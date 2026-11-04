@@ -11,6 +11,15 @@ namespace Zjcs.Presentation.Combat
     /// <summary>Builds the confirmed offline pet energy state from the selected skill plan.</summary>
     public static class OfficialBattlePetEnergyAssembler
     {
+        private static OfficialCharacterCatalog LoadBattlePetCatalog(OfficialCharacterCatalog characterCatalog)
+        {
+            var rules = UnityEngine.Resources.Load<UnityEngine.TextAsset>("Combat/pet-battle-rules");
+            var receipt = UnityEngine.Resources.Load<UnityEngine.TextAsset>("Combat/pet-battle-rules-source-manifest");
+            if (!rules || !receipt) throw new InvalidOperationException("Original battle pet rules are missing.");
+            var source = FightOfficialCombatCatalog.ReadSourceManifest(receipt.text);
+            return characterCatalog.WithBattlePetRules(rules.text, source.OutputSha256);
+        }
+
         public static bool TryConfigure(FightBattleUnitState owner, OfflinePlayerProgress player,
             OfficialCharacterCatalog characterCatalog, FightOfficialCombatCatalog combat,
             FightOfficialSkillItemCatalog skillItems)
@@ -22,9 +31,23 @@ namespace Zjcs.Presentation.Combat
             OfflinePetInstance pet = plan == null || plan.PetIndex <= 0
                 ? null : player.Pets?.Pets?.FirstOrDefault(value => value?.Index == plan.PetIndex);
             if (pet == null) return false;
+            if (!characterCatalog.Rows("pet_evolution").Any())
+                characterCatalog = LoadBattlePetCatalog(characterCatalog);
             Dictionary<string, object> evolution = characterCatalog.Rows("pet_evolution")
                 .FirstOrDefault(value => Integer(value, "ClassId") == pet.ClassId
                     && Integer(value, "EvolutionPhase") == pet.EvolutionPhase);
+            // PassiveStatusIdList is not guaranteed to contain status templates:
+            // the original 16014 points to skill entity 50165. Until the passive
+            // agent can consume that type, fail the configuration before changing
+            // the owner's properties/statuses, rather than partially assembling it.
+            foreach (int supportId in IntArray(evolution, "SupportSkills"))
+                if (skillItems.TryGet(supportId, out FightOfficialSkillItem support))
+                    foreach (int statusId in support.PassiveStatusIds ?? Array.Empty<int>())
+                        if (!combat.HasComponent(statusId, "FightStatusComponent"))
+                        {
+                            UnityEngine.Debug.LogWarning("Battle pet support entity requires passive skill-agent migration: " + statusId);
+                            return false;
+                        }
             int skillItemId = Integer(evolution, "EntitySkill");
             if (skillItemId <= 0) return false;
             int skillEntityId = skillItemId;

@@ -331,6 +331,7 @@ namespace Zjcs.Presentation.Combat
                 {
                     hudView.Refresh(result.Checkpoint);
                     hudView.RefreshSkillSlots(result.Checkpoint, skillIconResolver);
+                    hudView.RefreshPet(result.Checkpoint, statueProgress?.Save?.Player);
                     hudView.RefreshTimeline(result.Checkpoint, timelinePortraitResolver,
                         timelineFactionResolver, true, result.Event);
                     hudView.RefreshBoss(result.Checkpoint, UnitName);
@@ -671,8 +672,7 @@ namespace Zjcs.Presentation.Combat
         private void RefreshPetFunction(OfficialBattleHudView view)
         {
             if (statueProgress?.Save?.Player == null) return;
-            int petCount = statueProgress.Save.Player.Pets?.Pets?.Count ?? 0;
-            view.RefreshPetFunction(OfficialBattleSkillSlotBindings.IsPetFunctionUnlocked(petCount));
+            view.RefreshPet(Checkpoint, statueProgress.Save.Player);
         }
 
         private void MountDelayedHud()

@@ -1,0 +1,1795 @@
+{
+  "manifest": "854_156383",
+  "references": {
+    "mPetIcon": "/FightMainPanel/Content/Bottom/Anim/SkillListContent/BgSlot/GamePetSkillIconItem/Content/Bg/Anim/Mask/PetIcon",
+    "mPetEnergyProgressImg": "/FightMainPanel/Content/Bottom/Anim/SkillListContent/BgSlot/GamePetSkillIconItem/Content/Bg/Energy",
+    "mPetEnergyProgressText": "/FightMainPanel/Content/Bottom/Anim/SkillListContent/BgSlot/GamePetSkillIconItem/Content/Bg/EnergyTxt",
+    "mPetSupportSkillIcon": "/FightMainPanel/Content/Bottom/Anim/SkillListContent/BgSlot/GamePetSkillIconItem/SupportSkillRoot/SkillContent/SupportSkillIcon",
+    "mPetSupportSkillQuality": "/FightMainPanel/Content/Bottom/Anim/SkillListContent/BgSlot/GamePetSkillIconItem/SupportSkillRoot/SkillContent/Quality",
+    "mNoEquipPetShowUI": "/FightMainPanel/Content/Bottom/Anim/SkillListContent/BgSlot/GamePetSkillIconItem/BgNone",
+    "mPetSupportSkillGo": "/FightMainPanel/Content/Bottom/Anim/SkillListContent/BgSlot/GamePetSkillIconItem/SupportSkillRoot",
+    "mPetIconGo": "/FightMainPanel/Content/Bottom/Anim/SkillListContent/BgSlot/GamePetSkillIconItem/Content",
+    "mTriggerSupportSkillAnim": "/FightMainPanel/Content/Bottom/Anim/SkillListContent/BgSlot/GamePetSkillIconItem",
+    "mDisabledGO": "/FightMainPanel/Content/Bottom/Anim/SkillListContent/BgSlot/GamePetSkillIconItem/Disabled"
+  },
+  "evolutions": [
+    {
+      "classId": 1600,
+      "phase": 1,
+      "supportSkillId": 16000,
+      "resource": "Combat/PetHud/Portraits/pet_1600",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 41.02675247192383,
+        "y": 56.07612228393555
+      },
+      "trimSize": {
+        "x": 179.89712524414062,
+        "y": 153.84774780273438
+      },
+      "uvMin": {
+        "x": 0.00014862484402126735,
+        "y": 0.0004943005450360186
+      },
+      "uvMax": {
+        "x": 0.9995770984225802,
+        "y": 0.999505649913441
+      }
+    },
+    {
+      "classId": 1600,
+      "phase": 2,
+      "supportSkillId": 16300,
+      "resource": "Combat/PetHud/Portraits/pet_1700",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 24.026750564575195,
+        "y": 29.076120376586914
+      },
+      "trimSize": {
+        "x": 207.94650268554688,
+        "y": 200.84774780273438
+      },
+      "uvMin": {
+        "x": 0.00012860848353459284,
+        "y": 0.00037870834122842817
+      },
+      "uvMax": {
+        "x": 0.9998714098563561,
+        "y": 0.9996212347229915
+      }
+    },
+    {
+      "classId": 1601,
+      "phase": 1,
+      "supportSkillId": 16001,
+      "resource": "Combat/PetHud/Portraits/pet_1601",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 43.05131530761719,
+        "y": 45.02675247192383
+      },
+      "trimSize": {
+        "x": 170.87255859375,
+        "y": 164.94650268554688
+      },
+      "uvMin": {
+        "x": 0.0003000895182291667,
+        "y": 0.0001621361934777462
+      },
+      "uvMax": {
+        "x": 0.9995548181366503,
+        "y": 0.999837910045277
+      }
+    },
+    {
+      "classId": 1601,
+      "phase": 2,
+      "supportSkillId": 16001,
+      "resource": "Combat/PetHud/Portraits/pet_1701",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 34.07612228393555,
+        "y": 31.026750564575195
+      },
+      "trimSize": {
+        "x": 188.89712524414062,
+        "y": 201.92193603515625
+      },
+      "uvMin": {
+        "x": 0.0004027634070663856,
+        "y": 0.00013242853750096688
+      },
+      "uvMax": {
+        "x": 0.9998584525295036,
+        "y": 0.9997459732659972
+      }
+    },
+    {
+      "classId": 1602,
+      "phase": 1,
+      "supportSkillId": 16002,
+      "resource": "Combat/PetHud/Portraits/pet_1602",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 53.02675247192383,
+        "y": 35.02675247192383
+      },
+      "trimSize": {
+        "x": 149.89712524414062,
+        "y": 189.94650268554688
+      },
+      "uvMin": {
+        "x": 0.00017834981282552082,
+        "y": 0.00014080248380962172
+      },
+      "uvMax": {
+        "x": 0.9994925181070964,
+        "y": 0.9998592376708985
+      }
+    },
+    {
+      "classId": 1602,
+      "phase": 2,
+      "supportSkillId": 16002,
+      "resource": "Combat/PetHud/Portraits/pet_1702",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 26.026750564575195,
+        "y": 22.026750564575195
+      },
+      "trimSize": {
+        "x": 203.89712524414062,
+        "y": 231.89712524414062
+      },
+      "uvMin": {
+        "x": 0.00013113021850585938,
+        "y": 0.00011530415765170394
+      },
+      "uvMax": {
+        "x": 0.9996268421995873,
+        "y": 0.999671878485844
+      }
+    },
+    {
+      "classId": 1603,
+      "phase": 1,
+      "supportSkillId": 16003,
+      "resource": "Combat/PetHud/Portraits/pet_1603",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 22.076120376586914,
+        "y": 28.026750564575195
+      },
+      "trimSize": {
+        "x": 211.88096618652344,
+        "y": 199.89712524414062
+      },
+      "uvMin": {
+        "x": 0.0003590583801269531,
+        "y": 0.00013375282287597656
+      },
+      "uvMax": {
+        "x": 0.9997975781278791,
+        "y": 0.9996193790435791
+      }
+    },
+    {
+      "classId": 1603,
+      "phase": 2,
+      "supportSkillId": 16003,
+      "resource": "Combat/PetHud/Portraits/pet_1703",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 12.04290771484375,
+        "y": 19.04290771484375
+      },
+      "trimSize": {
+        "x": 239.90296936035156,
+        "y": 219.9303436279297
+      },
+      "uvMin": {
+        "x": 0.00017878214518229167,
+        "y": 0.0001950350674715909
+      },
+      "uvMax": {
+        "x": 0.9997744878133138,
+        "y": 0.9998784151944247
+      }
+    },
+    {
+      "classId": 1604,
+      "phase": 1,
+      "supportSkillId": 16004,
+      "resource": "Combat/PetHud/Portraits/pet_1604",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 34.07612228393555,
+        "y": 28.026750564575195
+      },
+      "trimSize": {
+        "x": 185.8761749267578,
+        "y": 192.94650268554688
+      },
+      "uvMin": {
+        "x": 0.00040925959105132727,
+        "y": 0.0001386039615295094
+      },
+      "uvMax": {
+        "x": 0.9997435333908246,
+        "y": 0.9998614158037413
+      }
+    },
+    {
+      "classId": 1604,
+      "phase": 2,
+      "supportSkillId": 16304,
+      "resource": "Combat/PetHud/Portraits/pet_1704",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 18.076120376586914,
+        "y": 15.076120376586914
+      },
+      "trimSize": {
+        "x": 218.89712524414062,
+        "y": 225.87255859375
+      },
+      "uvMin": {
+        "x": 0.00034758162825074913,
+        "y": 0.0003368158256058144
+      },
+      "uvMax": {
+        "x": 0.9998778338846006,
+        "y": 0.9997729157979509
+      }
+    },
+    {
+      "classId": 1605,
+      "phase": 1,
+      "supportSkillId": 16005,
+      "resource": "Combat/PetHud/Portraits/pet_1605",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 1.0267510414123535,
+        "y": 24.026750564575195
+      },
+      "trimSize": {
+        "x": 247.94650268554688,
+        "y": 193.94650268554688
+      },
+      "uvMin": {
+        "x": 0.0001078671024691674,
+        "y": 0.00013788950811956347
+      },
+      "uvMax": {
+        "x": 0.9998921521248356,
+        "y": 0.9998621301552684
+      }
+    },
+    {
+      "classId": 1605,
+      "phase": 2,
+      "supportSkillId": 16305,
+      "resource": "Combat/PetHud/Portraits/pet_1705",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 9.076120376586914,
+        "y": 20.026750564575195
+      },
+      "trimSize": {
+        "x": 238.86415100097656,
+        "y": 214.9303436279297
+      },
+      "uvMin": {
+        "x": 0.00031849529952683705,
+        "y": 0.0001244212305823038
+      },
+      "uvMax": {
+        "x": 0.9997500894458723,
+        "y": 0.9998004381046739
+      }
+    },
+    {
+      "classId": 1606,
+      "phase": 1,
+      "supportSkillId": 16006,
+      "resource": "Combat/PetHud/Portraits/pet_1606",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 5.036284923553467,
+        "y": 37.07612228393555
+      },
+      "trimSize": {
+        "x": 245.92080688476562,
+        "y": 182.89712524414062
+      },
+      "uvMin": {
+        "x": 0.00014749968924173494,
+        "y": 0.0004159687646751195
+      },
+      "uvMax": {
+        "x": 0.9998255764565817,
+        "y": 0.9998538116288316
+      }
+    },
+    {
+      "classId": 1606,
+      "phase": 2,
+      "supportSkillId": 16306,
+      "resource": "Combat/PetHud/Portraits/pet_1706",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 6.0267510414123535,
+        "y": 14.076120376586914
+      },
+      "trimSize": {
+        "x": 245.94650268554688,
+        "y": 224.84774780273438
+      },
+      "uvMin": {
+        "x": 0.00010874407078192486,
+        "y": 0.00033831278483072917
+      },
+      "uvMax": {
+        "x": 0.9998912753128424,
+        "y": 0.999661636352539
+      }
+    },
+    {
+      "classId": 1607,
+      "phase": 1,
+      "supportSkillId": 16007,
+      "resource": "Combat/PetHud/Portraits/pet_1607",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 24.026750564575195,
+        "y": 47.07612228393555
+      },
+      "trimSize": {
+        "x": 203.94650268554688,
+        "y": 160.8675079345703
+      },
+      "uvMin": {
+        "x": 0.00013113021850585938,
+        "y": 0.0004728092169909744
+      },
+      "uvMax": {
+        "x": 0.9998688884809905,
+        "y": 0.9996498771335768
+      }
+    },
+    {
+      "classId": 1607,
+      "phase": 2,
+      "supportSkillId": 16307,
+      "resource": "Combat/PetHud/Portraits/pet_1707",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 9.076120376586914,
+        "y": 17.026750564575195
+      },
+      "trimSize": {
+        "x": 232.8574981689453,
+        "y": 219.94650268554688
+      },
+      "uvMin": {
+        "x": 0.00032669689522280714,
+        "y": 0.00012159347534179688
+      },
+      "uvMax": {
+        "x": 0.9997151010537864,
+        "y": 0.9998784238641912
+      }
+    },
+    {
+      "classId": 1608,
+      "phase": 1,
+      "supportSkillId": 16008,
+      "resource": "Combat/PetHud/Portraits/pet_1608",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 45.07612228393555,
+        "y": 30.026750564575195
+      },
+      "trimSize": {
+        "x": 161.89712524414062,
+        "y": 204.89712524414062
+      },
+      "uvMin": {
+        "x": 0.00046989064157744985,
+        "y": 0.00013049055890339178
+      },
+      "uvMax": {
+        "x": 0.9998348612844208,
+        "y": 0.9996286624815406
+      }
+    },
+    {
+      "classId": 1608,
+      "phase": 2,
+      "supportSkillId": 16308,
+      "resource": "Combat/PetHud/Portraits/pet_1708",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 0.02675098180770874,
+        "y": 18.076120376586914
+      },
+      "trimSize": {
+        "x": 221.89712524414062,
+        "y": 222.84774780273438
+      },
+      "uvMin": {
+        "x": 0.00012049991805274208,
+        "y": 0.00034134698021037697
+      },
+      "uvMax": {
+        "x": 0.9996571001168844,
+        "y": 0.9996586017009923
+      }
+    },
+    {
+      "classId": 1609,
+      "phase": 1,
+      "supportSkillId": 16009,
+      "resource": "Combat/PetHud/Portraits/pet_1609",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 34.07612228393555,
+        "y": 28.076120376586914
+      },
+      "trimSize": {
+        "x": 189.84774780273438,
+        "y": 204.88758850097656
+      },
+      "uvMin": {
+        "x": 0.00040064359966077303,
+        "y": 0.0003713189101800686
+      },
+      "uvMax": {
+        "x": 0.9995993162456311,
+        "y": 0.999822970134456
+      }
+    },
+    {
+      "classId": 1609,
+      "phase": 2,
+      "supportSkillId": 16009,
+      "resource": "Combat/PetHud/Portraits/pet_1709",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 0.0,
+        "y": 15.076120376586914
+      },
+      "trimSize": {
+        "x": 254.97325134277344,
+        "y": 230.90919494628906
+      },
+      "uvMin": {
+        "x": 0.0,
+        "y": 0.00032952543977019075
+      },
+      "uvMax": {
+        "x": 0.9998951033049939,
+        "y": 0.9999364299691601
+      }
+    },
+    {
+      "classId": 1610,
+      "phase": 1,
+      "supportSkillId": 16010,
+      "resource": "Combat/PetHud/Portraits/pet_1610",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 37.04290771484375,
+        "y": 28.026750564575195
+      },
+      "trimSize": {
+        "x": 182.9141845703125,
+        "y": 204.94650268554688
+      },
+      "uvMin": {
+        "x": 0.00023446838712431694,
+        "y": 0.00013049055890339178
+      },
+      "uvMax": {
+        "x": 0.9997655316128757,
+        "y": 0.9998695280493759
+      }
+    },
+    {
+      "classId": 1610,
+      "phase": 2,
+      "supportSkillId": 16010,
+      "resource": "Combat/PetHud/Portraits/pet_1710",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 0.0,
+        "y": 16.026750564575195
+      },
+      "trimSize": {
+        "x": 256.0,
+        "y": 223.89712524414062
+      },
+      "uvMin": {
+        "x": 0.0,
+        "y": 0.00011942216328212194
+      },
+      "uvMax": {
+        "x": 1.0,
+        "y": 0.9996601598603385
+      }
+    },
+    {
+      "classId": 1611,
+      "phase": 1,
+      "supportSkillId": 16011,
+      "resource": "Combat/PetHud/Portraits/pet_1611",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 52.04290771484375,
+        "y": 28.026750564575195
+      },
+      "trimSize": {
+        "x": 164.9303436279297,
+        "y": 178.94650268554688
+      },
+      "uvMin": {
+        "x": 0.0002600467566287879,
+        "y": 0.00014944449483349337
+      },
+      "uvMax": {
+        "x": 0.9998378869258996,
+        "y": 0.9998505768163244
+      }
+    },
+    {
+      "classId": 1611,
+      "phase": 2,
+      "supportSkillId": 16011,
+      "resource": "Combat/PetHud/Portraits/pet_1711",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 39.02675247192383,
+        "y": 18.026750564575195
+      },
+      "trimSize": {
+        "x": 177.92193603515625,
+        "y": 237.97325134277344
+      },
+      "uvMin": {
+        "x": 0.00015029478608892205,
+        "y": 0.00011239733014787947
+      },
+      "uvMax": {
+        "x": 0.9997117331858432,
+        "y": 1.0000000080140699
+      }
+    },
+    {
+      "classId": 1612,
+      "phase": 1,
+      "supportSkillId": 16012,
+      "resource": "Combat/PetHud/Portraits/pet_1612",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 22.026750564575195,
+        "y": 35.02675247192383
+      },
+      "trimSize": {
+        "x": 198.89712524414062,
+        "y": 183.94650268554688
+      },
+      "uvMin": {
+        "x": 0.0001344249476140468,
+        "y": 0.0001453938691512398
+      },
+      "uvMax": {
+        "x": 0.9996174663754563,
+        "y": 0.9998546475949495
+      }
+    },
+    {
+      "classId": 1613,
+      "phase": 1,
+      "supportSkillId": 16013,
+      "resource": "Combat/PetHud/Portraits/pet_1613",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 24.026750564575195,
+        "y": 26.01291275024414
+      },
+      "trimSize": {
+        "x": 203.94650268554688,
+        "y": 189.9109649658203
+      },
+      "uvMin": {
+        "x": 0.00013113021850585938,
+        "y": 6.796184339021381e-05
+      },
+      "uvMax": {
+        "x": 0.9998688884809905,
+        "y": 0.9995993564003393
+      }
+    },
+    {
+      "classId": 1613,
+      "phase": 2,
+      "supportSkillId": 16013,
+      "resource": "Combat/PetHud/Portraits/pet_1713",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 17.076120376586914,
+        "y": 19.0
+      },
+      "trimSize": {
+        "x": 222.89712524414062,
+        "y": 200.9238739013672
+      },
+      "uvMin": {
+        "x": 0.00034134698021037697,
+        "y": 0.0
+      },
+      "uvMax": {
+        "x": 0.9998800252050563,
+        "y": 0.9996212631908815
+      }
+    },
+    {
+      "classId": 1614,
+      "phase": 1,
+      "supportSkillId": 16014,
+      "resource": "Combat/PetHud/Portraits/pet_1614",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 9.04290771484375,
+        "y": 28.026750564575195
+      },
+      "trimSize": {
+        "x": 237.88096618652344,
+        "y": 196.94650268554688
+      },
+      "uvMin": {
+        "x": 0.0001802845161502101,
+        "y": 0.00013578966789439244
+      },
+      "uvMax": {
+        "x": 0.9996801424427193,
+        "y": 0.9998642296960512
+      }
+    },
+    {
+      "classId": 1614,
+      "phase": 2,
+      "supportSkillId": 16014,
+      "resource": "Combat/PetHud/Portraits/pet_1714",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 0.0,
+        "y": 16.026750564575195
+      },
+      "trimSize": {
+        "x": 256.0,
+        "y": 217.94650268554688
+      },
+      "uvMin": {
+        "x": 0.0,
+        "y": 0.00012270901181282254
+      },
+      "uvMax": {
+        "x": 1.0,
+        "y": 0.9998773084867985
+      }
+    },
+    {
+      "classId": 1615,
+      "phase": 1,
+      "supportSkillId": 16015,
+      "resource": "Combat/PetHud/Portraits/pet_1615",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 43.07612228393555,
+        "y": 28.026750564575195
+      },
+      "trimSize": {
+        "x": 182.84774780273438,
+        "y": 205.94650268554688
+      },
+      "uvMin": {
+        "x": 0.0004159687646751195,
+        "y": 0.00012985710958832676
+      },
+      "uvMax": {
+        "x": 0.9995839895446443,
+        "y": 0.9998701614083596
+      }
+    },
+    {
+      "classId": 1615,
+      "phase": 2,
+      "supportSkillId": 16015,
+      "resource": "Combat/PetHud/Portraits/pet_1715",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 2.076120376586914,
+        "y": 16.04290771484375
+      },
+      "trimSize": {
+        "x": 235.84774780273438,
+        "y": 229.88096618652344
+      },
+      "uvMin": {
+        "x": 0.00032254396858861893,
+        "y": 0.00018655528192934782
+      },
+      "uvMax": {
+        "x": 0.999677407539497,
+        "y": 0.999669016962466
+      }
+    },
+    {
+      "classId": 1616,
+      "phase": 1,
+      "supportSkillId": 16017,
+      "resource": "Combat/PetHud/Portraits/pet_1616",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 36.02675247192383,
+        "y": 29.076120376586914
+      },
+      "trimSize": {
+        "x": 194.89712524414062,
+        "y": 189.87255859375
+      },
+      "uvMin": {
+        "x": 0.0001371921637119391,
+        "y": 0.0004006335609837582
+      },
+      "uvMax": {
+        "x": 0.999609629313151,
+        "y": 0.9997298893175627
+      }
+    },
+    {
+      "classId": 1616,
+      "phase": 2,
+      "supportSkillId": 16017,
+      "resource": "Combat/PetHud/Portraits/pet_1716",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 34.04290771484375,
+        "y": 16.026750564575195
+      },
+      "trimSize": {
+        "x": 188.9303436279297,
+        "y": 232.94650268554688
+      },
+      "uvMin": {
+        "x": 0.0002270249462632275,
+        "y": 0.00011480929002229748
+      },
+      "uvMax": {
+        "x": 0.9998584727130869,
+        "y": 0.999885207082069
+      }
+    },
+    {
+      "classId": 1617,
+      "phase": 1,
+      "supportSkillId": 16018,
+      "resource": "Combat/PetHud/Portraits/pet_1617",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 55.07612228393555,
+        "y": 28.076120376586914
+      },
+      "trimSize": {
+        "x": 141.84774780273438,
+        "y": 191.84774780273438
+      },
+      "uvMin": {
+        "x": 0.000536072422081316,
+        "y": 0.00039646029472351074
+      },
+      "uvMax": {
+        "x": 0.9994638738497882,
+        "y": 0.9996034801006317
+      }
+    },
+    {
+      "classId": 1617,
+      "phase": 2,
+      "supportSkillId": 16018,
+      "resource": "Combat/PetHud/Portraits/pet_1717",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 61.04290771484375,
+        "y": 15.026750564575195
+      },
+      "trimSize": {
+        "x": 146.9303436279297,
+        "y": 226.94650268554688
+      },
+      "uvMin": {
+        "x": 0.00029188921662414965,
+        "y": 0.00011784389680702781
+      },
+      "uvMax": {
+        "x": 0.9998180363453976,
+        "y": 0.9998821729080267
+      }
+    },
+    {
+      "classId": 1619,
+      "phase": 1,
+      "supportSkillId": 16019,
+      "resource": ""
+    },
+    {
+      "classId": 1620,
+      "phase": 1,
+      "supportSkillId": 16020,
+      "resource": "Combat/PetHud/Portraits/pet_1620",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 22.076120376586914,
+        "y": 29.076120376586914
+      },
+      "trimSize": {
+        "x": 200.86415100097656,
+        "y": 195.89712524414062
+      },
+      "uvMin": {
+        "x": 0.00037870834122842817,
+        "y": 0.00038836926830058195
+      },
+      "uvMax": {
+        "x": 0.9997028426744452,
+        "y": 0.9998634980649365
+      }
+    },
+    {
+      "classId": 1620,
+      "phase": 2,
+      "supportSkillId": 16020,
+      "resource": "Combat/PetHud/Portraits/pet_1720",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 15.076120376586914,
+        "y": 17.026750564575195
+      },
+      "trimSize": {
+        "x": 221.84774780273438,
+        "y": 230.89712524414062
+      },
+      "uvMin": {
+        "x": 0.0003428845792203336,
+        "y": 0.00011580330984933036
+      },
+      "uvMax": {
+        "x": 0.9996570638708167,
+        "y": 0.9996704580463889
+      }
+    },
+    {
+      "classId": 1622,
+      "phase": 1,
+      "supportSkillId": 16021,
+      "resource": "Combat/PetHud/Portraits/pet_1622",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 11.036285400390625,
+        "y": 29.026750564575195
+      },
+      "trimSize": {
+        "x": 216.92080688476562,
+        "y": 207.94650268554688
+      },
+      "uvMin": {
+        "x": 0.00016721382668490782,
+        "y": 0.00012860848353459284
+      },
+      "uvMax": {
+        "x": 0.9998022685951901,
+        "y": 0.9998714098563561
+      }
+    },
+    {
+      "classId": 1622,
+      "phase": 2,
+      "supportSkillId": 16021,
+      "resource": "Combat/PetHud/Portraits/pet_1722",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 2.0267510414123535,
+        "y": 20.026750564575195
+      },
+      "trimSize": {
+        "x": 253.97325134277344,
+        "y": 216.94650268554688
+      },
+      "uvMin": {
+        "x": 0.00010531906067855715,
+        "y": 0.0001232744911299323
+      },
+      "uvMax": {
+        "x": 1.0000000093865582,
+        "y": 0.9998767430881201
+      }
+    }
+  ],
+  "supportIcons": [
+    {
+      "itemId": 16000,
+      "resource": "Combat/PetHud/Portraits/petskill_16000",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 14.076120376586914,
+        "y": 13.076120376586914
+      },
+      "trimSize": {
+        "x": 228.84774780273438,
+        "y": 229.84774780273438
+      },
+      "uvMin": {
+        "x": 0.0003324033912092317,
+        "y": 0.0003309581590735394
+      },
+      "uvMax": {
+        "x": 0.9996675466345908,
+        "y": 0.9996689920840056
+      }
+    },
+    {
+      "itemId": 16001,
+      "resource": "Combat/PetHud/Portraits/petskill_16001",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 14.076120376586914,
+        "y": 13.076120376586914
+      },
+      "trimSize": {
+        "x": 228.84774780273438,
+        "y": 229.84774780273438
+      },
+      "uvMin": {
+        "x": 0.0003324283783092249,
+        "y": 0.0003309581590735394
+      },
+      "uvMax": {
+        "x": 0.9996675716216907,
+        "y": 0.9996689920840056
+      }
+    },
+    {
+      "itemId": 16002,
+      "resource": "Combat/PetHud/Portraits/petskill_16002",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 14.076120376586914,
+        "y": 13.076120376586914
+      },
+      "trimSize": {
+        "x": 228.84774780273438,
+        "y": 229.84774780273438
+      },
+      "uvMin": {
+        "x": 0.0003324283783092249,
+        "y": 0.0003309581590735394
+      },
+      "uvMax": {
+        "x": 0.9996675716216907,
+        "y": 0.9996689920840056
+      }
+    },
+    {
+      "itemId": 16003,
+      "resource": "Combat/PetHud/Portraits/petskill_16003",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 14.076120376586914,
+        "y": 13.076120376586914
+      },
+      "trimSize": {
+        "x": 228.84774780273438,
+        "y": 229.89712524414062
+      },
+      "uvMin": {
+        "x": 0.0003324033912092317,
+        "y": 0.0003309581590735394
+      },
+      "uvMax": {
+        "x": 0.9996675466345908,
+        "y": 0.9998836766118588
+      }
+    },
+    {
+      "itemId": 16004,
+      "resource": "Combat/PetHud/Portraits/petskill_16004",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 14.076120376586914,
+        "y": 13.076120376586914
+      },
+      "trimSize": {
+        "x": 228.84774780273438,
+        "y": 229.89712524414062
+      },
+      "uvMin": {
+        "x": 0.0003324033912092317,
+        "y": 0.0003309581590735394
+      },
+      "uvMax": {
+        "x": 0.9996675466345908,
+        "y": 0.9998836766118588
+      }
+    },
+    {
+      "itemId": 16005,
+      "resource": "Combat/PetHud/Portraits/petskill_16005",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 14.076120376586914,
+        "y": 13.076120376586914
+      },
+      "trimSize": {
+        "x": 228.84774780273438,
+        "y": 229.84774780273438
+      },
+      "uvMin": {
+        "x": 0.0003324033912092317,
+        "y": 0.0003309581590735394
+      },
+      "uvMax": {
+        "x": 0.9996675466345908,
+        "y": 0.9996689920840056
+      }
+    },
+    {
+      "itemId": 16006,
+      "resource": "Combat/PetHud/Portraits/petskill_16006",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 14.076120376586914,
+        "y": 13.076120376586914
+      },
+      "trimSize": {
+        "x": 228.84774780273438,
+        "y": 229.84774780273438
+      },
+      "uvMin": {
+        "x": 0.0003324033912092317,
+        "y": 0.0003309581590735394
+      },
+      "uvMax": {
+        "x": 0.9996675466345908,
+        "y": 0.9996689920840056
+      }
+    },
+    {
+      "itemId": 16007,
+      "resource": "Combat/PetHud/Portraits/petskill_16007",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 14.076120376586914,
+        "y": 13.076120376586914
+      },
+      "trimSize": {
+        "x": 228.84774780273438,
+        "y": 229.84774780273438
+      },
+      "uvMin": {
+        "x": 0.0003324033912092317,
+        "y": 0.0003309581590735394
+      },
+      "uvMax": {
+        "x": 0.9996675466345908,
+        "y": 0.9996689920840056
+      }
+    },
+    {
+      "itemId": 16008,
+      "resource": "Combat/PetHud/Portraits/petskill_16008",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 14.076120376586914,
+        "y": 13.076120376586914
+      },
+      "trimSize": {
+        "x": 228.84774780273438,
+        "y": 229.84774780273438
+      },
+      "uvMin": {
+        "x": 0.0003324283783092249,
+        "y": 0.0003309581590735394
+      },
+      "uvMax": {
+        "x": 0.9996675716216907,
+        "y": 0.9996689920840056
+      }
+    },
+    {
+      "itemId": 16009,
+      "resource": "Combat/PetHud/Portraits/petskill_16009",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 15.076120376586914,
+        "y": 14.076120376586914
+      },
+      "trimSize": {
+        "x": 226.84774780273438,
+        "y": 227.84774780273438
+      },
+      "uvMin": {
+        "x": 0.0003353320554489606,
+        "y": 0.0003338613008197985
+      },
+      "uvMax": {
+        "x": 0.9996646175300498,
+        "y": 0.9996660885057951
+      }
+    },
+    {
+      "itemId": 16010,
+      "resource": "Combat/PetHud/Portraits/petskill_16010",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 15.076120376586914,
+        "y": 15.076120376586914
+      },
+      "trimSize": {
+        "x": 226.84774780273438,
+        "y": 226.84774780273438
+      },
+      "uvMin": {
+        "x": 0.00033535726269961455,
+        "y": 0.00033535726269961455
+      },
+      "uvMax": {
+        "x": 0.9996646427373004,
+        "y": 0.9996646427373004
+      }
+    },
+    {
+      "itemId": 16011,
+      "resource": "Combat/PetHud/Portraits/petskill_16012",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 15.076120376586914,
+        "y": 14.076120376586914
+      },
+      "trimSize": {
+        "x": 226.84774780273438,
+        "y": 227.84774780273438
+      },
+      "uvMin": {
+        "x": 0.00033535726269961455,
+        "y": 0.00033388639751233553
+      },
+      "uvMax": {
+        "x": 0.9996646427373004,
+        "y": 0.9996661136024877
+      }
+    },
+    {
+      "itemId": 16012,
+      "resource": "Combat/PetHud/Portraits/petskill_16011",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 15.076120376586914,
+        "y": 15.076120376586914
+      },
+      "trimSize": {
+        "x": 226.84774780273438,
+        "y": 226.84774780273438
+      },
+      "uvMin": {
+        "x": 0.0003353320554489606,
+        "y": 0.0003353320554489606
+      },
+      "uvMax": {
+        "x": 0.9996646175300498,
+        "y": 0.9996646175300498
+      }
+    },
+    {
+      "itemId": 16013,
+      "resource": "Combat/PetHud/Portraits/petskill_16013",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 14.076120376586914,
+        "y": 14.076120376586914
+      },
+      "trimSize": {
+        "x": 227.84774780273438,
+        "y": 227.84774780273438
+      },
+      "uvMin": {
+        "x": 0.00033388639751233553,
+        "y": 0.0003338613008197985
+      },
+      "uvMax": {
+        "x": 0.9996661136024877,
+        "y": 0.9996660885057951
+      }
+    },
+    {
+      "itemId": 16014,
+      "resource": "Combat/PetHud/Portraits/petskill_16014",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 13.076120376586914,
+        "y": 13.076120376586914
+      },
+      "trimSize": {
+        "x": 228.84774780273438,
+        "y": 229.84774780273438
+      },
+      "uvMin": {
+        "x": 0.0003324033912092317,
+        "y": 0.0003309830375339674
+      },
+      "uvMax": {
+        "x": 0.9996675466345908,
+        "y": 0.999669016962466
+      }
+    },
+    {
+      "itemId": 16015,
+      "resource": "Combat/PetHud/Portraits/petskill_16015",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 13.076120376586914,
+        "y": 13.076120376586914
+      },
+      "trimSize": {
+        "x": 228.84774780273438,
+        "y": 229.84774780273438
+      },
+      "uvMin": {
+        "x": 0.0003324283783092249,
+        "y": 0.0003309581590735394
+      },
+      "uvMax": {
+        "x": 0.9996675716216907,
+        "y": 0.9996689920840056
+      }
+    },
+    {
+      "itemId": 16017,
+      "resource": "Combat/PetHud/Portraits/petskill_16016",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 13.076120376586914,
+        "y": 13.076120376586914
+      },
+      "trimSize": {
+        "x": 228.84774780273438,
+        "y": 229.84774780273438
+      },
+      "uvMin": {
+        "x": 0.0003324283783092249,
+        "y": 0.0003309581590735394
+      },
+      "uvMax": {
+        "x": 0.9996675716216907,
+        "y": 0.9996689920840056
+      }
+    },
+    {
+      "itemId": 16018,
+      "resource": "Combat/PetHud/Portraits/petskill_16018",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 13.076120376586914,
+        "y": 13.076120376586914
+      },
+      "trimSize": {
+        "x": 228.84774780273438,
+        "y": 229.84774780273438
+      },
+      "uvMin": {
+        "x": 0.0003324283783092249,
+        "y": 0.0003309581590735394
+      },
+      "uvMax": {
+        "x": 0.9996675716216907,
+        "y": 0.9996689920840056
+      }
+    },
+    {
+      "itemId": 16019,
+      "resource": "Combat/PetHud/Portraits/monsterskill_14002",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 16.076120376586914,
+        "y": 15.076120376586914
+      },
+      "trimSize": {
+        "x": 224.84774780273438,
+        "y": 224.84774780273438
+      },
+      "uvMin": {
+        "x": 0.00033831278483072917,
+        "y": 0.00033831278483072917
+      },
+      "uvMax": {
+        "x": 0.999661636352539,
+        "y": 0.999661636352539
+      }
+    },
+    {
+      "itemId": 16020,
+      "resource": "Combat/PetHud/Portraits/petskill_16020",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 13.076120376586914,
+        "y": 14.076120376586914
+      },
+      "trimSize": {
+        "x": 228.84774780273438,
+        "y": 228.84774780273438
+      },
+      "uvMin": {
+        "x": 0.0003324033912092317,
+        "y": 0.0003324283783092249
+      },
+      "uvMax": {
+        "x": 0.9996675466345908,
+        "y": 0.9996675716216907
+      }
+    },
+    {
+      "itemId": 16021,
+      "resource": "Combat/PetHud/Portraits/petskill_16021",
+      "sourceSize": {
+        "x": 256.0,
+        "y": 256.0
+      },
+      "trimOffset": {
+        "x": 13.076120376586914,
+        "y": 14.076120376586914
+      },
+      "trimSize": {
+        "x": 228.84774780273438,
+        "y": 229.84774780273438
+      },
+      "uvMin": {
+        "x": 0.0003324033912092317,
+        "y": 0.0003309830375339674
+      },
+      "uvMax": {
+        "x": 0.9996675466345908,
+        "y": 0.999669016962466
+      }
+    }
+  ],
+  "ranks": [
+    {
+      "rank": 0,
+      "quality": 0
+    },
+    {
+      "rank": 1,
+      "quality": 2
+    },
+    {
+      "rank": 2,
+      "quality": 2
+    },
+    {
+      "rank": 3,
+      "quality": 3
+    },
+    {
+      "rank": 4,
+      "quality": 3
+    },
+    {
+      "rank": 5,
+      "quality": 3
+    },
+    {
+      "rank": 6,
+      "quality": 4
+    },
+    {
+      "rank": 7,
+      "quality": 4
+    },
+    {
+      "rank": 8,
+      "quality": 4
+    },
+    {
+      "rank": 9,
+      "quality": 4
+    },
+    {
+      "rank": 10,
+      "quality": 5
+    },
+    {
+      "rank": 11,
+      "quality": 5
+    },
+    {
+      "rank": 12,
+      "quality": 5
+    },
+    {
+      "rank": 13,
+      "quality": 5
+    },
+    {
+      "rank": 14,
+      "quality": 5
+    },
+    {
+      "rank": 15,
+      "quality": 5
+    },
+    {
+      "rank": 16,
+      "quality": 6
+    },
+    {
+      "rank": 17,
+      "quality": 6
+    },
+    {
+      "rank": 18,
+      "quality": 6
+    },
+    {
+      "rank": 19,
+      "quality": 6
+    },
+    {
+      "rank": 20,
+      "quality": 6
+    },
+    {
+      "rank": 21,
+      "quality": 6
+    },
+    {
+      "rank": 22,
+      "quality": 6
+    },
+    {
+      "rank": 23,
+      "quality": 6
+    },
+    {
+      "rank": 24,
+      "quality": 7
+    },
+    {
+      "rank": 25,
+      "quality": 7
+    },
+    {
+      "rank": 26,
+      "quality": 7
+    },
+    {
+      "rank": 27,
+      "quality": 7
+    },
+    {
+      "rank": 28,
+      "quality": 7
+    },
+    {
+      "rank": 29,
+      "quality": 7
+    },
+    {
+      "rank": 30,
+      "quality": 7
+    },
+    {
+      "rank": 31,
+      "quality": 7
+    },
+    {
+      "rank": 32,
+      "quality": 7
+    },
+    {
+      "rank": 33,
+      "quality": 7
+    },
+    {
+      "rank": 34,
+      "quality": 7
+    }
+  ],
+  "defaultRanks": [
+    {
+      "itemId": 16000,
+      "rank": 1
+    },
+    {
+      "itemId": 16001,
+      "rank": 1
+    },
+    {
+      "itemId": 16002,
+      "rank": 1
+    },
+    {
+      "itemId": 16003,
+      "rank": 3
+    },
+    {
+      "itemId": 16004,
+      "rank": 3
+    },
+    {
+      "itemId": 16005,
+      "rank": 3
+    },
+    {
+      "itemId": 16006,
+      "rank": 3
+    },
+    {
+      "itemId": 16007,
+      "rank": 3
+    },
+    {
+      "itemId": 16008,
+      "rank": 3
+    },
+    {
+      "itemId": 16009,
+      "rank": 6
+    },
+    {
+      "itemId": 16010,
+      "rank": 6
+    },
+    {
+      "itemId": 16011,
+      "rank": 6
+    },
+    {
+      "itemId": 16012,
+      "rank": 1
+    },
+    {
+      "itemId": 16013,
+      "rank": 3
+    },
+    {
+      "itemId": 16014,
+      "rank": 6
+    },
+    {
+      "itemId": 16015,
+      "rank": 3
+    },
+    {
+      "itemId": 16017,
+      "rank": 3
+    },
+    {
+      "itemId": 16018,
+      "rank": 3
+    },
+    {
+      "itemId": 16019,
+      "rank": 24
+    },
+    {
+      "itemId": 16020,
+      "rank": 6
+    },
+    {
+      "itemId": 16021,
+      "rank": 3
+    },
+    {
+      "itemId": 16300,
+      "rank": 1
+    },
+    {
+      "itemId": 16304,
+      "rank": 3
+    },
+    {
+      "itemId": 16305,
+      "rank": 3
+    },
+    {
+      "itemId": 16306,
+      "rank": 3
+    },
+    {
+      "itemId": 16307,
+      "rank": 3
+    },
+    {
+      "itemId": 16308,
+      "rank": 3
+    }
+  ]
+}

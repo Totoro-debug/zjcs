@@ -1,0 +1,235 @@
+{
+  "manifest": "854_156383",
+  "generator": {
+    "path": "scripts/prepare_battle_pet_rules.py",
+    "sha256": "8d7cfaacfda292eb7af0cd677ed3eba9c4367eafd33b2e89addcea1d07b0b0e3"
+  },
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/rules-source-manifest.json",
+      "sha256": "fbe2d8b778cc089d851f9eef60efa6e12842b42732627c14e20e167b746942a2"
+    },
+    {
+      "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile",
+      "sha256": "1b8e2cf7029ba8a80750f54aa35658878166d1bfbe2e206317473b43f6af3f1f"
+    },
+    {
+      "path": "unity/Assets/Official/Character/source-manifest.json",
+      "sha256": "a7c0d59bb02abf22ce608c464486055946007b121ab47c993d5d2905c95e117e"
+    }
+  ],
+  "active_comparison": {
+    "manifest": "884_156692",
+    "tables": [
+      {
+        "table": "pet",
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "4316317137983404343",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "ce050310edf7892975d232e6de2d0281cb348f1c76a92cfe75a4f8f0284c8de9"
+      },
+      {
+        "table": "pet_evolution",
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "-898538355896511098",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "8f4277734c37f34ee81187fef6629332a91b6496997c1e7bce2345097306354e"
+      },
+      {
+        "table": "pet_ability_prop",
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "-4906958488993697661",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "7966a9fb6b38dbf9ce42866fe49bfd6e7e1378cbf17d267145319135c3554d0b"
+      },
+      {
+        "table": "pet_ability_prop_scale_factor",
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "-3708332648464356204",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "e0e029e9d6fbea94a0baab43a6f9195bb6f15c9b1820386005ce266e38c26559"
+      },
+      {
+        "table": "skill",
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "1398458758611605706",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "5da6dd4982bdb6259e13043da7e2b7b4dc6b655beff1661b5f92f4fd65e0c81f"
+      },
+      {
+        "table": "item",
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "3644532119292667704",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "da276129e605494f2392572880d2cbc0354da14c4151bea6d7dcc90a69be7888"
+      },
+      {
+        "table": "skill_rank",
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "1461075118270095129",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "c3706031371263173303cabf822b5a3aee7ec4edaffe2811e94c40188093295c"
+      }
+    ],
+    "properties": {
+      "record": {
+        "name": "wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile",
+        "hash": "11e11b3ef06eaece6061f07f8f399542",
+        "size": 9107096,
+        "record_offset": 17449,
+        "unity_crc": 0,
+        "file_crc": 1870833886,
+        "encrypted": false,
+        "dependencies": [],
+        "tags": [
+          "Payd_Base"
+        ],
+        "file": "11e11b3ef06eaece6061f07f8f399542.rawfile"
+      },
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/WwiseBnk/11e11b3ef06eaece6061f07f8f399542.rawfile",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+      },
+      "payload_sha256": "1b8e2cf7029ba8a80750f54aa35658878166d1bfbe2e206317473b43f6af3f1f",
+      "groups": [
+        5180,
+        6002,
+        6003,
+        6004,
+        6005,
+        6006,
+        6102,
+        6103,
+        6104,
+        6105,
+        6106,
+        6202,
+        6203,
+        6204,
+        6205,
+        6206,
+        6302,
+        6303,
+        6304,
+        6305,
+        6306,
+        6403,
+        6404,
+        6405,
+        6406,
+        6503,
+        6504,
+        6505,
+        6506,
+        6603,
+        6604,
+        6605,
+        6606,
+        6703,
+        6704,
+        6705,
+        6706,
+        6902,
+        6903,
+        6904,
+        6905,
+        6906,
+        7002,
+        7003,
+        7004,
+        7005,
+        7006
+      ]
+    }
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/pet-battle-rules.json",
+      "sha256": "17f02dc29b1af307d4ba8a412b3b32f3285c5e0d534f0969ce70837e3ce13e9c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/pet-battle-rules-source-manifest.json",
+      "sha256": "0adc7ed9cbd0970dfb51059c61aebec53494568b18b8f8367b34024d13f28f11"
+    }
+  ],
+  "runtime_sources": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterCatalog.BattlePets.cs",
+      "sha256": "232fb5ae1d0712cd113fc8b83f05e5ac50d5bb5faf02281dbd64370b8b1ef447"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePetEnergyAssembler.cs",
+      "sha256": "d0b1f955329fbe7805ceb6dbe047f0187e1d9fcb25c6c7620754016baa6af241"
+    }
+  ],
+  "operation": "Copy the existing battle pet tables and decode original pet entity/ability property groups; no formula changes."
+}

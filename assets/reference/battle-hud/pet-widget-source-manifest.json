@@ -1,0 +1,2392 @@
+{
+  "manifest": "854_156383",
+  "generator": {
+    "path": "scripts/prepare_battle_pet_hud.py",
+    "sha256": "0fddca7ffb2a772cda7ea047311709e653d75931fce127ceec2359608766297b"
+  },
+  "installed_panels": {
+    "path": "unity/Assets/Official/Combat/HUD/panels.json",
+    "sha256": "7f442111c1368e0f704721aaa8321ee8e6265b932d7d343b59b74ebeb55168a3"
+  },
+  "installed_runtime": {
+    "path": "unity/Assets/Official/Combat/HUD/panels-runtime.json",
+    "sha256": "a8a0d36b8cda8798fbd0f3489b96c0fda8c4b7f8edd4d16bc7ac6e77c3da284e"
+  },
+  "original_bundle": {
+    "bundle": "defaultpackage_assets_prefabs_ui_fight_fightmainpanel_fightmainpanel.bundle",
+    "bundle_hash": "06d7f2f7684c6fb9f5a0d3b6d12df835",
+    "path_id": "-5660125702193225572",
+    "origin": "official_cdn",
+    "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/06d7f2f7684c6fb9f5a0d3b6d12df835.bundle",
+    "manifest": "854_156383",
+    "bundle_size": 56808,
+    "bundle_sha256": "325dafb4c83536ae838ec953e01a44000ec53bb98323ba76739cca2749231eb0",
+    "prefab": "/FightMainPanel.prefab"
+  },
+  "apk_checked": {
+    "path": ".tools\\source-packages\\zjcs_M509085.apk",
+    "packaged": false
+  },
+  "original_component": {
+    "path_id": "-3937308527446269796",
+    "sha256": "d30e3e4204c53e11163f03295d5893b0348b6c36d97ab91cbfc3a3ae1e7382da"
+  },
+  "references": [
+    {
+      "field": "mPetIcon",
+      "path_id": "-4786085005537910628",
+      "sha256": "f58c451eb89f1d374991aef6a2401206c596086f44c6c451d00961447261521b"
+    },
+    {
+      "field": "mPetEnergyProgressImg",
+      "path_id": "-3063860301384654692",
+      "sha256": "6ed943f9c93dcde88cebbcf1140969dbbe81a8b6ba2630caf33c99e4373c479e"
+    },
+    {
+      "field": "mPetEnergyProgressText",
+      "path_id": "3039805166307565724",
+      "sha256": "f7f7e372708ed86a4326f8ccc9257e9c6b0572fcb46fc13d62b3089078b249eb"
+    },
+    {
+      "field": "mPetSupportSkillIcon",
+      "path_id": "2063414242736464028",
+      "sha256": "e802a6566239ca49e788e477c652d2ece8de0ec55e2d78eb7d00b317735788b2"
+    },
+    {
+      "field": "mPetSupportSkillQuality",
+      "path_id": "-2135872349029080932",
+      "sha256": "4dd9f480d1fd876b79c7bea26a8b2e46046dab236f2c53dd944702fcbe357a9b"
+    },
+    {
+      "field": "mNoEquipPetShowUI",
+      "path_id": "4657178421285216412",
+      "sha256": "cf1debfd0eaaaafb0145061f1c96463848d09fb53b036ff35b6a6ce4aa5e8a34"
+    },
+    {
+      "field": "mPetSupportSkillGo",
+      "path_id": "-1673151417874653028",
+      "sha256": "98b9c4a03565360816b4f50f46f90bea4f0ac4ecf6f4258eb2d9bbfd4378c6b0"
+    },
+    {
+      "field": "mPetIconGo",
+      "path_id": "2984086085090599068",
+      "sha256": "61571fb1f456910bd89d1ecf775c7dc18025e07bfb3d8bc0aec2ddd5ce8bd050"
+    },
+    {
+      "field": "mTriggerSupportSkillAnim",
+      "path_id": "3494559581903118492",
+      "sha256": "e2318ee00157b658b95a5f2cc323247dc63c238b2464aa0f7b96b7d91f538a7c"
+    },
+    {
+      "field": "mDisabledGO",
+      "path_id": "-6951050703386910564",
+      "sha256": "ed76d9b157a4c6d594b412e5edb8fcc7877b4431b2c7316735a4054ed802f492"
+    }
+  ],
+  "visuals": {
+    "installed_rules": {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    },
+    "rules_receipt": {
+      "path": "unity/Assets/Official/Combat/rules-source-manifest.json",
+      "sha256": "fbe2d8b778cc089d851f9eef60efa6e12842b42732627c14e20e167b746942a2"
+    },
+    "original_image_field": {
+      "pointer": {
+        "m_FileID": 19,
+        "m_PathID": 1459838406371290543
+      },
+      "path_id": "-4786085005537910628",
+      "object_sha256": "f58c451eb89f1d374991aef6a2401206c596086f44c6c451d00961447261521b"
+    },
+    "referenced_serialized_file": "CAB-b87bc926f26e2fa12718da129cd5d063",
+    "active_configuration_comparison": [
+      {
+        "table": "pet_evolution",
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "-898538355896511098",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "object_sha256": "c77b73675d3cc47290142312a9aaeed862f3affbbcb6f638afa84df4b76f04d0",
+        "payload_sha256": "8f4277734c37f34ee81187fef6629332a91b6496997c1e7bce2345097306354e"
+      },
+      {
+        "table": "item",
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "3644532119292667704",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "object_sha256": "3f81dc44b9bbcea0ed38aca080b8b38ccc9f04cc4d8e8e4bf62fce88dc55a5cf",
+        "payload_sha256": "da276129e605494f2392572880d2cbc0354da14c4151bea6d7dcc90a69be7888"
+      },
+      {
+        "table": "skill_rank",
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "1461075118270095129",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "object_sha256": "efd0bf67a13410e75dfa7fa78a17de4c4bb0a956d7beed3575505bdcde373337",
+        "payload_sha256": "c3706031371263173303cabf822b5a3aee7ec4edaffe2811e94c40188093295c"
+      }
+    ],
+    "support_template_sprite": {
+      "bundle": "defaultpackage_assets_image_itemicon_monsterskill_lcommon_noatlas.bundle",
+      "bundle_hash": "586e9d56c6219b434ceca951d5d96b82",
+      "path_id": "1753776294830817298",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/586e9d56c6219b434ceca951d5d96b82.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 902905,
+      "bundle_sha256": "66abc18ef3a5e3e2e8c444e839dbce3ba70c576d7d14e9ab61b0367839fa9bcb"
+    },
+    "inputs": [
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "1386659482895107248",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "a9875bad869131da63c62124e7fc30dd077029aaa5170e117558f8197696cf6b"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "2242963343306245296",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "3f9dba2f7fef2f5784da0c09d5853e0f81356fdb1e7a93a1e04fa754f8713ae2"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-1029037071681775793",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "abe78f62abbdad3fa38d0c7962dbf787cdeee865147e0eabed1c9785102aa15d"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "4045647419470321487",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "4c3516cbc047a8abcaa36a375f9b04a89958bfe2c954cb8762eb4444b7b2d30b"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "2772973963390505720",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "1641a4cc1d8b104d05fe177cd4c02935337a0620583fbb858cc8771803ca5a9d"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-941922129345555720",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "95d7e512dbd2e081efbdf01cc4727e33d124f241615149b63e0dc25004a88585"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-4455183184845019928",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "46105e43261bc402611dd69284506c88b0b7829e8301b06d59a46c9bc1b1324e"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "3588385455900714216",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "27ea1dc70a023946486984c8001fa890e7b1b4fcbe7f25a335616022eb18e93f"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-8675837896953258554",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "f28a67fba2832f89358b7e71ac80f1bc6c83d513cc15309fab72abcb88b7f59f"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "384546188414918086",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "e716bf4358d56e6c4fee3d3303a45ee043e4c1ee0ec4d2bf9917d9e488ee3d23"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-3209417229118016309",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "2966515865c2c5daf01f775e2677704b21c6ee737671948013c4de97ec4f7c6c"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "338529351436858571",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "b53340897782ef893d82a3d48254630ea448df6a1d357ac6fd04a7f327b8eaa2"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "7089174607037328973",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "519ca62a0e20022a011d775bef32b6ad2cd5670cfddbd4cba907958d911fde91"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-5545361232508424627",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "4fe5e1238b556d3b69edef1195771ead710ce012fe926c9bb77077354e359ef1"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-7101897632894545759",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "715f65b5cb463dfefae59e4c9d9e254ff70b3e3b2d5fc81c25f96e8bbd6661e9"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-998105687832457055",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "379ac1e8c57dde37fc538386f070f67592d240cf202b3ee9ab63e17fd727fe36"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-2026359590569694333",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "335fc38199b2d8324b7149b6afbabde307f18240d685cdd7fd7f5949041004af"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "1417705814470175619",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "9a8e93fa25e454067135a4a18be3f94e552fbada29ef43c4ac56225fc5da58cc"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "5022729236171232656",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "9926f43f718a8cc8eb971e3d577f141e12743e56e27e2151ea3594718184a755"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-1468384970195036784",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "21e623a4d5656b858e49fc1b9b483ae1504db8e64dcb67fe90ab9fee249c2364"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-6530591307628396354",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "6c6b2b0b923496fd241f4fb635c6ef60f6e916661a359f488f6055f8c8dc76c8"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-5571759756248989506",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "82636dfc43323c99e80603262866102fe0179ff86892c43a0413231a2abde3fc"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "3896166760075043885",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "bd1f7eb840935d3a2be52953f9850ab65204342715de2716e4a3afcc257855b7"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "4242561015718421549",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "10cf9affefa0013a98afc7316dbfe886391b8332684a23b6183eb3aaa9014869"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "1459838406371290543",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "e63150b6da1920086bcc36d50e078f9fcd99c2a07042a92a709873284c6d96e9"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "1196044595615739311",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "23050b3111d20f7a34e5c87ea83ec8307ac5549bc77f1df9adb95fa41a12eb3f"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "2916100527522524533",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "4246a5686fe55835c49f355f8dde01ad08082662b2bed3850c41127d6522930d"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "1059409478593228149",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "08d39727961c5b966766d46878bbfdddf91f9cee09c0e7d6ee3ad744b1999edd"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "5019321273342734434",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "0c018b1f9c08920d6cfd5259d717348a9bc98bf57b6a51c691fe7ce0d80ef252"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "3377657861026984034",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "096ce27f9a334a8327bcc31f1c87ab7ebfc0bd45b5b198f517df8597d5d78b1d"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-4356733977811426644",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "449c42ae81e56ec67a757e3e8c5f4f2af59a0d2f151e481dc0eabbe909aa3a3a"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "5596160183855538860",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "eef384936a0808bb26139913c5ce5f9b73943dc74711ca020b8cae43eae12fc4"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-9102075397504915043",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "158a7a438df79fc64b00d58b9461d21ba323861a4741a517977af6cd83e89023"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-2986267080172918371",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "f995c84e71e70c77d32c26839d960933244c4f26676ee1eca3020d131db93f1b"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-1852777661076117235",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "7a356e6fd586138a404db6eb99f426543d914d7ae43cadac38857d3acca76a60"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-7512734209237358323",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "3c62ee43181888130b7e910618bb3dd1a2aacf5f88a41775bdb32755aede5145"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "4179423357626829485",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "c51e8302ed18713235900b608840e8054346673d2ab93fea7f5e86f9cda07f57"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-3908707861455680851",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "b4f874ded4ceb90c225339f86a67fdf0ec85485551a628f50da6683dda10e372"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "3045907116161637861",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "d8b3cc8bf5ac01e986c2a1b7f274fa1b47a53412aa5a04ba6a50e80514d1e637"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-4185475992600240667",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "c1607527f3bff816afe7fbbae8991e2558ac2dc5d1d53b94e75e0578ce76e82e"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-6866391382510886527",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "2bf86788c1bdb2d92549b40db5e0107be7251626029002fd95aab4c681f83106"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "54311071623848321",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "579c1b71abcce5ffe419d4805791e014ff83983b93fee317cf87fd7d6f86caf4"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "7612304093613097289",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "59af7a5f590b13e6c5406607570880e63ac7ea8b4862dd310585a7ebfbfba521"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "1702133812242776393",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "6c1ba0c87c8abcb5749f3af01fcdef368636fb1ab2d296954334955c8c43ceca"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-7890852079109747174",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "3e7a3d5e13a6922ca630122cd2ddeaebae0db4fa969d51de4ed8ffdfb64f54a6"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "6640331618693795354",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "c41c8ac2e3a81253f2199b24dbafdd51d15ca199b36240973d90c720b34b11df"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-863268423300107666",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "aa7366ef4d3f1adb525cf88253733fcd5b0f13f950902d01200a30df66882008"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-4088392839045533074",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "37fd492b4792ce2a7878b32ee00e1d24d2fbe132eec37bcd2e2dd4e259bf4839"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-6353930610277638950",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "57fe37c3392920f20486ac23b38187b3c9bebdecfb70cc43b666a49a31b02a91"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-1748387395760186150",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "2845df50a25d47f299c0979afb2cc02c26eb2c6f14af6137a95b138aa2745aaa"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-7079255037224736610",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "644524ac7994a21ec304661bd3b95d21e6db160313ba880ff4de23560c964a37"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-8145681295955580770",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "a77ac0c1281c924095321172712c2983c9bc636e03f6f18ccd4dd3e701165709"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-6683485797943164024",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "944e3ac0e86a5e1ec97de055c21279e64d39076fd335c44e2104216e380b8032"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-96962054562724984",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "a457ee80f47d858fb9e1812c18c786d88f94838e0a751e0b0ea8b674ad36f682"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-7872728295098351280",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "cd5925a252161dcb5920fd374ab0699c2fc2749016bd8664ba8f26dc1ed58d6c"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "3570202676486209872",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "489901fcd4efbd43906ccfda90c6984792415ff10e01e0d77b0055fd1b935a15"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "2383247692411838645",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "2119f13af502df54af444f036a9b639911b051cb37b765d5085e4a3a17b4229d"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "6335597294501372085",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "491c4d878d6428029923df31fa895eced920b79ca6379983ed5dc1735663a581"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "4458071311155305658",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "8aada259cb9c5008d486716d0ab41ba4245999c2514093b5478d8c84a6f1dcbf"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "147003381298404538",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "db82852e501eb3e5f2dd8f2bda77f6458000a70acf5b03c9adbf1107c0359718"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-8163129242399949537",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "dcf7e990e36724c4027d6197b89332128559ce9c27d59801fe15308a9f84c54a"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "7583637193770122527",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "5f154d1ad6fbd403bd6174500c33e3d3ba8de6d6aaa9ecc557d28c43dada3586"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-2910240539327412282",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "6843a76614420123efdb87faa32c1f160cfc8eb2087cf9e1bbf4401b14fc4bbd"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-8701990385494341690",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "9415451d782a90b4add87fd765bb580e2bf81d93be95da3ccc65d99c8f1f6242"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-5430044830433974553",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "4a051bc9673a46f1ea407c4169c949151822a46912796eb42cdba68b89a0c4bb"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "8809818967808370407",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "d09cd04b12b59cf610ff2cc48860f449c164b84fde88aab9328b12d8593117d9"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "7107131011788832072",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "7a51b162b6a031d5a6377fe1ebb24fcf36f48fa512b1dd46127bbbfb4718cda6"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "5152086477300301128",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "804fb83b0c6c9ddcac46ccab41cc07b3348d809f661830283459ab3b4d3ada4f"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "6853434381480758950",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "fb179cf40715580edf04d56021d64428354e6f4c34467c0807f4a855fc959a94"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-4883802006540448090",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "cb12669e717a0b4b17baf2781fa86e09c170d93482249ab72806460b294f63a6"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-3541814527006893170",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "0816d513ad22cafbc4291bd3a27d091c8753d65a98d4671f9b47e48f3ab4d54d"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "4929736358139960206",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "32ca1fdf8fd32b9588914a71cf2ac8fbf283b2a8760d3548d81a6bd4eafbeb46"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-3935964888074350208",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "291695cd3eabfe731547863b7e5a048b1887b258384ec717670743e85f454640"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-7460510106799697536",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "d16f54e2cdf75031c1759233089b12f5bc86d27fb23eb2a0383f985418d3c6d3"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "6474520031754301058",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "618610e5e1df39b426e1c9edbb2979e439b33ae34167ca96a0ca5d47ec8db727"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-6638696160864784766",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "5fab396026526f84cbde09a04777eb8e2c1d8cfa6cac097268680c367dc941bf"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "2716291933022807794",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "5e655a048cf6929ad801402a2567bf726c5ac35959f0a8878d985394ef8afe8c"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_pet.bundle",
+        "bundle_hash": "73a47cf60b4a2dfab446a719edcb8e42",
+        "path_id": "-8896134719619963150",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/73a47cf60b4a2dfab446a719edcb8e42.bundle",
+        "raw_size": 945473,
+        "raw_sha256": "2697186e399893745475906f77670656ba51adb62ea6a470d73d6a1c7d35f3b7",
+        "object_sha256": "f8d6ffcb4df87d61e03f00a5d49674d627f67ad6d6934fedd56d3adbcd85ab5a"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1600_atlas.bundle",
+        "bundle_hash": "0b43d99e4adb5855ce75429d2275e53c",
+        "path_id": "7105596776100114867",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0b43d99e4adb5855ce75429d2275e53c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 130484,
+        "bundle_sha256": "23cc3f8488e0832f0053417863797a908c8624640a19773bc98928f9847d27da",
+        "object_sha256": "3b772c0e04819bc19b1727a5859e5c24c460c9c59590c6c523cec21404ab878d"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1600_atlas.bundle",
+        "bundle_hash": "0b43d99e4adb5855ce75429d2275e53c",
+        "path_id": "-2140680722345719278",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0b43d99e4adb5855ce75429d2275e53c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 130484,
+        "bundle_sha256": "23cc3f8488e0832f0053417863797a908c8624640a19773bc98928f9847d27da",
+        "object_sha256": "ce437609e9397b5a291fa6485e72cd9f1016a8b9611ad6a63d63228fa6fd7573"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1600_atlas.bundle",
+        "bundle_hash": "0b43d99e4adb5855ce75429d2275e53c",
+        "path_id": "5766101480655063570",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0b43d99e4adb5855ce75429d2275e53c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 130484,
+        "bundle_sha256": "23cc3f8488e0832f0053417863797a908c8624640a19773bc98928f9847d27da",
+        "object_sha256": "4cfdf04bad0108fee130095864a04f571e03a535fb256de48f7080b15fed6c3c"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1601_atlas.bundle",
+        "bundle_hash": "43b2acd8c512a149f2fbec4eb9bb9a5a",
+        "path_id": "-7004418159124269728",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/43b2acd8c512a149f2fbec4eb9bb9a5a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 130609,
+        "bundle_sha256": "6b5a979366ee9558450e375ce69029d0af7d3efe5c6ed90532122c4b9fc3cc8a",
+        "object_sha256": "1d1b06d14278959b5cbb0dbe95667389dcc651996406bf540155ae99aac4aa37"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1601_atlas.bundle",
+        "bundle_hash": "43b2acd8c512a149f2fbec4eb9bb9a5a",
+        "path_id": "208676191608976163",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/43b2acd8c512a149f2fbec4eb9bb9a5a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 130609,
+        "bundle_sha256": "6b5a979366ee9558450e375ce69029d0af7d3efe5c6ed90532122c4b9fc3cc8a",
+        "object_sha256": "a946dd85275ca1048d4f6a598fc335f70830baa4e3415a7fcc898c8c5fdaabd2"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1601_atlas.bundle",
+        "bundle_hash": "43b2acd8c512a149f2fbec4eb9bb9a5a",
+        "path_id": "6369920085445522211",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/43b2acd8c512a149f2fbec4eb9bb9a5a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 130609,
+        "bundle_sha256": "6b5a979366ee9558450e375ce69029d0af7d3efe5c6ed90532122c4b9fc3cc8a",
+        "object_sha256": "1a2c1bcd63788bdffb7379e7910d151eb1b64b9f90fb5a2c4bb7ce6edc19ea45"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1602_atlas.bundle",
+        "bundle_hash": "f0b25648fd95e9268d4593e2437709b8",
+        "path_id": "-2777377695665208391",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f0b25648fd95e9268d4593e2437709b8.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 129491,
+        "bundle_sha256": "839ba21809762ac8ee6a9ed69554e739012fa07162d9977e897fa16db7de1f08",
+        "object_sha256": "d44275d45bbbde86839e4c10a602d6f3f64b20306c4b267e0aaba9a1bc89815e"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1602_atlas.bundle",
+        "bundle_hash": "f0b25648fd95e9268d4593e2437709b8",
+        "path_id": "6957471916403588397",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f0b25648fd95e9268d4593e2437709b8.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 129491,
+        "bundle_sha256": "839ba21809762ac8ee6a9ed69554e739012fa07162d9977e897fa16db7de1f08",
+        "object_sha256": "275af67fcdca41722c4b16d532bca486f9a8f121fdd2f9346faf1f3688a3a633"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1602_atlas.bundle",
+        "bundle_hash": "f0b25648fd95e9268d4593e2437709b8",
+        "path_id": "-2716540209634018003",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f0b25648fd95e9268d4593e2437709b8.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 129491,
+        "bundle_sha256": "839ba21809762ac8ee6a9ed69554e739012fa07162d9977e897fa16db7de1f08",
+        "object_sha256": "c4396a68827fbea5f8910730275205380a426c4dde5a4ff71e048edf5e620033"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1603_atlas.bundle",
+        "bundle_hash": "ec5cfdb186b5ec7eb5ed76d6e06ab4e9",
+        "path_id": "-6837373381308480454",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ec5cfdb186b5ec7eb5ed76d6e06ab4e9.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 121989,
+        "bundle_sha256": "a4bd7aee27c756a793208708a252b3e2bde73c3d71b854ad938a3b910e10ea8b",
+        "object_sha256": "2fcad2b4258436269cbcd265c8ecb16e5ba657c112112be56bf67b4b15ebc67e"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1603_atlas.bundle",
+        "bundle_hash": "ec5cfdb186b5ec7eb5ed76d6e06ab4e9",
+        "path_id": "2746513834335906445",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ec5cfdb186b5ec7eb5ed76d6e06ab4e9.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 121989,
+        "bundle_sha256": "a4bd7aee27c756a793208708a252b3e2bde73c3d71b854ad938a3b910e10ea8b",
+        "object_sha256": "1c5f2670b0e4c3d9c209ac75275ea1ebb4e95e2eecd721e568ecd31b252b44e5"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1603_atlas.bundle",
+        "bundle_hash": "ec5cfdb186b5ec7eb5ed76d6e06ab4e9",
+        "path_id": "2046278840156793485",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ec5cfdb186b5ec7eb5ed76d6e06ab4e9.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 121989,
+        "bundle_sha256": "a4bd7aee27c756a793208708a252b3e2bde73c3d71b854ad938a3b910e10ea8b",
+        "object_sha256": "3d11330d9247f3a5026c94d4349352f5e56f0bf86119b3b3d64d10dbb5b2dc94"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1604_atlas.bundle",
+        "bundle_hash": "4c0ae2d448bc0047937ddf96ce3bb67a",
+        "path_id": "8811572714106565285",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/4c0ae2d448bc0047937ddf96ce3bb67a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 132631,
+        "bundle_sha256": "098a6c979a41179d2ecb4edd39dec54bab6aa9212776a6746224caf8a7edcd1b",
+        "object_sha256": "413b742560927051b3dacb1d77ba93a9217cbf2e954c8a52cc4d8ddc34518ee4"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1604_atlas.bundle",
+        "bundle_hash": "4c0ae2d448bc0047937ddf96ce3bb67a",
+        "path_id": "-6789581513341908064",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/4c0ae2d448bc0047937ddf96ce3bb67a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 132631,
+        "bundle_sha256": "098a6c979a41179d2ecb4edd39dec54bab6aa9212776a6746224caf8a7edcd1b",
+        "object_sha256": "bc95f6bc6367d15e0b7cf9aa7c1e941a91b1819851bc63e111c5ac441b90d989"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1604_atlas.bundle",
+        "bundle_hash": "4c0ae2d448bc0047937ddf96ce3bb67a",
+        "path_id": "2748582322590469024",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/4c0ae2d448bc0047937ddf96ce3bb67a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 132631,
+        "bundle_sha256": "098a6c979a41179d2ecb4edd39dec54bab6aa9212776a6746224caf8a7edcd1b",
+        "object_sha256": "8b1d0e76e63808311734aa60a3f80cfdd86973c607e75abe22e1add43e09bfdd"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1605_atlas.bundle",
+        "bundle_hash": "2d00a595b57a43f33434f3dc76f1932b",
+        "path_id": "-95204352723948162",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2d00a595b57a43f33434f3dc76f1932b.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 134346,
+        "bundle_sha256": "1311aae1c89a42bddcbf3c975a6faaba3ccca872684e57f899eb0592f11498b5",
+        "object_sha256": "134c9b7f21fba01745eb004e8149b021c5c81ddf4648571fa914942402fc8d1e"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1605_atlas.bundle",
+        "bundle_hash": "2d00a595b57a43f33434f3dc76f1932b",
+        "path_id": "-5947508485857689176",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2d00a595b57a43f33434f3dc76f1932b.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 134346,
+        "bundle_sha256": "1311aae1c89a42bddcbf3c975a6faaba3ccca872684e57f899eb0592f11498b5",
+        "object_sha256": "27a6bbf96286b8105beaffc947c4e5d30d54f03a69690df092787a2c71ea0dc0"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1605_atlas.bundle",
+        "bundle_hash": "2d00a595b57a43f33434f3dc76f1932b",
+        "path_id": "-4927558528702037592",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2d00a595b57a43f33434f3dc76f1932b.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 134346,
+        "bundle_sha256": "1311aae1c89a42bddcbf3c975a6faaba3ccca872684e57f899eb0592f11498b5",
+        "object_sha256": "71c2e76ce122334872eae1d86706c56f70366e83a920a0f1219e1ecad559c130"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1606_atlas.bundle",
+        "bundle_hash": "3ee66fe4d795146f331b67db0ff8f851",
+        "path_id": "9067956630912972342",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3ee66fe4d795146f331b67db0ff8f851.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 128694,
+        "bundle_sha256": "4d31812f3a6611f16edd30c4a444a270d5a11c500acefbfad64547706eda2d8c",
+        "object_sha256": "26f864e135808fcab8b22ce2bb59b9fd71ce6dfc80771c0c1ba1f4740271b9d3"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1606_atlas.bundle",
+        "bundle_hash": "3ee66fe4d795146f331b67db0ff8f851",
+        "path_id": "-4469592331014231570",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3ee66fe4d795146f331b67db0ff8f851.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 128694,
+        "bundle_sha256": "4d31812f3a6611f16edd30c4a444a270d5a11c500acefbfad64547706eda2d8c",
+        "object_sha256": "d6da79aeff880ffb76ebf8a840cb67cdf895c48c05e9f5ab16a63b12332eb030"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1606_atlas.bundle",
+        "bundle_hash": "3ee66fe4d795146f331b67db0ff8f851",
+        "path_id": "4491239990745770478",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3ee66fe4d795146f331b67db0ff8f851.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 128694,
+        "bundle_sha256": "4d31812f3a6611f16edd30c4a444a270d5a11c500acefbfad64547706eda2d8c",
+        "object_sha256": "7e3cff7e60306c4234607c4e73a76522fdb1fd6d2fa913a28f17dd9cd580062a"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1607_atlas.bundle",
+        "bundle_hash": "802ff01cbdee29ac6e417470b8cac2a0",
+        "path_id": "2192916661614080364",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/802ff01cbdee29ac6e417470b8cac2a0.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 121678,
+        "bundle_sha256": "0b1e047130e000474c72e9200d46f6c9b2d0b1c448bd959473d9339046faeeb2",
+        "object_sha256": "470007c304e77dd57fc4411deb4b478bee22206c71ffd44b4406454fe43702f1"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1607_atlas.bundle",
+        "bundle_hash": "802ff01cbdee29ac6e417470b8cac2a0",
+        "path_id": "6441653315379866369",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/802ff01cbdee29ac6e417470b8cac2a0.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 121678,
+        "bundle_sha256": "0b1e047130e000474c72e9200d46f6c9b2d0b1c448bd959473d9339046faeeb2",
+        "object_sha256": "c077570b7837ed931147fb75c03fc9a4ef8e739e5f2772efa5b00e2d325945bf"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1607_atlas.bundle",
+        "bundle_hash": "802ff01cbdee29ac6e417470b8cac2a0",
+        "path_id": "-878615894086374655",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/802ff01cbdee29ac6e417470b8cac2a0.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 121678,
+        "bundle_sha256": "0b1e047130e000474c72e9200d46f6c9b2d0b1c448bd959473d9339046faeeb2",
+        "object_sha256": "1eb313d6bdafade06b427b80ee4f725311a2409dd86c3c08f083f52e69390c5e"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1608_atlas.bundle",
+        "bundle_hash": "7faeec51f3c39610070af86757f6f82e",
+        "path_id": "-6262379229191626473",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/7faeec51f3c39610070af86757f6f82e.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 126536,
+        "bundle_sha256": "b0d8b77d06d586daf0b581f667dc619ba8ec1323a2a4ea8964388c52020145db",
+        "object_sha256": "5c11fc7877935617b1f139c389e4aa051a0da959be138682239356828bdd9273"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1608_atlas.bundle",
+        "bundle_hash": "7faeec51f3c39610070af86757f6f82e",
+        "path_id": "3434499759825850957",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/7faeec51f3c39610070af86757f6f82e.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 126536,
+        "bundle_sha256": "b0d8b77d06d586daf0b581f667dc619ba8ec1323a2a4ea8964388c52020145db",
+        "object_sha256": "a1b1847ba2e896e22bef625604b8a80d40f21ac108e54ed48dd4a2f4a0bc76c8"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1608_atlas.bundle",
+        "bundle_hash": "7faeec51f3c39610070af86757f6f82e",
+        "path_id": "4376754287267385933",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/7faeec51f3c39610070af86757f6f82e.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 126536,
+        "bundle_sha256": "b0d8b77d06d586daf0b581f667dc619ba8ec1323a2a4ea8964388c52020145db",
+        "object_sha256": "abdd77f41deb339bf34924f746f67e3df6e62e911455e17d5becde5caeb8dd15"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1609_atlas.bundle",
+        "bundle_hash": "f11b56b97ee78c9670aab024f9741d83",
+        "path_id": "7075392475070647219",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f11b56b97ee78c9670aab024f9741d83.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 170891,
+        "bundle_sha256": "7448906a4c7e8ce77b2b31292a6291f603da673d012acaef173da80f88501098",
+        "object_sha256": "8793248fc3b247749e9e19e0a98235e147377b61ed3fc912bd9fd9a757f1f615"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1609_atlas.bundle",
+        "bundle_hash": "f11b56b97ee78c9670aab024f9741d83",
+        "path_id": "-3147664538316494503",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f11b56b97ee78c9670aab024f9741d83.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 170891,
+        "bundle_sha256": "7448906a4c7e8ce77b2b31292a6291f603da673d012acaef173da80f88501098",
+        "object_sha256": "972783c72b651e5ec9462128b928e4f8c006fa33b78c5bdfd64210ac7fd32811"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1609_atlas.bundle",
+        "bundle_hash": "f11b56b97ee78c9670aab024f9741d83",
+        "path_id": "6058262566595668313",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f11b56b97ee78c9670aab024f9741d83.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 170891,
+        "bundle_sha256": "7448906a4c7e8ce77b2b31292a6291f603da673d012acaef173da80f88501098",
+        "object_sha256": "2ae7f22d47f589bf1465ec786ff489c4813132c0cbd7611f79b62bb369c79d1b"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1610_atlas.bundle",
+        "bundle_hash": "91e4e1cecf99bcf473469dea34b6273e",
+        "path_id": "2802127336360002501",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/91e4e1cecf99bcf473469dea34b6273e.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 167331,
+        "bundle_sha256": "5c021eb2f119b6c8c9dc45c8965a6b29cc530f3c5459c66825bf5b0f02504a4f",
+        "object_sha256": "ec3266aa1eed27a7a55465b87f3fafa702ce9b190e249ed5377e81c77303c989"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1610_atlas.bundle",
+        "bundle_hash": "91e4e1cecf99bcf473469dea34b6273e",
+        "path_id": "1017884853230592661",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/91e4e1cecf99bcf473469dea34b6273e.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 167331,
+        "bundle_sha256": "5c021eb2f119b6c8c9dc45c8965a6b29cc530f3c5459c66825bf5b0f02504a4f",
+        "object_sha256": "35b2733e647e1f29fb37535ed77a74eb101765b07a44a423ee115db8c43c02b1"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1610_atlas.bundle",
+        "bundle_hash": "91e4e1cecf99bcf473469dea34b6273e",
+        "path_id": "5098276076701966997",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/91e4e1cecf99bcf473469dea34b6273e.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 167331,
+        "bundle_sha256": "5c021eb2f119b6c8c9dc45c8965a6b29cc530f3c5459c66825bf5b0f02504a4f",
+        "object_sha256": "ba8ba7ee030d1fb39baa099ca2eaa3b9f215b91eaa6c2f588c8034de71e5ec13"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1611_atlas.bundle",
+        "bundle_hash": "6e1c156e236f9c2f2c8739b894bf298e",
+        "path_id": "3880284111178337412",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6e1c156e236f9c2f2c8739b894bf298e.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 172974,
+        "bundle_sha256": "d2ff5435514a1f4d4c87e7a177c1c6da33717121fad717acc05b6e9c51f3d0d4",
+        "object_sha256": "74b6bce709ef582a8fbdc6b4fa1f8484f7b5b7153beb75e8960714a6982cb9ca"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1611_atlas.bundle",
+        "bundle_hash": "6e1c156e236f9c2f2c8739b894bf298e",
+        "path_id": "-1050839763596076576",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6e1c156e236f9c2f2c8739b894bf298e.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 172974,
+        "bundle_sha256": "d2ff5435514a1f4d4c87e7a177c1c6da33717121fad717acc05b6e9c51f3d0d4",
+        "object_sha256": "4b91c28b34ef92a0bebc6eedcde58ed30938829024612cd1c62c81be3cdfed56"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1611_atlas.bundle",
+        "bundle_hash": "6e1c156e236f9c2f2c8739b894bf298e",
+        "path_id": "6374790838467303904",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6e1c156e236f9c2f2c8739b894bf298e.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 172974,
+        "bundle_sha256": "d2ff5435514a1f4d4c87e7a177c1c6da33717121fad717acc05b6e9c51f3d0d4",
+        "object_sha256": "93c80454cdc21b90827150c9c07ab8c0e02da619ab1c3032f44e4459a51add47"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_petunknown_noatlas.bundle",
+        "bundle_hash": "9c32d7565254b7b73cfa2468a2bef36c",
+        "path_id": "7070474248574221571",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/9c32d7565254b7b73cfa2468a2bef36c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 44695,
+        "bundle_sha256": "a163a09475b5515f6f8674beb50fdf3ebf05eafd1bf77558078c0d1587d3b861",
+        "object_sha256": "2f663a08e27305db29d2ee18a89987bccf437f811c084e7513ebc1a0d93a6402"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_petunknown_noatlas.bundle",
+        "bundle_hash": "9c32d7565254b7b73cfa2468a2bef36c",
+        "path_id": "7652172581196741891",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/9c32d7565254b7b73cfa2468a2bef36c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 44695,
+        "bundle_sha256": "a163a09475b5515f6f8674beb50fdf3ebf05eafd1bf77558078c0d1587d3b861",
+        "object_sha256": "b588b9190e64ea28e4c394ec32511ba5c5c3440ac4c5eecdd68038a50fb68c5c"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1613_atlas.bundle",
+        "bundle_hash": "4c7c24027fe25eab79d09ead11b9e41b",
+        "path_id": "4446414260117489733",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/4c7c24027fe25eab79d09ead11b9e41b.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 127996,
+        "bundle_sha256": "1a4a2845637d2609cd1d1fc166a0ea968c5982a7398e1913cd86b33a670125ac",
+        "object_sha256": "23bb23a737fe994980122b0c45d40f547a55ab0d38ae241482b8d3f138ed9535"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1613_atlas.bundle",
+        "bundle_hash": "4c7c24027fe25eab79d09ead11b9e41b",
+        "path_id": "3082658148312801525",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/4c7c24027fe25eab79d09ead11b9e41b.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 127996,
+        "bundle_sha256": "1a4a2845637d2609cd1d1fc166a0ea968c5982a7398e1913cd86b33a670125ac",
+        "object_sha256": "b24064c9f107d06be6b307a9e03e0b997682fa1c1c1e5ca6322906eb89d9b62c"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1613_atlas.bundle",
+        "bundle_hash": "4c7c24027fe25eab79d09ead11b9e41b",
+        "path_id": "-6942824745855753995",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/4c7c24027fe25eab79d09ead11b9e41b.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 127996,
+        "bundle_sha256": "1a4a2845637d2609cd1d1fc166a0ea968c5982a7398e1913cd86b33a670125ac",
+        "object_sha256": "f610c609348219cd7d3bc6bb0c2c89726fbfa629de048ca5c1e5c90d7b68321c"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1614_atlas.bundle",
+        "bundle_hash": "bb03a8a3035904bc1ea3f52628bf829e",
+        "path_id": "-3053614951470167335",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/bb03a8a3035904bc1ea3f52628bf829e.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 166900,
+        "bundle_sha256": "0e25a0bf5f030958023f9dcdd3cdee114cede765de8e1e2341e236d2b51d9035",
+        "object_sha256": "0836081127bf244dd91e9726c977145546d185722427602ce15355772aba3bd7"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1614_atlas.bundle",
+        "bundle_hash": "bb03a8a3035904bc1ea3f52628bf829e",
+        "path_id": "-5014861041739680409",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/bb03a8a3035904bc1ea3f52628bf829e.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 166900,
+        "bundle_sha256": "0e25a0bf5f030958023f9dcdd3cdee114cede765de8e1e2341e236d2b51d9035",
+        "object_sha256": "cf6a7aed99dedc6ff506f01f54c3302ffb3c6b74ba600ceedce5ea76e2257d68"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1614_atlas.bundle",
+        "bundle_hash": "bb03a8a3035904bc1ea3f52628bf829e",
+        "path_id": "7990411761639241063",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/bb03a8a3035904bc1ea3f52628bf829e.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 166900,
+        "bundle_sha256": "0e25a0bf5f030958023f9dcdd3cdee114cede765de8e1e2341e236d2b51d9035",
+        "object_sha256": "de2905a7b275b053da5c47558bccba47a42bebe39be21222331dad84bd14a381"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1615_atlas.bundle",
+        "bundle_hash": "8c4ae0c9ef317037e6ee445622a91722",
+        "path_id": "-2067520306489535899",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/8c4ae0c9ef317037e6ee445622a91722.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 127403,
+        "bundle_sha256": "42a5a3a10848da4ea6d7f890b3a73e80d8b4635fad4f8642a812d87fa5c7e2ba",
+        "object_sha256": "98c3af89b934529c46b658d7814125438b0b6e652843fc154392867cea599733"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1615_atlas.bundle",
+        "bundle_hash": "8c4ae0c9ef317037e6ee445622a91722",
+        "path_id": "3005584607332913299",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/8c4ae0c9ef317037e6ee445622a91722.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 127403,
+        "bundle_sha256": "42a5a3a10848da4ea6d7f890b3a73e80d8b4635fad4f8642a812d87fa5c7e2ba",
+        "object_sha256": "5bfcde2dace1bf15b7ef5c54c12f8da257289c876ac0b89f7ff2a9f40ee5ebb1"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1615_atlas.bundle",
+        "bundle_hash": "8c4ae0c9ef317037e6ee445622a91722",
+        "path_id": "-1857829516544716653",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/8c4ae0c9ef317037e6ee445622a91722.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 127403,
+        "bundle_sha256": "42a5a3a10848da4ea6d7f890b3a73e80d8b4635fad4f8642a812d87fa5c7e2ba",
+        "object_sha256": "83743262d8e1bc7ed425ba0584967947e82d4943c65960c37f167b80d2f7b726"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1616_atlas.bundle",
+        "bundle_hash": "4774966314be350f4cb9c0d057a5a107",
+        "path_id": "-3578777597715160116",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/4774966314be350f4cb9c0d057a5a107.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 127787,
+        "bundle_sha256": "7386aaf29258d2249a6bbc87cb2e6712956ffe33e4cc6f4847c81accdf97930c",
+        "object_sha256": "f2e5b43371b975b23990be9e9e57383e704edd0bd3ef5d2ad4880b13937094a5"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1616_atlas.bundle",
+        "bundle_hash": "4774966314be350f4cb9c0d057a5a107",
+        "path_id": "-7667499602713212703",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/4774966314be350f4cb9c0d057a5a107.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 127787,
+        "bundle_sha256": "7386aaf29258d2249a6bbc87cb2e6712956ffe33e4cc6f4847c81accdf97930c",
+        "object_sha256": "10d7a944741ff302ef4c20648b5caf9c98e03f8cab312945a0bcfaf104341910"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1616_atlas.bundle",
+        "bundle_hash": "4774966314be350f4cb9c0d057a5a107",
+        "path_id": "4699217904842475745",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/4774966314be350f4cb9c0d057a5a107.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 127787,
+        "bundle_sha256": "7386aaf29258d2249a6bbc87cb2e6712956ffe33e4cc6f4847c81accdf97930c",
+        "object_sha256": "a0f09a12d35da1144964b5260353e6251fbb550bc6859e0f424561e378924fcb"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1617_atlas.bundle",
+        "bundle_hash": "841bb215fc03378a3452cada647cad78",
+        "path_id": "-6837351530823736351",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/841bb215fc03378a3452cada647cad78.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 119773,
+        "bundle_sha256": "133eecd10979f4bf306a90d066beb8144092d425ae2d20403854f7a4ad164d56",
+        "object_sha256": "7a02d807cabb1f7e2d4d6ada75415415041c292b7cd9729448606980ca6a52d6"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1617_atlas.bundle",
+        "bundle_hash": "841bb215fc03378a3452cada647cad78",
+        "path_id": "-5781285842370602881",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/841bb215fc03378a3452cada647cad78.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 119773,
+        "bundle_sha256": "133eecd10979f4bf306a90d066beb8144092d425ae2d20403854f7a4ad164d56",
+        "object_sha256": "00c4d1470bff1ae20f5634ff0dfdacca1e32c6bf6ddf6297100bc494008c2c32"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1617_atlas.bundle",
+        "bundle_hash": "841bb215fc03378a3452cada647cad78",
+        "path_id": "6238388027219204223",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/841bb215fc03378a3452cada647cad78.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 119773,
+        "bundle_sha256": "133eecd10979f4bf306a90d066beb8144092d425ae2d20403854f7a4ad164d56",
+        "object_sha256": "424af53f8fcb17631946dde081a1c62e2d906afe6c7693f7db6aa50e95fcac97"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_monsterskill_lcommon_noatlas.bundle",
+        "bundle_hash": "586e9d56c6219b434ceca951d5d96b82",
+        "path_id": "9058921902931976051",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/586e9d56c6219b434ceca951d5d96b82.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 902905,
+        "bundle_sha256": "66abc18ef3a5e3e2e8c444e839dbce3ba70c576d7d14e9ab61b0367839fa9bcb",
+        "object_sha256": "abb11fac2c9b03a4f3c0210c0b4f1ff7c0212412dc39398250e070887595d11f"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_monsterskill_lcommon_noatlas.bundle",
+        "bundle_hash": "586e9d56c6219b434ceca951d5d96b82",
+        "path_id": "6494787423861022579",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/586e9d56c6219b434ceca951d5d96b82.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 902905,
+        "bundle_sha256": "66abc18ef3a5e3e2e8c444e839dbce3ba70c576d7d14e9ab61b0367839fa9bcb",
+        "object_sha256": "c153a1053a6feb1fe9ef2367a62901de2fcea073011c4cb1da7a92b85cc289ab"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1620_atlas.bundle",
+        "bundle_hash": "0fb425f595897d7bcb5ad057e1f2a5b8",
+        "path_id": "2847738441669442547",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0fb425f595897d7bcb5ad057e1f2a5b8.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 167850,
+        "bundle_sha256": "f7f5db28de485ad6c616fb8fe9ca2be7a6693a903e4700402f58f2000bfdfe84",
+        "object_sha256": "fddb4587432dd7726224ef7c240483c3ff52830a5d140311813083fc360c78bd"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1620_atlas.bundle",
+        "bundle_hash": "0fb425f595897d7bcb5ad057e1f2a5b8",
+        "path_id": "4215620853994004926",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0fb425f595897d7bcb5ad057e1f2a5b8.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 167850,
+        "bundle_sha256": "f7f5db28de485ad6c616fb8fe9ca2be7a6693a903e4700402f58f2000bfdfe84",
+        "object_sha256": "3d04a049e2d15a427d2319bd9e4d8b76157680c24c6c98089c013a660406a683"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1620_atlas.bundle",
+        "bundle_hash": "0fb425f595897d7bcb5ad057e1f2a5b8",
+        "path_id": "157448953876619710",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0fb425f595897d7bcb5ad057e1f2a5b8.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 167850,
+        "bundle_sha256": "f7f5db28de485ad6c616fb8fe9ca2be7a6693a903e4700402f58f2000bfdfe84",
+        "object_sha256": "b83a05ab7b36e69320f40bacbfe2a52661ef8d6ea4ab4f3f027ea2896e6651f2"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1622_atlas.bundle",
+        "bundle_hash": "094cfdf22cd67188ef096572935c2b32",
+        "path_id": "-2369782297117917313",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/094cfdf22cd67188ef096572935c2b32.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 132798,
+        "bundle_sha256": "ecfeb0fe0c88a7ca52702fa4748c305150beeae0014d98bce252d8704905a1b7",
+        "object_sha256": "cb83bf7955c85a699f78335bdc0182f018b26aa876a824beb3455b86ee4ab831"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1622_atlas.bundle",
+        "bundle_hash": "094cfdf22cd67188ef096572935c2b32",
+        "path_id": "7567820621766258199",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/094cfdf22cd67188ef096572935c2b32.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 132798,
+        "bundle_sha256": "ecfeb0fe0c88a7ca52702fa4748c305150beeae0014d98bce252d8704905a1b7",
+        "object_sha256": "2dba92e227084fce73e67110276b25b23374a48c21efb75dae7d06a27665a1b6"
+      },
+      {
+        "bundle": "defaultpackage_assets_image_itemicon_petskill_pet1622_atlas.bundle",
+        "bundle_hash": "094cfdf22cd67188ef096572935c2b32",
+        "path_id": "-7442189182012559849",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/094cfdf22cd67188ef096572935c2b32.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 132798,
+        "bundle_sha256": "ecfeb0fe0c88a7ca52702fa4748c305150beeae0014d98bce252d8704905a1b7",
+        "object_sha256": "1d644b6aba774548d17fd1914c3fb23a7b34a91136ae09b6c0c065f30b15ed76"
+      }
+    ],
+    "outputs": [
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1600.png",
+        "sha256": "0c4861780c75e443dc04e9a551b1a2d1bb39e8ee5b39132c2893cbe46cf702a4"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1600.png.meta",
+        "sha256": "a4e7df0853ae66ebf25ae5023c1a8fd44fa2cfab6592a035756c0bb8e1f54642"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1700.png",
+        "sha256": "9803d893d3ab084d1a3b17e1461954ce2f43f81aa97795d87a5cb4dca44b4da5"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1700.png.meta",
+        "sha256": "864d84df40924abc2fd01e4e4539f6a68cd469cbfe006cc8c4c8120a8e8b4d16"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1601.png",
+        "sha256": "13373f7087bdd06da92eb388ba4a73fa937f5bc51320fc0ea5ad10690424f962"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1601.png.meta",
+        "sha256": "de52cbe2a5e49b8af83e3b7d1c4bd0ccf32599916b0fde65d3da8a02c91b64bf"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1701.png",
+        "sha256": "2944d7884a75aa466913e233cf93812a750c14c42eec795e97853079ec7ac375"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1701.png.meta",
+        "sha256": "e6f4484c2223d0e1ae113766234d850fff648df63f9153e1880fad9b9e3fbf8a"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1602.png",
+        "sha256": "269c285553efaf25d8468a8761df6895cffbdacc0713a8ae3b9d8b5ff440f9a4"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1602.png.meta",
+        "sha256": "3c3a676fb37c456297f87f67732243ff79de15e7bb844966ea93e590002658e3"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1702.png",
+        "sha256": "635c6647dc462b45b9f1d0c0987f04afb0f3172f3df547cf67acc7c360c6ba19"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1702.png.meta",
+        "sha256": "f7b39fabe3c6469b34367f22d4bee3bb14a52193efa4b32e5adf268feaf63256"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1603.png",
+        "sha256": "929c543f683a059b5f726d952b7fec488d4a9d282e45659e95532d24a54614d1"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1603.png.meta",
+        "sha256": "5042a3c00d5d5d7ec475f50f0da89b6b2fc981786c6eea70a0b296352180933a"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1703.png",
+        "sha256": "b61b3274c4c3b5d6cbce479017a11dbf3780b0a495bb5376a60985e728cc2a1d"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1703.png.meta",
+        "sha256": "8e09c7d337cb1aea753b0ddf18725f526127df86a89434d2d11e1baee7182d98"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1604.png",
+        "sha256": "1d00c891738a2a497ffe9960615134a816a5e152b383e86bb3aa0f5d9e47b4a0"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1604.png.meta",
+        "sha256": "ebe10b30883ce19d9b341f150e5182321f552dbcdca7c1148f42183a29036ff6"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1704.png",
+        "sha256": "f2ed997e489bbbb61320965096f937d87f1a22724806e9381d8f0bd2eb6a449d"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1704.png.meta",
+        "sha256": "da260f9e6ec4435cbf4ba6326b18e787e7fa5057b4728057caf63d34844c7f26"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1605.png",
+        "sha256": "928478c74b87518d00632cc77d1f30c443eaf62d98eb091259ea6cf4d7286ea4"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1605.png.meta",
+        "sha256": "964837c0304bbd455895c47d6baeab328ed3ea8af0283aa2430922a8379f61b4"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1705.png",
+        "sha256": "e02f8874af792429dd88034a13d782e5a59692e579d5f0d352d5eefdbf0864cd"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1705.png.meta",
+        "sha256": "fa828432a1123cce2595e264986ad00172ed74396f2fec065c0e4bcb71742bd0"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1606.png",
+        "sha256": "c9c66b4a6c71d70ca99c8cc147ec0f970104fbec2ba3282dd35578edc8a9b58c"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1606.png.meta",
+        "sha256": "cc22abf7c20bf19477eefabf52c5362dbca15e39dafa6fca76deb2a1237375c0"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1706.png",
+        "sha256": "9ff74abe4d25219c0e6d1a0952ed2f26d088f85dd9508d1c2d5f3939ded33960"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1706.png.meta",
+        "sha256": "415b3b39d3312f7e29ce2dae2466f75d9784b2bf28e32efda0d6048e99c86ae2"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1607.png",
+        "sha256": "8977e962cd316d7690228e7a84d17259c8280c2b7ffc8edda710683f32d4d0f3"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1607.png.meta",
+        "sha256": "af06090e9c9117345c2f9632ceae0ac8b01e496151e50c400ed57210637cf157"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1707.png",
+        "sha256": "cc0d2eaa231cbbcd3b1e2fe2c8ed8d6d25594600c2c686b3753e4d6fadde213b"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1707.png.meta",
+        "sha256": "77200977d9632abd70d7d2b6982e246d9a14ee80383312338fdda19c9df24807"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1608.png",
+        "sha256": "d0d224ef88664f0833cf191e0ff824622bb983d300f141cc2a53bb17982da96a"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1608.png.meta",
+        "sha256": "0b48865149c342b3ff80fd1949ce217df0e19385e99e6bd7fedad8abdc785675"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1708.png",
+        "sha256": "733a2ccffd062a360c39b453fb0861d252a61261faabaed322deda52977db092"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1708.png.meta",
+        "sha256": "c3723aa2a6265b3e48cbc5af48bb6ae7386809f2f9b5d784e885a1198ac192c5"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1609.png",
+        "sha256": "985f2501c45cf89074d9ab82ca440cd70129966ab4dbe04c9bf6aad8af5fe000"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1609.png.meta",
+        "sha256": "d4b292312fb13edc1108eddb00aaa0acd853ea60e748c822dbeee567fdd73c59"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1709.png",
+        "sha256": "37265c6f55af6b718679cca1598a808d7c0885aac0aae86248f82f41fe73f8c7"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1709.png.meta",
+        "sha256": "fc0233498350327c5b9291e2ff68847280d44493c9635ea3148ebe4c5b72103f"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1610.png",
+        "sha256": "a3178a57abcf25fd0cbb965d5587a7deb15f3de5375123343993a02e9504dcab"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1610.png.meta",
+        "sha256": "ffe14e07846b92a16a5ae1bd33bcff5cafd1d4fb9ea90657a8d7a408dd9b6df6"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1710.png",
+        "sha256": "3e7c7f42733c254111e4f7bf2ee44957dd8c855a569196621d729724f3fb53b1"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1710.png.meta",
+        "sha256": "b01133eb5c17f5275a53d8c13a6edeb8684be5cc42f87e7aac5e28fb1eb432de"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1611.png",
+        "sha256": "6fa48e95ade2c5ee5996f1c3aa1dd95b5a3d2bdee14b0da528eed523bdccb5f1"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1611.png.meta",
+        "sha256": "75ce78305381e1bd19eb2c4e81d26a0e6edd5d2d3dfced01cac41418128a78d9"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1711.png",
+        "sha256": "8c00354f0d746e930e7faac927c1abfc9ef2ae353e82ad0a3b9aa44368782706"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1711.png.meta",
+        "sha256": "b235014f001ded036f7c18ffbdbd43e6c6398d5a4c6d35cf45ade56b81b0e39c"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1612.png",
+        "sha256": "4e89e2c37a1c92152f2361ef848839c34c5447fc83599611817afe5d29768926"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1612.png.meta",
+        "sha256": "a22d3f6fd8fab1287f098768c4d885fb31dbf152eaa0d66d1550db639733b45c"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1613.png",
+        "sha256": "eeda223a78cb3c9add21ed3838c45b89f1b90d72ce4f21d33b2355ba91bdabdd"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1613.png.meta",
+        "sha256": "7d73e71f07fb29ca4135f16b0637846a4590bcf42ca4503232d77b3cdb3e516b"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1713.png",
+        "sha256": "53c6cfdfee16fdd356585c911471730f138d816774a50c00d7c330eb5a82f312"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1713.png.meta",
+        "sha256": "e416b9ec761505e13823a3dff9cdac465bf351ace11af4fd67670b92ffa40b2e"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1614.png",
+        "sha256": "ba34375b895389db7744921faa9d6f0e230138ca398f31710f61088b37bed186"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1614.png.meta",
+        "sha256": "6fe477a6c21f7d1a41d90a66647c5482f875954b0a9ec9179260e792f824c5e1"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1714.png",
+        "sha256": "4dbe3ef17309f60d2b4f1a4a982d71c4af2bb9115dd224001f7a37b02d983794"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1714.png.meta",
+        "sha256": "6e9a40ae57373dea94b9e09e3fb69449ee9f7990fe132827f95bc037fd8986d7"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1615.png",
+        "sha256": "c0b55ece0adbf91d21fb51b072c9ed799032848a4981820af6e5d44a399eb58f"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1615.png.meta",
+        "sha256": "ee4032f77a68bec5c2ab0a049aa90771285a815d097aad2f0715e427769d87fc"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1715.png",
+        "sha256": "999b7e773ede0ccba1526751734b4aec3a3e8220f4659dffbe550073ad50828b"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1715.png.meta",
+        "sha256": "47bd0f279ccfd5a4b42173633f6be8cd5115501b70ad9d84698934f788e2a954"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1616.png",
+        "sha256": "7054d46ba5608c13bd891be8bba0077d85b9c3c4f6e97fcb0e2ccb21e50259c4"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1616.png.meta",
+        "sha256": "bad6016e940dd3974ff9a3c1c90575577d378e7c2340759cef9ff2a5ec5d3616"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1716.png",
+        "sha256": "57d8d880b14cc6368dc6eaaa1933c20035a9958475164edb9bb23df7282bcb39"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1716.png.meta",
+        "sha256": "4f723b1c049b93490023562d17ecb5672b869da79990bb648f77a805934bccfd"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1617.png",
+        "sha256": "af9edb5795d33f6a1a0ab3c60df58a11576f6a3eebccd99fc891908d9044ad17"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1617.png.meta",
+        "sha256": "cec0564571c233fb808a564691e2fd4af264f302ca42ee73347df7d214de6cb0"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1717.png",
+        "sha256": "175d851c099099aff83edabe16f30856876d050565aadb2477d55da1fdae17ff"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1717.png.meta",
+        "sha256": "69a144ecd204c3f3268150638b06c6d2fdd5f820908a2aa6e864aaeb425d4fcf"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1620.png",
+        "sha256": "8b49f15ea019d9287647e1368a7406a470a5d6fb6272c4ad0537e5e4b3d92d27"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1620.png.meta",
+        "sha256": "9c5308f320d7df18543750d8fc494b4fdd5b0dcb5ba170f2fbbf508a88b2d618"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1720.png",
+        "sha256": "6b62fa5bd382aad417c6b31b389c6d73c99225591d4b55e76cd2751a0d87b886"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1720.png.meta",
+        "sha256": "d518c134a820227d03c1bd31d06479fdeda4495cec1080ef4dadf7c53264ed73"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1622.png",
+        "sha256": "5b18f39aa93b696c100d1c86d927bf2b5045eb5278383db4a24d651c1b56d7dd"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1622.png.meta",
+        "sha256": "a8a6699cae7e4d08d037357fd74b238a410fd1b0938d29886b6b2061772b0b2c"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1722.png",
+        "sha256": "f0a508bafb5e765db25fbc5f1b934868f7910972263f82973379825e5561512c"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/pet_1722.png.meta",
+        "sha256": "46d2081fe0f6ae4900e8ec21f44140929b317b7c99f71f46696d659889214c66"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16000.png",
+        "sha256": "fcd5b41a6bd8dc23115c465cc0614155becee239ce8ebdca104b12b88db874ab"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16000.png.meta",
+        "sha256": "a92778b5c9cb84309d6c9d0b9067ab2b3ea4fdfe6cfb1ff3c65219724f5c9113"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16001.png",
+        "sha256": "b626e06f1969bb23cb580f45bb3858c7fc13dc47461681dd11bccc87a2cb2bde"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16001.png.meta",
+        "sha256": "e1e35e199825f82403d4db009e518f7f2ccfbe5382e353c0359b2fef853752f1"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16002.png",
+        "sha256": "4ed744a6d08d1ccc7a4d50b65774183ae2371954013f47bed9dadf46c8d8c39c"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16002.png.meta",
+        "sha256": "8d52495510179e346ed5afac753ab4e206074ff17b27bc5938dc93422731184d"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16003.png",
+        "sha256": "f6ece70219cfce2be64e69b029061771993022bccfd5c7cb10eed35f32609585"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16003.png.meta",
+        "sha256": "f277036ee176f95a487a3fcf35fa9acd87a36ffac09d2f93c1e31ed081df1b8b"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16004.png",
+        "sha256": "74e1aaa55db8be02bc637e2692c170c9c85350a30ae797c00b8b6fbffc140f18"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16004.png.meta",
+        "sha256": "fb274705d7d9b15a20a6ca4fbb520dfccbd97728e9b37bd4e446afe4632a05e0"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16005.png",
+        "sha256": "0338a09c672d0afc7c1aef6df7d904945a64281598aa86061206f2c957f765ba"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16005.png.meta",
+        "sha256": "1ef1dcd7f1fcf993c8314c3ed7e82bbdf3e78e77eadd004f2c3302138349ce39"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16006.png",
+        "sha256": "d534d0d68535d9b9ed42e94795ed0c9e05975a7f2309f9af7c5a83eee98ef017"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16006.png.meta",
+        "sha256": "5bb275c0ff4d8eae2bded9acb8a2079c0488bd5e1e45dc34f1c5b79a1fde359e"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16007.png",
+        "sha256": "5399dee2c17c920f49e45495ad0d1723c29795b6f3d5fe2699e22e6b441e1520"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16007.png.meta",
+        "sha256": "bc686846feecd27a90b2d717d6683819aa67e7d39894ccf54eb76d58bfba30f4"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16008.png",
+        "sha256": "094079de2eae52d48513f8bde521766be51e72d8c4d989ecaf391a48e82a6f23"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16008.png.meta",
+        "sha256": "b03b94717a359aeb791ebe8f474f3bb1eb00fe1988cfa98b52a4e8178ced83b2"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16009.png",
+        "sha256": "ca4f6702c763658923a3824c94aaaa55abb5faf33ece1c336dcf8dabf8fb10aa"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16009.png.meta",
+        "sha256": "9029544d3bcc1c6be207d8e238a1e43fd4640499d2bf3e77c13cde7d08991dd9"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16010.png",
+        "sha256": "610a21d2ce5fb94289485c40d2f5b43b507fc861b7f9748d33812687d5482863"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16010.png.meta",
+        "sha256": "b92804510d96630f485a14a77289c87f9559c4812a85e2bac0a006e7ecbc8449"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16012.png",
+        "sha256": "9701f7926ddb6eb0cb3c7532a677a37eec778ca6ff39e6e35e5f3524f9d14959"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16012.png.meta",
+        "sha256": "e5932ea038d383c47c1e80b1e1ec9d51d3bbfc3473f0dd38f64d227ea96ca669"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16011.png",
+        "sha256": "b5066614db6811b4ca72bb7024bafd92eb8257698589a55e6483d55773f3d5cd"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16011.png.meta",
+        "sha256": "b6ccc358df5a23308cb68a5aaa842904fa73f0f359bce201ab28843de363c95f"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16013.png",
+        "sha256": "5ee38c56868f27e33ae619fbb5189296ee530c1c2ae6f9b0fe06529cfb791957"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16013.png.meta",
+        "sha256": "0432780321a06918af7fc05a58dee8c97d17f63023db2d883ae48bb449d19fc5"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16014.png",
+        "sha256": "decbdf82bc7848fc653d436fb5e06505533600e567b1c9b98894e41db1fed375"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16014.png.meta",
+        "sha256": "beb478384efc94c9b52bade4b3b9d156d899a54f51cd9c39a8e42e310bc8a359"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16015.png",
+        "sha256": "931c18cbc6c738c5907d9c4cc9a1dd802b2d6863ff32f716d872f55a2b8ab4b8"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16015.png.meta",
+        "sha256": "9b86c62ef13d594cbb58256628ee7c2c2eb78b391ac5bef5ac53be456b449b34"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16016.png",
+        "sha256": "33ea23813c4d4bd638ee0cde8aa1bd7b3577e9bec3ccc30d871bb76bfc6cf72c"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16016.png.meta",
+        "sha256": "4d994672f5b0314f0abfa1c7177cc554fb0ce0b3c843e4d857347dceb30738f8"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16018.png",
+        "sha256": "c2423b0df5f5b52b7c65f1861176f12082db56c7ad2de568e6960ce2d870586d"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16018.png.meta",
+        "sha256": "841eca0f27012e2c8a9414dd3c793c03091868faabe2563b96a0e8824c8d78e8"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/monsterskill_14002.png",
+        "sha256": "5dbfe8aa247a5669b41858147585abac9718ef6792c9190677b4c8c8e62b1697"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/monsterskill_14002.png.meta",
+        "sha256": "e0fe806a0775e1c8710433515620c5378a6f55a52bb28bf1c30aac8eadc522b8"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16020.png",
+        "sha256": "b85f419c7548a352896081e33ac490445d88c9e361adc43658ac6efb78c7344f"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16020.png.meta",
+        "sha256": "9e9c098c9c0b080e9f3e07fad054a418fa80efae668506c0352132b2b8344e85"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16021.png",
+        "sha256": "6b2ebd14e483ae3f5050b05bd5ad70423e242b6f722d4f224e578e34988af713"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/PetHUD/Resources/Combat/PetHud/Portraits/petskill_16021.png.meta",
+        "sha256": "5eb23eb0b33fed6d1cc1adea86b75842d8c9c1e0b541afadeb7b9cebaab43d92"
+      }
+    ]
+  },
+  "application_sources": [
+    {
+      "path": ".tools/source-packages/official-code/client-source/GamePetSkillIcon.cs",
+      "sha256": "32dfd13be817a1ae1a856f51baf563f04ca96f188390ba00b21cc5d5d4832f23"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/GamePetSkillIcon.cs",
+      "sha256": "32dfd13be817a1ae1a856f51baf563f04ca96f188390ba00b21cc5d5d4832f23"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/FormulaHandler.cs",
+      "sha256": "1c9d25ef741f342b419a85f53ed3287a7c86a7397847a6170176a62276fbce98"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/Framework/CultureNumberFormatterBase.cs",
+      "sha256": "f4171f14d149db5645c824ab0dcad8d04d4fae8f32c3d2d150cb5dd4f005e205"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/Framework/NumberFormatHelper.cs",
+      "sha256": "6f99c3f60df79d5914bbdb2ed92247d7ace8a68f4870b9349e123227f5c2e4cb"
+    }
+  ],
+  "runtime_sources": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePetHudView.cs",
+      "sha256": "26d0c52152d041c599362da14efb1a1ced4592d9d8a9ad252c5bc7a8a44c4157"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.Pet.cs",
+      "sha256": "b0da1649db9f75e1823871d4b70be756b3c24e02e349c9f5c88d60318a6dd50f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillQualityCatalog.cs",
+      "sha256": "ba27cad007d1c37ed67798bed2a30d111456b9c2ff8109c4db2fc2a1afc56c89"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs",
+      "sha256": "6ff8b67588babc4692510b02c436e66ab541c71ec967cc073696b4bbebd424a5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialBattlePetHudAcceptance.cs",
+      "sha256": "67a30e764105aaa697cc893c2ecfe459ea800a3306c9e469f816f7742fcdef46"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/battle-pet-hud.json",
+      "sha256": "b7595009646335746dc43080b8cddacbf8f8e575edae8d9651e05d785b61e104"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/battle-pet-hud-source-manifest.json",
+      "sha256": "96baa840b1700d67a3678e85d2ec28919d133aa0ce686a00bf07d47afb77db99"
+    }
+  ],
+  "operation": "Restore original GamePetSkillIcon field references without changing the HUD hierarchy or layout."
+}

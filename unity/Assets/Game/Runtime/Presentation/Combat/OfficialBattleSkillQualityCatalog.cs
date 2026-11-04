@@ -51,6 +51,11 @@ namespace Zjcs.Presentation.Combat
             EnsureLoaded();
             if (!itemMap.TryGetValue(itemId, out int quality))
                 throw new InvalidOperationException("Official skill item quality is missing: " + itemId);
+            ApplyQuality(image, quality);
+        }
+
+        internal void ApplyQuality(Image image, int quality)
+        {
             BattleSkillQualityBinding binding = Binding(quality);
             image.sprite = binding.sprite;
             var geometry = image.GetComponent<OfficialBattleSkillQualityGeometry>();
