@@ -1,6 +1,5 @@
 """Convert every active-version graph referenced by an official FightSkill entity."""
 import json
-import faulthandler
 import os
 import subprocess
 import sys
@@ -23,7 +22,6 @@ def main():
     assert work.parent == (ROOT / 'output/validation').resolve()
     assert (work / '.zjcs-validation.json').is_file()
 
-    faulthandler.dump_traceback_later(300, repeat=True)
     print("SkillGraphs: auditing official entity bindings", flush=True)
     audit = subprocess.run([sys.executable, str(AUDIT)], check=True, capture_output=True,
                            text=True, encoding='utf-8').stdout
@@ -58,6 +56,10 @@ def main():
         -1211289337: ('StoryFollowBone', 'ApplyOnStop'),
         -61675510: ('BattleSkillPlayables', 'MyPlayableFightCameraFollowerWeightModifier'),
         -782967297: ('BattleSkillPlayables', 'MyPlayableSpineBoneLookAt'),
+        1382981218: ('BattleSkillPlayables', 'MyPlayableSpineClone'),
+        -1957709185: ('BattleSkillPlayables', 'PlayableSpinePlayerCloneInit'),
+        1122795596: ('StoryFollowBone', 'ApplyOnStopCheckSourceDie'),
+        -1860136715: ('ProfessionUI', 'AppearanceAnimationPartHandler'),
         -713493980: ('BattleSkillPlayables', 'MyPlayableAfterimage'),
         -547320074: ('BattleSkillPlayables', 'MyPlayableFightCameraPerformance'),
         100375930: ('BattleStatusPlayables', 'ApplyOverrideToMaster'),
@@ -74,7 +76,8 @@ def main():
         116049708: ('BattleTrackPlayables', 'ParabolicTrack')})
     build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS={}, graph_roots=roots,
         MAPPED=mapped, family='SkillGraphs', shader_prefix='SkillGraph_',
-        runtime_receipts=('track-runtime-source-manifest.json',), generator=Path(__file__),
+        runtime_receipts=('track-runtime-source-manifest.json',
+            'spine-clone-runtime-source-manifest.json'), generator=Path(__file__),
         reference_scripts={-210918009: dict(name='WwiseEventReference',
             native_asset=EVENT_ASSET,
             runtime='unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs',
@@ -104,6 +107,16 @@ def main():
             namespace='AppearanceSystem.SpineExt',
             source='AppearanceSystem.SpineExt/DynamicSkeletonRenderSeparator.cs',
             runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/DynamicSkeletonRenderSeparator.cs'),
+            2111475641: dict(name='AppearanceCharacter', namespace='AppearanceSystem.Runtime',
+            target_namespace='Zjcs.Official.CombatAppearance',
+            source='AppearanceSystem.Runtime/AppearanceCharacter.cs',
+            runtime='unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs'),
+            -1254263949: dict(name='AppearanceAnimation', namespace='AppearanceSystem.Runtime',
+            target_namespace='', source='AppearanceSystem.Runtime/AppearanceAnimation.cs',
+            runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/AppearanceAnimation.cs'),
+            2084312037: dict(name='PreviewTool', namespace='', source_root='framework-source',
+            source='PreviewTool.cs',
+            runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/PreviewTool.cs'),
             -1369127073: dict(name='YooAssetTextureLoader', namespace='AppearanceSystem.Runtime',
             target_namespace='Zjcs.Official.ProfessionUI',
             source='AppearanceSystem.Runtime/YooAssetTextureLoader.cs',

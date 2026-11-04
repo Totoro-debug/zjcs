@@ -182,7 +182,9 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         assert apk.version == '884_156692'
         manifest = read_asset_manifest(apk.source.manifest_bytes('DefaultPackage', apk.archive))
         originals = []
-        for key, path in graph_paths.items():
+        for root_index, (key, path) in enumerate(graph_paths.items(), 1):
+            if root_index == 1 or root_index % 128 == 0:
+                print(f"{family}: verifying root {root_index}/{len(graph_paths)} {path}", flush=True)
             if key in (graph_roots or {}):
                 # Shared dependency prefabs have no independent address entry.
                 # The verified native exporter preserves their original bundle.
@@ -213,9 +215,11 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         # bundle before looking up its original texture/shader object.
         print(f"{family}: verified {len(originals)} roots", flush=True)
         source_bundles = set()
-        for path in sorted(found):
-            if path.suffix != '.png' and '/Shaders/' not in path.as_posix():
-                continue
+        source_paths = [path for path in sorted(found)
+                        if path.suffix == '.png' or '/Shaders/' in path.as_posix()]
+        for source_index, path in enumerate(source_paths, 1):
+            if source_index == 1 or source_index % 256 == 0:
+                print(f"{family}: loading original textures/shaders {source_index}/{len(source_paths)}", flush=True)
             source_meta = Path(str(path)+'.meta')
             bundle_name = re.search(r'(?m)^  assetBundleName: ([^\s\r\n]+)[ \t]*$', read(source_meta).decode())
             if bundle_name is None:
