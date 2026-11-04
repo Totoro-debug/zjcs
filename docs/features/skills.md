@@ -22,6 +22,8 @@
 
 `ApplyOnStopCheckSourceDie` 已经独立的死亡视图接口，在技能图实例化、Awake 订阅前由 scope 注入；公共战斗控制器把本场共享场景传给技能图调度器。场景仅匹配当前检查点仍保留的来源实体根对象，并在结算后仍为零血时清除待播动作、停止旧动作并强制重播已有死亡动画；存活、即时复活、空来源、模型子对象及已移除实体不重播，不重新创建已移除的场景对象。原生模型／已有 Spine 绑定支持强制重新开始，附挂 Animator 使用同一重播入口。Unity Play Mode 已使用已有原生怪物 3322／3803 验证真实死亡动画推进及重播、原对象池复用、技能停止回调、存活／复活／移除分支与实际相机画面，并查看截图；静态检查、技能图调度回归及 `ProjectTools.Validate` 通过。首次人物运行检查发现地图人物载体尚未装入战斗死亡片段，因此人物死亡动作和完整官方死亡 Playable 绑定仍未完成，也未完成整场战斗／Windows Player 验证。此项不代表分身正式演出已经完成。
 
+人物死亡图使用所选 `884_156692` 的原 `ECFightRoleCharacterView` 托管引用：3100／3991 绑定 `playable_die` 和 `playable_die_onStart`，3102 两项为空；三者均保留入场死亡检查。`prepare_battle_character_death_assets.py` 沿原 APK 的实体驱动器引用转换两套完整序列，逐字段保留 `ApplyBySource`、`die`／`immediately_die` 布尔参数、无限持续及停止恢复参数。`OfficialBattleCharacterDeathPlayback` 仅迁移原视图的死亡方法，保留 Animator 初始化门槛、入场／正常图选择、已有句柄不重复播放、暂停全部恢复、强制停止后重放及复活停止；精确实体根与当前死亡值由显式依赖提供。原字段、代码、输出和绑定哈希见[人物死亡图来源](../../assets/reference/battle-animation/character-death-assets-source-manifest.json)。内置屏实际 Play Mode 已通过男女战士／法师四套当前控制器，验证初始化门槛、入场与正常死亡片段、暂停恢复、强制停止后重放、复活恢复参数和3102空图；使用官方默认外观解析器、Game附加皮肤及实际Low纹理绘制稳定动作，已查看同一固定相机下的12张运行截图。此检查不覆盖过渡帧混合、独立武器与染色。静态工程检查、Unity导入／编译和同次 `ProjectTools.Validate` 通过；为全工程编译补齐地图标记验证程序集对既有 `Zjcs.Offline.World.NativeMap13` 的引用。正式场景仍需接入当前人物原生载体和原视图生命周期，此适配未替换既有地图人物的死亡 fallback，也未完成整场战斗／Windows Player 验证。
+
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
 复核固定版本 `871_156598` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

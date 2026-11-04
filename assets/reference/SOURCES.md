@@ -42,6 +42,8 @@
 
 原版战斗 Game 控制器：`prepare_battle_game_animators.py` 使用所选 `884_156692` 的原生转换凭据、APK／云缓存中的原控制器和依赖对象，保留四份职业／性别控制器及33个片段。原对象／包、转换输入、消费者源码及输出 SHA256 见 [Game 控制器凭据](battle-animation/game-animators-source-manifest.json)；正式人物绑定和验证范围见[战斗执行](../../docs/features/battle-execution.md)。
 
+人物死亡序列输入：`prepare_battle_character_death_assets.py` 核对所选 `884_156692` 的 3100／3102／3991 原实体驱动器托管引用，沿 APK 内两个共享 bundle 转换完整正常／入场死亡图，保留原空引用。原 bundle、对象、组件字段、反编译来源、迁移方法、资源与显式绑定 SHA256 见[人物死亡图来源](battle-animation/character-death-assets-source-manifest.json)；使用和验证范围见[技能](../../docs/features/skills.md)。本批未生成完整素材快照。
+
 战斗 Animator 补充代码：`prepare_battle_animator_runtime.py` 从当前 `884_156692` 已校验程序集／反编译结果迁入 `MyPlayableOverrideAnimator`；当前 `AnimationController`、`StateMergeList`、`MyPlayableAnimator` 原源码与既有历史迁移凭据逐字节相同。原始输入、程序集、兼容核对及输出 SHA256 见 [Animator 代码凭据](battle-rules/animator-runtime-source-manifest.json)；已有技能 cue 与 clip 的来源身份不变。
 
 游记布局补充输入：`prepare_travel_entry_layout.py` 读取当前 APK 中 `defaultpackage_assets_prefabs_ui_home.bundle`，严格核对其与历史 `871_156598` 清单的字节身份相同（353,152 字节，SHA256 `78b8a1151fcd575ce7dd6d98511b788853ba71730dbd620bf8e5917eabebd9c2`），再解码原组件字段。原 prefab PathID、逐组件原字节哈希、解码程序集、原脚本和输出哈希集中记录于 [游记布局凭据](dungeon-ui/prefab-binding-source-manifest.json) 的 `travel_entry_layout`；历史输入凭据保持原值，当前 APK 仅记录为相同包的新位置。

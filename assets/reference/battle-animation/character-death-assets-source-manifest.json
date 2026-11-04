@@ -1,0 +1,2407 @@
+{
+  "manifest": "884_156692",
+  "originals": [
+    {
+      "id": "normal",
+      "shared_dependency_bundle": "defaultpackage_share_e9795fd7c4579b487be421773c144668.bundle",
+      "native_export_meta": {
+        "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Playables/playable_die.prefab.meta",
+        "sha256": "ec42485ef325a3796479525edada58bb68473fe065931d250cd1546d49939b0c"
+      },
+      "original_game_object_name": "playable_die",
+      "original_game_object_sha256": "e0c2935b858e6b3f1a2db60f527436fc536eff4652811cf763d055da5efa3d7f",
+      "source": {
+        "bundle": "defaultpackage_share_e9795fd7c4579b487be421773c144668.bundle",
+        "bundle_hash": "7554204e943bab5915c5e242d2408aef",
+        "path_id": "-8436422432579699079",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7554204e943bab5915c5e242d2408aef.bundle",
+        "raw_size": 1034,
+        "raw_sha256": "cdbee55677ba784aeda8dfb7b1b8c06eae24cc659c59041e4211e3443082d791"
+      }
+    },
+    {
+      "id": "on_start",
+      "shared_dependency_bundle": "defaultpackage_share_b71c75e60bb705ce4ca629094fbd672b.bundle",
+      "native_export_meta": {
+        "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Playables/playable_die_onStart.prefab.meta",
+        "sha256": "fcfa8b27df48f82afacaf6917c8c7260b81f564c1b494ee0ef3dae0d296fdab5"
+      },
+      "original_game_object_name": "playable_die_onStart",
+      "original_game_object_sha256": "cef7bd477e03858e4451d162701f38b2d9dd49f790e2c0b5c475c942b32f47dd",
+      "source": {
+        "bundle": "defaultpackage_share_b71c75e60bb705ce4ca629094fbd672b.bundle",
+        "bundle_hash": "c2b6c908b79bece79fd7b290a7e43a99",
+        "path_id": "-7700451267270321013",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c2b6c908b79bece79fd7b290a7e43a99.bundle",
+        "raw_size": 1041,
+        "raw_sha256": "ad1b2d58ecdacd1ce342f7c359f1e25e1b7b90e46464cd936d660f6861461ebe"
+      }
+    }
+  ],
+  "native_export_receipt": {
+    "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json",
+    "sha256": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c"
+  },
+  "native_inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Playables/playable_die.prefab",
+      "sha256": "672b52c1488944bd206010bc579d4811aeb4136e3a8e53b57fa1633b8c37c7f7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Playables/playable_die.prefab.meta",
+      "sha256": "ec42485ef325a3796479525edada58bb68473fe065931d250cd1546d49939b0c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Playables/playable_die_onStart.prefab",
+      "sha256": "1d10291917269a895a3407b9e02e6322f0c4f8b01eea83bc605115bed5eeb37b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Playables/playable_die_onStart.prefab.meta",
+      "sha256": "fcfa8b27df48f82afacaf6917c8c7260b81f564c1b494ee0ef3dae0d296fdab5"
+    }
+  ],
+  "texture_conversion_receipt": {
+    "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-textures/source-manifest.json",
+    "sha256": "095eb422b8a241e6468abd81940e22aff9ad22f89bc78161dbdba8bd1f45b3b0"
+  },
+  "converted_inputs": [],
+  "textures": [],
+  "shaders": [],
+  "binary_assets": [],
+  "application": [
+    {
+      "file_id": -253978515,
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/game-framework-source/GameFramework/MyPlayableSequence.cs",
+        "sha256": "169b013367c39521a6bd1a8161c59aa93201ed1e7190803f5ffcb76fd4ad7e22"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs",
+        "sha256": "f2f3c212ecd384e80c9a2a8f0a82e2251ede2abc8662c954a2c7988190080d42"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs.meta",
+        "sha256": "58ba372bbd79a79b5c7bb3c40858a9e663386a3ac05cfdd760931a3d4af569f0"
+      },
+      "verified_current_runtime_methods": {
+        "PlayImpl": "81c9f91f00d897b55ea95bc748a8e0eb2925b02955f1c387012c88b9094e5d26",
+        "Stop": "f963d47e08e3f30a7721e60711c280fdbe5e49bea63d69d57290098876236c27",
+        "RemoveImpl": "9dffe045eae4ebb0fdd4e11d30e73949fa747d085b67bcb005b0e7483c6d491d",
+        "ProcessFrameImpl": "5189aa3dd0117a7af30e8b1e09a224faaa4d8199b2252496a8a3c457009f652f",
+        "PostProcessFrameImpl": "20ea5653b366c0fafd344f1312378dc0b163bf2dbb0e427c8b6ca3b4a5e534b3",
+        "StopImpl": "cba86c5abc5cb4cc846277fb1399f787de27769c29054296fdab09b2f784c4c6",
+        "GetDuration": "b0d9510722c4f25fca3ace761e84cee06aca1731a631d83bb3e7e01ae86ea172",
+        "ResetData": "d4743a5f96c1f720213477e7f45fdfc3737f3267a5bd08dba6fdd0a798ac0523",
+        "InitDataOnPlay": "883a5bb3a5aa31061ad1500ada071c0fae86077159db07242a68d811b456584b",
+        "SinglePlay": "957a64ce66127743dfeec8fefb9b5810d63c1c522d3dd84f900926082666bdf3",
+        "SingleStop": "852c1dd5c3061c14d9e60f7acb6d1e1722c10958068e74454ccd98ef8765d6ff",
+        "SingleRemove": "22525e22e40f655ef175c5766cb89f0a8459e6cf21c90b399ff2738cd7b01ff0"
+      }
+    },
+    {
+      "file_id": -822603460,
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/game-framework-source/GameFramework/ApplyBySource.cs",
+        "sha256": "5295d122baf98dfc982320cb68a73050ce594b1898699029bf95e6f376350a4f"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs",
+        "sha256": "650ea193fe5f1143d5b0438d6ad26069f9be64d6753f24d523248908b89d0b20"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs.meta",
+        "sha256": "d44656ffcbbc7922858a88080ab8c690ded072f406c3acc0784d01fca6de71e1"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 205640859,
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableAnimator.cs",
+        "sha256": "833f0b99dc83f3db92dc90400d8cea36596dde43a024f1ceb3f326e84d0e17b2"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs",
+        "sha256": "556de9b57b5684be1ca88df986687b9c7817a2bf79ea4b7def4ccf0268a19489"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs.meta",
+        "sha256": "87cfb6242ac3458692cef4e9ebf3803dcc1e8951ced05012bbbe51697ef61532"
+      },
+      "verified_current_runtime_methods": {}
+    }
+  ],
+  "runtime_receipts": [
+    {
+      "path": "assets/reference/battle-animation/scene-player-animator-source-manifest.json",
+      "sha256": "84c6459a7e0b4ddf9510d187699519449ddca681ed5025a02a87273f39191150"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_character_death_assets.py",
+    "sha256": "49b37af984fb24039185934cb04e065a4ef626f81d9a61dff34e0e8aa5ea62c4"
+  },
+  "graph_asset_adapter": {
+    "path": "scripts/prepare_battle_status_orbit_assets.py",
+    "sha256": "0e9e8633647430ba93e8dd353916476e289920ce38b58a084487dff9aeef09f8"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/character-death-graphs.json",
+      "sha256": "8de7eb577249763d999028e26af2ee76d96210324d26b9fbd390623cd1f39ccc"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/character-death-graphs.json.meta",
+      "sha256": "c417ca4691d3ecf99538b872828e3ddef210bcd102599c6ca8c5e1b324760bc8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/CharacterDeath/Resources/Combat/CharacterDeath/Prefabs/Playables/playable_die.prefab",
+      "sha256": "b4235036e0b62e6cac3c41cdd7ac26b29a4b5981c4e5095154c483b94d00435d"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/CharacterDeath/Resources/Combat/CharacterDeath/Prefabs/Playables/playable_die.prefab.meta",
+      "sha256": "cc39f6fa32951a748cb85ee4b7801afee12fbce183d00ae4a4d0b3cf03adc9b7"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/CharacterDeath/Resources/Combat/CharacterDeath/Prefabs/Playables/playable_die_onStart.prefab",
+      "sha256": "f5df68d8e8b088821f388be58739fcb94320c6726d0bf26a1497c1ece2668c86"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/CharacterDeath/Resources/Combat/CharacterDeath/Prefabs/Playables/playable_die_onStart.prefab.meta",
+      "sha256": "cb7bdad4aaaa44a753424dd5229e5e7c4bddb0f253c8df604a8044753d5b3457"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/CharacterDeath/Resources/Combat/CharacterDeath/Prefabs/Playables.meta",
+      "sha256": "c2dfadf5bcc43d0b7dbaa73b606025f95576262e5fe34b4612d6e2ae6a8a9fa6"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/CharacterDeath/Resources/Combat/CharacterDeath/Prefabs.meta",
+      "sha256": "f9a8d7f962ec7ad2a8f83d324d12b20034bd381e8ae84e7a8be9d0ec4c3653f7"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/CharacterDeath/Resources/Combat/CharacterDeath.meta",
+      "sha256": "89cfc500db82b2923c2e1d480b39cc729b2c88c71ff671ea5d3b563a37980c27"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/CharacterDeath/Resources/Combat.meta",
+      "sha256": "a0f1f461a121bcab4671e11bd1f8ee4bb3134d47afa5c797ddc78ee7ab9ed62d"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/CharacterDeath/Resources.meta",
+      "sha256": "12ddb81e3e11ac90e3d5ea8c33a5be05b4e88846e2711cc7cef1e5da4d1d8b89"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/CharacterDeath.meta",
+      "sha256": "2af99108370dab4aa355ebf5d9294f1e2f00ebf26095bc730e10099f0d73f33c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/character-death-views.json",
+      "sha256": "999c3a9bd74295124a1eaa2a91b04f8d6e4c68ae2240a40797b4dd9d9de662f2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/character-death-views.json.meta",
+      "sha256": "9e188fd2bb23334388617b9d9f4f7fbbd65a41afdc35508c6550bcfe4e6eb257"
+    }
+  ],
+  "operation": "Full original graphs: no components, sequence leaves or local objects removed. Preserve native local fileIDs, transforms, particles, orbit configuration and dependencies. Remap migrated application scripts/GUIDs, decode all original texture mips through hash-matched conversion cache and use verified full Windows shaders.",
+  "limits": [
+    "Original death graphs and role-view bindings only. Full player prefab, native player pose consumer and shared battle death lifecycle/Windows Player integration require separate validation."
+  ],
+  "original_role_views": [
+    {
+      "entity_id": 3100,
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightcharacter_3100.bundle",
+        "bundle_hash": "d9ab0a5f474bae3c43f40d039f23b412",
+        "path_id": "109853421538505270",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/d9ab0a5f474bae3c43f40d039f23b412.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 33770,
+        "bundle_sha256": "0c837b95583bf1ab22b21e59a5c3f8d79f5e67253002c161f76603b622f79aad"
+      },
+      "object_sha256": "d1eede5ce8fd8f41c10f6d5c06b11c4a88d5b59b223b8674044c2def2bdf34aa",
+      "driver_fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 1294736940787823158
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 2491674463829926342
+        },
+        "m_Name": "",
+        "mECViews": [
+          {
+            "rid": 3986547892861534286
+          },
+          {
+            "rid": 3986547898241515534
+          },
+          {
+            "rid": 3986547898241515757
+          },
+          {
+            "rid": 3986547898241515758
+          },
+          {
+            "rid": 3986547898241515826
+          },
+          {
+            "rid": 3986547898241515827
+          },
+          {
+            "rid": 3986547898241516198
+          },
+          {
+            "rid": 3986547898241516199
+          },
+          {
+            "rid": 3986547898241516516
+          }
+        ],
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": 3986547892861534286,
+              "type": {
+                "class": "ECFightRoleCharacterView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mSpriteList": {
+                  "m_FileID": 0,
+                  "m_PathID": -1621767969930284490
+                },
+                "mPlayerHUD": {
+                  "m_FileID": 0,
+                  "m_PathID": 6071391030905532982
+                },
+                "mPlayerAppearance": {
+                  "m_FileID": 0,
+                  "m_PathID": -2149675590359190986
+                },
+                "mDieOnStartPlayable": {
+                  "m_FileID": 35,
+                  "m_PathID": -7700451267270321013
+                },
+                "mDiePlayable": {
+                  "m_FileID": 33,
+                  "m_PathID": -8436422432579699079
+                },
+                "mTryDiePlayableOnStart": 1,
+                "mGeneratePlayable": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mGenerateDelayTime": 0.0,
+                "mGeneratePlayableNeedDelay": 0,
+                "mDelayVisibilityParts": [
+                  {
+                    "m_FileID": 0,
+                    "m_PathID": 6960460644627706422
+                  },
+                  {
+                    "m_FileID": 0,
+                    "m_PathID": -117953163307847114
+                  }
+                ]
+              }
+            },
+            {
+              "rid": 3986547898241515534,
+              "type": {
+                "class": "ECFightRoleHpView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mHpSlider": {
+                  "m_FileID": 0,
+                  "m_PathID": 6749229630713623094
+                }
+              }
+            },
+            {
+              "rid": 3986547898241515757,
+              "type": {
+                "class": "ECFightRoleStatusDisplayView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mStatusItem": {
+                  "m_FileID": 1,
+                  "m_PathID": 5426047660340627646
+                },
+                "mStatusItemSlot": {
+                  "m_FileID": 0,
+                  "m_PathID": 2343172957803311670
+                },
+                "mMaxCountOfRow": 5,
+                "mMaxRowCount": 1
+              }
+            },
+            {
+              "rid": 3986547898241515758,
+              "type": {
+                "class": "ECFightRoleTeamFlagView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mReadyBattleFlag": {
+                  "m_FileID": 0,
+                  "m_PathID": -8001990824771259850
+                }
+              }
+            },
+            {
+              "rid": 3986547898241515826,
+              "type": {
+                "class": "ECActionAgentPlayableView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mActionTypePlayables": [
+                  {
+                    "ActionType": 57,
+                    "Playable": {
+                      "m_FileID": 2,
+                      "m_PathID": 985586064989836473
+                    },
+                    "StopOnActionEnd": 1,
+                    "EndPlayable": {
+                      "m_FileID": 0,
+                      "m_PathID": 0
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "rid": 3986547898241515827,
+              "type": {
+                "class": "ECFightRolePartInView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mPartInPlayable": {
+                  "m_FileID": 0,
+                  "m_PathID": 7394990692178003581
+                }
+              }
+            },
+            {
+              "rid": 3986547898241516198,
+              "type": {
+                "class": "ECFightRoundGMDisplayView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mGMRoundSlot": {
+                  "m_FileID": 0,
+                  "m_PathID": -8939155230875389386
+                }
+              }
+            },
+            {
+              "rid": 3986547898241516199,
+              "type": {
+                "class": "ECFightDebugClickView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mClickObj": {
+                  "m_FileID": 0,
+                  "m_PathID": -8911349676877352394
+                }
+              }
+            },
+            {
+              "rid": 3986547898241516516,
+              "type": {
+                "class": "ECPrepareBattleDragView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mRaisePlayable": {
+                  "m_FileID": 3,
+                  "m_PathID": 7475767516239301339
+                },
+                "mDownPlayable": {
+                  "m_FileID": 3,
+                  "m_PathID": 8114451694284526576
+                },
+                "mFrameShowStateSwitcher": {
+                  "mStateConfigs": [
+                    {
+                      "rid": 3986547898241516524
+                    }
+                  ],
+                  "mOwner": {
+                    "m_FileID": 0,
+                    "m_PathID": -7669644911584480714
+                  }
+                }
+              }
+            },
+            {
+              "rid": 3986547898241516524,
+              "type": {
+                "class": "StateGameObjectConfig",
+                "ns": "",
+                "asm": "Framework"
+              },
+              "data": {
+                "mStateGameObjectData": {
+                  "GoConfig": [
+                    {
+                      "State": {
+                        "mValue": 0
+                      },
+                      "GameObjects": [
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": -117953163307847114
+                        }
+                      ]
+                    },
+                    {
+                      "State": {
+                        "mValue": 1
+                      },
+                      "GameObjects": [
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": -3591340442800033226
+                        },
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": -8202670430801825226
+                        },
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": -117953163307847114
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      "character_view_reference": {
+        "rid": 3986547892861534286,
+        "type": {
+          "class": "ECFightRoleCharacterView",
+          "ns": "",
+          "asm": "Assembly-CSharp"
+        },
+        "data": {
+          "mSpriteList": {
+            "m_FileID": 0,
+            "m_PathID": -1621767969930284490
+          },
+          "mPlayerHUD": {
+            "m_FileID": 0,
+            "m_PathID": 6071391030905532982
+          },
+          "mPlayerAppearance": {
+            "m_FileID": 0,
+            "m_PathID": -2149675590359190986
+          },
+          "mDieOnStartPlayable": {
+            "m_FileID": 35,
+            "m_PathID": -7700451267270321013
+          },
+          "mDiePlayable": {
+            "m_FileID": 33,
+            "m_PathID": -8436422432579699079
+          },
+          "mTryDiePlayableOnStart": 1,
+          "mGeneratePlayable": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mGenerateDelayTime": 0.0,
+          "mGeneratePlayableNeedDelay": 0,
+          "mDelayVisibilityParts": [
+            {
+              "m_FileID": 0,
+              "m_PathID": 6960460644627706422
+            },
+            {
+              "m_FileID": 0,
+              "m_PathID": -117953163307847114
+            }
+          ]
+        }
+      }
+    },
+    {
+      "entity_id": 3102,
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightcharacter_3102.bundle",
+        "bundle_hash": "a28a6f3525e6fcb84eea9757c03cbf84",
+        "path_id": "-18674000591164386",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a28a6f3525e6fcb84eea9757c03cbf84.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 22183,
+        "bundle_sha256": "ac9304eb6eb690e940ed1fa1fd6e23457f56698235197c2d73d2ae0108ec8164"
+      },
+      "object_sha256": "7530d5320ff27df0684265dc909c1d5dd9d22a58110df0f68eb8ebea27c53392",
+      "driver_fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -6030047921760277474
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 2491674463829926342
+        },
+        "m_Name": "",
+        "mECViews": [
+          {
+            "rid": 3986547892861534288
+          },
+          {
+            "rid": 3986547898241515536
+          },
+          {
+            "rid": 3986547898241515760
+          },
+          {
+            "rid": 3986547898241515761
+          },
+          {
+            "rid": 3986547898241515835
+          },
+          {
+            "rid": 3986547898241516518
+          }
+        ],
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": 3986547892861534288,
+              "type": {
+                "class": "ECFightRoleCharacterView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mSpriteList": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mPlayerHUD": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mPlayerAppearance": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mDieOnStartPlayable": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mDiePlayable": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mTryDiePlayableOnStart": 1,
+                "mGeneratePlayable": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mGenerateDelayTime": 0.0,
+                "mGeneratePlayableNeedDelay": 0,
+                "mDelayVisibilityParts": []
+              }
+            },
+            {
+              "rid": 3986547898241515536,
+              "type": {
+                "class": "ECFightRoleHpView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mHpSlider": {
+                  "m_FileID": 0,
+                  "m_PathID": 8357888282433973278
+                }
+              }
+            },
+            {
+              "rid": 3986547898241515760,
+              "type": {
+                "class": "ECFightRoleStatusDisplayView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mStatusItem": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mStatusItemSlot": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mMaxCountOfRow": 1,
+                "mMaxRowCount": 1
+              }
+            },
+            {
+              "rid": 3986547898241515761,
+              "type": {
+                "class": "ECFightRoleTeamFlagView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mReadyBattleFlag": {
+                  "m_FileID": 0,
+                  "m_PathID": 6210315695371938846
+                }
+              }
+            },
+            {
+              "rid": 3986547898241515835,
+              "type": {
+                "class": "ECActionAgentPlayableView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mActionTypePlayables": [
+                  {
+                    "ActionType": 57,
+                    "Playable": {
+                      "m_FileID": 13,
+                      "m_PathID": 985586064989836473
+                    },
+                    "StopOnActionEnd": 1,
+                    "EndPlayable": {
+                      "m_FileID": 0,
+                      "m_PathID": 0
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "rid": 3986547898241516518,
+              "type": {
+                "class": "ECPrepareBattleDragView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mRaisePlayable": {
+                  "m_FileID": 14,
+                  "m_PathID": 7475767516239301339
+                },
+                "mDownPlayable": {
+                  "m_FileID": 14,
+                  "m_PathID": 8114451694284526576
+                },
+                "mFrameShowStateSwitcher": {
+                  "mStateConfigs": [
+                    {
+                      "rid": 3986547898241516526
+                    }
+                  ],
+                  "mOwner": {
+                    "m_FileID": 0,
+                    "m_PathID": -4838752993751831522
+                  }
+                }
+              }
+            },
+            {
+              "rid": 3986547898241516526,
+              "type": {
+                "class": "StateGameObjectConfig",
+                "ns": "",
+                "asm": "Framework"
+              },
+              "data": {
+                "mStateGameObjectData": {
+                  "GoConfig": [
+                    {
+                      "State": {
+                        "mValue": 0
+                      },
+                      "GameObjects": [
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": -360926942654469090
+                        }
+                      ]
+                    },
+                    {
+                      "State": {
+                        "mValue": 1
+                      },
+                      "GameObjects": [
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": -3200735825241805794
+                        },
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": 3127421993787681822
+                        },
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": -360926942654469090
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      "character_view_reference": {
+        "rid": 3986547892861534288,
+        "type": {
+          "class": "ECFightRoleCharacterView",
+          "ns": "",
+          "asm": "Assembly-CSharp"
+        },
+        "data": {
+          "mSpriteList": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mPlayerHUD": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mPlayerAppearance": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mDieOnStartPlayable": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mDiePlayable": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mTryDiePlayableOnStart": 1,
+          "mGeneratePlayable": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mGenerateDelayTime": 0.0,
+          "mGeneratePlayableNeedDelay": 0,
+          "mDelayVisibilityParts": []
+        }
+      }
+    },
+    {
+      "entity_id": 3991,
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightcharacter_3991.bundle",
+        "bundle_hash": "3d7085573766f01624100b55238ae09f",
+        "path_id": "4329624670078049991",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3d7085573766f01624100b55238ae09f.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 22215,
+        "bundle_sha256": "e70399c42787bb593c7f0716dbb80f85e21ed9ccc0539af5c4d934613952078a"
+      },
+      "object_sha256": "3046fd0477f0bd2b2f636a57c6dbd25d18f5ac01b94527d76520faf777f3a097",
+      "driver_fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1561258911520186681
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 2491674463829926342
+        },
+        "m_Name": "",
+        "mECViews": [
+          {
+            "rid": 3986547892861534290
+          },
+          {
+            "rid": 3986547898241515538
+          },
+          {
+            "rid": 3986547898241515763
+          },
+          {
+            "rid": 3986547898241515837
+          },
+          {
+            "rid": 3986547898241516201
+          },
+          {
+            "rid": 3986547898241516202
+          }
+        ],
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": 3986547892861534290,
+              "type": {
+                "class": "ECFightRoleCharacterView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mSpriteList": {
+                  "m_FileID": 0,
+                  "m_PathID": -7237894377312739641
+                },
+                "mPlayerHUD": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mPlayerAppearance": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mDieOnStartPlayable": {
+                  "m_FileID": 21,
+                  "m_PathID": -7700451267270321013
+                },
+                "mDiePlayable": {
+                  "m_FileID": 19,
+                  "m_PathID": -8436422432579699079
+                },
+                "mTryDiePlayableOnStart": 1,
+                "mGeneratePlayable": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mGenerateDelayTime": 0.0,
+                "mGeneratePlayableNeedDelay": 0,
+                "mDelayVisibilityParts": []
+              }
+            },
+            {
+              "rid": 3986547898241515538,
+              "type": {
+                "class": "ECFightRoleHpView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mHpSlider": {
+                  "m_FileID": 0,
+                  "m_PathID": -7014838059398979897
+                }
+              }
+            },
+            {
+              "rid": 3986547898241515763,
+              "type": {
+                "class": "ECFightRoleStatusDisplayView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mStatusItem": {
+                  "m_FileID": 1,
+                  "m_PathID": 5426047660340627646
+                },
+                "mStatusItemSlot": {
+                  "m_FileID": 0,
+                  "m_PathID": 1627621193608928967
+                },
+                "mMaxCountOfRow": 5,
+                "mMaxRowCount": 1
+              }
+            },
+            {
+              "rid": 3986547898241515837,
+              "type": {
+                "class": "ECActionAgentPlayableView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mActionTypePlayables": [
+                  {
+                    "ActionType": 57,
+                    "Playable": {
+                      "m_FileID": 23,
+                      "m_PathID": 985586064989836473
+                    },
+                    "StopOnActionEnd": 1,
+                    "EndPlayable": {
+                      "m_FileID": 0,
+                      "m_PathID": 0
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "rid": 3986547898241516201,
+              "type": {
+                "class": "ECFightRoundGMDisplayView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mGMRoundSlot": {
+                  "m_FileID": 0,
+                  "m_PathID": -6199999045895512377
+                }
+              }
+            },
+            {
+              "rid": 3986547898241516202,
+              "type": {
+                "class": "ECFightDebugClickView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mClickObj": {
+                  "m_FileID": 0,
+                  "m_PathID": -5989348800865100089
+                }
+              }
+            }
+          ]
+        }
+      },
+      "character_view_reference": {
+        "rid": 3986547892861534290,
+        "type": {
+          "class": "ECFightRoleCharacterView",
+          "ns": "",
+          "asm": "Assembly-CSharp"
+        },
+        "data": {
+          "mSpriteList": {
+            "m_FileID": 0,
+            "m_PathID": -7237894377312739641
+          },
+          "mPlayerHUD": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mPlayerAppearance": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mDieOnStartPlayable": {
+            "m_FileID": 21,
+            "m_PathID": -7700451267270321013
+          },
+          "mDiePlayable": {
+            "m_FileID": 19,
+            "m_PathID": -8436422432579699079
+          },
+          "mTryDiePlayableOnStart": 1,
+          "mGeneratePlayable": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mGenerateDelayTime": 0.0,
+          "mGeneratePlayableNeedDelay": 0,
+          "mDelayVisibilityParts": []
+        }
+      }
+    }
+  ],
+  "schemas": {
+    "Assembly-CSharp:ECViewDriver": [
+      {
+        "level": 0,
+        "type": "ECViewDriver",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "mECViews",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "managedReference",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "SInt64",
+        "name": "rid",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "ManagedReferencesRegistry",
+        "name": "references",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "version",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "RefIds",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "ReferencedObject",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "SInt64",
+        "name": "rid",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "ReferencedManagedType",
+        "name": "type",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "string",
+        "name": "class",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 8,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "string",
+        "name": "ns",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 8,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "string",
+        "name": "asm",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 8,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "ReferencedObjectData",
+        "name": "data",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp.dll:ECFightRoleCharacterView": [
+      {
+        "level": 0,
+        "type": "ECFightRoleCharacterView",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$SpriteRendererList>",
+        "name": "mSpriteList",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GamePlayerHUD>",
+        "name": "mPlayerHUD",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$PlayerAnimatorAppearance>",
+        "name": "mPlayerAppearance",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "mDieOnStartPlayable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "mDiePlayable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "mTryDiePlayableOnStart",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "mGeneratePlayable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "float",
+        "name": "mGenerateDelayTime",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "mGeneratePlayableNeedDelay",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "mDelayVisibilityParts",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "PPtr<$GameObject>",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp.dll:ECFightRoleHpView": [
+      {
+        "level": 0,
+        "type": "ECFightRoleHpView",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$BattleHpSpriteSlider>",
+        "name": "mHpSlider",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp.dll:ECFightRoleStatusDisplayView": [
+      {
+        "level": 0,
+        "type": "ECFightRoleStatusDisplayView",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$FightStatusItem>",
+        "name": "mStatusItem",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$Transform>",
+        "name": "mStatusItemSlot",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "mMaxCountOfRow",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "mMaxRowCount",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp.dll:ECFightRoleTeamFlagView": [
+      {
+        "level": 0,
+        "type": "ECFightRoleTeamFlagView",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$TeamMemberReadyBattleFlag>",
+        "name": "mReadyBattleFlag",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp.dll:ECActionAgentPlayableView": [
+      {
+        "level": 0,
+        "type": "ECActionAgentPlayableView",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "mActionTypePlayables",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "ActionTypePlayable",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "ActionType",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "PPtr<$GameObject>",
+        "name": "Playable",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "UInt8",
+        "name": "StopOnActionEnd",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "PPtr<$GameObject>",
+        "name": "EndPlayable",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp.dll:ECFightRolePartInView": [
+      {
+        "level": 0,
+        "type": "ECFightRolePartInView",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "mPartInPlayable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp.dll:ECFightRoundGMDisplayView": [
+      {
+        "level": 0,
+        "type": "ECFightRoundGMDisplayView",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$Transform>",
+        "name": "mGMRoundSlot",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp.dll:ECFightDebugClickView": [
+      {
+        "level": 0,
+        "type": "ECFightDebugClickView",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "mClickObj",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp.dll:ECPrepareBattleDragView": [
+      {
+        "level": 0,
+        "type": "ECPrepareBattleDragView",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "mRaisePlayable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "mDownPlayable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "StateSwitcher`1",
+        "name": "mFrameShowStateSwitcher",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "mStateConfigs",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "managedReference",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "SInt64",
+        "name": "rid",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "PPtr<$GameObject>",
+        "name": "mOwner",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      }
+    ],
+    "Framework.dll:StateGameObjectConfig": [
+      {
+        "level": 0,
+        "type": "StateGameObjectConfig",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "StateGameObjectData",
+        "name": "mStateGameObjectData",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "GoConfig",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "StateGameObjectKV",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "StateConfigValue",
+        "name": "State",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "mValue",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "vector",
+        "name": "GameObjects",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "PPtr<$GameObject>",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      }
+    ]
+  },
+  "death_method_port": {
+    "archive_receipt": {
+      "path": ".tools/source-packages/current/884_156692/client-decompilation-manifest.json",
+      "sha256": "4a203396ca1aa7b924038134239f3e203a26ac5e1c879ad52076167912cb6ebe"
+    },
+    "official_sources": [
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/ECFightRoleCharacterView.cs",
+        "sha256": "6845b6511d5aae48ab3818735b8452f1c152009e2fc8ee22a9521ff415bccac0"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/AnimationController.cs",
+        "sha256": "cd59a6e68288133c542c5b7a8f03049be528775a299ddc841f883f1a1fd15a47"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableAnimator.cs",
+        "sha256": "833f0b99dc83f3db92dc90400d8cea36596dde43a024f1ceb3f326e84d0e17b2"
+      }
+    ],
+    "outputs": [
+      {
+        "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleCharacterDeathCatalog.cs",
+        "sha256": "f316930ec1ddcc2c520904fdcd9378d0598a2e9090ad9daac65d2c2300b29507"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleCharacterDeathPlayback.cs",
+        "sha256": "97fbe482f9d8b6e7fc30bb4c5670dab92bbdb78bb44298c1fe93f2695d27759c"
+      },
+      {
+        "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleCharacterDeathValidation.cs",
+        "sha256": "44412488d650cd115d040617e401544c3dcc03085dc5cb8db89ce58871568613"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleCharacterDeathCatalog.cs.meta",
+        "sha256": "c5b06f1e197a1e88da516e34282133734c2523b66c3cb9e843fb805c8f062230"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleCharacterDeathPlayback.cs.meta",
+        "sha256": "4c194bc1374f8974061d42ae5078bf0621191dcae51820b8be5821af6754cbea"
+      },
+      {
+        "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleCharacterDeathValidation.cs.meta",
+        "sha256": "0dc6fcfe6b727f046c542f1a24820eeddb19f52b966787bf6989571f384d6088"
+      }
+    ],
+    "operation": "Port only ECFightRoleCharacterView death methods, retaining initialization gate, try-on-start, normal/on-start nullable prefab selection, original manager Play source/target, force-resume-all-pauses, stop-then-replay and Stop handle cleanup. The exact bound entity root/current death value replace global MyEntity lookup and component subscription. This is not a port of the complete role view or production scene integration."
+  }
+}
