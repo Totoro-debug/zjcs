@@ -18,6 +18,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         private readonly Dictionary<int, Extension> extensions;
         private readonly EntityMapUIDisplayInfoParser displays = new EntityMapUIDisplayInfoParser();
         private readonly NativeMap13AssetCatalog assets;
+        private NativeMap13AssetCatalog dialogAssets;
 
         public MainlineMiniMapMarkerCatalog(TextAsset configuration, NativeMap13AssetCatalog assets)
         {
@@ -67,6 +68,40 @@ namespace Zjcs.Offline.World.MainlineMiniMap
             if (string.IsNullOrEmpty(originalPath) || !originalPath.StartsWith(Prefix, StringComparison.Ordinal))
                 throw new InvalidDataException("Expected the original marker prefab address.");
             return assets.Load<GameObject>(originalPath.EndsWith(".prefab", StringComparison.Ordinal) ? originalPath : originalPath + ".prefab");
+        }
+
+        public GameObject LoadDialogPrefab(Type dialogType)
+        {
+            if (dialogType == null || dialogType.IsAbstract || !typeof(MiniMapMarkDialogBase).IsAssignableFrom(dialogType))
+                throw new ArgumentException("An original concrete marker dialog type is required.", nameof(dialogType));
+            var address = (MiniMapWindowAttribute)Attribute.GetCustomAttribute(dialogType, typeof(MiniMapWindowAttribute));
+            if (address == null || string.IsNullOrEmpty(address.Path) || !address.Path.StartsWith("Map/MiniMap/MiniMapMarkDialog/", StringComparison.Ordinal))
+                throw new InvalidDataException("The original marker dialog address is missing.");
+            var prefab = DialogAssets.Load<GameObject>("UI/" + address.Path + ".prefab");
+            if (prefab.GetComponent(dialogType) == null
+                || prefab.GetComponent<Zjcs.Official.World.Map13MiniMapWindows.PopupWindow>() == null)
+                throw new InvalidDataException("The native marker dialog has different original components.");
+            return prefab;
+        }
+
+        public Sprite LoadDialogSprite(string originalPath)
+        {
+            if (string.IsNullOrEmpty(originalPath))
+                throw new InvalidDataException("The original dialog sprite address is required.");
+            return DialogAssets.Load<Sprite>(originalPath.EndsWith(".asset", StringComparison.Ordinal)
+                ? originalPath : originalPath + ".asset");
+        }
+
+        private NativeMap13AssetCatalog DialogAssets
+        {
+            get
+            {
+                if (dialogAssets == null)
+                    dialogAssets = Resources.Load<NativeMap13AssetCatalog>("MainlineMiniMap/mark-dialog-assets");
+                if (dialogAssets == null)
+                    throw new InvalidDataException("The complete original marker dialog resource catalog is missing.");
+                return dialogAssets;
+            }
         }
 
         [Serializable] private sealed class Data

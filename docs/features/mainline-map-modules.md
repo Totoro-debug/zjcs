@@ -203,6 +203,10 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 六图资源目录的隔离图形 Play Mode 已通过：94块原资源板、620个标记点（森之国121、山之国160、泽之国178、龙之国161），全部 Sprite 逻辑字段、网格／图集UV与来源凭据一致；覆盖原资源层顺序、物品／怪物定位过滤、地区映射、公开／私有／未知状态事件、显式选择与引导取消、缓存复用及全部租约释放。已实际查看四张资源标记渲染截图；共用Sprite恢复代码后的六图回归同样通过。测试直接驱动原管理器，不代表正式地图鼠标操作或存档流程。三项来源／绑定检查、全量静态元数据检查（119,305个GUID）、正式工程Unity导入／编译与 `ProjectTools.Validate` 通过。当前没有发布新的Windows Player。
 
+共享标记目录现在按原 `MiniMapWindowAttribute` 地址读取三个完整原生标记弹窗，`LoadDialogPrefab(Type)` 核对原控制器与 `PopupWindow` 类型，`LoadDialogSprite` 复用同一目录的17份原 Sprite；入口为 `Resources/MainlineMiniMap/mark-dialog-assets`。目录只引用既有原 prefab、图集、字体、材质、动画与声音，不修改层级或布局。历史871原生资源和当前884标记配置分别保留来源身份，不认定整版等价，见[共享弹窗资源凭据](../../assets/reference/official-map/mainline-minimap-mark-dialog-catalog-source-manifest.json)。正式弹窗宿主、原遮罩与地图状态 Adapter 的组合仍未接通。
+
+共享弹窗的正式工程图形 Play Mode 已改为通过上述 Resources 目录加载全部原 prefab／Sprite，验证402个层级对象、1,488个组件的托管与对象引用、原中文标签与背景、7份动画、42次窗口状态变化、两次模拟鼠标传送按钮、原音频播放、显示／隐藏事件顺序、暂停恢复、半秒遮罩点击保护、重入／取消及全部背景资源租约释放。已查看三个实际运行弹窗画面；这些画面来自原窗口测试宿主，尚未覆盖正式地图的实体详情或原模糊遮罩画面，本批未发布新 Windows Player。全量静态元数据检查（124,797个GUID）、正式工程导入／编译、`ProjectTools.Validate` 及来源／输出／绑定哈希检查通过。
+
 ## 自定义实现
 
 鲸背岛数据由公共 `OfficialWorldMapAssetCatalog.LoadMap(16)` 统一读取和校验来源，图形 Play Mode 已检查本图数据身份与未开放入口状态。公共夹具的 `-verify-map15-only` 分支另通过通天塔模拟移动、冷读及每日访问效果冷读；后者比较访问前已有记录及新增的一条精确效果，不依赖被跳过的英雄雕像步骤。整图与资源接线边界见[鲸背岛](../maps/map-16.md)。

@@ -2289,3 +2289,8 @@ unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipVa
 unity/Assets/Official/World/Map/14/source-manifest.json text eol=lf
 scripts/prepare_unity_map10_entities.py text eol=lf
 unity/Assets/Official/World/Map/14/map14.json text eol=lf
+
+# Keep the shared original marker dialog resource catalog reproducible.
+scripts/prepare_mainline_minimap_dialog_catalog.py text eol=lf
+assets/reference/official-map/mainline-minimap-mark-dialog-catalog-source-manifest.json text eol=lf
+unity/Assets/Game/Resources/MainlineMiniMap/mark-dialog-assets.asset* text eol=lf

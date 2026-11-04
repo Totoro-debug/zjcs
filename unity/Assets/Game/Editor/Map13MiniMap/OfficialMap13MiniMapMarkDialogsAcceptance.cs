@@ -18,6 +18,8 @@ using Zjcs.Official.World.NativeLabelUI;
 using Zjcs.Official.World.NativeLabelUI.Framework;
 using Zjcs.Official.World.NativeTerrain.Common;
 using Zjcs.Offline.ProfessionUI;
+using Zjcs.Offline.World.MainlineMiniMap;
+using Zjcs.Offline.World.NativeMap13;
 using Object=UnityEngine.Object;
 using PopupWindow=Zjcs.Official.World.Map13MiniMapWindows.PopupWindow;
 using FullScreenAction=Zjcs.Official.StoryPlayables.GAction<UnityEngine.GameObject>;
@@ -31,7 +33,6 @@ namespace Zjcs.Editor.Map13MiniMap
     public static class OfficialMap13MiniMapMarkDialogsAcceptance
     {
         private const string Key="Zjcs.Map13.MiniMapMarkDialogs.Running";
-        private const string Native="Assets/Official/World/Map/13/NativeMiniMapMarkDialogs/";
         private static IEnumerator routine;private static readonly Stack<IEnumerator> routines=new Stack<IEnumerator>();private static int errors;
         private static string Workspace=>Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
         private sealed class Data:MiniMapMarkBase
@@ -72,7 +73,10 @@ namespace Zjcs.Editor.Map13MiniMap
             Application.runInBackground=true;
             var pipeline=AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>("Assets/Official/World/Map/13/NativePipeline/UniversalRenderPipeline.asset");GraphicsSettings.renderPipelineAsset=pipeline;QualitySettings.renderPipeline=pipeline;
             int objects=0,components=0;
-            var prefabs=AssetDatabase.FindAssets("t:Prefab",new[]{Native.TrimEnd('/')}).Select(g=>AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(g))).OrderBy(p=>p.name).ToArray();Require(prefabs.Length==3,"Three original dialog prefabs");
+            var catalog=new MainlineMiniMapMarkerCatalog(Resources.Load<TextAsset>("MainlineMiniMap/current-marker-data"),Resources.Load<NativeMap13AssetCatalog>("MainlineMiniMap/current-marker-assets"));
+            var prefabs=new[]{typeof(MiniMapDisplayMarkDialog),typeof(MiniMapEntryMarkDialog),typeof(MiniMapWayPointMarkDialog)}.Select(catalog.LoadDialogPrefab).OrderBy(p=>p.name).ToArray();Require(prefabs.Length==3,"Three original dialog prefabs through Player resources");
+            var nativeCatalog=Resources.Load<NativeMap13AssetCatalog>("MainlineMiniMap/mark-dialog-assets");Require(nativeCatalog&&nativeCatalog.Bindings.Length==20,"Complete Player dialog resource closure");
+            foreach(var binding in nativeCatalog.Bindings.Where(row=>row.Asset is Sprite))Require(catalog.LoadDialogSprite(binding.OfficialPath)==binding.Asset,"Original sprite address resolves the bound native object");
             foreach(var prefab in prefabs)
             {
                 Require(!PrefabUtility.HasManagedReferencesWithMissingTypes(prefab),"Original managed references: "+prefab.name);
@@ -90,7 +94,7 @@ namespace Zjcs.Editor.Map13MiniMap
             var canvas=new GameObject("OriginalWindowContainerFixture",typeof(RectTransform),typeof(Canvas),typeof(CanvasScaler),typeof(GraphicRaycaster));var cv=canvas.GetComponent<Canvas>();cv.renderMode=RenderMode.ScreenSpaceCamera;cv.worldCamera=camera;cv.planeDistance=100;var scaler=canvas.GetComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;scaler.referenceResolution=new Vector2(1080,1920);scaler.matchWidthOrHeight=.5f;
             var staging=new GameObject("OriginalWindowInjectionFixture");staging.SetActive(false);
             var eventSystem=new GameObject("SimulatedPointer",typeof(EventSystem)).GetComponent<EventSystem>();
-            var map=new GameObject("OriginalMarkerDialogFixture").AddComponent<Map13NativeDialogFixture>();map.Background=AssetDatabase.LoadAssetAtPath<Sprite>(Native+"Image/UI/ItemNotes/BigMapStageBg/map_11_stage_bg.asset");var data=new Data(map.Trace,labels.Text("region_13_38"));int clicks=0,pixels=0,states=0;
+            var map=new GameObject("OriginalMarkerDialogFixture").AddComponent<Map13NativeDialogFixture>();map.Background=catalog.LoadDialogSprite("UI/ItemNotes/BigMapStageBg/map_11_stage_bg");var data=new Data(map.Trace,labels.Text("region_13_38"));int clicks=0,pixels=0,states=0;
             foreach(var prefab in prefabs)
             {
                 var host=new WindowHost();var go=Object.Instantiate(prefab,staging.transform,false);labels.Bind(go);var window=go.GetComponent<PopupWindow>();window.WindowManager=host;var dialog=go.GetComponent<MiniMapMarkDialogBase>();Require(dialog&&window,"Original dialog/window components");go.transform.SetParent(canvas.transform,false);go.SetActive(true);yield return null;go.SetActive(false);
