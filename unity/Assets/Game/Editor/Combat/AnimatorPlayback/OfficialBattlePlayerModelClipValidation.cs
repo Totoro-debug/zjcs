@@ -25,6 +25,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".physics", false);
             SessionState.SetBool(Key + ".high-textures", false);
             SessionState.SetBool(Key + ".weapon-physics", false);
+            SessionState.SetBool(Key + ".weapon-bones", false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")))
@@ -72,9 +73,10 @@ namespace Zjcs.Editor.Combat
                 var config = Resources.Load<AppearanceConfig>("Combat/SceneAppearance/AppearanceConfig");
                 var resolver = new ProfessionAppearanceResolver(ProfessionAppearanceTables.Load(Resources.Load<TextAsset>("Combat/SceneAppearance/appearance-tables").text));
                 var weaponTextures = weapons.Textures;
-                using var highPipeline = SessionState.GetBool(Key + ".high-textures", false)
+                bool useHighPipeline = SessionState.GetBool(Key + ".high-textures", false) || SessionState.GetBool(Key + ".weapon-bones", false);
+                using var highPipeline = useHighPipeline
                     ? Resources.Load<Zjcs.Presentation.Combat.OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets").Enter() : null;
-                if (SessionState.GetBool(Key + ".high-textures", false))
+                if (useHighPipeline)
                 {
                     // An empty scene has no camera and does not initialize its
                     // render pipeline. Render one actual camera frame first.
@@ -92,8 +94,9 @@ namespace Zjcs.Editor.Combat
                         warmupCamera.enabled = false; warmupCamera.targetTexture = null;
                         Object.Destroy(warmup); RenderTexture.ReleaseTemporary(warmupTarget);
                     }
-                    CheckHighTextures();
+                    if (SessionState.GetBool(Key + ".high-textures", false)) CheckHighTextures();
                     if (SessionState.GetBool(Key + ".weapon-physics", false)) CheckWeaponPhysics();
+                    if (SessionState.GetBool(Key + ".weapon-bones", false)) yield return CheckWeaponBoneOverrides();
                     weaponTextures = Resources.Load<ProfessionNativeWeaponTextureResources>("Combat/Weapons/texture-resources");
                 }
                 using var textures = new OfflineProfessionSceneTextureResources(catalog);

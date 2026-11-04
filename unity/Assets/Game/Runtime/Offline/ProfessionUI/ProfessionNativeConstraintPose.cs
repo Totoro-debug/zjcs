@@ -8,7 +8,7 @@ namespace Zjcs.Offline.ProfessionUI
     public static class ProfessionNativeConstraintPose
     {
         public static void EvaluateSetupBeforePhysics(ProfessionNativeAppearanceSkeleton skeleton,
-            ProfessionNativeConstraintAnimation setup)
+            ProfessionNativeConstraintAnimation setup, Action updateLocal = null)
         {
             if (skeleton == null || setup == null) throw new ArgumentNullException();
             if (!ReferenceEquals(setup.Source, skeleton.Source) || setup.Name != null)
@@ -17,11 +17,12 @@ namespace Zjcs.Offline.ProfessionUI
             var transforms = setup.SampleTransforms(0, skeleton.SkinConstraints);
             ValidateConstraints(ik, transforms);
             skeleton.SetToSetupPose();
+            updateLocal?.Invoke();
             Solve(skeleton, ik, transforms);
         }
 
         public static void EvaluateBeforePhysics(ProfessionNativeAppearanceSkeleton skeleton,
-            ProfessionNativeAnimationChannels channels, float time, bool loop = true)
+            ProfessionNativeAnimationChannels channels, float time, bool loop = true, Action updateLocal = null)
         {
             Validate(skeleton, channels, time);
             float position = loop && channels.Duration > 0 ? time % channels.Duration : time;
@@ -29,6 +30,7 @@ namespace Zjcs.Offline.ProfessionUI
             var transforms = channels.Constraints.SampleTransforms(position, skeleton.SkinConstraints);
             ValidateConstraints(ik, transforms);
             skeleton.EvaluateNativeAnimation(channels, time, loop);
+            updateLocal?.Invoke();
             Solve(skeleton, ik, transforms);
         }
 

@@ -15,6 +15,11 @@ namespace Zjcs.Offline.ProfessionUI
         private bool loop;
         private float duration, time;
         public float PhysicsTime => physics?.PhysicsTime ?? 0;
+        public event Action<ProfessionNativeAppearanceSkeleton> UpdateLocal, UpdateComplete;
+
+        private void ApplyPose(bool updatePhysics, float delta)
+            => physics.Apply(state, animation, time, false, delta, updatePhysics,
+                () => UpdateLocal?.Invoke(state), () => UpdateComplete?.Invoke(state));
 
         public void Play(ProfessionNativeAppearanceSkeleton target, string name, bool repeat)
         {
@@ -44,14 +49,14 @@ namespace Zjcs.Offline.ProfessionUI
             // Keep the accumulator at the original motion's bounded time.
             // Zero-duration clips retain their frame-zero pose.
             time = duration == 0 ? 0 : loop ? next % duration : Math.Min(next, duration);
-            physics.Apply(state, animation, time, false, delta);
+            ApplyPose(true, delta);
         }
 
         public void Apply(ProfessionNativeAppearanceSkeleton target)
         {
             if (state == null || !ReferenceEquals(state, target))
                 throw new InvalidOperationException("Play the original weapon animation on this skeleton before applying it.");
-            physics.Apply(target, animation, time, false, 0, updatePhysics: false);
+            ApplyPose(false, 0);
         }
     }
 }

@@ -105,7 +105,7 @@ namespace Zjcs.Offline.ProfessionUI
                     if (!transforms.TryGetValue(key, out Transform node))
                     {
                         node = new GameObject((string)source["name"]).transform; node.SetParent(parent, false);
-                        node.gameObject.layer = Int(source, "layer"); node.localPosition = Vector(source["position"]);
+                        node.gameObject.layer = Convert.ToInt32(source["layer"]); node.localPosition = Vector(source["position"]);
                         node.localScale = Vector(source["scale"]); var q = Obj(source["rotation"]);
                         node.localRotation = new Quaternion(Number(q, "x"), Number(q, "y"), Number(q, "z"), Number(q, "w"));
                         node.gameObject.SetActive(Flag(source, "active")); transforms.Add(key, node);

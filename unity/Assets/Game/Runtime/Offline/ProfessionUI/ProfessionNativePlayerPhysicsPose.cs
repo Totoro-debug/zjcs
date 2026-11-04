@@ -44,16 +44,18 @@ namespace Zjcs.Offline.ProfessionUI
             => Apply(skeleton, channels, animationTime, loop, deltaTime, true);
 
         public void Apply(ProfessionNativeAppearanceSkeleton skeleton, ProfessionNativeAnimationChannels channels,
-            float animationTime, bool loop, float deltaTime, bool updatePhysics)
+            float animationTime, bool loop, float deltaTime, bool updatePhysics,
+            Action updateLocal = null, Action updateComplete = null)
         {
             Validate(skeleton, channels, animationTime, deltaTime, updatePhysics);
             float position = Position(channels, animationTime, loop);
             var physics = (channels?.Physics ?? setupPhysics).Sample(position, skeleton.SkinConstraints);
             ApplyCompleted(skeleton, physics, deltaTime, updatePhysics, () =>
             {
-                if (channels == null) ProfessionNativeConstraintPose.EvaluateSetupBeforePhysics(skeleton, setupConstraints);
-                else ProfessionNativeConstraintPose.EvaluateBeforePhysics(skeleton, channels, animationTime, loop);
+                if (channels == null) ProfessionNativeConstraintPose.EvaluateSetupBeforePhysics(skeleton, setupConstraints, updateLocal);
+                else ProfessionNativeConstraintPose.EvaluateBeforePhysics(skeleton, channels, animationTime, loop, updateLocal);
             });
+            updateComplete?.Invoke();
         }
 
         public void ApplyMixNext(ProfessionNativeAppearanceSkeleton skeleton,

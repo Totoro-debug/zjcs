@@ -9,8 +9,8 @@ namespace Zjcs.Offline.ProfessionUI
     // Independent drawing endpoint for original primary-weapon poses. The
     // default clock advances in Update; diagnostic producers remain explicit.
     [RequireComponent(typeof(ProfessionNativeSceneMeshPart))]
-    public sealed class ProfessionNativeSceneWeaponRenderer : MonoBehaviour,
-        IProfessionAppearanceRendererLite, IProfessionFollowerRenderer, IProfessionPartAnimatedSkeleton
+    public sealed partial class ProfessionNativeSceneWeaponRenderer : MonoBehaviour,
+        IProfessionAppearanceRendererLite, IProfessionFollowerRenderer, IProfessionPartAnimatedSkeleton, IProfessionBoneOverrideAnimation
     {
         private ProfessionNativeSceneWeaponCatalog catalog;
         private ProfessionNativeSceneWeaponCatalog.Entry entry;
@@ -43,6 +43,11 @@ namespace Zjcs.Offline.ProfessionUI
             catalog = resources ? resources : throw new ArgumentNullException(nameof(resources));
             entry = catalog.Find(skin);
             playback = poseProducer == null ? new ProfessionNativeSceneWeaponPlayback() : null;
+            if (playback != null)
+            {
+                playback.UpdateLocal += OnUpdateLocal;
+                playback.UpdateComplete += _ => UpdateComplete?.Invoke(this);
+            }
             poses = poseProducer ?? playback;
         }
 
