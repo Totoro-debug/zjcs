@@ -1,0 +1,57 @@
+{
+  "manifest": "884_156692",
+  "mapClassId": 16,
+  "operation": "Normalize the pinned Whale Island story graphs, subgraph closure, localized dialogue, roles, options, and hand-in item rules for the shared offline runtime.",
+  "inputs": [
+    {
+      "path": "assets/reference/official-map/map16-story-source-manifest.json",
+      "bytes": 323942,
+      "sha256": "090d5a29d906bc525b22fb2b628654a645b3c190590ee2f70899a4a4e2ac1809"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/16/Source/story-source.json",
+      "bytes": 224492,
+      "sha256": "734100292801536dcb6365da73721311a4c0983fed8cde7c43d0f03358a96671"
+    },
+    {
+      "path": "scripts/prepare_unity_map16_story_runtime.py",
+      "bytes": 6507,
+      "sha256": "7df128414e2d753a318a66b5960e14d5370aa16003226242ed33943da77b02d3"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_story_runtime.py",
+      "bytes": 21385,
+      "sha256": "5a90eefa8f60d2641938eef470a87e48f65a49ce7680c738a7cacc77af732a08"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map16/stories.json",
+      "bytes": 303955,
+      "sha256": "e010c5dbd578d5a6c7b688765cbd7bdcaab5700aaf7539a2bb3a98d3e9a00570"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map16/stories.json.meta",
+      "bytes": 155,
+      "sha256": "43590942e4afe9942c0e90738384d6d436384171ef167017ed41173eb590c7f7"
+    }
+  ],
+  "counts": {
+    "graphs": 7,
+    "mainStories": 6,
+    "subgraphs": 1,
+    "nodes": 94,
+    "dialogueGroups": 17,
+    "dialogueLines": 45,
+    "dialogRoles": 2,
+    "mapLogicTags": 3,
+    "storyOptions": 6,
+    "fixedRewards": 0,
+    "handInItems": 1
+  },
+  "pendingRuntimeBindings": [
+    "official playables",
+    "Map16 battle-runtime",
+    "mainline map host"
+  ]
+}
