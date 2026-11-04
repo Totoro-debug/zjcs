@@ -90,7 +90,8 @@ namespace Zjcs.Editor
                     yield return RunColdArenaRestore(home, slot, root, output, click, value => home = value);
                     yield break;
                 }
-                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_DIRECT") == "1")
+                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_DIRECT") == "1"
+                    || Skills.SkillPlayModeAcceptance.PartnerBattleModelAcceptanceRequested)
                 {
                     yield return Capture(output, "home-entry");
                     yield return OpenTravel(home, click);
