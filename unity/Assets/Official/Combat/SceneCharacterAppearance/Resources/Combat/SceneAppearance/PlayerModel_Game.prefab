@@ -1,0 +1,460 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &-5782892318397170653
+GameObject:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_Component:
+  - component:
+      fileID: 5593072029723917347
+  - component:
+      fileID: 6271724979700628515
+  - component:
+      fileID: -2607812103905018845
+  - component:
+      fileID: 3624573931971410979
+  - component:
+      fileID: 4966496450495380515
+  - component:
+      fileID: -207813519153497053
+  - component:
+      fileID: 9138123871016713251
+  - component:
+      fileID: -6943088631072097245
+  - component:
+      fileID: -4467340010232415197
+  - component:
+      fileID: 4703190000899980323
+  - component:
+      fileID: -5882275686797214685
+  - component:
+      fileID: 114000000000000001
+  m_Layer: 0
+  m_Name: PlayerModel_Game
+  m_IsActive: 1
+  m_TagString: Character
+--- !u!4 &5593072029723917347
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -5782892318397170653
+  m_LocalRotation:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  m_LocalPosition:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  m_LocalScale:
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  m_Children:
+  - fileID: -8935329426613273565
+  - fileID: 5573745123873520675
+  m_Father:
+    fileID: 0
+--- !u!33 &6271724979700628515
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -5782892318397170653
+  m_Mesh:
+    fileID: 0
+--- !u!23 &-2607812103905018845
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -5782892318397170653
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_LightmapIndex: 65535
+  m_LightmapIndexDynamic: 65535
+  m_LightmapTilingOffset:
+    x: 1.0
+    y: 1.0
+    z: 0.0
+    w: 0.0
+  m_LightmapTilingOffsetDynamic:
+    x: 1.0
+    y: 1.0
+    z: 0.0
+    w: 0.0
+  m_Materials: []
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot:
+    fileID: 0
+  m_ProbeAnchor:
+    fileID: 0
+  m_LightProbeVolumeOverride:
+    fileID: 0
+  m_SortingLayerID: 1182434123
+  m_SortingLayer: 18
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams:
+    fileID: 0
+  m_EnlightenVertexStream:
+    fileID: 0
+--- !u!95 &3624573931971410979
+Animator:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -5782892318397170653
+  m_Enabled: 1
+  m_Avatar:
+    fileID: 0
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+  m_Controller:
+    fileID: 9100000
+    guid: 1d0f065db250a8dd57ab2873bd5f7227
+    type: 2
+--- !u!114 &4966496450495380515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -5782892318397170653
+  m_Enabled: 1
+  m_Script:
+    fileID: 11500000
+    guid: ddd5e04e0de945189e3289ea9c88e6e4
+    type: 3
+--- !u!114 &-207813519153497053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -5782892318397170653
+  m_Enabled: 1
+  m_Name: ''
+  SkinTextureAssetGuid:
+    mAssetGuid: 87bd06b35b068b849b40f5b5d71b420a
+  mPartHandler:
+    fileID: -4467340010232415197
+  TextureLoaderGuid:
+    mAssetGuid: 8f832ea7ecc2ee74c9539cb088df10eb
+  mSkeletonRenderer:
+    fileID: 4966496450495380515
+  m_Script:
+    fileID: 11500000
+    guid: 5ff9aa82fb9251a3b988a61904d4f1b8
+    type: 3
+--- !u!114 &9138123871016713251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -5782892318397170653
+  m_Enabled: 1
+  m_Name: ''
+  mPartHandler:
+    fileID: -4467340010232415197
+  m_Script:
+    fileID: 11500000
+    guid: 8b2446d274ac5a3880149798351c0efe
+    type: 3
+--- !u!114 &-6943088631072097245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -5782892318397170653
+  m_Enabled: 1
+  m_Name: ''
+  AppearanceCharacter:
+    fileID: 9138123871016713251
+  AppendSkinType: 4
+  mAppearanceInfoList: []
+  AnimController:
+    fileID: 0
+  Animator:
+    fileID: 3624573931971410979
+  PlayerPhase: 1
+  m_Script:
+    fileID: 11500000
+    guid: e72f0e5738c6561985c604d4fc314cd9
+    type: 3
+--- !u!114 &-4467340010232415197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -5782892318397170653
+  m_Enabled: 1
+  m_Name: ''
+  IgnoreSkinTypes: []
+  mSkeletonRenderer:
+    fileID: 4966496450495380515
+  mSlot:
+    fileID: -8935329426613273565
+  mSortingLayer: Object
+  mDefaultSortingOrder: 0
+  m_Script:
+    fileID: 11500000
+    guid: 981f3cc995b0e053ae6a84ae534ede91
+    type: 3
+--- !u!114 &4703190000899980323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -5782892318397170653
+  m_Enabled: 1
+  m_Name: ''
+  mSkinType: 3
+  mClipMeshProvideSlotName: body_tou_S/headOrnament_1_ZZ_A
+  mAppearanceCharacter:
+    fileID: 9138123871016713251
+  mAppearanceSpine:
+    fileID: -207813519153497053
+  m_Script:
+    fileID: 11500000
+    guid: fca05a2acfb99374aa9ad763f6a01d2c
+    type: 3
+--- !u!114 &-5882275686797214685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -5782892318397170653
+  m_Enabled: 1
+  m_Name: ''
+  m_Script:
+    fileID: 11500000
+    guid: ee1916fd0df83264e85fff325d64a8b5
+    type: 3
+--- !u!114 &114000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -5782892318397170653
+  m_Enabled: 1
+  m_Script:
+    fileID: 11500000
+    guid: 7220a09f3d6457808779622bba20008b
+    type: 3
+--- !u!1 &1529709911388453923
+GameObject:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_Component:
+  - component:
+      fileID: -8935329426613273565
+  m_Layer: 0
+  m_Name: PartSlot
+  m_IsActive: 1
+  m_TagString: Untagged
+--- !u!4 &-8935329426613273565
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: 1529709911388453923
+  m_LocalRotation:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  m_LocalPosition:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  m_LocalScale:
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  m_Children: []
+  m_Father:
+    fileID: 5593072029723917347
+--- !u!1 &-8231625195404264413
+GameObject:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_Component:
+  - component:
+      fileID: 5573745123873520675
+  - component:
+      fileID: 3778555387605220387
+  - component:
+      fileID: -9175646849513358301
+  m_Layer: 0
+  m_Name: Dimianzhezhao
+  m_IsActive: 1
+  m_TagString: Untagged
+--- !u!4 &5573745123873520675
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -8231625195404264413
+  m_LocalRotation:
+    x: -0.0
+    y: -0.0
+    z: -0.0
+    w: 1.0
+  m_LocalPosition:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  m_LocalScale:
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  m_Children: []
+  m_Father:
+    fileID: 5593072029723917347
+--- !u!114 &3778555387605220387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -8231625195404264413
+  m_Enabled: 1
+  m_Name: ''
+  SkeletonGo:
+    fileID: -5782892318397170653
+  SlotName: ZZshadow/dimianzhezhao
+  AttachmentName: dimianzhezhao
+  m_Script:
+    fileID: 11500000
+    guid: ff3ca41e6cda5fc5bcb544b073f2d4b8
+    type: 3
+--- !u!114 &-9175646849513358301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -8231625195404264413
+  m_Enabled: 1
+  m_Name: ''
+  mAppearanceRenderer:
+    fileID: -207813519153497053
+  m_Script:
+    fileID: 11500000
+    guid: 1e3d1a9d04385e11b48e8a8b37563623
+    type: 3

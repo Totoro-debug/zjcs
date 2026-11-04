@@ -115,7 +115,7 @@ namespace Zjcs.Offline.ProfessionUI
         }
     }
 
-    public sealed class ProfessionNativeClippingAttachment : ProfessionNativeAttachment
+    public sealed class ProfessionNativeClippingAttachment : ProfessionNativeAttachment, Zjcs.Official.CombatAppearance.IProfessionClippingAttachment
     {
         private readonly ProfessionNativeVertexAttachment vertices;
         private readonly float dataScale;

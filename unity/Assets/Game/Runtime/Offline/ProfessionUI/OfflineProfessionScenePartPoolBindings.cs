@@ -41,7 +41,7 @@ namespace Zjcs.Offline.ProfessionUI
         public GameObject Instantiate(IProfessionCharacterPartPrefab source, Transform parent)
         {
             if (!(source is Prefab prefab) || !prefab.Result) throw new ArgumentException("Original native prefab definition is unavailable.");
-            var target = parent ? parent.GetComponentInParent<ProfessionNativeSceneRenderer>() : null;
+            var target = parent ? parent.GetComponentInParent<ProfessionNativeSceneRenderer>(true) : null;
             if (!target) throw new InvalidOperationException("Bind the original PartSlot under its native scene renderer.");
             var instance = ProfessionNativeSceneWeapon.Create(catalog, prefab.Entry.InitialSkin, parent, target, materials, parts, poses);
             instances.Add(instance.GameObject, instance);
@@ -49,7 +49,7 @@ namespace Zjcs.Offline.ProfessionUI
         }
         public void PrepareRent(GameObject instance, Transform parent)
         {
-            var target = parent ? parent.GetComponentInParent<ProfessionNativeSceneRenderer>() : null;
+            var target = parent ? parent.GetComponentInParent<ProfessionNativeSceneRenderer>(true) : null;
             if (!target) throw new InvalidOperationException("Bind the original PartSlot under its native scene renderer.");
             instances[instance].PrepareTarget(target);
         }

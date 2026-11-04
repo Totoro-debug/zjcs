@@ -65,9 +65,9 @@ namespace Zjcs.Offline.ProfessionUI
             private readonly ProfessionNativeScenePartOrder order;
             internal ScenePartPlacement(ProfessionNativeSceneRenderer owner, IAppearanceSkeletonPart part)
             {
-                var body = owner.GetComponentInParent<SortingGroup>();
+                var body = owner.GetComponentInParent<SortingGroup>(true);
                 var parent = part.GameObject.transform.parent;
-                if (!body || !parent || parent.GetComponentInParent<SortingGroup>() != body)
+                if (!body || !parent || parent.GetComponentInParent<SortingGroup>(true) != body)
                     throw new InvalidOperationException("Native body and independent weapon must share the original character's sorting group.");
                 order = part.GameObject.GetComponent<ProfessionNativeScenePartOrder>();
                 if (!order)
