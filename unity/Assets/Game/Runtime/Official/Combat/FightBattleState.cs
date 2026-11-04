@@ -247,7 +247,10 @@ namespace Zjcs.Combat.Official
                 || left.EntityKind != right.EntityKind || left.EntityId <= 0 || left.EntityId != right.EntityId)
                 return false;
             if (left.SkillItemId > 0 && right.SkillItemId > 0) return left.SkillItemId == right.SkillItemId;
-            return left.SkillEntityId > 0 && left.SkillEntityId == right.SkillEntityId;
+            if (left.SkillEntityId > 0 && right.SkillEntityId > 0)
+                return left.SkillEntityId == right.SkillEntityId;
+            return left.SkillItemId == 0 && right.SkillItemId == 0
+                && left.SkillEntityId == 0 && right.SkillEntityId == 0;
         }
     }
 
