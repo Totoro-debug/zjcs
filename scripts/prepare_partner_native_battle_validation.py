@@ -1,5 +1,6 @@
 """Create an owned Unity project for original partner battle data and textures."""
 import json
+from pathlib import Path
 import shutil
 
 from official_apk import ROOT
@@ -34,10 +35,27 @@ def main():
     editor = project / "Assets/Editor"
     editor.mkdir(parents=True)
     shutil.copy2(ROOT / "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattleDataValidation.cs", editor)
+    gpu_validation = ROOT / "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattlePoseAcceptance.cs"
+    if gpu_validation.is_file():
+        shutil.copy2(gpu_validation, editor)
     (editor / "Validation.asmdef").write_text(json.dumps(dict(name="PartnerNativeBattleDataValidation",
-        includePlatforms=["Editor"], references=["Zjcs.Offline.ProfessionUI", "Zjcs.Official.ProfessionUI"])), encoding="utf-8", newline="\n")
+        includePlatforms=["Editor"], references=["Zjcs.Offline.ProfessionUI", "Zjcs.Official.ProfessionUI",
+            "Zjcs.Offline.Equipment", "Unity.RenderPipelines.Universal.Runtime"])), encoding="utf-8", newline="\n")
     shutil.copytree(ROOT / "unity/Assets/Official/Combat/NativePartners",
                     project / "Assets/Official/Combat/NativePartners")
+    shader_cache = ROOT / ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders"
+    shader_receipt = json.loads((shader_cache / "source-manifest.json").read_bytes())
+    shader, = [row for row in shader_receipt["shaders"] if row["source"]["object_sha256"] ==
+               "4aa96ea56babfdc788805e559c0c1d94e1d64b7ed36719d12e61f6a08bb850ae"]
+    from hashlib import sha256
+    shader_path = shader_cache / shader["path"]
+    if sha256(shader_path.read_bytes()).hexdigest() != shader["sha256"] or sha256(
+            Path(str(shader_path) + ".meta").read_bytes()).hexdigest() != shader["meta_sha256"]:
+        raise ValueError("Current original partner battle shader conversion changed")
+    shader_destination = project / "Assets/PartnerNativeBattleValidation/OriginalSkeletonEffect.shader"
+    shader_destination.parent.mkdir()
+    shutil.copy2(shader_path, shader_destination)
+    shutil.copy2(str(shader_path) + ".meta", str(shader_destination) + ".meta")
     packages = project / "Packages"
     packages.mkdir()
     shutil.copytree(ROOT / "unity/Packages/com.cysharp.unitask", packages / "com.cysharp.unitask")
@@ -53,6 +71,7 @@ def main():
     settings.mkdir()
     shutil.copy2(ROOT / "unity/ProjectSettings/ProjectVersion.txt", settings)
     shutil.copy2(ROOT / "unity/ProjectSettings/ProjectSettings.asset", settings)
+    shutil.copy2(ROOT / "unity/ProjectSettings/TagManager.asset", settings)
     print("Prepared original partner battle data with", len(selected), "runtime assemblies:", project)
 
 

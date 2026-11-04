@@ -177,7 +177,9 @@ namespace Zjcs.Offline.ProfessionUI
         }
 
         public ProfessionNativeBonePose CreateBonePose()
-            => new ProfessionNativeBonePose(bones, Sex.StartsWith("partner-portrait:", StringComparison.Ordinal));
+            => new ProfessionNativeBonePose(bones,
+                Sex.StartsWith("partner-portrait:", StringComparison.Ordinal) || Sex.StartsWith("partner-battle:", StringComparison.Ordinal),
+                Sex.StartsWith("partner-battle:", StringComparison.Ordinal));
         public ProfessionNativeSlotPose CreateSlotPose(ProfessionNativeBonePose pose) => new ProfessionNativeSlotPose(slots, pose);
         public IReadOnlyDictionary<string, object> GetAnimation(string name) => Object(animations[name]);
         public ProfessionNativeSlotPose.Clip CreateSlotClip(string animationName)

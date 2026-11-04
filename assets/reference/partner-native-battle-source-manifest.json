@@ -10838,7 +10838,31 @@
     "license": "MIT",
     "wheel_sha256": "e6a0c0c5a38c811c7b23074fb22381615edbbc0be42db2cd12468764228e8897"
   },
-  "generator_sha256": "a0c9ab6b3663000a1963745db3b7af70683078e16758036578f9557635c39e57",
+  "native_shader": {
+    "source": {
+      "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+      "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+      "path_id": "9169776915593584302",
+      "type": "Shader",
+      "object_sha256": "4aa96ea56babfdc788805e559c0c1d94e1d64b7ed36719d12e61f6a08bb850ae",
+      "name": "Universal Render Pipeline/Spine/SkeletonEffect-2D",
+      "platforms": [
+        9,
+        18
+      ],
+      "subshaders": 1,
+      "passes": 1
+    },
+    "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/Assets/Shaders/b29a473e62738eead13653b36769455d26786718ce89594fb7c40dba0d56a85f.shader",
+    "sha256": "2effb82caa6118b46eb095c038bb361859913e823f61ce549e5f82fca256931e",
+    "meta_sha256": "9098f5e0295f71665ade7f023948dbb323afcb9147e73676d87182fa5d08a8af",
+    "generator_sha256": "41f58ab1e79513ebf1da0544e32a36e13883799e0086c01ce1d1cda84dc8c151",
+    "reference": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/source-manifest.json",
+      "sha256": "09b81e5260175a1524a2178d37bea2b78752bdc85f130751e2d95398171fbe0b"
+    }
+  },
+  "generator_sha256": "55da33482c82ad418e963d914b961a09480d57bcda78c5124a7287db9b72f00f",
   "inputs": [
     {
       "path": "official-source.json",
@@ -10846,11 +10870,11 @@
     },
     {
       "path": "scripts/prepare_partner_native_battle.py",
-      "sha256": "a0c9ab6b3663000a1963745db3b7af70683078e16758036578f9557635c39e57"
+      "sha256": "55da33482c82ad418e963d914b961a09480d57bcda78c5124a7287db9b72f00f"
     },
     {
       "path": "scripts/prepare_partner_native_battle_validation.py",
-      "sha256": "6c1cf2085b8024af87233f2e8234c27a76e9cb810db92ad44bdd56fb094b8ffb"
+      "sha256": "c0831fd9332e9c2e82ab1a0fe3f12f316a09e2211e76f4e0acd71125f86d75eb"
     },
     {
       "path": "scripts/convert_official_skeletons.py",
@@ -10881,6 +10905,10 @@
       "sha256": "9505befc10bb3b7d64ad49773e47d8c93678df7bc604848b155bf822e6dd607a"
     },
     {
+      "path": "unity/ProjectSettings/TagManager.asset",
+      "sha256": "16fe6dfd6b07f8c0795e661509ec1fe0c31d2fdd917047efcf07fa44e4b3d5a9"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem/AppearanceRendererLite.cs",
       "sha256": "e0441d3ba36839af8381c6955de47eabd9ca1e02d86d858bd33be2fe07fe8d44"
     },
@@ -10901,12 +10929,52 @@
       "sha256": "d5d3e6bcbdf5263279e70767b0bd62182624b4e3ff953aadb042343625fbffb3"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.cs",
+      "sha256": "4ef188e18e4e089f270f242f9d77f67267d302a772dbfab7f4c136c471a8cb71"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs",
+      "sha256": "8b473978a8313cf966c3df498772cf247b60af88480df646496bc79b9fa9d178"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAffineIk.cs",
+      "sha256": "25677e38c149805af425e9d2185353da99926604009b998f548d674611499366"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeOrderedConstraintPose.cs",
+      "sha256": "6e7a4b43003b53c642c4a7bc6cde46330cb11381b083f6d26d7a74a31504c813"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePolygonClipper.cs",
+      "sha256": "a164dc25329971e1623b31661bc66951518bb70f92ba7fc24bfedf9d42384556"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeMeshBatches.cs",
+      "sha256": "65dab4d24bdf430172dd1448858a94824cfdf195f61b432a96cd7bbc0193b37a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerNativePortraitIk.cs",
+      "sha256": "85b82dee438363b20ceee20a84e56d9e832fe4e25965fa97352c46828ea44564"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConstraintPose.cs",
       "sha256": "057e05470231374185f4b83127b014143aa67a83360fff111597ed52eed0ce69"
     },
     {
       "path": "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattleDataValidation.cs",
-      "sha256": "6dca34be2fd3cbd8b8fbdb4ccab6f487a12439ae717a3b760ac234b6ab7e7685"
+      "sha256": "da0f2f311dded39d1c193ed0f208295286dda8fce7b35fb33d84e4dc668b52d1"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattlePoseAcceptance.cs",
+      "sha256": "50ce9f7356b8ae21a1653b4e8f53bad4f1546cd03e75963416076db9a0f46f89"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/Assets/Shaders/b29a473e62738eead13653b36769455d26786718ce89594fb7c40dba0d56a85f.shader",
+      "sha256": "2effb82caa6118b46eb095c038bb361859913e823f61ce549e5f82fca256931e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/Assets/Shaders/b29a473e62738eead13653b36769455d26786718ce89594fb7c40dba0d56a85f.shader.meta",
+      "sha256": "9098f5e0295f71665ade7f023948dbb323afcb9147e73676d87182fa5d08a8af"
     }
   ],
   "sources": {

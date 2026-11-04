@@ -82,7 +82,11 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 
 贴图沿原 `AppearanceRendererLite.SkeletonRenderer` 指针、`AppearanceConfig` 骨骼路径和 `AppearanceAddressUtils.GetTextureLoaderPath` 恢复。35 个渲染器均使用原 Low 分辨率；原材质的占位页与运行时 `TextureLoader_Low` 的实际目标分别保存，35 项映射对应 28 份不同的目标 PNG。11015–11022 的原 Low 目标为 24×24，当前原 High 目标也为该尺寸，未以其他图片替换。隔离 Unity 工程复用正式工程的 Linear 颜色空间；全部目标导入后的 RGBA 像素哈希、尺寸、mip、颜色空间、过滤／各轴 Wrap 参数一致，并恢复原可读性。
 
-Unity 编译及数据检查通过：35 个包的原动画名一致，错误 NPC 身份全部拒绝；791 段动画分别在起点、中点、终点构建网格，635 段通过，156 段明确拒绝尚未支持的交错约束顺序、路径、IK 分支或选择继承。`ProjectTools.Validate` 与静态检查（117,636 个 GUID）通过，354 项源码／安装文件哈希及安装元数据一致。材质渲染、Animator 播放、正式战斗和 Windows Player 尚未验证，34 个伙伴尚未加入战斗候选。输入对象、原贴图加载配置、解码器、转换及安装载荷／元数据哈希见[完整骨骼战斗数据来源](../../assets/reference/partner-native-battle-source-manifest.json)。未生成完整素材快照。
+`ProfessionNativeOrderedConstraintPose` 按原 order 交错求解 IK 与 Transform，保留前序约束结果；`ProfessionNativeAffineIk` 使用独立平面几何处理单骨骼、双骨骼的圆形／非均匀缩放椭圆及反射坐标，保留原混合、弯曲、伸展和适用的柔化分支。非均匀缩放时子骨骼 Y 归零且不伸展，依据[公开 IK 约束说明](https://esotericsoftware.com/spine-ik-constraints)；该分支的非零 softness 仍显式拒绝，当前相关原配置和动画均为零。恢复原 noScaleOrReflection 继承、11042 的相对局部旋转；原非凸裁剪边界通过独立三角剖分接入既有半平面裁剪，保持原三角形朝向与插值 UV，不复制动画 SDK。
+
+隔离 Unity 编译及数据检查通过：35 个包的原动画名一致，错误 NPC 身份全部拒绝；对 791 段动画的起点、中点、终点、全部原关键帧及相邻关键帧中点构建网格，共 36,929 个姿态采样，749 段通过；11009、11010 的 42 段因路径约束未接通而明确拒绝。另通过已知 FK 端点的非均匀缩放／反射双骨骼 IK、前序约束保留、单骨骼伸展、选择继承和非凸裁剪面积／重心／UV 检查。正式工程 Unity 导入／编译与 `ProjectTools.Validate`、静态检查（118,401 个 GUID）通过，365 项源码／安装文件哈希及 337 项安装元数据一致。
+
+内置屏 Direct3D Play Mode 使用当前原 shader 对象哈希完全匹配的 Windows 转换缓存，恢复原材质参数、Low 贴图、MeshRenderer 和 Transform 字段，检查 11001、11003、11005、11007、11042 的原 idle 与首段 skill_01 动作，30 张实际渲染画面已查看；11005 的独立背饰同时渲染。该隔离夹具直接采样动画，尚未证明正式 Animator、战斗集成或 Windows Player；34 个伙伴尚未加入正式战斗候选。输入对象、原贴图加载配置、shader 转换凭据、解码器、转换及安装载荷／元数据哈希见[完整骨骼战斗数据来源](../../assets/reference/partner-native-battle-source-manifest.json)。未生成完整素材快照。
 
 - 素材秘境（2）、道路属性门槛（1）、探索首领（All=10）、节庆首领（5）、联合行动（4）各自的实际选择入口、条件筛选、官方属性排序／门槛、站位、战斗加入、快照提交及结算接线；不能用日常副本的 All 规则替代这些玩法。
 - 羁绊冒险（6）的 NPC 战斗邀请入口和战斗接线；NPC 旅行是派遣系统，不等同战斗助战。

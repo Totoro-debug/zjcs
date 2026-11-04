@@ -48,7 +48,7 @@ namespace Zjcs.Offline.ProfessionUI
             if(slotCount<=0)throw new ArgumentOutOfRangeException(nameof(slotCount));
             this.slotCount=slotCount;seen=new bool[slotCount];Batches=active.AsReadOnly();
         }
-        public void Build(ProfessionNativeBonePose pose,IReadOnlyList<Slot> drawOrder,bool useClipping=true,bool pmaVertexColors=false,float zSpacing=0)
+        public void Build(ProfessionNativeBonePose pose,IReadOnlyList<Slot> drawOrder,bool useClipping=true,bool pmaVertexColors=false,float zSpacing=0,bool allowConcaveClipping=false)
         {
             if(disposed)throw new ObjectDisposedException(nameof(ProfessionNativeMeshBatches));
             if(float.IsNaN(zSpacing)||float.IsInfinity(zSpacing))throw new ArgumentOutOfRangeException(nameof(zSpacing));
@@ -60,7 +60,7 @@ namespace Zjcs.Offline.ProfessionUI
                     throw new ArgumentException("Original draw order is not a valid source-slot permutation.");
                 seen[slot.Index]=true;
             }
-            active.Clear();Batch current=null;ProfessionNativeConvexClipper clipping=null;int clipEnd=-1,clipStart=-1;
+            active.Clear();Batch current=null;ProfessionNativePolygonClipper clipping=null;int clipEnd=-1,clipStart=-1;
             for(int draw=0;draw<drawOrder.Count;draw++)
             {
                 Slot slot=drawOrder[draw];ProfessionNativeAttachment attachment=slot.Attachment;
@@ -69,7 +69,7 @@ namespace Zjcs.Offline.ProfessionUI
                     if(useClipping&&attachment is ProfessionNativeClippingAttachment clip)
                     {
                         if(clipping!=null)throw new NotSupportedException("Original clipping ranges overlap; their draw-order binding must be restored.");
-                        var boundary=new Vector2[clip.VertexCount];clip.ComputeVertices(pose,boundary,slot.Deform);clipping=new ProfessionNativeConvexClipper(boundary);clipEnd=clip.EndSlot;clipStart=slot.Index;
+                        var boundary=new Vector2[clip.VertexCount];clip.ComputeVertices(pose,boundary,slot.Deform);clipping=new ProfessionNativePolygonClipper(boundary,allowConcaveClipping);clipEnd=clip.EndSlot;clipStart=slot.Index;
                     }
                     else if(attachment is ProfessionNativeRenderAttachment render)
                     {

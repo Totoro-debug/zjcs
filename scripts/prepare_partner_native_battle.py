@@ -296,16 +296,38 @@ def build(work, install=False):
         "scripts/official_battle_spine_component.py", "scripts/official_unity_schema.py",
         "scripts/current_component_schemas.py", "scripts/official_manifest.py",
         "unity/ProjectSettings/ProjectSettings.asset",
+        "unity/ProjectSettings/TagManager.asset",
         ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem/AppearanceRendererLite.cs",
         ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceAddressUtils.cs",
         "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererLite.cs",
         "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceAssetManager.cs",
         "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.PartnerBattle.cs",
+        "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.cs",
+        "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs",
+        "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAffineIk.cs",
+        "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeOrderedConstraintPose.cs",
+        "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePolygonClipper.cs",
+        "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeMeshBatches.cs",
+        "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerNativePortraitIk.cs",
         "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConstraintPose.cs",
-        "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattleDataValidation.cs"]
+        "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattleDataValidation.cs",
+        "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattlePoseAcceptance.cs"]
+    shader_cache = ROOT / ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders"
+    shader_receipt = json.loads((shader_cache / "source-manifest.json").read_bytes())
+    shader, = [row for row in shader_receipt["shaders"] if row["source"]["object_sha256"] ==
+               "4aa96ea56babfdc788805e559c0c1d94e1d64b7ed36719d12e61f6a08bb850ae"]
+    for suffix, expected in (("", shader["sha256"]), (".meta", shader["meta_sha256"])):
+        path = shader_cache / (shader["path"] + suffix)
+        if sha(path.read_bytes()) != expected:
+            raise ValueError("Original current partner battle shader conversion changed")
+        inputs.append(path.relative_to(ROOT).as_posix())
     proof = dict(manifest=apk.version, selection=selected, rules_sha256=sha(rules_raw),
         asset_table_sha256=sha(table_raw), fighters=fighters,
         decoder=dict(name="SkelToJson", version="1.0.1", license="MIT", wheel_sha256=WHEEL_SHA256),
+        native_shader=dict(source=shader["source"], path=(shader_cache / shader["path"]).relative_to(ROOT).as_posix(),
+            sha256=shader["sha256"], meta_sha256=shader["meta_sha256"], generator_sha256=shader["generator_sha256"],
+            reference=dict(path=(shader_cache / "source-manifest.json").relative_to(ROOT).as_posix(),
+                sha256=sha((shader_cache / "source-manifest.json").read_bytes()))),
         generator_sha256=sha((ROOT / "scripts/prepare_partner_native_battle.py").read_bytes()),
         inputs=[dict(path=path, sha256=sha((ROOT / path).read_bytes())) for path in inputs],
         sources=sources, outputs=outputs)

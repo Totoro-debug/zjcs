@@ -37,6 +37,7 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly int[] inheritance;
         private readonly float[] rotation;
         private readonly bool allowNonuniformNoRotation;
+        private readonly bool allowNoScaleOrReflection;
         public int Count => source.Length;
         public bool IsActive(int bone) => active[bone];
         public Matrix4x4 World(int bone) => EvaluateWorld(bone);
@@ -48,9 +49,11 @@ namespace Zjcs.Offline.ProfessionUI
         public float LocalRotation(int bone) => rotation[bone];
         public bool HasWorldOverride(int bone) => overridden[bone];
 
-        public ProfessionNativeBonePose(Bone[] bones, bool allowNonuniformNoRotation = false)
+        public ProfessionNativeBonePose(Bone[] bones, bool allowNonuniformNoRotation = false,
+            bool allowNoScaleOrReflection = false)
         {
             this.allowNonuniformNoRotation = allowNonuniformNoRotation;
+            this.allowNoScaleOrReflection = allowNoScaleOrReflection;
             if (bones == null || bones.Length == 0) throw new ArgumentException("Original bone hierarchy is empty.");
             source = new Bone[bones.Length];
             var names = new HashSet<string>(StringComparer.Ordinal);
@@ -239,6 +242,8 @@ namespace Zjcs.Offline.ProfessionUI
             }
             else if (inheritance[i] == 3)
                 basis = WithoutParentScale(parent, rotation[i], shear[i], scale[i]);
+            else if (inheritance[i] == 4 && allowNoScaleOrReflection)
+                basis = WithoutParentScale(parent, rotation[i], shear[i], scale[i], false);
             else
                 throw new NotSupportedException("Original selective inheritance is unbound: " + b.name + "/" + inheritance[i]);
             basis.m03 = origin.x; basis.m13 = origin.y; world[i] = basis; ready[i] = true;
@@ -276,7 +281,8 @@ namespace Zjcs.Offline.ProfessionUI
             return result;
         }
 
-        private static Matrix4x4 WithoutParentScale(Matrix4x4 parent, float rotation, Vector2 shear, Vector2 scale)
+        private static Matrix4x4 WithoutParentScale(Matrix4x4 parent, float rotation, Vector2 shear, Vector2 scale,
+            bool preserveReflection = true)
         {
             // Reuse this repository's independent planar construction: normalize
             // the transformed local direction, retain the parent's determinant
@@ -284,7 +290,7 @@ namespace Zjcs.Offline.ProfessionUI
             Vector2 Direction(float degrees) => new Vector2(Mathf.Cos(degrees * Mathf.Deg2Rad), Mathf.Sin(degrees * Mathf.Deg2Rad));
             Vector2 u = parent.MultiplyVector(Direction(rotation));
             float length = u.magnitude; u = length > 1e-7f ? u / length : Vector2.zero;
-            float reflection = parent.m00 * parent.m11 - parent.m01 * parent.m10 < 0 ? -1 : 1;
+            float reflection = preserveReflection && parent.m00 * parent.m11 - parent.m01 * parent.m10 < 0 ? -1 : 1;
             Vector2 v = new Vector2(-u.y, u.x) * reflection;
             Vector2 a = Direction(shear.x) * scale.x, b = Direction(90 + shear.y) * scale.y;
             Vector2 x = u * a.x + v * a.y, y = u * b.x + v * b.y;
