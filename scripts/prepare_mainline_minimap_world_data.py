@@ -145,6 +145,7 @@ def build():
             ROOT / 'unity/Assets/Official/World/Map/14/SharedRuntime/hero-shared-prefabs.json',
             ROOT / 'unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset',
             CODE / 'common-source/Common/MapLogicEntityTagInfoParser.cs', CODE / 'common-source/Common/MapEntityExtra.cs',
+            CODE / 'common-source/Common/MapLoEntityIdManager.cs', CODE / 'common-source/Common/PlayerMap.cs',
             CODE / 'common-source/Common/MapTransportEntityInfoPackParser.cs',
             CODE / 'common-source/Common/MapTransportEntityTargetInfo.cs',
             CODE / 'common-source/MessagePack.Formatters.Common/MapTransportEntityTargetInfoFormatter.cs']

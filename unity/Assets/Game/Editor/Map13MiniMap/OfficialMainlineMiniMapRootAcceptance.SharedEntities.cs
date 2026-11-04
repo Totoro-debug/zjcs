@@ -9,6 +9,7 @@ using Zjcs.Offline.World.MainlineMiniMap;
 using Zjcs.Offline.World.MainlineMiniMapEntities;
 using Zjcs.Offline.World.NativeMap14SharedEntities;
 using Zjcs.Offline.World.NativeMap14SharedViews;
+using Zjcs.Official.StoryPlayables;
 using Zjcs.Official.World.Map13Entities;
 using Zjcs.Official.World.Map13EntityVisibilityViews;
 using Zjcs.Official.World.Map13MiniMap;
@@ -22,6 +23,7 @@ namespace Zjcs.Editor.Map13MiniMap
         {
             internal MainlineMiniMapWorldData World;
             internal MapRegionStatus Status;
+            internal int LastTagMap, LastTagPlacement;
             public bool HasMainPlayer { get; set; } = true;
             public bool HasMainMapContainer { get; set; } = true;
             public int MainMapClassId => 14;
@@ -30,7 +32,8 @@ namespace Zjcs.Editor.Map13MiniMap
             public string GetAreaTag(int map, int area) => World.GetAreaTag(map, area);
             public MiniMapMarkMapInfo GetMapInfo(int map) => World.GetMapInfo(map);
             public MiniMapMarkLoEntityInfo GetContainerEntityInfo(int map, int id) => World.GetContainerEntityInfo(map, id);
-            public string GetEntityTag(int map, int id) => World.GetEntityTag(map, id);
+            public string GetEntityTag(int map, int id)
+            { LastTagMap = map; LastTagPlacement = id; return World.GetEntityTag(map, id); }
             public int GridToRegion(int map, Pos2d position) => World.GridToRegion(map, position);
             public int QueryRegion(Pos2d position) => GridToRegion(14, position);
             public MapRegionStatus GetMapRegionStatus(int map, int region) => Status;
@@ -79,6 +82,15 @@ namespace Zjcs.Editor.Map13MiniMap
                 }
                 var prefabs = new NativeMap14SharedPrefabs(shared, catalog);
                 var queries = new SharedEntityQueries { World = world };
+                var placements = New("MapLoEntityIdManager");
+                object OriginalId(EcEntityIdentifier id)
+                    => Activator.CreateInstance(shared.CommonType("EcEntityIdentifier"), id.ContainerId, id.EntityId);
+                int PlacementId(EcEntityIdentifier id) => (int)Call(placements, "GetLoEntIdByEntId",
+                    new[] { shared.CommonType("EcEntityIdentifier") }, OriginalId(id));
+                void Bind(int placementId, EcEntityIdentifier id) => Call(placements, "SetLoEntId2EntId",
+                    new[] { typeof(int), shared.CommonType("EcEntityIdentifier") }, placementId, OriginalId(id));
+                var tagged = world.GetMapRegionDict(14).Values.SelectMany(region => world.GetEntityByMapRegion(14, region.Region))
+                    .First(row => !string.IsNullOrEmpty(world.GetEntityTag(14, row.LoEntityId)));
                 foreach (int classId in new[] { 6570, 6571, 6572, 6573 })
                 {
                     var placement = world.GetMapRegionDict(14).Values.SelectMany(region => world.GetEntityByMapRegion(14, region.Region))
@@ -86,7 +98,9 @@ namespace Zjcs.Editor.Map13MiniMap
                     var entity = prefabs.CreateClientPrefab(classId);
                     var container = New("EcContainer"); Set(container, "ClassId", 14);
                     Set(entity, "Container", container);
-                    Set(entity, "Id", Activator.CreateInstance(shared.CommonType("EcEntityIdentifier"), 14L, placement.LoEntityId));
+                    var runtimeId = new EcEntityIdentifier(14L, 100000 + placement.LoEntityId);
+                    Set(entity, "Id", OriginalId(runtimeId));
+                    Bind(placement.LoEntityId, runtimeId);
                     object Add(string name)
                     {
                         // GetComponent caches absence; construct the complete
@@ -119,12 +133,26 @@ namespace Zjcs.Editor.Map13MiniMap
                         var originalStage = view.Stage.Original;
                         int before = ReceiverCount(Get(originalStage, "StateUpdateEvent"));
                         var borrowed = view.Stage.Subscribe(_ => { });
-                        var adapter = new MainlineMiniMapSharedEntity(shared, view, queries);
+                        var adapter = new MainlineMiniMapSharedEntity(shared, view, queries, PlacementId);
                         try
                         {
                             Require(ReferenceEquals(adapter.Original, entity) && adapter.ClassId == classId
-                                && adapter.ContainerClassId == 14 && adapter.Id.EntityId == placement.LoEntityId
-                                && adapter.GetEntityTag() == (world.GetEntityTag(14, placement.LoEntityId) ?? string.Empty), "Original entity identity and logic tag");
+                                && adapter.ContainerClassId == 14 && adapter.Id.EntityId == runtimeId.EntityId
+                                && adapter.Id.EntityId != placement.LoEntityId
+                                && adapter.GetEntityTag() == (world.GetEntityTag(14, placement.LoEntityId) ?? string.Empty)
+                                && queries.LastTagMap == 14 && queries.LastTagPlacement == placement.LoEntityId,
+                                "Original runtime identity resolves its distinct placement for logic tags");
+                            // An unmapped runtime ID deliberately collides with an
+                            // actual tagged placement. Raw-ID fallback would leak its tag.
+                            var collisionId = new EcEntityIdentifier(14L, tagged.LoEntityId);
+                            Set(entity, "Id", OriginalId(collisionId));
+                            Require(adapter.GetEntityTag() == string.Empty && queries.LastTagPlacement == -1,
+                                "Missing original placement mapping keeps -1 without a raw runtime-ID fallback");
+                            Bind(tagged.LoEntityId, collisionId);
+                            Require(adapter.GetEntityTag() == world.GetEntityTag(14, tagged.LoEntityId)
+                                && queries.LastTagPlacement == tagged.LoEntityId,
+                                "Existing adapter reads the latest original placement mapping");
+                            Set(entity, "Id", OriginalId(runtimeId));
                             var body = adapter.GridTransform;
                             Require(body.GetBodyRange().SequenceEqual(view.Grid.Info.GetBodyRange())
                                 && body.Info.GetBodyRange().SequenceEqual(body.GetBodyRange())
@@ -179,15 +207,16 @@ namespace Zjcs.Editor.Map13MiniMap
                         Require(ReceiverCount(Get(originalStage, "StateUpdateEvent")) == before + 1, "Adapter releases only its own original receiver");
                         borrowed.Dispose(); Require(ReceiverCount(Get(originalStage, "StateUpdateEvent")) == before, "Borrowed original view remains usable");
                     }
+                    Call(placements, "Clear", Type.EmptyTypes);
                 }
                 using (var empty = new NativeMap14SharedViewEntity(shared, New("EcEntity")))
-                using (var adapter = new MainlineMiniMapSharedEntity(shared, empty, queries))
+                using (var adapter = new MainlineMiniMapSharedEntity(shared, empty, queries, PlacementId))
                     Require(adapter.GridTransform == null && adapter.GetComponent<IMiniMapManagedStage>() == null
                         && adapter.GetComponent<IMiniMapMarkWorldEntry>() == null && adapter.GetComponent<IMiniMapManagedGridMover>() == null,
                         "Absent original components are not fabricated");
                 VerifySharedWorld(shared, prefabs, queries);
             }
-            Debug.Log("MAINLINE_MINIMAP_SHARED_ENTITY_PASS: four actual two-cell hero prefabs; original stage activity/checkers/events, centroid, transport, entry, waypoint, ownership, occupancy and owned receiver teardown. Additional component fixtures do not assert hero configuration.");
+            Debug.Log("MAINLINE_MINIMAP_SHARED_ENTITY_PASS: four actual two-cell hero prefabs; distinct runtime/placement IDs, original missing/live mapping and tagged-ID collision; original stage activity/checkers/events, centroid, transport, entry, waypoint, ownership, occupancy and owned receiver teardown. Additional component and tag fixtures do not assert hero configuration.");
         }
     }
 }

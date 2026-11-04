@@ -94,7 +94,8 @@ namespace Zjcs.Editor.Map13MiniMap
             MainlineMiniMapSharedWorld world = null;
             try
             {
-                world = new MainlineMiniMapSharedWorld(shared, container, View, queries);
+                // This lifecycle fixture has no placement bindings or tag use.
+                world = new MainlineMiniMapSharedWorld(shared, container, View, queries, id => -1);
                 Require(eventNames.All(name => Receivers(Get(container, name + "Event")) == before[name] + 1), "Four owned original lifecycle receivers");
                 var firstId = new EcEntityIdentifier(14, 2);
                 var firstData = world.GetEntity(firstId);

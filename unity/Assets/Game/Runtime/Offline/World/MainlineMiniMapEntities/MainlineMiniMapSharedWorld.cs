@@ -20,6 +20,7 @@ namespace Zjcs.Offline.World.MainlineMiniMapEntities
         private readonly object container, area, ground;
         private readonly Func<object, NativeMap14SharedViewEntity> viewLookup;
         private readonly IMiniMapMarkDataQueries queries;
+        private readonly Func<EcEntityIdentifier, int> placementLookup;
         private readonly Dictionary<object, MainlineMiniMapSharedEntity> entities
             = new Dictionary<object, MainlineMiniMapSharedEntity>(IdentityComparer.Instance);
         private readonly List<IDisposable> subscriptions = new List<IDisposable>();
@@ -27,12 +28,14 @@ namespace Zjcs.Offline.World.MainlineMiniMapEntities
         public MiniMapManagedEvents Events { get; } = new MiniMapManagedEvents();
 
         public MainlineMiniMapSharedWorld(NativeMap14SharedAssemblies shared, object container,
-            Func<object, NativeMap14SharedViewEntity> viewLookup, IMiniMapMarkDataQueries queries)
+            Func<object, NativeMap14SharedViewEntity> viewLookup, IMiniMapMarkDataQueries queries,
+            Func<EcEntityIdentifier, int> placementLookup)
         {
             this.shared = shared ?? throw new ArgumentNullException(nameof(shared));
             this.container = container ?? throw new ArgumentNullException(nameof(container));
             this.viewLookup = viewLookup ?? throw new ArgumentNullException(nameof(viewLookup));
             this.queries = queries ?? throw new ArgumentNullException(nameof(queries));
+            this.placementLookup = placementLookup ?? throw new ArgumentNullException(nameof(placementLookup));
             if (!shared.CommonType("EcContainer").IsInstanceOfType(container))
                 throw new ArgumentException("The original map container is required.", nameof(container));
             if (!(bool)Get(container, "Started"))
@@ -88,7 +91,7 @@ namespace Zjcs.Offline.World.MainlineMiniMapEntities
             var view = viewLookup(original);
             if (view == null || !ReferenceEquals(view.Original, original))
                 throw new InvalidOperationException("The host returned a different original entity view.");
-            entity = new MainlineMiniMapSharedEntity(shared, view, queries);
+            entity = new MainlineMiniMapSharedEntity(shared, view, queries, placementLookup);
             entities.Add(original, entity);
             return entity;
         }

@@ -20,6 +20,7 @@ namespace Zjcs.Offline.World.MainlineMiniMapEntities
     {
         private readonly NativeMap14SharedViewEntity view;
         private readonly IMiniMapMarkDataQueries queries;
+        private readonly Func<EcEntityIdentifier, int> placementLookup;
         private readonly Grid grid;
         private readonly Stage stage;
         private readonly Transport transport;
@@ -29,11 +30,13 @@ namespace Zjcs.Offline.World.MainlineMiniMapEntities
         private readonly Mover mover;
 
         public MainlineMiniMapSharedEntity(NativeMap14SharedAssemblies shared,
-            NativeMap14SharedViewEntity view, IMiniMapMarkDataQueries queries)
+            NativeMap14SharedViewEntity view, IMiniMapMarkDataQueries queries,
+            Func<EcEntityIdentifier, int> placementLookup)
         {
             if (shared == null) throw new ArgumentNullException(nameof(shared));
             this.view = view ?? throw new ArgumentNullException(nameof(view));
             this.queries = queries ?? throw new ArgumentNullException(nameof(queries));
+            this.placementLookup = placementLookup ?? throw new ArgumentNullException(nameof(placementLookup));
             if (view.Original.GetType() != shared.CommonType("EcEntity"))
                 throw new ArgumentException("The original entity and assembly scope differ.", nameof(view));
             object Component(string name) => view.Original.GetType().GetMethod("GetComponent", new[] { typeof(Type) })
@@ -59,7 +62,7 @@ namespace Zjcs.Offline.World.MainlineMiniMapEntities
             get { var container = Get(Original, "Container"); return container == null ? 0 : (int)Get(container, "ClassId"); }
         }
         public IMiniMapMarkGrid GridTransform => grid;
-        public string GetEntityTag() => queries.GetEntityTag(ContainerClassId, Id.EntityId) ?? string.Empty;
+        public string GetEntityTag() => queries.GetEntityTag(ContainerClassId, placementLookup(Id)) ?? string.Empty;
         public T GetComponent<T>() where T : class
         {
             if (grid is T g) return g;
