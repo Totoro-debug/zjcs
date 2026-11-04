@@ -1,0 +1,385 @@
+#!/usr/bin/env python3
+"""Bind selected official detail actor prefabs to native Canvas application ports."""
+import copy
+import hashlib
+import json
+import argparse
+import re
+from pathlib import Path
+import yaml
+
+from official_apk import ROOT
+from official_manifest import read_asset_manifest
+from prepare_current_partner_native import documents, identity
+from prepare_partner_card_native import sha, guid, script_id, Dumper
+from prepare_partner_detail_window_native import PartnerDetailWindowBinding
+from prepare_partner_gift_native import PartnerGiftBinding
+from prepare_partner_input_dialog import metadata
+from validation_workspace import validation_directory
+
+NAME = 'partner-detail-actor-native-source-manifest.json'
+
+
+class PartnerDetailActorBinding(PartnerDetailWindowBinding):
+    def __init__(self, work):
+        self.actor_proof = json.loads((work / 'partner-detail-actor-data-source-manifest.json').read_bytes())
+        self.actor_rows = {row['source']: row for row in self.actor_proof['actors']}
+        self.native_actors, self.native_atlases, self.actor_roots = {}, {}, []
+        self.dynamic_assets, self.texture_addresses = [], []
+        self.texture_objects = {}
+        super().__init__(work)
+        for relative, expected in self.actor_proof['outputs'].items():
+            if sha((work / 'detail-actor-data' / relative).read_bytes()) != expected:
+                raise ValueError('Staged original actor data changed: ' + relative)
+
+    def register_scripts(self):
+        super().register_scripts()
+        runtime = ROOT / 'unity/Assets/Game/Runtime'
+        self.actor_scripts = {
+            'AppearanceCombineSkin': runtime / 'Official/PartnersUI/Detail/AppearanceCombineSkin.cs',
+            'UIBloomLiteSpineElement': runtime / 'Official/PartnersUI/Detail/UIBloomLiteSpineElement.cs',
+            'SpineLazyAnimLoad': runtime / 'Official/PartnersUI/Detail/SpineLazyAnimLoad.cs',
+            'AppearanceSystem.SkeletonGraphicProxy': runtime / 'Official/PartnersUI/Detail/SkeletonGraphicProxy.cs',
+            'AppearanceSystem.AppearanceUILite': runtime / 'Official/ProfessionUI/AppearanceUILite.cs',
+            'Spine.Unity.SkeletonSubmeshGraphic': runtime / 'Offline/ProfessionUI/ProfessionNativeUiBatchGraphic.cs',
+            'AppearanceSystem.AppearanceConfig': runtime / 'Official/ProfessionUI/AppearanceConfig.cs',
+            'AppearanceSystem.YooAssetTextureLoader': runtime / 'Official/ProfessionUI/YooAssetTextureLoader.cs',
+        }
+        for name, path in self.actor_scripts.items():
+            pointer = self.script_pointer(path)
+            self.scripts[name] = pointer
+            namespace, _, leaf = name.rpartition('.')
+            self.class_ids[script_id(namespace, leaf or name)] = pointer
+
+    def replace(self, value):
+        # AssetRipper emits an empty scalar for these original string fields.
+        # PyYAML reads that as None; writing `null` back makes Unity load the
+        # literal string "null", incorrectly enabling the optional dye request.
+        if isinstance(value, dict):
+            value = {key: '' if item is None and key in ('mAssetGuid', 'DyeTexturePath') else item
+                     for key, item in value.items()}
+        return super().replace(value)
+
+    def script_pointer(self, path):
+        meta = metadata(path)
+        result = dict(fileID=11500000, guid=guid(meta), type=3)
+        self.script_guids.add(result['guid'])
+        self.script_sources[path.relative_to(ROOT).as_posix()] = dict(path=path.relative_to(ROOT).as_posix(),
+            pointer=result, sha256=sha(path.read_bytes()), meta_sha256=sha(meta.read_bytes()))
+        return result
+
+    def native_fields(self, source_guid, obj):
+        path = self.native_path(source_guid, obj)
+        for value in (path, Path(str(path) + '.meta')):
+            key = value.relative_to(self.cache / 'native-export-all').as_posix()
+            if sha(value.read_bytes()) != self.checked[key]:
+                raise ValueError('Original actor native export changed: ' + key)
+            self.inputs[value.relative_to(ROOT).as_posix()] = sha(value.read_bytes())
+        docs = documents(path.read_text('utf8'))
+        fields, = [row['MonoBehaviour'] for row in docs.values() if 'MonoBehaviour' in row]
+        self.learn(self.recovery.fields(obj), fields, obj)
+        return path, fields
+
+    def local_asset(self, key, name, fields, script):
+        target_guid = hashlib.md5(('zjcs:partner-detail-actor:' + key).encode()).hexdigest()
+        reference = dict(fileID=11400000, guid=target_guid, type=2)
+        body = dict(m_ObjectHideFlags=0, m_CorrespondingSourceObject=dict(fileID=0), m_PrefabInstance=dict(fileID=0),
+            m_PrefabAsset=dict(fileID=0), m_GameObject=dict(fileID=0), m_Enabled=1, m_EditorHideFlags=0,
+            m_Script=self.script_pointer(script), m_Name=name, m_EditorClassIdentifier='', **fields)
+        self.queue.append((Path('ActorData') / (sha(key.encode())[:16] + '.asset'), target_guid,
+                           {11400000: dict(MonoBehaviour=body)}))
+        self.script_guids.add(target_guid)
+        return reference
+
+    def load_original(self, key):
+        keys = [source_guid for source_guid, obj in self.objects.items() if identity(obj) == key]
+        if not keys:
+            obj = self.original(key)
+            if obj.type.name not in ('Texture2D', 'Cubemap', 'Shader'):
+                raise ValueError('Resolve original actor native pointer: ' + key)
+            keys = [hashlib.md5(('zjcs:partner-detail-object:' + key).encode()).hexdigest()]
+            self.objects[keys[0]] = obj
+        result = self.load(keys[0])
+        # The caller embeds this already converted pointer in a new local asset.
+        # The dependency pass must not hash that local GUID as an original GUID.
+        self.script_guids.add(result['guid'])
+        return result
+
+    def actor_data(self, source_guid, obj):
+        key = identity(obj)
+        if key in self.native_actors:
+            return self.native_actors[key]
+        row = self.actor_rows[key]
+        _, fields = self.native_fields(source_guid, obj)
+        atlas, = fields['atlasAssets']
+        self.load(atlas['guid'])  # Learn original materials and placeholder GUIDs first.
+        base = self.work / 'detail-actor-data'
+        materials = json.loads((base / row['materials']).read_bytes())
+        regions = json.loads((base / row['regions']).read_bytes())
+        pages = []
+        for page in dict.fromkeys(region['page'] for region in regions):
+            matches = [texture for material in materials for texture in material['textures']
+                       if texture['property'] == '_MainTex' and texture['name'] in (page, page + '_placeholder')]
+            if len(matches) != 1:
+                raise ValueError('Original UI atlas page mapping is ambiguous: ' + page)
+            pages.append(dict(Name=page, Placeholder=self.load_original(matches[0]['original'])))
+        payload_guid = hashlib.md5(('zjcs:partner-ui-payload:' + key).encode()).hexdigest()
+        self.queue.append((Path('ActorData') / (sha(key.encode())[:16] + '.bytes'), payload_guid,
+                           (base / row['package']).read_bytes()))
+        self.script_guids.add(payload_guid)
+        split = json.loads((base / (row['package'].rsplit('/', 1)[0] + '/split-metadata.json')).read_bytes()) if 'model' in row['package'] else None
+        names = [item['ContentName'] for item in split['ListAnimationContent']
+                 if item['ContentName'] in row['animationNames']] if split else []
+        value = self.local_asset(key, obj.read(check_read=False).m_Name,
+            dict(payload=dict(fileID=4900000, guid=payload_guid, type=3), npcId=row['npcId'], combineSkins=[],
+                 defaultMix=self.recovery.fields(obj)['defaultMix'], pages=pages, splitAnimationNames=names),
+            ROOT / 'unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerNativeUiSkeletonAsset.cs')
+        self.native_actors[key] = value
+        return value
+
+    def load(self, source_guid):
+        if source_guid in self.redirects:
+            return self.redirects[source_guid]
+        obj = self.objects.get(source_guid)
+        if obj is not None and obj.type.name in ('Texture2D', 'Cubemap'):
+            key = identity(obj)
+            if key not in self.texture_objects:
+                self.texture_objects[key] = super().load(source_guid)
+                self.script_guids.add(self.texture_objects[key]['guid'])
+            self.redirects[source_guid] = self.texture_objects[key]
+            return self.redirects[source_guid]
+        if obj is not None and obj.type.name == 'MonoBehaviour':
+            original_script = obj.read(check_read=False).m_Script.deref()
+            script = original_script.read()
+            target = next((path for name, path in self.actor_scripts.items()
+                           if name.rsplit('.', 1)[-1] == script.m_ClassName), None)
+            if target is not None:
+                full_name = '.'.join(filter(None, (script.m_Namespace, script.m_ClassName)))
+                pointer = self.script_pointer(target)
+                self.scripts[full_name] = pointer
+                self.class_ids[script_id(script.m_Namespace, script.m_ClassName)] = pointer
+                self.proof[identity(original_script)] = dict(source=self.recovery.apk.provenance(original_script),
+                    original_sha256=sha(original_script.get_raw_data()), type='MonoScript',
+                    original_name=full_name, runtime=target.relative_to(ROOT).as_posix(), pointer=pointer)
+            if identity(obj) in self.actor_rows:
+                self.redirects[source_guid] = self.actor_data(source_guid, obj)
+                return self.redirects[source_guid]
+            if script.m_ClassName == 'SpineAnimationSplitBinarySO':
+                model, = [row for row in self.actor_rows.values() if 'model' in row['package']]
+                self.redirects[source_guid] = self.load_original(model['source'])
+                return self.redirects[source_guid]
+            if script.m_ClassName == 'SpineAtlasAsset':
+                path, fields = self.native_fields(source_guid, obj)
+                pointer = self.local_asset(identity(obj), fields['m_Name'],
+                    dict(sourcePath=path.relative_to(self.native).as_posix(), sourceGuid=source_guid,
+                         originalMetadata=dict(fileID=0), materials=fields['materials']),
+                    ROOT / 'unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeTextureAtlas.cs')
+                self.redirects[source_guid] = pointer
+                self.native_atlases[identity(obj)] = pointer
+                return pointer
+        return super().load(source_guid)
+
+    def friendship_templates(self):
+        self.recovery.recover('NpcModel_UI_8402', self.work / 'partner-native',
+            bundle='defaultpackage_assets_prefabs_appearance_npc_8402.bundle',
+            native_relative='Prefabs/Appearance/Npc/8402/NpcModel_UI_8402.prefab')
+        table = read_asset_manifest(self.recovery.apk.source.manifest_bytes('DefaultPackage', self.recovery.apk.archive))
+        live_path = 'Assets/Prefabs/Appearance/NpcLive/NpcDetailLiveItem.prefab'
+        live, = [row for row in table if row['path'] == live_path]
+        self.recovery.recover('NpcDetailLiveItem', self.work / 'partner-native', bundle=live['bundle'],
+            native_relative=live_path.removeprefix('Assets/'))
+        self.recovery.finalize()
+        # These addresses are selected by application configuration at runtime,
+        # so they are not reached by a prefab's serialized pointer closure.
+        requests = [row['textureLoader']['path'] for row in self.actor_rows.values() if row['textureLoader']]
+        requests += ['Assets/AppearanceAssets/NpcPortrait/NPC_illustration_8402/NPC_illustration_8402_SkeletonData.asset']
+        requests += [row['path'] for row in table if row['path'].endswith('/AppearanceConfig.asset')]
+        for path in requests:
+            entry, = [row for row in table if row['path'] == path]
+            obj = self.recovery.apk.asset(entry['bundle'], entry['path'])
+            # Yoo's runtime GUID and AssetRipper's native GUID are independent.
+            # Resolve the exact original asset path, then verify its cached bytes.
+            native = self.native / path.removeprefix('Assets/')
+            native_guid = guid(Path(str(native) + '.meta'))
+            self.objects[native_guid] = obj
+            self.dynamic_assets.append(dict(path=path, officialAssetGuid=entry['guid'], nativeGuid=native_guid,
+                original=identity(obj), source=self.recovery.apk.provenance(obj), original_sha256=sha(obj.get_raw_data()),
+                asset=self.load(native_guid)))
+        for row in self.actor_rows.values():
+            materials = json.loads((self.work / 'detail-actor-data' / row['materials']).read_bytes())
+            for material in materials:
+                for texture in material['runtimeTextures']:
+                    if any(item['guid'] == texture['guid'] for item in self.texture_addresses):
+                        continue
+                    pointer = self.load_original(texture['original'])
+                    self.texture_addresses.append(dict(guid=texture['guid'], path=texture['path'], asset=pointer))
+        templates = []
+        for native, _, original, evidence in self.recovery.outputs:
+            data = copy.deepcopy(original)
+            graphic, = [item for item in data['scripts'] if item['type'] == 'SkeletonGraphic']
+            go = data['documents'][graphic['nativeFileID']]['MonoBehaviour']['m_GameObject']['fileID']
+            render_root = data['documents'][data['root']]['GameObject']['m_Component'][0]['component']['fileID']
+            bootstrap_id = max(data['documents']) + 1
+            data['documents'][go]['GameObject']['m_Component'].insert(1, dict(component=dict(fileID=bootstrap_id)))
+            data['documents'][bootstrap_id] = dict(MonoBehaviour=dict(m_ObjectHideFlags=0,
+                m_CorrespondingSourceObject=dict(fileID=0), m_PrefabInstance=dict(fileID=0), m_PrefabAsset=dict(fileID=0),
+                m_GameObject=dict(fileID=go), m_Enabled=1, m_EditorHideFlags=0,
+                m_Script=self.script_pointer(ROOT / 'unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerNativeUiActor.cs'),
+                m_Name='', m_EditorClassIdentifier='', graphic=dict(fileID=graphic['nativeFileID']), renderRoot=dict(fileID=render_root)))
+            templates.append((evidence['name'], data))
+            self.actor_roots.append(dict(name=evidence['name'], source=evidence, bootstrap=bootstrap_id,
+                adaptation='Retain every original node, field and component; insert an explicit native binding before application initialization.'))
+        self.template_selection = self.actor_roots
+        return templates
+
+
+def install(work):
+    proof = json.loads((work / NAME).read_bytes())
+    if proof['generator_sha256'] != sha(Path(__file__).read_bytes()):
+        raise ValueError('Rebuild the staged original actor assets after generator changes')
+    for path, expected in proof['inputs'].items():
+        if sha((ROOT / path).read_bytes()) != expected: raise ValueError('Actor input changed: ' + path)
+    for path, expected in proof['runtime_bindings'].items():
+        if sha((ROOT / path).read_bytes()) != expected: raise ValueError('Actor application port changed: ' + path)
+    base = ROOT / 'unity/Assets/Official/Partners'
+    existing = {}
+    for meta in base.rglob('*.meta'):
+        path = Path(str(meta)[:-5])
+        if path.is_file():
+            key = guid(meta)
+            if key in existing: raise ValueError('Duplicate partner GUID: ' + key)
+            existing[key] = path
+    staged = {}
+    for relative, expected in proof['outputs'].items():
+        path = work / 'gift-assets' / relative
+        if sha(path.read_bytes()) != expected: raise ValueError('Staged actor dependency changed: ' + relative)
+        if not relative.endswith('.meta'):
+            meta = Path(str(path) + '.meta')
+            staged[guid(meta)] = (relative, path.read_bytes(), meta.read_bytes())
+    previous_path = ROOT / 'assets/reference' / NAME
+    previous = json.loads(previous_path.read_bytes()) if previous_path.exists() else {}
+    aliases = dict(previous.get('isolated_serialization_guids', {}))
+    def owned(path):
+        relative = path.relative_to(ROOT).as_posix()
+        expected = previous.get('installed_output_sha256', {}).get(relative)
+        within = (path.is_relative_to(base / 'UI/DetailActors') or
+                  path.is_relative_to(base / 'Resources/PartnerDetailTextures'))
+        return within and expected is not None and sha(path.read_bytes()) == expected
+    texture_keys = {row['asset']['guid'] for row in proof['texture_addresses']}
+    for key in texture_keys:
+        if key in existing and 'Resources' not in existing[key].parts:
+            aliases[key] = hashlib.md5(('zjcs:partner-detail-actor:' + key).encode()).hexdigest()
+    def remap(raw):
+        if not raw.startswith(b'%YAML'): return raw
+        return re.sub(rb'(?<=guid: )[0-9a-f]{32}', lambda m: aliases.get(m[0].decode(), m[0].decode()).encode(), raw)
+    while True:
+        changed = False
+        for key, (_, raw, _) in staged.items():
+            if key in aliases or key not in existing or owned(existing[key]): continue
+            if remap(raw) != existing[key].read_bytes():
+                aliases[key] = hashlib.md5(('zjcs:partner-detail-actor:' + key).encode()).hexdigest(); changed = True
+        if not changed: break
+    installed, planned, texture_resources = {}, [], {}
+    for key, (relative, raw, meta_raw) in staged.items():
+        mapped = aliases.get(key, key)
+        target = existing.get(mapped)
+        if target is None:
+            target = base / ('Resources/PartnerDetailTextures' if key in texture_keys else 'UI/DetailActors') / relative
+        raw = remap(raw)
+        meta_raw = re.sub(rb'(?m)^guid: [0-9a-f]{32}$', ('guid: ' + mapped).encode(), meta_raw)
+        if target.exists():
+            if target.read_bytes() != raw:
+                if not owned(target): raise ValueError('Preserve existing actor dependency: ' + str(target))
+                planned.append((target, raw))
+            old_meta = Path(str(target) + '.meta').read_bytes()
+            if yaml.safe_load(old_meta) != yaml.safe_load(meta_raw):
+                old_fields, new_fields = yaml.safe_load(old_meta), yaml.safe_load(meta_raw)
+                old_fields['guid'] = new_fields['guid']
+                if not (owned(target) and owned(Path(str(target) + '.meta')) and old_fields == new_fields):
+                    raise ValueError('Preserve existing actor metadata: ' + str(target))
+                planned.append((Path(str(target) + '.meta'), meta_raw))
+            else:
+                meta_raw = old_meta
+        else: planned += [(target, raw), (Path(str(target) + '.meta'), meta_raw)]
+        for path, content in ((target, raw), (Path(str(target) + '.meta'), meta_raw)):
+            installed[path.relative_to(ROOT).as_posix()] = sha(content)
+        if key in texture_keys:
+            index = target.parts.index('Resources')
+            texture_resources[key] = Path(*target.parts[index + 1:]).with_suffix('').as_posix()
+    for path, raw in planned:
+        path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(raw)
+    for folder in (base / 'UI/DetailActors', base / 'Resources', base / 'Resources/PartnerDetailTextures'):
+        for path in (folder, *[p for p in folder.rglob('*') if p.is_dir()]):
+            meta = metadata(path, 'DefaultImporter', True); installed[meta.relative_to(ROOT).as_posix()] = sha(meta.read_bytes())
+    def mapped(pointer): return dict(pointer, guid=aliases.get(pointer['guid'], pointer['guid']))
+    script = ROOT / 'unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerNativeDetailActorAssets.cs'
+    pointer = dict(fileID=11500000, guid=guid(metadata(script)), type=3)
+    config, = [row['asset'] for row in proof['dynamic_assets'] if row['path'].endswith('/AppearanceConfig.asset')]
+    body = dict(m_ObjectHideFlags=0, m_CorrespondingSourceObject=dict(fileID=0), m_PrefabInstance=dict(fileID=0),
+        m_PrefabAsset=dict(fileID=0), m_GameObject=dict(fileID=0), m_Enabled=1, m_EditorHideFlags=0,
+        m_Script=pointer, m_Name='PartnerNativeDetailActorAssets', m_EditorClassIdentifier='', config=mapped(config),
+        assets=[dict(Path=row['path'], Asset=mapped(row['asset'])) for row in proof['dynamic_assets']],
+        prefabs=[dict(Path='Appearance/Npc/8402/NpcModel_UI_8402', Prefab=mapped(proof['roots']['NpcModel_UI_8402'])),
+                 dict(Path='Appearance/NpcLive/NpcDetailLiveItem', Prefab=mapped(proof['roots']['NpcDetailLiveItem']))],
+        textures=[dict(Guid=row['guid'], Resource=texture_resources[row['asset']['guid']]) for row in proof['texture_addresses']],
+        atlases=[mapped(row) for row in proof['native_atlases'].values()])
+    catalog = ROOT / 'unity/Assets/Game/Resources/Partners/PartnerNativeDetailActorAssets.asset'
+    catalog.write_text('%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!114 &11400000\n' +
+        yaml.dump(dict(MonoBehaviour=body), Dumper=Dumper, sort_keys=False, allow_unicode=True, width=1000000), 'utf8', newline='\n')
+    for path in (catalog, metadata(catalog, 'NativeFormatImporter'), script, metadata(script)):
+        installed[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+    proof.update(installed_output_sha256=installed, isolated_serialization_guids=aliases)
+    previous_path.write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
+    print('Installed original detail actor assets:', len(installed), 'paths', flush=True)
+
+
+def main():
+    work = validation_directory()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--install', action='store_true')
+    if parser.parse_args().install:
+        install(work)
+        return
+    binding = PartnerDetailActorBinding(work)
+    try:
+        PartnerGiftBinding.build(binding)
+        proof = json.loads((work / 'partner-gift-native-source-manifest.json').read_bytes())
+        for relative in list(proof['outputs']):
+            if relative.endswith('.bytes.meta'):
+                path = work / 'gift-assets' / relative
+                path.write_bytes(path.read_bytes().replace(b'NativeFormatImporter:', b'TextScriptImporter:'))
+                proof['outputs'][relative] = sha(path.read_bytes())
+        runtime = ROOT / 'unity/Assets/Game/Runtime'
+        inputs = list(binding.actor_scripts.values()) + [
+            runtime / 'Official/PartnersUI/Detail/PartnerCombineSkinBindings.cs',
+            runtime / 'Offline/PartnersUI/PartnerNativeUiActor.cs',
+            runtime / 'Offline/PartnersUI/PartnerNativeUiSkeletonAsset.cs',
+            runtime / 'Offline/PartnersUI/OfflinePartnerUiTextureResources.cs',
+            runtime / 'Offline/PartnersUI/OfflinePartnerDetailLiveServices.cs',
+            runtime / 'Offline/PartnersUI/PartnerNativeDetailActorAssets.cs',
+            runtime / 'Offline/ProfessionUI/ProfessionNativeUiGraphic.cs',
+            runtime / 'Offline/ProfessionUI/ProfessionNativeUiBatchGraphic.cs']
+        inputs += [metadata(path) for path in list(inputs)]
+        inputs += [ROOT / 'scripts/fixtures/partner_detail_actor_render_validation.cs']
+        for name in ('AppearanceCombineSkin.cs', 'SpineLazyAnimLoad.cs', 'UIBloomLiteSpineElement.cs',
+                     'AppearanceSystem/SkeletonGraphicProxy.cs', 'AppearanceSystem.Runtime/YooAssetTextureLoader.cs'):
+            path = ROOT / '.tools/source-packages/current/884_156692/official-code/client-source' / name
+            proof['inputs'][path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+        proof.update(generator_sha256=sha(Path(__file__).read_bytes()), actor_data=binding.actor_proof,
+                     native_actor_assets=binding.native_actors, dynamic_assets=binding.dynamic_assets,
+                     texture_addresses=binding.texture_addresses,
+                     native_atlases=binding.native_atlases,
+                     runtime_bindings={path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in inputs},
+                     scope='Original 8402 UI model and live actor prefabs, native data and High texture bindings. Other companions and complete production detail host remain pending.',
+                     actor_adaptations=[
+                         'Retain original actor objects, fields, relative component order and sibling CanvasRenderer transforms; insert an explicit native bootstrap.',
+                         'Preserve original empty mAssetGuid and DyeTexturePath strings instead of serializing YAML null as literal text.',
+                         'Resolve one native texture binding per original CAB/PathID across all dependency paths.',
+                         'Package original High textures under explicit local Resources addresses; original application loaders retain request and release control.'])
+        (work / NAME).write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
+    finally:
+        binding.recovery.apk.archive.close()
+
+
+if __name__ == '__main__':
+    main()

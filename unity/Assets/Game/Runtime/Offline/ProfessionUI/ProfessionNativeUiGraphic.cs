@@ -64,6 +64,8 @@ namespace Zjcs.Offline.ProfessionUI
         public IProfessionAppearanceAnimationState AnimationState => State != null ? source?.AnimationState : null;
         public Material[] MaterialsMultipleCanvasRenderers { get; private set; } = Array.Empty<Material>();
         public Texture[] TexturesMultipleCanvasRenderers { get; private set; } = Array.Empty<Texture>();
+        private Texture[] placeholderTextures = Array.Empty<Texture>();
+        Texture[] IProfessionAppearanceUILiteGraphic.TexturesMultipleCanvasRenderers => placeholderTextures;
         public Texture OverrideTexture { get; set; }
         public Dictionary<Texture, Texture> CustomTextureOverride { get; } = new Dictionary<Texture, Texture>();
         public override Texture mainTexture => OverrideTexture ? OverrideTexture :
@@ -81,6 +83,20 @@ namespace Zjcs.Offline.ProfessionUI
         {
             if (State != null) throw new InvalidOperationException("Release the original UI skeleton before rebinding it.");
             source = value ?? throw new ArgumentNullException(nameof(value));
+        }
+        public void BindOriginalCanvasRenderers(Transform originalRoot)
+        {
+            if (State != null || graphics.Count != 0)
+                throw new InvalidOperationException("Bind the serialized original Canvas renderers before initialization.");
+            if (!originalRoot || !transform.IsChildOf(originalRoot))
+                throw new ArgumentException("Bind the exact original actor prefab root.");
+            foreach (var renderer in renderers)
+            {
+                var item = renderer ? renderer.GetComponent<ProfessionNativeUiBatchGraphic>() : null;
+                if (!item || !item.transform.IsChildOf(originalRoot) || graphics.Contains(item))
+                    throw new InvalidOperationException("Restore each original submesh graphic and its CanvasRenderer binding.");
+                graphics.Add(item);
+            }
         }
         public void Initialize(bool overwrite)
         {
@@ -133,21 +149,25 @@ namespace Zjcs.Offline.ProfessionUI
             if (!allowMultipleCanvasRenderers && count > 1)
                 throw new NotSupportedException("Original UI graphic requires multiple CanvasRenderers for these atlas/blend batches.");
             var materials = new Material[count]; var textures = new Texture[count]; var meshes = new Mesh[count];
+            var placeholders = new Texture[count];
             for (int i = 0; i < count; i++)
             {
                 var batch = batches.Batches[i]; meshes[i] = batch.Mesh;
                 materials[i] = source.MaterialForPage(batch.Page, batch.Blend);
                 var originalTexture = source.TextureForPage(batch.Page);
+                placeholders[i] = originalTexture;
                 textures[i] = !allowMultipleCanvasRenderers && OverrideTexture ? OverrideTexture :
                     originalTexture && CustomTextureOverride.TryGetValue(originalTexture, out var loaded) ? loaded : originalTexture;
                 if (!materials[i] || !textures[i]) throw new InvalidOperationException("Original UI atlas page/material is unbound: " + batch.Page);
             }
             MaterialsMultipleCanvasRenderers = materials; TexturesMultipleCanvasRenderers = textures;
+            placeholderTextures = placeholders;
             if (useCustomDemandLoading) OnCustomDemandLoading?.Invoke(this);
             SyncSubmeshGraphicsWithCanvasRenderers();
             for (int i = 0; i < count; i++)
             {
-                graphics[i].Assign(meshes[i], materials[i], textures[i], MeshScale, pivotOffset, color * m_SkeletonColor);
+                var sourceToBatch = graphics[i].transform.worldToLocalMatrix * transform.localToWorldMatrix;
+                graphics[i].Assign(meshes[i], materials[i], textures[i], MeshScale, pivotOffset, color * m_SkeletonColor, sourceToBatch);
                 graphics[i].Rebuild(CanvasUpdate.PreRender);
             }
             AssignMeshOverrideMultipleRenderers?.Invoke(count, meshes, materials, textures);
@@ -209,6 +229,7 @@ namespace Zjcs.Offline.ProfessionUI
             batches?.Dispose(); batches = null; State = null;
             separatorPartInstructions.Clear();
             MaterialsMultipleCanvasRenderers = Array.Empty<Material>(); TexturesMultipleCanvasRenderers = Array.Empty<Texture>();
+            placeholderTextures = Array.Empty<Texture>();
         }
         protected override void OnDestroy() { Release(); base.OnDestroy(); }
     }

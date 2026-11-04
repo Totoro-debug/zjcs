@@ -12,10 +12,13 @@ namespace Zjcs.Offline.ProfessionUI
         private Texture page;
         private float scale;
         private Vector2 offset;
+        private Matrix4x4 sourceToBatch = Matrix4x4.identity;
         public override Texture mainTexture => page ? page : s_WhiteTexture;
-        internal void Assign(Mesh value, Material sourceMaterial, Texture texture, float meshScale, Vector2 meshOffset, Color tint)
+        internal void Assign(Mesh value, Material sourceMaterial, Texture texture, float meshScale, Vector2 meshOffset, Color tint,
+            Matrix4x4 sourceToBatch)
         {
             mesh = value; page = texture; scale = meshScale; offset = meshOffset;
+            this.sourceToBatch = sourceToBatch;
             material = sourceMaterial; color = tint; raycastTarget = false;
             SetAllDirty();
         }
@@ -28,7 +31,7 @@ namespace Zjcs.Offline.ProfessionUI
             for (int i = 0; i < points.Length; i++)
             {
                 var vertex = UIVertex.simpleVert;
-                vertex.position = points[i] * scale + (Vector3)offset;
+                vertex.position = sourceToBatch.MultiplyPoint3x4(points[i] * scale + (Vector3)offset);
                 vertex.uv0 = uvs[i];
                 Color32 value = colors[i];
                 vertex.color = new Color32((byte)((value.r * tint.r + 127) / 255),

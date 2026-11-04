@@ -658,9 +658,13 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 ### 当前详情原生动画端口（局部）
 
-`prepare_partner_detail_actor_data.py` 按当前原 `NpcModel_UI_8402` 的实际 `SkeletonGraphic`、按需动画和 `AppearanceUILite.LevelOfResolution` 提取小模型；动态立绘独立读取原 `NPC_illustration_8402`，不使用战斗模型代替。小模型保留共享骨骼、171 个原皮肤和 57 段原按需动画，立绘保留 2 段原动画；共享骨骼引用的 `LoadAllAnimationsSkeletonDataModifier.Apply` 原为空方法。High 纹理按原 AppearanceConfig 与 TextureLoader 的 placeholder 映射解析颜色／染色图，原图、采样设置、对象及像素身份独立记录。此批数据仍在隔离工作区暂存，尚未安装为正式详情角色目录，也没有生成完整素材快照。
+`prepare_partner_detail_actor_data.py` 按当前原 `NpcModel_UI_8402` 的实际 `SkeletonGraphic`、按需动画和 `AppearanceUILite.LevelOfResolution` 提取小模型；动态立绘独立读取原 `NPC_illustration_8402`，不使用战斗模型代替。小模型保留共享骨骼、171 个原皮肤和 57 段原按需动画，立绘保留 2 段原动画；共享骨骼引用的 `LoadAllAnimationsSkeletonDataModifier.Apply` 原为空方法。High 纹理按原 AppearanceConfig 与 TextureLoader 的 placeholder 映射解析颜色／染色图，原图、采样设置、对象及像素身份独立记录。`prepare_partner_detail_actor_native.py` 已将 8402 的原 UI 小模型、通用动态立绘 prefab、两份骨骼载荷、原图集／材质和高清纹理安装到正式素材目录，显式目录为 `Partners/PartnerNativeDetailActorAssets`，高清纹理按需从 `PartnerDetailTextures` 加载；其余伙伴仍待接入，未生成完整素材快照。
 
 本地 `PartnerNativeUiPose` 将原应用层序列的开始／结束通知、循环、混合及点击后返回先前动画接到已有独立原生几何；`PartnerNativeUiPhysicsPose` 复用既有弹簧求解器，将原物理约束与 IK／变换／路径约束按配置顺序交错执行。UI 载荷采用独立身份 `ZJCSPNUI`／`partner-ui`，与战斗及头像载荷分别验证；原 Canvas 端口增加轻量外观贴图覆盖和移动继承端口，非预乘顶点色保留原 CanvasGroup 淡入语义。PMA 顶点色与 CanvasGroup 同用、相对物理参考系等新增分支仍显式拒绝，未以忽略字段方式放行。
+
+原应用 `AppearanceCombineSkin` 与 `SpineLazyAnimLoad` 的 UI 分支按原字段、顺序和初始化时机接到独立原生端口；场景／Mecanim 分支尚未接入。原 `SkeletonGraphicProxy`、`UIBloomLiteSpineElement` 元数据引用与完整 actor 层级保留；小模型原 CanvasRenderer 位于 Graphic 同级节点，本地后端复用该节点并转换两者坐标，不移动原节点。`OfflinePartnerUiTextureResources` 由原 `AppearanceUILite`／TextureLoader 决定加载和释放，以共享引用计数承接本地 Resources；空染色 GUID 保持空字符串，同一原 CAB／对象纹理只生成一个本地绑定。`OfflinePartnerDetailLiveServices` 承接原立绘数据切换与动画重建订阅，完整详情窗口和 Home 路由仍待接线。原对象、源代码、转换及安装哈希见[详情角色资源来源](../../assets/reference/partner-detail-actor-native-source-manifest.json)。
+
+`partner_detail_actor_render_validation.cs` 在隔离 Unity URP Play Mode 中实际加载正式 8402 小模型与通用立绘，核对原合并皮肤、高清纹理请求、停用释放／重开加载、销毁引用归零；通过实际射线模拟点击原立绘按钮，检查 `click_01` 播放后回到 `idle_01`，并验证停用／重开后的动画重建订阅。三张实际 450×800 GPU 画面已查看，运行无 Unity 错误。共享 Canvas 后端同时回归真实本地主角男女头像、原遮罩、模拟点击音效、血量更新和存档重开，查看两张运行画面，退出码为零。静态检查通过（125350 个 GUID），主工程 Unity 2022.3.57f1c2 导入／编译和 `ProjectTools.Validate` 退出码为零；1077 项安装路径及 31 项端口输入哈希一致。本次 Play Mode 验证位于独立角色视口，没有初始化完整详情窗口，不代表完整详情或 Windows Player 已完成。
 
 隔离 Unity 使用两份真实 UI 骨骼与原应用 `SkeletonGraphicAnimSequence`，验证原动画名称、缺失动画分支、触摸一次后返回原待机、点击恢复、连续点击混合、物理时钟、皮肤／遮罩／变形网格生成及实际活动骨骼的有限矩阵；随后完整详情资源引用和三页模拟指针回归通过。这是规则／几何端口检查，没有在完整详情窗口实际播放角色，也不替代画面及正式点击验证。静态检查通过，主工程 Unity 2022.3.57f1c2 导入／编译与 `ProjectTools.Validate` 通过；地图验证程序集补入其已使用的 NativeMap14 引用。源输入、按需动画／纹理映射、暂存输出与本地端口哈希见[详情角色原生端口来源](../../assets/reference/partner-detail-actor-runtime-source-manifest.json)。
 
