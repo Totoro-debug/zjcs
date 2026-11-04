@@ -12,6 +12,7 @@ using Zjcs.Combat.Official;
 using Zjcs.Offline.BattleNativePlayables;
 using Zjcs.Offline.ProfessionUI;
 using Zjcs.Presentation.Combat;
+using Zjcs.Official.BattleUnitUI;
 using AnimationController = Zjcs.Official.StoryAnimation.AnimationController;
 
 namespace Zjcs.Editor.ProfessionUI
@@ -41,7 +42,7 @@ namespace Zjcs.Editor.ProfessionUI
         {
             SessionState.SetBool(Active, false);
             if (error != null) Debug.LogException(error);
-            else Debug.Log("PARTNER_NATIVE_ROLE_SCENE_PASSED: shared scene creation, original shadows, movement, death/revival and restored death. Invitations, full unit HUD and Windows Player are not validated by this probe.");
+            else Debug.Log("PARTNER_NATIVE_ROLE_SCENE_PASSED: 26 original partner HP prefabs, damage/healing, shield below/above max, faction color, flip locking, shared scene shadows, movement, death/revival and restored death. Invitations, remaining unit HUD branches and Windows Player are not validated by this probe.");
             EditorApplication.Exit(error == null ? 0 : 1);
         }
     }
@@ -89,7 +90,7 @@ namespace Zjcs.Editor.ProfessionUI
                 var root = new GameObject("Partner shared scene " + npcId);
                 var checkpoint = new FightBattleCheckpoint { Grid = new FightBattleGrid { Width = 10, Height = 10 } };
                 var state = new FightBattleUnitState { Id = 1, NpcClassId = npcId, MonsterId = entityId,
-                    Hp = 100, MaxHp = 100, X = 4, Y = 4 };
+                    Hp = 100, MaxHp = 100, LastMaxHp = 100, Side = 1, X = 4, Y = 4 };
                 combat.BindNpcRoleEntity(state, entityId);
                 Require(state.RoleEntityId == entityId && state.CharacterType == 4,
                     "Original NPC role entity/type was not retained: " + npcId);
@@ -114,6 +115,39 @@ namespace Zjcs.Editor.ProfessionUI
                     Require(body.GetComponentsInChildren<SpriteRenderer>().Any(sprite => sprite.sprite && sprite.name == "Shadow"),
                         "The original partner shadow is missing: " + npcId);
                     Capture(npcId + "-idle");
+                    var hp = body.GetComponentsInChildren<BattleHpSpriteSlider>(true).Single();
+                    Require(Mathf.Approximately(hp.HpSlider.FillAmount, 1), "Original partner HP was not initialized: " + npcId);
+                    var palette = Resources.Load<GamePlayManagerConfig>("Combat/PartnerHpBars/ScriptableConfig/Modules/Fight/GamePlayManagerConfig");
+                    Require(hp.HpSlider.Color == palette.FactionEffectDatas[0].HpColor, "Original NPC faction palette differs: " + npcId);
+                    state.Hp = 40; scene.Refresh(checkpoint);
+                    Require(Mathf.Approximately(hp.HpSlider.FillAmount, .4f) && hp.HpSubSlider.FillAmount > .4f,
+                        "Original loss trail did not start: " + npcId);
+                    yield return new WaitForSeconds(.6f); Tick(scope, scene);
+                    Require(Mathf.Approximately(hp.HpSubSlider.FillAmount, 0), "Original loss trail did not finish: " + npcId);
+                    state.Hp = 80; scene.Refresh(checkpoint);
+                    Require(Mathf.Approximately(hp.HpAddSlider.FillAmount, .8f) && hp.myEffectSlider.OutLineEffect.activeSelf,
+                        "Original healing trail/effect did not start: " + npcId);
+                    yield return new WaitForSeconds(.2f); Tick(scope, scene);
+                    Capture(npcId + "-heal");
+                    yield return new WaitForSeconds(.4f); Tick(scope, scene);
+                    Require(Mathf.Approximately(hp.HpSlider.FillAmount, .8f) && hp.HpAddSlider.FillAmount == 0
+                        && !hp.myEffectSlider.OutLineEffect.activeSelf, "Original healing trail/effect did not finish: " + npcId);
+                    var shield = new FightBattleStatusState { ShieldKind = FightBattleShieldKind.Persistent,
+                        ShieldInitialized = true, ShieldValue = 60, ShieldRemainValue = 10 };
+                    state.Statuses.Add(shield); scene.Refresh(checkpoint); Tick(scope, scene);
+                    Require(Mathf.Approximately(hp.myEffectSlider.ShieldSlider.FillAmount, .9f), "Original shield below max differs: " + npcId);
+                    shield.ShieldRemainValue = 60; scene.Refresh(checkpoint); Tick(scope, scene);
+                    Require(Mathf.Approximately(hp.HpSlider.FillAmount, 80f / 140f)
+                        && Mathf.Approximately(hp.myEffectSlider.ShieldSlider.FillAmount, 1), "Original shield above max differs: " + npcId);
+                    Capture(npcId + "-shield");
+                    state.Statuses.Clear(); state.Hp = 100; scene.Refresh(checkpoint);
+                    yield return new WaitForSeconds(.6f); Tick(scope, scene);
+                    var scale = body.localScale; body.localScale = new Vector3(-Mathf.Abs(scale.x), scale.y, scale.z);
+                    Tick(scope, scene);
+                    Require(hp.transform.parent.localScale.x * body.localScale.x >= 0
+                        && Quaternion.Angle(hp.transform.parent.rotation, Quaternion.identity) < .001f,
+                        "Original HP transform flip/rotation lock differs: " + npcId);
+                    body.localScale = scale; Tick(scope, scene);
 
                     var movement = combat.CreateRoleMovement(state, false);
                     Require(movement.MoveSkillEntityId > 0 && movement.MoveBehaviourId > 0,
@@ -141,6 +175,9 @@ namespace Zjcs.Editor.ProfessionUI
                     Require(hasDeathParameter ? animator.GetBool("die") : npcId == 11008,
                         "Original normal death playable did not retain its controller contract: " + npcId);
                     for (int frame = 0; frame < 70; frame++) { Tick(scope, scene); yield return null; }
+                    yield return new WaitForSeconds(.6f); Tick(scope, scene);
+                    Require(hp.HpSlider.FillAmount == 0 && hp.HpSubSlider.FillAmount == 0,
+                        "Original death HP trail did not finish: " + npcId);
                     Require(Unit(scene, 1) == body, "An indefinite original death view was removed: " + npcId);
                     Capture(npcId + "-death");
                     state.Hp = 100; scene.Refresh(checkpoint);

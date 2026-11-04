@@ -49,6 +49,7 @@ namespace Zjcs.Presentation.Combat
         private const float SecondsPerCell = 0.5f;
         private Vector3 damageUiSpacing = new Vector3(0f, -0.1f, 0f);
         private FightBattleCheckpoint latestCheckpoint;
+        private OfficialBattlePartnerHpEffects partnerHpEffects;
         private long pendingAnimationSerial;
 
         private sealed class PendingDamageFloat
@@ -87,6 +88,7 @@ namespace Zjcs.Presentation.Combat
             public IOfficialBattleNativeModel NativeModel;
             public OfficialBattleModelBinding Binding;
             public OfficialBattleUnitWorldHudView Hud;
+            public OfficialBattlePartnerHpView PartnerHp;
             public string CurrentAnimation;
             public bool AnimationLoops;
             public bool Dying;
@@ -499,6 +501,7 @@ namespace Zjcs.Presentation.Combat
             foreach (FightBattleUnitState state in checkpoint.Units)
             {
                 if (state == null || state.Ended && state.Hp > 0 || !IsWaveSpawned(checkpoint, state.Id)) continue;
+                if (units.TryGetValue(state.Id, out UnitView healthView)) healthView.PartnerHp?.Refresh(state);
                 if (state.Hp <= 0)
                 {
                     Transform deadAttached = attachedTransforms.TryGetValue(state.Id, out Transform deadBody)
@@ -715,6 +718,7 @@ namespace Zjcs.Presentation.Combat
                 if (view.NativeModel != null)
                 {
                     view.NativeModel.Tick(deltaTime);
+                    view.PartnerHp?.Tick();
                     if (view.CurrentAnimation == "run_01" && !IsMotionRunning(entry.Key))
                         PlayAnimation(view, "idle_01", true);
                     else if (view.NativeModel.IsAnimationFinished)
@@ -1248,6 +1252,7 @@ namespace Zjcs.Presentation.Combat
             RemovePendingAnimations(unitId);
             if (!units.TryGetValue(unitId, out UnitView view)) return;
             view.Hud?.Dispose();
+            view.PartnerHp?.Dispose();
             if (view.NativeModel != null) view.NativeModel.Dispose();
             else if (view.Root != null) UnityEngine.Object.Destroy(view.Root.gameObject);
             else if (view.Skeleton != null) UnityEngine.Object.Destroy(view.Skeleton.gameObject);
@@ -1269,11 +1274,14 @@ namespace Zjcs.Presentation.Combat
             foreach (UnitView view in units.Values)
             {
                 view.Hud?.Dispose();
+                view.PartnerHp?.Dispose();
                 if (view.NativeModel != null) view.NativeModel.Dispose();
                 else if (view.Root != null) DestroySceneObject(view.Root.gameObject);
                 else if (view.Skeleton != null) DestroySceneObject(view.Skeleton.gameObject);
             }
             units.Clear();
+            partnerHpEffects?.Dispose();
+            partnerHpEffects = null;
             motions.Clear();
             pendingUnitAnimations.Clear();
             foreach (OfficialBattleUnitSorting sorting in attachedSorting.Values) sorting?.Dispose();
@@ -1298,6 +1306,13 @@ namespace Zjcs.Presentation.Combat
             else UnityEngine.Object.DestroyImmediate(instance);
         }
 
+        private void BindPartnerHp(UnitView view, FightBattleUnitState state)
+        {
+            if (!(view.NativeModel is OfficialBattlePartnerNativeModelView partner)) return;
+            if (partnerHpEffects == null) partnerHpEffects = new OfficialBattlePartnerHpEffects(root, latestCheckpoint);
+            view.PartnerHp = new OfficialBattlePartnerHpView(state, partner.Actor, partnerHpEffects);
+        }
+
         private UnitView GetOrCreate(FightBattleUnitState state)
         {
             if (units.TryGetValue(state.Id, out UnitView existing)) return existing;
@@ -1317,6 +1332,7 @@ namespace Zjcs.Presentation.Combat
                 if (npcModel != null)
                 {
                     var npcView = new UnitView { State = state, NativeModel = npcModel };
+                    BindPartnerHp(npcView, state);
                     PlayAnimation(npcView, "idle_01", true);
                     npcView.Hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state, npcModel.Transform);
                     units.Add(state.Id, npcView);
@@ -1327,6 +1343,7 @@ namespace Zjcs.Presentation.Combat
             if (partnerModel != null)
             {
                 var partnerView = new UnitView { State = state, NativeModel = partnerModel };
+                BindPartnerHp(partnerView, state);
                 PlayAnimation(partnerView, state.Hp <= 0 ? "die_01" : "idle_01", state.Hp > 0);
                 partnerView.Hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state, partnerModel.Transform);
                 units.Add(state.Id, partnerView);

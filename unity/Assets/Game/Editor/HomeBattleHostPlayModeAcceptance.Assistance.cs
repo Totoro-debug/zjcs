@@ -8,6 +8,7 @@ using Zjcs.Combat.Official;
 using Zjcs.Offline.World;
 using Zjcs.Presentation.Combat;
 using Zjcs.Presentation.Home;
+using Zjcs.Official.BattleUnitUI;
 
 namespace Zjcs.Editor
 {
@@ -19,11 +20,22 @@ namespace Zjcs.Editor
             if (!Application.isBatchMode || string.IsNullOrEmpty(directory)
                 || !File.Exists(Path.Combine(directory, ".zjcs-validation.json")))
                 throw new InvalidOperationException("Use a dedicated graphical batch Editor and an owned validation directory.");
-            ProjectTools.Validate();
             // Keep this process's compiled snapshot stable while other sessions
             // write the shared project. The dedicated Editor exits after the run.
             UnityEditor.AssetDatabase.DisallowAutoRefresh();
-            Skills.SkillPlayModeAcceptance.Run();
+            try
+            {
+                ProjectTools.Validate();
+                Environment.SetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ACCEPTANCE", "1");
+                Environment.SetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ASSIST", "1");
+                Environment.SetEnvironmentVariable("ZJCS_SKILLS_AUTORUN", "1");
+                Skills.SkillPlayModeAcceptance.Run();
+            }
+            catch (Exception error)
+            {
+                Debug.LogException(error);
+                UnityEditor.EditorApplication.Exit(1);
+            }
         }
 
         // An isolated seam fixture, not the festival activity's entry or reward adapter.
@@ -162,6 +174,9 @@ namespace Zjcs.Editor
                     "Native partner model did not produce a rendered mesh.");
                 Require(nativeEntity.GetComponentsInChildren<SpriteRenderer>().Any(value => value.sprite != null),
                     "Native partner original shadow is unbound.");
+                var hp = nativeEntity.GetComponentsInChildren<BattleHpSpriteSlider>(true).SingleOrDefault();
+                Require(hp && hp.myEffectSlider && hp.GetComponentsInChildren<MeshFilter>(true).Length >= 4,
+                    "Native partner original HP prefab/renderers are unbound.");
                 return;
             }
             var payload = JsonUtility.FromJson<PartnerFighterPayload>(File.ReadAllText(

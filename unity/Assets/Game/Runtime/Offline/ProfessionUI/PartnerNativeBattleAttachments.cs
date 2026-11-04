@@ -165,6 +165,9 @@ namespace Zjcs.Offline.ProfessionUI
                 if (follower && follower.isActiveAndEnabled) follower.ForceUpdate();
         }
         public void RebindOriginalShadow(Transform shadow)
+            => RebindOriginalSubtree(shadow);
+
+        public void RebindOriginalSubtree(Transform shadow)
         {
             if (!shadow) throw new ArgumentNullException(nameof(shadow));
             Transform previous = transforms.Values.Single(value => value != shadow && value.name == shadow.name
@@ -177,7 +180,7 @@ namespace Zjcs.Offline.ProfessionUI
                 var path = new List<string>();
                 for (Transform part = old; part != previous; part = part.parent) path.Insert(0, part.name);
                 Transform current = path.Count == 0 ? shadow : shadow.Find(string.Join("/", path));
-                if (!current) throw new InvalidDataException("Original partner shadow hierarchy differs.");
+                if (!current) throw new InvalidDataException("Original partner replacement subtree hierarchy differs.");
                 replacements.Add(old, current); transforms[key] = current;
             }
             for (int index = 0; index < Agent.myBoneList.Count; index++)

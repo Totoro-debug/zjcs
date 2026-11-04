@@ -3,6 +3,8 @@ import json
 import os
 import re
 import struct
+import shutil
+import subprocess
 import uuid
 from functools import lru_cache
 from pathlib import Path
@@ -35,7 +37,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
           family='StatusOrbits', shader_prefix='StatusOrbit_', runtime_receipts=None,
           generator=None, limits=None, graph_roots=None, reference_scripts=None,
           external_scripts=None, source_scripts=None, native_transform=None,
-          external_assets=None, native_scripts=None, operation=None):
+          external_assets=None, native_scripts=None, operation=None, native_preprocess=None):
     work = Path(os.environ['ZJCS_VALIDATION_DIR']).resolve()
     assert work.parent == (ROOT/'output/validation').resolve() and (work/'.zjcs-validation.json').is_file()
     export_receipt = CACHE/'native-export-all-source-manifest.json'
@@ -70,9 +72,21 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                 index_path.write_bytes(json.dumps(index).encode())
                 if guid in index: break
         if guid not in index and not complete_index_built:
-            for path in EXPORTED.rglob('*.meta'):
-                match = GUID.search(path.read_text(encoding='utf-8-sig'))
-                if match: index[match[1]] = path.relative_to(EXPORTED).as_posix()[:-5]
+            # The complete exporter has hundreds of thousands of sidecars. Let
+            # rg stream them once instead of opening every tiny file in Python.
+            # Selected assets are still individually hash-verified by read().
+            if shutil.which('rg'):
+                scan = subprocess.run(['rg', '--hidden', '--no-ignore', '--with-filename',
+                    '--no-heading', '--color', 'never', '--glob', '*.meta',
+                    r'^guid: [a-f0-9]{32}\r?$', str(EXPORTED)],
+                    capture_output=True, text=True, encoding='utf-8', check=True)
+                for line in scan.stdout.splitlines():
+                    filename, value = line.rsplit(':guid: ', 1)
+                    index[value.strip()] = Path(filename).relative_to(EXPORTED).as_posix()[:-5]
+            else:
+                for path in EXPORTED.rglob('*.meta'):
+                    match = GUID.search(path.read_text(encoding='utf-8-sig'))
+                    if match: index[match[1]] = path.relative_to(EXPORTED).as_posix()[:-5]
             index_path.write_bytes(json.dumps(index).encode())
             complete_index_built = True
         assert guid in index, ('Unresolved native orbit reference', guid)
@@ -163,6 +177,8 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
     unmapped_script_samples = {}
 
     def adapt(text, path):
+        if native_preprocess:
+            text = native_preprocess(text, path)
         def script(match):
             file_id = int(match[1])
             if file_id not in script_guids:
@@ -209,12 +225,13 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                 source_meta = Path(str(EXPORTED/path)+'.meta')
                 bundle = re.search(r'(?m)^  assetBundleName: (.+)$', read(source_meta).decode())[1]+'.bundle'
                 assert bundle in apk.index, bundle
-                candidates = [obj for obj in apk.objects(bundle) if obj.type.name == 'GameObject'
-                              and obj.read().m_Name == Path(path).stem]
+                object_type = 'GameObject' if Path(path).suffix == '.prefab' else 'MonoBehaviour'
+                candidates = [obj for obj in apk.objects(bundle) if obj.type.name == object_type
+                              and obj.read(check_read=False).m_Name == Path(path).stem]
                 assert len(candidates) == 1, (path, len(candidates))
                 go = candidates[0]
                 originals.append(dict(id=key, shared_dependency_bundle=bundle,
-                    native_export_meta=identity(source_meta), original_game_object_name=go.read().m_Name,
+                    native_export_meta=identity(source_meta), original_game_object_name=go.read(check_read=False).m_Name,
                     original_game_object_sha256=sha(go.get_raw_data()), source=apk.provenance(go)))
             else:
                 source_path = f'Prefabs/EcEntity/Fight/FightSkill/{key}/{key}.prefab'
