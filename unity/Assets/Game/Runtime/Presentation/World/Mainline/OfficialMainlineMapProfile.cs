@@ -42,7 +42,7 @@ namespace Zjcs.Presentation.World
                     nativeGroundPrefabResource: "Map15/Native/current-ground", localChannelCount: 1,
                     storyDataManifest: "871_156598"), // Original root has no cloud; MiniMapPath is empty.
                 [16] = new OfficialMainlineMapProfile(16, 70, 6, null,
-                    new[] { 116 }, false, regionCount: 43, defaultEntryPlacementId: 101,
+                    Array.Empty<int>(), false, regionCount: 43, defaultEntryPlacementId: 101,
                     visibilityResource: "World/Mainline/Visibility/Map16/visibility",
                     bodiesResource: "World/Mainline/Visibility/Map16/bodies",
                     fogResource: "World/Mainline/Fog/Map16",

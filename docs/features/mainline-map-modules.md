@@ -155,6 +155,8 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 ## 自定义实现
 
+`OfficialMainlineMapProfile.RequiredAccessConditions` 只固定地区 `AccessibleConditionId` 的依赖，不包含整图入口条件。鲸背岛按原43区的零条件配置登记空清单，整图条件116留在独立入口配置；`ProjectTools.Validate` 以本图真实定义构造公共区域策略并检查全部地区，防止把整图条件误作缺失的地区条件。正式鲸背岛入口仍未开放，详见[鲸背岛](../maps/map-16.md)。
+
 公共剧情归一化保留官方查询节点 `HandInItemId` 和执行节点 `HandleItemId` 两种字段名，统一投影为运行器消费的 `handInItemId`；Map13／16 的生成载荷同步修复。Map14 转换已有同义处理，本次保留既有载荷；其历史输入 `stories.json` 与来源收据不一致，重建被拒绝，未修改预期哈希。各图实际交付流程和验证边界见所属地图页。 Unity 导入／编译、`ProjectTools.Validate` 和内置屏公共地图 Play Mode 回归通过：覆盖初始岛／森之国模拟点击、女神／英雄雕像、资源消耗／刷新、探寻和冷读，以及通天塔移动／冷读；交付次数、限额与冷读由既有存档规则检查覆盖，尚未通过Map13／16实际交付UI验证。已查看运行截图，森之国仍存在地面和部分实体显示缺项，不能将交互断言通过等同于完整视觉还原；未发布新的 Windows Player。
 
 公共原生小地图的单机差异沿[世界地图已确认规则](world-map.md#自定义实现)。`LocalMiniMapDataSource.Request(mapClassId)` 读取一份地图快照，校验到访身份、原RLE尺寸及唯一实体ID，选择实体后复制白雾、公开地区和最新类型／状态；延迟完成保持原协调器先订阅、再显示内容／初始化白雾／标记的次序。`UseLatestLocalEntityStates` 仅用于本地响应，让原标记初始化按最新类型判断完成隐藏，并略过公开地区的默认完成状态补建；未设置该字段的原消费分支保留。`SingleChannelMiniMapHud` 由 `AttachHud` 统一绑定，原按钮自行按 prefab 条件隐藏；地区、战斗、窗口和公开容器身份继续读取原宿主，HUD 文本复用所属实例的地区计时绑定。正式地图文件的快照读取已由下述公共入口提供；原生全屏页签与正式宿主的组合接线仍未完成，不据此声明整图或 Windows Player 完成。

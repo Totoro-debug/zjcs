@@ -35,7 +35,7 @@ namespace Zjcs.Editor
                 || whaleIsland.InteractionResource != "Map16/interactions"
                 || whaleIsland.InteractionManifest != "884_156692")
                 throw new InvalidDataException("Whale Island data profile or entry readiness differs from its migrated inputs.");
-            if (!whaleIsland.RequiredAccessConditions.SequenceEqual(new[] { 116 })
+            if (whaleIsland.RequiredAccessConditions.Count != 0
                 || Resources.Load<TextAsset>(whaleIsland.GridVisibilityResource) == null
                 || Resources.Load<TextAsset>(whaleIsland.GridBodiesResource) == null
                 || Resources.Load<GameObject>(whaleIsland.GridFogResource) == null
@@ -43,6 +43,15 @@ namespace Zjcs.Editor
                 || Resources.Load<TextAsset>(whaleIsland.Resource("battle-runtime")) == null
                 || Resources.Load<TextAsset>(whaleIsland.Resource("stories")) == null)
                 throw new InvalidDataException("Whale Island profile resources or access condition are not loadable.");
+            var definitionAsset = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Official/World/Map/16/map16.json");
+            if (definitionAsset == null) throw new InvalidDataException("Whale Island official definition is missing.");
+            var definition = JsonUtility.FromJson<Zjcs.Official.World.OfficialMapDefinition>(definitionAsset.text);
+            var regions = new OfficialMainlineRegionPolicy(definition, whaleIsland);
+            var points = new System.Collections.Generic.Dictionary<int, int>();
+            foreach (var region in definition.MaxRegionProgress)
+                if (!regions.IsAccessible(region.Region, points,
+                    _ => throw new InvalidDataException("Whale Island has no regional story-access condition.")))
+                    throw new InvalidDataException("Whale Island official regional access condition changed.");
         }
 
         public static void ValidateWhaleIslandStoryCondition()
