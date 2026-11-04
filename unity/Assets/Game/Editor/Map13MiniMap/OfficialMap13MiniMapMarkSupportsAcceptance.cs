@@ -30,7 +30,7 @@ namespace Zjcs.Editor.Map13MiniMap
         public IMiniMapMarkSupportPlayer SupportPlayer=>Player;public IMiniMapMarkSupportQueries SupportQueries=>Support;
         public override MiniMapKeepSizeHandler SizingHandler=>GetComponent<MiniMapKeepSizeHandler>();
     }
-    public static class OfficialMap13MiniMapMarkSupportsAcceptance
+    public static partial class OfficialMap13MiniMapMarkSupportsAcceptance
     {
         private const string Key="Zjcs.Map13.MarkSupports.Running";
         private const string CurrentKey="Zjcs.Mainline.CurrentMarkers.Running";
@@ -143,6 +143,7 @@ namespace Zjcs.Editor.Map13MiniMap
             entity.Components[typeof(IMiniMapMarkWayPoint)]=new WayPoint{Entity=entity,Queries=q};entity.Components[typeof(IMiniMapMarkWorldEntry)]=new Entry{Entity=entity,Active=true};q.Common=entity;q.Entities[entity.Id]=entity;
             bool current=SessionState.GetBool(CurrentKey,false);SessionState.EraseBool(CurrentKey);
             var catalog=current?Resources.Load<NativeMap13AssetCatalog>("MainlineMiniMap/current-marker-assets"):null;
+            var markerCatalog=current?VerifyMarkerCatalog(catalog):null;
             string[] paths;
             if(current)
             {
@@ -165,7 +166,7 @@ namespace Zjcs.Editor.Map13MiniMap
             var instances=new List<MiniMapMarkUIBase>();int sprites=0;
             foreach(var path in paths)
             {
-                var prefab=current?catalog.Load<GameObject>(path):AssetDatabase.LoadAssetAtPath<GameObject>(Native+Path.GetFileName(path));Require(prefab,"Actual original marker prefab "+path);var go=Object.Instantiate(prefab,host.transform,false);labels.Bind(go);
+                var prefab=current?markerCatalog.LoadPrefab(path):AssetDatabase.LoadAssetAtPath<GameObject>(Native+Path.GetFileName(path));Require(prefab,"Actual original marker prefab "+path);var go=Object.Instantiate(prefab,host.transform,false);labels.Bind(go);
                 Require(go.GetComponentsInChildren<Transform>(true).All(t=>GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(t.gameObject)==0),"Original marker component binding");sprites+=go.GetComponentsInChildren<SpriteRenderer>(true).Length;
                 foreach(var link in go.GetComponentsInChildren<MapEntityTipDotNodeLinker>(true)){link.Controller=tips;link.TipDotSystem=tips;link.Context=map;link.MiniMap=map;}
                 instances.Add(go.GetComponent<MiniMapMarkUIBase>());

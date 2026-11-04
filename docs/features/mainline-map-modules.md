@@ -12,7 +12,7 @@
 
 原生实体 prefab 实例化使用 `IMainlineEntityPrefabProvider` 与 `MainlineEntityPrefabVisualFactory` 公共契约；地图 profile 配置 provider 资源地址和来源 manifest，宿主统一校验地图 ID／来源后按实体类创建视觉。Map14 已通过该接口接入现有主线宿主，目录序列化与官方路径查找保持原样。其他地图仍需按各自原生资源与 prefab 来源实现 provider，并完成显式资源绑定和运行验证；该接口不代表这些地图实体已迁移。
 
-该接口与 profile 配置所属的 `Zjcs.Offline.World.NativeMap14EntityAssets`、`Zjcs.Presentation.World` 程序集已在 Unity 编译通过。`ProjectTools.Validate` 与 Map14 Play Mode 尚未运行：当前 Editor 编译被工作区未提交的 `HomeBattleHostPlayModeAcceptance.cs` 两个类型成员错误阻断（`FightBattleCheckpoint.Round`、`FightBattleUnitState.TotalDamageDealt`）；此前旧版 Map14 provider 的 Play Mode 通过不覆盖本次 factory/profile 重构。静态项目检查已通过。
+该接口与 profile 配置所属的 `Zjcs.Offline.World.NativeMap14EntityAssets`、`Zjcs.Presentation.World` 程序集已在正式 Unity 工程编译通过，`ProjectTools.Validate` 已通过。Map14 provider 的 Play Mode 尚未覆盖此次 factory/profile 重构；此前旧版 provider 的运行验证不作为该重构的交互证明。
 
 小地图区域地面由公共 `MainlineMiniMapRegions` 管理原 prefab 实例、原管理器的状态／范围事件及资源生命周期。各图提供 `MainlineMiniMapRegionAssets` 与 `IMainlineMiniMapRegionState`；模块直接订阅原可见范围事件，替换处理器时切换订阅，停用／销毁时退订；普通状态刷新不会重置原十秒回收期限。所选 `884_156692` 的 Map10／11／12／13／14／16 已分别转换5／77／99／106／111／43份原区域 Tilemap，复用同一实现；Map15 原配置没有独立小地图 prefab，不生成空目录。当前原生资源与各图历史来源独立记录，不混接不同版本的区域身份；完整原小地图根已提供公共实例绑定；白雾、标记及正式宿主的完整状态接线仍未完成。各图验证范围见[初始岛](../maps/map-10.md)、[森之国](../maps/map-11.md)、[山之国](../maps/map-12.md)、[泽之国](../maps/map-13.md)、[龙之国](../maps/map-14.md)和[鲸背岛](../maps/map-16.md)，来源见[公共小地图区域模块](../../assets/reference/official-map/mainline-minimap-regions-source-manifest.json)。
 
@@ -167,7 +167,9 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 公共动态标记目录使用当前 `884_156692` 的放置数据、原实体扩展／展示表和刷新分组全部候选，保留区域／实体标签的标记备选，具体优先级继续由原运行时选择。六图共用71份完整原标记 prefab 和105份原生 Sprite；Map10／11／12／13／14／16 的依赖名称分别为10／37／45／42／51／16种。目录位于 `Assets/Official/World/Shared/NativeMiniMapMarkersCurrent`，`Resources` 入口为 `MainlineMiniMap/current-marker-assets`，沿既有 `NativeMap13AssetCatalog.Load<T>(officialPath)` 按原完整地址查找；该目录类型不限制地图ID，历史泽之国871目录独立保留。生成器为 `prepare_mainline_minimap_markers.py`，来源为 `mainline-current-minimap-markers-source-manifest.json`。原标记组件逐文件核对当前源码与已迁移来源哈希，资源点和动态标记共同使用 `mainline_minimap_native_sprite.py` 恢复逻辑矩形、网格、轴心和图集UV。正式宿主的状态与标记创建仍待接入。
 
-共享标记的带图形 Play Mode 经 `OfficialMap13MiniMapMarkSupportsAcceptance.RunCurrent` 通过：71份原 prefab 的组件绑定、105份原Sprite逻辑字段／网格／图集UV、7次状态切换、40组每日次数与归属条件、4次NPC显隐、红点开关／数量上限、释放／复用和销毁退订；已查看两张实际渲染画面。回归使用明确的测试实体与状态直接驱动原组件，未代替正式地图输入和存档。
+共享标记配置查询由 `MainlineMiniMapMarkerCatalog` 复用原 `EntityMapUIDisplayInfoParser`，读取 `Resources/MainlineMiniMap/current-marker-data` 并按官方完整地址取得同一原生 prefab。`prepare_mainline_minimap_marker_catalog.py` 从所选884版原 Luban 表保留六图放置与刷新候选涉及的287类实体扩展字段及311条完整UI显示行；当前解析器的查询与初始化正文分别核对原 `Get`／`PostParse`，初始化仅改为显式输入配置。查找保留地图组、地图、地区标签及实体标签的逐层默认分支，显示行图标为空时依原 `MapUtils` 回退到实体扩展图标；不展开成逐放置的固定绑定。每实例解析配置并只加一次原路径前缀，不修改共享JSON，实例不拥有原生资源。当前选取不证明剧情动态生成实体的完整覆盖；正式宿主实体状态、标记管理器与HUD组合仍待接入。来源见 [共享标记配置凭据](../../assets/reference/official-map/mainline-minimap-marker-catalog-source-manifest.json)。
+
+共享配置查询与标记的带图形 Play Mode 经 `OfficialMap13MiniMapMarkSupportsAcceptance.RunCurrent` 通过：真实配置验证六图查询、同类怪物跨图图标覆盖、地区默认行、空图标回退、未知实体、两实例前缀与共享输入隔离，并按查询结果加载同一原生 prefab；71份原 prefab 的155个 SpriteRenderer、105份原Sprite逻辑字段／网格／图集UV、7次状态切换、40组每日次数与归属条件、4次NPC显隐、红点开关／数量上限、释放／复用和销毁退订通过。已查看两张实际渲染画面；静态项目检查、来源／输出／绑定哈希检查、正式工程 Unity 编译与 `ProjectTools.Validate` 通过。标记状态仍由明确的测试实体直接驱动，未代替正式地图输入、存档或 Windows Player 验证，本批未发布新可执行版本。
 
 `MainlineMiniMap.Create` 的资源目录入口在原根激活前创建本地资源适配器，并与绑定副本一起交给既有完整根工厂；调用方原绑定保持不变。工厂统一持有并释放适配器，创建失败也退订，不销毁外部目录拥有的原生资产；直接提供外部资源上下文的既有入口继续由调用方持有，两个入口不能同时提供上下文与目录。额外引导图标可通过原适配器已有的精灵解析依赖注入。回归入口已将泽之国HUD、鲸背岛地区计时及其余五图原根改为读取当前资源目录；图形Play Mode通过同一工厂验证目录地图身份、原图层顺序、调用方绑定不变、创建失败退订及销毁后的全部订阅释放。正式宿主与完整地图路线仍未切换。
 

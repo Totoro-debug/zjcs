@@ -24,6 +24,13 @@ class MainlineMiniMapNativeBindingsTests(unittest.TestCase):
                 with self.subTest(receipt=name, path=path):
                     self.assertEqual(hashlib.sha256((ROOT / path).read_bytes()).hexdigest(), expected)
 
+    def test_selected_marker_query_sources_and_integration(self):
+        receipt = json.loads((ROOT / 'assets/reference/official-map/mainline-minimap-marker-catalog-source-manifest.json').read_bytes())
+        self.assertEqual(receipt['manifest'], '884_156692')
+        for row in receipt['inputs'] + receipt['outputs'] + receipt['integration'] + [receipt['native_markers']]:
+            with self.subTest(path=row['path']):
+                self.assertEqual(hashlib.sha256((ROOT / row['path']).read_bytes()).hexdigest(), row['sha256'])
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -412,6 +412,8 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 主线当前小地图标记：`prepare_mainline_minimap_markers.py` 从所选884版原放置字节、Luban表及刷新分组候选选择共享标记，复用完整原生prefab恢复链；资源点与标记通过 `mainline_minimap_native_sprite.py` 统一恢复原Sprite逻辑几何及有效图集UV。当前目录和历史871目录分开保存，输入CAB／对象／程序集、脚本等价依据与输出哈希记录于 `mainline-current-minimap-markers-source-manifest.json` 和各图当前资源点来源凭据。
 
+共享标记查询数据由 `prepare_mainline_minimap_marker_catalog.py` 从所选884版原 `entity_extend_parameter`、`entity_map_ui_display` 和 `map` Luban 表提取，选取范围与当前原生标记目录一致；保留完整匹配显示行及原顺序，仅投影标记端口消费的扩展字段。原 `EntityMapUIDisplayInfoParser.Get` 与初始化正文逐一核对，原 `PostParse` 只替换全局数据入口；APK优先输入对象、构造器源码、输出JSON与本地绑定哈希见[共享查询来源](official-map/mainline-minimap-marker-catalog-source-manifest.json)，历史来源独立保留，未生成完整素材快照。
+
 伙伴主角头像的选定884_156692原摄影棚、PlayerPortraitSettings／AppearanceConfig对象字段、三个原Sprite及Windows转换依赖见[主角头像来源](partner-player-portraits-source-manifest.json)。`prepare_partner_player_portraits.py` 记录APK优先／匹配缓存、CAB／对象身份、枚举列表恢复、显式脚本／资源绑定和逐文件哈希；当前角色与外观输入引用各自已校验来源，不混标历史头像配置，本批未生成完整素材快照。
 
 鲸背岛交互配置来源见 [map16-interactions-source-manifest.json](official-map/map16-interactions-source-manifest.json)。`prepare_mainline_map_interactions.py` 按地图ID复用所选884_156692的定义输入与公共英雄结果索引转换器，额外解码原状态效果／周期随机奖励表；记录APK优先／匹配缓存、原构造器源码、模板来源凭据、逐文件输出哈希与工具，不混入历史871配置。本批无新增美术或完整素材快照。
