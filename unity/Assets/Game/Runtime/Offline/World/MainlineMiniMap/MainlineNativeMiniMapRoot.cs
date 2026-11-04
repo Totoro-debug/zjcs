@@ -78,9 +78,9 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         public override GameObject InstantiateMark(GameObject prefab,Transform parent,bool worldPositionStays)
             => State.InstantiateMark(prefab,parent,worldPositionStays);
         public override IMiniMapManagedQueries ManagedQueries => WorldQueries;
-        public override MiniMapManagedEvents ManagedEvents => State.ManagedEvents;
-        public override IMiniMapManagedAreaAgent ManagedAreaAgent => State.ManagedAreaAgent;
-        public override IMiniMapMarkGridGround ManagedGridGround => State.ManagedGridGround;
+        public override MiniMapManagedEvents ManagedEvents => Bindings.Entities.Events;
+        public override IMiniMapManagedAreaAgent ManagedAreaAgent => Bindings.Entities;
+        public override IMiniMapMarkGridGround ManagedGridGround => Bindings.Entities;
         public override void InstantiateMarkAsync(string path,Transform parent,Action<MiniMapMarkUIBase> callback)
             => State.InstantiateMarkAsync(path,parent,callback);
     }

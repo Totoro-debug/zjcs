@@ -10,6 +10,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
     {
         public MiniMapManagedContext State;
         public MainlineMiniMapWorldData WorldData;
+        public IMainlineMiniMapEntities Entities;
         public MiniMapSettings Settings;
         public int MinimapConfigId;
         public int MapViewRangeExtraSize;

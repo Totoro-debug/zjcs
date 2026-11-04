@@ -41,7 +41,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
 
         public static MainlineMiniMap Create(GameObject prefab, Transform parent, MainlineMiniMapBindings bindings)
         {
-            if (prefab == null || bindings?.State == null || bindings.WorldData == null || bindings.Settings == null
+            if (prefab == null || bindings?.State == null || bindings.WorldData == null || bindings.Entities == null || bindings.Settings == null
                 || bindings.Characters == null || bindings.ResourcePoints == null || bindings.OfflineData == null
                 || bindings.MarkerServices == null || bindings.MarkerPerformance == null || bindings.ClickInput == null
                 || bindings.CameraControl == null || bindings.ClickPublisher == null)
@@ -71,7 +71,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
                 var instance = Object.Instantiate(prefab, owner.transform, false);
                 var root = instance.GetComponent<MainlineNativeMiniMapRoot>();
                 root.Bindings = bindings;
-                root.WorldQueries = new MainlineMiniMapWorldQueries(bindings.WorldData, bindings.State, bindings.MarkerServices);
+                root.WorldQueries = new MainlineMiniMapWorldQueries(bindings.WorldData, bindings.State, bindings.Entities, bindings.MarkerServices);
                 if (bindings.RegionTime != null)
                     root.TimedLabels = new MainlineMiniMapLabels(bindings.State, bindings.RegionTime, bindings.WorldData);
                 if (bindings.Visibility != null)

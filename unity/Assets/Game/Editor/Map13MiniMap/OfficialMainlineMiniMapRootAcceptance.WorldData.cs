@@ -110,6 +110,10 @@ namespace Zjcs.Editor.Map13MiniMap
                 && ReferenceEquals(root.GetMapRegionDict(root.MapClassId), bindings.WorldData.GetMapRegionDict(root.MapClassId))
                 && ReferenceEquals(root.GetSpawnGridMover(root.MapClassId), bindings.WorldData.GetSpawnGridMover(root.MapClassId)),
                 "Complete original root consumes the shared world projection: " + root.MapClassId);
+            Require(ReferenceEquals(root.ManagedEvents, bindings.Entities.Events)
+                && ReferenceEquals(root.ManagedAreaAgent, bindings.Entities)
+                && ReferenceEquals(root.ManagedGridGround, bindings.Entities),
+                "Original mark managers share one injected entity source independent of state fixture ports");
             var parameters = LoEntityDescParamsUtils.GetLoEntityDescParams(root.MarkDataQueries, 10,
                 root.MarkDataQueries.GetContainerEntityInfo(10, 501));
             Require(parameters.Single().KeyOrText == "region_11_0", "Original offline marker formats the actual destination region");

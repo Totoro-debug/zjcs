@@ -10,7 +10,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
 {
     // One live map, including its private/public containers, supplies the same
     // entity objects to the original area, ground and marker-manager consumers.
-    public sealed class MainlineMiniMapEntityIndex : IMiniMapManagedAreaAgent, IMiniMapMarkGridGround
+    public sealed class MainlineMiniMapEntityIndex : IMainlineMiniMapEntities
     {
         private readonly MainlineMiniMapWorldData world;
         private readonly int map, width, height;

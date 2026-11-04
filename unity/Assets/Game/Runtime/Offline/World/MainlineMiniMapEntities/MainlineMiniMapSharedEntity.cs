@@ -14,7 +14,8 @@ namespace Zjcs.Offline.World.MainlineMiniMapEntities
 {
     // Borrows the map host's original entity/view. Disposal releases only this
     // adapter's stage receiver; creation, state restoration and replacement belong
-    // to the host, which creates a fresh adapter when replacing an entity.
+    // to the host. An in-place original replacement keeps this adapter; replacing
+    // the original object requires a new adapter after component construction.
     public sealed class MainlineMiniMapSharedEntity : IMiniMapSpawnEntity, IDisposable
     {
         private readonly NativeMap14SharedViewEntity view;

@@ -16,12 +16,15 @@ namespace Zjcs.Offline.World.MainlineMiniMap
     {
         private readonly MainlineMiniMapWorldData world;
         private readonly MiniMapManagedContext state;
+        private readonly IMainlineMiniMapEntities entities;
         private readonly IServiceProvider services;
 
-        public MainlineMiniMapWorldQueries(MainlineMiniMapWorldData world, MiniMapManagedContext state, IServiceProvider services)
+        public MainlineMiniMapWorldQueries(MainlineMiniMapWorldData world, MiniMapManagedContext state,
+            IMainlineMiniMapEntities entities, IServiceProvider services)
         {
             this.world = world ?? throw new ArgumentNullException(nameof(world));
             this.state = state ? state : throw new ArgumentNullException(nameof(state));
+            this.entities = entities ?? throw new ArgumentNullException(nameof(entities));
             this.services = services ?? throw new ArgumentNullException(nameof(services));
         }
 
@@ -59,7 +62,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         public List<MapRegionStatus> GetCurrentMapStatus() => state.ManagedQueries.GetCurrentMapStatus();
         public bool TryGetStatusByContainerId(long container, out MapRegionStatus status)
             => state.ManagedQueries.TryGetStatusByContainerId(container, out status);
-        public IMiniMapSpawnEntity GetEntity(EcEntityIdentifier id) => state.ManagedQueries.GetEntity(id);
+        public IMiniMapSpawnEntity GetEntity(EcEntityIdentifier id) => entities.GetEntity(id);
         public IEnumerable<MiniMapMarkLoEntityInfo> GetEntityByMapRegion(int map, int region) => world.GetEntityByMapRegion(map, region);
         public long MainPlayerId => state.ManagedQueries.MainPlayerId;
     }

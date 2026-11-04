@@ -185,6 +185,7 @@ namespace Zjcs.Editor.Map13MiniMap
                     Require(adapter.GridTransform == null && adapter.GetComponent<IMiniMapManagedStage>() == null
                         && adapter.GetComponent<IMiniMapMarkWorldEntry>() == null && adapter.GetComponent<IMiniMapManagedGridMover>() == null,
                         "Absent original components are not fabricated");
+                VerifySharedWorld(shared, prefabs, queries);
             }
             Debug.Log("MAINLINE_MINIMAP_SHARED_ENTITY_PASS: four actual two-cell hero prefabs; original stage activity/checkers/events, centroid, transport, entry, waypoint, ownership, occupancy and owned receiver teardown. Additional component fixtures do not assert hero configuration.");
         }
