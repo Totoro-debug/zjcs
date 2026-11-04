@@ -6,6 +6,7 @@ import shutil
 
 from official_apk import ROOT
 from prepare_partner_panel_validation import main as prepare_panel
+from prepare_partner_star_god_validation import verified_installed_bytes
 from validation_workspace import validation_directory
 
 
@@ -31,14 +32,21 @@ def main():
     value['references'] = list(dict.fromkeys(value['references'] + ['Zjcs.Official.PartnerDialoguePlaybackUI']))
     definition.write_text(json.dumps(value), 'utf8', newline='\n')
     receipt = json.loads((ROOT / 'assets/reference/partner-dialogue-playback-native-source-manifest.json').read_bytes())
+    actors = json.loads((ROOT / 'assets/reference/partner-panel-actors-source-manifest.json').read_bytes())
+    adapted = {row['path']: row for row in actors['adaptations']}
+    actor_outputs = {row['path']: row['sha256'] for row in actors['outputs']}
     for relative, expected in receipt['installed_output_sha256'].items():
-        source = ROOT / relative
-        if hashlib.sha256(source.read_bytes()).hexdigest() != expected: raise ValueError('Changed playback asset: ' + relative)
         if '/Runtime/' in relative: continue
+        source = ROOT / relative
+        if relative in adapted:
+            if actors['manifest'] != receipt['manifest'] or adapted[relative]['baseline_sha256'] != expected:
+                raise ValueError('Original playback actor baseline differs: ' + relative)
+            expected = actor_outputs[relative]
+        data = verified_installed_bytes(source, expected, relative)
         target = project / source.relative_to(ROOT / 'unity')
         target.parent.mkdir(parents=True, exist_ok=True)
-        if target.exists() and target.read_bytes() != source.read_bytes(): raise ValueError('Preserve differing validation asset: ' + str(target))
-        shutil.copy2(source, target)
+        if target.exists() and target.read_bytes().splitlines() != data.splitlines(): raise ValueError('Preserve differing validation asset: ' + str(target))
+        target.write_bytes(data)
     # The condition player uses the actual shared world lookup even though this
     # input check selects a conversation whose first branches need no map facts.
     world = json.loads((ROOT / 'assets/reference/partner-conversation-world-source-manifest.json').read_bytes())

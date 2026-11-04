@@ -49,7 +49,9 @@ def main():
                     match = re.search(rb'(?m)^guid: ([0-9a-f]{32})', meta.read_bytes())
                     if match: package_guids.add(match[1])
     pending = [ROOT / ('unity/Assets/Game/Resources/Partners/' + name + '.asset') for name in
-        ('OfficialPartnerPanelAssetCatalog', 'OfficialPartnerRosterAssetCatalog')]
+        ('OfficialPartnerPanelAssetCatalog', 'OfficialPartnerRosterAssetCatalog',
+         'OfficialPartnerGiftAssetCatalog', 'OfficialPartnerGiftPageAssetCatalog',
+         'OfficialPartnerTipDotAssetCatalog')]
     pending += [ROOT / ('unity/Assets/Game/Resources/Partners/Portraits/Npc' + str(id) + '.asset') for id in (8401, 10412)]
     visited, copied = set(), {}
     while pending:

@@ -638,6 +638,14 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 `prepare_partner_detail_talk_validation.py` 在隔离原窗口 Play Mode 中加载原子树，验证三段 Legacy 动画绑定、逐字文本推进、替换对白、配置延迟关闭、停用取消与重开，并检查原尺寸字典的配置／默认／空目标分支；实际 GPU 截图核对入场文字、完整文字和退场空画面。原成就页领取、档案及提示服务窗口回归通过，Unity 项目静态检查为 91,019 GUID，主工程 `ProjectTools.Validate` 返回码 0。该验证用 API 调用对白组件，未验证角色触摸按钮或完整详情路由；正式详情控制器、立绘／角色模型仍待迁移，Windows Player 未发布。
 
+### 正式头像资源与窗口裁剪绑定（局部）
+
+`NpcPanel`、地址簿行与通话播放行的九组头像现直接绑定所选当前版 `CombatAppearance` 应用组件，不再只修补验证工程副本。`prepare_partner_panel_actor_bindings.py` 逐对象复核原 APK 字段，只修改三个脚本引用及两组枚举序列；保留全部对象 ID、层级、布局和其他字段。原 `IgnoreSkinTypes` 为背饰、主武器、副武器，`IgnoreEffectTypes` 为身体；修复 YAML 1.1 将打包枚举 `05000000` 当八进制数字读取的问题。该原配置不请求这些部件，不能据此声称全部 UI 武器或特效已迁移。
+
+`OfflineProfessionAppearancePartBindings` 使用本地显式资源目录承接原部件加载端口。伙伴整页及独立通话窗口使用当前版裁剪适配器，并在关闭时恢复下层服务。`WorldPopupWindow` 保留原 `OnWindowDestory` 名称和图释放后通知的顺序；`OfflinePartnerWindowService` 直接订阅／解除原事件，由窗口拥有者执行原隐藏动画和销毁。
+
+隔离 Unity Play Mode 已使用正式 prefab，通过当前真实存档的男女外观、姓名通知、HP 修改与读档重开、模拟头像点击，以及伙伴／空通话／星神三页切换、返回、重开、功能限制、实际销毁通知和解除订阅。已查看男女头像与三页运行截图。原生通话选项的模拟点击、落盘失败／重试、过期选项拒绝及读档回归通过，已查看选项前后截图；该选项检查没有初始化完整播放控制器。静态检查通过（123842 GUID）；主工程导入／编译及 `ProjectTools.Validate` 通过，同时补齐编辑器已有战斗验证所需的显式程序集引用。头像点击检查到原弹窗端口，未验证完整 `PlayerDetailInfoPanel`；整页测试仍使用空通话配置及头像服务边界，不能代替 Home 生产入口接线或完整伙伴功能验收。来源与精确修改哈希见[正式头像绑定来源](../../assets/reference/partner-panel-actors-source-manifest.json)。
+
 ## 自定义实现
 
 用户已确认：自定义伙伴称谓通过原字库与长度校验后直接在本地保存，不等待线上文本审核；保留原伙伴资格及好感等级门槛。自动伙伴在创建角色及读档后检查原相遇条件，满足且尚未拥有时自动结识，初始好感使用原配置；此触发时机是确认的单机方案，不声称取得服务器实现。`HomeFeatureRuntime.Open` 在首次读取 Home 上下文后调用 `MeetAutomaticNpcs`，并在新增伙伴后重读上下文。`-partnerAutoMeetLoadAcceptance` 使用隔离角色档，在进入 Home 前移除已结识的 8402；Unity GUI Play Mode 验证读档后恰好新增一条 8402 记录，退出码为 0，并保存、检查实际 GPU 画面。该截图只覆盖 Home 场景，存在其他遮挡／渲染异常，不作为伙伴界面还原验收；Home 画面和完整伙伴页面仍须单独验证。

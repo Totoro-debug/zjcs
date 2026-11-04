@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Zjcs.Official.PartnersUI;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.WorldUI;
+using Zjcs.Offline.ProfessionUI;
 
 namespace Zjcs.Offline.PartnersUI
 {
@@ -39,6 +40,8 @@ namespace Zjcs.Offline.PartnersUI
         private Func<string, string> previousLocalize;
         private Func<TMP_FontAsset> previousFont;
         private Func<Image, IProfessionImageResourceLoader> previousImages;
+        private IProfessionAppearanceSkinClipBindings previousSkinClip;
+        private OfflineProfessionNativeSkinClipBindings skinClip;
         private OfflinePartnerUiSoundScope sounds;
         public GameObject Content => content;
         public WorldPopupWindow Window => content ? content.GetComponent<WorldPopupWindow>() : null;
@@ -54,9 +57,12 @@ namespace Zjcs.Offline.PartnersUI
             context = value;
             previousLocalize = WorldMultiLanguageText.Localize; previousFont = WorldMultiLanguageText.LanguageFont;
             previousImages = ProfessionImageResourceBridge.Provider;
+            previousSkinClip = ProfessionAppearanceSkinClipBindings.Current;
             try
             {
                 sounds = new OfflinePartnerUiSoundScope(assets.GetSound);
+                skinClip = new OfflineProfessionNativeSkinClipBindings(previousSkinClip);
+                ProfessionAppearanceSkinClipBindings.Current = new OfflineProfessionCurrentUiSkinClipBindings(skinClip);
                 WorldMultiLanguageText.Localize = assets.CreateLocalizer(value.Localize);
                 WorldMultiLanguageText.LanguageFont = () => value.Font;
                 bindingRoot = new GameObject("OriginalConversationWindowBinding", typeof(RectTransform));
@@ -105,6 +111,8 @@ namespace Zjcs.Offline.PartnersUI
             bindingRoot = null; content = null;
             WorldMultiLanguageText.Localize = previousLocalize; WorldMultiLanguageText.LanguageFont = previousFont;
             ProfessionImageResourceBridge.Provider = previousImages;
+            ProfessionAppearanceSkinClipBindings.Current = previousSkinClip;
+            skinClip?.Dispose(); skinClip = null; previousSkinClip = null;
             sounds?.Dispose(); sounds = null; context = null;
             previousLocalize = null; previousFont = null; previousImages = null;
         }

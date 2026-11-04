@@ -110,6 +110,9 @@ public sealed class PartnerLocalPlayerWidgetRunner : MonoBehaviour
         var lowMemory = new GAction();
         using var manager = new AppearanceAssetManager(Resources.Load<AppearanceAssetManagerConfig>("Partners/appearance-asset-manager-config"), lowMemory.Subscribe);
         using var textures = new OfflineProfessionSceneTextureResources(resources);
+        var partCatalog = ScriptableObject.CreateInstance<OfflineProfessionImageCatalog>();
+        partCatalog.Entries = Array.Empty<OfflineProfessionImageCatalog.Entry>();
+        var parts = new OfflineProfessionAppearancePartBindings(config, tables.SpineSkinInfoParser, partCatalog);
         var oldTextures = ProfessionAppearanceTextureBindings.Current;
         var oldClip = ProfessionAppearanceSkinClipBindings.Current;
         var oldLocalize = WorldMultiLanguageText.Localize;
@@ -154,7 +157,13 @@ public sealed class PartnerLocalPlayerWidgetRunner : MonoBehaviour
                 Require(icon && graphic, "Actual original player widget components");
                 widget.ConfigureInfo(info); icon.ConfigureInfo(info);
                 foreach (var value in owner.GetComponentsInChildren<TeamPlayerUIBase>(true)) value.Configure(hp);
-                new OfflineProfessionUiPlayerBindings(resources, manager, new Parts(config, tables.SpineSkinInfoParser), appearance).BindTree(owner);
+                new OfflineProfessionUiPlayerBindings(resources, manager, parts, appearance).BindTree(owner);
+                var partHandler = owner.GetComponentInChildren<AppearanceUIPartHandler>(true);
+                Require(partHandler.IgnoreSkinTypes.SequenceEqual(new[] { SkinType.backDecoration, SkinType.pWeapon, SkinType.sWeapon })
+                    && ((List<SkinType>)typeof(AppearanceUIPartHandler).GetField("IgnoreEffectTypes",
+                        System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(partHandler))
+                        .SequenceEqual(new[] { SkinType.body }),
+                    "Installed avatar retains the actual APK ignored part and body-effect lists");
                 owner.transform.SetParent(canvasObject.transform, false);
                 owner.SetActive(true); icon.Init();
                 yield return null;
@@ -230,6 +239,7 @@ public sealed class PartnerLocalPlayerWidgetRunner : MonoBehaviour
             if (owner) Object.DestroyImmediate(owner);
             Application.logMessageReceived -= log;
             Object.DestroyImmediate(soundObject); Object.DestroyImmediate(audioCatalog);
+            Object.DestroyImmediate(partCatalog);
             ProfessionAppearanceTextureBindings.Current = oldTextures;
             ProfessionAppearanceSkinClipBindings.Current = oldClip;
             WorldMultiLanguageText.Localize = oldLocalize;
@@ -253,11 +263,14 @@ public sealed class PartnerLocalPlayerWidgetRunner : MonoBehaviour
         var image = new Texture2D(render.width, render.height, TextureFormat.RGBA32, false);
         image.ReadPixels(new Rect(0, 0, render.width, render.height), 0, 0); image.Apply(); RenderTexture.active = previous;
         var colors = image.GetPixels32();
+        File.WriteAllBytes(path, image.EncodeToPNG());
         Require(!colors.Any(color => color.r > 245 && color.g < 10 && color.b > 245), "No shader error pixels in the actual original widget");
         Require(colors.Count(color => color.r > 120 && color.g > 80 && color.b > 45 && color.r > color.b) > 200
             && colors.Count(color => color.b > color.r + 40 && color.b > color.g + 10) > 5,
-            "Actual visible native face, hair and selected original eye dye");
-        File.WriteAllBytes(path, image.EncodeToPNG()); Object.DestroyImmediate(image);
+            "Actual visible native face, hair and selected original eye dye: warm="
+                + colors.Count(color => color.r > 120 && color.g > 80 && color.b > 45 && color.r > color.b)
+                + ", blue=" + colors.Count(color => color.b > color.r + 40 && color.b > color.g + 10));
+        Object.DestroyImmediate(image);
     }
     static void Click(EventSystem events, Camera camera, Button button, Vector3 worldPoint)
     {
@@ -272,15 +285,6 @@ public sealed class PartnerLocalPlayerWidgetRunner : MonoBehaviour
         ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerClickHandler);
     }
     static NotSupportedException Outside() => new NotSupportedException("Outside the original local player widget fixture");
-    sealed class Parts : IProfessionAppearancePartBindings
-    {
-        public AppearanceConfig Config { get; }
-        readonly SpineSkinInfoParser parser;
-        public Parts(AppearanceConfig config, SpineSkinInfoParser parser) { Config = config; this.parser = parser; }
-        public bool HasEffect(string skin) => parser.HasEffect(skin);
-        public IProfessionAppearancePartAsset LoadPrefab(string path) => throw Outside();
-        public GameObject Instantiate(GameObject prefab, Transform parent, bool world) => Object.Instantiate(prefab, parent, world);
-    }
     // The original selected row has no subrank/level/CP/profession-name fields,
     // no profession activation root, figure, model slot or title. Any accidental
     // use of their services fails instead of fabricating unrelated UI behavior.

@@ -15,6 +15,7 @@ namespace Zjcs.Official.WorldUI
         public AnimationClip mShowClip, mHideClip, mLoopClip;
         public event Action<WorldPopupWindow> OnShowing, OnHiding, OnShow, OnHide;
         public WorldGAction OnCanvasSortingOrderChanged = new WorldGAction();
+        public WorldGAction OnWindowDestory = new WorldGAction();
         private Canvas mCanvas;
         public Canvas Canvas => mCanvas != null ? mCanvas : (mCanvas = GetComponent<Canvas>());
         private PlayableGraph graph;
@@ -38,7 +39,11 @@ namespace Zjcs.Official.WorldUI
 
         private void OnEnable() => graph.Play();
         private void OnDisable() { if (graph.IsValid()) graph.Stop(); }
-        private void OnDestroy() { if (graph.IsValid()) graph.Destroy(); }
+        private void OnDestroy()
+        {
+            if (graph.IsValid()) graph.Destroy();
+            OnWindowDestory.SafeInvoke();
+        }
 
         public void Show()
         {

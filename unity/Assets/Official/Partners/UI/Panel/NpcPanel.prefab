@@ -13742,7 +13742,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1313026266067498}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8f4db9927cc52eddbffc2f7ee01063, type: 3}
+  m_Script: {fileID: 11500000, guid: b9c2a5d121eb5c49a193e7049f0cfe67, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   SkinTextureAssetGuid: {mAssetGuid: 87bd06b35b068b849b40f5b5d71b420a}
@@ -13758,7 +13758,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1313026266067498}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be482acf769b62f2d8594a50af181dfa, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b2446d274ac5a3880149798351c0efe, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   mPartHandler: {fileID: 114096880647939044}
@@ -13771,7 +13771,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1313026266067498}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5695cffc536a26bf94d060abeefe6ca4, type: 3}
+  m_Script: {fileID: 11500000, guid: 390e9f7a38205e1bb77307e1b62bb854, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   AppearanceCharacter: {fileID: 114996941701857495}
@@ -13795,10 +13795,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2cae0e4a83875c99499bceebe8d28c, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
-  IgnoreSkinTypes: 0c0000000700000008000000
+  IgnoreSkinTypes:
+  - 12
+  - 7
+  - 8
   mSkeletonGraphic: {fileID: 114764651933062146}
   mSlot: {fileID: 224219586937566887}
-  IgnoreEffectTypes: 1310720
+  IgnoreEffectTypes:
+  - 5
 --- !u!114 &114823770748084144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17039,7 +17043,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1689364072382846}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8f4db9927cc52eddbffc2f7ee01063, type: 3}
+  m_Script: {fileID: 11500000, guid: b9c2a5d121eb5c49a193e7049f0cfe67, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   SkinTextureAssetGuid: {mAssetGuid: 87bd06b35b068b849b40f5b5d71b420a}
@@ -17055,7 +17059,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1689364072382846}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be482acf769b62f2d8594a50af181dfa, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b2446d274ac5a3880149798351c0efe, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   mPartHandler: {fileID: 114166859300479349}
@@ -17068,7 +17072,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1689364072382846}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5695cffc536a26bf94d060abeefe6ca4, type: 3}
+  m_Script: {fileID: 11500000, guid: 390e9f7a38205e1bb77307e1b62bb854, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   AppearanceCharacter: {fileID: 114452709770756929}
@@ -17092,10 +17096,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2cae0e4a83875c99499bceebe8d28c, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
-  IgnoreSkinTypes: 0c0000000700000008000000
+  IgnoreSkinTypes:
+  - 12
+  - 7
+  - 8
   mSkeletonGraphic: {fileID: 114825852472270891}
   mSlot: {fileID: 224219067365658135}
-  IgnoreEffectTypes: 1310720
+  IgnoreEffectTypes:
+  - 5
 --- !u!114 &114598443666368413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20336,7 +20344,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1533803739292891}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8f4db9927cc52eddbffc2f7ee01063, type: 3}
+  m_Script: {fileID: 11500000, guid: b9c2a5d121eb5c49a193e7049f0cfe67, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   SkinTextureAssetGuid: {mAssetGuid: 87bd06b35b068b849b40f5b5d71b420a}
@@ -20352,7 +20360,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1533803739292891}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be482acf769b62f2d8594a50af181dfa, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b2446d274ac5a3880149798351c0efe, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   mPartHandler: {fileID: 114789453016421937}
@@ -20365,7 +20373,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1533803739292891}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5695cffc536a26bf94d060abeefe6ca4, type: 3}
+  m_Script: {fileID: 11500000, guid: 390e9f7a38205e1bb77307e1b62bb854, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   AppearanceCharacter: {fileID: 114911604714251892}
@@ -20389,10 +20397,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2cae0e4a83875c99499bceebe8d28c, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
-  IgnoreSkinTypes: 0c0000000700000008000000
+  IgnoreSkinTypes:
+  - 12
+  - 7
+  - 8
   mSkeletonGraphic: {fileID: 114557543343976191}
   mSlot: {fileID: 224731728474376346}
-  IgnoreEffectTypes: 1310720
+  IgnoreEffectTypes:
+  - 5
 --- !u!114 &114505129024980056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23633,7 +23645,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1220697728379336}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8f4db9927cc52eddbffc2f7ee01063, type: 3}
+  m_Script: {fileID: 11500000, guid: b9c2a5d121eb5c49a193e7049f0cfe67, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   SkinTextureAssetGuid: {mAssetGuid: 87bd06b35b068b849b40f5b5d71b420a}
@@ -23649,7 +23661,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1220697728379336}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be482acf769b62f2d8594a50af181dfa, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b2446d274ac5a3880149798351c0efe, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   mPartHandler: {fileID: 114677648574233891}
@@ -23662,7 +23674,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1220697728379336}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5695cffc536a26bf94d060abeefe6ca4, type: 3}
+  m_Script: {fileID: 11500000, guid: 390e9f7a38205e1bb77307e1b62bb854, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   AppearanceCharacter: {fileID: 114292969531719507}
@@ -23686,10 +23698,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2cae0e4a83875c99499bceebe8d28c, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
-  IgnoreSkinTypes: 0c0000000700000008000000
+  IgnoreSkinTypes:
+  - 12
+  - 7
+  - 8
   mSkeletonGraphic: {fileID: 114192887119429853}
   mSlot: {fileID: 224996929721055303}
-  IgnoreEffectTypes: 1310720
+  IgnoreEffectTypes:
+  - 5
 --- !u!114 &114851870559099643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26930,7 +26946,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1904079258986964}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8f4db9927cc52eddbffc2f7ee01063, type: 3}
+  m_Script: {fileID: 11500000, guid: b9c2a5d121eb5c49a193e7049f0cfe67, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   SkinTextureAssetGuid: {mAssetGuid: 87bd06b35b068b849b40f5b5d71b420a}
@@ -26946,7 +26962,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1904079258986964}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be482acf769b62f2d8594a50af181dfa, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b2446d274ac5a3880149798351c0efe, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   mPartHandler: {fileID: 114806980798193366}
@@ -26959,7 +26975,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1904079258986964}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5695cffc536a26bf94d060abeefe6ca4, type: 3}
+  m_Script: {fileID: 11500000, guid: 390e9f7a38205e1bb77307e1b62bb854, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   AppearanceCharacter: {fileID: 114330860830280435}
@@ -26983,10 +26999,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2cae0e4a83875c99499bceebe8d28c, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
-  IgnoreSkinTypes: 0c0000000700000008000000
+  IgnoreSkinTypes:
+  - 12
+  - 7
+  - 8
   mSkeletonGraphic: {fileID: 114811135515671722}
   mSlot: {fileID: 224828584753893640}
-  IgnoreEffectTypes: 1310720
+  IgnoreEffectTypes:
+  - 5
 --- !u!114 &114156144144747732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30227,7 +30247,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1573076885614623}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8f4db9927cc52eddbffc2f7ee01063, type: 3}
+  m_Script: {fileID: 11500000, guid: b9c2a5d121eb5c49a193e7049f0cfe67, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   SkinTextureAssetGuid: {mAssetGuid: 87bd06b35b068b849b40f5b5d71b420a}
@@ -30243,7 +30263,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1573076885614623}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be482acf769b62f2d8594a50af181dfa, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b2446d274ac5a3880149798351c0efe, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   mPartHandler: {fileID: 114276430488365212}
@@ -30256,7 +30276,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1573076885614623}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5695cffc536a26bf94d060abeefe6ca4, type: 3}
+  m_Script: {fileID: 11500000, guid: 390e9f7a38205e1bb77307e1b62bb854, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
   AppearanceCharacter: {fileID: 114435973590157420}
@@ -30280,10 +30300,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2cae0e4a83875c99499bceebe8d28c, type: 3}
   m_Name: ''
   m_EditorClassIdentifier: null
-  IgnoreSkinTypes: 0c0000000700000008000000
+  IgnoreSkinTypes:
+  - 12
+  - 7
+  - 8
   mSkeletonGraphic: {fileID: 114945116736992106}
   mSlot: {fileID: 224644364330909280}
-  IgnoreEffectTypes: 1310720
+  IgnoreEffectTypes:
+  - 5
 --- !u!114 &114687796701880807
 MonoBehaviour:
   m_ObjectHideFlags: 0

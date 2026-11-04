@@ -51,10 +51,11 @@ class UnityYamlLoader(getattr(yaml, 'CSafeLoader', yaml.SafeLoader)):
                 # PyYAML's null would be emitted as the literal text "null",
                 # causing MultiLanguageText to overwrite static separators.
                 value.tag = 'tag:yaml.org,2002:str'
-            if key.value in ('m_IndexBuffer', '_typelessdata', 'm_TypelessData'):
+            if key.value in ('m_IndexBuffer', '_typelessdata', 'm_TypelessData',
+                             'IgnoreSkinTypes', 'IgnoreEffectTypes') and isinstance(value, yaml.ScalarNode):
                 # Unity writes byte arrays as unquoted hex. YAML 1.1 otherwise
                 # turns digit-only buffers into integers (including octal),
-                # corrupting triangle indices and dropping leading zeroes.
+                # corrupting indices or packed enum arrays and dropping zeroes.
                 value.tag = 'tag:yaml.org,2002:str'
         return super().construct_mapping(node, deep=deep)
 

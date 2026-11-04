@@ -59,9 +59,10 @@ class PartnerPanelBinding(PartnerStarGodBinding):
         paths = {name: official / 'ProfessionUI' / (name + '.cs') for name in
             ('AppearanceUIPartHandler', 'CloseWindowBtn', 'OffScreenUISpinePlayer', 'PanelTitle',
              'PlayerIconMe', 'PlayerInfoUI', 'TopBarHandler')}
-        paths.update({name: official / 'ProfessionUI' / (name.rsplit('.', 1)[-1] + '.cs') for name in
+        paths.update({name: official / 'CombatAppearance' / (name.rsplit('.', 1)[-1] + '.cs') for name in
             ('AppearanceSystem.PlayerAnimationAppearance', 'AppearanceSystem.Runtime.AppearanceCharacter',
-             'AppearanceSystem.Runtime.AppearanceSkinClip', 'AppearanceSystem.Runtime.AppearanceUI')})
+             'AppearanceSystem.Runtime.AppearanceUI')})
+        paths['AppearanceSystem.Runtime.AppearanceSkinClip'] = official / 'ProfessionUI/AppearanceSkinClip.cs'
         paths.update({name: official / 'TeamUI' / ('Team' + name + '.cs') for name in
             ('HeadCharacterPortrait', 'PlayerIcon', 'PlayerIconMeHpSliderNormal', 'PlayerIconOther')})
         paths.update({name: official / 'WorldUI' / file for name, file in

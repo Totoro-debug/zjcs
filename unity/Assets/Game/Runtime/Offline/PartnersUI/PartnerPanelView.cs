@@ -98,7 +98,7 @@ namespace Zjcs.Offline.PartnersUI
                 value.PrepareOpen?.Invoke();
                 sounds = new OfflinePartnerUiSoundScope(assets.GetSound);
                 skinClip = new OfflineProfessionNativeSkinClipBindings(previousSkinClip);
-                ProfessionAppearanceSkinClipBindings.Current = skinClip;
+                ProfessionAppearanceSkinClipBindings.Current = new OfflineProfessionCurrentUiSkinClipBindings(skinClip);
                 WorldMultiLanguageText.Localize = assets.CreateLocalizer(value.Localize); WorldMultiLanguageText.LanguageFont = () => value.Font;
                 bindingRoot = new GameObject("OriginalPartnerWindowBinding", typeof(RectTransform));
                 var rect = (RectTransform)bindingRoot.transform; rect.SetParent(transform, false);

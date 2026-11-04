@@ -28,6 +28,20 @@ def copy_modules(project, runtime, modules, selected):
             target = project / 'Assets/Game/Runtime' / source.relative_to(runtime)
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source, target)
+    # These assemblies load their local inputs at runtime; asmdef references
+    # alone do not include the native plug-in or Resources configuration.
+    inputs = []
+    if 'Zjcs.Official.SharedSerialization' in selected:
+        inputs.append('Assets/Official/World/Map/14/SharedSerialization/MessagePack.dll')
+    if 'Zjcs.Offline.Progression' in selected:
+        inputs.append('Assets/Game/Resources/Map14/world-alone-preparation.json')
+        inputs.append('Assets/Game/Resources/Map16/world-alone-configuration.json')
+    for relative in inputs:
+        for suffix in ('', '.meta'):
+            source = ROOT / 'unity' / (relative + suffix)
+            target = project / (relative + suffix)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, target)
 
 
 def verified_installed_bytes(source, expected, relative):

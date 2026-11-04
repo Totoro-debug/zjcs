@@ -161,13 +161,20 @@ public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPrese
         var previousSound = OfficialWwiseEvent.Host;
         var limited = new HashSet<int>();
         var context = new PartnerPanelContext {
-            Roster = roster, StarGod = services, Dialogues = new NewProfileDialogueFixture(), Windows = new Windows(this),
+            Roster = roster, StarGod = services, Dialogues = new NewProfileDialogueFixture(),
+            Windows = new OfflinePartnerWindowService(CloseWindow, () => CloseWindow(view.Content)),
             Images = new OfflineProfessionImageResourceLoader(mergedImages), Font = font,
             Localize = key => words.TryGetValue(key, out var word) ? word : localizeRoster(key),
             IsFunctionLimit = limited.Contains, BindNativeTree = BindNativeTree,
             BindPartnerTipDotDialogues = tipDots.BindDialogues, PostSound = PostSound
         };
+        int destroyedWindows = 0, removedObservers = 0;
+        Action onDestroyed = () => destroyedWindows++;
+        Action removedObserver = () => removedObservers++;
         view.Open(OfficialPartnerPanelAssetCatalog.Load(), context);
+        context.Windows.ObserveDestroyed(view.Window, onDestroyed);
+        context.Windows.ObserveDestroyed(view.Window, removedObserver);
+        context.Windows.StopObservingDestroyed(view.Window, removedObserver);
         yield return null; yield return new WaitForSeconds(0.7f);
         Require(view.Window.State == WorldPopupWindow.EState.Show, "Original show clip completed");
         var panel = view.Content.GetComponent<NpcPanel>();
@@ -213,12 +220,17 @@ public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPrese
         Require(view.Window.State == WorldPopupWindow.EState.Hiding, "Original close button starts actual hide clip");
         yield return new WaitForSeconds(0.7f);
         Require(!view.Content && ReferenceEquals(previousSkin, ProfessionAppearanceSkinClipBindings.Current), "Hide completion destroys window and restores scoped bindings");
+        Require(destroyedWindows == 1 && removedObservers == 0,
+            "Production window service observes actual native destruction and honors unsubscribe");
         Require(ReferenceEquals(previousSound, OfficialWwiseEvent.Host), "Hide completion restores underlying sound host");
         view.Open(OfficialPartnerPanelAssetCatalog.Load(), context, NpcPanelTabType.StarGod);
+        context.Windows.ObserveDestroyed(view.Window, onDestroyed);
         yield return new WaitForSeconds(0.7f);
         Require(view.Content.GetComponentInChildren<NpcPanelStarGodContent>(), "Reopen original window on requested page");
         Capture("panel-host-reopened.png");
         view.Close(); yield return null;
+        Require(destroyedWindows == 2 && removedObservers == 0,
+            "Direct owner cleanup also emits the original window destruction event exactly once");
         limited.UnionWith(new[] { 57, 174 });
         view.Open(OfficialPartnerPanelAssetCatalog.Load(), context, NpcPanelTabType.StarGod);
         yield return new WaitForSeconds(0.7f);
@@ -256,26 +268,10 @@ public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPrese
         public void ShowError(int code) => throw new Exception("Unexpected dialogue error " + code);
         public void ShowDialogue(PartnerDialogueData dialogue) => throw new InvalidOperationException("No dialogue in this fixture");
     }
-    sealed class Windows : IProfessionWindowService
+    void CloseWindow(GameObject window)
     {
-        readonly PartnerPanelHostRunner owner;
-        readonly Dictionary<WorldPopupWindow, List<Action>> observers = new Dictionary<WorldPopupWindow, List<Action>>();
-        public Windows(PartnerPanelHostRunner owner) { this.owner = owner; }
-        public void ObserveDestroyed(WorldPopupWindow window, Action callback) {
-            Require(window, "Observe original parent window after Awake");
-            if (!observers.TryGetValue(window, out var rows)) observers.Add(window, rows = new List<Action>());
-            rows.Add(callback);
-        }
-        public void StopObservingDestroyed(WorldPopupWindow window, Action callback) { if (observers.TryGetValue(window, out var rows)) rows.Remove(callback); }
-        public void CloseLast() => Close(owner.view.Content);
-        public void Close(GameObject window) {
-            Require(window == owner.view.Content, "Close exact original window");
-            var popup = window.GetComponent<WorldPopupWindow>();
-            popup.Hide(() => {
-                if (observers.TryGetValue(popup, out var rows)) foreach (var callback in rows.ToArray()) callback();
-                observers.Remove(popup); owner.view.Close();
-            });
-        }
+        Require(window == view.Content, "Close exact original window");
+        window.GetComponent<WorldPopupWindow>().Hide(() => view.Close());
     }
     void BindNativeTree(GameObject root) => tipDots.BindNativeTree(root);
     public void BindNpcTipDot(TipDotNodeLinker linker, int id) => tipDots.Bind(linker, id);

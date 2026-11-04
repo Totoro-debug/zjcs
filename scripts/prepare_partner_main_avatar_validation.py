@@ -82,8 +82,8 @@ def main():
         raw = source.read_bytes()
         if raw.startswith(b'%YAML'):
             pending.extend(index[key] for key in set(re.findall(rb'guid: ([0-9a-f]{32})', raw)) if key in index)
-    # Only the owned isolated prefab changes script bindings. Its transforms,
-    # masks, objects, original field values and references remain intact.
+    # The installed prefab now uses the selected current application bindings.
+    # Copy that exact production prefab; do not repair it only in the fixture.
     prefab = project / 'Assets/Official/Partners/UI/Panel/NpcPanel.prefab'
     text = prefab.read_text('utf8')
     count = {}
@@ -92,11 +92,9 @@ def main():
             source = runtime / 'Official' / folder / (name + '.cs.meta')
             return re.search(r'(?m)^guid: ([0-9a-f]{32})', source.read_text('utf8'))[1]
         old, new = guid('ProfessionUI'), guid('CombatAppearance')
-        count[name] = text.count('guid: ' + old)
-        if count[name] == 0:
-            raise ValueError('Original avatar application component missing: ' + name)
-        text = text.replace('guid: ' + old, 'guid: ' + new)
-    prefab.write_text(text, 'utf8', newline='\n')
+        count[name] = text.count('guid: ' + new)
+        if count[name] != 6 or ('guid: ' + old) in text:
+            raise ValueError('Bind the installed original avatars to the selected current application: ' + name)
     editor = project / 'Assets/Editor'
     references = selected | {'Unity.ugui', 'Unity.TextMeshPro',
         'Unity.RenderPipelines.Universal.Runtime', 'Unity.RenderPipelines.Core.Runtime'}

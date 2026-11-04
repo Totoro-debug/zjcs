@@ -1,0 +1,653 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    "assets/reference/partner-panel-native-source-manifest.json": "bdf7d505ad48a5782ee65320f124dda67d98279d8bb41bd0f02e9e90af88016b",
+    "assets/reference/partner-dialogue-playback-native-source-manifest.json": "d73b2f5cfea0b121496c14514ba2ab85e63670281a60b77cf182fbb63a3af76d"
+  },
+  "adaptations": [
+    {
+      "path": "unity/Assets/Official/Partners/UI/Panel/NpcPanel.prefab",
+      "baseline_sha256": "99a08091411b08e43ea7531c3d0e5dab98811b467cd501b2dd119683b47c0627",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+        "bundle_hash": "2212f712f2ca157310ba8577a8c36879",
+        "path_id": "5196666809939467722",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2212f712f2ca157310ba8577a8c36879.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 1079086,
+        "bundle_sha256": "a8847b99610c4b5e86ee8699e912c7cbcba059b065cef6a3ec0f3680861bebcb"
+      },
+      "native_source": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcPanel.prefab",
+      "native_sha256": "a279b3532f096dbd5470772f4884045ab3bcc23f1b9fa8457f35931512cc49cb",
+      "components": [
+        {
+          "nativeFileID": 114168433043195795,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-5092219668895228470",
+          "type": "AppearanceUI",
+          "payload_sha256": "28e52a250d72de7e92be200b1c99ea5fc0fbf2c19f74ae2b03be76b83a02e0ab",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs",
+            "sha256": "54827131c7302d006f826c198186b96c3faad557a954b035fb8cca1f25fbba1a"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs.meta",
+            "sha256": "17cbb540bd4d60ec81f4a43b5176c31f4c082dd60c864e41c0b642805f8582fa"
+          }
+        },
+        {
+          "nativeFileID": 114996941701857495,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-8982643571897524790",
+          "type": "AppearanceCharacter",
+          "payload_sha256": "1d640be3b7f9390d20672f4dc8343bf2651bd709a4e0249dd26a77c1e92577d8",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs",
+            "sha256": "d89b6bfaac4e7a0b982928e151b121de40f2662c7b9e76df34ab151d4f963c99"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs.meta",
+            "sha256": "ac1111d971d46a2b2f4c73e29d5f0945ef95d3c2eea932df61e0e4e58f6d9925"
+          }
+        },
+        {
+          "nativeFileID": 114808008904197051,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-7308529911317258806",
+          "type": "PlayerAnimationAppearance",
+          "payload_sha256": "fcc863c3a9ad3d32642b50ba1b572a37b3e4179848c0946419fb6394af67ce9c",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs",
+            "sha256": "5221d2bb5cb6fd9f2c104c235294eac13e7b7a514772b76d67fb36686b8a4956"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs.meta",
+            "sha256": "4c786bced874d498d8e8cd589904eb0cdf7ad538e5a407aaceb9f6fb464893fe"
+          }
+        },
+        {
+          "nativeFileID": 114096880647939044,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:7356624426530774474",
+          "type": "AppearanceUIPartHandler",
+          "payload_sha256": "b6a5348e7dca4cd4f76abdb20f8992b05963461c4ebab469b919fc7f6a75f534",
+          "original_fields": {
+            "IgnoreSkinTypes": [
+              12,
+              7,
+              8
+            ],
+            "IgnoreEffectTypes": [
+              5
+            ]
+          }
+        },
+        {
+          "nativeFileID": 114235180746187507,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-1466961953488626230",
+          "type": "AppearanceUI",
+          "payload_sha256": "0a01454a8b28295bccf9695b0c167a044f45aa14de08d7f506a3b1b46ed172aa",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs",
+            "sha256": "54827131c7302d006f826c198186b96c3faad557a954b035fb8cca1f25fbba1a"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs.meta",
+            "sha256": "17cbb540bd4d60ec81f4a43b5176c31f4c082dd60c864e41c0b642805f8582fa"
+          }
+        },
+        {
+          "nativeFileID": 114452709770756929,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-2463475100779668022",
+          "type": "AppearanceCharacter",
+          "payload_sha256": "2f20724bb65f9ee0b7534f4c4219e537c1c55d31e3bcb1d52b56e2bf084a84ff",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs",
+            "sha256": "d89b6bfaac4e7a0b982928e151b121de40f2662c7b9e76df34ab151d4f963c99"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs.meta",
+            "sha256": "ac1111d971d46a2b2f4c73e29d5f0945ef95d3c2eea932df61e0e4e58f6d9925"
+          }
+        },
+        {
+          "nativeFileID": 114108971881938108,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-2499164931620921910",
+          "type": "PlayerAnimationAppearance",
+          "payload_sha256": "1aab333b7795a0f57bf9dec2a707685f89953e557e1c2e13379a0c16666df0c8",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs",
+            "sha256": "5221d2bb5cb6fd9f2c104c235294eac13e7b7a514772b76d67fb36686b8a4956"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs.meta",
+            "sha256": "4c786bced874d498d8e8cd589904eb0cdf7ad538e5a407aaceb9f6fb464893fe"
+          }
+        },
+        {
+          "nativeFileID": 114166859300479349,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:3893085892109737418",
+          "type": "AppearanceUIPartHandler",
+          "payload_sha256": "a044f68cef7ddc880667bd4ea500501339821cc761c62f34886d3ea0a396d65c",
+          "original_fields": {
+            "IgnoreSkinTypes": [
+              12,
+              7,
+              8
+            ],
+            "IgnoreEffectTypes": [
+              5
+            ]
+          }
+        },
+        {
+          "nativeFileID": 114695280048154070,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-1745719189468209718",
+          "type": "AppearanceUI",
+          "payload_sha256": "1e769e2fb56eca5c3752857a43b98fc394c4bc2dde99dead1851677287214f23",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs",
+            "sha256": "54827131c7302d006f826c198186b96c3faad557a954b035fb8cca1f25fbba1a"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs.meta",
+            "sha256": "17cbb540bd4d60ec81f4a43b5176c31f4c082dd60c864e41c0b642805f8582fa"
+          }
+        },
+        {
+          "nativeFileID": 114911604714251892,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:6756448218923933130",
+          "type": "AppearanceCharacter",
+          "payload_sha256": "8e70288352c2ceff89d32e16c9c06951156970689474eb5bd4a99bc8fb491750",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs",
+            "sha256": "d89b6bfaac4e7a0b982928e151b121de40f2662c7b9e76df34ab151d4f963c99"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs.meta",
+            "sha256": "ac1111d971d46a2b2f4c73e29d5f0945ef95d3c2eea932df61e0e4e58f6d9925"
+          }
+        },
+        {
+          "nativeFileID": 114219131114696041,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:7547203054826429898",
+          "type": "PlayerAnimationAppearance",
+          "payload_sha256": "a42f653be48d3e44421d7052f695acc06a31185b7338a66712c76a8a17f2c808",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs",
+            "sha256": "5221d2bb5cb6fd9f2c104c235294eac13e7b7a514772b76d67fb36686b8a4956"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs.meta",
+            "sha256": "4c786bced874d498d8e8cd589904eb0cdf7ad538e5a407aaceb9f6fb464893fe"
+          }
+        },
+        {
+          "nativeFileID": 114789453016421937,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-7064950496834413110",
+          "type": "AppearanceUIPartHandler",
+          "payload_sha256": "40a05c8ce355243da04830ad0255112e925f8d7abb324ee44190a07a21fe9c36",
+          "original_fields": {
+            "IgnoreSkinTypes": [
+              12,
+              7,
+              8
+            ],
+            "IgnoreEffectTypes": [
+              5
+            ]
+          }
+        },
+        {
+          "nativeFileID": 114007274055415308,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:664542786426117578",
+          "type": "AppearanceUI",
+          "payload_sha256": "68e564810cc5d2226c3a893098d3ec0818b58cb2a65b03aa0e7b4d4d8e498ac4",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs",
+            "sha256": "54827131c7302d006f826c198186b96c3faad557a954b035fb8cca1f25fbba1a"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs.meta",
+            "sha256": "17cbb540bd4d60ec81f4a43b5176c31f4c082dd60c864e41c0b642805f8582fa"
+          }
+        },
+        {
+          "nativeFileID": 114292969531719507,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:5689336160882859466",
+          "type": "AppearanceCharacter",
+          "payload_sha256": "c733274e685f8652b1e2729ae656400f698cde8695b7e939feadde643e7e72d1",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs",
+            "sha256": "d89b6bfaac4e7a0b982928e151b121de40f2662c7b9e76df34ab151d4f963c99"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs.meta",
+            "sha256": "ac1111d971d46a2b2f4c73e29d5f0945ef95d3c2eea932df61e0e4e58f6d9925"
+          }
+        },
+        {
+          "nativeFileID": 114701682588093428,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:5017957183667576266",
+          "type": "PlayerAnimationAppearance",
+          "payload_sha256": "2aa93b8fcea5db6ccba8aa0658b3e59fd51128520af849ac9e865ece62270fd8",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs",
+            "sha256": "5221d2bb5cb6fd9f2c104c235294eac13e7b7a514772b76d67fb36686b8a4956"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs.meta",
+            "sha256": "4c786bced874d498d8e8cd589904eb0cdf7ad538e5a407aaceb9f6fb464893fe"
+          }
+        },
+        {
+          "nativeFileID": 114677648574233891,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-3211425765043593782",
+          "type": "AppearanceUIPartHandler",
+          "payload_sha256": "acd4fad758af017239c5fe3a94981cf78d588cde84e00c520ba3629d070f18fc",
+          "original_fields": {
+            "IgnoreSkinTypes": [
+              12,
+              7,
+              8
+            ],
+            "IgnoreEffectTypes": [
+              5
+            ]
+          }
+        },
+        {
+          "nativeFileID": 114776817288976005,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-1605545083808375350",
+          "type": "AppearanceUI",
+          "payload_sha256": "fdebaca7e0b88c9040097dc777e1208b832ae7215d44ce6ae9ccc7f6e1dcaa3f",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs",
+            "sha256": "54827131c7302d006f826c198186b96c3faad557a954b035fb8cca1f25fbba1a"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs.meta",
+            "sha256": "17cbb540bd4d60ec81f4a43b5176c31f4c082dd60c864e41c0b642805f8582fa"
+          }
+        },
+        {
+          "nativeFileID": 114330860830280435,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-4366883180924625462",
+          "type": "AppearanceCharacter",
+          "payload_sha256": "fa4a6577b1be06f5d0055f02355ecef14bcb85f9fe927a420d35c4863bdd42eb",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs",
+            "sha256": "d89b6bfaac4e7a0b982928e151b121de40f2662c7b9e76df34ab151d4f963c99"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs.meta",
+            "sha256": "ac1111d971d46a2b2f4c73e29d5f0945ef95d3c2eea932df61e0e4e58f6d9925"
+          }
+        },
+        {
+          "nativeFileID": 114200455970185606,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:8306863704429174218",
+          "type": "PlayerAnimationAppearance",
+          "payload_sha256": "8339410f2311f068c56a0b72fb63591ca2627e8cf0caa1cbfe424015bd0d5255",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs",
+            "sha256": "5221d2bb5cb6fd9f2c104c235294eac13e7b7a514772b76d67fb36686b8a4956"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs.meta",
+            "sha256": "4c786bced874d498d8e8cd589904eb0cdf7ad538e5a407aaceb9f6fb464893fe"
+          }
+        },
+        {
+          "nativeFileID": 114806980798193366,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-2438499682869436982",
+          "type": "AppearanceUIPartHandler",
+          "payload_sha256": "0c2749694722214b667d1b87820921cd391c9617cbe6c6a2d271735393fe37ce",
+          "original_fields": {
+            "IgnoreSkinTypes": [
+              12,
+              7,
+              8
+            ],
+            "IgnoreEffectTypes": [
+              5
+            ]
+          }
+        },
+        {
+          "nativeFileID": 114135916817254013,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-7614253259255702070",
+          "type": "AppearanceUI",
+          "payload_sha256": "13eb98e2f81ff5c26f9e2b46f8d64b3530fd7a2627f44a238c542760b8ada5df",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs",
+            "sha256": "54827131c7302d006f826c198186b96c3faad557a954b035fb8cca1f25fbba1a"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs.meta",
+            "sha256": "17cbb540bd4d60ec81f4a43b5176c31f4c082dd60c864e41c0b642805f8582fa"
+          }
+        },
+        {
+          "nativeFileID": 114435973590157420,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-8329518669159195190",
+          "type": "AppearanceCharacter",
+          "payload_sha256": "2e8f650dfb8860f8e85ab296b541e1fa47b41df3ded41f99a2caf647c3034ac8",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs",
+            "sha256": "d89b6bfaac4e7a0b982928e151b121de40f2662c7b9e76df34ab151d4f963c99"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs.meta",
+            "sha256": "ac1111d971d46a2b2f4c73e29d5f0945ef95d3c2eea932df61e0e4e58f6d9925"
+          }
+        },
+        {
+          "nativeFileID": 114214420302799419,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-1009971771178869302",
+          "type": "PlayerAnimationAppearance",
+          "payload_sha256": "c25f1f325ff0169d6779d82de582f677f8850001309691763a4e1f68ebca4e70",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs",
+            "sha256": "5221d2bb5cb6fd9f2c104c235294eac13e7b7a514772b76d67fb36686b8a4956"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs.meta",
+            "sha256": "4c786bced874d498d8e8cd589904eb0cdf7ad538e5a407aaceb9f6fb464893fe"
+          }
+        },
+        {
+          "nativeFileID": 114276430488365212,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:490978733925604810",
+          "type": "AppearanceUIPartHandler",
+          "payload_sha256": "16e12222f373fd0f42ec46bb84344a6b282582d2420077e001d8c47bc8e347ac",
+          "original_fields": {
+            "IgnoreSkinTypes": [
+              12,
+              7,
+              8
+            ],
+            "IgnoreEffectTypes": [
+              5
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/Panel/NativePrefabs/39af9cbc1cf8b837.prefab",
+      "baseline_sha256": "a2b552139c03d50ca43234450e65b14bd1921de668901eacf332139dd58bd7d9",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+        "bundle_hash": "2212f712f2ca157310ba8577a8c36879",
+        "path_id": "291228603885645322",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2212f712f2ca157310ba8577a8c36879.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 1079086,
+        "bundle_sha256": "a8847b99610c4b5e86ee8699e912c7cbcba059b065cef6a3ec0f3680861bebcb"
+      },
+      "native_source": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcPanelDialogueItem.prefab",
+      "native_sha256": "436acbc67285c74918163fce34c05bb57c2919b078019a92500f0afbb2d50b97",
+      "components": [
+        {
+          "nativeFileID": 114651560128206891,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-6162642295845130742",
+          "type": "AppearanceUI",
+          "payload_sha256": "a7a5661b0737a4aea4d943a4cc85d8ae86536ab2bc1ccef8b08c04b980daf99d",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs",
+            "sha256": "54827131c7302d006f826c198186b96c3faad557a954b035fb8cca1f25fbba1a"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs.meta",
+            "sha256": "17cbb540bd4d60ec81f4a43b5176c31f4c082dd60c864e41c0b642805f8582fa"
+          }
+        },
+        {
+          "nativeFileID": 114964469411310401,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:5757695045574422026",
+          "type": "AppearanceCharacter",
+          "payload_sha256": "d695736cd26430c12169066c64ae400e28457c66dfc38d8f8cbfb5cc7a33251b",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs",
+            "sha256": "d89b6bfaac4e7a0b982928e151b121de40f2662c7b9e76df34ab151d4f963c99"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs.meta",
+            "sha256": "ac1111d971d46a2b2f4c73e29d5f0945ef95d3c2eea932df61e0e4e58f6d9925"
+          }
+        },
+        {
+          "nativeFileID": 114208575754630950,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-4987389805078745590",
+          "type": "PlayerAnimationAppearance",
+          "payload_sha256": "6f98424b54cde23f037ddde99589c773343120a93d9cfe15b5f37bddb2515e79",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs",
+            "sha256": "5221d2bb5cb6fd9f2c104c235294eac13e7b7a514772b76d67fb36686b8a4956"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs.meta",
+            "sha256": "4c786bced874d498d8e8cd589904eb0cdf7ad538e5a407aaceb9f6fb464893fe"
+          }
+        },
+        {
+          "nativeFileID": 114431740505123533,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-4092065996981309942",
+          "type": "AppearanceUIPartHandler",
+          "payload_sha256": "b6c8afc32a17db9af3db97d9fac0120b0b8de940092f25ce6d9598877f76e2e0",
+          "original_fields": {
+            "IgnoreSkinTypes": [
+              12,
+              7,
+              8
+            ],
+            "IgnoreEffectTypes": [
+              5
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/DialoguePlayback/NativePrefabs/9e4e500e3555f2fa.prefab",
+      "baseline_sha256": "d34e7dfb1e96d4306e0544c97864fa711d3a03f345e64651537bdcb41b0d4de5",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+        "bundle_hash": "2212f712f2ca157310ba8577a8c36879",
+        "path_id": "8153402246322924224",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2212f712f2ca157310ba8577a8c36879.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 1079086,
+        "bundle_sha256": "a8847b99610c4b5e86ee8699e912c7cbcba059b065cef6a3ec0f3680861bebcb"
+      },
+      "native_source": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcDialoguePanelItem.prefab",
+      "native_sha256": "8d0042eef5cfe1688b97057a06e260553981fbab4681383c9bf7ab951be90b84",
+      "components": [
+        {
+          "nativeFileID": 114571878917323452,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-6346890128785462592",
+          "type": "AppearanceUI",
+          "payload_sha256": "f9e41b47de15bf2209bbdf3f666286ff6e96984027f67284428efd306d322c3e",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs",
+            "sha256": "54827131c7302d006f826c198186b96c3faad557a954b035fb8cca1f25fbba1a"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs.meta",
+            "sha256": "17cbb540bd4d60ec81f4a43b5176c31f4c082dd60c864e41c0b642805f8582fa"
+          }
+        },
+        {
+          "nativeFileID": 114534704304255049,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-3029903871222666560",
+          "type": "AppearanceCharacter",
+          "payload_sha256": "886198c2a25fa1033c293355157572b9df6bd8162e193391aca7a8e7aec05729",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs",
+            "sha256": "d89b6bfaac4e7a0b982928e151b121de40f2662c7b9e76df34ab151d4f963c99"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs.meta",
+            "sha256": "ac1111d971d46a2b2f4c73e29d5f0945ef95d3c2eea932df61e0e4e58f6d9925"
+          }
+        },
+        {
+          "nativeFileID": 114651560128206891,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-1399741653837075776",
+          "type": "PlayerAnimationAppearance",
+          "payload_sha256": "5773b17a0cab842212a89eb346b89d4ef2cdba721d894449a513a11f5dde1821",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs",
+            "sha256": "5221d2bb5cb6fd9f2c104c235294eac13e7b7a514772b76d67fb36686b8a4956"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs.meta",
+            "sha256": "4c786bced874d498d8e8cd589904eb0cdf7ad538e5a407aaceb9f6fb464893fe"
+          }
+        },
+        {
+          "nativeFileID": 114964469411310401,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:2319290013115886272",
+          "type": "AppearanceUIPartHandler",
+          "payload_sha256": "f3dd51d7646025eb05dc35af982aeb1f8672ce5819a91ab4c1f14d4a7c6b6de6",
+          "original_fields": {
+            "IgnoreSkinTypes": [
+              12,
+              7,
+              8
+            ],
+            "IgnoreEffectTypes": [
+              5
+            ]
+          }
+        },
+        {
+          "nativeFileID": 114948132087033897,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:6769171606100585152",
+          "type": "AppearanceUI",
+          "payload_sha256": "2585246fe1af490f52a2abee5a004492b9c762a69decf197f4110d6bd5b0d9e6",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs",
+            "sha256": "54827131c7302d006f826c198186b96c3faad557a954b035fb8cca1f25fbba1a"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs.meta",
+            "sha256": "17cbb540bd4d60ec81f4a43b5176c31f4c082dd60c864e41c0b642805f8582fa"
+          }
+        },
+        {
+          "nativeFileID": 114320592835458227,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:7518129299902573248",
+          "type": "AppearanceCharacter",
+          "payload_sha256": "c3fe540dd07d5ee490070ddf30136913198aae85a751e079f39522018d1c25ba",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs",
+            "sha256": "d89b6bfaac4e7a0b982928e151b121de40f2662c7b9e76df34ab151d4f963c99"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs.meta",
+            "sha256": "ac1111d971d46a2b2f4c73e29d5f0945ef95d3c2eea932df61e0e4e58f6d9925"
+          }
+        },
+        {
+          "nativeFileID": 114911997548769506,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:3861114676144515776",
+          "type": "PlayerAnimationAppearance",
+          "payload_sha256": "fcdcb109257e72daa291c09d130b7453c65f76cd5c3200cdd3d6ac2990c82c93",
+          "runtime": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs",
+            "sha256": "5221d2bb5cb6fd9f2c104c235294eac13e7b7a514772b76d67fb36686b8a4956"
+          },
+          "runtime_meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs.meta",
+            "sha256": "4c786bced874d498d8e8cd589904eb0cdf7ad538e5a407aaceb9f6fb464893fe"
+          }
+        },
+        {
+          "nativeFileID": 114689010887986514,
+          "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-4870976631336064320",
+          "type": "AppearanceUIPartHandler",
+          "payload_sha256": "641946a56a1e0d811a3e800e1f219ddb2229dcbfc0d68251fbcbe4f8638a9eb8",
+          "original_fields": {
+            "IgnoreSkinTypes": [
+              12,
+              7,
+              8
+            ],
+            "IgnoreEffectTypes": [
+              5
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/Partners/UI/Panel/NpcPanel.prefab",
+      "sha256": "9449247670591465f6d32c8c4757c5939e37d99d68cd373279e719889b84226b"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/Panel/NpcPanel.prefab.meta",
+      "sha256": "f8f995e820e909b933201afa5b07b9995408bf0bbdddf9d5286963bf6ad6bdbf"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/Panel/NativePrefabs/39af9cbc1cf8b837.prefab",
+      "sha256": "800bbfb8f0a1a9f49a248ff601eb0d35b99403efac9fc33c39741fe49bfaaaa9"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/Panel/NativePrefabs/39af9cbc1cf8b837.prefab.meta",
+      "sha256": "2091b7a28089c87e30754a44a3bf733760244cdba0ac0faf21c4021e3700b125"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/DialoguePlayback/NativePrefabs/9e4e500e3555f2fa.prefab",
+      "sha256": "1258982685aded91cd22e9010590e45400c9304fdf41e834d6fc14116307e5dd"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/DialoguePlayback/NativePrefabs/9e4e500e3555f2fa.prefab.meta",
+      "sha256": "a64959212e807c66d487739fe6accf15cf292e3e250c90b98cb0cc7f5f1b7f81"
+    }
+  ],
+  "component_cache": {
+    "path": ".tools/source-packages/current/884_156692/native-conversion/component-fields-all/source-manifest.json",
+    "sha256": "c82db6a6903d36856807688d11573793cdaef98d1da13d0d6108b6f3f04aeec5"
+  },
+  "generator": {
+    "path": "scripts/prepare_partner_panel_actor_bindings.py",
+    "sha256": "bfb8176cc4f005e23f8aa0cf5498e091cbd0db7939acedd212745b1432467293"
+  },
+  "window_lifecycle": {
+    "original": {
+      "path": ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/PopupWindow.cs",
+      "sha256": "bffa7ae9f9d3058a44519e2f899497945ce47f6ccac783ab0485b58751aa3f80"
+    },
+    "methods": [
+      "OnWindowDestory",
+      "OnDestroy"
+    ],
+    "migrated": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldPopupWindow.cs",
+      "sha256": "0ec2880a12719c8d3e79decb0021a84e8a3a4f360f1e72fe2bda7c157fe8f2b7"
+    },
+    "service": {
+      "path": "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerWindowService.cs",
+      "sha256": "2d59f831fc44ec318c865fbd7627ea5401db0c7d6ebc9e6e3f7276060ffa6cf6"
+    },
+    "operation": "Notify the original destruction action after releasing the playable graph; subscribe/unsubscribe through the window port."
+  },
+  "part_loader": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionAppearancePartBindings.cs",
+    "sha256": "799df7d396c63101b79eb1d98612e405c83e2996893fdea61d5753e9ec5df7c0"
+  },
+  "window_skin_clip_bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerPanelView.cs",
+      "sha256": "b8d1d5be1f86cddec98da79073f8d35b9563e9756e38570414514427e9d392e7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerDialoguePlaybackView.cs",
+      "sha256": "976caeb8931c17de5575a2e4ff371f300bb4b0d5ba97583daf9f910a155c74a9"
+    }
+  ],
+  "operation": "Retain the original prefab object IDs, hierarchy and all other fields byte-for-byte. Bind the selected current shared application appearance ports. Restore each original ignored skin/effect list from verified APK fields as a Unity enum sequence; never interpret packed enum hex as a YAML number."
+}
