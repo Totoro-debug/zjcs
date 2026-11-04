@@ -30,6 +30,11 @@ namespace Zjcs.Presentation.World
             public RenderTexture minimapTexture;
             public Camera minimapCamera;
             private RectTransform minimapPlayerMarker;
+            private readonly Dictionary<int, MainlineMapEntityPresentation.Result> entityPresentations =
+                new Dictionary<int, MainlineMapEntityPresentation.Result>();
+
+            public void SetEntityPresentation(int placementId, MainlineMapEntityPresentation.Result result)
+                => entityPresentations[placementId] = result;
         }
     }
 }

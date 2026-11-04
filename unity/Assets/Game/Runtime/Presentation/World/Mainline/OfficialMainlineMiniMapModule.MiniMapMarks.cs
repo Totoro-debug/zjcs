@@ -26,22 +26,17 @@ namespace Zjcs.Presentation.World
                 foreach (var binding in miniMapUiData.minimapMarkBindings)
                 {
                     var entity = host.mapEntities[binding.placementId];
-                    GameObject worldObject = host.entityView.FindEntityObject(entity.PlacementId);
-                    int state = host.puzzles != null && host.puzzles.Contains(entity.PlacementId) ? host.puzzles.State(entity.PlacementId) : entity.State;
-                    if (host.mapLogicTags.TryGetValue(entity.PlacementId, out var tag))
-                        state = host.localSave.mapLogicStates.FirstOrDefault(value => value.Tag == tag.Tag)?.State ?? state;
-                    if (entity.TypeId == 202 && host.statues.IsGoddessActivated(entity)) state = binding.completeState;
-                    bool completed = state == binding.completeState || (!host.IsMap12StelePresentation(entity)
-                        && host.localSave.completedEntityPlacements.Contains(entity.PlacementId));
-                    bool active = worldObject != null && worldObject.activeSelf && host.regions.IsRegionAccessible(entity.Region)
-                        && !(binding.hideInEnd && completed);
+                    // Consume the same latest state as the world. Removal animations
+                    // may keep a world object alive after its logical entity ended.
+                    if (!entityPresentations.TryGetValue(entity.PlacementId, out var presentation)) continue;
+                    int state = presentation.State;
+                    bool completed = state == binding.completeState;
+                    bool active = presentation.Active && !(binding.hideInEnd && completed);
                     if (!nativeMiniMapMarks.TryGetValue(entity.PlacementId, out var mark))
                     {
                         if (!active) continue;
                         var root = Instantiate(Resources.Load<GameObject>(host.NativeUiResource("") + binding.key), minimapCamera.transform.parent, false);
                         root.name = binding.key + "_" + binding.placementId;
-                        Vector3 position = host.navigation.GridToWorld(entity.Grid);
-                        root.transform.localPosition = new Vector3(position.x + binding.offset.x, position.y + binding.offset.y, 0);
                         SetLayerRecursively(root, 30);
                         var supports = miniMapUiData.components.Where(value => value.panel == binding.key
                             && value.type != "NativeAnimation").ToArray();
@@ -52,6 +47,8 @@ namespace Zjcs.Presentation.World
                         mark.OriginalScales = mark.ScaleContents.Select(value => value.localScale).ToArray();
                         nativeMiniMapMarks.Add(entity.PlacementId, mark);
                     }
+                    Vector3 position = host.navigation.GridToWorld(entity.Grid);
+                    mark.Root.transform.localPosition = new Vector3(position.x + binding.offset.x, position.y + binding.offset.y, 0);
                     bool selected = !miniMapFilters.TryGetValue(binding.key, out bool filter) || filter;
                     mark.Root.SetActive(active && selected && (fullMiniMapPanel == null || fullMiniMapClassId == host.mapClassId));
                     foreach (var support in mark.Supports)

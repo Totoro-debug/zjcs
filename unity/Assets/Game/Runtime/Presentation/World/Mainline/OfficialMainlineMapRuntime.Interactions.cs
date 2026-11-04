@@ -234,6 +234,7 @@ namespace Zjcs.Presentation.World
                 bool spawned = waterState != null ? waterState.Spawned
                     : IsPuzzleEntity(entity.PlacementId) ? puzzles.IsSpawned(entity.PlacementId) : entity.Active;
                 MainlineMapEntityPresentation.Result result = presentation.Read(entity, state, spawned);
+                miniMap.SetEntityPresentation(entity.PlacementId, result);
                 entityView.SetEntityState(entity.PlacementId, result.State);
                 bool active = result.Active;
                 if (mapClassId == 13 && localSave.completedEntityPlacements.Contains(entity.PlacementId)

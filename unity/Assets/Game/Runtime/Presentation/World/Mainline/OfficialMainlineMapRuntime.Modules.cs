@@ -122,6 +122,7 @@ namespace Zjcs.Presentation.World
                 minimapTexture = null;
                 if (minimapImage != null) Destroy(minimapImage.gameObject);
                 minimapImage = null;
+                entityPresentations.Clear();
             }
         }
     }

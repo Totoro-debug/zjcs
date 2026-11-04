@@ -215,6 +215,7 @@ namespace Zjcs.Presentation.World
                     {
                         Require(Field<OfflineMainlineProgressSession>("progressionSave").Save.World.ActivatedGoddessRegions.Count == 3,
                             "Goddess activation survives a cold reload");
+                        VerifyHeroMiniMapVisibility(true);
                         Require(Field<OfficialMainlineRegionFog>("regionFog").VisibleShadowCount == 70,
                             "Cold map entry keeps all three public region shadows cleared");
                     }
@@ -358,10 +359,23 @@ namespace Zjcs.Presentation.World
             yield return Capture("map-11-region-fog-cleared");
         }
 
+        private void VerifyHeroMiniMapVisibility(bool expected)
+        {
+            var marks = Field<IDictionary>("nativeMiniMapMarks");
+            Require(marks.Contains(1401), "The actual hero minimap marker exists");
+            object mark = marks[1401];
+            var marker = (GameObject)mark.GetType().GetField("Root").GetValue(mark);
+            Require(marker.activeInHierarchy == expected,
+                "Hero minimap visibility follows current private/public state");
+        }
+
         private IEnumerator VerifyHeroStatues()
         {
             var entities = Field<IDictionary>("mapEntities");
             object hero = entities[1401];
+            Invoke("SetStoryProgress", "OldManAlways2", 1, 2); // Original region 12 story gate.
+            Invoke("RefreshEntityActivity");
+            VerifyHeroMiniMapVisibility(true);
             var progress = Field<OfflineMainlineProgressSession>("progressionSave");
             Invoke("InteractHero", hero);
             yield return new WaitForSecondsRealtime(.5f);
@@ -377,10 +391,17 @@ namespace Zjcs.Presentation.World
             yield return Click(window.Find(window.Source("WorldStageInteractionPreviewDialog").fields.mCloseBtn).GetComponent<Button>());
             Require(progress.Save.Player.CharacterProperties.ExtraProperties.Count(value => value.SourceId == "hero-activation:11:1401") == 1,
                 "Hero activation atomically grants its permanent original property");
+            VerifyHeroMiniMapVisibility(false);
             Invoke("InteractHero", hero);
             Require(Field<OfficialMap11WitchWindow>("witchDialog") == null, "Private completed hero waits for its region to become public");
             progress.SetMapRegionProgress(11, 12, 10000);
             Require(progress.RecordGoddessActivated(11, 12, "probe-public-hero-region").IsApplied, "Public hero fixture");
+            Invoke("RefreshEntityActivity");
+            VerifyHeroMiniMapVisibility(true);
+            var heroGrid = (MapGridPoint)hero.GetType().GetField("Grid").GetValue(hero);
+            Invoke("SetAvatarPosition", heroGrid + new MapGridPoint(0, 1));
+            yield return new WaitForSecondsRealtime(1);
+            yield return Capture("map-11-hero-public-marker");
             Invoke("InteractHero", hero);
             window = Field<OfficialMap11WitchWindow>("witchDialog");
             yield return new WaitForSecondsRealtime(.5f);
