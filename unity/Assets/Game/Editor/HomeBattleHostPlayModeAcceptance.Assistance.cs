@@ -75,6 +75,9 @@ namespace Zjcs.Editor
                 _ => callback = true, new OfficialBattleAssistOptions { PlayType = playType, EntryId = entryId });
             Require(JsonUtility.ToJson(home.NpcAssistanceProgress.ActiveBattle) == committed,
                 "Restoring the configured battle recommitted its assistance transaction.");
+            yield return new WaitForEndOfFrame();
+            foreach (var unit in savedBattle.Units.Where(value => selectedNpcIds.Contains(value.NpcClassId)))
+                VerifyPartnerModel(unit.Id, unit.NpcClassId);
             yield return RunBattle<DailyDungeonBattleRunner>("daily-assist", output, click);
             verifyHome();
             Require(callback && home.NpcAssistanceProgress.ActiveBattle == null,
@@ -83,6 +86,40 @@ namespace Zjcs.Editor
                 "PlayType 5 custom entry, selected NPCs " + string.Join(",", selectedNpcIds)
                 + ": checkpoint restore, default-type rejection, unchanged committed snapshot, "
                 + "actual battle completion, assistance cleanup and host restoration passed.\n");
+        }
+
+        [Serializable] private sealed class PartnerFighterPayload { public PartnerFighter[] fighters; }
+        [Serializable] private sealed class PartnerFighter
+        {
+            public int classId;
+            public float scale;
+            public OfficialBattleModelTransform[] modelTransforms;
+        }
+
+        private static void VerifyPartnerModel(int unitId, int npcId)
+        {
+            var payload = JsonUtility.FromJson<PartnerFighterPayload>(File.ReadAllText(
+                "Assets/Official/Combat/NpcFighters/fighters.json"));
+            PartnerFighter source = payload.fighters.Single(value => value.classId == npcId);
+            Transform entity = GameObject.Find("BattleUnit_" + unitId)?.transform;
+            Require(entity != null && Mathf.Approximately(Mathf.Abs(entity.localScale.x), 1f)
+                && Mathf.Approximately(entity.localScale.y, 1f),
+                "Partner skeleton unit conversion was reapplied to its entity transform.");
+            Transform model = entity;
+            foreach (OfficialBattleModelTransform expected in source.modelTransforms)
+            {
+                model = model.Find(expected.name);
+                Require(model != null && Vector3.Distance(model.localPosition, expected.position) < .00001f
+                    && Quaternion.Angle(model.localRotation, expected.rotation) < .001f
+                    && Vector3.Distance(model.localScale, expected.scale) < .00001f,
+                    "Partner model differs from the original prefab transform: " + expected.name);
+            }
+            var skeleton = model.GetComponent<Spine.Unity.SkeletonAnimation>();
+            Require(skeleton != null && Mathf.Approximately(skeleton.skeletonDataAsset.scale, source.scale),
+                "Partner skeleton lost its original data scale.");
+            var renderer = model.GetComponent<MeshRenderer>();
+            Require(renderer != null && renderer.enabled && renderer.bounds.size.sqrMagnitude > 0f,
+                "Partner model did not produce a rendered mesh.");
         }
     }
 }

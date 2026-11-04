@@ -81,6 +81,7 @@ namespace Zjcs.Presentation.Combat
         {
             public FightBattleUnitState State;
             public SkeletonAnimation Skeleton;
+            public Transform Root;
             public IOfficialBattleNativeModel NativeModel;
             public OfficialBattleModelBinding Binding;
             public OfficialBattleUnitWorldHudView Hud;
@@ -874,6 +875,7 @@ namespace Zjcs.Presentation.Combat
                 return attached;
             if (!units.TryGetValue(unitId, out UnitView view)) return null;
             if (view.NativeModel != null) return view.NativeModel.Transform;
+            if (view.Root != null) return view.Root;
             return view.Skeleton == null ? null : view.Skeleton.transform;
         }
 
@@ -1188,6 +1190,7 @@ namespace Zjcs.Presentation.Combat
             if (!units.TryGetValue(unitId, out UnitView view)) return;
             view.Hud?.Dispose();
             if (view.NativeModel != null) view.NativeModel.Dispose();
+            else if (view.Root != null) UnityEngine.Object.Destroy(view.Root.gameObject);
             else if (view.Skeleton != null) UnityEngine.Object.Destroy(view.Skeleton.gameObject);
         }
 
@@ -1207,6 +1210,7 @@ namespace Zjcs.Presentation.Combat
             {
                 view.Hud?.Dispose();
                 if (view.NativeModel != null) view.NativeModel.Dispose();
+                else if (view.Root != null) DestroySceneObject(view.Root.gameObject);
                 else if (view.Skeleton != null) DestroySceneObject(view.Skeleton.gameObject);
             }
             units.Clear();
@@ -1285,7 +1289,18 @@ namespace Zjcs.Presentation.Combat
 
             var gameObject = new GameObject("BattleUnit_" + state.Id);
             gameObject.transform.SetParent(root, false);
-            SkeletonAnimation skeleton = gameObject.AddComponent<SkeletonAnimation>();
+            Transform modelTransform = gameObject.transform;
+            if (binding.modelTransforms != null)
+                foreach (OfficialBattleModelTransform source in binding.modelTransforms)
+                {
+                    var node = new GameObject(source.name);
+                    node.transform.SetParent(modelTransform, false);
+                    node.transform.localPosition = source.position;
+                    node.transform.localRotation = source.rotation;
+                    node.transform.localScale = source.scale;
+                    modelTransform = node.transform;
+                }
+            SkeletonAnimation skeleton = modelTransform.gameObject.AddComponent<SkeletonAnimation>();
             skeleton.skeletonDataAsset = binding.skeleton;
             skeleton.initialSkinName = binding.skin;
             skeleton.Initialize(true);
@@ -1302,8 +1317,8 @@ namespace Zjcs.Presentation.Combat
             }
             gameObject.transform.localScale = Vector3.one * binding.scale;
             OfficialBattleSceneBindings.BindModel(gameObject.transform, OfficialBattleSceneBindings.EntityId(state));
-            var view = new UnitView { State = state, Skeleton = skeleton, Binding = binding };
-            view.Hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state, skeleton.transform);
+            var view = new UnitView { State = state, Root = gameObject.transform, Skeleton = skeleton, Binding = binding };
+            view.Hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state, gameObject.transform);
             units.Add(state.Id, view);
             return view;
         }

@@ -119,6 +119,18 @@ def main():
         lazy = schemas.read(components["SpineLazyAnimLoad"])
         definition = parse_split_binary_object(ptr(lazy["mSplitBinarySo"], components["SpineLazyAnimLoad"]).get_raw_data())
         renderer_game_object = renderer_obj.read(check_read=False).m_GameObject
+        model_transforms = []
+        transform_obj = renderer_game_object.read().m_Component[0].component.deref()
+        while True:
+            transform = record(transform_obj).read()
+            model_transforms.append(dict(name=record(transform.m_GameObject.deref()).read().m_Name,
+                position={axis: getattr(transform.m_LocalPosition, axis) for axis in "xyz"},
+                rotation={axis: getattr(transform.m_LocalRotation, axis) for axis in "xyzw"},
+                scale={axis: getattr(transform.m_LocalScale, axis) for axis in "xyz"}))
+            if not transform.m_Father.path_id:
+                break
+            transform_obj = transform.m_Father.deref()
+        model_transforms.reverse()
         controller_obj = next((record(obj) for obj in apk.objects(bundle) if obj.type.name == "Animator"
                               and obj.read().m_GameObject.path_id == renderer_game_object.path_id
                               and obj.assets_file.name == renderer_obj.assets_file.name), None)
@@ -177,7 +189,7 @@ def main():
                           split_animations=split, string_table=definition["strings"], keep_skins=skin_names,
                           output=str(output / (stem + ".skel.bytes")), output_atlas=str(output / (stem + ".atlas.txt")))
         fighters.append(dict(classId=npc_id, entityClassId=class_id, stem=stem, scale=scale, skins=skin_names,
-                             renderer=renderer, controller=controller_key,
+                             renderer=renderer, controller=controller_key, modelTransforms=model_transforms,
                              animations=[dict(name=name, spineName=clip) for name, clip in sorted(aliases.items())]))
     output.mkdir(parents=True, exist_ok=True)
     job_path = cache / "jobs.json"

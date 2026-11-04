@@ -23,6 +23,7 @@ namespace Zjcs.Editor.Combat
             public string[] skins;
             public Page[] pages;
             public OfficialBattleAnimationAlias[] animations;
+            public OfficialBattleModelTransform[] modelTransforms;
         }
         [Serializable] private sealed class Page { public string name, file; }
 
@@ -43,7 +44,7 @@ namespace Zjcs.Editor.Combat
             {
                 if (fighter == null || fighter.classId <= 0 || fighter.entityClassId <= 0
                     || !classIds.Add(fighter.classId) || fighter.pages == null || fighter.skins == null
-                    || fighter.animations == null)
+                    || fighter.animations == null || fighter.modelTransforms == null || fighter.modelTransforms.Length == 0)
                     throw new InvalidDataException("Official partner fighter metadata is invalid.");
                 var materials = new List<Material>();
                 foreach (Page page in fighter.pages)
@@ -116,7 +117,8 @@ namespace Zjcs.Editor.Combat
                     key = "body_" + fighter.classId,
                     skin = fighter.skins[0],
                     skins = fighter.skins,
-                    scale = fighter.scale,
+                    scale = 1f,
+                    modelTransforms = fighter.modelTransforms,
                     animations = fighter.animations,
                     skeleton = skeleton
                 });
@@ -137,6 +139,17 @@ namespace Zjcs.Editor.Combat
                     skins.GetArrayElementAtIndex(j).stringValue = bindings[i].skins[j];
                 row.FindPropertyRelative("scale").floatValue = bindings[i].scale;
                 row.FindPropertyRelative("skeleton").objectReferenceValue = bindings[i].skeleton;
+                SerializedProperty transforms = row.FindPropertyRelative("modelTransforms");
+                transforms.arraySize = bindings[i].modelTransforms.Length;
+                for (int j = 0; j < transforms.arraySize; j++)
+                {
+                    SerializedProperty transform = transforms.GetArrayElementAtIndex(j);
+                    OfficialBattleModelTransform source = bindings[i].modelTransforms[j];
+                    transform.FindPropertyRelative("name").stringValue = source.name;
+                    transform.FindPropertyRelative("position").vector3Value = source.position;
+                    transform.FindPropertyRelative("rotation").quaternionValue = source.rotation;
+                    transform.FindPropertyRelative("scale").vector3Value = source.scale;
+                }
                 SerializedProperty animations = row.FindPropertyRelative("animations");
                 animations.arraySize = bindings[i].animations.Length;
                 for (int j = 0; j < bindings[i].animations.Length; j++)

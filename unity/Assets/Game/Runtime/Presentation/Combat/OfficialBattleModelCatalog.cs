@@ -19,6 +19,7 @@ namespace Zjcs.Presentation.Combat
         public float scale = 1f;
         public OfficialBattleAnimationAlias[] animations = Array.Empty<OfficialBattleAnimationAlias>();
         public SkeletonDataAsset skeleton;
+        public OfficialBattleModelTransform[] modelTransforms = Array.Empty<OfficialBattleModelTransform>();
 
         public int ApplySkinCombination(Spine.Skeleton target)
         {
@@ -38,6 +39,15 @@ namespace Zjcs.Presentation.Combat
             target.SetSlotsToSetupPose();
             return applied;
         }
+    }
+
+    [Serializable]
+    public sealed class OfficialBattleModelTransform
+    {
+        public string name;
+        public Vector3 position;
+        public Quaternion rotation;
+        public Vector3 scale;
     }
 
     [Serializable]
