@@ -68,7 +68,7 @@ Unity 2022.3.57f1c2 内置屏隔离图形 Play Mode 已通过公共 `MainlineNat
 
 独立地图准备的官方 `Silver/14/300秒` 配置由 [`prepare_map16_alone_configuration.py`](../../scripts/prepare_map16_alone_configuration.py) 解码并输出至 `Resources/Map16/world-alone-configuration.json`。用户确认单机准备时间为：准备开始后至少300秒；角色恰为位阶4时，还须距首次达到位阶4满14天，采用两者较晚时间；角色高于位阶4时免除14天等待，但仍须完成300秒。原绳索剧情、位阶、等级和其他条件继续保留。`OfflineMainlineProgressSession` 已实现准备状态、开始、到时解锁和提交时刷新。配置提取测试、全量静态检查、Unity 导入／编译、包含位阶4／14天边界与300秒最短时长场景的 `OfflineMainlineProgressValidation`，以及 `ProjectTools.Validate` 均通过。正式入口卡片与鲸背岛宿主尚未接线，未覆盖本图实际界面、Play Mode 流程或 Windows Player。
 
-用户确认鲸背岛的6条手动剧情按登岛、NPC交互和离岛映射：首次启程流程播放 `LookForWhaleIsland`；独立地图准备完成播放配置指定的 `DiscoverWhaleIsland`；实际进入Map16播放 `WhaleIslandArrive`；NPC10801交互播放 `SubmitRopes`（原图含交物品3及 Map16 登岛节点）；鲸岛神龛NPC8443交互播放 `WhaleIslandFinishLoop`（由自动完成图 `WhaleIslandFinish` 在神龛处生成）；独立地图离开播放配置指定的 `WhaleIslandLeave`。`WhaleIslandFinish` 保持原自动条件启动，各图仍按原 `MaxCount` 限制次数。该映射是已确认的本地触发适配，公共宿主调用、正式剧情数据和完整剧情流程仍待接通。
+用户确认鲸背岛的6条手动剧情按登岛、NPC交互和离岛映射；本地适配具体采用：首次启程流程播放 `LookForWhaleIsland`；独立地图准备完成播放配置指定的 `DiscoverWhaleIsland`；实际进入Map16播放 `WhaleIslandArrive`；NPC10801交互播放 `SubmitRopes`（原图含交物品3及 Map16 登岛节点）；鲸岛神龛NPC8443交互播放 `WhaleIslandFinishLoop`（该NPC由自动完成图 `WhaleIslandFinish` 在神龛处生成）；独立地图离开播放配置指定的 `WhaleIslandLeave`。`WhaleIslandFinish` 保持原自动条件启动，各图仍按原 `MaxCount` 限制次数。NPC8443绑定依据是原完成图的生成节点，属于本地触发适配；公共宿主调用、正式剧情数据和完整剧情流程仍待接通。
 
 沿用已确认的独立地图领奖方案：原客户端 `AloneWorldMapEntryItemContentCommonBase.FinshAward` 只发出 `OperPlayerAloneMapFinshAward(16)` 请求；单机按原奖励规则770／771发放钻石200、金币80000，奖励、剧情、随机状态与一次性领取记录同事务写盘，失败回滚，冷读后防重复。表现保留 `SourceOperate.AloneMapAward=222`、Popup 与原 `AwardPanel`。完整本地领取事务和原界面接线仍需实现与验证。
 
