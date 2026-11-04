@@ -98,6 +98,10 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 
 内置屏 Direct3D Play Mode 核对34名伙伴全部节点、注册项及矩形字段；站立与技能共2,720次阴影姿态采样通过，并检查整体位移／旋转／反射后跟随及原 `AttachPosRotCfg` 的挂接偏移。该挂接检查调用原应用方法，不是正式战斗输入验证。34张实际运行画面已查看，11015–11022保留原贴图现状。追加运行75个技能、93个方向分支的95个原 Animator 节点均通过。正式工程 Unity 导入／编译及 `ProjectTools.Validate` 通过，静态检查通过（120,456个 GUID）。完整技能特效、邀请实战与 Windows Player 验证仍待完成。
 
+`PartnerNativeBattleAnimationBinding` 从选定884的34份原实体读取应用层 `AnimationController` 与 Animator 指针，显式绑定到原实体根节点，复用原控制器代码。保留 `InitOnAwake=true`、`CreateOverrideController=true`、`NotCreateGraph=false`、禁用时不重置初始化状态及原启用字段；实例暂存为非激活后再恢复激活，使原 Awake 在引用就绪后运行。释放时仅清理本次组件与覆盖控制器，恢复原 Animator 引用，不销毁实体节点。该绑定由调用方显式创建，既有独立姿态夹具不自动改变控制器生命周期。原组件对象、组件模式、应用源码和安装载荷哈希见[伙伴应用动画绑定来源](../../assets/reference/partner-native-animation-bindings-source-manifest.json)。
+
+隔离内置屏 Direct3D Play Mode 在原实体根控制器上运行34名伙伴的93个技能分支、95个原 `MyPlayableAnimator` 节点，全部进入匹配触发器的原目标状态；原 Awake 初始化、禁用／再启用、覆盖控制器独立创建、释放后原引用恢复与组件清理均通过。93张重新隔离取景的实际运行截图已查看，沿用11015–11022的原24×24贴图现状。正式工程 Unity 导入／编译与 `ProjectTools.Validate` 通过，静态检查通过（120,460个 GUID），14项文件身份与68个原组件对象记录完整。该夹具直接播放原节点，只证明应用动画绑定与早期姿态，不证明完整技能特效图、正式邀请实战或 Windows Player。
+
 贴图沿原 `AppearanceRendererLite.SkeletonRenderer` 指针、`AppearanceConfig` 骨骼路径和 `AppearanceAddressUtils.GetTextureLoaderPath` 恢复。35 个渲染器均使用原 Low 分辨率；原材质的占位页与运行时 `TextureLoader_Low` 的实际目标分别保存，35 项映射对应 28 份不同的目标 PNG。11015–11022 的原 Low 目标为 24×24，当前原 High 目标也为该尺寸，未以其他图片替换。隔离 Unity 工程复用正式工程的 Linear 颜色空间；全部目标导入后的 RGBA 像素哈希、尺寸、mip、颜色空间、过滤／各轴 Wrap 参数一致，并恢复原可读性。
 
 `ProfessionNativeOrderedConstraintPose` 按原 order 交错求解 IK 与 Transform，保留前序约束结果；`ProfessionNativeAffineIk` 使用独立平面几何处理单骨骼、双骨骼的圆形／非均匀缩放椭圆及反射坐标，保留原混合、弯曲、伸展和适用的柔化分支。非均匀缩放时子骨骼 Y 归零且不伸展，依据[公开 IK 约束说明](https://esotericsoftware.com/spine-ik-constraints)；该分支的非零 softness 仍显式拒绝，当前相关原配置和动画均为零。恢复原 noScaleOrReflection 继承、11042 的相对局部旋转；原非凸裁剪边界通过独立三角剖分接入既有半平面裁剪，保持原三角形朝向与插值 UV，不复制动画 SDK。

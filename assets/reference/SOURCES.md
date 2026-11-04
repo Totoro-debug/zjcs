@@ -535,3 +535,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 角色技能部件显隐配置取所选 `884_156692` 原始 `ECViewDriver` 的 SerializeReference 注册表，经原 `mECViews` 有序引用读取409份 `ECFightRoleCharacterView.mDelayVisibilityParts`；原角色对象、引用的 GameObject／Transform、bundle版本／哈希、严格解码器、官方代码和公共配置输出哈希见[角色显隐来源](battle-scenes/character-visibility-source-manifest.json)。入口为 `scripts/prepare_battle_character_visibility.py`，未从省略托管注册表的原生YAML推测默认值，未生成新美术或完整素材快照；运行绑定范围见[战斗执行](../../docs/features/battle-execution.md)。
 
 角色阴影子树取所选 `884_156692` 的19份实际角色 prefab，逐项核对原 `ShadowBoneFollower` 的父节点变换、对象／组件、Sprite与纹理绑定；原始导出、APK对象、应用跟随代码、独立空间适配、完整mip转换缓存和输出SHA256见[角色阴影来源](battle-scenes/character-shadow-source-manifest.json)。入口为 `scripts/prepare_battle_character_shadows.py`，沿用原Sprite几何与解码纹理，不生成替代美术或完整素材快照；运行接入与验证范围见[战斗执行](../../docs/features/battle-execution.md)。
+
+伙伴应用动画控制器绑定：`scripts/prepare_partner_native_battle_animation_bindings.py` 从所选 `884_156692` APK／对应云端实体包读取34份原 `AnimationController` 与 Animator 引用，保留68个原组件对象、组件模式、原应用代码及安装载荷的身份；输入输出 SHA256、包来源和显式绑定见[动画绑定来源](partner-native-animation-bindings-source-manifest.json)。没有新增美术或生成完整素材快照；功能与验证范围见[伙伴助战](../../docs/features/npc-assistance.md)。
