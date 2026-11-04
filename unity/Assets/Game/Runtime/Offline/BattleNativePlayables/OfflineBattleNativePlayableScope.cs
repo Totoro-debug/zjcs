@@ -18,6 +18,7 @@ namespace Zjcs.Offline.BattleNativePlayables
         private IBattleCameraOffsetHost cameraOffsetHost;
         private IBattleCameraPerformanceHost cameraPerformanceHost;
         private IBattleMasterEntityResolver masterEntityResolver;
+        private IBattleSourceDeathView sourceDeathView;
         private IBattleCharacterPartVisibilityHost characterPartVisibilityHost;
         private readonly BattleAfterimageTexturePool afterimageTextures = new BattleAfterimageTexturePool();
         private readonly MyPlayableCenter center = new MyPlayableCenter();
@@ -90,9 +91,17 @@ namespace Zjcs.Offline.BattleNativePlayables
                     performancePlayable.BindCameraPerformanceHost(cameraPerformanceHost);
                 if (component is IBattleMasterEntityOverridePlayable masterOverridePlayable)
                     masterOverridePlayable.BindMasterEntityResolver(masterEntityResolver);
+                if (component is IBattleSourceDeathPlayable sourceDeathPlayable)
+                    sourceDeathPlayable.BindSourceDeathView(sourceDeathView);
             }
             instance.transform.SetParent(parent, worldPositionStays);
             return instance;
+        }
+
+        public void BindSourceDeathView(IBattleSourceDeathView view)
+        {
+            RequireLive();
+            sourceDeathView = view;
         }
 
         public MyPlayable Play(GameObject prefab, GameObject source, GameObject target, float speed = 1,

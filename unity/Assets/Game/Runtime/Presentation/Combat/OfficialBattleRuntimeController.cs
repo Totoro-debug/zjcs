@@ -220,6 +220,7 @@ namespace Zjcs.Presentation.Combat
                 executor = nextExecutor;
                 hudView = nextHud;
                 sceneView = nextScene;
+                nextSkillGraphPlayback?.BindSourceDeathView(nextScene);
                 nativeModelLibrary = nextNativeModels;
                 skillGraphPlayback = nextSkillGraphPlayback;
                 environmentView = nextEnvironment;

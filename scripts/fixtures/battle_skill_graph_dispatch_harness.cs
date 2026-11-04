@@ -19,6 +19,10 @@ namespace UnityEngine
     public static class JsonUtility { public static object Data; public static T FromJson<T>(string text) { return (T)Data; } }
     public static class Mathf { public static float Max(float a, float b) { return Math.Max(a, b); } }
 }
+namespace Zjcs.Official.StoryPlayables
+{
+    public interface IBattleSourceDeathView {}
+}
 namespace Zjcs.Combat.Official
 {
     public class FightBattleUnitState { public int Id, Direction; public long Hp; }
@@ -57,6 +61,7 @@ namespace Zjcs.Offline.BattleNativePlayables
         public float Clock;
         public int LateTicks;
         public bool Disposed;
+        public void BindSourceDeathView(Zjcs.Official.StoryPlayables.IBattleSourceDeathView view) {}
         public void BindHosts(Zjcs.Official.StoryPlayableManager.IBattleCameraOffsetHost host,
             Zjcs.Official.StoryPlayableManager.IBattleCameraPerformanceHost cameraPerformanceHost = null) {}
         public void Tick(float delta) { Clock += delta; }

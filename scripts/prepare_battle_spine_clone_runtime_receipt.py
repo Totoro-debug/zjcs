@@ -27,12 +27,16 @@ def main():
         'AppearanceAnimation', 'BattleSpineCloneAnimation', 'PreviewTool')]
     outputs.extend(runtime / name for name in (
         'StoryFollowBone/ApplyOnStopCheckSourceDie.cs',
+        'StoryPlayables/IBattleSourceDeathView.cs',
         'CombatAppearance/AppearanceCharacter.cs', 'ProfessionUI/AppearanceAnimationPartHandler.cs'))
     outputs.extend(ROOT / 'unity/Assets/Game' / name for name in (
         'Runtime/Presentation/Combat/OfficialBattleSpineCloneAnimation.cs',
+        'Runtime/Presentation/Combat/OfficialBattleSceneView.SourceDeath.cs',
+        'Runtime/Offline/BattleNativePlayables/OfflineBattleNativePlayableScope.cs',
         'Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs',
         'Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs',
-        'Editor/Combat/AnimatorPlayback/OfficialBattleSpineCloneAnimationValidation.cs'))
+        'Editor/Combat/AnimatorPlayback/OfficialBattleSpineCloneAnimationValidation.cs',
+        'Editor/Combat/AnimatorPlayback/OfficialBattleSourceDeathValidation.cs'))
     proof = dict(manifest=record['manifest'], code_receipt=identity(receipt), assembly=identity(assembly),
         official_sources=[identity(p) for p in sources],
         migrated_components_and_ports=[identity(p) for p in outputs],
@@ -45,12 +49,27 @@ def main():
             'native characters can participate without an SDK renderer. Expose the original track-zero, '
             'zero-mix, immediate-pose animation request and read-only state through an independent native '
             'track and physical clock. Load all renderer/clock settings from five verified original clone '
-            'targets; replace EC view lookup with a scene dependency.',
-        limits=['Appearance renderer/resource injection, physics inheritance of world movement and source death '
-            'view require production scene binding and actual Play Mode/Windows Player validation. '
+            'targets; replace EC view lookup with a scene dependency injected before Awake. Restart the '
+            'still-present dead source through the shared scene, retaining original stop-then-replay behavior.',
+        limits=['Appearance renderer/resource injection and physics inheritance of world movement '
+            'require production scene binding and actual Play Mode/Windows Player validation. '
+            'Attached player death motions and the complete original death playable binding remain incomplete. '
             'Source mapping and successful prefab loading alone do not prove those effects work.'])
     target = ROOT / 'assets/reference/battle-animation/spine-clone-runtime-source-manifest.json'
     write_changed(target, json.dumps(proof, ensure_ascii=False, indent=2) + '\n')
+    # The graph receipt references this runtime proof and the migrated leaf.
+    # Refresh only those code identities; asset conversion/output evidence stays
+    # untouched because this operation does not regenerate any prefab or asset.
+    graph_receipt = ROOT / 'assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json'
+    if graph_receipt.is_file():
+        graph = json.loads(graph_receipt.read_bytes())
+        for row in graph['application']:
+            if row.get('migrated', {}).get('path') == 'unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopCheckSourceDie.cs':
+                row['migrated'] = identity(ROOT / row['migrated']['path'])
+        for row in graph['runtime_receipts']:
+            if row['path'] == target.relative_to(ROOT).as_posix():
+                row.update(identity(target))
+        write_changed(graph_receipt, json.dumps(graph, ensure_ascii=False, indent=2) + '\n')
     print('Recorded original skill clone sources and explicit dependency boundaries.')
 
 

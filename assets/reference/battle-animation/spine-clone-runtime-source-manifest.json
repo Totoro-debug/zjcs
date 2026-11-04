@@ -77,7 +77,11 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopCheckSourceDie.cs",
-      "sha256": "db2839aa4ad9145818f90364d11121635687e2255564695d89957b69eb6f6a9f"
+      "sha256": "371d9e9321d27faa48f4795887c23b48f862d86bba5c07ccc84e99c52bd561f2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IBattleSourceDeathView.cs",
+      "sha256": "6665abadac1f3e679e046727916eb33f08f33522c4f5e9a830c46a908159ff70"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs",
@@ -92,6 +96,14 @@
       "sha256": "62e416a82801ed26897e93277b12427993f93c4084e07d61ceb1af765f2837c5"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.SourceDeath.cs",
+      "sha256": "49eb7010a4540dc05078e8d815603bd33005e122b6ae236dae793e64a342bf7d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleNativePlayableScope.cs",
+      "sha256": "f3bed8805c0a921c72be2c44c20b986fa5fc6c6659c2cc9e36ea9bc6d9b5a550"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs",
       "sha256": "9ef68640ba312e40f3f1e8c689f0e330762ecefb9214c10bcc6946dc3d7867c8"
     },
@@ -101,7 +113,11 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSpineCloneAnimationValidation.cs",
-      "sha256": "3b58ccfd3dc4f2a1e371df095f28fca124d225c2db2379e747e8cff92c285ee8"
+      "sha256": "9c6dd05c2ad1f27ab07fddf7d4a09197c28c07b629b11539016058c586147722"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSourceDeathValidation.cs",
+      "sha256": "8551ea8878eacd53889828685c0372200f8acb957fc171d0066c50874687f0bf"
     }
   ],
   "metadata": [
@@ -134,6 +150,10 @@
       "sha256": "ce312ed1101614e99bdbea7631fb9aad45bb95544ac5543b799ac051d5143778"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IBattleSourceDeathView.cs.meta",
+      "sha256": "41323be18a85cf6a6a2f490c0a58d764ffe4ab6e546c1b787c4909d0f3f925bc"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs.meta",
       "sha256": "ac1111d971d46a2b2f4c73e29d5f0945ef95d3c2eea932df61e0e4e58f6d9925"
     },
@@ -146,6 +166,14 @@
       "sha256": "65b95dc88430b7fa7eefc78107d4b787cf21da1bb51e0e50c60adb1ead9ddb70"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.SourceDeath.cs.meta",
+      "sha256": "9765ad4c28c464cf6aefd32a0cbb50540727132c02e3fd5e7f8ce1e0655c8ce4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleNativePlayableScope.cs.meta",
+      "sha256": "05162823d14833981e80e4c43018d707829b95c2cf9397c9370e55edf0827cd7"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs.meta",
       "sha256": "7782124572671f703b0b22842ca8fbc1a57fd8df46a7c5d2ebd293a97c511188"
     },
@@ -156,6 +184,10 @@
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSpineCloneAnimationValidation.cs.meta",
       "sha256": "ec0ced7cb0120f081a4d3efba67e1a379dd9734bb68babed53be2d504978b822"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSourceDeathValidation.cs.meta",
+      "sha256": "ae6294157426dbe8a4aee03a8f1afc12fd0dcdb1f2a413a4b5b7da57d50cb4a8"
     }
   ],
   "clone_settings_receipt": {
@@ -164,10 +196,10 @@
   },
   "generator": {
     "path": "scripts/prepare_battle_spine_clone_runtime_receipt.py",
-    "sha256": "75d409c3a55951948d1423c90700a62d8d66c2e535d2962043f9dfaa9883af82"
+    "sha256": "e0b731b7743a55c01d0e5b09b3c0ee04024670f6d568f5fde2883393c20c7850"
   },
-  "operation": "Retain clone init/activate/play and clear/deactivate/stop order, original duration, player appearance source and empty PreviewTool marker. Bind source renderer selection through IProfessionFollowerRenderer and serialized targets through Component, so current native characters can participate without an SDK renderer. Expose the original track-zero, zero-mix, immediate-pose animation request and read-only state through an independent native track and physical clock. Load all renderer/clock settings from five verified original clone targets; replace EC view lookup with a scene dependency.",
+  "operation": "Retain clone init/activate/play and clear/deactivate/stop order, original duration, player appearance source and empty PreviewTool marker. Bind source renderer selection through IProfessionFollowerRenderer and serialized targets through Component, so current native characters can participate without an SDK renderer. Expose the original track-zero, zero-mix, immediate-pose animation request and read-only state through an independent native track and physical clock. Load all renderer/clock settings from five verified original clone targets; replace EC view lookup with a scene dependency injected before Awake. Restart the still-present dead source through the shared scene, retaining original stop-then-replay behavior.",
   "limits": [
-    "Appearance renderer/resource injection, physics inheritance of world movement and source death view require production scene binding and actual Play Mode/Windows Player validation. Source mapping and successful prefab loading alone do not prove those effects work."
+    "Appearance renderer/resource injection and physics inheritance of world movement require production scene binding and actual Play Mode/Windows Player validation. Attached player death motions and the complete original death playable binding remain incomplete. Source mapping and successful prefab loading alone do not prove those effects work."
   ]
 }

@@ -34,6 +34,9 @@ namespace Zjcs.Presentation.Combat
 
         public int CatalogCount => catalog.Count;
 
+        public void BindSourceDeathView(Zjcs.Official.StoryPlayables.IBattleSourceDeathView view)
+            => scope.BindSourceDeathView(view);
+
         public void BindCameraHost(IBattleCameraOffsetHost cameraHost)
         {
             scope.BindHosts(cameraHost, cameraPerformanceHost: cameraHost as IBattleCameraPerformanceHost);

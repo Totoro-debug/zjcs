@@ -5,20 +5,19 @@ namespace Zjcs.Official.StoryFollowBone
 {
     // Original ApplyOnStopCheckSourceDie. The EC view lookup is supplied by the
     // owning battle scene rather than a global entity container.
-    public class ApplyOnStopCheckSourceDie : ApplyOnStop
+    public class ApplyOnStopCheckSourceDie : ApplyOnStop, IBattleSourceDeathPlayable
     {
-        public interface ISourceDeathView
+        public interface ISourceDeathView : IBattleSourceDeathView
         {
-            void ForcePlayDiePlayable(GameObject source);
         }
 
-        private ISourceDeathView sourceDeathView;
-        public void BindSourceDeathView(ISourceDeathView view) => sourceDeathView = view;
+        private IBattleSourceDeathView sourceDeathView;
+        public void BindSourceDeathView(IBattleSourceDeathView view) => sourceDeathView = view;
 
         protected override void HandleOnStop(MyPlayable playable)
         {
             if (playable.mySource == null) return;
-            var view = sourceDeathView ?? playable.mySource.GetComponentInChildren<ISourceDeathView>(true);
+            var view = sourceDeathView ?? playable.mySource.GetComponentInChildren<IBattleSourceDeathView>(true);
             view?.ForcePlayDiePlayable(playable.mySource);
         }
     }

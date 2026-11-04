@@ -9,7 +9,7 @@ using Zjcs.Combat.Official;
 
 namespace Zjcs.Presentation.Combat
 {
-    public sealed class OfficialBattleSceneView : IDisposable
+    public sealed partial class OfficialBattleSceneView : IDisposable
     {
         private readonly OfficialBattleModelCatalog catalog;
         private readonly OfficialBattleNativeAnimationLibrary nativeModelLibrary;
@@ -1345,12 +1345,12 @@ namespace Zjcs.Presentation.Combat
             return true;
         }
 
-        private static bool PlayAnimation(UnitView view, string animation, bool loop)
+        private static bool PlayAnimation(UnitView view, string animation, bool loop, bool restart = false)
         {
             if (view == null || string.IsNullOrEmpty(animation)) return false;
             if (view.NativeModel != null)
             {
-                if (!view.NativeModel.Play(animation, loop)) return false;
+                if (!view.NativeModel.Play(animation, loop, restart)) return false;
                 view.CurrentAnimation = animation;
                 view.AnimationLoops = loop;
                 return true;
@@ -1361,7 +1361,7 @@ namespace Zjcs.Presentation.Combat
                 if (alias.name == animation) { spineName = alias.spineName; break; }
             if (spineName == null) return false;
             Spine.TrackEntry current = view.Skeleton.AnimationState.GetCurrent(0);
-            if (view.CurrentAnimation == animation && current != null && !current.IsComplete
+            if (!restart && view.CurrentAnimation == animation && current != null && !current.IsComplete
                 && view.AnimationLoops == loop) return true;
             view.Skeleton.AnimationState.SetAnimation(0, spineName, loop);
             view.CurrentAnimation = animation;
