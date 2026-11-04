@@ -3,6 +3,8 @@ import json
 import os
 import re
 import struct
+import uuid
+from functools import lru_cache
 from pathlib import Path
 from hashlib import sha256
 from PIL import Image, ImageChops
@@ -174,6 +176,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
             {file_id: dict(occurrences=count, paths=sorted(unmapped_script_samples[file_id])[:3])
              for file_id, count in sorted(unmapped_scripts.items())}))
 
+    print(f"{family}: dependency closure {len(found)} assets", flush=True)
     apk = Apk.current()
     try:
         assert apk.version == '884_156692'
@@ -208,21 +211,25 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         # A selected child graph can reference an asset that the numeric root
         # does not load. Resolve the verified exporter metadata's exact source
         # bundle before looking up its original texture/shader object.
+        print(f"{family}: verified {len(originals)} roots", flush=True)
+        source_bundles = set()
         for path in sorted(found):
             if path.suffix != '.png' and '/Shaders/' not in path.as_posix():
                 continue
             source_meta = Path(str(path)+'.meta')
-            bundle_name = re.search(r'(?m)^  assetBundleName: (\S+)$', read(source_meta).decode())
+            bundle_name = re.search(r'(?m)^  assetBundleName: ([^\s\r\n]+)[ \t]*$', read(source_meta).decode())
             if bundle_name is None:
                 # Built-in/exported shader metadata may omit a bundle. Its
                 # real original object must still resolve uniquely below.
                 continue
             bundle = bundle_name[1]+'.bundle'
             assert bundle in apk.index, (path,bundle)
+            source_bundles.add(bundle)
             for _ in apk.objects(bundle):
                 pass
         native = {}
-        for bundle in list(apk.loaded.values()):
+        for bundle_name in sorted(source_bundles):
+            bundle = apk.load(bundle_name)
             for file in serialized_files(bundle):
                 for obj in file.objects.values():
                     if obj.type.name not in ('Shader', 'Texture2D'): continue
@@ -233,18 +240,86 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         texture_proof = json.loads(texture_receipt.read_bytes())
         assert texture_proof['manifest'] == apk.version and texture_proof['completed']
         texture_records = {row['source']['object_sha256']: row for row in texture_proof['textures']}
+        texture_records_by_name = {}
+        texture_records_by_base = {}
+        for object_sha, record in texture_records.items():
+            source_name = record['source'].get('name')
+            if not source_name:
+                continue
+            texture_records_by_name.setdefault(source_name, []).append(object_sha)
+            texture_records_by_base.setdefault(re.sub(r'_\d+$', '', source_name), []).append(object_sha)
+        @lru_cache(maxsize=4)
+        def converted_pixels(object_sha):
+            record = texture_records[object_sha]
+            if record['native_format'] not in (3, 4): return None
+            converted = CACHE/'all-assets/windows-textures'/next(
+                row['path'] for row in record['outputs'] if row['path'].endswith('.asset'))
+            raw = converted.read_bytes()
+            pixels = bytes.fromhex(re.search(rb'(?m)^  _typelessdata: ([a-fA-F0-9]+)', raw)[1].decode())
+            width, height = record['source']['width'], record['source']['height']
+            stride = 3 if record['native_format'] == 3 else 4
+            return Image.frombytes('RGB' if stride == 3 else 'RGBA', (width, height),
+                                   pixels[:width*height*stride]).convert('RGBA')
+        @lru_cache(maxsize=1)
+        def exported_pixels(path):
+            with Image.open(path) as image:
+                return image.convert('RGBA')
+        def texture_candidates(name):
+            candidates = dict(native.get(('Texture2D', name), {}))
+            base = re.sub(r'_\d+$', '', name)
+            object_shas = list(texture_records_by_name.get(name, ()))
+            object_shas.extend(object_sha for object_sha in texture_records_by_name.get(base, ())
+                               if object_sha not in object_shas)
+            object_shas.extend(object_sha for object_sha in texture_records_by_base.get(base, ())
+                               if object_sha not in object_shas
+                               and texture_records[object_sha]['source'].get('name', '').startswith(base+'_'))
+            seen_bundles = set()
+            for object_sha in object_shas:
+                record = texture_records[object_sha]
+                source = record['source']
+                bundle_name = Path(source['input']).name
+                if bundle_name in seen_bundles: continue
+                seen_bundles.add(bundle_name)
+                try:
+                    objects = apk.objects(bundle_name)
+                except KeyError:
+                    continue
+                for obj in objects:
+                    if obj.type.name != 'Texture2D': continue
+                    object_sha = sha(obj.get_raw_data())
+                    if object_sha not in texture_records: continue
+                    value = obj.read()
+                    if value.m_Name in (name, base) or value.m_Name.startswith(base+'_'):
+                        candidates[object_sha] = (obj, value)
+            return candidates
         shader_cache = CACHE/'all-assets/windows-shaders'
         shader_records = {}
         for path in (shader_cache/'Records').glob('*.json'):
             row = json.loads(path.read_bytes())
             shader_records[row['source']['object_sha256']] = (path, row)
+        def export_png_delta(path, object_sha):
+            image = converted_pixels(object_sha)
+            if image is None: return 256
+            exported = exported_pixels(path)
+            if image.size != exported.size: return 256
+            differences = [max(hi for lo, hi in ImageChops.difference(exported, sample).getextrema())
+                           for sample in (image, image.transpose(Image.Transpose.FLIP_TOP_BOTTOM))]
+            return min(differences)
         targets, replacements = {}, {}
         for path in sorted(found):
             target = DEST/path.relative_to(EXPORTED)
             if path.suffix == '.png': target = target.with_name(target.stem+'.texture.asset')
             elif '/Shaders/' in path.as_posix():
                 target = ROOT/'unity/Assets/Game/Runtime/Presentation/Combat/Shaders'/(shader_prefix+path.stem+'.shader')
-            target.parent.mkdir(parents=True, exist_ok=True); meta(target)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if target.is_relative_to(DEST):
+                sidecar = Path(str(target)+'.meta')
+                if sidecar.exists():
+                    expected = uuid.uuid5(uuid.NAMESPACE_URL,
+                        'zjcs/profession/character-resource/' + target.relative_to(ROOT).as_posix()).hex
+                    if GUID.search(sidecar.read_text(encoding='utf-8-sig'))[1] != expected:
+                        sidecar.unlink()
+            meta(target)
             old = GUID.search(read(Path(str(path)+'.meta')).decode('utf-8-sig'))[1]
             new = GUID.search(Path(str(target)+'.meta').read_text(encoding='utf-8-sig'))[1]
             targets[path] = target; replacements[old] = new
@@ -253,11 +328,21 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         shader_guids = {GUID.search(Path(str(target)+'.meta').read_text(encoding='utf-8-sig'))[1]
                         for target in targets.values() if target.suffix == '.shader'}
         textures, shaders, binary_assets, converted_inputs = [], [], [], []
-        for path, target in targets.items():
+        print(f"{family}: converting {len(targets)} assets", flush=True)
+        for ordinal, (path, target) in enumerate(targets.items(), 1):
+            if ordinal % 500 == 0:
+                print(f"{family}: {ordinal}/{len(targets)} {path.name}", flush=True)
             raw = read(path)
             if target.suffix == '.shader':
                 name = re.search(r'(?m)^  m_Name: (.+)$', raw.decode('utf-8-sig'))[1]
-                candidates = native['Shader', name]; assert len(candidates) == 1, name
+                candidates = native['Shader', name]
+                source_bundle = re.search(r'(?m)^  assetBundleName: ([^\s\r\n]+)[ \t]*$',
+                    read(Path(str(path)+'.meta')).decode('utf-8-sig'))
+                if source_bundle is not None and len(candidates) > 1:
+                    bundle_path = '/'+source_bundle[1]+'.bundle'
+                    candidates = {object_sha: candidate for object_sha, candidate in candidates.items()
+                        if shader_records[object_sha][1]['source']['input'].endswith(bundle_path)}
+                assert len(candidates) == 1, (path, len(candidates))
                 object_sha, (obj, _) = next(iter(candidates.items()))
                 record_path, record = shader_records[object_sha]
                 assert not record['stripped_passes']
@@ -269,8 +354,40 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                                     conversion=identity(record_path), converted=identity(converted)))
             elif path.suffix == '.png':
                 name = path.stem
-                if ('Texture2D', name) not in native: name = re.sub(r'_\d+$', '', name)
-                candidates = native['Texture2D', name]; assert len(candidates) == 1, (path, len(candidates))
+                candidates = texture_candidates(name)
+                source_meta = Path(str(path)+'.meta')
+                bundle_name = re.search(r'(?m)^  assetBundleName: ([^\s\r\n]+)[ \t]*$',
+                                        read(source_meta).decode('utf-8-sig'))
+                if bundle_name is not None and len(candidates) > 1:
+                    source_bundle = bundle_name[1] + '.bundle'
+                    candidates = {object_sha: value for object_sha, value in candidates.items()
+                        if texture_records[object_sha]['source']['input'].endswith('/'+source_bundle)}
+                if not candidates:
+                    candidates = texture_candidates(name)
+                if len(candidates) > 1:
+                    deltas = {object_sha: export_png_delta(path, object_sha)
+                              for object_sha in candidates}
+                    best = min(deltas.values())
+                    candidates = {object_sha: candidates[object_sha] for object_sha, delta in deltas.items()
+                                  if delta == best and delta <= 1}
+                exact_records = texture_records_by_name.get(path.stem, [])
+                exact_matches = [object_sha for object_sha in exact_records
+                                 if object_sha in candidates and export_png_delta(path, object_sha) <= 1]
+                if len(exact_matches) == 1:
+                    object_sha = exact_matches[0]
+                    candidates = {object_sha: candidates[object_sha]}
+                if not candidates or (len(candidates) == 1
+                                      and export_png_delta(path, next(iter(candidates))) > 1):
+                    recovered = {}
+                    for object_sha in exact_records:
+                        if export_png_delta(path, object_sha) > 1:
+                            continue
+                        bundle_name = Path(texture_records[object_sha]['source']['input']).name
+                        for obj in apk.objects(bundle_name):
+                            if obj.type.name == 'Texture2D' and sha(obj.get_raw_data()) == object_sha:
+                                recovered[object_sha] = (obj, obj.read())
+                    candidates = recovered
+                assert len(candidates) == 1, (path, len(candidates))
                 object_sha, (obj, value) = next(iter(candidates.items()))
                 record = texture_records[object_sha]
                 image_data = bytes(value.get_image_data())
@@ -290,7 +407,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                 mode, stride = ('RGB', 3) if record['native_format'] == 3 else ('RGBA', 4)
                 first = Image.frombytes(mode, (value.m_Width, value.m_Height),
                                         rgba[:value.m_Width*value.m_Height*stride]).convert('RGBA')
-                png = Image.open(path).convert('RGBA'); assert first.size == png.size
+                png = exported_pixels(path); assert first.size == png.size
                 comparison = [max(hi for lo, hi in ImageChops.difference(png, image).getextrema())
                               for image in (first, first.transpose(Image.Transpose.FLIP_TOP_BOTTOM))]
                 assert min(comparison) <= 1, (path, comparison)
@@ -314,6 +431,11 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                     target.write_bytes(raw)
             else:
                 write_changed(target, raw.decode('utf-8'))
+            # Concurrent asset conversion can leave an existing output without
+            # its sidecar; restore the Unity GUID before recording the receipt.
+            sidecar = Path(str(target)+'.meta')
+            if not sidecar.exists():
+                meta(target)
             guid = GUID.search(Path(str(target)+'.meta').read_text(encoding='utf-8-sig'))[1]
             importer = ('ShaderImporter' if target.suffix == '.shader' else
                 'PrefabImporter' if target.suffix == '.prefab' else

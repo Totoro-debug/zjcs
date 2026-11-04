@@ -16,6 +16,8 @@
 
 ### 官方代码与资源依据
 
+技能图转换器 `prepare_battle_skill_graph_assets.py` 复用官方导出和 Windows 纹理转换回执；共享转换器按纹理完整名称及数字后缀索引候选，先核对原 bundle，再用 PNG 与原生像素的最大通道差选择唯一匹配对象，仍逐项校验原压缩 mip、转换输出及像素 SHA256。像素缓存限制为四份原生图和一份 PNG，阶段日志保留实体审计、依赖闭包、原图验证与转换位置。本轮已审计 1,884 个实体、验证 2,216 个图根并解析 23,977 项依赖；最终清单与实际 Unity 演出验证尚未完成，不把部分导出视为完整技能演出。
+
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
 复核固定版本 `871_156598` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

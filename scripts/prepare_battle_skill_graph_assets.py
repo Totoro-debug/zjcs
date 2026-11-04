@@ -1,5 +1,6 @@
 """Convert every active-version graph referenced by an official FightSkill entity."""
 import json
+import faulthandler
 import os
 import subprocess
 import sys
@@ -11,7 +12,7 @@ from prepare_battle_status_orbit_assets import SCRIPTS, build
 from prepare_battle_scene_appearance_runtime import identity, meta, write_changed
 
 AUDIT = ROOT / 'scripts/inspect_battle_skill_graph_bindings.py'
-DEST = ROOT / 'unity/Assets/Official/Combat/SkillGraphs/Resources/Combat/SkillGraphs'
+DEST = ROOT / 'unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs'
 DATA = ROOT / 'unity/Assets/Game/Resources/Combat/skill-native-graphs.json'
 RECEIPT = ROOT / 'assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json'
 EXPORT_PREFIX = Path('Prefabs/EcEntity/Fight/FightSkill')
@@ -22,9 +23,13 @@ def main():
     assert work.parent == (ROOT / 'output/validation').resolve()
     assert (work / '.zjcs-validation.json').is_file()
 
+    faulthandler.dump_traceback_later(300, repeat=True)
+    print("SkillGraphs: auditing official entity bindings", flush=True)
     audit = subprocess.run([sys.executable, str(AUDIT)], check=True, capture_output=True,
                            text=True, encoding='utf-8').stdout
     source = json.loads(audit)
+    (work/'skill-graph-binding-audit.json').write_text(audit, encoding='utf-8')
+    print(f"SkillGraphs: audited {len(source['skills'])} entities", flush=True)
     roots, skills = {}, []
     for row in source['skills']:
         bindings = {}
@@ -53,6 +58,9 @@ def main():
         -1211289337: ('StoryFollowBone', 'ApplyOnStop'),
         -61675510: ('BattleSkillPlayables', 'MyPlayableFightCameraFollowerWeightModifier'),
         -782967297: ('BattleSkillPlayables', 'MyPlayableSpineBoneLookAt'),
+        -713493980: ('BattleSkillPlayables', 'MyPlayableAfterimage'),
+        -547320074: ('BattleSkillPlayables', 'MyPlayableFightCameraPerformance'),
+        100375930: ('BattleStatusPlayables', 'ApplyOverrideToMaster'),
         2012015779: ('StoryAttachment', 'MyPlayableAttachToBone'),
         -1858338532: ('StoryAttachment', 'MyPlayableActiveBone'),
         1513771027: ('ProfessionUI', 'SkeletonRendererFollower'),
@@ -132,7 +140,11 @@ def main():
     for skill in skills:
         catalog['skills'].append(dict(
             skill_entity_id=skill['skill_entity_id'],
-            playables={field: resources[key] for field, key in skill['playables'].items()}))
+            # JsonUtility cannot deserialize dynamic object keys (the original
+            # fields are default/0/1/2/3), so persist the same binding as a
+            # deterministic typed list consumed by Unity.
+            playables=[dict(field=field, resource=resources[key])
+                       for field, key in skill['playables'].items()]))
     write_changed(DATA, json.dumps(catalog, ensure_ascii=False, indent=2) + '\n')
     meta(DATA)
 
