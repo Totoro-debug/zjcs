@@ -203,7 +203,8 @@ namespace Zjcs.Presentation.Combat
                         isDay: environmentIsDay);
                 nextScene = new OfficialBattleSceneView(resolvedModelCatalog, worldRoot,
                     modelKey, gridMapper, animationForEvent, orientUnit, resolvedHudCatalog, hudParent,
-                    nextNativeModels, animationGroupResolver, nativeNpcFactory);
+                    nextNativeModels, animationGroupResolver, nativeNpcFactory,
+                    nextSkillGraphPlayback?.Scope, restoreCheckpoint);
                 nextHud.ControlClicked += OnHudControlClicked;
                 nextHud.SpeedCycled += OnSpeedCycled;
                 if (sessionOptions.ShowMainPanelDelay <= 0)

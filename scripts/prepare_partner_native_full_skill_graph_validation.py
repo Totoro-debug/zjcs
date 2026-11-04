@@ -11,7 +11,7 @@ from prepare_partner_star_god_validation import copy_modules
 from validation_workspace import validation_directory
 
 
-def main():
+def main(extra_roots=(), extra_editors=()):
     work = validation_directory()
     if work.parent != ROOT / 'output/validation' or not (work / '.zjcs-validation.json').is_file():
         raise ValueError('Use an owned partner full skill graph workspace')
@@ -56,6 +56,7 @@ def main():
     if len(wanted) != 75 or len(roots) != 93:
         raise ValueError('Original partner full graph selection changed')
     roots += list((ROOT / 'unity/Assets/Game/Resources/Combat').glob('*.json'))
+    roots += [ROOT / path for path in extra_roots]
     roots.append(ROOT / 'unity/Assets/Game/Resources/Combat/OfficialCombatAssetCatalog.asset')
     roots += [path for path in (ROOT / 'unity/Assets/Official/Combat/NativePartnerAssets/Resources').rglob('*')
         if path.is_file() and path.suffix != '.meta']
@@ -112,10 +113,12 @@ def main():
     shutil.copy2(ROOT / 'unity/Packages/manifest.json', project / 'Packages/manifest.json')
     editor = project / 'Assets/Editor'
     shutil.copy2(ROOT / 'unity/Assets/Game/Editor/PartnerBattlePlayables/OfficialPartnerNativeSkillGraphProbe.cs', editor)
+    for source in extra_editors:
+        shutil.copy2(ROOT / source, editor)
     definition = json.loads((editor / 'Validation.asmdef').read_bytes())
     definition['references'] = sorted(set(definition['references']) | {'Zjcs.Combat.Official', 'Zjcs.Presentation.Combat',
         'Zjcs.Offline.BattleNativePlayables', 'Zjcs.Official.StoryPlayableManager', 'Zjcs.Official.StoryAnimation',
-        'Zjcs.Offline.Equipment', 'Zjcs.Official.StoryPlayables'})
+        'Zjcs.Offline.Equipment', 'Zjcs.Official.StoryPlayables', 'Zjcs.Native.Summons'})
     (editor / 'Validation.asmdef').write_text(json.dumps(definition), encoding='utf8')
     (project.parent / 'partner-graph-fixture-inputs.json').write_text(json.dumps(dict(
         roots=[str(p.relative_to(ROOT)) for p in roots], asset_count=len(seen),

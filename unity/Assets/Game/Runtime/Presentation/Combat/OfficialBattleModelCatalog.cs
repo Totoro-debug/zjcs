@@ -130,6 +130,7 @@ namespace Zjcs.Presentation.Combat
 
         public bool HasNpcBattleAnimations(int npcClassId)
         {
+            if (OfficialBattlePartnerNativeModelView.HasBinding(npcClassId)) return true;
             string key = ResolveModelKey(new FightBattleUnitState { NpcClassId = npcClassId });
             OfficialBattleModelBinding binding = Find(key);
             return binding != null && binding.animations.Any(value => value.name == "idle_01")

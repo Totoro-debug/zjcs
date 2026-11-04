@@ -31,6 +31,7 @@ namespace Zjcs.Combat.Official
         public int CharacterType;
         public int MonsterId;
         public int NpcClassId;
+        public int RoleEntityId;
         public int MonsterTemplateId;
         public int MonsterGroupNo;
         public int AiType = -1;

@@ -104,7 +104,15 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 
 伙伴完整技能图复用已转换的75个原技能实体、93份方向／默认 prefab。`PartnerNativeSkillSkeleton` 在生产 `OfficialBattleSkillGraphPlayback` 的实例工厂中，于 Awake 前为58550内嵌的原4.2伙伴骨骼绑定既有独立几何端口；保留原模型与单个分离渲染子节点、`100/skill_01_2` 循环、原 Update 时序、停用不清空动画状态及原 shadow 附着。该模型与11007原实体使用同一骨骼／材质对象，按原 `SkeletonRendererHighTexturePreview` 的高清加载引用绑定2048×668原贴图；其他原技能特效继续沿现有路径加载。`PartnerNativeBattleMesh` 复用原角色的网格、材质字段与渲染设置操作，不读取或重建 Spine SDK 算法。原 prefab 组件、加载器、贴图对象／像素、应用类来源及当前绑定输入输出哈希见[内嵌骨骼来源凭据](../../assets/reference/partner-native-skill-skeletons-source-manifest.json)。
 
-隔离内置屏 Direct3D Play Mode 经生产技能调度器、原技能实体视图、对象池、原相机与完整 prefab 图运行全部93个分支；逐帧核对已初始化原节点的应用组件，58550另检查原骨骼身份、高清页、现有分离子节点和旧组件替换，未出现原 atlas 缺失或附着类型异常。每分支运行至少2秒并覆盖最后一个已知 Animator 节点之后0.5秒，共279张实际运行截图已查看；高清贴图导入后的RGBA哈希、尺寸、mip、颜色空间、过滤／Wrap及原不可读设置一致。正式工程导入／编译、`ProjectTools.Validate` 和静态检查（120,482个 GUID）通过，17项输入和4项安装文件身份一致。该夹具保持技能实体至检查结束，不合成玩法时长或结算伤害；没有验证自然播放完成、实际声音、正式邀请鼠标流程或 Windows Player，11015–11022白色轮廓仍属未完成范围。
+隔离内置屏 Direct3D Play Mode 经生产技能调度器、原技能实体视图、对象池、原相机与完整 prefab 图运行全部93个分支；逐帧核对已初始化原节点的应用组件，58550另检查原骨骼身份、高清页、现有分离子节点和旧组件替换，未出现原 atlas 缺失或附着类型异常。每分支运行至少2秒并覆盖最后一个已知 Animator 节点之后0.5秒，共279张实际运行截图已查看；高清贴图导入后的RGBA哈希、尺寸、mip、颜色空间、过滤／Wrap及原不可读设置一致。正式工程导入／编译、`ProjectTools.Validate` 和静态检查（120,482个 GUID）通过，17项输入和4项安装文件身份一致。该夹具保持技能实体至检查结束，不合成玩法时长或结算伤害；没有验证自然播放完成、实际声音、正式邀请鼠标流程或 Windows Player；11015–11022现按[已确认联动范围](offline-access.md#暂不开放的联动活动及伙伴)不开放并保留原资源。
+
+伙伴角色视图已接入公共战斗场景：`OfficialBattlePartnerNativeModelView` 使用选定884的原实体、原 Animator／应用控制器和挂接注册表，复用生产技能图作用域；移动读取原角色的移动技能／行为节点，完整技能图继续控制原 Animator，不叠加别名动画。`prepare_partner_native_role_views.py` 解码34份原 `ECViewDriver` 的 `ECFightRoleCharacterView`，核对共享死亡／开局死亡 prefab 的原对象与载荷哈希，并恢复10608／10708引用的原生成序列。死亡状态按原无限期序列保留，复活停止序列，读档使用原开局死亡分支并恢复格点。11008原控制器与骨骼没有死亡动画和 `die`／`immediately_die` 参数；保留通用死亡视图的原引用及其警告行为，不新增参数或动画。原字段、组件模式、共享图来源与显式代码绑定见[角色视图来源](../../assets/reference/partner-native-role-views-source-manifest.json)。
+
+`prepare_partner_native_shadows.py` 沿原实体提取34份完整阴影子树及共用 Sprite／贴图，保留原 Transform、SpriteRenderer、附着／骨骼跟随字段，复用公共阴影转换与既有独立跟随实现。场景用原阴影替换挂接图中的空节点，同时重绑原 `AttachAgent` 注册表；角色网格与阴影沿公共战斗排序。输入对象、转换缓存与安装载荷哈希见[伙伴阴影来源](../../assets/reference/partner-native-shadows-source-manifest.json)。这些载荷尚未纳入完整素材快照。
+
+伙伴社交编号与战斗实体编号分别保存：新增 `FightBattleUnitState.RoleEntityId`，创建伙伴时从原 `NpcInfo.FightEntityId` 绑定角色实体及其 `FightRoleCharacterComponent.CharacterType`；移动规则、场景实体和血条查询优先使用该实体，避免把11001等社交编号当成战斗实体或把伙伴设成主角类型。恢复旧 checkpoint 时重新核对并补全此字段。95名原 Team 候选的身份／移动配置、旧字段补全、十名额外角色属性技能及既有伙伴结果一致性规则检查通过，其中11004保留原15320／15321移动分支。
+
+隔离内置屏 Direct3D Play Mode 经公共场景实际创建26名当前开放伙伴，核对原阴影、原移动参数与动画、移动终点、死亡／复活及死亡 checkpoint 的原序列和位置恢复，78张站立／移动／死亡运行截图已查看。正式工程导入／编译与 `ProjectTools.Validate` 通过，静态检查通过（123,495个 GUID）。11015–11022按[已确认联动范围](offline-access.md#暂不开放的联动活动及伙伴)不开放，原资源保留。该检查直接构造场景与状态，不代表正式邀请鼠标流程、完整血条／状态表现、实战结算、声音或 Windows Player 已验证；这些仍须继续完成。
 
 贴图沿原 `AppearanceRendererLite.SkeletonRenderer` 指针、`AppearanceConfig` 骨骼路径和 `AppearanceAddressUtils.GetTextureLoaderPath` 恢复。35 个渲染器均使用原 Low 分辨率；原材质的占位页与运行时 `TextureLoader_Low` 的实际目标分别保存，35 项映射对应 28 份不同的目标 PNG。11015–11022 的原 Low 目标为 24×24，当前原 High 目标也为该尺寸，未以其他图片替换。隔离 Unity 工程复用正式工程的 Linear 颜色空间；全部目标导入后的 RGBA 像素哈希、尺寸、mip、颜色空间、过滤／各轴 Wrap 参数一致，并恢复原可读性。
 

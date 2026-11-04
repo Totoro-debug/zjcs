@@ -24,7 +24,9 @@ def sha(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
-def main():
+def main(destination=DEST, data=DATA, receipt=RECEIPT, role_catalog=None,
+         catalog_source=None, resource_root='Combat/CharacterShadows', generator=None):
+    DEST, DATA, RECEIPT = destination, data, receipt
     work = Path(os.environ['ZJCS_VALIDATION_DIR']).resolve()
     if work.parent != (ROOT / 'output/validation').resolve() or not (work / '.zjcs-validation.json').is_file():
         raise ValueError('An owned validation workspace is required.')
@@ -136,8 +138,8 @@ def main():
         converted.append(dict(record=record, converted=identity(native), png_channel_max_delta=min(deltas)))
         return result
 
-    source_catalog = ROOT / 'unity/Assets/Game/Resources/Combat/character-visibility-bindings.json'
-    catalog = json.loads(source_catalog.read_bytes())
+    source_catalog = catalog_source or ROOT / 'unity/Assets/Game/Resources/Combat/character-visibility-bindings.json'
+    catalog = role_catalog if role_catalog is not None else json.loads(source_catalog.read_bytes())
     follower_script = ROOT / 'unity/Assets/Game/Runtime/Official/BattleSpinePlayables/AttachmentFollower.cs'
     follower_guid = GUID.search(Path(str(follower_script) + '.meta').read_text(encoding='utf-8-sig'))[1]
     bone_script = ROOT / 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleShadowBoneFollower.cs'
@@ -148,7 +150,7 @@ def main():
         if not shadow_paths:
             continue
         kind = 'FightCharacter' if role['prefab'] in ('3100', '3102', '3991') else 'FightMonster'
-        source = EXPORT / 'Prefabs/EcEntity/Fight' / kind / (role['prefab'] + '.prefab')
+        source = EXPORT / role['sourcePrefab'] if 'sourcePrefab' in role else EXPORT / 'Prefabs/EcEntity/Fight' / kind / (role['prefab'] + '.prefab')
         raw = read(source).decode('utf-8-sig')
         docs = documents(source)
         gos = {key: data['GameObject'] for key, data in docs.items() if 'GameObject' in data}
@@ -231,11 +233,12 @@ def main():
         save(target, ('%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n' + ''.join(pieces)).encode(), 'PrefabImporter')
         rows.append(dict(prefab=role['prefab'], name=gos[transforms[root_id]['m_GameObject']['fileID']]['m_Name'],
                          parent='/'.join(parent_path[1:]), ancestors=ancestors[1:],
-                         resource='Combat/CharacterShadows/Prefabs/' + role['prefab'], renderers=renderer_bindings))
+                         resource=resource_root + '/Prefabs/' + role['prefab'], renderers=renderer_bindings))
     write_changed(DATA, json.dumps(dict(manifest=apk.version, roles=rows), indent=2) + '\n')
     meta(DATA)
     outputs.update((DATA, Path(str(DATA) + '.meta')))
-    receipt = dict(manifest=apk.version, generator=identity(Path(__file__)),
+    receipt = dict(manifest=apk.version, generator=identity(generator or Path(__file__)),
+        shadow_graph_adapter=identity(Path(__file__)),
         original_export=identity(EXPORT_RECEIPT), visibility_catalog=identity(source_catalog),
         texture_conversion=identity(texture_receipt), native_inputs=list(inputs.values()), originals=originals,
         converted=converted, follower=identity(follower_script), follower_meta=identity(Path(str(follower_script) + '.meta')),

@@ -109,6 +109,8 @@ namespace Zjcs.Presentation.Combat
 
         public FightBattleExecutor RestoreBattle(FightBattleCheckpoint checkpoint)
         {
+            foreach (var unit in checkpoint.Units)
+                if (unit != null && unit.NpcClassId > 0) LoadNpcAssistance().BindRoleEntity(unit);
             return FightBattleExecutor.Restore(checkpoint, LoadDamageFormula(), new FightDamageSettlement(),
                 Load(), LoadSkillItems());
         }

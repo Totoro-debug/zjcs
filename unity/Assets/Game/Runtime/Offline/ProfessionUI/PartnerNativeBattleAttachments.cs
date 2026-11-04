@@ -24,6 +24,7 @@ namespace Zjcs.Offline.ProfessionUI
             { Transform = transform; Skeleton = skeleton; Settings = settings; Material = material; }
         }
         private readonly List<AttachmentFollower> followers = new List<AttachmentFollower>();
+        private readonly Dictionary<string, Transform> transforms;
         public AttachAgent Agent { get; }
         public Dictionary<string, object> OriginalRow { get; }
         public IReadOnlyList<AttachmentFollower> Followers => followers;
@@ -32,6 +33,7 @@ namespace Zjcs.Offline.ProfessionUI
         internal PartnerNativeBattleAttachments(PartnerNativeBattleActor actor,
             Dictionary<string, Transform> transforms, RendererBinding[] bindings)
         {
+            this.transforms = transforms;
             var asset = Resources.Load<TextAsset>("Combat/NativePartnerAssets/attachments");
             if (!asset) throw new FileNotFoundException("Original partner attachment graph is not packaged.");
             var root = Obj(OfficialEquipmentJson.Parse(asset.text));
@@ -121,6 +123,33 @@ namespace Zjcs.Offline.ProfessionUI
         {
             foreach (var follower in followers)
                 if (follower && follower.isActiveAndEnabled) follower.ForceUpdate();
+        }
+        public void RebindOriginalShadow(Transform shadow)
+        {
+            if (!shadow) throw new ArgumentNullException(nameof(shadow));
+            Transform previous = transforms.Values.Single(value => value != shadow && value.name == shadow.name
+                && value.parent == shadow.parent);
+            var replacements = new Dictionary<Transform, Transform>();
+            foreach (string key in transforms.Keys.ToArray())
+            {
+                Transform old = transforms[key];
+                if (old != previous && !old.IsChildOf(previous)) continue;
+                var path = new List<string>();
+                for (Transform part = old; part != previous; part = part.parent) path.Insert(0, part.name);
+                Transform current = path.Count == 0 ? shadow : shadow.Find(string.Join("/", path));
+                if (!current) throw new InvalidDataException("Original partner shadow hierarchy differs.");
+                replacements.Add(old, current); transforms[key] = current;
+            }
+            for (int index = 0; index < Agent.myBoneList.Count; index++)
+                if (Agent.myBoneList[index] && replacements.TryGetValue(Agent.myBoneList[index], out var current))
+                    Agent.myBoneList[index] = current;
+            Agent.Init();
+            followers.RemoveAll(value => value && (value.transform == previous || value.transform.IsChildOf(previous)));
+            followers.AddRange(shadow.GetComponentsInChildren<AttachmentFollower>(true));
+            previous.gameObject.SetActive(false);
+            if (Application.isPlaying) UnityEngine.Object.Destroy(previous.gameObject);
+            else UnityEngine.Object.DestroyImmediate(previous.gameObject);
+            UpdateFollowers();
         }
         private static Component Resolve(Dictionary<string, Component> values, Dictionary<string, object> references, string path)
             => references.TryGetValue(path, out object reference) ? values[(string)Obj(reference)["sourceKey"]] : null;

@@ -34,6 +34,15 @@ public static class Map12SteleNpcHarness
             Require(!catalog.CanInviteTeamNpc(id, true, false), "Assist condition must be met: " + id);
             Require(catalog.CanInviteTeamNpc(id, false, true) == !catalog.RequiresEncounter(id),
                 "Encounter requirement changed: " + id);
+            var oldCheckpointUnit = new FightBattleUnitState { Id = 4000 + id, NpcClassId = id, CharacterType = 1 };
+            catalog.BindRoleEntity(oldCheckpointUnit);
+            Require(oldCheckpointUnit.RoleEntityId > 0 && oldCheckpointUnit.CharacterType == 4,
+                "NPC role identity did not migrate from the old checkpoint: " + id);
+            var movement = combat.CreateRoleMovement(oldCheckpointUnit, false);
+            Require(movement.MoveSkillEntityId > 0 && movement.MoveBehaviourId > 0,
+                "NPC role entity did not select original movement: " + id);
+            if (id == 11004) Require(movement.MoveSkillEntityId == 15320 && movement.MoveBehaviourId == 15321,
+                "NPC 11004 lost its original fixed-speed movement branch");
         }
         Require(team.Count(id => !catalog.RequiresEncounter(id)) == 3, "Original three no-encounter candidates");
         Require(!catalog.CanInviteTeamNpc(-1, true, true), "Unknown NPC cannot join");

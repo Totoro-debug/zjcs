@@ -109,6 +109,12 @@ namespace Zjcs.Combat.Official
 
         public string NpcIconPath(int npcClassId) => RequiredNpc(npcClassId, "Icon");
 
+        public void BindRoleEntity(FightBattleUnitState unit)
+        {
+            if (unit == null || unit.NpcClassId <= 0) return;
+            combat.BindNpcRoleEntity(unit, Int(RequiredNpcRow(unit.NpcClassId), "FightEntityId"));
+        }
+
         public bool RequiresEncounter(int npcClassId) => Bool(RequiredNpcRow(npcClassId), "IsOnlyMeetCanAssist");
 
         public Dictionary<string, object> AssistCondition(int npcClassId)
@@ -259,7 +265,6 @@ namespace Zjcs.Combat.Official
                 Id = unitId,
                 MasterId = masterId,
                 Side = 1,
-                CharacterType = 1,
                 NpcClassId = npcClassId,
                 Level = effectiveLevel,
                 SubRank = subRank,
@@ -273,6 +278,7 @@ namespace Zjcs.Combat.Official
                 Properties = properties.Select(value => new FightPropertyValue
                     { Id = value.Key, Value = value.Value }).ToList()
             };
+            BindRoleEntity(unit);
             unit.MoveDist = combat.CalculateMoveDist(properties);
             unit.Turn.Id = unit.Id;
             unit.Turn.MasterId = unit.MasterId;

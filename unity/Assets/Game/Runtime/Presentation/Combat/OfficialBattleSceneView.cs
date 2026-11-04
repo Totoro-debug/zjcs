@@ -20,6 +20,8 @@ namespace Zjcs.Presentation.Combat
         private readonly bool usesOfficialAnimationFallback;
         private readonly Func<FightBattleUnitState, string> animationGroupResolver;
         private readonly Func<FightBattleUnitState, IOfficialBattleNativeModel> nativeNpcFactory;
+        private readonly Zjcs.Offline.BattleNativePlayables.OfflineBattleNativePlayableScope nativePlayableScope;
+        private readonly bool restoringNativeUnits;
         private readonly Action<Transform, FightBattleUnitState> orientUnit;
         private readonly OfficialBattleHudCatalog hudCatalog;
         private readonly OfficialBattleSkillPlayableCatalog skillPlayableCatalog;
@@ -111,7 +113,9 @@ namespace Zjcs.Presentation.Combat
             OfficialBattleHudCatalog hudCatalog = null, Transform hudParent = null,
             OfficialBattleNativeAnimationLibrary nativeModelLibrary = null,
             Func<FightBattleUnitState, string> animationGroupResolver = null,
-            Func<FightBattleUnitState, IOfficialBattleNativeModel> nativeNpcFactory = null)
+            Func<FightBattleUnitState, IOfficialBattleNativeModel> nativeNpcFactory = null,
+            Zjcs.Offline.BattleNativePlayables.OfflineBattleNativePlayableScope nativePlayableScope = null,
+            bool restoringNativeUnits = false)
         {
             this.catalog = catalog != null ? catalog : OfficialBattleModelCatalog.LoadDefault();
             this.nativeModelLibrary = nativeModelLibrary;
@@ -129,6 +133,8 @@ namespace Zjcs.Presentation.Combat
                     new OfficialBattleGroundEffectLibrary(() => gridMapper));
             this.animationGroupResolver = animationGroupResolver;
             this.nativeNpcFactory = nativeNpcFactory;
+            this.nativePlayableScope = nativePlayableScope;
+            this.restoringNativeUnits = restoringNativeUnits;
             this.orientUnit = orientUnit ?? ((_, __) => { });
             this.hudCatalog = hudCatalog;
             damageVisibility = OfficialBattleDamageVisibilityCatalog.Load();
@@ -883,8 +889,17 @@ namespace Zjcs.Presentation.Combat
 
         private bool TryBeginDeath(FightBattleUnitState state)
         {
-            if (!units.TryGetValue(state.Id, out UnitView view)) return false;
+            if (!units.TryGetValue(state.Id, out UnitView view))
+            {
+                if (nativePlayableScope == null || !OfficialBattlePartnerNativeModelView.HasBinding(state.NpcClassId)) return false;
+                view = GetOrCreate(state);
+                if (view == null) return false;
+                Transform body = Body(state.Id);
+                PlaceUnit(state.Id, body, state, null);
+                orientUnit(body, state);
+            }
             view.State = state;
+            view.Hud?.Refresh(state, latestCheckpoint?.Units);
             if (view.Dying) return true;
             if (!PlayAnimation(view, "die_01", false)) return false;
             RemovePendingAnimations(state.Id);
@@ -964,6 +979,19 @@ namespace Zjcs.Presentation.Combat
                 bool hasAttached = attachedTransforms.TryGetValue(cue.UnitId, out Transform attached)
                     && attached != null;
                 if (!hasAttached && !units.ContainsKey(cue.UnitId)) continue;
+                if (!hasAttached && units[cue.UnitId].NativeModel is OfficialBattlePartnerNativeModelView partner)
+                {
+                    // Complete skill prefabs already own their Animator leaves.
+                    if (cue.SkillCast != null) continue;
+                    if (cue.Movement != null && movementCues.TryGetValue(cue.Movement, out var partnerMoves))
+                    {
+                        if (!partnerMoves.TrueForAll(value => partner.Supports(value.SkillPlayable)))
+                            throw new InvalidOperationException("Original partner movement Animator parameters are unbound.");
+                        foreach (var original in partnerMoves)
+                            pendingUnitAnimations.Add(new PendingUnitAnimation { Cue = original, Serial = ++pendingAnimationSerial });
+                        continue;
+                    }
+                }
                 if (hasAttached && cue.Movement != null
                     && movementCues.TryGetValue(cue.Movement, out var originals))
                 {
@@ -1047,6 +1075,11 @@ namespace Zjcs.Presentation.Combat
             }
 
             if (!units.TryGetValue(state.Id, out UnitView unit) || unit.Dying) return;
+            if (unit.NativeModel is OfficialBattlePartnerNativeModelView partner)
+            {
+                partner.PlayMovement(playable, eventCue.StopAfter < 0f ? -1f : eventCue.StopAfter - elapsedSinceScheduled);
+                return;
+            }
             string exactAnimation = playable.kind == 1 ? playable.animation : null;
             if (string.IsNullOrEmpty(exactAnimation)) return;
             if (unit.NativeModel != null && unit.NativeModel.HasAnimation(exactAnimation))
@@ -1265,6 +1298,15 @@ namespace Zjcs.Presentation.Combat
                     units.Add(state.Id, npcView);
                     return npcView;
                 }
+            }
+            var partnerModel = OfficialBattlePartnerNativeModelView.TryCreate(state, root, nativePlayableScope, restoringNativeUnits);
+            if (partnerModel != null)
+            {
+                var partnerView = new UnitView { State = state, NativeModel = partnerModel };
+                PlayAnimation(partnerView, state.Hp <= 0 ? "die_01" : "idle_01", state.Hp > 0);
+                partnerView.Hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state, partnerModel.Transform);
+                units.Add(state.Id, partnerView);
+                return partnerView;
             }
             var liveMonster = OfficialBattleLiveMonsterModelView.TryCreate(state, root);
             if (liveMonster != null)

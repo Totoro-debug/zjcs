@@ -94,6 +94,7 @@ namespace Zjcs.Presentation.Combat
         public static int EntityId(FightBattleUnitState state)
         {
             if (state == null) return 0;
+            if (state.RoleEntityId > 0) return state.RoleEntityId;
             if (state.MonsterTemplateId > 0 && Find(state.MonsterTemplateId) != null)
                 return state.MonsterTemplateId;
             // Arena guards retain a stat-source MonsterId but are spawned as role players.

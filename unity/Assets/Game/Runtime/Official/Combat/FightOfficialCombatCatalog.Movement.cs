@@ -4,6 +4,17 @@ namespace Zjcs.Combat.Official
 {
     public sealed partial class FightOfficialCombatCatalog
     {
+        // NpcInfo.FightEntityId selects the role prefab; the NPC class ID remains
+        // the social/progression identity. Preserve the role's configured type.
+        public void BindNpcRoleEntity(FightBattleUnitState unit, int entityId)
+        {
+            if (unit == null || unit.NpcClassId <= 0 || !entities.TryGetValue(entityId, out var entity))
+                throw new System.ArgumentException("A configured NPC role entity is required.");
+            var role = Component(entity, "FightRoleCharacterComponent")
+                ?? throw new System.InvalidOperationException("Original NPC role character component is missing: " + entityId);
+            unit.RoleEntityId = entityId;
+            unit.CharacterType = Int(role, "CharacterType");
+        }
         // FightActionSkillMoveComponent.StartImpl commits facing before action-start listeners.
         public void ApplyMovementFacing(FightBattleUnitState unit, FightBattleMovementEvent movement)
         {
@@ -31,7 +42,8 @@ namespace Zjcs.Combat.Official
         public FightBattleMovementEvent CreateRoleMovement(FightBattleUnitState unit, bool retreat)
         {
             var result = new FightBattleMovementEvent { UnitId = unit.Id, IsRetreat = retreat };
-            int entityId = unit.NpcClassId > 0 ? unit.NpcClassId
+            int entityId = unit.RoleEntityId > 0 ? unit.RoleEntityId
+                : unit.NpcClassId > 0 ? unit.NpcClassId
                 : unit.CharacterType == 1 ? 3100
                 : unit.MonsterTemplateId > 0 ? unit.MonsterTemplateId
                 : unit.MonsterId > 0 ? MonsterTemplateId(unit.MonsterId)

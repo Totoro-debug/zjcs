@@ -660,7 +660,7 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 - 完整 `NpcPanel` 宿主的对话／星神页、伙伴档案与餐桌通话；当前 Home 已接通原生名册卡片、本地相遇／好感／置顶、详情属性区、赠礼控制器和好感说明弹窗。Home 生命周期已构造并释放 `OfflinePartnerStarGodUiServices`，使用正式本地名册、星神资源与礼物图标绑定；该服务尚未接入原生 `NpcPanel` 的生产入口。
 - 正式窗口中的立绘／小模型、完整详情简报、伙伴位置导航、赠礼物品详情及声音仍未全部接通。
-- 每日挑战与每日副本已使用官方助战邀请弹窗：按原 `FightAssistNpcClassIds` 名册生成伙伴候选，结合本地结识／好感、原助战条件、战斗模型可用性和次数上限过滤；选择及最大人数写入 `OfflineNpcAssistanceProgress`，确认后进入对应战斗。入口位于 `HomeHudView.DailyChallenges`，弹窗为 `OfficialBattleAssistSelectionView`。主线等其他战斗入口尚未接入该邀请流程，也未完成主角加伙伴队伍的完整运行验证。伙伴战斗资源目前仅有官方动画提取目录，尚未绑定到可运行的 Windows 模型；提取结果与限制见[NPC邀请与战前准备](npc-assistance.md#尚未实现)。
+- 每日挑战与每日副本已使用官方助战邀请弹窗：按原 `FightAssistNpcClassIds` 名册生成伙伴候选，结合本地结识／好感、原助战条件、战斗模型可用性和次数上限过滤；选择及最大人数写入 `OfflineNpcAssistanceProgress`，确认后进入对应战斗。入口位于 `HomeHudView.DailyChallenges`，弹窗为 `OfficialBattleAssistSelectionView`。主线等其他战斗入口尚未接入该邀请流程，也未完成主角加伙伴队伍的完整运行验证。当前原生伙伴已接入公共战斗场景，完成26名开放伙伴的移动、阴影、死亡及恢复状态的隔离画面检查；正式邀请实战与 Windows Player 仍待验证，来源、接线与限制见[NPC邀请与战前准备](npc-assistance.md#尚未实现)。
 - 主工程 GUI Play Mode 在 450×800 下通过原生名册、详情、赠礼和好感说明窗口流程；模拟指针完成赠礼选择／重置／赠送、说明按钮、遮罩外点与返回键，赠礼扣除和好感落盘后重读成功，关闭说明弹窗保留底层选择并恢复本地化／对象池服务。已查看名册、详情、赠礼、保存后赠礼及好感说明的运行截图；`-partnersAcceptance` 与 `-partnerFriendshipAcceptance` 均退出码为 0，静态检查通过（91,072 GUID）。完整页面交互、手动结识的正式宿主流程、声音与 Windows Player 仍未完成。
 
 - 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。

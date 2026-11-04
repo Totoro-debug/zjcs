@@ -50,18 +50,28 @@ namespace Zjcs.Presentation.Combat
             return false;
         }
 
-        public OfficialBattleAnimatorPlayback(Animator animator, Transform parent)
+        public OfficialBattleAnimatorPlayback(Animator animator, Transform parent,
+            AnimationController existingController = null)
         {
             this.animator = animator != null ? animator : throw new ArgumentNullException(nameof(animator));
             originalController = animator.runtimeAnimatorController;
             root = new GameObject("OfficialBattleAnimatorPlayables");
             root.transform.SetParent(parent, false);
-            controller = root.AddComponent<AnimationController>();
-            controller.myAnimator = animator;
-            controller.NotCreateGraph = true;
-            controller.CreateOverrideController = true;
-            controller.Init();
-            ownedController = controller.RuntimeAnimatorController;
+            if (existingController != null)
+            {
+                if (existingController.myAnimator != animator || !existingController.myInited)
+                    throw new ArgumentException("The original entity Animator controller must be initialized.", nameof(existingController));
+                controller = existingController;
+            }
+            else
+            {
+                controller = root.AddComponent<AnimationController>();
+                controller.myAnimator = animator;
+                controller.NotCreateGraph = true;
+                controller.CreateOverrideController = true;
+                controller.Init();
+                ownedController = controller.RuntimeAnimatorController;
+            }
         }
 
         public void Play(OfficialBattleSkillPlayableCue cue, AnimationClip clip, float ownerDuration = -1f)
@@ -145,7 +155,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) return;
             Stop();
-            if (animator != null && animator.runtimeAnimatorController == ownedController)
+            if (ownedController != null && animator != null && animator.runtimeAnimatorController == ownedController)
                 animator.runtimeAnimatorController = originalController;
             if (ownedController != null && ownedController != originalController) Destroy(ownedController);
             Destroy(root);

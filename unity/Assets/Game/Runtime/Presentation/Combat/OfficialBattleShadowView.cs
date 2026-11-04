@@ -14,22 +14,24 @@ namespace Zjcs.Presentation.Combat
         [Serializable] private sealed class Binding { public string prefab, name, parent, resource; public Ancestor[] ancestors; public RendererBinding[] renderers; }
         [Serializable] private sealed class Ancestor { public string name; public bool active; public float[] position, rotation, scale; }
         [Serializable] private sealed class RendererBinding { public string path; public int layerIndex, layerId, order; }
-        private static Dictionary<string, Binding> bindings;
+        private static readonly Dictionary<string, Dictionary<string, Binding>> catalogs =
+            new Dictionary<string, Dictionary<string, Binding>>(StringComparer.Ordinal);
         private readonly GameObject instance;
         private readonly List<GameObject> createdAncestors = new List<GameObject>();
         private bool disposed;
 
         public Transform Root => instance.transform;
 
-        public static OfficialBattleShadowView Create(int entityId, Transform entityRoot, Component skeletonRenderer)
+        public static OfficialBattleShadowView Create(int entityId, Transform entityRoot, Component skeletonRenderer,
+            string catalogResource = "Combat/character-shadow-bindings")
         {
             if (entityRoot == null) throw new ArgumentNullException(nameof(entityRoot));
             if (skeletonRenderer == null) throw new ArgumentNullException(nameof(skeletonRenderer));
             if (!(skeletonRenderer is IProfessionFollowerRenderer))
                 throw new ArgumentException("Bind the original role's native follower renderer.", nameof(skeletonRenderer));
-            if (bindings == null)
+            if (!catalogs.TryGetValue(catalogResource, out var bindings))
             {
-                TextAsset source = Resources.Load<TextAsset>("Combat/character-shadow-bindings");
+                TextAsset source = Resources.Load<TextAsset>(catalogResource);
                 if (!source) throw new InvalidOperationException("Original role shadow bindings are missing.");
                 Catalog catalog = JsonUtility.FromJson<Catalog>(source.text);
                 if (catalog?.manifest != "884_156692" || catalog.roles == null)
@@ -37,6 +39,7 @@ namespace Zjcs.Presentation.Combat
                 var next = new Dictionary<string, Binding>(StringComparer.Ordinal);
                 foreach (Binding binding in catalog.roles) next.Add(binding.prefab, binding);
                 bindings = next;
+                catalogs.Add(catalogResource, bindings);
             }
             if (!bindings.TryGetValue(entityId.ToString(CultureInfo.InvariantCulture), out Binding original)) return null;
             GameObject prefab = Resources.Load<GameObject>(original.resource);

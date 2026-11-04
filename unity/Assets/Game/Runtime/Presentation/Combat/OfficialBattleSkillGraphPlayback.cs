@@ -34,6 +34,7 @@ namespace Zjcs.Presentation.Combat
         }
 
         public int CatalogCount => catalog.Count;
+        public OfflineBattleNativePlayableScope Scope => scope;
 
         public void BindSourceDeathView(Zjcs.Official.StoryPlayables.IBattleSourceDeathView view)
             => scope.BindSourceDeathView(view);
