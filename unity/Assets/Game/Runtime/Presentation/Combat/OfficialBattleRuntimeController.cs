@@ -474,10 +474,14 @@ namespace Zjcs.Presentation.Combat
         {
             phases.Tick(Time.unscaledDeltaTime);
             if (phases.IsPreparing && preparationView != null)
-                preparationView.Tick(PreparationPointerProvider != null ? PreparationPointerProvider()
+            {
+                OfficialBattlePointerFrame pointer = PreparationPointerProvider != null ? PreparationPointerProvider()
                     : new OfficialBattlePointerFrame { Position = Input.mousePosition,
                         Down = Input.GetMouseButtonDown(0), Held = Input.GetMouseButton(0),
-                        Up = Input.GetMouseButtonUp(0) }, Time.unscaledDeltaTime);
+                        Up = Input.GetMouseButtonUp(0) };
+                if (cameraView == null || cameraView.AllowsGameObjectInput)
+                    preparationView.Tick(pointer, Time.unscaledDeltaTime);
+            }
             if (executor != null && hudRoot == null && pendingHudParent != null)
             {
                 // FightMainPanelLoader.DealyLoad uses WaitForSeconds, hence scaled time.

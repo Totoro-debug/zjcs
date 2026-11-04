@@ -4,6 +4,8 @@
 
 本页只记录官方输入与来源凭据。各模块的原始实现、转换／绑定细节、当前实现和验证边界见所属功能／地图页；逐文件记录以模块来源清单为准。
 
+战斗技能演出相机来自所选 `884_156692` 原生 FightStage 导出中的231个战场 prefab；逐文件SHA256与原生导出凭据核对，保留原层级、变换、激活标记、完整镜头／过渡／优先级及 CameraOffset 字段，并核实原管线没有 body／aim／noise、Follow／LookAt 或 framing／recomposer 代理。原 prefab、`GameCameraController`／`FightCamera`／演出节点／输入封锁源码及生成 JSON／meta 哈希见[演出相机来源](battle-scenes/performance-camera-source-manifest.json)，提取入口为 `scripts/prepare_battle_performance_camera.py`。原普通相机仍保留既有历史来源，未重标为当前版本；本批没有新增美术或完整素材快照，行为与验证范围见[战斗执行](../../docs/features/battle-execution.md)。
+
 公共技能实体视图配置来自所选 `884_156692` 原生导出缓存中 1,884 个 `MyFightSkill` 的原序列化字段；逐 prefab 哈希与导出凭据核对，原 `PreferredPosToPlayable`／`ShowSkillReplay`、代码输入及输出 JSON／meta 哈希见[技能实体视图凭据](battle-animation/skill-entity-views-source-manifest.json)，入口为 `scripts/prepare_battle_skill_entity_views.py`。本批没有新增美术或完整素材快照；使用与验证范围见[战斗执行](../../docs/features/battle-execution.md)。
 
 头顶状态项的所选 `884_156692` 原生 `BattleStatusItem` prefab、官方显示／计数源码及转换输出哈希见[状态项来源](battle-hud/status-item-source-manifest.json)，入口为 `scripts/prepare_battle_status_item.py`。复用哈希匹配的原生导出缓存、原 SpriteRenderer／TMP／描边参数和相同官方 FZY4K TTF 的既有 Windows 字体绑定；历史854状态栏网格另按原凭据保留；回合调用计数的当前共享／客户端源码与历史854规则／显示标记分别核对并登记。本批未生成完整素材快照，行为与验证范围见[战斗执行](../../docs/features/battle-execution.md)。

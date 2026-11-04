@@ -10,7 +10,7 @@ namespace Zjcs.Presentation.Combat
 {
     // Replays the original GameCameraIniter aspect adapter and group framing with the
     // installed Cinemachine implementation. Unit positions come from the same scene as their HUD.
-    internal sealed class OfficialBattleCameraView : IDisposable, IBattleCameraOffsetHost
+    internal sealed class OfficialBattleCameraView : IDisposable, IBattleCameraOffsetHost, IBattleCameraPerformanceHost
     {
         [Serializable] private sealed class Catalog
         {
@@ -21,6 +21,7 @@ namespace Zjcs.Presentation.Combat
         [Serializable] private sealed class Binding
         {
             public int gameId, priority;
+            public string sceneName;
             public float[] baseAspect;
             public float baseSize, yOffset;
             public bool includeDead;
@@ -35,6 +36,7 @@ namespace Zjcs.Presentation.Combat
         private readonly CinemachineFramingTransposer framing;
         private readonly CinemachineCameraOffset cameraOffset;
         private readonly CinemachineRecomposer recomposer;
+        private readonly OfficialBattlePerformanceCamera performanceCamera;
         private readonly CinemachineFramingTransposer.FramingMode framingMode;
         private readonly CinemachineBrain brain;
         private readonly bool addedBrain, previousBrainEnabled;
@@ -90,6 +92,16 @@ namespace Zjcs.Presentation.Combat
             cameraOffset = cameraObject.AddComponent<CinemachineCameraOffset>();
             recomposer = cameraObject.AddComponent<CinemachineRecomposer>();
             recomposer.m_ZoomScale = 1f;
+            try
+            {
+                performanceCamera = new OfficialBattlePerformanceCamera(root.transform,
+                    binding.sceneName, cameraObject);
+            }
+            catch
+            {
+                OfficialBattleSceneBindings.DestroyCreatedObject(root);
+                throw;
+            }
             brain = output.GetComponent<CinemachineBrain>();
             addedBrain = brain == null;
             if (addedBrain) brain = output.gameObject.AddComponent<CinemachineBrain>();
@@ -105,6 +117,20 @@ namespace Zjcs.Presentation.Combat
             indexes.Add(index);
             ApplyCameraOffsets();
             return index;
+        }
+
+        internal bool AllowsGameObjectInput => performanceCamera.AllowsGameObjectInput;
+        public long BlockGameObjectInput() => performanceCamera.BlockGameObjectInput();
+        public void UnblockGameObjectInput(long operationId) => performanceCamera.UnblockGameObjectInput(operationId);
+        public void SwitchInPerformanceCamera()
+        {
+            performanceCamera.SwitchInPerformanceCamera();
+            ApplyCameraOffsets();
+        }
+        public void SwitchOutPerformanceCamera()
+        {
+            performanceCamera.SwitchOutPerformanceCamera();
+            ApplyCameraOffsets();
         }
 
         public void SetCameraOffset(int index, Vector3 offset)
@@ -187,8 +213,12 @@ namespace Zjcs.Presentation.Combat
                     && cameraOffsets.TryGetValue(group.Value[group.Value.Count - 1], out Vector3 offset))
                     total += offset;
             }
-            cameraOffset.m_Offset = new Vector3(total.x, total.y, 0f);
-            recomposer.m_ZoomScale = total.z + 1f;
+            if (performanceCamera.IsActive) performanceCamera.SetOffset(total);
+            else
+            {
+                cameraOffset.m_Offset = new Vector3(total.x, total.y, 0f);
+                recomposer.m_ZoomScale = total.z + 1f;
+            }
         }
 
         internal void Refresh(FightBattleCheckpoint checkpoint, FightBattlePhase phase)
@@ -247,6 +277,7 @@ namespace Zjcs.Presentation.Combat
 
         public void Dispose()
         {
+            performanceCamera.Dispose();
             if (brain != null)
             {
                 brain.enabled = previousBrainEnabled && !addedBrain;

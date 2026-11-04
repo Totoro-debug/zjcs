@@ -245,6 +245,7 @@ namespace Zjcs.Editor.Combat
                 Object.DestroyImmediate(root);
             }
             yield return CheckProductionSkillViews(actor, victim, prefab, pump, capture);
+            yield return CheckPerformanceCamera(actor, pump);
         }
     }
 }

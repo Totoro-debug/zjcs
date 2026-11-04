@@ -36,7 +36,7 @@ namespace Zjcs.Presentation.Combat
 
         public void BindCameraHost(IBattleCameraOffsetHost cameraHost)
         {
-            scope.BindHosts(cameraHost);
+            scope.BindHosts(cameraHost, cameraPerformanceHost: cameraHost as IBattleCameraPerformanceHost);
         }
 
         public void Play(FightBattleStepEvent stepEvent, FightBattleCheckpoint checkpoint,

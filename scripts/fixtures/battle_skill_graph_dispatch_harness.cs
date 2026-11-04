@@ -27,7 +27,11 @@ namespace Zjcs.Combat.Official
     public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(); }
     public class FightBattleStepEvent { public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); }
 }
-namespace Zjcs.Official.StoryPlayableManager { public interface IBattleCameraOffsetHost {} }
+namespace Zjcs.Official.StoryPlayableManager
+{
+    public interface IBattleCameraOffsetHost {}
+    public interface IBattleCameraPerformanceHost {}
+}
 namespace Zjcs.Presentation.Combat
 {
     // Exercise dispatch through its real entity-lifecycle seam. Native entity
@@ -53,7 +57,8 @@ namespace Zjcs.Offline.BattleNativePlayables
         public float Clock;
         public int LateTicks;
         public bool Disposed;
-        public void BindHosts(Zjcs.Official.StoryPlayableManager.IBattleCameraOffsetHost host) {}
+        public void BindHosts(Zjcs.Official.StoryPlayableManager.IBattleCameraOffsetHost host,
+            Zjcs.Official.StoryPlayableManager.IBattleCameraPerformanceHost cameraPerformanceHost = null) {}
         public void Tick(float delta) { Clock += delta; }
         public void LateTick() { LateTicks++; }
         public void Play(GameObject prefab, GameObject source, GameObject target, float speed,
