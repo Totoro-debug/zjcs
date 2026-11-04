@@ -992,13 +992,18 @@ namespace Zjcs.Presentation.Combat
                         continue;
                     }
                 }
-                if (!hasAttached && units[cue.UnitId].NativeModel is OfficialBattleLiveMonsterModelView liveMonster
-                    && cue.Movement != null && movementCues.TryGetValue(cue.Movement, out var monsterMoves)
-                    && monsterMoves.TrueForAll(value => liveMonster.Supports(value.SkillPlayable)))
+                if (!hasAttached && units[cue.UnitId].NativeModel is OfficialBattleLiveMonsterModelView liveMonster)
                 {
-                    foreach (var original in monsterMoves)
-                        pendingUnitAnimations.Add(new PendingUnitAnimation { Cue = original, Serial = ++pendingAnimationSerial });
-                    continue;
+                    // The full original prefab owns its Animator leaves. Do not
+                    // also dispatch the extracted flat cues for the same cast.
+                    if (cue.SkillCast != null && liveMonster.UsesNativeSkillGraphs) continue;
+                    if (cue.Movement != null && movementCues.TryGetValue(cue.Movement, out var monsterMoves)
+                        && monsterMoves.TrueForAll(value => liveMonster.Supports(value.SkillPlayable)))
+                    {
+                        foreach (var original in monsterMoves)
+                            pendingUnitAnimations.Add(new PendingUnitAnimation { Cue = original, Serial = ++pendingAnimationSerial });
+                        continue;
+                    }
                 }
                 if (hasAttached && cue.Movement != null
                     && movementCues.TryGetValue(cue.Movement, out var originals))
@@ -1327,7 +1332,7 @@ namespace Zjcs.Presentation.Combat
                 units.Add(state.Id, partnerView);
                 return partnerView;
             }
-            var liveMonster = OfficialBattleLiveMonsterModelView.TryCreate(state, root);
+            var liveMonster = OfficialBattleLiveMonsterModelView.TryCreate(state, root, nativePlayableScope != null);
             if (liveMonster != null)
             {
                 var liveView = new UnitView { State = state, NativeModel = liveMonster };

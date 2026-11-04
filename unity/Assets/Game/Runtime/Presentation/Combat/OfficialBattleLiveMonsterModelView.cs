@@ -18,6 +18,7 @@ namespace Zjcs.Presentation.Combat
         private readonly OfficialBattleShadowBoneFollower follower;
         private readonly BattleNativeMonsterAssets assets;
         private readonly OfficialBattleMonsterAnimatorBindings.State[] states;
+        private readonly OfficialBattleMonsterAnimationController application;
         private OfficialBattleAnimatorPlayback skillPlaybacks;
         private float playbackSpeed = 1f;
         private int requestedState;
@@ -27,12 +28,14 @@ namespace Zjcs.Presentation.Combat
 
         public Transform Transform => renderer.EntityRoot;
         public Transform ModelTransform => renderer.transform;
+        internal bool UsesNativeSkillGraphs { get; }
         public bool IsAnimationFinished => !disposed && !loop && !skillControlled
             && !renderer.Animator.IsInTransition(0)
             && (renderer.Animator.GetCurrentAnimatorStateInfo(0).fullPathHash != requestedState
                 || renderer.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
 
-        public static OfficialBattleLiveMonsterModelView TryCreate(FightBattleUnitState state, Transform parent)
+        public static OfficialBattleLiveMonsterModelView TryCreate(FightBattleUnitState state, Transform parent,
+            bool nativeSkillGraphs = false)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
             // Role-player arena guards may carry a monster stat row.
@@ -40,11 +43,11 @@ namespace Zjcs.Presentation.Combat
             int entityId = state.MonsterTemplateId > 0 ? state.MonsterTemplateId : state.MonsterId;
             var assets = BattleNativeMonsterAssets.Load();
             return assets.Find(entityId) == null ? null
-                : new OfficialBattleLiveMonsterModelView(assets, entityId, parent, "BattleUnit_" + state.Id);
+                : new OfficialBattleLiveMonsterModelView(assets, entityId, parent, "BattleUnit_" + state.Id, nativeSkillGraphs);
         }
 
         private OfficialBattleLiveMonsterModelView(BattleNativeMonsterAssets assets, int entityId,
-            Transform parent, string name)
+            Transform parent, string name, bool nativeSkillGraphs)
         {
             try
             {
@@ -52,6 +55,8 @@ namespace Zjcs.Presentation.Combat
                 states = OfficialBattleMonsterAnimatorBindings.Find(entityId);
                 renderer = BattleNativeMonsterRenderer.Create(assets, entityId, parent, name);
                 renderer.BindOriginalAnimator(assets, entityId);
+                application = new OfficialBattleMonsterAnimationController(renderer.EntityRoot, renderer.Animator, entityId);
+                UsesNativeSkillGraphs = nativeSkillGraphs;
                 Transform body = renderer.transform.parent;
                 if (!body || body.name != "body" || !body.IsChildOf(renderer.EntityRoot))
                     throw new InvalidOperationException("Original monster body transform is unbound: " + entityId);
@@ -108,7 +113,8 @@ namespace Zjcs.Presentation.Combat
             AnimationClip motion = cue.kind == 1
                 ? OfficialBattleMonsterAnimatorBindings.ResolveMotion(assets, states, marker) : null;
             if (cue.kind == 1 && (!motion || !renderer.AnimationNames.Contains(motion.name))) return false;
-            skillPlaybacks ??= new OfficialBattleAnimatorPlayback(renderer.Animator, Transform);
+            skillPlaybacks ??= new OfficialBattleAnimatorPlayback(renderer.Animator, Transform,
+                UsesNativeSkillGraphs ? application.Controller : null);
             skillPlaybacks.Play(cue, motion, ownerDuration);
             loop = false; skillControlled = true; playbackSpeed = 1f;
             renderer.Animator.Update(0);
@@ -131,6 +137,7 @@ namespace Zjcs.Presentation.Combat
             if (disposed) return;
             disposed = true;
             skillPlaybacks?.Dispose();
+            application?.Dispose();
             shadow?.Dispose();
             sorting?.Dispose();
             if (renderer) renderer.Release();

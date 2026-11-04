@@ -15,7 +15,7 @@ using Zjcs.Presentation.Combat;
 namespace Zjcs.Editor.ProfessionUI
 {
     [InitializeOnLoad]
-    public static class OfficialBattleMonsterSceneValidation
+    public static partial class OfficialBattleMonsterSceneValidation
     {
         private const string Active = "Zjcs.BattleMonsterScene.Validation";
         private static IEnumerator<int> steps;
@@ -31,10 +31,13 @@ namespace Zjcs.Editor.ProfessionUI
         [Serializable] private sealed class MovementSources { public MovementSource[] actions; }
 
         static OfficialBattleMonsterSceneValidation() { EditorApplication.update += Update; }
-        public static void Run()
+        public static void Run() => Begin(false);
+        public static void RunNativeGraphs() => Begin(true);
+        private static void Begin(bool nativeGraphs)
         {
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             SessionState.SetBool(Active, true);
+            SessionState.SetBool(Active + ".NativeGraphs", nativeGraphs);
             SessionState.SetFloat(Active + ".Deadline", (float)EditorApplication.timeSinceStartup + 300);
             EditorApplication.EnterPlaymode();
         }
@@ -46,7 +49,7 @@ namespace Zjcs.Editor.ProfessionUI
                 if (EditorApplication.timeSinceStartup > SessionState.GetFloat(Active + ".Deadline", 0))
                     throw new TimeoutException("Shared monster scene validation timed out.");
                 if (!EditorApplication.isPlaying || EditorApplication.isCompiling) return;
-                steps ??= Steps().GetEnumerator();
+                steps ??= (SessionState.GetBool(Active + ".NativeGraphs", false) ? NativeGraphSteps() : Steps()).GetEnumerator();
                 if (!steps.MoveNext()) Finish(0);
             }
             catch (Exception error) { Debug.LogException(error); Finish(1); }
@@ -55,21 +58,8 @@ namespace Zjcs.Editor.ProfessionUI
         {
             string output = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
             if (string.IsNullOrEmpty(output)) throw new InvalidOperationException("Set the owned validation workspace.");
-            previousDefault = GraphicsSettings.defaultRenderPipeline; previousQuality = QualitySettings.renderPipeline;
-            rendererData = ScriptableObject.CreateInstance<Renderer2DData>();
-            pipeline = UniversalRenderPipelineAsset.Create(rendererData);
-            GraphicsSettings.defaultRenderPipeline = pipeline; QualitySettings.renderPipeline = pipeline;
-            root = new GameObject("Shared original monster scene");
-            var light = new GameObject("Validation light").AddComponent<Light2D>();
-            light.transform.SetParent(root.transform, false);
-            light.lightType = Light2D.LightType.Global; light.intensity = 1;
-            target = new RenderTexture(450, 800, 24); target.Create();
-            camera = new GameObject("Diagnostic monster and shadow camera").AddComponent<Camera>();
-            camera.transform.SetParent(root.transform, false);
-            camera.orthographic = true; camera.clearFlags = CameraClearFlags.SolidColor;
-            camera.backgroundColor = new Color(.65f, .7f, .75f); camera.targetTexture = target;
+            var mapper = InitializeRenderScene();
             var assets = BattleNativeMonsterAssets.Load();
-            var mapper = new OfficialBattleGridMapper(root.transform, new FightBattleGrid { Width = 6, Height = 6 });
             scene = new OfficialBattleSceneView(null, root.transform, null, mapper, null, null);
             int models = 0, animations = 0, samples = 0, changedPixels = 0;
             foreach (int id in assets.EntityIds.OrderBy(value => value))
@@ -272,6 +262,7 @@ namespace Zjcs.Editor.ProfessionUI
         private static void Finish(int code)
         {
             SessionState.SetBool(Active, false);
+            nativeGraphPlayback?.Dispose(); nativeGraphPlayback = null;
             model?.Dispose(); scene?.Dispose();
             if (camera) camera.targetTexture = null;
             if (root) UnityEngine.Object.Destroy(root);
@@ -282,6 +273,24 @@ namespace Zjcs.Editor.ProfessionUI
                 UnityEngine.Object.Destroy(pipeline); UnityEngine.Object.Destroy(rendererData);
             }
             EditorApplication.Exit(code);
+        }
+
+        private static OfficialBattleGridMapper InitializeRenderScene()
+        {
+            previousDefault = GraphicsSettings.defaultRenderPipeline; previousQuality = QualitySettings.renderPipeline;
+            rendererData = ScriptableObject.CreateInstance<Renderer2DData>();
+            pipeline = UniversalRenderPipelineAsset.Create(rendererData);
+            GraphicsSettings.defaultRenderPipeline = pipeline; QualitySettings.renderPipeline = pipeline;
+            root = new GameObject("Shared original monster scene");
+            var light = new GameObject("Validation light").AddComponent<Light2D>();
+            light.transform.SetParent(root.transform, false);
+            light.lightType = Light2D.LightType.Global; light.intensity = 1;
+            target = new RenderTexture(450, 800, 24); target.Create();
+            camera = new GameObject("Diagnostic monster and shadow camera").AddComponent<Camera>();
+            camera.transform.SetParent(root.transform, false);
+            camera.orthographic = true; camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color(.65f, .7f, .75f); camera.targetTexture = target;
+            return new OfficialBattleGridMapper(root.transform, new FightBattleGrid { Width = 6, Height = 6 });
         }
     }
 }
