@@ -118,7 +118,8 @@ namespace Zjcs.Editor.Combat
             target.transform.position = actor.transform.position + new Vector3(1.3f, .4f, 0);
             var oldHost = OfficialWwiseEvent.Host;
             float captureDelta = Time.captureDeltaTime;
-            var sampler = new ProfessionNativeAnimatorPose(animator, ProfessionNativeConstraintPose.EvaluateBeforePhysics);
+            var sampler = new ProfessionNativeAnimatorPose(animator, (poseSkeleton, poseChannels, poseTime, poseLoop) =>
+                ProfessionNativeConstraintPose.EvaluateBeforePhysics(poseSkeleton, poseChannels, poseTime, poseLoop));
             string label = "cast-" + native.State.Source.Sex + (ownController ? "-direct" : "-controller");
             void Draw()
             {

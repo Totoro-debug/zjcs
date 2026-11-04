@@ -29,7 +29,8 @@ namespace Zjcs.Editor.Combat
             var parts = actor.GetComponent<AppearanceRendererPartHandler>();
             var weaponRoot = parts.LoadedSkeletonDict[SkinType.pWeapon].Part.GameObject;
             var weapon = weaponRoot.GetComponentInChildren<ProfessionNativeSceneWeaponRenderer>(true);
-            var sampler = new ProfessionNativeAnimatorPose(animator, ProfessionNativeConstraintPose.EvaluateBeforePhysics);
+            var sampler = new ProfessionNativeAnimatorPose(animator, (poseSkeleton, poseChannels, poseTime, poseLoop) =>
+                ProfessionNativeConstraintPose.EvaluateBeforePhysics(poseSkeleton, poseChannels, poseTime, poseLoop));
             var root = new GameObject("Original status animation pause graph scope");
             var center = new MyPlayableCenter(); var factory = new StatusMaterialFactory(center);
             var previousFactory = StoryPlayableInstantiation.Resolve; StoryPlayableInstantiation.Resolve = _ => factory;

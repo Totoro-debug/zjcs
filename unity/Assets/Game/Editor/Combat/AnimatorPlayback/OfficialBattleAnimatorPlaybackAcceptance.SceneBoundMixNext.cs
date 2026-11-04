@@ -29,7 +29,8 @@ namespace Zjcs.Editor.Combat
 
         private static void BindSceneMixNext(ProfessionNativeSceneRenderer renderer, Animator animator) =>
             renderer.BindAnimatorPose(new ProfessionNativeAnimatorPose(animator,
-                ProfessionNativeConstraintPose.EvaluateBeforePhysics, SolveSceneMixNext));
+                (poseSkeleton, poseChannels, poseTime, poseLoop) =>
+                    ProfessionNativeConstraintPose.EvaluateBeforePhysics(poseSkeleton, poseChannels, poseTime, poseLoop), SolveSceneMixNext));
 
         private static void ResetSceneMixAnimator(Animator animator)
         {
@@ -166,7 +167,8 @@ namespace Zjcs.Editor.Combat
                 parts.enabled = true; renderer.UpdateAnimationAndMesh(); renderer.UpdateAnimationAndMesh();
                 Require(observed.Calls == 6, "original handler re-subscribes once and deduplicates an unchanged unmixed identity");
 
-                renderer.BindAnimatorPose(new ProfessionNativeAnimatorPose(animator, ProfessionNativeConstraintPose.EvaluateBeforePhysics));
+                renderer.BindAnimatorPose(new ProfessionNativeAnimatorPose(animator, (poseSkeleton, poseChannels, poseTime, poseLoop) =>
+                    ProfessionNativeConstraintPose.EvaluateBeforePhysics(poseSkeleton, poseChannels, poseTime, poseLoop)));
                 animator.CrossFadeInFixedTime("Damage", .2f, 0, 0); animator.Update(.03f);
                 notices.Clear(); var saved = Pose(); bool rejected = false;
                 try { renderer.ApplyAnimatorPose(); } catch (NotSupportedException) { rejected = true; }

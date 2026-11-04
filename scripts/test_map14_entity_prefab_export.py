@@ -1,4 +1,5 @@
 """Verify that every selected Map14 prefab root has a byte-verified native export."""
+import argparse
 import json
 import hashlib
 from pathlib import Path
@@ -11,7 +12,7 @@ EXPORT_ROOT = ROOT / ".tools/map14-entity-native-cache-871_156598/restored"
 PACKAGED_ROOT = ROOT / "unity/Assets/Official/World/Map/14/NativeEntityPrefabs"
 
 
-def main():
+def main(require_cache=False):
     source = json.loads(MANIFEST.read_bytes())
     receipt = json.loads(EXPORT_RECEIPT.read_bytes())
     assert source["manifest"] == receipt["manifest"] == "871_156598"
@@ -30,11 +31,17 @@ def main():
         assert output is not None, entry["path"]
         restored = EXPORT_ROOT / "Prefabs" / relative
         packaged = PACKAGED_ROOT / "Prefabs" / relative
-        assert restored.is_file() and packaged.is_file(), entry["path"]
-        assert hashlib.sha256(restored.read_bytes()).hexdigest() == output["sha256"], entry["path"]
-        assert hashlib.sha256(packaged.read_bytes()).hexdigest() == output["sha256"], entry["path"]
-    print(f"Map14 native entity prefab export passed: {len(prefabs)} roots, {len(receipt['outputs'])} restored assets")
+        assert packaged.is_file(), entry["path"]
+        # Git can check text assets out with CRLF. The recorded native YAML is
+        # LF; compare that exact text without changing fields or expected hashes.
+        assert hashlib.sha256(packaged.read_bytes().replace(b"\r\n", b"\n")).hexdigest() == output["sha256"], entry["path"]
+        if require_cache or restored.exists():
+            assert restored.is_file(), entry["path"]
+            assert hashlib.sha256(restored.read_bytes().replace(b"\r\n", b"\n")).hexdigest() == output["sha256"], entry["path"]
+    print(f"Map14 native entity prefab export passed: {len(prefabs)} packaged roots match recorded native YAML (LF); cache required={require_cache}")
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--require-cache", action="store_true")
+    main(parser.parse_args().require_cache)

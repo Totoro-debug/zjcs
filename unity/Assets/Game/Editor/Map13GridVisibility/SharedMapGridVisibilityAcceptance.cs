@@ -12,7 +12,7 @@ namespace Zjcs.Editor.MapGridVisibility
         public static void RunSourceMaps()
         {
             Run();
-            foreach (int mapId in new[] { 11, 12, 15, 16 })
+            foreach (int mapId in new[] { 10, 11, 12, 14, 15, 16 })
             {
                 string root = "World/Mainline/Visibility/Map" + mapId + "/";
                 var configuration = JsonUtility.FromJson<OfflineMapGridVisibility.Configuration>(Resources.Load<TextAsset>(root + "visibility").text);

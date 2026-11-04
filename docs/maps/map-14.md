@@ -349,6 +349,8 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 
 ## 自定义实现
 
+龙之国正式共享宿主已绑定原280×280网格、2,961个放置的身体／营地、111区揭格列表及地图根白雾，与既有原生分区地形共用本地玩家位置。原入口101的(247,115)保持不变；揭格与曾发现实体沿既有地图文件保存，可供已到访地图的只读小地图快照读取。正式工程补齐由现有 Unity 生成器产生的实体 prefab 目录，416项原路径、类别和原生 GameObject 引用逐项核对，见[实体目录绑定来源](../../assets/reference/official-map/map14-entity-prefab-catalog-binding-source-manifest.json)。公共实现、来源与验证范围见[公共模块](../features/mainline-map-modules.md)；原实体 prefab 仍产生缺失脚本警告，角色／实体动画和HUD未完整呈现；完整小地图窗口、实体交互及本图完整玩法仍未完成。
+
 共享序列化的 Windows 依赖适配：使用固定 MIT MessagePack `1.9.11` 发布包及其仓库提交 `6cbd8196e7dbe9b8810d7620f4542c3db9388753` 的 Unity 类型支持；该版本仅为平台依赖，不声称是官方原版本。依官方固定 AOT 方法修正原始单精度浮点编码，并迁入原 Vector3／Quaternion 方法，通过 GFrameCore 类型转发维持原 Console ABI；原生成格式器 IL 与地图载荷不改写。完整发布许可随本地资源交付，加载器及反射注册表作用域结束后恢复原绑定。
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。

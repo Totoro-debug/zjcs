@@ -25,7 +25,8 @@ namespace Zjcs.Editor.Combat
             var weapon = weaponRoot.GetComponentInChildren<ProfessionNativeSceneWeaponRenderer>(true);
             var animator = player.Animator;
             var original = animator.runtimeAnimatorController;
-            var sampler = new ProfessionNativeAnimatorPose(animator, ProfessionNativeConstraintPose.EvaluateBeforePhysics);
+            var sampler = new ProfessionNativeAnimatorPose(animator, (poseSkeleton, poseChannels, poseTime, poseLoop) =>
+                ProfessionNativeConstraintPose.EvaluateBeforePhysics(poseSkeleton, poseChannels, poseTime, poseLoop));
             string label = "animator-clock-" + renderer.State.Source.Sex + "-" + original.name + (player.AnimController ? "-controller" : "-direct");
             void Draw()
             {

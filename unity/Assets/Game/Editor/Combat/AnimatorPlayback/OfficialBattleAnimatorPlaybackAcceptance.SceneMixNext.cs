@@ -30,7 +30,8 @@ namespace Zjcs.Editor.Combat
             var parts = player.GetComponent<AppearanceRendererPartHandler>();
             var weaponRoot = parts.LoadedSkeletonDict[SkinType.pWeapon].Part.GameObject;
             var weapon = weaponRoot.GetComponentInChildren<ProfessionNativeSceneWeaponRenderer>(true);
-            var sampler = new ProfessionNativeAnimatorPose(animator, ProfessionNativeConstraintPose.EvaluateBeforePhysics, SolveSceneMixNext);
+            var sampler = new ProfessionNativeAnimatorPose(animator, (poseSkeleton, poseChannels, poseTime, poseLoop) =>
+                ProfessionNativeConstraintPose.EvaluateBeforePhysics(poseSkeleton, poseChannels, poseTime, poseLoop), SolveSceneMixNext);
             var label = "mix-next-" + state.Source.Sex + "-" + controller.name + (player.AnimController ? "-controller" : "-direct");
             void Draw()
             {
@@ -102,7 +103,8 @@ namespace Zjcs.Editor.Combat
                 try { Mix(float.NaN); } catch (ArgumentOutOfRangeException) { rejected = true; }
                 Require(rejected && outgoingPose.SequenceEqual(Pose()), "invalid mixed weight rejects before pose mutation");
                 rejected = false;
-                try { new ProfessionNativeAnimatorPose(animator, ProfessionNativeConstraintPose.EvaluateBeforePhysics).ApplyMixNext(state); }
+                try { new ProfessionNativeAnimatorPose(animator, (poseSkeleton, poseChannels, poseTime, poseLoop) =>
+                    ProfessionNativeConstraintPose.EvaluateBeforePhysics(poseSkeleton, poseChannels, poseTime, poseLoop)).ApplyMixNext(state); }
                 catch (InvalidOperationException) { rejected = true; }
                 Require(rejected && outgoingPose.SequenceEqual(Pose()), "mixing requires an explicit solver and does not install a fallback");
             }

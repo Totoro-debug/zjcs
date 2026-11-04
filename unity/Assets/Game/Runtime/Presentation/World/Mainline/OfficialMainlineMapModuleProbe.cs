@@ -100,7 +100,9 @@ namespace Zjcs.Presentation.World
                 else yield return next;
             }
             File.WriteAllText(Path.Combine(output, "passed.txt"),
-                Environment.GetCommandLineArgs().Contains("-verify-exploration-only")
+                Environment.GetCommandLineArgs().Contains("-verify-visibility-maps")
+                    ? "Map10/14 original visibility/fog, pointer movement, exact disk cold restore and read-only visited-map snapshots passed."
+                    : Environment.GetCommandLineArgs().Contains("-verify-exploration-only")
                     ? "Exploration pointer flow: native HUD, confirmation, probability/detail/history, token scrolling/selection/cost, guide chest reward without stamina, ten-times exploration and cold reload passed."
                     : Environment.GetCommandLineArgs().Contains("-verify-map15-only")
                     ? "Whale Island verified data binding, Map15 pointer navigation and cold reload, shared statue visit transaction and cold reload passed."
@@ -149,6 +151,12 @@ namespace Zjcs.Presentation.World
             var progress = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
             new OfflineCharacterProgressionService(progress, OfficialCharacterAssetCatalog.LoadDefault().Load())
                 .InitializeWardrobe("shared-map-probe-wardrobe");
+            if (Environment.GetCommandLineArgs().Contains("-verify-visibility-maps"))
+            {
+                yield return VerifyVisibilityMaps(canvas.transform, slots);
+                Destroy(canvas);
+                yield break;
+            }
             if (Environment.GetCommandLineArgs().Contains("-verify-exploration-only"))
             {
                 Open(11, canvas.transform);
@@ -272,6 +280,61 @@ namespace Zjcs.Presentation.World
                 && effects.Last().StatusEffectClassIds.SequenceEqual(new[] { 28500 }),
                 "Daily visit and battle effects survive cold reload");
             Destroy(canvas);
+        }
+
+        private IEnumerator VerifyVisibilityMaps(Transform canvas, ProfileSlotCatalog slots)
+        {
+            // Existing saves have no fog/history fields. Rebuild only from the
+            // current position and activated regions, without inventing history.
+            File.WriteAllText(Path.Combine(slots.GetSlotDirectory(slot), "map-10-save.json"),
+                JsonUtility.ToJson(new Map10LocalSave { slotId = slot, gridX = 24, gridY = 23,
+                    completedStories = new[] { "FirstEnterMap", "FirstBattle" } }));
+            var snapshots = new MainlineMapMiniMapSnapshots(OfficialWorldMapAssetCatalog.LoadDefault(), slots, slot);
+            var saved = new Dictionary<int, byte[]>();
+            foreach (int id in new[] { 10, 14 })
+            {
+                Open(id, canvas);
+                yield return new WaitForSecondsRealtime(3);
+                var session = Field<OfficialWorldMapSession>("session");
+                var visibility = Field<Zjcs.Offline.World.MapGridVisibility.OfflineMapGridVisibility>("mapGridVisibility");
+                Require(visibility != null, "Formal map entry binds shared exploration visibility");
+                var position = Field<MapGridPoint>("currentGrid");
+                Require(position.Equals(id == 10 ? new MapGridPoint(24, 23) : new MapGridPoint(247, 115)),
+                    "Visibility binding preserves legacy position and original Map14 entry");
+                Require(runtime.GetComponentsInChildren<Zjcs.Official.MapRootFog.CloudController2>(true).Length == 1,
+                    "Formal map entry mounts exactly one original fog subtree");
+                byte[] before = visibility.Snapshot();
+                yield return Capture("map-" + id + "-visibility-entry");
+                yield return VerifyPointerMovement(session);
+                position = Field<MapGridPoint>("currentGrid");
+                Require(visibility.IsVisible(new Zjcs.Official.World.NativeTerrain.Common.Pos2d(position.X, position.Y)),
+                    "Pointer movement reveals the actual player cell");
+                Invoke("SaveLocalProgress");
+                saved[id] = visibility.Snapshot();
+                Require(!before.SequenceEqual(saved[id]), "Pointer movement expands the original revealed-cell payload");
+                int[] discovered = visibility.ExploredEntityIds;
+                string file = Path.Combine(slots.GetSlotDirectory(slot), "map-" + id + "-save.json");
+                string persisted = File.ReadAllText(file);
+                var snapshot = snapshots.Read(id);
+                Require(saved[id].SequenceEqual(snapshot.GridVisibility) && persisted == File.ReadAllText(file),
+                    "Offline minimap reads exact exploration without writing the map save");
+                yield return Capture("map-" + id + "-visibility-moved");
+                Destroy(runtime.gameObject);
+                yield return null;
+                Open(id, canvas);
+                yield return new WaitForSecondsRealtime(3);
+                visibility = Field<Zjcs.Offline.World.MapGridVisibility.OfflineMapGridVisibility>("mapGridVisibility");
+                Require(Field<MapGridPoint>("currentGrid").Equals(position)
+                    && saved[id].SequenceEqual(visibility.Snapshot())
+                    && discovered.SequenceEqual(visibility.ExploredEntityIds),
+                    "Formal cold entry preserves position, original fog bytes and discovered entities");
+                yield return Capture("map-" + id + "-visibility-cold");
+                Destroy(runtime.gameObject);
+                yield return null;
+            }
+            foreach (int id in new[] { 10, 14 })
+                Require(saved[id].SequenceEqual(snapshots.Read(id).GridVisibility),
+                    "Both visited maps remain readable after their live scenes are disposed");
         }
 
         private void Open(int id, Transform canvas)

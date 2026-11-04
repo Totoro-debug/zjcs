@@ -117,13 +117,19 @@ def build(map_ids):
         print(f"Map{map_id}: {nav['size']}, {len(rows)} regions, {len(templates)} bodies, {len(placements)} placements", flush=True)
     for directory in [DEST, *sorted(p for p in DEST.rglob("*") if p.is_dir())]:
         meta(directory, folder=True)
+    # Keep historical definition versions distinct; prove only the fields used
+    # by this loader against every actually installed placement and grid size.
+    from record_mainline_grid_visibility_sources import map_binding
+    proof["active_map_bindings"] = [map_binding(map_id,
+        f"unity/Assets/Official/World/Mainline/Visibility/Resources/World/Mainline/Visibility/Map{map_id}/visibility.json",
+        f"unity/Assets/Official/World/Mainline/Visibility/Resources/World/Mainline/Visibility/Map{map_id}/bodies.json") for map_id in map_ids]
     proof["formatters"] = [record(p) for p in sorted(set(formats.sources.values()))]
     for row in proof["formatters"]:
         if expected.get(row["path"]) != row["sha256"]:
             raise ValueError("Consumed formatter differs from selected prepared source: " + row["path"])
     proof["prepared_source"] = record(prepared)
     proof["outputs"] = [record(p) for p in sorted(DEST.rglob("*")) if p.is_file()]
-    proof["tools"] = [record(Path(__file__).resolve()), record(ROOT / "scripts/official_ec_codec.py"), record(ROOT / "scripts/official_map_codec.py")]
+    proof["tools"] = [record(Path(__file__).resolve()), record(ROOT / "scripts/official_ec_codec.py"), record(ROOT / "scripts/official_map_codec.py"), record(ROOT / "scripts/record_mainline_grid_visibility_sources.py")]
     proof["method"] = "Decode original per-map ground, EC placement/body/view-range and region-active unlock lists with selected official generated formatters. Preserve array ordering, placement transforms and camp references; adapt only RealCenter Vector2 representation consumed by JsonUtility. This receipt does not establish scene integration or playability."
     write(ROOT / "assets/reference/official-map/mainline-grid-visibility-data-source-manifest.json", encode(proof))
     apk.archive.close()
@@ -131,5 +137,5 @@ def build(map_ids):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--maps", type=int, nargs="+", default=[11, 12, 15, 16])
+    parser.add_argument("--maps", type=int, nargs="+", default=[10, 11, 12, 14, 15, 16])
     build(parser.parse_args().maps)

@@ -69,6 +69,8 @@ Windows D3D11 构建已复现并修复水面 shader 的 `TRANSFORM_TEX` 复合�
 
 ## 自定义实现
 
+初始岛正式共享宿主已绑定原60×60网格、82个放置的身体／营地、5区揭格列表及地图根白雾，沿既有地图文件保存探索格和曾发现实体。旧档没有揭格记录时从当前角色位置和已公开地区恢复，不改既有角色出生／存档坐标。公共实现、单机差异与验证范围见[公共模块](../features/mainline-map-modules.md)；此项不表示完整原生小地图窗口或本图完整玩法已经完成。
+
 `OfficialMainlineMapRuntime.RunStoryGraph` 对 `RemoveMapExclusiveNpcNode` 只保留一个分支：配置删除 playable 时先播放，再删除 NPC 并沿 `Exit` 继续；未配置时直接删除。执行顺序依据官方 `RemoveMapEntitiesByCfgNode.PlayPlayables/OnPlayableStop`。工程启用 Unity 内置 `unitywebrequest` 与 `unitywebrequestaudio` 模块，供 `OfficialMap10AudioPlayer` 从本地文件 URI 解码音频；模块启用不代表音频播放已验收。
 
 地形与怪物动画使用官方原始网格、纹理、骨骼帧数据，经 Unity MeshRenderer 适配为 Windows 原生资产；未自绘或用静态图替代。现有本地地图进度 DTO、地图寻路和战斗执行器尚未由 Map10 运行时调用。
