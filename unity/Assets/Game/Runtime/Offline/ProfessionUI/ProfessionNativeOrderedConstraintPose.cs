@@ -51,9 +51,10 @@ namespace Zjcs.Offline.ProfessionUI
         {
             if (skeleton == null || animation == null) throw new ArgumentNullException();
             if (skeleton.Source.Manifest != "884_156692" ||
-                !skeleton.Source.Sex.StartsWith("partner-battle:", StringComparison.Ordinal) ||
+                !(skeleton.Source.Sex.StartsWith("partner-battle:", StringComparison.Ordinal)
+                    || skeleton.Source.Sex.StartsWith("battle-monster:", StringComparison.Ordinal)) ||
                 !ReferenceEquals(animation.OriginalFields, skeleton.Source.GetAnimation(animation.Name)))
-                throw new ArgumentException("Original full-binary partner battle animation identity differs.");
+                throw new ArgumentException("Original full-binary battle animation identity differs.");
             if (!float.IsFinite(time) || time < 0) throw new ArgumentOutOfRangeException(nameof(time));
             for (int index = 0; index < skeleton.Source.Constraints.Count; index++)
             {
