@@ -2234,3 +2234,8 @@ unity/Assets/Game/Resources/Combat/pet-battle-rules*.json* text eol=lf
 unity/Assets/Official/Combat/PetHUD.meta text eol=lf
 unity/Assets/Official/Combat/PetHUD/**/*.meta text eol=lf
 # END shared battle pet byte identities
+
+# Keep current 3100 attachment data and independent bindings byte-stable.
+scripts/prepare_battle_player_attachments.py text eol=lf
+assets/reference/battle-animation/player-attachments-source-manifest.json text eol=lf
+unity/Assets/Game/Resources/Combat/player-attachments.json* text eol=lf

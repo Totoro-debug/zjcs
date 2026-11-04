@@ -24,6 +24,7 @@ namespace Zjcs.Offline.ProfessionUI
         public AnimationController Controller { get; private set; }
         public PlayerAppearance Appearance { get; private set; }
         public ProfessionNativeSceneRenderer Renderer { get; private set; }
+        public ProfessionNativeBattlePlayerAttachments Attachments { get; private set; }
 
         public ProfessionNativeBattlePlayerActor(GameObject modelPrefab, Transform parent,
             OfflineProfessionScenePlayerBindings bindings, long playerId)
@@ -79,6 +80,7 @@ namespace Zjcs.Offline.ProfessionUI
                 Appearance.Init(playerId);
                 if (!Appearance.Inited || !Controller.myInited)
                     throw new InvalidOperationException("Original player appearance/controller initialization did not complete.");
+                Attachments = new ProfessionNativeBattlePlayerAttachments(this);
                 Renderer.UpdateAnimationAndMesh();
             }
             catch { Dispose(); throw; }

@@ -45,6 +45,7 @@ namespace Zjcs.Editor.Combat
                 var playerBindings = new OfflineProfessionAppearanceBindings(17, () => profile, _ => profile.InitialWeaponType,
                     tables, config, rules, defaults);
                 var host = new GameObject("Current original 3100 player model/controller probe");
+                if (SessionState.GetBool(Key + ".player-attachments", false)) host.transform.position = new Vector3(4, -2, .8f);
                 host.AddComponent<SortingGroup>().sortingLayerID = 1182434123;
                 var parts = new PartBindings(config);
                 var poolBindings = new OfflineProfessionScenePartPoolBindings(weapons, materials, parts, () => true);
@@ -79,6 +80,7 @@ namespace Zjcs.Editor.Combat
                     camera.transform.position = bounds.center + Vector3.back * 100;
                     target = new RenderTexture(384, 512, 24); camera.targetTexture = target;
                     using var scope = new OfflineBattleNativePlayableScope(host.transform, null);
+                    scope.BindNativePrefabAdapter(PartnerNativeSkillSkeleton.BindOriginalPrefab);
                     using var death = new OfficialBattleCharacterDeathPlayback(actor.Root, () => dead, scope, deathBinding);
                     actor.Appearance.OnAnimatorChanged += death.OnAnimatorInited;
                     death.OnAnimatorInited();
@@ -88,6 +90,13 @@ namespace Zjcs.Editor.Combat
                         if (renderer.enabled) bounds.Encapsulate(renderer.bounds);
                     string label = sex.ToString().ToLowerInvariant() + "-" + profession + "-3100-actor";
                     CaptureActor(label + "-idle");
+                    if (SessionState.GetBool(Key + ".player-attachments", false))
+                    {
+                        CheckPlayerAttachmentRegistry(actor);
+                        var graphs = CheckPlayerAttachmentGraphs(actor, scope, profession, label, CaptureActor);
+                        try { while (graphs.MoveNext()) yield return graphs.Current; }
+                        finally { (graphs as IDisposable)?.Dispose(); }
+                    }
                     var state = native.State; float before = native.PlayerPhysicsTime;
                     playerBindings.Refresh(AppearanceOperateSource.Normal);
                     owned.Add(animator.runtimeAnimatorController);
@@ -120,6 +129,8 @@ namespace Zjcs.Editor.Combat
                         var current = native.GetComponent<MeshRenderer>().bounds;
                         foreach (var renderer in actor.Root.GetComponentsInChildren<MeshRenderer>())
                             if (renderer.enabled) current.Encapsulate(renderer.bounds);
+                        foreach (var renderer in host.GetComponentsInChildren<ParticleSystemRenderer>())
+                            if (renderer.enabled && renderer.GetComponent<ParticleSystem>().particleCount > 0) current.Encapsulate(renderer.bounds);
                         Capture(current, name);
                     }
                 }
