@@ -210,6 +210,8 @@ class PartnerCardBinding:
             original_bank = self.cache / 'raw-resources' / cached['bank']['path']
             if (wav.is_file() and sha(wav.read_bytes()) == cached['output_sha256']
                 and sha(original_bank.read_bytes()) == cached['bank']['sha256']
+                and (not cached.get('media_source') or
+                     sha((self.cache / 'raw-resources' / cached['media_source']['path']).read_bytes()) == cached['media_source']['sha256'])
                 and cached['tools'] == {str(p.relative_to(ROOT)): sha(p.read_bytes()) for p in (wwiser, decoder)}):
                 self.audio_proof[key] = cached
                 self.audio_outputs[Path(cached['output'])] = (cached['pointer']['guid'], wav.read_bytes())
@@ -243,8 +245,32 @@ class PartnerCardBinding:
         if len(leaves) != 1 or 'master volume: auto' in graph:
             raise ValueError('Preserve the original Wwise layered/random/gain graph: ' + graph)
         leaf = re.fullmatch(r'\.\./banks/(\d+)\.bnk #s(\d+) #i(?:  #v (-?[\d.]+)dB)?  ##(\d+)\.wem', leaves[0])
-        if leaf is None or int(leaf[1]) != bank['id']:
-            raise ValueError('Resolve the original Wwise playback leaf: ' + graph)
+        media_source = None
+        if leaf is not None:
+            if int(leaf[1]) != bank['id']:
+                raise ValueError('Original Wwise playback bank differs: ' + graph)
+            gain_db, media_id = float(leaf[3] or 0), int(leaf[4])
+        else:
+            memory_leaf = re.fullmatch(r'\.\./banks/(\d+)\.wem #i(?:  #v (-?[\d.]+)dB)?  ##memory', leaves[0])
+            if memory_leaf is None:
+                raise ValueError('Resolve the original Wwise playback leaf: ' + graph)
+            media_id, gain_db = int(memory_leaf[1]), float(memory_leaf[2] or 0)
+            # A memory sound may live in a shared bank rather than the event's
+            # own bank. Resolve its exact extracted media identity, never use a
+            # similarly named event or a substitute sound.
+            candidates = [(key, row) for key, row in media['audio'].items()
+                          if any(value['media_id'] == media_id and value['language'] == 0
+                                 for value in row['identities'])]
+            media_hash, media_row = candidates[0] if len(candidates) == 1 else (None, None)
+            if media_row is None:
+                raise ValueError('Shared original Wwise media is ambiguous: ' + str(media_id))
+            media_path = self.cache / 'raw-resources' / media_row['original']
+            media_raw = media_path.read_bytes()
+            if sha(media_raw) != media_hash:
+                raise ValueError('Shared original Wwise media changed: ' + str(media_id))
+            (banks / (str(media_id) + '.wem')).write_bytes(media_raw)
+            media_source = dict(path=media_row['original'], sha256=media_hash,
+                                identities=media_row['identities'])
         wav = stage / (event['objectName'] + '.wav')
         subprocess.run([str(decoder), '-i', '-o', str(wav), str(txtp)], check=True,
             capture_output=True, creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
@@ -258,7 +284,7 @@ class PartnerCardBinding:
         self.script_guids.add(target_guid)  # Already bound local payload.
         self.audio_proof[key] = dict(event=event, original_sha256=sha(obj.get_raw_data()),
             source=self.recovery.apk.provenance(obj), bank=bank, package=package['name'],
-            txtp=graph, gain_db=float(leaf[3] or 0), media_id=int(leaf[4]),
+            txtp=graph, gain_db=gain_db, media_id=media_id, media_source=media_source,
             pcm=pcm, output=target.as_posix(), output_sha256=sha(data), pointer=result,
             tools={str(p.relative_to(ROOT)): sha(p.read_bytes()) for p in (wwiser, decoder)})
         print('Resolved original partner sound:', event['objectName'], flush=True)

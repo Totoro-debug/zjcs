@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 490835b4b4a7c1f9f42997850656bc08, type: 3}
+  m_Name: OfficialPartnerDetailWindowAssetCatalog
+  m_EditorClassIdentifier: ''
+  panelPrefab: {fileID: 1709254077376921, guid: eb6fee8f1d55a29cb8fae91afc38528d, type: 3}
+  texts:
+  - {key: ui_Achievement_Rewards, text: 馈赠}
+  - {key: ui_achievement_empty_tip_text, text: 已领所有馈赠奖励}
+  - {key: ui_award_text, text: 奖励}
+  - {key: ui_common_unfinished, text: 未达成}
+  - {key: ui_completed_text, text: 已完成}
+  - {key: ui_level_max_text, text: 已满级}
+  - {key: ui_new_mark_text, text: 新}
+  - {key: ui_npc_detail_auto_select_gift_btn_text, text: 自动选择}
+  - {key: ui_npc_detail_empty_prop_text, text: 暂无属性加成}
+  - {key: ui_npc_detail_friendship_level_text, text: 好感度等级}
+  - {key: ui_npc_detail_give_empty_tip, text: 当前没有可赠送的道具}
+  - {key: ui_npc_detail_give_gift_btn_text, text: 赠送}
+  - {key: ui_npc_detail_give_gift_text, text: 赠送礼物}
+  - {key: ui_npc_detail_give_limit_text, text: 已达到当前位阶最高等级}
+  - {key: ui_npc_detail_jump_btn_text, text: 前往}
+  - {key: ui_npc_detail_level_text, text: '{0}<size=46>级</size>'}
+  - {key: ui_npc_detail_level_up_prop_tip, text: 升级加成属性}
+  - {key: ui_npc_detail_look_prop_btn_text, text: 查看详情}
+  - {key: ui_npc_detail_tab_item_friend_text, text: 伙伴}
+  - {key: ui_npc_detail_tab_item_gift_text, text: 赠礼}
+  - {key: ui_npc_detail_tab_item_profile_text, text: 档案}
+  - {key: ui_npc_friendship_current_exp_diff_text, text: '{0}'}
+  - {key: ui_npc_friendship_max_level_tip, text: 已满级！}
+  - {key: ui_npc_friendship_next_exp_diff_text, text: '/{0}'}
+  - {key: ui_npc_friendship_preview_exp_text, text: '+{0}'}
+  - {key: ui_npc_panel_addressbook, text: 伙伴}
+  - {key: ui_npc_panel_dialogue, text: 通话}
+  - {key: ui_npc_profile_can_unlock_btn_text, text: 解锁}
+  - {key: ui_npc_profile_lock_tip_text, text: '{0}解锁档案'}
+  - {key: ui_npc_profile_tab_group_item_text, text: '档案{0}'}
+  - {key: ui_npc_profile_title_text, text: 角色故事}
+  - {key: ui_npc_star_god_title, text: 星间之神}
+  - {key: ui_receive_reward, text: 领取}

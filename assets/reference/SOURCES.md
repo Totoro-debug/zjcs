@@ -595,3 +595,7 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 幻兽支援放电动画来源：原HUD的`mTriggerSupportSkillAnim`沿实际CAB引用解析至所选884_156692官方包`defaultpackage_share_2c5f0e5af1aca8075e1f6b05c99883ef.bundle`，MD5 `c3129108100da9b590d6530128a58586`、SHA256 `7c4961517fd0d7e602eee9fad208b37014f6750a0ae337ed71fc567cdd3006d1`；原AnimationClip对象、当前输入版本、曲线字段、生成器及运行绑定哈希补记[幻兽HUD来源清单](battle-hud/pet-widget-source-manifest.json)。历史HUD与当前动画输入分别保留来源身份，未生成完整素材快照。
 
 主线地图放置目录的公共转换读取独立记录的871泽之国／龙之国定义与 `Source/entities.json`，复用已提取的官方EC数据。输入／输出SHA256与生成器来源分别见 `assets/reference/official-map/map13-entity-catalog-source-manifest.json` 和 `map14-entity-catalog-source-manifest.json`；显式加载地址为 `Resources/Map13/Entities/catalog`、`Resources/Map14/Entities/catalog`。龙之国源JSON固定为原凭据的LF字节。
+
+所选884完整伙伴详情：`prepare_partner_detail_window_native.py` 从原 NpcDetailPanel 及实际 CAB 引用恢复完整层级、外部 prefab、原字体／材质／Windows 纹理及原动画，绑定本地应用脚本；根曲线空路径修复逐字段核对原载荷，NpcAffinity_Click 按原共享媒体身份转换。原输入、对象、曲线证据、媒体哈希、GUID 重绑及显式 Resources 目录见[完整详情资源来源](partner-detail-window-native-source-manifest.json)。`prepare_partner_detail_window_ui.py` 的原应用控制器与适配边界哈希见[详情代码来源](partner-detail-window-ui-source-manifest.json)；功能范围与验证维护于[伙伴](../../docs/features/partners.md)。未生成完整素材快照。
+
+所选884详情角色数据由 `prepare_partner_detail_actor_data.py` 通过原 NpcModel_UI_8402／NPC_illustration_8402 实际引用提取，保留原共享骨骼、按需动画、atlas、材质与 High TextureLoader 颜色／染色映射；原版本、对象、载荷／像素身份、转换工具、暂存输出及本地 UI 动画端口哈希见[详情角色原生端口来源](partner-detail-actor-runtime-source-manifest.json)。数据尚未安装到正式角色目录，未生成完整素材快照；实际实现与验证范围仅在[伙伴](../../docs/features/partners.md)维护。

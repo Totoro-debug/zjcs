@@ -175,7 +175,8 @@ class PartnerRosterBinding(PartnerGiftBinding):
                 import zlib
                 _, _, docs = next(row for row in self.queue if row[1] == result['guid'])
                 clip = docs[result['fileID']]['AnimationClip']
-                source = self.recovery.fields(obj)['m_ClipBindingConstant']['genericBindings']
+                source_fields = self.recovery.fields(obj)
+                source = source_fields['m_ClipBindingConstant']['genericBindings']
                 native = clip['m_ClipBindingConstant']['genericBindings']
                 if len(source) != len(native):
                     raise ValueError('Original animation binding count differs')
@@ -187,6 +188,60 @@ class PartnerRosterBinding(PartnerGiftBinding):
                             if original['path'] == converted['path'] == 0 and original['typeID'] == curve['classID']
                             and original['attribute'] == zlib.crc32(curve['attribute'].encode('utf8'))
                             and converted['script'] == curve['script']]
+                        if not matches and not source:
+                            # Non-compiled legacy UI clips keep their binding
+                            # directly in m_FloatCurves. AssetRipper turns the
+                            # original empty root path into YAML null here too.
+                            originals = source_fields.get(field, [])
+                            original = originals[index] if index < len(originals) else None
+                            script_matches = curve['script'] == dict(fileID=0)
+                            if original is not None and original['script']['m_PathID']:
+                                from UnityPy.classes.PPtr import PPtr
+                                original_script = PPtr(**original['script'], assetsfile=obj.assets_file).deref()
+                                script = original_script.read()
+                                learned = self.objects.get(curve['script'].get('guid'))
+                                script_matches = (learned is not None and identity(learned) == identity(original_script)
+                                    and curve['script']['fileID'] == script_id(script.m_Namespace, script.m_ClassName))
+                                if learned is None:
+                                    assembly_name = script.m_AssemblyName
+                                    if not assembly_name.endswith('.dll'):
+                                        assembly_name += '.dll'
+                                    assembly = self.native / 'Plugins' / assembly_name
+                                    metadata = Path(str(assembly) + '.meta')
+                                    if assembly.is_file() and metadata.is_file():
+                                        for path in (assembly, metadata):
+                                            key = path.relative_to(self.cache / 'native-export-all').as_posix()
+                                            if sha(path.read_bytes()) != self.checked[key]:
+                                                raise ValueError('Original animation script assembly changed')
+                                            self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+                                        script_matches = (guid(metadata) == curve['script']['guid'] and
+                                            curve['script']['fileID'] == script_id(script.m_Namespace, script.m_ClassName))
+                                if not script_matches:
+                                    raise ValueError('Original uncompiled curve script binding differs: ' + repr(dict(
+                                        original=identity(original_script), script=script.m_Namespace + '.' + script.m_ClassName,
+                                        learned=identity(learned) if learned is not None else None,
+                                        converted=curve['script'], expected_id=script_id(script.m_Namespace, script.m_ClassName))))
+                            if (original is not None and original['path'] == ''
+                                and original['classID'] == curve['classID']
+                                and original['attribute'] == curve['attribute']
+                                and script_matches):
+                                import math
+                                left, right = original['curve'], curve['curve']
+                                if (any(left[key] != right[key] for key in ('m_PreInfinity', 'm_PostInfinity', 'm_RotationOrder'))
+                                    or len(left['m_Curve']) != len(right['m_Curve'])
+                                    or any(not math.isclose(value, actual[key], rel_tol=0, abs_tol=1e-6)
+                                           for expected, actual in zip(left['m_Curve'], right['m_Curve'])
+                                           for key, value in expected.items())):
+                                    raise ValueError('Original uncompiled root animation curve differs')
+                                curve['path'] = ''
+                                script_binding = None
+                                if original['script']['m_PathID']:
+                                    full_name = '.'.join(filter(None, [script.m_Namespace, script.m_ClassName]))
+                                    script_binding = dict(original=original['script'], native=curve['script'], restored=self.scripts[full_name])
+                                    curve['script'] = self.scripts[full_name]
+                                self.animation_root_paths.append(dict(original=identity(obj), field=field, curve_index=index,
+                                    original_curve=original, script_binding=script_binding, converted=None, restored=''))
+                                continue
                         if len(matches) != 1:
                             raise ValueError('Null curve path is not one original compiled root binding')
                         number, original = matches[0]

@@ -10,12 +10,51 @@ namespace Zjcs.Offline.ProfessionUI
     // construction also used by partner illustrations. Physics is a later stage.
     public static class ProfessionNativeOrderedConstraintPose
     {
+        public readonly struct AnimationLayer
+        {
+            public readonly ProfessionNativeAnimationChannels Animation;
+            public readonly float Time, Weight;
+            public readonly bool Loop;
+            public AnimationLayer(ProfessionNativeAnimationChannels animation, float time, bool loop, float weight)
+            { Animation = animation; Time = time; Loop = loop; Weight = weight; }
+        }
+        public static void EvaluateStackWithAdditionalConstraints(ProfessionNativeAppearanceSkeleton skeleton,
+            IReadOnlyList<AnimationLayer> layers, IReadOnlyDictionary<int, Action> additional)
+        {
+            if (layers == null || layers.Count == 0) throw new ArgumentException("At least one original animation is required.");
+            foreach (var layer in layers)
+            {
+                Validate(skeleton, layer.Animation, layer.Time);
+                if (!float.IsFinite(layer.Weight) || layer.Weight < 0 || layer.Weight > 1)
+                    throw new ArgumentOutOfRangeException(nameof(layers));
+            }
+            var first = layers[0];
+            float position = first.Loop && first.Animation.Duration > 0 ? first.Time % first.Animation.Duration : first.Time;
+            var ik = first.Animation.Constraints.SampleIk(position, skeleton.SkinConstraints);
+            var transforms = first.Animation.Constraints.SampleTransforms(position, skeleton.SkinConstraints);
+            var paths = Paths(skeleton, first.Animation).Sample(position, skeleton.SkinConstraints);
+            skeleton.EvaluateNativeAnimation(first.Animation, first.Time, first.Loop);
+            for (int index = 1; index < layers.Count; index++)
+            {
+                var layer = layers[index];
+                position = layer.Loop && layer.Animation.Duration > 0 ? layer.Time % layer.Animation.Duration : layer.Time;
+                layer.Animation.Constraints.ApplyReplace(ik, transforms, position, layer.Weight);
+                Paths(skeleton, layer.Animation).ApplyReplace(paths, position, layer.Weight);
+                skeleton.ApplyMixNext(layer.Animation, position, layer.Weight);
+            }
+            Solve(skeleton, ik, transforms, paths, additional);
+        }
         private static readonly ConditionalWeakTable<ProfessionNativeAnimationChannels, ProfessionNativePathAnimation> PathChannels =
             new ConditionalWeakTable<ProfessionNativeAnimationChannels, ProfessionNativePathAnimation>();
         private static ProfessionNativePathAnimation Paths(ProfessionNativeAppearanceSkeleton skeleton, ProfessionNativeAnimationChannels animation)
             => PathChannels.GetValue(animation, value => new ProfessionNativePathAnimation(skeleton.Source, value.Name, value.OriginalBezierSegments));
         public static void EvaluateBeforePhysics(ProfessionNativeAppearanceSkeleton skeleton,
             ProfessionNativeAnimationChannels animation, float time, bool loop = true)
+            => EvaluateWithAdditionalConstraints(skeleton, animation, time, loop, null);
+
+        public static void EvaluateWithAdditionalConstraints(ProfessionNativeAppearanceSkeleton skeleton,
+            ProfessionNativeAnimationChannels animation, float time, bool loop,
+            IReadOnlyDictionary<int, Action> additional)
         {
             Validate(skeleton, animation, time);
             float position = loop && animation.Duration > 0 ? time % animation.Duration : time;
@@ -23,12 +62,19 @@ namespace Zjcs.Offline.ProfessionUI
             var transforms = animation.Constraints.SampleTransforms(position, skeleton.SkinConstraints);
             var paths = Paths(skeleton, animation).Sample(position, skeleton.SkinConstraints);
             skeleton.EvaluateNativeAnimation(animation, time, loop);
-            Solve(skeleton, ik, transforms, paths);
+            Solve(skeleton, ik, transforms, paths, additional);
         }
 
         public static void EvaluateMixNextBeforePhysics(ProfessionNativeAppearanceSkeleton skeleton,
             ProfessionNativeAnimationChannels outgoing, float outgoingTime, bool outgoingLoop,
             ProfessionNativeAnimationChannels incoming, float incomingTime, bool incomingLoop, float weight)
+            => EvaluateMixNextWithAdditionalConstraints(skeleton, outgoing, outgoingTime, outgoingLoop,
+                incoming, incomingTime, incomingLoop, weight, null);
+
+        public static void EvaluateMixNextWithAdditionalConstraints(ProfessionNativeAppearanceSkeleton skeleton,
+            ProfessionNativeAnimationChannels outgoing, float outgoingTime, bool outgoingLoop,
+            ProfessionNativeAnimationChannels incoming, float incomingTime, bool incomingLoop, float weight,
+            IReadOnlyDictionary<int, Action> additional)
         {
             Validate(skeleton, outgoing, outgoingTime);
             Validate(skeleton, incoming, incomingTime);
@@ -43,7 +89,7 @@ namespace Zjcs.Offline.ProfessionUI
             Paths(skeleton, incoming).ApplyReplace(paths, to, weight);
             skeleton.EvaluateNativeAnimation(outgoing, outgoingTime, outgoingLoop);
             skeleton.ApplyMixNext(incoming, to, weight);
-            Solve(skeleton, ik, transforms, paths);
+            Solve(skeleton, ik, transforms, paths, additional);
         }
 
         private static void Validate(ProfessionNativeAppearanceSkeleton skeleton,
@@ -52,6 +98,7 @@ namespace Zjcs.Offline.ProfessionUI
             if (skeleton == null || animation == null) throw new ArgumentNullException();
             if (skeleton.Source.Manifest != "884_156692" ||
                 !(skeleton.Source.Sex.StartsWith("partner-battle:", StringComparison.Ordinal)
+                    || skeleton.Source.Sex.StartsWith("partner-ui:", StringComparison.Ordinal)
                     || skeleton.Source.Sex.StartsWith("battle-monster:", StringComparison.Ordinal)) ||
                 !ReferenceEquals(animation.OriginalFields, skeleton.Source.GetAnimation(animation.Name)))
                 throw new ArgumentException("Original full-binary battle animation identity differs.");
@@ -68,15 +115,18 @@ namespace Zjcs.Offline.ProfessionUI
 
         private static void Solve(ProfessionNativeAppearanceSkeleton skeleton,
             ProfessionNativeConstraintAnimation.IkState[] ik, ProfessionNativeIdleTransform.Constraint[] transforms,
-            ProfessionNativePathAnimation.State[] paths)
+            ProfessionNativePathAnimation.State[] paths, IReadOnlyDictionary<int, Action> additional)
         {
             int[] orders = ik.Select(value => value.Order).Concat(transforms.Select(value => value.Order))
                 .Concat(paths.Select(value => value.Order))
+                .Concat(additional?.Keys ?? Enumerable.Empty<int>())
                 .OrderBy(value => value).ToArray();
             if (orders.Distinct().Count() != orders.Length)
                 throw new ArgumentException("Original partner constraint order is ambiguous.");
             foreach (int order in orders)
             {
+                if (additional != null && additional.TryGetValue(order, out var action))
+                { action(); continue; }
                 var chain = ik.FirstOrDefault(value => value.Order == order);
                 if (chain != null && chain.Bones.Length == 1)
                 {

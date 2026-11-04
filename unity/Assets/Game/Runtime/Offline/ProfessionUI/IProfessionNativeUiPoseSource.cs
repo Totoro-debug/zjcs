@@ -3,6 +3,10 @@ using Zjcs.Official.ProfessionUI;
 
 namespace Zjcs.Offline.ProfessionUI
 {
+    public interface IProfessionNativeUiPhysicsMovement
+    {
+        void UpdatePhysicsMovement();
+    }
     // The application owns sampling, constraints and animation transitions. The
     // Canvas endpoint consumes a completed pose and never substitutes a clip.
     public interface IProfessionNativeUiPoseSource

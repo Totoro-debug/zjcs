@@ -112,6 +112,7 @@ class PartnerStarGodBinding(PartnerDialogueEntryBinding):
             root = transform.m_GameObject.deref()
             prefab_path = self.native_path(source_guid, root)
             self.recovery.recover(root.read(check_read=False).m_Name, self.work / 'partner-native',
+                bundle=self.recovery.apk.provenance(root)['bundle'],
                 native_relative=prefab_path.relative_to(self.native).as_posix())
             native, _, data, record = self.recovery.outputs[-1]
             original_root, = [key for key, value in data['objectMap'].items() if value == data['root']]

@@ -12,7 +12,8 @@ namespace Zjcs.Offline.ProfessionUI
     // fields retain the original prefab values; no Spine runtime code is used.
     [RequireComponent(typeof(CanvasRenderer))]
     public sealed class ProfessionNativeUiGraphic : MaskableGraphic,
-        IProfessionAppearanceUIGraphic, IProfessionOffScreenGraphic, IProfessionFollowerGraphic, IProfessionAppearancePartGraphic
+        IProfessionAppearanceUIGraphic, IProfessionOffScreenGraphic, IProfessionFollowerGraphic, IProfessionAppearancePartGraphic,
+        IProfessionAppearanceUILiteGraphic
     {
         [Serializable] public sealed class MeshSettings
         {
@@ -63,6 +64,14 @@ namespace Zjcs.Offline.ProfessionUI
         public IProfessionAppearanceAnimationState AnimationState => State != null ? source?.AnimationState : null;
         public Material[] MaterialsMultipleCanvasRenderers { get; private set; } = Array.Empty<Material>();
         public Texture[] TexturesMultipleCanvasRenderers { get; private set; } = Array.Empty<Texture>();
+        public Texture OverrideTexture { get; set; }
+        public Dictionary<Texture, Texture> CustomTextureOverride { get; } = new Dictionary<Texture, Texture>();
+        public override Texture mainTexture => OverrideTexture ? OverrideTexture :
+            TexturesMultipleCanvasRenderers.FirstOrDefault() ?? base.mainTexture;
+        string IProfessionAppearanceUILiteGraphic.SkeletonDataName => skeletonDataAsset ?
+            skeletonDataAsset.name.Replace("_SkeletonData", "") : throw new InvalidOperationException("Original UI skeleton is unbound.");
+        bool IProfessionAppearanceUILiteGraphic.allowMultipleCanvasRenderers => allowMultipleCanvasRenderers;
+        void IProfessionAppearanceUILiteGraphic.UpdateMesh() => ApplyAnimation();
         public event Action<IProfessionAppearanceUIGraphic> OnCustomDemandLoading;
         public event Action<int, Mesh[], Material[], Texture[]> AssignMeshOverrideMultipleRenderers;
         public event Action<IProfessionSkinClipGraphic> OnMeshAndMaterialsUpdated;
@@ -93,8 +102,9 @@ namespace Zjcs.Offline.ProfessionUI
         {
             var settings = meshGenerator.settings;
             if (initialFlipX || initialFlipY || layoutScaleMode != 0 || enableSeparatorSlots || separatorSlotNames.Length != 0 ||
-                settings.tintBlack || settings.canvasGroupCompatible || settings.addNormals || settings.calculateTangents ||
-                settings.zSpacing != 0 || physicsPositionInheritanceFactor != Vector2.zero || physicsRotationInheritanceFactor != 0 ||
+                settings.tintBlack || (settings.canvasGroupCompatible && settings.pmaVertexColors) || settings.addNormals || settings.calculateTangents ||
+                settings.zSpacing != 0 || ((physicsPositionInheritanceFactor != Vector2.zero || physicsRotationInheritanceFactor != 0)
+                    && source is not IProfessionNativeUiPhysicsMovement) ||
                 updateTiming != 1)
                 throw new NotSupportedException("Restore additional original UI graphic flip/layout/separator/vertex/physics settings before using this prefab.");
         }
@@ -112,6 +122,7 @@ namespace Zjcs.Offline.ProfessionUI
         private void LateUpdate()
         {
             if (State == null || freeze || UpdateMode < 1) return;
+            (source as IProfessionNativeUiPhysicsMovement)?.UpdatePhysicsMovement();
             source.Apply(State, (unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime) * timeScale);
             if (UpdateMode >= 2) Build();
         }
@@ -126,7 +137,9 @@ namespace Zjcs.Offline.ProfessionUI
             {
                 var batch = batches.Batches[i]; meshes[i] = batch.Mesh;
                 materials[i] = source.MaterialForPage(batch.Page, batch.Blend);
-                textures[i] = source.TextureForPage(batch.Page);
+                var originalTexture = source.TextureForPage(batch.Page);
+                textures[i] = !allowMultipleCanvasRenderers && OverrideTexture ? OverrideTexture :
+                    originalTexture && CustomTextureOverride.TryGetValue(originalTexture, out var loaded) ? loaded : originalTexture;
                 if (!materials[i] || !textures[i]) throw new InvalidOperationException("Original UI atlas page/material is unbound: " + batch.Page);
             }
             MaterialsMultipleCanvasRenderers = materials; TexturesMultipleCanvasRenderers = textures;
