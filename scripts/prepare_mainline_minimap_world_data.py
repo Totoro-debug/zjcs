@@ -170,6 +170,8 @@ def build():
                 'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.SharedEntities.cs.meta',
                 'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.SharedWorld.cs',
                 'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.SharedWorld.cs.meta',
+                'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.SharedMaps.cs',
+                'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.SharedMaps.cs.meta',
                 'unity/Assets/Game/Editor/Map13MiniMap/Zjcs.Editor.Map13.MiniMap.asmdef',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/IMainlineMiniMapEntities.cs',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/IMainlineMiniMapEntities.cs.meta',

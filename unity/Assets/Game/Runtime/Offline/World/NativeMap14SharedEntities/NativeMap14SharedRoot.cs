@@ -26,13 +26,14 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
         public object AreaAgent { get; }
 
         public NativeMap14SharedRoot(NativeMap14SharedAssemblies shared, NativeMap14SharedConfiguration configuration,
-            NativeMap14SharedData data, long containerId)
+            NativeMap14SharedData data, long containerId, string containerBindingResource = "Map14/SharedRoot/container-binding")
         {
             this.shared = shared ?? throw new ArgumentNullException(nameof(shared));
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (data == null || !data.Loaded) throw new ArgumentException("Load the original map data first.", nameof(data));
             if (containerId <= 0) throw new ArgumentOutOfRangeException(nameof(containerId));
-            var catalog = Resources.Load<TextAsset>("Map14/SharedRoot/container-binding");
+            if (string.IsNullOrEmpty(containerBindingResource)) throw new ArgumentException("An original container table binding is required.", nameof(containerBindingResource));
+            var catalog = Resources.Load<TextAsset>(containerBindingResource);
             if (!catalog) throw new InvalidOperationException("Original container table binding is absent.");
             var binding = JsonUtility.FromJson<Binding>(catalog.text);
             var asset = Resources.Load<TextAsset>(binding.Resource);
@@ -44,7 +45,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             object table = constructor.Invoke(new[] { buffer });
             if ((int)buffer.GetType().GetProperty("Remaining").GetValue(buffer) != 0)
                 throw new InvalidOperationException("Original container table was not fully consumed.");
-            object info = ((IDictionary)tableType.GetProperty("DataMap").GetValue(table))[14];
+            object info = ((IDictionary)tableType.GetProperty("DataMap").GetValue(table))[data.MapClassId];
             if (info == null) throw new InvalidOperationException("Original map container definition is absent.");
 
             utilities = new NativeMap14SharedEntityUtilities(shared);
@@ -53,7 +54,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                 instantiate = shared.CommonType("EntityUtils").GetMethod("InstantiateEntity");
                 Container = Activator.CreateInstance(shared.CommonType("EcContainer"));
                 Set(Container, "Id", containerId);
-                Set(Container, "ClassId", 14);
+                Set(Container, "ClassId", data.MapClassId);
                 Set(Container, "Info", info);
                 int rootClassId = (int)info.GetType().GetField("RootEntityClassId").GetValue(info);
                 Root = Instantiate(data.GetCommonPrefab(rootClassId));

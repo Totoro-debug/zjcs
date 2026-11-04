@@ -15,6 +15,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
     {
         [Serializable] private sealed class Catalog
         {
+            public int MapClassId;
             public Entry[] Entries;
             public string LookupResource;
             public string LookupSha256;
@@ -63,14 +64,21 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
         public object Navigation { get; private set; }
         public object Placement { get; private set; }
         public bool Loaded { get; private set; }
+        public int MapClassId { get; }
 
-        public NativeMap14SharedData(NativeMap14SharedAssemblies shared, NativeMap14SharedConfiguration configuration)
+        public NativeMap14SharedData(NativeMap14SharedAssemblies shared, NativeMap14SharedConfiguration configuration,
+            int mapClassId = 14, string catalogResource = "Map14/SharedSerialization/catalog")
         {
             this.shared = shared ?? throw new ArgumentNullException(nameof(shared));
             manager = configuration?.Manager ?? throw new ArgumentNullException(nameof(configuration));
-            var asset = Resources.Load<TextAsset>("Map14/SharedSerialization/catalog");
+            if (mapClassId <= 0) throw new ArgumentOutOfRangeException(nameof(mapClassId));
+            if (string.IsNullOrEmpty(catalogResource)) throw new ArgumentException("An original map catalog is required.", nameof(catalogResource));
+            MapClassId = mapClassId;
+            var asset = Resources.Load<TextAsset>(catalogResource);
             if (!asset) throw new InvalidOperationException("Original shared map catalog is absent.");
             catalog = JsonUtility.FromJson<Catalog>(asset.text);
+            if ((catalog.MapClassId == 0 ? 14 : catalog.MapClassId) != MapClassId)
+                throw new ArgumentException("Original map catalog identity differs from the requested map.", nameof(catalogResource));
             foreach (var entry in catalog.Entries) entries.Add(entry.OriginalPath, entry);
             var lookup = Resources.Load<TextAsset>(catalog.LookupResource);
             if (!lookup) throw new InvalidOperationException("Original generated formatter lookup is absent.");
@@ -136,14 +144,18 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             // character prefab/view range. Let its original local loading path
             // populate the cache from the same verified lite payload.
             var pack=manager.GetParser(shared.CommonType("MapRootEntityLiteInfoPackParser"));
-            var arguments=new object[]{14,null};
+            if (Navigation == null || Placement == null
+                || (int)Navigation.GetType().GetField("MapClassId").GetValue(Navigation) != MapClassId
+                || (int)Placement.GetType().GetField("ClassId").GetValue(Placement) != MapClassId)
+                throw new InvalidOperationException("Original map navigation or placement identity differs.");
+            var arguments=new object[]{MapClassId,null};
             if(!(bool)pack.GetType().GetMethod("TryGetMapLiteData").Invoke(pack,arguments))
                 throw new InvalidOperationException("Original map lite pack lookup failed.");
             Loaded = true;
         }
 
         public object GetCommonPrefab(int classId) => DataCenter.GetType().GetMethod("GetCommonPrefab").Invoke(DataCenter, new object[] { classId });
-        public object GetContainerPrefab(int entityId) => DataCenter.GetType().GetMethod("GetContainerPrefab").Invoke(DataCenter, new object[] { 14, entityId });
+        public object GetContainerPrefab(int entityId) => DataCenter.GetType().GetMethod("GetContainerPrefab").Invoke(DataCenter, new object[] { MapClassId, entityId });
 
         private object Deserialize(Type type, byte[] bytes)
         {

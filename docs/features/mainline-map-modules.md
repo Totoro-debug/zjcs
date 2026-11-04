@@ -6,6 +6,8 @@
 
 ## 功能简介
 
+七图原始共享数据现在由同一加载器的地图编号、资源目录和容器表参数选择，既有调用的默认龙之国绑定保留。`NativeMap14SharedData`／`NativeMap14SharedRoot` 已可读取初始岛、森之国、山之国、泽之国、龙之国、通天塔和鲸背岛的原 EC、导航、MapInfoWrap、根组件及公共实体／动作模板。新资源保留所选884原字节与独立来源；共享 Console IL、formatter和 GameSettings 仍保留历史871身份，不声明整个程序集跨版本等价。隔离图形 Play Mode 已逐图启动原根，核对259,150个原始网格、11,174份放置模板的组件顺序／新实例／共享配置和对应默认实体模板查询。逐组件编码检查在原 `Info.Init` 前进行，避免把原 `AreaInfo.PosSet` 初始化缓存误判为字段变化；按所选官方 `SubStageStateInfoFormatter.Deserialize` 保留其读取但不赋回 `Select` 的行为，其余所选组件载荷重新编码与输入逐字节一致。主工程编译、`ProjectTools.Validate` 与原全屏／筛选／单分线HUD／白雾／区域时间回归通过，实际画面已查看。此项没有定义服务器初始实体状态、刷新或出生策略，也没有完成正式宿主恢复、完整标记和 Windows Player 接线。来源与显式资源地址见[七图共享数据凭据](../../assets/reference/official-map/mainline-shared-world-data-source-manifest.json)。
+
 小地图资源点宿主显式引用区域说明和原标签接口程序集，保证组合数据源所用类型可在正式世界程序集编译。
 
 主线地图通过 `OfficialMainlineMapRuntime.Begin(mapClassId, …)` 使用同一套运行时。`OfficialMainlineMapProfile` 登记 Map10–16；各图数据、表现和游玩完成范围以所属地图页为准，登记或可进入不表示整图完成。鲸背岛 Map16 已登记原版本、网格／身体／白雾、交互和战斗／剧情来源配置，但 `IsRuntimeEntryReady=false`，不能打开正式地图入口。地图资源、区域条件、剧情、实体和进度仍按地图 ID 隔离。新增地图须先迁移其官方数据与专属流程，再登记配置，不能仅替换地图 ID 后宣称地图完成。
