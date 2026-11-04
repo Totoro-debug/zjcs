@@ -25,6 +25,7 @@ namespace Zjcs.Offline.ProfessionUI
             public void Dispose() { Batches?.Dispose(); Destroy(Material); }
         }
         private readonly List<Part> parts = new List<Part>();
+        private readonly Dictionary<string, Transform> transforms = new Dictionary<string, Transform>(StringComparer.Ordinal);
         private readonly ProfessionNativeAnimatorPose pose;
         private bool disposed;
         public Transform Root { get; }
@@ -33,6 +34,8 @@ namespace Zjcs.Offline.ProfessionUI
         public IReadOnlyList<MeshRenderer> Renderers => parts.Select(part => part.Mesh.MeshRenderer).ToArray();
         public Dictionary<string, object> OriginalRow { get; }
         public ProfessionNativeAnimatorPose.AppliedFrame LastFrame { get; private set; }
+        public IReadOnlyDictionary<string, Transform> OriginalTransforms => transforms;
+        public PartnerNativeBattleAttachments Attachments { get; private set; }
 
         public PartnerNativeBattleActor(PartnerNativeBattleAssetCatalog catalog, int npcId, Transform parent, string name)
         {
@@ -41,7 +44,6 @@ namespace Zjcs.Offline.ProfessionUI
             Root = new GameObject(name).transform; Root.SetParent(parent, false);
             try
             {
-                var transforms = new Dictionary<string, Transform>(StringComparer.Ordinal);
                 foreach (var row in new[] { OriginalRow }.Concat(Arr(OriginalRow["parts"]).Select(Obj)))
                     parts.Add(CreatePart(catalog, row, Root, transforms));
                 var translator = Obj(parts[0].Settings["translator"]);
@@ -58,6 +60,9 @@ namespace Zjcs.Offline.ProfessionUI
                         mix.Outgoing.Animation, mix.Outgoing.Time, mix.Outgoing.Loop,
                         mix.Incoming.Animation, mix.Incoming.Time, mix.Incoming.Loop, mix.Weight), allowPartnerBlendTrees: true);
                 Animator.Rebind(); Animator.Update(0); ApplyPose();
+                Attachments = new PartnerNativeBattleAttachments(this, transforms, parts.Select(part =>
+                    new PartnerNativeBattleAttachments.RendererBinding(part.Mesh.transform, part.Skeleton,
+                        part.Settings, part.Material)).ToArray());
             }
             catch { Dispose(); throw; }
         }
@@ -85,6 +90,7 @@ namespace Zjcs.Offline.ProfessionUI
                 part.Mesh.Assign(part.Batches.Batches, batch => batch.Blend == 0 ? part.Material
                     : throw new NotSupportedException("Original partner non-normal material is unbound."));
             }
+            Attachments?.UpdateFollowers();
         }
 
         private static Part CreatePart(PartnerNativeBattleAssetCatalog catalog, Dictionary<string, object> row,
