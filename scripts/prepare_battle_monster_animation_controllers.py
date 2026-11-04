@@ -7,6 +7,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / ".tools/python-packages"))
 from current_component_schemas import CurrentSchemas
 from official_apk import Apk, ROOT
+from prepare_battle_live_monsters import entity_prefab_family
 from prepare_unity_profession_character_resources import meta
 from UnityPy.classes import PPtr
 
@@ -28,7 +29,8 @@ def build():
     try:
         for row in selected["models"]:
             entity = row["entityId"]
-            objects = apk.objects(f"prefabs_ecentity_fight_fightmonster_{entity}")
+            family = entity_prefab_family(apk, entity)
+            objects = apk.objects(f"prefabs_ecentity_fight_{family}_{entity}")
             component, = [obj for obj in objects if obj.type.name == "MonoBehaviour"
                 and obj.read(check_read=False).m_Script.read().m_ClassName == "AnimationController"]
             fields = schemas.read(component)

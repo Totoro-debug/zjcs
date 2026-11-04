@@ -32,6 +32,7 @@ namespace Zjcs.Editor.Combat
             UnityEditor.SceneManagement.EditorSceneManager.NewScene(
                 UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Single);
             SessionState.SetBool(Key, true);
+            SessionState.SetInt(Key + ".result", 1);
             EditorApplication.playModeStateChanged -= Mode;
             EditorApplication.playModeStateChanged += Mode;
             EditorApplication.EnterPlaymode();
@@ -39,15 +40,17 @@ namespace Zjcs.Editor.Combat
 
         private static void Mode(PlayModeStateChange state)
         {
-            if (state != PlayModeStateChange.EnteredPlayMode || !SessionState.GetBool(Key, false)) return;
+            if (!SessionState.GetBool(Key, false)) return;
+            if (state == PlayModeStateChange.EnteredPlayMode) EditorApplication.update += Start;
+            if (state != PlayModeStateChange.EnteredEditMode) return;
+            SessionState.SetBool(Key, false);
             EditorApplication.playModeStateChanged -= Mode;
-            EditorApplication.update += Start;
+            EditorApplication.Exit(SessionState.GetInt(Key + ".result", 1));
         }
 
         private static void Start()
         {
             EditorApplication.update -= Start;
-            SessionState.SetBool(Key, false);
             new GameObject("BattlePetHudProbe").AddComponent<Probe>().StartCoroutine(Exercise());
         }
 
@@ -80,8 +83,8 @@ namespace Zjcs.Editor.Combat
                 Debug.Log("BATTLE_PET_HUD_ACCEPTANCE_PASSED");
             }
             if (canvas) UnityEngine.Object.Destroy(canvas);
+            SessionState.SetInt(Key + ".result", failure == null ? 0 : 1);
             EditorApplication.isPlaying = false;
-            EditorApplication.delayCall += () => EditorApplication.Exit(failure == null ? 0 : 1);
         }
 
         private static void Verify(OfficialBattleHudView view)

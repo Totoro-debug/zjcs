@@ -270,7 +270,8 @@ def build():
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.Pet.cs',
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillQualityCatalog.cs',
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs',
-            'unity/Assets/Game/Editor/OfficialBattlePetHudAcceptance.cs')],
+            'unity/Assets/Game/Editor/OfficialBattlePetHudAcceptance.cs',
+            'unity/Assets/Game/Editor/OfficialBattlePetHostAcceptance.cs')],
         outputs=[identity(output), identity(output.with_name("battle-pet-hud-source-manifest.json"))],
         operation="Restore original GamePetSkillIcon field references without changing the HUD hierarchy or layout.")
     receipt = ROOT / "assets/reference/battle-hud/pet-widget-source-manifest.json"

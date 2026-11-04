@@ -185,8 +185,8 @@ namespace Zjcs.Combat.Official
             if (actor.PetEnergy != null && actor.PetEnergy.Enabled
                 && actor.PetEnergy.OwnerUnitId > 0)
             {
-                // Until the visible PetEntity is registered as its own unit, the owner turn is
-                // the deterministic offline equivalent of the pet's round-start callback.
+                // Recovery follows the checkpoint's configured energy clock. Existing
+                // offline pet assemblies use the owner as their transfer clock.
                 if (actor.PetEnergy.PetUnitId == actor.Id
                     || actor.PetEnergy.PetUnitId != actor.PetEnergy.OwnerUnitId)
                     FightBattlePetEnergyRuntime.RecoverAtPetRoundStart(actor);
@@ -987,7 +987,9 @@ namespace Zjcs.Combat.Official
                     : Math.Max(1, actor.Level);
                 FightBattleUnitState summon = isDoll
                     ? CreateVoodooDoll(actor, skill, pool, reference, position)
-                    : CreateSummonedUnit(actor, skill, pool, hit, level, position, reference);
+                    : hit.SummonConfigType == "FightHitSummonPetCfg"
+                        ? CreatePetSummon(actor, skill, pool, hit, position, reference)
+                        : CreateSummonedUnit(actor, skill, pool, hit, level, position, reference);
                 if (!CanPlaceSummon(summon)) continue;
 
                 units.Add(summon);

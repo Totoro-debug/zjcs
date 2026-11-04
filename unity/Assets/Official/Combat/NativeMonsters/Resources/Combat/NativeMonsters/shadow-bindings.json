@@ -30,6 +30,42 @@
           "order": -10
         }
       ]
+    },
+    {
+      "prefab": "9301",
+      "name": "ShadowBoneFollower",
+      "parent": "0templatePetEntity1x1_view",
+      "ancestors": [
+        {
+          "name": "0templatePetEntity1x1_view",
+          "active": true,
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      ],
+      "resource": "Combat/NativeMonsters/Shadows/Prefabs/9301",
+      "renderers": [
+        {
+          "path": "Shadow",
+          "layerIndex": 18,
+          "layerId": 1182434123,
+          "order": -10
+        }
+      ]
     }
   ]
 }

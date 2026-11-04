@@ -3,7 +3,8 @@ import hashlib
 import json
 from pathlib import Path
 
-from official_apk import ROOT
+from official_apk import Apk, ROOT
+from prepare_battle_live_monsters import entity_prefab_family
 from prepare_battle_character_shadows import main as shadows
 from prepare_battle_scene_appearance_runtime import identity, meta, write_changed
 from prepare_partner_native_battle_attachments import build
@@ -37,6 +38,7 @@ def main():
     existing_path = ROOT / 'unity/Assets/Game/Resources/Combat/character-shadow-bindings.json'
     existing = {row['prefab'] for row in json.loads(existing_path.read_bytes())['roles']}
     additions = []
+    apk = Apk.current()
     for row in rows:
         if str(row['entityId']) in existing:
             continue
@@ -46,7 +48,11 @@ def main():
         while shadow:
             path.insert(0, shadow['name'])
             shadow = nodes.get(shadow['parentKey'])
-        additions.append(dict(prefab=str(row['entityId']), parts=['/'.join(path)]))
+        family = entity_prefab_family(apk, row['entityId'])
+        additions.append(dict(prefab=str(row['entityId']), parts=['/'.join(path)],
+            sourcePrefab='Prefabs/EcEntity/Fight/' + ('FightPet' if family == 'fightpet' else 'FightMonster')
+                + '/' + str(row['entityId']) + '.prefab'))
+    apk.archive.close()
     destination = ROOT / 'unity/Assets/Official/Combat/NativeMonsters/Resources/Combat/NativeMonsters/Shadows'
     shadows(destination=destination,
         data=target.with_name('shadow-bindings.json'),

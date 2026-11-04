@@ -2225,6 +2225,7 @@ scripts/prepare_battle_pet_rules.py text eol=lf
 assets/reference/battle-hud/pet-widget-source-manifest.json text eol=lf
 assets/reference/battle-rules/pet-assembly-source-manifest.json text eol=lf
 unity/Assets/Game/Editor/OfficialBattlePetHudAcceptance.cs* text eol=lf
+unity/Assets/Game/Editor/OfficialBattlePetHostAcceptance.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterCatalog.BattlePets.cs* text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.Pet.cs* text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePetHudView.cs* text eol=lf
@@ -2234,6 +2235,20 @@ unity/Assets/Game/Resources/Combat/pet-battle-rules*.json* text eol=lf
 unity/Assets/Official/Combat/PetHUD.meta text eol=lf
 unity/Assets/Official/Combat/PetHUD/**/*.meta text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs text eol=lf
+scripts/prepare_battle_live_monsters.py text eol=lf
+scripts/prepare_battle_monster_animation_controllers.py text eol=lf
+scripts/prepare_battle_monster_attachments.py text eol=lf
+scripts/inspect_battle_pet_quality_versions.py text eol=lf
+scripts/test_battle_pet_entity.ps1 text eol=lf
+scripts/fixtures/battle_pet_entity_harness.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.PetEntities.cs* text eol=lf
+unity/Assets/Official/Combat/NativeMonsters/**/*.asset text eol=lf
+unity/Assets/Official/Combat/NativeMonsters/**/*.anim text eol=lf
+unity/Assets/Official/Combat/NativeMonsters/**/*.controller text eol=lf
+unity/Assets/Official/Combat/NativeMonsters/**/*.json text eol=lf
+unity/Assets/Official/Combat/NativeMonsters/**/*.meta text eol=lf
+unity/Assets/Official/Combat/NativeMonsters/**/*.shader text eol=lf
+unity/Assets/Official/Combat/NativeMonsters/textures/*.asset whitespace=-blank-at-eol
 # END shared battle pet byte identities
 
 # Keep current 3100 attachment data and independent bindings byte-stable.

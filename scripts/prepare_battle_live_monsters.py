@@ -50,7 +50,15 @@ def package(entity, scale, skeleton, regions):
             + struct.pack("<if", entity, scale) + block(encoded(skeleton)) + block(encoded(regions)))
 
 
-def build(roles):
+def entity_prefab_family(apk, entity):
+    families = [family for family in ("fightmonster", "fightpet")
+        if f"defaultpackage_assets_prefabs_ecentity_fight_{family}_{entity}.bundle" in apk.index]
+    if len(families) != 1:
+        raise ValueError("Bind an unambiguous original summon prefab family: " + str(entity))
+    return families[0]
+
+
+def build(roles, pet_roles=()):
     work = validation_directory()
     if not (work / ".zjcs-validation.json").is_file():
         raise ValueError("An owned monster validation workspace is required")
@@ -147,8 +155,14 @@ def build(roles):
     if roles is None:
         roles = sorted(int(name.rsplit("_", 1)[1].removesuffix(".bundle")) for name in apk.index
             if "prefabs_ecentity_fight_fightmonster_" in name and name.rsplit("_", 1)[1].removesuffix(".bundle").isdigit())
-    for entity in roles:
-        objects = apk.objects(f"prefabs_ecentity_fight_fightmonster_{entity}")
+    pet_roles = set(pet_roles)
+    if set(roles) & pet_roles:
+        raise ValueError("An entity cannot use both monster and pet prefabs")
+    for entity in sorted(set(roles) | pet_roles):
+        family = entity_prefab_family(apk, entity)
+        if (family == "fightpet") != (entity in pet_roles):
+            raise ValueError("Requested summon family differs from original prefab: " + str(entity))
+        objects = apk.objects(f"prefabs_ecentity_fight_{family}_{entity}")
         components = {}
         for obj in objects:
             if obj.type.name == "MonoBehaviour":
@@ -266,5 +280,7 @@ def build(roles):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--roles", help="Comma-separated original monster entity IDs; omitted means all numeric monster prefabs")
+    parser.add_argument("--pet-roles", default="", help="Comma-separated original pet entity IDs, recovered from fightpet prefabs")
     args = parser.parse_args()
-    build(sorted({int(value) for value in args.roles.split(",")}) if args.roles else None)
+    build(sorted({int(value) for value in args.roles.split(",")}) if args.roles else None,
+        [int(value) for value in args.pet_roles.split(",") if value])

@@ -45,6 +45,7 @@ namespace Zjcs.Editor
                 if (!player.Skills.Skills.Any(value => value.ClassId == 10014))
                     player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = 10014, Rank = 1 });
                 ConfigureEquipmentBattleProfile(player, catalog.RankOfSubRank(player.SubRank));
+                Combat.OfficialBattlePetHostAcceptance.Configure(player);
             }, "battle-host-acceptance-fixture").IsApplied, "Could not prepare the isolated battle profile.");
             var progression = new OfflineCharacterProgressionService(profile, catalog);
             progression.AttachSkillRules(assets.LoadSkillRules(), assets.LoadSkillRecommendations().recommendations);
@@ -523,6 +524,7 @@ namespace Zjcs.Editor
                 if (start == null) yield return null;
             }
             yield return SettleUi();
+            Combat.OfficialBattlePetHostAcceptance.Observe(controller);
             yield return Capture(output, name + "-preparation");
             // Compare the HUD anchor and scene timeline after this frame's LateUpdate.
             yield return new WaitForEndOfFrame();

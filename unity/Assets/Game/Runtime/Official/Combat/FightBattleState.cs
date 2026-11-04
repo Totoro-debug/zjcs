@@ -101,8 +101,8 @@ namespace Zjcs.Combat.Official
         public int SkillLevel = 1;
         public int SkillSubRank;
         public List<FightPropertyValue> SkillProperties = new List<FightPropertyValue>();
-        // The entityized pet does not occupy the turn queue, but its source type and
-        // inherited properties are required when the entity skill is released.
+        // The transfer caster and configured FightHitSummonPetCfg entity both use
+        // these assembled pet properties and saved active/passive skills.
         public List<FightPropertyValue> EntityProperties = new List<FightPropertyValue>();
         public List<FightBattleSkillDefinition> EntityActiveSkills = new List<FightBattleSkillDefinition>();
         public List<int> EntityPassiveStatusIds = new List<int>();
