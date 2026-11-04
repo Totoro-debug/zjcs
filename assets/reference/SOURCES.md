@@ -26,6 +26,8 @@
 
 玩家本体逐帧物理沿用当前同版原 `PlayerModel_Game` 层级与男女完整骨骼输入；原组件、更新／不可见／混合及零宿主继承字段、独立接线与验证入口身份见[本体逐帧物理来源](battle-animation/player-live-physics-source-manifest.json)，记录入口为 `scripts/record_battle_player_live_physics.py`。不新增素材载荷，不读取动画 SDK 实现；功能及验证范围在[战斗执行](../../docs/features/battle-execution.md)维护。
 
+原Game人物装配接线复用同版 `PlayerModel_Game`、四项男女战士／法师控制器、`PlayerAnimatorAppearance`／`AppearanceAddressUtils`／`AppearanceMecanim` 等原应用代码；原组件和控制器身份、接线与记录入口见[原Game人物装配来源](battle-animation/player-scene-bindings-source-manifest.json)，由 `scripts/record_battle_player_scene_bindings.py` 记录，不新增素材载荷。实际功能及验证范围在[战斗执行](../../docs/features/battle-execution.md)维护。
+
 人物 Game prefab 与地面／武器裁剪取所选 `884_156692` 的原 `PlayerModel_Game` 三节点对象、已核验原生导出及已核验官方程序集／三份应用源码；原载荷、完整字段、默认空 Animator、脚本映射、转换输出及加载绑定的 SHA256 见[人物 prefab 与裁剪来源](battle-animation/player-model-prefab-source-manifest.json)，入口为 `scripts/prepare_battle_player_model_prefab.py`。复用当前男女原骨骼、Low／High 纹理和既有独立原生绘制端点，无新增自绘素材或完整素材快照；实现与验证边界见[技能](../../docs/features/skills.md)。
 
 战斗技能演出相机来自所选 `884_156692` 原生 FightStage 导出中的231个战场 prefab；逐文件SHA256与原生导出凭据核对，保留原层级、变换、激活标记、完整镜头／过渡／优先级及 CameraOffset 字段，并核实原管线没有 body／aim／noise、Follow／LookAt 或 framing／recomposer 代理。原 prefab、`GameCameraController`／`FightCamera`／演出节点／输入封锁源码及生成 JSON／meta 哈希见[演出相机来源](battle-scenes/performance-camera-source-manifest.json)，提取入口为 `scripts/prepare_battle_performance_camera.py`。原普通相机仍保留既有历史来源，未重标为当前版本；本批没有新增美术或完整素材快照，行为与验证范围见[战斗执行](../../docs/features/battle-execution.md)。

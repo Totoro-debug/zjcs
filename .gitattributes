@@ -2208,3 +2208,8 @@ unity/Assets/Official/World/Map/14/SharedRuntime/hero-shared-prefabs.json text e
 scripts/record_battle_player_live_physics.py text eol=lf
 assets/reference/battle-animation/player-live-physics-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMonsterAnimationController.cs* text eol=lf
+
+# Keep original Game-player bindings and provenance byte-stable.
+scripts/record_battle_player_scene_bindings.py text eol=lf
+assets/reference/battle-animation/player-scene-bindings-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionScenePlayerBindings.cs* text eol=lf

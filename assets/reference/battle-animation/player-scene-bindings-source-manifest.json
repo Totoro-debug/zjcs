@@ -1,0 +1,125 @@
+{
+  "manifest": "884_156692",
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "application": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/PlayerPhase.cs",
+      "sha256": "8b7193f75eada4bbc0220671773192e11dd0c9a7703da9a846f55c6e30799430"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceAddressUtils.cs",
+      "sha256": "97d0805f9ab9c32bddbbd4cee9321acae6653441c512f539b52c1320ec95be22"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem/PlayerAnimatorAppearance.cs",
+      "sha256": "178f3f5496a25dc8bc552de29ce6233a940f334deab4e72ecb2ac0fdba76eb1d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceMecanim.cs",
+      "sha256": "2fdb3d405507f02643fd3f03497c40c90c6e5cb2c23372046dcac83c9ba67e41"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem/PlayerAppearance.cs",
+      "sha256": "42066169c856b75de01208e36413022c144d37a2b596360bce2b3086b4fdcefb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ECFightRoleCharacterView.cs",
+      "sha256": "6845b6511d5aae48ab3818735b8452f1c152009e2fc8ee22a9521ff415bccac0"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/battle-animation/player-model-prefab-source-manifest.json",
+      "sha256": "16dabd3f205fa045a4e960dc2dd3eb489f0af0e4b04ab6e1e4ee66ba168f0acc"
+    },
+    {
+      "path": "assets/reference/battle-animation/scene-player-animator-source-manifest.json",
+      "sha256": "84c6459a7e0b4ddf9510d187699519449ddca681ed5025a02a87273f39191150"
+    },
+    {
+      "path": "assets/reference/battle-animation/game-animators-source-manifest.json",
+      "sha256": "e3444117d2b5423d54ef6f2e730559ae9445b0741b68290b852cab87883f9a73"
+    },
+    {
+      "path": "assets/reference/battle-animation/player-live-physics-source-manifest.json",
+      "sha256": "646558611edbbe4b9c16b3214fc0f9712f477e18bc27d182d7d64ca7b185b589"
+    }
+  ],
+  "hierarchy": {
+    "path": "unity/Assets/Official/Combat/SceneCharacterSources/PlayerModel_Game-source.json",
+    "sha256": "eadc90ce5c44c08bc54ef39b107ccd77626db193df30bdf406f109c4f1b7a517"
+  },
+  "controllers": [
+    {
+      "path": "unity/Assets/Official/Combat/GameAnimators/Resources/Combat/GameAnimators/Anim/Female_Fashi_Controller.overrideController",
+      "sha256": "934dfca6a824505d3241193e38b5b03d0be1daaaf01a6ea25ead3c3cf044b5d0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/GameAnimators/Resources/Combat/GameAnimators/Anim/Female_Zhanshi_Controller.overrideController",
+      "sha256": "fd832fa4ecfefed1615b3148214eb8e9090a61a769458ff7041eeada63d028d7"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/GameAnimators/Resources/Combat/GameAnimators/Anim/Male_Fashi_Controller.controller",
+      "sha256": "d28f5c9059ce71fbb1903fd0449cef889f7be38bf3a2841b257f028f18d30d93"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/GameAnimators/Resources/Combat/GameAnimators/Anim/Male_Zhanshi_Controller.controller",
+      "sha256": "845a67e683d5360ed831fbda6adc347587a1447f732d96af66ccad4bd1ccf483"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionScenePlayerBindings.cs",
+      "sha256": "ac437b79434b58c6c5824ff23a476af8af62b61cd1e1f02a08f9b922dc4c3a8b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionScenePlayerBindings.cs.meta",
+      "sha256": "7a22a02fe46799d5a5edf38f583ec481605552651a546b19a52b3b1cbb9177d3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.PlayerAppearance.cs",
+      "sha256": "d848c6f3096e5b0812baffe1398013985073e3c714e17ca9b53fe33bab05b748"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.PlayerAppearance.cs.meta",
+      "sha256": "73dcdf970aaaec5d67f477fa5124d29edac155389e1ee5ed14e443f538afd314"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeScenePlayerPlayback.cs",
+      "sha256": "e71dbd97961404b89c738a99af44b179616e3d14ac74fcc9cba2c5e73b6851d2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeScenePlayerPlayback.cs.meta",
+      "sha256": "9638e194ff584b207e821dd0e2068a490b59781885801e17fde34016046df4d2"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerBindings.cs",
+      "sha256": "ab53ece107522d97395ae11c466c725b9fa588c4946a5db9c8dec571cdad50aa"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerBindings.cs.meta",
+      "sha256": "9a46d55292630a719159f1789a7bd32c01da35fc80f9987c3555c7bcfb465daa"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs",
+      "sha256": "926a146633364ba76e3d9bf211e7f0619f6d8ce992251e3b6b328b7d2912b1fc"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs.meta",
+      "sha256": "2d5d88da76093fb2985f3cbe852610a6fa9426a9696c4cfe6c58a36fdf82707b"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_battle_player_scene_bindings.py",
+    "sha256": "4e2143647ba7330b3ce1f4ea72cb133ae57fbd59e05ef2f6f7c34df62f871808"
+  },
+  "binding": "Bind the inactive original PlayerModel_Game graph and its serialized skin/loader, renderer, part slot and sorting references. Reuse original PlayerAnimatorAppearance, saved-player projection and character/part refresh. Bind physics once on first skin setup; an unevaluated initial Animator uses completed setup constraints with zero elapsed time. The original RefreshAppearance then evaluates Animator.Update(0); subsequent real LateUpdate samples it. Repeated appearance events and disable/pool refresh retain the same physical owner.",
+  "limits": [
+    "An injectable production binding for the existing Game model; the main battle host still must supply its local-player/material/effect/pool services and the original outer 3100 entity hierarchy.",
+    "The rendered lifecycle fixture uses real original Game prefab/controllers and an isolated local-player profile. Its effect service rejects optional external appearance effects; this is not coverage of every wardrobe/effect/skill.",
+    "No UI input, disk save, complete original ECS character view, full battle-HP event routing or Windows Player delivery is claimed."
+  ]
+}

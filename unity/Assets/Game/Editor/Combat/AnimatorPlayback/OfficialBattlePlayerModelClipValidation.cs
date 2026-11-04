@@ -30,6 +30,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".weapon-prefabs", false);
             SessionState.SetBool(Key + ".weapon-host-motion", false);
             SessionState.SetBool(Key + ".player-live-physics", false);
+            SessionState.SetBool(Key + ".player-appearance-bindings", false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")))
@@ -115,6 +116,8 @@ namespace Zjcs.Editor.Combat
                 ProfessionAppearanceTextureBindings.Current = new OfflineProfessionBattleSceneTextures(catalog, textures, weaponTextures, materialBindings);
                 try
                 {
+                    if (SessionState.GetBool(Key + ".player-appearance-bindings", false))
+                        yield return CheckPlayerAppearanceBindings(prefab, catalog, weapons, manager, materialBindings, config, resolver);
                     foreach (var model in catalog.Models)
                     foreach (int profession in new[] { 1, 10 })
                     {

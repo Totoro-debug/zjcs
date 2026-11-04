@@ -18,6 +18,9 @@ namespace Zjcs.Offline.ProfessionUI
                 Solve, SolveMix, originalBezierSegments: true);
         }
 
+        internal void ApplySetup(ProfessionNativeAppearanceSkeleton state)
+            => Physics(state).Apply(state, null, 0, false, 0, updatePhysics: false);
+
         private void Solve(ProfessionNativeAppearanceSkeleton state, ProfessionNativeAnimationChannels motion, float time, bool loop)
         {
             float delta = DeltaTime; DeltaTime = 0;
