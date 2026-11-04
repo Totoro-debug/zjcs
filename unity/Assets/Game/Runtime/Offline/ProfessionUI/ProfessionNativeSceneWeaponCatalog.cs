@@ -5,12 +5,14 @@ using UnityEngine;
 namespace Zjcs.Offline.ProfessionUI
 {
     // Lossless scene prefab inputs plus explicit reused native dependencies.
-    // Source records are not yet production scene prefabs.
+    // Legacy diagnostic sources and complete native prefab entries coexist.
     public sealed class ProfessionNativeSceneWeaponCatalog : ScriptableObject
     {
         [Serializable] public sealed class Entry
         {
             public string Path, Guid, InitialSkin, InitialAnimation;
+            public string Skin;
+            public GameObject Prefab;
             public TextAsset Hierarchy;
             public Material OriginalMaterial;
         }
@@ -21,13 +23,15 @@ namespace Zjcs.Offline.ProfessionUI
         public ProfessionNativeWeaponTextureResources Textures => textures ? textures : throw new InvalidOperationException("Original scene weapon texture resources are unbound.");
         public Entry Find(string skin)
         {
-            foreach (var entry in entries) if (entry.InitialSkin == skin) return entry;
+            foreach (var entry in entries)
+                if ((string.IsNullOrEmpty(entry.Skin) ? entry.InitialSkin : entry.Skin) == skin) return entry;
             throw new NotSupportedException("Original scene weapon prefab is not converted: " + skin);
         }
         public Entry FindPath(string path)
         {
             foreach (var entry in entries)
-                if (ProfessionAppearancePartPaths.GetPlayerPartPrefabRenderer(PlayerPartMode.Integrated, entry.InitialSkin) == path)
+                if (ProfessionAppearancePartPaths.GetPlayerPartPrefabRenderer(PlayerPartMode.Integrated,
+                    string.IsNullOrEmpty(entry.Skin) ? entry.InitialSkin : entry.Skin) == path)
                     return entry;
             throw new NotSupportedException("Original independent scene part path is not converted: " + path);
         }

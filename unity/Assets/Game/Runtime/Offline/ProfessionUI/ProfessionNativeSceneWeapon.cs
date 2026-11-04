@@ -32,6 +32,7 @@ namespace Zjcs.Offline.ProfessionUI
         public SkeletonRendererFollower Follower => Part.mSkeletonFollower as SkeletonRendererFollower;
         private IDisposable placement;
         private ProfessionNativeSceneRenderer target;
+        private bool nativePrefab;
 
         public static ProfessionNativeSceneWeapon Create(ProfessionNativeSceneWeaponCatalog catalog, string skin,
             Transform parent, ProfessionNativeSceneRenderer target, IProfessionAppearanceUILiteBindings materials, IProfessionAppearancePartBindings parts,
@@ -39,6 +40,7 @@ namespace Zjcs.Offline.ProfessionUI
         {
             if (!catalog || !parent || !target || materials == null || parts == null) throw new ArgumentNullException();
             var entry = catalog.Find(skin);
+            if (entry.Prefab) return CreateNative(catalog, entry, skin, parent, target, materials, parts, poseProducer);
             var source = JsonUtility.FromJson<Hierarchy>(entry.Hierarchy.text);
             if (source.nodes.Length != 4 || source.nodes[0].name != skin + "_Integrated"
                 || source.nodes[1].name != skin || source.nodes[2].name != "Spine" || source.nodes[3].name != "Effect")
@@ -97,13 +99,46 @@ namespace Zjcs.Offline.ProfessionUI
             catch { result.Dispose(); throw; }
         }
 
+        private static ProfessionNativeSceneWeapon CreateNative(ProfessionNativeSceneWeaponCatalog catalog,
+            ProfessionNativeSceneWeaponCatalog.Entry entry, string skin, Transform parent, ProfessionNativeSceneRenderer target,
+            IProfessionAppearanceUILiteBindings materials, IProfessionAppearancePartBindings parts,
+            IProfessionNativeSceneWeaponPoseProducer poseProducer)
+        {
+            var result = new ProfessionNativeSceneWeapon { nativePrefab = true };
+            var staging = new GameObject("Native weapon binding staging"); staging.SetActive(false);
+            staging.transform.SetParent(parent, false);
+            try
+            {
+                result.GameObject = Object.Instantiate(entry.Prefab, staging.transform, false);
+                result.GameObject.name = entry.Prefab.name;
+                result.Renderer = result.GameObject.GetComponentsInChildren<ProfessionNativeSceneWeaponRenderer>(true).Single();
+                result.Renderer.Configure(catalog, skin, poseProducer); result.Renderer.Initialize(false, false);
+                foreach (var lite in result.GameObject.GetComponentsInChildren<AppearanceRendererLite>(true)) lite.Configure(materials);
+                result.Part = result.GameObject.GetComponent<AppearanceSkeletonPart>();
+                if (!result.Part || result.Part.Skeleton != result.Renderer.gameObject || result.Part.SkinType != SkinType.pWeapon)
+                    throw new InvalidOperationException("Original native weapon part references disagree.");
+                result.Part.ConfigurePart(parts); result.PrepareTarget(target);
+                // Every serialized source transform, active flag, component and
+                // internal reference is retained. All bindings precede Awake.
+                result.GameObject.transform.SetParent(parent, false);
+                result.Renderer.UpdateAnimationAndMesh();
+                return result;
+            }
+            catch { result.Dispose(); throw; }
+            finally { if (Application.isPlaying) Object.Destroy(staging); else Object.DestroyImmediate(staging); }
+        }
+
         internal void PrepareTarget(ProfessionNativeSceneRenderer next)
         {
             if (target == next && placement != null) return;
             Detach(); target = next ? next : throw new ArgumentNullException(nameof(next));
             foreach (var follower in GameObject.GetComponentsInChildren<SkeletonRendererFollower>(true))
             {
-                follower.SkeletonRenderer = follower.gameObject == GameObject ? (Component)target : Renderer;
+                // Native internal followers keep their serialized target and
+                // original InitializeOnAwake path. Only the part's external
+                // follower changes when attached to another character.
+                if (nativePrefab && follower != Follower) continue;
+                follower.SkeletonRenderer = nativePrefab || follower.gameObject == GameObject ? (Component)target : Renderer;
                 follower.Initialize();
             }
             placement = target.BindScenePart(Part);

@@ -26,6 +26,8 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".high-textures", false);
             SessionState.SetBool(Key + ".weapon-physics", false);
             SessionState.SetBool(Key + ".weapon-bones", false);
+            SessionState.SetBool(Key + ".weapon-low", false);
+            SessionState.SetBool(Key + ".weapon-prefabs", false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")))
@@ -73,7 +75,8 @@ namespace Zjcs.Editor.Combat
                 var config = Resources.Load<AppearanceConfig>("Combat/SceneAppearance/AppearanceConfig");
                 var resolver = new ProfessionAppearanceResolver(ProfessionAppearanceTables.Load(Resources.Load<TextAsset>("Combat/SceneAppearance/appearance-tables").text));
                 var weaponTextures = weapons.Textures;
-                bool useHighPipeline = SessionState.GetBool(Key + ".high-textures", false) || SessionState.GetBool(Key + ".weapon-bones", false);
+                bool useHighPipeline = SessionState.GetBool(Key + ".high-textures", false)
+                    || SessionState.GetBool(Key + ".weapon-bones", false) || SessionState.GetBool(Key + ".weapon-prefabs", false);
                 using var highPipeline = useHighPipeline
                     ? Resources.Load<Zjcs.Presentation.Combat.OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets").Enter() : null;
                 if (useHighPipeline)
@@ -95,6 +98,7 @@ namespace Zjcs.Editor.Combat
                         Object.Destroy(warmup); RenderTexture.ReleaseTemporary(warmupTarget);
                     }
                     if (SessionState.GetBool(Key + ".high-textures", false)) CheckHighTextures();
+                    if (SessionState.GetBool(Key + ".weapon-low", false)) CheckHighTextures(low: true);
                     if (SessionState.GetBool(Key + ".weapon-physics", false)) CheckWeaponPhysics();
                     if (SessionState.GetBool(Key + ".weapon-bones", false)) yield return CheckWeaponBoneOverrides();
                     weaponTextures = Resources.Load<ProfessionNativeWeaponTextureResources>("Combat/Weapons/texture-resources");
@@ -200,8 +204,13 @@ namespace Zjcs.Editor.Combat
                             var noWeapon = Object.Instantiate(prefab, staging.transform, false);
                             noWeapon.transform.Find("Dimianzhezhao").GetComponent<SkeletonRendererWeaponClipSet>().SetClipHeight(0);
                             Object.Destroy(noWeapon);
+                            if (SessionState.GetBool(Key + ".weapon-prefabs", false) && model.Sex == "female")
+                                yield return CheckNativeWeaponPrefabs(native, handler, parts, group);
                             Object.Destroy(setter); yield return null;
-                            Require(material, "lite-owned material survives clipping-component destruction");
+                            // The complete-prefab fixture replaces and releases
+                            // this weapon; the ordinary clipping probe retains it.
+                            if (!SessionState.GetBool(Key + ".weapon-prefabs", false) || model.Sex != "female")
+                                Require(material, "lite-owned material survives clipping-component destruction");
                         }
                         finally
                         {

@@ -79,14 +79,20 @@ namespace Zjcs.Offline.ProfessionUI
                 || native.BoneCount != State.Source.BoneCount || native.ConstraintCount != State.Source.Constraints.Count)
                 throw new ArgumentException("Original skin does not belong to this independent weapon.", nameof(skin));
             foreach (var attachment in native.Entries.Select(e => e.Attachment).OfType<ProfessionNativeRenderAttachment>())
-            { CheckPage(attachment.Page); yield return entry.OriginalMaterial; }
+                yield return PageMaterial(attachment.Page);
         }
 
-        private void CheckPage(string page)
+        private Material PageMaterial(string page)
         {
-            if (!entry.OriginalMaterial || !entry.OriginalMaterial.mainTexture
-                || entry.OriginalMaterial.mainTexture.name != page + "_placeholder")
-                throw new NotSupportedException("Bind the actual original independent weapon atlas page: " + page);
+            if (entry.OriginalMaterial && entry.OriginalMaterial.mainTexture
+                && entry.OriginalMaterial.mainTexture.name == page + "_placeholder") return entry.OriginalMaterial;
+            // Source MeshRenderer material slots can be null before skeleton
+            // initialization. Complete prefabs resolve each drawn page from the
+            // exact original atlas, as opposed to inventing a placeholder slot.
+            if (entry.Prefab)
+                return Enumerable.Range(0, catalog.Textures.Atlas.MaterialCount).Select(catalog.Textures.Atlas.MaterialAt)
+                    .Single(m => m.mainTexture && m.mainTexture.name == page + "_placeholder");
+            throw new NotSupportedException("Bind the actual original independent weapon atlas page: " + page);
         }
 
         public void PlayAnimation(string name, bool loop)
@@ -104,12 +110,13 @@ namespace Zjcs.Offline.ProfessionUI
             // changing its rendering state. Complete the live animation again
             // so a skin/setup reset cannot leave the bones in their rest pose.
             poses.Apply(State);
-            batches.Build(State.Pose, State.CreateDrawSlots(), settings.UseClipping, settings.PmaVertexColors, allowConcaveClipping: true);
+            batches.Build(State.Pose, State.CreateDrawSlots(), settings.UseClipping, settings.PmaVertexColors,
+                zSpacing: settings.ZSpacing, allowConcaveClipping: true);
             Main.Assign(batches.Batches, batch =>
             {
                 if (batch.Blend != 0) throw new NotSupportedException("Bind the original independent weapon slot blend material.");
-                CheckPage(batch.Page);
-                return CustomMaterialOverride.TryGetValue(entry.OriginalMaterial, out var replacement) ? replacement : entry.OriginalMaterial;
+                var material = PageMaterial(batch.Page);
+                return CustomMaterialOverride.TryGetValue(material, out var replacement) ? replacement : material;
             });
             Main.MeshRenderer.enabled = settings.Enabled;
             OnCustomDemandLoading?.Invoke(this);

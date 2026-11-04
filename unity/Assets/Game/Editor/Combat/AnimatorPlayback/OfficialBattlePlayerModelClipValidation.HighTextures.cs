@@ -32,22 +32,28 @@ namespace Zjcs.Editor.Combat
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 1800);
         }
 
-        private static void CheckHighTextures()
+        public static void RunLowTextures()
+        {
+            RunHighTextures(); SessionState.SetBool(Key + ".weapon-low", true);
+        }
+
+        private static void CheckHighTextures(bool low = false)
         {
             var work = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
-            var fixture = JsonUtility.FromJson<HighCases>(File.ReadAllText(Path.Combine(work, "weapon-high-texture-cases.json")));
-            var resources = Resources.Load<ProfessionNativeWeaponTextureResources>("Combat/Weapons/texture-resources");
+            var fixture = JsonUtility.FromJson<HighCases>(File.ReadAllText(Path.Combine(work, low ? "weapon-low-texture-cases.json" : "weapon-high-texture-cases.json")));
+            var resources = Resources.Load<ProfessionNativeWeaponTextureResources>(low ? "Combat/Weapons/full-texture-resources" : "Combat/Weapons/texture-resources");
             var config = Resources.Load<AppearanceConfig>("Combat/SceneAppearance/AppearanceConfig");
             Require(resources && resources.Loader && resources.Atlas && resources.ManagerConfig, "complete selected weapon High native graph");
             Require(resources.Loader.placeholderMap.Length == fixture.mappings.Length && fixture.mappings.Length == 398
                 && resources.Atlas.MaterialCount == 398 && fixture.addresses.Length == 398 && fixture.textures.Length == 398,
                 "complete original weapon High inventory");
-            Require(resources.TextureGuids.OrderBy(g => g).SequenceEqual(fixture.addresses.Select(a => a.Guid).OrderBy(g => g)),
+            Require((low ? fixture.addresses.Select(a => a.Guid).All(g => resources.TextureGuids.Contains(g))
+                : resources.TextureGuids.OrderBy(g => g).SequenceEqual(fixture.addresses.Select(a => a.Guid).OrderBy(g => g))),
                 "all original High GUIDs are explicitly bound");
-            var loader = resources.Loader;
-            Require(loader.LevelOfResolution == LevelOfResolution.High && loader.maxPlaceholderSize == 32
+            var loader = low ? (YooAssetTextureLoader)resources.LoadPath("Assets/AppearanceAssets/Character/pWeapon/primaryWeapon_TextureLoader_Low.asset") : resources.Loader;
+            Require(loader.LevelOfResolution == (low ? LevelOfResolution.Low : LevelOfResolution.High) && loader.maxPlaceholderSize == 32
                 && loader.unloadAfterSecondsUnused == 60 && loader.PlaceholderPath == "Atlas/Placeholder"
-                && loader.TargetTexturePath == "Atlas/High" && loader.DyeTexturePath == "" && !loader.skeletonDataAsset,
+                && loader.TargetTexturePath == (low ? "Atlas/Low" : "Atlas/High") && loader.DyeTexturePath == "" && !loader.skeletonDataAsset,
                 "selected original High loader settings");
             var pages = new Dictionary<string, Material>(StringComparer.Ordinal);
             foreach (var row in fixture.mappings)
@@ -137,7 +143,7 @@ namespace Zjcs.Editor.Combat
                     {
                         Require(shared.All(m => m && m.mainTexture && !m.mainTexture.name.EndsWith("_placeholder", StringComparison.Ordinal)),
                             "actual original manager supplies High art for every native weapon page: " + skin);
-                        CaptureHighWeapon(batches, shared, skin, work);
+                        CaptureHighWeapon(batches, shared, (low ? "low-" : "") + skin, work);
                     }
                     finally { assets.ReturnLoaderSharedMaterials(loader, source, true); }
                     Require(firstOwner.LoadedResourceTextureCount == 0 && source.All(m => m.mainTexture.name.EndsWith("_placeholder", StringComparison.Ordinal)),
@@ -145,7 +151,7 @@ namespace Zjcs.Editor.Combat
                 }
             }
             finally { ProfessionAppearanceTextureBindings.Current = previous; ShaderUtil.allowAsyncCompilation = previousAsync; }
-            Debug.Log("Complete selected weapon High passed: 398 original mappings/GUIDs, " + fixture.textures.Length + " lazy native textures, "
+            Debug.Log("Complete selected weapon " + (low ? "Low" : "High") + " passed: 398 original mappings/GUIDs, " + fixture.textures.Length + " lazy native textures, "
                 + mipCount + " exact GPU mip hashes (" + bytes + " bytes), dual-owner/refcount/type guards and original manager release; 390 original setup-geometry weapon captures. Weapon animation/physics, full particle/sprite prefabs and production factory remain separate.");
         }
 

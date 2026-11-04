@@ -34,7 +34,7 @@ namespace Zjcs.Offline.ProfessionUI
 
         public static ProfessionNativeSceneRendererSettings LoadWeapon(TextAsset source)
         {
-            var result = Load(source, "Spine", "Spine.Unity.SkeletonAnimation", 1, true);
+            var result = Load(source, "Spine", "Spine.Unity.SkeletonAnimation", 1, true, true);
             if (Convert.ToSingle(result.skeleton["timeScale"]) != 1
                 || Int(result.skeleton, "updateTiming") != 1 || Flag(result.skeleton, "unscaledTime")
                 || result.UpdateWhenInvisible != 0)

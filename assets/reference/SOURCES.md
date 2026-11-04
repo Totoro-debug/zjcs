@@ -8,6 +8,8 @@
 
 武器骨骼覆盖取所选 `884_156692` 的官方应用源码与APK优先解析的场景主武器配置，并核对同版原生导出390份prefab哈希；15份相关prefab保留18项原旋转覆盖字段及空Controller引用。原始对象、应用源码、转换工具与显式原生局部回调绑定的哈希见[骨骼覆盖来源](battle-animation/weapon-bone-overrides-source-manifest.json)，提取入口为 `scripts/prepare_battle_weapon_bone_overrides.py`，不读取或复制动画SDK实现；功能与验证边界在[战斗执行](../../docs/features/battle-execution.md)维护。
 
+完整场景武器prefab取同版 `884_156692`：APK优先读取390份原层级与组件对象，同版已核验原生导出恢复1739项依赖，保留粒子、精灵、内部引用及局部文件ID，复用逐项核对的High图集材质；原动画SDK组件仅由序列化类型桥接到独立原生端，原字段保存在无损源JSON中。G_073的两个预览组件仍引用原Low加载器，额外恢复其398项原GUID和实际Low贴图全部mip，与High共796项显式本地绑定。入口为 `scripts/prepare_battle_weapon_low_textures.py`、`scripts/prepare_battle_native_weapon_prefabs.py`；输入、转换与输出身份见[Low来源](battle-animation/weapon-low-textures-source-manifest.json)、[prefab依赖来源](battle-animation/weapon-prefab-assets-source-manifest.json)及[完整层级来源](battle-animation/weapon-prefabs-source-manifest.json)。本批未生成完整素材快照，功能与验证边界在[战斗执行](../../docs/features/battle-execution.md)维护。
+
 武器约束与物理使用完整High来源中已核验同版原始对象一致的 `primaryWeapon` 数据，保留历史原生载荷的 `871_156598` 标记；输入包含399个原皮肤、1项IK、1项变换、222项物理约束及6段原动作，未读取或复制动画SDK实现。原始约束字段、同版应用代码身份、既有独立数值依据和当前代码绑定见[武器物理来源](battle-animation/weapon-physics-source-manifest.json)，转换入口为 `scripts/prepare_battle_weapon_physics.py`；功能与验证边界在[战斗执行](../../docs/features/battle-execution.md)维护。
 
 完整武器High载荷取所选 `884_156692`，按APK优先及同版已下载缓存解析全部398项原加载映射、图集／材质／配置依赖与实际High贴图；仅按原始对象及编码图像哈希复用既有占位图，全部原mip转换为Windows原生纹理，保持原GUID和显式本地请求绑定。当前shader由已核验同版Windows转换及fallback依赖恢复。输入／输出哈希、解码器、历史复用依据和绑定见[完整武器High来源](battle-animation/weapon-high-textures-source-manifest.json)，入口为 `scripts/prepare_battle_weapon_high_textures.py`。本批未生成完整素材快照，功能与验证边界见[战斗执行](../../docs/features/battle-execution.md)。

@@ -34,7 +34,8 @@ def sha(raw):
 def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
           family='StatusOrbits', shader_prefix='StatusOrbit_', runtime_receipts=None,
           generator=None, limits=None, graph_roots=None, reference_scripts=None,
-          external_scripts=None, source_scripts=None):
+          external_scripts=None, source_scripts=None, native_transform=None,
+          external_assets=None, native_scripts=None, operation=None):
     work = Path(os.environ['ZJCS_VALIDATION_DIR']).resolve()
     assert work.parent == (ROOT/'output/validation').resolve() and (work/'.zjcs-validation.json').is_file()
     export_receipt = CACHE/'native-export-all-source-manifest.json'
@@ -97,7 +98,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         original = EXPORTED/binding['native_asset']
         text = read(original).decode('utf-8-sig')
         read(Path(str(original)+'.meta'))
-        assert int(SCRIPT.search(text)[1]) == file_id
+        assert any(int(match[1]) == file_id for match in SCRIPT.finditer(text))
         assert struct.unpack('<i', MD4.new(('s\0\0\0'+binding.get('namespace', '')+binding['name']).encode()).digest()[:4])[0] == file_id
         target = ROOT/binding['runtime']
         script_guids[file_id] = GUID.search(Path(str(target)+'.meta').read_text(encoding='utf-8-sig'))[1]
@@ -142,6 +143,22 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
             migrated=identity(target), migrated_meta=identity(target_meta),
             verification='official source type and namespace; ID bound by active-version prefab reference'))
     local_scripts = set(script_guids.values())
+    native_script_records = []
+    for relative in native_scripts or ():
+        target = ROOT/relative
+        sidecar = Path(str(target)+'.meta')
+        local_scripts.add(GUID.search(sidecar.read_text(encoding='utf-8-sig'))[1])
+        native_script_records.append(dict(script=identity(target), meta=identity(sidecar)))
+    external_replacements, external_records = {}, []
+    for original_guid, binding in (external_assets or {}).items():
+        original, target = EXPORTED/binding['source'], ROOT/binding['target']
+        read(original)
+        source_meta = Path(str(original)+'.meta')
+        assert GUID.search(read(source_meta).decode('utf-8-sig'))[1] == original_guid
+        target_meta = Path(str(target)+'.meta')
+        external_replacements[original_guid] = GUID.search(target_meta.read_text(encoding='utf-8-sig'))[1]
+        external_records.append(dict(source=identity(original), source_meta=identity(source_meta),
+            target=identity(target), target_meta=identity(target_meta)))
     unmapped_scripts = {}
     unmapped_script_samples = {}
 
@@ -153,7 +170,8 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                 unmapped_script_samples.setdefault(file_id, set()).add(path.relative_to(EXPORTED).as_posix())
                 return match[0]
             return 'm_Script: {fileID: 11500000, guid: '+script_guids[file_id]+', type: 3}'
-        return SCRIPT.sub(script, text)
+        text = SCRIPT.sub(script, text)
+        return native_transform(text, path) if native_transform else text
 
     graph_paths = {key: f'Prefabs/EcEntity/Fight/FightSkill/{key}/{name}.prefab' for key, name in ROOTS.items()}
     graph_paths.update(graph_roots or {})
@@ -170,7 +188,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         except UnicodeDecodeError as error:
             raise ValueError(('Non-text asset in skill graph closure', path, error.start)) from error
         original_script_guids = {match[2] for match in SCRIPT.finditer(text)}
-        pending += [resolve(guid) for guid in set(GUID.findall(text))-BUILTINS-local_scripts-original_script_guids]
+        pending += [resolve(guid) for guid in set(GUID.findall(text))-BUILTINS-local_scripts-original_script_guids-set(external_replacements)]
     if unmapped_scripts:
         raise AssertionError(('Unmigrated skill graph scripts (occurrences, sample paths)',
             {file_id: dict(occurrences=count, paths=sorted(unmapped_script_samples[file_id])[:3])
@@ -313,7 +331,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
             differences = [max(hi for lo, hi in ImageChops.difference(exported, sample).getextrema())
                            for sample in (image, image.transpose(Image.Transpose.FLIP_TOP_BOTTOM))]
             return min(differences)
-        targets, replacements = {}, {}
+        targets, replacements = {}, dict(external_replacements)
         for path in sorted(found):
             target = DEST/path.relative_to(EXPORTED)
             if path.suffix == '.png': target = target.with_name(target.stem+'.texture.asset')
@@ -466,11 +484,12 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
             native_export_receipt=identity(export_receipt), native_inputs=[inputs[key] for key in sorted(inputs)],
             texture_conversion_receipt=identity(texture_receipt), converted_inputs=converted_inputs,
             textures=textures, shaders=shaders, binary_assets=binary_assets, application=script_records,
+            external_assets=external_records, native_scripts=native_script_records,
             runtime_receipts=[identity(ROOT/'assets/reference/battle-animation'/name) for name in (
                 runtime_receipts or ('status-orbit-runtime-source-manifest.json', 'status-view-runtime-source-manifest.json'))],
             generator=identity(generator or Path(__file__)), graph_asset_adapter=identity(Path(__file__)),
             outputs=[identity(path) for path in sorted(set(outputs))],
-            operation='Full original graphs: no components, sequence leaves or local objects removed. Preserve native local fileIDs, transforms, particles, orbit configuration and dependencies. Remap migrated application scripts/GUIDs, decode all original texture mips through hash-matched conversion cache and use verified full Windows shaders.',
+            operation=operation or 'Full original graphs: no components, sequence leaves or local objects removed. Preserve native local fileIDs, transforms, particles, orbit configuration and dependencies. Remap migrated application scripts/GUIDs, decode all original texture mips through hash-matched conversion cache and use verified full Windows shaders.',
             limits=limits or ['These three graph resources do not install all status lifecycle roles or formal battle actor/timeline binding.']),
             ensure_ascii=False, indent=2)+'\n')
         print('Original orbit graphs:', len(rows), 'assets:', len(targets), 'textures:', len(textures), 'shaders:', len(shaders))

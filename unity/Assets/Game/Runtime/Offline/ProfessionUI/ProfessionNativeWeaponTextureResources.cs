@@ -8,11 +8,13 @@ namespace Zjcs.Offline.ProfessionUI
     public sealed class ProfessionNativeWeaponTextureResources : ScriptableObject
     {
         [Serializable] private sealed class TextureBinding { public string Guid, Resource; public Texture Texture; }
+        [Serializable] private sealed class LoaderBinding { public string Path, Guid; public YooAssetTextureLoader Loader; }
         [SerializeField] private string loaderPath, loaderGuid;
         [SerializeField] private YooAssetTextureLoader loader;
         [SerializeField] private ProfessionNativeTextureAtlas atlas;
         [SerializeField] private AppearanceAssetManagerConfig managerConfig;
         [SerializeField] private TextureBinding[] textures;
+        [SerializeField] private LoaderBinding[] additionalLoaders;
         public string LoaderPath => loaderPath;
         public string LoaderGuid => loaderGuid;
         public YooAssetTextureLoader Loader => loader;
@@ -22,6 +24,8 @@ namespace Zjcs.Offline.ProfessionUI
         public ScriptableObject LoadPath(string path)
         {
             if (path == loaderPath) return loader;
+            if (additionalLoaders != null)
+                foreach (var binding in additionalLoaders) if (path == binding.Path) return binding.Loader;
             if (path == atlas.SourcePath) return atlas;
             throw new NotSupportedException("Original weapon texture resource is unbound: " + path);
         }
