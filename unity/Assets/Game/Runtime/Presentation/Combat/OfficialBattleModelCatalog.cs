@@ -72,6 +72,8 @@ namespace Zjcs.Presentation.Combat
         [SerializeField] private TextAsset identities;
         [SerializeField] private TextAsset identitiesManifest;
         [SerializeField] private OfficialBattleModelBinding[] bindings = Array.Empty<OfficialBattleModelBinding>();
+        [SerializeField] private OfficialBattleModelBinding[] partnerNpcBindings = Array.Empty<OfficialBattleModelBinding>();
+        private OfficialBattleModelBinding[] allBindings;
         private Dictionary<string, OfficialBattleModelBinding> byKey;
         private Dictionary<int, string> monsterKeys;
         private Dictionary<int, string> npcKeys;
@@ -93,7 +95,8 @@ namespace Zjcs.Presentation.Combat
             return byKey.TryGetValue(key, out OfficialBattleModelBinding binding) ? binding : null;
         }
 
-        public int Count => bindings == null ? 0 : bindings.Length;
+        public int Count => (bindings == null ? 0 : bindings.Length)
+            + (partnerNpcBindings == null ? 0 : partnerNpcBindings.Length);
 
         public bool HasNpcBattleAnimations(int npcClassId)
         {
@@ -124,26 +127,30 @@ namespace Zjcs.Presentation.Combat
         private void BuildIndex()
         {
             byKey = new Dictionary<string, OfficialBattleModelBinding>(StringComparer.Ordinal);
-            if (bindings == null) throw new InvalidOperationException("Official battle model bindings are missing.");
-            foreach (OfficialBattleModelBinding binding in bindings)
+            if (bindings == null || partnerNpcBindings == null)
+                throw new InvalidOperationException("Official battle model bindings are missing.");
+            allBindings = bindings.Concat(partnerNpcBindings).ToArray();
+            foreach (OfficialBattleModelBinding binding in allBindings)
             {
+                bool partnerBinding = partnerNpcBindings.Contains(binding);
                 if (binding == null || string.IsNullOrEmpty(binding.key) || binding.skeleton == null
-                    || byKey.ContainsKey(binding.key))
+                    || (byKey.ContainsKey(binding.key) && !partnerBinding))
                     throw new InvalidOperationException("Official battle model catalog contains an invalid binding.");
                 if (binding.animations == null || binding.animations.Length == 0 || binding.scale <= 0)
                     throw new InvalidOperationException("Official battle model animation metadata is incomplete: " + binding.key);
                 foreach (OfficialBattleAnimationAlias animation in binding.animations)
                     if (animation == null || string.IsNullOrEmpty(animation.name) || string.IsNullOrEmpty(animation.spineName))
                         throw new InvalidOperationException("Official battle animation binding is invalid: " + binding.key);
-                byKey.Add(binding.key, binding);
+                byKey[binding.key] = binding;
             }
             npcKeys = new Dictionary<int, string>();
-            foreach (OfficialBattleModelBinding binding in bindings)
+            foreach (OfficialBattleModelBinding binding in allBindings)
             {
                 int marker = binding.key.LastIndexOf("body_", StringComparison.Ordinal);
                 if (marker < 0 || !int.TryParse(binding.key.Substring(marker + 5), out int npcClassId)
                     || npcClassId <= 0) continue;
-                npcKeys.Add(npcClassId, binding.key);
+                if (partnerNpcBindings.Contains(binding)) npcKeys[npcClassId] = binding.key;
+                else if (!npcKeys.ContainsKey(npcClassId)) npcKeys.Add(npcClassId, binding.key);
             }
             BuildMonsterIndex();
         }

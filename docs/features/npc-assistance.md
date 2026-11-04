@@ -80,7 +80,7 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 
 - 素材秘境（2）、道路属性门槛（1）、探索首领（All=10）、节庆首领（5）、联合行动（4）各自的实际选择入口、条件筛选、官方属性排序／门槛、站位、战斗加入、快照提交及结算接线；不能用日常副本的 All 规则替代这些玩法。
 - 羁绊冒险（6）的 NPC 战斗邀请入口和战斗接线；NPC 旅行是派遣系统，不等同战斗助战。
-- NPC 战斗模型／动画加载绑定仍未完成。候选列表仅放行 `OfficialBattleModelCatalog.HasNpcBattleAnimations` 已确认包含 `idle_01`、`run_01` 的角色；85 个伙伴对应的官方 `fightnpc_*` 包已从固定 APK／已校验 CDN 缓存提取至 `.tools/source-packages/extracted/`。`scripts/prepare_battle_animation.py` 已解除对缺失 `prepare_map_regions.py` 的依赖，按当前选定 `884_156692` APK 生成 `assets/official/battle-animation/catalog.json` 与 `assets/reference/battle-animation/source-manifest.json`，记录 598 个 Animator 控制器、470 个骨骼绑定、1,880 个技能播放图及 543 个实体包，转换失败为 0。该 JSON 是提取中间数据；尚未将伙伴原生骨骼、贴图、材质和动画绑定进 Unity 战斗模型目录，也未在战斗中运行验证，因此不能据此开放候选或声称伙伴战斗表现已完成。
+- NPC 战斗模型／动画加载绑定仍未完整。85 个官方伙伴战斗包按当前选定 `884_156692` 检查后，48 个实体含原 `SkeletonMecanim` 和可匹配 Animator；沿原 Spine binary、Atlas、材质页和 `AppearanceCombineSkin` 恢复骨骼、贴图、皮肤与动画别名，安装至 `unity/Assets/Official/Combat/NpcFighters/`，由 `OfficialPartnerBattleFighterTools` 导入 `OfficialBattleModelCatalog` 的伙伴绑定。另 37 个实体缺少所需原 `SkeletonMecanim` 或对应 Animator，未伪造替代模型。战斗候选只放行 `OfficialBattleModelCatalog.HasNpcBattleAnimations` 确认具备 `idle_01`、`run_01` 的伙伴。此前 `scripts/prepare_battle_animation.py` 生成的控制器／骨骼绑定／技能播放图 JSON 是中间数据；当前模型目录导入检查覆盖 48 个绑定及别名，但正式非空伙伴队伍战斗的角色切换、动画和渲染尚未实跑验证，不能视为伙伴助战战斗表现完整。APK 对象、匹配云端页资源、转换输入／输出哈希及跳过原因见[伙伴战斗模型来源凭据](../../assets/reference/partner-battle-fighters-source-manifest.json)。
 - 将用户确认的等级／阶位规则扩展到其余通用助战玩法；当前日常战斗按玩家等级与存档 `SubRank` 创建伙伴。
 - 非空伙伴队伍的正式入口、人数限制、战斗表现、次数保存恢复及失败回滚仍需完整 Unity Play Mode 验证。公共选择视图已在内置屏 Direct3D 11 Play Mode 通过20名夹具候选的原 Toggle 选择／取消、不可选条目、原确认／关闭按钮模拟鼠标输入、列表20→2→20的复用和释放，并检查弹窗位于宿主及其独立排序子窗口之上；该独立检查不证明实际NPC规则、画像、次数事务或正式玩法已完成。
 
