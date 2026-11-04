@@ -99,7 +99,7 @@ namespace Zjcs.Offline.ProfessionUI
             // changing its rendering state. Complete the live animation again
             // so a skin/setup reset cannot leave the bones in their rest pose.
             poses.Apply(State);
-            batches.Build(State.Pose, State.CreateDrawSlots(), settings.UseClipping, settings.PmaVertexColors);
+            batches.Build(State.Pose, State.CreateDrawSlots(), settings.UseClipping, settings.PmaVertexColors, allowConcaveClipping: true);
             Main.Assign(batches.Batches, batch =>
             {
                 if (batch.Blend != 0) throw new NotSupportedException("Bind the original independent weapon slot blend material.");

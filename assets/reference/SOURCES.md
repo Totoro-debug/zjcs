@@ -6,6 +6,8 @@
 
 完整骨骼怪物输入取所选 `884_156692` 的18份原实体 prefab、完整骨骼二进制、AppearanceConfig／Low加载器、图集、材质及控制器闭包；按APK优先、已下载同版云缓存次序解析。原对象／包、固定MIT格式读取器、原生转换输入、控制器逐字段核对、19张原贴图全部ASTC mip至Unity RGBA32的转换与输出哈希见[完整骨骼怪物来源](battle-animation/live-monsters-source-manifest.json)。提取与绑定入口为 `scripts/prepare_battle_live_monsters.py`／`scripts/prepare_battle_live_monster_assets.py`；Unity仅提供原生纹理序列化模板，保留原图像、mip、色彩空间和采样参数。未生成完整素材快照；实现及验证边界见[战斗执行](../../docs/features/battle-execution.md)。
 
+武器约束与物理使用完整High来源中已核验同版原始对象一致的 `primaryWeapon` 数据，保留历史原生载荷的 `871_156598` 标记；输入包含399个原皮肤、1项IK、1项变换、222项物理约束及6段原动作，未读取或复制动画SDK实现。原始约束字段、同版应用代码身份、既有独立数值依据和当前代码绑定见[武器物理来源](battle-animation/weapon-physics-source-manifest.json)，转换入口为 `scripts/prepare_battle_weapon_physics.py`；功能与验证边界在[战斗执行](../../docs/features/battle-execution.md)维护。
+
 完整武器High载荷取所选 `884_156692`，按APK优先及同版已下载缓存解析全部398项原加载映射、图集／材质／配置依赖与实际High贴图；仅按原始对象及编码图像哈希复用既有占位图，全部原mip转换为Windows原生纹理，保持原GUID和显式本地请求绑定。当前shader由已核验同版Windows转换及fallback依赖恢复。输入／输出哈希、解码器、历史复用依据和绑定见[完整武器High来源](battle-animation/weapon-high-textures-source-manifest.json)，入口为 `scripts/prepare_battle_weapon_high_textures.py`。本批未生成完整素材快照，功能与验证边界见[战斗执行](../../docs/features/battle-execution.md)。
 
 人物动作过渡物理使用当前 `884_156692` 的男女完整骨骼载荷，核对原层级的 `MixNext` 配置并参照公开 4.2 行为文档；原输入、全部物理轨道、独立关键帧／区间预期、原生实现及验证入口哈希见[人物过渡物理来源](battle-animation/player-mixed-physics-source-manifest.json)，生成入口为 `scripts/prepare_battle_player_mixed_physics.py`。不读取或复制动画 SDK 实现，不修改美术载荷；功能与验证边界见[战斗执行](../../docs/features/battle-execution.md)。

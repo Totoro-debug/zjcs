@@ -84,10 +84,11 @@ namespace Zjcs.Offline.ProfessionUI
             ProfessionNativeIdleIk.Apply(skeleton.Pose, ik.Select(value => new ProfessionNativeIdleIk.Constraint {
                 name = value.Name, order = value.Order, target = value.Target, bones = value.Bones,
                 childLength = value.ChildLength, mix = value.Mix, bendPositive = value.BendPositive }).ToArray());
-            // The verified full-binary battle rig 11007 retains bone41's
-            // original mixY=-0.4. Its explicit package identity permits finite
-            // extrapolation, using the same geometric branch as illustrations.
-            if (skeleton.Source.Sex.StartsWith("partner-battle:", StringComparison.Ordinal))
+            // Battle rig 11007 retains mixY=-0.4; primaryWeapon's skin-bound
+            // transform retains mixRotate=-1. Keep those original finite
+            // extrapolating weights in the existing geometric solver.
+            if (skeleton.Source.Sex.StartsWith("partner-battle:", StringComparison.Ordinal)
+                || skeleton.Source.Sex == "primary-weapon")
                 ProfessionNativeIdleTransform.ApplyUnclamped(skeleton.Pose, transforms);
             else ProfessionNativeIdleTransform.Apply(skeleton.Pose, transforms);
             skeleton.Pose.UpdateWorld();

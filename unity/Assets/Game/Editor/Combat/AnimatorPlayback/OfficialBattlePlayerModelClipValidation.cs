@@ -24,6 +24,7 @@ namespace Zjcs.Editor.Combat
         {
             SessionState.SetBool(Key + ".physics", false);
             SessionState.SetBool(Key + ".high-textures", false);
+            SessionState.SetBool(Key + ".weapon-physics", false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")))
@@ -92,6 +93,7 @@ namespace Zjcs.Editor.Combat
                         Object.Destroy(warmup); RenderTexture.ReleaseTemporary(warmupTarget);
                     }
                     CheckHighTextures();
+                    if (SessionState.GetBool(Key + ".weapon-physics", false)) CheckWeaponPhysics();
                     weaponTextures = Resources.Load<ProfessionNativeWeaponTextureResources>("Combat/Weapons/texture-resources");
                 }
                 using var textures = new OfflineProfessionSceneTextureResources(catalog);
