@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using Zjcs.Combat.Official;
+using Zjcs.Offline.BattleNativePlayables;
 using Zjcs.Offline.Progression;
 
 namespace Zjcs.Presentation.Combat
@@ -36,6 +37,7 @@ namespace Zjcs.Presentation.Combat
         private OfficialBattleHudCatalog hudCatalog;
         private OfficialBattleDamageColors damageColors;
         private OfficialBattleNativeAnimationLibrary nativeModelLibrary;
+        private OfficialBattleSkillGraphPlayback skillGraphPlayback;
         private OfficialBattleEnvironmentView environmentView;
         private OfflineMainlineProgressSession statueProgress;
         private bool statueEffectsEnded;
@@ -172,6 +174,7 @@ namespace Zjcs.Presentation.Combat
                 : resolvedCombatAssets.BeginBattle(checkpoint);
             var nextHud = new OfficialBattleHudView(resolvedHudCatalog);
             OfficialBattleNativeAnimationLibrary nextNativeModels = null;
+            OfficialBattleSkillGraphPlayback nextSkillGraphPlayback = null;
             OfficialBattleEnvironmentView nextEnvironment = null;
             OfficialBattleSceneView nextScene = null;
             GameObject nextHudRoot = null;
@@ -181,6 +184,14 @@ namespace Zjcs.Presentation.Combat
                 var pipelineAssets=Resources.Load<OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets");
                 if(pipelineAssets!=null)renderPipelineScope=pipelineAssets.Enter();
                 nextNativeModels = OfficialBattleNativeAnimationLibrary.LoadDefault();
+                OfficialBattleSkillGraphCatalog graphCatalog =
+                    OfficialBattleSkillGraphCatalog.TryLoadDefault();
+                if (graphCatalog != null && graphCatalog.Count > 0)
+                {
+                    var nativeScope = new OfflineBattleNativePlayableScope(worldRoot,
+                        request.SkillPlayableSoundHost);
+                    nextSkillGraphPlayback = new OfficialBattleSkillGraphPlayback(graphCatalog, nativeScope);
+                }
                 if (environmentGameId > 0)
                     nextEnvironment = OfficialBattleEnvironmentView.Load(worldRoot, environmentGameId,
                         isDay: environmentIsDay);
@@ -204,6 +215,7 @@ namespace Zjcs.Presentation.Combat
                 hudView = nextHud;
                 sceneView = nextScene;
                 nativeModelLibrary = nextNativeModels;
+                skillGraphPlayback = nextSkillGraphPlayback;
                 environmentView = nextEnvironment;
                 if (hostPresentation != null)
                 {
@@ -239,6 +251,7 @@ namespace Zjcs.Presentation.Combat
                 {
                     cameraView = new OfficialBattleCameraView(hostPresentation.Camera, worldRoot,
                         environmentGameId, initialCamera, sceneView.Body);
+                    skillGraphPlayback?.BindCameraHost(cameraView);
                     cameraView.Refresh(checkpoint, Phase);
                     cameraView.SetVisible(hudVisible);
                 }
@@ -246,12 +259,17 @@ namespace Zjcs.Presentation.Combat
             }
             catch
             {
-                if (executor == nextExecutor) DisposeSession();
+                if (executor == nextExecutor)
+                {
+                    nextSkillGraphPlayback?.Dispose();
+                    DisposeSession();
+                }
                 else
                 {
                     nextScene?.Dispose();
                     nextEnvironment?.Dispose();
                     nextNativeModels?.Dispose();
+                    nextSkillGraphPlayback?.Dispose();
                     if (nextHudRoot != null) Destroy(nextHudRoot);
                     renderPipelineScope?.Dispose();
                     renderPipelineScope=null;
@@ -299,6 +317,8 @@ namespace Zjcs.Presentation.Combat
                 FightBattleExecutionResult result = executor.Step(executor.State.Sequence,
                     executor.State.Counter + 1);
                 sceneView.Refresh(result.Checkpoint, result.Event);
+                skillGraphPlayback?.Play(result.Event, result.Checkpoint,
+                    sceneView.TryGetUnitTransform);
                 if (hudRoot != null)
                 {
                     hudView.Refresh(result.Checkpoint);
@@ -317,6 +337,8 @@ namespace Zjcs.Presentation.Combat
                     LastStepSeconds = Mathf.Max(LastStepSeconds, result.Event.ActionDuration);
                     foreach (FightBattleDamageEvent damage in result.Event.DamageEvents)
                         if (damage != null) LastStepSeconds = Mathf.Max(LastStepSeconds, damage.Delay);
+                    foreach (FightBattleSkillCastEvent cast in result.Event.SkillCasts)
+                        if (cast != null) LastStepSeconds = Mathf.Max(LastStepSeconds, cast.Delay);
                 }
                 // A settled result is not a completed presentation. In particular the last lethal
                 // hit must reach its configured time before the mode destroys the battle scene.
@@ -458,7 +480,16 @@ namespace Zjcs.Presentation.Combat
             hudView?.Tick(Time.unscaledDeltaTime);
             sceneView?.Tick(Time.deltaTime);
             if (executor != null) cameraView?.Refresh(Checkpoint, Phase);
-            if (!paused) stepPlayback?.Tick(Time.deltaTime);
+            if (!paused)
+            {
+                skillGraphPlayback?.Tick(Time.deltaTime);
+                stepPlayback?.Tick(Time.deltaTime);
+            }
+        }
+
+        private void LateUpdate()
+        {
+            if (!paused) skillGraphPlayback?.LateTick();
         }
 
         private void CompleteStepPresentation()
@@ -525,6 +556,7 @@ namespace Zjcs.Presentation.Combat
                 preparationView = null;
             }
             sceneView?.Dispose();
+            skillGraphPlayback?.Dispose();
             environmentView?.Dispose();
             renderPipelineScope?.Dispose();
             renderPipelineScope=null;
@@ -544,6 +576,7 @@ namespace Zjcs.Presentation.Combat
             executor = null;
             sceneView = null;
             nativeModelLibrary = null;
+            skillGraphPlayback = null;
             hudView = null;
             hudRoot = null;
             combatCatalog = null;

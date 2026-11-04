@@ -15,10 +15,10 @@ namespace Zjcs.Offline.BattleNativePlayables
     {
         private readonly GameObject root, staging;
         private readonly IProfessionSoundHost sound;
-        private readonly IBattleCameraOffsetHost cameraOffsetHost;
-        private readonly IBattleCameraPerformanceHost cameraPerformanceHost;
-        private readonly IBattleMasterEntityResolver masterEntityResolver;
-        private readonly IBattleCharacterPartVisibilityHost characterPartVisibilityHost;
+        private IBattleCameraOffsetHost cameraOffsetHost;
+        private IBattleCameraPerformanceHost cameraPerformanceHost;
+        private IBattleMasterEntityResolver masterEntityResolver;
+        private IBattleCharacterPartVisibilityHost characterPartVisibilityHost;
         private readonly BattleAfterimageTexturePool afterimageTextures = new BattleAfterimageTexturePool();
         private readonly MyPlayableCenter center = new MyPlayableCenter();
         private readonly MyPlayableManager manager;
@@ -32,7 +32,7 @@ namespace Zjcs.Offline.BattleNativePlayables
             IBattleCameraPerformanceHost cameraPerformanceHost = null,
             IBattleMasterEntityResolver masterEntityResolver = null)
         {
-            this.sound = sound ?? throw new ArgumentNullException(nameof(sound));
+            this.sound = sound ?? NullProfessionSoundHost.Instance;
             this.cameraOffsetHost = cameraOffsetHost;
             this.cameraPerformanceHost = cameraPerformanceHost;
             this.masterEntityResolver = masterEntityResolver;
@@ -53,6 +53,23 @@ namespace Zjcs.Offline.BattleNativePlayables
                         return instance;
                     }, prefab.name)));
             Application.lowMemory += OnLowMemory;
+        }
+
+        /// <summary>
+        /// Binds scene-owned hosts after the battle camera and character roots exist.
+        /// Skill graphs are instantiated after Begin, so late binding preserves the
+        /// original graph components' source/target initialization order.
+        /// </summary>
+        public void BindHosts(IBattleCameraOffsetHost cameraOffsetHost = null,
+            IBattleCharacterPartVisibilityHost characterPartVisibilityHost = null,
+            IBattleCameraPerformanceHost cameraPerformanceHost = null,
+            IBattleMasterEntityResolver masterEntityResolver = null)
+        {
+            RequireLive();
+            this.cameraOffsetHost = cameraOffsetHost;
+            this.characterPartVisibilityHost = characterPartVisibilityHost;
+            this.cameraPerformanceHost = cameraPerformanceHost;
+            this.masterEntityResolver = masterEntityResolver;
         }
 
         public GameObject Instantiate(GameObject prefab, Transform parent, bool worldPositionStays)
@@ -150,6 +167,12 @@ namespace Zjcs.Offline.BattleNativePlayables
         private void RequireLive()
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfflineBattleNativePlayableScope));
+        }
+
+        private sealed class NullProfessionSoundHost : IProfessionSoundHost
+        {
+            internal static readonly NullProfessionSoundHost Instance = new NullProfessionSoundHost();
+            public uint PostEvent(uint eventId, GameObject emitter) => 0;
         }
 
         private void OnLowMemory() => WithSound(() => { lowMemory.Invoke(); return 0; });
