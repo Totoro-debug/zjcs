@@ -591,3 +591,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 所选884伙伴整页、地址簿行与通话播放行的九组头像，通过 `scripts/prepare_partner_panel_actor_bindings.py` 重新核对 APK 原字段，保留原生对象及布局，只绑定当前外观应用脚本并恢复原打包枚举序列。三个 prefab 的基线凭据、原组件载荷、精确变更、当前输出及窗口／本地端口哈希见[正式头像绑定来源](partner-panel-actors-source-manifest.json)；原基线清单保持不变。窗口销毁通知复用原 `PopupWindow.OnWindowDestory`，本地加载与裁剪接线及验证范围维护于[伙伴](../../docs/features/partners.md)。未生成完整素材快照。
 
 幻兽支援放电动画来源：原HUD的`mTriggerSupportSkillAnim`沿实际CAB引用解析至所选884_156692官方包`defaultpackage_share_2c5f0e5af1aca8075e1f6b05c99883ef.bundle`，MD5 `c3129108100da9b590d6530128a58586`、SHA256 `7c4961517fd0d7e602eee9fad208b37014f6750a0ae337ed71fc567cdd3006d1`；原AnimationClip对象、当前输入版本、曲线字段、生成器及运行绑定哈希补记[幻兽HUD来源清单](battle-hud/pet-widget-source-manifest.json)。历史HUD与当前动画输入分别保留来源身份，未生成完整素材快照。
+
+主线地图放置目录的公共转换读取独立记录的871泽之国／龙之国定义与 `Source/entities.json`，复用已提取的官方EC数据。输入／输出SHA256与生成器来源分别见 `assets/reference/official-map/map13-entity-catalog-source-manifest.json` 和 `map14-entity-catalog-source-manifest.json`；显式加载地址为 `Resources/Map13/Entities/catalog`、`Resources/Map14/Entities/catalog`。龙之国源JSON固定为原凭据的LF字节。

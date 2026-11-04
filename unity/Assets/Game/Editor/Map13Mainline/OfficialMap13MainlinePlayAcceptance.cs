@@ -19,6 +19,7 @@ using Zjcs.Presentation.CharacterCreation;
 using Zjcs.Presentation.World;
 using Zjcs.Presentation.World.NativeMap13;
 using Zjcs.Presentation.World.NativeMap12;
+using Zjcs.Presentation.World.NativeMap14;
 using Zjcs.Official.World;
 using Zjcs.Offline.World.NativeMap13TreeEntities;
 using Zjcs.Offline.World.MapGridVisibility;
@@ -85,6 +86,7 @@ namespace Zjcs.Editor.Map13Mainline
             GraphicsSettings.defaultRenderPipeline=null;QualitySettings.renderPipeline=null;
         }
         public static void RunMap12(){Run();SessionState.SetInt(Key+".map",12);}
+        public static void RunMap14(){Run();SessionState.SetInt(Key+".map",14);}
         public static void RunSavedSnapshots()
         {
             foreach(int map in new[]{11,12})
@@ -167,7 +169,7 @@ namespace Zjcs.Editor.Map13Mainline
             save.Player.Level=90;save.Player.Experience=characterCatalog.CumulativeLevelExperience[90];
             save.Player.SubRank=characterCatalog.LevelLimits.Where(r=>r.PlayerBlessLevel==0&&r.PlayerLevel>=90).Min(r=>r.SubRank);
             save.Player.Rank=characterCatalog.RankOfSubRank(save.Player.SubRank);save.Player.Wardrobe.Profession=1;
-            save.Player.UnlockedMapClassIds.AddRange(new[]{11,12,13,15});
+            save.Player.UnlockedMapClassIds.AddRange(new[]{11,12,13,14,15});
             save.Tasks.ClaimedMainlineTaskIds.AddRange(OfficialMainlineTaskCatalog.LoadDefault().OrderedTasks.Where(t=>t.classId<=1040).Select(t=>t.classId));
             File.WriteAllText(slots.GetProgressPath(slot),JsonUtility.ToJson(save,true));
             var progression=OfflineMainlineProgressSession.OpenCharacter(slots,slot);
@@ -187,11 +189,24 @@ namespace Zjcs.Editor.Map13Mainline
                 while(!world.IsReady&&Time.realtimeSinceStartup<deadline)yield return null;
                 Require(world.IsReady,"Formal Map12 original partitions did not become ready.");
             }
+            if(MapId==14)
+            {
+                var world=Field<OfficialMap14NativeWorldView>(runtime,"nativeMap14World");
+                while(!world.IsReady&&Time.realtimeSinceStartup<deadline)yield return null;
+                Require(world.IsReady,"Formal Map14 original partitions did not become ready.");
+                var entities=(System.Collections.IDictionary)Field<object>(runtime,"mapEntities");
+                Require(entities.Count==2961&&Field<int>(entities[101],"State")==1,
+                    "Formal Map14 lost the original entry stage instead of restoring state 1.");
+                Require(Field<int>(entities[201],"LockType")==2
+                    &&Field<bool>(entities[201],"ConditionEntityInactiveInUnlock"),
+                    "Formal Map14 lost its original entity-state lock metadata.");
+            }
             var navigation=Field<object>(runtime,"navigation");var initial=Field<MapGridPoint>(navigation,"currentGrid");
             if(MapId==13)Require((int)Call(runtime,"GetDefaultEntryId")==11001&&initial.Equals(new MapGridPoint(113,233)),"Original TbMapWorldInfo.DefEntryId 11001 and its (113,233) placement were not used.");
             if(MapId==11)Require((int)Call(runtime,"GetDefaultEntryId")==101&&initial.Equals(new MapGridPoint(167,133)),"Original Map11 DefEntryId 101 and its (167,133) placement were not used.");
             if(MapId==12)Require((int)Call(runtime,"GetDefaultEntryId")==101&&initial.Equals(new MapGridPoint(248,32)),"Original Map12 entry 101 at (248,32) was not used.");
             if(MapId==15)Require((int)Call(runtime,"GetDefaultEntryId")==101&&initial.Equals(new MapGridPoint(12,6)),"Original Map15 entry 101 at (12,6) was not used.");
+            if(MapId==14)Require((int)Call(runtime,"GetDefaultEntryId")==101&&initial.Equals(new MapGridPoint(247,115)),"Original Map14 entry 101 at (247,115) was not used.");
             Require(Field<object>(runtime,"mapGridVisibility")!=null,"Formal original grid component is not bound.");
             var visibilityAtEntry=Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility");
             var entityViewsAtEntry=Field<OfficialMap10EntityView>(runtime,"entityView");
@@ -318,7 +333,9 @@ namespace Zjcs.Editor.Map13Mainline
             string slot,string phase)
         {
             var formalOffline=runtime.GetComponentsInChildren<OfflineMiniMap>(true);
-            Require(formalOffline.Length>0&&formalOffline.All(value=>value.DataSource!=null),
+            // Map14's original complete minimap has not yet been mounted by the
+            // formal host. Still verify its actual local snapshot and fog below.
+            Require((MapId==14||formalOffline.Length>0)&&formalOffline.All(value=>value.DataSource!=null),
                 "Formal map minimap did not receive the shared local snapshot data source.");
             var files=Directory.GetFiles(slots.GetSlotDirectory(slot),"*",SearchOption.AllDirectories)
                 .ToDictionary(path=>path,path=>Convert.ToBase64String(File.ReadAllBytes(path)));

@@ -1,0 +1,44 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/14/map14.json",
+      "sha256": "7acb3d00fbfa754569138253b08c86d0a43f8c1f9667c8bb1e1511ac46ed1897"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/source-manifest.json",
+      "sha256": "a8d74b108891d31a16fa071962255fca19de626b722e0bdf4c06f2b0f93f4267"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/entities.json",
+      "sha256": "68ca0a9513a2036b725cb7bf585d3b95211b4fb34d34ff8372966303afa25e8b"
+    },
+    {
+      "path": "assets/reference/official-map/map14-source-manifest.json",
+      "sha256": "04a160772dd26a9d367858ab8e9eac6a82f1886d02248d27a0d403804d5c8a2e"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_entity_catalog.py",
+      "sha256": "8a14b47730dc46b80cdc2c7d006f36bcb078fcdcba3348909c623a17d646ff8f"
+    },
+    {
+      "path": "scripts/mainline_entity_catalog.py",
+      "sha256": "1732394b05d1e2fbeec164785ef152577cfea8014fb7445fa5ba8ac4d6be2018"
+    },
+    {
+      "path": "scripts/prepare_unity_map10_entities.py",
+      "sha256": "b8c7527e56a86f84e6ae9a8d7ce95ce6b329426fc3066b9ecfd325cec1d583cb"
+    }
+  ],
+  "output": {
+    "path": "unity/Assets/Game/Resources/Map14/Entities/catalog.json",
+    "sha256": "bb82bb674c2aeae981ccaa2a17ca5dbb1877569f370d206a433f48c29af971f8",
+    "entityCount": 2961
+  },
+  "operation": "Project the verified original placement EC state, active flag, locks, awards, map changes, battle bindings and periodicity groups through the shared entity catalog implementation.",
+  "limitations": [
+    "This is placement configuration, not a server entity snapshot or a spawn/refresh algorithm. Native prefab presentation and local saved state remain with the owning map host."
+  ]
+}

@@ -12,6 +12,8 @@
 
 小地图资源点宿主显式引用区域说明和原标签接口程序集，保证组合数据源所用类型可在正式世界程序集编译。
 
+正式宿主的放置实体输入由 `scripts/mainline_entity_catalog.py` 公共实现转换官方 EC 的阶段、激活、锁定、奖励、换图、战斗绑定与周期组，泽之国和龙之国的生成入口均调用此实现。读取前核对地图身份、定义／组件来源哈希及完整放置集合，转换不修改借用的组件字典。龙之国旧目录统一阶段0和空锁定／绑定的输入已替换为原配置；来源、具体数据与运行验证范围见[龙之国](../maps/map-14.md)。这仍是放置配置，不定义服务器实体快照、出生或刷新算法。
+
 主线地图通过 `OfficialMainlineMapRuntime.Begin(mapClassId, …)` 使用同一套运行时。`OfficialMainlineMapProfile` 登记 Map10–16；各图数据、表现和游玩完成范围以所属地图页为准，登记或可进入不表示整图完成。鲸背岛 Map16 已登记原版本、网格／身体／白雾、交互和战斗／剧情来源配置，但 `IsRuntimeEntryReady=false`，不能打开正式地图入口。地图资源、区域条件、剧情、实体和进度仍按地图 ID 隔离。新增地图须先迁移其官方数据与专属流程，再登记配置，不能仅替换地图 ID 后宣称地图完成。
 
 实体资源寻址已有通用官方输入解析器 [`prepare_mainline_entity_prefab_roots.py`](../../scripts/prepare_mainline_entity_prefab_roots.py)：它从原地图放置、导航角色类别、EC `index.g.txt` 和展示表导出真实 prefab 地址，按选定 APK／CDN bundle 核验 GameObject 身份并闭合CAB依赖；不把显示用的 `PenPath` 当资源路径，也不声明 Android 输入可直接作为 Windows 运行资源。后续 AssetRipper 输出由 [`verify_mainline_entity_native_exports.py`](../../scripts/verify_mainline_entity_native_exports.py) 按根清单逐项核对 prefab 与 `.meta` 输出哈希；此步骤只锁定转换输入，不替代 Windows 脚本／资源绑定。Map16 已通过两步输入解析，实体视觉的 Windows 转换和宿主接线仍未完成，见[鲸背岛](../maps/map-16.md)。
