@@ -30,6 +30,7 @@ namespace Zjcs.Presentation.Combat
             this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
             this.scope = scope ?? throw new ArgumentNullException(nameof(scope));
             this.entityViews = entityViews ?? throw new ArgumentNullException(nameof(entityViews));
+            this.scope.BindNativePrefabAdapter(Zjcs.Offline.ProfessionUI.PartnerNativeSkillSkeleton.BindOriginalPrefab);
         }
 
         public int CatalogCount => catalog.Count;

@@ -102,6 +102,10 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 
 隔离内置屏 Direct3D Play Mode 在原实体根控制器上运行34名伙伴的93个技能分支、95个原 `MyPlayableAnimator` 节点，全部进入匹配触发器的原目标状态；原 Awake 初始化、禁用／再启用、覆盖控制器独立创建、释放后原引用恢复与组件清理均通过。93张重新隔离取景的实际运行截图已查看，沿用11015–11022的原24×24贴图现状。正式工程 Unity 导入／编译与 `ProjectTools.Validate` 通过，静态检查通过（120,460个 GUID），14项文件身份与68个原组件对象记录完整。该夹具直接播放原节点，只证明应用动画绑定与早期姿态，不证明完整技能特效图、正式邀请实战或 Windows Player。
 
+伙伴完整技能图复用已转换的75个原技能实体、93份方向／默认 prefab。`PartnerNativeSkillSkeleton` 在生产 `OfficialBattleSkillGraphPlayback` 的实例工厂中，于 Awake 前为58550内嵌的原4.2伙伴骨骼绑定既有独立几何端口；保留原模型与单个分离渲染子节点、`100/skill_01_2` 循环、原 Update 时序、停用不清空动画状态及原 shadow 附着。该模型与11007原实体使用同一骨骼／材质对象，按原 `SkeletonRendererHighTexturePreview` 的高清加载引用绑定2048×668原贴图；其他原技能特效继续沿现有路径加载。`PartnerNativeBattleMesh` 复用原角色的网格、材质字段与渲染设置操作，不读取或重建 Spine SDK 算法。原 prefab 组件、加载器、贴图对象／像素、应用类来源及当前绑定输入输出哈希见[内嵌骨骼来源凭据](../../assets/reference/partner-native-skill-skeletons-source-manifest.json)。
+
+隔离内置屏 Direct3D Play Mode 经生产技能调度器、原技能实体视图、对象池、原相机与完整 prefab 图运行全部93个分支；逐帧核对已初始化原节点的应用组件，58550另检查原骨骼身份、高清页、现有分离子节点和旧组件替换，未出现原 atlas 缺失或附着类型异常。每分支运行至少2秒并覆盖最后一个已知 Animator 节点之后0.5秒，共279张实际运行截图已查看；高清贴图导入后的RGBA哈希、尺寸、mip、颜色空间、过滤／Wrap及原不可读设置一致。正式工程导入／编译、`ProjectTools.Validate` 和静态检查（120,482个 GUID）通过，17项输入和4项安装文件身份一致。该夹具保持技能实体至检查结束，不合成玩法时长或结算伤害；没有验证自然播放完成、实际声音、正式邀请鼠标流程或 Windows Player，11015–11022白色轮廓仍属未完成范围。
+
 贴图沿原 `AppearanceRendererLite.SkeletonRenderer` 指针、`AppearanceConfig` 骨骼路径和 `AppearanceAddressUtils.GetTextureLoaderPath` 恢复。35 个渲染器均使用原 Low 分辨率；原材质的占位页与运行时 `TextureLoader_Low` 的实际目标分别保存，35 项映射对应 28 份不同的目标 PNG。11015–11022 的原 Low 目标为 24×24，当前原 High 目标也为该尺寸，未以其他图片替换。隔离 Unity 工程复用正式工程的 Linear 颜色空间；全部目标导入后的 RGBA 像素哈希、尺寸、mip、颜色空间、过滤／各轴 Wrap 参数一致，并恢复原可读性。
 
 `ProfessionNativeOrderedConstraintPose` 按原 order 交错求解 IK 与 Transform，保留前序约束结果；`ProfessionNativeAffineIk` 使用独立平面几何处理单骨骼、双骨骼的圆形／非均匀缩放椭圆及反射坐标，保留原混合、弯曲、伸展和适用的柔化分支。非均匀缩放时子骨骼 Y 归零且不伸展，依据[公开 IK 约束说明](https://esotericsoftware.com/spine-ik-constraints)；该分支的非零 softness 仍显式拒绝，当前相关原配置和动画均为零。恢复原 noScaleOrReflection 继承、11042 的相对局部旋转；原非凸裁剪边界通过独立三角剖分接入既有半平面裁剪，保持原三角形朝向与插值 UV，不复制动画 SDK。

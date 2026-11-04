@@ -26,6 +26,7 @@ namespace Zjcs.Offline.BattleNativePlayables
         private readonly HashSet<MyPlayable> owned = new HashSet<MyPlayable>();
         private readonly Zjcs.Official.StoryPlayables.GAction lowMemory = new Zjcs.Official.StoryPlayables.GAction();
         private bool disposed;
+        private Action<GameObject> nativePrefabAdapter;
 
         public OfflineBattleNativePlayableScope(Transform parent, IProfessionSoundHost sound,
             IBattleCameraOffsetHost cameraOffsetHost = null,
@@ -78,6 +79,7 @@ namespace Zjcs.Offline.BattleNativePlayables
             RequireLive();
             // Inject before Awake/OnEnable: preserve original leaf subscriptions.
             var instance = UnityEngine.Object.Instantiate(prefab, staging.transform, worldPositionStays);
+            nativePrefabAdapter?.Invoke(instance);
             foreach (var playable in instance.GetComponentsInChildren<MyPlayable>(true)) playable.MyPlayableCenter = center;
             foreach (MonoBehaviour component in instance.GetComponentsInChildren<MonoBehaviour>(true))
             {
@@ -96,6 +98,15 @@ namespace Zjcs.Offline.BattleNativePlayables
             }
             instance.transform.SetParent(parent, worldPositionStays);
             return instance;
+        }
+
+        public void BindNativePrefabAdapter(Action<GameObject> adapter)
+        {
+            RequireLive();
+            if (adapter == null) throw new ArgumentNullException(nameof(adapter));
+            if (nativePrefabAdapter != null && nativePrefabAdapter != adapter)
+                throw new InvalidOperationException("The original prefab adapter is already bound.");
+            nativePrefabAdapter = adapter;
         }
 
         public void BindSourceDeathView(IBattleSourceDeathView view)

@@ -1,7 +1,9 @@
 {
   "name": "Zjcs.Editor.PartnerBattlePlayables",
   "rootNamespace": "Zjcs.Editor.ProfessionUI",
-  "includePlatforms": ["Editor"],
+  "includePlatforms": [
+    "Editor"
+  ],
   "references": [
     "Zjcs.Editor.ProfessionUI",
     "Zjcs.Offline.ProfessionUI",
@@ -11,6 +13,10 @@
     "Zjcs.Official.ProfessionUI",
     "Zjcs.Official.StoryPlayables",
     "Zjcs.Official.StoryAnimation",
+    "Zjcs.Combat.Official",
+    "Zjcs.Offline.BattleNativePlayables",
+    "Zjcs.Official.StoryPlayableManager",
+    "Zjcs.Offline.Equipment",
     "Unity.RenderPipelines.Universal.Runtime"
   ]
 }

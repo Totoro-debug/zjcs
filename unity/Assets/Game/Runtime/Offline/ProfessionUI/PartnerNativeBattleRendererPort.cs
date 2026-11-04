@@ -15,6 +15,7 @@ namespace Zjcs.Offline.ProfessionUI
         private int invisibleMode;
         private float spacing;
         private string dataName;
+        private MeshRenderer visibleRenderer;
         public Component Component => this;
         public IProfessionAppearanceSkeleton Skeleton => skeleton;
         IProfessionFollowerSkeleton IProfessionFollowerAnimation.Skeleton => skeleton;
@@ -24,18 +25,20 @@ namespace Zjcs.Offline.ProfessionUI
         public bool UseCustomZSpacing => false;
         public float ZSpacing => spacing;
         public int UpdateWhenInvisible => invisibleMode;
-        public int UpdateMode => gameObject.activeInHierarchy && GetComponent<MeshRenderer>().enabled
-            && GetComponent<MeshRenderer>().isVisible ? 3 : invisibleMode;
+        public int UpdateMode => gameObject.activeInHierarchy && visibleRenderer.enabled
+            && visibleRenderer.isVisible ? 3 : invisibleMode;
         public event Action<IProfessionAppearanceRendererLite> OnCustomDemandLoading;
         public event Action<IProfessionFollowerAnimation> OnAnimationRebuild;
 
         internal void Bind(ProfessionNativeAppearanceSkeleton value, Material sourceMaterial,
-            int originalInvisibleMode, float originalSpacing, string originalDataName, Action updateMesh)
+            int originalInvisibleMode, float originalSpacing, string originalDataName, Action updateMesh,
+            MeshRenderer originalVisibleRenderer = null)
         {
             if (skeleton != null) throw new InvalidOperationException("Original partner renderer is already bound.");
             skeleton = value ?? throw new ArgumentNullException(nameof(value));
             material = sourceMaterial; invisibleMode = originalInvisibleMode; spacing = originalSpacing;
             dataName = originalDataName; update = updateMesh;
+            visibleRenderer = originalVisibleRenderer ? originalVisibleRenderer : GetComponent<MeshRenderer>();
             OnAnimationRebuild?.Invoke(this);
         }
         public void Initialize(bool overwrite, bool quiet)
