@@ -20,6 +20,8 @@
 
 ## 完整还原部分
 
+鲸背岛已加入共享 `OfficialMainlineMapProfile` 作为数据档案，配置同版网格／身体／白雾资源、43区、默认入口实体101、单本地分线、交互资源及 `884_156692` 战斗／剧情来源；`IsRuntimeEntryReady=false`，正式地图入口仍关闭。网格资源、白雾 prefab 和交互配置尚未接入本图正式地图宿主，剧情、战斗及实体视觉仍有独立缺项。
+
 完整原小地图 prefab 已接入公共 `MainlineMiniMap` 实例工厂，保留原根315个序列化对象文档及全部原外部说明／接缝线引用；`MapAreaTile` 保留原继承关系、区域编号和完整Tile字段。隔离 GUI Play Mode 已检查本图完整 prefab 的脚本、托管类型及对象引用；使用本图140×120网格、43地区和配置4，通过与泽之国相同工厂的加载、原离线请求／等待隐藏和订阅释放。此项尚未提供本图正式存档响应、地区白雾／实体图标实播或HUD模拟交互；不视为本图完整小地图完成。来源见[当前完整小地图根](../../assets/reference/official-map/map16-current-minimap-root-source-manifest.json)，公共生命周期与验证边界见[公共模块](../features/mainline-map-modules.md)。
 
 尚无本图完整 Unity 游玩流程的完成结论。

@@ -17,15 +17,32 @@ namespace Zjcs.Editor
 
         public static void ValidateProfileDataManifests()
         {
-            string[] battle = { "854_156383", "854_156383", "854_156383", "854_156383", "871_156598", "854_156383" };
-            string[] story = { "854_156383", "854_156383", "854_156383", "871_156598", "871_156598", "871_156598" };
-            for (int mapId = 10; mapId <= 15; mapId++)
+            string[] battle = { "854_156383", "854_156383", "854_156383", "854_156383", "871_156598", "854_156383", "884_156692" };
+            string[] story = { "854_156383", "854_156383", "854_156383", "871_156598", "871_156598", "871_156598", "884_156692" };
+            for (int mapId = 10; mapId <= 16; mapId++)
             {
                 OfficialMainlineMapProfile profile = OfficialMainlineMapProfile.Get(mapId);
                 int index = mapId - 10;
                 if (profile.BattleDataManifest != battle[index] || profile.StoryDataManifest != story[index])
                     throw new InvalidDataException("Mainline map source manifests differ from the pinned map inputs: " + mapId);
             }
+            OfficialMainlineMapProfile whaleIsland = OfficialMainlineMapProfile.Get(16);
+            if (whaleIsland.IsRuntimeEntryReady || whaleIsland.NativeUiRoot != null || whaleIsland.RegionCount != 43
+                || whaleIsland.DefaultEntryPlacementId != 101 || whaleIsland.LocalChannelCount != 1
+                || whaleIsland.GridVisibilityResource != "World/Mainline/Visibility/Map16/visibility"
+                || whaleIsland.GridBodiesResource != "World/Mainline/Visibility/Map16/bodies"
+                || whaleIsland.GridFogResource != "World/Mainline/Fog/Map16"
+                || whaleIsland.InteractionResource != "Map16/interactions"
+                || whaleIsland.InteractionManifest != "884_156692")
+                throw new InvalidDataException("Whale Island data profile or entry readiness differs from its migrated inputs.");
+            if (!whaleIsland.RequiredAccessConditions.SequenceEqual(new[] { 116 })
+                || Resources.Load<TextAsset>(whaleIsland.GridVisibilityResource) == null
+                || Resources.Load<TextAsset>(whaleIsland.GridBodiesResource) == null
+                || Resources.Load<GameObject>(whaleIsland.GridFogResource) == null
+                || Resources.Load<TextAsset>(whaleIsland.InteractionResource) == null
+                || Resources.Load<TextAsset>(whaleIsland.Resource("battle-runtime")) == null
+                || Resources.Load<TextAsset>(whaleIsland.Resource("stories")) == null)
+                throw new InvalidDataException("Whale Island profile resources or access condition are not loadable.");
         }
 
         public static void ValidateWhaleIslandStoryCondition()

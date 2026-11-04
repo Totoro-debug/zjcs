@@ -6,7 +6,7 @@
 
 ## 功能简介
 
-主线地图通过 `OfficialMainlineMapRuntime.Begin(mapClassId, …)` 使用同一套运行时。`OfficialMainlineMapProfile` 当前登记 Map10–15；各图数据、表现和游玩完成范围以所属地图页为准，登记或可进入不表示整图完成。地图资源、区域条件、剧情、实体和进度仍按地图 ID 隔离。新增地图须先迁移其官方数据与专属流程，再登记配置，不能仅替换地图 ID 后宣称地图完成。鲸背岛 Map16 尚未登记此运行时。
+主线地图通过 `OfficialMainlineMapRuntime.Begin(mapClassId, …)` 使用同一套运行时。`OfficialMainlineMapProfile` 登记 Map10–16；各图数据、表现和游玩完成范围以所属地图页为准，登记或可进入不表示整图完成。鲸背岛 Map16 已登记原版本、网格／身体／白雾、交互和战斗／剧情来源配置，但 `IsRuntimeEntryReady=false`，不能打开正式地图入口。地图资源、区域条件、剧情、实体和进度仍按地图 ID 隔离。新增地图须先迁移其官方数据与专属流程，再登记配置，不能仅替换地图 ID 后宣称地图完成。
 
 实体资源寻址已有通用官方输入解析器 [`prepare_mainline_entity_prefab_roots.py`](../../scripts/prepare_mainline_entity_prefab_roots.py)：它从原地图放置、导航角色类别、EC `index.g.txt` 和展示表导出真实 prefab 地址，按选定 APK／CDN bundle 核验 GameObject 身份并闭合CAB依赖；不把显示用的 `PenPath` 当资源路径，也不声明 Android 输入可直接作为 Windows 运行资源。后续 AssetRipper 输出由 [`verify_mainline_entity_native_exports.py`](../../scripts/verify_mainline_entity_native_exports.py) 按根清单逐项核对 prefab 与 `.meta` 输出哈希；此步骤只锁定转换输入，不替代 Windows 脚本／资源绑定。Map16 已通过两步输入解析，实体视觉的 Windows 转换和宿主接线仍未完成，见[鲸背岛](../maps/map-16.md)。
 
@@ -145,13 +145,13 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 公共白雾 Module 位于 `Presentation/World/Mainline/OfficialMainlineGridFog.cs`，以原根 prefab、相机、地形坐标、公共可见性实例和玩家／传送坐标为 Interface，内部完成原 prefab 实例化、独立材质、原 `CloudController2` 初始化与结束清理。`LocalGridVisibilityAgent` 从完整官方 `MyGridVisibilityAgent` 迁移，只将实体容器、DI 生命周期与角色查询换成本地 Adapter；原单格／多格事件、即时移除、按距离扩散、暂缓揭雾、源坐标覆盖及目标集合均保留。现有 `MapRootVisibility` 的容器生命周期 Adapter 继续保留供原实体宿主使用；公共地图宿主不依赖该动态容器。Map11／12／13 的正式宿主已通过公共载入层接入原白雾；Map15 复用可见性且保留原无白雾差异。当前验证范围在各地图页维护。
 
-当前版 Map11／12／15／16 的真实网格与身体输入已按原生成格式解码，使用 `World/Mainline/Visibility/Map<ID>/` 的独立 Resources 地址；Map11／12／15 已接入正式 Adapter，Map16 等待接线。Map11／12／13／16 的原雾层 prefab 已分别恢复；Map15 原根的 `CloudController` 显式为空，该差异以配置保持。资源规格及接入／验证范围只在各地图页维护；共同来源见 `mainline-grid-visibility-data-source-manifest.json` 与 `mainline-grid-fog-source-manifest.json`。
+当前版 Map11／12／15／16 的真实网格与身体输入已按原生成格式解码，使用 `World/Mainline/Visibility/Map<ID>/` 的独立 Resources 地址；Map11／12／15 已接入正式 Adapter，Map16 的配置已在 profile 登记但地图宿主仍待接线。Map11／12／13／16 的原雾层 prefab 已分别恢复；Map15 原根的 `CloudController` 显式为空，该差异以配置保持。资源规格及接入／验证范围只在各地图页维护；共同来源见 `mainline-grid-visibility-data-source-manifest.json` 与 `mainline-grid-fog-source-manifest.json`。
 
 静态元数据检查（85,050 GUID）与 `ProjectTools.Validate` 通过。`SharedMapGridVisibilityAcceptance.RunSourceMaps` 已在 Unity 2022.3.57f1c2 中通过：保留原 Map13 与四组小尺寸 Interface 夹具回归，再使用 Map11／12／15／16 的真实原版输入执行移动揭格、全部区域列表、独立实例及逐格／逐字节冷读。后四图使用显式规则夹具（实体全部活动、地区查询返回0、不检查通行），未代替各图真实地区 Adapter、导航或地图交互验证。
 
 公共可见性的加载、坐标／实体来源核对、区域查询、快照、白雾绑定和清理集中至 `OfficialMainlineMapRuntime.GridVisibility.cs`。Map13 保留旧 JSON 字段，其他地图使用 `gridVisibility`；事务回滚更换可见性实例时同时重新绑定雾层事件，避免继续监听已释放实例。当前接入与验证范围见各地图页。
 
-地图档案显式配置网格／身体／白雾地址、是否要求独立小地图 prefab、交互配置版本及战斗／剧情数据版本，公共载入层不再按地图ID选择来源版本。当前 Map10–13、15 的战斗数据使用 `854_156383`，Map14 的战斗数据使用 `871_156598`；Map10–12 的剧情数据使用 `854_156383`，Map13–15 的剧情数据使用 `871_156598`。Map12／13 的地区、奖励预览、区域刷新和英雄结果索引从各自已校验的 `871_156598` 原表转换，避免误用仅含 Map10／11 的早期共享地区数组。空奖励列表按原表保留；来源与绑定哈希见[各图交互配置](../../assets/reference/official-map/mainline-interaction-maps-source-manifest.json)。Map16 尚未注册到共享档案；鲸背岛专属来源版本仍由其地图页维护。
+地图档案显式配置网格／身体／白雾地址、是否要求独立小地图 prefab、交互配置版本及战斗／剧情数据版本，公共载入层不再按地图ID选择来源版本。当前 Map10–13、15 的战斗数据使用 `854_156383`，Map14 的战斗数据使用 `871_156598`，Map16 使用 `884_156692`；Map10–12 的剧情数据使用 `854_156383`，Map13–15 使用 `871_156598`，Map16 使用 `884_156692`。Map12／13 的地区、奖励预览、区域刷新和英雄结果索引从各自已校验的 `871_156598` 原表转换，避免误用仅含 Map10／11 的早期共享地区数组。空奖励列表按原表保留；来源与绑定哈希见[各图交互配置](../../assets/reference/official-map/mainline-interaction-maps-source-manifest.json)。
 
 ## 自定义实现
 

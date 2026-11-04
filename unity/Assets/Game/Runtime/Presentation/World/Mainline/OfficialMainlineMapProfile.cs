@@ -40,7 +40,14 @@ namespace Zjcs.Presentation.World
                     bodiesResource: "World/Mainline/Visibility/Map15/bodies", requiresMiniMapPrefab: false,
                     playerViewResource: "Map15/BaseGround/player-view", nativeGroundLabelResource: "Map15/Native/region-label-data",
                     nativeGroundPrefabResource: "Map15/Native/current-ground", localChannelCount: 1,
-                    storyDataManifest: "871_156598") // Original root has no cloud; MiniMapPath is empty.
+                    storyDataManifest: "871_156598"), // Original root has no cloud; MiniMapPath is empty.
+                [16] = new OfficialMainlineMapProfile(16, 70, 6, null,
+                    new[] { 116 }, false, regionCount: 43, defaultEntryPlacementId: 101,
+                    visibilityResource: "World/Mainline/Visibility/Map16/visibility",
+                    bodiesResource: "World/Mainline/Visibility/Map16/bodies",
+                    fogResource: "World/Mainline/Fog/Map16",
+                    interactionResource: "Map16/interactions", interactionManifest: "884_156692",
+                    localChannelCount: 1, battleDataManifest: "884_156692", storyDataManifest: "884_156692")
             });
 
         public int MapClassId { get; }
