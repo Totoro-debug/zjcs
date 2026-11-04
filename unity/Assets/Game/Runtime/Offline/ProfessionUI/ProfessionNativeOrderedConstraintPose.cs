@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Zjcs.Offline.ProfessionUI
 {
@@ -9,6 +10,10 @@ namespace Zjcs.Offline.ProfessionUI
     // construction also used by partner illustrations. Physics is a later stage.
     public static class ProfessionNativeOrderedConstraintPose
     {
+        private static readonly ConditionalWeakTable<ProfessionNativeAnimationChannels, ProfessionNativePathAnimation> PathChannels =
+            new ConditionalWeakTable<ProfessionNativeAnimationChannels, ProfessionNativePathAnimation>();
+        private static ProfessionNativePathAnimation Paths(ProfessionNativeAppearanceSkeleton skeleton, ProfessionNativeAnimationChannels animation)
+            => PathChannels.GetValue(animation, value => new ProfessionNativePathAnimation(skeleton.Source, value.Name, value.OriginalBezierSegments));
         public static void EvaluateBeforePhysics(ProfessionNativeAppearanceSkeleton skeleton,
             ProfessionNativeAnimationChannels animation, float time, bool loop = true)
         {
@@ -16,8 +21,9 @@ namespace Zjcs.Offline.ProfessionUI
             float position = loop && animation.Duration > 0 ? time % animation.Duration : time;
             var ik = animation.Constraints.SampleIk(position, skeleton.SkinConstraints);
             var transforms = animation.Constraints.SampleTransforms(position, skeleton.SkinConstraints);
+            var paths = Paths(skeleton, animation).Sample(position, skeleton.SkinConstraints);
             skeleton.EvaluateNativeAnimation(animation, time, loop);
-            Solve(skeleton, ik, transforms);
+            Solve(skeleton, ik, transforms, paths);
         }
 
         public static void EvaluateMixNextBeforePhysics(ProfessionNativeAppearanceSkeleton skeleton,
@@ -32,10 +38,12 @@ namespace Zjcs.Offline.ProfessionUI
             float to = incomingLoop && incoming.Duration > 0 ? incomingTime % incoming.Duration : incomingTime;
             var ik = outgoing.Constraints.SampleIk(from, skeleton.SkinConstraints);
             var transforms = outgoing.Constraints.SampleTransforms(from, skeleton.SkinConstraints);
+            var paths = Paths(skeleton, outgoing).Sample(from, skeleton.SkinConstraints);
             incoming.Constraints.ApplyReplace(ik, transforms, to, weight);
+            Paths(skeleton, incoming).ApplyReplace(paths, to, weight);
             skeleton.EvaluateNativeAnimation(outgoing, outgoingTime, outgoingLoop);
             skeleton.ApplyMixNext(incoming, to, weight);
-            Solve(skeleton, ik, transforms);
+            Solve(skeleton, ik, transforms, paths);
         }
 
         private static void Validate(ProfessionNativeAppearanceSkeleton skeleton,
@@ -50,7 +58,7 @@ namespace Zjcs.Offline.ProfessionUI
             for (int index = 0; index < skeleton.Source.Constraints.Count; index++)
             {
                 var definition = skeleton.Source.Constraints[index];
-                if (definition.Kind == "ik" || definition.Kind == "transform" || definition.Kind == "physics") continue;
+                if (definition.Kind == "ik" || definition.Kind == "transform" || definition.Kind == "path" || definition.Kind == "physics") continue;
                 if (definition.Fields.TryGetValue("skin", out object required) && (bool)required
                     && !skeleton.SkinConstraints.Contains(index)) continue;
                 throw new NotSupportedException("Restore original world constraint kind: " + definition.Kind);
@@ -58,9 +66,11 @@ namespace Zjcs.Offline.ProfessionUI
         }
 
         private static void Solve(ProfessionNativeAppearanceSkeleton skeleton,
-            ProfessionNativeConstraintAnimation.IkState[] ik, ProfessionNativeIdleTransform.Constraint[] transforms)
+            ProfessionNativeConstraintAnimation.IkState[] ik, ProfessionNativeIdleTransform.Constraint[] transforms,
+            ProfessionNativePathAnimation.State[] paths)
         {
             int[] orders = ik.Select(value => value.Order).Concat(transforms.Select(value => value.Order))
+                .Concat(paths.Select(value => value.Order))
                 .OrderBy(value => value).ToArray();
             if (orders.Distinct().Count() != orders.Length)
                 throw new ArgumentException("Original partner constraint order is ambiguous.");
@@ -76,6 +86,8 @@ namespace Zjcs.Offline.ProfessionUI
                     ProfessionNativeAffineIk.ApplySingle(skeleton.Pose, chain, length);
                 }
                 else if (chain != null) ProfessionNativeAffineIk.ApplyPair(skeleton.Pose, chain);
+                else if (paths.FirstOrDefault(value => value.Order == order) is ProfessionNativePathAnimation.State path)
+                    ProfessionNativePathAnimation.Apply(skeleton, path);
                 else ApplyTransform(skeleton.Pose, transforms.Single(value => value.Order == order));
             }
             skeleton.Pose.UpdateWorld();

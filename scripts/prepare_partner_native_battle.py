@@ -306,6 +306,8 @@ def build(work, install=False):
         "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs",
         "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAffineIk.cs",
         "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeOrderedConstraintPose.cs",
+        "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimationChannels.cs",
+        "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePathAnimation.cs",
         "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePolygonClipper.cs",
         "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeMeshBatches.cs",
         "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerNativePortraitIk.cs",

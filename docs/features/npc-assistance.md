@@ -84,9 +84,11 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 
 `ProfessionNativeOrderedConstraintPose` 按原 order 交错求解 IK 与 Transform，保留前序约束结果；`ProfessionNativeAffineIk` 使用独立平面几何处理单骨骼、双骨骼的圆形／非均匀缩放椭圆及反射坐标，保留原混合、弯曲、伸展和适用的柔化分支。非均匀缩放时子骨骼 Y 归零且不伸展，依据[公开 IK 约束说明](https://esotericsoftware.com/spine-ik-constraints)；该分支的非零 softness 仍显式拒绝，当前相关原配置和动画均为零。恢复原 noScaleOrReflection 继承、11042 的相对局部旋转；原非凸裁剪边界通过独立三角剖分接入既有半平面裁剪，保持原三角形朝向与插值 UV，不复制动画 SDK。
 
-隔离 Unity 编译及数据检查通过：35 个包的原动画名一致，错误 NPC 身份全部拒绝；对 791 段动画的起点、中点、终点、全部原关键帧及相邻关键帧中点构建网格，共 36,929 个姿态采样，749 段通过；11009、11010 的 42 段因路径约束未接通而明确拒绝。另通过已知 FK 端点的非均匀缩放／反射双骨骼 IK、前序约束保留、单骨骼伸展、选择继承和非凸裁剪面积／重心／UV 检查。正式工程 Unity 导入／编译与 `ProjectTools.Validate`、静态检查（118,401 个 GUID）通过，365 项源码／安装文件哈希及 337 项安装元数据一致。
+`ProfessionNativePathAnimation` 采样原 path position／spacing／mix 的线性、阶梯和 Bezier 曲线，MixNext 只替换已开始的 incoming 通道，未设置通道保留 outgoing 状态。11009 的5条单骨骼路径和11010 的30节骨骼链按原 order 接入；保留可见目标槽位、原多段三次曲线控制点、当前变形、长度间距、百分比位置及 tangent／chain 旋转，用独立数值积分与弧长反求处理恒速路径，两端按原切线外延。chain 的零旋转偏移保持相邻骨骼首尾连接，依据[公开路径约束说明](https://esotericsoftware.com/spine-path-constraints)。其他闭合、非恒速、间距／旋转模式仍显式拒绝，当前这34个实体没有使用这些分支。
 
-内置屏 Direct3D Play Mode 使用当前原 shader 对象哈希完全匹配的 Windows 转换缓存，恢复原材质参数、Low 贴图、MeshRenderer 和 Transform 字段，检查 11001、11003、11005、11007、11042 的原 idle 与首段 skill_01 动作，30 张实际渲染画面已查看；11005 的独立背饰同时渲染。该隔离夹具直接采样动画，尚未证明正式 Animator、战斗集成或 Windows Player；34 个伙伴尚未加入正式战斗候选。输入对象、原贴图加载配置、shader 转换凭据、解码器、转换及安装载荷／元数据哈希见[完整骨骼战斗数据来源](../../assets/reference/partner-native-battle-source-manifest.json)。未生成完整素材快照。
+隔离 Unity 编译及数据检查通过：35 个包的原动画名一致，错误 NPC 身份全部拒绝；对 791 段动画的起点、中点、终点、全部原关键帧及相邻关键帧中点构建网格，共 38,457 个姿态采样，791 段全部通过。另通过已知 FK 端点的非均匀缩放／反射双骨骼 IK、前序约束保留、单骨骼伸展、选择继承、非凸裁剪面积／重心／UV，以及解析可知的三次曲线长度／中点／切线、多段路径与两端外延、原阶梯位置关键帧、incoming 路径混合／未设置通道保留和30节链连接检查。正式工程 Unity 导入／编译与 `ProjectTools.Validate`、静态检查（118,404 个 GUID）通过，367 项源码／安装文件哈希及 337 项安装元数据一致。
+
+内置屏 Direct3D Play Mode 使用当前原 shader 对象哈希完全匹配的 Windows 转换缓存，恢复原材质参数、Low 贴图、MeshRenderer 和 Transform 字段，检查 11001、11003、11005、11007、11009、11010、11042 的原 idle 与技能动作；11010 取原 skill_02 路径动作，两名路径角色另检查技能早期的0.1／0.2／0.3进度，共48张实际渲染画面已查看。11005 的独立背饰、11009 路径移动的木条和11010 的火焰长带均可见；截图夹具按非零透明度顶点取景，保留原完整网格与颜色。该隔离夹具直接采样动画，尚未证明正式 Animator、战斗集成或 Windows Player；34 个伙伴尚未加入正式战斗候选。输入对象、原贴图加载配置、shader 转换凭据、解码器、转换及安装载荷／元数据哈希见[完整骨骼战斗数据来源](../../assets/reference/partner-native-battle-source-manifest.json)。未生成完整素材快照。
 
 - 素材秘境（2）、道路属性门槛（1）、探索首领（All=10）、节庆首领（5）、联合行动（4）各自的实际选择入口、条件筛选、官方属性排序／门槛、站位、战斗加入、快照提交及结算接线；不能用日常副本的 All 规则替代这些玩法。
 - 羁绊冒险（6）的 NPC 战斗邀请入口和战斗接线；NPC 旅行是派遣系统，不等同战斗助战。

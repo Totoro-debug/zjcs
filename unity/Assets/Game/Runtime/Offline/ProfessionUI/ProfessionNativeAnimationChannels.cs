@@ -30,6 +30,7 @@ namespace Zjcs.Offline.ProfessionUI
         public int InheritanceTrackCount => inheritance.Length;
         public int ColorTrackCount => colors.Length;
         public IReadOnlyDictionary<string, object> OriginalFields { get; }
+        internal bool OriginalBezierSegments => originalBezierSegments;
         public ProfessionNativeConstraintAnimation Constraints {
             get { if (constraints == null) { constraints = new ProfessionNativeConstraintAnimation(data, Name);
                 if (originalBezierSegments) constraints.UseOriginalBezierSegments(); } return constraints; }

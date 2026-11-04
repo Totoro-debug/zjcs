@@ -90,7 +90,7 @@ namespace Zjcs.Editor.ProfessionUI
             var catalog = Obj(OfficialEquipmentJson.Parse(File.ReadAllText(Root + "catalog.json")));
             var shader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/PartnerNativeBattleValidation/OriginalSkeletonEffect.shader");
             if (!shader || !shader.isSupported) throw new InvalidDataException("Original current battle shader is unavailable.");
-            foreach (int id in new[] { 11001, 11003, 11005, 11007, 11042 })
+            foreach (int id in new[] { 11001, 11003, 11005, 11007, 11009, 11010, 11042 })
             {
                 var row = Arr(catalog["fighters"]).Select(Obj).Single(value => Int(value, "npcId") == id);
                 var root = new GameObject("Original partner " + id);
@@ -101,11 +101,14 @@ namespace Zjcs.Editor.ProfessionUI
                     foreach (var part in new[] { row }.Concat(Arr(row["parts"]).Select(Obj)))
                         actors.Add(CreateActor(part, root.transform, transforms, shader));
                     string idle = (string)Obj(row["aliases"])["idle_01"];
-                    string skill = actors[0].Skeleton.Source.AnimationNames.First(value => value.Contains("/skill_01", StringComparison.Ordinal));
+                    string skill = actors[0].Skeleton.Source.AnimationNames.First(value =>
+                        value.Contains(id == 11010 ? "/skill_02" : "/skill_01", StringComparison.Ordinal));
                     foreach (string name in new[] { idle, skill })
                     {
                         var clip = new ProfessionNativeAnimationChannels(actors[0].Skeleton.Source, name);
-                        foreach (float fraction in new[] { 0f, .5f, .8f })
+                        float[] fractions = name == skill && (id == 11009 || id == 11010)
+                            ? new[] { 0f, .1f, .2f, .3f, .5f, .8f } : new[] { 0f, .5f, .8f };
+                        foreach (float fraction in fractions)
                         {
                             float time = clip.Duration * fraction;
                             foreach (Actor actor in actors)
@@ -117,8 +120,7 @@ namespace Zjcs.Editor.ProfessionUI
                                     time * (body ? 1 : Number(actor.Renderer, "timeScale")), !body && Flag(actor.Renderer, "loop"));
                                 Draw(actor);
                             }
-                            Bounds bounds = actors.SelectMany(actor => actor.Draws).Where(draw => draw.enabled).First().bounds;
-                            foreach (MeshRenderer draw in actors.SelectMany(actor => actor.Draws).Where(draw => draw.enabled)) bounds.Encapsulate(draw.bounds);
+                            Bounds bounds = VisibleBounds(actors);
                             camera.transform.position = new Vector3(bounds.center.x, bounds.center.y, bounds.min.z - 10);
                             camera.orthographicSize = Mathf.Max(bounds.extents.y, bounds.extents.x / camera.aspect) * 1.12f;
                             yield return null;
@@ -130,6 +132,27 @@ namespace Zjcs.Editor.ProfessionUI
                 yield return null;
             }
             Destroy(target); Destroy(pipeline);
+        }
+        private static Bounds VisibleBounds(IEnumerable<Actor> actors)
+        {
+            // Validation framing ignores authored zero-alpha slots. Their full
+            // original meshes still render; distant invisible path geometry
+            // must not shrink the visible character to a few capture pixels.
+            Bounds? bounds = null;
+            foreach (MeshRenderer draw in actors.SelectMany(actor => actor.Draws)
+                         .Where(draw => draw.enabled && draw.gameObject.activeInHierarchy))
+            {
+                Mesh mesh = draw.GetComponent<MeshFilter>().sharedMesh;
+                Vector3[] vertices = mesh.vertices; Color32[] colors = mesh.colors32;
+                for (int i = 0; i < vertices.Length; i++)
+                {
+                    if (colors.Length == vertices.Length && colors[i].a == 0) continue;
+                    Vector3 point = draw.transform.TransformPoint(vertices[i]);
+                    if (bounds.HasValue) { Bounds value = bounds.Value; value.Encapsulate(point); bounds = value; }
+                    else bounds = new Bounds(point, Vector3.zero);
+                }
+            }
+            return bounds ?? throw new InvalidDataException("Original partner validation pose has no visible vertices.");
         }
         private static Actor CreateActor(Dictionary<string, object> row, Transform parent,
             Dictionary<string, Transform> transforms, Shader shader)

@@ -77,6 +77,7 @@ namespace Zjcs.Editor.ProfessionUI
                 if (!rejected) throw new InvalidDataException("Native partner loader accepted another NPC identity.");
                 var skeleton = new ProfessionNativeAppearanceSkeleton(data);
                 skeleton.SetSkin(data.CreateCombinedNpcSkin(fighter.skins));
+                if (ordered && fighter.npcId == 11010) ValidatePathChain(skeleton);
                 using var batches = new ProfessionNativeMeshBatches(data.SlotCount);
                 foreach (string name in data.AnimationNames)
                 {
@@ -136,6 +137,23 @@ namespace Zjcs.Editor.ProfessionUI
 
         private static void ValidateOrderedGeometry()
         {
+            var path = new ProfessionNativePathAnimation.OpenCurve(new[] {
+                new Vector2(-1, 0), Vector2.zero, Vector2.right, new Vector2(2, 0), new Vector2(3, 0),
+                new Vector2(3, 1), new Vector2(3, 2), new Vector2(3, 3), new Vector2(3, 4)
+            });
+            if (Math.Abs(path.Length - 6) > .00001
+                || Vector2.Distance(path.Sample(2, out _), new Vector2(2, 0)) > .00001f
+                || Vector2.Distance(path.Sample(4, out _), new Vector2(3, 1)) > .00001f
+                || Vector2.Distance(path.Sample(-2, out _), new Vector2(-2, 0)) > .00001f
+                || Vector2.Distance(path.Sample(8, out _), new Vector2(3, 5)) > .00001f)
+                throw new InvalidDataException("Independent open path changed segment lengths or endpoint extrapolation.");
+            path = new ProfessionNativePathAnimation.OpenCurve(new[] {
+                new Vector2(-1, 0), Vector2.zero, new Vector2(0, 2), new Vector2(2, 2), new Vector2(2, 0), new Vector2(3, 0)
+            });
+            Vector2 middle = path.Sample(2, out Vector2 tangent);
+            if (Math.Abs(path.Length - 4) > .00001 || Vector2.Distance(middle, new Vector2(1, 1.5f)) > .00001f
+                || Vector2.Distance(tangent, Vector2.right) > .00001f)
+                throw new InvalidDataException("Independent cubic arc inversion changed the analytic midpoint or tangent.");
             foreach (float scaleY in new[] { .6f, 1.8f, -.6f, -1.8f, -1.2f })
                 foreach (bool bend in new[] { false, true })
                 {
@@ -230,6 +248,36 @@ namespace Zjcs.Editor.ProfessionUI
                 for (int i = 0; i < vertices.Count; i++)
                     if (Vector2.Distance(uvs[i], new Vector2((vertices[i].x + 10) / 20, (vertices[i].y + 10) / 20)) > .00001f)
                         throw new InvalidDataException("Concave clipping changed affine source UVs.");
+            }
+        }
+
+        private static void ValidatePathChain(ProfessionNativeAppearanceSkeleton skeleton)
+        {
+            var data = skeleton.Source;
+            var track = new ProfessionNativePathAnimation(data, "200/skill_02");
+            var state = track.Sample(0, skeleton.SkinConstraints);
+            if (state.Length != 1 || state[0].Bones.Length != 30 || Math.Abs(state[0].Position - .8f) > .000001f)
+                throw new InvalidDataException("Original 11010 path setup identity differs.");
+            track.ApplyReplace(state, .9333334f, .5f);
+            if (Math.Abs(state[0].Position - .395f) > .00001f)
+                throw new InvalidDataException("Original incoming path position did not mix with the outgoing state.");
+            new ProfessionNativePathAnimation(data, "200/idle_01").ApplyReplace(state, 1, 1);
+            if (Math.Abs(state[0].Position - .395f) > .00001f)
+                throw new InvalidDataException("An unkeyed incoming path reset the outgoing position.");
+            if (Math.Abs(track.Sample(1.5f, skeleton.SkinConstraints)[0].Position + .01f) > .00001f)
+                throw new InvalidDataException("Original stepped path position was interpolated.");
+            ProfessionNativeOrderedConstraintPose.EvaluateBeforePhysics(skeleton,
+                new ProfessionNativeAnimationChannels(data, "200/idle_01"), 0, false);
+            int[] bones = state[0].Bones;
+            var source = (List<object>)data.SourceFields["bones"];
+            for (int i = 1; i < bones.Length; i++)
+            {
+                float length = Convert.ToSingle(((Dictionary<string, object>)source[bones[i - 1]])["length"],
+                    System.Globalization.CultureInfo.InvariantCulture);
+                Vector3 tip = skeleton.Pose.World(bones[i - 1]).MultiplyPoint3x4(new Vector3(length, 0, 0));
+                Vector3 origin = skeleton.Pose.World(bones[i]).MultiplyPoint3x4(Vector3.zero);
+                if (Vector3.Distance(tip, origin) > .001f)
+                    throw new InvalidDataException("Original chain path separated adjacent rigid bones.");
             }
         }
 
