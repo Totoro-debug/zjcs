@@ -80,7 +80,7 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 
 - 素材秘境（2）、道路属性门槛（1）、探索首领（All=10）、节庆首领（5）、联合行动（4）各自的实际选择入口、条件筛选、官方属性排序／门槛、站位、战斗加入、快照提交及结算接线；不能用日常副本的 All 规则替代这些玩法。
 - 羁绊冒险（6）的 NPC 战斗邀请入口和战斗接线；NPC 旅行是派遣系统，不等同战斗助战。
-- NPC 战斗模型／动画加载绑定。目前候选列表仅放行 `OfficialBattleModelCatalog.HasNpcBattleAnimations` 已确认包含 `idle_01`、`run_01` 的角色；85 个伙伴对应的官方 `fightnpc_*` 包已按当前规则实体 ID 从固定 APK／已校验 CDN 缓存提取至 `.tools/source-packages/extracted/`，但还未转换并绑定为 Windows 原生资产，不能把原始包或地图移动动画当作可运行战斗模型。现有 `scripts/prepare_battle_animation.py` 因其共享依赖 `scripts/prepare_map_regions.py` 在工作区及 Git 历史中均缺失而无法启动；其他地图与剧情素材转换工具也引用该缺失模块。
+- NPC 战斗模型／动画加载绑定仍未完成。候选列表仅放行 `OfficialBattleModelCatalog.HasNpcBattleAnimations` 已确认包含 `idle_01`、`run_01` 的角色；85 个伙伴对应的官方 `fightnpc_*` 包已从固定 APK／已校验 CDN 缓存提取至 `.tools/source-packages/extracted/`。`scripts/prepare_battle_animation.py` 已解除对缺失 `prepare_map_regions.py` 的依赖，按当前选定 `884_156692` APK 生成 `assets/official/battle-animation/catalog.json` 与 `assets/reference/battle-animation/source-manifest.json`，记录 598 个 Animator 控制器、470 个骨骼绑定、1,880 个技能播放图及 543 个实体包，转换失败为 0。该 JSON 是提取中间数据；尚未将伙伴原生骨骼、贴图、材质和动画绑定进 Unity 战斗模型目录，也未在战斗中运行验证，因此不能据此开放候选或声称伙伴战斗表现已完成。
 - 将用户确认的等级／阶位规则扩展到其余通用助战玩法；当前日常战斗按玩家等级与存档 `SubRank` 创建伙伴。
 - 非空伙伴队伍的正式入口、人数限制、战斗表现、次数保存恢复及失败回滚仍需完整 Unity Play Mode 验证。公共选择视图已在内置屏 Direct3D 11 Play Mode 通过20名夹具候选的原 Toggle 选择／取消、不可选条目、原确认／关闭按钮模拟鼠标输入、列表20→2→20的复用和释放，并检查弹窗位于宿主及其独立排序子窗口之上；该独立检查不证明实际NPC规则、画像、次数事务或正式玩法已完成。
 

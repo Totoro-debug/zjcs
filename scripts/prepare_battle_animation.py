@@ -3,17 +3,74 @@ import hashlib
 import json
 import re
 import struct
-import numpy as np
+import sys
 from pathlib import Path
-from prepare_map_regions import Regions, ROOT, save, transform as unity_transform
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / '.tools/character-art-python'))
+
+import numpy as np
 from UnityPy.classes.PPtr import PPtr
+from official_apk import Apk
+from official_unity_schema import ScriptSchemas
 from official_battle_spine_component import read_component, player_renderers as read_player_renderers
 
 OUT = ROOT / 'assets/official/battle-animation'
 
 
+class BattleAnimationSources:
+    """Pinned source access used by this converter, independent of map extraction."""
+    def __init__(self):
+        self.apk = Apk.current()
+        self.schemas = ScriptSchemas()
+        self.source_records = {}
+
+    def mono(self, obj):
+        script = obj.read(check_read=False).m_Script.deref().read()
+        return script.m_ClassName, obj.get_raw_data(), None
+
+    def input(self, obj):
+        provenance = self.apk.provenance(obj)
+        raw = obj.get_raw_data()
+        key = provenance['bundle'] + ':' + str(obj.path_id)
+        name = ''
+        try:
+            name = obj.read(check_read=False).m_Name
+        except Exception:
+            pass
+        record = dict(provenance, type=obj.type.name, name=name,
+                      bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
+        previous = self.source_records.get(key)
+        if previous is not None and previous != record:
+            raise ValueError('Conflicting pinned battle animation source object: ' + key)
+        self.source_records[key] = record
+        return record
+
+
+def save(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    data = (json.dumps(value, ensure_ascii=False, separators=(',', ':'), allow_nan=False) + '\n').encode('utf-8')
+    temporary = path.with_suffix(path.suffix + '.tmp')
+    temporary.write_bytes(data)
+    temporary.replace(path)
+
+
+def unity_transform(value):
+    """Return Unity's local transform as a column-vector 4x4 matrix."""
+    p, q, s = value.m_LocalPosition, value.m_LocalRotation, value.m_LocalScale
+    x, y, z, w = (float(component) for component in (q.x, q.y, q.z, q.w))
+    matrix = np.identity(4)
+    matrix[:3, :3] = np.array([
+        [1 - 2 * (y * y + z * z), 2 * (x * y - z * w), 2 * (x * z + y * w)],
+        [2 * (x * y + z * w), 1 - 2 * (x * x + z * z), 2 * (y * z - x * w)],
+        [2 * (x * z - y * w), 2 * (y * z + x * w), 1 - 2 * (x * x + y * y)],
+    ]) @ np.diag([float(s.x), float(s.y), float(s.z)])
+    matrix[:3, 3] = [float(p.x), float(p.y), float(p.z)]
+    return matrix
+
+
 def build():
-    e = Regions()
+    e = BattleAnimationSources()
     controllers, skeletons, playables, failures, players = {}, {}, {}, {}, {}
     entities, effects, animation_components, skeleton_animators = {}, {}, {}, {}
     skeleton_renderers, player_renderers, model_bindings, body_attachments = {}, {}, {}, {}
@@ -260,7 +317,7 @@ def build():
                 elif kind == 'MyActionAgent':
                     entities.setdefault(identity, {})['actions'] = {
                         str(row['ActionType']): {'start': playable(pointer(row['Playable'], obj)), 'end': playable(pointer(row['EndPlayable'], obj)), 'stop': bool(row['StopOnActionEnd'])}
-                        for row in cfg['ActionTypePlayables']}
+                        for row in cfg.get('ActionTypePlayables', [])}
                 elif kind == 'DefaultMoveEffectSupport':
                     entities.setdefault(identity, {})['move'] = playable(pointer(cfg.get('mMoveEffectPlayable'), obj))
                 else:
@@ -313,7 +370,7 @@ def build():
     assembly = ROOT / '.tools/source-packages/official-code/managed/decoded/GameFramework.Runtime.dll'
     if assembly.exists():framework_code['GameFramework.Runtime.dll'] = hashlib.sha256(assembly.read_bytes()).hexdigest()
     save(ROOT / 'assets/reference/battle-animation/source-manifest.json', {
-        'manifest': '854_156383', 'inputs': e.source_records, 'schemas': e.schemas.records,
+        'manifest': e.apk.version, 'inputs': e.source_records, 'schemas': e.schemas.records,
         'code': code, 'common_code': common_code,
         'framework_code': framework_code,
         'framework_symbols': ['GameFramework.MyPlayable.PlayImpl', 'GameFramework.MyPlayableApplyAttribute.GetApplyComponent',
