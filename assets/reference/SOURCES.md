@@ -32,6 +32,8 @@
 
 当前884玩家3100挂点由 `scripts/prepare_battle_player_attachments.py` 从原FightCharacter包提取69条Transform／RectTransform、49项AttachAgent引用及附件／骨骼跟随字段；逐对象来源、组件codec、原应用、输出、元数据及原生装配代码身份见[3100挂点来源](battle-animation/player-attachments-source-manifest.json)。显式加载为 `Combat/player-attachments`，复用既有原Game模型和SkillGraphs资源；只读取序列化数据和原游戏应用，不读取第三方动画算法。两份原骨骼跟随字段映射到独立原生几何实现，测试仅调用现有库公开API取得数值对照，不复制其方法体；夹具和程序集元数据身份列入同一来源凭据。不新增美术或完整素材快照，实现及验证边界见[战斗执行](../../docs/features/battle-execution.md)。
 
+当前884人物Renderer附加特效由 `scripts/prepare_battle_player_effects.py` 核对APK清单、所选版本实际bundle、原层级／组件及原生导出缓存，恢复32项prefab和完整依赖；4项同表武器特效由原配置优先转入整体部件。原始对象、bundle／CAB、组件codec、原游戏网格烘焙应用代码和本地显式目录见[人物特效来源](battle-animation/player-effects-source-manifest.json)，399项原生依赖、161张纹理各mip、4个Windows shader及输出SHA256见[转换来源](battle-animation/player-effect-assets-source-manifest.json)。不复制第三方动画实现，不新增自绘素材或完整素材快照；当前行为及验证范围只在[战斗执行](../../docs/features/battle-execution.md)维护。
+
 人物 Game prefab 与地面／武器裁剪取所选 `884_156692` 的原 `PlayerModel_Game` 三节点对象、已核验原生导出及已核验官方程序集／三份应用源码；原载荷、完整字段、默认空 Animator、脚本映射、转换输出及加载绑定的 SHA256 见[人物 prefab 与裁剪来源](battle-animation/player-model-prefab-source-manifest.json)，入口为 `scripts/prepare_battle_player_model_prefab.py`。复用当前男女原骨骼、Low／High 纹理和既有独立原生绘制端点，无新增自绘素材或完整素材快照；实现与验证边界见[技能](../../docs/features/skills.md)。
 
 战斗技能演出相机来自所选 `884_156692` 原生 FightStage 导出中的231个战场 prefab；逐文件SHA256与原生导出凭据核对，保留原层级、变换、激活标记、完整镜头／过渡／优先级及 CameraOffset 字段，并核实原管线没有 body／aim／noise、Follow／LookAt 或 framing／recomposer 代理。原 prefab、`GameCameraController`／`FightCamera`／演出节点／输入封锁源码及生成 JSON／meta 哈希见[演出相机来源](battle-scenes/performance-camera-source-manifest.json)，提取入口为 `scripts/prepare_battle_performance_camera.py`。原普通相机仍保留既有历史来源，未重标为当前版本；本批没有新增美术或完整素材快照，行为与验证范围见[战斗执行](../../docs/features/battle-execution.md)。

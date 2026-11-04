@@ -47,6 +47,7 @@ namespace Zjcs.Offline.ProfessionUI
         public event Action<Material[]> OnGetUpdatedSharedMaterials;
         public event Action<IProfessionAppearanceRendererLite> OnCustomDemandLoading;
         public event Action<IProfessionFollowerAnimation> OnAnimationRebuild;
+        public event Action<ProfessionNativeSceneRenderer> OnMeshAndMaterialsUpdated;
         private ProfessionNativeSceneMeshPart Main => GetComponent<ProfessionNativeSceneMeshPart>();
 
         private bool HasVisibleGeometry()
@@ -165,6 +166,7 @@ namespace Zjcs.Offline.ProfessionUI
                 Main.Assign(batches.Batches, MaterialFor, materials => OnGetUpdatedSharedMaterials?.Invoke(materials));
                 Main.MeshRenderer.enabled = settings.Enabled;
             }
+            OnMeshAndMaterialsUpdated?.Invoke(this);
             OnCustomDemandLoading?.Invoke(this);
         }
 

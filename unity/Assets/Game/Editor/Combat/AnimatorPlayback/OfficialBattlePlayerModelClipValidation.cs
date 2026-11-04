@@ -33,6 +33,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".player-appearance-bindings", false);
             SessionState.SetBool(Key + ".player-actor", false);
             SessionState.SetBool(Key + ".player-attachments", false);
+            SessionState.SetBool(Key + ".player-effects", false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")))
@@ -262,12 +263,13 @@ namespace Zjcs.Editor.Combat
                 else { camera.targetTexture = rt; camera.Render(); }
                 RenderTexture.active = rt;
                 texture.ReadPixels(new Rect(0, 0, 384, 512), 0, 0); texture.Apply();
-                Require(texture.GetPixels32().Count(p => p.r > 16 || p.g > 16 || p.b > 16) > 100, "visible actual GPU output");
-                if (SessionState.GetBool(Key + ".player-live-physics", false) || SessionState.GetBool(Key + ".player-attachments", false))
-                    Require(!texture.GetPixels32().Any(p => p.r > 240 && p.g < 20 && p.b > 240),
-                        "live body/clipping probe has no error-shader diagnostic particles");
                 var bytes = texture.EncodeToPNG();
                 File.WriteAllBytes(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), name + ".png"), bytes);
+                Require(texture.GetPixels32().Count(p => p.r > 16 || p.g > 16 || p.b > 16) > 100, "visible actual GPU output");
+                if (SessionState.GetBool(Key + ".player-live-physics", false) || SessionState.GetBool(Key + ".player-attachments", false)
+                    || SessionState.GetBool(Key + ".player-effects", false))
+                    Require(!texture.GetPixels32().Any(p => p.r > 240 && p.g < 20 && p.b > 240),
+                        "live body/clipping probe has no error-shader diagnostic particles");
                 return bytes;
             }
             finally { RenderTexture.active = previous; Object.Destroy(go); Object.Destroy(rt); Object.Destroy(texture); }

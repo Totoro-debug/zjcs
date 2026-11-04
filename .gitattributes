@@ -2276,3 +2276,16 @@ unity/Assets/Game/Resources/Map14/Entities/catalog.json text eol=lf
 unity/Assets/Official/World/Map/14/source-manifest.json text eol=lf
 scripts/prepare_unity_map10_entities.py text eol=lf
 unity/Assets/Official/World/Map/14/map14.json text eol=lf
+
+# Keep complete original player-effect assets and conversion identities byte-stable.
+scripts/prepare_battle_player_effects.py text eol=lf
+assets/reference/battle-animation/player-effect*-source-manifest.json -text
+unity/Assets/Official/Combat/PlayerEffects/** -text
+unity/Assets/Official/Combat/PlayerEffects.meta -text
+unity/Assets/Game/Resources/Combat/PlayerEffects/** -text
+unity/Assets/Game/Resources/Combat/PlayerEffects.meta -text
+unity/Assets/Game/Runtime/Offline/ProfessionUI/SkeletonRendererAttachmentBacker.cs* text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerEffects.cs* text eol=lf
+unity/Assets/Official/World/Map/14/source-manifest.json text eol=lf
+scripts/prepare_unity_map10_entities.py text eol=lf
+unity/Assets/Official/World/Map/14/map14.json text eol=lf

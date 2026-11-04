@@ -47,7 +47,10 @@ namespace Zjcs.Editor.Combat
                 var host = new GameObject("Current original 3100 player model/controller probe");
                 if (SessionState.GetBool(Key + ".player-attachments", false)) host.transform.position = new Vector3(4, -2, .8f);
                 host.AddComponent<SortingGroup>().sortingLayerID = 1182434123;
-                var parts = new PartBindings(config);
+                IProfessionAppearancePartBindings parts = SessionState.GetBool(Key + ".player-effects", false)
+                    ? new OfflineProfessionAppearancePartBindings(config, tables.SpineSkinInfoParser,
+                        Resources.Load<OfflineProfessionImageCatalog>("Combat/PlayerEffects/catalog"))
+                    : new PartBindings(config);
                 var poolBindings = new OfflineProfessionScenePartPoolBindings(weapons, materials, parts, () => true);
                 using var pool = new CharacterPartEntryProvider(poolBindings);
                 var binding = new OfflineProfessionScenePlayerBindings(catalog, manager, parts, pool, playerBindings);
@@ -90,6 +93,13 @@ namespace Zjcs.Editor.Combat
                         if (renderer.enabled) bounds.Encapsulate(renderer.bounds);
                     string label = sex.ToString().ToLowerInvariant() + "-" + profession + "-3100-actor";
                     CaptureActor(label + "-idle");
+                    if (SessionState.GetBool(Key + ".player-effects", false) && profession == 1)
+                    {
+                        var effectCheck = CheckPlayerEffects(actor, sex, profession, tables, config, resolver, CaptureActor);
+                        try { while (effectCheck.MoveNext()) yield return effectCheck.Current; }
+                        finally { (effectCheck as IDisposable)?.Dispose(); }
+                        playerBindings.Refresh(AppearanceOperateSource.Normal);
+                    }
                     if (SessionState.GetBool(Key + ".player-attachments", false))
                     {
                         CheckPlayerAttachmentRegistry(actor);
