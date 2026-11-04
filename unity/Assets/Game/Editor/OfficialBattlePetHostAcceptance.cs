@@ -56,13 +56,23 @@ namespace Zjcs.Editor.Combat
             var field = typeof(OfficialBattleRuntimeController).GetField("hudView", BindingFlags.NonPublic | BindingFlags.Instance);
             var view = (OfficialBattleHudView)field.GetValue(controller);
             Check(controller.Checkpoint, view);
-            int samples = 0, modelSamples = 0;
+            int samples = 0, modelSamples = 0, supportCasts = 0, ordinaryCasts = 0;
             bool captured = false;
             var scene = (OfficialBattleSceneView)typeof(OfficialBattleRuntimeController)
                 .GetField("sceneView", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(controller);
             controller.StepCompleted += result =>
             {
                 Check(result.Checkpoint, view); samples++;
+                foreach (var cast in result.Event.SkillCasts.Where(value => value.ActorId == 1))
+                {
+                    if (cast.IsPetSupport)
+                    {
+                        Require(cast.SkillItemId == 16300 && cast.Slot < 0,
+                            "Actual pet support did not use the equipped evolution skill.");
+                        supportCasts++;
+                    }
+                    else if (cast.Slot >= 0) ordinaryCasts++;
+                }
                 foreach (var pet in result.Checkpoint.Units.Where(unit => unit.MonsterId == 9301
                     && !unit.Ended && unit.Hp > 0))
                 {
@@ -89,16 +99,23 @@ namespace Zjcs.Editor.Combat
             controller.BattleCompleted += checkpoint =>
             {
                 Require(samples > 0, "Host did not advance its actual pet battle.");
+                Require(supportCasts > 0 && ordinaryCasts > 0,
+                    "Actual host did not run both pet support and ordinary owner actions.");
                 var copy = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
                 var expected = checkpoint.Units.Single(unit => unit.Id == 1).PetEnergy;
                 var actual = copy.Units.Single(unit => unit.Id == 1).PetEnergy;
                 Require(actual.CurrentEnergy == expected.CurrentEnergy && actual.NeedEnergy == expected.NeedEnergy
                     && actual.SupportSkillsApplied == expected.SupportSkillsApplied,
                     "Pet battle checkpoint did not preserve its actual energy/support state.");
+                Require(actual.SupportSkills.Count == expected.SupportSkills.Count
+                    && actual.SupportSkillState.Slots.Single().ReleasedTimes == supportCasts
+                    && actual.SupportSkillState.Slots.Single().LastRound == expected.SupportSkillState.Slots.Single().LastRound,
+                    "Actual pet support checkpoint lost CD/count state.");
                 if (Environment.GetEnvironmentVariable("ZJCS_PET_REQUIRE_ENTITY") == "1")
                     Require(modelSamples > 0, "Actual host never displayed an entityized pet.");
                 Debug.Log("BATTLE_PET_HOST_PASSED stage=" + checkpoint.StageId + " steps=" + samples
-                    + " modelSamples=" + modelSamples);
+                    + " modelSamples=" + modelSamples + " supportCasts=" + supportCasts
+                    + " ordinaryCasts=" + ordinaryCasts);
             };
         }
 

@@ -103,7 +103,7 @@ namespace Zjcs.Editor.Combat
             view.RefreshPet(checkpoint, player);
             Require(view.Find(Pet + "/BgNone").activeSelf, "An owned but unequipped pet must show the original empty state.");
             player.Skills.Plans[0].PetIndex = 1;
-            int portraits = 0, entities = 0, supports = 0;
+            int portraits = 0, entities = 0, supports = 0, activeSupports = 0, passiveSupports = 0;
             foreach (var evolution in data.evolutions.Where(value => value.classId != 1619))
             {
                 pet.ClassId = evolution.classId; pet.EvolutionPhase = evolution.phase;
@@ -120,8 +120,18 @@ namespace Zjcs.Editor.Combat
                 else if (configured)
                 {
                     Require(evolution.phase == 1 && owner.PetEnergy.SupportSkillsApplied
-                        && owner.Statuses.Count > 0 && !owner.PetEnergy.Enabled,
-                        "Childhood passive support must not create an energy transfer entity.");
+                        && (owner.Statuses.Count > 0 || owner.PetEnergy.SupportSkills.Count > 0)
+                        && !owner.PetEnergy.Enabled && owner.PetEnergy.PetClassId == pet.ClassId,
+                        "Childhood support must retain its pet identity without creating an energy transfer entity.");
+                    if (owner.PetEnergy.SupportSkills.Count > 0)
+                    {
+                        activeSupports++;
+                        Require(owner.PetEnergy.SupportSkills.All(skill => skill.Slot < 0)
+                            && owner.PetEnergy.SupportSkillState.Slots.Count == owner.PetEnergy.SupportSkills.Count
+                            && owner.Skills.Count == 0 && owner.SkillState.Slots.Count == 0,
+                            "Childhood support polluted the owner's ordinary skill agent.");
+                    }
+                    else passiveSupports++;
                     string before = FightBattleCheckpointSerializer.Save(checkpoint);
                     Require(OfficialBattlePetEnergyAssembler.TryConfigure(owner, player, catalog, combat, combatAssets.LoadSkillItems())
                         && before == FightBattleCheckpointSerializer.Save(checkpoint),
@@ -138,7 +148,8 @@ namespace Zjcs.Editor.Combat
                     "Equipped pet visibility differs from the original widget.");
                 portraits++;
             }
-            Require(portraits == 39 && entities == 18 && supports == 9 && !catalog.Rows("pet_evolution").Any(),
+            Require(portraits == 39 && entities == 18 && supports == 19
+                && activeSupports == 10 && passiveSupports == 9 && !catalog.Rows("pet_evolution").Any(),
                 "Pet source coverage or original catalog isolation differs.");
             pet.ClassId = 1600; pet.EvolutionPhase = 2;
             var main = Owner(combat);

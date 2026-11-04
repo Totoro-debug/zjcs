@@ -51,20 +51,24 @@ namespace Zjcs.Presentation.Combat
             int skillItemId = Integer(evolution, "EntitySkill");
             if (skillItemId <= 0)
             {
-                // Childhood has no transfer/energy skill. Its passive support
-                // still belongs to the owner, using the same original item
-                // properties/status binding path as an entityized pet.
+                // Childhood has no transfer/energy skill. Support is assembled
+                // independently, including the active skill agent's CD/counts.
                 int[] supportIds = IntArray(evolution, "SupportSkills");
                 if (supportIds.Length == 0 || supportIds.Any(id =>
-                    !skillItems.TryGet(id, out FightOfficialSkillItem support)
-                    || support.PassiveStatusIds == null || support.PassiveStatusIds.Length == 0))
-                    return false; // Active support requires the separate skill agent.
+                    !skillItems.TryGet(id, out FightOfficialSkillItem support)))
+                    return false;
                 var supportState = owner.PetEnergy ?? new FightBattlePetEnergyState
                 {
                     OwnerUnitId = owner.Id, PetUnitId = owner.Id, PetClassId = pet.ClassId,
                     PetEvolutionPhase = pet.EvolutionPhase
                 };
+                supportState.OwnerUnitId = owner.Id;
+                supportState.PetUnitId = owner.Id;
+                supportState.PetClassId = pet.ClassId;
+                supportState.PetEvolutionPhase = pet.EvolutionPhase;
                 ApplySupportSkillsOnce(supportState, evolution, pet, characterCatalog, combat,
+                    skillItems, owner, Math.Max(1, pet.Level), owner.SubRank);
+                ConfigureSupportSkills(supportState, evolution, pet, characterCatalog, combat,
                     skillItems, owner, Math.Max(1, pet.Level), owner.SubRank);
                 owner.PetEnergy = supportState;
                 return true;
@@ -104,6 +108,8 @@ namespace Zjcs.Presentation.Combat
             ConfigureEntitySkillSet(state, evolution, pet, characterCatalog, combat, skillItems,
                 owner, petProps, rank, level, subRank);
             ApplySupportSkillsOnce(state, evolution, pet, characterCatalog, combat, skillItems,
+                owner, level, subRank);
+            ConfigureSupportSkills(state, evolution, pet, characterCatalog, combat, skillItems,
                 owner, level, subRank);
             state.InitialEnergy = Math.Max(0d, initial);
             state.NeedEnergy = need;
@@ -162,6 +168,29 @@ namespace Zjcs.Presentation.Combat
             state.EntityProperties = new List<FightPropertyValue>(OfficialBattlePropertyAssembler.ToProperties(entityProps));
         }
 
+        private static void ConfigureSupportSkills(FightBattlePetEnergyState state,
+            Dictionary<string, object> evolution, OfflinePetInstance pet,
+            OfficialCharacterCatalog catalog, FightOfficialCombatCatalog combat,
+            FightOfficialSkillItemCatalog skillItems, FightBattleUnitState owner,
+            int level, int subRank)
+        {
+            if (state.SupportSkills.Count > 0) return;
+            foreach (int itemId in IntArray(evolution, "SupportSkills"))
+            {
+                FightOfficialSkillItem item = skillItems.Required(itemId);
+                if (item.PassiveStatusIds != null && item.PassiveStatusIds.Length > 0) continue;
+                int rank = PetSkillRank(catalog, pet, itemId);
+                var skill = combat.CreateSkill(item.EntityId, -2 - state.SupportSkills.Count,
+                    itemId, rank, level, subRank, OfficialBattlePropertyAssembler.ToProperties(
+                        combat.CalculateSkillProps(item.EntityId, rank, level, subRank)));
+                state.SupportSkills.Add(skill);
+                state.SupportSkillState.Slots.Add(combat.CreateSkillSlot(skill,
+                    combat.CalculateSkillCooldown(item.EntityId, rank, level, subRank,
+                        OfficialBattlePropertyAssembler.ToMap(owner.Properties))));
+                owner.ReportSkillSnapshots.Add(skill);
+            }
+        }
+
         private static void ApplySupportSkillsOnce(FightBattlePetEnergyState state,
             Dictionary<string, object> evolution, OfflinePetInstance pet,
             OfficialCharacterCatalog catalog, FightOfficialCombatCatalog combat,
@@ -174,6 +203,7 @@ namespace Zjcs.Presentation.Combat
             foreach (int itemId in IntArray(evolution, "SupportSkills"))
             {
                 if (itemId <= 0 || !skillItems.TryGet(itemId, out FightOfficialSkillItem item)) continue;
+                if (item.PassiveStatusIds == null || item.PassiveStatusIds.Length == 0) continue;
                 int rank = PetSkillRank(catalog, pet, itemId);
                 int effectiveLevel = Math.Max(1, level);
                 IReadOnlyDictionary<int, long> properties = combat.CalculatePassiveSkillProps(

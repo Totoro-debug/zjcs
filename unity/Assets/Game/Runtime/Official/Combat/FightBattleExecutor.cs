@@ -260,6 +260,10 @@ namespace Zjcs.Combat.Official
                     RebuildBattleProperties();
                 }
 
+            ExecutePetSupportSkills(actor, actorRound, globalRound, casts, damageEvents,
+                movements, ref stepDuration, ref stepActionDuration, out float petSupportDuration);
+            int ordinaryCastStart = casts.Count;
+            int ordinaryDamageStart = damageEvents.Count, ordinaryMovementStart = movements.Count;
             while (true)
             {
                 FightBattleSkillDefinition skill = FightBattleTargeting.FindReadySkill(
@@ -294,12 +298,12 @@ namespace Zjcs.Combat.Official
                     out float skillStartActionDuration);
                 checkpoint.Statistics.RecordCast(actor.Id, skill.EntityId, skill.ItemId);
                 stepDuration = Math.Max(stepDuration,
-                    Math.Max(ResolveDuration(skill, castLastDelay), skillStartDuration));
+                    petSupportDuration + Math.Max(ResolveDuration(skill, castLastDelay), skillStartDuration));
                 float actionDuration = ResolveActionDuration(skill, castLastDelay);
                 if (actionDuration >= 0)
-                    stepActionDuration = Math.Max(stepActionDuration, actionDuration);
+                    stepActionDuration = Math.Max(stepActionDuration, petSupportDuration + actionDuration);
                 if (skillStartActionDuration >= 0f)
-                    stepActionDuration = Math.Max(stepActionDuration, skillStartActionDuration);
+                    stepActionDuration = Math.Max(stepActionDuration, petSupportDuration + skillStartActionDuration);
                 checkedSlots.Add(skill.Slot);
                 performedTargets.AddRange(targets);
                 var cast = new FightBattleSkillCastEvent
@@ -318,9 +322,11 @@ namespace Zjcs.Combat.Official
                 CollectStatusCustomActions(statusCustomActions);
             }
 
+            OffsetSkillEvents(casts, ordinaryCastStart, damageEvents, ordinaryDamageStart,
+                movements, ordinaryMovementStart, petSupportDuration);
             FightBattleSkillDefinition eventSkill = null;
-            if (casts.Count > 0)
-                eventSkill = FindSkillBySlot(actor, casts[0].Slot);
+            if (casts.Count > ordinaryCastStart)
+                eventSkill = FindSkillBySlot(actor, casts[ordinaryCastStart].Slot);
             else if (movements.Count == 0 && actor.VoodooDoll == null)
                 MoveAwayFromNearestEnemy(actor, movements);
             // Keep unavailable-skill turns non-damaging; the local retreat rule may still move
@@ -419,6 +425,7 @@ namespace Zjcs.Combat.Official
             {
                 checkpoint.Statistics.Unit(unit.Id);
                 new FightSkillState(unit.SkillState).Initialize(unit.SkillCooldownChangeAtStart);
+                InitializePetSupportSkills(unit);
                 foreach (FightBattleStatusState status in unit.Statuses)
                 {
                     FightStatusLifecycle.Initialize(status, 0);

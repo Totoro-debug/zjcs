@@ -115,6 +115,9 @@ namespace Zjcs.Combat.Official
         public double OwnerDamageAccumulator;
         public bool Initialized;
         public bool SupportSkillsApplied;
+        // Support has its own CD/count clock; it never occupies the owner's skill slots.
+        public List<FightBattleSkillDefinition> SupportSkills = new List<FightBattleSkillDefinition>();
+        public FightSkillAgentState SupportSkillState = new FightSkillAgentState();
     }
 
     [Serializable]
@@ -1224,6 +1227,7 @@ namespace Zjcs.Combat.Official
         public int SkillItemId;
         public bool IsReplay;
         public bool IsPetEnergy;
+        public bool IsPetSupport;
         public int ReplayType; // Official EReplaySkillType: Normal=0, Extra=1, ExtraWithTip=2.
         public int ReplayStatusInstanceId; // Zero for a skill's own replay configuration.
         public List<int> TargetIds = new List<int>();
@@ -1307,6 +1311,10 @@ namespace Zjcs.Combat.Official
                     unit.PetEnergy.EntityActiveSkills = new List<FightBattleSkillDefinition>();
                 if (unit?.PetEnergy != null && unit.PetEnergy.EntityPassiveStatusIds == null)
                     unit.PetEnergy.EntityPassiveStatusIds = new List<int>();
+                if (unit?.PetEnergy != null && unit.PetEnergy.SupportSkills == null)
+                    unit.PetEnergy.SupportSkills = new List<FightBattleSkillDefinition>();
+                if (unit?.PetEnergy != null && unit.PetEnergy.SupportSkillState == null)
+                    unit.PetEnergy.SupportSkillState = new FightSkillAgentState();
                 if (unit == null || unit.Id <= 0 || !ids.Add(unit.Id) || unit.Hp < 0
                     || unit.MaxHp < 0 || unit.Hp > unit.MaxHp || unit.MaxHpPlies < 0 || unit.MaxResilience < 0
                     || unit.Resilience < 0 || unit.Resilience > unit.MaxResilience

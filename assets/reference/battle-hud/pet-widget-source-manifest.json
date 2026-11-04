@@ -2,7 +2,7 @@
   "manifest": "854_156383",
   "generator": {
     "path": "scripts/prepare_battle_pet_hud.py",
-    "sha256": "8906b2fbd466f79c0012e15bc5cc6fa17c6472f7724d7c7248a7c49e1dfe45e5"
+    "sha256": "65f73701da6a2d44e307843c09dc9cf7e51853f6e822e748929ecbfc2b1ee3ac"
   },
   "installed_panels": {
     "path": "unity/Assets/Official/Combat/HUD/panels.json",
@@ -2366,6 +2366,26 @@
       "sha256": "5e857be2a0a3a3340f122eef921c4f5ad945c129914c5f51ff5bb42c4bf103a7"
     },
     {
+      "path": ".tools/source-packages/official-code/client-source/MyFightRolePet.cs",
+      "sha256": "3e46c3244c2a00fa133f9856c561d638c4c7adc998ebc41af9860a2732dbbc4c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/FightRolePetSpawnerComponent.cs",
+      "sha256": "12dd5e4dca568d1ae4a66e0670c1cc9b633aa11c6d3b3ff860ed3f680aa0b15c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/FightSkillAgentComponentImplement.cs",
+      "sha256": "7a4a0b4f2c0d6c9e6419c1f03f5964239b4cf61151cd44f8a3443dfca8aa5f91"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/FightSkillData.cs",
+      "sha256": "71490c37c8d73b445076c0b0212b37a77f48dcbe88ba89508671d55959fb2354"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/FightSourceInfo.cs",
+      "sha256": "0d795321dfdce83733228aa1ebd1e1f0dcc4316296d83101d1c86e15a83bf002"
+    },
+    {
       "path": ".tools/source-packages/official-code/common-source/Common/FormulaHandler.cs",
       "sha256": "1c9d25ef741f342b419a85f53ed3287a7c86a7397847a6170176a62276fbce98"
     },
@@ -2392,6 +2412,14 @@
       "sha256": "2216c908004f596d2d061f9e3954879524c25e24264f424427bb0178e285f7d0"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePetEnergyAssembler.cs",
+      "sha256": "fb324ba66f7981af023558b1c9299c0fc354ca4978e51829086935bd53ba5a66"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.PetSupport.cs",
+      "sha256": "daba2be1b431de1a09c9cf61080248cb737074b90cf63918b2add770c87c1332"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.Pet.cs",
       "sha256": "0dc4107c9c55e8875be89783691307765986b332b21e44bfad31f4aef89e0086"
     },
@@ -2405,11 +2433,11 @@
     },
     {
       "path": "unity/Assets/Game/Editor/OfficialBattlePetHudAcceptance.cs",
-      "sha256": "4f111a41d35e37777ac2307e3ba6a7eaf8855b177c3490b54c9e59d1d07c7be3"
+      "sha256": "9421e9008628cd48bc22836f46735669fc5af775c728dbf078324e2d0adaf1ae"
     },
     {
       "path": "unity/Assets/Game/Editor/OfficialBattlePetHostAcceptance.cs",
-      "sha256": "bdbc1802bc3a8b392879289b23ebb11e4009f43244ffc24d02a81f1179065f93"
+      "sha256": "7065e6119502eb6123cf2d2956bff20049a01999e33e38df26b6c881eabcc90d"
     }
   ],
   "outputs": [
