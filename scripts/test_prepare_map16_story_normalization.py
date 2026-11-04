@@ -10,6 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "unity/Assets/Official/World/Map/16/Source/story-source.json"
+ALONE = ROOT / "unity/Assets/Game/Resources/Map16/world-alone-configuration.json"
 sys.path.insert(0, str(ROOT / "scripts"))
 from prepare_unity_map13_story_runtime import normalize_story  # noqa: E402
 
@@ -18,6 +19,7 @@ class Map16StoryNormalizationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.source = json.loads(SOURCE.read_bytes())
+        cls.alone = json.loads(ALONE.read_bytes())
         cls.rows = {row["StoryName"]: row for row in cls.source["storyRows"]}
         cls.subgraphs = {
             node.get("subgraph_name", node.get("SubgraphName", ""))
@@ -74,6 +76,45 @@ class Map16StoryNormalizationTests(unittest.TestCase):
         counts = Counter(node["type"] for story in self.records.values() for node in story["nodes"])
         self.assertEqual(94, sum(counts.values()))
         self.assertEqual(7, counts["StartStoryNode"])
+
+    def test_confirmed_manual_story_triggers_match_official_anchors(self):
+        manual = {name for name, row in self.rows.items() if not row["AutoRunOnMeetCondition"]}
+        self.assertEqual({"LookForWhaleIsland", "SubmitRopes", "DiscoverWhaleIsland",
+                          "WhaleIslandArrive", "WhaleIslandFinishLoop", "WhaleIslandLeave"}, manual)
+
+        def nodes(story):
+            return list(self.source["graphs"][story]["nodes"].values())
+
+        look_nodes = nodes("LookForWhaleIsland")
+        self.assertTrue(any(node["_type"] == "AddMapExclusiveNpcAroundPlayerNode"
+                            and node.get("EntityClassId") == 8402 for node in look_nodes))
+        self.assertTrue(any(node["_type"] == "SubgraphRunNode"
+                            and node.get("subgraph_name") == "SubmitRopes" for node in look_nodes))
+
+        discover_nodes = nodes("DiscoverWhaleIsland")
+        entry_buttons = [node.get("StoryUIKey") for node in discover_nodes
+                         if node["_type"] == "ClickBtnNode"]
+        self.assertIn("AloneWorldMapEntry.NormalBtn", entry_buttons)
+        self.assertIn("AloneWorldTouchDialog.EnterBtn", entry_buttons)
+        self.assertEqual("DiscoverWhaleIsland", self.alone["aloneWorld"]["PrepareEndStoryId"])
+        self.assertEqual("WhaleIslandLeave", self.alone["aloneWorld"]["FinishStoryId"])
+
+        rope_graph = nodes("SubmitRopes")
+        self.assertTrue(any(node["_type"] == "GetEntityNode" and node.get("LoEntityId") == 10801
+                            and node.get("Tag") == "大泽荣一_本土码头" for node in rope_graph))
+        self.assertTrue(any(node["_type"] == "CanHandInItemNode" and node.get("HandInItemId") == 3
+                            for node in rope_graph))
+        self.assertTrue(any(node["_type"] == "PlayerWorldAloneAppearNode"
+                            and node.get("MapAloneWorldClassId") == 16 for node in rope_graph))
+
+        arrive_graph = nodes("WhaleIslandArrive")
+        self.assertTrue(any(node["_type"] == "GetEntityNode" and node.get("LoEntityId") == 106
+                            and node.get("Tag") == "大泽荣一_登陆鲸岛" for node in arrive_graph))
+        finish_graph = nodes("WhaleIslandFinish")
+        self.assertTrue(any(node["_type"] == "AddMapExclusiveNpcAtPosNode"
+                            and node.get("EntityClassId") == 8443 for node in finish_graph))
+        self.assertEqual(-1, self.rows["WhaleIslandFinishLoop"]["MaxCount"])
+        self.assertTrue(self.rows["WhaleIslandFinish"]["AutoRunOnMeetCondition"])
 
 
 if __name__ == "__main__":

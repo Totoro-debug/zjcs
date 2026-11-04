@@ -68,6 +68,8 @@ Unity 2022.3.57f1c2 内置屏隔离图形 Play Mode 已通过公共 `MainlineNat
 
 独立地图准备的官方 `Silver/14/300秒` 配置由 [`prepare_map16_alone_configuration.py`](../../scripts/prepare_map16_alone_configuration.py) 解码并输出至 `Resources/Map16/world-alone-configuration.json`。用户确认单机准备时间为：准备开始后至少300秒；角色恰为位阶4时，还须距首次达到位阶4满14天，采用两者较晚时间；角色高于位阶4时免除14天等待，但仍须完成300秒。原绳索剧情、位阶、等级和其他条件继续保留。`OfflineMainlineProgressSession` 已实现准备状态、开始、到时解锁和提交时刷新。配置提取测试、全量静态检查、Unity 导入／编译、包含位阶4／14天边界与300秒最短时长场景的 `OfflineMainlineProgressValidation`，以及 `ProjectTools.Validate` 均通过。正式入口卡片与鲸背岛宿主尚未接线，未覆盖本图实际界面、Play Mode 流程或 Windows Player。
 
+用户确认鲸背岛的6条手动剧情按登岛、NPC交互和离岛映射：首次启程流程播放 `LookForWhaleIsland`；独立地图准备完成播放配置指定的 `DiscoverWhaleIsland`；实际进入Map16播放 `WhaleIslandArrive`；NPC10801交互播放 `SubmitRopes`（原图含交物品3及 Map16 登岛节点）；鲸岛神龛NPC8443交互播放 `WhaleIslandFinishLoop`（由自动完成图 `WhaleIslandFinish` 在神龛处生成）；独立地图离开播放配置指定的 `WhaleIslandLeave`。`WhaleIslandFinish` 保持原自动条件启动，各图仍按原 `MaxCount` 限制次数。该映射是已确认的本地触发适配，公共宿主调用、正式剧情数据和完整剧情流程仍待接通。
+
 沿用已确认的独立地图领奖方案：原客户端 `AloneWorldMapEntryItemContentCommonBase.FinshAward` 只发出 `OperPlayerAloneMapFinshAward(16)` 请求；单机按原奖励规则770／771发放钻石200、金币80000，奖励、剧情、随机状态与一次性领取记录同事务写盘，失败回滚，冷读后防重复。表现保留 `SourceOperate.AloneMapAward=222`、Popup 与原 `AwardPanel`。完整本地领取事务和原界面接线仍需实现与验证。
 
 沿用已确认的踩格机关辅助方案：原客户端／Common 的 `StageResultAutoPuzzle／ResetPuzzle`、`MapPuzzleTerminalDataStepGrid／LockBase` 不含服务端执行器；辅助按原菜单扣 `325×1`，只解开 `LockLoEntityIds`。原菜单允许的重置只恢复该组踏板与辅助锁，不清除奖励实体状态或领取记录；完成锁后按原配置生成独立奖励、切换终端状态，不增设重置入口。五组原菜单的实际交互、事务、回滚和冷读仍需实现与验证。
@@ -76,9 +78,9 @@ Unity 2022.3.57f1c2 内置屏隔离图形 Play Mode 已通过公共 `MainlineNat
 
 原鲸背岛入口卡片、坎斯汀 NPC10801 的准备／提交 `43039×5` 绳索／登岛／离岛剧情、全部任务和战斗、五组踩格机关及奖励770／771的完整原流程仍待接线。对应当前官方配置、故事图和消费路径须逐项核对，不能把历史转换记录当作当前已交付载荷。
 
-本图尚未注册到公共正式宿主。鲸背岛7张原剧情图、94个节点、45条对白、6个选项、51个中文文本键和7份配对服务端记录已从同版 APK 提取至 `Assets/Official/World/Map/16/Source/story-source.json`；该数据保留官方图结构供适配核对，不是共享离线解释器的 `Resources/Map16/stories.json`，也不执行服务端记录。`test_prepare_map16_story_normalization.py` 将7张图通过共享 `normalize_story` 转换，并验证入口、唯一子图、节点原文、端口连接及完整对白，3项通过；这只证明数据可以适配到公共节点 DTO，不执行或注册地图剧情。共享 `Map13OfflinePlayerConditionEvaluator` 现允许 Map16 剧情节点使用官方 `MapLogicEntityEndByTag` 条件，并以当前本地完成标签状态判断；`ProjectTools.Validate` 增加该条件的匹配、反向条件及不匹配检查。此处仅复用条件求值，不表示 Map16 故事运行数据、服务端触发映射或正式剧情入口已接入。
+本图尚未注册到公共正式宿主。鲸背岛7张原剧情图、94个节点、45条对白、6个选项、51个中文文本键和7份配对服务端记录已从同版 APK 提取至 `Assets/Official/World/Map/16/Source/story-source.json`；该数据保留官方图结构供适配核对，不是共享离线解释器的 `Resources/Map16/stories.json`，也不执行服务端记录。`test_prepare_map16_story_normalization.py` 将7张图通过共享 `normalize_story` 转换，并验证入口、唯一子图、节点原文、端口连接、完整对白及已确认触发映射的官方锚点，4项通过；这只证明数据可以适配到公共节点 DTO，不执行或注册地图剧情。共享 `Map13OfflinePlayerConditionEvaluator` 现允许 Map16 剧情节点使用官方 `MapLogicEntityEndByTag` 条件，并以当前本地完成标签状态判断；`ProjectTools.Validate` 增加该条件的匹配、反向条件及不匹配检查。触发映射已由用户确认，正式宿主仍未消费映射或注册故事数据。
 
-`prepare_unity_map16_battle_data.py` 已从同版 `884_156692` 提取70个阶段、9个战斗场景、46个怪物编组表和237个实体阶段绑定，输出 `Assets/Official/World/Map/16/map16-battles-source.json`。`test_prepare_unity_map16_battle_data.py` 覆盖收据与输出哈希、阶段／场景／编组引用闭包及剧情无战斗启动节点，3项通过。7张原剧情图均无 `StoryStartStageNode`。该输出只记录当前版阶段、编组和战斗场景来源，不含已展开怪物属性／技能阵容或离线战斗运行数据；工程现存 `skill-rules.json` 明确属于旧版 `854_156383`，不能混入本图。鲸背岛专用 `battle-runtime.json` 仍缺失，正式宿主会按地图 profile 校验故事与战斗数据及阶段数量，不能用空数据登记地图。接下来须完成同版战斗规则输入、故事运行数据与缺失配置、经用户确认的剧情触发映射及战斗闭包，再接通原 HUD、地区开放与本地位阶日期、四类雕像与每日访问、探索度、白雾、资源刷新、独立大小地图及标记，按原 `CanExplore=false` 保留本图探寻差异，并验证场景音画、退出与存档恢复。
+`prepare_unity_map16_battle_data.py` 已从同版 `884_156692` 提取70个阶段、9个战斗场景、46个怪物编组表和237个实体阶段绑定，输出 `Assets/Official/World/Map/16/map16-battles-source.json`。`test_prepare_unity_map16_battle_data.py` 覆盖收据与输出哈希、阶段／场景／编组引用闭包及剧情无战斗启动节点，3项通过。7张原剧情图均无 `StoryStartStageNode`。该输出只记录当前版阶段、编组和战斗场景来源，不含已展开怪物属性／技能阵容或离线战斗运行数据；工程现存 `skill-rules.json` 明确属于旧版 `854_156383`，不能混入本图。鲸背岛专用 `battle-runtime.json` 仍缺失，正式宿主会按地图 profile 校验故事与战斗数据及阶段数量，不能用空数据登记地图。接下来须完成同版战斗规则输入、故事运行数据与缺失配置、NPC和登岛／离岛触发接线及战斗闭包，再接通原 HUD、地区开放与本地位阶日期、四类雕像与每日访问、探索度、白雾、资源刷新、独立大小地图及标记，按原 `CanExplore=false` 保留本图探寻差异，并验证场景音画、退出与存档恢复。
 
 小地图使用公共模块确认的单本地分线配置，原分线数 `≤1` 时隐藏按钮，地区私有／公开状态与玩法保持原配置；规则及公共适配范围见[主线地图公共模块](../features/mainline-map-modules.md)。此配置尚未接入本图正式宿主。
 
