@@ -261,7 +261,7 @@ namespace Zjcs.Presentation.Combat
                     cameraView.Refresh(checkpoint, Phase);
                     cameraView.SetVisible(hudVisible);
                 }
-                skillGraphPlayback?.BindSceneHosts(cameraView, masterResolver: sceneView);
+                skillGraphPlayback?.BindSceneHosts(cameraView, visibilityHost: sceneView, masterResolver: sceneView);
                 if (hudRoot != null) hudRoot.SetActive(hudVisible);
             }
             catch

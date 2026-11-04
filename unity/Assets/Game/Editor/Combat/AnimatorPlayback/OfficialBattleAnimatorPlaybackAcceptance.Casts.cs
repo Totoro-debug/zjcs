@@ -148,6 +148,14 @@ namespace Zjcs.Editor.Combat
             {
                 Time.captureDeltaTime = .01f; yield return null;
                 OfficialWwiseEvent.Host = other;
+                if (SessionState.GetBool(Key + ".partVisibility", false))
+                {
+                    yield return CheckPartVisibility(actor, Pump, phase =>
+                    {
+                        Draw(); CaptureSceneRendererCamera(bounds, label + "-" + phase);
+                    });
+                    yield break;
+                }
                 if (SessionState.GetBool(Key + ".shadows", false))
                 {
                     yield return CheckShadows(actor, Pump, label);
