@@ -71,7 +71,11 @@ namespace Zjcs.Editor.Map13MiniMap
                         new[] { "Reload", "get_CodeVersion", "get_ResVersion", "get_Version", "set_CodeVersion", "set_ResVersion" }.OrderBy(name => name)),
                     "Original MeManager resolves the complete version interface in its original assembly");
                 VerifyOriginalInstanceInjector(shared, core, entry);
-                Require(core.GetTypes().Length == 4, "The recorded Core port contains only the four inspected original types");
+                var selector = core.GetType("Framework.DependencyInjection.DryIoc.InjectAttributeSelector", true);
+                var selectProperties = selector.GetMethod("Properties");
+                Require(selectProperties != null && selectProperties.GetParameters().Length == 1 &&
+                    Convert.ToInt32(selectProperties.GetParameters()[0].DefaultValue) == 2 && core.GetTypes().Length == 7,
+                    "The recorded Core port retains the five inspected original types and two selector closures");
             }
             Debug.Log("MAINLINE_SHARED_INJECTION_PASS: original provider and DryIoc injector ABI, target/null/exception identity, original MeManager construction and scope restoration. Resolver receiver is a fixture; offline services and player startup are pending.");
         }

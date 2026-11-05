@@ -120,6 +120,26 @@ def build():
             injector_bodies.append(dict(method=name,address=hex(address),length=length,sha256=expected,
                 instructions=[dict(address=hex(i.address),op=i.mnemonic,arguments=i.op_str)
                               for i in Cs(CS_ARCH_ARM64,CS_MODE_LITTLE_ENDIAN).disasm(body,address)]))
+        selector_bodies = []
+        for name, address, length, expected in (
+                ('Properties',0xb872cb0,452,'d02f60e98d1d801899065f0500e7b774580c7345165cf1347888c2495eaca043'),
+                ('closure.constructor',0xb872e74,8,'c0a768f7d72f8941a4f284d48b281f3603dcd22baee034f613fef7bbefae6b97'),
+                ('constructor',0xb872e7c,136,'ae44f2d19e6deb3fce48013a42e583421369ae24a655be0b0297abb354ae4dbb'),
+                ('static.constructor',0xb872f04,156,'f5a9f46ec5395874bbd23502d64d6244702aa64b836e36950249cd2127d5e3ae'),
+                ('singleton.static.constructor',0xb872fa0,104,'607969b95d39c5abb0fe7ca20c53c71f89b85e019b715ba8e4cdcc2e99fee5e0'),
+                ('singleton.constructor',0xb873008,8,'595b3db07fdcd8c91af0795b96d0f36f848b5d0be65242f87c8b7df86000aac2'),
+                ('declared.properties',0xb873010,40,'2e2269bc12050137e8439ea10f8161a29082f909a8d54e3e2e50025c6b6e7205'),
+                ('attribute.predicate',0xb873038,100,'6916b4474cfd050829be4b06e680d6b91728c7a64759b7952f44780e77be8da8'),
+                ('service.info',0xb87309c,40,'1702c219d84402c8ffa17bd34927bc7b3494407fabe2248a28b7e5c52da53b85'),
+                ('service.details',0xb8730c4,96,'afda428bf58fa5059e0ca49c2c1bbadb74d85cb9612eb31945bae89bf437ae29'),
+                ('selector',0xb873124,920,'b054cbac54ee124dccd0347ed6772fc21bc6571644f6a6d119f8a9574ff36905'),
+):
+            body = native(address,length)
+            if hashlib.sha256(body).hexdigest() != expected:
+                raise ValueError('Original property selector body differs: '+name)
+            selector_bodies.append(dict(method=name,address=hex(address),length=length,sha256=expected,
+                instructions=[dict(address=hex(i.address),op=i.mnemonic,arguments=i.op_str)
+                              for i in Cs(CS_ARCH_ARM64,CS_MODE_LITTLE_ENDIAN).disasm(body,address)]))
         pointer, = struct.unpack('<Q', native(0x1245d4b0, 8))
         encoded, = struct.unpack('<Q', native(pointer, 8))
         index = (encoded & 0x1fffffff) >> 1
@@ -153,14 +173,15 @@ def build():
     if not Path(str(version_target)+'.meta').exists():
         runtime_meta(version_target)
     RECEIPT.write_text(json.dumps(dict(manifest='884_156692',
-        operation='Port the four inspected original injection types, native provider.GetService<IInstanceInjector>().Inject(instance) call and original DryIocInstanceInjector constructor/ContainerTools.InjectPropertiesAndFields<object> call. Copy the complete decompiled Launch.IVersionManager interface with normalized line endings after checking its six original method signatures. Original Console and Framework.FirstPass.Runtime IL remain unchanged. Do not ship dummy method bodies.',
+        operation='Port the five inspected original injection types and two original selector closures, native provider.GetService<IInstanceInjector>().Inject(instance) call and original DryIocInstanceInjector constructor/ContainerTools.InjectPropertiesAndFields<object> call. Copy the complete decompiled Launch.IVersionManager interface with normalized line endings after checking its six original method signatures. Original Console and Framework.FirstPass.Runtime IL remain unchanged. Do not ship dummy method bodies.',
         inputs=[record(p) for p in [evidence_path,metadata,*required,code_manifest,launch,version_source,ASSETS/'Console.bytes',ASSETS/'Microsoft.Extensions.DependencyInjection.Abstractions.bytes',ASSETS/'DryIoc.bytes',ASSETS/'Framework.FirstPass.Runtime.bytes']],
         native=dict(address='0xb872300',length=len(raw),sha256=hashlib.sha256(raw).hexdigest(),instructions=instructions,
                     service_lookup='Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService<object>',service_lookup_address='0xc4504f8',
                     interface_type_index=index,interface_dispatch=interface['namespace']+'.'+interface['name'],
                     attribute_constructor_address='0xb872148',attribute_constructor_sha256=hashlib.sha256(constructor).hexdigest(),attribute_base_constructor_address='0x10912910'),
         instance_injector=dict(bodies=injector_bodies,target='DryIoc.ContainerTools.InjectPropertiesAndFields<object>',target_address='0xc102b78'),
-        contract=binding,tools=[record(Path(__file__)),record(tool)],
+        property_selector=dict(bodies=selector_bodies),
+        contract=binding,tools=[record(Path(__file__)),record(tool),record(ROOT/'scripts/fixtures/mainline_shared_injection.cs')],
         integration=[record(ROOT/path) for path in (
             'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Injection.cs',
             'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Injection.cs.meta',
@@ -168,7 +189,7 @@ def build():
         outputs=[record(p) for p in (payload,Path(str(payload)+'.meta'),version_target,Path(str(version_target)+'.meta'))],binding=record(catalog),
         limitations=['This is a partial Core port, not the full original Framework.Core assembly.',
                     'Dummy RVA/token and JetBrains static analysis annotations are excluded; runtime AttributeUsage is preserved.',
-                    'Original InjectAttributeSelector/container registration, offline client services, player startup, map interaction and Windows Player remain pending.']),
+                    'Original container registration, offline client services, player startup, map interaction and Windows Player remain pending.']),
         ensure_ascii=False,indent=2)+'\n',encoding='utf8',newline='\n')
     print('Bound inspected Core Inject, property marker and IInstanceInjector ABI.')
 

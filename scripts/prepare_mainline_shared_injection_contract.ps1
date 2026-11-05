@@ -31,74 +31,57 @@ try {
     if($iface.Methods[0].FullName -ne 'System.Void Framework.DependencyInjection.Abstractions.IInstanceInjector::Inject(System.Object)' -or $inject[0].FullName -ne 'System.Void Framework.DependencyInjection.ServiceProviderExtensions::Inject(System.IServiceProvider,System.Object)'){throw 'Original injection method parameters differ'}
     $usage=$marker.CustomAttributes | Where-Object {$_.AttributeType.FullName -eq 'System.AttributeUsageAttribute'}
     if($usage.ConstructorArguments[0].Value -ne 128 -or @($usage.Properties | Where-Object {$_.Name -eq 'AllowMultiple' -and $_.Argument.Value -eq $false}).Count -ne 1 -or @($usage.Properties | Where-Object {$_.Name -eq 'Inherited' -and $_.Argument.Value -eq $true}).Count -ne 1){throw 'Original injection attribute usage differs'}
-    $assembly=[Mono.Cecil.AssemblyDefinition]::CreateAssembly([Mono.Cecil.AssemblyNameDefinition]::new('Framework.Core',[Version]'0.0.0.0'),'Framework.Core',[Mono.Cecil.ModuleKind]::Dll)
+    # Compile only the recovered injection subset against the Editor's .NET Standard
+    # contract. No DummyDll method body is copied into the resulting assembly.
+    $source=Join-Path $PSScriptRoot 'fixtures/mainline_shared_injection.cs'
+    $editorData='D:/Tool/Unity/Editor/Data'
+    $references=@(Get-ChildItem (Join-Path $editorData 'NetStandard/ref/2.1.0') -Filter '*.dll')
+    if($references.Count -eq 0){throw 'Unity .NET Standard reference assemblies are unavailable'}
+    New-Item -ItemType Directory -Path $Destination -Force | Out-Null
+    $compiled=Join-Path $Destination 'compiled'
+    New-Item -ItemType Directory -Path $compiled -Force | Out-Null
+    $output=Join-Path $compiled 'Framework.Core.dll'
+    $arguments=@('-noconfig','-nostdlib+','-target:library','-optimize+','-deterministic+',('-out:'+$output))
+    $arguments+=@($references | ForEach-Object {'-r:'+$_.FullName})
+    $arguments+=@(('-r:'+$DryIoc),('-r:'+$DependencyInjectionAbstractions),$source)
+    & (Join-Path $editorData 'NetCoreRuntime/dotnet.exe') (Join-Path $editorData 'DotNetSdkRoslyn/csc.dll') @arguments
+    if($LASTEXITCODE -ne 0){throw 'Original injection subset compilation failed'}
+    Copy-Item -LiteralPath $DryIoc -Destination (Join-Path $compiled 'DryIoc.dll') -Force
+    Copy-Item -LiteralPath $DependencyInjectionAbstractions -Destination (Join-Path $compiled 'Microsoft.Extensions.DependencyInjection.Abstractions.dll') -Force
+    $resolver=[Mono.Cecil.DefaultAssemblyResolver]::new()
+    $resolver.AddSearchDirectory($compiled)
+    $resolver.AddSearchDirectory((Join-Path $editorData 'NetStandard/ref/2.1.0'))
+    $reader=[Mono.Cecil.ReaderParameters]::new();$reader.AssemblyResolver=$resolver
+    $assembly=[Mono.Cecil.AssemblyDefinition]::ReadAssembly($output,$reader)
     try {
         $module=$assembly.MainModule
-        $attribute=[Mono.Cecil.TypeReference]::new('System','Attribute',$module,$module.TypeSystem.Object.Scope)
-        $baseCtor=[Mono.Cecil.MethodReference]::new('.ctor',$module.TypeSystem.Void,$attribute);$baseCtor.HasThis=$true
-        $portedMarker=[Mono.Cecil.TypeDefinition]::new($marker.Namespace,$marker.Name,$marker.Attributes,$attribute)
-        $module.Types.Add($portedMarker)
-        $ctor=[Mono.Cecil.MethodDefinition]::new('.ctor',$marker.Methods[0].Attributes,$module.TypeSystem.Void)
-        $portedMarker.Methods.Add($ctor);$il=$ctor.Body.GetILProcessor()
-        $il.Emit([Mono.Cecil.Cil.OpCodes]::Ldarg_0);$il.Emit([Mono.Cecil.Cil.OpCodes]::Call,$baseCtor);$il.Emit([Mono.Cecil.Cil.OpCodes]::Ret)
-        # Keep the runtime usage contract. Dummy RVA/token and JetBrains static
-        # analysis annotations are not executable application dependencies.
-        $attributeTargets=[Mono.Cecil.TypeReference]::new('System','AttributeTargets',$module,$module.TypeSystem.Object.Scope,$true)
-        $usageType=[Mono.Cecil.TypeReference]::new('System','AttributeUsageAttribute',$module,$module.TypeSystem.Object.Scope)
-        $usageCtor=[Mono.Cecil.MethodReference]::new('.ctor',$module.TypeSystem.Void,$usageType);$usageCtor.HasThis=$true
-        $usageCtor.Parameters.Add([Mono.Cecil.ParameterDefinition]::new($attributeTargets))
-        $portedUsage=[Mono.Cecil.CustomAttribute]::new($usageCtor)
-        $portedUsage.ConstructorArguments.Add([Mono.Cecil.CustomAttributeArgument]::new($attributeTargets,[int]128))
-        foreach($property in $usage.Properties){$portedUsage.Properties.Add([Mono.Cecil.CustomAttributeNamedArgument]::new($property.Name,[Mono.Cecil.CustomAttributeArgument]::new($module.TypeSystem.Boolean,[bool]$property.Argument.Value)))}
-        $portedMarker.CustomAttributes.Add($portedUsage)
-        $portedInterface=[Mono.Cecil.TypeDefinition]::new($iface.Namespace,$iface.Name,$iface.Attributes)
-        $module.Types.Add($portedInterface)
-        $interfaceMethod=[Mono.Cecil.MethodDefinition]::new('Inject',$iface.Methods[0].Attributes,$module.TypeSystem.Void)
-        $interfaceMethod.Parameters.Add([Mono.Cecil.ParameterDefinition]::new($iface.Methods[0].Parameters[0].Name,$iface.Methods[0].Parameters[0].Attributes,$module.TypeSystem.Object))
-        $portedInterface.Methods.Add($interfaceMethod)
-        $portedExtension=[Mono.Cecil.TypeDefinition]::new($extension.Namespace,$extension.Name,$extension.Attributes,$module.TypeSystem.Object)
-        $module.Types.Add($portedExtension)
-        $method=[Mono.Cecil.MethodDefinition]::new('Inject',$inject[0].Attributes,$module.TypeSystem.Void)
-        $provider=[Mono.Cecil.TypeReference]::new('System','IServiceProvider',$module,$module.TypeSystem.Object.Scope)
-        $method.Parameters.Add([Mono.Cecil.ParameterDefinition]::new($inject[0].Parameters[0].Name,$inject[0].Parameters[0].Attributes,$provider))
-        $method.Parameters.Add([Mono.Cecil.ParameterDefinition]::new($inject[0].Parameters[1].Name,$inject[0].Parameters[1].Attributes,$module.TypeSystem.Object))
-        $portedExtension.Methods.Add($method)
-        $getService=@(($di.MainModule.Types | Where-Object FullName -eq 'Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions').Methods | Where-Object {$_.Name -eq 'GetService' -and $_.HasGenericParameters -and $_.GenericParameters.Count -eq 1 -and $_.Parameters.Count -eq 1})
-        if($getService.Count -ne 1){throw 'Pinned public GetService<T> ABI differs'}
-        $generic=[Mono.Cecil.GenericInstanceMethod]::new($module.ImportReference($getService[0]));$generic.GenericArguments.Add($portedInterface)
-        $il=$method.Body.GetILProcessor()
-        $il.Emit([Mono.Cecil.Cil.OpCodes]::Ldarg_0);$il.Emit([Mono.Cecil.Cil.OpCodes]::Call,$generic)
-        $il.Emit([Mono.Cecil.Cil.OpCodes]::Ldarg_1);$il.Emit([Mono.Cecil.Cil.OpCodes]::Callvirt,$interfaceMethod);$il.Emit([Mono.Cecil.Cil.OpCodes]::Ret)
-        $extensionType=[Mono.Cecil.TypeReference]::new('System.Runtime.CompilerServices','ExtensionAttribute',$module,$module.TypeSystem.Object.Scope)
-        $extensionCtor=[Mono.Cecil.MethodReference]::new('.ctor',$module.TypeSystem.Void,$extensionType);$extensionCtor.HasThis=$true
-        $portedExtension.CustomAttributes.Add([Mono.Cecil.CustomAttribute]::new($extensionCtor));$method.CustomAttributes.Add([Mono.Cecil.CustomAttribute]::new($extensionCtor))
-        $injector=$original.MainModule.Types | Where-Object FullName -eq 'Framework.DependencyInjection.DryIoc.DryIocInstanceInjector'
-        if($injector.Fields.Count -ne 1 -or $injector.Methods.Count -ne 2 -or $injector.Fields[0].Name -ne 'mContext' -or $injector.Fields[0].FieldType.FullName -ne 'DryIoc.IResolverContext' -or $injector.BaseType.FullName -ne 'System.Object' -or $injector.Interfaces.Count -ne 1 -or $injector.Interfaces[0].InterfaceType.FullName -ne 'Framework.DependencyInjection.Abstractions.IInstanceInjector'){throw 'Original injector layout differs'}
-        $originalCtor=$injector.Methods | Where-Object Name -eq '.ctor'
-        $originalInject=$injector.Methods | Where-Object Name -eq 'Inject'
-        if($originalCtor.FullName -ne 'System.Void Framework.DependencyInjection.DryIoc.DryIocInstanceInjector::.ctor(DryIoc.IResolverContext)' -or $originalInject.FullName -ne 'System.Void Framework.DependencyInjection.DryIoc.DryIocInstanceInjector::Inject(System.Object)'){throw 'Original injector method ABI differs'}
-        $context=$dry.MainModule.Types | Where-Object FullName -eq 'DryIoc.IResolverContext'
-        $portedInjector=[Mono.Cecil.TypeDefinition]::new($injector.Namespace,$injector.Name,$injector.Attributes,$module.TypeSystem.Object)
-        $portedInjector.Interfaces.Add([Mono.Cecil.InterfaceImplementation]::new($portedInterface));$module.Types.Add($portedInjector)
-        $field=[Mono.Cecil.FieldDefinition]::new('mContext',$injector.Fields[0].Attributes,$module.ImportReference($context));$portedInjector.Fields.Add($field)
-        $injectorCtor=[Mono.Cecil.MethodDefinition]::new('.ctor',$originalCtor.Attributes,$module.TypeSystem.Void)
-        $injectorCtor.Parameters.Add([Mono.Cecil.ParameterDefinition]::new($originalCtor.Parameters[0].Name,$originalCtor.Parameters[0].Attributes,$module.ImportReference($context)))
-        $portedInjector.Methods.Add($injectorCtor);$il=$injectorCtor.Body.GetILProcessor()
-        $objectCtor=[Mono.Cecil.MethodReference]::new('.ctor',$module.TypeSystem.Void,$module.TypeSystem.Object);$objectCtor.HasThis=$true
-        $il.Emit([Mono.Cecil.Cil.OpCodes]::Ldarg_0);$il.Emit([Mono.Cecil.Cil.OpCodes]::Call,$objectCtor)
-        $il.Emit([Mono.Cecil.Cil.OpCodes]::Ldarg_0);$il.Emit([Mono.Cecil.Cil.OpCodes]::Ldarg_1);$il.Emit([Mono.Cecil.Cil.OpCodes]::Stfld,$field);$il.Emit([Mono.Cecil.Cil.OpCodes]::Ret)
-        $injectorMethod=[Mono.Cecil.MethodDefinition]::new('Inject',$originalInject.Attributes,$module.TypeSystem.Void)
-        $injectorMethod.Parameters.Add([Mono.Cecil.ParameterDefinition]::new($originalInject.Parameters[0].Name,$originalInject.Parameters[0].Attributes,$module.TypeSystem.Object));$portedInjector.Methods.Add($injectorMethod)
-        $targets=@(($dry.MainModule.Types | Where-Object FullName -eq 'DryIoc.ContainerTools').Methods | Where-Object {$_.Name -eq 'InjectPropertiesAndFields' -and $_.GenericParameters.Count -eq 1 -and $_.Parameters.Count -eq 2})
-        if($targets.Count -ne 1){throw 'Pinned original DryIoc injection call differs'}
-        $genericInject=[Mono.Cecil.GenericInstanceMethod]::new($module.ImportReference($targets[0]));$genericInject.GenericArguments.Add($module.TypeSystem.Object)
-        $il=$injectorMethod.Body.GetILProcessor();$il.Emit([Mono.Cecil.Cil.OpCodes]::Ldarg_0);$il.Emit([Mono.Cecil.Cil.OpCodes]::Ldfld,$field)
-        $il.Emit([Mono.Cecil.Cil.OpCodes]::Ldarg_1);$il.Emit([Mono.Cecil.Cil.OpCodes]::Call,$genericInject);$il.Emit([Mono.Cecil.Cil.OpCodes]::Pop);$il.Emit([Mono.Cecil.Cil.OpCodes]::Ret)
-        $identity=[System.Security.Cryptography.SHA256]::HashData([System.Text.Encoding]::UTF8.GetBytes($IdentitySeed))
+        function Assert-OriginalType($ported,$expected) {
+            if(!$expected -or $ported.Attributes -ne $expected.Attributes -or $ported.BaseType.FullName -ne $expected.BaseType.FullName){throw ('Original type ABI differs: '+$ported.FullName)}
+            if(($ported.Interfaces.InterfaceType.FullName -join '|') -ne ($expected.Interfaces.InterfaceType.FullName -join '|')){throw ('Original interfaces differ: '+$ported.FullName)}
+            if($ported.Fields.Count -ne $expected.Fields.Count){throw ('Original fields differ: '+$ported.FullName)}
+            foreach($field in $ported.Fields){
+                $matches=@($expected.Fields | Where-Object {$_.FullName -eq $field.FullName -and $_.Attributes -eq $field.Attributes})
+                if($matches.Count -ne 1){throw ('Original field ABI differs: '+$field.FullName)}
+            }
+            foreach($method in $ported.Methods){
+                $matches=@($expected.Methods | Where-Object {$_.FullName -eq $method.FullName -and $_.Attributes -eq $method.Attributes})
+                if($matches.Count -ne 1){throw ('Original method ABI differs: '+$method.FullName)}
+            }
+            if($ported.Name -ne 'ServiceProviderExtensions' -and $ported.Methods.Count -ne $expected.Methods.Count){throw ('Original method count differs: '+$ported.FullName)}
+            if($ported.Name -ne 'ServiceProviderExtensions' -and $ported.NestedTypes.Count -ne $expected.NestedTypes.Count){throw ('Original nested types differ: '+$ported.FullName)}
+            foreach($nested in $ported.NestedTypes){Assert-OriginalType $nested ($expected.NestedTypes | Where-Object FullName -eq $nested.FullName)}
+        }
+        $types=@($module.Types | Where-Object Name -ne '<Module>')
+        $names=@('Framework.DependencyInjection.InjectAttribute','Framework.DependencyInjection.Abstractions.IInstanceInjector','Framework.DependencyInjection.ServiceProviderExtensions','Framework.DependencyInjection.DryIoc.DryIocInstanceInjector','Framework.DependencyInjection.DryIoc.InjectAttributeSelector')
+        if((@($types.FullName | Sort-Object) -join '|') -ne (@($names | Sort-Object) -join '|')){throw 'Unexpected partial Core type set'}
+        foreach($type in $types){Assert-OriginalType $type ($original.MainModule.Types | Where-Object FullName -eq $type.FullName)}
+        $selector=$types | Where-Object Name -eq 'InjectAttributeSelector'
+        $properties=$selector.Methods | Where-Object Name -eq 'Properties'
+        if($properties.Parameters.Count -ne 1 -or !$properties.Parameters[0].HasConstant -or [int]$properties.Parameters[0].Constant -ne 2){throw 'Original selector default differs'}
+        $identity=[System.Security.Cryptography.SHA256]::HashData([System.Text.Encoding]::UTF8.GetBytes($IdentitySeed+(Get-FileHash -Algorithm SHA256 $source).Hash))
         $module.Mvid=[guid]::new([byte[]]$identity[0..15])
-        New-Item -ItemType Directory -Path $Destination -Force | Out-Null
         $writer=[Mono.Cecil.WriterParameters]::new();$writer.Timestamp=[uint32]0
         $assembly.Write((Join-Path $Destination 'Framework.Core.dll'),$writer)
-        @{name='Framework.Core';module_id=$module.Mvid.ToString();types=@($portedMarker.FullName,$portedInterface.FullName,$portedExtension.FullName,$portedInjector.FullName);method=$method.FullName;injector=$injectorMethod.FullName;injector_target=$targets[0].FullName} | ConvertTo-Json -Depth 4 | Set-Content (Join-Path $Destination 'contract.json') -Encoding utf8
-    } finally {$assembly.Dispose()}
+        @{name='Framework.Core';module_id=$module.Mvid.ToString();types=$names;method='System.Void Framework.DependencyInjection.ServiceProviderExtensions::Inject(System.IServiceProvider,System.Object)';injector='System.Void Framework.DependencyInjection.DryIoc.DryIocInstanceInjector::Inject(System.Object)';injector_target='DryIoc.ContainerTools.InjectPropertiesAndFields<System.Object>';selector=$properties.FullName} | ConvertTo-Json -Depth 4 | Set-Content (Join-Path $Destination 'contract.json') -Encoding utf8
+    } finally {$assembly.Dispose();$resolver.Dispose()}
 } finally {$original.Dispose();$di.Dispose();$dry.Dispose();$framework.Dispose()}
