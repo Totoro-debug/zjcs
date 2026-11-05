@@ -265,7 +265,7 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 共享原演出核心见 `Runtime/Official/StoryPlayables/` 与 `scripts/prepare_unity_story_playable_runtime.py`：原 `MyPlayable` 状态机、双阶段中心、序列、触发器、有序容器与粒子淡入淡出保留；离线显式注入及调用方帧阶段替代原服务注册。隔离 Unity 完整校验、Play Mode 调度／状态／异常恢复及 3 项迁移回归通过，视觉和输入未覆盖；正式宿主、原 prefab、动画／骨骼、Timeline、相机和音频仍待绑定。来源与验证范围见[龙之国](../maps/map-14.md)，不据此开放完整地图。
 
-`Runtime/Offline/World/MainlineStoryPlayables/` 是各图原演出资源边界：`MainlineStoryPlayableAssets.Load(mapClassId, expectedManifest, loadCatalog)` 按地图配置和固定来源清单核对 GUID／节点字段并创建原 `PlayPlayableNode`；各图通过 `loadCatalog` 适配自己的原生资源目录；`MainlineStoryPlayableScope` 为原 `MyPlayableManager`／`MyPlayableCenter`／FIFO池提供地图生命周期作用域。Map13／16 已配各自资源清单，不改原请求 flags、时长、资源顺序或端口。已绑定鲸背岛两份演出 prefab。此次相关 C# 程序集在主工程重新编译成功，全量静态元数据检查覆盖127,774个GUID通过；内置屏 Unity 回归进程停在工程路径切换且没有资产导入记录，已终止，故抽取后的 Map13 请求回归与 Map16 实际演员流程仍未运行，详见[泽之国](../maps/map-13.md)和[鲸背岛](../maps/map-16.md)。
+`Runtime/Offline/World/MainlineStoryPlayables/` 是各图原演出资源边界：`MainlineStoryPlayableAssets.Load(mapClassId, expectedManifest, loadCatalog)` 按地图配置和固定来源清单核对 GUID／节点字段并创建原 `PlayPlayableNode`；各图通过 `loadCatalog` 适配自己的原生资源目录；`MainlineStoryPlayableScope` 为原 `MyPlayableManager`／`MyPlayableCenter`／FIFO池提供地图生命周期作用域。Map13／16 已配各自资源清单，不改原请求 flags、时长、资源顺序或端口。已绑定鲸背岛两份演出 prefab。此次相关 C# 程序集在主工程重新编译成功，全量静态元数据检查覆盖127,774个GUID通过；内置屏 D3D11 Unity 回归实际执行并通过 Map13 全部29个请求、55路演员输入、20次等待、2次演出前停止及清理，运行画面已查看；同次验证加载并创建了Map16的2个请求节点，Map16正式演员流程仍待正式入口接通，详见[泽之国](../maps/map-13.md)和[鲸背岛](../maps/map-16.md)。
 
 地图 14 的专属实现、决策和缺口见[龙之国](../maps/map-14.md)。
 
