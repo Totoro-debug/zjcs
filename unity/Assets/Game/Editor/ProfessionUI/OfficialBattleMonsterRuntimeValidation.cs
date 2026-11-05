@@ -62,7 +62,7 @@ namespace Zjcs.Editor.ProfessionUI
         {
             string work = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
             assets = BattleNativeMonsterAssets.Load();
-            if (assets.EntityIds.Count() != 39) throw new InvalidDataException("Original monster inventory differs.");
+            if (assets.EntityIds.Count() != 60) throw new InvalidDataException("Original monster inventory differs.");
             target = new RenderTexture(450, 800, 24, RenderTextureFormat.ARGB32); target.Create();
             camera = new GameObject("Monster validation camera").AddComponent<Camera>();
             camera.orthographic = true; camera.clearFlags = CameraClearFlags.SolidColor;

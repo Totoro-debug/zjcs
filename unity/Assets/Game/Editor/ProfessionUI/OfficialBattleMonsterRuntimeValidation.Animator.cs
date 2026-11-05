@@ -98,7 +98,7 @@ namespace Zjcs.Editor.ProfessionUI
             File.WriteAllText(Path.Combine(work, "monster-animator-result.json"), JsonUtility.ToJson(new AnimatorResult {
                 models=models, states=states, samples=samples, transitions=transitions, emptyStates=empty,
                 unboundCarriers=carriers, failures=failures.ToArray() }, true));
-            if (models != 39 || states + empty + carriers != 484 || samples != states * 9 || transitions == 0)
+            if (models != 60 || states + empty + carriers != 569 || samples != states * 9 || transitions == 0)
                 throw new InvalidDataException("Original monster Animator coverage differs from its verified inventory.");
             if (failures.Count != 0) throw new InvalidDataException("Original monster Animator validation failed: " + failures.Count);
             Debug.Log("[Original monster Animator] models=" + models + " states=" + states + " samples=" + samples + " transitionFrames=" + transitions);

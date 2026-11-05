@@ -47,6 +47,7 @@ def main(refresh=False):
     if external - allowed:
         raise ValueError("Review native monster validation dependencies: " + repr(external))
     copy_modules(project, runtime, modules, selected)
+    shutil.copytree(ROOT / "unity/Assets/Official/Combat/NativeMonsters", project / "Assets/Official/Combat/NativeMonsters")
     editor = project / "Assets/Editor"
     editor.mkdir(parents=True)
     for name in ("OfficialBattleMonsterDataValidation", "OfficialBattleMonsterRuntimeValidation", "OfficialBattleMonsterRuntimeValidation.Animator"):

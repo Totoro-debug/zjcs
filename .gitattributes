@@ -2246,7 +2246,7 @@ unity/Assets/Official/Combat/NativeMonsters/**/*.asset text eol=lf
 unity/Assets/Official/Combat/NativeMonsters/**/*.anim text eol=lf
 unity/Assets/Official/Combat/NativeMonsters/**/*.controller text eol=lf
 unity/Assets/Official/Combat/NativeMonsters/**/*.json text eol=lf
-unity/Assets/Official/Combat/NativeMonsters/**/*.meta text eol=lf
+unity/Assets/Official/Combat/NativeMonsters/**/*.meta text eol=lf whitespace=-blank-at-eol
 unity/Assets/Official/Combat/NativeMonsters/**/*.shader text eol=lf
 unity/Assets/Official/Combat/NativeMonsters/textures/*.asset whitespace=-blank-at-eol
 scripts/prepare_battle_pet_portraits.py text eol=lf
@@ -2259,6 +2259,9 @@ unity/Assets/Official/Combat/PetPortraits/*.asset text eol=lf whitespace=-blank-
 scripts/test_battle_pet_support.ps1 text eol=lf
 scripts/fixtures/battle_pet_support_harness.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.PetSupport.cs* text eol=lf
+scripts/prepare_battle_live_monster_validation.py text eol=lf
+assets/reference/battle-animation/monster-attachments-source-manifest.json text eol=lf
+assets/reference/battle-animation/monster-additional-shadows-source-manifest.json text eol=lf
 # END shared battle pet byte identities
 
 # Keep current 3100 attachment data and independent bindings byte-stable.
