@@ -63,7 +63,7 @@ namespace Zjcs.Editor.MainlineWorldStartup
                     while (load.MoveNext()) yield return load.Current;
                     if (calls.Count == 0 || calls.Values.Any(value => value != 1))
                         throw new InvalidDataException("Client snapshot did not read each region exactly once.");
-                    var player = Activator.CreateInstance(shared.CommonType("Player"));
+                    var player = ProjectLocalPlayer(world);
                     world.StartClient(player);
                     var map = mapProperty.GetValue(manager);
                     if (!world.IsReady || !ReferenceEquals(playerProperty.GetValue(manager), player)

@@ -1,6 +1,13 @@
 {
   "name": "Zjcs.Editor.MainlineWorldStartup",
-  "references": ["Zjcs.Offline.World.NativeMap14SharedEntities", "Config"],
-  "includePlatforms": ["Editor"],
+  "references": [
+    "Zjcs.Offline.World.NativeMap14SharedEntities",
+    "Config",
+    "Zjcs.Offline.World.MainlinePlayerState",
+    "Zjcs.Offline.Progression"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
   "autoReferenced": false
 }

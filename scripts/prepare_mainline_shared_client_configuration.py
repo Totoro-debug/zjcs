@@ -1,10 +1,13 @@
 """Bind the original configuration closure used by fresh map client players."""
 import hashlib
 import json
+import re
+import subprocess
 from pathlib import Path
 
 from official_apk import ROOT, Apk
 from prepare_mainline_shared_world_data import meta, record
+from validation_workspace import validation_directory
 
 DESTINATION = ROOT / "unity/Assets/Official/World/Shared/SharedClientConfiguration"
 RECEIPT = ROOT / "assets/reference/official-map/mainline-shared-client-configuration-source-manifest.json"
@@ -25,6 +28,30 @@ TABLES = (
 )
 BINARY = ROOT / "unity/Assets/StreamingAssets/PartnerNpcShared/Config/Binary/level_prop.g.bytes"
 BINARY_SHA256 = "1b8e2cf7029ba8a80750f54aa35658878166d1bfbe2e206317473b43f6af3f1f"
+
+
+def verify_player_projection(source, shared, work):
+    work.mkdir(parents=True, exist_ok=True)
+    subprocess.run([str(ROOT / ".tools/dotnet/dotnet.exe"),
+        str(ROOT / ".tools/ilspycmd/tools/net10.0/any/ilspycmd.dll"),
+        "-t", "Common.Player", "-o", str(work), str(shared)], check=True)
+    old = (work / "Common.Player.decompiled.cs").read_text("utf8")
+    current = (source / "Player.cs").read_text("utf8")
+    methods = ("public static Player CreateNewPlayer()", "public List<int> GetWorldMapProgresses(",
+        "public int GetWorldMapRegionProgress(", "public int GetStoryCount(",
+        "public StoryStatus GetStoryStatus(", "public DateTime GetStoryLastPlayTime(",
+        "public T GetBlackboardDataValue<T>(")
+    def body(text, method):
+        start = text.index("{", text.index(method))
+        end, depth = start + 1, 1
+        while depth:
+            depth += (text[end] == "{") - (text[end] == "}")
+            end += 1
+        return re.sub(r"\s+", "", re.sub(r"//[^\n]*", "", text[start:end]))
+    for method in methods:
+        if body(old, method) != body(current, method):
+            raise ValueError("Retained original player projection method differs: " + method)
+    return dict(verified_methods=list(methods), scope="Only the listed original player methods; not whole-version equivalence")
 
 
 def build():
@@ -66,10 +93,13 @@ def build():
         outputs.append(record(Path(str(directory) + ".meta")))
     source = ROOT / ".tools/source-packages/current" / apk.version / "official-code/common-source/Common"
     names = [config for _, _, config in TABLES] + [config + "Parser" for _, _, config in TABLES]
-    names += ["LevelPropParser", "LevelPropBinaryReader", "RawFileUtility", "Player", "PlayerPropContext"]
+    names += ["LevelPropParser", "LevelPropBinaryReader", "RawFileUtility", "Player", "PlayerPropContext",
+        "PlayerProfessionData", "PlayerProfessionDataWrap", "PlayerStory", "PlayerStoryDataWrap",
+        "BlackboardDataKeyMapLogicEntityEnd", "MapLogicEntityEndByTagCondition"]
     shared = ROOT / "unity/Assets/Official/World/Map/14/SharedRuntime/Console.bytes"
     if record(shared)["sha256"] != "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397":
         raise ValueError("Preserve independently pinned original shared IL")
+    projection_evidence = verify_player_projection(source, shared, validation_directory() / "player-projection-sources")
     native = ROOT / "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities"
     binding = native / "MainlineSharedClientConfiguration.cs"
     meta(binding)
@@ -78,8 +108,10 @@ def build():
         operation="Restore original fresh-player tables and reuse the verified local level-property binary. Replace only YooAsset path discovery; retain original ParserBase initialization, binary reader, 1000-entry LRU, default values and calculations.",
         inputs=inputs, binary_input=record(BINARY), binary_provenance=record(binary_proof_path),
         code_inputs=[record(source / (name + ".cs")) for name in names],
-        shared_il=dict(record(shared), manifest="871_156598"),
-        bindings=[record(path) for path in (binding, Path(str(binding) + ".meta"), native / "NativeMap14SharedConfiguration.cs")],
+        shared_il=dict(record(shared), manifest="871_156598"), player_projection=projection_evidence,
+        bindings=[record(path) for path in (binding, Path(str(binding) + ".meta"), native / "NativeMap14SharedConfiguration.cs")]
+            + [record(path) for path in sorted((native.parent / "MainlinePlayerState").iterdir()) if path.is_file()]
+            + [record(native.parent / "MainlinePlayerState.meta")],
         validation=[record(path) for path in sorted(validation.iterdir()) if path.is_file()],
         tools=[record(Path(__file__).resolve()), record(ROOT / "scripts/prepare_mainline_world_startup_validation.py")],
         outputs=outputs)

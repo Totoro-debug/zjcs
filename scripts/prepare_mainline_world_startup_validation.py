@@ -22,7 +22,7 @@ def main():
     source = ROOT / "unity"
     runtime = source / "Assets/Game/Runtime"
     modules = {json.loads(p.read_bytes())["name"]: p for p in runtime.rglob("*.asmdef")}
-    pending = ["Zjcs.Offline.World.NativeMap14SharedEntities"]
+    pending = ["Zjcs.Offline.World.NativeMap14SharedEntities", "Zjcs.Offline.World.MainlinePlayerState"]
     selected = set()
     while pending:
         name = pending.pop()
