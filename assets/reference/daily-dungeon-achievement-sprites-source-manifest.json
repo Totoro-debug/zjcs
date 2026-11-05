@@ -1,0 +1,217 @@
+{
+  "manifest": "884_156692",
+  "selector": {
+    "path": "official-source.json",
+    "sha256": "a29067dd1363590c8fde67a7d5326fcb5a4632441e8c73ae8b64300aa491a3a6"
+  },
+  "generator": {
+    "path": "scripts/prepare_daily_dungeon_achievement_sprites.py",
+    "sha256": "32e9da68d3c6dafe5e41793185e7aeb413985814b40f87ea413bf6cb8c9eeaed"
+  },
+  "rulesBinding": {
+    "path": "unity/Assets/StreamingAssets/Home/rules.json",
+    "version": "854_156383",
+    "sha256": "6d97156e969e882f32e9cf2f357fd5b776295125ac6d01b97186cadfb5bfa489",
+    "itemIcons": [
+      {
+        "itemId": 102,
+        "file": "item_102-cae011d41c.png"
+      },
+      {
+        "itemId": 103,
+        "file": "item_103-dd5ad0232c.png"
+      },
+      {
+        "itemId": 1105,
+        "file": "item_1105-eb4028384a.png"
+      },
+      {
+        "itemId": 1115,
+        "file": "item_1115-73a94e6ef4.png"
+      },
+      {
+        "itemId": 1125,
+        "file": "item_1125-077865581e.png"
+      },
+      {
+        "itemId": 1134,
+        "file": "item_1134-406c75a66c.png"
+      }
+    ]
+  },
+  "achievementCatalog": {
+    "path": "unity/Assets/Game/Resources/Dungeons/daily-dungeon-achievements.json",
+    "sha256": "95fe60e6b18a97adf967b2a71086db50e2787e28d21f2020ca9a6b659308a841",
+    "group": 39,
+    "type": 22
+  },
+  "operation": "Resolve each exact original Sprite through the selected APK first and verified same-version CDN cache second; export UnityPy's decoded Sprite image as PNG.",
+  "outputs": [
+    {
+      "itemId": 102,
+      "homeIconFile": "item_102-cae011d41c.png",
+      "sourcePath": "Assets/Image/ItemIcon/Other/Common_NoAtlas/item_102.png",
+      "sourceObject": "item_102",
+      "sourceObjectPathId": "-4311686522380300201",
+      "sourceObjectSha256": "c15890507f399ce46ba04277affa10c4bf50d5fedf14835e3393ba0e9cee146e",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_other_common_noatlas.bundle",
+        "bundle_hash": "1bfdffbf8561b029ace6e16b986176fe",
+        "path_id": "-4311686522380300201",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/1bfdffbf8561b029ace6e16b986176fe.bundle",
+        "raw_size": 916538,
+        "raw_sha256": "2cb8469d52f67bc7fd8341e025191735ff8ee16253a6f4f53b4fbfebe7fb0bd0"
+      },
+      "conversion": "Decode the original Unity Sprite image to PNG without drawing or resizing.",
+      "width": 168,
+      "height": 183,
+      "output": "unity/Assets/StreamingAssets/Home/sprites/item_102-cae011d41c.png",
+      "outputBytes": 27053,
+      "outputSha256": "9a49a176c2f2de43afbe40a1898f20b3817b8733f306d45a37ae4c17e30913b3",
+      "meta": "unity/Assets/StreamingAssets/Home/sprites/item_102-cae011d41c.png.meta",
+      "metaGuid": "5f96295907fe5b1f9ea873325881566c",
+      "metaSha256": "4fe538cc6c059488efb6fad482522d1c6212ec8aa5735817c82c193c60775697"
+    },
+    {
+      "itemId": 103,
+      "homeIconFile": "item_103-dd5ad0232c.png",
+      "sourcePath": "Assets/Image/ItemIcon/Other/Common_NoAtlas/item_103.png",
+      "sourceObject": "item_103",
+      "sourceObjectPathId": "482926377247070178",
+      "sourceObjectSha256": "e5e062c636573681a2203fad5593b4c7ea07139399ac4c8827184d5456e69ad8",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_other_common_noatlas.bundle",
+        "bundle_hash": "1bfdffbf8561b029ace6e16b986176fe",
+        "path_id": "482926377247070178",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/1bfdffbf8561b029ace6e16b986176fe.bundle",
+        "raw_size": 916538,
+        "raw_sha256": "2cb8469d52f67bc7fd8341e025191735ff8ee16253a6f4f53b4fbfebe7fb0bd0"
+      },
+      "conversion": "Decode the original Unity Sprite image to PNG without drawing or resizing.",
+      "width": 166,
+      "height": 222,
+      "output": "unity/Assets/StreamingAssets/Home/sprites/item_103-dd5ad0232c.png",
+      "outputBytes": 27115,
+      "outputSha256": "62cadc4914faf2fc03529c8befd11a84718f0fd6ef4f54c1abf6792255254045",
+      "meta": "unity/Assets/StreamingAssets/Home/sprites/item_103-dd5ad0232c.png.meta",
+      "metaGuid": "3fdf8da970105bccbcc78efcab2ee501",
+      "metaSha256": "1e37d8026ba1158fbcf194b94055ad59c53682d074454e97c39eb1a22b1213f4"
+    },
+    {
+      "itemId": 1105,
+      "homeIconFile": "item_1105-eb4028384a.png",
+      "sourcePath": "Assets/Image/ItemIcon/Gift/Gift_Atlas/item_1105.png",
+      "sourceObject": "item_1105",
+      "sourceObjectPathId": "-3795189304037308548",
+      "sourceObjectSha256": "51518db13a24f500e55df7941011b771f958cf4777f4c3b9def5799b52ce24f2",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gift_gift_atlas.bundle",
+        "bundle_hash": "bcb56eb05329d2be2e7f124e7ad0edf4",
+        "path_id": "-3795189304037308548",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/bcb56eb05329d2be2e7f124e7ad0edf4.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 507869,
+        "bundle_sha256": "0125e98a2a7b0d3bb66f843ba2b3a3890e894f6e19e0e474d85f5147bec44a83"
+      },
+      "conversion": "Decode the original Unity Sprite image to PNG without drawing or resizing.",
+      "width": 171,
+      "height": 172,
+      "output": "unity/Assets/StreamingAssets/Home/sprites/item_1105-eb4028384a.png",
+      "outputBytes": 36703,
+      "outputSha256": "6aa391a1512a985b3a42acd8caa8afe10a7695c680c41f97acfdd6ea42d2173e",
+      "meta": "unity/Assets/StreamingAssets/Home/sprites/item_1105-eb4028384a.png.meta",
+      "metaGuid": "6ff54726b7fc5853a588ac9ed2006872",
+      "metaSha256": "63f1c0238321ad0d7b00ffeaee11405f55eab919afc28b0d49d7874a26c0f624"
+    },
+    {
+      "itemId": 1115,
+      "homeIconFile": "item_1115-73a94e6ef4.png",
+      "sourcePath": "Assets/Image/ItemIcon/Gift/Gift_Atlas/item_1115.png",
+      "sourceObject": "item_1115",
+      "sourceObjectPathId": "5753641176228278882",
+      "sourceObjectSha256": "edbcf49da6727bd54f2e57156ff52b35f21a81a8f0b480e65d892a8b4ee5fffd",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gift_gift_atlas.bundle",
+        "bundle_hash": "bcb56eb05329d2be2e7f124e7ad0edf4",
+        "path_id": "5753641176228278882",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/bcb56eb05329d2be2e7f124e7ad0edf4.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 507869,
+        "bundle_sha256": "0125e98a2a7b0d3bb66f843ba2b3a3890e894f6e19e0e474d85f5147bec44a83"
+      },
+      "conversion": "Decode the original Unity Sprite image to PNG without drawing or resizing.",
+      "width": 133,
+      "height": 189,
+      "output": "unity/Assets/StreamingAssets/Home/sprites/item_1115-73a94e6ef4.png",
+      "outputBytes": 23529,
+      "outputSha256": "a350cc1a23e6ddf3ace420ea5f2140014b4cb65a926338553a67183ee816b61c",
+      "meta": "unity/Assets/StreamingAssets/Home/sprites/item_1115-73a94e6ef4.png.meta",
+      "metaGuid": "b8d00c36deb5545a81e8c64fac3ba5be",
+      "metaSha256": "25f86bd550b2a91318cb3dd392d31a0917cab71617500b6bddd662d9f7608682"
+    },
+    {
+      "itemId": 1125,
+      "homeIconFile": "item_1125-077865581e.png",
+      "sourcePath": "Assets/Image/ItemIcon/Gift/Gift_Atlas/item_1125.png",
+      "sourceObject": "item_1125",
+      "sourceObjectPathId": "-4148652315839045672",
+      "sourceObjectSha256": "5febff5299c89dc16e35bf3635ad6480f06be91eae03487b658de96fbb1855f8",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gift_gift_atlas.bundle",
+        "bundle_hash": "bcb56eb05329d2be2e7f124e7ad0edf4",
+        "path_id": "-4148652315839045672",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/bcb56eb05329d2be2e7f124e7ad0edf4.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 507869,
+        "bundle_sha256": "0125e98a2a7b0d3bb66f843ba2b3a3890e894f6e19e0e474d85f5147bec44a83"
+      },
+      "conversion": "Decode the original Unity Sprite image to PNG without drawing or resizing.",
+      "width": 196,
+      "height": 118,
+      "output": "unity/Assets/StreamingAssets/Home/sprites/item_1125-077865581e.png",
+      "outputBytes": 22483,
+      "outputSha256": "fe166e2d75cdef9129a9f114d3099b049b23394019d15af9ed30313857350cb3",
+      "meta": "unity/Assets/StreamingAssets/Home/sprites/item_1125-077865581e.png.meta",
+      "metaGuid": "2546d7f8d0a85541b1af235288159960",
+      "metaSha256": "236a060fa2ae1f0fb93e9d451c57c6525d760ff720c3b5e50b2a2675fedab617"
+    },
+    {
+      "itemId": 1134,
+      "homeIconFile": "item_1134-406c75a66c.png",
+      "sourcePath": "Assets/Image/ItemIcon/Gift/Gift_Atlas/item_1134.png",
+      "sourceObject": "item_1134",
+      "sourceObjectPathId": "7674066844680984727",
+      "sourceObjectSha256": "ec20afa6aa6953784d5bc2d4120b0e36a6819a0f4f68bc61c7dad301665bebf0",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gift_gift_atlas.bundle",
+        "bundle_hash": "bcb56eb05329d2be2e7f124e7ad0edf4",
+        "path_id": "7674066844680984727",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/bcb56eb05329d2be2e7f124e7ad0edf4.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 507869,
+        "bundle_sha256": "0125e98a2a7b0d3bb66f843ba2b3a3890e894f6e19e0e474d85f5147bec44a83"
+      },
+      "conversion": "Decode the original Unity Sprite image to PNG without drawing or resizing.",
+      "width": 145,
+      "height": 195,
+      "output": "unity/Assets/StreamingAssets/Home/sprites/item_1134-406c75a66c.png",
+      "outputBytes": 36908,
+      "outputSha256": "f0394292ff2cecbb351c94687e3828cc9164a154295ec4f74efd3b39f57487df",
+      "meta": "unity/Assets/StreamingAssets/Home/sprites/item_1134-406c75a66c.png.meta",
+      "metaGuid": "0b0244f9d96855ae9f4ce42ecc957e17",
+      "metaSha256": "a4944aa1a1c6afe0d4d3e874b4b8278b774d5f4a1ce4a9ddcc8517faabc330d0"
+    }
+  ]
+}

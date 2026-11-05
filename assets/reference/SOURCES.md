@@ -115,6 +115,7 @@
 | 当前来源切换与转换链 | `assets/reference/official-map/current-*-source-manifest.json`、`assets/reference/character-creation/current-*-source-manifest.json` |
 | 客户端／共享代码来源 | [官方程序集与反编译目录](../../.tools/source-packages/official-code/) 与各模块源码来源清单 |
 | 模块资源来源 | 本目录各模块的 `source-manifest.json`、`*-source-manifest.json` 及所属功能／地图页中的入口 |
+| 日常副本 Type 22 奖励物品图标 | [奖励图标来源](daily-dungeon-achievement-sprites-source-manifest.json)：所选 APK 与同版已校验云端 Sprite、对象／输出哈希及 `Home/rules.json` 物品 ID 绑定；处理入口为 `scripts/prepare_daily_dungeon_achievement_sprites.py` |
 | 当前伙伴界面公共组件、名册控制器与原生字段输入 | [公共组件源码](partner-ui-helpers-source-manifest.json)、[名册控制器源码](partner-roster-ui-source-manifest.json)、[原生 prefab 字段](partner-native-recovery-source-manifest.json)：`884_156692` 选定反编译输入、NPC bundle／对象、原字段缓存及转换输入输出哈希；运行接线与验证范围见[伙伴功能页](../../docs/features/partners.md) |
 | 当前伙伴卡片依赖与提示图输入 | [卡片资源凭据](partner-card-binding-source-manifest.json)、[提示节点源码凭据](partner-tipdot-source-manifest.json)：`884_156692` 原 CAB／PathID、SpriteAtlas／原索引字节、动态图片地址、CN 字体配置／TTF、Windows 纹理／shader 转换、Wwise 路由与 PCM、选定反编译源码及元数据输入输出哈希；处理入口为 `prepare_partner_card_native.py`／`prepare_partner_tipdot_nodes.py`，接线与验证范围见[伙伴功能页](../../docs/features/partners.md) |
 | 当前伙伴赠礼与好感属性组件输入 | [赠礼组件源码凭据](partner-gift-ui-source-manifest.json)：`884_156692` 选定客户端／共享／框架源码、生成工具与输出 SHA256；处理入口为 `prepare_partner_gift_ui.py`，接线与验证范围见[伙伴功能页](../../docs/features/partners.md) |
