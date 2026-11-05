@@ -442,6 +442,22 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/luban-source/Luban/ByteBuf.cs",
       "sha256": "d3151b392daa823a5e25cc740959bd91c9946c8ee94404941ab3797282729323"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerMap.cs",
+      "sha256": "a569827e2bbaf6e10f13c17be01f77eac8db1a562190bf7b9efa86ef30e3e709"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapLoEntityIdManager.cs",
+      "sha256": "24ed5661c9637848aab4acb340ada7a689d02777a8ef0e69e2e6d7f1fdbf6f8a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PublicMapLineStatus.cs",
+      "sha256": "7f513e66dad92d7c2bc9d6571ebbfd4b70aff70a2de2ef2b7ee1e3a212ce2a68"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MsgMapStart.cs",
+      "sha256": "b0c393f96f3090591387fe86470080860e808316738b5e349d084731668b0449"
     }
   ],
   "shared_reader": {
@@ -542,7 +558,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedWorld.cs",
-      "sha256": "1ae242ebe9b26ef96e1d188d4a21b2434006310c335d601327967b96c84ceb24"
+      "sha256": "8a1fc4303d9bc051546d702145c092b303bb6689b3ae05bd925574db0165f915"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedData.cs",
@@ -550,7 +566,15 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedEntityCreation.cs",
-      "sha256": "0c915fe9df3b526c6ccaf7fe0865568d889c12d3ad6e56a054788b965f913b88"
+      "sha256": "baa57ec2bca9e4988213b95a088e1d582e43efa53f5aee36434f8fc9cf4acb6c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedClientContext.cs",
+      "sha256": "efa8c9862eebd0b476abebf80874446376af3b2e6298ae3e78c323da6e2ebf7f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedClientContext.cs.meta",
+      "sha256": "c136bb7d438f668ef253582f7912b1325f03bdea7a5ce750f84a28559fe8f7b8"
     }
   ],
   "validation": [
@@ -580,7 +604,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.cs",
-      "sha256": "800e1786a0bbbe8ac994c491d7dbc96c0d0b75b9060480069e61dc28c145cc94"
+      "sha256": "37b899fa1e5576629092ea9101af9231b80d3dec8bdbb5bd05e9fda8d15f7fbb"
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.cs.meta",
@@ -593,12 +617,20 @@
     {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef.meta",
       "sha256": "3b6f057b9671d1ee4488af82d18ab03a31f89a6fa9097e8ee189f7cbb9bbbb46"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientContext.cs",
+      "sha256": "4895e333435d59be99eb21e94acc2c683595759c2f1cd9811b302cf22d8d0b96"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientContext.cs.meta",
+      "sha256": "7dc704d054b2f65aa6439a998b5e7a239839f142b0e5657642bfe91dc198c564"
     }
   ],
   "tools": [
     {
       "path": "scripts/prepare_mainline_shared_map_configuration.py",
-      "sha256": "7edda6773766fafbf73bcbc589917dad8b7ee4cc51533a972a61c7ce3b0cd26d"
+      "sha256": "2e3023b260f6c48980b37bd8cab548e3dc97a3e3070befc3016bad079e2e4c5a"
     },
     {
       "path": "D:\\Tool\\Unity\\Editor\\Data\\DotNetSdkRoslyn\\csc.dll",
@@ -1523,5 +1555,18 @@
     23010,
     23021
   ],
-  "additional_ec_records": 18
+  "additional_ec_records": 18,
+  "client_map_identity": {
+    "player_map_methods": [
+      "public void SetConatainerStatus(",
+      "public bool TryGetContainerIdByStatus(",
+      "public bool TryGetStatusByContainerId(",
+      "public EcEntityIdentifier GetEntIdByLoEntId(int",
+      "public EcEntityIdentifier GetEntIdByLoEntId(long",
+      "public bool IsMixMap(",
+      "public int GetMapLineIndex()",
+      "public void SetGroupMapIdOrderList("
+    ],
+    "map_enter_identity_branch_verified": true
+  }
 }

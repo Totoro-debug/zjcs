@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using GConfig;
 
 namespace Zjcs.Offline.World.NativeMap14SharedEntities
@@ -19,6 +20,11 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
         private readonly long containerId;
         private MainlineSharedEntityCreation entities;
         private MainlineSharedMapConfiguration clientConfiguration;
+        private MainlineSharedClientContext client;
+        private MainlineSharedClientServices clientServices;
+        private Dictionary<int, int> clientRegions;
+        private long publicContainerId;
+        private bool clientSupportsPrivate;
         private NativeMap14SharedLogging logging;
         private bool loading, disposed;
 
@@ -66,6 +72,25 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             catch { Dispose(); throw; }
         }
 
+        // A mixed map keeps distinct private/public entity identifiers inside
+        // the original merged display container, as consumed by MsgMapStart.
+        public IEnumerator LoadClient(Func<int, int> initialRegionStatus, long publicContainerId)
+        {
+            RequireActive();
+            if (publicContainerId <= 0 || publicContainerId == containerId)
+                throw new ArgumentOutOfRangeException(nameof(publicContainerId));
+            if (initialRegionStatus == null) throw new ArgumentNullException(nameof(initialRegionStatus));
+            if (loading) throw new InvalidOperationException("This original map load has already started.");
+            try
+            {
+                clientServices = new MainlineSharedClientServices(Assemblies);
+                var load = LoadClient(initialRegionStatus);
+                this.publicContainerId = publicContainerId;
+                return load;
+            }
+            catch { Dispose(); throw; }
+        }
+
         private IEnumerator LoadCore(Func<int, int> initialRegionStatus)
         {
             bool completed = false;
@@ -84,12 +109,27 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                     yield return load.Current;
                 }
                 clientConfiguration?.Complete(Data);
+                if (publicContainerId != 0)
+                {
+                    var metadataType = Assemblies.CommonType("MapInfoManager");
+                    var info = metadataType.GetMethod("GetMapPartInfo").Invoke(
+                        metadataType.GetProperty("Instance").GetValue(null), new object[] { Data.MapClassId });
+                    clientSupportsPrivate = (bool)NativeMap14SharedPrefabs.Get(info, "SupportPrivateRegion");
+                    clientRegions = new Dictionary<int, int>();
+                    foreach (var region in ((IDictionary)NativeMap14SharedPrefabs.Get(Data.Placement, "MaxRegionProgressDict")).Keys)
+                    {
+                        int id = (int)region, status = initialRegionStatus(id);
+                        if (status < 0 || status > 2) throw new ArgumentOutOfRangeException(nameof(initialRegionStatus));
+                        clientRegions.Add(id, status);
+                    }
+                    initialRegionStatus = region => clientRegions[region];
+                }
                 Root = new NativeMap14SharedRoot(Assemblies, Configuration, Data, containerId,
                     "MainlineSharedWorld/container-binding");
                 entities = new MainlineSharedEntityCreation(Assemblies, Data, Root);
                 if (initialRegionStatus != null)
                 {
-                    entities.Populate(initialRegionStatus);
+                    entities.Populate(initialRegionStatus, publicContainerId == 0 ? null : (Func<int, long>)ClientContainerId);
                     // Keep cancellation possible after the complete snapshot is
                     // registered, before handing ownership back to the host.
                     yield return null;
@@ -114,6 +154,24 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             catch { Dispose(); throw; }
         }
 
+        public void StartClient(object player)
+        {
+            RequireActive();
+            if (!IsLoaded || IsReady || clientRegions == null)
+                throw new InvalidOperationException("Load the client map with distinct private/public identifiers before client startup.");
+            if (player == null || !Assemblies.CommonType("Player").IsInstanceOfType(player))
+                throw new ArgumentException("An original local player is required.", nameof(player));
+            try
+            {
+                client = new MainlineSharedClientContext(this, clientServices, player, clientRegions, ClientContainerId);
+                Start();
+            }
+            catch { Dispose(); throw; }
+        }
+
+        private long ClientContainerId(int status) =>
+            status == 2 && clientSupportsPrivate ? publicContainerId : containerId;
+
         public void Dispose()
         {
             if (disposed) return;
@@ -123,13 +181,27 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             try { Root?.Dispose(); }
             finally
             {
-                entities?.Clear();
-                entities = null;
-                Root = null;
                 try
                 {
-                    try { clientConfiguration?.Dispose(); }
-                    finally { clientConfiguration = null; Data?.Dispose(); }
+                    try { client?.Dispose(); }
+                    finally
+                    {
+                        client = null;
+                        clientRegions = null;
+                        try { entities?.Clear(); }
+                        finally
+                        {
+                            entities = null;
+                            Root = null;
+                            try { clientServices?.Dispose(); }
+                            finally
+                            {
+                                clientServices = null;
+                                try { clientConfiguration?.Dispose(); }
+                                finally { clientConfiguration = null; Data?.Dispose(); }
+                            }
+                        }
+                    }
                 }
                 finally
                 {

@@ -41,6 +41,37 @@ def constructors(text, name):
     return result
 
 
+def verify_client_map_identity(common, shared, work):
+    def body(text, name):
+        start = text.index("{", text.index(name))
+        end, depth = start + 1, 1
+        while depth:
+            depth += (text[end] == "{") - (text[end] == "}")
+            end += 1
+        return normalized(text[start:end])
+
+    for name in ("Common.PlayerMap", "MsgMapStart"):
+        subprocess.run([str(ROOT / ".tools/dotnet/dotnet.exe"),
+            str(ROOT / ".tools/ilspycmd/tools/net10.0/any/ilspycmd.dll"),
+            "-t", name, "-o", str(work), str(shared / "Console.bytes")], check=True)
+    old = (work / "Common.PlayerMap.decompiled.cs").read_text("utf8")
+    current = (common / "PlayerMap.cs").read_text("utf8")
+    methods = (
+        "public void SetConatainerStatus(", "public bool TryGetContainerIdByStatus(",
+        "public bool TryGetStatusByContainerId(", "public EcEntityIdentifier GetEntIdByLoEntId(int",
+        "public EcEntityIdentifier GetEntIdByLoEntId(long", "public bool IsMixMap(",
+        "public int GetMapLineIndex()", "public void SetGroupMapIdOrderList(",
+    )
+    for name in methods:
+        if body(old, name) != body(current, name):
+            raise ValueError("Retained original map identity method differs: " + name)
+    old_message = (work / "MsgMapStart.decompiled.cs").read_text("utf8")
+    current_message = (common.parent / "MsgMapStart.cs").read_text("utf8")
+    if normalized(old_message.split("mapData.EnsureContainer(", 1)[1]) != normalized(current_message.split("mapData.EnsureContainer(", 1)[1]):
+        raise ValueError("Retained original map enter identity branch differs")
+    return dict(player_map_methods=list(methods), map_enter_identity_branch_verified=True)
+
+
 def build():
     if RECEIPT.exists():
         for output in json.loads(RECEIPT.read_bytes())["outputs"]:
@@ -56,6 +87,7 @@ def build():
     shared = ROOT / "unity/Assets/Official/World/Map/14/SharedRuntime"
     if record(shared / "Console.bytes")["sha256"] != "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397":
         raise ValueError("The independently retained shared IL differs")
+    identity_evidence = verify_client_map_identity(common, shared, work)
 
     # Verify the exact inherited constructor prefixes against the delivered IL,
     # rather than assuming that the selected and historical schemas agree.
@@ -248,14 +280,14 @@ public sealed class SelectedEntityExtendParameterInfoParser : EntityExtendParame
     acceptance = ROOT / "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientMaps.cs"
     meta(acceptance)
     names = [name for _, _, name in TABLES] + [name + "Parser" for _, _, name in TABLES]
-    names += ["TbMapWorldInfo", "TbEntityExtendParameterInfo", "MapPartInfoBase", "MapInfoWrapParser", "MapInfoManager", "MapRegionEntityInfoManager", "LoEntityCampComponentInfo", "EntityCampComponent"]
+    names += ["TbMapWorldInfo", "TbEntityExtendParameterInfo", "MapPartInfoBase", "MapInfoWrapParser", "MapInfoManager", "MapRegionEntityInfoManager", "LoEntityCampComponentInfo", "EntityCampComponent", "PlayerMap", "MapLoEntityIdManager", "PublicMapLineStatus"]
     receipt = dict(manifest=apk.version, shared_il=dict(record(shared / "Console.bytes"), manifest="871_156598"),
         operation="Keep original payloads and shared IL. Derive original DTOs with verified appended selected fields, reuse selected table readers and original parser/PostParse/query implementations. Include complete original EC dependency records.",
-        constructor_compatibility=evidence, inputs=inputs,
-        code_inputs=[record(common / (name + ".cs")) for name in names] + [record(reader_source)],
+        constructor_compatibility=evidence, client_map_identity=identity_evidence, inputs=inputs,
+        code_inputs=[record(common / (name + ".cs")) for name in names] + [record(reader_source), record(common.parent / "MsgMapStart.cs")],
         shared_reader=record(shared / "Luban.bytes"), nullable_string_reader_verified=True,
         config_abi_sources=[record(path) for path in sorted((ROOT / "unity/Assets/Game/Runtime/Official/SharedConfig").rglob("*.cs"))],
-        bindings=[record(path) for path in (new_binding, Path(str(new_binding) + ".meta"), runtime / "MainlineSharedWorld.cs", runtime / "NativeMap14SharedData.cs", runtime / "MainlineSharedEntityCreation.cs")],
+        bindings=[record(path) for path in (new_binding, Path(str(new_binding) + ".meta"), runtime / "MainlineSharedWorld.cs", runtime / "NativeMap14SharedData.cs", runtime / "MainlineSharedEntityCreation.cs", runtime / "MainlineSharedClientContext.cs", runtime / "MainlineSharedClientContext.cs.meta")],
         validation=[record(path) for path in sorted(acceptance.parent.iterdir()) if path.is_file()],
         tools=[record(Path(__file__).resolve()), dict(path=str(UNITY / "DotNetSdkRoslyn/csc.dll"),
             sha256=hashlib.sha256((UNITY / "DotNetSdkRoslyn/csc.dll").read_bytes()).hexdigest())],

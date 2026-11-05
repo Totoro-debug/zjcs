@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成（已提取共享宿主、原世界配置、部分地图网格、正式存档快照读取及离线小地图数据源组合入口，客户端依赖、全新角色初始化及七图原客户端实体启动已验证；各玩法的原表现与正式宿主接线仍待完成）
+状态：未完成（已提取共享宿主、原世界配置、部分地图网格、正式存档快照读取及离线小地图数据源组合入口，客户端依赖、全新角色初始化、七图原客户端实体启动与混合地区身份已验证；各玩法的原表现与正式宿主接线仍待完成）
 
 ## 功能简介
 
@@ -18,7 +18,11 @@
 
 历史871的 `MapWorldInfo` 比当前884少两个尾字段、`EntityExtendParameterInfo` 少一个尾字段。所选读取器通过派生原 DTO 保留 `SupportFastClear`、`EnterNavigateKey`、`IgnoreFastClear`，复用当前官方表读取循环和原解析器／`PostParse`；生成时直接反编译所交付IL，逐构造函数核对继承前缀。当前官方与所交付 `Luban.ByteBuf.ReadString` 逐方法一致，零长度仍返回 `null`。原共享程序集与官方表字节均保持原身份，不声明整份程序集跨版本等价。原生源码位于 `Runtime/Official/World/SelectedMapConfiguration/`，以明确编译符号单独生成对真实共享ABI的程序集，并按资源地址／哈希加载；来源、编译输入和绑定见[地图客户端配置来源](../../assets/reference/official-map/mainline-shared-map-configuration-source-manifest.json)。
 
-`OfficialMainlineWorldStartupAcceptance.RunClientMaps`（默认 `Run` 同一路径）的内置屏 D3D11 Play Mode 已通过七图×私有／公开的14组状态、12,789个实际原实体的 `Awake`／`Start` 与退出，包含458次营地怪物列表的独立快照和14,574项当前新增字段对照；原错误日志计数为零。加载中途取消后，原属性文件读取器已释放，地图元数据未改变；逐图退出均恢复原查询作用域。玩家及区域状态为显式全新夹具，尚未覆盖正式存档投影、混合地区容器、实体美术、鼠标交互、HUD或 Windows Player。本批主工程 Unity 导入／编译、`ProjectTools.Validate` 与静态元数据检查（127,985个GUID）通过；完整公共模块仍未完成。
+`OfficialMainlineWorldStartupAcceptance.RunClientMaps`（默认 `Run` 同一路径）的内置屏 D3D11 Play Mode 已通过七图×私有／公开的14组状态、12,789个实际原实体的 `Awake`／`Start` 与退出，包含458次营地怪物列表的独立快照和14,574项当前新增字段对照；原错误日志计数为零。加载中途取消后，原属性文件读取器已释放，地图元数据未改变；逐图退出均恢复原查询作用域。该入口的玩家及区域状态为显式均一夹具，不覆盖正式存档投影、实体美术、鼠标交互、HUD或 Windows Player；混合地区验证见下段。本批主工程 Unity 导入／编译、`ProjectTools.Validate` 与静态元数据检查（127,985个GUID）通过；完整公共模块仍未完成。
+
+`MainlineSharedWorld.LoadClient(regionStatus, publicContainerId)` 另提供完整本地客户端作用域；调用者在加载后将投影的原 `Player` 交给 `StartClient(player)`，模块负责原依赖注入、公式绑定、`Player.ClientInit`、`PlayerMap`、原容器事件与退出时的 `ClientDestory`／作用域恢复。区域查询按官方连续索引只读取一次，实体创建与原玩家使用同一份快照。依据原 `MsgMapStart` 的合并容器消费方式，主容器身份用于私有地图（仅公开地图时用于公开身份），混合地图的公开实体使用独立 `publicContainerId`；原双向状态登记、运行时ID和LoID查询保留这一区别，不能将两种状态登记成同一个ID。公共分线沿已确认方案只登记一条本地分线。生成工具直接反编译交付IL，核对八个 `PlayerMap` 身份／查询方法及原进入消息的身份分支与所选源码一致。
+
+`OfficialMainlineWorldStartupAcceptance.RunClientContext` 已在内置屏 D3D11 Play Mode 通过七图、6,971个实体的原启动／退出及6,964个放置实体的直接和地区LoID查询；森／山／泽／龙四图使用私有／公开交错地区，其余图按原配置的默认状态初始化。逐图核对原双向容器身份、混合地图判断、单分线序号、原区域快照只读一次、角色／地图元数据／应用作用域恢复；加载中途取消后，公式、注入作用域和原属性读取器均已恢复或释放。本批主工程 Unity 导入／编译、`ProjectTools.Validate`、全量静态元数据检查（127,987个GUID）及原14组客户端状态回归通过。此项仍使用显式新角色与地区夹具，正式存档投影、正式表现宿主与交互组合尚未完成。
 
 正式宿主的放置实体输入由 `scripts/mainline_entity_catalog.py` 公共实现转换官方 EC 的阶段、激活、锁定、奖励、换图、战斗绑定与周期组，泽之国、龙之国和鲸背岛的生成入口均调用此实现。来源清单路径可由调用方传入，保留各图独立版本和哈希校验。读取前核对地图身份、定义／组件来源哈希及完整放置集合，转换不修改借用的组件字典。龙之国旧目录统一阶段0和空锁定／绑定的输入已替换为原配置；来源、具体数据与运行验证范围见[龙之国](../maps/map-14.md)和[鲸背岛](../maps/map-16.md)。这仍是放置配置，不定义服务器实体快照、出生或刷新算法。
 
@@ -227,7 +231,7 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 `MainlineSharedClientConfiguration.Load` 为公共原配置作用域绑定所选884的13张角色初始化表，统一核对原字节哈希，先注册、解析全部表，再执行原 `PostParse`，保留职业对技能表的交叉索引。属性二进制复用已经安装且核验来源的 `StreamingAssets/PartnerNpcShared/Config/Binary/level_prop.g.bytes`，不复制第二份载荷；共享资源目录明确记录该本地路径与哈希。单机只将原 YooAsset 路径发现改为本地文件：仍调用原 `ParserBase.Initialize`、原 `LevelPropBinaryReader(string)` 和1000项原LRU，再登记至同一 `ConfigManager`；属性读取、默认值合并、等级限制、战力公式和两个原属性上下文均保留原实现。配置退出现在调用原管理器的 `Dispose`，关闭原读取器后销毁所属对象。此加载入口不创建角色、不改角色模板默认值，重复登记被拒绝；加载失败时由调用者释放所属配置作用域。来源、所选884源码、独立固定的历史871 IL、输入／输出与显式加载路径见[角色配置来源](../../assets/reference/official-map/mainline-shared-client-configuration-source-manifest.json)。正式存档投影和地图宿主组合仍待完成。
 
-`OfficialMainlineWorldStartupAcceptance.RunClientServices` 的内置屏 D3D11 Play Mode 通过真实容器与注入器身份、原 MeManager 单例、两次全新 Player／PlayerDataWrap 构造、LiteDB 强命名身份、原 R3 玩法观察器初始化／空状态枚举／释放，以及嵌套应用作用域和两类公式绑定的恢复。完整玩家入口 `RunClientPlayer` 已在同类图形 Play Mode 通过：使用正式公共配置模块及原本地文件读取器，沿原 MeManager setter 实际执行两次完整 `Player.ClientInit`、两个原属性上下文、属性重算、账号初始化及 `ClientDestory`；两个未改模板的全新角色原战力均为644，重算稳定。重复配置登记被拒绝，配置退出后原二进制读取器已释放，原生命周期无错误日志。当前客户端、角色配置、公共世界配置与地图配置四份清单的285项输入／载荷／绑定哈希核验通过。这仍不包含正式存档到原玩家的状态投影、混合私有／公开地区的宿主组合、界面交互或 Windows Player；共享模块保持未完成。七图配置生命周期回归通过14组私有／公开状态、12,789个准备实体、79个移动实体及七图默认原根启动。本次主工程 Unity 导入／编译、`ProjectTools.Validate` 及全量静态元数据检查（127,947个GUID）通过。
+`OfficialMainlineWorldStartupAcceptance.RunClientServices` 的内置屏 D3D11 Play Mode 通过真实容器与注入器身份、原 MeManager 单例、两次全新 Player／PlayerDataWrap 构造、LiteDB 强命名身份、原 R3 玩法观察器初始化／空状态枚举／释放，以及嵌套应用作用域和两类公式绑定的恢复。完整玩家入口 `RunClientPlayer` 已在同类图形 Play Mode 通过：使用正式公共配置模块及原本地文件读取器，沿原 MeManager setter 实际执行两次完整 `Player.ClientInit`、两个原属性上下文、属性重算、账号初始化及 `ClientDestory`；两个未改模板的全新角色原战力均为644，重算稳定。重复配置登记被拒绝，配置退出后原二进制读取器已释放，原生命周期无错误日志。当前客户端、角色配置、公共世界配置与地图配置四份清单的299项输入／载荷／绑定哈希核验通过。这仍不包含正式存档到原玩家的状态投影、正式地图表现宿主的完整组合、界面交互或 Windows Player；共享模块保持未完成。七图配置生命周期回归通过14组私有／公开状态、12,789个准备实体、79个移动实体及七图默认原根启动。本次主工程 Unity 导入／编译、`ProjectTools.Validate` 及全量静态元数据检查（127,947个GUID）通过。
 
 `MainlineSharedWorld` 在解析配置前安装 `NativeMap14SharedLogging`，通过原 `Framework.Logging.Log.Initialize` 向已交付原 `ILogger`／`ILoggerFactory` ABI 提供本地输出，不启动在线应用入口。日志保留原泛型状态格式化器、等级、类别及异常对象；正式输出写入 Unity 日志，原事件委托和 EC 组件仍按原实现捕获并报告异常。已有完整日志绑定时借用，本模块拥有的绑定在最后一个重叠地图作用域退出后恢复，且不覆盖外部后装的绑定。ZLogger 所需的16份传递依赖按其官方 NuGet 清单固定版本、包SHA-512、DLL哈希和MVID，原 Console／Framework IL 保持不变；载荷、许可与本地目录见[日志依赖来源](../../assets/reference/official-map/mainline-shared-logging-source-manifest.json)。带图形的隔离 Play Mode 已核对泛型值状态、格式化器、异常对象身份、类别复用、原泛型日志包装、原事件委托捕获异常、嵌套／交错释放、外部替换及构造失败恢复；七图259,150格与33,522次全新放置初始化回归通过（12,775次出生、20,747次被原出生条件拦截）。主工程编译、`ProjectTools.Validate` 和静态元数据检查通过；此次是原运行时日志与状态检查，实体完整客户端启动、正式交互和 Windows Player 仍未验证。
 

@@ -21,17 +21,17 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             LoEntityIds = Activator.CreateInstance(shared.CommonType("MapLoEntityIdManager"));
         }
 
-        public void Populate(Func<int, int> regionStatus)
+        public void Populate(Func<int, int> regionStatus, Func<int, long> statusContainerId = null)
         {
             foreach (DictionaryEntry region in (IDictionary)Get(data.Placement, "RegionInfos"))
             {
                 int status = regionStatus((int)region.Key);
                 foreach (var placement in (IEnumerable)region.Value)
-                    Spawn(placement, status);
+                    Spawn(placement, status, statusContainerId?.Invoke(status));
             }
         }
 
-        private void Spawn(object placement, int regionStatus)
+        private void Spawn(object placement, int regionStatus, long? statusContainerId)
         {
             if (regionStatus < 0 || regionStatus > 2) throw new ArgumentOutOfRangeException(nameof(regionStatus));
             int placementId = (int)Get(placement, "LoEntityId");
@@ -63,7 +63,8 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                         Get(Get(camp, "Info"), "CampMonsterEntities")));
 
             int index = (int)container.GetType().GetMethod("NewEntityIndex").Invoke(container, null);
-            var identifier = Activator.CreateInstance(shared.CommonType("EcEntityIdentifier"), Get(container, "Id"), index);
+            var identifier = Activator.CreateInstance(shared.CommonType("EcEntityIdentifier"),
+                statusContainerId ?? Get(container, "Id"), index);
             NativeMap14SharedPrefabs.Set(entity, "Id", identifier);
             // Make the original placement lookup available to Add/Start receivers.
             LoEntityIds.GetType().GetMethod("SetLoEntId2EntId").Invoke(LoEntityIds, new[] { (object)placementId, identifier });
