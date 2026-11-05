@@ -2512,3 +2512,28 @@ scripts/fixtures/battle_stack_count_harness.cs text eol=lf
 assets/reference/battle-rules/stack-count-source-manifest.json text eol=lf
 # Keep the recovered original injection source and payload stable.
 scripts/fixtures/mainline_shared_injection.cs text eol=lf
+
+# Preserve original multi-page monster and embedded particle source identities.
+scripts/prepare_battle_live_monster_assets.py text eol=lf
+scripts/prepare_battle_monster_body_effects.py text eol=lf
+assets/reference/battle-animation/live-monsters-source-manifest.json text eol=lf
+assets/reference/battle-animation/monster-body-effects-source-manifest.json text eol=lf
+unity/Assets/Official/Combat/MonsterBodyEffects/** text eol=lf
+unity/Assets/Official/Combat/MonsterBodyEffects.meta text eol=lf
+unity/Assets/Game/Resources/Combat/monster-body-effects.json* text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/Shaders/MonsterBodyEffect_*.shader* text eol=lf
+assets/reference/battle-animation/monster-animation-controllers-source-manifest.json text eol=lf
+assets/reference/battle-animation/monster-animator-bindings-source-manifest.json text eol=lf
+assets/reference/battle-animation/partner-native-hp-bars-source-manifest.json text eol=lf
+assets/reference/partner-native-attachments-source-manifest.json text eol=lf
+assets/reference/profession-ui/item-components-source-manifest.json text eol=lf
+assets/reference/profession-ui/item-icon-source-manifest.json text eol=lf
+assets/reference/profession-ui/item-resources-source-manifest.json text eol=lf
+assets/reference/profession-ui/photographer-source-manifest.json text eol=lf
+assets/reference/profession-ui/portrait-lifecycle-source-manifest.json text eol=lf
+assets/reference/profession-ui/portrait-manager-source-manifest.json text eol=lf
+assets/reference/profession-ui/portrait-persistence-source-manifest.json text eol=lf
+assets/reference/profession-ui/property-resources-source-manifest.json text eol=lf
+assets/reference/profession-ui/property-rows-source-manifest.json text eol=lf
+assets/reference/profession-ui/runtime-source-manifest.json text eol=lf
+unity/Assets/Official/Combat/NativeMonsters/Resources/Combat/NativeMonsters/Shadows/Prefabs/3803.prefab text eol=lf

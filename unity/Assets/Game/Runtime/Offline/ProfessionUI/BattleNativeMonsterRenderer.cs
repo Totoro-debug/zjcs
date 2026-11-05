@@ -19,6 +19,8 @@ namespace Zjcs.Offline.ProfessionUI
         private ProfessionNativeAnimationChannels motion;
         private Dictionary<string, object> settings;
         private Material material;
+        private Material[] sourceMaterials;
+        private Dictionary<string, Material> pageMaterials;
         private float elapsed;
         private bool loop;
         public Transform EntityRoot { get; private set; }
@@ -79,8 +81,17 @@ namespace Zjcs.Offline.ProfessionUI
             batches = new ProfessionNativeMeshBatches(data.SlotCount);
             physics = data.Constraints.Any(value => value.Kind == "physics") ? new ProfessionNativePlayerPhysicsPose(data) : null;
             var sources = Arr(row["materials"]);
-            if (sources.Count != 1) throw new NotSupportedException("Bind original monster multipage materials.");
-            material = CreateMaterial(assets, Obj(sources[0]), Obj(row["textures"]));
+            sourceMaterials = new Material[sources.Count];
+            for (int i = 0; i < sources.Count; i++)
+                sourceMaterials[i] = CreateMaterial(assets, Obj(sources[i]), Obj(row["textures"]));
+            material = sourceMaterials[0];
+            if (row.TryGetValue("atlasPages", out object pagesValue))
+            {
+                var pages = Arr(pagesValue);
+                pageMaterials = new Dictionary<string, Material>(StringComparer.Ordinal);
+                for (int i = 0; i < pages.Count; i++) pageMaterials.Add((string)pages[i], sourceMaterials[i]);
+            }
+            else if (sources.Count != 1) throw new InvalidDataException("Original monster atlas pages are unbound.");
             ApplyRenderer(GetComponent<MeshRenderer>(), Obj(row["meshRenderer"]));
             Play("idle_01", true, true);
             OnAnimationRebuild?.Invoke(this);
@@ -114,23 +125,25 @@ namespace Zjcs.Offline.ProfessionUI
         {
             batches.Build(state.Pose, state.CreateDrawSlots(), Flag(settings, "useClipping"),
                 Flag(settings, "pmaVertexColors"), ZSpacing, allowConcaveClipping: true);
-            GetComponent<ProfessionNativeSceneMeshPart>().Assign(batches.Batches, batch => batch.Blend == 0
-                ? material : throw new NotSupportedException("Bind original monster non-normal material."));
+            GetComponent<ProfessionNativeSceneMeshPart>().Assign(batches.Batches, MaterialForBatch);
+            RefreshOriginalMeshCopies();
             Attachments?.UpdateFollowers();
         }
         private static Material CreateMaterial(BattleNativeMonsterAssets assets, Dictionary<string, object> source,
             Dictionary<string, object> textures)
         {
             var fields = Obj(source["fields"]); var saved = Obj(fields["m_SavedProperties"]);
-            if (Arr(fields["stringTagMap"]).Count != 0 || Arr(fields["disabledShaderPasses"]).Count != 0
-                || Arr(fields["m_BuildTextureStacks"]).Count != 0)
+            if (Arr(fields["m_BuildTextureStacks"]).Count != 0)
                 throw new NotSupportedException("Bind additional original monster material branches.");
-            var result = new Material(assets.Shader) { name = (string)fields["m_Name"],
+            var result = new Material(assets.ResolveShader((string)source["shader"])) { name = (string)fields["m_Name"],
                 renderQueue = Int(fields, "m_CustomRenderQueue"), enableInstancing = Flag(fields, "m_EnableInstancingVariants"),
                 doubleSidedGI = Flag(fields, "m_DoubleSidedGI"), globalIlluminationFlags = (MaterialGlobalIlluminationFlags)Int(fields, "m_LightmapFlags") };
             try
             {
                 result.shaderKeywords = Arr(fields["m_ValidKeywords"]).Select(value => (string)value).ToArray();
+                foreach (var pair in Arr(fields["stringTagMap"]).Select(Arr))
+                    result.SetOverrideTag((string)pair[0], (string)pair[1]);
+                foreach (string pass in Arr(fields["disabledShaderPasses"])) result.SetShaderPassEnabled(pass, false);
                 foreach (var pair in Arr(saved["m_Floats"]).Select(Arr)) result.SetFloat((string)pair[0], Convert.ToSingle(pair[1]));
                 foreach (var pair in Arr(saved["m_Ints"]).Select(Arr)) result.SetInteger((string)pair[0], Convert.ToInt32(pair[1]));
                 foreach (var pair in Arr(saved["m_Colors"]).Select(Arr))
@@ -162,7 +175,18 @@ namespace Zjcs.Offline.ProfessionUI
             renderer.realtimeLightmapScaleOffset = Tiling(source["m_LightmapTilingOffsetDynamic"]);
             renderer.sortingLayerID = Int(source, "m_SortingLayerID"); renderer.sortingOrder = Int(source, "m_SortingOrder");
         }
-        private void OnDestroy() { batches?.Dispose(); DestroyOwned(material); batches = null; material = null; }
+        private Material MaterialForBatch(ProfessionNativeMeshBatches.Batch batch)
+        {
+            if (batch.Blend != 0) throw new NotSupportedException("Bind original monster non-normal material.");
+            return pageMaterials == null ? material : pageMaterials.TryGetValue(batch.Page, out var value) ? value
+                : throw new InvalidDataException("Original monster atlas page material is unbound: " + batch.Page);
+        }
+        private void OnDestroy()
+        {
+            batches?.Dispose();
+            if (sourceMaterials != null) foreach (var value in sourceMaterials) DestroyOwned(value);
+            batches = null; material = null; sourceMaterials = null;
+        }
         private static void DestroyOwned(UnityEngine.Object value)
         { if (!value) return; if (Application.isPlaying) Destroy(value); else DestroyImmediate(value); }
         private static Dictionary<string, object> Obj(object value) => (Dictionary<string, object>)value;

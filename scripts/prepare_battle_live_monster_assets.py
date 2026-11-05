@@ -79,10 +79,21 @@ def build():
             files[file] = 9100000 if file.endswith(".controller") else 7400000
     cache = ROOT / ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders"
     shader_proof = cache / "source-manifest.json"
-    shader, = [row for row in json.loads(shader_proof.read_bytes())["shaders"] if row["source"]["object_sha256"] == "4aa96ea56babfdc788805e559c0c1d94e1d64b7ed36719d12e61f6a08bb850ae"]
+    shader_rows = json.loads(shader_proof.read_bytes())["shaders"]
+    shader, = [row for row in shader_rows if row["source"]["object_sha256"] == "4aa96ea56babfdc788805e559c0c1d94e1d64b7ed36719d12e61f6a08bb850ae"]
     raw = (cache / shader["path"]).read_bytes()
     if sha(raw) != shader["sha256"]: raise ValueError("Original Windows monster shader differs")
     write("OriginalSkeletonEffect.shader", raw)
+    shader_bindings, additional_shaders = [], []
+    required_shaders = {material["shader"] for model in catalog["models"] for material in model["materials"]}
+    for name in sorted(required_shaders - {shader["source"]["name"]}):
+        original, = [row for row in shader_rows if row["source"]["name"] == name]
+        raw = (cache / original["path"]).read_bytes()
+        if sha(raw) != original["sha256"]:
+            raise ValueError("Original Windows monster material shader differs: " + name)
+        relative = write("shaders/" + original["sha256"] + ".shader", raw)
+        shader_bindings.append(dict(Name=name, Asset=dict(fileID=4800000, guid=guid(destination / relative), type=3)))
+        additional_shaders.append(original)
     inventory = write("inventory.json", encoded(catalog))
     script = ROOT / "unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterAssets.cs"
     if not Path(str(script) + ".meta").exists(): meta(script)
@@ -91,6 +102,7 @@ def build():
     asset(target, "Original full-binary battle monsters", script, dict(
         inventory=dict(fileID=4900000, guid=guid(destination / inventory), type=3),
         shader=dict(fileID=4800000, guid=guid(destination / "OriginalSkeletonEffect.shader"), type=3),
+        shaderBindings=shader_bindings,
         bindings=[dict(File=file, Asset=dict(fileID=kind, guid=guid(destination / file), type=3 if kind == 4900000 else 2)) for file, kind in sorted(files.items())]))
     for path in (target, Path(str(target) + ".meta")): outputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
     for folder in sorted({parent for path in destination.rglob("*") if path.is_file() for parent in path.parents if parent.is_relative_to(destination)}):
@@ -102,12 +114,13 @@ def build():
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterAssets.cs",
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterRenderer.cs",
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterRenderer.Animator.cs",
+            "unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterRenderer.MeshCopies.cs",
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.BattleMonster.cs",
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.cs",
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeOrderedConstraintPose.cs")},
         serializer=dict(template_sha256=sha((work / "monster-texture-template.asset").read_bytes()), unity="2022.3.57f1c2",
             converter_sha256=sha((ROOT / "scripts/prepare_unity_map13_native_scene.py").read_bytes())),
-        shader=dict(receipt_sha256=sha(shader_proof.read_bytes()), source=shader), textures=textures, outputs=outputs,
+        shader=dict(receipt_sha256=sha(shader_proof.read_bytes()), source=shader, additional_sources=additional_shaders), textures=textures, outputs=outputs,
         operation="Preserve full original skeletons, controller closure, prefab bindings and materials. Decode every original ASTC mip to native Unity RGBA32, retaining source texture flags, mip count, color space and sampling. Explicitly bind local Unity assets; no sampled mesh animation.")
     (ROOT / "assets/reference/battle-animation/live-monsters-source-manifest.json").write_bytes(encoded(receipt))
     apk.archive.close()

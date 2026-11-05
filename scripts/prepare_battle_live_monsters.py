@@ -190,12 +190,18 @@ def build(roles, pet_roles=()):
         appearance_obj, = [obj for obj in components.get("AppearanceRendererLite", [])
             if schemas.read(obj)["SkeletonRenderer"] == dict(m_FileID=0, m_PathID=renderer_obj.path_id)]
         appearance = schemas.read(record(appearance_obj))
-        resolution = {1: "Low", 2: "High"}[appearance["LevelOfResolution"]]
+        resolution = {0: "None", 1: "Low", 2: "High"}[appearance["LevelOfResolution"]]
         skeleton_name = data_obj.read(check_read=False).m_Name.removesuffix("_SkeletonData")
-        loader_location, = [row for row in locations if row["path"] == skeleton_paths[skeleton_name]
+        loader_locations = [row for row in locations if row["path"] == skeleton_paths.get(skeleton_name, "")
             + "/" + skeleton_name + "_TextureLoader_" + resolution + ".asset"]
-        loader_obj = record(apk.asset(loader_location["bundle"], loader_location["path"]))
-        loader = schemas.read(loader_obj)
+        loader_obj = None
+        loader = {"placeholderMap": []}
+        if loader_locations:
+            loader_location, = loader_locations
+            loader_obj = record(apk.asset(loader_location["bundle"], loader_location["path"]))
+            loader = schemas.read(loader_obj)
+        elif resolution != "None":
+            raise ValueError("Original monster texture loader is unbound: " + skeleton_name)
         mappings = {}
         for mapping in loader["placeholderMap"]:
             placeholder = pointer(loader_obj, mapping["placeholderTexture"])
@@ -203,9 +209,13 @@ def build(roles, pet_roles=()):
             if key in mappings:
                 raise ValueError("Duplicate original monster texture placeholder")
             mappings[key] = mapping
-        textures, materials = {}, []
-        for material_pointer in atlas["materials"]:
-            material_obj = pointer(atlas_obj, material_pointer)
+        textures, materials, material_indices = {}, [], {}
+
+        def recover_material(material_obj):
+            material_obj = record(material_obj)
+            material_key = material_obj.assets_file.name + ":" + str(material_obj.path_id)
+            if material_key in material_indices:
+                return material_indices[material_key]
             material = material_obj.read()
             bindings = []
             for property_name, environment in material.m_SavedProperties.m_TexEnvs:
@@ -214,7 +224,7 @@ def build(roles, pet_roles=()):
                 placeholder = record(environment.m_Texture.deref())
                 key = placeholder.assets_file.name + ":" + str(placeholder.path_id)
                 selected = [(property_name, placeholder)]
-                if property_name == "_MainTex":
+                if property_name == "_MainTex" and loader_obj is not None:
                     mapping = mappings[key]
                     selected = []
                     for field, target_property in (("targetTextureReference", "_MainTex"), ("dyeTextureReference", "_DyeTex")):
@@ -224,6 +234,8 @@ def build(roles, pet_roles=()):
                             selected.append((target_property, record(apk.asset(location["bundle"], location["path"]))))
                 for target_property, texture_obj in selected:
                     texture = texture_obj.read()
+                    if not texture.get_image_data():
+                        raise ValueError("Original monster texture has no payload: " + texture.m_Name)
                     identity = texture_obj.assets_file.name + ":" + str(texture_obj.path_id)
                     textures[identity] = dict(name=texture.m_Name, width=texture.m_Width, height=texture.m_Height,
                         mipCount=texture.m_MipCount, colorSpace=texture.m_ColorSpace, settings=texture_obj.read_typetree()["m_TextureSettings"],
@@ -233,6 +245,12 @@ def build(roles, pet_roles=()):
             shader = record(material.m_Shader.deref())
             materials.append(dict(fields=material_obj.read_typetree(), shader=shader.read().m_ParsedForm.m_Name,
                 shaderSource=shader.assets_file.name + ":" + str(shader.path_id), textures=bindings))
+            material_indices[material_key] = len(materials) - 1
+            return len(materials) - 1
+
+        for material_pointer in atlas["materials"]:
+            recover_material(pointer(atlas_obj, material_pointer))
+        atlas_material_count = len(materials)
         go_obj = record(renderer_obj.read(check_read=False).m_GameObject.deref())
         transforms, transform_obj = [], go_obj.read().m_Component[0].component.deref()
         while True:
@@ -250,6 +268,28 @@ def build(roles, pet_roles=()):
         controller = record(animator_obj.read().m_Controller.deref())
         clips = [record(pointer.deref()) for pointer in controller.read().m_AnimationClips]
         mesh_obj, = [ref.component.deref() for ref in go_obj.read().m_Component if ref.component.deref().type.name == "MeshRenderer"]
+        mesh_copies = []
+        for copy_obj in components.get("CustomRenderExistingMesh", []):
+            fields = schemas.read(record(copy_obj))
+            reference = pointer(copy_obj, fields["ReferenceRenderer"])
+            if reference.path_id != mesh_obj.path_id or reference.assets_file.name != mesh_obj.assets_file.name:
+                raise ValueError("Bind the original mesh-copy renderer reference: " + str(entity))
+            copy_go = record(copy_obj.read(check_read=False).m_GameObject.deref())
+            copy_components = [ref.component.deref() for ref in copy_go.read().m_Component]
+            copy_transform, = [obj for obj in copy_components if obj.type.name in ("Transform", "RectTransform")]
+            copy_renderer, = [obj for obj in copy_components if obj.type.name == "MeshRenderer"]
+            copy_filter, = [obj for obj in copy_components if obj.type.name == "MeshFilter"]
+            if record(copy_filter).read().m_Mesh.path_id:
+                raise ValueError("Bind the original mesh-copy initial mesh: " + str(entity))
+            replacements = []
+            for pair in fields["ReplacementMaterialDict"]["mSerializeBuffer"]:
+                original = recover_material(pointer(copy_obj, pair["Key"]))
+                replacement = recover_material(pointer(copy_obj, pair["Value"]))
+                if original >= atlas_material_count:
+                    raise ValueError("Mesh-copy material is not an original atlas page")
+                replacements.append(dict(original=original, replacement=replacement))
+            mesh_copies.append(dict(transform=copy_transform.assets_file.name + ":" + str(copy_transform.path_id),
+                fields=fields, renderer=record(copy_renderer).read_typetree(), replacements=replacements))
         skins = schemas.read(record(components["AppearanceCombineSkin"][0]))["CombineSkins"] if "AppearanceCombineSkin" in components else [renderer["initialSkinName"] or "default"]
         prefix = str(entity) + "/"
         result = dict(entityId=entity, skeletonName=skeleton_name, scale=data["scale"], rendererKind=kind,
@@ -265,6 +305,13 @@ def build(roles, pet_roles=()):
             counts={key: len(skeleton.get(key, [])) for key in ("bones", "slots", "skins", "animations", "ik", "transform", "path", "physics")},
             attachmentTypes=dict(Counter(a.get("type", "region") for skin in skeleton["skins"]
                 for entries in skin.get("attachments", {}).values() for a in entries.values())))
+        if atlas_material_count > 1:
+            pages = list(dict.fromkeys(region["page"] for region in regions))
+            if len(pages) != atlas_material_count:
+                raise ValueError("Original atlas page/material counts differ: " + str(entity))
+            result["atlasPages"] = pages
+        if mesh_copies:
+            result["meshCopies"] = mesh_copies
         records.append(result)
         print(entity, skeleton_name, result["counts"], result["attachmentTypes"], flush=True)
     write("catalog.json", encoded(dict(manifest=apk.version, models=records)))

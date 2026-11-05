@@ -11,12 +11,21 @@ namespace Zjcs.Offline.ProfessionUI
     {
         public const string ResourcePath = "Combat/NativeMonsters/catalog";
         [Serializable] public sealed class Binding { public string File; public Object Asset; }
+        [Serializable] public sealed class ShaderBinding { public string Name; public Shader Asset; }
         [SerializeField] private TextAsset inventory;
         [SerializeField] private Shader shader;
         [SerializeField] private Binding[] bindings = Array.Empty<Binding>();
+        [SerializeField] private ShaderBinding[] shaderBindings = Array.Empty<ShaderBinding>();
         private Dictionary<string, Object> files;
         private Dictionary<int, Dictionary<string, object>> models;
         public Shader Shader => shader ? shader : throw new InvalidDataException("Original monster shader is unbound.");
+        public Shader ResolveShader(string name)
+        {
+            if (Shader.name == name) return Shader;
+            foreach (var binding in shaderBindings)
+                if (binding.Name == name && binding.Asset) return binding.Asset;
+            throw new InvalidDataException("Original monster material shader is unbound: " + name);
+        }
         public IEnumerable<int> EntityIds { get { Initialize(); return models.Keys; } }
         public static BattleNativeMonsterAssets Load() => Resources.Load<BattleNativeMonsterAssets>(ResourcePath)
             ?? throw new InvalidDataException("Original native monster assets are unbound.");

@@ -115,8 +115,18 @@ namespace Zjcs.Offline.ProfessionUI
                         follower.SkeletonGraphic = Resolve(renderers, references, "/SkeletonGraphic");
                         follower.BoneName = (string)fields["BoneName"]; follower.SlotName = (string)fields["SlotName"];
                         follower.AttachmentName = (string)fields["AttachmentName"];
-                        if (Arr(fields["Gos"]).Count != 0) throw new NotSupportedException("Bind original follower visibility targets.");
-                        follower.Gos = Array.Empty<GameObject>();
+                        follower.Gos = Arr(fields["Gos"]).Select((value, index) =>
+                        {
+                            if (!references.TryGetValue("/Gos/" + index, out object reference))
+                            {
+                                if (Convert.ToInt64(Obj(value)["m_PathID"]) != 0)
+                                    throw new InvalidDataException("Original follower visibility reference is unbound.");
+                                return null;
+                            }
+                            string sourceKey = (string)Obj(reference)["sourceKey"];
+                            var target = nodes.Single(node => Equals(node["gameObjectKey"], sourceKey));
+                            return transforms[(string)target["sourceKey"]].gameObject;
+                        }).ToArray();
                         follower.FollowZSpacing = Flag(fields, "FollowZSpacing"); follower.ZFront = Flag(fields, "ZFront");
                         follower.FollowLocalScale = Flag(fields, "FollowLocalScale"); follower.FollowRotation = Flag(fields, "FollowRotation");
                         follower.FollowSkeletonTransformFlipX = Flag(fields, "FollowSkeletonTransformFlipX");
@@ -187,6 +197,11 @@ namespace Zjcs.Offline.ProfessionUI
                 if (Agent.myBoneList[index] && replacements.TryGetValue(Agent.myBoneList[index], out var current))
                     Agent.myBoneList[index] = current;
             Agent.Init();
+            foreach (var follower in followers)
+                if (follower && follower.Gos != null)
+                    for (int index = 0; index < follower.Gos.Length; index++)
+                        if (follower.Gos[index] && replacements.TryGetValue(follower.Gos[index].transform, out Transform target))
+                            follower.Gos[index] = target.gameObject;
             followers.RemoveAll(value => value && (value.transform == previous || value.transform.IsChildOf(previous)));
             boneFollowers.RemoveAll(value => value.Transform && (value.Transform == previous || value.Transform.IsChildOf(previous)));
             followers.AddRange(shadow.GetComponentsInChildren<AttachmentFollower>(true));

@@ -33,11 +33,13 @@ namespace Zjcs.Editor.ProfessionUI
         static OfficialBattleMonsterSceneValidation() { EditorApplication.update += Update; }
         public static void Run() => Begin(false);
         public static void RunNativeGraphs() => Begin(true);
-        private static void Begin(bool nativeGraphs)
+        public static void RunSelected() => Begin(false, true);
+        private static void Begin(bool nativeGraphs, bool selected = false)
         {
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             SessionState.SetBool(Active, true);
             SessionState.SetBool(Active + ".NativeGraphs", nativeGraphs);
+            SessionState.SetBool(Active + ".Selected", selected);
             SessionState.SetFloat(Active + ".Deadline", (float)EditorApplication.timeSinceStartup + 300);
             EditorApplication.EnterPlaymode();
         }
@@ -49,7 +51,8 @@ namespace Zjcs.Editor.ProfessionUI
                 if (EditorApplication.timeSinceStartup > SessionState.GetFloat(Active + ".Deadline", 0))
                     throw new TimeoutException("Shared monster scene validation timed out.");
                 if (!EditorApplication.isPlaying || EditorApplication.isCompiling) return;
-                steps ??= (SessionState.GetBool(Active + ".NativeGraphs", false) ? NativeGraphSteps() : Steps()).GetEnumerator();
+                steps ??= (SessionState.GetBool(Active + ".Selected", false) ? SelectedSteps()
+                    : SessionState.GetBool(Active + ".NativeGraphs", false) ? NativeGraphSteps() : Steps()).GetEnumerator();
                 if (!steps.MoveNext()) Finish(0);
             }
             catch (Exception error) { Debug.LogException(error); Finish(1); }

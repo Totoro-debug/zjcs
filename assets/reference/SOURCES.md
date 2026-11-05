@@ -621,3 +621,7 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 主线共享客户端依赖由 `scripts/prepare_mainline_shared_client_dependencies.py` 按原Framework.FirstPass的DryIoc强程序集引用恢复发布者NuGet 5.4.3、netstandard2.1 DLL与原MIT许可。完整包SHA-512核对NuGet官方元数据，版本、空目标依赖组、DLL／许可SHA-256、MVID及显式共享目录绑定见[客户端依赖来源](official-map/mainline-shared-client-dependencies-source-manifest.json)和[锁定清单](official-map/mainline-shared-client-packages.json)。载荷与许可位于 `unity/Assets/Official/World/Map/14/SharedRuntime/`；无新增替代美术，未生成完整素材快照，当前实现及验证范围仅在[主线地图公共模块](../../docs/features/mainline-map-modules.md)维护。
 
 公共战斗状态叠层技能：复用已验证的历史`battle-rules.json`与`skill-rules.json`，记录28份原`StatusStackCountComponent`配置及已反编译的`StatusStackCountComponentInfo`、`StatusStackCountComponent`和`FightStatusTriggerSkillCfg`；具体输入／源码及运行绑定哈希见[battle-rules/stack-count-source-manifest.json](battle-rules/stack-count-source-manifest.json)。骨骼跟随初始化的原始方法及接口适配哈希同步记录于[battle-animation/spine-follower-runtime-source-manifest.json](battle-animation/spine-follower-runtime-source-manifest.json)，下游技能图与宿主绑定凭据同步更新。未混改官方资源版本，未新增或替换美术。
+
+周常3803的原生三页图集、材质与网格副本来自当前884版APK优先解析，逐对象来源、严格解码及Windows资产哈希继续归入[完整骨骼怪物来源](battle-animation/live-monsters-source-manifest.json)，挂点及额外阴影沿用对应模块来源清单；实现与当前验证边界见[战斗执行](../../docs/features/battle-execution.md)。
+
+3803第一阶段翼部粒子及其原实体实例覆盖归入[怪物本体效果来源](battle-animation/monster-body-effects-source-manifest.json)，记录原prefab、当前实体导出输入、纹理／shader闭包与输出身份；具体实现和验证仍见战斗执行功能页。

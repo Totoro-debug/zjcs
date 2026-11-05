@@ -31,7 +31,31 @@ namespace Zjcs.Offline.ProfessionUI
             Attachments = new PartnerNativeBattleAttachments(EntityRoot.parent, EntityRoot, row, originals,
                 new[] { new PartnerNativeBattleAttachments.RendererBinding(transform, state, settings, material) },
                 () => Advance(0), bindBoneFollowers: true);
+            BindOriginalMeshCopies(BattleNativeMonsterAssets.Load().Find(entityId), originals);
+            BindOriginalBodyEffects(entityId, originals);
             EntityRoot.name = name;
+        }
+
+        private void BindOriginalBodyEffects(int entityId, Dictionary<string, Transform> originals)
+        {
+            if (entityId != 3803) return;
+            var asset = Resources.Load<TextAsset>("Combat/monster-body-effects");
+            if (!asset) throw new FileNotFoundException("Original monster body effects are not packaged.");
+            var catalog = Obj(OfficialEquipmentJson.Parse(asset.text));
+            if (!Equals(catalog["manifest"], "884_156692")) throw new InvalidDataException("Original body-effect version differs.");
+            foreach (var effect in Arr(catalog["graphs"]).Select(Obj))
+            {
+                Transform previous = originals.Values.Single(value => value.name == (string)effect["id"]);
+                var prefab = Resources.Load<GameObject>((string)effect["resource"]);
+                if (!prefab) throw new FileNotFoundException("Original monster body-effect prefab is unbound: " + effect["id"]);
+                var replacement = UnityEngine.Object.Instantiate(prefab, previous.parent, false).transform;
+                replacement.name = previous.name;
+                replacement.localPosition = previous.localPosition;
+                replacement.localRotation = previous.localRotation;
+                replacement.localScale = previous.localScale;
+                replacement.gameObject.SetActive(previous.gameObject.activeSelf);
+                Attachments.RebindOriginalSubtree(replacement);
+            }
         }
     }
 }
