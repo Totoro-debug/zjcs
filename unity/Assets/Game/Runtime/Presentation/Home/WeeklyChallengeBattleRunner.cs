@@ -108,10 +108,12 @@ namespace Zjcs.Presentation.Home
         public void OnBattleCompleted(FightBattleCheckpoint checkpoint)
         {
             if (complete || checkpoint == null) return;
+            if (stageId == 4800 && finalReport == null)
+                throw new InvalidOperationException("Weekly challenge settlement requires the shared final battle report.");
             complete = true;
             session.CompleteBattle(stageId, periodStartLocalTicks,
                 checkpoint.Outcome != null && checkpoint.Outcome.Won,
-                stageId == 4800 ? PlayerDamageDealt(checkpoint) : 0);
+                stageId == 4800 ? PlayerDamageDealt(finalReport) : 0);
             DisposeBattle();
             Completed?.Invoke(checkpoint);
             Destroy(this);
@@ -134,9 +136,9 @@ namespace Zjcs.Presentation.Home
         }
         public void OnBattleReportReady(FightBattleReport report) { finalReport = report; }
 
-        private static long PlayerDamageDealt(FightBattleCheckpoint checkpoint)
+        private static long PlayerDamageDealt(FightBattleReport report)
         {
-            FightBattleReport report = FightBattleReportBuilder.Build(checkpoint);
+            if (report == null) return 0;
             FightBattleReportPlayerGroups groups = FightBattleReportGrouping.Build(report, 1);
             FightBattleReportPlayerGroup player = groups.Players.Find(value => value.TargetId == 1);
             if (player == null) return 0;
