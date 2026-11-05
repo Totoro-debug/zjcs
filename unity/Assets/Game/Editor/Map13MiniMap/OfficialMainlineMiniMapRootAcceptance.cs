@@ -169,6 +169,14 @@ namespace Zjcs.Editor.Map13MiniMap
         private static void Advance(){try{if(routine.MoveNext())return;Require(errors==0,"Native root runtime errors: "+errors);SessionState.EraseBool(Key);EditorApplication.update-=Advance;EditorApplication.Exit(0);}catch(Exception e){Debug.LogException(e);SessionState.EraseBool(Key);EditorApplication.update-=Advance;EditorApplication.Exit(1);}}
         private static IEnumerator Verify()
         {
+            if (Environment.GetCommandLineArgs().Contains("-verify-fresh-entities-only"))
+            {
+                var originalRoots = VerifySharedMaps();
+                while (originalRoots.MoveNext()) yield return originalRoots.Current;
+                var fresh = VerifyFreshEntities();
+                while (fresh.MoveNext()) yield return fresh.Current;
+                yield break;
+            }
             // Set after Play Mode's domain reload, before any original UI draws.
             ShaderUtil.allowAsyncCompilation=false;
             var pipeline=AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>("Assets/Official/World/Map/13/NativePipeline/UniversalRenderPipeline.asset");GraphicsSettings.renderPipelineAsset=pipeline;QualitySettings.renderPipeline=pipeline;

@@ -6,9 +6,9 @@
 
 ## 功能简介
 
-`MainlineSharedWorld` 统一持有原程序集解析、配置管理器、地图数据和原容器根，调用者只传入程序集目录、地图编号与容器身份。加载时在每次让出帧前完成同步解析任务，全部数据就绪后才启动原根；加载异常、枚举器取消及地图退出按根、数据、配置、程序集的顺序释放。重复加载和关闭后恢复加载会被拒绝，原全局解析器、文件加载器与 formatter 作用域恢复给原所有者。龙之国正式地形入口已使用此模块及当前884地图数据目录，原生地形和原111区配置继续保持各自来源。七图原根验证现均走此公共生命周期，另核对缺失地图配置、加载取消、重复启动和关闭后恢复。龙之国实际地形宿主的加载、私有／公开地区刷新、分区移动、重入及中断清理通过带图形 Play Mode，入口与重挂画面已查看；公共小地图全屏、筛选、HUD、白雾和区域时间回归及主工程编译／`ProjectTools.Validate` 通过。实体创建／本地状态恢复、激活检查和正式图标接线仍未完成。
+`MainlineSharedWorld` 统一持有原程序集解析、配置管理器、地图数据和原容器根，调用者只传入程序集目录、地图编号与容器身份。加载时在每次让出帧前完成同步解析任务，全部数据就绪后，地形调用自动启动原根，带地区查询的新存档调用先完成实体准备、由宿主绑定上下文后显式启动；加载异常、枚举器取消及地图退出按根、数据、配置、程序集的顺序释放。重复加载和关闭后恢复加载会被拒绝，原全局解析器、文件加载器与 formatter 作用域恢复给原所有者。龙之国正式地形入口已使用此模块及当前884地图数据目录，原生地形和原111区配置继续保持各自来源。七图原根验证现均走此公共生命周期，另核对缺失地图配置、加载取消、重复启动和关闭后恢复。龙之国实际地形宿主的加载、私有／公开地区刷新、分区移动、重入及中断清理通过带图形 Play Mode，入口与重挂画面已查看；公共小地图全屏、筛选、HUD、白雾和区域时间回归及主工程编译／`ProjectTools.Validate` 通过。正式宿主的实体创建／新存档状态恢复、激活检查和正式图标接线仍未完成。
 
-七图原始共享数据现在由同一加载器的地图编号、资源目录和容器表参数选择，既有调用的默认龙之国绑定保留。`NativeMap14SharedData`／`NativeMap14SharedRoot` 已可读取初始岛、森之国、山之国、泽之国、龙之国、通天塔和鲸背岛的原 EC、导航、MapInfoWrap、根组件及公共实体／动作模板。新资源保留所选884原字节与独立来源；共享 Console IL、formatter和 GameSettings 仍保留历史871身份，不声明整个程序集跨版本等价。隔离图形 Play Mode 已逐图启动原根，核对259,150个原始网格、11,174份放置模板的组件顺序／新实例／共享配置和对应默认实体模板查询。逐组件编码检查在原 `Info.Init` 前进行，避免把原 `AreaInfo.PosSet` 初始化缓存误判为字段变化；按所选官方 `SubStageStateInfoFormatter.Deserialize` 保留其读取但不赋回 `Select` 的行为，其余所选组件载荷重新编码与输入逐字节一致。主工程编译、`ProjectTools.Validate` 与原全屏／筛选／单分线HUD／白雾／区域时间回归通过，实际画面已查看。此项没有定义服务器初始实体状态、刷新或出生策略，也没有完成正式宿主恢复、完整标记和 Windows Player 接线。来源与显式资源地址见[七图共享数据凭据](../../assets/reference/official-map/mainline-shared-world-data-source-manifest.json)。
+七图原始共享数据现在由同一加载器的地图编号、资源目录和容器表参数选择，既有调用的默认龙之国绑定保留。`NativeMap14SharedData`／`NativeMap14SharedRoot` 已可读取初始岛、森之国、山之国、泽之国、龙之国、通天塔和鲸背岛的原 EC、导航、MapInfoWrap、根组件及公共实体／动作模板。新资源保留所选884原字节与独立来源；共享 Console IL、formatter和 GameSettings 仍保留历史871身份，不声明整个程序集跨版本等价。隔离图形 Play Mode 已逐图启动原根，核对259,150个原始网格、11,174份放置模板的组件顺序／新实例／共享配置和对应默认实体模板查询。逐组件编码检查在原 `Info.Init` 前进行，避免把原 `AreaInfo.PosSet` 初始化缓存误判为字段变化；按所选官方 `SubStageStateInfoFormatter.Deserialize` 保留其读取但不赋回 `Select` 的行为，其余所选组件载荷重新编码与输入逐字节一致。主工程编译、`ProjectTools.Validate` 与原全屏／筛选／单分线HUD／白雾／区域时间回归通过，实际画面已查看。原 EC 数据加载本身不提供服务器初始状态或刷新执行器；全新存档的公共实体初始化按下述已确认方案接入，正式宿主恢复、完整标记和 Windows Player 接线仍未完成。来源与显式资源地址见[七图共享数据凭据](../../assets/reference/official-map/mainline-shared-world-data-source-manifest.json)。
 
 小地图资源点宿主显式引用区域说明和原标签接口程序集，保证组合数据源所用类型可在正式世界程序集编译。
 
@@ -211,7 +211,11 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 ## 自定义实现
 
-公共原 EC 实体的初始化方案已确认：以全新存档创建，将原 `LoGridTransform`、`LoWorldStage`、`LoWorldActiveableEntity` 的配置值写入对应运行时字段，未指定字段保留原实体模板默认值；地区出生继续使用原 `RegionStatusSupported`／`BlockDefaultSpawnInMap` 条件，刷新沿所属功能已确认规则。该方案尚待接入公共实体创建。
+公共原 EC 实体按已确认方案从全新存档初始化，无旧存档迁移。`MainlineSharedWorld.Load(地区状态查询)` 统一处理七图的默认出生，查询接收本图地区编号，沿原 `MapRegionStatus` 的0／1／2返回未知／私有／公开；只使用地形／根的既有调用仍可省略该查询。内部 `MainlineSharedEntityCreation` 查本图原 `MapInfoWrap` 与原 Lo 模板，调用原 `RegionStatusSupported`／`BlockDefaultSpawnInMap` 决定是否出生，不符合条件不创建。非法状态使加载失败并释放所属作用域，重复加载仍由原公共生命周期拒绝。
+
+原 `EntityHandler.InstantiateEntity` 只克隆组件配置，缺少服务端初始化执行器；单机在加入容器前，将原 `LoGridTransform` 的位置／方向／翻转、`LoWorldStage` 的阶段和 `LoWorldActiveableEntity` 的激活配置写入对应已有运行时组件，其余值保留原模板构造默认值，不补造组件、不改变共享Info。编号仍调用原 `EcContainer.NewEntityIndex`，Lo ID 对应仍由原 `MapLoEntityIdManager` 保存。全部初始实体先注册到尚未启动的容器。带地区查询的 `Load` 完成后 `IsLoaded=true`、`IsReady=false`，宿主安装真实玩家、地图和条件上下文后再调用 `Start`，沿原容器先全体 Awake、再全体 Start及 `newEntity=false` 的事件派发顺序；未完成加载或重复启动被拒绝。原 NPC 启动依赖 `MeManager.MainPlayer` 的跟随者事件，以及 `PlayerMap` 的逻辑ID映射和条件查询，正式离线适配仍待接入，不以空玩家或禁用原客户端分支代替。地图退出通过原容器移除实体后清空该映射；尚未启动的实体按原行为只移除登记，不调用 End／Destroy。刷新沿所属功能已确认规则，新的存档状态写回、重新进入恢复及正式地图宿主的状态接线尚待接通。
+
+全新实体准备已在主工程内置屏带图形 Play Mode 通过七图×未知／私有／公开的33,522次放置检查：12,775个实体实际克隆和登记，20,747次按原条件排除。核对已有组件的坐标／方向／翻转、阶段、激活值、原编号／Lo映射、启动前无 Awake／Start、显式释放，以及非法地区状态和准备阶段取消的清理。Map11–16 对照独立导出的组件JSON；Map10旧导出缺少组件JSON，坐标／方向对照地图定义，翻转／阶段／激活对照同一原Lo配置。既有七图默认加载路径也通过同一入口回归，覆盖259,150格、11,174份模板和原组件载荷；未知地区无放置实体时，显式启动原根及重复启动拒绝通过。静态元数据检查（125,958个GUID）、主工程导入／编译与 `ProjectTools.Validate` 通过，验证入口为 `OfficialMainlineMiniMapRootAcceptance.Run -verify-fresh-entities-only`。本项验证快照准备及原根生命周期，未验证原客户端完整实体启动、正式实体美术、交互、存档流程或 Windows Player。
 
 鲸背岛数据由公共 `OfficialWorldMapAssetCatalog.LoadMap(16)` 统一读取和校验来源，图形 Play Mode 已检查本图数据身份与未开放入口状态。公共夹具的 `-verify-map15-only` 分支另通过通天塔模拟移动、冷读及每日访问效果冷读；后者比较访问前已有记录及新增的一条精确效果，不依赖被跳过的英雄雕像步骤。整图与资源接线边界见[鲸背岛](../maps/map-16.md)。
 
