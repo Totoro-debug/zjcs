@@ -668,6 +668,16 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 隔离 Unity 使用两份真实 UI 骨骼与原应用 `SkeletonGraphicAnimSequence`，验证原动画名称、缺失动画分支、触摸一次后返回原待机、点击恢复、连续点击混合、物理时钟、皮肤／遮罩／变形网格生成及实际活动骨骼的有限矩阵；随后完整详情资源引用和三页模拟指针回归通过。这是规则／几何端口检查，没有在完整详情窗口实际播放角色，也不替代画面及正式点击验证。静态检查通过，主工程 Unity 2022.3.57f1c2 导入／编译与 `ProjectTools.Validate` 通过；地图验证程序集补入其已使用的 NativeMap14 引用。源输入、按需动画／纹理映射、暂存输出与本地端口哈希见[详情角色原生端口来源](../../assets/reference/partner-detail-actor-runtime-source-manifest.json)。
 
+### 当前详情背景、地区立绘与冒险提示（局部）
+
+`prepare_partner_detail_presentation_native.py` 按所选 884 的原资源索引与实际 Sprite 对象恢复 117 个详情背景／静态立绘地址，包含原 JPG 与 PNG；通过原 RenderDataKey 核对索引 GUID、原生导出对象与实际纹理依赖，不按文件名猜图。原 `npc_region_image.g` 的八行、全部地区覆盖及 CN 枚举值单独保留，未将地区表折叠为通用立绘。完整原 `PopTipNpcAdventure`、`NpcAdventureSettings` 与 18 个国度／职业／偏好图标安装到正式目录，显式绑定为 `Partners/PartnerNativeDetailPresentationAssets`。原输入／对象、语言、安装输出及加载映射见[详情展示资源来源](../../assets/reference/partner-detail-presentation-native-source-manifest.json)，尚未生成完整素材快照。
+
+`prepare_partner_adventure_tip_ui.py` 复制原应用控制器、配置、礼物类型和四个 `UIUtils` 定位／命中方法。`OfflinePartnerAdventureTipServices` 按原设置查找顺序加载图标，以本地资源租约承接原释放顺序，并由所属输入宿主转发全局按下事件；保留原三个独立类型分支、动态语言键、10 单位纵向偏移、pivot 与屏幕边界夹取。原代码及适配哈希见[冒险提示应用来源](../../assets/reference/partner-adventure-tip-ui-source-manifest.json)。这只迁移详情页的条件说明，不代表羁绊冒险玩法完成。
+
+隔离 Unity Play Mode 已加载全部 117 个 Sprite 的实际网格、纹理及地区表；18 个配置分支通过实际原弹窗验证图标、原中文、全部字形、屏幕边缘定位、内部按下保留、外部模拟指针按下关闭、重复打开，以及图标租约和全局事件订阅归零。新 Canvas 先完成布局，窗口按原 `UIUtils.ResetUI` 初始化，再执行原定位；已查看国度、职业、礼物偏好三张 450×800 GPU 截图。全工程静态检查（125937 GUID）、主工程导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过；163 个输入、636 个运行绑定及 666 个安装路径哈希复核一致。此验证没有点击完整详情页的三个条件按钮，没有验证全部背景／立绘的整页显示，Home 正式接线与 Windows Player 仍待完成。
+
+10611、10709 的原 `FullBodyImage` 同指向 `UI/NPC/Npc_Individual/10611/npc_img_10611`。APK 881 与所选云端 884 索引均无该地址；对应 bundle 不在 APK 中，已校验云端包 `86a2656a8eca93cce8d94e18519f2840`，其实际容器和内部 Sprite 只有 `npc_role_10611`、`npc_portrait_10611`。当前记录此缺口并等待用户决定，不使用其他图替代；`NoneCondition.IsMet` 原返回 true，不能据此认定这两个 NPC 隐藏。11015–11022 的十个详情背景／立绘缺项继续沿用已确认的联动暂停范围。
+
 ## 自定义实现
 
 用户已确认：自定义伙伴称谓通过原字库与长度校验后直接在本地保存，不等待线上文本审核；保留原伙伴资格及好感等级门槛。自动伙伴在创建角色及读档后检查原相遇条件，满足且尚未拥有时自动结识，初始好感使用原配置；此触发时机是确认的单机方案，不声称取得服务器实现。`HomeFeatureRuntime.Open` 在首次读取 Home 上下文后调用 `MeetAutomaticNpcs`，并在新增伙伴后重读上下文。`-partnerAutoMeetLoadAcceptance` 使用隔离角色档，在进入 Home 前移除已结识的 8402；Unity GUI Play Mode 验证读档后恰好新增一条 8402 记录，退出码为 0，并保存、检查实际 GPU 画面。该截图只覆盖 Home 场景，存在其他遮挡／渲染异常，不作为伙伴界面还原验收；Home 画面和完整伙伴页面仍须单独验证。

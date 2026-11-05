@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52a1580a5a6b90a38533c33c85d09223, type: 3}
+  m_Name: NpcAdventureSettings
+  m_EditorClassIdentifier: null
+  CombatRatingDatas:
+  - {StartRate: 0, EndRate: 0.835, Key: 4}
+  - {StartRate: 0.835, EndRate: 0.915, Key: 3}
+  - {StartRate: 0.915, EndRate: 1, Key: 2}
+  - {StartRate: 1, EndRate: 1.055, Key: 1}
+  - {StartRate: 1.055, EndRate: -1, Key: 0}
+  MapGroupDatas:
+  - MapGroupId: 9
+    IconSpriteProxy: {mAssetGuid: 2513044a060f6534f9512ed34a220de4}
+  - MapGroupId: 11
+    IconSpriteProxy: {mAssetGuid: 960271767d42a78439e7b2a0167a4a00}
+  - MapGroupId: 12
+    IconSpriteProxy: {mAssetGuid: e7f60813f22dde341ad50cc89f219976}
+  - MapGroupId: 13
+    IconSpriteProxy: {mAssetGuid: 61245c08d9f7e054295646745c8f9221}
+  - MapGroupId: 14
+    IconSpriteProxy: {mAssetGuid: 64fdad93d50c7684e888cf44933053a2}
+  - MapGroupId: 17
+    IconSpriteProxy: {mAssetGuid: 74c4833accbb2624c9f94c6ac4295958}
+  - MapGroupId: 19
+    IconSpriteProxy: {mAssetGuid: 7397a95187fddd3489c960a28dd01537}
+  - MapGroupId: 21
+    IconSpriteProxy: {mAssetGuid: 9090409f1af805a4fa29edcaaabd5639}
+  - MapGroupId: 23
+    IconSpriteProxy: {mAssetGuid: 9e37a2ee62510384ea532e8877649678}
+  - MapGroupId: 25
+    IconSpriteProxy: {mAssetGuid: b2a4ad9ae7cfd9f4f8e5bc128f3d3527}
+  ProfessionDatas:
+  - Profession: 2
+    IconSpriteProxy: {mAssetGuid: ea8ee72ffff864d42908057e65b76a50}
+  - Profession: 6
+    IconSpriteProxy: {mAssetGuid: 9224c39dd37a99f468ae3378d59f3b68}
+  - Profession: 11
+    IconSpriteProxy: {mAssetGuid: 366b1f95103d4b546b66cd222b4f025a}
+  - Profession: 15
+    IconSpriteProxy: {mAssetGuid: 4232d29c3fa79c741b35d867c815adf5}
+  PreferenceDatas:
+  - NpcGiftType: 1
+    IconSpriteProxy: {mAssetGuid: 2d748716f95544946af0d89fe653c008}
+  - NpcGiftType: 2
+    IconSpriteProxy: {mAssetGuid: 30cad96f506e7d247ba2701a24ae41f4}
+  - NpcGiftType: 3
+    IconSpriteProxy: {mAssetGuid: 8f9cee4d4f43f714e81a3a425c9dff7e}
+  - NpcGiftType: 4
+    IconSpriteProxy: {mAssetGuid: a9801f363c2c98a42846d135f22ebadd}
+  QualityDatas:
+  - Quality: 1
+    Color: {r: 0.8352942, g: 0.8352942, b: 0.8352942, a: 1}
+  - Quality: 2
+    Color: {r: 0.54509807, g: 0.7843138, b: 0.9960785, a: 1}
+  - Quality: 3
+    Color: {r: 0.74509805, g: 0.54509807, b: 1, a: 1}
+  - Quality: 4
+    Color: {r: 0.9333334, g: 0.7019608, b: 0.2784314, a: 1}
+  - Quality: 5
+    Color: {r: 0.9607844, g: 0.87843144, b: 0.28235295, a: 1}
+  ConfigData: {RotateSpeeds: 6, AnimTimeScale: 0.7, FastRotateSpeeds: 30, FastAnimTimeScale: 2.8, SpeedUpDurationTime: 1, SpeedCutDurationTime: 1, FastIntervalTime: 0.1}
