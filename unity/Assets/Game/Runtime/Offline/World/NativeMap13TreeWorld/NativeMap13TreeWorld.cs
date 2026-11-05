@@ -7,7 +7,7 @@ using Zjcs.Offline.World.Map13Entities;
 using Zjcs.Offline.World.NativeMap13EntityAssets;
 using Zjcs.Offline.World.NativeMap13EntityViews;
 using Zjcs.Offline.World.NativeMap13Skeletons;
-using Zjcs.Offline.World.NativeMap13StoryPlayables;
+using Zjcs.Offline.World.MainlineStoryPlayables;
 using Zjcs.Official.World;
 using Zjcs.Official.World.Map13EntityRendering;
 using Zjcs.Official.World.Map13TreePlayables;
@@ -21,7 +21,7 @@ namespace Zjcs.Offline.World.NativeMap13TreeEntities
         private NativeMap13AnimatorLibrary animations;
         private NativeMap13EntitySpriteLibrary sprites;
         private NativeMap13TreeModelAnimatorLibrary dissolve;
-        private NativeMap13StoryPlayableScope playables;
+        private MainlineStoryPlayableScope playables;
         private OfflineMap13EntityPresentation presentation;
         private OfficialMapDefinition map;
         private GameObject staging;
@@ -48,7 +48,7 @@ namespace Zjcs.Offline.World.NativeMap13TreeEntities
             sprites = new NativeMap13EntitySpriteLibrary(Resources.Load<NativeMap13EntitySpriteCatalog>(assets.spriteCatalogResource));
             dissolve = new NativeMap13TreeModelAnimatorLibrary(assets.dissolveBinary, assets.dissolveCatalog);
             staging = new GameObject("Map13 inactive tree entity injection"); staging.SetActive(false); staging.transform.SetParent(transform, false);
-            playables = gameObject.AddComponent<NativeMap13StoryPlayableScope>(); playables.Initialize();
+            playables = gameObject.AddComponent<MainlineStoryPlayableScope>(); playables.Initialize();
         }
         public bool TryCreate(int placementId, int entityClassId, Vector2Int grid, int state, GameObject owner)
         {

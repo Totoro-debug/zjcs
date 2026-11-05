@@ -619,9 +619,9 @@ namespace Zjcs.Presentation.World
                             nodeId = subgraph.entryNodeId;
                             continue;
                         case "PlayPlayableNode":
-                            if (mapClassId == 13)
+                            if (mapClassId == 13 || mapClassId == 16)
                             {
-                                StartCoroutine(RunMap13StoryPlayable(activeStory, node));
+                                StartCoroutine(RunMainlineStoryPlayable(activeStory, node));
                                 return;
                             }
                             if (string.IsNullOrWhiteSpace(node.playableAssetGuid)
@@ -1256,7 +1256,7 @@ namespace Zjcs.Presentation.World
         private void FinishStoryGraph(bool invokeCompletion)
         {
             navigation.UnlockPlayerMovementForStory();
-            if (mapClassId == 13) CleanMap13StoryPlayables();
+            if (mapClassId == 13 || mapClassId == 16) CleanMainlineStoryPlayables();
             mapVoice?.StopVoice();
             Action completed = invokeCompletion ? storyFinished : null;
             if (!invokeCompletion && MapProfile.HasNativeUi && !string.IsNullOrEmpty(activeStoryRootKey)

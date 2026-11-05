@@ -5,6 +5,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Zjcs.Offline.World;
+using Zjcs.Official.StoryPlayableRequests;
 
 namespace Zjcs.Presentation.World
 {
@@ -18,6 +19,8 @@ namespace Zjcs.Presentation.World
         private readonly Dictionary<Collider2D, OfficialMap10EntityInfo> hitTargets =
             new Dictionary<Collider2D, OfficialMap10EntityInfo>();
         private readonly Dictionary<int, GameObject> entityObjects = new Dictionary<int, GameObject>();
+        private readonly Dictionary<int, bool> entityActiveStates = new Dictionary<int, bool>();
+        private readonly Dictionary<int, int> forceVisibleCounts = new Dictionary<int, int>();
         private readonly Dictionary<int, Dictionary<int, GameObject>> entityStateObjects =
             new Dictionary<int, Dictionary<int, GameObject>>();
         private readonly List<OfficialMap10EntityInfo> entityInfos = new List<OfficialMap10EntityInfo>();
@@ -37,7 +40,28 @@ namespace Zjcs.Presentation.World
         public bool SetEntityActive(int placementId, bool active)
         {
             if (!entityObjects.TryGetValue(placementId, out GameObject entity) || entity == null) return false;
-            entity.SetActive(active);
+            entityActiveStates[placementId] = active;
+            entity.SetActive(active || forceVisibleCounts.ContainsKey(placementId));
+            return true;
+        }
+
+        public bool SetEntityForceVisible(int placementId, bool forceVisible)
+        {
+            if (!entityObjects.TryGetValue(placementId, out GameObject entity) || entity == null) return false;
+            if (forceVisible)
+            {
+                forceVisibleCounts.TryGetValue(placementId, out int count);
+                forceVisibleCounts[placementId] = count + 1;
+                entity.SetActive(true);
+                return true;
+            }
+            if (forceVisibleCounts.TryGetValue(placementId, out int current))
+            {
+                if (current <= 1) forceVisibleCounts.Remove(placementId);
+                else forceVisibleCounts[placementId] = current - 1;
+            }
+            entity.SetActive(entityActiveStates.TryGetValue(placementId, out bool active) && active
+                || forceVisibleCounts.ContainsKey(placementId));
             return true;
         }
 
@@ -182,6 +206,7 @@ namespace Zjcs.Presentation.World
             if (!entityObjects.TryGetValue(placement, out var entity)) return;
             foreach (var collider in entity.GetComponentsInChildren<Collider2D>(true)) hitTargets.Remove(collider);
             entityObjects.Remove(placement); entityStateObjects.Remove(placement);
+            entityActiveStates.Remove(placement); forceVisibleCounts.Remove(placement);
             entityInfos.RemoveAll(v => v.PlacementId == placement);
             EntityCount--; DestroyGeneratedObject(entity);
         }
@@ -318,11 +343,24 @@ namespace Zjcs.Presentation.World
             entity.transform.localPosition = new Vector3(mapOrigin.x + record.grid[0], mapOrigin.y + record.grid[1],
                 -record.grid[1] * 0.001f);
             entity.transform.localRotation = Quaternion.Euler(0f, 0f, record.direction * 90f);
-            entity.SetActive(record.active || (mapClassId == 11 && record.typeId == 202));
+            bool active = record.active || (mapClassId == 11 && record.typeId == 202);
+            entity.SetActive(active);
             if (record.placementId > 0)
             {
                 entityObjects.Add(record.placementId, entity);
                 entityInfos.Add(info);
+                entityActiveStates.Add(record.placementId, active);
+            }
+            if (mapClassId == 13 || mapClassId == 16)
+            {
+                StoryPlayableEntityBinding binding = entity.GetComponent<StoryPlayableEntityBinding>()
+                    ?? entity.AddComponent<StoryPlayableEntityBinding>();
+                binding.ClientVisibilitySupporter ??= new StoryPlayableVisibilityAdapter(forceVisible =>
+                {
+                    if (record.placementId > 0)
+                        SetEntityForceVisible(record.placementId, forceVisible);
+                    else entity.SetActive(forceVisible || active);
+                });
             }
 
             bool nativeVisual = NativeVisualFactory?.Invoke(info, entity) ?? false;
@@ -550,6 +588,8 @@ namespace Zjcs.Presentation.World
             models.Clear();
             hitTargets.Clear();
             entityObjects.Clear();
+            entityActiveStates.Clear();
+            forceVisibleCounts.Clear();
             entityStateObjects.Clear();
             entityInfos.Clear();
             EntityCount = 0;
@@ -635,6 +675,14 @@ namespace Zjcs.Presentation.World
             public string texture;
             public int layer;
             public int order;
+        }
+
+        private sealed class StoryPlayableVisibilityAdapter : IStoryPlayableEntityVisibility
+        {
+            private readonly Action<bool> update;
+            public StoryPlayableVisibilityAdapter(Action<bool> update) =>
+                this.update = update ?? throw new ArgumentNullException(nameof(update));
+            public void SetForceVisible(bool visible) => update(visible);
         }
 
         private sealed class GeneratedModel

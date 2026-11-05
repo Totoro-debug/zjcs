@@ -455,6 +455,8 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 公共剧情载荷由 `prepare_unity_map13_story_runtime.py` 的官方图归一化生成，分别读取查询节点 `HandInItemId` 和执行节点 `HandleItemId`。Map13／Map16 的输入、转换器及输出哈希见[泽之国剧情运行时来源](official-map/map13-story-runtime-source-manifest.json)和[鲸背岛剧情运行时来源](official-map/map16-story-runtime-source-manifest.json)；实现与验证范围见所属地图页。
 
+鲸背岛两份故事消失演出 prefab 由 `prepare_unity_map16_story_playable_prefabs.py` 按所选 `884_156692` APK／缓存恢复，沿原 CAB／对象身份核对组件与外部依赖，记录原 prefab、17份材质、3份网格、25张纹理、Windows shader、2项 Wwise 引用及逐项输入／输出哈希；来源见[演出资源清单](official-map/map16-native-story-playables-source-manifest.json)。Unity 资源边界与运行验证状态见[鲸背岛](../../docs/maps/map-16.md)。
+
 公共交付窗口从所选 `884_156692` APK优先解析原 prefab、CAB依赖、中文rawfile和 Wwise 事件；APK未包含的对象按同版索引读取已取得云端bundle。`prepare_mainline_handin_ui.py` 提取原43／19节点、101组件及19张Sprite，核验原按钮controller／clip和gray shader后复用原生序列化资产；两条声音按当前事件链、原增益解码，与已有官方PCM逐字节核对后显式复用。输入对象、版本、工具、语言、事件链及输出哈希见[窗口来源](official-map/mainline-handin-ui-source-manifest.json)；`record_unity_map14_handin_ui.py --mainline` 记录当前公共原生prefab、动画、材质与脚本绑定，见[原生绑定来源](official-map/mainline-handin-ui-bindings-source-manifest.json)。历史871版来源保持独立；实现与验证范围仅维护于[公共模块](../../docs/features/mainline-map-modules.md)。
 
 鲸背岛现有定义与来源收据通过 `World/OfficialWorldMapAssetCatalog` 的地图16条目显式绑定；加载入口为 `LoadMap(16)`，输入输出摘要仍由[地图定义清单](official-map/map16-definition-source-manifest.json)及原 `source-manifest.json` 提供，未重新生成或替换官方数据载荷。

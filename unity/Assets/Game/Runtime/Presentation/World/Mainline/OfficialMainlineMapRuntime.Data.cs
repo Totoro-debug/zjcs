@@ -214,8 +214,9 @@ namespace Zjcs.Presentation.World
                 || !officialPlayables.ContainsKey("FeiLe_disappear")
                 || !officialPlayables.ContainsKey("9b248cde91299ee4287533b25b7dd468")))
                 throw new InvalidDataException("Official Map10 story playable bindings are incomplete.");
-            if (mapClassId == 13) ValidateMap13StoryPlayables();
-            foreach (Map10RuntimeStory story in stories.Values.Where(_ => mapClassId != 13 && mapClassId != 14))
+            if (mapClassId == 13 || mapClassId == 16) ValidateMainlineStoryPlayables();
+            foreach (Map10RuntimeStory story in stories.Values.Where(_ => mapClassId != 13
+                         && mapClassId != 14 && mapClassId != 16))
                 foreach (Map10RuntimeStoryNode node in story.nodes.Where(value => value != null
                              && value.type == "PlayPlayableNode"))
                     if ((node.playableDuration <= 0f && node.waitPlayableStop)

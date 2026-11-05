@@ -14,7 +14,7 @@ using Zjcs.Presentation.World.NativeMap13;
 using Zjcs.Official.StoryAnimation;
 using Zjcs.Official.StoryAttachment;
 using Zjcs.Official.StoryFollowBone;
-using Zjcs.Offline.World.NativeMap13StoryPlayables;
+using Zjcs.Offline.World.MainlineStoryPlayables;
 using Zjcs.Official.StoryPlayableRequests;
 using Zjcs.Presentation.World;
 using Cysharp.Threading.Tasks;
@@ -46,7 +46,17 @@ namespace Zjcs.Editor.Map13StoryPlayableRequests
                 Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
                 Require(Path.GetFullPath(Output).Replace('\\','/').Contains("/output/validation/"),"named isolated validation workspace");
                 AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
-                NativeMap13StoryPlayableAssets.Load();
+                LoadPlayableAssets(13, "871_156598");
+                MainlineStoryPlayableAssets map16Playables = LoadPlayableAssets(16, "884_156692");
+                Require(map16Playables.Count == 2, "two native Map16 playables");
+                Map10RuntimeStoryData map16Data = JsonUtility.FromJson<Map10RuntimeStoryData>(
+                    Resources.Load<TextAsset>("Map16/stories").text);
+                Map10RuntimeStory[] map16Graphs = (map16Data.stories ?? Array.Empty<Map10RuntimeStory>())
+                    .Concat(map16Data.subgraphs ?? Array.Empty<Map10RuntimeStory>()).ToArray();
+                Map10RuntimeStoryNode[] map16Requests = map16Graphs.SelectMany(value => value.nodes)
+                    .Where(value => value.type == "PlayPlayableNode").ToArray();
+                Require(map16Requests.Length == 2, "two configured Map16 request nodes");
+                foreach (Map10RuntimeStoryNode node in map16Requests) map16Playables.CreateRequest(node.sourceJson);
                 Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor",true).GetMethod("Validate").Invoke(null,null);
                 SessionState.SetString(Key+".pipeline",AssetDatabase.GetAssetPath(GraphicsSettings.defaultRenderPipeline));SessionState.SetString(Key+".quality",AssetDatabase.GetAssetPath(QualitySettings.renderPipeline));SessionState.SetInt(Key+".color",(int)PlayerSettings.colorSpace);
                 PlayerSettings.colorSpace=ColorSpace.Linear;GraphicsSettings.defaultRenderPipeline=AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>("Assets/Official/World/Map/13/NativePipeline/UniversalRenderPipeline.asset");QualitySettings.renderPipeline=null;
@@ -76,20 +86,28 @@ namespace Zjcs.Editor.Map13StoryPlayableRequests
             if(errors==0){SessionState.SetInt(Key+".result",0);Debug.Log("Map13 original 29 request bodies / 55 indexed source inputs passed native pooled playback, original stop waits, flags, stage-stop order, visibility lifecycle and cleanup on real Map13 ground. Isolated actor parameter boundary; original NPC art, full formal stories and Windows Player remain pending.");}EditorApplication.isPlaying=false;
         }
         private static void Require(bool value,string message){if(!value)throw new InvalidDataException("Native NPC appearance playable: "+message);}
+        private static MainlineStoryPlayableAssets LoadPlayableAssets(int mapClassId, string manifest) =>
+            MainlineStoryPlayableAssets.Load(mapClassId, manifest, catalogName =>
+            {
+                var catalog = Resources.Load<NativeMap13AssetCatalog>("Map" + mapClassId + "/Native/" + catalogName);
+                if (!catalog || catalog.Bindings == null) return null;
+                return catalog.Bindings.Select(binding => binding == null
+                    ? default : new MainlineStoryPlayableCatalogEntry(binding.OfficialPath, binding.Asset)).ToArray();
+            });
         private static IEnumerator Steps()
         {
             Application.runInBackground=true;
             var cameraObject=new GameObject("Original Map13 request camera");cameraObject.tag="MainCamera";var camera=cameraObject.AddComponent<Camera>();camera.orthographic=true;camera.orthographicSize=12;camera.transform.position=new Vector3(4.5f,74.5f,-500);camera.farClipPlane=1000;cameraObject.AddComponent<UniversalAdditionalCameraData>().SetRenderer(0);
             var root=new GameObject("Original Map13 request ground");var world=OfficialMap13NativeWorldView.Create(root.transform,camera,new State());
             float deadline=Time.realtimeSinceStartup+120;while(!world.IsReady&&Time.realtimeSinceStartup<deadline)yield return null;Require(world.IsReady,"original ground readiness");
-            var assets=NativeMap13StoryPlayableAssets.Load();Require(assets.Count==12,"twelve native assets");
+            var assets=LoadPlayableAssets(13,"871_156598");Require(assets.Count==12,"twelve native assets");
             var data=JsonUtility.FromJson<Map10RuntimeStoryData>(Resources.Load<TextAsset>("Map13/stories").text);
             var sound=new SoundProbe();var previousSound=OfficialWwiseEvent.Host;OfficialWwiseEvent.Host=sound;
             int requests=0,inputs=0,waits=0,stageStops=0;bool captured=false;
             foreach(var graph in data.stories.Concat(data.subgraphs))
             foreach(var source in graph.nodes.Where(n=>n.type=="PlayPlayableNode"))
             {
-                var request=assets.CreateRequest(source.sourceJson);var scopeObject=new GameObject("Map13 original request pool");var scope=scopeObject.AddComponent<NativeMap13StoryPlayableScope>();scope.Initialize();
+                var request=assets.CreateRequest(source.sourceJson);var scopeObject=new GameObject("Map13 original request pool");var scope=scopeObject.AddComponent<MainlineStoryPlayableScope>();scope.Initialize();
                 var proxy=new StoryHandleProxy();proxy.BindMyPlayableManager(new Zjcs.Official.StoryPlayableManager.ActivePlayableManagerInfo{MyPlayableManager=scope.Manager});request.StoryHandleProxy=proxy;
                 var actors=new Dictionary<string,StoryPlayableEntityBinding>();var supports=new Dictionary<StoryPlayableEntityBinding,StageProbe>();var controllers=new List<AnimatorController>();
                 foreach(var port in source.ports.Where(p=>(p.name.StartsWith("SourceEntitys ")||p.name.StartsWith("TargetEntitys "))&&p.connections.Length>0))

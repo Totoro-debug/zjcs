@@ -3,12 +3,12 @@ using UnityEngine;
 using Zjcs.Official.StoryPlayables;
 using Zjcs.Official.StoryPlayableManager;
 
-namespace Zjcs.Offline.World.NativeMap13StoryPlayables
+namespace Zjcs.Offline.World.MainlineStoryPlayables
 {
     // A map-owned DI boundary around the original manager/center/FIFO pools.
     // Custom pool creation uses the original factory overload and does not
     // replace another map's global StoryPlayableInstantiation resolver.
-    public sealed class NativeMap13StoryPlayableScope : MonoBehaviour, IStoryPlayableInstanceFactory, IDisposable
+    public sealed class MainlineStoryPlayableScope : MonoBehaviour, IStoryPlayableInstanceFactory, IDisposable
     {
         private MyPlayableCenter center;
         private MyPlayableManager manager;
@@ -19,10 +19,10 @@ namespace Zjcs.Offline.World.NativeMap13StoryPlayables
 
         public void Initialize()
         {
-            if (manager != null || disposed) throw new InvalidOperationException("Map13 story playable scope is not new.");
+            if (manager != null || disposed) throw new InvalidOperationException("Mainline story playable scope is not new.");
             center = new MyPlayableCenter();
             lowMemory = new GAction();
-            staging = new GameObject("Map13 original playable injection");
+            staging = new GameObject("Mainline original playable injection");
             staging.SetActive(false); staging.transform.SetParent(transform, false);
             manager = new MyPlayableManager { ScopeRoot = gameObject, InstanceFactory = this,
                 MyPlayableCenter = center, LowMemory = lowMemory };
@@ -40,7 +40,7 @@ namespace Zjcs.Offline.World.NativeMap13StoryPlayables
 
         public GameObject Instantiate(GameObject prefab, Transform parent, bool worldPositionStays)
         {
-            if (disposed || !staging || center == null) throw new ObjectDisposedException(nameof(NativeMap13StoryPlayableScope));
+            if (disposed || !staging || center == null) throw new ObjectDisposedException(nameof(MainlineStoryPlayableScope));
             var instance = UnityEngine.Object.Instantiate(prefab, staging.transform, worldPositionStays);
             foreach (var playable in instance.GetComponentsInChildren<MyPlayable>(true)) playable.MyPlayableCenter = center;
             instance.transform.SetParent(parent, worldPositionStays);
@@ -48,7 +48,7 @@ namespace Zjcs.Offline.World.NativeMap13StoryPlayables
         }
         public MyPlayable Play(GameObject prefab, GameObject source, GameObject target)
         {
-            if (manager == null || disposed) throw new ObjectDisposedException(nameof(NativeMap13StoryPlayableScope));
+            if (manager == null || disposed) throw new ObjectDisposedException(nameof(MainlineStoryPlayableScope));
             return manager.Play(prefab, source, target);
         }
         private void OnLowMemory() => lowMemory?.Invoke();

@@ -1,0 +1,3314 @@
+{
+  "conversion_inputs": {
+    "native_export_manifest_sha256": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c",
+    "official_code_manifest_sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4",
+    "windows_shader_manifest_sha256": "09b81e5260175a1524a2178d37bea2b78752bdc85f130751e2d95398171fbe0b",
+    "windows_texture_manifest_sha256": "095eb422b8a241e6468abd81940e22aff9ad22f89bc78161dbdba8bd1f45b3b0"
+  },
+  "counts": {
+    "materials": 17,
+    "meshes": 3,
+    "playable_components": 22,
+    "prefabs": 2,
+    "shaders": 1,
+    "textures": 25,
+    "wwise_events": 2
+  },
+  "input_tools": [
+    {
+      "bytes": 40570,
+      "path": "scripts/prepare_unity_map16_story_playable_prefabs.py",
+      "sha256": "d0ff349374a1a4c24e12a4d92db27fb36c0ceadc05095415d9b1153768ae8ccc"
+    },
+    {
+      "bytes": 224492,
+      "path": "unity/Assets/Official/World/Map/16/Source/story-source.json",
+      "sha256": "734100292801536dcb6365da73721311a4c0983fed8cde7c43d0f03358a96671"
+    },
+    {
+      "bytes": 323942,
+      "path": "assets/reference/official-map/map16-story-source-manifest.json",
+      "sha256": "090d5a29d906bc525b22fb2b628654a645b3c190590ee2f70899a4a4e2ac1809"
+    },
+    {
+      "bytes": 114378086,
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json",
+      "sha256": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c"
+    },
+    {
+      "bytes": 136826710,
+      "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-textures/source-manifest.json",
+      "sha256": "095eb422b8a241e6468abd81940e22aff9ad22f89bc78161dbdba8bd1f45b3b0"
+    },
+    {
+      "bytes": 2172040,
+      "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/source-manifest.json",
+      "sha256": "09b81e5260175a1524a2178d37bea2b78752bdc85f130751e2d95398171fbe0b"
+    },
+    {
+      "bytes": 6939,
+      "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+      "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+    },
+    {
+      "bytes": 1394,
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13/NativeMap13AssetCatalog.cs",
+      "sha256": "ac4beead9730aaf0092d580f11cd2e6bfe5eb0b0d818880556332839b53e1698"
+    },
+    {
+      "bytes": 243,
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13/NativeMap13AssetCatalog.cs.meta",
+      "sha256": "cac4f382832fc25df269924bea7a6d7cfa76f32ed5162592bcdf6de0f8e5b063"
+    },
+    {
+      "bytes": 8193,
+      "path": "scripts/prepare_unity_map14_entity_materials.py",
+      "sha256": "aadb245f007aa4a8ec1dfe4af83642f13cde35998e9ca4ba488327a6412f897d"
+    },
+    {
+      "bytes": 18615,
+      "path": "scripts/prepare_unity_map14_entity_materials_native.py",
+      "sha256": "7b5a322402436ea58efda2ccf21abe511355f59a05f0e34be026119386ca52d2"
+    },
+    {
+      "bytes": 18634,
+      "path": "scripts/prepare_unity_map14_suimo_performance.py",
+      "sha256": "29f08c02243be8778409f7a93b0da476e7c91b7250521208dbedb09bddb26abb"
+    },
+    {
+      "bytes": 19464,
+      "path": "scripts/prepare_unity_map13_sources.py",
+      "sha256": "184ad823d4c850434c2fc792036c277e1305484ffdb0acd7a92a129e7bf87aaa"
+    },
+    {
+      "bytes": 9385,
+      "path": "scripts/prepare_unity_bundle_inputs.py",
+      "sha256": "8978bfd0277dab37f06070af408a18d56bc8610fc74c25764b48a03c26a99ef6"
+    },
+    {
+      "bytes": 17006592,
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+    },
+    {
+      "bytes": 80896,
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/GameFramework.Runtime.dll",
+      "sha256": "737c1e6b4313b330530aa84b6d9b59dd01a470c69937d95a6cf69cd13c61e253"
+    },
+    {
+      "class": "ApplyBySource",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs.meta",
+        "sha256": "d44656ffcbbc7922858a88080ab8c690ded072f406c3acc0784d01fca6de71e1"
+      },
+      "script_guid": "8811547e645bd6980ca21c58c99b9a4a",
+      "source": {
+        "bytes": 929,
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs",
+        "sha256": "650ea193fe5f1143d5b0438d6ad26069f9be64d6753f24d523248908b89d0b20"
+      }
+    },
+    {
+      "class": "ApplyEnableOnPlay",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyEnableOnPlay.cs.meta",
+        "sha256": "4fa001c702d7b8d5a898513d3f5952a935e20cd9787ca96689c1aa9e9b257c94"
+      },
+      "script_guid": "4ffabc222c1794e81a73c669f9215ea1",
+      "source": {
+        "bytes": 1671,
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyEnableOnPlay.cs",
+        "sha256": "9031a17d29199a44af50a2cf289ab70dbf4885c4f238c6e5b3f96d0341f0a77e"
+      }
+    },
+    {
+      "class": "ApplyOnStopFadeOut",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopFadeOut.cs.meta",
+        "sha256": "876de6bd9727d012df10e69446323668893d574733fabda7bf491336c6a66dec"
+      },
+      "script_guid": "81ebc8e099c5a490f7340ec60178cc77",
+      "source": {
+        "bytes": 481,
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopFadeOut.cs",
+        "sha256": "c10011991db0c1c7ef27bdb74eb5f44a491913307f9c65a3cd1a9ddb74e604a0"
+      }
+    },
+    {
+      "class": "MyPlayableActiveBone",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableActiveBone.cs.meta",
+        "sha256": "ee4086b938e7c6691f3581a4e3b37e36a5e7351b5627e77b8b5d89972893b695"
+      },
+      "script_guid": "3a5963523e4fa086d0bd6d9403792f10",
+      "source": {
+        "bytes": 2187,
+        "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableActiveBone.cs",
+        "sha256": "f759c2ab02210bd4340aea45a152480165d1ef9d795445df57958bfe9b2f8f5c"
+      }
+    },
+    {
+      "class": "MyPlayableAnimator",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs.meta",
+        "sha256": "87cfb6242ac3458692cef4e9ebf3803dcc1e8951ced05012bbbe51697ef61532"
+      },
+      "script_guid": "48e0a7dd9c2fa77dda83de3b7e3dce53",
+      "source": {
+        "bytes": 7049,
+        "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs",
+        "sha256": "556de9b57b5684be1ca88df986687b9c7817a2bf79ea4b7def4ccf0268a19489"
+      }
+    },
+    {
+      "class": "MyPlayableFollowBone",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFollowBone.cs.meta",
+        "sha256": "7e7ab1c3b226804894aa591e07078eccaf3499c34d05fe48f68e6b96002db69a"
+      },
+      "script_guid": "a08ad30e138701bc8b6a36c102b7fee5",
+      "source": {
+        "bytes": 13246,
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFollowBone.cs",
+        "sha256": "3ccc330554190f228073d3d8b5412e718e529aa328571368ad20a1800080ac39"
+      }
+    },
+    {
+      "class": "MyPlayableSequence",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs.meta",
+        "sha256": "58ba372bbd79a79b5c7bb3c40858a9e663386a3ac05cfdd760931a3d4af569f0"
+      },
+      "script_guid": "bce1c23b143625ac322a4b9f11594d67",
+      "source": {
+        "bytes": 4888,
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs",
+        "sha256": "f2f3c212ecd384e80c9a2a8f0a82e2251ede2abc8662c954a2c7988190080d42"
+      }
+    },
+    {
+      "class": "MyPlayableSound",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StorySounds/MyPlayableSound.cs.meta",
+        "sha256": "6d723cee29eeef93753d7323f05b8b75fd61b4640d14e54fc99713a021eb0856"
+      },
+      "script_guid": "cabc4e819ca0894e41470326f33fc671",
+      "source": {
+        "bytes": 1773,
+        "path": "unity/Assets/Game/Runtime/Official/StorySounds/MyPlayableSound.cs",
+        "sha256": "d406bdb27df233456dba4c4bff0a12781e9551b733390eca621e673b8b74c83c"
+      }
+    },
+    {
+      "class": "WwiseEventReference",
+      "meta": {
+        "bytes": 62,
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs.meta",
+        "sha256": "f393e1af77160cb98a16b745897e728620a26cafe5e3033cf0c2d23196a428e3"
+      },
+      "script_guid": "eda62e0b27051dfd578214e537c3c072",
+      "source": {
+        "bytes": 323,
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs",
+        "sha256": "7c7b698a69a8d3eb424dc94a32ab91b7364ca923979f89be53d405ee5f6d9942"
+      }
+    }
+  ],
+  "manifest": "884_156692",
+  "mapClassId": 16,
+  "official_assets": [
+    {
+      "event": {
+        "export": {
+          "bytes": 525,
+          "path": "ExportedProject/Assets/Wwise/ScriptableObjects/Event/6B99DC6E-8F0E-4DFE-B122-2FBEEE314EEA.asset",
+          "sha256": "112e32b4534252c631fa097d50d74f284894985ce48f0bad39cb38d9c61ebbb4"
+        },
+        "export_meta": {
+          "bytes": 280,
+          "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/6B99DC6E-8F0E-4DFE-B122-2FBEEE314EEA.asset.meta",
+          "sha256": "be2db6bfe292cf0fe35a7b3119933844932ba19b39ae5860a88205974f86c811"
+        },
+        "output": {
+          "bytes": 523,
+          "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Audio/6B99DC6E-8F0E-4DFE-B122-2FBEEE314EEA.asset",
+          "sha256": "d7ebaf09956b9a77fce163ede5dfed9c2f52f1e43c148848f44e33768a51d3dc"
+        },
+        "output_meta": {
+          "bytes": 186,
+          "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Audio/6B99DC6E-8F0E-4DFE-B122-2FBEEE314EEA.asset.meta",
+          "sha256": "37212503df791c2c6cd1d20ef915599826761f3ed5e1e06f2e2ff1faea3a82e4"
+        },
+        "source": {
+          "guid": "6B99DC6E-8F0E-4DFE-B122-2FBEEE314EEA",
+          "id": 1758751830,
+          "name": "Map_Action_BlueFlash_2"
+        }
+      },
+      "export": {
+        "bytes": 455207,
+        "path": "ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_disappear.prefab",
+        "sha256": "cef8ad28323be2d2806a523c3df82035b4ed4b5ac2237b44e3735d92a5509145"
+      },
+      "export_meta": {
+        "bytes": 386,
+        "path": "ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_disappear.prefab.meta",
+        "sha256": "c4c63b0cbda3ca4f79f6ab012ee66daa93fafba0b9c00303591aa5a6fa1770ce"
+      },
+      "hierarchy_counts": {
+        "GameObject": 15,
+        "MonoBehaviour": 11,
+        "ParticleSystem": 8,
+        "ParticleSystemRenderer": 9,
+        "Transform": 15
+      },
+      "materials": [
+        {
+          "export": {
+            "bytes": 3413,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_Mask_05_C 1_NB_5_B.mat",
+            "sha256": "125b8188ef45cc2f540607835ff958d7b01c39d9b2a555724bea3462547fb02c"
+          },
+          "identity": "cab-0fa53c7e76d6bbcdabedb7e70b604eb7:-5140505925673581326",
+          "name": "Fx_Mask_05_C 1_NB_5_B",
+          "output": {
+            "bytes": 3413,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/c2db938c28a24418630b.mat",
+            "sha256": "eb43f05377b24c9bf6cd7328ddd0ead333468439aa17d49329fb7ddce3bc5d05"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/c2db938c28a24418630b.mat.meta",
+            "sha256": "ec21d07a6df76fa32f6cbc84509a53f1344ae2300ebf102aafcba496e5296f9b"
+          },
+          "payload_sha256": "c07902fd6113f50d8b5b1a08c1cbed60e430e7fde31b5528abb35cc0106ce373",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "79c24995dc0cc654bb8b70eac550aa29",
+              "output_guid": "fbc94756b2f94bb356f4c7fb08d7ea76",
+              "source": {
+                "cab": "CAB-ce698490f2d151face7328b07176f413",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 512,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_ad3dc6753967886dca09c50a6eb83bcc.bundle",
+                "mips": 10,
+                "name": "Fx_RaoDon_0002",
+                "object_sha256": "c8bf6855b4ad46c7c1a831ad934322f0f9b2acd0bd28101efebc4f4d25b96907",
+                "path_id": "-6907032761427240894",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 512
+              }
+            },
+            {
+              "guid": "87d8934a366fabc418d0921559ae2037",
+              "output_guid": "28e9a3702e7d8b5692943bfb574d97b2",
+              "source": {
+                "cab": "CAB-524773c81a1b4e7ff91cfbc7b8396dd2",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_c89014243701ab6bd3ef5fdce23aaeb2.bundle",
+                "mips": 9,
+                "name": "Fx_Mask_05_C",
+                "object_sha256": "0054b79aa2c73fb57847af828c06d7634b2b216bbf348950991f70d7ac0ca54c",
+                "path_id": "6683587163527741767",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            },
+            {
+              "guid": "2d5758bbc0957de47903d32614aeb38a",
+              "output_guid": "5f7415bbead5d543ef0b5ddfacc274d2",
+              "source": {
+                "cab": "CAB-7e302fce5aea16bc578b0d7dec86f7a2",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_0ab21da1b71b906e8ff26d423767fda0.bundle",
+                "mips": 9,
+                "name": "Fx_QiLang_140 1",
+                "object_sha256": "2e71c9551e8c8c2faf1ec3cb6d1cee08d023b7f9b8a8db6341b9ad02dd1bde4b",
+                "path_id": "6077464231749547733",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            }
+          ]
+        },
+        {
+          "export": {
+            "bytes": 3218,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_Mask_0005_3_NB_8_B.mat",
+            "sha256": "e90b0ba04216bb8d5be284f1e9ba976e1ac6b4976e4c4c19800f84359f082142"
+          },
+          "identity": "cab-0fa53c7e76d6bbcdabedb7e70b604eb7:4491477914247246962",
+          "name": "Fx_Mask_0005_3_NB_8_B",
+          "output": {
+            "bytes": 3218,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/21159b97670f17864310.mat",
+            "sha256": "fe979a2eca693049cd25f55f955c5d03b6cbcbc540114a7752645f042e287aa3"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/21159b97670f17864310.mat.meta",
+            "sha256": "8381a9649d07b750e22d87ddcb25043bf04f11f8cb696b36b07c097c37df4a0d"
+          },
+          "payload_sha256": "430daa1389b7d1ee45b1972f23daba061bf39a2a23f6d8976500e61d398d1063",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "09476deea8704e64eba46be492ea1d5d",
+              "output_guid": "9e7aac863a96f2878e940a6660fd744b",
+              "source": {
+                "cab": "CAB-31279f0d608bf8e7c65b9ee792342f65",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_d8d0255bb89850f43a5b2b03ac9e14ec.bundle",
+                "mips": 9,
+                "name": "Fx_Mask_0005_3",
+                "object_sha256": "8afb772f4cf33b01490f1b6507d2dd6466448f637d942d409f66e5f737f79e3c",
+                "path_id": "-8319716542741231794",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            }
+          ]
+        },
+        {
+          "export": {
+            "bytes": 3194,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_GuangQuan_59_1.mat",
+            "sha256": "244162670e0a86410ad7dc98e98c41dd57979bb8665e1cfab1c0ed4515a4b963"
+          },
+          "identity": "cab-0fa53c7e76d6bbcdabedb7e70b604eb7:6710307332802228265",
+          "name": "Fx_GuangQuan_59_1",
+          "output": {
+            "bytes": 3194,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/cd6392bbab151999ea5c.mat",
+            "sha256": "dc2047fa60c9388251d3a9c73732c56959d5de90334304cc7a6a297277cf7665"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/cd6392bbab151999ea5c.mat.meta",
+            "sha256": "ea0b3d6f56aebb23cf33e95f171fc9f74d5a98d55ff4202e3d30544b90240527"
+          },
+          "payload_sha256": "be11f8bd62e5040301dbd44c94292809532e449cdf060b68a8011dd18057761b",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "222710ebd4ee9184a958cc44fb18817f",
+              "output_guid": "16b35ec40da2e7fbc7dd23143f58f674",
+              "source": {
+                "cab": "CAB-0fa53c7e76d6bbcdabedb7e70b604eb7",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_c906dce2233465732c765bcbba3877b3.bundle",
+                "mips": 9,
+                "name": "Fx_GuangQuan_59_1",
+                "object_sha256": "5a94947e7493252deadcbcc397a3c7ad7b5578748b02e9abeb42d31c7d3ce126",
+                "path_id": "6467647941241945396",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            }
+          ]
+        },
+        {
+          "export": {
+            "bytes": 3276,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_QiLang_126_NB_8_B.mat",
+            "sha256": "ce786d68efa98e02f29dcf55ac2c796f22613ac48dfc2d6c562966ef1adb7377"
+          },
+          "identity": "cab-0fa53c7e76d6bbcdabedb7e70b604eb7:8132547579015209459",
+          "name": "Fx_QiLang_126_NB_8_B",
+          "output": {
+            "bytes": 3276,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/1a2374376710dbce25ae.mat",
+            "sha256": "acd5efd815a1e08bec822856fa475ce70d21732935c9a6ea8eb0432759c38062"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/1a2374376710dbce25ae.mat.meta",
+            "sha256": "236f08fd9eb9de28f0cd64356712060a3e007aefed7d12da52bdfd158e26663d"
+          },
+          "payload_sha256": "a03f949ff5fe01f6b96cfa0546fd8c5845c9ebd157cc01a93941a0d21e677c46",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "99f7ad2d4fd681c419653cd2a5ce46aa",
+              "output_guid": "a71e9db6bee64b6e87efcd43203de4c1",
+              "source": {
+                "cab": "CAB-4340d25f20bcdfebbfb2dc76aff405ed",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_b64a930b8e9b1d23c56285115f5d061b.bundle",
+                "mips": 9,
+                "name": "Fx_QiLang_126",
+                "object_sha256": "91c538f9aa8a1b7843ee639512779fbc024b9eae2e506545d83e63ed5493c723",
+                "path_id": "7579536296150802854",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            }
+          ]
+        },
+        {
+          "export": {
+            "bytes": 4528,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_GuangYun_60.mat",
+            "sha256": "9813b7d058415f6edbb6b064993dab9077ebe0136506025fb8a5fa26080ee112"
+          },
+          "identity": "cab-12048b3d329293291cf2b415ff45aac0:7124562974119593989",
+          "name": "Fx_GuangYun_60",
+          "output": {
+            "bytes": 4528,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/bc2188f09c709a5c9c28.mat",
+            "sha256": "a24033fa00170f071de66a26a8d0644ebce2dcf1a66985a59b9818b1ae40170a"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/bc2188f09c709a5c9c28.mat.meta",
+            "sha256": "0adf1dcdb5230e4e132a93fd15bdbe97fde0a0886175bffa06976004e78bf236"
+          },
+          "payload_sha256": "c99e5f9abee54df9187dd93853f9072e9378c18874ba6b4b9c94f4472756d4e3",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "a12edae8070f3b24484ff7374bc6ff78",
+              "output_guid": "9d78136673f0cc9038cdccad0cab408f",
+              "source": {
+                "cab": "CAB-14c358c62ee85b1fd9be104316e65a60",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_d1c442eed92b5813c6c11f0b3b90b71c.bundle",
+                "mips": 9,
+                "name": "Fx_GuangYun_60",
+                "object_sha256": "5c6f0a057529b394950c3b78c883b3fd08f843c8c0f363df8dc9e5d1d195d666",
+                "path_id": "-6164036980351034518",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            },
+            {
+              "guid": "b16eb85d9148e0b4d8fd248bd7ae5d0a",
+              "output_guid": "01c59e8032d4a75ebf6e560872df459e",
+              "source": {
+                "cab": "CAB-6f378fa75ea88bced392a7a49f5a7bec",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_dfb08039e642be5b2980601f46a464c9.bundle",
+                "mips": 9,
+                "name": "Fx_Mask_02",
+                "object_sha256": "bb3ccfe811df107d24ea8e3535f7c13e1c6bb9f8d33a5eb051edbc96c5eb6fa7",
+                "path_id": "7755796040788465701",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            }
+          ]
+        },
+        {
+          "export": {
+            "bytes": 3252,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_GuangDian_22_0.mat",
+            "sha256": "18cda3787bd338301772a9a6c8b83f969eff182285c9f96acb06d6615faac262"
+          },
+          "identity": "cab-58b7ad59853fc466b1d336a3722c5356:-5555193328368527501",
+          "name": "Fx_GuangDian_22",
+          "output": {
+            "bytes": 3252,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/f9978f530f4861d83814.mat",
+            "sha256": "3df2b2396b69f01b5b06bf9243b0aae813e6d2b002aed1cd6db6d51b8282ad95"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/f9978f530f4861d83814.mat.meta",
+            "sha256": "7fa2fc4081e6ea5116afe7f98efb28abf6af663a8b1859fdaafb6a9319162d86"
+          },
+          "payload_sha256": "98f5df870747264e20640a507932ccd87f8544201703e10443985a8a75091108",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "44bbbef0de28a6b45b8689fb5ccc6a75",
+              "output_guid": "6f168b673f2a237d3a8f5703fb7c8055",
+              "source": {
+                "cab": "CAB-bdb0e681bcb83fc387524c56375bedb7",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 128,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_d9fedd8211934cebc0a3f8646c153197.bundle",
+                "mips": 8,
+                "name": "Fx_GuangDian_22",
+                "object_sha256": "a7355ec41d65d407d2e8835f9273ee2db79aadd2c6ebe30607b5e1befddcbb27",
+                "path_id": "-9044906526440537553",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 128
+              }
+            }
+          ]
+        },
+        {
+          "export": {
+            "bytes": 3190,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_GuangQuan_59_3.mat",
+            "sha256": "335f2f37e6933e58ef7be877b2ace1af92e443d4f04a8247ab3431848242e320"
+          },
+          "identity": "cab-b064ed53c8b161ce62a07bfb429a431a:2499401343910126137",
+          "name": "Fx_GuangQuan_59_3",
+          "output": {
+            "bytes": 3190,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/dceeccf62462bc3e15bd.mat",
+            "sha256": "689cb3daa06660f8c33a9dcf34fab15daaee37899422df4b2499ecb72d0a23a2"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/dceeccf62462bc3e15bd.mat.meta",
+            "sha256": "11c2046a8f6b3058297472caa0cc64069abfee3000729bd8cc209d0c8320a86f"
+          },
+          "payload_sha256": "23f81a352bd519d1982091287f2a0e965c0e753a24a1b5f72d40c40b73130046",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "d6e8ffbfd7620f64f9a07e3ab827e683",
+              "output_guid": "4a768e4bac57c058b01e3dfa30e4bb64",
+              "source": {
+                "cab": "CAB-e9a765cbc57fba936816f4c7ef10358c",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_51e83e38d43d101eaa1010bd3a3932d8.bundle",
+                "mips": 1,
+                "name": "Fx_GuangQuan_59_3",
+                "object_sha256": "bde2ea8c91a3b66b81ee4c075c8e691b890a3b8cb31d16120922a1a6e340ad50",
+                "path_id": "-7157444114214028703",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            }
+          ]
+        }
+      ],
+      "meshes": [
+        {
+          "export": {
+            "bytes": 7566,
+            "path": "ExportedProject/Assets/Effect/models/Cylinder001_3.asset",
+            "sha256": "ebaa4e175f71fce73e3cafe6a73fca92ae35a0abf7c6aa9f11bf5ad2ee540405"
+          },
+          "identity": "cab-acc3b3b396ba7840fe113a303e91fc8a:-4749387427849380699",
+          "name": "Cylinder001",
+          "output": {
+            "bytes": 7566,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Meshes/bb16f7a473691245859e.asset",
+            "sha256": "ebaa4e175f71fce73e3cafe6a73fca92ae35a0abf7c6aa9f11bf5ad2ee540405"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Meshes/bb16f7a473691245859e.asset.meta",
+            "sha256": "e10842e7fee003f1b1674b7881456ff225bd4597e07cd43b84789c11ae3732b3"
+          },
+          "payload_sha256": "4814c2a5662332c90da1a1f7de013be96ecf1121713e83aee7827c80926c3553"
+        }
+      ],
+      "official_asset": {
+        "address": "",
+        "bundle": "defaultpackage_assets_prefabs_playables_displaypackage_story_npcanimator_playable_npc_disappear.bundle",
+        "guid": "9b248cde91299ee4287533b25b7dd468",
+        "path": "Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_disappear.prefab",
+        "tags": [
+          "Payd_Priority"
+        ]
+      },
+      "official_guid": "9b248cde91299ee4287533b25b7dd468",
+      "official_source": {
+        "bundle": "defaultpackage_assets_prefabs_playables_displaypackage_story_npcanimator_playable_npc_disappear.bundle",
+        "bundle_hash": "c0cab0d2374b8dfc52655b1a6d87eb5c",
+        "bundle_sha256": "0589b9837fb421b5d48d3fa856016148fee20edfa4c964637d7df2d7745cf406",
+        "bundle_size": 5145,
+        "manifest": "884_156692",
+        "origin": "official_cdn",
+        "path_id": "-1586527171097934306",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/c0cab0d2374b8dfc52655b1a6d87eb5c.bundle"
+      },
+      "output": {
+        "bytes": 455182,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Prefabs/playable_npc_disappear.prefab",
+        "sha256": "8d0e4c34db31907ba1b1d278691413ff8038adffe3d34c6ee81d37826c8167f9"
+      },
+      "output_meta": {
+        "bytes": 151,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Prefabs/playable_npc_disappear.prefab.meta",
+        "sha256": "8846966dcd81b8ca818e6ce27f8de929fc5a5c27069f8e4f8dcd29209c74b57a"
+      },
+      "root_payload_sha256": "d49f0e1a787f9a4824aeeebc76eadb9b7b294653be31e01223f192b817f33b8a",
+      "source_scripts": {
+        "ApplyBySource": 2,
+        "ApplyEnableOnPlay": 2,
+        "ApplyOnStopFadeOut": 1,
+        "MyPlayableActiveBone": 1,
+        "MyPlayableAnimator": 1,
+        "MyPlayableFollowBone": 2,
+        "MyPlayableSequence": 1,
+        "MyPlayableSound": 1
+      }
+    },
+    {
+      "event": {
+        "export": {
+          "bytes": 525,
+          "path": "ExportedProject/Assets/Wwise/ScriptableObjects/Event/C79A391D-164F-4B89-87BA-7EC819D33FFB.asset",
+          "sha256": "430f48c8d78e86ed37ab07c9c4588ec0504ae5b5d615ac670634c17fd1f7a5e3"
+        },
+        "export_meta": {
+          "bytes": 280,
+          "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/C79A391D-164F-4B89-87BA-7EC819D33FFB.asset.meta",
+          "sha256": "98aa86ca52653e2a19c18b5bd5abbc1156ec150ce3d83ebae72f8260c42e4366"
+        },
+        "output": {
+          "bytes": 523,
+          "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Audio/C79A391D-164F-4B89-87BA-7EC819D33FFB.asset",
+          "sha256": "3aaeb3fb5947bf68a4e701947a15c963c27aeeaead4910931aec85918686b06d"
+        },
+        "output_meta": {
+          "bytes": 186,
+          "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Audio/C79A391D-164F-4B89-87BA-7EC819D33FFB.asset.meta",
+          "sha256": "b3fcd292759e9af4ffe843cbe1a6dfc607ec509a36c9313866acadca37a72b46"
+        },
+        "source": {
+          "guid": "C79A391D-164F-4B89-87BA-7EC819D33FFB",
+          "id": 2315213594,
+          "name": "Map_Action_PinkFlash_2"
+        }
+      },
+      "export": {
+        "bytes": 626856,
+        "path": "ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_FeiLe_disappear.prefab",
+        "sha256": "08af9cf6b8cb90cd684ae7586d142408cd9b1debfa69644301c1b55708381de8"
+      },
+      "export_meta": {
+        "bytes": 388,
+        "path": "ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_FeiLe_disappear.prefab.meta",
+        "sha256": "6ba35a491475a70d8710d68edaf0c2353e8cd09335fb85d5a0fc8c71bee4e769"
+      },
+      "hierarchy_counts": {
+        "GameObject": 19,
+        "MonoBehaviour": 11,
+        "ParticleSystem": 11,
+        "ParticleSystemRenderer": 13,
+        "Transform": 19
+      },
+      "materials": [
+        {
+          "export": {
+            "bytes": 3215,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_Huo_11_1_NB_5_B.mat",
+            "sha256": "2e91c866f2c48406979f8ba0024eede8f627751b6360325a8d9352d632861a89"
+          },
+          "identity": "cab-0293ba5cfc2486cc7d244964b4ec650c:-8938008650529513604",
+          "name": "Fx_Huo_11_1_NB_5_B",
+          "output": {
+            "bytes": 3215,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/94ea01dfedd75602d7fc.mat",
+            "sha256": "6147d735da7e0e5bf7e7bbca003a1ad2faf60a9ae2bb4b9f9d9aa1511e9a7ffa"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/94ea01dfedd75602d7fc.mat.meta",
+            "sha256": "f19ebd2be124a64828f66db80f64fca907272b09076e36e1a96415bb560493a8"
+          },
+          "payload_sha256": "ffa63726c3b07ce15f8a74fc8d4020fe2d64c8441678f4ad13ed45a236c4ca45",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "f6aa733643385be40b73cc130c4073be",
+              "output_guid": "955e8d2ef4b08a5f9d7410195b5d16c9",
+              "source": {
+                "cab": "CAB-6bb7896dcf9a9f4ecb628398580be2ad",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 512,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_7c775959eb83c261b8292c04e443a17c.bundle",
+                "mips": 10,
+                "name": "Fx_Huo_11_1",
+                "object_sha256": "079b90ba39d9472b1662c4a269998936c2f86793d994e20eba9906076e32e97f",
+                "path_id": "8821636287783317221",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 512
+              }
+            }
+          ]
+        },
+        {
+          "export": {
+            "bytes": 3194,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_GuangQuan_196_NB_5.mat",
+            "sha256": "390b1466a3788c03848dbc1b0c89242ff18d2f977c394a0f6d1c958d43fd4775"
+          },
+          "identity": "cab-322ec57feed76ce92c543161e5c1e144:6161837345503615178",
+          "name": "Fx_GuangQuan_196_NB_5",
+          "output": {
+            "bytes": 3194,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/3e188940c667ad0f57ef.mat",
+            "sha256": "c95dd280bba9a70946fa4acd33e16b816cd538232ef831750507fadcb76af795"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/3e188940c667ad0f57ef.mat.meta",
+            "sha256": "9b4fecffff9d518dff0ee26d9125f5347a7ea9ebb8eb3f9b2483ef57446ef473"
+          },
+          "payload_sha256": "4c6eebd889063c491f5cbb1296c202a33fb4424444cf15ba1599ea07f7a9db7e",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "708cce2e3cc8a1f4f861658cfebe1090",
+              "output_guid": "d96e6854bf57bb4912040de99068016d",
+              "source": {
+                "cab": "CAB-29728792328f8fc26f2c01841e48ca9a",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 512,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_d328ad9af0ee4ac29cd3ed8518a4e7bd.bundle",
+                "mips": 1,
+                "name": "Fx_GuangQuan_196",
+                "object_sha256": "0ac5ce7780819cdfb167777a95778be616b0f3ea525e743b9ec74dfba2fe48a0",
+                "path_id": "3508753104322790093",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 512
+              }
+            }
+          ]
+        },
+        {
+          "export": {
+            "bytes": 3413,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_GuangDian_0003_5.mat",
+            "sha256": "889aad461d5a4c41070987e4836f4f7c6f016d63e2da012edf5145cd9bd537d6"
+          },
+          "identity": "cab-60cef8f6e9fe6fd38ae6e3b0901dad67:3350657721254414277",
+          "name": "Fx_GuangDian_0003_5",
+          "output": {
+            "bytes": 3413,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/66ae952a444650b7cb60.mat",
+            "sha256": "672829462845ee3ca1ecd317cb8964e13e63d25781a892f540258c1355db536d"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/66ae952a444650b7cb60.mat.meta",
+            "sha256": "9e507512fa52d3672f2d6f4d1b19a2f4138855d8ab7fa2de95f78011c7f4adc5"
+          },
+          "payload_sha256": "1db5af901fa16749c1d5cd9c6dad7ccbc750487227bb0f2045139b976dd1ccc0",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "c6cce9378599e81459ad8f132916e5c1",
+              "output_guid": "d3ca16b48678e44781aca262f7079f2d",
+              "source": {
+                "cab": "CAB-58a0b473fd9d468a8f67fad99fd19831",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_63a2adcf08da5c3de2ce707e008beaef.bundle",
+                "mips": 9,
+                "name": "Fx_GuangDian_0003",
+                "object_sha256": "f8bf5170b94324c1ebf0ea1ff46be97c9ac6499a4df86acafc0e173944d6ffc3",
+                "path_id": "-2032958072824436701",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            }
+          ]
+        },
+        {
+          "export": {
+            "bytes": 3218,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_Glow_0609_Jy_2_NB_5_B.mat",
+            "sha256": "cc2bfdc831b7a554909b270e145eaaa18b436cb1cee4065c8e3511db4caed112"
+          },
+          "identity": "cab-7b43974939419bb5ed630f02fef610be:-6009889887122643782",
+          "name": "Fx_Glow_0609_Jy_2_NB_5_B",
+          "output": {
+            "bytes": 3218,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/61d15e17d2c755df0d20.mat",
+            "sha256": "cbb9bf33c393b7bef48a1009667357beded0eaa6aed5418f8c8037d19699b54e"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/61d15e17d2c755df0d20.mat.meta",
+            "sha256": "45a613e4fd43e6c05e5e2156132fd3bce2c174103220b63298abe26c863042af"
+          },
+          "payload_sha256": "73649fda5f6452d5d2a0c17d67505622396fe690996f609f5c40019bcabd747c",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "c33aaaa3ca5945a42b6c97e36d2ec10a",
+              "output_guid": "4c1cdbc20f395d7dcea1e18ef822bda1",
+              "source": {
+                "cab": "CAB-296ca5bb0bcf1f852e8c84943d8bac15",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 128,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_00aa9969a21792f70811a6881520268b.bundle",
+                "mips": 8,
+                "name": "Fx_Glow_0609_Jy_2",
+                "object_sha256": "1a753e1dcd4fe1158b23c0539fd65aea4bef005cda85ab10965e6c37235f8ef3",
+                "path_id": "-6680358084982722800",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 128
+              }
+            }
+          ]
+        },
+        {
+          "export": {
+            "bytes": 3416,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_Tuowei_128_1 1_NB_3_B.mat",
+            "sha256": "26fc967edb29ba6da20719e056aa4fd4eac33f787ca0e3610241bacf22df41c2"
+          },
+          "identity": "cab-7b43974939419bb5ed630f02fef610be:-7733725505097252596",
+          "name": "Fx_Tuowei_128_1 1_NB_3_B",
+          "output": {
+            "bytes": 3416,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/ea86eb8d336ab2bac99c.mat",
+            "sha256": "b4263a9463ad89006f80669be6b0fb24a680bcd8d5d95cba97f6ea4aa5568a89"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/ea86eb8d336ab2bac99c.mat.meta",
+            "sha256": "30c91e0544ce42003c57d1007cc35acad9c5076cfdfb8cb78dc5a50f5a2e760d"
+          },
+          "payload_sha256": "8e83dedd42ed3039b237308f694b67ace2fb2bfd155c205899f6a46c2ab07e08",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "14ac43279fb0c4b42a58c1c1c29d896a",
+              "output_guid": "2ec80c6cf03044f04c11ab7c1d879c90",
+              "source": {
+                "cab": "CAB-ac8f5ed1ed3a4e4cb5f6a1946b302ec3",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 128,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_4b5f3f26108d0e377692c2ae0b6bf818.bundle",
+                "mips": 8,
+                "name": "Fx_Fire_0003 1",
+                "object_sha256": "103df22f00f9fb816725645491aaf1647f0e69ea418ee26bde963087de3fa5e2",
+                "path_id": "-6986255995043029081",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 128
+              }
+            },
+            {
+              "guid": "53ee354995204ad4593d00e5035c9a86",
+              "output_guid": "8e2b449e3e6d16c4f53f49ab0d5f9cbd",
+              "source": {
+                "cab": "CAB-42568bc515c51cc39d8e5305f0e44a52",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_6fc91d524d524e67b33e9fa5ee813a5f.bundle",
+                "mips": 9,
+                "name": "Fx_Mask_0200_Jy",
+                "object_sha256": "6c1df95cc18572b28d82f67915cbcc52fc3e24619d04fb2e1423c2041f680be9",
+                "path_id": "-6138090587282540085",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            },
+            {
+              "guid": "846b8ba0e301f464da524857a4723e29",
+              "output_guid": "6e9f4b43395004b22ab08ec31cb9e2a2",
+              "source": {
+                "cab": "CAB-52b89e3a244d70d24afc1a76ea10e263",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_f4f990658e011e1b802b475a06fbc244.bundle",
+                "mips": 9,
+                "name": "Fx_Mask_MLZ_108",
+                "object_sha256": "3120e9da9422a45aa1d1d7bc42edca473200b755b932a2e47ca7b276e2cfd166",
+                "path_id": "405666186808729768",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            }
+          ]
+        },
+        {
+          "export": {
+            "bytes": 3516,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_SanGuang_0006F 1.mat",
+            "sha256": "565cdb982066922ee629465f78647b80890e4889e8db187bd4d2d32a84b323c2"
+          },
+          "identity": "cab-b869d600a339006eb7cffcac92361aff:4493201609772812816",
+          "name": "Fx_SanGuang_0006F 1",
+          "output": {
+            "bytes": 3516,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/ac2fe1e2cc66e4db093a.mat",
+            "sha256": "a44f8dff587c9609c24fcc80c1fcba446f92911fe890206c0c1468414738467e"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/ac2fe1e2cc66e4db093a.mat.meta",
+            "sha256": "055a4e0599c5ce748a0cbe49a90497794002638a6f978efa8ed32337cf07d9c2"
+          },
+          "payload_sha256": "47650124dea745a82c7f88c875eec1de61e9f492cbfb3e006ef88e0deb3ee26f",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "30847b080f3a94c4c9fce2901167a40d",
+              "output_guid": "058e6f3e060a95e62c001e0df6f365a1",
+              "source": {
+                "cab": "CAB-434d9abb4363429a5215307f98556de5",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_d454e2254e4c90ad1147d945efa204c2.bundle",
+                "mips": 9,
+                "name": "Fx_SanGuang_0006F",
+                "object_sha256": "d98f7fed99106520957f9109af147200aa4ee9d748398c2957d3782de5de074f",
+                "path_id": "1764456835388924129",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            },
+            {
+              "guid": "966e7320d4546994b90a01e60090de2f",
+              "output_guid": "87f5785c35ec83c3587518dac3fbf95b",
+              "source": {
+                "cab": "CAB-f56e0f611887e57af2a926a75691ecb3",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_e8e2b31477ab10749a7d05931691d255.bundle",
+                "mips": 9,
+                "name": "Fx_Mask_02_2",
+                "object_sha256": "ceedbf8d202ebd3fc257ab6a4bb251f352af630f24dd9f72b31b6db02c951e7a",
+                "path_id": "-7938660470362944020",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            },
+            {
+              "guid": "c256212634a1d774ab6dae1677780af7",
+              "output_guid": "73c93ec91027966d1240b77696a35daa",
+              "source": {
+                "cab": "CAB-55640b083ec518810ea23b59a7830868",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 128,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_6d85542d695f6caf499b03ace92d9040.bundle",
+                "mips": 8,
+                "name": "Fx_RaoDon_0012",
+                "object_sha256": "f2d146d682ad4b648b7b1af77a90e5b2f9ff2f9a6dcdc5c8cfe4a3014ba1c608",
+                "path_id": "-4901854042459641645",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 128
+              }
+            }
+          ]
+        },
+        {
+          "export": {
+            "bytes": 3197,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_GuangDian_12_2_NB_8.mat",
+            "sha256": "afa258929a9e3c3d4685201e2cf5453d6fc1fafe57ceb492b631265a4f856aa8"
+          },
+          "identity": "cab-c5c065c3d4ed073172d4db12f58130cd:2434221005107564198",
+          "name": "Fx_GuangDian_12_2_NB_8",
+          "output": {
+            "bytes": 3197,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/cac73377c11c21fd6128.mat",
+            "sha256": "79912c5f64fa01d17d38b3e0f1af3b183a1b7499313e59d8ae01995bd7e97025"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/cac73377c11c21fd6128.mat.meta",
+            "sha256": "6a23c1f214405d36fbaee5c0dde92c3d005d419c398d5e8dd0d523941607a3ad"
+          },
+          "payload_sha256": "d6b99ecd9451413d722a093ba0f660736d603ff7a969bfbc1342702076421a9e",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "ed1e17e705080d34aa625ab4580eb023",
+              "output_guid": "626a003121e41ebef6493be77f162c5d",
+              "source": {
+                "cab": "CAB-51928afaf64aa911cb206e215757b152",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_ef1da31a32e865a89cd31a1cffe0c422.bundle",
+                "mips": 9,
+                "name": "Fx_GuangDian_12_2",
+                "object_sha256": "8e8429a8025b5eeded5004cffed0510210aa350aaebf0698e4c23516dc4ba5de",
+                "path_id": "7780928276603653353",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            }
+          ]
+        },
+        {
+          "export": {
+            "bytes": 11797,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_Glow_0612_Jy.mat",
+            "sha256": "9b9b46121b0ca5e2ac7fa6c27c8bebe473867bcff59dad1d997ae1ab3b85c2fd"
+          },
+          "identity": "cab-eb2c39b32e243df10d5584004e38b366:-5434389461741503630",
+          "name": "Fx_Glow_0612_Jy",
+          "output": {
+            "bytes": 11797,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/22e0f190aad2cead5d20.mat",
+            "sha256": "c949d627ce9ec2197775795bef5fcfc71c67c56a25beb0d575a9aff8c5aba6c1"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/22e0f190aad2cead5d20.mat.meta",
+            "sha256": "a99b1f81bc7a6b586530f78ef99351b2f8690468d9a0433aa76b191fe0b17321"
+          },
+          "payload_sha256": "50302a78ddac98b532608a86eb13f2da2b01a116e469028b741e625f7b14d9c4",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "0ccbc0faf2d4bb74abd73337e19ba703",
+              "output_guid": "aba263c94d39e97bfe9def739e80c2d9",
+              "source": {
+                "cab": "CAB-e2b5dea34ccbef088eb04e864e25aa96",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 128,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_33ff5a747c335cdf30271e5f0a3bc5aa.bundle",
+                "mips": 8,
+                "name": "Fx_Glow_0607_Jy",
+                "object_sha256": "3853457a9b8f3cae55a66654cec7cc7e850bc039eb6980fcce5d1808ffb89892",
+                "path_id": "-6396412636841070684",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 128
+              }
+            }
+          ]
+        },
+        {
+          "export": {
+            "bytes": 3461,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_SanGuang_0001.mat",
+            "sha256": "da64d26cb060983496d03775dbba1013508efd27edc48f0101d04dda2598159f"
+          },
+          "identity": "cab-f7735d0f3fda78206f5ecc30aab190e7:2410436149487172191",
+          "name": "Fx_SanGuang_0001",
+          "output": {
+            "bytes": 3461,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/646dea5d26bd6f0e5cb4.mat",
+            "sha256": "de80361467ca95754f6a2a1ca60a82cca139156987102a0f875ca492c86e6b9b"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/646dea5d26bd6f0e5cb4.mat.meta",
+            "sha256": "28d37185784c1c1c174c10573f7d36dc16c9b7cfc39525def8535904b5f42568"
+          },
+          "payload_sha256": "ecb0fa34ebc626ddc044b753d11be9ddbead952b3f6f1f16da83e56de07d9eac",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "4b1ead14cfd211140b0eb50369eb5c46",
+              "output_guid": "7b96c7204c67014e7d0fbee8a0db22ad",
+              "source": {
+                "cab": "CAB-6ede48b460c1bf425b23d71cd951ed70",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_959bf642bd725a6b2b250f1b5f5ad495.bundle",
+                "mips": 9,
+                "name": "Fx_RaoDon_0003",
+                "object_sha256": "a7937478d4995b01b394750eaee4cfc1c73189d7e0e99d038370c14e39a55ed6",
+                "path_id": "-8744816673249466109",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            },
+            {
+              "guid": "74235a451fa285f4fb1aef61a00c66ff",
+              "output_guid": "487ea4703baa3537f8c6100396edefb7",
+              "source": {
+                "cab": "CAB-e8e2a3504fab27ca0d5ebae3bc89fbeb",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_50234bbb16c41aa2d16dc977cc2e8db7.bundle",
+                "mips": 9,
+                "name": "Fx_SanGuang_0001",
+                "object_sha256": "b15aa69c194114a3883dd41652f6c489a1642a4ba5b5d1ed1a96015f9ef26406",
+                "path_id": "6089464755034186923",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            }
+          ]
+        },
+        {
+          "export": {
+            "bytes": 3194,
+            "path": "ExportedProject/Assets/Effect/Materials/Fx_GuangQuan_104_NB_5.mat",
+            "sha256": "11193c30c60f8f330ab9319e43bf61f47b3a6dc50df04a0787baab91f5f7128a"
+          },
+          "identity": "cab-fbac07e15af177553a18c8d04654aa78:-7370081226024680773",
+          "name": "Fx_GuangQuan_104_NB_5",
+          "output": {
+            "bytes": 3194,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/efa5ddaf311916ce451b.mat",
+            "sha256": "1a91ac33c36477b7ffd45e7694dd256d702a0956ec7f02ab3016b0b9a6a00b3f"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/efa5ddaf311916ce451b.mat.meta",
+            "sha256": "ca907d6cbedb44a7ba19a4e2b290bca0c514c2e0bf0b7a44cd4706939ac876d7"
+          },
+          "payload_sha256": "a097e1e0c98cbce15d5afcc635ac1d74483a90a296840a2474c31d388acf949b",
+          "shader_source": {
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+            "name": "Effect/Noise_Mask_Pro",
+            "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+            "passes": 2,
+            "path_id": "-1464726073327024352",
+            "platforms": [
+              9,
+              18
+            ],
+            "subshaders": 1,
+            "type": "Shader"
+          },
+          "textures": [
+            {
+              "guid": "2708710fb9b3cca47906add1f0666241",
+              "output_guid": "38a9d75fda6f44ae5fc78473f0e39d96",
+              "source": {
+                "cab": "CAB-1e18041c341fb818b9f49248c0043cbb",
+                "dimension": 2,
+                "format": 50,
+                "format_name": "ASTC_RGB_6x6",
+                "height": 256,
+                "images": 1,
+                "input": "inputs/DefaultPackage/defaultpackage_share_68c4ac2a6d601ec2572371dd3d62dd7b.bundle",
+                "mips": 9,
+                "name": "Fx_GuangQuan_104",
+                "object_sha256": "0f36e7889c0d7771375ddf77301236806ee0463ad91e139b250729d5ebbefb95",
+                "path_id": "7051731241419194095",
+                "stripped": 0,
+                "type": "Texture2D",
+                "width": 256
+              }
+            }
+          ]
+        }
+      ],
+      "meshes": [
+        {
+          "export": {
+            "bytes": 7026,
+            "path": "ExportedProject/Assets/Effect/models/Helix01_0.asset",
+            "sha256": "ee6bb5360bb8efe09c469fd7f434a30c7a35db2fc3a6c9356fd0c15a5783cec9"
+          },
+          "identity": "cab-85984ed569a105e95aef634cf07f1144:7740575344759720108",
+          "name": "Helix01",
+          "output": {
+            "bytes": 7026,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Meshes/adb747152e1fa949c004.asset",
+            "sha256": "ee6bb5360bb8efe09c469fd7f434a30c7a35db2fc3a6c9356fd0c15a5783cec9"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Meshes/adb747152e1fa949c004.asset.meta",
+            "sha256": "a5a6f339f331fad13c0ff069e83d5ab9b49126ebeb7e16d5e5ad8bb2983ee5b2"
+          },
+          "payload_sha256": "2135ce3f171ba7e6ff1d6e1a34a2102580d1c9f33f5b2c86c2297c06a3532bc3"
+        },
+        {
+          "export": {
+            "bytes": 3275,
+            "path": "ExportedProject/Assets/Effect/models/Plane01.asset",
+            "sha256": "4804a0d5faf99fc8c78fe419337fdef73f60df3e507e698c63db3e55a7f81bcf"
+          },
+          "identity": "cab-aea353584f0497ade2148105c63849b5:3405415219815800369",
+          "name": "Plane01",
+          "output": {
+            "bytes": 3275,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Meshes/b6050678c4e05983e015.asset",
+            "sha256": "4804a0d5faf99fc8c78fe419337fdef73f60df3e507e698c63db3e55a7f81bcf"
+          },
+          "output_meta": {
+            "bytes": 185,
+            "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Meshes/b6050678c4e05983e015.asset.meta",
+            "sha256": "9f6876cd7df71e735cd7ea6b16f25922d63ac60de541e0c1a2ff3beda2803a23"
+          },
+          "payload_sha256": "97629539fef74030548d4a1b7268d200a725c5798045a273cbb25084efa960d6"
+        }
+      ],
+      "official_asset": {
+        "address": "",
+        "bundle": "defaultpackage_assets_prefabs_playables_displaypackage_story_npcanimator_playable_feile_disappear.bundle",
+        "guid": "5fd5bec6c4f91f54799a4b823888f49a",
+        "path": "Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_FeiLe_disappear.prefab",
+        "tags": [
+          "Payd_Priority"
+        ]
+      },
+      "official_guid": "5fd5bec6c4f91f54799a4b823888f49a",
+      "official_source": {
+        "bundle": "defaultpackage_assets_prefabs_playables_displaypackage_story_npcanimator_playable_feile_disappear.bundle",
+        "bundle_hash": "2ecb2327c8c1835e53ed35c127f427e5",
+        "bundle_sha256": "711f60f1bd1817401485030e1e34a19b81d48da77d4e43fbe95043dde735ab5a",
+        "bundle_size": 7194,
+        "manifest": "884_156692",
+        "origin": "official_cdn",
+        "path_id": "2947843042803664730",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2ecb2327c8c1835e53ed35c127f427e5.bundle"
+      },
+      "output": {
+        "bytes": 626831,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Prefabs/playable_FeiLe_disappear.prefab",
+        "sha256": "6917924dc6ac045a5c9cde3a79ffd280206aacef6a5490223bdc5f5fb8802d70"
+      },
+      "output_meta": {
+        "bytes": 151,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Prefabs/playable_FeiLe_disappear.prefab.meta",
+        "sha256": "3980d0a33e0367c14135b9e179fd514adbbf8e7aeb497551a8537508151652b0"
+      },
+      "root_payload_sha256": "77a10f63bda97b74cc3188abc88c8bbc38365069f4a3a1e1968e0a4401a46d72",
+      "source_scripts": {
+        "ApplyBySource": 2,
+        "ApplyEnableOnPlay": 2,
+        "ApplyOnStopFadeOut": 1,
+        "MyPlayableActiveBone": 1,
+        "MyPlayableAnimator": 1,
+        "MyPlayableFollowBone": 2,
+        "MyPlayableSequence": 1,
+        "MyPlayableSound": 1
+      }
+    }
+  ],
+  "operation": "Restore original Map16 story disappearance prefabs, remap their verified 884 scripts, bind exact Windows textures and shader, preserve the original Wwise event fields, and publish a local GUID catalog.",
+  "outputs": [
+    {
+      "bytes": 707,
+      "path": "unity/Assets/Game/Resources/Map16/Native/native-story-playables-catalog.asset",
+      "sha256": "522eafeb04e8681fa039b7b2d47ae9300fade31b036077126b2847a9b2de6909"
+    },
+    {
+      "bytes": 186,
+      "path": "unity/Assets/Game/Resources/Map16/Native/native-story-playables-catalog.asset.meta",
+      "sha256": "4f6529b4c4fb00e7879fd035f07964bbcd05cf66c6a62da6ed543e9a3ee968e9"
+    },
+    {
+      "bytes": 131,
+      "path": "unity/Assets/Game/Resources/Map16/Native/story-playables.json",
+      "sha256": "3535e5577a84b913881e3d6c2ad232ff9cc3c8d430d328e6287a16400929a3e3"
+    },
+    {
+      "bytes": 155,
+      "path": "unity/Assets/Game/Resources/Map16/Native/story-playables.json.meta",
+      "sha256": "673ee81be0aa829144fea2040d92e35b38290da7a44efc2cae976038d1469c04"
+    },
+    {
+      "bytes": 172,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables.meta",
+      "sha256": "2fa51d655318047f0ec670ad75841fbae6a6ba20cb019bf1b77c4f9e5c793f32"
+    },
+    {
+      "bytes": 172,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Audio.meta",
+      "sha256": "77cd119ac3493320006a8e12acb19dc782f33baf8c65532a53541e8f4c0ac91e"
+    },
+    {
+      "bytes": 523,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Audio/6B99DC6E-8F0E-4DFE-B122-2FBEEE314EEA.asset",
+      "sha256": "d7ebaf09956b9a77fce163ede5dfed9c2f52f1e43c148848f44e33768a51d3dc"
+    },
+    {
+      "bytes": 186,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Audio/6B99DC6E-8F0E-4DFE-B122-2FBEEE314EEA.asset.meta",
+      "sha256": "37212503df791c2c6cd1d20ef915599826761f3ed5e1e06f2e2ff1faea3a82e4"
+    },
+    {
+      "bytes": 523,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Audio/C79A391D-164F-4B89-87BA-7EC819D33FFB.asset",
+      "sha256": "3aaeb3fb5947bf68a4e701947a15c963c27aeeaead4910931aec85918686b06d"
+    },
+    {
+      "bytes": 186,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Audio/C79A391D-164F-4B89-87BA-7EC819D33FFB.asset.meta",
+      "sha256": "b3fcd292759e9af4ffe843cbe1a6dfc607ec509a36c9313866acadca37a72b46"
+    },
+    {
+      "bytes": 172,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials.meta",
+      "sha256": "c1d5aa455b94867ff3f849e58c858f7eb48739b47dcd4c393eba423c4d8b8764"
+    },
+    {
+      "bytes": 3276,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/1a2374376710dbce25ae.mat",
+      "sha256": "acd5efd815a1e08bec822856fa475ce70d21732935c9a6ea8eb0432759c38062"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/1a2374376710dbce25ae.mat.meta",
+      "sha256": "236f08fd9eb9de28f0cd64356712060a3e007aefed7d12da52bdfd158e26663d"
+    },
+    {
+      "bytes": 3218,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/21159b97670f17864310.mat",
+      "sha256": "fe979a2eca693049cd25f55f955c5d03b6cbcbc540114a7752645f042e287aa3"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/21159b97670f17864310.mat.meta",
+      "sha256": "8381a9649d07b750e22d87ddcb25043bf04f11f8cb696b36b07c097c37df4a0d"
+    },
+    {
+      "bytes": 11797,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/22e0f190aad2cead5d20.mat",
+      "sha256": "c949d627ce9ec2197775795bef5fcfc71c67c56a25beb0d575a9aff8c5aba6c1"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/22e0f190aad2cead5d20.mat.meta",
+      "sha256": "a99b1f81bc7a6b586530f78ef99351b2f8690468d9a0433aa76b191fe0b17321"
+    },
+    {
+      "bytes": 3194,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/3e188940c667ad0f57ef.mat",
+      "sha256": "c95dd280bba9a70946fa4acd33e16b816cd538232ef831750507fadcb76af795"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/3e188940c667ad0f57ef.mat.meta",
+      "sha256": "9b4fecffff9d518dff0ee26d9125f5347a7ea9ebb8eb3f9b2483ef57446ef473"
+    },
+    {
+      "bytes": 3218,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/61d15e17d2c755df0d20.mat",
+      "sha256": "cbb9bf33c393b7bef48a1009667357beded0eaa6aed5418f8c8037d19699b54e"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/61d15e17d2c755df0d20.mat.meta",
+      "sha256": "45a613e4fd43e6c05e5e2156132fd3bce2c174103220b63298abe26c863042af"
+    },
+    {
+      "bytes": 3461,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/646dea5d26bd6f0e5cb4.mat",
+      "sha256": "de80361467ca95754f6a2a1ca60a82cca139156987102a0f875ca492c86e6b9b"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/646dea5d26bd6f0e5cb4.mat.meta",
+      "sha256": "28d37185784c1c1c174c10573f7d36dc16c9b7cfc39525def8535904b5f42568"
+    },
+    {
+      "bytes": 3413,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/66ae952a444650b7cb60.mat",
+      "sha256": "672829462845ee3ca1ecd317cb8964e13e63d25781a892f540258c1355db536d"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/66ae952a444650b7cb60.mat.meta",
+      "sha256": "9e507512fa52d3672f2d6f4d1b19a2f4138855d8ab7fa2de95f78011c7f4adc5"
+    },
+    {
+      "bytes": 3215,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/94ea01dfedd75602d7fc.mat",
+      "sha256": "6147d735da7e0e5bf7e7bbca003a1ad2faf60a9ae2bb4b9f9d9aa1511e9a7ffa"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/94ea01dfedd75602d7fc.mat.meta",
+      "sha256": "f19ebd2be124a64828f66db80f64fca907272b09076e36e1a96415bb560493a8"
+    },
+    {
+      "bytes": 3516,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/ac2fe1e2cc66e4db093a.mat",
+      "sha256": "a44f8dff587c9609c24fcc80c1fcba446f92911fe890206c0c1468414738467e"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/ac2fe1e2cc66e4db093a.mat.meta",
+      "sha256": "055a4e0599c5ce748a0cbe49a90497794002638a6f978efa8ed32337cf07d9c2"
+    },
+    {
+      "bytes": 4528,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/bc2188f09c709a5c9c28.mat",
+      "sha256": "a24033fa00170f071de66a26a8d0644ebce2dcf1a66985a59b9818b1ae40170a"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/bc2188f09c709a5c9c28.mat.meta",
+      "sha256": "0adf1dcdb5230e4e132a93fd15bdbe97fde0a0886175bffa06976004e78bf236"
+    },
+    {
+      "bytes": 3413,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/c2db938c28a24418630b.mat",
+      "sha256": "eb43f05377b24c9bf6cd7328ddd0ead333468439aa17d49329fb7ddce3bc5d05"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/c2db938c28a24418630b.mat.meta",
+      "sha256": "ec21d07a6df76fa32f6cbc84509a53f1344ae2300ebf102aafcba496e5296f9b"
+    },
+    {
+      "bytes": 3197,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/cac73377c11c21fd6128.mat",
+      "sha256": "79912c5f64fa01d17d38b3e0f1af3b183a1b7499313e59d8ae01995bd7e97025"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/cac73377c11c21fd6128.mat.meta",
+      "sha256": "6a23c1f214405d36fbaee5c0dde92c3d005d419c398d5e8dd0d523941607a3ad"
+    },
+    {
+      "bytes": 3194,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/cd6392bbab151999ea5c.mat",
+      "sha256": "dc2047fa60c9388251d3a9c73732c56959d5de90334304cc7a6a297277cf7665"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/cd6392bbab151999ea5c.mat.meta",
+      "sha256": "ea0b3d6f56aebb23cf33e95f171fc9f74d5a98d55ff4202e3d30544b90240527"
+    },
+    {
+      "bytes": 3190,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/dceeccf62462bc3e15bd.mat",
+      "sha256": "689cb3daa06660f8c33a9dcf34fab15daaee37899422df4b2499ecb72d0a23a2"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/dceeccf62462bc3e15bd.mat.meta",
+      "sha256": "11c2046a8f6b3058297472caa0cc64069abfee3000729bd8cc209d0c8320a86f"
+    },
+    {
+      "bytes": 3416,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/ea86eb8d336ab2bac99c.mat",
+      "sha256": "b4263a9463ad89006f80669be6b0fb24a680bcd8d5d95cba97f6ea4aa5568a89"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/ea86eb8d336ab2bac99c.mat.meta",
+      "sha256": "30c91e0544ce42003c57d1007cc35acad9c5076cfdfb8cb78dc5a50f5a2e760d"
+    },
+    {
+      "bytes": 3194,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/efa5ddaf311916ce451b.mat",
+      "sha256": "1a91ac33c36477b7ffd45e7694dd256d702a0956ec7f02ab3016b0b9a6a00b3f"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/efa5ddaf311916ce451b.mat.meta",
+      "sha256": "ca907d6cbedb44a7ba19a4e2b290bca0c514c2e0bf0b7a44cd4706939ac876d7"
+    },
+    {
+      "bytes": 3252,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/f9978f530f4861d83814.mat",
+      "sha256": "3df2b2396b69f01b5b06bf9243b0aae813e6d2b002aed1cd6db6d51b8282ad95"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Materials/f9978f530f4861d83814.mat.meta",
+      "sha256": "7fa2fc4081e6ea5116afe7f98efb28abf6af663a8b1859fdaafb6a9319162d86"
+    },
+    {
+      "bytes": 172,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Meshes.meta",
+      "sha256": "f410b1d1986ed08b9f50f3b25ae91219e1580e26b4a13f2b1ddc498eb259fba3"
+    },
+    {
+      "bytes": 7026,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Meshes/adb747152e1fa949c004.asset",
+      "sha256": "ee6bb5360bb8efe09c469fd7f434a30c7a35db2fc3a6c9356fd0c15a5783cec9"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Meshes/adb747152e1fa949c004.asset.meta",
+      "sha256": "a5a6f339f331fad13c0ff069e83d5ab9b49126ebeb7e16d5e5ad8bb2983ee5b2"
+    },
+    {
+      "bytes": 3275,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Meshes/b6050678c4e05983e015.asset",
+      "sha256": "4804a0d5faf99fc8c78fe419337fdef73f60df3e507e698c63db3e55a7f81bcf"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Meshes/b6050678c4e05983e015.asset.meta",
+      "sha256": "9f6876cd7df71e735cd7ea6b16f25922d63ac60de541e0c1a2ff3beda2803a23"
+    },
+    {
+      "bytes": 7566,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Meshes/bb16f7a473691245859e.asset",
+      "sha256": "ebaa4e175f71fce73e3cafe6a73fca92ae35a0abf7c6aa9f11bf5ad2ee540405"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Meshes/bb16f7a473691245859e.asset.meta",
+      "sha256": "e10842e7fee003f1b1674b7881456ff225bd4597e07cd43b84789c11ae3732b3"
+    },
+    {
+      "bytes": 172,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Prefabs.meta",
+      "sha256": "871e3fbd6163ff65f529a515faeff25a4e51ee2a90a9a416dcee965a1f9283da"
+    },
+    {
+      "bytes": 626831,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Prefabs/playable_FeiLe_disappear.prefab",
+      "sha256": "6917924dc6ac045a5c9cde3a79ffd280206aacef6a5490223bdc5f5fb8802d70"
+    },
+    {
+      "bytes": 151,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Prefabs/playable_FeiLe_disappear.prefab.meta",
+      "sha256": "3980d0a33e0367c14135b9e179fd514adbbf8e7aeb497551a8537508151652b0"
+    },
+    {
+      "bytes": 455182,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Prefabs/playable_npc_disappear.prefab",
+      "sha256": "8d0e4c34db31907ba1b1d278691413ff8038adffe3d34c6ee81d37826c8167f9"
+    },
+    {
+      "bytes": 151,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Prefabs/playable_npc_disappear.prefab.meta",
+      "sha256": "8846966dcd81b8ca818e6ce27f8de929fc5a5c27069f8e4f8dcd29209c74b57a"
+    },
+    {
+      "bytes": 172,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Shaders.meta",
+      "sha256": "e055a608a44816520d892d4191043987d988e334b50154f77a036d38647d19e8"
+    },
+    {
+      "bytes": 4444607,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Shaders/Noise_Mask_Pro.shader",
+      "sha256": "5eb0117bec984f7b689d932e8bada7b860958efb06ff22d129cd798f3f0157ad"
+    },
+    {
+      "bytes": 151,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Shaders/Noise_Mask_Pro.shader.meta",
+      "sha256": "53adc6bbf8e15964c926d9c3fdd6931336a732eba9dd6ea20c1a6204eb2501cd"
+    },
+    {
+      "bytes": 172,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures.meta",
+      "sha256": "96942f35048ef57ea58990acdd1ed86e7bb5636a13546e6d584aa3e1dcf30f46"
+    },
+    {
+      "bytes": 699981,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/07dd6f6db273818d9d14.asset",
+      "sha256": "07be3d12c73faa67531e8546de0bc673b2f2fa66aa99d323a9d09df9ad00618f"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/07dd6f6db273818d9d14.asset.meta",
+      "sha256": "9b6d98b4303cd249227ab383458b69446fc9457dddb5342a398a645c7d377908"
+    },
+    {
+      "bytes": 175692,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/10b0ad35122d6bb85884.asset",
+      "sha256": "03f959726ec04c415547dad6bb837f000efd8115b4380be5ceb1bfa6f428a858"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/10b0ad35122d6bb85884.asset.meta",
+      "sha256": "0f39855f0bbfc0bfd42cdeddbd4357e9a3c19658b5df2b98d72dbf62f6d0c088"
+    },
+    {
+      "bytes": 699984,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/199af1a3bc9b5fe6f021.asset",
+      "sha256": "30bd045ebbc7063aa0905733886a8449ea7baa59b3d88ad42abca20ff9933ad4"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/199af1a3bc9b5fe6f021.asset.meta",
+      "sha256": "5e83d658e1e4ccdcbb47222a37cfec5c8864a1d2e1e0f8791c0e304e82fe178d"
+    },
+    {
+      "bytes": 699982,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/22f338f7eee13b3e3769.asset",
+      "sha256": "0c359a181490217b30cc871ed4e72fa3da859527b6a810a0b599f4be62b40203"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/22f338f7eee13b3e3769.asset.meta",
+      "sha256": "bb9152182eed68e8cafa5130040f8645ffd569874475a9196fe2ca5654d7d9da"
+    },
+    {
+      "bytes": 699979,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/25a16013180801382188.asset",
+      "sha256": "9d035ba009bcefd12a3599ae0e4ed026305bfd90f45dc84151155b471c3cf2b6"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/25a16013180801382188.asset.meta",
+      "sha256": "e8834ee8eeaa2a45157a5c4377ed199e60093374f257f0615fa3eaeaf8d6a508"
+    },
+    {
+      "bytes": 699982,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/352ab042c00141395d89.asset",
+      "sha256": "f2d8396d1ef6818d468949d739c580da21e8d4bf9fa9ee56f6df9f61360a2968"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/352ab042c00141395d89.asset.meta",
+      "sha256": "448a62e3e813aaac9f8135ea7f2301c6ef5f7cf1b7e95d23860ecd85316b085e"
+    },
+    {
+      "bytes": 2098089,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/389629288d460e4a6ea9.asset",
+      "sha256": "419c45c27d8a50e8e6520f29592c5ef313c12835ab11e0f4fa435b0178030696"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/389629288d460e4a6ea9.asset.meta",
+      "sha256": "d35b9177bf40ccdfe76b09f3ee4251cfd09f5d2bf70b5ec7e6d4a8afb0367409"
+    },
+    {
+      "bytes": 2797136,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/4111f7871e00ac3394d6.asset",
+      "sha256": "9c4799155d2f15995de733f3431d31c7f533d7919869441eea510c8edbdc1291"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/4111f7871e00ac3394d6.asset.meta",
+      "sha256": "6561f4d2982d44913dc7aab22b37e0362570606d72efb3b1a537f1d20facdd21"
+    },
+    {
+      "bytes": 699977,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/4b5bb5d526aed822baf7.asset",
+      "sha256": "5001a91c2ea6723414d0a781dbcaeb1a8e5508bffe769a03371679b9a88d1c8b"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/4b5bb5d526aed822baf7.asset.meta",
+      "sha256": "96f4e7e9b189253e61c808dd855d9340e8697cbb34c2a8ab9fb44ae37db88d35"
+    },
+    {
+      "bytes": 699981,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/5f41dcebb9d4aade95d8.asset",
+      "sha256": "2815f97095d0a441ab8638884adee97625dd98e1b73c9fb320673896dee8d3ed"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/5f41dcebb9d4aade95d8.asset.meta",
+      "sha256": "afce98c5d59ff4100d280070fccd9813502b76a164f6c5783c64f18296c76c9a"
+    },
+    {
+      "bytes": 175692,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/60fb6c1730b0774e0e23.asset",
+      "sha256": "d1d9a1aa8599d8a2efa60968abd2606d68b1fa16c65ed44f58ae6bc931bc68a0"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/60fb6c1730b0774e0e23.asset.meta",
+      "sha256": "09afb6559a788022448a99a51581683f1f331e9a89a75fe8384d2e699f05dc09"
+    },
+    {
+      "bytes": 699979,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/67da0d4568dcedb306d8.asset",
+      "sha256": "ebcfa26c00dd22d1427c9caf78760c5f67eee0b30799d12f679fd0ee900be75b"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/67da0d4568dcedb306d8.asset.meta",
+      "sha256": "2093e5d04b4a19255c743b081c91b16b68245dbece6a43a8d3fa5440afdaf4a1"
+    },
+    {
+      "bytes": 699984,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/763c37cfd25dc8d361af.asset",
+      "sha256": "553be1fed7abcb77336ff57028ce4d7c42d0f9f16e9ee6d33a41c37681f7f158"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/763c37cfd25dc8d361af.asset.meta",
+      "sha256": "0c4e3df92753eb51b046c1393e705c88e821efa3c26376ff6bbe9dacc4897222"
+    },
+    {
+      "bytes": 699980,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/7c2d0ac70c5f87e102be.asset",
+      "sha256": "dac23de478bd2fbecc1df8d1ce9fe804336eb1474b30e993bb1a4eb163f7cb21"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/7c2d0ac70c5f87e102be.asset.meta",
+      "sha256": "ed1644a9364a4dc9cedad84c9d2db7e2df0dff281c2a084574cf040f99364b7d"
+    },
+    {
+      "bytes": 175691,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/80c9cd8407304d1030c4.asset",
+      "sha256": "3b164d56fa61ce414fe4dd9790caaa28c6dcb5a099ebff968ef3931cae241456"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/80c9cd8407304d1030c4.asset.meta",
+      "sha256": "d7505929415f7d52b678b3c40e34c32660ea60c2e9a4d3072cf0f9a726d276f1"
+    },
+    {
+      "bytes": 175694,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/831fbe3ee10e6e73c33b.asset",
+      "sha256": "c2433833b98c4d3d05f3c9ebe975e52efa2b721a11aaec6bdf3f72109c7a820d"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/831fbe3ee10e6e73c33b.asset.meta",
+      "sha256": "5fba0eab1da53b8057eef9207bafba365251959d676268d60a20cd4254baf2c3"
+    },
+    {
+      "bytes": 699983,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/8e4853f4a24beeed1b67.asset",
+      "sha256": "a29345e2fe43502efb31e998ff73efe2ed695721f1769b5866c83e5033840322"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/8e4853f4a24beeed1b67.asset.meta",
+      "sha256": "e02e7bd10872f0483a5dd363bec392bf3c285cbe0b69d533d840aeb6858e275a"
+    },
+    {
+      "bytes": 699982,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/923e72e120dca2d07028.asset",
+      "sha256": "f516bd4079d4931090d6ff1cb5b0c65bb4bf1c809379544608efc39900d36566"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/923e72e120dca2d07028.asset.meta",
+      "sha256": "074ff2c1d379fbe36d305c13a24f903f82a81e669540ec5a75ad42a9f8af0f6a"
+    },
+    {
+      "bytes": 699984,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/9b9827b6623d54532de4.asset",
+      "sha256": "76dfea6b6c237b7bed8391ebb9df57cdc98503135d096955a72fb084c572a13f"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/9b9827b6623d54532de4.asset.meta",
+      "sha256": "9c825a154658550bbd169ed267beb25c960444fa5181e88abce3efbe156013a4"
+    },
+    {
+      "bytes": 699983,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/9e0f274a38a20d6693b0.asset",
+      "sha256": "691c27b7a01ee718497c4a4f0d231a0ba2ea245faf57cd2d2c09f1225dbb4a3e"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/9e0f274a38a20d6693b0.asset.meta",
+      "sha256": "5678fc942d4659890283a722e7759caeac010e27e9681d64f6b3107176b4bf94"
+    },
+    {
+      "bytes": 175691,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/a2e7f676b3729f84e908.asset",
+      "sha256": "38ae998465b50dccab15f9006b3a4636f377752948a51f97e8af7df45834a2fd"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/a2e7f676b3729f84e908.asset.meta",
+      "sha256": "2ca163959533007ca1f9af9e9c5e1b9574d10d860e7f91895b6a376d9fedfea1"
+    },
+    {
+      "bytes": 699984,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/b1a9f796b175ba4cc61f.asset",
+      "sha256": "d023e1bb4d4847c00c0f1e977e9918344c68635fe29948c7e9d469a24d419f30"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/b1a9f796b175ba4cc61f.asset.meta",
+      "sha256": "df8615bdf401a896ad5f9033fe858f483fc31b9b834d0ae009bbe4af2c13c643"
+    },
+    {
+      "bytes": 525224,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/b1eb22fb1dd6aa532e02.asset",
+      "sha256": "e5172f0b39482cf511fe1234325f4838543fc5e996416392a5196a86b35e1816"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/b1eb22fb1dd6aa532e02.asset.meta",
+      "sha256": "f903699c0759124422c3f22bac9730ba5d8211e2331e1889c4c83206db799a1e"
+    },
+    {
+      "bytes": 699981,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/b33be8d591f90d2e022f.asset",
+      "sha256": "a8f18380c38846749e056d0030aa701fdfde90a41efe0c6213fbe2eec6437347"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/b33be8d591f90d2e022f.asset.meta",
+      "sha256": "54bacd18cc4082ac18a20152c1fc4934f0abcce5e65eb33330a7dba114eb0489"
+    },
+    {
+      "bytes": 2797133,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/f941c8e11a8af7f2355f.asset",
+      "sha256": "032644cdae01d973cebadf612a24baf378e5d153c64c3bda63fb747355476894"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/f941c8e11a8af7f2355f.asset.meta",
+      "sha256": "7dc51b819053016de72fbe5a0e0fc190ab01dd91b210d82267bfce1c1beacd4a"
+    }
+  ],
+  "scripts": [
+    {
+      "class": "ApplyBySource",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs.meta",
+        "sha256": "d44656ffcbbc7922858a88080ab8c690ded072f406c3acc0784d01fca6de71e1"
+      },
+      "script_guid": "8811547e645bd6980ca21c58c99b9a4a",
+      "source": {
+        "bytes": 929,
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs",
+        "sha256": "650ea193fe5f1143d5b0438d6ad26069f9be64d6753f24d523248908b89d0b20"
+      }
+    },
+    {
+      "class": "ApplyEnableOnPlay",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyEnableOnPlay.cs.meta",
+        "sha256": "4fa001c702d7b8d5a898513d3f5952a935e20cd9787ca96689c1aa9e9b257c94"
+      },
+      "script_guid": "4ffabc222c1794e81a73c669f9215ea1",
+      "source": {
+        "bytes": 1671,
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyEnableOnPlay.cs",
+        "sha256": "9031a17d29199a44af50a2cf289ab70dbf4885c4f238c6e5b3f96d0341f0a77e"
+      }
+    },
+    {
+      "class": "ApplyOnStopFadeOut",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopFadeOut.cs.meta",
+        "sha256": "876de6bd9727d012df10e69446323668893d574733fabda7bf491336c6a66dec"
+      },
+      "script_guid": "81ebc8e099c5a490f7340ec60178cc77",
+      "source": {
+        "bytes": 481,
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopFadeOut.cs",
+        "sha256": "c10011991db0c1c7ef27bdb74eb5f44a491913307f9c65a3cd1a9ddb74e604a0"
+      }
+    },
+    {
+      "class": "MyPlayableActiveBone",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableActiveBone.cs.meta",
+        "sha256": "ee4086b938e7c6691f3581a4e3b37e36a5e7351b5627e77b8b5d89972893b695"
+      },
+      "script_guid": "3a5963523e4fa086d0bd6d9403792f10",
+      "source": {
+        "bytes": 2187,
+        "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableActiveBone.cs",
+        "sha256": "f759c2ab02210bd4340aea45a152480165d1ef9d795445df57958bfe9b2f8f5c"
+      }
+    },
+    {
+      "class": "MyPlayableAnimator",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs.meta",
+        "sha256": "87cfb6242ac3458692cef4e9ebf3803dcc1e8951ced05012bbbe51697ef61532"
+      },
+      "script_guid": "48e0a7dd9c2fa77dda83de3b7e3dce53",
+      "source": {
+        "bytes": 7049,
+        "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs",
+        "sha256": "556de9b57b5684be1ca88df986687b9c7817a2bf79ea4b7def4ccf0268a19489"
+      }
+    },
+    {
+      "class": "MyPlayableFollowBone",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFollowBone.cs.meta",
+        "sha256": "7e7ab1c3b226804894aa591e07078eccaf3499c34d05fe48f68e6b96002db69a"
+      },
+      "script_guid": "a08ad30e138701bc8b6a36c102b7fee5",
+      "source": {
+        "bytes": 13246,
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFollowBone.cs",
+        "sha256": "3ccc330554190f228073d3d8b5412e718e529aa328571368ad20a1800080ac39"
+      }
+    },
+    {
+      "class": "MyPlayableSequence",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs.meta",
+        "sha256": "58ba372bbd79a79b5c7bb3c40858a9e663386a3ac05cfdd760931a3d4af569f0"
+      },
+      "script_guid": "bce1c23b143625ac322a4b9f11594d67",
+      "source": {
+        "bytes": 4888,
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs",
+        "sha256": "f2f3c212ecd384e80c9a2a8f0a82e2251ede2abc8662c954a2c7988190080d42"
+      }
+    },
+    {
+      "class": "MyPlayableSound",
+      "meta": {
+        "bytes": 251,
+        "path": "unity/Assets/Game/Runtime/Official/StorySounds/MyPlayableSound.cs.meta",
+        "sha256": "6d723cee29eeef93753d7323f05b8b75fd61b4640d14e54fc99713a021eb0856"
+      },
+      "script_guid": "cabc4e819ca0894e41470326f33fc671",
+      "source": {
+        "bytes": 1773,
+        "path": "unity/Assets/Game/Runtime/Official/StorySounds/MyPlayableSound.cs",
+        "sha256": "d406bdb27df233456dba4c4bff0a12781e9551b733390eca621e673b8b74c83c"
+      }
+    },
+    {
+      "class": "WwiseEventReference",
+      "meta": {
+        "bytes": 62,
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs.meta",
+        "sha256": "f393e1af77160cb98a16b745897e728620a26cafe5e3033cf0c2d23196a428e3"
+      },
+      "script_guid": "eda62e0b27051dfd578214e537c3c072",
+      "source": {
+        "bytes": 323,
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs",
+        "sha256": "7c7b698a69a8d3eb424dc94a32ab91b7364ca923979f89be53d405ee5f6d9942"
+      }
+    }
+  ],
+  "shader": {
+    "conversion": {
+      "bytes": 4444573,
+      "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/Assets/Shaders/59de19d261370c02044c882aeda72c54bf496caf9dc73bed0a9d6e9339fd6b95.shader",
+      "sha256": "9cb8bfecdb52d69825d8de83232d14e26cb0f2d131e64e9e91d9faf7b78df49c"
+    },
+    "conversion_meta_sha256": "236967865c974be31faff261a945ac8e40f662bf5524213d0e2f256d0ed27629",
+    "output": {
+      "bytes": 4444607,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Shaders/Noise_Mask_Pro.shader",
+      "sha256": "5eb0117bec984f7b689d932e8bada7b860958efb06ff22d129cd798f3f0157ad"
+    },
+    "output_meta": {
+      "bytes": 151,
+      "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Shaders/Noise_Mask_Pro.shader.meta",
+      "sha256": "53adc6bbf8e15964c926d9c3fdd6931336a732eba9dd6ea20c1a6204eb2501cd"
+    },
+    "runtime_name": "Zjcs/Official/World/Map16/StoryPlayables/Noise_Mask_Pro",
+    "source": {
+      "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+      "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+      "name": "Effect/Noise_Mask_Pro",
+      "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+      "passes": 2,
+      "path_id": "-1464726073327024352",
+      "platforms": [
+        9,
+        18
+      ],
+      "subshaders": 1,
+      "type": "Shader"
+    }
+  },
+  "story_source": {
+    "bytes": 224492,
+    "path": "unity/Assets/Official/World/Map/16/Source/story-source.json",
+    "sha256": "734100292801536dcb6365da73721311a4c0983fed8cde7c43d0f03358a96671"
+  },
+  "story_source_receipt": {
+    "bytes": 323942,
+    "path": "assets/reference/official-map/map16-story-source-manifest.json",
+    "sha256": "090d5a29d906bc525b22fb2b628654a645b3c190590ee2f70899a4a4e2ac1809"
+  },
+  "textures": [
+    {
+      "output": {
+        "bytes": 699984,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/763c37cfd25dc8d361af.asset",
+        "sha256": "553be1fed7abcb77336ff57028ce4d7c42d0f9f16e9ee6d33a41c37681f7f158"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/763c37cfd25dc8d361af.asset.meta",
+        "sha256": "0c4e3df92753eb51b046c1393e705c88e821efa3c26376ff6bbe9dacc4897222"
+      },
+      "source": {
+        "cab": "CAB-0fa53c7e76d6bbcdabedb7e70b604eb7",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_c906dce2233465732c765bcbba3877b3.bundle",
+        "mips": 9,
+        "name": "Fx_GuangQuan_59_1",
+        "object_sha256": "5a94947e7493252deadcbcc397a3c7ad7b5578748b02e9abeb42d31c7d3ce126",
+        "path_id": "6467647941241945396",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699984,
+          "path": "Assets/Textures/76/763c37cfd25dc8d361af8fd830c05f4bb51b48ad5fc1c60458104b89f09a2fa8.asset",
+          "sha256": "553be1fed7abcb77336ff57028ce4d7c42d0f9f16e9ee6d33a41c37681f7f158"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/76/763c37cfd25dc8d361af8fd830c05f4bb51b48ad5fc1c60458104b89f09a2fa8.asset.meta",
+          "sha256": "65ab8b8b1209e4fa9502843a68b9788a9546eba52a746e496ca7a57f19505f45"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 699981,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/5f41dcebb9d4aade95d8.asset",
+        "sha256": "2815f97095d0a441ab8638884adee97625dd98e1b73c9fb320673896dee8d3ed"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/5f41dcebb9d4aade95d8.asset.meta",
+        "sha256": "afce98c5d59ff4100d280070fccd9813502b76a164f6c5783c64f18296c76c9a"
+      },
+      "source": {
+        "cab": "CAB-14c358c62ee85b1fd9be104316e65a60",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_d1c442eed92b5813c6c11f0b3b90b71c.bundle",
+        "mips": 9,
+        "name": "Fx_GuangYun_60",
+        "object_sha256": "5c6f0a057529b394950c3b78c883b3fd08f843c8c0f363df8dc9e5d1d195d666",
+        "path_id": "-6164036980351034518",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699981,
+          "path": "Assets/Textures/5f/5f41dcebb9d4aade95d876448fc6c79e077f9c8210967bc5f3eb012e9ba6bb6a.asset",
+          "sha256": "2815f97095d0a441ab8638884adee97625dd98e1b73c9fb320673896dee8d3ed"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/5f/5f41dcebb9d4aade95d876448fc6c79e077f9c8210967bc5f3eb012e9ba6bb6a.asset.meta",
+          "sha256": "1112af0661df64165b7548d25cb3f1023746579f1234995b80efe626a16a7ddf"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 699983,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/8e4853f4a24beeed1b67.asset",
+        "sha256": "a29345e2fe43502efb31e998ff73efe2ed695721f1769b5866c83e5033840322"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/8e4853f4a24beeed1b67.asset.meta",
+        "sha256": "e02e7bd10872f0483a5dd363bec392bf3c285cbe0b69d533d840aeb6858e275a"
+      },
+      "source": {
+        "cab": "CAB-1e18041c341fb818b9f49248c0043cbb",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_68c4ac2a6d601ec2572371dd3d62dd7b.bundle",
+        "mips": 9,
+        "name": "Fx_GuangQuan_104",
+        "object_sha256": "0f36e7889c0d7771375ddf77301236806ee0463ad91e139b250729d5ebbefb95",
+        "path_id": "7051731241419194095",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699983,
+          "path": "Assets/Textures/8e/8e4853f4a24beeed1b675ce369554f1be65fc762be700d8410b83c72fd76a5f0.asset",
+          "sha256": "a29345e2fe43502efb31e998ff73efe2ed695721f1769b5866c83e5033840322"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/8e/8e4853f4a24beeed1b675ce369554f1be65fc762be700d8410b83c72fd76a5f0.asset.meta",
+          "sha256": "166219982cc616d73ab92bcb1d3b0868ee0aab5e35e0c4323a1c073a6eb61b72"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 175694,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/831fbe3ee10e6e73c33b.asset",
+        "sha256": "c2433833b98c4d3d05f3c9ebe975e52efa2b721a11aaec6bdf3f72109c7a820d"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/831fbe3ee10e6e73c33b.asset.meta",
+        "sha256": "5fba0eab1da53b8057eef9207bafba365251959d676268d60a20cd4254baf2c3"
+      },
+      "source": {
+        "cab": "CAB-296ca5bb0bcf1f852e8c84943d8bac15",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 128,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_00aa9969a21792f70811a6881520268b.bundle",
+        "mips": 8,
+        "name": "Fx_Glow_0609_Jy_2",
+        "object_sha256": "1a753e1dcd4fe1158b23c0539fd65aea4bef005cda85ab10965e6c37235f8ef3",
+        "path_id": "-6680358084982722800",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 128
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 175694,
+          "path": "Assets/Textures/83/831fbe3ee10e6e73c33b06fa27649d4540bb487c44c11ddd8138a8545e94094f.asset",
+          "sha256": "c2433833b98c4d3d05f3c9ebe975e52efa2b721a11aaec6bdf3f72109c7a820d"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/83/831fbe3ee10e6e73c33b06fa27649d4540bb487c44c11ddd8138a8545e94094f.asset.meta",
+          "sha256": "4ef9239e329a416b7eaaf360899e37c71a2f85039116ae35b4fb819bb2c406ac"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 2098089,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/389629288d460e4a6ea9.asset",
+        "sha256": "419c45c27d8a50e8e6520f29592c5ef313c12835ab11e0f4fa435b0178030696"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/389629288d460e4a6ea9.asset.meta",
+        "sha256": "d35b9177bf40ccdfe76b09f3ee4251cfd09f5d2bf70b5ec7e6d4a8afb0367409"
+      },
+      "source": {
+        "cab": "CAB-29728792328f8fc26f2c01841e48ca9a",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 512,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_d328ad9af0ee4ac29cd3ed8518a4e7bd.bundle",
+        "mips": 1,
+        "name": "Fx_GuangQuan_196",
+        "object_sha256": "0ac5ce7780819cdfb167777a95778be616b0f3ea525e743b9ec74dfba2fe48a0",
+        "path_id": "3508753104322790093",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 512
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 2098089,
+          "path": "Assets/Textures/38/389629288d460e4a6ea9814652f259852e26b8dc66fb13d00e2d4992143c6e0d.asset",
+          "sha256": "419c45c27d8a50e8e6520f29592c5ef313c12835ab11e0f4fa435b0178030696"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/38/389629288d460e4a6ea9814652f259852e26b8dc66fb13d00e2d4992143c6e0d.asset.meta",
+          "sha256": "3f1d764294f1ea943e26cce25170174519352fcdeb9eaa060bd5f9dde8b4cf1f"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 699981,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/b33be8d591f90d2e022f.asset",
+        "sha256": "a8f18380c38846749e056d0030aa701fdfde90a41efe0c6213fbe2eec6437347"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/b33be8d591f90d2e022f.asset.meta",
+        "sha256": "54bacd18cc4082ac18a20152c1fc4934f0abcce5e65eb33330a7dba114eb0489"
+      },
+      "source": {
+        "cab": "CAB-31279f0d608bf8e7c65b9ee792342f65",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_d8d0255bb89850f43a5b2b03ac9e14ec.bundle",
+        "mips": 9,
+        "name": "Fx_Mask_0005_3",
+        "object_sha256": "8afb772f4cf33b01490f1b6507d2dd6466448f637d942d409f66e5f737f79e3c",
+        "path_id": "-8319716542741231794",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699981,
+          "path": "Assets/Textures/b3/b33be8d591f90d2e022f2c146482c5fae1c1125a4da433d9d00de388fe72ef03.asset",
+          "sha256": "a8f18380c38846749e056d0030aa701fdfde90a41efe0c6213fbe2eec6437347"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/b3/b33be8d591f90d2e022f2c146482c5fae1c1125a4da433d9d00de388fe72ef03.asset.meta",
+          "sha256": "0453029a26f22b896a23a02352c311cc05268de6cb45a49fbac4c43e879fdb95"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 699982,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/352ab042c00141395d89.asset",
+        "sha256": "f2d8396d1ef6818d468949d739c580da21e8d4bf9fa9ee56f6df9f61360a2968"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/352ab042c00141395d89.asset.meta",
+        "sha256": "448a62e3e813aaac9f8135ea7f2301c6ef5f7cf1b7e95d23860ecd85316b085e"
+      },
+      "source": {
+        "cab": "CAB-42568bc515c51cc39d8e5305f0e44a52",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_6fc91d524d524e67b33e9fa5ee813a5f.bundle",
+        "mips": 9,
+        "name": "Fx_Mask_0200_Jy",
+        "object_sha256": "6c1df95cc18572b28d82f67915cbcc52fc3e24619d04fb2e1423c2041f680be9",
+        "path_id": "-6138090587282540085",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699982,
+          "path": "Assets/Textures/35/352ab042c00141395d89e56d85c2cd89b13825284dfa34110040b67bf8700c33.asset",
+          "sha256": "f2d8396d1ef6818d468949d739c580da21e8d4bf9fa9ee56f6df9f61360a2968"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/35/352ab042c00141395d89e56d85c2cd89b13825284dfa34110040b67bf8700c33.asset.meta",
+          "sha256": "67f29ebcb5d493750d2e14747e3d68b8a40c8e1f029cca55c11652b64789d342"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 699980,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/7c2d0ac70c5f87e102be.asset",
+        "sha256": "dac23de478bd2fbecc1df8d1ce9fe804336eb1474b30e993bb1a4eb163f7cb21"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/7c2d0ac70c5f87e102be.asset.meta",
+        "sha256": "ed1644a9364a4dc9cedad84c9d2db7e2df0dff281c2a084574cf040f99364b7d"
+      },
+      "source": {
+        "cab": "CAB-4340d25f20bcdfebbfb2dc76aff405ed",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_b64a930b8e9b1d23c56285115f5d061b.bundle",
+        "mips": 9,
+        "name": "Fx_QiLang_126",
+        "object_sha256": "91c538f9aa8a1b7843ee639512779fbc024b9eae2e506545d83e63ed5493c723",
+        "path_id": "7579536296150802854",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699980,
+          "path": "Assets/Textures/7c/7c2d0ac70c5f87e102bef84bb1129693104b9bf5bce8039759c2f619f725a428.asset",
+          "sha256": "dac23de478bd2fbecc1df8d1ce9fe804336eb1474b30e993bb1a4eb163f7cb21"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/7c/7c2d0ac70c5f87e102bef84bb1129693104b9bf5bce8039759c2f619f725a428.asset.meta",
+          "sha256": "fe9e6ce75894f269d85dcd4f75a3723fe73deea6963f677b8a1c90db8997af20"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 699984,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/9b9827b6623d54532de4.asset",
+        "sha256": "76dfea6b6c237b7bed8391ebb9df57cdc98503135d096955a72fb084c572a13f"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/9b9827b6623d54532de4.asset.meta",
+        "sha256": "9c825a154658550bbd169ed267beb25c960444fa5181e88abce3efbe156013a4"
+      },
+      "source": {
+        "cab": "CAB-434d9abb4363429a5215307f98556de5",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_d454e2254e4c90ad1147d945efa204c2.bundle",
+        "mips": 9,
+        "name": "Fx_SanGuang_0006F",
+        "object_sha256": "d98f7fed99106520957f9109af147200aa4ee9d748398c2957d3782de5de074f",
+        "path_id": "1764456835388924129",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699984,
+          "path": "Assets/Textures/9b/9b9827b6623d54532de4cf2064669cc287ad3a42e2e8cb8e7c73b61abbf9a99a.asset",
+          "sha256": "76dfea6b6c237b7bed8391ebb9df57cdc98503135d096955a72fb084c572a13f"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/9b/9b9827b6623d54532de4cf2064669cc287ad3a42e2e8cb8e7c73b61abbf9a99a.asset.meta",
+          "sha256": "5de3db4fb104b62159a894e58673ebb6cd89c0913cadf56291e3e025c1a34464"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 699984,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/199af1a3bc9b5fe6f021.asset",
+        "sha256": "30bd045ebbc7063aa0905733886a8449ea7baa59b3d88ad42abca20ff9933ad4"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/199af1a3bc9b5fe6f021.asset.meta",
+        "sha256": "5e83d658e1e4ccdcbb47222a37cfec5c8864a1d2e1e0f8791c0e304e82fe178d"
+      },
+      "source": {
+        "cab": "CAB-51928afaf64aa911cb206e215757b152",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_ef1da31a32e865a89cd31a1cffe0c422.bundle",
+        "mips": 9,
+        "name": "Fx_GuangDian_12_2",
+        "object_sha256": "8e8429a8025b5eeded5004cffed0510210aa350aaebf0698e4c23516dc4ba5de",
+        "path_id": "7780928276603653353",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699984,
+          "path": "Assets/Textures/19/199af1a3bc9b5fe6f0210c4a551809ba5b4cd7207d722471e47b13f4985b350e.asset",
+          "sha256": "30bd045ebbc7063aa0905733886a8449ea7baa59b3d88ad42abca20ff9933ad4"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/19/199af1a3bc9b5fe6f0210c4a551809ba5b4cd7207d722471e47b13f4985b350e.asset.meta",
+          "sha256": "b4b31a5629a0d5f39c449bace200b7010b528fab44200f51a745c98d7c97319e"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 699979,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/25a16013180801382188.asset",
+        "sha256": "9d035ba009bcefd12a3599ae0e4ed026305bfd90f45dc84151155b471c3cf2b6"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/25a16013180801382188.asset.meta",
+        "sha256": "e8834ee8eeaa2a45157a5c4377ed199e60093374f257f0615fa3eaeaf8d6a508"
+      },
+      "source": {
+        "cab": "CAB-524773c81a1b4e7ff91cfbc7b8396dd2",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_c89014243701ab6bd3ef5fdce23aaeb2.bundle",
+        "mips": 9,
+        "name": "Fx_Mask_05_C",
+        "object_sha256": "0054b79aa2c73fb57847af828c06d7634b2b216bbf348950991f70d7ac0ca54c",
+        "path_id": "6683587163527741767",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699979,
+          "path": "Assets/Textures/25/25a160131808013821883d44aff9c9e8498c8f5ef98987cd1c4e6154f96ef7e7.asset",
+          "sha256": "9d035ba009bcefd12a3599ae0e4ed026305bfd90f45dc84151155b471c3cf2b6"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/25/25a160131808013821883d44aff9c9e8498c8f5ef98987cd1c4e6154f96ef7e7.asset.meta",
+          "sha256": "dbe97b1abfe10b783e45d18360fbcb4a1b21e3e406cdfce174c6d4dcb2d97687"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 699982,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/22f338f7eee13b3e3769.asset",
+        "sha256": "0c359a181490217b30cc871ed4e72fa3da859527b6a810a0b599f4be62b40203"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/22f338f7eee13b3e3769.asset.meta",
+        "sha256": "bb9152182eed68e8cafa5130040f8645ffd569874475a9196fe2ca5654d7d9da"
+      },
+      "source": {
+        "cab": "CAB-52b89e3a244d70d24afc1a76ea10e263",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_f4f990658e011e1b802b475a06fbc244.bundle",
+        "mips": 9,
+        "name": "Fx_Mask_MLZ_108",
+        "object_sha256": "3120e9da9422a45aa1d1d7bc42edca473200b755b932a2e47ca7b276e2cfd166",
+        "path_id": "405666186808729768",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699982,
+          "path": "Assets/Textures/22/22f338f7eee13b3e3769a914abe2249888dd5e9b5b443526f719acbd5f55711e.asset",
+          "sha256": "0c359a181490217b30cc871ed4e72fa3da859527b6a810a0b599f4be62b40203"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/22/22f338f7eee13b3e3769a914abe2249888dd5e9b5b443526f719acbd5f55711e.asset.meta",
+          "sha256": "a58c5d3c9ec2f54dd005c952abda9969ba83759e12ba8fe6d3c103a960fff69c"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 175691,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/80c9cd8407304d1030c4.asset",
+        "sha256": "3b164d56fa61ce414fe4dd9790caaa28c6dcb5a099ebff968ef3931cae241456"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/80c9cd8407304d1030c4.asset.meta",
+        "sha256": "d7505929415f7d52b678b3c40e34c32660ea60c2e9a4d3072cf0f9a726d276f1"
+      },
+      "source": {
+        "cab": "CAB-55640b083ec518810ea23b59a7830868",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 128,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_6d85542d695f6caf499b03ace92d9040.bundle",
+        "mips": 8,
+        "name": "Fx_RaoDon_0012",
+        "object_sha256": "f2d146d682ad4b648b7b1af77a90e5b2f9ff2f9a6dcdc5c8cfe4a3014ba1c608",
+        "path_id": "-4901854042459641645",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 128
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 175691,
+          "path": "Assets/Textures/80/80c9cd8407304d1030c43a2d973f842a60814bb068ec66bfbf596d83758cff65.asset",
+          "sha256": "3b164d56fa61ce414fe4dd9790caaa28c6dcb5a099ebff968ef3931cae241456"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/80/80c9cd8407304d1030c43a2d973f842a60814bb068ec66bfbf596d83758cff65.asset.meta",
+          "sha256": "213f92b4879535c48ba34fcb340c6189f0b0cb776a6d84f8b51b0b429b81411a"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 699984,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/b1a9f796b175ba4cc61f.asset",
+        "sha256": "d023e1bb4d4847c00c0f1e977e9918344c68635fe29948c7e9d469a24d419f30"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/b1a9f796b175ba4cc61f.asset.meta",
+        "sha256": "df8615bdf401a896ad5f9033fe858f483fc31b9b834d0ae009bbe4af2c13c643"
+      },
+      "source": {
+        "cab": "CAB-58a0b473fd9d468a8f67fad99fd19831",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_63a2adcf08da5c3de2ce707e008beaef.bundle",
+        "mips": 9,
+        "name": "Fx_GuangDian_0003",
+        "object_sha256": "f8bf5170b94324c1ebf0ea1ff46be97c9ac6499a4df86acafc0e173944d6ffc3",
+        "path_id": "-2032958072824436701",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699984,
+          "path": "Assets/Textures/b1/b1a9f796b175ba4cc61f57a9ac338aafe9260f5196039846f1e233a55ecb6087.asset",
+          "sha256": "d023e1bb4d4847c00c0f1e977e9918344c68635fe29948c7e9d469a24d419f30"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/b1/b1a9f796b175ba4cc61f57a9ac338aafe9260f5196039846f1e233a55ecb6087.asset.meta",
+          "sha256": "35b50048ad2543c3e697e543448ae036c1aa528ac7869fd2a5be647de128e729"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 2797133,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/f941c8e11a8af7f2355f.asset",
+        "sha256": "032644cdae01d973cebadf612a24baf378e5d153c64c3bda63fb747355476894"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/f941c8e11a8af7f2355f.asset.meta",
+        "sha256": "7dc51b819053016de72fbe5a0e0fc190ab01dd91b210d82267bfce1c1beacd4a"
+      },
+      "source": {
+        "cab": "CAB-6bb7896dcf9a9f4ecb628398580be2ad",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 512,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_7c775959eb83c261b8292c04e443a17c.bundle",
+        "mips": 10,
+        "name": "Fx_Huo_11_1",
+        "object_sha256": "079b90ba39d9472b1662c4a269998936c2f86793d994e20eba9906076e32e97f",
+        "path_id": "8821636287783317221",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 512
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 2797133,
+          "path": "Assets/Textures/f9/f941c8e11a8af7f2355f318f3f3e73ed986a741b64f7d8744923599bf0300de8.asset",
+          "sha256": "032644cdae01d973cebadf612a24baf378e5d153c64c3bda63fb747355476894"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/f9/f941c8e11a8af7f2355f318f3f3e73ed986a741b64f7d8744923599bf0300de8.asset.meta",
+          "sha256": "80b57fd2507cf1110235bbfd0a13cd7b21c0d968ed52f3f1440badc1757a211e"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 699981,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/07dd6f6db273818d9d14.asset",
+        "sha256": "07be3d12c73faa67531e8546de0bc673b2f2fa66aa99d323a9d09df9ad00618f"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/07dd6f6db273818d9d14.asset.meta",
+        "sha256": "9b6d98b4303cd249227ab383458b69446fc9457dddb5342a398a645c7d377908"
+      },
+      "source": {
+        "cab": "CAB-6ede48b460c1bf425b23d71cd951ed70",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_959bf642bd725a6b2b250f1b5f5ad495.bundle",
+        "mips": 9,
+        "name": "Fx_RaoDon_0003",
+        "object_sha256": "a7937478d4995b01b394750eaee4cfc1c73189d7e0e99d038370c14e39a55ed6",
+        "path_id": "-8744816673249466109",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699981,
+          "path": "Assets/Textures/07/07dd6f6db273818d9d14a87a75c7c6a5222c138c01eacf6ae88bce7a4159084f.asset",
+          "sha256": "07be3d12c73faa67531e8546de0bc673b2f2fa66aa99d323a9d09df9ad00618f"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/07/07dd6f6db273818d9d14a87a75c7c6a5222c138c01eacf6ae88bce7a4159084f.asset.meta",
+          "sha256": "e35336faf3cfc0b14b1908d072c99800028f1df963506279d6ee6cd486b4d7a5"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 699977,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/4b5bb5d526aed822baf7.asset",
+        "sha256": "5001a91c2ea6723414d0a781dbcaeb1a8e5508bffe769a03371679b9a88d1c8b"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/4b5bb5d526aed822baf7.asset.meta",
+        "sha256": "96f4e7e9b189253e61c808dd855d9340e8697cbb34c2a8ab9fb44ae37db88d35"
+      },
+      "source": {
+        "cab": "CAB-6f378fa75ea88bced392a7a49f5a7bec",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_dfb08039e642be5b2980601f46a464c9.bundle",
+        "mips": 9,
+        "name": "Fx_Mask_02",
+        "object_sha256": "bb3ccfe811df107d24ea8e3535f7c13e1c6bb9f8d33a5eb051edbc96c5eb6fa7",
+        "path_id": "7755796040788465701",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699977,
+          "path": "Assets/Textures/4b/4b5bb5d526aed822baf7a456d53979aeafef04db23afef90d1c94baababf6083.asset",
+          "sha256": "5001a91c2ea6723414d0a781dbcaeb1a8e5508bffe769a03371679b9a88d1c8b"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/4b/4b5bb5d526aed822baf7a456d53979aeafef04db23afef90d1c94baababf6083.asset.meta",
+          "sha256": "05dcb98466017b06c72b3ed5f634b6df1bd9c8035bd4343187d8f38dd4d2d217"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 699982,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/923e72e120dca2d07028.asset",
+        "sha256": "f516bd4079d4931090d6ff1cb5b0c65bb4bf1c809379544608efc39900d36566"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/923e72e120dca2d07028.asset.meta",
+        "sha256": "074ff2c1d379fbe36d305c13a24f903f82a81e669540ec5a75ad42a9f8af0f6a"
+      },
+      "source": {
+        "cab": "CAB-7e302fce5aea16bc578b0d7dec86f7a2",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_0ab21da1b71b906e8ff26d423767fda0.bundle",
+        "mips": 9,
+        "name": "Fx_QiLang_140 1",
+        "object_sha256": "2e71c9551e8c8c2faf1ec3cb6d1cee08d023b7f9b8a8db6341b9ad02dd1bde4b",
+        "path_id": "6077464231749547733",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699982,
+          "path": "Assets/Textures/92/923e72e120dca2d070282919fe9986679164d7865de582aaef381c1a884ed479.asset",
+          "sha256": "f516bd4079d4931090d6ff1cb5b0c65bb4bf1c809379544608efc39900d36566"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/92/923e72e120dca2d070282919fe9986679164d7865de582aaef381c1a884ed479.asset.meta",
+          "sha256": "50de4bb6e46efe3cd1c1719fa71c9067cde1bdfba190a6a9aae5a68fa363c069"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 175691,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/a2e7f676b3729f84e908.asset",
+        "sha256": "38ae998465b50dccab15f9006b3a4636f377752948a51f97e8af7df45834a2fd"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/a2e7f676b3729f84e908.asset.meta",
+        "sha256": "2ca163959533007ca1f9af9e9c5e1b9574d10d860e7f91895b6a376d9fedfea1"
+      },
+      "source": {
+        "cab": "CAB-ac8f5ed1ed3a4e4cb5f6a1946b302ec3",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 128,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_4b5f3f26108d0e377692c2ae0b6bf818.bundle",
+        "mips": 8,
+        "name": "Fx_Fire_0003 1",
+        "object_sha256": "103df22f00f9fb816725645491aaf1647f0e69ea418ee26bde963087de3fa5e2",
+        "path_id": "-6986255995043029081",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 128
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 175691,
+          "path": "Assets/Textures/a2/a2e7f676b3729f84e90805a980826a1354dec7e3f1fc079b25d7da1cf3ce9202.asset",
+          "sha256": "38ae998465b50dccab15f9006b3a4636f377752948a51f97e8af7df45834a2fd"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/a2/a2e7f676b3729f84e90805a980826a1354dec7e3f1fc079b25d7da1cf3ce9202.asset.meta",
+          "sha256": "1b9601ee71c2875740a89a59990ef15914d079a5864f8f016730afa031a32e7f"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 175692,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/10b0ad35122d6bb85884.asset",
+        "sha256": "03f959726ec04c415547dad6bb837f000efd8115b4380be5ceb1bfa6f428a858"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/10b0ad35122d6bb85884.asset.meta",
+        "sha256": "0f39855f0bbfc0bfd42cdeddbd4357e9a3c19658b5df2b98d72dbf62f6d0c088"
+      },
+      "source": {
+        "cab": "CAB-bdb0e681bcb83fc387524c56375bedb7",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 128,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_d9fedd8211934cebc0a3f8646c153197.bundle",
+        "mips": 8,
+        "name": "Fx_GuangDian_22",
+        "object_sha256": "a7355ec41d65d407d2e8835f9273ee2db79aadd2c6ebe30607b5e1befddcbb27",
+        "path_id": "-9044906526440537553",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 128
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 175692,
+          "path": "Assets/Textures/10/10b0ad35122d6bb85884267c7e647b01c3feb17ff81bd42a4369d32b422a151f.asset",
+          "sha256": "03f959726ec04c415547dad6bb837f000efd8115b4380be5ceb1bfa6f428a858"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/10/10b0ad35122d6bb85884267c7e647b01c3feb17ff81bd42a4369d32b422a151f.asset.meta",
+          "sha256": "6fc34fc0af4efea28855649ee0b98b70642bf2dd77dde9db4e9b6a3d5915ddbe"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 2797136,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/4111f7871e00ac3394d6.asset",
+        "sha256": "9c4799155d2f15995de733f3431d31c7f533d7919869441eea510c8edbdc1291"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/4111f7871e00ac3394d6.asset.meta",
+        "sha256": "6561f4d2982d44913dc7aab22b37e0362570606d72efb3b1a537f1d20facdd21"
+      },
+      "source": {
+        "cab": "CAB-ce698490f2d151face7328b07176f413",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 512,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_ad3dc6753967886dca09c50a6eb83bcc.bundle",
+        "mips": 10,
+        "name": "Fx_RaoDon_0002",
+        "object_sha256": "c8bf6855b4ad46c7c1a831ad934322f0f9b2acd0bd28101efebc4f4d25b96907",
+        "path_id": "-6907032761427240894",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 512
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 2797136,
+          "path": "Assets/Textures/41/4111f7871e00ac3394d6317923563a31355c290c668a4dfc82fdd4066e6f9a85.asset",
+          "sha256": "9c4799155d2f15995de733f3431d31c7f533d7919869441eea510c8edbdc1291"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/41/4111f7871e00ac3394d6317923563a31355c290c668a4dfc82fdd4066e6f9a85.asset.meta",
+          "sha256": "fd4a8ed1cd9e5078d4cca70ba9cb2eeb7462c0b5ad1656aea2cad72265b26232"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 175692,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/60fb6c1730b0774e0e23.asset",
+        "sha256": "d1d9a1aa8599d8a2efa60968abd2606d68b1fa16c65ed44f58ae6bc931bc68a0"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/60fb6c1730b0774e0e23.asset.meta",
+        "sha256": "09afb6559a788022448a99a51581683f1f331e9a89a75fe8384d2e699f05dc09"
+      },
+      "source": {
+        "cab": "CAB-e2b5dea34ccbef088eb04e864e25aa96",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 128,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_33ff5a747c335cdf30271e5f0a3bc5aa.bundle",
+        "mips": 8,
+        "name": "Fx_Glow_0607_Jy",
+        "object_sha256": "3853457a9b8f3cae55a66654cec7cc7e850bc039eb6980fcce5d1808ffb89892",
+        "path_id": "-6396412636841070684",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 128
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 175692,
+          "path": "Assets/Textures/60/60fb6c1730b0774e0e23841d3dcd2254e6bafb00fa78aa8398317698da511072.asset",
+          "sha256": "d1d9a1aa8599d8a2efa60968abd2606d68b1fa16c65ed44f58ae6bc931bc68a0"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/60/60fb6c1730b0774e0e23841d3dcd2254e6bafb00fa78aa8398317698da511072.asset.meta",
+          "sha256": "94a68b84447d10c6b56d4dc149573f91caf3816db7c29b493a896ff8b278f856"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 699983,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/9e0f274a38a20d6693b0.asset",
+        "sha256": "691c27b7a01ee718497c4a4f0d231a0ba2ea245faf57cd2d2c09f1225dbb4a3e"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/9e0f274a38a20d6693b0.asset.meta",
+        "sha256": "5678fc942d4659890283a722e7759caeac010e27e9681d64f6b3107176b4bf94"
+      },
+      "source": {
+        "cab": "CAB-e8e2a3504fab27ca0d5ebae3bc89fbeb",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_50234bbb16c41aa2d16dc977cc2e8db7.bundle",
+        "mips": 9,
+        "name": "Fx_SanGuang_0001",
+        "object_sha256": "b15aa69c194114a3883dd41652f6c489a1642a4ba5b5d1ed1a96015f9ef26406",
+        "path_id": "6089464755034186923",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699983,
+          "path": "Assets/Textures/9e/9e0f274a38a20d6693b00f2cd815a62725563673fc87122fdd04dc556123d76c.asset",
+          "sha256": "691c27b7a01ee718497c4a4f0d231a0ba2ea245faf57cd2d2c09f1225dbb4a3e"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/9e/9e0f274a38a20d6693b00f2cd815a62725563673fc87122fdd04dc556123d76c.asset.meta",
+          "sha256": "03dd3c897fd98e991651569cfc0541481f77487d33d49b5693913a473f840fca"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 525224,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/b1eb22fb1dd6aa532e02.asset",
+        "sha256": "e5172f0b39482cf511fe1234325f4838543fc5e996416392a5196a86b35e1816"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/b1eb22fb1dd6aa532e02.asset.meta",
+        "sha256": "f903699c0759124422c3f22bac9730ba5d8211e2331e1889c4c83206db799a1e"
+      },
+      "source": {
+        "cab": "CAB-e9a765cbc57fba936816f4c7ef10358c",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_51e83e38d43d101eaa1010bd3a3932d8.bundle",
+        "mips": 1,
+        "name": "Fx_GuangQuan_59_3",
+        "object_sha256": "bde2ea8c91a3b66b81ee4c075c8e691b890a3b8cb31d16120922a1a6e340ad50",
+        "path_id": "-7157444114214028703",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 525224,
+          "path": "Assets/Textures/b1/b1eb22fb1dd6aa532e0201117a0ec5492cec27de205318ed9de9d8035d170b44.asset",
+          "sha256": "e5172f0b39482cf511fe1234325f4838543fc5e996416392a5196a86b35e1816"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/b1/b1eb22fb1dd6aa532e0201117a0ec5492cec27de205318ed9de9d8035d170b44.asset.meta",
+          "sha256": "dc0a8d31caa56b6fbee0f929fdf25ae8b9d4197c3b04de3cc4edb785c5aba69c"
+        }
+      }
+    },
+    {
+      "output": {
+        "bytes": 699979,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/67da0d4568dcedb306d8.asset",
+        "sha256": "ebcfa26c00dd22d1427c9caf78760c5f67eee0b30799d12f679fd0ee900be75b"
+      },
+      "output_meta": {
+        "bytes": 185,
+        "path": "unity/Assets/Official/World/Map/16/NativeStoryPlayables/Textures/67da0d4568dcedb306d8.asset.meta",
+        "sha256": "2093e5d04b4a19255c743b081c91b16b68245dbece6a43a8d3fa5440afdaf4a1"
+      },
+      "source": {
+        "cab": "CAB-f56e0f611887e57af2a926a75691ecb3",
+        "dimension": 2,
+        "format": 50,
+        "format_name": "ASTC_RGB_6x6",
+        "height": 256,
+        "images": 1,
+        "input": "inputs/DefaultPackage/defaultpackage_share_e8e2b31477ab10749a7d05931691d255.bundle",
+        "mips": 9,
+        "name": "Fx_Mask_02_2",
+        "object_sha256": "ceedbf8d202ebd3fc257ab6a4bb251f352af630f24dd9f72b31b6db02c951e7a",
+        "path_id": "-7938660470362944020",
+        "stripped": 0,
+        "type": "Texture2D",
+        "width": 256
+      },
+      "windows_conversion": {
+        "asset": {
+          "bytes": 699979,
+          "path": "Assets/Textures/67/67da0d4568dcedb306d8176d4f4823a97185275a2147444fded57e846eafc21b.asset",
+          "sha256": "ebcfa26c00dd22d1427c9caf78760c5f67eee0b30799d12f679fd0ee900be75b"
+        },
+        "meta": {
+          "bytes": 185,
+          "path": "Assets/Textures/67/67da0d4568dcedb306d8176d4f4823a97185275a2147444fded57e846eafc21b.asset.meta",
+          "sha256": "ab36656bb90d5bdb6a9c7d8c0117ef0d553c30137d7dcb852bdf04f534a238d5"
+        }
+      }
+    }
+  ]
+}

@@ -67,8 +67,8 @@ namespace Zjcs.Presentation.World
         {
             DisposeMapVisibility();
             map13Trees?.Dispose();map13Trees=null;
-            CleanMap13StoryPlayables();
-            map13StoryPlayableScope?.Dispose();map13StoryPlayableScope=null;
+            CleanMainlineStoryPlayables();
+            mainlineStoryPlayableScope?.Dispose();mainlineStoryPlayableScope=null;
             nativeMap13World?.Dispose();nativeMap13World=null;
             map13NavigationSession=null;
         }
