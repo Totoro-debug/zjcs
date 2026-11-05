@@ -64,6 +64,7 @@ namespace Zjcs.Editor.MainlineWorldStartup
                     var previousMap = mapProperty.GetValue(manager);
                     if (playerProperty.GetValue(manager) != null) throw new InvalidDataException("Fresh fixture has an active player.");
                     while (load.MoveNext()) yield return load.Current;
+                    VerifyCrossMapMetadata(world);
                     var time = shared.CommonType("TimeManager").GetProperty("Instance").GetValue(null);
                     var now = (DateTime)time.GetType().GetMethod("GetDateTime").Invoke(time, new object[] { DateTimeKind.Utc });
                     if (!(bool)time.GetType().GetField("TimeSynced").GetValue(time)

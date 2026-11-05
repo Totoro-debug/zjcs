@@ -23,6 +23,19 @@
       ]
     }
   ],
+  "client_map_identity": {
+    "player_map_methods": [
+      "public void SetConatainerStatus(",
+      "public bool TryGetContainerIdByStatus(",
+      "public bool TryGetStatusByContainerId(",
+      "public EcEntityIdentifier GetEntIdByLoEntId(int",
+      "public EcEntityIdentifier GetEntIdByLoEntId(long",
+      "public bool IsMixMap(",
+      "public int GetMapLineIndex()",
+      "public void SetGroupMapIdOrderList("
+    ],
+    "map_enter_identity_branch_verified": true
+  },
   "inputs": [
     {
       "bundle": "defaultpackage_assets_config_luban.bundle",
@@ -350,6 +363,64 @@
       "payload_sha256": "58f443dfd3b971ef2534da3f2cea81fa66e65c6606fa2d96e98c4b96961133c5"
     }
   ],
+  "placement_inputs": [
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/10/catalog.json",
+      "sha256": "0caec4e49584cf8142de4ff45299b0ea9ca839eb7b1fe0d62ba9bc60eb96131b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/Payload/MapInfoWrap/mapinfowrap_10.g.bytes",
+      "sha256": "6a61c10edfad48b0a3ea9173d7be0a5db3313c05b4dd26f315c51f50052cedbe"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/11/catalog.json",
+      "sha256": "10579b7bb63a2ce010c7344c586ba5eb68331ed44a0659cebebe738e44d34c88"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/Payload/MapInfoWrap/mapinfowrap_11.g.bytes",
+      "sha256": "4a0f528c24644e6deeda967f8c5b19f9fc3cc0d1ba9935a5007e537d97aa6a3c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/12/catalog.json",
+      "sha256": "b75a9287e8833710fd7c50b3014024fdfc0139e9d4b239d98838777aa2398dfc"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/Payload/MapInfoWrap/mapinfowrap_12.g.bytes",
+      "sha256": "7b2b5f8ddb98ae97e8d3dfb4746294423dc6fd7973bd6a117414c800f1cb8312"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/13/catalog.json",
+      "sha256": "241a3e42afb92351383e5358616cac437c4d4f956cadbaa3efd6a3c658842085"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/Payload/MapInfoWrap/mapinfowrap_13.g.bytes",
+      "sha256": "9494ead7d023406f99a2f3b2ccfad7b83b04da081c21664942936a1890cf5e1f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/14/catalog.json",
+      "sha256": "4defb849e52b12261da9abe926228c25d4b784c5d6c41d8e30589ff7c4cdb03b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/Payload/MapInfoWrap/mapinfowrap_14.g.bytes",
+      "sha256": "f42e9f4d9a6d8f130241bcfb155469fbfb52dec567e2cfc0cae316f3dfab780e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/15/catalog.json",
+      "sha256": "a6d603def73985c51d141700420818e0bf7a3342ae7d67adff8596b793d4e2a0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/Payload/MapInfoWrap/mapinfowrap_15.g.bytes",
+      "sha256": "3916f3ee50e60adcc90b28be14004ff22b6028de6c1bbff95093d10592f87076"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/16/catalog.json",
+      "sha256": "e6d806d012d1908851ece1c223da870cb86ff517c7851028261027e4d0543bc0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/Payload/MapInfoWrap/mapinfowrap_16.g.bytes",
+      "sha256": "afe4f43c6b0eaad0e8808599aceae448d65d0e5e98164f74a6550aa0cf9d0cbe"
+    }
+  ],
   "code_inputs": [
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EquipInlaySiteInfo.cs",
@@ -440,10 +511,6 @@
       "sha256": "e6586a8f7b05a68efe1c075f851bcf0d354df2e1141c64df665cd516b2bb4cf7"
     },
     {
-      "path": ".tools/source-packages/current/884_156692/official-code/luban-source/Luban/ByteBuf.cs",
-      "sha256": "d3151b392daa823a5e25cc740959bd91c9946c8ee94404941ab3797282729323"
-    },
-    {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerMap.cs",
       "sha256": "a569827e2bbaf6e10f13c17be01f77eac8db1a562190bf7b9efa86ef30e3e709"
     },
@@ -454,6 +521,30 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PublicMapLineStatus.cs",
       "sha256": "7f513e66dad92d7c2bc9d6571ebbfd4b70aff70a2de2ef2b7ee1e3a212ce2a68"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapInfoWrap.cs",
+      "sha256": "6dc3c84f1a79678ca40fd6ee6046c540d7fc814f121f0f5671b57da603db694a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapWorldLoEntityInfoWrap.cs",
+      "sha256": "b9195e57ff16a707aaf5b1115394fff07554fade9bc28585c0779e47aaa63e0c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SpawnEntityLiteInfo.cs",
+      "sha256": "53195dcf3b0e8f2b640adadceae346bdf759eefd846610a8ca34427054742a50"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityPositionInfo.cs",
+      "sha256": "e75d7386ca6bf9760d52daf0e3b6dfebe9ccd59a97085302c23f7a557da77976"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapEntityWorldStageType.cs",
+      "sha256": "842c467dea34b13f91fe8069f9ef6369e1b801910592356871fb37d872d21ece"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/luban-source/Luban/ByteBuf.cs",
+      "sha256": "d3151b392daa823a5e25cc740959bd91c9946c8ee94404941ab3797282729323"
     },
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/MsgMapStart.cs",
@@ -550,7 +641,7 @@
   "bindings": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedMapConfiguration.cs",
-      "sha256": "c10d91339ee24bef0d9d6fb4deba79d03f10b022a9862de896b8584ef2b94347"
+      "sha256": "a9ab77336da567f0bfc9086a0ed479eba0fd3fb15afe8cd273e0c6f830ab1480"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedMapConfiguration.cs.meta",
@@ -562,7 +653,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedData.cs",
-      "sha256": "6c144f7539fdade172565c6a564e8a79f2f86565198ed154199310f4f45bbf31"
+      "sha256": "d4d9954dfbd10ababf7a63a4afe89d7083999c22d3350eb62686f145bfbeb1c5"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedEntityCreation.cs",
@@ -578,6 +669,14 @@
     }
   ],
   "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientContext.cs",
+      "sha256": "778992b4cd3689ed3b8bd330e8c48183cabe25d5b8a8b283780c70bd248d6b8a"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientContext.cs.meta",
+      "sha256": "7dc704d054b2f65aa6439a998b5e7a239839f142b0e5657642bfe91dc198c564"
+    },
     {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientMaps.cs",
       "sha256": "42220208fede20846945d69ff7d820c9b34e63d552ad3122d7d1fddc52a25c4d"
@@ -603,6 +702,14 @@
       "sha256": "4c6bd02992ea44178f1a3074dc356122726bfa8587a73e4567f4cdc8e14a65a9"
     },
     {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.CrossMapMetadata.cs",
+      "sha256": "9a94070342b1b435c2eeaba6a17ed315ba34782b967e3b9d622aca9781eaa0c9"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.CrossMapMetadata.cs.meta",
+      "sha256": "5b089426db624d5ca96f073a0e14a17ed81c87dfb1563cf63fc889cc6be2ba96"
+    },
+    {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.cs",
       "sha256": "37b899fa1e5576629092ea9101af9231b80d3dec8bdbb5bd05e9fda8d15f7fbb"
     },
@@ -611,26 +718,26 @@
       "sha256": "99472a67e41f7c610443b7cfef72c14c1f0c2f97310c2113c99c0d126def58f0"
     },
     {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.PlayerProjection.cs",
+      "sha256": "a02b95edc10313e91d9350aa6ccbc6c123b2fa55b2e5594bc8d60e80fd787565"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.PlayerProjection.cs.meta",
+      "sha256": "5f97058f12259e4927965986d27f974cccf9a018af33de3855c020b9228eecfa"
+    },
+    {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef",
       "sha256": "677c66f1ae35dbe031554566b0dcbe134498afbd82a721c7ca6118b2821229b4"
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef.meta",
       "sha256": "3b6f057b9671d1ee4488af82d18ab03a31f89a6fa9097e8ee189f7cbb9bbbb46"
-    },
-    {
-      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientContext.cs",
-      "sha256": "bb52a25174ec4961caff3b10ebabe54f74d634e80812d948947b33a7eda60f34"
-    },
-    {
-      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientContext.cs.meta",
-      "sha256": "7dc704d054b2f65aa6439a998b5e7a239839f142b0e5657642bfe91dc198c564"
     }
   ],
   "tools": [
     {
       "path": "scripts/prepare_mainline_shared_map_configuration.py",
-      "sha256": "2e3023b260f6c48980b37bd8cab548e3dc97a3e3070befc3016bad079e2e4c5a"
+      "sha256": "b3b98eafd881d1539d45a862b5a23bf52fed24ca61b055fbab376d34e996d10b"
     },
     {
       "path": "D:\\Tool\\Unity\\Editor\\Data\\DotNetSdkRoslyn\\csc.dll",
@@ -855,6 +962,14 @@
       "sha256": "604fdb2b49a4653e96b212266aa3ab47d3ebfef3c50a09ec6c1cfeb529a95c25"
     },
     {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/placement-expected.json",
+      "sha256": "8a6c51c9142059ca8f8057b8b0bf475e1b80f06ef75cb699f0c43dd8fbf0201d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/placement-expected.json.meta",
+      "sha256": "6742ae4b4be6064f27491ad7abceb5ff2e967dee1441d9671ba8f790fee38bc5"
+    },
+    {
       "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/selected-readers.bytes",
       "sha256": "bccfb7dc75077572a630cefdf7c4de68fa7f83aa8a5c471d921ea390290b53fb"
     },
@@ -864,7 +979,7 @@
     },
     {
       "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/catalog.json",
-      "sha256": "9a50128f289890decdc3fe6f41b7daf3abd4b3cffadad192120266c9a0a25b21"
+      "sha256": "035c05b726d6b70f0d6f7864ce094d8b4d7db0ecbcb60273e2d1c8875b5bf2bf"
     },
     {
       "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/catalog.json.meta",
@@ -1555,18 +1670,5 @@
     23010,
     23021
   ],
-  "additional_ec_records": 18,
-  "client_map_identity": {
-    "player_map_methods": [
-      "public void SetConatainerStatus(",
-      "public bool TryGetContainerIdByStatus(",
-      "public bool TryGetStatusByContainerId(",
-      "public EcEntityIdentifier GetEntIdByLoEntId(int",
-      "public EcEntityIdentifier GetEntIdByLoEntId(long",
-      "public bool IsMixMap(",
-      "public int GetMapLineIndex()",
-      "public void SetGroupMapIdOrderList("
-    ],
-    "map_enter_identity_branch_verified": true
-  }
+  "additional_ec_records": 18
 }

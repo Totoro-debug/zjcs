@@ -33,28 +33,46 @@ namespace Zjcs.Editor.MainlineWorldStartup
             save.World.StageWinCounts.Add(new OfflineStageWinCount { StageId = stageId, Count = 7 });
             var maximum = (IDictionary)NativeMap14SharedPrefabs.Get(world.Data.Placement, "MaxRegionProgressDict");
             var ids = maximum.Keys.Cast<int>().OrderBy(value => value).ToArray();
-            save.World.Maps.Add(new OfflineMapProgress { MapClassId = world.Data.MapClassId,
-                Regions = ids.Select(id => new OfflineRegionProgress { Region = id, Progress = 10000 }).ToList() });
-            var raw = ids.ToDictionary(id => id, id => id * 7 + 3);
+            var maps = JsonUtility.FromJson<PlacementExpected>(
+                Resources.Load<TextAsset>("MainlineSharedWorld/MapConfiguration/placement-expected").text).Maps;
+            var rawByMap = maps.ToDictionary(map => map.MapClassId,
+                map => map.Regions.ToDictionary(region => region.Region, region => region.Region * 7 + 3));
+            foreach (var map in maps)
+            {
+                save.World.Maps.Add(new OfflineMapProgress { MapClassId = map.MapClassId,
+                    Regions = map.Regions.Select(region => new OfflineRegionProgress { Region = region.Region, Progress = 10000 }).ToList() });
+                var goddess = map.Regions.FirstOrDefault(region => region.GoddessId > 0);
+                if (goddess != null) save.World.ActivatedGoddessRegions.Add(new OfflineMapRegionKey { MapClassId = map.MapClassId, Region = goddess.Region });
+                var mapParser = world.Configuration.Manager.GetParser(world.Assemblies.CommonType("MapInfoWrapParser"));
+                var args = new object[] { map.MapClassId, null };
+                mapParser.GetType().GetMethod("TryLoadMapInfoWrap").Invoke(mapParser, args);
+                var placements = ((IDictionary)NativeMap14SharedPrefabs.Get(args[1], "RegionInfos")).Values.Cast<IEnumerable>()
+                    .SelectMany(values => values.Cast<object>());
+                var witch = placements.FirstOrDefault(value => NativeMap14SharedPrefabs.Get(value, "DefSpawnEntityInfo") is object spawn
+                    && Convert.ToInt32(NativeMap14SharedPrefabs.Get(spawn, "StageType")) == 216);
+                if (witch != null) save.World.ActivatedWitches.Add(new OfflineMapEntityKey
+                    { MapClassId = map.MapClassId, PlacementId = (int)NativeMap14SharedPrefabs.Get(witch, "LoEntityId") });
+            }
+            var raw = rawByMap[world.Data.MapClassId];
             string before = JsonUtility.ToJson(save);
-            int reads = 0;
+            var reads = new Dictionary<int, int>();
             var player = MainlineSharedPlayerProjection.Create(world, save, 731, map =>
             {
-                if (map != world.Data.MapClassId) throw new InvalidDataException("Projection read an unvisited map.");
-                reads++;
-                return raw;
+                reads[map] = reads.TryGetValue(map, out int count) ? count + 1 : 1;
+                return rawByMap[map];
             });
             object Get(object owner, string name) => NativeMap14SharedPrefabs.Get(owner, name);
             var type = player.GetType();
-            if (reads != 1 || before != JsonUtility.ToJson(save)
+            if (reads.Count != maps.Length || reads.Values.Any(count => count != 1) || before != JsonUtility.ToJson(save)
                 || !ReferenceEquals(Get(Get(player, "DataWrap"), "Player"), player)
                 || (long)Get(player, "Id") != 731 || (string)Get(player, "Name") != save.Player.CharacterName
                 || (int)Get(player, "Level") != 20 || Convert.ToInt32(Get(player, "SubRank")) != 5
                 || Convert.ToInt32(Get(player, "Sex")) != 1 || Convert.ToInt32(Get(player, "Profession")) != 1)
                 throw new InvalidDataException("Original player identity, wrap owner or local save isolation differs.");
-            foreach (int region in ids)
-                if ((int)type.GetMethod("GetWorldMapRegionProgress").Invoke(player, new object[] { world.Data.MapClassId, region }) != raw[region])
-                    throw new InvalidDataException("Original player received normalized rather than raw progress.");
+            foreach (var map in maps)
+                foreach (var region in map.Regions)
+                    if ((int)type.GetMethod("GetWorldMapRegionProgress").Invoke(player, new object[] { map.MapClassId, region.Region }) != rawByMap[map.MapClassId][region.Region])
+                        throw new InvalidDataException("Original player received normalized rather than raw progress.");
             raw[ids[0]] = int.MaxValue;
             if ((int)type.GetMethod("GetWorldMapRegionProgress").Invoke(player, new object[] { world.Data.MapClassId, ids[0] }) == int.MaxValue)
                 throw new InvalidDataException("Original player shares the mutable input progress dictionary.");
@@ -72,6 +90,21 @@ namespace Zjcs.Editor.MainlineWorldStartup
             if ((int)type.GetMethod("GetStageCount").Invoke(player, new object[] { stageId }) != 7
                 || (DateTime)Get(type.GetMethod("GetStageData").Invoke(player, new object[] { stageId }), "LastUpdateTime") != default)
                 throw new InvalidDataException("Original permanent stage count differs or received a fabricated timestamp.");
+            foreach (var map in maps)
+            {
+                foreach (var region in map.Regions)
+                    if ((bool)type.GetMethod("IsGoddessActive").Invoke(player, new object[] { map.MapClassId, region.Region })
+                        != save.World.ActivatedGoddessRegions.Any(value => value.MapClassId == map.MapClassId && value.Region == region.Region))
+                        throw new InvalidDataException("Original goddess activation query lost its cross-map placement.");
+                var witchType = Enum.Parse(world.Assemblies.CommonType("MapWorldActiveableEntityType"), "Witch");
+                if ((int)type.GetMethod("GetMapActiveEntCount").Invoke(player, new[] { (object)map.MapClassId, witchType })
+                    != save.World.ActivatedWitches.Count(value => value.MapClassId == map.MapClassId))
+                    throw new InvalidDataException("Original per-map witch count differs.");
+            }
+            if (save.World.ActivatedGoddessRegions.Count == 0 || save.World.ActivatedWitches.Count == 0
+                || (int)type.GetMethod("GetAllMapActiveEntCount").Invoke(player, new[] {
+                    Enum.Parse(world.Assemblies.CommonType("MapWorldActiveableEntityType"), "Witch") }) != save.World.ActivatedWitches.Count)
+                throw new InvalidDataException("Original global witch count differs or the activation fixture is empty.");
             var key = Activator.CreateInstance(world.Assemblies.CommonType("BlackboardDataKeyMapLogicEntityEnd"), "projection-completed-tag");
             if ((long)type.GetMethods().Single(method => method.Name == "GetBlackboardDataValue" && method.IsGenericMethod
                 && method.GetGenericArguments().Length == 1)

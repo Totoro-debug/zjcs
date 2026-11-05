@@ -37,6 +37,7 @@ namespace Zjcs.Offline.World.MainlinePlayerState
             var unlocked = (IDictionary)Get(Get(profession, "UnlockedData"), "RawData");
             foreach (var value in source.ProfessionLevels)
                 unlocked.Add(Enum.ToObject(professionType, value.Profession), value.Level);
+            RestoreActivations(world, player, save);
 
             var stories = Get(player, "StoryManager");
             var storyType = shared.CommonType("PlayerStory");
@@ -95,5 +96,36 @@ namespace Zjcs.Offline.World.MainlinePlayerState
 
         private static object Get(object owner, string name) => NativeMap14SharedPrefabs.Get(owner, name);
         private static void Set(object owner, string name, object value) => NativeMap14SharedPrefabs.Set(owner, name, value);
+
+        private static void RestoreActivations(MainlineSharedWorld world, object player, OfflineMainlineSave save)
+        {
+            var data = (IDictionary)Get(player, "ActiveableEntityDataDict");
+            var activeType = world.Assemblies.CommonType("MapWorldActiveableEntityType");
+            var metadataType = world.Assemblies.CommonType("MapRegionEntityInfoManager");
+            var metadata = metadataType.GetProperty("Instance").GetValue(null);
+            var goddessId = metadataType.GetMethod("GetMapRegionGoddessId");
+            var placement = metadataType.GetMethod("GetContainerEntityInfo");
+            void Add(int mapId, string kind, int id)
+            {
+                if (id <= 0) throw new InvalidDataException("Activated original " + kind + " placement is absent: " + mapId);
+                if (!data.Contains(mapId)) data.Add(mapId, Activator.CreateInstance(data.GetType().GetGenericArguments()[1]));
+                var map = (IDictionary)data[mapId];
+                var key = Enum.Parse(activeType, kind);
+                if (!map.Contains(key)) map.Add(key, new List<int>());
+                var ids = (List<int>)map[key];
+                if (ids.Contains(id)) throw new InvalidDataException("Duplicate original statue activation: " + mapId + "/" + id);
+                ids.Add(id);
+            }
+            foreach (var region in save.World.ActivatedGoddessRegions)
+                Add(region.MapClassId, "Goddess", (int)goddessId.Invoke(metadata, new object[] { region.MapClassId, region.Region }));
+            foreach (var witch in save.World.ActivatedWitches)
+            {
+                var info = placement.Invoke(metadata, new object[] { witch.MapClassId, witch.PlacementId });
+                var spawn = info == null ? null : Get(info, "DefSpawnEntityInfo");
+                if (spawn == null || !Equals(Get(spawn, "StageType"), Enum.Parse(world.Assemblies.CommonType("MapEntityWorldStageType"), "Witch")))
+                    throw new InvalidDataException("Activated witch differs from its original placement: " + witch.MapClassId + "/" + witch.PlacementId);
+                Add(witch.MapClassId, "Witch", witch.PlacementId);
+            }
+        }
     }
 }

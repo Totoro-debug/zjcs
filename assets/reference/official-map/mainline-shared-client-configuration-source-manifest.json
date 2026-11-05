@@ -453,6 +453,22 @@
       "sha256": "51be63de02c93729761e25201991595a49b03bdd9d49412234217e4441be6a5e"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapWorldActiveableEntityType.cs",
+      "sha256": "8ec67932556f8f547111c4500e906d3902f7af8571161cd81593320afd988f9f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapEntityWorldStageType.cs",
+      "sha256": "842c467dea34b13f91fe8069f9ef6369e1b801910592356871fb37d872d21ece"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapRegionEntityInfoManager.cs",
+      "sha256": "cf1f3269b19712c36b03cc52bc49c74404db7a7e14d049b44d23183e827ce297"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FormulaHandler.cs",
+      "sha256": "1c9d25ef741f342b419a85f53ed3287a7c86a7397847a6170176a62276fbce98"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FactionInfo.cs",
       "sha256": "74efb196b8fb9bfb333d85e6ba8741825feea6c3baba6a940038d167f358740f"
     },
@@ -500,7 +516,12 @@
       "public DateTime GetStoryLastPlayTime(",
       "public T GetBlackboardDataValue<T>(",
       "public int GetStageCount(",
-      "public PlayerStageDataWrap GetStageData("
+      "public PlayerStageDataWrap GetStageData(",
+      "public bool IsGoddessActive(",
+      "public int GetMapActiveEntCount(",
+      "public int GetAllMapActiveEntCount(",
+      "public List<int> GetActivedMapEntities(",
+      "private bool IsMapEntityActived("
     ],
     "scope": "Only the listed original player methods; not whole-version equivalence"
   },
@@ -594,7 +615,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlinePlayerState/MainlineSharedPlayerProjection.cs",
-      "sha256": "439517ef5f71716a515433bf2840bc857f94fc6c78d718bd52aca86cc573145c"
+      "sha256": "102fe75874f107b0770eed1aff882c5687ad52784edf34ef026d7b8978e00d1f"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlinePlayerState/MainlineSharedPlayerProjection.cs.meta",
@@ -616,7 +637,7 @@
   "validation": [
     {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientContext.cs",
-      "sha256": "bb52a25174ec4961caff3b10ebabe54f74d634e80812d948947b33a7eda60f34"
+      "sha256": "778992b4cd3689ed3b8bd330e8c48183cabe25d5b8a8b283780c70bd248d6b8a"
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientContext.cs.meta",
@@ -647,6 +668,14 @@
       "sha256": "4c6bd02992ea44178f1a3074dc356122726bfa8587a73e4567f4cdc8e14a65a9"
     },
     {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.CrossMapMetadata.cs",
+      "sha256": "9a94070342b1b435c2eeaba6a17ed315ba34782b967e3b9d622aca9781eaa0c9"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.CrossMapMetadata.cs.meta",
+      "sha256": "5b089426db624d5ca96f073a0e14a17ed81c87dfb1563cf63fc889cc6be2ba96"
+    },
+    {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.cs",
       "sha256": "37b899fa1e5576629092ea9101af9231b80d3dec8bdbb5bd05e9fda8d15f7fbb"
     },
@@ -656,7 +685,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.PlayerProjection.cs",
-      "sha256": "1b281a157941849242325e6bc7197162fef3e482c889de74733f5ae3fe1075b4"
+      "sha256": "a02b95edc10313e91d9350aa6ccbc6c123b2fa55b2e5594bc8d60e80fd787565"
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.PlayerProjection.cs.meta",
@@ -674,7 +703,7 @@
   "tools": [
     {
       "path": "scripts/prepare_mainline_shared_client_configuration.py",
-      "sha256": "7eaeb71295b3444371d5512221b976b54d41b8166f5fe6e021a57f5a23a00885"
+      "sha256": "bded448a276ac0b0f5442c6d358bc8eef4ba92d6a3db6fbffa405ea54eb6dd75"
     },
     {
       "path": "scripts/prepare_mainline_world_startup_validation.py",

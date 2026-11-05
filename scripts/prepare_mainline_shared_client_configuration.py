@@ -55,7 +55,9 @@ def verify_player_projection(source, shared, work):
         "public int GetWorldMapRegionProgress(", "public int GetStoryCount(",
         "public StoryStatus GetStoryStatus(", "public DateTime GetStoryLastPlayTime(",
         "public T GetBlackboardDataValue<T>(", "public int GetStageCount(",
-        "public PlayerStageDataWrap GetStageData(")
+        "public PlayerStageDataWrap GetStageData(", "public bool IsGoddessActive(",
+        "public int GetMapActiveEntCount(", "public int GetAllMapActiveEntCount(",
+        "public List<int> GetActivedMapEntities(", "private bool IsMapEntityActived(")
     for method in methods:
         if method_body(old, method) != method_body(current, method):
             raise ValueError("Retained original player projection method differs: " + method)
@@ -155,7 +157,8 @@ def build():
     names = [config for _, _, config in TABLES] + [config + "Parser" for _, _, config in TABLES]
     names += ["LevelPropParser", "LevelPropBinaryReader", "RawFileUtility", "Player", "PlayerPropContext",
         "PlayerProfessionData", "PlayerProfessionDataWrap", "PlayerStory", "PlayerStoryDataWrap",
-        "BlackboardDataKeyMapLogicEntityEnd", "MapLogicEntityEndByTagCondition"]
+        "BlackboardDataKeyMapLogicEntityEnd", "MapLogicEntityEndByTagCondition",
+        "MapWorldActiveableEntityType", "MapEntityWorldStageType", "MapRegionEntityInfoManager", "FormulaHandler"]
     shared = ROOT / "unity/Assets/Official/World/Map/14/SharedRuntime/Console.bytes"
     if record(shared)["sha256"] != "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397":
         raise ValueError("Preserve independently pinned original shared IL")

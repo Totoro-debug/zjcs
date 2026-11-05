@@ -16,13 +16,17 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
         {
             public string Manifest, AssemblyResource, AssemblySha256, EntityCatalog;
             public Entry[] Entries;
+            public PlacementMap[] PlacementMaps;
         }
         [Serializable] private sealed class Entry
         { public string Config, Resource, OriginalPath, Sha256; }
+        [Serializable] private sealed class PlacementMap
+        { public int MapClassId; public string CatalogResource, CatalogSha256; }
 
         private readonly NativeMap14SharedAssemblies shared;
         private readonly ConfigManager manager;
         private readonly List<MetadataScope> metadata = new List<MetadataScope>();
+        private readonly PlacementMap[] placementMaps;
         private bool completed, disposed;
 
         public MainlineSharedMapConfiguration(NativeMap14SharedAssemblies shared, ConfigManager manager,
@@ -35,6 +39,11 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             var catalog = JsonUtility.FromJson<Catalog>(asset.text);
             if (catalog.Manifest != "884_156692" || catalog.Entries == null || catalog.Entries.Length != 7)
                 throw new InvalidOperationException("Original client map configuration closure differs.");
+            placementMaps = catalog.PlacementMaps;
+            if (placementMaps == null || placementMaps.Length == 0
+                || placementMaps.Select(map => map.MapClassId).Distinct().Count() != placementMaps.Length
+                || !placementMaps.Any(map => map.MapClassId == data.MapClassId))
+                throw new InvalidOperationException("Original client placement catalog list differs.");
             var assembly = Resources.Load<TextAsset>(catalog.AssemblyResource);
             if (!assembly) throw new InvalidOperationException("Selected original map readers are absent.");
             NativeMap14SharedAssemblies.Verify(assembly.bytes, catalog.AssemblySha256);
@@ -106,8 +115,10 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             var parser = manager.GetParser(type);
             // Use the already verified original deserialization, including its
             // initialized component info. No duplicate placement model is built.
-            ((IDictionary)type.GetField("mMapInfoWrapDic", BindingFlags.Instance | BindingFlags.NonPublic)
-                .GetValue(parser)).Add(data.MapClassId, data.Placement);
+            var placements = (IDictionary)type.GetField("mMapInfoWrapDic", BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetValue(parser);
+            foreach (var map in placementMaps)
+                placements.Add(map.MapClassId, data.ReadPlacement(map.MapClassId, map.CatalogResource, map.CatalogSha256));
             try
             {
                 metadata.Add(new MetadataScope(shared.CommonType("MapInfoManager")));

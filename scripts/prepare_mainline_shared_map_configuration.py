@@ -247,6 +247,44 @@ public sealed class SelectedEntityExtendParameterInfoParser : EntityExtendParame
         inputs.append(dict(apk.provenance(obj), payload_sha256=digest))
         outputs.extend((record(target), record(Path(str(target) + ".meta"))))
         extra.append(dict(OriginalPath=original, Resource="MainlineSharedWorld/MapConfiguration/EC/" + target.name.removesuffix(".bytes"), Sha256=digest))
+    placement_maps, placement_expected, placement_inputs = [], [], []
+    stage_types = {row["EntityClassId"]: row["WorldStageType"] for row in rows}
+    world_resources = ROOT / "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources"
+    for map_id in range(10, 17):
+        resource = "MainlineSharedWorld/" + str(map_id) + "/catalog"
+        source_catalog = world_resources / (resource + ".json")
+        source_map = json.loads(source_catalog.read_bytes())
+        if source_map["MapClassId"] != map_id:
+            raise ValueError("Original placement catalog map differs")
+        entry, = [entry for entry in source_map["Entries"]
+            if entry["OriginalPath"] == f"Config/MapInfoWrap/mapinfowrap_{map_id}.g.bytes"]
+        source_placement = world_resources / (entry["Resource"] + ".bytes")
+        if record(source_placement)["sha256"] != entry["Sha256"]:
+            raise ValueError("Original placement payload differs")
+        wrap = unpack(source_placement.read_bytes())
+        if len(wrap) != 5 or wrap[0] != map_id:
+            raise ValueError("Original placement schema or map differs")
+        entities, goddesses = [], {region: 0 for region in wrap[4]}
+        for region, placements in wrap[1].items():
+            for placed in placements:
+                position, spawn = placed[4], placed[5]
+                if position[4] != region:
+                    raise ValueError("Original placement region differs")
+                entities.append(dict(Id=placed[0], Region=region, Area=position[3],
+                    X=position[0][0], Y=position[0][1], EntityClassId=spawn[0] if spawn else 0,
+                    StageType=spawn[1] if spawn else 0))
+                if spawn and stage_types[spawn[0]] == 202:  # Original MapEntityWorldStageType.Goddess.
+                    goddesses[region] = placed[0]
+        placement_maps.append(dict(MapClassId=map_id, CatalogResource=resource,
+            CatalogSha256=record(source_catalog)["sha256"]))
+        entity_text = "".join(",".join(str(entity[key]) for key in
+            ("Id", "Region", "Area", "X", "Y", "EntityClassId", "StageType")) + "\n"
+            for entity in sorted(entities, key=lambda entity: entity["Id"]))
+        placement_expected.append(dict(MapClassId=map_id, EntityCount=len(entities),
+            EntitySha256=hashlib.sha256(entity_text.encode("utf8")).hexdigest(),
+            Regions=[dict(Region=region, Maximum=maximum, GoddessId=goddesses[region])
+                for region, maximum in sorted(wrap[4].items())]))
+        placement_inputs.extend((record(source_catalog), record(source_placement)))
     for name, payload in (
         ("entities.json", dict(MapClassId=0, Entries=extra)),
         # The general Python table decoder represents zero-length strings as
@@ -255,6 +293,7 @@ public sealed class SelectedEntityExtendParameterInfoParser : EntityExtendParame
             EnterNavigateKey=row["EnterNavigateKey"], EnterNavigateKeyIsNull=not row["EnterNavigateKey"])
             for row in constructors_reader.table(raw_tables["MapWorldInfo"], "TbMapWorldInfo")],
             Entities=[{key: row[key] for key in ("EntityClassId", "IgnoreFastClear")} for row in rows])),
+        ("placement-expected.json", dict(Maps=placement_expected)),
     ):
         target = folder / name
         target.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf8", newline="\n")
@@ -267,7 +306,8 @@ public sealed class SelectedEntityExtendParameterInfoParser : EntityExtendParame
     catalog = folder / "catalog.json"
     catalog.write_text(json.dumps(dict(Manifest=apk.version, Entries=entries,
         AssemblyResource="MainlineSharedWorld/MapConfiguration/selected-readers",
-        AssemblySha256=record(assembly)["sha256"], EntityCatalog="MainlineSharedWorld/MapConfiguration/entities"), indent=2) + "\n", encoding="utf8", newline="\n")
+        AssemblySha256=record(assembly)["sha256"], EntityCatalog="MainlineSharedWorld/MapConfiguration/entities",
+        PlacementMaps=placement_maps), indent=2) + "\n", encoding="utf8", newline="\n")
     meta(catalog)
     outputs.extend((record(catalog), record(Path(str(catalog) + ".meta"))))
     for directory in (DEST, *sorted(path for path in DEST.rglob("*") if path.is_dir()), SOURCE):
@@ -281,9 +321,11 @@ public sealed class SelectedEntityExtendParameterInfoParser : EntityExtendParame
     meta(acceptance)
     names = [name for _, _, name in TABLES] + [name + "Parser" for _, _, name in TABLES]
     names += ["TbMapWorldInfo", "TbEntityExtendParameterInfo", "MapPartInfoBase", "MapInfoWrapParser", "MapInfoManager", "MapRegionEntityInfoManager", "LoEntityCampComponentInfo", "EntityCampComponent", "PlayerMap", "MapLoEntityIdManager", "PublicMapLineStatus"]
+    names += ["MapInfoWrap", "MapWorldLoEntityInfoWrap", "SpawnEntityLiteInfo", "EntityPositionInfo", "MapEntityWorldStageType"]
     receipt = dict(manifest=apk.version, shared_il=dict(record(shared / "Console.bytes"), manifest="871_156598"),
         operation="Keep original payloads and shared IL. Derive original DTOs with verified appended selected fields, reuse selected table readers and original parser/PostParse/query implementations. Include complete original EC dependency records.",
         constructor_compatibility=evidence, client_map_identity=identity_evidence, inputs=inputs,
+        placement_inputs=placement_inputs,
         code_inputs=[record(common / (name + ".cs")) for name in names] + [record(reader_source), record(common.parent / "MsgMapStart.cs")],
         shared_reader=record(shared / "Luban.bytes"), nullable_string_reader_verified=True,
         config_abi_sources=[record(path) for path in sorted((ROOT / "unity/Assets/Game/Runtime/Official/SharedConfig").rglob("*.cs"))],

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using GConfig;
 using MessagePack;
@@ -184,6 +185,26 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
 
         public object GetCommonPrefab(int classId) => DataCenter.GetType().GetMethod("GetCommonPrefab").Invoke(DataCenter, new object[] { classId });
         public object GetContainerPrefab(int entityId) => DataCenter.GetType().GetMethod("GetContainerPrefab").Invoke(DataCenter, new object[] { MapClassId, entityId });
+
+        internal object ReadPlacement(int mapClassId, string catalogResource, string catalogSha256)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(NativeMap14SharedData));
+            if (!Loaded) throw new InvalidOperationException("Load the original map before reading its placement metadata.");
+            var source = Resources.Load<TextAsset>(catalogResource);
+            if (!source) throw new InvalidOperationException("Original placement catalog is absent: " + catalogResource);
+            NativeMap14SharedAssemblies.Verify(source.bytes, catalogSha256);
+            var other = JsonUtility.FromJson<Catalog>(source.text);
+            if (other.MapClassId != mapClassId || other.Entries == null)
+                throw new InvalidOperationException("Original placement catalog identity differs.");
+            var selected = other.Entries.Where(entry => entry.OriginalPath ==
+                $"Config/MapInfoWrap/mapinfowrap_{mapClassId}.g.bytes").ToArray();
+            if (selected.Length != 1) throw new InvalidOperationException("Original map placement is missing or ambiguous.");
+            if (mapClassId == MapClassId) return Placement;
+            var result = Deserialize(shared.CommonType("MapInfoWrap"), LoadAsset(selected[0]).bytes);
+            if ((int)NativeMap14SharedPrefabs.Get(result, "ClassId") != mapClassId)
+                throw new InvalidOperationException("Original placement data identity differs.");
+            return result;
+        }
 
         private object Deserialize(Type type, byte[] bytes)
         {
