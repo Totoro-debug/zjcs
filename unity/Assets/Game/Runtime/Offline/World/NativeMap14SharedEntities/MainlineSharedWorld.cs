@@ -32,6 +32,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                 Assemblies = new NativeMap14SharedAssemblies(catalog);
                 logging = new NativeMap14SharedLogging(Assemblies);
                 Configuration = new NativeMap14SharedConfiguration(Assemblies);
+                MainlineSharedWorldConfiguration.Load(Assemblies, Configuration.Manager);
                 Data = new NativeMap14SharedData(Assemblies, Configuration, mapClassId,
                     $"MainlineSharedWorld/{mapClassId}/catalog");
             }

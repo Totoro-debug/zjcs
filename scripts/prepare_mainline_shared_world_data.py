@@ -103,6 +103,7 @@ def build():
             'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedLogging.cs',
             'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedLogging.cs.meta',
             'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedData.cs',
+            'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblies.cs',
             'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedRoot.cs',
             'unity/Assets/Game/Runtime/Presentation/World/NativeMap14/OfficialMap14NativeWorldView.cs',
             'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.SharedMaps.cs',

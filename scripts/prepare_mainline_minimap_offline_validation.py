@@ -67,7 +67,8 @@ def main():
     pending.extend((source/'Assets/Official/World/Map/14/SharedSerialization').glob('*.dll'))
     for folder in ('SharedConfig', 'SharedRoot', 'SharedSerialization'):
      pending.extend(p for p in (source/'Assets/Official/World/Map/14'/folder).rglob('*') if p.is_file() and p.suffix!='.meta')
-    pending.extend(p for p in (source/'Assets/Official/World/Shared/SharedWorldDataCurrent').rglob('*') if p.is_file() and p.suffix!='.meta')
+    for folder in ('SharedWorldDataCurrent', 'SharedWorldConfiguration'):
+     pending.extend(p for p in (source/'Assets/Official/World/Shared'/folder).rglob('*') if p.is_file() and p.suffix!='.meta')
     pending.append(source/'Assets/Official/World/Map/15/map15.json')
     pending.extend(source/f'Assets/Official/World/Map/{mid}/NativeMiniMapResourcesCurrent/Resources/Map{mid}/Native/current-resource-point-assets.asset' for mid in (10,11,12,13,14,16))
     current_markers=source/'Assets/Official/World/Shared/NativeMiniMapMarkersCurrent/Resources/MainlineMiniMap/current-marker-assets.asset'

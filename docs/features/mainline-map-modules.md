@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成（已提取共享宿主、部分地图网格、正式存档快照读取及离线小地图数据源组合入口；各玩法的原表现与内容缺项仍待接入）
+状态：未完成（已提取共享宿主、原世界配置、部分地图网格、正式存档快照读取及离线小地图数据源组合入口；各玩法的原表现与内容缺项仍待接入）
 
 ## 功能简介
 
@@ -11,6 +11,8 @@
 七图原始共享数据现在由同一加载器的地图编号、资源目录和容器表参数选择，既有调用的默认龙之国绑定保留。`NativeMap14SharedData`／`NativeMap14SharedRoot` 已可读取初始岛、森之国、山之国、泽之国、龙之国、通天塔和鲸背岛的原 EC、导航、MapInfoWrap、根组件及公共实体／动作模板。新资源保留所选884原字节与独立来源；共享 Console IL、formatter和 GameSettings 仍保留历史871身份，不声明整个程序集跨版本等价。隔离图形 Play Mode 已逐图启动原根，核对259,150个原始网格、11,174份放置模板的组件顺序／新实例／共享配置和对应默认实体模板查询。逐组件编码检查在原 `Info.Init` 前进行，避免把原 `AreaInfo.PosSet` 初始化缓存误判为字段变化；按所选官方 `SubStageStateInfoFormatter.Deserialize` 保留其读取但不赋回 `Select` 的行为，其余所选组件载荷重新编码与输入逐字节一致。主工程编译、`ProjectTools.Validate` 与原全屏／筛选／单分线HUD／白雾／区域时间回归通过，实际画面已查看。原 EC 数据加载本身不提供服务器初始状态或刷新执行器；全新存档的公共实体初始化按下述已确认方案接入，正式宿主恢复、完整标记和 Windows Player 接线仍未完成。来源与显式资源地址见[七图共享数据凭据](../../assets/reference/official-map/mainline-shared-world-data-source-manifest.json)。
 
 小地图资源点宿主显式引用区域说明和原标签接口程序集，保证组合数据源所用类型可在正式世界程序集编译。
+
+公共共享世界现于创建时加载所选884的三份原始 Luban 表：`EC/entity_grid_mover`、`Map/map_logic_entity_tag` 和 `map_entity_condition_show`。`MainlineSharedWorldConfiguration` 将它们注册到同一原 `Parsers` 作用域，保留原阶段解析、`PostParse` 标签索引和原 `GridMoverComponentInfo.MoveMask`／`Walkable` 的地形与服务器覆盖分支；未向掩码缓存写入替代值。各图无需增加表绑定参数。输入载荷、原源码、历史871共享IL依赖与显式资源地址分别记录于[公共世界配置来源](../../assets/reference/official-map/mainline-shared-world-configuration-source-manifest.json)。`OfficialMainlineWorldStartupAcceptance.RunConfiguration` 的内置屏 D3D11 Play Mode 已覆盖七图×私有／公开状态、12,789个准备实体（含各次根实体）及79个移动实体，对照官方地形表核对掩码和全部地形的覆盖分支，逐项核对原标签表的索引。该入口仅验证配置和启动前实体，不验证 NPC 显隐条件执行或完整客户端启动；完整 `Run` 曾暴露 `MeManager.MapData`／真实玩家上下文未绑定，仍属下文未完成范围。 同次回归通过七图原根自动启动；主工程 Unity 导入／编译、`ProjectTools.Validate` 与静态元数据检查（127,833个GUID）通过。本次未改动界面或美术，未执行交互画面与 Windows Player 验证。
 
 正式宿主的放置实体输入由 `scripts/mainline_entity_catalog.py` 公共实现转换官方 EC 的阶段、激活、锁定、奖励、换图、战斗绑定与周期组，泽之国、龙之国和鲸背岛的生成入口均调用此实现。来源清单路径可由调用方传入，保留各图独立版本和哈希校验。读取前核对地图身份、定义／组件来源哈希及完整放置集合，转换不修改借用的组件字典。龙之国旧目录统一阶段0和空锁定／绑定的输入已替换为原配置；来源、具体数据与运行验证范围见[龙之国](../maps/map-14.md)和[鲸背岛](../maps/map-16.md)。这仍是放置配置，不定义服务器实体快照、出生或刷新算法。
 

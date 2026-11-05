@@ -5333,7 +5333,7 @@
   "tools": [
     {
       "path": "scripts/prepare_mainline_shared_world_data.py",
-      "sha256": "3b4d0198daeec4ec7a0e7cfd94dd9158d0a29ec0cda06fc1a596a5b1c751aecb"
+      "sha256": "ccadbcc1d587d78f3022a7f84466885f7149bdaa4808cb682caaaeb3b4f29292"
     },
     {
       "path": "scripts/prepare_mainline_map_definition.py",
@@ -5993,15 +5993,35 @@
   "integration": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedWorld.cs",
-      "sha256": "7e2fd1cf989bef805b3a2b2956f8cfc1c2c865cd6523e3b5881a2304e33838af"
+      "sha256": "6694c0933c6cb3dd14a6e6af1002c5ebe64754dd0ca33f2fe81919b115e13718"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedWorld.cs.meta",
       "sha256": "c17b37418ea48702b77473a0806deca60a14e52385f2134ec2fda8bf40cd1f68"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedEntityCreation.cs",
+      "sha256": "e465ec1ada647845ada7aad9a67e21880f91ed26ccd413c0b71656f42b4fe6bb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedEntityCreation.cs.meta",
+      "sha256": "261653ae74fc30d6bf605ea614278c8d5e7abe268edbd09275ac3b37fa285d77"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedLogging.cs",
+      "sha256": "494266b9eb496a2690adab6b4a5c1e0e7c88ff75cd72e7318dced505a9e8f9bb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedLogging.cs.meta",
+      "sha256": "a873d336d9e417bc9dbecb6a4c2688c38f7d798c2cd860f6b57e9cdbfe48d6ab"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedData.cs",
       "sha256": "8f873a010494ad867993d6208b03208e92d882e0758acb57fc00ea6a52608ecb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblies.cs",
+      "sha256": "a1c3f76db9cb350a7ddf282734784605fcaedf4b08466d42ae6f6d7d3b8aeb6c"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedRoot.cs",
@@ -6034,26 +6054,6 @@
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Logging.cs.meta",
       "sha256": "e4ce3b57602a79efc920d9221ddc31e5a4dba2362fda915473c8c23079d838a7"
-    },
-    {
-      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedEntityCreation.cs",
-      "sha256": "e465ec1ada647845ada7aad9a67e21880f91ed26ccd413c0b71656f42b4fe6bb"
-    },
-    {
-      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedEntityCreation.cs.meta",
-      "sha256": "261653ae74fc30d6bf605ea614278c8d5e7abe268edbd09275ac3b37fa285d77"
-    },
-    {
-      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblies.cs",
-      "sha256": "a1c3f76db9cb350a7ddf282734784605fcaedf4b08466d42ae6f6d7d3b8aeb6c"
-    },
-    {
-      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedLogging.cs",
-      "sha256": "494266b9eb496a2690adab6b4a5c1e0e7c88ff75cd72e7318dced505a9e8f9bb"
-    },
-    {
-      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedLogging.cs.meta",
-      "sha256": "a873d336d9e417bc9dbecb6a4c2688c38f7d798c2cd860f6b57e9cdbfe48d6ab"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Injection.cs",

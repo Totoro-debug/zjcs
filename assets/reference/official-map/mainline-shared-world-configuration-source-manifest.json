@@ -1,0 +1,183 @@
+{
+  "manifest": "884_156692",
+  "operation": "Load unchanged movement, logical tag and conditional visibility Luban tables through the original parsers, phases and PostParse hooks in the public shared world scope.",
+  "inputs": [
+    {
+      "bundle": "defaultpackage_assets_config_luban_ec.bundle",
+      "bundle_hash": "63c23eae2715809080bd1c246b6f063e",
+      "path_id": "-4165658816141399837",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/63c23eae2715809080bd1c246b6f063e.bundle",
+      "raw_size": 31317,
+      "raw_sha256": "f55910165fbc464ea485bec9f4f8c0bc3643931127a4d5276809a83d43a53e39",
+      "table": "EC/entity_grid_mover",
+      "payload_sha256": "276907e3a6b8fb8aaaa96ca768e51a6a4b30b401468c3a535c364ec15ce20657"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "path_id": "308904620314379306",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "raw_size": 197305,
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "table": "Map/map_logic_entity_tag",
+      "payload_sha256": "8258e30225942a9c93bcb90d555a9bab918bb83da057723aa9fe8d52b2c43c8d"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-7471324102069739148",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "table": "map_entity_condition_show",
+      "payload_sha256": "7f91388e17e604cf58a4db55107de14c1d53062f8bbdfa27836260cf4ad0d384"
+    }
+  ],
+  "code_inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityGridMoverInfo.cs",
+      "sha256": "7093e61ecc974675061d1fcd58eb8ba038ee04685bc9e1dee10cc8c3b2754279"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityGridMoverInfoParser.cs",
+      "sha256": "9bac5afd5b49106427a656e8643b7a80eea2bc1a58d515c2deb14f41f7f9c5da"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GridMoverComponentInfo.cs",
+      "sha256": "9192fe7435eab0ca2d4d9df410e1a849695fc724317a74410ff055285fae253a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapLogicEntityTagInfo.cs",
+      "sha256": "f00142ad8f5ac39828a9155f0460f6a62c35fd20875697b791bd4c8633f19ce6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapLogicEntityTagInfoParser.cs",
+      "sha256": "affc9871fcce3c40294638694297947577e30bdca7fafa4ca6cea9197d6ec6d3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapEntityConditionShowInfo.cs",
+      "sha256": "1e8133fc7d9dbc5308bd176e23186682a69c3e1a9c0ea5532745060f84db9460"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapEntityConditionShowInfoParser.cs",
+      "sha256": "52171cd8d40a82ec8deaf0c185a670fd8c4f654bf4ddba3121dee90e1e57bb6d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LubanKeyCsvParser.cs",
+      "sha256": "7019f106f4e436e2164671476bd2b237bd09e7fc1d7935a644e716d7dd72122e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LubanParserHelper.cs",
+      "sha256": "6ecf83f3024bcb00c9c093a20b955607f5c2531c63970cc01ebc326d842a3310"
+    }
+  ],
+  "shared_il": {
+    "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Console.bytes",
+    "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397",
+    "manifest": "871_156598"
+  },
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedWorld.cs",
+      "sha256": "6694c0933c6cb3dd14a6e6af1002c5ebe64754dd0ca33f2fe81919b115e13718"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedWorldConfiguration.cs",
+      "sha256": "c5a9c584a9c1408cb938defd7ae089e4fdf2e5f01583d6337ff05a06b16c06dd"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.cs",
+      "sha256": "c72f6fced29af3738591f6c714c1279de72ce0ccc9e1102afff3f749b53eceaa"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.cs.meta",
+      "sha256": "99472a67e41f7c610443b7cfef72c14c1f0c2f97310c2113c99c0d126def58f0"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef",
+      "sha256": "b9d9ca5067a0f9fa0b56a2ac900292ca6107f47a5bdb679be50038b6aa92bc4e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef.meta",
+      "sha256": "3b6f057b9671d1ee4488af82d18ab03a31f89a6fa9097e8ee189f7cbb9bbbb46"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_mainline_shared_world_configuration.py",
+      "sha256": "e5dc6ce81fe94e461ade8313219b0bc1e46aa73364e9c87709d48c3dfc6f5204"
+    },
+    {
+      "path": "scripts/prepare_mainline_world_startup_validation.py",
+      "sha256": "58e1a663ccb08acb059f33f7eee9ec821a9ccdcd1fa5ab10bb84c3e56f20b80f"
+    },
+    {
+      "path": "scripts/prepare_mainline_minimap_offline_validation.py",
+      "sha256": "5af84ba0d5fefc97cf6f4d3cb32bc502a96a0799893876358c62199d8f234792"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldConfiguration/Resources/MainlineSharedWorld/Configuration/entity_grid_mover.g.bytes",
+      "sha256": "276907e3a6b8fb8aaaa96ca768e51a6a4b30b401468c3a535c364ec15ce20657"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldConfiguration/Resources/MainlineSharedWorld/Configuration/entity_grid_mover.g.bytes.meta",
+      "sha256": "21f4d68019590212a8f1e084b796e001734b5b91aa8d0a1e31706732d5c61b7e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldConfiguration/Resources/MainlineSharedWorld/Configuration/map_logic_entity_tag.g.bytes",
+      "sha256": "8258e30225942a9c93bcb90d555a9bab918bb83da057723aa9fe8d52b2c43c8d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldConfiguration/Resources/MainlineSharedWorld/Configuration/map_logic_entity_tag.g.bytes.meta",
+      "sha256": "2987417f222265ea0c6f83bdf7bd288e789252b7850c052512f372f10e59c88b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldConfiguration/Resources/MainlineSharedWorld/Configuration/map_entity_condition_show.g.bytes",
+      "sha256": "7f91388e17e604cf58a4db55107de14c1d53062f8bbdfa27836260cf4ad0d384"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldConfiguration/Resources/MainlineSharedWorld/Configuration/map_entity_condition_show.g.bytes.meta",
+      "sha256": "a2d958a080df4c763e156bac7c494882704edf4f734ee89fa3bfdb2888783a87"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldConfiguration/Resources/MainlineSharedWorld/Configuration/catalog.json",
+      "sha256": "67f09073e7bf922597f63bf8345b6f6688aa948e0b81ae451b346cbbcb0c1958"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldConfiguration/Resources/MainlineSharedWorld/Configuration/catalog.json.meta",
+      "sha256": "d3371eb2e7b578743930a30a5aece9e3851580860f72567e971fa232f5ab0c2b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldConfiguration.meta",
+      "sha256": "fc00202ffca3062d047ab954d893aab211860387d3ddb36a8d766a1277afb6a7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldConfiguration/Resources.meta",
+      "sha256": "b9034087ef1378f72398aad157461da6142df0c18d27e925b6b06de901fbe2b2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldConfiguration/Resources/MainlineSharedWorld.meta",
+      "sha256": "7f0e86046d49942c52b6a281f5dc83ffb9a719715615b3c92387d5f982149880"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldConfiguration/Resources/MainlineSharedWorld/Configuration.meta",
+      "sha256": "dc19f7c005a82f53b60007172a1117e37d1d9c68c253457ce581a37e57032866"
+    }
+  ]
+}
