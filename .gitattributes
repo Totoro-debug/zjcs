@@ -2375,3 +2375,15 @@ assets/reference/battle-animation/weapon-low-textures-source-manifest.json text 
 assets/reference/battle-animation/weapon-physics-source-manifest.json text eol=lf
 assets/reference/battle-animation/weapon-prefab-assets-source-manifest.json text eol=lf
 assets/reference/battle-animation/weapon-prefabs-source-manifest.json text eol=lf
+
+# Keep native battle player view source identities byte-stable.
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerNativeModelView.cs text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.NativeViews.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerNativeModelView.cs.meta text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.NativeViews.cs.meta text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerAttachments.cs text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerActor.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerActor.cs text eol=lf
+scripts/prepare_battle_player_native_view.py text eol=lf
+assets/reference/battle-animation/player-native-view-source-manifest.json text eol=lf

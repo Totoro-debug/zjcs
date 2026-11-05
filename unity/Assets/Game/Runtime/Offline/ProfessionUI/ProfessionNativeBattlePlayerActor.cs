@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Zjcs.Offline.Equipment;
 using Zjcs.Official.ProfessionUI;
 using PlayerAppearance = Zjcs.Official.CombatAppearance.PlayerAnimatorAppearance;
@@ -48,6 +49,10 @@ namespace Zjcs.Offline.ProfessionUI
                     var node = new GameObject((string)transforms[index]["name"]);
                     node.transform.SetParent(current, false); ApplyNode(node, transforms[index]); current = node.transform;
                 }
+                // Native separator parts and independent weapons need a shared
+                // local ordering boundary before Appearance.Init rents parts.
+                // The battle view assigns this body's scene order afterwards.
+                current.gameObject.AddComponent<SortingGroup>();
                 var model = Object.Instantiate(modelPrefab, current, false);
                 ApplyNode(model, transforms[transforms.Length - 1]);
                 if (bindings.BindTree(model) != 1) throw new InvalidOperationException("Bind exactly one original Game player.");

@@ -28,6 +28,12 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".player-resources", true);
         }
 
+        public static void RunPlayerNativeViews()
+        {
+            RunPlayerActors();
+            SessionState.SetBool(Key + ".player-native-view", true);
+        }
+
         private static IEnumerator CheckPlayerActors(GameObject prefab,
             ProfessionNativeSceneAppearanceResources catalog, ProfessionNativeSceneWeaponCatalog weapons,
             IAppearanceAssetManager manager, IProfessionAppearanceUILiteBindings materials,
@@ -39,6 +45,11 @@ namespace Zjcs.Editor.Combat
                 Resources.Load<TextAsset>("Combat/SceneAppearance/skin-defaults").text,
                 message => { throw new InvalidOperationException(message); });
             var deathBinding = OfficialBattleCharacterDeathCatalog.LoadDefault().Find(3100);
+            if (SessionState.GetBool(Key + ".player-native-view", false))
+            {
+                yield return CheckPlayerNativeViews(config, resolver);
+                yield break;
+            }
             using var battleResources = SessionState.GetBool(Key + ".player-resources", false)
                 ? new OfflineProfessionBattlePlayerResources() : null;
             foreach (Sex sex in new[] { Sex.Male, Sex.Female })

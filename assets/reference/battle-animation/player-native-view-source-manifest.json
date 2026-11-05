@@ -1,0 +1,98 @@
+{
+  "manifest": "884_156692",
+  "archive": {
+    "path": ".tools/source-packages/current/884_156692/client-decompilation-manifest.json",
+    "sha256": "4a203396ca1aa7b924038134239f3e203a26ac5e1c879ad52076167912cb6ebe"
+  },
+  "original": {
+    "path": ".tools/source-packages/current/884_156692/official-code/client-source/ECFightRoleCharacterView.cs",
+    "sha256": "6845b6511d5aae48ab3818735b8452f1c152009e2fc8ee22a9521ff415bccac0"
+  },
+  "inputs": [
+    {
+      "path": "assets/reference/battle-animation/player-resource-service-source-manifest.json",
+      "sha256": "a07651ed19b513ede701b228d134858dcaedd120d72a74f37926ee674c76ae6b"
+    },
+    {
+      "path": "assets/reference/battle-animation/player-attachments-source-manifest.json",
+      "sha256": "92ce12a981b9a845a2b5ca6ac2051d323c41b465138641c7473239780114172e"
+    },
+    {
+      "path": "assets/reference/battle-animation/character-death-assets-source-manifest.json",
+      "sha256": "f13bf98dfb995c0bbc5301bb92db53495975b7fe08302d0748b5f001ebbc7963"
+    },
+    {
+      "path": "assets/reference/battle-animation/move-animators-source-manifest.json",
+      "sha256": "5f74b8763c948a53dcb8fc1b401ae4ca9b929c396cdaa655ace88e289794789d"
+    },
+    {
+      "path": "assets/reference/battle-scenes/character-shadow-source-manifest.json",
+      "sha256": "c09b59caf9782b76c8ae5a63b74d11d42971004aebca12b8a24eb83e6b345400"
+    }
+  ],
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerNativeModelView.cs",
+      "sha256": "e06feaee11a19ae8364af6685ce1fae1395134afd7fd076fe3767b8ede8aea2d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerActor.cs",
+      "sha256": "4aecc143fd0da78e222cc49a6d9b8e36bb574118130a3051ab301cec07c32162"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerAttachments.cs",
+      "sha256": "ac9e0841cc591859897f489ddbb634530f3376ad5a92d876826b7245c823b1b8"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs",
+      "sha256": "09f991f7fa97241581a9eb957449335b6a46a40c8cdc5f3b96e6a4966d2cfe84"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerActor.cs",
+      "sha256": "1c6740ae21416c8d6020302029c860406da5047d0c1f063c2dfd7371a8e8d27c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.NativeViews.cs",
+      "sha256": "65db5497a924e43f065ec68020adab8e8c2e06c4f9c0376765a3f8e579cef298"
+    }
+  ],
+  "metadata": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerNativeModelView.cs.meta",
+      "sha256": "628b89daf2b493247dc3ab86d2543f714a019a1a4c0015d2571e8827ede10714"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerActor.cs.meta",
+      "sha256": "0a4650d63e35ebe2e438cb2aa3a2aa1103b12495b7444f053782deed81fb79d4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerAttachments.cs.meta",
+      "sha256": "2e854df519f55f19df62a9f2cb237cbeba946da962e09c25a24bbbedb6ee98b6"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs.meta",
+      "sha256": "2d5d88da76093fb2985f3cbe852610a6fa9426a9696c4cfe6c58a36fdf82707b"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerActor.cs.meta",
+      "sha256": "e191fd2cd503a65100132f31dfa6b6ef8bdcca7dd9216d42fb5d25f1d42619cb"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.NativeViews.cs.meta",
+      "sha256": "9219f19c01b8fc981dd56320d7944cd897e4657c598be95337c889fa5dd73b8d"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_player_native_view.py",
+    "sha256": "afd5e95f22ee1eabfe7bc1f777833ca391aed72c879bec7e34bc86c24767a60e"
+  },
+  "binding": "OfficialBattlePlayerNativeModelView",
+  "operation": "Own a resource-service player lease; expose the original 3100 root and nested Animator. Create a common native body/weapon ordering boundary before appearance initialization, then bind its scene order. Replace the attachment-only shadow placeholder with the exact original shadow subtree and update attachment identities. Run extracted movement cues and original ordinary/on-start death graphs, refresh appearance, revive and dispose. Unity owns Animator and native physics advancement.",
+  "limits": [
+    "Formal shared scene/controller and host entry remain separate.",
+    "This is a model-view adapter, not a complete port of ECFightRoleCharacterView generation, fade or HUD.",
+    "Validation uses local profile projections; UI input, disk-save flow and Windows Player remain separate."
+  ]
+}

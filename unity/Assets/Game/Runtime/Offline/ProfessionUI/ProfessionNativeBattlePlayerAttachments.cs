@@ -119,6 +119,33 @@ namespace Zjcs.Offline.ProfessionUI
                 throw new InvalidOperationException("Original player attachment set differs.");
         }
 
+        public void RebindOriginalShadow(Transform shadow)
+        {
+            if (!shadow) throw new ArgumentNullException(nameof(shadow));
+            var previous = transforms.Values.Single(value => value != shadow && value.name == shadow.name
+                && value.parent == shadow.parent);
+            var replacements = new Dictionary<Transform, Transform>();
+            foreach (var old in transforms.Values.Where(value => value == previous || value.IsChildOf(previous)))
+            {
+                var path = new List<string>();
+                for (var node = old; node != previous; node = node.parent) path.Insert(0, node.name);
+                var current = path.Count == 0 ? shadow : shadow.Find(string.Join("/", path));
+                if (!current) throw new InvalidOperationException("Original player shadow replacement hierarchy differs.");
+                replacements.Add(old, current);
+            }
+            foreach (string key in transforms.Keys.ToArray())
+                if (replacements.TryGetValue(transforms[key], out var current)) transforms[key] = current;
+            for (int index = 0; index < Agent.myBoneList.Count; index++)
+                if (Agent.myBoneList[index] && replacements.TryGetValue(Agent.myBoneList[index], out var current))
+                    Agent.myBoneList[index] = current;
+            Agent.Init();
+            followers.RemoveAll(value => value && (value.transform == previous || value.transform.IsChildOf(previous)));
+            followers.AddRange(shadow.GetComponentsInChildren<AttachmentFollower>(true));
+            previous.gameObject.SetActive(false);
+            if (Application.isPlaying) UnityEngine.Object.Destroy(previous.gameObject);
+            else UnityEngine.Object.DestroyImmediate(previous.gameObject);
+        }
+
         private static Component Resolve(Dictionary<string, Component> renderers, Dictionary<string, object> references, string path)
             => references.TryGetValue(path, out var target) ? renderers[(string)Obj(target)["sourceKey"]] : null;
         private static Dictionary<string, object> Obj(object value) => (Dictionary<string, object>)value;

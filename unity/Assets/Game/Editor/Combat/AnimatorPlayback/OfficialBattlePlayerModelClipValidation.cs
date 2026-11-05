@@ -36,6 +36,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".player-effects", false);
             SessionState.SetBool(Key + ".player-resource-routes", false);
             SessionState.SetBool(Key + ".player-resources", false);
+            SessionState.SetBool(Key + ".player-native-view", false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")))
@@ -273,7 +274,7 @@ namespace Zjcs.Editor.Combat
                 File.WriteAllBytes(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), name + ".png"), bytes);
                 Require(texture.GetPixels32().Count(p => p.r > 16 || p.g > 16 || p.b > 16) > 100, "visible actual GPU output");
                 if (SessionState.GetBool(Key + ".player-live-physics", false) || SessionState.GetBool(Key + ".player-attachments", false)
-                    || SessionState.GetBool(Key + ".player-effects", false))
+                    || SessionState.GetBool(Key + ".player-effects", false) || SessionState.GetBool(Key + ".player-native-view", false))
                     Require(!texture.GetPixels32().Any(p => p.r > 240 && p.g < 20 && p.b > 240),
                         "live body/clipping probe has no error-shader diagnostic particles");
                 return bytes;
