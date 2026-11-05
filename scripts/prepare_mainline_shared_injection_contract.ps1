@@ -2,6 +2,8 @@ param(
     [Parameter(Mandatory)][string]$OriginalCore,
     [Parameter(Mandatory)][string]$OriginalLaunch,
     [Parameter(Mandatory)][string]$DependencyInjectionAbstractions,
+    [Parameter(Mandatory)][string]$DryIoc,
+    [Parameter(Mandatory)][string]$OriginalFramework,
     [Parameter(Mandatory)][string]$Destination,
     [Parameter(Mandatory)][string]$IdentitySeed,
     [string]$Cecil='D:/Tool/Unity/Editor/Data/Tools/ScriptUpdater/Unity.Cecil.dll'
@@ -16,7 +18,11 @@ try {
 } finally {$launch.Dispose()}
 $original=[Mono.Cecil.AssemblyDefinition]::ReadAssembly($OriginalCore)
 $di=[Mono.Cecil.AssemblyDefinition]::ReadAssembly($DependencyInjectionAbstractions)
+$dry=[Mono.Cecil.AssemblyDefinition]::ReadAssembly($DryIoc)
+$framework=[Mono.Cecil.AssemblyDefinition]::ReadAssembly($OriginalFramework)
 try {
+    $reference=$framework.MainModule.AssemblyReferences | Where-Object Name -eq 'DryIoc'
+    if($reference.FullName -ne $dry.Name.FullName -or $dry.Name.FullName -ne 'DryIoc, Version=5.4.3.0, Culture=neutral, PublicKeyToken=dfbf2bd50fcf7768'){throw 'Original client DryIoc assembly identity differs'}
     $marker=$original.MainModule.Types | Where-Object FullName -eq 'Framework.DependencyInjection.InjectAttribute'
     $iface=$original.MainModule.Types | Where-Object FullName -eq 'Framework.DependencyInjection.Abstractions.IInstanceInjector'
     $extension=$original.MainModule.Types | Where-Object FullName -eq 'Framework.DependencyInjection.ServiceProviderExtensions'
@@ -66,11 +72,33 @@ try {
         $extensionType=[Mono.Cecil.TypeReference]::new('System.Runtime.CompilerServices','ExtensionAttribute',$module,$module.TypeSystem.Object.Scope)
         $extensionCtor=[Mono.Cecil.MethodReference]::new('.ctor',$module.TypeSystem.Void,$extensionType);$extensionCtor.HasThis=$true
         $portedExtension.CustomAttributes.Add([Mono.Cecil.CustomAttribute]::new($extensionCtor));$method.CustomAttributes.Add([Mono.Cecil.CustomAttribute]::new($extensionCtor))
+        $injector=$original.MainModule.Types | Where-Object FullName -eq 'Framework.DependencyInjection.DryIoc.DryIocInstanceInjector'
+        if($injector.Fields.Count -ne 1 -or $injector.Methods.Count -ne 2 -or $injector.Fields[0].Name -ne 'mContext' -or $injector.Fields[0].FieldType.FullName -ne 'DryIoc.IResolverContext' -or $injector.BaseType.FullName -ne 'System.Object' -or $injector.Interfaces.Count -ne 1 -or $injector.Interfaces[0].InterfaceType.FullName -ne 'Framework.DependencyInjection.Abstractions.IInstanceInjector'){throw 'Original injector layout differs'}
+        $originalCtor=$injector.Methods | Where-Object Name -eq '.ctor'
+        $originalInject=$injector.Methods | Where-Object Name -eq 'Inject'
+        if($originalCtor.FullName -ne 'System.Void Framework.DependencyInjection.DryIoc.DryIocInstanceInjector::.ctor(DryIoc.IResolverContext)' -or $originalInject.FullName -ne 'System.Void Framework.DependencyInjection.DryIoc.DryIocInstanceInjector::Inject(System.Object)'){throw 'Original injector method ABI differs'}
+        $context=$dry.MainModule.Types | Where-Object FullName -eq 'DryIoc.IResolverContext'
+        $portedInjector=[Mono.Cecil.TypeDefinition]::new($injector.Namespace,$injector.Name,$injector.Attributes,$module.TypeSystem.Object)
+        $portedInjector.Interfaces.Add([Mono.Cecil.InterfaceImplementation]::new($portedInterface));$module.Types.Add($portedInjector)
+        $field=[Mono.Cecil.FieldDefinition]::new('mContext',$injector.Fields[0].Attributes,$module.ImportReference($context));$portedInjector.Fields.Add($field)
+        $injectorCtor=[Mono.Cecil.MethodDefinition]::new('.ctor',$originalCtor.Attributes,$module.TypeSystem.Void)
+        $injectorCtor.Parameters.Add([Mono.Cecil.ParameterDefinition]::new($originalCtor.Parameters[0].Name,$originalCtor.Parameters[0].Attributes,$module.ImportReference($context)))
+        $portedInjector.Methods.Add($injectorCtor);$il=$injectorCtor.Body.GetILProcessor()
+        $objectCtor=[Mono.Cecil.MethodReference]::new('.ctor',$module.TypeSystem.Void,$module.TypeSystem.Object);$objectCtor.HasThis=$true
+        $il.Emit([Mono.Cecil.Cil.OpCodes]::Ldarg_0);$il.Emit([Mono.Cecil.Cil.OpCodes]::Call,$objectCtor)
+        $il.Emit([Mono.Cecil.Cil.OpCodes]::Ldarg_0);$il.Emit([Mono.Cecil.Cil.OpCodes]::Ldarg_1);$il.Emit([Mono.Cecil.Cil.OpCodes]::Stfld,$field);$il.Emit([Mono.Cecil.Cil.OpCodes]::Ret)
+        $injectorMethod=[Mono.Cecil.MethodDefinition]::new('Inject',$originalInject.Attributes,$module.TypeSystem.Void)
+        $injectorMethod.Parameters.Add([Mono.Cecil.ParameterDefinition]::new($originalInject.Parameters[0].Name,$originalInject.Parameters[0].Attributes,$module.TypeSystem.Object));$portedInjector.Methods.Add($injectorMethod)
+        $targets=@(($dry.MainModule.Types | Where-Object FullName -eq 'DryIoc.ContainerTools').Methods | Where-Object {$_.Name -eq 'InjectPropertiesAndFields' -and $_.GenericParameters.Count -eq 1 -and $_.Parameters.Count -eq 2})
+        if($targets.Count -ne 1){throw 'Pinned original DryIoc injection call differs'}
+        $genericInject=[Mono.Cecil.GenericInstanceMethod]::new($module.ImportReference($targets[0]));$genericInject.GenericArguments.Add($module.TypeSystem.Object)
+        $il=$injectorMethod.Body.GetILProcessor();$il.Emit([Mono.Cecil.Cil.OpCodes]::Ldarg_0);$il.Emit([Mono.Cecil.Cil.OpCodes]::Ldfld,$field)
+        $il.Emit([Mono.Cecil.Cil.OpCodes]::Ldarg_1);$il.Emit([Mono.Cecil.Cil.OpCodes]::Call,$genericInject);$il.Emit([Mono.Cecil.Cil.OpCodes]::Pop);$il.Emit([Mono.Cecil.Cil.OpCodes]::Ret)
         $identity=[System.Security.Cryptography.SHA256]::HashData([System.Text.Encoding]::UTF8.GetBytes($IdentitySeed))
         $module.Mvid=[guid]::new([byte[]]$identity[0..15])
         New-Item -ItemType Directory -Path $Destination -Force | Out-Null
         $writer=[Mono.Cecil.WriterParameters]::new();$writer.Timestamp=[uint32]0
         $assembly.Write((Join-Path $Destination 'Framework.Core.dll'),$writer)
-        @{name='Framework.Core';module_id=$module.Mvid.ToString();types=@($portedMarker.FullName,$portedInterface.FullName,$portedExtension.FullName);method=$method.FullName} | ConvertTo-Json -Depth 4 | Set-Content (Join-Path $Destination 'contract.json') -Encoding utf8
+        @{name='Framework.Core';module_id=$module.Mvid.ToString();types=@($portedMarker.FullName,$portedInterface.FullName,$portedExtension.FullName,$portedInjector.FullName);method=$method.FullName;injector=$injectorMethod.FullName;injector_target=$targets[0].FullName} | ConvertTo-Json -Depth 4 | Set-Content (Join-Path $Destination 'contract.json') -Encoding utf8
     } finally {$assembly.Dispose()}
-} finally {$original.Dispose();$di.Dispose()}
+} finally {$original.Dispose();$di.Dispose();$dry.Dispose();$framework.Dispose()}

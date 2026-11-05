@@ -56,6 +56,22 @@ def meta(path):
     return guid
 
 
+def bind_licenses(catalog):
+    """Keep publisher notices in the Player's Resources dependency closure."""
+    text = catalog.read_text(encoding='utf8')
+    block = '  Licenses:\n'
+    for path in sorted(ASSETS.glob('*license*.txt')):
+        block += f'  - {{fileID: 4900000, guid: {meta(path)}, type: 3}}\n'
+    import re
+    matches = list(re.finditer(r'(?m)^  Licenses:[^\n]*\n(?:(?!  [A-Za-z_]\w*:)[^\n]*\n)*',text))
+    valid = r'  Licenses:\n(?:  - \{fileID: 4900000, guid: [a-f0-9]{32}, type: 3\}\n)*'
+    if len(matches) > 1 or ('  Licenses:' in text and not matches) or any(re.fullmatch(valid,match.group()) is None for match in matches):
+        raise ValueError('Preserve an unknown publisher license binding')
+    updated = text[:matches[0].start()]+block+text[matches[0].end():] if matches else text+block
+    if updated != text:
+        catalog.write_text(updated,encoding='utf8',newline='\n')
+
+
 def packages(names=None):
     CACHE.mkdir(parents=True, exist_ok=True)
     sources = []
@@ -183,6 +199,15 @@ def build():
         target = ASSETS/'Framework.Core.bytes'
         bindings.append(dict(Name='Framework.Core',guid=meta(target),Sha256=sha(target.read_bytes()),
                              ModuleId=injection['contract']['module_id']))
+    client_path = ROOT/'assets/reference/official-map/mainline-shared-client-dependencies-source-manifest.json'
+    client = json.loads(client_path.read_bytes()) if client_path.exists() else None
+    if client is not None:
+        for row in client['outputs']:
+            if sha((ROOT/row['path']).read_bytes()) != row['sha256']:
+                raise ValueError('Current original client dependencies differ from their source record')
+        for module in client['assemblies']:
+            target = ASSETS/(module['Name']+'.bytes')
+            bindings.append(dict(Name=module['Name'],guid=meta(target),Sha256=sha(target.read_bytes()),ModuleId=module['ModuleId']))
     source = ROOT/'unity/Assets/Official/World/Map/14/Source/templates.json'
     source_receipt = ROOT/'assets/reference/official-map/map14-source-manifest.json'
     evidence = json.loads(source_receipt.read_bytes())
@@ -216,6 +241,7 @@ def build():
     text += f'  Prefabs: {{fileID: 4900000, guid: {prefab_guid}, type: 3}}\n  PrefabsSha256: {sha(prefab_asset.read_bytes())}\n'
     write(catalog,text.encode()); meta(catalog); meta(ASSETS)
     for path in ASSETS.glob('*.txt'): meta(path)
+    bind_licenses(catalog)
     sources = [CODE/'common-source/Common'/name for name in ('EcEntity.cs','EcComponent.cs','EcDataCenterParser.cs','GridTransformComponent.cs','GridTransformComponentInfo.cs','WorldStageComponent.cs','SubStageStateInfo.cs')]
     formatter = CODE/'common-source/MessagePack.Formatters.Common/SubStageStateInfoFormatter.cs'
     outputs = [p for directory in (RUNTIME,ASSETS,CONFIG) for p in directory.rglob('*') if p.is_file()]
@@ -227,6 +253,7 @@ def build():
         packages=package_sources,logging_calls=contract['loggingCalls'],config_contract=config_abi,
         serialization_extension=record(extension_path) if extension is not None else None,
         injection_extension=record(injection_path) if injection is not None else None,
+        client_dependency_extension=record(client_path) if client is not None else None,
         tools=[record(Path(__file__).resolve()),record(LOGGING_PACKAGES),record(ROOT/'scripts/prepare_unity_shared_ec_contracts.ps1')],outputs=[record(p) for p in outputs],
         validation=record(ROOT/'unity/Assets/Game/Editor/Map14/SharedEntities/OfficialMap14SharedEcAcceptance.cs'),
         operation='Ship unchanged original Console/Luban/Framework.FirstPass.Runtime IL as explicitly bound local TextAssets. Recover the complete GConfig.IConfig marker and exact IGSerializable ABI from APK metadata; forward seven application logging signatures to pinned public ZLogger APIs. Original ContainerInfo and all other table/shared class methods remain in Console IL. Restore the four original 11-component client prefabs in original order and initialize original info using source field data. SubStageStateInfo.Select follows its original generated client formatter, which consumes without assignment. No server entity state, reward or save rules are supplied.',

@@ -137,12 +137,12 @@
   },
   "serialization_extension": {
     "path": "assets/reference/official-map/map14-shared-serialization-source-manifest.json",
-    "sha256": "6367455a433b016b7d969d4b659bc33ec06807ce97e3e4182583edb7679d53e5"
+    "sha256": "0e45689dce73c9f5eacc6d5003f7a9c4898c5ec15678df80336b62e805e24d3a"
   },
   "tools": [
     {
       "path": "scripts/prepare_unity_map14_shared_ec_runtime.py",
-      "sha256": "f8db07f8755edf3214de84fd91a2d6611c7ca120ad6c396b8a8b938be1ab9d77"
+      "sha256": "5eba66d35c112aa190f7577d70c0ce09252011d2cbea90d4c0b50a190fd48c65"
     },
     {
       "path": "scripts/prepare_unity_shared_ec_contracts.ps1",
@@ -164,7 +164,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblyCatalog.cs",
-      "sha256": "80341f0a082ec04df54ca4cae64d8c347f97853c3252ea60562cd854ce785831"
+      "sha256": "a47b6fe97337fa06f57a16476e7a6dfe0891fc94db1aab74a4685505d47dcf38"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblyCatalog.cs.meta",
@@ -485,7 +485,7 @@
     },
     {
       "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset",
-      "sha256": "8480374224b3bcdfd93fc7bb5b61e05f92bc15c7e746f61283c91c81e446403a"
+      "sha256": "de9f5079f727bc040a12fdf0b8c2d763a6473a7ca5adec257dddab9d6585f8e5"
     },
     {
       "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset.meta",
@@ -773,11 +773,27 @@
     },
     {
       "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Framework.Core.bytes",
-      "sha256": "2ec52b7110aaa12c1447df2b2b51f9eb203a486cc6623b8bed1e54aa5189a410"
+      "sha256": "6a438acf946c8593bd854a50e4d475ffa7ca40d51a26193364dc70950165133d"
     },
     {
       "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Framework.Core.bytes.meta",
       "sha256": "4147dd10928eb70f9021255ca1f4a02cbfa94b80d20c4a88b2aa94e33a631889"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/DryIoc-license.txt",
+      "sha256": "65441d6109f52747d57bd022ee5f0de8f0362f4506f1a5b94c17cc3f578bac49"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/DryIoc-license.txt.meta",
+      "sha256": "33db0c665f09e0cb6fbaa843e323f279d8cd17e1834352cf6431134b600f85e2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/DryIoc.bytes",
+      "sha256": "4f6f68263291b5f37fa9563329419e9811ca85bb54958b1cc4ad349cd17041db"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/DryIoc.bytes.meta",
+      "sha256": "51504c47536d2de769c4f56a5405f576ee9055e25d0e1aa86af3baea5bbecb43"
     }
   ],
   "validation": {
@@ -790,10 +806,14 @@
   ],
   "logging_dependency_extension": {
     "path": "assets/reference/official-map/mainline-shared-logging-source-manifest.json",
-    "sha256": "39b69b702af3aaef5253c5d4c581bf50f799fd24a8f1a530b701e70a2779f180"
+    "sha256": "1dd5c573f8c27625eaf8288b8dd2db6a72203197d5a0a470630fc4dc568692cf"
   },
   "injection_extension": {
     "path": "assets/reference/official-map/mainline-shared-injection-source-manifest.json",
-    "sha256": "79e85a7d49959ec0b36440661692844ced0c774ea6ab9c2c8347adeacb3ff3b3"
+    "sha256": "081594b4927a62d292ecd6141b9069eb0adff449a6e784025c81afd053ac2eec"
+  },
+  "client_dependency_extension": {
+    "path": "assets/reference/official-map/mainline-shared-client-dependencies-source-manifest.json",
+    "sha256": "f9c43f663b0b371378beed05c2854bd652d1d70cd5340e1ad61acf9243164d96"
   }
 }

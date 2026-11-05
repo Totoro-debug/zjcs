@@ -78,6 +78,8 @@ def build():
     dump = required[3].read_text(encoding='utf8')
     if not re.search(r'RVA: 0xC4504F8[^\n]*\n\s*\|\-ServiceProviderServiceExtensions.GetService<object>',dump):
         raise ValueError('Review original generic service lookup identity')
+    if not re.search(r'RVA: 0xC102B78[^\n]*\n\s*\|\-ContainerTools.InjectPropertiesAndFields<object>',dump):
+        raise ValueError('Review original generic instance injection identity')
     attribute_dump = dump[dump.index('public abstract class Attribute : '):]
     if not re.search(r'RVA: 0x10912910[^\n]*\n\s*protected void \.ctor\(\)',attribute_dump):
         raise ValueError('Review original Attribute constructor branch target')
@@ -108,6 +110,16 @@ def build():
         constructor = native(0xb872148, 8)
         if hashlib.sha256(constructor).hexdigest() != '222882407fb2e6ff6d1c1606322789dc6c01539d762510e83c098a89376c553c':
             raise ValueError('Original InjectAttribute constructor differs')
+        injector_bodies = []
+        for name, address, length, expected in (
+                ('constructor',0xb86cbc8,48,'26b32cda3ff7162b71ec10f329a23278ee4ff90afa6e362ef7690fa0501ae718'),
+                ('Inject',0xb872c30,128,'d6af2b235f0f07e6701c88b0d241c2c0296f8c0babb9d54e1f6a5bc2bf0ce4c9')):
+            body = native(address,length)
+            if hashlib.sha256(body).hexdigest() != expected:
+                raise ValueError('Original instance injector body differs: '+name)
+            injector_bodies.append(dict(method=name,address=hex(address),length=length,sha256=expected,
+                instructions=[dict(address=hex(i.address),op=i.mnemonic,arguments=i.op_str)
+                              for i in Cs(CS_ARCH_ARM64,CS_MODE_LITTLE_ENDIAN).disasm(body,address)]))
         pointer, = struct.unpack('<Q', native(0x1245d4b0, 8))
         encoded, = struct.unpack('<Q', native(pointer, 8))
         index = (encoded & 0x1fffffff) >> 1
@@ -123,6 +135,7 @@ def build():
     subprocess.run(['pwsh','-NoProfile','-File',str(tool),'-OriginalCore',str(required[1]),
                     '-OriginalLaunch',str(launch),
                     '-DependencyInjectionAbstractions',str(ASSETS/'Microsoft.Extensions.DependencyInjection.Abstractions.bytes'),
+                    '-DryIoc',str(ASSETS/'DryIoc.bytes'),'-OriginalFramework',str(ASSETS/'Framework.FirstPass.Runtime.bytes'),
                     '-Destination',str(destination),'-IdentitySeed',seed],check=True)
     binding = json.loads((destination/'contract.json').read_text(encoding='utf-8-sig'))
     if catalog.read_text(encoding='utf8') != original:
@@ -140,12 +153,13 @@ def build():
     if not Path(str(version_target)+'.meta').exists():
         runtime_meta(version_target)
     RECEIPT.write_text(json.dumps(dict(manifest='884_156692',
-        operation='Port only the three inspected original injection types and native provider.GetService<IInstanceInjector>().Inject(instance) call. Copy the complete decompiled Launch.IVersionManager interface with normalized line endings after checking its six original method signatures. Original Console and Framework.FirstPass.Runtime IL remain unchanged. Do not ship dummy method bodies.',
-        inputs=[record(p) for p in [evidence_path,metadata,*required,code_manifest,launch,version_source,ASSETS/'Console.bytes',ASSETS/'Microsoft.Extensions.DependencyInjection.Abstractions.bytes']],
+        operation='Port the four inspected original injection types, native provider.GetService<IInstanceInjector>().Inject(instance) call and original DryIocInstanceInjector constructor/ContainerTools.InjectPropertiesAndFields<object> call. Copy the complete decompiled Launch.IVersionManager interface with normalized line endings after checking its six original method signatures. Original Console and Framework.FirstPass.Runtime IL remain unchanged. Do not ship dummy method bodies.',
+        inputs=[record(p) for p in [evidence_path,metadata,*required,code_manifest,launch,version_source,ASSETS/'Console.bytes',ASSETS/'Microsoft.Extensions.DependencyInjection.Abstractions.bytes',ASSETS/'DryIoc.bytes',ASSETS/'Framework.FirstPass.Runtime.bytes']],
         native=dict(address='0xb872300',length=len(raw),sha256=hashlib.sha256(raw).hexdigest(),instructions=instructions,
                     service_lookup='Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService<object>',service_lookup_address='0xc4504f8',
                     interface_type_index=index,interface_dispatch=interface['namespace']+'.'+interface['name'],
                     attribute_constructor_address='0xb872148',attribute_constructor_sha256=hashlib.sha256(constructor).hexdigest(),attribute_base_constructor_address='0x10912910'),
+        instance_injector=dict(bodies=injector_bodies,target='DryIoc.ContainerTools.InjectPropertiesAndFields<object>',target_address='0xc102b78'),
         contract=binding,tools=[record(Path(__file__)),record(tool)],
         integration=[record(ROOT/path) for path in (
             'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Injection.cs',
@@ -154,7 +168,7 @@ def build():
         outputs=[record(p) for p in (payload,Path(str(payload)+'.meta'),version_target,Path(str(version_target)+'.meta'))],binding=record(catalog),
         limitations=['This is a partial Core port, not the full original Framework.Core assembly.',
                     'Dummy RVA/token and JetBrains static analysis annotations are excluded; runtime AttributeUsage is preserved.',
-                    'No injector implementation, client services, player startup, map interaction or Windows Player proof is supplied by this port.']),
+                    'Original InjectAttributeSelector/container registration, offline client services, player startup, map interaction and Windows Player remain pending.']),
         ensure_ascii=False,indent=2)+'\n',encoding='utf8',newline='\n')
     print('Bound inspected Core Inject, property marker and IInstanceInjector ABI.')
 

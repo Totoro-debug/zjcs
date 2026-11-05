@@ -17,5 +17,6 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
         public AssemblyPayload[] Assemblies;
         public TextAsset Prefabs;
         public string PrefabsSha256;
+        public TextAsset[] Licenses;
     }
 }

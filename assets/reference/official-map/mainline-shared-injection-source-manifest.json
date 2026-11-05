@@ -1,6 +1,6 @@
 {
   "manifest": "884_156692",
-  "operation": "Port only the three inspected original injection types and native provider.GetService<IInstanceInjector>().Inject(instance) call. Copy the complete decompiled Launch.IVersionManager interface with normalized line endings after checking its six original method signatures. Original Console and Framework.FirstPass.Runtime IL remain unchanged. Do not ship dummy method bodies.",
+  "operation": "Port the four inspected original injection types, native provider.GetService<IInstanceInjector>().Inject(instance) call and original DryIocInstanceInjector constructor/ContainerTools.InjectPropertiesAndFields<object> call. Copy the complete decompiled Launch.IVersionManager interface with normalized line endings after checking its six original method signatures. Original Console and Framework.FirstPass.Runtime IL remain unchanged. Do not ship dummy method bodies.",
   "inputs": [
     {
       "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/source-manifest.json",
@@ -45,6 +45,14 @@
     {
       "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.DependencyInjection.Abstractions.bytes",
       "sha256": "3a588921e88c7b989f805adc5721ed25e24d389e8a9bc968ebcff79f412a5288"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/DryIoc.bytes",
+      "sha256": "4f6f68263291b5f37fa9563329419e9811ca85bb54958b1cc4ad349cd17041db"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Framework.FirstPass.Runtime.bytes",
+      "sha256": "fe49d4ce3611fbd7f9a2fe73fdd0986253b9f44517eb1044e717d901dd2caabe"
     }
   ],
   "native": {
@@ -321,30 +329,275 @@
     "attribute_constructor_sha256": "222882407fb2e6ff6d1c1606322789dc6c01539d762510e83c098a89376c553c",
     "attribute_base_constructor_address": "0x10912910"
   },
+  "instance_injector": {
+    "bodies": [
+      {
+        "method": "constructor",
+        "address": "0xb86cbc8",
+        "length": 48,
+        "sha256": "26b32cda3ff7162b71ec10f329a23278ee4ff90afa6e362ef7690fa0501ae718",
+        "instructions": [
+          {
+            "address": "0xb86cbc8",
+            "op": "str",
+            "arguments": "x30, [sp, #-0x20]!"
+          },
+          {
+            "address": "0xb86cbcc",
+            "op": "stp",
+            "arguments": "x20, x19, [sp, #0x10]"
+          },
+          {
+            "address": "0xb86cbd0",
+            "op": "mov",
+            "arguments": "x19, x1"
+          },
+          {
+            "address": "0xb86cbd4",
+            "op": "mov",
+            "arguments": "x1, xzr"
+          },
+          {
+            "address": "0xb86cbd8",
+            "op": "mov",
+            "arguments": "x20, x0"
+          },
+          {
+            "address": "0xb86cbdc",
+            "op": "bl",
+            "arguments": "#0x105c20f8"
+          },
+          {
+            "address": "0xb86cbe0",
+            "op": "str",
+            "arguments": "x19, [x20, #0x10]!"
+          },
+          {
+            "address": "0xb86cbe4",
+            "op": "mov",
+            "arguments": "x0, x20"
+          },
+          {
+            "address": "0xb86cbe8",
+            "op": "mov",
+            "arguments": "x1, x19"
+          },
+          {
+            "address": "0xb86cbec",
+            "op": "ldp",
+            "arguments": "x20, x19, [sp, #0x10]"
+          },
+          {
+            "address": "0xb86cbf0",
+            "op": "ldr",
+            "arguments": "x30, [sp], #0x20"
+          },
+          {
+            "address": "0xb86cbf4",
+            "op": "b",
+            "arguments": "#0x78326ac"
+          }
+        ]
+      },
+      {
+        "method": "Inject",
+        "address": "0xb872c30",
+        "length": 128,
+        "sha256": "d6af2b235f0f07e6701c88b0d241c2c0296f8c0babb9d54e1f6a5bc2bf0ce4c9",
+        "instructions": [
+          {
+            "address": "0xb872c30",
+            "op": "str",
+            "arguments": "x30, [sp, #-0x30]!"
+          },
+          {
+            "address": "0xb872c34",
+            "op": "stp",
+            "arguments": "x22, x21, [sp, #0x10]"
+          },
+          {
+            "address": "0xb872c38",
+            "op": "stp",
+            "arguments": "x20, x19, [sp, #0x20]"
+          },
+          {
+            "address": "0xb872c3c",
+            "op": "adrp",
+            "arguments": "x22, #0x1307b000"
+          },
+          {
+            "address": "0xb872c40",
+            "op": "adrp",
+            "arguments": "x21, #0x12456000"
+          },
+          {
+            "address": "0xb872c44",
+            "op": "ldrb",
+            "arguments": "w8, [x22, #0x8be]"
+          },
+          {
+            "address": "0xb872c48",
+            "op": "ldr",
+            "arguments": "x21, [x21, #0x668]"
+          },
+          {
+            "address": "0xb872c4c",
+            "op": "mov",
+            "arguments": "x19, x1"
+          },
+          {
+            "address": "0xb872c50",
+            "op": "mov",
+            "arguments": "x20, x0"
+          },
+          {
+            "address": "0xb872c54",
+            "op": "tbnz",
+            "arguments": "w8, #0, #0xb872c78"
+          },
+          {
+            "address": "0xb872c58",
+            "op": "adrp",
+            "arguments": "x0, #0x1245d000"
+          },
+          {
+            "address": "0xb872c5c",
+            "op": "ldr",
+            "arguments": "x0, [x0, #0x4e0]"
+          },
+          {
+            "address": "0xb872c60",
+            "op": "bl",
+            "arguments": "#0x7832708"
+          },
+          {
+            "address": "0xb872c64",
+            "op": "adrp",
+            "arguments": "x0, #0x12456000"
+          },
+          {
+            "address": "0xb872c68",
+            "op": "ldr",
+            "arguments": "x0, [x0, #0x668]"
+          },
+          {
+            "address": "0xb872c6c",
+            "op": "bl",
+            "arguments": "#0x7832708"
+          },
+          {
+            "address": "0xb872c70",
+            "op": "mov",
+            "arguments": "w8, #1"
+          },
+          {
+            "address": "0xb872c74",
+            "op": "strb",
+            "arguments": "w8, [x22, #0x8be]"
+          },
+          {
+            "address": "0xb872c78",
+            "op": "ldr",
+            "arguments": "x0, [x21]"
+          },
+          {
+            "address": "0xb872c7c",
+            "op": "adrp",
+            "arguments": "x21, #0x1245d000"
+          },
+          {
+            "address": "0xb872c80",
+            "op": "ldr",
+            "arguments": "x20, [x20, #0x10]"
+          },
+          {
+            "address": "0xb872c84",
+            "op": "ldr",
+            "arguments": "w8, [x0, #0xe0]"
+          },
+          {
+            "address": "0xb872c88",
+            "op": "ldr",
+            "arguments": "x21, [x21, #0x4e0]"
+          },
+          {
+            "address": "0xb872c8c",
+            "op": "cbnz",
+            "arguments": "w8, #0xb872c94"
+          },
+          {
+            "address": "0xb872c90",
+            "op": "bl",
+            "arguments": "#0x7832880"
+          },
+          {
+            "address": "0xb872c94",
+            "op": "ldr",
+            "arguments": "x2, [x21]"
+          },
+          {
+            "address": "0xb872c98",
+            "op": "mov",
+            "arguments": "x0, x20"
+          },
+          {
+            "address": "0xb872c9c",
+            "op": "mov",
+            "arguments": "x1, x19"
+          },
+          {
+            "address": "0xb872ca0",
+            "op": "ldp",
+            "arguments": "x20, x19, [sp, #0x20]"
+          },
+          {
+            "address": "0xb872ca4",
+            "op": "ldp",
+            "arguments": "x22, x21, [sp, #0x10]"
+          },
+          {
+            "address": "0xb872ca8",
+            "op": "ldr",
+            "arguments": "x30, [sp], #0x30"
+          },
+          {
+            "address": "0xb872cac",
+            "op": "b",
+            "arguments": "#0xc102b78"
+          }
+        ]
+      }
+    ],
+    "target": "DryIoc.ContainerTools.InjectPropertiesAndFields<object>",
+    "target_address": "0xc102b78"
+  },
   "contract": {
+    "name": "Framework.Core",
     "types": [
       "Framework.DependencyInjection.InjectAttribute",
       "Framework.DependencyInjection.Abstractions.IInstanceInjector",
-      "Framework.DependencyInjection.ServiceProviderExtensions"
+      "Framework.DependencyInjection.ServiceProviderExtensions",
+      "Framework.DependencyInjection.DryIoc.DryIocInstanceInjector"
     ],
-    "name": "Framework.Core",
-    "module_id": "70f203d1-4f0d-f706-22ee-39f936a57a9c",
+    "module_id": "f76bddad-e872-060c-de4e-06fbcb54e9e1",
+    "injector_target": "TService DryIoc.ContainerTools::InjectPropertiesAndFields(DryIoc.IResolverContext,TService)",
+    "injector": "System.Void Framework.DependencyInjection.DryIoc.DryIocInstanceInjector::Inject(System.Object)",
     "method": "System.Void Framework.DependencyInjection.ServiceProviderExtensions::Inject(System.IServiceProvider,System.Object)"
   },
   "tools": [
     {
       "path": "scripts/prepare_mainline_shared_injection.py",
-      "sha256": "f9ca39f8d10ba3bd76fe42bd3ee476fe28bbeef306d4b0b0e4b055ed2dc7ce32"
+      "sha256": "0266fe1170a4367e6a6c0d0aa76321fcc35b368fe63873f888b920abab502ff6"
     },
     {
       "path": "scripts/prepare_mainline_shared_injection_contract.ps1",
-      "sha256": "f4e580278609271473ac5065e6c1f73275b8362773e9aa443a6b773eac4d621c"
+      "sha256": "44d50824d796a3c5b338a2b2af18ed08c3f33e438575fd89c6786ac3c3b0127c"
     }
   ],
   "integration": [
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Injection.cs",
-      "sha256": "f42d57a70daf7c0b221ad7aa5e1628c41c65250d17bd6a32a0dc74c691c65fdb"
+      "sha256": "9a505485ec017f5f2e820f76a839ba814548c7d50126f5c6892778adb45c49e9"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Injection.cs.meta",
@@ -358,7 +611,7 @@
   "outputs": [
     {
       "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Framework.Core.bytes",
-      "sha256": "2ec52b7110aaa12c1447df2b2b51f9eb203a486cc6623b8bed1e54aa5189a410"
+      "sha256": "6a438acf946c8593bd854a50e4d475ffa7ca40d51a26193364dc70950165133d"
     },
     {
       "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Framework.Core.bytes.meta",
@@ -375,11 +628,11 @@
   ],
   "binding": {
     "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset",
-    "sha256": "8480374224b3bcdfd93fc7bb5b61e05f92bc15c7e746f61283c91c81e446403a"
+    "sha256": "de9f5079f727bc040a12fdf0b8c2d763a6473a7ca5adec257dddab9d6585f8e5"
   },
   "limitations": [
     "This is a partial Core port, not the full original Framework.Core assembly.",
     "Dummy RVA/token and JetBrains static analysis annotations are excluded; runtime AttributeUsage is preserved.",
-    "No injector implementation, client services, player startup, map interaction or Windows Player proof is supplied by this port."
+    "Original InjectAttributeSelector/container registration, offline client services, player startup, map interaction and Windows Player remain pending."
   ]
 }

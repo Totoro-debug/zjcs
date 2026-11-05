@@ -20,6 +20,9 @@ namespace Zjcs.Editor.Map13MiniMap
         private static void VerifySharedInjection()
         {
             var catalog = Resources.Load<NativeMap14SharedAssemblyCatalog>("Map14/Native/shared-assembly-catalog");
+            Require(catalog.Licenses != null && catalog.Licenses.Length == 19 &&
+                catalog.Licenses.All(license => license && license.bytes.Length != 0),
+                "The local Resources catalog retains all 19 publisher notices in the Player dependency closure");
             using (var shared = new NativeMap14SharedAssemblies(catalog))
             {
                 // Cross the same verified loader seam as the original caller.
@@ -67,9 +70,93 @@ namespace Zjcs.Editor.Map13MiniMap
                     version.GetMethods().Select(method => method.Name).OrderBy(name => name).SequenceEqual(
                         new[] { "Reload", "get_CodeVersion", "get_ResVersion", "get_Version", "set_CodeVersion", "set_ResVersion" }.OrderBy(name => name)),
                     "Original MeManager resolves the complete version interface in its original assembly");
-                Require(core.GetTypes().Length == 3, "The recorded Core port contains only the three inspected original types");
+                VerifyOriginalInstanceInjector(shared, core, entry);
+                Require(core.GetTypes().Length == 4, "The recorded Core port contains only the four inspected original types");
             }
-            Debug.Log("MAINLINE_SHARED_INJECTION_PASS: original service identity, target/null forwarding, exception identity, provider/service failures and original MeManager attribute binding. Full client context is pending.");
+            Debug.Log("MAINLINE_SHARED_INJECTION_PASS: original provider and DryIoc injector ABI, target/null/exception identity, original MeManager construction and scope restoration. Resolver receiver is a fixture; offline services and player startup are pending.");
+        }
+
+        private static void VerifyOriginalInstanceInjector(NativeMap14SharedAssemblies shared, Assembly core, MethodInfo entry)
+        {
+            var load = typeof(NativeMap14SharedAssemblies).GetMethod("Load", BindingFlags.NonPublic | BindingFlags.Instance);
+            var dry = (Assembly)load.Invoke(shared, new object[] { "DryIoc" });
+            Require(dry.FullName == "DryIoc, Version=5.4.3.0, Culture=neutral, PublicKeyToken=dfbf2bd50fcf7768",
+                "Original client DryIoc strong identity resolves to the pinned public package");
+            var contextType = dry.GetType("DryIoc.IResolverContext", true);
+            object received = null; string[] members = new[] { "unmodified" }; int calls = 0;
+            var context = CreateResolverReceiver(contextType, (target, names) => { received = target; members = names; calls++; });
+            var injectorType = core.GetType("Framework.DependencyInjection.DryIoc.DryIocInstanceInjector", true);
+            var injector = Activator.CreateInstance(injectorType, context);
+            var field = injectorType.GetField("mContext", BindingFlags.NonPublic | BindingFlags.Instance);
+            Require(field.IsInitOnly && ReferenceEquals(field.GetValue(injector), context),
+                "Original constructor retains the same resolver in its readonly field");
+            var provider = new OriginalInjectionProvider { Service = injector }; var targetObject = new object();
+            entry.Invoke(null, new object[] { provider, targetObject });
+            Require(calls == 1 && ReferenceEquals(received, targetObject) && members == null,
+                "Original injector forwards the same target and original null member list through the public DryIoc call");
+            entry.Invoke(null, new object[] { provider, null });
+            Require(calls == 2 && received == null && members == null, "Original injector preserves a null target");
+            var expected = new InvalidOperationException("Resolver injection failure");
+            provider.Service = Activator.CreateInstance(injectorType, CreateResolverReceiver(contextType, (target, names) => throw expected));
+            Require(ReferenceEquals(InjectionFailure(entry, provider, targetObject), expected), "Original resolver failure propagates unchanged");
+            provider.Service = Activator.CreateInstance(injectorType, new object[] { null });
+            Require(field.GetValue(provider.Service) == null && InjectionFailure(entry, provider, targetObject) is NullReferenceException,
+                "Original constructor adds no resolver null guard");
+
+            var framework = (Assembly)load.Invoke(shared, new object[] { "Framework.FirstPass.Runtime" });
+            var current = framework.GetType("Framework.DependencyInjection.ApplicationScope", true).GetProperty("Current");
+            var previous = current.GetValue(null);
+            try
+            {
+                calls = 0; provider.Service = injector; current.SetValue(null, provider);
+                // Construct the unchanged original manager, without touching its
+                // readonly singleton, creating a player or bypassing ClientInit.
+                var managerType = shared.Shared.GetType("MeManager", true);
+                var manager = Activator.CreateInstance(managerType);
+                Require(calls == 1 && ReferenceEquals(received, manager) && members == null,
+                    "The unchanged original manager constructor reaches its real recovered injector");
+                Require(managerType.GetField("GameData").GetValue(manager) != null &&
+                    managerType.GetProperty("MapData").GetValue(manager) != null &&
+                    managerType.GetField("RoomData").GetValue(manager) != null &&
+                    managerType.GetProperty("Player").GetValue(manager) == null,
+                    "Original field initializers create game/map/room state while player startup remains separate");
+            }
+            finally { current.SetValue(null, previous); }
+            Require(ReferenceEquals(current.GetValue(null), previous), "Original application scope restores its previous provider");
+        }
+
+        private static object CreateResolverReceiver(Type contract, Action<object, string[]> callback)
+        {
+            // Only this fixture supplies a resolver receiver. Production member
+            // selection, registration and offline client services remain separate.
+            var assembly = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Zjcs.ResolverFixture." + Guid.NewGuid().ToString("N")), AssemblyBuilderAccess.Run);
+            var builder = assembly.DefineDynamicModule("Resolver").DefineType("Resolver", TypeAttributes.Public | TypeAttributes.Sealed);
+            builder.AddInterfaceImplementation(contract); builder.DefineDefaultConstructor(MethodAttributes.Public);
+            var field = builder.DefineField("Callback", typeof(Action<object, string[]>), FieldAttributes.Public);
+            var methods = new[] { contract }.Concat(contract.GetInterfaces()).SelectMany(type => type.GetMethods()).Distinct()
+                .GroupBy(method => method.ToString());
+            foreach (var group in methods)
+            {
+                var original = group.First();
+                Require(!original.ContainsGenericParameters, "Pinned resolver fixture methods have no open generic parameters");
+                var parameters = original.GetParameters().Select(parameter => parameter.ParameterType).ToArray();
+                var method = builder.DefineMethod(original.Name, MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.Final |
+                    MethodAttributes.NewSlot | MethodAttributes.HideBySig, original.ReturnType, parameters);
+                var il = method.GetILGenerator();
+                if (original.Name == "InjectPropertiesAndFields" && parameters.SequenceEqual(new[] { typeof(object), typeof(string[]) }))
+                {
+                    il.Emit(OpCodes.Ldarg_0); il.Emit(OpCodes.Ldfld, field); il.Emit(OpCodes.Ldarg_1); il.Emit(OpCodes.Ldarg_2);
+                    il.Emit(OpCodes.Callvirt, typeof(Action<object, string[]>).GetMethod("Invoke")); il.Emit(OpCodes.Ret);
+                }
+                else
+                {
+                    il.Emit(OpCodes.Ldstr, "Unexpected fixture resolver call: " + original.Name);
+                    il.Emit(OpCodes.Newobj, typeof(NotSupportedException).GetConstructor(new[] { typeof(string) })); il.Emit(OpCodes.Throw);
+                }
+                foreach (var implemented in group) builder.DefineMethodOverride(method, implemented);
+            }
+            var type = builder.CreateType(); var instance = Activator.CreateInstance(type);
+            type.GetField("Callback").SetValue(instance, callback); return instance;
         }
 
         private static Exception InjectionFailure(MethodInfo entry, object provider, object target)

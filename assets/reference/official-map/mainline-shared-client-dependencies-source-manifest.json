@@ -1,0 +1,69 @@
+{
+  "operation": "Restore the public DryIoc 5.4.3 netstandard2.1 dependency required by the unchanged Framework.FirstPass.Runtime ScopeBase field and original client injection. Do not replace original application IL or deliver dummy method bodies.",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Framework.FirstPass.Runtime.bytes",
+      "sha256": "fe49d4ce3611fbd7f9a2fe73fdd0986253b9f44517eb1044e717d901dd2caabe"
+    },
+    {
+      "path": "assets/reference/official-map/mainline-shared-client-packages.json",
+      "sha256": "7b1efdd9d1641189d41c40f2d3583adc48ea52f10c80f97aace5d4fb1cf69859"
+    }
+  ],
+  "packages": [
+    {
+      "name": "DryIoc",
+      "package": "DryIoc.dll",
+      "version": "5.4.3",
+      "framework": "netstandard2.1",
+      "package_sha512": "Bxp53Z7jxu1Df8i/QYm16KjYn4TyZQb8YCCVOCraxR7rwjBVJnK3/IKiEq/9u7nxVu+JNWfKy8MuSqA9T7YsYA==",
+      "url": "https://api.nuget.org/v3-flatcontainer/dryioc.dll/5.4.3/dryioc.dll.5.4.3.nupkg",
+      "metadata_url": "https://www.nuget.org/api/v2/Packages(Id='DryIoc.dll',Version='5.4.3')",
+      "dll_sha256": "4f6f68263291b5f37fa9563329419e9811ca85bb54958b1cc4ad349cd17041db",
+      "module_id": "34c13a75-9c10-44f0-8acc-650f1e8818a6",
+      "assembly_version": "5.4.3.0",
+      "public_key_token": "dfbf2bd50fcf7768",
+      "license_entry": "LICENSE.txt",
+      "license_sha256": "65441d6109f52747d57bd022ee5f0de8f0362f4506f1a5b94c17cc3f578bac49",
+      "dependencies": []
+    }
+  ],
+  "assemblies": [
+    {
+      "Name": "DryIoc",
+      "ModuleId": "34c13a75-9c10-44f0-8acc-650f1e8818a6"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/DryIoc.bytes",
+      "sha256": "4f6f68263291b5f37fa9563329419e9811ca85bb54958b1cc4ad349cd17041db"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/DryIoc.bytes.meta",
+      "sha256": "51504c47536d2de769c4f56a5405f576ee9055e25d0e1aa86af3baea5bbecb43"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/DryIoc-license.txt",
+      "sha256": "65441d6109f52747d57bd022ee5f0de8f0362f4506f1a5b94c17cc3f578bac49"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/DryIoc-license.txt.meta",
+      "sha256": "33db0c665f09e0cb6fbaa843e323f279d8cd17e1834352cf6431134b600f85e2"
+    }
+  ],
+  "binding": {
+    "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset",
+    "sha256": "de9f5079f727bc040a12fdf0b8c2d763a6473a7ca5adec257dddab9d6585f8e5"
+  },
+  "tools": [
+    {
+      "path": "scripts/prepare_mainline_shared_client_dependencies.py",
+      "sha256": "04236f313f79e23dd7e8ffc4a9e31c782d0e80ec0beb9aeb6b9cad95fa3ec5fe"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_shared_ec_runtime.py",
+      "sha256": "5eba66d35c112aa190f7577d70c0ce09252011d2cbea90d4c0b50a190fd48c65"
+    }
+  ]
+}
