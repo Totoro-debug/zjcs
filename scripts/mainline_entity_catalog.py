@@ -11,12 +11,13 @@ from prepare_unity_map10_entities import entity_runtime_rules, stage_behavior_bi
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def read_inputs(map_id: int, manifest: str, root: Path = ROOT):
+def read_inputs(map_id: int, manifest: str, root: Path = ROOT, *, components_receipt: str | None = None):
     directory = root / f"unity/Assets/Official/World/Map/{map_id}"
     definition_path = directory / f"map{map_id}.json"
     definition_receipt = directory / "source-manifest.json"
     components_path = directory / "Source/entities.json"
-    components_receipt = root / f"assets/reference/official-map/map{map_id}-source-manifest.json"
+    components_receipt = root / (components_receipt or
+                                f"assets/reference/official-map/map{map_id}-source-manifest.json")
     raw = definition_path.read_bytes()
     definition = json.loads(raw)
     receipt = json.loads(definition_receipt.read_bytes())

@@ -49,6 +49,13 @@ namespace Zjcs.Editor
                 || definition.Navigation.MaxSteps != 35 || definition.Entities.Length != 1021
                 || definition.MaxRegionProgress.Length != whaleIsland.RegionCount)
                 throw new InvalidDataException("Whale Island public catalog definition differs from its official map.");
+            int entityCount = OfficialMap10EntityView.ValidateCatalog(
+                Resources.Load<TextAsset>(whaleIsland.Resource("Entities/catalog")), 16,
+                out int modelCount, out int geometryCount, out int spineCount, out int textureCount);
+            if (entityCount != definition.Entities.Length || modelCount != 1
+                || geometryCount != 0 || spineCount != 0 || textureCount != 0)
+                throw new InvalidDataException("Whale Island placement catalog differs or contains unverified visual bindings.");
+            Debug.Log("Whale Island shared entity catalog loaded: 1021 original placements; native visual binding remains pending.");
             var regions = new OfficialMainlineRegionPolicy(definition, whaleIsland);
             var points = new System.Collections.Generic.Dictionary<int, int>();
             foreach (var region in definition.MaxRegionProgress)

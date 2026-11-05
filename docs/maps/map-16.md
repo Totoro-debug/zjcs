@@ -20,6 +20,10 @@
 
 ## 完整还原部分
 
+官方放置配置已通过公共 `mainline_entity_catalog` 转换为 `Resources/Map16/Entities/catalog`，保留全部1021个放置身份、网格、阶段、激活、锁定、奖励、换图、战斗绑定与周期组。Map16 只传入地图编号、884版本和自身来源清单路径，不复制转换逻辑；来源见[实体目录清单](../../assets/reference/official-map/map16-entity-catalog-source-manifest.json)。规则检查核对完整放置集合、原网格／阶段／激活值、借用输入不变及错误版本拒绝，另回归泽之国目录字节不变。目录不含替代美术，原 Windows prefab 与正式宿主仍待接线；此配置转换不证明本图出生、刷新、交互或存档运行已完成。
+
+实体目录的4项转换回归与静态元数据检查通过。隔离 Unity 工程编译公共世界模块及依赖，使用真实 `Resources.Load` 与正式目录读取路径核对1021项、空视觉绑定和错误地图身份拒绝，正常退出；主工程另完成导入／编译及 `ProjectTools.Validate`，实际加载并核对本图目录。上述检查不进入 Play Mode，也不覆盖本图界面、交互、存档或 Windows Player。
+
 鲸背岛已加入共享 `OfficialMainlineMapProfile` 作为数据档案，配置同版网格／身体／白雾资源、43区、默认入口实体101、单本地分线、交互资源及 `884_156692` 战斗／剧情来源；`IsRuntimeEntryReady=false`，正式地图入口仍关闭。网格资源、白雾 prefab 和交互配置尚未接入本图正式地图宿主，剧情触发与演出、战斗及实体视觉仍有独立缺项。
 
 `WhaleIslandArrive` 的两项原 `PlayPlayableNode` 资源已按 `884_156692` 原 GUID 恢复并写入 `Resources/Map16/Native/story-playables` 配置。配置固定地图 ID、故事清单版本、两个资源目录项及预期数量；共享 `MainlineStoryPlayableAssets` 校验资源 GUID 与原节点字段，共享 `MainlineStoryPlayableScope` 注入原 `MyPlayableManager`／`MyPlayableCenter` 和 FIFO 池。运行时入口接通 Map16 请求解析与演员端口绑定，`OfficialMap10EntityView` 的本地显隐适配在演出期间保持可见，并在结束时恢复最新本地激活状态。闭包含2个原 prefab、17个材质、3个网格、25张 Windows 纹理、1个 Windows shader、2个 Wwise 事件引用和22个演出组件；来源及输入／输出哈希见[鲸背岛演出资源清单](../../assets/reference/official-map/map16-native-story-playables-source-manifest.json)。正式入口仍关闭，尚未运行本图 NPC 演出流程。
