@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成（已提取共享宿主、原世界配置、部分地图网格、正式存档快照读取及离线小地图数据源组合入口，客户端依赖与服务工厂已局部验证；各玩法的原表现与正式宿主接线仍待完成）
+状态：未完成（已提取共享宿主、原世界配置、部分地图网格、正式存档快照读取及离线小地图数据源组合入口，客户端依赖、配置和全新角色初始化已验证；各玩法的原表现与正式宿主接线仍待完成）
 
 ## 功能简介
 
@@ -219,7 +219,9 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 原 Framework.FirstPass 所需 `DryIoc` 5.4.3.0（dfbf2bd50fcf7768）使用发布者 NuGet 5.4.3 netstandard2.1；原 Console 的 PlayerDataWrap／IMongoObj 所需 `LiteDB` 5.0.20.0（4ee40123013c9f27）使用 NuGet 5.0.20 netstandard2.0；原玩法状态观察器所需 `R3` 1.3.0.0（df4c250b14d82627）使用 NuGet 1.3.0 netstandard2.1。包 SHA-512 均核对 NuGet 官方元数据，DLL／许可 SHA-256、MVID 与原强命名引用分别固定在[客户端依赖来源](../../assets/reference/official-map/mainline-shared-client-dependencies-source-manifest.json)。R3 四项依赖沿用已有固定的 TimeProvider 8.0.0、Annotations 5.0.0、Unsafe 6.0.0 和 Channels 8.0.0。原 Console／Framework IL 未改写；加载继续核对哈希和 MVID。共享资源目录显式引用全部21份发布者许可文本；R3 许可取其包内仓库提交的完整 MIT 文本。
 
-`OfficialMainlineWorldStartupAcceptance.RunClientServices` 的内置屏 D3D11 Play Mode 通过真实容器与注入器身份、原 MeManager 单例、两次全新 Player／PlayerDataWrap 构造、LiteDB 强命名身份、原 R3 玩法观察器初始化／空状态枚举／释放，以及嵌套应用作用域和两类公式绑定的恢复。该入口只验证客户端依赖闭包，不执行 `Player.ClientInit` 或实体完整启动。完整初始化诊断已进入原 `BattleFormulaHandler.CalcCharacterBattlePropsWithoutProfession`，仍缺原 `LevelPropParser` 等属性配置闭包与正式存档投影；尚未通过完整玩家／实体启动。主工程导入／编译检查当前被共享工作区 `HomeHudView.Partners.cs` 的6处错误拦截（低内存委托类型、Profession 歧义和 TMPEffect 引用）；`ProjectTools.Validate` 因编译门槛未执行。本轮隔离服务入口已编译并通过上述 Play Mode，全量静态元数据检查通过（127,891个GUID）；未执行本项交互画面和 Windows Player 验证。
+`MainlineSharedClientConfiguration.Load` 为公共原配置作用域绑定所选884的13张角色初始化表，统一核对原字节哈希，先注册、解析全部表，再执行原 `PostParse`，保留职业对技能表的交叉索引。属性二进制复用已经安装且核验来源的 `StreamingAssets/PartnerNpcShared/Config/Binary/level_prop.g.bytes`，不复制第二份载荷；共享资源目录明确记录该本地路径与哈希。单机只将原 YooAsset 路径发现改为本地文件：仍调用原 `ParserBase.Initialize`、原 `LevelPropBinaryReader(string)` 和1000项原LRU，再登记至同一 `ConfigManager`；属性读取、默认值合并、等级限制、战力公式和两个原属性上下文均保留原实现。配置退出现在调用原管理器的 `Dispose`，关闭原读取器后销毁所属对象。此加载入口不创建角色、不改角色模板默认值，重复登记被拒绝；加载失败时由调用者释放所属配置作用域。来源、所选884源码、独立固定的历史871 IL、输入／输出与显式加载路径见[角色配置来源](../../assets/reference/official-map/mainline-shared-client-configuration-source-manifest.json)。正式存档投影和地图宿主组合仍待完成。
+
+`OfficialMainlineWorldStartupAcceptance.RunClientServices` 的内置屏 D3D11 Play Mode 通过真实容器与注入器身份、原 MeManager 单例、两次全新 Player／PlayerDataWrap 构造、LiteDB 强命名身份、原 R3 玩法观察器初始化／空状态枚举／释放，以及嵌套应用作用域和两类公式绑定的恢复。完整玩家入口 `RunClientPlayer` 已在同类图形 Play Mode 通过：使用正式公共配置模块及原本地文件读取器，沿原 MeManager setter 实际执行两次完整 `Player.ClientInit`、两个原属性上下文、属性重算、账号初始化及 `ClientDestory`；两个未改模板的全新角色原战力均为644，重算稳定。重复配置登记被拒绝，配置退出后原二进制读取器已释放，原生命周期无错误日志。当前客户端、角色配置与公共世界配置三份清单的151项输入／载荷／绑定哈希核验通过。这仍不包含正式存档到原玩家的状态投影、地图实体完整启动、界面交互或 Windows Player；共享模块保持未完成。七图配置生命周期回归通过14组私有／公开状态、12,789个准备实体、79个移动实体及七图默认原根启动。本次主工程 Unity 导入／编译、`ProjectTools.Validate` 及全量静态元数据检查（127,947个GUID）通过。
 
 `MainlineSharedWorld` 在解析配置前安装 `NativeMap14SharedLogging`，通过原 `Framework.Logging.Log.Initialize` 向已交付原 `ILogger`／`ILoggerFactory` ABI 提供本地输出，不启动在线应用入口。日志保留原泛型状态格式化器、等级、类别及异常对象；正式输出写入 Unity 日志，原事件委托和 EC 组件仍按原实现捕获并报告异常。已有完整日志绑定时借用，本模块拥有的绑定在最后一个重叠地图作用域退出后恢复，且不覆盖外部后装的绑定。ZLogger 所需的16份传递依赖按其官方 NuGet 清单固定版本、包SHA-512、DLL哈希和MVID，原 Console／Framework IL 保持不变；载荷、许可与本地目录见[日志依赖来源](../../assets/reference/official-map/mainline-shared-logging-source-manifest.json)。带图形的隔离 Play Mode 已核对泛型值状态、格式化器、异常对象身份、类别复用、原泛型日志包装、原事件委托捕获异常、嵌套／交错释放、外部替换及构造失败恢复；七图259,150格与33,522次全新放置初始化回归通过（12,775次出生、20,747次被原出生条件拦截）。主工程编译、`ProjectTools.Validate` 和静态元数据检查通过；此次是原运行时日志与状态检查，实体完整客户端启动、正式交互和 Windows Player 仍未验证。
 

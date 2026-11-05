@@ -1,0 +1,515 @@
+{
+  "manifest": "884_156692",
+  "operation": "Restore original fresh-player tables and reuse the verified local level-property binary. Replace only YooAsset path discovery; retain original ParserBase initialization, binary reader, 1000-entry LRU, default values and calculations.",
+  "inputs": [
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "3644532119292667704",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "table": "item",
+      "payload_sha256": "da276129e605494f2392572880d2cbc0354da14c4151bea6d7dcc90a69be7888"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-2551715952852499895",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "table": "treasure_suit",
+      "payload_sha256": "3c92dc2d7b8c8aa8478379eac1e46cd2bac3c18e9e0f9e400af12d7f9f86750b"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-5241032966734201054",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "table": "equip_resonance",
+      "payload_sha256": "601078633d632dd995a67368e34800f4278da6d215ae10294b8c100c2ea06664"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-1112184631750720510",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "table": "level_exp",
+      "payload_sha256": "ff43b883b8c86835de154c3772d89f69675a8171829cc93c0fb60a196e6b6cc7"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-5504087048174519210",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "table": "prop_cfg",
+      "payload_sha256": "849cde72b0a26881cb224119dfd31b6af1d7665ec41a2635c4fad97442da046c"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-3955754053971000225",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "table": "level_prop_default_value",
+      "payload_sha256": "e866fc9ed6f08b9c2debb0639c7626817e45efa7451cc5b88514720d5210ef98"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "3355735935519861306",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "table": "role_prop_group",
+      "payload_sha256": "b52c3e07f08399423244cc858114098dc3712902524836fab2e8e03f681ddf13"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-5402877092816210485",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "table": "profession_base",
+      "payload_sha256": "92eba63835e3300821811c21bb9fc5cbdeb36699e12bbeb9f0c0e1dab79170a5"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "1398458758611605706",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "table": "skill",
+      "payload_sha256": "5da6dd4982bdb6259e13043da7e2b7b4dc6b655beff1661b5f92f4fd65e0c81f"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban_astrologicaldestiny.bundle",
+      "bundle_hash": "818ddff3dc9fa0861964db063de16bbf",
+      "path_id": "-4290971703235514641",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/818ddff3dc9fa0861964db063de16bbf.bundle",
+      "raw_size": 8631,
+      "raw_sha256": "4efa384caff1049cf5c671176b79f339c0c343fa7efc9d70b1fd715a99ff5c7b",
+      "table": "AstrologicalDestiny/astrological_season_config",
+      "payload_sha256": "c9527fc1003976bf6e4c7318c6d822eec690309507873fc0e2d3a696a974a15f"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "6169700038687162556",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "table": "periodic_card_pay",
+      "payload_sha256": "0bd7468bb83d745ca9d533dffdd6533c68eade795cfe0a7ed856c6424d94b3a1"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban_astrologicaldestiny.bundle",
+      "bundle_hash": "818ddff3dc9fa0861964db063de16bbf",
+      "path_id": "-1766176442708729996",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/818ddff3dc9fa0861964db063de16bbf.bundle",
+      "raw_size": 8631,
+      "raw_sha256": "4efa384caff1049cf5c671176b79f339c0c343fa7efc9d70b1fd715a99ff5c7b",
+      "table": "AstrologicalDestiny/astrological_level",
+      "payload_sha256": "c5489a3c17fecc69bead9cc3bde91f65ba6d81f4bb080dc672991595af231b1a"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "8175311697490842801",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "table": "system_level_limit",
+      "payload_sha256": "c082fb4985e76ffc5f751c65e7761d62b7974e322b3447fae9c1d3232ffb845b"
+    }
+  ],
+  "binary_input": {
+    "path": "unity/Assets/StreamingAssets/PartnerNpcShared/Config/Binary/level_prop.g.bytes",
+    "sha256": "1b8e2cf7029ba8a80750f54aa35658878166d1bfbe2e206317473b43f6af3f1f"
+  },
+  "binary_provenance": {
+    "path": "assets/reference/partner-npc-runtime-source-manifest.json",
+    "sha256": "1c42e943a68c6422a2c89aa343b670c9a91be0b8b10b70f1472f4c1b84e39ddc"
+  },
+  "code_inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemInfo.cs",
+      "sha256": "33a0ac813b6e402c07999fdfc2b889d0b3f3d039df7ee0d0be493e2c16da20a6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TreasureSuitInfo.cs",
+      "sha256": "5bfd1870a37b396d3110588d38ab5f0201dd619d847543639cb03c1836e157a6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EquipResonanceInfo.cs",
+      "sha256": "0562fdff9ff35b332f5434281cee2d0f5e30da7fc99349d7a51d55dbb080bdfa"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelExp.cs",
+      "sha256": "9100f64e3811272187f28e23a878a855b2004cbbd1d760d4acf5a4d44d213c0d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PropCfgInfo.cs",
+      "sha256": "a7ee908037a491843e56971235b07dbc42e0e0419afb956644f6e16575a1e7fe"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelPropDefaultValue.cs",
+      "sha256": "1d4df96727239af646022a831472a801d65bbed9c3b3709930a8738df7784484"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RolePropGroupInfo.cs",
+      "sha256": "cabcee2a87ab7cf9b0ef8954c32192760e0009faa40d210b8badaf64ae24a455"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ProfessionBaseInfo.cs",
+      "sha256": "8e157ce33784b5e550847106566581ab83d3d5b6b4635efa6bd7938f541490f2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillInfo.cs",
+      "sha256": "b403f503798af59fe02a307c8f4d6fbfd1dfb94d11431d17d007a68f5945745d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/AstrologicalSeasonConfig.cs",
+      "sha256": "18c51ad5a511c64a83d748a5e855fa8c971473b680222f0fc3fc7eaf971062f8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PeriodicCardPayInfo.cs",
+      "sha256": "71c861a354c44ec78f20f73a4b237f0f18212a6f009b9f7727965abbab672fd1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/AstrologicalLevelInfo.cs",
+      "sha256": "55714eb3958dd31a0369de2def6f4f7b54c6767bc135a5a49e2bc18210ba7160"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SystemLevelLimitInfo.cs",
+      "sha256": "64344a6ad7622292803435c8c32268f8ab3cf20dfbf18bf0685ee1a22ab875f3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemInfoParser.cs",
+      "sha256": "0d7ff59ed30273d1b3f94135f326b3895b82cbc5e97a54a30aaf1f1e3bc6eabb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TreasureSuitInfoParser.cs",
+      "sha256": "92c14e2449e659786c1cfcd0c095f2446b11bfdc9d5695739dfec66552456aff"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EquipResonanceInfoParser.cs",
+      "sha256": "69769d2556e56d06603354f758923141bcc976c48e278e508e189d0705e9f090"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelExpParser.cs",
+      "sha256": "3fdce158bfeda6f302f937649095df2b18ffd19c65029d7b3de1aa1355c025d6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PropCfgInfoParser.cs",
+      "sha256": "9abccbd9a3d0c6ac9b4e399eb4ea630c9c550514cd7cc768bb59b0f74cd7c075"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelPropDefaultValueParser.cs",
+      "sha256": "8bdc9ed5d6aace504a82d66e55c4098f7a255b1fc619c5f861fce97b221996e1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RolePropGroupInfoParser.cs",
+      "sha256": "0987eb182493b4e9e6d921fa54562d279eb1e603c2f472316f57cb18d9f452d2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ProfessionBaseInfoParser.cs",
+      "sha256": "801c076f2df4bce5ad6db9e9647066af7dc111438bdbc80ec556465381225e10"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillInfoParser.cs",
+      "sha256": "0cce246f80ada0ddb672576926aff3a219b3850fa78f7a2e1783abbdd464609a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/AstrologicalSeasonConfigParser.cs",
+      "sha256": "c9ef29bd65453e2d1636a16cd51091707795e246f3eb2a650d8f5cfc62871408"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PeriodicCardPayInfoParser.cs",
+      "sha256": "0ff74a616d7a6c04b8dbb3ca85932a4c19813ef5053ad3c56cc0dfb69df0ad30"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/AstrologicalLevelInfoParser.cs",
+      "sha256": "012e7f9b7d33458fcc6e7cbc38772c3d79678144fbe766c236e946ff818511d4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SystemLevelLimitInfoParser.cs",
+      "sha256": "cf54b913ea1b37a9de4496c191be1cd080c1bb7dfa88b02b05e6de8172d89f1c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelPropParser.cs",
+      "sha256": "ff101b07975b5f195a9fb88a4e35a89a9ca84a19e0475c4db3416f841530abd8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelPropBinaryReader.cs",
+      "sha256": "36050a9a6c01fe4d255cf3966831036c22b67fcf4c232ada943fd002c69d752f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RawFileUtility.cs",
+      "sha256": "3109ed557a6301e860bdc2ca57016c4fb6a59d02cc9b265739b6ee2642b4c0eb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Player.cs",
+      "sha256": "e0b324d6cf965e194cc517c176e8fae80f16dda7019e42d705ed6ae7d44da611"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerPropContext.cs",
+      "sha256": "ff85f73f1e935bfe46d4a1876633980be34e76b59197725c4e97f1a461fd5cb1"
+    }
+  ],
+  "shared_il": {
+    "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Console.bytes",
+    "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397",
+    "manifest": "871_156598"
+  },
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedClientConfiguration.cs",
+      "sha256": "23993d1fa2c917c39675a19c321037c47b06a5669a53f880e5939a2824a9ced7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedClientConfiguration.cs.meta",
+      "sha256": "7f92210abca41a71e3892c28515a61cc41fe87e1b6d25d1941e2ef10537647e6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedConfiguration.cs",
+      "sha256": "e09de7e2d4e7023ccbf6cc3b3fad6914af24c38b75df1eef2ae61d8caec4f128"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientPlayer.cs",
+      "sha256": "35d98351cb206ffa4febaca316498f0b7649f8a504f5e50155760dce8845a7d0"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientPlayer.cs.meta",
+      "sha256": "cf55268d4a5678fdb3de97efaa4d1543f77ce42dc3a319f7e4fa2550966e673f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientServices.cs",
+      "sha256": "c6cd1aa00e3312f30a4c5ce03e82b860578b8973d6af5a1ae8b773fb48743904"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientServices.cs.meta",
+      "sha256": "4c6bd02992ea44178f1a3074dc356122726bfa8587a73e4567f4cdc8e14a65a9"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.cs",
+      "sha256": "22a3eb1b0b636dac0f8eab158d9cb55f7d47194b3a452bff78a15deee3043684"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.cs.meta",
+      "sha256": "99472a67e41f7c610443b7cfef72c14c1f0c2f97310c2113c99c0d126def58f0"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef",
+      "sha256": "b9d9ca5067a0f9fa0b56a2ac900292ca6107f47a5bdb679be50038b6aa92bc4e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef.meta",
+      "sha256": "3b6f057b9671d1ee4488af82d18ab03a31f89a6fa9097e8ee189f7cbb9bbbb46"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_mainline_shared_client_configuration.py",
+      "sha256": "38f5ade251df99298e98db3fd423a9cfb4054fa4fe493db468bc09f4aeb0c9c0"
+    },
+    {
+      "path": "scripts/prepare_mainline_world_startup_validation.py",
+      "sha256": "6d8c14190092daf7b22ffd7fdc6e434793e86a46b01ca087825dedc920e393ae"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/item.g.bytes",
+      "sha256": "da276129e605494f2392572880d2cbc0354da14c4151bea6d7dcc90a69be7888"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/item.g.bytes.meta",
+      "sha256": "e7624605b646fd8fe8b2e67d07221f1be1acee8e37e823658e44c3d1dbd9f6ed"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/treasure_suit.g.bytes",
+      "sha256": "3c92dc2d7b8c8aa8478379eac1e46cd2bac3c18e9e0f9e400af12d7f9f86750b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/treasure_suit.g.bytes.meta",
+      "sha256": "8d85c195524de28a5ed9828fa2fd08687bcc1da37b7569c3a26e78b92b01c227"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/equip_resonance.g.bytes",
+      "sha256": "601078633d632dd995a67368e34800f4278da6d215ae10294b8c100c2ea06664"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/equip_resonance.g.bytes.meta",
+      "sha256": "a959c58de8b4534fca304d7b895f111092d6de935f853ca08997287b93f67b7d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/level_exp.g.bytes",
+      "sha256": "ff43b883b8c86835de154c3772d89f69675a8171829cc93c0fb60a196e6b6cc7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/level_exp.g.bytes.meta",
+      "sha256": "c54271d9b2bbb67242d6062f1a375c7b3227caf8df7e46b66c3d6a4623e8d9cb"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/prop_cfg.g.bytes",
+      "sha256": "849cde72b0a26881cb224119dfd31b6af1d7665ec41a2635c4fad97442da046c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/prop_cfg.g.bytes.meta",
+      "sha256": "5aab50aff44ed1bacce75811f2e1dc7cf7b92703efeb0d7318dd66273a70415c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/level_prop_default_value.g.bytes",
+      "sha256": "e866fc9ed6f08b9c2debb0639c7626817e45efa7451cc5b88514720d5210ef98"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/level_prop_default_value.g.bytes.meta",
+      "sha256": "f12dcb25c8fd4cf8a76836d0d4befa1300cd583eac5b49df7f88129b2d47d3bc"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/role_prop_group.g.bytes",
+      "sha256": "b52c3e07f08399423244cc858114098dc3712902524836fab2e8e03f681ddf13"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/role_prop_group.g.bytes.meta",
+      "sha256": "fcd3b2d7c9c385f570a5a013d043ce543ca0535d1400b2edf7cc43f038302a6c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/profession_base.g.bytes",
+      "sha256": "92eba63835e3300821811c21bb9fc5cbdeb36699e12bbeb9f0c0e1dab79170a5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/profession_base.g.bytes.meta",
+      "sha256": "ea9dd6c3e5e33eb599b1ea2e9bb61e4605755c756af730a403e3f2f86f03bc23"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/skill.g.bytes",
+      "sha256": "5da6dd4982bdb6259e13043da7e2b7b4dc6b655beff1661b5f92f4fd65e0c81f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/skill.g.bytes.meta",
+      "sha256": "c731666b5f2c7e105aa732d10893474c353f3e6332dfdd342175c4f10549a194"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/astrological_season_config.g.bytes",
+      "sha256": "c9527fc1003976bf6e4c7318c6d822eec690309507873fc0e2d3a696a974a15f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/astrological_season_config.g.bytes.meta",
+      "sha256": "4f401188efe2783299e2d8e41997a50e8baa680ae32d1525d6222a16697e837d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/periodic_card_pay.g.bytes",
+      "sha256": "0bd7468bb83d745ca9d533dffdd6533c68eade795cfe0a7ed856c6424d94b3a1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/periodic_card_pay.g.bytes.meta",
+      "sha256": "eecb8339990f51067926a3c1244d98fa3ce3eb956205f43181b1d2ebab89369d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/astrological_level.g.bytes",
+      "sha256": "c5489a3c17fecc69bead9cc3bde91f65ba6d81f4bb080dc672991595af231b1a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/astrological_level.g.bytes.meta",
+      "sha256": "039475e2d47e359a8ddf4503a967eb7c56bc36dbbea87bde13a942491408135a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/system_level_limit.g.bytes",
+      "sha256": "c082fb4985e76ffc5f751c65e7761d62b7974e322b3447fae9c1d3232ffb845b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/system_level_limit.g.bytes.meta",
+      "sha256": "57a39e36dcda99b1b83bef9bacdfd9e25564598f701981e7ae026b38bf3d2737"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/catalog.json",
+      "sha256": "3606c6b3af4325122511b827f3eda7f7d677737d63df4286572280502a17eb0f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration/catalog.json.meta",
+      "sha256": "910d810a6b7fb1882a9175af97917a03d495c8843d6206683245ae29aae8c09e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration.meta",
+      "sha256": "0f212481db2adf3076c3056303d4f4d6619005c1ffeeaee956a0c3430495f93b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources.meta",
+      "sha256": "2a71b78edc036471e1d16b33481e2c1575dcae8dce6fa52d85953a5dc2bd802c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld.meta",
+      "sha256": "5cee8e4218974d9a9d5653df83fee14eb2a8f0d33f526129a9e3ff74f9d6b918"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration.meta",
+      "sha256": "6039cc30e1d0e8abb79b85da2ddbae9bb677aecaf284a8149e775d6ade8a94dd"
+    }
+  ]
+}

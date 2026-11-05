@@ -40,9 +40,15 @@ def main():
         "Assets/Official/World/Map/14/SharedSerialization",
         "Assets/Official/World/Shared/SharedWorldDataCurrent",
         "Assets/Official/World/Shared/SharedWorldConfiguration",
+        "Assets/Official/World/Shared/SharedClientConfiguration",
         "Assets/Game/Editor/MainlineWorldStartup",
     ):
         shutil.copytree(source / relative, project / relative, dirs_exist_ok=True)
+    relative = "Assets/StreamingAssets/PartnerNpcShared/Config/Binary/level_prop.g.bytes"
+    target = project / relative
+    target.parent.mkdir(parents=True, exist_ok=True)
+    for suffix in ("", ".meta"):
+        shutil.copy2(source / (relative + suffix), project / (relative + suffix))
     relative = "Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset"
     target = project / relative
     target.parent.mkdir(parents=True, exist_ok=True)

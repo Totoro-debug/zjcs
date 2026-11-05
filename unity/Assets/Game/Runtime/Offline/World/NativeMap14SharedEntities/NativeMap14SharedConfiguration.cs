@@ -67,12 +67,17 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             instance = null;
             previousInstance = null;
             Settings = null;
+            var manager = Manager;
             Manager = null;
-            if (owner)
+            try { manager?.Dispose(); }
+            finally
             {
-                if (Application.isPlaying) UnityEngine.Object.Destroy(owner);
-                else UnityEngine.Object.DestroyImmediate(owner);
-                owner = null;
+                if (owner)
+                {
+                    if (Application.isPlaying) UnityEngine.Object.Destroy(owner);
+                    else UnityEngine.Object.DestroyImmediate(owner);
+                    owner = null;
+                }
             }
         }
     }
