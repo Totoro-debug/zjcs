@@ -172,6 +172,17 @@ def build():
             write(target,(folder/module['file']).read_bytes())
         guid = meta(target)
         bindings.append(dict(Name=module['name'],guid=guid,Sha256=sha(target.read_bytes()),ModuleId=module['moduleId']))
+    injection_path = ROOT/'assets/reference/official-map/mainline-shared-injection-source-manifest.json'
+    injection = json.loads(injection_path.read_bytes()) if injection_path.exists() else None
+    if injection is not None:
+        # A later, independently inspected AOT port owns this partial assembly.
+        # Never silently replace it with dummy metadata or omit its binding.
+        for row in injection['outputs']:
+            if sha((ROOT/row['path']).read_bytes()) != row['sha256']:
+                raise ValueError('Current shared injection extension differs from its source record')
+        target = ASSETS/'Framework.Core.bytes'
+        bindings.append(dict(Name='Framework.Core',guid=meta(target),Sha256=sha(target.read_bytes()),
+                             ModuleId=injection['contract']['module_id']))
     source = ROOT/'unity/Assets/Official/World/Map/14/Source/templates.json'
     source_receipt = ROOT/'assets/reference/official-map/map14-source-manifest.json'
     evidence = json.loads(source_receipt.read_bytes())
@@ -215,11 +226,12 @@ def build():
         contract=dict(type='GFrameCore.IGSerializable',type_index=interface['index'],method='System.UInt16 GetOpCode()',method_index=definition[9]),
         packages=package_sources,logging_calls=contract['loggingCalls'],config_contract=config_abi,
         serialization_extension=record(extension_path) if extension is not None else None,
+        injection_extension=record(injection_path) if injection is not None else None,
         tools=[record(Path(__file__).resolve()),record(LOGGING_PACKAGES),record(ROOT/'scripts/prepare_unity_shared_ec_contracts.ps1')],outputs=[record(p) for p in outputs],
         validation=record(ROOT/'unity/Assets/Game/Editor/Map14/SharedEntities/OfficialMap14SharedEcAcceptance.cs'),
         operation='Ship unchanged original Console/Luban/Framework.FirstPass.Runtime IL as explicitly bound local TextAssets. Recover the complete GConfig.IConfig marker and exact IGSerializable ABI from APK metadata; forward seven application logging signatures to pinned public ZLogger APIs. Original ContainerInfo and all other table/shared class methods remain in Console IL. Restore the four original 11-component client prefabs in original order and initialize original info using source field data. SubStageStateInfo.Select follows its original generated client formatter, which consumes without assignment. No server entity state, reward or save rules are supplied.',
         limitations=['Additional AOT dependencies, full serializers, formal view/input/state/save integration and Windows Player remain required. The GFrameCore marker and separately recorded serialization extension do not supply its full original assembly. Logging catch paths and all public APIs of Console are not validated.'])))
-    print(f'Local original shared EC payload: {len(contract["modules"])} assemblies, 4 source client prefabs / 44 components.')
+    print(f'Local original shared EC payload: {len(bindings)} assemblies, 4 source client prefabs / 44 components.')
 
 
 if __name__=='__main__': build()

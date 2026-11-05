@@ -211,6 +211,10 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 ## 自定义实现
 
+原玩家客户端的注入依赖已恢复原 `Framework.Core` 中三个已核对类型：属性标记 `InjectAttribute`、`IInstanceInjector` 和静态 `ServiceProviderExtensions.Inject`。依据所选884 APK的已恢复AOT映像、原元数据及方法指令，将原 `GetService<IInstanceInjector>().Inject(对象)` 调用迁为托管IL；仅交付该局部程序集，不使用DummyDll空方法体，也不改写历史871的Console／Framework.FirstPass IL。原 `Launch.IVersionManager` 完整接口从所选官方Launch程序集与反编译源码复用，核对六个原方法签名后只规范换行。资源、原生调用证据、版本、哈希、MVID和显式目录绑定见[共享注入来源](../../assets/reference/official-map/mainline-shared-injection-source-manifest.json)。
+
+主工程带图形Play Mode已通过原接口身份、同一目标／空目标传递、同一异常对象、缺失／错误服务和空provider失败、原MeManager两项注入属性及完整版本接口解析检查；生成保护另核对六种载荷／元数据／目录改变或无主记录的拒绝条件；新增局部Core绑定后的共享日志回归、主工程编译、`ProjectTools.Validate`及静态元数据检查（126,014个GUID）通过。这里的注入接收器仅用于调用验证，正式离线injector、连接／版本实现、MeManager构造、真实玩家初始化、实体完整客户端启动、正式地图交互及Windows Player仍待接通。
+
 `MainlineSharedWorld` 在解析配置前安装 `NativeMap14SharedLogging`，通过原 `Framework.Logging.Log.Initialize` 向已交付原 `ILogger`／`ILoggerFactory` ABI 提供本地输出，不启动在线应用入口。日志保留原泛型状态格式化器、等级、类别及异常对象；正式输出写入 Unity 日志，原事件委托和 EC 组件仍按原实现捕获并报告异常。已有完整日志绑定时借用，本模块拥有的绑定在最后一个重叠地图作用域退出后恢复，且不覆盖外部后装的绑定。ZLogger 所需的16份传递依赖按其官方 NuGet 清单固定版本、包SHA-512、DLL哈希和MVID，原 Console／Framework IL 保持不变；载荷、许可与本地目录见[日志依赖来源](../../assets/reference/official-map/mainline-shared-logging-source-manifest.json)。带图形的隔离 Play Mode 已核对泛型值状态、格式化器、异常对象身份、类别复用、原泛型日志包装、原事件委托捕获异常、嵌套／交错释放、外部替换及构造失败恢复；七图259,150格与33,522次全新放置初始化回归通过（12,775次出生、20,747次被原出生条件拦截）。主工程编译、`ProjectTools.Validate` 和静态元数据检查通过；此次是原运行时日志与状态检查，实体完整客户端启动、正式交互和 Windows Player 仍未验证。
 
 公共原 EC 实体按已确认方案从全新存档初始化，无旧存档迁移。`MainlineSharedWorld.Load(地区状态查询)` 统一处理七图的默认出生，查询接收本图地区编号，沿原 `MapRegionStatus` 的0／1／2返回未知／私有／公开；只使用地形／根的既有调用仍可省略该查询。内部 `MainlineSharedEntityCreation` 查本图原 `MapInfoWrap` 与原 Lo 模板，调用原 `RegionStatusSupported`／`BlockDefaultSpawnInMap` 决定是否出生，不符合条件不创建。非法状态使加载失败并释放所属作用域，重复加载仍由原公共生命周期拒绝。

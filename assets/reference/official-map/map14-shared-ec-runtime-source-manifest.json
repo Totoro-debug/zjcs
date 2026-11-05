@@ -137,12 +137,12 @@
   },
   "serialization_extension": {
     "path": "assets/reference/official-map/map14-shared-serialization-source-manifest.json",
-    "sha256": "1ee7925e881655d8e55c2cf3d3b21a49c6403a43b057405730ec87067a7240cd"
+    "sha256": "6367455a433b016b7d969d4b659bc33ec06807ce97e3e4182583edb7679d53e5"
   },
   "tools": [
     {
       "path": "scripts/prepare_unity_map14_shared_ec_runtime.py",
-      "sha256": "713efe81f7e4eb0b1398dd245a43df74a0a9d9e3fbea85c1b403372418f58f79"
+      "sha256": "f8db07f8755edf3214de84fd91a2d6611c7ca120ad6c396b8a8b938be1ab9d77"
     },
     {
       "path": "scripts/prepare_unity_shared_ec_contracts.ps1",
@@ -485,7 +485,7 @@
     },
     {
       "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset",
-      "sha256": "13e4652fe4903a9a36b6c985c4c56762767fba7a411b0558c4bad32176a89432"
+      "sha256": "8480374224b3bcdfd93fc7bb5b61e05f92bc15c7e746f61283c91c81e446403a"
     },
     {
       "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset.meta",
@@ -770,6 +770,14 @@
     {
       "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.ComponentModel.Annotations.bytes.meta",
       "sha256": "cea443f3fb24c98b2b6958a1fd0352a8e2421c01d77d76f8e2e7622cad3961b5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Framework.Core.bytes",
+      "sha256": "2ec52b7110aaa12c1447df2b2b51f9eb203a486cc6623b8bed1e54aa5189a410"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Framework.Core.bytes.meta",
+      "sha256": "4147dd10928eb70f9021255ca1f4a02cbfa94b80d20c4a88b2aa94e33a631889"
     }
   ],
   "validation": {
@@ -782,6 +790,10 @@
   ],
   "logging_dependency_extension": {
     "path": "assets/reference/official-map/mainline-shared-logging-source-manifest.json",
-    "sha256": "fa99d18eaa7733e410ac9d66593ec4daa3b8c831b5e7eaf0f78d6da54b5cd316"
+    "sha256": "39b69b702af3aaef5253c5d4c581bf50f799fd24a8f1a530b701e70a2779f180"
+  },
+  "injection_extension": {
+    "path": "assets/reference/official-map/mainline-shared-injection-source-manifest.json",
+    "sha256": "79e85a7d49959ec0b36440661692844ced0c774ea6ab9c2c8347adeacb3ff3b3"
   }
 }

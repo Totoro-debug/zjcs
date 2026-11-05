@@ -169,6 +169,11 @@ namespace Zjcs.Editor.Map13MiniMap
         private static void Advance(){try{if(routine.MoveNext())return;Require(errors==0,"Native root runtime errors: "+errors);SessionState.EraseBool(Key);EditorApplication.update-=Advance;EditorApplication.Exit(0);}catch(Exception e){Debug.LogException(e);SessionState.EraseBool(Key);EditorApplication.update-=Advance;EditorApplication.Exit(1);}}
         private static IEnumerator Verify()
         {
+            if (Environment.GetCommandLineArgs().Contains("-verify-shared-injection-only"))
+            {
+                VerifySharedInjection();
+                yield break;
+            }
             if (Environment.GetCommandLineArgs().Contains("-verify-shared-logging-only"))
             {
                 VerifySharedLogging();

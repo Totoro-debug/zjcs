@@ -1,0 +1,385 @@
+{
+  "manifest": "884_156692",
+  "operation": "Port only the three inspected original injection types and native provider.GetService<IInstanceInjector>().Inject(instance) call. Copy the complete decompiled Launch.IVersionManager interface with normalized line endings after checking its six original method signatures. Original Console and Framework.FirstPass.Runtime IL remain unchanged. Do not ship dummy method bodies.",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/source-manifest.json",
+      "sha256": "aaff0b5a2c873d332f49efd1a625f129aabaa1cb026dabb2ffe69d976c1fffc0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/global-metadata.dat",
+      "sha256": "c0fe5e062fb3ed1814781e54fd1b4859757970632655138adc091820ded88e0e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/analysis-elf.so",
+      "sha256": "86b5d4d886aa45102cf990b4a827686e3fba74734251f65ff32fe06878f93bb4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/DummyDll/Framework.Core.dll",
+      "sha256": "d2aedd0d6b7b1cdc40e905b55a7230ffba19421a28c461e438552167a36c1c1e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/DummyDll/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+      "sha256": "a460e8353c7436400882d85ebac0e8951d91cfb6fb182cafe24636c692aa270e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
+      "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+      "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Launch.dll",
+      "sha256": "3a5405399f8932ba7319384183423648811d4ef48c87c17fe367f1995e138b1f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/launch-source/IVersionManager.cs",
+      "sha256": "38d423fe71146f53977170c9bb29d5d7390fe6c19bd54f647d3b5c71be5a0311"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Console.bytes",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.DependencyInjection.Abstractions.bytes",
+      "sha256": "3a588921e88c7b989f805adc5721ed25e24d389e8a9bc968ebcff79f412a5288"
+    }
+  ],
+  "native": {
+    "address": "0xb872300",
+    "length": 208,
+    "sha256": "9eaa8f933136f56aa8df94fdaffd88d32e429a17ca70058925c59f9299f019c1",
+    "instructions": [
+      {
+        "address": "0xb872300",
+        "op": "str",
+        "arguments": "x30, [sp, #-0x30]!"
+      },
+      {
+        "address": "0xb872304",
+        "op": "stp",
+        "arguments": "x22, x21, [sp, #0x10]"
+      },
+      {
+        "address": "0xb872308",
+        "op": "stp",
+        "arguments": "x20, x19, [sp, #0x20]"
+      },
+      {
+        "address": "0xb87230c",
+        "op": "adrp",
+        "arguments": "x21, #0x1307b000"
+      },
+      {
+        "address": "0xb872310",
+        "op": "adrp",
+        "arguments": "x22, #0x1245d000"
+      },
+      {
+        "address": "0xb872314",
+        "op": "ldrb",
+        "arguments": "w8, [x21, #0x8ba]"
+      },
+      {
+        "address": "0xb872318",
+        "op": "ldr",
+        "arguments": "x22, [x22, #0x4a8]"
+      },
+      {
+        "address": "0xb87231c",
+        "op": "mov",
+        "arguments": "x19, x1"
+      },
+      {
+        "address": "0xb872320",
+        "op": "mov",
+        "arguments": "x20, x0"
+      },
+      {
+        "address": "0xb872324",
+        "op": "tbnz",
+        "arguments": "w8, #0, #0xb872348"
+      },
+      {
+        "address": "0xb872328",
+        "op": "adrp",
+        "arguments": "x0, #0x1245d000"
+      },
+      {
+        "address": "0xb87232c",
+        "op": "ldr",
+        "arguments": "x0, [x0, #0x4b0]"
+      },
+      {
+        "address": "0xb872330",
+        "op": "bl",
+        "arguments": "#0x7832708"
+      },
+      {
+        "address": "0xb872334",
+        "op": "adrp",
+        "arguments": "x0, #0x1245d000"
+      },
+      {
+        "address": "0xb872338",
+        "op": "ldr",
+        "arguments": "x0, [x0, #0x4a8]"
+      },
+      {
+        "address": "0xb87233c",
+        "op": "bl",
+        "arguments": "#0x7832708"
+      },
+      {
+        "address": "0xb872340",
+        "op": "mov",
+        "arguments": "w8, #1"
+      },
+      {
+        "address": "0xb872344",
+        "op": "strb",
+        "arguments": "w8, [x21, #0x8ba]"
+      },
+      {
+        "address": "0xb872348",
+        "op": "ldr",
+        "arguments": "x1, [x22]"
+      },
+      {
+        "address": "0xb87234c",
+        "op": "mov",
+        "arguments": "x0, x20"
+      },
+      {
+        "address": "0xb872350",
+        "op": "bl",
+        "arguments": "#0xc4504f8"
+      },
+      {
+        "address": "0xb872354",
+        "op": "cbz",
+        "arguments": "x0, #0xb8723cc"
+      },
+      {
+        "address": "0xb872358",
+        "op": "adrp",
+        "arguments": "x10, #0x1245d000"
+      },
+      {
+        "address": "0xb87235c",
+        "op": "ldr",
+        "arguments": "x8, [x0]"
+      },
+      {
+        "address": "0xb872360",
+        "op": "ldr",
+        "arguments": "x10, [x10, #0x4b0]"
+      },
+      {
+        "address": "0xb872364",
+        "op": "mov",
+        "arguments": "x20, x0"
+      },
+      {
+        "address": "0xb872368",
+        "op": "ldrh",
+        "arguments": "w9, [x8, #0x12e]"
+      },
+      {
+        "address": "0xb87236c",
+        "op": "ldr",
+        "arguments": "x1, [x10]"
+      },
+      {
+        "address": "0xb872370",
+        "op": "cbz",
+        "arguments": "x9, #0xb872394"
+      },
+      {
+        "address": "0xb872374",
+        "op": "ldr",
+        "arguments": "x10, [x8, #0xb0]"
+      },
+      {
+        "address": "0xb872378",
+        "op": "add",
+        "arguments": "x10, x10, #8"
+      },
+      {
+        "address": "0xb87237c",
+        "op": "ldur",
+        "arguments": "x11, [x10, #-8]"
+      },
+      {
+        "address": "0xb872380",
+        "op": "cmp",
+        "arguments": "x11, x1"
+      },
+      {
+        "address": "0xb872384",
+        "op": "b.eq",
+        "arguments": "#0xb8723a4"
+      },
+      {
+        "address": "0xb872388",
+        "op": "subs",
+        "arguments": "x9, x9, #1"
+      },
+      {
+        "address": "0xb87238c",
+        "op": "add",
+        "arguments": "x10, x10, #0x10"
+      },
+      {
+        "address": "0xb872390",
+        "op": "b.ne",
+        "arguments": "#0xb87237c"
+      },
+      {
+        "address": "0xb872394",
+        "op": "mov",
+        "arguments": "x0, x20"
+      },
+      {
+        "address": "0xb872398",
+        "op": "mov",
+        "arguments": "w2, wzr"
+      },
+      {
+        "address": "0xb87239c",
+        "op": "bl",
+        "arguments": "#0x73c5608"
+      },
+      {
+        "address": "0xb8723a0",
+        "op": "b",
+        "arguments": "#0xb8723b0"
+      },
+      {
+        "address": "0xb8723a4",
+        "op": "ldrsw",
+        "arguments": "x9, [x10]"
+      },
+      {
+        "address": "0xb8723a8",
+        "op": "add",
+        "arguments": "x8, x8, x9, lsl #4"
+      },
+      {
+        "address": "0xb8723ac",
+        "op": "add",
+        "arguments": "x0, x8, #0x138"
+      },
+      {
+        "address": "0xb8723b0",
+        "op": "ldp",
+        "arguments": "x3, x2, [x0]"
+      },
+      {
+        "address": "0xb8723b4",
+        "op": "mov",
+        "arguments": "x0, x20"
+      },
+      {
+        "address": "0xb8723b8",
+        "op": "mov",
+        "arguments": "x1, x19"
+      },
+      {
+        "address": "0xb8723bc",
+        "op": "ldp",
+        "arguments": "x20, x19, [sp, #0x20]"
+      },
+      {
+        "address": "0xb8723c0",
+        "op": "ldp",
+        "arguments": "x22, x21, [sp, #0x10]"
+      },
+      {
+        "address": "0xb8723c4",
+        "op": "ldr",
+        "arguments": "x30, [sp], #0x30"
+      },
+      {
+        "address": "0xb8723c8",
+        "op": "br",
+        "arguments": "x3"
+      },
+      {
+        "address": "0xb8723cc",
+        "op": "bl",
+        "arguments": "#0x78329ac"
+      }
+    ],
+    "service_lookup": "Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService<object>",
+    "service_lookup_address": "0xc4504f8",
+    "interface_type_index": 101946,
+    "interface_dispatch": "Framework.DependencyInjection.Abstractions.IInstanceInjector",
+    "attribute_constructor_address": "0xb872148",
+    "attribute_constructor_sha256": "222882407fb2e6ff6d1c1606322789dc6c01539d762510e83c098a89376c553c",
+    "attribute_base_constructor_address": "0x10912910"
+  },
+  "contract": {
+    "types": [
+      "Framework.DependencyInjection.InjectAttribute",
+      "Framework.DependencyInjection.Abstractions.IInstanceInjector",
+      "Framework.DependencyInjection.ServiceProviderExtensions"
+    ],
+    "name": "Framework.Core",
+    "module_id": "70f203d1-4f0d-f706-22ee-39f936a57a9c",
+    "method": "System.Void Framework.DependencyInjection.ServiceProviderExtensions::Inject(System.IServiceProvider,System.Object)"
+  },
+  "tools": [
+    {
+      "path": "scripts/prepare_mainline_shared_injection.py",
+      "sha256": "f9ca39f8d10ba3bd76fe42bd3ee476fe28bbeef306d4b0b0e4b055ed2dc7ce32"
+    },
+    {
+      "path": "scripts/prepare_mainline_shared_injection_contract.ps1",
+      "sha256": "f4e580278609271473ac5065e6c1f73275b8362773e9aa443a6b773eac4d621c"
+    }
+  ],
+  "integration": [
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Injection.cs",
+      "sha256": "f42d57a70daf7c0b221ad7aa5e1628c41c65250d17bd6a32a0dc74c691c65fdb"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Injection.cs.meta",
+      "sha256": "a314b1cdd475ef6e21e63c97a1aad736e0e8eb6dcdb84cd47a53fc50bd2056f8"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs",
+      "sha256": "0ff4227fc85aaf355d1d9c5e71bf119b8477ae3ce821dd017895108da3707a4b"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Framework.Core.bytes",
+      "sha256": "2ec52b7110aaa12c1447df2b2b51f9eb203a486cc6623b8bed1e54aa5189a410"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Framework.Core.bytes.meta",
+      "sha256": "4147dd10928eb70f9021255ca1f4a02cbfa94b80d20c4a88b2aa94e33a631889"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedLaunch/IVersionManager.cs",
+      "sha256": "75dd23aa2653715f7f721c5df7829bee7030dab711512c8879efd5bacb76a93e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedLaunch/IVersionManager.cs.meta",
+      "sha256": "e3c93ef13dcb6141de42c53b28578fed9ee6ac1adb135da4aa8749894c763a2b"
+    }
+  ],
+  "binding": {
+    "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset",
+    "sha256": "8480374224b3bcdfd93fc7bb5b61e05f92bc15c7e746f61283c91c81e446403a"
+  },
+  "limitations": [
+    "This is a partial Core port, not the full original Framework.Core assembly.",
+    "Dummy RVA/token and JetBrains static analysis annotations are excluded; runtime AttributeUsage is preserved.",
+    "No injector implementation, client services, player startup, map interaction or Windows Player proof is supplied by this port."
+  ]
+}

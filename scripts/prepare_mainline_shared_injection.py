@@ -1,0 +1,163 @@
+"""Restore the inspected original Core injection call; do not ship AOT stubs."""
+import hashlib
+import json
+from pathlib import Path
+import re
+import struct
+import subprocess
+import sys
+
+from official_apk import ROOT
+from official_metadata import Metadata
+from prepare_unity_map14_shared_ec_runtime import ASSETS, RESOURCES, meta
+from validation_workspace import validation_directory
+from prepare_unity_story_sound_runtime import runtime_meta
+
+sys.path.insert(0, str(ROOT / '.tools/character-art-python'))
+from capstone import Cs, CS_ARCH_ARM64, CS_MODE_LITTLE_ENDIAN
+from elftools.elf.elffile import ELFFile
+
+SOURCE = ROOT / '.tools/source-packages/current/884_156692/official-code'
+RECEIPT = ROOT / 'assets/reference/official-map/mainline-shared-injection-source-manifest.json'
+
+
+def record(path):
+    return dict(path=path.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+
+
+def existing_binding(catalog, payload):
+    """Validate all live bindings before replacing this port's own payload."""
+    original = catalog.read_text(encoding='utf8')
+    pattern = r'  - Name: (.+)\n    Data: \{fileID: 4900000, guid: ([a-f0-9]+), type: 3\}\n    Sha256: ([a-f0-9]+)\n    ModuleId: ([a-f0-9-]+)\n'
+    matches = list(re.finditer(pattern, original))
+    if len(matches) != original.count('  - Name: '):
+        raise ValueError('Preserve an unknown shared assembly binding')
+    for match in matches:
+        name, guid, digest, _ = match.groups()
+        current = ASSETS/(name+'.bytes')
+        if record(current)['sha256'] != digest or f'guid: {guid}\n' not in Path(str(current)+'.meta').read_text():
+            raise ValueError('Preserve changed shared assembly: '+name)
+    owned = [m for m in matches if m[1] == 'Framework.Core']
+    if owned or payload.exists() or RECEIPT.exists():
+        if len(owned) != 1 or not RECEIPT.exists() or not payload.exists():
+            raise ValueError('Preserve an unrecorded Core payload or binding')
+        previous = json.loads(RECEIPT.read_bytes())
+        for current in (payload, Path(str(payload)+'.meta')):
+            rows = [r for r in previous['outputs'] if r['path'] == current.relative_to(ROOT).as_posix()]
+            if len(rows) != 1 or record(current)['sha256'] != rows[0]['sha256']:
+                raise ValueError('Preserve changed original injection port')
+        for row in previous['outputs']:
+            if record(ROOT/row['path'])['sha256'] != row['sha256']:
+                raise ValueError('Preserve changed injection dependency: '+row['path'])
+        if owned[0][4] != previous['contract']['module_id']:
+            raise ValueError('Preserve a changed Core module identity')
+        return original, owned[0].group()
+    return original, None
+
+
+def build():
+    payload = ASSETS/'Framework.Core.bytes'
+    catalog = RESOURCES/'shared-assembly-catalog.asset'
+    original, old_block = existing_binding(catalog, payload)
+    evidence_path = SOURCE / 'aot-metadata/source-manifest.json'
+    evidence = json.loads(evidence_path.read_bytes())
+    if evidence['manifest'] != '884_156692':
+        raise ValueError('Review selected AOT input identity')
+    required = [SOURCE/'aot-metadata/analysis-elf.so', SOURCE/'aot-metadata/DummyDll/Framework.Core.dll',
+                SOURCE/'aot-metadata/DummyDll/Microsoft.Extensions.DependencyInjection.Abstractions.dll',
+                SOURCE/'aot-metadata/dump.cs']
+    for path in required:
+        expected = next(r['sha256'] for r in evidence['outputs'] if r['path'] == path.relative_to(ROOT).as_posix())
+        if record(path)['sha256'] != expected:
+            raise ValueError('Original AOT input differs: ' + str(path))
+    metadata = SOURCE / 'global-metadata.dat'
+    if record(metadata)['sha256'] != 'c0fe5e062fb3ed1814781e54fd1b4859757970632655138adc091820ded88e0e':
+        raise ValueError('Selected original AOT metadata differs')
+    if record(required[0])['sha256'] != '86b5d4d886aa45102cf990b4a827686e3fba74734251f65ff32fe06878f93bb4':
+        raise ValueError('Review the original restored native image')
+    dump = required[3].read_text(encoding='utf8')
+    if not re.search(r'RVA: 0xC4504F8[^\n]*\n\s*\|\-ServiceProviderServiceExtensions.GetService<object>',dump):
+        raise ValueError('Review original generic service lookup identity')
+    attribute_dump = dump[dump.index('public abstract class Attribute : '):]
+    if not re.search(r'RVA: 0x10912910[^\n]*\n\s*protected void \.ctor\(\)',attribute_dump):
+        raise ValueError('Review original Attribute constructor branch target')
+    launch = SOURCE/'managed/decoded/Launch.dll'
+    code_manifest = SOURCE.parent/'code-manifest.json'
+    code = json.loads(code_manifest.read_bytes())
+    if code['manifest'] != '884_156692' or record(launch)['sha256'] != code['assemblies']['Launch.dll']['decoded_sha256']:
+        raise ValueError('Original Launch assembly differs')
+    version_source = SOURCE/'launch-source/IVersionManager.cs'
+    if record(version_source)['sha256'] != '38d423fe71146f53977170c9bb29d5d7390fe6c19bd54f647d3b5c71be5a0311':
+        raise ValueError('Review original decompiled version interface')
+    version_target = ROOT/'unity/Assets/Game/Runtime/Official/SharedLaunch/IVersionManager.cs'
+    version_text = version_source.read_text(encoding='utf8')
+    if version_target.exists() and version_target.read_text(encoding='utf8') != version_text:
+        raise ValueError('Preserve a changed version interface')
+    with required[0].open('rb') as stream:
+        elf = ELFFile(stream)
+        segments = [dict(s.header) for s in elf.iter_segments() if s['p_type'] == 'PT_LOAD']
+
+        def native(address, count):
+            segment, = [s for s in segments if s['p_vaddr'] <= address < s['p_vaddr']+s['p_filesz']]
+            stream.seek(address-segment['p_vaddr']+segment['p_offset'])
+            return stream.read(count)
+
+        raw = native(0xb872300, 0xd0)
+        if hashlib.sha256(raw).hexdigest() != '9eaa8f933136f56aa8df94fdaffd88d32e429a17ca70058925c59f9299f019c1':
+            raise ValueError('Original Inject native body differs')
+        constructor = native(0xb872148, 8)
+        if hashlib.sha256(constructor).hexdigest() != '222882407fb2e6ff6d1c1606322789dc6c01539d762510e83c098a89376c553c':
+            raise ValueError('Original InjectAttribute constructor differs')
+        pointer, = struct.unpack('<Q', native(0x1245d4b0, 8))
+        encoded, = struct.unpack('<Q', native(pointer, 8))
+        index = (encoded & 0x1fffffff) >> 1
+        types = Metadata(metadata.read_bytes())
+        interface = types.type_for(index)
+        if encoded >> 29 != 1 or interface['byval'] != index or (interface['namespace'],interface['name']) != ('Framework.DependencyInjection.Abstractions','IInstanceInjector'):
+            raise ValueError('Original Inject interface dispatch identity differs')
+    instructions = [dict(address=hex(i.address), op=i.mnemonic, arguments=i.op_str)
+                    for i in Cs(CS_ARCH_ARM64,CS_MODE_LITTLE_ENDIAN).disasm(raw,0xb872300)]
+    tool = ROOT / 'scripts/prepare_mainline_shared_injection_contract.ps1'
+    destination = validation_directory() / 'injection-contract'
+    seed = hashlib.sha256(raw+constructor+tool.read_bytes()).hexdigest()
+    subprocess.run(['pwsh','-NoProfile','-File',str(tool),'-OriginalCore',str(required[1]),
+                    '-OriginalLaunch',str(launch),
+                    '-DependencyInjectionAbstractions',str(ASSETS/'Microsoft.Extensions.DependencyInjection.Abstractions.bytes'),
+                    '-Destination',str(destination),'-IdentitySeed',seed],check=True)
+    binding = json.loads((destination/'contract.json').read_text(encoding='utf-8-sig'))
+    if catalog.read_text(encoding='utf8') != original:
+        raise ValueError('Shared bindings changed during generation; review and retry')
+    payload.write_bytes((destination/'Framework.Core.dll').read_bytes())
+    guid = meta(payload)
+    block = (f'  - Name: Framework.Core\n    Data: {{fileID: 4900000, guid: {guid}, type: 3}}\n'
+             f"    Sha256: {record(payload)['sha256']}\n    ModuleId: {binding['module_id']}\n")
+    if old_block is not None:
+        updated = original.replace(old_block,block)
+    else:
+        updated = original.replace('  Prefabs:',block+'  Prefabs:')
+    catalog.write_text(updated,encoding='utf8',newline='\n')
+    version_target.write_text(version_text,encoding='utf8',newline='\n')
+    if not Path(str(version_target)+'.meta').exists():
+        runtime_meta(version_target)
+    RECEIPT.write_text(json.dumps(dict(manifest='884_156692',
+        operation='Port only the three inspected original injection types and native provider.GetService<IInstanceInjector>().Inject(instance) call. Copy the complete decompiled Launch.IVersionManager interface with normalized line endings after checking its six original method signatures. Original Console and Framework.FirstPass.Runtime IL remain unchanged. Do not ship dummy method bodies.',
+        inputs=[record(p) for p in [evidence_path,metadata,*required,code_manifest,launch,version_source,ASSETS/'Console.bytes',ASSETS/'Microsoft.Extensions.DependencyInjection.Abstractions.bytes']],
+        native=dict(address='0xb872300',length=len(raw),sha256=hashlib.sha256(raw).hexdigest(),instructions=instructions,
+                    service_lookup='Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService<object>',service_lookup_address='0xc4504f8',
+                    interface_type_index=index,interface_dispatch=interface['namespace']+'.'+interface['name'],
+                    attribute_constructor_address='0xb872148',attribute_constructor_sha256=hashlib.sha256(constructor).hexdigest(),attribute_base_constructor_address='0x10912910'),
+        contract=binding,tools=[record(Path(__file__)),record(tool)],
+        integration=[record(ROOT/path) for path in (
+            'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Injection.cs',
+            'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Injection.cs.meta',
+            'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs')],
+        outputs=[record(p) for p in (payload,Path(str(payload)+'.meta'),version_target,Path(str(version_target)+'.meta'))],binding=record(catalog),
+        limitations=['This is a partial Core port, not the full original Framework.Core assembly.',
+                    'Dummy RVA/token and JetBrains static analysis annotations are excluded; runtime AttributeUsage is preserved.',
+                    'No injector implementation, client services, player startup, map interaction or Windows Player proof is supplied by this port.']),
+        ensure_ascii=False,indent=2)+'\n',encoding='utf8',newline='\n')
+    print('Bound inspected Core Inject, property marker and IInstanceInjector ABI.')
+
+
+if __name__ == '__main__':
+    build()
