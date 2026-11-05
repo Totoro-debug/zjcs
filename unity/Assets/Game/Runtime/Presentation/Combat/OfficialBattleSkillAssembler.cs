@@ -39,6 +39,7 @@ namespace Zjcs.Presentation.Combat
             if (combat == null) throw new ArgumentNullException(nameof(combat));
             if (skillItems == null) throw new ArgumentNullException(nameof(skillItems));
             if (unit == null) throw new ArgumentNullException(nameof(unit));
+            OfficialBattleUnitAssembler.ApplyMonsterIdentity(combat, unit);
             List<FightOfficialSkillBinding> active = PrepareActiveBindings(combat,
                 sourceProperties, activeSkills, preserveZeroProperties);
             List<FightOfficialPassiveSkillBinding> passive = passiveSkills?.ToList()

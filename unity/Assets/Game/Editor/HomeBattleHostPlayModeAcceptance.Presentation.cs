@@ -24,6 +24,7 @@ namespace Zjcs.Editor
 
         private static void VerifyAttachedPlayerPresentation(MonoBehaviour runner, FightBattleCheckpoint checkpoint)
         {
+            VerifyConfiguredMonsterBodies(runner, checkpoint);
             Transform entity = BattlePlayerEntity(runner);
             var home = runner.GetComponentInParent<HomeFeatureRuntime>();
             Transform player = entity.GetComponentInChildren<ProfessionNativeSceneRenderer>(true)?.transform;

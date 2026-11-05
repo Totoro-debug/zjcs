@@ -1,0 +1,290 @@
+{
+  "manifest": "854_156383",
+  "generator": {
+    "path": "scripts/prepare_battle_monster_bodies.py",
+    "sha256": "6fda25d41fa7f6e24c3afe851d65dff9146f86f1d0b43340561e0431a5679f18"
+  },
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules-source-manifest.json",
+      "sha256": "cef8b0b5a12460f2bdb2b4d8031f95fb8d560a391a9170641e401b67ef08968b"
+    }
+  ],
+  "original_code": [
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/GridTransformComponentInfo.cs",
+      "sha256": "7aa393429e451d3e1b9a579e768ed1242067925e9fb3e866746f08098b3b853d"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/GridTransformComponentBodyPosInfo.cs",
+      "sha256": "89d577d69ada54d9dd25c015cf831dc905227a04dd3d63ee5be2a0cbde57b0e8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/GameCameraController.cs",
+      "sha256": "4c58c8acb09dc575a7be586d86b3d7aef28eb4ed3a3ea8c9f96deff632adc4ef"
+    }
+  ],
+  "resolved_monsters": 470,
+  "resolved_body_config_sha256": "2a670a56345f801ace57c779242d828054d3f44c87171905378ad6322516ec72",
+  "example_3803": {
+    "template": 3803,
+    "body": [
+      {
+        "Pos": {
+          "X": -2,
+          "Y": -2
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": -2,
+          "Y": -1
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": -2,
+          "Y": 0
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": -2,
+          "Y": 1
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": -2,
+          "Y": 2
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": -1,
+          "Y": -2
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": -1,
+          "Y": -1
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": -1,
+          "Y": 0
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": -1,
+          "Y": 1
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": -1,
+          "Y": 2
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": 0,
+          "Y": -2
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": 0,
+          "Y": -1
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": 0,
+          "Y": 0
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": 0,
+          "Y": 1
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": 0,
+          "Y": 2
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": 1,
+          "Y": -2
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": 1,
+          "Y": -1
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": 1,
+          "Y": 0
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": 1,
+          "Y": 1
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": 1,
+          "Y": 2
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": 2,
+          "Y": -2
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": 2,
+          "Y": -1
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": 2,
+          "Y": 0
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": 2,
+          "Y": 1
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      },
+      {
+        "Pos": {
+          "X": 2,
+          "Y": 2
+        },
+        "GroundType": 1,
+        "IgnoreClick": false,
+        "OverrideGroundType": false
+      }
+    ]
+  },
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs",
+      "sha256": "8ee429a2dd65e4ae31de88b30081f207fb83ec47dd2ccda1de74326da95cab58"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleUnitAssembler.cs",
+      "sha256": "be5cfa30460f01d2faa4c15fec3469433c6c6b459e747a98689bb682f59b157e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillAssembler.cs",
+      "sha256": "a50dcbdbc2f195093fd52699aa36874b872f79aa4305c0deb026b064c0a0f82f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleCameraView.cs",
+      "sha256": "a7402674f7a8c3a4dba181608730a5d32667ba58620a71b888fcb8343073865f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.Presentation.cs",
+      "sha256": "14ae24e43c89a1b20cf357e618fed2cdb0848431729de420c619fc0013ed3119"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.MonsterBodies.cs",
+      "sha256": "9a38a9e91605eebfe20a75f77a0e4a1811942b42a5f54d4bfac11cca252c7381"
+    }
+  ],
+  "operation": "Resolve the existing verified monster TempEntityId and GridTransformComponent.BodyRangeInfos at initial formal-monster assembly before skills/passives. Arena role players and configured summons retain their separate identity/footprint assembly. Restored checkpoints are not reassembled. Reuse the current source camera radius formula without changing original art transforms or lens settings."
+}

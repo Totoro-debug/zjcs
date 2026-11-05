@@ -7,6 +7,20 @@ namespace Zjcs.Presentation.Combat
     /// <summary>Initializes the shared HP, movement and turn state for a battle unit.</summary>
     public static class OfficialBattleUnitAssembler
     {
+        public static void ApplyMonsterIdentity(FightOfficialCombatCatalog combat, FightBattleUnitState unit)
+        {
+            if (combat == null) throw new ArgumentNullException(nameof(combat));
+            if (unit == null) throw new ArgumentNullException(nameof(unit));
+            // Arena role players use monster stat rows; summons already carry
+            // their own configured body. This is the initial formal-monster assembly.
+            if (unit.MonsterId <= 0 || unit.CharacterType == 1 || unit.MasterId > 0) return;
+            var body = combat.MonsterBodyOffsets(unit.MonsterId);
+            if (body.Count == 0)
+                throw new InvalidOperationException("Official monster body footprint is unbound: " + unit.MonsterId);
+            unit.MonsterTemplateId = combat.MonsterTemplateId(unit.MonsterId);
+            unit.BodyOffsets = body;
+        }
+
         public static void Initialize(FightDamageFormula formula, FightBattleUnitState unit,
             IReadOnlyDictionary<int, long> properties, int maxHpPropertyId, int speedPropertyId,
             bool preserveZeroProperties = false)
