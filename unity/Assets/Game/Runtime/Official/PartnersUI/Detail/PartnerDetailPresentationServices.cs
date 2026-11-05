@@ -47,7 +47,7 @@ namespace Zjcs.Official.PartnersUI
     }
     public interface IPartnerDetailLiveControllerServices
     {
-        int MaxCacheCount { get; }
+        int MemorySizeLevel { get; }
         IProfessionAssetOperation<GameObject> LoadPrefab(string path);
         NpcDetailLiveItem Instantiate(GameObject prefab, Transform parent);
     }

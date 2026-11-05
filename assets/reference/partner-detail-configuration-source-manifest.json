@@ -1,0 +1,44 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ENpcFullBodyImageType.cs": "fc0eb80936439009304cda03aa6a36e617d0bc6ce9193bd65317643c77ecdefe",
+    ".tools/source-packages/current/884_156692/official-code/launch-source/Common/RegionCodeEnum.cs": "80f27e92de15af96d5dd7e36bc300563ecbc2e9ef045486841e03d8516d02253",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcRoleType.cs": "0cc47390185f14b0511ca7f84cddf0fdf18c917183af35c88babe11b6f3395a2",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcInfo.cs": "387c584e748963f1870e9861fee043e68fcc741cf52409fcdeffe294007c6a8d",
+    ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceUtils.cs": "f44c5bd234aedd06e9f7845b8b1eaf66963a81675b8eb5b204ca4e2c8189c109",
+    ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework.Device/DesktopDevice.cs": "8836aa26da1102b7b9ad8dd547a7ee3fd79a0dd7f6fb38784120ff59ab64bfdb",
+    ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework.Device/DeviceUtility.cs": "ffb59c55af585af4d98b072a9712f0016bc38a2d9819d7d467a98b8e551ea379",
+    "scripts/templates/partner_detail/OfflinePartnerDetailConfiguration.cs": "faa9b0e83dd823686a7bc738f691d65b47882906ab21013b6b23c5e748088775"
+  },
+  "methods": {
+    "common-source/Common/NpcInfo.cs:public ENpcFullBodyImageType GetFullBodyImagePath(out string path, RegionCodeEnum? region = null)": "372ac4a12c5f90f4bf293f72e5a5ffcae4ac687027015a60cc16f30d377e2b3e",
+    "common-source/Common/NpcInfo.cs:public bool TryGetFullBodyImagePath(ENpcFullBodyImageType imageType, out string path, RegionCodeEnum? region = null)": "cb5f92decabf3222e4618d5b7b239e6ab718b0b17e249f1dec1161d64840bb29",
+    "common-source/Common/NpcInfo.cs:private bool TryGetFullBodyImagePathInternal(ENpcFullBodyImageType imageType, RegionCodeEnum targetRegion, out string path)": "9342f2b34ba64aa851ca964226bc95e8797e010be66b3ea17a7cb60eae784a72",
+    "common-source/Common/NpcInfo.cs:private bool TryGetRegionImagePath(Dictionary<RegionCodeEnum, string> regionImages, RegionCodeEnum targetRegion, out string path)": "70e01798e14c108afe2825e9948af3c03c3608a890ecc777f2dc1dea5fc12caf",
+    "client-source/AppearanceSystem.Runtime/AppearanceUtils.cs:public static string GetNpcStartingAnimName(int npcId)": "4c25904e8f9a03b19fe1b016f963abcdee82d75c27f51d1861fa9413a2843935",
+    "framework-firstpass-source/Framework.Device/DeviceUtility.cs:public static MemorySizeLevel GetMemorySizeLevel()": "6b16c6066e1c64d1f79f1ebf0c0db8f6a2aca3d7ea4b079d120c6c6fcb7bc117"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDetailConfiguration.cs": "b2da66a465d73349f6cd439dab21f0f22b02297a656ef18908e1e1a6f67f6018",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDetailConfiguration.cs.meta": "9c9fe0f29020e59649d6c068937495bf07be7c1836238f21446abedb3481ee94",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDetailPresentationServices.cs": "becd4778544133a7b5b0d90477aedefc2e15391a689a298a88e11516fc8c41b5",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDetailPresentationServices.cs.meta": "8bf007ac2a3130540a58a05c6e4467d0040f11de9858bba8e7f9af4a3769371a",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDetailWindowServices.cs": "7f1a77a974dc5acd44b3adc8522fde34b19bb38cb751e21a87f2e7914365e272",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDetailWindowServices.cs.meta": "f5ec945a5811ac920baa5bc63c11d685d047184e8ef340062e3be5c31039fe52",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerRewardUiPresentation.cs": "c306b0ba9da4d0a48338e9ce4dd6b758681780fa20cc5c50ac4908ceaf13f7cc",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerRewardUiPresentation.cs.meta": "edb9b91d7206d33ac52e2d1f00380894d431f7f2046bfc8666a2185a3fcc8389",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerDetailWindowView.cs": "5b64836e4ea76a11606458431ca14ee914cc27d5a6adf317928cc08b0f51ccc0",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerDetailWindowView.cs.meta": "d82ba5188c7c2979c11d8635847659e147ac742e990c5c5a9d0a000277eb2d90"
+  },
+  "generator_sha256": "5a8ece461fcc95f37fcaa86b9befafc16e5008e62ddd671354092e2de07c06a7",
+  "validation_sources": {
+    "scripts/fixtures/partner_detail_window_validation.cs": "b301f0797adf466d4f3021e385f3a7c803e78d68baa317a4767d829abe84c509"
+  },
+  "adaptations": [
+    "Typed projections preserve all NPC fields and friendship animations/talk IDs.",
+    "Selected Chinese client uses CN=0; callers can pass every retained original region.",
+    "Original live-before-static and per-kind region-before-default branches retained.",
+    "Diagnostics use Unity logging; resource selection and return order remain original.",
+    "Local Windows device tier retains DesktopDevice/DeviceUtility memory thresholds; live controller keeps its serialized cache dictionary."
+  ]
+}

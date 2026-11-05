@@ -107,7 +107,8 @@ def main():
     text = text.replace('.Release(tryUnloadAsset: true)', '.Dispose()').replace('ResourceLoader.LoadPrefab(', 'services.LoadPrefab(')
     text = replace(text, 'UIUtils.Instantiate<NpcDetailLiveItem>(orLoadPrefab, mSlot)', 'services.Instantiate(orLoadPrefab, mSlot)')
     text = re.sub(r'GLoggerErrorInterpolatedStringHandler message =.*?Log.Error\(ref message, null, "GetOrLoadPrefab",.*?\);', 'Debug.LogError("NpcDetailLiveController.ShowNpc load fail！");', text, flags=re.S)
-    text = re.sub(r'return CollectionExtensions.GetValueOrDefault<MemorySizeLevel, int>\(.*?\);', 'return services.MaxCacheCount;', text)
+    text = re.sub(r'return CollectionExtensions.GetValueOrDefault<MemorySizeLevel, int>\(.*?\);',
+        'return mMaxCacheCountDict.TryGetValue(services.MemorySizeLevel, out int count) ? count : 1;', text)
     write('NpcDetailLiveController', text)
 
     text = controller('NpcDetailLiveEffectInfo')
@@ -218,7 +219,7 @@ def main():
         inputs=inputs, outputs=outputs,
         adaptations=['Application controllers only; no Spine SDK implementation.',
             'Resource handles use local IDisposable operations; injected service ports retain original call order.',
-            'Live controller memory-tier cache limit is supplied from its serialized dictionary by the Windows host.',
+            'Live controller retains its serialized memory-tier cache dictionary and default; local device service supplies the original memory tier.',
             'Full-body image selection and starting animation remain official configuration queries.'],
         status='Controller migration in progress; complete original window/native actors and host validation pending.')
     (ROOT / 'assets/reference/partner-detail-window-ui-source-manifest.json').write_text(

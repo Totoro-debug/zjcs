@@ -1,6 +1,6 @@
 {
   "source_version": "884_156692",
-  "generator_sha256": "dc9ec4852b82d86c2c7dd2276a8e4bcca95886d3c07d15ffe24ea57b3a6c08ee",
+  "generator_sha256": "59a305cd6999cb12c8cf103174a64693cfc5485cba82cb355af1a535873d1efe",
   "inputs": {
     ".tools/source-packages/current/884_156692/official-code/client-source/NpcDetailPanelDetailContent.cs": "76b88c3b472f0ed3d5eaff9a6c21b0c7dfde36d7452f565e57bf17779e60fbd6",
     ".tools/source-packages/current/884_156692/official-code/client-source/NpcAdventureConditionContent.cs": "f2f5e858b2bd2f8b370f2a76333f4b4cf1eeda2a45d843eb9a7214e682dcdd49",
@@ -20,7 +20,7 @@
     "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/NpcAdventureConditionContent.cs.meta": "01eecece77ea2986f670b46fd855b3151b8ada392081fe39925f9ca97c9247ac",
     "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/NpcTreasureIcon.cs": "ccb96f2b03ab8d075e7d6d62392edf950c91e38816bb9a409f5ca78d9f60795a",
     "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/NpcTreasureIcon.cs.meta": "7c827e4f0dc388e68d6b40bb189faf1be3b1b1383391bd2e133b82e029f605a2",
-    "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/NpcDetailLiveController.cs": "f45a6d57bf5966596b022a9033614a42b8049ef63e56497b731b7e48d0e625fa",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/NpcDetailLiveController.cs": "eb5bf3fc5755e14918060749b6efa5685cb01a90d354e351882a618c08f63fa7",
     "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/NpcDetailLiveController.cs.meta": "3d44c5b32fcb2665a659097a2f2d1a38469df9242eb0ffdbdc4166f471ea11a8",
     "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/NpcDetailLiveEffectInfo.cs": "60684aa581d647120124e86bfb97917e2b27c32da140d06532527db56e203e1a",
     "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/NpcDetailLiveEffectInfo.cs.meta": "df2754f8fc3cfb1c6f93c4991a5436c04cfc8922e840a0937233d595c115ead4",
@@ -34,7 +34,7 @@
     "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/SkeletonGraphicAnimSequence.cs.meta": "a6b5ffcf1854126d87520acdf8b941e0adea90eeb52bfc27206edcf75b2a1c66",
     "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/PartnerSequenceBindings.cs": "a6b65fc001ff20aac5836eaf463bd577867d9c42b21e00737b36fbf9144e143a",
     "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/PartnerSequenceBindings.cs.meta": "c1388b8e52f45f9195f25795ef72209a101d750ad6c42b3736b8b247ff71f41a",
-    "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/PartnerDetailPresentationServices.cs": "b00194bd5b459250a503c6069d859396f8d114760f65c5c929412d09f318635c",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/PartnerDetailPresentationServices.cs": "d3cd00c4084b68be9426726f27a1fff7944403194ce69d3fb4c733fe7a3b8818",
     "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/PartnerDetailPresentationServices.cs.meta": "dca27438811e61e405de2772f93381869e91d55e310efd688119fad558d14545",
     "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/PartnerDetailResourceBag.cs": "a61c412c0b18cc3207ed21c0a21ffabccd275e08285e89d0bd53b04436ca2534",
     "unity/Assets/Game/Runtime/Official/PartnersUI/Detail/PartnerDetailResourceBag.cs.meta": "0b9e90ae18ed5c0178f3bebffb283b9514ee15d56cd19e707a89f3057cbe0878",
@@ -46,7 +46,7 @@
   "adaptations": [
     "Application controllers only; no Spine SDK implementation.",
     "Resource handles use local IDisposable operations; injected service ports retain original call order.",
-    "Live controller memory-tier cache limit is supplied from its serialized dictionary by the Windows host.",
+    "Live controller retains its serialized memory-tier cache dictionary and default; local device service supplies the original memory tier.",
     "Full-body image selection and starting animation remain official configuration queries."
   ],
   "status": "Controller migration in progress; complete original window/native actors and host validation pending."

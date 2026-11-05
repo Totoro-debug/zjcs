@@ -120,7 +120,7 @@ public class NpcDetailLiveController : MonoBehaviour
 
 	private int GetMaxCacheCount()
 	{
-		return services.MaxCacheCount;
+		return mMaxCacheCountDict.TryGetValue(services.MemorySizeLevel, out int count) ? count : 1;
 	}
 }
 

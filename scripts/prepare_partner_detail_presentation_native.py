@@ -124,6 +124,7 @@ class PresentationBinding(PartnerDetailWindowBinding):
         self.sprites = []
         self.unreachable_images = []
         self.unresolved_images = []
+        self.confirmed_image_substitutions = []
         for address in sorted(addresses):
             path = 'Assets/Image/' + address
             matches = [row for row in table if row['address'] == path or
@@ -137,6 +138,13 @@ class PresentationBinding(PartnerDetailWindowBinding):
                         reason='Confirmed closed collaboration; no substitute asset.'))
                     continue
                 if not matches:
+                    if address == 'UI/NPC/Npc_Individual/10611/npc_img_10611' and sorted(npc['Id'] for npc in consumers) == [10611, 10709]:
+                        replacement, = [row for row in table if row['path'].endswith('/10611/npc_role_10611.png')]
+                        self.sprites.append(dict(address=address, **self.sprite(replacement)))
+                        self.confirmed_image_substitutions.append(dict(address=address, consumers=[10611, 10709],
+                            replacement=replacement,
+                            reason='User explicitly approved the same NPC official npc_role_10611 image after APK/index/bundle inspection found no configured full-body image.'))
+                        continue
                     self.unresolved_images.append(dict(address=address, consumers=[npc['Id'] for npc in consumers],
                         reason='Not indexed in selected resource manifest; original bundle inspection and user decision required.'))
                     continue
@@ -278,6 +286,7 @@ def main():
             adventure_icons=binding.icons, sprites=binding.sprites, region_table=binding.region_proof,
             unreachable_images=binding.unreachable_images,
             unresolved_images=binding.unresolved_images,
+            confirmed_image_substitutions=binding.confirmed_image_substitutions,
             region_asset=binding.region_asset, texts=texts,
             scope='Original presentation sprites, region table and adventure tip staged; local services and interaction validation pending.')
         (work / NAME).write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
