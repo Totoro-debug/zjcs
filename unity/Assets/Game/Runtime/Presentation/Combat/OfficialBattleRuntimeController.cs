@@ -345,7 +345,7 @@ namespace Zjcs.Presentation.Combat
                 // Install the settled CD snapshot before native zero-delay starts.
                 // Delayed starts and each skill's own Remove drive subsequent states.
                 skillGraphPlayback?.Play(result.Event, result.Checkpoint,
-                    sceneView.Body);
+                    sceneView.Body, sceneView.TryGetPetTransform);
                 if (!result.Replayed)
                     sceneView.ShowDamageFloats(result.Event, result.Checkpoint, hudCatalog.Font, damageColors);
                 LastStepSeconds = result.Event != null && result.Event.Duration > 0f

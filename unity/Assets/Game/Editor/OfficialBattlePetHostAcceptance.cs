@@ -11,6 +11,8 @@ using Zjcs.Offline.Progression;
 using Zjcs.Offline.ProfessionUI;
 using Zjcs.Official.WorldUI;
 using Zjcs.Presentation.Combat;
+using Zjcs.Official.BattleSkillPlayables;
+using Zjcs.Official.EntityLifecycle;
 
 namespace Zjcs.Editor.Combat
 {
@@ -42,6 +44,7 @@ namespace Zjcs.Editor.Combat
         public static void Configure(OfflinePlayerProgress player)
         {
             if (Environment.GetEnvironmentVariable(Flag) != "1") return;
+            OfficialBattlePetFollowerAcceptance.Verify();
             var pet = OfflinePetProgress.AddPet(player.Pets, 1600, 4);
             pet.EvolutionPhase = 2;
             pet.Level = 1;
@@ -56,13 +59,30 @@ namespace Zjcs.Editor.Combat
             var field = typeof(OfficialBattleRuntimeController).GetField("hudView", BindingFlags.NonPublic | BindingFlags.Instance);
             var view = (OfficialBattleHudView)field.GetValue(controller);
             Check(controller.Checkpoint, view);
-            int samples = 0, modelSamples = 0, supportCasts = 0, ordinaryCasts = 0;
+            int samples = 0, modelSamples = 0, supportCasts = 0, ordinaryCasts = 0, followerSamples = 0, nativePetCasts = 0, releasedSamples = 0;
             bool captured = false;
             var scene = (OfficialBattleSceneView)typeof(OfficialBattleRuntimeController)
                 .GetField("sceneView", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(controller);
             controller.StepCompleted += result =>
             {
                 Check(result.Checkpoint, view); samples++;
+                var follower = scene.TryGetPetTransform(1);
+                var followerRenderer = follower ? follower.GetComponentInChildren<BattleNativeMonsterRenderer>(true) : null;
+                Require(followerRenderer && follower.GetComponent<GridTransformFollower>() && follower.GetComponent<MyFightRolePet>(),
+                    "Actual host did not create the original childhood follower/model/lifecycle.");
+                Require(followerRenderer.Animator.runtimeAnimatorController.name.Contains("9201"),
+                    "Actual childhood follower selected another original pet controller.");
+                followerSamples++;
+                var role = follower.GetComponent<MyFightRolePet>();
+                int currentSkills = (int)typeof(MyFightRolePet).GetField("mCurrentSkillCounter", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(role);
+                Require(currentSkills >= 0, "Original pet skill lifecycle counter became negative.");
+                if (supportCasts > 0 && currentSkills == 0)
+                {
+                    string state = typeof(GridTransformFollower).GetField("mMoveState", BindingFlags.Instance | BindingFlags.NonPublic)
+                        .GetValue(follower.GetComponent<GridTransformFollower>()).ToString();
+                    Require(state != "Pause", "Native pet skill ended without releasing its follower pause.");
+                    releasedSamples++;
+                }
                 foreach (var cast in result.Event.SkillCasts.Where(value => value.ActorId == 1))
                 {
                     if (cast.IsPetSupport)
@@ -70,6 +90,16 @@ namespace Zjcs.Editor.Combat
                         Require(cast.SkillItemId == 16300 && cast.Slot < 0,
                             "Actual pet support did not use the equipped evolution skill.");
                         supportCasts++;
+                        if (cast.Delay <= 0 && cast.Presentation.Duration > 0)
+                        {
+                            var entity = follower.GetComponent<MyEntity>();
+                            int active = (int)typeof(MyFightRolePet).GetField("mCurrentSkillCounter", BindingFlags.Instance | BindingFlags.NonPublic)
+                                .GetValue(follower.GetComponent<MyFightRolePet>());
+                            Require(entity && entity.Entity.ClassId == 9201 && active > 0
+                                && entity.myContainer is IEntityContainerLocalPosition,
+                                "Actual support graph did not bind the pet source and pause its original follower lifecycle.");
+                            nativePetCasts++;
+                        }
                     }
                     else if (cast.Slot >= 0) ordinaryCasts++;
                 }
@@ -101,6 +131,8 @@ namespace Zjcs.Editor.Combat
                 Require(samples > 0, "Host did not advance its actual pet battle.");
                 Require(supportCasts > 0 && ordinaryCasts > 0,
                     "Actual host did not run both pet support and ordinary owner actions.");
+                Require(followerSamples > 0 && nativePetCasts > 0 && releasedSamples > 0,
+                    "Actual host did not exercise native childhood pet support casts.");
                 var copy = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
                 var expected = checkpoint.Units.Single(unit => unit.Id == 1).PetEnergy;
                 var actual = copy.Units.Single(unit => unit.Id == 1).PetEnergy;
@@ -116,6 +148,7 @@ namespace Zjcs.Editor.Combat
                 Debug.Log("BATTLE_PET_HOST_PASSED stage=" + checkpoint.StageId + " steps=" + samples
                     + " modelSamples=" + modelSamples + " supportCasts=" + supportCasts
                     + " ordinaryCasts=" + ordinaryCasts);
+                Debug.Log("BATTLE_PET_FOLLOWER_HOST_PASSED followerSamples=" + followerSamples + " nativePetCasts=" + nativePetCasts + " releasedSamples=" + releasedSamples);
             };
         }
 

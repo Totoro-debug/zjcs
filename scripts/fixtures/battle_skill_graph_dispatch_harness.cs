@@ -24,7 +24,7 @@ namespace Zjcs.Combat.Official
     public class FightBattleUnitState { public int Id, Direction; public long Hp; }
     public class FightBattleCheckpoint { public List<FightBattleUnitState> Units = new List<FightBattleUnitState>(); }
     public class FightBattleSkillCastPresentation { public int FacingIndex, TargetId; }
-    public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(); }
+    public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId; public bool IsPetSupport; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(); }
     public class FightBattleStepEvent { public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); }
 }
 namespace Zjcs.Official.StoryPlayableManager
@@ -62,6 +62,7 @@ namespace Zjcs.Offline.BattleNativePlayables
         public readonly List<int> EntitiesStarted = new List<int>();
         public void BindNativePrefabAdapter(Action<GameObject> adapter) {}
         public readonly List<string> Plays = new List<string>();
+        public readonly List<string> Sources = new List<string>();
         public readonly List<float> Times = new List<float>();
         public float Clock;
         public int LateTicks;
@@ -75,7 +76,7 @@ namespace Zjcs.Offline.BattleNativePlayables
         public void LateTick() { LateTicks++; }
         public void Play(GameObject prefab, GameObject source, GameObject target, float speed,
             GameObject parent, Dictionary<string, object> parameters)
-        { Plays.Add(prefab.name + ":" + target.name); Times.Add(Clock); }
+        { Plays.Add(prefab.name + ":" + target.name); Sources.Add(source.name); Times.Add(Clock); }
         public void Dispose() { Disposed = true; }
     }
 }
@@ -149,6 +150,21 @@ public static class BattleSkillGraphDispatchHarness
             playback.Play(new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> { captured } }, checkpoint, resolve);
             playback.Tick(.2f);
             Require(capturedScope.Plays[0] == "LeftPlayablePrefab:target", "Settled actor direction replaced the skill creation snapshot");
+        }
+        var petScope = new OfflineBattleNativePlayableScope();
+        using (var playback = new OfficialBattleSkillGraphPlayback(catalog, petScope, new OfficialBattleSkillEntityPlayback(petScope)))
+        {
+            var immediate = Cast(20, 0); immediate.IsPetSupport = true;
+            var delayed = Cast(20, .25f); delayed.IsPetSupport = true;
+            var pet = new Transform("pet");
+            playback.Play(new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> {
+                immediate, Cast(20, 0), delayed } }, checkpoint, resolve, id => id == 1 ? pet : null);
+            Require(string.Join(",", petScope.Sources) == "pet,actor", "Support and ordinary casts did not retain separate sources");
+            playback.Tick(.25f);
+            Require(string.Join(",", petScope.Sources) == "pet,actor,pet" && petScope.Plays[2] == "fallback:target",
+                "Delayed support lost its pet source or unit target");
+            playback.Play(new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> { immediate } }, checkpoint, resolve);
+            Require(petScope.Sources.Count == 3, "Missing pet source incorrectly cast through the owner");
         }
         var empty = new OfflineBattleNativePlayableScope();
         using (var playback = new OfficialBattleSkillGraphPlayback(catalog, empty, new OfficialBattleSkillEntityPlayback(empty)))

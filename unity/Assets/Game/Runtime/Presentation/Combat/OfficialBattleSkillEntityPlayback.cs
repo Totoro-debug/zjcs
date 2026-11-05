@@ -64,10 +64,10 @@ namespace Zjcs.Presentation.Combat
             public FightBattleSkillCastEvent Cast;
             public EntityData Data;
             public readonly SkillInfo Configuration = new SkillInfo();
-            public override EcEntityIdentifier SrcEntityId => UnitId(Cast.ActorId);
+            public override EcEntityIdentifier SrcEntityId => Cast.IsPetSupport ? PetId(Cast.ActorId) : UnitId(Cast.ActorId);
             public override EcEntityIdentifier TargetId => UnitId(Cast.Presentation.TargetId);
             public override Pos2d TargetPos => new Pos2d(Cast.Presentation.TargetX, Cast.Presentation.TargetY);
-            public override int SkillSlot => Cast.Slot;
+            public override int SkillSlot => Cast.IsPetSupport ? -2 - Cast.Slot : Cast.Slot;
             public override bool Interrupted => false;
             public override ECViewEntityData Entity => Data;
             public override FightSkillComponentInfo Info => Configuration;
@@ -93,11 +93,14 @@ namespace Zjcs.Presentation.Combat
         }
 
         private readonly Transform root;
+        private readonly OfficialBattleEntityPositionContainer positionContainer;
         private readonly OfficialBattleGridMapper gridMapper;
         private readonly OfficialBattleSkillEntityViewCatalog catalog;
         private readonly OfflineBattleNativePlayableScope scope;
         private readonly Func<int, FightBattleUnitState> unitState;
         private readonly Dictionary<int, UnitLease> units = new Dictionary<int, UnitLease>();
+        private readonly Dictionary<int, UnitLease> pets = new Dictionary<int, UnitLease>();
+        private OfficialBattlePetFollowerCatalog petCatalog;
         private readonly Dictionary<EcEntityIdentifier, MyEntity> entities = new Dictionary<EcEntityIdentifier, MyEntity>();
         private readonly List<ActiveCast> casts = new List<ActiveCast>();
         private int serial;
@@ -120,6 +123,10 @@ namespace Zjcs.Presentation.Combat
             this.scope = scope ?? throw new ArgumentNullException(nameof(scope));
             this.unitState = unitState ?? throw new ArgumentNullException(nameof(unitState));
             catalog = OfficialBattleSkillEntityViewCatalog.Load();
+            var containerRoot = new GameObject("Battle presentation entity coordinates");
+            containerRoot.transform.SetParent(root, false);
+            positionContainer = containerRoot.AddComponent<OfficialBattleEntityPositionContainer>();
+            positionContainer.EntitySlot = root;
         }
 
         public MyEntity GetEntity(EcEntityIdentifier id) =>
@@ -140,7 +147,7 @@ namespace Zjcs.Presentation.Combat
             if (cast.Presentation == null)
                 throw new InvalidOperationException("A native skill requires its creation-time presentation snapshot.");
             var binding = catalog.Find(cast.SkillEntityId);
-            var sourceLease = BindUnit(cast.ActorId, source);
+            var sourceLease = BindUnit(cast.ActorId, source, cast.IsPetSupport);
             sourceLease.Projection.Position = new Pos2d(cast.Presentation.SourceX, cast.Presentation.SourceY);
             sourceLease.Projection.Facing = Facing(cast.Presentation.FacingIndex);
             sourceLease.Projection.Mirrored = cast.Presentation.FlipX;
@@ -164,7 +171,7 @@ namespace Zjcs.Presentation.Combat
                 Grid = new Grid { Position = sourceLease.Projection.Position,
                     Facing = sourceLease.Projection.Facing, Mirrored = cast.Presentation.FlipX,
                     ToPosition = GridToPos, ToGrid = PositionToGrid } };
-            entity.Bind(null, state.Data, true);
+            entity.Bind(positionContainer, state.Data, true);
             casts.Add(new ActiveCast { Entity = entity, Remaining = cast.Presentation.Duration < 0f
                 ? float.PositiveInfinity : cast.Presentation.Duration });
             go.SetActive(true);
@@ -194,9 +201,11 @@ namespace Zjcs.Presentation.Combat
             }
         }
 
-        private UnitLease BindUnit(int id, Transform transform)
+        private UnitLease BindUnit(int id, Transform transform, bool pet = false)
         {
-            if (units.TryGetValue(id, out var lease))
+            var leases = pet ? pets : units;
+            var identifier = pet ? PetId(id) : UnitId(id);
+            if (leases.TryGetValue(id, out var lease))
             {
                 if (lease.Transform == transform) return lease;
                 ReleaseUnit(lease);
@@ -217,19 +226,29 @@ namespace Zjcs.Presentation.Combat
             lease.GridView = Bind<MyGridTransform>();
             lease.PreviousGrid = lease.GridView.Component;
             lease.SkillAgent = Bind<MyFightSkillAgent>();
-            lease.SkillApplied = skill => SkillStarted?.Invoke(id, skill.Component.SkillSlot);
-            lease.SkillEnded = skill => SkillEnded?.Invoke(id, skill.Component.SkillSlot);
-            lease.SkillAgent.OnSkillApplied += lease.SkillApplied;
-            lease.SkillAgent.OnSkillEnded += lease.SkillEnded;
+            if (!pet)
+            {
+                lease.SkillApplied = skill => SkillStarted?.Invoke(id, skill.Component.SkillSlot);
+                lease.SkillEnded = skill => SkillEnded?.Invoke(id, skill.Component.SkillSlot);
+                lease.SkillAgent.OnSkillApplied += lease.SkillApplied;
+                lease.SkillAgent.OnSkillEnded += lease.SkillEnded;
+            }
+            int typeId = OfficialBattleSceneBindings.EntityId(state);
+            if (pet)
+            {
+                petCatalog ??= OfficialBattlePetFollowerCatalog.Load();
+                typeId = petCatalog.Find(state.PetEnergy.PetClassId)?.entityId
+                    ?? throw new InvalidOperationException("Original native pet source is unavailable.");
+            }
             if (lease.Added.Contains(lease.Entity))
-                lease.Entity.Bind(null, new EntityData { TypeId = OfficialBattleSceneBindings.EntityId(state),
-                    Identifier = UnitId(id), Grid = lease.Projection }, true);
+                lease.Entity.Bind(positionContainer, new EntityData { TypeId = typeId,
+                    Identifier = identifier, Grid = lease.Projection }, true);
             lease.GridView.Component = lease.Projection;
             // Only configure a grid view owned by this adapter. Existing official
             // entity views retain their own serialized flip-transform binding.
             if (lease.Added.Contains(lease.GridView)) lease.GridView.BindFlipTransform(transform);
-            units[id] = lease;
-            entities[UnitId(id)] = lease.Entity;
+            leases[id] = lease;
+            entities[identifier] = lease.Entity;
             return lease;
         }
 
@@ -249,7 +268,9 @@ namespace Zjcs.Presentation.Combat
             foreach (var cast in casts) if (cast.Entity != null) Destroy(cast.Entity.gameObject);
             casts.Clear();
             foreach (var lease in units.Values) ReleaseUnit(lease);
-            units.Clear(); entities.Clear();
+            foreach (var lease in pets.Values) ReleaseUnit(lease);
+            units.Clear(); pets.Clear(); entities.Clear();
+            if (positionContainer) Destroy(positionContainer.gameObject);
         }
 
         private static void ReleaseUnit(UnitLease lease)
@@ -270,6 +291,7 @@ namespace Zjcs.Presentation.Combat
         }
 
         private static EcEntityIdentifier UnitId(int id) => new EcEntityIdentifier(1, id);
+        private static EcEntityIdentifier PetId(int ownerId) => new EcEntityIdentifier(3, ownerId);
         private static Direction Facing(int index)
         {
             switch (index)

@@ -15,6 +15,7 @@ namespace Zjcs.Presentation.Combat
             public FightBattleSkillCastEvent Cast;
             public GameObject Prefab;
             public Func<int, Transform> UnitTransform;
+            public Func<int, Transform> PetTransform;
             public float Remaining;
         }
 
@@ -46,7 +47,7 @@ namespace Zjcs.Presentation.Combat
         }
 
         public void Play(FightBattleStepEvent stepEvent, FightBattleCheckpoint checkpoint,
-            Func<int, Transform> unitTransform)
+            Func<int, Transform> unitTransform, Func<int, Transform> petTransform = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillGraphPlayback));
             if (stepEvent?.SkillCasts == null || checkpoint?.Units == null || unitTransform == null) return;
@@ -54,7 +55,7 @@ namespace Zjcs.Presentation.Combat
             {
                 if (cast == null || cast.ActorId <= 0 || cast.SkillEntityId <= 0) continue;
                 FightBattleUnitState actor = FindUnit(checkpoint, cast.ActorId);
-                Transform source = unitTransform(cast.ActorId);
+                Transform source = cast.IsPetSupport ? petTransform?.Invoke(cast.ActorId) : unitTransform(cast.ActorId);
                 if (actor == null || source == null) continue;
                 int targetId = TargetId(cast);
                 string direction = ResolveDirection(cast.Presentation?.FacingIndex ?? actor.Direction);
@@ -65,6 +66,7 @@ namespace Zjcs.Presentation.Combat
                     Cast = cast,
                     Prefab = prefab,
                     UnitTransform = unitTransform,
+                    PetTransform = petTransform,
                     Remaining = Mathf.Max(0f, cast.Delay)
                 };
                 if (scheduled.Remaining <= 0f) Start(scheduled, prefab, source, unitTransform(targetId));
@@ -91,7 +93,8 @@ namespace Zjcs.Presentation.Combat
                 foreach (ScheduledCast value in pending) value.Remaining -= elapsed;
                 ScheduledCast scheduled = pending[0];
                 pending.RemoveAt(0);
-                Transform source = scheduled.UnitTransform(scheduled.Cast.ActorId);
+                Transform source = scheduled.Cast.IsPetSupport
+                    ? scheduled.PetTransform?.Invoke(scheduled.Cast.ActorId) : scheduled.UnitTransform(scheduled.Cast.ActorId);
                 if (source == null) continue;
                 Transform target = scheduled.UnitTransform(TargetId(scheduled.Cast));
                 Start(scheduled, scheduled.Prefab, source, target);

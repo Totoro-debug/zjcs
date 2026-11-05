@@ -2409,3 +2409,25 @@ unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs.meta te
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRequest.cs.meta text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs.meta text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePartnerNativeModelView.cs.meta text eol=lf
+
+# Preserve original pet follower graph, ports and source identities.
+scripts/prepare_battle_pet_followers.py text eol=lf
+scripts/fixtures/battle_skill_graph_dispatch_harness.cs text eol=lf
+assets/reference/battle-animation/pet-followers-source-manifest.json text eol=lf
+unity/Assets/Official/Combat/PetFollowers/**/*.meta text eol=lf whitespace=-blank-at-eol
+unity/Assets/Official/Combat/PetFollowers/**/*.prefab text eol=lf whitespace=-blank-at-eol
+unity/Assets/Official/Combat/PetFollowers/**/*.mat text eol=lf whitespace=-blank-at-eol
+unity/Assets/Official/Combat/PetFollowers/**/*.asset text eol=lf whitespace=-blank-at-eol
+unity/Assets/Game/Resources/Combat/pet-follower*.json* text eol=lf
+unity/Assets/Game/Runtime/Official/BattleSkillPlayables/GridTransformFollower.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightRolePet.cs* text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePetFollower*.cs* text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Pets.cs* text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/Shaders/PetFollower_* text eol=lf
+unity/Assets/Game/Editor/OfficialBattlePetFollowerAcceptance.cs* text eol=lf
+unity/Assets/Game/Editor/OfficialBattlePetHostAcceptance.cs text eol=lf
+unity/Assets/Official/Combat/PetFollowers.meta text eol=lf whitespace=-blank-at-eol
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveMonsterModelView.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleEntityPositionContainer.cs* text eol=lf

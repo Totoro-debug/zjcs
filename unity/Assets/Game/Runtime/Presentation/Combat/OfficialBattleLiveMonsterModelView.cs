@@ -127,6 +127,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) return;
             skillPlaybacks?.Tick(deltaTime);
+            if (!renderer.gameObject.activeInHierarchy) return;
             renderer.Advance(deltaTime * playbackSpeed);
             follower.ForceUpdate();
         }

@@ -546,6 +546,8 @@ namespace Zjcs.Presentation.Combat
                     PlayAnimation(view, "idle_01", true);
             }
 
+            RefreshPetFollowers(checkpoint);
+
             if (usesOfficialAnimationFallback && stepEvent != null)
                 ScheduleOfficialAnimationCues(stepEvent);
 
@@ -711,6 +713,8 @@ namespace Zjcs.Presentation.Combat
                     }
                 }
             }
+
+            TickPetFollowers(deltaTime);
 
             var completedDeaths = new List<int>();
             foreach (KeyValuePair<int, UnitView> entry in units)
@@ -1271,6 +1275,7 @@ namespace Zjcs.Presentation.Combat
 
         public void Dispose()
         {
+            ReleasePetFollowers();
             ReleaseAttachedShadows();
             movementEffects?.Dispose();
             foreach (UnitView view in units.Values)
