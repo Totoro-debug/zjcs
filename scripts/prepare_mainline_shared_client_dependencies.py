@@ -39,7 +39,13 @@ def build():
             raise ValueError('Pinned client package digest differs: '+name)
         with zipfile.ZipFile(package) as archive:
             payload = archive.read('lib/'+row['framework']+'/'+name+'.dll')
-            license = archive.read(row['license_entry'])
+            if 'license_entry' in row:
+                license = archive.read(row['license_entry'])
+            else:
+                license_cache = CACHE/(name+'-license.txt')
+                if not license_cache.exists():
+                    license_cache.write_bytes(urllib.request.urlopen(row['license_url'],timeout=45).read())
+                license = license_cache.read_bytes()
         if hashlib.sha256(payload).hexdigest() != row['dll_sha256'] or hashlib.sha256(license).hexdigest() != row['license_sha256']:
             raise ValueError('Pinned client DLL or license differs: '+name)
         for target, content in ((ASSETS/(name+'.bytes'),payload),(ASSETS/(name+'-license.txt'),license)):
@@ -65,9 +71,19 @@ def build():
     if additions:
         catalog.write_text(original.replace('  Prefabs:',additions+'  Prefabs:'),encoding='utf8',newline='\n')
     bind_licenses(catalog)
+    runtime = ROOT/'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities'
+    validation = ROOT/'unity/Assets/Game/Editor/MainlineWorldStartup'
+    source = ROOT/'.tools/source-packages/current/884_156692/official-code'
     RECEIPT.write_text(json.dumps(dict(
-        operation='Restore the public DryIoc 5.4.3 netstandard2.1 dependency required by the unchanged Framework.FirstPass.Runtime ScopeBase field and original client injection. Do not replace original application IL or deliver dummy method bodies.',
-        inputs=[record(ASSETS/'Framework.FirstPass.Runtime.bytes'),record(LOCK)],
+        operation='Restore pinned public DryIoc for original client injection, LiteDB for PlayerDataWrap/IMongoObj identities and R3 for original player state observers. Preserve original application IL; use publisher packages and licenses.',
+        inputs=[record(ASSETS/name) for name in ('Framework.Core.bytes','Framework.FirstPass.Runtime.bytes','Console.bytes')]+[record(LOCK)],
+        code_inputs=[record(source/path) for path in (
+            'client-source/UtilsHandlerBinder.cs','common-source/MeManager.cs',
+            'common-source/Common/Player.cs','common-source/Common/PlayerDataWrap.cs',
+            'common-source/Common/PlayerPlayStateHandler.cs','common-source/Common/PlayerPlayFightStateObserver.cs',
+            'common-source/Common/BattleFormula.cs','common-source/Common/Formula.cs')],
+        integration=[record(runtime/'MainlineSharedClientServices.cs'),record(runtime/'MainlineSharedClientServices.cs.meta')],
+        validation=[record(path) for path in sorted(validation.iterdir()) if path.is_file()],
         packages=packages,assemblies=assemblies,outputs=outputs,binding=record(catalog),
         tools=[record(Path(__file__)),record(ROOT/'scripts/prepare_unity_map14_shared_ec_runtime.py')]),
         ensure_ascii=False,indent=2)+'\n',encoding='utf8',newline='\n')

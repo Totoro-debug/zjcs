@@ -20,9 +20,9 @@ namespace Zjcs.Editor.Map13MiniMap
         private static void VerifySharedInjection()
         {
             var catalog = Resources.Load<NativeMap14SharedAssemblyCatalog>("Map14/Native/shared-assembly-catalog");
-            Require(catalog.Licenses != null && catalog.Licenses.Length == 19 &&
+            Require(catalog.Licenses != null && catalog.Licenses.Length == 21 &&
                 catalog.Licenses.All(license => license && license.bytes.Length != 0),
-                "The local Resources catalog retains all 19 publisher notices in the Player dependency closure");
+                "The local Resources catalog retains all 21 publisher notices in the Player dependency closure");
             using (var shared = new NativeMap14SharedAssemblies(catalog))
             {
                 // Cross the same verified loader seam as the original caller.

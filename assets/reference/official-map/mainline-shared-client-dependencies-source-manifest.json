@@ -1,13 +1,91 @@
 {
-  "operation": "Restore the public DryIoc 5.4.3 netstandard2.1 dependency required by the unchanged Framework.FirstPass.Runtime ScopeBase field and original client injection. Do not replace original application IL or deliver dummy method bodies.",
+  "operation": "Restore pinned public DryIoc for original client injection, LiteDB for PlayerDataWrap/IMongoObj identities and R3 for original player state observers. Preserve original application IL; use publisher packages and licenses.",
   "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Framework.Core.bytes",
+      "sha256": "173f184c175401b2451c8f53fd4cece168c0499403489d8c3c4cdcaa834f9794"
+    },
     {
       "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Framework.FirstPass.Runtime.bytes",
       "sha256": "fe49d4ce3611fbd7f9a2fe73fdd0986253b9f44517eb1044e717d901dd2caabe"
     },
     {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Console.bytes",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    {
       "path": "assets/reference/official-map/mainline-shared-client-packages.json",
-      "sha256": "7b1efdd9d1641189d41c40f2d3583adc48ea52f10c80f97aace5d4fb1cf69859"
+      "sha256": "b7a06533689af01f4e40071e7b3d3ac34be7da289fc6289e0e853d4c88832777"
+    }
+  ],
+  "code_inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/UtilsHandlerBinder.cs",
+      "sha256": "fbaed264cec52eba448b0b22ac1446d0a36c60fc9834b125bebe742d525ac586"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MeManager.cs",
+      "sha256": "6fb729ace8c5a79c59d58ec4333a6aa8aa3706ca5fe27be857aca4e8627504c9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Player.cs",
+      "sha256": "e0b324d6cf965e194cc517c176e8fae80f16dda7019e42d705ed6ae7d44da611"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerDataWrap.cs",
+      "sha256": "2a38af89dfe4de827f6fdf9c24627bed8cf91bc61c0f400f5558bd4a9f96339b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerPlayStateHandler.cs",
+      "sha256": "e38401d41f5545f107879e2d070679876acbefeabd66b1d0c93343a7adb49251"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerPlayFightStateObserver.cs",
+      "sha256": "ad292f91669449426ee1724040fb7ffcc90c4e7b25b45fed7f89dd47ff3ae882"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormula.cs",
+      "sha256": "c3cc659319bed428ebac076b027832d9010a7589d824756fa4d10e0e7e713273"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Formula.cs",
+      "sha256": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76"
+    }
+  ],
+  "integration": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedClientServices.cs",
+      "sha256": "7187da613ee67fb6dd3dbf2c2869ab5a3672553f594cb7f9b649154e46db3493"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedClientServices.cs.meta",
+      "sha256": "168e8e193060e20153367c281e120397669b5ae4cecf249fd05f1f836303e7c5"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientServices.cs",
+      "sha256": "c6cd1aa00e3312f30a4c5ce03e82b860578b8973d6af5a1ae8b773fb48743904"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientServices.cs.meta",
+      "sha256": "4c6bd02992ea44178f1a3074dc356122726bfa8587a73e4567f4cdc8e14a65a9"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.cs",
+      "sha256": "d08aaea13677258cbe499e0a955a24f52fa2bb5063f51ba2870a8b5c4f7375a2"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.cs.meta",
+      "sha256": "99472a67e41f7c610443b7cfef72c14c1f0c2f97310c2113c99c0d126def58f0"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef",
+      "sha256": "b9d9ca5067a0f9fa0b56a2ac900292ca6107f47a5bdb679be50038b6aa92bc4e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef.meta",
+      "sha256": "3b6f057b9671d1ee4488af82d18ab03a31f89a6fa9097e8ee189f7cbb9bbbb46"
     }
   ],
   "packages": [
@@ -26,12 +104,73 @@
       "license_entry": "LICENSE.txt",
       "license_sha256": "65441d6109f52747d57bd022ee5f0de8f0362f4506f1a5b94c17cc3f578bac49",
       "dependencies": []
+    },
+    {
+      "name": "LiteDB",
+      "package": "LiteDB",
+      "version": "5.0.20",
+      "framework": "netstandard2.0",
+      "package_sha512": "N4To9VCTFSbuJZPBBTOE5V7HQshN5CTDCPIjhBTLNxN6OWJk2Ri14pnE3A+sG0SbNK93IXyy0XVTUmkmp+Y8Jg==",
+      "url": "https://api.nuget.org/v3-flatcontainer/litedb/5.0.20/litedb.5.0.20.nupkg",
+      "metadata_url": "https://www.nuget.org/api/v2/Packages(Id='LiteDB',Version='5.0.20')",
+      "dll_sha256": "cb20227a771e862fe98301d1407a2eaab26b032e54c1c429c1a8fbed6d1d4c7e",
+      "module_id": "b132ccd6-5c02-42e0-a5e3-839c6502d6c3",
+      "assembly_version": "5.0.20.0",
+      "public_key_token": "4ee40123013c9f27",
+      "license_entry": "LICENSE",
+      "license_sha256": "0f077c548c9f6f6181d59a6dc1ddca08f35968a9b38b7f45932932b0cb082081",
+      "dependencies": []
+    },
+    {
+      "name": "R3",
+      "package": "R3",
+      "version": "1.3.0",
+      "framework": "netstandard2.1",
+      "package_sha512": "mjL1b7riA+G9PSmEXfiBMmq3lUJF/VK89I3tLCMNy6IxJDI6arEOadmmmSKLZAyuCzzyBZWHjxkn4nhl1Xh16w==",
+      "url": "https://api.nuget.org/v3-flatcontainer/r3/1.3.0/r3.1.3.0.nupkg",
+      "metadata_url": "https://www.nuget.org/api/v2/Packages(Id='R3',Version='1.3.0')",
+      "dll_sha256": "48af716f8ace2fd771241de7e3ebd9ee54bffeafeed14a1ddd69df4ac61226db",
+      "module_id": "a6479622-a931-4fcb-a3eb-70d4da8dd460",
+      "assembly_version": "1.3.0.0",
+      "public_key_token": "df4c250b14d82627",
+      "license_url": "https://raw.githubusercontent.com/Cysharp/R3/329ca7915713417f2e0837b0e0a80b4da074db4a/LICENSE",
+      "license_sha256": "f7ad61ea54f0a855ffdcb8536d602a6d0a59fb6da19fe4a748aabde377865d9a",
+      "dependencies": [
+        {
+          "name": "Microsoft.Bcl.TimeProvider",
+          "version": "8.0.0",
+          "binding": "shared-assembly-catalog.asset"
+        },
+        {
+          "name": "System.ComponentModel.Annotations",
+          "version": "5.0.0",
+          "binding": "shared-assembly-catalog.asset"
+        },
+        {
+          "name": "System.Runtime.CompilerServices.Unsafe",
+          "version": "6.0.0",
+          "binding": "shared-assembly-catalog.asset"
+        },
+        {
+          "name": "System.Threading.Channels",
+          "version": "8.0.0",
+          "binding": "shared-assembly-catalog.asset"
+        }
+      ]
     }
   ],
   "assemblies": [
     {
       "Name": "DryIoc",
       "ModuleId": "34c13a75-9c10-44f0-8acc-650f1e8818a6"
+    },
+    {
+      "Name": "LiteDB",
+      "ModuleId": "b132ccd6-5c02-42e0-a5e3-839c6502d6c3"
+    },
+    {
+      "Name": "R3",
+      "ModuleId": "a6479622-a931-4fcb-a3eb-70d4da8dd460"
     }
   ],
   "outputs": [
@@ -50,16 +189,48 @@
     {
       "path": "unity/Assets/Official/World/Map/14/SharedRuntime/DryIoc-license.txt.meta",
       "sha256": "33db0c665f09e0cb6fbaa843e323f279d8cd17e1834352cf6431134b600f85e2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/LiteDB.bytes",
+      "sha256": "cb20227a771e862fe98301d1407a2eaab26b032e54c1c429c1a8fbed6d1d4c7e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/LiteDB.bytes.meta",
+      "sha256": "66e9568b1d455204f6a8e053af986a65938da99a185f005b45aa1e440f24b9c1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/LiteDB-license.txt",
+      "sha256": "0f077c548c9f6f6181d59a6dc1ddca08f35968a9b38b7f45932932b0cb082081"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/LiteDB-license.txt.meta",
+      "sha256": "663995aeff1e762a865b811060abcac834448df9c206e183ae4bcbaf73a8182f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/R3.bytes",
+      "sha256": "48af716f8ace2fd771241de7e3ebd9ee54bffeafeed14a1ddd69df4ac61226db"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/R3.bytes.meta",
+      "sha256": "cb588998a114b11036ec2e68c36a50d0a80e00b9a8e0b9ee6293058a967f6abd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/R3-license.txt",
+      "sha256": "f7ad61ea54f0a855ffdcb8536d602a6d0a59fb6da19fe4a748aabde377865d9a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/R3-license.txt.meta",
+      "sha256": "c5ffa663c3226e4938ab495a12a963372e771847ec6f4e375730edacb203407a"
     }
   ],
   "binding": {
     "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset",
-    "sha256": "0195695197c3d11c51b86af9ef1a5a2a0f48870cf6ff40ebaf584a062924ce2a"
+    "sha256": "271566895d3e7402cc9214463c0cf91e9d1f55ecb8d979da5f8e07de1b85d11f"
   },
   "tools": [
     {
       "path": "scripts/prepare_mainline_shared_client_dependencies.py",
-      "sha256": "04236f313f79e23dd7e8ffc4a9e31c782d0e80ec0beb9aeb6b9cad95fa3ec5fe"
+      "sha256": "4f591f6ec03a55a6b617da6b5479d156836322efe3fb4c67175158d405789988"
     },
     {
       "path": "scripts/prepare_unity_map14_shared_ec_runtime.py",

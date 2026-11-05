@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成（已提取共享宿主、原世界配置、部分地图网格、正式存档快照读取及离线小地图数据源组合入口；各玩法的原表现与内容缺项仍待接入）
+状态：未完成（已提取共享宿主、原世界配置、部分地图网格、正式存档快照读取及离线小地图数据源组合入口，客户端依赖与服务工厂已局部验证；各玩法的原表现与正式宿主接线仍待完成）
 
 ## 功能简介
 
@@ -215,9 +215,11 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 原玩家客户端的注入依赖已恢复原 `Framework.Core` 中四个已核对类型：属性标记 `InjectAttribute`、`IInstanceInjector`、静态 `ServiceProviderExtensions.Inject` 和 `DryIocInstanceInjector`。依据所选884 APK的已恢复AOT映像、原元数据及方法指令，将原 `GetService<IInstanceInjector>().Inject(对象)` 调用、原实例注入器构造及其 `ContainerTools.InjectPropertiesAndFields<object>` 调用迁为托管IL；仅交付该局部程序集，不使用DummyDll空方法体，也不改写历史871的Console／Framework.FirstPass IL。原 `Launch.IVersionManager` 完整接口从所选官方Launch程序集与反编译源码复用，核对六个原方法签名后只规范换行。资源、原生调用证据、版本、哈希、MVID和显式目录绑定见[共享注入来源](../../assets/reference/official-map/mainline-shared-injection-source-manifest.json)。
 
-原实例注入检查通过原接口身份、同一目标／空目标传递、异常身份、缺失／错误服务、空provider与空resolver行为，以及原MeManager的GameData／MapData／RoomData构造和作用域恢复。选择器迁移后，主工程图形Play Mode再次通过七类型程序集、完整版本接口和十九份许可引用检查；隔离Mono使用原 DryIoc 容器通过私有／基类标记属性、未标记属性过滤、服务身份、类型缓存、默认可缺失及显式Throw模式检查。原MeManager本次仍使用resolver夹具验证构造链，离线连接／版本服务、本地容器注册、Player.ClientInit、实体完整客户端启动、地图交互与Windows Player仍待接通。
+原实例注入检查覆盖原接口身份、同一目标／空目标传递、异常身份、缺失／错误服务、空 provider 与空 resolver，以及原 MeManager 的 GameData／MapData／RoomData 构造。原属性选择器保留私有／基类标记属性、未标记属性过滤、服务身份、类型缓存、默认可缺失及显式 Throw 分支。正式注入入口现由 `MainlineSharedClientServices` 创建真实 DryIoc 容器，使用原选择器、原 `DryIocInstanceInjector` 和原 `ApplicationScope.Current`，再取得原 MeManager 单例；公式服务按原 `UtilsHandlerBinder.BindAll` 的顺序绑定原 `BattleFormulaHandler` 与 `FormulaHandler`。退出时恢复仍由本作用域拥有的应用与公式绑定，保留外部后装的绑定。此入口不设置玩家、替换客户端初始化或启动网络连接；调用者须持有原配置作用域，正式世界宿主与玩家／地图状态的完整组合仍未接通。
 
-`DryIoc` 依赖按原Framework.FirstPass的强程序集身份（5.4.3.0、dfbf2bd50fcf7768）补齐，复用发布者NuGet 5.4.3的netstandard2.1完整DLL及MIT许可；该目标依赖组为空。包SHA-512已与NuGet官方元数据核对，DLL／许可哈希与MVID固定在[客户端依赖来源](../../assets/reference/official-map/mainline-shared-client-dependencies-source-manifest.json)。当前本地目录包含25份程序集，加载仍核对哈希和MVID；共享重建入口保留此依赖和局部Core扩展。目录同时显式引用全部19份发布者许可文本，保留它们的Resources打包依赖；主工程与隔离工程带图形Play Mode均检查19份文本可加载且非空；目录生成另通过三种未知绑定拒绝及重复生成不变检查。
+原 Framework.FirstPass 所需 `DryIoc` 5.4.3.0（dfbf2bd50fcf7768）使用发布者 NuGet 5.4.3 netstandard2.1；原 Console 的 PlayerDataWrap／IMongoObj 所需 `LiteDB` 5.0.20.0（4ee40123013c9f27）使用 NuGet 5.0.20 netstandard2.0；原玩法状态观察器所需 `R3` 1.3.0.0（df4c250b14d82627）使用 NuGet 1.3.0 netstandard2.1。包 SHA-512 均核对 NuGet 官方元数据，DLL／许可 SHA-256、MVID 与原强命名引用分别固定在[客户端依赖来源](../../assets/reference/official-map/mainline-shared-client-dependencies-source-manifest.json)。R3 四项依赖沿用已有固定的 TimeProvider 8.0.0、Annotations 5.0.0、Unsafe 6.0.0 和 Channels 8.0.0。原 Console／Framework IL 未改写；加载继续核对哈希和 MVID。共享资源目录显式引用全部21份发布者许可文本；R3 许可取其包内仓库提交的完整 MIT 文本。
+
+`OfficialMainlineWorldStartupAcceptance.RunClientServices` 的内置屏 D3D11 Play Mode 通过真实容器与注入器身份、原 MeManager 单例、两次全新 Player／PlayerDataWrap 构造、LiteDB 强命名身份、原 R3 玩法观察器初始化／空状态枚举／释放，以及嵌套应用作用域和两类公式绑定的恢复。该入口只验证客户端依赖闭包，不执行 `Player.ClientInit` 或实体完整启动。完整初始化诊断已进入原 `BattleFormulaHandler.CalcCharacterBattlePropsWithoutProfession`，仍缺原 `LevelPropParser` 等属性配置闭包与正式存档投影；尚未通过完整玩家／实体启动。主工程导入／编译检查当前被共享工作区 `HomeHudView.Partners.cs` 的6处错误拦截（低内存委托类型、Profession 歧义和 TMPEffect 引用）；`ProjectTools.Validate` 因编译门槛未执行。本轮隔离服务入口已编译并通过上述 Play Mode，全量静态元数据检查通过（127,891个GUID）；未执行本项交互画面和 Windows Player 验证。
 
 `MainlineSharedWorld` 在解析配置前安装 `NativeMap14SharedLogging`，通过原 `Framework.Logging.Log.Initialize` 向已交付原 `ILogger`／`ILoggerFactory` ABI 提供本地输出，不启动在线应用入口。日志保留原泛型状态格式化器、等级、类别及异常对象；正式输出写入 Unity 日志，原事件委托和 EC 组件仍按原实现捕获并报告异常。已有完整日志绑定时借用，本模块拥有的绑定在最后一个重叠地图作用域退出后恢复，且不覆盖外部后装的绑定。ZLogger 所需的16份传递依赖按其官方 NuGet 清单固定版本、包SHA-512、DLL哈希和MVID，原 Console／Framework IL 保持不变；载荷、许可与本地目录见[日志依赖来源](../../assets/reference/official-map/mainline-shared-logging-source-manifest.json)。带图形的隔离 Play Mode 已核对泛型值状态、格式化器、异常对象身份、类别复用、原泛型日志包装、原事件委托捕获异常、嵌套／交错释放、外部替换及构造失败恢复；七图259,150格与33,522次全新放置初始化回归通过（12,775次出生、20,747次被原出生条件拦截）。主工程编译、`ProjectTools.Validate` 和静态元数据检查通过；此次是原运行时日志与状态检查，实体完整客户端启动、正式交互和 Windows Player 仍未验证。
 

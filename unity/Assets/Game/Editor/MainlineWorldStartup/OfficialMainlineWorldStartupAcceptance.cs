@@ -9,7 +9,7 @@ using Zjcs.Offline.World.NativeMap14SharedEntities;
 
 namespace Zjcs.Editor.MainlineWorldStartup
 {
-    public static class OfficialMainlineWorldStartupAcceptance
+    public static partial class OfficialMainlineWorldStartupAcceptance
     {
         private const string Key = "Zjcs.MainlineWorldStartup";
         private static IEnumerator routine;
@@ -18,6 +18,12 @@ namespace Zjcs.Editor.MainlineWorldStartup
         public static void RunConfiguration()
         {
             SessionState.SetBool(Key + ".configuration", true);
+            Run();
+        }
+
+        public static void RunClientServices()
+        {
+            SessionState.SetBool(Key + ".client-services", true);
             Run();
         }
 
@@ -45,7 +51,7 @@ namespace Zjcs.Editor.MainlineWorldStartup
         private static void Mode(PlayModeStateChange mode)
         {
             if (mode != PlayModeStateChange.EnteredPlayMode) return;
-            routine = Verify();
+            routine = SessionState.GetBool(Key + ".client-services", false) ? VerifyClientServices() : Verify();
             EditorApplication.update += Advance;
         }
 
@@ -71,6 +77,7 @@ namespace Zjcs.Editor.MainlineWorldStartup
             Application.logMessageReceived -= Observe;
             SessionState.EraseBool(Key);
             SessionState.EraseBool(Key + ".configuration");
+            SessionState.EraseBool(Key + ".client-services");
             EditorApplication.Exit(result);
         }
 
