@@ -1,0 +1,110 @@
+{
+  "manifest": "884_156692",
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "originals": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceAssetManager.cs",
+      "sha256": "1a6ab8d07fe0c4cd8026497cf6e8df085e69bfb0cb444e3f3d2f084af1d82fe8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/CharacterPartEntryProvider.cs",
+      "sha256": "4065b017813cd0c379f9f5051028554d77b79aec7359c476213d800afb7be87d"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "assets/reference/battle-animation/player-resource-ownership-source-manifest.json",
+      "sha256": "383e9234a39002396425332ac83c73fba342bccb7f9e3e5cf19d710e30606c95"
+    },
+    {
+      "path": "assets/reference/battle-animation/player-scene-bindings-source-manifest.json",
+      "sha256": "33319941bafa6b23339fddb0e62ab3d71631425ded070c393c7658e416f51154"
+    },
+    {
+      "path": "assets/reference/battle-animation/player-animation-binding-source-manifest.json",
+      "sha256": "9dee8e21f15b4c89c6d02b8a0cb3b1607e214d11c90fe79d5ecf7ebb2af09317"
+    },
+    {
+      "path": "assets/reference/battle-animation/renderer-parts-source-manifest.json",
+      "sha256": "1033022c8498172880b91b895fb4f854a752598206f4cbaa0a80fd1d1ecf38f8"
+    },
+    {
+      "path": "assets/reference/battle-animation/player-effects-source-manifest.json",
+      "sha256": "cf6e25770b4e5dd19a12bf99cff438e6f9d4090ec9548dc822a397809b4352ce"
+    }
+  ],
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionBattlePlayerResources.cs",
+      "sha256": "1e6214773ba7b0bc1e176b12d99b811828e4bed6b4283a0226566175aaa1c962"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerActor.cs",
+      "sha256": "0e9c5dd2bad39f13d2c65dfe52ae81f6bf07eaaadd461b9ecca7f2d5f59421f2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionScenePlayerBindings.cs",
+      "sha256": "ac437b79434b58c6c5824ff23a476af8af62b61cd1e1f02a08f9b922dc4c3a8b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionAppearanceBindings.cs",
+      "sha256": "c621cb3b0d23da831180ac741c0c1780df044332fe44ff38b1753dd4c89d2f61"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs",
+      "sha256": "099e992d98f5ee3dedf53a36ee394bd90fc8a053411022a66c9f87bc23632404"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerActor.cs",
+      "sha256": "b93176d4eedb413d03b193dad8ef256a8458d5dbb5e1e9856f8e12cb1450b7c4"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.ResourceService.cs",
+      "sha256": "5ed15772614651f1bc3c8b1c53db2ec4dbc7337b7ae5d4fdd955be2386bee1a2"
+    }
+  ],
+  "metadata": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionBattlePlayerResources.cs.meta",
+      "sha256": "5e428de27c75bba2c387b7765d9c66f624816b3951b9ebd6e02365b19bdc1b29"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerActor.cs.meta",
+      "sha256": "0a4650d63e35ebe2e438cb2aa3a2aa1103b12495b7444f053782deed81fb79d4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionScenePlayerBindings.cs.meta",
+      "sha256": "7a22a02fe46799d5a5edf38f583ec481605552651a546b19a52b3b1cbb9177d3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionAppearanceBindings.cs.meta",
+      "sha256": "f1b44c303cede486cc51b1c1a8057d008b48391f236e4a8bae9c7d56995bdbe5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs.meta",
+      "sha256": "2d5d88da76093fb2985f3cbe852610a6fa9426a9696c4cfe6c58a36fdf82707b"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerActor.cs.meta",
+      "sha256": "e191fd2cd503a65100132f31dfa6b6ef8bdcca7dd9216d42fb5d25f1d42619cb"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.ResourceService.cs.meta",
+      "sha256": "7db9da892b64ebb8ffd92af1c3a470b761bb4f92e54ecd8455c918720fe77e8b"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_player_resource_service.py",
+    "sha256": "0281d8aada5d09439b01b64294a96e6b7e9cc9cd50b940a22764bd00b8398ef4"
+  },
+  "binding": "OfflineProfessionBattlePlayerResources.Create",
+  "operation": "Bind verified original Game actors to read-only local player projections. Own the original part pool and appearance asset manager, real low-memory subscription, explicit Low body/High weapon routes and complete original effect catalog. Update shared cache timers once per Unity frame without advancing actors. Dispose actors, pool, manager, routes and texture owner in that order.",
+  "limits": [
+    "Formal battle view/controller and host entry, UI input, disk-save flow and Windows Player remain separate."
+  ]
+}

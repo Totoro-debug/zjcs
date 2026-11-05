@@ -35,6 +35,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".player-attachments", false);
             SessionState.SetBool(Key + ".player-effects", false);
             SessionState.SetBool(Key + ".player-resource-routes", false);
+            SessionState.SetBool(Key + ".player-resources", false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")))

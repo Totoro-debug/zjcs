@@ -22,6 +22,12 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".player-actor", true);
         }
 
+        public static void RunPlayerResources()
+        {
+            RunPlayerActors();
+            SessionState.SetBool(Key + ".player-resources", true);
+        }
+
         private static IEnumerator CheckPlayerActors(GameObject prefab,
             ProfessionNativeSceneAppearanceResources catalog, ProfessionNativeSceneWeaponCatalog weapons,
             IAppearanceAssetManager manager, IProfessionAppearanceUILiteBindings materials,
@@ -33,6 +39,8 @@ namespace Zjcs.Editor.Combat
                 Resources.Load<TextAsset>("Combat/SceneAppearance/skin-defaults").text,
                 message => { throw new InvalidOperationException(message); });
             var deathBinding = OfficialBattleCharacterDeathCatalog.LoadDefault().Find(3100);
+            using var battleResources = SessionState.GetBool(Key + ".player-resources", false)
+                ? new OfflineProfessionBattlePlayerResources() : null;
             foreach (Sex sex in new[] { Sex.Male, Sex.Female })
             foreach (int profession in new[] { 1, 10 })
             {
@@ -42,8 +50,8 @@ namespace Zjcs.Editor.Combat
                 foreach (var pair in data.SkinMap)
                     profile.Wardrobe.BaseSkins.Add(new OfflineAppearanceSkin { Type = (int)pair.Key, Id = pair.Value.SkinId });
                 string saved = JsonUtility.ToJson(profile);
-                var playerBindings = new OfflineProfessionAppearanceBindings(17, () => profile, _ => profile.InitialWeaponType,
-                    tables, config, rules, defaults);
+                var playerBindings = battleResources == null ? new OfflineProfessionAppearanceBindings(17, () => profile,
+                    _ => profile.InitialWeaponType, tables, config, rules, defaults) : null;
                 var host = new GameObject("Current original 3100 player model/controller probe");
                 if (SessionState.GetBool(Key + ".player-attachments", false)) host.transform.position = new Vector3(4, -2, .8f);
                 host.AddComponent<SortingGroup>().sortingLayerID = 1182434123;
@@ -52,15 +60,22 @@ namespace Zjcs.Editor.Combat
                         Resources.Load<OfflineProfessionImageCatalog>("Combat/PlayerEffects/catalog"))
                     : new PartBindings(config);
                 var poolBindings = new OfflineProfessionScenePartPoolBindings(weapons, materials, parts, () => true);
-                using var pool = new CharacterPartEntryProvider(poolBindings);
-                var binding = new OfflineProfessionScenePlayerBindings(catalog, manager, parts, pool, playerBindings);
+                using var pool = battleResources == null ? new CharacterPartEntryProvider(poolBindings) : null;
+                var binding = battleResources == null
+                    ? new OfflineProfessionScenePlayerBindings(catalog, manager, parts, pool, playerBindings) : null;
                 var owned = new List<RuntimeAnimatorController>();
                 ProfessionNativeBattlePlayerActor actor = null;
+                OfflineProfessionBattlePlayerResources.Player player = null;
                 GameObject cameraObject = null; RenderTexture target = null;
                 bool dead = false;
                 try
                 {
-                    actor = new ProfessionNativeBattlePlayerActor(prefab, host.transform, binding, 17);
+                    if (battleResources != null)
+                    {
+                        player = battleResources.Create(host.transform, 17, () => profile, _ => profile.InitialWeaponType);
+                        actor = player.Actor; playerBindings = player.Appearance;
+                    }
+                    else actor = new ProfessionNativeBattlePlayerActor(prefab, host.transform, binding, 17);
                     var animator = actor.Animator; var native = actor.Renderer;
                     owned.Add(animator.runtimeAnimatorController);
                     Require(actor.Root.name == "3100" && actor.Root.transform.Find("3100_view/body/PlayerModel_Game") == animator.transform,
@@ -87,7 +102,13 @@ namespace Zjcs.Editor.Combat
                     using var death = new OfficialBattleCharacterDeathPlayback(actor.Root, () => dead, scope, deathBinding);
                     actor.Appearance.OnAnimatorChanged += death.OnAnimatorInited;
                     death.OnAnimatorInited();
-                    for (int frame = 0; frame < 10; frame++) { scope.Tick(Time.deltaTime); scope.LateTick(); yield return null; }
+                    for (int frame = 0; frame < 10; frame++)
+                    {
+                        float time = native.PlayerPhysicsTime;
+                        battleResources?.Update(); battleResources?.Update();
+                        Require(native.PlayerPhysicsTime == time, "battle resource updates never tick actor physics");
+                        scope.Tick(Time.deltaTime); scope.LateTick(); yield return null;
+                    }
                     Require(native.PlayerPhysicsTime > 0, "root-bound model advances only through actual Unity frames");
                     foreach (var renderer in actor.Root.GetComponentsInChildren<MeshRenderer>())
                         if (renderer.enabled) bounds.Encapsulate(renderer.bounds);
@@ -116,7 +137,8 @@ namespace Zjcs.Editor.Combat
                         }
                     }
                     var state = native.State; float before = native.PlayerPhysicsTime;
-                    playerBindings.Refresh(AppearanceOperateSource.Normal);
+                    if (player != null) player.RefreshAppearance();
+                    else playerBindings.Refresh(AppearanceOperateSource.Normal);
                     owned.Add(animator.runtimeAnimatorController);
                     Require(native.State == state && native.PlayerPhysicsTime == before && actor.Controller.myInited,
                         "original profile refresh preserves physical state while replacing the owned controller");
@@ -154,7 +176,7 @@ namespace Zjcs.Editor.Combat
                 }
                 finally
                 {
-                    actor?.Dispose(); pool.ClearPool();
+                    player?.Dispose(); actor?.Dispose(); pool?.ClearPool();
                     if (cameraObject) { cameraObject.GetComponent<Camera>().targetTexture = null; Object.Destroy(cameraObject); }
                     if (target) Object.Destroy(target);
                     Object.Destroy(host);
@@ -163,6 +185,7 @@ namespace Zjcs.Editor.Combat
                 Require(poolBindings.LiveInstanceCount == 0 && owned.All(value => !value), "actor releases all owned weapons and override controllers");
                 Require(prefab.GetComponent<Animator>().runtimeAnimatorController, "shared prefab controller survives actor disposal");
             }
+            if (battleResources != null) yield return CheckPlayerResourceService(config, resolver);
         }
     }
 }
