@@ -1501,6 +1501,19 @@ namespace Zjcs.Combat.Official
             if (consumeStackCount != null)
                 AddHpAccTriggerEntries(consumeStackCount, "StatusTriggerStatusCfgs", "StatusId",
                     result.ConsumeStackCountStatuses, false);
+            var stackCount = Component(components, "StatusStackCountComponent");
+            if (stackCount != null)
+            {
+                result.HasStackCountTrigger = true;
+                result.StackCountThreshold = Int(stackCount, "StackCount");
+                result.StackCountMaxTriggers = Int(stackCount, "MaxCount", -1);
+                result.StackCountRemoveOnMax = Bool(stackCount, "RemoveOnMaxCount");
+                // The verified 24138 uses status effects only. Skill-shaped
+                // threshold effects remain explicit unsupported configuration.
+                result.StackCountRulesSupported = ArrayCount(stackCount, "Skills") == 0;
+                AddHpThresholdStatuses(stackCount, "StatusTriggerStatusCfgs", null,
+                    result.StackCountStatuses);
+            }
             if (hpAccDecrease != null)
             {
                 AddHpAccTriggerEntries(hpAccDecrease, "StatusList", "StatusId",

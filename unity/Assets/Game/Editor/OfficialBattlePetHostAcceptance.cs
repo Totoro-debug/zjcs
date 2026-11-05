@@ -44,6 +44,11 @@ namespace Zjcs.Editor.Combat
         public static void Configure(OfflinePlayerProgress player)
         {
             if (Environment.GetEnvironmentVariable(Flag) != "1") return;
+            if (OfficialBattlePetPassiveHostAcceptance.Enabled)
+            {
+                OfficialBattlePetPassiveHostAcceptance.Configure(player);
+                return;
+            }
             OfficialBattlePetFollowerAcceptance.Verify();
             var pet = OfflinePetProgress.AddPet(player.Pets, 1600, 4);
             pet.EvolutionPhase = 2;
@@ -56,6 +61,11 @@ namespace Zjcs.Editor.Combat
         public static void Observe(OfficialBattleRuntimeController controller)
         {
             if (Environment.GetEnvironmentVariable(Flag) != "1") return;
+            if (OfficialBattlePetPassiveHostAcceptance.Enabled)
+            {
+                OfficialBattlePetPassiveHostAcceptance.Observe(controller);
+                return;
+            }
             var field = typeof(OfficialBattleRuntimeController).GetField("hudView", BindingFlags.NonPublic | BindingFlags.Instance);
             var view = (OfficialBattleHudView)field.GetValue(controller);
             Check(controller.Checkpoint, view);

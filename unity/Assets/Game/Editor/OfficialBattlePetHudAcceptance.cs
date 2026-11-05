@@ -109,6 +109,11 @@ namespace Zjcs.Editor.Combat
                 pet.ClassId = evolution.classId; pet.EvolutionPhase = evolution.phase;
                 var owner = Owner(combat);
                 bool configured = OfficialBattlePetEnergyAssembler.TryConfigure(owner, player, catalog, combat, combatAssets.LoadSkillItems());
+                if (pet.ClassId == 1614)
+                    Require(configured && owner.PetEnergy.SupportSkills.Single().EntityId == 50165
+                        && owner.PetEnergy.SupportSkillState.Slots.Single().LimitedTimes == 4
+                        && owner.Statuses.All(status => status.ClassId != 50165),
+                        "1614 passive support must bind its original limited skill, never a status template.");
                 checkpoint.Units.Clear(); checkpoint.Units.Add(owner);
                 if (configured && owner.PetEnergy.Enabled)
                 {
@@ -148,8 +153,8 @@ namespace Zjcs.Editor.Combat
                     "Equipped pet visibility differs from the original widget.");
                 portraits++;
             }
-            Require(portraits == 39 && entities == 18 && supports == 19
-                && activeSupports == 10 && passiveSupports == 9 && !catalog.Rows("pet_evolution").Any(),
+            Require(portraits == 39 && entities == 19 && supports == 20
+                && activeSupports == 11 && passiveSupports == 9 && !catalog.Rows("pet_evolution").Any(),
                 "Pet source coverage or original catalog isolation differs.");
             pet.ClassId = 1600; pet.EvolutionPhase = 2;
             var main = Owner(combat);

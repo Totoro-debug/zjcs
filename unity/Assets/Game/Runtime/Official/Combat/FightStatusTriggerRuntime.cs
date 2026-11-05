@@ -9,7 +9,7 @@ namespace Zjcs.Combat.Official
     /// <c>UnitHpPer</c>, the configured statuses are applied again, up to <c>MaxCount</c> times. Only
     /// the status list is executed; the component's trigger skills are not part of this pass.
     /// </summary>
-    public static class FightStatusTriggerRuntime
+    public static partial class FightStatusTriggerRuntime
     {
         private const int StatusTriggerTargetCreator = 3;
 

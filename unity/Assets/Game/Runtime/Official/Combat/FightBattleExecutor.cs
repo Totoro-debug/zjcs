@@ -601,7 +601,8 @@ namespace Zjcs.Combat.Official
             List<FightBattleDamageEvent> damageEvents, List<FightBattleMovementEvent> movements,
             out float lastDelay, out float statusTriggerDuration,
             out float statusTriggerActionDuration, FightBattleUnitState targetPosition = null,
-            bool allowDeadSource = false, double externalDamageFactor = 1.0)
+            bool allowDeadSource = false, double externalDamageFactor = 1.0,
+            FightBattleUnitState targetingSource = null)
         {
             // Movement listeners have local times, just like other nested skills. Return
             // their lifetime to the caller before that caller offsets the whole cast.
@@ -611,7 +612,7 @@ namespace Zjcs.Combat.Official
             {
                 ExecuteSkillCore(actor, skill, targets, casts, damageEvents, movements,
                     out lastDelay, out statusTriggerDuration, out statusTriggerActionDuration,
-                    targetPosition, allowDeadSource, externalDamageFactor);
+                    targetPosition, allowDeadSource, externalDamageFactor, targetingSource);
                 statusTriggerDuration = Math.Max(statusTriggerDuration, movementStartContext.Duration);
                 statusTriggerActionDuration = Math.Max(statusTriggerActionDuration,
                     movementStartContext.ActionDuration);
@@ -627,11 +628,14 @@ namespace Zjcs.Combat.Official
             List<FightBattleDamageEvent> damageEvents, List<FightBattleMovementEvent> movements,
             out float lastDelay, out float statusTriggerDuration,
             out float statusTriggerActionDuration, FightBattleUnitState targetPosition,
-            bool allowDeadSource, double externalDamageFactor)
+            bool allowDeadSource, double externalDamageFactor, FightBattleUnitState targetingSource)
         {
             lastDelay = 0f;
             statusTriggerDuration = 0f;
             statusTriggerActionDuration = -1f;
+            // Support settles against the owner state, but its original target
+            // filters (notably TargetType.Master) belong to the pet source.
+            targetingSource = targetingSource ?? actor;
             if (targets != null && targets.Count > 0)
                 actor.AiPreviousTargetId = targets[0].Id;
             FightBattleDamageEvent skillCost = ApplySkillCost(actor, skill);
@@ -711,7 +715,7 @@ namespace Zjcs.Combat.Official
                                 ? targets[0] : null)
                             : actor;
                         List<FightBattleRandomScopeSelection> selections =
-                            FightBattleTargeting.SelectRandomScopePositions(actor, units, skill,
+                            FightBattleTargeting.SelectRandomScopePositions(targetingSource, units, skill,
                                 scopeAnchor, hit.RandomTargetScope, checkpoint.Grid,
                                 hit.RandomCount, random, hit.RandomTargetAllowEmptyScope,
                                 hit.RandomTargetNotAllowHitEmpty, hit.RandomTargetNotSameTarget,
@@ -767,7 +771,7 @@ namespace Zjcs.Combat.Official
                             Scope = hit.Scope
                         };
                         foreach (FightBattleUnitState selectedTarget in selectedTargets)
-                            hitTargets.AddRange(FightBattleTargeting.SelectScopeTargets(actor,
+                            hitTargets.AddRange(FightBattleTargeting.SelectScopeTargets(targetingSource,
                                 units, skill, selectedTarget, randomTargetEffect, random));
                     }
                     else hitTargets.AddRange(selectedTargets);
@@ -775,7 +779,7 @@ namespace Zjcs.Combat.Official
                 else if (hit.Scope != null && hit.Scope.Count > 0)
                 {
                     List<FightBattleUnitState> scopeTargets = FightBattleTargeting.SelectScopeTargets(
-                        actor, units, skill, targetPosition
+                        targetingSource, units, skill, targetPosition
                             ?? (targets.Count > 0 ? targets[0] : null), hit, random);
                     hitTargets = hit.TargetMode == 2
                         ? FightBattleTargeting.SelectHitTargets(scopeTargets, 2, hit.RandomCount, random)

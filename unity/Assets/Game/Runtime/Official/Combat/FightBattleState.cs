@@ -323,6 +323,14 @@ namespace Zjcs.Combat.Official
         public int AddStackedRandomMinCount = 1;
         public int AddStackedRandomMaxCount = 1;
         public int MaxStackedCount;
+        public bool HasStackCountTrigger;
+        public bool StackCountRulesSupported;
+        public int StackCountThreshold;
+        public int StackCountMaxTriggers = -1;
+        public int StackCountTriggered;
+        public bool StackCountRemoveOnMax;
+        public List<FightBattleStatusStateTrigger> StackCountStatuses = new List<FightBattleStatusStateTrigger>();
+        [NonSerialized] internal Action<FightBattleStatusState> StackChanged;
         public bool IsOpenStack;
         public int OwnerId;
         public int CreatorId;

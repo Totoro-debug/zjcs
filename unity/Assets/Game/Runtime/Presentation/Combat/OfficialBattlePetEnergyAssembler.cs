@@ -37,13 +37,14 @@ namespace Zjcs.Presentation.Combat
                 .FirstOrDefault(value => Integer(value, "ClassId") == pet.ClassId
                     && Integer(value, "EvolutionPhase") == pet.EvolutionPhase);
             // PassiveStatusIdList is not guaranteed to contain status templates:
-            // the original 16014 points to skill entity 50165. Until the passive
-            // agent can consume that type, fail the configuration before changing
-            // the owner's properties/statuses, rather than partially assembling it.
+            // 16014 points to skill 50165. Its owner-turn-start schedule is an
+            // explicitly confirmed offline rule; unknown non-status entries still
+            // fail before mutating the owner.
             foreach (int supportId in IntArray(evolution, "SupportSkills"))
                 if (skillItems.TryGet(supportId, out FightOfficialSkillItem support))
                     foreach (int statusId in support.PassiveStatusIds ?? Array.Empty<int>())
-                        if (!combat.HasComponent(statusId, "FightStatusComponent"))
+                        if (!combat.HasComponent(statusId, "FightStatusComponent")
+                            && !IsOwnerTurnPassiveSupport(support, combat))
                         {
                             UnityEngine.Debug.LogWarning("Battle pet support entity requires passive skill-agent migration: " + statusId);
                             return false;
@@ -178,7 +179,8 @@ namespace Zjcs.Presentation.Combat
             foreach (int itemId in IntArray(evolution, "SupportSkills"))
             {
                 FightOfficialSkillItem item = skillItems.Required(itemId);
-                if (item.PassiveStatusIds != null && item.PassiveStatusIds.Length > 0) continue;
+                if (item.PassiveStatusIds != null && item.PassiveStatusIds.Length > 0
+                    && !IsOwnerTurnPassiveSupport(item, combat)) continue;
                 int rank = PetSkillRank(catalog, pet, itemId);
                 var skill = combat.CreateSkill(item.EntityId, -2 - state.SupportSkills.Count,
                     itemId, rank, level, subRank, OfficialBattlePropertyAssembler.ToProperties(
@@ -203,7 +205,8 @@ namespace Zjcs.Presentation.Combat
             foreach (int itemId in IntArray(evolution, "SupportSkills"))
             {
                 if (itemId <= 0 || !skillItems.TryGet(itemId, out FightOfficialSkillItem item)) continue;
-                if (item.PassiveStatusIds == null || item.PassiveStatusIds.Length == 0) continue;
+                if (item.PassiveStatusIds == null || item.PassiveStatusIds.Length == 0
+                    || IsOwnerTurnPassiveSupport(item, combat)) continue;
                 int rank = PetSkillRank(catalog, pet, itemId);
                 int effectiveLevel = Math.Max(1, level);
                 IReadOnlyDictionary<int, long> properties = combat.CalculatePassiveSkillProps(
@@ -233,6 +236,17 @@ namespace Zjcs.Presentation.Combat
                 combat.AssembleUnit(owner, null, statuses);
             }
             state.SupportSkillsApplied = true;
+        }
+
+        private static bool IsOwnerTurnPassiveSupport(FightOfficialSkillItem item,
+            FightOfficialCombatCatalog combat)
+        {
+            // Only this verified skill-shaped passive has a confirmed offline
+            // schedule. Its passive property factors are empty in the source.
+            return item.ItemId == 16014 && item.EntityId == 50165
+                && item.PassiveStatusIds != null && item.PassiveStatusIds.Length == 1
+                && item.PassiveStatusIds[0] == 50165
+                && combat.HasComponent(50165, "FightSkillComponent");
         }
 
         private static int PetSkillRank(OfficialCharacterCatalog catalog, OfflinePetInstance pet, int skillId)

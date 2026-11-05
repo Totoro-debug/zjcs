@@ -31,7 +31,7 @@ public static class BattlePetSupportHarness
             catalog.CalculateSkillProps(item.EntityId, 3, 20, 1)
                 .Select(p => new FightPropertyValue { Id = p.Key, Value = p.Value }).ToList());
         if (limit >= 0) skill.LimitedTimes = limit;
-        owner.PetEnergy.PetClassId = 1600;
+        owner.PetEnergy.PetClassId = itemId == 16014 ? 1614 : 1600;
         owner.PetEnergy.OwnerUnitId = 1;
         owner.PetEnergy.SupportSkills.Add(skill);
         owner.PetEnergy.SupportSkillState.Slots.Add(catalog.CreateSkillSlot(skill,
@@ -48,7 +48,7 @@ public static class BattlePetSupportHarness
     public static void Run(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
         FightDamageFormula formula)
     {
-        foreach (int id in new[] {16000,16002,16003,16004,16006,16009,16012,16018,16019,16020,16021,16300,16304,16306})
+        foreach (int id in new[] {16000,16002,16003,16004,16006,16009,16012,16014,16018,16019,16020,16021,16300,16304,16306})
         {
             var state = Create(catalog, items, id);
             state.Units[0].Hp /= 2; state.Units[0].Turn.Hp = state.Units[0].Hp;
@@ -68,11 +68,31 @@ public static class BattlePetSupportHarness
                     Require(normal != null, "Support consumed normal action: " + id);
                     foreach (var cast in result.Event.SkillCasts.Where(c => c.IsPetSupport))
                     {
+                        if (id == 16014)
+                            Require(cast.SkillEntityId == 50165 && cast.TargetIds.SequenceEqual(new[] {1}),
+                                "Passive support did not retain its original skill/master target.");
                         Require(cast.Slot < 0 && result.Event.SkillCasts.IndexOf(cast) < result.Event.SkillCasts.IndexOf(normal),
                             "Support did not precede the owner's normal skill: " + id);
                         Require(normal.Delay >= cast.Delay + Math.Max(0f, cast.Presentation.Duration),
                             "Normal skill presentation overlaps its leading support: " + id);
                         releases++;
+                    }
+                    if (id == 16014)
+                    {
+                        var stack = state.Units[0].Statuses.SingleOrDefault(s => s.ClassId == 24138);
+                        Require(stack != null && stack.StackCount == Math.Min(4, ownerTurns),
+                            "Passive support stack mismatch: turn=" + ownerTurns + " releases=" + releases
+                                + " statuses=" + string.Join(",", state.Units[0].Statuses.Select(s => s.ClassId + ":" + s.StackCount)));
+                        Require(stack.StackCountTriggered == (ownerTurns >= 4 ? 1 : 0),
+                            "Passive stack threshold quota was reset or triggered before four stacks.");
+                        Require(state.Units[0].Statuses.All(s => s.ClassId != 50165),
+                            "Passive skill entity was incorrectly installed as a status.");
+                        if (ownerTurns >= 4)
+                            Require(state.Units[0].Statuses.Any(s => s.ClassId == 24139 && s.HasHpLimit
+                                && s.HpLimitLowerLimit == 1 && s.HpLimitMaxCount == 1),
+                                "Fourth passive support HP-floor mismatch: " + string.Join(",",
+                                    state.Units[0].Statuses.Select(s => s.ClassId + ":" + s.StackCount
+                                        + ":" + s.HasHpLimit + ":" + s.HpLimitLowerLimit + ":" + s.HpLimitMaxCount)));
                     }
                     Require(state.Units[0].SkillState.Slots.Count == 1
                         && state.Units[0].SkillState.Slots[0].ReleasedTimes == ownerTurns,
@@ -87,6 +107,9 @@ public static class BattlePetSupportHarness
             }
             Require(releases > 0, "Original support never released: " + id);
             var slot = state.Units[0].PetEnergy.SupportSkillState.Slots.Single();
+            if (id == 16014)
+                Require(releases == 4 && slot.LimitedTimes == 4 && slot.Cooldown == 0,
+                    "Passive support did not retain its original four-release limit/CD.");
             Require(slot.ReleasedTimes == releases && !state.Units[0].PetEnergy.SupportSkillState.IsDriving,
                 "Support CD/count clock did not close: " + id);
             Require(state.Statistics.Skills.Single(s => s.SkillItemId == id).Casts == releases,

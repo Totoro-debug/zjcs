@@ -61,7 +61,8 @@ namespace Zjcs.Combat.Official
                     casts.Add(cast);
                     checkpoint.Statistics.RecordCast(owner.Id, skill.EntityId, skill.ItemId);
                     ExecuteSkill(owner, skill, targets, casts, damageEvents, movements,
-                        out float delay, out float duration, out float actionDuration);
+                        out float delay, out float duration, out float actionDuration,
+                        targetingSource: support);
                     CompleteCastPresentation(cast, skill, delay);
                     OffsetSkillEvents(casts, castStart, damageEvents, damageStart,
                         movements, movementStart, supportDuration);

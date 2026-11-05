@@ -26,6 +26,7 @@ namespace Zjcs.Combat.Official
                 unit.StatusForbiddenChanged = OnStatusForbiddenChanged;
                 unit.StatusRoundResolver = StatusClockRound;
                 unit.RoundStartClockResolver = RoundStartClockRound;
+                foreach (var status in unit.Statuses) status.StackChanged = OnStatusStackChanged;
             }
             try { return StepCore(sequence, counter); }
             finally
@@ -39,6 +40,7 @@ namespace Zjcs.Combat.Official
                     unit.StatusForbiddenChanged = null;
                     unit.StatusRoundResolver = null;
                     unit.RoundStartClockResolver = null;
+                    foreach (var status in unit.Statuses) status.StackChanged = null;
                 }
                 movementStartContext = null;
                 roundStartNotForbiddenListener = null;
@@ -47,6 +49,7 @@ namespace Zjcs.Combat.Official
 
         private void OnStatusEnded(FightBattleUnitState owner, FightBattleStatusState ended)
         {
+            if (ended != null) ended.StackChanged = null;
             statusMutex.Remove(owner, ended);
             if (statusCatalog != null && ended != null && ended.HasPropertyComponent)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
@@ -63,6 +66,7 @@ namespace Zjcs.Combat.Official
 
         private void OnStatusStarted(FightBattleUnitState owner, FightBattleStatusState status)
         {
+            if (status != null) status.StackChanged = OnStatusStackChanged;
             InitializeStatusDeathForbidden(owner, status);
             statusMutex.Add(owner, status);
             if (statusCatalog != null && status != null && status.HasPropertyComponent)
@@ -78,6 +82,7 @@ namespace Zjcs.Combat.Official
             InitializeRoundStartDelay(status);
             StartHpStatus(owner, status);
             StartRoundStatus(owner, status);
+            OnStatusStackChanged(status);
             if (!status.HasMoveNear || !status.MoveNearTryAtStart || !status.MoveNearRulesSupported
                 || owner.Hp <= 0 || !owner.Statuses.Contains(status)) return;
             var invocations = FightStatusTriggerRuntime.CollectMoveNearSkills(owner, units,
@@ -91,6 +96,12 @@ namespace Zjcs.Combat.Official
                 context.Movements, ref delay, out float duration, out float actionDuration);
             context.Duration = Math.Max(context.Duration, Math.Max(delay, duration));
             context.ActionDuration = Math.Max(context.ActionDuration, actionDuration);
+        }
+
+        private void OnStatusStackChanged(FightBattleStatusState status)
+        {
+            if (status == null || !unitById.TryGetValue(status.OwnerId, out var owner)) return;
+            FightStatusTriggerRuntime.ApplyStackCount(owner, status, statusCatalog, units, random);
         }
     }
 }

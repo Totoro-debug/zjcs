@@ -71,6 +71,7 @@ namespace Zjcs.Combat.Official
                 status.StatusProperties = ToValues(properties);
             }
             status.ResolvedProperties = null;
+            status.StackChanged?.Invoke(status);
         }
 
         private static Dictionary<int, long> SourceProperties(FightBattleStatusState status,
