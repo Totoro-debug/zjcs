@@ -67,6 +67,7 @@ namespace Zjcs.Editor.Map13Mainline
             started=false;failed=false;SessionState.SetString(Key+".queue","");
             SessionState.SetInt(Key+".map",13);
             SessionState.SetBool(Key+".trees",false);
+            SessionState.SetBool(Key+".raw-points",false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION","1");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED","1");
             SessionState.SetString(Key+".pipeline",AssetDatabase.GetAssetPath(GraphicsSettings.defaultRenderPipeline));
@@ -78,6 +79,7 @@ namespace Zjcs.Editor.Map13Mainline
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);EditorApplication.isPlaying=true;
         }
         public static void RunTrees(){Run();SessionState.SetBool(Key+".trees",true);}
+        public static void RunRawRegionPoints(){Run();SessionState.SetBool(Key+".raw-points",true);}
         public static void RunMap11()
         {
             Run();SessionState.SetInt(Key+".map",11);
@@ -141,7 +143,8 @@ namespace Zjcs.Editor.Map13Mainline
         }
         private static IEnumerator Verify()
         {
-            Application.logMessageReceived+=Observe;var stack=new Stack<IEnumerator>();stack.Push(Steps());
+            Application.logMessageReceived+=Observe;var stack=new Stack<IEnumerator>();
+            stack.Push(SessionState.GetBool(Key+".raw-points",false)?RawRegionPointsSteps():Steps());
             while(stack.Count>0)
             {
                 object next;
@@ -155,6 +158,56 @@ namespace Zjcs.Editor.Map13Mainline
         private static void Observe(string message,string trace,LogType type){if(type==LogType.Error||type==LogType.Exception||type==LogType.Assert)failed=true;}
         private static T Field<T>(object value,string name)=>(T)value.GetType().GetField(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance).GetValue(value);
         private static object Call(object value,string name,params object[] arguments)=>value.GetType().GetMethod(name,BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance).Invoke(value,arguments);
+        private static IEnumerator RawRegionPointsSteps()
+        {
+            string saves=Path.Combine(Output,"raw-region-points-profile-"+Guid.NewGuid().ToString("N"));
+            var slots=new ProfileSlotCatalog(saves);string slot=slots.CreateSlot();
+            var profile=new OfflineMainlineSave();
+            var assets=OfficialWorldMapAssetCatalog.LoadDefault();
+            int maps=0,regions=0;
+            foreach(int mapId in new[]{10,11,12,13,14,15,16})
+            {
+                var definition=assets.LoadMap(mapId).Definition;
+                profile.World.Maps.Add(new OfflineMapProgress{MapClassId=mapId,Regions=definition.MaxRegionProgress
+                    .Select(value=>new OfflineRegionProgress{Region=value.Region,Progress=10000}).ToList()});
+                File.WriteAllText(slots.GetProgressPath(slot),JsonUtility.ToJson(profile,true));
+                var local=new RawPointsSave{slotId=slot,gridX=0,gridY=0,
+                    completedEntityPlacements=definition.Entities.Select(value=>value.Id).ToArray()};
+                string mapPath=Path.Combine(slots.GetSlotDirectory(slot),"map-"+mapId+"-save.json");
+                File.WriteAllText(mapPath,JsonUtility.ToJson(local,true));
+                var before=Directory.GetFiles(slots.GetSlotDirectory(slot),"*",SearchOption.AllDirectories)
+                    .ToDictionary(path=>path,path=>Convert.ToBase64String(File.ReadAllBytes(path)));
+                var objects=UnityEngine.Object.FindObjectsOfType<GameObject>(true).Select(value=>value.GetInstanceID()).OrderBy(value=>value).ToArray();
+                var reader=new MainlineMapMiniMapSnapshots(assets,slots,slot);
+                var points=reader.ReadRegionPoints(mapId);
+                foreach(var maximum in definition.MaxRegionProgress)
+                    Require(points[maximum.Region]==maximum.Value,"Raw fully completed region differs from its original maximum: map="
+                        +mapId+" region="+maximum.Region+" points="+points[maximum.Region]+" maximum="+maximum.Value);
+                int first=points.Keys.First();points[first]=int.MaxValue;
+                Require(reader.ReadRegionPoints(mapId)[first]==definition.MaxRegionProgress.Single(value=>value.Region==first).Value,
+                    "Raw progress reads share mutable dictionaries.");
+                bool rejected=false;try{reader.Read(mapId);}catch(InvalidDataException){rejected=true;}
+                Require(rejected,"A raw-only world unexpectedly supplied missing minimap fog.");
+                Require(objects.SequenceEqual(UnityEngine.Object.FindObjectsOfType<GameObject>(true).Select(value=>value.GetInstanceID()).OrderBy(value=>value)),
+                    "Raw progress read mounted scene objects.");
+                Require(before.All(pair=>Convert.ToBase64String(File.ReadAllBytes(pair.Key))==pair.Value)
+                    &&before.Count==Directory.GetFiles(slots.GetSlotDirectory(slot),"*",SearchOption.AllDirectories).Length,
+                    "Raw progress read changed local profile/world files.");
+                maps++;regions+=points.Count;
+                Debug.Log("MAINLINE_RAW_REGION_POINTS_PASS map="+mapId+" regions="+points.Count);
+                yield return null;
+            }
+            Require(!failed,"Raw region progress emitted runtime errors.");
+            File.WriteAllText(Path.Combine(Output,"raw-region-points.json"),"{\"maps\":"+maps+",\"regions\":"+regions
+                +",\"original_maxima\":true,\"no_minimap_fog\":true,\"read_only\":true,\"play_mode\":true}");
+        }
+        [Serializable] private sealed class RawPointsSave
+        {
+            public int schema=1;
+            public string slotId;
+            public int gridX,gridY;
+            public int[] completedEntityPlacements;
+        }
         private static IEnumerator Steps()
         {
             Application.runInBackground=true;Application.targetFrameRate=60;BattleGameViewInput.Focus();yield return new WaitForSecondsRealtime(.5f);
@@ -342,6 +395,10 @@ namespace Zjcs.Editor.Map13Mainline
             var reader=new MainlineMapMiniMapSnapshots(OfficialWorldMapAssetCatalog.LoadDefault(),slots,slot);
             var beforeObjects=UnityEngine.Object.FindObjectsOfType<GameObject>(true).Select(value=>value.GetInstanceID()).OrderBy(id=>id).ToArray();
             var snapshot=reader.Read(MapId);
+            var rawPoints=reader.ReadRegionPoints(MapId);
+            var livePoints=Field<Dictionary<int,int>>(Field<object>(runtime,"regions"),"regionPoints");
+            Require(rawPoints.OrderBy(pair=>pair.Key).SequenceEqual(livePoints.OrderBy(pair=>pair.Key)),
+                "Cold raw region points differ from the actual world's entity progress.");
             Require(beforeObjects.SequenceEqual(UnityEngine.Object.FindObjectsOfType<GameObject>(true)
                 .Select(value=>value.GetInstanceID()).OrderBy(id=>id)),"A cold minimap read mounted scene objects.");
             var views=Field<OfficialMap10EntityView>(runtime,"entityView");
@@ -428,9 +485,17 @@ namespace Zjcs.Editor.Map13Mainline
                 Require(rejected,"Two corrupt map files supplied a minimap.");
                 string noFog=Regex.Replace(System.Text.Encoding.UTF8.GetString(originalMap),
                     "\"gridVisibility\"\\s*:\\s*\"[^\"]*\"","\"gridVisibility\":\"\"");
+                File.WriteAllBytes(mapPath,originalMap);
+                var pointsWithFog=reader.ReadRegionPoints(MapId);
                 File.WriteAllText(mapPath,noFog);
                 rejected=false;try{reader.Read(MapId);}catch(InvalidDataException){rejected=true;}
                 Require(rejected&&File.ReadAllText(mapPath)==noFog,"Missing exploration was replaced with invented fog or written back.");
+                var pointsWithoutFog=reader.ReadRegionPoints(MapId);
+                Require(pointsWithFog.OrderBy(pair=>pair.Key).SequenceEqual(pointsWithoutFog.OrderBy(pair=>pair.Key)),
+                    "Raw entity progress incorrectly depends on saved minimap visibility.");
+                pointsWithoutFog[pointsWithoutFog.Keys.First()]=int.MaxValue;
+                Require(pointsWithFog.OrderBy(pair=>pair.Key).SequenceEqual(reader.ReadRegionPoints(MapId).OrderBy(pair=>pair.Key))
+                    &&File.ReadAllText(mapPath)==noFog,"Raw progress read shared mutable results or changed the map save.");
                 Debug.Log("MAINLINE_FORMAL_MINIMAP_FRESHNESS_PASS map="+MapId+" resource="+resource.Id+" generated="+generated.PlacementId);
             }
             finally

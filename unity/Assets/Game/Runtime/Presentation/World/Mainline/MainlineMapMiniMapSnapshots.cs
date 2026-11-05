@@ -32,7 +32,18 @@ namespace Zjcs.Presentation.World
             this.now = now ?? (() => DateTimeOffset.UtcNow.ToUnixTimeSeconds());
         }
 
-        public LocalMiniMapSnapshot Read(int mapClassId)
+        public LocalMiniMapSnapshot Read(int mapClassId) => ReadCore(mapClassId, false, out _);
+
+        // Original Player progress is measured in raw entity points. Read the
+        // same restored states used by the live host, without requiring that a
+        // visited map has already saved its minimap visibility.
+        public Dictionary<int, int> ReadRegionPoints(int mapClassId)
+        {
+            ReadCore(mapClassId, true, out var points);
+            return points;
+        }
+
+        private LocalMiniMapSnapshot ReadCore(int mapClassId, bool pointsOnly, out Dictionary<int, int> points)
         {
             var progress = OfflineMainlineProgressSession.InspectCharacter(slots, slotId);
             if (!progress.Save.World.Maps.Any(value => value.MapClassId == mapClassId))
@@ -43,9 +54,6 @@ namespace Zjcs.Presentation.World
             Map10LocalSave local = MainlineMapLocalSaveFile.Read(Path.Combine(slots.GetSlotDirectory(slotId),
                 "map-" + mapClassId + "-save.json"), slotId, mapClassId, width, height);
             if (local == null) throw new InvalidDataException("The visited map has no local world save.");
-            string encoded = mapClassId == 13 ? local.map13GridVisibility : local.gridVisibility;
-            if (string.IsNullOrEmpty(encoded))
-                throw new InvalidDataException("The visited map has no saved exploration visibility.");
             var entities = OfficialMap10EntityView.ReadEntityInfos(Resources.Load<TextAsset>(map.Resource(
                 mapClassId == 12 ? "Entities/native-catalog" : "Entities/catalog")), mapClassId)
                 .ToDictionary(value => value.PlacementId, value => new Entity(value));
@@ -109,10 +117,15 @@ namespace Zjcs.Presentation.World
                 entity.Grid = value.Grid;
                 entity.Active = value.Spawned;
             }
-            var points = MainlineMapEntityRestore.RegionPoints(definition, local, entities.Values, tags);
+            var restoredPoints = MainlineMapEntityRestore.RegionPoints(definition, local, entities.Values, tags);
+            points = restoredPoints;
+            if (pointsOnly) return null;
+            string encoded = mapClassId == 13 ? local.map13GridVisibility : local.gridVisibility;
+            if (string.IsNullOrEmpty(encoded))
+                throw new InvalidDataException("The visited map has no saved exploration visibility.");
             var policy = new OfficialMainlineRegionPolicy(definition, map);
             var presentation = new MainlineMapEntityPresentation(definition, map, local, progress.Save, tags,
-                region => policy.IsAccessible(region, points,
+                region => policy.IsAccessible(region, restoredPoints,
                     key => Math.Max(local.storyPlayCounts.FirstOrDefault(value => value.key == key)?.count ?? 0,
                         progress.StoryCount(key)), progress.StoryStatus,
                     tag => progress.Save.World.CompletedEntityTags.Contains(tag)
