@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using Zjcs.Presentation.World.NativeMap14;
+using Zjcs.Offline.World.NativeMap14SharedEntities;
 using Zjcs.Official.World.NativeTerrain.Common;
 
 namespace Zjcs.Editor.Map14
@@ -78,7 +79,7 @@ namespace Zjcs.Editor.Map14
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log("Map14 production native host Play Mode passed: original terrain/environment/labels and original shared nine-component root mounted together, initial position loading, live region state refresh, render captures, interrupted loading, disposal, binding restoration and remount. Map interactions, progression saves, world entity spawning and Player release are not covered.");
+                Debug.Log("Map14 production native host Play Mode passed: original terrain/environment/labels and original shared nine-component root mounted together, initial position loading, live region state refresh, render captures, borrowed world identity, terrain cancellation/disposal/remount, owner disposal and binding restoration. Map interactions, progression saves, world entity spawning and Player release are not covered.");
             }
             EditorApplication.isPlaying = false;
         }
@@ -100,7 +101,10 @@ namespace Zjcs.Editor.Map14
             string output = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR") ??
                 throw new InvalidOperationException("Set the owned validation directory before running the native host check.");
             Directory.CreateDirectory(output);
-            OfficialMap14NativeWorldView view = OfficialMap14NativeWorldView.Create(null, camera, state);
+            var shared = NewWorld();
+            var loading = shared.Load();
+            while (loading.MoveNext()) yield return loading.Current;
+            OfficialMap14NativeWorldView view = OfficialMap14NativeWorldView.Create(null, camera, state, shared);
             yield return WaitForHost(view, state.Position);
             var context = view.GroundRoot.PartitionController.Context;
             if (context.GetCurrentMapStatus().Count != 111)
@@ -127,28 +131,47 @@ namespace Zjcs.Editor.Map14
             var originalRoot = view.SharedRoot.Root;
             view.Dispose(); UnityEngine.Object.Destroy(view.gameObject);
             yield return null; yield return null;
-            RequireSharedCleanup(view, originalRoot, originalBindings, originalManagers);
+            RequireBorrowedWorld(shared, originalRoot);
             if (GraphicsSettings.defaultRenderPipeline != pipeline || QualitySettings.renderPipeline != quality)
                 throw new InvalidDataException("Map14 host did not restore previous pipelines.");
             if (camera.GetComponent<UniversalAdditionalCameraData>() != null)
                 throw new InvalidDataException("Map14 host leaked added camera data after disposal.");
-            view = OfficialMap14NativeWorldView.Create(null, camera, state);
+            view = OfficialMap14NativeWorldView.Create(null, camera, state, shared);
             yield return WaitForHost(view, state.Position);
             Capture(camera, target, Path.Combine(output, "central-remount.png"));
             originalRoot = view.SharedRoot.Root;
             view.Dispose(); UnityEngine.Object.Destroy(view.gameObject);
             yield return null; yield return null;
-            RequireSharedCleanup(view, originalRoot, originalBindings, originalManagers);
-            view = OfficialMap14NativeWorldView.Create(null, camera, state);
-            yield return null;
-            if (view.IsReady || view.SharedRoot != null)
-                throw new InvalidDataException("Interrupted-loading check did not interrupt shared map loading.");
+            RequireBorrowedWorld(shared, originalRoot);
+            view = OfficialMap14NativeWorldView.Create(null, camera, state, shared);
+            if (view.IsReady || !ReferenceEquals(view.SharedRoot, shared.Root))
+                throw new InvalidDataException("Interrupted terrain load lost its borrowed original map.");
             view.Dispose(); UnityEngine.Object.Destroy(view.gameObject);
             yield return null; yield return null;
-            RequireSharedCleanup(view, null, originalBindings, originalManagers);
+            RequireBorrowedWorld(shared, originalRoot);
+            shared.Dispose();
+            yield return null; yield return null;
+            RequireSharedCleanup(view, originalRoot, originalBindings, originalManagers);
+            shared = NewWorld();
+            loading = shared.Load();
+            if (!loading.MoveNext()) throw new InvalidDataException("Original load cancellation fixture finished too soon.");
+            (loading as IDisposable)?.Dispose();
+            shared.Dispose();
+            yield return null; yield return null;
+            RequireSharedCleanup(null, null, originalBindings, originalManagers);
             camera.targetTexture = null; target.Release(); UnityEngine.Object.Destroy(target); UnityEngine.Object.Destroy(cameraObject);
             if (errors != 0) throw new InvalidDataException("Map14 original host logged errors during its lifecycle.");
         }
+        private static MainlineSharedWorld NewWorld() => new MainlineSharedWorld(
+            Resources.Load<NativeMap14SharedAssemblyCatalog>("Map14/Native/shared-assembly-catalog"), 14, 14);
+
+        private static void RequireBorrowedWorld(MainlineSharedWorld world, object root)
+        {
+            if (!world.IsReady || !ReferenceEquals(world.Root.Root, root) ||
+                (bool)root.GetType().GetField("Ended").GetValue(root))
+                throw new InvalidDataException("Terrain disposal ended or replaced the map host's original world.");
+        }
+
         private static IEnumerator WaitForHost(OfficialMap14NativeWorldView view, Vector3 position)
         {
             float deadline = Time.realtimeSinceStartup + 45;

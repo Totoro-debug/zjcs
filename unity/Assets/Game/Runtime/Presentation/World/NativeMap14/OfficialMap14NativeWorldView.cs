@@ -42,12 +42,16 @@ namespace Zjcs.Presentation.World.NativeMap14
         private UniversalAdditionalCameraData addedCameraData;
         private MainlineSharedWorld sharedWorld;
 
-        public static OfficialMap14NativeWorldView Create(Transform parent, Camera camera, IMainlineWorldGroundState state)
+        public static OfficialMap14NativeWorldView Create(Transform parent, Camera camera, IMainlineWorldGroundState state,
+            MainlineSharedWorld world)
         {
+            if (world == null || !world.IsReady || world.Data?.MapClassId != 14)
+                throw new ArgumentException("The terrain must borrow its ready original Map14 world.", nameof(world));
             var host = new GameObject("Map14 original native world");
             host.SetActive(false);
             host.transform.SetParent(parent, false);
             var view = host.AddComponent<OfficialMap14NativeWorldView>();
+            view.sharedWorld = world;
             try
             {
                 view.Initialize(camera, state);
@@ -157,10 +161,6 @@ namespace Zjcs.Presentation.World.NativeMap14
 
         private IEnumerator LoadInitialPosition()
         {
-            var sharedCatalog = Resources.Load<NativeMap14SharedAssemblyCatalog>("Map14/Native/shared-assembly-catalog");
-            sharedWorld = new MainlineSharedWorld(sharedCatalog, 14, 14);
-            var load = sharedWorld.Load();
-            while (load.MoveNext()) yield return load.Current;
             yield return GroundRoot.PartitionController.LoadByPlayerPos();
             IsReady = GroundRoot.PartitionController.Loader.IsPosReady(environment.PlayerWorldPosition);
         }
@@ -190,7 +190,7 @@ namespace Zjcs.Presentation.World.NativeMap14
 
         private void ReleaseSharedRoot()
         {
-            sharedWorld?.Dispose();
+            // The map host owns the shared scope. Terrain and minimap borrow it.
             sharedWorld = null;
         }
 

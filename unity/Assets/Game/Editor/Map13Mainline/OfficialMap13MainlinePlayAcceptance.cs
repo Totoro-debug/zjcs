@@ -26,6 +26,7 @@ using Zjcs.Offline.World.MapGridVisibility;
 using Zjcs.Official.MapRootFog;
 using Zjcs.Official.World.NativeTerrain.Common;
 using Zjcs.Offline.World.MainlineMiniMap;
+using Zjcs.Offline.World.NativeMap14SharedEntities;
 using Zjcs.Official.World.Map13MiniMap;
 
 namespace Zjcs.Editor.Map13Mainline
@@ -68,6 +69,7 @@ namespace Zjcs.Editor.Map13Mainline
             SessionState.SetInt(Key+".map",13);
             SessionState.SetBool(Key+".trees",false);
             SessionState.SetBool(Key+".raw-points",false);
+            SessionState.SetBool(Key+".world-owner",false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION","1");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED","1");
             SessionState.SetString(Key+".pipeline",AssetDatabase.GetAssetPath(GraphicsSettings.defaultRenderPipeline));
@@ -89,6 +91,7 @@ namespace Zjcs.Editor.Map13Mainline
         }
         public static void RunMap12(){Run();SessionState.SetInt(Key+".map",12);}
         public static void RunMap14(){Run();SessionState.SetInt(Key+".map",14);}
+        public static void RunMap14WorldOwner(){RunMap14();SessionState.SetBool(Key+".world-owner",true);}
         public static void RunSavedSnapshots()
         {
             foreach(int map in new[]{11,12})
@@ -245,8 +248,9 @@ namespace Zjcs.Editor.Map13Mainline
             if(MapId==14)
             {
                 var world=Field<OfficialMap14NativeWorldView>(runtime,"nativeMap14World");
-                while(!world.IsReady&&Time.realtimeSinceStartup<deadline)yield return null;
-                Require(world.IsReady,"Formal Map14 original partitions did not become ready.");
+                while((world==null||!world.IsReady)&&Time.realtimeSinceStartup<deadline)
+                { yield return null;world=Field<OfficialMap14NativeWorldView>(runtime,"nativeMap14World"); }
+                Require(world!=null&&world.IsReady,"Formal Map14 original partitions did not become ready.");
                 var entities=(System.Collections.IDictionary)Field<object>(runtime,"mapEntities");
                 Require(entities.Count==2961&&Field<int>(entities[101],"State")==1,
                     "Formal Map14 lost the original entry stage instead of restoring state 1.");
@@ -309,6 +313,11 @@ namespace Zjcs.Editor.Map13Mainline
             var explored=Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility").ExploredEntityIds;
             Require(explored.Length>0&&before.exploredEntityPlacements!=null&&explored.SequenceEqual(before.exploredEntityPlacements),
                 "Formal map did not persist its actually revealed entity placements after simulated movement.");
+            if(SessionState.GetBool(Key+".world-owner",false))
+            {
+                yield return VerifyFormalWorldOwner(runtime,slot,saves,canvas.transform,target);
+                yield break;
+            }
             yield return VerifyMiniMapSnapshot(runtime,slots,slot,"moved");
             ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map"+MapId+"-formal-moved.png"));yield return new WaitForSecondsRealtime(.5f);
             Call(runtime,"CloseMap");yield return null;yield return null;
@@ -329,6 +338,46 @@ namespace Zjcs.Editor.Map13Mainline
             File.WriteAllText(Path.Combine(Output,"map"+MapId+"-formal-entry.json"),JsonUtility.ToJson(new Proof{map_id=MapId,editor=Application.unityVersion,backend=SystemInfo.graphicsDeviceType.ToString(),play_mode=true,simulated_pointer=true,save_reopen=true,entry_x=initial.X,entry_y=initial.Y,moved_x=target.X,moved_y=target.Y},true));
             Debug.Log("Map"+MapId+" formal entry passed: shared map host, simulated map pointer, local grid visibility/position save and cold reopen.");
         }
+        private static IEnumerator VerifyFormalWorldOwner(OfficialMainlineMapRuntime runtime,string slot,string saves,
+            Transform ui,MapGridPoint position)
+        {
+            var world=Field<MainlineSharedWorld>(runtime,"mainlineSharedWorld");
+            var terrain=Field<OfficialMap14NativeWorldView>(runtime,"nativeMap14World");
+            var root=world.Root;
+            Require(ReferenceEquals(root,terrain.SharedRoot),"Formal terrain created a second original world root.");
+            var originalRoot=terrain.SharedRoot.Root;
+            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map14-owner-moved.png"));
+            yield return new WaitForSecondsRealtime(.5f);
+            Call(runtime,"CloseMap");yield return null;yield return null;
+            Require(!world.IsReady
+                &&Field<bool>(originalRoot,"Ended"),"Closing the formal map retained its original world.");
+            runtime=Open(slot,saves,ui);
+            float deadline=Time.realtimeSinceStartup+120;
+            terrain=Field<OfficialMap14NativeWorldView>(runtime,"nativeMap14World");
+            while((terrain==null||!terrain.IsReady)&&Time.realtimeSinceStartup<deadline)
+            { yield return null;terrain=Field<OfficialMap14NativeWorldView>(runtime,"nativeMap14World"); }
+            Require(terrain!=null&&terrain.IsReady,"Formal map owner did not remount its original terrain.");
+            var reopened=Field<MainlineSharedWorld>(runtime,"mainlineSharedWorld");
+            Require(!ReferenceEquals(world,reopened)&&!ReferenceEquals(root,terrain.SharedRoot)
+                &&ReferenceEquals(reopened.Root,terrain.SharedRoot),
+                "Reopening the formal map did not create exactly one new original world.");
+            Require(Field<MapGridPoint>(Field<object>(runtime,"navigation"),"currentGrid").Equals(position),
+                "Formal world ownership changed the saved player position.");
+            CheckFog(runtime);
+            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map14-owner-restored.png"));
+            yield return new WaitForSecondsRealtime(.5f);
+            Call(runtime,"CloseMap");yield return null;yield return null;
+            runtime=Open(slot,saves,ui);
+            world=Field<MainlineSharedWorld>(runtime,"mainlineSharedWorld");
+            Require(Field<OfficialMap14NativeWorldView>(runtime,"nativeMap14World")==null,
+                "Formal cancellation did not interrupt original world loading.");
+            Call(runtime,"CloseMap");yield return null;yield return null;
+            Require(!world.IsLoaded,
+                "Cancelled formal map retained its original world load.");
+            Require(!failed,"Formal world ownership emitted runtime errors.");
+            Debug.Log("MAINLINE_FORMAL_WORLD_OWNER_PASS: borrowed original root, simulated map movement, save reopen and loading cancellation; full minimap is outside this check.");
+        }
+
         private static IEnumerator GoddessSteps(string slot,string saves,Transform ui)
         {
             var runtime=Open(slot,saves,ui);yield return new WaitForSecondsRealtime(3);
