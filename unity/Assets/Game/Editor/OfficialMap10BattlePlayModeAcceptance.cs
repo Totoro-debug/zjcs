@@ -379,29 +379,32 @@ namespace Zjcs.Editor
                     + " scale=" + modelRenderer.transform.lossyScale + " bounds=" + modelRenderer.bounds);
             Require(!worldTerrain.activeSelf, "World terrain remained active over the battle scene.");
             VerifyOriginalCamera(sceneController);
-            Renderer[] battleModels = UnityEngine.Object.FindObjectsOfType<Renderer>()
-                .Where(value => value.name.StartsWith("Native draw ", StringComparison.Ordinal)).ToArray();
+            yield return new WaitForEndOfFrame();
+            Renderer[] battleModels = sceneController.Checkpoint.Units.Where(value => value.MonsterId > 0)
+                .Select(value => sceneController.TryGetUnitTransform(value.Id))
+                .Where(value => value != null).SelectMany(value => value.GetComponentsInChildren<MeshRenderer>())
+                .Where(value => value.enabled && value.GetComponent<MeshFilter>()?.sharedMesh?.vertexCount > 0)
+                .Cast<Renderer>().ToArray();
             Require(battleModels.Length > 0 && battleModels.Any(value => value.isVisible),
                 "The official native monster meshes are outside the battle camera.");
-            Require(UnityEngine.Object.FindObjectsOfType<Animator>().Any(value =>
-                value.name.StartsWith("Map10Player_", StringComparison.Ordinal)),
-                "The battle test did not mount the real character model.");
-            Require(UnityEngine.Object.FindObjectsOfType<MeshRenderer>().Any(value => value.isVisible
-                && value.GetComponentInParent<Animator>() != null),
-                "The real character appearance has no visible mesh in the battle camera.");
-            Require(playerAnimator.GetCurrentAnimatorClipInfo(0).Any(value => value.weight > 0f
-                    && value.clip != null && value.clip.name == "100/idle_01"),
-                "The native character entered an empty source state instead of its converted idle clip.");
-            Renderer[] characterParts = playerAnimator.GetComponentsInChildren<Renderer>(true);
-            foreach (string part in new[] { "hair_", "eye_", "brow_", "mouth_" })
-                Require(characterParts.Any(value => value.name == "Official native attachment geometry"
-                        && value.transform.parent.name.StartsWith("__skin__" + part, StringComparison.Ordinal)
-                        && value.enabled && value.gameObject.activeInHierarchy
-                        && value.GetComponent<MeshFilter>().sharedMesh.bounds.size.sqrMagnitude > .00001f),
-                    "The created character lost its native appearance part in battle: " + part);
-            Require(playerAnimator.transform.parent != worldModelParent
-                && Mathf.Approximately(Mathf.Abs(playerAnimator.transform.parent.localScale.x), 0.3f),
-                "The reused character did not receive the original fight model transform.");
+            Transform battlePlayer = sceneController.TryGetUnitTransform(1);
+            Require(battlePlayer != null && battlePlayer.name == "3100",
+                "The mainline host did not create the shared original player entity.");
+            var battleRenderer = battlePlayer.GetComponentInChildren<Zjcs.Offline.ProfessionUI.ProfessionNativeSceneRenderer>();
+            Animator battleAnimator = battleRenderer != null ? battleRenderer.GetComponent<Animator>() : null;
+            Require(battleAnimator != null && battleAnimator.GetCurrentAnimatorClipInfo(0).Any(value =>
+                    value.weight > 0f && value.clip != null && value.clip.name == "100/idle_01"),
+                "The native battle character did not enter its original Game idle clip.");
+            Require(battlePlayer.Find("3100_view/body/PlayerModel_Game") == battleRenderer.transform
+                && Mathf.Approximately(Mathf.Abs(battleRenderer.transform.localScale.x), 0.3f),
+                "The shared player lost its original fight model hierarchy or scale.");
+            Require(battlePlayer.GetComponentsInChildren<MeshRenderer>().Any(value => value.isVisible
+                    && value.enabled && value.GetComponent<MeshFilter>()?.sharedMesh?.vertexCount > 0),
+                "The native battle player has no visible attachment geometry.");
+            Require(!playerAnimator.gameObject.activeInHierarchy && playerAnimator.transform.parent == worldModelParent
+                && playerAnimator.transform.localScale == worldModelScale,
+                "The mainline battle borrowed or changed its suspended world avatar.");
+            yield return Zjcs.Presentation.Home.SkillDamageTestValidation.VerifyBattleCharacterMotion(battlePlayer);
 
             Type controllerType = controller.GetType();
             PropertyInfo phaseProperty = controllerType.GetProperty("Phase");

@@ -534,7 +534,7 @@ namespace Zjcs.Editor
             // not an idle-pose check; observe idle only while the host is still preparing.
             if (controller.Phase == FightBattlePhase.Preparing)
                 yield return SkillDamageTestValidation.VerifyBattleCharacterMotion(
-                    runner.GetComponentInParent<HomeFeatureRuntime>().HomePlayerTransform);
+                    BattlePlayerEntity(runner));
             var portraitSprites = VerifyCharacterPortraits(controller.Checkpoint);
             var portraitLeases = UnityEngine.Object.FindObjectsOfType<Zjcs.Presentation.CharacterCreation.CharacterNativePortraitLease>()
                 .Where(value => portraitSprites.Values.Contains(value.Sprite)).ToArray();

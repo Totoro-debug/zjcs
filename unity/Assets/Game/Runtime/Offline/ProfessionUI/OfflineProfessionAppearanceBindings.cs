@@ -104,14 +104,19 @@ namespace Zjcs.Offline.ProfessionUI
             var data = new AppearanceData { ModifyTimeStamp = revision, AppearanceLevel = wardrobe.AppearanceLevel };
             foreach (var value in wardrobe.BaseSkins)
                 data.SkinMap.Add((SkinType)value.Type, new SkinData { Type = (SkinType)value.Type, SkinId = value.Id });
-            // The local equipment synchronizer stores SkinType, whereas the
-            // official protocol uses EquipPos. Preserve absent versus explicit 0.
+            // Local creation stores selected base parts here too. Only equipment
+            // body/weapon entries use the official protocol's EquipPos dictionary.
             foreach (var value in wardrobe.WornSkins)
             {
                 var type = (SkinType)value.Type;
-                if (type != SkinType.body && type != SkinType.pWeapon && type != SkinType.sWeapon)
-                    throw new InvalidOperationException("Unsupported equipped appearance type: " + value.Type);
-                data.EquipSkinDict.Add(type.ToEquipPos(), value.Id);
+                if (type == SkinType.body || type == SkinType.pWeapon || type == SkinType.sWeapon)
+                    data.EquipSkinDict.Add(type.ToEquipPos(), value.Id);
+                else
+                {
+                    if (!Enum.IsDefined(typeof(SkinType), type))
+                        throw new InvalidOperationException("Unsupported appearance type: " + value.Type);
+                    data.SkinMap[type] = new SkinData { Type = type, SkinId = value.Id };
+                }
             }
             foreach (var value in wardrobe.WornItems) data.AppendAppearanceDict.Add((SkinType)value.Type, value.Id);
             foreach (var value in wardrobe.WearTimes)

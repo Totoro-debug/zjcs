@@ -886,7 +886,7 @@ namespace Zjcs.Presentation.Combat
             if (body != null) body.position = world;
         }
 
-        internal Transform Body(int unitId)
+        public Transform TryGetUnitTransform(int unitId)
         {
             if (attachedTransforms.TryGetValue(unitId, out Transform attached) && attached != null)
                 return attached;
@@ -895,6 +895,8 @@ namespace Zjcs.Presentation.Combat
             if (view.Root != null) return view.Root;
             return view.Skeleton == null ? null : view.Skeleton.transform;
         }
+
+        internal Transform Body(int unitId) => TryGetUnitTransform(unitId);
 
         private bool TryBeginDeath(FightBattleUnitState state)
         {

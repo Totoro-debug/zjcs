@@ -20,9 +20,7 @@ namespace Zjcs.Presentation.Home
         private OfficialFantasyTowerCatalog catalog;
         private OfficialBattleRuntimeController controller;
         private FantasyTowerAudioPlayer towerAudio;
-        private Transform battleRoot, playerTransform, previousPlayerParent;
-        private Vector3 previousPlayerPosition, previousPlayerScale;
-        private Quaternion previousPlayerRotation;
+        private Transform battleRoot;
         private int entryIndex, layer;
         private float continueTimer;
         private bool autoPush, resultHandled, disposed, backgroundExecution;
@@ -97,13 +95,6 @@ namespace Zjcs.Presentation.Home
                     progress.ClearForegroundCheckpoint(entryIndex);
                 }
                 backgroundExecution = true;
-                if (playerTransform != null)
-                {
-                    playerTransform.SetParent(previousPlayerParent, false);
-                    playerTransform.localPosition = previousPlayerPosition;
-                    playerTransform.localRotation = previousPlayerRotation;
-                    playerTransform.localScale = previousPlayerScale;
-                }
                 if (battleRoot != null) battleRoot.gameObject.SetActive(false);
                 controller?.SetHudVisible(false);
                 return true;
@@ -114,7 +105,6 @@ namespace Zjcs.Presentation.Home
                 return false;
             backgroundExecution = false;
             if (battleRoot != null) battleRoot.gameObject.SetActive(true);
-            if (playerTransform != null && battleRoot != null) playerTransform.SetParent(battleRoot, true);
             controller?.SetHudVisible(true);
             if (controller?.Checkpoint != null)
             {
@@ -141,10 +131,6 @@ namespace Zjcs.Presentation.Home
             else progress.SaveForegroundCheckpoint(entryIndex, checkpoint);
             if (backgroundExecution)
             {
-                playerTransform.SetParent(previousPlayerParent, false);
-                playerTransform.localPosition = previousPlayerPosition;
-                playerTransform.localRotation = previousPlayerRotation;
-                playerTransform.localScale = previousPlayerScale;
                 battleRoot.gameObject.SetActive(false);
                 controller.SetHudVisible(false);
             }
@@ -154,21 +140,16 @@ namespace Zjcs.Presentation.Home
 
         private void MountBattle(FightBattleCheckpoint checkpoint, Map10RuntimeBattleScene scene, bool restore)
         {
-            if (playerTransform != null) throw new InvalidOperationException("Fantasy Tower battle avatar is already mounted.");
+            if (controller != null) throw new InvalidOperationException("Fantasy Tower battle is already mounted.");
             disposed = false;
-            playerTransform = host.HomePlayerTransform;
+            Transform playerTransform = host.HomePlayerTransform;
             if (playerTransform == null) throw new InvalidOperationException("Official player model is unavailable.");
-            previousPlayerParent = playerTransform.parent;
-            previousPlayerPosition = playerTransform.localPosition;
-            previousPlayerRotation = playerTransform.localRotation;
-            previousPlayerScale = playerTransform.localScale;
             battleRoot = new GameObject("FantasyTowerBattleWorld").transform;
             FightBattleUnitState player = checkpoint.Units.First(value => value.Id == 1);
             battleRoot.position = playerTransform.position - new Vector3(
                 scene.FightGridGroundComponent.OriginPos.X + player.X,
                 scene.FightGridGroundComponent.OriginPos.Y + player.Y,
                 scene.FightGridGroundComponent.OriginPos.Z);
-            playerTransform.SetParent(battleRoot, true);
 
             OfficialCombatAssetCatalog combatAssets = OfficialCombatAssetCatalog.LoadDefault();
             FightOfficialCombatCatalog combat = combatAssets.Load();
@@ -177,6 +158,8 @@ namespace Zjcs.Presentation.Home
             {
                 Checkpoint = checkpoint,
                 WorldRoot = battleRoot,
+                PlayerAppearance = new OfficialBattlePlayerAppearanceSource(1, 1,
+                    () => host.Profile.Save.Player, id => host.DailyDungeonProgression.Catalog.ItemType(id)),
                 EnvironmentGameId = scene.GameId,
                 HudParent = host.Hud.CanvasTransform,
                 TimelinePortrait = OfficialBattleCharacterPortraits.ForProfile(battleRoot.gameObject,
@@ -189,10 +172,6 @@ namespace Zjcs.Presentation.Home
                 RestoreCheckpoint = restore,
                 StatueProgress = host.Profile
             });
-            controller.AttachUnitTransform(1, playerTransform);
-            if (!backgroundExecution)
-                playerTransform.GetComponent<CharacterCreationMeshFramePlayer>()?.PlayOnce(
-                    "map/portal_01", "home/idle_01");
             controller.ConfigureSpeeds(combat.SpeedSettings, 0, IsBattleSpeedConditionMet);
         }
 
@@ -389,14 +368,6 @@ namespace Zjcs.Presentation.Home
             {
                 controller.DisposeSession();
                 Destroy(controller); controller = null;
-            }
-            if (playerTransform != null)
-            {
-                playerTransform.SetParent(previousPlayerParent, false);
-                playerTransform.localPosition = previousPlayerPosition;
-                playerTransform.localRotation = previousPlayerRotation;
-                playerTransform.localScale = previousPlayerScale;
-                playerTransform = null;
             }
             if (battleRoot != null) { Destroy(battleRoot.gameObject); battleRoot = null; }
         }

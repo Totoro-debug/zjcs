@@ -18,9 +18,7 @@ namespace Zjcs.Presentation.Home
         private HomeFeatureRuntime host;
         private OfficialSkillDamageTestRequest request;
         private OfficialBattleRuntimeController controller;
-        private Transform battleRoot, playerTransform, previousPlayerParent;
-        private Vector3 previousPlayerPosition, previousPlayerScale;
-        private Quaternion previousPlayerRotation;
+        private Transform battleRoot;
         private bool complete;
         public event Action<FightBattleCheckpoint> Completed;
         public event Action Left;
@@ -64,19 +62,14 @@ namespace Zjcs.Presentation.Home
 
         private void MountBattle(FightBattleCheckpoint checkpoint, Map10RuntimeBattleScene scene, Map10RuntimeStage stage)
         {
-            playerTransform = host.HomePlayerTransform;
+            Transform playerTransform = host.HomePlayerTransform;
             if (playerTransform == null) throw new InvalidOperationException("Official home player model is absent.");
-            previousPlayerParent = playerTransform.parent;
-            previousPlayerPosition = playerTransform.localPosition;
-            previousPlayerRotation = playerTransform.localRotation;
-            previousPlayerScale = playerTransform.localScale;
             battleRoot = new GameObject("SkillDamageTestBattleWorld").transform;
             FightBattleUnitState player = checkpoint.Units.First(value => value.Id == 1);
             battleRoot.position = playerTransform.position - new Vector3(
                 scene.FightGridGroundComponent.OriginPos.X + player.X,
                 scene.FightGridGroundComponent.OriginPos.Y + player.Y,
                 scene.FightGridGroundComponent.OriginPos.Z);
-            playerTransform.SetParent(battleRoot, true);
             OfficialCombatAssetCatalog assets = OfficialCombatAssetCatalog.LoadDefault();
             FightOfficialCombatCatalog combat = assets.Load();
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
@@ -84,6 +77,8 @@ namespace Zjcs.Presentation.Home
             {
                 Checkpoint = checkpoint,
                 WorldRoot = battleRoot,
+                PlayerAppearance = new OfficialBattlePlayerAppearanceSource(1, 1,
+                    () => host.Profile.Save.Player, id => host.DailyDungeonProgression.Catalog.ItemType(id)),
                 HudParent = host.Hud.CanvasTransform,
                 ModeAdapter = this,
                 TimelinePortrait = OfficialBattleCharacterPortraits.ForProfile(battleRoot.gameObject,
@@ -102,7 +97,6 @@ namespace Zjcs.Presentation.Home
                     ChangePositionCenterX = player.X, ChangePositionCenterY = player.Y },
                 InitialStepDelay = 0f
             });
-            controller.AttachUnitTransform(1, playerTransform);
             controller.ConfigureSpeeds(combat.SpeedSettings, 0, conditionId => {
                 var context = new OfficialConditionContext { Level = host.Level };
                 foreach (int map in host.Profile.Save.Player.UnlockedMapClassIds ?? new List<int>()) context.UnlockedMapClassIds.Add(map);
@@ -143,10 +137,6 @@ namespace Zjcs.Presentation.Home
         {
             if (controller != null) {
                 controller.DisposeSession(); Destroy(controller); controller = null;
-            }
-            if (playerTransform != null) {
-                playerTransform.SetParent(previousPlayerParent, false); playerTransform.localPosition = previousPlayerPosition;
-                playerTransform.localRotation = previousPlayerRotation; playerTransform.localScale = previousPlayerScale; playerTransform = null;
             }
             if (battleRoot != null) { Destroy(battleRoot.gameObject); battleRoot = null; }
         }

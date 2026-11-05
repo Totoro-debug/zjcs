@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Presentation.Home;
+using Zjcs.Presentation.Combat;
+using Zjcs.Offline.ProfessionUI;
 
 namespace Zjcs.Editor
 {
@@ -12,15 +14,27 @@ namespace Zjcs.Editor
         [Serializable] private sealed class SceneModel { public SceneTransform[] transforms; }
         [Serializable] private sealed class SceneTransform { public string name; public float[] position, scale; }
 
+        private static Transform BattlePlayerEntity(MonoBehaviour runner)
+        {
+            var controller = runner.GetComponent<OfficialBattleRuntimeController>();
+            var entity = controller.TryGetUnitTransform(1);
+            Require(entity != null, "The real controller has no shared player entity.");
+            return entity;
+        }
+
         private static void VerifyAttachedPlayerPresentation(MonoBehaviour runner, FightBattleCheckpoint checkpoint)
         {
-            Transform player = runner.GetComponentInParent<HomeFeatureRuntime>().HomePlayerTransform;
-            Transform entity = player;
-            while (entity != null && entity.name != "Battle attached unit 3100") entity = entity.parent;
-            Require(entity != null, "The player was not attached to the common battle entity hierarchy.");
+            Transform entity = BattlePlayerEntity(runner);
+            var home = runner.GetComponentInParent<HomeFeatureRuntime>();
+            Transform player = entity.GetComponentInChildren<ProfessionNativeSceneRenderer>(true)?.transform;
+            Require(entity.name == "3100" && player != null && player.GetComponent<Animator>() != null,
+                "The shared battle scene did not create the original native player/Animator.");
+            Require(!home.HomePlayerTransform.IsChildOf(entity) && !home.HomePlayerTransform.gameObject.activeInHierarchy,
+                "The battle borrowed or exposed the suspended home avatar.");
             var data = JsonUtility.FromJson<SceneBindings>(Resources.Load<TextAsset>("Combat/battle-scene-bindings").text);
             SceneUnit binding = Array.Find(data.units, value => value.entityId == 3100);
-            Transform model = entity;
+            Transform model = entity.Find("3100_view");
+            Require(model != null, "The native player lost its original 3100_view root.");
             foreach (var part in binding.model.transforms)
             {
                 model = model.Find(part.name);
@@ -31,9 +45,7 @@ namespace Zjcs.Editor
                         Mathf.Abs(model.localScale.z)), new Vector3(part.scale[0], part.scale[1], part.scale[2])) < .001f,
                     "The player's official battle offset/scale was multiplied by the host model transform.");
             }
-            Require(player.parent == model && player.localPosition.sqrMagnitude < .000001f
-                && Vector3.Distance(player.localScale, Vector3.one) < .001f,
-                "The attached player retained a second map offset/scale.");
+            Require(player == model, "The battle player is not the original embedded Game model.");
             Transform hud = entity.Find("OfficialBattleUnitHud_1");
             // A completed death releases its HUD. Keep requiring the original
             // anchor while a live player or a retained death HUD is present.

@@ -171,6 +171,8 @@ namespace Zjcs.Presentation.World
             {
                 Checkpoint = checkpoint,
                 WorldRoot = battleRoot,
+                PlayerAppearance = new OfficialBattlePlayerAppearanceSource(1, 1,
+                    () => progressionSave.Save.Player, id => progression.Catalog.ItemType(id)),
                 HudParent = uiParent,
                 HostPresentation = new OfficialBattleHostPresentation(worldCamera, null, hud.ui.OverlayRoot,
                     additionalHudRoots: new[] { hud.ui.Find("WorldCanvas", "/WorldCanvas").transform }),
@@ -200,7 +202,6 @@ namespace Zjcs.Presentation.World
                         "Map12BattleNpc_" + unit.Id)
                     : null
             });
-            battleController.AttachUnitTransform(1, avatar.transform);
             battleController.ConfigureSpeeds(
                 OfficialCombatAssetCatalog.LoadDefault().Load().SpeedSettings, 0,
                 IsBattleSpeedConditionMet);

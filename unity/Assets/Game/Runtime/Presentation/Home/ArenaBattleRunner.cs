@@ -19,11 +19,6 @@ namespace Zjcs.Presentation.Home
         private Action<bool> completed;
         private OfficialBattleRuntimeController controller;
         private Transform battleRoot;
-        private Transform previousPlayerParent;
-        private Vector3 previousPlayerPosition;
-        private Quaternion previousPlayerRotation;
-        private Vector3 previousPlayerScale;
-        private Transform playerTransform;
         private Transform guardTransform;
         private bool resultHandled;
         private bool won;
@@ -125,18 +120,13 @@ namespace Zjcs.Presentation.Home
 
             var world = new GameObject("ArenaBattleWorld");
             battleRoot = world.transform;
-            playerTransform = host.HomePlayerTransform;
+            Transform playerTransform = host.HomePlayerTransform;
             if (playerTransform == null) throw new InvalidOperationException("Official home character model is unavailable.");
-            previousPlayerParent = playerTransform.parent;
-            previousPlayerPosition = playerTransform.localPosition;
-            previousPlayerRotation = playerTransform.localRotation;
-            previousPlayerScale = playerTransform.localScale;
             FightBattleUnitState player = checkpoint.Units.First(value => value.Id == 1);
             float[] origin = scene.gridOrigin ?? new[] { 0f, 0f, 0f };
             Vector3 playerPoint = new Vector3(origin[0] + player.X, origin[1] + player.Y,
                 origin.Length > 2 ? origin[2] : 0f);
             battleRoot.position = playerTransform.position - playerPoint;
-            playerTransform.SetParent(battleRoot, true);
 
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             ArenaRuntimeAppearanceSet guardAppearance = (guard.appendAppearances
@@ -155,6 +145,8 @@ namespace Zjcs.Presentation.Home
             {
                 Checkpoint = checkpoint,
                 WorldRoot = battleRoot,
+                PlayerAppearance = new OfficialBattlePlayerAppearanceSource(1, 1,
+                    () => host.Profile.Save.Player, id => host.DailyDungeonProgression.Catalog.ItemType(id)),
                 EnvironmentGameId = scene.gameId,
                 HudParent = host.Hud.CanvasTransform,
                 TimelinePortrait = OfficialBattleCharacterPortraits.ForProfile(battleRoot.gameObject,
@@ -169,7 +161,6 @@ namespace Zjcs.Presentation.Home
                 RestoreCheckpoint = restore,
                 StatueProgress = host.Profile
             });
-            controller.AttachUnitTransform(1, playerTransform);
             GameObject guardModel = CharacterCreationNativeModelFactory.CreateArenaGuardModel(
                 host.Arena.ActiveGuardSex, guard.profession, skinByType);
             guardTransform = guardModel.transform;
@@ -367,14 +358,6 @@ namespace Zjcs.Presentation.Home
                 controller.DisposeSession();
                 Destroy(controller);
                 controller = null;
-            }
-            if (playerTransform != null)
-            {
-                playerTransform.SetParent(previousPlayerParent, false);
-                playerTransform.localPosition = previousPlayerPosition;
-                playerTransform.localRotation = previousPlayerRotation;
-                playerTransform.localScale = previousPlayerScale;
-                playerTransform = null;
             }
             if (battleRoot != null)
             {

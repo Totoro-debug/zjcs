@@ -16,7 +16,7 @@ namespace Zjcs.Presentation.World
             if (battleHiddenWorldObjects.Count > 0) return;
             foreach (Transform child in mapRoot)
             {
-                if (child == avatar.transform || child == battleRoot) continue;
+                if (child == battleRoot) continue;
                 battleHiddenWorldObjects.Add(child.gameObject, child.gameObject.activeSelf);
                 child.gameObject.SetActive(false);
             }

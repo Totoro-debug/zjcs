@@ -18,11 +18,6 @@ namespace Zjcs.Presentation.Home
         private Action<bool> completed;
         private OfficialBattleRuntimeController controller;
         private Transform battleRoot;
-        private Transform previousPlayerParent;
-        private Vector3 previousPlayerPosition;
-        private Quaternion previousPlayerRotation;
-        private Vector3 previousPlayerScale;
-        private Transform playerTransform;
         private bool resultHandled;
         private int roomId;
         private string dailyAssistEntryId;
@@ -263,18 +258,13 @@ namespace Zjcs.Presentation.Home
             FightOfficialCombatCatalog combat = combatAssets.Load();
             var world = new GameObject(isChallenge ? "DailyChallengeBattleWorld" : "DailyDungeonBattleWorld");
             battleRoot = world.transform;
-            playerTransform = battlePlayer;
+            Transform playerTransform = battlePlayer;
             if (playerTransform == null) throw new InvalidOperationException("Official home character model is unavailable.");
-            previousPlayerParent = playerTransform.parent;
-            previousPlayerPosition = playerTransform.localPosition;
-            previousPlayerRotation = playerTransform.localRotation;
-            previousPlayerScale = playerTransform.localScale;
             FightBattleUnitState player = checkpoint.Units.First(value => value.Id == 1);
             float[] origin = scene.gridOrigin ?? new[] { 0f, 0f, 0f };
             Vector3 playerPoint = new Vector3(origin[0] + player.X, origin[1] + player.Y,
                 origin.Length > 2 ? origin[2] : 0f);
             battleRoot.position = playerTransform.position - playerPoint;
-            playerTransform.SetParent(battleRoot, true);
 
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             OfficialBattleHudCatalog hudCatalog = OfficialBattleHudCatalog.LoadDefault();
@@ -290,6 +280,8 @@ namespace Zjcs.Presentation.Home
             {
                 Checkpoint = checkpoint,
                 WorldRoot = battleRoot,
+                PlayerAppearance = new OfficialBattlePlayerAppearanceSource(1, 1,
+                    () => battleProfile.Save.Player, id => battleProgression.Catalog.ItemType(id)),
                 EnvironmentGameId = scene.gameId,
                 HudParent = battleCanvas,
                 HostPresentation = privateMapEntry ? privateMapPresentation : new OfficialBattleHostPresentation(
@@ -303,7 +295,6 @@ namespace Zjcs.Presentation.Home
                 RestoreCheckpoint = restore,
                 StatueProgress = battleProfile
             });
-            controller.AttachUnitTransform(1, playerTransform);
             controller.ConfigureSpeeds(combatAssets.Load().SpeedSettings, 0, IsBattleSpeedConditionMet);
             string serialized = FightBattleCheckpointSerializer.Save(checkpoint);
             if (!isChallenge && !privateMapEntry && !host.DailyDungeons.SaveBattleCheckpoint(serialized))
@@ -442,14 +433,6 @@ namespace Zjcs.Presentation.Home
                 controller.DisposeSession();
                 Destroy(controller);
                 controller = null;
-            }
-            if (playerTransform != null)
-            {
-                playerTransform.SetParent(previousPlayerParent, false);
-                playerTransform.localPosition = previousPlayerPosition;
-                playerTransform.localRotation = previousPlayerRotation;
-                playerTransform.localScale = previousPlayerScale;
-                playerTransform = null;
             }
             if (battleRoot != null)
             {

@@ -61,6 +61,7 @@ namespace Zjcs.Presentation.Combat
 
         public FightBattleCheckpoint Checkpoint => executor == null ? null : executor.State;
         public FightBattleReport FinalReport => finalReport;
+        public Transform TryGetUnitTransform(int unitId) => sceneView?.TryGetUnitTransform(unitId);
         /// <summary>Presentation length of the last step, from the official skill/hit timing.</summary>
         public float LastStepSeconds { get; private set; } = 0.35f;
         public FightBattlePhase Phase => phases.Phase;
