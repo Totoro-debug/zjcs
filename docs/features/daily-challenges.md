@@ -64,6 +64,8 @@ NPC 战斗属性和技能由当前版 `npc_level_detail`、`npc_profession_detai
 
 当前公共战斗接线已通过隔离 Unity 导入／编译、`ProjectTools.Validate` 和工程静态检查；本功能的实际运行范围及原生 UI 缺口见上文。
 
+活动邀请控件（局部迁移）：`ActivityDomainBossTeamButton` 保留原人数文本格式、按钮回调、初始化与启停订阅顺序；原队伍人数、上限和邀请请求由 `IActivityBattleTeam` 传入，三项在线队伍变更通知汇合为本地变更事件。原生绑定工具从所选884 `ActivityDomainBossPanelBattleContent.mTeamBtn` 提取完整61对象子树，仅解除根父引用，保留原位置、尺寸、隐藏状态、红点及原按钮音效。字体按官方 `MultiLanguageText.RefreshFont` 与 CN／zh_CN 配置切换为中国区字体；原预置日文字体不能直接用于中文人数文本。字体和资源持有独立 GUID，避免覆盖其他模块；空语言键沿原数据保留，不当作缺失文本。运行与资源输入／输出见[脚本来源](../../assets/reference/daily-challenges/activity-team-runtime-source-manifest.json)、[原生绑定来源](../../assets/reference/daily-challenges/activity-team-native-source-manifest.json)。隔离 Play Mode 已通过模拟指针点击、中文实际字形、测试适配器人数变化、原音频事件参数、启停／替换／销毁的订阅清理，并已查看675×1463运行画面。此项使用独立控件宿主，只验证邀请回调，未验证实际邀请窗口、助战单位、正式活动入口或整页状态；尚未接入完整活动页。工程静态检查、Unity 编译与 `ProjectTools.Validate` 均通过；未发布新版本。
+
 ## 自定义实现
 
 用户确认期次以首次进入功能的本地时间起算；该时间由 `EnterFeature(DateTime.Now)` 首次持久化。每日逻辑日采用官方 08:00 配置。官方活动 `Duration=335` 小时，最后 1 小时结算。用户确认系统时间回拨不得降低已到最高期次或逻辑日；系统时间向前跳转仍会按本地时间推进期次。

@@ -1,0 +1,13 @@
+{
+  "manifest": "884_156692",
+  "source": ".tools/source-packages/current/884_156692/official-code/client-source/ActivityDomainBossTeamButton.cs",
+  "source_sha256": "a2debf1a83ad968c8ceacdec193539666a67d5246b046e90b9f7278a61591d8f",
+  "generator_sha256": "50c090ccaef943a324ba19977bcf9345be4e3e7c1a4c0cdbb4bbce442f9cc99d",
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityDomainBossTeamButton.cs": "04f4416d56bf9005d3e42a0c6d6c1ee4dd590dd53f7d31ef6df3dd256effd720",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityDomainBossTeamButton.cs.meta": "5eed2969e9458b283d3fd64eb28e938d48fa8e52385c82a17493b7ea58ad312c",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/IActivityBattleTeam.cs": "b7e70cef001db6cfbdf7e7162f8f09694387f2d337cf0645e85ec71fa93a3087",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/IActivityBattleTeam.cs.meta": "70310409672ece206d7e040b3d0fb92d008fcbb313dc66ba5c3760a593f038e8"
+  },
+  "adaptation": "UIBase lifecycle uses migrated WorldInitializedUI. Three online team events share Changed; team count/maximum and original invitation request pass through IActivityBattleTeam. Serialized fields, text formatting, button callback and enable/disable order retained."
+}

@@ -76,6 +76,11 @@ namespace Zjcs.Editor
                         || result.Status == ProgressionResultStatus.Unchanged, "Could not publish fixture region.");
                 }
                 yield return new WaitForSecondsRealtime(1);
+                if (Environment.GetEnvironmentVariable("ZJCS_ACTIVITY_TEAM") == "1")
+                {
+                    yield return ExerciseActivityTeam(output, click);
+                    yield break;
+                }
                 if (Environment.GetEnvironmentVariable("ZJCS_ACTIVITY_SELECTOR") == "1")
                 {
                     yield return ExerciseActivitySelector(output, click);

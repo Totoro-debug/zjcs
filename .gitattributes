@@ -2552,3 +2552,14 @@ unity/Assets/Game/Editor/MainlineWorldStartup.meta text eol=lf
 scripts/prepare_mainline_shared_world_configuration.py text eol=lf
 scripts/prepare_mainline_world_startup_validation.py text eol=lf
 assets/reference/official-map/mainline-shared-world-configuration-source-manifest.json text eol=lf
+
+# Activity invitation native bindings retain their provenance hashes.
+unity/Assets/Official/DailyChallenges/UI/Team/** -text
+unity/Assets/Official/DailyChallenges/UI/Team.meta -text
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityDomainBossTeamButton.cs text eol=lf
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityDomainBossTeamButton.cs.meta -text
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/IActivityBattleTeam.cs text eol=lf
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/IActivityBattleTeam.cs.meta -text
+scripts/prepare_activity_battle_team_ui.py text eol=lf
+scripts/prepare_activity_battle_team_native.py text eol=lf
+assets/reference/daily-challenges/activity-team-*.json text eol=lf

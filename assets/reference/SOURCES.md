@@ -632,3 +632,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 3803第一阶段翼部粒子及其原实体实例覆盖归入[怪物本体效果来源](battle-animation/monster-body-effects-source-manifest.json)，记录原prefab、当前实体导出输入、纹理／shader闭包与输出身份；具体实现和验证仍见战斗执行功能页。
 
 公共新单位怪物占格装配沿用已校验的854_156383战斗规则及原模板映射，原GridTransform声明、当前884客户端相机消费代码、输入哈希与接线哈希见[怪物占格来源](battle-rules/monster-bodies-source-manifest.json)。具体规则、验证范围和旧检查点兼容缺项见[战斗执行](../../docs/features/battle-execution.md)。
+
+活动邀请控件原生输入：`scripts/prepare_activity_battle_team_native.py` 按所选884原包 `ActivityDomainBossPanelBattleContent.mTeamBtn` 引用提取原子树，沿已核验原生转换、Windows贴图／shader与Wwise解码缓存绑定；字体按原 CN／zh_CN 配置校验源文件。原包身份、转换输入、资源闭包、隔离 GUID 和安装输出 SHA256 见 `daily-challenges/activity-team-native-source-manifest.json`，客户端原控制类及适配输入／输出 SHA256 见 `daily-challenges/activity-team-runtime-source-manifest.json`。功能范围与验证结论见[圣兽试炼与双影幻境](../../docs/features/daily-challenges.md)。
