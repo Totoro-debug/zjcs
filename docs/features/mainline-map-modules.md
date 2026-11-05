@@ -211,6 +211,8 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 ## 自定义实现
 
+`MainlineSharedWorld` 在解析配置前安装 `NativeMap14SharedLogging`，通过原 `Framework.Logging.Log.Initialize` 向已交付原 `ILogger`／`ILoggerFactory` ABI 提供本地输出，不启动在线应用入口。日志保留原泛型状态格式化器、等级、类别及异常对象；正式输出写入 Unity 日志，原事件委托和 EC 组件仍按原实现捕获并报告异常。已有完整日志绑定时借用，本模块拥有的绑定在最后一个重叠地图作用域退出后恢复，且不覆盖外部后装的绑定。ZLogger 所需的16份传递依赖按其官方 NuGet 清单固定版本、包SHA-512、DLL哈希和MVID，原 Console／Framework IL 保持不变；载荷、许可与本地目录见[日志依赖来源](../../assets/reference/official-map/mainline-shared-logging-source-manifest.json)。带图形的隔离 Play Mode 已核对泛型值状态、格式化器、异常对象身份、类别复用、原泛型日志包装、原事件委托捕获异常、嵌套／交错释放、外部替换及构造失败恢复；七图259,150格与33,522次全新放置初始化回归通过（12,775次出生、20,747次被原出生条件拦截）。主工程编译、`ProjectTools.Validate` 和静态元数据检查通过；此次是原运行时日志与状态检查，实体完整客户端启动、正式交互和 Windows Player 仍未验证。
+
 公共原 EC 实体按已确认方案从全新存档初始化，无旧存档迁移。`MainlineSharedWorld.Load(地区状态查询)` 统一处理七图的默认出生，查询接收本图地区编号，沿原 `MapRegionStatus` 的0／1／2返回未知／私有／公开；只使用地形／根的既有调用仍可省略该查询。内部 `MainlineSharedEntityCreation` 查本图原 `MapInfoWrap` 与原 Lo 模板，调用原 `RegionStatusSupported`／`BlockDefaultSpawnInMap` 决定是否出生，不符合条件不创建。非法状态使加载失败并释放所属作用域，重复加载仍由原公共生命周期拒绝。
 
 原 `EntityHandler.InstantiateEntity` 只克隆组件配置，缺少服务端初始化执行器；单机在加入容器前，将原 `LoGridTransform` 的位置／方向／翻转、`LoWorldStage` 的阶段和 `LoWorldActiveableEntity` 的激活配置写入对应已有运行时组件，其余值保留原模板构造默认值，不补造组件、不改变共享Info。编号仍调用原 `EcContainer.NewEntityIndex`，Lo ID 对应仍由原 `MapLoEntityIdManager` 保存。全部初始实体先注册到尚未启动的容器。带地区查询的 `Load` 完成后 `IsLoaded=true`、`IsReady=false`，宿主安装真实玩家、地图和条件上下文后再调用 `Start`，沿原容器先全体 Awake、再全体 Start及 `newEntity=false` 的事件派发顺序；未完成加载或重复启动被拒绝。原 NPC 启动依赖 `MeManager.MainPlayer` 的跟随者事件，以及 `PlayerMap` 的逻辑ID映射和条件查询，正式离线适配仍待接入，不以空玩家或禁用原客户端分支代替。地图退出通过原容器移除实体后清空该映射；尚未启动的实体按原行为只移除登记，不调用 End／Destroy。刷新沿所属功能已确认规则，新的存档状态写回、重新进入恢复及正式地图宿主的状态接线尚待接通。

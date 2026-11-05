@@ -18,6 +18,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
 
         private readonly long containerId;
         private MainlineSharedEntityCreation entities;
+        private NativeMap14SharedLogging logging;
         private bool loading, disposed;
 
         public MainlineSharedWorld(NativeMap14SharedAssemblyCatalog catalog, int mapClassId, long containerId)
@@ -29,6 +30,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             try
             {
                 Assemblies = new NativeMap14SharedAssemblies(catalog);
+                logging = new NativeMap14SharedLogging(Assemblies);
                 Configuration = new NativeMap14SharedConfiguration(Assemblies);
                 Data = new NativeMap14SharedData(Assemblies, Configuration, mapClassId,
                     $"MainlineSharedWorld/{mapClassId}/catalog");
@@ -114,8 +116,13 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                     finally
                     {
                         Configuration = null;
-                        Assemblies?.Dispose();
-                        Assemblies = null;
+                        try { logging?.Dispose(); }
+                        finally
+                        {
+                            logging = null;
+                            Assemblies?.Dispose();
+                            Assemblies = null;
+                        }
                     }
                 }
             }

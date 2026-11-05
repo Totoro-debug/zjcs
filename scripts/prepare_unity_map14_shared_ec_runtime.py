@@ -31,7 +31,11 @@ PACKAGES = [
      'UKCt2W0w2QWA+44ColzqCqFfTSJ0Qnm1rP4YzIVot0QCqgYtXbE8xYh6CL/STgfLyIsvwQ7o7sLDft87zaf4pw=='),
     ('ZLogger', '2.5.10', 'netstandard2.1',
      '/1DqUYTMuXic6DqCSS70FsMPgxpqGsXwxhG4UxPwOBIzjHCMUcvYgn20+YLi+s/Y9RgsL+Pw1+fUtD7pj5bGgg=='),
+
 ]
+LOGGING_PACKAGES = ROOT / 'assets/reference/official-map/mainline-shared-logging-packages.json'
+PACKAGES += [(r['name'], r['version'], r['framework'], r['package_sha512'])
+             for r in json.loads(LOGGING_PACKAGES.read_bytes())['packages']]
 
 
 def meta(path):
@@ -52,10 +56,12 @@ def meta(path):
     return guid
 
 
-def packages():
+def packages(names=None):
     CACHE.mkdir(parents=True, exist_ok=True)
     sources = []
     for name, version, framework, expected in PACKAGES:
+        if names is not None and name not in names:
+            continue
         slug = name.lower()
         url = f'https://api.nuget.org/v3-flatcontainer/{slug}/{version}/{slug}.{version}.nupkg'
         cache = CACHE / f'{slug}.{version}.nupkg'
@@ -73,18 +79,21 @@ def packages():
         for index, entry in enumerate(licenses):
             write(ASSETS / f'{name}-license-{index}.txt', archive.read(entry))
         license_source = None
-        if not licenses and name == 'ZLogger':
+        if not licenses and name in ('ZLogger', 'Utf8StringInterpolation'):
             specification = ET.fromstring(archive.read(next(n for n in archive.namelist() if n.endswith('.nuspec'))))
             repository = next(n for n in specification.iter() if n.tag.endswith('}repository'))
-            if repository.attrib != dict(type='git',url='https://github.com/Cysharp/ZLogger',commit='ac885aa1e6588d28aaf6b523682a591e97ed9ba5'):
-                raise ValueError('Pinned ZLogger publisher repository differs')
-            url_license = 'https://raw.githubusercontent.com/Cysharp/ZLogger/ac885aa1e6588d28aaf6b523682a591e97ed9ba5/LICENSE'
-            cached_license = CACHE/'ZLogger-LICENSE.txt'
+            commit = {'ZLogger': 'ac885aa1e6588d28aaf6b523682a591e97ed9ba5',
+                      'Utf8StringInterpolation': 'bd04ec912fbe8d5714c9e5b663641b73b1e56901'}[name]
+            if repository.attrib != dict(type='git',url='https://github.com/Cysharp/'+name,commit=commit):
+                raise ValueError('Pinned logging publisher repository differs: ' + name)
+            license_name = 'LICENSE.md' if name == 'Utf8StringInterpolation' else 'LICENSE'
+            url_license = f'https://raw.githubusercontent.com/Cysharp/{name}/{commit}/{license_name}'
+            cached_license = CACHE/(name+'-LICENSE.txt')
             if not cached_license.exists(): write(cached_license,urllib.request.urlopen(url_license,timeout=45).read())
             content = cached_license.read_bytes()
             if b'MIT License' not in content or b'Cysharp' not in content:
                 raise ValueError('Publisher ZLogger license is not the expected MIT license')
-            write(ASSETS/'ZLogger-license.txt',content)
+            write(ASSETS/(name+'-license.txt'),content)
             license_source = dict(url=url_license,sha256=sha(content))
         sources.append(dict(name=name, version=version, url=url,
                             package_sha512=expected, dll_sha256=sha(dll),
@@ -206,11 +215,11 @@ def build():
         contract=dict(type='GFrameCore.IGSerializable',type_index=interface['index'],method='System.UInt16 GetOpCode()',method_index=definition[9]),
         packages=package_sources,logging_calls=contract['loggingCalls'],config_contract=config_abi,
         serialization_extension=record(extension_path) if extension is not None else None,
-        tools=[record(Path(__file__).resolve()),record(ROOT/'scripts/prepare_unity_shared_ec_contracts.ps1')],outputs=[record(p) for p in outputs],
+        tools=[record(Path(__file__).resolve()),record(LOGGING_PACKAGES),record(ROOT/'scripts/prepare_unity_shared_ec_contracts.ps1')],outputs=[record(p) for p in outputs],
         validation=record(ROOT/'unity/Assets/Game/Editor/Map14/SharedEntities/OfficialMap14SharedEcAcceptance.cs'),
         operation='Ship unchanged original Console/Luban/Framework.FirstPass.Runtime IL as explicitly bound local TextAssets. Recover the complete GConfig.IConfig marker and exact IGSerializable ABI from APK metadata; forward seven application logging signatures to pinned public ZLogger APIs. Original ContainerInfo and all other table/shared class methods remain in Console IL. Restore the four original 11-component client prefabs in original order and initialize original info using source field data. SubStageStateInfo.Select follows its original generated client formatter, which consumes without assignment. No server entity state, reward or save rules are supplied.',
         limitations=['Additional AOT dependencies, full serializers, formal view/input/state/save integration and Windows Player remain required. The GFrameCore marker and separately recorded serialization extension do not supply its full original assembly. Logging catch paths and all public APIs of Console are not validated.'])))
-    print('Local original shared EC payload: 7 assemblies, 4 source client prefabs / 44 components.')
+    print(f'Local original shared EC payload: {len(contract["modules"])} assemblies, 4 source client prefabs / 44 components.')
 
 
 if __name__=='__main__': build()

@@ -59,7 +59,10 @@ foreach($file in @('Console.dll','Luban.dll','Framework.FirstPass.Runtime.dll'))
     $modules+=@{name=$a.Name.Name;moduleId=$a.MainModule.Mvid.ToString();file=$file;origin='original'}
     $a.Dispose()
 }
-foreach($entry in @(@{folder=$PackageDirectory;file='Microsoft.Extensions.Logging.Abstractions.dll';origin='package'},@{folder=$PackageDirectory;file='ZLogger.dll';origin='package'},@{folder=$Destination;file='GFrameCore.dll';origin='contract'},@{folder=$Destination;file='GFrameCore.Extensions.ZLogger.dll';origin='adapter'})) {
+$entries=@(@{folder=$Destination;file='GFrameCore.dll';origin='contract'},@{folder=$Destination;file='GFrameCore.Extensions.ZLogger.dll';origin='adapter'})
+$packageNames=@('Microsoft.Extensions.Logging.Abstractions','ZLogger')+@((Get-Content -LiteralPath (Join-Path $PSScriptRoot '../assets/reference/official-map/mainline-shared-logging-packages.json') -Raw | ConvertFrom-Json).packages.name)
+foreach($name in $packageNames){$entries+=@{folder=$PackageDirectory;file=($name+'.dll');origin='package'}}
+foreach($entry in $entries) {
     $a=[Mono.Cecil.AssemblyDefinition]::ReadAssembly((Join-Path $entry.folder $entry.file))
     $modules+=@{name=$a.Name.Name;moduleId=$a.MainModule.Mvid.ToString();file=$entry.file;origin=$entry.origin}
     $a.Dispose()

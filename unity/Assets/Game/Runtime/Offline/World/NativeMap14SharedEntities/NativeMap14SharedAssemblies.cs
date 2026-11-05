@@ -40,7 +40,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             return payloads.ContainsKey(name) ? Load(name) : null;
         }
 
-        private Assembly Load(string name)
+        internal Assembly Load(string name)
         {
             if (disposed) throw new ObjectDisposedException(nameof(NativeMap14SharedAssemblies));
             if (loaded.TryGetValue(name, out var result)) return result;

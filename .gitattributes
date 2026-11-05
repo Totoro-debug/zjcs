@@ -2431,3 +2431,26 @@ unity/Assets/Game/Editor/OfficialBattlePetHostAcceptance.cs text eol=lf
 unity/Assets/Official/Combat/PetFollowers.meta text eol=lf whitespace=-blank-at-eol
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveMonsterModelView.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleEntityPositionContainer.cs* text eol=lf
+
+# Verified shared map lifecycle and pinned local logging source bytes.
+unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedWorld.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedEntityCreation.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblies.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedLogging.cs text eol=lf
+scripts/prepare_mainline_shared_world_data.py text eol=lf
+scripts/prepare_mainline_shared_logging_dependencies.py text eol=lf
+scripts/prepare_unity_map14_shared_ec_runtime.py text eol=lf
+scripts/prepare_unity_shared_ec_contracts.ps1 text eol=lf
+scripts/prepare_mainline_minimap_offline_validation.py text eol=lf
+unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset text eol=lf
+unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance*.cs* text eol=lf
+unity/Assets/Official/World/Map/14/SharedRuntime/*-license*.txt -text whitespace=cr-at-eol
+assets/reference/official-map/mainline-shared-*.json text eol=lf
+assets/reference/official-map/map14-shared-*-source-manifest.json text eol=lf
+unity/Assets/Official/World/Map/14/SharedRuntime/*.bytes.meta text eol=lf
+unity/Assets/Official/World/Map/14/SharedRuntime/*-license*.txt.meta text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedLogging.cs.meta text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedEntityCreation.cs.meta text eol=lf
+assets/reference/official-map/mainline-current-minimap-markers-source-manifest.json text eol=lf
+assets/reference/official-map/mainline-minimap-marker-catalog-source-manifest.json text eol=lf
+assets/reference/official-map/mainline-minimap-world-data-source-manifest.json text eol=lf

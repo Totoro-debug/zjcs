@@ -111,6 +111,13 @@ def main():
        if guid.startswith(b'000000') or guid in package_guids:continue
        if guid not in index:raise ValueError('Unbound native asset '+guid.decode()+' '+str(p))
        pending.append(index[guid])
+    external_refs={ref for name in selected for ref in json.loads(modules[name].read_bytes()).get('references',[])}
+    if external_refs & {'spine-unity','spine-csharp'}:
+     # Existing original-playable dependencies include the installed Spine ABI,
+     # which lives outside Game/Runtime and is not found by stage_modules.
+     shutil.copytree(source/'Assets/Spine/Runtime',project/'Assets/Spine/Runtime',dirs_exist_ok=args.refresh)
+     for relative in ('Assets/Spine.meta','Assets/Spine/Runtime.meta'):
+      shutil.copy2(source/relative,project/relative)
     shutil.copytree(source/'Packages',project/'Packages',dirs_exist_ok=args.refresh)
     shutil.copytree(source/'Assets/StreamingAssets/Map13/NativeText',project/'Assets/StreamingAssets/Map13/NativeText',dirs_exist_ok=args.refresh)
     settings=project/'ProjectSettings';settings.mkdir(exist_ok=args.refresh)

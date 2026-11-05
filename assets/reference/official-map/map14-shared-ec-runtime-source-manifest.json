@@ -137,22 +137,26 @@
   },
   "serialization_extension": {
     "path": "assets/reference/official-map/map14-shared-serialization-source-manifest.json",
-    "sha256": "957be16b6a79db81ece24ade4a3fe47c553c622d37687bb18f692285637e5f9c"
+    "sha256": "1ee7925e881655d8e55c2cf3d3b21a49c6403a43b057405730ec87067a7240cd"
   },
   "tools": [
     {
       "path": "scripts/prepare_unity_map14_shared_ec_runtime.py",
-      "sha256": "a3c4db8bcd72a317e8e852c571f12266871980aae8f195e45127a09743dff044"
+      "sha256": "713efe81f7e4eb0b1398dd245a43df74a0a9d9e3fbea85c1b403372418f58f79"
     },
     {
       "path": "scripts/prepare_unity_shared_ec_contracts.ps1",
-      "sha256": "335faf77118609794d2f4b8976c6e23935ca562cda6fb5576f2440720a629f32"
+      "sha256": "92bdc177a6b7e41f05248d06bc35fa291193f4f66dfcd833ff384a9be17792d8"
+    },
+    {
+      "path": "assets/reference/official-map/mainline-shared-logging-packages.json",
+      "sha256": "5518740eb5a817ecc8c9f06399395adb6a6a4fcce9338d955ea4bb3cc2312911"
     }
   ],
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblies.cs",
-      "sha256": "6bbdfd69b9aac9cca92ad08e071ef7253045a338d5e1ee0e04eb4756b51356f0"
+      "sha256": "a1c3f76db9cb350a7ddf282734784605fcaedf4b08466d42ae6f6d7d3b8aeb6c"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblies.cs.meta",
@@ -481,7 +485,7 @@
     },
     {
       "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset",
-      "sha256": "b64951b1e55d9b90f627d25bf36dd96aa944e462560ca9e8bd7df0b81a763cfe"
+      "sha256": "13e4652fe4903a9a36b6c985c4c56762767fba7a411b0558c4bad32176a89432"
     },
     {
       "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset.meta",
@@ -490,6 +494,282 @@
     {
       "path": "unity/Assets/Game/Runtime/Official/SharedConfig.meta",
       "sha256": "9fd43bb7f6653a96723c12bd84ecfa507827494ffa625b25ccaae177f8a6d03b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedEntityCreation.cs",
+      "sha256": "e465ec1ada647845ada7aad9a67e21880f91ed26ccd413c0b71656f42b4fe6bb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedEntityCreation.cs.meta",
+      "sha256": "261653ae74fc30d6bf605ea614278c8d5e7abe268edbd09275ac3b37fa285d77"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedWorld.cs",
+      "sha256": "7e2fd1cf989bef805b3a2b2956f8cfc1c2c865cd6523e3b5881a2304e33838af"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedLogging.cs",
+      "sha256": "494266b9eb496a2690adab6b4a5c1e0e7c88ff75cd72e7318dced505a9e8f9bb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedLogging.cs.meta",
+      "sha256": "a873d336d9e417bc9dbecb6a4c2688c38f7d798c2cd860f6b57e9cdbfe48d6ab"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Bcl.AsyncInterfaces-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Bcl.AsyncInterfaces-license-0.txt.meta",
+      "sha256": "9a116aaa6fd483990ce54c3d84e57d956fb0aaaeffdb66f1cd9fa37bda2f9ca2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Bcl.AsyncInterfaces.bytes",
+      "sha256": "136d5965cf4768e8420b547a8bddea882921f426c371833d558a858a2f0c235a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Bcl.AsyncInterfaces.bytes.meta",
+      "sha256": "fcd29b9dd15fc5c7a6d62a2e5c6c7ea9dfeb2470bac89747a9408dc7929ad6ac"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Bcl.TimeProvider-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Bcl.TimeProvider-license-0.txt.meta",
+      "sha256": "a724058f4979f741c9326027a49c0474f35e696aebb537b342027ae3cc50d140"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Bcl.TimeProvider.bytes",
+      "sha256": "d9941b9603506c46e2aaf8b44166c93646b55ebea0d365792b405c2562753442"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Bcl.TimeProvider.bytes.meta",
+      "sha256": "aa883b060ec4030a80e8d42421793cb3f87f5643e9342007edafffb635f8fc09"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Logging-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Logging-license-0.txt.meta",
+      "sha256": "fbf1108aa88ef3cc6dbdd07b42a280640cb0cb9218816b0e03fc7915e8241769"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Logging.bytes",
+      "sha256": "1a13da2bb23ebdd1af5776b5d49e587d78192b3aa1314e99589fe1cda1b4b16c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Logging.bytes.meta",
+      "sha256": "298d32fb0c6da08d5939569836204d61e44bd5bb0fa323193804eef491002b1f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Collections.Immutable-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Collections.Immutable-license-0.txt.meta",
+      "sha256": "7fbc061e130c81316e93e9d54abec0278cae793395bfa1491351378c30c77bda"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Collections.Immutable.bytes",
+      "sha256": "5b1b1c83ba3d135c2fdfe425842fbe9c7432878b7e468623acb554c69b4c130f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Collections.Immutable.bytes.meta",
+      "sha256": "5230dfd1c263deed76c585b9f7c0f66e356398bbe0f4b9dff42c0be4afee2336"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.IO.Hashing-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.IO.Hashing-license-0.txt.meta",
+      "sha256": "f6d3a62705170b48f97675c846216f6b20fcbb8ce0f22ebf5da5da3308710fd0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.IO.Hashing.bytes",
+      "sha256": "1b6bf2f68268800fde54de63bb09edc25201f028b24c2108bd3d94f0077185e9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.IO.Hashing.bytes.meta",
+      "sha256": "52b57a6538e4d21c4cb27b437ed0e6e0e911b28059b03057c6338d4d7805d1fe"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Text.Json-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Text.Json-license-0.txt.meta",
+      "sha256": "49e1e39796493816c6171b4e47672371ba59dd7891a2b5b4b83327818736fe8c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Text.Json.bytes",
+      "sha256": "42a3d66464aa3f52202a625fb8d719663ceae07678081253b54d6ed56a95ea0a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Text.Json.bytes.meta",
+      "sha256": "f7b94601edf75d65c759291f931ea287fda861642c85deb6dba7de9dd5fb19a4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Threading.Channels-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Threading.Channels-license-0.txt.meta",
+      "sha256": "c949d03c54b38b212a057f0569a3d0888ba5a66ca8e6001e5eb591de7707ab73"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Threading.Channels.bytes",
+      "sha256": "31c7e3704c0477c53d9306362dc6abe741088efb7a7b4e46cded0169cf7bb0b2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Threading.Channels.bytes.meta",
+      "sha256": "c543889fe4ba7fe757136f29d159b2fa93955edc1e60ad8ff9e5389bad9fd076"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Utf8StringInterpolation-license.txt",
+      "sha256": "691fea33753bb047e3d6380e4ec078275d6732c13be736fb0a248efd464dd6b8"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Utf8StringInterpolation-license.txt.meta",
+      "sha256": "309f505b6fd868e845b5c92c99d96647d8cd021c9a0a64fc9a0b09506422db50"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Utf8StringInterpolation.bytes",
+      "sha256": "cc7610fda2a04121ff98eb1893bf7e50042ee553245ff4db799459c08eb0158b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Utf8StringInterpolation.bytes.meta",
+      "sha256": "d6c2f6f0ddc46f554d924427788bbee9edf49df9369053a0ca14db0c26e817a3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.DependencyInjection-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.DependencyInjection-license-0.txt.meta",
+      "sha256": "4ba3e51276e548db1e5d5cfd580d698ac748c4ab218d8cffb2f7bfd2f3386de0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.DependencyInjection.bytes",
+      "sha256": "3dc3c09f96115b8bb818265284abd2c15364de3658efe74813b40e76d42459e7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.DependencyInjection.bytes.meta",
+      "sha256": "4c1520b65849fa7fd186547a3c3700a6cf00b5ff352f6043ba6a9553da4eb84a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Options-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Options-license-0.txt.meta",
+      "sha256": "70daabbb6dee71b3a3797f6e3fdcd2a32646b869826f0cac65b189f9aa506f43"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Options.bytes",
+      "sha256": "685eb2257b161cb35a12d508e5b5a6520e66747bd94bc0afbc39f89fa7262681"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Options.bytes.meta",
+      "sha256": "01a76c2ef1a019ea5f080446a4e4a6edb8f03f55a5e8b32359fffc4ee2635b5f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Diagnostics.DiagnosticSource-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Diagnostics.DiagnosticSource-license-0.txt.meta",
+      "sha256": "a68b525fc9b7094ce46394448a6584fb9f6a24c2fd11e8b560f3a1dbe8a7dd1d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Diagnostics.DiagnosticSource.bytes",
+      "sha256": "abc69603fc8ddab9e90eb5317170242ef1f57d575690f82da691a2b34fc46eac"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Diagnostics.DiagnosticSource.bytes.meta",
+      "sha256": "214b43e3522380c8b9a47de300fbcbc99d2a5fbeeb79e11e69a0551084457a4e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Runtime.CompilerServices.Unsafe-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Runtime.CompilerServices.Unsafe-license-0.txt.meta",
+      "sha256": "bdd3e34c1d430fd5d4ec45021fd71277649ad32d94a22d1e9bd18c81ba60e893"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Runtime.CompilerServices.Unsafe.bytes",
+      "sha256": "01748200f2400c742aa689f1f5101bd6298efdfd92c00c18f4fa473847235ba9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Runtime.CompilerServices.Unsafe.bytes.meta",
+      "sha256": "76f9bb86a494d88b937c90e37ef2b3e716adf16a43ebeec712efe4bd0cb40306"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Text.Encodings.Web-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Text.Encodings.Web-license-0.txt.meta",
+      "sha256": "41d8873d7c29335bc0aeb3de1d03787e43a2b7ac88e858088a331a5921659363"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Text.Encodings.Web.bytes",
+      "sha256": "5ad1f348223f281c34b9b857445a1c3412a430026ef049aeac641c53a92408be"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.Text.Encodings.Web.bytes.meta",
+      "sha256": "10252d7ddb4dad62527438eb859517d532398bda27832a2d2e05e582cac5c00f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.DependencyInjection.Abstractions-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.DependencyInjection.Abstractions-license-0.txt.meta",
+      "sha256": "ffc1c4313dcda89b9951499b3e2cb53ea5cc20899f24d238871447ddaffb8bd5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.DependencyInjection.Abstractions.bytes",
+      "sha256": "3a588921e88c7b989f805adc5721ed25e24d389e8a9bc968ebcff79f412a5288"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.DependencyInjection.Abstractions.bytes.meta",
+      "sha256": "f6667c3f44c0e7841d30b4c63884d8221b9c28e25f19f66fdb73bc8720a75274"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Primitives-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Primitives-license-0.txt.meta",
+      "sha256": "bcee05cde8cac69c710ae8e4e8bfb7f40999aebc72a6de2ead6f3df3114cc394"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Primitives.bytes",
+      "sha256": "6d492e7919789c7ab3d4afb5d2e5841cc0e2f28b07bf561bd1fcf8945e2170b3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Primitives.bytes.meta",
+      "sha256": "fbd73c41cbfa53f843ead730512d366a255327f5b21cdf3b7d46953daa35ddd4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.ComponentModel.Annotations-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.ComponentModel.Annotations-license-0.txt.meta",
+      "sha256": "9fbbc8286ecdaaa44dfec8f7787e8c6f4c35544ea9dc9a91a55b2c26ede3d3ff"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.ComponentModel.Annotations.bytes",
+      "sha256": "c46069e29ad23fee7f5d2ced736ffea27b0177f82341296d9af6325acf821c69"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/System.ComponentModel.Annotations.bytes.meta",
+      "sha256": "cea443f3fb24c98b2b6958a1fd0352a8e2421c01d77d76f8e2e7622cad3961b5"
     }
   ],
   "validation": {
@@ -499,5 +779,9 @@
   "operation": "Ship unchanged original Console/Luban/Framework.FirstPass.Runtime IL as explicitly bound local TextAssets. Recover the complete GConfig.IConfig marker and exact IGSerializable ABI from APK metadata; forward seven application logging signatures to pinned public ZLogger APIs. Original ContainerInfo and all other table/shared class methods remain in Console IL. Restore the four original 11-component client prefabs in original order and initialize original info using source field data. SubStageStateInfo.Select follows its original generated client formatter, which consumes without assignment. No server entity state, reward or save rules are supplied.",
   "limitations": [
     "Additional AOT dependencies, full serializers, formal view/input/state/save integration and Windows Player remain required. The GFrameCore marker and separately recorded serialization extension do not supply its full original assembly. Logging catch paths and all public APIs of Console are not validated."
-  ]
+  ],
+  "logging_dependency_extension": {
+    "path": "assets/reference/official-map/mainline-shared-logging-source-manifest.json",
+    "sha256": "fa99d18eaa7733e410ac9d66593ec4daa3b8c831b5e7eaf0f78d6da54b5cd316"
+  }
 }
