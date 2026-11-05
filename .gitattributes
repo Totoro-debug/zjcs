@@ -2387,3 +2387,25 @@ unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipVa
 unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerActor.cs text eol=lf
 scripts/prepare_battle_player_native_view.py text eol=lf
 assets/reference/battle-animation/player-native-view-source-manifest.json text eol=lf
+
+# Keep shared player scene integration and dependency identities byte-stable.
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRequest.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePartnerNativeModelView.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/IOfficialBattleAnimatorMovementModel.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerAppearanceSource.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Players.cs text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.SceneViews.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/IOfficialBattleAnimatorMovementModel.cs.meta text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerAppearanceSource.cs.meta text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Players.cs.meta text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.SceneViews.cs.meta text eol=lf
+assets/reference/partner-battle-fighters-source-manifest.json text eol=lf
+assets/reference/battle-animation/movement-effects-source-manifest.json text eol=lf
+assets/reference/battle-hud/skill-slot-lifecycle-source-manifest.json text eol=lf
+assets/reference/partner-native-role-views-source-manifest.json text eol=lf
+scripts/prepare_battle_player_scene.py text eol=lf
+assets/reference/battle-animation/player-scene-dispatch-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs.meta text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRequest.cs.meta text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs.meta text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePartnerNativeModelView.cs.meta text eol=lf

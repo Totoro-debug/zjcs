@@ -9,7 +9,7 @@ namespace Zjcs.Presentation.Combat
 {
     // The shared battle supplies grid movement, HP and skill graphs. This view
     // owns the original player actor, ambient/death Animator and shadow binding.
-    public sealed class OfficialBattlePlayerNativeModelView : IOfficialBattleNativeModel
+    public sealed class OfficialBattlePlayerNativeModelView : IOfficialBattleNativeModel, IOfficialBattleAnimatorMovementModel
     {
         private readonly OfflineProfessionBattlePlayerResources resources;
         private readonly OfflineProfessionBattlePlayerResources.Player player;

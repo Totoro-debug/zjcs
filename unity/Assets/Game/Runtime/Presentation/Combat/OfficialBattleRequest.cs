@@ -44,6 +44,7 @@ namespace Zjcs.Presentation.Combat
         public OfflineMainlineProgressSession StatueProgress;
         public OfficialBattleSessionOptions Options;
         public Func<FightBattleUnitState, IOfficialBattleNativeModel> NativeNpcFactory;
+        public OfficialBattlePlayerAppearanceSource PlayerAppearance;
         // Optional Wwise host for sound leaves inside native FightSkill graphs.
         // Visual graphs remain usable when omitted; their sound leaves use the
         // scope's silent local fallback until a mode supplies the official bank host.

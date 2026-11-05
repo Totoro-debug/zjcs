@@ -211,7 +211,7 @@ namespace Zjcs.Presentation.Combat
                 nextScene = new OfficialBattleSceneView(resolvedModelCatalog, worldRoot,
                     modelKey, gridMapper, animationForEvent, orientUnit, resolvedHudCatalog, hudParent,
                     nextNativeModels, animationGroupResolver, nativeNpcFactory,
-                    nextSkillGraphPlayback?.Scope, restoreCheckpoint);
+                    nextSkillGraphPlayback?.Scope, restoreCheckpoint, request.PlayerAppearance);
                 nextHud.ControlClicked += OnHudControlClicked;
                 nextHud.SpeedCycled += OnSpeedCycled;
                 if (sessionOptions.ShowMainPanelDelay <= 0)
@@ -345,7 +345,7 @@ namespace Zjcs.Presentation.Combat
                 // Install the settled CD snapshot before native zero-delay starts.
                 // Delayed starts and each skill's own Remove drive subsequent states.
                 skillGraphPlayback?.Play(result.Event, result.Checkpoint,
-                    sceneView.TryGetUnitTransform);
+                    sceneView.Body);
                 if (!result.Replayed)
                     sceneView.ShowDamageFloats(result.Event, result.Checkpoint, hudCatalog.Font, damageColors);
                 LastStepSeconds = result.Event != null && result.Event.Duration > 0f

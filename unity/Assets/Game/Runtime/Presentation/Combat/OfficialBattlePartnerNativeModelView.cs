@@ -11,7 +11,7 @@ namespace Zjcs.Presentation.Combat
 {
     // The original controller owns ambient/skill transitions. Movement and role
     // death parameters come from the original application playables, not aliases.
-    public sealed class OfficialBattlePartnerNativeModelView : IOfficialBattleNativeModel
+    public sealed class OfficialBattlePartnerNativeModelView : IOfficialBattleNativeModel, IOfficialBattleAnimatorMovementModel
     {
         [Serializable] private sealed class Views { public string manifest; public Role[] partners; }
         [Serializable] private sealed class Role

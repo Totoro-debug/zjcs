@@ -1,0 +1,122 @@
+{
+  "manifest": "884_156692",
+  "inputs": [
+    {
+      "path": "assets/reference/battle-animation/player-native-view-source-manifest.json",
+      "sha256": "a162d23326e5284bde63da65e93c003fbd7a81e077ab46819be6686aa428bcba"
+    },
+    {
+      "path": "assets/reference/battle-animation/move-animators-source-manifest.json",
+      "sha256": "5f74b8763c948a53dcb8fc1b401ae4ca9b929c396cdaa655ace88e289794789d"
+    },
+    {
+      "path": "assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json",
+      "sha256": "14055cc29627ebb48c2001f6f374325c4381d1261e75207d561d7109f3379aa0"
+    }
+  ],
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/IOfficialBattleAnimatorMovementModel.cs",
+      "sha256": "c8d5de2b1c04b130dada60591b0d33ff30255d8d81a081d39934c6ffe1bea24d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerAppearanceSource.cs",
+      "sha256": "d30b29f1dcccedaf4e660ea8d0f76a2630c2a3de911fdef8ab3ac7f89631887a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Players.cs",
+      "sha256": "5fd1711152f3fe1a6616467677c87e27b2b9d9eecfff1be2d9b98c8a240e07c1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
+      "sha256": "13d011dd5cd32b7305eefee6dd6032cd544ba8b11ad48a8837e1e285a0043850"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRequest.cs",
+      "sha256": "629cc4dd5cbe521f7f1e66a366fa61ddec0bb6e5214c76d9e82e39b937a9cac2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs",
+      "sha256": "8222414c2fd686284d69de2788191b9ff159f3824d9c9cfe532aae45fab9aeac"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerNativeModelView.cs",
+      "sha256": "9b00381a0e687bdb1879393d4da57221cf163e179b59f48763ebb871d23de2fe"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePartnerNativeModelView.cs",
+      "sha256": "f619d89265a11e99b81ad6318829b05c5543eef338e5996eb0e761ef2485ebc6"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs",
+      "sha256": "f22dea17e2c1303c54a9d1e9b013487dc6345a320d2d9d5e0a68df5f155aa456"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerActor.cs",
+      "sha256": "9498c9a8654df0579b6cbbfa4c4ed27f90699e12aafe7efead594305120cd700"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.SceneViews.cs",
+      "sha256": "39d082c1405caa699c71020c4f4fcf9dda88ed9610c6d569f5bfd6435b348c80"
+    }
+  ],
+  "metadata": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/IOfficialBattleAnimatorMovementModel.cs.meta",
+      "sha256": "b454f1cae60e2eea1f6ce24691b5a932848994857507850e030e4aa13c47c0f6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerAppearanceSource.cs.meta",
+      "sha256": "02f5c31a58f6becc3da7d7ebce0d59770d3477f11084cc3a34133d70f8f75aa2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Players.cs.meta",
+      "sha256": "05df65a5a5e4da8a2a15bf5dab8886fc0725bc61d76a494f4d1a0c481388c2ec"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs.meta",
+      "sha256": "acca89279098fd3eaf5ed8dc8a0063730ac0184606f5a7452a2f39a4a69ea495"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRequest.cs.meta",
+      "sha256": "0817098fbd8abcc7de8e7771029ec1bbac428e31ef7b9d5a62d0aaed99bf25f1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs.meta",
+      "sha256": "134290ecda0bbd2baac5c2104dad383c67dc1dd607e0aa227f06d9868b1d197d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerNativeModelView.cs.meta",
+      "sha256": "628b89daf2b493247dc3ab86d2543f714a019a1a4c0015d2571e8827ede10714"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePartnerNativeModelView.cs.meta",
+      "sha256": "6a298f6a2dccd131acb176f442670fc6777e9cc52c692bd0ffbba9f581c91b9a"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs.meta",
+      "sha256": "2d5d88da76093fb2985f3cbe852610a6fa9426a9696c4cfe6c58a36fdf82707b"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerActor.cs.meta",
+      "sha256": "e191fd2cd503a65100132f31dfa6b6ef8bdcca7dd9216d42fb5d25f1d42619cb"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.SceneViews.cs.meta",
+      "sha256": "d54bd962c84f188f17bf5fcc161393fb62b18661439c2b0c4b96f642052d89e8"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_player_scene.py",
+    "sha256": "d536e74bc8287e39fdd319364d3bb55a12595a2d3e4a379abf3128db31f88ed7"
+  },
+  "binding": "OfficialBattleRequest.PlayerAppearance -> OfficialBattleSceneView.TryCreatePlayer",
+  "operation": "Bind an explicitly selected player unit to a read-only profile and item-type lookup. The shared scene creates and owns its original native model/resources, including when restoring zero HP. Dispatch extracted movement leaves through the original player/partner controller interface; complete native cast graphs retain exclusive ownership of their Animator leaves. Shared HP refresh starts death, retains the role and revives it; dispose roles before shared player resources.",
+  "limits": [
+    "Host modes must still provide the profile binding and stop attaching borrowed map avatars.",
+    "The model view does not complete original player HUD, fade or every skill/status graph.",
+    "Validation uses the shared scene with local profile projections; UI input, disk saves and Windows Player remain separate."
+  ]
+}

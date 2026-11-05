@@ -117,7 +117,7 @@ namespace Zjcs.Presentation.Combat
             Func<FightBattleUnitState, string> animationGroupResolver = null,
             Func<FightBattleUnitState, IOfficialBattleNativeModel> nativeNpcFactory = null,
             Zjcs.Offline.BattleNativePlayables.OfflineBattleNativePlayableScope nativePlayableScope = null,
-            bool restoringNativeUnits = false)
+            bool restoringNativeUnits = false, OfficialBattlePlayerAppearanceSource playerAppearance = null)
         {
             this.catalog = catalog != null ? catalog : OfficialBattleModelCatalog.LoadDefault();
             this.nativeModelLibrary = nativeModelLibrary;
@@ -137,6 +137,7 @@ namespace Zjcs.Presentation.Combat
             this.nativeNpcFactory = nativeNpcFactory;
             this.nativePlayableScope = nativePlayableScope;
             this.restoringNativeUnits = restoringNativeUnits;
+            this.playerAppearance = playerAppearance;
             this.orientUnit = orientUnit ?? ((_, __) => { });
             this.hudCatalog = hudCatalog;
             damageVisibility = OfficialBattleDamageVisibilityCatalog.Load();
@@ -895,7 +896,8 @@ namespace Zjcs.Presentation.Combat
         {
             if (!units.TryGetValue(state.Id, out UnitView view))
             {
-                if (nativePlayableScope == null || !OfficialBattlePartnerNativeModelView.HasBinding(state.NpcClassId)) return false;
+                if (nativePlayableScope == null || !OfficialBattlePartnerNativeModelView.HasBinding(state.NpcClassId)
+                    && !CanCreatePlayer(state)) return false;
                 view = GetOrCreate(state);
                 if (view == null) return false;
                 Transform body = Body(state.Id);
@@ -983,14 +985,14 @@ namespace Zjcs.Presentation.Combat
                 bool hasAttached = attachedTransforms.TryGetValue(cue.UnitId, out Transform attached)
                     && attached != null;
                 if (!hasAttached && !units.ContainsKey(cue.UnitId)) continue;
-                if (!hasAttached && units[cue.UnitId].NativeModel is OfficialBattlePartnerNativeModelView partner)
+                if (!hasAttached && units[cue.UnitId].NativeModel is IOfficialBattleAnimatorMovementModel role)
                 {
                     // Complete skill prefabs already own their Animator leaves.
                     if (cue.SkillCast != null) continue;
                     if (cue.Movement != null && movementCues.TryGetValue(cue.Movement, out var partnerMoves))
                     {
-                        if (!partnerMoves.TrueForAll(value => partner.Supports(value.SkillPlayable)))
-                            throw new InvalidOperationException("Original partner movement Animator parameters are unbound.");
+                        if (!partnerMoves.TrueForAll(value => role.Supports(value.SkillPlayable)))
+                            throw new InvalidOperationException("Original role movement Animator parameters are unbound.");
                         foreach (var original in partnerMoves)
                             pendingUnitAnimations.Add(new PendingUnitAnimation { Cue = original, Serial = ++pendingAnimationSerial });
                         continue;
@@ -1092,9 +1094,9 @@ namespace Zjcs.Presentation.Combat
             }
 
             if (!units.TryGetValue(state.Id, out UnitView unit) || unit.Dying) return;
-            if (unit.NativeModel is OfficialBattlePartnerNativeModelView partner)
+            if (unit.NativeModel is IOfficialBattleAnimatorMovementModel role)
             {
-                partner.PlayMovement(playable, eventCue.StopAfter < 0f ? -1f : eventCue.StopAfter - elapsedSinceScheduled);
+                role.PlayMovement(playable, eventCue.StopAfter < 0f ? -1f : eventCue.StopAfter - elapsedSinceScheduled);
                 return;
             }
             if (unit.NativeModel is OfficialBattleLiveMonsterModelView liveMonster)
@@ -1280,6 +1282,7 @@ namespace Zjcs.Presentation.Combat
                 else if (view.Skeleton != null) DestroySceneObject(view.Skeleton.gameObject);
             }
             units.Clear();
+            playerResources?.Dispose(); playerResources = null;
             partnerHpEffects?.Dispose();
             partnerHpEffects = null;
             motions.Clear();
@@ -1316,6 +1319,8 @@ namespace Zjcs.Presentation.Combat
         private UnitView GetOrCreate(FightBattleUnitState state)
         {
             if (units.TryGetValue(state.Id, out UnitView existing)) return existing;
+            var player = TryCreatePlayer(state);
+            if (player != null) return player;
             var summonData = Resources.Load<OfficialSummonSkeletonData>("Combat/Summons/" + state.MonsterId + "-data");
             if (summonData != null)
             {

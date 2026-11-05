@@ -34,6 +34,12 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".player-native-view", true);
         }
 
+        public static void RunPlayerSceneViews()
+        {
+            RunPlayerNativeViews();
+            SessionState.SetBool(Key + ".player-scene", true);
+        }
+
         private static IEnumerator CheckPlayerActors(GameObject prefab,
             ProfessionNativeSceneAppearanceResources catalog, ProfessionNativeSceneWeaponCatalog weapons,
             IAppearanceAssetManager manager, IProfessionAppearanceUILiteBindings materials,
@@ -47,7 +53,9 @@ namespace Zjcs.Editor.Combat
             var deathBinding = OfficialBattleCharacterDeathCatalog.LoadDefault().Find(3100);
             if (SessionState.GetBool(Key + ".player-native-view", false))
             {
-                yield return CheckPlayerNativeViews(config, resolver);
+                if (SessionState.GetBool(Key + ".player-scene", false))
+                    yield return CheckPlayerSceneViews(config, resolver);
+                else yield return CheckPlayerNativeViews(config, resolver);
                 yield break;
             }
             using var battleResources = SessionState.GetBool(Key + ".player-resources", false)
