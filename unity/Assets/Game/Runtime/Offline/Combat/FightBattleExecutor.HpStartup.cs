@@ -32,7 +32,8 @@ namespace Zjcs.Combat.Official
             if (statusCatalog == null) return false;
             foreach (var owner in units)
                 foreach (var status in owner.Statuses)
-                    if (IsPendingHpStart(owner, status) || IsPendingRoundStart(owner, status)) return true;
+                    if (IsPendingHpStart(owner, status) || IsPendingRoundStart(owner, status)
+                        || IsPendingStackCountStart(owner, status)) return true;
             return false;
         }
 
@@ -116,11 +117,14 @@ namespace Zjcs.Combat.Official
                         // Preserve the original HP collector's reverse status order.
                         for (int index = statuses.Count - 1; index >= 0; index--)
                             if (owner.Statuses.Contains(statuses[index])
-                                && (IsPendingHpStart(owner, statuses[index]) || IsPendingRoundStart(owner, statuses[index])))
+                                && (IsPendingHpStart(owner, statuses[index]) || IsPendingRoundStart(owner, statuses[index])
+                                    || IsPendingStackCountStart(owner, statuses[index])))
                             {
                                 if (firstOwner == null) firstOwner = owner;
                                 changed += StartHpStatus(owner, statuses[index]);
                                 changed += StartRoundStatus(owner, statuses[index]);
+                                if (IsPendingStackCountStart(owner, statuses[index]))
+                                    OnStatusStackChanged(statuses[index]);
                             }
                     }
                     RebuildBattleProperties();

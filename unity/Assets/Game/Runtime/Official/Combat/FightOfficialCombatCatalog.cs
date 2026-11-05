@@ -1508,11 +1508,11 @@ namespace Zjcs.Combat.Official
                 result.StackCountThreshold = Int(stackCount, "StackCount");
                 result.StackCountMaxTriggers = Int(stackCount, "MaxCount", -1);
                 result.StackCountRemoveOnMax = Bool(stackCount, "RemoveOnMaxCount");
-                // The verified 24138 uses status effects only. Skill-shaped
-                // threshold effects remain explicit unsupported configuration.
-                result.StackCountRulesSupported = ArrayCount(stackCount, "Skills") == 0;
+                result.StackCountSkillsResolved = true;
+                result.StackCountRulesSupported = StackCountSkillsSupported(stackCount);
                 AddHpThresholdStatuses(stackCount, "StatusTriggerStatusCfgs", null,
                     result.StackCountStatuses);
+                AddHpThresholdSkills(stackCount, null, "Skills", result.StackCountSkills);
             }
             if (hpAccDecrease != null)
             {
@@ -2399,6 +2399,27 @@ namespace Zjcs.Combat.Official
                         "StatusReplacePropertyValues")
                 });
             }
+        }
+
+        private static bool StackCountSkillsSupported(Dictionary<string, object> component)
+        {
+            foreach (object raw in Array(component["Skills"], "stack threshold skills"))
+            {
+                var row = Object(raw, "stack threshold skill");
+                int source = Int(row, "Source"), target = Int(row, "Target");
+                // This event has no TriggerSource/TriggerTarget. Preserve unsupported
+                // AI/property/custom-damage branches instead of silently flattening them.
+                if (Bool(row, "AffectedByProp") || Bool(row, "UseAI")
+                    || source != 2 && source != 3 || target != 2 && target != 3
+                    || Int(row, "TargetPos") < 0 || Int(row, "TargetPos") > 1
+                    || Bool(row, "StackedCountToDamageFactor")) return false;
+                var prop = Object(row["PropTarget"], "stack threshold property target");
+                var damage = Object(row["CustomDamageInfo"], "stack threshold custom damage");
+                if (Int(prop, "PropType") != 0 || Bool(prop, "SupportCustomFilter")
+                    || IntArray(prop, "RoleType").Length != 0
+                    || Int(damage, "BaseProp") != 0 || Int(damage, "DamageProp") != 0) return false;
+            }
+            return true;
         }
 
         private static void AddHpThresholdSkills(Dictionary<string, object> component,

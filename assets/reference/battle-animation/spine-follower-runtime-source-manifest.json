@@ -16,7 +16,7 @@
       },
       "migrated": {
         "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/AttachmentFollower.cs",
-        "sha256": "db424477824968b6426f4f587ca69fe731d06de2ee9c843caa7bb13881b298e9"
+        "sha256": "e9ac563e184ee7f5388f9a6c222adf4d2cefafb554444fad0f1738f3dccfc917"
       },
       "original_mono_script_file_id": -1421533442,
       "diagnostics_adapted": 3,
@@ -60,7 +60,7 @@
         "public void SetSkeletonGraphic(SkeletonGraphic skeletonGraphic)": "f9a822093d370c2600f97469063af5c16c73eed735c6e479811d9d10157a522e",
         "private void InitSettings()": "9a2a72c91ae4a49b59d72203dcb9ac948f86b6381f311d8aed9d8e614ee45014",
         "private Vector3 GetBoneLocalPosition()": "c3a20562d6550c8f3713bb33c1cca945000faa518cbe80844aeb52687a591bef",
-        "private bool IsSkeletonComponentValid()": "605f37658f698fb25038906bf4d64e64b829d7ab76f5c0f035158c5a944d26f0",
+        "private bool IsSkeletonComponentValid()": "c19f9563fdf503f89dd433039d605f079197b057f0a5f85a2f582f70933f8049",
         "private void UpdateSkeleton()": "8b1ac55a3305b854b63a80acd38db8623d99f85ff93b74a8545b203355e13b7f",
         "private void UpdateSkeletonTransform()": "5dddc499a8cf9dbf110f0fc721d68dc87a81c10ceb81c9213a907c02a3f9cfa4",
         "private float GetPosZ()": "18f17686345fed61b1079ea52363d3f58e08ade6f48cc4ca9a8b67bfa860ecc1",
@@ -159,12 +159,12 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_spine_follower_runtime.py",
-    "sha256": "e6d44ec39ad647e80d8717289d55fd14d5ebcbace591cb961b9c1765260317eb"
+    "sha256": "7b75fe4a66d4c740264ada37a0a6a9d3fd78d024ed2ff177a7e1771a3f7fe310"
   },
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/AttachmentFollower.cs",
-      "sha256": "db424477824968b6426f4f587ca69fe731d06de2ee9c843caa7bb13881b298e9"
+      "sha256": "e9ac563e184ee7f5388f9a6c222adf4d2cefafb554444fad0f1738f3dccfc917"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/AttachmentFollower.cs.meta",
@@ -236,11 +236,11 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAppearance.cs",
-      "sha256": "ae8807805cab90c435ffe76d1b4c85e20a852e44f494226d0dcf8dc70021a552"
+      "sha256": "c96ce4225eed3dd9bf08cbc8902fa4193b54b8f8132ccce869593996eac53973"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef",
-      "sha256": "54b4a2e66440d04bf5a9fc8594e280588c7618f680894c9d20244d9f2978e2ea"
+      "sha256": "215e5ad19c98a5ac2d28b742c9337f10252791721977b19554d88acfa28158ce"
     }
   ],
   "reused_dependencies": [
@@ -263,6 +263,6 @@
   ],
   "adaptation": "Original application classes, serialized field names, method order and branches retained. SDK data types use existing independent native follower interfaces; renderer/graphic fields remain serialized Components. Rebuild events, initialization, validity (an initialized native pose exists), attachment lookup by slot index, draw-order arrays and live slot alpha cross explicit native boundaries. No animation SDK code is copied.",
   "limits": [
-    "Runtime components require native renderer/graphic endpoints with the declared initialization interfaces. Native graph bindings and actual actor integration require separate verification."
+    "Runtime components require native follower endpoints with a completed pose. Appearance endpoints are initialized through their declared interfaces; battle-owned native skeletons are initialized by their actor factory before binding. Native graph bindings and actual actor integration require separate verification."
   ]
 }

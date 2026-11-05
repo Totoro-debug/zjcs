@@ -2504,3 +2504,9 @@ assets/reference/official-map/mainline-shared-client-packages.json text eol=lf
 assets/reference/official-map/mainline-shared-client-dependencies-source-manifest.json text eol=lf
 unity/Assets/Official/World/Map/14/SharedRuntime/DryIoc-license.txt -text whitespace=cr-at-eol
 unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblyCatalog.cs text eol=lf
+
+# Keep shared stack threshold rule receipts stable.
+scripts/prepare_battle_stack_count_runtime.py text eol=lf
+scripts/test_battle_stack_count.ps1 text eol=lf
+scripts/fixtures/battle_stack_count_harness.cs text eol=lf
+assets/reference/battle-rules/stack-count-source-manifest.json text eol=lf

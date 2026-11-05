@@ -357,12 +357,12 @@ public class AttachmentFollower : MonoBehaviour
 	{
 		if ((Object)(object)SkeletonRenderer != (Object)null)
 		{
-			((IProfessionAppearanceRendererLite)SkeletonRenderer).Initialize(false, false);
+			if (SkeletonRenderer is IProfessionAppearanceRendererLite appearance) appearance.Initialize(false, false);
 			return RendererPort.Skeleton != null;
 		}
 		if ((Object)(object)SkeletonGraphic != (Object)null)
 		{
-			((IProfessionAppearanceUIGraphic)SkeletonGraphic).Initialize(false);
+			if (SkeletonGraphic is IProfessionAppearanceUIGraphic appearance) appearance.Initialize(false);
 			return GraphicPort.Skeleton != null;
 		}
 		return false;

@@ -1747,10 +1747,13 @@ namespace Zjcs.Combat.Official
                 }
                 skill.StatusOrigin = invocation.Trigger.Origin?.Copy();
                 InheritBlessingScales(skill, invocation.Trigger.BlessPropertyScales);
-                if (!invocation.SelectTargets && !invocation.AllowDeadTarget
-                    && !IsExplicitTargetCompatible(source, target, skill.TargetType)
-                    || !invocation.SelectTargets && FightBattleTargeting.IsActionBlockedByStatus(target,
-                        skill.BlockingTargetActionTypes)) continue;
+                // SkillTargetType.Pos/PosCanStand/PosSkillDirectionCanStand use
+                // this unit as a position reference, not as the affected entity.
+                bool entityTarget = skill.SkillTargetType == 1 || skill.SkillTargetType == 4
+                    || skill.SkillTargetType == 5;
+                if (!invocation.SelectTargets && entityTarget
+                    && (!invocation.AllowDeadTarget && !IsExplicitTargetCompatible(source, target, skill.TargetType)
+                        || FightBattleTargeting.IsActionBlockedByStatus(target, skill.BlockingTargetActionTypes))) continue;
 
                 var targets = invocation.SelectTargets
                     ? FightBattleTargeting.Select(source, units, skill.TargetType, 0, false, false, skill, random)

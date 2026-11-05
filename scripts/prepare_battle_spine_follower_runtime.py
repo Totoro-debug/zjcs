@@ -38,9 +38,11 @@ def adapt(original, name):
         text = change(text, 'SkeletonGraphic.OnRebuild', 'GraphicPort.OnAnimationRebuild')
         text = change(text, 'SkeletonRenderer.updateWhenInvisible', 'RendererPort.UpdateWhenInvisible')
         text = change(text, 'SkeletonRenderer.UpdateMode', 'RendererPort.UpdateMode')
-        text = change(text, 'SkeletonRenderer.Initialize(false, false)', '((IProfessionAppearanceRendererLite)SkeletonRenderer).Initialize(false, false)')
+        text = change(text, 'SkeletonRenderer.Initialize(false, false)',
+            'if (SkeletonRenderer is IProfessionAppearanceRendererLite appearance) appearance.Initialize(false, false)')
         text = change(text, 'return SkeletonRenderer.valid;', 'return RendererPort.Skeleton != null;')
-        text = change(text, 'SkeletonGraphic.Initialize(false)', '((IProfessionAppearanceUIGraphic)SkeletonGraphic).Initialize(false)')
+        text = change(text, 'SkeletonGraphic.Initialize(false)',
+            'if (SkeletonGraphic is IProfessionAppearanceUIGraphic appearance) appearance.Initialize(false)')
         text = change(text, 'return SkeletonGraphic.IsValid;', 'return GraphicPort.Skeleton != null;')
         text = change(text, 'SkeletonRenderer.Skeleton', 'RendererPort.Skeleton')
         text = change(text, 'SkeletonGraphic.Skeleton', 'GraphicPort.Skeleton')
@@ -123,7 +125,7 @@ def build():
             'unity/Assets/Game/Runtime/Official/ProfessionUI/SkeletonRendererFollower.cs',
             'unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAppearanceSkeleton.cs')],
         adaptation='Original application classes, serialized field names, method order and branches retained. SDK data types use existing independent native follower interfaces; renderer/graphic fields remain serialized Components. Rebuild events, initialization, validity (an initialized native pose exists), attachment lookup by slot index, draw-order arrays and live slot alpha cross explicit native boundaries. No animation SDK code is copied.',
-        limits=['Runtime components require native renderer/graphic endpoints with the declared initialization interfaces. Native graph bindings and actual actor integration require separate verification.']),
+        limits=['Runtime components require native follower endpoints with a completed pose. Appearance endpoints are initialized through their declared interfaces; battle-owned native skeletons are initialized by their actor factory before binding. Native graph bindings and actual actor integration require separate verification.']),
         ensure_ascii=False,indent=2)+'\n').encode())
     print('Original spine application followers migrated:',len(originals),'methods:',sum(len(x['original_method_bodies']) for x in originals))
 

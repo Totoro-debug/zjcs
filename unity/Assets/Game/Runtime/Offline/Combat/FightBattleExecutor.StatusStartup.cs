@@ -14,6 +14,7 @@ namespace Zjcs.Combat.Official
             bool mutexChanged = false;
             foreach (var unit in units)
             {
+                foreach (var status in unit.Statuses) RestoreStackCountDefinition(status);
                 mutexChanged |= SynchronizeDeathForbidden(unit);
                 mutexChanged |= statusMutex.Synchronize(unit);
             }
@@ -100,8 +101,11 @@ namespace Zjcs.Combat.Official
 
         private void OnStatusStackChanged(FightBattleStatusState status)
         {
-            if (status == null || !unitById.TryGetValue(status.OwnerId, out var owner)) return;
-            FightStatusTriggerRuntime.ApplyStackCount(owner, status, statusCatalog, units, random);
+            if (status == null || !status.HasStackCountTrigger
+                || !unitById.TryGetValue(status.OwnerId, out var owner)) return;
+            status.StackCountStartChecked = true;
+            FightStatusTriggerRuntime.ApplyStackCount(owner, status, statusCatalog, units, random,
+                movementStartContext == null ? null : (Action<System.Collections.Generic.List<FightBattleStatusSkillInvocation>>)ExecuteHpStartupSkills);
         }
     }
 }

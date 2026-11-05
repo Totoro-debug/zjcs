@@ -1,0 +1,1148 @@
+{
+  "generator": {
+    "path": "scripts/prepare_battle_stack_count_runtime.py",
+    "sha256": "ef9acc4740ea96833c1fed3c4778df20a6ba97e2c6e564a4b2e89ac40bc0f8b3"
+  },
+  "original_code": [
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/StatusStackCountComponentInfo.cs",
+      "sha256": "593dde2ad2a710f05d2cfdc00903563cabea2ceaaa3f33d7385f2a7b075e58ec"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/StatusStackCountComponent.cs",
+      "sha256": "a89538749d63a800577bf69465ac14707115c56f1a6f57fe3372f2c5c656bb41"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/FightStatusTriggerSkillCfg.cs",
+      "sha256": "690c2b807601c00d473c7ab054d75ed8e4ffd14362b5f21efccadfe60fcd4e32"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/SkillTargetType.cs",
+      "sha256": "9e9036ac6043d786a24652f6d244748485602d63e1e43d6176ced7e978b37f11"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/StatusTriggerTarget.cs",
+      "sha256": "820889e1c2ece988f8a08843ff9b1801e46a624a208cb6c64e4ec3d4971fe652"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/EStatusTriggerTargetPos.cs",
+      "sha256": "0d8c173ee2ed6b5b5ac02ead99cec04fcfa022f4fb99522766f24d322c17e639"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules-source-manifest.json",
+      "sha256": "cef8b0b5a12460f2bdb2b4d8031f95fb8d560a391a9170641e401b67ef08968b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+      "sha256": "9b447a15838602a598b7530eb0398a3b0c9e1a6d93d7eb8d0e194932cd24d8bf"
+    }
+  ],
+  "definitions": [
+    {
+      "entity_id": 24034,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 15,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 12910,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 2,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 3,
+              "UpperLimitPropType": 1,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24066,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 10,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 58370,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 2,
+            "UseAI": true,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 5,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 3,
+              "UpperLimitPropType": 1,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24084,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 3,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [
+          {
+            "StatusId": 24085,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "ApplyTarget": 2,
+            "StatusReplacePropertyValues": []
+          }
+        ],
+        "Skills": []
+      }
+    },
+    {
+      "entity_id": 24086,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 4,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": []
+      }
+    },
+    {
+      "entity_id": 24138,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 4,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": false,
+        "StatusTriggerStatusCfgs": [
+          {
+            "StatusId": 24139,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "ApplyTarget": 2,
+            "StatusReplacePropertyValues": []
+          }
+        ],
+        "Skills": []
+      }
+    },
+    {
+      "entity_id": 24145,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 1,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 13110,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 2,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 3,
+              "UpperLimitPropType": 1,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          },
+          {
+            "SkillId": 13115,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 2,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 3,
+              "UpperLimitPropType": 1,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24196,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 3,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [
+          {
+            "StatusId": 24197,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "ApplyTarget": 2,
+            "StatusReplacePropertyValues": []
+          }
+        ],
+        "Skills": []
+      }
+    },
+    {
+      "entity_id": 24289,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 5,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 17950,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 3,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 0,
+              "UpperLimitPropType": 0,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24313,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 5,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 18840,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 3,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 0,
+              "UpperLimitPropType": 0,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24316,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 10,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 11810,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 3,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 3,
+              "UpperLimitPropType": 1,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24353,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 3,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 50075,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 2,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 0,
+              "UpperLimitPropType": 0,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24408,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 10,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [
+          {
+            "StatusId": 24407,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "ApplyTarget": 2,
+            "StatusReplacePropertyValues": []
+          }
+        ],
+        "Skills": []
+      }
+    },
+    {
+      "entity_id": 24410,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 5,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 56950,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 3,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 0,
+              "UpperLimitPropType": 0,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24421,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 7,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 50140,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 2,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 0,
+              "UpperLimitPropType": 0,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24430,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 3,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 12470,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 3,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 3,
+              "UpperLimitPropType": 1,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24433,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 6,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 12510,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 3,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 3,
+              "UpperLimitPropType": 1,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24438,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 6,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [
+          {
+            "StatusId": 24439,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "ApplyTarget": 2,
+            "StatusReplacePropertyValues": []
+          }
+        ],
+        "Skills": []
+      }
+    },
+    {
+      "entity_id": 24466,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 20,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 56190,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 2,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 3,
+              "UpperLimitPropType": 1,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24518,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 6,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 62840,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 3,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 3,
+              "UpperLimitPropType": 1,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24602,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 10,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 62310,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 2,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 3,
+              "UpperLimitPropType": 1,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24670,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 3,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [
+          {
+            "StatusId": 24671,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "ApplyTarget": 2,
+            "StatusReplacePropertyValues": []
+          }
+        ],
+        "Skills": []
+      }
+    },
+    {
+      "entity_id": 24694,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 4,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 13460,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 3,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 0,
+              "UpperLimitPropType": 0,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24703,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 10,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 63900,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 3,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 3,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 0,
+              "UpperLimitPropType": 0,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24743,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 3,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 64190,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 3,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 3,
+              "UpperLimitPropType": 1,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24777,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 6,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 64520,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 3,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 3,
+              "UpperLimitPropType": 1,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24796,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 10,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 64760,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 2,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 2,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 3,
+              "UpperLimitPropType": 1,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24851,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 10,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": false,
+        "StatusTriggerStatusCfgs": [
+          {
+            "StatusId": 24852,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "ApplyTarget": 2,
+            "StatusReplacePropertyValues": []
+          }
+        ],
+        "Skills": []
+      }
+    },
+    {
+      "entity_id": 25181,
+      "component": {
+        "StatusReplacePropertyValues": [],
+        "StackCount": 20,
+        "MaxCount": 1,
+        "RemoveOnMaxCount": true,
+        "StatusTriggerStatusCfgs": [],
+        "Skills": [
+          {
+            "SkillId": 57550,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "Source": 3,
+            "UseAI": false,
+            "PropTarget": {
+              "IsEnemy": false,
+              "RoleType": [],
+              "IncludeApplicator": false,
+              "PropType": 0,
+              "Heighest": false,
+              "SupportCustomFilter": false
+            },
+            "Target": 3,
+            "TargetPos": 1,
+            "StackedCountToDamageFactor": false,
+            "CustomDamageInfo": {
+              "TargetType": 0,
+              "BaseProp": 0,
+              "BaseCurrentHp": false,
+              "DamageProp": 0,
+              "UpperLimitTarget": 0,
+              "UpperLimitPropType": 0,
+              "UpperLimitPercent": 0
+            },
+            "StatusReplacePropertyValues": [],
+            "TargetWithoutStatusIds": []
+          }
+        ]
+      }
+    }
+  ],
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
+      "sha256": "dc20fcb8e1cebe5916153d38a23e74ec207c004343ae89b9e79a7e3b914431d2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs",
+      "sha256": "e0967109b26532a723e74b6d2b2b01e1177380d7e8890f74fe6a1ab4dcd2a864"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
+      "sha256": "0f6b35a3fc336cdef659b22490c6e4af767e4508e97d9c118c446cb9186d7a6b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs",
+      "sha256": "8ee429a2dd65e4ae31de88b30081f207fb83ec47dd2ccda1de74326da95cab58"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusTriggerRuntime.StackCount.cs",
+      "sha256": "e023fe23935f17631e1dd0606aaad57d252a7d76009fd24660b895a50555b546"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.StackCount.cs",
+      "sha256": "2096860e9e995dd9270a00ce6c88a34ed6a80fbbd8f3abada713e41f7775bba8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.StatusStartup.cs",
+      "sha256": "485c8ee37f2def8b70f40844da5eb8612d2d504c3d313a3b1e321f52dfa3958e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.HpStartup.cs",
+      "sha256": "5b4f954434b55f8cb882869db8c16c38bb93a55b53470c539154887a4bde2d77"
+    },
+    {
+      "path": "scripts/fixtures/battle_stack_count_harness.cs",
+      "sha256": "bdda3aed29687f985a77547819a65e2b58be097fd936d3a1988515930ab9f0c0"
+    },
+    {
+      "path": "scripts/test_battle_stack_count.ps1",
+      "sha256": "d19d898dfe272b3237687dc0b596c66778b5bf48f80f01383012912f299056e5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialBattleStackCountHostAcceptance.cs",
+      "sha256": "527a37be07d6e18711ed05afac324ad9927b2200bcef46f355b18728fc257465"
+    }
+  ],
+  "operation": "Reuse verified original layer threshold, quota, removal and trigger skill definitions. Route supported applicator/creator skill effects through existing configured status skill execution. Preserve saved quotas and restore missing legacy definitions. AI/TriggerTarget, property target, custom damage and stack-damage branches remain unsupported."
+}

@@ -61,6 +61,7 @@ namespace Zjcs.Editor.Combat
         public static void Observe(OfficialBattleRuntimeController controller)
         {
             if (Environment.GetEnvironmentVariable(Flag) != "1") return;
+            OfficialBattleStackCountHostAcceptance.Observe(controller);
             if (OfficialBattlePetPassiveHostAcceptance.Enabled)
             {
                 OfficialBattlePetPassiveHostAcceptance.Observe(controller);
