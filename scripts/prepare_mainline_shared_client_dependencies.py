@@ -66,6 +66,29 @@ def build():
             additions += block
         assemblies.append(dict(Name=name,ModuleId=row['module_id']))
         outputs.extend(record(p) for p in (target,Path(str(target)+'.meta'),license_target,Path(str(license_target)+'.meta')))
+    source = ROOT/'.tools/source-packages/current/884_156692/official-code'
+    code_manifest = source.parent/'code-manifest.json'
+    original_name = 'GFrameCore.Extensions.Cloneable'
+    original_path = source/'managed/decoded'/(original_name+'.dll')
+    original_evidence = json.loads(code_manifest.read_bytes())['assemblies'][original_name+'.dll']
+    if record(original_path)['sha256'] != original_evidence['decoded_sha256']:
+        raise ValueError('Original cloneable assembly differs from its decoded APK receipt')
+    payload = original_path.read_bytes()
+    target = ASSETS/(original_name+'.bytes')
+    if target.exists() and target.read_bytes() != payload:
+        raise ValueError('Preserve a changed original cloneable dependency')
+    target.write_bytes(payload)
+    guid = meta(target)
+    module_id = '777f61be-a30e-46f3-85ce-af1f2dd5f4ca'
+    block = (f'  - Name: {original_name}\n    Data: {{fileID: 4900000, guid: {guid}, type: 3}}\n'
+             f"    Sha256: {record(target)['sha256']}\n    ModuleId: {module_id}\n")
+    if f'  - Name: {original_name}\n' in original:
+        if block not in original:
+            raise ValueError('Preserve an unknown original cloneable binding')
+    else:
+        additions += block
+    assemblies.append(dict(Name=original_name,ModuleId=module_id))
+    outputs.extend(record(p) for p in (target,Path(str(target)+'.meta')))
     if catalog.read_text(encoding='utf8') != original:
         raise ValueError('Shared bindings changed during generation; review and retry')
     if additions:
@@ -73,15 +96,16 @@ def build():
     bind_licenses(catalog)
     runtime = ROOT/'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities'
     validation = ROOT/'unity/Assets/Game/Editor/MainlineWorldStartup'
-    source = ROOT/'.tools/source-packages/current/884_156692/official-code'
     RECEIPT.write_text(json.dumps(dict(
-        operation='Restore pinned public DryIoc for original client injection, LiteDB for PlayerDataWrap/IMongoObj identities and R3 for original player state observers. Preserve original application IL; use publisher packages and licenses.',
-        inputs=[record(ASSETS/name) for name in ('Framework.Core.bytes','Framework.FirstPass.Runtime.bytes','Console.bytes')]+[record(LOCK)],
+        operation='Restore pinned public DryIoc for original client injection, LiteDB for PlayerDataWrap/IMongoObj identities, R3 for original player state observers and the unchanged APK cloneable assembly for original monster formations. Preserve original application IL; use publisher packages and licenses.',
+        inputs=[record(ASSETS/name) for name in ('Framework.Core.bytes','Framework.FirstPass.Runtime.bytes','Console.bytes')]+[record(LOCK),record(code_manifest),record(original_path)],
+        original_cloneable=dict(manifest='884_156692',extraction=original_evidence),
         code_inputs=[record(source/path) for path in (
             'client-source/UtilsHandlerBinder.cs','common-source/MeManager.cs',
             'common-source/Common/Player.cs','common-source/Common/PlayerDataWrap.cs',
             'common-source/Common/PlayerPlayStateHandler.cs','common-source/Common/PlayerPlayFightStateObserver.cs',
-            'common-source/Common/BattleFormula.cs','common-source/Common/Formula.cs')],
+            'common-source/Common/BattleFormula.cs','common-source/Common/Formula.cs',
+            'common-source/Common/TimeManager.cs')],
         integration=[record(runtime/'MainlineSharedClientServices.cs'),record(runtime/'MainlineSharedClientServices.cs.meta')],
         validation=[record(path) for path in sorted(validation.iterdir()) if path.is_file()],
         packages=packages,assemblies=assemblies,outputs=outputs,binding=record(catalog),

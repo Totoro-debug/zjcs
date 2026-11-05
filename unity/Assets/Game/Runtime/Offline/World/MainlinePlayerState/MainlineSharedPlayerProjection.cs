@@ -53,6 +53,27 @@ namespace Zjcs.Offline.World.MainlinePlayerState
                 addStory.Invoke(stories, new[] { (object)value.Key, story });
             }
 
+            var stages = Get(player, "StageManager");
+            var stageType = shared.CommonType("PlayerStageDataWrap");
+            var stageParser = world.Configuration.Manager.GetParser(shared.CommonType("StageInfoParser"));
+            var getStage = stageParser.GetType().GetMethod("Get", new[] { typeof(int) });
+            var addStage = stages.GetType().GetMethod("Add", new[] { typeof(int), stageType });
+            foreach (var value in save.World.StageWinCounts)
+            {
+                var info = getStage.Invoke(stageParser, new object[] { value.StageId });
+                if (info == null) throw new InvalidDataException("Saved map stage is absent from the original table: " + value.StageId);
+                // The mainline save records lifetime map victories. Daily stages
+                // need their own dated records; never stamp today's date onto
+                // an undated lifetime count during a projection.
+                if (Convert.ToInt32(Get(info, "Reset")) != 0)
+                    throw new NotSupportedException("A resetting stage requires its dated local record: " + value.StageId);
+                var stage = Activator.CreateInstance(stageType);
+                Set(stage, "PlayerId", playerId);
+                Set(stage, "StageId", value.StageId);
+                Set(stage, "WinCount", value.Count);
+                addStage.Invoke(stages, new[] { (object)value.StageId, stage });
+            }
+
             var progress = (IDictionary)Get(player, "WorldMapRegionProgressDict");
             foreach (var map in save.World.Maps)
             {

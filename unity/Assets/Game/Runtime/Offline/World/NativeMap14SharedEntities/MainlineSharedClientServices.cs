@@ -14,6 +14,9 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
         private IDisposable provider;
         private readonly List<(FieldInfo Field, object Previous, object Value)> formulas
             = new List<(FieldInfo, object, object)>();
+        private readonly List<(FieldInfo Field, object Previous)> clockFields
+            = new List<(FieldInfo, object)>();
+        private object clock;
         public object Manager { get; private set; }
 
         public MainlineSharedClientServices(NativeMap14SharedAssemblies shared)
@@ -40,6 +43,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                 current = framework.GetType("Framework.DependencyInjection.ApplicationScope", true).GetProperty("Current");
                 previous = current.GetValue(null);
                 current.SetValue(null, provider);
+                InitializeLocalClock(shared);
                 // Preserve the formula binding order in original UtilsHandlerBinder.BindAll.
                 foreach (var name in new[] { "BattleFormula", "Formula" })
                 {
@@ -53,11 +57,32 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             catch { Dispose(); throw; }
         }
 
+        private void InitializeLocalClock(NativeMap14SharedAssemblies shared)
+        {
+            var type = shared.CommonType("TimeManager");
+            clock = type.GetProperty("Instance").GetValue(null);
+            // HandleServerTime always resolves INetwork. Seed the same initial
+            // synchronization state locally, retaining original monotonic reads.
+            var values = new (string Name, object Value)[] {
+                ("TimeSynced", true), ("TimeOffset", DateTime.UtcNow.Ticks),
+                ("PreTime", 0L), ("TotalEnvTime", 0L),
+                ("LastEnvTime", (long)(UnityEngine.Time.realtimeSinceStartup * 10000000f)) };
+            foreach (var value in values)
+            {
+                var field = type.GetField(value.Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                    ?? throw new MissingFieldException(type.FullName, value.Name);
+                clockFields.Add((field, field.GetValue(clock)));
+                field.SetValue(clock, value.Value);
+            }
+        }
+
         public void Dispose()
         {
             if (provider == null) return;
             try
             {
+                for (int i = clockFields.Count - 1; i >= 0; i--)
+                    clockFields[i].Field.SetValue(clock, clockFields[i].Previous);
                 for (int i = formulas.Count - 1; i >= 0; i--)
                 {
                     var binding = formulas[i];
@@ -75,6 +100,8 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                 current = null;
                 previous = null;
                 formulas.Clear();
+                clockFields.Clear();
+                clock = null;
             }
         }
     }

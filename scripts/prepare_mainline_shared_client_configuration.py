@@ -25,9 +25,23 @@ TABLES = (
     ("config_luban", "periodic_card_pay", "PeriodicCardPayInfo"),
     ("config_luban_astrologicaldestiny", "AstrologicalDestiny/astrological_level", "AstrologicalLevelInfo"),
     ("config_luban", "system_level_limit", "SystemLevelLimitInfo"),
+    ("config_luban", "stage", "StageInfo"),
+    ("config_luban", "stage_entry", "StageEntry"),
+    ("config_luban", "stage_monster", "StageMonsters"),
+    ("config_luban", "stage_monster_array", "StageMonsterArrayInfo"),
+    ("config_ec", "EC/FightStageEntityLiteInfoPack", "FightStageEntityLiteInfoPack"),
 )
 BINARY = ROOT / "unity/Assets/StreamingAssets/PartnerNpcShared/Config/Binary/level_prop.g.bytes"
 BINARY_SHA256 = "1b8e2cf7029ba8a80750f54aa35658878166d1bfbe2e206317473b43f6af3f1f"
+
+
+def method_body(text, method):
+    start = text.index("{", text.index(method))
+    end, depth = start + 1, 1
+    while depth:
+        depth += (text[end] == "{") - (text[end] == "}")
+        end += 1
+    return re.sub(r"\s+", "", re.sub(r"//[^\n]*", "", text[start:end]))
 
 
 def verify_player_projection(source, shared, work):
@@ -40,18 +54,63 @@ def verify_player_projection(source, shared, work):
     methods = ("public static Player CreateNewPlayer()", "public List<int> GetWorldMapProgresses(",
         "public int GetWorldMapRegionProgress(", "public int GetStoryCount(",
         "public StoryStatus GetStoryStatus(", "public DateTime GetStoryLastPlayTime(",
-        "public T GetBlackboardDataValue<T>(")
-    def body(text, method):
-        start = text.index("{", text.index(method))
-        end, depth = start + 1, 1
-        while depth:
-            depth += (text[end] == "{") - (text[end] == "}")
-            end += 1
-        return re.sub(r"\s+", "", re.sub(r"//[^\n]*", "", text[start:end]))
+        "public T GetBlackboardDataValue<T>(", "public int GetStageCount(",
+        "public PlayerStageDataWrap GetStageData(")
     for method in methods:
-        if body(old, method) != body(current, method):
+        if method_body(old, method) != method_body(current, method):
             raise ValueError("Retained original player projection method differs: " + method)
     return dict(verified_methods=list(methods), scope="Only the listed original player methods; not whole-version equivalence")
+
+
+def verify_stage_condition_readers(source, shared, work):
+    evidence = []
+    segments = {
+        "PlayerStageDataWrap": (("public int GetWinCount(", None, "default:"),),
+        "TimeManager": (("private long GetAndUpdateEnvTime()", None, None),
+            ("private long GetTimeImpl()", "longnum=", None),
+            ("public void InternalHandleServerTime(", "TimeSynced=true;", None)),
+    }
+    for name, methods in segments.items():
+        subprocess.run([str(ROOT / ".tools/dotnet/dotnet.exe"),
+            str(ROOT / ".tools/ilspycmd/tools/net10.0/any/ilspycmd.dll"),
+            "-t", "Common." + name, "-o", str(work), str(shared)], check=True)
+        old = (work / ("Common." + name + ".decompiled.cs")).read_text("utf8")
+        current = (source / (name + ".cs")).read_text("utf8")
+        for method, start, end in methods:
+            def segment(text):
+                body = method_body(text, method)
+                return body[body.index(start) if start else 0:body.index(end) if end else len(body)]
+            if segment(old) != segment(current):
+                raise ValueError("Retained stage condition calculation differs: " + name + "." + method)
+            evidence.append(dict(type=name, method=method, from_token=start, before_token=end, identical=True))
+    return dict(segments=evidence,
+        scope="Only the listed calculation segments. Logger lowering differs; no full-method or whole-version equivalence claimed.")
+
+
+def verify_stage_configuration(source, shared, work):
+    work.mkdir(parents=True, exist_ok=True)
+    names = ("StageInfo", "StageEntry", "StageMonsters", "StageMonsterArrayInfo",
+        "FactionInfo", "GameMonsterInfo", "GameArrayMonsterInfo", "GameArrayMonsterPosInfo")
+    evidence = []
+    def bodies(text, name):
+        result = []
+        for match in re.finditer(r"public " + name + r"\(ByteBuf\b[^)]*\)\s*(?::\s*base\([^)]*\)\s*)?\{", text):
+            start, end, depth = match.end(), match.end(), 1
+            while depth:
+                depth += (text[end] == "{") - (text[end] == "}")
+                end += 1
+            result.append(re.sub(r"\s+", "", text[start:end - 1]))
+        return result
+    for name in names:
+        subprocess.run([str(ROOT / ".tools/dotnet/dotnet.exe"),
+            str(ROOT / ".tools/ilspycmd/tools/net10.0/any/ilspycmd.dll"),
+            "-t", "Common." + name, "-o", str(work), str(shared)], check=True)
+        old = bodies((work / ("Common." + name + ".decompiled.cs")).read_text("utf8"), name)
+        current = bodies((source / (name + ".cs")).read_text("utf8"), name)
+        if not old or old != current:
+            raise ValueError("Retained original stage reader differs: " + name)
+        evidence.append(dict(type=name, bytebuf_constructors=len(old), identical=True))
+    return evidence
 
 
 def build():
@@ -80,7 +139,8 @@ def build():
         meta(target)
         outputs.extend((record(target), record(Path(str(target) + ".meta"))))
         inputs.append(dict(apk.provenance(obj), table=table, payload_sha256=digest))
-        entries.append(dict(Config=config, OriginalPath="Config/Luban/" + table + ".g.bytes",
+        prefix = "Config/" if bundle == "config_ec" else "Config/Luban/"
+        entries.append(dict(Config=config, OriginalPath=prefix + table + ".g.bytes",
             Resource="MainlineSharedWorld/ClientConfiguration/" + target.name.removesuffix(".bytes"), Sha256=digest))
     catalog = folder / "catalog.json"
     catalog.write_text(json.dumps(dict(Manifest=apk.version, Entries=entries,
@@ -100,6 +160,10 @@ def build():
     if record(shared)["sha256"] != "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397":
         raise ValueError("Preserve independently pinned original shared IL")
     projection_evidence = verify_player_projection(source, shared, validation_directory() / "player-projection-sources")
+    stage_evidence = verify_stage_configuration(source, shared, validation_directory() / "stage-configuration-sources")
+    condition_evidence = verify_stage_condition_readers(source, shared, validation_directory() / "stage-configuration-sources")
+    names += ["FactionInfo", "GameMonsterInfo", "GameArrayMonsterInfo", "GameArrayMonsterPosInfo",
+        "PlayerStageDataWrap", "PlayerStageManager", "StageResetType", "TimeManager"]
     native = ROOT / "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities"
     binding = native / "MainlineSharedClientConfiguration.cs"
     meta(binding)
@@ -109,6 +173,8 @@ def build():
         inputs=inputs, binary_input=record(BINARY), binary_provenance=record(binary_proof_path),
         code_inputs=[record(source / (name + ".cs")) for name in names],
         shared_il=dict(record(shared), manifest="871_156598"), player_projection=projection_evidence,
+        stage_reader_compatibility=stage_evidence,
+        stage_condition_calculations=condition_evidence,
         bindings=[record(path) for path in (binding, Path(str(binding) + ".meta"), native / "NativeMap14SharedConfiguration.cs")]
             + [record(path) for path in sorted((native.parent / "MainlinePlayerState").iterdir()) if path.is_file()]
             + [record(native.parent / "MainlinePlayerState.meta")],

@@ -27,7 +27,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             var asset = Resources.Load<TextAsset>("MainlineSharedWorld/ClientConfiguration/catalog");
             if (!asset) throw new InvalidOperationException("Original player configuration is absent.");
             var catalog = JsonUtility.FromJson<Catalog>(asset.text);
-            if (catalog.Manifest != "884_156692" || catalog.Entries == null || catalog.Entries.Length != 13)
+            if (catalog.Manifest != "884_156692" || catalog.Entries == null || catalog.Entries.Length != 18)
                 throw new InvalidOperationException("Original player configuration closure differs.");
             var types = catalog.Entries.Select(entry => shared.CommonType(entry.Config + "Parser")).ToArray();
             var binaryType = shared.CommonType("LevelPropParser");

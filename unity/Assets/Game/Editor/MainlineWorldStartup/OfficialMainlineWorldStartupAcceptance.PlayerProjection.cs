@@ -25,6 +25,12 @@ namespace Zjcs.Editor.MainlineWorldStartup
             save.Player.ProfessionLevels.Add(new OfflineProfessionLevel { Profession = 1, Level = 20 });
             save.Player.Stories.Add(new OfflineStoryProgress { Key = "projection-fixture", Count = 3, Status = 2 });
             save.World.CompletedEntityTags.Add("projection-completed-tag");
+            var stageParser = world.Configuration.Manager.GetParser(world.Assemblies.CommonType("StageInfoParser"));
+            var originalStages = ((IEnumerable)stageParser.GetType().GetMethod("GetAll").Invoke(stageParser, null)).Cast<object>().ToArray();
+            var mainStage = originalStages.First(value => Convert.ToInt32(NativeMap14SharedPrefabs.Get(value, "Type")) == 1
+                && Convert.ToInt32(NativeMap14SharedPrefabs.Get(value, "Reset")) == 0);
+            int stageId = (int)NativeMap14SharedPrefabs.Get(mainStage, "Id");
+            save.World.StageWinCounts.Add(new OfflineStageWinCount { StageId = stageId, Count = 7 });
             var maximum = (IDictionary)NativeMap14SharedPrefabs.Get(world.Data.Placement, "MaxRegionProgressDict");
             var ids = maximum.Keys.Cast<int>().OrderBy(value => value).ToArray();
             save.World.Maps.Add(new OfflineMapProgress { MapClassId = world.Data.MapClassId,
@@ -63,11 +69,27 @@ namespace Zjcs.Editor.MainlineWorldStartup
             if (Convert.ToInt32(Get(profession, "InitialWeaponType")) != 201
                 || (int)((IDictionary)Get(Get(profession, "UnlockedData"), "RawData"))[Enum.ToObject(world.Assemblies.CommonType("Profession"), 1)] != 20)
                 throw new InvalidDataException("Original profession projection lost its weapon or unlocked level.");
+            if ((int)type.GetMethod("GetStageCount").Invoke(player, new object[] { stageId }) != 7
+                || (DateTime)Get(type.GetMethod("GetStageData").Invoke(player, new object[] { stageId }), "LastUpdateTime") != default)
+                throw new InvalidDataException("Original permanent stage count differs or received a fabricated timestamp.");
             var key = Activator.CreateInstance(world.Assemblies.CommonType("BlackboardDataKeyMapLogicEntityEnd"), "projection-completed-tag");
             if ((long)type.GetMethods().Single(method => method.Name == "GetBlackboardDataValue" && method.IsGenericMethod
                 && method.GetGenericArguments().Length == 1)
                 .MakeGenericMethod(typeof(long)).Invoke(player, new[] { key }) != 1)
                 throw new InvalidDataException("Original tag completion condition lost its blackboard value.");
+            bool rejected = false;
+            var reset = Get(mainStage, "Reset");
+            try
+            {
+                // Explicit invalid-input fixture; the selected table contains
+                // no daily stage. Always restore the original cached record.
+                NativeMap14SharedPrefabs.Set(mainStage, "Reset", Enum.ToObject(world.Assemblies.CommonType("StageResetType"), 1));
+                try { MainlineSharedPlayerProjection.Create(world, save, 731, _ => raw); }
+                catch (NotSupportedException) { rejected = true; }
+            }
+            finally { NativeMap14SharedPrefabs.Set(mainStage, "Reset", reset); }
+            if (!rejected || (int)type.GetMethod("GetStageCount").Invoke(player, new object[] { stageId }) != 7)
+                throw new InvalidDataException("Undated daily victories were accepted or changed the projected player.");
             Debug.Log("MAINLINE_PLAYER_PROJECTION_PASS map=" + world.Data.MapClassId + " raw_regions=" + ids.Length);
             return player;
         }

@@ -23,10 +23,12 @@ namespace Zjcs.Editor.MainlineWorldStartup
                 var previous = scope.GetValue(null);
                 var formula = shared.CommonType("Formula").GetField("Instance");
                 var priorFormula = formula.GetValue(null);
+                var clock = CaptureClientClock(shared);
                 var load = cancelled.LoadClient(_ => 1, 8991);
                 var reader = cancelled.Configuration.Manager.GetParser(shared.CommonType("LevelPropParser"));
                 if (!load.MoveNext()) throw new InvalidDataException("Client context could not be cancelled during parsing.");
                 ((IDisposable)load).Dispose();
+                VerifyClientClockRestored(clock);
                 if (cancelled.IsLoaded || cancelled.IsReady || !ReferenceEquals(scope.GetValue(null), previous)
                     || !ReferenceEquals(formula.GetValue(null), priorFormula)
                     || reader.GetType().GetField("mBinaryReader", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(reader) != null)
@@ -42,6 +44,7 @@ namespace Zjcs.Editor.MainlineWorldStartup
                     var scope = Assembly.Load("Framework.FirstPass.Runtime").GetType("Framework.DependencyInjection.ApplicationScope", true)
                         .GetProperty("Current");
                     var previousScope = scope.GetValue(null);
+                    var clock = CaptureClientClock(shared);
                     var calls = new Dictionary<int, int>();
                     var regionStates = new Dictionary<int, int>();
                     var load = world.LoadClient(region =>
@@ -61,6 +64,11 @@ namespace Zjcs.Editor.MainlineWorldStartup
                     var previousMap = mapProperty.GetValue(manager);
                     if (playerProperty.GetValue(manager) != null) throw new InvalidDataException("Fresh fixture has an active player.");
                     while (load.MoveNext()) yield return load.Current;
+                    var time = shared.CommonType("TimeManager").GetProperty("Instance").GetValue(null);
+                    var now = (DateTime)time.GetType().GetMethod("GetDateTime").Invoke(time, new object[] { DateTimeKind.Utc });
+                    if (!(bool)time.GetType().GetField("TimeSynced").GetValue(time)
+                        || Math.Abs((DateTime.UtcNow - now).TotalSeconds) > 5)
+                        throw new InvalidDataException("Original client clock did not use the local UTC clock.");
                     if (calls.Count == 0 || calls.Values.Any(value => value != 1))
                         throw new InvalidDataException("Client snapshot did not read each region exactly once.");
                     var player = ProjectLocalPlayer(world);
@@ -124,7 +132,10 @@ namespace Zjcs.Editor.MainlineWorldStartup
                     entities += originals.Length;
                     if (errors != 0) throw new InvalidDataException("Original merged-map startup logged errors.");
                     yield return null;
+                    var later = (DateTime)time.GetType().GetMethod("GetDateTime").Invoke(time, new object[] { DateTimeKind.Utc });
+                    if (later <= now) throw new InvalidDataException("Original client clock did not advance across frames.");
                     world.Dispose();
+                    VerifyClientClockRestored(clock);
                     if (playerProperty.GetValue(manager) != null || !ReferenceEquals(mapProperty.GetValue(manager), previousMap))
                         throw new InvalidDataException("Client map teardown retained a player or changed the previous map.");
                     if (!ReferenceEquals(scope.GetValue(null), previousScope))
@@ -139,7 +150,25 @@ namespace Zjcs.Editor.MainlineWorldStartup
             }
             if (errors != 0) throw new InvalidDataException("Original client teardown logged errors.");
             File.WriteAllText(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), "client-context.json"),
-                $"{{\"maps\":{maps},\"mixed_maps\":{mixed},\"entities\":{entities},\"lo_lookups\":{lookups},\"original_start\":true,\"context_restored\":true,\"cancelled_dependencies_restored\":true,\"play_mode\":true}}");
+                $"{{\"maps\":{maps},\"mixed_maps\":{mixed},\"entities\":{entities},\"lo_lookups\":{lookups},\"original_start\":true,\"context_restored\":true,\"local_clock\":true,\"clock_restored\":true,\"cancelled_dependencies_restored\":true,\"play_mode\":true}}");
+        }
+
+        private static (object Clock, FieldInfo Field, object Previous)[] CaptureClientClock(NativeMap14SharedAssemblies shared)
+        {
+            var type = shared.CommonType("TimeManager");
+            var clock = type.GetProperty("Instance").GetValue(null);
+            return new[] { "TimeSynced", "TimeOffset", "PreTime", "TotalEnvTime", "LastEnvTime" }.Select(name =>
+            {
+                var field = type.GetField(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                return (clock, field, field.GetValue(clock));
+            }).ToArray();
+        }
+
+        private static void VerifyClientClockRestored((object Clock, FieldInfo Field, object Previous)[] fields)
+        {
+            foreach (var state in fields)
+                if (!Equals(state.Field.GetValue(state.Clock), state.Previous))
+                    throw new InvalidDataException("Client teardown changed the previous clock state: " + state.Field.Name);
         }
     }
 }

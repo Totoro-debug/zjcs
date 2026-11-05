@@ -28,6 +28,9 @@ def main():
         name = pending.pop()
         if name in selected:
             continue
+        if name == "Unity.Newtonsoft.Json":
+            # Supplied by the pinned com.unity.nuget.newtonsoft-json below.
+            continue
         if name not in modules:
             raise ValueError("Review the original startup dependency: " + name)
         selected.add(name)
