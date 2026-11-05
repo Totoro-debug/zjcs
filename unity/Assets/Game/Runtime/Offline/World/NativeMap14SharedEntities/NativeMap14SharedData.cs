@@ -116,6 +116,34 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             catch { Dispose(); throw; }
         }
 
+        internal void Include(string catalogResource)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(NativeMap14SharedData));
+            if (Loaded) throw new InvalidOperationException("Original map data has already loaded.");
+            var asset = Resources.Load<TextAsset>(catalogResource);
+            if (!asset) throw new InvalidOperationException("Original map dependency catalog is absent.");
+            var additional = JsonUtility.FromJson<Catalog>(asset.text);
+            if (additional.MapClassId != 0 || additional.Entries == null)
+                throw new InvalidOperationException("Original shared dependency catalog differs.");
+            var append = new List<Entry>();
+            foreach (var entry in additional.Entries)
+            {
+                if (!entry.OriginalPath.StartsWith("Config/EC/", StringComparison.Ordinal))
+                    throw new InvalidOperationException("Original map dependency is not an EC record.");
+                LoadAsset(entry);
+                if (entries.TryGetValue(entry.OriginalPath, out var previous))
+                {
+                    if (previous.Sha256 != entry.Sha256)
+                        throw new InvalidOperationException("Conflicting original map dependency: " + entry.OriginalPath);
+                    continue;
+                }
+                entries.Add(entry.OriginalPath, entry);
+                append.Add(entry);
+            }
+            append.AddRange(catalog.Entries);
+            catalog.Entries = append.ToArray();
+        }
+
         public IEnumerator LoadAll(bool loadAsync = true)
         {
             if (disposed) throw new ObjectDisposedException(nameof(NativeMap14SharedData));

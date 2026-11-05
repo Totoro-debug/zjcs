@@ -1,0 +1,1527 @@
+{
+  "manifest": "884_156692",
+  "shared_il": {
+    "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Console.bytes",
+    "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397",
+    "manifest": "871_156598"
+  },
+  "operation": "Keep original payloads and shared IL. Derive original DTOs with verified appended selected fields, reuse selected table readers and original parser/PostParse/query implementations. Include complete original EC dependency records.",
+  "constructor_compatibility": [
+    {
+      "type": "MapWorldInfo",
+      "inherited_constructor_prefix": true,
+      "appended_fields": [
+        "SupportFastClear = _buf.ReadBool();",
+        "EnterNavigateKey = _buf.ReadString();"
+      ]
+    },
+    {
+      "type": "EntityExtendParameterInfo",
+      "inherited_constructor_prefix": true,
+      "appended_fields": [
+        "IgnoreFastClear = _buf.ReadBool();"
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-8139939703981088177",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "payload_sha256": "21299636ba7f5a84ddf1ed63100063f53cbddaaaf697de78babf5aa274a66815"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-5263075563552482356",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "payload_sha256": "bc0d8ff7e1fc4c7919aa6c89d1bb61ff17ca140535fd8fefe7350f50f30915ab"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "2135504609496173008",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "payload_sha256": "87610428d6195c06ff55291ae24423cc949df7ac25bfb8953cc3798a1aaa31e5"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "path_id": "8484321971040082196",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "raw_size": 197305,
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "payload_sha256": "0bc7e55e56586c0e0f8b8ba0e6c4f0f6e65ef703ff41301e808988ceed0670dd"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "path_id": "-6051789679960494712",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "raw_size": 197305,
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "payload_sha256": "beeae896bd37221692243faae8b0c353941b0a42dac66eedb28a6314df276df4"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "path_id": "-475710695530452369",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "raw_size": 197305,
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "payload_sha256": "04525b1a307baeed8ed49e4004a855b2e0239176718ac08c912f34f2e0467bfa"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "path_id": "-957009542101312328",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "raw_size": 197305,
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "payload_sha256": "b2e99626a80beb4e07669d42f0c738a5620b30683a80757679103694d85e93d4"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "1818463115982819942",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "13a98253a3aa0d8271d8734aea27ef4e3e815b64e40052b301a9f13c4833a135"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "6647561602785107332",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "130630f9c026b6fdb99f26b7586dd74574527d139f90e35cfe0bf0f0cc803452"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "-2724216284267352362",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "8164e54744f046ce719f0cfdd3086a71bc4b3598cfe6402624073969e326e113"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "-7841867664089972137",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "e909b756c83fb47d808ee2da690b7dd514a633de7f5e22774d41564e8e50eae4"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "-1948090885680524845",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "3439c3c2e68f27f7a857bdf863824898efb0d55185e8f2394585af75bb8aacbc"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "-6838055613025604810",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "aabe742f12047c0d5f54e185e18fb6819328dc9b99b7ad27dc8b881c5e782097"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "873877364653472356",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "897527abb11ab65aa80619b6d32966ed7da7d31192bfeac62b83726fa424490e"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "6385320838744534922",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "41a371a76b50f1f897b3453a2d4f766101cf7361b91bd1a35d64e4f8d669e179"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "-8086348543079531395",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "c1320f3c3bc52bfd8a9811b4bcbb03de591a472db237e7428940d5a1a2b13aee"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "-8605894297062808326",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "1dbe3121b80c683b755756c82939ce8ee56983011d9e9437a7c9bc62a8a7f294"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "-4725351040224879977",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "8910388ede08c36b790a547b0bc97a5a97bea99008b503e6792af413d401964b"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "-3014377474906051674",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "b0a27beb71155e2fcafc8fb55697e24a82630ac1f81cad3bfb1cfd80a23275b0"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "2237549149347869063",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "b3dc04e784b8793e0b1fb2fd5fcd44ae8c731c3712ec5e97d6fc9f19f5e10fcd"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "-7418305976549516302",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "ad1c3842031d5011e537a1b56de55164527ad48c04e1c616142008e48e524118"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "1469107285564641189",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "40521e29c9ba3373195fa241289913b55275f2805a4eba0d7ccdc04797d99865"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "2759472550726168594",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "24c00b75f0bfb470d6a66f0af49bc0aff842e56044a08eeb8ae74dd9f8b207f8"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "-7788244268444916242",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "61b181dbeda8b8473906d90211eb91db83236847f23406d13b6707600ee874f0"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "6206723872084960419",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "payload_sha256": "58f443dfd3b971ef2534da3f2cea81fa66e65c6606fa2d96e98c4b96961133c5"
+    }
+  ],
+  "code_inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EquipInlaySiteInfo.cs",
+      "sha256": "833e65f075483af1707eecbc63efc4b5afb280c419ee8d1622965c9427ec884a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FunctionLimitInfo.cs",
+      "sha256": "85f969fd0b01433319aa5f81eaaec03b6df8720bc8584e1e9549306a157c8e58"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ConditionInfo.cs",
+      "sha256": "7621ca17ebe2cfa68b441ae7e6c8e370447ae89fab9a0222aaecc2e32161ceb3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapInfo.cs",
+      "sha256": "38a537f395d85bb38bc299898ba682265915388ffc3fc21ec40ea18dcecc3e47"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapWorldInfo.cs",
+      "sha256": "bbb818e98ec2f7a1798476ac4308aaaa9a2b5e81d882fac4ba10315ccf912118"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapRegionInfo.cs",
+      "sha256": "c98644f4854ff2f4c4e03b4e517d8d6799d323f6eabb7bbc6f64d281c2537a36"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityExtendParameterInfo.cs",
+      "sha256": "574e01256562165a68d4a0c9710db1594890f3841374aef67e07da156da3a49b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EquipInlaySiteInfoParser.cs",
+      "sha256": "afda58e4ac15fb01a908109453b4a9aa7472396b93460aeaa2fc1950bebd03fe"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FunctionLimitInfoParser.cs",
+      "sha256": "77f31a1cbb6033a1ce2647523357c11a34b554b87981392222a87d73ba6852de"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ConditionInfoParser.cs",
+      "sha256": "ba10895470c4d9d3b330852b968504dd955009179bb75b3685ea67eed998981f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapInfoParser.cs",
+      "sha256": "f38a793b1c5cfa24fbdf3dc24f49c6a1f00e6b6fd09b412f3626aa95f2d14398"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapWorldInfoParser.cs",
+      "sha256": "98f3c2814d13d9cca924c33b3425500033113ba5e96ec7c3f8588184ff93b821"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapRegionInfoParser.cs",
+      "sha256": "24379426b584f71e3a29c539d531644fcdbdaac114dbc9f7f2a7b261760b9f1e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityExtendParameterInfoParser.cs",
+      "sha256": "a6a3aa63f51306644512bbe9a27c33f86524e06cf2b0a709a9ab19671cbd9cdc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbMapWorldInfo.cs",
+      "sha256": "c36d30a01c3b4dd5391668f2f8f0c606396a435dc9af7f2d969e872f51f0ff86"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbEntityExtendParameterInfo.cs",
+      "sha256": "55e9736fd13d78290da60583f951f724c1c261831a2b02536e42e1f49ff0befb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapPartInfoBase.cs",
+      "sha256": "88f4d8137d4f45c6b09f78a9d630f0f60806fb9e87388c1356f03e11c57925aa"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapInfoWrapParser.cs",
+      "sha256": "f58295b84b9b29d99c6c06c916d6945efbcf19bb3cd1c4fefe552cb37a625a06"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapInfoManager.cs",
+      "sha256": "f7e33841283364e82981f84c88bce7b9ca240f1c3494a167f794361b27fd7528"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapRegionEntityInfoManager.cs",
+      "sha256": "cf1f3269b19712c36b03cc52bc49c74404db7a7e14d049b44d23183e827ce297"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LoEntityCampComponentInfo.cs",
+      "sha256": "f6a141388a0b75227e5837253991bc0ba0c88508224775bb9f2594c1ca16da04"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityCampComponent.cs",
+      "sha256": "e6586a8f7b05a68efe1c075f851bcf0d354df2e1141c64df665cd516b2bb4cf7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/luban-source/Luban/ByteBuf.cs",
+      "sha256": "d3151b392daa823a5e25cc740959bd91c9946c8ee94404941ab3797282729323"
+    }
+  ],
+  "shared_reader": {
+    "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Luban.bytes",
+    "sha256": "de6598af27d573ba225e3d60c57a07034552b2a2b8f399fdead46b0c22b393b2"
+  },
+  "nullable_string_reader_verified": true,
+  "config_abi_sources": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/CatalogCache.cs",
+      "sha256": "05885b3a2414cb993e596f4bf1ee3a8533d25b7f5efbababcc07fbe32825930e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/CatalogChildParseJob.cs",
+      "sha256": "0922c77d7954d26a88a35297ffd8e9932bbed12d2e6fd956f5db2e5c8363a772"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/CatalogConfigAttribute.cs",
+      "sha256": "a1af8e1dff59c485faeac9e6e0406d9b91497e71182d7e114a28c225c39b6e4b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/CatalogParser.cs",
+      "sha256": "4cbd7390de13272de0de3de9089cac08a7c5962b79e49b8d893432d9924c4ba2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigAttribute.cs",
+      "sha256": "8b2ee8928a584fc0c2a7cbb69ba6a5c4f7cf497c4e5fd7567986a11c8af208d6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigBatchRequest.cs",
+      "sha256": "e28885f629cedc4900da6fecd7f01484db0d69c8199a3473e236e420bb81cd67"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigManager.cs",
+      "sha256": "fa3ad5ddc4cb75844300be83440eeeed7700e10332de8518c7c1550d17044d9f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigManager.Initialize.cs",
+      "sha256": "c6a111cb9d060e06e6b88e4c2760ff8d99f49d12f639bc8f0d734e7ec7985ec0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigManager.Jobs.cs",
+      "sha256": "b3e9ed8d62500f8f0f56b522a0f3da78ad179b25e48ff3871b47c5d46ab66df0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigParseJob.cs",
+      "sha256": "249655dfb9be29f683befd959aee834b14da20305092043f0e8544b39b9bb9c2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigRequest.cs",
+      "sha256": "ae969b4ef37ee5d66a005616950b5246fa5dc83f0fbbfc6575f2e4c337f0af7c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/FileLoader.cs",
+      "sha256": "79faf59fa4ece84408095476baac2cc0ec53d2901a6baaed1e62edbd8e8d1411"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/IConfig.cs",
+      "sha256": "b1585770c419d13d138045369bc851986c634b5b3bec8ed16340c6bb886fc23d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/IFileLoader.cs",
+      "sha256": "51f70501c873d30464843c7e10914f7dfd5239b939597b4712671fed44f4fea1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/JsonHelper.cs",
+      "sha256": "52e467db00ac3a8b00f97c60d1dc1bc0ec002b03af3b3fa65e59b702a5f8f4ef"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/JsonParser.cs",
+      "sha256": "81dbd8f8dcf013d997211577c338d0d8a226e62250c3abd427d56c5f783075c5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ParserBase.cs",
+      "sha256": "d74d70d37c06e87cb9713ee6cd0dff4aed0d53cd6cadbe8d2f5282bb79859ad5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/RawParser.cs",
+      "sha256": "75828ece30f00d927ca79589ffe36385aeaf07c676547b6a274e7ba3b5e87630"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ResourceManager.cs",
+      "sha256": "1ecb8253a996f61e4100b49779bae296b6170d3587e273cef2e89235f8a77e93"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ThreadPool.cs",
+      "sha256": "b8db9e6b5c8c2d86ebb0d65cd06697dfc694fb680d75e4c57912c336f234b87d"
+    }
+  ],
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedMapConfiguration.cs",
+      "sha256": "c10d91339ee24bef0d9d6fb4deba79d03f10b022a9862de896b8584ef2b94347"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedMapConfiguration.cs.meta",
+      "sha256": "4f5409419e243c25cb6104040f9372971fb71cd2abbe4d6fdf967483a0972537"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedWorld.cs",
+      "sha256": "1ae242ebe9b26ef96e1d188d4a21b2434006310c335d601327967b96c84ceb24"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedData.cs",
+      "sha256": "6c144f7539fdade172565c6a564e8a79f2f86565198ed154199310f4f45bbf31"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedEntityCreation.cs",
+      "sha256": "0c915fe9df3b526c6ccaf7fe0865568d889c12d3ad6e56a054788b965f913b88"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientMaps.cs",
+      "sha256": "42220208fede20846945d69ff7d820c9b34e63d552ad3122d7d1fddc52a25c4d"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientMaps.cs.meta",
+      "sha256": "e147f3d937d5d20c9deff73b0538a388f52a37a74d88c78a34af567357b0aa61"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientPlayer.cs",
+      "sha256": "35d98351cb206ffa4febaca316498f0b7649f8a504f5e50155760dce8845a7d0"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientPlayer.cs.meta",
+      "sha256": "cf55268d4a5678fdb3de97efaa4d1543f77ce42dc3a319f7e4fa2550966e673f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientServices.cs",
+      "sha256": "c6cd1aa00e3312f30a4c5ce03e82b860578b8973d6af5a1ae8b773fb48743904"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientServices.cs.meta",
+      "sha256": "4c6bd02992ea44178f1a3074dc356122726bfa8587a73e4567f4cdc8e14a65a9"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.cs",
+      "sha256": "800e1786a0bbbe8ac994c491d7dbc96c0d0b75b9060480069e61dc28c145cc94"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.cs.meta",
+      "sha256": "99472a67e41f7c610443b7cfef72c14c1f0c2f97310c2113c99c0d126def58f0"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef",
+      "sha256": "b9d9ca5067a0f9fa0b56a2ac900292ca6107f47a5bdb679be50038b6aa92bc4e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef.meta",
+      "sha256": "3b6f057b9671d1ee4488af82d18ab03a31f89a6fa9097e8ee189f7cbb9bbbb46"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_mainline_shared_map_configuration.py",
+      "sha256": "7edda6773766fafbf73bcbc589917dad8b7ee4cc51533a972a61c7ce3b0cd26d"
+    },
+    {
+      "path": "D:\\Tool\\Unity\\Editor\\Data\\DotNetSdkRoslyn\\csc.dll",
+      "sha256": "ea9a1028a70517e38ff4bbd1b0f07c44a4706aad442475da548e7170cadd89b6"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/equip_inlay_site.g.bytes",
+      "sha256": "21299636ba7f5a84ddf1ed63100063f53cbddaaaf697de78babf5aa274a66815"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/equip_inlay_site.g.bytes.meta",
+      "sha256": "4ac08b6818f4c111d18be67bcd1ab02439e75fff6616a8e54463a021ea7df85c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/function_limit.g.bytes",
+      "sha256": "bc0d8ff7e1fc4c7919aa6c89d1bb61ff17ca140535fd8fefe7350f50f30915ab"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/function_limit.g.bytes.meta",
+      "sha256": "436e22c79fa60b3abbe4b1f2217eaacbd737a702e4ad110e4ad6dcbcd212a5de"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/conditions.g.bytes",
+      "sha256": "87610428d6195c06ff55291ae24423cc949df7ac25bfb8953cc3798a1aaa31e5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/conditions.g.bytes.meta",
+      "sha256": "2400222fe79535796832b7858c6e00e82913e5e7b28963e659700551d5fb7158"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/map.g.bytes",
+      "sha256": "0bc7e55e56586c0e0f8b8ba0e6c4f0f6e65ef703ff41301e808988ceed0670dd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/map.g.bytes.meta",
+      "sha256": "acea55359f538bffeea2f0a935abea94b22e7202762c73e23fa4af88e5f20341"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/map_world.g.bytes",
+      "sha256": "beeae896bd37221692243faae8b0c353941b0a42dac66eedb28a6314df276df4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/map_world.g.bytes.meta",
+      "sha256": "2f2ee53132bbaec19b39f356b602b53db550638b407bb92bcb393f44dd03c769"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/map_region.g.bytes",
+      "sha256": "04525b1a307baeed8ed49e4004a855b2e0239176718ac08c912f34f2e0467bfa"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/map_region.g.bytes.meta",
+      "sha256": "0a1b81a1ef6ef8cf627d734ecd7c96c61e3d70a530d20204d332b93e34d55c81"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/entity_extend_parameter.g.bytes",
+      "sha256": "b2e99626a80beb4e07669d42f0c738a5620b30683a80757679103694d85e93d4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/entity_extend_parameter.g.bytes.meta",
+      "sha256": "180d39f81db84dc5f939e20758de9deb1929132381a12e4df9ecf38e78feeb54"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/ActionWorldBuilding_part1.g.bytes",
+      "sha256": "13a98253a3aa0d8271d8734aea27ef4e3e815b64e40052b301a9f13c4833a135"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/ActionWorldBuilding_part1.g.bytes.meta",
+      "sha256": "673ecb111f049e0c26cf6d5fa2024421f72191658f8e2ab8c6df22f533533eac"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/ActionWorldInteraction_part2.g.bytes",
+      "sha256": "130630f9c026b6fdb99f26b7586dd74574527d139f90e35cfe0bf0f0cc803452"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/ActionWorldInteraction_part2.g.bytes.meta",
+      "sha256": "c86baff3e91869cb914b8917e32d203235e27f74faac149a9e1c98ba18ad66d9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/ActionWorldPuzzle_part2.g.bytes",
+      "sha256": "8164e54744f046ce719f0cfdd3086a71bc4b3598cfe6402624073969e326e113"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/ActionWorldPuzzle_part2.g.bytes.meta",
+      "sha256": "e818103cf74fc1832ea9bb1cd45c03fe4834ed3a5b97920908826ad584ccf7ad"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/ActivityMusicFestivaCommon_part1.g.bytes",
+      "sha256": "e909b756c83fb47d808ee2da690b7dd514a633de7f5e22774d41564e8e50eae4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/ActivityMusicFestivaCommon_part1.g.bytes.meta",
+      "sha256": "b8adc56ebe14cf49cb875b5d2a4891ef00a9753f1cb0db9fa2d101a89f3ba47b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapActivityAnniversary_part1.g.bytes",
+      "sha256": "3439c3c2e68f27f7a857bdf863824898efb0d55185e8f2394585af75bb8aacbc"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapActivityAnniversary_part1.g.bytes.meta",
+      "sha256": "bf00f0959bbae0c110766b1db070f468711b364b5338d10173b5fdc19e79a9f1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapActivityChristmas_part1.g.bytes",
+      "sha256": "aabe742f12047c0d5f54e185e18fb6819328dc9b99b7ad27dc8b881c5e782097"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapActivityChristmas_part1.g.bytes.meta",
+      "sha256": "bf70d8af93777473b1560471b8ed56039d83e1ce4c7149791c6bb6f4875d155b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapActivityCommon_part1.g.bytes",
+      "sha256": "897527abb11ab65aa80619b6d32966ed7da7d31192bfeac62b83726fa424490e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapActivityCommon_part1.g.bytes.meta",
+      "sha256": "419e317802978077b068de1b072f908d8176da7bea79bbe0e4ae4b9628c8468f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapActivityExplore_part1.g.bytes",
+      "sha256": "41a371a76b50f1f897b3453a2d4f766101cf7361b91bd1a35d64e4f8d669e179"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapActivityExplore_part1.g.bytes.meta",
+      "sha256": "335704057637591ef1908aeb8817c3bc9130affff2bf61d6f0209e36442394d0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapActivityHalloween_part1.g.bytes",
+      "sha256": "c1320f3c3bc52bfd8a9811b4bcbb03de591a472db237e7428940d5a1a2b13aee"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapActivityHalloween_part1.g.bytes.meta",
+      "sha256": "3e19be3c1f3bf59f76862b5c31817a12a2b5575d0afac5026c4f8085f587f8dd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapActivitySpring_part1.g.bytes",
+      "sha256": "1dbe3121b80c683b755756c82939ce8ee56983011d9e9437a7c9bc62a8a7f294"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapActivitySpring_part1.g.bytes.meta",
+      "sha256": "8945b6c286fe3c42c24178b6a445af750e2324d02a6a19fa0e1c8793b252b976"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapHideAndSeek_part1.g.bytes",
+      "sha256": "8910388ede08c36b790a547b0bc97a5a97bea99008b503e6792af413d401964b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapHideAndSeek_part1.g.bytes.meta",
+      "sha256": "d192c3f6cfda4b59fa631272858f1e947b97a66fab50d65f65d08ba598574324"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapKitchen_part1.g.bytes",
+      "sha256": "b0a27beb71155e2fcafc8fb55697e24a82630ac1f81cad3bfb1cfd80a23275b0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/MapKitchen_part1.g.bytes.meta",
+      "sha256": "2e63d60a108cdc7ccb46501f94a6be4cca9f0c4212015afe92ea2149c647a266"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/WorldBonus_part9.g.bytes",
+      "sha256": "b3dc04e784b8793e0b1fb2fd5fcd44ae8c731c3712ec5e97d6fc9f19f5e10fcd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/WorldBonus_part9.g.bytes.meta",
+      "sha256": "cbc9075f6d510b7a1d7c02b788e2bded7f08edd18ef4e950f4b7a37d8241d3ab"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/WorldBuilding_part3.g.bytes",
+      "sha256": "ad1c3842031d5011e537a1b56de55164527ad48c04e1c616142008e48e524118"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/WorldBuilding_part3.g.bytes.meta",
+      "sha256": "fabad5e75ee056efeb5fe2b32bcc06c8595e54d3fc132477c14fc4a36f1422e7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/WorldDoor_part3.g.bytes",
+      "sha256": "40521e29c9ba3373195fa241289913b55275f2805a4eba0d7ccdc04797d99865"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/WorldDoor_part3.g.bytes.meta",
+      "sha256": "57400fb05654ffb138cfa34bde09ad7d8d5d76e78619d4fa08a0f557e45d19fa"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/WorldGamePlay_part6.g.bytes",
+      "sha256": "24c00b75f0bfb470d6a66f0af49bc0aff842e56044a08eeb8ae74dd9f8b207f8"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/WorldGamePlay_part6.g.bytes.meta",
+      "sha256": "20dc711a754dde145427735298d4cf4e65b578bd72e8acaf16491cc575f27af1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/WorldNPC_part4.g.bytes",
+      "sha256": "61b181dbeda8b8473906d90211eb91db83236847f23406d13b6707600ee874f0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/WorldNPC_part4.g.bytes.meta",
+      "sha256": "b93b36cfeb28d82cd08eee2f8fa18d07d7cd55893a54c96e3e280b5dbed5a4c5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/WorldNPC_part5.g.bytes",
+      "sha256": "58f443dfd3b971ef2534da3f2cea81fa66e65c6606fa2d96e98c4b96961133c5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC/WorldNPC_part5.g.bytes.meta",
+      "sha256": "6cd809c132d147a932749f31f2e19341c288eeeffedd7c34347526d03d9756a3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/entities.json",
+      "sha256": "586208d97e147a6626857b0e24783ecbc5f8559a11d7ecce278b7d86f7d92bc3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/entities.json.meta",
+      "sha256": "259d5c50980c2f6969f7c1d51c2eb37b37c8f76787b688a5ab8357e3c5858359"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/expected.json",
+      "sha256": "556d785bf8db49a6626c17a0b977ad03f98da1b556bd94ed678322798b37bf9f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/expected.json.meta",
+      "sha256": "604fdb2b49a4653e96b212266aa3ab47d3ebfef3c50a09ec6c1cfeb529a95c25"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/selected-readers.bytes",
+      "sha256": "bccfb7dc75077572a630cefdf7c4de68fa7f83aa8a5c471d921ea390290b53fb"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/selected-readers.bytes.meta",
+      "sha256": "105922d5a645f9ebd1cc4bed6ecfdd5f343b630e47b9f14e9cf9f3884226c998"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/catalog.json",
+      "sha256": "9a50128f289890decdc3fe6f41b7daf3abd4b3cffadad192120266c9a0a25b21"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/catalog.json.meta",
+      "sha256": "6e3da5bfcd8dc351169c6836345f0e870e8e742390e333c1229a21b2bea22c19"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration.meta",
+      "sha256": "51332574293f552783b3d8f07f17f560771ae7f67ff14132256ca47880a9418b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources.meta",
+      "sha256": "e3a2492d7738100de8017ed94323dbe728a398da677bb9a854a67e7ee260240c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld.meta",
+      "sha256": "9002c74c846a3e7d1f8afcd2777c7894d4870be48e1c3931181a667b51918fe8"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration.meta",
+      "sha256": "abdd157cbada79c18f67902101030de0bae65f997c1f7e3085c9dbe6edebb6ca"
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/EC.meta",
+      "sha256": "2548c44b013e37fc5c50f58d09df71330661e8b70f081f3dc6df42df64278b7a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/SelectedMapConfiguration.meta",
+      "sha256": "23ab1f647a53ae043a71ec3862de09fd2a9c1bbd3fb3c9c8320cfdf2a77662de"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/SelectedMapConfiguration/SelectedMapConfiguration.cs",
+      "sha256": "ebc291ffc5893d2fb63d5e5546885596140f771f27f67b366bae22cc82de7818"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/SelectedMapConfiguration/SelectedMapConfiguration.cs.meta",
+      "sha256": "90645edec7b0e02d8415db6355f81fd22cd6205799eaff0d7da926cdb2fbbd14"
+    }
+  ],
+  "required_template_ids": [
+    5001,
+    5002,
+    5003,
+    5004,
+    5005,
+    5006,
+    5007,
+    5008,
+    5009,
+    5010,
+    5011,
+    5012,
+    5013,
+    5014,
+    5015,
+    5016,
+    5017,
+    5021,
+    5022,
+    5023,
+    5024,
+    5026,
+    5027,
+    5028,
+    5029,
+    5030,
+    5031,
+    5032,
+    5033,
+    5034,
+    5041,
+    5042,
+    5043,
+    5050,
+    5051,
+    5052,
+    5053,
+    5055,
+    5100,
+    5101,
+    5102,
+    5103,
+    5104,
+    5105,
+    5110,
+    6000,
+    6001,
+    6002,
+    6003,
+    6004,
+    6005,
+    6006,
+    6007,
+    6010,
+    6011,
+    6015,
+    6019,
+    6020,
+    6021,
+    6022,
+    6024,
+    6025,
+    6026,
+    6027,
+    6028,
+    6030,
+    6031,
+    6032,
+    6033,
+    6034,
+    6035,
+    6036,
+    6037,
+    6099,
+    6101,
+    6102,
+    6103,
+    6104,
+    6105,
+    6106,
+    6107,
+    6108,
+    6109,
+    6110,
+    6112,
+    6113,
+    6114,
+    6115,
+    6116,
+    6117,
+    6118,
+    6119,
+    6120,
+    6121,
+    6122,
+    6123,
+    6124,
+    6125,
+    6126,
+    6127,
+    6128,
+    6129,
+    6130,
+    6131,
+    6132,
+    6133,
+    6135,
+    6136,
+    6137,
+    6138,
+    6139,
+    6140,
+    6141,
+    6150,
+    6151,
+    6152,
+    6153,
+    6154,
+    6155,
+    6156,
+    6157,
+    6158,
+    6159,
+    6160,
+    6161,
+    6162,
+    6163,
+    6164,
+    6165,
+    6166,
+    6167,
+    6168,
+    6301,
+    6302,
+    6303,
+    6304,
+    6320,
+    6321,
+    6330,
+    6331,
+    6340,
+    6341,
+    6342,
+    6350,
+    6360,
+    6370,
+    6380,
+    6381,
+    6382,
+    6383,
+    6501,
+    6502,
+    6503,
+    6504,
+    6505,
+    6509,
+    6511,
+    6512,
+    6515,
+    6516,
+    6517,
+    6518,
+    6519,
+    6520,
+    6521,
+    6522,
+    6523,
+    6524,
+    6525,
+    6526,
+    6527,
+    6528,
+    6530,
+    6531,
+    6532,
+    6533,
+    6539,
+    6541,
+    6542,
+    6543,
+    6544,
+    6545,
+    6546,
+    6547,
+    6548,
+    6549,
+    6551,
+    6552,
+    6553,
+    6560,
+    6561,
+    6562,
+    6563,
+    6564,
+    6565,
+    6570,
+    6571,
+    6572,
+    6573,
+    6574,
+    6575,
+    6579,
+    6580,
+    6581,
+    6582,
+    6583,
+    6591,
+    6592,
+    6593,
+    6594,
+    6595,
+    6596,
+    6597,
+    6599,
+    6601,
+    6602,
+    6620,
+    6650,
+    6655,
+    6660,
+    6670,
+    6671,
+    6672,
+    6674,
+    6675,
+    6676,
+    6677,
+    6678,
+    6680,
+    6681,
+    6682,
+    6690,
+    6691,
+    6692,
+    6693,
+    6695,
+    6696,
+    6697,
+    6698,
+    6699,
+    6900,
+    7001,
+    7002,
+    7003,
+    7010,
+    7011,
+    7012,
+    7013,
+    7014,
+    7015,
+    7016,
+    7017,
+    7018,
+    7020,
+    7021,
+    7022,
+    7023,
+    7024,
+    7025,
+    7026,
+    7027,
+    7028,
+    7029,
+    7031,
+    7032,
+    7033,
+    7034,
+    7035,
+    7036,
+    7038,
+    7039,
+    7043,
+    7044,
+    7045,
+    7046,
+    7047,
+    7050,
+    7051,
+    7052,
+    7053,
+    7054,
+    7055,
+    7056,
+    7057,
+    7058,
+    7060,
+    7061,
+    7062,
+    8006,
+    8007,
+    8008,
+    8009,
+    8010,
+    8011,
+    8012,
+    8015,
+    8016,
+    8017,
+    8020,
+    8021,
+    8022,
+    8023,
+    8024,
+    8025,
+    8026,
+    8027,
+    8030,
+    8031,
+    8032,
+    8033,
+    8034,
+    8035,
+    8036,
+    8037,
+    8040,
+    8041,
+    8042,
+    8043,
+    8044,
+    8045,
+    8046,
+    8047,
+    8050,
+    8051,
+    8052,
+    8053,
+    8054,
+    8055,
+    8056,
+    8057,
+    8060,
+    8061,
+    8062,
+    8063,
+    8064,
+    8065,
+    8066,
+    8067,
+    8073,
+    8074,
+    8075,
+    8076,
+    8077,
+    8081,
+    8082,
+    8083,
+    8084,
+    8085,
+    8086,
+    8087,
+    8088,
+    8089,
+    8090,
+    8091,
+    8092,
+    8093,
+    8094,
+    8095,
+    8200,
+    8201,
+    8202,
+    8203,
+    8204,
+    8205,
+    8206,
+    8207,
+    8210,
+    8211,
+    8212,
+    8213,
+    8214,
+    8215,
+    8216,
+    8217,
+    8218,
+    8221,
+    8222,
+    8223,
+    8224,
+    8225,
+    8226,
+    8227,
+    8230,
+    8231,
+    8232,
+    8233,
+    8234,
+    8235,
+    8236,
+    8237,
+    8238,
+    8239,
+    8240,
+    8241,
+    8242,
+    8251,
+    8252,
+    8253,
+    8256,
+    8257,
+    8300,
+    8301,
+    8302,
+    8305,
+    8306,
+    8307,
+    8310,
+    8311,
+    8312,
+    8315,
+    8340,
+    8341,
+    8342,
+    8343,
+    8344,
+    8345,
+    8346,
+    8347,
+    8348,
+    8350,
+    8351,
+    8352,
+    8360,
+    8361,
+    8362,
+    8363,
+    8364,
+    8365,
+    8366,
+    8367,
+    8368,
+    8369,
+    8370,
+    8371,
+    8372,
+    8373,
+    8374,
+    8375,
+    8376,
+    8377,
+    8378,
+    8380,
+    8381,
+    8385,
+    8386,
+    8387,
+    8391,
+    8392,
+    8393,
+    8394,
+    8395,
+    8396,
+    8397,
+    8398,
+    8399,
+    8401,
+    8402,
+    8404,
+    8405,
+    8406,
+    8407,
+    8408,
+    8409,
+    8410,
+    8411,
+    8412,
+    8413,
+    8414,
+    8415,
+    8416,
+    8417,
+    8418,
+    8420,
+    8421,
+    8422,
+    8423,
+    8424,
+    8425,
+    8427,
+    8428,
+    8429,
+    8430,
+    8431,
+    8434,
+    8435,
+    8436,
+    8437,
+    8438,
+    8439,
+    8440,
+    8441,
+    8442,
+    8443,
+    8444,
+    8445,
+    8446,
+    8447,
+    8448,
+    8449,
+    8450,
+    8451,
+    8452,
+    8453,
+    8454,
+    8455,
+    8456,
+    8457,
+    8458,
+    8459,
+    8460,
+    8461,
+    8462,
+    8463,
+    8464,
+    8465,
+    8466,
+    8467,
+    8468,
+    8471,
+    8472,
+    8473,
+    8474,
+    8475,
+    8476,
+    8477,
+    8478,
+    8479,
+    8480,
+    8481,
+    8482,
+    8483,
+    8484,
+    8485,
+    8486,
+    8487,
+    8488,
+    8489,
+    8490,
+    8491,
+    8492,
+    8493,
+    8501,
+    8502,
+    8503,
+    8504,
+    8505,
+    8506,
+    8507,
+    8508,
+    8509,
+    8510,
+    8511,
+    8512,
+    8600,
+    8601,
+    8602,
+    8603,
+    8604,
+    8605,
+    8606,
+    8607,
+    8609,
+    8610,
+    8611,
+    8612,
+    8613,
+    8614,
+    8620,
+    8621,
+    8622,
+    8623,
+    8624,
+    8625,
+    8626,
+    8627,
+    8628,
+    8629,
+    8630,
+    8631,
+    8632,
+    8633,
+    8634,
+    8635,
+    8636,
+    8637,
+    8638,
+    8639,
+    8640,
+    8641,
+    8642,
+    8643,
+    8644,
+    8645,
+    8646,
+    8647,
+    8648,
+    8649,
+    8651,
+    8652,
+    8653,
+    8654,
+    8655,
+    8656,
+    8657,
+    8658,
+    8659,
+    8660,
+    8661,
+    8662,
+    8663,
+    8664,
+    8666,
+    8667,
+    8668,
+    8669,
+    8670,
+    8671,
+    8672,
+    8673,
+    8674,
+    8675,
+    22022,
+    22025,
+    22027,
+    22036,
+    22047,
+    22049,
+    22052,
+    22053,
+    22062,
+    22063,
+    22069,
+    22079,
+    22082,
+    22086,
+    22088,
+    22096,
+    22103,
+    22106,
+    22107,
+    22127,
+    22148,
+    22153,
+    22169,
+    22180,
+    22250,
+    22251,
+    22252,
+    23010,
+    23021
+  ],
+  "additional_ec_records": 18
+}

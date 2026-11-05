@@ -18,6 +18,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
 
         private readonly long containerId;
         private MainlineSharedEntityCreation entities;
+        private MainlineSharedMapConfiguration clientConfiguration;
         private NativeMap14SharedLogging logging;
         private bool loading, disposed;
 
@@ -50,6 +51,21 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             return LoadCore(initialRegionStatus);
         }
 
+        // Prepare the full original client configuration and its metadata
+        // dependencies. The host binds its original player/map before Start.
+        public IEnumerator LoadClient(Func<int, int> initialRegionStatus)
+        {
+            RequireActive();
+            if (initialRegionStatus == null) throw new ArgumentNullException(nameof(initialRegionStatus));
+            if (loading) throw new InvalidOperationException("This original map load has already started.");
+            try
+            {
+                clientConfiguration = new MainlineSharedMapConfiguration(Assemblies, Configuration.Manager, Data);
+                return Load(initialRegionStatus);
+            }
+            catch { Dispose(); throw; }
+        }
+
         private IEnumerator LoadCore(Func<int, int> initialRegionStatus)
         {
             bool completed = false;
@@ -67,6 +83,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                         Configuration.Manager.Wait(new[] { request });
                     yield return load.Current;
                 }
+                clientConfiguration?.Complete(Data);
                 Root = new NativeMap14SharedRoot(Assemblies, Configuration, Data, containerId,
                     "MainlineSharedWorld/container-binding");
                 entities = new MainlineSharedEntityCreation(Assemblies, Data, Root);
@@ -109,7 +126,11 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                 entities?.Clear();
                 entities = null;
                 Root = null;
-                try { Data?.Dispose(); }
+                try
+                {
+                    try { clientConfiguration?.Dispose(); }
+                    finally { clientConfiguration = null; Data?.Dispose(); }
+                }
                 finally
                 {
                     Data = null;

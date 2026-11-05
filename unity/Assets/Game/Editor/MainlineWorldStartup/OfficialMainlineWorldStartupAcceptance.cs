@@ -33,6 +33,12 @@ namespace Zjcs.Editor.MainlineWorldStartup
             Run();
         }
 
+        public static void RunClientMaps()
+        {
+            SessionState.SetBool(Key + ".client-maps", true);
+            Run();
+        }
+
         public static void Run()
         {
             SessionState.SetBool(Key, true);
@@ -57,8 +63,10 @@ namespace Zjcs.Editor.MainlineWorldStartup
         private static void Mode(PlayModeStateChange mode)
         {
             if (mode != PlayModeStateChange.EnteredPlayMode) return;
-            routine = SessionState.GetBool(Key + ".client-player", false) ? VerifyClientPlayer()
-                : SessionState.GetBool(Key + ".client-services", false) ? VerifyClientServices() : Verify();
+            routine = SessionState.GetBool(Key + ".client-maps", false) ? VerifyClientMaps()
+                : SessionState.GetBool(Key + ".client-player", false) ? VerifyClientPlayer()
+                : SessionState.GetBool(Key + ".client-services", false) ? VerifyClientServices()
+                : SessionState.GetBool(Key + ".configuration", false) ? Verify() : VerifyClientMaps();
             EditorApplication.update += Advance;
         }
 
@@ -86,6 +94,7 @@ namespace Zjcs.Editor.MainlineWorldStartup
             SessionState.EraseBool(Key + ".configuration");
             SessionState.EraseBool(Key + ".client-services");
             SessionState.EraseBool(Key + ".client-player");
+            SessionState.EraseBool(Key + ".client-maps");
             EditorApplication.Exit(result);
         }
 

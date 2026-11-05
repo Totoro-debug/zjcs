@@ -55,6 +55,12 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             Copy(source, entity, "LoGridTransformComponent", "GridTransformComponent", "FlipX", "FlipX");
             Copy(source, entity, "LoWorldStageComponent", "WorldStageComponent", "State", "State");
             Copy(source, entity, "LoWorldActiveableEntityComponent", "WorldActiveableEntityComponent", "Active", "Active");
+            var camp = Component(source, "LoEntityCampComponent");
+            var runtimeCamp = Component(entity, "EntityCampComponent");
+            if (camp != null && runtimeCamp != null)
+                NativeMap14SharedPrefabs.Set(runtimeCamp, "CampMonsterEntities",
+                    new System.Collections.Generic.List<int>((System.Collections.Generic.List<int>)
+                        Get(Get(camp, "Info"), "CampMonsterEntities")));
 
             int index = (int)container.GetType().GetMethod("NewEntityIndex").Invoke(container, null);
             var identifier = Activator.CreateInstance(shared.CommonType("EcEntityIdentifier"), Get(container, "Id"), index);

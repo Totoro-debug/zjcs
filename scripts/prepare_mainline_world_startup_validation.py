@@ -41,6 +41,7 @@ def main():
         "Assets/Official/World/Shared/SharedWorldDataCurrent",
         "Assets/Official/World/Shared/SharedWorldConfiguration",
         "Assets/Official/World/Shared/SharedClientConfiguration",
+        "Assets/Official/World/Shared/SharedMapConfiguration",
         "Assets/Game/Editor/MainlineWorldStartup",
     ):
         shutil.copytree(source / relative, project / relative, dirs_exist_ok=True)
