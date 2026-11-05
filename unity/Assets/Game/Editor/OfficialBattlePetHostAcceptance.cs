@@ -132,7 +132,7 @@ namespace Zjcs.Editor.Combat
                     if (!captured)
                     {
                         captured = true;
-                        controller.StartCoroutine(CaptureEntity(result.Checkpoint.StageId));
+                        controller.StartCoroutine(CaptureEntity(result.Checkpoint.StageId, scene, controller));
                     }
                 }
             };
@@ -162,9 +162,16 @@ namespace Zjcs.Editor.Combat
             };
         }
 
-        private static IEnumerator CaptureEntity(int stage)
+        private static IEnumerator CaptureEntity(int stage, OfficialBattleSceneView scene, OfficialBattleRuntimeController controller)
         {
             yield return new WaitForSecondsRealtime(.2f);
+            var child = scene.TryGetPetTransform(1);
+            bool adultPresent = controller.Checkpoint.Units.Any(unit => unit.MasterId == 1
+                && unit.MonsterId == 9301 && !unit.Ended && unit.Hp > 0);
+            Require(child && child.Find("BodyGraph").gameObject.activeSelf != adultPresent
+                && child.Find("0templatePet_view/ShadowBoneFollower").gameObject.activeSelf != adultPresent,
+                "Actual host pet transfer did not apply the original body/shadow visibility groups.");
+            Debug.Log("BATTLE_PET_TRANSFER_HOST_PASSED adultPresent=" + adultPresent);
             yield return new WaitForEndOfFrame();
             ScreenCapture.CaptureScreenshot(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"),
                 "battle-pet-entity-" + stage + ".png"));

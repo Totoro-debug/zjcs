@@ -17,16 +17,22 @@ namespace Zjcs.Presentation.Combat
                 if (owner?.PetEnergy == null || owner.PetEnergy.PetClassId <= 0) continue;
                 Transform ownerRoot = Body(owner.Id);
                 if (!ownerRoot) continue;
+                bool transferred = false;
+                foreach (var entity in checkpoint.Units)
+                    if (entity != null && entity.MasterId == owner.Id && entity.CharacterType == 7
+                        && entity.MonsterId == owner.PetEnergy.PetEntityClassId && !entity.Ended && entity.Hp > 0)
+                    { transferred = true; break; }
                 if (!petFollowers.TryGetValue(owner.Id, out var view))
                 {
                     petFollowerCatalog ??= OfficialBattlePetFollowerCatalog.Load();
                     var binding = petFollowerCatalog.Find(owner.PetEnergy.PetClassId);
                     if (binding == null) throw new System.InvalidOperationException("Original follower is unbound for pet " + owner.PetEnergy.PetClassId);
                     Transform facing = attachedModels.TryGetValue(owner.Id, out var attached) ? attached.Model : ownerRoot;
-                    view = new OfficialBattlePetFollowerView(binding, owner, ownerRoot, facing, root, gridToWorld, nativePlayableScope);
+                    view = new OfficialBattlePetFollowerView(binding, owner, ownerRoot, facing, root, gridToWorld, nativePlayableScope,
+                        initialTransfer: transferred);
                     petFollowers.Add(owner.Id, view);
                 }
-                view.Refresh(owner);
+                view.Refresh(owner, transferred);
             }
         }
 

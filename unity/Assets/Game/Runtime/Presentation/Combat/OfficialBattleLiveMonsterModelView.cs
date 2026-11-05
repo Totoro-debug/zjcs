@@ -27,6 +27,20 @@ namespace Zjcs.Presentation.Combat
 
         public Transform Transform => renderer.EntityRoot;
         public Transform ModelTransform => renderer.transform;
+        internal Transform ResolveOriginalTransform(string path)
+        {
+            // Rebinding schedules the old shadow for Destroy at frame end. A
+            // same-name Transform.Find can still return that retired subtree.
+            Transform liveShadow = shadow?.Root;
+            if (liveShadow)
+            {
+                string originalPath = liveShadow.name;
+                for (Transform parent = liveShadow.parent; parent && parent != Transform; parent = parent.parent)
+                    originalPath = parent.name + "/" + originalPath;
+                if (originalPath == path) return liveShadow;
+            }
+            return Transform.Find(path);
+        }
         internal bool UsesNativeSkillGraphs { get; }
         public bool IsAnimationFinished => !disposed && !loop && !skillControlled
             && !renderer.Animator.IsInTransition(0)

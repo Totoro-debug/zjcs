@@ -39,16 +39,19 @@ namespace Zjcs.Presentation.Combat
         private readonly OfficialBattleLiveMonsterModelView model;
         private readonly GridTransformFollower follower;
         private readonly MyFightRolePet role;
+        private readonly ECFightRolePetTransferView transfer;
         private readonly Grid grid;
         private readonly MyFightSkillAgent ownerSkills;
         private readonly bool ownsOwnerSkills;
         private bool disposed;
+        private bool transferred;
         public Transform Transform => model.Transform;
         public int EntityId { get; }
 
         public OfficialBattlePetFollowerView(OfficialBattlePetFollowerCatalog.Binding binding,
             FightBattleUnitState owner, Transform ownerRoot, Transform ownerFacing, Transform worldRoot,
-            Func<FightGridPoint, Vector3> gridToWorld, OfflineBattleNativePlayableScope scope)
+            Func<FightGridPoint, Vector3> gridToWorld, OfflineBattleNativePlayableScope scope,
+            bool initialTransfer = false)
         {
             if (binding == null) throw new ArgumentNullException(nameof(binding));
             if (scope == null) throw new ArgumentNullException(nameof(scope));
@@ -75,21 +78,40 @@ namespace Zjcs.Presentation.Combat
                     ToPosition = value => worldRoot.InverseTransformPoint(gridToWorld(new FightGridPoint(value.X, value.Y))) };
                 model.Transform.gameObject.SetActive(true);
                 role.Bind(follower, petSkills, ownerSkills, ownerFacing, grid);
+                var transferBinding = OfficialBattlePetTransferCatalog.Load().Find(EntityId)
+                    ?? throw new InvalidOperationException("Original pet transfer view is unbound: " + EntityId);
+                var groups = new List<GameObject>();
+                foreach (var path in transferBinding.graphGroups)
+                {
+                    var group = model.ResolveOriginalTransform(path);
+                    if (!group) throw new InvalidOperationException("Original pet transfer group is unbound: " + path);
+                    groups.Add(group.gameObject);
+                }
+                transferred = initialTransfer;
+                transfer = new ECFightRolePetTransferView(groups, transferBinding.transferTime,
+                    transferBinding.HidePlayable, transferBinding.ShowPlayable, model.Transform.gameObject,
+                    scope, null, initialTransfer);
             }
             catch { Dispose(); throw; }
         }
 
-        public void Refresh(FightBattleUnitState owner)
+        public void Refresh(FightBattleUnitState owner, bool isTransferred = false)
         {
             if (disposed) return;
             grid.Refresh(new Pos2d(owner.X, owner.Y));
             follower.NotifyTargetScaleUpdated();
+            if (transferred != isTransferred)
+            {
+                transferred = isTransferred;
+                transfer.OnPetEntityStatusChange(isTransferred);
+            }
         }
         public void Tick(float deltaTime)
         {
             // Original MonoBehaviour/SkeletonMecanim updates stop while the
             // original skill graph hides this childhood entity.
             if (disposed || deltaTime <= 0 || !model.Transform.gameObject.activeInHierarchy) return;
+            transfer.Tick(deltaTime);
             follower.Tick(deltaTime);
             model.Tick(deltaTime);
         }
@@ -97,6 +119,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) return;
             disposed = true;
+            transfer?.Dispose();
             if (role) role.Release();
             model?.Dispose();
             if (ownsOwnerSkills && ownerSkills)

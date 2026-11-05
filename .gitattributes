@@ -2469,3 +2469,13 @@ assets/reference/official-map/map11-current-minimap-resources-source-manifest.js
 assets/reference/official-map/map12-current-minimap-resources-source-manifest.json text eol=lf
 assets/reference/official-map/map14-buffered-events-source-manifest.json text eol=lf
 assets/reference/official-map/map14-current-minimap-resources-source-manifest.json text eol=lf
+
+# Keep original pet transfer sources and native payloads stable.
+scripts/prepare_battle_pet_transfers.py text eol=lf
+assets/reference/battle-animation/pet-transfers-source-manifest.json text eol=lf
+unity/Assets/Game/Resources/Combat/pet-transfers.json* text eol=lf
+unity/Assets/Game/Resources/Combat/pet-transfer-graphs.json* text eol=lf
+unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ECFightRolePetTransferView.cs* text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePetTransferCatalog.cs* text eol=lf
+unity/Assets/Official/Combat/PetTransfers/** text eol=lf
+unity/Assets/Official/Combat/PetTransfers.meta text eol=lf

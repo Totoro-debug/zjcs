@@ -37,7 +37,8 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
           family='StatusOrbits', shader_prefix='StatusOrbit_', runtime_receipts=None,
           generator=None, limits=None, graph_roots=None, reference_scripts=None,
           external_scripts=None, source_scripts=None, native_transform=None,
-          external_assets=None, native_scripts=None, operation=None, native_preprocess=None):
+          external_assets=None, native_scripts=None, operation=None, native_preprocess=None,
+          graph_originals=None):
     work = Path(os.environ['ZJCS_VALIDATION_DIR']).resolve()
     assert work.parent == (ROOT/'output/validation').resolve() and (work/'.zjcs-validation.json').is_file()
     export_receipt = CACHE/'native-export-all-source-manifest.json'
@@ -223,13 +224,18 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                 # Shared dependency prefabs have no independent address entry.
                 # The verified native exporter preserves their original bundle.
                 source_meta = Path(str(EXPORTED/path)+'.meta')
-                bundle = re.search(r'(?m)^  assetBundleName: (.+)$', read(source_meta).decode())[1]+'.bundle'
+                original_binding = (graph_originals or {}).get(key)
+                bundle = (original_binding['source']['bundle'] if original_binding else
+                    re.search(r'(?m)^  assetBundleName: (.+)$', read(source_meta).decode())[1]+'.bundle')
+                read(source_meta)
                 assert bundle in apk.index, bundle
                 object_type = 'GameObject' if Path(path).suffix == '.prefab' else 'MonoBehaviour'
                 candidates = [obj for obj in apk.objects(bundle) if obj.type.name == object_type
                               and obj.read(check_read=False).m_Name == Path(path).stem]
                 assert len(candidates) == 1, (path, len(candidates))
                 go = candidates[0]
+                if original_binding:
+                    assert sha(go.get_raw_data()) == original_binding['object_sha256'], path
                 originals.append(dict(id=key, shared_dependency_bundle=bundle,
                     native_export_meta=identity(source_meta), original_game_object_name=go.read(check_read=False).m_Name,
                     original_game_object_sha256=sha(go.get_raw_data()), source=apk.provenance(go)))

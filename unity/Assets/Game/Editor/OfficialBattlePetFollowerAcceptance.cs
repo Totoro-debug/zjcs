@@ -54,12 +54,41 @@ namespace Zjcs.Editor.Combat
                     for (int i = 0; i < 160; i++) { view.Tick(.02f); scope.Tick(.02f); scope.LateTick(); }
                     Require(Vector3.Distance(view.Transform.localPosition, new Vector3(-4.7f, -2, 0)) < .0001f, "Long follow movement did not settle");
                     Require(owner.transform.localScale == new Vector3(-2, 3, 1), "Following changed owner scale");
+                    var transferBinding = OfficialBattlePetTransferCatalog.Load().Find(row.entityId);
+                    var groups = transferBinding.graphGroups.Select(path => GraphGroup(view.Transform, path)).ToArray();
+                    view.Refresh(state, true);
+                    view.Tick(transferBinding.transferTime + .001f); scope.Tick(.01f); scope.LateTick();
+                    Require(groups.All(group => !group.activeSelf) && view.Transform.gameObject.activeSelf,
+                        "Entityized pet did not hide precisely its original graph groups");
+                    view.Refresh(state, false);
+                    view.Tick(transferBinding.transferTime + .001f); scope.Tick(.01f); scope.LateTick();
+                    Require(groups.All(group => group.activeSelf), "Ending entityization did not restore the original childhood graph groups");
+                    view.Refresh(state, true); view.Tick(.01f);
+                    view.Refresh(state, false); view.Tick(.01f);
+                    view.Refresh(state, true); view.Tick(transferBinding.transferTime + .001f);
+                    Require(groups.All(group => !group.activeSelf), "Interrupted transfer left a stale visibility timer");
+                    view.Refresh(state, false); view.Tick(transferBinding.transferTime + .001f);
+                    Require(groups.All(group => group.activeSelf), "Repeated transfer failed to restore childhood rendering");
+                }
+                using (var scope = new OfflineBattleNativePlayableScope(root.transform, null))
+                using (var restored = new OfficialBattlePetFollowerView(catalog.Find(row.petClassId), state,
+                    owner.transform, owner.transform, root.transform,
+                    point => root.transform.TransformPoint(new Vector3(point.X, point.Y, 5)), scope, initialTransfer: true))
+                {
+                    var groups = OfficialBattlePetTransferCatalog.Load().Find(row.entityId).graphGroups;
+                    Require(groups.All(path => !GraphGroup(restored.Transform, path).activeSelf),
+                        "Restored entityization briefly exposed childhood graph groups");
                 }
                 UnityEngine.Object.Destroy(root);
             }
             Require(rows.Length == 21 && rows.Select(row => row.entityId).Distinct().Count() == 21, "Incomplete native follower fixture");
             Debug.Log("BATTLE_PET_FOLLOWERS_PASSED models=21 delay/queue/run/facing/nonteleport/Z/hidden/disposal");
+            Debug.Log("BATTLE_PET_TRANSFERS_PASSED models=21 hide/show/interruption/restore/disposal");
         }
+
+        private static GameObject GraphGroup(Transform root, string path)
+            => path.EndsWith("/ShadowBoneFollower", StringComparison.Ordinal)
+                ? root.GetComponentInChildren<OfficialBattleShadowBoneFollower>(true).gameObject : root.Find(path).gameObject;
 
         private static void Require(bool value, string message)
         { if (!value) throw new InvalidOperationException(message); }
