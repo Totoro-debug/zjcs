@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Name: Original full-binary battle monsters
+  m_EditorClassIdentifier: ''
+  m_Script: {fileID: 11500000, guid: 7c82caa682647b14ebcfc2dc80b360c8, type: 3}
+  inventory: {fileID: 4900000, guid: a9fe053061c452b1995626589b44a71f, type: 3}
+  shader: {fileID: 4800000, guid: 35eb17f2dab65f768077e56c65f22d14, type: 3}
+  shaderBindings: []
+  bindings:
+  - File: 3706/model.bytes
+    Asset: {fileID: 4900000, guid: f9de2d627b1c574387a3fb9ca51a5527, type: 3}
+  - File: animators/AnimationClip/idle_01_21.anim
+    Asset: {fileID: 7400000, guid: 7b01dc554166b8103f02bcf90fc284b9, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/block_01.anim
+    Asset: {fileID: 7400000, guid: 26f4ef8fdaaaa1151a76397b2b493b2e, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/die_01.anim
+    Asset: {fileID: 7400000, guid: 8ef305a481f0ec31d187e668387ef97e, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/generate_01.anim
+    Asset: {fileID: 7400000, guid: 9f61d71a1298b81176f6e3313e854fc0, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/generate_03.anim
+    Asset: {fileID: 7400000, guid: d7a59e1441fce1a0a23b21c8e04a62b3, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/hit_01.anim
+    Asset: {fileID: 7400000, guid: 11bd05d022dd6d1661b59eaaf2f61bb6, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/hit_02.anim
+    Asset: {fileID: 7400000, guid: 0fd57fcb474e8dab1411feba8baf90a2, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/monster_3706_Controller.controller
+    Asset: {fileID: 9100000, guid: 207151e3692643b447425997b2cd4876, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/run_01.anim
+    Asset: {fileID: 7400000, guid: c26a20522e7b83585c814b19f33cffe3, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/skill_01.anim
+    Asset: {fileID: 7400000, guid: 95f5079d33b93639525135bc086cf883, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/skill_02.anim
+    Asset: {fileID: 7400000, guid: 7f7c90977eca49a2b8135d9f1dc74929, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/skill_03.anim
+    Asset: {fileID: 7400000, guid: 867a014e633679dc503e4458a405c7d2, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/skill_04.anim
+    Asset: {fileID: 7400000, guid: 02ac3147dfecdfe52621b3b390471059, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/skill_04_1.anim
+    Asset: {fileID: 7400000, guid: 74fb1a68643b3197c67204095bb3a1f7, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/skill_04_2.anim
+    Asset: {fileID: 7400000, guid: 7d23a4370a3065274d2b181206685c4d, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/skill_04_3.anim
+    Asset: {fileID: 7400000, guid: b8b828b8b2a47c0274c558122dbf8743, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/skill_06.anim
+    Asset: {fileID: 7400000, guid: ac6d7bc40981c6f87636deb334a4585f, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/skill_07.anim
+    Asset: {fileID: 7400000, guid: 15e4d1b5cc345384e7793469355b9296, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3706/stun_01.anim
+    Asset: {fileID: 7400000, guid: 3ecd2e8c1146ac6053461e79e1ccd3bb, type: 2}
+  - File: textures/307a40a9a546b00f2d63b2c9753e69229d453bc1fa28c83f95570cf40ced9043.asset
+    Asset: {fileID: 2800000, guid: cadd6f74465b528d873f1528f6cf2656, type: 2}
+  - File: textures/6d1ada22c64e611ee045988d78a0fe78b9d954042a07716ee1dc7417b20fbe15.asset
+    Asset: {fileID: 2800000, guid: 761bfe8cf0f95468800e875372e85c61, type: 2}
+  - File: textures/7f9ad26c8af345803a663e5acf617ce20600269b558d441fbb0f8fa84cf2ce29.asset
+    Asset: {fileID: 2800000, guid: d48c4047da23532bb932137adb66aaaa, type: 2}
+  - File: textures/87eec55ac622d4084ca884b0b3470d8748f0ff36cacec305425fa44975de58a4.asset
+    Asset: {fileID: 2800000, guid: 56ed5259b664532dadd3f9c35e7b50d5, type: 2}
+  - File: textures/98df62381d4779aac18f1db9c89850156950c9d0df262934fa4f8e9bbf767eb8.asset
+    Asset: {fileID: 2800000, guid: f92ccf2783165f07b9c3f0fa06a7111e, type: 2}
+  - File: textures/c928c88850856948ddb4f77f3ad9cd871c852291373c6bcf57373df4db16cfc8.asset
+    Asset: {fileID: 2800000, guid: afe37fd58a13529db78999a7fae0dee3, type: 2}
+  - File: textures/f6299c93c0fbdfc5c43caa9db76943229447d722e42c0f6494c206a2be07967a.asset
+    Asset: {fileID: 2800000, guid: fc9ecb00c03f5b3c9393a557c2872039, type: 2}

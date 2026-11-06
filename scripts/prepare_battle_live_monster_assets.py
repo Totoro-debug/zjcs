@@ -13,7 +13,7 @@ from prepare_unity_map13_native_scene import decode_mips, native_texture
 from prepare_battle_live_monsters import sha, encoded
 
 
-def build():
+def build(*, destination=None, resource_path="Combat/NativeMonsters/catalog", receipt_path=None):
     work = validation_directory()
     source = work / "live-monsters"
     proof_path = work / "live-monsters-source-manifest.json"
@@ -25,7 +25,8 @@ def build():
             raise ValueError("Verified monster input changed: " + file)
     catalog = json.loads((source / "catalog.json").read_bytes())
     apk = Apk.current()
-    destination = ROOT / "unity/Assets/Official/Combat/NativeMonsters"
+    destination = Path(destination) if destination is not None else ROOT / "unity/Assets/Official/Combat/NativeMonsters"
+    receipt_path = Path(receipt_path) if receipt_path is not None else ROOT / "assets/reference/battle-animation/live-monsters-source-manifest.json"
     files, outputs, textures = {}, {}, {}
     def write(relative, raw, file_id=None):
         target = destination / relative
@@ -33,7 +34,7 @@ def build():
         if target.exists() and target.read_bytes() != raw:
             if relative != "inventory.json":
                 raise ValueError("Preserve changed original monster asset: " + str(target))
-            previous = json.loads((ROOT / "assets/reference/battle-animation/live-monsters-source-manifest.json").read_bytes())
+            previous = json.loads(receipt_path.read_bytes())
             if previous["outputs"][target.relative_to(ROOT).as_posix()] != sha(target.read_bytes()):
                 raise ValueError("Preserve modified original monster inventory")
             before, after = json.loads(target.read_bytes()), json.loads(raw)
@@ -97,7 +98,7 @@ def build():
     inventory = write("inventory.json", encoded(catalog))
     script = ROOT / "unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterAssets.cs"
     if not Path(str(script) + ".meta").exists(): meta(script)
-    target = destination / "Resources/Combat/NativeMonsters/catalog.asset"
+    target = destination / "Resources" / (resource_path + ".asset")
     target.parent.mkdir(parents=True, exist_ok=True)
     asset(target, "Original full-binary battle monsters", script, dict(
         inventory=dict(fileID=4900000, guid=guid(destination / inventory), type=3),
@@ -122,7 +123,7 @@ def build():
             converter_sha256=sha((ROOT / "scripts/prepare_unity_map13_native_scene.py").read_bytes())),
         shader=dict(receipt_sha256=sha(shader_proof.read_bytes()), source=shader, additional_sources=additional_shaders), textures=textures, outputs=outputs,
         operation="Preserve full original skeletons, controller closure, prefab bindings and materials. Decode every original ASTC mip to native Unity RGBA32, retaining source texture flags, mip count, color space and sampling. Explicitly bind local Unity assets; no sampled mesh animation.")
-    (ROOT / "assets/reference/battle-animation/live-monsters-source-manifest.json").write_bytes(encoded(receipt))
+    receipt_path.write_bytes(encoded(receipt))
     apk.archive.close()
     print("Installed original live monsters:", len(catalog["models"]), "textures:", len(textures), "files:", len(outputs))
 

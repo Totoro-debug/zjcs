@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 using Zjcs.Offline.ProfessionUI;
+using Zjcs.Offline.PartnersUI;
 using Zjcs.Official.ActivityBattleUI;
 using Zjcs.Presentation.Combat;
 
@@ -23,6 +24,8 @@ namespace Zjcs.Editor
             var pipeline = Resources.Load<OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets");
             Require(pipeline, "Bind the existing original Universal render pipeline.");
             using var pipelineScope = pipeline.Enter();
+            ValidateActivitySharedUiPhysics();
+            ValidateActivitySharedMonsterPhysics();
             var fixture = new GameObject("Original activity RT component fixture", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
             fixture.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
             var scaler = fixture.GetComponent<CanvasScaler>();
@@ -39,12 +42,16 @@ namespace Zjcs.Editor
             var staging = new GameObject("Inactive original RT component staging", typeof(RectTransform));
             staging.transform.SetParent(fixture.transform, false);
             staging.SetActive(false);
-            var assets = BattleNativeMonsterAssets.Load();
-            // This fixture exercises the shared RT transport using the existing
-            // verified 3709 world mesh. It does not claim to bind the 3706 model.
-            var template = BattleNativeMonsterRenderer.Create(assets, 3709, staging.transform, "Original native test model");
+            int modelId = Environment.GetEnvironmentVariable("ZJCS_ACTIVITY_RT_MODEL") == "3706" ? 3706 : 3709;
+            var assets = modelId == 3706
+                ? Resources.Load<BattleNativeMonsterAssets>("DailyChallenges/ActivityRtMonsters/catalog")
+                : BattleNativeMonsterAssets.Load();
+            Require(assets, "The selected original native RT model inputs are unavailable.");
+            // Exercise the original model inputs through the shared native mesh
+            // backend. The full source prefab hierarchy is a separate binding.
+            var template = BattleNativeMonsterRenderer.Create(assets, modelId, staging.transform, "Original native test model");
             var seats = new SpineRTUIManager();
-            var bindings = new ActivityRtBindings(assets, template.gameObject, seats);
+            var bindings = new ActivityRtBindings(assets, modelId, template.gameObject, seats);
             GameObject first = null, second = null;
             RTHandle firstHandle = null, secondHandle = null;
             Camera firstCamera = null, secondCamera = null;
@@ -71,6 +78,10 @@ namespace Zjcs.Editor
                 { bindings.Advance(.04f); yield return null; }
                 yield return new WaitForEndOfFrame();
                 byte[] before = ReadActivityRt(firstHandle.rt, out int visible);
+                Debug.Log("[Battle hosts] RT diagnostic pixels=" + visible + " camera=" + firstCamera.cullingMask
+                    + " model=" + bindings.Models[0].GetComponent<MeshRenderer>().bounds
+                    + " materials=" + string.Join(",", bindings.Models[0].GetComponent<MeshRenderer>().sharedMaterials
+                        .Select(value => value.name + "/" + value.shader.name)));
                 Require(visible > 500, "The original Universal2D render pass produced no native model pixels.");
                 for (int frame = 0; frame < 8; frame++)
                 { bindings.Advance(.04f); yield return null; }
@@ -107,7 +118,7 @@ namespace Zjcs.Editor
                 Require(!firstCamera && !firstHandle.rt && bindings.BloomOwners.Count == 0
                     && bindings.Registers == 3 && bindings.Unregisters == 3,
                     "Original RT destruction leaked a camera, texture, or bloom registration.");
-                Debug.Log("[Battle hosts] Original TempRTUI passed: native 3709 test mesh pixels and Animator changes, original 3706 icon geometry/camera/RT settings, same-target sharing, foreign-seat guard, disable/reopen handover and camera/RT disposal. Production 3706 model, particles and bloom output are not covered.");
+                Debug.Log("[Battle hosts] Original TempRTUI passed: native " + modelId + " test mesh pixels and Animator changes, original 3706 icon geometry/camera/RT settings, same-target sharing, foreign-seat guard, disable/reopen handover and camera/RT disposal. Full native hierarchy, particles, bloom output and production entry are not covered.");
             }
             finally
             {
@@ -130,6 +141,78 @@ namespace Zjcs.Editor
             return icon;
         }
 
+        private static void ValidateActivitySharedUiPhysics()
+        {
+            int validated = 0;
+            foreach (string guid in AssetDatabase.FindAssets("t:PartnerNativeUiSkeletonAsset"))
+            {
+                var asset = AssetDatabase.LoadAssetAtPath<PartnerNativeUiSkeletonAsset>(AssetDatabase.GUIDToAssetPath(guid));
+                var data = asset.Data;
+                if (data.Sex != "partner-ui:8402") continue;
+                bool model = data.AnimationNames.Contains("npc_8402/idle_01");
+                string idle = model ? "npc_8402/idle_01" : "idle_01";
+                var skeleton = new ProfessionNativeAppearanceSkeleton(data);
+                skeleton.SetSkin(model
+                    ? data.CreateCombinedNpcSkin(new[] { "body_8402" })
+                    : data.SkinCatalog.FindSkin("default") as ProfessionNativeSkin);
+                skeleton.SetToSetupPose(); skeleton.UpdateCache();
+                var physics = new PartnerNativeUiPhysicsPose(data);
+                string touch = model ? "npc_8402/idle_02" : "click_01";
+                var a = new ProfessionNativeAnimationChannels(data, idle, originalBezierSegments: true);
+                var b = new ProfessionNativeAnimationChannels(data, touch, originalBezierSegments: true);
+                for (int frame = 0; frame < 120; frame++)
+                {
+                    physics.Apply(skeleton, b, frame / 60f, false, 1f / 60, a, frame / 60f, true,
+                        Mathf.Clamp01(frame / 15f));
+                    for (int bone = 0; bone < data.BoneCount; bone++)
+                    {
+                        if (!skeleton.Pose.IsActive(bone)) continue;
+                        var pose = skeleton.Pose.World(bone);
+                        Require(float.IsFinite(pose.m00) && float.IsFinite(pose.m11)
+                            && float.IsFinite(pose.m03) && float.IsFinite(pose.m13), "Shared UI physics produced a non-finite pose.");
+                    }
+                }
+                Require(Math.Abs(physics.PhysicsTime - 2f) < .00001f, "Shared UI physics advances once per frame.");
+                using var meshes = new ProfessionNativeMeshBatches(data.SlotCount);
+                meshes.Build(skeleton.Pose, skeleton.CreateDrawSlots(), true, false);
+                Require(meshes.Batches.Sum(batch => batch.Mesh.vertexCount) > 0, "Shared UI physics lost original geometry.");
+                validated++;
+            }
+            Require(validated >= 2, "Regress both original 8402 model and illustration rigs.");
+            Debug.Log("[Battle hosts] Shared ordered physics passed original 8402 UI rigs: " + validated);
+        }
+
+        private static void ValidateActivitySharedMonsterPhysics()
+        {
+            var assets = BattleNativeMonsterAssets.Load();
+            foreach (int id in new[] { 3903, 3925 })
+            {
+                var row = assets.Find(id);
+                var data = ProfessionNativeSkeletonData.LoadBattleMonster(assets.Resolve<TextAsset>((string)row["package"]).bytes, id);
+                var a = new ProfessionNativeAppearanceSkeleton(data);
+                var b = new ProfessionNativeAppearanceSkeleton(data);
+                var skins = ((List<object>)row["skins"]).Cast<string>().ToArray();
+                a.SetSkin(data.CreateCombinedNpcSkin(skins)); b.SetSkin(data.CreateCombinedNpcSkin(skins));
+                var original = new ProfessionNativePlayerPhysicsPose(data);
+                var shared = new ProfessionNativeOrderedPhysicsPose(data);
+                var animation = new ProfessionNativeAnimationChannels(data, "idle_01", originalBezierSegments: true);
+                for (int frame = 0; frame < 120; frame++)
+                {
+                    original.Apply(a, animation, frame / 60f, true, 1f / 60);
+                    shared.Apply(b, animation, frame / 60f, true, 1f / 60);
+                    for (int bone = 0; bone < data.BoneCount; bone++)
+                    {
+                        if (!a.Pose.IsActive(bone)) continue;
+                        var x = a.Pose.World(bone); var y = b.Pose.World(bone);
+                        for (int axis = 0; axis < 16; axis++)
+                            Require(Math.Abs(x[axis] - y[axis]) < .0001f,
+                                "Shared ordered physics changed the existing monster pose: " + id + "/" + bone + "/" + frame);
+                    }
+                }
+            }
+            Debug.Log("[Battle hosts] Shared ordered physics preserved original 3903/3925 poses over 240 frames.");
+        }
+
         private static byte[] ReadActivityRt(RenderTexture source, out int visible)
         {
             var previous = RenderTexture.active;
@@ -148,23 +231,24 @@ namespace Zjcs.Editor
         private sealed class ActivityRtBindings : IActivityRtUIBindings
         {
             private readonly BattleNativeMonsterAssets assets;
+            private readonly int modelId;
             private readonly GameObject template;
             public ISpineRTUIManager RenderSeats { get; }
             public readonly List<BattleNativeMonsterRenderer> Models = new List<BattleNativeMonsterRenderer>();
             public readonly List<Camera> Cameras = new List<Camera>();
             public readonly HashSet<IUIBloomRequirer> BloomOwners = new HashSet<IUIBloomRequirer>();
             public int Registers, Unregisters;
-            public ActivityRtBindings(BattleNativeMonsterAssets value, GameObject original, ISpineRTUIManager seats)
-            { assets = value; template = original; RenderSeats = seats; }
+            public ActivityRtBindings(BattleNativeMonsterAssets value, int id, GameObject original, ISpineRTUIManager seats)
+            { assets = value; modelId = id; template = original; RenderSeats = seats; }
             public GameObject InstantiateTarget(GameObject source, Transform parent)
             {
                 Require(source == template, "The RT target identity differs.");
-                var model = BattleNativeMonsterRenderer.Create(assets, 3709, parent, "Original native 3709 RT test mesh");
-                model.BindOriginalAnimator(assets, 3709);
+                var model = BattleNativeMonsterRenderer.Create(assets, modelId, parent, "Original native " + modelId + " RT test mesh");
+                model.BindOriginalAnimator(assets, modelId);
                 // Select the actual original model node from the battle entity
                 // carrier; TempRTUI then applies its own serialized transforms.
                 model.transform.SetParent(parent, false);
-                UnityEngine.Object.Destroy(model.EntityRoot.gameObject);
+                if (model.EntityRoot != model.transform) UnityEngine.Object.Destroy(model.EntityRoot.gameObject);
                 Models.Add(model); Cameras.Add(parent.GetComponent<Camera>());
                 return model.gameObject;
             }

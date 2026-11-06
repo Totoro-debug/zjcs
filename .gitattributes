@@ -2616,3 +2616,13 @@ unity/Assets/Game/Runtime/Official/ActivityBattleUI/IActivityRtUIBindings.cs tex
 unity/Assets/Game/Runtime/Official/ActivityBattleUI/IActivityRtUIBindings.cs.meta -text
 unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.ActivityRtUI.cs text eol=lf
 unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.ActivityRtUI.cs.meta -text
+
+# Preserve the original 3706 RT variant payloads.
+scripts/prepare_battle_live_monsters.py text eol=lf
+scripts/prepare_battle_live_monster_assets.py text eol=lf
+unity/Assets/Official/DailyChallenges/ActivityRtMonsters/** -text whitespace=-blank-at-eol
+unity/Assets/Official/DailyChallenges/ActivityRtMonsters.meta -text
+
+# Shared ordered UI and battle physics implementation.
+unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeOrderedPhysicsPose.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerNativeUiPhysicsPose.cs text eol=lf

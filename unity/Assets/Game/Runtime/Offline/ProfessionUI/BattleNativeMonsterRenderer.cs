@@ -15,7 +15,7 @@ namespace Zjcs.Offline.ProfessionUI
     {
         private ProfessionNativeAppearanceSkeleton state;
         private ProfessionNativeMeshBatches batches;
-        private ProfessionNativePlayerPhysicsPose physics;
+        private ProfessionNativeOrderedPhysicsPose physics;
         private ProfessionNativeAnimationChannels motion;
         private Dictionary<string, object> settings;
         private Material material;
@@ -79,7 +79,7 @@ namespace Zjcs.Offline.ProfessionUI
             state = new ProfessionNativeAppearanceSkeleton(data);
             state.SetSkin(data.CreateCombinedNpcSkin(Arr(row["skins"]).Select(value => (string)value).ToArray()));
             batches = new ProfessionNativeMeshBatches(data.SlotCount);
-            physics = data.Constraints.Any(value => value.Kind == "physics") ? new ProfessionNativePlayerPhysicsPose(data) : null;
+            physics = data.Constraints.Any(value => value.Kind == "physics") ? new ProfessionNativeOrderedPhysicsPose(data) : null;
             var sources = Arr(row["materials"]);
             sourceMaterials = new Material[sources.Count];
             for (int i = 0; i < sources.Count; i++)

@@ -40,7 +40,7 @@ namespace Zjcs.Offline.ProfessionUI
             Animator.writeDefaultValuesOnDisable = Flag(original, "m_WriteDefaultValuesOnDisable");
             Animator.enabled = false; // Battle time owns Update, including pause and speed.
             animatorPose = new ProfessionNativeAnimatorPose(Animator, SolveAnimator, SolveAnimatorMix,
-                originalBezierSegments: true);
+                originalBezierSegments: true, allowOriginalCarrierDuration: row.ContainsKey("rtPrefab"));
             Animator.Rebind(); Animator.Update(0); ApplyAnimatorPose(0);
         }
 

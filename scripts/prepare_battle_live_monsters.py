@@ -58,7 +58,7 @@ def entity_prefab_family(apk, entity):
     return families[0]
 
 
-def build(roles, pet_roles=()):
+def build(roles, pet_roles=(), rt_roles=()):
     work = validation_directory()
     if not (work / ".zjcs-validation.json").is_file():
         raise ValueError("An owned monster validation workspace is required")
@@ -133,7 +133,8 @@ def build(roles, pet_roles=()):
             next(iter(natives[path].values()))["m_Name"] for path in closure}
         native_graphs[original.read().m_Name] = verify_graph(original, natives[start], names, verify_monster_motion)
         originals = {(obj.type.name, obj.read().m_Name): obj for obj in [original, *clips]}
-        remap = {key: sha(("zjcs:battle-live-monster:" + path.relative_to(exported).as_posix()).encode())[:32]
+        scope = "zjcs:activity-rt-monster:" if entity in rt_roles else "zjcs:battle-live-monster:"
+        remap = {key: sha((scope + path.relative_to(exported).as_posix()).encode())[:32]
             for key, path in animator_guids.items() if path in closure}
         for path in closure:
             fields = next(iter(natives[path].values()))
@@ -155,14 +156,39 @@ def build(roles, pet_roles=()):
     if roles is None:
         roles = sorted(int(name.rsplit("_", 1)[1].removesuffix(".bundle")) for name in apk.index
             if "prefabs_ecentity_fight_fightmonster_" in name and name.rsplit("_", 1)[1].removesuffix(".bundle").isdigit())
-    pet_roles = set(pet_roles)
-    if set(roles) & pet_roles:
-        raise ValueError("An entity cannot use both monster and pet prefabs")
-    for entity in sorted(set(roles) | pet_roles):
-        family = entity_prefab_family(apk, entity)
-        if (family == "fightpet") != (entity in pet_roles):
-            raise ValueError("Requested summon family differs from original prefab: " + str(entity))
-        objects = apk.objects(f"prefabs_ecentity_fight_{family}_{entity}")
+    pet_roles, rt_roles = set(pet_roles), set(rt_roles)
+    if set(roles) & pet_roles or rt_roles & (set(roles) | pet_roles):
+        raise ValueError("Select one original monster, pet or RT prefab per entity identity")
+    for entity in sorted(set(roles) | pet_roles | rt_roles):
+        rt_prefab = None
+        if entity in rt_roles:
+            rt_path = f"Assets/Prefabs/Appearance/Monster/{entity}/MonsterModel_{entity}_RT.prefab"
+            location, = [row for row in locations if row["path"] == rt_path]
+            root = record(apk.asset(location["bundle"], location["path"]))
+            if root.type.name != "GameObject":
+                raise ValueError("Bind the actual original RT prefab root: " + rt_path)
+            # Appearance bundles contain multiple model/UI variants. Select only
+            # this exact hierarchy, while retaining all original components.
+            pending, visited, objects = [root], set(), []
+            while pending:
+                node = record(pending.pop())
+                key = node.assets_file.name + ":" + str(node.path_id)
+                if key in visited: continue
+                visited.add(key)
+                objects.append(node)
+                for reference in node.read().m_Component:
+                    component = record(reference.component.deref())
+                    objects.append(component)
+                    if component.type.name in ("Transform", "RectTransform"):
+                        pending.extend(child.read().m_GameObject.deref()
+                            for child in component.read().m_Children)
+            rt_prefab = dict(path=rt_path, original=root.assets_file.name + ":" + str(root.path_id),
+                source=apk.provenance(root), sha256=sha(root.get_raw_data()))
+        else:
+            family = entity_prefab_family(apk, entity)
+            if (family == "fightpet") != (entity in pet_roles):
+                raise ValueError("Requested summon family differs from original prefab: " + str(entity))
+            objects = apk.objects(f"prefabs_ecentity_fight_{family}_{entity}")
         components = {}
         for obj in objects:
             if obj.type.name == "MonoBehaviour":
@@ -312,6 +338,10 @@ def build(roles, pet_roles=()):
             result["atlasPages"] = pages
         if mesh_copies:
             result["meshCopies"] = mesh_copies
+        if rt_prefab:
+            rt_prefab["appearance"] = appearance
+            rt_prefab["textureLoader"] = loader_location if loader_obj else None
+            result["rtPrefab"] = rt_prefab
         records.append(result)
         print(entity, skeleton_name, result["counts"], result["attachmentTypes"], flush=True)
     write("catalog.json", encoded(dict(manifest=apk.version, models=records)))
@@ -328,6 +358,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--roles", help="Comma-separated original monster entity IDs; omitted means all numeric monster prefabs")
     parser.add_argument("--pet-roles", default="", help="Comma-separated original pet entity IDs, recovered from fightpet prefabs")
+    parser.add_argument("--rt-roles", default="", help="Original MonsterModel_ID_RT prefab IDs; excludes same-ID battle variants")
     args = parser.parse_args()
-    build(sorted({int(value) for value in args.roles.split(",")}) if args.roles else None,
-        [int(value) for value in args.pet_roles.split(",") if value])
+    build(sorted({int(value) for value in args.roles.split(",")}) if args.roles else (() if args.rt_roles else None),
+        [int(value) for value in args.pet_roles.split(",") if value],
+        [int(value) for value in args.rt_roles.split(",") if value])

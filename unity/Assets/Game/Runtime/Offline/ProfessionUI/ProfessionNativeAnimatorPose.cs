@@ -43,6 +43,7 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly Action<ProfessionNativeAppearanceSkeleton, MixNextFrame> mix;
         private readonly bool allowPartnerBlendTrees;
         private readonly bool originalBezierSegments;
+        private readonly bool allowOriginalCarrierDuration;
         private readonly List<AnimatorClipInfo> clips = new List<AnimatorClipInfo>(1);
         private readonly List<AnimatorClipInfo> nextClips = new List<AnimatorClipInfo>(1);
         private readonly Dictionary<string, ProfessionNativeAnimationChannels> channels = new Dictionary<string, ProfessionNativeAnimationChannels>(StringComparer.Ordinal);
@@ -51,13 +52,15 @@ namespace Zjcs.Offline.ProfessionUI
         public ProfessionNativeAnimatorPose(Animator animator,
             Action<ProfessionNativeAppearanceSkeleton, ProfessionNativeAnimationChannels, float, bool> solve,
             Action<ProfessionNativeAppearanceSkeleton, MixNextFrame> mixNext = null,
-            bool allowPartnerBlendTrees = false, bool originalBezierSegments = false)
+            bool allowPartnerBlendTrees = false, bool originalBezierSegments = false,
+            bool allowOriginalCarrierDuration = false)
         {
             this.animator = animator ? animator : throw new ArgumentNullException(nameof(animator));
             this.solve = solve ?? throw new ArgumentNullException(nameof(solve));
             mix = mixNext;
             this.allowPartnerBlendTrees = allowPartnerBlendTrees;
             this.originalBezierSegments = originalBezierSegments;
+            this.allowOriginalCarrierDuration = allowOriginalCarrierDuration;
         }
 
         // Callers consume one completed pose without inspecting the Animator
@@ -158,11 +161,12 @@ namespace Zjcs.Offline.ProfessionUI
                 animation = new ProfessionNativeAnimationChannels(source, clip.name, originalBezierSegments: originalBezierSegments);
                 channels.Add(clip.name, animation);
             }
-            // Original name-carrier clips retain their animation duration. A
-            // mismatched binding must be restored, never stretched to fit.
+            // Verified RT variants can have a shorter original name carrier.
+            // Keep its real Animator clock and the skeleton's own loop length;
+            // never stretch either input. Other callers retain strict matching.
             bool mismatch = Mathf.Abs(clip.length - animation.Duration) > 1f / 30f + .00001f;
             bool staticOriginal = mismatch && IsStaticOriginalPartnerMotion(skeleton, clip, animation);
-            if (mismatch && !staticOriginal)
+            if (mismatch && !staticOriginal && !allowOriginalCarrierDuration)
                 throw new InvalidOperationException("Original Animator and skeleton motion durations differ: " + clip.name);
             float time = staticOriginal ? 0 : state.normalizedTime * clip.length;
             if (float.IsNaN(time) || float.IsInfinity(time)) throw new InvalidOperationException("Animator motion time is not finite.");

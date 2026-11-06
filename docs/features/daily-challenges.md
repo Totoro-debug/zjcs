@@ -72,6 +72,8 @@ NPC 战斗属性和技能由当前版 `npc_level_detail`、`npc_profession_detai
 
 3706离屏视图（局部迁移）：已迁入所选884原 `SimpleRTRenderPass`、`TempRTUI`、`SpineRTUIManager` 及接口，保留原相机配置、RT格式、投影、清屏、Universal2D筛选、单席位持有与同目标复用、启停／销毁顺序、材质参数和原 `SafeAction` 通知。原场景注入改为显式 `IActivityRtUIBindings`，只包含已有的目标实例化、独立材质、泛光注册和席位服务边界；修复反编译的C#参数和隐式转换写法。静态检查通过128,104个GUID；隔离工程通过Unity导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和渲染Play Mode，退出码0；保留原七对象图标的几何及相机／RT参数，以现有原3709世界模型作为独立组件测试输入，验证真实像素、原Animator变化、同目标复用、非持有者不能交还席位、禁用／重开／销毁交接及相机、RT和泛光登记释放，运行截图已查看。测试未覆盖生产3706模型、粒子、泛光输出或完整页面，生产服务和3706骨骼、原Animator、粒子挂点仍待接入。来源为[渲染通道](../../assets/reference/daily-challenges/activity-rt-render-pass-source-manifest.json)与[生命周期](../../assets/reference/daily-challenges/activity-rt-ui-source-manifest.json)，不能据此认为3706或完整活动页面已恢复。
 
+3706专属输入（局部迁移）：公共怪物提取器已增加明确的 RT prefab 变体入口，按原 `MonsterModel_3706_RT` 根节点选择自身层级，避免把同 bundle 的战斗、UI及其他变体混入。419根骨骼、257个槽、23个完整动画、47项路径、136项物理及1项变换约束与原Animator完整状态机、四个原材质、配置指定的七份Low纹理已通过公共原生转换流程安装；二进制完整消费，原ASTC各级mip、采样与色彩空间转换为Windows原生资产。RT Animator采用独立序列化GUID范围，不与同ID战斗变体混淆。入口为 `DailyChallenges/ActivityRtMonsters/catalog`，来源见[原生模型输入](../../assets/reference/daily-challenges/activity-rt-monster-assets-source-manifest.json)。公共顺序物理后端已接入，原待机Unity载体约1.3333秒、骨骼动画约3秒，RT变体显式保留原Animator时钟与骨骼自身循环时长。隔离Unity导入／编译、ProjectTools.Validate及内置屏D3D11 Play Mode通过并退出0；实际读到92930个可见像素，核对Animator推进后像素变化、席位复用、启停／销毁交接及RT释放，运行画面已查看。一次较早的像素检查未通过，后续诊断复跑通过，冷启动表现仍须在完整流程复核。完整373对象原生层级、挂点跟随、粒子、泛光及生产页面接线尚未完成，未发布新Player。
+
 ## 自定义实现
 
 用户确认期次以首次进入功能的本地时间起算；该时间由 `EnterFeature(DateTime.Now)` 首次持久化。每日逻辑日采用官方 08:00 配置。官方活动 `Duration=335` 小时，最后 1 小时结算。用户确认系统时间回拨不得降低已到最高期次或逻辑日；系统时间向前跳转仍会按本地时间推进期次。
