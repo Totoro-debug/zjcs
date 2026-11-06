@@ -58,7 +58,8 @@ def verify_player_projection(source, shared, work):
         "public PlayerStageDataWrap GetStageData(", "public bool IsGoddessActive(",
         "public int GetMapActiveEntCount(", "public int GetAllMapActiveEntCount(",
         "public List<int> GetActivedMapEntities(", "private bool IsMapEntityActived(",
-        "public void OnUpdateActiveableEntity(")
+        "public void OnUpdateActiveableEntity(", "public MapRegionStatus GetMapRegionStatus(",
+        "public bool TryGetMapRegionStatusList(", "public void SetMapRegionStatus(")
     for method in methods:
         if method_body(old, method) != method_body(current, method):
             raise ValueError("Retained original player projection method differs: " + method)
@@ -186,7 +187,7 @@ def build():
     condition_evidence = verify_stage_condition_readers(source, shared, validation_directory() / "stage-configuration-sources")
     names += ["FactionInfo", "GameMonsterInfo", "GameArrayMonsterInfo", "GameArrayMonsterPosInfo",
         "PlayerStageDataWrap", "PlayerStageManager", "StageResetType", "TimeManager",
-        "WorldActiveableEntityComponent", "MapActiveableEntityInfo"]
+        "WorldActiveableEntityComponent", "MapActiveableEntityInfo", "MapWorldInfo", "MapPartInfoBase", "MapInfoManager"]
     native = ROOT / "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities"
     binding = native / "MainlineSharedClientConfiguration.cs"
     meta(binding)
@@ -194,7 +195,8 @@ def build():
     receipt = dict(manifest=apk.version,
         operation="Restore original fresh-player tables and reuse the verified local level-property binary. Replace only YooAsset path discovery; retain original ParserBase initialization, binary reader, 1000-entry LRU, default values and calculations.",
         inputs=inputs, binary_input=record(BINARY), binary_provenance=record(binary_proof_path),
-        code_inputs=[record(source / (name + ".cs")) for name in names],
+        code_inputs=[record(source / (name + ".cs")) for name in names]
+            + [record(source.parent / "MsgPlayerWorldMapProgressUpdate.cs")],
         shared_il=dict(record(shared), manifest="871_156598"), player_projection=projection_evidence,
         activation_component_compatibility=activation_evidence,
         stage_reader_compatibility=stage_evidence,

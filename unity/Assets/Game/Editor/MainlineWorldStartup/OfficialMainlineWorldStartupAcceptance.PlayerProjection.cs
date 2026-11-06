@@ -73,6 +73,54 @@ namespace Zjcs.Editor.MainlineWorldStartup
                 foreach (var region in map.Regions)
                     if ((int)type.GetMethod("GetWorldMapRegionProgress").Invoke(player, new object[] { map.MapClassId, region.Region }) != rawByMap[map.MapClassId][region.Region])
                         throw new InvalidDataException("Original player received normalized rather than raw progress.");
+            var regionStatuses = (IDictionary)Get(player, "MapRegionStatusDict");
+            if (regionStatuses.Count != maps.Length)
+                throw new InvalidDataException("Visited-map status restoration added or omitted a map.");
+            var metadataType = world.Assemblies.CommonType("MapInfoManager");
+            var metadata = metadataType.GetProperty("Instance").GetValue(null);
+            foreach (var map in maps)
+            {
+                var info = metadataType.GetMethod("GetMapPartInfo").Invoke(metadata, new object[] { map.MapClassId });
+                int defaultStatus = Convert.ToInt32(Get(info, "MapDefaultRegionStatus"));
+                var statuses = (IList)regionStatuses[map.MapClassId];
+                if (statuses.Count != map.Regions.Length)
+                    throw new InvalidDataException("Original visited-map status indices differ.");
+                foreach (var region in map.Regions)
+                {
+                    int expectedStatus = save.World.ActivatedGoddessRegions.Any(value =>
+                        value.MapClassId == map.MapClassId && value.Region == region.Region) ? 2 : defaultStatus;
+                    if (Convert.ToInt32(type.GetMethod("GetMapRegionStatus").Invoke(player, new object[] { map.MapClassId, region.Region })) != expectedStatus)
+                        throw new InvalidDataException("Original cross-map status query lost a default or public goddess region.");
+                }
+            }
+            // A snapshot must not reveal a map that this local slot never visited.
+            var partial = JsonUtility.FromJson<OfflineMainlineSave>(before);
+            int absentMap = maps.Last().MapClassId;
+            partial.World.Maps.RemoveAll(map => map.MapClassId == absentMap);
+            partial.World.ActivatedGoddessRegions.RemoveAll(value => value.MapClassId == absentMap);
+            partial.World.ActivatedWitches.RemoveAll(value => value.MapClassId == absentMap);
+            string partialBefore = JsonUtility.ToJson(partial);
+            var partialPlayer = MainlineSharedPlayerProjection.Create(world, partial, 732, map => rawByMap[map]);
+            if (((IDictionary)Get(partialPlayer, "MapRegionStatusDict")).Contains(absentMap)
+                || Convert.ToInt32(type.GetMethod("GetMapRegionStatus").Invoke(partialPlayer, new object[] { absentMap, 0 })) != 0
+                || partialBefore != JsonUtility.ToJson(partial))
+                throw new InvalidDataException("A cold region projection revealed an unvisited map or mutated its save.");
+            // Contiguous but truncated data must not silently use a partial map.
+            var malformed = JsonUtility.FromJson<OfflineMainlineSave>(before);
+            var truncated = malformed.World.Maps.First(map => map.Regions.Count > 1);
+            truncated.Regions.RemoveAt(truncated.Regions.Count - 1);
+            bool coverageRejected = false;
+            try
+            {
+                MainlineSharedPlayerProjection.Create(world, malformed, 733, map => map == truncated.MapClassId
+                    ? rawByMap[map].Where(pair => truncated.Regions.Any(region => region.Region == pair.Key)).ToDictionary(pair => pair.Key, pair => pair.Value)
+                    : rawByMap[map]);
+            }
+            catch (InvalidDataException) { coverageRejected = true; }
+            if (!coverageRejected || before != JsonUtility.ToJson(save))
+                throw new InvalidDataException("Incomplete official region coverage was accepted or changed the source save.");
+            Debug.Log("MAINLINE_PLAYER_SAVED_REGION_STATUS_PASS maps=" + maps.Length + " regions=" + maps.Sum(map => map.Regions.Length)
+                + " unvisited=none truncated=rejected input=unchanged");
             raw[ids[0]] = int.MaxValue;
             if ((int)type.GetMethod("GetWorldMapRegionProgress").Invoke(player, new object[] { world.Data.MapClassId, ids[0] }) == int.MaxValue)
                 throw new InvalidDataException("Original player shares the mutable input progress dictionary.");

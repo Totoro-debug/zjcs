@@ -507,6 +507,22 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapActiveableEntityInfo.cs",
       "sha256": "5b36540de20f40ef83a64afa281ba246ba7a9aec8d80407703bce266bdc91dbb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapWorldInfo.cs",
+      "sha256": "bbb818e98ec2f7a1798476ac4308aaaa9a2b5e81d882fac4ba10315ccf912118"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapPartInfoBase.cs",
+      "sha256": "88f4d8137d4f45c6b09f78a9d630f0f60806fb9e87388c1356f03e11c57925aa"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapInfoManager.cs",
+      "sha256": "f7e33841283364e82981f84c88bce7b9ca240f1c3494a167f794361b27fd7528"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MsgPlayerWorldMapProgressUpdate.cs",
+      "sha256": "183a387cfeed6cfc52e9af089955ef237d07364498dd268ebb0a8e037e5d62e4"
     }
   ],
   "shared_il": {
@@ -530,9 +546,19 @@
       "public int GetAllMapActiveEntCount(",
       "public List<int> GetActivedMapEntities(",
       "private bool IsMapEntityActived(",
-      "public void OnUpdateActiveableEntity("
+      "public void OnUpdateActiveableEntity(",
+      "public MapRegionStatus GetMapRegionStatus(",
+      "public bool TryGetMapRegionStatusList(",
+      "public void SetMapRegionStatus("
     ],
     "scope": "Only the listed original player methods; not whole-version equivalence"
+  },
+  "activation_component_compatibility": {
+    "type": "WorldActiveableEntityComponent",
+    "property": "Active",
+    "before_token": "catch",
+    "identical": true,
+    "scope": "Original getter, equality guard, assignment, Dirty and OnActived; exception logging is excluded."
   },
   "stage_reader_compatibility": [
     {
@@ -624,7 +650,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlinePlayerState/MainlineSharedPlayerProjection.cs",
-      "sha256": "73a2bf8aff0540af0e15e7c30769548929802bfb64fd045f624a43cf4d6f68f7"
+      "sha256": "5a19718edfee4636820a8f36d60987e05bbec94edd88d63f507e32467838dcaf"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlinePlayerState/MainlineSharedPlayerProjection.cs.meta",
@@ -694,7 +720,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.PlayerProjection.cs",
-      "sha256": "a02b95edc10313e91d9350aa6ccbc6c123b2fa55b2e5594bc8d60e80fd787565"
+      "sha256": "f5f50a10c2f14604235a053977229483946db22f40a3c2af5ffc294c36d52387"
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.PlayerProjection.cs.meta",
@@ -712,7 +738,7 @@
   "tools": [
     {
       "path": "scripts/prepare_mainline_shared_client_configuration.py",
-      "sha256": "f339b2e0575e8436f1344bcc380c8089650cb79f1e3c3caea62a2d9a829baf7e"
+      "sha256": "87cc685732231818dd4a0e060b8529bee4c6691707fd89d9d6ddec7474917d9a"
     },
     {
       "path": "scripts/prepare_mainline_world_startup_validation.py",
@@ -888,12 +914,5 @@
       "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration.meta",
       "sha256": "6039cc30e1d0e8abb79b85da2ddbae9bb677aecaf284a8149e775d6ade8a94dd"
     }
-  ],
-  "activation_component_compatibility": {
-    "type": "WorldActiveableEntityComponent",
-    "property": "Active",
-    "before_token": "catch",
-    "identical": true,
-    "scope": "Original getter, equality guard, assignment, Dirty and OnActived; exception logging is excluded."
-  }
+  ]
 }

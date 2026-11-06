@@ -76,6 +76,10 @@ namespace Zjcs.Offline.World.MainlinePlayerState
             }
 
             var progress = (IDictionary)Get(player, "WorldMapRegionProgressDict");
+            var regionParser = world.Configuration.Manager.GetParser(shared.CommonType("MapRegionInfoParser"));
+            var regionRows = regionParser.GetType().GetMethod("GetMapRegionDict");
+            var setRegionStatus = playerType.GetMethod("SetMapRegionStatus");
+            var statusType = shared.CommonType("MapRegionStatus");
             foreach (var map in save.World.Maps)
             {
                 var points = readRegionPoints(map.MapClassId);
@@ -83,7 +87,20 @@ namespace Zjcs.Offline.World.MainlinePlayerState
                 if (points == null || !regions.SequenceEqual(Enumerable.Range(0, regions.Length))
                     || !regions.SequenceEqual(points.Keys.OrderBy(value => value)) || points.Values.Any(value => value < 0))
                     throw new InvalidDataException("Local raw region points differ from the visited original map: " + map.MapClassId);
+                var originalRegions = regionRows.Invoke(regionParser, new object[] { map.MapClassId }) as IDictionary;
+                if (originalRegions == null || !regions.SequenceEqual(originalRegions.Keys.Cast<int>().OrderBy(id => id)))
+                    throw new InvalidDataException("Saved region coverage differs from the original visited map: " + map.MapClassId);
                 progress.Add(map.MapClassId, regions.Select(region => points[region]).ToList());
+                // The original progress message initializes a visited map with region -1.
+                // Its own MapDefaultRegionStatus selects private/public defaults.
+                // Restore before ClientInit so reading a save emits no live transition.
+                setRegionStatus.Invoke(player, new object[] { map.MapClassId, -1, Enum.ToObject(statusType, 0) });
+                foreach (var activated in save.World.ActivatedGoddessRegions.Where(value => value.MapClassId == map.MapClassId))
+                {
+                    if (!originalRegions.Contains(activated.Region))
+                        throw new InvalidDataException("Activated goddess region is absent from the original map.");
+                    setRegionStatus.Invoke(player, new object[] { map.MapClassId, activated.Region, Enum.ToObject(statusType, 2) });
+                }
             }
             var update = playerType.GetMethod("UpdateBlackboardData").MakeGenericMethod(typeof(long));
             foreach (string tag in save.World.CompletedEntityTags)
