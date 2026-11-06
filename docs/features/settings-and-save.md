@@ -44,6 +44,8 @@ Bloom 的0／25／50／100四档、反射及其他质量效果须恢复原 URP V
 
 官方档案选择界面已接入本地槽位列表、创建草稿、继续创角及损坏文件保留逻辑。完整游戏发布与其余功能的存档恢复分别见[工程页](unity-project.md)和所属功能页。
 
+正式发布路径的 Windows Player 已通过存档页模拟点击、列表滚动、新建草稿、已有槽位选择和损坏槽位提示；退出进程后再次启动，恢复最近选择并继续未完成创角。已查看存档页与恢复后的实际画面，测试存档位于隔离目录；该范围不包含完整角色切换和游戏内所有模块的存档恢复。
+
 ### 设置与存档基础
 
 已有 [ProfileSlotCatalog](../../unity/Assets/Game/Runtime/Offline/State/ProfileSlotCatalog.cs) 的槽位发现／创建和 [LocalJsonSaveFile](../../unity/Assets/Game/Runtime/Offline/State/LocalJsonSaveFile.cs) 的临时写入、备份、损坏原字节保留与恢复代码。主城设置入口使用官方 `SettingsDialog` 控件树、30 张固定版 Sprite 和点击音效；[HomeSettingsProfile](../../unity/Assets/Game/Runtime/Presentation/Home/HomeSettingsProfile.cs) 按角色槽保存音量、帧率和数值显示，写入失败时维持旧设置。设置页目前接通 30／60 帧、总／音乐／音效／语音滑杆和完整／简略显示；消息推送及单机不适用控件隐藏，游戏页语言控件固定为当前中文。
