@@ -5,7 +5,7 @@ import re
 import shutil
 
 from official_apk import ROOT
-from prepare_partner_star_god_validation import copy_modules
+from validation_assemblies import stage_runtime_modules
 from validation_workspace import validation_directory
 
 
@@ -17,22 +17,10 @@ def main():
     if project.exists():
         raise ValueError("Preserve the existing validation project")
     runtime = ROOT / "unity/Assets/Game/Runtime"
-    modules = {json.loads(path.read_bytes())["name"]: path for path in runtime.rglob("*.asmdef")}
-    pending, selected, external = ["Zjcs.Offline.ProfessionUI"], set(), set()
-    while pending:
-        name = pending.pop()
-        if name in selected:
-            continue
-        if name not in modules:
-            external.add(name)
-            continue
-        selected.add(name)
-        pending.extend(json.loads(modules[name].read_bytes()).get("references", []))
+    pending = ['Zjcs.Offline.ProfessionUI']
     allowed = {"UniTask", "Unity.ugui", "UnityEngine.UI", "Unity.TextMeshPro", "Unity.Newtonsoft.Json",
                "Unity.RenderPipelines.Universal.Runtime"}
-    if external - allowed:
-        raise ValueError("Review partner battle validation dependencies: " + repr(external))
-    copy_modules(project, runtime, modules, selected)
+    selected = stage_runtime_modules(project, runtime, pending, allowed_external=allowed)
     editor = project / "Assets/Editor"
     editor.mkdir(parents=True)
     shutil.copy2(ROOT / "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattleDataValidation.cs", editor)

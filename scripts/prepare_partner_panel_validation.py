@@ -8,7 +8,7 @@ import sys
 
 from official_apk import ROOT
 from prepare_partner_star_god_local_validation import main as prepare_local
-from prepare_partner_star_god_validation import copy_modules
+from validation_assemblies import stage_runtime_modules
 from validation_workspace import validation_directory
 
 
@@ -17,13 +17,8 @@ def main():
     project = work / 'star-god-unity'
     if not project.exists(): prepare_local()
     runtime = ROOT / 'unity/Assets/Game/Runtime'
-    modules = {json.loads(path.read_bytes())['name']: path for path in runtime.rglob('*.asmdef')}
-    pending, selected = ['Zjcs.Offline.PartnersUI', 'Zjcs.Official.TeamUI'], set()
-    while pending:
-        name = pending.pop()
-        if name in selected or name not in modules: continue
-        selected.add(name); pending.extend(json.loads(modules[name].read_bytes()).get('references', []))
-    copy_modules(project, runtime, modules, selected)
+    pending = ['Zjcs.Offline.PartnersUI', 'Zjcs.Official.TeamUI']
+    selected = stage_runtime_modules(project, runtime, pending)
     editor = project / 'Assets/Editor'
     (editor / 'PartnerStarGodLocalValidation.cs').unlink(missing_ok=True)
     shutil.copy2(ROOT / 'scripts/fixtures/partner_panel_native_graphic_validation.cs', editor / 'PartnerPanelNativeGraphicValidation.cs')

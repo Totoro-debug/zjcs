@@ -23,6 +23,21 @@
 
 Windows 使用本地启动和可缩放竖屏窗口；游戏资源、规则与存档由本地工程提供。
 
+### 隔离验证工程装配
+
+[`validation_assemblies.py`](../../scripts/validation_assemblies.py) 集中处理运行时程序集依赖闭包、嵌套程序集归属、按名称或 GUID 绑定的 `.asmref`、代码与 `.meta` 复制，以及 MessagePack 和世界初始化配置等隐式输入。17 个原有装配入口已接入该公共 module，地图验证不再从伙伴星命页面脚本导入复制实现。
+
+通常通过 `stage_runtime_modules(project, runtime, roots, allowed_external=...)` 完成解析、外部程序集检查和复制；返回实际选中的程序集名称。省略外部白名单的入口继续由各自 Unity 包提供外部依赖。主线启动入口通过 `resolve_runtime_modules` 和 `copy_modules` 保留包程序集优先及 Spine 载荷处理；小地图和完整技能图保留按实际资源追加程序集的流程。各入口继续选择自身官方资源、包、验证代码和工作区，来源版本与哈希校验保持原约定。
+
+当前验证范围：
+
+- [`test_validation_assemblies.py`](../../scripts/test_validation_assemblies.py) 的三个测试覆盖循环依赖、嵌套程序集隔离、两种 `.asmref`、源码与元数据字节、外部依赖失败前置检查、排除规则及隐式输入。
+- 主线启动 78 个程序集、6,899 个装配文件与原生伙伴战斗 19 个程序集、5,810 个装配文件，重构前后路径及 SHA-256 完全一致。
+- Unity `2022.3.57f1c2` 已完成主线客户端上下文 Play Mode 验证（Map10–16）、原生伙伴战斗数据验证、正式工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate`；静态检查 `python -B scripts/check_unity_project.py` 通过。
+- 原星命页面装配在重构前即被既有资源哈希校验拒绝，具体为 `C_none_0.asset.meta` 与页面来源清单不符；该入口的完整页面验证仍未通过。公共装配另经原生伙伴战斗工程验证，未调整来源清单或绕过校验。
+
+本项完成范围是验证工具的架构重构；模拟输入、界面画面与完整游戏流程仍按所属功能页验证，不以工具检查替代。未产生新的游戏功能或 Windows Player 发布。
+
 ## 尚未实现
 
 - 从启动、创角进入主城／地图、完成战斗、退出并冷启动恢复的完整 Player 流程。

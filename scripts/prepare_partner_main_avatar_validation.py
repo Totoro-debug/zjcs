@@ -11,7 +11,7 @@ import subprocess
 from official_apk import ROOT
 from prepare_partner_player_portrait_validation import main as prepare_portraits
 from prepare_partner_main_player_validation import main as prepare_profile
-from prepare_partner_star_god_validation import copy_modules
+from validation_assemblies import stage_runtime_modules
 from validation_workspace import validation_directory
 
 
@@ -30,15 +30,8 @@ def main():
         prepare_profile()
     project = work / 'unity'
     runtime = ROOT / 'unity/Assets/Game/Runtime'
-    modules = {json.loads(path.read_bytes())['name']: path for path in runtime.rglob('*.asmdef')}
-    selected, pending = set(), ['Zjcs.Offline.PartnersUI', 'Coffee.UIParticle']
-    while pending:
-        name = pending.pop()
-        if name not in modules or name in selected:
-            continue
-        selected.add(name)
-        pending.extend(json.loads(modules[name].read_bytes()).get('references', []))
-    copy_modules(project, runtime, modules, selected)
+    pending = ['Zjcs.Offline.PartnersUI', 'Coffee.UIParticle']
+    selected = stage_runtime_modules(project, runtime, pending)
     print('Copied current UI application/native ports', flush=True)
     high = json.loads((ROOT / 'assets/reference/partner-ui-high-textures-source-manifest.json').read_bytes())
     if high['manifest'] != '884_156692':

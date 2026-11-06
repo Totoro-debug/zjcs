@@ -7,7 +7,8 @@ import shutil
 import sys
 
 from official_apk import ROOT
-from prepare_partner_star_god_validation import main as prepare_page, copy_modules
+from prepare_partner_star_god_validation import main as prepare_page
+from validation_assemblies import stage_runtime_modules
 from validation_workspace import validation_directory
 
 
@@ -16,14 +17,8 @@ def main():
     if not (work / 'star-god-unity').exists(): prepare_page()
     project = work / 'star-god-unity'
     runtime = ROOT / 'unity/Assets/Game/Runtime'
-    modules = {json.loads(path.read_bytes())['name']: path for path in runtime.rglob('*.asmdef')}
-    pending, selected = ['Zjcs.Offline.PartnersUI'], set()
-    while pending:
-        name = pending.pop()
-        if name in selected or name not in modules: continue
-        selected.add(name)
-        pending.extend(json.loads(modules[name].read_bytes()).get('references', []))
-    copy_modules(project, runtime, modules, selected)
+    pending = ['Zjcs.Offline.PartnersUI']
+    selected = stage_runtime_modules(project, runtime, pending)
     editor = project / 'Assets/Editor'
     for name in ('OfficialPartnerStarGodAssetCatalog.cs', 'OfficialPartnerStarGodAssetCatalog.cs.meta', 'PartnerStarGodValidation.cs'):
         (editor / name).unlink(missing_ok=True)

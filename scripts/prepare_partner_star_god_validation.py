@@ -1,47 +1,12 @@
 """Create an owned Play Mode project for the installed original star-god page."""
 import hashlib
 import json
-from pathlib import Path
 import shutil
-import re
 import subprocess
 
 from official_apk import ROOT
+from validation_assemblies import stage_runtime_modules
 from validation_workspace import validation_directory
-
-
-def copy_modules(project, runtime, modules, selected):
-    module_guids = {re.search(r'(?m)^guid: ([0-9a-f]{32})', Path(str(path) + '.meta').read_text('utf8'))[1]: name
-                    for name, path in modules.items()}
-    folders = [modules[name].parent for name in selected]
-    for reference in runtime.rglob('*.asmref'):
-        target = json.loads(reference.read_bytes())['reference']
-        target = module_guids.get(target[5:]) if target.startswith('GUID:') else target
-        if target in selected: folders.append(reference.parent)
-    for folder in folders:
-        for source in folder.rglob('*'):
-            if not source.is_file() or source.suffix not in ('.cs', '.meta', '.asmdef', '.asmref'): continue
-            parent = source.parent
-            while parent != folder and not list(parent.glob('*.asmdef')) and not list(parent.glob('*.asmref')): parent = parent.parent
-            if parent != folder: continue
-            if source.suffix == '.meta' and Path(str(source)[:-5]).suffix not in ('.cs', '.asmdef', '.asmref'): continue
-            target = project / 'Assets/Game/Runtime' / source.relative_to(runtime)
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(source, target)
-    # These assemblies load their local inputs at runtime; asmdef references
-    # alone do not include the native plug-in or Resources configuration.
-    inputs = []
-    if 'Zjcs.Official.SharedSerialization' in selected:
-        inputs.append('Assets/Official/World/Map/14/SharedSerialization/MessagePack.dll')
-    if 'Zjcs.Offline.Progression' in selected:
-        inputs.append('Assets/Game/Resources/Map14/world-alone-preparation.json')
-        inputs.append('Assets/Game/Resources/Map16/world-alone-configuration.json')
-    for relative in inputs:
-        for suffix in ('', '.meta'):
-            source = ROOT / 'unity' / (relative + suffix)
-            target = project / (relative + suffix)
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(source, target)
 
 
 def verified_installed_bytes(source, expected, relative):
@@ -61,21 +26,11 @@ def main():
     project = work / 'star-god-unity'
     if project.exists(): raise ValueError('Preserve the existing validation project')
     runtime = ROOT / 'unity/Assets/Game/Runtime'
-    modules = {json.loads(path.read_bytes())['name']: path for path in runtime.rglob('*.asmdef')}
     # Native effect components are reached through prefab GUIDs, not C# references.
-    pending, selected, external = ['Zjcs.Official.PartnerRosterUI', 'Coffee.UIParticle', 'Zjcs.Offline.ProfessionUI'], set(), set()
-    while pending:
-        name = pending.pop()
-        if name in selected: continue
-        if name not in modules:
-            external.add(name)
-            continue
-        selected.add(name)
-        pending.extend(json.loads(modules[name].read_bytes()).get('references', []))
-    if external - {'Unity.ugui', 'UnityEngine.UI', 'Unity.TextMeshPro', 'Unity.Newtonsoft.Json', 'UniTask',
-                   'Unity.RenderPipelines.Universal.Runtime', 'Unity.RenderPipelines.Core.Runtime'}:
-        raise ValueError('Inspect validation dependencies: ' + repr(external))
-    copy_modules(project, runtime, modules, selected)
+    pending = ['Zjcs.Official.PartnerRosterUI', 'Coffee.UIParticle', 'Zjcs.Offline.ProfessionUI']
+    selected = stage_runtime_modules(
+        project, runtime, pending,
+        allowed_external={'Unity.ugui', 'UnityEngine.UI', 'Unity.TextMeshPro', 'Unity.Newtonsoft.Json', 'UniTask', 'Unity.RenderPipelines.Universal.Runtime', 'Unity.RenderPipelines.Core.Runtime'})
     editor = project / 'Assets/Editor'
     editor.mkdir(parents=True)
     shutil.copy2(ROOT / 'scripts/fixtures/partner_star_god_validation.cs', editor / 'PartnerStarGodValidation.cs')

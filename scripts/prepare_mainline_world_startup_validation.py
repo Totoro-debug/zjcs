@@ -2,10 +2,9 @@
 import json
 import argparse
 import shutil
-from pathlib import Path
 
 from official_apk import ROOT
-from prepare_partner_star_god_validation import copy_modules
+from validation_assemblies import copy_modules, resolve_runtime_modules
 from validation_workspace import validation_directory
 
 
@@ -21,27 +20,18 @@ def main():
         raise ValueError("Preserve the existing startup validation project")
     source = ROOT / "unity"
     runtime = source / "Assets/Game/Runtime"
-    modules = {json.loads(p.read_bytes())["name"]: p for p in runtime.rglob("*.asmdef")}
     package_assemblies = {json.loads(p.read_bytes())["name"]
                           for folder in (source / "Packages", source / "Library/PackageCache")
                           for p in folder.rglob("*.asmdef")}
     package_assemblies.add("Unity.ugui")  # Built into this pinned Editor installation.
     fixture = source / "Assets/Game/Editor/MainlineWorldStartup"
     pending = json.loads((fixture / "Zjcs.Editor.MainlineWorldStartup.asmdef").read_bytes())["references"]
-    selected = set()
-    while pending:
-        name = pending.pop()
-        if name in selected:
-            continue
-        if name in package_assemblies or name == "Unity.Newtonsoft.Json":
-            continue
-        if name in ("spine-unity", "spine-csharp"):
-            shutil.copytree(source / "Assets/Spine/Runtime", project / "Assets/Spine/Runtime", dirs_exist_ok=True)
-            continue
-        if name not in modules:
-            raise ValueError("Review the original startup dependency: " + name)
-        selected.add(name)
-        pending.extend(json.loads(modules[name].read_bytes()).get("references", []))
+    modules, selected, external = resolve_runtime_modules(
+        runtime, pending, excluded=package_assemblies | {"Unity.Newtonsoft.Json"})
+    if external - {"spine-unity", "spine-csharp"}:
+        raise ValueError("Review the original startup dependencies: " + repr(sorted(external)))
+    if external:
+        shutil.copytree(source / "Assets/Spine/Runtime", project / "Assets/Spine/Runtime", dirs_exist_ok=True)
     copy_modules(project, runtime, modules, selected)
     for relative in (
         "Assets/Official/World/Map/14/SharedConfig",

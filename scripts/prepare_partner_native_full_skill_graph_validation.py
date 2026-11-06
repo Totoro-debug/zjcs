@@ -7,7 +7,7 @@ import subprocess
 
 from official_apk import ROOT
 from prepare_partner_native_battle_validation import main as prepare_actor
-from prepare_partner_star_god_validation import copy_modules
+from validation_assemblies import stage_runtime_modules
 from validation_workspace import validation_directory
 
 
@@ -21,21 +21,7 @@ def main(extra_roots=(), extra_editors=()):
     elif not (project / 'Assets/Editor/Validation.asmdef').is_file():
         raise ValueError('Preserve the existing validation project')
     runtime = ROOT / 'unity/Assets/Game/Runtime'
-    modules = {json.loads(p.read_bytes())['name']: p for p in runtime.rglob('*.asmdef')}
-    selected, external = set(), set()
-
-    def add_module(name):
-        if name in selected:
-            return
-        if name not in modules:
-            external.add(name)
-            return
-        selected.add(name)
-        for dependency in json.loads(modules[name].read_bytes()).get('references', []):
-            add_module(dependency)
-
-    for name in ('Zjcs.Presentation.Combat', 'Zjcs.Offline.BattleNativePlayables'):
-        add_module(name)
+    assembly_roots = ['Zjcs.Presentation.Combat', 'Zjcs.Offline.BattleNativePlayables']
     result = subprocess.run(['rg', '--no-ignore', '--hidden', '--no-heading', '--with-filename', '-g', '*.meta',
         '^guid: [0-9a-f]{32}', 'unity/Assets', 'unity/Packages', 'unity/Library/PackageCache'],
         cwd=ROOT, check=True, capture_output=True)
@@ -78,7 +64,7 @@ def main(extra_roots=(), extra_editors=()):
             while parent.is_relative_to(runtime):
                 definitions = list(parent.glob('*.asmdef'))
                 if definitions:
-                    add_module(json.loads(definitions[0].read_bytes())['name'])
+                    assembly_roots.append(json.loads(definitions[0].read_bytes())['name'])
                     break
                 parent = parent.parent
         destination = project / relative
@@ -104,9 +90,7 @@ def main(extra_roots=(), extra_editors=()):
     allowed = {'Cinemachine', 'UniTask', 'Unity.Newtonsoft.Json', 'Unity.RenderPipelines.Core.Runtime',
         'Unity.RenderPipelines.Universal.Runtime', 'Unity.TextMeshPro', 'Unity.Timeline', 'Unity.ugui',
         'spine-csharp', 'spine-unity'}
-    if external - allowed:
-        raise ValueError('Review original graph runtime dependencies: ' + repr(external))
-    copy_modules(project, runtime, modules, selected)
+    selected = stage_runtime_modules(project, runtime, assembly_roots, allowed_external=allowed)
     shutil.copytree(ROOT / 'unity/Assets/Spine/Runtime', project / 'Assets/Spine/Runtime', dirs_exist_ok=True)
     for name in ('com.unity.cinemachine', 'com.unity.timeline'):
         shutil.copytree(ROOT / 'unity/Packages' / name, project / 'Packages' / name, dirs_exist_ok=True)

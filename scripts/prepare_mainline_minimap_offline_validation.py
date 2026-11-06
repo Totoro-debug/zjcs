@@ -4,7 +4,7 @@ from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from official_apk import ROOT
 from validation_workspace import validation_directory
-from prepare_partner_star_god_validation import copy_modules
+from validation_assemblies import stage_runtime_modules
 
 
 def main():
@@ -32,14 +32,9 @@ def main():
      map_data=dict(mapClassId=map_id,configId=info['MinimapConfigId'],width=nav['Width'],height=nav['Height'],origin=[nav['Origin'][a] for a in 'XYZ'],cells=[dict(area=c['RawValues'][0],ground=c['RawValues'][1]) for row in nav['Rows'] for c in row['Cells']],areas=[dict(x=a['Cell'][0],y=a['Cell'][1],count=a['Value']) for a in nav['AreaMappings']],regions=map_regions)
      if len(map_data['cells'])!=expected[0]*expected[1]:raise ValueError('Incomplete original navigation fixture: '+str(map_id))
      (work/f'minimap-description-fixture-{map_id}.json').write_text(json.dumps(map_data,separators=(',',':')),'utf8')
-    modules={json.loads(p.read_bytes())['name']:p for p in runtime.rglob('*.asmdef')};selected=set()
+    selected=set()
     def stage_modules(pending):
-     added=set()
-     while pending:
-      n=pending.pop()
-      if n in selected or n not in modules:continue
-      selected.add(n);added.add(n);pending.extend(json.loads(modules[n].read_bytes()).get('references',[]))
-     copy_modules(project,runtime,modules,added)
+     selected.update(stage_runtime_modules(project,runtime,pending))
     fixture=source/'Assets/Game/Editor/Map13MiniMap';stage_modules(json.loads((fixture/'Zjcs.Editor.Map13.MiniMap.asmdef').read_bytes())['references']);shutil.copytree(fixture,project/'Assets/Game/Editor/Map13MiniMap',dirs_exist_ok=args.refresh)
     files=subprocess.check_output(['git','ls-files','-co','--exclude-standard','-z','--','unity/Assets'],cwd=ROOT).split(b'\0')
     metas=[ROOT/n.decode() for n in set(files) if n.endswith(b'.meta')]

@@ -8,7 +8,7 @@ import shutil
 import subprocess
 
 from official_apk import ROOT
-from prepare_partner_star_god_validation import copy_modules
+from validation_assemblies import stage_runtime_modules
 from validation_workspace import validation_directory
 
 
@@ -20,7 +20,6 @@ def main():
     if project.exists():
         raise ValueError('Preserve the existing isolated ground project')
     runtime = ROOT / 'unity/Assets/Game/Runtime'
-    modules = {json.loads(p.read_bytes())['name']: p for p in runtime.rglob('*.asmdef')}
     fixture = ROOT / 'unity/Assets/Game/Editor/MainlineNativeGround'
     pending = json.loads((fixture / 'Zjcs.Editor.MainlineNativeGround.asmdef').read_bytes())['references']
     labels = os.environ.get('ZJCS_NATIVE_LABEL_CONTEXT') == '1'
@@ -28,19 +27,9 @@ def main():
     if labels:
         pending += json.loads((host_fixture / 'Zjcs.Editor.Map13NativeWorld.asmdef').read_bytes())['references']
     pending += ['Zjcs.Official.World.NativeWater', 'Zjcs.Official.World.NativeText']
-    selected, external = set(), set()
-    while pending:
-        name = pending.pop()
-        if name in selected:
-            continue
-        if name not in modules:
-            external.add(name)
-            continue
-        selected.add(name)
-        pending.extend(json.loads(modules[name].read_bytes()).get('references', []))
-    if external - {'Unity.Newtonsoft.Json', 'Unity.ugui', 'Unity.TextMeshPro', 'UniTask', 'Unity.RenderPipelines.Universal.Runtime', 'Unity.RenderPipelines.Core.Runtime'}:
-        raise ValueError('Inspect ground validation dependencies: ' + repr(external))
-    copy_modules(project, runtime, modules, selected)
+    selected = stage_runtime_modules(
+        project, runtime, pending,
+        allowed_external={'Unity.Newtonsoft.Json', 'Unity.ugui', 'Unity.TextMeshPro', 'UniTask', 'Unity.RenderPipelines.Universal.Runtime', 'Unity.RenderPipelines.Core.Runtime'})
     shutil.copytree(fixture, project / 'Assets/Game/Editor/MainlineNativeGround')
     if labels:
         shutil.copytree(host_fixture, project / 'Assets/Game/Editor/Map13NativeWorld')

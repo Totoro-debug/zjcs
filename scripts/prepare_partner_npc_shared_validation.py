@@ -11,7 +11,7 @@ import zipfile
 from official_apk import Apk, ROOT
 from official_tables import Constructors
 from prepare_partner_panel_validation import main as prepare_panel
-from prepare_partner_star_god_validation import copy_modules
+from validation_assemblies import stage_runtime_modules
 from validation_workspace import validation_directory
 
 
@@ -43,13 +43,8 @@ def main():
     package_config['dependencies']['com.unity.nuget.newtonsoft-json'] = source_packages['dependencies']['com.unity.nuget.newtonsoft-json']
     packages.write_text(json.dumps(package_config, indent=2) + '\n', 'utf8')
     runtime = ROOT / 'unity/Assets/Game/Runtime'
-    modules = {json.loads(path.read_bytes())['name']: path for path in runtime.rglob('*.asmdef')}
-    pending, selected = ['Zjcs.Offline.World.NativeMap14SharedEntities', 'Zjcs.Offline.PartnersNpc'], set()
-    while pending:
-        name = pending.pop()
-        if name in selected or name not in modules: continue
-        selected.add(name); pending.extend(json.loads(modules[name].read_bytes()).get('references', []))
-    copy_modules(project, runtime, modules, selected)
+    pending = ['Zjcs.Offline.World.NativeMap14SharedEntities', 'Zjcs.Offline.PartnersNpc']
+    selected = stage_runtime_modules(project, runtime, pending)
     editor = project / 'Assets/Editor'
     for name in ('PartnerPanelNativeGraphicValidation.cs', 'PartnerStarGodLocalValidation.cs'):
         (editor / name).unlink(missing_ok=True)

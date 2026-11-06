@@ -8,7 +8,7 @@ import subprocess
 import sys
 
 from official_apk import ROOT
-from prepare_partner_star_god_validation import copy_modules
+from validation_assemblies import stage_runtime_modules
 from validation_workspace import validation_directory
 
 
@@ -16,13 +16,8 @@ def main():
     work = validation_directory()
     project = work / 'unity'
     runtime = ROOT / 'unity/Assets/Game/Runtime'
-    modules = {json.loads(p.read_bytes())['name']: p for p in runtime.rglob('*.asmdef')}
-    pending, selected = ['Zjcs.Offline.ProfessionUI'], set()
-    while pending:
-        name = pending.pop()
-        if name in selected or name not in modules: continue
-        selected.add(name); pending.extend(json.loads(modules[name].read_bytes()).get('references', []))
-    copy_modules(project, runtime, modules, selected)
+    pending = ['Zjcs.Offline.ProfessionUI']
+    selected = stage_runtime_modules(project, runtime, pending)
     print('Copied', len(selected), 'runtime assemblies', flush=True)
     editor = project / 'Assets/Editor'; editor.mkdir(parents=True, exist_ok=True)
     shutil.copy2(ROOT / 'scripts/fixtures/partner_player_portrait_validation.cs', editor / 'PartnerPlayerPortraitValidation.cs')
