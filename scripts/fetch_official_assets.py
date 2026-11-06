@@ -90,38 +90,31 @@ def download():
 
 def extract(pattern, package='DefaultPackage', manifest=None, quiet=False):
     from official_source import OfficialSource
-    from official_cloud_cache import CloudCache
+    from official_bundle_reader import OfficialBundleReader
 
     selected = OfficialSource(manifest)
     extraction_root = CACHE if selected.version == OfficialSource().version else CACHE / 'history' / selected.version
     destination = extraction_root / ('extracted' if package == 'DefaultPackage' else package)
     destination.mkdir(exist_ok=True)
-    cloud = CloudCache(selected.cloud_path, selected.version)
-    with zipfile.ZipFile(APK) as archive:
-        manifest = selected.manifest(package, archive)
+    with OfficialBundleReader(selected) as reader:
+        manifest = reader.manifest(package)
         mapping = {bundle['name']: bundle['hash'] for bundle in manifest['bundles']}
         (destination / 'bundle-index.json').write_text(json.dumps(mapping, indent=2), encoding='utf-8')
-        available = set(archive.namelist())
         source_path = destination / 'bundle-sources.json'
         sources = json.loads(source_path.read_text(encoding='utf-8')) if source_path.exists() else {}
         for bundle in manifest['bundles']:
             name = bundle['name']
             if not re.search(pattern, name):
                 continue
-            zipped = f'assets/yoo/{package}/{bundle["file"]}'
-            if zipped not in available:
-                cached = cloud.read(package, bundle)
-                if cached is None:
-                    print('Not packaged or cached:', name)
-                    continue
-                payload, source = cached
-                if not quiet:print('Official CDN cache:', name, len(payload))
-            else:
-                payload = archive.read(zipped)
-                source = {'origin': 'apk_zip', 'apk_sha256': SHA256, 'path': zipped}
-                if not quiet:print(name, len(payload))
-            if len(payload) != bundle['size'] or hashlib.md5(payload).hexdigest() != bundle['hash']:
-                raise ValueError('Selected source failed size/MD5 verification: ' + name)
+            try:
+                verified = reader.read(package, name)
+            except FileNotFoundError:
+                print('Not packaged or cached:', name)
+                continue
+            payload, source = verified.data, dict(verified.provenance)
+            if source['origin'] == 'apk_zip':
+                source = {'origin': 'apk_zip', 'apk_sha256': selected.apk_sha256, 'path': source['apk_entry']}
+            if not quiet: print(name, len(payload))
             # Replace the directory entry: version archives may share hard links.
             temporary = destination / (name + '.part')
             temporary.write_bytes(payload)

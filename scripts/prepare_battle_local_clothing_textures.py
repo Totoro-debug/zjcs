@@ -137,7 +137,7 @@ def build():
                 if bundle["hash"] != source["bundle_hash"] or bundle["size"] != source["bundle_size"]:
                     raise ValueError("Current clothing bundle differs from historical source")
                 entry = "assets/yoo/DefaultPackage/" + bundle["hash"] + ".bundle"
-                retained = apk.archive.read(entry) if entry in apk.available else apk.cloud.read("DefaultPackage", bundle)[0]
+                retained = apk.reader.read("DefaultPackage", current["bundle"]).data
                 if sha(retained) != source["bundle_sha256"]:
                     raise ValueError("Retained clothing bytes differ from original historical bundle")
                 obj = apk.asset(current["bundle"], current["path"])

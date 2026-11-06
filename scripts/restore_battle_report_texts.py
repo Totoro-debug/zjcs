@@ -99,15 +99,8 @@ def build(source_root):
         name = 'wwisebnk_assets_' + suffix
         bundle = next(row for row in manifest['bundles'] if row['name'] == name)
         entry = 'assets/yoo/WwiseBnk/' + bundle['file']
-        if entry in apk.available:
-            raw = apk.archive.read(entry)
-            source = dict(origin='apk_zip', apk_entry=entry, apk_sha256=apk.source.apk_sha256)
-        else:
-            cached = apk.cloud.read('WwiseBnk', bundle)
-            if cached is None: raise FileNotFoundError('Original report language rawfile: ' + name)
-            raw, source = cached
-        if len(raw) != bundle['size'] or hashlib.md5(raw).hexdigest() != bundle['hash']:
-            raise ValueError('Original report language size/MD5 mismatch: ' + name)
+        verified = apk.reader.read('WwiseBnk', bundle["name"])
+        raw, source = verified.data, dict(verified.provenance)
         count = struct.unpack_from('<i', raw)[0]
         start = 4 + count * 12
         for i in range(count):

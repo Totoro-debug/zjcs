@@ -7,6 +7,7 @@ import inspect
 from pathlib import Path
 
 from official_apk import Apk, ROOT
+from official_bundle_reader import verify_payload
 from official_ec_codec import Formats
 from official_map_codec import unpack
 from official_tables import Constructors
@@ -145,19 +146,16 @@ def build():
     bank = next(row for row in apk.source.manifest("WwiseBnk")["bundles"]
                 if row["name"] == "wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile")
     packaged = "assets/yoo/WwiseBnk/" + bank["file"]
-    if packaged in apk.available:
-        level_raw = apk.archive.read(packaged)
-        origin = {"origin": "apk", "entry": packaged}
-    else:
-        cached = apk.cloud.read("WwiseBnk", bank)
-        if cached is None:
-            historic = ROOT / ".tools/source-packages/WwiseBnk" / bank["name"]
-            level_raw = historic.read_bytes()
-            origin = {"origin": "verified_identical_retained_payload", "path": historic.relative_to(ROOT).as_posix()}
-        else:
-            level_raw, origin = cached
-    if len(level_raw) != bank["size"] or hashlib.md5(level_raw).hexdigest() != bank["hash"]:
-        raise ValueError("Current level_prop payload hash mismatch")
+    try:
+        verified = apk.reader.read("WwiseBnk", bank["name"])
+        level_raw, origin = verified.data, dict(verified.provenance)
+        if packaged in apk.available:
+            origin = {"origin": "apk", "entry": packaged}
+    except FileNotFoundError:
+        historic = ROOT / ".tools/source-packages/WwiseBnk" / bank["name"]
+        level_raw = historic.read_bytes()
+        verify_payload(level_raw, bank, identity=bank["name"])
+        origin = {"origin": "verified_identical_retained_payload", "path": historic.relative_to(ROOT).as_posix()}
     inputs.append(dict(origin, manifest=VERSION, bundle=bank, sha256=sha(level_raw)))
     props = decode_level_props(level_raw, prop_ids)
     property_ids, _ = _read_property_ids()

@@ -96,15 +96,8 @@ def build(dotnet, ilspy, client=False, manifest=None, output_root=None):
     for bundle in entries:
         name,digest = bundle['name'],bundle['hash']
         path = f'assets/yoo/HybridCLR/{bundle["file"]}'
-        if path in apk.available:
-            content = apk.archive.read(path)
-            source = dict(origin='apk_zip', apk_entry=path, manifest=apk.version)
-        else:
-            cached = apk.cloud.read('HybridCLR', bundle)
-            if cached is None:raise FileNotFoundError('Required official assembly bundle: '+name)
-            content,source = cached
-        if len(content) != bundle['size'] or hashlib.md5(content).hexdigest() != digest:
-            raise ValueError('Official assembly bundle size/MD5 mismatch: '+name)
+        verified = apk.reader.read('HybridCLR', bundle["name"])
+        content, source = verified.data, dict(verified.provenance)
         env = UnityPy.load(apk.decode(content))
         for obj in env.objects:
             if obj.type.name!='TextAsset':continue

@@ -47,6 +47,8 @@ try {
 
 保留真实版本、URL、原对象／CAB／PathID、输入输出哈希、工具与处理方式、`.meta` 和显式加载绑定。`Apk.current()`、`Apk()` 与 `Apk(manifest=None)` 均读取 `official-source.json` 选定的当前输入；需要复核非当前来源时必须显式指定其 manifest，不能把旧对象冒充当前版本。来源清单保留后续转换哈希链，不按旧基线覆盖其他会话新内容，不修改预期哈希绕过失败。
 
+读取原始 bundle 使用 `with OfficialBundleReader(OfficialSource(manifest)) as reader`，调用 `reader.read(package, bundleName)` 取得 `VerifiedBundle.data` 和 `provenance`。读取模块持有并释放 APK 归档句柄，从已选清单内部取得文件名、大小与哈希，先查 APK 实际文件，再查已下载云缓存；损坏的 APK 文件不回退到云端。云文件必须具有 URL 收据、匹配的版本、大小、MD5 和收据 SHA256。缺少实际文件与取得载荷后的解密／解析失败分别传递。`Apk.load`、提取工具和 Unity 转换输入共用此入口；解密、UnityPy、CAB 解析与转换保持各自职责。使用 `Apk` 的调用方也可通过上下文管理器或 `close()` 明确释放句柄。历史复现仅在显式启用 `reuse_current_cache` 时允许复用哈希及大小完全相同的当前缓存载荷。
+
 运行 `python -B scripts/fetch_latest_official_sources.py` 直接获取官方当前 APK 和配套全量云端资源，不依赖模拟器。工具核对 APK HTTP 身份、完整大小、MD5／SHA256、ZIP CRC 与包内五包版本，再按该 APK build 的官方配置选择当前资源目录；仅使用该目录的两处官方 CDN，不使用预下载目录。所有资源下载通过后，`official-source.json` 只登记当前来源。APK 统一保存为 `.tools/source-packages/zjcs_M509085.apk`，下载凭据保存为同目录 `source.json`。之后 `fetch_official_assets.py` 等工具从当前配置读取路径和哈希。
 
 完整云端缓存（包括通常随 APK 打包的文件）用 `.tools/character-art-python/Scripts/python.exe -B scripts/verify_official_cloud_cache.py` 重新读取并复验。工具核对当前清单、库存身份、逐文件大小／MD5、收据 SHA256／精确 URL／版本和 UnityFS CAB 目录，WwiseBnk 中具有 `.bundle` 扩展名的原视频按 MP4 结构检查；全部通过后才更新缓存内完整性凭据。所用环境需安装 UnityPy 1.25.4；此检查不证明 CAB 外部引用闭包、Windows 转换或 Unity 工程完整。

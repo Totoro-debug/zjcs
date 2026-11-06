@@ -8,7 +8,7 @@ import sys
 import tempfile
 import zipfile
 from official_source import OfficialSource
-from official_cloud_cache import CloudCache
+from official_bundle_reader import OfficialBundleReader
 from prepare_character_creation_opening_audio import parse_pck, read_field
 from prepare_unity_map14_audio import fields
 from verify_current_audio_sources import mapping
@@ -18,30 +18,31 @@ class AudioSource:
     def __init__(self, expected_version="871_156598", work_directory=None):
         self.selected = OfficialSource()
         if self.selected.version != expected_version: raise ValueError("Inspect selected audio version: " + self.selected.version)
-        with self.selected.apk.open("rb") as stream:
-            if hashlib.file_digest(stream,"sha256").hexdigest() != self.selected.apk_sha256: raise ValueError("APK hash mismatch")
-        self.archive = zipfile.ZipFile(self.selected.apk)
-        self.inventory = {b["name"]:b for b in self.selected.manifest("WwiseBnk",self.archive)["bundles"]}
-        self.cloud = CloudCache(self.selected.cloud_path,self.selected.version)
+        self.reader = OfficialBundleReader(self.selected)
+        self.archive = self.reader.archive
+        self.inventory = {b["name"]:b for b in self.reader.manifest("WwiseBnk")["bundles"]}
         self.packages = {}
         self.temporary = tempfile.TemporaryDirectory(prefix="official-audio-", dir=work_directory)
         self.by_id = {}
         self.object_payloads = {}
         self.media_search_complete = False
         self.bank_sources = {}
-        self.mapping = mapping(self.package("wwisebnk_assets_wwisedata_android_eventbankmapping_bytes.rawfile"))
+        try:
+            self.mapping = mapping(self.package("wwisebnk_assets_wwisedata_android_eventbankmapping_bytes.rawfile"))
+        except BaseException:
+            self.close()
+            raise
     def close(self):
-        self.archive.close(); self.temporary.cleanup()
+        self.reader.close(); self.temporary.cleanup()
+    def __enter__(self): return self
+    def __exit__(self, *args): self.close()
     def package(self,name):
         if name in self.packages: return self.packages[name][0]
         b = self.inventory[name]; entry = "assets/yoo/WwiseBnk/"+b["file"]
         packaged = entry in self.archive.namelist()
-        if packaged: raw,origin = self.archive.read(entry),dict(origin="apk_zip",entry=entry,apkSha256=self.selected.apk_sha256)
-        else:
-            cached = self.cloud.read("WwiseBnk",b)
-            if cached is None: raise FileNotFoundError("Current original audio package is not cached: "+name)
-            raw,origin = cached
-        if len(raw)!=b["size"] or hashlib.md5(raw).hexdigest()!=b["hash"]: raise ValueError("Wwise package size/MD5 mismatch: "+name)
+        verified = self.reader.read("WwiseBnk", name)
+        raw,origin = verified.data,dict(verified.provenance)
+        if packaged: origin = dict(origin="apk_zip",entry=entry,apkSha256=self.selected.apk_sha256)
         self.packages[name]=(raw,dict(bundle=b,source=origin,sha256=sha(raw),apkCheckedFirst=dict(entry=entry,packaged=packaged)))
         return raw
     def objects(self,name):

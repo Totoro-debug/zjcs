@@ -106,16 +106,8 @@ def main():
     name = 'wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile'
     record, = [row for row in apk.source.manifest('WwiseBnk', apk.archive)['bundles'] if row['name'] == name]
     entry = 'assets/yoo/WwiseBnk/' + record['file']
-    if entry in apk.available:
-        raw = apk.archive.read(entry)
-        origin = dict(origin='apk_zip', apk_entry=entry, apk_sha256=apk.source.apk_sha256)
-    else:
-        cached = apk.cloud.read('WwiseBnk', record)
-        if cached is None:
-            raise FileNotFoundError('Selected raw property binary is not cached')
-        raw, origin = cached
-    if len(raw) != record['size'] or hashlib.md5(raw).hexdigest() != record['hash']:
-        raise ValueError('Selected raw property binary differs from its manifest')
+    verified = apk.reader.read('WwiseBnk', record["name"])
+    raw, origin = verified.data, dict(verified.provenance)
     binary = project / 'Assets/StreamingAssets/PartnerNpcShared/Config/Binary/level_prop.g.bytes'
     binary.parent.mkdir(parents=True, exist_ok=True)
     binary.write_bytes(raw)

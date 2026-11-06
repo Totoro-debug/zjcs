@@ -115,16 +115,8 @@ def decode_localization(apk: Apk, keys: set[str], required_keys: set[str]) -> tu
     for name in Wwise_NAMES:
         record = manifest[name]
         entry = "assets/yoo/WwiseBnk/" + record["file"]
-        if entry in apk.available:
-            raw = apk.archive.read(entry)
-            origin = dict(origin="apk_zip", apk_entry=entry, apk_sha256=apk.source.apk_sha256)
-        else:
-            cached = apk.cloud.read("WwiseBnk", record)
-            if cached is None:
-                raise FileNotFoundError("Selected official Chinese text rawfile is unavailable: " + name)
-            raw, origin = cached
-        if len(raw) != record["size"] or hashlib.md5(raw).hexdigest() != record["hash"]:
-            raise ValueError("Selected official Chinese text rawfile differs from its manifest")
+        verified = apk.reader.read('WwiseBnk', record["name"])
+        raw, origin = verified.data, dict(verified.provenance)
         inputs.append(dict(origin, name=name, payload_sha256=sha(raw), bytes=len(raw), md5=record["hash"]))
         count = struct.unpack_from("<i", raw)[0]
         start = 4 + count * 12

@@ -51,11 +51,8 @@ def build():
     for name in e.apk.loaded:
         digest = e.apk.index[name]
         entry = f'assets/yoo/DefaultPackage/{digest}.bundle'
-        if entry in e.apk.available:
-            raw = e.apk.archive.read(entry)
-            source = {'origin': 'apk', 'apk_entry': entry}
-        else:
-            raw, source = e.apk.cloud.read('DefaultPackage', e.apk.bundle_records[name])
+        verified = e.apk.reader.read('DefaultPackage', e.apk.bundle_records[name]["name"])
+        raw, source = verified.data, dict(verified.provenance)
         inputs[name] = dict(source, md5=digest, bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
     for record in e.records.values():
         if 'origin' not in record:

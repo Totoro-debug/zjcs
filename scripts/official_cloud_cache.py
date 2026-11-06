@@ -60,10 +60,8 @@ class CloudCache:
         if not receipt or not receipt.get('url'):
             raise ValueError(f'Official CDN cache has no source receipt: {key}')
         data = path.read_bytes()
-        if (len(data) != bundle['size'] or hashlib.md5(data).hexdigest() != bundle['hash']
-                or hashlib.sha256(data).hexdigest() != receipt['sha256']
-                or receipt['md5'] != bundle['hash'] or receipt['size'] != bundle['size']):
-            raise ValueError(f'Official CDN cache failed verification: {key}')
+        from official_bundle_reader import verify_payload
+        verify_payload(data, bundle, receipt=receipt, identity=key)
         source = {'origin': 'official_cdn', 'url': receipt['url'],
                   'manifest': self.versions.get(package, self.manifest),
                   'size': len(data), 'sha256': receipt['sha256']}

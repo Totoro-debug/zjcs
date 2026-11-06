@@ -13,7 +13,7 @@ import zipfile
 
 from official_apk import Apk, ROOT
 from official_source import OfficialSource
-from official_cloud_cache import CloudCache
+from official_bundle_reader import OfficialBundleReader, verify_payload
 from official_manifest import read_manifest, read_asset_manifest
 
 
@@ -43,13 +43,9 @@ def prepare(destination):
     destination.mkdir(parents=True, exist_ok=True)
     inputs = destination / 'inputs'
     inputs.mkdir(exist_ok=True)
-    with source.apk.open('rb') as stream:
-        if hashlib.file_digest(stream, 'sha256').hexdigest() != source.apk_sha256:
-            raise ValueError('APK SHA256 mismatch')
-    cloud = CloudCache(source.cloud_path, source.version)
     bundles, catalogs, unavailable = [], {}, []
-    with zipfile.ZipFile(source.apk) as archive:
-        available = set(archive.namelist())
+    with OfficialBundleReader(source) as reader:
+        archive, available = reader.archive, reader.available
         for package in source.manifests:
             apk_entry = f'assets/yoo/{package}/PackageManifest_{package}_{source.apk_version}.v3.bytes'
             original_bytes = archive.read(apk_entry)
@@ -65,19 +61,16 @@ def prepare(destination):
                 apk_bundles=len(original), current_bundles=len(current), retained_apk_only=len(selected)-len(current))
             for record in selected:
                 entry = f'assets/yoo/{package}/{record["file"]}'
-                if entry in available:
+                if record['source_manifest'] == source.version:
+                    verified = reader.read(package, record['name'])
+                    raw, provenance = verified.data, dict(verified.provenance)
+                elif entry in available:
                     raw = archive.read(entry)
+                    verify_payload(raw, record, identity=record['name'])
                     provenance = dict(origin='apk_zip', apk_entry=entry, apk_sha256=source.apk_sha256)
                 else:
-                    if record['source_manifest'] != source.version:
-                        unavailable.append(dict(record, reason='Listed in APK manifest, bytes absent from APK and selected downloaded cloud version'))
-                        continue
-                    cached = cloud.read(package, record)
-                    if cached is None:
-                        raise FileNotFoundError('Current bundle is not cached: ' + record['name'])
-                    raw, provenance = cached
-                if len(raw) != record['size'] or hashlib.md5(raw).hexdigest() != record['hash']:
-                    raise ValueError('Bundle size/MD5 mismatch: ' + record['name'])
+                    unavailable.append(dict(record, reason='Listed in APK manifest, bytes absent from APK and selected downloaded cloud version'))
+                    continue
                 decoded = Apk.decode(raw)
                 # Equal hashes can occur in different packages. Names are kept
                 # separate to avoid silently replacing a different identity.

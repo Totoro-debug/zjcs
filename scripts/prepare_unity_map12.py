@@ -65,16 +65,8 @@ def verify_art_bundles():
     verified = []
     for name, expected in sorted(bundles.items()):
         entry = f"assets/yoo/DefaultPackage/{expected}.bundle"
-        if entry in apk.available:
-            raw = apk.archive.read(entry)
-            origin = dict(origin="apk_zip", apk_entry=entry, apk_sha256=apk.source.apk_sha256)
-        else:
-            cached = apk.cloud.read("DefaultPackage", apk.bundle_records[name])
-            if cached is None:
-                raise FileNotFoundError("Selected official art bundle is not cached: " + name)
-            raw, origin = cached
-        if hashlib.md5(raw).hexdigest() != expected or len(raw) != apk.bundle_records[name]["size"]:
-            raise ValueError("Selected art bundle differs from its original indexed identity: " + name)
+        verified = apk.reader.read('DefaultPackage', apk.bundle_records[name]["name"])
+        raw, origin = verified.data, dict(verified.provenance)
         verified.append(dict(bundle=name, md5=expected, sha256=sha(raw), bytes=len(raw), source=origin))
     apk.archive.close()
     return verified, source_receipts, changed_objects

@@ -7,7 +7,7 @@ import sys
 import tempfile
 import zipfile
 
-from official_cloud_cache import CloudCache
+from official_bundle_reader import OfficialBundleReader
 from official_source import OfficialSource
 from prepare_character_creation_opening_audio import parse_pck, read_field
 from prepare_unity_map10_entities import json_bytes, write_generated, write_meta
@@ -97,24 +97,18 @@ def build():
         import hashlib
         if hashlib.file_digest(stream, "sha256").hexdigest() != selected.apk_sha256:
             raise ValueError("Pinned APK SHA256 mismatch")
-    with zipfile.ZipFile(selected.apk) as archive:
+    with OfficialBundleReader(selected) as reader:
+        archive = reader.archive
         inventory = {value["name"]: value for value in selected.manifest("WwiseBnk", archive)["bundles"]}
-        cloud = CloudCache(selected.cloud_path, selected.version)
         package_names = sorted({value["bank"] for value in resources.values()} | {STOP_PACKAGE})
         for name in package_names:
             bundle = inventory[name]
             entry = "assets/yoo/WwiseBnk/" + bundle["file"]
             packaged = entry in archive.namelist()
-            if packaged:
-                raw = archive.read(entry)
+            verified = reader.read("WwiseBnk", bundle["name"])
+            raw, origin = verified.data, dict(verified.provenance)
+            if entry in reader.available:
                 origin = {"origin": "apk_zip", "entry": entry, "apkSha256": selected.apk_sha256}
-            else:
-                cached = cloud.read("WwiseBnk", bundle)
-                if cached is None:
-                    raise FileNotFoundError("Original voice package is not downloaded: " + name)
-                raw, origin = cached
-            if len(raw) != bundle["size"] or hashlib.md5(raw).hexdigest() != bundle["hash"]:
-                raise ValueError("Original voice package size/MD5 mismatch: " + name)
             packages[name] = {"raw": raw, "sha256": digest(raw), "source": origin,
                               "apkCheckedFirst": {"entry": entry, "packaged": packaged}}
     event_sources = {}

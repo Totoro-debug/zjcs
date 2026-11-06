@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 from official_apk import Apk, ROOT
+from official_bundle_reader import verify_payload
 from official_tables import Constructors
 from prepare_unity_character_catalog import decode_level_props
 from prepare_unity_map10_battle_data import (
@@ -44,20 +45,16 @@ def level_prop_payload(apk: Apk) -> tuple[bytes, dict]:
     bank = next(row for row in apk.source.manifest("WwiseBnk")["bundles"]
                 if row["name"] == "wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile")
     packaged = "assets/yoo/WwiseBnk/" + bank["file"]
-    if packaged in apk.available:
-        raw = apk.archive.read(packaged)
-        origin = {"origin": "apk", "entry": packaged}
-    else:
-        cached = apk.cloud.read("WwiseBnk", bank)
-        if cached is None:
-            retained = ROOT / ".tools/source-packages/WwiseBnk" / bank["name"]
-            raw = retained.read_bytes()
-            origin = {"origin": "verified_identical_retained_payload",
-                      "path": retained.relative_to(ROOT).as_posix()}
-        else:
-            raw, origin = cached
-    if len(raw) != bank["size"] or hashlib.md5(raw).hexdigest() != bank["hash"]:
-        raise ValueError("Current Map16 level_prop payload hash mismatch")
+    try:
+        verified = apk.reader.read("WwiseBnk", bank["name"])
+        raw, origin = verified.data, dict(verified.provenance)
+        if packaged in apk.available:
+            origin = {"origin": "apk", "entry": packaged}
+    except FileNotFoundError:
+        retained = ROOT / ".tools/source-packages/WwiseBnk" / bank["name"]
+        raw = retained.read_bytes()
+        verify_payload(raw, bank, identity=bank["name"])
+        origin = {"origin": "verified_identical_retained_payload", "path": retained.relative_to(ROOT).as_posix()}
     return raw, dict(origin, manifest=VERSION, bundle=bank, sha256=sha(raw))
 
 

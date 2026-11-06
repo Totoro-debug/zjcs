@@ -29,17 +29,8 @@ def build(work):
     record, = [row for row in apk.source.manifest('WwiseBnk', apk.archive)['bundles'] if row['name'] == name]
     entry = 'assets/yoo/WwiseBnk/' + record['file']
     packaged = entry in apk.available
-    if packaged:
-        raw = apk.archive.read(entry)
-        origin = dict(origin='apk_zip', apk_entry=entry, apk_manifest=apk.source.apk_version,
-                      apk_sha256=apk.source.apk_sha256)
-    else:
-        cached = apk.cloud.read('WwiseBnk', record)
-        if cached is None:
-            raise FileNotFoundError('Selected property binary is not cached: ' + name)
-        raw, origin = cached
-    if len(raw) != record['size'] or hashlib.md5(raw).hexdigest() != record['hash']:
-        raise ValueError('Selected property binary size/MD5 mismatch')
+    verified = apk.reader.read('WwiseBnk', name)
+    raw, origin = verified.data, dict(verified.provenance)
     (work / 'reference-level-prop.g.bytes').write_bytes(raw)
     wanted = {row['LevelPropId'] for row in rules['tables']['npc'] if row['LevelPropId'] > 0}
     wanted.update(row['PropId'] for row in rules['tables']['npc_talent_tree_npc_map_prop'] if row['PropId'] > 0)

@@ -127,18 +127,8 @@ class Exporter:
             except KeyError as ex:
                 raise ValueError(f'871 Wwise manifest lacks required language input: {name}') from ex
             entry = f"assets/yoo/WwiseBnk/{record['file']}"
-            if entry in self.apk.available:
-                raw = self.apk.archive.read(entry)
-                source = dict(origin='apk_zip', manifest=self.apk.version,
-                    apk_manifest=self.apk.source.apk_version, apk_entry=entry,
-                    raw_size=len(raw), raw_sha256=hashlib.sha256(raw).hexdigest())
-            else:
-                cached = self.apk.cloud.read('WwiseBnk', record)
-                if cached is None:
-                    raise FileNotFoundError(f'871 language bundle is absent from APK and verified cache: {name}')
-                raw, source = cached
-            if len(raw) != record['size'] or hashlib.md5(raw).hexdigest() != record['hash']:
-                raise ValueError(f'871 Wwise language bundle checksum mismatch: {name}')
+            verified = self.apk.reader.read('WwiseBnk', record["name"])
+            raw, source = verified.data, dict(verified.provenance)
             count = struct.unpack_from('<i', raw)[0]
             start = 4 + count * 12
             if count < 0 or start > len(raw):

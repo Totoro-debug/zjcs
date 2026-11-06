@@ -66,13 +66,8 @@ def build():
     record, = [row for row in apk.source.manifest('WwiseBnk', apk.archive)['bundles']
                if row['name'] == 'wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile']
     entry = 'assets/yoo/WwiseBnk/' + record['file']
-    if entry in apk.available:
-        active_raw = apk.archive.read(entry)
-        origin = dict(origin='apk_zip', apk_entry=entry, apk_manifest=apk.source.apk_version, apk_sha256=apk.source.apk_sha256)
-    else:
-        active_raw, origin = apk.cloud.read('WwiseBnk', record) or (None, None)
-    if active_raw is None or len(active_raw) != record['size'] or hashlib.md5(active_raw).hexdigest() != record['hash']:
-        raise ValueError('Selected official pet property binary is unavailable or differs')
+    verified = apk.reader.read('WwiseBnk', record["name"])
+    active_raw, origin = verified.data, dict(verified.provenance)
     if decode_level_props(active_raw, wanted) != properties:
         raise ValueError('Pet property rows changed across recorded sources')
     output = ROOT / 'unity/Assets/Game/Resources/Combat/pet-battle-rules.json'

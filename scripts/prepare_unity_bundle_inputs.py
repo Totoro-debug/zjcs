@@ -62,18 +62,8 @@ def read_source(apk, name):
         raw = apk.archive.read(name)
         source = {'origin': 'apk_zip', 'apk_entry': name, 'apk_sha256': APK_SHA256}
     else:
-        record = apk.bundle_records[name]
-        entry = 'assets/yoo/DefaultPackage/' + record['file']
-        if entry in apk.available:
-            raw = apk.archive.read(entry)
-            source = {'origin': 'apk_zip', 'apk_entry': entry, 'apk_sha256': APK_SHA256}
-        else:
-            cached = apk.cloud.read('DefaultPackage', record)
-            if cached is None:
-                raise FileNotFoundError('Not packaged or cached: ' + name)
-            raw, source = cached
-        if len(raw) != record['size'] or hashlib.md5(raw).hexdigest() != record['hash']:
-            raise ValueError('Pinned manifest size/MD5 mismatch: ' + name)
+        verified = apk.reader.read('DefaultPackage', name)
+        raw, source = verified.data, dict(verified.provenance)
     decoded = Apk.decode(raw)
     return decoded, dict(source, name=name, manifest=apk.version,
                          raw_size=len(raw), raw_md5=hashlib.md5(raw).hexdigest(),
@@ -163,7 +153,7 @@ def prepare(names, stage_dir=None, verbose=False, include_unity_builtins=False, 
               'This does not verify object decoding, restored scripts, shaders, or Windows rendering.')
         return 0
     finally:
-        apk.archive.close()
+        apk.close()
 
 
 def main():

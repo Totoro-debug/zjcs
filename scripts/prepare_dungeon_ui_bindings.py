@@ -702,15 +702,8 @@ def route_texts(apk, keys, required_keys):
                  "wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile"):
         record = wwise[name]
         entry = "assets/yoo/WwiseBnk/" + record["file"]
-        if entry in apk.available:
-            raw = apk.archive.read(entry)
-            origin = dict(origin="apk_zip", apk_entry=entry, apk_sha256=apk.source.apk_sha256)
-        else:
-            cached = apk.cloud.read("WwiseBnk", record)
-            if cached is None: raise FileNotFoundError("Selected original route language is not cached: " + name)
-            raw, origin = cached
-        if len(raw) != record["size"] or hashlib.md5(raw).hexdigest() != record["hash"]:
-            raise ValueError("Selected route language does not match its manifest: " + name)
+        verified = apk.reader.read('WwiseBnk', record["name"])
+        raw, origin = verified.data, dict(verified.provenance)
         inputs[name] = dict(origin, sha256=sha256(raw), bytes=len(raw), md5=record["hash"])
         count = struct.unpack_from("<i", raw)[0]
         start = 4 + count * 12

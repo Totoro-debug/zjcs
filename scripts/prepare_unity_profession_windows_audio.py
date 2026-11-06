@@ -9,7 +9,7 @@ import sys
 import wave
 import zipfile
 from official_apk import ROOT
-from official_cloud_cache import CloudCache
+from official_bundle_reader import OfficialBundleReader
 from official_source import OfficialSource
 from official_native_yaml_verification import documents
 from prepare_character_creation_opening_audio import parse_pck, read_field
@@ -73,22 +73,16 @@ def build():
     if len(events) != 5 or len({event["event_id"] for event in events}) != 5:
         raise ValueError("Inspect the complete original profession event reference scope")
     events.sort(key=lambda row: row["event_id"])
-    with zipfile.ZipFile(selected.apk) as archive:
-        cloud = CloudCache(selected.cloud_path, selected.version)
+    with OfficialBundleReader(selected) as reader:
+        archive = reader.archive
         manifest = selected.manifest("WwiseBnk", archive)
         def payload(key):
             bundle = next(row for row in manifest["bundles"] if key in row["name"])
             entry = "assets/yoo/WwiseBnk/" + bundle["file"]
-            if entry in archive.namelist():
-                raw = archive.read(entry)
+            verified = reader.read("WwiseBnk", bundle["name"])
+            raw, origin = verified.data, dict(verified.provenance)
+            if entry in reader.available:
                 origin = dict(origin="apk", entry=entry, manifest=selected.apk_version)
-            else:
-                found = cloud.read("WwiseBnk", bundle)
-                if found is None:
-                    raise FileNotFoundError("Original Wwise package not cached: " + bundle["name"])
-                raw, origin = found
-            if len(raw) != bundle["size"] or hashlib.md5(raw).hexdigest() != bundle["hash"]:
-                raise ValueError("Wwise source package differs from selected manifest")
             return raw, dict(bundle=bundle, source=origin, sha256=sha(raw))
         map_raw, map_source = payload("eventbankmapping_bytes")
         bank_map = mapping(map_raw)

@@ -108,22 +108,15 @@ def build() -> dict:
     bank = next(row for row in apk.source.manifest("WwiseBnk")["bundles"]
                 if row["name"] == "wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile")
     packaged = "assets/yoo/WwiseBnk/" + bank["file"]
-    if packaged in apk.available:
-        level_raw = apk.archive.read(packaged)
-        level_origin = {"origin": "apk_zip", "entry": packaged}
-    else:
-        cached = apk.cloud.read("WwiseBnk", bank)
-        if cached is None:
-            raise FileNotFoundError("Selected official level_prop resource is not cached")
-        level_raw, level_origin = cached
-    if len(level_raw) != bank["size"] or hashlib.md5(level_raw).hexdigest() != bank["hash"]:
-        raise ValueError("Current official level_prop resource hash mismatch")
+    verified = apk.reader.read('WwiseBnk', bank["name"])
+    level_raw, level_origin = verified.data, dict(verified.provenance)
     inputs.append({**level_origin, "manifest": apk.version, "bundle": bank, "sha256": sha(level_raw)})
     props = decode_level_props(level_raw, prop_ids)
 
     ec_bundle_name = "defaultpackage_assets_config_ec.bundle"
     ec_bundle = apk.bundle_records[ec_bundle_name]
-    ec_raw, ec_source = apk.cloud.read("DefaultPackage", ec_bundle)
+    ec_verified = apk.reader.read("DefaultPackage", ec_bundle["name"])
+    ec_raw, ec_source = ec_verified.data, dict(ec_verified.provenance)
     if ec_raw is None or len(ec_raw) != ec_bundle["size"] or hashlib.md5(ec_raw).hexdigest() != ec_bundle["hash"]:
         raise ValueError("Current official EC bundle is not cached or its package hash is invalid")
     loaded_ec = apk.env.load_file(apk.decode(ec_raw), name="weekly-config-ec-" + apk.version)

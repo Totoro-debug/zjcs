@@ -76,14 +76,8 @@ def build():
     all_entries = {}
     for name, bundle, location in bindings:
         record = wwise[bundle]; entry = "assets/yoo/WwiseBnk/" + record["file"]
-        if entry in apk.available:
-            raw = apk.archive.read(entry); origin = dict(origin="apk_zip", apk_entry=entry, apk_sha256=apk.source.apk_sha256)
-        else:
-            cached = apk.cloud.read("WwiseBnk", record)
-            if cached is None: raise FileNotFoundError("Selected original language rawfile is not cached: " + bundle)
-            raw, origin = cached
-        if len(raw) != record["size"] or hashlib.md5(raw).hexdigest() != record["hash"]:
-            raise ValueError("Selected rawfile does not match its manifest: " + bundle)
+        verified = apk.reader.read('WwiseBnk', record["name"])
+        raw, origin = verified.data, dict(verified.provenance)
         count = struct.unpack_from("<i", raw)[0]; start = 4 + count * 12
         decoded = {}
         for i in range(count):

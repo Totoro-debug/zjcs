@@ -170,12 +170,8 @@ def build(map_class_id=13):
     for record in apk.source.manifest("WwiseBnk")["bundles"]:
         if record["name"] not in ("wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile", "wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile"): continue
         entry = "assets/yoo/WwiseBnk/" + record["file"]
-        if entry in apk.available: raw = apk.archive.read(entry); origin = dict(origin="apk_zip", apk_entry=entry, apk_sha256=apk.source.apk_sha256)
-        else:
-            cached = apk.cloud.read("WwiseBnk", record)
-            if cached is None: raise FileNotFoundError(record["name"])
-            raw, origin = cached
-        if len(raw) != record["size"] or hashlib.md5(raw).hexdigest() != record["hash"]: raise ValueError("Official language rawfile hash differs")
+        verified = apk.reader.read('WwiseBnk', record["name"])
+        raw, origin = verified.data, dict(verified.provenance)
         language_sources.append(dict(origin, name=record["name"], sha256=sha(raw)))
         count = struct.unpack_from("<i", raw)[0]; start = 4 + count * 12
         for index in range(count):

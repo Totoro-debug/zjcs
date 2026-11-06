@@ -34,57 +34,52 @@ class Apk:
         from official_source import OfficialSource
         self.source = OfficialSource(manifest)
         self.version = self.source.version
-        APK, SHA256 = self.source.apk, self.source.apk_sha256
-        with APK.open('rb') as stream:
-            if hashlib.file_digest(stream, 'sha256').hexdigest() != SHA256:
-                raise ValueError('Pinned APK checksum mismatch')
-        self.archive = zipfile.ZipFile(APK)
-        from official_cloud_cache import CloudCache
-        manifest = self.source.manifest('DefaultPackage', self.archive)
-        self.bundles = manifest['bundles']
-        self.bundle_records = {b['name']: b for b in self.bundles}
-        self.index = {b['name']: b['hash'] for b in self.bundles}
-        self.cloud = CloudCache(self.source.cloud_path, self.version)
-        cloud_bundles = self.bundles
-        if reuse_current_cache and not self.source.profile.get('cloud_cache_retained', True):
-            # Explicit historical reproduction may read identical retained bytes.
-            # CloudCache.read still verifies the requested old MD5/size plus the
-            # retained receipt's SHA256; changed bundles are never substituted.
-            current = OfficialSource()
-            self.cloud = CloudCache(current.cloud_path, current.version)
-            cloud_bundles = current.manifest('DefaultPackage', self.archive)['bundles']
-        self.available = set(self.archive.namelist())
-        self.env = UnityPy.Environment()
-        self.loaded = {}
-        self.missing = set()
-        self.cabs = json.loads(self.source.cab_path.read_text()) if self.source.cab_path.exists() else self.index_cabs()
-        self.cabs = {k.lower(): v for k, v in self.cabs.items()}
-        cloud_cabs = self.cloud.index_cabs(cloud_bundles)
-        if cloud_bundles is self.bundles:
-            self.cabs.update({k: v for k, v in cloud_cabs.items() if k not in self.cabs})
-        else:
-            expected_hashes = {value['hash']: value['name'] for value in self.bundles}
-            self.cabs.update({k: dict(v, bundle=expected_hashes[v['hash']]) for k, v in cloud_cabs.items()
-                              if k not in self.cabs and v['hash'] in expected_hashes})
-        original = self.env.find_file
+        from official_bundle_reader import OfficialBundleReader
+        self.reader = OfficialBundleReader(self.source, reuse_current_cache=reuse_current_cache)
+        try:
+            self.archive = self.reader.archive
+            manifest = self.reader.manifest('DefaultPackage')
+            self.bundles = manifest['bundles']
+            self.bundle_records = {b['name']: b for b in self.bundles}
+            self.index = {b['name']: b['hash'] for b in self.bundles}
+            self.cloud = self.reader.cloud
+            cloud_bundles = self.bundles if self.reader.cloud_source is self.source else \
+                self.reader.cloud_source.manifest('DefaultPackage', self.archive)['bundles']
+            self.available = set(self.archive.namelist())
+            self.env = UnityPy.Environment()
+            self.loaded = {}
+            self.missing = set()
+            self.cabs = json.loads(self.source.cab_path.read_text()) if self.source.cab_path.exists() else self.index_cabs()
+            self.cabs = {k.lower(): v for k, v in self.cabs.items()}
+            cloud_cabs = self.cloud.index_cabs(cloud_bundles)
+            if cloud_bundles is self.bundles:
+                self.cabs.update({k: v for k, v in cloud_cabs.items() if k not in self.cabs})
+            else:
+                expected_hashes = {value['hash']: value['name'] for value in self.bundles}
+                self.cabs.update({k: dict(v, bundle=expected_hashes[v['hash']]) for k, v in cloud_cabs.items()
+                                  if k not in self.cabs and v['hash'] in expected_hashes})
+            original = self.env.find_file
 
-        def resolve(name, *args, **kwargs):
-            key = name.rsplit('/', 1)[-1].lower()
-            cached=self.env.get_cab(key)
-            if cached is not None and key in self.cabs:return cached
-            if key in ['unity_builtin_extra','globalgamemanagers','globalgamemanagers.assets','resources.assets','sharedassets0.assets','level0']:
-                self.load_builtin('assets/bin/Data/data.unity3d')
-            elif key=='unity default resources':
-                self.load_builtin('assets/bin/Data/unity default resources')
-            elif key in self.cabs:
-                self.load(canonical_bundle_name(self.cabs[key], self.index))
-            cached=self.env.get_cab(key)
-            if cached is not None:return cached
-            if key.startswith('cab-') or key in ['unity_builtin_extra','unity default resources']:
-                raise FileNotFoundError('Dependency absent from pinned APK and verified CDN cache: '+name)
-            return original(name, *args, **kwargs)
+            def resolve(name, *args, **kwargs):
+                key = name.rsplit('/', 1)[-1].lower()
+                cached=self.env.get_cab(key)
+                if cached is not None and key in self.cabs:return cached
+                if key in ['unity_builtin_extra','globalgamemanagers','globalgamemanagers.assets','resources.assets','sharedassets0.assets','level0']:
+                    self.load_builtin('assets/bin/Data/data.unity3d')
+                elif key=='unity default resources':
+                    self.load_builtin('assets/bin/Data/unity default resources')
+                elif key in self.cabs:
+                    self.load(canonical_bundle_name(self.cabs[key], self.index))
+                cached=self.env.get_cab(key)
+                if cached is not None:return cached
+                if key.startswith('cab-') or key in ['unity_builtin_extra','unity default resources']:
+                    raise FileNotFoundError('Dependency absent from pinned APK and verified CDN cache: '+name)
+                return original(name, *args, **kwargs)
 
-        self.env.find_file = resolve
+            self.env.find_file = resolve
+        except BaseException:
+            self.reader.close()
+            raise
 
     @classmethod
     def current(cls):
@@ -133,28 +128,27 @@ class Apk:
             name = f'defaultpackage_assets_{name}.bundle'
         if name in self.loaded:
             return self.loaded[name]
-        path = f'assets/yoo/DefaultPackage/{self.index[name]}.bundle'
-        source = None
-        if path in self.available:
-            data = self.archive.read(path)
-            source = dict(origin='apk_zip', apk_entry=path, manifest=self.version,
-                          apk_manifest=self.source.apk_version, apk_sha256=self.source.apk_sha256,
-                          raw_size=len(data), raw_sha256=hashlib.sha256(data).hexdigest())
-        else:
-            cached = self.cloud.read('DefaultPackage', self.bundle_records[name])
-            if cached is None:
-                self.missing.add(name)
-                raise FileNotFoundError(f'Not packaged or cached: {name}')
-            data, source = cached
-        record = self.bundle_records[name]
-        if len(data) != record['size'] or hashlib.md5(data).hexdigest() != record['hash']:
-            raise ValueError('Official manifest size/MD5 mismatch: ' + name)
+        try:
+            verified = self.reader.read('DefaultPackage', name)
+        except FileNotFoundError:
+            self.missing.add(name)
+            raise
+        data, source = verified.data, verified.provenance
         bundle = self.env.load_file(self.decode(data), name=name)
         self.loaded[name] = bundle
         for asset in bundle.files.values():
             if hasattr(asset, 'objects'):
                 self.cabs[asset.name.lower()] = dict({'bundle': name, 'hash': self.index[name]}, **(source or {}))
         return bundle
+
+    def close(self):
+        self.reader.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self.close()
 
     def objects(self, name):
         bundle = self.load(name)
