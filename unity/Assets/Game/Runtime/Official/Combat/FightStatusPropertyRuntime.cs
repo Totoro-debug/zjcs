@@ -9,8 +9,16 @@ namespace Zjcs.Combat.Official
             FightOfficialCombatCatalog catalog, FightDamageFormula formula)
         {
             if (units == null || catalog == null || formula == null) return;
+            var hpChanges = new List<FightBattleUnitState>();
             foreach (FightBattleUnitState unit in units)
+            {
+                if (unit == null) continue;
+                long previousHp = unit.Hp;
                 Rebuild(unit, units, catalog, formula);
+                if (unit.Hp != previousHp) hpChanges.Add(unit);
+            }
+            foreach (FightBattleUnitState unit in hpChanges)
+                unit.HpUpdated?.Invoke(unit);
         }
 
         public static void Rebuild(FightBattleUnitState unit,
