@@ -60,6 +60,8 @@ Map11 实体转换保留 105 类模型中的 24 类状态模型、64 份状态�
 
 ## 完整还原部分
 
+正式入口的原世界加载、原玩家与放置实体状态同步及退出释放统一使用[主线地图公共模块](../features/mainline-map-modules.md)。该公共接线不代表本图完整表现与交互已完成。
+
 共享宿主已接入[实体探索记录](../features/mainline-map-modules.md)：正式入口的图形 Play Mode 通过模拟地图点击、原可见数据／位置／探索实体存档冷读，以及女神揭雾回归，实际画面已查看。女神验证的前置地区完成度由夹具提供；这次未验证跨图快照窗口或 Windows Player，整图状态仍为未完成。
 
 完整原小地图根已通过公共 `MainlineMiniMap` 工厂绑定，保留所选884的531个原序列化对象文档、原接缝线及主／支地区说明引用。隔离 GUI Play Mode 检查全部脚本、托管引用类型和对象引用；使用本图已安装的240×180导航、77地区和原配置2，验证地区插槽数量、加载、原离线请求／等待隐藏及销毁退订。此项未提供本图正式离线响应、白雾／实体标记画面、HUD模拟输入或Player结论；正式宿主接线仍待完成。来源见[当前完整小地图根](../../assets/reference/official-map/map11-current-minimap-root-source-manifest.json)，共用生命周期与验证边界见[公共模块](../features/mainline-map-modules.md)。

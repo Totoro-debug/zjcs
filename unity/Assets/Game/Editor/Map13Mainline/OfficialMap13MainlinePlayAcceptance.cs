@@ -33,7 +33,7 @@ using Zjcs.Official.World.Map13MiniMap;
 namespace Zjcs.Editor.Map13Mainline
 {
     [InitializeOnLoad]
-    public static class OfficialMap13MainlinePlayAcceptance
+    public static partial class OfficialMap13MainlinePlayAcceptance
     {
         private const string Key="Map13.FormalNativeEntry";
         private static bool started,failed;
@@ -55,9 +55,11 @@ namespace Zjcs.Editor.Map13Mainline
                 if(SessionState.GetInt(Key+".result",1)==0&&!string.IsNullOrEmpty(queue))
                 {
                     string[] maps=queue.Split(',');string remaining=string.Join(",",maps.Skip(1));
+                    bool sharedWorlds=SessionState.GetBool(Key+".shared-worlds",false);
                     EditorApplication.delayCall+=()=>
                     {
-                        if(maps[0]=="15")RunMap15();else Run();
+                        if(sharedWorlds)RunSharedWorldMap(int.Parse(maps[0]));
+                        else if(maps[0]=="15")RunMap15();else Run();
                         SessionState.SetString(Key+".queue",remaining);
                     };
                     return;
@@ -73,6 +75,7 @@ namespace Zjcs.Editor.Map13Mainline
             SessionState.SetBool(Key+".raw-points",false);
             SessionState.SetBool(Key+".world-owner",false);
             SessionState.SetBool(Key+".hud",false);
+            SessionState.SetBool(Key+".shared-worlds",false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION","1");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED","1");
             SessionState.SetString(Key+".pipeline",AssetDatabase.GetAssetPath(GraphicsSettings.defaultRenderPipeline));
@@ -155,7 +158,8 @@ namespace Zjcs.Editor.Map13Mainline
         private static IEnumerator Verify()
         {
             Application.logMessageReceived+=Observe;var stack=new Stack<IEnumerator>();
-            stack.Push(SessionState.GetBool(Key+".raw-points",false)?RawRegionPointsSteps():Steps());
+            stack.Push(SessionState.GetBool(Key+".shared-worlds",false)?SharedWorldSteps()
+                :SessionState.GetBool(Key+".raw-points",false)?RawRegionPointsSteps():Steps());
             while(stack.Count>0)
             {
                 object next;

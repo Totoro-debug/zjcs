@@ -235,7 +235,7 @@ namespace Zjcs.Presentation.World
         private OfficialMap10UiPayload Load()
         {
             ValidateBindings();
-            if (payload == null)
+            if (payload == null || panelByKey == null || spriteByUri == null || spriteByFile == null)
             {
                 OfficialMap10UiPayload parsed = JsonUtility.FromJson<OfficialMap10UiPayload>(panelData.text);
                 OfficialMap10UiSourceManifest manifest = JsonUtility.FromJson<OfficialMap10UiSourceManifest>(sourceManifest.text);

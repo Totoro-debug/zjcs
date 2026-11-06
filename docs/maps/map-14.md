@@ -189,6 +189,8 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 
 ## 完整还原部分
 
+正式入口的原世界加载、原玩家与放置实体状态同步及退出释放统一使用[主线地图公共模块](../features/mainline-map-modules.md)。该公共接线不代表本图完整表现与交互已完成。
+
 公共主线宿主现按配置加载所选884版公共交付窗口，原871版58节点资源及来源仍独立保留。当前窗口通过包括 `2208×1` 在内的四组官方配置的隔离模拟点击、原声音、原子扣除与冷读；正式NPC剧情路线和Player尚未验证，详见[主线地图公共模块](../features/mainline-map-modules.md)。
 
 完整原小地图根已通过公共 `MainlineMiniMap` 工厂绑定，保留所选884的732个原序列化对象文档、原接缝线及主／支地区说明引用。隔离 GUI Play Mode 检查全部脚本、托管引用类型和对象引用；使用本图已安装的280×280导航、111地区和原配置2，验证地区插槽数量、加载、原离线请求／等待隐藏及销毁退订。此项未提供本图正式离线响应、白雾／实体标记画面、HUD模拟输入或Player结论；正式宿主接线仍待完成。来源见[当前完整小地图根](../../assets/reference/official-map/map14-current-minimap-root-source-manifest.json)，共用生命周期与验证边界见[公共模块](../features/mainline-map-modules.md)。

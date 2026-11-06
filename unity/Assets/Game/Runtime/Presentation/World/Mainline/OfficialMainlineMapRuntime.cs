@@ -445,11 +445,14 @@ namespace Zjcs.Presentation.World
             }
             SaveLocalProgress();
             RefreshEntityActivity();
+            InitializeMainlineSharedWorld();
             if (mapClassId == 12) InitializeNativeMap12();
             else if (mapClassId == 13) InitializeNativeMap13();
-            else if (mapClassId == 14) InitializeNativeMap14();
-            else if (MapProfile.NativeGroundLabelResource != null) InitializeConfiguredNativeGround();
-            else regions.InitializeFog(terrain.transform);
+            else if (mapClassId != 14)
+            {
+                if (MapProfile.NativeGroundLabelResource != null) InitializeConfiguredNativeGround();
+                else regions.InitializeFog(terrain.transform);
+            }
             if (mapClassId != 13) InitializeSharedMapVisibility();
         }
 
@@ -599,6 +602,7 @@ namespace Zjcs.Presentation.World
             hud.ui?.Dispose();
             if (avatar != null) Destroy(avatar);
             miniMap.DisposeRendering();
+            DisposeMainlineSharedWorld();
             if (worldCamera != null && worldCamera.transform.IsChildOf(transform))
                 Destroy(worldCamera.gameObject);
             if (mapRoot != null) Destroy(mapRoot.gameObject);
