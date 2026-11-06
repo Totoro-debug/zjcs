@@ -400,19 +400,47 @@ namespace Zjcs.Editor.Map13Mainline
             ExecuteEvents.Execute(button.gameObject,pointer,ExecuteEvents.pointerUpHandler);
             ExecuteEvents.Execute(button.gameObject,pointer,ExecuteEvents.pointerClickHandler);
         }
+        private static void VerifyFormalOriginalClient(OfficialMainlineMapRuntime runtime)
+        {
+            var world=Field<MainlineSharedWorld>(runtime,"mainlineSharedWorld");
+            var player=Field<object>(runtime,"mainlineSharedPlayer");
+            var manager=world.Assemblies.Shared.GetType("MeManager",true).GetProperty("Instance").GetValue(null);
+            object Get(object owner,string name)=>NativeMap14SharedPrefabs.Get(owner,name);
+            var map=Get(manager,"MapData");
+            var originals=((IDictionary)Get(world.Root.Container,"EntityDict")).Values.Cast<object>().ToArray();
+            var progress=Field<object>(runtime,"progressionSave");
+            var save=(OfflineMainlineSave)progress.GetType().GetProperty("Save").GetValue(progress);
+            Require(world.IsReady&&ReferenceEquals(Get(manager,"Player"),player)
+                &&ReferenceEquals(Get(map,"MapContainer"),world.Root.Container)
+                &&ReferenceEquals(map.GetType().GetProperty("mMapLoEntityIdManager",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(map),world.LoEntityIds),
+                "Formal map did not bind its original player, map and placement manager before startup.");
+            Require(originals.Length>1&&originals.All(entity=>(bool)Get(entity,"Awaked")&&(bool)Get(entity,"Started")),
+                "Formal map retained a root-only original snapshot or unstarted placed entities.");
+            Require((string)Get(player,"Name")==save.Player.CharacterName&&(int)Get(player,"Level")==save.Player.Level
+                &&Convert.ToInt32(Get(player,"SubRank"))==save.Player.SubRank,
+                "Formal original player identity differs from the local character.");
+            var points=Field<Dictionary<int,int>>(Field<object>(runtime,"regions"),"regionPoints");
+            foreach(var pair in points)
+                Require((int)player.GetType().GetMethod("GetWorldMapRegionProgress").Invoke(player,new object[]{MapId,pair.Key})==pair.Value,
+                    "Formal original player lost restored raw region points.");
+            Debug.Log("MAINLINE_FORMAL_CLIENT_PASS map="+MapId+" entities="+originals.Length);
+        }
         private static IEnumerator VerifyFormalWorldOwner(OfficialMainlineMapRuntime runtime,string slot,string saves,
             Transform ui,MapGridPoint position)
         {
             var world=Field<MainlineSharedWorld>(runtime,"mainlineSharedWorld");
             var terrain=Field<OfficialMap14NativeWorldView>(runtime,"nativeMap14World");
             var root=world.Root;
+            VerifyFormalOriginalClient(runtime);
+            var manager=world.Assemblies.Shared.GetType("MeManager",true).GetProperty("Instance").GetValue(null);
             Require(ReferenceEquals(root,terrain.SharedRoot),"Formal terrain created a second original world root.");
             var originalRoot=terrain.SharedRoot.Root;
             ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map14-owner-moved.png"));
             yield return new WaitForSecondsRealtime(.5f);
             Call(runtime,"CloseMap");yield return null;yield return null;
             Require(!world.IsReady
-                &&Field<bool>(originalRoot,"Ended"),"Closing the formal map retained its original world.");
+                &&Field<bool>(originalRoot,"Ended")
+                &&NativeMap14SharedPrefabs.Get(manager,"Player")==null,"Closing the formal map retained its original world.");
             runtime=Open(slot,saves,ui);
             float deadline=Time.realtimeSinceStartup+120;
             terrain=Field<OfficialMap14NativeWorldView>(runtime,"nativeMap14World");
@@ -420,6 +448,7 @@ namespace Zjcs.Editor.Map13Mainline
             { yield return null;terrain=Field<OfficialMap14NativeWorldView>(runtime,"nativeMap14World"); }
             Require(terrain!=null&&terrain.IsReady,"Formal map owner did not remount its original terrain.");
             var reopened=Field<MainlineSharedWorld>(runtime,"mainlineSharedWorld");
+            VerifyFormalOriginalClient(runtime);
             Require(!ReferenceEquals(world,reopened)&&!ReferenceEquals(root,terrain.SharedRoot)
                 &&ReferenceEquals(reopened.Root,terrain.SharedRoot),
                 "Reopening the formal map did not create exactly one new original world.");

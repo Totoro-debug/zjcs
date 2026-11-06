@@ -1,5 +1,8 @@
 using System;
 using System.Collections;
+using Zjcs.Offline.State;
+using Zjcs.Offline.World;
+using Zjcs.Offline.World.MainlinePlayerState;
 using UnityEngine;
 using Zjcs.Offline.World.NativeMap14SharedEntities;
 using Zjcs.Presentation.World.NativeMap14;
@@ -11,6 +14,7 @@ namespace Zjcs.Presentation.World
         private OfficialMap14NativeWorldView nativeMap14World;
         private float nativeMap14RefreshAt;
         private MainlineSharedWorld mainlineSharedWorld;
+        private object mainlineSharedPlayer;
         private IEnumerator mainlineSharedLoad;
         private Coroutine mainlineSharedLoading;
 
@@ -19,8 +23,9 @@ namespace Zjcs.Presentation.World
             if (mapClassId != 14 || avatar == null || worldCamera == null)
                 throw new InvalidOperationException("The native Map14 world requires its initialized player and camera.");
             var catalog = Resources.Load<NativeMap14SharedAssemblyCatalog>("Map14/Native/shared-assembly-catalog");
-            mainlineSharedWorld = new MainlineSharedWorld(catalog, mapClassId, mapClassId);
-            mainlineSharedLoad = mainlineSharedWorld.Load();
+            mainlineSharedWorld = new MainlineSharedWorld(catalog, mapClassId, mapClassId * 2L);
+            mainlineSharedLoad = mainlineSharedWorld.LoadClient(
+                region => regions.IsPublicRegion(region) ? 2 : 1, mapClassId * 2L + 1);
             mainlineSharedLoading = StartCoroutine(LoadNativeMap14World());
             nativeMap14RefreshAt = Time.unscaledTime + 0.25f;
         }
@@ -29,6 +34,12 @@ namespace Zjcs.Presentation.World
         {
             while (mainlineSharedLoad.MoveNext()) yield return mainlineSharedLoad.Current;
             mainlineSharedLoad = null;
+            var snapshots = new MainlineMapMiniMapSnapshots(OfficialWorldMapAssetCatalog.LoadDefault(),
+                new ProfileSlotCatalog(persistentDataPath), slotId);
+            // One local player; container identifiers keep the original private/public split.
+            mainlineSharedPlayer = MainlineSharedPlayerProjection.Create(mainlineSharedWorld,
+                progressionSave.Save, 1, map => map == mapClassId ? regions.regionPoints : snapshots.ReadRegionPoints(map));
+            mainlineSharedWorld.StartClient(mainlineSharedPlayer);
             nativeMap14World = OfficialMap14NativeWorldView.Create(mapRoot, worldCamera,
                 new MainlineNativeGroundState(this), mainlineSharedWorld);
         }
@@ -57,6 +68,7 @@ namespace Zjcs.Presentation.World
                     mainlineSharedLoad = null;
                     mainlineSharedWorld?.Dispose();
                     mainlineSharedWorld = null;
+                    mainlineSharedPlayer = null;
                 }
             }
         }
