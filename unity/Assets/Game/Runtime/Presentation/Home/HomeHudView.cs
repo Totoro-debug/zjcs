@@ -1367,6 +1367,12 @@ namespace Zjcs.Presentation.Home
             characterRoot = null;
             characterRuntime = null;
             owned.Clear();
+            if (partnerUiAudioSource != null)
+            {
+                HomeAudioSettings.Unregister(partnerUiAudioSource);
+                UnityEngine.Object.Destroy(partnerUiAudioSource);
+                partnerUiAudioSource = null;
+            }
             if (canvas != null) UnityEngine.Object.Destroy(canvas.gameObject);
             canvas = null;
         }

@@ -42,12 +42,19 @@ namespace Zjcs.Presentation.Home
 
         void IOfflinePartnerPresentation.BindNpcTipDot(TipDotNodeLinker linker, int npcClassId)
             => host.PartnerTipDots?.Bind(linker, npcClassId);
+        private AudioSource partnerUiAudioSource;
         void IOfflinePartnerPresentation.PostSound(AudioClip sound, GameObject owner)
         {
-            if (sound == null || owner == null) return;
-            var source = owner.GetComponent<AudioSource>();
-            if (source == null) source = owner.AddComponent<AudioSource>();
-            source.playOnAwake = false; source.spatialBlend = 0f; source.PlayOneShot(sound);
+            if (sound == null || canvas == null) return;
+            if (partnerUiAudioSource == null)
+            {
+                partnerUiAudioSource = canvas.gameObject.AddComponent<AudioSource>();
+                partnerUiAudioSource.playOnAwake = false;
+                partnerUiAudioSource.loop = false;
+                partnerUiAudioSource.spatialBlend = 0f;
+                HomeAudioSettings.Register(partnerUiAudioSource, HomeAudioChannel.Sound);
+            }
+            partnerUiAudioSource.PlayOneShot(sound);
         }
         void IOfflinePartnerPresentation.ShowFriendshipLevelUp(NpcRosterItem npc, long oldFriendship, int oldLevel)
             => Notify(npc == null ? "伙伴已结识" : "已结识伙伴 " + npc.NpcClassId);
