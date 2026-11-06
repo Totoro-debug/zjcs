@@ -430,6 +430,7 @@ namespace Zjcs.Editor.Map13Mainline
         {
             var world=Field<MainlineSharedWorld>(runtime,"mainlineSharedWorld");
             var local=Field<IDictionary>(runtime,"mapEntities");
+            var presentation=Call(runtime,"CreateEntityPresentation");
             object Get(object owner,string name)=>NativeMap14SharedPrefabs.Get(owner,name);
             var placementOf=world.LoEntityIds.GetType().GetMethod("GetLoEntIdByEntId");
             int checkedStates=0,checkedPositions=0;
@@ -441,7 +442,14 @@ namespace Zjcs.Editor.Map13Mainline
                 object Component(string name)=>entity.GetType().GetMethod("GetComponent",new[]{typeof(Type)})
                     .Invoke(entity,new object[]{world.Assemblies.CommonType(name)});
                 var stage=Component("WorldStageComponent");
-                if(stage!=null){Require((int)Get(stage,"State")==Field<int>(state,"State"),"Original/local placed stage mismatch: "+placement);checkedStates++;}
+                if(stage!=null)
+                {
+                    var displayed=presentation.GetType().GetMethod("Read",BindingFlags.Instance|BindingFlags.NonPublic)
+                        .Invoke(presentation,new[]{state,(object)Field<int>(state,"State"),Field<bool>(state,"Active")});
+                    Require((int)Get(stage,"State")==Field<int>(displayed,"State"),
+                        "Original/world/minimap displayed stage mismatch: "+placement);
+                    checkedStates++;
+                }
                 var grid=Component("GridTransformComponent");
                 if(grid==null)continue;
                 var point=Field<MapGridPoint>(state,"Grid");var original=Get(grid,"MyPos");

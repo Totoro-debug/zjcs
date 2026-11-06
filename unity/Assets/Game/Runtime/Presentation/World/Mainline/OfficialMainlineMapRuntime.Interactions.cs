@@ -213,8 +213,7 @@ namespace Zjcs.Presentation.World
             if (entityView == null || localSave == null) return;
             SynchronizeMap12ClaimedChests();
             SynchronizeMap12BuildingCompletions();
-            var presentation = new MainlineMapEntityPresentation(session.Definition, MapProfile, localSave,
-                progressionSave.Save, mapLogicTags, regions.IsRegionAccessible, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+            var presentation = CreateEntityPresentation();
             foreach (Map10RuntimeEntity entity in mapEntities.Values)
             {
                 int state = entity.State;
@@ -248,6 +247,10 @@ namespace Zjcs.Presentation.World
                 _ = mapGridVisibility.ExploredEntityIds;
             if (MapProfile.HasNativeUi) miniMap.RefreshNativeMiniMapMarks();
         }
+
+        private MainlineMapEntityPresentation CreateEntityPresentation() =>
+            new MainlineMapEntityPresentation(session.Definition, MapProfile, localSave,
+                progressionSave.Save, mapLogicTags, regions.IsRegionAccessible, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
 
         private bool IsMapLogicEntityDestroyed(int placementId)
         {
