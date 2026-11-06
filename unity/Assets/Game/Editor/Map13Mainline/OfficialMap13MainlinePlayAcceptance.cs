@@ -457,6 +457,15 @@ namespace Zjcs.Editor.Map13Mainline
                     "Original/local placed grid mismatch: "+placement);checkedPositions++;
             }
             Require(checkedStates>0&&checkedPositions>0,"Formal original entity-state fixture is empty.");
+            var character=world.ClientCharacter;
+            var position=Get(character.GetType().GetMethod("GetComponent",new[]{typeof(Type)})
+                .Invoke(character,new object[]{world.Assemblies.CommonType("GridTransformComponent")}),"Pos");
+            var current=Field<MapGridPoint>(Field<object>(runtime,"navigation"),"currentGrid");
+            Require((int)Get(position,"X")==current.X&&(int)Get(position,"Y")==current.Y,
+                "Formal original character lost the saved/moved local grid.");
+            var manager=world.Assemblies.Shared.GetType("MeManager",true).GetProperty("Instance").GetValue(null);
+            Require(ReferenceEquals(Get(Get(Get(manager,"MapData"),"MapCharacter"),"Entity"),character),
+                "Formal map lost the original local character selection.");
             Debug.Log("MAINLINE_FORMAL_ENTITY_STATE_PASS stages="+checkedStates+" positions="+checkedPositions);
         }
         private static KeyValuePair<int,int> MutateOriginalPuzzleState(OfficialMainlineMapRuntime runtime)

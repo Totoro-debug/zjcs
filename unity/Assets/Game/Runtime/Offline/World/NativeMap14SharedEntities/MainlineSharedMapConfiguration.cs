@@ -30,6 +30,10 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
         internal Assembly Readers { get; private set; }
         private bool completed, disposed;
 
+        internal void Dispatch(string name, object value) => Readers.GetType("Zjcs.Mainline.SelectedConfiguration." + name, true)
+            .GetMethod("OnMessage", BindingFlags.Public | BindingFlags.Static,
+                null, new[] { value.GetType() }, null).Invoke(null, new[] { value });
+
         public MainlineSharedMapConfiguration(NativeMap14SharedAssemblies shared, ConfigManager manager,
             NativeMap14SharedData data)
         {

@@ -96,6 +96,46 @@ def verify_client_map_identity(common, shared, work):
     return dict(player_map_methods=list(methods), map_enter_identity_branch_verified=True)
 
 
+def verify_client_character(common, shared, work):
+    methods = {
+        "CharacterComponent": ("public void Init(", "public override void Start()", "public override void End("),
+        "MapCharacterBaseComponent": ("public override void Start()", "public override void Destroy()",
+            "public EntityReplaceResultType CanReplace(", "public bool CanReplaceWith(",
+            "private bool IsMe()", "private bool IsOlderThanCurrentMeCharacter(",
+            "bool IEntityAddAssistant.TryEntityAdd("),
+    }
+    evidence = {}
+    for name in (*methods, "MapRegionStatusComponent", "MapComponent", "GridTransformComponent", "MapCharacterRemoveSourceInfo"):
+        subprocess.run([str(ROOT / ".tools/dotnet/dotnet.exe"),
+            str(ROOT / ".tools/ilspycmd/tools/net10.0/any/ilspycmd.dll"),
+            "-t", "Common." + name, "-o", str(work), str(shared / "Console.bytes")], check=True)
+        old = (work / ("Common." + name + ".decompiled.cs")).read_text("utf8")
+        current = (common / (name + ".cs")).read_text("utf8")
+        def body(text, signature):
+            start = text.index("{", text.index(signature))
+            end, depth = start + 1, 1
+            while depth:
+                depth += (text[end] == "{") - (text[end] == "}")
+                end += 1
+            text = text[start:end]
+            # ILSpy renders the same event receiver/delegate construction in
+            # two equivalent C# forms; preserve the actual subscription.
+            text = text.replace("MeManager instance = MeManager.Instance;", "")
+            text = text.replace("instance.OnTeamUpdate", "MeManager.Instance.OnTeamUpdate")
+            text = text.replace("new Action(OnTeamUpdate)", "(Action)OnTeamUpdate")
+            return normalized(text)
+        signatures = methods.get(name)
+        if signatures:
+            if any(body(old, signature) != body(current, signature) for signature in signatures):
+                raise ValueError("Retained original character method differs: " + name)
+            evidence[name] = list(signatures)
+        else:
+            if normalized(old) != normalized(current):
+                raise ValueError("Retained original character dependency differs: " + name)
+            evidence[name] = "complete_type"
+    return evidence
+
+
 def build():
     if RECEIPT.exists():
         for output in json.loads(RECEIPT.read_bytes())["outputs"]:
@@ -112,6 +152,7 @@ def build():
     if record(shared / "Console.bytes")["sha256"] != "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397":
         raise ValueError("The independently retained shared IL differs")
     identity_evidence = verify_client_map_identity(common, shared, work)
+    character_evidence = verify_client_character(common, shared, work)
     transition_evidence = []
     for name in ("EntityRegionStatusChecker", "MapEntityReplaceHandle"):
         subprocess.run([str(ROOT / ".tools/dotnet/dotnet.exe"),
@@ -356,17 +397,19 @@ public sealed class SelectedEntityExtendParameterInfoParser : EntityExtendParame
     names = [name for _, _, name in TABLES] + [name + "Parser" for _, _, name in TABLES]
     names += ["TbMapWorldInfo", "TbEntityExtendParameterInfo", "MapPartInfoBase", "MapInfoWrapParser", "MapInfoManager", "MapRegionEntityInfoManager", "LoEntityCampComponentInfo", "EntityCampComponent", "PlayerMap", "MapLoEntityIdManager", "PublicMapLineStatus"]
     names += ["MapInfoWrap", "MapWorldLoEntityInfoWrap", "SpawnEntityLiteInfo", "EntityPositionInfo", "MapEntityWorldStageType", "EntityRegionStatusChecker", "MapEntityReplaceHandle", "MapEntityAddMsg", "MapEntityRemoveMsg", "MapRegionStatusUpdateMsg"]
+    names += list(character_evidence)
     receipt = dict(manifest=apk.version, shared_il=dict(record(shared / "Console.bytes"), manifest="871_156598"),
         operation="Keep original payloads and shared IL. Derive original DTOs with verified appended selected fields, reuse selected table readers and original parser/PostParse/query implementations. Include complete original EC dependency records.",
         constructor_compatibility=evidence, client_map_identity=identity_evidence,
         region_transition_compatibility=transition_evidence,
+        client_character_compatibility=character_evidence,
         local_message_adaptation="Original static remove/add/status handlers; omit network entry overloads, network base class and status logging only.", inputs=inputs,
         placement_inputs=placement_inputs,
         code_inputs=[record(common / (name + ".cs")) for name in names] + [record(reader_source), record(common.parent / "MsgMapStart.cs")]
             + [record(common.parent / (name + ".cs")) for name in ("MsgMapEntityAdd", "MsgMapEntityRemove", "MsgMapRegionStatusUpdate")],
         shared_reader=record(shared / "Luban.bytes"), nullable_string_reader_verified=True,
         config_abi_sources=[record(path) for path in sorted((ROOT / "unity/Assets/Game/Runtime/Official/SharedConfig").rglob("*.cs"))],
-        bindings=[record(path) for path in (new_binding, Path(str(new_binding) + ".meta"), runtime / "MainlineSharedWorld.cs", runtime / "NativeMap14SharedData.cs", runtime / "MainlineSharedEntityCreation.cs", runtime / "MainlineSharedClientContext.cs", runtime / "MainlineSharedClientContext.cs.meta")],
+        bindings=[record(path) for path in (new_binding, Path(str(new_binding) + ".meta"), runtime / "MainlineSharedWorld.cs", runtime / "MainlineSharedWorld.Character.cs", runtime / "MainlineSharedWorld.Character.cs.meta", runtime / "NativeMap14SharedData.cs", runtime / "MainlineSharedEntityCreation.cs", runtime / "MainlineSharedClientContext.cs", runtime / "MainlineSharedClientContext.cs.meta")],
         validation=[record(path) for path in sorted(acceptance.parent.iterdir()) if path.is_file()],
         tools=[record(Path(__file__).resolve()), dict(path=str(UNITY / "DotNetSdkRoslyn/csc.dll"),
             sha256=hashlib.sha256((UNITY / "DotNetSdkRoslyn/csc.dll").read_bytes()).hexdigest())],

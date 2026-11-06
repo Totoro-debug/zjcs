@@ -16,7 +16,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
 
     // Owns one map's original parser scope and container. Entity restoration and
     // presentation borrow this scope rather than installing another map root.
-    public sealed class MainlineSharedWorld : IDisposable
+    public sealed partial class MainlineSharedWorld : IDisposable
     {
         public NativeMap14SharedAssemblies Assemblies { get; private set; }
         public NativeMap14SharedConfiguration Configuration { get; private set; }
@@ -135,7 +135,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                 }
                 Root = new NativeMap14SharedRoot(Assemblies, Configuration, Data, containerId,
                     "MainlineSharedWorld/container-binding");
-                entities = new MainlineSharedEntityCreation(Assemblies, Data, Root, clientConfiguration?.Readers);
+                entities = new MainlineSharedEntityCreation(Assemblies, Data, Root, clientConfiguration);
                 if (initialRegionStatus != null)
                 {
                     entities.Populate(initialRegionStatus, publicContainerId == 0 ? null : (Func<int, long>)ClientContainerId);
@@ -181,6 +181,11 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                 entities.TransitionRegion(pair.Key, pair.Value, ClientContainerId(pair.Value), states, client.Player);
                 clientRegions[pair.Key] = pair.Value;
             }
+            if (ClientCharacter != null)
+            {
+                var position = NativeMap14SharedPrefabs.Get(CharacterComponent(ClientCharacter, "GridTransformComponent"), "Pos");
+                SynchronizeClientCharacter((int)NativeMap14SharedPrefabs.Get(position, "X"), (int)NativeMap14SharedPrefabs.Get(position, "Y"));
+            }
         }
 
         public void Start()
@@ -193,6 +198,12 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
         }
 
         public void StartClient(object player)
+            => StartClientCore(player, null);
+
+        public void StartClient(object player, int x, int y)
+            => StartClientCore(player, new[] { x, y });
+
+        private void StartClientCore(object player, int[] position)
         {
             RequireActive();
             if (!IsLoaded || IsReady || clientRegions == null)
@@ -203,6 +214,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             {
                 entities.SynchronizeActivations(player);
                 client = new MainlineSharedClientContext(this, clientServices, player, clientRegions, ClientContainerId);
+                if (position != null) CreateClientCharacter(position[0], position[1]);
                 Start();
             }
             catch { Dispose(); throw; }
@@ -220,6 +232,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             try { Root?.Dispose(); }
             finally
             {
+                ClientCharacter = null;
                 try
                 {
                     try { client?.Dispose(); }

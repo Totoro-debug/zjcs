@@ -12,11 +12,11 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
         private readonly NativeMap14SharedAssemblies shared;
         private readonly NativeMap14SharedData data;
         private readonly NativeMap14SharedRoot root;
-        private readonly System.Reflection.Assembly messages;
+        private readonly MainlineSharedMapConfiguration messages;
         public object LoEntityIds { get; }
 
         public MainlineSharedEntityCreation(NativeMap14SharedAssemblies shared,
-            NativeMap14SharedData data, NativeMap14SharedRoot root, System.Reflection.Assembly messages = null)
+            NativeMap14SharedData data, NativeMap14SharedRoot root, MainlineSharedMapConfiguration messages = null)
         {
             this.shared = shared;
             this.data = data;
@@ -127,9 +127,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             Message("MsgMapRegionStatusUpdate", update);
         }
 
-        private void Message(string name, object value) => messages.GetType("Zjcs.Mainline.SelectedConfiguration." + name, true)
-            .GetMethod("OnMessage", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static,
-                null, new[] { value.GetType() }, null).Invoke(null, new[] { value });
+        private void Message(string name, object value) => messages.Dispatch(name, value);
 
         private void Register(int placement, object entity) => LoEntityIds.GetType().GetMethod("SetLoEntId2EntId")
             .Invoke(LoEntityIds, new[] { (object)placement, Get(entity, "Id") });

@@ -75,8 +75,18 @@ namespace Zjcs.Editor.MainlineWorldStartup
                     if (calls.Count == 0 || calls.Values.Any(value => value != 1))
                         throw new InvalidDataException("Client snapshot did not read each region exactly once.");
                     var player = ProjectLocalPlayer(world);
-                    world.StartClient(player);
+                    var placed = ((IEnumerable)((IDictionary)NativeMap14SharedPrefabs.Get(world.Data.Placement, "RegionInfos"))
+                        .Values.Cast<object>().First()).Cast<object>().First();
+                    var startPosition = NativeMap14SharedPrefabs.Get(NativeMap14SharedPrefabs.Get(placed, "PosInfo"), "Pos");
+                    int startX = (int)NativeMap14SharedPrefabs.Get(startPosition, "X");
+                    int startY = (int)NativeMap14SharedPrefabs.Get(startPosition, "Y");
+                    world.StartClient(player, startX, startY);
                     var map = mapProperty.GetValue(manager);
+                    var character = NativeMap14SharedPrefabs.Get(map, "MapCharacter");
+                    if (world.ClientCharacter == null || character == null
+                        || !ReferenceEquals(NativeMap14SharedPrefabs.Get(character, "Entity"), world.ClientCharacter))
+                        throw new InvalidDataException("Original character Start did not select the local player.");
+                    VerifyClientCharacter(world, map, startX, startY);
                     if (!world.IsReady || !ReferenceEquals(playerProperty.GetValue(manager), player)
                         || !ReferenceEquals(NativeMap14SharedPrefabs.Get(map, "MapContainer"), world.Root.Container))
                         throw new InvalidDataException("Public client startup did not bind the real player and map.");
@@ -215,6 +225,18 @@ namespace Zjcs.Editor.MainlineWorldStartup
                         throw new InvalidDataException("Invalid region snapshot mutated the original container.");
                     world.SynchronizeClientState(states, id => id == region ? 2 : regionStates[id]);
                     regionStates[region] = 2;
+                    var originalCharacter = world.ClientCharacter;
+                    var characterPosition = NativeMap14SharedPrefabs.Get(MapComponent(originalCharacter, shared.CommonType("GridTransformComponent")), "Pos");
+                    int characterArea = (int)world.Data.Navigation.GetType().GetMethod("GridToArea").Invoke(world.Data.Navigation, new[] { characterPosition });
+                    var regionParser = world.Configuration.Manager.GetParser(shared.CommonType("MapRegionInfoParser"));
+                    int characterRegion = (int)regionParser.GetType().GetMethod("AreaToRegion").Invoke(regionParser, new object[] { mapId, characterArea });
+                    if (characterRegion == region && (long)Get(Get(originalCharacter, "Id"), "ContainerId") != publicId)
+                        throw new InvalidDataException("Region transition did not move the original local character to its public identity.");
+                    VerifyCharacterRegistration(world);
+                    var characterStatuses = MapComponent(originalCharacter, shared.CommonType("MapRegionStatusComponent"));
+                    foreach (var pair in regionStates)
+                        if (Convert.ToInt32(characterStatuses.GetType().GetMethod("GetRegionStatus").Invoke(characterStatuses, new object[] { pair.Key })) != pair.Value)
+                            throw new InvalidDataException("The original local character lost the current region statuses.");
                     var after = Current();
                     foreach (var pair in before.Where(pair => !regionPlacements.Contains(pair.Key)))
                         if (!after.TryGetValue(pair.Key, out var unchanged) || !ReferenceEquals(unchanged, pair.Value))
@@ -246,6 +268,61 @@ namespace Zjcs.Editor.MainlineWorldStartup
                 }
             }
             finally { foreach (var remove in listeners) remove(); }
+        }
+
+        private static void VerifyClientCharacter(MainlineSharedWorld world, object map, int x, int y)
+        {
+            object Get(object owner, string name) => NativeMap14SharedPrefabs.Get(owner, name);
+            var original = world.ClientCharacter;
+            var shared = world.Assemblies;
+            var grid = MapComponent(original, shared.CommonType("GridTransformComponent"));
+            var id = Get(original, "Id");
+            int updates = 0;
+            using (var receiver = new NativeMap14SharedEventSubscription(Get(grid, "PosUpdatedEvent"),
+                shared.CommonType("IGridTransformPosUpdatedEventReceiver"), _ => updates++))
+            {
+                world.SynchronizeClientCharacter(x, y);
+                if (updates != 0) throw new InvalidDataException("Unchanged local character position repeated its original event.");
+                bool rejected = false;
+                try { world.SynchronizeClientCharacter(-1, y); }
+                catch (ArgumentOutOfRangeException) { rejected = true; }
+                if (!rejected || updates != 0 || !Equals(id, Get(original, "Id")))
+                    throw new InvalidDataException("Invalid local position mutated the original character.");
+                var positions = ((IDictionary)Get(world.Data.Placement, "RegionInfos")).Values.Cast<IEnumerable>()
+                    .SelectMany(rows => rows.Cast<object>()).Select(row => Get(Get(row, "PosInfo"), "Pos"));
+                var moved = positions.First(pos => (int)Get(pos, "X") != x || (int)Get(pos, "Y") != y);
+                world.SynchronizeClientCharacter((int)Get(moved, "X"), (int)Get(moved, "Y"));
+                if (updates != 1 || !Equals(Get(grid, "Pos"), moved))
+                    throw new InvalidDataException("The original local character did not move exactly once.");
+                VerifyCharacterRegistration(world);
+                world.SynchronizeClientCharacter(x, y);
+                if (updates != 2 || !ReferenceEquals(world.ClientCharacter, original))
+                    throw new InvalidDataException("Walking between region identities replaced the stable original character reference.");
+                VerifyCharacterRegistration(world);
+            }
+            var identity = MapComponent(original, shared.CommonType("CharacterComponent"));
+            var expected = Get(Get(map, "MapCharacter"), "Character");
+            if (!ReferenceEquals(identity, expected) || (long)Get(identity, "PlayerId") != 731)
+                throw new InvalidDataException("The original map character has another player identity.");
+            Debug.Log($"MAINLINE_ORIGINAL_CHARACTER_PASS map={world.Data.MapClassId} class={Get(original, "ClassId")} unchanged=0 invalid=rejected");
+        }
+
+        private static void VerifyCharacterRegistration(MainlineSharedWorld world)
+        {
+            object Get(object owner, string name) => NativeMap14SharedPrefabs.Get(owner, name);
+            var entity = world.ClientCharacter;
+            var manager = world.Assemblies.Shared.GetType("MeManager", true).GetProperty("Instance").GetValue(null);
+            var character = Get(Get(manager, "MapData"), "MapCharacter");
+            var component = MapComponent(world.Root.Root, world.Assemblies.CommonType("MapComponent"));
+            var arguments = new object[] { 731L, null };
+            if (!ReferenceEquals(Get(character, "Entity"), entity)
+                || !ReferenceEquals(((IDictionary)Get(world.Root.Container, "EntityDict"))[Get(entity, "Id")], entity)
+                || !(bool)component.GetType().GetMethod("TryGetCharacter").Invoke(component, arguments)
+                || !ReferenceEquals(arguments[1], character)
+                // Original MapComponent keeps its registration key during an
+                // in-place replacement; GridVisibilityAgent consumes Values.
+                || !((IDictionary)Get(component, "MapCharacterDict")).Values.Cast<object>().Contains(character))
+                throw new InvalidDataException("Original character replacement lost the player, map or container lookup.");
         }
 
         private static Action TrackPlayerRegionEvent(object player, string name, Action<object[]> callback)

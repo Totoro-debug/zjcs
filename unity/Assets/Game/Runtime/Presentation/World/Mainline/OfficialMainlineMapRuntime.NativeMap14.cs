@@ -41,7 +41,7 @@ namespace Zjcs.Presentation.World
             mainlineSharedPlayer = MainlineSharedPlayerProjection.Create(mainlineSharedWorld,
                 progressionSave.Save, 1, map => map == mapClassId ? regions.regionPoints : snapshots.ReadRegionPoints(map));
             SynchronizeOriginalMapEntities();
-            mainlineSharedWorld.StartClient(mainlineSharedPlayer);
+            mainlineSharedWorld.StartClient(mainlineSharedPlayer, navigation.currentGrid.X, navigation.currentGrid.Y);
             nativeMap14World = OfficialMap14NativeWorldView.Create(mapRoot, worldCamera,
                 new MainlineNativeGroundState(this), mainlineSharedWorld);
         }
@@ -59,7 +59,10 @@ namespace Zjcs.Presentation.World
                     presentation.Read(pair.Value, pair.Value.State, pair.Value.Active).State,
                     pair.Value.Grid.X, pair.Value.Grid.Y));
             if (mainlineSharedWorld.IsReady)
+            {
                 mainlineSharedWorld.SynchronizeClientState(states, region => regions.IsPublicRegion(region) ? 2 : 1);
+                mainlineSharedWorld.SynchronizeClientCharacter(navigation.currentGrid.X, navigation.currentGrid.Y);
+            }
             else mainlineSharedWorld.SynchronizeEntityStates(states);
         }
 
