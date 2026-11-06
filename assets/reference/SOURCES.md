@@ -575,11 +575,12 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 共享揭格输入补入初始岛与龙之国：`prepare_mainline_grid_visibility_data.py` 使用所选884官方程序集格式器读取 APK／配套云端的原地图、身体、视野、营地及地区揭格列表，并逐一比较已安装地图定义的尺寸和放置ID／类别／坐标；各版本身份保持独立。输入、格式器、逐项跨版本绑定和输出哈希见[公共揭格数据来源](official-map/mainline-grid-visibility-data-source-manifest.json)。`prepare_mainline_grid_fog.py` 恢复两图原地图根的 CloudController2 子树，复用已核验的官方纹理、材质和 Windows shader；原对象、显式脚本绑定及输出哈希见[公共白雾来源](official-map/mainline-grid-fog-source-manifest.json)。本批没有生成完整素材快照。 龙之国正式实体目录由既有 Unity 生成器绑定416个原 prefab，逐项路径／类别／GUID／GameObject、安装输出及生成器哈希见[实体目录绑定来源](official-map/map14-entity-prefab-catalog-binding-source-manifest.json)，由 `record_map14_entity_prefab_catalog.py` 复验并记录；文本资产明确按LF核对，不修改原导出预期哈希。
 
+公共小地图实体查询输入见 [mainline-minimap-world-data-source-manifest.json](official-map/mainline-minimap-world-data-source-manifest.json)：所选 `884_156692` 的 `map_area`、`map_logic_entity_tag` Luban表、`MapTransportEntityInfoPack.g.bytes` MessagePack及六图 `mapinfowrap`，提取为 `unity/Assets/Game/Resources/MainlineMiniMap/current-entity-data.json`。来源清单记录原对象／载荷、官方解析器／formatter、当前输入与输出哈希；逐项核对安装地图实体ID／类／位置／地区／区域及传送目标，历史地图定义仍保留各自版本。处理方式为 `scripts/prepare_mainline_minimap_world_data.py`，运行绑定见所属[主线地图公共模块](../../docs/features/mainline-map-modules.md)。
+
 选定884伙伴角色视图：`scripts/prepare_partner_native_role_views.py` 解码34份原实体的 `ECViewDriver` 序列化角色视图，按 bundle／pathID／原始载荷哈希核对既有共享死亡图，并转换原 `playable_10608_generate`；本地绑定为 `Combat/NativePartnerAssets/role-views` 与 `RoleGraphs/`。原组件模式、原对象、应用绑定代码和安装文件身份见[角色视图来源](partner-native-role-views-source-manifest.json)。
 
 选定884伙伴阴影：`scripts/prepare_partner_native_shadows.py` 复用公共阴影转换器，从34份原伙伴实体提取完整阴影子树、共享 Sprite 和纹理，核对原生导出及匹配的 Windows 转换缓存，显式绑定为 `Combat/NativePartnerAssets/partner-shadow-bindings` 与 `RoleShadows/`；输入输出 SHA256 及处理方式见[伙伴阴影来源](partner-native-shadows-source-manifest.json)。未生成完整素材快照；功能范围见[伙伴助战](../../docs/features/npc-assistance.md)。
 
-公共小地图实体查询输入见 [mainline-minimap-world-data-source-manifest.json](official-map/mainline-minimap-world-data-source-manifest.json)：所选 `884_156692` 的 `map_area`、`map_logic_entity_tag` Luban表、`MapTransportEntityInfoPack.g.bytes` MessagePack及六图 `mapinfowrap`，提取为 `unity/Assets/Game/Resources/MainlineMiniMap/current-entity-data.json`。来源清单记录原对象／载荷、官方解析器／formatter、当前输入与输出哈希；逐项核对安装地图实体ID／类／位置／地区／区域及传送目标，历史地图定义仍保留各自版本。处理方式为 `scripts/prepare_mainline_minimap_world_data.py`，运行绑定见所属[主线地图公共模块](../../docs/features/mainline-map-modules.md)。
 
 公共小地图实体索引的事件顺序核对所选884的 `Common.EcContainer` 三个原容器操作，原源文件及本地适配／验证代码哈希记入[共用地图查询来源](official-map/mainline-minimap-world-data-source-manifest.json)。生成的地区／实体元数据固定 UTF-8 LF，GUID与官方载荷保持原值；完整根、HUD及窗口凭据仅在核对原输入和资源输出未变后刷新接线哈希。
 
@@ -668,3 +669,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 圣兽页面数据来源：`record_activity_battle_page_data.py` 记录884原共享 `RewardRuleInfoParser`／`ItemDropInfo`、已选871规则载荷和本地页面数据适配的逐文件SHA256；固定／概率显示分支保持原算法，输入边界校验所选奖励行不含条件、等级或阶级倍率，未重新选择或混入其他规则版本。来源见[页面数据输入与输出](daily-challenges/activity-page-data-source-manifest.json)，实现与验证范围仅在[所属功能页](../../docs/features/daily-challenges.md)维护。
 
 主线正式公共宿主来源：`record_mainline_shared_world_host.py` 记录所选884的原 `PlayerMap` 地区状态消费代码与 `MapPartInfoBase`、已核验的七图共享数据／客户端配置及保留871共享IL凭据，以及公共宿主、龙之国地形借用入口和正式验证入口的源码／元数据哈希与显式调用绑定，见[公共宿主来源](official-map/mainline-shared-world-host-source-manifest.json)。没有新增或转换美术载荷，未改变当前来源选择或生成素材快照；实现与验证范围仅在[主线地图公共模块](../../docs/features/mainline-map-modules.md)维护。
+
+地图入口补充接线来源见[地图公共接线来源](official-map/mainline-map-integration-source-manifest.json)：记录主线小地图版本选择、地图战斗公共构造、山之国私图助战与其公共副本内核依赖、Unity 导入后的地图元数据及源码哈希；原美术载荷与 GUID 保持既有来源，导入器自动扩展字段不声明为原始官方配置。验证范围维护在[主线地图公共模块](../../docs/features/mainline-map-modules.md)及[山之国](../../docs/maps/map-12.md)。

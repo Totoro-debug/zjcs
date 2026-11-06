@@ -563,6 +563,7 @@ namespace Zjcs.Presentation.World
 
         private void DisposeRuntime()
         {
+            CloseMap12PrivateDungeonAssistPicker();
             CloseMap15PreparationDialog();
             CloseHandInView();
             if (map12BuildingDialog != null) Destroy(map12BuildingDialog);

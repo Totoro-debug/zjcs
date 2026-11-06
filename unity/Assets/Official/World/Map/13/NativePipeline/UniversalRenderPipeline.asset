@@ -27,10 +27,10 @@ MonoBehaviour:
   m_SupportsHDR: 1
   m_HDRColorBufferPrecision: 0
   m_MSAA: 1
-  m_RenderScale: 1.0
+  m_RenderScale: 1
   m_UpscalingFilter: 0
   m_FsrOverrideSharpness: 0
-  m_FsrSharpness: 0.9200000166893005
+  m_FsrSharpness: 0.92
   m_EnableLODCrossFade: 1
   m_LODCrossFadeDitheringType: 1
   m_ShEvalMode: 0
@@ -46,19 +46,14 @@ MonoBehaviour:
   m_AdditionalLightsShadowResolutionTierHigh: 512
   m_ReflectionProbeBlending: 0
   m_ReflectionProbeBoxProjection: 0
-  m_ShadowDistance: 1.0
+  m_ShadowDistance: 1
   m_ShadowCascadeCount: 1
   m_Cascade2Split: 0.25
-  m_Cascade3Split:
-    x: 0.10000000149011612
-    y: 0.30000001192092896
-  m_Cascade4Split:
-    x: 0.06700000166893005
-    y: 0.20000000298023224
-    z: 0.46700000762939453
-  m_CascadeBorder: 0.10000000149011612
-  m_ShadowDepthBias: 1.0
-  m_ShadowNormalBias: 1.0
+  m_Cascade3Split: {x: 0.1, y: 0.3}
+  m_Cascade4Split: {x: 0.067, y: 0.2, z: 0.467}
+  m_CascadeBorder: 0.1
+  m_ShadowDepthBias: 1
+  m_ShadowNormalBias: 1
   m_AnyShadowsSupported: 1
   m_SoftShadowsSupported: 0
   m_ConservativeEnclosingSphere: 0
@@ -88,8 +83,8 @@ MonoBehaviour:
   m_Textures:
     blueNoise64LTex: {fileID: 2800000, guid: 574e2c1a96419768550b6ede8d99aad1, type: 2}
     bayerMatrixTex: {fileID: 2800000, guid: 6a1c135cd45f2f050f84294cdce020e6, type: 2}
-  m_PrefilteringModeMainLightShadows: 1
-  m_PrefilteringModeAdditionalLight: 4
+  m_PrefilteringModeMainLightShadows: 4
+  m_PrefilteringModeAdditionalLight: 5
   m_PrefilteringModeAdditionalLightShadows: 1
   m_PrefilterXRKeywords: 0
   m_PrefilteringModeForwardPlus: 1
@@ -113,7 +108,7 @@ MonoBehaviour:
   m_PrefilterSoftShadowsQualityLow: 0
   m_PrefilterSoftShadowsQualityMedium: 0
   m_PrefilterSoftShadowsQualityHigh: 0
-  m_PrefilterSoftShadows: 0
+  m_PrefilterSoftShadows: 1
   m_PrefilterScreenCoord: 0
   m_PrefilterNativeRenderPass: 0
   m_ShaderVariantLogLevel: 0

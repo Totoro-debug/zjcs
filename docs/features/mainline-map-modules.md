@@ -145,6 +145,8 @@
 
 ## 完整还原部分
 
+地图战斗的配置选项和 checkpoint 构造已提取为 `OfficialMapBattleSessionOptionsBuilder`／`OfficialMapBattleCheckpointBuilder`，玩家主动／被动技能装配共用 `OfficialBattlePlayerLoadoutAssembler`；主线保留其原零值属性与必需主动技能约束。小地图冷读按地图 profile 的 `StoryDataManifest` 校验剧情来源，避免把鲸背岛误判为历史871。山之国私图入口和副本内核的公共接线见[山之国](../maps/map-12.md)，相应来源与 Unity 导入元数据变化见[地图公共接线来源](../../assets/reference/official-map/mainline-map-integration-source-manifest.json)。新增元数据保留已有 GUID；Unity 自动扩展的默认纹理导入器不代表完整官方 Sprite 绑定已恢复。本次静态检查通过（132,293个GUID），Unity 导入／编译和 `ProjectTools.Validate` 通过。前批正式六图 Play 已通过原玩家、实体状态、模拟地图点击、冷读和取消释放；本次山之国私图专项复验因另一会话占用主工程未启动，不将已有记录当作本次新跑结果。Windows Player 未在本次构建或发布。
+
 公共剧情交付窗口使用所选 `884_156692` 的 `DialogHandInItemDialog`，资源入口为 `World/Mainline/HandIn`。官方43个弹窗节点、19个道具图标节点、101份组件记录、19张切片、原按钮 controller／五态动画、弹出／关闭动画、灰色材质与原中文文本均显式恢复；新增概率说明区域保留原默认隐藏状态。两条按钮／关闭声音从当前 Wwise 事件链按原增益解码，与已安装官方 PCM 逐字节一致后复用。公共宿主按节点 `HandleItemId`、`NeedHandInWindow` 和原交付配置选择事务及分支，不再限制 Map14。旧版 Map14 资源和单独恢复入口保留独立来源，不将其版本身份改为当前版。转换与绑定见[公共交付窗口来源](../../assets/reference/official-map/mainline-handin-ui-source-manifest.json)和[原生绑定](../../assets/reference/official-map/mainline-handin-ui-bindings-source-manifest.json)。
 
 内置屏带图形 Play Mode 已通过四组已安装配置的原窗口模拟鼠标验证：缺物品禁用、取消、弹窗关闭／销毁中断、原音效播放与释放、按配置数量原子扣除、次数上限、回执幂等、失败回滚和存档冷读；已查看缺物品和绳索足量的实际渲染画面。该夹具直接实例化公共窗口并调用同一存档事务，未覆盖正式 NPC 剧情入口、完整图运行或 Windows Player。官方成功系统提示、图标详情及全局剧情遮罩仍需接线，不能将公共窗口验证视为整图交付完成。

@@ -311,23 +311,33 @@ namespace Zjcs.Editor
             if (worldHudStates.Any(value => value.Value && value.Key.activeInHierarchy))
                 throw new InvalidDataException("Private dungeon battle did not suspend the separate native world HUD.");
             Animator battlePlayer = UnityEngine.Object.FindObjectsOfType<Animator>(true)
-                .SingleOrDefault(value => value.name.StartsWith("PlayerCharacter_", StringComparison.Ordinal));
-            Transform battleWrapper = battlePlayer == null ? null : battlePlayer.transform.parent;
-            Transform officialBattleModel = battleWrapper == null ? null : battleWrapper.parent;
+                .SingleOrDefault(value => value.name == "PlayerModel_Game"
+                    && value.transform.parent != null && value.transform.parent.name == "body"
+                    && value.transform.parent.parent != null && value.transform.parent.parent.name == "3100_view"
+                    && value.transform.parent.parent.parent != null
+                    && value.transform.parent.parent.parent.name == "3100");
+            Transform battleBody = battlePlayer == null ? null : battlePlayer.transform.parent;
+            Transform battleViewRoot = battleBody == null ? null : battleBody.parent;
+            Transform battleEntityRoot = battleViewRoot == null ? null : battleViewRoot.parent;
             yield return new WaitForEndOfFrame();
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-battle-preparing.png"));
             string hierarchy = string.Empty;
             for (Transform node = battlePlayer == null ? null : battlePlayer.transform; node != null; node = node.parent)
                 hierarchy += $" [{node.name} local={node.localScale} world={node.lossyScale}]";
             Debug.Log("Map12 private battle attached character hierarchy:" + hierarchy);
-            if (battlePlayer == null || battleWrapper == null
-                || !Mathf.Approximately(Mathf.Abs(battleWrapper.localScale.x * battlePlayer.transform.localScale.x), 1.25f)
-                || officialBattleModel == null || officialBattleModel.name != "PlayerModel_Game"
-                || !Mathf.Approximately(Mathf.Abs(officialBattleModel.localScale.x), 0.3f))
-                throw new InvalidDataException("The player model did not retain its 1.25x battle scale within the original 0.3x model hierarchy: "
+            if (battlePlayer == null || battleBody == null || battleBody.name != "body"
+                || (battleBody.localScale - Vector3.one).sqrMagnitude > 1e-6f
+                || battleViewRoot == null || battleViewRoot.name != "3100_view"
+                || (battleViewRoot.localScale - Vector3.one).sqrMagnitude > 1e-6f
+                || battleEntityRoot == null || battleEntityRoot.name != "3100"
+                || (battleEntityRoot.localScale - Vector3.one).sqrMagnitude > 1e-6f
+                || (battlePlayer.transform.localScale - new Vector3(0.3f, 0.3f, 1f)).sqrMagnitude > 1e-6f
+                || (battlePlayer.transform.localPosition - new Vector3(0f, -0.5f, 0f)).sqrMagnitude > 1e-6f)
+                throw new InvalidDataException("The original 3100 battle model hierarchy or transform differs from the official binding: "
                     + $"player={(battlePlayer == null ? "null" : battlePlayer.transform.localScale.ToString())}, "
-                    + $"wrapper={(battleWrapper == null ? "null" : battleWrapper.localScale.ToString())}, "
-                    + $"model={(officialBattleModel == null ? "null" : officialBattleModel.name + ":" + officialBattleModel.localScale)}; "
+                    + $"body={(battleBody == null ? "null" : battleBody.localScale.ToString())}, "
+                    + $"view={(battleViewRoot == null ? "null" : battleViewRoot.name + ":" + battleViewRoot.localScale)}, "
+                    + $"entity={(battleEntityRoot == null ? "null" : battleEntityRoot.name + ":" + battleEntityRoot.localScale)}; "
                     + "hierarchy=" + hierarchy + ".");
             privateSession = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
             run = privateSession.ActiveRun;
@@ -569,7 +579,7 @@ namespace Zjcs.Editor
             string previousDay = System.DateTime.Now.AddDays(-1).ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
             string dungeonPath = Path.Combine(slots.GetSlotDirectory(settlementSlot), "daily-dungeon-save.json");
             File.WriteAllText(dungeonPath, JsonUtility.ToJson(new Zjcs.Offline.World.DailyDungeonSave {
-                localDate = previousDay, usedEntries = 2, purchasedEntries = 1 }, true));
+                claimStateVersion = 3, localDate = previousDay, usedEntries = 2, purchasedEntries = 1 }, true));
             byte[] dungeonBefore = File.ReadAllBytes(dungeonPath);
             var session = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, settlementSlot);
             if (!File.ReadAllBytes(dungeonPath).SequenceEqual(dungeonBefore) || session.Save.localDate != previousDay

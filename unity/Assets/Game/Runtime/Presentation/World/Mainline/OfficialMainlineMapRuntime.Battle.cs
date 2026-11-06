@@ -184,18 +184,9 @@ namespace Zjcs.Presentation.World
                 EnvironmentGameId = scene.GameId,
                 AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
                 StatueProgress = progressionSave,
-                Options = new OfficialBattleSessionOptions
-                {
-                    SkipPrepareStatus = stage.SkipPrepareStatus,
-                    ShowMainPanelDelay = stage.ShowMainPanelDelay,
-                    LeaveInPreparing = stage.LeaveInPreparing,
-                    LeaveInPlaying = stage.LeaveInPlaying,
-                    ChangeCameraMode = stage.ChangeCameraMode,
-                    CanFastforward = stage.CanFastforward,
-                    CanChangePosition = !stage.JoinInMiddle,
-                    ChangePositionCenterX = playerEntry.X,
-                    ChangePositionCenterY = playerEntry.Y
-                },
+                Options = OfficialMapBattleSessionOptionsBuilder.Create(stage,
+                    !stage.JoinInMiddle, changePositionCenterX: playerEntry.X,
+                    changePositionCenterY: playerEntry.Y),
                 NativeNpcFactory = unit => mapClassId == 12 && unit != null && unit.Id != 1
                     && OfficialMap12NpcBattleModelView.HasBinding(unit.MonsterId)
                     ? new OfficialMap12NpcBattleModelView(unit.MonsterId, battleRoot,
@@ -343,7 +334,8 @@ namespace Zjcs.Presentation.World
             };
             OfficialBattleUnitAssembler.Initialize(formula, player, playerProperties, 3, 4, true);
             checkpoint.Units.Add(player);
-            AssemblePlayerSkills(combatCatalog, skillItems, player);
+            OfficialBattlePlayerLoadoutAssembler.Assemble(combatCatalog, skillItems, player,
+                progression.Player, progression, preserveZeroProperties: true, requireActiveSkill: true);
             OfficialBattlePetEnergyAssembler.TryConfigure(player, progression.Player,
                 progression.Catalog, combatCatalog, skillItems);
 
@@ -400,73 +392,6 @@ namespace Zjcs.Presentation.World
                 { ItemId = itemId, Rank = 1, Level = level, SubRank = subRank }));
         }
 
-        private void AssemblePlayerSkills(FightOfficialCombatCatalog combatCatalog,
-            FightOfficialSkillItemCatalog skillItems, FightBattleUnitState player)
-        {
-            OfflineSkillProfile profile = progression.Player.Skills;
-            int[] equipped = OfflineSkillProgression.EquippedActiveSkills(profile);
-            if (!equipped.Any(value => value > 0))
-            {
-                int starter = skillItems.InitialActiveSkill(progression.Player.InitialWeaponType);
-                if (starter > 0) equipped = new[] { starter, 0, 0, 0 };
-            }
-
-            IReadOnlyDictionary<int, long> sourceProps = OfficialBattlePropertyAssembler.ToMap(player.Properties);
-            int weaponItemId = OfflineEquipmentOperations.EquippedItemIdAtPosition(
-                progression.Player.Equipment, 10);
-            int currentWeaponType = skillItems.ItemTypeFor(weaponItemId);
-            var bindings = new List<FightOfficialSkillBinding>();
-            for (int slot = 0; slot < equipped.Length; slot++)
-            {
-                int itemId = equipped[slot];
-                if (itemId <= 0) continue;
-                int skinId = progression.Player.Wardrobe?.SkillSkins?.FirstOrDefault(value => value.SkillId == itemId)?.SkillSkinId ?? 0;
-                FightOfficialSkillItem item = skillItems.RequiredForSkin(itemId, skinId);
-                if (item.EntityId <= 0)
-                    throw new InvalidDataException("Official active skill item has no fight entity: " + itemId);
-                int rank = OfflineSkillProgression.OwnedRank(profile, itemId);
-                if (rank <= 0) rank = 1;
-                int level = progression.SkillProgression.SlotLevel(profile, 100, slot,
-                    progression.SkillContext().CurrentSeasonId);
-                if (level <= 0) level = 1;
-                bindings.Add(new FightOfficialSkillBinding
-                {
-                    EntityId = item.EntityId,
-                    Slot = slot,
-                    ItemId = itemId,
-                    UseItemId = item.ItemId,
-                    SkillSkinId = skinId,
-                    Rank = rank,
-                    Level = level,
-                    ProfessionAvailability = skillItems.ProfessionAvailabilityFor(item.ItemId,
-                        player.Profession, currentWeaponType, progression.Player.InitialWeaponType),
-                    SubRank = player.SubRank
-                });
-            }
-            if (bindings.Count == 0)
-                throw new InvalidDataException("Official player has no equipped or initial active skill.");
-            List<FightOfficialPassiveSkillBinding> passives = new List<FightOfficialPassiveSkillBinding>();
-            int[] passiveItems = OfflineSkillProgression.EquippedPassiveSkills(profile);
-            for (int slot = 0; slot < passiveItems.Length; slot++)
-            {
-                int itemId = passiveItems[slot];
-                if (itemId <= 0) continue;
-                int rank = OfflineSkillProgression.OwnedRank(profile, itemId);
-                int level = progression.SkillProgression.SlotLevel(profile, 101, slot,
-                    progression.SkillContext().CurrentSeasonId);
-                passives.Add(new FightOfficialPassiveSkillBinding
-                {
-                    ItemId = itemId,
-                    Rank = Math.Max(1, rank),
-                    Level = Math.Max(1, level),
-                    SubRank = player.SubRank
-                });
-            }
-            passives.AddRange(OfficialEquipmentBattlePassives.Collect(progression, progression.Player, player.SubRank));
-            OfficialBattleSkillAssembler.AssembleUnit(combatCatalog, skillItems, player,
-                sourceProps, bindings, passives, true);
-        }
-
         private static void AssembleMonsterSkills(FightOfficialCombatCatalog combatCatalog,
             FightOfficialSkillItemCatalog skillItems, FightBattleUnitState unit,
             Map10RuntimeMonster source)
@@ -516,7 +441,8 @@ namespace Zjcs.Presentation.World
                 SaveActiveBattle(false);
         }
 
-        public void OnBattleReportReady(FightBattleReport report) { }
+        public FightBattleReport FinalReport { get; private set; }
+        public void OnBattleReportReady(FightBattleReport report) { FinalReport = report; }
 
 
         private void FinishBattle()

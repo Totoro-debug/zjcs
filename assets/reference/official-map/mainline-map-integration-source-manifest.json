@@ -1,0 +1,472 @@
+{
+  "format": 1,
+  "operation": "Collect existing mainline story-version selection, map battle options/checkpoint/player-loadout extraction, Map12 private invitation and shared daily-dungeon core dependencies. Retain prior official payload and GUID identities. Unity expanded previously minimal texture/text importer metadata and serialized Map13 pipeline prefilter fields; these generated defaults are not a claim of complete original Sprite binding. No new art payload or full asset snapshot.",
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/mainline-shared-world-host-source-manifest.json",
+      "sha256": "f51c4940821b83949f19f6f67656d21503fc7220d65c65f16a69fcd1057c4f27",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "assets/reference/official-map/mainline-minimap-world-data-source-manifest.json",
+      "sha256": "6b29f0c56ed4dceb9d49079532b84b5eb7aa3db371a6ecd8016f29eb883053ff",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "assets/reference/dungeons-runtime-source-manifest.json",
+      "sha256": "25ff6bb6c442e2fb3aa659e941f165c2ec2350dd08662bdf382093d0cda401ef",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "assets/reference/daily-dungeon-achievements-source-manifest.json",
+      "sha256": "adf0e62a8d106318598d46b9e7702103835775df814020fed85f731cedca61d6",
+      "hashLineEndings": "LF"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.BuildingRuntime.cs",
+      "sha256": "0a259926567bf073bb86736b9c0a72d7af97fb5d8c45ac7c0fac5dcb0b3faa15",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Ui.cs",
+      "sha256": "33114f2544ac7f95b937ee187083044bf67e2e01f4e03d3659286dfb789a6c19",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/MainlineMapMiniMapSnapshots.cs",
+      "sha256": "f5a2829cdaafc44fd051c48689681e90cb62f6a4ecb7ba95ddd75eaa127190da",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Battle.cs",
+      "sha256": "7d384bdb316f82f69ef40f884d5616efbae314019c5c4189aa8fd8246dd0f08d",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map12Buildings.cs",
+      "sha256": "e9eb628f8df97d56a893c55e506de6022294420f54895206d684a79d9fc5c7d6",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs",
+      "sha256": "0bcda60501a6d6dd3090978b3dfa0379cbe3f89805bc99714668d5ca8abea1fc",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/UniversalRenderPipeline.asset",
+      "sha256": "4758dc004257cb79a5a7f7c81ff5e25949a9782355f0d49184eeed865bb4eb63"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/BtnAloneWorldMapBuild_SmallIcon_01-48de0aee0f.png.meta",
+      "sha256": "7275f797bfa24f797084132f763127b0c67234f2c73218ab39768d68855daeff"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/BtnAloneWorldMapBuild_SmallIcon_02-8e434804a5.png.meta",
+      "sha256": "990a88d497d633db5617dd61445211cac5e15e69aa196160379de7fd49c2b5a7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/BtnAloneWorldMapIsland_Icon_01-bcaeea6f31.png.meta",
+      "sha256": "95d490b6a113535f0613cf1b4ebf02b721f2523c643c438c9a157bffffd9717a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/BtnAloneWorldMap_Bg_01-f969666279.png.meta",
+      "sha256": "3214ad38b571a0b1ade7ae427826d3e24bad41a58eeaa6b57c661e6aa73fcc08"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/BtnAloneWorldMap_Bg_02-81d86e68a4.png.meta",
+      "sha256": "cd94ec40e741c3a93d765fc1ec4acd98a1cd2bb1429fc0840d527f07843855dd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/BtnAloneWorldMap_Icon_01-2dd08aaa81.png.meta",
+      "sha256": "2149d24ed869ebb488f36c45a3062c24069b565c4d73a3b14d5829476f5e7fc1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/BtnAloneWorldMap_Icon_03-435600f220.png.meta",
+      "sha256": "24e67d37d055c07375ceba3a68c10165447851c7d7a17f1074fff1737ad790d3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/BtnCheck_Sel-4f63d09337.png.meta",
+      "sha256": "8d06193d378dbb547e77ce2be47616ffc263c41382ecad44e225fdf46cd8c8b5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/BtnCoordinate_Notice-04afcf6ca4.png.meta",
+      "sha256": "a635a08dbfaf418eb5190e0ab040658287fafe2f35929ea46f2134b9c191dbb2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/BtnOk-27952bd12b.png.meta",
+      "sha256": "7cbc33094b5f51d58e6123ac26f16105427734fd3af1b4bec53b501889043674"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/BtnOk_Notice-6cec190928.png.meta",
+      "sha256": "c6c02ac50dbb0af49c8af89288afbe927026aab6aa5617f39e3819791cf305be"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgAloneWorldMap_Bg_01-130a04a40c.png.meta",
+      "sha256": "44cd5beae2ea02aae26a3e1eff829bf4c1f3e9dedaeb76880be75081c49ecde2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgAloneWorldMap_Bg_02-8aa8d89f63.png.meta",
+      "sha256": "1caaeedf0638848d26499ab7ae017504cd83cbf84ecb44dd4901af5ca914fc1a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgAloneWorldMap_Bg_03-91da511148.png.meta",
+      "sha256": "cd1cf94b6f50a7ca49c932de15c15a93cf4fa229bf1606e5a248a36c02c7a7d7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgAloneWorldMap_Bg_04-7839eeb1af.png.meta",
+      "sha256": "94e475208a0299195da98a74389844f51e72852147bb0d16779525d80775635f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgAloneWorldMap_Bg_05-a6b2f698ce.png.meta",
+      "sha256": "890e1ef024c4bb0300cbe70a3fe192b88a304b8bb4ecc667234d4c860c21f718"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgAloneWorldMap_Bg_07-de6cc82355.png.meta",
+      "sha256": "5252c490cf5d371cfeb35ae6bacdfc12971e35d92ba2f08162f5e1bf066badfc"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgAloneWorldMap_Bg_09-d39e951837.png.meta",
+      "sha256": "516f9a4cfe1ff9048e117de9f44ca1935f1bf89a9a24d698c7d6deea5c345907"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgAloneWorldMap_Bg_11-a0579219e7.png.meta",
+      "sha256": "4055e635421aa4565abddb0ca8942bf4d485949991fba698b0d7f4af15b1bf0f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgAloneWorldMap_Bg_12-5e780f4fe1.png.meta",
+      "sha256": "7af3020af4c477874e2001587fb9ffd9e9234819c6d68062fd17a0c6ca505567"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgAloneWorldMap_Bg_13-72970148e9.png.meta",
+      "sha256": "5873c652c5b7afdc0160b31407c17ffe98fe2b2bff819678d9d265765f78fa64"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgAloneWorldMap_Frame_01-e7e51d6e91.png.meta",
+      "sha256": "679cf1d844b80b15394bcac4bd6663bf325fc8db4ce8d57417740079f5af651c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgAloneWorldMap_Frame_02-458870d8da.png.meta",
+      "sha256": "8ff1314cb9768ed77f48154603d50d7300dc6638d04363f3497a6cdc37536a2d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgAloneWorldMap_Icon_01-e15e5cea21.png.meta",
+      "sha256": "92b0b62eddc5c0bd205e1096b1577088142707c7d90c1773dce6888239021e7d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgBg_Countdown-9240d64b8f.png.meta",
+      "sha256": "fc0aed0faed61bf1c20dd60ce670b3780c4770b311576e703bb66e0c7c532ccf"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgBg_CountdownGreen-db101ae9bf.png.meta",
+      "sha256": "8b24ef269605f148a49f416c7a337fa6b1d60090304109b1320d57151deacc0a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgBg_Hourglass-6c9455ad29.png.meta",
+      "sha256": "10bb8d9c70531fe5a62be13f4a3ac253f8702ce838c1998068ca1235f8431f8e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgBg_Neirongban1-e4f1968a1e.png.meta",
+      "sha256": "da3511b421eff4dc351824e05d2fe652b82bdeb3671adb7a1066ee55c1e9b06c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgBg_TaskIllustration-9335c6e94d.png.meta",
+      "sha256": "d226620a96dd7833531c2711799b34ee94f8550a1b07f2d21336e18b084b0eec"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgBlue-852756b231.png.meta",
+      "sha256": "ddadddabb645c29a25f686142a941fdf78efe93be71649308af4a5516fdf057d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgBlueDot-d245e09217.png.meta",
+      "sha256": "f85d523e48f53839cd866a980e34b1727b70d2754c74f3d83afeae5b36771bde"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgBlue_Upgrade-f77095c4c9.png.meta",
+      "sha256": "5c4d734f2deb134b3eed4e8501384f92fbef6e9ca2884d17f6fcb70f1e6d6347"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgCompleted-1f7f338f7c.png.meta",
+      "sha256": "fe94515b9db2835efb03e1e398ec20a0967619fd0d84c968086ffc81944772f4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgGold-851cb98f97.png.meta",
+      "sha256": "5d18d234a3fc01952a6cd0b1ef117808be791d6899d02d12a86e261e65e27f52"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgLIne_Star-e2b7dacf32.png.meta",
+      "sha256": "84817124da4231feb04556a4ff01321fef6fbd55eb028614dd75fc6f7f1ce5f9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgNew-f37ed67204.png.meta",
+      "sha256": "21262e47219c2f08ca58dbe474ccea2a44a92d811714308d1d44818c330ad5a2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgRedDot-02ebb92c90.png.meta",
+      "sha256": "173d69a5461c8b5272709d2e2772a9fa893eb4b637075dd561494ae5046e05c4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgTask_Arrow-02fcd28f55.png.meta",
+      "sha256": "55f720d9e22a6ecfb2c1f31ca7033a32ad7c341cef026b02718fbd3133b4df48"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ImgTask_Line-7488299bf6.png.meta",
+      "sha256": "cd16f9c698727b349050258fdca63e0de11323b58fa062619432e261640c8b90"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/ItemFromArrow-56a00278c5.png.meta",
+      "sha256": "82e85833755191958707c3831a6c78a302d50a9217ead316ed36f3d38ce8b745"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/map_11_stage_bg-738424c381.png.meta",
+      "sha256": "508a710d0d54ab6f85467423e08ef644d88f1e8a5ae679576b1f72ab6dd71342"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/Sprites/map_13_stage_bg-d85014080a.png.meta",
+      "sha256": "efef1df9b55c621263b364583adc35ddd2f51ac5c1359bc25dbdaf2b231e7ea7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/map14-alone-ui-source-manifest.json.meta",
+      "sha256": "1a15a1a683d4afb3e3ad8cbc4272819578dfd0402b9dd6e4f73293d7e26a0317"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Alone/map14-alone-ui.json.meta",
+      "sha256": "e33c9cc1d5721455ca7e9a793ce5830f55e98f533ce35d9df3d64ac0b4227d4d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/BtnAloneWorldMapBuild_SmallIcon_01-48de0aee0f.png.meta",
+      "sha256": "ccaed770f3279e44c8560dae3b8636dbf2b35ea19cec469fff568208e9f287d9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/BtnAloneWorldMapBuild_SmallIcon_02-8e434804a5.png.meta",
+      "sha256": "594219c6efbfb4b598dde23fc32677d6646673a34470dcc93c9bc1db90772c94"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/BtnAloneWorldMapIsland_Icon_01-bcaeea6f31.png.meta",
+      "sha256": "668391fdfaa35932cf8f245f908e85799e1a7b9760b4aab562acbb4f31aaa9be"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/BtnAloneWorldMap_Bg_01-f969666279.png.meta",
+      "sha256": "c9404f87ca31d880d6412578a78cfc1f0678d6a275fff3a1d7a2c8f8404e22b7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/BtnAloneWorldMap_Bg_02-81d86e68a4.png.meta",
+      "sha256": "0b57cd9f3afbeff48b45f4a4cf2413d8aedc804175c60d48124ea67dbd5a5458"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/BtnAloneWorldMap_Icon_01-2dd08aaa81.png.meta",
+      "sha256": "d83c5123d295c84669454fade329ff32887d9f12fa6a413fc024228c8c156ea6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/BtnAloneWorldMap_Icon_03-435600f220.png.meta",
+      "sha256": "e2d4e90f7bb652288193cc376cc0865efa38574ae9e7c64ea291d405da128f25"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgAloneWorldMap_Bg_01-130a04a40c.png.meta",
+      "sha256": "7dc38da0f1163240e10e1aebd525fa73f10f1172d57bb7d54ac780d546db7997"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgAloneWorldMap_Bg_02-8aa8d89f63.png.meta",
+      "sha256": "486c1a9336cc4b2364dbf6024a168f4b7ead8c4702f3641d5f3fc75f951ae6a5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgAloneWorldMap_Bg_03-91da511148.png.meta",
+      "sha256": "43e79553dace774920626789cf83938048e36b3aeca707ddf0e55f35e9b83a36"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgAloneWorldMap_Bg_04-7839eeb1af.png.meta",
+      "sha256": "a085db1a54cb454d1b3bbaa543d73b91ebb37d62742567368e556813954be856"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgAloneWorldMap_Bg_05-a6b2f698ce.png.meta",
+      "sha256": "61f9df85ae119932c47efd4be8ddb8ec6e3618de469d459897313b21bb8e526a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgAloneWorldMap_Bg_07-de6cc82355.png.meta",
+      "sha256": "61457ccaaa3eaacacad9800293a62dfce0b45aaf89ebe58cf5d0d60890f9c402"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgAloneWorldMap_Bg_09-d39e951837.png.meta",
+      "sha256": "44c224a89bc2f580b00f127009787819eec14d5dafc937c3262bf5ca6c4b7006"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgAloneWorldMap_Bg_11-a0579219e7.png.meta",
+      "sha256": "6a7254cae7326685063b2e5ce79fb825a3731a679a5bcd255cb4b4208abc21c0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgAloneWorldMap_Bg_12-5e780f4fe1.png.meta",
+      "sha256": "ab67225b8c6b83e128b8b03ccc96ba5c874f5b8b65200790eff8cd0752c9f93e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgAloneWorldMap_Bg_13-72970148e9.png.meta",
+      "sha256": "a0401f3632c20fd21ec67ac2b730cd2d83521ec0d7bc2586041fa2fe9675cef3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgAloneWorldMap_Frame_01-e7e51d6e91.png.meta",
+      "sha256": "4d16cbfea4c61b98f575352749c77a7b70df4c6d0d0cebda79754c7ca0f11cf0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgAloneWorldMap_Frame_02-458870d8da.png.meta",
+      "sha256": "ae147d016b0e03cc4930bda539ae8963ea02e0f436ba706f4144110f2668f474"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgAloneWorldMap_Icon_01-e15e5cea21.png.meta",
+      "sha256": "8f0361dc60a27eb634dea93f3f03e1787e86b311d2e212a92be248d1b40431ad"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgBg_CountdownGreen-db101ae9bf.png.meta",
+      "sha256": "28b1795db5e7c74ced0d73e23d9fe18790189865b401a847c7bc7e7c24e0e94d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgBg_Neirongban1-e4f1968a1e.png.meta",
+      "sha256": "5ef4ad9bb88d4baedde2a18d379d95ba3606fb8f95e073226c94ea87d7b0ed0c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgBg_TaskIllustration-9335c6e94d.png.meta",
+      "sha256": "fe2367e0ce84848ea4224327379573c2908ad6fe696da447b4ab8a6a633d4366"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgCompleted-1f7f338f7c.png.meta",
+      "sha256": "f5df10aeaf7aadce501fda64fafb90ba7425197cc89384f1c9bc6dbec42f6a0b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgGold-851cb98f97.png.meta",
+      "sha256": "edf0edc271b59e5de4369e33bd58002cc3a71d47d752c860ea6d25dc7041a4d4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgTask_Arrow-02fcd28f55.png.meta",
+      "sha256": "11bf47e15a55a28b72ef427a7a48c7be00517a5d5ca8b77e50ed2a12f5f0852f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ImgTask_Line-7488299bf6.png.meta",
+      "sha256": "642858288a524713a23a7a750529b1b12c6ddfdaa9a9a05555a5ee9041175b0f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/ItemFromArrow-56a00278c5.png.meta",
+      "sha256": "74c4125f9cba3624aa40160dab14f9fee41409d01bb49167680da0da644c8fa6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Sprites/map_13_stage_bg-d85014080a.png.meta",
+      "sha256": "a2ed1e95b46a420c71cb3c4f2eb2da261015b7b1f808ff3dc952f40d2ff76178"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMapBattleCheckpointBuilder.cs",
+      "sha256": "993c6345271271224980c3855d7b3fa5851fb9bedd822640d66e455ec322d084",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMapBattleCheckpointBuilder.cs.meta",
+      "sha256": "0e2e221c5f16f5f07c2cc9a343a313a2bc802f2001e52dfc8de43bda8a65cc45",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMapBattleSessionOptionsBuilder.cs",
+      "sha256": "f0558bff450b5bb5819465d2a5f1e077ca6bb3714b24de447aa45ef01c0446b9",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMapBattleSessionOptionsBuilder.cs.meta",
+      "sha256": "dd79be414bd35c87bd1ebd9baecc90df8d98c690bbed49349f18a35329d69293",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/OfflineDailyDungeonSession.cs",
+      "sha256": "f36874f43f6c44099cb069f006bf4ff32c8231eea2cc2375dc2764fa4033a1f7",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/DailyDungeonAchievementRules.cs",
+      "sha256": "b7ae5f8d80d48e5c73955dcef233db9706082e89a4e89358f3f544ed31e135f9",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/DailyDungeonAchievementRules.cs.meta",
+      "sha256": "8cc1bbd80938b3cdfaef2f0056337182beab6d236996d4b8a0c0f5ff09761c2e",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/DailyDungeonSettlementHudModel.cs",
+      "sha256": "6cac25fe01e73815453c5063ae835c003fcbca70aae944d3343fd8ea7ddec69d",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/DailyDungeonSettlementHudModel.cs.meta",
+      "sha256": "1f462654a270397c806ef6f5140b7fccff6045bb9a5a9ef6c481ad7642acace4",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/OfflineDailyDungeonModule.cs",
+      "sha256": "d4cf01d4a2dd480dd48d857bd1c4917db6d6c5fb96120c627181ed14eb1fecdf",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/OfflineDailyDungeonModule.cs.meta",
+      "sha256": "807725a193565ae761cc3a7e9835744a3ab16c99fc376c861e54286e2f6c0aa9",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/daily-dungeon-achievements.json",
+      "sha256": "95fe60e6b18a97adf967b2a71086db50e2787e28d21f2020ca9a6b659308a841",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/daily-dungeon-achievements.json.meta",
+      "sha256": "a97ec86547e9eb31c095f16a5dd02c728650fc831970575729fcdfa3f3dc1129",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/private-routes.json",
+      "sha256": "038473263af6495101b30739ca78dc86d7ae567974f6395647f2841e6485b6ec",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/private-routes.json.meta",
+      "sha256": "7ee2fad8ca5deee39ced990e643af4ce3768c656a4e44976adedcff8c5444593",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/DailyDungeonModuleRuleAcceptance.cs",
+      "sha256": "2d0b72ad06a73637e90ca2e93c4f053c008783bd22e0de91aac31576ee29d242",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/DailyDungeonModuleRuleAcceptance.cs.meta",
+      "sha256": "137cb4457ff33ccb3c2d171f96201941dd622dc69decf89bcdcd8be5e344e425",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerLoadoutAssembler.cs",
+      "sha256": "e9b2374505b5f6f3abadc5007304a508049b35c1198f4b03882d565d401d5e4b",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerLoadoutAssembler.cs.meta",
+      "sha256": "49871bac92b6d656ef2c28a7f166d45af9a521fa1516f1ec8758001d22259cf5",
+      "hashLineEndings": "LF"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/record_mainline_map_integration.py",
+      "sha256": "f4b809069eaf170470c11105cd3212b36845cb40e4e35bc3d1804f4a13730c5b",
+      "hashLineEndings": "LF"
+    }
+  ],
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs",
+      "operation": "PrivateDungeon=2 invitation, committed assistance and route checkpoints; unrelated report-window call remains outside this integration."
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Zjcs.Editor.asmdef",
+      "operation": "Reference original entity world stage, lifecycle, view and legacy stage assemblies for map validation."
+    }
+  ],
+  "remaining": [
+    "Complete original character and minimap presentation",
+    "Map16 formal entry",
+    "Multi-partner and process-cold-start private battle validation",
+    "Windows Player publication"
+  ]
+}

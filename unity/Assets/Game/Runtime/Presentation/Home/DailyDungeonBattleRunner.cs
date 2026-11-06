@@ -490,7 +490,8 @@ namespace Zjcs.Presentation.Home
             }
         }
 
-        public void OnBattleReportReady(FightBattleReport report) { }
+        public FightBattleReport FinalReport { get; private set; }
+        public void OnBattleReportReady(FightBattleReport report) { FinalReport = report; }
 
         private bool SaveChallengeCheckpoint(string serialized)
         {
@@ -576,7 +577,7 @@ namespace Zjcs.Presentation.Home
             };
             OfficialBattleUnitAssembler.Initialize(formula, player, playerProperties, maxHpId, speedId);
             checkpoint.Units.Add(player);
-            AssemblePlayer(combat, skillItems, player, playerSave);
+            OfficialBattlePlayerLoadoutAssembler.Assemble(combat, skillItems, player, playerSave, progression);
             OfficialBattlePetEnergyAssembler.TryConfigure(player, playerSave,
                 progression.Catalog, combat, skillItems);
 
@@ -836,56 +837,6 @@ namespace Zjcs.Presentation.Home
             return assistMaxPlayerOverride > 0
                 ? Math.Min(assistMaxPlayerOverride, officialMax)
                 : Math.Min(3, officialMax);
-        }
-
-        private void AssemblePlayer(FightOfficialCombatCatalog combat,
-            FightOfficialSkillItemCatalog skillItems, FightBattleUnitState player, OfflinePlayerProgress save)
-        {
-            int[] equipped = OfflineSkillProgression.EquippedActiveSkills(save.Skills);
-            if (!equipped.Any(value => value > 0))
-            {
-                int initial = skillItems.InitialActiveSkill(save.InitialWeaponType);
-                if (initial > 0) equipped = new[] { initial, 0, 0, 0 };
-            }
-            var properties = OfficialBattlePropertyAssembler.ToMap(player.Properties);
-            int weaponItemId = OfflineEquipmentOperations.EquippedItemIdAtPosition(save.Equipment, 10);
-            int currentWeaponType = skillItems.ItemTypeFor(weaponItemId);
-            var skills = new List<FightOfficialSkillBinding>();
-            for (int slot = 0; slot < equipped.Length; slot++)
-            {
-                int itemId = equipped[slot];
-                if (itemId <= 0) continue;
-                int skinId = save.Wardrobe?.SkillSkins?.FirstOrDefault(value => value.SkillId == itemId)?.SkillSkinId ?? 0;
-                FightOfficialSkillItem item = skillItems.RequiredForSkin(itemId, skinId);
-                int rank = Math.Max(1, OfflineSkillProgression.OwnedRank(save.Skills, itemId));
-                int level = Math.Max(1, battleProgression.SkillProgression.SlotLevel(save.Skills, 100, slot,
-                    battleProgression.SkillContext().CurrentSeasonId));
-                skills.Add(new FightOfficialSkillBinding
-                {
-                    EntityId = item.EntityId, Slot = slot, ItemId = itemId, UseItemId = item.ItemId, SkillSkinId = skinId, Rank = rank,
-                    Level = level,
-                    ProfessionAvailability = skillItems.ProfessionAvailabilityFor(item.ItemId,
-                        player.Profession, currentWeaponType, save.InitialWeaponType),
-                    SubRank = player.SubRank
-                });
-            }
-            var passives = new List<FightOfficialPassiveSkillBinding>();
-            int[] passiveItems = OfflineSkillProgression.EquippedPassiveSkills(save.Skills);
-            for (int slot = 0; slot < passiveItems.Length; slot++)
-            {
-                int itemId = passiveItems[slot];
-                if (itemId <= 0) continue;
-                passives.Add(new FightOfficialPassiveSkillBinding
-                {
-                    ItemId = itemId,
-                    Rank = Math.Max(1, OfflineSkillProgression.OwnedRank(save.Skills, itemId)),
-                    Level = Math.Max(1, battleProgression.SkillProgression.SlotLevel(save.Skills, 101, slot,
-                        battleProgression.SkillContext().CurrentSeasonId)),
-                    SubRank = player.SubRank
-                });
-            }
-            passives.AddRange(OfficialEquipmentBattlePassives.Collect(battleProgression, save, player.SubRank));
-            OfficialBattleSkillAssembler.AssembleUnit(combat, skillItems, player, properties, skills, passives);
         }
 
         private static void AssembleMonster(FightOfficialCombatCatalog combat,

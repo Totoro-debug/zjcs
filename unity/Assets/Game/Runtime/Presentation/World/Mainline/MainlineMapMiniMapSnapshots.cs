@@ -172,7 +172,7 @@ namespace Zjcs.Presentation.World
             if (map.MapClassId == 15) return null;
             var source = Resources.Load<TextAsset>(map.Resource("stories"));
             var story = source ? JsonUtility.FromJson<Map10RuntimeStoryData>(source.text) : null;
-            string manifest = map.MapClassId >= 13 ? "871_156598" : "854_156383";
+            string manifest = map.StoryDataManifest;
             if (story == null || story.mapClassId != map.MapClassId || story.manifest != manifest || story.mapLogicTags == null)
                 throw new InvalidDataException("Official map state restoration data is absent or differs from its source.");
             return story;
