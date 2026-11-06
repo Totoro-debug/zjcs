@@ -2,11 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成（旅行配置、主页面、详情、伙伴选择和本地事务已接通；状态窗原生模型演出、缺失伙伴头像和 Unity 实际运行验收仍缺）
-
-## 功能简介
-
-羁绊第一节点后开放四格伙伴旅行。选择已结识伙伴派遣，计时完成后领取一次奖励；召回遵循用户确认的离线规则：不发奖励，移除旅行，退还仍属于派遣日的次数并恢复原位置委托。
+状态：未完成（旅行配置、主页面、详情、伙伴选择和本地事务已接通；选择已结识伙伴派遣，计时完成后领取一次奖励；召回遵循用户确认的离线规则：不发奖励，移除旅行，退还仍属于派遣日的次数并恢复原位置委托。
 
 入口沿用主城 `TravelNote` 页签中的官方 `NpcAdventureEntry`，羁绊第一节点为基础前置；实际开放还要求从已通关主线进度解析出有效官方旅行节点。联网战斗入口按离线范围关闭。
 
@@ -18,7 +14,7 @@
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-固定 `871_156598` 的 7 个原旅行 prefab、44 份组件绑定与 3,489 条中文使用独立 `npc-travel-ui/source-manifest.json` 记录；运行目录为 `assets/official/npc-travel-ui/`，包含 `panels.json` 与 72 张原贴图。共享接入按来源 SHA 验证全部 73 条运行路径并合并中央来源及显式清单，保留既有预期哈希。
+伙伴旅行使用 7 个原 prefab 和对应中文文本，Unity 运行目录为 `assets/official/npc-travel-ui/`，资源与显式加载绑定见 `npc-travel-ui/source-manifest.json`。
 
 第二批补入原 `MarkableConfirmDialog` 及其 5 张依赖图像，现为 8 个 prefab、59 份组件绑定、3,493 条中文和 78 条运行路径。前批 72 张 PNG 的来源、实际文件和中央绑定 SHA 均未改变；`panels.json` 按新增原确认框重新转换并登记新 SHA，旧 73 条路径哈希、原来源指纹和 72 张图像完整凭据保存在 `npc-travel-ui/registration-history/registered-v1.json` 及相邻历史文件。首批未另存完整来源文件原字节，该限制如实记录；第二批保存完整来源和增量快照。
 
@@ -55,7 +51,7 @@ Unity 离线旅行 UI 载荷由 `scripts/prepare_unity_npc_travel_ui.py` 从固�
 11015–11022 配置均含 `FigureModelUI`／`FigureModelWithWeaponUI`。复查固定 APK `871_156598` 的完整 AssetTable 路径、当前热更新 `871_156598` 的缓存提取物和已核对的新版同名资源记录：11015–11018 有 Spine 骨骼、图集及控制器对象，但没有对应 `NpcModel_UI` prefab；11019–11022 有模型采样对象。可取得的八人 `npc_<id>.png`、`Low.png` 与 `placeholder.png` 均为 108 字节且 SHA256 相同（`0b92327864244a52…`），不是可显示角色贴图。`FigureImage` 与 `Icon` 路由都没有可用图像。八人仍开放选择，但没有可见头像；状态窗按配置选择模型及 Idle/Run 动画仍未接入。没有用相似伙伴或占位纹理冒充官方头像。
 
 - 官方 `NpcAdventureTravelStartStatusDialog`、`NpcAdventureTravelEndStatusDialog` 的 Spine Idle/Run 模型和换装已经按免费迁移路线采样为 Unity 原生网格数据，76 名伙伴的 UI/WithWeaponUI 共152个模型及原始贴图位于 `assets/official/npc-travel-ui/travel-models/`，回执登记在旅行来源清单。尚未将采样数据打包进 Unity StreamingAssets，或接入 UI 原生网格播放、状态窗及出发／返回演出。
-- Unity Editor 编译和实际运行验收未完成。Editor 当前显示 Safe Mode 提示，尚未重新导入并确认编译结果。旅行入口、鼠标／键盘输入、奖励发放、08:00刷新、召回、时钟回拨、存档恢复和失败回滚尚未在 Play Mode 验证。
+- Unity Editor 导入、编译、Play Mode 与 Windows Player 流程尚未完成验证。
 
 ### 尚未接入的表现
 

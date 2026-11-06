@@ -28,13 +28,13 @@
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-`prepare_activity_ui.py` 从固定 `871_156598` APK / 匹配版本官方 CDN 缓存解码 `ActivityEntryPanel` 所引用的图片卡片与签到、SevenDayTask、BingoActivity、ScratchCardActivity 界面。此次登记 109 个原始 prefab、757 项运行资源、13 张完整消费的活动配置表，以及同版本中文语言表；运行目录为 `assets/official/activities.json`，动态贴图进入显式加载清单。各项原始包名、哈希、对象路径及输出 SHA256 见 [活动来源清单](../../assets/reference/activity-ui/source-manifest.json)。没有生成、截图裁切或重绘素材。
+活动 UI 资源由 `prepare_activity_ui.py` 从固定版 APK 和同版官方缓存恢复，运行目录为 `assets/official/activities.json`，动态贴图通过显式清单加载。prefab、配置、语言和素材凭据见[活动 UI 来源清单](../../assets/reference/activity-ui/source-manifest.json)。
 
-当次转换有 32 个入口（29 个主题签到 + 成长试炼 / 宾果 / 刮刮乐）；主题活动只开放已接入的签到模块，其余节日小游戏仍待迁移。取消活动开始 / 结束排期、倒计时及开服等待；签到每日一次，宾果 / 刮刮乐原始 30 套配置分别保存进度。刮卡的本地预抽结果和三个匹配图案结算属于离线规则适配，不声称已取得服务器实现。
+签到活动目录包含 29 个主题签到以及成长试炼、宾果和刮刮乐。离线版取消活动开始／结束排期、倒计时及开服等待；签到每日一次，宾果／刮刮乐分别按原 30 套配置保存进度。刮卡预抽结果和匹配结算按已确认的离线规则本地保存，不推定服务器实现。
 
-后续补入赛季七日任务100～105的六套原面板、六套任务行及六套积分格，来自固定版本的 `prefabs_ui_seasonactivity_season1`～`season5` 与 `prefabs_ui_activity_s6`。当前 [活动 UI 来源清单](../../assets/reference/activity-ui/source-manifest.json)登记127个 prefab、801项运行资源；`ActivityEntrySevenDayTaskHandler.OnActivityOpen` 按 `DisplayCommonEntry` 过滤通用入口，赛季目录卡片为本地导航，面板与配置仍为原版。签到表2仅在 `activity_sign_days` 存在 ID 2 奖励配置，没有对应原导航或专用面板；本地入口复用已登记的官方通用签到面板，独立进度按自定义单机规则保存。
+七日任务 100～105 使用原赛季任务面板、任务行和积分格；`ActivityEntrySevenDayTaskHandler.OnActivityOpen` 按 `DisplayCommonEntry` 过滤通用入口，赛季目录卡片作为本地导航。签到表 2 有 ID 2 奖励配置但没有原导航或专用面板，本地入口复用官方通用面板并按单机规则保存独立进度。prefab 与配置来源见[活动 UI 来源清单](../../assets/reference/activity-ui/source-manifest.json)。
 
-检索固定版本完整资源清单和本地已缓存容器后，`ActivitySlime/Sign/ActivitySlimeSignDialog` 未定位到资源包；物品 `1478`、`1487`、`35968`、`35986`、`35987` 的 RawIcon 未定位到 Sprite，均在来源清单 `missing` 中保留。孤独摇滚签到的背景和 NPC Sprite 实际为 16px 白色占位，真实美术未取得，因此不放入活动目录。不使用其他图片冒充。部分原始动态角色预览仍未转换，以上 prefab / 图集已提取不代表该动画已迁移。历史“签到专有面板缺失、活动文字入口”的说明保留为此前状态，以本节和运行时清单为当前状态。
+固定版本缺少史莱姆签到的专有面板和部分物品图标；孤独摇滚签到的背景与角色图为白色占位。按已确认方案使用官方通用签到面板并隐藏无关 IP 内容，不将其称为专有面板还原；动态角色预览仍待接入。
 
 `scripts/prepare_activity_completion.py` 独立输出 `assets/official/activity-completion/`，来源清单为 `activity-completion/source-manifest.json`，Unity 显式贴图绑定尚待接入。输入均为固定 APK 与经过原版本清单校验的 CDN 依赖；保留原 prefab、组件 path_id、原骨骼／图集／初始动画、Skin、材质、RectTransform 和转换输出 SHA256。7 个静态角色／宠物 SkeletonGraphic 使用原初始动画逐帧转换，不自绘；火锅签到嵌入面板的 ImgStove 来自原 RawImage 指向的 Texture2D，保留原面板的初始可见状态。
 
@@ -63,8 +63,6 @@
 ## 尚未实现
 
 - 已授权开放主题的签到、原奖励格、换装预览、赛季100～105七日任务与积分领奖；暂停联动的入口继续关闭。
-
-- 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
 
 ## 代码与资源入口
 

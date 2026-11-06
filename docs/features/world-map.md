@@ -18,13 +18,13 @@
 
 大陆总览移植：新增 `prepare_official_maps.py`，直接从固定 APK 转换 `WorldMapIsland`、`WorldMapSky`、`WorldMapSpace` 的 RectTransform、原图、九个地点 ID、背景自适应和缩放参数。登记 33 个原始 Sprite 与 3 张星球 Spine 图集，其中实际新增 29 张 PNG；其余图像复用既有文件。原始数据、输出哈希、bundle / 对象 ID、完整消费的三张地图配置表和效果缺口见 [地图来源清单](../../assets/reference/official-map/source-manifest.json)。
 
-本节记录后续素材转换及实际替换，保留前文地图总览阶段的来源历史。范围为固定版本全部 373 个地图定义，包含九个大陆地区、副本和活动地图。
+范围为固定版本的 373 个地图定义，包含九个大陆地区、副本和活动地图。
 
 来源继续使用固定 APK `871_156598` 和匹配原清单的已校验 CDN 缓存。373 组原始导航 / 放置表输入凭据见 [map-layout-source-manifest.json](../../assets/reference/official-map/map-layout-source-manifest.json)。地形、实体模板、外观、交互包装、界面、昼夜层、水面、剧情媒体及音频分别登记在 `official-map/` 对应 `*-source-manifest.json`；当前地图资源注册包含 18,559 项本地资源，并保存输出数据 SHA256。已缓存新版同名包仍为独立研究来源，没有冒充原版本补齐。没有新增自绘位图。
 
 `prepare_map_minimaps.py` 读取原 `MiniMapPrivateRegionMaskManager` 的动态分区 Tilemap GUID、原 manifest 资源路径、Grid 单元尺寸和世界变换，补转换静态根 prefab 未包含的地图地块。149 个地图配置共用 65 份原始小地图，包含 1,788 条配置分区引用；转换记录 3,148 项输入对象凭据、5 张解码纹理及网格输出哈希，见 [minimaps-source-manifest.json](../../assets/reference/official-map/minimaps-source-manifest.json)。原编辑器玩家占位图不作为地块叠加。全屏地图接入 169 种原 MiniMapMark 外观、筛选、定位、滚轮 / 原滑条缩放、拖动和已激活入口传送。地图交互对话根据原 DialogIconPrefab 或 NPC FigureImage 绑定官方图像。
 
-原 WorldStage 组件、970 个原始剧情图及 15 个旧版对话适配图在本地执行。NPC Touch 与 Function 分开提供交谈和委托，支持原始提交物品流程。私有 / 公共区域生成条件、区域状态条件和原探索度的 100 点激活加成已接入。无女神像区域在私有探索全部完成后转为公共状态，是缺少服务端实现时的单机适配；没有把这个推断标为已取得的原服务端规则。原战斗属性计算仍使用项目的本地规则。
+原 WorldStage 组件、原始剧情图及对话图像在本地执行。NPC Touch 与 Function 分开提供交谈和委托，支持原始提交物品流程。私有／公共区域生成条件、区域状态条件和原探索度的 100 点激活加成已接入。无女神像区域在私有探索全部完成后转为公共状态，是缺少服务端实现时的单机适配；没有把该判断标为原服务端规则。原战斗属性计算仍使用项目的本地规则。
 
 活动的 522 条原始关卡配置保留赛季和关卡各自进度。踩石板接入方向、进入次数和传送落点事件；活动棋盘和世界机关的完成标记分别保存，离开地图再返回恢复当前棋盘。
 
@@ -52,11 +52,11 @@
 
 私人副本胜利改为推进一个原始入口状态，避免跳过结晶螺旋树的战后剧情；公共重复挑战保留建筑激活状态。旧本地存档仅恢复尚未播放的原战后检查点，不重复发放已领战斗奖励。
 
-本节更新地图模块的实际接入状态，前文 2026-10-13 的资源数量及“新版尚未接入”保留为历史记录。`prepare_map_particles.py --use-verified-counterparts --upgrade-particle-motion` 检查当前实体、地形、Timeline、Playable 和剧情角色引用的 8,706 个 prefab，转换 3,010 个带粒子的 prefab、41,551 个发射器及原始材质纹理，当前转换依赖无失败。转换结果为空时移除旧缓存，清理 54 个已失效 prefab 的 278 个隐藏发射器。资源、对象、输入哈希、原始 URI 及逐文件输出哈希见 [particles-source-manifest.json](../../assets/reference/official-map/particles-source-manifest.json)；运行文件位于 `assets/official/map-particles/` 和 `map-particles.json`。未新增自绘位图。
+地图粒子载荷由 `prepare_map_particles.py` 从官方 prefab、Timeline、Playable 和剧情角色引用恢复，运行文件位于 `assets/official/map-particles/` 与 `map-particles.json`；输入身份、哈希及绑定见 [particles-source-manifest.json](../../assets/reference/official-map/particles-source-manifest.json)。不新增自绘位图。
 
 原版仍缺失的粒子依赖通过 `official_counterpart_assets.py` 显式补充。累计使用 68 个已校验的 `864_156496` 独立缓存包，以精确 CAB 身份及可用外部依赖核验后解析；凭据含新版真实 URL、大小、MD5、SHA256、对象 ID 和所对应的原版缺项，见 [particle-counterparts-source-manifest.json](../../assets/reference/official-map/particle-counterparts-source-manifest.json)。原版预期哈希和缓存没有被修改，新版文件没有冒充原版补齐。
 
-粒子转换保留原生命周期、发射、突发、形状、旋转、速度、颜色、尺寸、UV 帧、网格、状态显隐、材质滚动、噪声参数及拖尾。Unity 内部噪声使用本地 Perlin 播放，噪声算法一致性不作原样声明。子发射器、碰撞及部分 3D 参数仍需继续核对，具体未转换模块保留在来源清单。373 张最新地图截图仍在重新生成。
+粒子转换保留原生命周期、发射、突发、形状、旋转、速度、颜色、尺寸、UV、网格、显隐、材质滚动、噪声和拖尾参数。Unity 使用本地 Perlin 噪声；算法不声明与原生噪声一致。子发射器、碰撞及部分 3D 参数仍有缺项，详见来源清单。
 
 `prepare_story_playables.py` 转换 36 个原始序列；原引用中两项 GUID 未匹配，未采用相邻素材替代。原始开始时间、持续时间、层级、动画及可解析效果见 [playables-source-manifest.json](../../assets/reference/official-map/playables-source-manifest.json)，运行数据为 `map-playables.json` 和 `map-playables/`。`prepare_story_actors.py` 转换 95 个剧情角色场景，保留原变换、Animator、动画关键帧与 Spine 分包动画，见 [story-actors-source-manifest.json](../../assets/reference/official-map/story-actors-source-manifest.json)。
 
@@ -86,7 +86,9 @@
 
 Unity 已建立地图数据模型与 `IWorldMapAssets.Load(int)` 资源接口。`OfficialMapNavigationView`、`OfficialMapPathfinder`、`OfficialMapGroundRules`、`OfficialMapExplorationProgress` 和 `OfficialMapProgressCalculator` 实现导航读取、A* 路径、地面规则、探索点累计与区域／地图进度计算。导航实现见 [OfficialMapPathfinder.cs](../../unity/Assets/Game/Runtime/Offline/World/OfficialMapPathfinder.cs)。相关代码位于 [`Runtime/Official/World`](../../unity/Assets/Game/Runtime/Official/World/) 和 [`Runtime/Offline/World`](../../unity/Assets/Game/Runtime/Offline/World/)。
 
-Map10、Map11 已接入同一套主线运行时，具有固定 APK 导出的地图、区域、实体、导航、剧情与原生 UI 载荷；公共 HUD、寻路、区域条件、小地图和存档的复用及验证范围见[主线地图公共模块](mainline-map-modules.md)。单图仍按[初始岛](../maps/map-10.md)和[森之国](../maps/map-11.md)列出的缺项继续迁移，不能据此将整图标为完成。其他地图页保留各图官方配置、已确认的单机差异和待迁移范围，尚无完整 Unity 运行结论。
+`WorldMapProgressCondition` 按是否指定地区分别检查单区或整图进度；整图进度汇总地区进度并按原最大值归一化，全部地区公开时增加原完成值。原进度节点达到配置百分比后由玩家手动领取，世界地图入口显示可领取红点。此进度与命运探寻、女神像激活分开处理。
+
+Map10–16 共用主线地图运行时，按地图配置加载原地图、区域、实体、导航、剧情和界面数据；共享状态、存档与离线适配见[主线地图公共模块](mainline-map-modules.md)。各图仍有未接入的资源、交互或流程，具体范围见所属地图页；共享运行时可用不代表单图完成。
 
 地图转换工具集中在 `scripts/prepare_map_*.py`、`prepare_unity_map10_*.py`、`map_native_animation.py`、`map_player_assets.py` 与 `official_ec_codec.py`；剧情／动作／时间轴转换沿用 `prepare_story_*.py`、`extract_story_character_actions.mjs` 及相应来源清单。保存这些工具和地图文档不等于其全部输出已接入 Unity；运行时只消费随工程打包的本地载荷。
 
@@ -107,11 +109,12 @@ Map10、Map11 已接入同一套主线运行时，具有固定 APK 导出的地�
 - 已确认的公共分线规则：每张地图固定一个本地分线，按原 HUD 的“分线数≤1”条件隐藏按钮，保留地区私有／公开状态与玩法。公共原生小地图 HUD 已绑定本地单分线适配，正式世界地图宿主接线仍待完成，范围见[公共模块](mainline-map-modules.md#自定义实现)。
 - 服务器与运营日历开放采用[离线政策](offline-access.md)，个人等级、阶位、材料与真实地图目标继续检查。地图活动首次打开目录建立本地起点，内部阶段按原日界及 UnlockHours 推进；身份、回合、机关与领奖回执分别保存，共享地形不合并活动进度。
 
-规则与验证参考：[主线地图公共模块](mainline-map-modules.md)、[命运探寻](world-exploration.md)及各图所属页。工程静态检查不能代替编辑器、Player 与实际游玩验证，相关边界见[Unity 工程页](unity-project.md)。
+各图当前运行状态与缺项见[主线地图公共模块](mainline-map-modules.md)、[命运探寻](world-exploration.md)及所属地图页。
 
 ## 尚未实现
 
-- 补齐 Map10／Map11 尚缺的官方资源与交互，并恢复其他地图的地形、区域、MiniMap、放置实体和角色资源绑定。
-- 玩家移动、镜头、实体交互、剧情演出、机关、战斗、领奖及退出恢复的完整地图流程。
-- 地图状态与正式本地存档的端到端集成。
-- 各地图独立迁移及实际界面验收；共享 DTO、单张地图数据或导航规则不代表地图完成。
+以下缺项是所有地图的共同基线；地图页只维护各图专属配置、规则、离线差异和资源状态。
+
+- 补齐 Map10–16 各自尚缺的官方资源与交互，并迁移其余地图的地形、区域、MiniMap、放置实体和角色资源绑定。
+- 接通各地图的正式入口、玩家移动／镜头、实体交互、剧情、机关、战斗、领奖、退出恢复及本地存档。
+- 各地图独立完成实际游玩流程与 Windows Player 发布；共享 DTO、单图数据或导航规则不代表地图完成。

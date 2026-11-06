@@ -22,7 +22,7 @@
 
 Bloom 的0／25／50／100四档、反射及其他质量效果须恢复原 URP Volume／设备调用后再开放；官方 Bloom 默认由设备档位和旧存档决定，不能用固定100代替。
 
-设置使用角色槽 `settings.json` 立即原子保存，不推进玩法随机；失败时保留并重新应用旧值。模态可点空白关闭或按 Esc 返回。四页真实输入、画面、重启恢复、保存失败和音频表现尚待 Play Mode 验收。
+设置使用角色槽 `settings.json` 立即原子保存，不推进玩法随机；失败时保留并重新应用旧值。模态可点空白关闭或按 Esc 返回。
 
 原可保留的玩法操作都经费用、奖励、随机、库存和回执共同提交，关闭保存失败不立即退出。
 
@@ -36,15 +36,13 @@ Bloom 的0／25／50／100四档、反射及其他质量效果须恢复原 URP V
 
 ### 启动存档选择界面
 
-直接提取固定 `871_156598` 官方 APK 的 `defaultpackage_assets_prefabs_ui_login.bundle`，恢复 `PlanesListPanel` 和其滚动列表内嵌的 `PlanesRoleItem`，并复用同包版本启动页的模糊遮罩；共131个原始对象、37张 Sprite、16个动画片段。原黑色标题、双页签、白色列表、绿色选中卡片、头像边框、战力图标、“最近”标签、底部状态图例与原锚点／九宫格／字体／材质保持原绑定。页签沿用原 Animator 状态与转换，显示沿用 `PopupWindow` 的原 `UIDialog_Show` 曲线；背景按 `WindowBlurMask` 的四层模糊流程捕获实际启动主题。未用截图充当交互界面。
+直接使用固定 `871_156598` 官方 APK 的 `PlanesListPanel`、`PlanesRoleItem` 与启动页模糊遮罩；保留原布局、字体、材质、页签动画和弹窗曲线。背景按 `WindowBlurMask` 流程捕获当前启动主题。
 
 迁移官方 `PlanesListPanel.InitShow / OnTabItemChange`、`PlanesInfoItemBase.Init`、`PlanesInfoItemWithRoleInfo.InitRoleInfo` 的视图分支，由本地槽位替代联网角色列表。已创建角色显示真实姓名、等级与当前属性计算的战力；头像复用原模型外观、染色、骨骼网格及 `PlayerPortraitSettings` 的100×120头照摄影、排除部位和 `home/idle_01` 姿势。未创建的槽位使用原默认头像，标注“继续创建”。损坏的主档使用原灰色状态标记；点击显示中文错误并保留文件。空列表和新建页复用原 `EmptyTip` 与原按钮。
 
 加载入口是 `Resources/SaveSelection/OfficialSaveSelectionAssets`，原始转换载荷在 `unity/Assets/Official/SaveSelection/`，Unity 原生 prefab、字体、材质、Sprite 与动画在 `unity/Assets/Game/Resources/SaveSelection/`。提取入口为 `scripts/prepare_official_save_selection.py`，原生恢复入口为 `Zjcs.Editor.Startup.OfficialStartupTools.RestoreSaveSelection`，运行适配为 `OfficialSaveSelectionView`。APK／CAB／对象／代码来源及输入输出哈希见[源清单](../../assets/reference/save-selection/source-manifest.json)和[原生绑定清单](../../assets/reference/save-selection/native-source-manifest.json)。素材尚未加入完整备份快照。
 
-Unity 2022.3.57f1c2、 Play Mode 已验证15槽列表、男女原生头像、页签动画、鼠标滚轮、已有角色入口、损坏主档提示与新建独立草稿。交互使用 EventSystem 射线命中和模拟按下／抬起／点击，确认无控件遮挡；列表浏览前后所有隔离存档文件 SHA256 一致。已查看450×800、675×1200、900×800和360×1000运行截图并检查面板处于窗口内。静态检查、Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。复验入口为 `Zjcs.Editor.Startup.SaveSelectionPlayModeValidation.Run`，需指定环境变量 `ZJCS_SAVE_SELECTION_PROBE_OUTPUT` 为独立临时目录；Windows Player 使用 `--zjcs-validate-saves <临时目录>`，再次启动同目录执行冷启动回读检查。验证数据与用户存档隔离。
-
-已构建并发布到 `D:/Desktop/杖剑传说/杖剑传说.exe`，桌面快捷方式保持指向该入口。真实启动该  Player，在内置 BOE 屏显示主窗口且不抢占前台，查看列表、新建页、滚动和错误提示运行画面；模拟输入通过已有角色入口、新建草稿及损坏文件原字节保留检查。再次独立启动 Player，读回16槽列表、最后选择的槽16及草稿，并模拟点击继续创角。验证器拒绝黑色截图，隐藏窗口中的逻辑通过不计入画面结论。检查前后9个用户数据文件 SHA256 一致。此输出包含共享工作区既有未提交依赖，属于当前工作区测试版；存档界面代码、素材与本页已同步提交，完整游戏和仅含全部已提交依赖的独立重建仍见[工程页](unity-project.md)。
+官方档案选择界面已接入本地槽位列表、创建草稿、继续创角及损坏文件保留逻辑。完整游戏发布与其余功能的存档恢复分别见[工程页](unity-project.md)和所属功能页。
 
 ### 设置与存档基础
 
@@ -66,17 +64,16 @@ Windows 采用竖屏等比缩放、中文和多个独立本地角色存档，移
 
 新建槽位时记录本地创建 Unix 时间，并在打开进度存档时写入 `CreatedAtUnixSeconds`，供已确认以开服时间计算开放资格的功能读取。没有创建时间记录的旧槽位保持未知，不按目录时间补推。
 
-本地主城拍照保存视口PNG，失败恢复界面；完整原相册、滤镜、姿态、贴纸与编辑页尚无 Unity 实现。Bloom 应恢复原 Unity 组件；旧引擎屏幕采样近似不沿用。
+本地主城拍照保存视口 PNG，失败时恢复界面；原相册、滤镜、姿态、贴纸与编辑页尚未接入。Bloom 需恢复原 Unity Volume 组件。
 
 ## 尚未实现
 
 - 完整游戏内角色切换、所有功能角色数据保存／恢复、实际进入时离线收益及主城拍照。启动列表的新建、选择和草稿入口已接通，不据此声称后续全游戏流程完成。
 - 设置页的 URP 分辨率缩放、Bloom、其他画质组和主城背景音乐尚未接入；当前 Unity 包清单没有 URP，现有设置页隐藏这些未接线选项。
 - 存档面板原按钮／窗口音效尚未接入；拍照功能的完整官方 Unity 代码、配置、prefab、资源和调用关系仍须恢复。
-- 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
 
 ## 代码与资源入口
 
 [SettingsDialog.cs](../../.tools/source-packages/official-code/client-source/SettingsDialog.cs)、[SoundSettingsUI.cs](../../.tools/source-packages/official-code/launch-source/SoundSettingsUI.cs)、[FrameRateSettingsItem.cs](../../.tools/source-packages/official-code/client-source/FrameRateSettingsItem.cs)、[NumberDisplayRuleSettings.cs](../../.tools/source-packages/official-code/client-source/NumberDisplayRuleSettings.cs)、[RenderQualitySetter.cs](../../.tools/source-packages/official-code/launch-source/RenderQualitySetter.cs)、[BloomIntensityService.cs](../../.tools/source-packages/official-code/launch-source/BloomIntensityService.cs)
 
-[settings source manifest](../../assets/reference/settings/source-manifest.json)、[settings runtime generator](../../scripts/prepare_unity_home_settings.py)、[HomeHudView.Settings.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Settings.cs)、[HomeSettingsProfile.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeSettingsProfile.cs)、[ProfileSlotCatalog.cs](../../unity/Assets/Game/Runtime/Offline/State/ProfileSlotCatalog.cs)、[LocalJsonSaveFile.cs](../../unity/Assets/Game/Runtime/Offline/State/LocalJsonSaveFile.cs)。载荷与规则测试：`python -B scripts/test_prepare_unity_home_settings.py`。
+[settings source manifest](../../assets/reference/settings/source-manifest.json)、[settings runtime generator](../../scripts/prepare_unity_home_settings.py)、[HomeHudView.Settings.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Settings.cs)、[HomeSettingsProfile.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeSettingsProfile.cs)、[ProfileSlotCatalog.cs](../../unity/Assets/Game/Runtime/Offline/State/ProfileSlotCatalog.cs)、[LocalJsonSaveFile.cs](../../unity/Assets/Game/Runtime/Offline/State/LocalJsonSaveFile.cs)。

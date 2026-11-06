@@ -80,8 +80,6 @@ prepare_home_decoration.py 从固定 871_156598 的 131 个实际家具／主题
 
 ### 已确认的本地接线与边界
 
-`prepare_pet_gacha_performance.py` 从 APK 清单解析外壳真实 bundle，保留默认 Animation 片段及扩展粒子材质。`Fx_XingKon_0002` 没有显式 `_MainTex`，使用已解析的原 shader 默认白纹理，以常量资源表达官方默认行为；不是替代图片。10 个官方 NoiseModule 的参数和曲线直接进入运行模块；Unity 引擎原生采样算法和 quality 实现未在当前官方客户端源码中取得，因此不声明逐轴或逐帧一致；原 `UIBloomManager.SetActive` 仅在 Bloom 全局开关开启且需求计数大于零时激活，需求计数由 `UIBloomRequirer.OnEnable/OnDisable` 管理；结缘使用的 prefab 共登记 6 个 `UIBloomGroup`、`UIBloomPlayerElement`、`UIBloomGraphicElement`，没有 Requirer。结缘页不自行注册需求或强制启用 Bloom；结缘页隐藏／离树时， 按 `PetGachaResultPerformer.OnDisable` 清空队列与计时、释放工作中的奖励与特效、停止音效并关闭操作遮罩，恢复显示时应用官方默认动画；`OnWindowClosing` 的停止计时行为一并迁移。结缘场景、结果与新幻兽介绍由原 UI 层级、RectTransform、动画和调用时序迁移，运行入口为该控制器及其 reward／effect／popup 脚本。价格黑底隐藏沿用用户明确确认的界面调整，不标为原版表现。校验命令为 `python scripts/prepare_pet_gacha_performance.py --check`；素材包和 Windows 发布状态见对应功能／地图文档。
+`prepare_pet_gacha_performance.py` 从 APK 清单解析外壳真实 bundle，保留默认 Animation 片段及扩展粒子材质。`Fx_XingKon_0002` 没有显式 `_MainTex`，使用已解析的原 shader 默认白纹理，以常量资源表达官方默认行为；不是替代图片。10 个官方 NoiseModule 的参数和曲线直接进入运行模块；Unity 引擎原生采样算法和 quality 实现未在当前官方客户端源码中取得，因此不声明逐轴或逐帧一致；原 `UIBloomManager.SetActive` 仅在 Bloom 全局开关开启且需求计数大于零时激活，需求计数由 `UIBloomRequirer.OnEnable/OnDisable` 管理；结缘使用的 prefab 共登记 6 个 `UIBloomGroup`、`UIBloomPlayerElement`、`UIBloomGraphicElement`，没有 Requirer。结缘页不自行注册需求或强制启用 Bloom；结缘页隐藏／离树时， 按 `PetGachaResultPerformer.OnDisable` 清空队列与计时、释放工作中的奖励与特效、停止音效并关闭操作遮罩，恢复显示时应用官方默认动画；`OnWindowClosing` 的停止计时行为一并迁移。结缘场景、结果与新幻兽介绍由原 UI 层级、RectTransform、动画和调用时序迁移，运行入口为该控制器及其 reward／effect／popup 脚本。价格黑底隐藏沿用用户明确确认的界面调整，不标为原版表现。校验命令为 `python scripts/prepare_pet_gacha_performance.py --check`；素材包和 Windows 发布状态见对应功能／地图文档。尚未实现
 
-## 尚未实现
-
-- 结缘入口、输入、动画画面及存档恢复尚未在 Unity Play Mode 完成真实操作验证；Editor导入／编译和Windows Player验证也未通过验证。静态工程检查及资源生成不能代替运行验收。
+- 结缘入口、输入、动画画面及存档恢复尚未在 Unity Play Mode 完成真实操作验证；静态工程检查及资源生成不能代替运行验收。

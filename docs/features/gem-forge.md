@@ -40,8 +40,7 @@
 
 - 按 `DialogOpenFurnaceHandle`、`OpenFurnacePanelNode` 和 `MechanicalFurnacePanel` 恢复山之国地图类 12 的世界交互入口及 NPC 类 8422 导航。固定版 `assets/official/regions/12-entities.json` 的放置记录 `1803` 将 `8422`（梅克娜_日常）放在 `(182, 99)`；对应 `defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_map_12_npc.bundle` 已在原版 CDN 缓存中。当前运行地图为地图 10，地图 12 实体、场景和切图流程仍未转换接入。
 - 主石列表仍未恢复官方循环列表逐件排序、红点/选中状态和低阶提醒；当前用材料数及可合成状态排序，并按配置显示当前等级上限。
-- 接入高阶成功、爆炸、降阶爆炸三套原 Timeline、Spine、粒子和音效；补取并绑定对白 20000–20002、梅克娜立绘和中文语音。当前结果窗只有官方静态层与文字反馈，尚无合成演出。
-- 验证普通/高阶成功与失败、满炉能必成、材料和货币变化、前三次补偿、receipt 去重、存档恢复、鼠标输入与实际画面。此前 `python -B scripts/check_unity_project.py` 通过（38,668 GUID）；再次运行时没有取得脚本退出回传，不能记作通过。Unity 日志确认完整 Tundra 脚本编译通过（411 个评估项，Character 与 Offline Progression 程序集成功）；独立 Editor 启动因另一会话的批处理 Editor 已占用同一工程而失败，未运行 Play Mode。高阶材料来源选择和对应机械熔炉中心槽是在该次脚本编译之后接入的，尚未单独编译和实机运行验证。
+- 高阶流程相关的官方动画、粒子、音频、对白和立绘资源已恢复；结果窗目前只有静态界面和文字反馈，尚无完整合成演出。高阶材料选择与机械熔炉中心槽使用本地配置，Windows Player 流程仍未完成。
 
 固定版 `871_156598` 的 `defaultpackage_assets_prefabs_ui_mechanicalfurnace.bundle` 原始 SHA-256 为 `7360ff7fbf99e81e823cce4fef22a7233db66c801b772dbbdc10e37ffce34093`；UnityPy 读取确认含 `MechanicalFurnacePanel`、`HighRankMergePage`、`GemMerge` 官方根对象。`scripts/prepare_unity_gem_forge_ui.py` 已转换机械熔炉、普通合成、结果、确认、列表行、规则、NPC 对话节点共 9 棵 UI 树，并按对象哈希恢复 77 张官方精灵到 `unity/Assets/Game/Resources/Equipment/GemForgeSprites/`。演出 bundle `defaultpackage_assets_animation_ui_gemmergepanel.bundle` 存在于固定版提取视图，Spine/粒子/Timeline 依赖尚未转换绑定。地图 12 NPC bundle 同样已在固定版原 CDN 缓存中，入口位置由 `regions/12-entities.json` 确认；当前工程尚无地图 12 运行场景与跨图切换。
 
@@ -50,4 +49,4 @@
 - 官方公共代码：`.tools/source-packages/official-code/common-source/Common/PlayerGemDataExt.cs`、`GemMergeInfo.cs`、`GemMergeStorySetting.cs`。
 - 官方客户端：`.tools/source-packages/official-code/client-source/GemMergeManager.cs`、`GemMergePanel.cs`、`HighRankGemMergePage.cs`、`MechanicalFurnacePanel.cs`、`DialogOpenFurnaceHandle.cs`、`OpenFurnacePanelNode.cs`。
 - 固定版配置：`assets/official/rules.json` 的 `gem`、`gem_merge`、`game_settings.GemMergeStorySetting`，提取工具 `scripts/prepare_unity_gem_forge_rules.py`。
-- Unity 静态入口：`python -B scripts/check_unity_project.py`（此前通过，38,668 个 GUID）。Unity 批处理日志有一轮完整脚本编译通过：Tundra 411 项成功，包含 `CharacterEquipSlots.cs` 与 `OfflineGemForgeService.cs` 所属程序集；后续高阶材料中心槽接线未包含在该次编译。Unity Play Mode 未运行，不能声称已完成输入或画面验收。
+Unity Play Mode 与正式人物页的实际输入、画面和材料存档流程仍未完成。

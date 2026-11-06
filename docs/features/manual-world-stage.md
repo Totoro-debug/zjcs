@@ -36,8 +36,6 @@
 
 - 人物突破页独立查看和推进本地世界阶段；阶段只影响内容分档，与人物等级／位阶和赛季映射分别保存。
 
-- 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
-
 ## 代码与资源入口
 
 交接实体条件以官方公共源码 [StageConLevelComponent](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/StageConLevelComponent.cs) 和固定版本导出的 [地图实体组件数据](../../assets/official/map-entities.json) 为准；地图解锁本身不替代实体交接。当前 Unity 保存世界地图区域进度的入口为 [OfflineMainlineProgressSession](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs)；世界阶段属性目前位于 `OfflineCharacterPropertyProgress.TreasurePlaneRank`，尚未接入手动推进事务或赛季结算。

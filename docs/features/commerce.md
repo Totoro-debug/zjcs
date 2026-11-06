@@ -8,7 +8,7 @@
 
 范围为从当前角色 HUD 进入商城，恢复商城底栏、耀星直购、代金券、每日礼包、每周礼包、首购、耀星兑换、公共购买确认、规则与价格表、奖励图标、提示与存档。月度奖励、七日祈愿及星眷累计奖励的完整规则和缺项统一维护在[月卡与星眷](monthly-card.md)，本页只记录商城中的入口、共享依赖和已实现的星眷入口／当前组领取。家园商店等独立商店见所属功能页。
 
-固定官方来源为 manifest `871_156598`：客户端反编译结果在 [client-source](../../.tools/source-packages/official-code/client-source)，共享规则在 [common-source](../../.tools/source-packages/official-code/common-source)，配置在 [rules.json](../../assets/official/rules.json)、[commerce-ui.json](../../unity/Assets/Official/Commerce/commerce-ui.json) 与 [settings.json](../../.tools/source-packages/official-data/settings.json)，原 UI 层级在 [ui.json](../../assets/official/ui.json)。以下“官方功能”是恢复依据；本页“完整还原部分”只写已实际接通并验证的内容。
+固定官方版本以 `official-source.json` 为准；原始客户端代码、共享规则、配置和 UI 资源见 [client-source](../../.tools/source-packages/official-code/client-source)、[common-source](../../.tools/source-packages/official-code/common-source)、[rules.json](../../assets/official/rules.json)、[commerce-ui.json](../../unity/Assets/Official/Commerce/commerce-ui.json)、[settings.json](../../.tools/source-packages/official-data/settings.json) 与 [ui.json](../../assets/official/ui.json)。当前接入与缺项见下文。
 
 ### 官方原始功能与调用依据
 
@@ -34,11 +34,11 @@
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-本节记录首次修复；后续实现已覆盖下文历史记录中尚未接入的礼包组、代金券、续期和月卡属性。
+本页按当前规则与接入状态维护商城功能；月卡和星眷缺项见[所属页](monthly-card.md)。
 
 彩色货币为原表 `FlareStarId=15` 的「耀星」，黄色货币为 `DiamonId=2` 的「晨星」，金币为「罗拉」。三种官方图标及库存字段原本已存在；旧顶部默认仅绑定罗拉、晨星，原表又将货币设为 `ShowInBag=false`，造成耀星没有可见余额入口。现主城显示三种主要货币，商城 / 月卡 / 礼包显示晨星、耀星，点击余额使用原物品详情 prefab 显示名称、原始说明及实际库存。调整顶部控件的鼠标顺序，恢复页面上方的实际点击。
 
-`python scripts/prepare_commerce_assets.py` 复用固定 APK 及已校验 `871_156598` CDN 缓存，转换原 `DailyPayGiftDialog / WeeklyPayGiftPanel / PayGiftItem`，并根据 `PayGiftIconConfig` 的 GUID 解码六个原始礼包立绘 prefab。首购 / 再次赠送数值继续读取原表，六档商品名称与货币说明补读官方中文文本分包；每日 / 每周礼包展示完整奖励，补接原表每日免费晨星、每周赠礼、整组购买和限购状态。新增运行目录为 `assets/official/commerce-ui.json`，全部 74 项相关图像资源、来源 bundle / 对象、输出哈希、中文分包及行为代码凭据见 [commerce-ui/source-manifest.json](../../assets/reference/commerce-ui/source-manifest.json)，动态图片均纳入显式加载清单。第 1 组礼包此前缺少的五个奖励图标已从官方资源转换，其余已存在图标重新核验登记。没有新增自绘图片。
+商城运行资源包含官方购买、礼包和直购界面。原始对象、配置、语言、输入／输出哈希及显式加载路径见 [commerce-ui/source-manifest.json](../../assets/reference/commerce-ui/source-manifest.json)。
 
 每日礼包替换原通用货架卡片，每周礼包恢复原专用卡片、立绘及所有奖励图标。免费入库、本地日 / 七日周期与第 1 组礼包仍为离线适配，未模拟服务器赛季换组或支付 / 代金券服务。
 
@@ -54,15 +54,13 @@
 
 `scripts/prepare_commerce_bindings.py`只读固定APK及已校验同版本缓存，沿现有commerce-ui的21个原prefab取得PopupWindow.mShowClip／mHideClip／mLoopClip、Animation默认播放引用，以及PayPeriodicCardItem、CommonPayBtn、FirstPayDialog／AwardItem／PreviewAppearance的序列化字段。沿ExtraPropItem实际指针取得PayPeriodicCardPropItem／PlayerPropItem原模板，复用已登记官方贴图，严格核对原Sprite解码输出，不新增位图或修改共享素材目录。
 
-原片段、组件对象及相关客户端C#／PopupWindow／RotateAnimation代码的SHA256、原语言分包输入与模板来源内嵌于；21项片段引用包括FirstPayDialog_AniShow两条2793键的原四元数曲线，保留原时间、值和出入切线，仅接受原非加权曲线。生成器`--check`只读重建并比较代码元数据；该文件属于运行代码输入，不包含验收成绩。原图、资源包来源及哈希继续沿用commerce-ui、现有UI／物品素材各来源清单；没有引入新版资源或自绘补充。具体运行边界与剩余未迁移项只记于对应功能／地图文档。
 
-prepare_commerce_bindings.py 从固定 APK／匹配 CDN 的 871_156598 补取全部 38 个商业节点绑定，以及 RuleDialog.mTipInfoPrefab、PayInfoTableDialog.mDescPrefab/mRowItemPrefab 的真实引用模板；GlobalColors.asset 的 White 和 Light 主题 Red 直接读取配置。 保存对象、原始字节及源代码 SHA256；时间格式文本来自相同版本语言表，规则来自 PayPeriodicCardItem、ShowRemainTimeInfo、CommonPayBtn、CultureTimeSpanArg。AccumulatedPayAwardItem 嵌套枚举读取使用原程序集 StateSwitcher<T> 的序列化字段布局，按原类声明顺序拼接，完整对象及托管引用字节仍严格校验。此轮为原有资源与程序集字段解码，没有自绘或新版替换。
 
 prepare_commerce_bindings.py 追加固定871_156598的22个原prefab（既有21个commerce加PayDirectPayItem）完整UI定义、原LayoutElementClamper与AdaptiveHorizontalLayoutGroup字段，保存原组件字节SHA256及原类源码SHA256。92个业务／文本效果／页签／计时节点按原程序集严格解码，规则／价格行沿真实序列化指针取得并重定根路径；模板图片复用已校验的原PNG，不新绘图片。运行时恢复原Grid、字体尺寸、奖励排列与原MoneyCostInfoParser价格列表规则、未修改APK或预期哈希。
 
 `scripts/prepare_commerce_components.py` 按固定 manifest `871_156598` 读取已校验 APK／原版 CDN，复用完全相同的既有 Sprite，新增像素仅写入 `assets/official/commerce-components/`。`commerce-components/source-manifest.json` 记录 26 个 prefab 所用 172 个纹理资源、原对象及包版本／URL／大小／哈希、代码与语言输入；其中 23 个 PNG 位于独立目录，其余复用共享原素材。没有自绘或新版替代。
 
-累计奖励运行时采用 `AccumulatedPayAwardShowConfig` 中原品质背景、锁定图片和缩放、颜色，原 UIMesh 的 MeshRenderer 材质、网格坐标／UV／三角形／顶点色与纹理平移参数；`RotateAnimation` 保留序列化速度；CoreMulti 使用原片段与 SwitchItem 事件。列表方向依据取得的 `LoopScrollRect.Runtime.dll` 反编译代码和该 prefab 的 `reverseDirection=true`、`reverseIndex=true`，不按截图猜测。新增入口原图先转换并登记，接入状态以验收全流程记录为准。
+累计奖励运行时采用 `AccumulatedPayAwardShowConfig` 的原背景、状态、布局与 `RotateAnimation` 参数；CoreMulti 使用原动画片段与 SwitchItem 事件。入口接线范围见本页缺项。
 
 commerce-components/source-manifest.json 进一步覆盖 28 个 prefab、173 个实际纹理资源，包含 ActivityEntryBtn、ActivityEntryItemWrapper、每日／每周入口与 FirstPayIconEntry 的原物件和图片；新增图片仅写入独立目录。原 HomeUIActivityEntryController.mEntryRoot、home_right_entry_ui_activity 原表哈希、ActivityEntryOverview 的 LoopVerticalScrollRect、ShopActivityEntryPanel／PayDirectPay 状态与 RuleBtn.mRuleKey 直接迁移。来源保持固定 APK／原版 CDN manifest 871_156598，没有自绘或新版替代。
 
@@ -80,7 +78,7 @@ commerce-components 来源清单补齐固定871_156598的 Selectable 原 ColorBl
 
 沿固定871_156598的 AutoAlignForSingleMultiLineText.AutoAlign 与 ConfirmDialog.OnContentTextRefresh 迁移文字布局完成后的单／多行判定、原514／513对齐值和提示同步；原两类确认 prefab 的字段由 commerce-components/source-manifest.json 登记，补入两份实际C#输入哈希。富文本沿相同布局判定，不用强制居中标签覆盖原多行左对齐。此项不代表 TMPEffect 双描边／阴影已还原；shader 原 GLSL 已从 defaultpackage_unityshaders.bundle 提取为开发输入，受保护原生方法的字段到uniform映射仍未恢复，未自拟百分比换算或阴影公式。
 
-商城组件、首购原show_01开发期转换、原Wwise音频的三份来源清单和运行资源补入37a8f1db943eb3cb素材包；以2adebc529c12e803已提交包为基准，仅追加本会话91个文件，601项相关文件／导入描述对照来源及目录核对，其余原包内容保持逐项一致。全局显式绑定补入53项，合并三组catalog后的302条运行资源均有绑定；完整包与清单哈希见现行lock及全流程文档。素材包的创建不表示TMPEffect参数映射及原越界事件已解决。
+该包管理与恢复范围见[素材管理](../asset-management.md)；本功能仍未完成的界面和交互见下方缺项。
 
 Wwise转换输入及十份原音频内容保持不变，运行时改走 official_resources 显式导入资源加载后复制并设置原循环参数；不再依赖发布目录不存在的原始Ogg文件。正式分包中302条商城资源和十份音频均直接挂载、读取／解码通过，未增自绘或替换音频，素材包仍为37a8f1db943eb3cb。
 
@@ -108,11 +106,7 @@ prepare_commerce_components.py 与 commerce_scroll.py 从固定 prefab 转换九
 
 - `OfficialCommerceAssetCatalog.asset` 已生成并随 `Resources/Commerce` 交付，绑定 317 张官方图片、169 个奖励物品、10 个官方音频事件和 26 个 prefab；生成入口为 [`OfficialCommerceAssetTools.Validate`](../../unity/Assets/Game/Editor/Commerce/OfficialCommerceAssetTools.cs)。
 - 运行目录由 [`prepare_unity_commerce_catalog.py`](../../scripts/prepare_unity_commerce_catalog.py) 从固定版 `rules.json`、`commerce-ui.json`、`settings.json` 生成；每个 prefab 展平为 `nodes` 并记录 `has_image/has_text/...`，避免 Unity `JsonUtility` 把缺失的可选组件实例化为空对象。加载与重建见 [`OfficialCommerceAssetCatalog.Load`](../../unity/Assets/Game/Runtime/Presentation/Commerce/OfficialCommerceAssetCatalog.cs) 与 [`OfficialCommerceCatalogView.BuildTree`](../../unity/Assets/Game/Runtime/Offline/Commerce/OfficialCommerceCatalogView.cs)。
-- [`prepare_unity_commerce_entry.py`](../../scripts/prepare_unity_commerce_entry.py) 把官方 `FunctionEntryDialog`、`FunctionEntryShopItem`、`ActivityCommonEntry`、直购顶部 `AccumulatedPayEntryGo` 子树及所需官方图片合并进商城载荷；来源和哈希记录在 [commerce source-manifest](../../unity/Assets/Official/Commerce/source-manifest.json) 与 [SOURCES.md](../../assets/reference/SOURCES.md)。
-
-### HUD 入口
-
-[`OfficialMainlineMapRuntime.BindWorldControl`](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs) 通过功能入口接入商城：Map11 先打开原 `FunctionEntryDialog`，商城按钮再调用 [`CommerceScreenController.OpenShop`](../../unity/Assets/Game/Runtime/Presentation/Commerce/CommerceScreenController.cs)；Map10 仍从功能入口直接打开商城。Map11 的首购 HUD 已替换为从固定版 APK 提取的原 `FirstPayBtn`，保持原图标、文字、按钮和 LayoutElement，由 WorldCanvas 原纵向布局定位；来源为 `unity/Assets/Official/World/Map/11/UI/source-manifest.json`。首购可见性继续使用现有 `CommerceHudStatus.FirstPayShouldShow`，原支付功能门槛与完整提示图绑定尚未迁移。Map10 仍使用旧 `commerce_first_entry`，其完整还原待后续处理。
+- [`prepare_unity_commerce_entry.py`](../../scripts/prepare_unity_commerce_entry.py) 把官方 `FunctionEntryDialog`、`FunctionEntryShopItem`、`ActivityCommonEntry`、直购顶部 `AccumulatedPayEntryGo` 子树及所需官方图片合并进商城载荷；来源和哈希记录在 [commerce source-manifest](../../unity/Assets/Official/Commerce/source-manifest.json) 与 [SOURCES.md](../../assets/reference/SOURCES.md)。Map10 仍从功能入口直接打开商城。Map11 的首购 HUD 已替换为从固定版 APK 提取的原 `FirstPayBtn`，保持原图标、文字、按钮和 LayoutElement，由 WorldCanvas 原纵向布局定位；来源为 `unity/Assets/Official/World/Map/11/UI/source-manifest.json`。首购可见性继续使用现有 `CommerceHudStatus.FirstPayShouldShow`，原支付功能门槛与完整提示图绑定尚未迁移。Map10 仍使用旧 `commerce_first_entry`，其完整还原待后续处理。
 
 ### 商城界面与业务
 
@@ -133,11 +127,10 @@ prepare_commerce_components.py 与 commerce_scroll.py 从固定 prefab 转换九
 
 [`OfflineCommerceSession`](../../unity/Assets/Game/Runtime/Offline/Commerce/OfflineCommerceSession.cs) 以主存档库存为权威：
 
-- 打开时重新读取主存档并把库存镜像到商城状态；首次迁移不会用旧商城快照增删主库存。
+- 每次打开时从主存档读取库存，并同步商城状态，不以商城镜像改写主库存。
 - 每次提交重新读取最新主存档，只写入商城前后库存的差额，保留其他玩法在商城打开期间新增／消耗的物品。
 - 日／周周期在打开期间每秒检查；跨日推进、刷新列表并保存，且不会重复领取。
 - 首购不因普通直购自动激活；激活只来自首购确认。激活日记录后第 1/2/3 天奖励永久可补领。
-- 每日单买／整组互斥、每周免费礼包、限购次数、累计星值、兑换边界、确认快照和保存失败回滚均由 [`OfflineCommerceTransaction`](../../unity/Assets/Game/Runtime/Offline/Commerce/OfflineCommerceTransaction.cs) 统一处理。
 
 ## 自定义实现
 
@@ -152,7 +145,7 @@ prepare_commerce_components.py 与 commerce_scroll.py 从固定 prefab 转换九
 
 ### 已确认的本地接线与边界
 
-commerce-components/source-manifest.json 新增 ConfirmDialog/MarkableConfirmDialog，累计31 prefab、218纹理；补录 WeeklyPayGiftShowContext、DailyPayGiftItem、PayGiftIconUtils、PayVoucherUtils 原代码输入。Toggle 原对象344字节布局严格校验后解析原graphic／transition／isOn，原 UIToggle 与 MarkableConfirmDialog 调用链决定交互；其底层0.1秒graphic渐变与Unity官方[UGUI Toggle实现](https://github.com/Unity-Technologies/uGUI/blob/main/com.unity.ugui/Runtime/UGUI/UI/Core/Toggle.cs)核对，未用新版资源替换原包。现金SDK替换为本地原窗口确认属于用户批准的离线适配，其余确认／兑换控件、文案、图和规则沿固定871_156598原内容。
+确认弹窗、周期礼包控件及 Toggle 的原始字段和资源绑定见 [commerce-components/source-manifest.json](../../assets/reference/commerce-components/source-manifest.json)；离线确认窗口沿用本地 UI 流程，不接真实支付 SDK。
 
 ## 尚未实现
 
@@ -162,22 +155,10 @@ commerce-components/source-manifest.json 新增 ConfirmDialog/MarkableConfirmDia
 - 原活动入口目录、活动开放条件、每日／每周红点 agent、活动页布局和动态活动资源。
 - 首购原角色模型／骨骼预览、武器比较、`FirstPayPreviewAppearance` 动画和 `FirstPayDialog` 原生动画。
 - 物品详情的原使用／分解按钮、来源列表、限时说明、属性详情和货币余额点击详情；当前奖励图标点击可打开基础物品详情，但不执行物品操作。
-- 原 prefab 的 Animator／Animation、PopupWindow 开关动画、UIBloom、TMPEffect／TMProWarp、原生粒子、字体材质和全部按钮音效；仅播放 `Main_Cursor_Normal`。
+- 除已接入的累计充值显示曲线外，原 prefab 的 Animator／Animation、弹窗开关动画、UIBloom、文字特效、原生粒子、字体材质和按钮音效仍有缺项。
 - 星眷原 15 组完整 LayoutElement、主副奖励分区、多奖励轮播、进度线和末组锁定项；当前已展示全部组与档位，但行布局为运行时组合。
 - 价格表行内容由运行时组合，当前页面顶部／底部裁切和滚动定位仍未按原 `PayInfoTableDialog` 脚本校正。
 - 活动页入口视觉、礼品图标内数量文字、首购顶部白色信息区、每日整组价格区的最终版式仍需按原 prefab 校正。
-- 真实磁盘保存失败、只读目录、断电中断和 Windows Player 运行未验证；当前只验证保存委托失败回滚和正常磁盘重开。
-- 新增/变更的 `unity/Assets/Official/Commerce` 入口图片、`commerce-ui.json` 和生成目录尚未纳入完整素材 ZIP 快照；未重建素材包，不声称这些新增载荷已备份。
+- 商城完整入口、交互和 Windows Player 发布仍未完成。
 
-## 当前验证范围
-
-- `python -B scripts/check_unity_project.py` 通过：27788 个 GUID 的静态元数据检查通过；该检查不代替 Editor 导入、编译或运行。
-- 隔离 Unity 工程（`D:/Desktop/zjcs-commerce-acceptance`，复制当前 `Assets/Packages/ProjectSettings`）使用 `Unity 2022.3.57f1c2` 完成 Editor 导入与 C# 编译，`CommercePlayModeAcceptance` 通过：官方主窗口／直购／代金券／每日／每周／首购／星眷／兑换 prefab 实际创建，代金券支付、免费赠礼、单买／整组互斥、首购激活与领取、兑换、保存重开，以及另一玩法新增库存后商城购买不清零。该验收在隔离工程把不相关的 Map10 运行入口替换为桩，商城代码本身未裁剪；共享工程当时被另一模块未完成的 `HomeHudView.TreasureGacha.cs` 编译错误阻塞，不能据此声称共享工程已完成 Editor 验收。
-- Play Mode 实际捕获 14 张画面并逐张检查：直购主页、价格表、确认框、物品详情、活动页、星眷全组页、每日礼包、每日规则、每日已购、每周礼包、首购、首购已激活、兑换、重开。画面确认官方角色立绘、标题、六档商品、每日三档、每周六档、首购三天奖励、兑换滑条和官方按钮均实际渲染；同时记录活动入口文字、礼品图标数量、首购顶部信息区和每日整组价格区仍有版式差异，不把差异写成官方最终版。
-- 验收的按钮输入通过 `ExecuteEvents` 向真实 Unity UI 控件派发点击并等待界面状态，不是直接调用业务方法；尚未用操作系统鼠标覆盖遮挡、滚动、拖拽和键盘焦点。
-- HUD 入口逻辑另由 `CommerceHudPlayModeAcceptance` 在 Play Mode 验证：官方 `WorldCanvas` 的 `FunctionEntryPhoto/EntryBtnFolded` 点击后实际打开商城，首购入口创建成功、标题为「首购」且红点显示。该验收只挂载官方 Map10 UI 与商城运行入口，不进入完整 Map10 地图场景；HUD 在真实地图中的遮挡、层级和最终位置仍未验收。
-- 商城专属 Windows Player 交互尚未验收；开场战斗版本包含已提交的商城编译依赖修复，不据此判定商城完整玩法已通过 Windows 验证。
-
-累充面板的 `AccumulatedPayPanel_Show` 已从固定官方 bundle 经 AssetRipper 重建为 Unity 原生 AnimationClip，保留压缩曲线恢复结果，按现有 Animation 播放器设为 Legacy；编辑器优先加载该本地资产，避免直接反序列化 Android bundle 的 `2022.3.57f1`／`2022.3.57f1c2` 版本冲突。来源与输出哈希见 [动画来源清单](../../assets/reference/commerce-components/accumulated-panel-animation-source-manifest.json)。该依赖修复不代表商城其余动画已完成。
-
-开场战斗发布所需的商城数值转换、周期卡接口和原生动画事件接收已纳入提交，并通过所用基线的 Editor 编译、`ProjectTools.Validate` 与 Windows 构建。周期卡业务及属性刷新范围见[月卡与星眷累计奖励](monthly-card.md)；验证流程以开场战斗为主，商城专属流程仍沿用本页所列验证边界。
+累计充值面板的显示曲线已转换为 Unity 原生 `AnimationClip` 并由本地资源加载；来源与输出见[动画来源清单](../../assets/reference/commerce-components/accumulated-panel-animation-source-manifest.json)。

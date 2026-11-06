@@ -18,7 +18,7 @@
 
 宾果／刮卡各保留30套已提取配置及页首切换，进度独立；未完卡片、抽定奖励和刮开位置保存。活动材料任务仅登记原目录中的真实完成事件，仍检查原功能／等级、每日条件和去重。
 
-宾果接入原 `BingoActivityPanelContent` 的16格与10条连线、原布局和奖励格。单抽／全部抽取保留原数量、费用及交互保护，依次执行格子 `GetAnimTrigger`、非阻塞奖励列表、连线 `LightAnimTrigger`、连线奖励和原 `AwardPanel`；关闭奖励后在原窗口切换下一轮，轮奖仍须点击原轮次按钮手动领取。已领取轮奖显示原 `GotTip`。原规则、任务列表、进度详情、批量领取和地图跳转确认／取消须接入，关闭详情回到原列表，再关闭列表回到原棋盘。两种活动的任务行按原 `TryCheckPreviewConditionLimit` 显示结缘、扭蛋、日常副本和素材秘境的解锁提示，沿 `BaseTaskListLiteItem.CanBeClick` 拦截未解锁任务的详情／单项领取／跳转，原 `PlayerTaskComparer` 把未解锁任务排在可用任务之后；原文及语言输入哈希由 保存。
+宾果接入原 `BingoActivityPanelContent` 的16格与10条连线、原布局和奖励格。单抽／全部抽取保留原数量、费用及交互保护，依次执行格子 `GetAnimTrigger`、非阻塞奖励列表、连线 `LightAnimTrigger`、连线奖励和原 `AwardPanel`；关闭奖励后在原窗口切换下一轮，轮奖仍须点击原轮次按钮手动领取。已领取轮奖显示原 `GotTip`。原规则、任务列表、进度详情、批量领取和地图跳转确认／取消须接入，关闭详情回到原列表，再关闭列表回到原棋盘。两种活动的任务行按原 `TryCheckPreviewConditionLimit` 显示结缘、扭蛋、日常副本和素材秘境的解锁提示，沿 `BaseTaskListLiteItem.CanBeClick` 拦截未解锁任务的详情／单项领取／跳转，原 `PlayerTaskComparer` 把未解锁任务排在可用任务之后。
 
 刮卡接入原 `ScratchCardActivityPanel`、16格、卡片堆叠及三档奖品预览。首次卡片、按原背包时间顺序自动使用下一张、品质状态、点击／75像素拖动阈值和5秒提示沿原脚本／配置迁移。原刮擦溶解、提示、奖级完成、奖励图案闪光和切卡曲线使用原网格、贴图及材质程序；第三个相同图案的刮擦动画播完再显示奖励，关闭奖励后由原 `SwitchCardEvent` 在窗口内切换下一张。未刮完退出后仍保留同一张卡及刮开位置，不再次扣卡。原规则、任务列表与详情接入，通用详情单次提交、任务行批量提交，领奖后保留原列表。
 
@@ -54,7 +54,7 @@
 
 运行界面使用原 AnniversaryMapBuildDetailDialog、AnniversaryMapBuildSelectDialog、材料 Item 与 ActivityFestivalAnniversaryShopPanel／ShopItem，显示原建筑模型。每日总提交二次、每建筑限额、物资消耗、修复进度与奖励、完成奖励防重、原货币与库存均本地执行。
 
-联网共同建设采用离线适配：首次进入开始本地计时，阶段长度使用原 168／168／167 小时；庆典阶段自动完成共享修复并保留个人贡献。该阶段自动完成属于本项目离线设计，不能据此声称已验证原服务器的自动完成规则。
+联网共同建设采用离线适配：首次进入开始本地计时，阶段长度使用原 168／168／167 小时；庆典阶段自动完成共享修复并保留个人贡献。庆典阶段自动完成是本项目离线规则；原服务器的自动完成行为未知。
 
 固定版 `871_156598` 的 `ActivityPickGameMainPanel`、`ActivityPickGameContentSceneEffect`、`AnimationSoundPlayer`、`PickButtonEffect` 和 `ButtonSound` 按原对象引用接入。`prepare_activity_game_assets.py` 转换三套原 NPC 骨骼、组合皮肤、材质、挂件及12个所需动画数据集和五张评级图；原 UI 层级、曲线及粒子复用已转换的 map-ui。
 
@@ -66,7 +66,7 @@
 
 `prepare_activity_game_audio.py --game match3` 从这些原 prefab 的 `ButtonSound`、`AnimationSoundPlayer` 和原动画事件读取13个事件，按5个固定版音频分包转换13条音频；保留原容器、增益、循环和停止动作。完整对象和音频来源、输入输出哈希见 [match3-game/audio/bindings-source-manifest.json](../../assets/reference/match3-game/audio/bindings-source-manifest.json)、[match3-game/audio/source-manifest.json](../../assets/reference/match3-game/audio/source-manifest.json)。结果奖励复用原 `AwardContent` 及既有原奖励卡片资源。未使用新版替代包或自绘素材。
 
-拼图现有七套主题界面、37个 prefab、六个入口和52幅题图保留 `JigsawGameContent.GenerateImage` 的原 Texture2D、`JigsawSuffixSettings` 中文标识图、归一化 TRS、颜色、原布局与拖动行为；不生成替代图。871 对象级复核覆盖26个输入 bundle、3,065个主输入对象及全部布局／粒子引用；234个 PNG 均从871 Sprite 重新解码并逐个匹配输出 SHA256。九张 SimpleSunny 题图和题库来源已切换并通过回归（183阶段、2,196组状态用例、解局轨迹不变）。三个不同哈希对象中，`JigsawPanel` 用官方程序集类型树解出1,028字节字段流及 PPtr 绑定，两个配置表按183阶段的41个奖励ID、15个物品ID及557条既有规则提示验证投影不变；原始流不含 `ManagedReferencesRegistry` 数据，两个 `StateSwitcher` 的动态配置仍未恢复。变化的 `ParticleSystemRenderer` 已从871重新读取类型树并写入目录与来源清单。目录中另有120处来源指针没有原始对象哈希，尚不能证明其与871对象内容相同，暂未改写来源标记。三份拼图 Wwise 音频分包哈希一致。来源与投影核验见 [拼图来源清单](../../assets/reference/jigsaw-game/source-manifest.json)、[音频绑定来源清单](../../assets/reference/jigsaw-game/audio/bindings-source-manifest.json)、[音频来源清单](../../assets/reference/jigsaw-game/audio/source-manifest.json) 和[拼图来源重核脚本](../../scripts/reconcile_jigsaw_871_sources.py)。原始流的动态状态配置、目录来源指针核验及 Unity 导入／运行验证仍未完成。快速完成继续复用原 `ConfirmDialog/CostItemConfirmDialog.prefab`（`gacha-purchase.json`），保留原TMP换行／边距、自动对齐、默认语言键和数量／颜色配置。
+拼图现有七套主题界面、37个 prefab、六个入口和52幅题图保留 `JigsawGameContent.GenerateImage` 的原 Texture2D、`JigsawSuffixSettings` 中文标识图、归一化 TRS、颜色、原布局与拖动行为；不生成替代图。871 对象级复核覆盖26个输入 bundle、3,065个主输入对象及全部布局／粒子引用；234个 PNG 均从871 Sprite 重新解码并逐个匹配输出 SHA256。三个不同哈希对象中，`JigsawPanel` 用官方程序集类型树解出1,028字节字段流及 PPtr 绑定，两个配置表按183阶段的41个奖励ID、15个物品ID及557条既有规则提示验证投影不变；原始流不含 `ManagedReferencesRegistry` 数据，两个 `StateSwitcher` 的动态配置仍未恢复。变化的 `ParticleSystemRenderer` 已从871重新读取类型树并写入目录与来源清单。目录中另有120处来源指针没有原始对象哈希，尚不能证明其与871对象内容相同，暂未改写来源标记。三份拼图 Wwise 音频分包哈希一致。来源与投影核验见 [拼图来源清单](../../assets/reference/jigsaw-game/source-manifest.json)、[音频绑定来源清单](../../assets/reference/jigsaw-game/audio/bindings-source-manifest.json)、[音频来源清单](../../assets/reference/jigsaw-game/audio/source-manifest.json) 和[拼图来源重核脚本](../../scripts/reconcile_jigsaw_871_sources.py)。原始流的动态状态配置、目录来源指针核验及 Unity 导入／运行验证仍未完成。快速完成继续复用原 `ConfirmDialog/CostItemConfirmDialog.prefab`（`gacha-purchase.json`），保留原TMP换行／边距、自动对齐、默认语言键和数量／颜色配置。
 
 2161 专用资源与当前停用状态见下方来源核验；配置、奖励与既有迁移边界分开记录，不据此开放联动活动。
 
@@ -96,7 +96,7 @@
 
 知识问答客户端原通过 `KnowledgeQuizQuestionPanelAnswerContent.Init`／`SelectQuestion` 请求服务器返回初题、`NextQuestionId`、`AnsweredCount` 和 `IsCleared`；Common 的 `ActivityKnowledgeQuizQuestionInfoParser.DrawQuestions`／`BuildShuffledOptionMap`、原题表及 `KnowledgeQuizSetting` 则提供本地可用的题池、权重、选项洗牌、每阶段3个正确答案和0.5秒反馈间隔。为满足项目离线运行，本地用这套官方抽题／洗牌逻辑和配置替代服务器下发的题号与状态，并在本地保存正确进度、阶段奖励和领取记录；随机种子与线上服务端不同，因此不声称每局题序与线上一致。聊天助战及排行榜仍依赖在线服务，本地页不提供助战，相关排名目标按用户确认停用。
 
-史莱姆、孤独摇滚联动的全部关联小游戏现按用户最新决定暂不开放，包含史莱姆拼图2161，范围见[暂不开放约定](offline-access.md#暂不开放的联动活动及伙伴)。下述常驻入口及史莱姆题图／界面复用的旧授权不再作为开放这些联动小游戏的依据；既有迁移说明仅记录实现现状。
+史莱姆、孤独摇滚联动的全部关联小游戏现按用户决定暂不开放，包含史莱姆拼图2161，范围见[暂不开放约定](offline-access.md#暂不开放的联动活动及伙伴)。
 
 固定版客户端、Common 及序列化代码只有 `ItemParamScratchCard.RandomIcons`／`RewardRecord` 的读取和同步，未取得服务端生成各奖级图案与16格分布的实现。用户明确确认保留既有本地结算：先按原奖励表和权重抽定奖励，三个相同图案中奖，其余图案各不相同；另外两档预览各使用原19图案中不进入本卡格子的一个图案。图案、奖品、权重和刮擦动画取原内容，此处分布为已确认的本地补充。活动取消运营开放日历，保留原个人条件、消耗、阶段与领取语义。
 
@@ -143,9 +143,7 @@
 ## 尚未实现
 
 - 成长试炼、宾果、刮卡、音乐节奏、三消、伐木、拼图、知识问答、足球和舞蹈；逐项恢复官方入口、操作、动画、音效、结算与存档。
-
-- 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
-- 舞蹈专用舞台 prefab 尚未定位；史莱姆2161及孤独摇滚相关小游戏暂停开放，旧外观复用授权不覆盖后续暂停决定。
+- 舞蹈专用舞台 prefab 尚未定位；史莱姆2161及孤独摇滚相关小游戏暂不开放。
 
 ## 代码与资源入口
 
@@ -157,13 +155,13 @@
 
 [PlayerTaskDataUtils](../../.tools/source-packages/official-code/common-source/Common/PlayerTaskDataUtils.cs)、[TaskDetailDialog.OnClaim](../../.tools/source-packages/official-code/client-source/TaskDetailDialog.cs)、
 
-[test_jigsaw_reference.ps1](../../scripts/test_jigsaw_reference.ps1)、[引擎／配置适配夹具](../../scripts/fixtures/jigsaw_reference_harness.cs)、[期望值及来源哈希](../../scripts/fixtures/jigsaw-reference.json)、
 
-[test_ice_cream_reference.ps1](../../scripts/test_ice_cream_reference.ps1)、[引擎／配置适配夹具](../../scripts/fixtures/ice_cream_reference_harness.cs)、[原配置、期望值及输入哈希](../../scripts/fixtures/ice-cream-reference.json)
 
-[generate_bbq_reference.py](../../scripts/generate_bbq_reference.py)、[引擎／配置适配夹具](../../scripts/fixtures/bbq_reference_harness.cs)、[test_bbq_reference.ps1](../../scripts/test_bbq_reference.ps1)、[原配置、输入哈希与期望值](../../scripts/fixtures/bbq-reference.json)
 
-[test_knowledge_quiz_reference.ps1](../../scripts/test_knowledge_quiz_reference.ps1)、[引擎／配置适配夹具](../../scripts/fixtures/knowledge_quiz_reference_harness.cs)、[原表、期望结果及输入哈希](../../scripts/fixtures/knowledge-quiz-reference.json)、
+
+
+
+
 
 `scripts/prepare_activity_games.py`（来源工具标识）、
 
@@ -171,7 +169,7 @@
 
 [tree-felling/audio/source-manifest.json](../../assets/reference/tree-felling/audio/source-manifest.json)、
 
-`scripts/test_match3_reference.ps1`（来源工具标识）、[运行适配夹具](../../scripts/fixtures/match3_reference_harness.cs)、[原代码测试输入及源文件哈希](../../scripts/fixtures/match3-reference.json)、
+
 
 `scripts/prepare_match3_game.py`（来源工具标识）、
 
@@ -181,7 +179,7 @@
 
 [jigsaw-game/source-manifest.json](../../assets/reference/jigsaw-game/source-manifest.json)、[jigsaw-game/audio/source-manifest.json](../../assets/reference/jigsaw-game/audio/source-manifest.json)、
 
-[test_jump_score_reference.ps1](../../scripts/test_jump_score_reference.ps1)、[ActivityKnowledgeQuizQuestionInfoParser.DrawQuestions／BuildShuffledOptionMap](../../.tools/source-packages/official-code/common-source/Common/ActivityKnowledgeQuizQuestionInfoParser.cs)
+
 
 [KnowledgeQuizQuestionPanelAnswerContent](../../.tools/source-packages/official-code/client-source/KnowledgeQuizQuestionPanelAnswerContent.cs)、[KnowledgeQuizSetting](../../.tools/source-packages/official-code/common-source/Common/KnowledgeQuizSetting.cs)
 

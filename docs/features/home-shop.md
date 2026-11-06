@@ -16,7 +16,7 @@ HomeShopPanel 使用 shop 1／2、商品组、权重、折扣、库存、刷新�
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-`prepare_shop_assets.py` 按商店 1 / 2 的固定商品与全部商品组、家园特卖表限定提取范围，补齐 24 个图标，其中包括胡椒、糖、盐、木果粉、乐园牛奶、奶油、黄玉奶酪七项食材。所有补充资源来自已校验的同版本 `871_156598` 官方 CDN 缓存，家园三类货架的 48 种物品均有原始图标。此前“七项食材未打包”的历史记录对应基础 APK 状态，此次补充来源、实际 URL、bundle 哈希和输出 SHA256 见 [shop-ui/source-manifest.json](../../assets/reference/shop-ui/source-manifest.json)。
+家园三类货架的 48 种商品均使用官方图标，其中七项食材来自同版本官方 CDN；来源与显式加载绑定见 [shop-ui/source-manifest.json](../../assets/reference/shop-ui/source-manifest.json)。
 
 同一脚本读取原始 `ShopGoodsItemShowConfig.asset` 的品质到 Sprite GUID 映射，解码七种原始商品品质背景。商品使用已提取的 `ShopGoodsItemInfoCommon` 布局、图片、数量与阴影；数量文字扩大到原数量容器宽度，避免三位数截掉乘号。没有绘制替代图片。
 
@@ -45,13 +45,13 @@ scripts/prepare_shop_bindings.py 从固定 APK 及通过原清单校验的同版
 - shop 2 按 `GroupIdList`／`GroupRandomCounts` 生成 12 格：8 个阶段确定组分别是 30 体力（原价 144、`PriceOff=0`，免费）、命运果实 1 个（60 晨星，50% 价）、精锻石（100／120／150／180／200 个，阶段条件选档）、史诗女神牌 5 个（75 晨星）、委托卷轴 1 个（120 晨星）、黄金甲虫（50 晨星）、幻形魔镜（100 晨星）和改名卡（500 晨星，每周刷新）；当前进度显示 180 个精锻石与官方 `goods_id=20404` 对应。另 4 格是随机组：第 2 格从星之愿 2 个、稀有女神牌 20 个、结缘绳 1 个中选 1；第 4、5 格各从四种采矿工具（每种 5 个、原价 100 晨星）抽取；第 8 格从 17 种伙伴礼物／素材中抽取。`Unique=true` 保证同架不重复。早期注册天数和位阶条件会过滤候选。折扣逐商品读取 `shop_goods_price_off`：宝库各商品折扣并不相同，甲虫、魔镜、改名卡无折扣；不能把所有商品都概括成随机折扣。改名卡按官方每周周期刷新，本地周起始和 08:00 重置时间取固定配置。
 - 馈赠使用官方成就类型 12、分组 4：39 个一次性档位、20 万积分循环锚点、每轮 40 个模板且每档递增 5000，奖励物品与数量从固定表读取。积分、已领取 ID 和奖励都写本地存档；服务器玩家进度不参与。
 - `ShopBuyBatchContent` 仅由 `FunctionType.Shop, shopId=3` 的通用商店启用；家园杂货与宝库使用 `shop_id=1/2`，只按各自 `SupportBuyMultiCount` 配置提供商品数量选择，不显示该批量勾选面板。shop 1/2 固定与随机商品的 `PopConfirmDialog` 均为 `false`；`ShopRefreshCoinNeedConfirm=[2]`，杂货刷新货币为物品 1，因此家园购买和刷新没有确认弹窗。
-- 源表对照测试：`python -B scripts/prepare_home_shop_runtime.py` 后运行 `python -B scripts/test_home_shop_runtime.py`。测试核对商品 ID、物品、价格、条件、分组权重、折扣、馈赠节点、官方 UI 树及图标哈希。
+测试核对商品 ID、物品、价格、条件、分组权重、折扣、馈赠节点、官方 UI 树及图标哈希。
 
 ## 自定义实现
 
 - 用户确认以当前配置驱动的离线货架为本功能完成标准：首次打开或手动刷新时使用官方逐组抽取次数、嵌套权重、商品权重、条件与折扣表抽取，并将随机状态和货架存档；重新打开不重抽。宝库受 `RegisteredDaysCondition` 控制，固定商品按 `UnlockedMapClassIds` 显示。固定 APK 中商店 1 与商店 2 货币分别使用官方物品 ID，不硬编码为同一货币。该本地随机序列不冒称复现服务端。
 - 服务器生成的初始 `PlayerShopData`、RPC 回包和服务器随机种子不属于离线游戏；Visit 关闭。宝库第二页沿用官方随机商品配置，不增加“特卖”映射。
-当前验证覆盖官方源表、Editor 编译、杂货购买／刷新与货架重载、12 格宝库购买／库存恢复、馈赠领奖／状态恢复及 450×800 画面。输入覆盖宝库打开、PageDown 切馈赠、Escape 关闭；完整家园组合验证仍有失败，不能据此声称全套通过。
+杂货、宝库及馈赠的正式页面流程、存档恢复、音频和 Windows Player 尚未完整验证或发布。
 
 ### 已确认的本地接线与边界
 
@@ -64,4 +64,4 @@ scripts/prepare_shop_bindings.py 从固定 APK 及通过原清单校验的同版
 
 ## 尚未实现
 
-- 完成与已提交代码、资源和文档一致的 Windows 构建、真实 Player 运行验证及逐项发布；既有 Play Mode 覆盖不替代此条件。
+- 完成含当前代码、资源和文档的 Windows Player 构建、运行验证与发布。

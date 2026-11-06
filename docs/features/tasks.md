@@ -30,7 +30,7 @@
 
 [`OfficialMainlineTaskCatalog`](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialMainlineTaskCatalog.cs) 读取主线目录与来源清单，资源位于 `Resources/Official/Progression/mainline-tasks*.json`。目录由1000～1160的33项扩展到1000～1270的55项，增加山之国1165～1270的22项任务。既有转换保留 `871_156598` 来源；新增任务逐项核对选定 `871_156598` 的山之国原表，条件及奖励全部相同才复用转换。目录生成器为 [`prepare_unity_mainline_tasks.py`](../../scripts/prepare_unity_mainline_tasks.py)，目录、当前原表及比对结果的哈希见 `Resources/Official/Progression/mainline-tasks-source-manifest.json`；主城任务素材来源仍见 `assets/reference/task/source-manifest.json`。目录扩展不代表山之国完整主线路线已经验证。
 
-`OfflineMainlineProgressSession` 在本地角色槽中维护玩家成长、物品、地图与区域进度、战斗次数、实体标签、女神区域、宝箱、事件去重和已领取主线任务，并提供条件检查与领奖事务。成功祈愿抽取会将实际开启数量与奖励、消耗写入同一存档事务；重复回执不会重复增加宝箱计数。`OfficialWishAcceptance.Run` 已验证十连抽计数、重复回执／无效请求、任务 1040 条件及存档冷读，不代表完整前序主线已跑通。`TaskSubmitCondition` 依据已领取 ID 判定；`TaskCompleteCondition` 对已领取 ID 计完成，未领取任务仅在接取、展示（若有）和完成条件均由本地状态满足时计完成；不支持的条件会继续返回 `Unsupported`。保存由 `ProfileSlotCatalog` 和 `LocalJsonSaveFile` 提供。
+`OfflineMainlineProgressSession` 在本地角色槽中维护玩家成长、物品、地图与区域进度、战斗次数、实体标签、女神区域、宝箱、事件去重和已领取主线任务，并提供条件检查与领奖事务。成功祈愿抽取会将实际开启数量与奖励、消耗写入同一存档事务；重复回执不会重复增加宝箱计数；`TaskSubmitCondition` 依据已领取 ID 判定；`TaskCompleteCondition` 对已领取 ID 计完成，未领取任务仅在接取、展示（若有）和完成条件均由本地状态满足时计完成；不支持的条件会继续返回 `Unsupported`。保存由 `ProfileSlotCatalog` 和 `LocalJsonSaveFile` 提供。
 
 任务目录还携带固定版 `npc_friendship_level` 的 10,000 条等级门槛。领取带 `NpcFriendshipReward` 的主线任务时，在领奖存档副本内累加 NPC 好感经验，并按当前 `SubRankLimit` 更新等级；门槛目录、奖励扣发和任务领取同由本地事务提交，失败不会留下部分奖励。
 
@@ -38,7 +38,7 @@
 
 森之国主线目标使用现有地图进度、女神激活、实体标签和塔进度存档；任务 1070 的 `DemonBattleLayerPassCondition` 按官方共享条件检查第 1 入口已通关层数，UI 按官方客户端将当前层及目标层各加 1 显示，并跳转到幻想阶梯入口。其他地图目标的跳转仍受对应地图正式入口接线限制。
 
-编辑器校验入口为 `Zjcs.Editor.Progression.OfflineMainlineProgressValidation.Run`。主线 bundle 已按 `prepare_unity_bundle_inputs.py` 核对固定版 CAB 闭包：Unity `2022.3.57f1`、Android 目标、26 个外部 CAB 依赖、86 个序列化文件。`python scripts/check_unity_project.py` 通过（39,824 个 GUID）；`OfflineMainlineProgressValidation.Run` 在 Unity `2022.3.57f1c2` 实际通过，覆盖任务 1000／1005／1070 奖励、条件和存档冷读，以及跨地图魔女累计、去重和冷读；`ProjectTools.Validate` 也通过。上述检查不验证主城 HUD 的真实输入、画面和完整路线，详见[工程页](unity-project.md)。
+固定版任务配置与本地奖励、条件、跨地图魔女累计规则已接入；主城 HUD 输入、完整任务路线、画面和存档连续流程仍待完成。资源来源与工程检查范围见[工程页](unity-project.md)。
 
 ## 自定义实现
 
@@ -59,5 +59,5 @@
 - 当前目录含1000～1270共55项主线任务；山之国新增22项已接入目录和跨图任务文字，正式入口、完整任务路线、条件和领奖仍须按[山之国地图页](../maps/map-12.md)验证。地图10的区域进度、战斗回执、剧情次数／状态和首次手动NPC交互有角色存档写入，地图11只接入文档列明的地区、女神、实体标签、塔通关条件及固定奖励，未接入事件不得推定完成。
 - 地图 11 主线数据与本地条件、奖励事务已接线；地图 11 目标从主城跳转仍待正式大陆入口接通。职业目标跳转、宝箱条件及完整任务路线仍未验收。
 - 森之国正式入口要求先完成并领取 Map10 主线任务 1040；固定版该任务要求成功开启 10 次 `chestId=6000` 普通祈愿宝箱。计数已接入本地祈愿成功事务，地图内的 `EntityClassId=6000` 放置实体不是该计数来源。完整前序任务路线、新档累计 10 次祈愿的实际操作及领奖后的进入流程仍未完成 Play Mode 验收；运行时会继续检查任务实际领取记录。
-- 完整主线路线与任务奖励表现仍未验收；任务面板的实际输入、画面和任务领取后的主城 UI 恢复尚未 Play Mode 实测。
+- 完整主线路线与任务奖励表现仍未验收；尚未 Play Mode 实测。
 - 非主线任务面板、委托、每日／每周任务与成就系统。

@@ -69,14 +69,13 @@ prepare_kitchen_completion.py --story-only 从固定 manifest 871_156598 的 pre
 
 - 主城家具类型 3 已接入 `CookingFeatureRuntime.Open`；尚未在 Unity Play Mode 验证实际鼠标／键盘命中、画面、制作状态与存档重载。
 - `OperPlayerCooking` 的服务端结算未在客户端源码中提供，当前不能确认超出配方表的奖励或服务器失败语义。
-- 料理恢复消费、增益状态、71种料理的永久属性、盈满阶段、生命上限变化后的战斗刷新及相同料理刷新行为不由本模块落地；这些须接到物品使用/战斗系统。已经确认的离线语义不得当作本模块已验证。
+- 料理恢复消费、增益状态、71种料理的永久属性、盈满阶段、生命上限变化后的战斗刷新及相同料理刷新行为不由本模块落地；这些须接到物品使用/战斗系统。已确认的离线语义仍不代表本模块已接入。
 - 官方效果说明依赖 `LanguageUtils.SetCookingFormulaDesc`、本地化表和效果解析链；面板目前只显示已确认的恢复值及原始效果 ID，尚未恢复完整效果说明、可得来源跳转和物品详情弹窗。
 - 原 Animator、炉图 UIMesh、材质、粒子与奖励逐项出现时序未迁移。合成、分解、宝石、馈赠等其他炉页签尚未实现。
 
-### 官方依据与验证
+### 官方来源与实现入口
 
 - 固定 APK：`.tools/source-packages/zjcs_M509085.apk`，SHA-256 `ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9`。
 - Cooking Prefab 包：`defaultpackage_assets_prefabs_ui_cooking.bundle`，manifest `871_156598`，MD5 `5b2b455726b8c4f6c699ce328f9bdfc1`，SHA-256 `3a4b0c6790370ad29f026b954172b32f6cbe3ba894b555a5b434e04c8faf7802`；面板和行 prefab path ID 分别为 `6989734908194755216` 与 `7013167902997705936`。
 - 规则来源见 `assets/reference/cooking-module/source-manifest.json`：`cooking.g.bytes` SHA-256 `99cfe4b96d2b46897f0ceb3125029732e14b16a5d97b0c164540616f8e64275f`，`item.g.bytes` SHA-256 `a317a104405d25b63d1ec8c6f63397001f8cc6f2329a04034c2a49be4a18934d`，`game_settings.g.bytes` SHA-256 `8832aa02061ada1c2dad9cc190fbe6fe54a25be1e30596513b9f8c1a1ef22b27`。
 - 相关实现：`.tools/source-packages/official-code/client-source/CookingPanel.cs`、`CookingPanelItem.cs`、`ItemUseEffectCookingFormula.cs`；`.tools/source-packages/official-code/common-source/Common/CookingInfo.cs`、`CookingInfoParser.cs`、`CookingExtraInfoRecovery.cs`、`UsedItemCondition.cs`、`MapUnlockCondition.cs`、`CookingMakeItemComparer.cs`。
-- 转换器直接校验固定版 APK 原始 `cooking`、`item`、`game_settings` 表级哈希与 871 CDN Bundle／图片回执，不依赖可变的汇总 `assets/official/rules.json`。固定表／载荷 parity 与输出哈希检查：`python -B scripts/test_cooking_module.py`。工程静态检查：`python -B scripts/check_unity_project.py`。Unity Editor 导入、编译与 Play Mode 尚未由本模块单独执行。

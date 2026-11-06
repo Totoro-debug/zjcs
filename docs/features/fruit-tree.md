@@ -18,7 +18,7 @@
 
 `scripts/prepare_fruit_tree_assets.py` 已实际执行，固定 `871_156598` 的原 `FruitTree.prefab`、两个子家具、`HomeNotice`、果实效果模板和四个原维修/图标 prefab 均按原 bundle/CAB 解析。独立运行数据 `fruit-tree.json` 包含原状态切换路径和可见标志、碰撞范围、6 层 Sprite、三段 `loop_1/2/3` 的 12 fps 原生网格及循环时长、23 个场景粒子发射器、十个果实槽位和原果实效果发射器；维修效果时序为原 0.6 / 1.5 秒。原成功通知的 `mPropItemPrefab` 另精确提取为 `FurnitureProductionProp`，原语言、对象、输入和输出 SHA 保存在 `fruit-tree/source-manifest.json`。
 
-本模块来源共引用 50 张官方 PNG：最初登记 47 项时新增 14 张图像，属性行使引用数增加 3 项，但这 3 项与已有中央登记文件同字节，实际不新增 PNG。此前一次通知将“新增引用”误称“新增图像”，最终差集和修正说明保留于 `fruit-tree/registration-history/registered-v2.json`。该版转换 JSON SHA 为 `ab58e8e997ae5eb0ae68fec1005fc5f8f64cca0164d4b1d195f316dc64cbd5fd`，初版 JSON / 来源指纹和本版完整来源快照保留于该历史目录。
+果树界面使用 50 张官方 PNG 引用；图片身份、中央载荷复用关系及转换输出见 [fruit-tree 来源清单](../../assets/reference/fruit-tree/source-manifest.json)。
 
 原 RPC 23624 的最终奖算法仍未找到，实际 `fruit_harvest` 原子失败并保留果实、计时和存档；未补造收获礼包。下一素材包仅按实际文件差集纳入该转换结果，功能完成情况单独验收。
 
@@ -32,9 +32,7 @@
 
 果树 prefab 实际没有独立 `HomeDayNight` 组件，`day_night` 为空。夜光来自 `HomePlayableClipBind` 的原 24 秒曲线：接入原家园 30 倍时间及 FunctionType 90 的门槛／锁定 12 点状态，并按实际路径应用两条显隐和三条 Sprite 颜色曲线。三条原 Light2D 强度曲线及原粒子／渲染绑定的后续接入见“家园灯光与材质迁移”；没有按名称添加昼夜开关。
 
-原通知通过 `FurnitureRepairedNotifyDialog → HangUpUtils → BattleFormulaHandler → PlayerPropItem → PlayerComplexProp → LanguageUtils` 先把每小时收益转 long，再格式化。原 hang_up 100 使用 HourlyOutput 0.25、比例属性 1030、整数属性 1029，1029 的 Float／Percent 均为 false，因此无附加属性时显示 0 是原版行为；按原配置与 fixed 的 single 转换取值，不补造小数显示。
-
-原 RPC23624 最终领奖仍无可验证算法，继续保持原子失败；转换与来源登记不表示完整果树玩法完成。
+原通知通过 `FurnitureRepairedNotifyDialog → HangUpUtils → BattleFormulaHandler → PlayerPropItem → PlayerComplexProp → LanguageUtils` 先把每小时收益转 long，再格式化。原 hang_up 100 使用 HourlyOutput 0.25、比例属性 1030、整数属性 1029，1029 的 Float／Percent 均为 false，因此无附加属性时显示 0 是原版行为；按原配置与 fixed 的 single 转换取值，不补造小数显示。转换与来源登记不表示完整果树玩法完成。
 
 ## 完整还原部分
 
@@ -72,5 +70,4 @@
 
 ## 尚未实现
 
-- 活动系统尚无调用点把真实活动记录传给 `SetOutputAddition`。活动触发归活动系统负责，未伪造活动实例或奖励。
-- 受影响流程尚未在 Unity Play Mode 完成真实鼠标／键盘输入、运行画面、存档重进及 Windows Player 验证。静态元数据检查不等于该项通过。
+- 活动系统尚无调用点把真实活动记录传给 `SetOutputAddition`。活动触发归活动系统负责，未伪造活动实例或奖励。尚未在 Unity Play Mode 完成真实鼠标／键盘输入、运行画面、存档重进及 Windows Player 验证。

@@ -8,7 +8,7 @@
 
 游记素材秘境包含铁石矿洞、罗拉金矿、历战之地、时光沙海四类采集场。对应官方秘境类型为2、4、1、3；解锁条件是该类 `UnlockStages` 中任一 Type 18 秘境战斗关卡有通关记录。
 
-当前官方配置载荷、离线事务服务和主城游记入口已接入。采集面板由 871 热更新导出的官方 prefab 显示，单次、快速和宝箱按钮已绑定本地事务；首次采集可进入，可计数材料被击破时会在同一事务中推进对应秘境的 Type 18 解锁关卡计数，均为用户确认的离线规则。完整动作表现和本功能 Play Mode 验证仍未完成。
+当前官方配置载荷、离线事务服务和主城游记入口已接入。采集面板由 871 热更新导出的官方 prefab 显示，单次、快速和宝箱按钮已绑定本地事务；首次采集可进入，可计数材料被击破时会在同一事务中推进对应秘境的 Type 18 解锁关卡计数，均为用户确认的离线规则。仍未完成。
 
 ## 原始官方实现
 
@@ -26,7 +26,7 @@ prepare_gathering_actions.py 从三类材料原 SkeletonAnimReferenceAsset 取�
 
 `prepare_gathering_feedback.py` 接入同包的 `MopUpFloatingIconItem`、`MopUpFloatingIconItemCrit`、`MopUpFloatingIconItemQuick` 三套原奖励飘字预制体及原完成事件。普通／暴击数字复用已转换的 DamageNumber、CritDamageNumber 原位图字形和图集，另四张装饰贴图逐字节核验后复用现有资源；没有新增或自绘图片。原版本、URL、prefab、组件、曲线、字体对象、图集输出和原C#代码哈希在 的 `data.source` 中随生成绑定保存；对应位图字体的原提取来源继续见 `battle-hud/source-manifest.json`。
 
-同一配置还包含官方 `stage_map_location` 中可用的秘境解锁关卡位置。客户端按 `Player.GetStageCount` 检查逐关通关，但离线档案尚无逐关记录；53个解锁关卡中仅23个有非空区域映射，另30个为无表行或空 `RegionInfos`。Home 当前区域满进度判断是临时代理，需依功能页待确认项处理。
+同一配置还包含官方 `stage_map_location` 中可用的秘境解锁关卡位置。但离线档案尚无逐关记录；53个解锁关卡中仅23个有非空区域映射，另30个为无表行或空 `RegionInfos`。Home 当前区域满进度判断是临时代理，需依功能页待确认项处理。
 
 `scripts/prepare_material_gathering_ui_assets.py` 从当前版本 `871_156598` 的 `defaultpackage_assets_image_ui_notes_mopup.bundle` 提取68个原始 UI Sprite，输入来自 APK ZIP 中与 `871_156598` 一致的官方同名包，bundle SHA256 为 `12080a2c5a32c5e2741b792a6cd20c1b469a765a1c4afd83175f349bfa6cf7ae`。Unity 图像载荷在 `unity/Assets/Official/Gathering/UI/`，对象路径、逐图 SHA256 和来源 URL 记于 `assets/reference/dungeon-ui/gathering-ui-source-manifest.json`。
 
@@ -61,8 +61,7 @@ prepare_gathering_actions.py 从三类材料原 SkeletonAnimReferenceAsset 取�
 
 ## 尚未实现
 
-- prefab 导出列出92个 MonoScript GUID，其中73个由工程/包缓存解析，19个官方客户端脚本仍缺；主城本地绑定覆盖采集事务，官方 StateSwitcher、目标切换表现、角色展示及其余脚本驱动状态还没有等价迁移。当前国度角色模型与工具 Spine 4.2 原生动画、49个目标动画、受击/消失/切换特效、浮标和采集音效尚未接入运行时。已有动作载荷 `assets/official/gathering/{male,female}.json` 与 `assets/official/gathering/targets/` 仍在独立素材目录，来源见 `gathering-motion-source-manifest.json`、`gathering-actions-source-manifest.json`。
-- 静态元数据检查已通过；隔离 Unity Editor 批处理运行中的采集规则验收通过：四类首次采集、工具消耗、奖励发放、`UnlockStages` 顺序推进及重载恢复均核对成功。导入期间 Spine 编辑器后处理有 `IngestSpineAtlas` 空引用异常，未阻止 C# 编译和规则验收，但不能据此视为资源导入整体无错误。Play Mode 鼠标输入、实际画面及写入失败验证尚未完成；批处理规则验收不代替这些验证。
+- 当前地区目标的模型、受击／消失／切换特效、浮标和采集音频仍有缺项；已有动作载荷与来源见所属清单，缺失脚本组件对运行渲染和状态的影响仍待确认。
 
 ## 代码与资源入口
 

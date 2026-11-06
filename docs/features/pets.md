@@ -16,7 +16,7 @@
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-核对原始 `PetListPanelItem`、`PetInfoContent.Init` 与 `PetSettings`，幻兽列表应替换 `PetInfoSlot/Mask/IconImg` 的图片，并按当前进化阶段加载 `pet_{ClassId + 100 × (phase - 1)}`。修正此前保留模板示例 `pet_1704` 并叠加通用圆形物品图标的行为，直接使用原卡片图片、遮罩、等级与名称节点；品质背景按实际 Quality 切换，底部类型图标按 PetSettings 的 0 / 1 / 2 映射绑定。
+幻兽列表使用原 `PetListPanelItem`、`PetInfoContent.Init` 与 `PetSettings` 的资源绑定：按当前进化阶段加载 `pet_{ClassId + 100 × (phase - 1)}`，显示原卡片图片、遮罩、等级和名称，并按品质及 PetSettings 的 0 / 1 / 2 类型映射绑定背景与图标。
 
 `prepare_pet_ui.py` 从固定 APK 的 `image_itemicon_pet`、`image_ui_pet` 与 `scriptableconfig_modules_pet` 提取 39 张现有阶段图片、三种类型标记与对应配置，新增 20 项运行时 Sprite，其余复用已有原图。没有重绘或生成图片。配置中的 `pet_1619` 不在原始幻兽图像 bundle 内，保留待补齐记录；该项不再显示其他幻兽的模板图片。
 
@@ -27,8 +27,6 @@
 依据：[pet-fidelity-ui/source-manifest.json](../../assets/reference/pet-fidelity-ui/source-manifest.json)。
 
 `prepare_fidelity_skill_rules.py` 依据原 Luban 构造器、MessagePack 格式化器及静态类型解析器，严格解码 3,824 个技能／状态／命中实体和 108 个等级属性类。运行数据位于 `assets/official/skill-rules.json`，输入配置、源码、格式化器及输出哈希见 [skill-rules/source-manifest.json](../../assets/reference/skill-rules/source-manifest.json)。原阶级倍率、等级属性、被动、召唤加成、显示排序及隐藏规则用于技能详情与升阶预览；完整技能战斗没有因此自动完成。
-
-编队遮罩、筛选、成就、技能详情、进阶、重置、确认及能力重置截图已目视复核。没有原 APP 同状态实机截图，不作为全范围或逐像素一致结论。
 
 原 PetPanelWriteMask / PetPanelMask 材质的 ColorMask、Stencil 比较与操作、AlphaClip 及九宫格图片已保存到转换记录；原 LoopScrollGridLayoutGroup 的最小间距、列数及动态间距由原程序集反编译核对。没有新增自绘图片。原成就循环与战力评分的源码哈希见非主线实施证据。
 
@@ -61,8 +59,6 @@ prepare_pet_progress_ui.py 从固定 871_156598 的 prefabs_ui_tips、prefabs_ui
 ## 尚未实现
 
 - 四阵位、随行、经验喂养、技能、潜力、进化、能力树、赛季祝福、改名及原模型／图标。
-
-- 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
 
 ## 代码与资源入口
 

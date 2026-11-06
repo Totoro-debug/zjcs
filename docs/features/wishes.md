@@ -4,8 +4,6 @@
 
 状态：未完成
 
-已接入素材已复核当前云端 `871_156598`：16 个独立粒子材质补齐真实 shader、关键字与纹理采样参数，两个遗留材质属性更新为当前值；恢复官方 Image 的射线开关和透明 `NoDrawingRayCast` 命中区域。来源分别见 `assets/reference/official-map/current-ui-particle-materials-source-manifest.json`、`current-ui-graphics-source-manifest.json`。Unity Play Mode 已通过 EventSystem 坐标／射线模拟选择职业、常驻单抽、关闭结果、进入兑换与返回祈愿；没有控制 Windows 鼠标。该次结果音频未被观测到，不能视为音频播放验证通过。画面复核发现的 prefab 外语占位文字由 `refresh_current_ui_text_bindings.py` 根据当前中文 rawfile 的实际本地化键转换；已在同步当前代码和同一载荷的独立验证副本中重跑模拟输入，并查看结果截图确认中文显示，转换前字节保留在来源记录中。这不代表整套祈愿功能已验收完成。
-
 ## 功能简介
 
 女神像或技能页进入常驻／高阶祈愿，范围包含职业选择与自选、技能池、概率与保底、积分、馈赠、兑换、材料购买、详情、历史，以及对应 UI、动画、特效和音频。幻兽及古遗物奖池分别见[幻兽召唤](pet-gacha.md)和[古遗物寻宝](treasure-gacha.md)。
@@ -114,8 +112,8 @@
 | 资源组 | 原始内容与定位 | 当前边界 |
 | --- | --- | --- |
 | 祈愿主体 | `defaultpackage_assets_prefabs_ui_gachapanel.bundle`：`GachaPanel`、`SkillGachaPanel`、`SkilSeniorlGachaPanel`（原拼写）、`GachaDetailDialog`、`GachaHistoryContent`、`ScoreRewardDialog`、`GachaResultPanel` 等原 prefab；友情页、自选及列表项继续沿原引用绑定 | 官方 prefab 已接入祈愿控制器和显式加载目录；输入与画面验收状态见“尚未实现” |
-| 结果演出 | [结果演出来源](../../assets/reference/wish-performance/source-manifest.json)、[转换数据](../../assets/official/wish-performance/performance.json)：单抽、十抽、百抽行、奖励图标、AnimationClip／事件、粒子、品质效果、Wwise 事件到媒体映射 | 旧转换为迁移输入，需恢复 Unity 原生播放、材质与目标平台效果 |
-| 视觉与后处理 | [视觉来源](../../assets/reference/wish-visuals/source-manifest.json)、[转换数据](../../assets/official/wish_visuals.json)、[后处理参数](../../assets/official/battle-post/data.json)、原 [Bloom.cs](../../.tools/source-packages/official-code/urp-reference/Bloom.cs) | 来源明确含旧 Godot 粒子投影、Noise／Bloom 近似；不能把旧 `unconverted_modules=[]` 视为 Unity 迁移完成 |
+| 结果演出 | [结果演出来源](../../assets/reference/wish-performance/source-manifest.json)、[转换数据](../../assets/official/wish-performance/performance.json) | Unity 原生播放、材质与目标平台效果尚未完成 |
+| 视觉与后处理 | [视觉来源](../../assets/reference/wish-visuals/source-manifest.json)、[转换数据](../../assets/official/wish_visuals.json)、[后处理参数](../../assets/official/battle-post/data.json) | 祈愿粒子、材质和后处理尚未完整接入 Unity |
 | 兑换／购买共用组件 | [商店组件来源](../../assets/reference/shop-components/source-manifest.json)、[价格按钮来源](../../assets/reference/wish-button-costs/source-audit.json)、[材料来源入口](../../assets/reference/gacha-item-sources/source-manifest.json)、[快捷购买来源](../../assets/reference/gacha-purchase/source-manifest.json) | 沿原列表、详情、确认、批量设置、价格组件、顶部货币及奖励弹窗绑定；共享模块恢复不等于祈愿调用方已接入 |
 
 ### 官方代码与资源依据
@@ -124,13 +122,12 @@
 
 核对固定 APK 的 GachaPanel 内嵌 ShopContent 与 Shop4 / Shop5，序列化 ShopPanelTabItem.myShopId 分别为 4 / 5；TabItemTopBarSwitcher.ShowTypeList 分别为 PlayerItemType.Jingshenli (1) / SkillGachaByproduct (47)，对应物品 4 / 20。SkillExchageShopParent 按子分页切换面板，不跳转国家材料兑换。ChestGachaPanel.OnTabItemChanged 使用内嵌 Shop 子面板并明确商店 6；原始 shop 表中商店 6 的 FixedGoodsList=null、GroupIdList=[]，不虚构服务器货架。
 
-ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，按分段目标计算圆形进度。现按此绑定原奖励并修正零宽 Slot 的居中；首档技能奖励箱 6800 的 ItemIcon/Box/item_6800 在未打包的 box_skill_noatlas 中，保留奖励名称，不冒用消耗品图像。古遗物页分宝箱 / 元素，使用已取得 ChestElementGacha 图集；完整 ChestGachaPanel、扭蛋机和背景仍未取得，共用原始底部导航和通用结果面板的部分属于本地适配，不声称像素级还原。具体缺项见 source-manifest.json 的 gacha_exchange_interface / wish_first_score_reward_icon。没有新增位图素材。
+ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标并按分段目标显示圆形进度；首档技能箱 6800 使用已绑定的官方图标。古遗物页仍缺完整 ChestGachaPanel、扭蛋机与背景，共用导航和结果面板属于本地适配。
 
-积分奖励列表再次核对 `ScoreRewardDialogItem` / `AchievementPanelItem.Refresh` 和 `ItemIconDefault`：行宽为 850.2618，标题位于原始背景框内；`AchievementPanelItem.Refresh` 对所有奖励执行 `SetCount`，包含数量 1。原 prefab 确有 `ImgItemIcon_NumBg` 深色数量底（颜色 #222222，alpha 0.851）及内容自适应布局。其 TMP 序列化当前字号为 18.8，基准字号为 36，自动缩放范围为 18–36；本地普通物品数量恢复基准字号和按数字测量的宽度，保留原数量底图。重新校验固定 APK 后提取 `image_itemicon_box_skill_noatlas.bundle` 仍返回 `Not packaged`，列表也按真实名称显示 6800，未声称补齐原图。没有新增位图素材。
 
 物品数量的字号修正继续上移到共用 UI 控件，覆盖普通物品、技能、技能碎片、装备、料理、宝石、古遗物 / 碎片，以及页面内嵌的图标。统一使用 36 基准字号，小槽位按缩放补偿，在标准 450 像素宽窗口中不低于 10 像素；文字和背景按实际数字重排，动态数量更新也触发重排。技能碎片原始 `BgCountText ` 名称带末尾空格，按实际数量节点绑定，避免漏显。古遗物无数量底图的原始样式继续保留，并增加细描边以便辨认；这些最小字号与描边属于本地桌面适配，不声称是原版全部场景的字体规则。原数量底图、碎片标记和图片来源不变，没有新增位图素材。
 
-再次核对 `GachaProbabilityContent` / `GachaProbabilityItem`、`ShopGoodsItemIconBase` / `ShopPanelGoodsItem` 与原始 prefab。祈愿详情现从 `chest.RewardRules` 和实际职业池生成按品质、类别分组的基础概率，并复用详情内的 `RuleRateInfoItemGacha` 图标网格；只读取配置，不推进随机或保底。商品信息使用已提取 `ShopGoodsItemInfoCommon` 的名称、图片、数量节点，禁用被误作名称的额外 `BottomDescGo`，为名称与数量划分空间。馈赠内嵌 `ScrollRect` 缺少滚动脚本，现显式绑定实际奖励列表，支持滚轮及拖动；缺图箱保留真实名称。没有新增位图素材。
+祈愿详情按 `chest.RewardRules` 和职业奖池分组显示基础概率，不推进随机或保底；商品行使用官方名称、图片与数量节点。馈赠列表接入滚轮和拖动，详细缺项见本页来源清单。
 
 按用户要求，常驻与高阶的文字下拉框统一为人物当前转职路线的各阶段；此筛选属于本地行为调整，不沿用 APK 常驻跨路线筛选。两个奖池的记录入口也统一坐标。
 
@@ -138,13 +135,13 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 使用固定 manifest `871_156598`，`prepare_wish_assets.py` 重新解码并逐项比对 13 张 Luban 配置表，记录原始字节 SHA256；同时核对 `SkillGachaPanel`、`SkillSeniorGachaPanel`、`GachaPanelBase`、职业过滤、路线回溯、循环成就和记录客户端逻辑。证据见 `official-city/wish-source-audit.json`，玩法与离线边界见 `docs/features/wishes.md`。
 
-常驻选中图 `ImgSel1` 的 500×328 原画布仅有约 500×174.85 的 atlas 裁切片，纵向偏移约 67.08；此前裁切片被拉伸为整幅高度。已恢复 `rect_size`、`trim_offset`、`trim_size`。高阶 `ImgSel` 保留原九宫格。两尊雕像 prefab 均使用 808×988 原画布，已在各自不同宽度的 Slot 中按同一尺寸居中，并恢复常驻雕像裁切参数。积分弹窗保留来源祈愿背景，馈赠释放重复的内嵌顶栏 / 底栏预留，技能商品库存文字与图标分开。未新增自绘图片。
+常驻选中图按原 500×328 画布、裁切区域及偏移绑定；高阶 `ImgSel` 使用原九宫格。两尊雕像 prefab 按各自 Slot 居中，并保留积分弹窗背景、馈赠顶栏／底栏及技能商品库存布局。未新增自绘图片。
 
-首档自选 1 阶技能箱 `6800` 已补齐并实际用于圆圈、积分弹窗及馈赠，替代历史缺图名称占位。原始 `defaultpackage_assets_image_itemicon_box_skill_noatlas.bundle` 不在基础 APK 内，但现有同版本官方 CDN 缓存可用：MD5 `ea8a28849473cdeb177a30a44b54782e`，大小 512,743 字节，SHA256 `1756ede5d29cbeec9497fecdf06cc64d6abd18111c37948338705f28ef016c2b`。实际 URL 为 `https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ea8a28849473cdeb177a30a44b54782e.bundle`。Sprite `item_6800`、path ID `2600191277797411432`，转换输出 `assets/official/sprites/item_6800-15e9a49313.png`，输出 SHA256 `6dc025b9463e576af3628b5ab2cea07ff05ba1b1e7bd5b26ea404d4f65302d19`，已登记来源清单及显式加载清单。
+首档技能箱 6800 的官方图标由同版本 CDN 资源恢复，并用于积分弹窗、祈愿圆圈和馈赠；输入及输出凭据见[来源总表](../../assets/reference/SOURCES.md)与祈愿来源清单。
 
-前文的 `Not packaged` 和 `wish_first_score_reward_icon` 是当时仅核对基础 APK 的历史结果，现以其 `resolution` 及清单记录实际替换状态；没有混入新版文件或改变原预期哈希。原客户端完整服务端动态概率公式未取得，`WeightScaleFactor=2` 不据此猜造概率；本地实现明确的基础权重、品质保底和当前阶段保证，并标注这一限制。
+客户端未提供完整的服务端动态概率公式；本地只使用已确认的基础权重、品质保底和当前阶段保证，不根据 `WeightScaleFactor=2` 推测未知概率。
 
-对照原版本新增官方下载缓存和固定 APK，补迁此前未转换的祈愿视觉资源。实际使用的 29 项图像依赖均来自固定 APK `871_156598`，没有将已缓存新版特效包当作原版补齐。前一节从同版本 CDN 恢复的技能箱 `6800` 继续使用；其来源与历史缺图记录保留。
+祈愿视觉资源来自固定 APK 与匹配版本缓存；每个资源沿所属来源清单记录版本和对象身份，不混用新版同名包。
 
 `python scripts/prepare_wish_visuals.py` 从原 `SkillGachaPanel / SkilSeniorlGachaPanel / PetGachaSubPanel` 读取常驻、高阶与幻兽结缘环境粒子，从 `GachaTenRewardGo` 读取四组奖励粒子，恢复八个白／蓝／紫／橙品质光效 prefab 和 `GachaLightConfig` 的五种品质 Sprite。输出 20 张原始 Texture2D 解码 PNG 到 `assets/official/wish/`，相关 Sprite 继续使用 `assets/official/sprites/`，参数写入 `assets/official/wish_visuals.json`；所有动态图像均纳入显式本地加载清单。原 bundle、MD5、对象 path ID、操作、输出 SHA256、客户端代码哈希与字段绑定见 [wish-visuals/source-manifest.json](../../assets/reference/wish-visuals/source-manifest.json)。没有新增自绘位图。
 
@@ -156,7 +153,7 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 原价为星之愿 `110` 每个晨星 ×100、稀有女神牌 `301` 每张晨星 ×8、结缘材料 `107` 每个晨星 ×160。高阶材料 `118`、女神牌 `302–304`、元素牌 `311` 没有快捷购买记录。材料不足时使用原确认弹窗购买差额；数量购买使用原数量滑条、加减与最大按钮。购买后先补入材料，另行点击抽取，保留原流程；顶部余额加号与物品详情为购买入口，祈愿页的“购买材料”为本地便捷入口。
 
-核验命令为 `python scripts/verify_gacha_purchase.py`；此前“在线购买材料不属于离线实现”的范围说明已由本地晨星购买替代，真实支付仍不接入。
+材料快捷购买按原 `QuickBuyUtils.TryGetQuickBuyInfo` 与 `ShopBuyIntent.PopupConfirmDialog` 检查商品、条件和余额；材料购买与祈愿为两个独立步骤，真实支付不接入。
 
 固定 `871_156598` APK 的常驻抽取及兑换刷新 prefab 确实默认显示 `ImgCostMoneyBtn_Bg`，`PlayerCostMoneyContent` 在正数成本下显示整个成本区域，核对的余额状态切换配置为空。原资源中存在黑色价格底板，不能声称原版会在材料足够时隐藏它。这属于本地展示调整，既有官方图片像素与来源未改动，没有新增自绘或重新转换图片。
 
@@ -168,7 +165,7 @@ prepare_pet_exchange.py 从固定871_156598 APK／匹配原版本CDN提取PetGac
 
 购买成功／失败声音由ShopGoodsItemShowConfig的实际事件引用追到原UI／Minimum Wwise包的Event→Action→Sound／DIDX媒体，转为Vorbis并保留包哈希和原媒体哈希；Main_Cursor_Fail位于Minimum包，未用其他声音替换。购买确认及模糊遮罩复用已有原ConfirmDialog与默认BlurMask资源。源校验：python scripts/prepare_pet_exchange.py --check；运行规则、测试、尚未迁移项与素材包／正式发布状态仅记对应功能／地图文档。
 
-`prepare_gacha_item_sources.py` 从固定871_156598 `ItemDetailDialog` 的 `ItemSourceGo.ItemSourcePrefab` 转换实际引用的 `ItemSourceItem`，保留原布局、可用／不可用状态、箭头与背景贴图；来源枚举文案由同版本简中语言包提供，包括国度扭蛋获取与元素扭蛋获取。资源位于 `assets/official/gacha-item-sources/`，原组件、调用脚本、语言包哈希及输出哈希见 [gacha-item-sources/source-manifest.json](../../assets/reference/gacha-item-sources/source-manifest.json)。Unity 库存导入工具通过 `prepare_unity_inventory_assets.py` 校验并接入该来源行目录与三张图。
+`prepare_gacha_item_sources.py` 从固定871_156598 `ItemDetailDialog` 的 `ItemSourceGo.ItemSourcePrefab` 转换实际引用的 `ItemSourceItem`，保留原布局、可用／不可用状态、箭头与背景贴图；来源枚举文案由同版本简中语言包提供，包括国度扭蛋获取与元素扭蛋获取。资源位于 `assets/official/gacha-item-sources/`，原组件、调用脚本、语言包哈希及输出哈希见 [gacha-item-sources/source-manifest.json](../../assets/reference/gacha-item-sources/source-manifest.json)。
 
 ## 完整还原部分
 
@@ -186,13 +183,7 @@ prepare_pet_exchange.py 从固定871_156598 APK／匹配原版本CDN提取PetGac
 
 - `unity/Assets/Game/Runtime/Presentation/Wishes/WishScreenController.cs` 从 `OfficialWishAssetCatalog` 装载并实例化官方祈愿 prefab，保留原层级和按钮／图标位置；按本地服务状态绑定祈愿、详情、历史、成就、商店及弹窗。官方规则、历史、积分奖励 prefab 均没有关闭节点时，按各自对话框尺寸在底部复用职业选择 prefab 的 `CancelBtn`；奖励反馈使用该官方对话框壳并显示物品图标／数量，隐藏未用的职业选择控件。价格按钮按已确认差异隐藏黑底并使用深色价格字。
 - 单抽、十抽、百抽逐项执行已结算奖励的对应动画；十抽消费原星光事件和品质音效，百抽按原列表曲线滚动，跳过只结束演出、不重抽。技能重复转化和碎片回收直接展示服务返回的转换奖励。
-- 官方资源由 `OfficialWishAssetTools` 导入 Unity 原生可用的祈愿 prefab、图标、动画数据和音频；导入 588 个官方祈愿 sprite 和 17 段音频；`OfficialWishAssetCatalog.asset` 及 `Resources/Wishes/wishes-runtime.json` 作为显式本地加载目录。`commerce_ui_conversion.flatten_ui_node` 按节点组件生成 `has_image/has_text` 等运行时标记；固定版主页 739 个节点包含 330 个图像和 161 个文本组件，加载器校验图文组件存在。原始来源与转换依据继续见本页上方清单、`assets/reference/wish-performance/`、`wish-visuals/` 及 `assets/reference/SOURCES.md`。
-
-### 来源与验证
-
-固定 APK 由现有 `Apk` 读取器核验；`gacha/chest/reward_rule/random_reward/profession_base/skill/item/achievement/game_settings/gacha_pity_probability` 解码结果与 `assets/official/rules.json` 一致。祈愿原 prefab、演出及视觉来源沿本页上方记录恢复，没有把新版同名包或自绘内容冒充固定版本资源。
-
-`Zjcs.Editor.Wishes.OfficialWishAcceptance.Run` 使用隔离临时档案覆盖配置引导奖励、常规抽取、receipt 幂等、品质计数、友情币不足、九格商店、本地日切、双项撞期 `9/10`、三项撞期 `8/9/10`、职业覆盖为 `7` 时仍固定发三片、重复技能转化、满阶碎片回收及存档重开；Unity Batchmode 规则验收已通过。`python -B scripts/check_unity_project.py` 静态 GUID 检查已通过（27,935 个 GUID）。Unity 2022.3.57f1c2 独立图形 Editor 已重导入并运行祈愿 UI；在 `450×800` Game View 实际渲染了祈愿主体、引导奖励标题、`110×5` 奖励行和单一关闭按钮，主页 739 节点的目录校验及图文组件断言通过。真实输入首次尝试中女神像点击落到 Explorer（PID `10152`），未打开维修窗；验收器现校验前台与命中窗口 PID，之后因 Editor 未获前台而安全超时、未发送点击。单／十／百抽连续演出、音频和关闭重开存档的可见流程仍未通过真实鼠标验收。
+- 官方资源由 `OfficialWishAssetTools` 导入 Unity 原生 prefab、图标、动画和音频；运行时通过 `OfficialWishAssetCatalog.asset` 与 `Resources/Wishes/wishes-runtime.json` 显式加载。祈愿资源、材质及中文文本绑定见[来源总表](../../assets/reference/SOURCES.md)和本页所属清单。
 
 ## 自定义实现
 
@@ -207,11 +198,8 @@ prepare_pet_exchange.py 从固定871_156598 APK／匹配原版本CDN提取PetGac
 
 `SkillGachaPanel.GachaSend` 调用 `OperPlayerGacha`，结果由奖励消息返回；APK 共享代码 `Common.Player.SkillGacha` 未包含完整服务端随机裁决。已按客户端实际使用的奖池、权重和条件，以及用户对缺失服务端分支的明确答复落实离线逻辑；不把消息结构误当作服务端算法。
 
-首登发奖、首抽流程、重复技能转换、满阶回收、碎片数量、保底命中清零范围及同时触发排程均已按用户确认补齐；不得将这些先前的待确认文字当作当前缺项。
-
 ## 尚未实现
 
-- [ ] Windows 输入桌面可用，但 Unity Editor 未获前台焦点。重新运行隔离 Editor 后先确认其为前台，再以真实 OS 鼠标从家园维修并点击女神像，关闭教程奖励，执行常驻抽取并打开结果／历史／兑换页；确认真实扣款、历史写入、弹窗输入及重开存档。前一次点击命中 Explorer（PID `10152`），不能记作通过。
-- [ ] 可见验收完成后，复核 `W01～W28` 相关动态加载、输入遮挡、竖屏缩放和单／十／百抽演出范围；按[Android → Windows 资源流程](../asset-management.md#android-资源迁移到-windows)核对依赖。Windows Player 仅在涉及导出链或成品行为时构建验证。
+- 祈愿正式页面的鼠标／键盘流程、音频播放和存档重启恢复仍待完成；尚无包含完整祈愿流程的 Windows Player 发布。
 
-原表及总页来源另见[祈愿原始来源](../../assets/reference/official-city/wish-source-audit.json)和[素材来源总表](../../assets/reference/SOURCES.md)。验证结果持续维护于本功能页，不另建验收报告。
+原表与总页来源见[祈愿原始来源](../../assets/reference/official-city/wish-source-audit.json)和[素材来源总表](../../assets/reference/SOURCES.md)。

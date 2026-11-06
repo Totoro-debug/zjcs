@@ -6,123 +6,34 @@
 
 ## 功能简介
 
-圣兽试炼（活动 ID 209、212、226）与双影幻境（217）使用官方活动页、关卡、难度和奖励配置，并进入共用本地战斗。每日记录按本地 08:00 换日，活动期次以首次进入本功能的本地时间为起点；用户已确认双影进度使用本地实际战斗结果、宝箱每次领取生成并持久化本地种子。
-
-游记页每日活动卡片打开四项离线挑战选择层：圣兽试炼 1/2/3（活动 ID 209、212、226）和双影幻境（217）。选择层复用官方 `DailyActivityEntry` 卡片与对应官方挑战页；各卡片标题为本地入口标识，官方资源没有为这四项提供旅行笔记专属卡片。
+圣兽试炼（活动 ID 209、212、226）与双影幻境（217）共用本地战斗。玩法读取各自的活动、难度、关卡和奖励配置；日界为 08:00，期次时长为 335 小时。
 
 ## 原始官方实现
 
-圣兽试炼与双影幻境分别读取原活动期次、08:00 日界、难度、关卡／属性修正、首杀／阶段奖励和结果界面。
-
-### 官方代码与资源依据
-
-以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
-
-`prepare_challenge_ui.py` 经 `official_apk.Apk` 从固定 APK 与同版本已校验 CDN 读取 SecretArea、JointStrike、VoidFissure、DemonInvasion 四个原 UI 包，转换67个 prefab； 保存原层级、锚点、尺寸、缩放、布局组、裁切、状态、组件字段、文本及脚本哈希。来源完整保存在 `challenge-modes/source-manifest.json`，含312项实际使用资源的输入／输出 SHA256、bundle 版本／URL／哈希和21项圣兽技能图标与原 ItemInfo.RawIcon 的对应关系。62张独立 PNG 保存在 `assets/official/challenge-ui/sprites/`；其余图片复用字节一致的既有官方转换图，不覆盖或重绘原图。
-
-圣兽七种 StyleSetting 直接读取原 SecretAreaSettings：首杀列表与详情图片、规则预览图片、原模型缩放／偏移；怪物技能直接使用原 phase 表 ClientShowSkills 和实际同名 Sprite。图标收集目录可能含 lCommon_NoAtlas，按精确图标名在对应官方图标族中唯一定位，缺失或歧义即报错。首杀 NPC 的 FigureModelUI 复用已转换的官方伙伴模型，角色使用原角色网格。原语言资源按 DateTimeFormat 显示中国时区的击破日期。
-
-圣兽／双影主页面按原 TopBarHandler 的空货币列表清除主城余额栏，保持原首杀按钮位置。原馈赠页使用 AchievementPanel／Base／Item 的五行槽位、原状态、文本、奖励及滚动；专用规则页使用 SecretAreaRuleDialog／JointStrikeRuleDialog 与 RuleTipNumer 原编号，不再以通用规则窗口替代。轮换预告及魔物详情仍待接线，不显示 prefab 示例值。
-
-用户授权的单机调整：首杀记录本人当期首次击破；原隐藏的主页面邀请按钮显示后进入原 NPC 选择页；首杀说明同步为本人／伙伴规则，移除仅真人及同位面限制。主规则中的组队说明同步改为邀请伙伴，首杀说明同步为本人首杀；好友额外金币说明随已排除的在线社交功能隐藏。文字调整记录在运行控制器中，不改原表、prefab 或来源数据。四玩法主入口与其余交互仍在迁移；提取及转换完成不表示四套玩法已接入完毕。
-
-`prepare_challenge_results.py` 严格读取固定版本两个原战斗结果 prefab、成员结算行及 PopupWindow，共24个 MonoBehaviour；连同开场 AnimationClip、原 UIMesh／MeshRenderer／Mesh／Material／Shader 共36项输入，原对象来源、bundle 凭据及输入 SHA256 嵌入 ，所有节点引用均核对既有 `map-ui.json`。保留原 BlurMask、开场曲线、伤害／波数／历史峰值文本、本人／NPC 原模型槽及离开按钮；战斗数值与紧凑数值沿原 CultureNumberArg 使用不同格式，相关格式化代码哈希另存 `format_code_sha256`。
-
-底部原121顶点／200三角形网格按原 RectTransform 的三维旋转及三个缩放分量投影，材质 CommonJieSuanDown／UI/EffectDistort 沿已迁移原 GLES 着色程序、纹理坐标、混合与时间参数。唯一新增 PNG 为原 Mask_065_tex 的 Texture2D 解码，位于 `assets/official/challenge-results/`，输入／输出哈希和原始包凭据在 `assets/reference/challenge-results/source-manifest.json`，纳入显式加载与独立素材包；未自绘背景或替换原布局。
-
-成员伤害服务端写入未取得，统计口径待用户意。动态圣兽 MonsterIcon 已定位到原对应 prefab，仍待适配。当前隔离结果页隐藏未接通内容，不用占位数值或其他模型代替，正式战斗区域接线另行完成。
-
-结果页按 GameEndPanelBoss.RefreshBoss 读取原 StageInfo.Monsters[0] 和 MonsterType.Normal=1 选择原 BossSlot／NormalSlot，不使用奖励计算的 GetMainMonster 替代。3703、3704、3705、3707、3708、3709 的 MonsterIcon 与已转换 MonsterUI 逐一核对 SkeletonDataAsset PPtr、皮肤、初始动画及网格哈希，复用同一原骨骼，保留各自0.42／0.44缩放、原枢轴和 SkeletonGraphic 参数。UIUtils.KeepScale=11 在实例化时清零位置与旋转，避免误沿编辑器预览位移。原 prefab／RectTransform／SkeletonGraphic 输入凭据及 UIUtils 代码哈希嵌入结果绑定的 icon_sources／icon_code_sha256；无新增图片或素材包变更。
-
-3706 为原 TempRTUI，已取得相机正交尺寸3.5、640×512 RT、原目标位置／缩放和带粒子的 MonsterModel_3706_RT；该独立渲染链待迁移，保留 pending_icons 元数据，不用其他骨骼或自制图片代替。
-
-`scripts/prepare_unity_daily_challenges.py` 从当前热更新 `871_156598` 提取圣兽活动／难度／属性修正、双影活动、08:00 活动时间、阶段奖励、宝箱及奖励规则表；输入 bundle 与构造器哈希、完整消费行数和输出哈希见 `daily-challenges/source-manifest.json`。`scripts/prepare_unity_daily_challenge_assistance.py` 从已核验当前 Luban 表缓存导出 `conditions`、`npc`、`npc_level_detail`、`npc_profession_detail`、`player_robot_invite` 与 `skill`，运行载荷及输入来源见 `daily-challenges/npc-assistance-source-manifest.json`。`scripts/prepare_unity_daily_challenges_assets.py` 使用 AssetRipper 1.3.14 对已核验 CAB 闭包转换官方活动页、挑战页、战斗 HUD、结果 prefab 和依赖；清单登记 15 个 prefab、82 项官方转换输出、6 个 Resources prefab 映射（共 88 项输出）、33 项载荷目录 GUID、193 个省略的官方 MonoBehaviour 脚本及 836 项 CAB 依赖。`unity/Assets/Official/DailyChallenges/` 为官方转换载荷，运行时资源映射列于该清单。
+客户端配置圣兽难度与首杀奖励、双影阶段分数与宝箱权重，并使用各自的结果页。官方客户端代码与原始来源入口见[来源总表](../../assets/reference/SOURCES.md)。
 
 ## 完整还原部分
 
-当前版 `871_156598` 的圣兽活动、难度、阶位属性修正、双影活动、活动期次、阶段奖励、宝箱与奖励规则已转换为 `assets/official/daily-challenges/daily-challenges.json`，运行时副本位于 `unity/Assets/Game/Resources/DailyChallenges/daily-challenges.json`。`scripts/prepare_unity_daily_challenges.py` 负责配置转换。关卡数据来自固定 APK `871_156598`，由 `scripts/prepare_unity_daily_challenge_battles.py` 转换到 `battle-stages.json`。
-
-官方资源清单 `assets/reference/daily-challenges/source-manifest.json` 记录当前版 12 个来源 bundle、836 项 CAB 依赖、15 个官方 prefab、82 项官方转换输出及 6 个 Resources prefab 映射（共 88 项输出）。资源由 `scripts/prepare_unity_daily_challenges_assets.py` 经 AssetRipper 1.3.14 转换；载荷在 `unity/Assets/Official/DailyChallenges/`，运行时 prefab 映射在 `unity/Assets/Game/Resources/DailyChallenges/`。圣兽／双影结果 prefab 现由 `OpenDailyChallengeResult` 按战斗结算打开。官方脚本通过项目 C# 适配实现必要行为，不以已导入 prefab 代表原脚本已运行。
-
-`OfficialDailyChallengeCatalog` (`unity/Assets/Game/Runtime/Offline/Progression/OfficialDailyChallengeCatalog.cs`) 读取活动、奖励和难度表，并按 `ActivityDomainBossUtils.GetActivityDomainBossProps` 的配置顺序合并阶位／等级修正与难度属性。`OfflineDailyChallengeBattleCatalog` (`unity/Assets/Game/Runtime/Offline/World/OfflineDailyChallengeBattleCatalog.cs`) 读取四个官方 stage 与场景映射。
-
-`OfflineDailyChallengeService` (`unity/Assets/Game/Runtime/Offline/Progression/OfflineDailyChallengeService.cs`) 保存角色槽位外的本地活动状态：首次进入锚点、335 小时期次、08:00 逻辑日及其高水位、期次最高索引、每日参与次数、难度解锁、挑战检查点、阶段领取、双影当日最高成绩及宝箱事务。用户确认系统时间回拨不重置进度；每日逻辑日及期次只前进不回退，旧存档从既有活动记录恢复高水位。参与和检查点在战斗启动时一起记录；战斗结算检查点可在重启后恢复。双影击杀按官方每日上限计数，挑战尝试本身不限次。
-
-当前版 NPC 助战表由 `scripts/prepare_unity_daily_challenge_assistance.py` 从具备构造器证明的 Luban 缓存导出到 `unity/Assets/Game/Resources/DailyChallenges/npc-assistance-rules.json`，独立清单记录源表及输入／输出哈希。`OfficialCombatAssetCatalog.LoadNpcAssistance` 从该载荷加载 `NpcType=4` 候选、等级详情、职业、技能、邀约上限和条件；`FightOfficialNpcAssistanceCatalog.AssistConditionMet` 支持实际候选所用等级、好感、组合及剧情计数条件。游记挑战页的 `OpenDailyChallengeAssist` 使用官方 `TeamInvitePanel` 与 `TeamInvitePanelRobotItem` prefab 显示伙伴并保存每项挑战的选择；`DailyDungeonBattleRunner.ResolveDailyChallengeAssistSelection` 在开战前重核官方条件与次数，`OfflineNpcAssistanceProgress.CommitBattle` 在挑战入场时记录邀约次数。战斗检查点包含助战单位，结束时清除进行中的助战快照。普通日常副本也由 `HomeHudView.Dungeons.SelectDailyDungeonRoom` 打开同一伙伴选择界面，按房间分别存档并接入实际战斗；该入口和通用助战迁移状态见 [NPC 助战](npc-assistance.md)。
-
-NPC 战斗属性和技能由当前版 `npc_level_detail`、`npc_profession_detail`、`skill` 计算；用户确认将 NPC 放在官方多格起点或玩家起点周围最近的可行走空格。`DailyDungeonBattleRunner.AddAssistNpcs` 避开检查点中已占格，按 Manhattan 距离和固定坐标顺序选位。`OfficialBattleModelCatalog` 已从现有官方绑定识别 `body_<NpcClassId>`，但命中的 12 名候选原动画数据都只有 `map/run_01`，不具备战斗所需的 `idle_01` 与 `run_01`。选择面板因此禁用这些未具备完整战斗动画的候选；当前官方 `FightEntityId` prefab 包还未转换为 Windows 原生战斗模型。已核对的 NPC 4202 包依赖闭包为 65 个序列化文件且闭包完整，源对象使用 Android 平台资源；该输入核对不代表转换或 Windows 渲染已完成。
-
-`DailyDungeonBattleRunner` (`unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs`) 将圣兽 stage type 102 与双影 stage type 103 接到共用战斗执行器。挑战 checkpoint 从挑战战斗目录补充阵型到构建用的映射，不改写普通日常副本目录。难度选择按钮和 `ActivityDomainBossNumCell` 按官方 prefab 层级接入；胜利推进圣兽难度并发放配置的每日固定奖励。双影记录玩家及其召唤单位的实际 HP 伤害与护盾吸收，按首领最大 HP 折算最高万分比进度；阶段领奖一次结清所有已达成未领档位。`FightBattleHitExecutor` 与 `FightBattleStatistics` 独立记录护盾吸收，不改变实际扣血统计。战斗结束后使用官方 `GameEndPanelActivityDomainBoss`／`GameEndPanelActivityFunnyBoss` 显示胜负和实际伤害，返回按钮回到当前挑战页。
-
-圣兽／双影结算操作区（局部完成）：从所选884原版两种结果 prefab 提取完整 `BtnGroup` 及原祖先变换、SafeArea、Canvas、GraphicRaycaster，迁入 `GameEndPanelBase`，保留原六项按钮／图片引用、支持类型判断、回调及启停订阅。其原版统计按钮调用公共 `OfficialBattleResultReport`，由原控制类持有按钮订阅；技能测试结果继续使用该公共模块的直接按钮适配。原图集纹理按 APK 优先来源转为 Windows 原生载荷，并完整解析排队的 Sprite 纹理依赖；按钮声音使用原事件解码的本地音频。运行代码及原生绑定分别见[脚本来源](../../assets/reference/daily-challenges/battle-result-actions-runtime-source-manifest.json)、[资源来源](../../assets/reference/daily-challenges/battle-result-actions-native-source-manifest.json)。隔离 Play Mode 已通过实际 `DailyDungeonBattleRunner.BeginChallenge` 运行209、212、226、217四项战斗，核对真实结束状态、原版按钮图片／模拟点击、公共战报、技能统计及只读详情、关闭重开、禁用再启用与销毁清理；统计查看前后背包不变。已查看四项实际结果操作区、战报及详情画面。该验证绕过尚未恢复的正式活动入口，未验证完整结果页、胜利奖励展示、返回按钮、NPC 出场或冷启动恢复；原结果页其余内容仍有省略脚本，不能据此视为整页恢复完成。Unity 导入／编译与 `ProjectTools.Validate` 通过，本功能仍未完成，未发布新 Player。
-
-公共奖励滚动组件（进行中）：新增 `OfficialBattleAwardList`，基于已迁入的 `LoopScrollRect` 实现原 `AwardContent` 的列表准备、来源过滤委托、虚拟滚动数据绑定、延迟及逐项显示、清理与重启生命周期。奖励合并、忽略规则、原物品图标管理及具体活动 prefab 绑定尚未接入；宿主未绑定时显式失败，未以临时公式或图标替代。活动结果窗口仍未使用此组件，需继续迁入原奖励条目与物品图标脚本并验证完整展示。
-
-原生活动 UI 恢复（进行中）：已从所选884原包与已验证转换缓存核对圣兽入口、双影入口、两种结果页及难度条目共5个 prefab、5,898个对象的层级和组件对应，恢复全部2,323个脚本组件字段；工具对缓存之外的组件继续按原包类型树或选定程序集解码，不再跳过。两种结算的 `GameEndPanelBase` 按钮及入口的解锁／预览分支均保留，脚本字段覆盖率逐组件核对；仍需接入运行时组件与资源闭包，未安装为可游玩的新界面。可复现入口为 `scripts/prepare_activity_battle_native.py`，原包对象、原生转换输入及输出哈希见[原生界面来源](../../assets/reference/daily-challenges/native-ui-source-manifest.json)。通用 YAML 读取器现按 Unity 字符串类型保留数字、布尔字样及空值字样的 `m_Name`，避免原结算节点 `1`／`2`／`3` 被误读为数字；五种名称与数值字段不变对照、上述五个官方 prefab 的严格映射通过；共用工具另回归伙伴条目与好感度属性组，459个对象、117个脚本组件完整恢复通过。此项仅证明恢复输入可继续使用，不代表活动实战或界面验证完成。
-
-活动难度选择模块（局部完成）：从所选884客户端迁入 `ActivityFestivalBossNumContext`、`ActivityFestivalBossNumCell`、`ActivityFestivalBossNumScrollView`，复用已迁移的官方 FancyScrollView、Scroller、状态切换、字典与文字效果模块。保留原索引、选中阈值、四种选中／解锁样式、锁图标、奖励红点、动画采样、切换回调及滚动参数；Wwise 选择事件通过本地 AudioClip 适配器传出。`scripts/prepare_activity_battle_selector_native.py` 安装原版 `ActivityDomainBossNumCell`，并提取原详情页 `mNumScrollView` 指向的完整21对象子树，仅解除其根父引用，未重画控件。字体按同版本官方 CN／zh_CN 字体配置及源字体 MD5／长度绑定 FZY4K TTF，保留原 TMP 参数，单独持有动态字体、材质及图集；文本取官方 `activity_domain_boss_num_cell_text`。运行代码与原生资产来源分别见 [脚本清单](../../assets/reference/daily-challenges/activity-selector-runtime-source-manifest.json)、[原生绑定清单](../../assets/reference/daily-challenges/activity-selector-native-source-manifest.json)。隔离 Play Mode 已模拟条目点击，核对四种样式、中文实际字形、奖励红点、采样动画及重复启用回调并查看运行画面；原版滚动容器另通过模拟指针点击、拖拽吸附、前后切换、越界保护、数据刷新和本地选择音效事件参数检查，并查看完整运行画面。工程静态检查、Unity 导入／编译及 `ProjectTools.Validate` 已通过；上述 UI 使用隔离测试宿主，整页活动入口、活动实战、实际音频播放、结算与存档恢复尚未通过本项验证，未发布新版本。
-
-活动关卡序列化：既有854转换载荷中的嵌套出生点、怪物波次和波次原点无法由 Unity `JsonUtility` 直接恢复。`scripts/prepare_unity_daily_challenge_battles.py --repair-serialized-arrays` 对已提交的四关卡载荷追加公共战斗适配器既有的扁平数组／偏移字段，逐项保留原嵌套值、阵型、坐标及数值；输入 Git 身份、前后哈希和转换方式见[序列化来源](../../assets/reference/daily-challenges/battle-stages-serialization-source-manifest.json)。四活动实际运行已穿过出生点与波次构建。双影召唤物3925的原版缺继承配置分支按[公共战斗说明](battle-execution.md)处理，未填造继承数值。
-
-圣兽难度奖励及双影阶段奖励按当前配置为单物品固定数量；双影宝箱按官方权重表抽取。宝箱领取先将随机种子、抽取结果和角色物品事务 ID 写入本地，再提交幂等物品事务，进程崩溃后可继续完成同一笔领取。
-
-当前公共战斗接线已通过隔离 Unity 导入／编译、`ProjectTools.Validate` 和工程静态检查；本功能的实际运行范围及原生 UI 缺口见上文。
-
-正式入口当前状态：窗口化隔离 Play Mode 已模拟点击游记每日活动卡片、四项挑战选择层和209入口，能够创建 `ActivityDomainBossPanel` 根对象；实际675×1463画面仍显示主城，活动页本体未正确渲染。旧 `Resources/DailyChallenges/ActivityDomainBossPanel` 的多个原脚本组件缺失，`GoToBtn`／`BattleBtn` 未形成可操作的挑战入口，流程在开战前失败。原 `ActivityDomainBossPanelBattleContent` 分别持有挑战与前往地图按钮，须按原字段与状态分支恢复绑定；不能用根对象存在证明活动页可用。日常活动专用验收入口为 `HomeBattleHostPlayModeAcceptance` 的 `dailyChallenge` 分支，需同时启用 `ZJCS_BATTLE_HOSTS_DIRECT=1`；后续战斗、完整结算与返回断言尚未执行通过。
-
-活动邀请控件（局部迁移）：`ActivityDomainBossTeamButton` 保留原人数文本格式、按钮回调、初始化与启停订阅顺序；原队伍人数、上限和邀请请求由 `IActivityBattleTeam` 传入，三项在线队伍变更通知汇合为本地变更事件。原生绑定工具从所选884 `ActivityDomainBossPanelBattleContent.mTeamBtn` 提取完整61对象子树，仅解除根父引用，保留原位置、尺寸、隐藏状态、红点及原按钮音效。字体按官方 `MultiLanguageText.RefreshFont` 与 CN／zh_CN 配置切换为中国区字体；原预置日文字体不能直接用于中文人数文本。字体和资源持有独立 GUID，避免覆盖其他模块；空语言键沿原数据保留，不当作缺失文本。运行与资源输入／输出见[脚本来源](../../assets/reference/daily-challenges/activity-team-runtime-source-manifest.json)、[原生绑定来源](../../assets/reference/daily-challenges/activity-team-native-source-manifest.json)。隔离 Play Mode 已通过模拟指针点击、中文实际字形、测试适配器人数变化、原音频事件参数、启停／替换／销毁的订阅清理，并已查看675×1463运行画面。此项使用独立控件宿主，只验证邀请回调，未验证实际邀请窗口、助战单位、正式活动入口或整页状态；尚未接入完整活动页。工程静态检查、Unity 编译与 `ProjectTools.Validate` 均通过；未发布新版本。
-
-活动倒计时（局部迁移）：原 `ACountdownView`、`CountdownView`、`CountdownText` 按所选884代码迁入 `Official/ActivityBattleUI`，保留原半秒 `WaitForSeconds`、初始先显示的 do/while、剩余／总时长比值、Show 重启与停用清理，时间文本复用既有官方格式化迁移。原 `ActivityDomainBossPreviewContent.mCountdown` 子树单独恢复原组件及字体依赖；原 `myKey={0}` 按官方本地化服务缺键时返回原键的实现保留为格式字符串，不添加替代文案。提取与邀请控件共用严格子树检查和资源绑定，默认邀请输出保持不变。运行／原生输入输出分别见[脚本来源](../../assets/reference/daily-challenges/activity-countdown-runtime-source-manifest.json)、[原生来源](../../assets/reference/daily-challenges/activity-countdown-native-source-manifest.json)。隔离 Play Mode 已通过原生组件绑定、中文多日时间实际字形、缩放时钟暂停／恢复、替换计时、单次超时，以及隐藏／父节点停用／销毁的回调清理，已查看675×1463运行截图。该验收在独立 Canvas 中调用原 Show／Hide 接口，未模拟页面入口，不能证明预告数据、完整页面或实际开战已接通。隔离工程 Unity 编译与 `ProjectTools.Validate` 通过，工程静态检查通过127,999个GUID；验收断言通过后停止该隔离Editor，未验证自动退出，尚未发布新 Player。
-
-活动首领视图（局部迁移）：已迁入原 `MonsterUI`，保留原 `Slot`、相同怪物ID直接返回、从后向前销毁全部子节点、按 `MonsterInfo.IconId` 加载 `Appearance/Monster/{id}/MonsterIcon_{id}`、资源句柄持有至销毁及实例位置归零。解析器与注入式实例化由宿主显式提供。原活动页 `mMonsterUI` 显示区域和3703、3704、3705、3707、3708、3709六种原 `MonsterIcon` 已绑定；保留原节点、坐标、缩放、材质与启动动画，复用现有原生 Canvas 骨骼及纹理加载实现。二进制骨骼完整消费，原 atlas、约束、动画及 `AppearanceConfig` 指定的 High 贴图显式接入，无近似素材。原代码与资源输入／输出见[脚本来源](../../assets/reference/daily-challenges/activity-monster-ui-runtime-source-manifest.json)、[原生来源](../../assets/reference/daily-challenges/activity-monster-native-source-manifest.json)，资源入口为 `DailyChallenges/ActivityMonsterAssets`／`ActivityMonsterPrefabs` 和 `ActivityMonsterIcons/`。工程静态检查通过128,102个GUID；隔离工程完成Unity导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和渲染Play Mode，进程退出码0。六种图标逐项验证原启动动画、网格逐帧变化、High纹理绑定、ID切换与同ID不重载、关闭重开、销毁后的六个句柄及纹理释放；运行截图均已查看。范围为独立组件场景，未验证完整页面的模拟点击、血条与结算返回，完整页面尚未接线。3706使用原 `TempRTUI`、独立相机、RenderTexture和粒子渲染链，尚未完整接入，未用Spine图标替代；当前不能据此认为全部首领视图或活动页已恢复。
-
-3706离屏视图（局部迁移）：已迁入所选884原 `SimpleRTRenderPass`、`TempRTUI`、`SpineRTUIManager` 及接口，保留原相机配置、RT格式、投影、清屏、Universal2D筛选、单席位持有与同目标复用、启停／销毁顺序、材质参数和原 `SafeAction` 通知。原场景注入改为显式 `IActivityRtUIBindings`，包含目标实例化、独立材质、泛光注册和席位服务。来源为[渲染通道](../../assets/reference/daily-challenges/activity-rt-render-pass-source-manifest.json)与[生命周期](../../assets/reference/daily-challenges/activity-rt-ui-source-manifest.json)，实际运行范围见下述完整预制体检查。
-
-3706专属输入（局部迁移）：公共怪物提取器按原 `MonsterModel_3706_RT` 根节点选择 RT 变体，避免混入同 bundle 的其他模型。419根骨骼、257个槽、23个完整动画、47项路径、136项物理及1项变换约束与原Animator完整状态机、四个原材质、配置指定的七份Low纹理通过公共原生转换流程安装。二进制完整消费；原ASTC各级mip、采样及色彩空间转为Windows原生资产，RT控制器使用独立序列化GUID。入口为 `DailyChallenges/ActivityRtMonsters/catalog`，来源见[原生模型输入](../../assets/reference/daily-challenges/activity-rt-monster-assets-source-manifest.json)。公共顺序物理后端保留原待机Unity载体约1.3333秒与骨骼动画约3秒的各自时钟。
-
-3706完整预制体（局部迁移）：`BattleNativeMonsterRenderer.CreatePrefab` 在禁用状态绑定原 `AppearanceRendererLite` 后启用，原373对象及22项应用脚本引用完整保留，仅增加公共网格适配器。20个原 `AttachmentFollower`、52个原粒子系统、原Mesh／材质／纹理／Shader及Low加载器通过独立资源闭包接入；模型、挂点与其他战斗共用同一骨骼、动画和物理模块。入口为 `DailyChallenges/ActivityRtPrefab/MonsterModel_3706_RT` 与同目录 `AppearanceAssets`，来源见[完整预制体清单](../../assets/reference/daily-challenges/activity-rt-prefab-source-manifest.json)。隔离Unity编译、ProjectTools.Validate和内置屏D3D11 Play Mode通过：实际读到107544个可见像素，20个挂点位置与当前骨骼坐标相符并随动画变化，52个粒子系统中有197个活动粒子，四张Low主贴图请求与销毁释放通过；原几何／相机／RT参数、同目标共享、非持有者交还保护、禁用／重开／销毁交接通过，已查看实际完整模型及粒子画面。编辑器检查使用同步着色器编译；此前异步检查曾读到透明RT，尚未确认其原因，须继续核对正式入口冷启动。Play Mode断言完成并返回编辑模式；Editor退出停滞后仅停止本次隔离进程。原泛光输出、活动整页服务与交互、结算和Windows Player仍未完成，未发布新版本。
-
-圣兽独立血量与原血条（局部迁移）：`OfflineDomainBossBattleHealth.Read` 从公共检查点读取所选阶位的首领实际HP，核对活动关卡、战斗类型及原关卡首只怪物身份，排除召唤物和其他单位；进行中的旧阶位重战优先显示本场HP。无进行中检查点时，保留原已击败阶位为0、当前／后续阶位满血的显示分支。失败结算清除检查点后不保留伤害，每日参与回执不变。`ActivityDomainBossHpView` 提取原 `RefreshContent` 的百分比文字与Slider赋值，复用公共战斗的原百分比格式化。`prepare_activity_battle_health_native.py` 恢复原 `mHpSlider` 所在的完整 `HpSliderGo` 子树，保留19个原对象及全部组件字段、坐标、Sprite、填充引用、文字效果与字体，并增加一个持有原字段引用的显示组件；43项原生输出、输入哈希及显式绑定见[血条来源](../../assets/reference/daily-challenges/activity-health-native-source-manifest.json)，资源入口为 `DailyChallenges/Health/ActivityDomainBossHpView`。
-
-血条验证范围为隔离组件场景：三种活动使用构造并经公共序列化器校验的检查点，验证身份匹配、同ID召唤排除、存档冷重载、清除进度后满血、每日一次、已击败阶位及重战；尚未通过正式活动入口执行这些流程。隔离工程静态检查通过128301个GUID，Unity编译、`ProjectTools.Validate`、内置屏D3D11 Play Mode及原邀请按钮模拟点击回归通过，一次完整运行正常退出码0；最新清屏复测全部断言通过后Editor退出停滞，仅停止本次隔离进程。已查看完整运行画面，原血条文字读到1358个亮色像素、0个编译占位色像素；该渲染检查使用同步着色器编译，正式整页的异步冷启动仍待验证。整页按钮、奖励、排行榜、结算与Windows Player仍未完成，未发布新版本。
-
-圣兽本期成绩（局部完成）：公共 `FightBattleReport.DamageToMonsters` 沿原 `FightUtilsHandler.CanAccDamageToBoss` 的怪物目标过滤，从完整命中回执累计实际扣血绝对值与护盾吸收，保留NPC、召唤物等施法来源，排除治疗和技能耗血。不能使用只区分施法单位的伤害总行替代目标过滤。`DailyDungeonBattleRunner.FinalizeChallenge` 只在有效战斗结束后保存本期最高实际伤害，包含失败结果及已完成检查点的恢复结算；正常结束直接消费公共控制器已有的最终报告，冷恢复沿同一公共报告构建入口读取完整回执。`OfflineDailyChallengeService.DomainBossRanking` 将三种活动分别保存，区分未完成战斗与完成零伤害，每日08:00不清排行，换期清空，原最高时钟机制防止回拨复活旧成绩；旧存档没有成绩时保留空榜，不推算历史记录。原字段、消费代码与迁移入口见[成绩来源](../../assets/reference/daily-challenges/activity-rank-results-source-manifest.json)。
-
-成绩验证通过主工程静态检查（128649个GUID）、隔离Unity编译与 `ProjectTools.Validate`；内置屏D3D11 Play Mode实际运行209／212／226至失败结算，分别为31／5／19条步骤回执，实际伤害642／80／320，与公共最终报告和冷读取的本地成绩一致。隔离角色使用原推荐10015／10043技能及其原范围、跳跃、CD和伤害，不改战斗参数；另一次近身技能实战完成零伤害，保存后仍有成绩。模拟指针完成四种活动原结算操作区的战报、技能详情、重开、启停与释放回归，不重复发奖；规则夹具覆盖最高成绩、日／期切换、回拨与活动隔离。基础战报和独立分组回归通过；完整分组脚本的前置状态Discard断言失败，撤去本次报告改动后同样复现，不计为本次通过项。已查看三项完整运行截图及战报，原战报数值可见，完整结算页主体仍未恢复、仍透出主城背景；此次未验证胜利分支、完整入口、排行页、NPC助战或发布Player。验收全部断言通过，Editor退出码0。
-
-圣兽原排行页（局部完成）：`ActivityRankUI` 迁入原 `ActivityDomainBossRankPanel`、`TeamTopContent`、首位／本人行、原范围切换和规则按钮；`ActivityDomainBossRankView` 通过本地已完成成绩适配器提供数据。原独立 `Top/ActivityDomainBossTopPanel` 保留全部2114对象及原启停状态，行模板和两种原规则窗口随本地资源交付；独立页原 `mRuleBtn` 为空，规则按钮位于后续待接的活动整页，不能把没有执行的规则点击计为已验证。旧存档先迁移稳定的本地角色身份；原角色UI使用共用角色绑定，默认剑／杖的完整原UI部件按原路径、跟随、动画和High贴图映射加载，动态装备分层沿原 `AppearanceUIPartHandler`／`PartSlot` 的前后层选择恢复。当前目录只绑定默认剑／杖的原UI部件，其他装备外观的原部件prefab及其特效依赖仍待转换，不能据默认武器验证声称任意装备均可显示。代码与资源输入分别见[脚本来源](../../assets/reference/daily-challenges/activity-rank-runtime-source-manifest.json)和[原生来源](../../assets/reference/daily-challenges/activity-rank-native-source-manifest.json)。正式活动页标签与Windows Player尚未接通、验证。
-
-排行页验证：隔离工程通过Unity编译及 `ProjectTools.Validate`，内置屏D3D11 Play Mode运行209／212／226实际战斗至失败，原排行页分别显示公共报告中的560／80／320伤害，与冷重载成绩一致；模拟指针通过原范围切换和返回按钮，验证空榜、首位角色、本人行及窗口释放，并回归四种活动的原结算操作区和公共战报。已查看三项675×1463完整截图，默认剑的原角色与武器正常显示；该验证直接调用排行入口打开原窗口，尚未通过活动主页面的排行标签，也未执行独立页中原本不激活的规则按钮。Editor全部断言通过、正常退出码0；当前验证基于包含共用角色UI与分层适配修改的工作区，尚无包含本项的新Player发布。
-
-活动主页面控制器（未完成）：原 `ActivityDomainBossPanel` 的原标签映射和内容状态、`ActivityDomainBossPanelDetailContent` 的初选阶位／前后浏览／红点扫描、`ActivityDomainBossPanelBattleContent` 的层状态／挑战次数／奖励图标与附件操作已经迁入 `ActivityBattleUI`。在线数据管理与请求改为显式的本地快照和命令绑定接口，尚未完成生产适配器和整页 prefab 接线；原 MonsterInfo 回调为空，保持原行为。`ActivityInfoUI`、`ActivityDomainBossPreviewContent`、`MultiFontTextMaterial` 保留原标题／截止时间、进度平滑／倒计时／单次通知及字体材质租用生命周期；本地首次进入即开启活动，不伪造服务器召唤预览。通用 `NavigateBtn` 和 `SecretAreaBattleButtons` 的原导航成功延时关闭、组队人数和确认分支亦已迁入，尚未实测。来源见[页面控制代码](../../assets/reference/daily-challenges/activity-page-ui-source-manifest.json)和[显示支持代码](../../assets/reference/daily-challenges/activity-page-support-source-manifest.json)。原排行控制类、首位／本人行、范围切换和规则窗口控制亦已迁入 `ActivityRankUI`，见[排行控制代码来源](../../assets/reference/daily-challenges/activity-rank-runtime-source-manifest.json)。控制代码通过主工程静态检查（130474个GUID）、隔离Unity编译和 `ProjectTools.Validate`；这些检查不代表整页可用，仍须完成整页原资源绑定、生产入口、模拟输入与Player验证。
-
-圣兽页面数据（局部完成）：`ReadDomainBossPage` 统一读取同一期／同一逻辑日的挑战次数、日常奖励次数、阶位和已领奖阶位；即使处于结算窗口也先刷新显示状态，返回的已领奖集合与存档分离，沿用现有08:00刷新和防回拨时钟。奖励预览迁移原 `RewardRuleInfoParser.GetRewardDropInfosByRuleList`／`GetRewardDictByRuleList` 的固定与概率计数，不进行随机抽奖；所选871配置的15条规则均无条件及等级／阶级倍率，记录脚本与后续配置提取均校验这个适用范围。主工程静态检查（132293个GUID）、隔离Unity编译、`ProjectTools.Validate` 与 `ActivityDomainBossPageDataAcceptance.Run` 已通过，覆盖209／212／226的实际阶位奖励、概率掉落、重复物品、结算窗口、跨日／跨期、冷读存档和时间回拨。当前工作区的完整官方主页面3029对象及依赖已转换并导入，但生产适配器、正式入口和整页模拟点击／画面尚未接通；本次未构建或发布新Player。来源见[页面数据来源](../../assets/reference/daily-challenges/activity-page-data-source-manifest.json)。
+- `OfficialDailyChallengeCatalog` 加载活动、关卡、属性修正和奖励数据；`OfflineDailyChallengeService` 保存活动期次、参与次数、挑战进度、成绩、领奖记录与战斗检查点。
+- `DailyDungeonBattleRunner` 将圣兽 stage type 102、双影 stage type 103 接入公共战斗。结算按实际战斗报告记录伤害，保存有效检查点，并提交配置奖励。
+- 游记入口支持四项玩法选择；圣兽难度、部分排行与邀请控件已迁入。结果操作区复用公共战报，规则见[战斗执行](battle-execution.md)。
+- NPC 候选按官方条件和邀约次数筛选，选择随战斗检查点保存；通用助战规则见[NPC 助战](npc-assistance.md)。
 
 ## 自定义实现
 
-用户确认期次以首次进入功能的本地时间起算；该时间由 `EnterFeature(DateTime.Now)` 首次持久化。每日逻辑日采用官方 08:00 配置。官方活动 `Duration=335` 小时，最后 1 小时结算。用户确认系统时间回拨不得降低已到最高期次或逻辑日；系统时间向前跳转仍会按本地时间推进期次。
-
-圣兽读取 `MaxDailyChallengeCount=1` 与 `MaxDailyChallengeAwardCount=1`。双影的 `DailyMaxKillCount=3` 限定每日击杀，不当作挑战次数。用户确认挑战成功进入战斗才计参与，失败也保留回执，同一逻辑日不重复挑战圣兽；双影每次开始进入本地战斗均记录参与。服务器写入和奖励执行逻辑未在客户端来源中取得，以上离线行为不声称为官方服务端实现。
-
-用户确认圣兽按每场独立战斗计算血量：进行中及中断恢复读取公共战斗检查点的实际HP；失败结束后，下次挑战重新满血，不跨场累计伤害。原 `ActivityDomainBossPanelBattleContent` 从服务器 `ActivityDomainBossDescData.TotalHp`／`TotalDamage` 读取的全局血条改为上述本地投影；原每日一次和胜利升阶规则保留。独立血量适配与原血条组件已验证，完整活动页仍待接线与运行验证。
-
-用户确认圣兽保留原排行页和规则说明，只展示当前角色在本期实际完成战斗的成绩，未挑战时显示原版空榜状态。本期最高实际伤害现已保存，零伤害完成与未挑战分别记录；原排行控制类已迁入 `ActivityRankUI`，正式活动页的排行标签接线尚未完成。位面／本服两个原范围均只投影同一角色的本期实际成绩，不生成其他玩家或历史成绩。
-
-双影进度采用本地战斗结果的当日最高实际团队伤害，阶段分数按官方客户端 `max(DailyMaxTeamDamage, DailyMaxTeamDamagePercent * bossMaxHp / 10000)` 规则折算。由于离线战斗为单角色加本地召唤物，伤害按其 `MasterId` 归属角色；未取得服务端个人／队伍伤害写入实现。
-
-### 已确认的本地接线与边界
-
-`OfficialDailyChallengeCatalog` 与 `OfflineDailyChallengeBattleCatalog` 读取当前规则及固定 APK 关卡数据；`OfflineDailyChallengeService` 保存首次进入时间、335 小时期次与最高期次、08:00 逻辑日高水位、参与回执、挑战检查点、档位领奖和双影进度／宝箱事务。`DailyDungeonBattleRunner` 将圣兽／双影 stage 接入共用战斗，按本地 HP 结算及护盾吸收记录双影成绩，领奖写入角色物品事务；宝箱使用用户确认的逐次本地随机种子并先存抽取结果以支持崩溃恢复。`prepare_unity_daily_challenges_assets.py --runtime-only` 校验来源 prefab SHA256 并映射圣兽／双影结果页至 `Resources`；胜负、伤害及已提交的胜利奖励明细接入结果页。当前版 NPC 候选规则表由独立清单记录；游记挑战入口支持逐项选择，按官方条件与邀请次数筛选，布阵使用官方起点及用户确认的邻近可行走空格策略，战斗检查点保存助战单位。现有模型目录命中 12 名助战候选的 `body_*` 绑定，但原动画数据只有 `map/run_01`，缺少战斗所需 `idle_01`／`run_01`，选择界面会禁用它们。官方 NPC 4202 的 65 个序列化文件 CAB 闭包已核验；85 个候选 `fightnpc_*` 战斗模型、动画及依赖尚未完成 Windows 原生转换和运行绑定。官方客户端 C# 行为由本地 C# 适配实现，未复制被省略脚本。Editor／Play Mode 验证状态见[圣兽与双影功能页](daily-challenges.md)。
+- 用户确认期次从首次进入功能时起算；系统时间回拨不降低期次或逻辑日高水位。最后一小时按结算期处理。
+- 圣兽本地排行只记录当前角色本期实际战斗成绩；单场失败后不跨场累计伤害。双影进度采用本地战斗实际伤害与护盾吸收，击杀数按官方每日上限计算。
+- 服务端榜单、匹配与奖励写入未从客户端取得；离线行为仅按上述已确认范围执行。
 
 ## 尚未实现
 
-- 将 85 个可配置 NPC 对应的官方 `fightnpc_*` 战斗模型、动画及依赖转为 Windows 可用原生资产并绑定到 `OfficialBattleModelCatalog`／战斗场景视图；只核验 NPC 4202 一个包的依赖闭包，尚未完成模型转换与画面验证。已发现的 12 个官方 `body_*` 绑定仅有地图跑步动画，不能替代战斗动画。入口选择、官方条件／次数复核、检查点单位、最近可行走格布阵及助战计数已实现；未获得战斗模型的 NPC 会禁用选择。
-- 完成85个候选的原生战斗模型与动画绑定后，对有多个 NPC 助战的四个挑战地图进行 Play Mode 实测，确认出场、移动／技能、结算和检查点恢复。当前四项实战只覆盖单角色。
-- 恢复完整活动入口与结果窗口的原脚本及资源绑定，包括原奖励列表、首领模型、开场动画、返回交互；现有操作区与公共战报验证不能代替这些内容。
-- 通过模拟指针／键盘验证四项正式入口、整页难度选择、助战筛选、胜利领奖、08:00 换日、期次交界及冷启动存档恢复；完成后构建、启动并发布 Windows Player。
+- 圣兽活动页的正式入口、完整状态与排行接线，以及完整奖励结果页仍缺失。
+- 双影首领和活动演出、完整结算奖励展示、关闭重开与冷启动恢复仍未接入。
+- 助战候选的正式战斗模型和动画尚未完整绑定；不符合战斗动画要求的候选会禁用。
+- 本功能尚未完成 Unity Play Mode 全流程验证和 Windows Player 发布。
 
 ## 代码与资源入口
 
-官方客户端：`.tools/source-packages/official-code/client-source/ActivityDomainBossPanelDetailContent.cs`（难度格及阶位选择）、`ActivityDomainBossPanelBattleContent.cs`（挑战次数、奖励显示及领奖）、`GameEndPanelActivityDomainBoss.cs`（结算奖励消息接入）、`ActivityDomainBossUIUtils.cs`（参与与逻辑日）、`AnniversaryFunnyBossContent.cs`（双影挑战／宝箱入口）、`AnniversaryFunnyBossStepAwardView.cs`（当日最高伤害与阶段分数）、`AnniversaryFunnyBossUtils.cs`（可开宝箱数）、`FightActivityFunnyBossMainPanel.cs`（实际伤害加护盾吸收）。官方共享奖励解析位于 `.tools/source-packages/official-code/common-source/Common/RewardRuleInfoParser.cs`。客户端调用不能揭示的服务端规则在本地按已确认单机范围实现。
+[DailyDungeonBattleRunner.cs](../../unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs)、[OfflineDailyChallengeService.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineDailyChallengeService.cs)、[OfficialDailyChallengeCatalog.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialDailyChallengeCatalog.cs)。
 
-配置：当前热更新 `871_156598`，活动 ID 209、212、226、217；地图 94、96、98、95；关卡 21153、21154、22600、72100；双影宝箱 6525、阶段组 1010。运行配置与逐项输入／输出哈希见 [daily-challenges/source-manifest.json](../../assets/reference/daily-challenges/source-manifest.json)，助战规则表见 [npc-assistance-source-manifest.json](../../assets/reference/daily-challenges/npc-assistance-source-manifest.json)；战斗关卡来源见 [battle-stages-source-manifest.json](../../assets/reference/daily-challenges/battle-stages-source-manifest.json)。
+活动页面与结果操作区资源入口见[原生界面清单](../../assets/reference/daily-challenges/native-ui-source-manifest.json)、[结算资源清单](../../assets/reference/daily-challenges/battle-result-actions-native-source-manifest.json)和[结算运行清单](../../assets/reference/daily-challenges/battle-result-actions-runtime-source-manifest.json)。

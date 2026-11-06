@@ -6,89 +6,34 @@
 
 ## 功能简介
 
-人物五个装备槽和行囊装备分类进入候选、详情、比较、强化、继承、星石及碎片合成。
+人物装备页和行囊装备分类提供五槽穿戴、候选、详情、强化、继承、星石镶嵌与拆卸。
 
-Unity 已接入角色五槽及行囊装备操作、实例存档事务、装备属性来源和官方装备 UI 数据载荷。运行界面目前由角色页节点工厂组合面板，尚未恢复装备 prefab 的完整原始坐标、动画音效、强化粒子及继承奖励表现；Unity 编译及规则／UI 载荷校验已通过，完整穿戴至战斗的 Play Mode 交互与 Windows Player 验证仍未完成，因此模块仍未完成。
+Unity 已接入装备实例、属性来源、本地存档事务和部分页面交互。当前面板由人物页节点工厂组合，尚未恢复完整官方装备界面。
 
 ## 原始官方实现
 
-官方装备由五部位实例、主副属性、词条、品质、套装、祝福、强化、继承、星石与碎片配置组成；随机实例生成和属性换算以 EquipInfo、EquipAttributeInfoParser 及对应共享公式为依据。
-
-### 官方代码与资源依据
-
-以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
-
-`prepare_fidelity_equipment.py` 从原 promotepanel / character 包转换 18 个 prefab／引用模板，严格读取 213 组字段绑定、9 张原表及 101 个等级属性类；七种 EquipQualityBg 按 LanguageUtils 的资源名和原图子目录定位。强化、锁定和分解规则已接入；继承、宝石、共鸣等面板当前仅完成转换，未全量接入。新装备按原权重及参数生成，普通／特殊／被动词条与互斥、套装已参与属性与战力；旧实例保留兼容值。继承、镶嵌、完整说明及后期祝福仍待完成，不以素材转换宣称装备完整一致。
-
-依据：[equipment-fidelity/source-manifest.json](../../assets/reference/equipment-fidelity/source-manifest.json)。
-
-记录见非主线实施证据。没有新增自绘素材。
-
-上述 21 个模板和 297 份输入记录是继承模块完成时的范围。继续从同一固定版本提取 `prefabs_ui_itemdetail` 的原 `GemDetailDialog`，追踪其完整组件字段及 TMP 换行、溢出和边距；原语言补齐星石说明及镶嵌部位。当前输出为 22 个 prefab／引用模板、295 份完整组件字段、68 份 TMP 输入记录（58 个不同文字路径）、228 组不同路径／脚本绑定、655 项资源记录及 58 份原代码指纹。原星石图标全部复用已转换同版素材，未增加自绘或新版来源。字段输入与去重后绑定数量分别登记，不合并为一个夸大的“绑定数”。
-
-依据原 `GemPartInfoParser`、`GemPropChunck`、`PlayerEquipDataExt`、`EquipLevelCondition`、候选比较器与镶嵌界面实现；360 个固定版本星石均使用特殊属性组首组。 接入原槽位／列表、短按镶嵌、一秒长按专用详情、移动取消和外点击。卸下时返还一枚原星石是服务端 `AwardData` 缺失时的离线所有权适配，不标为已取得原服务端返还实现；未补造手续费、额外奖励或材料返还。
-
-地图 94 活动首领使用固定版本 `871_156598` 的原 Luban 配置、既有官方怪物及面板。`scripts/prepare_map_activity_boss.py` 解码原七张表，运行数据按已提交地图筛选；各原始表完整消费字节数、bundle 及输入哈希、筛选范围和输出哈希见 `assets/reference/official-map/activity-boss-source-manifest.json`。
-
-地图 96 活动首领使用固定版本 `871_156598` 的原 Luban 配置、既有官方怪物及面板。
-
-地图 98 活动首领使用固定版本 `871_156598` 的原 Luban 配置、既有官方怪物及面板。
-
-地图 95 活动首领使用固定版本 `871_156598` 的原 Luban 配置、既有官方怪物及面板。
-
-地图 92 音乐节使用固定版本 `871_156598` 的活动配置、原面板、人物与武器 Spine 数据。原始绑定及输入/输出哈希见 `official-map/activity-hud-source-manifest.json`、`player-actions-source-manifest.json` 和 `music-weapons-source-manifest.json`；荧光棒按原共享武器预制体比例接到当前男角色的原持械骨骼。服务端处理器缺失，离线报名免费发放一根所选荧光棒，应援每原配置 29.9 秒使用音符奖池 73005，奖励使用原首日分组上限并持续保存、不随重进刷新；离场回到原默认入口。这些是本地执行策略。 固定表已退休地图 92 的迎宾绑定，本地仅对原 TrackTag 重接仍保留的 MusicPartyWelcome1/2 原图。
-
-本会话剧情挂点使用固定版原 StoryNodeRegister / StoryNodeDelayRegister，来源、原坐标、父级变换及输出指纹见 official-map/story-bindings-source-manifest.json。剧情演出的既有官方 Timeline、MyPlayable、角色与插图转换依赖随地图 12 提交，来源分别见 timelines、playables、story-actors、story-media、ui-spines 来源清单；未补造挂点或插图。
-
-星系 UI 测试使用的原星系层级、故事书、插图、彩蛋和原面板依赖，来源分别见 official-map/galaxy-source-manifest.json、ui-source-manifest.json 及 ui-spines-source-manifest.json。运行时只加载显式清单中的本地转换资源。
-
-地图音频测试所依赖的原 Wwise 音乐分支、桥段及混音资源，输入、工具版本、实际输出与哈希见 official-map/audio-source-manifest.json 和 music-source-manifest.json。混音在开发时完成，运行时离线播放本地资源。
-
-音乐踏板使用原 ECEntityOverlapDisplayView.mDisplaySwitcher 的占据状态及官方粒子，未绘制高亮替代图。按实际使用的踏板 prefab 筛选输出，来源和转换指纹见 official-map/particles-source-manifest.json；不代表全部世界粒子已接入。
-
-`prepare_fidelity_equipment.py` 从固定版 `defaultpackage_assets_prefabs_ui_itemdetail.bundle`（MD5 `ed61998dccf8c8b2451eb16f49b433cb`）补充原 `Assets/Prefabs/UI/ItemDetail/EquipMutillPropItem.prefab`，GameObject path_id `-120004648565983737`。沿用 `EquipPropPanel.MainPropItem`、`SecPropItem`，以 `OtherPropGroup` 中逐条实例化的原模板显示附加属性，保留原状态切换、文字边距、加号设置、行距与交替底色；没有新增自绘。当前来源清单共 23 个 prefab／引用模板、231 组路径／脚本绑定、61 份 TMP 文字记录及 655 项资源记录。`EquipPropPanel`、`EquipMutillPropItem` 与装备候选／详情源码和完整输入输出哈希见 [equipment-fidelity/source-manifest.json](../../assets/reference/equipment-fidelity/source-manifest.json)。主、副属性和附加值分别依照原 `BattleFormulaHandler` 计算，不再将同类型附加值并入主词条显示。
-
-`prepare_equipment_completion.py` 从固定 APK／匹配 `871_156598` 的 Character、ItemDetail、PromotePanel、Equip、Tips、ConfirmDialog 与 ItemIconAttachmentConfig 提取 16 个真实窗口／引用模板，沿原 PPtr 取得星石行、等级说明行及类型 13 的已拥有附件。保留原同名兄弟节点的对象引用、RectTransform、网格、布局、自适应高度、PopupWindow 遮罩、状态、TMP 字段与 TMPEffect 描边；没有绘制替代素材。真实 bundle、对象、语言、原 C#、输入输出 SHA256 与完整 276 行等级差表来源见 `assets/reference/equipment-completion/source-manifest.json`。脚本严格校验 TMP 字段、64 字节 AutoAlign 序列化范围和原始表输入，不把 SafeAction 当作 Unity 序列化字段。此清单由转换脚本生成；先提交不冲突代码，共用素材登记待锁交接。
-
-`prepare_equipment_completion.py` 按固定 `871_156598` APK／匹配清单的 CDN 资源，转换装备详情与比较、碎片详情及候选、祝福／套装提示、确认框、技能词条详情、装备星石属性行、等级提示及说明行。16 个原 prefab／模板、转换图像、组件字段、Prefab 来源、表格及调用源码哈希登记于 [equipment-completion/source-manifest.json](../../assets/reference/equipment-completion/source-manifest.json)；运行数据写入 `assets/official/ui.json`、`fidelity-rules.json` 和 `fidelity-texts.json`。转换没有绘制替代界面或图片。
-
-`prepare_equipment_inherit_feedback.py` 按同一固定版本读取 `EquipInheritPropItem`、其原粒子系统与 `UIParticle` 配置，以及 `ItemIconAttachmentConfig` 引用的六种原挂件 prefab；将六个粒子发射器、六种奖励挂件和关联的原纹理写入 `assets/official/equipment-feedback/catalog.json` 及正式素材目录。[equipment-feedback/source-manifest.json](../../assets/reference/equipment-feedback/source-manifest.json) 保存原 bundle／对象来源、输入输出哈希、附件配置和客户端调用源码哈希。Godot 在继承属性行和奖励图标上复用这些原资源，不生成替代特效或挂件。
-
-Unity 规则载荷由 `scripts/prepare_unity_equipment_catalog.py` 从上述固定版规则投影生成，仅保留装备运行所需表，不重复携带全局规则文件。`unity/Assets/Official/Equipment/source-manifest.json` 记录三份来源清单哈希及输出路径；`Runtime/source-manifest.json` 记录精简规则表 SHA256、输入 SHA256 和保留的表名。
-
-同一工具还恢复装备、强化、继承、星石、详情及碎片选择的 39 个原 prefab 层级投影和 132 张来源图片到 `unity/Assets/Official/Equipment/UI/`。`UI/source-manifest.json` 记录原 prefab 来源身份、逐图哈希、实际使用的 UI 汇总 SHA256 及既有 `equipment-completion/source-manifest.json` 中的历史汇总预期值。当前 `assets/official/ui.json` 汇总 SHA256 与该历史预期不一致；不改写历史哈希，当前迁移范围通过固定版逐 prefab 身份与原图输入哈希检查。独立 UI 输出和 Unity `.meta` 可由 `prepare_unity_equipment_catalog.py` 复现，并由 `Zjcs.Editor.Equipment.OfficialEquipmentValidation.Validate` 核验。该载荷尚未恢复成可操作的 Unity prefab/窗口，也未完成 Unity 编辑器运行验收；完整范围见[装备、强化、继承与星石](equipment.md)。Unity 官方载荷可按需通过 [unity_asset_pack.py](../../scripts/unity_asset_pack.py) 打入本机恢复快照；该快照不参与构建或运行。
+装备实例、主副属性、随机词条、品质、套装、祝福、强化、继承与星石遵循固定版 `EquipInfo`、`EquipAttributeInfoParser`、`PlayerEquipDataExt` 及对应配置。词条互斥、属性计算和战斗被动效果沿用官方规则。
 
 ## 完整还原部分
 
-`scripts/prepare_unity_equipment_catalog.py` 校验固定 `871_156598` 规则来源并恢复运行所需表。`OfficialEquipmentCatalog` / `OfficialEquipmentAssetCatalog.Load` 校验版本、输出长度、SHA256 与关键表；编辑器入口为 `Zjcs.Editor.Equipment.OfficialEquipmentValidation.Validate`。
-
-`OfflineEquipmentProfile` 为五部位保留独立实例 ID、实例词条、星石、锁定状态、穿戴关系和各部位基础/赛季祝福强化状态。`OfflineMainlineProgressSession.ApplyCharacterMutation` 对装备数据与玩家背包使用同一存档副本及原子写盘，旧存档缺少装备字段时初始化为空装备档案。
-
-装备词条的类型替换参数已局部迁移：`OfficialEquipmentCatalog.CalculateTermReplacementProperties` 直接适配当前 `884_156692` 共享源码 `BattleFormulaHandler.CalcEquipTermsReplacePropDictByPropGroupIndices`、`EquipAttributesPassiveSkillInfo.GetEquipAttributePassiveSkillProp` 与祝福查询，消费保留 `854_156383` 身份的装备运行表。按实例索引取 `Props.Values`，保留原 `Long`／`Float` 类型及原始定点数；只有角色位阶与物品 `LimitRank` 相同且祝福非零时应用 `PropBlessScaleFactorIds`，缺少缩放行回退1，乘积向零截断。此参数计算不额外乘品质倍率；品质驱动的技能属性计算与 `PropsFactors`／`QualityFactors` 战力计算分别另行处理。有效词条筛选、正式战斗装配、原方法和适配哈希见[装备被动选择来源清单](../../assets/reference/battle-rules/equipment-selection-source-manifest.json)。
-
-正式战斗装配已接通 `OfflineEquipmentPropSource.CollectBattlePassiveTerms`：按官方 `CheckEquipsAllEffectTerm` 先过滤 `IsApplyInBattle`，再按 `ExclusiveGroup`／`SelfExclusive` 使用后加入装备的 `LimitRank`、祝福和原战力上下文比较，平局保留先加入项。穿戴词条和达到阈值的套装被动都会生成 `FightOfficialPassiveSkillBinding`；词条品质映射到官方技能品阶的首个 `Rank`，装备词条使用 `GetLevel` 的有效装备等级，套装随等级变化时使用同品阶激活装备有效等级的整数平均，固定参数保持原值，来源位阶取持有者位阶。替换参数和 `SkillPropMapFactorIds` 祝福缩放随绑定传给状态及其子技能。装备基础属性、套装和战力路径也统一按物品 `LimitRank` 判断。输入、原方法与适配代码哈希见[装备词条来源](../../assets/reference/battle-rules/equipment-term-source-manifest.json)。
-
-规则验证入口包括 `scripts/test_battle_equipment_replay.ps1` 与 `scripts/test_battle_equipment_selection.ps1`（PowerShell 7）。前者验证真实40015／17015的800浮点原值、1整数上限、60150的8%概率和检查点；后者编译 `884_156692` 原 `CheckEquipsAllEffectTerm`、互斥评分、套装选择和属性组方法，与本地实现对比1,042组组合，覆盖战斗过滤、混合实现类型、入场品阶／祝福上下文、平局、套装平均等级和固定参数。Unity `ProjectTools.Validate` 和84,658 GUID静态检查通过。内置屏D3D12带画面公共宿主实际结算日常副本335步、竞技场22步、幻境之塔36步；三宿主均从隔离玩家装备档案装入真实40015词条及四件套50008，分别验证装备等级31、套装均值34、品质首技能品阶10、持有者位阶4、原类型替换值和检查点往返，日常副本按原8%概率命中两次，另两场未命中。实际查看日常副本准备截图；主城及战斗HUD的既有表现限制参见[战斗执行](battle-execution.md)。装备目录校验另验证1,223件装备、360种星石、39个原UI层级和132张原图；UI载荷末尾CRLF还原为LF后与既有长度3,118,034及SHA256一致，来源清单未修改。全量静态检查及重放回归通过；状态组件验证见[战斗执行](battle-execution.md)。本项尚未构建／发布Windows Player。
-
-`OfflineEquipmentOperations` 已接入穿戴职业检查、部位强化报价和材料事务、星石候选/镶卸、碎片职业过滤与部位排序、碎片实例生成回调、装备分解限制与原奖励/星石返还、以及继承属性事务。强化和祝福限制读取原 `system_level_limit`、`system_level_gap_limit` 与材料表；星石条件由调用方按原条件对象求值；继承重掷由调用方传入官方生成回调，以便单机存档事务整体回滚。
-
-角色页的 `CharacterEquipSlots` 从五个原角色槽与背包调用穿戴、卸下、锁定、分解、强化、星石、继承、碎片合成操作；详情、候选排序、比较与操作状态绑定角色页。`OfflineEquipmentPropSource` 接入主副属性、普通/特殊词条、星石普通与特殊属性、祝福强化、套装阈值及装备共鸣；普通星石按原 `GemPartInfoParser.GetGemProp` 使用物品阶位和属性类型查 `level_prop`，特殊星石按 `EquipAttributesPropsInfo.GetGemSpecialProp` 取 `Props[0]`。有效词条按 `ExclusiveGroup`/`SelfExclusive` 比较战力后择优；`CalculateCombatRating` 已计算装备基础属性、套装评分、普通/特殊词条品质与祝福缩放。类型4/5的战斗被动已由战斗装配入口生成状态绑定；尚未接入的是 `IsApplyInBattle=false` 词条的战外属性转换。角色属性页和战斗属性读取同一来源，分解/继承/镶卸/强化仍由 progression 存档事务提交。
-
-`OfficialEquipmentGenerator` 按固定版 `EquipInfo.GenerateItemParams` 与 `EquipAttributeInfoParser` 的已还原数据迁移掉落等级、祝福等级、主副属性类型权重、随机词条类型/互斥、品质与阶位过滤、被动品质及套装抽取。代码依据为 `.tools/source-packages/official-code/common-source/Common/PlayerEquipDataExt.cs`、`EquipInfo.cs`、`EquipAttributeInfoParser.cs`、`EquipUpgradeMatInfoParser.cs` 和客户端 `EquipPromotePanelUpgradePanel.cs`、`EquipInheritSelectContent.cs`、`EquipSelectPanel.cs`。
-
-Unity 官方载荷中有 39 个装备、强化、继承、星石、详情与碎片 prefab 层级目录和 132 张对应原图；由 `prepare_unity_equipment_catalog.py` 从已转换官方目录恢复，`Assets/Official/Equipment/UI/source-manifest.json` 记录面板、来源身份、输入/输出哈希与图片路径。编辑器校验会检查目录结构及原图导入/哈希。规则及上述UI载荷已通过Unity编辑器校验；此处目前只完成原始UI数据和图片载荷，不表示已生成可操作Unity界面。
+- `OfflineEquipmentProfile` 保存装备实例、部位关系、词条、星石及强化状态；装备操作通过角色存档事务提交。
+- `OfficialEquipmentGenerator` 按官方装备配置和随机权重生成装备；装备等级、祝福、品质、词条互斥与套装参与属性计算。
+- 角色页已接入装备槽、候选、详情、比较、强化、继承及星石操作。装备规则载荷与局部界面资源入口见[Unity装备界面来源清单](../../unity/Assets/Official/Equipment/UI/source-manifest.json)。
 
 ## 自定义实现
 
-副本最终评级奖励读取 `dungeons-runtime.json` 的 `gradeRewards`、`rewardRules`：按官方条件选中当前评级行，并遵照客户端 `RewardRuleInfoParser` 的 `Percent × Weight / WeightTotal` 逐候选概率和数量结算；房间惊喜奖励读取房间配置引用的同一套规则。完整装备奖励的 `ItemType=110` 是官方随机装备占位项，`randomEquipmentPools` 由 `random_reward.IdList` / `WeightOfIdList` 导出为带权实际装备 ID 池；装备实例通过 `OfficialEquipmentGenerator.Generate` 按所选装备和官方生成逻辑创建。实例在一次性 `ApplyInventoryTransaction` 中写入装备档案；等级和祝福等级应用对应副本地图组、难度的官方区间，掉落来源使用 `SourceOperate.DailyDungeonReward = 61`。装备碎片等普通道具按库存事务发放。服务端领奖响应中的 `EquipItemData` 未下发生成参数，本地使用同一官方装备配置生成实例；提交后的重复领奖由 receipt 去重，不重掷。
-
-星石卸下按现有 Godot 离线适配返还同一颗已拥有星石，不添加费用、升级或替代奖励。赛季装备柜的记录和只读详情见[赛季](seasons.md)；远古砥石的词条替换、自动锁定、分解与期限处理见[行囊](inventory.md)。
+服务端星石返还参数未在客户端提供。单机拆卸时返还原有星石，不增加费用或额外奖励。
 
 ## 尚未实现
 
-- 类型4/5的正式战斗状态装配、品质首品阶、装备等级／套装平均等级、`LimitRank` 选择、替换参数和战斗内祝福缩放已接入；仍缺类型4且 `IsApplyInBattle=false` 的战外属性转换：原 `BattleFormulaHandler.CalcEquipTermExchangeProps` 按 `EquipAttributesPassiveSkillInfo.SkillId` 查技能实体，用词条品质对应的首个品阶、装备等级和持有者位阶计算技能属性，同位阶祝福经 `SkillPropMapFactorIds` 缩放，再由 `FightStatusPropComponent.TransitionPropCfgs` 按角色原始战斗总属性计算转换量。此转换没有把 `PropsFactors`／`QualityFactors` 再乘入技能属性；当前尚未合入玩家属性来源。
-- 继承事务已执行来源/目标实例更新并保存，但成功后界面只关闭弹窗并刷新装备槽；原继承结果页逐条显示接收属性、替换属性和首项奖励装备实例的表现尚未接入。
-- 当前交互面板使用已恢复节点模板组合，没有直接恢复装备原 prefab 完整坐标/锚点、字体和层级；尚缺星石长按原详情、部分重复合成确认及原材料不足/取消状态表现。
-- 恢复 `Effect_ui_Upgrade` 六个粒子系统、目标词条顺序、六类原奖励挂件与原按钮/动画音效；检查 Android prefab/bundle 与编译 shader 的 Windows 兼容性。
-- 当前 `assets/official/ui.json` 汇总 SHA256 与历史 `equipment-completion` 输出清单记录值不一致；逐面板 prefab 身份和图片来源哈希已核验，仍需独立从原始 bundle 重建 UI 投影并核对实际汇总哈希。
-- 规则及UI载荷已通过Unity编译和目录校验；完整界面仍须在Play Mode实际运行，覆盖正常操作、存档恢复、失败回滚、原资源绑定、动画/音频及不同窗口尺寸下的鼠标与键盘交互，并完成Windows Player构建发布。
+- 官方装备各面板的完整坐标、锚点、字体、层级、动画、音效、升级粒子与继承奖励表现。
+- `IsApplyInBattle=false` 的类型 4 被动词条战外属性转换尚未接入人物属性来源；继承成功后的逐项结果页仍缺失。
+- 完整装备操作、存档冷读与 Windows Player 流程尚未完成 Unity Play Mode 验证和发布。
+
+## 代码与资源入口
+
+[OfflineEquipmentProfile.cs](../../unity/Assets/Game/Runtime/Offline/Equipment/OfflineEquipmentProfile.cs)、[OfflineEquipmentOperations.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineEquipmentOperations.cs)、[OfficialEquipmentGenerator.cs](../../unity/Assets/Game/Runtime/Offline/Equipment/OfficialEquipmentGenerator.cs)、[OfflineEquipmentPropSource.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineEquipmentPropSource.cs)。
+
+[PlayerEquipDataExt](../../.tools/source-packages/official-code/common-source/Common/PlayerEquipDataExt.cs)、[EquipAttributeInfoParser](../../.tools/source-packages/official-code/common-source/Common/EquipAttributeInfoParser.cs)、[BattleFormulaHandler](../../.tools/source-packages/official-code/common-source/Common/BattleFormulaHandler.cs)。
+
+装备词条筛选与替换参数的来源及适配入口见[战斗规则来源](../../assets/reference/battle-rules/equipment-selection-source-manifest.json)和[词条替换来源](../../assets/reference/battle-rules/equipment-term-source-manifest.json)。
