@@ -1,0 +1,595 @@
+{
+  "manifest": "884_156692",
+  "prefab": {
+    "name": "ActivityDomainBossPanel",
+    "originalRoot": "cab-07300c191d442cf45a4d85054c81bab5:-1400939265550666818",
+    "originalSource": {
+      "bundle": "defaultpackage_assets_prefabs_ui_activitydomainboss.bundle",
+      "bundle_hash": "5e034fe117562604e35619af977b5da9",
+      "path_id": "-1400939265550666818",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/5e034fe117562604e35619af977b5da9.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 229321,
+      "bundle_sha256": "dc0a772f29a6952d801d51989fe45911a2ac9b53f71a19d1911fa246397cb55b"
+    },
+    "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/ActivityDomainBoss/ActivityDomainBossPanel.prefab",
+    "native_sha256": "87176232be0e7b848131cbbf282f4525084667aaf3cc81e39ab61f63c31cb793",
+    "mapped_objects": 3029,
+    "recovered_components": 1202,
+    "unresolved": 1,
+    "pendingBindings": {
+      "cab-f77d3f01129d48cbd57b20ded583e2d2:-8666515848883870153": {
+        "type": "MonoBehaviour",
+        "payload_sha256": "cd6edd9a0fe7e0dcded0f256a91e5a6fe2750cf866f9e8ac9e0b023cfc23d937",
+        "name": "[1][State]活动界域boss是否有提示"
+      }
+    },
+    "output": "ActivityDomainBossPanel.json",
+    "nativeMeta_sha256": "61c2312e25734192760605319c4a624855ade044532c4c237bee2883b21a1a4c",
+    "output_sha256": "e1d451f368f7298009f49a509e046a5eebe7dac23d5e0e26c6b3d936febd9cd7"
+  },
+  "selection": {
+    "consumer": "cab-07300c191d442cf45a4d85054c81bab5:8256490725291307966",
+    "field": "mHpSlider",
+    "native_root": 1313026266067498,
+    "original_parent": {
+      "fileID": 224992571384066502
+    },
+    "objects": 19,
+    "adaptation": "Exact original HpSliderGo subtree, root parent detached only. Preserve every original object/component/field; add the extracted RefreshContent HP presenter with original mHpSlider and mHpText references.",
+    "hp_fields": {
+      "mHpSlider": {
+        "fileID": 114447409744879641
+      },
+      "mHpText": {
+        "fileID": 114571371313329062
+      }
+    },
+    "added_component": 114000000000000001
+  },
+  "inputs": {
+    "scripts/prepare_current_partner_native.py": "21eed29e19b3b3fbd370eb0736c10fa663d35c749b7fa1f9686a57774c6d2cea",
+    "scripts/official_apk.py": "ffc722b06e62bacc6689d98a7910562527fbcacc1c512c05e57a21bb8aa0ea46",
+    "scripts/official_manifest.py": "1aae5bd86af587511466e17308719c2e6b356be4117942809c7e6ba89e2d7399",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c",
+    ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-textures/source-manifest.json": "095eb422b8a241e6468abd81940e22aff9ad22f89bc78161dbdba8bd1f45b3b0",
+    ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/source-manifest.json": "09b81e5260175a1524a2178d37bea2b78752bdc85f130751e2d95398171fbe0b",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/ActivityDomainBoss/ActivityDomainBossPanel.prefab": "87176232be0e7b848131cbbf282f4525084667aaf3cc81e39ab61f63c31cb793",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/ActivityDomainBoss/ActivityDomainBossPanel.prefab.meta": "61c2312e25734192760605319c4a624855ade044532c4c237bee2883b21a1a4c",
+    ".tools/source-packages/current/884_156692/official-code/client-source/ActivityDomainBossPanelBattleContent.cs": "5e5e76176b17e301b2d5f93aa24a36053c6218b7dbebd294f60a43563f7e71fc",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Character/Character_Atlas/ImgBgLoad.asset": "64871ac7b1d0cff23d18fe519f3c86ecc857a9c5494094fe55378d90ea6397c6",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/ArrestMonster/ArrestMonster_Atlas/ImgBgLoad1.asset": "1aa45919b8d2d6f9bb59644e9a0ad22db5dc234d8cb557eb00de6f7026b398b6",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/GenJyuuGothic-P-Medium SDF.asset": "06ba2c4ddc00eeabd9127a069919689c28c77f6d34697d334a63ab9d1c44b1fd",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/GenJyuuGothic-P-Medium SDF Material.mat": "3e31aefb16bd52b4ae241a36b80e531cfcbe6bd04894f7fbd8f8e8eb146e4c8b",
+    ".tools/source-packages/WwiseBnk/wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365",
+    ".tools/source-packages/WwiseBnk/wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile": "a7e72b9478ce455a7ef12974f16e3f78e684ded497b7750f7901dacb66eacfad",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset": "397369fcab08537e8b8f004d5ebe62717deca632f8cdf4e0ea2c2bdc9cbe3124",
+    ".tools/source-packages/official-code/framework-firstpass-source/MultiLanguageFontService.cs": "ea21a58a8d6162e331d10ce81f72b19ce9096b15682c700d207f639892e7d0d5",
+    ".tools/source-packages/official-code/framework-firstpass-source/FontAssetFontService.cs": "4c13f0a4aab388c02a9d17d516da4ad845673a407d73749b7e6f8132151b040f",
+    ".tools/source-packages/official-code/framework-firstpass-source/MultiLanguageText.cs": "3229b04b116900b276a925e0ec9186717dbbf4cb91470b4758a4f514f216e963",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat": "bd062c658f5ba748fd7a916a114e6f1986221184155500b45f411552dde4c542",
+    "scripts/prepare_activity_battle_team_native.py": "6c5ca9052ee38e772e6fe06122edd835319a69f758b09cb8754ec2d35e2c90b5",
+    "scripts/prepare_activity_battle_selector_native.py": "4e1c24423f1d8df4aec09bd907fc360fec83d71677195d5770a9d2e37e1ce630",
+    "scripts/prepare_activity_battle_team_ui.py": "50c090ccaef943a324ba19977bcf9345be4e3e7c1a4c0cdbb4bbce442f9cc99d",
+    "scripts/prepare_partner_card_native.py": "5ad35ae36dafa53961576f3c5b2a2c76eddfb98a398c74fba96a4697ef464093",
+    "scripts/prepare_partner_gift_native.py": "84d18ed2d4a3e90bf9f99f4f1596621756123e4a12799fc1f6a23952d0197cdb",
+    "scripts/prepare_partner_roster_native.py": "69151d290193f169f62f1f79496ebc9794de6dacb3b3cc39eec35a3b2ffbb23a",
+    "scripts/prepare_partner_panel_native.py": "4abe625f74620eacdffe32b662651e1116b250bcf4b1bb2482323b0666bee8ae",
+    "scripts/prepare_partner_input_dialog.py": "e98d82b2db496c14c34ea97b86dd73e672ec75dad208362097810177e4c3b431",
+    "scripts/prepare_unity_map13_native_sprite_yaml.py": "14dfe9eb5e89760f862abccda6bfee2ee1a97447454c2d98124e3dff210b763e",
+    "scripts/npc_travel_language.py": "5c03df02e09d6b443520407928478018b0f74f959fc081e6bb00f033b65d1232",
+    "scripts/prepare_activity_battle_health_native.py": "667e0426f044006fb011f06b5d58f876172fabb62ef84fbc128cd565ef3e5e1e"
+  },
+  "scripts": {
+    "MultiLanguageText": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldMultiLanguageText.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "231cab3c6fd951b7a2d14633a5465cbf",
+        "type": 3
+      },
+      "sha256": "490825671794bffc638d37170ab39c2e1523cd8bbfdb016cf4bf4e0966ea63ad",
+      "meta_sha256": "b3800ddfd9284bb2c13282b37175e83c6b21673564bc1683db546fc6cd6e2d38"
+    },
+    "TMPro.TMPEffect": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeText/TMPEffect.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "3e2d40fcb3febb5d237c6eaab0dd385a",
+        "type": 3
+      },
+      "sha256": "a91bca648f40bde3666d2d3f9bacf31edce18055bee1d35f590f27c510bef9da",
+      "meta_sha256": "af602f224b9bf014dc051480db5d18c7443115793fea4406cb9781abf643fcd3"
+    },
+    "TMPro.TextMeshProUGUI": {
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshProUGUI.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "f4688fdb7df04437aeb418b961361dc5",
+        "type": 3
+      },
+      "sha256": "f25b03386b3b6eaef0f6f164ae0230b74f09ea53145fdf8bcb6d4a01786af425",
+      "meta_sha256": "dabd328cbb3096519a4356686931a62663f4c934771d9525260ca4d6972620fd"
+    },
+    "TMPro.TMP_FontAsset": {
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TMP_FontAsset.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "71c1514a6bd24e1e882cebbe1904ce04",
+        "type": 3
+      },
+      "sha256": "4944761e316e6c3e6053507283f4c1b310dd47312830346ef7efc4715ac403af",
+      "meta_sha256": "788d1b900702d38deac8b40940ddb3f065752ee2a1bbb9714dc2a63c6b669e12"
+    },
+    "UnityEngine.UI.Image": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Image.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+        "type": 3
+      },
+      "sha256": "351dd72516d240f5722c55f72f8e95a0a92cf71e83358bbc922eee47bdb78502",
+      "meta_sha256": "5d5268c445723f854020175a8fdfe91d4ca7fbc62f360438d4224a3ecca32066"
+    },
+    "UnityEngine.UI.Slider": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Slider.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "67db9e8f0e2ae9c40bc1e2b64352a6b4",
+        "type": 3
+      },
+      "sha256": "8903cfcc99fb46bd4376e87f533de56cb9c5ac015d9da47a34d29ede955fd271",
+      "meta_sha256": "8cb3a3f6e84382d5062971974e239d5ee64ecab36b80fc5d5487987ff0c80d5e"
+    },
+    "UnityEngine.UI.ContentSizeFitter": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/ContentSizeFitter.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "3245ec927659c4140ac4f8d17403cc18",
+        "type": 3
+      },
+      "sha256": "a6b30a3b6e697524ce16f07e1807e870faf8d0c3e8c43004474eb5b8bb3c887b",
+      "meta_sha256": "0fedd1ac89e603605d4632d8b992eeb450e1b0a82dcf16dc3fd9d4bb5acee9f7"
+    },
+    "ActivityDomainBossHpView": {
+      "path": "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityDomainBossHpView.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "6f6e86653da680ab43bbecfef0fa2b45",
+        "type": 3
+      },
+      "sha256": "9ac489192da0674317fd35c794cd725e7e92896262b63c0d4d99812a3e9abbdc",
+      "meta_sha256": "3a153380388ae6c709c9661713b4115ff301048eee6f8d4bc59759bfe4cd1f4d"
+    },
+    "SlicedFilledImage": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/SlicedFilledImage.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "b036970375a068547960884299c9c208",
+        "type": 3
+      },
+      "sha256": "6989af191248a41bc1586c2f6de1a6c70d15eddc4c0280f92632b7e9232ad74a",
+      "meta_sha256": "95f2e35d1127661424465bc75999023bee824b4d562a70949e7ddb6646425625"
+    }
+  },
+  "resources": {
+    "cab-7d4e1738fd2c38d4c62db598c87053fd:-4773812762296335527": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_character.bundle",
+        "bundle_hash": "4848d331ff44d9a64ac226fb806ea50f",
+        "path_id": "-4773812762296335527",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/4848d331ff44d9a64ac226fb806ea50f.bundle",
+        "raw_size": 562828,
+        "raw_sha256": "ff262acb1bb2954b9df6060970c9f942e3dcc885953dd6b149dafc6f0b4ea0d2"
+      },
+      "type": "SpriteAtlas",
+      "original_sha256": "e0c6ff2bb3e332c6a6947bca9f750230a2fcd0614017d480d53e7b3f876e6817",
+      "usage": "Packed sprite render data"
+    },
+    "cab-7d4e1738fd2c38d4c62db598c87053fd:682534229807506848": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_character.bundle",
+        "bundle_hash": "4848d331ff44d9a64ac226fb806ea50f",
+        "path_id": "682534229807506848",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/4848d331ff44d9a64ac226fb806ea50f.bundle",
+        "raw_size": 562828,
+        "raw_sha256": "ff262acb1bb2954b9df6060970c9f942e3dcc885953dd6b149dafc6f0b4ea0d2"
+      },
+      "type": "Sprite",
+      "original_sha256": "ecd6c1b0a847e8103fa60a3842622fc1a23fa1952ebbaaf2a8b1179a28c3b012",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Character/Character_Atlas/ImgBgLoad.asset",
+      "output": "Image/UI/Character/Character_Atlas/ImgBgLoad.asset",
+      "guid": "aa464b97a439cc06b4268a9be21aa59c",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-26339d3ed75961dfa7fd54479ff2859c:5724931271276362638": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_arrestmonster.bundle",
+        "bundle_hash": "d77cb58e2876f9917f3465096ca53792",
+        "path_id": "5724931271276362638",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/d77cb58e2876f9917f3465096ca53792.bundle",
+        "raw_size": 653136,
+        "raw_sha256": "0f79b5f3eaaa87217a3282f6fe085183548df5d216d16bf764dfd186afe545f2"
+      },
+      "type": "SpriteAtlas",
+      "original_sha256": "7f91d2ea62bc5817a91cd6b491be738c8f21bc57ba2aad1a0b1c255fee1e92b4",
+      "usage": "Packed sprite render data"
+    },
+    "cab-26339d3ed75961dfa7fd54479ff2859c:-379539761798763811": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_arrestmonster.bundle",
+        "bundle_hash": "d77cb58e2876f9917f3465096ca53792",
+        "path_id": "-379539761798763811",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/d77cb58e2876f9917f3465096ca53792.bundle",
+        "raw_size": 653136,
+        "raw_sha256": "0f79b5f3eaaa87217a3282f6fe085183548df5d216d16bf764dfd186afe545f2"
+      },
+      "type": "Sprite",
+      "original_sha256": "2ca64d694a74e3c9b653159038cee3d01c4433cde906217467cb8fd69b37626f",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/ArrestMonster/ArrestMonster_Atlas/ImgBgLoad1.asset",
+      "output": "Image/UI/ArrestMonster/ArrestMonster_Atlas/ImgBgLoad1.asset",
+      "guid": "804f7913be7934046c1cfa0c86c0c409",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:-6087799781555030818": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "-6087799781555030818",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "MonoBehaviour",
+      "original_sha256": "e3de1b93d650b20e753dcc83ad1b0e156f2a7d58463519f498b9868f60d49512",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/GenJyuuGothic-P-Medium SDF.asset",
+      "output": "TextMesh Pro/Assets/Fonts & Materials/GenJyuuGothic-P-Medium SDF.asset",
+      "guid": "4352d32ddeef4aa44e7c8113435e89d6",
+      "geometry": null
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:-5900409554780277538": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "-5900409554780277538",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "Material",
+      "original_sha256": "3d67ce6802fe1c9181e534356b3dae8c100757304c558227b2f9f7cf23e1b724",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/GenJyuuGothic-P-Medium SDF Material.mat",
+      "output": "TextMesh Pro/Assets/Fonts & Materials/GenJyuuGothic-P-Medium SDF Material.mat",
+      "guid": "d7dfbdf2892c3bbf2113ada083987748",
+      "geometry": null
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:-1054575886599457342": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "-1054575886599457342",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "MonoBehaviour",
+      "original_sha256": "993fe9f48bba80bc3f729c6cfabf269fdf7b91ac69fb2d013625ee8ac8a68031",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
+      "output": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
+      "guid": "ddbf4f40317a281874302e707c6b97db",
+      "geometry": null
+    },
+    "cab-68c8ed9cb67cd68faa53d3a40124953b:-4610972457973430565": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_fonts_fzy4k.bundle",
+        "bundle_hash": "f4e7267dbaeaf4aecd4b9fcc9d89e789",
+        "path_id": "-4610972457973430565",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/f4e7267dbaeaf4aecd4b9fcc9d89e789.bundle",
+        "raw_size": 7244199,
+        "raw_sha256": "e45a57a0a87ca207d3526accb7ad93546a5a2d014e285ac1180a24eb98f9624a"
+      },
+      "type": "Font",
+      "original_sha256": "f70d78156bff31e78d485a8c5b107d9e27dcc3f48adb2cf78ca0e3c5f8972d52",
+      "font_data_sha256": "90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386",
+      "output": "Fonts/FZY4K.TTF",
+      "guid": "361d52fe7fad65d6413db534072fdf5c"
+    },
+    "cab-7d4e1738fd2c38d4c62db598c87053fd:7731476519406912345": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_character.bundle",
+        "bundle_hash": "4848d331ff44d9a64ac226fb806ea50f",
+        "path_id": "7731476519406912345",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/4848d331ff44d9a64ac226fb806ea50f.bundle",
+        "raw_size": 562828,
+        "raw_sha256": "ff262acb1bb2954b9df6060970c9f942e3dcc885953dd6b149dafc6f0b4ea0d2"
+      },
+      "type": "Texture2D",
+      "original_sha256": "4c3d6216b012506f48cdcc5f036ed12c558a5d272f5fa38f4c10f58d3b78685e",
+      "native_path": null,
+      "output": "Converted/68b6597bf3d603ca.asset",
+      "guid": "c281427f960e962ec6f67319224071d4",
+      "geometry": null
+    },
+    "cab-26339d3ed75961dfa7fd54479ff2859c:-7431123961775457394": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_arrestmonster.bundle",
+        "bundle_hash": "d77cb58e2876f9917f3465096ca53792",
+        "path_id": "-7431123961775457394",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/d77cb58e2876f9917f3465096ca53792.bundle",
+        "raw_size": 653136,
+        "raw_sha256": "0f79b5f3eaaa87217a3282f6fe085183548df5d216d16bf764dfd186afe545f2"
+      },
+      "type": "Texture2D",
+      "original_sha256": "f403a64eeda4e68fcce4ed470e9f97a252afa152db8990fa3e9c46421aaca6f7",
+      "native_path": null,
+      "output": "Converted/71a939ba7d827dc6.asset",
+      "guid": "cb979e2727e932e65443bb2af80732de",
+      "geometry": null
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:6018100312387826910": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "6018100312387826910",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "Texture2D",
+      "original_sha256": "19de8e708fd6da88b8e1fb7d03802fcecbb1de175bde86953310969d61b09ab2",
+      "native_path": null,
+      "output": "Converted/696dd8affc814418.asset",
+      "guid": "1baa8f441080a58960dd173810e07497",
+      "geometry": null
+    },
+    "cab-014000ed2538cb87d1aa4612be612002:-4286560471751938018": {
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "465300f28c23d7564868393936041212",
+        "path_id": "-4286560471751938018",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/465300f28c23d7564868393936041212.bundle",
+        "raw_size": 2909118,
+        "raw_sha256": "991da192cbcd00a1b3a2714b7ca649b7f416881f87b656dac17f5f1123da2e46"
+      },
+      "type": "Shader",
+      "original_sha256": "82cc97a220222d38ceeb7b173dd31fccede81cc11f4eca3a2c052177f11acd81",
+      "native_path": null,
+      "output": "Converted/f2e1ff40e17239bc.shader",
+      "guid": "8ad282bda13b8ecea8575ba68c545b4b",
+      "geometry": null
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:8668477128756491714": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "8668477128756491714",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "Material",
+      "original_sha256": "57b7f2adeb457a8f4f3b3842127ac1bdf497f87992d883bbfee812a4525383be",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
+      "output": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
+      "guid": "168bbf98467c8873a9a2a10b80deed75",
+      "geometry": null
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:3935595767026349506": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "3935595767026349506",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "Texture2D",
+      "original_sha256": "5100748872e5a73c20864292b0f19fb862964e3c2c50785768804056276fd4d8",
+      "native_path": null,
+      "output": "Converted/ac573a40fda4c096.asset",
+      "guid": "c2c2f0cfaae100e193689ca9192f8102",
+      "geometry": null
+    }
+  },
+  "audio": {},
+  "font": {
+    "region": "CN",
+    "language": "zh_CN",
+    "name": "FZY4K SDF - dynamic",
+    "font_asset": {
+      "fileID": 11400000,
+      "guid": "d9d392d8b616efbdada232a5a266b5ad",
+      "type": 2
+    },
+    "source_font": {
+      "fileID": 12800000,
+      "guid": "103c96acb65bc1febc8dfb48a5f49cc1",
+      "type": 3
+    },
+    "source_font_definition": {
+      "FontPath": "Assets/TextMesh Pro/Fonts/FZY4K.TTF",
+      "RawFontPath": "Assets/TextMesh Pro/RawFonts/FZY4K.bytes",
+      "Hash": "11a2dd2b22891535ec398a00c33ab4e1",
+      "Length": 10017464
+    },
+    "configs": [
+      {
+        "source": {
+          "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+          "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+          "path_id": "-6461299786733695581",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+          "raw_size": 415026,
+          "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+        },
+        "original": "cab-43221b4d126447a2b398f3477e814a2c:-6461299786733695581",
+        "original_sha256": "dde5715dcb061a826bbba0bda0ee2185a03fa959379803410e7cd048615c6c8e",
+        "path": "Assets/TextMesh Pro/Assets/Fonts & Materials/MultiLanguageFontConfig.json"
+      },
+      {
+        "source": {
+          "bundle": "defaultpackage_assets_textmesh_pro_rawfonts_fontassetfontconfig.bundle",
+          "bundle_hash": "21b128d62ad3efaa58f4f7fc04aa979f",
+          "path_id": "6242301411135133937",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/21b128d62ad3efaa58f4f7fc04aa979f.bundle",
+          "raw_size": 945,
+          "raw_sha256": "7a34d3bf237df94442a7e5681b52e83c2785228c1f6a54560a2d27e4f9338ceb"
+        },
+        "original": "cab-239b5290b6b31b4f6678dc9ce6ee2394:6242301411135133937",
+        "original_sha256": "bb346460c9200a1bab8421812ed0071e832bd67dda00e390f21c27f532b132ef",
+        "path": "Assets/TextMesh Pro/RawFonts/FontAssetFontConfig.json"
+      }
+    ],
+    "localized_texts": [
+      {
+        "component": "cab-07300c191d442cf45a4d85054c81bab5:-7097898489416797250",
+        "preview_font": {
+          "fileID": 11400000,
+          "guid": "cbb11fe0e0fc212dbf8be1df8aac9189",
+          "type": 2
+        },
+        "preview_material": {
+          "fileID": 2100000,
+          "guid": "3eaf774ab47ca5633806bd4ecd29bd39",
+          "type": 2
+        }
+      }
+    ]
+  },
+  "installed": {
+    "unity/Assets/Official/DailyChallenges/UI/Health/Image/UI/Character/Character_Atlas/ImgBgLoad.asset": "9abd2edc4bb7192bf105e544dc86c519ba3bbb1558182e9593e589c4f935dfcc",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Image/UI/Character/Character_Atlas/ImgBgLoad.asset.meta": "9d03b9624f63e236bd577b2be453b39e2b987416501a4b911b09472388cd0da6",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Image/UI/Character/Character_Atlas.meta": "8162856c77725f09c69ad6e9443e7829a80308bdfd714d66fbec1f7310359537",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Image/UI/Character.meta": "021d81a8ad232fb0843b41fea63bf11303a419b908156919abfb0e9bdf708145",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Image/UI.meta": "450be4c61655ab3e6d1c95b6b1ba9ac755f31cb80fce448c4d126d12b1323dd3",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Image.meta": "467baf2bf65950ef24770e71496fd6bfb7633dad9b1737a18f86708972c0037c",
+    "unity/Assets/Official/DailyChallenges/UI/Health.meta": "57c75afac9ad202ed6dc2123f49fddb1735dae734da42f8cfbfccc4e72513b8f",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Image/UI/ArrestMonster/ArrestMonster_Atlas/ImgBgLoad1.asset": "54aee21c2617d6839e71f2317b55392d7f3c31da5a5c734684e13d8397384ed6",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Image/UI/ArrestMonster/ArrestMonster_Atlas/ImgBgLoad1.asset.meta": "f89546e35bd4cb964854e1b7192c77a02097b6eb374b961e9eb334208a661a75",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Image/UI/ArrestMonster/ArrestMonster_Atlas.meta": "7035721263bc807b980946a7757be34e969488b522cfb059193956e13b5f0917",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Image/UI/ArrestMonster.meta": "1460924c2c648e8e5226b0afb5837ea7f67f1a8d5bffc3a7f34f922e16d75e54",
+    "unity/Assets/Official/DailyChallenges/UI/Health/TextMesh Pro/Assets/Fonts & Materials/GenJyuuGothic-P-Medium SDF.asset": "d7fb3dafd9b39781c23233870064765902ba5ab737acbe1b1c77124a97d63ccd",
+    "unity/Assets/Official/DailyChallenges/UI/Health/TextMesh Pro/Assets/Fonts & Materials/GenJyuuGothic-P-Medium SDF.asset.meta": "59fd3785c6ffcac398f0cce6638cac9267ac342b91dc233edc9ba1ef01de6610",
+    "unity/Assets/Official/DailyChallenges/UI/Health/TextMesh Pro/Assets/Fonts & Materials.meta": "f71a141cecfe2460292d6f93f2cefb22a2bdd1dfa398e04a7ea84d13f236992b",
+    "unity/Assets/Official/DailyChallenges/UI/Health/TextMesh Pro/Assets.meta": "8da7d61b72281600eb3861ce299e6b50c9451dd0e27952d3e959f901a29abb0f",
+    "unity/Assets/Official/DailyChallenges/UI/Health/TextMesh Pro.meta": "ee708c71fa380d5a8fabf853019e71df8cb6b76374b282e9d3feaa710ec38bf8",
+    "unity/Assets/Official/DailyChallenges/UI/Health/TextMesh Pro/Assets/Fonts & Materials/GenJyuuGothic-P-Medium SDF Material.mat": "03dcdb75867b0e3c0f7e92c4d8245afd73c21c651a544ef7422fccb328748707",
+    "unity/Assets/Official/DailyChallenges/UI/Health/TextMesh Pro/Assets/Fonts & Materials/GenJyuuGothic-P-Medium SDF Material.mat.meta": "282b6652f12a648ddc2307e71b86e2b4f169f564004ce1cc723bc50a381d1451",
+    "unity/Assets/Official/DailyChallenges/UI/Health/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset": "c89cb07955487d424aba2c192ffb33e7727a2efad2861905dd96e7582a05e0a0",
+    "unity/Assets/Official/DailyChallenges/UI/Health/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset.meta": "319cc5555ec09ac4458426351c853b30cbb8f144e3ba9228524f70b0f9bd1b50",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Fonts/FZY4K.TTF": "90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Fonts/FZY4K.TTF.meta": "33123a425f6066acd8c957a035acf7d32efa4ea31272de7c76d465f6b13a09c9",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Fonts.meta": "ba4b913e86a64dff3e5c222868136e4606f2c8eecd091463819a83fb54262b86",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Converted/68b6597bf3d603ca.asset": "a226ae31cbb35bec8a4f8acfd4aeb60d81f06e82bd2f5676feffcdfdfa48104b",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Converted/68b6597bf3d603ca.asset.meta": "a2ebcb2edb57c37a2da704faa4a748eca00f25959b57b3479440fe7f5d1e5ec0",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Converted.meta": "a7b872748966253797a709f49213ace91eb69df8aed9e52860b9e9c3b6e77202",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Converted/71a939ba7d827dc6.asset": "015b04c74f934dd517f895e578058063ec83bb95dc431c15093978de15cb11a6",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Converted/71a939ba7d827dc6.asset.meta": "6099858081f9b88e5e37a0fe0806a09678431a69e919a32e01654cfcac6a64a9",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Converted/696dd8affc814418.asset": "224d16ba3fe1e87773acc90d75bb731ad0557fa1b63a3e0154dd3e54ec98cc42",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Converted/696dd8affc814418.asset.meta": "059ef7ec1cb492725950faa11132a87a63e3e881aa96cfd13f744416491ed011",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Converted/f2e1ff40e17239bc.shader": "6175d73864092e26c113b2a49d5379d8b72dd5f0e5e413765530ff0b1f1268dd",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Converted/f2e1ff40e17239bc.shader.meta": "e3674a847f66a28595daa42cce6ad67c4831e232b80772a2fc24b1c10e19270f",
+    "unity/Assets/Official/DailyChallenges/UI/Health/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat": "fbce9601ad8bfe074f2b86fceccbeb739cfe2a508e3e2ad0b5d11553c93c1f77",
+    "unity/Assets/Official/DailyChallenges/UI/Health/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat.meta": "de57adf5f84dfbd10ec520a461064e5a4bf3c567aae0047f178a497897a7fc93",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Converted/ac573a40fda4c096.asset": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Converted/ac573a40fda4c096.asset.meta": "520cc1948b91297164780d9e3b21af199a77b490f86c7714b9e4ede2a44e6d24",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Resources/DailyChallenges/Health/ActivityDomainBossHpView.prefab": "a9f33c06a0f76737ec9856b07079739a1070e8437be4ced2e72be840c33834d4",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Resources/DailyChallenges/Health/ActivityDomainBossHpView.prefab.meta": "189cb061e9159460c15ef36fac5b7d88fd8ecdb6248dd8616414bb16c7954aae",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Resources/DailyChallenges/Health.meta": "e645edf86b9b83ddd384555307ccf38a6e072a99515e756883e6498689881cd5",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Resources/DailyChallenges.meta": "c04642cd6177e5b859a56dd8ce1b99c0d29746b86ed3b901cf6a4706ef31cb59",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Resources.meta": "ad6b3e141bf347e1ff505a25909915b6302d55bec39aa98d5b2f5a10f9ed05f7",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Resources/DailyChallenges/Health/texts.json": "f91c4344b78175317a187b1c09b1b3561b50307a7bb40babb660fa16192e9c85",
+    "unity/Assets/Official/DailyChallenges/UI/Health/Resources/DailyChallenges/Health/texts.json.meta": "344d5e66385d3d5b64acab458f540fcca4454fe06aaef4931c0dbb250380c9e5"
+  },
+  "isolated_resource_guids": {
+    "aa464b97a439cc06b4268a9be21aa59c": "ffd68ec4b9208e4ae45e9b56807752db",
+    "804f7913be7934046c1cfa0c86c0c409": "08539ec16162c60496d6f57d446e0954",
+    "4352d32ddeef4aa44e7c8113435e89d6": "cbb11fe0e0fc212dbf8be1df8aac9189",
+    "d7dfbdf2892c3bbf2113ada083987748": "3eaf774ab47ca5633806bd4ecd29bd39",
+    "ddbf4f40317a281874302e707c6b97db": "d9d392d8b616efbdada232a5a266b5ad",
+    "361d52fe7fad65d6413db534072fdf5c": "103c96acb65bc1febc8dfb48a5f49cc1",
+    "c281427f960e962ec6f67319224071d4": "054501c1360f266541263d60e303e735",
+    "cb979e2727e932e65443bb2af80732de": "85b6edac89c34cbcce903b06509ad8cc",
+    "1baa8f441080a58960dd173810e07497": "ffa4a301b3aec43e11ed9980710746ea",
+    "0b5a526f51d54805e059fe74dc7aade8": "f32f5afd01e277761e1ba5db632fbc99",
+    "168bbf98467c8873a9a2a10b80deed75": "1fbb1955dae51668ee2db27e7fe2b3fa",
+    "c2c2f0cfaae100e193689ca9192f8102": "b753cbe16b2626d4c5f7deae07b72a3c",
+    "8ad282bda13b8ecea8575ba68c545b4b": "f32f5afd01e277761e1ba5db632fbc99",
+    "c6d1441f4f9d7d9ca0afa9f887559780": "26c84379d3b32b6fcb5599a07308b49f",
+    "dceee58f8b911a2cafc6c4a74fc88d1d": "09ff15b1052876bb2dc77850a9d86089"
+  },
+  "stage": "Original health control bound. Full activity page and production host pending."
+}

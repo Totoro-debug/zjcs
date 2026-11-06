@@ -29,10 +29,16 @@ class TeamBinding(SelectorBinding):
                 sha256=sha(path.read_bytes()), meta_sha256=sha(Path(str(path) + '.meta').read_bytes()))
 
 
-def extract(panel, consumer_type='ActivityDomainBossPanelBattleContent', field='mTeamBtn'):
+def extract(panel, consumer_type='ActivityDomainBossPanelBattleContent', field='mTeamBtn', *, parent_levels=0):
     consumer, = [row for row in panel['scripts'] if row['type'] == consumer_type]
     component = panel['documents'][consumer['nativeFileID']]['MonoBehaviour'][field]['fileID']
     root = panel['documents'][component]['MonoBehaviour']['m_GameObject']['fileID']
+    for _ in range(parent_levels):
+        transform_id = panel['documents'][root]['GameObject']['m_Component'][0]['component']['fileID']
+        transform = next(iter(panel['documents'][transform_id].values()))
+        parent = transform['m_Father']['fileID']
+        if not parent: raise ValueError('Original referenced subtree has no requested parent')
+        root = next(iter(panel['documents'][parent].values()))['m_GameObject']['fileID']
     selected = set()
     def visit(go):
         selected.add(go)
@@ -65,7 +71,8 @@ def extract(panel, consumer_type='ActivityDomainBossPanelBattleContent', field='
 
 
 def build(binding, *, consumer_type='ActivityDomainBossPanelBattleContent', field='mTeamBtn',
-          prefab_name='ActivityDomainBossTeamButton', group='Team', extra_text_keys=()):
+          prefab_name='ActivityDomainBossTeamButton', group='Team', extra_text_keys=(),
+          parent_levels=0, decorate_selection=None):
     binding.recovery.recover('ActivityDomainBossPanel', binding.work / 'activity-team-native',
         bundle='defaultpackage_assets_prefabs_ui_activitydomainboss.bundle',
         native_relative='Prefabs/UI/ActivityDomainBoss/ActivityDomainBossPanel.prefab')
@@ -75,7 +82,7 @@ def build(binding, *, consumer_type='ActivityDomainBossPanelBattleContent', fiel
         expected = binding.checked[path.relative_to(binding.cache / 'native-export-all').as_posix()]
         if sha(path.read_bytes()) != expected: raise ValueError('Native invitation source changed')
         binding.inputs[path.relative_to(ROOT).as_posix()] = expected
-    team, selection = extract(panel, consumer_type, field)
+    team, selection = extract(panel, consumer_type, field, parent_levels=parent_levels)
     for key, pointer in team['external'].items(): binding.objects[pointer['guid']] = binding.original(key)
     for key, file_id in team['objectMap'].items():
         owner = binding.original(key)
@@ -91,6 +98,7 @@ def build(binding, *, consumer_type='ActivityDomainBossPanelBattleContent', fiel
             fields['ClickEvent'] = binding.sound(binding.recovery.fields(owner)['ClickEvent'], owner)
         if row['type'] == 'MultiLanguageText' and fields['myKey']: text_keys.add(fields['myKey'])
     text_keys.update(extra_text_keys)
+    if decorate_selection is not None: decorate_selection(binding, panel, team, selection)
     resolved = binding.replace(team['documents'])
     texts, sources = language(text_keys)
     # The original localization service returns the key itself when absent.
@@ -140,6 +148,16 @@ def install(binding, record, selection, font, *, group='Team', receipt_name='act
     # No other module's resources or importer settings are overwritten.
     aliases = {value: hashlib.md5(('zjcs:activity-' + group.lower() + '-resource:' + value).encode()).hexdigest()
         for _, value, _ in binding.queue}
+    # Different official shader objects can convert to the exact same native
+    # payload/path. Preserve both source records while sharing that output's GUID.
+    unique = {}
+    for relative, value, data in binding.queue:
+        raw = encode(data) if isinstance(data, dict) else data
+        if relative in unique:
+            prior_value, prior_data, prior_raw = unique[relative]
+            if raw != prior_raw: raise ValueError('Conflicting activity resource outputs: ' + str(relative))
+            aliases[value] = aliases[prior_value]
+        else: unique[relative] = (value, data, raw)
     def remap(value):
         if isinstance(value, dict):
             return {key: aliases.get(child, child) if key == 'guid' else remap(child) for key, child in value.items()}
@@ -150,12 +168,15 @@ def install(binding, record, selection, font, *, group='Team', receipt_name='act
     receipt_path = ROOT / 'assets/reference/daily-challenges' / receipt_name
     previous = json.loads(receipt_path.read_bytes()).get('installed', {}) if receipt_path.exists() else {}
     planned = []
-    for relative, value, data in binding.queue:
+    for relative, (value, data, _) in unique.items():
         target = destination / relative
         data = remap(data)
         raw = encode(data) if isinstance(data, dict) else data
         if target.exists() and target.read_bytes() != raw and sha(target.read_bytes()) != previous.get(target.relative_to(ROOT).as_posix()):
             raise ValueError('Preserve changed invitation output: ' + str(target))
+        meta = Path(str(target) + '.meta')
+        if meta.exists() and guid(meta) != aliases[value]:
+            raise ValueError('Activity control metadata identity changed: ' + str(meta))
         planned.append((target, aliases[value], raw, data))
     installed = {}
     for path, value, raw, data in planned:
@@ -165,7 +186,7 @@ def install(binding, record, selection, font, *, group='Team', receipt_name='act
         elif isinstance(data, dict): importer = 'NativeFormatImporter:\n  externalObjects: {}\n  mainObjectFileID: ' + str(next(iter(data))) + '\n'
         else: importer = ''
         expected_meta = ('fileFormatVersion: 2\nguid: ' + value + '\n' + importer).encode()
-        if meta.exists() and guid(meta) != value: raise ValueError('Invitation metadata identity changed')
+        if meta.exists() and guid(meta) != value: raise ValueError('Activity control metadata identity changed: ' + str(meta))
         if not meta.exists(): meta.write_bytes(expected_meta)
         for output in (path, meta): installed[output.relative_to(ROOT).as_posix()] = sha(output.read_bytes())
         parent = path.parent

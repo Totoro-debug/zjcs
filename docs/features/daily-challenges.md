@@ -76,13 +76,19 @@ NPC 战斗属性和技能由当前版 `npc_level_detail`、`npc_profession_detai
 
 3706完整预制体（局部迁移）：`BattleNativeMonsterRenderer.CreatePrefab` 在禁用状态绑定原 `AppearanceRendererLite` 后启用，原373对象及22项应用脚本引用完整保留，仅增加公共网格适配器。20个原 `AttachmentFollower`、52个原粒子系统、原Mesh／材质／纹理／Shader及Low加载器通过独立资源闭包接入；模型、挂点与其他战斗共用同一骨骼、动画和物理模块。入口为 `DailyChallenges/ActivityRtPrefab/MonsterModel_3706_RT` 与同目录 `AppearanceAssets`，来源见[完整预制体清单](../../assets/reference/daily-challenges/activity-rt-prefab-source-manifest.json)。隔离Unity编译、ProjectTools.Validate和内置屏D3D11 Play Mode通过：实际读到107544个可见像素，20个挂点位置与当前骨骼坐标相符并随动画变化，52个粒子系统中有197个活动粒子，四张Low主贴图请求与销毁释放通过；原几何／相机／RT参数、同目标共享、非持有者交还保护、禁用／重开／销毁交接通过，已查看实际完整模型及粒子画面。编辑器检查使用同步着色器编译；此前异步检查曾读到透明RT，尚未确认其原因，须继续核对正式入口冷启动。Play Mode断言完成并返回编辑模式；Editor退出停滞后仅停止本次隔离进程。原泛光输出、活动整页服务与交互、结算和Windows Player仍未完成，未发布新版本。
 
+圣兽独立血量与原血条（局部迁移）：`OfflineDomainBossBattleHealth.Read` 从公共检查点读取所选阶位的首领实际HP，核对活动关卡、战斗类型及原关卡首只怪物身份，排除召唤物和其他单位；进行中的旧阶位重战优先显示本场HP。无进行中检查点时，保留原已击败阶位为0、当前／后续阶位满血的显示分支。失败结算清除检查点后不保留伤害，每日参与回执不变。`ActivityDomainBossHpView` 提取原 `RefreshContent` 的百分比文字与Slider赋值，复用公共战斗的原百分比格式化。`prepare_activity_battle_health_native.py` 恢复原 `mHpSlider` 所在的完整 `HpSliderGo` 子树，保留19个原对象及全部组件字段、坐标、Sprite、填充引用、文字效果与字体，并增加一个持有原字段引用的显示组件；43项原生输出、输入哈希及显式绑定见[血条来源](../../assets/reference/daily-challenges/activity-health-native-source-manifest.json)，资源入口为 `DailyChallenges/Health/ActivityDomainBossHpView`。
+
+血条验证范围为隔离组件场景：三种活动使用构造并经公共序列化器校验的检查点，验证身份匹配、同ID召唤排除、存档冷重载、清除进度后满血、每日一次、已击败阶位及重战；尚未通过正式活动入口执行这些流程。隔离工程静态检查通过128301个GUID，Unity编译、`ProjectTools.Validate`、内置屏D3D11 Play Mode及原邀请按钮模拟点击回归通过，一次完整运行正常退出码0；最新清屏复测全部断言通过后Editor退出停滞，仅停止本次隔离进程。已查看完整运行画面，原血条文字读到1358个亮色像素、0个编译占位色像素；该渲染检查使用同步着色器编译，正式整页的异步冷启动仍待验证。整页按钮、奖励、排行榜、结算与Windows Player仍未完成，未发布新版本。
+
 ## 自定义实现
 
 用户确认期次以首次进入功能的本地时间起算；该时间由 `EnterFeature(DateTime.Now)` 首次持久化。每日逻辑日采用官方 08:00 配置。官方活动 `Duration=335` 小时，最后 1 小时结算。用户确认系统时间回拨不得降低已到最高期次或逻辑日；系统时间向前跳转仍会按本地时间推进期次。
 
 圣兽读取 `MaxDailyChallengeCount=1` 与 `MaxDailyChallengeAwardCount=1`。双影的 `DailyMaxKillCount=3` 限定每日击杀，不当作挑战次数。用户确认挑战成功进入战斗才计参与，失败也保留回执，同一逻辑日不重复挑战圣兽；双影每次开始进入本地战斗均记录参与。服务器写入和奖励执行逻辑未在客户端来源中取得，以上离线行为不声称为官方服务端实现。
 
-用户确认圣兽按每场独立战斗计算血量：进行中及中断恢复读取公共战斗检查点的实际HP；失败结束后，下次挑战重新满血，不跨场累计伤害。原 `ActivityDomainBossPanelBattleContent` 从服务器 `ActivityDomainBossDescData.TotalHp`／`TotalDamage` 读取的全局血条改为上述本地投影；原每日一次和胜利升阶规则保留。该决定已确认，完整活动页血条尚待接线与运行验证。
+用户确认圣兽按每场独立战斗计算血量：进行中及中断恢复读取公共战斗检查点的实际HP；失败结束后，下次挑战重新满血，不跨场累计伤害。原 `ActivityDomainBossPanelBattleContent` 从服务器 `ActivityDomainBossDescData.TotalHp`／`TotalDamage` 读取的全局血条改为上述本地投影；原每日一次和胜利升阶规则保留。独立血量适配与原血条组件已验证，完整活动页仍待接线与运行验证。
+
+用户确认圣兽保留原排行页和规则说明，只展示当前角色在本期实际完成战斗的成绩，未挑战时显示原版空榜状态。本地成绩持久化、原排行控制类与页面接线尚未完成。
 
 双影进度采用本地战斗结果的当日最高实际团队伤害，阶段分数按官方客户端 `max(DailyMaxTeamDamage, DailyMaxTeamDamagePercent * bossMaxHp / 10000)` 规则折算。由于离线战斗为单角色加本地召唤物，伤害按其 `MasterId` 归属角色；未取得服务端个人／队伍伤害写入实现。
 

@@ -28,6 +28,22 @@ namespace Zjcs.Editor
 
         public static IEnumerator Exercise(string slot, string root, string output, Action<Selectable> click)
         {
+            if (Environment.GetEnvironmentVariable("ZJCS_ACTIVITY_HEALTH") == "1")
+            {
+                var input = new GameObject("Activity control fixture input", typeof(UnityEngine.EventSystems.EventSystem),
+                    typeof(UnityEngine.EventSystems.StandaloneInputModule));
+                var clearCamera = input.AddComponent<Camera>();
+                clearCamera.clearFlags = CameraClearFlags.SolidColor;
+                clearCamera.backgroundColor = Color.black;
+                clearCamera.cullingMask = 0;
+                try
+                {
+                    yield return ExerciseActivityHealth(output);
+                    yield return ExerciseActivityTeam(output, button => click(button));
+                }
+                finally { UnityEngine.Object.Destroy(input); }
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_ACTIVITY_RT_UI") == "1")
             {
                 yield return ExerciseActivityRtUI(output);
