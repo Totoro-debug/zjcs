@@ -31,47 +31,44 @@ namespace Zjcs.Offline.PartnersUI
         private static readonly FieldInfo PrefabSource = typeof(LoopScrollRectBase)
             .GetField("mPrefabSource", BindingFlags.Instance | BindingFlags.NonPublic);
         private GameObject content;
-        private Func<string, string> previousLocalize;
-        private Func<TMPro.TMP_FontAsset> previousLanguageFont;
+        private IDisposable uiBinding;
 
         public void Open(OfficialPartnerRosterAssetCatalog assets, IPartnerRosterUiServices services)
         {
             if (assets == null || services == null) throw new ArgumentNullException();
-            previousLocalize = WorldMultiLanguageText.Localize;
-            previousLanguageFont = WorldMultiLanguageText.LanguageFont;
-            WorldMultiLanguageText.LanguageFont = () => Resources.Load<TMPro.TMP_FontAsset>("Combat/FZY4K-Dynamic");
-            var localize = assets.CreateLocalizer();
-            WorldMultiLanguageText.Localize = key =>
+            if (uiBinding != null) throw new InvalidOperationException("Original roster is already open.");
+            uiBinding = OfflineUiBindingModule.Register(transform, new OfflineUiBindings {
+                Font = () => Resources.Load<TMPro.TMP_FontAsset>("Combat/FZY4K-Dynamic"),
+                Localize = assets.CreateLocalizer()
+            });
+            try
             {
-                string value = localize(key);
-                return value == key ? previousLocalize?.Invoke(key) ?? key : value;
-            };
-            content = Instantiate(assets.RosterPrefab, transform, false);
-            content.name = "OfficialPartnerRosterContent";
-            // Configure the official list before enabling it. NpcPanelNpcList.OnEnable
-            // immediately reads the local player and fills the loop-scroll cells.
-            content.SetActive(false);
-            var list = content.GetComponent<NpcPanelNpcList>();
-            if (list == null) throw new InvalidOperationException("Official partner roster list component is missing.");
-            list.Configure(services);
-            var loop = content.GetComponentInChildren<LoopVerticalScrollRect>(true);
-            if (loop == null || loop.DefaultPrefabSource == null || loop.DefaultPrefabSource.Prefab == null)
-                throw new InvalidOperationException("Official partner roster scroll binding is missing.");
-            // Resolve the original source before wrapping it. Its getter creates
-            // the inactive pool, so a new cell can be configured before OnEnable.
-            var source = loop.prefabSource;
-            PrefabSource.SetValue(loop, new CardPool(source, services));
-            content.SetActive(true);
+                content = Instantiate(assets.RosterPrefab, transform, false);
+                content.name = "OfficialPartnerRosterContent";
+                // Configure the official list before enabling it. NpcPanelNpcList.OnEnable
+                // immediately reads the local player and fills the loop-scroll cells.
+                content.SetActive(false);
+                var list = content.GetComponent<NpcPanelNpcList>();
+                if (list == null) throw new InvalidOperationException("Official partner roster list component is missing.");
+                list.Configure(services);
+                var loop = content.GetComponentInChildren<LoopVerticalScrollRect>(true);
+                if (loop == null || loop.DefaultPrefabSource == null || loop.DefaultPrefabSource.Prefab == null)
+                    throw new InvalidOperationException("Official partner roster scroll binding is missing.");
+                // Resolve the original source before wrapping it. Its getter creates
+                // the inactive pool, so a new cell can be configured before OnEnable.
+                var source = loop.prefabSource;
+                PrefabSource.SetValue(loop, new CardPool(source, services));
+                content.SetActive(true);
+            }
+            catch { Close(); throw; }
         }
 
         public void Close()
         {
+            uiBinding?.Dispose(); uiBinding = null;
             if (content != null) Destroy(content);
             content = null;
-            WorldMultiLanguageText.Localize = previousLocalize;
-            previousLocalize = null;
-            WorldMultiLanguageText.LanguageFont = previousLanguageFont;
-            previousLanguageFont = null;
         }
+        private void OnDestroy() => Close();
     }
 }

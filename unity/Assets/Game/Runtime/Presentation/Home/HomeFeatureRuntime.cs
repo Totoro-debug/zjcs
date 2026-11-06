@@ -42,6 +42,7 @@ namespace Zjcs.Presentation.Home
         private const int OfficialMailFunctionType = 52;
         private const int HomeTutorialFixedRewardId = 7;
         private const string HomeTutorialFixedRewardReceipt = "home:tutorial:fixed-reward:7";
+        private IDisposable partnerUiBinding;
         private ProfileSlotCatalog slots;
         private OfflineMainlineProgressSession profile;
         private OfflineDailyChallengeService dailyChallenges;
@@ -692,8 +693,6 @@ namespace Zjcs.Presentation.Home
             partnerDetailImages = new OfflineProfessionImageResourceLoader(partnerDetailAssets.Common.Images);
             partnerGiftAssets = OfficialPartnerGiftPageAssetCatalog.LoadDefault();
             var partnerGiftImages = new OfflineProfessionImageResourceLoader(partnerGiftAssets.Images);
-            ProfessionImageResourceBridge.Provider = image => image.GetComponentInParent<ItemIcon>(true) != null
-                ? partnerGiftImages : partnerDetailImages;
             var localization = new OfflinePartnerLocalizationService(partnerDetailAssets.Texts,
                 partnerDetailAssets.Common.GiftTexts, friendshipAssets.PropertyTexts, friendshipAssets.DialogTexts,
                 partnerGiftAssets.GiftTexts, partnerGiftAssets.RelationshipTexts);
@@ -733,6 +732,9 @@ namespace Zjcs.Presentation.Home
                 partnerDetailSource, partnerRoster, id => profile.Save.Player.CharacterProperties.Treasures
                     .Any(value => value.ClassId == id && value.Active), hud);
             hud.Build();
+            partnerUiBinding = OfflineUiBindingModule.Register(hud.CanvasTransform, new OfflineUiBindings {
+                Images = image => image.GetComponentInParent<ItemIcon>(true) != null ? partnerGiftImages : partnerDetailImages
+            });
             hud.ShowFantasyTowerPendingResult();
             fruitTreeTutorialVoiceSource = gameObject.AddComponent<AudioSource>();
             fruitTreeTutorialVoiceSource.playOnAwake = false;
@@ -1833,6 +1835,7 @@ namespace Zjcs.Presentation.Home
 
         private void OnDestroy()
         {
+            partnerUiBinding?.Dispose(); partnerUiBinding = null;
             EndAstrologicalCharge();
             tutorialRunner?.Suspend();
             tutorialRunner = null;

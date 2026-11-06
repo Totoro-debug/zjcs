@@ -33,10 +33,7 @@ namespace Zjcs.Offline.PartnersUI
     {
         private PartnerDetailWindowContext context;
         private GameObject bindingRoot, content;
-        private Func<string, string> previousLocalize;
-        private Func<TMP_FontAsset> previousFont;
-        private Func<Image, IProfessionImageResourceLoader> previousImages;
-        private Func<Transform, GameObject, Transform, bool, GameObject> previousPool;
+        private IDisposable uiBinding;
         private OfflinePartnerUiSoundScope sound;
         public GameObject Content => content;
         public NpcDetailPanel Panel => content ? content.GetComponent<NpcDetailPanel>() : null;
@@ -52,28 +49,20 @@ namespace Zjcs.Offline.PartnersUI
                 throw new ArgumentException("Bind all original detail window services before opening.");
             if (context != null) throw new InvalidOperationException("Original detail window is already open.");
             context = value;
-            previousLocalize = WorldMultiLanguageText.Localize; previousFont = WorldMultiLanguageText.LanguageFont;
-            previousImages = ProfessionImageResourceBridge.Provider; previousPool = ProfessionGameObjectPoolBridge.Provider;
             try
             {
                 var words = new Dictionary<string, string>(StringComparer.Ordinal);
                 foreach (var entry in assets.Texts) words[entry.key] = entry.text;
-                WorldMultiLanguageText.Localize = key => words.TryGetValue(key, out var text) ? text : value.Localize(key);
-                WorldMultiLanguageText.LanguageFont = () => value.Font;
                 sound = new OfflinePartnerUiSoundScope(OfficialPartnerPanelAssetCatalog.Load().GetSound);
                 bindingRoot = new GameObject("Original partner detail bindings", typeof(RectTransform));
                 var rect = (RectTransform)bindingRoot.transform; rect.SetParent(transform, false);
                 rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one; rect.sizeDelta = Vector2.zero;
                 bindingRoot.SetActive(false);
-                ProfessionImageResourceBridge.Provider = image => image && image.transform.IsChildOf(rect) ? value.Images : previousImages?.Invoke(image);
-                ProfessionGameObjectPoolBridge.Provider = (scope, prefab, parent, keepWorld) => {
-                    if (scope && scope.IsChildOf(rect))
-                    {
-                        return InstantiateAndBind(prefab, parent, keepWorld);
-                    }
-                    if (previousPool != null) return previousPool(scope, prefab, parent, keepWorld);
-                    throw new InvalidOperationException("Original item pool request is outside the detail window.");
-                };
+                uiBinding = OfflineUiBindingModule.Register(rect, new OfflineUiBindings {
+                    Localize = key => words.TryGetValue(key, out var text) ? text : value.Localize(key),
+                    Font = () => value.Font, Images = image => value.Images,
+                    Pool = (scope, prefab, parent, keepWorld) => InstantiateAndBind(prefab, parent, keepWorld)
+                });
                 content = Instantiate(assets.PanelPrefab, rect, false);
                 BindTree(content);
                 if (!Panel || !Window) throw new InvalidOperationException("Complete original detail controller/window is unbound.");
@@ -127,12 +116,10 @@ namespace Zjcs.Offline.PartnersUI
         public void Close()
         {
             if (context == null) return;
+            uiBinding?.Dispose(); uiBinding = null;
             if (bindingRoot) { bindingRoot.SetActive(false); Destroy(bindingRoot); }
             bindingRoot = null; content = null;
-            WorldMultiLanguageText.Localize = previousLocalize; WorldMultiLanguageText.LanguageFont = previousFont;
-            ProfessionImageResourceBridge.Provider = previousImages; ProfessionGameObjectPoolBridge.Provider = previousPool;
             sound?.Dispose(); sound = null; context = null;
-            previousLocalize = null; previousFont = null; previousImages = null; previousPool = null;
         }
         private void OnDestroy() => Close();
     }

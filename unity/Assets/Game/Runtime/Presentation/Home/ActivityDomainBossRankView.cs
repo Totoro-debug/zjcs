@@ -33,10 +33,6 @@ namespace Zjcs.Presentation.Home
         private IProfessionAppearanceTextureBindings actorTextures;
         private OfflineProfessionImageCatalog images;
         private OfflineProfessionNativeSkinClipBindings skinClip;
-        private IProfessionAppearanceSkinClipBindings previousSkinClip;
-        private Func<string, string> previousLocalize;
-        private Func<TMP_FontAsset> previousFont;
-        private Func<Image, IProfessionImageResourceLoader> previousImages;
         private Func<string, string> localize;
         private OfflinePartnerWindowService windows;
         private Config config;
@@ -44,6 +40,7 @@ namespace Zjcs.Presentation.Home
         private Action closed;
         private Action<AudioClip, GameObject> postSound;
         private bool opened;
+        private IDisposable uiBinding;
         public GameObject Content => content;
 
         public void Open(HomeFeatureRuntime home, int activityId, Action openPlayer,
@@ -51,14 +48,10 @@ namespace Zjcs.Presentation.Home
         {
             if (opened) throw new InvalidOperationException("Rank window is already open.");
             opened = true; closed = onClosed; postSound = sound ?? throw new ArgumentNullException(nameof(sound));
-            previousLocalize = WorldMultiLanguageText.Localize;
-            previousFont = WorldMultiLanguageText.LanguageFont;
-            previousImages = ProfessionImageResourceBridge.Provider;
-            previousSkinClip = ProfessionAppearanceSkinClipBindings.Current;
             try
             {
                 var labels = JsonUtility.FromJson<Texts>(Required<TextAsset>("texts").text).texts.ToDictionary(row => row.key, row => row.text);
-                localize = key => labels.TryGetValue(key, out string value) ? value : previousLocalize?.Invoke(key) ?? key;
+                localize = key => labels.TryGetValue(key, out string value) ? value : key;
                 config = JsonUtility.FromJson<Config>(Required<TextAsset>("config").text);
                 var identities = home.Profile.EnsureLocalActorIdentities();
                 if (identities.Status != ProgressionResultStatus.Applied && identities.Status != ProgressionResultStatus.Unchanged)
@@ -82,17 +75,16 @@ namespace Zjcs.Presentation.Home
                 actorTextures = ProfessionAppearanceTextureBindings.Current;
                 partTextures = new OfflinePartnerUiTextureResources(partAssets, partManager, actorTextures);
                 ProfessionAppearanceTextureBindings.Current = partTextures;
-                skinClip = new OfflineProfessionNativeSkinClipBindings(previousSkinClip);
-                ProfessionAppearanceSkinClipBindings.Current = new OfflineProfessionCurrentUiSkinClipBindings(skinClip);
-                WorldMultiLanguageText.Localize = localize;
-                ProfessionImageResourceBridge.Provider = image => image && image.transform.IsChildOf(transform)
-                    ? resources : previousImages?.Invoke(image);
+                skinClip = new OfflineProfessionNativeSkinClipBindings();
                 windows = new OfflinePartnerWindowService(CloseWindow, () => CloseWindow(rule ? rule : content));
                 gameObject.SetActive(false);
                 content = Instantiate(Required<GameObject>("ActivityDomainBossRankPanel"), transform, false);
                 content.name = "ActivityDomainBossRankPanel";
                 var nativeFont = content.GetComponentsInChildren<TMP_Text>(true).First().font;
-                WorldMultiLanguageText.LanguageFont = () => nativeFont;
+                uiBinding = OfflineUiBindingModule.Register(transform, new OfflineUiBindings {
+                    Localize = localize, Font = () => nativeFont, Images = image => resources,
+                    SkinClip = new OfflineProfessionCurrentUiSkinClipBindings(skinClip)
+                });
                 BindTree(content);
                 var player = actors.PlayerInfo.BuildData(actors.PlayerInfo.MainPlayer).TargetData;
                 var bindings = new ActivityRankBindings(actors.TeamIcons, id => id == player.TargetId ? player
@@ -158,15 +150,12 @@ namespace Zjcs.Presentation.Home
         {
             if (!opened) return;
             opened = false;
+            uiBinding?.Dispose(); uiBinding = null;
             if (rule) { rule.SetActive(false); Destroy(rule); rule = null; }
             if (content) { content.SetActive(false); Destroy(content); content = null; }
             if (partTextures != null) ProfessionAppearanceTextureBindings.Current = actorTextures;
             actors?.Dispose(); actors = null;
             partManager?.Dispose(); partManager = null; partTextures = null;
-            WorldMultiLanguageText.Localize = previousLocalize;
-            WorldMultiLanguageText.LanguageFont = previousFont;
-            ProfessionImageResourceBridge.Provider = previousImages;
-            ProfessionAppearanceSkinClipBindings.Current = previousSkinClip;
             skinClip?.Dispose(); skinClip = null;
             if (images) Destroy(images); images = null;
             var callback = closed; closed = null; callback?.Invoke();

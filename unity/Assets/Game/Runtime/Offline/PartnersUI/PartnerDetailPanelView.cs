@@ -10,34 +10,38 @@ namespace Zjcs.Offline.PartnersUI
     public sealed class PartnerDetailPanelView : MonoBehaviour
     {
         private GameObject content;
+        private IDisposable uiBinding;
         private OfflinePartnerUiSoundScope soundScope;
-        private Func<string, string> previousLocalize;
-        private Func<TMPro.TMP_FontAsset> previousLanguageFont;
-        private Func<Transform, GameObject, Transform, bool, GameObject> previousPool;
         public void Open(OfficialPartnerDetailPropertyAssetCatalog assets, IPartnerDetailPropertyServices services,
             IPartnerDetailNpcData npc, PartnerDetailNpcInfo info, OfflinePartnerLocalizationService localization)
         {
             if (assets == null || services == null || npc == null || info == null || localization == null) throw new ArgumentNullException();
-            soundScope = new OfflinePartnerUiSoundScope();
-            previousLocalize = WorldMultiLanguageText.Localize;
-            previousLanguageFont = WorldMultiLanguageText.LanguageFont;
-            WorldMultiLanguageText.LanguageFont = () => Resources.Load<TMPro.TMP_FontAsset>("Combat/FZY4K-Dynamic");
-            WorldMultiLanguageText.Localize = key => localization.GetText(key, LanguageType.zh_CN);
-            previousPool = ProfessionGameObjectPoolBridge.Provider;
-            ProfessionGameObjectPoolBridge.Provider = (scope, prefab, parent, keepWorld) => Instantiate(prefab, parent, keepWorld);
-            content = Instantiate(assets.PropertyPrefab, transform, false);
-            content.name = "OfficialPartnerDetailPropertyContent";
-            var panel = content.GetComponent<NpcDetailPanelPropContent>();
-            if (panel == null) throw new InvalidOperationException("Official partner detail-property controller is missing.");
-            panel.Configure(services); panel.Init(npc, info); content.SetActive(true);
+            if (uiBinding != null) throw new InvalidOperationException("Original partner content is already open.");
+            try
+            {
+                soundScope = new OfflinePartnerUiSoundScope();
+                uiBinding = OfflineUiBindingModule.Register(transform, new OfflineUiBindings {
+                    Font = () => Resources.Load<TMPro.TMP_FontAsset>("Combat/FZY4K-Dynamic"),
+                    Localize = key => localization.GetText(key, LanguageType.zh_CN),
+                    Pool = (scope, prefab, parent, keepWorld) => Instantiate(prefab, parent, keepWorld)
+                });
+                content = Instantiate(assets.PropertyPrefab, transform, false);
+                content.name = "OfficialPartnerDetailPropertyContent";
+                var panel = content.GetComponent<NpcDetailPanelPropContent>();
+                if (panel == null) throw new InvalidOperationException("Official partner detail-property controller is missing.");
+                panel.Configure(services); panel.Init(npc, info); content.SetActive(true);
+            }
+            catch { Close(); throw; }
         }
+
         public void Close()
         {
+            uiBinding?.Dispose(); uiBinding = null;
             if (content != null) { content.SetActive(false); Destroy(content); }
             soundScope?.Dispose(); soundScope = null;
-            content = null; ProfessionGameObjectPoolBridge.Provider = previousPool; previousPool = null;
-            WorldMultiLanguageText.Localize = previousLocalize; previousLocalize = null;
-            WorldMultiLanguageText.LanguageFont = previousLanguageFont; previousLanguageFont = null;
+            content = null;
+
         }
+        private void OnDestroy() => Close();
     }
 }

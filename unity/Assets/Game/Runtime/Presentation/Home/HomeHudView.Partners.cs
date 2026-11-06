@@ -540,21 +540,18 @@ namespace Zjcs.Presentation.Home
             staging.SetActive(false);
             try
             {
-                previousFriendshipLocalize = WorldMultiLanguageText.Localize;
-                previousFriendshipLanguageFont = WorldMultiLanguageText.LanguageFont;
-                previousFriendshipPool = ProfessionGameObjectPoolBridge.Provider;
-                partnerFriendshipServicesInstalled = true;
-                WorldMultiLanguageText.LanguageFont = () => host.Catalog.Font;
                 var localization = new OfflinePartnerLocalizationService(host.PartnerDetailAssets.Texts,
                     host.PartnerDetailAssets.Common.GiftTexts, host.PartnerFriendshipAssets.PropertyTexts,
                     host.PartnerFriendshipAssets.DialogTexts);
-                WorldMultiLanguageText.Localize = key => localization.GetText(key, LanguageType.zh_CN);
-                ProfessionGameObjectPoolBridge.Provider = (scope, prefab, parent, keepWorld) =>
-                    UnityEngine.Object.Instantiate(prefab, parent, keepWorld);
                 var assets = OfficialPartnerFriendshipWindowAssetCatalog.LoadDefault();
                 var root = UnityEngine.Object.Instantiate(assets.WindowPrefab,
                     staging.transform, false);
                 partnerFriendshipPanel = root;
+                partnerFriendshipUiBinding = OfflineUiBindingModule.Register(root.transform, new OfflineUiBindings {
+                    Font = () => host.Catalog.Font,
+                    Localize = key => localization.GetText(key, LanguageType.zh_CN),
+                    Pool = (scope, prefab, parent, keepWorld) => UnityEngine.Object.Instantiate(prefab, parent, keepWorld)
+                });
                 root.name = "OfficialPartnerFriendshipDialog";
                 var dialog = root.GetComponent<NpcFriendshipDialog>();
                 if (dialog == null) throw new InvalidOperationException("Official partner friendship dialog component is missing.");
@@ -595,7 +592,7 @@ namespace Zjcs.Presentation.Home
         }
 
         private GameObject partnerFriendshipMask;
-        private bool partnerFriendshipServicesInstalled;
+        private IDisposable partnerFriendshipUiBinding;
         private PartnerWindowBlurCapture partnerFriendshipCapture;
         private Coroutine partnerFriendshipPreparation;
 
@@ -642,16 +639,7 @@ namespace Zjcs.Presentation.Home
                 UnityEngine.Object.Destroy(partnerFriendshipPanel);
                 partnerFriendshipPanel = null;
             }
-            if (partnerFriendshipServicesInstalled)
-            {
-                partnerFriendshipServicesInstalled = false;
-                ProfessionGameObjectPoolBridge.Provider = previousFriendshipPool;
-                previousFriendshipPool = null;
-                WorldMultiLanguageText.Localize = previousFriendshipLocalize;
-                previousFriendshipLocalize = null;
-                WorldMultiLanguageText.LanguageFont = previousFriendshipLanguageFont;
-                previousFriendshipLanguageFont = null;
-            }
+            partnerFriendshipUiBinding?.Dispose(); partnerFriendshipUiBinding = null;
         }
 
         private sealed class OfflinePartnerConfirmDialog : IPartnerGiftConfirmDialog

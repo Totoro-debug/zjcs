@@ -60,9 +60,6 @@ namespace Zjcs.Presentation.Home
         private OfflineProfessionImageCatalog partnerDetailWindowImages;
         private PartnerGiftPanelView partnerGiftPanel;
         private GameObject partnerFriendshipPanel;
-        private Func<string, string> previousFriendshipLocalize;
-        private Func<TMPro.TMP_FontAsset> previousFriendshipLanguageFont;
-        private Func<Transform, GameObject, Transform, bool, GameObject> previousFriendshipPool;
 
         private TextMeshProUGUI nameLabel;
         private TextMeshProUGUI levelLabel;

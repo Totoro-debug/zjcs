@@ -69,11 +69,7 @@ namespace Zjcs.Offline.PartnersUI
         private static readonly FieldInfo PrefabSource = typeof(LoopScrollRectBase).GetField("mPrefabSource", BindingFlags.Instance | BindingFlags.NonPublic);
         private PartnerPanelContext context;
         private GameObject bindingRoot, content;
-        private Func<string, string> previousLocalize;
-        private Func<TMP_FontAsset> previousFont;
-        private Func<Image, IProfessionImageResourceLoader> previousImages;
-        private Func<Transform, GameObject, Transform, bool, GameObject> previousPool;
-        private IProfessionAppearanceSkinClipBindings previousSkinClip;
+        private IDisposable uiBinding;
         private OfflineProfessionNativeSkinClipBindings skinClip;
         private DialogueBindings dialogueBindings;
         private OfflinePartnerUiSoundScope sounds;
@@ -90,29 +86,23 @@ namespace Zjcs.Offline.PartnersUI
             if (context != null) throw new InvalidOperationException("Original partner window is already open.");
             context = value;
             dialogueBindings = new DialogueBindings(value.Dialogues, this);
-            previousLocalize = WorldMultiLanguageText.Localize; previousFont = WorldMultiLanguageText.LanguageFont;
-            previousImages = ProfessionImageResourceBridge.Provider; previousPool = ProfessionGameObjectPoolBridge.Provider;
-            previousSkinClip = ProfessionAppearanceSkinClipBindings.Current;
             try
             {
                 value.PrepareOpen?.Invoke();
                 sounds = new OfflinePartnerUiSoundScope(assets.GetSound);
-                skinClip = new OfflineProfessionNativeSkinClipBindings(previousSkinClip);
-                ProfessionAppearanceSkinClipBindings.Current = new OfflineProfessionCurrentUiSkinClipBindings(skinClip);
-                WorldMultiLanguageText.Localize = assets.CreateLocalizer(value.Localize); WorldMultiLanguageText.LanguageFont = () => value.Font;
+                skinClip = new OfflineProfessionNativeSkinClipBindings();
                 bindingRoot = new GameObject("OriginalPartnerWindowBinding", typeof(RectTransform));
                 var rect = (RectTransform)bindingRoot.transform; rect.SetParent(transform, false);
                 rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one; rect.sizeDelta = Vector2.zero;
                 bindingRoot.SetActive(false);
-                ProfessionImageResourceBridge.Provider = image => image && image.transform.IsChildOf(rect) ? value.Images : previousImages?.Invoke(image);
-                ProfessionGameObjectPoolBridge.Provider = (scope, prefab, parent, keepWorld) => {
-                    if (scope && scope.IsChildOf(rect))
-                    {
+                uiBinding = OfflineUiBindingModule.Register(rect, new OfflineUiBindings {
+                    Localize = assets.CreateLocalizer(value.Localize), Font = () => value.Font,
+                    Images = image => value.Images,
+                    SkinClip = new OfflineProfessionCurrentUiSkinClipBindings(skinClip),
+                    Pool = (scope, prefab, parent, keepWorld) => {
                         var instance = Instantiate(prefab, parent, keepWorld); BindTree(instance); return instance;
                     }
-                    if (previousPool != null) return previousPool(scope, prefab, parent, keepWorld);
-                    throw new InvalidOperationException("Original item pool request is outside this partner window.");
-                };
+                });
                 content = Instantiate(assets.PanelPrefab, rect, false);
                 BindTree(content);
                 var panel = content.GetComponent<NpcPanel>();
@@ -156,15 +146,12 @@ namespace Zjcs.Offline.PartnersUI
         public void Close()
         {
             if (context == null) return;
+            uiBinding?.Dispose(); uiBinding = null;
             if (bindingRoot) { bindingRoot.SetActive(false); Destroy(bindingRoot); }
             content = null; bindingRoot = null;
-            WorldMultiLanguageText.Localize = previousLocalize; WorldMultiLanguageText.LanguageFont = previousFont;
-            ProfessionImageResourceBridge.Provider = previousImages; ProfessionGameObjectPoolBridge.Provider = previousPool;
-            ProfessionAppearanceSkinClipBindings.Current = previousSkinClip;
             skinClip?.Dispose(); skinClip = null; context = null;
             sounds?.Dispose(); sounds = null;
             dialogueBindings = null;
-            previousLocalize = null; previousFont = null; previousImages = null; previousPool = null; previousSkinClip = null;
         }
         private void OnDestroy() => Close();
     }

@@ -35,10 +35,7 @@ namespace Zjcs.Offline.PartnersUI
         private static readonly FieldInfo PrefabSource = typeof(LoopScrollRectBase)
             .GetField("mPrefabSource", BindingFlags.Instance | BindingFlags.NonPublic);
         private GameObject content, bindingRoot;
-        private Func<string, string> previousLocalize;
-        private Func<TMPro.TMP_FontAsset> previousFont;
-        private Func<Image, IProfessionImageResourceLoader> previousImages;
-        private Func<Transform, GameObject, Transform, bool, GameObject> previousPool;
+        private IDisposable uiBinding;
         private OfflineProfessionImageCatalog imageCatalog;
         private bool hasScope;
 
@@ -47,39 +44,26 @@ namespace Zjcs.Offline.PartnersUI
         {
             if (!assets || services == null || !font || bindNativeTree == null) throw new ArgumentNullException();
             if (hasScope) throw new InvalidOperationException("Star-god page is already open.");
-            previousLocalize = WorldMultiLanguageText.Localize;
-            previousFont = WorldMultiLanguageText.LanguageFont;
-            previousImages = ProfessionImageResourceBridge.Provider;
-            previousPool = ProfessionGameObjectPoolBridge.Provider;
             hasScope = true;
             try
             {
                 imageCatalog = assets.CreateImageCatalog();
                 var images = new OfflineProfessionImageResourceLoader(imageCatalog);
-                WorldMultiLanguageText.LanguageFont = () => font;
-                WorldMultiLanguageText.Localize = key => {
-                    foreach (var row in assets.Texts) if (row.key == key) return row.text;
-                    return previousLocalize?.Invoke(key) ?? key;
-                };
                 // An inactive parent also prevents OnEnable when the source prefab
                 // is active. Preserve the source page's own RectTransform values.
                 bindingRoot = new GameObject("OfficialPartnerStarGodBinding", typeof(RectTransform));
                 var rect = (RectTransform)bindingRoot.transform;
                 rect.SetParent(transform, false); rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
                 rect.sizeDelta = Vector2.zero; bindingRoot.SetActive(false);
-                ProfessionImageResourceBridge.Provider = image => image && image.transform.IsChildOf(rect)
-                    ? images : previousImages?.Invoke(image);
-                ProfessionGameObjectPoolBridge.Provider = (scope, prefab, parent, keepWorld) => {
-                    if (scope && scope.IsChildOf(rect))
-                    {
-                        var value = Instantiate(prefab, parent, keepWorld);
-                        bindNativeTree(value);
+                uiBinding = OfflineUiBindingModule.Register(rect, new OfflineUiBindings {
+                    Font = () => font, Images = image => images,
+                    Localize = key => { foreach (var row in assets.Texts) if (row.key == key) return row.text; return key; },
+                    Pool = (scope, prefab, parent, keepWorld) => {
+                        var value = Instantiate(prefab, parent, keepWorld); bindNativeTree(value);
                         foreach (var text in value.GetComponentsInChildren<WorldMultiLanguageText>(true)) text.Refresh();
                         return value;
                     }
-                    if (previousPool != null) return previousPool(scope, prefab, parent, keepWorld);
-                    throw new InvalidOperationException("Item pool request is outside the original star-god page.");
-                };
+                });
                 content = Instantiate(assets.PagePrefab, rect, false);
                 var list = content.GetComponent<NpcPanelStarGodContent>();
                 var loop = content.GetComponentInChildren<LoopVerticalScrollRect>(true);
@@ -103,21 +87,15 @@ namespace Zjcs.Offline.PartnersUI
         {
             if (!hasScope) return;
             hasScope = false;
+            uiBinding?.Dispose(); uiBinding = null;
             if (bindingRoot)
             {
                 bindingRoot.SetActive(false); // Unsubscribe before the deferred destroy.
                 Destroy(bindingRoot);
             }
             bindingRoot = null; content = null;
-            WorldMultiLanguageText.Localize = previousLocalize;
-            WorldMultiLanguageText.LanguageFont = previousFont;
-            ProfessionImageResourceBridge.Provider = previousImages;
-            ProfessionGameObjectPoolBridge.Provider = previousPool;
-            previousPool = null;
-            previousImages = null;
             if (imageCatalog) Destroy(imageCatalog);
             imageCatalog = null;
-            previousLocalize = null; previousFont = null;
         }
         private void OnDestroy() => Close();
     }

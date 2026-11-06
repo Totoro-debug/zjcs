@@ -37,10 +37,7 @@ namespace Zjcs.Offline.PartnersUI
         private static readonly FieldInfo PrefabSource = typeof(LoopScrollRectBase).GetField("mPrefabSource", BindingFlags.Instance | BindingFlags.NonPublic);
         private PartnerDialoguePlaybackContext context;
         private GameObject bindingRoot, content;
-        private Func<string, string> previousLocalize;
-        private Func<TMP_FontAsset> previousFont;
-        private Func<Image, IProfessionImageResourceLoader> previousImages;
-        private IProfessionAppearanceSkinClipBindings previousSkinClip;
+        private IDisposable uiBinding;
         private OfflineProfessionNativeSkinClipBindings skinClip;
         private OfflinePartnerUiSoundScope sounds;
         public GameObject Content => content;
@@ -55,21 +52,18 @@ namespace Zjcs.Offline.PartnersUI
                 throw new ArgumentException("Bind the saved dialogue and complete original playback services before opening it.");
             if (context != null) throw new InvalidOperationException("Original conversation window is already open.");
             context = value;
-            previousLocalize = WorldMultiLanguageText.Localize; previousFont = WorldMultiLanguageText.LanguageFont;
-            previousImages = ProfessionImageResourceBridge.Provider;
-            previousSkinClip = ProfessionAppearanceSkinClipBindings.Current;
             try
             {
                 sounds = new OfflinePartnerUiSoundScope(assets.GetSound);
-                skinClip = new OfflineProfessionNativeSkinClipBindings(previousSkinClip);
-                ProfessionAppearanceSkinClipBindings.Current = new OfflineProfessionCurrentUiSkinClipBindings(skinClip);
-                WorldMultiLanguageText.Localize = assets.CreateLocalizer(value.Localize);
-                WorldMultiLanguageText.LanguageFont = () => value.Font;
+                skinClip = new OfflineProfessionNativeSkinClipBindings();
                 bindingRoot = new GameObject("OriginalConversationWindowBinding", typeof(RectTransform));
                 var rect = (RectTransform)bindingRoot.transform; rect.SetParent(transform, false);
                 rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one; rect.sizeDelta = Vector2.zero;
                 bindingRoot.SetActive(false);
-                ProfessionImageResourceBridge.Provider = image => image && image.transform.IsChildOf(rect) ? value.Images : previousImages?.Invoke(image);
+                uiBinding = OfflineUiBindingModule.Register(rect, new OfflineUiBindings {
+                    Localize = assets.CreateLocalizer(value.Localize), Font = () => value.Font,
+                    Images = image => value.Images, SkinClip = new OfflineProfessionCurrentUiSkinClipBindings(skinClip)
+                });
                 content = Instantiate(assets.PanelPrefab, rect, false);
                 BindTree(content);
                 var panel = content.GetComponent<NpcDialoguePanel>();
@@ -107,14 +101,11 @@ namespace Zjcs.Offline.PartnersUI
         public void Close()
         {
             if (context == null) return;
+            uiBinding?.Dispose(); uiBinding = null;
             if (bindingRoot) { bindingRoot.SetActive(false); Destroy(bindingRoot); }
             bindingRoot = null; content = null;
-            WorldMultiLanguageText.Localize = previousLocalize; WorldMultiLanguageText.LanguageFont = previousFont;
-            ProfessionImageResourceBridge.Provider = previousImages;
-            ProfessionAppearanceSkinClipBindings.Current = previousSkinClip;
-            skinClip?.Dispose(); skinClip = null; previousSkinClip = null;
+            skinClip?.Dispose(); skinClip = null;
             sounds?.Dispose(); sounds = null; context = null;
-            previousLocalize = null; previousFont = null; previousImages = null;
         }
         private void OnDestroy() => Close();
     }
