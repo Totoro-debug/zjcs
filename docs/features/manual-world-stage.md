@@ -38,4 +38,4 @@
 
 ## 代码与资源入口
 
-交接实体条件以官方公共源码 [StageConLevelComponent](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/StageConLevelComponent.cs) 和固定版本导出的 [地图实体组件数据](../../assets/official/map-entities.json) 为准；地图解锁本身不替代实体交接。当前 Unity 保存世界地图区域进度的入口为 [OfflineMainlineProgressSession](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs)；世界阶段属性目前位于 `OfflineCharacterPropertyProgress.TreasurePlaneRank`，尚未接入手动推进事务或赛季结算。
+交接实体条件以官方公共源码 [StageConLevelComponent](../../.tools/source-packages/official-code/common-source/Common/StageConLevelComponent.cs) 和固定版本导出的 [地图实体组件数据](../../assets/official/map-entities.json) 为准；地图解锁本身不替代实体交接。当前 Unity 保存世界地图区域进度的入口为 [OfflineMainlineProgressSession](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs)；世界阶段属性目前位于 `OfflineCharacterPropertyProgress.TreasurePlaneRank`，尚未接入手动推进事务或赛季结算。

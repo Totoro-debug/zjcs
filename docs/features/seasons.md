@@ -67,10 +67,10 @@
 
 ### 已核实的官方评分依据
 
-固定配置 `871_156598` 的 `season-rules.json` 已含日常副本、魔王战场、秘境、地图进度、地图组、地区进度、地图完成时效及装备柜星石评分表。固定 APK 中 `destiny_score_award.g.bytes` 由 [prepare_official_season_score_awards.py](../../scripts/prepare_official_season_score_awards.py) 提取为 126 行，来源与输出哈希记录在 `assets/reference/season-lifecycle/source-manifest.json`；人物规则目录已将这些表纳入 `character-progression.json`。
+季评分配置包括日常副本、魔王战场、秘境、地图进度、地图组、地区进度、地图完成时效及装备柜星石；人物规则目录 `character-progression.json` 已使用这些表。来源版本和转换凭据见[来源总表](../../assets/reference/SOURCES.md)。
 
-官方公共源码 [PlayerSeasonRecordDataWrapExtra](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/PlayerSeasonRecordDataWrapExtra.cs) 明确总分为赐福分、启用玩法分、装备柜分之和；玩家位阶低于记录位阶时赐福分和玩法分为0，玩法只累加该季 `GamePlayRecordTypes` 启用项。评分档位由 [DestinyScoreAwardInfoParser](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/DestinyScoreAwardInfoParser.cs) 按门槛选择不高于当前分数的最高档；玩法奖励读该档 `AwardItems`。赐福奖励为 `floor(赐福分 / SourceStarRateMatrialValue) + BaseBlessAwardCount`，物品为官方星命升级材料。该源码快照为 `871_156598`，数据表仍严格固定于 `871_156598`，二者未混写为同一版本。
+官方季总分由赐福分、启用玩法分、装备柜分组成；玩家位阶低于记录位阶时赐福分和玩法分为0，玩法只累计该季启用项。评级选择不高于当前分数的最高档，玩法奖励读取该档 `AwardItems`；赐福奖励为 `floor(赐福分 / SourceStarRateMatrialValue) + BaseBlessAwardCount`，奖励物品为星命升级材料。官方客户端与 Common 来源见[来源总表](../../assets/reference/SOURCES.md)。
 
 ## 代码与资源入口
 
-官方记录字段与生命周期见 [PlayerSeasonRecordData](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/PlayerSeasonRecordData.cs)、[PlayerSeasonRecordDataWrap](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/PlayerSeasonRecordDataWrap.cs) 和 [SeasonRecordUtils](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/SeasonRecordUtils.cs)。Unity 表提取及合并入口为 [prepare_official_season_score_awards.py](../../scripts/prepare_official_season_score_awards.py) 和 [prepare_unity_character_catalog.py](../../scripts/prepare_unity_character_catalog.py)。
+官方记录字段与生命周期见 [PlayerSeasonRecordData](../../.tools/source-packages/official-code/common-source/Common/PlayerSeasonRecordData.cs)、[PlayerSeasonRecordDataWrap](../../.tools/source-packages/official-code/common-source/Common/PlayerSeasonRecordDataWrap.cs) 和 [SeasonRecordUtils](../../.tools/source-packages/official-code/common-source/Common/SeasonRecordUtils.cs)。Unity 表提取及合并入口为 [prepare_official_season_score_awards.py](../../scripts/prepare_official_season_score_awards.py) 和 [prepare_unity_character_catalog.py](../../scripts/prepare_unity_character_catalog.py)。
