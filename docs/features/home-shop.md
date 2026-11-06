@@ -16,7 +16,7 @@ HomeShopPanel 使用 shop 1／2、商品组、权重、折扣、库存、刷新�
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-家园三类货架的 48 种商品均使用官方图标，其中七项食材来自同版本官方 CDN；来源与显式加载绑定见 [shop-ui/source-manifest.json](../../assets/reference/shop-ui/source-manifest.json)。
+家园三类货架的 48 种商品均使用官方图标，其中七项食材来自同版本官方 CDN；来源与显式加载绑定见 [来源总表](../../assets/reference/SOURCES.md)。
 
 同一脚本读取原始 `ShopGoodsItemShowConfig.asset` 的品质到 Sprite GUID 映射，解码七种原始商品品质背景。商品使用已提取的 `ShopGoodsItemInfoCommon` 布局、图片、数量与阴影；数量文字扩大到原数量容器宽度，避免三位数截掉乘号。没有绘制替代图片。
 
@@ -59,7 +59,7 @@ scripts/prepare_shop_bindings.py 从固定 APK 及通过原清单校验的同版
 
 ## 代码与资源入口
 
-- [shop UI source manifest](../../assets/reference/shop-ui/source-manifest.json)、[规则 manifest](../../assets/reference/official-city/rules-manifest.json)、[HomeShop/ui.json](../../unity/Assets/StreamingAssets/HomeShop/ui.json)、[HomeShop/rules.json](../../unity/Assets/StreamingAssets/HomeShop/rules.json)。
+- [来源总表](../../assets/reference/SOURCES.md)、[HomeShop/ui.json](../../unity/Assets/StreamingAssets/HomeShop/ui.json)、[HomeShop/rules.json](../../unity/Assets/StreamingAssets/HomeShop/rules.json)。
 - 官方代码：[ShopInfo.cs](../../.tools/source-packages/official-code/common-source/Common/ShopInfo.cs)、[ShopGoodsGroupInfoParser.cs](../../.tools/source-packages/official-code/common-source/Common/ShopGoodsGroupInfoParser.cs)、[ShopDataManager.cs](../../.tools/source-packages/official-code/client-source/ShopDataManager.cs)、[ShopPanel.cs](../../.tools/source-packages/official-code/client-source/ShopPanel.cs)、[AchievementPanelItem.cs](../../.tools/source-packages/official-code/client-source/AchievementPanelItem.cs)。
 
 ## 尚未实现

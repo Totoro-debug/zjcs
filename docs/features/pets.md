@@ -20,13 +20,13 @@
 
 `prepare_pet_ui.py` 从固定 APK 的 `image_itemicon_pet`、`image_ui_pet` 与 `scriptableconfig_modules_pet` 提取 39 张现有阶段图片、三种类型标记与对应配置，新增 20 项运行时 Sprite，其余复用已有原图。没有重绘或生成图片。配置中的 `pet_1619` 不在原始幻兽图像 bundle 内，保留待补齐记录；该项不再显示其他幻兽的模板图片。
 
-依据：[pet-ui/source-manifest.json](../../assets/reference/pet-ui/source-manifest.json)。
+依据：[来源总表](../../assets/reference/SOURCES.md)。
 
 `prepare_fidelity_pet_ui.py` 当前转换 33 个原 prefab／引用模板和 857 组完整字段／材质绑定，包含能力图与连线、培养／重置、技能详情、进阶、通用碎片确认和原技能标签模板。遗物绑定采用相同修复。原 TextMeshPro 的自动字号、换行和溢出设置保留在转换数据中。原能力培养、技能进阶、取消、重置返还已实际接入；原编队、筛选和循环成就已接入；改名、导师、后期祝福、经验喂养成就统计和独立实体战斗仍未全量完成。
 
-依据：[pet-fidelity-ui/source-manifest.json](../../assets/reference/pet-fidelity-ui/source-manifest.json)。
+依据：[来源总表](../../assets/reference/SOURCES.md)。
 
-`prepare_fidelity_skill_rules.py` 依据原 Luban 构造器、MessagePack 格式化器及静态类型解析器，严格解码 3,824 个技能／状态／命中实体和 108 个等级属性类。运行数据位于 `assets/official/skill-rules.json`，输入配置、源码、格式化器及输出哈希见 [skill-rules/source-manifest.json](../../assets/reference/skill-rules/source-manifest.json)。原阶级倍率、等级属性、被动、召唤加成、显示排序及隐藏规则用于技能详情与升阶预览；完整技能战斗没有因此自动完成。
+`prepare_fidelity_skill_rules.py` 依据原 Luban 构造器、MessagePack 格式化器及静态类型解析器，严格解码 3,824 个技能／状态／命中实体和 108 个等级属性类。运行数据位于 `assets/official/skill-rules.json`，输入配置、源码、格式化器及输出哈希见 [来源总表](../../assets/reference/SOURCES.md)。原阶级倍率、等级属性、被动、召唤加成、显示排序及隐藏规则用于技能详情与升阶预览；完整技能战斗没有因此自动完成。
 
 原 PetPanelWriteMask / PetPanelMask 材质的 ColorMask、Stencil 比较与操作、AlphaClip 及九宫格图片已保存到转换记录；原 LoopScrollGridLayoutGroup 的最小间距、列数及动态间距由原程序集反编译核对。没有新增自绘图片。原成就循环与战力评分的源码哈希见非主线实施证据。
 
@@ -50,7 +50,7 @@ prepare_pet_progress_ui.py 从固定 871_156598 的 prefabs_ui_tips、prefabs_ui
 
 服务端改名次数更新体缺失：本地自定义改名消耗一次，跨原UTC零点重记；恢复默认名不返还当日次数，仅跳过外部文字审核，不加费用。
 
-幼年列表图标 `ItemIcon/Pet/pet_1619` 重新解析固定 APK 五包完整资源路径仍未列出，原幻兽 Sprite／Texture2D 对象、相关图集及185个新版同名补包亦未取得。进一步从官方当前目录 `202610141241870` 下载清单 `870_156522` 及匹配大小／MD5 的 `image_itemicon_pet`、`image_ui_pet` 包，完整新版资源路径与两包实际图像对象仍无该图。按用户“实在没有就算了”的意见继续隐藏图片、保留名称，不绘制替代图；9219详情／随行／战斗模型正常保留。可复查入口为 `prepare_pet_ui.py --recheck-portrait`，版本、URL、输入哈希及实际对象见 [pet-ui/source-manifest.json](../../assets/reference/pet-ui/source-manifest.json)。
+幼年列表图标 `ItemIcon/Pet/pet_1619` 重新解析固定 APK 五包完整资源路径仍未列出，原幻兽 Sprite／Texture2D 对象、相关图集及185个新版同名补包亦未取得。进一步从官方当前目录 `202610141241870` 下载清单 `870_156522` 及匹配大小／MD5 的 `image_itemicon_pet`、`image_ui_pet` 包，完整新版资源路径与两包实际图像对象仍无该图。按用户“实在没有就算了”的意见继续隐藏图片、保留名称，不绘制替代图；9219详情／随行／战斗模型正常保留。可复查入口为 `prepare_pet_ui.py --recheck-portrait`，版本、URL、输入哈希及实际对象见 [来源总表](../../assets/reference/SOURCES.md)。
 
 ### 已确认的本地接线与边界
 
@@ -66,18 +66,14 @@ prepare_pet_progress_ui.py 从固定 871_156598 的 prefabs_ui_tips、prefabs_ui
 
 [原版技能回放目录](../../assets/official/battle-animation/catalog.json)、[原版技能特效目录](../../assets/official/battle-presentation/effects.json)、[动画来源清单](../../assets/reference/battle-animation/source-manifest.json)
 
-[特效来源清单](../../assets/reference/official-map/battle-effects-source-manifest.json)、[MyFightSkill.PlayPlayable](../../.tools/source-packages/official-code/client-source/MyFightSkill.cs)、[MyPlayableFollowBone](../../.tools/source-packages/official-code/client-source/MyPlayableFollowBone.cs)、[AttachPosRotCfg.GetBone](../../.tools/source-packages/official-code/client-source/AttachPosRotCfg.cs)、
+[来源总表](../../assets/reference/SOURCES.md)、[MyFightSkill.PlayPlayable](../../.tools/source-packages/official-code/client-source/MyFightSkill.cs)、[MyPlayableFollowBone](../../.tools/source-packages/official-code/client-source/MyPlayableFollowBone.cs)、[AttachPosRotCfg.GetBone](../../.tools/source-packages/official-code/client-source/AttachPosRotCfg.cs)、
 
 `scripts/prepare_battle_effects.py`（来源工具标识）、[prepare_battle_animation.py](../../scripts/prepare_battle_animation.py)、
 
 `scripts/prepare_pet_materials.py`（来源工具标识）、
 
-[粒子材质来源](../../assets/reference/pet-materials/source-manifest.json)、`scripts/prepare_battle_post.py`（来源工具标识）、`scripts/prepare_battle_linear_textures.py`（来源工具标识）、[battle-post](../../assets/reference/battle-post/source-manifest.json)
+[来源总表](../../assets/reference/SOURCES.md)、`scripts/prepare_battle_post.py`（来源工具标识）、`scripts/prepare_battle_linear_textures.py`（来源工具标识）、[来源总表](../../assets/reference/SOURCES.md)
 
-[battle-linear](../../assets/reference/battle-linear/source-manifest.json)、
+[来源总表](../../assets/reference/SOURCES.md)、
 
-`scripts/native/pet_texture_sampler.c`（来源工具标识）、`scripts/prepare_pet_texture_sampler.py`（来源工具标识）、[来源清单](../../assets/reference/pet-texture-sampler/source-manifest.json)、
-
-[source-manifest.json](../../assets/reference/pet-fidelity-ui/source-manifest.json)、[source-manifest.json](../../assets/reference/pet-progress/source-manifest.json)、
-
-[pet-ui/source-manifest.json](../../assets/reference/pet-ui/source-manifest.json)
+`scripts/native/pet_texture_sampler.c`（来源工具标识）、`scripts/prepare_pet_texture_sampler.py`（来源工具标识）、[来源总表](../../assets/reference/SOURCES.md)

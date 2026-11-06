@@ -22,17 +22,17 @@
 
 恢复原动态／静态 FZY4K TMP 字体、字形表、FaceInfo、Atlas 和材质。流式字体按 APK 原 `FontAssetFontConfig` 的长度／MD5 核验，复用已迁移的同字节官方 TTF；正确处理官方 TMP 字体额外的序列化字段。单描边使用官方 `TMPEffect.DoSetup` 的 `pointSize / fontSize / atlasPadding` 换算及 Clamp01；原 TMP GLES 的描边和 UI 裁剪分支转换为 Windows HLSL。Sprite 保留原边框、轴心、PPU、顶点和三角形。
 
-运行绑定入口为 `Resources/Startup/OfficialStartupAssets`。原始载荷位于 `unity/Assets/Official/Startup/`；原生 prefab、字体、材质、Sprite、动画和控制器位于 `unity/Assets/Game/Resources/Startup/`；官方逻辑位于 `Runtime/Official/Startup/`，本地加载适配位于 `Runtime/Offline/Startup/`。提取入口为 `scripts/prepare_official_startup.py`，原生恢复入口为 `Zjcs.Editor.Startup.OfficialStartupTools.Restore`；输入对象、CAB／bundle、版本、处理方式与哈希见[来源清单](../../assets/reference/startup/source-manifest.json)。新增素材尚未生成完整备份快照。
+运行绑定入口为 `Resources/Startup/OfficialStartupAssets`。原始载荷位于 `unity/Assets/Official/Startup/`；原生 prefab、字体、材质、Sprite、动画和控制器位于 `unity/Assets/Game/Resources/Startup/`；官方逻辑位于 `Runtime/Official/Startup/`，本地加载适配位于 `Runtime/Offline/Startup/`。提取入口为 `scripts/prepare_official_startup.py`，原生恢复入口为 `Zjcs.Editor.Startup.OfficialStartupTools.Restore`；输入对象、CAB／bundle、版本、处理方式与哈希见[来源总表](../../assets/reference/SOURCES.md)。新增素材尚未生成完整备份快照。
 
 启动界面已接入健康提示、背景／标志、进度条、适龄弹窗、档案选择和官方开场路由。完整弹窗附属组件与当前提交工程对应的 Windows Player 仍待完成。
 
-通用 Unity 验证与临时产物管理见[素材管理](../asset-management.md)；本模块资源绑定见[原生来源清单](../../assets/reference/startup/native-source-manifest.json)。
+通用 Unity 验证与临时产物管理见[素材管理](../asset-management.md)；本模块资源绑定见[来源总表](../../assets/reference/SOURCES.md)。
 
 ### 已迁移代码与局部资源
 
 以下为局部代码／资源接入，完整流程仍受本页缺项限制。
 
-`scripts/prepare_official_startup.py` 优先核对官方 APK 的 Boot／Launch 包内清单、实际载荷、CAB 和 PPtr，所需资源均在固定 `871_156598` APK 中，无需混用云端版本。恢复 BootSplash、ThemeCanvas、LaunchRoot/LaunchCanvas 和 AgeTipsDialog 的 80 个对象、24 张 Sprite、原字体／材质、启动曲线及按钮 Animator；字体额外字段、流式字体配置长度／MD5、原顶点／三角形和 TMP 裁剪／描边程序均核实后转换。Windows 使用 Unity 原生 prefab、Sprite、字体、HLSL 和显式 `Startup/OfficialStartupAssets` 引用。输入对象、代码／APK／bundle／字体与输出哈希见[原始来源](../../assets/reference/startup/source-manifest.json)，导入后的资源和运行绑定见[原生来源](../../assets/reference/startup/native-source-manifest.json)，实际流程与发布边界见[功能页](startup.md)。
+`scripts/prepare_official_startup.py` 优先核对官方 APK 的 Boot／Launch 包内清单、实际载荷、CAB 和 PPtr，所需资源均在固定 `871_156598` APK 中，无需混用云端版本。恢复 BootSplash、ThemeCanvas、LaunchRoot/LaunchCanvas 和 AgeTipsDialog 的 80 个对象、24 张 Sprite、原字体／材质、启动曲线及按钮 Animator；字体额外字段、流式字体配置长度／MD5、原顶点／三角形和 TMP 裁剪／描边程序均核实后转换。Windows 使用 Unity 原生 prefab、Sprite、字体、HLSL 和显式 `Startup/OfficialStartupAssets` 引用。输入对象、代码／APK／bundle／字体与输出哈希见[来源总表](../../assets/reference/SOURCES.md)，导入后的资源和运行绑定见[来源总表](../../assets/reference/SOURCES.md)，实际流程与发布边界见[功能页](startup.md)。
 
 ## 自定义实现
 

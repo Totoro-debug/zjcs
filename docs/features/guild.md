@@ -32,7 +32,7 @@
 
 `python scripts/prepare_guild_scene.py` 转换原始 `LegionMap` 的 188 个 Sprite 实例、32 个 Mesh 和 16 组 Spine 数据，保留十二座建筑的位置、点击碰撞区域、镜头聚焦 / 拖动参数、24 个建筑名称和等级标签，以及未建造、施工、正常状态。生产使用三个原始世界 Canvas 背景、九个原始生产物件视图和骨骼；另有 10 组 UI Spine 数据。运行数据为 `assets/official/guild-ui.json`、`guild.json`、`guild-ui-spine.json` 和 `guild-scene.json`，全部为原素材解码 / 网格转换，没有自行绘制或生成图片。
 
-完整消费公会建筑、研究、生产、商品、首领、战斗奖励及成就配置。bundle、对象、输入版本、语言与输出哈希见 [guild-ui/source-manifest.json](../../assets/reference/guild-ui/source-manifest.json)；场景、镜头、碰撞区域和世界物件见 [guild-ui/scene-manifest.json](../../assets/reference/guild-ui/scene-manifest.json)。
+完整消费公会建筑、研究、生产、商品、首领、战斗奖励及成就配置。bundle、对象、输入版本、语言与输出哈希见 [来源总表](../../assets/reference/SOURCES.md)；场景、镜头、碰撞区域和世界物件见 [来源总表](../../assets/reference/SOURCES.md)。
 
 公会成员、申请、其他公会和留言回应使用本地 NPC。公会战每天进行一轮准备、战斗与结算，赛季按周结算；战斗复用本地模拟器，联网匹配、Elo 和实时多人通信采用离线适配。领地地图保留原横向拖动和建筑入口操作。
 

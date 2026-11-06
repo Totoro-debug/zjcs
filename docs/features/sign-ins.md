@@ -22,17 +22,17 @@
 
 规则与实现定位：（`seasonal_growth`、`seasonal_task_ids`、`seasonal_task_list`、`seasonal_score_rewards`）、（`task_state`、`task_progress`）、（`execute`）。配置表为 `activity_sign_days`、`seven_day_task_activity`、`seven_day_task`、`seven_day_task_group`、`seven_day_task_phase`、`seven_day_task_score_reward`；赛季活动 ID 为100～105。
 
-对应官方代码为 `ActivityEntrySevenDayTaskHandler.OnActivityOpen`、`SevenDayTaskPanel`、`SevenDayTaskSubPanelTaskWithTaskGroup`、`SevenDayTaskGroup.GetDisplayTask`、`TaskListLiteItemForProgressTask.RefreshProgress`、`TaskListLiteItemForSevenDayTask.RefreshAward` 和 `SevenDayTaskScoreRewardItem`，源文件位于固定版本 `.tools/source-packages/official-code/client-source/`。提取与输出登记见[活动 UI 来源清单](../../assets/reference/activity-ui/source-manifest.json)及[素材来源总览](../../assets/reference/SOURCES.md)。
+对应官方代码为 `ActivityEntrySevenDayTaskHandler.OnActivityOpen`、`SevenDayTaskPanel`、`SevenDayTaskSubPanelTaskWithTaskGroup`、`SevenDayTaskGroup.GetDisplayTask`、`TaskListLiteItemForProgressTask.RefreshProgress`、`TaskListLiteItemForSevenDayTask.RefreshAward` 和 `SevenDayTaskScoreRewardItem`，源文件位于固定版本 `.tools/source-packages/official-code/client-source/`。提取与输出登记见[来源总表](../../assets/reference/SOURCES.md)及[素材来源总览](../../assets/reference/SOURCES.md)。
 
 ### 官方代码与资源依据
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-活动 UI 资源由 `prepare_activity_ui.py` 从固定版 APK 和同版官方缓存恢复，运行目录为 `assets/official/activities.json`，动态贴图通过显式清单加载。prefab、配置、语言和素材凭据见[活动 UI 来源清单](../../assets/reference/activity-ui/source-manifest.json)。
+活动 UI 资源由 `prepare_activity_ui.py` 从固定版 APK 和同版官方缓存恢复，运行目录为 `assets/official/activities.json`，动态贴图通过显式清单加载。prefab、配置、语言和素材凭据见[来源总表](../../assets/reference/SOURCES.md)。
 
 签到活动目录包含 29 个主题签到以及成长试炼、宾果和刮刮乐。离线版取消活动开始／结束排期、倒计时及开服等待；签到每日一次，宾果／刮刮乐分别按原 30 套配置保存进度。刮卡预抽结果和匹配结算按已确认的离线规则本地保存，不推定服务器实现。
 
-七日任务 100～105 使用原赛季任务面板、任务行和积分格；`ActivityEntrySevenDayTaskHandler.OnActivityOpen` 按 `DisplayCommonEntry` 过滤通用入口，赛季目录卡片作为本地导航。签到表 2 有 ID 2 奖励配置但没有原导航或专用面板，本地入口复用官方通用面板并按单机规则保存独立进度。prefab 与配置来源见[活动 UI 来源清单](../../assets/reference/activity-ui/source-manifest.json)。
+七日任务 100～105 使用原赛季任务面板、任务行和积分格；`ActivityEntrySevenDayTaskHandler.OnActivityOpen` 按 `DisplayCommonEntry` 过滤通用入口，赛季目录卡片作为本地导航。签到表 2 有 ID 2 奖励配置但没有原导航或专用面板，本地入口复用官方通用面板并按单机规则保存独立进度。prefab 与配置来源见[来源总表](../../assets/reference/SOURCES.md)。
 
 固定版本缺少史莱姆签到的专有面板和部分物品图标；孤独摇滚签到的背景与角色图为白色占位。按已确认方案使用官方通用签到面板并隐藏无关 IP 内容，不将其称为专有面板还原；动态角色预览仍待接入。
 
@@ -42,9 +42,9 @@
 
 1478、1487、35968、35986、35987 的精确图像路径不在固定版完整资源清单，已解析礼物／外观 Sprite 容器中也无相符对象；现存 185 个新版同名缺包记录不提供这些图标。保留原品质框、数量和真实名称，不画或借用其他物品图片。7 处玩家奖励换装预览仍未完成迁移，与这五项图像缺失分开记录；未将“尚未接入”登记为官方资源不存在。
 
-`prepare_activity_sign.py` 从固定871_156598签到 prefab 提取 `PopupWindow`、签到物品、状态切换、`ListItemShowSequence`、`PlayerAnimationAppearance` 和提示文字组件；复用既有原图片，另转换两张原品质框至 `assets/official/activity-sign/`。原开窗／循环／关窗曲线、`StartShow` 动画事件和职业皮肤组的输入哈希见 [activity-sign/source-manifest.json](../../assets/reference/activity-sign/source-manifest.json)。
+`prepare_activity_sign.py` 从固定871_156598签到 prefab 提取 `PopupWindow`、签到物品、状态切换、`ListItemShowSequence`、`PlayerAnimationAppearance` 和提示文字组件；复用既有原图片，另转换两张原品质框至 `assets/official/activity-sign/`。原开窗／循环／关窗曲线、`StartShow` 动画事件和职业皮肤组的输入哈希见 [来源总表](../../assets/reference/SOURCES.md)。
 
-`prepare_sign_appearance.py` 转换27种签到外观及绑定皮肤，7个原角色预览窗口使用男女原骨骼、完整分辨率图集、染色遮罩和24帧原待机动作，武器沿原 prefab 的骨骼／插槽／附件跟随。运行资源位于 `assets/characters/sign-preview/`；原脚本、组件、模型来源、复用输入及输出哈希见 [sign-preview/source-manifest.json](../../assets/reference/sign-preview/source-manifest.json)。未使用新版替代包或自绘素材。
+`prepare_sign_appearance.py` 转换27种签到外观及绑定皮肤，7个原角色预览窗口使用男女原骨骼、完整分辨率图集、染色遮罩和24帧原待机动作，武器沿原 prefab 的骨骼／插槽／附件跟随。运行资源位于 `assets/characters/sign-preview/`；原脚本、组件、模型来源、复用输入及输出哈希见 [来源总表](../../assets/reference/SOURCES.md)。未使用新版替代包或自绘素材。
 
 ## 完整还原部分
 
@@ -66,4 +66,4 @@
 
 ## 代码与资源入口
 
-[活动 UI 来源清单](../../assets/reference/activity-ui/source-manifest.json)
+[来源总表](../../assets/reference/SOURCES.md)

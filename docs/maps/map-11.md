@@ -26,7 +26,7 @@ Unity 森之国载荷固定使用 `871_156598`。`prepare_unity_map11_runtime_da
 
 森之国 `5110` 动态怪物显示：`prepare_unity_map11_world_monsters.py` 沿固定版 `ECStageBehStageView.GetMonsterId`、`Formula.GetMainMonster`、`MapMonsterLoader` 和 `MapMonsterLoadHandler` 核验六个阶段绑定，以及 3212、3215、3216、3217、3218 的官方 `MonsterModel` prefab。原 `5110.prefab` 的 `ModelSlot`、`Shadow` 挂点及偏移均记录在来源清单；`MonsterShadow` prefab 跟随 `shadow` 骨骼，其 Sprite 从 APK 原 bundle 提取为 `unity/Assets/Official/World/Map/11/Resources/Map11/Textures/MonsterShadow.png`。官方 CDN／APK 来源 URL、bundle 哈希、CAB 名、path ID、对象与纹理哈希、缩放和复用的战斗骨骼映射见 `official-map/map11-world-monsters-source-manifest.json`；运行时显式从 `Resources/Map11/Textures/MonsterShadow` 加载。
 
-`prepare_unity_map11_dialogue_audio.py` 同样先查 APK 实际内容，再核对固定版云端语音包，验证 207 个剧情事件的 Play 动作、原媒体切片和已转换 Vorbis 哈希；`Voice_StopAll` 的两个立即停止动作保留原调用顺序。原语音以 Windows 原生流式 AudioClip 绑定 `Resources/Map11/Audio/voices`，来源、代码及输入输出哈希见 `official-map/map11-dialogue-audio-source-manifest.json`。音源静音，未进行试听或真实输入检查。
+原语音以 Windows 原生流式 AudioClip 绑定 `Resources/Map11/Audio/voices`；`Voice_StopAll` 保留原两项立即停止动作的顺序。音源静音，试听与真实输入尚未验证；来源凭据见[来源总表](../../assets/reference/SOURCES.md)。
 
 `prepare_unity_map11_story_spatial.py` 从 APK 实际 DefaultPackage 清单定位 EC 索引及 113 类 Map11／本地玩家 prefab，严格读取原 `MapEntityTag`、`StoryNodeRegister`、玩家活动范围及距离设置，保留 bundle、对象和组件来源哈希；结果绑定 `Resources/Map11/story-spatial.json`，清单为 `official-map/map11-story-spatial-source-manifest.json`。原 `StoryUtils` 会根据动态 AttachAgent 骨骼可见性筛掉地图 NPC，这部分自制地图视图尚未复原，不能将空间查询记作完整 NPC 可见性迁移。
 
@@ -48,7 +48,7 @@ Map11 原生资源通过显式本地清单加载；输入版本、对象身份�
 
 不同阶数的历战精华匣／箱子按原Item.RawIcon共用图片，运行时对缺少独立ID绑定的9200／9217等解析到完整同名路径。白箱`ItemIcon/Other/itembox_white_5`与蓝箱`ItemIcon/Other/itembox_blue_5`复用已转换的`assets/official/sprites/itembox_white_5-9cc50ec3de.png`、`itembox_blue_5-fd88304460.png`；没有新增或重新绘制图像，没有修改图标目录或图片字节。
 
-Map11 的家园资源图标按原 Sprite 对象绑定，来源与显式加载路径见[原城市素材来源](../../assets/reference/official-city/source-manifest.json)。
+Map11 的家园资源图标按原 Sprite 对象绑定，来源与显式加载路径见[来源总表](../../assets/reference/SOURCES.md)。
 
 存档选择界面：`scripts/prepare_official_save_selection.py` 复用启动页提取工具，从固定854官方 APK 恢复 `PlanesListPanel`、列表内嵌 `PlanesRoleItem` 与原启动模糊遮罩，共131个对象、37张 Sprite、16个原动画片段；保留原层级、锚点、TMP字体／描边、Sprite几何、RawImage UV、页签 Animator 与窗口显示曲线。角色头像复用原外观网格、摄影参数及待机姿势；本地槽位替代在线位面提供者。APK、bundle／CAB／对象、官方代码及载荷哈希见 [source-manifest.json](../../assets/reference/save-selection/source-manifest.json)，Unity原生转换、资源目录和显式绑定哈希见 [native-source-manifest.json](../../assets/reference/save-selection/native-source-manifest.json)。实际验证范围见[设置、拍照与本地存档](../features/settings-and-save.md)。
 
@@ -66,7 +66,7 @@ Map11 地区小地图使用原 Grid、77 个地区插槽和 Tilemap，通过共�
 
 地图公共能力由 `OfficialMainlineMapRuntime` 组装 HUD、区域／雾、四类雕像、导航、体力、探寻、小地图七个独立状态模块；本图资源、剧情和进度按地图 ID 注入。模块边界、共享规则与未接入项见[主线地图公共模块](../features/mainline-map-modules.md)。按地图 ID 装载本图资源，沿用本图存档与回执。
 
-UI素材目录的385张Sprite已核对PNG的SHA256、稳定GUID、原尺寸、PPU、枢轴和边框，其中18份仅含GUID的 `.meta` 已补全。`OfficialMap11UiTools.RestoreSpriteMetadata` 复用原Sprite转换步骤，可独立修复导入设置；明确使用Texture2D、Single Sprite、无mipmap／NPOT缩放、Clamp、Bilinear和无压缩Alpha，避免不完整元数据将图片识别为Cube纹理。输入清单、转换工具及18份元数据的前后哈希见 `assets/reference/official-map/map11-sprite-metadata-source-manifest.json`；该项验证范围为元数据与Editor导入。
+Map11 UI 图片以原 Sprite 元数据导入；`OfficialMap11UiTools.RestoreSpriteMetadata` 可恢复 Texture2D、Single Sprite、无 mipmap／NPOT 缩放、Clamp、Bilinear 与无压缩 Alpha 设置。来源凭据见[来源总表](../../assets/reference/SOURCES.md)。
 
 本图 UI 已从固定版本官方 prefab、程序集和资源绑定恢复为 37 份原生 panel、325 张 Sprite。`WorldCanvas` 保持官方根 Canvas、CanvasScaler、SafeArea、原始坐标和层级，修复 HUD 缩放与布局；头像使用官方角色模型、相机参数和排除皮肤列表生成，生命、等级、战力、货币／体力和固定任务内容接到本地状态。人物对话恢复原底板、左右立绘、说话人位置、明暗切换、选项、逐字显示及动画半程事件；首次点击补全当前句，之后才推进。右侧立绘的原 `RectMask2D` 为禁用状态，现按序列化状态还原，避免人物被错误裁掉。对话与选项期间按原流程隐藏地图 HUD。功能入口使用官方 `FunctionEntryDialog`，迁移 `GridLayoutGroupJSZX` 的间距、排列和自定义行数算法，恢复原按钮排列；没有本地服务器时钟区域或提示记录时使用官方关闭状态。功能入口和快捷消息恢复原 Animator 默认片段的初始状态，修复未收起的内嵌面板残留。首购 HUD 改为原 `FirstPayBtn` prefab，由原纵向布局定位，不再借用累计星值图标或手写坐标；仍沿用现有首购可见性业务查询。
 

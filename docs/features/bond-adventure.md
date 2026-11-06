@@ -26,7 +26,7 @@
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-`scripts/prepare_npc_adventure_models.py` 根据固定版 `npc`、`npc_level_detail` 与 `FightEntityId` 确定 95 名可配置羁绊助战候选；固定版 AssetTable 中有 91 名候选的 `FigureModelUI` 与 `FigureModelWithWeaponUI` 原 prefab 路由，并据此转换皮肤合成、SkeletonGraphic、Idle／Run 动画及引用贴图。输入对象、原客户端源码、转换器与输出哈希见 [npc-adventure-models/source-manifest.json](../../assets/reference/npc-adventure-models/source-manifest.json)。运行时按原 `NpcAdventureModelItem` 规则优先选择 WithWeaponUI，缺失时回退 UI 模型，并读取该 NPC 的原 IdleAnimName／RunAnimName。
+`scripts/prepare_npc_adventure_models.py` 根据固定版 `npc`、`npc_level_detail` 与 `FightEntityId` 确定 95 名可配置羁绊助战候选；固定版 AssetTable 中有 91 名候选的 `FigureModelUI` 与 `FigureModelWithWeaponUI` 原 prefab 路由，并据此转换皮肤合成、SkeletonGraphic、Idle／Run 动画及引用贴图。输入对象、原客户端源码、转换器与输出哈希见 [来源总表](../../assets/reference/SOURCES.md)。运行时按原 `NpcAdventureModelItem` 规则优先选择 WithWeaponUI，缺失时回退 UI 模型，并读取该 NPC 的原 IdleAnimName／RunAnimName。
 
 固定版 AssetTable 的 UI prefab 路由仅覆盖其中 91 名；11015–11018 的 FigureModelUI 与 FigureModelWithWeaponUI 均无路径记录。已取得的固定版 NPC 骨骼包不含这些 prefab；新版 `864_156496` manifest（`.tools/source-packages/cloud-research/current-manifest.v3.bytes`，SHA256 `30d8debb4b9541668321f57c5e116e916d38a8bcb7a78f3b2f3161a902acfbb7`）也无四名 NPC 的对应 UI prefab 路径。因此来源清单分别记录全部候选、91 名可转换候选及四组缺失路径，不重建替代 prefab。
 

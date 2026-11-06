@@ -30,11 +30,11 @@
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-`prepare_official_seasons.py` 按固定 `871_156598` 原 Luban 构造器转换 14 张赛季依赖表、642 行，并记录服务器阶位／赛季日数条件、原 UTC 日界与发布类型的代码指纹，见 [seasons/source-manifest.json](../../assets/reference/seasons/source-manifest.json)。独立服务器阶位不按人物进度补造历史；手动切季仍待完整资格及结算实现。
+`prepare_official_seasons.py` 按固定 `871_156598` 原 Luban 构造器转换 14 张赛季依赖表、642 行，并记录服务器阶位／赛季日数条件、原 UTC 日界与发布类型的代码指纹，见 [来源总表](../../assets/reference/SOURCES.md)。独立服务器阶位不按人物进度补造历史；手动切季仍待完整资格及结算实现。
 
 `prepare_fidelity_equipment.py` 新增原继承选材详情、两种词条模板及原词条说明语言，当前共 21 个 prefab／引用模板、287 份完整组件字段和 10 份 TMP 文字记录、9 张表、101 个属性类；重复引用路径合并后为 220 组不同的路径／脚本绑定。按原 `RawIcon` 解析固定版装备图标，1223 个装备定义均有映射，来源清单包括 530 个装备图标对象，共 654 项图像／资源记录。输出仍为原 Sprite 的裁切／转换；没有自绘或混入新版。
 
-依据：[equipment-fidelity/source-manifest.json](../../assets/reference/equipment-fidelity/source-manifest.json)。
+依据：[来源总表](../../assets/reference/SOURCES.md)。
 
 继承使用原帮助函数的条件式宝石复制，目标已有宝石时保留目标；本地对未转移的来源宝石做等量返还，对销毁的已穿戴来源清除引用。这两项没有服务端实现证据，按离线适配登记，不声称已还原原 `AwardData`。NPC 对话入口、成功奖励演出及完整动态附件仍未完成；
 
@@ -45,7 +45,7 @@
 
 
 
-装备柜使用原始装备详情、属性分组、套装和技能说明 prefab；代码、文本及布局来源见 [equipment-fidelity/source-manifest.json](../../assets/reference/equipment-fidelity/source-manifest.json)。
+装备柜使用原始装备详情、属性分组、套装和技能说明 prefab；代码、文本及布局来源见 [来源总表](../../assets/reference/SOURCES.md)。
 
 评分及快照来源为 EquipCabinetPanel／EquipCabinetGridItem／EquipCabinetDetailPanel、PlayerEquipCabinetDataExt、EquipCabinetEvaluateInfoParser；属性行和规则来源为 PropGroupContent／EquipCabinetPropGroup／EquipCabinetPropRuleItem。品质文字按原 GridItem 对 TextColor 的隐式 Color 转换读取普通色，未擅自启用 GradientColor。全屏显示读取原 AstrologicalDestinyPanel 的 PopupWindow.mFullScreen，并参照 AutoHideBuiltInUIViaWindowManagerCounter，避免本地主城货币栏覆盖原总分。动态祝福／套装文字直接取原语言分包，属性枚举来自原 PropType.cs，GreenRainbow 四角颜色来自原 TMP 预设并保留对象及 SHA256。没有新增自绘、替代布局或新版来源；原位图、素材 ZIP 和锁文件的内容保持不变。
 

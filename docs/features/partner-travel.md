@@ -61,4 +61,4 @@ Unity 离线旅行 UI 载荷由 `scripts/prepare_unity_npc_travel_ui.py` 从固�
 
 ## 代码与资源入口
 
-官方客户端依据：`.tools/source-packages/official-code/client-source/NpcAdventureEntry.cs`、`NpcAdventurePanelMainContent.cs`、`NpcAdventureTravelDialog.cs`、`NpcAdventureTravelConditionItem.cs`、`NpcAdventureTravelStartStatusDialog.cs`、`NpcAdventureTravelEndStatusDialog.cs`；共享公式依据：`.tools/source-packages/official-code/common-source/Common/NpcAdventureUtils.cs`、`NpcAdventureTravelInfoParser.cs`、`NpcAdventureSettings.cs`。旅行素材来源、模型对象和转换状态见[旅行原始来源与模型转换回执](../../assets/reference/npc-travel-ui/source-manifest.json)。
+官方客户端依据：`.tools/source-packages/official-code/client-source/NpcAdventureEntry.cs`、`NpcAdventurePanelMainContent.cs`、`NpcAdventureTravelDialog.cs`、`NpcAdventureTravelConditionItem.cs`、`NpcAdventureTravelStartStatusDialog.cs`、`NpcAdventureTravelEndStatusDialog.cs`；共享公式依据：`.tools/source-packages/official-code/common-source/Common/NpcAdventureUtils.cs`、`NpcAdventureTravelInfoParser.cs`、`NpcAdventureSettings.cs`。旅行素材来源、模型对象和转换状态见[来源总表](../../assets/reference/SOURCES.md)。

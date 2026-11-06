@@ -18,7 +18,7 @@
 
 `scripts/prepare_fruit_tree_assets.py` 已实际执行，固定 `871_156598` 的原 `FruitTree.prefab`、两个子家具、`HomeNotice`、果实效果模板和四个原维修/图标 prefab 均按原 bundle/CAB 解析。独立运行数据 `fruit-tree.json` 包含原状态切换路径和可见标志、碰撞范围、6 层 Sprite、三段 `loop_1/2/3` 的 12 fps 原生网格及循环时长、23 个场景粒子发射器、十个果实槽位和原果实效果发射器；维修效果时序为原 0.6 / 1.5 秒。原成功通知的 `mPropItemPrefab` 另精确提取为 `FurnitureProductionProp`，原语言、对象、输入和输出 SHA 保存在 `fruit-tree/source-manifest.json`。
 
-果树界面使用 50 张官方 PNG 引用；图片身份、中央载荷复用关系及转换输出见 [fruit-tree 来源清单](../../assets/reference/fruit-tree/source-manifest.json)。
+果树界面使用 50 张官方 PNG 引用；图片身份、中央载荷复用关系及转换输出见 [来源总表](../../assets/reference/SOURCES.md)。
 
 原 RPC 23624 的最终奖算法仍未找到，实际 `fruit_harvest` 原子失败并保留果实、计时和存档；未补造收获礼包。下一素材包仅按实际文件差集纳入该转换结果，功能完成情况单独验收。
 
@@ -56,7 +56,7 @@
 
 ### 配置与代码
 
-规则数据见 [rules.json](../../assets/official/rules.json) 的 `furniture`、`conditions`、`item`、`hang_up`、`hang_up_reward`、`reward_rule`，以及[果树载荷](../../assets/official/fruit-tree.json)和[来源清单](../../assets/reference/fruit-tree/source-manifest.json)。主要实现为 [OfflineFruitTreeService.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineFruitTreeService.cs)、[OfflineFruitTreeProgress.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineFruitTreeProgress.cs)、[HomeFeatureRuntime.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs)、[HomeSceneView.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeSceneView.cs) 与 `HomeHudView.FruitTree.cs`。
+规则数据见 [rules.json](../../assets/official/rules.json) 的 `furniture`、`conditions`、`item`、`hang_up`、`hang_up_reward`、`reward_rule`，以及[果树载荷](../../assets/official/fruit-tree.json)和[来源总表](../../assets/reference/SOURCES.md)。主要实现为 [OfflineFruitTreeService.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineFruitTreeService.cs)、[OfflineFruitTreeProgress.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineFruitTreeProgress.cs)、[HomeFeatureRuntime.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs)、[HomeSceneView.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeSceneView.cs) 与 `HomeHudView.FruitTree.cs`。
 
 官方依据包括 `HomeFruitTree`、`HomeFruitTreeSubFurniture`、`HomeFruitTreeProduceFruit`、`HomeFruitTreePet`、`FurnitureBase`、`HomeMyPlayerData`、`ItemEffectAutoIncrease`、`AutoIncreaseItemUtils` 和 `AutoIncreaseItemOutputAdditionUtils`。RPC23624只取得客户端请求与回调，未取得服务端结算方法体。
 

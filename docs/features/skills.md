@@ -30,7 +30,7 @@
 
 复核固定版本 `871_156598` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。
 
-`python scripts/prepare_skill_ui.py` 使用既有 APK 读取器、同版本 CDN 缓存和已校验中文文本分包，转换上述五个原始 prefab、禁用图像状态、遮罩、高亮框、中文文字及脚本引用目标；运行时资源继续纳入 `ui.json` 和显式本地加载清单。`skill_recommend.g` 经原始 `TbSkillRecommendInfo` 构造器完整读取，名称和说明取自原始中文表，输出为 `assets/official/skills.json`。bundle / 对象、APK / CDN 来源、原始配置与输出 SHA256、中文分包凭据及行为来源代码哈希见 [skill-ui/source-manifest.json](../../assets/reference/skill-ui/source-manifest.json)。没有新增自绘图片。
+`python scripts/prepare_skill_ui.py` 使用既有 APK 读取器、同版本 CDN 缓存和已校验中文文本分包，转换上述五个原始 prefab、禁用图像状态、遮罩、高亮框、中文文字及脚本引用目标；运行时资源继续纳入 `ui.json` 和显式本地加载清单。`skill_recommend.g` 经原始 `TbSkillRecommendInfo` 构造器完整读取，名称和说明取自原始中文表，输出为 `assets/official/skills.json`。bundle / 对象、APK / CDN 来源、原始配置与输出 SHA256、中文分包凭据及行为来源代码哈希见 [来源总表](../../assets/reference/SOURCES.md)。没有新增自绘图片。
 
 技能页恢复四个战技与四个秘法槽位的原始空槽素材，详情使用技能专用 prefab 和同一套官方遮罩图标；点击安装 / 替换后使用原版暗色遮罩与同类型四槽高亮，选择目标槽位后才提交本地事务，取消不改档。推荐页使用原始方案与说明，仅安装已拥有且职业适用的技能，未获得部分保持空位。新增槽位位置与方案名称兼容旧紧凑数组，并随本地存档保存；原技能等级、升阶费用和战斗公式仍属已有单机适配。
 
@@ -52,7 +52,7 @@
 
 官方 `MyPlayableFadeEffectSequence` 已迁入 StoryFollowBone，按序列化数组的 StartTime 累计帧时间并调用对应 `MyEffectFadeOut.FadeOut(Duration)`；重复触发会先取消前一序列，销毁时停止协程。Unity Coroutine 承接原逐帧 UniTask 时序，运行验收尚未执行；来源见[效果淡出触发序列来源](../../assets/reference/battle-animation/skill-trigger-fade-sequence-source-manifest.json)。
 
-官方 `MyPlayableCameraShake` 已迁入战斗技能 Playable 程序集，保留可序列化的 `CinemachineImpulseSource`、默认偏移 `(0,0,-250)`、按施法者世界坐标定位和即时 `GenerateImpulse`，并返回原配置持续时间；本轮尚未运行。`ProjectTools.Validate` 仍有现有资源校验日志。尚未接到各战斗模式，生产视觉 Play Mode 尚未完成。来源见[相机震动代码凭据](../../assets/reference/battle-animation/skill-camera-shake-runtime-source-manifest.json)。
+官方 `MyPlayableCameraShake` 已迁入战斗技能 Playable 程序集，保留可序列化的 `CinemachineImpulseSource`、默认偏移 `(0,0,-250)`、按施法者世界坐标定位和即时 `GenerateImpulse`，并返回原配置持续时间。尚未接到各战斗模式，生产视觉验证未完成；来源见[相机震动代码凭据](../../assets/reference/battle-animation/skill-camera-shake-runtime-source-manifest.json)。
 
 官方 `ApplyOverrideToMaster` 已迁入：按 `UseSourceDataToOverride` 从原施法者或目标查找角色母体，再按 `OverrideSource` 替换 Playable 的 source 或 target；scope 通过显式 `IBattleMasterEntityResolver` 提供母体查询。尚未取得这两条断言的运行结果。生产实体容器尚无 `MasterId → GameObject` resolver 绑定，完整技能图与生产调度仍未接通；官方来源与范围见[母体覆盖来源凭据](../../assets/reference/battle-animation/skill-master-override-runtime-source-manifest.json)。
 

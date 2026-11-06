@@ -126,15 +126,15 @@ ChestGachaPanel 与结果／概率／历史窗口消费原古遗物扭蛋池、�
 
 当前官方扭蛋面板使用 `ChestGachaPanel` 原始层级、宝箱／元素／兑换／馈赠页签、四种宝箱卡片、进度条、元素选择弹层和空商店；资源与绑定见本功能来源清单。
 
-提取 134 项 Sprite / Texture2D 来源记录，包括图集裁切及原始扭蛋机 / 胶囊 Spine 图集解码；脚本合并来源清单和显式加载清单，原始 bundle / 对象、实际 URL、输入校验与输出 SHA256 见 [relic-draw/source-manifest.json](../../assets/reference/relic-draw/source-manifest.json)。按 `TreasureGachaSetting` 的品质分布、元素皮肤和 `shock_01..10` 末帧组合九种奖池、十个胶囊的静止姿势，不调用抽奖 RNG。原版入场动画独立播放，开蛋粒子及完整演出仍未转换，结果使用既有原始通用结果页。
+提取 134 项 Sprite / Texture2D 来源记录，包括图集裁切及原始扭蛋机 / 胶囊 Spine 图集解码；脚本合并来源清单和显式加载清单，原始 bundle / 对象、实际 URL、输入校验与输出 SHA256 见 [来源总表](../../assets/reference/SOURCES.md)。按 `TreasureGachaSetting` 的品质分布、元素皮肤和 `shock_01..10` 末帧组合九种奖池、十个胶囊的静止姿势，不调用抽奖 RNG。原版入场动画独立播放，开蛋粒子及完整演出仍未转换，结果使用既有原始通用结果页。
 
 积分 / 规则 / 历史 / 结果弹窗以当前原始扭蛋页为底层，底层不接收指针。馈赠复用原始 `ChestGachaAchievementPanel` 成就条目并绑定滚轮 / 拖动。修正 Unity 无 Graphic 的零高 Mask 容器适配，避免元素图标被误裁空。
 
-`prepare_treasure_gacha.py` 按固定版16个原 prefab 读取 `Image` 组件并核对层级路径，登记245个原 Sprite 引用，解码60张原 UI Sprite；运行时恢复图片类型、色调、PPU、pivot、九切片边框及射线标记。`ImgCostMoneyBtn_Bg` 保留原边框 `[20,19,20,20]`。输入对象、输出 SHA256 与绑定数据见 [treasure-gacha/source-manifest.json](../../assets/reference/treasure-gacha/source-manifest.json)。
+`prepare_treasure_gacha.py` 按固定版16个原 prefab 读取 `Image` 组件并核对层级路径，登记245个原 Sprite 引用，解码60张原 UI Sprite；运行时恢复图片类型、色调、PPU、pivot、九切片边框及射线标记。`ImgCostMoneyBtn_Bg` 保留原边框 `[20,19,20,20]`。输入对象、输出 SHA256 与绑定数据见 [来源总表](../../assets/reference/SOURCES.md)。
 
-`python scripts/prepare_relic_navigation.py` 离线读取固定 APK 与已校验的同版本 CDN 缓存，转换 `ChestMapSwitchPanel`、`ChestMapSwitchItem` 和 `ChestGachaConfig` 的 17 组地图入口图片。40 项 Sprite 依赖继续输出至 `assets/official/sprites/`，两项 prefab 合并至 `assets/official/ui.json`，地图入口配置写入 `assets/official/relic_navigation.json`，均纳入显式本地加载清单。输入 bundle 的真实来源、大小、MD5、SHA256、CDN URL（如适用）、对象名、对象 path ID、转换方式与输出 SHA256 见 [relic-navigation/source-manifest.json](../../assets/reference/relic-navigation/source-manifest.json)。没有使用新版替代包或新增自绘图像。
+`python scripts/prepare_relic_navigation.py` 离线读取固定 APK 与已校验的同版本 CDN 缓存，转换 `ChestMapSwitchPanel`、`ChestMapSwitchItem` 和 `ChestGachaConfig` 的 17 组地图入口图片。40 项 Sprite 依赖继续输出至 `assets/official/sprites/`，两项 prefab 合并至 `assets/official/ui.json`，地图入口配置写入 `assets/official/relic_navigation.json`，均纳入显式本地加载清单。输入 bundle 的真实来源、大小、MD5、SHA256、CDN URL（如适用）、对象名、对象 path ID、转换方式与输出 SHA256 见 [来源总表](../../assets/reference/SOURCES.md)。没有使用新版替代包或新增自绘图像。
 
-右上角地图选择接入原版面板与地图图标，确认时持久化所选系列，切换标题、收集进度、背景、图鉴入口及实际宝箱奖池；四类宝箱采用原 `ItemFilterForTreasureGacha` 的系列过滤，元素池保留原元素范围。书本入口复用已转换的 `CollectBook` 古遗物图鉴，概率列表复用 [codex/source-manifest.json](../../assets/reference/codex/source-manifest.json) 登记的原始遗物图标。原扭蛋机、胶囊、收藏框与历史资源来源保留。
+右上角地图选择接入原版面板与地图图标，确认时持久化所选系列，切换标题、收集进度、背景、图鉴入口及实际宝箱奖池；四类宝箱采用原 `ItemFilterForTreasureGacha` 的系列过滤，元素池保留原元素范围。书本入口复用已转换的 `CollectBook` 古遗物图鉴，概率列表复用 [来源总表](../../assets/reference/SOURCES.md) 登记的原始遗物图标。原扭蛋机、胶囊、收藏框与历史资源来源保留。
 
 概率页沿用原 `GachaDetailDialog`、品质分组与滚动区域，按说明文字高度布局，显示原表基础概率、当前材料和保底进度；这一修正不表示 Unity 完整开蛋演出或服务端动态概率公式已迁移。
 
@@ -142,7 +142,7 @@ ChestGachaPanel 与结果／概率／历史窗口消费原古遗物扭蛋池、�
 
 提示控件复用已转换的 `ConfirmDialog.prefab`：原版本 CDN bundle `e9fb11a95f5ca61a90de42fc3fd90258`，对象 `5569979765835515756`，实际 URL `https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e9fb11a95f5ca61a90de42fc3fd90258.bundle`，输入 bundle SHA256 `872b72513cc17d918891383990fb4dbe92c0bb5add97a4561840197b468578d3`。控件来自 `ui.json` 中现有的 `common_confirm` 绑定，遮罩颜色沿用原公共 PopupWindow 配置；不产生新的图像、素材目录输出或显式资源清单条目。官方 `FurnitureBase`、`HomeMyPlayerData`、`ChestGachaPanelNavigateHandler`、`ConditionNotice` 与 `LanguageUtils.GetConditionTextWrap` 为条件与文字调用依据。
 
-原版 `871_156598` 的 `ChestGachaPanel`、`ChestGachaResultPanel`、`GachaponAwardGo`、各数量布局与 `ChestGachaTenRewardGo` 经 [古遗物演出转换来源](../../assets/reference/relic-performance/source-manifest.json) 转换。Animator、SimpleAnimation、UIParticle、材质与 Wwise 音频均记录原对象及输出哈希。运行资源在 `assets/official/relic-performance/`，来源见 [relic-performance/source-manifest.json](../../assets/reference/relic-performance/source-manifest.json)。未使用新版同名包或自绘素材。
+原版 `871_156598` 的 `ChestGachaPanel`、`ChestGachaResultPanel`、`GachaponAwardGo`、各数量布局与 `ChestGachaTenRewardGo` 经 [来源总表](../../assets/reference/SOURCES.md) 转换。Animator、SimpleAnimation、UIParticle、材质与 Wwise 音频均记录原对象及输出哈希。运行资源在 `assets/official/relic-performance/`，来源见 [来源总表](../../assets/reference/SOURCES.md)。未使用新版同名包或自绘素材。
 
 ## 完整还原部分
 
@@ -184,7 +184,7 @@ ChestGachaPanel 与结果／概率／历史窗口消费原古遗物扭蛋池、�
 | 次数与限制 | 单抽、按库存计算的2～10抽、百抽、10000日限、每日百抽确认、301晨星补差快捷购买和费用刷新已接入。 | 验证999／1000卡边界、材料不足、百抽提示记忆和本地午夜回拨。 |
 | 积分与馈赠 | 积分组12、宝箱馈赠组11、元素馈赠组13及循环模板、分页显示、领奖校验与防重复事务已接入。 | 真实操作复验循环段滚动、领奖反馈和关闭重开。 |
 | 详情与概率 | 原类别规则文字、基础／综合概率、条件过滤后的分组概率、物品详情及每日上限说明已接入。 | 真实操作复验长列表滚动、地区字段开关和遮挡。 |
-| 历史记录 | 四宝箱独立历史、五元素合并历史、分页／本地时间／品质色已接入；每条记录同时按180日和每类1000条裁剪，按时间删除最旧记录。Editor 用例覆盖四箱分类、合并元素分类、到期清理和最旧删除。 | 真实滚动、翻页及关闭重开恢复仍需鼠标验收。 |
+| 历史记录 | 四宝箱独立历史、五元素合并历史、分页／本地时间／品质色已接入；每条记录同时按180日和每类1000条裁剪，按时间删除最旧记录。 | 真实滚动、翻页及关闭重开恢复仍需鼠标验收。 |
 | 页面与辅助入口 | 家具类型9打开主面板；四底栏、图鉴、女神牌301补差购买、空商店、红点、结果页继续抽取／关闭已接入。库存详情使用原 `ItemSourceItem` 来源行；`InventoryFeatureRuntime` 按官方整件／碎片与元素来源规则提供行，跳转后关闭可重读存档并恢复物品详情。仅接入扭蛋来源行，不扩展主城储物箱入口或储物箱功能；尚未随扭蛋 Play Mode 流程验证。 | 来源行点击及关闭返回需真实鼠标验收。 |
 | 演出与音频 | 官方机台双网格和十胶囊品质／元素动画使用显式加载的官方图集与动画帧；结果数量排版和奖励兜底已接入。 | 真实点击后的结果开蛋阶段、动画跳过、音频和长结果演出仍待实机验收。 |
 
@@ -226,9 +226,9 @@ ChestGachaPanel 与结果／概率／历史窗口消费原古遗物扭蛋池、�
 
 | 待确认／待验证项 | 证据与当前状态 |
 | --- | --- |
-| 已确认的离线补充 | 到期保底按连续抽次提前兑现，命中后品质未命中数归零；阶位天数按本地解锁时间；日界为 Windows 本地午夜且回拨不重复重置；历史双重裁剪和重复整件兑换采用本页所述规则。代码及 Editor 用例已覆盖规则服务和抽取事务。 |
+| 已确认的离线补充 | 到期保底按连续抽次提前兑现，命中后品质未命中数归零；阶位天数按本地解锁时间；日界为 Windows 本地午夜且回拨不重复重置；历史双重裁剪和重复整件兑换采用本页所述规则。 |
 | 物品来源实际调用方 | `OfficialInventoryPanelView` 从已核验的 `gacha-item-sources/catalog.json` 生成原始来源行；`InventoryFeatureRuntime` 通过 `OfflineTreasureGachaService.ResolveItemSource` 与 `ResolveElementItemSource` 按官方奖池筛选来源，并调用家园现有宝箱／元素路由。扭蛋关闭时库存重读当前玩家存档、刷新列表并恢复来源物品详情。仅接入扭蛋来源行，不扩展主城储物箱入口或储物箱功能；来源行真实点击与返回仍待桌面 Play Mode 验收。 |
-| 机台及输入全流程 | 官方十个胶囊按原创建顺序播放，主界面、卡图、切图与九切片已在 Play Mode 画面核验；需在可交互桌面上验证标签／抽取／弹窗、系列和元素切换、滚动、跳过、动画与音频及独立存档恢复。当前 Windows 会话锁定，真实鼠标操作未验证。 |
+| 机台及输入全流程 | 官方十个胶囊按原创建顺序播放；完整界面、抽取、弹窗、系列和元素切换、滚动、跳过、音频及独立存档流程仍待 Play Mode 验证。 |
 
 ### 材料购买、资源恢复与运行验收
 
@@ -244,4 +244,4 @@ ChestGachaPanel 与结果／概率／历史窗口消费原古遗物扭蛋池、�
 
 当前 Unity 实现：[HomeFeatureRuntime.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs)、[HomeFeatureRuntime.TreasureGachaSource.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.TreasureGachaSource.cs)、[HomeHudView.TreasureGacha.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.TreasureGacha.cs)、[OfficialInventoryPanelView.cs](../../unity/Assets/Game/Runtime/Presentation/Inventory/OfficialInventoryPanelView.cs)、[InventoryFeatureRuntime.cs](../../unity/Assets/Game/Runtime/Presentation/Inventory/InventoryFeatureRuntime.cs)、[OfficialInventoryAssetCatalog.cs](../../unity/Assets/Game/Runtime/Presentation/Inventory/OfficialInventoryAssetCatalog.cs)、[HomeAssetCatalog.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeAssetCatalog.cs)、[TreasureGachaPerformancePlayer.cs](../../unity/Assets/Game/Runtime/Presentation/Home/TreasureGachaPerformancePlayer.cs)、[OfficialTreasureGachaCatalog.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialTreasureGachaCatalog.cs)、[OfflineTreasureGachaService.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureGachaService.cs)、[OfflineTreasureGachaProgress.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureGachaProgress.cs)、[OfficialTreasureGachaCatalogAcceptance.cs](../../unity/Assets/Game/Editor/TreasureGacha/OfficialTreasureGachaCatalogAcceptance.cs)、[OfficialInventoryAssetTools.cs](../../unity/Assets/Game/Editor/Inventory/OfficialInventoryAssetTools.cs)。素材导入入口为 [prepare_unity_inventory_assets.py](../../scripts/prepare_unity_inventory_assets.py)，扭蛋素材入口为 [prepare_treasure_gacha.py](../../scripts/prepare_treasure_gacha.py)。
 
-来源及转换依据：[扭蛋页面与机台](../../assets/reference/relic-draw/source-manifest.json)、[系列选择](../../assets/reference/relic-navigation/source-manifest.json)、[物品来源行](../../assets/reference/gacha-item-sources/source-manifest.json)、[演出与音效](../../assets/reference/relic-performance/source-manifest.json)、[百抽字段](../../assets/reference/hundred-draws/source-audit.json)、[快捷购买](../../assets/reference/gacha-purchase/source-manifest.json)。现存导航转换工具为 [prepare_relic_navigation.py](../../scripts/prepare_relic_navigation.py)，原始包与 CAB 核验使用 [prepare_unity_bundle_inputs.py](../../scripts/prepare_unity_bundle_inputs.py)；这些工具不证明玩法已恢复。
+来源及转换依据：[来源总表](../../assets/reference/SOURCES.md)。现存导航转换工具为 [prepare_relic_navigation.py](../../scripts/prepare_relic_navigation.py)，原始包与 CAB 核验使用 [prepare_unity_bundle_inputs.py](../../scripts/prepare_unity_bundle_inputs.py)；这些工具不证明玩法已恢复。

@@ -16,19 +16,7 @@
 
 ### 官方代码与资源依据
 
-以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
-
-来源链：MopUpPerformer.mApeendSkins → AppearanceAddressUtils.GetPlayerPartToolPrefabPath → 原 Assets/Prefabs/Appearance/PlayerPart/workTool/M_gaoZi_R_01.prefab；AppearanceEffectPart／SkeletonGraphicFollower 指向 pWeapon_R2，按 W_jian_R/W_jian_R 的 Map_GaoZi 附件决定显隐。保留原 -90° 子变换、局部缩放和层序。原 workTools.skel／atlas 位于 character_worktools.bundle，真实 M_gaoZi.png 由 character_worktools_default.bundle 提取；没有将工具名当作角色皮肤或自行绘制工具。
-
-prepare_gathering_actions.py 从三类材料原 SkeletonAnimReferenceAsset 取得 21 个角色动作，沿男女原 SkeletonData 的拆分动画引用取回，复用官方职业武器的跟随网格转换器按 24 fps 转换。assets/official/gathering/ 保存男女动作及工具贴图；assets/reference/dungeon-ui/gathering-actions-source-manifest.json 登记原 CDN URL、bundle／对象、脚本与输入／输出 SHA256。原皮肤、外观部件、UV、颜色、网格和附件显示条件保持。运行时先接入各材料真实待机与工具；攻击／开箱动作的队列和转场接线另行完成，不把已转换动作等同于全部表现接通。
-
-`prepare_gathering_motion.py` 从固定871_156598的 `prefabs_ui_mopup` 读取五个MopUpPanel动画的原事件，跟随49个实际使用的 `MopUpSkeletonGraphicMaterial.mSkeleton` 转换原待机、受击及消失动画。角色动作沿既有 `gathering-actions-source-manifest.json`，材质、工具及PlayerPos沿原绑定迁移；新增本地网格位于 `assets/official/gathering/targets/`。输入包、对象、原代码及输出哈希见 [gathering-motion-source-manifest.json](../../assets/reference/dungeon-ui/gathering-motion-source-manifest.json)，未使用自绘或近似动作。
-
-`prepare_gathering_feedback.py` 接入同包的 `MopUpFloatingIconItem`、`MopUpFloatingIconItemCrit`、`MopUpFloatingIconItemQuick` 三套原奖励飘字预制体及原完成事件。普通／暴击数字复用已转换的 DamageNumber、CritDamageNumber 原位图字形和图集，另四张装饰贴图逐字节核验后复用现有资源；没有新增或自绘图片。原版本、URL、prefab、组件、曲线、字体对象、图集输出和原C#代码哈希在 的 `data.source` 中随生成绑定保存；对应位图字体的原提取来源继续见 `battle-hud/source-manifest.json`。
-
-同一配置还包含官方 `stage_map_location` 中可用的秘境解锁关卡位置。但离线档案尚无逐关记录；53个解锁关卡中仅23个有非空区域映射，另30个为无表行或空 `RegionInfos`。Home 当前区域满进度判断是临时代理，需依功能页待确认项处理。
-
-`scripts/prepare_material_gathering_ui_assets.py` 从当前版本 `871_156598` 的 `defaultpackage_assets_image_ui_notes_mopup.bundle` 提取68个原始 UI Sprite，输入来自 APK ZIP 中与 `871_156598` 一致的官方同名包，bundle SHA256 为 `12080a2c5a32c5e2741b792a6cd20c1b469a765a1c4afd83175f349bfa6cf7ae`。Unity 图像载荷在 `unity/Assets/Official/Gathering/UI/`，对象路径、逐图 SHA256 和来源 URL 记于 `assets/reference/dungeon-ui/gathering-ui-source-manifest.json`。
+官方客户端、配置、MopUp prefab、骨骼动作与资源来源凭据集中见[来源总表](../../assets/reference/SOURCES.md)。当前接入和缺项见下文。
 
 ## 完整还原部分
 
@@ -37,15 +25,14 @@ prepare_gathering_actions.py 从三类材料原 SkeletonAnimReferenceAsset 取�
 - `OfflineMaterialGatheringProgress` 已进入角色主存档的规范化和校验；`OfflineMaterialGatheringService.Gather` 将工具、耐久、随机状态、目标进度和背包奖励放在同一 `ApplyInventoryTransaction` 中。普通操作一次一击，快速操作最多64击，工具不足时只提交可完成的攻击，目标击破后停止当前目标；免费宝箱不扣工具并作为采集记录。
 - `NewbieRewardMaterials` 初始队列结束后，目标按各秘境 `GenerateMaterialRuleId` 指向的官方 `reward_rule.IdList/WeightList` 抽取；目录校验候选材料和权重均有效。目标生成规则为13000（铁石：900/901/903，800/150/50）、13001（金矿：910/911/913，900/50/50）、13002（历战：920–927，200/200/200/200/75/75/20/30）、13003（时光沙海：930/931/933，800/150/50）。
 - 主城 `TravelNotesPanel.NormalMaterialEntry` 打开官方 `MopUpEntryPanel`，卡片 `StoneEntryItem/SilverEntryItem/SkillEntryItem/SandEntryItem` 对应类型2/4/1/3；首次采集卡片可进入。`HomeHudView.MaterialGathering` 将 `OnceBtn/QuickBtn/GetBtn` 接到 `HomeFeatureRuntime.GatherMaterial`，缺少工具时禁用耗材按钮，工具和背包经离线事务扣发，写档成功才刷新界面/提示奖励。官方 AnimatorController 的 `GoAhead/GoBack` 转场分别接入攻击与目标击破/宝箱领取。FunctionType 84 按官方 dungeon ID 检查快速开放；快速设置保存到 `OfflineMaterialGatheringProgress.QuickEnabled`。
-- 官方 UI 根 prefab 与非脚本依赖由 `scripts/prepare_material_gathering_assets.py` 从完整的 `871_156598` CAB 闭包迁移。两个根 prefab、19 项依赖及其哈希、三个导出引用映射记录于 `assets/reference/dungeon-ui/material-gathering-prefab-source-manifest.json`。92个导出的 MonoScript GUID 中73个在现有工程/包缓存可解析，19个确实缺脚本（含官方 `MopUpContent`、`MopUpPanel`、`MopUpPerformer`、背景/入口等）；本地界面逻辑由 Home partial 接管，尚未验证缺失脚本组件对实际渲染/状态的影响。
+- 官方 UI 根 prefab 与非脚本依赖已迁入；本地 UI 逻辑接管未迁移的脚本状态。仍有 19 个 MonoScript GUID 未解析，其对实际渲染和状态的影响尚未验证。
 - 快速采集的开放状态由调用方传入；普通/快速事务不包含官方每日免费次数、每日三次或体力机制，符合已确认的离线规则。
 
 ### 已迁移代码与局部资源
 
 以下为局部代码／资源接入，完整流程仍受本页缺项限制。
 
-`scripts/prepare_material_gathering_assets.py` 从当前 `871_156598` 已核验的399包 CAB 闭包导出并迁移官方 `MopUpEntryPanel`、`MopUpPanel` 及19项非脚本依赖；完整闭包的184项外部序列化引用全部解析。Prefab 与 Unity Resources 运行映射、三项 AssetRipper GUID 重定向、92个导出 MonoScript GUID 及当前工程内仍未解析的19个 MonoScript GUID、所有输出 SHA256 记于 `assets/reference/dungeon-ui/material-gathering-prefab-source-manifest.json`。入口与采集按钮由 `HomeHudView.MaterialGathering.cs` 接入本地服务；剩余脚本驱动状态/动作尚未迁移，也未完成 Unity Play Mode 检验。
-
+- 采集面板使用已迁移的官方 UI prefab；`HomeHudView.MaterialGathering.cs` 将入口和采集按钮接入本地服务。脚本驱动状态／动作仍未迁移，Unity Play Mode 验证尚未完成。来源凭据见[来源总表](../../assets/reference/SOURCES.md)。
 ## 自定义实现
 
 - 未取得服务端业务程序集，官方服务器 `OperPlayerMopUp` 结算细节无法复原。按用户确认的离线决策，每条攻击/击破奖励规则按 `WeightList` 抽取一个 `IdList` 项，数量按 `CountList`、阶位倍率和小数随机计算；额外产出同时作用于攻击和击破奖励，向下取整。当前 `871_156598` 采集奖励的 `Percent` 均为1.0。本地事务不得在写盘失败时播放奖励表现。
@@ -67,4 +54,4 @@ prepare_gathering_actions.py 从三类材料原 SkeletonAnimReferenceAsset 取�
 
 [官方秘境表 `MopUpDungeonInfo`](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/MopUpDungeonInfo.cs)、[解锁解析 `MopUpDungeonInfoParser`](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/MopUpDungeonInfoParser.cs)、[逐 stage 计数 `Player.GetStageCount`](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/Player.cs)、[关卡配置 `StageInfo`](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/StageInfo.cs)、[材料表 `MopUpMaterialInfo`](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/MopUpMaterialInfo.cs)、[初始队列 `PlayerMopUpDataWrap`](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/PlayerMopUpDataWrap.cs)、[解锁与快速伤害 `MopUpUtils`](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/MopUpUtils.cs)、[伤害公式 `BattleFormulaHandler`](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/BattleFormulaHandler.cs)、[客户端面板 `MopUpContent`](../../.tools/source-packages/current/871_156598/official-code/client-source/MopUpContent.cs)、[入口卡片 `NormalMaterialDungeonEntryItem`](../../.tools/source-packages/current/871_156598/official-code/client-source/NormalMaterialDungeonEntryItem.cs)。
 
-Unity 接入还包括 [HomeFeatureRuntime.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs)、[HomeHudView.MaterialGathering.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.MaterialGathering.cs) 和官方运行 prefab `Resources/Gathering/{MopUpEntryPanel,MopUpPanel}.prefab`；prefab 来源及转换哈希见 [material-gathering-prefab-source-manifest.json](../../assets/reference/dungeon-ui/material-gathering-prefab-source-manifest.json)。规则载荷为 [material-gathering.json](../../unity/Assets/Game/Resources/Official/Progression/material-gathering.json)，来源及哈希见 [material-gathering-source-manifest.json](../../unity/Assets/Game/Resources/Official/Progression/material-gathering-source-manifest.json)。
+Unity 接入还包括 [HomeFeatureRuntime.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs)、[HomeHudView.MaterialGathering.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.MaterialGathering.cs) 和官方运行 prefab `Resources/Gathering/{MopUpEntryPanel,MopUpPanel}.prefab`；prefab 来源及转换哈希见 [来源总表](../../assets/reference/SOURCES.md)。规则载荷为 [material-gathering.json](../../unity/Assets/Game/Resources/Official/Progression/material-gathering.json)，来源及哈希见 [material-gathering-source-manifest.json](../../unity/Assets/Game/Resources/Official/Progression/material-gathering-source-manifest.json)。

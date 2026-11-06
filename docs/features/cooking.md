@@ -20,13 +20,13 @@
 
 核对原始 `BagualuFurniture.OnClick → BagualuPanel`，锅应打开料理、合成、装备分解、宝石合成及馈赠，原本本地“石块 50 + 罗拉 500”的固定兑换不属于此原始逻辑，已移除。`prepare_kitchen_ui.py` 从固定 APK 及同版本 `871_156598`、具下载哈希凭据的官方缓存转换八个原始 prefab，保留完整背景、底部页签、料理五列网格、材料状态位置、数量控件及配方学习 / 合成目标弹窗。
 
-追加完整消费的 `item_merge`（38 行）、`gem`（360 行）、`gem_merge`（14 行）三张表。料理使用原 `Materials / Count / Condition`，学习原配方物品后记录 `UsedItemCondition`；各页签读取原功能解锁条件，馈赠使用原内嵌成就卡片及分解 / 宝石 / 料理三个分类。466 项图像 / prefab 资源全部有输出哈希与显式加载记录，所需图标缺失 0 项；原对象身份、bundle、处理方式见 [kitchen-ui/source-manifest.json](../../assets/reference/kitchen-ui/source-manifest.json)。没有重绘或生成图片。
+追加完整消费的 `item_merge`（38 行）、`gem`（360 行）、`gem_merge`（14 行）三张表。料理使用原 `Materials / Count / Condition`，学习原配方物品后记录 `UsedItemCondition`；各页签读取原功能解锁条件，馈赠使用原内嵌成就卡片及分解 / 宝石 / 料理三个分类。466 项图像 / prefab 资源全部有输出哈希与显式加载记录，所需图标缺失 0 项；原对象身份、bundle、处理方式见 [来源总表](../../assets/reference/SOURCES.md)。没有重绘或生成图片。
 
 原炉的 RenderTexture / UIMesh 及完整制作特效尚未转换，在同一原始图像槽使用原 `UI/Cooking/ImgStove` 静态图片。本地宝石按同 ID 堆叠、自动选择同类材料；独立宝石实例、混合材料、镶嵌、高阶 NPC 熔炉和赛季赐福进度未接入，一键合成维持原赛季条件锁定。装备分解保留既有本地强化材料返还；原作不同料理的食用效果仍待补齐。上述范围不记作完整战斗 / 赛季逻辑已经实现。
 
 运行数据 `assets/official/cooking-effects.json` 来自固定 APK manifest `871_156598`，转换工具为 `scripts/prepare_cooking_effects.py`。从原 `CookingUseDetailDialog.mEffectContentUI.mEffectItemConfig` 的引用提取 Recovery／Buff／Prop 三种真实模板、各自属性行及适用范围行，同时提取 `CookingBuffReplaceConfirmDialog`、`CookingPropEffectFullDialog`、盈满行、原规则提示行、确认窗专用窄列属性行及 `PopTipEntry`／`EntryDetailItem`，共14个窗口／引用模板；保留 RectTransform、原布局、字段引用、颜色及状态配置。嵌入模板的字段路径仅按原父级重定位，不自行重画或重排。适用范围说明读取同版本 `entry` 表及语言，原条目均无图标；位置与最大高度按 `UIUtils.SetRectPopPosInScreen`、`LoopVerticalScrollWithMaxHeight`，标题编号按 `RuleTipNumer` 的序列化数字。
 
-依据：[料理效果来源](../../assets/reference/cooking-effects/source-manifest.json)。
+依据：[来源总表](../../assets/reference/SOURCES.md)。
 
 永久属性使用原 `cooking_prop_effect_full` 的 284 条阈值和原 `level_prop` 的 71 类数值；前者逐字节核对 APK，后者沿已登记原版本 WwiseBnk 来源。临时战斗效果复用既有 `map-status.json` 的 `StatusEffectInfo` 与 `battle-rules.json`／`skill-rules.json` 的原 FightStatus 实体及属性。新增适用范围背景 `ImgInfoBg_CookBuff` 为原 Sprite，已登记到全局来源和显式资源绑定；没有新增自绘图。中文数字显示依据原 `NumberCultureFormatter_CN`／`NumberFormatHelper`，颜色取原 `GlobalColors.Red`／`Orange`。
 
@@ -46,7 +46,7 @@ prepare_kitchen_completion.py --story-only 从固定 manifest 871_156598 的 pre
 
 ## 完整还原部分
 
-- `scripts/prepare_cooking_module.py` 从官方 `cooking.g.bytes`、`item.g.bytes`、`game_settings.g.bytes` 解码规则，并将固定版 `CookingPanel`、`CookingPanelItem` 的变换、文字、图片、按钮与层级转换为本地载荷。面板原始节点245个、料理行节点4个；34张引用 Sprite 保持官方图像内容、边框与 pivot。来源与输出 SHA-256、包 ID、Prefab path ID 记录在 [source-manifest.json](../../assets/reference/cooking-module/source-manifest.json)。
+- `scripts/prepare_cooking_module.py` 从官方 `cooking.g.bytes`、`item.g.bytes`、`game_settings.g.bytes` 解码规则，并将固定版 `CookingPanel`、`CookingPanelItem` 的变换、文字、图片、按钮与层级转换为本地载荷。面板原始节点245个、料理行节点4个；34张引用 Sprite 保持官方图像内容、边框与 pivot。来源与输出 SHA-256、包 ID、Prefab path ID 记录在 [来源总表](../../assets/reference/SOURCES.md)。
 - [cooking.json](../../unity/Assets/StreamingAssets/Cooking/cooking.json) 含官方110条配方和305个相关物品；材料与产出、条件、料理类型、效果字段、单次上限 `9999`、恢复料理红点库存阈值 `10` 由固定配置生成。数据加载会检查版本号、行数、唯一 ID 和所有物品引用。
 - [ui.json](../../unity/Assets/StreamingAssets/Cooking/ui.json) 与 [Cooking/Sprites](../../unity/Assets/Game/Resources/Cooking/Sprites) 载入本地 Cooking 页。面板复用官方尺寸和层级，制作数量滑条、加减/最大数量、关闭、滚动列表、配方行选择和材料/成品库存数字可操作；Escape 可关闭面板。物品图标复用行囊 `OfficialInventoryAssetCatalog`。
 - [OfflineCookingService.cs](../../unity/Assets/Game/Runtime/Offline/Cooking/OfflineCookingService.cs) 按官方条件过滤料理：`NoneCondition`、`MapUnlockCondition`、`UsedItemCondition`、`AlwaysCondition`；配方纸为物品类型322，96种 `UsedItemCondition` 的来源操作为89。配方纸进入背包后可学习，学习时本地原子扣除一张配方纸并记录该解锁条件。

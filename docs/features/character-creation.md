@@ -32,50 +32,7 @@
 
 ### 官方代码与资源依据
 
-以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
-
-`scripts/prepare_appearance_chest_preview.py` 从固定 `871_156598` APK／校验 CDN 的 `prefabs_ui_pay_appearancegift` 读取 `PreviewAppearanceDialog` 原窗口、绑定和 `PreviewAnimConfigItem` 动作序列；解码 `spine_skin`、`character_skin`、`character_skin_id_group`，核对69种礼盒奖励的男女皮肤及职业集合。武器读取原 `PlayerPart/*_UI_Integrated.prefab` 的 follower、变换和正反面切换，复用已核验的原男女骨骼及职业基础部件；图集按原包无损解码。
-
-武器动作序列按原退出比例和 `AnimationState` 混合参数采样，循环段保留独立起点。运行数据位于 `assets/characters/item-preview/` 与 `assets/official/appearance-chest-preview.json`，不使用运行时骨骼扩展或自绘素材。逐对象、配置、原代码、复用输入及输出哈希见 `assets/reference/appearance-chest-preview/source-manifest.json`。
-
-男性角色另接入原始 `home/idle_01`，按 24 fps 转换为原生网格采样，来源见 [idle-animation.json](../../assets/reference/male-remodel/idle-animation.json)。正式头像按原始 PlayerPortraitSettings 与 GraphicCapsuleMeshClipper 裁切。初始职业选择页使用 APK 中的 Login/CreateRoleSelectProfessionPanel 和原始男性网格；完整战斗动作、幻兽模型、粒子与复杂材质仍有缺项。
-
-创角色板来源：缓存 APK 内 `character_skin_color.g.bytes` 与 `character_skin_dye.g.bytes`，由 `prepare_official_rules.py` 按 Console.dll 中的 Luban 构造器完整解码。运行时按照 `FixedColorIdList` 和 `FixedColorItem` 的 HSVToRGB 转换使用原有顺序，肤色 9 种、发色 7 种、瞳色 7 种；输入和输出哈希见 [rules-manifest.json](../../assets/reference/official-city/rules-manifest.json)。旧存档的合法 RGB 值保留以兼容已有形象，新界面只提供上述固定色板。
-
-
-在保留男性资源的同时接入固定871_156598的女性角色。实际输入、包MD5、对象path_id、原始对象SHA256、原配置／源码SHA256、复用来源及每项输出SHA256见[男女角色来源清单](../../assets/reference/character-genders/source-manifest.json)和[女性待机采样](../../assets/reference/character-genders/idle-animation.json)。女性使用character_Female_1骨骼、女性SplitBinarySO、Female_Map_Controller覆盖关系，以及对应原图集／染色遮罩；运行目录为assets/characters/female。没有让女性借用男性动画顶点。
-
-原包中有同名贴图的不同分辨率及共享副本，沿用既有角色转换器的最高宽度选择方式，所用PNG逐张匹配实际原Texture2D解码SHA256；未使用的同名版本单独登记texture_variants，不将其当作当前贴图来源。荧光棒复用已登记的原武器皮肤／贴图，挂点按女性pWeapon_R2采样。初始剑／杖仍是原有静态待机／地图展示锚点和战斗本地挂点适配，不声称已迁移完整武器骨骼。男女性可选部件保留原有六款发型、眉／眼／嘴各六款、三款妆容及无、五款特征及无的范围，沿用本地稳定ID和显示名；没有开放原版完整衣橱。
-
-正式换装沿用原 `AppendAppearance/ChangeAppearancePanel` 层级、双预览、职业立绘和费用栏，使用幻形魔镜 119×1。切换、保存／放弃确认、未修改拒绝保存和不足提示由本地事务处理，费用与形象同时提交或回滚。衣柜分类、装备皮肤和互斥规则见[人物页](character.md)。
-
-依据：[正式换装来源](../../assets/reference/character-genders/appearance-source-manifest.json)。
-
-费用图标沿原 `PlayerCostMoneyContent.ImageBtn` 打开已迁移的原 `ItemDetailDialog`，复用其图标、品质与数量展示；名称、道具类型及 `item_119_desc`／`item_119_func_desc` 均来自同版本语言表。原面板 `ui.json` 与 `icons.json` 输入哈希纳入换装来源清单。
-
-开场剧情 UI 使用固定 APK 的 9 个 prefab、47 个 Sprite 引用、5 个 `PopupWindow` 动画片段和 UIMesh 材质；层级及本地绑定见[开场来源清单](../../assets/reference/character-creation/opening-source-manifest.json)。
-
-固定 APK `871_156598` 的 `CreatePlayerPanel` prefab 动画数据由 `CharacterCreationPerformanceTools.BuildAndValidate` 转换为 13 个 Unity AnimationClip，恢复男女选择、页面切换、选择高亮与 glow 循环；同时恢复两个 UIMesh 溶解网格和 `TransformReorderer` 性别层级曲线。输入、输出哈希及官方代码来源见 [creation-performance-source-manifest.json](../../assets/reference/character-creation/creation-performance-source-manifest.json)。Wwise 音频使用原版 `WwiseBnk` 包并由 [audio source manifest](../../assets/reference/creation-performance/audio/source-manifest.json) 校验；`Main_Page`、`Main_Cursor_Normal`、`Main_Tag`、`Main_Cursor_Back` 四个 UI 事件的 Unity 本地 OGG 副本及哈希也登记在该清单，由 `CharacterCreationAssetCatalog.FindAudio` 和 `CharacterCreationFlowController.PlayUiSound` 分发。该 prefab 没有独立 ParticleSystem，效果来自官方动画、材质和角色动作；未使用新版替代包或自绘资源。
-
-开场剧情与录像由 `scripts/prepare_character_creation_opening.py` 从固定 APK `871_156598` 与已转换官方剧情数据提取：`Assets/Config/Story/CreatePlayerFightRecord.bytes`（bundle `defaultpackage_assets_config_story.bundle`，bundle hash `50ee5a2f1b0c5236442618152533e59d`，34,004 字节 GZip，解压 14 回合／1,168 步／19 个实体）、`BeforeFight`／`AfterFight` 剧情图（`defaultpackage_assets_scriptableconfig_story_storyfight.bundle`，hash `157d0f0d505963840eae965ebef2846e`）、`FirstStory` 剧情图（`defaultpackage_assets_scriptableconfig_story_map10story_basicguide.bundle`，hash `ef2a5f3244e4a8d01713cac78aeafffe`）、`dialog` CSV 的三段共 6 条对白与 840100／840200 角色行、`stage` 表第 20 行（`Type=33`、`GameId=902`）及`game_902` 网格地面、波次怪物 3803／3282／3281／3283／3481 与 `model-identities.json` 的怪物模型键。剧情 UI 从 `defaultpackage_assets_prefabs_ui_story.bundle`、`defaultpackage_assets_prefabs_ui_global.bundle` 与`defaultpackage_assets_prefabs_ui_fight_fightmainpanel_extmodel_fightmainpanelrecordfight.bundle` 导出 7 个 prefab 的RectTransform 层级、图片颜色、按钮与文本节点；官方图片经 prefab 内运行时代理取图，导出载荷不含 sprite 引用，该缺项已记入[新建存档与角色创建](character-creation.md)。未使用新版替代包或自绘素材。
-
-依据：[opening-source-manifest.json](../../assets/reference/character-creation/opening-source-manifest.json)。
-
-DIY 外观选项缩略图使用固定 APK `871_156598` 的 `defaultpackage_assets_image_ui_playerskin.bundle`（APK entry `assets/yoo/DefaultPackage/d9e385395fb855fe84340d2e1c152e18.bundle`）。`scripts/prepare_character_creation_skin_icons.py` 按原 Sprite 名提取 155 张 PNG，校验 bundle MD5、APK SHA256 与男女六类 141 个选项图标；Unity 载荷及输入／输出哈希见 [player skin icon source manifest](../../assets/reference/character-creation/player-skin-icons-source-manifest.json)。没有绘制或替代图标。
-
-创角“幻装试穿”组图从固定 APK `871_156598` 的五个 no-atlas 图标 bundle 提取 12 个 `item_<id>` Sprite；组 ID、男女、解锁条件、`append_appearance` 组件皮肤来自固定表 `append_appearance_group`／`append_appearance` 与现有角色皮肤目录。官方组名使用 APK entry `assets/yoo/WwiseBnk/9a0b6ab8c5136050fd005ead8f567863.rawfile`，原文件 MD5 `9a0b6ab8c5136050fd005ead8f567863`、SHA256 `738069eafacd7fe33aae970aa5edacd76f48ed02acdd07ededad1c4a499b93b8`、5,291,479 字节；`prepare_character_creation_group_icons.py` 按官方 `LocalizationBinaryFileReader` 的 12 字节索引和 `XXHash64` 键读取 `append_appearance_group_<id>`。图标与标签输入、输出及逐项 SHA256 见 [appearance-group-icons-source-manifest.json](../../assets/reference/character-creation/appearance-group-icons-source-manifest.json)。12 个 Sprite 已导入并绑定到目录资产；试穿组仅作用于创角页预览，不合并进存档，5／6／15／16 按官方域类型条件隐藏。组选择、互斥预览和离线保存验收见[新建存档与角色创建](character-creation.md)。
-
-开场录像特效由 `scripts/prepare_opening_skill_effects.py` 按录像实际 ClassId，从固定版 effects catalog、逐项 `battle-effects-source-manifest.json` 及 Wwise 音频目录核验后生成 `unity/Assets/StreamingAssets/Opening/skill-effects.json`。当前目录含139条事件记录、258张贴图、47个网格和31个本地音频文件；粒子配置递归保留主系统、跟随子系统与 SubEmitter，来源清单逐对象记录 APK bundle／CAB／path ID、输入哈希与336项输出哈希。输入包括 `assets/official/battle-presentation/effects.json`（SHA256 `191b761659b054e1f816aab2658a6872079ee6fb8fcf98545a6b3c70cd689a59`）、`assets/official/battle-audio/catalog.json`（SHA256 `445355dd5fcf674d410c5d24c847f10c454063b68939518947a15eb670f74b5e`）及固定录像；完整收据见 [opening-skill-effects-source-manifest.json](../../assets/reference/character-creation/opening-skill-effects-source-manifest.json)，输出载荷 SHA256 `8f274af270e9b33b652e8f5236a833376339dca14d1057f9bc38e85401c86a9c`。固定包的 Android `Effect/Noise_Mask_Pro` 编译 shader 无 Windows HLSL 源码，`unity/Assets/Game/Resources/Opening/OpeningNoiseMaskPro.shader` 按原材质属性适配，SHA256 `1891237be4f946cd952275e736dd95df2bc96f7381f7942fbcd8a0967b1748fa`；无新版包混入或自绘贴图。
-
-角色已接入素材的新版转换使用 `convert_official_skeletons.py`、`refresh_current_character_meshes.py` 和 `refresh_current_native_prefabs.py`：独立读取官方骨骼及拆分动画，先核对骨骼、约束、影响采样顶点的动画通道和附件几何，再更新创角／人物网格包及 92 个男体原生 prefab 的三角形索引。男女模型重新导出保留原 `.meta` 与 GUID。
-
-角色网格转换保留原始输入、转换工具、GUID 和输出间的对应关系；细节及哈希见对应来源清单。
-
-女体骨骼和全部 451 个动画经独立解码后与原版完全一致，男体发生变化的三角形索引按当前输入重建；等价性凭据包含两版原始对象及解码结果哈希。`verify_current_audio_sources.py` 完整解析新版万圣节 PCK、HIRC 和 EventBankMapping：9 段媒体及 117 个既有控制对象不变，新增 8 个对象和 2 条事件路由，既有 8,737 条路由不变；已接入的 6 份音频输出逐一核验后保留，详见 `assets/reference/official-map/current-audio-source-manifest.json`。
-
-资源转换缓存、Unity 导入与运行验证的共用约定见[素材管理](../asset-management.md)。
-
-开场附件、网格复制、伤害飘字和战斗演出组件使用独立渲染器／相机字段；英雄雕像等级属性读取 `OfficialCharacterCatalog.GetLevelProps`，阶段条件按原列表处理。
+创角流程、配置、prefab、角色资源及其转换凭据见[来源总表](../../assets/reference/SOURCES.md)。功能实现与缺项仅在本页维护。
 
 ## 完整还原部分
 
@@ -83,7 +40,7 @@ DIY 外观选项缩略图使用固定 APK `871_156598` 的 `defaultpackage_asset
 
 共享原生模型工厂保留男女骨骼与图集附件的局部坐标、权重、裁剪、排序和染色绑定；创角网格与人物模型共同使用该工厂。完整 Animator、原生动作混合／物理及家园动作仍有缺项，来源见[原生几何清单](../../assets/reference/character-creation/native-geometry-source-manifest.json)。
 
-角色模型、创角网格与动画资源按 `871_156598` 来源清单绑定，输入、转换工具和输出哈希见[当前模型来源](../../assets/reference/character-creation/current-mesh-source-manifest.json)。人物完整动作、界面流程仍按本页缺项维护。
+角色模型、创角网格与动画资源按 `871_156598` 来源清单绑定，输入、转换工具和输出哈希见[来源总表](../../assets/reference/SOURCES.md)。人物完整动作、界面流程仍按本页缺项维护。
 
 地面溶解组件 `Runtime/Official/Opening/GroundDissolve.cs` 按当前官方同名类恢复材质参数更新，`OpeningGroundEffectRuntime` 按 `MyPlayableGroundEffect` 恢复曲线、播放时取实例及结束还原；地面 shader、场景材质与组件的实际绑定及画面验证仍未完成，本段不代表地面溶解表现已还原。
 
@@ -91,21 +48,21 @@ DIY 外观选项缩略图使用固定 APK `871_156598` 的 `defaultpackage_asset
 
 开场输入由 [prepare_character_creation_opening.py](../../scripts/prepare_character_creation_opening.py) 从固定 APK 与已转换官方数据提取，输出与哈希见 [opening source manifest](../../assets/reference/character-creation/opening-source-manifest.json)：`Assets/Config/Story/CreatePlayerFightRecord.bytes`（bundle `defaultpackage_assets_config_story.bundle`，34,004 字节 GZip，解压后 14 回合、1,168 步、19 个实体、`GameResultMsg=null`）、`BeforeFight`／`AfterFight` 剧情图（`..._story_storyfight.bundle`）、`FirstStory` 剧情图（`..._story_map10story_basicguide.bundle`）、三段共 6 条对白与两名角色（840100 薇兰、840200 绯乐）、`stage` 表 20 行（`Type=33` RecordFight、`GameId=902` → 场景 `game_902`、波次怪物 3803/3282/3281/3283/3481）及网格地面。剧情 UI 由同一脚本从 `prefabs_ui_story`／`prefabs_ui_global`／`prefabs_ui_fight_fightmainpanel_extmodel_fightmainpanelrecordfight` 导出 9 个 prefab 的层级、布局、按钮、文本、图片与材质数据，供 [OpeningUiView](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningUi.cs) 在运行时还原。
 
-创角过场从固定版本 `CreatePlayerPanel` 官方 prefab 动画数据恢复 13 个命名片段、男女两份 UIMesh 溶解网格和角色层级顺序曲线，生成资产及来源哈希见 [creation performance source manifest](../../assets/reference/character-creation/creation-performance-source-manifest.json)。`CharacterCreationPerformanceTools.BuildAndValidate` 将曲线转为 Unity AnimationClip；`CharacterCreationEffectDissolve.shader` 是官方 `UI/EffectDissolve` 的 Windows HLSL 适配，按原 dissolve 参数、边缘颜色、Blend 和 stencil 设置绘制。未单独逐帧验收全部溶解曲线和音效。
+创角过场从固定版本 `CreatePlayerPanel` 官方 prefab 动画数据恢复 13 个命名片段、男女两份 UIMesh 溶解网格和角色层级顺序曲线，生成资产及来源哈希见 [来源总表](../../assets/reference/SOURCES.md)。`CharacterCreationPerformanceTools.BuildAndValidate` 将曲线转为 Unity AnimationClip；`CharacterCreationEffectDissolve.shader` 是官方 `UI/EffectDissolve` 的 Windows HLSL 适配，按原 dissolve 参数、边缘颜色、Blend 和 stencil 设置绘制。未单独逐帧验收全部溶解曲线和音效。
 
-六类男女外观选项使用官方配置 ID，缩略图来自 `defaultpackage_assets_image_ui_playerskin.bundle`；155 个 Sprite 和输入输出哈希见 [player skin icon source manifest](../../assets/reference/character-creation/player-skin-icons-source-manifest.json)。肤色、发色与瞳色范围、固定颜色及 HSV 配置从官方角色目录读取。
+六类男女外观选项使用官方配置 ID，缩略图来自 `defaultpackage_assets_image_ui_playerskin.bundle`；155 个 Sprite 和输入输出哈希见 [来源总表](../../assets/reference/SOURCES.md)。肤色、发色与瞳色范围、固定颜色及 HSV 配置从官方角色目录读取。
 
-原版创角外观组合数据与男女 12 个组图已按固定版 `append_appearance_group`、`append_appearance` 表及 APK 图标 bundle 恢复；组名从固定 APK 的 `wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile` 以官方 `LocalizationBinaryFileReader`／`XXHash64` 规则解析。图标、组名、条件 ID、组件 appearance/skin ID 及输入输出哈希见 [appearance group icon source manifest](../../assets/reference/character-creation/appearance-group-icons-source-manifest.json)。`CharacterCreationFlowController.RenderAppearanceGroups` 显示无条件组并保存草稿中的 `appearance_group_id`；选择组不会改写普通捏脸字段。切换主外观页签时 `SelectTab` 刷新原生预览，使组内 `SkinType=3` 皮肤在“头发／特征”页按官方互斥规则隐藏，并在“整体／脸部”页恢复。固定版 `CreatePlayerPanel.CacheAppendAppearanceDict` 把组的 `AppearanceIdList` 转成追加外观，和 `SkinIdMap` 捏脸字段分开；本离线实现遵循用户确认的“仅用于试穿”：组只影响创建页预览，不写入最终 `WornItems`，普通部件仍写入 `WornSkins`。`AppearanceGroupId` 是所选组，`IsUseAppearanceFunction` 在首次选中非默认组时置为真；服务端对这两个请求字段的额外处理不在客户端代码中，离线保存不推断其行为。`TryOnConditionId=30110` 经官方条件代码解码为 `DomainTypeCondition(LuoTianYi)`，使组 5／6／15／16 依赖服务器 `DomainType`；离线档案没有该字段，因此当前按官方条件隐藏。
+原版创角外观组合数据与男女 12 个组图已按固定版 `append_appearance_group`、`append_appearance` 表及 APK 图标 bundle 恢复；组名从固定 APK 的 `wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile` 以官方 `LocalizationBinaryFileReader`／`XXHash64` 规则解析。图标、组名、条件 ID、组件 appearance/skin ID 及输入输出哈希见 [来源总表](../../assets/reference/SOURCES.md)。`CharacterCreationFlowController.RenderAppearanceGroups` 显示无条件组并保存草稿中的 `appearance_group_id`；选择组不会改写普通捏脸字段。切换主外观页签时 `SelectTab` 刷新原生预览，使组内 `SkinType=3` 皮肤在“头发／特征”页按官方互斥规则隐藏，并在“整体／脸部”页恢复。固定版 `CreatePlayerPanel.CacheAppendAppearanceDict` 把组的 `AppearanceIdList` 转成追加外观，和 `SkinIdMap` 捏脸字段分开；本离线实现遵循用户确认的“仅用于试穿”：组只影响创建页预览，不写入最终 `WornItems`，普通部件仍写入 `WornSkins`。`AppearanceGroupId` 是所选组，`IsUseAppearanceFunction` 在首次选中非默认组时置为真；服务端对这两个请求字段的额外处理不在客户端代码中，离线保存不推断其行为。`TryOnConditionId=30110` 经官方条件代码解码为 `DomainTypeCondition(LuoTianYi)`，使组 5／6／15／16 依赖服务器 `DomainType`；离线档案没有该字段，因此当前按官方条件隐藏。
 
-创角展示使用 [CharacterCreationMeshFramePlayer](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterCreationMeshFramePlayer.cs)，以 Unity MeshRenderer 播放已校验的官方 24 fps 网格帧；当前转换动作是 `home/idle_01` 和 `map/run_01`，不依赖 Spine runtime。打包脚本 [prepare_character_creation_meshes.py](../../scripts/prepare_character_creation_meshes.py) 复用固定来源的骨骼转换缓存、贴图及染色遮罩，并将两种姿势实际包含的全部官方男女皮肤按单皮肤条目纳入 `StreamingAssets/CharacterCreation/creation-meshes.zip`；运行时仅按选中外观读取并逐条校验哈希，清单见 [native mesh source manifest](../../assets/reference/character-creation/native-mesh-source-manifest.json)。家园的 `HomePlayerActorView` 已改用原生世界模型工厂，以复用公共战斗挂载及正确的模型原点；状态与验证边界见[主城](city-and-home.md)。官方 `home/wakeUp_01`、`100/training_01` 尚未转换，其他角色 Animator 也未迁移。
+创角展示使用 [CharacterCreationMeshFramePlayer](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterCreationMeshFramePlayer.cs)，以 Unity MeshRenderer 播放已校验的官方 24 fps 网格帧；当前转换动作是 `home/idle_01` 和 `map/run_01`，不依赖 Spine runtime。打包脚本 [prepare_character_creation_meshes.py](../../scripts/prepare_character_creation_meshes.py) 复用固定来源的骨骼转换缓存、贴图及染色遮罩，并将两种姿势实际包含的全部官方男女皮肤按单皮肤条目纳入 `StreamingAssets/CharacterCreation/creation-meshes.zip`；运行时仅按选中外观读取并逐条校验哈希，清单见 [来源总表](../../assets/reference/SOURCES.md)。家园的 `HomePlayerActorView` 已改用原生世界模型工厂，以复用公共战斗挂载及正确的模型原点；状态与验证边界见[主城](city-and-home.md)。官方 `home/wakeUp_01`、`100/training_01` 尚未转换，其他角色 Animator 也未迁移。
 
-创角按钮使用的 `Main_Page`、`Main_Cursor_Normal`、`Main_Tag`、`Main_Cursor_Back` 音效已转为本地 OGG 并由 [audio source manifest](../../assets/reference/creation-performance/audio/source-manifest.json) 校验。DIY 恢复默认外观使用官方 `ui_reset_appearance_tip_text` 确认键及官方弹窗 prefab；固定版本地语言资源未包含该键的文本，Unity 离线界面使用中文提示。
+创角按钮使用的 `Main_Page`、`Main_Cursor_Normal`、`Main_Tag`、`Main_Cursor_Back` 音效已转为本地 OGG 并由 [来源总表](../../assets/reference/SOURCES.md) 校验。DIY 恢复默认外观使用官方 `ui_reset_appearance_tip_text` 确认键及官方弹窗 prefab；固定版本地语言资源未包含该键的文本，Unity 离线界面使用中文提示。
 
 ### 开场战场、录像单位与剧情排版
 
 官方 `game_902` 战斗阶段是 2D 场景：固定版 `defaultpackage_assets_prefabs_ecentity_fight_fightstage_902.bundle`（80,054 字节，md5 `67c160d271bba532c38a428252304295`，APK 内）中的 `Assets/Prefabs/EcEntity/Fight/FightStage/902/game_902.prefab` 含 144 个 SpriteRenderer、4 个 Tilemap（2,921 块有效瓦片）、23 个 ParticleSystem、2 个正交相机（Main size 7.0），**没有任何 Mesh 或 MeshRenderer**；地面、墙体与装饰都是 sprite 与瓦片。格网不在场景内，来自 `stage` 表 20 行：27×24、origin `(-1.5,-2.5)`、69 个阻挡格、玩家入口 `(13,10)`，16 个怪物出生点与录像 `GridTransformComponent.MyPos` 完全一致。
 
-[prepare_opening_battlefield.py](../../scripts/prepare_opening_battlefield.py) 按 prefab 世界变换把 sprite 与瓦片展平为按图集页、排序层和 order 分组的四边形批次（142 批、15,816 顶点、23,724 索引），导出 10 张官方图集/特效贴图、23 个粒子挂载和两个相机，写入 `StreamingAssets/Opening/battlefield/game_902.json`；来源与逐贴图哈希见 [opening battlefield source manifest](../../assets/reference/character-creation/opening-battlefield-source-manifest.json)。APK 中 `you` 粒子系统的 `ParticleSystemRenderer` 材质数组只有空 PPtr（path_id 0），该项保留空材质引用，运行时不绑定贴图；其余 22 个粒子材质贴图均有来源，不存在未找到的粒子纹理。来源清单没有未解析对象或警告。[OpeningBattlefield](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningBattlefield.cs) 在运行时装配批次、粒子与相机，单位根同时携带场景根偏移 `(5000,0,0)` 和格网 origin，录像单位与 NPC 直接使用官方格网坐标。原场景 shader 只有 Android GLES3 程序且工程未引入 URP；场景批次仍以 Unity 内建 `Sprites/Default` 绘制，属渲染管线适配差异。粒子 shader 已按上文改为 Windows HLSL；独立的 `Sprites/Ground-Dissolve` 材质与地面运行时绑定仍待完成。
+[prepare_opening_battlefield.py](../../scripts/prepare_opening_battlefield.py) 按 prefab 世界变换把 sprite 与瓦片展平为按图集页、排序层和 order 分组的四边形批次（142 批、15,816 顶点、23,724 索引），导出 10 张官方图集/特效贴图、23 个粒子挂载和两个相机，写入 `StreamingAssets/Opening/battlefield/game_902.json`；来源与逐贴图哈希见 [来源总表](../../assets/reference/SOURCES.md)。APK 中 `you` 粒子系统的 `ParticleSystemRenderer` 材质数组只有空 PPtr（path_id 0），该项保留空材质引用，运行时不绑定贴图；其余 22 个粒子材质贴图均有来源，不存在未找到的粒子纹理。来源清单没有未解析对象或警告。[OpeningBattlefield](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningBattlefield.cs) 在运行时装配批次、粒子与相机，单位根同时携带场景根偏移 `(5000,0,0)` 和格网 origin，录像单位与 NPC 直接使用官方格网坐标。原场景 shader 只有 Android GLES3 程序且工程未引入 URP；场景批次仍以 Unity 内建 `Sprites/Default` 绘制，属渲染管线适配差异。粒子 shader 已按上文改为 Windows HLSL；独立的 `Sprites/Ground-Dissolve` 材质与地面运行时绑定仍待完成。
 
 [prepare_battle_spine_pages.py](../../scripts/prepare_battle_spine_pages.py) 从固定 APK 中经 `models-source-manifest.json` 验证的 Texture2D 解出 5 只开场怪物（3803／3281／3282／3283／3481）与两名剧情角色（8401／8402）的 9 张图集页，核对 atlas `size:` 后绑定到既有 Spine 材质；`OfficialBattleModelCatalog` 的 identities／identitiesManifest 已指向真实资源。剧情角色不是玩家外观，而是官方 NPC 骨骼：录像中 1017 的 `NpcClassId=8401` 对应 `body_8401`、1018 的 8402 对应 `body_8402`。这两具骨骼不在 409 条战斗模型身份表内，因此新增 `Resources/Opening/OpeningNpcModelCatalog` 资产直接引用已转换的 SkeletonDataAsset，[OpeningFightPlayback](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningFightPlayback.cs) 优先按该目录生成单位（动作按官方 clip 同名回退），怪物仍走 `OfficialBattleModelCatalog` 的身份表。单位排序显式置于场景排序层之上，避免被 21 层的背景遮住。战前顺序按官方 `GAME_ENTITY_LIST` 先于 `BeforeFight`：进入场景 → 生成实体与 HUD → `BeforeFight` → 录像 → `AfterFight`。
 
@@ -127,7 +84,7 @@ Unity 2022.3 粒子转换将 `boxThickness`、`placementMode`、UV `animationTyp
 
 已核对固定 APK 的 `defaultpackage_assets_textmesh_pro_rawfonts_fzy4k.bundle` 中 `FZY4K` TextAsset：原始方正粗圆 TTF 与 `Assets/Official/Commerce/Art/fonts/FZY4K.ttf` 逐字节一致，SHA256 为 `90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386`，创角使用 `Resources/Combat/FZY4K-Dynamic.asset`，没有使用替代字体。
 
-旧恢复 prefab 缺少原 MonoBehaviour 字段，不能显示完整 UGUI/TMP 内容；[prepare_character_creation_runtime_ui.py](../../scripts/prepare_character_creation_runtime_ui.py) 与 [CharacterCreationUiTools](../../unity/Assets/Game/Editor/CharacterCreation/CharacterCreationUiTools.cs) 从已核验原始字段恢复三个原生 prefab、47 张原 Sprite、RectTransform、TMP 样式、遮罩、布局、滚动、CanvasGroup 及选择状态。页标题沿原 `StepTitles` 与语言包显示“选择体型／装扮形象／取个名吧”，HSV 滑块沿 `EditCustomColorBlock.GenerateTexture` 生成渐变。输入输出及生成工具哈希见 [runtime UI source manifest](../../assets/reference/character-creation/runtime-ui-source-manifest.json) 与 [native UI source manifest](../../assets/reference/character-creation/native-ui-source-manifest.json)。
+旧恢复 prefab 缺少原 MonoBehaviour 字段，不能显示完整 UGUI/TMP 内容；[prepare_character_creation_runtime_ui.py](../../scripts/prepare_character_creation_runtime_ui.py) 与 [CharacterCreationUiTools](../../unity/Assets/Game/Editor/CharacterCreation/CharacterCreationUiTools.cs) 从已核验原始字段恢复三个原生 prefab、47 张原 Sprite、RectTransform、TMP 样式、遮罩、布局、滚动、CanvasGroup 及选择状态。页标题沿原 `StepTitles` 与语言包显示“选择体型／装扮形象／取个名吧”，HSV 滑块沿 `EditCustomColorBlock.GenerateTexture` 生成渐变。输入输出及生成工具哈希见 [来源总表](../../assets/reference/SOURCES.md)。
 
 `OfflineMainlineProgressSession.UniqueAppearanceTypes` 接受官方 `PlayerSkinType.Eye = 0`；`LocalJsonSaveFile` 在 Windows 原子替换遇到短暂文件占用时有限重试。创角启动不额外创建存档选择遮罩。
 

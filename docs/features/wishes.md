@@ -103,7 +103,7 @@
 
 官方友情币配置包含每周上限 `1000`，助战、组队、队长奖励各 `1`，助战日上限 `3`，互动分享奖励 `5`，周未领取邮件 `1300`。这些只记录原始功能，不能据此在单机新增真人好友、模拟玩家或联网领币。
 
-`W27` 女神像维修／自动维修资格、首次进入、首次抽取及教程路由需连同原家园条件和技能获得引导恢复。配置包含 `SkillGachaGuideFixedRewardId=8`、`SkillGachaNewbieTimes=20`、`SkillGachaOnceSupportTimes=[1,10]`；教程输入与来源见[家园祈愿引导](../../assets/reference/home-wish-tutorial/source-manifest.json)。配置 ID 8 对应单独发放的 `110×5` 祈愿券；按用户确认，常规奖池首抽不替换为固定技能，也不推定前二十抽存在额外固定序列。
+`W27` 女神像维修／自动维修资格、首次进入、首次抽取及教程路由需连同原家园条件和技能获得引导恢复。配置包含 `SkillGachaGuideFixedRewardId=8`、`SkillGachaNewbieTimes=20`、`SkillGachaOnceSupportTimes=[1,10]`；教程输入与来源见[来源总表](../../assets/reference/SOURCES.md)。配置 ID 8 对应单独发放的 `110×5` 祈愿券；按用户确认，常规奖池首抽不替换为固定技能，也不推定前二十抽存在额外固定序列。
 
 ### 原始官方 UI、资源与加载绑定
 
@@ -112,9 +112,9 @@
 | 资源组 | 原始内容与定位 | 当前边界 |
 | --- | --- | --- |
 | 祈愿主体 | `defaultpackage_assets_prefabs_ui_gachapanel.bundle`：`GachaPanel`、`SkillGachaPanel`、`SkilSeniorlGachaPanel`（原拼写）、`GachaDetailDialog`、`GachaHistoryContent`、`ScoreRewardDialog`、`GachaResultPanel` 等原 prefab；友情页、自选及列表项继续沿原引用绑定 | 官方 prefab 已接入祈愿控制器和显式加载目录；输入与画面验收状态见“尚未实现” |
-| 结果演出 | [结果演出来源](../../assets/reference/wish-performance/source-manifest.json)、[转换数据](../../assets/official/wish-performance/performance.json) | Unity 原生播放、材质与目标平台效果尚未完成 |
-| 视觉与后处理 | [视觉来源](../../assets/reference/wish-visuals/source-manifest.json)、[转换数据](../../assets/official/wish_visuals.json)、[后处理参数](../../assets/official/battle-post/data.json) | 祈愿粒子、材质和后处理尚未完整接入 Unity |
-| 兑换／购买共用组件 | [商店组件来源](../../assets/reference/shop-components/source-manifest.json)、[价格按钮来源](../../assets/reference/wish-button-costs/source-audit.json)、[材料来源入口](../../assets/reference/gacha-item-sources/source-manifest.json)、[快捷购买来源](../../assets/reference/gacha-purchase/source-manifest.json) | 沿原列表、详情、确认、批量设置、价格组件、顶部货币及奖励弹窗绑定；共享模块恢复不等于祈愿调用方已接入 |
+| 结果演出 | [来源总表](../../assets/reference/SOURCES.md)、[转换数据](../../assets/official/wish-performance/performance.json) | Unity 原生播放、材质与目标平台效果尚未完成 |
+| 视觉与后处理 | [来源总表](../../assets/reference/SOURCES.md)、[转换数据](../../assets/official/wish_visuals.json)、[后处理参数](../../assets/official/battle-post/data.json) | 祈愿粒子、材质和后处理尚未完整接入 Unity |
+| 兑换／购买共用组件 | [来源总表](../../assets/reference/SOURCES.md) | 沿原列表、详情、确认、批量设置、价格组件、顶部货币及奖励弹窗绑定；共享模块恢复不等于祈愿调用方已接入 |
 
 ### 官方代码与资源依据
 
@@ -143,13 +143,13 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标并�
 
 祈愿视觉资源来自固定 APK 与匹配版本缓存；每个资源沿所属来源清单记录版本和对象身份，不混用新版同名包。
 
-`python scripts/prepare_wish_visuals.py` 从原 `SkillGachaPanel / SkilSeniorlGachaPanel / PetGachaSubPanel` 读取常驻、高阶与幻兽结缘环境粒子，从 `GachaTenRewardGo` 读取四组奖励粒子，恢复八个白／蓝／紫／橙品质光效 prefab 和 `GachaLightConfig` 的五种品质 Sprite。输出 20 张原始 Texture2D 解码 PNG 到 `assets/official/wish/`，相关 Sprite 继续使用 `assets/official/sprites/`，参数写入 `assets/official/wish_visuals.json`；所有动态图像均纳入显式本地加载清单。原 bundle、MD5、对象 path ID、操作、输出 SHA256、客户端代码哈希与字段绑定见 [wish-visuals/source-manifest.json](../../assets/reference/wish-visuals/source-manifest.json)。没有新增自绘位图。
+`python scripts/prepare_wish_visuals.py` 从原 `SkillGachaPanel / SkilSeniorlGachaPanel / PetGachaSubPanel` 读取常驻、高阶与幻兽结缘环境粒子，从 `GachaTenRewardGo` 读取四组奖励粒子，恢复八个白／蓝／紫／橙品质光效 prefab 和 `GachaLightConfig` 的五种品质 Sprite。输出 20 张原始 Texture2D 解码 PNG 到 `assets/official/wish/`，相关 Sprite 继续使用 `assets/official/sprites/`，参数写入 `assets/official/wish_visuals.json`；所有动态图像均纳入显式本地加载清单。原 bundle、MD5、对象 path ID、操作、输出 SHA256、客户端代码哈希与字段绑定见 [来源总表](../../assets/reference/SOURCES.md)。没有新增自绘位图。
 
 常驻／高阶页面已使用环境星光，幻兽页面使用星光与落叶；结果页使用原版品质光、奖励出现闪光、新技能光圈及重复转换碎光。`Fragment` 和 `Aperture` 的用途按原脚本字段与 prefab PPtr 核实，分别对应重复转换和首次获得。视觉随机源独立于抽取随机源，状态快照仅保留在界面实例中，不改变本地结算与存档。
 
 使用原始发射曲线、爆发、颜色、尺寸、寿命、数量上限、纹理滚动、扰动与淡出；Unity 3D 湍流、Bloom 后处理、完整星轨和结缘角色演出仍未逐项还原。
 
-`python scripts/prepare_gacha_purchase.py` 从固定 APK 与已校验的 `871_156598` CDN 缓存读取原 `quick_buy.g.bytes`、`furniture.g.bytes`，转换 `CostItemConfirmDialog` 和 `ShopQuickBuyDialog` 两套购买 prefab。运行数据为 `assets/official/gacha-purchase.json`，图像继续使用原 Sprite 解码文件，30 项依赖均登记并纳入显式本地资源清单。完整 26 条快捷购买原表、3 条本模块使用的材料购买记录、免费自动修复家具条件、bundle 来源与对象、图像处理方式及输入／输出哈希，见 [gacha-purchase/source-manifest.json](../../assets/reference/gacha-purchase/source-manifest.json)。没有使用新版替代包或自绘图片。
+`python scripts/prepare_gacha_purchase.py` 从固定 APK 与已校验的 `871_156598` CDN 缓存读取原 `quick_buy.g.bytes`、`furniture.g.bytes`，转换 `CostItemConfirmDialog` 和 `ShopQuickBuyDialog` 两套购买 prefab。运行数据为 `assets/official/gacha-purchase.json`，图像继续使用原 Sprite 解码文件，30 项依赖均登记并纳入显式本地资源清单。完整 26 条快捷购买原表、3 条本模块使用的材料购买记录、免费自动修复家具条件、bundle 来源与对象、图像处理方式及输入／输出哈希，见 [来源总表](../../assets/reference/SOURCES.md)。没有使用新版替代包或自绘图片。
 
 原价为星之愿 `110` 每个晨星 ×100、稀有女神牌 `301` 每张晨星 ×8、结缘材料 `107` 每个晨星 ×160。高阶材料 `118`、女神牌 `302–304`、元素牌 `311` 没有快捷购买记录。材料不足时使用原确认弹窗购买差额；数量购买使用原数量滑条、加减与最大按钮。购买后先补入材料，另行点击抽取，保留原流程；顶部余额加号与物品详情为购买入口，祈愿页的“购买材料”为本地便捷入口。
 
@@ -157,15 +157,15 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标并�
 
 固定 `871_156598` APK 的常驻抽取及兑换刷新 prefab 确实默认显示 `ImgCostMoneyBtn_Bg`，`PlayerCostMoneyContent` 在正数成本下显示整个成本区域，核对的余额状态切换配置为空。原资源中存在黑色价格底板，不能声称原版会在材料足够时隐藏它。这属于本地展示调整，既有官方图片像素与来源未改动，没有新增自绘或重新转换图片。
 
-原 `ShopPanel.SetRefreshUI` 显示 `RefreshCountsLimit - RefreshedCount`，原商店 5 为每天十次付费刷新；现显示完整剩余整数 `10→0`，并为徽标、文字、晨星和价格分配独立边界。四项原始成本组件字段、21 项 prefab 图片绑定、6 项复用 Sprite 哈希、客户端代码哈希及原刷新价格数组见 [wish-button-costs/source-audit.json](../../assets/reference/wish-button-costs/source-audit.json)。
+原 `ShopPanel.SetRefreshUI` 显示 `RefreshCountsLimit - RefreshedCount`，原商店 5 为每天十次付费刷新；现显示完整剩余整数 `10→0`，并为徽标、文字、晨星和价格分配独立边界。四项原始成本组件字段、21 项 prefab 图片绑定、6 项复用 Sprite 哈希、客户端代码哈希及原刷新价格数组见 [来源总表](../../assets/reference/SOURCES.md)。
 
-固定APK及匹配871_156598 CDN中的prefabs_ui_gachapanel、prefabs_ui_item、prefabs_ui_pet与原AnimationClip、ParticleSystem、Sprite、TMP字段和Wwise事件链由scripts/prepare_wish_performance.py转换，输出assets/official/wish-performance/。完整对象来源、客户端类SHA256、布局输入、图片／音频处理及输出哈希保存在[来源清单](../../assets/reference/wish-performance/source-manifest.json)。界面图片直接解码，动画保留原曲线与AnimationEvent，音频按原Event→Action→Sound→媒体解码为Vorbis；原停止事件登记为stop，无替代音效。LoopScrollRectBase来源于已解码的原LoopScrollRect.Runtime.dll，作为原百抽滚动方向和首屏行数计算依据。pet相关prefab绑定为继续迁移结缘所需的原始输入，提取完成本身不代表已接入运行时。
+固定APK及匹配871_156598 CDN中的prefabs_ui_gachapanel、prefabs_ui_item、prefabs_ui_pet与原AnimationClip、ParticleSystem、Sprite、TMP字段和Wwise事件链由scripts/prepare_wish_performance.py转换，输出assets/official/wish-performance/。完整对象来源、客户端类SHA256、布局输入、图片／音频处理及输出哈希保存在[来源总表](../../assets/reference/SOURCES.md)。界面图片直接解码，动画保留原曲线与AnimationEvent，音频按原Event→Action→Sound→媒体解码为Vorbis；原停止事件登记为stop，无替代音效。LoopScrollRectBase来源于已解码的原LoopScrollRect.Runtime.dll，作为原百抽滚动方向和首屏行数计算依据。pet相关prefab绑定为继续迁移结缘所需的原始输入，提取完成本身不代表已接入运行时。
 
 prepare_pet_exchange.py 从固定871_156598 APK／匹配原版本CDN提取PetGachaPanel商店区、ShopGoodsItem、ShopGoodsItemInfoCommon、ShopGoodsItemShowConfig及七档原品质图，保留原RectTransform、LayoutGroup／LayoutElement、StateSwitcher、ListItemShowSequence和中文键。资产写入assets/official/pet-exchange/，288个源对象、70个输出的bundle／对象、输入输出SHA256、原客户端与Common源码及两份语言包哈希统一在pet-exchange/source-manifest.json登记。ShopOpenController实际mShopId=7；当前商品类型使用原默认Common图标模板，名称按原ShowName显示，没有绘制替代图或添加第二套商品坐标。
 
 购买成功／失败声音由ShopGoodsItemShowConfig的实际事件引用追到原UI／Minimum Wwise包的Event→Action→Sound／DIDX媒体，转为Vorbis并保留包哈希和原媒体哈希；Main_Cursor_Fail位于Minimum包，未用其他声音替换。购买确认及模糊遮罩复用已有原ConfirmDialog与默认BlurMask资源。源校验：python scripts/prepare_pet_exchange.py --check；运行规则、测试、尚未迁移项与素材包／正式发布状态仅记对应功能／地图文档。
 
-`prepare_gacha_item_sources.py` 从固定871_156598 `ItemDetailDialog` 的 `ItemSourceGo.ItemSourcePrefab` 转换实际引用的 `ItemSourceItem`，保留原布局、可用／不可用状态、箭头与背景贴图；来源枚举文案由同版本简中语言包提供，包括国度扭蛋获取与元素扭蛋获取。资源位于 `assets/official/gacha-item-sources/`，原组件、调用脚本、语言包哈希及输出哈希见 [gacha-item-sources/source-manifest.json](../../assets/reference/gacha-item-sources/source-manifest.json)。
+`prepare_gacha_item_sources.py` 从固定871_156598 `ItemDetailDialog` 的 `ItemSourceGo.ItemSourcePrefab` 转换实际引用的 `ItemSourceItem`，保留原布局、可用／不可用状态、箭头与背景贴图；来源枚举文案由同版本简中语言包提供，包括国度扭蛋获取与元素扭蛋获取。资源位于 `assets/official/gacha-item-sources/`，原组件、调用脚本、语言包哈希及输出哈希见 [来源总表](../../assets/reference/SOURCES.md)。
 
 ## 完整还原部分
 
@@ -202,4 +202,4 @@ prepare_pet_exchange.py 从固定871_156598 APK／匹配原版本CDN提取PetGac
 
 - 祈愿正式页面的鼠标／键盘流程、音频播放和存档重启恢复仍待完成；尚无包含完整祈愿流程的 Windows Player 发布。
 
-原表与总页来源见[祈愿原始来源](../../assets/reference/official-city/wish-source-audit.json)和[素材来源总表](../../assets/reference/SOURCES.md)。
+原表与总页来源见[来源总表](../../assets/reference/SOURCES.md)和[素材来源总表](../../assets/reference/SOURCES.md)。
