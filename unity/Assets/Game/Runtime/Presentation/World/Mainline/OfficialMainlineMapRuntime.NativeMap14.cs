@@ -51,11 +51,14 @@ namespace Zjcs.Presentation.World
             if (mainlineSharedWorld?.IsLoaded != true) return;
             if (mainlineSharedPlayer != null) MainlineSharedPlayerProjection.SynchronizeActivations(
                 mainlineSharedWorld, mainlineSharedPlayer, progressionSave.Save);
-            mainlineSharedWorld.SynchronizeEntityStates(mapEntities.ToDictionary(pair => pair.Key,
-                pair => new MainlineSharedEntityState(pair.Value.EntityClassId, pair.Value.State,
-                    pair.Value.Grid.X, pair.Value.Grid.Y)));
             if (mainlineSharedPlayer != null) MainlineSharedPlayerProjection.SynchronizeRegionProgress(
                 mainlineSharedPlayer, mapClassId, regions.regionPoints);
+            var states = mapEntities.ToDictionary(pair => pair.Key,
+                pair => new MainlineSharedEntityState(pair.Value.EntityClassId, pair.Value.State,
+                    pair.Value.Grid.X, pair.Value.Grid.Y));
+            if (mainlineSharedWorld.IsReady)
+                mainlineSharedWorld.SynchronizeClientState(states, region => regions.IsPublicRegion(region) ? 2 : 1);
+            else mainlineSharedWorld.SynchronizeEntityStates(states);
         }
 
         private void RefreshNativeMap14State()

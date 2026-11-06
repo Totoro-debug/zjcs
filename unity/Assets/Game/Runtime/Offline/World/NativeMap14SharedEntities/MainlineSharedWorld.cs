@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using GConfig;
 
 namespace Zjcs.Offline.World.NativeMap14SharedEntities
@@ -134,7 +135,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                 }
                 Root = new NativeMap14SharedRoot(Assemblies, Configuration, Data, containerId,
                     "MainlineSharedWorld/container-binding");
-                entities = new MainlineSharedEntityCreation(Assemblies, Data, Root);
+                entities = new MainlineSharedEntityCreation(Assemblies, Data, Root, clientConfiguration?.Readers);
                 if (initialRegionStatus != null)
                 {
                     entities.Populate(initialRegionStatus, publicContainerId == 0 ? null : (Func<int, long>)ClientContainerId);
@@ -159,6 +160,27 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             if (!IsLoaded) throw new InvalidOperationException("Load the original entities before restoring their local state.");
             entities.Synchronize(states, IsReady);
             if (client != null) entities.SynchronizeActivations(client.Player);
+        }
+
+        // One committed local snapshot drives stage/grid changes and the original
+        // region remove/add/status sequence. Raw progress must already be published.
+        public void SynchronizeClientState(IReadOnlyDictionary<int, MainlineSharedEntityState> states,
+            Func<int, int> regionStatus)
+        {
+            RequireActive();
+            if (!IsReady || client == null || clientRegions == null)
+                throw new InvalidOperationException("Start the original client before synchronizing its live regions.");
+            if (states == null || regionStatus == null) throw new ArgumentNullException(nameof(states));
+            var next = clientRegions.Keys.ToDictionary(region => region, regionStatus);
+            if (next.Any(pair => pair.Value < clientRegions[pair.Key] || pair.Value > 2))
+                throw new InvalidOperationException("A live original region snapshot cannot revert its saved status.");
+            SynchronizeEntityStates(states);
+            foreach (var pair in next.OrderBy(pair => pair.Key))
+            {
+                if (pair.Value == clientRegions[pair.Key]) continue;
+                entities.TransitionRegion(pair.Key, pair.Value, ClientContainerId(pair.Value), states, client.Player);
+                clientRegions[pair.Key] = pair.Value;
+            }
         }
 
         public void Start()

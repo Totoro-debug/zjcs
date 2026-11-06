@@ -27,6 +27,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
         private readonly ConfigManager manager;
         private readonly List<MetadataScope> metadata = new List<MetadataScope>();
         private readonly PlacementMap[] placementMaps;
+        internal Assembly Readers { get; private set; }
         private bool completed, disposed;
 
         public MainlineSharedMapConfiguration(NativeMap14SharedAssemblies shared, ConfigManager manager,
@@ -48,6 +49,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             if (!assembly) throw new InvalidOperationException("Selected original map readers are absent.");
             NativeMap14SharedAssemblies.Verify(assembly.bytes, catalog.AssemblySha256);
             var readers = Assembly.Load(assembly.bytes);
+            Readers = readers;
             var paths = new Dictionary<string, string>(StringComparer.Ordinal);
             foreach (var entry in catalog.Entries)
             {

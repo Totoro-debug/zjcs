@@ -155,5 +155,138 @@ public class SelectedTbEntityExtendParameterInfo
 	}
 }
 
+
+public class MsgMapEntityAdd
+{
+
+	public static void OnMessage(MapEntityAddMsg msg)
+	{
+		if (msg.LoEntityId > 0)
+		{
+			MeManager.Instance.MapData.SetLoEntId2EntId(msg.LoEntityId, msg.Entity.Id);
+		}
+		MapComponent mainMap = MeManager.MainMap;
+		if (mainMap == null)
+		{
+			if (MeManager.Instance.MapData.ContainsContainerId(msg.ContainerId))
+			{
+				msg.Entity.Container = MeManager.Instance.MapContainer;
+				MeManager.Instance.MapContainer.EntityDict.Add(msg.Entity.Id, msg.Entity);
+			}
+		}
+		else
+		{
+			msg.Entity.BindInfos();
+			if (!TryReplace(msg.Entity))
+			{
+				AddEntity(mainMap.Container, msg.Entity);
+			}
+		}
+	}
+
+	private static void AddEntity(EcContainer container, EcEntity entity)
+	{
+		IEntityAddAssistant component = entity.GetComponent<IEntityAddAssistant>();
+		if (component == null || !component.TryEntityAdd(container))
+		{
+			container.AddEntity(entity);
+		}
+	}
+
+	private static bool TryReplace(EcEntity entity)
+	{
+		MapEntityReplaceHandle entityReplaceHandle = MeManager.Instance.MapData.EntityReplaceHandle;
+		if (entityReplaceHandle == null || !entityReplaceHandle.IsAllowed)
+		{
+			return false;
+		}
+		return entityReplaceHandle.TryReplace(entity);
+	}
+}
+
+
+public class MsgMapEntityRemove
+{
+
+	public static void OnMessage(MapEntityRemoveMsg msg)
+	{
+		MapComponent mainMap = MeManager.MainMap;
+		if (mainMap == null)
+		{
+			MeManager.Instance.MapContainer?.EntityDict.Remove(msg.EntityId);
+			return;
+		}
+		EcEntity entity = mainMap.Container.GetEntity(msg.EntityId);
+		if (entity != null && !TryHookForReplace(entity, msg.UserData))
+		{
+			mainMap.Container.RemoveEntityImmediate(entity, msg.UserData);
+		}
+	}
+
+	private static bool TryHookForReplace(EcEntity entity, MySerializable userData = null)
+	{
+		MapEntityReplaceHandle entityReplaceHandle = MeManager.Instance.MapData.EntityReplaceHandle;
+		if (entityReplaceHandle == null || !entityReplaceHandle.IsAllowed)
+		{
+			return false;
+		}
+		IEntityReplaceChecker entityReplaceChecker = GetEntityReplaceChecker(entity, userData, out var ignoreEntity);
+		if (ignoreEntity)
+		{
+			return true;
+		}
+		if (entityReplaceChecker == null)
+		{
+			return false;
+		}
+		entityReplaceHandle.AddNeedReplaceEntityData(entityReplaceChecker);
+		return true;
+	}
+
+	private static IEntityReplaceChecker GetEntityReplaceChecker(EcEntity entity, MySerializable userData, out bool ignoreEntity)
+	{
+		ignoreEntity = false;
+		if (MeManager.Instance.MapData.IsMixMap())
+		{
+			EntityRegionStatusChecker entityRegionStatusChecker = new EntityRegionStatusChecker(entity);
+			if (entityRegionStatusChecker.CanReplace(userData) == EntityReplaceResultType.CanReplace)
+			{
+				return entityRegionStatusChecker;
+			}
+		}
+		IEntityReplaceChecker component = entity.GetComponent<IEntityReplaceChecker>();
+		if (component == null)
+		{
+			return null;
+		}
+		switch (component.CanReplace(userData))
+		{
+		case EntityReplaceResultType.Ignore:
+			ignoreEntity = true;
+			return null;
+		default:
+			return null;
+		case EntityReplaceResultType.CanReplace:
+			return component;
+		}
+	}
+}
+
+
+public class MsgMapRegionStatusUpdate
+{
+
+	public static void OnMessage(MapRegionStatusUpdateMsg msg)
+	{
+		MeManager.Instance.MapData.UpdateRegionStatusComponentData(msg.MapClassId, msg.Region, msg.RegionStatus);
+		MeManager.MainPlayer.SetMapRegionStatus(msg.MapClassId, msg.Region, msg.RegionStatus);
+		MapEntityReplaceHandle entityReplaceHandle = MeManager.Instance.MapData.EntityReplaceHandle;
+		if (entityReplaceHandle != null && entityReplaceHandle.IsAllowed)
+		{
+			entityReplaceHandle.ForceRemoveAll();
+		}
+	}
+}
+
 }
 #endif

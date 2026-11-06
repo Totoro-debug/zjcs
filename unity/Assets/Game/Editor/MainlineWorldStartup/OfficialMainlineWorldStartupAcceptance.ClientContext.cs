@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Linq.Expressions;
+using Zjcs.Offline.World.MainlinePlayerState;
 using UnityEngine;
 using Zjcs.Offline.World.NativeMap14SharedEntities;
 
@@ -130,6 +132,7 @@ namespace Zjcs.Editor.MainlineWorldStartup
                             throw new InvalidDataException("Original region Lo lookup lost a merged entity.");
                         lookups++;
                     }
+                    if (supportPrivate && supportPublic) VerifyRegionTransition(world, player, regionStates, publicId);
                     entities += originals.Length;
                     if (errors != 0) throw new InvalidDataException("Original merged-map startup logged errors.");
                     yield return null;
@@ -152,6 +155,109 @@ namespace Zjcs.Editor.MainlineWorldStartup
             if (errors != 0) throw new InvalidDataException("Original client teardown logged errors.");
             File.WriteAllText(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), "client-context.json"),
                 $"{{\"maps\":{maps},\"mixed_maps\":{mixed},\"entities\":{entities},\"lo_lookups\":{lookups},\"original_start\":true,\"context_restored\":true,\"local_clock\":true,\"clock_restored\":true,\"cancelled_dependencies_restored\":true,\"play_mode\":true}}");
+        }
+
+        private static void VerifyRegionTransition(MainlineSharedWorld world, object player,
+            Dictionary<int, int> regionStates, long publicId)
+        {
+            object Get(object value, string name) => NativeMap14SharedPrefabs.Get(value, name);
+            var shared = world.Assemblies;
+            int mapId = world.Data.MapClassId;
+            int region = regionStates.First(pair => pair.Value == 1).Key;
+            var maximum = (IDictionary)Get(world.Data.Placement, "MaxRegionProgressDict");
+            // Explicit completed-region fixture; original replacement eligibility
+            // must consume actual raw points, not the normalized save percentage.
+            MainlineSharedPlayerProjection.SynchronizeRegionProgress(player, mapId,
+                maximum.Keys.Cast<int>().ToDictionary(id => id, id => (int)maximum[id]));
+            var container = world.Root.Container;
+            var placementOf = world.LoEntityIds.GetType().GetMethod("GetLoEntIdByEntId");
+            Dictionary<int, object> Current() => ((IDictionary)Get(container, "EntityDict")).Values.Cast<object>()
+                .Select(entity => new { Entity = entity, Placement = (int)placementOf.Invoke(world.LoEntityIds, new[] { Get(entity, "Id") }) })
+                .Where(pair => pair.Placement >= 0).ToDictionary(pair => pair.Placement, pair => pair.Entity);
+            var before = Current();
+            var regionPlacements = new HashSet<int>(((IEnumerable)((IDictionary)Get(world.Data.Placement, "RegionInfos"))[region])
+                .Cast<object>().Select(row => (int)Get(row, "LoEntityId")));
+            var states = before.ToDictionary(pair => pair.Key, pair =>
+            {
+                var grid = MapComponent(pair.Value, shared.CommonType("GridTransformComponent"));
+                var stage = MapComponent(pair.Value, shared.CommonType("WorldStageComponent"));
+                var position = grid == null ? null : Get(grid, "Pos");
+                return new MainlineSharedEntityState((int)Get(pair.Value, "ClassId"), stage == null ? 0 : (int)Get(stage, "State"),
+                    position == null ? 0 : (int)Get(position, "X"), position == null ? 0 : (int)Get(position, "Y"));
+            });
+            int prepares = 0, updates = 0, additions = 0, removals = 0, replacements = 0;
+            var statusQuery = player.GetType().GetMethod("GetMapRegionStatus");
+            int Status() => Convert.ToInt32(statusQuery.Invoke(player, new object[] { mapId, region }));
+            var listeners = new List<Action>();
+            try
+            {
+                listeners.Add(TrackPlayerRegionEvent(player, "OnMapStatusPrepareUpdate", args =>
+                {
+                    if ((int)args[0] != mapId || (int)args[1] != region || Status() != 1 || updates != 0)
+                        throw new InvalidDataException("Original region preparation changed the status too early.");
+                    prepares++;
+                }));
+                listeners.Add(TrackPlayerRegionEvent(player, "OnMapStatusUpdate", args =>
+                {
+                    if ((int)args[0] != mapId || (int)args[1] != region || Status() != 2 || prepares != 1)
+                        throw new InvalidDataException("Original public-region event has the wrong ordering.");
+                    updates++;
+                }));
+                using (var add = new NativeMap14SharedEventSubscription(Get(container, "AddEntityEvent"), shared.CommonType("IEcContainerAddEntityEventReceiver"), _ => additions++))
+                using (var remove = new NativeMap14SharedEventSubscription(Get(container, "RemoveEntityEvent"), shared.CommonType("IEcContainerRemoveEntityEventReceiver"), _ => removals++))
+                using (var replace = new NativeMap14SharedEventSubscription(Get(container, "ReplaceEntityEvent"), shared.CommonType("IEcContainerReplaceEntityEventReceiver"), _ => replacements++))
+                {
+                    bool rejected = false;
+                    try { world.SynchronizeClientState(states, id => id == region ? -1 : regionStates[id]); }
+                    catch (InvalidOperationException) { rejected = true; }
+                    if (!rejected || prepares + updates + additions + removals + replacements != 0
+                        || Current().Any(pair => !ReferenceEquals(pair.Value, before[pair.Key])))
+                        throw new InvalidDataException("Invalid region snapshot mutated the original container.");
+                    world.SynchronizeClientState(states, id => id == region ? 2 : regionStates[id]);
+                    regionStates[region] = 2;
+                    var after = Current();
+                    foreach (var pair in before.Where(pair => !regionPlacements.Contains(pair.Key)))
+                        if (!after.TryGetValue(pair.Key, out var unchanged) || !ReferenceEquals(unchanged, pair.Value))
+                            throw new InvalidDataException("Region transition replaced another region's original entity.");
+                    var rows = (IEnumerable)((IDictionary)Get(world.Data.Placement, "RegionInfos"))[region];
+                    int supported = 0;
+                    foreach (object row in rows)
+                    {
+                        int id = (int)Get(row, "LoEntityId");
+                        var info = Get(MapComponent(world.Data.GetContainerPrefab(id), shared.CommonType("LoEntityComponent")), "Info");
+                        var status = Enum.ToObject(shared.CommonType("MapRegionStatus"), 2);
+                        bool expected = (bool)row.GetType().GetMethod("RegionStatusSupported").Invoke(row, new[] { status })
+                            && (bool)info.GetType().GetMethod("RegionStatusSupported").Invoke(info, new[] { status })
+                            && !(bool)info.GetType().GetMethod("BlockDefaultSpawnInMap").Invoke(info, new[] { status });
+                        if (expected != after.ContainsKey(id)) throw new InvalidDataException("Public region retained the wrong original placements.");
+                        if (!expected) continue;
+                        supported++;
+                        var entity = after[id];
+                        var entityId = Get(entity, "Id");
+                        if ((long)Get(entityId, "ContainerId") != publicId || !(bool)Get(entity, "Started")
+                            || !(bool)Get(entity, "Awaked") || !ReferenceEquals(Get(entity, "Container"), container))
+                            throw new InvalidDataException("Public region did not retain its original started container.");
+                    }
+                    int priorEvents = additions + removals + replacements;
+                    world.SynchronizeClientState(states, id => regionStates[id]);
+                    if (Status() != 2 || prepares != 1 || updates != 1 || priorEvents != additions + removals + replacements || replacements == 0)
+                        throw new InvalidDataException("Region transition events repeated or skipped original in-place replacement.");
+                    Debug.Log($"MAINLINE_LIVE_REGION_TRANSITION_PASS map={mapId} region={region} public={supported} add={additions} remove={removals} replace={replacements} duplicate=0");
+                }
+            }
+            finally { foreach (var remove in listeners) remove(); }
+        }
+
+        private static Action TrackPlayerRegionEvent(object player, string name, Action<object[]> callback)
+        {
+            var info = player.GetType().GetEvent(name);
+            var parameters = info.EventHandlerType.GetMethod("Invoke").GetParameters()
+                .Select(value => Expression.Parameter(value.ParameterType, value.Name)).ToArray();
+            var listener = Expression.Lambda(info.EventHandlerType,
+                Expression.Invoke(Expression.Constant(callback), Expression.NewArrayInit(typeof(object),
+                    parameters.Select(value => Expression.Convert(value, typeof(object))))), parameters).Compile();
+            info.AddEventHandler(player, listener);
+            return () => info.RemoveEventHandler(player, listener);
         }
 
         private static (object Clock, FieldInfo Field, object Previous)[] CaptureClientClock(NativeMap14SharedAssemblies shared)

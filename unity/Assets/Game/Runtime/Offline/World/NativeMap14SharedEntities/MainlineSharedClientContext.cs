@@ -50,6 +50,11 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                 map.GetType().GetProperty("mMapLoEntityIdManager", BindingFlags.Instance | BindingFlags.NonPublic)
                     .SetValue(map, world.LoEntityIds);
                 map.GetType().GetProperty("MapContainer").SetValue(map, world.Root.Container);
+                // Original EnsureContainer performs this after selecting the map.
+                // Reuse the already owned container instead of creating another.
+                var replacements = NativeMap14SharedPrefabs.Get(map, "EntityReplaceHandle");
+                replacements.GetType().GetMethod("RefreshByContainer")
+                    .Invoke(replacements, new object[] { world.Data.MapClassId });
                 var component = world.Root.Root.GetType().GetMethod("GetComponent", new[] { typeof(Type) })
                     .Invoke(world.Root.Root, new object[] { shared.CommonType("MapComponent") });
                 map.GetType().GetProperty("Map").SetValue(map, component);

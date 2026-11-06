@@ -30,6 +30,29 @@ def normalized(text):
     return re.sub(r"\s+", "", re.sub(r"//[^\n]*", "", text))
 
 
+def static_map_messages(code):
+    # Keep the selected original static handlers. Their network entry overloads
+    # and base class are not needed when supplying a committed local snapshot.
+    result = []
+    for name in ("MsgMapEntityAdd", "MsgMapEntityRemove", "MsgMapRegionStatusUpdate"):
+        text = (code / "common-source" / (name + ".cs")).read_text("utf8")
+        start = text.index("\n\tprotected override void OnMessage(")
+        opening = text.index("{", start)
+        end, depth = opening + 1, 1
+        while depth:
+            depth += (text[end] == "{") - (text[end] == "}")
+            end += 1
+        text = text[:start] + text[end:]
+        text = text.replace(" : UserNetworkMessageProcessor", "")
+        if name == "MsgMapRegionStatusUpdate":
+            start = text.index("\n\t\tGLoggerDebugInterpolatedStringHandler")
+            end = text.index("\n\t\tMeManager.Instance.MapData.UpdateRegionStatusComponentData", start)
+            text = text[:start] + text[end:]
+        text = re.sub(r"^using [^\n]+;\n", "", text, flags=re.M)
+        result.append(text)
+    return "\n".join(result)
+
+
 def constructors(text, name):
     result = []
     for match in re.finditer(r"public " + name + r"\(ByteBuf [^)]*\)\s*: base\(_buf\)\s*\{", text):
@@ -61,6 +84,7 @@ def verify_client_map_identity(common, shared, work):
         "public bool TryGetStatusByContainerId(", "public EcEntityIdentifier GetEntIdByLoEntId(int",
         "public EcEntityIdentifier GetEntIdByLoEntId(long", "public bool IsMixMap(",
         "public int GetMapLineIndex()", "public void SetGroupMapIdOrderList(",
+        "public void UpdateRegionStatusComponentData(",
     )
     for name in methods:
         if body(old, name) != body(current, name):
@@ -88,6 +112,16 @@ def build():
     if record(shared / "Console.bytes")["sha256"] != "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397":
         raise ValueError("The independently retained shared IL differs")
     identity_evidence = verify_client_map_identity(common, shared, work)
+    transition_evidence = []
+    for name in ("EntityRegionStatusChecker", "MapEntityReplaceHandle"):
+        subprocess.run([str(ROOT / ".tools/dotnet/dotnet.exe"),
+            str(ROOT / ".tools/ilspycmd/tools/net10.0/any/ilspycmd.dll"),
+            "-t", "Common." + name, "-o", str(work), str(shared / "Console.bytes")], check=True)
+        retained = (work / ("Common." + name + ".decompiled.cs")).read_text("utf8")
+        selected = (common / (name + ".cs")).read_text("utf8")
+        if normalized(retained) != normalized(selected):
+            raise ValueError("Retained original region transition implementation differs: " + name)
+        transition_evidence.append(name)
 
     # Verify the exact inherited constructor prefixes against the delivered IL,
     # rather than assuming that the selected and historical schemas agree.
@@ -162,7 +196,7 @@ public sealed class SelectedEntityExtendParameterInfoParser : EntityExtendParame
         text = text.replace(name + ".Deserialize" + name + "(_buf)", "new Selected" + name + "(_buf)")
         text = re.sub(r"^using .*;\n", "", text, flags=re.M)
         source += "\n" + text
-    source += "\n}\n#endif\n"
+    source += "\n" + static_map_messages(code) + "\n}\n#endif\n"
     SOURCE.mkdir(parents=True, exist_ok=True)
     source_path = SOURCE / "SelectedMapConfiguration.cs"
     source_path.write_text(source, encoding="utf8", newline="\n")
@@ -321,12 +355,15 @@ public sealed class SelectedEntityExtendParameterInfoParser : EntityExtendParame
     meta(acceptance)
     names = [name for _, _, name in TABLES] + [name + "Parser" for _, _, name in TABLES]
     names += ["TbMapWorldInfo", "TbEntityExtendParameterInfo", "MapPartInfoBase", "MapInfoWrapParser", "MapInfoManager", "MapRegionEntityInfoManager", "LoEntityCampComponentInfo", "EntityCampComponent", "PlayerMap", "MapLoEntityIdManager", "PublicMapLineStatus"]
-    names += ["MapInfoWrap", "MapWorldLoEntityInfoWrap", "SpawnEntityLiteInfo", "EntityPositionInfo", "MapEntityWorldStageType"]
+    names += ["MapInfoWrap", "MapWorldLoEntityInfoWrap", "SpawnEntityLiteInfo", "EntityPositionInfo", "MapEntityWorldStageType", "EntityRegionStatusChecker", "MapEntityReplaceHandle", "MapEntityAddMsg", "MapEntityRemoveMsg", "MapRegionStatusUpdateMsg"]
     receipt = dict(manifest=apk.version, shared_il=dict(record(shared / "Console.bytes"), manifest="871_156598"),
         operation="Keep original payloads and shared IL. Derive original DTOs with verified appended selected fields, reuse selected table readers and original parser/PostParse/query implementations. Include complete original EC dependency records.",
-        constructor_compatibility=evidence, client_map_identity=identity_evidence, inputs=inputs,
+        constructor_compatibility=evidence, client_map_identity=identity_evidence,
+        region_transition_compatibility=transition_evidence,
+        local_message_adaptation="Original static remove/add/status handlers; omit network entry overloads, network base class and status logging only.", inputs=inputs,
         placement_inputs=placement_inputs,
-        code_inputs=[record(common / (name + ".cs")) for name in names] + [record(reader_source), record(common.parent / "MsgMapStart.cs")],
+        code_inputs=[record(common / (name + ".cs")) for name in names] + [record(reader_source), record(common.parent / "MsgMapStart.cs")]
+            + [record(common.parent / (name + ".cs")) for name in ("MsgMapEntityAdd", "MsgMapEntityRemove", "MsgMapRegionStatusUpdate")],
         shared_reader=record(shared / "Luban.bytes"), nullable_string_reader_verified=True,
         config_abi_sources=[record(path) for path in sorted((ROOT / "unity/Assets/Game/Runtime/Official/SharedConfig").rglob("*.cs"))],
         bindings=[record(path) for path in (new_binding, Path(str(new_binding) + ".meta"), runtime / "MainlineSharedWorld.cs", runtime / "NativeMap14SharedData.cs", runtime / "MainlineSharedEntityCreation.cs", runtime / "MainlineSharedClientContext.cs", runtime / "MainlineSharedClientContext.cs.meta")],
