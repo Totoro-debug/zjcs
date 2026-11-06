@@ -2,17 +2,19 @@ using System;
 using Zjcs.Offline.World.NativeMap14SharedEntities;
 using Zjcs.Offline.World.NativeMap14SharedViews;
 using Zjcs.Official.World.Map13EntityVisibilityViews;
+using Zjcs.Official.EntityLifecycle;
 
 namespace Zjcs.Offline.World.NativeMap14Visibility
 {
     // Read/write/event projection over the existing original shared component.
     // Flag mutation and original receiver dispatch stay in unchanged Console IL.
-    public sealed class NativeMap14VisibilityData : Map13VisibilityData, IDisposable
+    public sealed class NativeMap14VisibilityData : Map13VisibilityData, IEntityComponentInfoSource, IDisposable
     {
         private readonly NativeMap14SharedAssemblies shared;
         private readonly NativeMap14SharedEventSubscription subscription;
         private bool disposed;
         public object Original { get; }
+        public object ComponentInfo => Get("_Info");
 
         private NativeMap14VisibilityData(NativeMap14SharedAssemblies shared, object original)
         {

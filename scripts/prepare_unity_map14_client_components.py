@@ -33,11 +33,11 @@ def prepare():
     inputs += [CODE/'common-source/Common'/(name+'.cs') for name in ('EcComponent','LevelComponent','AwardExtraPropInfo','AwardExtraProp','StageResultAwardStatusEffectComponentData')]
     native=ROOT/'unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientComponents'
     editor=ROOT/'unity/Assets/Game/Editor/Map14/ClientComponents';editor.mkdir(parents=True,exist_ok=True)
-    common=['Zjcs.Official.EntityLifecycle','Zjcs.Official.EntityViews','Zjcs.Official.EntityTipDotViews','Zjcs.Official.StoryAnimation','Zjcs.Official.StoryPlayables','Zjcs.Official.StoryPlayableManager']
+    common=['Zjcs.Official.EntityLifecycle','Zjcs.Official.EntityViews','Zjcs.Official.EntityTipDotViews','Zjcs.Official.StoryAnimation','Zjcs.Official.StoryPlayables','Zjcs.Official.StoryPlayableManager','Zjcs.Official.EntityRootVisibility','Zjcs.Official.World.Map13EntityVisibilityViews']
     outputs=[]
     for folder,name,refs,platforms in (
         (output,'Zjcs.Official.EntityClientComponents',common,[]),
-        (native,'Zjcs.Offline.World.NativeMap14ClientComponents',common+['Zjcs.Official.EntityClientComponents','Zjcs.Offline.World.NativeMap14SharedViews','Zjcs.Offline.World.NativeMap14SharedEntities'],[]),
+        (native,'Zjcs.Offline.World.NativeMap14ClientComponents',common+['Zjcs.Official.EntityClientComponents','Zjcs.Offline.World.NativeMap14SharedViews','Zjcs.Offline.World.NativeMap14SharedEntities','Zjcs.Offline.World.NativeMap14Visibility'],[]),
         (editor,'Zjcs.Editor.Map14.ClientComponents',common+['Zjcs.Official.EntityContainers','Zjcs.Official.EntityLoading','Zjcs.Official.EntityClientComponents','Zjcs.Offline.World.NativeMap14ClientComponents','Zjcs.Offline.World.NativeMap14SharedViews','Zjcs.Offline.World.NativeMap14SharedEntities','Zjcs.Offline.World.NativeMap14ClientEntities','Zjcs.Editor.Map14.EntityIndex'],['Editor'])):
         write(folder/(name+'.asmdef'),encode(dict(name=name,autoReferenced=False,references=refs,includePlatforms=platforms)))
         for path in sorted(folder.iterdir()):

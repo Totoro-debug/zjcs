@@ -3,6 +3,7 @@ using Zjcs.Official.EntityClientComponents;
 using Zjcs.Official.EntityTipDotViews;
 using Zjcs.Offline.World.NativeMap14SharedEntities;
 using Zjcs.Offline.World.NativeMap14SharedViews;
+using Zjcs.Offline.World.NativeMap14Visibility;
 namespace Zjcs.Offline.World.NativeMap14ClientComponents
 {
     public sealed partial class NativeMap14ClientComponentBindings
@@ -20,7 +21,11 @@ namespace Zjcs.Offline.World.NativeMap14ClientComponents
             Bind(view, "MapStatusAgentComponent", value => new CharacterMapStatus(value));
             Bind(view, "CharacterComponent", value => new CharacterState(value));
             Bind(view, "GridMoverComponent", value => new CharacterGridMover(value));
+            Bind(view, "NpcFollowerControllerComponent", value => new CharacterFollowers(value));
             Bind(view, "ActionAgentComponent", value => new CharacterActionAgent(shared, value));
+            var customVisibility = view.Original.GetType().GetMethod("GetComponent", new[] { typeof(Type) })
+                .Invoke(view.Original, new object[] { shared.CommonType("VisibilityCustomComponent") });
+            if (customVisibility != null) NativeMap14VisibilityData.Bind(shared, view);
             Bind(view, "StageBehTouchComponent", value => new Touch(value));
             Bind(view, "StageResultAwardExtraPropComponent", value => new ExtraProp(value));
             Bind(view, "StageResultAwardStatusEffectComponent", value => new StatusEffect(value));
@@ -112,6 +117,12 @@ namespace Zjcs.Offline.World.NativeMap14ClientComponents
             public override object Original { get; }
             public override object ComponentInfo => Get(Original, "_Info");
             public CharacterGridMover(object original) { Original = original; }
+        }
+        private sealed class CharacterFollowers : NpcFollowerControllerComponentData
+        {
+            public override object Original { get; }
+            public override object ComponentInfo => Get(Original, "_Info");
+            public CharacterFollowers(object original) { Original = original; }
         }
         private sealed class Touch : StageBehTouchComponentData
         {

@@ -48,13 +48,13 @@
     },
     {
       "path": "assets/reference/official-map/mainline-character-components-source-manifest.json",
-      "sha256": "40b8780141e1a003f71405bd15d35ae204154129e0dd1106c214ed7a6bb344d4"
+      "sha256": "abf4b449353c07cc2a2d966c940206a216acb14557ad426126ad5326edb26cc1"
     }
   ],
   "tools": [
     {
       "path": "scripts/recover_mainline_character_sources.py",
-      "sha256": "921213fda97cbc1c8bd867e6155c2ed71fd04caf0885e3c41aa28db127072e3a"
+      "sha256": "6e11f759f23225d816c4ead05c3dbdc000821557a9825bf2e5be24b076f0da86"
     },
     {
       "path": ".tools/dotnet/dotnet.exe",
@@ -159,6 +159,10 @@
       "sha256": "75775226b2ff4efbc2853dff3d9964d5f11cd5032ca69ccd304d298944f5d5b9"
     },
     {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyVisibility.cs",
+      "sha256": "630ffc640b36d652fb839ed877bdb358242c31caaff557449ee276ab1a90ccde"
+    },
+    {
       "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyVisibilityCustom.cs",
       "sha256": "0255dbec863e16698a9bc9b95c859b4922d59e55aaaf126d223a4f8d58ed9459"
     },
@@ -225,6 +229,22 @@
     {
       "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/GridMoverComponentInfo.cs",
       "sha256": "9192fe7435eab0ca2d4d9df410e1a849695fc724317a74410ff055285fae253a"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/NpcFollowerControllerComponent.cs",
+      "sha256": "8ac231bbcda6324d1a0af1e34af8ba9bce30ea2de92cfed62a7406713f68e4e8"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/NpcFollowerControllerComponentInfo.cs",
+      "sha256": "49ba03af1772a6ffeee3f7149b6bedb9230e5bd0bfa4a48af3bd60e332c4d2da"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/VisibilityComponent.cs",
+      "sha256": "19ebac9446b8c5e8962ef5015defa6acae889e5d292376a47ff035a27e5a4f5d"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/VisibilityCustomComponent.cs",
+      "sha256": "89c7cd402b2cb843812b23fa486364d46225032cfa6d7441d29ddf885f817f75"
     }
   ],
   "operation": "Read the historical source profile from its committed Git identity without changing the active profile. Verify the original manifest size/MD5/SHA256 and each DLL bundle size/MD5; reuse the official assembly AES-CBC decode. Require decoded Assembly-CSharp and Console hashes to equal the existing original lifecycle pins. Decompile all original 3001 root script types, their generic character base, tag flags and consumed character, movement and action shared types into a separate historical source directory. Reuse source cache only when its recorded hash, originating IL and decompiler hash match; do not substitute current code for removed historical serialized fields."

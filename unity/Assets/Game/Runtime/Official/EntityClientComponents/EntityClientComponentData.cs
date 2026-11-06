@@ -31,6 +31,7 @@ namespace Zjcs.Official.EntityClientComponents
         public abstract event Action<bool> OnPlayerOnlineStateUpdate;
     }
     public abstract class GridMoverComponentData : EntityClientComponentData { }
+    public abstract class NpcFollowerControllerComponentData : EntityClientComponentData { }
     public abstract class StageBehTouchComponentData : EntityClientComponentData { }
     public abstract class StageResultAwardExtraPropComponentData : EntityClientComponentData
     { public abstract object GetAwardExtraPropInfo(int compIndex); }

@@ -1,0 +1,128 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyVisibility.cs",
+      "sha256": "630ffc640b36d652fb839ed877bdb358242c31caaff557449ee276ab1a90ccde"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyVisibilityCustom.cs",
+      "sha256": "0255dbec863e16698a9bc9b95c859b4922d59e55aaaf126d223a4f8d58ed9459"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyNpcFollowerController.cs",
+      "sha256": "cdd5673c254d3d221adc9547d2bdd675b16176809b40bea311b654ae73b49144"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/VisibilityComponent.cs",
+      "sha256": "19ebac9446b8c5e8962ef5015defa6acae889e5d292376a47ff035a27e5a4f5d"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/VisibilityCustomComponent.cs",
+      "sha256": "89c7cd402b2cb843812b23fa486364d46225032cfa6d7441d29ddf885f817f75"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/NpcFollowerControllerComponent.cs",
+      "sha256": "8ac231bbcda6324d1a0af1e34af8ba9bce30ea2de92cfed62a7406713f68e4e8"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/NpcFollowerControllerComponentInfo.cs",
+      "sha256": "49ba03af1772a6ffeee3f7149b6bedb9230e5bd0bfa4a48af3bd60e332c4d2da"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRootVisibility/MyVisibility.cs",
+      "sha256": "3349b7f38cd5d1185a6f50e232c72456f1680d327525761034751a47c1d76c8e"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/mainline-character-client-sources-source-manifest.json",
+      "sha256": "62b93bcc05d29624783c5e99407511974cf5a586b1fa954ee0592a5362e2f11b"
+    },
+    {
+      "path": "assets/reference/official-map/map14-entity-root-visibility-source-manifest.json",
+      "sha256": "a299816048802ee75e283b3a42adbc44114ff0cc52d9f8a1741cdbffc2deabd6"
+    },
+    {
+      "path": "assets/reference/official-map/map14-native-visibility-source-manifest.json",
+      "sha256": "1ab26451838f8396223b8591613feaed505ec237d48e7035090bf5c4efa40473"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_mainline_character_visibility.py",
+      "sha256": "ed0ae4e2b50bbbd16989f043e3cf0a2cbb0d801dd0ded601ecf358fa2637bbbe"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_client_components.py",
+      "sha256": "4e8c56a17e899b6276d2336c041bb356978dd57f1d58be9c6ab6fd943f15075d"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_native_visibility.py",
+      "sha256": "23e8711b847643231a08b520ab7a692c36cc3961e88cb7b96ab09176cad8263e"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyVisibilityCustom.cs",
+      "sha256": "285b34460ec1a86b736a9c4ade411dd97a77071760e52eac1c2b8543c75e2645"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyVisibilityCustom.cs.meta",
+      "sha256": "4a13627421d7a1e0bc767661e5ce69873ab62de6c482d1eac572fbcc8845bcc9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyNpcFollowerController.cs",
+      "sha256": "f929c4fad30aa181a9e20a34f9aa090f9095b4dceeb731112b251d9432e9902c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyNpcFollowerController.cs.meta",
+      "sha256": "503fbf0947412cc0884a2d068d6dda6bcdd46d22a748915935263b7bea40dc75"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/EntityClientComponentData.cs",
+      "sha256": "615e968a782db812befa94710ba52b7628cd6f1533ef258dc20ea11e3025da00"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/Zjcs.Official.EntityClientComponents.asmdef",
+      "sha256": "c81dbff6fdb6d58848497780c2631e15d6ce510f1340ac8b3cffa4c17918c2e8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientComponents/NativeMap14ClientComponentBindings.cs",
+      "sha256": "375c3c02603e225ff637d28b7941503200be80f1e8d62b99fd0595153d9bafcd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientComponents/Zjcs.Offline.World.NativeMap14ClientComponents.asmdef",
+      "sha256": "9aac704f5567292ec707b5a3006b0636a289c5784c8a9ef4661fb8bbc513effa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14Visibility/NativeMap14VisibilityData.cs",
+      "sha256": "109dc932e4c9203f2bf86a2a3667f329b652fa8c2993604c23748ce7ff050c1a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14Visibility/Zjcs.Offline.World.NativeMap14Visibility.asmdef",
+      "sha256": "298df76a76f7d0ef8c068dd79234a0e0dedb472a28346e04d5124a0af474da60"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.CharacterVisibility.cs",
+      "sha256": "73af6275581e2f71bdc188f2aff3968a14e63fd3496d66cb06842a9a7c080c9c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.CharacterVisibility.cs.meta",
+      "sha256": "9a2515ec7b25d0be68682285568d53b0aa49267ab309df493a4f60740f14ee4e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientContext.cs",
+      "sha256": "79a68d8c621fd5c92dbc19aff1d59f25f3c68f7efbe31bad81f716d58a4df2e3"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef",
+      "sha256": "1df4c97b3d6e1425d915d6348bdc79365dbc0a20a87b1b8d45114b71511b6c2e"
+    }
+  ],
+  "operation": "Copy both complete original character scripts. Verify the complete reused generic MyVisibility body against matching recovered historical IL after the existing ABI/DI substitutions. Bind the real custom visibility component through the existing native flag/event adapter and expose original Info identity. Bind the original follower controller and Info without implementing follower rules.",
+  "limitations": [
+    "Full native character prefab, real visibility handlers/fade rendering, formal minimap/HUD and Windows Player remain unfinished."
+  ]
+}

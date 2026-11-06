@@ -76,14 +76,16 @@ def main():
                               path_id=str(assets[0].path_id), text_asset_sha256=hashlib.sha256(text).hexdigest(), output=record(target)))
     identity_path = ROOT / "assets/reference/official-map/mainline-character-components-source-manifest.json"
     identities = json.loads(identity_path.read_bytes())["script_identities"]
-    names = sorted({row["type"] for row in identities if row["hierarchy"] == "3001"}) + ["MyMapCharacterBase`2", "EMapEntityTagType"]
+    names = sorted({row["type"] for row in identities if row["hierarchy"] == "3001"}) + ["MyMapCharacterBase`2", "EMapEntityTagType", "MyVisibility`2"]
     targets = [(name, "Assembly-CSharp.dll", "client-source") for name in names]
     targets.extend(("Common." + name, "Console.dll", "common-source/Common")
                    for name in ("CharacterComponent", "GridMoverComponent", "GridMoverComponentInfo",
                                 "ActionAgentComponent", "ActionAgentComponentImplement", "ActionComponent",
                                 "ActionRuntimeData", "ActionType", "ActionAgentStartEventDelegate",
                                 "ActionAgentEndEventDelegate", "EcEntityEndEventDelegate",
-                                "EventDelegateBasicBase`2", "EventDelegateBase`4"))
+                                "EventDelegateBasicBase`2", "EventDelegateBase`4",
+                                "VisibilityComponent", "VisibilityCustomComponent",
+                                "NpcFollowerControllerComponent", "NpcFollowerControllerComponentInfo"))
     dotnet = ROOT / ".tools/dotnet/dotnet.exe"
     ilspy = ROOT / ".tools/ilspycmd/tools/net10.0/any/ilspycmd.dll"
 

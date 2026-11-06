@@ -13,7 +13,7 @@ def record(p):
 def build():
     runtime=ROOT/'unity/Assets/Game/Runtime/Offline/World/NativeMap14Visibility'
     editor=ROOT/'unity/Assets/Game/Editor/Map14/NativeVisibility'
-    refs=['Zjcs.Official.World.Map13EntityVisibilityViews','Zjcs.Official.World.Map13EntityEvents','Zjcs.Official.EntityViews','Zjcs.Offline.World.NativeMap14SharedEntities','Zjcs.Offline.World.NativeMap14SharedViews']
+    refs=['Zjcs.Official.World.Map13EntityVisibilityViews','Zjcs.Official.World.Map13EntityEvents','Zjcs.Official.EntityViews','Zjcs.Official.EntityLifecycle','Zjcs.Offline.World.NativeMap14SharedEntities','Zjcs.Offline.World.NativeMap14SharedViews']
     base=ROOT/'unity/Assets/Game/Editor/Map14/StatueEntities/Zjcs.Editor.Map14.StatueEntities.asmdef'
     outputs=[]
     for folder,name,references,platforms in ((runtime,'Zjcs.Offline.World.NativeMap14Visibility',refs,[]),

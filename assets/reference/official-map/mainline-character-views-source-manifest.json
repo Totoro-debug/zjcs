@@ -14,7 +14,7 @@
   "inputs": [
     {
       "path": "assets/reference/official-map/mainline-character-client-sources-source-manifest.json",
-      "sha256": "c976f2ab4a89506bec7fee0375469f59b54bc3a71d590da2b789f8a591c99b8d"
+      "sha256": "62b93bcc05d29624783c5e99407511974cf5a586b1fa954ee0592a5362e2f11b"
     },
     {
       "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyCharacter.cs",
@@ -54,11 +54,11 @@
   "dependencies": [
     {
       "path": "assets/reference/official-map/mainline-character-components-source-manifest.json",
-      "sha256": "40b8780141e1a003f71405bd15d35ae204154129e0dd1106c214ed7a6bb344d4"
+      "sha256": "abf4b449353c07cc2a2d966c940206a216acb14557ad426126ad5326edb26cc1"
     },
     {
       "path": "assets/reference/official-map/map14-shared-ec-runtime-source-manifest.json",
-      "sha256": "fdb8f39128541dbf07c37cf55652cf350b2927b1ec74a4c0c1a2dd3944c06b10"
+      "sha256": "6a3f57c69d9f42d5ba62e7ad4ddf3cc221ff3b0cbdc5337766df8e9069e7fe99"
     }
   ],
   "outputs": [
@@ -96,15 +96,15 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/EntityClientComponentData.cs",
-      "sha256": "5e35ee8dead85d217c144b2f113032e6530117e04d4abcfbb06130eef3de3dfd"
+      "sha256": "615e968a782db812befa94710ba52b7628cd6f1533ef258dc20ea11e3025da00"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/Zjcs.Official.EntityClientComponents.asmdef",
-      "sha256": "4b202deb5e5d5ff2e42996257305d3f36802d6cc02f6edc14d47a35bc944ed15"
+      "sha256": "c81dbff6fdb6d58848497780c2631e15d6ce510f1340ac8b3cffa4c17918c2e8"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientComponents/NativeMap14ClientComponentBindings.cs",
-      "sha256": "0221850d2f5f8f33b5983b5b0985b0e0eb895cc8ad02c581f5b1d7df123be7bd"
+      "sha256": "375c3c02603e225ff637d28b7941503200be80f1e8d62b99fd0595153d9bafcd"
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.CharacterComponents.cs",
@@ -112,7 +112,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef",
-      "sha256": "200d8bbecaf2a04dfecab07858547944134ca7557729938cbecf66ee968f5291"
+      "sha256": "1df4c97b3d6e1425d915d6348bdc79365dbc0a20a87b1b8d45114b71511b6c2e"
     }
   ],
   "operation": "Copy complete original MyCharacter, MyGridMover, MapEntityTag and EMapEntityTagType. Preserve original character online subscription, initial refresh, base lifecycle, join-in-middle branch and Play request ordering. Replace original DI with explicit playable-manager and deferred StageInfo.JoinInMiddle injection. Bind the real original CharacterComponent event directly without copying dispatch/state; expose original grid mover Info identity. Preserve original tag flags and any-bit query.",
