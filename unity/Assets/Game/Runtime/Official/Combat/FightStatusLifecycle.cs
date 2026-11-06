@@ -549,7 +549,11 @@ namespace Zjcs.Combat.Official
             };
             unit.Statuses.Add(applied);
             if (round >= 0) InitializeRoundStartDelay(unit, applied);
-            if (applied.HasBackToLifeComponent) unit.Hp = 1;
+            if (applied.HasBackToLifeComponent)
+            {
+                unit.Hp = 1;
+                unit.HpUpdated?.Invoke(unit);
+            }
             FightStatusCooldownRuntime.Invoke(unit, applied, random);
             RecordApplication(unit, template);
             unit.StatusStarted?.Invoke(unit, applied);

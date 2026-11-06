@@ -1068,6 +1068,7 @@ namespace Zjcs.Combat.Official
                 unitById.Add(summon.Id, summon);
                 summon.StatusStarted = OnStatusStarted;
                 summon.StatusEnded = OnStatusEnded;
+                summon.HpUpdated = OnHpUpdated;
                 summon.StatusForbiddenChanged = OnStatusForbiddenChanged;
                 summon.StatusRoundResolver = StatusClockRound;
                 summon.RoundStartClockResolver = RoundStartClockRound;

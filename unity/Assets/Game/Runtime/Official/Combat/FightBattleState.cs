@@ -71,6 +71,7 @@ namespace Zjcs.Combat.Official
         // Runtime-only subscription, scoped to an executor step. Checkpoints contain public fields.
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusStarted;
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusEnded;
+        [NonSerialized] internal Action<FightBattleUnitState> HpUpdated;
         internal Action<FightBattleUnitState, FightBattleStatusState, bool> StatusForbiddenChanged;
         internal Func<FightBattleStatusState, int> StatusRoundResolver;
         internal Func<FightBattleStatusState, int> RoundStartClockResolver;

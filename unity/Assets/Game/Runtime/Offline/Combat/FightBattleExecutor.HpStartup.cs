@@ -77,6 +77,11 @@ namespace Zjcs.Combat.Official
             RebuildBattleProperties();
         }
 
+        private void OnHpUpdated(FightBattleUnitState changed)
+        {
+            ApplyHpChangeTriggers(changed, null);
+        }
+
         private void ExecuteHpStartupSkills(List<FightBattleStatusSkillInvocation> invocations)
         {
             if (invocations.Count == 0) return;

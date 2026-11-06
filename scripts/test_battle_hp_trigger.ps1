@@ -37,6 +37,7 @@ function New-Unit($hp, $maxHp) {
 function New-TriggerStatus($per, $statusId, $maxCount, $atStart) {
     $status = [Zjcs.Combat.Official.FightBattleStatusState]::new()
     $status.InstanceId = 1; $status.ClassId = 999999; $status.OwnerId = 1; $status.CreatorId = 1
+    $status.RootSkillId = 999990; $status.ApplyingSkillItemId = 999991
     $status.DurationRound = -1; $status.CurDurationRound = -1; $status.StartRound = 0
     $status.HpTriggerPer = $per; $status.HpTriggerMaxCount = $maxCount
     $status.HpTriggerAtStart = $atStart
@@ -76,7 +77,9 @@ $cp.Grid = [Zjcs.Combat.Official.FightBattleGrid]::new(); $cp.Grid.Width = 8; $c
 $cp.Units.Add($start); $cp.Units.Add($enemy)
 $wave = [Zjcs.Combat.Official.FightBattleWaveState]::new(); $wave.Index = 0; $wave.UnitIds.Add(2); $cp.Waves.Add($wave)
 $formula = [Zjcs.Combat.Official.FightDamageFormula]::new([Zjcs.Combat.Official.FightDamagePropertySchema]::new(), [Zjcs.Combat.Official.FightDamageFormulaConfig]::new())
-[void][Zjcs.Combat.Official.FightBattleExecutor]::Begin($cp, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(), $catalog)
+$startExecutor = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
+    $cp, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(), $catalog)
+[void]$startExecutor.Step(0, 1)
 Assert-Trigger (($start.Statuses | Where-Object { $_.ClassId -eq 26005 }).Count -eq 1) 'Executor did not run the HP trigger opening pass'
 
 # Official status 60680 applies 60681; 25070 requests skill 50010 below 15%.
