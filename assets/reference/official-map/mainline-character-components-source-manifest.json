@@ -1,0 +1,729 @@
+{
+  "format": 1,
+  "prefab_manifest": "871_156598",
+  "source_manifest": "884_156692",
+  "prefab_source": {
+    "path": "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
+    "container_path": "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
+    "uses": [
+      {
+        "kind": "ec_entity",
+        "class_id": 3001
+      }
+    ],
+    "source": {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmapcharacter.bundle",
+      "bundle_hash": "b5e9d08ca87e9493e291cb9e434bce9f",
+      "path_id": "-8969246423738281339",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/b5e9d08ca87e9493e291cb9e434bce9f.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 2318988,
+      "bundle_sha256": "e3198b909dbdcced0dcd2832435872ad217e74768ed74b6ad709e0c166f9d163"
+    },
+    "object_sha256": "2f177b4bafa6c52b416a89ab00ac60dd2b2764b195fc020b2798ae15067df604"
+  },
+  "script_identities": [
+    {
+      "hierarchy": "3001",
+      "type": "MyEntity",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-5337256399684169083",
+      "export_file_id": "114808113985169905",
+      "export_script_guid": "1a09bba1a531cae571bfe36ac392c6a3"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MyCharacter",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-7594064478052740475",
+      "export_file_id": "114060945828524476",
+      "export_script_guid": "32fb22def1e97756a3f3e8d84920e2eb"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "AttachAgent",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-4793055599625039227",
+      "export_file_id": "114900271049623953",
+      "export_script_guid": "7cb04e6a12caa838d4b8404a7111f840"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MyActionAgent",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "2249792044820337285",
+      "export_file_id": "114472185465350827",
+      "export_script_guid": "daa6309d6ca840de3846431065a61f3b"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MyProp",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-1607905436152098171",
+      "export_file_id": "114518489005915545",
+      "export_script_guid": "44557700a0c41a3526b518f20779be0f"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MyLevel",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-6625108572420369787",
+      "export_file_id": "114220653531496868",
+      "export_script_guid": "42ccfc3cf6dd852eeb5def9cb32fae3f"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MyGridMover",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "6963569608845365893",
+      "export_file_id": "114841364053301648",
+      "export_script_guid": "030f56e4f2075293b690dd13c053651d"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MySizeCfg",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-8766376157617188219",
+      "export_file_id": "114967328832014496",
+      "export_script_guid": "819b11f10b18f303847ce30e864070a1"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MyTransform",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "860159065481417349",
+      "export_file_id": "114291844617409189",
+      "export_script_guid": "18bcaddf6b6acac9d6383eac6c4f7e92"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MoveAgent",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-6930404719169957243",
+      "export_file_id": "114344419225485095",
+      "export_script_guid": "88425fab5a34276f3053ebd917c3a351"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MyGridTransform",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "7414927068920287877",
+      "export_file_id": "114919942235722503",
+      "export_script_guid": "0c248b1400dede1609276ace91770610"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MyWorldMapCharacter",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "7995889299046994565",
+      "export_file_id": "114107629493147155",
+      "export_script_guid": "a4b60be45dd0c5e5a084554438678d82"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MyEquipAgent",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-3122482477447048571",
+      "export_file_id": "114833703512093738",
+      "export_script_guid": "eaf274dd571857f1b3898ea3fd1dc111"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "WorldPlayerInput",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "2377743045393912453",
+      "export_file_id": "114632746491512912",
+      "export_script_guid": "7790f19e578e8729d652426e855caf94"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MyMapRegionStatus",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-3676140267955744123",
+      "export_file_id": "114719342369648492",
+      "export_script_guid": "8905eac40c41b7ac84dc125e12756d89"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "AnimationController",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-2489363411292908923",
+      "export_file_id": "114726790013014859",
+      "export_script_guid": "c340468b5bd22b96d515690bd890b556"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MapControllerEntityRadar",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "9109017260171793029",
+      "export_file_id": "114693329660128220",
+      "export_script_guid": "24845037f258e93ab5728833a103bca6"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MyVisibilityCustom",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-1079657347895258491",
+      "export_file_id": "114801075752484240",
+      "export_script_guid": "4884da4b05606383ddc5be468827e16a"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MapCharacterMoveEffectSupport",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-6292579866537749883",
+      "export_file_id": "114000955326284023",
+      "export_script_guid": "cbed2362b5ed8e75626788d0c989a3da"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MyCharacterShallowEffect",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-8875420175320739195",
+      "export_file_id": "114397768327470545",
+      "export_script_guid": "51dfafddff9acd53cefdc240d58ea09d"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MyNpcFollowerController",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "1642985576016188037",
+      "export_file_id": "114571718729274231",
+      "export_script_guid": "5dbfa9b6d5b5b5a920762779f91f4730"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MyMapStatusAgent",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-9058525322340003195",
+      "export_file_id": "114581786255902400",
+      "export_script_guid": "1fb5319eec2d8e22d5ab414ada32b38b"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "TerrainStepEffect",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "5229893817013572229",
+      "export_file_id": "114477046003934300",
+      "export_script_guid": "5e78fc5e2229c443f72f9ebe7eba23fa"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MapEntityTag",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-2804864355402378619",
+      "export_file_id": "114045458335737618",
+      "export_script_guid": "e238d1c973e2b1a02938716e7314d3b9"
+    },
+    {
+      "hierarchy": "3001",
+      "type": "MapCharacterUniformFloatMovementTargetSupport",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "5214291505947873925",
+      "export_file_id": "114722951815217645",
+      "export_script_guid": "f25ef3b557748d9290bebcc2bfe08ade"
+    },
+    {
+      "hierarchy": "3001/ColliderSlot",
+      "type": "TransformLocker",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "3833186228690883205",
+      "export_file_id": "114215879266689626",
+      "export_script_guid": "6d26cf866657b9a8e949fd826a6458b0"
+    },
+    {
+      "hierarchy": "3001/ColliderSlot/Collider",
+      "type": "ColliderEntityInputRedirectSupporter",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-8220138293108600187",
+      "export_file_id": "114743393880019028",
+      "export_script_guid": "2da82926ddf346cbdab575dfbee858da"
+    },
+    {
+      "hierarchy": "3001/3001_view",
+      "type": "ECViewDriver",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-1419007378876394875",
+      "export_file_id": "114026196548002408",
+      "export_script_guid": "ba7f5330c3ed630e2f31d8535cea8c98"
+    },
+    {
+      "hierarchy": "3001/3001_view",
+      "type": "SpriteRendererList",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-7684210770098449787",
+      "export_file_id": "114572839542275309",
+      "export_script_guid": "e0923cfc49c652fb1758536239715823"
+    },
+    {
+      "hierarchy": "3001/3001_view/Model/Offset/Player_Model_Map",
+      "type": "Spine.Unity.SkeletonMecanim",
+      "assembly": "spine-unity",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-1442183821149859195",
+      "export_file_id": "114370222726513266",
+      "export_script_guid": "ddec999086d996d056e1e92ef7d1bbe4"
+    },
+    {
+      "hierarchy": "3001/3001_view/Model/Offset/Player_Model_Map",
+      "type": "AppearanceSystem.Runtime.AppearanceMecanim",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-2249722970744089979",
+      "export_file_id": "114574304967836189",
+      "export_script_guid": "66cec78eed31719945d1d2ff3b20be3f"
+    },
+    {
+      "hierarchy": "3001/3001_view/Model/Offset/Player_Model_Map",
+      "type": "AppearanceSystem.Runtime.AppearanceCharacter",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "5523245877023740549",
+      "export_file_id": "114009931292380359",
+      "export_script_guid": "abfbce9ed0e677bca192ad75f4f827ae"
+    },
+    {
+      "hierarchy": "3001/3001_view/Model/Offset/Player_Model_Map",
+      "type": "AppearanceSystem.PlayerAnimatorAppearance",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-1118298506445450619",
+      "export_file_id": "114393105877652414",
+      "export_script_guid": "2a80a456c3247fa29644d17ebd4d35a3"
+    },
+    {
+      "hierarchy": "3001/3001_view/Model/Offset/Player_Model_Map",
+      "type": "AppearanceRendererPartHandler",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-5873915140495306107",
+      "export_file_id": "114799762105739359",
+      "export_script_guid": "ba7b891a3214e10f1553de4f2283c79a"
+    },
+    {
+      "hierarchy": "3001/3001_view/Model/Offset/Player_Model_Map",
+      "type": "AppearanceSystem.Runtime.AppearanceSkinClip",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "249750665656865413",
+      "export_file_id": "114829625606037309",
+      "export_script_guid": "1c67e21f7a96d6780bc5c83f6c14aadb"
+    },
+    {
+      "hierarchy": "3001/3001_view/Model/Offset/Player_Model_Map",
+      "type": "PreviewTool",
+      "assembly": "Framework",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-1808192656148327803",
+      "export_file_id": "114574190619683098",
+      "export_script_guid": "8052c60def74a9f674f9adc477cbfea4"
+    },
+    {
+      "hierarchy": "3001/3001_view/Model/Offset/PrimaryWeapenContent/PrimaryWeapon",
+      "type": "FollowPlayerWeapon",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "6290323968343282309",
+      "export_file_id": "114651560128206891",
+      "export_script_guid": "050065df88f95b3992bbe667448f9d89"
+    },
+    {
+      "hierarchy": "3001/3001_view/Model/Offset/PrimaryWeapenContent/PrimaryWeapon",
+      "type": "SkeletonRendererFade",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-2193276383327415675",
+      "export_file_id": "114964469411310401",
+      "export_script_guid": "9d6c1c4298f45ae3d3b1a9541e7bf39b"
+    },
+    {
+      "hierarchy": "3001/3001_view/Model/Offset/ShadowBoneFollower",
+      "type": "AttachmentFollower",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "4384563086986777221",
+      "export_file_id": "114431740505123533",
+      "export_script_guid": "7a455e102054b03741accba6096b5970"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI",
+      "type": "TransformLocker",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "3021221822438183557",
+      "export_file_id": "114121005239445321",
+      "export_script_guid": "6d26cf866657b9a8e949fd826a6458b0"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/HonorTitleSlot",
+      "type": "PreviewTool",
+      "assembly": "Framework",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-3645532084752936315",
+      "export_file_id": "114704330047573733",
+      "export_script_guid": "8052c60def74a9f674f9adc477cbfea4"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/icon",
+      "type": "PlayerIconMe",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "7649269865314914949",
+      "export_file_id": "114231814100211528",
+      "export_script_guid": "6d4d618c93a495b49319bea67f9b79b5"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/icon",
+      "type": "PlayerIconOther",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "6500613879048770181",
+      "export_file_id": "114194081240383615",
+      "export_script_guid": "f3a4ead89c7eab2ccab6674fb5f2e4a4"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/icon",
+      "type": "PlayerIcon",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-5644596211809643899",
+      "export_file_id": "114354824845356902",
+      "export_script_guid": "fbc2ea3a1d195692214db079ede23fc1"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/icon",
+      "type": "PlayerIconStatus",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-8909324436109847931",
+      "export_file_id": "114770005084341472",
+      "export_script_guid": "18694424ccd650e0bca4d16e0d1b56f0"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/icon",
+      "type": "PlayerInfoUI",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-3889593438540983675",
+      "export_file_id": "114123703392571528",
+      "export_script_guid": "244d8a0afebe6b1e6223cac5462a6683"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/HpBarMap",
+      "type": "HpSliderEffectMap",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "8671345326112313989",
+      "export_file_id": "114492842699383957",
+      "export_script_guid": "a3de49a831fe2b6d5e7e0bcc27742ba0"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/HpBarMap",
+      "type": "PlayerIconMeHpSliderEffect",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-1771128308060974459",
+      "export_file_id": "114880619614767448",
+      "export_script_guid": "00fe676a31b2d6642a612fe1bbb5075a"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/HpBarMap",
+      "type": "MapMePlayerLowHpShowHpSlider",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "6775260296458080901",
+      "export_file_id": "114167524263268962",
+      "export_script_guid": "d02e38e1a00beeadb8b8a6c17bbdf3f5"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/HpBarMap/Content/ShieldAddBar",
+      "type": "SlicedFilledRender",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-6088711146026691963",
+      "export_file_id": "114969505138979683",
+      "export_script_guid": "90c796fd586203526af0c863a85cf757"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/HpBarMap/Content/HpBar",
+      "type": "SlicedFilledRender",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-5808858574416833915",
+      "export_file_id": "114998874197659892",
+      "export_script_guid": "90c796fd586203526af0c863a85cf757"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/HpBarMap/Content/HpAddBar",
+      "type": "SlicedFilledRender",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-2035327489525280123",
+      "export_file_id": "114633296557590524",
+      "export_script_guid": "90c796fd586203526af0c863a85cf757"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/HpBarMap/Content/HpSubBar",
+      "type": "SlicedFilledRender",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-6520525186714037627",
+      "export_file_id": "114386943702330414",
+      "export_script_guid": "90c796fd586203526af0c863a85cf757"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/HpBarMap/Content/FillPointEffectSlot/Eff_Ui_Blood_01",
+      "type": "BattleHpBloodEffect",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-550324475484695931",
+      "export_file_id": "114275549183895104",
+      "export_script_guid": "874598f472d2cdefabdc5577da03a7ee"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/HpBarMap/Content/OutLineEffectSlot/Eff_Ui_Blood_02",
+      "type": "BattleHpBloodEffect",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "700584678550999685",
+      "export_file_id": "114011164340880974",
+      "export_script_guid": "874598f472d2cdefabdc5577da03a7ee"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/NameTxt",
+      "type": "TMPro.TextMeshPro",
+      "assembly": "Unity.TextMeshPro",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "8479018639639777925",
+      "export_file_id": "114433013960508438",
+      "export_script_guid": "334b3af4b97d3ad6a80278f82bcc6489"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/NameTxt",
+      "type": "MultiLanguageText",
+      "assembly": "Framework.FirstPass.Runtime",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "243083899475071621",
+      "export_file_id": "114649986673806370",
+      "export_script_guid": "9af3f11a55794eeb92472fe769e4bfc1"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/NameTxt",
+      "type": "TMPro.TMPEffect",
+      "assembly": "Unity.TextMeshPro",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-7039511882079399291",
+      "export_file_id": "114168105826085154",
+      "export_script_guid": "3b66221f5aa9e1298ea12f74281d00d8"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/PlayerBubbleController",
+      "type": "PlayerBubbleController",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-478004303948475771",
+      "export_file_id": "114146109142143575",
+      "export_script_guid": "68a7992d25b30dea2d8ae0f36b3e2faf"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/PlayerBubbleController/PlayerBubbleHandlerChat",
+      "type": "PlayerBubbleHandlerChatMap",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "5777860161494389381",
+      "export_file_id": "114896002537488308",
+      "export_script_guid": "2c78503d2eb593beeb2bca391beaab4d"
+    },
+    {
+      "hierarchy": "3001/3001_view/UI/PlayerBubbleController/PlayerBubbleHandlerBehaviour",
+      "type": "PlayerBubbleHandlerBehaviour",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "5362303982099698309",
+      "export_file_id": "114017892387517381",
+      "export_script_guid": "2cf0239dc3a8e9f1f36bc06b8765da35"
+    },
+    {
+      "hierarchy": "3001/3001_view/MeSupport",
+      "type": "TransformLocker",
+      "assembly": "Assembly-CSharp",
+      "source_cab": "CAB-7de87c34f066c245e6de592ea3ab81d1",
+      "source_path_id": "-3299634846976765307",
+      "export_file_id": "114271925019662038",
+      "export_script_guid": "6d26cf866657b9a8e949fd826a6458b0"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "assets/reference/official-map/map14-native-entity-input-source-manifest.json",
+      "sha256": "30203bc19bf6e709847b53be632a612a82f366e84e750e9461901732913a08b4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/native-entity-components.json",
+      "sha256": "93a73035456e3ca38d10d09a860a12c3c5c487d34053bd7e7aa9ef26292d3601"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityPrefabs/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
+      "sha256": "2b646b8c3cc2d1dce495d8c1f0be695f6c31f614694ce08b34d3110b5ab4bda6"
+    },
+    {
+      "path": "assets/reference/official-map/map14-native-entity-export-source-manifest.json",
+      "sha256": "e8a207a0d13bab23715a90e98fd7072a7edc7473ba469e5e403a2963c132415c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+      "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyLevel.cs",
+      "sha256": "37ba3fbcd2834c45f36acf7ed47e4d72d0830cb0b2be5618a01a8ed219fc3fc1"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/LevelComponent.cs",
+      "sha256": "c934c81ead88e1a3583134a52d754b11d09af23257568b9eee986bb8c6fada2e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyProp.cs",
+      "sha256": "0749af8aeab03af5e847c7a81ca68feb111070ed9745873e189209346416da69"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PropComponent.cs",
+      "sha256": "a3c8ca340c652af2db89c7500047a242243373372cf3e514c7f08e9296ba7f9f"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyMapRegionStatus.cs",
+      "sha256": "1a73bd3de30dd1533f2c0b6f5dccdf45fb9639fb0c08d6fe804e2d66dd7f203c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapRegionStatusComponent.cs",
+      "sha256": "0e47132263b0b568195bfb245a0cca54ff672b085eadb3f707c5b56313cd73dc"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyMapStatusAgent.cs",
+      "sha256": "7d68b14a32eb8ee0bb7ec72e01f5e495b8d4f1d7123437e37186df68bc481762"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapStatusAgentComponent.cs",
+      "sha256": "c8fde819b454a1749092a740c54cecfcda97dffe484f72e2e3b2fbfa009a7710"
+    }
+  ],
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+    },
+    {
+      "path": ".tools/source-packages/official-code/managed/decoded/Console.dll",
+      "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_mainline_character_components.py",
+      "sha256": "a4cc8161b5b645e394601a1cd296588733879464ffacc3866c839f7428905af5"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyLevel.cs",
+      "sha256": "495926d43f762a04651475a086086b3eb5261824565983bf07f7fcd2d47a4bb2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyLevel.cs.meta",
+      "sha256": "ceb3721d0edce3a5c828b39eb3fb9385fff38e5650d6a2520bb8a780431dd537"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyProp.cs",
+      "sha256": "aa9fdb9f085c0d8cf1a0deaf276626d47562d9d5b49dbe3353e6265f541cfcaf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyProp.cs.meta",
+      "sha256": "2c99b4a2bae7515454b8e9ee13bc54520da2e647dea5031c23e8f67cd7c4b13b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyMapRegionStatus.cs",
+      "sha256": "ef183ff734d82dc2be41289c7ffde049966fb0c610fe603ae233f79fe59bf281"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyMapRegionStatus.cs.meta",
+      "sha256": "0563d8b5613329c9e5ebcdff9ab65503932a8817c7dc7ff9bbc1d9a8eb73c59c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyMapStatusAgent.cs",
+      "sha256": "d87a38735aba1ee4ce3010fbab8744a9858b07705d23b0080d0365e5e53760d6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyMapStatusAgent.cs.meta",
+      "sha256": "07cb3acfc069e323cf97816045845c06e52cc08a8fffc81c25a2811303bf0d74"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.CharacterComponents.cs",
+      "sha256": "e22910784b705eb5e1e350ff8a5ed3a23ac7440679d45e136f29e2991de8a37c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.CharacterComponents.cs.meta",
+      "sha256": "ff4f3baa6e7cadd335c7dc0ff6f8869491d94224be4a9f8c80a793c47ffb225e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/EntityClientComponentData.cs",
+      "sha256": "ae96848397871545ad8d0636cd72f7e4a1d01b2755cb269329c2f2e739e0b27d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientComponents/NativeMap14ClientComponentBindings.cs",
+      "sha256": "0dc4f8b01c8262a7594130b3e3779c89d2767acd7307726aa19ae416d5f4f3c5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientContext.cs",
+      "sha256": "8602277549a8dd634876580de136214fc7def13be05bb06482fe18600566b8ee"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef",
+      "sha256": "6f35f6a0d6eb28281bce81126bb5c5ed1a25b2badc86bfdf3093b2993f502715"
+    }
+  ],
+  "operation": "Verify the exact historical bundle, root and all script payload hashes. Pair native/exported hierarchy and component order to recover original script identities without dummy scripts or cross-version bundles. Copy four complete original empty-info MyComponent classes; bind their original shared instances through the existing component cache. No gameplay formula or initial state is reimplemented.",
+  "validation": {
+    "entry": "Zjcs.Editor.MainlineWorldStartup.OfficialMainlineWorldStartupAcceptance.RunClientContext",
+    "checks": [
+      "Seven original map characters",
+      "Four original components and empty-info identity",
+      "Lifecycle rebind and retained identity across mixed-region transitions"
+    ]
+  },
+  "limitations": [
+    "Original 3001 prefab is unchanged; recovered script identities do not make it a fully bound native character.",
+    "Character rendering/input/effects and formal native minimap wiring remain unfinished.",
+    "Historical prefab and current source provenance stay separate; no whole-assembly version equivalence is claimed."
+  ]
+}

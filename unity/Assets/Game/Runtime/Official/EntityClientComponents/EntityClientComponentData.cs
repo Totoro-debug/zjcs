@@ -20,6 +20,10 @@ namespace Zjcs.Official.EntityClientComponents
         public abstract int SubRank { get; }
         public abstract int LevelType { get; }
     }
+    public abstract class LevelComponentData : EntityClientComponentData { }
+    public abstract class PropComponentData : EntityClientComponentData { }
+    public abstract class MapRegionStatusComponentData : EntityClientComponentData { }
+    public abstract class MapStatusAgentComponentData : EntityClientComponentData { }
     public abstract class StageBehTouchComponentData : EntityClientComponentData { }
     public abstract class StageResultAwardExtraPropComponentData : EntityClientComponentData
     { public abstract object GetAwardExtraPropInfo(int compIndex); }

@@ -14,6 +14,10 @@ namespace Zjcs.Offline.World.NativeMap14ClientComponents
         {
             Bind(view, "EntitySourceComponent", value => new Source(value));
             Bind(view, "WorldEntityLevelComponent", value => new LevelState(value));
+            Bind(view, "LevelComponent", value => new CharacterLevel(value));
+            Bind(view, "PropComponent", value => new CharacterProp(value));
+            Bind(view, "MapRegionStatusComponent", value => new CharacterRegionStatus(value));
+            Bind(view, "MapStatusAgentComponent", value => new CharacterMapStatus(value));
             Bind(view, "StageBehTouchComponent", value => new Touch(value));
             Bind(view, "StageResultAwardExtraPropComponent", value => new ExtraProp(value));
             Bind(view, "StageResultAwardStatusEffectComponent", value => new StatusEffect(value));
@@ -57,6 +61,30 @@ namespace Zjcs.Offline.World.NativeMap14ClientComponents
             public override float Level => (float)Get(Original, "Level");
             public override int SubRank => Convert.ToInt32(Get(Original, "SubRank"));
             public override int LevelType => Convert.ToInt32(Get(Original, "LevelType"));
+        }
+        private sealed class CharacterLevel : LevelComponentData
+        {
+            public override object Original { get; }
+            public override object ComponentInfo => null;
+            public CharacterLevel(object original) { Original = original; }
+        }
+        private sealed class CharacterProp : PropComponentData
+        {
+            public override object Original { get; }
+            public override object ComponentInfo => null;
+            public CharacterProp(object original) { Original = original; }
+        }
+        private sealed class CharacterRegionStatus : MapRegionStatusComponentData
+        {
+            public override object Original { get; }
+            public override object ComponentInfo => null;
+            public CharacterRegionStatus(object original) { Original = original; }
+        }
+        private sealed class CharacterMapStatus : MapStatusAgentComponentData
+        {
+            public override object Original { get; }
+            public override object ComponentInfo => null;
+            public CharacterMapStatus(object original) { Original = original; }
         }
         private sealed class Touch : StageBehTouchComponentData
         {
