@@ -90,6 +90,9 @@ namespace Zjcs.Combat.Official
         public long TotalDamageTaken;
         public long TotalHealDealt;
         public long TotalShieldGranted;
+        // Original FightUtilsHandler.CanAccDamageToBoss + FightActivityDomainBossMainPanel.
+        // Counts actual HP loss and absorbed shield on Monster targets, independent of caster.
+        public long DamageToMonsters;
         public List<FightBattleReportUnit> Units = new List<FightBattleReportUnit>();
         public List<FightBattleReportSkill> Skills = new List<FightBattleReportSkill>();
 
@@ -111,7 +114,10 @@ namespace Zjcs.Combat.Official
         public static FightBattleReport Build(FightBattleCheckpoint checkpoint)
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
-            var report = new FightBattleReport { StageId = checkpoint.StageId };
+            var report = new FightBattleReport {
+                StageId = checkpoint.StageId,
+                DamageToMonsters = FightBattleBossDamage.Read(checkpoint)
+            };
             if (checkpoint.Outcome != null)
             {
                 report.Won = checkpoint.Outcome.Won;

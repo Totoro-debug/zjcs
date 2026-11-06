@@ -374,7 +374,17 @@ namespace Zjcs.Presentation.Home
                         OfficialDailyChallengeCatalog.LoadDefault().DailyKillLimit(challengeActivityId)))
                     throw new InvalidOperationException("双影击杀记录无法保存。");
             }
-            else if (won) host.DailyChallenges.RecordDifficulty(challengeActivityId, challengeDifficulty + 1);
+            else
+            {
+                // Both normal completion and cold completion recovery consume the common report.
+                // An unfinished/invalid encounter must never manufacture a local ranking entry.
+                if (!checkpoint.Finished || checkpoint.Outcome == null || checkpoint.Outcome.Invalid)
+                    throw new InvalidOperationException("圣兽排行只接受有效的已结束战斗。");
+                FightBattleReport report = controller?.FinalReport ?? FightBattleReportBuilder.Build(checkpoint);
+                host.DailyChallenges.RecordDomainBossResult(challengeActivityId, now,
+                    challengeDurationHours, report.DamageToMonsters);
+                if (won) host.DailyChallenges.RecordDifficulty(challengeActivityId, challengeDifficulty + 1);
+            }
 
             if (won)
             {

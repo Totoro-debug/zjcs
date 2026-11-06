@@ -1,0 +1,38 @@
+{
+  "manifest": "884_156692",
+  "sources": {
+    ".tools/source-packages/current/884_156692/official-code/client-source/FightActivityDomainBossMainPanel.cs": "82ca9a9d9675f5fd6a4f67e019622f562a2ba4040b74639a495c22860a86f1a1",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TeamTopContentDataActivityDomainBoss.cs": "5edb6a3622f850e24f56ed45e83848a0a928429812ebf0339a4afc7ff4557f4d",
+    ".tools/source-packages/current/884_156692/official-code/client-source/GameEndPanelActivityDomainBoss.cs": "659508fb69d198760c2f404ab73e523598fcc96e87b555bd105f36ab8bf16ff0",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightUtilsHandler.cs": "6cff15412b844d47ecb14f7201a7b164af4932be9b7ceef8ee938957ebf84a8f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerActivityDomainBossData.cs": "798a546952234dae508503b987f7b0f1b682d10aac5068d41cac1179e56a303b",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameResultActivityDomainBossInfo.cs": "c67c3321e0269ee0380b2f889e6fb036525966a1e51258a9d68ada0b3c692269",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TopScoreDataActivityDomainBoss.cs": "6231276a15f7be05113636d9033428487c5ad9085b9bf78354b05cfa7af45a41"
+  },
+  "runtime": {
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleBossDamage.cs": "998d305ee763427345b067a6f4e9f86e5a10d1a5f85769a18b1bfd8bb04f3f13",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineDailyChallengeService.DomainBossRanking.cs": "c54fdcbcdda21c3c03af687bce9b083b4d349e1112fb4bce78d1bfd802038f0f",
+    "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.ActivityRanking.cs": "0251a474048bf7df452f23410883b2c5d4d8994713787ccf8f1acd5dac7c6c88"
+  },
+  "helper": {
+    "path": "scripts/prepare_activity_battle_rank_results.py",
+    "sha256": "391982737daac85b037774db3361bbdc8d632676a3d0be831586764580dfd7cb"
+  },
+  "original_rule": "FightUtilsHandler.CanAccDamageToBoss: Monster target and damage result; FightActivityDomainBossMainPanel adds abs(RealDamageValue) + ShieldValue.",
+  "offline_decision": "User-approved current-character actual completed results in the local period. Highest damage follows the original MaxDamageRecord field. A completed zero-damage battle has a rank entry; an uncompleted encounter has none. No damage carried between encounters.",
+  "integrations": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs",
+      "member": "Build: DamageToMonsters from common checkpoint receipts"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineDailyChallengeService.cs",
+      "member": "DailyChallengeActivitySave / ResetPeriod: independent period rank fields; daily reset keeps them"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs",
+      "member": "FinalizeChallenge: valid finished result only, including completed-checkpoint recovery"
+    }
+  ],
+  "stage": "Production settlement and period persistence connected. Original ranking page/controller pending."
+}

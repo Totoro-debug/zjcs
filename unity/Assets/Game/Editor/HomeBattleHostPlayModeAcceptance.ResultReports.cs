@@ -18,6 +18,8 @@ namespace Zjcs.Editor
         private static IEnumerator ExerciseActivityResultReports(HomeFeatureRuntime home, string output,
             Action<Selectable> click)
         {
+            VerifyDomainBossRankingRules(output);
+            if (Environment.GetEnvironmentVariable("ZJCS_RESULT_ACTIONS_DIRECT") == "1") PrepareActivityRankingLoadout(home);
             foreach (int activity in new[] { 209, 217 })
             {
                 yield return OpenTravel(home, click);
@@ -73,6 +75,7 @@ namespace Zjcs.Editor
                 int resultId = result.GetInstanceID();
                 var common = result.GetComponent<OfficialBattleResultReport>();
                 Require(common != null, "The activity result did not use the common report lifecycle.");
+                VerifyDomainBossActualRank(home, activity, checkpoint);
                 string Inventory() => string.Join(";", home.Profile.Save.Player.Inventory
                     .Select(value => value.ItemId + ":" + value.Count).OrderBy(value => value));
                 string inventory = Inventory();

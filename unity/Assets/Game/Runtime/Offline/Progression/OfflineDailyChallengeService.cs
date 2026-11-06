@@ -36,6 +36,9 @@ namespace Zjcs.Offline.Progression
         public int highestDifficulty;
         public long highestDamage;
         public int highestProgress;
+        // Period rank is independent of the FunnyBoss fields cleared at the 08:00 daily reset.
+        public bool hasDomainBossResult;
+        public long domainBossMaxDamage;
         public List<int> claimedStepScores = new List<int>();
         public List<int> claimedBossDifficulties = new List<int>();
         public int pendingChestSeed;
@@ -45,7 +48,7 @@ namespace Zjcs.Offline.Progression
         public List<string> completedBattleIds = new List<string>();
     }
 
-    public sealed class OfflineDailyChallengeService
+    public sealed partial class OfflineDailyChallengeService
     {
         public const int FunnyBossActivityId = 217;
         private readonly string path;
@@ -386,6 +389,8 @@ namespace Zjcs.Offline.Progression
             activity.highestProgress = 0;
             activity.claimedStepScores.Clear();
             activity.claimedBossDifficulties.Clear();
+            activity.hasDomainBossResult = false;
+            activity.domainBossMaxDamage = 0;
             activity.dailyKillCount = 0;
             activity.periodKillCount = 0;
             activity.openedChestCount = 0;
