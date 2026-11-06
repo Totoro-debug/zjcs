@@ -12,6 +12,7 @@ namespace Zjcs.Presentation.World
     public sealed partial class OfficialMainlineMapRuntime
     {
         private MainlineSharedWorld mainlineSharedWorld;
+        private MainlineSharedWorldStateModule mainlineSharedState;
         private object mainlineSharedPlayer;
         private object mainlineSharedPartInfo;
         private IEnumerator mainlineSharedLoad;
@@ -54,10 +55,12 @@ namespace Zjcs.Presentation.World
                 mainlineSharedLoad = null;
                 var snapshots = new MainlineMapMiniMapSnapshots(OfficialWorldMapAssetCatalog.LoadDefault(),
                     new ProfileSlotCatalog(persistentDataPath), slotId);
-                mainlineSharedPlayer = MainlineSharedPlayerProjection.Create(mainlineSharedWorld,
-                    progressionSave.Save, 1, map => map == mapClassId ? regions.regionPoints : snapshots.ReadRegionPoints(map));
+                mainlineSharedState = new MainlineSharedWorldStateModule(mainlineSharedWorld,
+                    progressionSave.Save, mapClassId, 1,
+                    map => map == mapClassId ? regions.regionPoints : snapshots.ReadRegionPoints(map));
+                mainlineSharedPlayer = mainlineSharedState.Player;
                 SynchronizeOriginalMapEntities();
-                mainlineSharedWorld.StartClient(mainlineSharedPlayer, navigation.currentGrid.X, navigation.currentGrid.Y);
+                mainlineSharedState.StartClient(navigation.currentGrid.X, navigation.currentGrid.Y);
                 if (mapClassId == 14) InitializeNativeMap14();
                 completed = true;
             }
@@ -71,21 +74,14 @@ namespace Zjcs.Presentation.World
         private void SynchronizeOriginalMapEntities()
         {
             if (mainlineSharedWorld?.IsLoaded != true) return;
-            if (mainlineSharedPlayer != null) MainlineSharedPlayerProjection.SynchronizeActivations(
-                mainlineSharedWorld, mainlineSharedPlayer, progressionSave.Save);
-            if (mainlineSharedPlayer != null) MainlineSharedPlayerProjection.SynchronizeRegionProgress(
-                mainlineSharedPlayer, mapClassId, regions.regionPoints);
             var presentation = CreateEntityPresentation();
             var states = mapEntities.ToDictionary(pair => pair.Key,
                 pair => new MainlineSharedEntityState(pair.Value.EntityClassId,
                     presentation.Read(pair.Value, pair.Value.State, pair.Value.Active).State,
                     pair.Value.Grid.X, pair.Value.Grid.Y));
-            if (mainlineSharedWorld.IsReady)
-            {
-                mainlineSharedWorld.SynchronizeClientState(states, OriginalRegionStatus);
-                mainlineSharedWorld.SynchronizeClientCharacter(navigation.currentGrid.X, navigation.currentGrid.Y);
-            }
-            else mainlineSharedWorld.SynchronizeEntityStates(states);
+            if (mainlineSharedState != null)
+                mainlineSharedState.Publish(states, regions.regionPoints, OriginalRegionStatus,
+                    navigation.currentGrid.X, navigation.currentGrid.Y);
         }
 
         private void DisposeMainlineSharedWorld()
@@ -101,6 +97,8 @@ namespace Zjcs.Presentation.World
                 finally
                 {
                     mainlineSharedWorld = null;
+                    mainlineSharedState?.Dispose();
+                    mainlineSharedState = null;
                     mainlineSharedPlayer = null;
                     mainlineSharedPartInfo = null;
                 }

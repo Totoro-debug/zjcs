@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using Zjcs.Combat.Official;
 using Zjcs.Offline.State;
 using Zjcs.Offline.World;
 
@@ -287,6 +288,83 @@ namespace Zjcs.Editor
             if (!reloaded.Save.claimedAchievementIndexes.Contains(cycleSeed.Index)
                 || reloaded.DailyDungeonGetRewardCount != cycleSeed.RequiredCount)
                 throw new InvalidOperationException("Claimed daily dungeon achievement state did not survive reload.");
+
+            ValidateBattleEntryTransaction(slots, slotId);
+        }
+
+        private static void ValidateBattleEntryTransaction(ProfileSlotCatalog slots, string slotId)
+        {
+            const int playType = (int)NpcAssistPlayType.All;
+            const string entryId = "daily-dungeon-entry-module-test";
+            const int npcId = 11001;
+            OfflineNpcAssistanceProgress progress = OfflineNpcAssistanceProgress.Open(slots, slotId);
+            if (!progress.SetSelection(playType, entryId, new[] { npcId }, 3))
+                throw new InvalidOperationException("The battle entry transaction fixture could not save its assist selection.");
+            var rule = new FightOfficialNpcInviteRule
+            {
+                OneNpcMaxInviteCount = -1,
+                MaxInviteCount = -1,
+                RefreshCycle = (int)NpcAssistRefreshCycle.Daily,
+                MaxPlayer = 3
+            };
+            var checkpoint = new FightBattleCheckpoint
+            {
+                StageId = 91001,
+                StageType = 11,
+                Units = new List<FightBattleUnitState>
+                {
+                    new FightBattleUnitState { Id = 1, NpcClassId = 0 },
+                    new FightBattleUnitState { Id = 2, NpcClassId = npcId }
+                }
+            };
+            DailyDungeonBattleEntryModule module = new DailyDungeonBattleEntryModule();
+            DailyDungeonBattleEntryModule.PreparedEntry prepared = module.Prepare(
+                checkpoint.StageId, checkpoint.StageType, playType, entryId, false, checkpoint,
+                new[] { npcId }, null, false);
+            List<string> successfulOrder = new List<string>();
+            module.Enter(prepared, rule, progress, 3, false,
+                DateTimeOffset.Now.ToUnixTimeSeconds(), mounted =>
+                {
+                    if (progress.ActiveBattle == null) throw new InvalidOperationException(
+                        "The assist transaction was not committed before battle mount.");
+                    successfulOrder.Add("mount");
+                    return mounted;
+                }, serialized =>
+                {
+                    if (progress.ActiveBattle == null) throw new InvalidOperationException(
+                        "The assist transaction was lost before checkpoint save.");
+                    successfulOrder.Add("save");
+                    return !string.IsNullOrWhiteSpace(serialized);
+                }, () => throw new InvalidOperationException("A successful battle entry unexpectedly disposed its battle."));
+            if (!successfulOrder.SequenceEqual(new[] { "mount", "save" }))
+                throw new InvalidOperationException("Battle entry did not mount and save in the official order.");
+            progress.FinishBattle(playType, entryId, checkpoint.StageId);
+
+            checkpoint = new FightBattleCheckpoint
+            {
+                StageId = 91002,
+                StageType = 11,
+                Units = new List<FightBattleUnitState>
+                {
+                    new FightBattleUnitState { Id = 1 },
+                    new FightBattleUnitState { Id = 2, NpcClassId = npcId }
+                }
+            };
+            prepared = module.Prepare(checkpoint.StageId, checkpoint.StageType, playType, entryId,
+                false, checkpoint, new[] { npcId }, null, false);
+            bool disposed = false;
+            bool rejected = false;
+            try
+            {
+                module.Enter(prepared, rule, progress, 3, false,
+                    DateTimeOffset.Now.ToUnixTimeSeconds(), mounted => mounted,
+                    _ => false, () => disposed = true);
+            }
+            catch (InvalidOperationException) { rejected = true; }
+            if (!rejected || !disposed || progress.ActiveBattle != null
+                || progress.AssistCount(playType, npcId, NpcAssistRefreshCycle.Daily,
+                    DateTimeOffset.Now.ToUnixTimeSeconds()) != 1)
+                throw new InvalidOperationException("A failed checkpoint save did not cancel the new assist transaction.");
         }
 
         private static List<int> FindTerminalRoute(OfflineDailyDungeonModule module, int startRoomId)

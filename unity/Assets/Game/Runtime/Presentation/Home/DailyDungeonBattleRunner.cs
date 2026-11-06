@@ -39,6 +39,7 @@ namespace Zjcs.Presentation.Home
         private OfflineNpcAssistanceProgress privateMapAssistProgress;
         private FightOfficialNpcAssistanceCatalog privateMapAssistCatalog;
         private string portraitSlotId, portraitSavesRoot;
+        private readonly DailyDungeonBattleEntryModule battleEntry = new DailyDungeonBattleEntryModule();
 
         public void Begin(HomeFeatureRuntime runtime, int selectedRoomId, string assistEntryId,
             Action<bool> onCompleted, OfficialBattleAssistOptions assistOptions = null)
@@ -73,9 +74,6 @@ namespace Zjcs.Presentation.Home
             FightOfficialNpcAssistanceCatalog npcCatalog = host.NpcAssistanceCatalog;
             FightOfficialNpcInviteRule inviteRule = npcCatalog.InviteRule(assistPlayType);
             OfflineNpcAssistBattle activeAssist = host.NpcAssistanceProgress.ActiveBattle;
-            if (activeAssist != null && (activeAssist.playType != assistPlayType
-                || activeAssist.entryId != assistEntryId || activeAssist.stageId != stage.id))
-                throw new InvalidOperationException("另一场 NPC 助战战斗尚未结束。");
             int[] selectedNpcIds;
             if (restore)
             {
@@ -98,28 +96,12 @@ namespace Zjcs.Presentation.Home
                 checkpoint = BuildCheckpoint(run, stage, scene, combatAssets, combat, selectedNpcIds);
             }
 
-            bool committedAssist = false;
-            try
-            {
-                if (!restore && selectedNpcIds.Length > 0 && activeAssist == null)
-                {
-                    host.NpcAssistanceProgress.CommitBattle(assistPlayType, assistEntryId, stage.id,
-                        ResolveAssistMaxPlayer(inviteRule), inviteRule.OneNpcMaxInviteCount,
-                        inviteRule.MaxInviteCount, (NpcAssistRefreshCycle)inviteRule.RefreshCycle,
-                        DateTimeOffset.Now.ToUnixTimeSeconds());
-                    committedAssist = true;
-                }
-                MountBattle(checkpoint, scene, combatAssets, restore, false);
-                if (!host.DailyDungeons.SaveBattleCheckpoint(
-                        FightBattleCheckpointSerializer.Save(controller.Checkpoint)))
-                    throw new InvalidOperationException("日常副本战斗 checkpoint 保存失败。");
-            }
-            catch
-            {
-                if (committedAssist) host.NpcAssistanceProgress.CancelBattle(assistPlayType, assistEntryId, stage.id);
-                DisposeBattle();
-                throw;
-            }
+            DailyDungeonBattleEntryModule.PreparedEntry prepared = battleEntry.Prepare(stage.id, 11,
+                assistPlayType, assistEntryId, restore, checkpoint, selectedNpcIds, activeAssist, false);
+            battleEntry.Enter(prepared, inviteRule, host.NpcAssistanceProgress,
+                ResolveAssistMaxPlayer(inviteRule), false, DateTimeOffset.Now.ToUnixTimeSeconds(),
+                value => MountBattle(value, scene, combatAssets, restore, false),
+                host.DailyDungeons.SaveBattleCheckpoint, DisposeBattle);
         }
 
         public void BeginPrivateMapRoom(OfflineMainlineProgressSession profile,
@@ -169,9 +151,6 @@ namespace Zjcs.Presentation.Home
             FightOfficialCombatCatalog combat = combatAssets.Load();
             FightOfficialNpcInviteRule inviteRule = privateMapAssistCatalog.InviteRule(assistPlayType);
             OfflineNpcAssistBattle activeAssist = privateMapAssistProgress.ActiveBattle;
-            if (activeAssist != null && (activeAssist.playType != assistPlayType
-                || activeAssist.entryId != dailyAssistEntryId || activeAssist.stageId != stage.id))
-                throw new InvalidOperationException("另一场 NPC 助战战斗尚未结束。");
             bool restore = !string.IsNullOrEmpty(run.activeBattleCheckpoint);
             FightBattleCheckpoint checkpoint;
             int[] selectedNpcIds;
@@ -196,29 +175,12 @@ namespace Zjcs.Presentation.Home
                 checkpoint = BuildCheckpoint(run, stage, scene, combatAssets, combat, selectedNpcIds);
             }
 
-            bool committedAssist = false;
-            try
-            {
-                if (!restore && selectedNpcIds.Length > 0 && activeAssist == null)
-                {
-                    privateMapAssistProgress.CommitBattle(assistPlayType, dailyAssistEntryId, stage.id,
-                        ResolveAssistMaxPlayer(inviteRule), inviteRule.OneNpcMaxInviteCount,
-                        inviteRule.MaxInviteCount, (NpcAssistRefreshCycle)inviteRule.RefreshCycle,
-                        DateTimeOffset.Now.ToUnixTimeSeconds());
-                    committedAssist = true;
-                }
-                MountBattle(checkpoint, scene, combatAssets, restore, false);
-                if (!privateMapDungeons.SaveBattleCheckpoint(
-                        FightBattleCheckpointSerializer.Save(controller.Checkpoint)))
-                    throw new InvalidOperationException("秘境战斗 checkpoint 保存失败。");
-            }
-            catch
-            {
-                if (committedAssist)
-                    privateMapAssistProgress.CancelBattle(assistPlayType, dailyAssistEntryId, stage.id);
-                DisposeBattle();
-                throw;
-            }
+            DailyDungeonBattleEntryModule.PreparedEntry prepared = battleEntry.Prepare(stage.id, 11,
+                assistPlayType, dailyAssistEntryId, restore, checkpoint, selectedNpcIds, activeAssist, false);
+            battleEntry.Enter(prepared, inviteRule, privateMapAssistProgress,
+                ResolveAssistMaxPlayer(inviteRule), false, DateTimeOffset.Now.ToUnixTimeSeconds(),
+                value => MountBattle(value, scene, combatAssets, restore, false),
+                privateMapDungeons.SaveBattleCheckpoint, DisposeBattle);
         }
 
         public void BeginChallenge(HomeFeatureRuntime runtime, int activityId, int stageId,
@@ -258,10 +220,6 @@ namespace Zjcs.Presentation.Home
             FightOfficialNpcInviteRule inviteRule = npcCatalog.InviteRule(assistPlayType);
             string assistEntryId = dailyAssistEntryId;
             OfflineNpcAssistBattle activeAssistBattle = host.NpcAssistanceProgress.ActiveBattle;
-            if (activeAssistBattle != null
-                && (activeAssistBattle.playType != assistPlayType || activeAssistBattle.entryId != assistEntryId
-                    || activeAssistBattle.stageId != stageId))
-                throw new InvalidOperationException("另一场 NPC 助战战斗尚未结束。");
             int[] selectedAssistNpcIds = restore ? Array.Empty<int>()
                 : activeAssistBattle != null
                     ? (activeAssistBattle.npcClassIds ?? new List<int>()).ToArray()
@@ -285,6 +243,8 @@ namespace Zjcs.Presentation.Home
             }
             if (checkpoint.Finished)
             {
+                battleEntry.Prepare(stageId, stageType, assistPlayType, assistEntryId, restore,
+                    checkpoint, selectedAssistNpcIds, activeAssistBattle, true);
                 FinishBattleAssist(stageId);
                 IReadOnlyList<OfficialChallengeReward> rewards = FinalizeChallenge(checkpoint,
                     checkpoint.Outcome.Won);
@@ -294,34 +254,20 @@ namespace Zjcs.Presentation.Home
                 return;
             }
             checkpoint.StageType = stageType;
-            bool committedAssist = false;
-            try
-            {
-                if (!restore && activeAssistBattle == null)
-                {
-                    host.NpcAssistanceProgress.CommitBattle(assistPlayType, assistEntryId, stageId,
-                        ResolveAssistMaxPlayer(inviteRule), inviteRule.OneNpcMaxInviteCount,
-                        inviteRule.MaxInviteCount, (NpcAssistRefreshCycle)inviteRule.RefreshCycle,
-                        DateTimeOffset.Now.ToUnixTimeSeconds());
-                    committedAssist = true;
-                }
-                MountBattle(checkpoint, scene, combatAssets, restore, true);
-                string checkpointJson = FightBattleCheckpointSerializer.Save(controller.Checkpoint);
-                bool recorded = restore
-                    ? SaveChallengeCheckpoint(checkpointJson)
+            DailyDungeonBattleEntryModule.PreparedEntry prepared = battleEntry.Prepare(stageId, stageType,
+                assistPlayType, assistEntryId, restore, checkpoint, selectedAssistNpcIds,
+                activeAssistBattle, true);
+            battleEntry.Enter(prepared, inviteRule, host.NpcAssistanceProgress,
+                ResolveAssistMaxPlayer(inviteRule), true, DateTimeOffset.Now.ToUnixTimeSeconds(),
+                value => MountBattle(value, scene, combatAssets, restore, true),
+                serialized => restore
+                    ? SaveChallengeCheckpoint(serialized)
                     : host.DailyChallenges.RecordParticipation(activityId, DateTime.Now,
-                        durationHours, dailyLimit, challengeDifficulty, checkpointJson);
-                if (!recorded) throw new InvalidOperationException("挑战回执或战斗进度无法保存。");
-            }
-            catch
-            {
-                if (committedAssist) host.NpcAssistanceProgress.CancelBattle(assistPlayType, assistEntryId, stageId);
-                DisposeBattle();
-                throw;
-            }
+                        durationHours, dailyLimit, challengeDifficulty, serialized),
+                DisposeBattle);
         }
 
-        private void MountBattle(FightBattleCheckpoint checkpoint, DailyDungeonRuntimeBattleScene scene,
+        private FightBattleCheckpoint MountBattle(FightBattleCheckpoint checkpoint, DailyDungeonRuntimeBattleScene scene,
             OfficialCombatAssetCatalog combatAssets, bool restore, bool isChallenge)
         {
             FightOfficialCombatCatalog combat = combatAssets.Load();
@@ -365,9 +311,7 @@ namespace Zjcs.Presentation.Home
                 StatueProgress = battleProfile
             });
             controller.ConfigureSpeeds(combatAssets.Load().SpeedSettings, 0, IsBattleSpeedConditionMet);
-            string serialized = FightBattleCheckpointSerializer.Save(checkpoint);
-            if (!isChallenge && !privateMapEntry && !host.DailyDungeons.SaveBattleCheckpoint(serialized))
-                throw new InvalidOperationException("Daily dungeon battle checkpoint could not be saved.");
+            return controller.Checkpoint;
         }
 
         private void Update()
