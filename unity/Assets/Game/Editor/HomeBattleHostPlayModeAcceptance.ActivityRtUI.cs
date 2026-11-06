@@ -10,6 +10,8 @@ using UnityEngine.UI;
 using Zjcs.Offline.ProfessionUI;
 using Zjcs.Offline.PartnersUI;
 using Zjcs.Official.ActivityBattleUI;
+using Zjcs.Official.ProfessionUI;
+using Zjcs.Official.BattleSpinePlayables;
 using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Editor
@@ -24,6 +26,8 @@ namespace Zjcs.Editor
             var pipeline = Resources.Load<OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets");
             Require(pipeline, "Bind the existing original Universal render pipeline.");
             using var pipelineScope = pipeline.Enter();
+            bool previousAsyncCompilation = ShaderUtil.allowAsyncCompilation;
+            ShaderUtil.allowAsyncCompilation = false;
             ValidateActivitySharedUiPhysics();
             ValidateActivitySharedMonsterPhysics();
             var fixture = new GameObject("Original activity RT component fixture", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
@@ -49,15 +53,25 @@ namespace Zjcs.Editor
             Require(assets, "The selected original native RT model inputs are unavailable.");
             // Exercise the original model inputs through the shared native mesh
             // backend. The full source prefab hierarchy is a separate binding.
-            var template = BattleNativeMonsterRenderer.Create(assets, modelId, staging.transform, "Original native test model");
+            bool complete = Environment.GetEnvironmentVariable("ZJCS_ACTIVITY_RT_COMPLETE") == "1";
+            GameObject template = complete
+                ? Resources.Load<GameObject>("DailyChallenges/ActivityRtPrefab/MonsterModel_3706_RT")
+                : BattleNativeMonsterRenderer.Create(assets, modelId, staging.transform, "Original native test model").gameObject;
+            Require(template, "Bind the complete original RT target.");
+            var config = ScriptableObject.CreateInstance<AppearanceAssetManagerConfig>();
+            using var appearanceManager = new AppearanceAssetManager(config, action => new ActivityMonsterSubscription(() => { }));
+            var appearanceAssets = complete ? Resources.Load<PartnerNativeDetailActorAssets>("DailyChallenges/ActivityRtPrefab/AppearanceAssets") : null;
+            var textures = complete ? new OfflinePartnerUiTextureResources(appearanceAssets, appearanceManager) : null;
+            var previousTextures = ProfessionAppearanceTextureBindings.Current;
+            if (complete) ProfessionAppearanceTextureBindings.Current = textures;
             var seats = new SpineRTUIManager();
-            var bindings = new ActivityRtBindings(assets, modelId, template.gameObject, seats);
+            var bindings = new ActivityRtBindings(assets, modelId, template, seats, textures);
             GameObject first = null, second = null;
             RTHandle firstHandle = null, secondHandle = null;
             Camera firstCamera = null, secondCamera = null;
             try
             {
-                first = CreateActivityRtIcon(prefab, fixture.transform, staging.transform, bindings, template.gameObject);
+                first = CreateActivityRtIcon(prefab, fixture.transform, staging.transform, bindings, template);
                 var a = first.GetComponent<TempRTUI>();
                 first.SetActive(true);
                 yield return null;
@@ -78,21 +92,41 @@ namespace Zjcs.Editor
                 { bindings.Advance(.04f); yield return null; }
                 yield return new WaitForEndOfFrame();
                 byte[] before = ReadActivityRt(firstHandle.rt, out int visible);
+                Vector3[] followerPositions = complete ? ActivityRtFollowerPositions(bindings.Models[0]) : null;
                 Debug.Log("[Battle hosts] RT diagnostic pixels=" + visible + " camera=" + firstCamera.cullingMask
                     + " model=" + bindings.Models[0].GetComponent<MeshRenderer>().bounds
                     + " materials=" + string.Join(",", bindings.Models[0].GetComponent<MeshRenderer>().sharedMaterials
-                        .Select(value => value.name + "/" + value.shader.name)));
+                        .Distinct().Select(value => value.name + "/" + value.shader.name + "/supported=" + value.shader.isSupported
+                            + "/texture=" + (value.mainTexture ? value.mainTexture.name + ":" + value.mainTexture.width : "null")
+                            + "/passes=" + string.Join(",", Enumerable.Range(0, value.passCount).Select(value.GetPassName))))
+                    + " requested=" + textures?.LoadedResourceTextureCount
+                    + " layer=" + bindings.Models[0].gameObject.layer);
                 Require(visible > 500, "The original Universal2D render pass produced no native model pixels.");
+                if (complete)
+                {
+                    var root = bindings.Models[0].gameObject;
+                    Require(root.GetComponentsInChildren<MonoBehaviour>(true).All(value => value), "Missing original RT application script.");
+                    var followers = root.GetComponentsInChildren<AttachmentFollower>(true);
+                    Require(followers.Length == 20 && followers.All(value => value.SkeletonRenderer == bindings.Models[0]),
+                        "The complete original RT follower references differ.");
+                    Require(root.GetComponentsInChildren<ParticleSystem>(true).Length > 0 && textures.LoadedResourceTextureCount == 4,
+                        "The original RT particles or four Low atlas pages are unbound.");
+                    Debug.Log("[Battle hosts] Complete RT hierarchy: followers=" + followers.Length
+                        + " particles=" + root.GetComponentsInChildren<ParticleSystem>(true).Length
+                        + " alive=" + root.GetComponentsInChildren<ParticleSystem>(true).Sum(value => value.particleCount));
+                }
                 for (int frame = 0; frame < 8; frame++)
                 { bindings.Advance(.04f); yield return null; }
                 yield return new WaitForEndOfFrame();
                 Require(!before.SequenceEqual(ReadActivityRt(firstHandle.rt, out _)),
                     "The original offscreen pass did not render the advanced native Animator pose.");
+                if (complete) Require(!followerPositions.SequenceEqual(ActivityRtFollowerPositions(bindings.Models[0])),
+                    "Original RT followers did not advance with their native bones.");
                 var screen = ScreenCapture.CaptureScreenshotAsTexture();
                 try { File.WriteAllBytes(Path.Combine(output, "activity-rt-native.png"), screen.EncodeToPNG()); }
                 finally { UnityEngine.Object.Destroy(screen); }
 
-                second = CreateActivityRtIcon(prefab, fixture.transform, staging.transform, bindings, template.gameObject);
+                second = CreateActivityRtIcon(prefab, fixture.transform, staging.transform, bindings, template);
                 var b = second.GetComponent<TempRTUI>();
                 second.SetActive(true); yield return null;
                 secondHandle = b.RTColorTextureHandle;
@@ -118,13 +152,21 @@ namespace Zjcs.Editor
                 Require(!firstCamera && !firstHandle.rt && bindings.BloomOwners.Count == 0
                     && bindings.Registers == 3 && bindings.Unregisters == 3,
                     "Original RT destruction leaked a camera, texture, or bloom registration.");
-                Debug.Log("[Battle hosts] Original TempRTUI passed: native " + modelId + " test mesh pixels and Animator changes, original 3706 icon geometry/camera/RT settings, same-target sharing, foreign-seat guard, disable/reopen handover and camera/RT disposal. Full native hierarchy, particles, bloom output and production entry are not covered.");
+                appearanceManager.Update();
+                if (complete) Require(textures.LoadedResourceTextureCount == 0, "Original RT destruction retained Low atlas requests.");
+                Debug.Log("[Battle hosts] Original TempRTUI passed: native " + modelId + " pixels and Animator changes, original 3706 icon geometry/camera/RT settings, same-target sharing, foreign-seat guard, disable/reopen handover and camera/RT disposal. "
+                    + (complete ? "Complete original hierarchy, 20 follower references/positions and moving poses, particles, four Low atlas requests and release covered. "
+                        : "Full native hierarchy and particles not covered. ")
+                    + "Bloom output and production entry are not covered.");
             }
             finally
             {
                 if (second) UnityEngine.Object.DestroyImmediate(second);
                 if (first) UnityEngine.Object.DestroyImmediate(first);
                 seats.Dispose();
+                ProfessionAppearanceTextureBindings.Current = previousTextures;
+                ShaderUtil.allowAsyncCompilation = previousAsyncCompilation;
+                UnityEngine.Object.Destroy(config);
                 UnityEngine.Object.Destroy(fixture);
             }
         }
@@ -228,21 +270,52 @@ namespace Zjcs.Editor
             finally { RenderTexture.active = previous; UnityEngine.Object.Destroy(image); }
         }
 
+        private static Vector3[] ActivityRtFollowerPositions(BattleNativeMonsterRenderer model)
+        {
+            var followers = model.GetComponentsInChildren<AttachmentFollower>(true);
+            int checkedBones = 0;
+            foreach (var follower in followers)
+            {
+                var skeleton = (IProfessionFollowerSkeleton)model.State;
+                var slot = string.IsNullOrEmpty(follower.SlotName) ? null : skeleton.FindSlot(follower.SlotName);
+                var bone = string.IsNullOrEmpty(follower.BoneName) ? slot?.Bone : skeleton.FindBone(follower.BoneName);
+                Require(bone != null, "Original RT follower bone is unbound: " + follower.name);
+                if (!bone.Active || !follower.isActiveAndEnabled) continue;
+                if (slot != null && !string.IsNullOrEmpty(follower.AttachmentName)
+                    && slot.Attachment != skeleton.GetAttachment(slot.Index, follower.AttachmentName)) continue;
+                var expected = model.transform.TransformPoint(new Vector3(bone.WorldX, bone.WorldY, 0));
+                Require(Mathf.Abs(expected.x - follower.transform.position.x) < .002f
+                    && Mathf.Abs(expected.y - follower.transform.position.y) < .002f,
+                    "Original RT follower differs from its completed native bone: " + follower.name);
+                checkedBones++;
+            }
+            Require(checkedBones > 0, "No original RT follower had an active matching attachment.");
+            return followers.Select(value => value.transform.localPosition).ToArray();
+        }
+
         private sealed class ActivityRtBindings : IActivityRtUIBindings
         {
             private readonly BattleNativeMonsterAssets assets;
             private readonly int modelId;
             private readonly GameObject template;
+            private readonly OfflinePartnerUiTextureResources textures;
             public ISpineRTUIManager RenderSeats { get; }
             public readonly List<BattleNativeMonsterRenderer> Models = new List<BattleNativeMonsterRenderer>();
             public readonly List<Camera> Cameras = new List<Camera>();
             public readonly HashSet<IUIBloomRequirer> BloomOwners = new HashSet<IUIBloomRequirer>();
             public int Registers, Unregisters;
-            public ActivityRtBindings(BattleNativeMonsterAssets value, int id, GameObject original, ISpineRTUIManager seats)
-            { assets = value; modelId = id; template = original; RenderSeats = seats; }
+            public ActivityRtBindings(BattleNativeMonsterAssets value, int id, GameObject original, ISpineRTUIManager seats,
+                OfflinePartnerUiTextureResources appearance)
+            { assets = value; modelId = id; template = original; RenderSeats = seats; textures = appearance; }
             public GameObject InstantiateTarget(GameObject source, Transform parent)
             {
                 Require(source == template, "The RT target identity differs.");
+                if (textures != null)
+                {
+                    var instance = BattleNativeMonsterRenderer.CreatePrefab(source, parent, textures);
+                    Models.Add(instance); Cameras.Add(parent.GetComponent<Camera>());
+                    return instance.gameObject;
+                }
                 var model = BattleNativeMonsterRenderer.Create(assets, modelId, parent, "Original native " + modelId + " RT test mesh");
                 model.BindOriginalAnimator(assets, modelId);
                 // Select the actual original model node from the battle entity
@@ -253,13 +326,14 @@ namespace Zjcs.Editor
                 return model.gameObject;
             }
             public Material[] GetIndependentMaterials(GameObject instance)
-            { return instance.GetComponent<MeshRenderer>().sharedMaterials; }
+            { return textures != null ? instance.GetComponent<AppearanceRendererLite>().GetIndependentMaterials()
+                : instance.GetComponent<MeshRenderer>().sharedMaterials; }
             public void RegisterBloom(IUIBloomRequirer requirer)
             { Require(BloomOwners.Add(requirer), "Duplicate original bloom registration."); Registers++; }
             public void UnregisterBloom(IUIBloomRequirer requirer)
             { Require(BloomOwners.Remove(requirer), "Unbalanced original bloom unregistration."); Unregisters++; }
             public void Advance(float delta)
-            { foreach (var model in Models) if (model) model.Advance(delta); }
+            { if (textures == null) foreach (var model in Models) if (model) model.Advance(delta); }
         }
     }
 }

@@ -81,9 +81,11 @@ namespace Zjcs.Offline.ProfessionUI
             batches = new ProfessionNativeMeshBatches(data.SlotCount);
             physics = data.Constraints.Any(value => value.Kind == "physics") ? new ProfessionNativeOrderedPhysicsPose(data) : null;
             var sources = Arr(row["materials"]);
-            sourceMaterials = new Material[sources.Count];
+            sourceMaterials = prefabMaterials ?? new Material[sources.Count];
+            if (sourceMaterials.Length != sources.Count)
+                throw new InvalidDataException("Original prefab atlas material count differs.");
             for (int i = 0; i < sources.Count; i++)
-                sourceMaterials[i] = CreateMaterial(assets, Obj(sources[i]), Obj(row["textures"]));
+                if (prefabMaterials == null) sourceMaterials[i] = CreateMaterial(assets, Obj(sources[i]), Obj(row["textures"]));
             material = sourceMaterials[0];
             if (row.TryGetValue("atlasPages", out object pagesValue))
             {
@@ -126,6 +128,7 @@ namespace Zjcs.Offline.ProfessionUI
             batches.Build(state.Pose, state.CreateDrawSlots(), Flag(settings, "useClipping"),
                 Flag(settings, "pmaVertexColors"), ZSpacing, allowConcaveClipping: true);
             GetComponent<ProfessionNativeSceneMeshPart>().Assign(batches.Batches, MaterialForBatch);
+            OnCustomDemandLoading?.Invoke(this);
             RefreshOriginalMeshCopies();
             Attachments?.UpdateFollowers();
         }
@@ -178,13 +181,14 @@ namespace Zjcs.Offline.ProfessionUI
         private Material MaterialForBatch(ProfessionNativeMeshBatches.Batch batch)
         {
             if (batch.Blend != 0) throw new NotSupportedException("Bind original monster non-normal material.");
-            return pageMaterials == null ? material : pageMaterials.TryGetValue(batch.Page, out var value) ? value
+            var original = pageMaterials == null ? material : pageMaterials.TryGetValue(batch.Page, out var value) ? value
                 : throw new InvalidDataException("Original monster atlas page material is unbound: " + batch.Page);
+            return CustomMaterialOverride.TryGetValue(original, out var replacement) ? replacement : original;
         }
         private void OnDestroy()
         {
             batches?.Dispose();
-            if (sourceMaterials != null) foreach (var value in sourceMaterials) DestroyOwned(value);
+            if (sourceMaterials != null && prefabMaterials == null) foreach (var value in sourceMaterials) DestroyOwned(value);
             batches = null; material = null; sourceMaterials = null;
         }
         private static void DestroyOwned(UnityEngine.Object value)

@@ -31,7 +31,8 @@ namespace Zjcs.Offline.ProfessionUI
             if (Flag(original, "m_ApplyRootMotion") || Flag(original, "m_LinearVelocityBlending")
                 || Flag(original, "m_StabilizeFeet") || Int(Obj(original["m_Avatar"]), "m_PathID") != 0)
                 throw new NotSupportedException("Bind additional original monster Animator branches.");
-            Animator = gameObject.AddComponent<Animator>();
+            Animator = GetComponent<Animator>();
+            if (!Animator) Animator = gameObject.AddComponent<Animator>();
             Animator.runtimeAnimatorController = assets.Resolve<RuntimeAnimatorController>((string)row["nativeController"]);
             Animator.cullingMode = (AnimatorCullingMode)Int(original, "m_CullingMode");
             Animator.updateMode = (AnimatorUpdateMode)Int(original, "m_UpdateMode");
