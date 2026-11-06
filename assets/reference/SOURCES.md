@@ -583,7 +583,6 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 选定884伙伴阴影：`scripts/prepare_partner_native_shadows.py` 复用公共阴影转换器，从34份原伙伴实体提取完整阴影子树、共享 Sprite 和纹理，核对原生导出及匹配的 Windows 转换缓存，显式绑定为 `Combat/NativePartnerAssets/partner-shadow-bindings` 与 `RoleShadows/`；输入输出 SHA256 及处理方式见[伙伴阴影来源](partner-native-shadows-source-manifest.json)。未生成完整素材快照；功能范围见[伙伴助战](../../docs/features/npc-assistance.md)。
 
-
 公共小地图实体索引的事件顺序核对所选884的 `Common.EcContainer` 三个原容器操作，原源文件及本地适配／验证代码哈希记入[共用地图查询来源](official-map/mainline-minimap-world-data-source-manifest.json)。生成的地区／实体元数据固定 UTF-8 LF，GUID与官方载荷保持原值；完整根、HUD及窗口凭据仅在核对原输入和资源输出未变后刷新接线哈希。
 
 当前20种原生怪物的完整Transform／RectTransform分支、AttachAgent名表／空引用及BoneFollower字段逐对象解码自所选884原prefab，原模型节点按来源身份重用；来源对象、组件模式、输入输出及显式绑定见[怪物挂点来源](battle-animation/monster-attachments-source-manifest.json)。3206／3207新增阴影复用已核验的原Sprite和逐mip原生纹理转换，路径／哈希与绑定见[新增怪物阴影来源](battle-animation/monster-additional-shadows-source-manifest.json)，生成入口为 `scripts/prepare_battle_monster_attachments.py`；未生成完整素材快照。实现及验证范围见[战斗执行](../../docs/features/battle-execution.md)。
@@ -672,8 +671,8 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 主线角色历史代码恢复：`recover_mainline_character_sources.py` 读取已提交871来源配置，按原HybridCLR清单的大小、MD5与SHA256以及DLL bundle的大小／MD5校验输入，复用官方AES-CBC解码；两份解码IL必须与既有实体生命周期凭据逐字节哈希一致，再在独立历史目录反编译原3001根脚本及相关基类／枚举／共享类型共53项。原来源版本、Git身份、URL、原对象、工具与逐文件哈希见[历史客户端源码凭据](official-map/mainline-character-client-sources-source-manifest.json)；`prepare_mainline_character_views.py` 的四份匹配版本角色类、适配及输出哈希见[角色生命周期来源](official-map/mainline-character-views-source-manifest.json)。匹配871版本的完整原动作表现类、枚举与共享动作／事件源码由 `prepare_mainline_character_actions.py` 记录于[动作来源](official-map/mainline-character-actions-source-manifest.json)。两个完整原角色可见性／跟随薄类、泛型可见性整类正文对照及适配输出由 `prepare_mainline_character_visibility.py` 记录于[可见性来源](official-map/mainline-character-visibility-source-manifest.json)。完整原移动代理、三层移动处理器、接口与移动枚举，以及未改写的原时钟／阈值调用凭据由 `prepare_mainline_character_movement.py` 记录于[移动来源](official-map/mainline-character-movement-source-manifest.json)。未修改当前所选来源或原角色prefab，未新增美术或素材快照；实现与验证范围仅在[公共模块页](../../docs/features/mainline-map-modules.md)维护。
 
-圣兽页面数据来源：`record_activity_battle_page_data.py` 记录884原共享 `RewardRuleInfoParser`／`ItemDropInfo`、已选871规则载荷和本地页面数据适配的逐文件SHA256；固定／概率显示分支保持原算法，输入边界校验所选奖励行不含条件、等级或阶级倍率，未重新选择或混入其他规则版本。来源见[页面数据输入与输出](daily-challenges/activity-page-data-source-manifest.json)，实现与验证范围仅在[所属功能页](../../docs/features/daily-challenges.md)维护。
-
 主线正式公共宿主来源：`record_mainline_shared_world_host.py` 记录所选884的原 `PlayerMap` 地区状态消费代码与 `MapPartInfoBase`、已核验的七图共享数据／客户端配置及保留871共享IL凭据，以及公共宿主、龙之国地形借用入口和正式验证入口的源码／元数据哈希与显式调用绑定，见[公共宿主来源](official-map/mainline-shared-world-host-source-manifest.json)。没有新增或转换美术载荷，未改变当前来源选择或生成素材快照；实现与验证范围仅在[主线地图公共模块](../../docs/features/mainline-map-modules.md)维护。
+
+圣兽页面数据来源：`record_activity_battle_page_data.py` 记录884原共享 `RewardRuleInfoParser`／`ItemDropInfo`、已选871规则载荷和本地页面数据适配的逐文件SHA256；固定／概率显示分支保持原算法，输入边界校验所选奖励行不含条件、等级或阶级倍率，未重新选择或混入其他规则版本。来源见[页面数据输入与输出](daily-challenges/activity-page-data-source-manifest.json)，实现与验证范围仅在[所属功能页](../../docs/features/daily-challenges.md)维护。
 
 地图入口补充接线来源见[地图公共接线来源](official-map/mainline-map-integration-source-manifest.json)：记录主线小地图版本选择、地图战斗公共构造、山之国私图助战与其公共副本内核依赖、Unity 导入后的地图元数据及源码哈希；原美术载荷与 GUID 保持既有来源，导入器自动扩展字段不声明为原始官方配置。验证范围维护在[主线地图公共模块](../../docs/features/mainline-map-modules.md)及[山之国](../../docs/maps/map-12.md)。

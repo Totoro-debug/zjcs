@@ -2063,17 +2063,17 @@ scripts/fixtures/partner_talent_validation.cs text eol=lf
 assets/reference/partner-talent-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/Partners/PartnerTalentRules.cs* text eol=lf
 
-# Current saved partner talent player projection.
-scripts/record_partner_talent_player.py text eol=lf
-scripts/fixtures/partner_talent_player_validation.cs text eol=lf
-assets/reference/partner-talent-player-source-manifest.json text eol=lf
-unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerTalentPlayer.cs* text eol=lf
-
 # Shared native minimap region clocks and original timed label provider.
 unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/MapRegionLimitStatusRefreshHelper.cs text eol=lf
 unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/MapRegionLimitStatusRefreshForRankUnlockTime.cs* text eol=lf
 unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.RegionTime.cs* text eol=lf
 unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.LocalData.cs* text eol=lf
+
+# Current saved partner talent player projection.
+scripts/record_partner_talent_player.py text eol=lf
+scripts/fixtures/partner_talent_player_validation.cs text eol=lf
+assets/reference/partner-talent-player-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerTalentPlayer.cs* text eol=lf
 
 # Original partner profile region and atomic offline claims.
 scripts/prepare_partner_profile_*.py text eol=lf
@@ -2089,6 +2089,13 @@ unity/Assets/Game/Runtime/Offline/PartnersUI/*PartnerProfile*.cs* text eol=lf
 unity/Assets/Game/Resources/Partners/OfficialPartnerProfile*.asset* text eol=lf
 unity/Assets/Official/Partners/UI/Profile/** text eol=lf
 
+# Saved original partner tip player and event payloads.
+scripts/record_partner_tip_player.py text eol=lf
+scripts/prepare_partner_tip_player_validation.py text eol=lf
+scripts/fixtures/partner_tipdot_player_validation.cs text eol=lf
+assets/reference/partner-tip-player-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerTipDotPlayer.cs* text eol=lf
+
 # Current original attachment followers and complete player status graphs.
 scripts/prepare_battle_spine_follower_*.py text eol=lf
 assets/reference/battle-animation/spine-follower-*-source-manifest.json text eol=lf
@@ -2098,13 +2105,6 @@ unity/Assets/Game/Resources/Combat/status-spine-followers.json* text eol=lf
 unity/Assets/Official/Combat/StatusSpineFollowers/** text eol=lf
 unity/Assets/Official/Combat/StatusSpineFollowers.meta text eol=lf
 
-# Saved original partner tip player and event payloads.
-scripts/record_partner_tip_player.py text eol=lf
-scripts/prepare_partner_tip_player_validation.py text eol=lf
-scripts/fixtures/partner_tipdot_player_validation.cs text eol=lf
-assets/reference/partner-tip-player-source-manifest.json text eol=lf
-unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerTipDotPlayer.cs* text eol=lf
-
 # Original partner condition subscriptions and local event ownership.
 scripts/prepare_partner_condition_handler*.py text eol=lf
 scripts/fixtures/partner_condition_handler_validation.cs text eol=lf
@@ -2112,13 +2112,6 @@ scripts/templates/partner_conditions/PartnerConditionHandler.cs text eol=lf
 assets/reference/partner-condition-handler-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/Partners/PartnerConditionHandler.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerTipDotConditions.cs* text eol=lf
-
-# Saved original partner tip parser services.
-scripts/record_partner_tip_services.py text eol=lf
-scripts/prepare_partner_tip_services_validation.py text eol=lf
-scripts/fixtures/partner_tipdot_services_validation.cs text eol=lf
-assets/reference/partner-tip-services-source-manifest.json text eol=lf
-unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerTipDotServices.cs* text eol=lf
 
 # Original complete native track classes and projectile/movement graphs.
 scripts/prepare_battle_track_*.py text eol=lf
@@ -2129,6 +2122,13 @@ unity/Assets/Game/Resources/Combat/tracks.json* text eol=lf
 unity/Assets/Official/Combat/Tracks/** text eol=lf
 unity/Assets/Official/Combat/Tracks.meta text eol=lf
 
+# Saved original partner tip parser services.
+scripts/record_partner_tip_services.py text eol=lf
+scripts/prepare_partner_tip_services_validation.py text eol=lf
+scripts/fixtures/partner_tipdot_services_validation.cs text eol=lf
+assets/reference/partner-tip-services-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerTipDotServices.cs* text eol=lf
+
 # Original partner friendship achievements and atomic local receipts.
 scripts/prepare_partner_achievements.py text eol=lf
 scripts/prepare_partner_achievement_validation.py text eol=lf
@@ -2137,6 +2137,17 @@ scripts/fixtures/partner_achievement_validation.cs text eol=lf
 assets/reference/partner-achievement-rules-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/Partners/PartnerFriendshipAchievementRules.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerAchievement*.cs* text eol=lf
+
+# Complete original skill cast graphs and explicit playable scope.
+scripts/prepare_battle_cast_assets.py text eol=lf
+assets/reference/battle-animation/cast-assets-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Offline/BattleNativePlayables/** text eol=lf
+unity/Assets/Game/Runtime/Offline/BattleNativePlayables.meta text eol=lf
+unity/Assets/Game/Resources/Combat/casts.json* text eol=lf
+unity/Assets/Game/Resources/Combat/cast-audio.json* text eol=lf
+unity/Assets/Official/Combat/Casts/** text eol=lf
+unity/Assets/Official/Combat/Casts/**/*.wav binary
+unity/Assets/Official/Combat/Casts.meta text eol=lf
 
 # Original partner friendship achievement page and native bindings.
 scripts/prepare_partner_achievement_ui*.py text eol=lf
@@ -2152,17 +2163,6 @@ unity/Assets/Game/Resources/Partners/OfficialPartnerAchievement*.asset* text eol
 unity/Assets/Official/Partners/UI/Achievements/** text eol=lf
 unity/Assets/Official/Partners/UI/Achievements/**/*.wav binary
 unity/Assets/Official/Partners/UI/Achievements.meta text eol=lf
-
-# Complete original skill cast graphs and explicit playable scope.
-scripts/prepare_battle_cast_assets.py text eol=lf
-assets/reference/battle-animation/cast-assets-source-manifest.json text eol=lf
-unity/Assets/Game/Runtime/Offline/BattleNativePlayables/** text eol=lf
-unity/Assets/Game/Runtime/Offline/BattleNativePlayables.meta text eol=lf
-unity/Assets/Game/Resources/Combat/casts.json* text eol=lf
-unity/Assets/Game/Resources/Combat/cast-audio.json* text eol=lf
-unity/Assets/Official/Combat/Casts/** text eol=lf
-unity/Assets/Official/Combat/Casts/**/*.wav binary
-unity/Assets/Official/Combat/Casts.meta text eol=lf
 
 # Original partner detail talk region and presentation controllers.
 scripts/prepare_partner_detail_talk*.py text eol=lf
@@ -2219,6 +2219,11 @@ scripts/prepare_battle_player_animation_binding.py text eol=lf
 assets/reference/battle-animation/player-animation-binding-source-manifest.json text eol=lf
 unity/Assets/Game/Resources/Combat/player-animation-binding.json* text eol=lf
 
+# Keep current 3100 attachment data and independent bindings byte-stable.
+scripts/prepare_battle_player_attachments.py text eol=lf
+assets/reference/battle-animation/player-attachments-source-manifest.json text eol=lf
+unity/Assets/Game/Resources/Combat/player-attachments.json* text eol=lf
+
 # BEGIN shared battle pet byte identities
 scripts/prepare_battle_pet_hud.py text eol=lf
 scripts/prepare_battle_pet_rules.py text eol=lf
@@ -2263,11 +2268,6 @@ scripts/prepare_battle_live_monster_validation.py text eol=lf
 assets/reference/battle-animation/monster-attachments-source-manifest.json text eol=lf
 assets/reference/battle-animation/monster-additional-shadows-source-manifest.json text eol=lf
 # END shared battle pet byte identities
-
-# Keep current 3100 attachment data and independent bindings byte-stable.
-scripts/prepare_battle_player_attachments.py text eol=lf
-assets/reference/battle-animation/player-attachments-source-manifest.json text eol=lf
-unity/Assets/Game/Resources/Combat/player-attachments.json* text eol=lf
 
 # Shared mainline placement catalog source byte identities.
 scripts/mainline_entity_catalog.py text eol=lf
@@ -2388,28 +2388,6 @@ unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerActor
 scripts/prepare_battle_player_native_view.py text eol=lf
 assets/reference/battle-animation/player-native-view-source-manifest.json text eol=lf
 
-# Keep shared player scene integration and dependency identities byte-stable.
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRequest.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePartnerNativeModelView.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/IOfficialBattleAnimatorMovementModel.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerAppearanceSource.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Players.cs text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.SceneViews.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/IOfficialBattleAnimatorMovementModel.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerAppearanceSource.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Players.cs.meta text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.SceneViews.cs.meta text eol=lf
-assets/reference/partner-battle-fighters-source-manifest.json text eol=lf
-assets/reference/battle-animation/movement-effects-source-manifest.json text eol=lf
-assets/reference/battle-hud/skill-slot-lifecycle-source-manifest.json text eol=lf
-assets/reference/partner-native-role-views-source-manifest.json text eol=lf
-scripts/prepare_battle_player_scene.py text eol=lf
-assets/reference/battle-animation/player-scene-dispatch-source-manifest.json text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRequest.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePartnerNativeModelView.cs.meta text eol=lf
-
 # Preserve original pet follower graph, ports and source identities.
 scripts/prepare_battle_pet_followers.py text eol=lf
 scripts/fixtures/battle_skill_graph_dispatch_harness.cs text eol=lf
@@ -2431,6 +2409,28 @@ unity/Assets/Game/Editor/OfficialBattlePetHostAcceptance.cs text eol=lf
 unity/Assets/Official/Combat/PetFollowers.meta text eol=lf whitespace=-blank-at-eol
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveMonsterModelView.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleEntityPositionContainer.cs* text eol=lf
+
+# Keep shared player scene integration and dependency identities byte-stable.
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRequest.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePartnerNativeModelView.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/IOfficialBattleAnimatorMovementModel.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerAppearanceSource.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Players.cs text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.SceneViews.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/IOfficialBattleAnimatorMovementModel.cs.meta text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerAppearanceSource.cs.meta text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Players.cs.meta text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.SceneViews.cs.meta text eol=lf
+assets/reference/partner-battle-fighters-source-manifest.json text eol=lf
+assets/reference/battle-animation/movement-effects-source-manifest.json text eol=lf
+assets/reference/battle-hud/skill-slot-lifecycle-source-manifest.json text eol=lf
+assets/reference/partner-native-role-views-source-manifest.json text eol=lf
+scripts/prepare_battle_player_scene.py text eol=lf
+assets/reference/battle-animation/player-scene-dispatch-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs.meta text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRequest.cs.meta text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs.meta text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePartnerNativeModelView.cs.meta text eol=lf
 
 # Verified shared map lifecycle and pinned local logging source bytes.
 unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedWorld.cs text eol=lf
@@ -2459,6 +2459,24 @@ assets/reference/official-map/mainline-minimap-world-data-source-manifest.json t
 unity/Assets/Game/Editor/OfficialBattlePetPassiveHostAcceptance.cs* text eol=lf
 unity/Assets/Game/Runtime/Official/Combat/FightStatusTriggerRuntime.StackCount.cs* text eol=lf
 
+# Keep native player host source receipts stable.
+scripts/prepare_battle_player_hosts.py text eol=lf
+assets/reference/battle-animation/player-hosts-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/ArenaBattleRunner.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/FantasyTowerBattleRunner.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestBattleRunner.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/WeeklyChallengeBattleRunner.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Battle.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.BattleScene.cs text eol=lf
+unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.Presentation.cs text eol=lf
+unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.cs text eol=lf
+unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs text eol=lf
+
+
 # Keep recovered original shared injection sources stable.
 scripts/prepare_mainline_shared_injection.py text eol=lf
 scripts/prepare_mainline_shared_injection_contract.ps1 text eol=lf
@@ -2479,23 +2497,6 @@ unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ECFightRolePetTransferVi
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePetTransferCatalog.cs* text eol=lf
 unity/Assets/Official/Combat/PetTransfers/** text eol=lf
 unity/Assets/Official/Combat/PetTransfers.meta text eol=lf
-
-# Keep native player host source receipts stable.
-scripts/prepare_battle_player_hosts.py text eol=lf
-assets/reference/battle-animation/player-hosts-source-manifest.json text eol=lf
-unity/Assets/Game/Runtime/Presentation/Home/ArenaBattleRunner.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Home/FantasyTowerBattleRunner.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestBattleRunner.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Home/WeeklyChallengeBattleRunner.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Battle.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.BattleScene.cs text eol=lf
-unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.Presentation.cs text eol=lf
-unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.cs text eol=lf
-unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionAppearanceBindings.cs text eol=lf
 
 # Keep original client injection dependency receipts and payloads stable.
@@ -2510,6 +2511,7 @@ scripts/prepare_battle_stack_count_runtime.py text eol=lf
 scripts/test_battle_stack_count.ps1 text eol=lf
 scripts/fixtures/battle_stack_count_harness.cs text eol=lf
 assets/reference/battle-rules/stack-count-source-manifest.json text eol=lf
+
 # Keep the recovered original injection source and payload stable.
 scripts/fixtures/mainline_shared_injection.cs text eol=lf
 
@@ -2541,6 +2543,22 @@ unity/Assets/Official/Combat/NativeMonsters/Resources/Combat/NativeMonsters/Shad
 # Keep verified initial monster footprint bindings stable.
 scripts/prepare_battle_monster_bodies.py text eol=lf
 assets/reference/battle-rules/monster-bodies-source-manifest.json text eol=lf
+
+# Original battle camera extension bindings and movement regression
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleCameraView.cs text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleCameraTrackingAcceptance.cs text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleCameraTrackingAcceptance.cs.meta text eol=lf
+
+# Legacy local monster checkpoint compatibility
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialCombatAssetCatalog.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/WeeklyChallengeBattleRunner.cs text eol=lf
+unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.LegacyMonsterBodies.cs text eol=lf
+unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.LegacyMonsterBodies.cs.meta text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleLegacyBodyRestoreValidation.cs text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleLegacyBodyRestoreValidation.cs.meta text eol=lf
+
+# Original embedded monster particle extraction
+scripts/prepare_battle_monster_embedded_particles.py text eol=lf
 
 # Original mainline world startup configuration and focused validation.
 unity/Assets/Official/World/Shared/SharedWorldConfiguration/** -text
@@ -2578,7 +2596,6 @@ scripts/prepare_activity_countdown_native.py text eol=lf
 assets/reference/daily-challenges/activity-countdown-*.json text eol=lf
 unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.ActivityCountdown.cs text eol=lf
 unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.ActivityCountdown.cs.meta -text
-
 unity/Assets/Official/World/Shared/SharedClientConfiguration/** -text
 unity/Assets/Official/World/Shared/SharedClientConfiguration.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedClientConfiguration.cs text eol=lf
@@ -2664,27 +2681,6 @@ unity/Assets/Official/Dungeons/884_156692/** -text whitespace=-blank-at-eol
 unity/Assets/Game/Resources/Dungeons/daily-dungeon-achievements.json text eol=lf
 unity/Assets/Game/Resources/Dungeons/private-routes.json text eol=lf
 
-# Map integration receipt tool.
-scripts/record_mainline_map_integration.py text eol=lf
-
-# Preserve the existing official Map14 puzzle payload bytes.
-unity/Assets/Official/World/Map/14/Resources/Map14/puzzle-rules.json -text
-
-# Original battle camera extension bindings and movement regression
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleCameraView.cs text eol=lf
-unity/Assets/Game/Editor/Combat/OfficialBattleCameraTrackingAcceptance.cs text eol=lf
-unity/Assets/Game/Editor/Combat/OfficialBattleCameraTrackingAcceptance.cs.meta text eol=lf
-
-# Legacy local monster checkpoint compatibility
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialCombatAssetCatalog.cs text eol=lf
-unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.LegacyMonsterBodies.cs text eol=lf
-unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.LegacyMonsterBodies.cs.meta text eol=lf
-unity/Assets/Game/Editor/Combat/OfficialBattleLegacyBodyRestoreValidation.cs text eol=lf
-unity/Assets/Game/Editor/Combat/OfficialBattleLegacyBodyRestoreValidation.cs.meta text eol=lf
-
-# Original embedded monster particle extraction
-scripts/prepare_battle_monster_embedded_particles.py text eol=lf
-
 # Pet skill UI import identities and source receipt bytes.
 scripts/prepare_skill_pet_ui.py text eol=lf
 assets/reference/pet-skill-ui/source-manifest.json text eol=lf
@@ -2706,6 +2702,9 @@ unity/Assets/Official/DailyChallenges/UI/ResultActions.meta -text
 unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityNodeInstanceInfo.cs* text eol=lf
 unity/Assets/Game/Runtime/Official/ActivityBattleUI/TipDotActivityDomainBoss*ConditionNode.cs* text eol=lf
 
+# Map integration receipt tool.
+scripts/record_mainline_map_integration.py text eol=lf
+
 # Preserve generated battle metadata without changing original YAML bytes.
 docs/maps/map-12.md text eol=lf
 unity/Assets/Game/Resources/Combat/NativeMonsters.meta whitespace=-blank-at-eol
@@ -2713,8 +2712,9 @@ unity/Assets/Game/Runtime/Presentation/Combat/*.meta whitespace=-blank-at-eol
 unity/Assets/Game/Runtime/Presentation/Home/*.meta whitespace=-blank-at-eol
 unity/Assets/Official/Combat/NativePartnerAssets/**/*.meta whitespace=-blank-at-eol
 unity/Assets/Official/Combat/NativePartners.meta whitespace=-blank-at-eol
+unity/Assets/Official/Combat/NativePartners/**/*.meta whitespace=-blank-at-eol
 unity/Assets/Official/Partners/Resources/PartnerDetailActors.meta whitespace=-blank-at-eol
 unity/Assets/Official/Partners/Resources/PartnerDetailActors/**/*.meta whitespace=-blank-at-eol
 
-# Battle host source and native metadata identities.
-unity/Assets/Official/Combat/NativePartners/**/*.meta whitespace=-blank-at-eol
+# Preserve the existing official Map14 puzzle payload bytes.
+unity/Assets/Official/World/Map/14/Resources/Map14/puzzle-rules.json -text
