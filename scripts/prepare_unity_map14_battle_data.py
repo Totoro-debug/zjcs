@@ -25,6 +25,41 @@ def sha(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
+def component_stage_bindings(local, templates, classes, stages):
+    component_bindings = []
+    for key, components in local.items():
+        placement = int(key)
+        entity_template = templates[str(classes[placement])]
+        bindings = []
+        for name, component in components.items():
+            if not isinstance(component, dict):
+                continue
+            if name == "LoStageBehStageComponent" and not any(
+                    key.startswith("StageBehStage") for key in entity_template):
+                continue
+            ids = component.get("StageIds") or []
+            if component.get("StageId"):
+                ids = list(ids) + [component["StageId"]]
+            if ids:
+                if any(not isinstance(value, int) or value <= 0 for value in ids):
+                    raise ValueError("Invalid original stage binding: " + str(placement))
+                stages.update(ids)
+                bindings.append({"Component": name, "StageIds": ids})
+        if bindings:
+            binding = {"PlacementId": placement, "StageComponents": bindings}
+            for component_name, field in (
+                ("LoStageResultPeriodicityInteractionComponent", "PeriodicityGroupIds"),
+                ("LoStageConPlayerPeriodicityInteractionComponent", "PlayerPeriodicityGroupIds"),
+            ):
+                groups = (components.get(component_name) or {}).get("PeriodicityGroupIds") or []
+                if any(not isinstance(value, int) or value <= 0 for value in groups):
+                    raise ValueError("Invalid original periodicity binding: " + str(placement))
+                if groups:
+                    binding[field] = list(groups)
+            component_bindings.append(binding)
+    return component_bindings
+
+
 def build():
     apk = Apk.current()
     if apk.version != VERSION:
@@ -59,27 +94,7 @@ def build():
     stories = verified_source("stories.json")
     classes = {int(row["id"]): int(row["entity"]) for row in placements["entities"]}
     stages = map_stage_ids(14, placements, tables["map_stage"], 2961)
-    component_bindings = []
-    for key, components in local.items():
-        placement = int(key)
-        entity_template = templates[str(classes[placement])]
-        bindings = []
-        for name, component in components.items():
-            if not isinstance(component, dict):
-                continue
-            if name == "LoStageBehStageComponent" and not any(
-                    key.startswith("StageBehStage") for key in entity_template):
-                continue
-            ids = component.get("StageIds") or []
-            if component.get("StageId"):
-                ids = list(ids) + [component["StageId"]]
-            if ids:
-                if any(not isinstance(value, int) or value <= 0 for value in ids):
-                    raise ValueError("Invalid original stage binding: " + str(placement))
-                stages.update(ids)
-                bindings.append({"Component": name, "StageIds": ids})
-        if bindings:
-            component_bindings.append({"PlacementId": placement, "StageComponents": bindings})
+    component_bindings = component_stage_bindings(local, templates, classes, stages)
     groups = [row for row in tables["Map/map_entity_group"] if row["Group"] == 2000
               and row["FilterCondition"].get("MapClassId") == 14]
     if len(groups) != 1:
@@ -194,5 +209,60 @@ def build():
     return result
 
 
+def refresh_placement_periodicity():
+    """Reuse retained verified official decoding; leave combat data untouched."""
+    source_receipt_path = ROOT / "assets/reference/official-map/map14-source-manifest.json"
+    source_receipt = json.loads(source_receipt_path.read_bytes())
+    receipt = json.loads(RECEIPT.read_bytes())
+    original = OUTPUT.read_bytes()
+    if (source_receipt.get("manifest") != VERSION or source_receipt.get("mapClassId") != 14
+            or receipt.get("manifest") != VERSION or receipt.get("mapClassId") != 14
+            or receipt.get("output", {}).get("sha256") != sha(original)):
+        raise ValueError("Retained official Map14 source or battle output differs")
+    records = {row["path"]: row for row in source_receipt["outputs"]}
+    decoded = {}
+    for name in ("placement.json", "entities.json", "templates.json"):
+        path = SOURCE / name
+        raw = path.read_bytes()
+        relative = path.relative_to(ROOT).as_posix()
+        if records.get(relative, {}).get("sha256") != sha(raw):
+            raise ValueError("Retained original Map14 decoding differs: " + name)
+        # The battle receipt must already declare these same original inputs.
+        if not any(row.get("path") == relative and row.get("sha256") == sha(raw)
+                   for row in receipt["inputs"]):
+            raise ValueError("Map14 battle input does not match its original decoding: " + name)
+        decoded[name] = json.loads(raw)
+    result = json.loads(original)
+    if result.get("manifest") != VERSION or result.get("mapClassId") != 14:
+        raise ValueError("Retained Map14 battle identity differs")
+    stages = set()
+    classes = {int(row["id"]): int(row["entity"]) for row in decoded["placement.json"]["entities"]}
+    bindings = component_stage_bindings(decoded["entities.json"], decoded["templates.json"], classes, stages)
+    fields = {"PeriodicityGroupIds", "PlayerPeriodicityGroupIds"}
+    previous = result["entityStageBindings"]
+    if ([{key: value for key, value in row.items() if key not in fields} for row in previous]
+            != [{key: value for key, value in row.items() if key not in fields} for row in bindings]
+            or not stages.issubset({row["Id"] for row in result["stages"]})):
+        raise ValueError("Periodicity refresh would change original battle stage bindings")
+    for old, new in zip(previous, bindings):
+        if any(old.get(key) and old[key] != new.get(key) for key in fields):
+            raise ValueError("Retained periodicity binding differs from original components")
+    result["entityStageBindings"] = bindings
+    raw = json_bytes(result)
+    receipt["generator"]["sha256"] = sha(Path(__file__).read_bytes())
+    receipt["output"].update(sha256=sha(raw), size=len(raw))
+    OUTPUT.write_bytes(raw)
+    RECEIPT.write_bytes(json_bytes(receipt))
+    print("Restored original Map14 periodicity fields on", sum(bool(row.get("PeriodicityGroupIds")
+          or row.get("PlayerPeriodicityGroupIds")) for row in bindings), "battle placements")
+    return result
+
+
 if __name__ == "__main__":
-    build()
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--refresh-placement-periodicity", action="store_true")
+    if parser.parse_args().refresh_placement_periodicity:
+        refresh_placement_periodicity()
+    else:
+        build()

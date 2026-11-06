@@ -3,6 +3,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Zjcs.Presentation.Character;
+using Zjcs.Presentation.Skills;
 
 namespace Zjcs.Presentation.CharacterCreation
 {
@@ -45,6 +47,16 @@ namespace Zjcs.Presentation.CharacterCreation
             var geometry = model.GetComponent<CharacterNativeAttachmentGeometry>();
             if (animator == null || geometry == null || !animator.HasState(0, Animator.StringToHash(animationState)))
                 throw new InvalidOperationException("The official native portrait pose or geometry is missing.");
+            OfficialSkillPreviewMaterials.Bind(model, OfficialSkillAssetCatalog.LoadDefault().NativePortraitShader);
+            var properties = new MaterialPropertyBlock();
+            foreach (Renderer renderer in model.GetComponentsInChildren<Renderer>(true))
+            {
+                renderer.GetPropertyBlock(properties);
+                // Original male/female portrait materials serialize this unclipped height.
+                properties.SetFloat("_WorldClipHeight", -1000000f);
+                renderer.SetPropertyBlock(properties);
+                properties.Clear();
+            }
             animator.Play(animationState, 0, 0);
             animator.Update(0);
             geometry.RefreshForCapture();

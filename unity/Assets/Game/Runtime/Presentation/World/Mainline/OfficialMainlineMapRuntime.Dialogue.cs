@@ -398,7 +398,7 @@ namespace Zjcs.Presentation.World
                 if (!MapProfile.HasNativeUi) return;
                 var node = hud.ui.Find(panel, path + "TalkText");
                 dialogueTypeWriter = node.GetComponent<WorldDialogueTypeWriter>() ?? node.AddComponent<WorldDialogueTypeWriter>();
-                var source = miniMap.miniMapUiData.components.Single(value => value.panel == panel
+                var source = NativeUi.Data.components.Single(value => value.panel == panel
                     && value.type == (panel == "TalkDialog" ? "TalkDialog" : "OptionTalkDialogPanel"));
                 dialogueTypeWriter.StartType(source.fields.mWordInterval);
             });

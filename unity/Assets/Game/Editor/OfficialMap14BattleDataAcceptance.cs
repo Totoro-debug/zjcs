@@ -83,6 +83,17 @@ namespace Zjcs.Editor
             Require(data.stages.Length == 217 && data.monsterRosters.Length == 217 && data.battleScenes.Length == 20,
                 "Map14 battle closure counts differ");
             Require(data.entityStageBindings.Length == 909, "Map14 component stage bindings differ");
+            int[] periodicPlacements = { 528, 1817, 3030, 3929, 4927, 6531, 7535, 8636 };
+            Require(data.entityStageBindings.Count(value => (value.PeriodicityGroupIds?.Length ?? 0) > 0
+                || (value.PlayerPeriodicityGroupIds?.Length ?? 0) > 0) == periodicPlacements.Length,
+                "Original Map14 periodic battle placement closure differs");
+            for (int index = 0; index < periodicPlacements.Length; index++)
+            {
+                var binding = data.entityStageBindings.Single(value => value.PlacementId == periodicPlacements[index]);
+                Require(binding.PeriodicityGroupIds.SequenceEqual(new[] { 130 + index })
+                    && binding.PlayerPeriodicityGroupIds.SequenceEqual(new[] { 130 + index }),
+                    "Original Map14 periodic interaction groups were lost: " + binding.PlacementId);
+            }
             var stageIds = new HashSet<int>(data.stages.Select(s => s.Id));
             Require(stageIds.Count == 217 && stageIds.SetEquals(data.monsterRosters.Select(r => r.StageId)), "Stage/roster identity mismatch");
             Require(data.entityStageBindings.All(b => b.StageComponents.All(c => c.StageIds.All(stageIds.Contains))), "Unbound entity stage");

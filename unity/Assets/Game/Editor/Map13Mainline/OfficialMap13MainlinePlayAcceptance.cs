@@ -45,6 +45,7 @@ namespace Zjcs.Editor.Map13Mainline
             {
                 if(state!=PlayModeStateChange.EnteredEditMode||!SessionState.GetBool(Key,false))return;
                 SessionState.SetBool(Key,false);PlayerSettings.colorSpace=(ColorSpace)SessionState.GetInt(Key+".color",0);
+                Application.SetStackTraceLogType(LogType.Warning,(StackTraceLogType)SessionState.GetInt(Key+".warning-trace",0));
                 string pipeline=SessionState.GetString(Key+".pipeline","");
                 string quality=SessionState.GetString(Key+".qualityPipeline","");
                 GraphicsSettings.defaultRenderPipeline=string.IsNullOrEmpty(pipeline)?null:AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>(pipeline);
@@ -70,11 +71,14 @@ namespace Zjcs.Editor.Map13Mainline
             SessionState.SetBool(Key+".trees",false);
             SessionState.SetBool(Key+".raw-points",false);
             SessionState.SetBool(Key+".world-owner",false);
+            SessionState.SetBool(Key+".hud",false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION","1");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED","1");
             SessionState.SetString(Key+".pipeline",AssetDatabase.GetAssetPath(GraphicsSettings.defaultRenderPipeline));
             SessionState.SetString(Key+".qualityPipeline",AssetDatabase.GetAssetPath(QualitySettings.renderPipeline));
             SessionState.SetInt(Key+".color",(int)PlayerSettings.colorSpace);PlayerSettings.colorSpace=ColorSpace.Linear;
+            SessionState.SetInt(Key+".warning-trace",(int)Application.GetStackTraceLogType(LogType.Warning));
+            Application.SetStackTraceLogType(LogType.Warning,StackTraceLogType.None);
             ShaderUtil.allowAsyncCompilation=false;
             SessionState.SetBool(Key,true);SessionState.SetInt(Key+".result",1);
             SessionState.SetFloat(Key+".deadline",(float)EditorApplication.timeSinceStartup+900);
@@ -92,6 +96,9 @@ namespace Zjcs.Editor.Map13Mainline
         public static void RunMap12(){Run();SessionState.SetInt(Key+".map",12);}
         public static void RunMap14(){Run();SessionState.SetInt(Key+".map",14);}
         public static void RunMap14WorldOwner(){RunMap14();SessionState.SetBool(Key+".world-owner",true);}
+        public static void RunMap14Hud(){RunMap14WorldOwner();SessionState.SetBool(Key+".hud",true);}
+        public static void RunMap11Hud(){RunMap11();SessionState.SetBool(Key+".hud",true);}
+
         public static void RunSavedSnapshots()
         {
             foreach(int map in new[]{11,12})
@@ -313,6 +320,12 @@ namespace Zjcs.Editor.Map13Mainline
             var explored=Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility").ExploredEntityIds;
             Require(explored.Length>0&&before.exploredEntityPlacements!=null&&explored.SequenceEqual(before.exploredEntityPlacements),
                 "Formal map did not persist its actually revealed entity placements after simulated movement.");
+            if(SessionState.GetBool(Key+".hud",false))
+            {
+                yield return VerifyFormalHud(runtime);
+                if(MapId!=14){Call(runtime,"CloseMap");yield return null;yield break;}
+                yield return VerifyMiniMapSnapshot(runtime,slots,slot,"hud");
+            }
             if(SessionState.GetBool(Key+".world-owner",false))
             {
                 yield return VerifyFormalWorldOwner(runtime,slot,saves,canvas.transform,target);
@@ -337,6 +350,55 @@ namespace Zjcs.Editor.Map13Mainline
             Require(!failed,"Formal map entry emitted runtime errors.");
             File.WriteAllText(Path.Combine(Output,"map"+MapId+"-formal-entry.json"),JsonUtility.ToJson(new Proof{map_id=MapId,editor=Application.unityVersion,backend=SystemInfo.graphicsDeviceType.ToString(),play_mode=true,simulated_pointer=true,save_reopen=true,entry_x=initial.X,entry_y=initial.Y,moved_x=target.X,moved_y=target.Y},true));
             Debug.Log("Map"+MapId+" formal entry passed: shared map host, simulated map pointer, local grid visibility/position save and cold reopen.");
+        }
+        private static IEnumerator VerifyFormalHud(OfficialMainlineMapRuntime runtime)
+        {
+            var hud=Field<object>(runtime,"hud");
+            var ui=Field<OfficialWorldUiRenderer>(hud,"ui");
+            var root=ui.Find("WorldCanvas","/WorldCanvas");
+            var prefab=Resources.Load<GameObject>("Map"+MapId+"/UI/WorldCanvas");
+            Require(root&&root.activeInHierarchy&&prefab&&root.transform.childCount==prefab.transform.childCount,
+                "Formal Map14 did not mount its original WorldCanvas hierarchy.");
+            var name=ui.Find("WorldCanvas","/WorldCanvas/Content/Content/WorldPanel/Anim/Left/PublicPlayerInfo/NameText");
+            Require(name.GetComponent<TMPro.TMP_Text>().text=="地图"+MapId+"验证","Formal HUD lost the local character identity.");
+            var portrait=Field<Texture2D>(hud,"playerHeadTexture");
+            Require(portrait&&portrait.GetPixels32().Count(value=>value.a>0)>100,
+                "Original HUD head photography produced an empty portrait.");
+            File.WriteAllBytes(Path.Combine(Output,"map"+MapId+"-hud-head.png"),portrait.EncodeToPNG());
+            var head=root.GetComponentsInChildren<RawImage>(true).Single(value=>value.name=="HeadImg");
+            Require(head.texture==portrait&&head.uvRect==new Rect(0,0,1,1)
+                &&head.rectTransform.sizeDelta==new Vector2(portrait.width,portrait.height),
+                "Official portrait UV rectangle/native texture size were not restored.");
+            var avatar=Field<GameObject>(runtime,"avatar");
+            Require(avatar&&avatar.GetComponentsInChildren<Renderer>().Any(value=>value.isVisible),
+                "Original player model is not visible over the native ground.");
+            string entry="/WorldCanvas/Content/Content/WorldPanel/Anim/Right/FunctionEntryGroup/FunctionEntryFunc/Content/Entry/";
+            var button=ui.Find("WorldCanvas",entry+"EntryBtnFolded").GetComponent<Button>();
+            if(!button.gameObject.activeInHierarchy)button=ui.Find("WorldCanvas",entry+"EntryBtnExpanded").GetComponent<Button>();
+            ClickHudButton(button);
+            yield return new WaitForSecondsRealtime(.5f);
+            var functions=Field<object>(hud,"worldFunctions");
+            Require(functions!=null,"Simulated function-entry click did not open the original dialog.");
+            var dialog=(GameObject)functions.GetType().GetProperty("Root").GetValue(functions);
+            Require(dialog&&dialog.activeInHierarchy,"Original function dialog is inactive.");
+            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map"+MapId+"-hud-functions.png"));
+            yield return new WaitForSecondsRealtime(.5f);
+            ClickHudButton(dialog.transform.Find("CloseBtn").GetComponent<Button>());
+            yield return null;
+            Require(Field<object>(hud,"worldFunctions")==null&&!dialog,"Simulated close click retained the function dialog.");
+            Debug.Log("MAINLINE_HUD_PASS map="+MapId+": original WorldCanvas, visible player, rendered head portrait, character identity and raycast-checked function open/close clicks; complete HUD flows remain outside this check.");
+        }
+        private static void ClickHudButton(Button button)
+        {
+            Canvas.ForceUpdateCanvases();
+            Require(button&&button.gameObject.activeInHierarchy&&button.interactable,"Official HUD button is unavailable.");
+            var pointer=new PointerEventData(EventSystem.current){position=RectTransformUtility.WorldToScreenPoint(null,button.transform.position),button=PointerEventData.InputButton.Left};
+            var hits=new List<RaycastResult>();EventSystem.current.RaycastAll(pointer,hits);
+            Require(hits.Count>0&&ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject)==button.gameObject,
+                "Official HUD button is occluded: "+button.name);
+            ExecuteEvents.Execute(button.gameObject,pointer,ExecuteEvents.pointerDownHandler);
+            ExecuteEvents.Execute(button.gameObject,pointer,ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.Execute(button.gameObject,pointer,ExecuteEvents.pointerClickHandler);
         }
         private static IEnumerator VerifyFormalWorldOwner(OfficialMainlineMapRuntime runtime,string slot,string saves,
             Transform ui,MapGridPoint position)
@@ -447,7 +509,7 @@ namespace Zjcs.Editor.Map13Mainline
             var rawPoints=reader.ReadRegionPoints(MapId);
             var livePoints=Field<Dictionary<int,int>>(Field<object>(runtime,"regions"),"regionPoints");
             Require(rawPoints.OrderBy(pair=>pair.Key).SequenceEqual(livePoints.OrderBy(pair=>pair.Key)),
-                "Cold raw region points differ from the actual world's entity progress.");
+                "Cold raw region points differ from the actual world's entity progress: "+string.Join(",",rawPoints.Where(pair=>!livePoints.TryGetValue(pair.Key,out int live)||live!=pair.Value).Select(pair=>pair.Key+"="+pair.Value+"/"+(livePoints.TryGetValue(pair.Key,out int live)?live:-1))));
             Require(beforeObjects.SequenceEqual(UnityEngine.Object.FindObjectsOfType<GameObject>(true)
                 .Select(value=>value.GetInstanceID()).OrderBy(id=>id)),"A cold minimap read mounted scene objects.");
             var views=Field<OfficialMap10EntityView>(runtime,"entityView");

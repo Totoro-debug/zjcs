@@ -16,9 +16,9 @@ namespace Zjcs.Presentation.World
             private void OpenNativeWorldFunctions()
             {
                 if (worldFunctions != null) return;
-                worldFunctions = new OfficialMap11WitchWindow("FunctionEntryDialog", ui.OverlayRoot, host.miniMap.miniMapUiData, host.MapProfile.NativeUiRoot);
+                worldFunctions = new OfficialMap11WitchWindow("FunctionEntryDialog", ui.OverlayRoot, host.NativeUi.Data, host.MapProfile.NativeUiRoot);
                 worldFunctions.Find(worldFunctions.Source("FunctionEntryDialog").fields.mActivityRecommondView).gameObject.SetActive(false);
-                foreach (var component in host.miniMap.miniMapUiData.components.Where(value => value.panel == "FunctionEntryDialog"))
+                foreach (var component in host.NativeUi.Data.components.Where(value => value.panel == "FunctionEntryDialog"))
                 {
                     // Original provider states: no server clock region and no online tip records.
                     if (component.type == "TimeInfoUI" || component.type == "TipDotNodeLinker") worldFunctions.State(component, 0);

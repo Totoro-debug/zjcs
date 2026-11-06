@@ -72,7 +72,8 @@ namespace Zjcs.Presentation.World
                 throw new InvalidDataException("Saved exploration references another map's entity placement.");
             Map10RuntimeStoryData story = ReadStoryData(map);
             var tags = (story?.mapLogicTags ?? Array.Empty<Map10RuntimeLogicTag>()).ToDictionary(value => value.LogicId);
-            MapPuzzleRule[] rules = story?.puzzleRules ?? Array.Empty<MapPuzzleRule>();
+            MapPuzzleRule[] rules = mapClassId == 14 ? Map14PuzzleAssets.LoadDefault().Load().Rules
+                : story?.puzzleRules ?? Array.Empty<MapPuzzleRule>();
             OfficialMap12ChestCatalog chests = null;
             if (mapClassId == 12)
             {

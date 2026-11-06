@@ -89,9 +89,14 @@ namespace Zjcs.Presentation.World
         public UnityEngine.Color color;
     }
     [Serializable] public sealed class OfficialMap11TopBarItem { public int type, itemId; public long maxCount; }
+    [Serializable] public struct OfficialMap11Rect
+    {
+        public float x, y, width, height;
+        public UnityEngine.Rect Value() => new UnityEngine.Rect(x, y, width, height);
+    }
     [Serializable] public sealed class OfficialMap11PortraitSettings
     {
-        public int TextureWidth, TextureHeight, mDepthBuffer;
+        public int TextureWidth, TextureHeight, mDepthBuffer, mCaptureParticle;
         public float Size;
         public UnityEngine.Vector3 mOffset;
         public int[] mExcludeSkinTypes;
@@ -145,7 +150,7 @@ namespace Zjcs.Presentation.World
     {
         public OfficialExploreGradient Gradient;
         public float Angle;
-        public UnityEngine.Rect m_UVRect;
+        public OfficialMap11Rect m_UVRect;
         public int m_RaycastTarget, m_Maskable;
         public int m_IgnoreReversedGraphics, m_BlockingObjects;
         public OfficialMap11LayerMask m_BlockingMask;

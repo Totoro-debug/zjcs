@@ -36,7 +36,7 @@ namespace Zjcs.Editor
                     image.color = source.fields.m_Color;
                     image.raycastTarget = source.fields.m_RaycastTarget != 0;
                     image.maskable = source.fields.m_Maskable != 0;
-                    image.uvRect = source.fields.m_UVRect;
+                    image.uvRect = source.fields.m_UVRect.Value();
                     image.enabled = source.fields.m_Enabled != 0;
                 }
                 if (source.type == "LoopVerticalScrollRect")

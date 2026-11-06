@@ -413,6 +413,9 @@ namespace Zjcs.Presentation.World
             InitializePuzzles();
             statues.RecoverWitchStates();
             statues.RecoverHeroStates();
+            // Entity templates and local puzzle/statue states are now restored.
+            // Publish their actual progress before the HUD and map labels read it.
+            regions.RefreshRegionProgress();
 
             hud.Mount();
             miniMap.CreateMinimap(assets.MiniMapPrefab);

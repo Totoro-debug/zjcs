@@ -53,7 +53,7 @@ namespace Zjcs.Presentation.World
             model.transform.localScale = data.modelScale;
             var sorting = root.AddComponent<SortingGroup>();
             sorting.sortingOrder = data.sortingOrder;
-            if (mapClassId == 12 || mapClassId == 13 || MapProfile.NativeGroundLabelResource != null)
+            if (mapClassId == 12 || mapClassId == 13 || mapClassId == 14 || MapProfile.NativeGroundLabelResource != null)
             {
                 sorting.sortingLayerID = data.sortingLayerId;
                 sorting.sortingOrder = data.nativeSortingOrder;

@@ -48,7 +48,7 @@ namespace Zjcs.Presentation.World
             Map10RuntimeStoryData storyDataValue = JsonUtility.FromJson<Map10RuntimeStoryData>(storyData.text);
             string expectedBattleManifest = MapProfile.BattleDataManifest;
             string expectedStoryManifest = MapProfile.StoryDataManifest;
-            puzzleRules = storyDataValue?.puzzleRules;
+            puzzleRules = mapClassId == 14 ? Map14PuzzleAssets.LoadDefault().Load().Rules : storyDataValue?.puzzleRules;
             statues.witchInfos = storyDataValue?.witchInfos ?? Array.Empty<Map11RuntimeWitchInfo>();
             statues.witchResults = storyDataValue?.witchResultEffects ?? Array.Empty<Map11RuntimeWitchResult>();
             statues.witchPeriodicAwards = storyDataValue?.witchPeriodicityAwards ?? Array.Empty<Map11RuntimePeriodicityAward>();
