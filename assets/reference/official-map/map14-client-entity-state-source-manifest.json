@@ -88,7 +88,7 @@
   "tools": [
     {
       "path": "scripts/prepare_unity_map14_client_entity_state.py",
-      "sha256": "e301cdcb3505dd4530e7aad1dec1b020ad9673048b253f369934814c0b562500"
+      "sha256": "98891632404b66802a37e11108c9b814c84b68c0c327b896d57041eda87366ac"
     }
   ],
   "dependencies": [
@@ -117,12 +117,16 @@
     {
       "path": "unity/Assets/Game/Runtime/Official/EntityLoading/EntityLoadingBindings.cs",
       "sha256": "2056ac3d8294570e95dc72670ae82644dd54bbf03a03b59fb49e6f527c232607"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedViews/NativeMap14SharedViewCache.cs",
+      "sha256": "10ba0dcae60b8e7f3f16a361a1a33f64ca52a075f1c4905c56630092b280f333"
     }
   ],
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientEntities/NativeMap14ClientEntityState.cs",
-      "sha256": "bb083709a067657d9e67ecc678a92ce772446015b8052b7cf0d13ef2a7412eb0"
+      "sha256": "9a12aed9c5a310b1926e8309259be00e733dfb7e89e60fe3c4ce412a191e948f"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientEntities/NativeMap14ClientEntityState.cs.meta",
@@ -161,7 +165,7 @@
       "sha256": "46c6599ce50bd75d77059dee41ba7e52a3003903ef81070f70c901fac9a40938"
     }
   ],
-  "operation": "Bind the unchanged original Console container, entity instantiation and mutable state to original migrated client container interfaces. Keep one reference-identity wrapper per original entity across identifier replacement. Subscribe through the original four dispatchers, preserving original event ordering and boxed original identifier values. Require an explicit low-memory policy and movement implementation; supply no server world state.",
+  "operation": "Bind the unchanged original Console container, entity instantiation and mutable state to original migrated client container interfaces. Keep one reference-identity wrapper per original entity across identifier replacement. Subscribe through the original four dispatchers, preserving original event ordering and boxed original identifier values. Require an explicit low-memory policy and movement implementation; supply no server world state. Reference identity, ownership checks, recursive component binding and view disposal now use NativeMap14SharedViewCache.",
   "validation": {
     "entry": "Zjcs.Editor.Map14.OfficialMap14ClientEntityStateAcceptance.Run",
     "graphicalPlayMode": true,

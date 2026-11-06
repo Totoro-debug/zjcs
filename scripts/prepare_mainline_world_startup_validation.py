@@ -22,14 +22,21 @@ def main():
     source = ROOT / "unity"
     runtime = source / "Assets/Game/Runtime"
     modules = {json.loads(p.read_bytes())["name"]: p for p in runtime.rglob("*.asmdef")}
-    pending = ["Zjcs.Offline.World.NativeMap14SharedEntities", "Zjcs.Offline.World.MainlinePlayerState"]
+    package_assemblies = {json.loads(p.read_bytes())["name"]
+                          for folder in (source / "Packages", source / "Library/PackageCache")
+                          for p in folder.rglob("*.asmdef")}
+    package_assemblies.add("Unity.ugui")  # Built into this pinned Editor installation.
+    fixture = source / "Assets/Game/Editor/MainlineWorldStartup"
+    pending = json.loads((fixture / "Zjcs.Editor.MainlineWorldStartup.asmdef").read_bytes())["references"]
     selected = set()
     while pending:
         name = pending.pop()
         if name in selected:
             continue
-        if name == "Unity.Newtonsoft.Json":
-            # Supplied by the pinned com.unity.nuget.newtonsoft-json below.
+        if name in package_assemblies or name == "Unity.Newtonsoft.Json":
+            continue
+        if name in ("spine-unity", "spine-csharp"):
+            shutil.copytree(source / "Assets/Spine/Runtime", project / "Assets/Spine/Runtime", dirs_exist_ok=True)
             continue
         if name not in modules:
             raise ValueError("Review the original startup dependency: " + name)
@@ -58,15 +65,7 @@ def main():
     target.parent.mkdir(parents=True, exist_ok=True)
     for suffix in ("", ".meta"):
         shutil.copy2(source / (relative + suffix), project / (relative + suffix))
-    packages = project / "Packages"
-    packages.mkdir(exist_ok=True)
-    (packages / "manifest.json").write_text(json.dumps({"dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.2.1",
-        "com.unity.modules.jsonserialize": "1.0.0",
-        "com.unity.modules.physics2d": "1.0.0",
-        "com.unity.modules.animation": "1.0.0",
-        "com.unity.modules.audio": "1.0.0",
-    }}, indent=2), encoding="utf8")
+    shutil.copytree(source / "Packages", project / "Packages", dirs_exist_ok=True)
     settings = project / "ProjectSettings"
     settings.mkdir(exist_ok=True)
     for name in ("ProjectVersion.txt", "ProjectSettings.asset", "TagManager.asset"):

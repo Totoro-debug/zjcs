@@ -80,6 +80,10 @@ namespace Zjcs.Editor.MainlineWorldStartup
                     var startPosition = NativeMap14SharedPrefabs.Get(NativeMap14SharedPrefabs.Get(placed, "PosInfo"), "Pos");
                     int startX = (int)NativeMap14SharedPrefabs.Get(startPosition, "X");
                     int startY = (int)NativeMap14SharedPrefabs.Get(startPosition, "Y");
+                    bool earlyMinimapRejected = false;
+                    try { using (Zjcs.Offline.World.MainlineMiniMapEntities.MainlineMiniMapSharedWorld.Create(world, new WorldTagQueries(world))) { } }
+                    catch (InvalidOperationException) { earlyMinimapRejected = true; }
+                    if (!earlyMinimapRejected) throw new InvalidDataException("Minimap accepted a world before its original client startup.");
                     world.StartClient(player, startX, startY);
                     var map = mapProperty.GetValue(manager);
                     var character = NativeMap14SharedPrefabs.Get(map, "MapCharacter");
@@ -142,7 +146,23 @@ namespace Zjcs.Editor.MainlineWorldStartup
                             throw new InvalidDataException("Original region Lo lookup lost a merged entity.");
                         lookups++;
                     }
-                    if (supportPrivate && supportPublic) VerifyRegionTransition(world, player, regionStates, publicId);
+                    var receiverCounts = LiveMiniMapReceiverCounts(world);
+                    VerifyLiveViewCache(world);
+                    var minimap = Zjcs.Offline.World.MainlineMiniMapEntities.MainlineMiniMapSharedWorld.Create(world, new WorldTagQueries(world));
+                    using (minimap)
+                    {
+                        var prior = VerifyLiveMiniMap(world, minimap, null);
+                        if (supportPrivate && supportPublic) VerifyRegionTransition(world, player, regionStates, publicId);
+                        VerifyLiveMiniMap(world, minimap, prior);
+                    }
+                    minimap.Dispose();
+                    if (!receiverCounts.SequenceEqual(LiveMiniMapReceiverCounts(world)))
+                        throw new InvalidDataException("Minimap disposal retained original container receivers.");
+                    bool disposedMinimapRejected = false;
+                    try { minimap.GetEntity(default); } catch (ObjectDisposedException) { disposedMinimapRejected = true; }
+                    if (!disposedMinimapRejected) throw new InvalidDataException("Disposed minimap still queried its borrowed original container.");
+                    if (!world.IsReady || !(bool)NativeMap14SharedPrefabs.Get(world.Root.Container, "Started"))
+                        throw new InvalidDataException("Minimap disposal ended the borrowed original world.");
                     entities += originals.Length;
                     if (errors != 0) throw new InvalidDataException("Original merged-map startup logged errors.");
                     yield return null;

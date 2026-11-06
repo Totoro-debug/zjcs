@@ -209,12 +209,20 @@
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedViews/Zjcs.Offline.World.NativeMap14SharedViews.asmdef.meta",
       "sha256": "b696ed538f2937e213d221d76659e1f25e17e9d11e99c8494e049f19e3d5e6db"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedViews/NativeMap14SharedViewCache.cs",
+      "sha256": "10ba0dcae60b8e7f3f16a361a1a33f64ca52a075f1c4905c56630092b280f333"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedViews/NativeMap14SharedViewCache.cs.meta",
+      "sha256": "11c0d01ea9199f05b5ee0729e57b60a6d3e64aae21d0e3894e7fcd88c9dfd285"
     }
   ],
   "tools": [
     {
       "path": "scripts/prepare_unity_map14_shared_views.py",
-      "sha256": "81bd231bfd15acb94ab1d01b6cba9518a895d77392b48d69601aabd4041ee79a"
+      "sha256": "d918fd0209a4f49525ccabdfb6779e19ffe617932cab5e8ea17b97c2451ce247"
     }
   ],
   "validation": {
@@ -222,7 +230,7 @@
     "sha256": "588748659592814449f554931a76ff7cbe573b9f1f7fb52b23e27f2a406669bc",
     "hashLineEndings": "LF"
   },
-  "operation": "Bind original EntityUtils to original EntityHandler without replacing an existing handler and release only the owned binding. Read original EcEntity identity, grid/info, original coordinate conversions, stage state/config/index/activity through unchanged Console IL. Implement twelve selected original void receiver interfaces at runtime (grid, visibility, stage, award-item update, player interaction removal and seven container lifecycle receivers) and register/unregister with original delegate operators; forward original argument identities and previous values to migrated display consumers. Dispose owned additional component projections with the view. No shared rule/dispatch iteration is reimplemented.",
+  "operation": "Bind original EntityUtils to original EntityHandler without replacing an existing handler and release only the owned binding. Read original EcEntity identity, grid/info, original coordinate conversions, stage state/config/index/activity through unchanged Console IL. Implement twelve selected original void receiver interfaces at runtime (grid, visibility, stage, award-item update, player interaction removal and seven container lifecycle receivers) and register/unregister with original delegate operators; forward original argument identities and previous values to migrated display consumers. Dispose owned additional component projections with the view. No shared rule/dispatch iteration is reimplemented. NativeMap14SharedViewCache owns the reference-identity cache used by client entity state and the minimap world factory; recursive lookup reuses that cache, failed binding removes and disposes the failed view, and scope disposal releases only owned views.",
   "limitations": [
     "Stage Select remains null in original shared client data; the legacy display DTO int slot is not a shared selector rule.",
     "Entity creation/state restoration, global parser/container host, redirects to another entity, visibility handlers, tip graph, actual UI, saves and Player require further integration."

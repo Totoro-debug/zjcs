@@ -44,11 +44,12 @@ def prepare():
         'Offline/World/NativeMap14SharedEntities/NativeMap14SharedRoot.cs',
         'Offline/World/NativeMap14SharedEntities/NativeMap14SharedData.cs',
         'Offline/World/NativeMap14SharedViews/NativeMap14SharedViewEntity.cs',
+        'Offline/World/NativeMap14SharedViews/NativeMap14SharedViewCache.cs',
         'Official/EntityContainers/EntityContainerBindings.cs', 'Official/EntityLoading/EntityLoadingBindings.cs')]
     write(RECEIPT, encode(dict(manifest='871_156598', mapClassId=14, assemblies=[record(p) for p in assemblies],
         inputs=[record(p) for p in inputs], tools=[record(Path(__file__).resolve())],
         dependencies=[record(p) for p in dependencies], outputs=[record(p) for p in outputs],
-        operation='Bind the unchanged original Console container, entity instantiation and mutable state to original migrated client container interfaces. Keep one reference-identity wrapper per original entity across identifier replacement. Subscribe through the original four dispatchers, preserving original event ordering and boxed original identifier values. Require an explicit low-memory policy and movement implementation; supply no server world state.',
+        operation='Bind the unchanged original Console container, entity instantiation and mutable state to original migrated client container interfaces. Reuse NativeMap14SharedViewCache for one reference-identity wrapper per original entity across identifier replacement, component binding and owned view cleanup. Subscribe through the original four dispatchers, preserving original event ordering and boxed original identifier values. Require an explicit low-memory policy and movement implementation; supply no server world state.',
         validation=dict(entry='Zjcs.Editor.Map14.OfficialMap14ClientEntityStateAcceptance.Run', graphicalPlayMode=True,
             checks=['Original container add/prepare/replace/remove methods and callback order',
                     'Stable entity projection and dictionary identity across identifier replacement',

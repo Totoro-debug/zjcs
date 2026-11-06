@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Zjcs.Official.EntityContainers;
 using Zjcs.Official.EntityLoading;
 using Zjcs.Official.EntityLifecycle;
@@ -31,8 +30,7 @@ namespace Zjcs.Offline.World.NativeMap14ClientEntities
         private readonly NativeMap14SharedConfiguration configuration;
         private readonly Func<bool> lowMemoryForbidden;
         private readonly INativeMap14ClientMovement movement;
-        private readonly Action<NativeMap14SharedViewEntity> bindComponents;
-        private readonly Dictionary<object, NativeMap14SharedViewEntity> views = new Dictionary<object, NativeMap14SharedViewEntity>(IdentityComparer.Instance);
+        private readonly NativeMap14SharedViewCache views;
         private readonly List<IDisposable> subscriptions = new List<IDisposable>();
         private bool disposed;
         public long MainPlayerId { get; }
@@ -67,20 +65,13 @@ namespace Zjcs.Offline.World.NativeMap14ClientEntities
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.lowMemoryForbidden = lowMemoryForbidden ?? throw new ArgumentNullException(nameof(lowMemoryForbidden));
             this.movement = movement;
-            this.bindComponents = bindComponents;
+            views = new NativeMap14SharedViewCache(shared, bindComponents);
             MainPlayerId = mainPlayerId;
         }
         public NativeMap14SharedViewEntity Wrap(object entity)
         {
             RequireActive();
-            if (entity == null) return null;
-            if (!views.TryGetValue(entity, out var view))
-            {
-                view = new NativeMap14SharedViewEntity(shared, entity, Wrap); views.Add(entity, view);
-                try { bindComponents?.Invoke(view); }
-                catch { views.Remove(entity); view.Dispose(); throw; }
-            }
-            return view;
+            return views.Wrap(entity);
         }
         public ECViewEntityData GetCommonPrefab(int classId) => Wrap(data.GetCommonPrefab(classId));
         public ECViewEntityData Instantiate(ECViewEntityData prefab) => Wrap(root.Instantiate(Original(prefab)));
@@ -133,8 +124,7 @@ namespace Zjcs.Offline.World.NativeMap14ClientEntities
         {
             if (disposed) return;
             foreach (var subscription in subscriptions.ToArray()) subscription.Dispose();
-            foreach (var view in views.Values) view.Dispose();
-            views.Clear(); disposed = true;
+            views.Dispose(); disposed = true;
         }
         private void RequireActive()
         { if (disposed) throw new ObjectDisposedException(nameof(NativeMap14ClientEntityState)); }
@@ -142,7 +132,7 @@ namespace Zjcs.Offline.World.NativeMap14ClientEntities
         {
             RequireActive();
             if (!(entity is NativeMap14SharedViewEntity view) ||
-                !views.TryGetValue(view.Original, out var known) || !ReferenceEquals(known, view))
+                !views.Owns(view))
                 throw new ArgumentException("The owned original shared entity is required.", nameof(entity));
             return view.Original;
         }
@@ -204,12 +194,6 @@ namespace Zjcs.Offline.World.NativeMap14ClientEntities
         {
             private Action release; public Lease(Action release) { this.release = release; }
             public void Dispose() { var action = release; release = null; action?.Invoke(); }
-        }
-        private sealed class IdentityComparer : IEqualityComparer<object>
-        {
-            public static readonly IdentityComparer Instance = new IdentityComparer();
-            public new bool Equals(object left, object right) => ReferenceEquals(left, right);
-            public int GetHashCode(object value) => RuntimeHelpers.GetHashCode(value);
         }
     }
 }

@@ -24,8 +24,33 @@ namespace Zjcs.Offline.World.MainlineMiniMapEntities
         private readonly Dictionary<object, MainlineMiniMapSharedEntity> entities
             = new Dictionary<object, MainlineMiniMapSharedEntity>(IdentityComparer.Instance);
         private readonly List<IDisposable> subscriptions = new List<IDisposable>();
+        private NativeMap14SharedViewCache ownedViews;
         private bool disposed;
         public MiniMapManagedEvents Events { get; } = new MiniMapManagedEvents();
+
+        // The map owns its original root, player, LoID mapping and lifetime.
+        // This entry point owns only the minimap's views and event receivers.
+        public static MainlineMiniMapSharedWorld Create(MainlineSharedWorld world, IMiniMapMarkDataQueries queries)
+        {
+            if (world == null) throw new ArgumentNullException(nameof(world));
+            if (queries == null) throw new ArgumentNullException(nameof(queries));
+            if (!world.IsReady || world.LoEntityIds == null)
+                throw new InvalidOperationException("Start the original client world before binding its minimap.");
+            var views = new NativeMap14SharedViewCache(world.Assemblies);
+            try
+            {
+                var mapping = world.LoEntityIds;
+                var lookup = mapping.GetType().GetMethod("GetLoEntIdByEntId")
+                    ?? throw new MissingMethodException(mapping.GetType().FullName, "GetLoEntIdByEntId");
+                var identifier = world.Assemblies.CommonType("EcEntityIdentifier");
+                var result = new MainlineMiniMapSharedWorld(world.Assemblies, world.Root.Container,
+                    views.Wrap, queries, id => (int)lookup.Invoke(mapping,
+                        new[] { Activator.CreateInstance(identifier, id.ContainerId, id.EntityId) }));
+                result.ownedViews = views;
+                return result;
+            }
+            catch { views.Dispose(); throw; }
+        }
 
         public MainlineMiniMapSharedWorld(NativeMap14SharedAssemblies shared, object container,
             Func<object, NativeMap14SharedViewEntity> viewLookup, IMiniMapMarkDataQueries queries,
@@ -105,6 +130,8 @@ namespace Zjcs.Offline.World.MainlineMiniMapEntities
             subscriptions.Clear();
             foreach (var entity in entities.Values) entity.Dispose();
             entities.Clear();
+            ownedViews?.Dispose();
+            ownedViews = null;
         }
         private void RequireActive()
         { if (disposed) throw new ObjectDisposedException(nameof(MainlineMiniMapSharedWorld)); }

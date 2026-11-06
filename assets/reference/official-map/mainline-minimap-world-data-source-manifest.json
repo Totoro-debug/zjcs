@@ -372,11 +372,11 @@
     },
     {
       "path": "assets/reference/official-map/map14-shared-ec-runtime-source-manifest.json",
-      "sha256": "a56040c7b35bdf603907faa35bb138ef724739d212b53701c6aa250bfe66c5ad"
+      "sha256": "27373b4245f599861652ea0865ad7605d9e952075dce9c6c51f346d4bd1b559d"
     },
     {
       "path": "assets/reference/official-map/map14-shared-view-source-manifest.json",
-      "sha256": "6e72a25613c15b3afab5de00e71143717aa99ec2509120c701a3a8189c62a961"
+      "sha256": "56354f01d2970c9f52dee6a6624d77c54425c4dae366e7e77080df3c97982931"
     },
     {
       "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Console.bytes",
@@ -483,7 +483,7 @@
     },
     "source_receipt": {
       "path": "assets/reference/official-map/map14-shared-ec-runtime-source-manifest.json",
-      "sha256": "a56040c7b35bdf603907faa35bb138ef724739d212b53701c6aa250bfe66c5ad"
+      "sha256": "27373b4245f599861652ea0865ad7605d9e952075dce9c6c51f346d4bd1b559d"
     },
     "operation": "Borrow existing original entity/view objects; read native grid conversion/body, stage state/activity and component fields. Forward the original stage event and release only the owned receiver. The historical payload is not relabeled as current IL; this adapter supplies no spawn or server state rules."
   },
@@ -745,7 +745,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities/MainlineMiniMapSharedWorld.cs",
-      "sha256": "29e886c2c33877556551b8b8e1f6583efd6dc98b01106ba7e116f23ead533cc7"
+      "sha256": "20c6a1bba9bc410cfab1e51e8f54c4de57a9736c4e4e1ad331a02ef417a595b5"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities/MainlineMiniMapSharedWorld.cs.meta",
@@ -886,7 +886,27 @@
     {
       "path": "scripts/test_mainline_minimap_native_bindings.py",
       "sha256": "83a939e987a31c3c0b829acfc4d1c3f269f01cc4ef0f1997fe8a01a7b65b55f5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.MiniMap.cs",
+      "sha256": "0982571a0cf70b53cea9cd89c0a8e04682d7366b3587b92f15e168d3102ab4a5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.MiniMap.cs.meta",
+      "sha256": "75a1540e0f389b5860603e7d61085192963ea678868647bd86e602710685c700"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientContext.cs",
+      "sha256": "f4be7ef8df93a4779db426c5ef6ceb786b519b15b36afd2230e51d3a88b37846"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef",
+      "sha256": "196ef7054994196deadb7285648201039e51d86f19d32f9e49661001e16e18be"
+    },
+    {
+      "path": "scripts/prepare_mainline_world_startup_validation.py",
+      "sha256": "d425f83885a52022c2e00dd01a30137b188947b26fdf310688039a739e6ed476"
     }
   ],
-  "operation": "Compare every installed navigation field/cell, map/minimap identity, region area membership, and every marker placement ID/class/grid/area/region against the selected actual ground and map-info wrap. Preserve historical definition versions; no whole-version equivalence. Extract original region-display rows, area tags, logic tags and transport MessagePack records. Verify each transport target against its installed destination. Bind original root and marker-factory static queries to this one instance-owned projection; live state and commands remain with the owning map adapter."
+  "operation": "Compare every installed navigation field/cell, map/minimap identity, region area membership, and every marker placement ID/class/grid/area/region against the selected actual ground and map-info wrap. Preserve historical definition versions; no whole-version equivalence. Extract original region-display rows, area tags, logic tags and transport MessagePack records. Verify each transport target against its installed destination. Bind original root and marker-factory static queries to this one instance-owned projection; live state and commands remain with the owning map adapter. MainlineMiniMapSharedWorld.Create borrows a started MainlineSharedWorld, owns its shared view cache and original lifecycle subscriptions, and resolves every current runtime identity through the original MapLoEntityIdManager without an ID fallback."
 }
