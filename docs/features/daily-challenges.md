@@ -68,11 +68,15 @@ NPC 战斗属性和技能由当前版 `npc_level_detail`、`npc_profession_detai
 
 活动倒计时（局部迁移）：原 `ACountdownView`、`CountdownView`、`CountdownText` 按所选884代码迁入 `Official/ActivityBattleUI`，保留原半秒 `WaitForSeconds`、初始先显示的 do/while、剩余／总时长比值、Show 重启与停用清理，时间文本复用既有官方格式化迁移。原 `ActivityDomainBossPreviewContent.mCountdown` 子树单独恢复原组件及字体依赖；原 `myKey={0}` 按官方本地化服务缺键时返回原键的实现保留为格式字符串，不添加替代文案。提取与邀请控件共用严格子树检查和资源绑定，默认邀请输出保持不变。运行／原生输入输出分别见[脚本来源](../../assets/reference/daily-challenges/activity-countdown-runtime-source-manifest.json)、[原生来源](../../assets/reference/daily-challenges/activity-countdown-native-source-manifest.json)。隔离 Play Mode 已通过原生组件绑定、中文多日时间实际字形、缩放时钟暂停／恢复、替换计时、单次超时，以及隐藏／父节点停用／销毁的回调清理，已查看675×1463运行截图。该验收在独立 Canvas 中调用原 Show／Hide 接口，未模拟页面入口，不能证明预告数据、完整页面或实际开战已接通。隔离工程 Unity 编译与 `ProjectTools.Validate` 通过，工程静态检查通过127,999个GUID；验收断言通过后停止该隔离Editor，未验证自动退出，尚未发布新 Player。
 
+活动首领视图（局部迁移）：已迁入原 `MonsterUI`，保留原 `Slot`、相同怪物ID直接返回、从后向前销毁全部子节点、按 `MonsterInfo.IconId` 加载 `Appearance/Monster/{id}/MonsterIcon_{id}`、资源句柄持有至销毁及实例位置归零。解析器与注入式实例化由宿主显式提供。原活动页 `mMonsterUI` 显示区域和3703、3704、3705、3707、3708、3709六种原 `MonsterIcon` 已绑定；保留原节点、坐标、缩放、材质与启动动画，复用现有原生 Canvas 骨骼及纹理加载实现。二进制骨骼完整消费，原 atlas、约束、动画及 `AppearanceConfig` 指定的 High 贴图显式接入，无近似素材。原代码与资源输入／输出见[脚本来源](../../assets/reference/daily-challenges/activity-monster-ui-runtime-source-manifest.json)、[原生来源](../../assets/reference/daily-challenges/activity-monster-native-source-manifest.json)，资源入口为 `DailyChallenges/ActivityMonsterAssets`／`ActivityMonsterPrefabs` 和 `ActivityMonsterIcons/`。工程静态检查通过128,102个GUID；隔离工程完成Unity导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和渲染Play Mode，进程退出码0。六种图标逐项验证原启动动画、网格逐帧变化、High纹理绑定、ID切换与同ID不重载、关闭重开、销毁后的六个句柄及纹理释放；运行截图均已查看。范围为独立组件场景，未验证完整页面的模拟点击、血条与结算返回，完整页面尚未接线。3706使用原 `TempRTUI`、独立相机、RenderTexture和粒子渲染链，尚未迁入，未用Spine图标替代；当前不能据此认为全部首领视图或活动页已恢复。
+
 ## 自定义实现
 
 用户确认期次以首次进入功能的本地时间起算；该时间由 `EnterFeature(DateTime.Now)` 首次持久化。每日逻辑日采用官方 08:00 配置。官方活动 `Duration=335` 小时，最后 1 小时结算。用户确认系统时间回拨不得降低已到最高期次或逻辑日；系统时间向前跳转仍会按本地时间推进期次。
 
 圣兽读取 `MaxDailyChallengeCount=1` 与 `MaxDailyChallengeAwardCount=1`。双影的 `DailyMaxKillCount=3` 限定每日击杀，不当作挑战次数。用户确认挑战成功进入战斗才计参与，失败也保留回执，同一逻辑日不重复挑战圣兽；双影每次开始进入本地战斗均记录参与。服务器写入和奖励执行逻辑未在客户端来源中取得，以上离线行为不声称为官方服务端实现。
+
+用户确认圣兽按每场独立战斗计算血量：进行中及中断恢复读取公共战斗检查点的实际HP；失败结束后，下次挑战重新满血，不跨场累计伤害。原 `ActivityDomainBossPanelBattleContent` 从服务器 `ActivityDomainBossDescData.TotalHp`／`TotalDamage` 读取的全局血条改为上述本地投影；原每日一次和胜利升阶规则保留。该决定已确认，完整活动页血条尚待接线与运行验证。
 
 双影进度采用本地战斗结果的当日最高实际团队伤害，阶段分数按官方客户端 `max(DailyMaxTeamDamage, DailyMaxTeamDamagePercent * bossMaxHp / 10000)` 规则折算。由于离线战斗为单角色加本地召唤物，伤害按其 `MasterId` 归属角色；未取得服务端个人／队伍伤害写入实现。
 

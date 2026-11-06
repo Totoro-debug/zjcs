@@ -1,0 +1,15 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    ".tools/source-packages/current/884_156692/official-code/client-source/MonsterUI.cs": "ba5285c2b14e2eafc3504b7131caac6cae9a8c6548b2c95b6e1dbeed047077fc",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LanguageUtils.cs": "ddc94bb5dd46f8c71b6d58ab0f03e2048cde72911de11e343304ce73e4b9a61c",
+    ".tools/source-packages/current/884_156692/official-code/framework-source/Framework/TransformExtensions.cs": "79fa1bf15205d678778cc6274b45722eef60e686f0070a3a66f2fc8de21b02c1",
+    "scripts/prepare_activity_monster_ui.py": "8d602b40346cd9def1c4fe31054e9e3362e7e19898472ab8a6b7c96b4b84516b",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionImageResourceBridge.cs": "acdb7d8a803632b80a5dc4140676980e2fb1e9b596a155ba6b704cf4632dd412"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/MonsterUI.cs": "e0f2b49bad9df48a9c6432dfcfebc93933a104123dbd4726b15a29fc723470e1",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/MonsterUI.cs.meta": "9a194304419bbb3465b1dc44f2d3c3dd03a3321a1ae5d59e98cc41f402d5a403"
+  },
+  "adaptation": "Original Slot, same-ID early return, descending inactive-child destruction without detach, MonsterInfo.IconId address, retained load handles until destruction and instantiated local position zero. Existing migrated resource operation contract; explicit parser and injected prefab factory delegates. Original missing config/icon logging uses Unity. Native prefab bindings are recorded separately; the production activity page remains pending."
+}
