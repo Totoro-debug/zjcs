@@ -250,7 +250,9 @@ namespace Zjcs.Presentation.World
                 MapReceiptPrefix + slotId + ":dialog:" + activeNativeDialog.Id + ":profession:" + node.Profession);
             if (result.Status == ProgressionResultStatus.InvalidState)
                 throw new InvalidOperationException(result.Message);
-            progression = new OfflineCharacterProgressionService(progressionSave, progression.Catalog);
+            // Existing property sources read the committed player dynamically.
+            // Profession changes must keep the complete equipment/skill assembly.
+            progressionSave.Reload();
             hud.ui.SetText("WorldCanvas", "/WorldCanvas/Content/Content/WorldPanel/Anim/Left/PublicPlayerInfo/NameText", characterName);
         }
 

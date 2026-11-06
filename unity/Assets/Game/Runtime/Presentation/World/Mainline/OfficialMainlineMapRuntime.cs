@@ -326,9 +326,8 @@ namespace Zjcs.Presentation.World
             if (!progressionSave.Save.Player.CharacterCreated || progressionSave.Save.Player.InitialWeaponType == 0)
                 throw new InvalidOperationException("Finish character creation and weapon selection before entering Map" + mapClassId + ".");
             OfficialCharacterAssetCatalog characterAssets = OfficialCharacterAssetCatalog.LoadDefault();
-            progression = new OfflineCharacterProgressionService(progressionSave, characterAssets.Load());
-            progression.AttachSkillRules(characterAssets.LoadSkillRules());
-            progression.AttachEquipmentCatalog(OfficialEquipmentAssetCatalog.LoadDefault().Load());
+            progression = OfflineCharacterProgressionService.Create(progressionSave, new CharacterProgressionInputs(
+                characterAssets.Load(), OfficialEquipmentAssetCatalog.LoadDefault().Load(), characterAssets.LoadSkillRules()));
             session = OfficialWorldMapSession.Load(OfficialWorldMapAssetCatalog.LoadDefault(), mapClassId);
             if (session.Definition.MaxRegionProgress == null || session.Definition.MaxRegionProgress.Length == 0)
                 throw new InvalidDataException("Official Map" + mapClassId + " region progress definitions are missing.");

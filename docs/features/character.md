@@ -12,6 +12,10 @@
 
 ### 属性来源与共享计算边界
 
+人物页、家园和公共主线地图统一调用 `OfflineCharacterProgressionService.Create(profile, CharacterProgressionInputs)`。人物目录、装备目录和技能规则是必需输入；技能推荐与 NPC 时钟可选。工厂依次完成原属性管线、装备／星石、技能配置，返回可完整计算的实例；缺少输入或装配失败抛出含 `Stage` 的 `CharacterProgressionInitializationException`，不会返回部分装配的实例。剧情转职保留已装配实例并重载提交后的存档，使装备与技能来源继续有效。
+
+`CharacterProgressionAssemblyAcceptance.Run` 已在隔离存档对照原家园／地图的两种挂接顺序：初始状态、实际装备穿戴、技能安装和存档重载后，在同一时间比较全部战斗／非战斗属性、出战属性、来源分块、明细排序、战力与料理所需最大生命值；并验证缺少目录或技能规则时的明确失败。该规则验证和 Unity 工程验证通过。家园与地图实际入口已运行；人物完整交互与表现仍按本页缺项维护。
+
 `CharacterPropCalculateIntent.SortPowerCategorys` 的明细顺序为：人物基础、职业、NPC、装备、技能、古遗物、星石、料理、额外、幻兽、公会、衣柜、星命。装备明细合并 `Equip + EquipResonance`，古遗物合并 `Treasure + TreasureSuit`，NPC 合并 `NpcFriendshipLevel + NpcTalentTree`，星命合并 `Astrological + EquipCabinet`；各来源分别经过 `HandleSingleSystemDisplayProp`，关联属性随主属性展示，零值和无内容来源按原规则隐藏。`PropDetailCategory.Apperance=12` 是明细分类编号，实际计算分块为 `EPropHandleType.Appearance=17`，二者不能混用。
 
 总属性与战力恢复须覆盖 `PlayerPropContext` 和原 `PropChunckFactory` 的实际分块：`BattleBasic`、`NoBattleBasic`、`Skill`、`Equip`、`EquipResonance`、`Treasure`、`TreasureSuit`、`Gem`、`Cooking`、`Extra`、`NpcFriendshipLevel`、`Pet`、`LostGoddess`、`PeriodIcCar`、`Legion`、`EquipCabinet`、`Astrological`、`Appearance`、`NpcTalentTree`。`NoBattleBasic` 已从 `PlayerLevelPropId`／`PlayerSubRankPropId` 生成，只合入非战斗属性，不参与战力或人物明细；`CharacterProgressionValidation.ValidatePropertyPipeline` 校验其与固定目录一致。其余来源按所属功能已确认的单机保留／关闭范围处理输入和有效条件；`GmProp=100` 为原调试分块，单独标识。计算与展示保留原合并顺序、百分比、转换、倍率、独立截断及评分引用数据，人物属性变化须使主页、明细、装备比较、技能详情和实战共同更新。

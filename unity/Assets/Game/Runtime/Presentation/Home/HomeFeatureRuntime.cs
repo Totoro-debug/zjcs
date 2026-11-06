@@ -949,18 +949,9 @@ namespace Zjcs.Presentation.Home
         {
             if (progression != null) return;
             OfficialCharacterAssetCatalog characterAssets = OfficialCharacterAssetCatalog.LoadDefault();
-            OfficialCharacterCatalog character = characterAssets.Load();
-            progression = new OfflineCharacterProgressionService(profile, character);
-            try
-            {
-                progression.AttachEquipmentCatalog(OfficialEquipmentAssetCatalog.LoadDefault().Load());
-                progression.AttachSkillRules(characterAssets.LoadSkillRules());
-                equipmentPropertiesLoaded = true;
-            }
-            catch (Exception error)
-            {
-                throw new InvalidOperationException("Official equipment properties are required for home stats.", error);
-            }
+            progression = OfflineCharacterProgressionService.Create(profile, new CharacterProgressionInputs(
+                characterAssets.Load(), OfficialEquipmentAssetCatalog.LoadDefault().Load(), characterAssets.LoadSkillRules()));
+            equipmentPropertiesLoaded = true;
         }
 
         private void BuildHomePlayer()

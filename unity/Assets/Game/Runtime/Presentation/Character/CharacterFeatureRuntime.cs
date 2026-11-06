@@ -44,17 +44,10 @@ namespace Zjcs.Presentation.Character
             activeSlotId = selectedSlotId;
             activeSavesRoot = string.IsNullOrEmpty(savesRoot) ? Application.persistentDataPath : savesRoot;
             session = OfflineMainlineProgressSession.OpenCharacter(slots, selectedSlotId);
-            progression = new OfflineCharacterProgressionService(session, assetCatalog.Load());
-            TryRegisterEquipmentProperties();
-            try
-            {
-                OfficialSkillRecommendationSet recommendations = assetCatalog.LoadSkillRecommendations();
-                progression.AttachSkillRules(assetCatalog.LoadSkillRules(), recommendations.recommendations);
-            }
-            catch (Exception error)
-            {
-                Debug.LogWarning("Official skill progression rules are unavailable: " + error.Message);
-            }
+            OfficialSkillRecommendationSet recommendations = assetCatalog.LoadSkillRecommendations();
+            progression = OfflineCharacterProgressionService.Create(session, new CharacterProgressionInputs(
+                assetCatalog.Load(), OfficialEquipmentAssetCatalog.LoadDefault().Load(), assetCatalog.LoadSkillRules(),
+                recommendations.recommendations));
             ProgressionResult wardrobe = progression.InitializeWardrobe("wardrobe-initialize");
             if (wardrobe.Status == ProgressionResultStatus.InvalidState)
                 throw new InvalidOperationException(wardrobe.Message ?? "Character wardrobe initialization failed.");
@@ -94,19 +87,6 @@ namespace Zjcs.Presentation.Character
                 return;
             }
             if (settlement.IsApplied && panelView != null) panelView.Refresh();
-        }
-
-        private void TryRegisterEquipmentProperties()
-        {
-            try
-            {
-                OfficialEquipmentCatalog equipment = OfficialEquipmentAssetCatalog.LoadDefault().Load();
-                progression.AttachEquipmentCatalog(equipment);
-            }
-            catch (Exception error)
-            {
-                Debug.LogWarning("Official equipment properties are unavailable: " + error.Message);
-            }
         }
 
         private void OnEnable()
