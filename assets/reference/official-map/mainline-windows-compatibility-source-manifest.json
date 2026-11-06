@@ -1,0 +1,11 @@
+{
+  "editor_version": "2022.3.57f1c2",
+  "relative_source": "MonoBleedingEdge/lib/mono/4.5/Facades/System.Memory.dll",
+  "assembly_identity": "System.Memory, Version=4.0.99.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+  "sha256": "c4f030a2cba7da7cdcf493257c24560e203d355904aee490d645a935842f834a",
+  "size": 4608,
+  "provenance": "Pinned Unity Editor Mono compatibility facade, identical to the existing 884_156692 native-conversion inputs/Managed/System.Memory.dll. This is a toolchain dependency, not an APK gameplay assembly.",
+  "processing": "Verify the pinned editor version, assembly identity and SHA256, then copy unchanged after Windows build. The original facade forwards its types to the Player mscorlib.",
+  "binding": "<Windows executable name>_Data/Managed/System.Memory.dll",
+  "tool": "unity/Assets/Game/Editor/MainlineWindowsCompatibilityBuild.cs"
+}

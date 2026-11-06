@@ -106,6 +106,10 @@ Windows 构建范围保留 `Assets/Official/` 中动态字体的原字形表与�
 
 Windows 构建入口同时检查 `BuildReport` 和构建过程的 Error／Exception／Assert 日志。发现 shader 内核等编译错误时以失败退出，不能仅凭 Unity 返回 `Succeeded` 判断可发布。
 
+原始 GPU 程序只有部分关键字组合时，将对应原生 shader 路径及程序数登记到 `OfficialSparseShaderVariants`。构建只编译原文件实际包含的组合；外层条件选择程序，程序体内部的平台条件继续保留。不得为缺少的组合增加替代程序。修改筛选后，通过 `ValidateProgramDomains` 核对完整程序域，再清空构建缓存、完成带错误检查的 Windows 构建；需要逐阶段专项诊断时使用 `Validate`。
+
+通过字节动态加载的程序集还须核对 Player 的实际依赖闭包；静态构建扫描不一定包含它们。工具链兼容程序集应登记来源、版本、程序集身份、原始大小／哈希和交付位置，由构建回调校验后复制原字节，并在 Windows Player 实测。具体依赖及当前验证范围由所属功能页维护。
+
 更改 shader 构建筛选后，首次验证设置 `ZJCS_CLEAN_BUILD_CACHE=1` 强制重建 Player 数据；仅重建脚本可能沿用旧 shader 产物。正常增量构建不设置此变量，继续复用缓存。
 
 ### 常见失败的处理顺序

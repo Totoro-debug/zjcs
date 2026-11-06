@@ -27,7 +27,44 @@ namespace Zjcs.Editor
             ["Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/EffectNoiseMaskPro_6d8d993d.shader"] = 260,
             ["Assets/Game/Runtime/Official/World/NativeMap14/Shaders/Butterfly1.shader"] = 260,
             ["Assets/Game/Runtime/Offline/World/Map12/BuildingPreview.shader"] = 6,
-            ["Assets/Official/Partners/UI/Card/Converted/59de19d261370c02.shader"] = 260
+            ["Assets/Official/Partners/UI/Card/Converted/59de19d261370c02.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/Cast_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/GroundEffectNoiseMaskPro.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/MonsterBodyEffect_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/MovementEffect_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/PartnerHp_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/PetFollower_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/PetTransfer_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/PlayerEffect_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/SkillGraph_FullScreen-Polar.shader"] = 3,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/SkillGraph_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/SkillGraph_Spine-SkeletonEffect-URP-2D.shader"] = 768,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/StatusAnimation_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/StatusFrozen_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/StatusMaterial_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/StatusOrbit_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/StatusSpineFollower_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/Track_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/WeaponPrefab_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Official/Combat/NativeMonsters/OriginalSkeletonEffect.shader"] = 768,
+            ["Assets/Official/Combat/NativePartnerAssets/OriginalSkeletonEffect.shader"] = 768,
+            ["Assets/Official/Combat/NativeMonsters/shaders/0acd001ab2a50fe9138876feb10a6193dd286155a16607a22e1c5900ec55c414.shader"] = 3,
+            ["Assets/Official/DailyChallenges/ActivityRtMonsters/OriginalSkeletonEffect.shader"] = 768,
+            ["Assets/Official/DailyChallenges/ActivityRtPrefab/Resources/DailyChallenges/ActivityRtPrefab/Payload/Converted/59de19d261370c02.shader"] = 260,
+            ["Assets/Official/DailyChallenges/ActivityRtPrefab/Resources/DailyChallenges/ActivityRtPrefab/Payload/Converted/b29a473e62738eea.shader"] = 768,
+            ["Assets/Official/DailyChallenges/Resources/ActivityMonsterIcons/Converted/893dda98db004c56.shader"] = 16,
+            ["Assets/Official/DailyChallenges/Resources/ActivityMonsterIcons/Converted/b29a473e62738eea.shader"] = 768,
+            ["Assets/Official/DailyChallenges/UI/Activity/Converted/4e00a32c496e3e94.shader"] = 16,
+            ["Assets/Official/DailyChallenges/UI/Activity/Converted/59de19d261370c02.shader"] = 260,
+            ["Assets/Official/DailyChallenges/UI/Activity/Converted/6a51e3ded6b39a3c.shader"] = 12,
+            ["Assets/Official/DailyChallenges/UI/Activity/Converted/b29a473e62738eea.shader"] = 768,
+            ["Assets/Official/DailyChallenges/UI/Rank/Converted/4e00a32c496e3e94.shader"] = 16,
+            ["Assets/Official/DailyChallenges/UI/Rank/Converted/b29a473e62738eea.shader"] = 768,
+            ["Assets/Official/Partners/UI/DetailActors/Converted/5dfd400a7875c92f.shader"] = 6,
+            ["Assets/Official/Partners/UI/DetailActors/Converted/b29a473e62738eea.shader"] = 768,
+            ["Assets/Official/World/Shared/NativeMiniMapMarkersCurrent/Converted/59de19d261370c02.shader"] = 260,
+            ["Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Converted/59de19d261370c02.shader"] = 260,
+            ["Assets/Official/World/Map/16/NativeStoryPlayables/Shaders/Noise_Mask_Pro.shader"] = 260
         };
         private static readonly Dictionary<string, Selection> selections = new Dictionary<string, Selection>();
         public int callbackOrder => -100;
@@ -38,6 +75,23 @@ namespace Zjcs.Editor
             public string[] Names;
             public HashSet<int> Programs;
             public int PassCount;
+        }
+
+        public static void ValidateProgramDomains()
+        {
+            selections.Clear();
+            int stages = 0;
+            foreach (var original in originalPrograms)
+            {
+                AssetDatabase.ImportAsset(original.Key, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+                Shader shader = AssetDatabase.LoadAssetAtPath<Shader>(original.Key);
+                if (shader == null) throw new BuildFailedException("Original shader is missing: " + original.Key);
+                Selection selection = Read(shader, original.Key, original.Value);
+                selections.Add(original.Key, selection);
+                stages += selection.PassCount * selection.Programs.Count * 2;
+            }
+            if (stages != 44652) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
         [MenuItem("Zjcs/Assets/Validate Original Sparse Shader Programs")]
@@ -76,7 +130,7 @@ namespace Zjcs.Editor
                 }
             }
             finally { ShaderUtil.allowAsyncCompilation = previousAsync; }
-            if (stages != 8844) throw new BuildFailedException("Original shader stage count changed: " + stages);
+            if (stages != 44652) throw new BuildFailedException("Original shader stage count changed: " + stages);
             Debug.Log("Original sparse shaders: all " + stages + " Windows GPU stages across "
                 + originalPrograms.Count + " original shader assets compiled.");
             ProjectTools.Validate();
@@ -111,8 +165,6 @@ namespace Zjcs.Editor
             foreach (Match block in blocks)
             {
                 string source = block.Groups[1].Value;
-                if (Regex.IsMatch(source, @"(?m)^\s*#else\b"))
-                    throw new BuildFailedException("Original sparse shader gained an unbounded fallback: " + path);
                 string[] currentNames = Regex.Matches(source,
                     @"(?m)^#pragma multi_compile(?:_local)? __ (\w+)\s*$")
                     .Cast<Match>().Select(value => value.Groups[1].Value).OrderBy(value => value, StringComparer.Ordinal).ToArray();
@@ -121,9 +173,20 @@ namespace Zjcs.Editor
                     throw new BuildFailedException("Original shader keyword domain changed: " + path);
                 names = currentNames;
                 var currentPrograms = new HashSet<int>();
-                foreach (Match branch in Regex.Matches(source, @"(?m)^#(?:if|elif) (.+)\r?$"))
+                int depth = 0;
+                foreach (Match branch in Regex.Matches(source,
+                    @"(?m)^\s*#(if|ifdef|ifndef|elif|else|endif)\b([^\r\n]*)"))
                 {
-                    string condition = branch.Groups[1].Value.Trim();
+                    string directive = branch.Groups[1].Value;
+                    bool selectsProgram = directive == "if" && depth == 0 || directive == "elif" && depth == 1;
+                    if (directive == "else" && depth == 1)
+                        throw new BuildFailedException("Original sparse shader gained an unbounded fallback: " + path);
+                    if (directive == "if" || directive == "ifdef" || directive == "ifndef") depth++;
+                    else if (directive == "endif") depth--;
+                    // Original bodies may contain platform branches such as
+                    // UNITY_UV_STARTS_AT_TOP. Only the outer chain selects programs.
+                    if (!selectsProgram) continue;
+                    string condition = branch.Groups[2].Value.Trim();
                     MatchCollection terms = Regex.Matches(condition, @"(!?)defined\((\w+)\)");
                     if (terms.Count != names.Length || string.Join(" && ", terms.Cast<Match>().Select(value => value.Value)) != condition
                         || !terms.Cast<Match>().Select(value => value.Groups[2].Value)
@@ -135,6 +198,7 @@ namespace Zjcs.Editor
                     if (!currentPrograms.Add(signature))
                         throw new BuildFailedException("Original shader program selection is ambiguous: " + path);
                 }
+                if (depth != 0) throw new BuildFailedException("Original shader condition nesting changed: " + path);
                 if (currentPrograms.Count != expected || programs != null && !programs.SetEquals(currentPrograms))
                     throw new BuildFailedException("Recheck original shader program domains for each pass: " + path);
                 programs = currentPrograms;

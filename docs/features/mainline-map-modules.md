@@ -34,6 +34,8 @@ Play Mode 已通过 Map10／11 导航、迷你地图页签与筛选冷读、女�
 
 Map10／14 白雾专项已通过原白雾节点挂载、实际指针移动揭格、保存字节扩展、正常退出后的精确冷恢复，以及跨图只读快照不改写存档；玩家所在格的可见性由官方压缩解码接口直接检查。
 
+动态加载的原客户端依赖 `System.Memory`，Windows 构建由 `MainlineWindowsCompatibilityBuild` 交付固定 Unity Mono 兼容程序集，保留原类型转发，不改写官方 IL。该依赖缺失会使原 `Player.ClientInit` 失败；上下文同时保留初始化与清理异常，探针遇到首个失败立即停止，避免后续点击掩盖原因。来源和原字节绑定见[Windows 兼容依赖来源](../../assets/reference/official-map/mainline-windows-compatibility-source-manifest.json)。构建回调自动补齐依赖的最终 Windows Player 已通过上述 Map10／11／15 整体与 Map10／14 白雾专项，已查看输入后的实际画面并核对隔离存档冷恢复；现有实体贴图与场景表现缺项仍未消除。
+
 ## 自定义实现
 
 - 所有主线地图的国度商店经验按实际消耗的专属货币 1:1 累计；商品、价格、库存和刷新周期仍取各地图官方配置。地图专属等级阈值及刷新规则在所属地图页维护。

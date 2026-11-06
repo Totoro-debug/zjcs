@@ -1292,8 +1292,17 @@ namespace Zjcs.Presentation.Home
                 Assert(PrivateField<Dictionary<int, long>>(giftPanel, "mSelectedGiftDict").Count == 0,
                     "gift reset pointer did not clear selection");
                 ClickPartnerUi(icon.Button);
+                return "selected, reset and selected through official buttons";
+            });
+            // A slow import/render frame can outlast a real-time delay before the
+            // HUD has ticked its notice clock. Observe the visible layer itself.
+            float noticeWaitDeadline = Time.realtimeSinceStartup + 15f;
+            while (GameObject.Find("HomeToast") != null && Time.realtimeSinceStartup < noticeWaitDeadline)
+                yield return null;
+            ok &= Check("partner-gift-submit-input", () =>
+            {
                 ClickPartnerUi(PrivateField<Button>(giftPanel, "mGiveGiftBtn"));
-                return "selected, reset, selected and submitted through official buttons";
+                return "submitted through the exposed original gift button";
             });
             float giftDeadline = Time.realtimeSinceStartup + 5f;
             while (runtime.ItemCount(giftId) == inventoryBefore && Time.realtimeSinceStartup < giftDeadline)

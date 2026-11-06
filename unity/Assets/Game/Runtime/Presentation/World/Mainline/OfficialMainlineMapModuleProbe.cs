@@ -87,6 +87,7 @@ namespace Zjcs.Presentation.World
             stack.Push(sequence);
             while (stack.Count > 0)
             {
+                if (finished) yield break;
                 object next;
                 try
                 {
@@ -103,8 +104,11 @@ namespace Zjcs.Presentation.World
                 if (next is IEnumerator child) stack.Push(child);
                 else yield return next;
             }
+            if (finished) yield break;
             File.WriteAllText(Path.Combine(output, "passed.txt"),
-                Environment.GetCommandLineArgs().Contains("-verify-visibility-maps")
+                Environment.GetCommandLineArgs().Contains("-verify-story-playable-materials")
+                    ? "Map16 original disappearance prefabs: 17 imported material shader bindings and rendered particle samples passed."
+                : Environment.GetCommandLineArgs().Contains("-verify-visibility-maps")
                     ? "Map10/14 original visibility/fog, pointer movement, exact disk cold restore and read-only visited-map snapshots passed."
                     : Environment.GetCommandLineArgs().Contains("-verify-exploration-only")
                     ? "Exploration pointer flow: native HUD, confirmation, probability/detail/history, token scrolling/selection/cost, guide chest reward without stamina, ten-times exploration and cold reload passed."
@@ -152,6 +156,78 @@ namespace Zjcs.Presentation.World
             Debug.Log("Shared interaction catalog validation passed: historical maps 10-15, six Whale Island heroes and source identity guards.");
         }
 
+        private IEnumerator VerifyStoryPlayableMaterials()
+        {
+            var catalog = Resources.Load<Zjcs.Offline.World.NativeMap13.NativeMap13AssetCatalog>(
+                "Map16/Native/native-story-playables-catalog");
+            Require(catalog != null && catalog.Bindings.Length == 2, "Original Map16 playable bindings");
+            var pipeline = Resources.Load<Zjcs.Presentation.Combat.OfficialBattleRenderPipelineAssets>(
+                "Combat/OfficialBattleRenderPipelineAssets");
+            Require(pipeline != null, "Original particle preview pipeline");
+            Camera[] previousCameras = FindObjectsOfType<Camera>().Where(value => value.enabled).ToArray();
+            foreach (Camera previous in previousCameras) previous.enabled = false;
+            var preview = new GameObject("Original particle preview").AddComponent<Camera>();
+            preview.orthographic = true;
+            preview.clearFlags = CameraClearFlags.SolidColor;
+            preview.backgroundColor = new Color(.15f, .18f, .2f);
+            var materials = new HashSet<Material>();
+            using (pipeline.Enter())
+            try
+            {
+                foreach (var binding in catalog.Bindings)
+                {
+                    var prefab = catalog.Load<GameObject>(binding.OfficialPath);
+                    var instance = Instantiate(prefab);
+                    try
+                    {
+                        instance.SetActive(true);
+                        var renderers = instance.GetComponentsInChildren<ParticleSystemRenderer>(true);
+                        // The original renderer arrays also contain empty trail slots.
+                        foreach (Material material in renderers.SelectMany(value => value.sharedMaterials).Where(value => value != null))
+                        {
+                            Require(material != null && material.shader != null && material.shader.isSupported
+                                && material.shader.name == "Zjcs/Official/World/Map16/StoryPlayables/Noise_Mask_Pro",
+                                "Original Map16 material shader resolves through ShaderImporter: "
+                                + (material == null ? "null material" : material.name + " / "
+                                    + (material.shader == null ? "null shader" : material.shader.name + " / supported=" + material.shader.isSupported)));
+                            materials.Add(material);
+                        }
+                        // This is an isolated material raster sample, separate from
+                        // the unfinished story graph's activation and actor binding.
+                        var systems = instance.GetComponentsInChildren<ParticleSystem>(true);
+                        foreach (var system in systems)
+                        {
+                            for (Transform node = system.transform; node != instance.transform; node = node.parent)
+                                node.gameObject.SetActive(true);
+                        }
+                        int particles = 0;
+                        for (int sample = 0; sample < 40 && particles == 0; sample++)
+                            foreach (var system in systems)
+                            {
+                                system.Simulate(.05f, false, sample == 0, true);
+                                system.Pause(false);
+                                particles += system.particleCount;
+                            }
+                        Require(particles > 0, "Original disappearance prefab produces particles");
+                        yield return null;
+                        Bounds bounds = renderers[0].bounds;
+                        foreach (var renderer in renderers) bounds.Encapsulate(renderer.bounds);
+                        preview.transform.position = bounds.center + Vector3.back * 50f;
+                        preview.orthographicSize = Mathf.Max(1f, bounds.extents.y, bounds.extents.x / preview.aspect) * 1.15f;
+                        yield return Capture("map-16-" + prefab.name + "-materials.png");
+                    }
+                    finally { Destroy(instance); }
+                    yield return null;
+                }
+                Require(materials.Count == 17, "All 17 original Map16 playable materials are bound");
+            }
+            finally
+            {
+                Destroy(preview.gameObject);
+                foreach (Camera previous in previousCameras) if (previous != null) previous.enabled = true;
+            }
+        }
+
         private IEnumerator Verify()
         {
             WorldMapAssets whaleIsland = OfficialWorldMapAssetCatalog.LoadDefault().LoadMap(16);
@@ -167,6 +243,11 @@ namespace Zjcs.Presentation.World
                 if (startup != null) Destroy(startup);
             }
             yield return null;
+            if (Environment.GetCommandLineArgs().Contains("-verify-story-playable-materials"))
+            {
+                yield return VerifyStoryPlayableMaterials();
+                yield break;
+            }
             if (EventSystem.current == null) new GameObject("ProbeInput", typeof(EventSystem), typeof(StandaloneInputModule));
             var canvas = new GameObject("ProbeCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             canvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;

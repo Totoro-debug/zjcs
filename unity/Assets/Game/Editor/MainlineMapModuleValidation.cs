@@ -132,6 +132,8 @@ namespace Zjcs.Editor
 
         public static void BuildWindowsPlayer()
         {
+            ProjectTools.Validate();
+            OfficialSparseShaderVariants.ValidateProgramDomains();
             string destination = null;
             string[] args = Environment.GetCommandLineArgs();
             int output = Array.IndexOf(args, "-mainline-player-output");
@@ -151,21 +153,39 @@ namespace Zjcs.Editor
             Directory.CreateDirectory(Path.GetDirectoryName(destination));
             ScriptingImplementation previous = PlayerSettings.GetScriptingBackend(NamedBuildTarget.Standalone);
             BuildReport report;
+            int loggedErrors = 0;
+            string firstError = null;
+            Application.LogCallback observe = (message, stack, type) => {
+                if (type != LogType.Error && type != LogType.Exception && type != LogType.Assert) return;
+                loggedErrors++;
+                if (firstError == null) firstError = message;
+            };
+            Application.logMessageReceived += observe;
             try
             {
                 PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
+                Skills.OfficialSkillRuntimeShaderBuild.Prepare();
+                BuildOptions options = releaseProbe ? BuildOptions.None : BuildOptions.Development;
+                if (Environment.GetEnvironmentVariable("ZJCS_CLEAN_BUILD_CACHE") == "1")
+                    options |= BuildOptions.CleanBuildCache;
                 report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
                 {
                     scenes = EditorBuildSettings.scenes.Where(value => value.enabled).Select(value => value.path).ToArray(),
                     locationPathName = destination,
                     target = BuildTarget.StandaloneWindows64,
-                    options = releaseProbe ? BuildOptions.None : BuildOptions.Development,
+                    options = options,
                     extraScriptingDefines = releaseProbe ? new[] { "ZJCS_MAINLINE_MODULE_VALIDATION" } : Array.Empty<string>()
                 });
             }
-            finally { PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, previous); }
-            if (report == null || report.summary.result != BuildResult.Succeeded)
-                throw new BuildFailedException("Shared mainline module Windows regression build failed.");
+            finally
+            {
+                Application.logMessageReceived -= observe;
+                Skills.OfficialSkillRuntimeShaderBuild.Restore();
+                PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, previous);
+            }
+            if (report == null || report.summary.result != BuildResult.Succeeded
+                || report.summary.totalErrors != 0 || loggedErrors != 0)
+                throw new BuildFailedException("Shared mainline module Windows regression build failed. " + firstError);
             Debug.Log("Shared mainline module Windows regression Player: " + destination);
         }
     }

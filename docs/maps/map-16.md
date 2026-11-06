@@ -20,6 +20,10 @@
 
 运行时代码入口为 [`OfficialMainlineMapProfile`](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs)、[`OfficialMainlineMapRuntime`](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs) 与 [`OfflineMainlineProgressSession`](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs)。完整入口仍缺角色／HUD 状态、白雾与地区状态联动、实体视觉、交互、故事演出、战斗及小地图数据响应。
 
+两份官方 NPC 消失演出 prefab 的 17 份材质已将外部 shader 引用从原生序列化资产类型修正为 `ShaderImporter` 类型，保留原 GUID、材质参数、shader 源、纹理与网格；转换器和逐项输出哈希同步更新，见[演出资源来源](../../assets/reference/official-map/map16-native-story-playables-source-manifest.json)。该 shader 的 260 组原程序／两个 pass 已纳入[共享构建校验](../features/battle-execution.md)，素材绑定检查不代表鲸背岛故事流程已接通。
+
+独立 Play Mode 与最终 Windows Player 已检查全部 17 份材质的 shader 引用与支持状态，并查看两份 prefab 的粒子抽帧。该夹具单独激活粒子，不绑定故事中的 NPC 来源，画面仅证明材质能够产生输出；原人物消失效果、完整故事激活顺序和声音仍未验证。
+
 ## 自定义实现
 
 用户确认的地区时间条件以首次达到位阶 4 的本地时间为基准；位阶 4 的 14 天及其他地区各自的原始偏移继续生效，位阶高于 4 时免除该时间门槛。绳索准备剧情、等级和其他原条件仍需满足；不应用服务器合服加速。

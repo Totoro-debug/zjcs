@@ -66,7 +66,16 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                         new object[] { new HashSet<long> { containerId(2) } });
                 }
             }
-            catch { Dispose(); throw; }
+            catch (Exception initializationError)
+            {
+                try { Dispose(); }
+                catch (Exception cleanupError)
+                {
+                    throw new AggregateException("Original client initialization and cleanup failed.",
+                        initializationError, cleanupError);
+                }
+                throw;
+            }
         }
 
         public void Dispose()

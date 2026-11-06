@@ -417,7 +417,9 @@ def build() -> dict:
             if shader_ref.get("guid") != re.search(r"guid: ([a-f0-9]{32})", material_raw).group(1):
                 raise ValueError("Original exported material shader pointer differs")
             material_raw, count = re.subn(r"(?m)^(  m_Shader: \{fileID: )[^,]+(, guid: )[a-f0-9]{32}(, type: \d+\})$",
-                lambda match: match[1] + "4800000" + match[2] + shader_target_guid + match[3], material_raw)
+                # The restored .shader uses ShaderImporter (external type 3),
+                # rather than the exported native Shader asset's type 2.
+                lambda match: match[1] + "4800000" + match[2] + shader_target_guid + ", type: 3}", material_raw)
             if count != 1: raise ValueError("Original Map16 material shader pointer is not unique")
 
             source_texture_rows = {}
