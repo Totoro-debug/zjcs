@@ -1,0 +1,80 @@
+{
+  "sourceVersion": "884_156692",
+  "nativeExport": "native-export-all",
+  "generator": "scripts/prepare_battle_monster_phase_transitions.py",
+  "controllerGuid": "a5f796660cefeac4b87e32b5b4151a42",
+  "clipGuid": "0f565ea97038f4e4a85db9e797dad23c",
+  "runtimeBinding": {
+    "entityId": 3803,
+    "animatorPath": "0template3x3_view/body",
+    "trigger": "stage2",
+    "prefabAnimator": {
+      "object": "body",
+      "enabled": true,
+      "cullingMode": 0,
+      "updateMode": 0,
+      "applyRootMotion": false,
+      "keepAnimatorStateOnDisable": false,
+      "writeDefaultValuesOnDisable": false
+    },
+    "clipTargets": [
+      "MonsterModel_3803/Stage1",
+      "MonsterModel_3803/Stage2"
+    ],
+    "resourceCatalog": "Combat/NativeMonsters/phase-transition-catalog"
+  },
+  "inputs": [
+    {
+      "role": "controller",
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AnimatorController/3803tostage2.controller",
+      "sha256": "18f2919e74b3b57284ccc469c9b5e15b3014de8351b11f660633f830f4e29294"
+    },
+    {
+      "role": "controller_meta",
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AnimatorController/3803tostage2.controller.meta",
+      "sha256": "2d9d259232a4b58d749f4c3ce69cc573f770946e5e50cfdcae00fe4b9b8f3900"
+    },
+    {
+      "role": "clip",
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AnimationClip/3803tostage2.anim",
+      "sha256": "f521e73509cb237c22977708f79fbf2e20fde74757dc62d220502f3f7688e8fc"
+    },
+    {
+      "role": "clip_meta",
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AnimationClip/3803tostage2.anim.meta",
+      "sha256": "7c2e33df04a425f2dd491a01027aa11433827e1bb029aab04735ed8a7baeba8c"
+    },
+    {
+      "role": "prefab",
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightMonster/3803.prefab",
+      "sha256": "7a98d9faa4be4f7d5717fa9ed62a7191617a6c6cb65456a92584874b43bc7792"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/Battle/Monsters/3803/3803tostage2.controller",
+      "sha256": "18f2919e74b3b57284ccc469c9b5e15b3014de8351b11f660633f830f4e29294"
+    },
+    {
+      "path": "unity/Assets/Official/Battle/Monsters/3803/3803tostage2.controller.meta",
+      "sha256": "2d9d259232a4b58d749f4c3ce69cc573f770946e5e50cfdcae00fe4b9b8f3900"
+    },
+    {
+      "path": "unity/Assets/Official/Battle/Monsters/3803/3803tostage2.anim",
+      "sha256": "f521e73509cb237c22977708f79fbf2e20fde74757dc62d220502f3f7688e8fc"
+    },
+    {
+      "path": "unity/Assets/Official/Battle/Monsters/3803/3803tostage2.anim.meta",
+      "sha256": "7c2e33df04a425f2dd491a01027aa11433827e1bb029aab04735ed8a7baeba8c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/NativeMonsters/phase-transition-catalog.asset",
+      "sha256": "f5e5913c414cf479115576fa32569edab4b831550f602bd596ba9d0ed37e1532"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/NativeMonsters/phase-transition-catalog.asset.meta",
+      "sha256": "f1f5d768ee6f6b951fe6b8d593c693c8c045257376e029547eba3a6a249d7836"
+    }
+  ],
+  "generatorSha256": "aa060033bce52b6521ff11023fec05630b4592e40a8c6e0a8a820e831afadde5"
+}

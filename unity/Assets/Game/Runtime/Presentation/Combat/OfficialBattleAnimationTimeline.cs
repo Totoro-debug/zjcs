@@ -12,6 +12,7 @@ namespace Zjcs.Presentation.Combat
         public float Delay;
         public int Priority;
         public int Order;
+        public string BodyAnimatorTrigger;
         public OfficialBattleSkillPlayableCue SkillPlayable;
         public FightBattleSkillCastEvent SkillCast;
         public FightBattleMovementEvent Movement;
@@ -69,6 +70,20 @@ namespace Zjcs.Presentation.Combat
             if (stepEvent == null) return cues;
 
             int order = 0;
+            if (stepEvent.BodyAnimatorTriggers != null)
+                foreach (FightBattleBodyAnimatorTriggerEvent trigger in stepEvent.BodyAnimatorTriggers)
+                {
+                    if (trigger == null || trigger.UnitId <= 0
+                        || string.IsNullOrEmpty(trigger.Parameter)) continue;
+                    cues.Add(new OfficialBattleAnimationCue
+                    {
+                        UnitId = trigger.UnitId,
+                        Delay = NormalizeDelay(trigger.Delay),
+                        Priority = 1,
+                        Order = order++,
+                        BodyAnimatorTrigger = trigger.Parameter
+                    });
+                }
             if (skillCatalog != null && skillCatalog.skills != null && stepEvent.SkillCasts != null)
                 foreach (FightBattleSkillCastEvent cast in stepEvent.SkillCasts)
                 {

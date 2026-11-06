@@ -7,6 +7,7 @@ namespace Zjcs.Offline.ProfessionUI
     public sealed partial class BattleNativeMonsterRenderer
     {
         private ProfessionNativeAnimatorPose animatorPose;
+        private Animator bodyPhaseAnimator;
         private float animatorDelta;
         public Animator Animator { get; private set; }
         public ProfessionNativeAnimatorPose.AppliedFrame AnimatorFrame { get; private set; }
@@ -43,11 +44,61 @@ namespace Zjcs.Offline.ProfessionUI
             Animator.Rebind(); Animator.Update(0); ApplyAnimatorPose(0);
         }
 
+        public void BindOriginalPhaseAnimator(int entityId)
+        {
+            if (entityId != 3803) return;
+            if (bodyPhaseAnimator) throw new InvalidOperationException("The original body phase Animator is already bound.");
+            Transform body = EntityRoot.Find("0template3x3_view/body");
+            if (!body || !body.Find("MonsterModel_3803/Stage1")
+                || !body.Find("MonsterModel_3803/Stage2"))
+                throw new InvalidDataException("Original 3803 phase Animator targets are unbound.");
+            RuntimeAnimatorController controller = BattleNativeMonsterPhaseTransitionCatalog.Load()
+                .FindController(entityId);
+            if (!controller) throw new FileNotFoundException("Original 3803 phase Animator controller is not packaged.");
+
+            bodyPhaseAnimator = body.GetComponent<Animator>();
+            if (!bodyPhaseAnimator) bodyPhaseAnimator = body.gameObject.AddComponent<Animator>();
+            bodyPhaseAnimator.runtimeAnimatorController = controller;
+            bodyPhaseAnimator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            bodyPhaseAnimator.updateMode = AnimatorUpdateMode.Normal;
+            bodyPhaseAnimator.applyRootMotion = false;
+            bodyPhaseAnimator.keepAnimatorStateOnDisable = false;
+            bodyPhaseAnimator.writeDefaultValuesOnDisable = false;
+            bodyPhaseAnimator.enabled = false; // The battle view advances both original graphs on one clock.
+            bodyPhaseAnimator.Rebind();
+            bodyPhaseAnimator.Update(0f);
+
+            bool hasStageTwoTrigger = false;
+            foreach (AnimatorControllerParameter parameter in bodyPhaseAnimator.parameters)
+                if (parameter.name == "stage2" && parameter.type == AnimatorControllerParameterType.Trigger)
+                {
+                    hasStageTwoTrigger = true;
+                    break;
+                }
+            if (!hasStageTwoTrigger) throw new InvalidDataException("Original 3803 body Animator has no stage2 Trigger.");
+        }
+
+        public void TriggerBodyAnimator(string parameter)
+        {
+            if (!bodyPhaseAnimator) throw new InvalidOperationException("The original body phase Animator is not bound.");
+            bool found = false;
+            foreach (AnimatorControllerParameter value in bodyPhaseAnimator.parameters)
+                if (value.name == parameter && value.type == AnimatorControllerParameterType.Trigger)
+                {
+                    found = true;
+                    break;
+                }
+            if (!found) throw new InvalidOperationException("Original body Animator Trigger is unbound: " + parameter);
+            bodyPhaseAnimator.SetTrigger(parameter);
+            bodyPhaseAnimator.Update(0f);
+        }
+
         private void AdvanceAnimator(float deltaTime)
         {
             if (!Animator) throw new InvalidOperationException("Bind the original monster Animator first.");
             if (!float.IsFinite(deltaTime) || deltaTime < 0) throw new ArgumentOutOfRangeException(nameof(deltaTime));
             Animator.Update(deltaTime);
+            if (bodyPhaseAnimator) bodyPhaseAnimator.Update(deltaTime);
             ApplyAnimatorPose(deltaTime);
         }
 

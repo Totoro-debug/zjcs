@@ -262,6 +262,22 @@ namespace Zjcs.Combat.Official
 
             ExecutePetSupportSkills(actor, actorRound, globalRound, casts, damageEvents,
                 movements, ref stepDuration, ref stepActionDuration, out float petSupportDuration);
+            int chaosInvasionPhaseSkillSlot = PrepareChaosInvasionPhaseSkill(actor,
+                globalRound, skillState);
+            // The official roster contains 18130 from battle start; keep the limited skill
+            // unavailable until its user-confirmed round.
+            if (checkpoint.StageId == ChaosInvasionStageId
+                && checkpoint.StageType == ChaosInvasionStageType
+                && (actor.MonsterId == ChaosInvasionBossEntityId
+                    || actor.MonsterTemplateId == ChaosInvasionBossEntityId)
+                && globalRound < ChaosInvasionPhaseTwoRound && actor.Skills != null)
+                foreach (FightBattleSkillDefinition scheduledSkill in actor.Skills)
+                    if (scheduledSkill != null
+                        && scheduledSkill.EntityId == ChaosInvasionPhaseTwoSkillEntityId)
+                        checkedSlots.Add(scheduledSkill.Slot);
+            if (chaosInvasionPhaseSkillSlot >= 0 && actor.BrokenRound >= 0
+                && actor.Resilience <= 0)
+                checkedSlots.Add(chaosInvasionPhaseSkillSlot);
             int ordinaryCastStart = casts.Count;
             int ordinaryDamageStart = damageEvents.Count, ordinaryMovementStart = movements.Count;
             while (true)
@@ -278,7 +294,10 @@ namespace Zjcs.Combat.Official
 
                 List<FightBattleUnitState> targets = FightBattleTargeting.SelectInSkillRange(actor,
                     units, skill, random: random);
-                if (targets.Count == 0 && MoveIntoSkillRange(actor, skill, movements))
+                if (skill.Slot == chaosInvasionPhaseSkillSlot)
+                    targets = ChaosInvasionPlayerTargets(actor);
+                if (skill.Slot != chaosInvasionPhaseSkillSlot && targets.Count == 0
+                    && MoveIntoSkillRange(actor, skill, movements))
                     targets = FightBattleTargeting.SelectInSkillRange(actor, units, skill,
                         random: random);
                 if (actor.Hp <= 0) break;
@@ -322,6 +341,7 @@ namespace Zjcs.Combat.Official
                 CollectStatusCustomActions(statusCustomActions);
             }
 
+            CompleteChaosInvasionPhaseSkillAttempt(actor, chaosInvasionPhaseSkillSlot, skillState);
             OffsetSkillEvents(casts, ordinaryCastStart, damageEvents, ordinaryDamageStart,
                 movements, ordinaryMovementStart, petSupportDuration);
             FightBattleSkillDefinition eventSkill = null;
@@ -403,6 +423,19 @@ namespace Zjcs.Combat.Official
             var stepEvent = CreateEvent(actor, eventSkill, performedTargets, before,
                 globalRound, movements, casts, damageEvents, currentStepSpawnedUnitIds,
                 statusCustomActions, stepDuration, stepActionDuration);
+            // Phase entry is round-driven, so the original body transition still occurs when
+            // break/control prevents the one allowed 18130 release.
+            if (checkpoint.StageId == ChaosInvasionStageId
+                && checkpoint.StageType == ChaosInvasionStageType
+                && globalRound == ChaosInvasionPhaseTwoRound
+                && (actor.MonsterId == ChaosInvasionBossEntityId
+                    || actor.MonsterTemplateId == ChaosInvasionBossEntityId))
+                stepEvent.BodyAnimatorTriggers.Add(new FightBattleBodyAnimatorTriggerEvent
+                {
+                    UnitId = actor.Id,
+                    Parameter = "stage2",
+                    Delay = 0f
+                });
             currentStepSpawnedUnitIds = null;
             currentStepStatusCustomActions = null;
             currentStepDispersedUnitIds = null;
@@ -636,6 +669,9 @@ namespace Zjcs.Combat.Official
             // Support settles against the owner state, but its original target
             // filters (notably TargetType.Master) belong to the pet source.
             targetingSource = targetingSource ?? actor;
+            // User-confirmed solo rule: a successful 18130 directly kills opposing player units;
+            // the original 18131 single-cell hit is self-targeted in the client data.
+            bool chaosInvasionWipe = IsChaosInvasionPhaseSkill(actor, skill);
             if (targets != null && targets.Count > 0)
                 actor.AiPreviousTargetId = targets[0].Id;
             FightBattleDamageEvent skillCost = ApplySkillCost(actor, skill);
@@ -698,7 +734,11 @@ namespace Zjcs.Combat.Official
                 if (hit.Delay > lastDelay) lastDelay = hit.Delay;
                 List<FightBattleUnitState> hitTargets;
                 bool hasRandomTargetContext = hit.RandomTargetGroupId > 0;
-                if (hasRandomTargetContext)
+                if (chaosInvasionWipe)
+                    hitTargets = targets.Where(target => target != null
+                        && target.CharacterType == 1 && target.Side != actor.Side
+                        && target.Hp > 0 && !target.Ended).ToList();
+                else if (hasRandomTargetContext)
                 {
                     if (!randomTargetGroups.TryGetValue(hit.RandomTargetGroupId,
                         out RandomTargetGroupState groupState))
@@ -808,25 +848,44 @@ namespace Zjcs.Combat.Official
                     int damageId = NextDamageId();
                     bool originalHasCustomDamage = hit.HasCustomDamage;
                     long originalCustomDamage = hit.CustomDamage;
-                    ApplyResilienceDamageOverride(actor, target, skill, hit);
+                    if (!chaosInvasionWipe)
+                        ApplyResilienceDamageOverride(actor, target, skill, hit);
                     float elementConfrontation = 0f;
                     bool elementConfrontationResolved = true;
-                    if (statusCatalog != null && hit.ActionType != 0 && hit.ActionType != 5
+                    if (!chaosInvasionWipe && statusCatalog != null
+                        && hit.ActionType != 0 && hit.ActionType != 5
                         && skill.SkillType != 3 && hit.DamageType >= 1 && hit.DamageType <= 7)
                         elementConfrontationResolved = statusCatalog.TryResolveElementConfrontation(
                             target, skill.ElementType, out elementConfrontation);
                     FightBattleHitResult resolved;
-                    try
+                    if (chaosInvasionWipe)
                     {
-                        resolved = hitExecutor.Apply(random, damageId, actor, target,
-                            skill, hit, checkpoint.StageType, checkpoint.IsPvp, elementConfrontation,
-                            new List<int>(), allowDeadSource, skillDamageScale
-                                * (hit.UseDamageFactor ? externalDamageFactor : 1.0));
+                        target.Hp = 0;
+                        SynchronizeTurn(target);
+                        resolved = new FightBattleHitResult
+                        {
+                            Type = new FightDamageTypeData(),
+                            Formula = new FightDamageFormulaResult
+                            {
+                                Damage = beforeHp,
+                                AbsoluteDamage = beforeHp
+                            }
+                        };
                     }
-                    finally
+                    else
                     {
-                        hit.HasCustomDamage = originalHasCustomDamage;
-                        hit.CustomDamage = originalCustomDamage;
+                        try
+                        {
+                            resolved = hitExecutor.Apply(random, damageId, actor, target,
+                                skill, hit, checkpoint.StageType, checkpoint.IsPvp, elementConfrontation,
+                                new List<int>(), allowDeadSource, skillDamageScale
+                                    * (hit.UseDamageFactor ? externalDamageFactor : 1.0));
+                        }
+                        finally
+                        {
+                            hit.HasCustomDamage = originalHasCustomDamage;
+                            hit.CustomDamage = originalCustomDamage;
+                        }
                     }
                     if (resolved.Formula == null && resolved.Settlement == null) continue;
                     var damage = new FightBattleDamageEvent
@@ -838,7 +897,7 @@ namespace Zjcs.Combat.Official
                         SkillItemId = skill.ItemId,
                         HitEntityId = hit.EntityId,
                         DamageEntityId = hit.DamageId,
-                        DamageType = hit.DamageType,
+                        DamageType = chaosInvasionWipe ? 1 : hit.DamageType,
                         ElementType = skill == null ? 0 : skill.ElementType,
                         ElementConfrontation = elementConfrontation,
                         IsElementAffect = resolved.Formula != null && resolved.Formula.ElementAffected,
@@ -851,14 +910,16 @@ namespace Zjcs.Combat.Official
                         Dodge = resolved.Type.Dodge,
                         Immunity = resolved.Type.Immunity,
                         Blinding = resolved.Type.Blinding,
-                        IgnoreShield = hit.IgnoreShield,
-                        TrueDamage = hit.TrueDamage,
+                        IgnoreShield = chaosInvasionWipe || hit.IgnoreShield,
+                        TrueDamage = chaosInvasionWipe || hit.TrueDamage,
                         BreakResilience = hit.BreakResilience,
-                        Damage = resolved.Settlement == null ? 0 : resolved.Settlement.RealDamageValue,
-                        HasDamageValue = resolved.Settlement != null,
-                        DamageValue = resolved.Settlement == null ? 0 : resolved.Settlement.DamageValue,
+                        Damage = chaosInvasionWipe ? beforeHp
+                            : resolved.Settlement == null ? 0 : resolved.Settlement.RealDamageValue,
+                        HasDamageValue = chaosInvasionWipe || resolved.Settlement != null,
+                        DamageValue = chaosInvasionWipe ? beforeHp
+                            : resolved.Settlement == null ? 0 : resolved.Settlement.DamageValue,
                         ShieldDamage = resolved.ShieldDamage,
-                        HasAbsoluteDamage = resolved.Formula != null,
+                        HasAbsoluteDamage = chaosInvasionWipe || resolved.Formula != null,
                         AbsoluteDamage = resolved.Formula == null ? 0 : resolved.Formula.AbsoluteDamage,
                         BeforeHp = beforeHp,
                         AfterHp = target.Hp,

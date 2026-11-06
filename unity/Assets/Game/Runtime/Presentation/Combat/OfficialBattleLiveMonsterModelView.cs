@@ -69,6 +69,7 @@ namespace Zjcs.Presentation.Combat
                 renderer = BattleNativeMonsterRenderer.Create(assets, entityId, parent, name);
                 renderer.BindOriginalAnimator(assets, entityId);
                 renderer.BindOriginalAttachments(entityId);
+                renderer.BindOriginalPhaseAnimator(entityId);
                 application = new OfficialBattleMonsterAnimationController(renderer.EntityRoot, renderer.Animator, entityId);
                 UsesNativeSkillGraphs = nativeSkillGraphs;
                 Transform body = renderer.transform.parent;
@@ -117,6 +118,13 @@ namespace Zjcs.Presentation.Combat
 
         public bool Supports(OfficialBattleSkillPlayableCue cue) => !disposed
             && OfficialBattleAnimatorPlayback.Supports(renderer.Animator, cue);
+
+        public void TriggerBodyAnimator(string parameter)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleLiveMonsterModelView));
+            renderer.TriggerBodyAnimator(parameter);
+            follower.ForceUpdate();
+        }
 
         public bool PlaySkill(OfficialBattleSkillPlayableCue cue, AnimationClip marker, float ownerDuration = -1f)
         {

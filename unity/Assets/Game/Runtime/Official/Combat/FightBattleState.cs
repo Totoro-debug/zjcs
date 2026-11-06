@@ -1196,6 +1196,8 @@ namespace Zjcs.Combat.Official
         public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>();
         public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>();
         public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>();
+        public List<FightBattleBodyAnimatorTriggerEvent> BodyAnimatorTriggers =
+            new List<FightBattleBodyAnimatorTriggerEvent>();
         public List<FightBattleStatusCustomActionEvent> StatusCustomActions =
             new List<FightBattleStatusCustomActionEvent>();
         public List<int> SpawnedUnitIds = new List<int>();
@@ -1242,6 +1244,14 @@ namespace Zjcs.Combat.Official
         public int ReplayType; // Official EReplaySkillType: Normal=0, Extra=1, ExtraWithTip=2.
         public int ReplayStatusInstanceId; // Zero for a skill's own replay configuration.
         public List<int> TargetIds = new List<int>();
+    }
+
+    [Serializable]
+    public sealed class FightBattleBodyAnimatorTriggerEvent
+    {
+        public int UnitId;
+        public string Parameter;
+        public float Delay;
     }
 
     [Serializable]

@@ -629,7 +629,7 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 周常3803的原生三页图集、材质与网格副本来自当前884版APK优先解析，逐对象来源、严格解码及Windows资产哈希继续归入[完整骨骼怪物来源](battle-animation/live-monsters-source-manifest.json)，挂点及额外阴影沿用对应模块来源清单；实现与当前验证边界见[战斗执行](../../docs/features/battle-execution.md)。
 
-3803第一阶段翼部粒子及其原实体实例覆盖归入[怪物本体效果来源](battle-animation/monster-body-effects-source-manifest.json)，记录原prefab、当前实体导出输入、纹理／shader闭包与输出身份；具体实现和验证仍见战斗执行功能页。
+3803第一阶段翼部粒子及其原实体实例覆盖归入[怪物本体效果来源](battle-animation/monster-body-effects-source-manifest.json)，记录原prefab、当前实体导出输入、纹理／shader闭包与输出身份；具体实现和验证仍见战斗执行功能页。第二阶段原 `3803tostage2.controller`、`3803tostage2.anim` 与 `3803.prefab` 输入，以及对应输出、GUID和哈希由[3803二阶段Animator来源清单](battle-animation/monster-3803-phase-transition-source-manifest.json)记录，生成入口为 `scripts/prepare_battle_monster_phase_transitions.py`。
 
 公共新单位怪物占格装配沿用已校验的854_156383战斗规则及原模板映射，原GridTransform声明、当前884客户端相机消费代码、输入哈希与接线哈希见[怪物占格来源](battle-rules/monster-bodies-source-manifest.json)。具体规则、验证范围和旧检查点兼容缺项见[战斗执行](../../docs/features/battle-execution.md)。
 

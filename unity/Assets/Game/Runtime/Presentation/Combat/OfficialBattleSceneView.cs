@@ -994,7 +994,7 @@ namespace Zjcs.Presentation.Combat
                 if (!hasAttached && units[cue.UnitId].NativeModel is IOfficialBattleAnimatorMovementModel role)
                 {
                     // Complete skill prefabs already own their Animator leaves.
-                    if (cue.SkillCast != null) continue;
+                    if (cue.SkillCast != null && string.IsNullOrEmpty(cue.BodyAnimatorTrigger)) continue;
                     if (cue.Movement != null && movementCues.TryGetValue(cue.Movement, out var partnerMoves))
                     {
                         if (!partnerMoves.TrueForAll(value => role.Supports(value.SkillPlayable)))
@@ -1008,7 +1008,8 @@ namespace Zjcs.Presentation.Combat
                 {
                     // The full original prefab owns its Animator leaves. Do not
                     // also dispatch the extracted flat cues for the same cast.
-                    if (cue.SkillCast != null && liveMonster.UsesNativeSkillGraphs) continue;
+                    if (cue.SkillCast != null && string.IsNullOrEmpty(cue.BodyAnimatorTrigger)
+                        && liveMonster.UsesNativeSkillGraphs) continue;
                     if (cue.Movement != null && movementCues.TryGetValue(cue.Movement, out var monsterMoves)
                         && monsterMoves.TrueForAll(value => liveMonster.Supports(value.SkillPlayable)))
                     {
@@ -1070,6 +1071,15 @@ namespace Zjcs.Presentation.Combat
         {
             FightBattleUnitState state = FindUnit(latestCheckpoint, cue.UnitId);
             if (state == null || state.Hp <= 0) return;
+            if (!string.IsNullOrEmpty(cue.BodyAnimatorTrigger))
+            {
+                if (!units.TryGetValue(cue.UnitId, out UnitView phaseView)
+                    || phaseView.NativeModel is not OfficialBattleLiveMonsterModelView phaseMonster)
+                    throw new InvalidOperationException("Original monster body Animator is unavailable for "
+                        + cue.BodyAnimatorTrigger + " on unit " + cue.UnitId);
+                phaseMonster.TriggerBodyAnimator(cue.BodyAnimatorTrigger);
+                return;
+            }
             if (cue.SkillPlayable != null)
             {
                 PlayScheduledSkillPlayable(cue, state, serial, elapsedSinceScheduled);
