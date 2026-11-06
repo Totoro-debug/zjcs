@@ -24,6 +24,7 @@ namespace Zjcs.Presentation.Character
 
         private void CloseAuxiliary()
         {
+            ClosePetSkillDetail();
             auxiliaryReturn = null;
             resultReport?.Close();
             resultReport = null;

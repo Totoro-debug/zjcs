@@ -13,7 +13,8 @@ def main():
     target = ROOT / 'unity/Assets/Game/Runtime/Official/ActivityBattleUI'
     sources, outputs, fields = {}, {}, {}
     for name in ('ActivityDomainBossPanel', 'ActivityDomainBossPanelDetailContent', 'ActivityDomainBossPanelBattleContent',
-                 'NavigateBtn', 'SecretAreaBattleButtons'):
+                 'NavigateBtn', 'SecretAreaBattleButtons', 'ActivityNodeInstanceInfo',
+                 'TipDotActivityDomainBossDailyChallengeConditionNode', 'TipDotActivityDomainBossHasKillAwardConditionNode'):
         source, port = client / (name + '.cs'), target / (name + '.cs')
         text = source.read_text('utf8')
         names = re.findall(r'\[SerializeField\]\s*private [^;\n]+ (m\w+);', text)

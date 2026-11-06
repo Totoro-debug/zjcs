@@ -19,6 +19,7 @@ namespace Zjcs.Editor.Combat
         {
             Require(checkpoint.Finished && checkpoint.Outcome != null && !checkpoint.Outcome.Invalid,
                 "The shared report must consume a completed real battle.");
+            FightBattleReport finalReport = FightBattleReportBuilder.Build(checkpoint);
             var fixture = new GameObject("SharedBattleReportFixture", typeof(RectTransform), typeof(Canvas),
                 typeof(CanvasScaler), typeof(GraphicRaycaster));
             var canvas = fixture.GetComponent<Canvas>();
@@ -37,7 +38,7 @@ namespace Zjcs.Editor.Combat
                 {
                     int closed = 0;
                     var populatedSkillUnits = new List<int>();
-                    using (var view = new OfficialBattleReportView(fixture.transform, checkpoint,
+                    using (var view = new OfficialBattleReportView(fixture.transform, checkpoint, finalReport,
                         new OfficialBattleReportView.Presentation { Closed = () => closed++,
                             PlayerName = id => "UI fixture " + id,
                             SkillIcon = (_, skill, __) => populatedSkillUnits.Add(skill.UnitId) }))
@@ -56,12 +57,12 @@ namespace Zjcs.Editor.Combat
                         Require((view.Root.name == "FightEndAllPlayerReportPanel") == expectAllPlayers,
                             "Official report-stage configuration selected the wrong native panel.");
                         var expected = OfficialBattleReportPlayerRowBinder.PlayerRows(
-                            FightBattleReportGrouping.Build(FightBattleReportBuilder.Build(checkpoint), 1),
+                            FightBattleReportGrouping.Build(finalReport, 1),
                             OfficialCombatAssetCatalog.LoadDefault().LoadReportScoreSettings());
                         if (expectAllPlayers)
                             foreach (int side in checkpoint.Units.Select(value => value.Side).Distinct().Where(value => value != 1))
                                 expected.AddRange(OfficialBattleReportPlayerRowBinder.PlayerRows(
-                                    FightBattleReportGrouping.Build(FightBattleReportBuilder.Build(checkpoint), side),
+                                    FightBattleReportGrouping.Build(finalReport, side),
                                     OfficialCombatAssetCatalog.LoadDefault().LoadReportScoreSettings()));
                         Require(view.Root.GetComponentsInChildren<WorldBattleReportPlayerRow>().Length == expected.Count,
                             "The native player report lost real roster/statistics rows.");

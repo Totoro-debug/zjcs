@@ -2669,3 +2669,49 @@ scripts/record_mainline_map_integration.py text eol=lf
 
 # Preserve the existing official Map14 puzzle payload bytes.
 unity/Assets/Official/World/Map/14/Resources/Map14/puzzle-rules.json -text
+
+# Original battle camera extension bindings and movement regression
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleCameraView.cs text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleCameraTrackingAcceptance.cs text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleCameraTrackingAcceptance.cs.meta text eol=lf
+
+# Legacy local monster checkpoint compatibility
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialCombatAssetCatalog.cs text eol=lf
+unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.LegacyMonsterBodies.cs text eol=lf
+unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.LegacyMonsterBodies.cs.meta text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleLegacyBodyRestoreValidation.cs text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleLegacyBodyRestoreValidation.cs.meta text eol=lf
+
+# Original embedded monster particle extraction
+scripts/prepare_battle_monster_embedded_particles.py text eol=lf
+
+# Pet skill UI import identities and source receipt bytes.
+scripts/prepare_skill_pet_ui.py text eol=lf
+assets/reference/pet-skill-ui/source-manifest.json text eol=lf
+unity/Assets/Official/PetSkillUI.meta text eol=lf
+unity/Assets/Official/PetSkillUI/** text eol=lf
+unity/Assets/Official/PetSkillUI/**/*.png binary
+
+# Preserve complete native battle activity resources and their source hashes.
+scripts/prepare_activity_battle_page_native.py text eol=lf
+scripts/prepare_activity_battle_rank_native.py text eol=lf
+assets/reference/daily-challenges/activity-page-native-source-manifest.json text eol=lf
+assets/reference/daily-challenges/activity-rank-native-source-manifest.json text eol=lf
+unity/Assets/Official/DailyChallenges/UI/Rank/** -text whitespace=-blank-at-eol
+unity/Assets/Official/DailyChallenges/UI/Rank.meta -text
+unity/Assets/Official/DailyChallenges/UI/Activity/** -text whitespace=-blank-at-eol
+unity/Assets/Official/DailyChallenges/UI/Activity.meta -text
+unity/Assets/Official/DailyChallenges/UI/ResultActions/** -text whitespace=-blank-at-eol
+unity/Assets/Official/DailyChallenges/UI/ResultActions.meta -text
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityNodeInstanceInfo.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/TipDotActivityDomainBoss*ConditionNode.cs* text eol=lf
+
+# Preserve generated battle metadata without changing original YAML bytes.
+docs/maps/map-12.md text eol=lf
+unity/Assets/Game/Resources/Combat/NativeMonsters.meta whitespace=-blank-at-eol
+unity/Assets/Game/Runtime/Presentation/Combat/*.meta whitespace=-blank-at-eol
+unity/Assets/Game/Runtime/Presentation/Home/*.meta whitespace=-blank-at-eol
+unity/Assets/Official/Combat/NativePartnerAssets/**/*.meta whitespace=-blank-at-eol
+unity/Assets/Official/Combat/NativePartners.meta whitespace=-blank-at-eol
+unity/Assets/Official/Partners/Resources/PartnerDetailActors.meta whitespace=-blank-at-eol
+unity/Assets/Official/Partners/Resources/PartnerDetailActors/**/*.meta whitespace=-blank-at-eol

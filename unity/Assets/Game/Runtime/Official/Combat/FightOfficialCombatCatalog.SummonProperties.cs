@@ -64,9 +64,12 @@ namespace Zjcs.Combat.Official
             int skillRank, int subRank, IReadOnlyDictionary<int, long> source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            if (!summonFixedProps.TryGetValue(entityId, out var fixedConfig)
-                || !summonAdditions.TryGetValue(entityId, out var addition))
-                throw new InvalidOperationException("Official summon inheritance configuration is absent: " + entityId);
+            if (!summonFixedProps.TryGetValue(entityId, out var fixedConfig))
+            {
+                System.Diagnostics.Trace.TraceError("CalcSummonMonsterInheritProp summon monster fix prop config error, classId:{0}", entityId);
+                // Original outputs remain null when the fixed table has no row.
+                return new FightSummonPropertyInheritance();
+            }
             IReadOnlyDictionary<int, long> level = EmptyProps;
             if (skillGroupLevels.TryGetValue(fixedConfig.GroupLevelPropId, out var levels)
                 && levels.TryGetValue(subRank, out int levelId) && levelId > 0)
@@ -75,10 +78,15 @@ namespace Zjcs.Combat.Official
                 ? ScaleProps(level, PropRows(fixedConfig.RankPropId, skillRank), false)
                 : CopyProperties(level);
             fixedProps = ScaleProps(fixedProps, fixedConfig.PropFactors, true);
+            var inherited = new Dictionary<int, long>();
+            if (!summonAdditions.TryGetValue(entityId, out var addition))
+            {
+                System.Diagnostics.Trace.TraceError("CalcSummonMonsterInheritProp summon monster addtion prop config error, classId:{0}", entityId);
+                return new FightSummonPropertyInheritance { Fixed = fixedProps, Summoner = inherited };
+            }
             IReadOnlyDictionary<int, long> factors = EmptyProps;
             if (summonRankFactors.TryGetValue(addition.RankGroup, out var ranks)
                 && ranks.TryGetValue(skillRank, out var exact)) factors = exact;
-            var inherited = new Dictionary<int, long>();
             foreach (var property in addition.Properties)
             {
                 if (property.Value == 0) continue;

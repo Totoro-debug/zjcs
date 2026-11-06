@@ -114,6 +114,14 @@ namespace Zjcs.Presentation.Character
             infoTemplate = CharacterModelPackage.AsObject(screens["character_props"], "character_props");
             skillUiTemplates = CharacterModelPackage.AsObject(
                 OfficialEquipmentJson.Parse(assets.SkillUiLayouts.text), "skill UI layouts");
+            Dictionary<string, object> petSkillUiTemplates = CharacterModelPackage.AsObject(
+                OfficialEquipmentJson.Parse(skillAssets.PetSkillUiLayouts.text), "pet skill UI layouts");
+            foreach (KeyValuePair<string, object> template in petSkillUiTemplates)
+            {
+                if (skillUiTemplates.ContainsKey(template.Key))
+                    throw new InvalidOperationException("Pet skill UI template collides with an existing skill template: " + template.Key);
+                skillUiTemplates.Add(template.Key, template.Value);
+            }
             listItemTemplate = CharacterModelPackage.AsObject(skillUiTemplates["skill_list_item"], "original skill list item");
             itemTemplate = CharacterModelPackage.AsObject(skillUiTemplates["item_skill"], "official skill icon");
             emptyItemTemplate = CharacterModelPackage.AsObject(skillUiTemplates["item_empty"], "official empty skill icon");
@@ -197,6 +205,7 @@ namespace Zjcs.Presentation.Character
         public bool HandleEscape()
         {
             if (skillVideoDialog != null) { CloseSkillVideo(); return true; }
+            if (petSkillDetailDialog != null) { ClosePetSkillDetail(); return true; }
             if (detailDialog != null && detailDialog.name == "skill_plain_detail") { CloseSkillDetail(); return true; }
             if (resultReport != null && resultReport.IsOpen) { resultReport.Close(); return true; }
             if (auxiliaryDialog != null) { var back = auxiliaryReturn; CloseAuxiliary(); back?.Invoke(); return true; }

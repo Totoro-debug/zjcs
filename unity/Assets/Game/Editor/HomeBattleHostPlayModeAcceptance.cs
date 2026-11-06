@@ -122,6 +122,11 @@ namespace Zjcs.Editor
                     yield return ExerciseActivityResultReports(home, output, click);
                     yield break;
                 }
+                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_RESTORE") == "weekly-legacy-body")
+                {
+                    yield return RunColdWeeklyLegacyBodyRestore(home, slot, root, output, click, value => home = value);
+                    yield break;
+                }
                 if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_RESTORE") == "arena")
                 {
                     yield return RunColdArenaRestore(home, slot, root, output, click, value => home = value);
@@ -152,6 +157,52 @@ namespace Zjcs.Editor
                     click(entry);
                     yield return SettleUi();
                     yield return Capture(output, "daily-entry");
+                    home.DailyDungeons.Save.lifetimeClaimedRewardTimes = 5;
+                    Transform dailyEntryPanel = Root("DailyDungeonEntryPanel");
+                    Button achievementTab = dailyEntryPanel == null ? null
+                        : dailyEntryPanel.GetComponentsInChildren<Button>(true)
+                            .FirstOrDefault(value => value.name == "AchievementTabGroupItem_11");
+                    Require(achievementTab != null, "Daily dungeon cumulative claim achievement tab is missing.");
+                    click(achievementTab);
+                    yield return SettleUi();
+                    Transform achievementPanel = dailyEntryPanel.GetComponentsInChildren<Transform>(true)
+                        .FirstOrDefault(value => value.name == "AchievementPanel");
+                    Transform selectContent = dailyEntryPanel.GetComponentsInChildren<Transform>(true)
+                        .FirstOrDefault(value => value.name == "SelectContent");
+                    Require(achievementPanel != null && achievementPanel.gameObject.activeInHierarchy
+                        && selectContent != null && !selectContent.gameObject.activeInHierarchy,
+                        "Daily dungeon achievement tab did not switch the official panel content.");
+                    int achievementRows = achievementPanel.GetComponentsInChildren<Transform>(true)
+                        .Count(value => value.name == "AchievementPanelItem"
+                            || value.name.StartsWith("AchievementPanelItem (", StringComparison.Ordinal));
+                    Image[] achievementRewards = achievementPanel.GetComponentsInChildren<Image>(true)
+                        .Where(value => value.name.StartsWith("OfflineReward_", StringComparison.Ordinal)).ToArray();
+                    Require(achievementRows == 5 && achievementRewards.Length == 10
+                        && achievementRewards.All(value => value.sprite != null),
+                        "The official achievement page did not render its five configured rows and rewards.");
+                    yield return Capture(output, "daily-achievements");
+                    int remainingClaimsBeforeAchievement = home.DailyDungeons.RemainEntries;
+                    long firstRewardBefore = home.ItemCount(1105);
+                    long secondRewardBefore = home.ItemCount(100);
+                    Button receiveAchievement = achievementPanel.GetComponentsInChildren<Button>(true)
+                        .FirstOrDefault(value => value.name == "ReceiveBtn" && value.interactable);
+                    Require(receiveAchievement != null, "The completed daily dungeon achievement has no active receive button.");
+                    click(receiveAchievement);
+                    yield return SettleUi();
+                    Require(home.ItemCount(1105) == firstRewardBefore + 1
+                        && home.ItemCount(100) == secondRewardBefore + 3
+                        && home.DailyDungeons.Save.claimedAchievementIndexes.Contains(0)
+                        && home.DailyDungeons.DailyDungeonGetRewardCount == 5
+                        && home.DailyDungeons.RemainEntries == remainingClaimsBeforeAchievement,
+                        "Daily dungeon achievement claim did not grant its official items and persist without charging a daily claim.");
+                    yield return Capture(output, "daily-achievement-claimed");
+                    Button dungeonTab = dailyEntryPanel.GetComponentsInChildren<Button>(true)
+                        .FirstOrDefault(value => value.name == "DailyDungeonEntryPanelTabGroupItem_11");
+                    Require(dungeonTab != null, "Daily dungeon selection tab button is missing.");
+                    click(dungeonTab);
+                    yield return SettleUi();
+                    Require(selectContent.gameObject.activeInHierarchy && !achievementPanel.gameObject.activeInHierarchy,
+                        "Daily dungeon selection tab did not restore the official selection content.");
                     int firstDungeon = home.DailyDungeons.PublicDungeons((map, region) => home.MapRegionProgress(map, region) >= 10000).First().id;
                     click(Active<Button>().Single(value => value.name == "Dungeon_" + firstDungeon));
                     yield return SettleUi();
@@ -282,6 +333,86 @@ namespace Zjcs.Editor
 
         private static IEnumerator RunDirectHosts(HomeFeatureRuntime home, string output, Action<Selectable> click)
         {
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ONLY") == "dailyChallenge")
+            {
+                yield return OpenTravel(home, click);
+                Transform dailyActivityEntry = Root("TravelNotesPanel").GetComponentsInChildren<Transform>(true)
+                    .FirstOrDefault(value => value.name == "DailyActivityEntry");
+                Require(dailyActivityEntry != null, "The original travel notes daily activity entry is missing.");
+                Button dailyActivityButton = dailyActivityEntry.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value.name == "EntryBtn" && value.isActiveAndEnabled);
+                Require(dailyActivityButton != null && dailyActivityButton.interactable,
+                    "The original travel notes daily activity entry is not interactable.");
+                click(dailyActivityButton);
+                yield return SettleUi();
+                yield return Capture(output, "daily-challenge-after-travel-entry");
+                Require(Root("DailyChallengeEntries") != null,
+                    "Travel notes did not open the daily challenge activity chooser.");
+                yield return Capture(output, "daily-challenge-chooser");
+                click(ButtonUnder("DailyChallengeEntry_209", "EntryBtn"));
+                yield return SettleUi();
+                Require(Root("ActivityDomainBossPanel") != null,
+                    "The activity chooser did not open the original beast trial panel.");
+                yield return Capture(output, "daily-challenge-entry");
+                click(ButtonUnder("ActivityDomainBossPanel", "GoToBtn"));
+                yield return SettleUi();
+                Require(Root("BattleAssistSelection") != null,
+                    "The beast trial did not open its original invitation panel.");
+                click(ButtonUnder("BattleAssistSelection", "CommonBtn_12"));
+                yield return null;
+
+                DailyDungeonBattleRunner dailyChallenge = UnityEngine.Object.FindObjectOfType<DailyDungeonBattleRunner>();
+                Require(dailyChallenge != null, "The activity invitation did not start the public daily challenge runner.");
+                var challengeController = dailyChallenge.GetComponent<OfficialBattleRuntimeController>();
+                Require(challengeController != null, "The daily challenge has no common battle controller.");
+                FightBattleReport[] challengeReport = { null };
+                challengeController.BattleReportReady += value => challengeReport[0] = value;
+                yield return RunBattle<DailyDungeonBattleRunner>("daily-challenge", output, click);
+                Require(challengeReport[0] != null && challengeReport[0].StageId > 0,
+                    "The activity entry did not deliver the shared final battle report.");
+
+                Transform result = Root("DailyChallengeResult");
+                Require(result != null, "The daily challenge did not open its result prefab after battle.");
+                Transform win = result.GetComponentsInChildren<Transform>(true)
+                    .FirstOrDefault(value => value.name == "WinObj");
+                Require(win != null && win.gameObject.activeSelf == challengeReport[0].Won,
+                    "The daily challenge result prefab did not display the actual battle outcome.");
+                yield return Capture(output, "daily-challenge-native-result");
+
+                Transform returnText = result.GetComponentsInChildren<Transform>(true)
+                    .FirstOrDefault(value => value.name == "ReturnText");
+                Button returnButton = returnText == null ? null : returnText.GetComponentInParent<Button>();
+                if (returnButton == null)
+                    returnButton = result.GetComponentsInChildren<Button>(true)
+                        .FirstOrDefault(value => value.name == "LevelBtn" && value.isActiveAndEnabled && value.interactable);
+                Require(returnButton != null && returnButton.interactable,
+                    "The daily challenge result prefab has no usable return-to-activity action.");
+                click(returnButton);
+                yield return SettleUi();
+                Require(Root("DailyChallengeResult") == null && Root("ActivityDomainBossPanel") != null,
+                    "Returning from the daily challenge result did not reopen the activity panel.");
+                Debug.Log("[Battle hosts] daily challenge real entry, shared battle, result, and return interaction passed.");
+                yield break;
+            }
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ONLY") == "weekly")
+            {
+                Action verifyWeeklyHome = CaptureHomeRestoration(home);
+                bool weeklyCallback = false;
+                FightBattleCheckpoint result = null;
+                WeeklyChallengeBattleRunner weekly = home.StartWeeklyChallengeBattle(4800,
+                    checkpoint => { weeklyCallback = true; result = checkpoint; });
+                FightBattleReport[] report = { null };
+                weekly.Controller.BattleReportReady += value => report[0] = value;
+                yield return RunBattle<WeeklyChallengeBattleRunner>("weekly", output, click);
+                verifyWeeklyHome();
+                Require(weeklyCallback && result != null && result.Finished && result.StageId == 4800,
+                    "Weekly challenge did not return its actual completed checkpoint.");
+                Require(report[0] != null && report[0].StageId == result.StageId
+                    && report[0].Won == result.Outcome.Won && report[0].Units.Count == result.Units.Count,
+                    "Weekly challenge did not deliver its common battle report for the completed checkpoint.");
+                Debug.Log("[Battle hosts] weekly challenge public runner integration passed.");
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ONLY") == "arena")
             {
                 yield return RunArenaHost(home, output, click);
@@ -487,6 +618,8 @@ namespace Zjcs.Editor
         {
             T runner = UnityEngine.Object.FindObjectOfType<T>();
             Require(runner != null, name + " did not create its real battle runner.");
+            IOfficialBattleModeAdapter adapter = runner as IOfficialBattleModeAdapter;
+            Require(adapter != null, name + " did not expose the shared battle adapter contract.");
             var controller = runner.GetComponent<OfficialBattleRuntimeController>();
             Require(controller != null && controller.Checkpoint != null && controller.HasBattleEnvironment,
                 name + " did not mount the common battle module/environment.");
@@ -684,6 +817,21 @@ namespace Zjcs.Editor
                 && checkpoint.Counter > initialCounter,
                 name + " disappeared without executing and completing a real battle: counter="
                     + checkpoint.Counter + ", finished=" + checkpoint.Finished + ", initial=" + initialCounter);
+            FightBattleReport report = adapter.FinalReport;
+            FightBattleReport expectedReport = FightBattleReportBuilder.Build(checkpoint);
+            Require(report != null && report.StageId == expectedReport.StageId
+                && report.Won == expectedReport.Won && report.Round == expectedReport.Round
+                && report.Units.Count == expectedReport.Units.Count
+                && report.Skills.Count == expectedReport.Skills.Count
+                && report.TotalDamageDealt == expectedReport.TotalDamageDealt
+                && report.TotalDamageTaken == expectedReport.TotalDamageTaken
+                && report.TotalHealDealt == expectedReport.TotalHealDealt
+                && report.TotalShieldGranted == expectedReport.TotalShieldGranted,
+                name + " did not retain the shared final report matching its completed battle.");
+            foreach (FightBattleReportUnit expectedUnit in expectedReport.Units)
+                Require(report.Unit(expectedUnit.UnitId)?.DamageAndShieldDamageDealt
+                    == expectedUnit.DamageAndShieldDamageDealt,
+                    name + " changed the official damage-and-shield statistic for unit " + expectedUnit.UnitId + ".");
             triggerChains?.Verify(name, checkpoint);
             gridMotion?.Verify(name);
             moveAnimators?.Verify(name);

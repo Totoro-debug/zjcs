@@ -419,7 +419,7 @@ namespace Zjcs.Presentation.Home
             else if (!won) host.DailyDungeons.SaveBattleCheckpoint(string.Empty);
             Action<bool> callback = completed;
             DisposeBattle();
-            if (challengeMode) host.Hud.OpenDailyChallengeResult(challengeActivityId, won, checkpoint, rewards);
+            if (challengeMode) host.Hud.OpenDailyChallengeResult(challengeActivityId, won, checkpoint, rewards, FinalReport);
             callback?.Invoke(won);
             Destroy(gameObject);
         }

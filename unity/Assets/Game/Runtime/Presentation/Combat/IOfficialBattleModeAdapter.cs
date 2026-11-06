@@ -9,6 +9,7 @@ namespace Zjcs.Presentation.Combat
     /// </summary>
     public interface IOfficialBattleModeAdapter
     {
+        FightBattleReport FinalReport { get; }
         void OnBattleStepCompleted(FightBattleExecutionResult result);
         void OnBattleReportReady(FightBattleReport report);
         void OnBattleCompleted(FightBattleCheckpoint checkpoint);

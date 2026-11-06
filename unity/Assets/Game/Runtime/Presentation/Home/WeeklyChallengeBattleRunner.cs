@@ -86,6 +86,9 @@ namespace Zjcs.Presentation.Home
                     host.Scene.Root.transform, host.Hud.CanvasTransform, host.SetBattlePresentationActive),
                 AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
                 CombatAssets = assets,
+                // Legacy saves made before the first initialization have no
+                // timeline. An initialized/advanced checkpoint must retain it.
+                RestoreCheckpoint = checkpoint.Counter > 0 || checkpoint.Timeline.Entries.Count > 0,
                 EnvironmentGameId = stage.GameId,
                 StatueProgress = host.Profile,
                 Options = OfficialMapBattleSessionOptionsBuilder.Create(stage, true, 3, 3, player.X, player.Y),

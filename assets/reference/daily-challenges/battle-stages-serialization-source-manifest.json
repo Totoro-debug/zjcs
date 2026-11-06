@@ -1,0 +1,21 @@
+{
+  "manifest": "854_156383",
+  "input": {
+    "path": "unity/Assets/Game/Resources/DailyChallenges/battle-stages.json",
+    "commit": "bb7cc7f64767aa2c6888cbec0f429afaa75dee6a",
+    "bytes": 68704,
+    "sha256": "9b7215d9b9607801aa8873137e00fbbfe242012b7fdda9a994bad8946d78dcd3",
+    "git_sha256": "0856c03a96130e9196bb3d15c867887a5f6743e5c72ae5dcb11749d5c569526f"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_daily_challenge_battles.py",
+    "sha256": "b9db163dc3327caaa75852cef77e356121d3fa124122b9d138e3430773fd60b9"
+  },
+  "outputs": {
+    "unity/Assets/Game/Resources/DailyChallenges/battle-stages.json": {
+      "bytes": 69382,
+      "sha256": "1306333b39ebccf22a9efb20c34f04766e301ad2ed621bae34e7d9c937da31a0"
+    }
+  },
+  "adaptation": "Lossless additive flat arrays/offsets for the existing common battle adapter; all original nested values retained unchanged."
+}

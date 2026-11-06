@@ -2,7 +2,7 @@
   "manifest": "854_156383",
   "generator": {
     "path": "scripts/prepare_battle_monster_bodies.py",
-    "sha256": "6fda25d41fa7f6e24c3afe851d65dff9146f86f1d0b43340561e0431a5679f18"
+    "sha256": "4d34632b331c96df69d7447fefb69f74394efcac5e1516db9817417e3bfe25b8"
   },
   "inputs": [
     {
@@ -267,15 +267,23 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleUnitAssembler.cs",
-      "sha256": "be5cfa30460f01d2faa4c15fec3469433c6c6b459e747a98689bb682f59b157e"
+      "sha256": "cf9edbcf69e03c373b0e9888cdde5215a5578370c7ba3f0c3546e5ba83f3a0de"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillAssembler.cs",
       "sha256": "a50dcbdbc2f195093fd52699aa36874b872f79aa4305c0deb026b064c0a0f82f"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialCombatAssetCatalog.cs",
+      "sha256": "e8a02a0699d68e11f659bfe9faccfbef2376002885b110c0d1c398104c035086"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/WeeklyChallengeBattleRunner.cs",
+      "sha256": "c4397fea7f76555afee6dbab328bf902c019b20b9eaf9a0efac4779156c9a6f4"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleCameraView.cs",
-      "sha256": "a7402674f7a8c3a4dba181608730a5d32667ba58620a71b888fcb8343073865f"
+      "sha256": "f480114dc2ede303061c1ca0a9d8926000dc975eefee1f4f738cbe7bb7d14b4b"
     },
     {
       "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.Presentation.cs",
@@ -284,7 +292,19 @@
     {
       "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.MonsterBodies.cs",
       "sha256": "9a38a9e91605eebfe20a75f77a0e4a1811942b42a5f54d4bfac11cca252c7381"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.cs",
+      "sha256": "a983da3a47fc4db26758118cffb37025ac6504f0d7e05c4c936de6a88f322a0b"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.LegacyMonsterBodies.cs",
+      "sha256": "144b11354f1e354d2d9c0b33e28d712032c36935811747932224e6870c9cf5b5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/OfficialBattleLegacyBodyRestoreValidation.cs",
+      "sha256": "d4c199d1bb0b2a9d26c47a4c78f92cdaaadff4a46c062ad32d3114a88faf104a"
     }
   ],
-  "operation": "Resolve the existing verified monster TempEntityId and GridTransformComponent.BodyRangeInfos at initial formal-monster assembly before skills/passives. Arena role players and configured summons retain their separate identity/footprint assembly. Restored checkpoints are not reassembled. Reuse the current source camera radius formula without changing original art transforms or lens settings."
+  "operation": "Resolve the existing verified monster TempEntityId and GridTransformComponent.BodyRangeInfos at initial formal-monster assembly before skills/passives. Arena role players and configured summons retain their separate identity/footprint assembly. Offline legacy restoration repairs only the known missing-template/default-single-cell signature, preserving explicit bodies/templates and all other serialized combat state. Saved weekly counters/timelines select restoration rather than fresh battle initialization; pre-initialization saves still initialize normally. Reuse the current source camera radius formula without changing original art transforms or lens settings."
 }

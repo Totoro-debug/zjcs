@@ -181,6 +181,8 @@
 
 技能附属窗口由固定 APK `871_156598` 的原 prefab、组件字段、字体与动画提取，运行时显式绑定 270 张官方 UI 精灵；窗口、原代码适配、字体／shader、工具及输入输出 SHA256 见 `skill-ui/unity-icon-source-manifest.json`。列表附件恢复原配置的类型 4／8／10／13／14、原 prefab 和脚本类绑定；培养窗口恢复原状态字段、材料计数、星级与跨品质通知，培养配色／原代码与横向虚拟滚动组件的输入输出 SHA256 记录在 auxiliary_inputs.cultivation_code、cultivation_colors、cultivation_scroll，来源、输入及输出哈希同见该清单；结算附加皮肤来自原 `AppearanceConfig`，网格、骨骼与图集见 `character-creation/native-geometry-source-manifest.json`，纹理显式绑定 `ProfessionUI/character-textures`。技能包内缺失的 18 个原技能图标按 `Assets/Image/ItemIcon/Skill/skill_<id>` 解析同版本 Sprite，地址、bundle、对象哈希及转换后字节哈希记录在 `auxiliary_sprites`。七套方案取原 `GameSettings.SkillPlanMaxCount` 与中文键 `skill_plan_default_name_1..7`；原方案 Scrollbar 对象 `-4354697964205878964` 的 SHA256 为 `53972465f66e438fa93ab2217ff461a62d6b579c6ffbcea23b42e78b90e219fc`。状态与运行验证见[技能功能页](../../docs/features/skills.md)，新增载荷未声明进入完整素材快照。技能方案输入框恢复 `TMP_InputField` 的完整 580 字节及 APK 分支字段 `m_EncodingType`；名称规则直接迁移官方 `Common.CJK`，公式、错误码、客户端调用与元数据哈希记录在技能载荷的 `auxiliary_inputs.plan_name_rules`、`plan_input`、`plan_input_schema`。全部技能模板与 SystemMsgPanel 的原 TMP 文字、顶点渐变预设及 TMPEffect 原组件字节哈希纳入 text_style_inputs；安装遮罩、取消按钮、四槽高亮和祝福文字从原组件字段绑定，不另画遮罩或提示。
 
+宠物实体技能 UI 使用官方 APK `884_156692`（APK SHA256 `f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431`，APK 清单 `881_156673`）恢复 `SkillWithOuterTagItem`、`ItemIconPetSkill`、`PetSkillDetailDialog` prefab 及其 CAB／图像引用；`scripts/prepare_skill_pet_ui.py` 记录输入对象、转换和显式绑定，安装输出及 SHA256 见 `pet-skill-ui/source-manifest.json`。此资源包与历史技能 UI 输入分别保留版本身份。
+
 技能载荷字节校验：四项字体／材质／规则文件恢复清单中既定 LF 字节，并固定 Git 换行策略；输入及预期哈希保持不变。既有提交 `562bf7f62` 在 `skill-ui.json` 仅增加 `auxiliary_inputs.pet_entity_formula` 的历史来源指纹，原模块清单尚未同步；现逐项比较 JSON，证明移除此项来源元数据后与原已校验载荷完全一致，在 `unity/Assets/Official/Skills/source-manifest.json` 保留旧输出哈希、原提交和新增字段并记录当前输出，不改 UI、公式或美术。 NPC 援助规则载荷同样恢复既定 LF 字节并固定换行策略，原871输入和预期哈希不变。既有同步工具补齐28个已交付技能 Sprite 的显式引用，共297项；没有新增图片。目录、meta、同步工具的输出字节与 SHA256 记录于同一清单的 `runtime_binding`。
 
 ## 提取与登记
@@ -535,9 +537,9 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 原生技能轨迹使用所选 `884_156692` 的游戏自有 `MyTrack`、`MyCurveTrack`、`AnimationTrack`、`ParabolicTrack` 和 `MyPlayableTrack` 完整源码；程序集、整类与方法摘要、原 `MyContainer.ToLocalPos` 坐标方法、显式接口适配及工具哈希见[代码凭据](battle-animation/track-runtime-source-manifest.json)，入口为 `scripts/prepare_battle_track_runtime.py`。`prepare_battle_track_assets.py` 按已核验的APK对象、完整原生导出图及CAB引用恢复10951_2／10584_move／11171三图，保留原曲线和序列参数；子图独立纹理按导出meta中的原bundle精确加载并继续验证原对象及哈希。输出meta仅规范化行尾空白，保留全部GUID与字段值。28项原生资源、10张全mip纹理、完整Windows shader、显式Resources／脚本绑定及输出哈希见[素材凭据](battle-animation/track-assets-source-manifest.json)。既有五类素材凭据同步记录共享转换器身份；没有替代美术，本批未生成完整素材快照。
 
-技能Spine残影捕获迁移取所选 `884_156692` 的 `MyPlayableAfterimage`、`AfterimageData` 与 `MeshRendererZSortComparer`；原码、输出及其RTHandle scope适配哈希见[残影代码凭据](battle-animation/skill-afterimage-runtime-source-manifest.json)。离线Battle Playable scope持有RT池并在销毁时释放；完整prefab图资源和生产调用接线尚未完成，范围见[技能](../../docs/features/skills.md)。
+技能Spine残影捕获迁移取所选 `884_156692` 的 `MyPlayableAfterimage`、`AfterimageData` 与 `MeshRendererZSortComparer`；原码、输出及其RTHandle scope适配哈希见[残影代码凭据](battle-animation/skill-afterimage-runtime-source-manifest.json)。离线Battle Playable scope持有RT池并在销毁时释放；完整prefab图资源生成及实际生产图调度验证仍待完成，范围见[技能](../../docs/features/skills.md)。
 
-技能战斗相机演出行为取所选 `884_156692` 的 `MyPlayableFightCameraPerformance`；本地以显式宿主端口承接原相机切换和输入封锁，源码、接口、scope适配和 meta 哈希见[相机演出来源清单](battle-animation/skill-camera-performance-runtime-source-manifest.json)。生产战斗的相机／输入宿主及技能图仍未接线。
+技能战斗相机演出行为取所选 `884_156692` 的 `MyPlayableFightCameraPerformance`；本地以显式宿主端口承接原相机切换和输入封锁，源码、接口、scope适配和 meta 哈希见[相机演出来源清单](battle-animation/skill-camera-performance-runtime-source-manifest.json)。生产技能图 scope 已接入战斗生命周期并绑定相机偏移 host；NativeCamera 程序集引用已修复，完整 prefab 图资源仍在严格 bundle／纹理对象绑定收尾，相机演出输入 host 和实际演出仍未验证。
 
 技能角色组合皮肤 Playable 使用所选 `884_156692` 的 `MyPlayableAppearanceCombineSkin` 与原 `AppearanceCombineSkin` 操作契约；源文件、输出和 Unity meta 哈希见[组合皮肤来源清单](battle-animation/skill-appearance-skin-runtime-source-manifest.json)，实跑范围见[技能](../../docs/features/skills.md)。
 
@@ -588,6 +590,8 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 公共小地图原实体适配继续使用既有 `Map/14/SharedRuntime/Console.bytes` 与 `shared-assembly-catalog.asset`，载荷版本保持 `871_156598`，按原共享实体凭据核对 Console SHA-256，未改写 IL。英雄 prefab JSON 恢复原凭据记录的 LF 字节，`.gitattributes` 固定该文件的 LF，原哈希不变。所选884的容器／实体生命周期、区域代理、占位网格、客户端标记管理器事件、阶段、身体、入口、传送点与归属源码，以及 `MapEntityExtra`／`PlayerMap`／`MapLoEntityIdManager` 的运行时身份到放置身份查询源码，以及本地适配器、验证入口和程序集元数据的哈希集中记入[共用地图查询来源](official-map/mainline-minimap-world-data-source-manifest.json)；历史程序集来源与当前配置来源分别记录，未生成新素材载荷或完整快照。
 
+选定884伙伴原生血条：`scripts/prepare_partner_native_hp_bars.py` 从34份原 FightNpc prefab 提取完整 `HpBarGame` 子树，并恢复原 `GamePlayManagerConfig`、6份阵营血条特效及其动画／材质依赖。原 `HpSliderEffect`、`BattleHpSpriteSlider`、护盾显示与阵营排序代码，原对象、APK优先来源、8张纹理全mip、3份Windows shader、组件映射、输出及接线哈希见[血条来源](battle-animation/partner-native-hp-bars-source-manifest.json)。显式本地加载目录为 `Combat/PartnerHpBars`；未生成完整素材快照。
+
 技能栏开始／结束状态消费所选 `884_156692` 的 `MyFightSkill`、`MyFightSkillAgent`、`FightSkillListDataEntityProvider`、`FightSkillListDataProvider`、`FightMainPanelSkillUI` 与 `GameSkillIcon` 原通知分支；来源代码、原10100空演出prefab及导出凭据、已有实体／技能图／854技能栏绑定、公共桥接与验证入口哈希见[技能栏生命周期来源](battle-hud/skill-slot-lifecycle-source-manifest.json)，记录入口为 `scripts/record_battle_skill_slot_lifecycle.py`。未新增美术或完整素材快照，实现及验证范围见[战斗执行](../../docs/features/battle-execution.md)。
 
 选定884伙伴原生血条：`scripts/prepare_partner_native_hp_bars.py` 从34份原 FightNpc prefab 提取完整 `HpBarGame` 子树，并恢复原 `GamePlayManagerConfig`、6份阵营血条特效及其动画／材质依赖。原 `HpSliderEffect`、`BattleHpSpriteSlider`、护盾显示与阵营排序代码，原对象、APK优先来源、8张纹理全mip、3份Windows shader、组件映射、输出及接线哈希见[血条来源](battle-animation/partner-native-hp-bars-source-manifest.json)。显式本地加载目录为 `Combat/PartnerHpBars`；未生成完整素材快照。
@@ -603,6 +607,8 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 所选884伙伴整页、地址簿行与通话播放行的九组头像，通过 `scripts/prepare_partner_panel_actor_bindings.py` 重新核对 APK 原字段，保留原生对象及布局，只绑定当前外观应用脚本并恢复原打包枚举序列。三个 prefab 的基线凭据、原组件载荷、精确变更、当前输出及窗口／本地端口哈希见[正式头像绑定来源](partner-panel-actors-source-manifest.json)；原基线清单保持不变。窗口销毁通知复用原 `PopupWindow.OnWindowDestory`，本地加载与裁剪接线及验证范围维护于[伙伴](../../docs/features/partners.md)。未生成完整素材快照。
 
 幻兽支援放电动画来源：原HUD的`mTriggerSupportSkillAnim`沿实际CAB引用解析至所选884_156692官方包`defaultpackage_share_2c5f0e5af1aca8075e1f6b05c99883ef.bundle`，MD5 `c3129108100da9b590d6530128a58586`、SHA256 `7c4961517fd0d7e602eee9fad208b37014f6750a0ae337ed71fc567cdd3006d1`；原AnimationClip对象、当前输入版本、曲线字段、生成器及运行绑定哈希补记[幻兽HUD来源清单](battle-hud/pet-widget-source-manifest.json)。历史HUD与当前动画输入分别保留来源身份，未生成完整素材快照。
+
+所选884完整伙伴详情：`prepare_partner_detail_window_native.py` 从原 NpcDetailPanel 及实际 CAB 引用恢复完整层级、外部 prefab、原字体／材质／Windows 纹理及原动画，绑定本地应用脚本；根曲线空路径修复逐字段核对原载荷，NpcAffinity_Click 按原共享媒体身份转换。原输入、对象、曲线证据、媒体哈希、GUID 重绑及显式 Resources 目录见[完整详情资源来源](partner-detail-window-native-source-manifest.json)。`prepare_partner_detail_window_ui.py` 的原应用控制器与适配边界哈希见[详情代码来源](partner-detail-window-ui-source-manifest.json)；功能范围与验证维护于[伙伴](../../docs/features/partners.md)。未生成完整素材快照。
 
 主线地图放置目录的公共转换读取独立记录的871泽之国／龙之国及884鲸背岛定义与 `Source/entities.json`，复用已提取的官方EC数据。输入／输出SHA256与生成器来源分别见 `assets/reference/official-map/map13-entity-catalog-source-manifest.json`、`map14-entity-catalog-source-manifest.json` 和 `map16-entity-catalog-source-manifest.json`；显式加载地址为 `Resources/Map13/Entities/catalog`、`Resources/Map14/Entities/catalog`、`Resources/Map16/Entities/catalog`。龙之国源JSON固定为原凭据的LF字节。
 
@@ -622,6 +628,8 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 公共战斗1614被动支援的状态阈值来源：复用已核验的854版`skill-rules.json`、`battle-rules.json`及`pet-battle-rules`中16014、50165／50166／50167、24138／24139配置；884版官方共享类型`.tools/source-packages/current/884_156692/official-code/common-source/Common/StatusStackCountComponentInfo.cs`的SHA-256为`593dde2ad2a710f05d2cfdc00903563cabea2ceaaa3f33d7385f2a7b075e58ec`，其原始Tooltip记录叠层阈值、最大触发次数与移除条件。原`StatusStackCountComponent.cs`保留配置替换读取，客户端`MyStatusStackCount.cs`为空；复用既有状态效果应用路径适配本地执行，单机时序和验证范围仅在所属战斗功能页维护。
 
+公共战斗正式宿主的人物接线复用已核验的884版3100原生模型、原动作及挂点资源，不新增美术载荷；`scripts/prepare_battle_player_hosts.py` 记录六类宿主、公共场景来源凭据、验证入口和明确绑定的源码哈希，见[正式宿主人物来源](battle-animation/player-hosts-source-manifest.json)。实际实现及验证范围仅在[战斗执行](../../docs/features/battle-execution.md)维护。
+
 主线共享注入依赖由 `scripts/prepare_mainline_shared_injection.py` 校验所选884的已恢复AOT映像、元数据、DummyDll类型签名及原生指令，复原五个局部Framework.Core类型与两个选择器闭包，以及原GetService调用、DryIoc实例注入器和属性注入选择器；DummyDll只作ABI证据，未交付空方法体。选择器按原实现读取继承链声明属性、验证继承属性标记、保留服务详情与类型结果缓存。完整 `Launch.IVersionManager` 接口复用同版官方Launch反编译源，另核对六个方法签名。AOT方法、输入／输出哈希、MVID及目录绑定见[共享注入来源](official-map/mainline-shared-injection-source-manifest.json)。Core载荷位于 `unity/Assets/Official/World/Map/14/SharedRuntime/Framework.Core.bytes`；未生成完整素材快照，功能范围仅在[主线地图公共模块](../../docs/features/mainline-map-modules.md)。
 
 公共战斗幻兽实体化显隐：`scripts/prepare_battle_pet_transfers.py`从所选884_156692实际`ECViewDriver`托管引用严格恢复21种幼年幻兽的原`ECFightRolePetTransferView`字段、原PPtr和两组节点路径，核对19种成年实体的原空转场绑定；三套hide/show图从原始对象反查原生导出，保留46份完整依赖、18张原纹理、Windows shader及原Wwise事件引用。原始bundle／对象、模式、反编译代码、转换输入输出哈希与显式加载绑定见[显隐来源清单](battle-animation/pet-transfers-source-manifest.json)。载荷在`unity/Assets/Official/Combat/PetTransfers/`，绑定在`Game/Resources/Combat/pet-transfers.json`和`pet-transfer-graphs.json`；未生成完整素材快照，实现与验证范围仅见[战斗执行](../../docs/features/battle-execution.md)。
@@ -637,6 +645,8 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 3803第一阶段翼部粒子及其原实体实例覆盖归入[怪物本体效果来源](battle-animation/monster-body-effects-source-manifest.json)，记录原prefab、当前实体导出输入、纹理／shader闭包与输出身份；具体实现和验证仍见战斗执行功能页。第二阶段原 `3803tostage2.controller`、`3803tostage2.anim` 与 `3803.prefab` 输入，以及对应输出、GUID和哈希由[3803二阶段Animator来源清单](battle-animation/monster-3803-phase-transition-source-manifest.json)记录，生成入口为 `scripts/prepare_battle_monster_phase_transitions.py`。
 
 公共新单位怪物占格装配沿用已校验的854_156383战斗规则及原模板映射，原GridTransform声明、当前884客户端相机消费代码、输入哈希与接线哈希见[怪物占格来源](battle-rules/monster-bodies-source-manifest.json)。具体规则、验证范围和旧检查点兼容缺项见[战斗执行](../../docs/features/battle-execution.md)。
+
+原战斗镜头扩展字段：`scripts/prepare_battle_camera_bindings.py` 以既有固定场景输入恢复普通镜头原偏移与重组组件，新增原对象身份及运行时绑定见[原战斗镜头来源](battle-scenes/camera-source-manifest.json)；配置为 `unity/Assets/Game/Resources/Combat/battle-camera-bindings.json`。
 
 活动邀请控件原生输入：`scripts/prepare_activity_battle_team_native.py` 按所选884原包 `ActivityDomainBossPanelBattleContent.mTeamBtn` 引用提取原子树，沿已核验原生转换、Windows贴图／shader与Wwise解码缓存绑定；字体按原 CN／zh_CN 配置校验源文件。原包身份、转换输入、资源闭包、隔离 GUID 和安装输出 SHA256 见 `daily-challenges/activity-team-native-source-manifest.json`，客户端原控制类及适配输入／输出 SHA256 见 `daily-challenges/activity-team-runtime-source-manifest.json`。功能范围与验证结论见[圣兽试炼与双影幻境](../../docs/features/daily-challenges.md)。
 
@@ -659,6 +669,8 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 圣兽原生血条来源：`prepare_activity_battle_health_native.py` 复用所选884原包、完整原生转换及Windows资源缓存，按原 `ActivityDomainBossPanelBattleContent.mHpSlider` 引用恢复父节点 `HpSliderGo` 的完整19对象子树，保留组件字段与Sprite依赖，按官方CN／zh_CN配置绑定FZY4K源字体，并提取原百分比／Slider显示代码。逐字节相同的转换Shader载荷共用输出GUID，保留各原CAB对象凭据；资源身份、输入、脚本、43项原生输出哈希及显式字段绑定见[血条来源清单](daily-challenges/activity-health-native-source-manifest.json)。未生成素材快照；单机规则、实现与验证范围仅在[圣兽试炼与双影幻境](../../docs/features/daily-challenges.md)维护。
 
 圣兽成绩代码来源：`prepare_activity_battle_rank_results.py` 记录所选884的 `FightActivityDomainBossMainPanel`、共享 `FightUtilsHandler`、原排行消费类、结算类、成绩与排行榜数据类型共七份已反编译源码SHA256，登记公共报告投影、本地成绩持久化、验收代码及具体接线入口。输入版本、源码与迁移文件哈希见[成绩来源清单](daily-challenges/activity-rank-results-source-manifest.json)；没有新增美术或素材快照，规则裁决、实现状态及验证范围仅在[所属功能页](../../docs/features/daily-challenges.md)维护。
+
+圣兽排行原生来源：`prepare_activity_battle_rank_ui.py` 记录所选884原排行、首位／本人行、范围切换、规则按钮及动态规则窗口代码；`prepare_activity_battle_rank_native.py` 恢复完整 `Top/ActivityDomainBossTopPanel`、原排行行模板和两种规则窗口，保留原活动内嵌版本与独立版本的控件启停差异。默认武器UI部件按原地址提取完整prefab，通过已有免费骨骼转换器和官方High贴图映射恢复；`prepare_partner_detail_actor_data.py --skeleton <原地址> --merge` 仅合并同版本且逐文件核验的原始载荷。脚本、资源、CAB对象、转换与输出哈希分别见[排行脚本来源](daily-challenges/activity-rank-runtime-source-manifest.json)和[原生来源](daily-challenges/activity-rank-native-source-manifest.json)。未生成新素材快照；规则裁决、接线与实际验证范围仅在[所属功能页](../../docs/features/daily-challenges.md)维护。
 
 圣兽活动控制代码来源：`record_activity_battle_page_ui.py` 核对所选884原主页面、难度内容、战斗内容、导航按钮和通用确认按钮的序列化字段，记录原始与手工适配代码SHA256；`prepare_activity_battle_page_support.py` 从原源码迁移标题／截止时间、预览进度／倒计时和语言字体材质控制。排行控制类由 `prepare_activity_battle_rank_ui.py` 从同版本原代码迁移，生产宿主与原生渲染适配的哈希可通过显式 `--include-host-bindings` 单独登记。输入与输出分别见[主页面代码来源](daily-challenges/activity-page-ui-source-manifest.json)、[显示支持来源](daily-challenges/activity-page-support-source-manifest.json)和[排行代码来源](daily-challenges/activity-rank-runtime-source-manifest.json)。这些清单只记录代码输入与迁移方式，完整资源接线和运行范围仅在[所属功能页](../../docs/features/daily-challenges.md)维护。
 

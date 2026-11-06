@@ -188,11 +188,12 @@ namespace Zjcs.Presentation.Character
         public event Action<OfficialSkillDamageTestRequest> SkillDamageTestRequested;
         public Func<int, string, string> SkillGiftSourceLimitCode;
         public Func<int, bool> SkillGiftSourceBlockConditionMet;
-        public void ShowSkillDamageTestResult(OfficialSkillDamageTestRequest request, Zjcs.Combat.Official.FightBattleCheckpoint checkpoint,
+        public void ShowSkillDamageTestResult(OfficialSkillDamageTestRequest request,
+            Zjcs.Combat.Official.FightBattleCheckpoint checkpoint, Zjcs.Combat.Official.FightBattleReport finalReport,
             Action again, Action settings, Action leave)
         {
             ResumeSkillPage();
-            skillPanel.ShowOriginalDamageTestResult(request, checkpoint, again, settings, leave);
+            skillPanel.ShowOriginalDamageTestResult(request, checkpoint, finalReport, again, settings, leave);
         }
 
         public void ResumeSkillPage()

@@ -62,13 +62,21 @@ namespace Zjcs.Presentation.Combat
             (bindings.window.maskType == 0 || root.GetComponent<OfficialBattlePopupMask>().IsReady);
 
         public OfficialBattleReportView(Transform parent, FightBattleCheckpoint checkpoint, Presentation presentation)
+            : this(parent, checkpoint, null, presentation)
+        {
+        }
+
+        public OfficialBattleReportView(Transform parent, FightBattleCheckpoint checkpoint,
+            FightBattleReport finalReport, Presentation presentation)
         {
             if (parent == null) throw new ArgumentNullException(nameof(parent));
             this.checkpoint = checkpoint ?? throw new ArgumentNullException(nameof(checkpoint));
             this.presentation = presentation ?? throw new ArgumentNullException(nameof(presentation));
             if (!checkpoint.Finished || checkpoint.Outcome == null || checkpoint.Outcome.Invalid)
                 throw new InvalidOperationException("A battle report requires a completed, valid battle.");
-            report = FightBattleReportBuilder.Build(checkpoint);
+            report = finalReport ?? FightBattleReportBuilder.Build(checkpoint);
+            if (report.StageId != checkpoint.StageId)
+                throw new InvalidOperationException("The battle report does not match the completed checkpoint.");
             var groups = FightBattleReportGrouping.Build(report, presentation.Side);
             var assets = OfficialCombatAssetCatalog.LoadDefault();
             skillItems = assets.LoadSkillItems();

@@ -32,6 +32,11 @@ public static class BattleSummonInheritanceHarness
                 && values.Summoner[79] == 231, "Crit percentage/value/base were not inherited together.");
         var invalidRank = catalog.CalculateSummonInheritance(3181, 20, 9999, 1, source);
         Require(invalidRank.Summoner[1] == 0, "Missing rank invented a fallback inheritance factor.");
+        // Funny-boss summon 3925 has no inheritance row in these source tables.
+        // BattleFormulaHandler preserves null outputs for this exact branch.
+        var noInheritance = catalog.CalculateSummonInheritance(3925, 20, 5, 1, source);
+        Require(noInheritance.Fixed == null && noInheritance.Summoner == null,
+            "Missing fixed inheritance configuration aborted the battle or invented inherited properties.");
 
         var player = new FightBattleUnitState { Id = 1, Side = 1, CharacterType = 1,
             Level = 150, SubRank = 1, X = 5, Y = 5, Hp = 100007, MaxHp = 100007 };

@@ -14,18 +14,24 @@ namespace Zjcs.Presentation.Combat
             public Button Report, PlaybackShare, SaveRecord, ThumbUp;
             public Transform PopupParent;
             public FightBattleCheckpoint Checkpoint;
+            public FightBattleReport FinalReport;
             public Func<GameObject, OfficialBattleReportView.Presentation> Presentation;
             public bool FastVictory;
+            // Native GameEndPanelBase owns its button subscription. Other
+            // original result adapters can bind the same report action directly.
+            public bool BindReportButton = true;
         }
 
         private Binding binding;
         private FightBattleCheckpoint checkpoint;
+        private FightBattleReport finalReport;
         private OfficialBattleReportView report;
         private GameObject lifetime;
         private Action closed;
         private bool subscribed;
 
         public bool IsOpen => report != null;
+        public FightBattleReport FinalReport => finalReport;
 
         public static OfficialBattleResultReport Attach(GameObject owner, Binding binding)
         {
@@ -42,6 +48,9 @@ namespace Zjcs.Presentation.Combat
             // mutations made while the host starts another battle.
             view.checkpoint = available ? FightBattleCheckpointSerializer.Load(
                 FightBattleCheckpointSerializer.Save(binding.Checkpoint)) : null;
+            view.finalReport = available
+                ? UnityEngine.JsonUtility.FromJson<FightBattleReport>(UnityEngine.JsonUtility.ToJson(binding.FinalReport
+                    ?? FightBattleReportBuilder.Build(binding.Checkpoint))) : null;
             binding.Report.gameObject.SetActive(available);
             // Existing offline choice: no online record/share/thumbs-up actions.
             foreach (Button button in new[] { binding.PlaybackShare, binding.SaveRecord, binding.ThumbUp })
@@ -56,13 +65,15 @@ namespace Zjcs.Presentation.Combat
 
         private void Subscribe(bool enabled)
         {
-            if (binding == null || binding.Report == null || subscribed == enabled) return;
+            if (binding == null || binding.Report == null) return;
+            enabled &= binding.BindReportButton;
+            if (subscribed == enabled) return;
             if (enabled) binding.Report.onClick.AddListener(Open);
             else binding.Report.onClick.RemoveListener(Open);
             subscribed = enabled;
         }
 
-        private void Open()
+        public void Open()
         {
             if (report != null || checkpoint == null || !isActiveAndEnabled) return;
             lifetime = new GameObject("BattleResultReportLifetime");
@@ -73,7 +84,7 @@ namespace Zjcs.Presentation.Combat
                     ?? throw new InvalidOperationException("Battle report presentation is absent.");
                 closed = presentation.Closed;
                 presentation.Closed = Close;
-                report = new OfficialBattleReportView(binding.PopupParent, checkpoint, presentation);
+                report = new OfficialBattleReportView(binding.PopupParent, checkpoint, finalReport, presentation);
             }
             catch { Close(); throw; }
         }
@@ -84,6 +95,7 @@ namespace Zjcs.Presentation.Combat
             var released = lifetime;
             Action callback = closed;
             report = null;
+            finalReport = null;
             lifetime = null;
             closed = null;
             previous?.Dispose();

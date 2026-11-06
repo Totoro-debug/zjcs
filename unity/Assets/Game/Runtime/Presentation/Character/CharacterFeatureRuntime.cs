@@ -20,8 +20,10 @@ namespace Zjcs.Presentation.Character
         public OfflineCharacterProgressionService Progression => progression;
         public event Action<string> NavigationRequested;
         public event Action<OfficialSkillDamageTestRequest> DamageTestRequested;
-        public void ShowDamageTestResult(OfficialSkillDamageTestRequest request, Zjcs.Combat.Official.FightBattleCheckpoint checkpoint,
-            Action again, Action settings, Action leave) => panelView.ShowSkillDamageTestResult(request, checkpoint, again, settings, leave);
+        public void ShowDamageTestResult(OfficialSkillDamageTestRequest request,
+            Zjcs.Combat.Official.FightBattleCheckpoint checkpoint, Zjcs.Combat.Official.FightBattleReport finalReport,
+            Action again, Action settings, Action leave) => panelView.ShowSkillDamageTestResult(
+                request, checkpoint, finalReport, again, settings, leave);
 
         public void OpenProfile(string selectedSlotId)
         {

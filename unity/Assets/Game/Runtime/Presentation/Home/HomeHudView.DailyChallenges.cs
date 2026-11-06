@@ -343,8 +343,12 @@ namespace Zjcs.Presentation.Home
         }
 
         public void OpenDailyChallengeResult(int activityId, bool won, FightBattleCheckpoint checkpoint,
-            System.Collections.Generic.IReadOnlyList<OfficialChallengeReward> rewards = null)
+            System.Collections.Generic.IReadOnlyList<OfficialChallengeReward> rewards = null,
+            FightBattleReport finalReport = null)
         {
+            if (finalReport == null && checkpoint != null && checkpoint.Finished
+                && checkpoint.Outcome != null && !checkpoint.Outcome.Invalid)
+                finalReport = FightBattleReportBuilder.Build(checkpoint);
             if (dailyChallengeResultRoot != null) {
                 dailyChallengeResultRoot.SetActive(false);
                 UnityEngine.Object.Destroy(dailyChallengeResultRoot);
@@ -362,7 +366,7 @@ namespace Zjcs.Presentation.Home
             SetPrefabActive(dailyChallengeResultRoot, "ShareBtn", false);
             SetPrefabActive(dailyChallengeResultRoot, "SaveRecordBtn", false);
             SetPrefabActive(dailyChallengeResultRoot, "ThumbUpReportSwitchBtn", false);
-            BindDailyChallengeBattleReport(dailyChallengeResultRoot, resource, checkpoint);
+            BindDailyChallengeBattleReport(dailyChallengeResultRoot, resource, checkpoint, finalReport);
             SetNamedText(dailyChallengeResultRoot.transform, "NameTxt", activityId switch
             {
                 209 => "圣兽试炼",
@@ -376,15 +380,12 @@ namespace Zjcs.Presentation.Home
             PopulateDailyChallengeResultRewards(rewards);
             long totalDamage = 0;
             long selfDamage = 0;
-            foreach (FightBattleUnitStatistics statistic in checkpoint?.Statistics?.Units
-                         ?? new System.Collections.Generic.List<FightBattleUnitStatistics>())
+            foreach (FightBattleReportUnit unit in finalReport?.Units ?? new System.Collections.Generic.List<FightBattleReportUnit>())
             {
-                if (checkpoint == null) break;
-                FightBattleUnitState unit = checkpoint.Units.FirstOrDefault(value => value.Id == statistic.UnitId);
-                if (unit == null || (unit.Id != 1 && unit.MasterId != 1)) continue;
-                long dealt = statistic.DamageAndShieldDamageDealt;
+                if (unit.UnitId != 1 && unit.MasterId != 1) continue;
+                long dealt = unit.DamageAndShieldDamageDealt;
                 totalDamage = checked(totalDamage + dealt);
-                if (unit.Id == 1) selfDamage = checked(selfDamage + dealt);
+                if (unit.UnitId == 1) selfDamage = checked(selfDamage + dealt);
             }
             string damageText = OfficialBattleSceneView.FormatBattleNumber(totalDamage);
             SetNamedText(dailyChallengeResultRoot.transform, "DamageTxt", damageText);

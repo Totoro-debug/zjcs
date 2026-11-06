@@ -2,7 +2,7 @@
   "manifest": "854_156383",
   "generator": {
     "path": "scripts/prepare_battle_pet_rules.py",
-    "sha256": "a162ff6f9fc59e7d9773bb8df7507920f54c0444e798e67749344ca00146aee1"
+    "sha256": "3f68958e4970d8ef9d2b0882e7bd2ff9f79f574662bd02bad2a7ea7ed5f45d2c"
   },
   "inputs": [
     {
@@ -218,11 +218,11 @@
   "outputs": [
     {
       "path": "unity/Assets/Game/Resources/Combat/pet-battle-rules.json",
-      "sha256": "17f02dc29b1af307d4ba8a412b3b32f3285c5e0d534f0969ce70837e3ce13e9c"
+      "sha256": "8795987899fc5b010189f0c7e7aa79f23b73034538a63ca0b736ed51060e2dd7"
     },
     {
       "path": "unity/Assets/Game/Resources/Combat/pet-battle-rules-source-manifest.json",
-      "sha256": "0adc7ed9cbd0970dfb51059c61aebec53494568b18b8f8367b34024d13f28f11"
+      "sha256": "45f4fa8c03451303635966451ee5cf8c8a58cb691c19516d5d2740a9f64cb1ef"
     }
   ],
   "runtime_sources": [
@@ -232,7 +232,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePetEnergyAssembler.cs",
-      "sha256": "df5a8a8eac3d6ce1bf6601377873527e7e3993269a58f659d7ff99c78d064156"
+      "sha256": "caee254fedc9b85636a1fc3a42342542fac234549616fee2b8fea0c660d19ccd"
     }
   ],
   "operation": "Copy the existing battle pet tables and decode original pet entity/ability property groups; no formula changes."

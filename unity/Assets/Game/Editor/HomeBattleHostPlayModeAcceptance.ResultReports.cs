@@ -10,6 +10,7 @@ using Zjcs.Offline.Progression;
 using Zjcs.Official.WorldUI;
 using Zjcs.Presentation.Combat;
 using Zjcs.Presentation.Home;
+using Zjcs.Official.BattleResultUI;
 
 namespace Zjcs.Editor
 {
@@ -19,9 +20,26 @@ namespace Zjcs.Editor
             Action<Selectable> click)
         {
             VerifyDomainBossRankingRules(output);
+            if (Environment.GetEnvironmentVariable("ZJCS_ACTIVITY_RANK_UI") == "1")
+                yield return ExerciseActivityRankPage(home, 209, output, click);
             if (Environment.GetEnvironmentVariable("ZJCS_RESULT_ACTIONS_DIRECT") == "1") PrepareActivityRankingLoadout(home);
-            foreach (int activity in new[] { 209, 217 })
+            bool direct = Environment.GetEnvironmentVariable("ZJCS_RESULT_ACTIONS_DIRECT") == "1";
+            foreach (int activity in direct ? new[] { 209, 212, 226, 217 } : new[] { 209, 217 })
             {
+                string page = activity == 217 ? "AnniversaryFunnyBossEntryPanel" : "ActivityDomainBossPanel";
+                if (direct)
+                {
+                    // Real runner and settlement; only the still pending entry
+                    // window is bypassed. Never fabricate a completed result.
+                    var catalog = OfficialDailyChallengeCatalog.LoadDefault();
+                    var battle = new GameObject("ActivityResultActionRunner");
+                    battle.transform.SetParent(home.transform, false);
+                    battle.AddComponent<DailyDungeonBattleRunner>().BeginChallenge(home, activity,
+                        catalog.StageId(activity), catalog.StageType(activity), catalog.DurationHours(activity),
+                        catalog.DailyLimit(activity), 0, _ => { });
+                }
+                else
+                {
                 yield return OpenTravel(home, click);
                 yield return Capture(output, "activity-" + activity + "-travel");
                 click(ButtonUnder("DailyActivityEntry", "EntryBtn"));
@@ -29,7 +47,6 @@ namespace Zjcs.Editor
                 yield return Capture(output, "activity-" + activity + "-chooser");
                 click(ButtonUnder("DailyChallengeEntry_" + activity, "EntryBtn"));
                 yield return SettleUi();
-                string page = activity == 217 ? "AnniversaryFunnyBossEntryPanel" : "ActivityDomainBossPanel";
                 yield return Capture(output, "activity-" + activity + "-entry");
                 Transform startNode = Root(page).GetComponentsInChildren<Transform>().Single(value => value.name == "GoToBtn");
                 click(startNode.GetComponent<Button>() ?? startNode.GetComponentInChildren<Button>());
@@ -43,6 +60,7 @@ namespace Zjcs.Editor
                 click(invitation.Find("BgPanel1/Content/MiddleGo/FriendRobotGo/BottomGo")
                     .GetComponentsInChildren<Button>().First(value => value.name == "CommonBtn_12"));
                 yield return SettleUi();
+                }
                 var runner = UnityEngine.Object.FindObjectOfType<DailyDungeonBattleRunner>();
                 Require(runner != null, "The formal activity entry did not start its battle runner.");
                 var controller = runner.GetComponent<OfficialBattleRuntimeController>();
@@ -76,11 +94,27 @@ namespace Zjcs.Editor
                 var common = result.GetComponent<OfficialBattleResultReport>();
                 Require(common != null, "The activity result did not use the common report lifecycle.");
                 VerifyDomainBossActualRank(home, activity, checkpoint);
+                var native = result.GetComponentInChildren<GameEndPanelBase>();
+                Require(native != null && native.ReportButton != null,
+                    "The activity result did not bind its original native action module.");
+                Require(native.GetComponentsInChildren<MonoBehaviour>(true).All(value => value != null),
+                    "The original action module has an omitted native script.");
+                Require(native.ReportButton.GetComponentsInChildren<Image>(true).Any(value => value.sprite != null),
+                    "The original report button lost its sprite binding.");
+                foreach (var name in new[] { "ShareBtn", "SaveRecordBtn", "ThumbUpReportSwitchBtn" })
+                    Require(!native.GetComponentsInChildren<Transform>(true).Single(value => value.name == name).gameObject.activeSelf,
+                        "Offline original support-type branch left an online action visible: " + name);
                 string Inventory() => string.Join(";", home.Profile.Save.Player.Inventory
                     .Select(value => value.ItemId + ":" + value.Count).OrderBy(value => value));
                 string inventory = Inventory();
+                File.WriteAllLines(Path.Combine(output, "activity-" + activity + "-native-actions.txt"),
+                    native.GetComponentsInChildren<Image>(true).Select(value => value.name
+                        + " sprite=" + value.sprite?.name + " material=" + value.material?.name
+                        + " shader=" + value.material?.shader?.name
+                        + " color=" + value.color + " inheritedAlpha=" + value.canvasRenderer.GetInheritedAlpha()
+                        + " screen=" + RectTransformUtility.WorldToScreenPoint(null, value.transform.position)));
                 yield return Capture(output, "activity-" + activity + "-result");
-                click(ButtonUnder("DailyChallengeResult", "BtnBattleData"));
+                click(native.ReportButton);
                 deadline = Time.realtimeSinceStartup + 15;
                 Transform report = null;
                 while (report == null || report.GetComponent<OfficialBattlePopupMask>()?.IsReady != true)
@@ -115,7 +149,7 @@ namespace Zjcs.Editor
                     "Closing the report did not return to the same result instance.");
                 Require(Root("BattleResultReportLifetime") == null && Root("skill_plain_detail") == null,
                     "Closing the report leaked its appearance/detail lifetime.");
-                click(ButtonUnder("DailyChallengeResult", "BtnBattleData"));
+                click(native.ReportButton);
                 yield return SettleUi();
                 Require(common.IsOpen, "The native report button could not reopen the report.");
                 result.gameObject.SetActive(false);
@@ -126,6 +160,22 @@ namespace Zjcs.Editor
                 yield return SettleUi();
                 Require(Inventory() == inventory,
                     "Viewing statistics granted settlement rewards more than once.");
+                if (direct)
+                {
+                    click(native.ReportButton);
+                    yield return SettleUi();
+                    Require(common.IsOpen && (Root("FightEndReportPanel") != null || Root("FightEndAllPlayerReportPanel") != null),
+                        "Re-enabled native result lost its report action.");
+                    result.gameObject.SetActive(false);
+                    UnityEngine.Object.Destroy(result.gameObject);
+                    yield return SettleUi();
+                    Require(Root("BattleResultReportLifetime") == null,
+                        "Native action result leaked its report after destruction.");
+                    if (activity != 217 && Environment.GetEnvironmentVariable("ZJCS_ACTIVITY_RANK_UI") == "1")
+                        yield return ExerciseActivityRankPage(home, activity, output, click);
+                    Debug.Log("[Result actions] actual activity " + activity + ": original button/sprites, shared statistics/detail, reopen, disable/re-enable and no repeated rewards passed; entry/return remain separate pending work.");
+                    continue;
+                }
                 var returnText = result.GetComponentsInChildren<TMP_Text>().First(value => value.name == "ReturnText");
                 click(returnText.GetComponentInParent<Button>());
                 yield return SettleUi();
@@ -133,8 +183,10 @@ namespace Zjcs.Editor
                     "The native result return control did not restore its activity entry.");
                 Debug.Log("[Result reports] actual activity " + activity + ": unavailable NPC guard, statistics, detail, reopen, host disable and return passed.");
             }
-            File.WriteAllText(Path.Combine(output, "activity-result-reports-passed.txt"),
-                "Actual 209/217 entry, unavailable NPC guard, shared battle, native settlement/report/detail, reopen/disposal and no repeated rewards passed.\n");
+            bool actionOnly = Environment.GetEnvironmentVariable("ZJCS_RESULT_ACTIONS_DIRECT") == "1";
+            File.WriteAllText(Path.Combine(output, actionOnly ? "activity-result-actions-passed.txt" : "activity-result-reports-passed.txt"),
+                actionOnly ? "Real 209/212/226/217 runners and settlement; original result actions, shared report/detail, reopen/disposal and no repeated rewards passed. Entry/return/full result content not validated.\n"
+                : "Actual 209/217 entry, unavailable NPC guard, shared battle, native settlement/report/detail, reopen/disposal and no repeated rewards passed.\n");
         }
     }
 }

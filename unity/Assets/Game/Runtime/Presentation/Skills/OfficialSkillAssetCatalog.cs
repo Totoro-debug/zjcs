@@ -25,6 +25,8 @@ namespace Zjcs.Presentation.Skills
         [SerializeField] private TextAsset fidelityTexts;
         [SerializeField] private TextAsset sourceManifest;
         [SerializeField] private TextAsset qualityGradient;
+        [SerializeField] private TextAsset petSkillUiLayouts;
+        [SerializeField] private TextAsset petSkillUiSourceManifest;
         [SerializeField] private TMP_FontAsset nativeUiFont;
         [SerializeField] private Shader nativeCharacterShader;
         [SerializeField] private Shader nativeCharacterUrpShader;
@@ -38,6 +40,8 @@ namespace Zjcs.Presentation.Skills
         public TextAsset FidelityTexts => fidelityTexts;
         public TextAsset SourceManifest => sourceManifest;
         public TextAsset QualityGradient => qualityGradient;
+        public TextAsset PetSkillUiLayouts => petSkillUiLayouts;
+        public TextAsset PetSkillUiSourceManifest => petSkillUiSourceManifest;
         public TMP_FontAsset NativeUiFont => nativeUiFont;
         public Shader NativePortraitShader => nativeCharacterShader;
         public Shader NativeCharacterShader => UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline != null
@@ -72,7 +76,8 @@ namespace Zjcs.Presentation.Skills
         public void ValidateBindings()
         {
             if (skillRecommendations == null || skillRules == null || runtimeRules == null || cultivationRules == null
-                || uiLayouts == null || fidelityTexts == null || sourceManifest == null || qualityGradient == null)
+                || uiLayouts == null || fidelityTexts == null || sourceManifest == null || qualityGradient == null
+                || petSkillUiLayouts == null || petSkillUiSourceManifest == null)
                 throw new InvalidOperationException("Official skill TextAssets are not bound.");
             if (sprites == null || sprites.Length == 0)
                 throw new InvalidOperationException("Official skill sprite bindings are empty.");

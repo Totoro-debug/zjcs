@@ -1834,10 +1834,10 @@ namespace Zjcs.Presentation.Home
             yield return Capture("dungeons-travel-notes.png");
 
             GameObject travelNotes = GetPrivateGameObject(runtime.Hud, "travelNotesRoot");
-            Transform mapPlayEntry = travelNotes.GetComponentsInChildren<Transform>(true)
-                .FirstOrDefault(value => value.name == "MapGamePlayEntry");
-            Button dungeonEntry = mapPlayEntry == null ? null
-                : mapPlayEntry.GetComponentsInChildren<Button>(true)
+            Transform dailyDungeonEntry = travelNotes.GetComponentsInChildren<Transform>(true)
+                .FirstOrDefault(value => value.name == "DailyDungeonEntry");
+            Button dungeonEntry = dailyDungeonEntry == null ? null
+                : dailyDungeonEntry.GetComponentsInChildren<Button>(true)
                     .FirstOrDefault(value => value.name == "EntryBtn");
             ok = Check("dungeons-entry-input", () =>
             {

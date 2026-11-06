@@ -1164,10 +1164,12 @@ namespace Zjcs.Combat.Official
                     sourceProperties[property.Id] = property.Value;
                 FightSummonPropertyInheritance inheritance = statusCatalog.CalculateSummonInheritance(
                     pool.MonsterId, skill.Level, skill.Rank, actor.SubRank, sourceProperties);
-                foreach (var property in inheritance.Fixed)
-                    properties[property.Key] = checked(Property(properties, property.Key) + property.Value);
-                foreach (var property in inheritance.Summoner)
-                    properties[property.Key] = checked(Property(properties, property.Key) + property.Value);
+                if (inheritance.Fixed != null)
+                    foreach (var property in inheritance.Fixed)
+                        properties[property.Key] = checked(Property(properties, property.Key) + property.Value);
+                if (inheritance.Summoner != null)
+                    foreach (var property in inheritance.Summoner)
+                        properties[property.Key] = checked(Property(properties, property.Key) + property.Value);
             }
             var passiveStatusIds = new List<int>();
             foreach (int itemId in statusCatalog.MonsterPassiveSkillItems(pool.MonsterId, groupNo))

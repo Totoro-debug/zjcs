@@ -42,10 +42,11 @@ namespace Zjcs.Presentation.Home
                 characterRuntime.ReloadProfile();
             };
             skillDamageTest.Completed += checkpoint => {
+                Zjcs.Combat.Official.FightBattleReport finalReport = skillDamageTest.FinalReport;
                 skillDamageTest = null;
                 SetDamageTestHomeUiVisible(true);
                 characterRoot.SetActive(true);
-                characterRuntime.ShowDamageTestResult(request, checkpoint,
+                characterRuntime.ShowDamageTestResult(request, checkpoint, finalReport,
                     () => OnSkillDamageTestRequested(request), () => { }, () => { });
             };
             try { skillDamageTest.Begin(host, request); }

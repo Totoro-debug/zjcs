@@ -195,7 +195,8 @@ namespace Zjcs.Presentation.Home
             host.Arena.RecordBattleCheckpoint(FightBattleCheckpointSerializer.Save(result.Checkpoint));
         }
 
-        public void OnBattleReportReady(FightBattleReport report) { }
+        public FightBattleReport FinalReport { get; private set; }
+        public void OnBattleReportReady(FightBattleReport report) { FinalReport = report; }
 
         public void OnBattleHudControlClicked(string path) { }
 

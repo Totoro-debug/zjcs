@@ -69,13 +69,23 @@ namespace Zjcs.Editor.ProfessionUI
                 camera.transform.position = bounds.center + new Vector3(0, 0, -10);
                 camera.orthographicSize = Mathf.Max(bounds.extents.y, bounds.extents.x / camera.aspect) * 1.2f;
                 yield return 0; yield return 0;
-                Capture(Path.Combine(output, "selected-monster-" + id + ".png"));
+                Color32[] beforeEffects = Capture(Path.Combine(output, "selected-monster-" + id + ".png"));
                 if (id == 3803)
                 {
+                    var secondPhaseParticles = EnableSelectedSecondPhaseParticles(native);
                     float until = UnityEngine.Time.time + 2f;
                     while (UnityEngine.Time.time < until) yield return 0;
-                    VerifySelectedBodyEffects(native);
-                    Capture(Path.Combine(output, "selected-monster-3803-particles-aged.png"));
+                    VerifySelectedBodyEffects(native, secondPhaseParticles);
+                    var effectBounds = renderer.bounds;
+                    foreach (var particleRenderer in native.EntityRoot.GetComponentsInChildren<ParticleSystemRenderer>())
+                        if (particleRenderer.enabled) effectBounds.Encapsulate(particleRenderer.bounds);
+                    camera.transform.position = effectBounds.center + new Vector3(0, 0, -10);
+                    camera.orthographicSize = Mathf.Max(effectBounds.extents.y, effectBounds.extents.x / camera.aspect) * 1.2f;
+                    yield return 0; yield return 0;
+                    Color32[] withEffects = Capture(Path.Combine(output, "selected-monster-3803-particles-aged.png"));
+                    int changed = beforeEffects.Zip(withEffects, (a, b) => Math.Abs(a.r - b.r) > 2
+                        || Math.Abs(a.g - b.g) > 2 || Math.Abs(a.b - b.b) > 2).Count(value => value);
+                    Require(changed > 30, "Original second-phase particles changed no rendered pixels: " + changed);
                 }
                 unit.X = 3; unit.Y = 3; scene.Refresh(checkpoint); scene.Tick(.1f);
                 Require(Vector3.Distance(entity.position, mapper.GridToWorld(new FightGridPoint(3, 3))) < .001f,
@@ -90,7 +100,23 @@ namespace Zjcs.Editor.ProfessionUI
             Debug.Log("[Selected native monsters] models=" + selected.Length + " actions=" + actions + " poses=" + poses + " copyChecks=" + copies);
         }
 
-        private static void VerifySelectedBodyEffects(BattleNativeMonsterRenderer native)
+        private static ParticleSystem[] EnableSelectedSecondPhaseParticles(BattleNativeMonsterRenderer native)
+        {
+            Transform stage = native.EntityRoot.Find("0template3x3_view/body/MonsterModel_3803/Stage2");
+            Require(stage, "Original second-phase model stage is absent.");
+            var particles = stage.GetComponentsInChildren<ParticleSystem>(true);
+            var renderers = stage.GetComponentsInChildren<ParticleSystemRenderer>(true);
+            Require(particles.Length == 33 && renderers.Length == 39,
+                "Original second-phase particle graph is incomplete: " + particles.Length + "/" + renderers.Length);
+            // This diagnostic activates the source-authored stage subtree and
+            // starts its source ParticleSystems. The original stage trigger
+            // caller remains a separate battle-rule binding.
+            stage.gameObject.SetActive(true);
+            foreach (var particle in particles) particle.Play(true);
+            return particles;
+        }
+
+        private static void VerifySelectedBodyEffects(BattleNativeMonsterRenderer native, ParticleSystem[] secondPhaseParticles)
         {
             var names = new[] { "LeftWings01", "LeftWings01_1", "RightWings01", "RightWings01_1" };
             var all = native.EntityRoot.GetComponentsInChildren<Transform>(true);
@@ -102,6 +128,8 @@ namespace Zjcs.Editor.ProfessionUI
             }
             Require(native.EntityRoot.GetComponentsInChildren<ParticleSystem>()
                 .Any(particles => particles.particleCount > 0), "Original wing particles did not emit in Play Mode.");
+            Require(secondPhaseParticles.Any(particles => particles.particleCount > 0),
+                "Original second-phase particle systems emitted no particles in Play Mode.");
             var nodes = (List<object>)native.Attachments.OriginalRow["nodes"];
             var first = (Dictionary<string, object>)nodes[0];
             var transforms = new Dictionary<string, Transform> { [(string)first["sourceKey"]] = native.EntityRoot };

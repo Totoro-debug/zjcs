@@ -128,6 +128,19 @@ def main():
         if len(framings) != 1:
             raise ValueError("Original camera has no unique framing transposer: " + scene)
         framing = schemas.read(framings[0])
+        virtual_go = virtual.read(check_read=False).m_GameObject.path_id
+        extensions = {}
+        for extension_name in ("CinemachineCameraOffset", "CinemachineRecomposer"):
+            matches = [obj for name, obj in scripts.values() if name == extension_name
+                       and obj.read(check_read=False).m_GameObject.path_id == virtual_go]
+            if len(matches) != 1:
+                raise ValueError("Original camera has no unique " + extension_name + ": " + scene)
+            extension = matches[0]
+            extensions[extension_name] = schemas.read(extension)
+            if extension_name == "CinemachineCameraOffset":
+                extensions[extension_name]["m_PreserveComposition"] = bool(
+                    extensions[extension_name]["m_PreserveComposition"])
+            record(extension, bundle)
         for key in ("m_LookaheadIgnoreY", "m_TargetMovementOnly", "m_UnlimitedSoftZone", "m_CenterOnActivate"):
             framing[key] = bool(framing[key])
         group_settings = schemas.read(groups[0])
@@ -141,7 +154,9 @@ def main():
             priority=virtual_settings["m_Priority"], yOffset=controller_settings["myYOffset"],
             includeDead=bool(controller_settings["AutoRegisterCharacterDie"]),
             framingJson=json.dumps(clean(framing), separators=(",", ":")),
-            groupJson=json.dumps(clean(group_settings), separators=(",", ":")))
+            groupJson=json.dumps(clean(group_settings), separators=(",", ":")),
+            offsetJson=json.dumps(clean(extensions["CinemachineCameraOffset"]), separators=(",", ":")),
+            recomposerJson=json.dumps(clean(extensions["CinemachineRecomposer"]), separators=(",", ":")))
     output = dict(defaultFollow=default_follow,
         viewBound=[fight_settings["CameraViewBound"][key] for key in ("x", "y")],
         cameras=[dict(resolved[item["sceneName"]], gameId=item["gameId"]) for item in scenes])
@@ -152,14 +167,18 @@ def main():
     else:
         OUTPUT.write_bytes(payload)
         source_code = ROOT / ".tools/source-packages/official-code/client-source"
-        receipt = dict(operation="Read original GameCameraIniter.Adaptor, referenced virtual camera, target group and framing transposer; preserve original aspect adaptation and Cinemachine group framing. Historical bundle identities remain fixed.",
+        receipt = dict(operation="Read original GameCameraIniter.Adaptor, referenced virtual camera, target group, framing transposer, camera offset and recomposer; preserve original aspect adaptation, group framing, extension stage and follow/look-at attachment weights. Historical bundle identities remain fixed.",
             layout_sha256=sha(LAYOUT.read_bytes()), original_objects=records,
             fight_settings_source=dict(apk.provenance(fight), object_sha256=sha(fight.get_raw_data())),
             progression_input=dict(path=str(progression_path.relative_to(ROOT)), sha256=sha(progression_path.read_bytes())),
             source_code={name: sha((source_code / name).read_bytes()) for name in
-                ("GameCameraIniter.cs", "OrthographicCameraExtendAdaptor.cs", "GameCameraController.cs")},
+                ("GameCameraIniter.cs", "OrthographicCameraExtendAdaptor.cs", "GameCameraController.cs",
+                 "FightCamera.cs", "CinemachineRecomposerProxy.cs")},
             schema_cinemachine_sha256=sha(cinemachine.read_bytes()),
-            output_sha256=sha(payload), generator_sha256=sha(Path(__file__).read_bytes()))
+            output_sha256=sha(payload), generator_sha256=sha(Path(__file__).read_bytes()),
+            runtime_bindings=[dict(path=name, sha256=sha((ROOT / name).read_bytes())) for name in (
+                "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleCameraView.cs",
+                "unity/Assets/Game/Editor/Combat/OfficialBattleCameraTrackingAcceptance.cs")])
         RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Original battle camera bindings verified: {len(scenes)} game IDs, {len(resolved)} scenes")
 

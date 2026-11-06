@@ -72,17 +72,24 @@ def extract(panel, consumer_type='ActivityDomainBossPanelBattleContent', field='
 
 def build(binding, *, consumer_type='ActivityDomainBossPanelBattleContent', field='mTeamBtn',
           prefab_name='ActivityDomainBossTeamButton', group='Team', extra_text_keys=(),
-          parent_levels=0, decorate_selection=None):
-    binding.recovery.recover('ActivityDomainBossPanel', binding.work / 'activity-team-native',
+          parent_levels=0, decorate_selection=None, literal_text_keys=(), complete_template=None):
+    template = complete_template or dict(name='ActivityDomainBossPanel',
         bundle='defaultpackage_assets_prefabs_ui_activitydomainboss.bundle',
         native_relative='Prefabs/UI/ActivityDomainBoss/ActivityDomainBossPanel.prefab')
+    binding.recovery.recover(template['name'], binding.work / 'activity-team-native',
+        bundle=template['bundle'], native_relative=template['native_relative'])
     binding.recovery.finalize()
     native, _, panel, record = binding.recovery.outputs[-1]
     for path in (native, Path(str(native) + '.meta')):
         expected = binding.checked[path.relative_to(binding.cache / 'native-export-all').as_posix()]
         if sha(path.read_bytes()) != expected: raise ValueError('Native invitation source changed')
         binding.inputs[path.relative_to(ROOT).as_posix()] = expected
-    team, selection = extract(panel, consumer_type, field, parent_levels=parent_levels)
+    if complete_template is None:
+        team, selection = extract(panel, consumer_type, field, parent_levels=parent_levels)
+    else:
+        team = copy.deepcopy(panel)
+        selection = dict(native_root=panel['root'], objects=len(panel['documents']),
+            adaptation='Complete original standalone prefab; preserve every node, field and component.')
     for key, pointer in team['external'].items(): binding.objects[pointer['guid']] = binding.original(key)
     for key, file_id in team['objectMap'].items():
         owner = binding.original(key)
@@ -102,9 +109,10 @@ def build(binding, *, consumer_type='ActivityDomainBossPanelBattleContent', fiel
     resolved = binding.replace(team['documents'])
     texts, sources = language(text_keys)
     # The original localization service returns the key itself when absent.
-    # This exact prefab format is intentional; other unknown keys still fail.
-    if '{0}' in text_keys and '{0}' not in texts:
-        texts['{0}'] = '{0}'
+    # Allow only explicitly verified literal preview keys; other unknown keys fail.
+    literal_keys = ({'{0}'} | set(literal_text_keys)) & text_keys - set(texts)
+    if literal_keys:
+        texts.update({key: key for key in literal_keys})
         for name in ('LocalizationBinaryTextService', 'LocalizationTextService'):
             path = ROOT / '.tools/source-packages/current' / binding.recovery.apk.version / 'official-code/framework-firstpass-source/Framework' / (name + '.cs')
             binding.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())

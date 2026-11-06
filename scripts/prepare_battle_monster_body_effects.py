@@ -6,14 +6,16 @@ from official_apk import ROOT
 from prepare_battle_status_orbit_assets import build
 from prepare_battle_game_animators import documents
 from prepare_battle_scene_appearance_runtime import identity
+from prepare_battle_monster_embedded_particles import particle_subtrees
 
 
 def embedded_overrides():
     cache = ROOT / '.tools/source-packages/current/884_156692/native-conversion'
     source = cache / 'native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightMonster/3803.prefab'
-    proof = json.loads((cache / 'native-export-all-source-manifest.json').read_bytes())
-    expected = next(row['sha256'] for row in proof['outputs']
-        if row['path'] == source.relative_to(cache / 'native-export-all').as_posix())
+    receipt = ROOT / 'assets/reference/battle-animation/monster-body-effects-source-manifest.json'
+    prior = json.loads(receipt.read_bytes())
+    assert identity(cache / 'native-export-all-source-manifest.json') == prior['native_export_receipt']
+    expected = prior['embedded_instance']['sha256']
     assert identity(source)['sha256'] == expected
     text = source.read_text(encoding='utf-8-sig')
 
@@ -54,20 +56,42 @@ def embedded_overrides():
 
 def main():
     adapt, source, overrides = embedded_overrides()
+    embedded = {}
+    def native(raw, path):
+        if path == source:
+            raw, graph = particle_subtrees(raw)
+            embedded.update(graph)
+            return raw
+        return adapt(raw, path)
     names = ["Eff_Npc_ChaosMonarch_" + name for name in (
         "LeftWings01", "LeftWings01_1", "RightWings01", "RightWings01_1")]
+    graphs = {name: 'Effect/prefabs/Monster/Npc_ChaosMonarch/' + name + '.prefab' for name in names}
+    graphs['3803'] = 'Prefabs/EcEntity/Fight/FightMonster/3803.prefab'
     build(DEST=ROOT / 'unity/Assets/Official/Combat/MonsterBodyEffects/Resources/Combat/MonsterBodyEffects',
         DATA=ROOT / 'unity/Assets/Game/Resources/Combat/monster-body-effects.json',
         RECEIPT=ROOT / 'assets/reference/battle-animation/monster-body-effects-source-manifest.json',
         ROOTS={}, MAPPED={}, family='MonsterBodyEffects', shader_prefix='MonsterBodyEffect_',
-        graph_roots={name: 'Effect/prefabs/Monster/Npc_ChaosMonarch/' + name + '.prefab' for name in names},
+        graph_roots=graphs,
         generator=Path(__file__), runtime_receipts=(),
-        native_preprocess=adapt,
-        limits=['Four original first-phase wing particle prefabs are bound to 3803 with original embedded instance overrides; other embedded effects and components remain separate.'])
+        native_preprocess=native,
+        operation='Restore four complete first-phase wing prefabs with verified entity-instance overrides, '
+            'and the nine exact second-phase particle subtrees selected from the verified complete 3803 entity. '
+            'Preserve selected local objects and native particle fields; retain only their original transform '
+            'ancestors and component/child references. Resolve original native dependency assets through '
+            'the hash-matched Windows texture/shader cache. Mesh copies and application followers remain '
+            'bound through the separately recorded original entity attachment graph.',
+        limits=['This resource family restores persistent body particles; action effects and other entity components are bound separately.'])
+    data = ROOT / 'unity/Assets/Game/Resources/Combat/monster-body-effects.json'
+    config = json.loads(data.read_bytes())
+    next(row for row in config['graphs'] if row['id'] == '3803')['embeddedRootPaths'] = embedded['root_paths']
+    data.write_bytes((json.dumps(config, ensure_ascii=False, indent=2) + '\n').encode())
     receipt = ROOT / 'assets/reference/battle-animation/monster-body-effects-source-manifest.json'
     proof = json.loads(receipt.read_bytes())
     proof['runtime_receipts'] = []
     proof['embedded_instance'] = identity(source)
+    proof['embedded_particle_graph'] = embedded
+    proof['embedded_particle_generator'] = identity(Path(__file__).with_name('prepare_battle_monster_embedded_particles.py'))
+    next(row for row in proof['outputs'] if row['path'] == data.relative_to(ROOT).as_posix())['sha256'] = identity(data)['sha256']
     proof['embedded_overrides'] = list({(row['prefab'], row['node'], row['field']): row for row in overrides}.values())
     proof['runtime_bindings'] = [identity(ROOT / name) for name in (
         'unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterRenderer.Attachments.cs',

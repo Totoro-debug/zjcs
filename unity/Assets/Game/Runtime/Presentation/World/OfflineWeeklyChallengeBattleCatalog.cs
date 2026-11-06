@@ -13,11 +13,11 @@ namespace Zjcs.Offline.World
     {
         public const string ResourcePath = "WeeklyChallenges/battle-stages";
         public const string ExpectedManifest = "884_156692";
-        private readonly Map10RuntimeBattleData data;
+        private readonly WeeklyBattleRuntimeData data;
         private readonly HashSet<int> voidFissureIds;
         private readonly HashSet<int> demonBattlefieldIds;
 
-        private OfflineWeeklyChallengeBattleCatalog(Map10RuntimeBattleData value)
+        private OfflineWeeklyChallengeBattleCatalog(WeeklyBattleRuntimeData value)
         {
             data = value;
             voidFissureIds = new HashSet<int>(value.voidFissureStageIds ?? Array.Empty<int>());
@@ -48,8 +48,9 @@ namespace Zjcs.Offline.World
                     || !value.monsterRosters.Any(roster => roster != null && roster.StageId == stage.Id))
                     throw new InvalidDataException("Official weekly stage scene or roster mapping is incomplete.");
             }
-            if (!value.voidFissureStageIds.Contains(7301) || !value.voidFissureStageIds.Contains(7525)
-                || !value.demonBattlefieldStageIds.Contains(4800))
+            if (!(value.voidFissureStageIds ?? Array.Empty<int>()).Contains(7301)
+                || !(value.voidFissureStageIds ?? Array.Empty<int>()).Contains(7525)
+                || !(value.demonBattlefieldStageIds ?? Array.Empty<int>()).Contains(4800))
                 throw new InvalidDataException("Official weekly activity stage bindings are incomplete.");
             return new OfflineWeeklyChallengeBattleCatalog(value);
         }
@@ -57,11 +58,12 @@ namespace Zjcs.Offline.World
         public bool TryGetBattle(int stageId, out Map10RuntimeStage stage,
             out Map10RuntimeRoster roster, out Map10RuntimeBattleScene scene)
         {
-            stage = data.stages.FirstOrDefault(value => value != null && value.Id == stageId);
-            roster = stage == null ? null : data.monsterRosters.FirstOrDefault(value =>
+            Map10RuntimeStage foundStage = data.stages.FirstOrDefault(value => value != null && value.Id == stageId);
+            stage = foundStage;
+            roster = foundStage == null ? null : data.monsterRosters.FirstOrDefault(value =>
                 value != null && value.StageId == stageId);
-            scene = stage == null ? null : data.battleScenes.FirstOrDefault(value =>
-                value != null && value.GameId == stage.GameId);
+            scene = foundStage == null ? null : data.battleScenes.FirstOrDefault(value =>
+                value != null && value.GameId == foundStage.GameId);
             return stage != null && roster != null && scene != null;
         }
 

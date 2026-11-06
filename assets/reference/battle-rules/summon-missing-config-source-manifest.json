@@ -1,0 +1,27 @@
+{
+  "code_manifest": "884_156692",
+  "source": {
+    "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs",
+    "sha256": "940a788760f45a92f4f0c1a53470dc3e5add64f9edc8159dde89ac042c050654",
+    "hashLineEndings": "LF"
+  },
+  "function": "CalcSummonMonsterInheritProp",
+  "behavior": "No fixed config: retain null fixed/inherited outputs; fixed config without addition: retain calculated fixed props and an empty inherited map. Diagnostic remains nonfatal. Existing rank/level calculations unchanged.",
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.SummonProperties.cs",
+      "sha256": "7c84779139b80bed0c74e6ded3b7c91b1bd5f8606b777ff0ba13b709aa0d5c50",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
+      "sha256": "cb360bdcc390e0bf57efd746a7f7e61c0d0a6fb4e9468f08edf8efc6145b726e",
+      "hashLineEndings": "LF"
+    }
+  ],
+  "validation": {
+    "path": "scripts/fixtures/battle_summon_inheritance_harness.cs",
+    "sha256": "1f3920bbe41d18792eda8f69c066fb40c81d94d86bffae404f6a628f4af273a7",
+    "hashLineEndings": "LF"
+  }
+}

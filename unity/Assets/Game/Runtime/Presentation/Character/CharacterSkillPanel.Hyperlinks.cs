@@ -75,17 +75,17 @@ namespace Zjcs.Presentation.Character
                 MergePropertyValues(props, inheritance.Summoner);
             }
 
-            OpenNonPlayerBrief(monsterId, level, subRank, props, null, false);
+            OpenNonPlayerBrief(monsterId, level, subRank, props, null, false, null);
         }
 
         private void OpenPetEntityBrief(int petClassId, int sourceSkillId)
         {
-            Dictionary<string, object> petDefinition = progression.Catalog.Find("pet", petClassId);
+            Dictionary<string, object> petDefinition = PetSkillCatalog.Find("pet", petClassId);
             if (petDefinition == null) return;
             OfflinePetInstance ownedPet = progression.Player.Pets.Pets.FirstOrDefault(value => value.ClassId == petClassId);
             if (ownedPet == null) return;
             int phase = ownedPet.EvolutionPhase;
-            Dictionary<string, object> evolution = progression.Catalog.Rows("pet_evolution")
+            Dictionary<string, object> evolution = PetSkillCatalog.Rows("pet_evolution")
                 .FirstOrDefault(value => Convert.ToInt32(value["ClassId"], CultureInfo.InvariantCulture) == petClassId
                     && Convert.ToInt32(value["EvolutionPhase"], CultureInfo.InvariantCulture) == phase);
             if (evolution == null) return;
@@ -99,28 +99,28 @@ namespace Zjcs.Presentation.Character
                 DateTimeOffset.Now.ToUnixTimeSeconds()).OutOfFightBattleProps.ToDictionary(value => value.Key, value => value.Value);
             FightSummonPropertyInheritance inheritance = combat.CalculateSummonInheritance(monsterId,
                 level, rank, subRank, masterProps);
-            var props = new Dictionary<int, long>(new OfflinePetPropSource(progression.Catalog)
+            var props = new Dictionary<int, long>(new OfflinePetPropSource(PetSkillCatalog)
                 .CalculatePetEntityBaseProps(petClassId, level, inheritance.Fixed));
             MergePropertyValues(props, inheritance.Summoner);
             OpenNonPlayerBrief(monsterId, level, subRank, props,
-                string.IsNullOrEmpty(ownedPet?.Name) ? null : ownedPet.Name, true);
+                string.IsNullOrEmpty(ownedPet?.Name) ? null : ownedPet.Name, true, ownedPet);
         }
 
         private int PetSkillRank(OfflinePetInstance pet, int skillId)
         {
             OfflinePetSkillRank saved = pet?.SkillRanks?.FirstOrDefault(value => value.SkillId == skillId);
             if (saved != null) return saved.Rank;
-            Dictionary<string, object> item = progression.Catalog.Find("item", skillId);
+            Dictionary<string, object> item = PetSkillCatalog.Find("item", skillId);
             if (item == null) return 0;
             int quality = Convert.ToInt32(item["Quality"], CultureInfo.InvariantCulture);
-            return progression.Catalog.Rows("skill_rank")
+            return PetSkillCatalog.Rows("skill_rank")
                 .Where(value => Convert.ToInt32(value["Quality"], CultureInfo.InvariantCulture) == quality)
                 .Select(value => Convert.ToInt32(value["Rank"], CultureInfo.InvariantCulture))
                 .DefaultIfEmpty(0).Min();
         }
 
         private void OpenNonPlayerBrief(int monsterId, int level, int subRank,
-            Dictionary<int, long> props, string displayName, bool isPetEntity)
+            Dictionary<int, long> props, string displayName, bool isPetEntity, OfflinePetInstance pet)
         {
             var combatAssets = OfficialCombatAssetCatalog.LoadDefault();
             var combat = combatAssets.Load();
@@ -159,6 +159,8 @@ namespace Zjcs.Presentation.Character
             Button detail = view[Convert.ToString(binding["mDetailPropBtn"])].GetComponent<Button>();
             if (detail != null) detail.onClick.AddListener(() => auxiliaryMonsterProps.OpenDialog(dialog.transform,
                 isPetEntity ? "ui_pet_detail_props_title_text" : "ui_monster_detail_props_title_text"));
+            if (pet != null) BindPetEntitySkills(pet, monsterId, subRank,
+                TransformAt(binding, "mSkillSlot", view));
         }
 
         private static Transform TransformAt(Dictionary<string, object> binding, string field,

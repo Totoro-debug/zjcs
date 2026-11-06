@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Zjcs.Combat.Official;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.Skills;
 using Zjcs.Offline.State;
@@ -260,6 +261,15 @@ namespace Zjcs.Presentation.Home
             int resultInstanceId = result.GetInstanceID();
             var resultReport = result.GetComponent<Zjcs.Presentation.Combat.OfficialBattleResultReport>();
             Require(resultReport != null, "The damage-test result did not bind the shared report lifecycle.");
+            FightBattleReport sharedReport = resultReport.FinalReport;
+            FightBattleReport expectedReport = FightBattleReportBuilder.Build(checkpoint);
+            Require(sharedReport != null && sharedReport.StageId == expectedReport.StageId
+                && sharedReport.Won == expectedReport.Won && sharedReport.Round == expectedReport.Round
+                && sharedReport.TotalDamageDealt == expectedReport.TotalDamageDealt
+                && sharedReport.TotalDamageTaken == expectedReport.TotalDamageTaken
+                && sharedReport.TotalHealDealt == expectedReport.TotalHealDealt
+                && sharedReport.TotalShieldGranted == expectedReport.TotalShieldGranted,
+                "The damage-test settlement did not retain the shared battle report matching its checkpoint.");
             var resultPose = FindObjectsOfType<Zjcs.Presentation.Character.OfficialSkillResultNativePose>().Single();
             Require(resultPose.AnimationName == (defeat ? "map/injuried_idle" : "map/win_01"),
                 "The completed damage test did not bind the animation for its real outcome.");

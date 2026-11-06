@@ -11,6 +11,12 @@ from prepare_character_prop_bindings import node_path
 from prepare_cooking_module import CookingConverter
 from official_tmp_input_schema import read_input_field, encoding_evidence
 
+PET_SKILL_TEMPLATES = {
+    "skill_outer_tag": ("prefabs_ui_skill", "SkillWithOuterTagItem"),
+    "pet_skill_icon": ("prefabs_ui_item", "ItemIconPetSkill"),
+    "pet_skill_detail": ("prefabs_ui_itemdetail", "PetSkillDetailDialog"),
+}
+
 
 def recover_prefab(reader, text_schemas, bundle, prefab_name, city):
     if not bundle.endswith(".bundle"):
@@ -106,12 +112,13 @@ def recover_prefab(reader, text_schemas, bundle, prefab_name, city):
                     "MonsterBriefInfoPanel", "FightRoleFightHpView", "PlayerBattleHpBar", "PlayerShieldText",
                     "PlayerBuffShow", "FightStatusItemBase", "CharacterDetailPropsDialogOverallContent",
                     "CommonRankShow", "SkillWithOuterTagItem", "ItemIconPetSkill", "MonsterDetailPropsDialog",
+                    "SkillTagGo", "ItemDetailDialogProfessionIcon", "SkillDetailDialogRangeUI",
                     "CharacterPanelSkillListPanelItem", "CharacterPanelSkillListPanelItemNewMark",
                     "SkillPanelRedDotItem", "SkillPanelCanRankUpRedDotItem", "SkillCanMergeRedDotItem",
                     "ItemIconAttachmentRedDotHandler", "ItemIconAttachmentHint", "RedDotMultiItem",
                     "SkillPromotePanel", "PlayerUseItemContent", "CharacterPanelSkillItem", "CharacterPanelSkillContent",
                     "CharacterPanelSkillPanel", "CharacterPanelSkillItemDragContent", "TMPEffect",
-                    "SkillContentPanelSkillGroup", "SkillRankUpNotifyDialog", "SkillStarInfo", "StarMiniInfo", "SkillPromotePanelItem", "ItemProgress", "ItemIcon", "LoopHorizontalScrollRect", "SkillSlotlCanLevelUpRedDotItem"))
+                    "SkillContentPanelSkillGroup", "SkillRankUpNotifyDialog", "SkillStarInfo", "StarMiniInfo", "SkillPromotePanelItem", "ItemProgress", "ItemIcon", "SkillTagItem", "PetSkillDetailDialog", "LoopHorizontalScrollRect", "SkillSlotlCanLevelUpRedDotItem"))
     for node in reader.walk(pointer.read()):
         row = by_path[node_path(node)]
         for entry in node.m_Component:

@@ -40,7 +40,8 @@ namespace Zjcs.Presentation.Character
             texts = Obj(OfficialEquipmentJson.Parse(assets.FidelityTexts.text));
         }
 
-        public List<Row> Calculate(int skillId, int rank, int level, int subRank, int validDigits = 3)
+        public List<Row> Calculate(int skillId, int rank, int level, int subRank, int validDigits = 3,
+            IReadOnlyDictionary<int, long> inputBaseProps = null)
         {
             if (!skills.TryGetValue(skillId, out var skill))
                 throw new InvalidOperationException("Original skill view configuration is absent: " + skillId);
@@ -62,7 +63,7 @@ namespace Zjcs.Presentation.Character
                 if (addition != null) break;
             }
             var rows = new List<Row>();
-            Fill(0, formula.CalculatePassiveSkillProps(Int(skill, "PassiveRankPropId"),
+            Fill(0, inputBaseProps ?? formula.CalculatePassiveSkillProps(Int(skill, "PassiveRankPropId"),
                 Int(skill, "PassiveGroupLevelPropId"), Int(skill, "PassiveRankFactorId"),
                 LongMap(skill, "PassivePropFactors"), rank, level, subRank), addition, rank, rows, validDigits);
             foreach (int id in views)
@@ -88,6 +89,27 @@ namespace Zjcs.Presentation.Character
                 return order == 0 ? b.Property - a.Property : order;
             });
             return rows;
+        }
+
+        public List<Row> CalculatePetSkill(int petClassId, int evolutionPhase, int fightEntityId,
+            int skillId, int rank, int level, int subRank)
+        {
+            Dictionary<string, object> evolution = character.Rows("pet_evolution")
+                .FirstOrDefault(row => Int(row, "ClassId") == petClassId
+                    && Int(row, "EvolutionPhase") == evolutionPhase);
+            if (evolution == null)
+                throw new InvalidOperationException("Original pet evolution configuration is absent: " + petClassId);
+            if (Int(evolution, "EntitySkill") != skillId)
+                return Calculate(skillId, rank, level, subRank);
+
+            Dictionary<string, object> summon = Table("summon_monster_fix_prop")
+                .FirstOrDefault(row => Int(row, "EntityId") == fightEntityId);
+            if (summon == null)
+                throw new InvalidOperationException("Original pet entity summon property configuration is absent: " + fightEntityId);
+            IReadOnlyDictionary<int, long> baseProps = formula.CalculatePassiveSkillProps(
+                Int(summon, "RankPropId"), Int(summon, "GroupLevelPropId"), 0,
+                LongMap(summon, "PropFactors"), rank, level, subRank);
+            return Calculate(skillId, rank, level, subRank, 3, baseProps);
         }
 
         private void Fill(int entityId, IReadOnlyDictionary<int, long> props,

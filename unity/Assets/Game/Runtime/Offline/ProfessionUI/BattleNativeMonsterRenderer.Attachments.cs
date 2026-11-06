@@ -45,17 +45,48 @@ namespace Zjcs.Offline.ProfessionUI
             if (!Equals(catalog["manifest"], "884_156692")) throw new InvalidDataException("Original body-effect version differs.");
             foreach (var effect in Arr(catalog["graphs"]).Select(Obj))
             {
-                Transform previous = originals.Values.Single(value => value.name == (string)effect["id"]);
                 var prefab = Resources.Load<GameObject>((string)effect["resource"]);
                 if (!prefab) throw new FileNotFoundException("Original monster body-effect prefab is unbound: " + effect["id"]);
-                var replacement = UnityEngine.Object.Instantiate(prefab, previous.parent, false).transform;
-                replacement.name = previous.name;
-                replacement.localPosition = previous.localPosition;
-                replacement.localRotation = previous.localRotation;
-                replacement.localScale = previous.localScale;
-                replacement.gameObject.SetActive(previous.gameObject.activeSelf);
-                Attachments.RebindOriginalSubtree(replacement);
+                if (effect.TryGetValue("embeddedRootPaths", out object paths))
+                {
+                    var container = UnityEngine.Object.Instantiate(prefab, EntityRoot, false);
+                    container.SetActive(false);
+                    try
+                    {
+                        foreach (string path in Arr(paths))
+                        {
+                            Transform previous = EntityRoot.Find(path);
+                            Transform replacement = container.transform.Find(path);
+                            if (!previous || !replacement)
+                                throw new InvalidDataException("Original embedded particle path is unbound: " + path);
+                            replacement.SetParent(previous.parent, false);
+                            ReplaceOriginalBodyEffect(previous, replacement);
+                        }
+                    }
+                    finally
+                    {
+                        if (Application.isPlaying) UnityEngine.Object.Destroy(container);
+                        else UnityEngine.Object.DestroyImmediate(container);
+                    }
+                }
+                else
+                {
+                    Transform previous = originals.Values.Single(value => value.name == (string)effect["id"]);
+                    ReplaceOriginalBodyEffect(previous,
+                        UnityEngine.Object.Instantiate(prefab, previous.parent, false).transform);
+                }
             }
+        }
+
+        private void ReplaceOriginalBodyEffect(Transform previous, Transform replacement)
+        {
+            replacement.name = previous.name;
+            replacement.localPosition = previous.localPosition;
+            replacement.localRotation = previous.localRotation;
+            replacement.localScale = previous.localScale;
+            replacement.SetSiblingIndex(previous.GetSiblingIndex());
+            replacement.gameObject.SetActive(previous.gameObject.activeSelf);
+            Attachments.RebindOriginalSubtree(replacement);
         }
     }
 }

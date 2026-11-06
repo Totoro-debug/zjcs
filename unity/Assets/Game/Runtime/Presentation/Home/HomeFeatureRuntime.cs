@@ -51,6 +51,7 @@ namespace Zjcs.Presentation.Home
         private OfflineDailyDungeonModule dailyDungeons;
         private OfficialFantasyTowerCatalog fantasyTowerCatalog;
         private OfflineFantasyTowerSession fantasyTower;
+        private WeeklyChallengeBattleRunner weeklyChallengeBattle;
         private OfflineNpcAssistanceProgress npcAssistanceProgress;
         private FightOfficialNpcAssistanceCatalog npcAssistanceCatalog;
         private OfflineArenaSession arena;
@@ -561,6 +562,35 @@ namespace Zjcs.Presentation.Home
             FantasyTowerBattleRunner runner = gameObject.AddComponent<FantasyTowerBattleRunner>();
             try { runner.Begin(this, entryIndex); }
             catch { Destroy(runner); throw; }
+            return runner;
+        }
+
+        public WeeklyChallengeBattleRunner StartWeeklyChallengeBattle(int stageId,
+            Action<FightBattleCheckpoint> completed, Action left = null)
+        {
+            if (weeklyChallengeBattle != null)
+                throw new InvalidOperationException("A weekly challenge battle is already active.");
+            var battleObject = new GameObject("WeeklyChallengeBattleRunner");
+            battleObject.transform.SetParent(transform, false);
+            WeeklyChallengeBattleRunner runner = battleObject.AddComponent<WeeklyChallengeBattleRunner>();
+            weeklyChallengeBattle = runner;
+            runner.Completed += checkpoint =>
+            {
+                if (weeklyChallengeBattle == runner) weeklyChallengeBattle = null;
+                completed?.Invoke(checkpoint);
+            };
+            runner.Left += () =>
+            {
+                if (weeklyChallengeBattle == runner) weeklyChallengeBattle = null;
+                left?.Invoke();
+            };
+            try { runner.Begin(this, stageId); }
+            catch
+            {
+                weeklyChallengeBattle = null;
+                Destroy(battleObject);
+                throw;
+            }
             return runner;
         }
 

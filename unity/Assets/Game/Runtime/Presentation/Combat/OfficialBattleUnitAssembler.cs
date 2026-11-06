@@ -7,12 +7,24 @@ namespace Zjcs.Presentation.Combat
     /// <summary>Initializes the shared HP, movement and turn state for a battle unit.</summary>
     public static class OfficialBattleUnitAssembler
     {
+        public static void RestoreLegacyMonsterIdentity(FightOfficialCombatCatalog combat, FightBattleUnitState unit)
+        {
+            if (combat == null) throw new ArgumentNullException(nameof(combat));
+            if (unit == null) throw new ArgumentNullException(nameof(unit));
+            // Older local checkpoints omitted the template and left the default
+            // one-cell body. Preserve configured/saved bodies and all combat state.
+            if (unit.MonsterTemplateId != 0 || unit.BodyOffsets == null || unit.BodyOffsets.Count != 1
+                || unit.BodyOffsets[0].X != 0 || unit.BodyOffsets[0].Y != 0) return;
+            ApplyMonsterIdentity(combat, unit);
+        }
+
         public static void ApplyMonsterIdentity(FightOfficialCombatCatalog combat, FightBattleUnitState unit)
         {
             if (combat == null) throw new ArgumentNullException(nameof(combat));
             if (unit == null) throw new ArgumentNullException(nameof(unit));
             // Arena role players use monster stat rows; summons already carry
-            // their own configured body. This is the initial formal-monster assembly.
+            // their own configured body. Legacy repair reaches this only after
+            // recognizing the old missing-template/default-body signature.
             if (unit.MonsterId <= 0 || unit.CharacterType == 1 || unit.MasterId > 0) return;
             var body = combat.MonsterBodyOffsets(unit.MonsterId);
             if (body.Count == 0)

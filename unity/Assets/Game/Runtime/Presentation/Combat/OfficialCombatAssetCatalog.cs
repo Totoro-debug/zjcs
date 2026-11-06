@@ -109,10 +109,15 @@ namespace Zjcs.Presentation.Combat
 
         public FightBattleExecutor RestoreBattle(FightBattleCheckpoint checkpoint)
         {
+            if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
+            var combat = Load();
             foreach (var unit in checkpoint.Units)
+            {
+                if (unit != null) OfficialBattleUnitAssembler.RestoreLegacyMonsterIdentity(combat, unit);
                 if (unit != null && unit.NpcClassId > 0) LoadNpcAssistance().BindRoleEntity(unit);
+            }
             return FightBattleExecutor.Restore(checkpoint, LoadDamageFormula(), new FightDamageSettlement(),
-                Load(), LoadSkillItems());
+                combat, LoadSkillItems());
         }
 
         private FightStageStatusCatalog loadedStageStatus;

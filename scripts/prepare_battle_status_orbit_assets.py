@@ -46,6 +46,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
     assert proof['manifest'] == '884_156692'
     assert proof['code_manifest_sha256'] == sha((CACHE.parent/'code-manifest.json').read_bytes())
     verified = {r['path']: r['sha256'] for r in proof['outputs']}
+    del proof  # Keep the digest lookup, release the full exporter receipt rows.
     inputs, index = {}, {}
 
     def read(path):
@@ -215,7 +216,10 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
     apk = Apk.current()
     try:
         assert apk.version == '884_156692'
-        manifest = read_asset_manifest(apk.source.manifest_bytes('DefaultPackage', apk.archive))
+        # Shared graph roots resolve through verified native metadata, so they
+        # do not need the full address manifest alongside the exporter lookup.
+        manifest = (read_asset_manifest(apk.source.manifest_bytes('DefaultPackage', apk.archive))
+                    if any(key not in (graph_roots or {}) for key in graph_paths) else ())
         originals = []
         for root_index, (key, path) in enumerate(graph_paths.items(), 1):
             if root_index == 1 or root_index % 128 == 0:

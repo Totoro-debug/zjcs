@@ -84,10 +84,12 @@ namespace Zjcs.Presentation.Combat
                         BodyAnimatorTrigger = trigger.Parameter
                     });
                 }
-            if (skillCatalog != null && skillCatalog.skills != null && stepEvent.SkillCasts != null)
+
+            if (stepEvent.SkillCasts != null)
                 foreach (FightBattleSkillCastEvent cast in stepEvent.SkillCasts)
                 {
                     if (cast == null || cast.ActorId <= 0 || cast.SkillEntityId <= 0) continue;
+                    if (skillCatalog == null || skillCatalog.skills == null) continue;
                     OfficialBattleSkillPlayableRecord record = FindSkill(skillCatalog, cast.SkillEntityId);
                     if (record == null || record.playables == null) continue;
                     foreach (OfficialBattleSkillPlayableCue playable in record.playables)

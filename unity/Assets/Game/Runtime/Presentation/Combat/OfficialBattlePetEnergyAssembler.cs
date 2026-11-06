@@ -11,7 +11,7 @@ namespace Zjcs.Presentation.Combat
     /// <summary>Builds the confirmed offline pet energy state from the selected skill plan.</summary>
     public static class OfficialBattlePetEnergyAssembler
     {
-        private static OfficialCharacterCatalog LoadBattlePetCatalog(OfficialCharacterCatalog characterCatalog)
+        public static OfficialCharacterCatalog LoadBattlePetCatalog(OfficialCharacterCatalog characterCatalog)
         {
             var rules = UnityEngine.Resources.Load<UnityEngine.TextAsset>("Combat/pet-battle-rules");
             var receipt = UnityEngine.Resources.Load<UnityEngine.TextAsset>("Combat/pet-battle-rules-source-manifest");

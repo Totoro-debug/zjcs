@@ -26,7 +26,7 @@ namespace Zjcs.Presentation.Combat
             public float baseSize, yOffset;
             public bool includeDead;
             public LensSettings lens;
-            public string framingJson, groupJson;
+            public string framingJson, groupJson, offsetJson, recomposerJson;
         }
         private static Catalog catalog;
         private readonly Binding binding;
@@ -63,7 +63,8 @@ namespace Zjcs.Presentation.Combat
             }
             binding = Array.Find(catalog.cameras, value => value.gameId == gameId);
             if (binding?.baseAspect == null || binding.baseAspect.Length != 2 || binding.baseAspect[1] <= 0
-                || binding.baseSize <= 0 || catalog.viewBound?.Length != 2)
+                || binding.baseSize <= 0 || catalog.viewBound?.Length != 2
+                || string.IsNullOrEmpty(binding.offsetJson) || string.IsNullOrEmpty(binding.recomposerJson))
                 throw new InvalidDataException("Original battle camera settings are missing: " + gameId);
             this.unitRoot = unitRoot;
             root = new GameObject("Official Battle Camera " + gameId);
@@ -90,8 +91,11 @@ namespace Zjcs.Presentation.Combat
             JsonUtility.FromJsonOverwrite(binding.framingJson, framing);
             framingMode = framing.m_GroupFramingMode;
             cameraOffset = cameraObject.AddComponent<CinemachineCameraOffset>();
+            JsonUtility.FromJsonOverwrite(binding.offsetJson, cameraOffset);
             recomposer = cameraObject.AddComponent<CinemachineRecomposer>();
-            recomposer.m_ZoomScale = 1f;
+            // Runtime AddComponent does not execute the editor's Reset defaults.
+            // Restore the actual source extensions, including attachment weights.
+            JsonUtility.FromJsonOverwrite(binding.recomposerJson, recomposer);
             try
             {
                 performanceCamera = new OfficialBattlePerformanceCamera(root.transform,

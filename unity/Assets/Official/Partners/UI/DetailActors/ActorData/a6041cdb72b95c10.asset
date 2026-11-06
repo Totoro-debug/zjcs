@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dba5b32f91260ee355a7cb208781550, type: 3}
+  m_Name: npc_11001_SkeletonData
+  m_EditorClassIdentifier: ''
+  payload: {fileID: 4900000, guid: b955ea9336be721154bf5c5b7bed852a, type: 3}
+  npcId: 11001
+  combineSkins: []
+  defaultMix: 0.20000000298023224
+  pages:
+  - Name: npc_11001
+    Placeholder: {fileID: 2800000, guid: c55397027b5bd5c0800c1caebc94ce4a, type: 2}
+  splitAnimationNames:
+  - 100/block_01
+  - 100/die_01
+  - 100/die_02
+  - 100/down_01
+  - 100/floating_01
+  - 100/hit_01
+  - 100/hit_02
+  - 100/idle_01
+  - 100/raise_01
+  - 100/run_01
+  - 100/run_02
+  - 100/run_03
+  - 100/skill_01
+  - 100/skill_02
+  - 100/skill_03
+  - 100/stun_01

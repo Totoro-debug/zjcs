@@ -31,7 +31,8 @@ def build():
               'pet_ability_prop_scale_factor', 'skill', 'skill_rank', 'item')}
     skill_ids = {row['EntitySkill'] for row in rules['pet_evolution'] if row['EntitySkill'] > 0}
     for row in rules['pet_evolution']:
-        for key in ('SupportSkills', 'EntityActiveSkills', 'EntityPassiveSkills', 'DeactiveEntityPassiveSkills'):
+        for key in ('SupportSkills', 'EntityActiveSkills', 'EntityPassiveSkills',
+                    'DeactiveEntityPassiveSkills', 'ActiveSkills', 'PassiveSkills'):
             skill_ids.update(row[key] or [])
     for table in ('skill', 'item'):
         tables[table] = [row for row in rules[table] if row['ClassId'] in skill_ids]

@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Collections;
+using System.Globalization;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -105,7 +108,8 @@ namespace Zjcs.Editor.Skills
             // Restore its startup scene; isolated battle mode supplies its own profile.
             EditorSceneManager.OpenScene("Assets/Game/Scenes/Bootstrap.unity", OpenSceneMode.Single);
             OfficialSkillAssetTools.Validate();
-            if (Application.isBatchMode || Environment.GetEnvironmentVariable("ZJCS_SKILLS_AUTORUN") == "1")
+            if ((Application.isBatchMode || Environment.GetEnvironmentVariable("ZJCS_SKILLS_AUTORUN") == "1")
+                && Environment.GetEnvironmentVariable("ZJCS_SKILLS_PET_UI_ONLY") != "1")
                 Combat.BattleGameViewInput.Focus();
             ConfigurePortraitGameView(675, 1463);
             string root = Path.Combine(ValidationDirectory, "save-" + Guid.NewGuid().ToString("N"));
@@ -212,8 +216,8 @@ namespace Zjcs.Editor.Skills
             int count = 0;
             foreach (var skill in progression.SkillRules.Skills)
             {
-                calculate.Invoke(provider, new object[] { skill.ClassId, 1, 1, 1, 4 });
-                calculate.Invoke(provider, new object[] { skill.ClassId, 1, 20, 2, 4 });
+                calculate.Invoke(provider, new object[] { skill.ClassId, 1, 1, 1, 4, null });
+                calculate.Invoke(provider, new object[] { skill.ClassId, 1, 20, 2, 4, null });
                 count++;
             }
             Require(count == 394, "Original detail property validation omitted skills: " + count);
@@ -369,6 +373,12 @@ namespace Zjcs.Editor.Skills
             yield return new WaitForEndOfFrame();
             yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-opening.png"));
             yield return null;
+            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PET_UI_ONLY") == "1")
+            {
+                yield return ValidatePetSkillDetail(progression, panel);
+                Finish(true, null);
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_ATTACHMENTS_ONLY") == "1") {
                 yield return ValidateListAttachments(session, progression, panel);
                 Finish(true, null);
@@ -939,6 +949,125 @@ namespace Zjcs.Editor.Skills
             if (ownsEventSystem)
                 UnityEngine.Object.Destroy(eventSystem);
             Finish(true, null);
+        }
+
+        private static IEnumerator ValidatePetSkillDetail(OfflineCharacterProgressionService progression,
+            CharacterSkillPanel panel)
+        {
+            var evolutions = Zjcs.Presentation.Combat.OfficialBattlePetEnergyAssembler
+                .LoadBattlePetCatalog(progression.Catalog).Rows("pet_evolution");
+            Dictionary<string, object> evolution = evolutions.FirstOrDefault(row =>
+            {
+                return PetSkillTestInt(row, "EntitySkill") > 0
+                    && (PetSkillTestArray(row, "EntityActiveSkills").Length > 0
+                    || PetSkillTestArray(row, "EntityPassiveSkills").Length > 0);
+            });
+            Require(evolution != null, "The official pet evolution table has no entity skill fixture.");
+            int petClassId = PetSkillTestInt(evolution, "ClassId");
+            int phase = PetSkillTestInt(evolution, "EvolutionPhase");
+            int sourceSkillId = PetSkillTestInt(evolution, "EntitySkill");
+            int skillId = PetSkillTestArray(evolution, "EntityActiveSkills")
+                .Concat(PetSkillTestArray(evolution, "EntityPassiveSkills")).First();
+            int monsterId = PetSkillTestInt(evolution, "FightEntityClassId");
+            int[] entityActive = PetSkillTestArray(evolution, "EntityActiveSkills");
+            int[] entityPassive = PetSkillTestArray(evolution, "EntityPassiveSkills");
+            Dictionary<string, object> childhood = evolutions.Where(row => PetSkillTestInt(row, "ClassId") == petClassId)
+                .OrderBy(row => PetSkillTestInt(row, "EvolutionPhase")).First();
+            int[] childhoodActive = PetSkillTestArray(childhood, "ActiveSkills");
+            int[] childhoodPassive = PetSkillTestArray(childhood, "PassiveSkills");
+            int expectedCount = entityActive.Length + childhoodActive.Length + entityPassive.Length + childhoodPassive.Length;
+            int skillIndex = Array.IndexOf(entityActive, skillId);
+            if (skillIndex < 0)
+            {
+                int passiveIndex = Array.IndexOf(entityPassive, skillId);
+                Require(passiveIndex >= 0, "The official pet entity skill is absent from its phase skill arrays.");
+                skillIndex = entityActive.Length + childhoodActive.Length + passiveIndex;
+            }
+            var pet = new OfflinePetInstance
+            {
+                Index = 987654321,
+                ClassId = petClassId,
+                Quality = 1,
+                Level = 18,
+                EvolutionPhase = phase,
+                SkillRanks = new List<OfflinePetSkillRank> { new OfflinePetSkillRank { SkillId = skillId, Rank = 1 } }
+            };
+            progression.Player.Pets.Pets.Add(pet);
+            MethodInfo open = typeof(CharacterSkillPanel).GetMethod("OpenPetEntityBrief",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Require(open != null, "The official pet entity hyperlink handler is missing.");
+            open.Invoke(panel, new object[] { petClassId, sourceSkillId });
+            yield return new WaitForSecondsRealtime(.75f);
+
+            GameObject brief = GameObject.Find("monster_brief");
+            Require(brief != null, "The pet entity hyperlink did not open the original brief.");
+            Transform[] icons = brief.GetComponentsInChildren<Transform>(true)
+                .Where(value => value.name == "ItemIconPetSkill" && value.gameObject.activeInHierarchy).ToArray();
+            Require(expectedCount > 0 && icons.Length == expectedCount,
+                "The pet brief skill list differs from the official entity-plus-childhood skill arrays: "
+                + icons.Length + " / " + expectedCount);
+            Button skillButton = icons[skillIndex].GetComponent<Button>();
+            Require(skillButton != null, "The official pet skill icon has no clickable button.");
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(
+                Path.Combine(ValidationDirectory, "zjcs-pet-skill-list.png"));
+            SimulatePointerClick(skillButton);
+            yield return new WaitForSecondsRealtime(.5f);
+
+            GameObject detail = GameObject.Find("pet_skill_detail");
+            Require(detail != null && detail.activeInHierarchy, "Clicking the pet skill did not open its original detail dialog.");
+            TMP_Text name = detail.GetComponentsInChildren<TMP_Text>(true).FirstOrDefault(value =>
+                value.name == "NameText" && value.transform.parent.name == "NameGo");
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(
+                Path.Combine(ValidationDirectory, "zjcs-pet-skill-detail.png"));
+            Require(name != null && name.text == Convert.ToString(
+                Zjcs.Presentation.Combat.OfficialBattlePetEnergyAssembler.LoadBattlePetCatalog(progression.Catalog)
+                    .Find("item", skillId)["Name"], CultureInfo.InvariantCulture),
+                "The original pet skill detail does not display its configured skill name: " + name?.text);
+            TMP_Text level = detail.GetComponentsInChildren<TMP_Text>(true).FirstOrDefault(value =>
+                value.name == "LevelText" && value.transform.parent.name == "LevelGo");
+            Require(level != null && !level.gameObject.activeInHierarchy,
+                "The current-entity skill incorrectly displays the normal pet skill level.");
+            yield return new WaitForEndOfFrame();
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(
+                Path.Combine(ValidationDirectory, "zjcs-pet-skill-detail.png"));
+            Button TopMask() => UnityEngine.Object.FindObjectsOfType<Button>()
+                .Where(value => value.name == "BlurMask")
+                .OrderByDescending(value => value.GetComponentInParent<Canvas>().sortingOrder).First();
+            SimulatePointerClick(TopMask());
+            yield return new WaitForSecondsRealtime(.3f);
+            Require(GameObject.Find("pet_skill_detail") == null && brief.activeInHierarchy,
+                "Closing the pet detail did not return to its entity skill list.");
+            if (childhoodActive.Length > 0)
+            {
+                SimulatePointerClick(icons[entityActive.Length].GetComponent<Button>());
+                yield return new WaitForSecondsRealtime(.75f);
+                detail = GameObject.Find("pet_skill_detail");
+                Require(detail != null, "The childhood skill did not open its original pet detail.");
+                level = detail.GetComponentsInChildren<TMP_Text>(true).First(value =>
+                    value.name == "LevelText" && value.transform.parent.name == "LevelGo");
+                Require(level.gameObject.activeInHierarchy && level.text.Contains(pet.Level.ToString(CultureInfo.InvariantCulture)),
+                    "The childhood skill detail did not retain the pet level.");
+                yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(
+                    Path.Combine(ValidationDirectory, "zjcs-pet-childhood-skill-detail.png"));
+                SimulatePointerClick(TopMask());
+                yield return new WaitForSecondsRealtime(.3f);
+                Require(GameObject.Find("pet_skill_detail") == null, "The childhood skill detail did not close by its original mask.");
+            }
+            Debug.Log("[Skills] Original pet skill list and entity-skill detail passed: pet="
+                + petClassId + ", skill=" + skillId + ", entries=" + icons.Length + ".");
+        }
+
+        private static int PetSkillTestInt(Dictionary<string, object> row, string field)
+        {
+            return row != null && row.TryGetValue(field, out object value) && value != null
+                ? Convert.ToInt32(value, CultureInfo.InvariantCulture) : 0;
+        }
+
+        private static int[] PetSkillTestArray(Dictionary<string, object> row, string field)
+        {
+            return row != null && row.TryGetValue(field, out object value) && value is List<object> values
+                ? values.Select(item => Convert.ToInt32(item, CultureInfo.InvariantCulture)).ToArray()
+                : Array.Empty<int>();
         }
 
         private static IEnumerator ValidateListAttachments(OfflineMainlineProgressSession session,

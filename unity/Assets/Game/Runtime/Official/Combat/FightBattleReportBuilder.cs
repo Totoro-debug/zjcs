@@ -20,6 +20,7 @@ namespace Zjcs.Combat.Official
         public int Hits;
         public int HitsTaken;
         public long DamageDealt;
+        public long DamageAndShieldDamageDealt;
         public long AdditionalAttributedDamage;
         public long DamageTaken;
         public bool HasAbsoluteDamageTaken;
@@ -150,6 +151,7 @@ namespace Zjcs.Combat.Official
                     Hits = stats == null ? 0 : stats.Hits,
                     HitsTaken = stats == null ? 0 : stats.HitsTaken,
                     DamageDealt = stats == null ? 0 : stats.DamageDealt,
+                    DamageAndShieldDamageDealt = stats == null ? 0 : stats.DamageAndShieldDamageDealt,
                     AdditionalAttributedDamage = stats == null ? 0 : stats.AdditionalAttributedDamage,
                     DamageTaken = stats == null ? 0 : stats.DamageTaken,
                     HasAbsoluteDamageTaken = stats != null && stats.HasAbsoluteDamageTaken,

@@ -11,6 +11,7 @@ namespace Zjcs.Presentation.Character
     public sealed partial class CharacterSkillPanel
     {
         public void ShowOriginalDamageTestResult(OfficialSkillDamageTestRequest request, FightBattleCheckpoint checkpoint,
+            FightBattleReport finalReport,
             Action again, Action settings, Action leave)
         {
             BuildAuxiliary("damage_test_result", out var resultNodes, out _);
@@ -40,7 +41,7 @@ namespace Zjcs.Presentation.Character
                 OriginalDetailText(request.EnableMonsterOneDamage ? "ui_skill_stage_monsterhurt_text_one" : "ui_skill_stage_monsterhurt_text_normal")));
             // GameEndPanelDamageTest.UpdateDamageUI sums the player's normal,
             // pet and summon groups, then divides using integer arithmetic.
-            long damage = checkpoint.Statistics.Units.Where(value => checkpoint.Units.Any(unit => unit.Id == value.UnitId && unit.Side == 1))
+            long damage = finalReport.Units.Where(value => value.Side == 1)
                 .Sum(value => value.DamageDealt + value.AdditionalAttributedDamage);
             int round = checkpoint.Units.Any(unit => unit.Id == 1) ? checkpoint.Timeline.Round : 0;
             SetAuxiliaryText(Bound("mDamageCountText"), Format("mDamageCountText", OfficialPropFormat.Compact(damage)));
@@ -75,7 +76,7 @@ namespace Zjcs.Presentation.Character
                     PlaybackShare = Control("mGamePlaybackShareBtn"),
                     SaveRecord = Control("mGameSaveRecordBtn"),
                     ThumbUp = Control("mThumbUpReportSwitchBtn"),
-                    PopupParent = popupParent, Checkpoint = checkpoint,
+                    PopupParent = popupParent, Checkpoint = checkpoint, FinalReport = finalReport,
                     Presentation = lifetime => CreateBattleReportPresentation(lifetime, request.MaxRound, popupParent)
                 });
         }

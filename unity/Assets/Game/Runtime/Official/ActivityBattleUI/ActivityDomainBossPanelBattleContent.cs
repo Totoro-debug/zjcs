@@ -68,9 +68,10 @@ namespace Zjcs.Official.ActivityBattleUI
                 ClearUnlockWait();
                 unlock = StartCoroutine(WaitUnlockTime(state.NextLogicDayResetTime));
             }
-            float ratio = mDifficulty < state.Difficulty ? 0f
-                : mDifficulty != state.Difficulty ? 1f : state.HpRatio;
-            ratio = Mathf.Clamp01(ratio);
+            // The approved local HP projection already handles completed tiers
+            // and a resumed encounter at an older tier. Do not overwrite the
+            // latter's actual checkpoint HP with the global progression state.
+            float ratio = Mathf.Clamp01(state.HpRatio);
             mHpText.Format(WorldBattleReportNumberFormat.Percent(ratio));
             mHpSlider.value = ratio;
             mChallengeCountText.Format(Math.Max(state.MaxDailyChallengeCount - state.DailyChallengeCount, 0),

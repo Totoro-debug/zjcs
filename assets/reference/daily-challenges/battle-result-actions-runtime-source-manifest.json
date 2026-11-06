@@ -1,0 +1,67 @@
+{
+  "manifest": "884_156692",
+  "classes": [
+    {
+      "source": ".tools/source-packages/current/884_156692/official-code/client-source/GameEndPanelBase.cs",
+      "source_sha256": "34c989b4245b6ee40468a9d7446a2029b762bb0ad4068febb6eb8dd7e0c41b5d",
+      "output": "unity/Assets/Game/Runtime/Official/BattleResultUI/GameEndPanelBase.cs",
+      "sha256": "4125114c5bd909b4834b2a3346cdcf3d082e9d529465e349b4a47b6330b277e4",
+      "hashLineEndings": "LF"
+    },
+    {
+      "source": ".tools/source-packages/current/884_156692/official-code/client-source/EndPanelAnimEventReceiver.cs",
+      "source_sha256": "a162e78c5cc9f29304f4ef810a25cc4a60432b9bd884c09223041f921bf02142",
+      "output": "unity/Assets/Game/Runtime/Official/BattleResultUI/EndPanelAnimEventReceiver.cs",
+      "sha256": "9406deb291ecaec3c68b0df25eb9f45c01bfa1996c0fbc70110faabcbc4e09ed",
+      "hashLineEndings": "LF"
+    }
+  ],
+  "adaptations": [
+    "Original GameEndPanelBase serialized fields, visibility branches, callbacks, animation notification and enable/disable lifecycle retained.",
+    "Namespace adapted; R3 button subscription disposal replaced by equivalent UnityEvent subscriptions/removals.",
+    "PlayerFightResult/parser/settings/record/window dependencies supplied by explicit presentation adapters. The common checkpoint remains the battle result owner.",
+    "The local result adapter uses the confirmed offline action policy; native GameEndPanelBase owns its report button, and invokes the same common report lifecycle used by the skill test result."
+  ],
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleResultUI/BattleResultData.cs",
+      "sha256": "5db15aa6fa48c7a023d132f0e644c4c8769f1d40f940d7a284fac171b2a02387",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleResultUI/BattleResultData.cs.meta",
+      "sha256": "b728fa1694bd2fbcf646a02856579fb699d96bafa79a3d583f4aad0e8adb2395",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleResultUI/EndPanelAnimEventReceiver.cs",
+      "sha256": "9406deb291ecaec3c68b0df25eb9f45c01bfa1996c0fbc70110faabcbc4e09ed",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleResultUI/EndPanelAnimEventReceiver.cs.meta",
+      "sha256": "02cba9b9042ae0b17a9c7fee5bf64d9dea91ef338c34e5db445765d85341fc0f",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleResultUI/GameEndPanelBase.cs",
+      "sha256": "4125114c5bd909b4834b2a3346cdcf3d082e9d529465e349b4a47b6330b277e4",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleResultUI/GameEndPanelBase.cs.meta",
+      "sha256": "f7b583e56d3846f6b2f7b12509fa70ef4577b4c564213b7ff7f4c057d88d0a62",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleResultUI/Zjcs.Official.BattleResultUI.asmdef",
+      "sha256": "a85f3f10c6c61ca447059ae348263c962302889ba51dc3c9d23b643c8ed1289a",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleResultUI/Zjcs.Official.BattleResultUI.asmdef.meta",
+      "sha256": "7299bcff1d7f1716df9c1e029ad7f2b40c25466d87364d494cda5122051d1122",
+      "hashLineEndings": "LF"
+    }
+  ]
+}

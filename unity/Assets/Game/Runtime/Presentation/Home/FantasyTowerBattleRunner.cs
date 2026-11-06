@@ -125,8 +125,15 @@ namespace Zjcs.Presentation.Home
             FantasyTowerEntrySave save = progress.GetEntry(entryIndex);
             FightBattleCheckpoint checkpoint = progress.LoadForegroundCheckpoint(entryIndex, stage.Id);
             bool restore = checkpoint != null;
-            if (!restore) checkpoint = BuildCheckpoint(stage, roster, scene);
-            MountBattle(checkpoint, scene, restore);
+            if (!restore) checkpoint = OfficialMapBattleCheckpointBuilder.Create(new OfficialMapBattleCheckpointRequest
+            {
+                Stage = stage, Roster = roster, Scene = scene,
+                Player = host.Profile.Save.Player, World = host.Profile.Save.World,
+                Progression = host.DailyDungeonProgression,
+                RandomSeed = StableSeed(host.ActiveProfileSlotId, stage.Id),
+                UseMonsterProperties = true
+            });
+            MountBattle(checkpoint, scene, stage, restore);
             if (backgroundExecution) progress.SaveBackgroundCheckpoint(entryIndex, checkpoint);
             else progress.SaveForegroundCheckpoint(entryIndex, checkpoint);
             if (backgroundExecution)
@@ -138,7 +145,8 @@ namespace Zjcs.Presentation.Home
             continueTimer = 0f;
         }
 
-        private void MountBattle(FightBattleCheckpoint checkpoint, Map10RuntimeBattleScene scene, bool restore)
+        private void MountBattle(FightBattleCheckpoint checkpoint, Map10RuntimeBattleScene scene,
+            Map10RuntimeStage stage, bool restore)
         {
             if (controller != null) throw new InvalidOperationException("Fantasy Tower battle is already mounted.");
             disposed = false;
@@ -170,93 +178,10 @@ namespace Zjcs.Presentation.Home
                 AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
                 CombatAssets = combatAssets,
                 RestoreCheckpoint = restore,
-                StatueProgress = host.Profile
+                StatueProgress = host.Profile,
+                Options = OfficialMapBattleSessionOptionsBuilder.Create(stage, true, 3, 3, player.X, player.Y)
             });
             controller.ConfigureSpeeds(combat.SpeedSettings, 0, IsBattleSpeedConditionMet);
-        }
-
-        private FightBattleCheckpoint BuildCheckpoint(Map10RuntimeStage stage,
-            Map10RuntimeRoster roster, Map10RuntimeBattleScene scene)
-        {
-            Map10RuntimeFightGridGroundComponent sourceGrid = scene.FightGridGroundComponent;
-            if (sourceGrid?.Size == null || sourceGrid.PosInfos == null || sourceGrid.OriginPos == null)
-                throw new InvalidOperationException("Official Fantasy Tower scene grid is malformed.");
-            OfficialBattleGridBuild gridBuild = OfficialBattleGridAssembler.Build(sourceGrid.Size.X,
-                sourceGrid.Size.Y, sourceGrid.OriginPos.X, sourceGrid.OriginPos.Y, sourceGrid.OriginPos.Z,
-                sourceGrid.PosInfos.Select(cell => new FightBattleGridCell { X = cell.Pos.X, Y = cell.Pos.Y,
-                    GroundType = cell.GroundType, Height = cell.Height }), "Fantasy Tower");
-            FightBattleGrid grid = gridBuild.Grid;
-            int moveMask = gridBuild.MoveMask;
-            Map10RuntimeFactionInfo faction = scene.FightComponent?.FactionInfoList?
-                .FirstOrDefault(value => value.Faction == 0);
-            if (faction?.EntryPosList == null || faction.EntryPosList.Length == 0)
-                throw new InvalidOperationException("Official Fantasy Tower scene has no player entry position.");
-
-            OfflinePlayerProgress playerSave = host.Profile.Save.Player;
-            OfflineCharacterProgressionService progression = host.DailyDungeonProgression;
-            OfficialCombatAssetCatalog combatAssets = OfficialCombatAssetCatalog.LoadDefault();
-            FightOfficialCombatCatalog combat = combatAssets.Load();
-            FightOfficialSkillItemCatalog skillItems = combatAssets.LoadSkillItems();
-            FightDamageFormula formula = combatAssets.LoadDamageFormula();
-            Dictionary<int, long> playerProps = new Dictionary<int, long>(progression.PropertyCalculator.Evaluate(
-                playerSave, host.Profile.Save.World, DateTimeOffset.Now.ToUnixTimeSeconds()).OutOfFightBattleProps);
-            OfficialBattlePassivePropertyAssembler.ApplyEquippedPlayerPassives(combat, skillItems,
-                playerProps, playerSave, host.DailyDungeonProgression);
-            int maxHpId = combat.PropertyType("MaxHp"), speedId = combat.PropertyType("Speed");
-            FightStageStatusCatalog stageStatuses = combatAssets.LoadStageStatusCatalog();
-            var checkpoint = OfficialBattleCheckpointAssembler.Create(new OfficialBattleCheckpointOptions
-            {
-                StageId = stage.Id,
-                StageType = stage.Type,
-                MaxRound = stage.MaxRound > 0 ? stage.MaxRound : roster.MaxRound,
-                IsPlayerRoundLimit = stage.IsPlayerRoundLimit,
-                PlayerRoundLimit = stage.PlayerRoundLimit,
-                RandomSeed = StableSeed(host.ActiveProfileSlotId, stage.Id),
-                Grid = grid,
-                StageStatuses = stageStatuses,
-                StageStatusClassId = stageStatuses.ClassIdOfStage(stage.Id)
-            });
-            Map10RuntimePoint spawn = faction.EntryPosList[0];
-            var player = new FightBattleUnitState
-            {
-                Id = 1, Side = 1, CharacterType = 1, Level = playerSave.Level,
-                SubRank = playerSave.SubRank, Profession = playerSave.Wardrobe.Profession,
-                X = spawn.X, Y = spawn.Y, MoveMask = moveMask
-            };
-            OfficialBattleUnitAssembler.Initialize(formula, player, playerProps, maxHpId, speedId);
-            checkpoint.Units.Add(player);
-            AssemblePlayer(combat, skillItems, player, playerSave);
-            OfficialBattlePetEnergyAssembler.TryConfigure(player, playerSave,
-                progression.Catalog, combat, skillItems);
-
-            foreach (Map10RuntimeWave sourceWave in (roster.Waves ?? Array.Empty<Map10RuntimeWave>()).OrderBy(value => value.Index))
-            {
-                var wave = new FightBattleWaveState { Index = sourceWave.Index, Spawned = sourceWave.Index == 0 };
-                foreach (Map10RuntimeMonster monster in sourceWave.Units ?? Array.Empty<Map10RuntimeMonster>())
-                {
-                    Dictionary<int, long> props = (monster.Properties ?? Array.Empty<Map10RuntimeProperty>())
-                        .Where(value => value.Id > 0).GroupBy(value => value.Id)
-                        .ToDictionary(group => group.Key, group => group.Last().Value);
-                    ApplyMonsterPassives(combat, skillItems, props, monster);
-                    var unit = new FightBattleUnitState
-                    {
-                        Id = checkpoint.Units.Count + 1, Side = 2, CharacterType = 2,
-                        MonsterId = monster.MonsterId, MonsterGroupNo = monster.MonsterGroupNo,
-                        MonsterType = monster.MonsterType, Level = Mathf.RoundToInt(monster.Level),
-                        SubRank = monster.SubRank, Wave = sourceWave.Index,
-                        X = monster.Position.X, Y = monster.Position.Y,
-                        MoveMask = moveMask, Direction = monster.FlipX ? 1 : 0,
-                        MaxHpPlies = combat.MonsterHpPliesFor(monster.MonsterId,
-                            monster.MonsterGroupNo, Mathf.RoundToInt(monster.Level))
-                    };
-                    OfficialBattleUnitAssembler.Initialize(formula, unit, props, maxHpId, speedId);
-                    checkpoint.Units.Add(unit); wave.UnitIds.Add(unit.Id);
-                    AssembleMonster(combat, skillItems, unit, monster);
-                }
-                checkpoint.Waves.Add(wave);
-            }
-            if (checkpoint.Waves.Count == 0) throw new InvalidOperationException("Official Fantasy Tower layer has no waves.");
-            return checkpoint;
         }
 
         private void Update()
@@ -293,7 +218,8 @@ namespace Zjcs.Presentation.Home
             else progress.SaveForegroundCheckpoint(entryIndex, checkpoint);
         }
 
-        public void OnBattleReportReady(FightBattleReport report) { }
+        public FightBattleReport FinalReport { get; private set; }
+        public void OnBattleReportReady(FightBattleReport report) { FinalReport = report; }
 
         public void OnBattleHudControlClicked(string path) { }
 
@@ -370,69 +296,6 @@ namespace Zjcs.Presentation.Home
                 Destroy(controller); controller = null;
             }
             if (battleRoot != null) { Destroy(battleRoot.gameObject); battleRoot = null; }
-        }
-
-        private static void ApplyMonsterPassives(FightOfficialCombatCatalog combat,
-            FightOfficialSkillItemCatalog items, Dictionary<int, long> properties, Map10RuntimeMonster monster)
-        {
-            OfficialBattlePassivePropertyAssembler.Apply(combat, items, properties,
-                (monster.PassiveSkills ?? Array.Empty<int>()).Select(id => new FightOfficialPassiveSkillBinding
-                { ItemId = id, Rank = 1, Level = Mathf.Max(1, Mathf.RoundToInt(monster.Level)), SubRank = monster.SubRank }));
-        }
-
-        private void AssemblePlayer(FightOfficialCombatCatalog combat, FightOfficialSkillItemCatalog items,
-            FightBattleUnitState unit, OfflinePlayerProgress player)
-        {
-            int[] equipped = OfflineSkillProgression.EquippedActiveSkills(player.Skills);
-            if (!equipped.Any(value => value > 0))
-            {
-                int initial = items.InitialActiveSkill(player.InitialWeaponType);
-                if (initial > 0) equipped = new[] { initial, 0, 0, 0 };
-            }
-            Dictionary<int, long> properties = OfficialBattlePropertyAssembler.ToMap(unit.Properties);
-            int weaponItemId = OfflineEquipmentOperations.EquippedItemIdAtPosition(player.Equipment, 10);
-            int currentWeaponType = items.ItemTypeFor(weaponItemId);
-            var active = new List<FightOfficialSkillBinding>();
-            for (int slot = 0; slot < equipped.Length; slot++)
-            {
-                int itemId = equipped[slot]; if (itemId <= 0) continue;
-                int skinId = player.Wardrobe?.SkillSkins?.FirstOrDefault(value => value.SkillId == itemId)?.SkillSkinId ?? 0;
-                FightOfficialSkillItem item = items.RequiredForSkin(itemId, skinId);
-                int rank = Math.Max(1, OfflineSkillProgression.OwnedRank(player.Skills, itemId));
-                int level = Math.Max(1, host.DailyDungeonProgression.SkillProgression.SlotLevel(player.Skills, 100, slot,
-                    host.DailyDungeonProgression.SkillContext().CurrentSeasonId));
-                active.Add(new FightOfficialSkillBinding { EntityId = item.EntityId, Slot = slot, ItemId = itemId, UseItemId = item.ItemId, SkillSkinId = skinId,
-                    Rank = rank, Level = level,
-                    ProfessionAvailability = items.ProfessionAvailabilityFor(item.ItemId,
-                        unit.Profession, currentWeaponType, player.InitialWeaponType),
-                    SubRank = player.SubRank });
-            }
-            var passive = OfflineSkillProgression.EquippedPassiveSkills(player.Skills)
-                .Select((value, slot) => new FightOfficialPassiveSkillBinding { ItemId = value,
-                    Rank = Math.Max(1, OfflineSkillProgression.OwnedRank(player.Skills, value)),
-                    Level = Math.Max(1, host.DailyDungeonProgression.SkillProgression.SlotLevel(player.Skills, 101, slot,
-                        host.DailyDungeonProgression.SkillContext().CurrentSeasonId)),
-                    SubRank = player.SubRank }).Where(value => value.ItemId > 0).ToList();
-            passive.AddRange(OfficialEquipmentBattlePassives.Collect(host.DailyDungeonProgression, player, unit.SubRank));
-            OfficialBattleSkillAssembler.AssembleUnit(combat, items, unit, properties, active, passive);
-        }
-
-        private static void AssembleMonster(FightOfficialCombatCatalog combat, FightOfficialSkillItemCatalog items,
-            FightBattleUnitState unit, Map10RuntimeMonster monster)
-        {
-            Dictionary<int, long> properties = OfficialBattlePropertyAssembler.ToMap(unit.Properties);
-            var active = new List<FightOfficialSkillBinding>();
-            foreach (Map10RuntimeSkill source in monster.ActiveSkills ?? Array.Empty<Map10RuntimeSkill>())
-            {
-                if (source.EntityId <= 0) continue;
-                active.Add(new FightOfficialSkillBinding { EntityId = source.EntityId, Slot = source.Slot,
-                    ItemId = source.ItemId, Rank = Math.Max(1, source.Rank), Level = Math.Max(1, unit.Level),
-                    SubRank = unit.SubRank });
-            }
-            var passive = (monster.PassiveSkills ?? Array.Empty<int>()).Where(value => value > 0)
-                .Select(value => new FightOfficialPassiveSkillBinding { ItemId = value, Rank = 1,
-                    Level = Math.Max(1, unit.Level), SubRank = unit.SubRank }).ToList();
-            OfficialBattleSkillAssembler.AssembleUnit(combat, items, unit, properties, active, passive);
         }
 
         private static int StableSeed(string slot, int stage)

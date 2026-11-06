@@ -56,6 +56,7 @@ namespace Zjcs.Editor.Skills
         }
 
         private const string PayloadRoot = "Assets/Official/Skills/";
+        private const string PetPayloadRoot = "Assets/Official/PetSkillUI/";
         private const string ResourcesRoot = "Assets/Game/Resources/Skills";
         private const string CatalogPath = ResourcesRoot + "/OfficialSkillAssetCatalog.asset";
         private static readonly string[] Names =
@@ -69,6 +70,8 @@ namespace Zjcs.Editor.Skills
             "skillRecommendations", "skillRules", "runtimeRules", "cultivationRules", "uiLayouts",
             "fidelityTexts", "sourceManifest", "qualityGradient"
         };
+        private static readonly string[] PetNames = { "pet-skill-ui.json", "source-manifest.json" };
+        private static readonly string[] PetFields = { "petSkillUiLayouts", "petSkillUiSourceManifest" };
 
         [Serializable]
         private sealed class SourceManifest
@@ -83,6 +86,28 @@ namespace Zjcs.Editor.Skills
             public string path;
             public long bytes;
             public string sha256;
+        }
+
+        [Serializable]
+        private sealed class PetSkillModuleManifest
+        {
+            public string manifest;
+            public PetSkillReceiptLink reference_receipt;
+            public SourceFile[] files;
+        }
+
+        [Serializable]
+        private sealed class PetSkillReceiptLink
+        {
+            public string path;
+            public string sha256;
+        }
+
+        [Serializable]
+        private sealed class PetSkillReceipt
+        {
+            public string manifest;
+            public SourceFile[] outputs;
         }
 
         [MenuItem("Zjcs/Validate/Official Skills Assets")]
@@ -100,6 +125,13 @@ namespace Zjcs.Editor.Skills
                 payloads[i] = AssetDatabase.LoadAssetAtPath<TextAsset>(path);
                 if (payloads[i] == null) throw new BuildFailedException("Skill TextAsset was not imported: " + path);
             }
+            var petPayloads = new TextAsset[PetNames.Length];
+            for (int i = 0; i < PetNames.Length; i++)
+            {
+                string path = PetPayloadRoot + PetNames[i];
+                petPayloads[i] = AssetDatabase.LoadAssetAtPath<TextAsset>(path);
+                if (petPayloads[i] == null) throw new BuildFailedException("Pet skill UI TextAsset was not imported: " + path);
+            }
 
             string artRoot = PayloadRoot + "Art/";
             string[] spriteGuids = AssetDatabase.FindAssets("t:Sprite", new[] { artRoot.TrimEnd('/') });
@@ -111,6 +143,16 @@ namespace Zjcs.Editor.Skills
                 if (sprite == null) continue;
                 string relative = path.Substring(artRoot.Length).Replace('\\', '/');
                 sprites.Add(new OfficialSkillSpriteBinding { sourcePath = relative, sprite = sprite });
+            }
+            string petArtRoot = PetPayloadRoot + "Art/";
+            string[] petSpriteGuids = AssetDatabase.FindAssets("t:Sprite", new[] { petArtRoot.TrimEnd('/') });
+            foreach (string guid in petSpriteGuids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+                if (sprite == null) continue;
+                string relative = path.Substring(petArtRoot.Length).Replace('\\', '/');
+                sprites.Add(new OfficialSkillSpriteBinding { sourcePath = "pet-skill-ui/" + relative, sprite = sprite });
             }
             if (sprites.Count == 0) throw new BuildFailedException("No official skill sprites were imported.");
             sprites.Sort((left, right) => string.CompareOrdinal(left.sourcePath, right.sourcePath));
@@ -127,6 +169,12 @@ namespace Zjcs.Editor.Skills
                 SerializedProperty field = serialized.FindProperty(Fields[i]);
                 if (field == null) throw new BuildFailedException("Skill catalog field is missing: " + Fields[i]);
                 field.objectReferenceValue = payloads[i];
+            }
+            for (int i = 0; i < petPayloads.Length; i++)
+            {
+                SerializedProperty field = serialized.FindProperty(PetFields[i]);
+                if (field == null) throw new BuildFailedException("Skill catalog field is missing: " + PetFields[i]);
+                field.objectReferenceValue = petPayloads[i];
             }
             SerializedProperty spriteArray = serialized.FindProperty("sprites");
             var nativeFont = AssetDatabase.LoadAssetAtPath<TMPro.TMP_FontAsset>(
@@ -182,6 +230,7 @@ namespace Zjcs.Editor.Skills
             if (qualityGradient.components.Length != 6)
                 throw new BuildFailedException("Official skill quality gradient must bind all six source components.");
             ValidateSourceHashes(payloads[6].text);
+            ValidatePetSkillSourceHashes(petPayloads[1].text);
             ValidateDerivedSkillPieceMetadata(characterCatalog.Load());
             OfflineSkillRules progressionRules = catalog.LoadProgressionRules();
             if (progressionRules.PlanCount != OfflineSkillProfile.PlanCount)
@@ -234,13 +283,69 @@ namespace Zjcs.Editor.Skills
             SourceManifest manifest = JsonUtility.FromJson<SourceManifest>(json);
             if (manifest == null || manifest.manifest != "854_156383" || manifest.files == null)
                 throw new BuildFailedException("Skill source manifest is not pinned to 854_156383.");
-            foreach (SourceFile file in manifest.files)
+            ValidateSourceFiles(manifest.files, "Skill");
+        }
+
+        private static void ValidatePetSkillSourceHashes(string json)
+        {
+            PetSkillModuleManifest manifest = JsonUtility.FromJson<PetSkillModuleManifest>(json);
+            if (manifest == null || manifest.manifest != "884_156692" || manifest.reference_receipt == null
+                || manifest.files == null || string.IsNullOrEmpty(manifest.reference_receipt.path)
+                || string.IsNullOrEmpty(manifest.reference_receipt.sha256))
+                throw new BuildFailedException("Pet skill UI source manifest is not pinned to 884_156692.");
+            ValidateSourceFiles(manifest.files, "Pet skill UI");
+
+            string repository = Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT");
+            if (string.IsNullOrWhiteSpace(repository) || !Path.IsPathRooted(repository))
             {
-                string absolute = Path.GetFullPath(Path.Combine(Application.dataPath, file.path.Substring("Assets/".Length)));
-                if (!File.Exists(absolute) || new FileInfo(absolute).Length != file.bytes
-                    || !string.Equals(Hash(File.ReadAllBytes(absolute)), file.sha256, StringComparison.OrdinalIgnoreCase))
-                    throw new BuildFailedException("Skill payload differs from its source manifest: " + file.path);
+                string project = Directory.GetParent(Application.dataPath).FullName;
+                repository = Directory.GetParent(project).FullName;
             }
+            repository = Path.GetFullPath(repository);
+            string receiptPath = Path.GetFullPath(Path.Combine(repository, manifest.reference_receipt.path));
+            if (!receiptPath.StartsWith(repository.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar,
+                    StringComparison.OrdinalIgnoreCase)
+                || !File.Exists(receiptPath))
+                throw new BuildFailedException("Pet skill UI reference receipt is absent from the repository.");
+            byte[] receiptBytes = File.ReadAllBytes(receiptPath);
+            if (!string.Equals(Hash(receiptBytes), manifest.reference_receipt.sha256, StringComparison.OrdinalIgnoreCase))
+                throw new BuildFailedException("Pet skill UI reference receipt hash differs from the module manifest.");
+            PetSkillReceipt receipt = JsonUtility.FromJson<PetSkillReceipt>(Encoding.UTF8.GetString(receiptBytes));
+            if (receipt == null || receipt.manifest != manifest.manifest || receipt.outputs == null
+                || !SameOutputFiles(manifest.files, receipt.outputs))
+                throw new BuildFailedException("Pet skill UI payload files differ from the official source receipt.");
+        }
+
+        private static void ValidateSourceFiles(SourceFile[] files, string label)
+        {
+            if (files == null) throw new BuildFailedException(label + " source file list is absent.");
+            string assetsRoot = Path.GetFullPath(Application.dataPath).TrimEnd(Path.DirectorySeparatorChar)
+                + Path.DirectorySeparatorChar;
+            foreach (SourceFile file in files)
+            {
+                if (file == null || string.IsNullOrEmpty(file.path) || !file.path.StartsWith("Assets/", StringComparison.Ordinal))
+                    throw new BuildFailedException(label + " source file path is invalid.");
+                string absolute = Path.GetFullPath(Path.Combine(Application.dataPath, file.path.Substring("Assets/".Length)));
+                if (!absolute.StartsWith(assetsRoot, StringComparison.OrdinalIgnoreCase)
+                    || !File.Exists(absolute) || new FileInfo(absolute).Length != file.bytes
+                    || !string.Equals(Hash(File.ReadAllBytes(absolute)), file.sha256, StringComparison.OrdinalIgnoreCase))
+                    throw new BuildFailedException(label + " payload differs from its source manifest: " + file.path);
+            }
+        }
+
+        private static bool SameOutputFiles(SourceFile[] moduleFiles, SourceFile[] receiptFiles)
+        {
+            if (moduleFiles.Length != receiptFiles.Length) return false;
+            var outputs = receiptFiles.ToDictionary(value => value.path.StartsWith("unity/", StringComparison.Ordinal)
+                ? value.path.Substring("unity/".Length) : value.path, StringComparer.Ordinal);
+            foreach (SourceFile moduleFile in moduleFiles)
+            {
+                if (!outputs.TryGetValue(moduleFile.path, out SourceFile receiptFile)
+                    || moduleFile.bytes != receiptFile.bytes
+                    || !string.Equals(moduleFile.sha256, receiptFile.sha256, StringComparison.OrdinalIgnoreCase))
+                    return false;
+            }
+            return true;
         }
 
         private static string Hash(byte[] bytes)

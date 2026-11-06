@@ -8,6 +8,8 @@ using Zjcs.Offline.Progression;
 using Zjcs.Offline.ProfessionUI;
 using Zjcs.Presentation.Character;
 using Zjcs.Presentation.Combat;
+using Zjcs.Official.BattleResultUI;
+using System.Collections.Generic;
 
 namespace Zjcs.Presentation.Home
 {
@@ -20,27 +22,35 @@ namespace Zjcs.Presentation.Home
         [Serializable] private sealed class ReportProfessionIcon
         { public int profession; public string address; }
 
-        private void BindDailyChallengeBattleReport(GameObject result, string resource, FightBattleCheckpoint checkpoint)
+        private void BindDailyChallengeBattleReport(GameObject result, string resource,
+            FightBattleCheckpoint checkpoint, FightBattleReport finalReport)
         {
             var data = Resources.Load<TextAsset>("Combat/BattleReport/result-report-bindings");
             if (data == null) throw new InvalidOperationException("Original result report bindings are absent.");
             var bindings = JsonUtility.FromJson<ResultReportBindings>(data.text);
-            var window = bindings.windows.Single(value => value.resource == resource);
-            Button Control(string path)
-            {
-                if (path == null) return null;
-                Transform node = result.transform;
-                if (path.Length != 0) foreach (string index in path.Split('/')) node = node.GetChild(int.Parse(index));
-                return node.GetComponent<Button>();
-            }
-            // The legacy activity export still has omitted uGUI scripts. Keep
-            // its existing result usable until the original native UI is restored.
-            Button reportButton = Control(window.report);
-            if (reportButton == null) return;
-            OfficialBattleResultReport.Attach(result, new OfficialBattleResultReport.Binding {
-                Report = reportButton, PlaybackShare = Control(window.share),
-                SaveRecord = Control(window.save), ThumbUp = Control(window.thumbsUp),
-                PopupParent = canvas.transform, Checkpoint = checkpoint,
+            string originalName = resource.Substring(resource.LastIndexOf('/') + 1);
+            var actionPrefab = Resources.Load<GameObject>("Combat/ResultActions/" + originalName);
+            if (actionPrefab == null) throw new InvalidOperationException("Original result action module is absent: " + originalName);
+            var actions = UnityEngine.Object.Instantiate(actionPrefab, result.transform, false);
+            actions.name = "OriginalResultActions";
+            var native = actions.GetComponent<GameEndPanelBase>();
+            if (native == null || native.ReportButton == null)
+                throw new InvalidOperationException("Original result action controls are unbound.");
+            foreach (var sound in actions.GetComponentsInChildren<Zjcs.Official.WorldUI.WorldButtonSound>(true))
+                sound.Post = (clip, emitter) => {
+                    var source = emitter.GetComponent<AudioSource>();
+                    if (source == null) source = emitter.AddComponent<AudioSource>();
+                    source.playOnAwake = false;
+                    source.spatialBlend = 0f;
+                    source.PlayOneShot(clip);
+                };
+            // The module retains the exact source ancestor transforms. Its
+            // original subtree replaces the legacy export's omitted scripts.
+            var legacy = result.transform.Find("Content/BtnGroup");
+            if (legacy != null) legacy.gameObject.SetActive(false);
+            var report = OfficialBattleResultReport.Attach(result, new OfficialBattleResultReport.Binding {
+                Report = native.ReportButton, BindReportButton = false,
+                PopupParent = canvas.transform, Checkpoint = checkpoint, FinalReport = finalReport,
                 Presentation = lifetime => {
                     // No skill page is opened. Its existing original item/detail
                     // adapter supplies only the art and read-only skill snapshot.
@@ -78,6 +88,41 @@ namespace Zjcs.Presentation.Home
                     return presentation;
                 }
             });
+            native.Bind(new LocalResultActions(checkpoint, report));
+            native.InitMsg(new BattleResultData {
+                StageId = checkpoint?.StageId ?? 0,
+                Win = checkpoint?.Outcome != null && checkpoint.Outcome.Won,
+                Players = Array.Empty<BattleResultPlayer>()
+            });
+            native.SetSkillItemReportBtn(checkpoint != null && checkpoint.Finished
+                && checkpoint.Outcome != null && !checkpoint.Outcome.Invalid);
+        }
+
+        // Confirmed offline choice: original local statistics remain available;
+        // sharing, online record management and multiplayer thumbs-up are hidden
+        // through the original support-type branches.
+        private sealed class LocalResultActions : IBattleResultBaseHost
+        {
+            private readonly FightBattleCheckpoint checkpoint;
+            private readonly OfficialBattleResultReport report;
+            private readonly ISet<int> unsupported = new HashSet<int>();
+            public LocalResultActions(FightBattleCheckpoint checkpoint, OfficialBattleResultReport report)
+            { this.checkpoint = checkpoint; this.report = report; }
+            public BattleResultStage GetStage(int id) => checkpoint != null && checkpoint.StageId == id
+                ? new BattleResultStage { Id = id, Type = checkpoint.StageType } : null;
+            public ISet<int> ShareStageTypes => unsupported;
+            public ISet<int> SaveRecordStageTypes => unsupported;
+            public ISet<int> ThumbsUpStageTypes => unsupported;
+            public bool IsPlayback => false;
+            public bool IsAutoSaveRecordStage(int id) => false;
+            public bool HasLocalCapturedRecord(long id) => false;
+            public IEnumerable<long> TeamMemberTargetIds => Array.Empty<long>();
+            public long ThumbsUpGameId { get; private set; }
+            public void SetThumbsUpGameId(long id) => ThumbsUpGameId = id;
+            public void OpenReport(BattleResultData result) => report.Open();
+            public void OpenShare(long id) => throw new NotSupportedException("Online result sharing is unavailable offline.");
+            public bool ActiveSaveRecord(long id, int type) => throw new NotSupportedException("Online result record management is unavailable offline.");
+            public void ShowSaveRecordSuccess() => throw new NotSupportedException("Online result record management is unavailable offline.");
         }
     }
 }
