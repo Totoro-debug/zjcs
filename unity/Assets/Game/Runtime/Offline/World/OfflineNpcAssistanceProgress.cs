@@ -24,7 +24,7 @@ namespace Zjcs.Offline.World
     [Serializable]
     public sealed class OfflineNpcAssistanceSave
     {
-        public int schema = 1;
+        public int schema = 2;
         public List<OfflineNpcAssistSelection> selections = new List<OfflineNpcAssistSelection>();
         public List<OfflineNpcAssistCount> counts = new List<OfflineNpcAssistCount>();
         public OfflineNpcAssistBattle activeBattle;
@@ -60,6 +60,7 @@ namespace Zjcs.Offline.World
 
     public sealed class OfflineNpcAssistanceProgress
     {
+        private static readonly TimeSpan DailyResetTimeLocal = TimeSpan.FromHours(6);
         private readonly string path;
         private OfflineNpcAssistanceSave save;
 
@@ -82,9 +83,16 @@ namespace Zjcs.Offline.World
             OfflineNpcAssistanceSave data = read.Json == null
                 ? new OfflineNpcAssistanceSave()
                 : JsonUtility.FromJson<OfflineNpcAssistanceSave>(read.Json);
+            bool shouldPersist = read.Json == null;
+            if (data.schema == 1)
+            {
+                MigrateVersionOne(data);
+                data.schema = 2;
+                shouldPersist = true;
+            }
             Normalize(data);
             var progress = new OfflineNpcAssistanceProgress(path, data);
-            if (read.Json == null) progress.Persist(data);
+            if (shouldPersist) progress.Persist(data);
             return progress;
         }
 
@@ -151,7 +159,7 @@ namespace Zjcs.Offline.World
             {
                 OfflineNpcAssistCount count = GetOrCreateCount(next, playType, npcId, refreshCycle, nowUnixSeconds);
                 count.count = checked(count.count + 1);
-                count.refreshTimeUnixSeconds = RefreshTime(nowUnixSeconds);
+                count.refreshTimeUnixSeconds = RefreshTime(nowUnixSeconds, refreshCycle);
             }
             next.activeBattle = new OfflineNpcAssistBattle
             {
@@ -206,6 +214,7 @@ namespace Zjcs.Offline.World
         private void Persist(OfflineNpcAssistanceSave next)
         {
             Normalize(next);
+            next.schema = 2;
             if (!IsValid(JsonUtility.ToJson(next)))
                 throw new InvalidDataException("NPC assistance progress is invalid.");
             LocalJsonSaveFile.Write(path, JsonUtility.ToJson(next, true), IsValid);
@@ -246,17 +255,45 @@ namespace Zjcs.Offline.World
             if (refreshTimeUnixSeconds <= 0 || refreshCycle == NpcAssistRefreshCycle.None) return false;
             DateTime previous = DateTimeOffset.FromUnixTimeSeconds(refreshTimeUnixSeconds).LocalDateTime;
             DateTime current = DateTimeOffset.FromUnixTimeSeconds(nowUnixSeconds).LocalDateTime;
-            if (refreshCycle == NpcAssistRefreshCycle.Daily) return previous.Date != current.Date;
+            if (refreshCycle == NpcAssistRefreshCycle.Daily)
+                return DailyResetPeriodDateLocal(refreshTimeUnixSeconds) != DailyResetPeriodDateLocal(nowUnixSeconds);
             System.Globalization.Calendar calendar = System.Globalization.CultureInfo.CurrentCulture.Calendar;
             return calendar.GetWeekOfYear(previous, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday)
                     != calendar.GetWeekOfYear(current, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday)
                 || previous.Year != current.Year;
         }
 
-        private static long RefreshTime(long nowUnixSeconds)
+        private static long RefreshTime(long nowUnixSeconds, NpcAssistRefreshCycle refreshCycle)
         {
+            if (refreshCycle == NpcAssistRefreshCycle.Daily)
+                return DailyResetBoundaryLocal(nowUnixSeconds).ToUnixTimeSeconds();
             return new DateTimeOffset(DateTimeOffset.FromUnixTimeSeconds(nowUnixSeconds).LocalDateTime.Date)
                 .ToUnixTimeSeconds();
+        }
+
+        private static DateTime DailyResetPeriodDateLocal(long unixSeconds)
+        {
+            DateTime localNow = DateTimeOffset.FromUnixTimeSeconds(unixSeconds).LocalDateTime;
+            return localNow.TimeOfDay < DailyResetTimeLocal ? localNow.Date.AddDays(-1) : localNow.Date;
+        }
+
+        private static DateTimeOffset DailyResetBoundaryLocal(long unixSeconds)
+        {
+            DateTime boundaryLocal = DailyResetPeriodDateLocal(unixSeconds).Add(DailyResetTimeLocal);
+            return new DateTimeOffset(DateTime.SpecifyKind(boundaryLocal, DateTimeKind.Local));
+        }
+
+        private static void MigrateVersionOne(OfflineNpcAssistanceSave data)
+        {
+            // Version 1 stored local midnight. Preserve its local calendar date while moving
+            // the marker to the confirmed 06:00 local refresh boundary.
+            foreach (OfflineNpcAssistCount count in data.counts ?? new List<OfflineNpcAssistCount>())
+            {
+                if (count == null || count.refreshTimeUnixSeconds <= 0) continue;
+                DateTime localDate = DateTimeOffset.FromUnixTimeSeconds(count.refreshTimeUnixSeconds).LocalDateTime.Date;
+                DateTime localBoundary = DateTime.SpecifyKind(localDate.Date.Add(DailyResetTimeLocal), DateTimeKind.Local);
+                count.refreshTimeUnixSeconds = new DateTimeOffset(localBoundary).ToUnixTimeSeconds();
+            }
         }
 
         private static OfflineNpcAssistSelection FindSelection(OfflineNpcAssistanceSave data,
@@ -274,7 +311,8 @@ namespace Zjcs.Offline.World
             try
             {
                 OfflineNpcAssistanceSave data = JsonUtility.FromJson<OfflineNpcAssistanceSave>(json);
-                if (data == null || data.schema != 1 || data.selections == null || data.counts == null)
+                if (data == null || (data.schema != 1 && data.schema != 2)
+                    || data.selections == null || data.counts == null)
                     return false;
                 var keys = new HashSet<string>(StringComparer.Ordinal);
                 foreach (OfflineNpcAssistSelection selection in data.selections)
