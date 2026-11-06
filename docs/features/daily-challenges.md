@@ -66,6 +66,8 @@ NPC 战斗属性和技能由当前版 `npc_level_detail`、`npc_profession_detai
 
 活动邀请控件（局部迁移）：`ActivityDomainBossTeamButton` 保留原人数文本格式、按钮回调、初始化与启停订阅顺序；原队伍人数、上限和邀请请求由 `IActivityBattleTeam` 传入，三项在线队伍变更通知汇合为本地变更事件。原生绑定工具从所选884 `ActivityDomainBossPanelBattleContent.mTeamBtn` 提取完整61对象子树，仅解除根父引用，保留原位置、尺寸、隐藏状态、红点及原按钮音效。字体按官方 `MultiLanguageText.RefreshFont` 与 CN／zh_CN 配置切换为中国区字体；原预置日文字体不能直接用于中文人数文本。字体和资源持有独立 GUID，避免覆盖其他模块；空语言键沿原数据保留，不当作缺失文本。运行与资源输入／输出见[脚本来源](../../assets/reference/daily-challenges/activity-team-runtime-source-manifest.json)、[原生绑定来源](../../assets/reference/daily-challenges/activity-team-native-source-manifest.json)。隔离 Play Mode 已通过模拟指针点击、中文实际字形、测试适配器人数变化、原音频事件参数、启停／替换／销毁的订阅清理，并已查看675×1463运行画面。此项使用独立控件宿主，只验证邀请回调，未验证实际邀请窗口、助战单位、正式活动入口或整页状态；尚未接入完整活动页。工程静态检查、Unity 编译与 `ProjectTools.Validate` 均通过；未发布新版本。
 
+活动倒计时（局部迁移）：原 `ACountdownView`、`CountdownView`、`CountdownText` 按所选884代码迁入 `Official/ActivityBattleUI`，保留原半秒 `WaitForSeconds`、初始先显示的 do/while、剩余／总时长比值、Show 重启与停用清理，时间文本复用既有官方格式化迁移。原 `ActivityDomainBossPreviewContent.mCountdown` 子树单独恢复原组件及字体依赖；原 `myKey={0}` 按官方本地化服务缺键时返回原键的实现保留为格式字符串，不添加替代文案。提取与邀请控件共用严格子树检查和资源绑定，默认邀请输出保持不变。运行／原生输入输出分别见[脚本来源](../../assets/reference/daily-challenges/activity-countdown-runtime-source-manifest.json)、[原生来源](../../assets/reference/daily-challenges/activity-countdown-native-source-manifest.json)。隔离 Play Mode 已通过原生组件绑定、中文多日时间实际字形、缩放时钟暂停／恢复、替换计时、单次超时，以及隐藏／父节点停用／销毁的回调清理，已查看675×1463运行截图。该验收在独立 Canvas 中调用原 Show／Hide 接口，未模拟页面入口，不能证明预告数据、完整页面或实际开战已接通。隔离工程 Unity 编译与 `ProjectTools.Validate` 通过，工程静态检查通过127,999个GUID；验收断言通过后停止该隔离Editor，未验证自动退出，尚未发布新 Player。
+
 ## 自定义实现
 
 用户确认期次以首次进入功能的本地时间起算；该时间由 `EnterFeature(DateTime.Now)` 首次持久化。每日逻辑日采用官方 08:00 配置。官方活动 `Duration=335` 小时，最后 1 小时结算。用户确认系统时间回拨不得降低已到最高期次或逻辑日；系统时间向前跳转仍会按本地时间推进期次。

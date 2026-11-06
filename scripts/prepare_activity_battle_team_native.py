@@ -29,9 +29,9 @@ class TeamBinding(SelectorBinding):
                 sha256=sha(path.read_bytes()), meta_sha256=sha(Path(str(path) + '.meta').read_bytes()))
 
 
-def extract(panel):
-    consumer, = [row for row in panel['scripts'] if row['type'] == 'ActivityDomainBossPanelBattleContent']
-    component = panel['documents'][consumer['nativeFileID']]['MonoBehaviour']['mTeamBtn']['fileID']
+def extract(panel, consumer_type='ActivityDomainBossPanelBattleContent', field='mTeamBtn'):
+    consumer, = [row for row in panel['scripts'] if row['type'] == consumer_type]
+    component = panel['documents'][consumer['nativeFileID']]['MonoBehaviour'][field]['fileID']
     root = panel['documents'][component]['MonoBehaviour']['m_GameObject']['fileID']
     selected = set()
     def visit(go):
@@ -59,12 +59,13 @@ def extract(panel):
         elif isinstance(value, list):
             for child in value: check(child)
     check(result['documents'])
-    return result, dict(consumer=consumer['original'], field='mTeamBtn', native_root=root,
+    return result, dict(consumer=consumer['original'], field=field, native_root=root,
         original_parent=original_parent, objects=len(selected),
         adaptation='Exact original referenced subtree; detach root parent only. Preserve original inactive state.')
 
 
-def build(binding):
+def build(binding, *, consumer_type='ActivityDomainBossPanelBattleContent', field='mTeamBtn',
+          prefab_name='ActivityDomainBossTeamButton', group='Team', extra_text_keys=()):
     binding.recovery.recover('ActivityDomainBossPanel', binding.work / 'activity-team-native',
         bundle='defaultpackage_assets_prefabs_ui_activitydomainboss.bundle',
         native_relative='Prefabs/UI/ActivityDomainBoss/ActivityDomainBossPanel.prefab')
@@ -74,7 +75,7 @@ def build(binding):
         expected = binding.checked[path.relative_to(binding.cache / 'native-export-all').as_posix()]
         if sha(path.read_bytes()) != expected: raise ValueError('Native invitation source changed')
         binding.inputs[path.relative_to(ROOT).as_posix()] = expected
-    team, selection = extract(panel)
+    team, selection = extract(panel, consumer_type, field)
     for key, pointer in team['external'].items(): binding.objects[pointer['guid']] = binding.original(key)
     for key, file_id in team['objectMap'].items():
         owner = binding.original(key)
@@ -89,8 +90,16 @@ def build(binding):
             owner = binding.original(row['original'])
             fields['ClickEvent'] = binding.sound(binding.recovery.fields(owner)['ClickEvent'], owner)
         if row['type'] == 'MultiLanguageText' and fields['myKey']: text_keys.add(fields['myKey'])
+    text_keys.update(extra_text_keys)
     resolved = binding.replace(team['documents'])
     texts, sources = language(text_keys)
+    # The original localization service returns the key itself when absent.
+    # This exact prefab format is intentional; other unknown keys still fail.
+    if '{0}' in text_keys and '{0}' not in texts:
+        texts['{0}'] = '{0}'
+        for name in ('LocalizationBinaryTextService', 'LocalizationTextService'):
+            path = ROOT / '.tools/source-packages/current' / binding.recovery.apk.version / 'official-code/framework-firstpass-source/Framework' / (name + '.cs')
+            binding.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
     if set(texts) != text_keys: raise ValueError('Original invitation text missing')
     binding.inputs.update(sources)
     records = read_asset_manifest(binding.recovery.apk.source.manifest_bytes('DefaultPackage', binding.recovery.apk.archive))
@@ -117,17 +126,19 @@ def build(binding):
     for _, _, data in binding.queue:
         if isinstance(data, dict):
             result = binding.replace(data); data.clear(); data.update(result)
-    root_guid = hashlib.md5(b'zjcs:activity-team:ActivityDomainBossTeamButton').hexdigest()
-    binding.queue.append((Path('Resources/DailyChallenges/Team/ActivityDomainBossTeamButton.prefab'), root_guid, resolved))
-    binding.queue.append((Path('Resources/DailyChallenges/Team/texts.json'), hashlib.md5(b'zjcs:activity-team:texts').hexdigest(),
+    prefix = 'zjcs:activity-' + group.lower() + ':'
+    root_guid = hashlib.md5((prefix + prefab_name).encode()).hexdigest()
+    binding.queue.append((Path('Resources/DailyChallenges') / group / (prefab_name + '.prefab'), root_guid, resolved))
+    binding.queue.append((Path('Resources/DailyChallenges') / group / 'texts.json', hashlib.md5((prefix + 'texts').encode()).hexdigest(),
         (json.dumps(dict(texts=[dict(key=k, text=texts[k]) for k in sorted(texts)]), ensure_ascii=False, indent=2) + '\n').encode()))
     return record, selection, font
 
 
-def install(binding, record, selection, font):
+def install(binding, record, selection, font, *, group='Team', receipt_name='activity-team-native-source-manifest.json',
+            extra_helpers=()):
     # Own each serialized asset identity, including the dynamic font and atlas.
     # No other module's resources or importer settings are overwritten.
-    aliases = {value: hashlib.md5(('zjcs:activity-team-resource:' + value).encode()).hexdigest()
+    aliases = {value: hashlib.md5(('zjcs:activity-' + group.lower() + '-resource:' + value).encode()).hexdigest()
         for _, value, _ in binding.queue}
     def remap(value):
         if isinstance(value, dict):
@@ -135,8 +146,8 @@ def install(binding, record, selection, font):
         if isinstance(value, list): return [remap(child) for child in value]
         if isinstance(value, str): return aliases.get(value, value)
         return value
-    destination = ROOT / 'unity/Assets/Official/DailyChallenges/UI/Team'
-    receipt_path = ROOT / 'assets/reference/daily-challenges/activity-team-native-source-manifest.json'
+    destination = ROOT / 'unity/Assets/Official/DailyChallenges/UI' / group
+    receipt_path = ROOT / 'assets/reference/daily-challenges' / receipt_name
     previous = json.loads(receipt_path.read_bytes()).get('installed', {}) if receipt_path.exists() else {}
     planned = []
     for relative, value, data in binding.queue:
@@ -174,15 +185,15 @@ def install(binding, record, selection, font):
                    'prepare_activity_battle_team_ui.py', 'prepare_partner_card_native.py',
                    'prepare_partner_gift_native.py', 'prepare_partner_roster_native.py',
                    'prepare_partner_panel_native.py', 'prepare_partner_input_dialog.py',
-                   'prepare_unity_map13_native_sprite_yaml.py', 'npc_travel_language.py'):
+                   'prepare_unity_map13_native_sprite_yaml.py', 'npc_travel_language.py') + tuple(extra_helpers):
         path = ROOT / 'scripts' / helper; binding.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
     receipt = dict(manifest=binding.recovery.apk.version, prefab=record, selection=selection, inputs=binding.inputs,
         scripts={name: row for name, row in binding.script_sources.items() if row['pointer']['guid'] in used},
         resources=binding.proof, audio=binding.audio_proof, font=remap(font), installed=installed,
         isolated_resource_guids=aliases,
-        stage='Original invitation control bound. Full activity page and production host pending.')
+        stage='Original ' + group.lower() + ' control bound. Full activity page and production host pending.')
     receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
-    print('Installed original activity invitation:', selection['objects'], 'objects,', len(installed), 'paths', flush=True)
+    print('Installed original activity ' + group.lower() + ':', selection['objects'], 'objects,', len(installed), 'paths', flush=True)
 
 
 def main():

@@ -2564,6 +2564,21 @@ scripts/prepare_activity_battle_team_ui.py text eol=lf
 scripts/prepare_activity_battle_team_native.py text eol=lf
 assets/reference/daily-challenges/activity-team-*.json text eol=lf
 
+# Activity preview countdown keeps original native payload hashes.
+unity/Assets/Official/DailyChallenges/UI/Countdown/** -text
+unity/Assets/Official/DailyChallenges/UI/Countdown.meta -text
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/ACountdownView.cs text eol=lf
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/ACountdownView.cs.meta -text
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/CountdownView.cs text eol=lf
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/CountdownView.cs.meta -text
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/CountdownText.cs text eol=lf
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/CountdownText.cs.meta -text
+scripts/prepare_activity_countdown_ui.py text eol=lf
+scripts/prepare_activity_countdown_native.py text eol=lf
+assets/reference/daily-challenges/activity-countdown-*.json text eol=lf
+unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.ActivityCountdown.cs text eol=lf
+unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.ActivityCountdown.cs.meta -text
+
 unity/Assets/Official/World/Shared/SharedClientConfiguration/** -text
 unity/Assets/Official/World/Shared/SharedClientConfiguration.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedClientConfiguration.cs text eol=lf

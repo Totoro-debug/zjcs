@@ -28,6 +28,11 @@ namespace Zjcs.Editor
 
         public static IEnumerator Exercise(string slot, string root, string output, Action<Selectable> click)
         {
+            if (Environment.GetEnvironmentVariable("ZJCS_ACTIVITY_COUNTDOWN") == "1")
+            {
+                yield return ExerciseActivityCountdown(output);
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_NATIVE_POSE_RESTORE_ACCEPTANCE") == "1")
                 CharacterCreation.CharacterNativePoseBindingValidation.Run();
             var profile = OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(root), slot);
