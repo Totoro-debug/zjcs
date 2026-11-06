@@ -10,6 +10,16 @@ namespace Zjcs.Offline.ProfessionUI
     // construction also used by partner illustrations. Physics is a later stage.
     public static class ProfessionNativeOrderedConstraintPose
     {
+        public static void EvaluateSetupPose(ProfessionNativeAppearanceSkeleton skeleton)
+        {
+            if (skeleton == null) throw new ArgumentNullException(nameof(skeleton));
+            if (skeleton.Source.Constraints.Any(value => value.Kind != "ik" && value.Kind != "transform"))
+                throw new NotSupportedException("Bind path/physics setup constraints before using this endpoint.");
+            var setup = ProfessionNativeConstraintAnimation.CreateSetup(skeleton.Source);
+            skeleton.SetToSetupPose(); skeleton.UpdateCache();
+            Solve(skeleton, setup.SampleIk(0, skeleton.SkinConstraints), setup.SampleTransforms(0, skeleton.SkinConstraints),
+                Array.Empty<ProfessionNativePathAnimation.State>(), null);
+        }
         public readonly struct AnimationLayer
         {
             public readonly ProfessionNativeAnimationChannels Animation;

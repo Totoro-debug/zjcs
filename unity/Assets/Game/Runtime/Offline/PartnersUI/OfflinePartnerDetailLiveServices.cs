@@ -38,7 +38,15 @@ namespace Zjcs.Offline.PartnersUI
         public PartnerDetailPresentationInfo GetNpcInfo(int npcId) => npcInfo(npcId);
         public IPartnerSequenceGraphic Resolve(Component graphic) => Actor(graphic);
         public bool HasSkeletonData(Component graphic) => Actor(graphic).SkeletonDataAsset;
-        public void Initialize(Component graphic, bool overwrite) => Actor(graphic).Graphic.Initialize(overwrite);
+        public void Initialize(Component graphic, bool overwrite)
+        {
+            var actor = Actor(graphic);
+            // Original parent OnEnable can initialize a graphic on an inactive
+            // child before that child's bootstrap Awake has run.
+            if (actor.Pose == null && actor.SkeletonDataAsset)
+                actor.SelectAsset((PartnerNativeUiSkeletonAsset)actor.SkeletonDataAsset, false);
+            actor.Graphic.Initialize(overwrite);
+        }
         public bool TryGetLiveImagePath(int npcId, out string path)
         { path = livePath(npcId); return !string.IsNullOrEmpty(path); }
         public IProfessionAssetOperation<ScriptableObject> LoadSkeleton(string path) => new Operation(assets.LoadAsset(path));

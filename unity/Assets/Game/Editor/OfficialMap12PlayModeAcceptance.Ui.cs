@@ -269,6 +269,38 @@ namespace Zjcs.Editor
             ExecuteEvents.Execute(pressed, pointer, ExecuteEvents.pointerClickHandler);
         }
 
+        private static void SimulateUiClick(Toggle expected, Camera camera)
+        {
+            if (expected == null || expected.targetGraphic == null)
+                throw new InvalidDataException("Original invitation toggle has no target graphic.");
+            Canvas.ForceUpdateCanvases();
+            RectTransform rect = expected.targetGraphic.rectTransform;
+            var corners = new Vector3[4];
+            rect.GetWorldCorners(corners);
+            Vector2 minimum = RectTransformUtility.WorldToScreenPoint(camera, corners[0]);
+            Vector2 maximum = RectTransformUtility.WorldToScreenPoint(camera, corners[2]);
+            if (maximum.x - minimum.x < 20 || maximum.y - minimum.y < 12)
+                throw new InvalidDataException("Original invitation toggle rendered below a usable portrait size.");
+            Vector2 position = RectTransformUtility.WorldToScreenPoint(camera, rect.TransformPoint(rect.rect.center));
+            var pointer = new PointerEventData(EventSystem.current)
+            { position = position, button = PointerEventData.InputButton.Left };
+            var hits = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointer, hits);
+            GameObject hit = hits.FirstOrDefault().gameObject;
+            if (hit == null || ExecuteEvents.GetEventHandler<IPointerClickHandler>(hit) != expected.gameObject)
+                throw new InvalidDataException("Original invitation toggle is occluded or outside its hit rectangle: "
+                    + expected.name + " @ " + position + "; hits="
+                    + string.Join(",", hits.Take(6).Select(value => value.gameObject.name)));
+            pointer.pointerCurrentRaycast = hits[0];
+            pointer.pressPosition = position;
+            pointer.pointerPressRaycast = hits[0];
+            GameObject pressed = ExecuteEvents.ExecuteHierarchy(hit, pointer, ExecuteEvents.pointerDownHandler);
+            if (pressed == null) pressed = ExecuteEvents.GetEventHandler<IPointerClickHandler>(hit);
+            pointer.pointerPress = pressed;
+            ExecuteEvents.Execute(pressed, pointer, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.Execute(pressed, pointer, ExecuteEvents.pointerClickHandler);
+        }
+
         private static Vector3[] Corners(RectTransform rect)
         {
             var corners = new Vector3[4];

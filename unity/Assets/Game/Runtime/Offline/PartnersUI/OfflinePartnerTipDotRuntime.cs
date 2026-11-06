@@ -102,10 +102,13 @@ namespace Zjcs.Offline.PartnersUI
         {
             private readonly OfflinePartnerAchievementService achievements;
             private readonly AchievementRules rules;
-            public AchievementPlayer(OfflinePartnerAchievementService achievements, AchievementRules rules)
+            private readonly Func<int, bool> functionLimited;
+            public AchievementPlayer(OfflinePartnerAchievementService achievements, AchievementRules rules,
+                Func<int, bool> functionLimited)
             {
                 this.achievements = achievements;
                 this.rules = rules;
+                this.functionLimited = functionLimited;
                 achievements.ProgressUpdated += OnProgressUpdated;
                 achievements.RewardGroupReceived += OnRewardGroupReceived;
                 achievements.RewardsReceivedBatch += OnRewardsReceivedBatch;
@@ -125,7 +128,7 @@ namespace Zjcs.Offline.PartnersUI
             public bool IsProfessionUnlocked(int profession) => false;
             public int GetProfessionLevel(int profession) => 0;
             public long GetItemAmount(int itemId) => 0;
-            public bool IsFunctionLimit(int function) => false;
+            public bool IsFunctionLimit(int function) => functionLimited(function);
             public bool IsAnyCanGetAchievementReward(ProfessionTipDotAchievementKey key)
                 => TryGetKey(key, out var value) && achievements.ReadCurrentPlayer().IsAnyCanGetAchievementReward(value);
             public bool IsAnyCanGetAchievementReward(List<ProfessionTipDotAchievementKey> keys)
@@ -189,15 +192,17 @@ namespace Zjcs.Offline.PartnersUI
         private bool disposed;
 
         public OfflinePartnerTipDotRuntime(OfflineMainlineProgressSession session, OfficialPartnerCatalog catalog,
-            OfflinePartnerGiftConfiguration gifts, OfflineCharacterProgressionService progression)
+            OfflinePartnerGiftConfiguration gifts, OfflineCharacterProgressionService progression,
+            Func<int, bool> functionLimited = null)
         {
             if (session == null || catalog == null || gifts == null || progression == null)
                 throw new ArgumentNullException();
             var achievementRules = new AchievementRules(catalog.Rows);
+            functionLimited ??= _ => false;
             achievements = new OfflinePartnerAchievementService(session, achievementRules);
-            achievementPlayer = new AchievementPlayer(achievements, achievementRules);
+            achievementPlayer = new AchievementPlayer(achievements, achievementRules, functionLimited);
             var rulePort = new AchievementRulesPort(achievementRules);
-            player = new OfflinePartnerTipDotPlayer(session, catalog, gifts, _ => false, id => {
+            player = new OfflinePartnerTipDotPlayer(session, catalog, gifts, functionLimited, id => {
                 var row = catalog.Rows("item").FirstOrDefault(value => Convert.ToInt32(value["ClassId"]) == id);
                 return row == null ? (ItemType)0 : (ItemType)Convert.ToInt32(row["ItemType"]);
             });

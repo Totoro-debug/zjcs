@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,7 +42,8 @@ namespace Zjcs.Offline.PartnersUI
         public NpcDetailPanel Panel => content ? content.GetComponent<NpcDetailPanel>() : null;
         public WorldPopupWindow Window => content ? content.GetComponent<WorldPopupWindow>() : null;
         public void Open(OfficialPartnerDetailWindowAssetCatalog assets, PartnerDetailWindowContext value,
-            List<IPartnerDetailWindowNpcData> npcs, int index)
+            List<IPartnerDetailWindowNpcData> npcs, int index,
+            NpcDetailPanel.TabType initialTab = NpcDetailPanel.TabType.Detail)
         {
             if (!assets || value == null || value.Npcs == null || value.Properties == null || value.Gifts == null ||
                 value.Profiles == null || value.Achievements == null || value.Treasures == null || value.Presentation == null ||
@@ -80,8 +82,19 @@ namespace Zjcs.Offline.PartnersUI
                 foreach (var close in content.GetComponentsInChildren<CloseWindowBtn>(true)) close.Init(value.Windows);
                 Panel.Init(npcs, index);
                 Window.Show();
+                SelectInitialTab(initialTab);
             }
             catch { Close(); throw; }
+        }
+        private void SelectInitialTab(NpcDetailPanel.TabType type)
+        {
+            if (type == NpcDetailPanel.TabType.Detail) return;
+            var field = typeof(NpcDetailPanel).GetField("mTabDatas", BindingFlags.Instance | BindingFlags.NonPublic);
+            var tabs = field?.GetValue(Panel) as List<NpcDetailPanel.TabData>;
+            var target = tabs?.Find(value => value.TabType == type);
+            if (target?.TabItem == null)
+                throw new InvalidOperationException("Original partner detail tab is not bound: " + type);
+            target.TabItem.isOn = true;
         }
         private void BindTree(GameObject root)
         {

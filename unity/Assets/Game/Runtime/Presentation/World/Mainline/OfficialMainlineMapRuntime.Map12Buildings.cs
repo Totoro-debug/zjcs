@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Reflection;
+using Zjcs.Combat.Official;
 using Zjcs.Official.World;
 using Zjcs.Official.WorldUI;
 using Zjcs.Offline.Progression;
@@ -26,6 +27,19 @@ namespace Zjcs.Presentation.World
         private GameObject map12PrivateDungeonRouteDialog;
         private GameObject map12PrivateDungeonRunner;
         private OfflineDailyDungeonModule map12PrivateDungeonSession;
+        private OfflineNpcAssistanceProgress map12PrivateDungeonAssistProgress;
+        private FightOfficialNpcAssistanceCatalog map12PrivateDungeonAssistCatalog;
+        private OfficialBattleModelCatalog map12PrivateDungeonBattleModels;
+        private OfficialNpcTravelCatalog map12PrivateDungeonTravelCatalog;
+        private object map12PrivateDungeonHomeAssets;
+        private MethodInfo map12PrivateDungeonHomeLocalizedText;
+        private MethodInfo map12PrivateDungeonHomeFindDynamicSprite;
+        private MethodInfo map12PrivateDungeonHomeRelease;
+        private OfficialBattleAssistSelectionView map12PrivateDungeonAssistView;
+        private int map12PrivateDungeonAssistRoomId;
+        private int map12PrivateDungeonAssistMaxPlayer;
+        private string map12PrivateDungeonAssistEntryId;
+        private const int Map12PrivateDungeonAssistPlayType = 2;
         private const string MountLiftCompletionTag = "map12:building:3501";
         private const string MountLiftMainlineTag = "山壁电梯";
 
@@ -282,6 +296,44 @@ namespace Zjcs.Presentation.World
 
         private void EnterMap12PrivateDungeonBattle(int roomId)
         {
+            if (map12PrivateDungeonAssistView != null) return;
+            if (map12PrivateDungeonBattleActive) return;
+            map12PrivateDungeonAssistProgress ??= OfflineNpcAssistanceProgress.Open(
+                new ProfileSlotCatalog(persistentDataPath), slotId);
+            map12PrivateDungeonAssistCatalog ??= OfficialCombatAssetCatalog.LoadDefault().LoadNpcAssistance();
+            DailyDungeonRunSave run = map12PrivateDungeonSession?.ActiveRun;
+            DailyDungeonRuntimeRoom room = run == null ? null : map12PrivateDungeonSession.FindRoom(roomId);
+            DailyDungeonRuntimeStage stage = room == null ? null : map12PrivateDungeonSession.FindStage(room.stageId);
+            if (run == null || room == null || stage == null || run.currentRoomId != roomId)
+                throw new InvalidOperationException("Official private daily dungeon route room is incomplete.");
+            map12PrivateDungeonAssistRoomId = roomId;
+            map12PrivateDungeonAssistEntryId = Map12PrivateDungeonAssistEntry(run, roomId);
+            OfflineNpcAssistBattle activeAssist = map12PrivateDungeonAssistProgress.ActiveBattle;
+            bool matchingActiveBattle = activeAssist != null
+                && activeAssist.playType == Map12PrivateDungeonAssistPlayType
+                && activeAssist.entryId == map12PrivateDungeonAssistEntryId
+                && activeAssist.stageId == stage.id;
+            if (!string.IsNullOrEmpty(run.activeBattleCheckpoint) || matchingActiveBattle)
+            {
+                StartMap12PrivateDungeonBattleRunner(roomId);
+                return;
+            }
+            if (activeAssist != null)
+                throw new InvalidOperationException("另一场 NPC 助战战斗尚未结束。");
+
+            List<OfficialBattleAssistSelectionView.Candidate> candidates =
+                Map12PrivateDungeonAssistCandidates(map12PrivateDungeonAssistEntryId,
+                    out map12PrivateDungeonAssistMaxPlayer);
+            map12PrivateDungeonAssistView?.Dispose();
+            map12PrivateDungeonAssistView = new OfficialBattleAssistSelectionView(hud.ui.OverlayRoot,
+                candidates, map12PrivateDungeonAssistMaxPlayer,
+                SelectMap12PrivateDungeonAssistCandidate,
+                ConfirmMap12PrivateDungeonAssistSelection,
+                CloseMap12PrivateDungeonAssistPicker);
+        }
+
+        private void StartMap12PrivateDungeonBattleRunner(int roomId)
+        {
             if (map12PrivateDungeonBattleActive) return;
             Type runnerType = Type.GetType("Zjcs.Presentation.Home.DailyDungeonBattleRunner, Zjcs.Presentation.Home");
             MethodInfo begin = runnerType?.GetMethod("BeginPrivateMapRoom", BindingFlags.Instance | BindingFlags.Public);
@@ -298,7 +350,14 @@ namespace Zjcs.Presentation.World
                     new OfficialBattleHostPresentation(worldCamera, mapRoot, hud.ui.OverlayRoot,
                         additionalHudRoots: new[] { hud.ui.Find("WorldCanvas", "/WorldCanvas").transform }),
                     slotId, persistentDataPath,
-                    (Action<bool>)FinishMap12PrivateDungeonBattle });
+                    (Action<bool>)FinishMap12PrivateDungeonBattle,
+                    map12PrivateDungeonAssistProgress,
+                    map12PrivateDungeonAssistCatalog,
+                    new OfficialBattleAssistOptions
+                    {
+                        PlayType = Map12PrivateDungeonAssistPlayType,
+                        EntryId = map12PrivateDungeonAssistEntryId
+                    } });
                 if (map12PrivateDungeonRouteDialog != null) map12PrivateDungeonRouteDialog.SetActive(false);
             }
             catch (TargetInvocationException error)
@@ -315,6 +374,151 @@ namespace Zjcs.Presentation.World
                 map12PrivateDungeonRunner = null;
                 throw;
             }
+        }
+
+        private List<OfficialBattleAssistSelectionView.Candidate> Map12PrivateDungeonAssistCandidates(
+            string entryId, out int maxPlayer)
+        {
+            map12PrivateDungeonBattleModels ??= OfficialBattleModelCatalog.LoadDefault();
+            map12PrivateDungeonTravelCatalog ??= OfficialNpcTravelCatalog.LoadDefault();
+            EnsureMap12PrivateDungeonHomeAssets();
+            IReadOnlyList<int> candidates = map12PrivateDungeonAssistCatalog.FightAssistNpcClassIds();
+            var friendships = (progressionSave.Save.Player.CharacterProperties.NpcFriendships
+                    ?? new List<OfflineNpcFriendship>())
+                .Where(value => value != null && value.NpcClassId > 0)
+                .ToDictionary(value => value.NpcClassId, value => value.Level);
+            FightOfficialNpcInviteRule invite =
+                map12PrivateDungeonAssistCatalog.InviteRule(Map12PrivateDungeonAssistPlayType);
+            NpcAssistRefreshCycle cycle = (NpcAssistRefreshCycle)invite.RefreshCycle;
+            long now = DateTimeOffset.Now.ToUnixTimeSeconds();
+            maxPlayer = Math.Max(0, Math.Min(3, invite.MaxPlayer));
+            int[] existing = map12PrivateDungeonAssistProgress
+                .Selected(Map12PrivateDungeonAssistPlayType, entryId).ToArray();
+            var retained = new List<int>();
+            var rows = new List<OfficialBattleAssistSelectionView.Candidate>(candidates.Count);
+            int selectedCount = 0;
+            foreach (int npcId in candidates)
+            {
+                bool meetsCondition = map12PrivateDungeonAssistCatalog.AssistConditionMet(npcId,
+                    progressionSave.Save.Player.Level, friendships, progressionSave.StoryCount);
+                bool encountered = friendships.ContainsKey(npcId);
+                bool modelAvailable = map12PrivateDungeonBattleModels.HasNpcBattleAnimations(npcId);
+                bool available = modelAvailable
+                    && map12PrivateDungeonAssistCatalog.CanInviteNpc(npcId, encountered, meetsCondition)
+                    && (invite.OneNpcMaxInviteCount <= 0
+                        || map12PrivateDungeonAssistProgress.AssistCount(Map12PrivateDungeonAssistPlayType,
+                            npcId, cycle, now) < invite.OneNpcMaxInviteCount);
+                bool selected = existing.Contains(npcId) && available && selectedCount < maxPlayer;
+                if (selected)
+                {
+                    selectedCount++;
+                    retained.Add(npcId);
+                }
+                NpcTravelNpc travelNpc = map12PrivateDungeonTravelCatalog.Npc(npcId);
+                rows.Add(new OfficialBattleAssistSelectionView.Candidate
+                {
+                    Id = npcId,
+                    Name = Map12PrivateDungeonLocalizedText(
+                        map12PrivateDungeonAssistCatalog.NpcNameKey(npcId), "伙伴 " + npcId),
+                    Portrait = Map12PrivateDungeonFindDynamicSprite(
+                        Map12PrivateDungeonNpcIconKey(travelNpc)),
+                    Available = available,
+                    Selected = selected,
+                    FriendshipLevel = friendships.TryGetValue(npcId, out int friendshipLevel)
+                        ? friendshipLevel : 1,
+                    FriendshipBlocked = !encountered
+                        && map12PrivateDungeonAssistCatalog.RequiresEncounter(npcId),
+                    Reason = !modelAvailable ? "本地战斗动画未安装"
+                        : !encountered && map12PrivateDungeonAssistCatalog.RequiresEncounter(npcId)
+                            ? "尚未相识" : !meetsCondition ? "未满足助战条件"
+                            : !available ? "今日助战次数已用完" : string.Empty
+                });
+            }
+            if (!existing.SequenceEqual(retained)
+                && !map12PrivateDungeonAssistProgress.SetSelection(Map12PrivateDungeonAssistPlayType,
+                    entryId, retained, maxPlayer))
+                throw new InvalidOperationException("素材秘境助战选择无法保存。");
+            return rows;
+        }
+
+        private void SelectMap12PrivateDungeonAssistCandidate(int npcId, bool selected)
+        {
+            List<OfficialBattleAssistSelectionView.Candidate> current =
+                Map12PrivateDungeonAssistCandidates(map12PrivateDungeonAssistEntryId, out int maxPlayer);
+            OfficialBattleAssistSelectionView.Candidate candidate = current.FirstOrDefault(value => value.Id == npcId);
+            if (candidate == null || !candidate.Available) return;
+            var selection = map12PrivateDungeonAssistProgress
+                .Selected(Map12PrivateDungeonAssistPlayType, map12PrivateDungeonAssistEntryId).ToList();
+            if (selected)
+            {
+                if (!selection.Contains(npcId)) selection.Add(npcId);
+            }
+            else selection.Remove(npcId);
+            if (!map12PrivateDungeonAssistProgress.SetSelection(Map12PrivateDungeonAssistPlayType,
+                    map12PrivateDungeonAssistEntryId, selection, maxPlayer))
+                throw new InvalidOperationException("素材秘境助战选择无法保存。");
+            current = Map12PrivateDungeonAssistCandidates(map12PrivateDungeonAssistEntryId, out maxPlayer);
+            map12PrivateDungeonAssistMaxPlayer = maxPlayer;
+            map12PrivateDungeonAssistView?.Refresh(current, maxPlayer);
+        }
+
+        private void ConfirmMap12PrivateDungeonAssistSelection()
+        {
+            int roomId = map12PrivateDungeonAssistRoomId;
+            CloseMap12PrivateDungeonAssistPicker();
+            StartMap12PrivateDungeonBattleRunner(roomId);
+        }
+
+        private void CloseMap12PrivateDungeonAssistPicker()
+        {
+            OfficialBattleAssistSelectionView view = map12PrivateDungeonAssistView;
+            object assets = map12PrivateDungeonHomeAssets;
+            map12PrivateDungeonAssistView = null;
+            map12PrivateDungeonHomeAssets = null;
+            view?.Dispose();
+            if (assets != null) map12PrivateDungeonHomeRelease.Invoke(assets, null);
+        }
+
+        private void EnsureMap12PrivateDungeonHomeAssets()
+        {
+            if (map12PrivateDungeonHomeAssets != null) return;
+            Type catalogType = Type.GetType(
+                "Zjcs.Presentation.Home.HomeAssetCatalog, Zjcs.Presentation.Home", true);
+            MethodInfo loadDefault = catalogType.GetMethod("LoadDefault", BindingFlags.Public | BindingFlags.Static);
+            map12PrivateDungeonHomeLocalizedText ??= catalogType.GetMethod("LocalizedText",
+                new[] { typeof(string), typeof(string) });
+            map12PrivateDungeonHomeFindDynamicSprite ??= catalogType.GetMethod("FindDynamicSprite",
+                new[] { typeof(string) });
+            map12PrivateDungeonHomeRelease ??= catalogType.GetMethod("Release", Type.EmptyTypes);
+            if (loadDefault == null || map12PrivateDungeonHomeLocalizedText == null
+                || map12PrivateDungeonHomeFindDynamicSprite == null || map12PrivateDungeonHomeRelease == null)
+                throw new MissingMethodException("Official home asset catalog API is unavailable.");
+            map12PrivateDungeonHomeAssets = loadDefault.Invoke(null, null);
+        }
+
+        private string Map12PrivateDungeonLocalizedText(string key, string fallback)
+        {
+            EnsureMap12PrivateDungeonHomeAssets();
+            return (string)map12PrivateDungeonHomeLocalizedText.Invoke(
+                map12PrivateDungeonHomeAssets, new object[] { key, fallback });
+        }
+
+        private Sprite Map12PrivateDungeonFindDynamicSprite(string key)
+        {
+            EnsureMap12PrivateDungeonHomeAssets();
+            return (Sprite)map12PrivateDungeonHomeFindDynamicSprite.Invoke(
+                map12PrivateDungeonHomeAssets, new object[] { key });
+        }
+
+        private static string Map12PrivateDungeonAssistEntry(DailyDungeonRunSave run, int roomId) =>
+            "map12-private-dungeon:" + run.id + ":" + roomId;
+
+        private static string Map12PrivateDungeonNpcIconKey(NpcTravelNpc npc)
+        {
+            string configuredPath = npc == null ? string.Empty : npc.figure_image;
+            if (string.IsNullOrWhiteSpace(configuredPath)) return string.Empty;
+            int separator = configuredPath.LastIndexOf('/');
+            return separator >= 0 ? configuredPath.Substring(separator + 1) : configuredPath;
         }
 
         private void FinishMap12PrivateDungeonBattle(bool won)

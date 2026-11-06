@@ -97,11 +97,25 @@ namespace Zjcs.Presentation.Combat
                     throw new InvalidOperationException("Original entity body attachment is missing: " + unitId);
                 return;
             }
-            var body = source.Find("body");
+            var body = FindBodyAttachment(source);
             if (body == null) throw new InvalidOperationException("Original entity body attachment is missing: " + unitId);
             agent = source.gameObject.AddComponent<AttachAgent>();
             agent.myBoneNameList.Add("body"); agent.myBoneList.Add(body); agent.Init();
             ownedAttachments.Add(unitId, agent);
+        }
+
+        private static Transform FindBodyAttachment(Transform source)
+        {
+            Transform body = source.Find("body");
+            if (body != null) return body;
+            foreach (Transform child in source.GetComponentsInChildren<Transform>(true))
+            {
+                if (child == source || child.name != "body") continue;
+                if (body != null)
+                    throw new InvalidOperationException("Original entity has ambiguous body attachments: " + source.name);
+                body = child;
+            }
+            return body;
         }
 
         private void StartDue()

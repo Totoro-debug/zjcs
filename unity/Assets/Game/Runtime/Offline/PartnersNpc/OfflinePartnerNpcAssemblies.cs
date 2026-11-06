@@ -43,6 +43,13 @@ namespace Zjcs.Offline.PartnersNpc
                 !Guid.TryParse(payload.ModuleId, out _) || string.IsNullOrEmpty(payload.Sha256))
                 throw new InvalidOperationException("NPC assembly payload is incomplete.");
             NativeMap14SharedAssemblies.Verify(payload.Data.bytes, payload.Sha256);
+            if (payloads.TryGetValue(payload.Name, out var existing))
+            {
+                if (!string.Equals(existing.ModuleId, payload.ModuleId, StringComparison.Ordinal)
+                    || !string.Equals(existing.Sha256, payload.Sha256, StringComparison.Ordinal))
+                    throw new InvalidOperationException("NPC assembly name is bound to conflicting verified identities: " + payload.Name);
+                return;
+            }
             payloads.Add(payload.Name, payload);
         }
 

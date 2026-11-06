@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Zjcs.Offline.ProfessionUI;
 using Zjcs.Official.PartnersUI;
@@ -11,7 +12,7 @@ namespace Zjcs.Offline.PartnersUI
     // application OnEnable methods so their skin/texture order stays intact.
     [ExecuteAlways, DefaultExecutionOrder(-1000), DisallowMultipleComponent]
     public sealed class PartnerNativeUiActor : MonoBehaviour, IPartnerCombineSkinBindings,
-        IPartnerCombineSkeletonComponent, IPartnerLazyUiGraphic, IPartnerSequenceGraphic
+        IPartnerCombineSkeletonComponent, IPartnerLazyUiGraphic, IPartnerSequenceGraphic, IProfessionPartAnimatedSkeleton
     {
         [SerializeField] private ProfessionNativeUiGraphic graphic;
         [SerializeField] private Transform renderRoot;
@@ -27,12 +28,23 @@ namespace Zjcs.Offline.PartnersUI
         public IPartnerSequenceAnimation GetOrLoadAnimation(string name) => pose?.GetOrLoadAnimation(name);
         public void UpdateAnimation() => graphic.ApplyAnimation();
         public string StartingAnimation => graphic.startingAnimation;
+        public string[] AnimationNames => ((PartnerNativeUiSkeletonAsset)graphic.skeletonDataAsset).Data.AnimationNames.ToArray();
         public bool StartingLoop => graphic.startingLoop;
         public bool IsValid => graphic.State != null;
         public bool TryGetAnimation(string name) => pose?.GetOrLoadAnimation(name) != null;
         public bool ContainsSplitAnimation(string name) =>
             ((PartnerNativeUiSkeletonAsset)graphic.skeletonDataAsset).ContainsSplitAnimation(name);
-        public void PlayAnimation(string name, bool loop) => graphic.PlayAnimation(name, loop);
+        public void PlayAnimation(string name, bool loop)
+        {
+            if (string.IsNullOrEmpty(name)) return;
+            if (pose?.GetOrLoadAnimation(name) == null)
+            {
+                Debug.LogWarning("不存在指定的动画:" + name);
+                return;
+            }
+            graphic.PlayAnimation(name, loop);
+            graphic.ApplyAnimation();
+        }
 
         private sealed class SkinData : IPartnerCombineSkinData
         {

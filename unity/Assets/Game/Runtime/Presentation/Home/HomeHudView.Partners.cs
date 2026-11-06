@@ -4,26 +4,42 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Offline.PartnersUI;
+using Zjcs.Offline.ProfessionUI;
 using Zjcs.Offline.Progression;
 using Zjcs.Official.Partners;
 using Zjcs.Official.PartnersUI;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.WorldUI;
 using Zjcs.Official.World.NativeLabelUI.Framework;
+using Zjcs.Presentation.World;
 
 namespace Zjcs.Presentation.Home
 {
     public sealed partial class HomeHudView
     {
+        private sealed class PartnerDetailLowMemorySubscription : IDisposable
+        {
+            private Application.LowMemoryCallback callback;
+            internal PartnerDetailLowMemorySubscription(Action handler)
+            {
+                if (handler == null) throw new ArgumentNullException(nameof(handler));
+                callback = () => handler();
+                Application.lowMemory += this.callback;
+            }
+            public void Dispose()
+            {
+                if (callback == null) return;
+                Application.lowMemory -= callback;
+                callback = null;
+            }
+        }
+
         private void OpenPartnerRoster()
         {
             CloseDialog();
-            var conversations = host.PartnerConversationOpenRefresher?.RefreshOnOpen();
-            if (conversations != null && !conversations.IsApplied
-                && conversations.Status != ProgressionResultStatus.Unchanged)
-                Notify(conversations.Message ?? "伙伴通话刷新失败");
             host.PartnerTipDots?.Refresh();
             var root = new GameObject("PartnerRosterDialog", typeof(RectTransform), typeof(Image), typeof(Button));
             root.transform.SetParent(canvas.transform, false);
@@ -32,12 +48,205 @@ namespace Zjcs.Presentation.Home
             rect.offsetMin = Vector2.zero; rect.offsetMax = Vector2.zero;
             root.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.62f);
             root.GetComponent<Button>().transition = Selectable.Transition.None;
-            root.GetComponent<Button>().onClick.AddListener(CloseDialog);
-            partnerRosterPanel = root.AddComponent<PartnerRosterPanelView>();
-            partnerRosterPanel.Open(host.PartnerRosterAssets, host.PartnerRoster);
+            root.GetComponent<Button>().onClick.AddListener(HandlePartnerBackgroundClick);
             activeDialog = root;
             activeDialogRenderer = null;
             activePanelKey = "partner_roster";
+            try
+            {
+                var roster = host.PartnerRosterAssets;
+                var starGodAssets = OfficialPartnerStarGodAssetCatalog.LoadDefault();
+                var panelAssets = OfficialPartnerPanelAssetCatalog.Load();
+                partnerUiImages = ScriptableObject.CreateInstance<OfflineProfessionImageCatalog>();
+                partnerUiImages.Entries = roster.Images.Entries.Concat(starGodAssets.CreateImageCatalog().Entries)
+                    .Concat(host.PartnerGiftAssets.Images.Entries)
+                    .GroupBy(value => value.Path).Select(group => group.First()).ToArray();
+                var panel = root.AddComponent<PartnerPanelView>();
+                partnerPanel = panel;
+                var dialoguePresentation = new HomePartnerDialoguePresentation(this);
+                partnerDialoguePresentation = dialoguePresentation;
+                var partnerData = OfficialPartnerAssetCatalog.LoadDefault();
+                var conversationUi = OfflinePartnerConversationUiSessionFactory.Create(host.Profile,
+                    host.DailyDungeonProgression.Catalog, partnerData, () => DateTime.UtcNow,
+                    () => host.Rules.IsFunctionLimited(57), 8,
+                    dialoguePresentation, dialoguePresentation, () => host.PartnerTipDots?.Refresh());
+                Func<string, string> panelFallback = WorldMultiLanguageText.Localize;
+                partnerActorUi = new OfflinePartnerActorUiRuntime(host.Profile, host.DailyDungeonProgression,
+                    partnerData, new OfflineProfessionImageResourceLoader(partnerUiImages),
+                    key => panelFallback == null ? key : panelFallback(key),
+                    npcId => host.OpenPartnerDetail(npcId), () => {
+                        CloseDialog();
+                        OpenCharacterPage();
+                    });
+                dialoguePresentation.Bind(conversationUi);
+                var context = new PartnerPanelContext {
+                    Roster = host.PartnerRoster,
+                    StarGod = host.PartnerStarGod,
+                    Windows = new OfflinePartnerWindowService(_ => CloseDialog(), () => CloseDialog()),
+                    Images = new OfflineProfessionImageResourceLoader(partnerUiImages),
+                    Font = catalog.Font,
+                    Localize = key => {
+                        foreach (var text in starGodAssets.Texts) if (text.key == key) return text.text;
+                        string value = roster.CreateLocalizer()(key);
+                        if (value != key) return value;
+                        return panelFallback == null ? key : panelFallback(key);
+                    },
+                    IsFunctionLimit = function => host.Rules.IsFunctionLimited(function),
+                    BindNativeTree = tree => {
+                        partnerActorUi.BindTree(tree);
+                        host.PartnerTipDots?.BindNativeTree(tree);
+                    },
+                    BindPartnerTipDotDialogues = services => host.PartnerTipDots?.BindDialogues(services),
+                    PostSound = ((IOfflinePartnerPresentation)this).PostSound
+                };
+                conversationUi.Bind(context);
+                panel.Open(panelAssets, context);
+            }
+            catch (Exception error)
+            {
+                Debug.LogException(error);
+                CloseDialog();
+                Notify("伙伴界面打开失败：" + error.Message);
+            }
+        }
+
+        private sealed class HomePartnerDialoguePresentation : IOfflinePartnerDialoguePresentation,
+            IOfflinePartnerDialoguePlaybackPresentation
+        {
+            private readonly HomeHudView owner;
+            private OfflinePartnerConversationUiSession conversations;
+            internal HomePartnerDialoguePresentation(HomeHudView value) { owner = value; }
+            internal void Bind(OfflinePartnerConversationUiSession value)
+                => conversations = value ?? throw new ArgumentNullException(nameof(value));
+            public GameObject Instantiate(GameObject prefab, Transform parent, bool resetTransformOnly)
+                => UnityEngine.Object.Instantiate(prefab, parent, resetTransformOnly);
+            public void InitializeNpcIcon(Component icon, PartnerDialogueNpcData npc)
+                => owner.partnerActorUi.InitializeNpcIcon(icon, npc);
+            public void ShowError(int code) => owner.Notify("伙伴通话错误：" + code);
+            public void ShowDialogue(PartnerDialogueData dialogue) => owner.OpenPartnerDialogue(dialogue, conversations);
+            public string GetNpcNameKey(int npcClassId)
+            {
+                var row = OfficialPartnerAssetCatalog.LoadDefault().Rows("npc")
+                    .FirstOrDefault(value => Convert.ToInt32(value["Id"]) == npcClassId);
+                return row == null ? string.Empty : Convert.ToString(row["NameKey"]);
+            }
+            public void InitializeActorIcon(Component icon, long actorId, PartnerDialogueSpokesMan speaker)
+                => owner.partnerActorUi.InitializeActorIcon(icon, actorId, speaker, conversations.Source.Npcs);
+            public ItemIcon GetRewardIcon(int itemClassId, Transform parent)
+            {
+                var prototype = owner.host.PartnerGiftAssets.GiftPrefab
+                    ? owner.host.PartnerGiftAssets.GiftPrefab.GetComponentInChildren<ItemIcon>(true)
+                    : null;
+                if (!prototype) throw new InvalidOperationException("Original partner gift ItemIcon prototype is missing.");
+                return owner.host.PartnerGiftBindings.CreateGiftIcon(itemClassId, parent, prototype.gameObject);
+            }
+            public void RecycleRewardIcon(ItemIcon icon)
+            {
+                if (!icon) return;
+                owner.host.PartnerGiftBindings.RecycleIcon(icon);
+                UnityEngine.Object.Destroy(icon.gameObject);
+            }
+            public void ShowAcknowledgeFailure(ProgressionResult result, bool invokeByPlayer)
+                => owner.Notify(result?.Message ?? "伙伴通话保存失败");
+        }
+
+        private void OpenPartnerDialogue(PartnerDialogueData dialogue, OfflinePartnerConversationUiSession conversations)
+        {
+            if (dialogue == null || conversations == null || partnerActorUi == null || partnerUiImages == null)
+                throw new InvalidOperationException("Saved partner dialogue or its local actor bindings are unavailable.");
+            if (partnerDialoguePlayback != null) ClosePartnerDialogueImmediate();
+            var root = new GameObject("PartnerDialoguePlayback", typeof(RectTransform), typeof(Image), typeof(Button));
+            root.transform.SetParent(activeDialog.transform, false);
+            RectTransform rect = (RectTransform)root.transform;
+            rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero; rect.offsetMax = Vector2.zero;
+            root.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.62f);
+            root.GetComponent<Button>().transition = Selectable.Transition.None;
+            root.GetComponent<Button>().onClick.AddListener(() => RequestClosePartnerDialogue(null));
+            var playback = root.AddComponent<PartnerDialoguePlaybackView>();
+            partnerDialogueRoot = root;
+            partnerDialoguePlayback = playback;
+            var assets = OfficialPartnerDialoguePlaybackAssetCatalog.LoadDefault();
+            Func<string, string> panelFallback = WorldMultiLanguageText.Localize;
+            var context = new PartnerDialoguePlaybackContext {
+                Dialogues = conversations.Playback,
+                Awards = new HomePartnerDialogueAwards(),
+                HyperLinks = new HomePartnerDialogueHyperLinks(),
+                Windows = new OfflinePartnerWindowService(RequestClosePartnerDialogue,
+                    () => RequestClosePartnerDialogue(null)),
+                Images = new OfflineProfessionImageResourceLoader(partnerUiImages),
+                Font = catalog.Font,
+                Localize = key => panelFallback == null ? key : panelFallback(key),
+                BindNativeTree = tree => {
+                    partnerActorUi.BindTree(tree);
+                    host.PartnerTipDots?.BindNativeTree(tree);
+                },
+                PostSound = ((IOfflinePartnerPresentation)this).PostSound
+            };
+            try
+            {
+                playback.Open(assets, context, dialogue);
+                playback.Window.SetMaskClickAction(() => RequestClosePartnerDialogue(playback.Window.gameObject));
+            }
+            catch (Exception error)
+            {
+                ClosePartnerDialogueImmediate();
+                Notify("伙伴通话打开失败：" + error.Message);
+            }
+        }
+
+        private void HandlePartnerBackgroundClick()
+        {
+            if (partnerDialoguePlayback != null) RequestClosePartnerDialogue(null);
+            else CloseDialog();
+        }
+
+        private void RequestClosePartnerDialogue(GameObject window)
+        {
+            var playback = partnerDialoguePlayback;
+            if (!playback) return;
+            var popup = playback.Window;
+            if (window && popup && window != popup.gameObject) return;
+            if (!popup || popup.State == WorldPopupWindow.EState.Hide)
+            { ClosePartnerDialogueImmediate(); return; }
+            popup.Hide(ClosePartnerDialogueImmediate);
+        }
+
+        private void ClosePartnerDialogueImmediate()
+        {
+            var root = partnerDialogueRoot;
+            partnerDialogueRoot = null;
+            if (partnerDialoguePlayback)
+            {
+                partnerDialoguePlayback.Close();
+                partnerDialoguePlayback = null;
+            }
+            if (root) UnityEngine.Object.Destroy(root);
+        }
+
+        private sealed class HomePartnerDialogueAwards : IPartnerDialogueAwardServices
+        {
+            private readonly HashSet<Func<object, bool>> handlers = new HashSet<Func<object, bool>>();
+            public void RegisterHandler(Func<object, bool> handler) => handlers.Add(handler);
+            public void RemoveHandler(Func<object, bool> handler) => handlers.Remove(handler);
+            // Partner node rewards are already committed by Acknowledge in the local conversation transaction.
+            public bool IsConversationAward(object message) => false;
+            public void PopupAward(object message) { }
+        }
+
+        private sealed class HomePartnerDialogueHyperLinks : IPartnerStaticHyperLinkServices
+        {
+            public PartnerStaticHyperLinkInfo GetHyperLinkInfo(int id) => null;
+            public IPartnerStaticHyperLinkHandler CreateHandler(int type, string data) => null;
+            public IEnumerable<RaycastResult> ForeachRaycastResults(Vector2 point)
+            {
+                var events = EventSystem.current;
+                if (!events) return Array.Empty<RaycastResult>();
+                var pointer = new PointerEventData(events) { position = point };
+                var results = new List<RaycastResult>();
+                events.RaycastAll(pointer, results);
+                return results;
+            }
         }
 
         void IOfflinePartnerPresentation.BindNpcTipDot(TipDotNodeLinker linker, int npcClassId)
@@ -78,63 +287,209 @@ namespace Zjcs.Presentation.Home
         internal void OpenPartnerDetail(int npcId, OfficialPartnerDetailPropertyAssetCatalog assets,
             OfflinePartnerDetailPropertyServices services, OfflinePartnerGiftPlayer gifts)
         {
-            CloseDialog();
-            try
-            {
-                var catalog = OfficialPartnerAssetCatalog.LoadDefault();
-                var config = OfficialPartnerGiftAssetCatalog.LoadDefault();
-                var npcData = gifts.GetNpcByClassId(npcId);
-                if (npcData == null) throw new InvalidOperationException("伙伴尚未结识");
-                var npc = new OfflinePartnerDetailNpcData(host.Profile, npcData);
-                var row = catalog.Rows("npc").FirstOrDefault(value => Convert.ToInt32(value["Id"]) == npcId);
-                if (row == null) throw new InvalidOperationException("Official partner detail row is missing: " + npcId);
-                var info = new PartnerDetailNpcInfo { Id = npcId,
-                    TreasureClassId = Convert.ToInt32(row["TreasureClassId"]),
-                    IsStarGodNpc = Convert.ToInt32(row["NpcRoleType"]) == 2,
-                    Friendship = config.GetNpcInfo(npcId) };
-                var root = new GameObject("PartnerDetailDialog", typeof(RectTransform), typeof(Image), typeof(Button));
-                root.transform.SetParent(canvas.transform, false);
-                var rect = (RectTransform)root.transform; rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
-                rect.offsetMin = Vector2.zero; rect.offsetMax = Vector2.zero;
-                root.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.62f);
-                root.GetComponent<Button>().transition = Selectable.Transition.None;
-                root.GetComponent<Button>().onClick.AddListener(CloseDialog);
-                var panel = root.AddComponent<PartnerDetailPanelView>();
-                partnerDetailPanel = panel;
-                panel.Open(assets, services, npc, info, new OfflinePartnerLocalizationService(assets.Texts,
-                    assets.Common.GiftTexts, host.PartnerFriendshipAssets.PropertyTexts));
-                activeDialog = root; activeDialogRenderer = null; activePanelKey = "partner_detail";
-            }
-            catch (Exception error) { partnerDetailPanel?.Close(); partnerDetailPanel = null; Notify("伙伴详情打开失败：" + error.Message); }
+            OpenPartnerWindow(npcId, NpcDetailPanel.TabType.Detail, services, gifts);
         }
 
         internal void OpenPartnerGift(int npcId, OfficialPartnerGiftPageAssetCatalog assets,
             OfflinePartnerGiftUiServices services, OfflinePartnerGiftPlayer gifts)
         {
+            OpenPartnerWindow(npcId, NpcDetailPanel.TabType.Gift, host.PartnerDetailServices, gifts);
+        }
+
+        private void OpenPartnerWindow(int npcId, NpcDetailPanel.TabType initialTab,
+            OfflinePartnerDetailPropertyServices properties, OfflinePartnerGiftPlayer gifts)
+        {
             CloseDialog();
             try
             {
-                var npcData = gifts.GetNpcByClassId(npcId);
-                if (npcData == null) throw new InvalidOperationException("伙伴尚未结识");
-                var config = OfficialPartnerGiftAssetCatalog.LoadDefault();
-                var info = config.GetNpcInfo(npcId);
-                if (info == null) throw new InvalidOperationException("Official partner gift row is missing: " + npcId);
-                var root = new GameObject("PartnerGiftDialog", typeof(RectTransform), typeof(Image), typeof(Button));
+                if (gifts == null || gifts.GetNpcByClassId(npcId) == null)
+                    throw new InvalidOperationException("伙伴尚未结识");
+                var official = host.PartnerCatalog ?? throw new InvalidOperationException("Official partner rules are unavailable.");
+                var giftConfig = OfficialPartnerGiftAssetCatalog.LoadDefault();
+                var detailAssets = host.PartnerDetailAssets;
+                var giftAssets = host.PartnerGiftAssets;
+                var profileAssets = OfficialPartnerProfileAssetCatalog.Load();
+                var achievementAssets = OfficialPartnerAchievementAssetCatalog.Load();
+                var windowAssets = OfficialPartnerDetailWindowAssetCatalog.Load();
+                var actorAssets = Resources.Load<PartnerNativeDetailActorAssets>("Partners/PartnerNativeDetailActorAssets");
+                var presentationAssets = Resources.Load<PartnerNativeDetailPresentationAssets>("Partners/PartnerNativeDetailPresentationAssets");
+                if (!actorAssets || !presentationAssets) throw new InvalidOperationException("Official partner actors are unavailable.");
+
+                var language = new OfflinePartnerLocalizationService(detailAssets.Texts,
+                    detailAssets.Common.GiftTexts, host.PartnerFriendshipAssets.PropertyTexts,
+                    host.PartnerFriendshipAssets.DialogTexts, giftAssets.GiftTexts, giftAssets.RelationshipTexts);
+                var text = new Dictionary<string, string>(StringComparer.Ordinal);
+                foreach (var entry in profileAssets.Texts) text[entry.Key] = entry.Value;
+                foreach (var entry in achievementAssets.Texts) text[entry.Key] = entry.Value;
+                foreach (var entry in windowAssets.Texts) text[entry.key] = entry.text;
+                string Localize(string key) => text.TryGetValue(key, out var value)
+                    ? value : language.GetText(key, LanguageType.zh_CN);
+
+                partnerDetailWindowImages = ScriptableObject.CreateInstance<OfflineProfessionImageCatalog>();
+                var starGodImages = OfficialPartnerStarGodAssetCatalog.LoadDefault().CreateImageCatalog();
+                partnerDetailWindowImages.Entries = new[] { giftAssets.Images, detailAssets.Common.Images,
+                        profileAssets.Images, achievementAssets.Images, host.PartnerRosterAssets.Images, starGodImages }
+                    .SelectMany(value => value.Entries).GroupBy(value => value.Path, StringComparer.Ordinal)
+                    .Select(group => group.First()).ToArray();
+                var imageLoader = new OfflineProfessionImageResourceLoader(partnerDetailWindowImages);
+
+                partnerDetailAppearanceManagerConfig = ScriptableObject.CreateInstance<AppearanceAssetManagerConfig>();
+                partnerDetailAppearanceManager = new AppearanceAssetManager(partnerDetailAppearanceManagerConfig,
+                    callback => new PartnerDetailLowMemorySubscription(callback));
+                partnerDetailTextures = new OfflinePartnerUiTextureResources(actorAssets, partnerDetailAppearanceManager);
+                previousPartnerAppearanceTextures = ProfessionAppearanceTextureBindings.Current;
+                ProfessionAppearanceTextureBindings.Current = partnerDetailTextures;
+
+                var detailConfiguration = new OfflinePartnerDetailConfiguration(official, giftConfig, presentationAssets.Regions.text);
+                var live = new OfflinePartnerDetailLiveServices(actorAssets, detailConfiguration.GetNpcInfo,
+                    id => detailConfiguration.TryGetFullBodyImagePath(id, PartnerFullBodyImageType.Live, out var path) ? path : null);
+                partnerAdventureTips = new OfflinePartnerAdventureTipServices(presentationAssets,
+                    canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera,
+                    tip => { if (tip) UnityEngine.Object.Destroy(tip); if (partnerAdventureTipRoot == tip) partnerAdventureTipRoot = null; });
+                var presentation = new OfflinePartnerDetailPresentationServices(detailConfiguration, actorAssets,
+                    presentationAssets, partnerDetailTextures, live, partnerAdventureTips, ShowPartnerAdventureTip);
+
+                var profileService = new OfflinePartnerProfileService(host.Profile, new PartnerProfileRules(official.Rows));
+                var achievementService = new OfflinePartnerAchievementService(host.Profile,
+                    new PartnerFriendshipAchievementRules(official.Rows));
+                achievementService.RefreshFromSave();
+                var rewardPresentation = new OfflinePartnerRewardUiPresentation(host.PartnerGiftBindings,
+                    profileAssets, achievementAssets, Localize,
+                    key => text.ContainsKey(key) || language.ContainsKey(key),
+                    linker => host.PartnerTipDots?.BindNativeTree(linker.gameObject),
+                    () => { gifts.Reload(); host.PartnerTipDots?.Refresh(); },
+                    result => ((IOfflinePartnerDetailPresentation)this).ShowProgressionResult(result), Notify);
+                var profileUi = new OfflinePartnerProfileUiServices(profileService, rewardPresentation.Profile);
+                var achievementUi = new OfflinePartnerAchievementUiServices(achievementService, official, () => false,
+                    rewardPresentation.Achievement);
+                var npcServices = new OfflinePartnerDetailWindowServices(host.Profile, gifts, profileUi,
+                    detailConfiguration, window =>
+                    {
+                        if (partnerDetailWindow && ReferenceEquals(window, partnerDetailWindow.Content)) CloseDialog();
+                        else if (window) UnityEngine.Object.Destroy(window);
+                    });
+
+                var root = new GameObject(initialTab == NpcDetailPanel.TabType.Gift
+                    ? "PartnerGiftDialog" : "PartnerDetailDialog", typeof(RectTransform), typeof(Image), typeof(Button));
                 root.transform.SetParent(canvas.transform, false);
                 var rect = (RectTransform)root.transform; rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
                 rect.offsetMin = Vector2.zero; rect.offsetMax = Vector2.zero;
                 root.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.62f);
                 root.GetComponent<Button>().transition = Selectable.Transition.None;
                 root.GetComponent<Button>().onClick.AddListener(CloseDialog);
-                var panel = root.AddComponent<PartnerGiftPanelView>();
-                partnerGiftPanel = panel;
-                panel.Open(assets, services, npcData, info,
-                    new OfflinePartnerLocalizationService(assets.GiftTexts, assets.RelationshipTexts,
-                        host.PartnerFriendshipAssets.PropertyTexts),
-                    () => Notify("伙伴好感度已更新"));
-                activeDialog = root; activeDialogRenderer = null; activePanelKey = "partner_gift";
+                activeDialog = root; activeDialogRenderer = null;
+                activePanelKey = initialTab == NpcDetailPanel.TabType.Gift ? "partner_gift" : "partner_detail";
+                partnerDetailWindow = root.AddComponent<PartnerDetailWindowView>();
+
+                var context = new PartnerDetailWindowContext
+                {
+                    Npcs = npcServices,
+                    Properties = properties,
+                    Gifts = host.PartnerGiftServices,
+                    Profiles = profileUi,
+                    Achievements = achievementUi,
+                    Treasures = this,
+                    Presentation = presentation,
+                    Windows = new OfflinePartnerWindowService(window =>
+                    {
+                        if (partnerDetailWindow && ReferenceEquals(window, partnerDetailWindow.Content)) CloseDialog();
+                        else if (window) UnityEngine.Object.Destroy(window);
+                    }, CloseDialog),
+                    Images = imageLoader,
+                    Font = Resources.Load<TMP_FontAsset>("Combat/FZY4K-Dynamic") ?? host.Catalog.Font,
+                    Localize = Localize,
+                    BindNativeTree = tree => host.PartnerTipDots?.BindNativeTree(tree),
+                    PostSound = ((IOfflinePartnerPresentation)this).PostSound
+                };
+                partnerDetailWindow.Open(windowAssets, context,
+                    new List<IPartnerDetailWindowNpcData> { npcServices.GetNpcByClassId(npcId) }, 0, initialTab);
             }
-            catch (Exception error) { partnerGiftPanel?.Close(); partnerGiftPanel = null; Notify("伙伴赠礼打开失败：" + error.Message); }
+            catch (Exception error)
+            {
+                CloseDialog();
+                Notify("伙伴详情打开失败：" + error.Message);
+            }
+        }
+
+        private void ShowPartnerAdventureTip(Vector3 position, int mapGroup, int profession, int preference)
+        {
+            if (partnerAdventureTipRoot) UnityEngine.Object.Destroy(partnerAdventureTipRoot);
+            var assets = Resources.Load<PartnerNativeDetailPresentationAssets>("Partners/PartnerNativeDetailPresentationAssets");
+            if (!assets || !assets.AdventureTip || partnerAdventureTips == null || activeDialog == null)
+                throw new InvalidOperationException("Original partner adventure tip is unavailable.");
+            var root = UnityEngine.Object.Instantiate(assets.AdventureTip, activeDialog.transform, false);
+            root.SetActive(false);
+            partnerAdventureTips.BindTree(root);
+            var tip = root.GetComponent<PopTipNpcAdventure>();
+            if (!tip) throw new InvalidOperationException("Original partner adventure tip controller is missing.");
+            tip.Configure(partnerAdventureTips);
+            tip.Init(position, mapGroup, (Zjcs.Official.ProfessionUI.Profession)profession, (NpcGiftType)preference);
+            partnerAdventureTipRoot = root;
+            root.SetActive(true);
+        }
+
+        internal void UpdatePartnerDetailRuntime()
+        {
+            partnerDetailAppearanceManager?.Update();
+            if (Input.GetMouseButtonDown(0)) partnerAdventureTips?.DispatchPointerDown(Input.mousePosition);
+        }
+
+        IProfessionItemInfo IPartnerTreasureIconServices.GetItemInfo(int itemId)
+        {
+            OfficialPartnerCatalog official = host.PartnerCatalog;
+            if (official == null || itemId <= 0 || !official.Rows("item").Any(row =>
+                    row.TryGetValue("ClassId", out var value) && Convert.ToInt32(value) == itemId))
+                return null;
+            return new OfflinePartnerItemInfo(official, itemId);
+        }
+
+        bool IPartnerTreasureIconServices.IsTreasureActive(int itemId)
+            => host.PartnerDetailServices?.IsTreasureActive(itemId) == true;
+
+        void IPartnerTreasureIconServices.SetUIGray(GameObject target, bool gray)
+        {
+            if (!target) return;
+            Material imageGray = Resources.Load<Material>("World/Mainline/HandIn/UIGray");
+            if (!imageGray) throw new InvalidOperationException("Official GlobalUIConfig GrayMat is not packaged.");
+            foreach (Graphic graphic in target.GetComponentsInChildren<Graphic>(true))
+            {
+                if (graphic is TextMeshProUGUI)
+                {
+                    TMPEffect effect = graphic.GetComponent<TMPEffect>();
+                    if (gray)
+                    {
+                        if (!effect) effect = graphic.gameObject.AddComponent<TMPEffect>();
+                        effect.SetGray(true);
+                    }
+                    else if (effect) effect.SetGray(false);
+                }
+                else if (graphic is Text)
+                    graphic.material = gray ? imageGray : null;
+                else if (graphic is Image || graphic is RawImage)
+                    graphic.material = gray ? imageGray : null;
+            }
+        }
+
+        void IPartnerTreasureIconServices.PopupTreasureDetail(int itemId)
+        {
+            if (itemId <= 0) return;
+            partnerTreasurePopup?.Close();
+            OfficialMap11UiAssets assets = Resources.Load<OfficialMap11UiAssets>("Map11/UI/DynamicItems");
+            GameObject prefab = Resources.Load<GameObject>("Map11/UI/TreasureDetailDialog");
+            if (!assets || !prefab)
+                throw new InvalidOperationException("Official treasure detail UI assets are unavailable.");
+            int quality = assets.ItemQualityId(itemId);
+            string[] qualities = { "None", "White", "Blue", "Purple", "Orange", "Gold", "Red", "Rainbow" };
+            if (quality < 0 || quality >= qualities.Length)
+                throw new InvalidOperationException("Official treasure quality is unavailable: " + itemId);
+            string itemName = WorldMultiLanguageText.Localize?.Invoke("item_" + itemId + "_name");
+            string qualityName = WorldMultiLanguageText.Localize?.Invoke("Quality." + qualities[quality]);
+            string itemTypeName = WorldMultiLanguageText.Localize?.Invoke("ItemType.Treasure");
+            if (string.IsNullOrEmpty(itemName) || string.IsNullOrEmpty(qualityName) || string.IsNullOrEmpty(itemTypeName))
+                throw new InvalidOperationException("Official treasure detail text is unavailable: " + itemId);
+            long ownedCount = host.Profile.Save.Player.Inventory.FirstOrDefault(value => value.ItemId == itemId)?.Count ?? 0;
+            partnerTreasurePopup = OfficialTreasureDetailPopup.Open(canvas.transform, prefab, assets, itemId,
+                itemName, itemTypeName, qualityName, ownedCount, () => partnerTreasurePopup = null);
         }
 
         bool IOfflinePartnerDetailPresentation.CanNavigateNpc(int npcId) => false;

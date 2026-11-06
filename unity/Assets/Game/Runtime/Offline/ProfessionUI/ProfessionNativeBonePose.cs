@@ -49,6 +49,16 @@ namespace Zjcs.Offline.ProfessionUI
         public float LocalRotation(int bone) => rotation[bone];
         public bool HasWorldOverride(int bone) => overridden[bone];
 
+        // Aim IK in the same inherited linear frame used to construct the bone.
+        // Position still comes from the full parent transform in EvaluateWorld.
+        internal Matrix4x4 IkFrame(int bone)
+        {
+            int parent = source[bone].parent;
+            if (parent < 0 || inheritance[bone] == 1 || inheritance[bone] >= 3) return Matrix4x4.identity;
+            Matrix4x4 matrix = World(parent);
+            return inheritance[bone] == 2 ? WithoutParentRotation(matrix) : matrix;
+        }
+
         public ProfessionNativeBonePose(Bone[] bones, bool allowNonuniformNoRotation = false,
             bool allowNoScaleOrReflection = false)
         {

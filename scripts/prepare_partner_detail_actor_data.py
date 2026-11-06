@@ -19,6 +19,10 @@ from validation_workspace import validation_directory
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--record', action='store_true', help='Record staged input identities and native application bindings')
+    parser.add_argument('--all', action='store_true', help='Recover every configured open partner UI model and live illustration')
+    parser.add_argument('--inventory', action='store_true', help='Resolve and record original actor identities before decoding')
+    parser.add_argument('--skeleton', action='append', help='Recover an exact configured UI skeleton address, without an NPC split bundle')
+    parser.add_argument('--merge', action='store_true', help='Preserve previously staged actors when adding exact skeletons')
     args = parser.parse_args()
     work = validation_directory()
     recovery = PartnerNativeRecovery()
@@ -56,7 +60,7 @@ def main():
             raise ValueError('Original detail resource is ambiguous: ' + path)
         return record(apk.asset(rows[0]['bundle'], rows[0]['path']))
 
-    def recover_skeleton(npc_id, name, skeleton_asset, split_asset=None, resolution=None):
+    def recover_skeleton(npc_id, name, skeleton_asset, split_asset=None, resolution=None, npc_ids=None):
         raw = record(skeleton_asset).get_raw_data()
         _, offset = read_aligned_string(raw, 28)
         if struct.unpack_from('<i', raw, offset)[0] != 1:
@@ -74,7 +78,7 @@ def main():
             document(name + '/split-metadata.json', split_fields)
             for row in split_fields['ListAnimationContent']:
                 animation_name = row['ContentName']
-                if not animation_name.startswith('npc_' + str(npc_id) + '/'):
+                if not any(animation_name.startswith('npc_' + str(value) + '/') for value in (npc_ids or [npc_id])):
                     continue
                 asset_guid = row['TextAsset']['mAssetGuid']
                 locations = [value for value in table if value['guid'] == asset_guid]
@@ -157,6 +161,7 @@ def main():
             json.dumps(data, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode('utf8'),
             json.dumps(regions, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode('utf8'))
         result = dict(npcId=npc_id, source=identity(skeleton_asset), scale=scale, textureLoader=loader_info,
+            npcIds=npc_ids or [npc_id], splitSource=identity(split_asset) if split_asset is not None else None,
             metadata=document(prefix + 'metadata.json', recovery.fields(skeleton_asset)),
             skeleton=document(prefix + 'skeleton.json', data),
             binary=write(prefix + 'original.skel.bytes', binary_raw),
@@ -170,44 +175,172 @@ def main():
         return result
 
     try:
-        # Initial production companion: explicit original UI model, never the
-        # fight prefab. Remaining configured companions use this same pipeline.
-        obj = location('Assets/Prefabs/Appearance/Npc/8402/NpcModel_UI_8402.prefab')
-        bundle = apk.provenance(obj)['bundle']
-        recovery.recover('NpcModel_UI_8402', work / 'detail-original', bundle=bundle,
-            native_relative='Prefabs/Appearance/Npc/8402/NpcModel_UI_8402.prefab')
-        model = recovery.outputs[-1][2]
-        graphic, = [row for row in model['scripts'] if row['type'] == 'SkeletonGraphic']
-        owner = record(apk.env.find_file(graphic['original'].rsplit(':', 1)[0]).objects[int(graphic['original'].rsplit(':', 1)[1])])
-        skeleton = pointer(recovery.fields(owner)['skeletonDataAsset'], owner)
-        lazy, = [row for row in model['scripts'] if row['type'] == 'SpineLazyAnimLoad']
-        cab, path_id = lazy['original'].rsplit(':', 1)
-        lazy_obj = record(apk.env.find_file(cab).objects[int(path_id)])
-        split_asset = pointer(recovery.fields(lazy_obj)['mSplitBinarySo'], lazy_obj)
-        appearance, = [row for row in model['scripts'] if row['type'] == 'AppearanceUILite']
-        cab, path_id = appearance['original'].rsplit(':', 1)
-        appearance_obj = record(apk.env.find_file(cab).objects[int(path_id)])
-        appearance_fields = recovery.fields(appearance_obj)
-        rows = [recover_skeleton(8402, '8402-model', skeleton, split_asset, appearance_fields['LevelOfResolution']),
-            recover_skeleton(8402, '8402-live', location('Assets/AppearanceAssets/NpcPortrait/NPC_illustration_8402/NPC_illustration_8402_SkeletonData.asset'))]
+        if args.skeleton:
+            rows = [recover_skeleton(0, Path(path).stem, location(path), resolution=2)
+                    for path in args.skeleton]
+        elif args.all:
+            rules_path = ROOT / 'unity/Assets/Official/Partners/partner-rules.json'
+            rules = json.loads(rules_path.read_bytes())
+            if rules['manifest'] != apk.version: raise ValueError('Partner actor rules version differs')
+            # NpcPanelNpcList uses GetNpcs(MapExploreBoss), whose original
+            # parser excludes this type. Keep star gods as their own page too.
+            npcs = [row for row in rules['tables']['npc'] if row['NpcType'] != 2 and not 11015 <= row['Id'] <= 11022]
+            npcs.sort(key=lambda row: (row['Id'] != 8402, row['Id']))
+            groups, model_templates, live_templates, unresolved_models = {}, [], [], []
+            def components(root):
+                result, visited = [], set()
+                def walk(go):
+                    key = identity(go)
+                    if key in visited: raise ValueError('Original UI hierarchy cycle')
+                    visited.add(key)
+                    transform = None
+                    for reference in go.read().m_Component:
+                        item = record(reference.component.deref()); result.append(item)
+                        if item.type.name in ('Transform', 'RectTransform'): transform = item
+                    if transform is not None:
+                        for child in transform.read().m_Children: walk(child.deref().read().m_GameObject.deref())
+                walk(root)
+                return result
+            def add_group(npc_id, kind, skeleton, split=None, resolution=None):
+                key = identity(skeleton)
+                signature = (identity(split) if split is not None else None, resolution)
+                if key in groups:
+                    if groups[key]['signature'] != signature: raise ValueError('Review shared original UI skeleton/split/resolution identity: ' + key)
+                    if npc_id not in groups[key]['npcIds']: groups[key]['npcIds'].append(npc_id)
+                else:
+                    groups[key] = dict(npcId=npc_id, npcIds=[npc_id], kind=kind, name=str(npc_id) + '-' + kind,
+                        skeleton=skeleton, split=split, resolution=resolution, signature=signature)
+            def collect_graphics(npc_id, root, kind):
+                scripts = [(item, item.read(check_read=False).m_Script.read().m_ClassName)
+                    for item in components(root) if item.type.name == 'MonoBehaviour']
+                graphics = [item for item, script in scripts if script in ('SkeletonGraphic', 'SkeletonAnimation')]
+                if not graphics and kind == 'model':
+                    proxies = [recovery.fields(item) for item, script in scripts if script == 'SkeletonGraphicProxy']
+                    if not any(script == 'Image' for _, script in scripts) or not proxies or any(
+                            value['mSkeletonGraphic']['m_PathID'] for value in proxies):
+                        raise ValueError('Review original non-skeletal UI model: ' + identity(root))
+                    model_templates[-1]['staticImage'] = True
+                for graphic in graphics:
+                    fields = recovery.fields(graphic)
+                    if not fields['skeletonDataAsset']['m_PathID']:
+                        if kind == 'model': raise ValueError('Original model skeleton is empty')
+                        continue  # Original live item selects its skeleton from NPC configuration.
+                    skeleton = record(pointer(fields['skeletonDataAsset'], graphic))
+                    lazy = [item for item, script in scripts if script == 'SpineLazyAnimLoad' and
+                            item.read(check_read=False).m_GameObject.path_id == graphic.read(check_read=False).m_GameObject.path_id]
+                    if len(lazy) > 1: raise ValueError('Ambiguous original UI lazy animation owner')
+                    split_pointer = recovery.fields(lazy[0])['mSplitBinarySo'] if lazy else None
+                    split = record(pointer(split_pointer, lazy[0])) if split_pointer and split_pointer['m_PathID'] else None
+                    appearances = [item for item, script in scripts if script == 'AppearanceUILite' and
+                        identity(pointer(recovery.fields(item)['SkeletonGraphic'], item)) == identity(graphic)]
+                    if len(appearances) > 1: raise ValueError('Ambiguous original UI texture owner')
+                    resolution = recovery.fields(appearances[0])['LevelOfResolution'] if appearances else None
+                    add_group(npc_id, kind, skeleton, split, resolution)
+            region_path = ROOT / 'unity/Assets/Official/Partners/UI/DetailPresentation/partner-detail-region-images.json'
+            region_rows = {row['NpcId']: row for row in json.loads(region_path.read_bytes())['rows']}
+            skeleton_paths = []
+            for npc in npcs:
+                path = 'Assets/Prefabs/' + npc['FigureModelUI'] + '.prefab'
+                requested_path = path
+                # User-confirmed repair of the original 10709 directory typo.
+                if npc['Id'] == 10709:
+                    if path != 'Assets/Prefabs/Appearance/Npc/10611/NpcModel_UI_10709.prefab':
+                        raise ValueError('Review the confirmed original 10709 typo repair')
+                    path = 'Assets/Prefabs/Appearance/Npc/10709/NpcModel_UI_10709.prefab'
+                entries = [row for row in table if row['path'] == path]
+                if not entries:
+                    unresolved_models.append(dict(npcId=npc['Id'], path=path))
+                else:
+                    row, = entries
+                    root = location(path)
+                    model_templates.append(dict(npcId=npc['Id'], name=Path(path).stem, path=path, bundle=row['bundle']))
+                    if path != requested_path: model_templates[-1]['requested_path'] = requested_path
+                    collect_graphics(npc['Id'], root, 'model')
+                region_live = (region_rows.get(npc['Id'], {}).get('RegionFullBodyLiveImages') or {}).get('0')
+                live_path = region_live or npc['FullBodyLiveImage']
+                if live_path:
+                    path = 'Assets/AppearanceAssets/NpcPortrait/' + live_path
+                    skeleton_paths.append(path)
+                    add_group(npc['Id'], 'live', location(path))
+                print('Resolved original partner UI model:', npc['Id'], npc['FigureModelUI'], flush=True)
+            ids = {row['Id'] for row in npcs}
+            for entry in table:
+                path = entry['path']
+                if not path.startswith('Assets/Prefabs/Appearance/NpcLive/NpcDetailLiveItem') or not path.endswith('.prefab'): continue
+                suffix = Path(path).stem.removeprefix('NpcDetailLiveItem')
+                if suffix and int(suffix.removeprefix('_')) not in ids: continue
+                npc_id = int(suffix.removeprefix('_')) if suffix else 8402
+                live_templates.append(dict(npcId=npc_id, name=Path(path).stem, path=path, bundle=entry['bundle']))
+                collect_graphics(npc_id, location(path), 'live-extra')
+            names = set()
+            for key, row in groups.items():
+                if row['name'] in names: row['name'] += '-' + digest(key.encode())[:10]
+                names.add(row['name'])
+            inventory = dict(manifest=apk.version, models=model_templates, live_templates=live_templates, skeleton_paths=skeleton_paths, unresolved_models=unresolved_models,
+                groups=[dict(npcId=row['npcId'], npcIds=row['npcIds'], kind=row['kind'], name=row['name'],
+                    skeleton=key, split=row['signature'][0], resolution=row['resolution']) for key, row in groups.items()], sources=sources)
+            (work / 'partner-detail-all-actor-inventory.json').write_text(json.dumps(inventory, ensure_ascii=False, indent=2)+'\n','utf8',newline='\n')
+            if args.inventory:
+                print('Resolved all original UI models:', len(model_templates), 'unique skeleton groups:', len(groups), flush=True)
+                return
+            rows = [recover_skeleton(row['npcId'], row['name'], row['skeleton'], row['split'], row['resolution'], row['npcIds'])
+                    for row in groups.values()]
+        else:
+            # Initial companion path remains available for focused recovery.
+            obj = location('Assets/Prefabs/Appearance/Npc/8402/NpcModel_UI_8402.prefab')
+            bundle = apk.provenance(obj)['bundle']
+            recovery.recover('NpcModel_UI_8402', work / 'detail-original', bundle=bundle,
+                native_relative='Prefabs/Appearance/Npc/8402/NpcModel_UI_8402.prefab')
+            model = recovery.outputs[-1][2]
+            graphic, = [row for row in model['scripts'] if row['type'] == 'SkeletonGraphic']
+            owner = record(apk.env.find_file(graphic['original'].rsplit(':', 1)[0]).objects[int(graphic['original'].rsplit(':', 1)[1])])
+            skeleton = pointer(recovery.fields(owner)['skeletonDataAsset'], owner)
+            lazy, = [row for row in model['scripts'] if row['type'] == 'SpineLazyAnimLoad']
+            cab, path_id = lazy['original'].rsplit(':', 1)
+            lazy_obj = record(apk.env.find_file(cab).objects[int(path_id)])
+            split_asset = pointer(recovery.fields(lazy_obj)['mSplitBinarySo'], lazy_obj)
+            appearance, = [row for row in model['scripts'] if row['type'] == 'AppearanceUILite']
+            cab, path_id = appearance['original'].rsplit(':', 1)
+            appearance_obj = record(apk.env.find_file(cab).objects[int(path_id)])
+            appearance_fields = recovery.fields(appearance_obj)
+            rows = [recover_skeleton(8402, '8402-model', skeleton, split_asset, appearance_fields['LevelOfResolution']),
+                recover_skeleton(8402, '8402-live', location('Assets/AppearanceAssets/NpcPortrait/NPC_illustration_8402/NPC_illustration_8402_SkeletonData.asset'))]
         inputs = ['official-source.json', 'scripts/prepare_partner_detail_actor_data.py',
             'scripts/prepare_partner_native_battle.py', 'scripts/prepare_current_partner_native.py',
             'scripts/convert_official_skeletons.py', 'scripts/prepare_native_character_geometry.py',
             '.tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.SpineExt/LoadAllAnimationsSkeletonDataModifier.cs',
             '.tools/source-packages/current/884_156692/official-code/client-source/AppearanceCombineSkin.cs',
             '.tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceAnimUtils.cs']
+        inputs.extend('.tools/source-packages/current/884_156692/official-code/' + path for path in
+            ('common-source/Common/NpcInfoParser.cs', 'client-source/NpcPanelNpcList.cs'))
         runtime = ['unity/Assets/Game/Runtime/Offline/ProfessionUI/' + name + '.cs' for name in
-            ('IProfessionNativeUiPoseSource', 'ProfessionNativeUiGraphic', 'ProfessionNativeOrderedConstraintPose',
-             'ProfessionNativeSkeletonData.PartnerUi')]
+            ('IProfessionNativeUiPoseSource', 'ProfessionNativeUiGraphic', 'ProfessionNativeUiGraphic.Separators', 'ProfessionNativeOrderedConstraintPose',
+             'ProfessionNativeSkeletonData', 'ProfessionNativeSkeletonData.PartnerUi', 'ProfessionNativeBonePose',
+             'ProfessionNativeAffineIk', 'ProfessionNativeMeshBatches')]
         runtime.extend('unity/Assets/Game/Runtime/Offline/PartnersUI/' + name + '.cs' for name in
             ('PartnerNativeUiPose', 'PartnerNativeUiPhysicsPose', 'PartnerNativeUiSkeletonAsset'))
         runtime.extend(name + '.meta' for name in list(runtime))
         runtime.append('scripts/fixtures/partner_detail_actor_pose_validation.cs')
+        if args.all: inputs.extend(path.relative_to(ROOT).as_posix() for path in (rules_path, region_path))
         proof = dict(manifest=apk.version, sources=sources, outputs=outputs, actors=rows,
+            unresolved_models=unresolved_models if args.all else [],
+            live_templates=live_templates if args.all else [],
+            skeleton_paths=args.skeleton or (skeleton_paths if args.all else ['Assets/AppearanceAssets/NpcPortrait/NPC_illustration_8402/NPC_illustration_8402_SkeletonData.asset']),
+            model_templates=[] if args.skeleton else (model_templates if args.all else [dict(npcId=8402, name='NpcModel_UI_8402', path='Assets/Prefabs/Appearance/Npc/8402/NpcModel_UI_8402.prefab', bundle=apk.provenance(obj)['bundle'])]),
             inputs={name: digest((ROOT / name).read_bytes()) for name in inputs},
             runtime_bindings={name: digest((ROOT / name).read_bytes()) for name in runtime},
             decoder=dict(wheel_sha256=WHEEL_SHA256), generator_sha256=digest(Path(__file__).read_bytes()),
             scope='Original detail actor data and original High texture mappings staged; native playback and installation pending.')
+        if args.merge:
+            previous = json.loads((work / 'partner-detail-actor-data-source-manifest.json').read_bytes())
+            if previous['manifest'] != proof['manifest']: raise ValueError('Cannot merge actor sources from different versions')
+            for key in ('sources', 'outputs', 'inputs', 'runtime_bindings'):
+                proof[key] = {**previous[key], **proof[key]}
+            actors = {row['source']: row for row in previous['actors']}
+            actors.update({row['source']: row for row in proof['actors']})
+            proof['actors'] = list(actors.values())
+            for key in ('model_templates', 'live_templates', 'skeleton_paths', 'unresolved_models'):
+                proof[key] = previous.get(key, []) + [row for row in proof[key] if row not in previous.get(key, [])]
         (work / 'partner-detail-actor-data-source-manifest.json').write_text(
             json.dumps(proof, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
         if args.record:

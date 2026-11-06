@@ -179,7 +179,7 @@ public class NpcDetailPanelDetailContent : UIBase
 		{
 			mNpcCustomSizeController.ApplyForNpc(mNpcInfo.Id);
 		}
-		if (((Component)skeletonGraphic).gameObject.activeInHierarchy)
+		if (skeletonGraphic != null && ((Component)skeletonGraphic).gameObject.activeInHierarchy)
 		{
 			string npcStartingAnimName = services.GetNpcStartingAnimName(mNpcData.NpcClassId);
 			services.PlayAnimation(skeletonGraphic, npcStartingAnimName, loop: true);
@@ -196,7 +196,7 @@ public class NpcDetailPanelDetailContent : UIBase
 
 	private void OnClickNpcTouchBtn()
 	{
-		if (!mIsPlayingAnim && !string.IsNullOrEmpty(mFriendshipLevelInfo.Animation))
+		if (mNpcInfo.Id != 10611 && !mIsPlayingAnim && !string.IsNullOrEmpty(mFriendshipLevelInfo.Animation))
 		{
 			mIsPlayingAnim = true;
 			mAnimDataList.Clear();

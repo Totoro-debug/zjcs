@@ -8,11 +8,13 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.PartnersUI;
+using Zjcs.Offline.ProfessionUI;
 using Zjcs.Offline.Progression;
 using Zjcs.Official.Partners;
 using Zjcs.Official.PartnersUI;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.WorldUI;
+using Zjcs.Presentation.World;
 using Zjcs.Presentation.Inventory;
 
 namespace Zjcs.Presentation.Home
@@ -22,7 +24,7 @@ namespace Zjcs.Presentation.Home
     /// bottom bar, function menu and the furniture/mail windows.
     /// </summary>
     public sealed partial class HomeHudView : IOfflinePartnerPresentation, IOfflinePartnerDetailPresentation,
-        IOfflinePartnerGiftPresentation
+        IOfflinePartnerGiftPresentation, IPartnerTreasureIconServices
     {
         private static readonly string[] CurrencyIcons = { "Money_1", "Money_2", "Money_15" };
         private static readonly int[] CurrencyItems = { 1, 2, 15 };
@@ -40,7 +42,22 @@ namespace Zjcs.Presentation.Home
         private HomeUiRenderer functionsRenderer;
         private GameObject functionsPanel;
         private PartnerRosterPanelView partnerRosterPanel;
+        private PartnerPanelView partnerPanel;
+        private PartnerDialoguePlaybackView partnerDialoguePlayback;
+        private GameObject partnerDialogueRoot;
+        private OfflinePartnerActorUiRuntime partnerActorUi;
+        private OfflineProfessionImageCatalog partnerUiImages;
+        private HomePartnerDialoguePresentation partnerDialoguePresentation;
         private PartnerDetailPanelView partnerDetailPanel;
+        private PartnerDetailWindowView partnerDetailWindow;
+        private AppearanceAssetManager partnerDetailAppearanceManager;
+        private AppearanceAssetManagerConfig partnerDetailAppearanceManagerConfig;
+        private OfflinePartnerUiTextureResources partnerDetailTextures;
+        private OfficialTreasureDetailPopup partnerTreasurePopup;
+        private IProfessionAppearanceTextureBindings previousPartnerAppearanceTextures;
+        private OfflinePartnerAdventureTipServices partnerAdventureTips;
+        private GameObject partnerAdventureTipRoot;
+        private OfflineProfessionImageCatalog partnerDetailWindowImages;
         private PartnerGiftPanelView partnerGiftPanel;
         private GameObject partnerFriendshipPanel;
         private Func<string, string> previousFriendshipLocalize;
@@ -787,6 +804,7 @@ namespace Zjcs.Presentation.Home
         public void Tick()
         {
             host.SetFantasyTowerBackgroundExecution(AnyModalOpen);
+            UpdatePartnerDetailRuntime();
             TickPetIntroduction();
             TickTreasureGachaPreview();
             TickNpcTravel();
@@ -871,13 +889,38 @@ namespace Zjcs.Presentation.Home
 
         public void CloseDialog()
         {
+            ClosePartnerDialogueImmediate();
             DestroyPartnerPromptWindow();
             DestroyPartnerFriendshipWindow();
             bool wasOpen = activeDialog != null;
             partnerRosterPanel?.Close();
             partnerRosterPanel = null;
+            partnerPanel?.Close();
+            partnerPanel = null;
+            partnerActorUi?.Dispose();
+            partnerActorUi = null;
+            if (partnerUiImages) UnityEngine.Object.Destroy(partnerUiImages);
+            partnerUiImages = null;
+            partnerDialoguePresentation = null;
+            partnerDetailWindow?.Close();
+            partnerDetailWindow = null;
+            if (partnerTreasurePopup != null) partnerTreasurePopup.Close();
+            partnerTreasurePopup = null;
             partnerDetailPanel?.Close();
             partnerDetailPanel = null;
+            if (partnerAdventureTipRoot != null) UnityEngine.Object.Destroy(partnerAdventureTipRoot);
+            partnerAdventureTipRoot = null;
+            partnerAdventureTips = null;
+            if (partnerDetailTextures != null && ReferenceEquals(ProfessionAppearanceTextureBindings.Current, partnerDetailTextures))
+                ProfessionAppearanceTextureBindings.Current = previousPartnerAppearanceTextures;
+            previousPartnerAppearanceTextures = null;
+            partnerDetailTextures = null;
+            partnerDetailAppearanceManager?.Dispose();
+            partnerDetailAppearanceManager = null;
+            if (partnerDetailAppearanceManagerConfig) UnityEngine.Object.Destroy(partnerDetailAppearanceManagerConfig);
+            partnerDetailAppearanceManagerConfig = null;
+            if (partnerDetailWindowImages) UnityEngine.Object.Destroy(partnerDetailWindowImages);
+            partnerDetailWindowImages = null;
             partnerGiftPanel?.Close();
             partnerGiftPanel = null;
             if (activePanelKey == "astrological_entry")

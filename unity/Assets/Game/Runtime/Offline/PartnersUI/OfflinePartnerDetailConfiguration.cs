@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using Zjcs.Offline.PartnersNpc;
 using Zjcs.Offline.Progression;
 using Zjcs.Official.PartnersUI;
 
@@ -40,7 +41,8 @@ namespace Zjcs.Offline.PartnersUI
                     MapGroupId = Int(row, "MapGroupId"), TravelProfession = Int(row, "TravelProfession"),
                     PreferenceGiftType = Int(row, "PreferenceGiftType"), IsSpecial = Int(row, "NpcRoleType") == 1,
                     IsShadow = (bool)row["IsShadow"], NameKey = (string)row["NameKey"],
-                    BigBgImage = (string)row["BigBgImage"], FigureModelUI = (string)row["FigureModelUI"],
+                    BigBgImage = (string)row["BigBgImage"],
+                    FigureModelUI = OfflinePartnerNpcRuntime.ResolveFigureModelUI(id, (string)row["FigureModelUI"]),
                     LiveOffset = Vector("LiveOffset"), LiveScale = Vector("LiveScale"),
                     Properties = new PartnerDetailNpcInfo { Id = id, TreasureClassId = Int(row, "TreasureClassId"),
                         IsStarGodNpc = Int(row, "NpcRoleType") == 2, Friendship = gifts.GetNpcInfo(id) } });

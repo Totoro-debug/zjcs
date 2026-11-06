@@ -10,7 +10,9 @@ namespace Zjcs.Offline.ProfessionUI
         public static ProfessionNativeSkeletonData LoadPartnerUi(byte[] data, int npcId)
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
-            if (npcId <= 0) throw new ArgumentOutOfRangeException(nameof(npcId));
+            // Zero identifies a shared UI part with no NPC owner. The payload
+            // still has to match the requested identity and selected manifest.
+            if (npcId < 0) throw new ArgumentOutOfRangeException(nameof(npcId));
             using var stream = new MemoryStream(data, false);
             using var reader = new BinaryReader(stream, new UTF8Encoding(false, true));
             if (Encoding.ASCII.GetString(reader.ReadBytes(8)) != "ZJCSPNUI" || reader.ReadUInt32() != 1)

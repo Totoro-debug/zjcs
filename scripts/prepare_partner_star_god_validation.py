@@ -72,7 +72,8 @@ def main():
             continue
         selected.add(name)
         pending.extend(json.loads(modules[name].read_bytes()).get('references', []))
-    if external - {'Unity.ugui', 'UnityEngine.UI', 'Unity.TextMeshPro', 'Unity.Newtonsoft.Json', 'UniTask'}:
+    if external - {'Unity.ugui', 'UnityEngine.UI', 'Unity.TextMeshPro', 'Unity.Newtonsoft.Json', 'UniTask',
+                   'Unity.RenderPipelines.Universal.Runtime', 'Unity.RenderPipelines.Core.Runtime'}:
         raise ValueError('Inspect validation dependencies: ' + repr(external))
     copy_modules(project, runtime, modules, selected)
     editor = project / 'Assets/Editor'

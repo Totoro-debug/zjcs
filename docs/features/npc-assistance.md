@@ -14,7 +14,7 @@
 
 ### 待迁移的规则与表现
 
-以下要求中每日挑战及日常副本已经接入；其余玩法仍是迁移目标，不构成当前实现结论。
+以下要求中每日挑战、普通日常副本和山之国私图的战斗邀请入口已接入；道路属性门槛、探索首领、节庆首领、联合行动及羁绊冒险仍是迁移目标，不构成当前实现结论。
 
 邀请资格、NPC 遭遇／职业限制、最大人数、累计次数、单 NPC 次数和原冷却来自 `PlayerRobotInvite`、`npc` 与助战属性配置。选人继续使用原 NPC 邀请窗口；原地图道路窗口、探索首领组队窗口、节庆首领面板、节庆助战说明窗及其条目沿固定 APK prefab 和布局接入。节庆邀请列表将 `ActivityBuff` 作为首个排序项，并按 `activity_festival_boss_npc` 标出对应助战。日常使用 `RobotInvitePlayType.All`（10），秘境为 2，道路属性门槛为 `PropGate`（1），探索首领使用 `All`（10），节庆首领为 5，联合行动为 4，羁绊冒险为 6。
 
@@ -44,13 +44,14 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 
 ## 完整还原部分
 
-已接入圣兽试炼、双影幻境及普通日常副本的候选选择、存档、战斗单位与次数事务；公共原生选择视图已完成独立 Play Mode 输入检查，其余玩法入口及非空伙伴队伍的完整实战验证仍未完成。
+已接入圣兽试炼、双影幻境、普通日常副本及山之国私图战斗房间的候选选择、存档、战斗单位与次数事务；公共原生选择视图及山之国单伙伴助战战斗已通过内置屏 Play Mode 验证。道路、探索首领、节庆首领、联合行动和羁绊冒险入口、多人伙伴队伍及完整进程冷启动恢复仍未完成。
 
 - `assets/official/rules.json` 与规则来源清单提供 `npc`、`npc_level_detail`、`npc_profession_detail`、`player_robot_invite`、`skill` 数据。`FightOfficialNpcAssistanceCatalog.Load` 校验规则哈希，按 `NpcType=4`、`CanDevelop`、战斗实体 `FightEntityId` 和等级详情筛伙伴候选，并读取遇见限制、助战条件和玩法次数规则。
 - `FightOfficialNpcAssistanceCatalog.CreateUnit` 按官方等级详情与职业配置计算 NPC 属性、主动技能、被动技能、冷却和状态。被动属性按官方 `NpcFightData.CalcPropsWithSkill` 的基础属性计算与 `BattleFormula.CalcFinalProps` 顺序合成。
 - Home runtime 通过 `OfficialCombatAssetCatalog.LoadNpcAssistance` 加载目录，并用 `OfflineNpcAssistanceProgress` 将选择、分玩法邀请次数和活动战斗快照保存至当前角色槽位。次数只由 `CommitBattle` 提交；`-1` 次数上限按不限制处理，正数上限允许达到配置值。所选 `PlayerRobotInvite` 的七行均为 `CdType=0`（每日），原 `DailyResetTime=08:00:00`；原客户端日界计算使用 `ServerInfoManager.TimeZone`。用户确认离线版全部助战次数按本地机器时间 06:00 重置，代码按本地日界处理，不依赖固定时区。保存 schema 2 以当地 06:00 边界记录次数，并把 schema 1 的本地午夜日期迁移到相应边界。
 - `HomeHudView.DailyChallenges.OpenDailyChallengeAssist` 与 `OpenDailyDungeonAssist` 使用官方 `TeamInvitePanel`／`TeamInvitePanelRobotItem` 资源显示候选并保存选择。日常副本与每日挑战共用 `RobotInvitePlayType.All`（10），选择按活动／房间分别保存；战斗开始时重核助战条件、单 NPC 次数和人数上限，`DailyDungeonBattleRunner.BuildCheckpoint` 调用 `CreateUnit` 并为伙伴寻找未占用的可行走格。普通副本 checkpoint 与助战快照一起恢复，启动失败回滚次数，战斗结束清除活动快照。
-- `OfficialBattleAssistOptions` 将助战 PlayType、入口标识和人数上限作为战斗宿主适配参数，开始时复制调用方配置；日常／每日挑战默认使用官方 `All=10`，节庆首领可传入 5。恢复时检查玩法、入口、关卡及伙伴快照，非空伙伴 checkpoint 缺少已提交快照时拒绝恢复，避免重新扣次；只回滚本次新提交的事务。独立内置屏 Play Mode 以空伙伴选择验证自定义玩法／入口、配置复制、错误玩法拒绝、已有快照恢复、387步真实结算清理和主城姿态恢复，通过；该夹具不证明非空伙伴扣次、节庆活动层、奖励或正式入口已完成。
+- `OfficialMainlineMapRuntime.Map12Buildings` 在素材秘境战斗房间打开同一官方邀请视图，按路线运行和房间保存 `PrivateDungeon`（2）选择。确认后 `DailyDungeonBattleRunner.BeginPrivateMapRoom` 重读存档并复核候选资格、单 NPC 次数和队伍上限，以主角等级／阶位创建伙伴；`CommitBattle` 在战斗挂载前提交次数，挂载失败回滚本次提交。私图 checkpoint 保存在路线档案，助战快照保存在助战档案；恢复时核对玩法、入口、关卡和伙伴列表，既有快照不重复扣次，胜负结算清除活动快照。空队伍仍可单人进入。内置屏 Play Mode 已通过模拟鼠标选择伙伴8402、核对 checkpoint 队伍成员、提交一次每日次数、完成官方战斗30152并冷读胜利结果；角色档案、公开奖励、公共次数和购买次数均未改变。完整进程冷启动恢复及多伙伴实战仍待验证。
+- `OfficialBattleAssistOptions` 将助战 PlayType、入口标识和人数上限作为战斗宿主适配参数，开始时复制调用方配置；日常／每日挑战默认使用官方 `All=10`，私图使用 `PrivateDungeon=2`，节庆首领可传入 5。恢复时检查玩法、入口、关卡及伙伴快照，非空伙伴 checkpoint 缺少已提交快照时拒绝恢复，避免重新扣次；只回滚本次新提交的事务。独立内置屏 Play Mode 以空伙伴选择验证自定义玩法／入口、配置复制、错误玩法拒绝、已有快照恢复、387步真实结算清理和主城姿态恢复，通过；该夹具不证明非空伙伴扣次、节庆活动层、奖励或正式入口已完成。
 - `OfficialBattleAssistSelectionView` 提供公共原生邀请视图，输入为候选展示资料、人数上限及选择／确认／取消回调。日常副本与每日挑战共用该视图，宿主继续计算资格、剩余次数和存档选择；原 `LoopVerticalScrollRect` 负责条目复用，不再由玩法入口手排条目或复制确认按钮。确认空选择时沿用单人开战，非空选择按宿主既有事务处理。
 - 公共视图复用已有 `Map12/Team/TeamInvitePanel`／`TeamInvitePanelRobotItem` 原生资源，替代日常目录中缺少 Sprite／字体绑定的旧副本。`record_battle_assist_selection.py` 实际读取选定884 APK，核对面板340节点／1,559对象和条目82节点／346对象；保留使用的序列化内容相同，外部引用表编号差异解析为同一原对象且原始载荷哈希相同。条目中被离线视图移除的旧在线 `AppearanceUI` 单独记录，不把它认作当前代码相同。历史871资源身份与当前884核对凭据分别保留于[公共选择视图来源](../../assets/reference/battle-hud/assist-selection-source-manifest.json)。没有新绘图片、替代布局或修改原资源载荷。排序／职业筛选、完整NPC头像与外观、条件提示参数及战力字段仍未在公共视图接通，不计作完整邀请UI迁移。
 
@@ -132,11 +133,11 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 
 内置屏 Direct3D Play Mode 使用当前原 shader 对象哈希完全匹配的 Windows 转换缓存，恢复原材质参数、Low 贴图、MeshRenderer 和 Transform 字段，检查 11001、11003、11005、11007、11009、11010、11042 的原 idle 与技能动作；11010 取原 skill_02 路径动作，两名路径角色另检查技能早期的0.1／0.2／0.3进度，共48张实际渲染画面已查看。11005 的独立背饰、11009 路径移动的木条和11010 的火焰长带均可见；截图夹具按非零透明度顶点取景，保留原完整网格与颜色。该隔离夹具直接采样动画，尚未证明正式 Animator、战斗集成或 Windows Player；34 个伙伴尚未加入正式战斗候选。输入对象、原贴图加载配置、shader 转换凭据、解码器、转换及安装载荷／元数据哈希见[完整骨骼战斗数据来源](../../assets/reference/partner-native-battle-source-manifest.json)。未生成完整素材快照。
 
-- 素材秘境（2）、道路属性门槛（1）、探索首领（All=10）、节庆首领（5）、联合行动（4）各自的实际选择入口、条件筛选、官方属性排序／门槛、站位、战斗加入、快照提交及结算接线；不能用日常副本的 All 规则替代这些玩法。
+- 道路属性门槛（1）、探索首领（All=10）、节庆首领（5）、联合行动（4）各自的实际选择入口、条件筛选、官方属性排序／门槛、站位、战斗加入、快照提交及结算接线；不能用日常副本的 All 规则替代这些玩法。
 - 羁绊冒险（6）的 NPC 战斗邀请入口和战斗接线；NPC 旅行是派遣系统，不等同战斗助战。
 - NPC 战斗模型／动画加载绑定仍未完整。85 个官方伙伴战斗包按当前选定 `884_156692` 检查后，51 个实体沿原 `SkeletonMecanim` 所属 GameObject 匹配 Animator（10111、10503、10507 的对象名使用 NPC ID）；沿原 Spine binary、Atlas、材质页和 `AppearanceCombineSkin` 恢复骨骼、贴图、原 `CombineSkins` 组合与动画别名，安装至 `unity/Assets/Official/Combat/NpcFighters/`，由 `OfficialPartnerBattleFighterTools` 导入 `OfficialBattleModelCatalog` 的伙伴绑定。运行时沿原 `AppearanceCombineSkin.ApplyCombineSkinInRuntime` 合并实际存在的所有组合皮肤并重置槽位；缺失的可选皮肤仍按原代码跳过。另 34 个实体使用完整骨骼分支，其中部分不使用 `AppearanceCombineSkin`；原数据已恢复，约束、材质和播放接线边界见本节开头，不认作官方资源缺失。51 个实体的转换、Unity 编译及模型导入检查均已通过。战斗候选只放行 `OfficialBattleModelCatalog.HasNpcBattleAnimations` 确认具备 `idle_01`、`run_01` 的伙伴。`SkillPlayModeAcceptance.RunPartnerBattleModelAcceptance` 与合作战斗宿主验收会选择 8402 并断言伙伴进入保存的战斗 checkpoint；内置屏 GUI Play Mode 已验证 8402 进入 checkpoint、已有快照恢复、错误玩法拒绝、78 步真实战斗胜利、助战清理和宿主恢复，模拟输入入口通过。51 个伙伴同时提取官方 prefab 从实体根到骨骼节点的完整 Transform 链。骨骼保留原 SkeletonDataAsset 单位换算，独立战斗实体根负责格子移动和血条，子节点恢复原位置、旋转和缩放；4202 的 PlayerModel_Game 使用原 scale=0.23、局部 Y=-0.5，未把骨骼 scale=0.01 再乘入实体根。内置屏 Play Mode 重跑逐节点核对原变换、骨骼数据 scale 和实际网格，并再次完成 78 步胜利及恢复／清理；已查看准备和战斗截图，8402 身体、武器和血条正常可见。这只覆盖该伙伴及宿主夹具，其余伙伴与正式邀请入口仍需完整验证。当前仓库静态检查已通过（115,583 个 GUID），Unity 编译、51 个模型导入及 `ProjectTools.Validate` 均通过。APK 对象、匹配云端页资源、转换输入／输出及运行绑定哈希、跳过原因见[伙伴战斗模型来源凭据](../../assets/reference/partner-battle-fighters-source-manifest.json)。
 - 将用户确认的等级／阶位规则扩展到其余通用助战玩法；当前日常战斗按玩家等级与存档 `SubRank` 创建伙伴。
-- 非空伙伴队伍的正式入口、人数限制、战斗表现、次数保存恢复及失败回滚仍需完整 Unity Play Mode 验证。公共选择视图已在内置屏 Direct3D 11 Play Mode 通过20名夹具候选的原 Toggle 选择／取消、不可选条目、原确认／关闭按钮模拟鼠标输入、列表20→2→20的复用和释放，并检查弹窗位于宿主及其独立排序子窗口之上；该独立检查不证明实际NPC规则、画像、次数事务或正式玩法已完成。
+- 山之国私图正式入口已在内置屏 Play Mode 通过模拟鼠标选择8402、伙伴进入战斗 checkpoint、提交一次助战次数、完成30152战斗并冷读胜利结果。道路、探索首领、节庆首领、联合行动和羁绊冒险的正式入口、多伙伴队伍、完整进程冷启动恢复及失败回滚仍需验证。公共选择视图已在内置屏 Direct3D 11 Play Mode 通过20名夹具候选的原 Toggle 选择／取消、不可选条目、原确认／关闭按钮模拟鼠标输入、列表20→2→20的复用和释放，并检查弹窗位于宿主及其独立排序子窗口之上；该独立检查不证明实际NPC规则、画像、次数事务或其他正式玩法已完成。
 
 ## 代码与资源入口
 
@@ -146,4 +147,4 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 
 原生伙伴附着的编辑器校验显式引用外观跟随端口和剧情播放程序集，以解析原附着组件使用的类型；动画绑定校验另外显式引用原剧情动画控制程序集。
 
-Unity 当前实现：规则目录 `unity/Assets/Game/Runtime/Official/Combat/FightOfficialNpcAssistanceCatalog.cs`、次数与战斗快照 `unity/Assets/Game/Runtime/Offline/World/OfflineNpcAssistanceProgress.cs`、官方 Team picker `unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.DailyChallenges.cs`、战斗接线 `unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs`。普通日常副本入口位于 `HomeHudView.Dungeons.SelectDailyDungeonRoom`；其余玩法入口未接线。每日边界与旧存档迁移可通过 `Zjcs.Editor.NpcAssistanceDailyResetAcceptance.Run` 验证。TeamInvitePanel 的 bundle 输入、45 项官方依赖、6 个运行时 prefab 与 52 项共享绑定记录见 [team-ui-source-manifest.json](../../assets/reference/npc-assistance/team-ui-source-manifest.json)。
+Unity 当前实现：规则目录 `unity/Assets/Game/Runtime/Official/Combat/FightOfficialNpcAssistanceCatalog.cs`、次数与战斗快照 `unity/Assets/Game/Runtime/Offline/World/OfflineNpcAssistanceProgress.cs`、官方 Team picker `unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAssistSelectionView.cs`、战斗接线 `unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs`。普通日常副本入口位于 `HomeHudView.Dungeons.SelectDailyDungeonRoom`；山之国私图入口位于 `OfficialMainlineMapRuntime.Map12Buildings.EnterMap12PrivateDungeonBattle`。道路、探索首领、节庆首领、联合行动和羁绊冒险入口仍未接线。每日 06:00 本地日界与旧存档迁移已通过 `Zjcs.Editor.NpcAssistanceDailyResetAcceptance.Run` 验收。TeamInvitePanel 的 bundle 输入、45 项官方依赖、6 个运行时 prefab 与 52 项共享绑定记录见 [team-ui-source-manifest.json](../../assets/reference/npc-assistance/team-ui-source-manifest.json)。

@@ -46,7 +46,7 @@
 
 全量资源校验仍受共享地图工作中已有的 `adventure.json` 哈希记录不一致影响；伙伴资源、四个相关数据目录和显式加载覆盖单独验证，没有改写地图预期哈希。
 
-`scripts/prepare_partner_detail.py` 从固定 APK／已校验原版本 CDN（871_156598）读取原 `NpcDetailPanel`、`NpcDetailPanelDetailContent`、`NpcDetailLiveItem` 及 23 个专用 Live prefab，覆盖当前本地支持的 76 位伙伴（52 位动态立绘、24 位静态立绘）。背景按 `Npc.BigBgImage` 选择原 `NpcBgFavor` Sprite；大立绘按 `FullBodyLiveImage`／`FullBodyImage`、`LiveOffset`／`LiveScale` 接入，右侧模型使用 `FigureModelUI` 与原 `SkeletonGraphicProxy` 指向的主图形。静态立绘遵循原 `ImageLocator` 的尺寸、pivot 和阴影透明度。没有自绘、替代背景或使用列表头像填充大立绘。
+`scripts/prepare_partner_detail.py` 从固定 APK／已校验原版本 CDN（871_156598）读取原 `NpcDetailPanel`、`NpcDetailPanelDetailContent`、`NpcDetailLiveItem` 及 23 个专用 Live prefab，覆盖当前本地支持的 76 位伙伴（52 位动态立绘、24 位静态立绘）。背景按 `Npc.BigBgImage` 选择原 `NpcBgFavor` Sprite；大立绘按 `FullBodyLiveImage`／`FullBodyImage`、`LiveOffset`／`LiveScale` 接入，右侧模型使用 `FigureModelUI` 与原 `SkeletonGraphicProxy` 指向的主图形；10611 的代理骨骼原引用为空，保留 prefab 内官方 Image 且跳过骨骼动画。静态立绘遵循原 `ImageLocator` 的尺寸、pivot 和阴影透明度。没有自绘、替代背景或使用列表头像填充大立绘。
 
 `assets/official/partner-detail/` 保存原 prefab 字段、中文文本、动态模型采样网格与配置目录；共享 PNG 位于 `assets/official/sprites/`。原 High texture-loader 的 GUID、颜色页／染色遮罩按原配置解析；原加法与乘法材质的混合参数已登记。原 `AppearanceAnimUtils` 在指定动画不存在时保留 prefab 当前动画，此分支也按原逻辑保留。
 
@@ -662,11 +662,15 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 ### 当前详情原生动画端口（局部）
 
-`prepare_partner_detail_actor_data.py` 按当前原 `NpcModel_UI_8402` 的实际 `SkeletonGraphic`、按需动画和 `AppearanceUILite.LevelOfResolution` 提取小模型；动态立绘独立读取原 `NPC_illustration_8402`，不使用战斗模型代替。小模型保留共享骨骼、171 个原皮肤和 57 段原按需动画，立绘保留 2 段原动画；共享骨骼引用的 `LoadAllAnimationsSkeletonDataModifier.Apply` 原为空方法。High 纹理按原 AppearanceConfig 与 TextureLoader 的 placeholder 映射解析颜色／染色图，原图、采样设置、对象及像素身份独立记录。`prepare_partner_detail_actor_native.py` 已将 8402 的原 UI 小模型、通用动态立绘 prefab、两份骨骼载荷、原图集／材质和高清纹理安装到正式素材目录，显式目录为 `Partners/PartnerNativeDetailActorAssets`，高清纹理按需从 `PartnerDetailTextures` 加载；其余伙伴仍待接入，未生成完整素材快照。
+`prepare_partner_detail_actor_data.py --all` 沿原 `NpcInfoParser.GetNpcs(MapExploreBoss)` 的排除语义，提取暂不开放联动之外的 91 个 UI 小模型地址、CN 选择规则下的 65 个动态立绘地址、通用及 31 个专用立绘 prefab，共 101 组实际引用骨骼；不以战斗模型替代。共享小模型保留 171 个原皮肤及这些伙伴引用的 468 段按需动画，原 `LoadAllAnimationsSkeletonDataModifier.Apply` 为空方法。High 纹理按原 AppearanceConfig 与 TextureLoader 的 placeholder 映射解析颜色／染色图，原图、采样设置、对象及像素身份独立记录。`prepare_partner_detail_actor_native.py` 将原层级、骨骼载荷、图集／材质和高清纹理安装到正式素材目录，显式目录为 `Partners/PartnerNativeDetailActorAssets`；模型、动态骨骼及加载器按 `PartnerDetailActors` 地址延迟加载，高清纹理继续由原应用引用计数从 `PartnerDetailTextures` 请求和释放，避免进入界面即加载全部立绘。未生成完整素材快照。
+
+专用立绘保留原附加粒子、骨骼跟随和分层节点；`AppearanceUILiteSeparator`、`TransformDirXLocker`、`UIBloomParticleElement` 迁移原应用实现。独立 Canvas 后端按原分隔槽切开绘制区间并绑定原分层 Transform，单 Canvas 模式沿用统一 UI 材质，多 Canvas 模式保留逐混合材质与 PMA 加法顶点色。10501 的原附加 `SkeletonAnimation` 由独立 MeshRenderer 端口读取原配置和网格；10602／10604 原空骨骼引用继续为空。伙伴 UI 启用既有无缩放／反射继承构造，单骨 IK 沿相同的继承线性坐标系求值。原 30 个独立小模型没有请求的 `npc_{id}/idle_01` 时，沿原 `AppearanceAnimUtils` 警告并保留 prefab 当前动画，不另造动画名。
+
+原专用立绘的粒子顶点流字节串 `00010304` 对应 `[0,1,3,4]`。转换器将 `m_VertexStreams`／`m_TrailVertexStreams` 与索引缓冲一样保留为十六进制字符串，避免 YAML 1.1 按八进制解析并丢失前导零；`test_partner_native_yaml.py` 覆盖实际解析和重新输出后的字节保留。原 Mesh 的空 `m_StreamData.path` 还须保持空字符串；写成 YAML `null` 后 Unity 会按字面路径加载，丢失内嵌顶点数据并在读取顶点或粒子烘焙时崩溃。原几何字节经 Unity API 重建与只修正空路径的最小探针均通过，8416 完整立绘的实际运行、点击动画和截图检查通过；回归测试同时覆盖空路径与真实外部路径保留。91 个原配置小模型已逐项完成运行检查并查看截图。10702／10704 的原主图形位于尚未激活子节点，父 `NpcDetailLiveItem.OnEnable` 先请求初始化时由本地服务提前绑定对应 pose；10708 的原 Z-spacing 设置接入既有网格批次。三者实际立绘与点击回归通过。10802 的凹裁剪边界启用既有独立耳切分解与半平面裁剪，保留原边界、UV 和绘制次序，其立绘和点击回归通过。隔离 Play Mode 全清单回归通过：91 个小模型、65 个中文配置大立绘逐项加载、模拟点击、动画恢复与纹理释放通过，已查看全部实际运行截图。主工程 Unity 2022.3.57f1c2 导入／编译、`ProjectTools.Validate` 和静态元数据检查通过（127666 GUID）。这不替代完整详情交互、Home 正式接线与 Windows Player 验证。
 
 本地 `PartnerNativeUiPose` 将原应用层序列的开始／结束通知、循环、混合及点击后返回先前动画接到已有独立原生几何；`PartnerNativeUiPhysicsPose` 复用既有弹簧求解器，将原物理约束与 IK／变换／路径约束按配置顺序交错执行。`PartnerNativeUiPhysicsPose` 的身份边界保留，约束交错与每骨架物理历史现委托公共 `ProfessionNativeOrderedPhysicsPose`；活动 RT 怪物复用该后端，范围及验证见[公共战斗](battle-execution.md)。UI 载荷采用独立身份 `ZJCSPNUI`／`partner-ui`，与战斗及头像载荷分别验证；原 Canvas 端口增加轻量外观贴图覆盖和移动继承端口，非预乘顶点色保留原 CanvasGroup 淡入语义。PMA 顶点色与 CanvasGroup 同用、相对物理参考系等新增分支仍显式拒绝，未以忽略字段方式放行。
 
-原应用 `AppearanceCombineSkin` 与 `SpineLazyAnimLoad` 的 UI 分支按原字段、顺序和初始化时机接到独立原生端口；场景／Mecanim 分支尚未接入。原 `SkeletonGraphicProxy`、`UIBloomLiteSpineElement` 元数据引用与完整 actor 层级保留；小模型原 CanvasRenderer 位于 Graphic 同级节点，本地后端复用该节点并转换两者坐标，不移动原节点。`OfflinePartnerUiTextureResources` 由原 `AppearanceUILite`／TextureLoader 决定加载和释放，以共享引用计数承接本地 Resources；空染色 GUID 保持空字符串，同一原 CAB／对象纹理只生成一个本地绑定。`OfflinePartnerDetailLiveServices` 承接原立绘数据切换与动画重建订阅，已接入上述隔离完整详情窗口，Home 路由仍待接线。原对象、源代码、转换及安装哈希见[详情角色资源来源](../../assets/reference/partner-detail-actor-native-source-manifest.json)。
+原应用 `AppearanceCombineSkin` 与 `SpineLazyAnimLoad` 的 UI 分支按原字段、顺序和初始化时机接到独立原生端口；场景／Mecanim 分支尚未接入。原 `SkeletonGraphicProxy`、`UIBloomLiteSpineElement` 元数据引用与完整 actor 层级保留；小模型原 CanvasRenderer 位于 Graphic 同级节点，本地后端复用该节点并转换两者坐标，不移动原节点。`OfflinePartnerUiTextureResources` 由原 `AppearanceUILite`／TextureLoader 决定加载和释放，以共享引用计数承接本地 Resources；空染色 GUID 保持空字符串，同一原 CAB／对象纹理只生成一个本地绑定。`OfflinePartnerDetailLiveServices` 承接原立绘数据切换与动画重建订阅，现已接入 Home 原版名册详情路由。原对象、源代码、转换及安装哈希见[详情角色资源来源](../../assets/reference/partner-detail-actor-native-source-manifest.json)。
 
 `partner_detail_actor_render_validation.cs` 在隔离 Unity URP Play Mode 中实际加载正式 8402 小模型与通用立绘，核对原合并皮肤、高清纹理请求、停用释放／重开加载、销毁引用归零；通过实际射线模拟点击原立绘按钮，检查 `click_01` 播放后回到 `idle_01`，并验证停用／重开后的动画重建订阅。三张实际 450×800 GPU 画面已查看，运行无 Unity 错误。共享 Canvas 后端同时回归真实本地主角男女头像、原遮罩、模拟点击音效、血量更新和存档重开，查看两张运行画面，退出码为零。静态检查通过（125350 个 GUID），主工程 Unity 2022.3.57f1c2 导入／编译和 `ProjectTools.Validate` 退出码为零；1077 项安装路径及 31 项端口输入哈希一致。本次 Play Mode 验证位于独立角色视口，没有初始化完整详情窗口，不代表完整详情或 Windows Player 已完成。
 
@@ -686,11 +690,13 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 用户已确认：10611、10709 的配置全身立绘经 APK／所选云端索引及实包核实缺失时，明确允许使用同 NPC 的官方 `npc_role_10611` 图片。只替换这一显示资源映射，不编造全身图或改动规则配置。
 
+用户已确认：10709 配置错误的 `Appearance/Npc/10611/NpcModel_UI_10709` 显式映射到其自己的官方 `Appearance/Npc/10709/NpcModel_UI_10709` prefab；10611 原 prefab 只有官方 Image、代理骨骼引用为空，保留原静态小模型并跳过不存在的骨骼动画。
+
 用户已确认：自定义伙伴称谓通过原字库与长度校验后直接在本地保存，不等待线上文本审核；保留原伙伴资格及好感等级门槛。自动伙伴在创建角色及读档后检查原相遇条件，满足且尚未拥有时自动结识，初始好感使用原配置；此触发时机是确认的单机方案，不声称取得服务器实现。`HomeFeatureRuntime.Open` 在首次读取 Home 上下文后调用 `MeetAutomaticNpcs`，并在新增伙伴后重读上下文。`-partnerAutoMeetLoadAcceptance` 使用隔离角色档，在进入 Home 前移除已结识的 8402；Unity GUI Play Mode 验证读档后恰好新增一条 8402 记录，退出码为 0，并保存、检查实际 GPU 画面。该截图只覆盖 Home 场景，存在其他遮挡／渲染异常，不作为伙伴界面还原验收；Home 画面和完整伙伴页面仍须单独验证。
 
 服务端通话创建／最终确认方法未取得。用户补证已完成前段并满足后续条件时可当天续接，超出好感最高值经原浪费确认后仍累计；本地按此保存，不反推旧结识日期。
 
-用户进一步确认：仅在打开伙伴界面时，按原 NPC 通话顺序检查尚未开始且满足原解锁／连锁条件及每日限制的通话；建角、读档、好感或其他条件变化时不额外创建。每日计数按原重置规则和用户确认的 UTC+8 检查。确认合法后继节点时，将该节点的配置物品／好感奖励和历史合并为同一保存事务，回看不重复领奖。`OfflinePartnerConversationOpenRefresher` 从原伙伴条件、通话和地图配置创建本地事务；Home 打开伙伴入口时会调用，失败时提示并保留名册访问。新增的 `OfflinePartnerConversationUiSessionFactory` 会先确保本地身份，再从同版本伙伴及地图目录创建地址簿／播放服务，固定使用 UTC 时钟端口和确认的 UTC+8 参数；Home 尚未调用该工厂。真实存档 Play Mode 覆盖首次创建、重复打开、原始完整通话、奖励回滚／重试和每日限制。正式通话地址簿／播放窗口及完整 `NpcPanel` 宿主仍未接线。
+用户进一步确认：仅在打开伙伴界面时，按原 NPC 通话顺序检查尚未开始且满足原解锁／连锁条件及每日限制的通话；建角、读档、好感或其他条件变化时不额外创建。每日计数按原重置规则和用户确认的 UTC+8 检查。确认合法后继节点时，将该节点的配置物品／好感奖励和历史合并为同一保存事务，回看不重复领奖。`OfflinePartnerConversationOpenRefresher` 从原伙伴条件、通话和地图配置创建本地事务；`OfflinePartnerConversationUiSessionFactory` 先确保本地身份，再从同版本伙伴及地图目录创建地址簿／播放服务，固定使用 UTC 时钟端口和确认的 UTC+8 参数。`HomeHudView.OpenPartnerRoster` 现在挂载原完整 `PartnerPanelView`，绑定名册、星神页、通话列表及正式播放窗口；面板每次实际打开时只刷新一次通话，选择原通话条目后由 `PartnerDialoguePlaybackView` 播放，并通过本地节点事务保存奖励和历史。头像使用本地主角及原 NPC 资料绑定。该 Home 接线已写入；正式功能菜单、完整名册与详情入口已通过主工程模拟指针验证，通话及星神分页因夹具原功能条件未解锁而未执行，Windows Player 仍待验证。
 
 用户已确认：档案点击解锁时重读存档，按已结识及原章节好感条件核对，配置奖励与章节领取记录同笔保存；失败不解锁，重试与回看不重复领奖。未取得服务器领取实现，该本地事务是确认的单机方案。
 
@@ -704,12 +710,14 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 伙伴 GUI 验收在修复按钮音效后于主工程重跑通过：隔离存档下使用模拟指针检查正式名册、详情／赠礼／好感说明窗口及赠礼选择／提交；好感、库存扣除和磁盘重载通过，并核对实际 GPU 画面。伙伴 UI 音效改由 Home Canvas 上注册到本地 Sound 声道的专用 `AudioSource` 播放，HUD 释放时解除注册并销毁；验收日志未再出现禁用音源警告。通话节点播放／奖励、完整角色展示和 Windows Player 仍待验证。
 
+主工程内置屏 Direct3D 11 Play Mode 已从原 Home 功能按钮打开菜单、点击伙伴入口和绯乐卡片进入完整详情，验证 10709 官方模型目录及 10611 静态模型分支；赠礼选择／重置／提交、库存及好感冷读和好感说明通过，退出码为 0，已查看实际运行画面。档案与赠礼合并回归以原门槛的 20 级好感及允许继续送礼的原阶位夹具运行，模拟点击原档案标签和解锁按钮，确认原配置物品奖励与章节领取记录能同笔保存并从磁盘恢复，合并回归退出码为 0，已查看领取前后、赠礼保存后和名册实际画面。页面刷新仍可能出现地图任务条件未开放的 HomeToast，暂时遮挡下部控件；验收等待其原提示时限结束后再输入，此项不视为全 Home 画面验收完成。通话功能 57、星神功能 174 在夹具中按原条件保持锁定，未将其计为已执行。礼物取整／排序／库存与溢出、通话条件／节点事务规则测试及原生 YAML 字节与网格路径回归通过。本轮全工程静态检查通过（132293 个 GUID），Unity 2022.3.57f1c2 导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 退出码为 0；四份相关来源清单的 159 项本地代码／脚本哈希一致。
+
 ## 尚未实现
 
-- 完整 `NpcPanel` 宿主的对话／星神页、伙伴档案与餐桌通话；当前 Home 已接通原生名册卡片、本地相遇／好感／置顶、详情属性区、赠礼控制器和好感说明弹窗。Home 生命周期已构造并释放 `OfflinePartnerStarGodUiServices`，使用正式本地名册、星神资源与礼物图标绑定；该服务尚未接入原生 `NpcPanel` 的生产入口。
+- Home 已接入原生完整 `PartnerPanelView`、正式通话播放窗口、本地头像服务及打开伙伴页时的通话刷新事务；功能菜单、名册和详情入口已通过主工程 Play Mode 模拟指针验证。夹具原条件未解锁通话与星神分页，相关分页、通话播放／奖励及完整导航、赠礼物品详情仍待运行验证。
 - 正式窗口中的立绘／小模型、完整详情简报、伙伴位置导航、赠礼物品详情及声音仍未全部接通。
-- 每日挑战与每日副本已使用官方助战邀请弹窗：按原 `FightAssistNpcClassIds` 名册生成伙伴候选，结合本地结识／好感、原助战条件、战斗模型可用性和次数上限过滤；选择及最大人数写入 `OfflineNpcAssistanceProgress`，确认后进入对应战斗。入口位于 `HomeHudView.DailyChallenges`，弹窗为 `OfficialBattleAssistSelectionView`。主线等其他战斗入口尚未接入该邀请流程，也未完成主角加伙伴队伍的完整运行验证。当前原生伙伴已接入公共战斗场景，完成26名开放伙伴的移动、阴影、死亡及恢复状态的隔离画面检查；正式邀请实战与 Windows Player 仍待验证，来源、接线与限制见[NPC邀请与战前准备](npc-assistance.md#尚未实现)。
-- 主工程 GUI Play Mode 在 450×800 下通过原生名册、详情、赠礼和好感说明窗口流程；模拟指针完成赠礼选择／重置／赠送、说明按钮、遮罩外点与返回键，赠礼扣除和好感落盘后重读成功，关闭说明弹窗保留底层选择并恢复本地化／对象池服务。已查看名册、详情、赠礼、保存后赠礼及好感说明的运行截图；`-partnersAcceptance` 与 `-partnerFriendshipAcceptance` 均退出码为 0，静态检查通过（91,072 GUID）。完整页面交互、手动结识的正式宿主流程、声音与 Windows Player 仍未完成。
+- 每日挑战与每日副本已使用官方助战邀请弹窗：按原 `FightAssistNpcClassIds` 名册生成伙伴候选，结合本地结识／好感、原助战条件、战斗模型可用性和次数上限过滤；选择及最大人数写入 `OfflineNpcAssistanceProgress`，确认后进入对应战斗。入口位于 `HomeHudView.DailyChallenges`，弹窗为 `OfficialBattleAssistSelectionView`。山之国私图入口已通过模拟鼠标选择8402、将伙伴写入战斗 checkpoint、提交一次次数并完成30152胜利及结果冷读；主线等其他战斗入口、多人伙伴队伍和完整进程冷启动仍待验证。原生伙伴已接入公共战斗场景，26名开放伙伴的移动、阴影、死亡及恢复状态通过隔离画面检查；Windows Player 尚未验证，其他助战限制见[NPC邀请与战前准备](npc-assistance.md#尚未实现)。
+- Home 功能菜单、完整名册、详情属性、赠礼及好感说明弹窗已通过模拟指针与隔离存档流程；完整通话播放、全部详情交互及 Windows Player 尚未验证。
 
 - 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
 - 史莱姆、孤独摇滚的八位伙伴及全部相关入口按[离线政策](offline-access.md#暂不开放的联动活动及伙伴)暂停，不列为自动开放目标。

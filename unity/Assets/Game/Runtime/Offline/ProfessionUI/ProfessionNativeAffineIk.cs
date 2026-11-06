@@ -19,14 +19,7 @@ namespace Zjcs.Offline.ProfessionUI
             int bone = state.Bones[0];
             if (!pose.IsActive(bone) || !pose.IsActive(state.Target))
                 throw new ArgumentException("Original single-bone IK depends on an inactive bone.");
-            int inheritance = pose.Inheritance(bone);
-            if (inheritance != 0 && inheritance != 3 && inheritance != 4)
-                throw new NotSupportedException("Bind original single-bone IK selective inheritance.");
-            int parentIndex = pose.Parent(bone);
-            // No-scale inheritance already constructs an orthonormal world
-            // frame. Aim its preserved affine axes directly in that frame.
-            Matrix4x4 parent = parentIndex < 0 || inheritance == 3 || inheritance == 4
-                ? Matrix4x4.identity : pose.World(parentIndex);
+            Matrix4x4 parent = pose.IkFrame(bone);
             if (Mathf.Abs(parent.m00 * parent.m11 - parent.m01 * parent.m10) < 1e-12f)
                 throw new NotSupportedException("Bind original single-bone IK singular parent.");
             Matrix4x4 inverse = parent.inverse;

@@ -56,14 +56,20 @@ public static class PartnerPanelHostValidation
         var sizes = typeof(ScriptableSingleton<>).MakeGenericType(sizesType).GetProperty("instance").GetValue(null);
         var group = sizesType.GetMethod("GetGroup").Invoke(sizes,
             new[] { Enum.Parse(editor.GetType("UnityEditor.GameViewSizeGroupType"), "Standalone") });
-        var size = Activator.CreateInstance(editor.GetType("UnityEditor.GameViewSize"),
+        var sizeType = editor.GetType("UnityEditor.GameViewSize");
+        var sizeKind = editor.GetType("UnityEditor.GameViewSizeType");
+        var size = Activator.CreateInstance(sizeType,
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null,
-            new object[] { Enum.ToObject(editor.GetType("UnityEditor.GameViewSizeType"), 1), width, height, "Original partner panel fixture" }, null);
+            new object[] { Enum.ToObject(sizeKind, 1), width, height, "Original partner panel fixture" }, null);
         group.GetType().GetMethod("AddCustomSize").Invoke(group, new[] { size });
         int index = (int)group.GetType().GetMethod("GetTotalCount").Invoke(group, null) - 1;
         var viewType = editor.GetType("UnityEditor.GameView");
-        // Internal-display launcher owns placement. Never focus the window.
-        var view = EditorWindow.GetWindow(viewType, false, "Game", false);
+        foreach (EditorWindow old in Resources.FindObjectsOfTypeAll(viewType)) old.Close();
+        var view = ScriptableObject.CreateInstance(viewType) as EditorWindow;
+        Rect editorBounds = EditorGUIUtility.GetMainWindowPosition();
+        view.titleContent = new GUIContent("Original partner panel validation");
+        view.position = new Rect(editorBounds.x + 40, editorBounds.y + 40, width, height + 21);
+        view.Show();
         viewType.GetProperty("selectedSizeIndex", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).SetValue(view, index);
         view.Repaint();
     }
@@ -106,7 +112,11 @@ public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPrese
     IEnumerator Check()
     {
         Application.logMessageReceived += (message, stack, type) => { if (type == LogType.Error || type == LogType.Assert || type == LogType.Exception) errors++; };
-        Require(Screen.width == 450 && Screen.height == 800, "Original SafeArea and pointer viewport use the same portrait resolution");
+        float resolutionDeadline = Time.realtimeSinceStartup + 10f;
+        while ((Screen.width != 450 || Screen.height != 800) && Time.realtimeSinceStartup < resolutionDeadline)
+            yield return null;
+        Require(Screen.width == 450 && Screen.height == 800,
+            "Original SafeArea and pointer viewport use the same portrait resolution: " + Screen.width + "x" + Screen.height);
         string work = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), repo = Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT");
         Func<string, string> read = name => File.ReadAllText(Path.Combine(repo, "unity/Assets/Official", name));
         var selected = OfficialPartnerCatalog.Parse(read("Partners/partner-rules.json"), read("Partners/partner-properties.json"));

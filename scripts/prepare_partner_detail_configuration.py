@@ -59,9 +59,11 @@ def main():
     dest = ROOT / 'unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDetailConfiguration.cs'
     receipt = ROOT / 'assets/reference/partner-detail-configuration-source-manifest.json'
     previous = json.loads(receipt.read_bytes()) if receipt.exists() else {}
-    if dest.exists() and previous.get('outputs', {}).get(dest.relative_to(ROOT).as_posix()) != hashlib.sha256(dest.read_bytes()).hexdigest():
+    generated = '// Selected official methods; see partner-detail-configuration-source-manifest.json.\n' + text
+    if (dest.exists() and dest.read_text('utf8') != generated
+            and previous.get('outputs', {}).get(dest.relative_to(ROOT).as_posix()) != hashlib.sha256(dest.read_bytes()).hexdigest()):
         raise ValueError('Preserve existing detail configuration change')
-    dest.write_text('// Selected official methods; see partner-detail-configuration-source-manifest.json.\n' + text, 'utf8', newline='\n')
+    dest.write_text(generated, 'utf8', newline='\n')
     outputs = {path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest() for path in (dest, metadata(dest))}
     for name in ('OfflinePartnerDetailPresentationServices', 'OfflinePartnerDetailWindowServices',
                  'OfflinePartnerRewardUiPresentation', 'PartnerDetailWindowView'):

@@ -35,6 +35,9 @@ namespace Zjcs.Presentation.Home
         private bool privateMapEntry;
         private int privateMapRoomId;
         private OfficialBattleHostPresentation privateMapPresentation;
+        private OfflineDailyDungeonSession privateMapDungeons;
+        private OfflineNpcAssistanceProgress privateMapAssistProgress;
+        private FightOfficialNpcAssistanceCatalog privateMapAssistCatalog;
         private string portraitSlotId, portraitSavesRoot;
 
         public void Begin(HomeFeatureRuntime runtime, int selectedRoomId, string assistEntryId,
@@ -122,10 +125,18 @@ namespace Zjcs.Presentation.Home
         public void BeginPrivateMapRoom(OfflineMainlineProgressSession profile,
             OfflineCharacterProgressionService progression, OfflineDailyDungeonSession dungeons,
             Transform player, Transform canvas, OfficialBattleHostPresentation presentation,
-            string slotId, string savesRoot, Action<bool> onCompleted)
+            string slotId, string savesRoot, Action<bool> onCompleted,
+            OfflineNpcAssistanceProgress assistProgress = null,
+            FightOfficialNpcAssistanceCatalog assistCatalog = null,
+            OfficialBattleAssistOptions assistOptions = null)
         {
             if (profile == null || progression == null || dungeons == null || player == null || canvas == null)
                 throw new ArgumentNullException("Private daily dungeon battle dependencies are incomplete.");
+            privateMapDungeons = dungeons;
+            privateMapAssistProgress = assistProgress
+                ?? throw new ArgumentNullException(nameof(assistProgress));
+            privateMapAssistCatalog = assistCatalog
+                ?? throw new ArgumentNullException(nameof(assistCatalog));
             privateMapPresentation = presentation ?? throw new ArgumentNullException(nameof(presentation));
             battleProfile = profile;
             battleProgression = progression;
@@ -145,11 +156,69 @@ namespace Zjcs.Presentation.Home
             if (run?.dungeonId != 121 || run.difficulty != 50 || room == null || stage == null || scene == null)
                 throw new InvalidOperationException("Official private daily dungeon route room is incomplete.");
             privateMapRoomId = room.id;
+            string entryId = "map12-private-dungeon:" + run.id + ":" + room.id;
+            ConfigureAssist(entryId, assistOptions ?? new OfficialBattleAssistOptions
+            {
+                PlayType = 2,
+                EntryId = entryId
+            });
+            if (assistPlayType != 2)
+                throw new InvalidOperationException("Map12 private dungeon requires the official PrivateDungeon assist rule.");
 
             OfficialCombatAssetCatalog combatAssets = OfficialCombatAssetCatalog.LoadDefault();
             FightOfficialCombatCatalog combat = combatAssets.Load();
-            FightBattleCheckpoint checkpoint = BuildCheckpoint(run, stage, scene, combatAssets, combat, Array.Empty<int>());
-            MountBattle(checkpoint, scene, combatAssets, false, false);
+            FightOfficialNpcInviteRule inviteRule = privateMapAssistCatalog.InviteRule(assistPlayType);
+            OfflineNpcAssistBattle activeAssist = privateMapAssistProgress.ActiveBattle;
+            if (activeAssist != null && (activeAssist.playType != assistPlayType
+                || activeAssist.entryId != dailyAssistEntryId || activeAssist.stageId != stage.id))
+                throw new InvalidOperationException("另一场 NPC 助战战斗尚未结束。");
+            bool restore = !string.IsNullOrEmpty(run.activeBattleCheckpoint);
+            FightBattleCheckpoint checkpoint;
+            int[] selectedNpcIds;
+            if (restore)
+            {
+                checkpoint = FightBattleCheckpointSerializer.Load(run.activeBattleCheckpoint);
+                if (checkpoint.StageId != stage.id || checkpoint.Finished)
+                    throw new InvalidOperationException("Saved private dungeon battle checkpoint does not match the active room.");
+                if (checkpoint.StageType == 0) checkpoint.StageType = 11;
+                selectedNpcIds = checkpoint.Units.Where(unit => unit.NpcClassId > 0)
+                    .Select(unit => unit.NpcClassId).ToArray();
+                if (activeAssist != null && !(activeAssist.npcClassIds ?? new List<int>()).SequenceEqual(selectedNpcIds))
+                    throw new InvalidOperationException("秘境助战快照与战斗 checkpoint 不一致。");
+                if (activeAssist == null && selectedNpcIds.Length > 0)
+                    throw new InvalidOperationException("秘境战斗 checkpoint 缺少已提交的助战快照。");
+            }
+            else
+            {
+                selectedNpcIds = activeAssist != null
+                    ? (activeAssist.npcClassIds ?? new List<int>()).ToArray()
+                    : ResolvePrivateMapAssistSelection(privateMapAssistCatalog, inviteRule, dailyAssistEntryId);
+                checkpoint = BuildCheckpoint(run, stage, scene, combatAssets, combat, selectedNpcIds);
+            }
+
+            bool committedAssist = false;
+            try
+            {
+                if (!restore && selectedNpcIds.Length > 0 && activeAssist == null)
+                {
+                    privateMapAssistProgress.CommitBattle(assistPlayType, dailyAssistEntryId, stage.id,
+                        ResolveAssistMaxPlayer(inviteRule), inviteRule.OneNpcMaxInviteCount,
+                        inviteRule.MaxInviteCount, (NpcAssistRefreshCycle)inviteRule.RefreshCycle,
+                        DateTimeOffset.Now.ToUnixTimeSeconds());
+                    committedAssist = true;
+                }
+                MountBattle(checkpoint, scene, combatAssets, restore, false);
+                if (!privateMapDungeons.SaveBattleCheckpoint(
+                        FightBattleCheckpointSerializer.Save(controller.Checkpoint)))
+                    throw new InvalidOperationException("秘境战斗 checkpoint 保存失败。");
+            }
+            catch
+            {
+                if (committedAssist)
+                    privateMapAssistProgress.CancelBattle(assistPlayType, dailyAssistEntryId, stage.id);
+                DisposeBattle();
+                throw;
+            }
         }
 
         public void BeginChallenge(HomeFeatureRuntime runtime, int activityId, int stageId,
@@ -317,6 +386,8 @@ namespace Zjcs.Presentation.Home
             if (result?.Checkpoint == null) return;
             string serialized = FightBattleCheckpointSerializer.Save(result.Checkpoint);
             if (challengeMode) host.DailyChallenges.SaveBattleCheckpoint(challengeActivityId, serialized);
+            else if (privateMapEntry && !privateMapDungeons.SaveBattleCheckpoint(serialized))
+                throw new InvalidOperationException("秘境战斗 checkpoint 保存失败。");
             else if (!privateMapEntry && !host.DailyDungeons.SaveBattleCheckpoint(serialized))
                 throw new InvalidOperationException("Daily dungeon battle checkpoint could not be saved.");
         }
@@ -328,6 +399,7 @@ namespace Zjcs.Presentation.Home
             FightBattleCheckpoint checkpoint = controller.Checkpoint;
             if (privateMapEntry)
             {
+                FinishBattleAssist(checkpoint.StageId);
                 Action<bool> privateMapCallback = completed;
                 DisposeBattle();
                 privateMapCallback?.Invoke(won);
@@ -413,7 +485,8 @@ namespace Zjcs.Presentation.Home
             {
                 string serialized = FightBattleCheckpointSerializer.Save(controller.Checkpoint);
                 if (challengeMode) host.DailyChallenges.SaveBattleCheckpoint(challengeActivityId, serialized);
-                else if (!privateMapEntry) host.DailyDungeons.SaveBattleCheckpoint(serialized);
+                else if (privateMapEntry) privateMapDungeons.SaveBattleCheckpoint(serialized);
+                else host.DailyDungeons.SaveBattleCheckpoint(serialized);
             }
         }
 
@@ -690,7 +763,8 @@ namespace Zjcs.Presentation.Home
             if (positions.Count != npcClassIds.Count)
                 throw new InvalidOperationException("挑战场景没有足够的官方可行走助战位置。");
 
-            FightOfficialNpcAssistanceCatalog npcCatalog = host.NpcAssistanceCatalog;
+            FightOfficialNpcAssistanceCatalog npcCatalog = privateMapEntry
+                ? privateMapAssistCatalog : host.NpcAssistanceCatalog;
             for (int index = 0; index < npcClassIds.Count; index++)
             {
                 FightGridPoint position = positions[index];
@@ -704,10 +778,42 @@ namespace Zjcs.Presentation.Home
 
         private void FinishBattleAssist(int stageId)
         {
-            OfflineNpcAssistBattle active = host.NpcAssistanceProgress.ActiveBattle;
+            OfflineNpcAssistanceProgress progress = privateMapEntry
+                ? privateMapAssistProgress : host.NpcAssistanceProgress;
+            if (progress == null) return;
+            OfflineNpcAssistBattle active = progress.ActiveBattle;
             if (active != null && active.playType == assistPlayType && active.entryId == dailyAssistEntryId
                 && active.stageId == stageId)
-                host.NpcAssistanceProgress.FinishBattle(assistPlayType, dailyAssistEntryId, stageId);
+                progress.FinishBattle(assistPlayType, dailyAssistEntryId, stageId);
+        }
+
+        private int[] ResolvePrivateMapAssistSelection(FightOfficialNpcAssistanceCatalog npcCatalog,
+            FightOfficialNpcInviteRule inviteRule, string entryId)
+        {
+            int[] selected = privateMapAssistProgress.Selected(assistPlayType, entryId).ToArray();
+            if (selected.Length > ResolveAssistMaxPlayer(inviteRule))
+                throw new InvalidOperationException("助战伙伴数量超过官方上限。");
+            var friendships = (battleProfile.Save.Player.CharacterProperties.NpcFriendships
+                    ?? new List<OfflineNpcFriendship>())
+                .Where(value => value != null && value.NpcClassId > 0)
+                .ToDictionary(value => value.NpcClassId, value => value.Level);
+            long now = DateTimeOffset.Now.ToUnixTimeSeconds();
+            NpcAssistRefreshCycle cycle = (NpcAssistRefreshCycle)inviteRule.RefreshCycle;
+            OfficialBattleModelCatalog battleModels = OfficialBattleModelCatalog.LoadDefault();
+            foreach (int npcId in selected)
+            {
+                if (!battleModels.HasNpcBattleAnimations(npcId))
+                    throw new InvalidOperationException("该助战伙伴没有完整的官方战斗模型与动画：" + npcId);
+                bool conditionMet = npcCatalog.AssistConditionMet(npcId,
+                    battleProfile.Save.Player.Level, friendships, battleProfile.StoryCount);
+                if (!npcCatalog.CanInviteNpc(npcId, friendships.ContainsKey(npcId), conditionMet))
+                    throw new InvalidOperationException("所选助战伙伴当前不满足官方条件：" + npcId);
+                if (inviteRule.OneNpcMaxInviteCount > 0
+                    && privateMapAssistProgress.AssistCount(assistPlayType, npcId, cycle, now)
+                        >= inviteRule.OneNpcMaxInviteCount)
+                    throw new InvalidOperationException("所选助战伙伴今日次数已用完：" + npcId);
+            }
+            return selected;
         }
 
         private void ConfigureAssist(string defaultEntryId, OfficialBattleAssistOptions options)

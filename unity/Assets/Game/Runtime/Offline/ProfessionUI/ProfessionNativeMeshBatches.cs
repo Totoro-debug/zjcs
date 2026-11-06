@@ -48,7 +48,7 @@ namespace Zjcs.Offline.ProfessionUI
             if(slotCount<=0)throw new ArgumentOutOfRangeException(nameof(slotCount));
             this.slotCount=slotCount;seen=new bool[slotCount];Batches=active.AsReadOnly();
         }
-        public void Build(ProfessionNativeBonePose pose,IReadOnlyList<Slot> drawOrder,bool useClipping=true,bool pmaVertexColors=false,float zSpacing=0,bool allowConcaveClipping=false)
+        public void Build(ProfessionNativeBonePose pose,IReadOnlyList<Slot> drawOrder,bool useClipping=true,bool pmaVertexColors=false,float zSpacing=0,bool allowConcaveClipping=false,bool singleMaterial=false,bool mergePmaAdditive=false)
         {
             if(disposed)throw new ObjectDisposedException(nameof(ProfessionNativeMeshBatches));
             if(float.IsNaN(zSpacing)||float.IsInfinity(zSpacing))throw new ArgumentOutOfRangeException(nameof(zSpacing));
@@ -95,13 +95,15 @@ namespace Zjcs.Offline.ProfessionUI
                             {
                                 Vector3 point=clippedVertices[i];point.z=draw*zSpacing;clippedVertices[i]=point;
                             }
-                            if(current==null||current.Page!=render.Page||current.Blend!=slot.Blend)
+                            int blend=singleMaterial||mergePmaAdditive&&pmaVertexColors&&slot.Blend==1?0:slot.Blend;
+                            if(current==null||current.Page!=render.Page||current.Blend!=blend)
                             {
-                                if(active.Count==pool.Count)pool.Add(new Batch());current=pool[active.Count];current.Clear();current.Page=render.Page;current.Blend=slot.Blend;current.FirstDrawIndex=draw;active.Add(current);
+                                if(active.Count==pool.Count)pool.Add(new Batch());current=pool[active.Count];current.Clear();current.Page=render.Page;current.Blend=blend;current.FirstDrawIndex=draw;active.Add(current);
                             }
                             current.LastDrawIndex=draw;int offset=current.Vertices.Count;current.Vertices.AddRange(clippedVertices);current.Uvs.AddRange(clippedUvs);
                             Color32 color=slot.Color;
                             if(pmaVertexColors)color=new Color32((byte)((color.r*color.a+127)/255),(byte)((color.g*color.a+127)/255),(byte)((color.b*color.a+127)/255),color.a);
+                            if(mergePmaAdditive&&pmaVertexColors&&slot.Blend==1)color.a=0;
                             for(int i=0;i<clippedVertices.Count;i++)current.Colors.Add(color);
                             foreach(int i in clippedIndices)current.Indices.Add(offset+i);
                         }

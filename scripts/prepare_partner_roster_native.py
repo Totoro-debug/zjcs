@@ -225,14 +225,25 @@ class PartnerRosterBinding(PartnerGiftBinding):
                                 and original['classID'] == curve['classID']
                                 and original['attribute'] == curve['attribute']
                                 and script_matches):
-                                import math
+                                import struct
                                 left, right = original['curve'], curve['curve']
                                 if (any(left[key] != right[key] for key in ('m_PreInfinity', 'm_PostInfinity', 'm_RotationOrder'))
                                     or len(left['m_Curve']) != len(right['m_Curve'])
-                                    or any(not math.isclose(value, actual[key], rel_tol=0, abs_tol=1e-6)
+                                    # Unity curves store IEEE-754 float32. The
+                                    # native YAML exporter uses a shorter decimal
+                                    # spelling; compare the serialized bytes, not
+                                    # an absolute decimal tolerance.
+                                    or any((value != 0 or actual[key] != 0)
+                                           and (struct.pack('<f', value) != struct.pack('<f', actual[key]))
+                                           if isinstance(value, float) else value != actual[key]
                                            for expected, actual in zip(left['m_Curve'], right['m_Curve'])
                                            for key, value in expected.items())):
                                     raise ValueError('Original uncompiled root animation curve differs')
+                                # Exported YAML also normalizes -0.0 to integer
+                                # zero. Restore the verified original values so
+                                # even the signed-zero bits survive serialization.
+                                for expected, actual in zip(left['m_Curve'], right['m_Curve']):
+                                    actual.update(expected)
                                 curve['path'] = ''
                                 script_binding = None
                                 if original['script']['m_PathID']:
@@ -240,7 +251,8 @@ class PartnerRosterBinding(PartnerGiftBinding):
                                     script_binding = dict(original=original['script'], native=curve['script'], restored=self.scripts[full_name])
                                     curve['script'] = self.scripts[full_name]
                                 self.animation_root_paths.append(dict(original=identity(obj), field=field, curve_index=index,
-                                    original_curve=original, script_binding=script_binding, converted=None, restored=''))
+                                    original_curve=original, script_binding=script_binding, converted=None, restored='',
+                                    numeric_adaptation='Verified float32 round-trip; restore original decimal spellings and signed zero.'))
                                 continue
                         if len(matches) != 1:
                             raise ValueError('Null curve path is not one original compiled root binding')

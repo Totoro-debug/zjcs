@@ -24,6 +24,7 @@ using Zjcs.Presentation.Wishes;
 using Zjcs.Presentation.Combat;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.PartnersUI;
+using Zjcs.Official.Partners;
 using Zjcs.Official.PartnersUI;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.World.NativeLabelUI.Framework;
@@ -57,6 +58,7 @@ namespace Zjcs.Presentation.Home
         private OfficialPartnerRosterAssetCatalog partnerRosterAssets;
         private OfflinePartnerRosterUiServices partnerRoster;
         private OfflinePartnerStarGodUiServices partnerStarGod;
+        private OfficialPartnerCatalog partnerCatalog;
         private OfficialPartnerDetailPropertyAssetCatalog partnerDetailAssets;
         private OfflinePartnerDetailPropertyServices partnerDetailServices;
         private OfflinePartnerDetailPropertySource partnerDetailSource;
@@ -162,6 +164,7 @@ namespace Zjcs.Presentation.Home
         public OfficialPartnerRosterAssetCatalog PartnerRosterAssets => partnerRosterAssets;
         public OfflinePartnerRosterUiServices PartnerRoster => partnerRoster;
         public OfflinePartnerStarGodUiServices PartnerStarGod => partnerStarGod;
+        public OfficialPartnerCatalog PartnerCatalog => partnerCatalog;
         public OfflinePartnerTipDotRuntime PartnerTipDots => partnerTipDots;
         public OfflinePartnerConversationOpenRefresher PartnerConversationOpenRefresher => partnerConversationOpenRefresher;
         public OfficialPartnerDetailPropertyAssetCatalog PartnerDetailAssets => partnerDetailAssets;
@@ -169,6 +172,7 @@ namespace Zjcs.Presentation.Home
         public OfficialPartnerGiftPageAssetCatalog PartnerGiftAssets => partnerGiftAssets;
         public OfflinePartnerGiftUiServices PartnerGiftServices => partnerGiftServices;
         public OfflinePartnerGiftRuntimeBindings PartnerGiftBindings => partnerGiftBindings;
+        public OfflinePartnerGiftPlayer PartnerGiftPlayer => partnerGiftPlayer;
         public OfficialPartnerFriendshipAssetCatalog PartnerFriendshipAssets => partnerFriendshipAssets;
         public OfflinePartnerFriendshipDialogServices PartnerFriendshipDialogServices => partnerFriendshipDialogServices;
         public OfflineArenaSession Arena => arena;
@@ -791,9 +795,10 @@ namespace Zjcs.Presentation.Home
                 new OfflineProfessionImageResourceLoader(partnerRosterAssets.Images), hud);
             partnerDetailAssets = OfficialPartnerDetailPropertyAssetCatalog.LoadDefault();
             var friendshipAssets = OfficialPartnerFriendshipAssetCatalog.LoadDefault();
-            var partnerCatalog = OfficialPartnerAssetCatalog.LoadDefault();
+            partnerCatalog = OfficialPartnerAssetCatalog.LoadDefault();
             partnerConversationOpenRefresher = new OfflinePartnerConversationOpenRefresher(profile,
-                progression.Catalog, partnerCatalog, () => DateTime.UtcNow, () => false, 8);
+                progression.Catalog, partnerCatalog, () => DateTime.UtcNow,
+                () => rules.IsFunctionLimited(57), 8);
             partnerDetailImages = new OfflineProfessionImageResourceLoader(partnerDetailAssets.Common.Images);
             partnerGiftAssets = OfficialPartnerGiftPageAssetCatalog.LoadDefault();
             var partnerGiftImages = new OfflineProfessionImageResourceLoader(partnerGiftAssets.Images);
@@ -811,8 +816,10 @@ namespace Zjcs.Presentation.Home
             partnerDetailSource = new OfflinePartnerDetailPropertySource(profile, partnerCatalog, properties);
             var giftConfiguration = OfficialPartnerGiftAssetCatalog.LoadDefault();
             partnerGiftPlayer = new OfflinePartnerGiftPlayer(profile, partnerCatalog,
-                giftConfiguration, id => new OfflinePartnerItemInfo(partnerCatalog, id), () => false);
-            partnerTipDots = new OfflinePartnerTipDotRuntime(profile, partnerCatalog, giftConfiguration, progression);
+                giftConfiguration, id => new OfflinePartnerItemInfo(partnerCatalog, id),
+                () => rules.IsFunctionLimited(65));
+            partnerTipDots = new OfflinePartnerTipDotRuntime(profile, partnerCatalog,
+                giftConfiguration, progression, function => rules.IsFunctionLimited(function));
             partnerTipDots.Refresh();
             partnerRoster.NpcAdded += OnPartnerRosterAdded;
             partnerRoster.NpcFriendshipUpdated += OnPartnerRosterFriendshipUpdated;

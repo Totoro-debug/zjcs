@@ -72,6 +72,11 @@ def main():
         'Component skeletonGraphic = services.GetSkeletonGraphic(services.InstantiateKeepScale(mNpcModelHandle.Result, mModelSlot));')
     text = text.replace('AppearanceUtils.GetNpcStartingAnimName(', 'services.GetNpcStartingAnimName(')
     text = text.replace('AppearanceAnimUtils.PlayAnimation(', 'services.PlayAnimation(')
+    # User-confirmed repair: original 10611 is an Image with a null graphic proxy.
+    text = replace(text, 'if (((Component)skeletonGraphic).gameObject.activeInHierarchy)',
+        'if (skeletonGraphic != null && ((Component)skeletonGraphic).gameObject.activeInHierarchy)')
+    text = replace(text, 'if (!mIsPlayingAnim && !string.IsNullOrEmpty(mFriendshipLevelInfo.Animation))',
+        'if (mNpcInfo.Id != 10611 && !mIsPlayingAnim && !string.IsNullOrEmpty(mFriendshipLevelInfo.Animation))')
     text = text.replace('RandomUtils.Range(', 'services.RandomRange(')
     write('NpcDetailPanelDetailContent', text)
 

@@ -13,6 +13,7 @@ using Zjcs.Offline.World;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.State;
 using Zjcs.Official.PartnersUI;
+using Zjcs.Official.Partners;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Offline.PartnersUI;
 using Zjcs.Official.WorldUI;
@@ -951,15 +952,78 @@ namespace Zjcs.Presentation.Home
         private IEnumerator VerifyPartners(HomeFeatureRuntime runtime, Action<bool> completed)
         {
             bool ok = true;
-            ok &= Check("partner-roster", () =>
+            ok &= Check("partner-model-10709", () =>
             {
-                InvokePrivate(runtime.Hud, "OpenPartnerRoster");
+                var assets = Resources.Load<PartnerNativeDetailActorAssets>("Partners/PartnerNativeDetailActorAssets");
+                Assert(assets, "original partner model asset catalog is missing");
+                GameObject model = assets.LoadPrefab("Appearance/Npc/10709/NpcModel_UI_10709");
+                Assert(model && model.name == "NpcModel_UI_10709",
+                    "10709 did not resolve to its own official detail prefab");
+                Assert(!assets.LoadPrefab("Appearance/Npc/10611/NpcModel_UI_10709"),
+                    "incorrect original 10709 folder path is still installed");
+                return "official 10709 prefab loaded from its own NPC folder";
+            });
+            ok &= Check("partner-model-10611-static", () =>
+            {
+                var assets = Resources.Load<PartnerNativeDetailActorAssets>("Partners/PartnerNativeDetailActorAssets");
+                GameObject model = assets.LoadPrefab("Appearance/Npc/10611/NpcModel_UI_10611");
+                Assert(model, "official 10611 detail prefab is missing");
+                Image image = model.GetComponentsInChildren<Image>(true).FirstOrDefault(value => value.sprite);
+                Assert(image, "10611 official static Image has no bound sprite");
+                MonoBehaviour proxy = model.GetComponentsInChildren<MonoBehaviour>(true)
+                    .FirstOrDefault(value => value.GetType().Name == "SkeletonGraphicProxy");
+                Component graphic = proxy == null ? null : proxy.GetType().GetField("mSkeletonGraphic",
+                    BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(proxy) as Component;
+                Assert(graphic == null, "10611 must remain a static official Image with no bone animation binding");
+                return "official 10611 Image retained with no fabricated skeleton animation";
+            });
+            HomeUiRenderer home = PrivateField<HomeUiRenderer>(runtime.Hud, "homeRenderer");
+            HomeUiRenderer functions = PrivateField<HomeUiRenderer>(runtime.Hud, "functionsRenderer");
+            bool functionMenuOpened = Check("partner-function-menu", () =>
+            {
+                Button menuEntry = home.Find<Button>(
+                    "/HomeUI/Content/FunctionEntryGroup/FunctionEntryFunc/Content/Entry/EntryBtnFolded");
+                Assert(menuEntry != null, "official function menu entry is missing");
+                ClickPartnerUi(menuEntry);
+                GameObject functionsPanel = PrivateField<GameObject>(runtime.Hud, "functionsPanel");
+                Assert(functionsPanel && functionsPanel.activeInHierarchy,
+                    "official function menu did not open from its HUD entry");
+                return "official function menu opened from its HUD entry";
+            });
+            ok &= functionMenuOpened;
+            if (!functionMenuOpened)
+            {
+                completed(false);
+                yield break;
+            }
+            yield return null;
+            yield return new WaitForEndOfFrame();
+            Canvas.ForceUpdateCanvases();
+            yield return Capture("partners-function-menu.png");
+            bool rosterOpened = Check("partner-roster", () =>
+            {
+                GameObject friendNode = functions.AllNodes.SingleOrDefault(value =>
+                    value && value.name == "FunctionEntryFriendItem");
+                Selectable friendEntry = friendNode ? friendNode.GetComponent<Selectable>() : null;
+                Assert(friendEntry && friendEntry.gameObject.activeInHierarchy,
+                    "official partner roster function entry is missing or hidden");
+                RectTransform friendRect = friendEntry.transform as RectTransform;
+                Assert(friendRect && friendRect.rect.width > 0f && friendRect.rect.height > 0f,
+                    "official partner roster entry has no laid-out hit area");
+                ClickPartnerUi(friendEntry);
                 GameObject root = PrivateField<GameObject>(runtime.Hud, "activeDialog");
                 Assert(root != null && root.name == "PartnerRosterDialog", "official partner roster root opens");
-                Assert(PrivateField<object>(runtime.Hud, "partnerRosterPanel") != null,
-                    "official partner roster controller is bound");
+                PartnerPanelView panel = PrivateField<PartnerPanelView>(runtime.Hud, "partnerPanel");
+                Assert(panel != null && panel.Content && panel.Content.GetComponent<NpcPanel>(),
+                    "complete original partner panel controller is bound");
                 return root.name;
             });
+            ok &= rosterOpened;
+            if (!rosterOpened)
+            {
+                completed(false);
+                yield break;
+            }
             float rosterDeadline = Time.realtimeSinceStartup + 5f;
             while (Time.realtimeSinceStartup < rosterDeadline)
             {
@@ -980,28 +1044,221 @@ namespace Zjcs.Presentation.Home
                 return cards.Length + " visible official cards";
             });
             yield return Capture("partners-roster.png");
-            ok &= Check("partner-detail", () =>
+            PartnerPanelView partnerPanel = PrivateField<PartnerPanelView>(runtime.Hud, "partnerPanel");
+            NpcPanel npcPanel = partnerPanel.Content.GetComponent<NpcPanel>();
+            IDictionary tabItems = PrivateField<IDictionary>(npcPanel, "mTabType2TabItemDict");
+            WorldTabItem dialogueTab = (WorldTabItem)tabItems[NpcPanelTabType.Dialogue];
+            bool dialogueAvailable = !runtime.Rules.IsFunctionLimited(57);
+            ok &= Check("partner-dialogue-page", () =>
             {
-                var roster = PrivateField<GameObject>(runtime.Hud, "activeDialog");
-                var card = roster.GetComponentsInChildren<NpcPanelNpcItem>().First();
-                ClickPartnerUi(PrivateField<Button>(card, "mDetailBtn"));
-                GameObject root = PrivateField<GameObject>(runtime.Hud, "activeDialog");
-                Assert(root != null && root.name == "PartnerDetailDialog", "official partner detail root opens");
-                Assert(PrivateField<object>(runtime.Hud, "partnerDetailPanel") != null,
-                    "official partner detail controller is bound");
-                Assert(root.GetComponentsInChildren<MonoBehaviour>(true).Any(value =>
-                    value.GetType().Name == "NpcDetailPanelPropContent"),
-                    "official partner property content exists");
-                return root.name;
+                Assert(dialogueTab != null && dialogueTab.gameObject.activeSelf == dialogueAvailable,
+                    "original conversation tab visibility does not match its local unlock rule");
+                if (dialogueAvailable)
+                {
+                    ClickPartnerUi(dialogueTab);
+                    NpcPanelDialogueList list = partnerPanel.Content.GetComponentInChildren<NpcPanelDialogueList>(true);
+                    Assert(list && list.gameObject.activeInHierarchy,
+                        "original partner conversation list did not open through its tab");
+                }
+                return dialogueAvailable ? "original partner conversation page opened by simulated tab click"
+                    : "original conversation tab remains locked by the local rule";
             });
-            yield return Capture("partners-detail.png");
+            if (dialogueAvailable)
+            {
+                var presentation = PrivateField<object>(runtime.Hud, "partnerDialoguePresentation");
+                var conversations = PrivateField<OfflinePartnerConversationUiSession>(presentation, "conversations");
+                float dialoguePageDeadline = Time.realtimeSinceStartup + 3f;
+                while (Time.realtimeSinceStartup < dialoguePageDeadline)
+                {
+                    var dialogueList = partnerPanel.Content.GetComponentInChildren<NpcPanelDialogueList>(true);
+                    bool emptyTip = PrivateField<GameObject>(dialogueList, "mEmptyTip").activeSelf;
+                    if (emptyTip == (conversations.Source.Dialogues.Count == 0)) break;
+                    yield return null;
+                }
+                ok &= Check("partner-dialogue-list-state", () =>
+                {
+                    var dialogueList = partnerPanel.Content.GetComponentInChildren<NpcPanelDialogueList>(true);
+                    bool emptyTip = PrivateField<GameObject>(dialogueList, "mEmptyTip").activeSelf;
+                    Assert(emptyTip == (conversations.Source.Dialogues.Count == 0),
+                        "original empty/list state does not match locally saved conversations");
+                    return conversations.Source.Dialogues.Count + " locally saved conversations";
+                });
+                yield return Capture("partners-dialogues.png");
+                if (conversations.Source.Dialogues.Count > 0)
+                {
+                    var dialogueList = partnerPanel.Content.GetComponentInChildren<NpcPanelDialogueList>(true);
+                    var npcItem = dialogueList.GetComponentsInChildren<NpcPanelDialogueListNpcItem>(true)
+                        .FirstOrDefault(item => item.gameObject.activeInHierarchy);
+                    ok &= Check("partner-dialogue-playback", () =>
+                    {
+                        Assert(npcItem != null, "saved conversations have no original NPC row");
+                        ClickPartnerUi(PrivateField<Button>(npcItem, "mBtn"));
+                        return "expanded saved conversation group through its original button";
+                    });
+                    float rowDeadline = Time.realtimeSinceStartup + 3f;
+                    NpcPanelDialogueListDialogueItem dialogueItem = null;
+                    while (Time.realtimeSinceStartup < rowDeadline)
+                    {
+                        dialogueItem = dialogueList.GetComponentsInChildren<NpcPanelDialogueListDialogueItem>(true)
+                            .FirstOrDefault(item => item.gameObject.activeInHierarchy
+                                && PrivateField<GameObject>(item, "mContentRoot").activeInHierarchy);
+                        if (dialogueItem != null) break;
+                        yield return null;
+                    }
+                    ok &= Check("partner-dialogue-open", () =>
+                    {
+                        Assert(dialogueItem != null, "expanded original conversation group has no dialogue item");
+                        ClickPartnerUi(PrivateField<Button>(dialogueItem, "mButton"));
+                        PartnerDialoguePlaybackView playback = PrivateField<PartnerDialoguePlaybackView>(runtime.Hud,
+                            "partnerDialoguePlayback");
+                        Assert(playback && playback.Content && playback.Content.GetComponent<NpcDialoguePanel>(),
+                            "official conversation playback window did not open");
+                        return "official conversation playback opened by simulated row click";
+                    });
+                    yield return Capture("partners-dialogue-playback.png");
+                    var playback = PrivateField<PartnerDialoguePlaybackView>(runtime.Hud, "partnerDialoguePlayback");
+                    CloseWindowBtn playbackClose = playback ? playback.Content.GetComponentsInChildren<CloseWindowBtn>(true)
+                        .FirstOrDefault(value => value.myButton && value.myButton.gameObject.activeInHierarchy) : null;
+                    ok &= Check("partner-dialogue-close", () =>
+                    {
+                        Assert(playbackClose != null, "original conversation window has no active close button");
+                        ClickPartnerUi(playbackClose.myButton);
+                        return "closed official playback without closing the partner panel";
+                    });
+                    for (int frame = 0; frame < 180 && PrivateField<PartnerDialoguePlaybackView>(runtime.Hud,
+                        "partnerDialoguePlayback") != null; frame++) yield return null;
+                    ok &= Check("partner-dialogue-parent", () =>
+                    {
+                        Assert(PrivateField<PartnerDialoguePlaybackView>(runtime.Hud, "partnerDialoguePlayback") == null,
+                            "conversation close animation did not complete");
+                        Assert(PrivateField<PartnerPanelView>(runtime.Hud, "partnerPanel") == partnerPanel
+                            && partnerPanel.Content && partnerPanel.Content.activeInHierarchy,
+                            "closing playback also closed the partner panel");
+                        return "partner page remains open after playback close";
+                    });
+                }
+            }
+            WorldTabItem starGodTab = (WorldTabItem)tabItems[NpcPanelTabType.StarGod];
+            ok &= Check("partner-star-god-page", () =>
+            {
+                bool limited = runtime.Rules.IsFunctionLimited(174);
+                Assert(starGodTab.gameObject.activeSelf == !limited,
+                    "original star-god tab visibility does not match its local unlock rule");
+                if (!limited)
+                {
+                    ClickPartnerUi(starGodTab);
+                    var content = partnerPanel.Content.GetComponentInChildren<NpcPanelStarGodContent>(true);
+                    Assert(content && content.gameObject.activeInHierarchy,
+                        "original star-god page did not open through its tab");
+                }
+                return limited ? "original star-god tab remains locked by the local rule"
+                    : "original star-god page opened by simulated tab click";
+            });
+            if (starGodTab.gameObject.activeSelf) yield return Capture("partners-star-god.png");
+            WorldTabItem npcListTab = (WorldTabItem)tabItems[NpcPanelTabType.NpcList];
+            GameObject npcListRoot = PrivateField<GameObject>(npcPanel, "mNpcListGo");
+            if (!npcListRoot.activeInHierarchy && npcListTab.gameObject.activeInHierarchy)
+            {
+                ClickPartnerUi(npcListTab);
+                float listDeadline = Time.realtimeSinceStartup + 3f;
+                while (!npcListRoot.activeInHierarchy && Time.realtimeSinceStartup < listDeadline)
+                    yield return null;
+            }
+            ok &= Check("partner-list-return", () =>
+            {
+                Assert(npcListRoot.activeInHierarchy || !npcListTab.gameObject.activeInHierarchy,
+                    "original partner list page did not return after changing tabs");
+                return npcListRoot.activeInHierarchy ? "original partner list page active"
+                    : "partner list tab unavailable under the current local function rules";
+            });
+            if (npcListRoot.activeInHierarchy)
+            {
+                ok &= Check("partner-detail", () =>
+                {
+                    var roster = PrivateField<GameObject>(runtime.Hud, "activeDialog");
+                    var card = roster.GetComponentsInChildren<NpcPanelNpcItem>().Single(value =>
+                        PrivateField<Zjcs.Official.Partners.NpcRosterItem>(value, "mNpcDataWrap").NpcClassId == 8402
+                        && PrivateField<Button>(value, "mDetailBtn").gameObject.activeInHierarchy);
+                    ClickPartnerUi(PrivateField<Button>(card, "mDetailBtn"));
+                    GameObject root = PrivateField<GameObject>(runtime.Hud, "activeDialog");
+                    Assert(root != null && root.name == "PartnerDetailDialog", "official partner detail root opens");
+                    PartnerDetailWindowView detailWindow = PrivateField<PartnerDetailWindowView>(runtime.Hud,
+                        "partnerDetailWindow");
+                    Assert(detailWindow && detailWindow.Panel && detailWindow.Content
+                        && detailWindow.Content.activeInHierarchy,
+                        "official partner detail window and panel are bound");
+                    Assert(root.GetComponentsInChildren<MonoBehaviour>(true).Any(value =>
+                        value.GetType().Name == "NpcDetailPanelPropContent"),
+                        "official partner property content exists");
+                    return root.name;
+                });
+                yield return Capture("partners-detail.png");
+                if (Environment.GetCommandLineArgs().Contains("-partnerProfileAcceptance"))
+                {
+                    bool profileOpened = Check("partner-profile-page", () =>
+                    {
+                        PartnerDetailWindowView detailWindow = PrivateField<PartnerDetailWindowView>(runtime.Hud,
+                            "partnerDetailWindow");
+                        NpcDetailPanel detailPanel = detailWindow.Content.GetComponentInChildren<NpcDetailPanel>(true);
+                        NpcDetailPanel.TabData profileTab = PrivateField<List<NpcDetailPanel.TabData>>(detailPanel,
+                            "mTabDatas").Single(value => value.TabType == NpcDetailPanel.TabType.Profile);
+                        Assert(profileTab.TabItem && profileTab.TabItem.gameObject.activeInHierarchy,
+                            "original profile tab is unavailable");
+                        ClickPartnerUi(profileTab.TabItem);
+                        NpcDetailPanelProfileContent content = detailPanel.GetComponentInChildren<NpcDetailPanelProfileContent>(true);
+                        Assert(content && content.gameObject.activeInHierarchy,
+                            "original partner archive page did not open through its tab");
+                        return "original partner archive page opened by simulated tab click";
+                    });
+                    ok &= profileOpened;
+                    if (profileOpened)
+                    {
+                        yield return null;
+                        yield return Capture("partners-profile.png");
+                        NpcDetailPanelProfileContent profile = PrivateField<NpcDetailPanelProfileContent>(
+                            PrivateField<PartnerDetailWindowView>(runtime.Hud, "partnerDetailWindow").Content
+                                .GetComponentInChildren<NpcDetailPanel>(true), "mProfileContent");
+                        object info = PrivateField<object>(profile, "mProfileInfo");
+                        int chapter = (int)info.GetType().GetField("ProfileId").GetValue(info);
+                        var rewards = (Dictionary<int, long>)info.GetType().GetField("Reward").GetValue(info);
+                        Button unlock = PrivateField<Button>(profile, "mUnlockBtn");
+                        var profileInventoryBefore = rewards.Keys.ToDictionary(itemId => itemId,
+                            itemId => runtime.ItemCount(itemId));
+                        ok &= Check("partner-profile-claim-input", () =>
+                        {
+                            Assert(unlock && unlock.gameObject.activeInHierarchy && unlock.interactable,
+                                "original profile unlock button is not enabled at the configured friendship threshold");
+                            ClickPartnerUi(unlock);
+                            return "claimed the unlocked archive chapter through its original button";
+                        });
+                        yield return null;
+                        ok &= Check("partner-profile-reward-save", () =>
+                        {
+                            runtime.Profile.Reload();
+                            var profileFriendship = runtime.Profile.Save.Player.CharacterProperties.NpcFriendships
+                                .Single(value => value.NpcClassId == 8402);
+                            Assert(profileFriendship.ReceivedProfileRewards.Contains(chapter),
+                                "archive chapter receipt was not restored from disk");
+                            foreach (var reward in rewards)
+                                Assert(runtime.ItemCount(reward.Key) == profileInventoryBefore[reward.Key] + reward.Value,
+                                    "original archive reward was not restored from disk: " + reward.Key);
+                            return "original archive reward and chapter receipt restored after reload";
+                        });
+                        yield return Capture("partners-profile-claimed.png");
+                    }
+                }
+            }
+            else log.Add("SKIP partner-detail: the original NPC list tab is locked by current local function rules");
             ok &= Check("partner-gift", () =>
             {
                 runtime.OpenPartnerGift(8402);
                 GameObject root = PrivateField<GameObject>(runtime.Hud, "activeDialog");
                 Assert(root != null && root.name == "PartnerGiftDialog", "official partner gift root opens");
-                Assert(PrivateField<object>(runtime.Hud, "partnerGiftPanel") != null,
-                    "official partner gift controller is bound");
+                PartnerDetailWindowView giftWindow = PrivateField<PartnerDetailWindowView>(runtime.Hud,
+                    "partnerDetailWindow");
+                Assert(giftWindow && giftWindow.Panel && giftWindow.Content
+                    && giftWindow.Content.activeInHierarchy,
+                    "official partner gift window and panel are bound");
                 Assert(root.GetComponentsInChildren<MonoBehaviour>(true).Any(value =>
                     value.GetType().Name == "NpcDetailPanelGiftContent"),
                     "official partner gift content exists");
@@ -1011,6 +1268,9 @@ namespace Zjcs.Presentation.Home
                 return root.name;
             });
             yield return Capture("partners-gift.png");
+            // Opening a page can show a temporary Home notice over the lower
+            // controls. Let its original lifetime finish before pointer input.
+            yield return new WaitForSecondsRealtime(2.5f);
             var giftRoot = PrivateField<GameObject>(runtime.Hud, "activeDialog");
             var giftPanel = giftRoot.GetComponentInChildren<NpcDetailPanelGiftContent>();
             var giftIcons = PrivateField<Dictionary<int, ItemIcon>>(giftPanel, "mGiftItemIconDict");
@@ -1420,7 +1680,9 @@ namespace Zjcs.Presentation.Home
             EventSystem.current.RaycastAll(pointer, hits);
             Assert(hits.Count > 0 && (hits[0].gameObject == target.gameObject
                 || hits[0].gameObject.transform.IsChildOf(target.transform)),
-                "partner pointer blocked at " + target.name + ": " + (hits.FirstOrDefault().gameObject?.name ?? "none"));
+                "partner pointer blocked at " + target.name + " at " + pointer.position
+                    + " (rect=" + rect.rect + ", world=" + rect.TransformPoint(rect.rect.center)
+                    + ", hits=" + string.Join(",", hits.Take(4).Select(value => value.gameObject.name)) + ")");
             pointer.pointerCurrentRaycast = hits[0];
             ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerDownHandler);
             ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerUpHandler);

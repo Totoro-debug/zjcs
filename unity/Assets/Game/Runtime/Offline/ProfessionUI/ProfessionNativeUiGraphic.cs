@@ -11,7 +11,7 @@ namespace Zjcs.Offline.ProfessionUI
     // Independent Canvas backend for original application components. Serialized
     // fields retain the original prefab values; no Spine runtime code is used.
     [RequireComponent(typeof(CanvasRenderer))]
-    public sealed class ProfessionNativeUiGraphic : MaskableGraphic,
+    public sealed partial class ProfessionNativeUiGraphic : MaskableGraphic,
         IProfessionAppearanceUIGraphic, IProfessionOffScreenGraphic, IProfessionFollowerGraphic, IProfessionAppearancePartGraphic,
         IProfessionAppearanceUILiteGraphic
     {
@@ -117,9 +117,9 @@ namespace Zjcs.Offline.ProfessionUI
         private void ValidateSettings()
         {
             var settings = meshGenerator.settings;
-            if (initialFlipX || initialFlipY || layoutScaleMode != 0 || enableSeparatorSlots || separatorSlotNames.Length != 0 ||
+            if (initialFlipX || initialFlipY || layoutScaleMode != 0 ||
                 settings.tintBlack || (settings.canvasGroupCompatible && settings.pmaVertexColors) || settings.addNormals || settings.calculateTangents ||
-                settings.zSpacing != 0 || ((physicsPositionInheritanceFactor != Vector2.zero || physicsRotationInheritanceFactor != 0)
+                ((physicsPositionInheritanceFactor != Vector2.zero || physicsRotationInheritanceFactor != 0)
                     && source is not IProfessionNativeUiPhysicsMovement) ||
                 updateTiming != 1)
                 throw new NotSupportedException("Restore additional original UI graphic flip/layout/separator/vertex/physics settings before using this prefab.");
@@ -144,7 +144,12 @@ namespace Zjcs.Offline.ProfessionUI
         }
         private void Build()
         {
-            batches.Build(State.Pose, State.CreateDrawSlots(), meshGenerator.settings.useClipping, meshGenerator.settings.pmaVertexColors);
+            // Original single-Canvas mode uses its assigned UI material for all
+            // slots. Separate blend materials belong to the multiple mode.
+            batches.Build(State.Pose, OriginalSeparatedDrawSlots(), meshGenerator.settings.useClipping,
+                meshGenerator.settings.pmaVertexColors,
+                zSpacing: meshGenerator.settings.useCustomSpacing ? meshGenerator.settings.zSpacing : 0,
+                allowConcaveClipping: true, singleMaterial: !allowMultipleCanvasRenderers, mergePmaAdditive: true);
             int count = batches.Batches.Count;
             if (!allowMultipleCanvasRenderers && count > 1)
                 throw new NotSupportedException("Original UI graphic requires multiple CanvasRenderers for these atlas/blend batches.");
@@ -164,6 +169,7 @@ namespace Zjcs.Offline.ProfessionUI
             placeholderTextures = placeholders;
             if (useCustomDemandLoading) OnCustomDemandLoading?.Invoke(this);
             SyncSubmeshGraphicsWithCanvasRenderers();
+            BindOriginalSeparatorParents();
             for (int i = 0; i < count; i++)
             {
                 var sourceToBatch = graphics[i].transform.worldToLocalMatrix * transform.localToWorldMatrix;
@@ -192,11 +198,7 @@ namespace Zjcs.Offline.ProfessionUI
         }
         public void PrepareInstructionsAndRenderers(bool isOnValidate)
         {
-            if (enableSeparatorSlots || separatorSlots.Count != 0 || separatorParts.Count != 0)
-                throw new NotSupportedException("Bind original UI appearance separator rendering before selecting parts.");
-            separatorPartInstructions.Clear();
-            if (State != null && State.SlotCount > 0)
-                separatorPartInstructions.Add(new ProfessionAppearancePartInstruction(State.SlotCount - 1));
+            UpdateOriginalSeparatorInstructions();
             SyncSubmeshGraphicsWithCanvasRenderers();
         }
         public void MatchRectTransformWithBounds()

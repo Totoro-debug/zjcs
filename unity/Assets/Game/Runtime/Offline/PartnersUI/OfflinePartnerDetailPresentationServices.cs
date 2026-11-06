@@ -63,8 +63,13 @@ namespace Zjcs.Offline.PartnersUI
         }
         public Component GetSkeletonGraphic(GameObject model)
         {
-            var actor = model.GetComponentInChildren<PartnerNativeUiActor>(true);
-            return actor ? actor.Graphic : throw new InvalidOperationException("Original detail model has no native graphic binding.");
+            if (model && model.name.StartsWith("NpcModel_UI_10611", StringComparison.Ordinal))
+                return null;
+            var proxy = model.GetComponent<SkeletonGraphicProxy>();
+            if (!proxy) throw new InvalidOperationException("Restore the original detail model's graphic proxy.");
+            if (!proxy.SkeletonGraphic)
+                throw new InvalidOperationException("Original detail model has no native graphic binding.");
+            return proxy.SkeletonGraphic;
         }
         public void PlayAnimation(Component graphic, string animation, bool loop)
         {

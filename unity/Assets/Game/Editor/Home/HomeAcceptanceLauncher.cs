@@ -192,7 +192,8 @@ namespace Zjcs.Editor.Home
             {
                 OfflinePartnerGiftConfiguration configuration = OfficialPartnerGiftAssetCatalog.LoadDefault();
                 int level = Environment.GetCommandLineArgs().Contains("-partnerTitlesAcceptance")
-                    ? configuration.CanCustomTagFriendShipLevel : 1;
+                    ? configuration.CanCustomTagFriendShipLevel
+                    : Environment.GetCommandLineArgs().Contains("-partnerProfileAcceptance") ? 20 : 1;
                 long experience = configuration.Get(8402, level).FriendshipExp;
                 bool overflow = Environment.GetCommandLineArgs().Contains("-partnerOverflowAcceptance");
                 int requiredSubRank = 0;
@@ -204,9 +205,17 @@ namespace Zjcs.Editor.Home
                         .Where(row => Convert.ToInt32(row["Id"]) == 8402)
                         .Max(row => Convert.ToInt32(row["SubRankLimit"]));
                 }
+                else if (Environment.GetCommandLineArgs().Contains("-partnerProfileAcceptance"))
+                {
+                    int maxSubRank = OfficialPartnerAssetCatalog.LoadDefault().Rows("npc_friendship_level")
+                        .Where(row => Convert.ToInt32(row["Id"]) == 8402)
+                        .Max(row => Convert.ToInt32(row["SubRankLimit"]));
+                    requiredSubRank = Enumerable.Range(0, maxSubRank + 1)
+                        .First(rank => configuration.GetMaxSubRankLevel(8402, rank) > level);
+                }
                 Apply("partner", player =>
                 {
-                    if (overflow) player.SubRank = Math.Max(player.SubRank, requiredSubRank);
+                    if (requiredSubRank > 0) player.SubRank = Math.Max(player.SubRank, requiredSubRank);
                     OfflineNpcFriendship friendship = player.CharacterProperties.NpcFriendships
                         .FirstOrDefault(value => value.NpcClassId == 8402);
                     if (friendship == null)

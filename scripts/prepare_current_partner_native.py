@@ -52,7 +52,8 @@ class UnityYamlLoader(getattr(yaml, 'CSafeLoader', yaml.SafeLoader)):
                 # causing MultiLanguageText to overwrite static separators.
                 value.tag = 'tag:yaml.org,2002:str'
             if key.value in ('m_IndexBuffer', '_typelessdata', 'm_TypelessData',
-                             'IgnoreSkinTypes', 'IgnoreEffectTypes') and isinstance(value, yaml.ScalarNode):
+                             'IgnoreSkinTypes', 'IgnoreEffectTypes', 'm_VertexStreams',
+                             'm_TrailVertexStreams') and isinstance(value, yaml.ScalarNode):
                 # Unity writes byte arrays as unquoted hex. YAML 1.1 otherwise
                 # turns digit-only buffers into integers (including octal),
                 # corrupting indices or packed enum arrays and dropping zeroes.

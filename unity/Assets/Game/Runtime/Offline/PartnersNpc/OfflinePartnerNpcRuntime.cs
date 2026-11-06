@@ -40,6 +40,7 @@ namespace Zjcs.Offline.PartnersNpc
         private ConfigManager manager;
         private object parsers, battleFormula, formula, logger, loggerFactory;
         private readonly List<StaticSlot> staticSlots = new List<StaticSlot>();
+        private Dictionary<int, string> npcFigureModels;
         private bool disposed;
         public int Norank { get; }
 
@@ -136,7 +137,8 @@ namespace Zjcs.Offline.PartnersNpc
                     Level = Convert.ToInt32(Property(fight, "Level")), SubRank = Convert.ToInt32(Property(fight, "SubRank")),
                     CreatePlanesRank = Convert.ToInt32(Property(fight, "CreatePlanesRank")), Profession = Convert.ToInt32(Property(detail, "Profession")),
                     Sex = Convert.ToInt32(Field(npc, "Sex")), NameKey = (string)Field(npc, "NameKey"), Icon = (string)Field(npc, "Icon"),
-                    FigureModelUI = (string)Field(npc, "FigureModelUI"), CombatRating = (long)fightType.GetMethod("CalcCombatRating").Invoke(fight, null) };
+                    FigureModelUI = ResolveFigureModelUI(npcClassId, (string)Field(npc, "FigureModelUI")),
+                    CombatRating = (long)fightType.GetMethod("CalcCombatRating").Invoke(fight, null) };
             }
         }
 
@@ -149,6 +151,43 @@ namespace Zjcs.Offline.PartnersNpc
                 return (string)parser.GetType().GetMethod(third ? "GetThirdIconPath" : "GetFirstIconPath")
                     .Invoke(parser, new[] { Enum.ToObject(Common("Profession"), profession) });
             }
+        }
+
+        public string SubRankName(int subRank)
+        {
+            CheckAccess();
+            using (Enter())
+            {
+                Type subRankType = Common("SubRank");
+                if (!Enum.IsDefined(subRankType, subRank)) throw new ArgumentOutOfRangeException(nameof(subRank));
+                return Enum.GetName(subRankType, subRank);
+            }
+        }
+
+        public string FigureModelUI(int npcClassId)
+        {
+            CheckAccess();
+            using (Enter())
+            {
+                if (npcFigureModels == null)
+                {
+                    object parser = RequiredParser("NpcInfoParser");
+                    var values = ((IEnumerable)parser.GetType().GetMethod("GetAll", Type.EmptyTypes).Invoke(parser, null))
+                        .Cast<object>();
+                    npcFigureModels = values.ToDictionary(value => Convert.ToInt32(Field(value, "Id")),
+                        value => (string)Field(value, "FigureModelUI"));
+                }
+                if (!npcFigureModels.TryGetValue(npcClassId, out string path))
+                    throw new KeyNotFoundException("Original NPC figure model is missing: " + npcClassId);
+                return ResolveFigureModelUI(npcClassId, path);
+            }
+        }
+
+        public static string ResolveFigureModelUI(int npcClassId, string originalPath)
+        {
+            // The selected official 884 model exists under its own NPC folder;
+            // NpcInfo's requested path incorrectly names 10611 for this prefab.
+            return npcClassId == 10709 ? "Appearance/Npc/10709/NpcModel_UI_10709" : originalPath;
         }
 
         private Type Common(string name) => assemblies.Shared.GetType("Common." + name, true);

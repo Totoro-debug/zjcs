@@ -17,6 +17,8 @@ namespace Zjcs.Editor
 {
     public static partial class OfficialMap12PlayModeAcceptance
     {
+        private static int map12PrivateAssistExpectedNpcId;
+
         public static void RunBuildingPrelude() => RunCore(false, false, 12, true, verifyBuildingPrelude: true);
         public static void RunBuildingBattle() => RunCore(false, false, 12, true, verifyBuildingBattle: true);
 
@@ -274,6 +276,8 @@ namespace Zjcs.Editor
             var worldHudStates = worldHud.Find("WorldCanvas", "/WorldCanvas").transform.Cast<Transform>()
                 .ToDictionary(value => value.gameObject, value => value.gameObject.activeSelf);
             SimulateUiClick(nextRoom, nextRoom.GetComponentInParent<Canvas>().worldCamera);
+            IEnumerator assistPicker = SelectPrivateDungeonAssist(root, slot, output, true);
+            while (assistPicker.MoveNext()) yield return assistPicker.Current;
             deadline = Time.realtimeSinceStartup + 20f;
             OfficialBattleRuntimeController controller = null;
             while (controller == null && Time.realtimeSinceStartup < deadline)
@@ -289,6 +293,19 @@ namespace Zjcs.Editor
             if (controller == null || controller.Checkpoint == null || controller.Checkpoint.StageId != 30152
                 || controller.Checkpoint.StageType != 11 || controller.Checkpoint.Units.All(value => value.Side != 2))
                 throw new InvalidDataException("Original private dungeon route did not enter the official 12102 / 30152 battle.");
+            int[] assistedNpcIds = controller.Checkpoint.Units.Where(value => value.NpcClassId > 0)
+                .Select(value => value.NpcClassId).ToArray();
+            if (map12PrivateAssistExpectedNpcId <= 0 || !assistedNpcIds.Contains(map12PrivateAssistExpectedNpcId))
+                throw new InvalidDataException("The confirmed private invitation did not add its selected partner to the battle.");
+            OfflineNpcAssistanceProgress assistProgress = OfflineNpcAssistanceProgress.Open(slots, slot);
+            OfflineNpcAssistBattle activeAssist = assistProgress.ActiveBattle;
+            if (activeAssist == null || !activeAssist.committed || activeAssist.playType != 2
+                || !activeAssist.npcClassIds.SequenceEqual(assistedNpcIds))
+                throw new InvalidDataException("Private battle did not retain the matching committed assist snapshot.");
+            foreach (int npcId in assistedNpcIds)
+                if (assistProgress.AssistCount(2, npcId, NpcAssistRefreshCycle.Daily,
+                        DateTimeOffset.Now.ToUnixTimeSeconds()) != 1)
+                    throw new InvalidDataException("Private invitation did not commit exactly one daily use for NPC " + npcId + ".");
             if (!controller.OwnsPresentationCamera)
                 throw new InvalidDataException("Private dungeon battle did not acquire the common battle camera.");
             if (worldHudStates.Any(value => value.Value && value.Key.activeInHierarchy))
@@ -357,6 +374,11 @@ namespace Zjcs.Editor
                 || privateSession.Save.usedEntries != 0 || privateSession.Save.purchasedEntries != 0
                 || !File.ReadAllBytes(slots.GetProgressPath(slot)).SequenceEqual(profileBefore))
                 throw new InvalidDataException("Actual private battle result did not persist only the local outcome and room state.");
+            assistProgress = OfflineNpcAssistanceProgress.Open(slots, slot);
+            if (assistProgress.ActiveBattle != null || assistProgress.AssistCount(2,
+                    map12PrivateAssistExpectedNpcId, NpcAssistRefreshCycle.Daily,
+                    DateTimeOffset.Now.ToUnixTimeSeconds()) != 1)
+                throw new InvalidDataException("Private battle completion did not clear the active assist snapshot while preserving its committed use.");
             if (!actualOutcome.Won)
             {
                 route = UnityEngine.Object.FindObjectsOfType<Transform>(true)
@@ -368,7 +390,7 @@ namespace Zjcs.Editor
             }
             else
             {
-                yield return VerifyPrivateVictoryRoute(slots, slot, profileBefore, output);
+                yield return VerifyPrivateVictoryRoute(root, slots, slot, profileBefore, output);
             }
             yield return new WaitForEndOfFrame();
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-battle-result.png"));
@@ -376,7 +398,7 @@ namespace Zjcs.Editor
                 + (actualOutcome.Won ? "victory" : "loss") + ". Result survived cold read without changing character profile, rewards, public attempts or purchases.");
         }
 
-        private static IEnumerator VerifyPrivateVictoryRoute(ProfileSlotCatalog slots, string slot,
+        private static IEnumerator VerifyPrivateVictoryRoute(string root, ProfileSlotCatalog slots, string slot,
             byte[] profileBefore, string output)
         {
             foreach (int roomId in new[] { 12104, 12106, 12107, 12108 })
@@ -400,6 +422,8 @@ namespace Zjcs.Editor
                 OfficialBattleRuntimeController controller = null;
                 if (hasBattle)
                 {
+                    IEnumerator assistPicker = SelectPrivateDungeonAssist(root, slot, output, false);
+                    while (assistPicker.MoveNext()) yield return assistPicker.Current;
                     float deadline = Time.realtimeSinceStartup + 20f;
                     while (controller == null && Time.realtimeSinceStartup < deadline)
                     {
@@ -457,6 +481,57 @@ namespace Zjcs.Editor
                 throw new InvalidDataException("The official 121/50 victory route did not persist its 12108 endpoint.");
             yield return new WaitForEndOfFrame();
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-route-complete.png"));
+        }
+
+        private static IEnumerator SelectPrivateDungeonAssist(string root, string slot, string output, bool requirePartner)
+        {
+            float deadline = Time.realtimeSinceStartup + 15f;
+            GameObject picker = null;
+            while (picker == null && Time.realtimeSinceStartup < deadline)
+            {
+                picker = UnityEngine.Object.FindObjectsOfType<Transform>(true)
+                    .FirstOrDefault(value => value.name == "BattleAssistSelection" && value.gameObject.activeInHierarchy)?.gameObject;
+                yield return null;
+            }
+            if (picker == null) throw new InvalidDataException("Private battle room did not open the original partner invitation panel.");
+            yield return new WaitForEndOfFrame();
+            var slots = new ProfileSlotCatalog(root);
+            OfflineDailyDungeonSession session = OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
+            DailyDungeonRunSave run = session.ActiveRun;
+            if (run == null) throw new InvalidDataException("Private invitation panel has no active route.");
+            ScreenCapture.CaptureScreenshot(Path.Combine(output,
+                "iron-mount-private-assist-" + run.currentRoomId + ".png"));
+
+            if (requirePartner)
+            {
+                Toggle option = picker.GetComponentsInChildren<Toggle>(true)
+                    .FirstOrDefault(value => value.isActiveAndEnabled && value.interactable && !value.isOn);
+                if (option == null)
+                    throw new InvalidDataException("Private invitation panel has no available partner row for the non-empty team acceptance.");
+                Transform row = option.transform;
+                while (row != null && !row.name.StartsWith("Npc_", StringComparison.Ordinal)) row = row.parent;
+                if (row == null || !int.TryParse(row.name.Substring(4), out map12PrivateAssistExpectedNpcId)
+                    || map12PrivateAssistExpectedNpcId <= 0)
+                    throw new InvalidDataException("Original partner invitation row has no NPC identity.");
+                SimulateUiClick(option, option.GetComponentInParent<Canvas>().worldCamera);
+                yield return null;
+                if (!option.isOn)
+                    throw new InvalidDataException("Simulated mouse input did not select the available partner row.");
+                string entryId = "map12-private-dungeon:" + run.id + ":" + run.currentRoomId;
+                int[] selected = OfflineNpcAssistanceProgress.Open(slots, slot)
+                    .Selected(2, entryId).ToArray();
+                if (!selected.Contains(map12PrivateAssistExpectedNpcId))
+                    throw new InvalidDataException("Private partner selection was not persisted by the original panel input.");
+                yield return new WaitForEndOfFrame();
+                ScreenCapture.CaptureScreenshot(Path.Combine(output,
+                    "iron-mount-private-assist-" + run.currentRoomId + "-selected.png"));
+            }
+
+            Button confirm = picker.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(value => value.name == "CommonBtn_12" && value.gameObject.activeInHierarchy);
+            if (confirm == null || !confirm.IsInteractable())
+                throw new InvalidDataException("Original private invitation confirmation button is unavailable.");
+            SimulateUiClick(confirm, confirm.GetComponentInParent<Canvas>().worldCamera);
         }
 
         private static Vector2 PrivateMaskInputPoint(Button expected)
