@@ -1,0 +1,21 @@
+{
+  "rule_manifest": "871_156598",
+  "client_source_manifest": "884_156692",
+  "sources": {
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RewardRuleInfoParser.cs": "826e9a131dcd64a0a56cf0fa872d44f2ff45f76dd7f912cd9518cd1c49849239",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemDropInfo.cs": "2cb303ac6bf6aa0a07b4c9d4457c42f7ad948562dc2d4c1642e8d707627be73a",
+    "unity/Assets/Game/Resources/DailyChallenges/daily-challenges.json": "141228bc4bc24bf5a122f6d402a094d281719ae03ca98df488cf8e8715ab6fdd"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialDailyChallengeCatalog.cs": "a8b8b7539cd37d304a1594cc5f50c69d2f98881b3d33204bdd6c1042e5aecb20",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialDailyChallengeCatalog.cs.meta": "4afae6a5f89607234ad206d547fe6904f1511e4ec8e09f39ff532dec87184f38",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialDailyChallengeCatalog.RewardPreview.cs": "ffdc68c570ae0b9b81acca1b1a06b835ce4502ba39870097059fcb07e9262cfb",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialDailyChallengeCatalog.RewardPreview.cs.meta": "68af36aa51e916f2251051cd3668799049e87dc5cb9cd1c173bf2c2b821857b8",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineDailyChallengeService.DomainBossPage.cs": "86312569e555fa962e6660fffeda3330e074e1c04690fd9e94bd253afaa17702",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineDailyChallengeService.DomainBossPage.cs.meta": "4d4fbe1351c1f9080f8af7f94c53c9559ee36aa8606135cb775a4c819649494b",
+    "unity/Assets/Game/Editor/ActivityDomainBossPageDataAcceptance.cs": "e0598446a4368d800c4ee798e74d6be3ac5d15edfe0be492e18b18b57a511e76",
+    "unity/Assets/Game/Editor/ActivityDomainBossPageDataAcceptance.cs.meta": "1736993b3c2a73f7bd37bdf6fd13b6dc1bb477c6cd8a352c838fe13611bae659"
+  },
+  "generator_sha256": "ede62c59e3c7fd472bf57b808d5b938aa3b34a2aa20db0df42888d9d8a1fe859",
+  "adaptation": "Original fixed/probability item preview without rolling rewards. Selected rule rows have no conditions or level/subrank multipliers. The local page projection uses existing participation, period/day refresh and monotonic clock rules; it returns detached tier claims and actual counters. Full activity page production binding and rendered interaction validation remain pending."
+}

@@ -86,6 +86,8 @@ NPC 战斗属性和技能由当前版 `npc_level_detail`、`npc_profession_detai
 
 活动主页面控制器（未完成）：原 `ActivityDomainBossPanel` 的原标签映射和内容状态、`ActivityDomainBossPanelDetailContent` 的初选阶位／前后浏览／红点扫描、`ActivityDomainBossPanelBattleContent` 的层状态／挑战次数／奖励图标与附件操作已经迁入 `ActivityBattleUI`。在线数据管理与请求改为显式的本地快照和命令绑定接口，尚未完成生产适配器和整页 prefab 接线；原 MonsterInfo 回调为空，保持原行为。`ActivityInfoUI`、`ActivityDomainBossPreviewContent`、`MultiFontTextMaterial` 保留原标题／截止时间、进度平滑／倒计时／单次通知及字体材质租用生命周期；本地首次进入即开启活动，不伪造服务器召唤预览。通用 `NavigateBtn` 和 `SecretAreaBattleButtons` 的原导航成功延时关闭、组队人数和确认分支亦已迁入，尚未实测。来源见[页面控制代码](../../assets/reference/daily-challenges/activity-page-ui-source-manifest.json)和[显示支持代码](../../assets/reference/daily-challenges/activity-page-support-source-manifest.json)。原排行控制类、首位／本人行、范围切换和规则窗口控制亦已迁入 `ActivityRankUI`，见[排行控制代码来源](../../assets/reference/daily-challenges/activity-rank-runtime-source-manifest.json)。控制代码通过主工程静态检查（130474个GUID）、隔离Unity编译和 `ProjectTools.Validate`；这些检查不代表整页可用，仍须完成整页原资源绑定、生产入口、模拟输入与Player验证。
 
+圣兽页面数据（局部完成）：`ReadDomainBossPage` 统一读取同一期／同一逻辑日的挑战次数、日常奖励次数、阶位和已领奖阶位；即使处于结算窗口也先刷新显示状态，返回的已领奖集合与存档分离，沿用现有08:00刷新和防回拨时钟。奖励预览迁移原 `RewardRuleInfoParser.GetRewardDropInfosByRuleList`／`GetRewardDictByRuleList` 的固定与概率计数，不进行随机抽奖；所选871配置的15条规则均无条件及等级／阶级倍率，记录脚本与后续配置提取均校验这个适用范围。主工程静态检查（132293个GUID）、隔离Unity编译、`ProjectTools.Validate` 与 `ActivityDomainBossPageDataAcceptance.Run` 已通过，覆盖209／212／226的实际阶位奖励、概率掉落、重复物品、结算窗口、跨日／跨期、冷读存档和时间回拨。当前工作区的完整官方主页面3029对象及依赖已转换并导入，但生产适配器、正式入口和整页模拟点击／画面尚未接通；本次未构建或发布新Player。来源见[页面数据来源](../../assets/reference/daily-challenges/activity-page-data-source-manifest.json)。
+
 ## 自定义实现
 
 用户确认期次以首次进入功能的本地时间起算；该时间由 `EnterFeature(DateTime.Now)` 首次持久化。每日逻辑日采用官方 08:00 配置。官方活动 `Duration=335` 小时，最后 1 小时结算。用户确认系统时间回拨不得降低已到最高期次或逻辑日；系统时间向前跳转仍会按本地时间推进期次。

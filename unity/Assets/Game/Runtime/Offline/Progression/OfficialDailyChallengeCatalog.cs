@@ -81,7 +81,7 @@ namespace Zjcs.Offline.Progression
         public long Count;
     }
 
-    public sealed class OfficialDailyChallengeCatalog
+    public sealed partial class OfficialDailyChallengeCatalog
     {
         public const string ResourcePath = "DailyChallenges/daily-challenges";
         public const string ExpectedManifest = "871_156598";

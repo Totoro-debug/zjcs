@@ -83,6 +83,14 @@ def main() -> None:
             if not should_keep(output_name, source_row):
                 continue
             row = dict(source_row)
+            if output_name == "reward_rule":
+                # The local rule DTO consumes already selected unconditional
+                # rows. Do not silently discard a future condition/multiplier.
+                unsupported = [key for key in ("Condition", "LevelCountId", "SubRankCountId")
+                               if row.get(key)]
+                if unsupported:
+                    raise ValueError("Challenge reward requires original parser inputs: "
+                                     + str(row["Id"]) + " " + ", ".join(unsupported))
             if output_name == "activity_domain_boss":
                 row["DailyChallengeAwards"] = [
                     {"Id": int(item_id), "Value": value}
