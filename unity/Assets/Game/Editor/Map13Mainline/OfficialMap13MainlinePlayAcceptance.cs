@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEditor;
@@ -494,6 +495,177 @@ namespace Zjcs.Editor.Map13Mainline
             Debug.Log("MAINLINE_FORMAL_STATE_MUTATION_PASS placement="+terminal.PlacementId);
             return new KeyValuePair<int,int>(terminal.PlacementId,puzzles.State(terminal.PlacementId));
         }
+        private static void VerifyOriginalActivations(OfficialMainlineMapRuntime runtime)
+        {
+            var world=Field<MainlineSharedWorld>(runtime,"mainlineSharedWorld");
+            var player=Field<object>(runtime,"mainlineSharedPlayer");
+            var progress=Field<OfflineMainlineProgressSession>(runtime,"progressionSave");
+            object Get(object owner,string name)=>NativeMap14SharedPrefabs.Get(owner,name);
+            var metadataType=world.Assemblies.CommonType("MapRegionEntityInfoManager");
+            var metadata=metadataType.GetProperty("Instance").GetValue(null);
+            var map=(IDictionary)Get(player,"ActiveableEntityDataDict");
+            var current=map.Contains(MapId)?(IDictionary)map[MapId]:null;
+            var expected=new Dictionary<string,List<int>>
+            {
+                ["Goddess"]=progress.Save.World.ActivatedGoddessRegions.Where(r=>r.MapClassId==MapId)
+                    .Select(r=>(int)metadataType.GetMethod("GetMapRegionGoddessId").Invoke(metadata,new object[]{MapId,r.Region})).ToList(),
+                ["Witch"]=progress.Save.World.ActivatedWitches.Where(r=>r.MapClassId==MapId).Select(r=>r.PlacementId).ToList()
+            };
+            foreach(var kind in expected)
+            {
+                var key=Enum.Parse(world.Assemblies.CommonType("MapWorldActiveableEntityType"),kind.Key);
+                var ids=current!=null&&current.Contains(key)?(List<int>)current[key]:new List<int>();
+                Require(ids.SequenceEqual(kind.Value),"Original activation query differs from the saved local records: "+kind.Key);
+            }
+            int checkedComponents=0;
+            var placementOf=world.LoEntityIds.GetType().GetMethod("GetLoEntIdByEntId");
+            foreach(object entity in ((IDictionary)Get(world.Root.Container,"EntityDict")).Values)
+            {
+                int id=(int)placementOf.Invoke(world.LoEntityIds,new[]{Get(entity,"Id")});
+                var component=entity.GetType().GetMethod("GetComponent",new[]{typeof(Type)})
+                    .Invoke(entity,new object[]{world.Assemblies.CommonType("WorldActiveableEntityComponent")});
+                if(component==null)continue;
+                string kind=Get(Get(component,"Info"),"ActiveableEntityType").ToString();
+                if(!expected.TryGetValue(kind,out var ids)||!ids.Contains(id))continue;
+                Require((bool)Get(component,"Active"),"Saved activation did not reach the original placed entity: "+id);
+                checkedComponents++;
+            }
+            Require(expected.Values.Sum(ids=>ids.Count)==0||checkedComponents>0,"Activation fixture checked no original component.");
+            Debug.Log("MAINLINE_FORMAL_ACTIVATION_STATE_PASS records="+expected.Values.Sum(ids=>ids.Count)+" components="+checkedComponents);
+        }
+
+        private static void VerifyOriginalActivationUpdates(OfficialMainlineMapRuntime runtime)
+        {
+            var world=Field<MainlineSharedWorld>(runtime,"mainlineSharedWorld");
+            var player=Field<object>(runtime,"mainlineSharedPlayer");
+            var progress=Field<OfflineMainlineProgressSession>(runtime,"progressionSave");
+            var session=Field<OfficialWorldMapSession>(runtime,"session");
+            var goddess=session.Definition.Entities.First(e=>e.TypeId==202);
+            var navigation=Field<object>(runtime,"navigation");
+            var originalPosition=Field<MapGridPoint>(navigation,"currentGrid");
+            // Position fixture in the goddess region, matching the original
+            // local interaction precondition used by partition preloading.
+            Call(navigation,"SetAvatarPosition",new MapGridPoint(goddess.Grid[0],goddess.Grid[1]));
+            var witches=session.Definition.Entities.Where(e=>e.EntityId==6620).Take(2).ToArray();
+            Require(witches.Length==2,"Original activation fixture requires two real witch placements.");
+            // Explicit completed-placement/activation-record fixture; no statue
+            // dialog, exploration input, reward or entity-container transition claim.
+            var local=Field<object>(runtime,"localSave");
+            local.GetType().GetField("completedEntityPlacements").SetValue(local,
+                session.Definition.Entities.Where(e=>e.Region==goddess.Region&&e.TypeId!=202).Select(e=>e.Id)
+                    .Concat(Field<int[]>(local,"completedEntityPlacements")).Distinct().ToArray());
+            Call(Field<object>(runtime,"regions"),"RefreshRegionProgress",true);
+            Call(runtime,"RefreshEntityActivity");Call(runtime,"SaveLocalProgress");
+            Require(progress.Save.World.Maps.Single(m=>m.MapClassId==MapId).Regions.Single(r=>r.Region==goddess.Region).Progress==10000,
+                "Goddess record fixture did not complete the real raw region points.");
+            Require(progress.RecordGoddessActivated(MapId,goddess.Region,"activation-fixture:goddess").Status==ProgressionResultStatus.Applied,
+                "Could not persist the explicit goddess activation record.");
+            foreach(var witch in witches)
+                Require(progress.RecordWitchActivated(MapId,witch.Id,"activation-fixture:witch:"+witch.Id).Status==ProgressionResultStatus.Applied,
+                    "Could not persist the explicit witch activation record.");
+            Call(runtime,"RefreshEntityActivity");
+            object Get(object owner,string name)=>NativeMap14SharedPrefabs.Get(owner,name);
+            var data=(IDictionary)Get(player,"ActiveableEntityDataDict");
+            var preSnapshots=new List<KeyValuePair<IList,int[]>>();
+            int beforeEvents=0,afterEvents=0,componentEvents=0,expectedComponentEvents=0;
+            using(var events=new ActivationEvents())
+            {
+                var metadata=world.Assemblies.CommonType("MapRegionEntityInfoManager");
+                int goddessId=(int)metadata.GetMethod("GetMapRegionGoddessId").Invoke(
+                    metadata.GetProperty("Instance").GetValue(null),new object[]{MapId,goddess.Region});
+                var placementIds=new HashSet<int>(witches.Select(w=>w.Id)){goddessId};
+                var placementOf=world.LoEntityIds.GetType().GetMethod("GetLoEntIdByEntId");
+                foreach(object entity in ((IDictionary)Get(world.Root.Container,"EntityDict")).Values)
+                {
+                    int id=(int)placementOf.Invoke(world.LoEntityIds,new[]{Get(entity,"Id")});
+                    if(!placementIds.Contains(id))continue;
+                    var component=entity.GetType().GetMethod("GetComponent",new[]{typeof(Type)})
+                        .Invoke(entity,new object[]{world.Assemblies.CommonType("WorldActiveableEntityComponent")});
+                    if(component==null)continue;
+                    if(!(bool)Get(component,"Active"))expectedComponentEvents++;
+                    events.Add(component,"OnActived",args=>
+                    {
+                        Require(ReferenceEquals(args[0],component)&&(bool)Get(component,"Active"),
+                            "Original activation component event has the wrong owner or flag.");
+                        componentEvents++;
+                    });
+                }
+                Require(expectedComponentEvents>0,"Activation fixture contains no inactive original component.");
+                events.Add(player,"OnActiveableEntPreUpdate",args=>
+                {
+                    Require((int)args[0]==MapId,"Original activation pre-event has the wrong map.");
+                    var map=data.Contains(MapId)?(IDictionary)data[MapId]:null;
+                    var ids=map!=null&&map.Contains(args[1])?(IList)map[args[1]]:null;
+                    Require(ids==null||!ids.Contains((int)args[2]),"Pre-update observes the newly activated placement.");
+                    if(ids!=null)preSnapshots.Add(new KeyValuePair<IList,int[]>(ids,ids.Cast<int>().ToArray()));
+                    beforeEvents++;
+                });
+                events.Add(player,"OnActiveableEntUpdate",args=>
+                {
+                    var message=args[0];var kind=Get(message,"ActiveEntType");int id=(int)Get(message,"ActiveEntLoId");
+                    Require(beforeEvents==afterEvents+1&&((IList)((IDictionary)data[MapId])[kind]).Contains(id),
+                        "Original activation post-event has wrong ordering or contents.");
+                    afterEvents++;
+                });
+                string originalPath=Field<string>(runtime,"mapSavePath");
+                string denied=Path.Combine(Output,"activation-write-denied");Directory.CreateDirectory(denied);
+                var pathField=runtime.GetType().GetField("mapSavePath",BindingFlags.Instance|BindingFlags.NonPublic);
+                bool rejected=false;pathField.SetValue(runtime,denied);
+                try { Call(runtime,"SaveLocalProgress"); }
+                catch(TargetInvocationException error) when(error.InnerException is IOException||error.InnerException is UnauthorizedAccessException)
+                { rejected=true; }
+                finally { pathField.SetValue(runtime,originalPath); }
+                Require(rejected&&beforeEvents==0&&afterEvents==0&&componentEvents==0,"Failed map write published an activation event.");
+                Call(runtime,"SaveLocalProgress");
+                Require(beforeEvents==3&&afterEvents==3&&componentEvents==expectedComponentEvents,"Each new local activation must publish exactly one original event.");
+                Call(runtime,"SaveLocalProgress");
+                Require(beforeEvents==3&&afterEvents==3&&componentEvents==expectedComponentEvents,"Unchanged save repeated original activation events.");
+                Require(preSnapshots.All(pair=>pair.Key.Cast<int>().SequenceEqual(pair.Value)),
+                    "A later activation mutated an earlier original snapshot.");
+            }
+            // Completion and activation changed inside one polling interval:
+            // the shared environment must publish progress before public status.
+            Field<OfficialMap14NativeWorldView>(runtime,"nativeMap14World").RefreshState();
+            Call(navigation,"SetAvatarPosition",originalPosition);Call(runtime,"SaveLocalProgress");
+            VerifyOriginalActivations(runtime);
+            Debug.Log("MAINLINE_FORMAL_ACTIVATION_UPDATE_PASS records=3 original-pre-post=3 write-failure=0 repeated-save=0");
+        }
+
+        private static void VerifyOriginalSceneLighting(OfficialMainlineMapRuntime runtime)
+        {
+            var terrain=Field<OfficialMap14NativeWorldView>(runtime,"nativeMap14World");
+            var controllers=terrain.GetComponentsInChildren<MonoBehaviour>(true)
+                .Where(value=>value!=null&&value.GetType().Name=="FollowSceneActiveSelfController").ToArray();
+            Require(controllers.Length>0&&controllers.All(value=>value.isActiveAndEnabled
+                &&value.gameObject.scene==UnityEngine.SceneManagement.SceneManager.GetActiveScene()),
+                "Original global map lights were moved outside their active scene.");
+            Debug.Log("MAINLINE_FORMAL_SCENE_LIGHT_PASS controllers="+controllers.Length);
+        }
+
+        private sealed class ActivationEvents:IDisposable
+        {
+            private readonly List<Action> remove=new List<Action>();
+            public void Add(object owner,string name,Action<object[]> callback)
+            {
+                var info=owner.GetType().GetEvent(name);
+                var safe=info==null?owner.GetType().GetField(name).GetValue(owner):null;
+                var add=safe?.GetType().GetMethod("AddListener");
+                var delegateType=info!=null?info.EventHandlerType:add.GetParameters()[0].ParameterType;
+                var parameters=delegateType.GetMethod("Invoke").GetParameters()
+                    .Select(p=>Expression.Parameter(p.ParameterType,p.Name)).ToArray();
+                var body=Expression.Invoke(Expression.Constant(callback),
+                    Expression.NewArrayInit(typeof(object),parameters.Select(p=>Expression.Convert(p,typeof(object)))));
+                var listener=Expression.Lambda(delegateType,body,parameters).Compile();
+                if(info!=null){info.AddEventHandler(owner,listener);remove.Add(()=>info.RemoveEventHandler(owner,listener));}
+                else
+                {
+                    add.Invoke(safe,new object[]{listener});
+                    remove.Add(()=>safe.GetType().GetMethod("RemoveListener").Invoke(safe,new object[]{listener}));
+                }
+            }
+            public void Dispose(){foreach(var action in remove)action();remove.Clear();}
+        }
+
         private static IEnumerator VerifyFormalWorldOwner(OfficialMainlineMapRuntime runtime,string slot,string saves,
             Transform ui,MapGridPoint position)
         {
@@ -502,7 +674,9 @@ namespace Zjcs.Editor.Map13Mainline
             var root=world.Root;
             VerifyOriginalEntityStates(runtime);
             VerifyFormalOriginalClient(runtime);
+            VerifyOriginalSceneLighting(runtime);
             var savedState=MutateOriginalPuzzleState(runtime);
+            VerifyOriginalActivationUpdates(runtime);
             var manager=world.Assemblies.Shared.GetType("MeManager",true).GetProperty("Instance").GetValue(null);
             Require(ReferenceEquals(root,terrain.SharedRoot),"Formal terrain created a second original world root.");
             var originalRoot=terrain.SharedRoot.Root;
@@ -521,6 +695,7 @@ namespace Zjcs.Editor.Map13Mainline
             var reopened=Field<MainlineSharedWorld>(runtime,"mainlineSharedWorld");
             VerifyFormalOriginalClient(runtime);
             VerifyOriginalEntityStates(runtime);
+            VerifyOriginalActivations(runtime);
             Require(Field<OfflineMapPuzzleSession>(runtime,"puzzles").State(savedState.Key)==savedState.Value,
                 "Saved terminal state was not restored before the original client started.");
             Require(!ReferenceEquals(world,reopened)&&!ReferenceEquals(root,terrain.SharedRoot)
@@ -529,6 +704,8 @@ namespace Zjcs.Editor.Map13Mainline
             Require(Field<MapGridPoint>(Field<object>(runtime,"navigation"),"currentGrid").Equals(position),
                 "Formal world ownership changed the saved player position.");
             CheckFog(runtime);
+            yield return new WaitForSecondsRealtime(3);
+            VerifyOriginalSceneLighting(runtime);
             ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map14-owner-restored.png"));
             yield return new WaitForSecondsRealtime(.5f);
             Call(runtime,"CloseMap");yield return null;yield return null;

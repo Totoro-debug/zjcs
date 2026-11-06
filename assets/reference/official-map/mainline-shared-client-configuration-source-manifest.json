@@ -499,6 +499,14 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TimeManager.cs",
       "sha256": "d3da79879de9847353415d3ff1c8c304af144d2829d5636951d905249b25fa85"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/WorldActiveableEntityComponent.cs",
+      "sha256": "41059445e996062eab89f3cd2a46fca9afee74738ab96e01c9fed6573bcc30d4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapActiveableEntityInfo.cs",
+      "sha256": "5b36540de20f40ef83a64afa281ba246ba7a9aec8d80407703bce266bdc91dbb"
     }
   ],
   "shared_il": {
@@ -521,7 +529,8 @@
       "public int GetMapActiveEntCount(",
       "public int GetAllMapActiveEntCount(",
       "public List<int> GetActivedMapEntities(",
-      "private bool IsMapEntityActived("
+      "private bool IsMapEntityActived(",
+      "public void OnUpdateActiveableEntity("
     ],
     "scope": "Only the listed original player methods; not whole-version equivalence"
   },
@@ -615,7 +624,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlinePlayerState/MainlineSharedPlayerProjection.cs",
-      "sha256": "068169c1f693ca653355b3dd5c016986ddd44d17a9991f492769d9b1b33964e1"
+      "sha256": "73a2bf8aff0540af0e15e7c30769548929802bfb64fd045f624a43cf4d6f68f7"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlinePlayerState/MainlineSharedPlayerProjection.cs.meta",
@@ -703,7 +712,7 @@
   "tools": [
     {
       "path": "scripts/prepare_mainline_shared_client_configuration.py",
-      "sha256": "bded448a276ac0b0f5442c6d358bc8eef4ba92d6a3db6fbffa405ea54eb6dd75"
+      "sha256": "f339b2e0575e8436f1344bcc380c8089650cb79f1e3c3caea62a2d9a829baf7e"
     },
     {
       "path": "scripts/prepare_mainline_world_startup_validation.py",
@@ -879,5 +888,12 @@
       "path": "unity/Assets/Official/World/Shared/SharedClientConfiguration/Resources/MainlineSharedWorld/ClientConfiguration.meta",
       "sha256": "6039cc30e1d0e8abb79b85da2ddbae9bb677aecaf284a8149e775d6ade8a94dd"
     }
-  ]
+  ],
+  "activation_component_compatibility": {
+    "type": "WorldActiveableEntityComponent",
+    "property": "Active",
+    "before_token": "catch",
+    "identical": true,
+    "scope": "Original getter, equality guard, assignment, Dirty and OnActived; exception logging is excluded."
+  }
 }

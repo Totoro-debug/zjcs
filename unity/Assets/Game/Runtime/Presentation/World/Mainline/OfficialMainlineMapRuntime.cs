@@ -176,9 +176,9 @@ namespace Zjcs.Presentation.World
             characterName = displayName ?? string.Empty;
             closeCallback = onClose;
             // Original FollowSceneActiveSelfController enables the global
-            // map light only in its active Unity scene. Map12 closes through
+            // map light only in its active Unity scene. Native maps close through
             // this runtime's existing lifecycle and has no scene transition.
-            if (mapClassId != 12 && mapClassId != 13) DontDestroyOnLoad(gameObject);
+            if (mapClassId != 12 && mapClassId != 13 && mapClassId != 14) DontDestroyOnLoad(gameObject);
 
             try
             {

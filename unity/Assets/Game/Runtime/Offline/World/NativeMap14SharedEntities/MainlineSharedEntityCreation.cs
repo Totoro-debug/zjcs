@@ -101,6 +101,26 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             }
         }
 
+        public void SynchronizeActivations(object player)
+        {
+            var maps = (IDictionary)Get(player, "ActiveableEntityDataDict");
+            if (!maps.Contains(data.MapClassId)) return;
+            var activated = (IDictionary)maps[data.MapClassId];
+            var placementOf = LoEntityIds.GetType().GetMethod("GetLoEntIdByEntId");
+            foreach (object entity in ((IDictionary)Get(root.Container, "EntityDict")).Values.Cast<object>().ToArray())
+            {
+                var component = Component(entity, "WorldActiveableEntityComponent");
+                if (component == null) continue;
+                var kind = Get(Get(component, "Info"), "ActiveableEntityType");
+                if (!activated.Contains(kind)) continue;
+                int placement = (int)placementOf.Invoke(LoEntityIds, new[] { Get(entity, "Id") });
+                // These records only add activations. Unrecorded entities retain their
+                // original placement/template defaults, including other activation kinds.
+                if (((List<int>)activated[kind]).Contains(placement))
+                    NativeMap14SharedPrefabs.Set(component, "Active", true);
+            }
+        }
+
         public void Clear() => LoEntityIds.GetType().GetMethod("Clear").Invoke(LoEntityIds, null);
 
         private void Copy(object source, object entity, string sourceType, string targetType, string input, string output)

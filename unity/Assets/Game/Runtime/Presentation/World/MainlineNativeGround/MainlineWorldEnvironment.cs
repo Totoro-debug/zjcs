@@ -62,6 +62,14 @@ namespace Zjcs.Presentation.World
 
         public void Refresh()
         {
+            List<int> nextProgress = Enumerable.Range(0, Data.regions.Length).Select(state.GetRegionProgress).ToList();
+            if (!progress.SequenceEqual(nextProgress))
+            {
+                progress = nextProgress;
+                // Original partitions preload the day layer while the region is
+                // still private. Publish completed exploration before activation.
+                OnWorldMapProgressUpdate?.Invoke(MapClassId, progress);
+            }
             foreach (MapRegionInfo region in Data.regions)
             {
                 int id = region.Region;
@@ -70,10 +78,6 @@ namespace Zjcs.Presentation.World
                 statuses[id] = next;
                 OnMapStatusUpdate?.Invoke(MapClassId, id, previous, next);
             }
-            List<int> nextProgress = Enumerable.Range(0, Data.regions.Length).Select(state.GetRegionProgress).ToList();
-            if (progress.SequenceEqual(nextProgress)) return;
-            progress = nextProgress;
-            OnWorldMapProgressUpdate?.Invoke(MapClassId, progress);
         }
     }
 

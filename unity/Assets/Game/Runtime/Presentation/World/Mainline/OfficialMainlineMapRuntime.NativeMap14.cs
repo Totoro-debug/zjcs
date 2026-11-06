@@ -49,6 +49,8 @@ namespace Zjcs.Presentation.World
         private void SynchronizeOriginalMapEntities()
         {
             if (mainlineSharedWorld?.IsLoaded != true) return;
+            if (mainlineSharedPlayer != null) MainlineSharedPlayerProjection.SynchronizeActivations(
+                mainlineSharedWorld, mainlineSharedPlayer, progressionSave.Save);
             mainlineSharedWorld.SynchronizeEntityStates(mapEntities.ToDictionary(pair => pair.Key,
                 pair => new MainlineSharedEntityState(pair.Value.EntityClassId, pair.Value.State,
                     pair.Value.Grid.X, pair.Value.Grid.Y)));

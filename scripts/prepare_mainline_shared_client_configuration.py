@@ -57,11 +57,29 @@ def verify_player_projection(source, shared, work):
         "public T GetBlackboardDataValue<T>(", "public int GetStageCount(",
         "public PlayerStageDataWrap GetStageData(", "public bool IsGoddessActive(",
         "public int GetMapActiveEntCount(", "public int GetAllMapActiveEntCount(",
-        "public List<int> GetActivedMapEntities(", "private bool IsMapEntityActived(")
+        "public List<int> GetActivedMapEntities(", "private bool IsMapEntityActived(",
+        "public void OnUpdateActiveableEntity(")
     for method in methods:
         if method_body(old, method) != method_body(current, method):
             raise ValueError("Retained original player projection method differs: " + method)
     return dict(verified_methods=list(methods), scope="Only the listed original player methods; not whole-version equivalence")
+
+
+def verify_activation_component(source, shared, work):
+    work.mkdir(parents=True, exist_ok=True)
+    name = "WorldActiveableEntityComponent"
+    subprocess.run([str(ROOT / ".tools/dotnet/dotnet.exe"),
+        str(ROOT / ".tools/ilspycmd/tools/net10.0/any/ilspycmd.dll"),
+        "-t", "Common." + name, "-o", str(work), str(shared)], check=True)
+    old = (work / ("Common." + name + ".decompiled.cs")).read_text("utf8")
+    current = (source / (name + ".cs")).read_text("utf8")
+    def prefix(text):
+        body = method_body(text, "public bool Active")
+        return body[:body.index("catch")]
+    if prefix(old) != prefix(current):
+        raise ValueError("Retained original activation flag/event implementation differs.")
+    return dict(type=name, property="Active", before_token="catch", identical=True,
+        scope="Original getter, equality guard, assignment, Dirty and OnActived; exception logging is excluded.")
 
 
 def verify_stage_condition_readers(source, shared, work):
@@ -163,10 +181,12 @@ def build():
     if record(shared)["sha256"] != "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397":
         raise ValueError("Preserve independently pinned original shared IL")
     projection_evidence = verify_player_projection(source, shared, validation_directory() / "player-projection-sources")
+    activation_evidence = verify_activation_component(source, shared, validation_directory() / "activation-component-sources")
     stage_evidence = verify_stage_configuration(source, shared, validation_directory() / "stage-configuration-sources")
     condition_evidence = verify_stage_condition_readers(source, shared, validation_directory() / "stage-configuration-sources")
     names += ["FactionInfo", "GameMonsterInfo", "GameArrayMonsterInfo", "GameArrayMonsterPosInfo",
-        "PlayerStageDataWrap", "PlayerStageManager", "StageResetType", "TimeManager"]
+        "PlayerStageDataWrap", "PlayerStageManager", "StageResetType", "TimeManager",
+        "WorldActiveableEntityComponent", "MapActiveableEntityInfo"]
     native = ROOT / "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities"
     binding = native / "MainlineSharedClientConfiguration.cs"
     meta(binding)
@@ -176,6 +196,7 @@ def build():
         inputs=inputs, binary_input=record(BINARY), binary_provenance=record(binary_proof_path),
         code_inputs=[record(source / (name + ".cs")) for name in names],
         shared_il=dict(record(shared), manifest="871_156598"), player_projection=projection_evidence,
+        activation_component_compatibility=activation_evidence,
         stage_reader_compatibility=stage_evidence,
         stage_condition_calculations=condition_evidence,
         bindings=[record(path) for path in (binding, Path(str(binding) + ".meta"), native / "NativeMap14SharedConfiguration.cs")]

@@ -158,6 +158,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             RequireActive();
             if (!IsLoaded) throw new InvalidOperationException("Load the original entities before restoring their local state.");
             entities.Synchronize(states, IsReady);
+            if (client != null) entities.SynchronizeActivations(client.Player);
         }
 
         public void Start()
@@ -178,6 +179,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                 throw new ArgumentException("An original local player is required.", nameof(player));
             try
             {
+                entities.SynchronizeActivations(player);
                 client = new MainlineSharedClientContext(this, clientServices, player, clientRegions, ClientContainerId);
                 Start();
             }

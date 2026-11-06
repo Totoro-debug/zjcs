@@ -37,7 +37,7 @@ namespace Zjcs.Offline.World.MainlinePlayerState
             var unlocked = (IDictionary)Get(Get(profession, "UnlockedData"), "RawData");
             foreach (var value in source.ProfessionLevels)
                 unlocked.Add(Enum.ToObject(professionType, value.Profession), value.Level);
-            RestoreActivations(world, player, save);
+            Set(player, "ActiveableEntityDataDict", ReadActivations(world, player, save));
 
             var stories = Get(player, "StoryManager");
             var storyType = shared.CommonType("PlayerStory");
@@ -110,9 +110,41 @@ namespace Zjcs.Offline.World.MainlinePlayerState
         private static object Get(object owner, string name) => NativeMap14SharedPrefabs.Get(owner, name);
         private static void Set(object owner, string name, object value) => NativeMap14SharedPrefabs.Set(owner, name, value);
 
-        private static void RestoreActivations(MainlineSharedWorld world, object player, OfflineMainlineSave save)
+        public static void SynchronizeActivations(MainlineSharedWorld world, object player, OfflineMainlineSave save)
         {
+            if (world == null || !world.IsLoaded) throw new InvalidOperationException("Load the original map before projecting activations.");
+            if (player == null || save?.World == null) throw new ArgumentNullException(nameof(save));
+            // Validate the complete local snapshot before publishing any original event.
+            var desired = ReadActivations(world, player, save);
             var data = (IDictionary)Get(player, "ActiveableEntityDataDict");
+            var messageType = world.Assemblies.CommonType("MapActiveableEntityInfo");
+            var update = player.GetType().GetMethod("OnUpdateActiveableEntity");
+            foreach (DictionaryEntry entry in desired)
+                foreach (DictionaryEntry kind in (IDictionary)entry.Value)
+                    foreach (int id in (List<int>)kind.Value)
+                    {
+                        var current = data.Contains(entry.Key) ? (IDictionary)data[entry.Key] : null;
+                        if (current != null && current.Contains(kind.Key) && ((List<int>)current[kind.Key]).Contains(id)) continue;
+                        // Each message owns an independent snapshot. The original pre-update
+                        // callback must still see the old list; one activation produces one event.
+                        var next = (IDictionary)Activator.CreateInstance(desired.GetType().GetGenericArguments()[1]);
+                        if (current != null)
+                            foreach (DictionaryEntry previous in current)
+                                next.Add(previous.Key, new List<int>((List<int>)previous.Value));
+                        if (!next.Contains(kind.Key)) next.Add(kind.Key, new List<int>());
+                        ((List<int>)next[kind.Key]).Add(id);
+                        var message = Activator.CreateInstance(messageType);
+                        Set(message, "MapClassId", entry.Key);
+                        Set(message, "ActiveEntType", kind.Key);
+                        Set(message, "ActiveEntLoId", id);
+                        Set(message, "ActiveableEntDataDict", next);
+                        update.Invoke(player, new[] { message });
+                    }
+        }
+
+        private static IDictionary ReadActivations(MainlineSharedWorld world, object player, OfflineMainlineSave save)
+        {
+            var data = (IDictionary)Activator.CreateInstance(Get(player, "ActiveableEntityDataDict").GetType());
             var activeType = world.Assemblies.CommonType("MapWorldActiveableEntityType");
             var metadataType = world.Assemblies.CommonType("MapRegionEntityInfoManager");
             var metadata = metadataType.GetProperty("Instance").GetValue(null);
@@ -139,6 +171,7 @@ namespace Zjcs.Offline.World.MainlinePlayerState
                     throw new InvalidDataException("Activated witch differs from its original placement: " + witch.MapClassId + "/" + witch.PlacementId);
                 Add(witch.MapClassId, "Witch", witch.PlacementId);
             }
+            return data;
         }
     }
 }

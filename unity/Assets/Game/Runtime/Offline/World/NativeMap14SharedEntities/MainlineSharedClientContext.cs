@@ -13,6 +13,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
     {
         private MainlineSharedClientServices services;
         private object player, map, previousMap;
+        internal object Player => player;
         private PropertyInfo playerProperty, mapProperty;
 
         public MainlineSharedClientContext(MainlineSharedWorld world, MainlineSharedClientServices services, object player,

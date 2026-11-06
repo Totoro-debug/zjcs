@@ -98,6 +98,7 @@ def build():
         integration = [ROOT / path for path in (
             'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedWorld.cs',
             'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedWorld.cs.meta',
+            'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedClientContext.cs',
             'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedEntityCreation.cs',
             'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedEntityCreation.cs.meta',
             'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedLogging.cs',
@@ -105,7 +106,9 @@ def build():
             'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedData.cs',
             'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblies.cs',
             'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedRoot.cs',
+            'unity/Assets/Game/Runtime/Presentation/World/MainlineNativeGround/MainlineWorldEnvironment.cs',
             'unity/Assets/Game/Runtime/Presentation/World/NativeMap14/OfficialMap14NativeWorldView.cs',
+            'unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs',
             'unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.NativeMap14.cs',
             'unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Persistence.cs',
             'unity/Assets/Game/Runtime/Presentation/World/Zjcs.Presentation.World.asmdef',
@@ -125,7 +128,9 @@ def build():
             operation='Retain exact selected EC map/root/common template and MapInfoWrap/lite bytes. Configure the existing original shared parser and container by map identity; no initial server entity state or spawning policy is supplied.',
             inputs=[record(path) for path in definitions.values()], templates=source.template_sources, container_table=container,
             formatter_lookup=record(old), original_code=source.checked_code()
-                + [record(state_sources / (name + ".cs")) for name in ("WorldStageComponent", "GridTransformComponent", "MapLoEntityIdManager")],
+                + [record(state_sources / (name + ".cs")) for name in ("WorldStageComponent", "GridTransformComponent", "MapLoEntityIdManager",
+                    "WorldActiveableEntityComponent", "MapActiveableEntityInfo")]
+                + [record(state_sources.parent.parent / "client-source/FollowSceneActiveSelfController.cs")],
             tools=[record(path) for path in (Path(__file__), ROOT / 'scripts/prepare_mainline_map_definition.py',
                 ROOT / 'scripts/official_ec_codec.py', ROOT / 'scripts/official_map_codec.py')], outputs=outputs,
             integration=[record(path) for path in integration],
