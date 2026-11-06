@@ -1,0 +1,191 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "profile_git_commit": "d8571957cb5d6e20c3760a5969274070c3ae90c4",
+  "profile_path": "official-source.json",
+  "manifest_input": {
+    "package": "HybridCLR",
+    "version": "871_156598",
+    "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/HybridCLR/PackageManifest_HybridCLR_871_156598.v3.bytes",
+    "md5": "76a0f65360ec5f69e7c29bf09d58bd5e",
+    "sha256": "f90e594528b49d00a6304c2469e0aa0e414c42044fc27034dd106c051543380c",
+    "size": 7015,
+    "cached": {
+      "path": ".tools/source-packages/cloud/runtime/202610211330871/PackageManifest_HybridCLR_871_156598.v3.bytes",
+      "sha256": "f90e594528b49d00a6304c2469e0aa0e414c42044fc27034dd106c051543380c"
+    }
+  },
+  "assemblies": [
+    {
+      "name": "Assembly-CSharp.dll",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/HybridCLR/b0c05eae0b6849a83ad8df1ef6cd6fad.bundle",
+      "bundle_md5": "b0c05eae0b6849a83ad8df1ef6cd6fad",
+      "bundle_sha256": "ee29ccdbd30878ffa37bc4f51a05f618004a2c3a61e0a367d21a9c4a75a74499",
+      "path_id": "49683184131557060",
+      "text_asset_sha256": "f7ad215ee00fd8fc8c8048b323f043d5d7ea7fc377830f7709751ad353e40f10",
+      "output": {
+        "path": ".tools/source-packages/recovered/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+        "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+      }
+    },
+    {
+      "name": "Console.dll",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/HybridCLR/fbe53f2dde9225c9265632bfbf06c2e8.bundle",
+      "bundle_md5": "fbe53f2dde9225c9265632bfbf06c2e8",
+      "bundle_sha256": "bb987bda43105683b7394dd52d7282428271abdab33dc07301cf69b2021704f2",
+      "path_id": "-7462651629129428820",
+      "text_asset_sha256": "312795c2e8aa028166fda2ec6ea0117b3279f7b35450f99ecd07aed0e8593360",
+      "output": {
+        "path": ".tools/source-packages/recovered/871_156598/official-code/managed/decoded/Console.dll",
+        "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "path": "assets/reference/official-map/map14-entity-lifecycle-source-manifest.json",
+      "sha256": "b87248060d1f755e091c630e0d3f9fe38403f07fc898a8819bc56c5c99c6a342"
+    },
+    {
+      "path": "assets/reference/official-map/mainline-character-components-source-manifest.json",
+      "sha256": "dc6aa74c848d31510716fe034df019cc4cfbfc67a8cb2278530ab5be7e2a46fc"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/recover_mainline_character_sources.py",
+      "sha256": "6ab755078540cee59cf4f8454b7861256f6b224fea0d41a7c9a5b5dfef225110"
+    },
+    {
+      "path": ".tools/dotnet/dotnet.exe",
+      "sha256": "1e881ec1786c31ba712d052258b4ad4202ac155df5965794030037878abb822f"
+    },
+    {
+      "path": ".tools/ilspycmd/tools/net10.0/any/ilspycmd.dll",
+      "sha256": "e93cec394a6e21221db7686ca3932004382642c7d58c1308633ce6eded41b9c9"
+    }
+  ],
+  "outputs": [
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/AnimationController.cs",
+      "sha256": "dccf73c1c8420653b7afa7c317e17fdd198a2ace5a181deb1dfbcb9d3181b3d7"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/AttachAgent.cs",
+      "sha256": "e0b2fdeea67530ddf7344dd5c8f69ae0ca578c0d514a7c6f97524f2bfdc63c0b"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/EMapEntityTagType.cs",
+      "sha256": "88a18f7c04f7cde432668b67e5298b8237f2720747d8cf9371c08d2d21d86203"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MapCharacterMoveEffectSupport.cs",
+      "sha256": "240fea65e648e39e45393f655547b4ea942988bc25e72fb880a4eb1e7e0543d9"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MapCharacterUniformFloatMovementTargetSupport.cs",
+      "sha256": "2e4322922c5249193e7f2821e7b2e3368922c4277d8ea3e882d57e2cd1e0465f"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MapControllerEntityRadar.cs",
+      "sha256": "f5c36182328c2829837ad7fca61bda847802a3bca16e34aba6d2e789c287bcb1"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MapEntityTag.cs",
+      "sha256": "7d1c129a71dd22024d728daae939c95b7b6d44e7ea94faf0a8527df2dfe43758"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MoveAgent.cs",
+      "sha256": "9cdedc9f1f5528273e3220921750766ec588fb4b99f61b9064ae81f20bc9b254"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyActionAgent.cs",
+      "sha256": "b42708a8aac821a9431bbb3442f1e21d4fbf33a6896082519d48814dfe1e1669"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyCharacter.cs",
+      "sha256": "a176da9d439a079fbac6429c84c20a994721217ab80b924b4552530384e40314"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyCharacterShallowEffect.cs",
+      "sha256": "b697e38860f98124ff0947ae064c0fa959a91c83f0f50a524d15693c1bc3d024"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyEntity.cs",
+      "sha256": "5f729b384753163937fc5b83bfe4d81d0f43890fd70098f393608e95c4f605f4"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyEquipAgent.cs",
+      "sha256": "a89cf30bb073720d771f9f17b7ba96d907638150679d82103ded085f69d5e23e"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyGridMover.cs",
+      "sha256": "5a258db7e524b9075ed8675e2a99731030fca4f148d3d08880cfa0b725baed23"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyGridTransform.cs",
+      "sha256": "6568a690831e9fc20eb95fcd659f4f8cca5b780d7b735b579406f1a9af8de0bd"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyLevel.cs",
+      "sha256": "37ba3fbcd2834c45f36acf7ed47e4d72d0830cb0b2be5618a01a8ed219fc3fc1"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyMapCharacterBase.cs",
+      "sha256": "6a259bfd8b4d13278d6d8eb05671b19ab6b0472cef8127a3cf81f1556f045048"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyMapRegionStatus.cs",
+      "sha256": "1a73bd3de30dd1533f2c0b6f5dccdf45fb9639fb0c08d6fe804e2d66dd7f203c"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyMapStatusAgent.cs",
+      "sha256": "7d68b14a32eb8ee0bb7ec72e01f5e495b8d4f1d7123437e37186df68bc481762"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyNpcFollowerController.cs",
+      "sha256": "cdd5673c254d3d221adc9547d2bdd675b16176809b40bea311b654ae73b49144"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyProp.cs",
+      "sha256": "0749af8aeab03af5e847c7a81ca68feb111070ed9745873e189209346416da69"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MySizeCfg.cs",
+      "sha256": "998f1c434c57045a7c095b897346d749f1c47d699583ab898441780558e32d09"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyTransform.cs",
+      "sha256": "75775226b2ff4efbc2853dff3d9964d5f11cd5032ca69ccd304d298944f5d5b9"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyVisibilityCustom.cs",
+      "sha256": "0255dbec863e16698a9bc9b95c859b4922d59e55aaaf126d223a4f8d58ed9459"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyWorldMapCharacter.cs",
+      "sha256": "e962a4040b2a0b78a43ee63145a690ce5f43565442db418af68780e84142431c"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/TerrainStepEffect.cs",
+      "sha256": "5caee0f3392c6e7366615c58021921b200c375fe2a9b9a7dcbc59986593de564"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/WorldPlayerInput.cs",
+      "sha256": "61e3933d8904500bd18788b2ba43828f47c5c089a41845604b3e3d6df93467e5"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/CharacterComponent.cs",
+      "sha256": "74a85ccda51e1af6f1362f9bf171d555d6666ff3b70940fdffae1abc96d5d00e"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/GridMoverComponent.cs",
+      "sha256": "0482718b0260b2fcfb8d765615b1c334d22918d9fae5e180b3a9c0f0b20d29db"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/GridMoverComponentInfo.cs",
+      "sha256": "9192fe7435eab0ca2d4d9df410e1a849695fc724317a74410ff055285fae253a"
+    }
+  ],
+  "operation": "Read the historical source profile from its committed Git identity without changing the active profile. Verify the original manifest size/MD5/SHA256 and each DLL bundle size/MD5; reuse the official assembly AES-CBC decode. Require decoded Assembly-CSharp and Console hashes to equal the existing original lifecycle pins. Decompile all original 3001 root script types, their generic character base, tag flags and three consumed shared types into a separate historical source directory. Reuse source cache only when its recorded hash, originating IL and decompiler hash match; do not substitute current code for removed historical serialized fields."
+}

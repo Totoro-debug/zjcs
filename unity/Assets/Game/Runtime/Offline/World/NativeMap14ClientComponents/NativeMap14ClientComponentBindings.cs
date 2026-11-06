@@ -18,6 +18,8 @@ namespace Zjcs.Offline.World.NativeMap14ClientComponents
             Bind(view, "PropComponent", value => new CharacterProp(value));
             Bind(view, "MapRegionStatusComponent", value => new CharacterRegionStatus(value));
             Bind(view, "MapStatusAgentComponent", value => new CharacterMapStatus(value));
+            Bind(view, "CharacterComponent", value => new CharacterState(value));
+            Bind(view, "GridMoverComponent", value => new CharacterGridMover(value));
             Bind(view, "StageBehTouchComponent", value => new Touch(value));
             Bind(view, "StageResultAwardExtraPropComponent", value => new ExtraProp(value));
             Bind(view, "StageResultAwardStatusEffectComponent", value => new StatusEffect(value));
@@ -85,6 +87,30 @@ namespace Zjcs.Offline.World.NativeMap14ClientComponents
             public override object Original { get; }
             public override object ComponentInfo => null;
             public CharacterMapStatus(object original) { Original = original; }
+        }
+        private sealed class CharacterState : CharacterComponentData
+        {
+            private readonly System.Reflection.EventInfo onlineUpdated;
+            public override object Original { get; }
+            public override object ComponentInfo => null;
+            public override bool Online => (bool)Get(Original, "Online");
+            public override event Action<bool> OnPlayerOnlineStateUpdate
+            {
+                add => onlineUpdated.AddEventHandler(Original, value);
+                remove => onlineUpdated.RemoveEventHandler(Original, value);
+            }
+            public CharacterState(object original)
+            {
+                Original = original;
+                onlineUpdated = original.GetType().GetEvent("OnPlayerOnlineStateUpdate")
+                    ?? throw new MissingMemberException(original.GetType().FullName, "OnPlayerOnlineStateUpdate");
+            }
+        }
+        private sealed class CharacterGridMover : GridMoverComponentData
+        {
+            public override object Original { get; }
+            public override object ComponentInfo => Get(Original, "_Info");
+            public CharacterGridMover(object original) { Original = original; }
         }
         private sealed class Touch : StageBehTouchComponentData
         {

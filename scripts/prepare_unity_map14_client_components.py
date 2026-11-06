@@ -33,7 +33,7 @@ def prepare():
     inputs += [CODE/'common-source/Common'/(name+'.cs') for name in ('EcComponent','LevelComponent','AwardExtraPropInfo','AwardExtraProp','StageResultAwardStatusEffectComponentData')]
     native=ROOT/'unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientComponents'
     editor=ROOT/'unity/Assets/Game/Editor/Map14/ClientComponents';editor.mkdir(parents=True,exist_ok=True)
-    common=['Zjcs.Official.EntityLifecycle','Zjcs.Official.EntityViews','Zjcs.Official.EntityTipDotViews']
+    common=['Zjcs.Official.EntityLifecycle','Zjcs.Official.EntityViews','Zjcs.Official.EntityTipDotViews','Zjcs.Official.StoryAnimation','Zjcs.Official.StoryPlayables','Zjcs.Official.StoryPlayableManager']
     outputs=[]
     for folder,name,refs,platforms in (
         (output,'Zjcs.Official.EntityClientComponents',common,[]),

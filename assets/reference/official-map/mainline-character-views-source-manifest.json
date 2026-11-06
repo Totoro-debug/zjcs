@@ -1,0 +1,126 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "assets/reference/official-map/mainline-character-client-sources-source-manifest.json",
+      "sha256": "b3cb72724fbdd5bcca1a452b8f332b0ab4dced501972b0be5361b8745574a526"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyCharacter.cs",
+      "sha256": "a176da9d439a079fbac6429c84c20a994721217ab80b924b4552530384e40314"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MyGridMover.cs",
+      "sha256": "5a258db7e524b9075ed8675e2a99731030fca4f148d3d08880cfa0b725baed23"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MapEntityTag.cs",
+      "sha256": "7d1c129a71dd22024d728daae939c95b7b6d44e7ea94faf0a8527df2dfe43758"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/EMapEntityTagType.cs",
+      "sha256": "88a18f7c04f7cde432668b67e5298b8237f2720747d8cf9371c08d2d21d86203"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/CharacterComponent.cs",
+      "sha256": "74a85ccda51e1af6f1362f9bf171d555d6666ff3b70940fdffae1abc96d5d00e"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/GridMoverComponent.cs",
+      "sha256": "0482718b0260b2fcfb8d765615b1c334d22918d9fae5e180b3a9c0f0b20d29db"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/GridMoverComponentInfo.cs",
+      "sha256": "9192fe7435eab0ca2d4d9df410e1a849695fc724317a74410ff055285fae253a"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_mainline_character_views.py",
+      "sha256": "71461ba65dd7087307d5a17334d0c9644c37810e21b2b82648fb8d1befe90940"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/mainline-character-components-source-manifest.json",
+      "sha256": "dc6aa74c848d31510716fe034df019cc4cfbfc67a8cb2278530ab5be7e2a46fc"
+    },
+    {
+      "path": "assets/reference/official-map/map14-shared-ec-runtime-source-manifest.json",
+      "sha256": "bcf8abdf8013ebbb43fa8bccfa598d514d28511067bcd2db0ffa3a3678db5d28"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyCharacter.cs",
+      "sha256": "53bcac1802ee1e6baf3214684f5bfcd01527178b6778bbba2c28b9a3ca8ff71c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyCharacter.cs.meta",
+      "sha256": "8d96a0da640964b5da4d2e6cee46773c225caf3beef8c907c51740f61aae3d73"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyGridMover.cs",
+      "sha256": "d9d89c4c71d95f03ceb463e362767106f59e373f1efc03f9350089427cf73e17"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyGridMover.cs.meta",
+      "sha256": "34c9caab238eb6e32874f6201555f32e5ecb9821d7e441b0a126073e9ca11782"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MapEntityTag.cs",
+      "sha256": "7e0e0219feebd37b2deaa0724e9375c41efdc4a3ebeb60aa7ea73cbbb234e626"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MapEntityTag.cs.meta",
+      "sha256": "440e3a36c6b40cb23713b4c2597fee6194a7bcae9d7065673dcdae7a32213793"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/EMapEntityTagType.cs",
+      "sha256": "4e6e86aa0bd278b26ecc426767528b73a1fa53cc786b9d408f9ec7ad66d355dd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/EMapEntityTagType.cs.meta",
+      "sha256": "ed4077e89a34308b82fc3ddbb69b664c85ff80952b1e6a5900f9786306c4a0e3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/EntityClientComponentData.cs",
+      "sha256": "5e35ee8dead85d217c144b2f113032e6530117e04d4abcfbb06130eef3de3dfd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/Zjcs.Official.EntityClientComponents.asmdef",
+      "sha256": "4b202deb5e5d5ff2e42996257305d3f36802d6cc02f6edc14d47a35bc944ed15"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientComponents/NativeMap14ClientComponentBindings.cs",
+      "sha256": "94ad8746a76df691df8e4db16aad6be4b1b6f6d2459eb4c2301f150785fb7800"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.CharacterComponents.cs",
+      "sha256": "76999ef2ef4ff08d1cc8212ee8506990ba11a81f5b4e73507fec7bd916b5ff98"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef",
+      "sha256": "200d8bbecaf2a04dfecab07858547944134ca7557729938cbecf66ee968f5291"
+    }
+  ],
+  "operation": "Copy complete original MyCharacter, MyGridMover, MapEntityTag and EMapEntityTagType. Preserve original character online subscription, initial refresh, base lifecycle, join-in-middle branch and Play request ordering. Replace original DI with explicit playable-manager and deferred StageInfo.JoinInMiddle injection. Bind the real original CharacterComponent event directly without copying dispatch/state; expose original grid mover Info identity. Preserve original tag flags and any-bit query.",
+  "validation": {
+    "entry": "Zjcs.Editor.MainlineWorldStartup.OfficialMainlineWorldStartupAcceptance.RunClientContext"
+  },
+  "limitations": [
+    "Formal complete native character prefab loading and minimap root/HUD wiring are unfinished.",
+    "Request verification does not prove the entry light effect is rendered."
+  ]
+}
