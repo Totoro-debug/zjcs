@@ -22,6 +22,15 @@
     "bytes": 2981274,
     "sha256": "90cdceb2d4282330721deae9f79a955cb6d6bb81826a323bcdaa6b019bb62268"
   },
+  "derivedConfigurations": [
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/private-routes.json",
+      "bytes": 144,
+      "sha256": "038473263af6495101b30739ca78dc86d7ae567974f6395647f2841e6485b6ec",
+      "derivedFrom": "dungeons-runtime.json rooms 12107 and 12108",
+      "purpose": "Private-route classification and terminal-room adapter inputs"
+    }
+  ],
   "rows": {
     "dungeons": 76,
     "maps": 136,

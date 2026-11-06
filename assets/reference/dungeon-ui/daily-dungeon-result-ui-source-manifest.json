@@ -1,0 +1,2138 @@
+{
+  "manifest": "884_156692",
+  "apk_manifest": "881_156673",
+  "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+  "operation": "Resolve original UI roots APK-first from the pinned APK and its verified selected CDN source; copy each AssetRipper asset and importer metadata without overwriting changed files. An existing converted file is reused only when the pinned prior receipt confirms the source hash, assigned GUID, and unchanged importer metadata; the actual on-disk asset hash is recorded. Preserve an existing runtime prefab GUID when its source and prior output hashes match, and remap nested references to that GUID. Clone dependent prefabs into a Windows Resources tree and bind migrated UGUI/TMP components. Android DLL payloads are recorded but not copied into Unity/Player.",
+  "native_roots": [
+    {
+      "path": "Assets/Prefabs/UI/Fight/GameEndPanelDailyDungeon.prefab",
+      "bundle": "defaultpackage_assets_prefabs_ui_fight_gameendpaneldailydungeon.bundle",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_gameendpaneldailydungeon.bundle",
+        "bundle_hash": "707c8569327b2c0a4bc763f46eea4e3a",
+        "path_id": "3451289892858118402",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/707c8569327b2c0a4bc763f46eea4e3a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 79205,
+        "bundle_sha256": "4935373874beb2fd5d4c8644833a93bd57cb43a0e9dca4a8757dabfb3005fe3c"
+      },
+      "payload_sha256": "85cceb9805d2f5ce90b7bcd8a881d7f1a95a753f4da41ba42e95ff94da26b48a",
+      "exported_prefab": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Fight/GameEndPanelDailyDungeon.prefab",
+      "exported_prefab_sha256": "15af34282c7f50117e14fc65988b8caad0f9186d26f0efd2e7475fc82642fd60",
+      "asset_ripper_guid": "709fc7748b647b948a678a6877cda5b5"
+    },
+    {
+      "path": "Assets/Prefabs/UI/DailyDungeon/DailyDungeonEndPanelItem.prefab",
+      "bundle": "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+        "bundle_hash": "33a3e4106b60a2be176db213e6e8007e",
+        "path_id": "-3721068013351032459",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/33a3e4106b60a2be176db213e6e8007e.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 808524,
+        "bundle_sha256": "6c3bac71991fbbdd0554838a5da626387b810ffbd9775af9bef6aacf6d0bb23d"
+      },
+      "payload_sha256": "1879a5c6c33aef4382b93072ccb19e5b357f5f9f1882886a50ca1fa2b76afc1d",
+      "exported_prefab": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/DailyDungeon/DailyDungeonEndPanelItem.prefab",
+      "exported_prefab_sha256": "bcf57d3addabbbfada5473fa970d76be898b796f285ec5a1211391f50a72e25a",
+      "asset_ripper_guid": "4accf761b76ec4b44ad32e2e9d249c39"
+    },
+    {
+      "path": "Assets/Prefabs/UI/DailyDungeon/DailyDungeonEndPaneAwardlItem.prefab",
+      "bundle": "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+        "bundle_hash": "33a3e4106b60a2be176db213e6e8007e",
+        "path_id": "4308953707576861896",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/33a3e4106b60a2be176db213e6e8007e.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 808524,
+        "bundle_sha256": "6c3bac71991fbbdd0554838a5da626387b810ffbd9775af9bef6aacf6d0bb23d"
+      },
+      "payload_sha256": "acc95b172fac91960bd6be131127755ef05a8cb49a2605aa85195880edc05758",
+      "exported_prefab": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/DailyDungeon/DailyDungeonEndPaneAwardlItem.prefab",
+      "exported_prefab_sha256": "12726d9280e5d97da5da450a5f84f75add9a59cb14708903165ea9a6f329e7d0",
+      "asset_ripper_guid": "cd0d6b16f5d25464198aae5a0261d2f5"
+    },
+    {
+      "path": "Assets/Prefabs/UI/Award/AwardPanelItem.prefab",
+      "bundle": "defaultpackage_assets_prefabs_ui_award.bundle",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_award.bundle",
+        "bundle_hash": "eb74228ea1380fa6fd65fe4790a5473c",
+        "path_id": "-3703834781206472839",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/eb74228ea1380fa6fd65fe4790a5473c.bundle",
+        "raw_size": 332139,
+        "raw_sha256": "4995205cd95e846360453a2a15b3b942453fa48217ffe72f9f8eb327102eb012"
+      },
+      "payload_sha256": "81b93d711c143b6449da678d66616860a6ef8f7f85e53989aaced76e54680a5f",
+      "exported_prefab": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Award/AwardPanelItem.prefab",
+      "exported_prefab_sha256": "1ad87c067c03adb61fefdffc5eb9eae871e2af11be393bc3dc31b84467aa89b8",
+      "asset_ripper_guid": "66447678bf35d4742a055896355cb80e"
+    },
+    {
+      "path": "Assets/Prefabs/UI/Item/ItemAwardIcon.prefab",
+      "bundle": "defaultpackage_assets_prefabs_ui_item.bundle",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_item.bundle",
+        "bundle_hash": "bfd713c764b26e98f41207e65a768801",
+        "path_id": "-7945723452353099945",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bfd713c764b26e98f41207e65a768801.bundle",
+        "raw_size": 278025,
+        "raw_sha256": "8669f4065a1b086026378ba101fb947a9e3123134d7743621530d87c47e09201"
+      },
+      "payload_sha256": "f7f5b793bb7572256d2551788fb40aac3ce5b33587d05f1d16f5608a8db5be74",
+      "exported_prefab": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Item/ItemAwardIcon.prefab",
+      "exported_prefab_sha256": "0a50d2eea82c318db7f4e6193771eae777a84e6e5d4e074ae036f04028d6303d",
+      "asset_ripper_guid": "04f605a0767d0c242bef5e046ac39e88"
+    },
+    {
+      "path": "Assets/Prefabs/UI/Item/ItemIcon.prefab",
+      "bundle": "defaultpackage_assets_prefabs_ui_item.bundle",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_item.bundle",
+        "bundle_hash": "bfd713c764b26e98f41207e65a768801",
+        "path_id": "7503788786557052815",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bfd713c764b26e98f41207e65a768801.bundle",
+        "raw_size": 278025,
+        "raw_sha256": "8669f4065a1b086026378ba101fb947a9e3123134d7743621530d87c47e09201"
+      },
+      "payload_sha256": "469e13ddbee6276a3b5f9cefce8c01ddf47fc8ea9fa3e45b708ce8861930915b",
+      "exported_prefab": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Item/ItemIcon.prefab",
+      "exported_prefab_sha256": "6783679c0568b348e83feab2a6233f9efa07d2cebb63edb4ee4eaa90af0a9f3f",
+      "asset_ripper_guid": "5551c4c7281133045aaf01f057be146f"
+    }
+  ],
+  "grade_settings": {
+    "path": "Assets/ScriptableConfig/Modules/DailyDungeon/DailyDungeonSettings.asset",
+    "source": {
+      "bundle": "defaultpackage_assets_scriptableconfig_modules_dailydungeon.bundle",
+      "bundle_hash": "ea1ef61b0f356c689646f2669b08b37d",
+      "path_id": "-2044257441374317939",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ea1ef61b0f356c689646f2669b08b37d.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 96453,
+      "bundle_sha256": "736c9dc8803a27948d306f3d9d5179b572390ed5064603b31297c4c5073da926"
+    },
+    "address": "Assets/ScriptableConfig/DailyDungeonSettings",
+    "bundle": "defaultpackage_assets_scriptableconfig_modules_dailydungeon.bundle",
+    "exported_asset": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/ScriptableConfig/Modules/DailyDungeon/DailyDungeonSettings.asset",
+    "exported_asset_sha256": "401678fa468f7beaab554ea5be6bffad53dd90c9458fb1c02afa545c7ca48b3b"
+  },
+  "official_grade_sprites": [
+    {
+      "asset_guid": "4a938332d1fa16a4e8f46b24e24bcfbe",
+      "grade_types": [
+        6
+      ],
+      "address": "Assets/Image/UI/Game/Img_RatingA",
+      "path": "Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingA.png",
+      "bundle": "defaultpackage_assets_image_ui_game.bundle",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "7041880345954791540",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bff6cee5399419c3e7b7cdd5d1d7d051.bundle",
+        "raw_size": 589349,
+        "raw_sha256": "421595d6414dbee3c736583a0ab27c2741edf3893334b4b7769a0b245c1ec625"
+      },
+      "exported_asset": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingA.png",
+      "exported_asset_sha256": "d2654c4196153baaf20a4038de729a88c23d3c3e08fc1b7cdaf0e3cab842336a",
+      "asset_ripper_guid": "91da4750b0d4eca4f95a1573bdec9d58"
+    },
+    {
+      "asset_guid": "5555b4c6b74912c47935430ec770656a",
+      "grade_types": [
+        9
+      ],
+      "address": "Assets/Image/UI/Game/Img_RatingSSS",
+      "path": "Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingSSS.png",
+      "bundle": "defaultpackage_assets_image_ui_game.bundle",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "-6987899043824195138",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bff6cee5399419c3e7b7cdd5d1d7d051.bundle",
+        "raw_size": 589349,
+        "raw_sha256": "421595d6414dbee3c736583a0ab27c2741edf3893334b4b7769a0b245c1ec625"
+      },
+      "exported_asset": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingSSS.png",
+      "exported_asset_sha256": "0a7969d820d512509b65eb38d15766581c8e875e7edb0461628583424e7d8fc1",
+      "asset_ripper_guid": "44ce5c88aceae854a8b926e09f6a188d"
+    },
+    {
+      "asset_guid": "746a9bda50447d6489c839c44ab5b087",
+      "grade_types": [
+        5
+      ],
+      "address": "Assets/Image/UI/Game/Img_RatingB",
+      "path": "Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingB.png",
+      "bundle": "defaultpackage_assets_image_ui_game.bundle",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "-1770105947546404835",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bff6cee5399419c3e7b7cdd5d1d7d051.bundle",
+        "raw_size": 589349,
+        "raw_sha256": "421595d6414dbee3c736583a0ab27c2741edf3893334b4b7769a0b245c1ec625"
+      },
+      "exported_asset": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingB.png",
+      "exported_asset_sha256": "4bf12458a39c6bf62a317b3919f0c337063ea3f0138661486982fa83a9740f5c",
+      "asset_ripper_guid": "b83d9709c974d4f4d87c444eb0f1d9de"
+    },
+    {
+      "asset_guid": "78228a7d57fd3684b9829268fcc924b9",
+      "grade_types": [
+        8
+      ],
+      "address": "Assets/Image/UI/Game/Img_RatingSS",
+      "path": "Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingSS.png",
+      "bundle": "defaultpackage_assets_image_ui_game.bundle",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "-1314205178805706932",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bff6cee5399419c3e7b7cdd5d1d7d051.bundle",
+        "raw_size": 589349,
+        "raw_sha256": "421595d6414dbee3c736583a0ab27c2741edf3893334b4b7769a0b245c1ec625"
+      },
+      "exported_asset": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingSS.png",
+      "exported_asset_sha256": "279948372ee5adb834b8325ab62f722bffec2b7801999f6f4600a52845d7a7f5",
+      "asset_ripper_guid": "9f3e2797497591e43a334202da5f8bd2"
+    },
+    {
+      "asset_guid": "a84aa8975cd3906448470dad7cfd7f07",
+      "grade_types": [
+        4
+      ],
+      "address": "Assets/Image/UI/Game/Img_RatingC",
+      "path": "Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingC.png",
+      "bundle": "defaultpackage_assets_image_ui_game.bundle",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "-3192143034971961721",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bff6cee5399419c3e7b7cdd5d1d7d051.bundle",
+        "raw_size": 589349,
+        "raw_sha256": "421595d6414dbee3c736583a0ab27c2741edf3893334b4b7769a0b245c1ec625"
+      },
+      "exported_asset": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingC.png",
+      "exported_asset_sha256": "53d9c58aa23c56615b12787ec4e21d0bda7e89e890f936358c7d15c13c104c2f",
+      "asset_ripper_guid": "6acbab93434907741bc51e3aa9ce24a8"
+    },
+    {
+      "asset_guid": "e5d40bce271fb6340be8b09d6de7292e",
+      "grade_types": [
+        0,
+        3
+      ],
+      "address": "Assets/Image/UI/Game/Img_RatingD",
+      "path": "Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingD.png",
+      "bundle": "defaultpackage_assets_image_ui_game.bundle",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "-2369323317927654739",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bff6cee5399419c3e7b7cdd5d1d7d051.bundle",
+        "raw_size": 589349,
+        "raw_sha256": "421595d6414dbee3c736583a0ab27c2741edf3893334b4b7769a0b245c1ec625"
+      },
+      "exported_asset": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingD.png",
+      "exported_asset_sha256": "0c4524b453128601d480f7f4caefd1809a93e7c75b737aadb70811788f7976e7",
+      "asset_ripper_guid": "721ceeb67352c6b41ba669ef200823cf"
+    },
+    {
+      "asset_guid": "efe45dd8a8e39574dae011cdbe044264",
+      "grade_types": [
+        7
+      ],
+      "address": "Assets/Image/UI/Game/Img_RatingS",
+      "path": "Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingS.png",
+      "bundle": "defaultpackage_assets_image_ui_game.bundle",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "4493700861360994689",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bff6cee5399419c3e7b7cdd5d1d7d051.bundle",
+        "raw_size": 589349,
+        "raw_sha256": "421595d6414dbee3c736583a0ab27c2741edf3893334b4b7769a0b245c1ec625"
+      },
+      "exported_asset": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingS.png",
+      "exported_asset_sha256": "a81de3b5d0d86486861ec43f8ac0fe4787323d0c3b8bd62c6dc35b2b1ecad149",
+      "asset_ripper_guid": "c07a68714cda7e1458bb32dd5c14ae73"
+    }
+  ],
+  "ripper_export_root": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets",
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/Dungeons/884_156692/GuidConflicts/Packages/com.unity.render-pipelines.universal/Shaders/2D/Sprite-Lit-Default_0.asset",
+      "source": "Packages/com.unity.render-pipelines.universal/Shaders/2D/Sprite-Lit-Default_0.asset",
+      "source_guid": "fff25f6a796cb224dbe6f68013b5ae90",
+      "guid": "915b64fe3c1a5b039c604dcc3b881cd6",
+      "bytes": 69071,
+      "source_sha256": "432023633747604e1e01e0bb03b43575184543c65fd0397ff9d58b9d5ec4147d",
+      "sha256": "e5333a01bf813513775b6646db81621be2b89649755040581711816bb1c8be46",
+      "meta_sha256": "63eb7ce29af8bd4ca80da6bbfe879a1bf33faa59572acb15b8f5b2ac6dfa3308",
+      "preserved_existing": true
+    },
+    {
+      "path": "unity/Assets/Official/Dungeons/884_156692/GuidConflicts/Shaders/Effect/Noise_Mask_Pro_0.asset",
+      "source": "Shaders/Effect/Noise_Mask_Pro_0.asset",
+      "source_guid": "4fe7dbb6bbd10bb409462b4b44983f98",
+      "guid": "94e13c95d9f8553b843ad0901d255077",
+      "bytes": 1612610,
+      "source_sha256": "dcced7bd050d56d4de0b198c25b0992f0600326a39c907750853602f32a66c43",
+      "sha256": "d839edd671179c78d40dfd5754980faf197488309220451798d0ea49e78dc274",
+      "meta_sha256": "c4537295a362358a269081a156dab8505db35a5b6f448dc3df8fb962a2b1a62a",
+      "preserved_existing": true
+    },
+    {
+      "path": "unity/Assets/Official/Dungeons/884_156692/GuidConflicts/Shaders/Light/Skeleton-Lit-Atten.asset",
+      "source": "Shaders/Light/Skeleton-Lit-Atten.asset",
+      "source_guid": "8eb2614a264dca14da52e05204240bdd",
+      "guid": "2c75997e3d8f5e17869825190e12c287",
+      "bytes": 82273,
+      "source_sha256": "07fca4a7f70fcb9d274c726191bfd329634b5ae2a350433f90d02eb57c9c15b9",
+      "sha256": "69f09df3fa3577f6dd2f063e03ecd9faa14295afe5c978042ceda079a8c4b9d5",
+      "meta_sha256": "7dd0a99ae463c3bd3915ed47ac4991541b485f234f92103c50cf467d21ceef2e",
+      "preserved_existing": true
+    }
+  ],
+  "shared_assets": [
+    {
+      "source": "Animation/UI/Common/Btn_Base_Click_0.controller",
+      "guid": "ce50bc97056325f408603c51cf599658",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Animation/UI/Common/Btn_Base_Click_0.controller",
+      "sha256": "666a6ba96b65ba6911766e9675dcfe542d4e4cfcf15eacd0e81c84672f6238ca",
+      "shared_asset_sha256": "666a6ba96b65ba6911766e9675dcfe542d4e4cfcf15eacd0e81c84672f6238ca"
+    },
+    {
+      "source": "Animation/UI/Common/Disabled_0.anim",
+      "guid": "764528e379dfa8048a958f558435748f",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Animation/UI/Common/Disabled_0.anim",
+      "sha256": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51",
+      "shared_asset_sha256": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51"
+    },
+    {
+      "source": "Animation/UI/Common/Highlighted_0.anim",
+      "guid": "47e7827b18e2d384482c3c41f7c384df",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Animation/UI/Common/Highlighted_0.anim",
+      "sha256": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07",
+      "shared_asset_sha256": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07"
+    },
+    {
+      "source": "Animation/UI/Common/Normal_0.anim",
+      "guid": "725ff2f1d1e580a4f97e803230d93d06",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Animation/UI/Common/Normal_0.anim",
+      "sha256": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952",
+      "shared_asset_sha256": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952"
+    },
+    {
+      "source": "Animation/UI/Common/Pressed_0.anim",
+      "guid": "8b155218895fbff49aa46e4932850e8b",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Animation/UI/Common/Pressed_0.anim",
+      "sha256": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49",
+      "shared_asset_sha256": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49"
+    },
+    {
+      "source": "Animation/UI/Common/Selected_0.anim",
+      "guid": "0c74f9156466bcf409a6afe1945f3333",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Animation/UI/Common/Selected_0.anim",
+      "sha256": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3",
+      "shared_asset_sha256": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3"
+    },
+    {
+      "source": "AppearanceAssets/Map/map_baoXiang_01/close_loop.anim",
+      "guid": "15c6d063175438a498dc58cc23a39708",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/AppearanceAssets/Map/map_baoXiang_01/close_loop.anim",
+      "sha256": "fe754b0051433c204418fa2853b26cd1fe3f9330ed6faad2918aad79c33bdacb",
+      "shared_asset_sha256": "fe754b0051433c204418fa2853b26cd1fe3f9330ed6faad2918aad79c33bdacb"
+    },
+    {
+      "source": "AppearanceAssets/Map/map_baoXiang_01/map_baoXiang_01.atlas.txt",
+      "guid": "6bcd2d9fc82105748b8ee0f6657a8649",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/AppearanceAssets/Map/map_baoXiang_01/map_baoXiang_01.atlas.txt",
+      "sha256": "f6c5fe4d0f585c1de18fd28a11d8ec308065ded140c86c4ba5b0766bf27cd47d",
+      "shared_asset_sha256": "f6c5fe4d0f585c1de18fd28a11d8ec308065ded140c86c4ba5b0766bf27cd47d"
+    },
+    {
+      "source": "AppearanceAssets/Map/map_baoXiang_01/map_baoXiang_01.png",
+      "guid": "3721f2326fca1a04b9714997a5c4bdf5",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/AppearanceAssets/Map/map_baoXiang_01/map_baoXiang_01.png",
+      "sha256": "3b5b68ad7e30aadb4d318662b85c24c46bec697846b326ba8fe1855a0de464e8",
+      "shared_asset_sha256": "3b5b68ad7e30aadb4d318662b85c24c46bec697846b326ba8fe1855a0de464e8"
+    },
+    {
+      "source": "AppearanceAssets/Map/map_baoXiang_01/map_baoXiang_01.skel.bytes",
+      "guid": "833798049c48d5b4b976b6847e488ee2",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/AppearanceAssets/Map/map_baoXiang_01/map_baoXiang_01.skel.bytes",
+      "sha256": "f75fdba9453396c09ce9a3423a4e2377781834cc119781fdd3c2bab2ae9f8491",
+      "shared_asset_sha256": "f75fdba9453396c09ce9a3423a4e2377781834cc119781fdd3c2bab2ae9f8491"
+    },
+    {
+      "source": "AppearanceAssets/Map/map_baoXiang_01/map_baoXiang_01_Atlas.asset",
+      "guid": "8d2f9ccf28254644ebdf9a044847f59d",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/AppearanceAssets/Map/map_baoXiang_01/map_baoXiang_01_Atlas.asset",
+      "sha256": "53c3e8d3799d4790d3c654c244c746c27103430e16ea1d5d5da1fbe6941d4a37",
+      "shared_asset_sha256": "53c3e8d3799d4790d3c654c244c746c27103430e16ea1d5d5da1fbe6941d4a37"
+    },
+    {
+      "source": "AppearanceAssets/Map/map_baoXiang_01/map_baoXiang_01_Controller.controller",
+      "guid": "91b0af995241e894daa1126400b55eee",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/AppearanceAssets/Map/map_baoXiang_01/map_baoXiang_01_Controller.controller",
+      "sha256": "88f68611a238745ee53deb481cffe9031f5b9d6b32e1e92479fdaba4e3d3c728",
+      "shared_asset_sha256": "88f68611a238745ee53deb481cffe9031f5b9d6b32e1e92479fdaba4e3d3c728"
+    },
+    {
+      "source": "AppearanceAssets/Map/map_baoXiang_01/map_baoXiang_01_Material.mat",
+      "guid": "04835f54745d36941815f3829066d4ac",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/AppearanceAssets/Map/map_baoXiang_01/map_baoXiang_01_Material.mat",
+      "sha256": "a24acf410be01161be2d34cd5d71fab444a73e02c0bc1cea44cf345bf4f5bc67",
+      "shared_asset_sha256": "a24acf410be01161be2d34cd5d71fab444a73e02c0bc1cea44cf345bf4f5bc67"
+    },
+    {
+      "source": "AppearanceAssets/Map/map_baoXiang_01/map_baoXiang_01_SkeletonData.asset",
+      "guid": "740b1ba4bbed7ca48b21acdf1af2285f",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/AppearanceAssets/Map/map_baoXiang_01/map_baoXiang_01_SkeletonData.asset",
+      "sha256": "fe12d56b1cd36605fce11cb6658f48382cecd004a4afd87b2264bdb3c1fc8400",
+      "shared_asset_sha256": "fe12d56b1cd36605fce11cb6658f48382cecd004a4afd87b2264bdb3c1fc8400"
+    },
+    {
+      "source": "AppearanceAssets/Map/map_baoXiang_01/open_01.anim",
+      "guid": "5c4059beb7bbd7e4e8183f0e5e0a1221",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/AppearanceAssets/Map/map_baoXiang_01/open_01.anim",
+      "sha256": "4bd71675eaff300e0cca0bfad2599a868497bdcf299064723bfb0321cd4198f4",
+      "shared_asset_sha256": "4bd71675eaff300e0cca0bfad2599a868497bdcf299064723bfb0321cd4198f4"
+    },
+    {
+      "source": "AppearanceAssets/Map/map_baoXiang_01/open_loop.anim",
+      "guid": "a370620a91a1b074e975935102f08034",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/AppearanceAssets/Map/map_baoXiang_01/open_loop.anim",
+      "sha256": "4461578d90817b0d73d9a692db1e3e22e85f7831eacb93ee3949e19a21bfefff",
+      "shared_asset_sha256": "4461578d90817b0d73d9a692db1e3e22e85f7831eacb93ee3949e19a21bfefff"
+    },
+    {
+      "source": "Effect/Materials/FX_CaiHon_0002.mat",
+      "guid": "b27eb12b9c6482b4ea46da23b0d8907e",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/Materials/FX_CaiHon_0002.mat",
+      "sha256": "971e9a122498baf953b4f49318f613b48818d38720ddb8d8d2cce6d640d9d4ad",
+      "shared_asset_sha256": "971e9a122498baf953b4f49318f613b48818d38720ddb8d8d2cce6d640d9d4ad"
+    },
+    {
+      "source": "Effect/Materials/Fx_glow02.mat",
+      "guid": "c5cd1d7453eec68458f4d5027d1b6bbe",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/Materials/Fx_glow02.mat",
+      "sha256": "b5e7c379ede5dee95e132d1483d9721cb8a5082325a07247cf01722c2d949dc5",
+      "shared_asset_sha256": "b5e7c379ede5dee95e132d1483d9721cb8a5082325a07247cf01722c2d949dc5"
+    },
+    {
+      "source": "Effect/Materials/Fx_GuangDian_155.mat",
+      "guid": "e67bba808aa634149bf9ed57822ba8f5",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/Materials/Fx_GuangDian_155.mat",
+      "sha256": "9326722581fe7dd579696f83eb8822d3af8e3caf0c646f73909046585b7460cf",
+      "shared_asset_sha256": "9326722581fe7dd579696f83eb8822d3af8e3caf0c646f73909046585b7460cf"
+    },
+    {
+      "source": "Effect/Materials/Fx_GuangDian_155_0001.mat",
+      "guid": "8680eb4aa3a66c344b6b16031b7f07f7",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/Materials/Fx_GuangDian_155_0001.mat",
+      "sha256": "a789136c95a80a5e6d76335e81d605a672635ce092ee40d4273a35e6d6ceca8c",
+      "shared_asset_sha256": "a789136c95a80a5e6d76335e81d605a672635ce092ee40d4273a35e6d6ceca8c"
+    },
+    {
+      "source": "Effect/Materials/Fx_GuangDian_155_1_F 1.mat",
+      "guid": "9f1ece0a6a7744746b82b1002f664cb4",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/Materials/Fx_GuangDian_155_1_F 1.mat",
+      "sha256": "9a1da3a8821c617058368d9aedcd923135a31c44f6a7aeebe22f54551dfd6c72",
+      "shared_asset_sha256": "9a1da3a8821c617058368d9aedcd923135a31c44f6a7aeebe22f54551dfd6c72"
+    },
+    {
+      "source": "Effect/Materials/Fx_GuangDian_156 4.mat",
+      "guid": "83cde5663ab9b6a4fa67e97ad5b4b032",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/Materials/Fx_GuangDian_156 4.mat",
+      "sha256": "7d3300da26614b9e02e84aac005219c28a8209bdd47fd7eac140bf368c83bc9f",
+      "shared_asset_sha256": "7d3300da26614b9e02e84aac005219c28a8209bdd47fd7eac140bf368c83bc9f"
+    },
+    {
+      "source": "Effect/Materials/Fx_GuangDian_66.mat",
+      "guid": "339b7faeb313be24288edfcb8ab1101d",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/Materials/Fx_GuangDian_66.mat",
+      "sha256": "eb41cc83a97c3adbfe6c59d8efebe2d81f2c6d5aba8e49d21a06373df60b76ac",
+      "shared_asset_sha256": "eb41cc83a97c3adbfe6c59d8efebe2d81f2c6d5aba8e49d21a06373df60b76ac"
+    },
+    {
+      "source": "Effect/Materials/Fx_GuangDian_67.mat",
+      "guid": "3953e2e3d34c4894e8583cf2c4f3f027",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/Materials/Fx_GuangDian_67.mat",
+      "sha256": "2e5fb3da5f4637be2f0439de0dbd40ae1f68ade351d581bf1b411c41f5d48c21",
+      "shared_asset_sha256": "2e5fb3da5f4637be2f0439de0dbd40ae1f68ade351d581bf1b411c41f5d48c21"
+    },
+    {
+      "source": "Effect/Materials/Fx_GuangDian_68.mat",
+      "guid": "3647289c44d4e30458c7fda28d5741a9",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/Materials/Fx_GuangDian_68.mat",
+      "sha256": "a042cf8adc9ddb4c6e25078a2d048b0fcce70793707968672c121e278075a535",
+      "shared_asset_sha256": "a042cf8adc9ddb4c6e25078a2d048b0fcce70793707968672c121e278075a535"
+    },
+    {
+      "source": "Effect/Materials/Fx_GuangDian_69.mat",
+      "guid": "cf23df2ecd73b26418efbea3ab9e72eb",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/Materials/Fx_GuangDian_69.mat",
+      "sha256": "9793973a135240cee8db5f5fa0d21b7d9873b020cbbf77cabeab94350b0b21da",
+      "shared_asset_sha256": "9793973a135240cee8db5f5fa0d21b7d9873b020cbbf77cabeab94350b0b21da"
+    },
+    {
+      "source": "Effect/Materials/Fx_GuangDian_83 2.mat",
+      "guid": "4a6873da19c8c824fb1c58763a6b5ed7",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/Materials/Fx_GuangDian_83 2.mat",
+      "sha256": "bf577a9c7a66714ae34b98bcc76bc9dc4e1b65014152c9fe7547795e86fbf903",
+      "shared_asset_sha256": "bf577a9c7a66714ae34b98bcc76bc9dc4e1b65014152c9fe7547795e86fbf903"
+    },
+    {
+      "source": "Effect/Materials/Fx_GuangQuan_0003.mat",
+      "guid": "296400e3fccb386469c2878c54930aaa",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/Materials/Fx_GuangQuan_0003.mat",
+      "sha256": "014f41679136ceed76b85f9035ec99532b682ef006ef32ca2dcc8c3dc4201000",
+      "shared_asset_sha256": "014f41679136ceed76b85f9035ec99532b682ef006ef32ca2dcc8c3dc4201000"
+    },
+    {
+      "source": "Effect/Materials/Fx_TuoWei_16_C 1.mat",
+      "guid": "fdcbb576085dd874086a64abaa69b6a0",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/Materials/Fx_TuoWei_16_C 1.mat",
+      "sha256": "90c36100266e367ebc9c52d292237d4ed994a14647aab5b5783380512b935801",
+      "shared_asset_sha256": "90c36100266e367ebc9c52d292237d4ed994a14647aab5b5783380512b935801"
+    },
+    {
+      "source": "Effect/textures/FX_CaiHon_0002.png",
+      "guid": "423b0ac9afc85c94ba44e929a358ed01",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/FX_CaiHon_0002.png",
+      "sha256": "97d5065dd42fd1576c6a9d9c3611a46f546a2fbf96b49c1095a0a325ed473699",
+      "shared_asset_sha256": "97d5065dd42fd1576c6a9d9c3611a46f546a2fbf96b49c1095a0a325ed473699"
+    },
+    {
+      "source": "Effect/textures/Fx_glow02_0.png",
+      "guid": "1ff4db251875b6748a6d7676d421a444",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_glow02_0.png",
+      "sha256": "fc254dd038431fefde3644ab3522f01126a6f9526a70e80be137b6357dc54cc2",
+      "shared_asset_sha256": "fc254dd038431fefde3644ab3522f01126a6f9526a70e80be137b6357dc54cc2"
+    },
+    {
+      "source": "Effect/textures/Fx_Glow14_1F.png",
+      "guid": "51ab0f3fd67598d4a8bc1e37e6bccde0",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_Glow14_1F.png",
+      "sha256": "acaa676d0e346e9f1cb5d8a02af0ab5511c3515c8d7ca9d46c5f6082c0ddcba8",
+      "shared_asset_sha256": "acaa676d0e346e9f1cb5d8a02af0ab5511c3515c8d7ca9d46c5f6082c0ddcba8"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangDian_155.png",
+      "guid": "cbdb302e48637284bb23ad4bda054482",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangDian_155.png",
+      "sha256": "2802496fed7c6d6dca5a16c802fb6012f8e4eb93c3fc44fc636255e211939348",
+      "shared_asset_sha256": "2802496fed7c6d6dca5a16c802fb6012f8e4eb93c3fc44fc636255e211939348"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangDian_155_0001.png",
+      "guid": "589417be90e8c4f4997949c18b9c8ec6",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangDian_155_0001.png",
+      "sha256": "529b2ebd78cecaa1ad89fcb67ba02b413097f4e4f4d1a9105e7d624e471daa96",
+      "shared_asset_sha256": "529b2ebd78cecaa1ad89fcb67ba02b413097f4e4f4d1a9105e7d624e471daa96"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangDian_155_1_F.png",
+      "guid": "d08219857c06ddf4dbf5cb161b4879b9",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangDian_155_1_F.png",
+      "sha256": "50c5bdf4cd0556fd86fd52a717c1a0aef53c60ecae0cd8cb5437e4a456ec9151",
+      "shared_asset_sha256": "50c5bdf4cd0556fd86fd52a717c1a0aef53c60ecae0cd8cb5437e4a456ec9151"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangDian_155_2.png",
+      "guid": "49d597d5d83d47042aae9cc068d06dab",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangDian_155_2.png",
+      "sha256": "978f965883e6c22d3f6cc494bc55947cefceac2bbeb20f264cad119b5dde7279",
+      "shared_asset_sha256": "978f965883e6c22d3f6cc494bc55947cefceac2bbeb20f264cad119b5dde7279"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangDian_156.png",
+      "guid": "4e9169ea604a7304cac8eb0e2dc9f318",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangDian_156.png",
+      "sha256": "6def7855af542a10fa0a9a875c1f40cc60cd2b91353160995b9feac82e42fd87",
+      "shared_asset_sha256": "6def7855af542a10fa0a9a875c1f40cc60cd2b91353160995b9feac82e42fd87"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangDian_66.png",
+      "guid": "0ed067a153282124da6177cb4d9839e9",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangDian_66.png",
+      "sha256": "eaa0508ff1b96d2718953d9b44adf1e34fd746105a23e1a4c8ffcab9498fcf20",
+      "shared_asset_sha256": "eaa0508ff1b96d2718953d9b44adf1e34fd746105a23e1a4c8ffcab9498fcf20"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangDian_67_0.png",
+      "guid": "c310722537f31704ea6509b8f88cf696",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangDian_67_0.png",
+      "sha256": "ce42a9550cd34aa6925ed944b6dfad50f7461c4aecaa927e7db2c9b9d82590fb",
+      "shared_asset_sha256": "ce42a9550cd34aa6925ed944b6dfad50f7461c4aecaa927e7db2c9b9d82590fb"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangDian_68.png",
+      "guid": "04fff845e62dc5e469dd4870d6b53ce6",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangDian_68.png",
+      "sha256": "7d781f78ebb17b57d3fee9d613dd7127f29559f35e515cbf9fcd273cf99ebbed",
+      "shared_asset_sha256": "7d781f78ebb17b57d3fee9d613dd7127f29559f35e515cbf9fcd273cf99ebbed"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangDian_69.png",
+      "guid": "b93a5d260aa8ed447855b2c66114fee1",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangDian_69.png",
+      "sha256": "f58dfe932851c13258d4da7a6041070e6c482758e2f90a78a127f1df224c69c4",
+      "shared_asset_sha256": "f58dfe932851c13258d4da7a6041070e6c482758e2f90a78a127f1df224c69c4"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangDian_83.png",
+      "guid": "5c71b8c4dcb0f47418829cf996217f3e",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangDian_83.png",
+      "sha256": "03e0292d5d0c09ad1af8bad218fd769564f26cd0063366d5f7b8142120a0e4ba",
+      "shared_asset_sha256": "03e0292d5d0c09ad1af8bad218fd769564f26cd0063366d5f7b8142120a0e4ba"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangDian_92_4_F.png",
+      "guid": "e10dc4dbbf4090e4b80baa5154cf9f60",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangDian_92_4_F.png",
+      "sha256": "c5d3468f423555c125beebad578124cc02332b6ab1ab673c085626c46640ecd1",
+      "shared_asset_sha256": "c5d3468f423555c125beebad578124cc02332b6ab1ab673c085626c46640ecd1"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangDian_92_5_F.png",
+      "guid": "52f9822d18fb5794d9ab40cf2ddc7b9e",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangDian_92_5_F.png",
+      "sha256": "54f90bd3537e94fb16ed374befe64c9de6d8d33d8a16cf49c13c3d4e3a7ec55d",
+      "shared_asset_sha256": "54f90bd3537e94fb16ed374befe64c9de6d8d33d8a16cf49c13c3d4e3a7ec55d"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangQuan_0003.png",
+      "guid": "42352c6d87a7ba94e8a919f42be09512",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangQuan_0003.png",
+      "sha256": "4935a6d438c3223e5cb1d7df7d7eaa69ab717256e249c4619207102d85eee974",
+      "shared_asset_sha256": "4935a6d438c3223e5cb1d7df7d7eaa69ab717256e249c4619207102d85eee974"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangQuan_123.png",
+      "guid": "ea8aaaeca102a52428f9b9efe08b8b26",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangQuan_123.png",
+      "sha256": "bc4ed9448d76d2224e1f60f6c41224a69f39a21d0ebb3a575b529384e2cb3c27",
+      "shared_asset_sha256": "bc4ed9448d76d2224e1f60f6c41224a69f39a21d0ebb3a575b529384e2cb3c27"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangQuan_31.png",
+      "guid": "b724a7a5823bb59418eb3264110dc9f9",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangQuan_31.png",
+      "sha256": "2b1b5c5c9c7392f0f6711efcf33aef1d5202c68df4b34d78f7168a8ea6404c0d",
+      "shared_asset_sha256": "2b1b5c5c9c7392f0f6711efcf33aef1d5202c68df4b34d78f7168a8ea6404c0d"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangQuan_39_1F.png",
+      "guid": "0e9d4d359fc4d764487da1e1b44916e0",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangQuan_39_1F.png",
+      "sha256": "b41a93a2453a8cfd909d001787213981569cac4bc36623bf4615fddec9bf1a41",
+      "shared_asset_sha256": "b41a93a2453a8cfd909d001787213981569cac4bc36623bf4615fddec9bf1a41"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangQuan_40.png",
+      "guid": "226626a8bf1029744bdf7e027f1b0cca",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangQuan_40.png",
+      "sha256": "0cca25f51469f2fe829eb28e26a24991d2b0c3900c7575894bcedfe46a43cab0",
+      "shared_asset_sha256": "0cca25f51469f2fe829eb28e26a24991d2b0c3900c7575894bcedfe46a43cab0"
+    },
+    {
+      "source": "Effect/textures/Fx_GuangXian_20.png",
+      "guid": "c61483e844fd08948be2ea8bac5f0eb7",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_GuangXian_20.png",
+      "sha256": "cd1e3c1fdd61009ee9d42d249c184c67802efaa11e1f2e6d730d3aec8c52982e",
+      "shared_asset_sha256": "cd1e3c1fdd61009ee9d42d249c184c67802efaa11e1f2e6d730d3aec8c52982e"
+    },
+    {
+      "source": "Effect/textures/Fx_Mask_06.png",
+      "guid": "af613c42513ec614987391174ec05cdb",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_Mask_06.png",
+      "sha256": "9455beadc244f882a3fbf944760660031a638c75497433866af78129dd53479f",
+      "shared_asset_sha256": "9455beadc244f882a3fbf944760660031a638c75497433866af78129dd53479f"
+    },
+    {
+      "source": "Effect/textures/Fx_RaoDon_0003_0.png",
+      "guid": "4b1ead14cfd211140b0eb50369eb5c46",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_RaoDon_0003_0.png",
+      "sha256": "756de12159ff7ea42b125906a6f8b3e6272c45548723fdc690784202829b5088",
+      "shared_asset_sha256": "756de12159ff7ea42b125906a6f8b3e6272c45548723fdc690784202829b5088"
+    },
+    {
+      "source": "Effect/textures/Fx_TuoWei_16_1F.png",
+      "guid": "dac40597adebec14db5a937eafdae6a3",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_TuoWei_16_1F.png",
+      "sha256": "6669075f6c883564244f6521cec133d5565cb49eaba89796c3cec4043db7438a",
+      "shared_asset_sha256": "6669075f6c883564244f6521cec133d5565cb49eaba89796c3cec4043db7438a"
+    },
+    {
+      "source": "Effect/textures/Fx_TuoWei_22_1F.png",
+      "guid": "667b942f29d76f347aacb015584eed9a",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_TuoWei_22_1F.png",
+      "sha256": "3bfac51a89dcf70183ceb7656d7c72df582a804d67adc53198f15ab8ba86f914",
+      "shared_asset_sha256": "3bfac51a89dcf70183ceb7656d7c72df582a804d67adc53198f15ab8ba86f914"
+    },
+    {
+      "source": "Effect/textures/Fx_WenLi_0004_1F.png",
+      "guid": "427348fcb44ca0b4faa16354fe865035",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_WenLi_0004_1F.png",
+      "sha256": "f8418e523347f32d3dc65f74cb9d8c11f7351ed906d1d38f6c33d00b884e1c66",
+      "shared_asset_sha256": "f8418e523347f32d3dc65f74cb9d8c11f7351ed906d1d38f6c33d00b884e1c66"
+    },
+    {
+      "source": "Effect/textures/Fx_WenLi_108 _2_F.png",
+      "guid": "b03447bb5370e094ebcbd5374b3248a5",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_WenLi_108 _2_F.png",
+      "sha256": "bc668af09839709332b269ba135f334ded915abb86926f14749de97d6c003420",
+      "shared_asset_sha256": "bc668af09839709332b269ba135f334ded915abb86926f14749de97d6c003420"
+    },
+    {
+      "source": "Effect/textures/Fx_WenLi_108.png",
+      "guid": "7f60b80f85700a64cbb7ef080cbcc649",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_WenLi_108.png",
+      "sha256": "522bc9e5b625e03d7030aa87e5de82344b126782e5174035448fec8e21f9567f",
+      "shared_asset_sha256": "522bc9e5b625e03d7030aa87e5de82344b126782e5174035448fec8e21f9567f"
+    },
+    {
+      "source": "Effect/textures/Fx_WenLi_122_0.png",
+      "guid": "867f38621e4f6e547bfc1db7b8acb83a",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_WenLi_122_0.png",
+      "sha256": "8b02fd2fd1344304ce5f2b8bfc996861421043d6b96e33d4dcfa8b85a8868179",
+      "shared_asset_sha256": "8b02fd2fd1344304ce5f2b8bfc996861421043d6b96e33d4dcfa8b85a8868179"
+    },
+    {
+      "source": "Effect/textures/Fx_WenLi_45.png",
+      "guid": "f716d5bf0e6dcf4479fa4d4b52ae78d6",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Effect/textures/Fx_WenLi_45.png",
+      "sha256": "03af5a3cdb277e7d8cbf3bf30a56c2b25971e88522bab0a4d3dc4cc6325e547b",
+      "shared_asset_sha256": "03af5a3cdb277e7d8cbf3bf30a56c2b25971e88522bab0a4d3dc4cc6325e547b"
+    },
+    {
+      "source": "GameObject/playable_dailydungeon_reward_drop_normal.prefab",
+      "guid": "4b5051accc4badf4793dc6fc09258ae2",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/GameObject/playable_dailydungeon_reward_drop_normal.prefab",
+      "sha256": "4102e008f9d4655b9429c77530bb3a2e24782a96351ee6c6c2ee591381c5be35",
+      "shared_asset_sha256": "4102e008f9d4655b9429c77530bb3a2e24782a96351ee6c6c2ee591381c5be35"
+    },
+    {
+      "source": "GameObject/playable_dailydungeon_reward_surprisedrop_gold.prefab",
+      "guid": "8a32835acd629074483a616a0c4a338d",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/GameObject/playable_dailydungeon_reward_surprisedrop_gold.prefab",
+      "sha256": "4815fb071459b474a713e64be11c6f39aa7a0d97b5ca8a1720d7812cbceb9caf",
+      "shared_asset_sha256": "4815fb071459b474a713e64be11c6f39aa7a0d97b5ca8a1720d7812cbceb9caf"
+    },
+    {
+      "source": "GameObject/playable_dailydungeon_reward_surprisedrop_orange.prefab",
+      "guid": "16a4027795d551a44a2067c343722e7f",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/GameObject/playable_dailydungeon_reward_surprisedrop_orange.prefab",
+      "sha256": "ce48b39bab17d279e74d2e9f2ed4532085d6748eb921ed40decd30b119c5f1ea",
+      "shared_asset_sha256": "ce48b39bab17d279e74d2e9f2ed4532085d6748eb921ed40decd30b119c5f1ea"
+    },
+    {
+      "source": "GameObject/playable_dailydungeon_reward_surprisedrop_purple.prefab",
+      "guid": "56cd775ecf025f3409fd93f64d100f2b",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/GameObject/playable_dailydungeon_reward_surprisedrop_purple.prefab",
+      "sha256": "8f1a883dac9604645cbe76e819ae79c3289d35e6f738d8a36ef8faadaf6e2f94",
+      "shared_asset_sha256": "8f1a883dac9604645cbe76e819ae79c3289d35e6f738d8a36ef8faadaf6e2f94"
+    },
+    {
+      "source": "Image/ItemIcon/Money/Money_1.asset",
+      "guid": "1a4decdb61c57774eaaa4b71405a62a8",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/ItemIcon/Money/Money_1.asset",
+      "sha256": "22272d91c129e679808a5ce27e7fbdaf24dcda32d19deb1cb0e1c311b23e4506",
+      "shared_asset_sha256": "22272d91c129e679808a5ce27e7fbdaf24dcda32d19deb1cb0e1c311b23e4506"
+    },
+    {
+      "source": "Image/ItemIcon/Money/Money_1.png",
+      "guid": "55a3af3ca705160408da40003466a264",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/ItemIcon/Money/Money_1.png",
+      "sha256": "9ce26f065b14a9048246006884b94121d2c5fbe9db7359eecec14ce4eb5954fb",
+      "shared_asset_sha256": "9ce26f065b14a9048246006884b94121d2c5fbe9db7359eecec14ce4eb5954fb"
+    },
+    {
+      "source": "Image/ItemIcon/ProfessionSmall/350.asset",
+      "guid": "d5374f58fae380440af1bda86fc6a27d",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/ItemIcon/ProfessionSmall/350.asset",
+      "sha256": "a7471f915343a1f7d25d0021ae3d5a7c553fdb03cc01cd567b10f50aac61cedb",
+      "shared_asset_sha256": "a7471f915343a1f7d25d0021ae3d5a7c553fdb03cc01cd567b10f50aac61cedb"
+    },
+    {
+      "source": "Image/ItemIcon/ProfessionSmall/350.png",
+      "guid": "53b0a26335c8d7342a63fe78f0ae17d9",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/ItemIcon/ProfessionSmall/350.png",
+      "sha256": "fe6817f9c8de4e4d3cbe52f41c30685c005e2746de687ae3b82902b6be1232a6",
+      "shared_asset_sha256": "fe6817f9c8de4e4d3cbe52f41c30685c005e2746de687ae3b82902b6be1232a6"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/BtnAdd.asset",
+      "guid": "f465c72f66abf204ca480f08c03bb3dd",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/BtnAdd.asset",
+      "sha256": "b9628c81f787e899a56fd3f49a86e2f28f825ea15c7f9602226d3b222b33ca91",
+      "shared_asset_sha256": "b9628c81f787e899a56fd3f49a86e2f28f825ea15c7f9602226d3b222b33ca91"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/BtnOk_0.asset",
+      "guid": "2539df3203ca28945965093513354a34",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/BtnOk_0.asset",
+      "sha256": "cbdb6dc9ff05b114eb2f7710da5642facfeae6375862ca586492413b00654c0a",
+      "shared_asset_sha256": "cbdb6dc9ff05b114eb2f7710da5642facfeae6375862ca586492413b00654c0a"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/C_jindutiao.asset",
+      "guid": "cc19436827207fb4aab48d1cc1a49a47",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/C_jindutiao.asset",
+      "sha256": "4ade4fc0f7e0bbb1dfc37f7d8cfe04501f27ac839854765ecc917d5669e608c5",
+      "shared_asset_sha256": "4ade4fc0f7e0bbb1dfc37f7d8cfe04501f27ac839854765ecc917d5669e608c5"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/C_jindutiao_di.asset",
+      "guid": "f39d6b6c5d1ecde4682c4ece450f6cb5",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/C_jindutiao_di.asset",
+      "sha256": "c9324b088725061c6d12f79beba2ac9083a7bdccaa6238d3753850fd80621464",
+      "shared_asset_sha256": "c9324b088725061c6d12f79beba2ac9083a7bdccaa6238d3753850fd80621464"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/C_none_0.asset",
+      "guid": "3444dd6b94652e943975b37d4caf579b",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/C_none_0.asset",
+      "sha256": "7f65da2cd60acfe24a9bbf3c7ec0216e0f2fc312203b606728809af3387395cf",
+      "shared_asset_sha256": "7f65da2cd60acfe24a9bbf3c7ec0216e0f2fc312203b606728809af3387395cf"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgBg_CountText_0.asset",
+      "guid": "e9920c471c6d3494cab0fa0580d9409a",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgBg_CountText_0.asset",
+      "sha256": "1233f7ce0167fdd7f8da08dc801cbee3475f0dd0c4e7c47b169c5aa2e3e436c8",
+      "shared_asset_sha256": "1233f7ce0167fdd7f8da08dc801cbee3475f0dd0c4e7c47b169c5aa2e3e436c8"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgBg_CountTextadd.asset",
+      "guid": "a671011123ed23e46ba1e9147cb0a9a4",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgBg_CountTextadd.asset",
+      "sha256": "dd7fe2dc812f097ed5c4fc95d631e47d91c31f79da02f8fb96e34499ecd91fe3",
+      "shared_asset_sha256": "dd7fe2dc812f097ed5c4fc95d631e47d91c31f79da02f8fb96e34499ecd91fe3"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgBg_Exclusive_0.asset",
+      "guid": "9dec5d1fc6a4c8848a82cb2ee2321125",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgBg_Exclusive_0.asset",
+      "sha256": "a0e1a7d80dbeeadb7e65965a09a312c48095a3a245d5b0d19e7f8231c3bb2787",
+      "shared_asset_sha256": "a0e1a7d80dbeeadb7e65965a09a312c48095a3a245d5b0d19e7f8231c3bb2787"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgBg_Star1.asset",
+      "guid": "5abf2670f04530346a2caa4246f46729",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgBg_Star1.asset",
+      "sha256": "af08a1708068a3b7e7e1bbcdb025a9547113c2ab22782a71de87332e84ede1bd",
+      "shared_asset_sha256": "af08a1708068a3b7e7e1bbcdb025a9547113c2ab22782a71de87332e84ede1bd"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgBgYuan_0.asset",
+      "guid": "4423d0481d7e1ce48b69682563e6902e",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgBgYuan_0.asset",
+      "sha256": "9f937da53a158ec51a049716f266085efce915c05b0cfaea0f2d0cc80c4bbae8",
+      "shared_asset_sha256": "9f937da53a158ec51a049716f266085efce915c05b0cfaea0f2d0cc80c4bbae8"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgBlue_0.asset",
+      "guid": "a01005106c720ed46981bf0358942890",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgBlue_0.asset",
+      "sha256": "84c6a5042f34d4ec21bec95fd7a7d984ce74aa2e0989d754775a117cdd9408e0",
+      "shared_asset_sha256": "84c6a5042f34d4ec21bec95fd7a7d984ce74aa2e0989d754775a117cdd9408e0"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgBlue_Upgrade_0.asset",
+      "guid": "cbf64ad88de80cf4e978925630b26a3c",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgBlue_Upgrade_0.asset",
+      "sha256": "1f3f3f3ef6c861ff43ab523dda5ff3c4d81d9694240f8175f41c18dabba7da5b",
+      "shared_asset_sha256": "1f3f3f3ef6c861ff43ab523dda5ff3c4d81d9694240f8175f41c18dabba7da5b"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgBlueDot_0.asset",
+      "guid": "df40f050c668df749bff7103441de7bf",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgBlueDot_0.asset",
+      "sha256": "2f51fd2546c0be29cc4cd2b9748a0bafb7b02e85a3f4c8b4119db09e8799c74d",
+      "shared_asset_sha256": "2f51fd2546c0be29cc4cd2b9748a0bafb7b02e85a3f4c8b4119db09e8799c74d"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgFunction_Bg2_0.asset",
+      "guid": "4c540a5346fb96d4493489af16aacbae",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgFunction_Bg2_0.asset",
+      "sha256": "2f8ee0c580a1bc86aa2a0b676f91ad5e23baf75a34e0a005588397e5b16747dc",
+      "shared_asset_sha256": "2f8ee0c580a1bc86aa2a0b676f91ad5e23baf75a34e0a005588397e5b16747dc"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgGameEndPanelBase_Like.asset",
+      "guid": "8f0576fe54533784f9afac9cc6072fa2",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgGameEndPanelBase_Like.asset",
+      "sha256": "613c4241999f7b026a1d2ff506c7fcff9cb4dd255d217a6086dfedf38501fad8",
+      "shared_asset_sha256": "613c4241999f7b026a1d2ff506c7fcff9cb4dd255d217a6086dfedf38501fad8"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgGameEndPanelBase_Report.asset",
+      "guid": "12066bcbe7e13fd4b8f216a2ab653dc9",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgGameEndPanelBase_Report.asset",
+      "sha256": "d051d9dc849380e2034315d8be98f4c2596bfc468a57a09ae6aa2dff2fd20282",
+      "shared_asset_sha256": "d051d9dc849380e2034315d8be98f4c2596bfc468a57a09ae6aa2dff2fd20282"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgItemIcon_NumBg.asset",
+      "guid": "fb1bc52a9b357774a8d8554aa9528dbe",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgItemIcon_NumBg.asset",
+      "sha256": "fd03ccbcdff07bdbb6838a9934123be2901eb72378bffef42a0ba9b3de9d1ab2",
+      "shared_asset_sha256": "fd03ccbcdff07bdbb6838a9934123be2901eb72378bffef42a0ba9b3de9d1ab2"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgItemTipBg.asset",
+      "guid": "6fba6568482755440a1941a5da0c11d0",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgItemTipBg.asset",
+      "sha256": "d65202f48a12f6ab524931bb823db5d41b9953ae09e107bfaf1024cff67e6773",
+      "shared_asset_sha256": "d65202f48a12f6ab524931bb823db5d41b9953ae09e107bfaf1024cff67e6773"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgLeader.asset",
+      "guid": "b80db324d00849a4fa478a2a6ff48d60",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgLeader.asset",
+      "sha256": "16ce62e93206e6853dd76cee4e2cef87eac30803da81993e944d4b69493091ec",
+      "shared_asset_sha256": "16ce62e93206e6853dd76cee4e2cef87eac30803da81993e944d4b69493091ec"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgLine_Career.asset",
+      "guid": "7bdbc55b3a1708043824e343d2d613d4",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgLine_Career.asset",
+      "sha256": "1cd437bcbcd32ceb2385369638f50d7c8b00d7b6537f7cb3c64fc0396fc64277",
+      "shared_asset_sha256": "1cd437bcbcd32ceb2385369638f50d7c8b00d7b6537f7cb3c64fc0396fc64277"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgNew_0.asset",
+      "guid": "25c0a9cf79fa7ea41bc7fb524f45bd9f",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgNew_0.asset",
+      "sha256": "bdd290b31254e59a7aa787aaceda8c65c9114676837da46129dd1b14db0da5e9",
+      "shared_asset_sha256": "bdd290b31254e59a7aa787aaceda8c65c9114676837da46129dd1b14db0da5e9"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgNpcPanelNpcItem_Pinned.asset",
+      "guid": "369a68bcc1662704c8d98ec55a87d904",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgNpcPanelNpcItem_Pinned.asset",
+      "sha256": "3daa2ab1bf924a0bb98105023030b64acfa778ea7e4209b5155ba2a1e7cea6ea",
+      "shared_asset_sha256": "3daa2ab1bf924a0bb98105023030b64acfa778ea7e4209b5155ba2a1e7cea6ea"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgRedDot_0.asset",
+      "guid": "52c25465ccf98c949831e3301d01ac03",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgRedDot_0.asset",
+      "sha256": "42c96e3c29202985c8d2a3e0131e4a2e1f395bcd111cfcbdbe9173f578f55e3d",
+      "shared_asset_sha256": "42c96e3c29202985c8d2a3e0131e4a2e1f395bcd111cfcbdbe9173f578f55e3d"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgReturn_0.asset",
+      "guid": "f8d541f3c87c90541ac4edda9939fe23",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgReturn_0.asset",
+      "sha256": "18065df8b59cc76abc7fbcad7b88403d15db8c105140e31b531f61166cc0a198",
+      "shared_asset_sha256": "18065df8b59cc76abc7fbcad7b88403d15db8c105140e31b531f61166cc0a198"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgReturnBg_0.asset",
+      "guid": "81f85406b64cd6e469a60cbdc2d186a3",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgReturnBg_0.asset",
+      "sha256": "40b069fa28e4b3463956b2b79acf521e35cf7a35b1ce0ac09cdfca4d65bbe70d",
+      "shared_asset_sha256": "40b069fa28e4b3463956b2b79acf521e35cf7a35b1ce0ac09cdfca4d65bbe70d"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgShare.asset",
+      "guid": "332b22e4a7303e243ba7dfec2ea87729",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgShare.asset",
+      "sha256": "22d601d49b3781e87c2fd8f7c91ae2f19f338dc8ec6d0b645619c414615c50ec",
+      "shared_asset_sha256": "22d601d49b3781e87c2fd8f7c91ae2f19f338dc8ec6d0b645619c414615c50ec"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ImgTouxiang_1.asset",
+      "guid": "0c782d66968aa0349bea9bfb161438db",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ImgTouxiang_1.asset",
+      "sha256": "a2060652aac16437081e47cd1493737665fe8103b666d719d0d52da15cfed77b",
+      "shared_asset_sha256": "a2060652aac16437081e47cd1493737665fe8103b666d719d0d52da15cfed77b"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ItemBattleData.asset",
+      "guid": "e7aedf6c409c7544cab4807ada5b8125",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ItemBattleData.asset",
+      "sha256": "27d15078bb1205cf9d656d3f824ee1720fa9e847d7f506c1a25826c8131b496d",
+      "shared_asset_sha256": "27d15078bb1205cf9d656d3f824ee1720fa9e847d7f506c1a25826c8131b496d"
+    },
+    {
+      "source": "Image/UI/Common/Common_Atlas/ItemPiece2.asset",
+      "guid": "78ad0401c800e0c42b3a7953749abe1f",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Common_Atlas/ItemPiece2.asset",
+      "sha256": "c405d4a20dbe489a33e5cc57619a0e860dd556d51a6cf7261c78b74d5779ad02",
+      "shared_asset_sha256": "c405d4a20dbe489a33e5cc57619a0e860dd556d51a6cf7261c78b74d5779ad02"
+    },
+    {
+      "source": "Image/UI/Common/Mask/ImgMask.asset",
+      "guid": "8ad17b4f777ea6f45aba956d811014d4",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Mask/ImgMask.asset",
+      "sha256": "2e2562a8551b0407c68c573df5c2e167b917b025031af268660023acc2b7b073",
+      "shared_asset_sha256": "2e2562a8551b0407c68c573df5c2e167b917b025031af268660023acc2b7b073"
+    },
+    {
+      "source": "Image/UI/Common/Mask/ImgMask.png",
+      "guid": "db302ef4a53b2e64da42b3389c4b6331",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Mask/ImgMask.png",
+      "sha256": "ce62b85b2d60c8ee8f9f5f7417425fa732cdcd34101034273795f40032e90bdd",
+      "shared_asset_sha256": "ce62b85b2d60c8ee8f9f5f7417425fa732cdcd34101034273795f40032e90bdd"
+    },
+    {
+      "source": "Image/UI/Common/Mask/ImgMask_Piece.asset",
+      "guid": "80b9c1b6c8d62eb49987d1ad710e0be9",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Mask/ImgMask_Piece.asset",
+      "sha256": "d5f2017302290bd210f19cc3c3d988a65128346ac6da28fa1c1b1a1b7d13fc2c",
+      "shared_asset_sha256": "d5f2017302290bd210f19cc3c3d988a65128346ac6da28fa1c1b1a1b7d13fc2c"
+    },
+    {
+      "source": "Image/UI/Common/Mask/ImgMask_Piece.png",
+      "guid": "88b363da6cf96eb4686fe32533cac000",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Mask/ImgMask_Piece.png",
+      "sha256": "075a6023d3623f414d1278645c7faf8552526a903d4284651c4d34e0d859206b",
+      "shared_asset_sha256": "075a6023d3623f414d1278645c7faf8552526a903d4284651c4d34e0d859206b"
+    },
+    {
+      "source": "Image/UI/Common/Mask/ImgMask_PieceTop.asset",
+      "guid": "908b19ed90bb839468d13dcd9ce99534",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Mask/ImgMask_PieceTop.asset",
+      "sha256": "b4cf9052fb3ee0950af1d46b6851dc5e34f1273cfdf758a355efcece02885296",
+      "shared_asset_sha256": "b4cf9052fb3ee0950af1d46b6851dc5e34f1273cfdf758a355efcece02885296"
+    },
+    {
+      "source": "Image/UI/Common/Mask/ImgMask_PieceTop.png",
+      "guid": "aade68f38d5775e48ba30fdcfd368e27",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Mask/ImgMask_PieceTop.png",
+      "sha256": "59e5c25e7862ab9d80eb7f9b4bed5283d5df82e736550d6db147701600bcc589",
+      "shared_asset_sha256": "59e5c25e7862ab9d80eb7f9b4bed5283d5df82e736550d6db147701600bcc589"
+    },
+    {
+      "source": "Image/UI/Common/Repeat/ImgDot.asset",
+      "guid": "a63819ee3b60bbf4dabd28caf96dfb8c",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Repeat/ImgDot.asset",
+      "sha256": "b4430c73b1f2594c79d581e740fa91b021d51fc05e9fc853269b852805e8eee1",
+      "shared_asset_sha256": "b4430c73b1f2594c79d581e740fa91b021d51fc05e9fc853269b852805e8eee1"
+    },
+    {
+      "source": "Image/UI/Common/Repeat/ImgDot.png",
+      "guid": "550659223ba0a8647a2e33cfe5fa8d3e",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Common/Repeat/ImgDot.png",
+      "sha256": "608fb0001ffa76519053a0598239aeb27f05520cad2ca9ba255903738f52845c",
+      "shared_asset_sha256": "608fb0001ffa76519053a0598239aeb27f05520cad2ca9ba255903738f52845c"
+    },
+    {
+      "source": "Image/UI/Game/Game_Atlas/ImgCamera_Pre.asset",
+      "guid": "76b149afb4894864a857575c5b6bb1ff",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Game_Atlas/ImgCamera_Pre.asset",
+      "sha256": "81eef9199dfc4132f7f6560c8b221612fd6959843bb19b35ea84bfba9b135e5e",
+      "shared_asset_sha256": "81eef9199dfc4132f7f6560c8b221612fd6959843bb19b35ea84bfba9b135e5e"
+    },
+    {
+      "source": "Image/UI/Game/GameEnd_Atlas/ImgBg_Banner.asset",
+      "guid": "62df5787aa0d8454da135bd6f20c2d62",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/GameEnd_Atlas/ImgBg_Banner.asset",
+      "sha256": "edeb23e4ccdc2fe4d0b774c4ab6ccc39a7741860648ebdb9791a4adfc354bf96",
+      "shared_asset_sha256": "edeb23e4ccdc2fe4d0b774c4ab6ccc39a7741860648ebdb9791a4adfc354bf96"
+    },
+    {
+      "source": "Image/UI/Game/GameEnd_Atlas/ImgBg_BannerWenLi.asset",
+      "guid": "c5c09b6c33423394d825fecfb1f33ccc",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/GameEnd_Atlas/ImgBg_BannerWenLi.asset",
+      "sha256": "0bbeb3909fd28c359f83c0a72fdc835a60dd578e83b47d9ebe4d9b78206f3783",
+      "shared_asset_sha256": "0bbeb3909fd28c359f83c0a72fdc835a60dd578e83b47d9ebe4d9b78206f3783"
+    },
+    {
+      "source": "Image/UI/Game/GameEnd_Atlas/ImgBg_Head.asset",
+      "guid": "a3f17f1e04210724ebdb8e03099920f8",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/GameEnd_Atlas/ImgBg_Head.asset",
+      "sha256": "1c2c942ef171dad2774d119800a46607784b8970670974867e01143af417024c",
+      "shared_asset_sha256": "1c2c942ef171dad2774d119800a46607784b8970670974867e01143af417024c"
+    },
+    {
+      "source": "Image/UI/Game/GameEnd_Atlas/ImgBg_WenLi.asset",
+      "guid": "aa6fc4083ee3cfd428ab6edcade7987b",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/GameEnd_Atlas/ImgBg_WenLi.asset",
+      "sha256": "b5a98165bc45deb7ef533168bfaafe63aaf947ee7e57cb3bec32c584d7f96117",
+      "shared_asset_sha256": "b5a98165bc45deb7ef533168bfaafe63aaf947ee7e57cb3bec32c584d7f96117"
+    },
+    {
+      "source": "Image/UI/Game/GameEnd_Atlas/ImgBg_WenLi2.asset",
+      "guid": "b51e62169438faf4786c91e8e1dff4bb",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/GameEnd_Atlas/ImgBg_WenLi2.asset",
+      "sha256": "86f47c8764b70f6ced21975631bebc040dc40550d5c3fed88ccaf086015a891a",
+      "shared_asset_sha256": "86f47c8764b70f6ced21975631bebc040dc40550d5c3fed88ccaf086015a891a"
+    },
+    {
+      "source": "Image/UI/Game/GameEnd_Atlas/ImgBg_WenLi3.asset",
+      "guid": "79c209320b534bd4f9bff01f81192941",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/GameEnd_Atlas/ImgBg_WenLi3.asset",
+      "sha256": "3dddf4ee44a451109781d591e9dc02fbb7e0e366069149a32493036186abd132",
+      "shared_asset_sha256": "3dddf4ee44a451109781d591e9dc02fbb7e0e366069149a32493036186abd132"
+    },
+    {
+      "source": "Image/UI/Game/GameEnd_Atlas/ImgBg_WenLi4.asset",
+      "guid": "ea1ffa07be2367346bb617d6f5aca558",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/GameEnd_Atlas/ImgBg_WenLi4.asset",
+      "sha256": "6808e057ca50623d6a2b8808a36421f3c7535fc7b2b0ebaff4d014abfa393316",
+      "shared_asset_sha256": "6808e057ca50623d6a2b8808a36421f3c7535fc7b2b0ebaff4d014abfa393316"
+    },
+    {
+      "source": "Image/UI/Game/GameEnd_Atlas/ImgBg_WenLiCopy.asset",
+      "guid": "8e67c5a7a473a6143904c173177c63b0",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/GameEnd_Atlas/ImgBg_WenLiCopy.asset",
+      "sha256": "bf36f46724d69372f4536aefc9885227dffdb595a728d1d8623d7cf57d7443a0",
+      "shared_asset_sha256": "bf36f46724d69372f4536aefc9885227dffdb595a728d1d8623d7cf57d7443a0"
+    },
+    {
+      "source": "Image/UI/Game/GameEnd_Atlas/ImgBg_WenLiCopyLight.asset",
+      "guid": "e2f8ff1e252202c49ac0dce5623b8f05",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/GameEnd_Atlas/ImgBg_WenLiCopyLight.asset",
+      "sha256": "03d30915be37d9ddf99001ec91465ab7d761104beef5704b9706c81ea02311ee",
+      "shared_asset_sha256": "03d30915be37d9ddf99001ec91465ab7d761104beef5704b9706c81ea02311ee"
+    },
+    {
+      "source": "Image/UI/Game/Like_Atlas/ImgBg_Subscribe_Black.asset",
+      "guid": "681f3113d3b8f4d45a8824f6006f91b4",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Like_Atlas/ImgBg_Subscribe_Black.asset",
+      "sha256": "6e49e63113b221116e55b80ab5cdf32900f535848a14115054a5c2fb6fc33559",
+      "shared_asset_sha256": "6e49e63113b221116e55b80ab5cdf32900f535848a14115054a5c2fb6fc33559"
+    },
+    {
+      "source": "Image/UI/Game/Like_Atlas/ImgBg_Subscribe_Green.asset",
+      "guid": "e4eeb7d43809dfa49a1975b72b5bbd43",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Like_Atlas/ImgBg_Subscribe_Green.asset",
+      "sha256": "182787e31a22258549161f6ae88cf7f9f217b5cd91772948ef3c3f7ed23f86ec",
+      "shared_asset_sha256": "182787e31a22258549161f6ae88cf7f9f217b5cd91772948ef3c3f7ed23f86ec"
+    },
+    {
+      "source": "Image/UI/Game/Like_Atlas/ImgBg_Subscribe_Myself.asset",
+      "guid": "261a7a1723010504da5ad80a32ed9019",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Like_Atlas/ImgBg_Subscribe_Myself.asset",
+      "sha256": "ea3455db486d6e273bbd7d70cf2e63199c33a1938198d79fdd5c11402652bdeb",
+      "shared_asset_sha256": "ea3455db486d6e273bbd7d70cf2e63199c33a1938198d79fdd5c11402652bdeb"
+    },
+    {
+      "source": "Image/UI/Game/Like_Atlas/ImgBtn_Subscribe.asset",
+      "guid": "f58036b8290c3d0419cd9b626555a292",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Like_Atlas/ImgBtn_Subscribe.asset",
+      "sha256": "308a378da0df9492ade19bf945141fdd888d25b8325ca9f4e800155fe6a7c74d",
+      "shared_asset_sha256": "308a378da0df9492ade19bf945141fdd888d25b8325ca9f4e800155fe6a7c74d"
+    },
+    {
+      "source": "Image/UI/Game/Like_Atlas/ImgBtn_Subscribe_EachOther.asset",
+      "guid": "b2645dbc45ad11a42b5b4389ed233125",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Like_Atlas/ImgBtn_Subscribe_EachOther.asset",
+      "sha256": "aaa728221a667a7efdd5603a23b817ae77f2a428fbe8942ecc2c8303cd2f6512",
+      "shared_asset_sha256": "aaa728221a667a7efdd5603a23b817ae77f2a428fbe8942ecc2c8303cd2f6512"
+    },
+    {
+      "source": "Image/UI/Game/Like_Atlas/ImgGameEndPanelBase_Report.asset",
+      "guid": "d8a6f789f2f51d249b6fcea333df30b4",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Like_Atlas/ImgGameEndPanelBase_Report.asset",
+      "sha256": "676315dd5459b87e6591fac9e2c0b34fa650e0389c689036ec9caa3f0c490224",
+      "shared_asset_sha256": "676315dd5459b87e6591fac9e2c0b34fa650e0389c689036ec9caa3f0c490224"
+    },
+    {
+      "source": "Image/UI/Game/Like_Atlas/ImgGameEndPanelBase_ReportBg.asset",
+      "guid": "53b3dacfc9e3d7e43bfe7af041e75bf5",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Like_Atlas/ImgGameEndPanelBase_ReportBg.asset",
+      "sha256": "8de70d44dcfe0be1f642cdeba29f92af9fe5dc5578d0749000fa826c54243b8c",
+      "shared_asset_sha256": "8de70d44dcfe0be1f642cdeba29f92af9fe5dc5578d0749000fa826c54243b8c"
+    },
+    {
+      "source": "Image/UI/Game/Rating_NoAtlas/Img_RatingA.png",
+      "guid": "91da4750b0d4eca4f95a1573bdec9d58",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Rating_NoAtlas/Img_RatingA.png",
+      "sha256": "d2654c4196153baaf20a4038de729a88c23d3c3e08fc1b7cdaf0e3cab842336a",
+      "shared_asset_sha256": "d2654c4196153baaf20a4038de729a88c23d3c3e08fc1b7cdaf0e3cab842336a"
+    },
+    {
+      "source": "Image/UI/Game/Rating_NoAtlas/Img_RatingB.asset",
+      "guid": "29cd31ed4e6dbd34a818308cb790eb05",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Rating_NoAtlas/Img_RatingB.asset",
+      "sha256": "72c3172550b3499a3ce31f991eed1a825bdc56f61257f260e8e02def6aa30497",
+      "shared_asset_sha256": "72c3172550b3499a3ce31f991eed1a825bdc56f61257f260e8e02def6aa30497"
+    },
+    {
+      "source": "Image/UI/Game/Rating_NoAtlas/Img_RatingB.png",
+      "guid": "b83d9709c974d4f4d87c444eb0f1d9de",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Rating_NoAtlas/Img_RatingB.png",
+      "sha256": "4bf12458a39c6bf62a317b3919f0c337063ea3f0138661486982fa83a9740f5c",
+      "shared_asset_sha256": "4bf12458a39c6bf62a317b3919f0c337063ea3f0138661486982fa83a9740f5c"
+    },
+    {
+      "source": "Image/UI/Game/Rating_NoAtlas/Img_RatingC.png",
+      "guid": "6acbab93434907741bc51e3aa9ce24a8",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Rating_NoAtlas/Img_RatingC.png",
+      "sha256": "53d9c58aa23c56615b12787ec4e21d0bda7e89e890f936358c7d15c13c104c2f",
+      "shared_asset_sha256": "53d9c58aa23c56615b12787ec4e21d0bda7e89e890f936358c7d15c13c104c2f"
+    },
+    {
+      "source": "Image/UI/Game/Rating_NoAtlas/Img_RatingD.png",
+      "guid": "721ceeb67352c6b41ba669ef200823cf",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Rating_NoAtlas/Img_RatingD.png",
+      "sha256": "0c4524b453128601d480f7f4caefd1809a93e7c75b737aadb70811788f7976e7",
+      "shared_asset_sha256": "0c4524b453128601d480f7f4caefd1809a93e7c75b737aadb70811788f7976e7"
+    },
+    {
+      "source": "Image/UI/Game/Rating_NoAtlas/Img_RatingS.png",
+      "guid": "c07a68714cda7e1458bb32dd5c14ae73",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Rating_NoAtlas/Img_RatingS.png",
+      "sha256": "a81de3b5d0d86486861ec43f8ac0fe4787323d0c3b8bd62c6dc35b2b1ecad149",
+      "shared_asset_sha256": "a81de3b5d0d86486861ec43f8ac0fe4787323d0c3b8bd62c6dc35b2b1ecad149"
+    },
+    {
+      "source": "Image/UI/Game/Rating_NoAtlas/Img_RatingSS.png",
+      "guid": "9f3e2797497591e43a334202da5f8bd2",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Rating_NoAtlas/Img_RatingSS.png",
+      "sha256": "279948372ee5adb834b8325ab62f722bffec2b7801999f6f4600a52845d7a7f5",
+      "shared_asset_sha256": "279948372ee5adb834b8325ab62f722bffec2b7801999f6f4600a52845d7a7f5"
+    },
+    {
+      "source": "Image/UI/Game/Rating_NoAtlas/Img_RatingSSS.png",
+      "guid": "44ce5c88aceae854a8b926e09f6a188d",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Game/Rating_NoAtlas/Img_RatingSSS.png",
+      "sha256": "0a7969d820d512509b65eb38d15766581c8e875e7edb0461628583424e7d8fc1",
+      "shared_asset_sha256": "0a7969d820d512509b65eb38d15766581c8e875e7edb0461628583424e7d8fc1"
+    },
+    {
+      "source": "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Blue.asset",
+      "guid": "ff407f85fff53fe4ea86147a6bb361f4",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Blue.asset",
+      "sha256": "d87dda4d3b37405a1f137592856d0c4639b262b9299e8accd4a84c5f135f20a8",
+      "shared_asset_sha256": "d87dda4d3b37405a1f137592856d0c4639b262b9299e8accd4a84c5f135f20a8"
+    },
+    {
+      "source": "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Shadow.asset",
+      "guid": "d606f4f9bcc481247ba376b693021335",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Shadow.asset",
+      "sha256": "42ace0b7e40518b2a0d014639095faf53406dca62302e3f0812a03f0c963b870",
+      "shared_asset_sha256": "42ace0b7e40518b2a0d014639095faf53406dca62302e3f0812a03f0c963b870"
+    },
+    {
+      "source": "Image/UI/NonHuman/NonHumanDailyFortune/NonHumanDailyFortune_Atlas/ImgNonHumanDailyFortune_icon.asset",
+      "guid": "bcf6df8e76e898846922c2753143f830",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/NonHuman/NonHumanDailyFortune/NonHumanDailyFortune_Atlas/ImgNonHumanDailyFortune_icon.asset",
+      "sha256": "f7c2cac291257e2e3b158b3f76889f8ecdbac8781ee4911aa7f8669410245dc2",
+      "shared_asset_sha256": "f7c2cac291257e2e3b158b3f76889f8ecdbac8781ee4911aa7f8669410245dc2"
+    },
+    {
+      "source": "Image/UI/NonHuman/NonHumanDailyFortune/NonHumanDailyFortune_Atlas/ImgNonHumanDailyFortune_icon2.asset",
+      "guid": "6cb535d4bd2619d47aef1274a5a2ff6f",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/NonHuman/NonHumanDailyFortune/NonHumanDailyFortune_Atlas/ImgNonHumanDailyFortune_icon2.asset",
+      "sha256": "6c6157b92d726011e928b9bb8362f8cd8622cf637e733919f3e67cf7dd3ac432",
+      "shared_asset_sha256": "6c6157b92d726011e928b9bb8362f8cd8622cf637e733919f3e67cf7dd3ac432"
+    },
+    {
+      "source": "Image/UI/NPC/Npc_Icon/Map_13/npc_icon_8441.asset",
+      "guid": "c3798705b83244a41ad423830ca740c6",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/NPC/Npc_Icon/Map_13/npc_icon_8441.asset",
+      "sha256": "9f424e922b1a66ac120e1352cd73e583ce82f78bfe3e6edf9a38853a7b9d3d28",
+      "shared_asset_sha256": "9f424e922b1a66ac120e1352cd73e583ce82f78bfe3e6edf9a38853a7b9d3d28"
+    },
+    {
+      "source": "Image/UI/NPC/Npc_Icon/Map_13/npc_icon_8441.png",
+      "guid": "1ff6b630c4d7fac40a25478c7528c25a",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/NPC/Npc_Icon/Map_13/npc_icon_8441.png",
+      "sha256": "932acdc6868d74609eb1e0731abcc9b5fb7baea1202bf5f9f1f400afb261c448",
+      "shared_asset_sha256": "932acdc6868d74609eb1e0731abcc9b5fb7baea1202bf5f9f1f400afb261c448"
+    },
+    {
+      "source": "Image/UI/OutputAddition/OutputAddition_Atlas/Img_OutputAddition_Frame03.asset",
+      "guid": "36bd3a74f3df03941a22cc2a3a620ea5",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/OutputAddition/OutputAddition_Atlas/Img_OutputAddition_Frame03.asset",
+      "sha256": "01cf3b3f1334dfae4b141edee051c7e5ef4a828c5cd4a448b43a7aeb69f0c33d",
+      "shared_asset_sha256": "01cf3b3f1334dfae4b141edee051c7e5ef4a828c5cd4a448b43a7aeb69f0c33d"
+    },
+    {
+      "source": "Image/UI/OutputAddition/OutputAddition_Atlas/Img_OutputAddition_Frame03_Split01.asset",
+      "guid": "c1c61e56a2ca401429f53c4e994dc853",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/OutputAddition/OutputAddition_Atlas/Img_OutputAddition_Frame03_Split01.asset",
+      "sha256": "48f08ef225fb92a60ab130ae32d5fb203f4bd0562d464c06b3825cf841341c64",
+      "shared_asset_sha256": "48f08ef225fb92a60ab130ae32d5fb203f4bd0562d464c06b3825cf841341c64"
+    },
+    {
+      "source": "Image/UI/Portrait/DefaultPortrait.png",
+      "guid": "098c4493fdf636f46844c99172e28da1",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Portrait/DefaultPortrait.png",
+      "sha256": "cd3fae23b719aad42cea1379684681162da8db8b253641fe96fd180ddf9cf2a9",
+      "shared_asset_sha256": "cd3fae23b719aad42cea1379684681162da8db8b253641fe96fd180ddf9cf2a9"
+    },
+    {
+      "source": "Image/UI/Reward/Reward_Atlas/ImgBg_Quality.asset",
+      "guid": "cfef9d798526835409fe23b677083f12",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Reward/Reward_Atlas/ImgBg_Quality.asset",
+      "sha256": "a8f47053be7658557b74c46ab3b1ce2d47e01dfb97174dd3596421f11c3b5dbc",
+      "shared_asset_sha256": "a8f47053be7658557b74c46ab3b1ce2d47e01dfb97174dd3596421f11c3b5dbc"
+    },
+    {
+      "source": "Image/UI/Reward/Reward_Atlas/ImgQuality_Light.asset",
+      "guid": "4ca7c7bdfe28f5748bc33dbf0fddfeee",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Reward/Reward_Atlas/ImgQuality_Light.asset",
+      "sha256": "11dae64fe513db128547f1119083463e8defe2f478d7a570a10cc033f987778d",
+      "shared_asset_sha256": "11dae64fe513db128547f1119083463e8defe2f478d7a570a10cc033f987778d"
+    },
+    {
+      "source": "Image/UI/Reward/Reward_Atlas/ImgStrip.asset",
+      "guid": "effb315cf9bcb7f4db1b74020882ea0d",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Image/UI/Reward/Reward_Atlas/ImgStrip.asset",
+      "sha256": "4c3a16f2c0b4f1497cc39aba88d0f5d3d07e5c6c7c7de058e4bf18880a57052a",
+      "shared_asset_sha256": "4c3a16f2c0b4f1497cc39aba88d0f5d3d07e5c6c7c7de058e4bf18880a57052a"
+    },
+    {
+      "source": "Material/Fx_Glow18 1.mat",
+      "guid": "ca624cb19c524b444954ed989530ae13",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_Glow18 1.mat",
+      "sha256": "820b0e3b6013697cbbd943ab64a499a6dc0eed28d003ec2363c91b919d67db29",
+      "shared_asset_sha256": "820b0e3b6013697cbbd943ab64a499a6dc0eed28d003ec2363c91b919d67db29"
+    },
+    {
+      "source": "Material/Fx_Glow18 2.mat",
+      "guid": "2f29b4c873098d9429fb6eaa8a0e0110",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_Glow18 2.mat",
+      "sha256": "7548f52357b406d25e5d24a814c2e510133d6396b5ecd17cb9103eedd15aa387",
+      "shared_asset_sha256": "7548f52357b406d25e5d24a814c2e510133d6396b5ecd17cb9103eedd15aa387"
+    },
+    {
+      "source": "Material/Fx_GuangDian_155_4 3.mat",
+      "guid": "3044c583d3b90cb449002f9642e2c480",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_GuangDian_155_4 3.mat",
+      "sha256": "67e6600622f1122e28e0aa3c2face975c849b42c0e4ddac235d6d0d7085d5a0f",
+      "shared_asset_sha256": "67e6600622f1122e28e0aa3c2face975c849b42c0e4ddac235d6d0d7085d5a0f"
+    },
+    {
+      "source": "Material/Fx_GuangDian_69 2.mat",
+      "guid": "67110da900d5f87479a32a72caa517c3",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_GuangDian_69 2.mat",
+      "sha256": "09b5e78f1f8391ae8a7eeba77c9f98daea9eca11ad05c335541a92f2cc4cd664",
+      "shared_asset_sha256": "09b5e78f1f8391ae8a7eeba77c9f98daea9eca11ad05c335541a92f2cc4cd664"
+    },
+    {
+      "source": "Material/Fx_GuangDian_92_5_F 2.mat",
+      "guid": "ec87b2efb6f23a846885d0cf0c6a6855",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_GuangDian_92_5_F 2.mat",
+      "sha256": "4504fba98a1b23a77fbebf11b0639fe4575240bf2aa6a21c179f9fcb72a26a37",
+      "shared_asset_sha256": "4504fba98a1b23a77fbebf11b0639fe4575240bf2aa6a21c179f9fcb72a26a37"
+    },
+    {
+      "source": "Material/Fx_GuangDian_92_5_F.mat",
+      "guid": "1afc20f1e29dd45419beba196e4c0aef",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_GuangDian_92_5_F.mat",
+      "sha256": "c3724c1e9177a8f2f3fecbc2909b9466a7ab54b18b308f4f03fe68214a35f5c0",
+      "shared_asset_sha256": "c3724c1e9177a8f2f3fecbc2909b9466a7ab54b18b308f4f03fe68214a35f5c0"
+    },
+    {
+      "source": "Material/Fx_GuangQuan_123 2.mat",
+      "guid": "91e78b7bbd8dd1647be6e67f9ec9eb8d",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_GuangQuan_123 2.mat",
+      "sha256": "0e17437661304f599c5a46117726a50443ee10b4441055f3b358010e3c1a035b",
+      "shared_asset_sha256": "0e17437661304f599c5a46117726a50443ee10b4441055f3b358010e3c1a035b"
+    },
+    {
+      "source": "Material/Fx_GuangQuan_31 1.mat",
+      "guid": "2913580e546e1364cad6f83a2c4400bf",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_GuangQuan_31 1.mat",
+      "sha256": "51b3083e610a910247f280e699584579b742f554d94d714850e857cd4deff555",
+      "shared_asset_sha256": "51b3083e610a910247f280e699584579b742f554d94d714850e857cd4deff555"
+    },
+    {
+      "source": "Material/Fx_GuangQuan_39 3.mat",
+      "guid": "14345e7009ced1b4bb0b6a10868f6df8",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_GuangQuan_39 3.mat",
+      "sha256": "2a758e20081996e5d693990fcf15357af698b09c75e5551cd2a6e6b6cef28dae",
+      "shared_asset_sha256": "2a758e20081996e5d693990fcf15357af698b09c75e5551cd2a6e6b6cef28dae"
+    },
+    {
+      "source": "Material/Fx_GuangQuan_39 4.mat",
+      "guid": "e6e58afd643d3ff42b045245c25d95da",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_GuangQuan_39 4.mat",
+      "sha256": "34eb504510d6c4309cffbd6d675f03a191ed737fdd5afdd38f3d11fe16b1f40b",
+      "shared_asset_sha256": "34eb504510d6c4309cffbd6d675f03a191ed737fdd5afdd38f3d11fe16b1f40b"
+    },
+    {
+      "source": "Material/Fx_GuangQuan_41 1.mat",
+      "guid": "85c588be28e97404787f2d45f03f78a8",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_GuangQuan_41 1.mat",
+      "sha256": "2ccc4ee2a3bf953431aa684493bfa4ac28b17bbddd8ac301f1d5b6195a5af449",
+      "shared_asset_sha256": "2ccc4ee2a3bf953431aa684493bfa4ac28b17bbddd8ac301f1d5b6195a5af449"
+    },
+    {
+      "source": "Material/Fx_GuangQuan_41 2.mat",
+      "guid": "668ff15edc71d054bbda3d9ec803dca0",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_GuangQuan_41 2.mat",
+      "sha256": "0920196d3c68b350941078e0de804d87b31f516f580a517c1a7c66420e5a9591",
+      "shared_asset_sha256": "0920196d3c68b350941078e0de804d87b31f516f580a517c1a7c66420e5a9591"
+    },
+    {
+      "source": "Material/Fx_GuangXian_20 1.mat",
+      "guid": "54b059667f4c00c4fafdf9689a1f8bce",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_GuangXian_20 1.mat",
+      "sha256": "f9fe94c2d94d4b34ca60273fbc66e616ff31c25a2ad9541ccb12056f13ee0f48",
+      "shared_asset_sha256": "f9fe94c2d94d4b34ca60273fbc66e616ff31c25a2ad9541ccb12056f13ee0f48"
+    },
+    {
+      "source": "Material/Fx_TuoWei_22 4.mat",
+      "guid": "85469de4243d97e41b6a8c1849b97ed4",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_TuoWei_22 4.mat",
+      "sha256": "7b15cc45b1b0a66e7a28c9f42d56363dfcd921425d98fd7cdfaed22ed5583f32",
+      "shared_asset_sha256": "7b15cc45b1b0a66e7a28c9f42d56363dfcd921425d98fd7cdfaed22ed5583f32"
+    },
+    {
+      "source": "Material/Fx_XingZhuang_145_4_F 2.mat",
+      "guid": "f4dbd173af0b3cb499f6cbb1ad84e552",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_XingZhuang_145_4_F 2.mat",
+      "sha256": "c4e40af4cdb94d59f3c8f4ab4f4f7a7c02170803d8cf78137d9cabe0cf049ef0",
+      "shared_asset_sha256": "c4e40af4cdb94d59f3c8f4ab4f4f7a7c02170803d8cf78137d9cabe0cf049ef0"
+    },
+    {
+      "source": "Material/Fx_XingZhuang_223_F 5.mat",
+      "guid": "0dc179b407cc1854aabf2fa3d5bea3a5",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_XingZhuang_223_F 5.mat",
+      "sha256": "be9f57c047ca02ea183e62c0036504f2c6de905c18d66a4ff18cccabdb19ed77",
+      "shared_asset_sha256": "be9f57c047ca02ea183e62c0036504f2c6de905c18d66a4ff18cccabdb19ed77"
+    },
+    {
+      "source": "Material/Fx_XingZhuang_223_F 6.mat",
+      "guid": "2a7a80f5e97442144b873f7fb0061321",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Material/Fx_XingZhuang_223_F 6.mat",
+      "sha256": "95c744449d8851bc1dd8de2112f9427089667e2e2ef09f9b95fcb94183df868e",
+      "shared_asset_sha256": "95c744449d8851bc1dd8de2112f9427089667e2e2ef09f9b95fcb94183df868e"
+    },
+    {
+      "source": "Materials/Spine/SkeletonGraphicDefault_0.mat",
+      "guid": "0627795339756134ebcea556c4cec2d2",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Materials/Spine/SkeletonGraphicDefault_0.mat",
+      "sha256": "a4cfd37536cc7e8d3ee340a29763b0f272d365b2341a998146689314cf89c70f",
+      "shared_asset_sha256": "a4cfd37536cc7e8d3ee340a29763b0f272d365b2341a998146689314cf89c70f"
+    },
+    {
+      "source": "Materials/Spine/SkeletonGraphicDye_0.mat",
+      "guid": "bc4aa6bca656c6941a7fbade26616b84",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Materials/Spine/SkeletonGraphicDye_0.mat",
+      "sha256": "903b438451d1fefbde1378ec10a61b565dccb9fec4641746535d78e5c44cae71",
+      "shared_asset_sha256": "903b438451d1fefbde1378ec10a61b565dccb9fec4641746535d78e5c44cae71"
+    },
+    {
+      "source": "Materials/UIGray.mat",
+      "guid": "5cb59fea92cbbdd4fa00304181c99467",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Materials/UIGray.mat",
+      "sha256": "95ee9e1d39ebd61c3e17b3702528f43216444656fb6667bd09a62dd0ba71d05f",
+      "shared_asset_sha256": "95ee9e1d39ebd61c3e17b3702528f43216444656fb6667bd09a62dd0ba71d05f"
+    },
+    {
+      "source": "Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Materials/SkeletonGraphic-PMATexture/SkeletonGraphicAdditive_0.mat",
+      "guid": "33e2b687c31b8f742a9c8145d76ec32b",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Materials/SkeletonGraphic-PMATexture/SkeletonGraphicAdditive_0.mat",
+      "sha256": "271b6594562ec17e3a3202786146c770b34c0933e6f6f8e40f3ad0321efec67c",
+      "shared_asset_sha256": "271b6594562ec17e3a3202786146c770b34c0933e6f6f8e40f3ad0321efec67c"
+    },
+    {
+      "source": "Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Materials/SkeletonGraphic-PMATexture/SkeletonGraphicMultiply_0.mat",
+      "guid": "c1f920ca8a5b6f444b843b892a30a0a3",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Materials/SkeletonGraphic-PMATexture/SkeletonGraphicMultiply_0.mat",
+      "sha256": "ceb3f1cdb9115f5cc44cd3c88df5ce5cf04285c881573603c9578edceb795843",
+      "shared_asset_sha256": "ceb3f1cdb9115f5cc44cd3c88df5ce5cf04285c881573603c9578edceb795843"
+    },
+    {
+      "source": "Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Materials/SkeletonGraphic-PMATexture/SkeletonGraphicScreen_0.mat",
+      "guid": "e9b54d3bbb47fc048b086156af41af9d",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Materials/SkeletonGraphic-PMATexture/SkeletonGraphicScreen_0.mat",
+      "sha256": "e95ed355078d4663f334b4bab9b6781dd97b8f0cb02c46430253432e8d5f4a05",
+      "shared_asset_sha256": "e95ed355078d4663f334b4bab9b6781dd97b8f0cb02c46430253432e8d5f4a05"
+    },
+    {
+      "source": "Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Shaders/SkeletonGraphic/Spine-SkeletonGraphic-Additive_0.asset",
+      "guid": "247b5c19d95d8f6498ab467f5cb00456",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Shaders/SkeletonGraphic/Spine-SkeletonGraphic-Additive_0.asset",
+      "sha256": "eaddc1a2dafa8fe83f5d52900417ac27fb06b84eaf0fc6cb456512a4f19d671f",
+      "shared_asset_sha256": "eaddc1a2dafa8fe83f5d52900417ac27fb06b84eaf0fc6cb456512a4f19d671f"
+    },
+    {
+      "source": "Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Shaders/SkeletonGraphic/Spine-SkeletonGraphic-Multiply_0.asset",
+      "guid": "bf6cd14a76cf88b49bd36163c477d099",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Shaders/SkeletonGraphic/Spine-SkeletonGraphic-Multiply_0.asset",
+      "sha256": "4441050062e3c4e64c2283b3ce46bad92f2eb2bac4e89504226d161243a87dab",
+      "shared_asset_sha256": "4441050062e3c4e64c2283b3ce46bad92f2eb2bac4e89504226d161243a87dab"
+    },
+    {
+      "source": "Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Shaders/SkeletonGraphic/Spine-SkeletonGraphic-Screen_0.asset",
+      "guid": "6a4c485a3c43e404ab6680f882b80576",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Shaders/SkeletonGraphic/Spine-SkeletonGraphic-Screen_0.asset",
+      "sha256": "13ed74d9f8cbfd09ae4d39baa97d5a76763b1cf81020d69cfd10bbfbf55a2205",
+      "shared_asset_sha256": "13ed74d9f8cbfd09ae4d39baa97d5a76763b1cf81020d69cfd10bbfbf55a2205"
+    },
+    {
+      "source": "Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Shaders/SkeletonGraphic/Spine-SkeletonGraphic_0.asset",
+      "guid": "8318b9157b2eddd4293c9f841a19a592",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Shaders/SkeletonGraphic/Spine-SkeletonGraphic_0.asset",
+      "sha256": "b53c010356b1d149dfef629326f515f1d2fc9dc076cd3c48c9c37c8cfcda1c6e",
+      "shared_asset_sha256": "b53c010356b1d149dfef629326f515f1d2fc9dc076cd3c48c9c37c8cfcda1c6e"
+    },
+    {
+      "source": "Packages/com.unity.textmeshpro/Shaders/TMP_SDF-Mobile_0.asset",
+      "guid": "23e38667c25d0b34ba267c68eecf6a7a",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Packages/com.unity.textmeshpro/Shaders/TMP_SDF-Mobile_0.asset",
+      "sha256": "6238423910b0fab00a13a06bf5b31ba1804ce7148300ba993899d1b3a85bd02d",
+      "shared_asset_sha256": "6238423910b0fab00a13a06bf5b31ba1804ce7148300ba993899d1b3a85bd02d"
+    },
+    {
+      "source": "Prefabs/UI/Award/AwardPanelItem.prefab",
+      "guid": "66447678bf35d4742a055896355cb80e",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Prefabs/UI/Award/AwardPanelItem.prefab",
+      "sha256": "1ad87c067c03adb61fefdffc5eb9eae871e2af11be393bc3dc31b84467aa89b8",
+      "shared_asset_sha256": "1ad87c067c03adb61fefdffc5eb9eae871e2af11be393bc3dc31b84467aa89b8"
+    },
+    {
+      "source": "Prefabs/UI/Award/AwardPanelItem_Show.anim",
+      "guid": "731076308c4f0064da55eb12c61ae876",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Prefabs/UI/Award/AwardPanelItem_Show.anim",
+      "sha256": "03edbccd124c9fc9ee6a04faa4749b6912b18c81e405cde6a736af187d8bc0fb",
+      "shared_asset_sha256": "03edbccd124c9fc9ee6a04faa4749b6912b18c81e405cde6a736af187d8bc0fb"
+    },
+    {
+      "source": "Prefabs/UI/DailyDungeon/DailyDungeonEndPaneAwardlItem.prefab",
+      "guid": "cd0d6b16f5d25464198aae5a0261d2f5",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Prefabs/UI/DailyDungeon/DailyDungeonEndPaneAwardlItem.prefab",
+      "sha256": "12726d9280e5d97da5da450a5f84f75add9a59cb14708903165ea9a6f329e7d0",
+      "shared_asset_sha256": "12726d9280e5d97da5da450a5f84f75add9a59cb14708903165ea9a6f329e7d0"
+    },
+    {
+      "source": "Prefabs/UI/DailyDungeon/DailyDungeonEndPaneAwardlItem_Show.anim",
+      "guid": "8a483fd0e1ee43c4d85bd761d805cf70",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Prefabs/UI/DailyDungeon/DailyDungeonEndPaneAwardlItem_Show.anim",
+      "sha256": "2e2a82e3df0c9c21e35f78fb641bf9aa7bf464aa5be00a49579e908af8120f49",
+      "shared_asset_sha256": "2e2a82e3df0c9c21e35f78fb641bf9aa7bf464aa5be00a49579e908af8120f49"
+    },
+    {
+      "source": "Prefabs/UI/DailyDungeon/DailyDungeonEndPanelItem.prefab",
+      "guid": "4accf761b76ec4b44ad32e2e9d249c39",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Prefabs/UI/DailyDungeon/DailyDungeonEndPanelItem.prefab",
+      "sha256": "bcf57d3addabbbfada5473fa970d76be898b796f285ec5a1211391f50a72e25a",
+      "shared_asset_sha256": "bcf57d3addabbbfada5473fa970d76be898b796f285ec5a1211391f50a72e25a"
+    },
+    {
+      "source": "Prefabs/UI/Fight/Common/FightThumbsUpUI_Can.anim",
+      "guid": "5ee96af85e5b792439da6c1e84a6864b",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Prefabs/UI/Fight/Common/FightThumbsUpUI_Can.anim",
+      "sha256": "34c4101f914e654aaa9cc8d318c5aefa9629dc40d9422b8b0d73a707d2488e02",
+      "shared_asset_sha256": "34c4101f914e654aaa9cc8d318c5aefa9629dc40d9422b8b0d73a707d2488e02"
+    },
+    {
+      "source": "Prefabs/UI/Fight/Common/FightThumbsUpUI_Each.anim",
+      "guid": "40d21efa0e5df4a4c9764f6cee521d62",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Prefabs/UI/Fight/Common/FightThumbsUpUI_Each.anim",
+      "sha256": "2d270b8e2aaaf861ca6aa21dbe261f5a6e27b50ef5d2148d7b54d1537db9c4a6",
+      "shared_asset_sha256": "2d270b8e2aaaf861ca6aa21dbe261f5a6e27b50ef5d2148d7b54d1537db9c4a6"
+    },
+    {
+      "source": "Prefabs/UI/Fight/Common/FightThumbsUpUI_Self.anim",
+      "guid": "e9eb3ab0706b8fb47bceeab9ca408117",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Prefabs/UI/Fight/Common/FightThumbsUpUI_Self.anim",
+      "sha256": "2526a5049debc72aab914b6f87c368bb1134319f276c6847747ca177e2ef6d27",
+      "shared_asset_sha256": "2526a5049debc72aab914b6f87c368bb1134319f276c6847747ca177e2ef6d27"
+    },
+    {
+      "source": "Prefabs/UI/Fight/GameEndPanelBase_Show.anim",
+      "guid": "0d53bb552c045cc4ba8d5677726b6f32",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Prefabs/UI/Fight/GameEndPanelBase_Show.anim",
+      "sha256": "bac25220d2732b181fc642b57fabfda153821dbd7d68c958a8ad673c3d1b7172",
+      "shared_asset_sha256": "bac25220d2732b181fc642b57fabfda153821dbd7d68c958a8ad673c3d1b7172"
+    },
+    {
+      "source": "Prefabs/UI/Fight/GameEndPanelDailyDungeon.prefab",
+      "guid": "709fc7748b647b948a678a6877cda5b5",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Prefabs/UI/Fight/GameEndPanelDailyDungeon.prefab",
+      "sha256": "15af34282c7f50117e14fc65988b8caad0f9186d26f0efd2e7475fc82642fd60",
+      "shared_asset_sha256": "15af34282c7f50117e14fc65988b8caad0f9186d26f0efd2e7475fc82642fd60"
+    },
+    {
+      "source": "Prefabs/UI/Item/ItemAwardIcon.prefab",
+      "guid": "04f605a0767d0c242bef5e046ac39e88",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Prefabs/UI/Item/ItemAwardIcon.prefab",
+      "sha256": "0a50d2eea82c318db7f4e6193771eae777a84e6e5d4e074ae036f04028d6303d",
+      "shared_asset_sha256": "0a50d2eea82c318db7f4e6193771eae777a84e6e5d4e074ae036f04028d6303d"
+    },
+    {
+      "source": "Prefabs/UI/Item/ItemIcon.prefab",
+      "guid": "5551c4c7281133045aaf01f057be146f",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Prefabs/UI/Item/ItemIcon.prefab",
+      "sha256": "6783679c0568b348e83feab2a6233f9efa07d2cebb63edb4ee4eaa90af0a9f3f",
+      "shared_asset_sha256": "6783679c0568b348e83feab2a6233f9efa07d2cebb63edb4ee4eaa90af0a9f3f"
+    },
+    {
+      "source": "Shaders/Spine/Spine-SkeletonGraphicDye_0.asset",
+      "guid": "b638668a558083840b23430c53789454",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Shaders/Spine/Spine-SkeletonGraphicDye_0.asset",
+      "sha256": "6d2b1a54a00e1d33c5580df7097bdcf06a641bc108206ba991e01fced473d585",
+      "shared_asset_sha256": "6d2b1a54a00e1d33c5580df7097bdcf06a641bc108206ba991e01fced473d585"
+    },
+    {
+      "source": "Shaders/UIEffect/UIEffectAdditive_0.asset",
+      "guid": "98c6b90e69b4b2748bc32e1fa44922f0",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Shaders/UIEffect/UIEffectAdditive_0.asset",
+      "sha256": "ac4bb3b6786cc7a6a135542c865bbf9a0868a27b13274cf762ff7564f48b48c3",
+      "shared_asset_sha256": "ac4bb3b6786cc7a6a135542c865bbf9a0868a27b13274cf762ff7564f48b48c3"
+    },
+    {
+      "source": "Shaders/UIEffect/UIEffectDistort_0.asset",
+      "guid": "91e407fe7dc53104aa467ae74064f1ad",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Shaders/UIEffect/UIEffectDistort_0.asset",
+      "sha256": "84e32e30bd62721bc6d8c3bc01b64052a92342e3fc482227b7606be1a8e93b39",
+      "shared_asset_sha256": "84e32e30bd62721bc6d8c3bc01b64052a92342e3fc482227b7606be1a8e93b39"
+    },
+    {
+      "source": "Shaders/UIGray.asset",
+      "guid": "6b9c440fe94733b449f047febd9edefc",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Shaders/UIGray.asset",
+      "sha256": "9b78353991269ead242f7ab5deffa7738f95a89adc02d6648c74161fd3e775f2",
+      "shared_asset_sha256": "9b78353991269ead242f7ab5deffa7738f95a89adc02d6648c74161fd3e775f2"
+    },
+    {
+      "source": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic Atlas_0.png",
+      "guid": "f255cca3238f39843ab0b8748b5499ad",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic Atlas_0.png",
+      "sha256": "4d23cf2fced491598158eb97381f77ef2b587aee5ab1cd1221ad38881c2b0d0f",
+      "shared_asset_sha256": "4d23cf2fced491598158eb97381f77ef2b587aee5ab1cd1221ad38881c2b0d0f"
+    },
+    {
+      "source": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset",
+      "guid": "59f4a7347d13ee84897ef251bdf2b26d",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset",
+      "sha256": "c775159727acc550a82b0ecc2ad98ff788ac29d2643147df18222189b88e8e70",
+      "shared_asset_sha256": "c775159727acc550a82b0ecc2ad98ff788ac29d2643147df18222189b88e8e70"
+    },
+    {
+      "source": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat",
+      "guid": "bd38b875bd3c62f45b6217d057f638d0",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat",
+      "sha256": "f465cf50b955ba2a9f593f4594bcc53e831682c68fce2eec2bfca9e873f8b69a",
+      "shared_asset_sha256": "f465cf50b955ba2a9f593f4594bcc53e831682c68fce2eec2bfca9e873f8b69a"
+    },
+    {
+      "source": "Texture2D/Fx_XingZhuang_145_5_F.png",
+      "guid": "d10370392108a1f48a90e4c7e8f3d182",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Texture2D/Fx_XingZhuang_145_5_F.png",
+      "sha256": "aaba98df63f5f44b6e3ba48bc4c9b3a269e696fd10533f61b95fa13eb6c83eab",
+      "shared_asset_sha256": "aaba98df63f5f44b6e3ba48bc4c9b3a269e696fd10533f61b95fa13eb6c83eab"
+    },
+    {
+      "source": "Texture2D/sactx-0-1024x1024-ASTC 6x6-Game_Atlas-2c022cd9.png",
+      "guid": "01dfd16a56b786740bceb96a27993b46",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Texture2D/sactx-0-1024x1024-ASTC 6x6-Game_Atlas-2c022cd9.png",
+      "sha256": "6200c47c1d6626be5a80cafedb077a0e6fc6839ce6b0e7365797a333f2405487",
+      "shared_asset_sha256": "6200c47c1d6626be5a80cafedb077a0e6fc6839ce6b0e7365797a333f2405487"
+    },
+    {
+      "source": "Texture2D/sactx-0-1024x1024-ASTC 6x6-NonHumanDailyFortune_Atlas-da3dfbad.png",
+      "guid": "730d62c96ff17e6468b5f3e7d7d1a363",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Texture2D/sactx-0-1024x1024-ASTC 6x6-NonHumanDailyFortune_Atlas-da3dfbad.png",
+      "sha256": "d64e5e972912a5c0d33790f8e2abc10d8ed8c7a44c9c25ea9b611412e593557e",
+      "shared_asset_sha256": "d64e5e972912a5c0d33790f8e2abc10d8ed8c7a44c9c25ea9b611412e593557e"
+    },
+    {
+      "source": "Texture2D/sactx-0-1024x512-ASTC 6x6-ItemQuality_Atlas-748d1aea.png",
+      "guid": "78f425ae9b6732842aab5314fc5361ca",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Texture2D/sactx-0-1024x512-ASTC 6x6-ItemQuality_Atlas-748d1aea.png",
+      "sha256": "ed1616b45e2e5eaf88a924378b7197abaca505a96e50cd6a97674cfa9eb16c12",
+      "shared_asset_sha256": "ed1616b45e2e5eaf88a924378b7197abaca505a96e50cd6a97674cfa9eb16c12"
+    },
+    {
+      "source": "Texture2D/sactx-0-2048x1024-ASTC 6x6-GameEnd_Atlas-28e2bca3.png",
+      "guid": "a276a55d118e2614890e87ec5bbf32a5",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Texture2D/sactx-0-2048x1024-ASTC 6x6-GameEnd_Atlas-28e2bca3.png",
+      "sha256": "d584a20fc04cae4f4f0d89cf670f5808bd1c717253b4bb8af76139950c024dfa",
+      "shared_asset_sha256": "d584a20fc04cae4f4f0d89cf670f5808bd1c717253b4bb8af76139950c024dfa"
+    },
+    {
+      "source": "Texture2D/sactx-0-2048x1024-ASTC 6x6-Reward_Atlas-bff1de4f.png",
+      "guid": "2299ee3e81572b54d8de12dc691e9f8f",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Texture2D/sactx-0-2048x1024-ASTC 6x6-Reward_Atlas-bff1de4f.png",
+      "sha256": "17631bd6d20c3cc40acf1695f8960d5a480fb48d95448f3e1dce1a9d6d3801c2",
+      "shared_asset_sha256": "17631bd6d20c3cc40acf1695f8960d5a480fb48d95448f3e1dce1a9d6d3801c2"
+    },
+    {
+      "source": "Texture2D/sactx-0-2048x2048-ASTC 6x6-Common_Atlas-7a2befb3_0.png",
+      "guid": "47abd5f9db704394aa3d470ad8631c5f",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Texture2D/sactx-0-2048x2048-ASTC 6x6-Common_Atlas-7a2befb3_0.png",
+      "sha256": "7b3a4e21c8b05d9a4186b9f9b17de3d5fc55c13940a578479d0b79d2f98fb76e",
+      "shared_asset_sha256": "7b3a4e21c8b05d9a4186b9f9b17de3d5fc55c13940a578479d0b79d2f98fb76e"
+    },
+    {
+      "source": "Texture2D/sactx-0-256x128-ASTC 6x6-OutputAddition_Atlas-19648e82.png",
+      "guid": "2b84ab85481297944a1a20213f9b21c0",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Texture2D/sactx-0-256x128-ASTC 6x6-OutputAddition_Atlas-19648e82.png",
+      "sha256": "260f584c79b8cc4203659453ae27142f26f0870625b6b7b3693e5f9faac97bd5",
+      "shared_asset_sha256": "260f584c79b8cc4203659453ae27142f26f0870625b6b7b3693e5f9faac97bd5"
+    },
+    {
+      "source": "Texture2D/sactx-0-512x128-ASTC 6x6-Like_Atlas-5a2ca45b.png",
+      "guid": "2b804a5cd4eec1648810536d3addae23",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Texture2D/sactx-0-512x128-ASTC 6x6-Like_Atlas-5a2ca45b.png",
+      "sha256": "7a086e2d60e77261b77d2c0db756610c8274833c1faaa18a1c7fab98edcd306a",
+      "shared_asset_sha256": "7a086e2d60e77261b77d2c0db756610c8274833c1faaa18a1c7fab98edcd306a"
+    },
+    {
+      "source": "UIEffect/Material/CommonJieSuanDown.mat",
+      "guid": "a0f7d565f0cc7724fa2a53ef57ed0942",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/UIEffect/Material/CommonJieSuanDown.mat",
+      "sha256": "f80f55bab8004125c2a01c8b85fed9ba3352fbe0d5e4e02a0872f5d0c7d05e5e",
+      "shared_asset_sha256": "f80f55bab8004125c2a01c8b85fed9ba3352fbe0d5e4e02a0872f5d0c7d05e5e"
+    },
+    {
+      "source": "UIEffect/Material/UIImgAdd_0.mat",
+      "guid": "0197be4263e9bae4db9439953f71f474",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/UIEffect/Material/UIImgAdd_0.mat",
+      "sha256": "b35616342700386752d93c59b8dcb666b040286ceb6933c4e6d8704cf09b85ba",
+      "shared_asset_sha256": "b35616342700386752d93c59b8dcb666b040286ceb6933c4e6d8704cf09b85ba"
+    },
+    {
+      "source": "UIEffect/VFXTexture/Mask/Mask_065_tex.png",
+      "guid": "11926c1d69148444eb515a8666072c5e",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/UIEffect/VFXTexture/Mask/Mask_065_tex.png",
+      "sha256": "f77f22c1617464ba795445063b02c0da9c9ebb4bf53189edd47cf26ba1491e13",
+      "shared_asset_sha256": "f77f22c1617464ba795445063b02c0da9c9ebb4bf53189edd47cf26ba1491e13"
+    },
+    {
+      "source": "Wwise/ScriptableObjects/Event/29EAB2BD-8BA7-4019-9EA5-9EA6872B4A0F.asset",
+      "guid": "5fc7dcb58cda81c4e9f39015951af169",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Wwise/ScriptableObjects/Event/29EAB2BD-8BA7-4019-9EA5-9EA6872B4A0F.asset",
+      "sha256": "e605fad0b835ca2b3fdef5f82feddec50aeebc15dd5e3f028ba1a93baa967e8a",
+      "shared_asset_sha256": "e605fad0b835ca2b3fdef5f82feddec50aeebc15dd5e3f028ba1a93baa967e8a"
+    },
+    {
+      "source": "Wwise/ScriptableObjects/Event/3E220EBB-B031-4979-BADF-E21959989CFD.asset",
+      "guid": "f3ab44a5dbf0cd74c9982dcc4d9b623f",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Wwise/ScriptableObjects/Event/3E220EBB-B031-4979-BADF-E21959989CFD.asset",
+      "sha256": "c665ac8c54b45c554a726c74b19cd4c5b7ae3c4f3a2a9ce801a92c07883658c2",
+      "shared_asset_sha256": "c665ac8c54b45c554a726c74b19cd4c5b7ae3c4f3a2a9ce801a92c07883658c2"
+    },
+    {
+      "source": "Wwise/ScriptableObjects/Event/5670D25B-6D4E-4DBB-ACF8-57DF7A95263C.asset",
+      "guid": "83c28a29e05fb9f49a76e669e3c45f7b",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Wwise/ScriptableObjects/Event/5670D25B-6D4E-4DBB-ACF8-57DF7A95263C.asset",
+      "sha256": "bd70866e30a5892ca680b612af8fde09016bf0eb7e22f2835456623299a45354",
+      "shared_asset_sha256": "bd70866e30a5892ca680b612af8fde09016bf0eb7e22f2835456623299a45354"
+    },
+    {
+      "source": "Wwise/ScriptableObjects/Event/7F024951-0A7E-410D-B28C-7602694A593A.asset",
+      "guid": "32dcc4b329003bc4da855fb250cdc6a6",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Wwise/ScriptableObjects/Event/7F024951-0A7E-410D-B28C-7602694A593A.asset",
+      "sha256": "3c89e34d37a2d055c4fbcb5948cf5ff33a0dad93bbf9f3c18c8563dc82778fac",
+      "shared_asset_sha256": "3c89e34d37a2d055c4fbcb5948cf5ff33a0dad93bbf9f3c18c8563dc82778fac"
+    },
+    {
+      "source": "Wwise/ScriptableObjects/Event/A19463E3-04BB-41C9-A4A3-7DF20D19190A.asset",
+      "guid": "50c50a86d3d53804c8e21df5ae3d684b",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Wwise/ScriptableObjects/Event/A19463E3-04BB-41C9-A4A3-7DF20D19190A.asset",
+      "sha256": "865cdccba8ab7014043b545b8cbdb2d2dae277402b4056b72d62b80b8de7a593",
+      "shared_asset_sha256": "865cdccba8ab7014043b545b8cbdb2d2dae277402b4056b72d62b80b8de7a593"
+    },
+    {
+      "source": "Wwise/ScriptableObjects/Event/A90F0F22-614A-499F-8D29-1297E0C82B70.asset",
+      "guid": "d856955128156cf4d8716b6342db0f86",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Wwise/ScriptableObjects/Event/A90F0F22-614A-499F-8D29-1297E0C82B70.asset",
+      "sha256": "58c31b149c6562bb8b966524d6806df94d7c3ede9bcd0f8a8b9fef2d9c742b79",
+      "shared_asset_sha256": "58c31b149c6562bb8b966524d6806df94d7c3ede9bcd0f8a8b9fef2d9c742b79"
+    },
+    {
+      "source": "Wwise/ScriptableObjects/Event/B1258887-58C5-4A02-9691-ED20B34BC39B.asset",
+      "guid": "67c019f6346d8d74ba18c3d89d9d597c",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Wwise/ScriptableObjects/Event/B1258887-58C5-4A02-9691-ED20B34BC39B.asset",
+      "sha256": "2d0c8acdca019f6d4aaf3b90b69f9c81bc5e1e9f9fb8f884b696f303754a960f",
+      "shared_asset_sha256": "2d0c8acdca019f6d4aaf3b90b69f9c81bc5e1e9f9fb8f884b696f303754a960f"
+    },
+    {
+      "source": "Wwise/ScriptableObjects/Event/CBA348B8-4D97-4238-B774-561DFB40DDE9.asset",
+      "guid": "8bab4d5f04e64b540b849704a13e8608",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Wwise/ScriptableObjects/Event/CBA348B8-4D97-4238-B774-561DFB40DDE9.asset",
+      "sha256": "e39fbb9cee5e5af3d4d8a269c12c1358a2cd314dfd49c2c9d3e74957ea098b5e",
+      "shared_asset_sha256": "e39fbb9cee5e5af3d4d8a269c12c1358a2cd314dfd49c2c9d3e74957ea098b5e"
+    },
+    {
+      "source": "Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset",
+      "guid": "706de87c453e2fc438605cf9df3b1f2b",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset",
+      "sha256": "af030280ed9c2bee89b5e4cf22ab10e5851d8999c3bfd14d0551124db69a0368",
+      "shared_asset_sha256": "af030280ed9c2bee89b5e4cf22ab10e5851d8999c3bfd14d0551124db69a0368"
+    },
+    {
+      "source": "Wwise/ScriptableObjects/Event/F1C8024A-2352-4DB8-AAFA-D5C19B5D1760.asset",
+      "guid": "3fe5232226a10e64d9b55f5460857371",
+      "shared_asset": "unity/Assets/Official/Dungeons/884/Wwise/ScriptableObjects/Event/F1C8024A-2352-4DB8-AAFA-D5C19B5D1760.asset",
+      "sha256": "884a15d4daad25e96ce042c8eb4bffc18457e9c033b4aa0e505d867d52726577",
+      "shared_asset_sha256": "884a15d4daad25e96ce042c8eb4bffc18457e9c033b4aa0e505d867d52726577"
+    }
+  ],
+  "skipped_android_assemblies": [
+    {
+      "source": "Plugins/AK.Wwise.Unity.API.WwiseTypes.dll",
+      "guid": "a9e21bc7bb762a5cf3086c00d123625f",
+      "sha256": "ef3424e6ce41195c3d8d6b9b6d06cd164b20aacc13588c92e7dded1083531365"
+    },
+    {
+      "source": "Plugins/AK.Wwise.Unity.MonoBehaviour.dll",
+      "guid": "2b6c926553287666f24ffd5af5ba21cb",
+      "sha256": "e157118d405891fea7b599a02005c3225ef96dfc2bbd7e8becefc73a2bb475b9"
+    },
+    {
+      "source": "Plugins/Assembly-CSharp.dll",
+      "guid": "06dd3d5416bf43ea368cc39ff96e6d5a",
+      "sha256": "f8723cad2a528d3d145248491f9c6fffa32c8052d7eda286142be121e4e48c8b"
+    },
+    {
+      "source": "Plugins/Coffee.UIParticle.dll",
+      "guid": "a36c265fcaa301ebf901ba366c00c544",
+      "sha256": "94b37ea47c86e9fae3662df838e9a60402d4890da1cf26e5f3bd954f7bca7179"
+    },
+    {
+      "source": "Plugins/Framework.dll",
+      "guid": "222c78078da8821ea09910124a9225a2",
+      "sha256": "2404c8264e9d8017a2ee0a53da24d5599d73089929aded461850df63f7ac60f6"
+    },
+    {
+      "source": "Plugins/Framework.FirstPass.Runtime.dll",
+      "guid": "7aa338e2f5263348de25eb85a28aad0d",
+      "sha256": "4a90133bf1e73301d2217094f55798f84cd7685362eb9a469c48ba9dc967c145"
+    },
+    {
+      "source": "Plugins/GameFramework.Runtime.dll",
+      "guid": "055811b6aa1e2185dc556870e6de0c64",
+      "sha256": "8dbc2ac63eaf6ef46707807ff49d69238ff30dfcd4cd517d85463e1505274fc6"
+    },
+    {
+      "source": "Plugins/Launch.dll",
+      "guid": "fdf006957f0f071b960b15b4c9e68d1a",
+      "sha256": "7423c2feae1818019211f34ec366334561040f3f32ad388db8f33f6c8f3f6308"
+    },
+    {
+      "source": "Plugins/spine-unity.dll",
+      "guid": "ebe353a9e51fc6708625f16edcb81e06",
+      "sha256": "13cc29fd1ff4a3c1a052d93a9a3d4d43d7308587f83a8fa54cf65c56d3ce69b3"
+    },
+    {
+      "source": "Plugins/Unity.TextMeshPro.dll",
+      "guid": "67dfb1fdfb2b407222eda8e23ac8b724",
+      "sha256": "c3b798db46d96a582f07798091b16b2ac73a6e7d9e16170cc3c50006f42b67ea"
+    },
+    {
+      "source": "Plugins/UnityEngine.UI.dll",
+      "guid": "d3e719b59ab71ba3f6b398058c866280",
+      "sha256": "d327ea29596428ef2ba50f5b43a361a9a06c905bbe98263d46ec0db3636c8117"
+    }
+  ],
+  "runtime_prefabs": [
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/GameObject/playable_dailydungeon_reward_drop_normal.prefab",
+      "resource": "Dungeons/UI/884_156692/Native/GameObject/playable_dailydungeon_reward_drop_normal",
+      "source": "GameObject/playable_dailydungeon_reward_drop_normal.prefab",
+      "source_guid": "4b5051accc4badf4793dc6fc09258ae2",
+      "guid": "84f3956ad61fdf449b0a06a3d6a75f74",
+      "source_sha256": "4102e008f9d4655b9429c77530bb3a2e24782a96351ee6c6c2ee591381c5be35",
+      "sha256": "4102e008f9d4655b9429c77530bb3a2e24782a96351ee6c6c2ee591381c5be35",
+      "meta_sha256": "0818a69afc6604557a59b4a420662bbf34cc99f5246af8c1d41dcfd7b6fea3e3",
+      "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v4-safearea"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/GameObject/playable_dailydungeon_reward_surprisedrop_gold.prefab",
+      "resource": "Dungeons/UI/884_156692/Native/GameObject/playable_dailydungeon_reward_surprisedrop_gold",
+      "source": "GameObject/playable_dailydungeon_reward_surprisedrop_gold.prefab",
+      "source_guid": "8a32835acd629074483a616a0c4a338d",
+      "guid": "55be6e3d71b41304185fd11010d97003",
+      "source_sha256": "4815fb071459b474a713e64be11c6f39aa7a0d97b5ca8a1720d7812cbceb9caf",
+      "sha256": "4815fb071459b474a713e64be11c6f39aa7a0d97b5ca8a1720d7812cbceb9caf",
+      "meta_sha256": "052fa50846474a1e34ed80dad53bcd1db5ba39cbff3bdae59bbf9062428d1e92",
+      "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v4-safearea"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/GameObject/playable_dailydungeon_reward_surprisedrop_orange.prefab",
+      "resource": "Dungeons/UI/884_156692/Native/GameObject/playable_dailydungeon_reward_surprisedrop_orange",
+      "source": "GameObject/playable_dailydungeon_reward_surprisedrop_orange.prefab",
+      "source_guid": "16a4027795d551a44a2067c343722e7f",
+      "guid": "ea9b4b11115775045bb30223f19fba00",
+      "source_sha256": "ce48b39bab17d279e74d2e9f2ed4532085d6748eb921ed40decd30b119c5f1ea",
+      "sha256": "ce48b39bab17d279e74d2e9f2ed4532085d6748eb921ed40decd30b119c5f1ea",
+      "meta_sha256": "239bddadd93bc59a932226d174345e9b3d6fa5ca5700ffdf3e505c8505bce816",
+      "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v4-safearea"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/GameObject/playable_dailydungeon_reward_surprisedrop_purple.prefab",
+      "resource": "Dungeons/UI/884_156692/Native/GameObject/playable_dailydungeon_reward_surprisedrop_purple",
+      "source": "GameObject/playable_dailydungeon_reward_surprisedrop_purple.prefab",
+      "source_guid": "56cd775ecf025f3409fd93f64d100f2b",
+      "guid": "aea54d6b03b75574298d2216bf217e4a",
+      "source_sha256": "8f1a883dac9604645cbe76e819ae79c3289d35e6f738d8a36ef8faadaf6e2f94",
+      "sha256": "8f1a883dac9604645cbe76e819ae79c3289d35e6f738d8a36ef8faadaf6e2f94",
+      "meta_sha256": "3a58e27e8ae69061bbe2cf8c79d6748f57c5664d095f801cf881524fc6a2ae7a",
+      "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v4-safearea"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/Prefabs/UI/Award/AwardPanelItem.prefab",
+      "resource": "Dungeons/UI/884_156692/Native/Prefabs/UI/Award/AwardPanelItem",
+      "source": "Prefabs/UI/Award/AwardPanelItem.prefab",
+      "source_guid": "66447678bf35d4742a055896355cb80e",
+      "guid": "3328227a8c6261244a9adf783bafbdac",
+      "source_sha256": "1ad87c067c03adb61fefdffc5eb9eae871e2af11be393bc3dc31b84467aa89b8",
+      "sha256": "b7b4ca25cad999c1168aa1a2d693652d1954b41016cd32569dd5662adcdbe592",
+      "meta_sha256": "858e3e526338073f2e7a98b1831d8b01f7d75eb8f68a94312adbb5bdbbbb376e",
+      "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v4-safearea"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/Prefabs/UI/DailyDungeon/DailyDungeonEndPaneAwardlItem.prefab",
+      "resource": "Dungeons/UI/884_156692/Native/Prefabs/UI/DailyDungeon/DailyDungeonEndPaneAwardlItem",
+      "source": "Prefabs/UI/DailyDungeon/DailyDungeonEndPaneAwardlItem.prefab",
+      "source_guid": "cd0d6b16f5d25464198aae5a0261d2f5",
+      "guid": "cf1a62f721a53374a8331ba1d7acf11f",
+      "source_sha256": "12726d9280e5d97da5da450a5f84f75add9a59cb14708903165ea9a6f329e7d0",
+      "sha256": "12726d9280e5d97da5da450a5f84f75add9a59cb14708903165ea9a6f329e7d0",
+      "meta_sha256": "c437d8219457677bd49578c89a0208d01109768f412099c5e0797a73d7b83a36",
+      "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v4-safearea"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/Prefabs/UI/DailyDungeon/DailyDungeonEndPanelItem.prefab",
+      "resource": "Dungeons/UI/884_156692/Native/Prefabs/UI/DailyDungeon/DailyDungeonEndPanelItem",
+      "source": "Prefabs/UI/DailyDungeon/DailyDungeonEndPanelItem.prefab",
+      "source_guid": "4accf761b76ec4b44ad32e2e9d249c39",
+      "guid": "a38b6906d02472b439d491ea15c4f516",
+      "source_sha256": "bcf57d3addabbbfada5473fa970d76be898b796f285ec5a1211391f50a72e25a",
+      "sha256": "7f88eb03f8a7a2f4a4716a53ea8f41c790defc540f0ab99fd8d5d47e4e261afa",
+      "meta_sha256": "2165c5d5ede7d299c1df9c042b45b39f73eabbf29c721897481ac4fb0cfe27b5",
+      "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v4-safearea"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/Prefabs/UI/Fight/GameEndPanelDailyDungeon.prefab",
+      "resource": "Dungeons/UI/884_156692/Native/Prefabs/UI/Fight/GameEndPanelDailyDungeon",
+      "source": "Prefabs/UI/Fight/GameEndPanelDailyDungeon.prefab",
+      "source_guid": "709fc7748b647b948a678a6877cda5b5",
+      "guid": "ee6ee070c16f5dc9aafc7beeabc964c8",
+      "source_sha256": "15af34282c7f50117e14fc65988b8caad0f9186d26f0efd2e7475fc82642fd60",
+      "sha256": "2124169115ced634f26b1ee3db5e9f2f64274b1db1fe3026f1dea42219434dbe",
+      "meta_sha256": "ca43460e011ad6b2cc662f302d286213eea4133ff1611ba84334ee5d6f90be7f",
+      "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v4-safearea"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/Prefabs/UI/Item/ItemAwardIcon.prefab",
+      "resource": "Dungeons/UI/884_156692/Native/Prefabs/UI/Item/ItemAwardIcon",
+      "source": "Prefabs/UI/Item/ItemAwardIcon.prefab",
+      "source_guid": "04f605a0767d0c242bef5e046ac39e88",
+      "guid": "cdf94fb705535559be30b2ed955fabf9",
+      "source_sha256": "0a50d2eea82c318db7f4e6193771eae777a84e6e5d4e074ae036f04028d6303d",
+      "sha256": "9b60de750c72b238c41b8227cc96655358f68cc0d9ae7ead83405fea9a5a4c0a",
+      "meta_sha256": "2e85f7c568711d1d8087d7aa576c29a2833e4f2ea3a48314c4c7ef200f5399b1",
+      "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v4-safearea"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/Prefabs/UI/Item/ItemIcon.prefab",
+      "resource": "Dungeons/UI/884_156692/Native/Prefabs/UI/Item/ItemIcon",
+      "source": "Prefabs/UI/Item/ItemIcon.prefab",
+      "source_guid": "5551c4c7281133045aaf01f057be146f",
+      "guid": "c4392cb792d75aa3b8d7081d866b73b3",
+      "source_sha256": "6783679c0568b348e83feab2a6233f9efa07d2cebb63edb4ee4eaa90af0a9f3f",
+      "sha256": "6cef75b16805a63f8d01faa37488511d83fff17ce766435bd6316c8293083152",
+      "meta_sha256": "b9a03a9fe51770319cbe3b55b094e28935ba270e6d4841ed15b33e47726c8a6a",
+      "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v4-safearea"
+    }
+  ],
+  "runtime_grade_sprites": [
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingA.png",
+      "source": "Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingA.png",
+      "asset_guid": "4a938332d1fa16a4e8f46b24e24bcfbe",
+      "grade_types": [
+        6
+      ],
+      "resource_path": "Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingA",
+      "guid": "31312b189e695354b92502b8ef27d267",
+      "sha256": "d2654c4196153baaf20a4038de729a88c23d3c3e08fc1b7cdaf0e3cab842336a",
+      "meta_sha256": "66ba0ec198ea7bb00e3157367b287033e25341ebeeae735dd0bba6754563bc61"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingSSS.png",
+      "source": "Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingSSS.png",
+      "asset_guid": "5555b4c6b74912c47935430ec770656a",
+      "grade_types": [
+        9
+      ],
+      "resource_path": "Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingSSS",
+      "guid": "9fb78e8f248f58c7a2c7a29275f8f529",
+      "sha256": "0a7969d820d512509b65eb38d15766581c8e875e7edb0461628583424e7d8fc1",
+      "meta_sha256": "2bcd11947eca911e756a1b9eb4201e3de8cdc6a42faa3dfd493c26f05c9a3958"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingB.png",
+      "source": "Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingB.png",
+      "asset_guid": "746a9bda50447d6489c839c44ab5b087",
+      "grade_types": [
+        5
+      ],
+      "resource_path": "Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingB",
+      "guid": "845d6e146e1b598e8fa5b6aaa2f12056",
+      "sha256": "4bf12458a39c6bf62a317b3919f0c337063ea3f0138661486982fa83a9740f5c",
+      "meta_sha256": "8db8ebeb0220eee1e81cd448dce70062631d3b9957de1f06981c33b1d7deedd6"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingSS.png",
+      "source": "Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingSS.png",
+      "asset_guid": "78228a7d57fd3684b9829268fcc924b9",
+      "grade_types": [
+        8
+      ],
+      "resource_path": "Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingSS",
+      "guid": "e45f6f5cda555dcbafaf1a67172f370e",
+      "sha256": "279948372ee5adb834b8325ab62f722bffec2b7801999f6f4600a52845d7a7f5",
+      "meta_sha256": "4dcd970dcfff028ad8f1bcfe772c88f39e4ee89c50d730d2abf417b95cdf7dd0"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingC.png",
+      "source": "Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingC.png",
+      "asset_guid": "a84aa8975cd3906448470dad7cfd7f07",
+      "grade_types": [
+        4
+      ],
+      "resource_path": "Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingC",
+      "guid": "0a6bb3eb90c35e34b00a95a6acd08aa0",
+      "sha256": "53d9c58aa23c56615b12787ec4e21d0bda7e89e890f936358c7d15c13c104c2f",
+      "meta_sha256": "e0488865bf916375c8189e7b0d13341ec9dd9de5235fef44e89333b09522cfa3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingD.png",
+      "source": "Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingD.png",
+      "asset_guid": "e5d40bce271fb6340be8b09d6de7292e",
+      "grade_types": [
+        0,
+        3
+      ],
+      "resource_path": "Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingD",
+      "guid": "238b131a5eb8559296b49e86d889fa5f",
+      "sha256": "0c4524b453128601d480f7f4caefd1809a93e7c75b737aadb70811788f7976e7",
+      "meta_sha256": "2a14dde0269ba786457230d7a9492ea173579131b3a7fd27803d2218d33eee2d"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingS.png",
+      "source": "Assets/Image/UI/Game/Rating_NoAtlas/Img_RatingS.png",
+      "asset_guid": "efe45dd8a8e39574dae011cdbe044264",
+      "grade_types": [
+        7
+      ],
+      "resource_path": "Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingS",
+      "guid": "117b6f8f1c4259809d30d3e30b64665d",
+      "sha256": "a81de3b5d0d86486861ec43f8ac0fe4787323d0c3b8bd62c6dc35b2b1ecad149",
+      "meta_sha256": "88c1c1d103a6063ef087b2eec2a988662902dadfaf0bb7b5f08dcdfc49dca71c"
+    }
+  ],
+  "runtime_grade_catalog": {
+    "path": "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Native/grade-sprites.json",
+    "guid": "ea535c75e98d056439ef96daf0fb0895",
+    "sha256": "ba1d193bb8e5bd25adce600c67c807abca045f28d9675b9df962030d7326d206",
+    "meta_sha256": "dd9da520f0668b0bb64d5709fd3f54414d2c8879f27f5395082ca2c37b31e9c2",
+    "records": [
+      {
+        "gradeType": 6,
+        "assetGuid": "4a938332d1fa16a4e8f46b24e24bcfbe",
+        "spriteName": "Img_RatingA",
+        "resourcePath": "Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingA"
+      },
+      {
+        "gradeType": 9,
+        "assetGuid": "5555b4c6b74912c47935430ec770656a",
+        "spriteName": "Img_RatingSSS",
+        "resourcePath": "Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingSSS"
+      },
+      {
+        "gradeType": 5,
+        "assetGuid": "746a9bda50447d6489c839c44ab5b087",
+        "spriteName": "Img_RatingB",
+        "resourcePath": "Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingB"
+      },
+      {
+        "gradeType": 8,
+        "assetGuid": "78228a7d57fd3684b9829268fcc924b9",
+        "spriteName": "Img_RatingSS",
+        "resourcePath": "Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingSS"
+      },
+      {
+        "gradeType": 4,
+        "assetGuid": "a84aa8975cd3906448470dad7cfd7f07",
+        "spriteName": "Img_RatingC",
+        "resourcePath": "Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingC"
+      },
+      {
+        "gradeType": 0,
+        "assetGuid": "e5d40bce271fb6340be8b09d6de7292e",
+        "spriteName": "Img_RatingD",
+        "resourcePath": "Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingD"
+      },
+      {
+        "gradeType": 3,
+        "assetGuid": "e5d40bce271fb6340be8b09d6de7292e",
+        "spriteName": "Img_RatingD",
+        "resourcePath": "Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingD"
+      },
+      {
+        "gradeType": 7,
+        "assetGuid": "efe45dd8a8e39574dae011cdbe044264",
+        "spriteName": "Img_RatingS",
+        "resourcePath": "Dungeons/UI/884_156692/Native/GradeSprites/Img_RatingS"
+      }
+    ]
+  },
+  "counts": {
+    "roots": 6,
+    "dependency_assets": 3,
+    "shared_assets": 210,
+    "runtime_prefabs": 10,
+    "grade_sprites": 7,
+    "skipped_android_assemblies": 11
+  }
+}

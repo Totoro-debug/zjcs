@@ -15,7 +15,13 @@ namespace Zjcs.Presentation.Home
         private GameObject travelNotesRoot;
         private GameObject dailyDungeonRoot;
         private GameObject dailyDungeonDialogRoot;
+        private GameObject dailyDungeonLeaderboardRoot;
         private GameObject dailyDungeonLeaveConfirmRoot;
+        private GameObject dailyDungeonClaimConfirmRoot;
+        private DailyDungeonResultPanelAdapter dailyDungeonResultPanelAdapter;
+        private GameObject dailyDungeonBuyCountRoot;
+        private Slider dailyDungeonBuyCountSlider;
+        private int dailyDungeonBuyCountLimit;
         private GameObject arenaConfirmRoot;
         private GameObject arenaRoot;
         private GameObject dailyChallengeRoot;
@@ -33,11 +39,19 @@ namespace Zjcs.Presentation.Home
             new Dictionary<string, DungeonOfficialPrefabBinding>(StringComparer.Ordinal);
         private int selectedDungeonId;
         private int selectedDifficulty;
+        private int selectedLeaderboardGrade;
+        private bool dailyDungeonShowingGifts;
+        private bool dailyDungeonAchievementButtonsBound;
+        private readonly List<DailyDungeonAchievementMilestone> dailyDungeonVisibleAchievements =
+            new List<DailyDungeonAchievementMilestone>();
 
         private bool DungeonModalOpen => travelNotesRoot != null || dailyDungeonRoot != null
-            || arenaRoot != null || dailyChallengeRoot != null || dailyChallengeSelectionRoot != null
+            || dailyDungeonLeaderboardRoot != null || arenaRoot != null
+            || dailyChallengeRoot != null || dailyChallengeSelectionRoot != null
             || dailyChallengeAssistRoot != null
             || dailyChallengeResultRoot != null
+            || dailyDungeonClaimConfirmRoot != null || dailyDungeonLeaveConfirmRoot != null
+            || dailyDungeonBuyCountRoot != null
             || fantasyTowerRoot != null || NpcTravelModalOpen || MaterialGatheringModalOpen;
         private bool IsDailyDungeonBattleActive => activeDungeonBattle != null || activeArenaBattle != null;
 
@@ -364,11 +378,23 @@ namespace Zjcs.Presentation.Home
             if (prefab == null) throw new InvalidOperationException("Official daily dungeon entry panel is missing.");
             dailyDungeonRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             dailyDungeonRoot.name = "DailyDungeonEntryPanel";
+            dailyDungeonShowingGifts = false;
+            dailyDungeonAchievementButtonsBound = false;
             dailyDungeonRoot.transform.SetAsLastSibling();
             PlaceModalCanvasOnTop(dailyDungeonRoot);
             ApplyOfficialDungeonBindings(dailyDungeonRoot, "DailyDungeonEntryPanel");
             BindPrefabButton(dailyDungeonRoot, "CloseBtn2", CloseDungeonPages);
-            BindPrefabButton(dailyDungeonRoot, "GoToBtn", OpenDailyDungeonRoute);
+            BindPrefabButton(dailyDungeonRoot, "GoToBtn", OpenDailyDungeonAction);
+            BindPrefabButton(dailyDungeonRoot, "DailyDungeonEntryPanelTabGroupItem_11",
+                () => ShowDailyDungeonGiftPage(false));
+            BindPrefabButton(dailyDungeonRoot, "AchievementTabGroupItem_11",
+                () => ShowDailyDungeonGiftPage(true));
+            RefreshDailyDungeonEntryPage();
+        }
+
+        private void ShowDailyDungeonGiftPage(bool showGifts)
+        {
+            dailyDungeonShowingGifts = showGifts;
             RefreshDailyDungeonEntryPage();
         }
 
@@ -376,13 +402,30 @@ namespace Zjcs.Presentation.Home
         {
             if (dailyDungeonRoot == null) return;
             SetPrefabText(dailyDungeonRoot, "FreeCount", host.DailyDungeons.RemainEntries.ToString());
+            Transform selectContent = Find(dailyDungeonRoot.transform, "SelectContent");
+            if (selectContent != null) selectContent.gameObject.SetActive(!dailyDungeonShowingGifts);
+            Transform achievementPanel = Find(dailyDungeonRoot.transform, "AchievementPanel");
+            if (achievementPanel != null) achievementPanel.gameObject.SetActive(dailyDungeonShowingGifts);
+            if (dailyDungeonShowingGifts)
+            {
+                RefreshDailyDungeonAchievementPage(achievementPanel);
+                Canvas.ForceUpdateCanvases();
+                return;
+            }
             if (host.DailyDungeons.ActiveRun != null)
             {
-                SetNamedText(dailyDungeonRoot.transform, "DescTxt", "存在未完成路线 · 今日剩余 "
+                SetNamedText(dailyDungeonRoot.transform, "DescTxt", "存在未完成路线 · 今日剩余领奖次数 "
                     + host.DailyDungeons.RemainEntries);
                 SetNamedText(dailyDungeonRoot.transform, "GoToBtn", "继续副本");
                 SetPrefabActive(dailyDungeonRoot, "GoToBtn", true);
             }
+            else if (host.DailyDungeons.PendingClaims.Count > 0)
+            {
+                SetNamedText(dailyDungeonRoot.transform, "GoToBtn",
+                    "领取副本奖励（" + host.DailyDungeons.PendingClaims.Count + "）");
+                SetPrefabActive(dailyDungeonRoot, "GoToBtn", true);
+            }
+            else SetPrefabActive(dailyDungeonRoot, "GoToBtn", false);
             int publicCount = 0;
             IReadOnlyList<DailyDungeonRuntimeBattle> publicDungeons =
                 Array.Empty<DailyDungeonRuntimeBattle>();
@@ -396,14 +439,15 @@ namespace Zjcs.Presentation.Home
                 publicCount = 0;
             }
             SetPrefabText(dailyDungeonRoot, "DescTxt", host.DailyDungeons.ActiveRun != null
-                ? "存在未完成路线 · 今日剩余 " + host.DailyDungeons.RemainEntries
+                ? "存在未完成路线 · 今日剩余领奖次数 " + host.DailyDungeons.RemainEntries
+                : host.DailyDungeons.PendingClaims.Count > 0
+                    ? "有 " + host.DailyDungeons.PendingClaims.Count + " 份副本奖励待领取 · 今日剩余领奖次数 "
+                        + host.DailyDungeons.RemainEntries
                 : publicCount == 0 ? "尚无已公开的日常副本入口区域"
-                    : "已公开副本 " + publicCount + " 个 · 今日剩余 " + host.DailyDungeons.RemainEntries);
+                    : "已公开副本 " + publicCount + " 个 · 今日剩余领奖次数 " + host.DailyDungeons.RemainEntries);
             Transform list = FindPath(dailyDungeonRoot.transform,
                 "SelectContent/ScrollRect/Viewport/Content");
             if (list == null) return;
-            Transform selectContent = Find(dailyDungeonRoot.transform, "SelectContent");
-            if (selectContent != null) selectContent.gameObject.SetActive(true);
             foreach (Transform child in list) UnityEngine.Object.Destroy(child.gameObject);
             GameObject itemPrefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonEntryPanelItem");
             if (itemPrefab == null) throw new InvalidOperationException("Official daily dungeon list item is missing.");
@@ -427,6 +471,114 @@ namespace Zjcs.Presentation.Home
             RectTransform listRect = list as RectTransform;
             if (listRect != null) LayoutRebuilder.ForceRebuildLayoutImmediate(listRect);
             Canvas.ForceUpdateCanvases();
+        }
+
+        private void RefreshDailyDungeonAchievementPage(Transform panel)
+        {
+            if (panel == null) return;
+            Transform grid = Find(panel, "Grid");
+            if (grid == null) return;
+            List<Transform> rows = grid.Cast<Transform>()
+                .Where(value => value.name == "AchievementPanelItem"
+                    || value.name.StartsWith("AchievementPanelItem (", StringComparison.Ordinal))
+                .OrderBy(value => value.GetSiblingIndex()).ToList();
+            if (rows.Count == 0) return;
+
+            IReadOnlyList<DailyDungeonAchievementMilestone> visible =
+                host.DailyDungeons.DailyDungeonAchievementRows(rows.Count);
+            dailyDungeonVisibleAchievements.Clear();
+            dailyDungeonVisibleAchievements.AddRange(visible);
+            if (!dailyDungeonAchievementButtonsBound)
+            {
+                for (int index = 0; index < rows.Count; index++)
+                {
+                    Transform receive = Find(rows[index], "ReceiveBtn");
+                    if (receive == null) continue;
+                    Button button = receive.GetComponent<Button>();
+                    if (button == null)
+                    {
+                        button = receive.gameObject.AddComponent<Button>();
+                        button.targetGraphic = receive.GetComponent<Graphic>();
+                    }
+                    int rowIndex = index;
+                    button.onClick.AddListener(() => ClaimDailyDungeonAchievement(rowIndex));
+                }
+                dailyDungeonAchievementButtonsBound = true;
+            }
+
+            long progress = host.DailyDungeons.DailyDungeonGetRewardCount;
+            for (int index = 0; index < rows.Count; index++)
+            {
+                Transform row = rows[index];
+                bool hasMilestone = index < visible.Count;
+                row.gameObject.SetActive(hasMilestone);
+                if (!hasMilestone) continue;
+                DailyDungeonAchievementMilestone milestone = visible[index];
+                SetNamedText(row, "TitleTxt", "累计领取 " + milestone.RequiredCount + " 次");
+                SetNamedText(row, "ProgressTxt", Math.Min(progress, milestone.RequiredCount)
+                    + "/" + milestone.RequiredCount);
+                Slider slider = row.GetComponentInChildren<Slider>(true);
+                if (slider != null)
+                {
+                    slider.minValue = 0;
+                    slider.maxValue = milestone.RequiredCount;
+                    slider.value = Math.Min(progress, milestone.RequiredCount);
+                }
+                SetPrefabActive(row.gameObject, "UncompletedGo",
+                    milestone.State == DailyDungeonAchievementState.Processing);
+                SetPrefabActive(row.gameObject, "FinishedChestImg",
+                    milestone.State == DailyDungeonAchievementState.Received);
+                SetPrefabActive(row.gameObject, "UnfinishedChestImg",
+                    milestone.State != DailyDungeonAchievementState.Received);
+                Button receive = Find(row, "ReceiveBtn")?.GetComponent<Button>();
+                if (receive != null) receive.interactable = milestone.State == DailyDungeonAchievementState.Completed;
+                RefreshDailyDungeonAchievementRewards(row, milestone.Rewards);
+            }
+        }
+
+        private void RefreshDailyDungeonAchievementRewards(Transform row,
+            IReadOnlyList<DailyDungeonAchievementReward> rewards)
+        {
+            Transform grid = Find(row, "AwardGrid");
+            if (grid == null) return;
+            foreach (Transform child in grid.Cast<Transform>().Where(value => value.name.StartsWith(
+                    "OfflineReward_", StringComparison.Ordinal)).ToArray())
+                UnityEngine.Object.Destroy(child.gameObject);
+            foreach (DailyDungeonAchievementReward reward in rewards ?? Array.Empty<DailyDungeonAchievementReward>())
+            {
+                if (reward == null || reward.ItemId <= 0 || reward.Count <= 0) continue;
+                GameObject iconObject = new GameObject("OfflineReward_" + reward.ItemId,
+                    typeof(RectTransform), typeof(Image));
+                iconObject.transform.SetParent(grid, false);
+                RectTransform iconRect = (RectTransform)iconObject.transform;
+                iconRect.sizeDelta = new Vector2(56f, 56f);
+                Image icon = iconObject.GetComponent<Image>();
+                icon.sprite = host.ItemIcon(reward.ItemId);
+                icon.preserveAspect = true;
+                icon.raycastTarget = false;
+                TextMeshProUGUI count = CreateLabel(iconObject.transform, "Count", 14,
+                    Vector2.zero, TextAlignmentOptions.BottomRight);
+                count.text = "×" + reward.Count;
+                count.raycastTarget = false;
+                RectTransform countRect = count.rectTransform;
+                countRect.anchorMin = Vector2.zero;
+                countRect.anchorMax = Vector2.one;
+                countRect.offsetMin = new Vector2(0f, 0f);
+                countRect.offsetMax = new Vector2(-2f, -2f);
+            }
+        }
+
+        private void ClaimDailyDungeonAchievement(int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= dailyDungeonVisibleAchievements.Count
+                || dailyDungeonVisibleAchievements[rowIndex].State != DailyDungeonAchievementState.Completed)
+                return;
+            if (!host.ClaimDailyDungeonAchievement(dailyDungeonVisibleAchievements[rowIndex].Index))
+            {
+                Notify("馈赠奖励领取失败");
+                return;
+            }
+            RefreshDailyDungeonEntryPage();
         }
 
         private bool IsMapRegionPublic(int mapClassId, int region)
@@ -654,6 +806,7 @@ namespace Zjcs.Presentation.Home
         {
             var dungeon = host.DailyDungeons.FindDungeon(dungeonId);
             if (dungeon == null) return;
+            CloseDailyDungeonLeaderboard();
             selectedDungeonId = dungeonId;
             selectedDifficulty = requestedDifficulty ?? host.DailyDungeons.DefaultDifficulty(dungeonId);
             if (selectedDifficulty < 0) selectedDifficulty = 0;
@@ -675,6 +828,116 @@ namespace Zjcs.Presentation.Home
             BindPrefabButton(dailyDungeonDialogRoot, "CloseBtn2", CloseDungeonDetail);
             BindPrefabButton(dailyDungeonDialogRoot, "LeftBtn", () => NavigateDailyDungeon(-1));
             BindPrefabButton(dailyDungeonDialogRoot, "RightBtn", () => NavigateDailyDungeon(1));
+            BindPrefabButton(dailyDungeonDialogRoot, "DailyDungeonTopGrade", OpenDailyDungeonLeaderboard);
+        }
+
+        private void OpenDailyDungeonLeaderboard()
+        {
+            if (dailyDungeonLeaderboardRoot != null) return;
+            DailyDungeonLevelDefinition level = host.DailyDungeons.ResolveLevel(
+                selectedDungeonId, selectedDifficulty);
+            if (level?.SupportsLeaderboard != true) return;
+            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonTopPanel");
+            if (prefab == null) throw new InvalidOperationException("Official daily dungeon leaderboard panel is missing.");
+            dailyDungeonLeaderboardRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
+            dailyDungeonLeaderboardRoot.name = "DailyDungeonTopPanel";
+            dailyDungeonLeaderboardRoot.transform.SetAsLastSibling();
+            PlaceModalCanvasOnTop(dailyDungeonLeaderboardRoot);
+            BindPrefabButton(dailyDungeonLeaderboardRoot, "CloseBtn_dark", CloseDailyDungeonLeaderboard);
+            SetPrefabActive(dailyDungeonLeaderboardRoot, "FirstGo", false);
+            SetPrefabActive(dailyDungeonLeaderboardRoot, "TeamInfo", false);
+            SetPrefabActive(dailyDungeonLeaderboardRoot, "MemberInfo", false);
+            SetPrefabActive(dailyDungeonLeaderboardRoot, "DailyDungeonTopPanelAchievementTabBottomBtn", false);
+            SetPrefabActive(dailyDungeonLeaderboardRoot, "SwitchTopRangeBtn", false);
+
+            DailyDungeonRuntimeMap map = host.DailyDungeons.FindMap(level.MapGroupId);
+            int[] grades = (map?.gradeRows ?? Array.Empty<DailyDungeonRuntimeGradeRow>())
+                .Where(value => value != null && value.difficulty == selectedDifficulty && value.grade > 0)
+                .Select(value => value.grade).Distinct().OrderByDescending(value => value).ToArray();
+            if (grades.Length == 0) grades = new[] { host.DailyDungeons.BestGrade(selectedDungeonId, selectedDifficulty) };
+            Transform tabGroup = Find(dailyDungeonLeaderboardRoot.transform, "TabGroup");
+            Button[] gradeTabs = tabGroup == null ? Array.Empty<Button>()
+                : tabGroup.GetComponentsInChildren<Button>(true)
+                    .Where(value => value.transform.name.StartsWith("DailyDungeonTopPanelTabBottomBtn",
+                        StringComparison.Ordinal)).ToArray();
+            for (int index = 0; index < gradeTabs.Length; index++)
+            {
+                bool active = index < grades.Length && grades[index] > 0;
+                gradeTabs[index].gameObject.SetActive(active);
+                if (!active) continue;
+                int grade = grades[index];
+                SetNamedText(gradeTabs[index].transform, "Text", grade.ToString());
+                SetNamedText(gradeTabs[index].transform, "text", grade.ToString());
+                gradeTabs[index].onClick.AddListener(() => RefreshDailyDungeonLeaderboard(grade));
+            }
+            selectedLeaderboardGrade = grades.FirstOrDefault(value => value == host.DailyDungeons.BestGrade(
+                selectedDungeonId, selectedDifficulty));
+            if (selectedLeaderboardGrade <= 0) selectedLeaderboardGrade = grades.FirstOrDefault(value => value > 0);
+            SetNamedText(dailyDungeonLeaderboardRoot.transform, "TitleText",
+                (level.Title ?? "日常副本") + " · 难度 " + selectedDifficulty + " 个人记录");
+            RefreshDailyDungeonLeaderboard(selectedLeaderboardGrade);
+        }
+
+        private void RefreshDailyDungeonLeaderboard(int grade)
+        {
+            if (dailyDungeonLeaderboardRoot == null) return;
+            selectedLeaderboardGrade = grade;
+            Transform teamContent = Find(dailyDungeonLeaderboardRoot.transform, "TeamTopContent");
+            ScrollRect scroll = teamContent == null ? null : teamContent.GetComponentInChildren<ScrollRect>(true);
+            Transform rows = scroll == null || scroll.content == null ? null : scroll.content;
+            if (rows == null)
+                throw new InvalidOperationException("Official daily dungeon leaderboard content is missing.");
+            foreach (Transform child in rows) UnityEngine.Object.Destroy(child.gameObject);
+            IReadOnlyList<DailyDungeonLeaderboardEntry> entries = grade <= 0
+                ? Array.Empty<DailyDungeonLeaderboardEntry>()
+                : host.DailyDungeons.Leaderboard(selectedDungeonId, selectedDifficulty, grade,
+                    host.DailyDungeons.Options.LeaderboardLimit);
+            GameObject itemPrefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonTopPanelItem");
+            if (itemPrefab == null) throw new InvalidOperationException("Official daily dungeon leaderboard row is missing.");
+            foreach (DailyDungeonLeaderboardEntry entry in entries)
+            {
+                GameObject row = UnityEngine.Object.Instantiate(itemPrefab, rows, false);
+                row.name = "DailyDungeonLocalRecord_" + entry.Rank;
+                SetNamedText(row.transform, "RankText", entry.Rank.ToString());
+                SetNamedText(row.transform, "FinishTimeText", FormatDailyDungeonFinishTime(entry.FinishTicks));
+                SetNamedText(row.transform, "Name", entry.PlayerName);
+                Transform team = Find(row.transform, "Team");
+                if (team != null)
+                {
+                    bool showedPlayer = false;
+                    foreach (Transform member in team)
+                    {
+                        bool playerSlot = !showedPlayer && member.name.StartsWith(
+                            "TopRankTeamMemberIcon", StringComparison.Ordinal);
+                        if (member.name.StartsWith("TopRankTeamMemberIcon", StringComparison.Ordinal))
+                        {
+                            member.gameObject.SetActive(playerSlot);
+                            showedPlayer |= playerSlot;
+                        }
+                    }
+                }
+                SetPrefabActive(row, "MeOutLineImg", entry.IsSelf);
+                SetPrefabActive(row, "Top1Icon", entry.Rank == 1);
+                SetPrefabActive(row, "Top2Icon", entry.Rank == 2);
+                SetPrefabActive(row, "Top3Icon", entry.Rank == 3);
+            }
+            SetPrefabActive(dailyDungeonLeaderboardRoot, "EmptyGo", entries.Count == 0);
+            if (scroll != null) scroll.verticalNormalizedPosition = 1f;
+            if (rows is RectTransform contentRect) LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
+        }
+
+        private static string FormatDailyDungeonFinishTime(long ticks)
+        {
+            TimeSpan elapsed = TimeSpan.FromTicks(Math.Max(0, ticks));
+            return elapsed.TotalHours >= 1
+                ? ((int)elapsed.TotalHours).ToString("00") + elapsed.ToString(@"\:mm\:ss")
+                : elapsed.ToString(@"mm\:ss\.ff");
+        }
+
+        private void CloseDailyDungeonLeaderboard()
+        {
+            if (dailyDungeonLeaderboardRoot != null) UnityEngine.Object.Destroy(dailyDungeonLeaderboardRoot);
+            dailyDungeonLeaderboardRoot = null;
         }
 
         private void NavigateDailyDungeon(int direction)
@@ -701,7 +964,8 @@ namespace Zjcs.Presentation.Home
             if (tabs == null) return;
             var difficulties = host.DailyDungeons.VisibleDifficulties(dungeonId,
                 conditionId => IsDailyDungeonConditionMet(dungeonId, conditionId))
-                .Where(value => value.difficulty != 50).ToArray();
+                .Where(value => host.DailyDungeons.ResolveLevel(dungeonId, value.difficulty)?.IsPrivateRoute != true)
+                .ToArray();
             var buttons = new List<Button>();
             foreach (Transform tab in tabs)
             {
@@ -739,10 +1003,13 @@ namespace Zjcs.Presentation.Home
             if (dailyDungeonDialogRoot == null) return;
             bool unlocked = selectedDifficulty == 0 || host.DailyDungeons.IsUnlocked(
                 selectedDungeonId, selectedDifficulty);
-            int best = host.DailyDungeons.BestGrade(selectedDungeonId, selectedDifficulty);
+            DailyDungeonHudModel model = host.DailyDungeons.BuildHudModel(
+                selectedDungeonId, selectedDifficulty, unlocked);
+            unlocked = model.IsUnlocked;
+            int best = model.BestGrade;
             SetNamedText(dailyDungeonDialogRoot.transform, "DescTxt",
                 "難度 " + selectedDifficulty + " · 最高评级 " + (best <= 0 ? "暂无" : best.ToString())
-                + " · 今日剩餘 " + host.DailyDungeons.RemainEntries);
+                + " · 今日剩余领奖次数 " + model.RemainingEntries);
             RefreshDailyDungeonUnlockConditions(unlocked);
             SetPrefabActive(dailyDungeonDialogRoot, "UnlockBtn", !unlocked && selectedDifficulty > 0);
             SetPrefabActive(dailyDungeonDialogRoot, "BattleBtn", unlocked);
@@ -817,7 +1084,12 @@ namespace Zjcs.Presentation.Home
         {
             if (host.DailyDungeons.ActiveRun != null)
             {
-                Notify("已有未完成路线，请先继续或离开该路线");
+                var activeRun = host.DailyDungeons.ActiveRun;
+                if (activeRun.dungeonId == selectedDungeonId
+                    && activeRun.difficulty == selectedDifficulty)
+                    OpenDailyDungeonRoute();
+                else
+                    Notify("已有其他副本路线，请先继续或离开该路线");
                 return;
             }
             string error;
@@ -876,6 +1148,187 @@ namespace Zjcs.Presentation.Home
             RenderDailyDungeonRoute();
         }
 
+        private void OpenDailyDungeonAction()
+        {
+            if (host.DailyDungeons.ActiveRun != null) OpenDailyDungeonRoute();
+            else OpenPendingDailyDungeonClaim();
+        }
+
+        private void OpenPendingDailyDungeonClaim()
+        {
+            if (dailyDungeonClaimConfirmRoot != null) return;
+            DailyDungeonPendingClaimSave pending = host.DailyDungeons.PendingClaims
+                .OrderByDescending(value => value != null && value.awardTimes > 0)
+                .FirstOrDefault();
+            if (pending?.run == null) return;
+            DailyDungeonEntryAllowanceState allowance = host.DailyDungeons.EntryAllowance();
+            int awardTimes = pending.awardTimes > 0 ? pending.awardTimes
+                : Math.Min(host.DailyDungeons.MaxAwardTimesPerClaim, host.DailyDungeons.RemainEntries);
+            bool canPurchase = allowance.PurchaseRemaining > 0
+                && host.DailyDungeons.ClaimCapacity > 0;
+            if (awardTimes <= 0 && !canPurchase)
+            {
+                ShowDailyDungeonClaimConfirm(pending, 0);
+                return;
+            }
+            if (awardTimes <= 0)
+            {
+                ShowDailyDungeonClaimConfirm(pending, 0);
+                return;
+            }
+            ShowDailyDungeonClaimConfirm(pending, awardTimes);
+        }
+
+        private void ShowDailyDungeonClaimConfirm(DailyDungeonPendingClaimSave pending,
+            int awardTimes)
+        {
+            GameObject prefab = Resources.Load<GameObject>(
+                "Dungeons/UI/884_156692/Native/Prefabs/UI/Fight/GameEndPanelDailyDungeon");
+            if (prefab == null)
+                throw new InvalidOperationException("Official daily dungeon result panel is missing.");
+            DailyDungeonSettlementHudModel settlement = DailyDungeonSettlementHudModelBuilder.Build(
+                host.DailyDungeons, pending, awardTimes, host.Level, host.SubRank);
+            if (settlement == null)
+            {
+                CloseDailyDungeonClaimConfirm();
+                return;
+            }
+            awardTimes = settlement.AwardTimes;
+            dailyDungeonResultPanelAdapter = DailyDungeonResultPanelAdapter.Create(prefab, canvas.transform);
+            dailyDungeonClaimConfirmRoot = dailyDungeonResultPanelAdapter.gameObject;
+            dailyDungeonClaimConfirmRoot.name = "GameEndPanelDailyDungeon";
+            dailyDungeonClaimConfirmRoot.transform.SetAsLastSibling();
+            dailyDungeonResultPanelAdapter.Configure(settlement, host, settlement.CanClaim,
+                settlement.CanPurchaseEntries, () =>
+            {
+                IReadOnlyList<DailyDungeonClaimRewardDisplayItem> receivedRewards =
+                    Array.Empty<DailyDungeonClaimRewardDisplayItem>();
+                bool claimed = host.DailyDungeons.ClaimPendingReward(pending.id,
+                    (receipt, run, claimTimes) => host.GrantDailyDungeonRewardsForSettlement(receipt,
+                        run, host.DailyDungeons.ConfiguredRewardRuleIds(run, true), claimTimes,
+                        out receivedRewards), awardTimes);
+                if (!claimed)
+                {
+                    Notify("副本奖励领取失败，请重试");
+                    return;
+                }
+                dailyDungeonResultPanelAdapter?.ShowClaimedRewards(receivedRewards);
+                RefreshDailyDungeonEntryPage();
+                Notify("副本奖励领取成功");
+            }, OpenDailyDungeonBuyCountDialog, () =>
+            {
+                CloseDailyDungeonClaimConfirm();
+                RefreshDailyDungeonEntryPage();
+            });
+            PlaceModalCanvasOnTop(dailyDungeonClaimConfirmRoot);
+        }
+
+        private void OpenDailyDungeonBuyCountDialog()
+        {
+            if (dailyDungeonBuyCountRoot != null) return;
+            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonBuyCountDialog");
+            if (prefab == null) throw new InvalidOperationException("Official daily dungeon count purchase dialog is missing.");
+            dailyDungeonBuyCountRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
+            dailyDungeonBuyCountRoot.name = "DailyDungeonBuyCountDialog";
+            dailyDungeonBuyCountRoot.transform.SetAsLastSibling();
+            PlaceModalCanvasOnTop(dailyDungeonBuyCountRoot);
+            DailyDungeonEntryAllowanceState allowance = host.DailyDungeons.EntryAllowance();
+            dailyDungeonBuyCountLimit = Math.Min(allowance.PurchaseRemaining,
+                host.DailyDungeons.ClaimCapacity);
+            Transform sliderNode = Find(dailyDungeonBuyCountRoot.transform, "Slider");
+            dailyDungeonBuyCountSlider = sliderNode == null ? null : sliderNode.GetComponent<Slider>();
+            if (dailyDungeonBuyCountSlider == null)
+                throw new InvalidOperationException("Official daily dungeon purchase slider is missing.");
+            dailyDungeonBuyCountSlider.minValue = 1;
+            dailyDungeonBuyCountSlider.maxValue = Math.Max(1, dailyDungeonBuyCountLimit);
+            dailyDungeonBuyCountSlider.wholeNumbers = true;
+            dailyDungeonBuyCountSlider.value = Mathf.Clamp(
+                host.DailyDungeons.Catalog.settings.DailyDungeonDefaultBuyCount,
+                1, Math.Max(1, dailyDungeonBuyCountLimit));
+            dailyDungeonBuyCountSlider.onValueChanged.AddListener(RefreshDailyDungeonPurchaseCost);
+            BindPrefabButton(dailyDungeonBuyCountRoot, "CloseBtn", CloseDailyDungeonBuyCountDialog);
+            BindPrefabButton(dailyDungeonBuyCountRoot, "CloseBtn_dark", CloseDailyDungeonBuyCountDialog);
+            BindPrefabButton(dailyDungeonBuyCountRoot, "CommonBtn_11", CloseDailyDungeonBuyCountDialog);
+            BindPrefabButton(dailyDungeonBuyCountRoot, "CommonBtn_12", PurchaseDailyDungeonClaims);
+            BindPrefabButton(dailyDungeonBuyCountRoot, "CommonBtn_Reduce", () =>
+                dailyDungeonBuyCountSlider.value = Mathf.Max(1f, dailyDungeonBuyCountSlider.value - 1f));
+            BindPrefabButton(dailyDungeonBuyCountRoot, "CommonBtn_Add", () =>
+                dailyDungeonBuyCountSlider.value = Mathf.Min(dailyDungeonBuyCountLimit,
+                    dailyDungeonBuyCountSlider.value + 1f));
+            SetNamedText(dailyDungeonBuyCountRoot.transform, "TipText", "购买额外副本领奖次数");
+            SetNamedText(dailyDungeonBuyCountRoot.transform, "LimitText",
+                "剩余可购买 " + allowance.PurchaseRemaining + " 次");
+            RefreshDailyDungeonPurchaseCost(dailyDungeonBuyCountSlider.value);
+        }
+
+        private void RefreshDailyDungeonPurchaseCost(float value)
+        {
+            if (dailyDungeonBuyCountRoot == null || dailyDungeonBuyCountSlider == null) return;
+            int count = Mathf.Clamp(Mathf.RoundToInt(value), 1, Math.Max(1, dailyDungeonBuyCountLimit));
+            long[] prices = host.DailyDungeons.Catalog.settings.DailyDungeonBuyCostCountList
+                ?? Array.Empty<long>();
+            int priceIndex = host.DailyDungeons.Save.purchasedEntries;
+            long cost = 0;
+            bool validPrice = priceIndex >= 0 && (long)priceIndex + count <= prices.Length;
+            try
+            {
+                for (int index = 0; validPrice && index < count; index++)
+                {
+                    long price = prices[priceIndex + index];
+                    if (price <= 0) { validPrice = false; break; }
+                    cost = checked(cost + price);
+                }
+            }
+            catch (OverflowException) { validPrice = false; }
+            SetNamedText(dailyDungeonBuyCountRoot.transform, "BuyCountText", count.ToString());
+            SetNamedText(dailyDungeonBuyCountRoot.transform, "CostCountText",
+                validPrice ? cost.ToString() : "—");
+            SetNamedText(dailyDungeonBuyCountRoot.transform, "CostText",
+                host.ItemName(host.DailyDungeons.Catalog.settings.DailyDungeonBuyCostItemId));
+        }
+
+        private void PurchaseDailyDungeonClaims()
+        {
+            if (dailyDungeonBuyCountSlider == null) return;
+            int count = Mathf.RoundToInt(dailyDungeonBuyCountSlider.value);
+            string receipt = "daily-dungeon:claim-purchase:" + host.DailyDungeons.Save.localDate
+                + ":" + host.DailyDungeons.Save.purchasedEntries;
+            if (!host.DailyDungeons.TryPurchaseEntries(receipt, count,
+                new DailyDungeonEconomyAdapter(host)))
+            {
+                Notify(host.ItemName(host.DailyDungeons.Catalog.settings.DailyDungeonBuyCostItemId)
+                    + "不足或今日可购买次数已用完");
+                return;
+            }
+            CloseDailyDungeonBuyCountDialog();
+            CloseDailyDungeonClaimConfirm();
+            RefreshDailyDungeonEntryPage();
+            OpenPendingDailyDungeonClaim();
+        }
+
+        private void CloseDailyDungeonBuyCountDialog()
+        {
+            if (dailyDungeonBuyCountRoot != null) UnityEngine.Object.Destroy(dailyDungeonBuyCountRoot);
+            dailyDungeonBuyCountRoot = null;
+            dailyDungeonBuyCountSlider = null;
+            dailyDungeonBuyCountLimit = 0;
+        }
+
+        private void CloseDailyDungeonClaimConfirm()
+        {
+            if (dailyDungeonClaimConfirmRoot != null) UnityEngine.Object.Destroy(dailyDungeonClaimConfirmRoot);
+            dailyDungeonClaimConfirmRoot = null;
+            dailyDungeonResultPanelAdapter = null;
+        }
+
+        private sealed class DailyDungeonEconomyAdapter : IDailyDungeonEconomyAdapter
+        {
+            private readonly HomeFeatureRuntime runtime;
+            public DailyDungeonEconomyAdapter(HomeFeatureRuntime runtime) => this.runtime = runtime;
+            public bool Consume(string receipt, int itemId, long count) =>
+                runtime.ConsumeDailyDungeonItem(receipt, itemId, count);
+        }
+
         private void RenderDailyDungeonRoute()
         {
             if (dailyDungeonDialogRoot == null || host.DailyDungeons.ActiveRun == null) return;
@@ -906,11 +1359,11 @@ namespace Zjcs.Presentation.Home
                 if (room.nextRoomIds == null || room.nextRoomIds.Length == 0)
                 {
                     int grade = host.DailyDungeons.CurrentGrade();
-                    if (grade > 0 && host.DailyDungeons.Finish(grade, GrantDailyDungeonRoomRewards))
+                    if (grade > 0 && host.DailyDungeons.Finish(grade))
                     {
                         CloseDungeonDetail();
                         RefreshDailyDungeonEntryPage();
-                        Notify("路线完成，评级 " + grade);
+                        OpenPendingDailyDungeonClaim();
                         return;
                     }
                 }
@@ -951,11 +1404,11 @@ namespace Zjcs.Presentation.Home
             if (room != null && room.nextRoomIds != null && room.nextRoomIds.Length == 0)
             {
                 int grade = host.DailyDungeons.CurrentGrade();
-                if (grade > 0 && host.DailyDungeons.Finish(grade, GrantDailyDungeonRoomRewards))
+                if (grade > 0 && host.DailyDungeons.Finish(grade))
                 {
                     CloseDungeonDetail();
                     RefreshDailyDungeonEntryPage();
-                    Notify("路线完成，评级 " + grade);
+                    OpenPendingDailyDungeonClaim();
                     return;
                 }
             }
@@ -970,7 +1423,7 @@ namespace Zjcs.Presentation.Home
             CloseDailyDungeonLeaveConfirm();
             CloseDungeonDetail();
             RefreshDailyDungeonEntryPage();
-            Notify("已离开路线，已结算清理房间的配置掉落；挑战次数不返还");
+            Notify("已离开路线，已结算清理房间的配置掉落；未完成不消耗领奖次数");
         }
 
         private void GrantDailyDungeonRoomRewards(string receipt, Zjcs.Offline.World.DailyDungeonRunSave run)
@@ -983,10 +1436,9 @@ namespace Zjcs.Presentation.Home
         private void CloseDailyDungeonRoute()
         {
             CloseDungeonDetail();
+            RefreshDailyDungeonEntryPage();
             if (host.DailyDungeons.ActiveRun != null)
                 Notify("路线已保存，可从副本列表继续");
-            else
-                RefreshDailyDungeonEntryPage();
         }
 
         private void ShowDailyDungeonLeaveConfirm()
@@ -1005,7 +1457,7 @@ namespace Zjcs.Presentation.Home
             PlaceModalCanvasOnTop(dailyDungeonLeaveConfirmRoot);
             ApplyOfficialDungeonBindings(dailyDungeonLeaveConfirmRoot, "DailyDungeonConfirmEnterPanel");
             SetNamedText(dailyDungeonLeaveConfirmRoot.transform, "TitleText", "离开副本路线");
-            SetNamedText(dailyDungeonLeaveConfirmRoot.transform, "Txt", "离开后将结算已清理房间的配置掉落，挑战次数不返还");
+            SetNamedText(dailyDungeonLeaveConfirmRoot.transform, "Txt", "离开后将结算已清理房间的配置掉落，未完成不消耗领奖次数");
             SetNamedText(dailyDungeonLeaveConfirmRoot.transform, "CommonBtn_11", "保存并返回");
             SetNamedText(dailyDungeonLeaveConfirmRoot.transform, "CommonBtn_12", "离开并结算");
             BindPrefabButton(dailyDungeonLeaveConfirmRoot, "CommonBtn_11", () =>
@@ -1026,7 +1478,7 @@ namespace Zjcs.Presentation.Home
         {
             var dungeon = host.DailyDungeons.FindDungeon(dungeonId);
             int grade = (dungeon?.difficulties ?? Array.Empty<Zjcs.Offline.World.DailyDungeonRuntimeDifficulty>())
-                .Where(value => value.difficulty != 50)
+                .Where(value => host.DailyDungeons.ResolveLevel(dungeonId, value.difficulty)?.IsPrivateRoute != true)
                 .Select(value => host.DailyDungeons.BestGrade(dungeonId, value.difficulty))
                 .DefaultIfEmpty(0).Max();
             return grade <= 0 ? "暂无" : grade.ToString();
@@ -1483,6 +1935,7 @@ namespace Zjcs.Presentation.Home
 
         private void CloseDungeonDetail()
         {
+            CloseDailyDungeonLeaderboard();
             if (dailyDungeonDialogRoot != null) UnityEngine.Object.Destroy(dailyDungeonDialogRoot);
             dailyDungeonDialogRoot = null;
         }
@@ -1686,6 +2139,9 @@ namespace Zjcs.Presentation.Home
         {
             if (activeDungeonBattle != null || activeArenaBattle != null) return;
             CloseDailyDungeonLeaveConfirm();
+            CloseDailyDungeonClaimConfirm();
+            CloseDailyDungeonBuyCountDialog();
+            CloseDailyDungeonLeaderboard();
             CloseDungeonDetail();
             if (travelNotesRoot != null) UnityEngine.Object.Destroy(travelNotesRoot);
             CloseMaterialGathering();

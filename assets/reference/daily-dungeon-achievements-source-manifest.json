@@ -1,0 +1,42 @@
+{
+  "manifest": "854_156383",
+  "achievementGroup": 39,
+  "achievementType": 22,
+  "inputs": [
+    {
+      "path": ".tools/source-packages/official-data/tables.json",
+      "bytes": 53962431,
+      "sha256": "8d9e905e55967a46ebf59484ac8faf0356515e1c214faaeebcbc303fc03de333"
+    },
+    {
+      "path": ".tools/source-packages/official-data/achievement.g.bytes",
+      "bytes": 188330,
+      "sha256": "50c66bef98508617c93ccd17c9fc0e5a8d355adef49f1c71bd4551649d69fb3a"
+    }
+  ],
+  "officialCode": [
+    {
+      "path": ".tools/source-packages/official-code/client-source/DailyDungeonAchievementPanel.cs",
+      "sha256": "8a347061ffbff70e53f18b7083f3c201c20cb0a7b8c312b56b671201ac94ec8e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AchievementDataDailyDungeonGetRewardCount.cs",
+      "sha256": "a945b817fbe5a2b6936807318fe0fb643c0139ac0218488b77bca80523ee9307"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AchievementTaskDailyDungeonGetRewardCount.cs",
+      "sha256": "b6fb4a4029ea0bc646f8f53e9242e8d35d01aec06734cd2866fa55c67dfd5fe0"
+    }
+  ],
+  "conversion": "Filter achievement rows by Group=39 and AchievementType=22; parse Count from CompleteParams and CycleIncrementParams; retain CycleCount and reward item counts.",
+  "generator": {
+    "path": "scripts/prepare_daily_dungeon_achievement_runtime.py",
+    "sha256": "7582581e9f85ccc5c4353264316d2fc587ee4dc1af509991edcc7c731a414ca0"
+  },
+  "output": {
+    "path": "unity/Assets/Game/Resources/Dungeons/daily-dungeon-achievements.json",
+    "bytes": 2245,
+    "sha256": "95fe60e6b18a97adf967b2a71086db50e2787e28d21f2020ca9a6b659308a841",
+    "rows": 8
+  }
+}

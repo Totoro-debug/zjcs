@@ -16,6 +16,8 @@
 
 游记、每日副本与竞技使用各自的原入口、地图／房间、难度、队伍邀请、评级和奖励配置；原 UI 的引用与脚本字段保持独立。
 
+日常副本原实现由 `DailyDungeonEntryPanel`、`DailyDungeonDetailContent`、`DailyDungeonBigMapDialog`、`DailyDungeonCostMoneyContent`、`GameEndPanelDailyDungeon` 与 `DailyDungeonTopPanel` 组成；客户端按 `DailyDungeonBattleInfo`／`DailyDungeonMapGroupInfo` 选择副本、难度、地图房间和等级奖励，`PlayerDailyDungeonDataExt` 保存解锁与最好评级，`PlayerDailyDungeonDataWrap.GetDailyRemainCount`／`GetDailyRemainBuyCount` 读取每日领奖池与购买次数。`RewardRuleInfoParser` 按条件选择奖励规则，候选掉落概率为 `Percent × 候选 Weight / Weight 总和`；当前副本 982 条奖励规则的 `Percent` 均为 1。结算评级来自已到达的最深地图行及该难度的 grade rows。官方榜单向服务器请求按副本、难度、评级和榜单范围分组的队伍记录，按完成耗时记录 `FinishTicks`。入口 prefab 的第二个 Tab 文案为“馈赠”，其 `AchievementPanel` 配置 `AchievementType.DailyDungeonGetRewardCount`（22），用于按副本领奖次数展示成就进度与奖励；Type 22 配置在累计成功领奖 5／10／15／20 次时发放对应物品，之后由四条循环奖励行每次增加 5 次。该页不增加每日领奖池次数。官方 `GetTodayDailyDungeonMaxTimes` 以 `1 + PlayerBenefitDailyDungeonExtraClaimRuntimeDataWrap.ExtraClaimCount` 决定批量领奖上限；福利发放规则由服务器状态驱动。团队榜单数据与范围没有随客户端程序集提供完整本地规则。
+
 ### 官方代码与资源依据
 
 日常公共／Map12 私有副本共用 `OfficialDungeonRoutePresenter.Refresh(root, session, selectRoom, close)`。模块接管原路线窗绑定、循环池、网格坐标、普通／选路切换、房间连线与评级显示；调用方提供既有 `OfflineDailyDungeonSession` 及房间选择／退出回调，保留各自的房间事务、战斗及奖励边界。原 Map12 `WorldDailyDungeonRoute`／`WorldDailyDungeonRoomItem` 的执行顺序与选择条件直接复用，主城不再逐个手建路线房间。原生 UI 继续使用已核实的 `871_156598` 载荷与历史来源，当前 `884_156692` 的代码依据单独记录，未混写版本。逐文件身份见[公共路线来源](../../assets/reference/dungeon-ui/route-presenter-source-manifest.json)。提取后的 Map12 调用方已通过原按钮选路、三场真实战斗、终点及冷读，角色档案和公共次数隔离保持不变；已检查完整路线与战斗画面。84,658项元数据检查、Unity导入／编译和3,158节点 prefab 路径回放通过。对应 Windows Player 的副本入口／路线画面及技能试打已运行通过。助战绑定修复后的 Play Mode 结算回归尚未通过：本轮错误路径均已按原 prefab 层级修正，最后一次编辑器启动因 LicensingClient IPC 缺失退出199；全流程结算仍待实际重跑。
@@ -48,7 +50,16 @@
 
 ## 完整还原部分
 
+共享模块新增 [DailyDungeonSettlementHudModel](../../unity/Assets/Game/Runtime/Offline/World/DailyDungeonSettlementHudModel.cs)，为待领取结算准备官方副本／难度／评级、可领取次数、购买次数，以及每条配置奖励规则的候选概率和评级翻倍概率；Home 领奖流程读取该模型，并仍使用相同的固定回执发奖。Home 现在实例化原 `GameEndPanelDailyDungeon`，通过结果面板适配器绑定官方评级图、本人队伍行、奖励预览和领取结果；资源与点击流程尚未通过本地 Unity Play Mode 验证。
+
 Type 22 成就页的六个缺失奖励物品图标已按 `Home/rules.json` 中的原文件名绑定：`item_102`／`item_103` 来源于所选 APK，`item_1105`／`item_1115`／`item_1125`／`item_1134` 来源于同版已校验云端资源。提取只解码原 Unity Sprite 图像，不绘制或调整尺寸；逐项来源、输入对象、PNG 与 Unity 元数据哈希见[成就奖励图标来源](../../assets/reference/daily-dungeon-achievement-sprites-source-manifest.json)。
+
+日常副本共用内核已提取为 [OfflineDailyDungeonModule](../../unity/Assets/Game/Runtime/Offline/World/OfflineDailyDungeonModule.cs)，并由 `HomeFeatureRuntime` 为世界之树、机神山、海之宫遗迹等公开副本共用；Map12 私有路线通过同一模块的 `OpenPrivateMap` 使用它。`DailyDungeonHudModel` 提供目录详情、地图、评级、解锁、剩余领奖次数及累计成功领奖次数；副本差异由官方目录行、`IDailyDungeonLevelAdapter` 及 [private-routes.json](../../unity/Assets/Game/Resources/Dungeons/private-routes.json) 提供。`OfflineDailyDungeonSession` 保留路线／房间／战斗检查点状态机，公共模块集中处理存档兼容、奖励概率和个人记录榜。完成后奖励保存在本地待领取列表，成功领取才扣全局领奖次数；失败、放弃领奖和未完成路线不扣次数。批量领奖次数会对每份待领奖励独立执行一次官方规则抽取；它只控制领取几份，不等于评价奖励翻倍概率。当前每笔批量领取上限由 `MaxAwardTimesPerClaim` 注入，默认值为 1。现有官方目录／详情／路线 prefab 仍由 Home 加载，详情 HUD 已改读公共模型。
+
+公共模块的内部分界为路线规则、关卡目录、个人榜单与累计领奖成就；私有路线难度与终点不再写在状态机里，而由配置提供。[日常副本运行来源清单](../../assets/reference/dungeons-runtime-source-manifest.json) 同步记录私有路线派生配置及输入房间 12107／12108。官方 `PlayerDailyDungeonDataWrap.GetDailyRemainCount` 在新的一天把当前剩余次数补至至少每日免费次数，未用完的可用次数随剩余池保留；购买次数及价格档位每日重置，购买弹窗按 `DailyDungeonMaxLimitCount` 限制当前剩余次数池。单机按用户确认只在挑战完成后的领奖成功时扣减次数，进场、失败、未领奖均不扣；成功领奖同时累计本地 `DailyDungeonGetRewardCount`，失败事务和仅完成挑战不推进该计数。购买次数按官方价格梯度加入全局领奖池。入口第二个“馈赠”Tab 是 Type 22 累计领奖成就页，不会发放额外领奖池次数；旧存档中服务器馈赠次数的拆分字段迁移时清零，已保存的总剩余次数保留。领奖准备阶段只固定本次批量领奖次数，不占用或扣减次数；同一时间仅允许一份已固定倍数的待领奖单继续处理。奖励事务按固定回执去重，重启重试仍扣除相同次数。`DailyDungeonProfessionScoreFactorInfo` 的系数字段在客户端没有消费处或评分函数；按用户确认，单机评级只使用官方 map grade rows，不另造战斗贡献分。`ServerRankUnlockDaysCondition` 按用户确认，以档案创建时间起完整经过的 24 小时天数对照官方 `days` 字段判断。
+
+每次公开副本完成会写入该副本／难度／评级的本地最快完成记录；原 `DailyDungeonTopPanel` 与 `DailyDungeonTopPanelItem` prefab 显示本地个人榜，不生成虚构玩家。入口第二个“馈赠”Tab 实际绑定 `DailyDungeonGetRewardCount` 成就面板；离线模块使用官方 Group 39／Type 22 配置，前四档在累计成功领奖 5／10／15／20 次开放，之后按四条每次增加 5 次的循环行继续。奖励使用原物品图标，领取通过带固定回执的背包事务发放，并将已领取行与领奖次数分别存档。[成就数据来源与转换](../../assets/reference/daily-dungeon-achievements-source-manifest.json)记录配置、原实现和输出哈希。`TryPurchaseEntries` 使用官方价格梯度，购买窗口复用原 `DailyDungeonBuyCountDialog`，并按官方 `DailyDungeonDefaultBuyCount`、数量滑块及逐档价格累计购买。官方 `GameEndPanelDailyDungeon` 的 884_156692 prefab、grade Sprite 和依赖闭包已迁入 Resources；Home 通过结果面板适配器显示原评级、本人队伍行及配置奖励预览，领取成功后使用固定回执发放实际奖励。该面板及领奖鼠标流程尚未通过 Play Mode 实际验证。`DailyDungeonCostMoneyContent.GetMaxAwardTimes` 计算单次领取消耗的次数，官方 `PlayerDailyDungeonExt.GetTodayDailyDungeonMaxTimes` 返回 1 加活动中的 `PlayerBenefitDailyDungeonExtraClaimRuntimeDataWrap.ExtraClaimCount`；它代表批量领取次数，与评价奖励翻倍概率分开。官方客户端包含 `DailyDungeonMonsterAwardAddPercent`、`DailyDungeonGradeAwardAddPercent` 输出加成类型，但翻倍结算由服务器返回。按用户确认，评级奖励双倍概率以 5% 为基础，赛季星象合约、古遗物幸运神像及装备词条加算并封顶 100%；公共模块通过 `IDailyDungeonRewardDoubleChanceAdapter` 接收三类加成，并按每条官方评级奖励规则独立判定翻倍。当前 Home 调用未接入这些来源的本地属性／配置，因此使用 5% 基础概率。当前模块每笔结算最多领取 1 份奖励；官方福利运行数据的离线接入尚未完成。按副本／难度保存的 `Free`／`FirstBuy`／`SecondBuy` 奖励找回次数与 `DailyDungeonAwardRetrieveInfo` 独立价格配置仍未迁入。私有剧情路线不进入公开榜单与公开领奖池。
+
 日常副本入口已在内置屏 Direct3D 11 Play Mode 通过模拟鼠标点击：游记→日常目录→第一张可用卡片→详情“前往副本”→1101营地→1102战斗房→公共原生助战确认→实际公共战斗。空伙伴选择运行388步后真实失败结算并返回保留的路线，检查点已结束；已查看入口、邀请、准备、战斗和返回画面。Unity编译、`ProjectTools.Validate` 与公共邀请窗口的独立输入检查通过。竞技场已通过游记原入口、对手挑战按钮、公共HUD及6步真实失败结算，票券减少一次且结果增加一次，已检查准备、交战及返回画面。竞技场原层级索引越界已修复；爬塔已按原 `OldPlayEntryBtn` 进入首塔与当前层，模拟挑战／公共HUD开战／倍速后实际62步获胜并结算返回；旧 `DemonBattleEntry` 保持原隐藏状态，避免与伙伴冒险卡片重叠。选择、楼层及结算界面的缺图／外语占位尚未完成，解锁条件与验证边界见[幻想阶梯](fantasy-tower.md)。底栏适配按原 `PublicBottomBar／TabGroup` 同步互斥的输入选中状态，模拟“家园→游记”能在结算后重新打开游记。全量静态检查通过（89,779个GUID），Unity导入／编译和 `ProjectTools.Validate` 通过。`--zjcs-validate-dungeon-entry <输出目录>` 的Windows Player隔离探针尚未执行，本批未发布新Player。助战视图实现与验证边界见[NPC邀请](npc-assistance.md)。
 游记进入战斗前的原生绑定：`prepare_travel_entry_layout.py` 校验当前可用的官方 home bundle 与既有871来源记录的 MD5、SHA256、字节数和 prefab PathID 完全相同，并核对 `SafeArea` 原代码哈希未变；恢复3个原 `SafeArea`、1个 `AspectRatioFitter`、10个 `NoDrawingRayCast` 点击区域和日常副本／竞技／幻境之塔的3个 `EntryButton` PPtr。使用原类型完整字段读取并检查消费字节数，UGUI schema 来自固定 Unity 编辑器编译程序集；未新增图像。历史来源身份保留，当前相同输入的取得位置、对象及转换输出哈希记录于[绑定来源清单](../../assets/reference/dungeon-ui/prefab-binding-source-manifest.json)的 `travel_entry_layout`。日常副本按原 `DailyDungeonEntry` 接入，修正旧实现误将 `MapGamePlayEntry` 连接到日常副本；竞技和幻境之塔按原子按钮引用接入。
 
@@ -63,7 +74,7 @@ Type 22 成就页的六个缺失奖励物品图标已按 `Home/rules.json` 中�
 
 官方 `DailyDungeonEntryPanel.InitContent()` 通过 `DetailContentStateSwitcher.SetState(false)` 激活初始目录；离线接线已按该初始状态启用 prefab 的 `SelectContent`。隔离 Unity r6 验收通过了区域进度夹具、游记入口、目录行点击、详情、进入路线、已清理房间离开结算及次数重载、竞技场打开与胜场名次重载。该验收由 `HomeAcceptanceDriver` 合成 PointerEvent 并直接记录房间清理，不代表 OS 鼠标输入或实际战斗。实际截图仍显示列表和详情的元素被裁切、偏移；官方 `LoopVerticalScrollRect.RefillCells` 的运行组件来自 AssetRipper 空脚本，当前没有恢复其 cell 生命周期和布局驱动，因此官方 UI 渲染尚未通过验收，不能声称美术完整还原。
 
-日常副本目录只列入口区域进度为 `10000` 的公开副本并排除剧情难度 50；难度页签按原 tab 条件显示，默认选择最高永久解锁难度，锁页显示等级、战力／阶位压制及前难度评级条件，左右翻页按公开副本／可见难度组合顺序推进。日常副本按官方配置检查永久难度解锁、独立入场条件、每日次数和额外次数消耗，保存当前路线、清理房间、评级及战斗检查点；奖励按官方 `RewardRuleInfoParser` 的条件、`Percent`、候选权重及数量结算；`RandomReward` 装备占位项通过固定版 `random_reward` 的候选装备及权重生成实际装备实例，装备等级和祝福等级使用对应地图组、难度的官方范围。主动离开仅结算清理房间配置掉落且不返次数，战斗失败保留当前路线并清除本场战斗检查点以允许重打；已清理房间不能重复挑战。区域公开通过已保存的主线区域进度判定。竞技场按 `ArenaEntry` Type 58 的地图预览／开放门槛显示，读取原匹配区间和守卫权重，支持免费／付费刷新、购买挑战次数、本地挑战名次和胜负奖励；胜利后名次移至对手名次。挑战前按官方守卫战力与 `ArenaCombatRatingDirectWinPercent` 提供正常战斗／直接胜利选择，直接胜利消耗次数并走同一胜场结算；守卫使用模板附加外观，性别按本地均衡随机选择并随挑战保存。`DailyDungeonBattleRunner`、`ArenaBattleRunner` 使用官方战斗配置和场景接入战斗控制器，并保存战斗检查点。
+日常副本目录只列入口区域进度为 `10000` 的公开副本并排除剧情难度 50；难度页签按原 tab 条件显示，默认选择最高永久解锁难度，锁页显示等级、战力／阶位压制及前难度评级条件，左右翻页按公开副本／可见难度组合顺序推进。日常副本按官方配置检查永久难度解锁与独立入场条件；领奖次数只在领取成功后扣除，保存当前路线、清理房间、评级及战斗检查点。奖励按官方 `RewardRuleInfoParser` 的条件、`Percent`、候选权重及数量结算；`RandomReward` 装备占位项通过固定版 `random_reward` 的候选装备及权重生成实际装备实例，装备等级和祝福等级使用对应地图组、难度的官方范围。主动离开仅结算清理房间配置掉落且不扣领奖次数，战斗失败保留当前路线并清除本场战斗检查点以允许重打；已清理房间不能重复挑战。区域公开通过已保存的主线区域进度判定。竞技场按 `ArenaEntry` Type 58 的地图预览／开放门槛显示，读取原匹配区间和守卫权重，支持免费／付费刷新、购买挑战次数、本地挑战名次和胜负奖励；胜利后名次移至对手名次。挑战前按官方守卫战力与 `ArenaCombatRatingDirectWinPercent` 提供正常战斗／直接胜利选择，直接胜利消耗次数并走同一胜场结算；守卫使用模板附加外观，性别按本地均衡随机选择并随挑战保存。`DailyDungeonBattleRunner`、`ArenaBattleRunner` 使用官方战斗配置和场景接入战斗控制器，并保存战斗检查点。
 Map12 的 121/50 机神山属于已确认的私有离线边界：原路线与官方房间波次照常使用，战斗胜负写入本地路线存档；失败可重试，胜利清理当前房间，不发奖励、不修改公共次数或购买次数。
 
 副本目录通过 `HomeFeatureRuntime.MapRegionProgress` 读取统一离线主线区域进度接口；进度达到 `10000` 时视为公开。该接口由主线区域目标推进，不扩展地图类 11–23 的运行时接线。
@@ -102,11 +113,11 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 
 以下为已确认的单机处理要求及实际采用的行为。
 
-服务端进入事务由本地保存替代；次数在实际进入时扣除，主动离开不退还。旧自创幻兽派遣与真人赛事／镜像入口停用，不增加统一体力或角色等级硬门槛。
+服务端进入事务由本地保存替代；挑战进入、失败或完成后未领奖均不扣领奖次数，只有奖励成功领取后才从全局领奖池扣减。旧自创幻兽派遣与真人赛事／镜像入口停用，不增加统一体力或角色等级硬门槛。
 
 成功完成至少携带一位本地邀请伙伴的战斗时，固定增加100友情币，不设置每周或累计领取上限；这替代原由服务器下发的好友助战奖励。
 
-沿用已确认的单机世界阶段方案，服务器开服日期条件不计等待；个人等级、战力和个人评级仍按原配置检查，区域官方主线目标完成后公开。难度仅按当前格式中的有效进度和原条件开放；旧格式存档不导入。
+日常副本难度按官方个人等级、战力和个人评级条件检查；`ServerRankUnlockDaysCondition` 以档案创建时间为起点，按已完整经过的24小时天数对照官方 `days` 字段。区域官方主线目标完成后公开；难度仅按当前格式中的有效进度和原条件开放，旧格式存档不导入。
 
 竞技入口在离线版采用原 `ArenaEntry` 的 Type 58 地图预览／开放门槛，不使用 `ArenaAreaEntry` 中依赖组队挑战的旁路开放条件。服务端对手资料和赛季同步改由固定版守卫模板及玩家本地名次替代；挑战结算用原每日次数及胜负奖励配置，本地胜场和名次只属于当前玩家，胜利后采用对手名次。守卫数值按用户确认翻倍，附加外观按模板数据加载，性别在官方可用选项中均衡随机并写入活动挑战存档。
 
@@ -118,9 +129,12 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 
 ## 尚未实现
 
+- Type 22 图标资源已恢复，其页面截图与模拟点击回归尚未通过。
 - 恢复官方 `LoopVerticalScrollRect.RefillCells` 组件及初始化行为，修复游记、副本列表／详情／路线及竞技 prefab 的偏移和裁切，再检查官方渲染、点击与遮挡。
-- 实际鼠标／键盘输入、战斗胜负与失败重打、奖励结算、路线中断后恢复、竞技排名变化及相关存档恢复均待 Play Mode 核验；当前验收仅通过业务状态断言，驱动器调用回调不等于真实输入或战斗。
-- 最新静态工程检查通过；Unity Player 构建、启动与逐项流程验收尚未执行。
+- 公共模块规则验收及 `ProjectTools.Validate` 通过，覆盖存档年龄解锁、官方评级、奖励概率、翻倍与封顶、领奖成功扣次、失败保留、购买、Type 22 成就和本地个人记录榜。内置屏 Play Mode 的模拟指针已通过目录／详情入场、路线保存后继续、主动离开结算及冷读；终点清理由夹具写入，不代表实战。成功领奖的模拟指针断言未通过，完整奖励 UI、真实战斗成功领奖和后续竞技流程仍待验证。
+- 最新静态工程检查通过（132,293 个 GUID）；本次公共模块提取尚未构建或发布 Windows Player。
+- 日常副本官方结果面板已接入 Home，包括原评级图、本人队伍行、奖励预览和成功领奖后的实际奖励入口。转换器保留已核对来源的现有输出与 GUID，记录实际字节哈希，并绑定原 RawImage 和 `WorldSafeArea`；面板激活后再设置宿主排序。Unity 导入／编译和结果模型断言通过，但已查看的运行截图仍有粉色 shader、缺字及内容遮挡，领奖按钮尚未完成有效点击；不能认定面板视觉或成功领奖流程通过。评级奖励双倍概率基础值为 5%；按用户确认，赛季星象合约、古遗物幸运神像和装备词条对应的本地系统迁移前暂按 0% 加成。适配器支持加算并按 100% 封顶，后续接入 Home 读取实际状态。当前批量领奖上限为 1，官方福利运行数据的离线接入尚未完成。批量购买滑块已接入原购买 prefab；入口第二个“馈赠”Tab 的 Type 22 成就进度、官方奖励行展示和本人领取事务已接入，该页不增加领奖池次数。
+- 官方按副本／难度分别记录的奖励找回次数与价格、成就排行窗口及完整榜单范围切换仍未迁移。跨玩家榜单按用户确认改为本地个人记录榜，不生成其他玩家或 NPC 数据。
 
 ## 代码与资源入口
 
@@ -133,3 +147,5 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 [日常副本运行资源来源清单](../../assets/reference/dungeons-runtime-source-manifest.json)、[竞技场运行资源来源清单](../../assets/reference/arena-source-manifest.json)
 
 主要接入代码：[HomeHudView.Dungeons](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Dungeons.cs)、[OfflineDailyDungeonSession](../../unity/Assets/Game/Runtime/Offline/World/OfflineDailyDungeonSession.cs)、[DailyDungeonBattleRunner](../../unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs)、[OfflineArenaSession](../../unity/Assets/Game/Runtime/Offline/World/OfflineArenaSession.cs)、[ArenaBattleRunner](../../unity/Assets/Game/Runtime/Presentation/Home/ArenaBattleRunner.cs)
+
+日常副本共用模块：[OfflineDailyDungeonModule](../../unity/Assets/Game/Runtime/Offline/World/OfflineDailyDungeonModule.cs)、[private-routes.json](../../unity/Assets/Game/Resources/Dungeons/private-routes.json)、[官方日常副本奖励规则](../../.tools/source-packages/official-code/common-source/Common/RewardRuleInfoParser.cs)、[官方评级与地图奖励](../../.tools/source-packages/official-code/common-source/Common/DailyDungeonMapGroupInfoParser.cs)、[官方解锁与次数](../../.tools/source-packages/official-code/common-source/Common/PlayerDailyDungeonDataExt.cs)、[官方领奖与购买 UI](../../.tools/source-packages/official-code/client-source/DailyDungeonCostMoneyContent.cs)

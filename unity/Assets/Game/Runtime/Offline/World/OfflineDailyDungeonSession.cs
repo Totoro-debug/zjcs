@@ -254,12 +254,30 @@ namespace Zjcs.Offline.World
     public sealed class DailyDungeonSave
     {
         public int schema = 1;
+        public int claimStateVersion;
         public string localDate;
         public int usedEntries;
         public int purchasedEntries;
+        public int remainingClaims;
+        public long lifetimeClaimedRewardTimes;
+        public List<int> claimedAchievementIndexes = new List<int>();
+        public int purchasedAvailableEntries;
+        public int giftedAvailableClaims; // Legacy save field; cleared by claim-state migration.
+        public List<string> entryPurchaseReceipts = new List<string>();
         public List<DailyDungeonDifficultySave> unlocked = new List<DailyDungeonDifficultySave>();
         public List<DailyDungeonBestGradeSave> bestGrades = new List<DailyDungeonBestGradeSave>();
+        public List<DailyDungeonLeaderboardRecordSave> leaderboard = new List<DailyDungeonLeaderboardRecordSave>();
+        public List<DailyDungeonGiftSave> gifts = new List<DailyDungeonGiftSave>();
+        public List<DailyDungeonPendingClaimSave> pendingClaims = new List<DailyDungeonPendingClaimSave>();
         public DailyDungeonRunSave activeRun;
+    }
+
+    [Serializable]
+    public sealed class DailyDungeonPendingClaimSave
+    {
+        public string id;
+        public int awardTimes;
+        public DailyDungeonRunSave run;
     }
 
     [Serializable]
@@ -292,24 +310,43 @@ namespace Zjcs.Offline.World
         public int lastBattleOutcome;
         public bool privateRouteComplete;
         public long startedAtUnixSeconds;
+        public long finishedAtUnixSeconds;
+        public long startedAtUtcTicks;
+        public long finishedAtUtcTicks;
     }
 
-    public sealed class OfflineDailyDungeonSession
+    public class OfflineDailyDungeonSession
     {
         private readonly string path;
         private DailyDungeonSave save;
+        private long profileCreatedAtUnixSeconds;
+        protected readonly IDailyDungeonRouteAdapter RouteAdapter;
 
         public DailyDungeonRuntimeData Catalog { get; }
         public DailyDungeonSave Save => save;
         public DailyDungeonRunSave ActiveRun => save.activeRun;
-        public int RemainEntries => Math.Max(0,
-            Catalog.settings.DailyDungeonMaxLimitCount - save.usedEntries);
+        public IReadOnlyList<DailyDungeonPendingClaimSave> PendingClaims => save.pendingClaims;
+        public long DailyDungeonGetRewardCount => Math.Max(0L, save.lifetimeClaimedRewardTimes);
+        protected virtual int DailyFreeClaimLimit => Math.Max(0, Catalog.settings.DailyDungeonDailyFreeCount);
+        public int ClaimCapacity => Math.Max(0, Catalog.settings.DailyDungeonMaxLimitCount
+            - Math.Max(0, save.remainingClaims));
+        public virtual int RemainEntries
+        {
+            get
+            {
+                long available = Math.Max(0L, Math.Min(Catalog.settings.DailyDungeonMaxLimitCount,
+                    Math.Max(0, save.remainingClaims)));
+                return (int)Math.Min(int.MaxValue, available);
+            }
+        }
 
-        private OfflineDailyDungeonSession(string path, DailyDungeonRuntimeData catalog, DailyDungeonSave save)
+        protected OfflineDailyDungeonSession(string path, DailyDungeonRuntimeData catalog, DailyDungeonSave save,
+            IDailyDungeonRouteAdapter routeAdapter = null)
         {
             this.path = path;
             Catalog = catalog;
             this.save = save;
+            RouteAdapter = routeAdapter ?? ConfiguredDailyDungeonRouteAdapter.LoadDefault();
         }
 
         public static DailyDungeonRuntimeData LoadCatalog()
@@ -328,8 +365,10 @@ namespace Zjcs.Offline.World
         public static OfflineDailyDungeonSession OpenPrivateMap(ProfileSlotCatalog slots, string slotId,
             DailyDungeonRuntimeData catalog = null) => OpenCore(slots, slotId, catalog, false);
 
-        private static OfflineDailyDungeonSession OpenCore(ProfileSlotCatalog slots, string slotId,
-            DailyDungeonRuntimeData catalog, bool resetDailyEntries)
+        protected static OfflineDailyDungeonSession OpenCore(ProfileSlotCatalog slots, string slotId,
+            DailyDungeonRuntimeData catalog, bool resetDailyEntries,
+            IDailyDungeonRouteAdapter routeAdapter = null,
+            Func<string, DailyDungeonRuntimeData, DailyDungeonSave, OfflineDailyDungeonSession> factory = null)
         {
             if (slots == null || !slots.Contains(slotId))
                 throw new ArgumentException("A valid profile slot is required.", nameof(slotId));
@@ -341,8 +380,12 @@ namespace Zjcs.Offline.World
             DailyDungeonSave state = read.Json == null
                 ? new DailyDungeonSave()
                 : JsonUtility.FromJson<DailyDungeonSave>(read.Json);
-            Normalize(state);
-            var session = new OfflineDailyDungeonSession(path, catalog, state);
+            Normalize(state, catalog.settings.DailyDungeonDailyFreeCount,
+                catalog.settings.DailyDungeonMaxLimitCount);
+            var session = factory == null
+                ? new OfflineDailyDungeonSession(path, catalog, state, routeAdapter)
+                : factory(path, catalog, state);
+            session.profileCreatedAtUnixSeconds = slots.GetCreatedAtUnixSeconds(slotId);
             if (resetDailyEntries) session.ResetDailyEntries(DateTime.Now);
             return session;
         }
@@ -351,7 +394,7 @@ namespace Zjcs.Offline.World
         {
             if (regionIsPublic == null) throw new ArgumentNullException(nameof(regionIsPublic));
             return Catalog.dungeons.Where(info => info != null
-                && info.difficulties != null && info.difficulties.Any(value => value.difficulty != 50)
+                && info.difficulties != null && info.difficulties.Any(value => !RouteAdapter.IsPrivateDifficulty(value.difficulty))
                 && info.entryEntityId > 0 && info.entryRegionId >= 0
                 && regionIsPublic(info.entryMapClassId, info.entryRegionId));
         }
@@ -395,7 +438,7 @@ namespace Zjcs.Offline.World
             {
                 if (dungeon == null || dungeonIsPublic == null || !dungeonIsPublic(dungeon.id)) continue;
                 foreach (DailyDungeonRuntimeDifficulty difficulty in dungeon.difficulties ?? Array.Empty<DailyDungeonRuntimeDifficulty>())
-                    if (difficulty.difficulty != 50 && (difficulty.tabConditionId <= 0
+                    if (!RouteAdapter.IsPrivateDifficulty(difficulty.difficulty) && (difficulty.tabConditionId <= 0
                         || tabConditionMet != null && tabConditionMet(dungeon.id, difficulty.tabConditionId)))
                         result.Add((dungeon.id, difficulty.difficulty));
             }
@@ -428,9 +471,9 @@ namespace Zjcs.Offline.World
         public bool CanEnter(int dungeonId, int difficulty, bool isPublic, Func<int, bool> conditionMet)
         {
             DailyDungeonRuntimeDifficulty data = FindDifficulty(dungeonId, difficulty);
-            if ((!isPublic && difficulty != 50) || data == null || data.entryConditionId > 0
+            if ((!isPublic && !RouteAdapter.IsPrivateDifficulty(difficulty)) || data == null || data.entryConditionId > 0
                 && (conditionMet == null || !conditionMet(data.entryConditionId))) return false;
-            return difficulty == 0 || difficulty == 50 || IsUnlocked(dungeonId, difficulty);
+            return difficulty == 0 || RouteAdapter.IsPrivateDifficulty(difficulty) || IsUnlocked(dungeonId, difficulty);
         }
 
         public bool TryBegin(int dungeonId, int difficulty, Func<int, bool> isPublic,
@@ -439,37 +482,55 @@ namespace Zjcs.Offline.World
         {
             error = null;
             if (save.activeRun != null) { error = "已有未完成的副本路线。"; return false; }
-            bool publicRoute = difficulty != 50;
+            bool publicRoute = !RouteAdapter.IsPrivateDifficulty(difficulty);
             if (publicRoute && (isPublic == null || !isPublic(dungeonId))
                 || !CanEnter(dungeonId, difficulty, publicRoute,
                     id => entryConditionMet != null && entryConditionMet(dungeonId, id)))
             { error = "当前副本难度尚不可进入。"; return false; }
-            if (publicRoute && save.usedEntries >= Catalog.settings.DailyDungeonMaxLimitCount)
-            { error = "今日副本次数已用完。"; return false; }
-            int freeCount = Math.Max(0, Catalog.settings.DailyDungeonDailyFreeCount);
-            bool paid = publicRoute && save.usedEntries >= freeCount;
-            if (paid)
-            {
-                int priceIndex = save.purchasedEntries;
-                long[] prices = Catalog.settings.DailyDungeonBuyCostCountList ?? Array.Empty<long>();
-                long currencyCount = priceIndex < prices.Length ? prices[priceIndex] : 0;
-                string receipt = "daily-dungeon:entry:" + save.localDate + ":" + save.usedEntries;
-                if (currencyItemId != Catalog.settings.DailyDungeonBuyCostItemId || currencyCount <= 0
-                    || consumeItem == null || !consumeItem(receipt, currencyItemId, currencyCount))
-                { error = "晨星不足，无法购买挑战次数。"; return false; }
-            }
             DailyDungeonRuntimeDifficulty selected = FindDifficulty(dungeonId, difficulty);
+            DailyDungeonRuntimeMap selectedMap = selected == null ? null : FindMap(selected.mapGroupId);
+            if (selectedMap == null || selectedMap.startRoomId <= 0)
+            { error = "当前副本地图配置不可用。"; return false; }
             var run = new DailyDungeonRunSave
             {
                 id = Guid.NewGuid().ToString("N"), dungeonId = dungeonId,
                 difficulty = difficulty, mapGroupId = selected.mapGroupId,
-                currentRoomId = FindMap(selected.mapGroupId).startRoomId,
-                startedAtUnixSeconds = nowUnixSeconds
+                currentRoomId = selectedMap.startRoomId,
+                startedAtUnixSeconds = nowUnixSeconds,
+                startedAtUtcTicks = DateTime.UtcNow.Ticks
             };
             DailyDungeonSave next = Clone(save);
-            if (publicRoute) next.usedEntries++;
-            if (paid) next.purchasedEntries++;
             next.activeRun = run;
+            Persist(next);
+            return true;
+        }
+
+        public bool TryPurchaseEntries(string receipt, int count, IDailyDungeonEconomyAdapter economy)
+        {
+            if (economy == null || string.IsNullOrWhiteSpace(receipt) || count <= 0
+                || save.entryPurchaseReceipts.Contains(receipt)
+                || count > ClaimCapacity)
+                return false;
+            long[] prices = Catalog.settings.DailyDungeonBuyCostCountList ?? Array.Empty<long>();
+            if ((long)save.purchasedEntries + count > prices.Length) return false;
+            long cost = 0;
+            try
+            {
+                for (int index = 0; index < count; index++)
+                {
+                    long price = prices[save.purchasedEntries + index];
+                    if (price <= 0) return false;
+                    cost = checked(cost + price);
+                }
+            }
+            catch (OverflowException) { return false; }
+            if (cost <= 0 || !economy.Consume(receipt, Catalog.settings.DailyDungeonBuyCostItemId, cost))
+                return false;
+            DailyDungeonSave next = Clone(save);
+            next.purchasedEntries += count;
+            next.purchasedAvailableEntries += count;
+            next.remainingClaims += count;
+            next.entryPurchaseReceipts.Add(receipt);
             Persist(next);
             return true;
         }
@@ -502,10 +563,8 @@ namespace Zjcs.Offline.World
             DailyDungeonRunSave run = save.activeRun;
             DailyDungeonRuntimeRoom room = run == null ? null : FindRoom(roomId);
             DailyDungeonRuntimeStage stage = room == null ? null : FindStage(room.stageId);
-            bool hasEnemyWaves = stage != null && (stage.waveArrayIds?.Length > 0
-                || stage.waveMonsterIds?.Any(wave => wave?.Length > 0) == true);
-            if (run == null || run.dungeonId != 121 || run.difficulty != 50
-                || run.currentRoomId != roomId || room == null || !hasEnemyWaves
+            if (run == null || !RouteAdapter.CanRecordPrivateBattle(run, room, stage)
+                || run.currentRoomId != roomId
                 || run.clearedRoomIds.Contains(roomId)) return false;
             DailyDungeonSave next = Clone(save);
             next.activeRun.lastBattleRoomId = roomId;
@@ -520,11 +579,8 @@ namespace Zjcs.Offline.World
         {
             DailyDungeonRunSave run = save.activeRun;
             DailyDungeonRuntimeRoom room = run == null ? null : FindRoom(roomId);
-            if (run == null || run.dungeonId != 121 || run.difficulty != 50 || run.privateRouteComplete
-                || run.currentRoomId != roomId || room == null || room.type != 6
-                || room.nextRoomIds == null || room.nextRoomIds.Length != 0 || FindStage(room.stageId) != null
-                || run.lastBattleRoomId != 12107 || run.lastBattleOutcome != 1
-                || !run.clearedRoomIds.Contains(12107)) return false;
+            if (run == null || !RouteAdapter.CanCompletePrivateRoute(run, room)
+                || FindStage(room.stageId) != null) return false;
             DailyDungeonSave next = Clone(save);
             next.activeRun.privateRouteComplete = true;
             Persist(next);
@@ -540,28 +596,48 @@ namespace Zjcs.Offline.World
             return true;
         }
 
-        public bool Finish(int grade, Action<string, DailyDungeonRunSave> grantClearedRoomRewards)
+        public virtual bool Finish(int grade)
+        {
+            return FinishAndPersist(grade, null);
+        }
+
+        protected bool FinishAndPersist(int grade,
+            Action<DailyDungeonSave, DailyDungeonRunSave> addCompletionData)
         {
             int officialGrade = CurrentGrade();
             DailyDungeonRuntimeRoom current = save.activeRun == null ? null : FindRoom(save.activeRun.currentRoomId);
             if (save.activeRun == null || current == null || current.nextRoomIds == null
                 || current.nextRoomIds.Length != 0 || !save.activeRun.clearedRoomIds.Contains(current.id)
-                || officialGrade <= 0 || grade != officialGrade || grantClearedRoomRewards == null) return false;
+                || RouteAdapter.IsPrivateDifficulty(save.activeRun.difficulty)
+                || officialGrade <= 0 || grade != officialGrade) return false;
             DailyDungeonRunSave completed = Clone(save.activeRun);
             completed.grade = officialGrade;
+            completed.finishedAtUnixSeconds = DateTimeOffset.Now.ToUnixTimeSeconds();
+            completed.finishedAtUtcTicks = DateTime.UtcNow.Ticks;
             DailyDungeonSave next = Clone(save);
             DailyDungeonBestGradeSave best = next.bestGrades.FirstOrDefault(value =>
                 value.dungeonId == completed.dungeonId && value.difficulty == completed.difficulty);
             if (best == null) next.bestGrades.Add(new DailyDungeonBestGradeSave
             { dungeonId = completed.dungeonId, difficulty = completed.difficulty, grade = grade });
             else best.grade = Math.Max(best.grade, grade);
+            next.pendingClaims.Add(new DailyDungeonPendingClaimSave { id = completed.id, run = completed });
             next.activeRun = null;
-            grantClearedRoomRewards("daily-dungeon:rooms:" + completed.id, completed);
+            addCompletionData?.Invoke(next, completed);
             Persist(next);
             return true;
         }
 
-        public bool Leave(Action<string, DailyDungeonRunSave> grantClearedRoomRewards)
+        public bool DiscardPendingClaim(string claimId)
+        {
+            if (string.IsNullOrWhiteSpace(claimId)) return false;
+            DailyDungeonSave next = Clone(save);
+            int removed = next.pendingClaims.RemoveAll(value => value != null && value.id == claimId);
+            if (removed == 0) return false;
+            Persist(next);
+            return true;
+        }
+
+        public virtual bool Leave(Action<string, DailyDungeonRunSave> grantClearedRoomRewards)
         {
             if (save.activeRun == null || grantClearedRoomRewards == null) return false;
             DailyDungeonRunSave left = Clone(save.activeRun);
@@ -680,7 +756,11 @@ namespace Zjcs.Offline.World
                 case "DailyDungeonUnlockDifficultyCondition":
                     return IsUnlocked(condition.dungeonId, condition.difficulty);
                 case "ServerRankUnlockDaysCondition":
-                    return true;
+                    if (condition.days <= 0) return true;
+                    if (profileCreatedAtUnixSeconds <= 0) return false;
+                    long elapsedProfileSeconds = Math.Max(0L,
+                        DateTimeOffset.Now.ToUnixTimeSeconds() - profileCreatedAtUnixSeconds);
+                    return elapsedProfileSeconds / 86400L >= condition.days;
                 default:
                     return false;
             }
@@ -700,7 +780,7 @@ namespace Zjcs.Offline.World
             }
         }
 
-        private void ResetDailyEntries(DateTime now)
+        protected void ResetDailyEntries(DateTime now)
         {
             string day = now.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
             if (save.localDate == day) return;
@@ -708,22 +788,25 @@ namespace Zjcs.Offline.World
             next.localDate = day;
             next.usedEntries = 0;
             next.purchasedEntries = 0;
+            next.remainingClaims = Math.Max(next.remainingClaims, DailyFreeClaimLimit);
+            next.entryPurchaseReceipts.Clear();
             Persist(next);
         }
 
-        private void Persist(DailyDungeonSave next)
+        protected void Persist(DailyDungeonSave next)
         {
-            Normalize(next);
+            Normalize(next, Catalog.settings.DailyDungeonDailyFreeCount,
+                Catalog.settings.DailyDungeonMaxLimitCount);
             if (!IsValidSave(JsonUtility.ToJson(next)))
                 throw new InvalidDataException("Daily dungeon progress is invalid.");
             LocalJsonSaveFile.Write(path, JsonUtility.ToJson(next, true), IsValidSave);
             save = next;
         }
 
-        private static DailyDungeonSave Clone(DailyDungeonSave value) =>
+        protected static DailyDungeonSave Clone(DailyDungeonSave value) =>
             JsonUtility.FromJson<DailyDungeonSave>(JsonUtility.ToJson(value));
 
-        private static DailyDungeonRunSave Clone(DailyDungeonRunSave value) =>
+        protected static DailyDungeonRunSave Clone(DailyDungeonRunSave value) =>
             JsonUtility.FromJson<DailyDungeonRunSave>(JsonUtility.ToJson(value));
 
         private static void ValidateCatalog(DailyDungeonRuntimeData data)
@@ -748,8 +831,12 @@ namespace Zjcs.Offline.World
             try
             {
                 DailyDungeonSave data = JsonUtility.FromJson<DailyDungeonSave>(json);
-                if (data == null || data.schema != 1 || data.usedEntries < 0 || data.purchasedEntries < 0
-                    || data.localDate == null || data.unlocked == null || data.bestGrades == null) return false;
+                if (data == null || data.schema != 1 || data.claimStateVersion < 0
+                    || data.usedEntries < 0 || data.purchasedEntries < 0 || data.remainingClaims < 0
+                    || data.lifetimeClaimedRewardTimes < 0
+                    || data.purchasedAvailableEntries < 0 || data.giftedAvailableClaims < 0
+                    || data.localDate == null
+                    || data.unlocked == null || data.bestGrades == null) return false;
                 if (data.activeRun != null && !IsEmptyRun(data.activeRun)
                     && (string.IsNullOrWhiteSpace(data.activeRun.id)
                     || data.activeRun.dungeonId <= 0 || data.activeRun.mapGroupId <= 0
@@ -761,6 +848,24 @@ namespace Zjcs.Offline.World
                 if (data.unlocked.Any(value => value == null || value.dungeonId <= 0 || value.difficulty < 0)
                     || data.bestGrades.Any(value => value == null || value.dungeonId <= 0
                         || value.difficulty < 0 || value.grade < 0)) return false;
+                if (data.leaderboard != null && data.leaderboard.Any(value => value == null
+                    || string.IsNullOrWhiteSpace(value.id) || value.dungeonId <= 0
+                    || value.difficulty < 0 || value.grade < 0 || value.finishTicks < 0)) return false;
+                if (data.gifts != null && data.gifts.Any(value => value == null
+                    || string.IsNullOrWhiteSpace(value.receipt) || value.count <= 0)) return false;
+                if (data.pendingClaims != null && data.pendingClaims.Any(value => value == null
+                    || string.IsNullOrWhiteSpace(value.id) || value.awardTimes < 0 || value.run == null
+                    || value.id != value.run.id || value.run.dungeonId <= 0
+                    || value.run.difficulty < 0 || value.run.mapGroupId <= 0
+                    || value.run.grade <= 0 || value.run.finishedAtUnixSeconds <= 0)) return false;
+                if (data.entryPurchaseReceipts != null
+                    && (data.entryPurchaseReceipts.Any(string.IsNullOrWhiteSpace)
+                        || data.entryPurchaseReceipts.Distinct().Count() != data.entryPurchaseReceipts.Count)) return false;
+                if (data.claimedAchievementIndexes != null
+                    && (data.claimedAchievementIndexes.Any(value => value < 0)
+                        || data.claimedAchievementIndexes.Distinct().Count() != data.claimedAchievementIndexes.Count)) return false;
+                if (data.pendingClaims != null
+                    && data.pendingClaims.Select(value => value.id).Distinct().Count() != data.pendingClaims.Count) return false;
                 return data.unlocked.Select(value => value.dungeonId + ":" + value.difficulty).Distinct().Count()
                     == data.unlocked.Count && data.bestGrades.Select(value => value.dungeonId + ":" + value.difficulty)
                     .Distinct().Count() == data.bestGrades.Count;
@@ -768,11 +873,63 @@ namespace Zjcs.Offline.World
             catch { return false; }
         }
 
-        private static void Normalize(DailyDungeonSave data)
+        private static void Normalize(DailyDungeonSave data, int dailyFreeClaimLimit, int dailyMaxLimit)
         {
             if (data.localDate == null) data.localDate = string.Empty;
             if (data.unlocked == null) data.unlocked = new List<DailyDungeonDifficultySave>();
             if (data.bestGrades == null) data.bestGrades = new List<DailyDungeonBestGradeSave>();
+            if (data.leaderboard == null) data.leaderboard = new List<DailyDungeonLeaderboardRecordSave>();
+            if (data.gifts == null) data.gifts = new List<DailyDungeonGiftSave>();
+            if (data.pendingClaims == null) data.pendingClaims = new List<DailyDungeonPendingClaimSave>();
+            if (data.entryPurchaseReceipts == null) data.entryPurchaseReceipts = new List<string>();
+            if (data.claimedAchievementIndexes == null) data.claimedAchievementIndexes = new List<int>();
+            if (data.purchasedAvailableEntries < 0) data.purchasedAvailableEntries = 0;
+            if (data.giftedAvailableClaims < 0) data.giftedAvailableClaims = 0;
+            if (data.lifetimeClaimedRewardTimes < 0) data.lifetimeClaimedRewardTimes = 0;
+            int previousClaimStateVersion = data.claimStateVersion;
+            if (data.claimStateVersion < 1)
+            {
+                // Legacy usedEntries counted route starts, including failed runs.
+                // The confirmed offline policy charges only after a successful claim.
+                data.usedEntries = 0;
+                data.claimStateVersion = 1;
+            }
+            if (data.claimStateVersion < 2)
+            {
+                data.remainingClaims = previousClaimStateVersion >= 1
+                    ? Math.Max(0, dailyFreeClaimLimit - data.usedEntries)
+                        + data.purchasedAvailableEntries + data.giftedAvailableClaims
+                    : dailyFreeClaimLimit;
+                data.remainingClaims = Math.Min(Math.Max(0, dailyMaxLimit), data.remainingClaims);
+                data.claimStateVersion = 2;
+            }
+            else
+            {
+                data.remainingClaims = Math.Min(Math.Max(0, dailyMaxLimit), data.remainingClaims);
+            }
+            if (data.claimStateVersion < 3)
+            {
+                // Keep the persisted total pool, but stop treating server-only gifts as a local source.
+                data.giftedAvailableClaims = 0;
+                data.claimStateVersion = 3;
+            }
+            foreach (DailyDungeonGiftSave gift in data.gifts)
+            {
+                if (gift == null) continue;
+                if (gift.receipt == null) gift.receipt = string.Empty;
+                if (gift.localDate == null) gift.localDate = string.Empty;
+                gift.count = Math.Max(0, gift.count);
+            }
+            foreach (DailyDungeonPendingClaimSave pending in data.pendingClaims)
+            {
+                if (pending == null) continue;
+                if (pending.id == null) pending.id = string.Empty;
+                pending.awardTimes = Math.Max(0, pending.awardTimes);
+                if (pending.run == null) continue;
+                if (pending.run.id == null) pending.run.id = string.Empty;
+                if (pending.run.clearedRoomIds == null) pending.run.clearedRoomIds = new List<int>();
+                if (pending.run.activeBattleCheckpoint == null) pending.run.activeBattleCheckpoint = string.Empty;
+            }
             if (data.activeRun != null && IsEmptyRun(data.activeRun)) data.activeRun = null;
             if (data.activeRun != null)
             {
@@ -789,7 +946,9 @@ namespace Zjcs.Offline.World
                 && run.grade == 0 && (run.clearedRoomIds == null || run.clearedRoomIds.Count == 0)
                 && !run.privateRouteComplete
                 && string.IsNullOrEmpty(run.activeBattleCheckpoint) && run.lastBattleRoomId == 0
-                && run.lastBattleOutcome == 0 && run.startedAtUnixSeconds == 0;
+                && run.lastBattleOutcome == 0 && run.startedAtUnixSeconds == 0
+                && run.finishedAtUnixSeconds == 0 && run.startedAtUtcTicks == 0
+                && run.finishedAtUtcTicks == 0;
         }
     }
 }

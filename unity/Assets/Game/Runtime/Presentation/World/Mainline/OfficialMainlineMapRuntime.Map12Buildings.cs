@@ -25,7 +25,7 @@ namespace Zjcs.Presentation.World
         private GameObject map12PrivateDungeonDialog;
         private GameObject map12PrivateDungeonRouteDialog;
         private GameObject map12PrivateDungeonRunner;
-        private OfflineDailyDungeonSession map12PrivateDungeonSession;
+        private OfflineDailyDungeonModule map12PrivateDungeonSession;
         private const string MountLiftCompletionTag = "map12:building:3501";
         private const string MountLiftMainlineTag = "山壁电梯";
 
@@ -126,7 +126,7 @@ namespace Zjcs.Presentation.World
             {
                 OfficialDungeonUiBindingRuntime.Apply(map12PrivateDungeonDialog, "DailyDungeonDialogPrivateMap", PostMap12PopupSound);
                 var slots = new ProfileSlotCatalog(persistentDataPath);
-                map12PrivateDungeonSession = OfflineDailyDungeonSession.OpenPrivateMap(slots, slotId);
+                map12PrivateDungeonSession = OfflineDailyDungeonModule.OpenPrivateMap(slots, slotId);
                 int displayId = OfficialDungeonUiBindingRuntime.PrivateDisplayDungeonId;
                 var display = map12PrivateDungeonSession.FindDungeon(displayId);
                 int difficulty = display.difficulties.Where(value => map12PrivateDungeonSession.IsUnlocked(displayId, value.difficulty))
@@ -194,7 +194,7 @@ namespace Zjcs.Presentation.World
         {
             if (map12PrivateDungeonBattleActive || closed || battleController != null) return;
             var slots = new ProfileSlotCatalog(persistentDataPath);
-            map12PrivateDungeonSession = OfflineDailyDungeonSession.OpenPrivateMap(slots, slotId);
+            map12PrivateDungeonSession = OfflineDailyDungeonModule.OpenPrivateMap(slots, slotId);
             DailyDungeonRunSave run = map12PrivateDungeonSession.ActiveRun;
             if (run == null)
             {

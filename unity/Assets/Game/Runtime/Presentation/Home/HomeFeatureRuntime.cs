@@ -36,7 +36,7 @@ namespace Zjcs.Presentation.Home
     /// furniture action through the offline rules.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class HomeFeatureRuntime : MonoBehaviour, IInventoryHomeNavigationContext
+    public sealed partial class HomeFeatureRuntime : MonoBehaviour, IInventoryHomeNavigationContext
     {
         private const int OfficialMailFunctionType = 52;
         private const int HomeTutorialFixedRewardId = 7;
@@ -47,7 +47,7 @@ namespace Zjcs.Presentation.Home
         private OfflineNpcTravelService npcTravel;
         private OfficialNpcTravelCatalog npcTravelCatalog;
         private OfflineNpcTravelPropertyCalculator npcTravelProperties;
-        private OfflineDailyDungeonSession dailyDungeons;
+        private OfflineDailyDungeonModule dailyDungeons;
         private OfficialFantasyTowerCatalog fantasyTowerCatalog;
         private OfflineFantasyTowerSession fantasyTower;
         private OfflineNpcAssistanceProgress npcAssistanceProgress;
@@ -153,7 +153,7 @@ namespace Zjcs.Presentation.Home
                 progression.Catalog, npcTravelCatalog);
             return npcTravelProperties.QuickSelect(profile.Save.Player, travelId, eligibleNpcIds);
         }
-        public OfflineDailyDungeonSession DailyDungeons => dailyDungeons;
+        public OfflineDailyDungeonModule DailyDungeons => dailyDungeons;
         public OfflineFantasyTowerSession FantasyTower => fantasyTower;
         internal OfficialFantasyTowerCatalog FantasyTowerCatalog =>
             fantasyTowerCatalog ?? (fantasyTowerCatalog = OfficialFantasyTowerCatalog.LoadDefault());
@@ -396,7 +396,7 @@ namespace Zjcs.Presentation.Home
         }
 
         public bool GrantDailyDungeonRewards(string receipt, Zjcs.Offline.World.DailyDungeonRunSave run,
-            int[] rewardRuleIds)
+            int[] rewardRuleIds, int awardTimes = 1)
         {
             if (string.IsNullOrWhiteSpace(receipt) || run == null || rewardRuleIds == null) return false;
             EnsureProgression();
@@ -404,35 +404,15 @@ namespace Zjcs.Presentation.Home
             var itemCounts = new Dictionary<int, long>();
             int profession = profile.Save.Player.Wardrobe.Profession;
             long combatRating = DailyDungeonCombatRating();
-            foreach (int ruleId in rewardRuleIds)
+            Zjcs.Offline.World.DailyDungeonRewardRoll roll = dailyDungeons.RollRewards(run,
+                run.grade > 0, profile.Save.Player.Level, profile.Save.Player.SubRank,
+                rule => DailyDungeonRewardConditionMet(rule, profession, combatRating), receipt,
+                Math.Max(1, awardTimes), rewardRuleIds, random);
+            foreach (Zjcs.Offline.World.DailyDungeonRewardRollItem reward in roll.Items)
             {
-                Zjcs.Offline.World.DailyDungeonRuntimeReward rule = dailyDungeons.Catalog.rewardRules
-                    .Where(value => value.Id == ruleId)
-                    .OrderBy(value => value.Order < 0 ? int.MaxValue : value.Order)
-                    .FirstOrDefault(value => DailyDungeonRewardConditionMet(value, profession, combatRating));
-                if (rule == null || rule.IdList == null || rule.WeightList == null || rule.CountList == null
-                    || rule.IdList.Length != rule.WeightList.Length || rule.IdList.Length != rule.CountList.Length)
-                    return false;
-                long weightTotal = rule.WeightList.Where(value => value > 0).Sum(value => (long)value);
-                if (weightTotal <= 0 || rule.Percent <= 0) continue;
-                for (int index = 0; index < rule.IdList.Length; index++)
-                {
-                    int itemId = rule.IdList[index];
-                    int weight = rule.WeightList[index];
-                    float count = rule.CountList[index];
-                    if (itemId <= 0 || weight <= 0 || count <= 0) continue;
-                    if (rule.LevelCountId > 0)
-                        count *= dailyDungeons.LevelNumber(rule.LevelCountId, profile.Save.Player.Level);
-                    if (rule.SubRankCountId != null && index < rule.SubRankCountId.Length
-                        && rule.SubRankCountId[index] > 0)
-                        count *= dailyDungeons.LevelNumber(rule.SubRankCountId[index], profile.Save.Player.SubRank);
-                    long amount = Math.Max(0L, (long)count);
-                    double probability = rule.Percent * weight / weightTotal;
-                    if (probability < 1d && !random.Roll(probability)) continue;
-                    if (probability <= 0d || amount <= 0) continue;
-                    itemCounts[itemId] = itemCounts.TryGetValue(itemId, out long current)
-                        ? checked(current + amount) : amount;
-                }
+                if (reward == null || reward.ItemId <= 0 || reward.Count <= 0) continue;
+                itemCounts[reward.ItemId] = itemCounts.TryGetValue(reward.ItemId, out long current)
+                    ? checked(current + reward.Count) : reward.Count;
             }
             if (itemCounts.Count == 0) return true;
             OfficialEquipmentCatalog equipment = progression.EquipmentCatalog;
@@ -508,6 +488,33 @@ namespace Zjcs.Presentation.Home
                 hud?.RefreshAll();
             }
             return applied;
+        }
+
+        public bool ClaimDailyDungeonAchievement(int index)
+        {
+            if (dailyDungeons == null || profile == null) return false;
+            bool claimed = dailyDungeons.ClaimDailyDungeonAchievement(index, (receipt, rewards) =>
+            {
+                long now = Now();
+                ProgressionResult result = profile.ApplyInventoryTransaction(receipt, save =>
+                {
+                    foreach (Zjcs.Offline.World.DailyDungeonAchievementReward reward in rewards)
+                    {
+                        if (reward == null || !OfflineInventoryOperations.Grant(save.Player,
+                            reward.ItemId, reward.Count, now).IsApplied)
+                            throw new InvalidOperationException("Daily dungeon achievement reward could not be saved.");
+                    }
+                });
+                return result.Status == ProgressionResultStatus.Applied
+                    || result.Status == ProgressionResultStatus.Unchanged
+                    || result.Status == ProgressionResultStatus.Ready;
+            });
+            if (claimed)
+            {
+                ReloadContext();
+                hud?.RefreshAll();
+            }
+            return claimed;
         }
 
         public List<FantasyTowerReward> RollFantasyTowerRewards(int stageId, string receipt)
@@ -613,7 +620,7 @@ namespace Zjcs.Presentation.Home
             return false;
         }
 
-        private sealed class DailyDungeonRewardRandom
+        private sealed class DailyDungeonRewardRandom : Zjcs.Offline.World.IDailyDungeonRandom
         {
             private uint state;
 
@@ -706,7 +713,7 @@ namespace Zjcs.Presentation.Home
             profile.Reload();
             dailyChallenges = new OfflineDailyChallengeService(
                 Path.Combine(slots.GetSlotDirectory(slotId), "daily-challenges.json"));
-            dailyDungeons = OfflineDailyDungeonSession.Open(slots, slotId);
+            dailyDungeons = OfflineDailyDungeonModule.Open(slots, slotId);
             fantasyTower = OfflineFantasyTowerSession.Open(slots, slotId);
             npcAssistanceProgress = OfflineNpcAssistanceProgress.Open(slots, slotId);
             npcAssistanceCatalog = OfficialCombatAssetCatalog.LoadDefault().LoadNpcAssistance();

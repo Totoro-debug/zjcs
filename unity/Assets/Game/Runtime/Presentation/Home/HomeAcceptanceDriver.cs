@@ -38,6 +38,7 @@ namespace Zjcs.Presentation.Home
 
         private IEnumerator Start()
         {
+            Application.runInBackground = true;
             Directory.CreateDirectory(Output);
             var slots = new ProfileSlotCatalog(Root);
             string slotId = slots.GetSlotIds().FirstOrDefault();
@@ -1613,15 +1614,11 @@ namespace Zjcs.Presentation.Home
                 Assert(enter != null && enter.interactable, "official dungeon enter button is unavailable");
                 ClickUi(enter);
                 Assert(runtime.DailyDungeons.ActiveRun != null, "dungeon enter button did not save a route");
-                Assert(runtime.DailyDungeons.RecordRoomCleared(
-                    runtime.DailyDungeons.ActiveRun.currentRoomId, string.Empty),
-                    "could not record the cleared route room");
-                InvokePrivate(runtime.Hud, "RenderDailyDungeonRoute");
                 Assert(GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot") != null,
                     "official daily dungeon route did not render");
                 AssertModalOnTop(GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot"), "dungeon route");
                 DumpModalState("dungeon-route", GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot"));
-                return "route " + runtime.DailyDungeons.ActiveRun.id + " entered with one cleared room";
+                return "route " + runtime.DailyDungeons.ActiveRun.id + " entered with no cleared rooms";
             });
             if (!ok) { completed(false); yield break; }
             yield return null;
@@ -1629,28 +1626,97 @@ namespace Zjcs.Presentation.Home
             yield return Capture("dungeons-route.png");
 
             int usedEntries = runtime.DailyDungeons.Save.usedEntries;
+            int runDungeonId = runtime.DailyDungeons.ActiveRun.dungeonId;
             int runDifficulty = runtime.DailyDungeons.ActiveRun.difficulty;
+            int routeStartRoomId = runtime.DailyDungeons.ActiveRun.currentRoomId;
+            GameObject route = GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot");
+            Button routeClose = route.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(value => value.name == "CloseBtn");
+            ok = Check("dungeons-save-route-input", () =>
+            {
+                Assert(routeClose != null && routeClose.isActiveAndEnabled,
+                    "official route close button is unavailable before room selection");
+                ClickUi(routeClose);
+                GameObject confirmation = GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaveConfirmRoot");
+                AssertModalOnTop(confirmation, "route save confirmation");
+                DumpModalState("route-save-confirmation", confirmation);
+                Button saveReturn = confirmation.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value.name == "CommonBtn_11");
+                ClickUi(saveReturn);
+                Assert(runtime.DailyDungeons.ActiveRun != null
+                    && runtime.DailyDungeons.ActiveRun.currentRoomId == routeStartRoomId
+                    && runtime.DailyDungeons.Save.usedEntries == usedEntries,
+                    "saving and returning discarded the route or charged an entry");
+                OfflineDailyDungeonSession reload = OfflineDailyDungeonSession.Open(
+                    new ProfileSlotCatalog(Root), runtime.ActiveProfileSlotId);
+                Assert(reload.ActiveRun != null && reload.ActiveRun.currentRoomId == routeStartRoomId
+                    && reload.Save.usedEntries == usedEntries,
+                    "saved route did not survive reload or changed the entry count");
+                return "route save-and-return persisted room " + routeStartRoomId
+                    + " without changing entry count " + usedEntries;
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+
+            GameObject resumeEntryPanel = GetPrivateGameObject(runtime.Hud, "dailyDungeonRoot");
+            Button resumeDungeon = resumeEntryPanel.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(value => value.name == "Dungeon_" + runtime.DailyDungeons.ActiveRun.dungeonId);
+            ok = Check("dungeons-resume-route-input", () =>
+            {
+                ClickUi(resumeDungeon);
+                GameObject detail = GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot");
+                AssertModalOnTop(detail, "saved dungeon detail");
+                Button resumeRoute = detail.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value.name == "BattleBtn" || value.name == "GoToBtn");
+                ClickUi(resumeRoute);
+                GameObject panel = GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot");
+                AssertModalOnTop(panel, "resumed dungeon route");
+                DumpModalState("resumed-dungeon-route", panel);
+                Assert(runtime.DailyDungeons.ActiveRun != null
+                    && runtime.DailyDungeons.ActiveRun.dungeonId == runDungeonId
+                    && runtime.DailyDungeons.ActiveRun.difficulty == runDifficulty
+                    && runtime.DailyDungeons.ActiveRun.currentRoomId == routeStartRoomId,
+                    "resuming entered a different route");
+                return "official dungeon selection and detail actions resumed the saved route";
+            });
+            if (!ok) { completed(false); yield break; }
+
+            Assert(runtime.DailyDungeons.RecordRoomCleared(routeStartRoomId, string.Empty),
+                "could not record the cleared route room");
+            InvokePrivate(runtime.Hud, "RenderDailyDungeonRoute");
+            yield return null;
+            yield return null;
+            yield return Capture("dungeons-route-cleared.png");
+
             int[] rewardPath = FindRewardRoomPath(runtime.DailyDungeons,
                 runtime.DailyDungeons.ActiveRun);
-            Assert(rewardPath.Length > 0,
-                "official route has no reachable configured reward room for this difficulty");
-            for (int index = 1; index < rewardPath.Length; index++)
+            Assert(rewardPath.Length >= 3,
+                "official route has no reachable configured reward room with a selectable successor");
+            for (int index = 1; index < rewardPath.Length - 1; index++)
             {
                 Assert(runtime.DailyDungeons.ChooseNextRoom(rewardPath[index]),
                     "could not advance through official route to room " + rewardPath[index]);
                 Assert(runtime.DailyDungeons.RecordRoomCleared(rewardPath[index], string.Empty),
                     "could not record cleared reward route room " + rewardPath[index]);
             }
+            int rewardRoomId = rewardPath[rewardPath.Length - 2];
+            Assert(runtime.DailyDungeons.ActiveRun.clearedRoomIds.Contains(rewardRoomId),
+                "the configured reward room was not cleared before leaving");
+            Assert(runtime.DailyDungeons.ChooseNextRoom(rewardPath[rewardPath.Length - 1]),
+                "could not advance to the un-cleared successor room");
+            InvokePrivate(runtime.Hud, "RenderDailyDungeonRoute");
             int[] expectedRoomRewards = runtime.DailyDungeons.ConfiguredRewardRuleIds(
                 runtime.DailyDungeons.ActiveRun, false);
-            GameObject route = GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot");
-            Button routeClose = route.GetComponentsInChildren<Button>(true)
+            route = GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot");
+            routeClose = route.GetComponentsInChildren<Button>(true)
                 .FirstOrDefault(value => value.name == "CloseBtn");
-            ok = Check("dungeons-leave-input", () =>
+            ok = Check("dungeons-leave-settle-input", () =>
             {
                 ClickUi(routeClose);
                 GameObject confirmation = GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaveConfirmRoot");
                 Assert(confirmation != null, "route close did not open leave confirmation");
+                AssertModalOnTop(confirmation, "route leave confirmation");
+                DumpModalState("route-leave-confirmation", confirmation);
                 Button confirm = confirmation.GetComponentsInChildren<Button>(true)
                     .FirstOrDefault(value => value.name == "CommonBtn_12");
                 ClickUi(confirm);
@@ -1675,6 +1741,97 @@ namespace Zjcs.Presentation.Home
             });
             if (!ok) { completed(false); yield break; }
             yield return null;
+
+            entryPanel = GetPrivateGameObject(runtime.Hud, "dailyDungeonRoot");
+            dungeonRow = entryPanel.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(value => value.name.StartsWith("Dungeon_", StringComparison.Ordinal));
+            ok = Check("dungeons-settlement-entry", () =>
+            {
+                ClickUi(dungeonRow);
+                GameObject panel = GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot");
+                AssertModalOnTop(panel, "settlement dungeon detail");
+                Button battle = panel.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value.name == "BattleBtn" || value.name == "GoToBtn");
+                ClickUi(battle);
+                Assert(runtime.DailyDungeons.ActiveRun != null,
+                    "second official dungeon entry did not start a route");
+                return "official detail button started the settlement route";
+            });
+            if (!ok) { completed(false); yield break; }
+
+            int[] terminalPath = FindTerminalRoomPath(runtime.DailyDungeons,
+                runtime.DailyDungeons.ActiveRun);
+            Assert(terminalPath.Length > 1,
+                "official route has no reachable terminal room for settlement");
+            Assert(runtime.DailyDungeons.RecordRoomCleared(terminalPath[0], string.Empty),
+                "could not clear the settlement route start room");
+            for (int index = 1; index < terminalPath.Length; index++)
+            {
+                Assert(runtime.DailyDungeons.ChooseNextRoom(terminalPath[index]),
+                    "could not advance the settlement route to room " + terminalPath[index]);
+                Assert(runtime.DailyDungeons.RecordRoomCleared(terminalPath[index], string.Empty),
+                    "could not clear the settlement route room " + terminalPath[index]);
+            }
+            int settlementGrade = runtime.DailyDungeons.CurrentGrade();
+            Assert(settlementGrade > 0 && runtime.DailyDungeons.Finish(settlementGrade),
+                "official grade rows did not finish the settlement route");
+            int usedBeforeClaim = runtime.DailyDungeons.Save.usedEntries;
+            int remainingBeforeClaim = runtime.DailyDungeons.RemainEntries;
+            long claimedBefore = runtime.DailyDungeons.DailyDungeonGetRewardCount;
+            InvokePrivate(runtime.Hud, "CloseDungeonDetail");
+            InvokePrivate(runtime.Hud, "RefreshDailyDungeonEntryPage");
+            InvokePrivate(runtime.Hud, "OpenPendingDailyDungeonClaim");
+            GameObject resultPanel = GetPrivateGameObject(runtime.Hud, "dailyDungeonClaimConfirmRoot");
+            DailyDungeonPendingClaimSave pending = runtime.DailyDungeons.PendingClaims
+                .FirstOrDefault(value => value != null && value.run != null);
+            DailyDungeonSettlementHudModel settlement = pending == null ? null
+                : DailyDungeonSettlementHudModelBuilder.Build(runtime.DailyDungeons, pending,
+                    runtime.DailyDungeons.MaxAwardTimesPerClaim, runtime.Level, runtime.SubRank);
+            ok = Check("dungeons-settlement-panel", () =>
+            {
+                AssertModalOnTop(resultPanel, "official daily dungeon result");
+                DumpModalState("dungeon-result", resultPanel);
+                Assert(resultPanel.GetComponent<DailyDungeonResultPanelAdapter>() != null,
+                    "official result panel adapter is missing");
+                int[] gradeRuleIds = runtime.DailyDungeons.FindMap(settlement.Run.mapGroupId)
+                    .gradeRewards.First(value => value.difficulty == settlement.Run.difficulty
+                        && value.grade == settlement.Run.grade).rewardRuleIds;
+                Assert(settlement.CanClaim && settlement.RewardRules.Count > 0
+                    && settlement.RewardRules.Any(value => gradeRuleIds.Contains(value.RuleId))
+                    && settlement.RewardRules.All(value => Math.Abs(value.DoubleProbability
+                        - (gradeRuleIds.Contains(value.RuleId) ? 0.05f : 0f)) < 0.000001f),
+                    "official result model did not show configured rewards and the 5% base double probability");
+                return "official result panel shows grade " + settlement.Run.grade
+                    + " and " + settlement.RewardRules.Count + " configured reward rules";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return null;
+            yield return Capture("dungeons-result.png");
+
+            Button claimButton = resultPanel.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(value => value.name == "CommonBtn_CostItem");
+            ok = Check("dungeons-successful-claim", () =>
+            {
+                int awardTimes = settlement.AwardTimes;
+                ClickUi(claimButton);
+                Assert(runtime.DailyDungeons.PendingClaims.Count == 0
+                    && runtime.DailyDungeons.Save.usedEntries == usedBeforeClaim + awardTimes
+                    && runtime.DailyDungeons.RemainEntries == remainingBeforeClaim - awardTimes
+                    && runtime.DailyDungeons.DailyDungeonGetRewardCount == claimedBefore + awardTimes,
+                    "successful result claim did not atomically charge and persist its award times");
+                OfflineDailyDungeonSession reload = OfflineDailyDungeonSession.Open(
+                    new ProfileSlotCatalog(Root), runtime.ActiveProfileSlotId);
+                Assert(reload.Save.usedEntries == usedBeforeClaim + awardTimes
+                    && reload.DailyDungeonGetRewardCount == claimedBefore + awardTimes,
+                    "successful result claim did not survive reload");
+                return "successful pointer claim charged " + awardTimes
+                    + " award time(s) after granting the result";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return null;
+            yield return Capture("dungeons-result-claimed.png");
 
             ok = Check("arena-panel", () =>
             {
@@ -1782,10 +1939,37 @@ namespace Zjcs.Presentation.Home
                 if (!visited.Add(roomId)) continue;
                 DailyDungeonRuntimeRoom room = session.FindRoom(roomId);
                 if (room == null) continue;
+                int[] nextRoomIds = (room.nextRoomIds ?? Array.Empty<int>())
+                    .Where(value => value > 0).ToArray();
                 if ((room.surpriseRewards ?? Array.Empty<DailyDungeonRuntimeSurpriseReward>())
                     .Any(value => value != null && value.difficulty == run.difficulty
-                        && value.rewardRuleIds != null && value.rewardRuleIds.Length > 0)) return path;
-                foreach (int nextRoomId in room.nextRoomIds ?? Array.Empty<int>())
+                        && value.rewardRuleIds != null && value.rewardRuleIds.Length > 0)
+                    && nextRoomIds.Length > 0)
+                    return path.Concat(new[] { nextRoomIds[0] }).ToArray();
+                foreach (int nextRoomId in nextRoomIds)
+                    pending.Enqueue(path.Concat(new[] { nextRoomId }).ToArray());
+            }
+            return Array.Empty<int>();
+        }
+
+        private static int[] FindTerminalRoomPath(OfflineDailyDungeonSession session,
+            DailyDungeonRunSave run)
+        {
+            if (session == null || run == null) return Array.Empty<int>();
+            var pending = new Queue<int[]>();
+            pending.Enqueue(new[] { run.currentRoomId });
+            var visited = new HashSet<int>();
+            while (pending.Count > 0)
+            {
+                int[] path = pending.Dequeue();
+                int roomId = path[path.Length - 1];
+                if (!visited.Add(roomId)) continue;
+                DailyDungeonRuntimeRoom room = session.FindRoom(roomId);
+                if (room == null) continue;
+                int[] nextRoomIds = (room.nextRoomIds ?? Array.Empty<int>())
+                    .Where(value => value > 0).ToArray();
+                if (nextRoomIds.Length == 0) return path;
+                foreach (int nextRoomId in nextRoomIds)
                     pending.Enqueue(path.Concat(new[] { nextRoomId }).ToArray());
             }
             return Array.Empty<int>();
