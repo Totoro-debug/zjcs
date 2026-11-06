@@ -425,13 +425,84 @@ namespace Zjcs.Editor.Map13Mainline
                     "Formal original player lost restored raw region points.");
             Debug.Log("MAINLINE_FORMAL_CLIENT_PASS map="+MapId+" entities="+originals.Length);
         }
+        private static void VerifyOriginalEntityStates(OfficialMainlineMapRuntime runtime)
+        {
+            var world=Field<MainlineSharedWorld>(runtime,"mainlineSharedWorld");
+            var local=Field<IDictionary>(runtime,"mapEntities");
+            object Get(object owner,string name)=>NativeMap14SharedPrefabs.Get(owner,name);
+            var placementOf=world.LoEntityIds.GetType().GetMethod("GetLoEntIdByEntId");
+            int checkedStates=0,checkedPositions=0;
+            foreach(object entity in ((IDictionary)Get(world.Root.Container,"EntityDict")).Values)
+            {
+                int placement=(int)placementOf.Invoke(world.LoEntityIds,new[]{Get(entity,"Id")});
+                if(placement<0)continue;
+                var state=local[placement];
+                object Component(string name)=>entity.GetType().GetMethod("GetComponent",new[]{typeof(Type)})
+                    .Invoke(entity,new object[]{world.Assemblies.CommonType(name)});
+                var stage=Component("WorldStageComponent");
+                if(stage!=null){Require((int)Get(stage,"State")==Field<int>(state,"State"),"Original/local placed stage mismatch: "+placement);checkedStates++;}
+                var grid=Component("GridTransformComponent");
+                if(grid==null)continue;
+                var point=Field<MapGridPoint>(state,"Grid");var original=Get(grid,"MyPos");
+                Require((int)Get(original,"X")==point.X&&(int)Get(original,"Y")==point.Y,
+                    "Original/local placed grid mismatch: "+placement);checkedPositions++;
+            }
+            Require(checkedStates>0&&checkedPositions>0,"Formal original entity-state fixture is empty.");
+            Debug.Log("MAINLINE_FORMAL_ENTITY_STATE_PASS stages="+checkedStates+" positions="+checkedPositions);
+        }
+        private static KeyValuePair<int,int> MutateOriginalPuzzleState(OfficialMainlineMapRuntime runtime)
+        {
+            var world=Field<MainlineSharedWorld>(runtime,"mainlineSharedWorld");
+            var puzzles=Field<OfflineMapPuzzleSession>(runtime,"puzzles");
+            object Get(object owner,string name)=>NativeMap14SharedPrefabs.Get(owner,name);
+            var placementOf=world.LoEntityIds.GetType().GetMethod("GetLoEntIdByEntId");
+            var stages=new Dictionary<int,object>();
+            foreach(object entity in ((IDictionary)Get(world.Root.Container,"EntityDict")).Values)
+            {
+                int placement=(int)placementOf.Invoke(world.LoEntityIds,new[]{Get(entity,"Id")});
+                var stage=entity.GetType().GetMethod("GetComponent",new[]{typeof(Type)})
+                    .Invoke(entity,new object[]{world.Assemblies.CommonType("WorldStageComponent")});
+                if(placement>=0&&stage!=null)stages.Add(placement,stage);
+            }
+            var terminal=puzzles.Rules.First(rule=>rule.TerminalPuzzleType>0&&puzzles.State(rule.PlacementId)==0
+                &&stages.ContainsKey(rule.PlacementId));
+            object original=stages[terminal.PlacementId];int before=(int)Get(original,"State"),events=0;
+            using(var subscription=new NativeMap14SharedEventSubscription(Get(original,"StateUpdateEvent"),
+                world.Assemblies.CommonType("IEcEntityWorldStageComponentStateUpdateEventReceiver"),args=>
+                {Require(ReferenceEquals(args[0],original)&&(int)args[1]==before&&args[2]==null,
+                    "Local state projection changed original event ownership, previous state or parameter.");events++;}))
+            {
+                // Explicit logic fixture: existing terminal results, no puzzle UI or item award claim.
+                puzzles.RunStage(terminal.PlacementId,0);
+                Call(runtime,"SynchronizePuzzleEntities");
+                string originalPath=Field<string>(runtime,"mapSavePath");
+                string denied=Path.Combine(Output,"entity-state-write-denied");Directory.CreateDirectory(denied);
+                var pathField=runtime.GetType().GetField("mapSavePath",BindingFlags.Instance|BindingFlags.NonPublic);
+                bool writeRejected=false;pathField.SetValue(runtime,denied);
+                try { Call(runtime,"SaveLocalProgress"); }
+                catch(TargetInvocationException error) when(error.InnerException is IOException||error.InnerException is UnauthorizedAccessException)
+                { writeRejected=true; }
+                finally { pathField.SetValue(runtime,originalPath); }
+                Require(writeRejected&&events==0&&(int)Get(original,"State")==before,
+                    "Failed map persistence published uncommitted original entity state.");
+                Call(runtime,"SaveLocalProgress");
+                Require(puzzles.State(terminal.PlacementId)!=before&&events==1,
+                    "Saved local terminal did not publish exactly one original stage event.");
+                Call(runtime,"SaveLocalProgress");Require(events==1,"Unchanged save repeated the original stage event.");
+            }
+            VerifyOriginalEntityStates(runtime);VerifyFormalOriginalClient(runtime);
+            Debug.Log("MAINLINE_FORMAL_STATE_MUTATION_PASS placement="+terminal.PlacementId);
+            return new KeyValuePair<int,int>(terminal.PlacementId,puzzles.State(terminal.PlacementId));
+        }
         private static IEnumerator VerifyFormalWorldOwner(OfficialMainlineMapRuntime runtime,string slot,string saves,
             Transform ui,MapGridPoint position)
         {
             var world=Field<MainlineSharedWorld>(runtime,"mainlineSharedWorld");
             var terrain=Field<OfficialMap14NativeWorldView>(runtime,"nativeMap14World");
             var root=world.Root;
+            VerifyOriginalEntityStates(runtime);
             VerifyFormalOriginalClient(runtime);
+            var savedState=MutateOriginalPuzzleState(runtime);
             var manager=world.Assemblies.Shared.GetType("MeManager",true).GetProperty("Instance").GetValue(null);
             Require(ReferenceEquals(root,terrain.SharedRoot),"Formal terrain created a second original world root.");
             var originalRoot=terrain.SharedRoot.Root;
@@ -449,6 +520,9 @@ namespace Zjcs.Editor.Map13Mainline
             Require(terrain!=null&&terrain.IsReady,"Formal map owner did not remount its original terrain.");
             var reopened=Field<MainlineSharedWorld>(runtime,"mainlineSharedWorld");
             VerifyFormalOriginalClient(runtime);
+            VerifyOriginalEntityStates(runtime);
+            Require(Field<OfflineMapPuzzleSession>(runtime,"puzzles").State(savedState.Key)==savedState.Value,
+                "Saved terminal state was not restored before the original client started.");
             Require(!ReferenceEquals(world,reopened)&&!ReferenceEquals(root,terrain.SharedRoot)
                 &&ReferenceEquals(reopened.Root,terrain.SharedRoot),
                 "Reopening the formal map did not create exactly one new original world.");

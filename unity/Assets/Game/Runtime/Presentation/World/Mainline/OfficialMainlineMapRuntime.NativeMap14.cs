@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using Zjcs.Offline.State;
 using Zjcs.Offline.World;
 using Zjcs.Offline.World.MainlinePlayerState;
@@ -39,9 +40,20 @@ namespace Zjcs.Presentation.World
             // One local player; container identifiers keep the original private/public split.
             mainlineSharedPlayer = MainlineSharedPlayerProjection.Create(mainlineSharedWorld,
                 progressionSave.Save, 1, map => map == mapClassId ? regions.regionPoints : snapshots.ReadRegionPoints(map));
+            SynchronizeOriginalMapEntities();
             mainlineSharedWorld.StartClient(mainlineSharedPlayer);
             nativeMap14World = OfficialMap14NativeWorldView.Create(mapRoot, worldCamera,
                 new MainlineNativeGroundState(this), mainlineSharedWorld);
+        }
+
+        private void SynchronizeOriginalMapEntities()
+        {
+            if (mainlineSharedWorld?.IsLoaded != true) return;
+            mainlineSharedWorld.SynchronizeEntityStates(mapEntities.ToDictionary(pair => pair.Key,
+                pair => new MainlineSharedEntityState(pair.Value.EntityClassId, pair.Value.State,
+                    pair.Value.Grid.X, pair.Value.Grid.Y)));
+            if (mainlineSharedPlayer != null) MainlineSharedPlayerProjection.SynchronizeRegionProgress(
+                mainlineSharedPlayer, mapClassId, regions.regionPoints);
         }
 
         private void RefreshNativeMap14State()

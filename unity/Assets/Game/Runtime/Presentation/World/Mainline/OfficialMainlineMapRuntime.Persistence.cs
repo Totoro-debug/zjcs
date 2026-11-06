@@ -50,6 +50,7 @@ namespace Zjcs.Presentation.World
             SnapshotMapVisibility();
             if (map13NavigationSession != null) localSave.map13WaterStates = map13NavigationSession.Water.Save();
             LocalJsonSaveFile.Write(mapSavePath, JsonUtility.ToJson(localSave, true), ValidLocalSave);
+            SynchronizeOriginalMapEntities();
         }
 
         private bool ValidLocalSave(string json)

@@ -5,6 +5,14 @@ using GConfig;
 
 namespace Zjcs.Offline.World.NativeMap14SharedEntities
 {
+    // State already resolved by the owning local map, keyed by original placement.
+    public readonly struct MainlineSharedEntityState
+    {
+        public readonly int EntityClassId, State, X, Y;
+        public MainlineSharedEntityState(int entityClassId, int state, int x, int y)
+        { EntityClassId = entityClassId; State = state; X = x; Y = y; }
+    }
+
     // Owns one map's original parser scope and container. Entity restoration and
     // presentation borrow this scope rather than installing another map root.
     public sealed class MainlineSharedWorld : IDisposable
@@ -143,6 +151,13 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             {
                 if (!completed) Dispose();
             }
+        }
+
+        public void SynchronizeEntityStates(IReadOnlyDictionary<int, MainlineSharedEntityState> states)
+        {
+            RequireActive();
+            if (!IsLoaded) throw new InvalidOperationException("Load the original entities before restoring their local state.");
+            entities.Synchronize(states, IsReady);
         }
 
         public void Start()

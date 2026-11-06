@@ -94,6 +94,19 @@ namespace Zjcs.Offline.World.MainlinePlayerState
             return player;
         }
 
+        public static void SynchronizeRegionProgress(object player, int mapClassId, IReadOnlyDictionary<int, int> points)
+        {
+            if (player == null) throw new ArgumentNullException(nameof(player));
+            if (mapClassId <= 0 || points == null || points.Count == 0
+                || !points.Keys.OrderBy(id => id).SequenceEqual(Enumerable.Range(0, points.Count))
+                || points.Values.Any(value => value < 0))
+                throw new InvalidDataException("Original map progress needs contiguous nonnegative raw region points.");
+            var values = Enumerable.Range(0, points.Count).Select(id => points[id]).ToList();
+            var progress = (IDictionary)Get(player, "WorldMapRegionProgressDict");
+            if (progress.Contains(mapClassId) && ((IEnumerable<int>)progress[mapClassId]).SequenceEqual(values)) return;
+            player.GetType().GetMethod("SetWorldMapProgress").Invoke(player, new object[] { mapClassId, values });
+        }
+
         private static object Get(object owner, string name) => NativeMap14SharedPrefabs.Get(owner, name);
         private static void Set(object owner, string name, object value) => NativeMap14SharedPrefabs.Set(owner, name, value);
 

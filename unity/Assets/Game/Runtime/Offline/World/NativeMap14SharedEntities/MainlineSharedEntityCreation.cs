@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Zjcs.Offline.World.NativeMap14SharedEntities
 {
@@ -70,6 +72,33 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             LoEntityIds.GetType().GetMethod("SetLoEntId2EntId").Invoke(LoEntityIds, new[] { (object)placementId, identifier });
             if (!(bool)container.GetType().GetMethod("AddEntity").Invoke(container, new[] { entity }))
                 throw new InvalidOperationException("Original fresh map entity registration failed: " + placementId);
+        }
+
+        public void Synchronize(IReadOnlyDictionary<int, MainlineSharedEntityState> states, bool started)
+        {
+            if (states == null) throw new ArgumentNullException(nameof(states));
+            var placementOf = LoEntityIds.GetType().GetMethod("GetLoEntIdByEntId");
+            foreach (object entity in ((IDictionary)Get(root.Container, "EntityDict")).Values.Cast<object>().ToArray())
+            {
+                int placement = (int)placementOf.Invoke(LoEntityIds, new[] { Get(entity, "Id") });
+                if (placement < 0 || !states.TryGetValue(placement, out var state)) continue;
+                if ((int)Get(entity, "ClassId") != state.EntityClassId)
+                    throw new InvalidOperationException("Local and original placed entity classes differ: " + placement);
+                var grid = Component(entity, "GridTransformComponent");
+                if (grid != null)
+                {
+                    var position = Get(grid, "MyPos");
+                    if ((int)Get(position, "X") != state.X || (int)Get(position, "Y") != state.Y)
+                        NativeMap14SharedPrefabs.Set(grid, started ? "Pos" : "MyPos",
+                            Activator.CreateInstance(shared.CommonType("Pos2d"), state.X, state.Y));
+                }
+                var stage = Component(entity, "WorldStageComponent");
+                if (stage == null || (int)Get(stage, "State") == state.State) continue;
+                if (started)
+                    stage.GetType().GetMethod("UpdateState", new[] { typeof(int), shared.CommonType("MySerializable") })
+                        .Invoke(stage, new object[] { state.State, null });
+                else NativeMap14SharedPrefabs.Set(stage, "State", state.State);
+            }
         }
 
         public void Clear() => LoEntityIds.GetType().GetMethod("Clear").Invoke(LoEntityIds, null);

@@ -107,6 +107,7 @@ def build():
             'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedRoot.cs',
             'unity/Assets/Game/Runtime/Presentation/World/NativeMap14/OfficialMap14NativeWorldView.cs',
             'unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.NativeMap14.cs',
+            'unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Persistence.cs',
             'unity/Assets/Game/Runtime/Presentation/World/Zjcs.Presentation.World.asmdef',
             'unity/Assets/Game/Editor/Map14/WorldHost/OfficialMap14NativeHostAcceptance.cs',
             'unity/Assets/Game/Editor/Map13Mainline/OfficialMap13MainlinePlayAcceptance.cs',
@@ -119,10 +120,12 @@ def build():
             'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Logging.cs.meta',
             'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Injection.cs',
             'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Injection.cs.meta')]
+        state_sources = ROOT / ".tools/source-packages/current" / source.apk.version / "official-code/common-source/Common"
         receipt.write_text(json.dumps(dict(manifest=source.apk.version, mapClassIds=list(MAPS),
             operation='Retain exact selected EC map/root/common template and MapInfoWrap/lite bytes. Configure the existing original shared parser and container by map identity; no initial server entity state or spawning policy is supplied.',
             inputs=[record(path) for path in definitions.values()], templates=source.template_sources, container_table=container,
-            formatter_lookup=record(old), original_code=source.checked_code(),
+            formatter_lookup=record(old), original_code=source.checked_code()
+                + [record(state_sources / (name + ".cs")) for name in ("WorldStageComponent", "GridTransformComponent", "MapLoEntityIdManager")],
             tools=[record(path) for path in (Path(__file__), ROOT / 'scripts/prepare_mainline_map_definition.py',
                 ROOT / 'scripts/official_ec_codec.py', ROOT / 'scripts/official_map_codec.py')], outputs=outputs,
             integration=[record(path) for path in integration],
