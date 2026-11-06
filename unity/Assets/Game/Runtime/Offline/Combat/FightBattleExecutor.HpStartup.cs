@@ -5,6 +5,26 @@ namespace Zjcs.Combat.Official
 {
     public sealed partial class FightBattleExecutor
     {
+        private FightBattleUnitState petEnergyHpOwner;
+        private FightBattleUnitState petEnergyHpCaster;
+
+        private void SynchronizePetEnergyHp(FightBattleUnitState unit)
+        {
+            if (unit == null || petEnergyHpOwner == null || petEnergyHpCaster == null) return;
+            if (ReferenceEquals(unit, petEnergyHpCaster))
+            {
+                petEnergyHpOwner.Hp = Math.Max(0L,
+                    Math.Min(petEnergyHpOwner.MaxHp, petEnergyHpCaster.Hp));
+                if (petEnergyHpOwner.Turn != null) petEnergyHpOwner.Turn.Hp = petEnergyHpOwner.Hp;
+            }
+            else if (ReferenceEquals(unit, petEnergyHpOwner))
+            {
+                petEnergyHpCaster.Hp = Math.Max(0L,
+                    Math.Min(petEnergyHpCaster.MaxHp, petEnergyHpOwner.Hp));
+                if (petEnergyHpCaster.Turn != null) petEnergyHpCaster.Turn.Hp = petEnergyHpCaster.Hp;
+            }
+        }
+
         private void RestoreHpChangeStackDefinition(FightBattleStatusState status)
         {
             if (!status.HasHpLessThan || status.HpLessThanChangeStackResolved) return;
@@ -62,6 +82,7 @@ namespace Zjcs.Combat.Official
 
         private void ApplyHpChangeTriggers(FightBattleUnitState changed, FightBattleSkillDefinition sourceSkill)
         {
+            SynchronizePetEnergyHp(changed);
             if (statusCatalog == null) return;
             var simple = new List<FightBattleStatusStateTrigger>();
             var configured = new List<FightBattleStatusSkillInvocation>();

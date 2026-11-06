@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Zjcs.Combat.Official;
 
 public static class BattlePetEntityHarness
@@ -60,5 +61,71 @@ public static class BattlePetEntityHarness
         Require(copy.MasterId == pet.MasterId && copy.Skills[0].Rank == 3 && copy.MaxHp == pet.MaxHp,
             "Pet entity checkpoint changed properties or skill rank.");
         FightBattleExecutor.Restore(restored, formula, new FightDamageSettlement(), catalog, items);
+
+        VerifyPetEnergyHpSynchronization(executor, owner);
+    }
+
+    private static void VerifyPetEnergyHpSynchronization(FightBattleExecutor executor,
+        FightBattleUnitState owner)
+    {
+        const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+        Type executorType = typeof(FightBattleExecutor);
+        FieldInfo ownerField = executorType.GetField("petEnergyHpOwner", flags);
+        FieldInfo casterField = executorType.GetField("petEnergyHpCaster", flags);
+        MethodInfo synchronize = executorType.GetMethod("SynchronizePetEnergyHp", flags);
+        MethodInfo executeSkill = executorType.GetMethods(flags).Single(method =>
+            method.Name == "ExecuteSkill" && method.GetParameters().Length == 10);
+        Require(ownerField != null && casterField != null && synchronize != null,
+            "Pet energy HP synchronization context is missing.");
+
+        long originalHp = owner.Hp;
+        long originalTurnHp = owner.Turn.Hp;
+        var costSkill = new FightBattleSkillDefinition
+        {
+            EntityId = 16100,
+            CostType = 1,
+            SkillCost = 1000
+        };
+        var caster = new FightBattleUnitState
+        {
+            Id = owner.Id,
+            Hp = owner.Hp,
+            MaxHp = owner.MaxHp,
+            Turn = new FightTurnUnit { Id = owner.Id, Hp = owner.Hp }
+        };
+        ownerField.SetValue(executor, owner);
+        casterField.SetValue(executor, caster);
+        try
+        {
+            caster.Hp = Math.Max(0L, owner.Hp - 1000L);
+            MethodInfo applyHpTriggers = executorType.GetMethod("ApplyHpChangeTriggers", flags);
+            applyHpTriggers.Invoke(executor, new object[] { caster, costSkill });
+            Require(owner.Hp == caster.Hp && owner.Turn.Hp == caster.Hp,
+                "Pet caster HP changes were not mirrored to its owner.");
+
+            long lowHp = Math.Max(2000L, owner.MaxHp / 4L);
+            owner.Hp = lowHp;
+            owner.Turn.Hp = lowHp;
+            caster.Hp = lowHp;
+            object[] arguments =
+            {
+                owner, costSkill, new List<FightBattleUnitState> { owner },
+                new List<FightBattleSkillCastEvent>(), new List<FightBattleDamageEvent>(),
+                new List<FightBattleMovementEvent>(), 0f, null, false, 1.0
+            };
+            executeSkill.Invoke(executor, arguments);
+            Require(owner.Hp == lowHp - costSkill.SkillCost && caster.Hp == owner.Hp
+                && caster.Turn.Hp == owner.Hp,
+                "Owner skill HP changes were not retained by the pet caster HP mirror: low="
+                + lowHp + ", owner=" + owner.Hp + ", caster=" + caster.Hp
+                + ", turn=" + caster.Turn.Hp + ".");
+        }
+        finally
+        {
+            ownerField.SetValue(executor, null);
+            casterField.SetValue(executor, null);
+            owner.Hp = originalHp;
+            owner.Turn.Hp = originalTurnHp;
+        }
     }
 }

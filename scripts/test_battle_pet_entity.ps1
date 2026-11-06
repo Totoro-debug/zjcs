@@ -17,4 +17,4 @@ $items = [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load(
     $rulesJson, $rulesProof.output_sha256, $rulesProof.manifest)
 $formula = $catalog.CreateDamageFormula($rulesJson, $rulesProof.output_sha256, $rulesProof.manifest)
 [BattlePetEntityHarness]::Run($catalog, $items, $formula)
-Write-Output 'Official pet entity summon passed: energy skill, original entity, assembled properties, saved skill ranks and checkpoint.'
+Write-Output 'Official pet entity passed: energy summon, assembled properties, saved ranks, checkpoint and bidirectional owner/caster HP synchronization.'

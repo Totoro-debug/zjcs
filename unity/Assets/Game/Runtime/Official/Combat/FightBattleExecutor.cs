@@ -546,8 +546,22 @@ namespace Zjcs.Combat.Official
                 };
                 casts.Add(cast);
                 checkpoint.Statistics.RecordCast(owner.Id, skill.EntityId, skill.ItemId);
-                ExecuteSkill(caster, skill, targets, casts, damageEvents, movements,
-                    out float lastDelay, out float skillDuration, out float actionDuration);
+                FightBattleUnitState previousPetEnergyHpOwner = petEnergyHpOwner;
+                FightBattleUnitState previousPetEnergyHpCaster = petEnergyHpCaster;
+                petEnergyHpOwner = owner;
+                petEnergyHpCaster = caster;
+                float lastDelay, skillDuration, actionDuration;
+                try
+                {
+                    ExecuteSkill(caster, skill, targets, casts, damageEvents, movements,
+                        out lastDelay, out skillDuration, out actionDuration);
+                }
+                finally
+                {
+                    SynchronizePetEnergyHp(caster);
+                    petEnergyHpOwner = previousPetEnergyHpOwner;
+                    petEnergyHpCaster = previousPetEnergyHpCaster;
+                }
                 CompleteCastPresentation(cast, skill, lastDelay);
                 owner.Hp = Math.Max(0L, Math.Min(owner.MaxHp, caster.Hp));
                 SynchronizeDeathForbidden(owner);
@@ -652,6 +666,7 @@ namespace Zjcs.Combat.Official
             }
             finally
             {
+                SynchronizePetEnergyHp(actor);
                 movementStartContext = previousMovementContext;
             }
         }
@@ -888,6 +903,7 @@ namespace Zjcs.Combat.Official
                         }
                     }
                     if (resolved.Formula == null && resolved.Settlement == null) continue;
+                    SynchronizePetEnergyHp(target);
                     var damage = new FightBattleDamageEvent
                     {
                         DamageId = damageId,
@@ -952,9 +968,13 @@ namespace Zjcs.Combat.Official
                     ApplyHitMove(actor, target, skill, hit, movements);
                     bool recoveredHp = ApplyHemophagia(actor, hit, damage, hitDelay, skill, damageEvents);
                     if (recoveredHp && actor != target)
+                    {
+                        SynchronizePetEnergyHp(actor);
                         FightStatusTriggerRuntime.Apply(actor, statusCatalog, false, hemophagiaTriggerSkills,
                             random, skill, units, configuredHpTriggerSkills,
                             executeHpSkills: ExecuteHpStartupSkills);
+                    }
+                    SynchronizePetEnergyHp(target);
                     FightStatusTriggerRuntime.Apply(target, statusCatalog, false, hpTriggerSkills,
                         random, skill, units, configuredHpTriggerSkills,
                         executeHpSkills: ExecuteHpStartupSkills);
