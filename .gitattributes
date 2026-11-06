@@ -2604,3 +2604,15 @@ unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.ActivityMonsters.cs.me
 unity/Assets/Game/Resources/DailyChallenges/ActivityMonster*.asset* -text
 unity/Assets/Official/DailyChallenges/Resources/ActivityMonsterIcons/** -text
 unity/Assets/Official/DailyChallenges/Resources/ActivityMonsterIcons.meta -text
+
+# Preserve the original activity render-texture lifecycle source hashes.
+scripts/prepare_activity_rt_*.py text eol=lf
+assets/reference/daily-challenges/activity-rt-*-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/*RT*.cs text eol=lf
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/*RT*.cs.meta -text
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/IUIBloomRequirer.cs text eol=lf
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/IUIBloomRequirer.cs.meta -text
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/IActivityRtUIBindings.cs text eol=lf
+unity/Assets/Game/Runtime/Official/ActivityBattleUI/IActivityRtUIBindings.cs.meta -text
+unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.ActivityRtUI.cs text eol=lf
+unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.ActivityRtUI.cs.meta -text

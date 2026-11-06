@@ -28,6 +28,11 @@ namespace Zjcs.Editor
 
         public static IEnumerator Exercise(string slot, string root, string output, Action<Selectable> click)
         {
+            if (Environment.GetEnvironmentVariable("ZJCS_ACTIVITY_RT_UI") == "1")
+            {
+                yield return ExerciseActivityRtUI(output);
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_ACTIVITY_MONSTERS") == "1")
             {
                 yield return ExerciseActivityMonsters(output);

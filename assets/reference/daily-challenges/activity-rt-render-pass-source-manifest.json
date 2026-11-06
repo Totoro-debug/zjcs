@@ -1,0 +1,13 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    ".tools/source-packages/current/884_156692/official-code/client-source/SimpleRTRenderPass.cs": "d2deeb5fb46c9405110650309878de6a52d1482802e22192a1501b893e5f393c",
+    "scripts/prepare_activity_rt_render_pass.py": "d405915033f689490b33c009a3ed0d05a850c6a2cc1af86aba6d4e70d15883b9"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/SimpleRTRenderPass.cs": "a9197a2d126d2ffe0dbf3edad69a61d09e13932e80eb1ae935810ae3898757d9",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/SimpleRTRenderPass.cs.meta": "0c6d9a7ba411e228962242afb3fb541d75895d74fa11d78da02cf33757e29ad6"
+  },
+  "adaptation": "Retain original descriptor, graphics formats, layer masks, Universal2D tag, sorting, culling, view/projection, clear, draw, depth ownership and disposal order. Restore C# out parameter and in descriptor and explicit RenderTargetIdentifier conversions; remove decompiler-only comments and empty constructor.",
+  "scope": "Original offscreen pass only. TempRTUI, model/animation/particle binding and runtime rendering pending."
+}
