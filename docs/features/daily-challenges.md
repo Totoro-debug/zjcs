@@ -84,6 +84,8 @@ NPC 战斗属性和技能由当前版 `npc_level_detail`、`npc_profession_detai
 
 成绩验证通过主工程静态检查（128649个GUID）、隔离Unity编译与 `ProjectTools.Validate`；内置屏D3D11 Play Mode实际运行209／212／226至失败结算，分别为31／5／19条步骤回执，实际伤害642／80／320，与公共最终报告和冷读取的本地成绩一致。隔离角色使用原推荐10015／10043技能及其原范围、跳跃、CD和伤害，不改战斗参数；另一次近身技能实战完成零伤害，保存后仍有成绩。模拟指针完成四种活动原结算操作区的战报、技能详情、重开、启停与释放回归，不重复发奖；规则夹具覆盖最高成绩、日／期切换、回拨与活动隔离。基础战报和独立分组回归通过；完整分组脚本的前置状态Discard断言失败，撤去本次报告改动后同样复现，不计为本次通过项。已查看三项完整运行截图及战报，原战报数值可见，完整结算页主体仍未恢复、仍透出主城背景；此次未验证胜利分支、完整入口、排行页、NPC助战或发布Player。验收全部断言通过，Editor退出码0。
 
+活动主页面控制器（未完成）：原 `ActivityDomainBossPanel` 的原标签映射和内容状态、`ActivityDomainBossPanelDetailContent` 的初选阶位／前后浏览／红点扫描、`ActivityDomainBossPanelBattleContent` 的层状态／挑战次数／奖励图标与附件操作已经迁入 `ActivityBattleUI`。在线数据管理与请求改为显式的本地快照和命令绑定接口，尚未完成生产适配器和整页 prefab 接线；原 MonsterInfo 回调为空，保持原行为。`ActivityInfoUI`、`ActivityDomainBossPreviewContent`、`MultiFontTextMaterial` 保留原标题／截止时间、进度平滑／倒计时／单次通知及字体材质租用生命周期；本地首次进入即开启活动，不伪造服务器召唤预览。通用 `NavigateBtn` 和 `SecretAreaBattleButtons` 的原导航成功延时关闭、组队人数和确认分支亦已迁入，尚未实测。来源见[页面控制代码](../../assets/reference/daily-challenges/activity-page-ui-source-manifest.json)和[显示支持代码](../../assets/reference/daily-challenges/activity-page-support-source-manifest.json)。原排行控制类、首位／本人行、范围切换和规则窗口控制亦已迁入 `ActivityRankUI`，见[排行控制代码来源](../../assets/reference/daily-challenges/activity-rank-runtime-source-manifest.json)。控制代码通过主工程静态检查（130474个GUID）、隔离Unity编译和 `ProjectTools.Validate`；这些检查不代表整页可用，仍须完成整页原资源绑定、生产入口、模拟输入与Player验证。
+
 ## 自定义实现
 
 用户确认期次以首次进入功能的本地时间起算；该时间由 `EnterFeature(DateTime.Now)` 首次持久化。每日逻辑日采用官方 08:00 配置。官方活动 `Duration=335` 小时，最后 1 小时结算。用户确认系统时间回拨不得降低已到最高期次或逻辑日；系统时间向前跳转仍会按本地时间推进期次。

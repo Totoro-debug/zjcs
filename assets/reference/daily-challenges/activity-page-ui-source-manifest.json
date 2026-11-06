@@ -1,0 +1,81 @@
+{
+  "manifest": "884_156692",
+  "sources": {
+    ".tools/source-packages/current/884_156692/official-code/client-source/ActivityDomainBossPanel.cs": "342a958e2141dba041d32c7cca99f430c92b1486fd2f90ff8cf21e14a2a7a06d",
+    ".tools/source-packages/current/884_156692/official-code/client-source/ActivityDomainBossPanelDetailContent.cs": "0cf578e9a710c68c5a4d62b660c54a687a911847ff34be327455af5d748c29de",
+    ".tools/source-packages/current/884_156692/official-code/client-source/ActivityDomainBossPanelBattleContent.cs": "5e5e76176b17e301b2d5f93aa24a36053c6218b7dbebd294f60a43563f7e71fc",
+    ".tools/source-packages/current/884_156692/official-code/client-source/NavigateBtn.cs": "3055f989e0b690d0ecd2e1e4de1acd15a5bd8e137b42adaf96d8d1e33f50a568",
+    ".tools/source-packages/current/884_156692/official-code/client-source/SecretAreaBattleButtons.cs": "a5bbc04aa8b429214b410f9ceb789b8478c05e3238b57a4cff73e72aa311f118"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityDomainBossPanel.cs": "8b3ada16dbbca132faa958c5a0ec98faa271b396c319ecfc3c47678e9ea252cc",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityDomainBossPanel.cs.meta": "dd2abf98b228e3e29400954080a47a6659bebd79dee2f368df75b6f595965672",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityDomainBossPanelDetailContent.cs": "ae06e004cd4178f1da90abab0241086e66fbba78c172ed01b93ad2d18ddbffe9",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityDomainBossPanelDetailContent.cs.meta": "b0c1667ca2a510d55634301df57910af78fb21903043ce2050181f70a321be24",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityDomainBossPanelBattleContent.cs": "679b8e7be70693867ce813fd09e14189cffd3d27b3c69b72e9e58c1d6effc93a",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityDomainBossPanelBattleContent.cs.meta": "abe04a0835282de1bd72539f7dfaa604cac4482603f12b358a991016ed16c0fb",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/NavigateBtn.cs": "6b1e986507e57ec9a6283b2d99d18581e510686a4024307d60a6f67700ef780d",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/NavigateBtn.cs.meta": "01a78db0c3c334b4af64622b9c0ea7061fd3a0451aed17d64db5d1e6b0d9b757",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/SecretAreaBattleButtons.cs": "2aea0ad1a50da0b0f67f12128579968d1bde210727be23bca7f5e51106d223e1",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/SecretAreaBattleButtons.cs.meta": "773b0dd13f74fe7269076e5840f5a5bcf31516b22fe54d5abf637545b4ac5578",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityDomainBossPageBindings.cs": "55726e600b6e161f6defaa8c7b2aca9f891acced5a2829e9136be67b16dd4fbf",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityDomainBossPageBindings.cs.meta": "400cd8f580ca883833b316d7b7625625b88b8c816732c3fa7885ed37bc01f291",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/Zjcs.Official.ActivityBattleUI.asmdef": "9332aac469e5dfb5b6305606953e8b1407b4a358a2394e3771cab8d8bcb4751e",
+    "unity/Assets/Game/Runtime/Official/ActivityBattleUI/Zjcs.Official.ActivityBattleUI.asmdef.meta": "4a95f2073bb29cfb9e728fa90c74ca5ec1762a3c589e95e916cab1666569f7f2"
+  },
+  "serialized_fields": {
+    "ActivityDomainBossPanel": [
+      "mBossContent",
+      "mRankPanel",
+      "mTabGroup",
+      "mTabDatas",
+      "mContentState",
+      "mTipDotNodeLinker",
+      "mRuleKey"
+    ],
+    "ActivityDomainBossPanelDetailContent": [
+      "mBattleContent",
+      "mPreviewContent",
+      "mActivityInfoUI",
+      "mNumScrollView",
+      "mLeftBtn",
+      "mRightBtn",
+      "mLeftStateSwitcher",
+      "mRightStateSwitcher",
+      "mUnlockStateSwitcher",
+      "mPreviewStateSwitcher",
+      "mLeftRedDot",
+      "mRightRedDot"
+    ],
+    "ActivityDomainBossPanelBattleContent": [
+      "mUnlockRemainTimeInfo",
+      "mMonsterUI",
+      "mMonsterInfoBtn",
+      "mReceiveKillAwardBtn",
+      "mChallengeAwardSlot",
+      "mKillAwardSlot",
+      "mHpSlider",
+      "mHpText",
+      "mHpSliderOffset",
+      "mLayerStateSwitcher",
+      "mLinker",
+      "mTeamBtn",
+      "mChallengeBtn",
+      "mGoToMapBtn",
+      "mGoToMapNavigateKey",
+      "mClaimableEffectGo",
+      "mChallengeCountText",
+      "mChallengeStateSwitcher"
+    ],
+    "NavigateBtn": [
+      "mNavigateKey",
+      "mButton",
+      "mIsNavigeteCloseWindow"
+    ],
+    "SecretAreaBattleButtons": [
+      "mBattleBtn"
+    ]
+  },
+  "generator_sha256": "193fe35f82e0333e0b980088834343c923c994a324c3f92361e10f8391c09c1d",
+  "adaptation": "Retain original tab order, selected difficulty, selector callbacks, red-dot scans, layer states, challenge count and reward icon/attachment operations. Replace online data managers/requests with an explicit local snapshot and command adapter; independent checkpoint HP is user-approved. The local period opens on first entry; no server summon preview is fabricated. Full native page binding, local adapter and Play Mode verification pending."
+}
