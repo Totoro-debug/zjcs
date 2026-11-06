@@ -67,7 +67,7 @@ namespace Zjcs.Editor.Home
             AssetDatabase.AllowAutoRefresh();
         }
 
-        private static void ConfigurePortraitGameView(int width = 450, int height = 800)
+        internal static void ConfigurePortraitGameView(int width = 450, int height = 800)
         {
             Assembly editor = typeof(EditorWindow).Assembly;
             Type sizesType = editor.GetType("UnityEditor.GameViewSizes");
@@ -122,7 +122,7 @@ namespace Zjcs.Editor.Home
             view.Repaint();
         }
 
-        private static void PrepareProfile()
+        public static void PrepareProfile()
         {
             if (Directory.Exists(Root) && Directory.GetFileSystemEntries(Root).Length > 0)
                 throw new IOException("The acceptance profile folder must be empty: " + Root);

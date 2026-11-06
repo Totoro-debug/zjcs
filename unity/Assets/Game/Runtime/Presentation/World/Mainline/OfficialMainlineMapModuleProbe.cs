@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -22,12 +21,16 @@ namespace Zjcs.Presentation.World
     public sealed class OfficialMainlineMapModuleProbe : MonoBehaviour
     {
         public const string Argument = "-verify-mainline-modules";
-        private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
         private OfficialMainlineMapRuntime runtime;
         private string output, root, slot;
         private Action<bool> completed;
         private bool finished;
         private float deadline;
+        private Transform canvasRoot;
+        private int mapId;
+        private bool escape;
+        private OfficialWorldMapSession mapSession;
+        private OfflineMainlineProgressSession observedProgress;
         private Vector2? press;
         private Vector3? worldPress;
 
@@ -56,7 +59,7 @@ namespace Zjcs.Presentation.World
             probe.output = Path.GetFullPath(outputDirectory);
             probe.root = Path.Combine(probe.output, "isolated-profile");
             probe.completed = onCompleted;
-            probe.deadline = Time.realtimeSinceStartup + 240f;
+            probe.deadline = Time.realtimeSinceStartup + 600f;
             Directory.CreateDirectory(probe.output);
             Application.logMessageReceived += probe.LogFailure;
             probe.StartCoroutine(probe.Guarded(probe.Verify()));
@@ -72,8 +75,9 @@ namespace Zjcs.Presentation.World
 
         private void Update()
         {
+            observedProgress?.Reload();
             if (finished || Time.realtimeSinceStartup < deadline) return;
-            File.WriteAllText(Path.Combine(output, "failed.txt"), "Shared map probe exceeded its 240 second deadline.");
+            File.WriteAllText(Path.Combine(output, "failed.txt"), "Shared map probe exceeded its 600 second deadline.");
             Complete(false);
         }
 
@@ -109,6 +113,43 @@ namespace Zjcs.Presentation.World
                     : "Map10/11 shared runtime: region conditions, pointer navigation, HUD, minimap tabs/filter, goddess activation, hero UI/permanent rewards/daily effects, stamina gathering/award animation/respawn, exploration and cold save reload passed.");
             Debug.Log("Shared mainline map modules passed: " + output);
             Complete(true);
+        }
+
+        public static void ValidateWhaleIslandStoryCondition()
+        {
+            const string tag = "金宝箱_鲸岛神龟";
+            var evaluator = new Map13OfflinePlayerConditionEvaluator(Array.Empty<Map13RuntimePlayerCondition>(),
+                _ => 0, _ => 0, _ => 0, _ => 0, (_, _) => 0, value => value == tag);
+            bool Evaluate(string value, int not) => evaluator.Evaluate(
+                "MapLogicEntityEndByTag", new Map13RuntimePlayerConditionData { Tag = value }, null, not);
+            if (!Evaluate(tag, 0) || Evaluate(tag, 1) || Evaluate("another-tag", 0) || !Evaluate("another-tag", 1))
+                throw new InvalidDataException("Shared mainline completed-tag story condition changed.");
+        }
+
+        public static void RunInteractionCatalogs()
+        {
+            for (int map = 10; map <= 15; map++)
+            {
+                var heroes = OfficialMainlineInteractionCatalog.Load(map).heroes;
+                if (heroes.Length != 4) throw new InvalidDataException("Historical hero selection changed: " + map);
+            }
+            var catalog = OfficialMainlineInteractionCatalog.Load(16);
+            int[] ids = catalog.heroes.Select(hero => hero.EntityClassId).ToArray();
+            if (!ids.SequenceEqual(new[] { 6570, 6571, 6572, 6573, 6574, 6575 }))
+                throw new InvalidDataException("Whale Island profile did not load all six original hero variants.");
+            var regions = catalog.regions;
+            if (regions.Length != 43 || regions.Any(region => region.MapClassId != 16))
+                throw new InvalidDataException("Whale Island profile did not load its 43 original interaction regions.");
+            foreach (object[] invalid in new[] {
+                new object[] { "Map16/interactions", "871_156598", 16, 43 },
+                new object[] { "Map16/interactions", "884_156692", 13, 43 },
+                new object[] { "Map16/interactions", "884_156692", 16, 42 } })
+            {
+                try { OfficialMainlineInteractionCatalog.Load((string)invalid[0], (string)invalid[1], (int)invalid[2], (int)invalid[3]); }
+                catch (InvalidDataException) { continue; }
+                throw new InvalidDataException("The shared interaction loader accepted another source identity.");
+            }
+            Debug.Log("Shared interaction catalog validation passed: historical maps 10-15, six Whale Island heroes and source identity guards.");
         }
 
         private IEnumerator Verify()
@@ -149,7 +190,9 @@ namespace Zjcs.Presentation.World
                 .Where(value => value.classId <= 1040).Select(value => value.classId));
             File.WriteAllText(slots.GetProgressPath(slot), JsonUtility.ToJson(save));
             var progress = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
-            new OfflineCharacterProgressionService(progress, OfficialCharacterAssetCatalog.LoadDefault().Load())
+            var characterAssets = OfficialCharacterAssetCatalog.LoadDefault();
+            OfflineCharacterProgressionService.Create(progress, new CharacterProgressionInputs(characterAssets.Load(),
+                Zjcs.Offline.Equipment.OfficialEquipmentAssetCatalog.LoadDefault().Load(), characterAssets.LoadSkillRules()))
                 .InitializeWardrobe("shared-map-probe-wardrobe");
             if (Environment.GetCommandLineArgs().Contains("-verify-visibility-maps"))
             {
@@ -161,23 +204,23 @@ namespace Zjcs.Presentation.World
             {
                 Open(11, canvas.transform);
                 yield return new WaitForSecondsRealtime(1);
-                progress = Field<OfflineMainlineProgressSession>("progressionSave");
+                progress = Progress;
                 foreach (int region in new[] { 0, 1, 12 })
                 {
                     progress.SetMapRegionProgress(11, region, 10000);
                     Require(progress.RecordGoddessActivated(11, region, "probe-explore-public-" + region).IsApplied,
                         "Public exploration region fixture");
                 }
-                Invoke("RefreshEntityActivity");
+                yield return Reopen();
                 yield return VerifyExploration();
-                Destroy(runtime.gameObject);
+                yield return ExitMap();
                 yield return null;
                 Open(11, canvas.transform);
                 yield return new WaitForSecondsRealtime(1);
-                Require(Field<OfflineMainlineProgressSession>("progressionSave").Save.World.Exploration.TotalCount == 12,
+                Require(Progress.Save.World.Exploration.TotalCount == 12,
                     "Pointer exploration result survives a cold runtime reload");
                 yield return Capture("map-11-explore-cold");
-                Destroy(runtime.gameObject);
+                yield return ExitMap();
                 Destroy(canvas);
                 yield break;
             }
@@ -191,7 +234,7 @@ namespace Zjcs.Presentation.World
                 {
                     Open(id, canvas.transform);
                     yield return new WaitForSecondsRealtime(1);
-                    var session = Field<OfficialWorldMapSession>("session");
+                    var session = mapSession;
                     var policy = new OfficialMainlineRegionPolicy(session.Definition, OfficialMainlineMapProfile.Get(id));
                     var points = new Dictionary<int, int>();
                     var gate = policy.regionConfigs.Values.First(value => value.AccessibleConditionId == (id == 10 ? 1201 : 1205));
@@ -204,7 +247,7 @@ namespace Zjcs.Presentation.World
                         Require(!policy.IsAccessible(storyGate.Region, points, _ => 0)
                             && policy.IsAccessible(storyGate.Region, points, key => key == "SenSenThanks" ? 1 : 0), "Story gate follows the pinned story count");
                     }
-                    Require(Field<OfficialWorldUiRenderer>("ui").Find("WorldCanvas", "/WorldCanvas").activeInHierarchy, "Map HUD mounted");
+                    Require(SceneRoot("WorldCanvas").activeInHierarchy, "Map HUD mounted");
                     yield return VerifyPointerMovement(session);
                     yield return Capture("map-" + id + "-hud");
                     if (id == 11)
@@ -214,27 +257,28 @@ namespace Zjcs.Presentation.World
                         yield return VerifyStaminaGathering();
                         yield return VerifyExploration();
                     }
-                    MapGridPoint position = Field<MapGridPoint>("currentGrid");
-                    Invoke("SaveLocalProgress");
-                    Destroy(runtime.gameObject);
+                    MapGridPoint position = Position;
+                    // Movement and interactions persist through the normal host lifecycle.
+                    yield return ExitMap();
                     yield return null;
                     Open(id, canvas.transform);
-                    Require(Field<MapGridPoint>("currentGrid").Equals(position), "Map position survives a cold runtime reload");
+                    Require(Position.Equals(position), "Map position survives a cold runtime reload");
                     if (id == 11)
                     {
-                        Require(Field<OfflineMainlineProgressSession>("progressionSave").Save.World.ActivatedGoddessRegions.Count == 3,
+                        Require(Progress.Save.World.ActivatedGoddessRegions.Count == 3,
                             "Goddess activation survives a cold reload");
                         VerifyHeroMiniMapVisibility(true);
-                        var restoredResources = Field<MiniMapResourcePointManager>("nativeResourcePoints");
+                        var restoredResources = FindObjectOfType<MiniMapResourcePointManager>();
                         Require(restoredResources.IsBoardActive(1), "Native resource selection restores on map entry");
                         // Original MapUIBase.Start initializes the board's region visibility.
                         yield return null;
                         Require(restoredResources.GetSelectResourcePointDatas(1, 0).Active,
                             "Native public resource area restores before reopening the minimap");
-                        Require(Field<OfficialMainlineRegionFog>("regionFog").VisibleShadowCount == 70,
+                        Require(runtime.GetComponentInChildren<OfficialMainlineRegionFog>().VisibleShadowCount == 70,
                             "Cold map entry keeps all three public region shadows cleared");
+                        yield return Capture("map-11-region-fog-cold");
                     }
-                    Destroy(runtime.gameObject);
+                    yield return ExitMap();
                     yield return null;
                 }
             }
@@ -245,7 +289,7 @@ namespace Zjcs.Presentation.World
                 "Map15 offline gate fixture");
             Open(15, canvas.transform);
             yield return new WaitForSecondsRealtime(2);
-            var map15Session = Field<OfficialWorldMapSession>("session");
+            var map15Session = mapSession;
             Require(map15Session.Definition.ClassId == 15
                 && map15Session.Definition.Navigation.Width == 25
                 && map15Session.Definition.Navigation.Height == 30,
@@ -255,15 +299,15 @@ namespace Zjcs.Presentation.World
                 "Map15 official entity catalog is mounted");
             yield return VerifyPointerMovement(map15Session);
             yield return Capture("map-15-entry");
-            MapGridPoint map15Position = Field<MapGridPoint>("currentGrid");
-            Invoke("SaveLocalProgress");
-            Destroy(runtime.gameObject);
+            MapGridPoint map15Position = Position;
+            // Movement and interactions persist through the normal host lifecycle.
+            yield return ExitMap();
             yield return null;
             Open(15, canvas.transform);
-            Require(Field<MapGridPoint>("currentGrid").Equals(map15Position),
+            Require(Position.Equals(map15Position),
                 "Map15 position survives a cold runtime reload");
             yield return Capture("map-15-entry-cold");
-            Destroy(runtime.gameObject);
+            yield return ExitMap();
             yield return null;
             progress = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
             string[] effectsBeforeVisit = progress.Save.Player.PendingStatueBattleEffects
@@ -295,41 +339,45 @@ namespace Zjcs.Presentation.World
             {
                 Open(id, canvas);
                 yield return new WaitForSecondsRealtime(3);
-                var session = Field<OfficialWorldMapSession>("session");
-                var visibility = Field<Zjcs.Offline.World.MapGridVisibility.OfflineMapGridVisibility>("mapGridVisibility");
-                Require(visibility != null, "Formal map entry binds shared exploration visibility");
-                var position = Field<MapGridPoint>("currentGrid");
+                var session = mapSession;
+                var visibility = new MainlineMapMiniMapSnapshots(OfficialWorldMapAssetCatalog.LoadDefault(), slots, slot);
+                var entrySnapshot = visibility.Read(id);
+                Require(entrySnapshot.Width == session.Definition.Navigation.Width
+                    && entrySnapshot.Height == session.Definition.Navigation.Height,
+                    "Formal map entry persists valid exploration visibility");
+                var position = Position;
                 Require(position.Equals(id == 10 ? new MapGridPoint(24, 23) : new MapGridPoint(247, 115)),
                     "Visibility binding preserves legacy position and original Map14 entry");
                 Require(runtime.GetComponentsInChildren<Zjcs.Official.MapRootFog.CloudController2>(true).Length == 1,
                     "Formal map entry mounts exactly one original fog subtree");
-                byte[] before = visibility.Snapshot();
+                byte[] before = visibility.Read(id).GridVisibility;
                 yield return Capture("map-" + id + "-visibility-entry");
                 yield return VerifyPointerMovement(session);
-                position = Field<MapGridPoint>("currentGrid");
-                Require(visibility.IsVisible(new Zjcs.Official.World.NativeTerrain.Common.Pos2d(position.X, position.Y)),
+                position = Position;
+                Require(Zjcs.Official.World.Map13GridVisibility.GridVisibilityCompressUtils
+                    .DoMyUnzip(visibility.Read(id).GridVisibility).GetPosValue(position.X, position.Y),
                     "Pointer movement reveals the actual player cell");
-                Invoke("SaveLocalProgress");
-                saved[id] = visibility.Snapshot();
+                // Movement and interactions persist through the normal host lifecycle.
+                saved[id] = visibility.Read(id).GridVisibility;
                 Require(!before.SequenceEqual(saved[id]), "Pointer movement expands the original revealed-cell payload");
-                int[] discovered = visibility.ExploredEntityIds;
+                int[] discovered = MapSave.exploredEntityPlacements;
                 string file = Path.Combine(slots.GetSlotDirectory(slot), "map-" + id + "-save.json");
                 string persisted = File.ReadAllText(file);
                 var snapshot = snapshots.Read(id);
                 Require(saved[id].SequenceEqual(snapshot.GridVisibility) && persisted == File.ReadAllText(file),
                     "Offline minimap reads exact exploration without writing the map save");
                 yield return Capture("map-" + id + "-visibility-moved");
-                Destroy(runtime.gameObject);
+                yield return ExitMap();
                 yield return null;
                 Open(id, canvas);
                 yield return new WaitForSecondsRealtime(3);
-                visibility = Field<Zjcs.Offline.World.MapGridVisibility.OfflineMapGridVisibility>("mapGridVisibility");
-                Require(Field<MapGridPoint>("currentGrid").Equals(position)
-                    && saved[id].SequenceEqual(visibility.Snapshot())
-                    && discovered.SequenceEqual(visibility.ExploredEntityIds),
+                visibility = new MainlineMapMiniMapSnapshots(OfficialWorldMapAssetCatalog.LoadDefault(), slots, slot);
+                Require(Position.Equals(position)
+                    && saved[id].SequenceEqual(visibility.Read(id).GridVisibility)
+                    && discovered.SequenceEqual(MapSave.exploredEntityPlacements),
                     "Formal cold entry preserves position, original fog bytes and discovered entities");
                 yield return Capture("map-" + id + "-visibility-cold");
-                Destroy(runtime.gameObject);
+                yield return ExitMap();
                 yield return null;
             }
             foreach (int id in new[] { 10, 14 })
@@ -344,31 +392,35 @@ namespace Zjcs.Presentation.World
             runtime.MapMusicVolume = runtime.MapVoiceVolume = () => 0;
             runtime.PointerPressProvider = () =>
             {
-                Vector2? result = worldPress.HasValue ? (Vector2?)Field<Camera>("worldCamera").WorldToScreenPoint(worldPress.Value) : press;
+                Vector2? result = worldPress.HasValue ? (Vector2?)WorldCamera.WorldToScreenPoint(worldPress.Value) : press;
                 press = null;
                 worldPress = null;
                 return result;
             };
+            canvasRoot = canvas; mapId = id;
+            mapSession = OfficialWorldMapSession.Load(OfficialWorldMapAssetCatalog.LoadDefault(), id);
+            observedProgress ??= OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(root), slot);
+            runtime.KeyDownProvider = key => { bool result = key == KeyCode.Escape && escape; escape = false; return result; };
             runtime.Begin(id, slot, root, canvas, model, name, null);
         }
 
         private IEnumerator VerifyPointerMovement(OfficialWorldMapSession session)
         {
-            MapGridPoint start = Field<MapGridPoint>("currentGrid");
-            var camera = Field<Camera>("worldCamera");
+            MapGridPoint start = Position;
+            var camera = WorldCamera;
             var entities = runtime.GetComponentInChildren<OfficialMap10EntityView>();
             foreach (MapGridPoint offset in new[] { new MapGridPoint(1, 0), new MapGridPoint(-1, 0), new MapGridPoint(0, 1), new MapGridPoint(0, -1) })
             {
                 MapGridPoint target = start + offset;
                 if (!session.Movement.IsFit(target) || !session.Movement.CanMoveToNext(start, target)) continue;
-                Vector3 world = (Vector3)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "GridToWorld", new object[] { target });
+                Vector3 world = GridToWorld(target);
                 Vector2 screen = camera.WorldToScreenPoint(world);
                 if (Hits(screen).Count != 0 || entities.EntityInfos.Any(value => value.Active
                     && value.Grid[0] == target.X && value.Grid[1] == target.Y)) continue;
                 worldPress = world;
                 float deadline = Time.realtimeSinceStartup + 5;
-                while (!Field<MapGridPoint>("currentGrid").Equals(target) && Time.realtimeSinceStartup < deadline) yield return null;
-                MapGridPoint actual = Field<MapGridPoint>("currentGrid");
+                while (!Position.Equals(target) && Time.realtimeSinceStartup < deadline) yield return null;
+                MapGridPoint actual = Position;
                 Require(actual.Equals(target), "Simulated map press expected " + target.X + "," + target.Y + "; got " + actual.X + "," + actual.Y);
                 Debug.Log("Shared map pointer moved to " + target.X + "," + target.Y);
                 yield break;
@@ -379,48 +431,43 @@ namespace Zjcs.Presentation.World
         private IEnumerator VerifyNativeUi()
         {
             var data = JsonUtility.FromJson<OfficialMap11UiData>(Resources.Load<TextAsset>("Map11/UI/catalog").text);
-            var mini = Field<GameObject>("nativeMiniMap");
+            var mini = SceneRoot("MiniMapMaskedUI");
             string buttonPath = data.components.Single(value => value.panel == "MiniMapMaskedUI" && value.type == "MiniMapMaskedUI").fields.MiniMapBtn;
             yield return Click(mini.transform.Find(buttonPath.Substring("/MiniMapMaskedUI/".Length)).GetComponent<Button>());
-            Require(Field<GameObject>("fullMiniMapPanel") != null, "Pointer opens the original full minimap");
-            var tabs = Field<Dictionary<int, GameObject>>("nativeMiniMapTabs");
-            yield return Click(tabs[10].GetComponent<Button>());
-            Require(Field<int>("fullMiniMapClassId") == 10 && !Field<GameObject>("nativeMiniMapCharacter").activeSelf, "Pointer switches to visited Map10");
-            yield return Click(tabs[11].GetComponent<Button>());
+            Require(SceneRoot("MiniMapFullScreenPanel") != null, "Pointer opens the original full minimap");
+
+            yield return Click(SceneRoot("MiniMapTab_10").GetComponent<Button>());
+            Require(!SceneRoot("MinimapCharacter").activeSelf, "Pointer switches to visited Map10");
+            yield return Click(SceneRoot("MiniMapTab_11").GetComponent<Button>());
             yield return Capture("map-11-minimap");
             var fields = data.components.Single(value => value.panel == "MiniMapFullScreenPanel" && value.type == "MiniMapMarkUIFilter").fields;
-            var full = Field<GameObject>("fullMiniMapPanel");
+            var full = SceneRoot("MiniMapFullScreenPanel");
             yield return Click(full.transform.Find(fields.mEntryBtn.Substring("/MiniMapFullScreenPanel/".Length)).GetComponent<Button>());
-            var filters = Field<Dictionary<string, bool>>("miniMapFilters");
-            bool before = filters["MiniMapGoddess"];
-            var items = Field<Dictionary<string, GameObject>>("miniMapFilterItems");
-            yield return Click(items["MiniMapGoddess"].GetComponentInChildren<Button>(true));
-            Require(filters["MiniMapGoddess"] != before, "Pointer changes the original mark filter");
+            bool before = FilterSelection("MiniMapGoddess");
+            yield return Click(FilterItem("MiniMapGoddess").GetComponentInChildren<Button>(true));
+            Require(FilterSelection("MiniMapGoddess") != before, "Pointer changes the original mark filter");
             // Close through the original button; reopening cold-reads the durable selection.
-            Invoke("SetMiniMapFilterExpanded", false);
-            yield return Click(full.transform.Find("Content/CloseBtn_dark").GetComponent<Button>());
-            filters.Clear();
-            typeof(OfficialMainlineMapRuntime).GetNestedType("OfficialMainlineMiniMapModule", BindingFlags.NonPublic)
-                .GetField("miniMapFilterState", Private).SetValue(Field<object>("miniMap"), null);
-            yield return Click(mini.transform.Find(buttonPath.Substring("/MiniMapMaskedUI/".Length)).GetComponent<Button>());
-            Require(filters["MiniMapGoddess"] != before, "Minimap filter cold-reads from its profile save file");
-            yield return Click(Field<GameObject>("fullMiniMapPanel").transform.Find("Content/CloseBtn_dark").GetComponent<Button>());
-
-            var progress = Field<OfflineMainlineProgressSession>("progressionSave");
-            var entities = Field<IDictionary>("mapEntities");
-            object goddess = entities[202]; // pinned Map11 lost goddess placement
-            progress.SetMapRegionProgress(11, 1, 10000);
-            var goddessGrid = (MapGridPoint)goddess.GetType().GetField("Grid").GetValue(goddess);
-            Invoke("SetAvatarPosition", goddessGrid + new MapGridPoint(0, 1));
+            yield return ExitMap();
+            Open(11, canvasRoot);
             yield return new WaitForSecondsRealtime(1);
-            var fog = Field<OfficialMainlineRegionFog>("regionFog");
+            mini = SceneRoot("MiniMapMaskedUI");
+            yield return Click(mini.transform.Find(buttonPath.Substring("/MiniMapMaskedUI/".Length)).GetComponent<Button>());
+            Require(FilterSelection("MiniMapGoddess") != before, "Minimap filter cold-reads from its profile save file");
+            yield return Click(SceneRoot("MiniMapFullScreenPanel").transform.Find("Content/CloseBtn_dark").GetComponent<Button>());
+
+            var progress = Progress;
+            var goddess = Entity(202); // pinned Map11 lost goddess placement
+            progress.SetMapRegionProgress(11, 1, 10000);
+            yield return At(new MapGridPoint(goddess.Grid[0], goddess.Grid[1] + 1));
+            yield return new WaitForSecondsRealtime(1);
+            var fog = runtime.GetComponentInChildren<OfficialMainlineRegionFog>();
             Require(fog != null && fog.ShadowCount == 73, "All native region light meshes are mounted");
             int shadows = fog.VisibleShadowCount;
             yield return Capture("map-11-region-fog");
-            Invoke("ShowGoddessDialog", goddess); // dialog fixture; activation itself uses pointer events
+            yield return ClickEntity(202);
             yield return new WaitForSecondsRealtime(.5f);
             yield return Capture("map-11-goddess");
-            yield return Click(Field<GoddessTouchDialog>("goddessDialog").myTouchBtn);
+            yield return Click(FindObjectOfType<GoddessTouchDialog>().myTouchBtn);
             Require(progress.Save.World.ActivatedGoddessRegions.Count == 1, "Pointer activates the original goddess stage");
             yield return new WaitForSecondsRealtime(.7f);
             yield return Capture("map-11-region-fog-clearing");
@@ -431,28 +478,26 @@ namespace Zjcs.Presentation.World
 
         private void VerifyHeroMiniMapVisibility(bool expected)
         {
-            var marks = Field<IDictionary>("nativeMiniMapMarks");
-            Require(marks.Contains(1401), "The actual hero minimap marker exists");
-            object mark = marks[1401];
-            var marker = (GameObject)mark.GetType().GetField("Root").GetValue(mark);
-            Require(marker.activeInHierarchy == expected,
+            var binding = UiData.minimapMarkBindings.Single(value => value.placementId == 1401);
+            var marker = SceneRoot(binding.key + "_1401");
+            Require((marker != null && marker.activeInHierarchy) == expected,
                 "Hero minimap visibility follows current private/public state");
         }
 
         private IEnumerator VerifyHeroStatues()
         {
-            var entities = Field<IDictionary>("mapEntities");
-            object hero = entities[1401];
-            Invoke("SetStoryProgress", "OldManAlways2", 1, 2); // Original region 12 story gate.
-            Invoke("RefreshEntityActivity");
+            var hero = Entity(1401);
+            Progress.SetStoryProgress("OldManAlways2", 1, 2); // Original region 12 story gate.
+            yield return Reopen();
             VerifyHeroMiniMapVisibility(true);
-            var progress = Field<OfflineMainlineProgressSession>("progressionSave");
-            Invoke("InteractHero", hero);
+            var progress = Progress;
+            yield return At(new MapGridPoint(hero.Grid[0], hero.Grid[1] + 1));
+            yield return ClickEntity(1401);
             yield return new WaitForSecondsRealtime(.5f);
-            var window = Field<OfficialMap11WitchWindow>("witchDialog");
+            var window = StatueWindow;
             yield return Capture("map-11-hero-touch");
             yield return Click(window.Find(window.Source("StageUIWithPreview").fields.myTouchBtn).GetComponent<Button>());
-            window = Field<OfficialMap11WitchWindow>("witchDialog");
+            window = StatueWindow;
             yield return new WaitForSecondsRealtime(1);
             var previewText = window.Root.GetComponentsInChildren<TMPro.TMP_Text>().Single(value => value.text == "生命+170");
             Require(previewText.rectTransform.rect.height > 0 && previewText.isActiveAndEnabled,
@@ -462,23 +507,22 @@ namespace Zjcs.Presentation.World
             Require(progress.Save.Player.CharacterProperties.ExtraProperties.Count(value => value.SourceId == "hero-activation:11:1401") == 1,
                 "Hero activation atomically grants its permanent original property");
             VerifyHeroMiniMapVisibility(false);
-            Invoke("InteractHero", hero);
-            Require(Field<OfficialMap11WitchWindow>("witchDialog") == null, "Private completed hero waits for its region to become public");
+            yield return ClickEntity(1401);
+            Require(StatueWindow == null, "Private completed hero waits for its region to become public");
             progress.SetMapRegionProgress(11, 12, 10000);
             Require(progress.RecordGoddessActivated(11, 12, "probe-public-hero-region").IsApplied, "Public hero fixture");
-            Invoke("RefreshEntityActivity");
+            yield return Reopen();
             VerifyHeroMiniMapVisibility(true);
-            var heroGrid = (MapGridPoint)hero.GetType().GetField("Grid").GetValue(hero);
-            Invoke("SetAvatarPosition", heroGrid + new MapGridPoint(0, 1));
+            yield return At(new MapGridPoint(hero.Grid[0], hero.Grid[1] + 1));
             yield return new WaitForSecondsRealtime(1);
             yield return Capture("map-11-hero-public-marker");
-            Invoke("InteractHero", hero);
-            window = Field<OfficialMap11WitchWindow>("witchDialog");
+            yield return ClickEntity(1401);
+            window = StatueWindow;
             yield return new WaitForSecondsRealtime(.5f);
             yield return Capture("map-11-hero-daily");
             yield return Click(window.Find(window.Source("PeriodicityInteractionStageUI").fields.mInteractionBtn).GetComponent<Button>());
             yield return new WaitForSecondsRealtime(4.6f);
-            window = Field<OfficialMap11WitchWindow>("witchDialog");
+            window = StatueWindow;
             yield return Capture("map-11-hero-daily-reward");
             yield return Click(window.Find(window.Source("WorldStageInteractionPreviewDialog").fields.mCloseBtn).GetComponent<Button>());
             Require(progress.HasVisitedStatueOn(DateTime.Now.ToString("yyyyMMdd")), "Hero daily visit is durable");
@@ -492,15 +536,15 @@ namespace Zjcs.Presentation.World
             var data = JsonUtility.FromJson<OfficialMap11UiData>(Resources.Load<TextAsset>("Map11/UI/catalog").text);
             string button = data.components.Single(row => row.panel == "MiniMapMaskedUI"
                 && row.type == "MiniMapMaskedUI").fields.MiniMapBtn;
-            var openButton = Field<GameObject>("nativeMiniMap").transform
+            var openButton = SceneRoot("MiniMapMaskedUI").transform
                 .Find(button.Substring("/MiniMapMaskedUI/".Length)).GetComponent<Button>();
             yield return Click(openButton);
-            var full = Field<GameObject>("fullMiniMapPanel");
+            var full = SceneRoot("MiniMapFullScreenPanel");
             var fields = data.components.Single(row => row.panel == "MiniMapFullScreenPanel"
                 && row.type == "MiniMapMarkUIFilter").fields;
             yield return Click(full.transform.Find(fields.mEntryBtn.Substring("/MiniMapFullScreenPanel/".Length)).GetComponent<Button>());
             yield return Click(full.transform.Find(fields.mButton.Substring("/MiniMapFullScreenPanel/".Length)).GetComponent<Button>());
-            var manager = Field<MiniMapResourcePointManager>("nativeResourcePoints");
+            var manager = FindObjectOfType<MiniMapResourcePointManager>();
             Require(manager.IsBoardActive(1) && !manager.GetSelectResourcePointDatas(1, 0).Active,
                 "Original resource board is selected while its private area remains hidden");
             var allButton = full.transform.Find(fields.mButton.Substring("/MiniMapFullScreenPanel/".Length)).GetComponent<Button>();
@@ -514,7 +558,7 @@ namespace Zjcs.Presentation.World
 
         private IEnumerator VerifyStaminaGathering()
         {
-            var progress = Field<OfflineMainlineProgressSession>("progressionSave");
+            var progress = Progress;
             yield return SelectNativeResourceLayers();
             progress.SetMapRegionProgress(11, 0, 10000);
             Require(progress.RecordGoddessActivated(11, 0, "probe-public-stamina-region").IsApplied, "Public resource region fixture");
@@ -523,24 +567,28 @@ namespace Zjcs.Presentation.World
                 if (!OfflineInventoryOperations.Grant(save.Player, 57, 20, DateTimeOffset.UtcNow.ToUnixTimeSeconds()).IsApplied)
                     throw new InvalidOperationException("Stamina fixture failed.");
             }).IsApplied, "Isolated gather stamina fixture");
-            Invoke("RefreshEntityActivity");
-            var resourceArea = Field<MiniMapResourcePointManager>("nativeResourcePoints").GetSelectResourcePointDatas(1, 0);
+            yield return Reopen();
+            var resourceArea = FindObjectOfType<MiniMapResourcePointManager>().GetSelectResourcePointDatas(1, 0);
             Require(resourceArea.Active && resourceArea.Datas.All(row => row.Item.gameObject.activeInHierarchy),
                 "The original resource board responds to the region becoming public");
+            var miniMapButton = UiData.components.Single(row => row.panel == "MiniMapMaskedUI"
+                && row.type == "MiniMapMaskedUI").fields.MiniMapBtn;
+            yield return Click(SceneRoot("MiniMapMaskedUI").transform
+                .Find(miniMapButton.Substring("/MiniMapMaskedUI/".Length)).GetComponent<Button>());
             yield return Capture("map-11-resource-layers");
-            yield return Click(Field<GameObject>("fullMiniMapPanel").transform.Find("Content/CloseBtn_dark").GetComponent<Button>());
-            object entity = Field<IDictionary>("mapEntities")[115];
-            var grid = (MapGridPoint)entity.GetType().GetField("Grid").GetValue(entity);
-            var session = Field<OfficialWorldMapSession>("session");
+            yield return Click(SceneRoot("MiniMapFullScreenPanel").transform.Find("Content/CloseBtn_dark").GetComponent<Button>());
+            var entity = Entity(115);
+            var grid = new MapGridPoint(entity.Grid[0], entity.Grid[1]);
+            var session = mapSession;
             MapGridPoint adjacent = new[] { new MapGridPoint(1, 0), new MapGridPoint(-1, 0), new MapGridPoint(0, 1), new MapGridPoint(0, -1) }
                 .Select(value => grid + value).First(value => session.Movement.IsFit(value));
-            Invoke("SetAvatarPosition", adjacent);
+            yield return At(adjacent);
             yield return new WaitForSecondsRealtime(1);
             var view = runtime.GetComponentInChildren<OfficialMap10EntityView>();
             var node = view.FindEntityObject(115);
             Require(node.activeInHierarchy, "Public resource point is visible");
             Vector3 point = node.GetComponentsInChildren<Collider2D>().First(value => value.enabled).bounds.center;
-            var camera = Field<Camera>("worldCamera");
+            var camera = WorldCamera;
             Require(Hits(camera.WorldToScreenPoint(point)).Count == 0, "Resource pointer is exposed to world picking");
             long gold = progress.InventoryCount(1), stamina = progress.InventoryCount(57);
             worldPress = point;
@@ -557,44 +605,40 @@ namespace Zjcs.Presentation.World
             yield return Capture("map-11-stamina-respawn");
         }
 
-        private OfficialMap11WitchWindow ExploreTop => Field<List<OfficialMap11WitchWindow>>("exploreWindows").Last();
+        private OfficialMap11WitchWindow ExploreTop => Window(SceneRoot("Official exploration UI").transform.Cast<Transform>()
+            .Where(value => value.name != "BlurMask" && value.gameObject.activeInHierarchy)
+            .OrderBy(value => value.GetComponent<Canvas>()?.sortingOrder ?? 0).Last().gameObject);
         private Dictionary<string, object> ExploreFields(OfficialMap11WitchWindow window, string kind) =>
-            (Dictionary<string, object>)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ExploreFields", new object[] { window.Key, kind, null });
+            ExploreFields(window.Key, kind);
         private Button ExploreButton(OfficialMap11WitchWindow window, string kind, string field) =>
             window.Find((string)ExploreFields(window, kind)[field]).GetComponent<Button>();
         private IEnumerator VerifyExploration()
         {
-            var progress = Field<OfflineMainlineProgressSession>("progressionSave");
+            var progress = Progress;
             Require(progress.ApplyInventoryTransaction("probe-world-explore-items", save =>
             {
                 foreach (int id in new[] { 115, 4016, 2011, 2012, 2013, 2014, 2015, 2016 })
                     if (!OfflineInventoryOperations.Grant(save.Player, id, id == 115 ? 30 : 2, DateTimeOffset.UtcNow.ToUnixTimeSeconds()).IsApplied)
                         throw new InvalidOperationException("Explore inventory fixture failed.");
             }).IsApplied, "Explore inventory fixture");
-            var entity = Field<IDictionary>("mapEntities")[115];
-            var grid = (MapGridPoint)entity.GetType().GetField("Grid").GetValue(entity);
-            Invoke("SetAvatarPosition", grid + new MapGridPoint(0, 1));
+            var entity = Entity(115);
+            var grid = new MapGridPoint(entity.Grid[0], entity.Grid[1]);
+            yield return At(grid + new MapGridPoint(0, 1));
             yield return new WaitForSecondsRealtime(1.1f);
-            var data = Field<OfficialMap11UiData>("miniMapUiData");
-            var ui = Field<OfficialWorldUiRenderer>("ui");
+            var data = UiData;
+
             var binding = data.worldBindings.exploreButtons.First(v => v.isOneTime);
             var worldFields = data.components.Single(v => v.panel == "WorldCanvas" && v.type == "WorldExploreBtn" && v.path == binding.path).fields;
             var cost = data.components.Single(v => v.panel == "WorldCanvas" && v.type == "PlayerCostMoneyContent" && v.path == worldFields.mCostMoneyContent).fields;
-            Button entry = ui.Find("WorldCanvas", cost.Btn).GetComponent<Button>();
+            Button entry = UiFind("WorldCanvas", cost.Btn).GetComponent<Button>();
             yield return Capture("map-11-explore-hud");
-            var context = (OfflineExploreContext)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ExploreContext", null);
-            var service = new OfflineWorldExplorationService(progress);
-            Require(entry.IsActive(), "Explore HUD is visible: map=" + context.MapClassId + ", area=" + context.Area
-                + ", region=" + context.Region + ", mapAllowed=" + context.MapCanExplore + ", regionForbids=" + context.RegionForbidsExplore
-                + ", level=" + progress.Save.Player.Level + ", unlockItem=" + progress.InventoryCount(4016)
-                + ", functionOpen=" + service.FunctionOpen(8, context) + ", canExplore=" + service.CanExplore(context)
-                + ", inactiveParents=" + string.Join(",", entry.GetComponentsInParent<Transform>(true)
-                    .Where(value => !value.gameObject.activeSelf).Select(value => value.name)));
-            yield return Click(entry);
+
+            Require(entry.IsActive(), "Original exploration HUD entry is visible for the isolated saved position");
+            yield return Click(UiFind("WorldCanvas", cost.Btn).GetComponent<Button>());
             yield return new WaitForSecondsRealtime(.65f);
             var confirm = ExploreTop;
             yield return Capture("map-11-explore-confirm-first");
-            var firstMask = Field<Dictionary<OfficialMap11WitchWindow, GameObject>>("exploreMasks")[confirm];
+            var firstMask = ExploreMask(confirm);
             var maskImage = firstMask.GetComponent<RawImage>();
             Require(maskImage.rectTransform.rect.width > 0 && maskImage.rectTransform.rect.height > 0,
                 "Original blur mask expands to the active root canvas");
@@ -605,10 +649,9 @@ namespace Zjcs.Presentation.World
             Require(detail.Key == "ExploreDetailDialog", "Original probability dialog opens");
             yield return Capture("map-11-explore-probability");
             // Close the native blur mask through an exposed top-screen point.
-            var masks = Field<Dictionary<OfficialMap11WitchWindow, GameObject>>("exploreMasks");
-            yield return Click(masks[detail].GetComponent<Button>());
+            yield return Click(ExploreMask(detail).GetComponent<Button>());
             yield return new WaitForSecondsRealtime(.6f);
-            Require(ExploreTop == confirm, "Native mask click closes the upper dialog");
+            Require(ExploreTop.Root == confirm.Root, "Native mask click closes the upper dialog");
             long food = progress.InventoryCount(115), guide = progress.InventoryCount(56);
             yield return Click(ExploreButton(confirm, "ConfirmDialog", "ConfirmBtn"));
             yield return new WaitForSecondsRealtime(.8f);
@@ -623,7 +666,7 @@ namespace Zjcs.Presentation.World
             long stamina = progress.InventoryCount(57);
             Vector3 chestPoint = view.FindEntityObject(spawned.PlacementId).GetComponentsInChildren<Collider2D>()
                 .First(v => v.enabled).bounds.center;
-            Require(Hits(Field<Camera>("worldCamera").WorldToScreenPoint(chestPoint)).Count == 0, "Guide chest is exposed to world picking");
+            Require(Hits(WorldCamera.WorldToScreenPoint(chestPoint)).Count == 0, "Guide chest is exposed to world picking");
             var beforeItems = progress.Save.Player.Inventory.ToDictionary(v => v.ItemId, v => v.Count);
             worldPress = chestPoint;
             float collectDeadline = Time.realtimeSinceStartup + 10;
@@ -635,7 +678,7 @@ namespace Zjcs.Presentation.World
                 "World pointer opens guide chest, grants native rewards and consumes no stamina");
             yield return Capture("map-11-explore-guide-collected");
             yield return new WaitForSecondsRealtime(2.2f);
-            yield return Click(entry);
+            yield return Click(UiFind("WorldCanvas", cost.Btn).GetComponent<Button>());
             yield return new WaitForSecondsRealtime(.65f);
             confirm = ExploreTop;
             yield return Click(ExploreButton(confirm, confirm.Key, "mProbabilityBtn"));
@@ -647,7 +690,7 @@ namespace Zjcs.Presentation.World
             var rewardDetail = ExploreTop;
             Require(rewardDetail.Key == "ExploreRewardPreviewItemDetailDialog", "Native exploration reward detail opens from its icon");
             Canvas rewardCanvas = rewardDetail.Root.GetComponent<Canvas>();
-            Canvas detailMaskCanvas = masks[rewardDetail].GetComponent<Canvas>();
+            Canvas detailMaskCanvas = ExploreMask(rewardDetail).GetComponent<Canvas>();
             Require(rewardCanvas.overrideSorting && detailMaskCanvas.overrideSorting
                 && detailMaskCanvas.sortingOrder == rewardCanvas.sortingOrder - 1
                 && detailMaskCanvas.sortingOrder > detail.Root.GetComponent<Canvas>().sortingOrder,
@@ -655,14 +698,14 @@ namespace Zjcs.Presentation.World
                 + rewardCanvas.sortingOrder + ", mask=" + detailMaskCanvas.sortingOrder
                 + ", previous=" + detail.Root.GetComponent<Canvas>().sortingOrder);
             yield return Capture("map-11-explore-reward-detail");
-            yield return Click(masks[rewardDetail].GetComponent<Button>());
+            yield return Click(ExploreMask(rewardDetail).GetComponent<Button>());
             yield return new WaitForSecondsRealtime(.6f);
             var detailFields = ExploreFields(detail, detail.Key);
             var tabs = (List<object>)detailFields["mTabItems"];
             var historyTab = (Dictionary<string, object>)tabs.Single(v => Convert.ToInt32(((Dictionary<string, object>)v)["State"]) == 1);
             yield return Click(detail.Find((string)historyTab["TabItem"]).GetComponent<Button>());
             yield return Capture("map-11-explore-history");
-            yield return Click(masks[detail].GetComponent<Button>());
+            yield return Click(ExploreMask(detail).GetComponent<Button>());
             yield return new WaitForSecondsRealtime(.6f);
             yield return Click(ExploreButton(confirm, confirm.Key, "SelectNewBtn"));
             yield return new WaitForSecondsRealtime(.65f);
@@ -680,27 +723,26 @@ namespace Zjcs.Presentation.World
             yield return Click(row);
             yield return Click(ExploreButton(tokens, tokens.Key, "ConfirmButton"));
             yield return new WaitForSecondsRealtime(.6f);
-            Require(Field<int>("exploreToken") > 0, "Native token row selection is applied by pointer");
             yield return Capture("map-11-explore-selected-token");
-            int selectedToken = Field<int>("exploreToken");
-            long tokenBefore = progress.InventoryCount(selectedToken);
+            var tokensBefore = new[] { 2011, 2012, 2013, 2014, 2015, 2016 }.ToDictionary(id => id, id => progress.InventoryCount(id));
             food = progress.InventoryCount(115);
             yield return Click(ExploreButton(confirm, "ConfirmDialog", "ConfirmBtn"));
             yield return new WaitForSecondsRealtime(.8f);
             Require(progress.Save.World.Exploration.TotalCount == 2 && progress.InventoryCount(115) == food - 1
-                && progress.InventoryCount(selectedToken) == tokenBefore - 1 && progress.InventoryCount(56) == guide + 1,
+                && tokensBefore.Count(pair => progress.InventoryCount(pair.Key) == pair.Value - 1) == 1 && progress.InventoryCount(56) == guide + 1,
                 "Token exploration consumes one native token and fruit without repeating the guide award");
             // Locate an open original area for the ten-result fixture. The
             // spawn service keeps its native distance and occupancy checks.
-            var map = Field<OfficialWorldMapSession>("session");
-            var occupied = new HashSet<MapGridPoint>(Field<IDictionary>("mapEntities").Values.Cast<object>()
-                .Select(v => (MapGridPoint)v.GetType().GetField("Grid").GetValue(v)));
+            var map = mapSession;
+            var occupied = new HashSet<MapGridPoint>(runtime.GetComponentInChildren<OfficialMap10EntityView>().EntityInfos
+                .Select(value => new MapGridPoint(value.Grid[0], value.Grid[1])));
+            OfficialMapNavigationView.TryGetCell(map.Definition.Navigation, Position.X, Position.Y, out int currentArea, out _);
             var open = new List<KeyValuePair<MapGridPoint, int>>();
             for (int y = 3; y < map.Definition.Navigation.Height - 3; y++)
                 for (int x = 3; x < map.Definition.Navigation.Width - 3; x++)
                 {
                     if (!OfficialMapNavigationView.TryGetCell(map.Definition.Navigation, x, y, out int area, out int ground)
-                        || area != context.Area || !map.Movement.IsFit(new MapGridPoint(x, y))) continue;
+                        || area != currentArea || !map.Movement.IsFit(new MapGridPoint(x, y))) continue;
                     int free = 0;
                     for (int dy = -3; dy <= 3; dy++) for (int dx = -3; dx <= 3; dx++)
                     {
@@ -712,13 +754,17 @@ namespace Zjcs.Presentation.World
                     open.Add(new KeyValuePair<MapGridPoint, int>(new MapGridPoint(x, y), free));
                 }
             Require(open.Count > 0, "Original area contains a ten-times exploration test position");
-            Invoke("SetAvatarPosition", open.OrderByDescending(v => v.Value).First().Key);
+            yield return At(open.OrderByDescending(v => v.Value).First().Key);
             yield return new WaitForSecondsRealtime(.8f);
-            PrepareTenExploreRandomFixture(progress);
+            // The pre-refactor module fixture selected seed 16 for this original
+            // area. Keep its input fixed instead of inspecting the live host.
+            Require(progress.ApplyInventoryTransaction("probe-ten-seed", save => save.Player.InventoryRandomState = 16).IsApplied,
+                "Deterministic isolated exploration seed");
+            yield return Reopen();
             var manyBinding = data.worldBindings.exploreButtons.Single(v => !v.isOneTime);
             var manyWorld = data.components.Single(v => v.panel == "WorldCanvas" && v.type == "WorldExploreBtn" && v.path == manyBinding.path).fields;
             var manyCost = data.components.Single(v => v.panel == "WorldCanvas" && v.type == "PlayerCostMoneyContent" && v.path == manyWorld.mCostMoneyContent).fields;
-            yield return Click(ui.Find("WorldCanvas", manyCost.Btn).GetComponent<Button>());
+            yield return Click(UiFind("WorldCanvas", manyCost.Btn).GetComponent<Button>());
             yield return new WaitForSecondsRealtime(.65f);
             confirm = ExploreTop;
             yield return Capture("map-11-explore-ten-confirm");
@@ -731,49 +777,24 @@ namespace Zjcs.Presentation.World
                 + progress.Save.World.Exploration.TotalCount + "; fruit=" + progress.InventoryCount(115));
             yield return Capture("map-11-explore-ten-results");
             yield return new WaitForSecondsRealtime(2.1f);
-            yield return Click(entry);
+            yield return Click(UiFind("WorldCanvas", cost.Btn).GetComponent<Button>());
             yield return new WaitForSecondsRealtime(.65f);
             confirm = ExploreTop;
             yield return Click(ExploreButton(confirm, confirm.Key, "mProbabilityBtn"));
             yield return new WaitForSecondsRealtime(.65f);
             detail = ExploreTop;
             yield return Click(detail.Find((string)historyTab["TabItem"]).GetComponent<Button>());
-            var historyFields = (Dictionary<string, object>)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ExploreFields", new object[] { detail.Key, "ExploreHistoryContent", ExploreFields(detail, detail.Key)["mExploreHistoryContent"] });
-            var paging = (Dictionary<string, object>)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ExploreFields", new object[] { detail.Key, "TurnPageUI", historyFields["mTurnPageUI"] });
-            var nextPage = (Dictionary<string, object>)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ExploreFields", new object[] { detail.Key, "TurnPageBtn", paging["mNextBtn"] });
+            var historyFields = ExploreFields(detail.Key, "ExploreHistoryContent", ExploreFields(detail, detail.Key)["mExploreHistoryContent"]);
+            var paging = ExploreFields(detail.Key, "TurnPageUI", historyFields["mTurnPageUI"]);
+            var nextPage = ExploreFields(detail.Key, "TurnPageBtn", paging["mNextBtn"]);
             yield return Click(detail.Find((string)nextPage["Btn"]).GetComponent<Button>());
             Require(detail.Find((string)paging["mCurPageText"]).GetComponent<TMPro.TMP_Text>().text.Contains("2"),
                 "Native history pagination advances to the second page");
             yield return Capture("map-11-explore-history-second-page");
-            yield return Click(masks[detail].GetComponent<Button>());
+            yield return Click(ExploreMask(detail).GetComponent<Button>());
             yield return new WaitForSecondsRealtime(.6f);
             yield return Click(ExploreButton(confirm, "ConfirmDialog", "CancelBtn"));
             yield return new WaitForSecondsRealtime(.6f);
-        }
-
-        private void PrepareTenExploreRandomFixture(OfflineMainlineProgressSession progress)
-        {
-            // Find a reproducible native sequence that fits the approved local
-            // placement policy. Distance-one entities can otherwise arrive after
-            // all four neighbouring cells were taken by distance-three results.
-            // Sampling writes only a second isolated fixture, never this profile.
-            var slots = new ProfileSlotCatalog(Path.Combine(output, "spawn-fixture"));
-            string sampleSlot = slots.CreateSlot();
-            var context = (OfflineExploreContext)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ExploreContext", null);
-            long selected = 0;
-            for (long seed = 1; seed <= 128; seed++)
-            {
-                var save = JsonUtility.FromJson<OfflineMainlineSave>(JsonUtility.ToJson(progress.Save));
-                save.Player.InventoryRandomState = seed;
-                File.WriteAllText(Path.Combine(slots.GetSlotDirectory(sampleSlot), "city-save.json"), JsonUtility.ToJson(save));
-                var sample = OfflineMainlineProgressSession.Open(slots, sampleSlot, OfficialMainlineTaskCatalog.LoadDefault());
-                var service = new OfflineWorldExplorationService(sample);
-                if (service.Explore(context, 10, 0, "ten-position-fixture", DateTimeOffset.UtcNow.ToUnixTimeSeconds(), out _).IsApplied)
-                { selected = seed; break; }
-            }
-            Require(selected > 0, "An original ten-result sequence fits the isolated map position");
-            Require(progress.ApplyInventoryTransaction("probe-ten-seed", save => save.Player.InventoryRandomState = selected).IsApplied,
-                "Reproducible ten-times exploration fixture");
         }
 
         private static IEnumerator DragScroll(LoopVerticalScrollRect scroll)
@@ -806,7 +827,8 @@ namespace Zjcs.Presentation.World
 
         private static IEnumerator Click(Button button)
         {
-            Require(button != null && button.IsActive() && button.IsInteractable(), "Pointer target is active and interactable");
+            Require(button != null && button.IsActive() && button.IsInteractable(), "Pointer target is active and interactable: "
+                + (button == null ? "missing" : button.name));
             Canvas.ForceUpdateCanvases();
             Vector2 position = RectTransformUtility.WorldToScreenPoint(null, ((RectTransform)button.transform).TransformPoint(((RectTransform)button.transform).rect.center));
             var hits = Hits(position);
@@ -846,8 +868,74 @@ namespace Zjcs.Presentation.World
             Destroy(image);
         }
 
-        private T Field<T>(string name) => (T)OfficialMainlineMapInspection.Get((OfficialMainlineMapRuntime)runtime, name);
-        private void Invoke(string name, params object[] args) => OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, name, args);
+        private OfflineMainlineProgressSession Progress { get { observedProgress.Reload(); return observedProgress; } }
+        private Map10LocalSave MapSave => MainlineMapLocalSaveFile.Read(
+            Path.Combine(new ProfileSlotCatalog(root).GetSlotDirectory(slot), "map-" + mapId + "-save.json"), slot, mapId,
+            mapSession.Definition.Navigation.Width, mapSession.Definition.Navigation.Height);
+        private MapGridPoint Position => new MapGridPoint(MapSave.gridX, MapSave.gridY);
+        private Camera WorldCamera => runtime.GetComponentsInChildren<Camera>(true).First(value => (value.cullingMask & (1 << 30)) == 0);
+        private OfficialMap11UiData UiData => JsonUtility.FromJson<OfficialMap11UiData>(Resources.Load<TextAsset>("Map11/UI/catalog").text);
+        private static GameObject SceneRoot(string name) => Resources.FindObjectsOfTypeAll<Transform>()
+            .FirstOrDefault(value => value.gameObject.scene.IsValid() && (value.name == name || value.name == name + "(Clone)"))?.gameObject;
+        private GameObject UiFind(string panel, string path) => path == "/" + panel ? SceneRoot(panel)
+            : SceneRoot(panel).transform.Find(path.Substring(panel.Length + 2)).gameObject;
+        private OfficialMap10EntityInfo Entity(int id) => runtime.GetComponentInChildren<OfficialMap10EntityView>().EntityInfos.Single(value => value.PlacementId == id);
+        private Vector3 GridToWorld(MapGridPoint grid)
+        {
+            var value = OfficialMapNavigationView.GridToWorld(mapSession.Definition.Navigation, grid.X, grid.Y);
+            return new Vector3(value.X, value.Y, value.Z - .1f);
+        }
+        private OfficialMap11WitchWindow Window(GameObject node) => node == null ? null : new OfficialMap11WitchWindow(node.name, node, UiData, "Map11/UI/");
+        private OfficialMap11WitchWindow StatueWindow => Window(new[] { "WorldTouchDialogWithPreview", "WorldStageInteractionPreviewDialogHeroStatue", "WorldTouchDialogPeriodicityInteraction", "WorldStageInteractionPreparePlayableDialog" }
+            .Select(SceneRoot).FirstOrDefault(value => value && value.activeInHierarchy));
+        private Dictionary<string, object> ExploreFields(string panel, string kind, object path = null) =>
+            (Dictionary<string, object>)((List<object>)((Dictionary<string, object>)Zjcs.Offline.Equipment.OfficialEquipmentJson.Parse(
+                Resources.Load<TextAsset>("Map11/UI/catalog").text, true))["components"])
+                .Cast<Dictionary<string, object>>().Single(value => (string)value["panel"] == panel && (string)value["type"] == kind
+                    && (path == null || (string)value["path"] == (string)path))["fields"];
+        private GameObject ExploreMask(OfficialMap11WitchWindow window) => window.Root.transform.parent.Cast<Transform>()
+            .Single(value => value.name == "BlurMask" && value.GetComponent<Canvas>().sortingOrder == window.Root.GetComponent<Canvas>().sortingOrder - 1).gameObject;
+        private GameObject FilterItem(string key)
+        {
+            int index = Array.FindIndex(UiData.minimapMarks, value => value.name == key);
+            var fields = UiData.components.Single(value => value.panel == "MiniMapFullScreenPanel" && value.type == "MiniMapMarkUIFilter").fields;
+            return UiFind("MiniMapFullScreenPanel", fields.mFilterContent).transform.GetChild(index).gameObject;
+        }
+        private bool FilterSelection(string key) => new MainlineMiniMapFilterPersistentState(new ProfileSlotCatalog(root), slot).State.FilterState.TryGetValue(key, out bool selected) ? selected : !int.TryParse(key, out _);
+        private IEnumerator ExitMap()
+        {
+            for (int attempt = 0; runtime != null && attempt < 12; attempt++)
+            {
+                escape = true;
+                yield return new WaitForSecondsRealtime(.4f);
+            }
+            Require(runtime == null, "Simulated Escape closes the map through its normal lifecycle");
+        }
+        private IEnumerator Reopen()
+        {
+            int id = mapId;
+            var canvas = canvasRoot;
+            yield return ExitMap();
+            Open(id, canvas);
+            yield return new WaitForSecondsRealtime(1);
+        }
+        private IEnumerator At(MapGridPoint point)
+        {
+            int id = mapId;
+            var canvas = canvasRoot;
+            yield return ExitMap();
+            var save = MapSave; save.gridX = point.X; save.gridY = point.Y;
+            File.WriteAllText(Path.Combine(new ProfileSlotCatalog(root).GetSlotDirectory(slot), "map-" + id + "-save.json"), JsonUtility.ToJson(save));
+            Open(id, canvas);
+            yield return new WaitForSecondsRealtime(1);
+        }
+        private IEnumerator ClickEntity(int id)
+        {
+            var node = runtime.GetComponentInChildren<OfficialMap10EntityView>().FindEntityObject(id);
+            Require(node != null && node.activeInHierarchy, "Original world entity is visible for pointer input: " + id);
+            worldPress = node.GetComponentsInChildren<Collider2D>().First(value => value.enabled).bounds.center;
+            yield return new WaitForSecondsRealtime(.7f);
+        }
         private static void Require(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
         private void Complete(bool success)
         {

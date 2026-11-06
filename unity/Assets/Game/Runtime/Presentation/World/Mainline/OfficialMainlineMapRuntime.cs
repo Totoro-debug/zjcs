@@ -208,6 +208,8 @@ namespace Zjcs.Presentation.World
             }
         }
 
+        public Func<KeyCode, bool> KeyDownProvider { private get; set; }
+
         private void Update()
         {
             if (session == null || closed) return;
@@ -221,7 +223,7 @@ namespace Zjcs.Presentation.World
             dialoguePortraits?.Tick(Time.unscaledDeltaTime);
             optionDialoguePortraits?.Tick(Time.unscaledDeltaTime);
             miniMap.UpdateMiniMapFilter();
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (KeyDownProvider?.Invoke(KeyCode.Escape) ?? Input.GetKeyDown(KeyCode.Escape))
             {
                 if (map12PrivateDungeonBattleActive) return;
                 if (exploration.exploreWindows.Count != 0) exploration.CloseExploreUi();

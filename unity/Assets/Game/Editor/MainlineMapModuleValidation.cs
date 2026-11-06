@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
@@ -64,54 +63,9 @@ namespace Zjcs.Editor
                     throw new InvalidDataException("Whale Island official regional access condition changed.");
         }
 
-        public static void ValidateWhaleIslandStoryCondition()
-        {
-            const string tag = "金宝箱_鲸岛神龟";
-            Type evaluatorType = typeof(OfficialMainlineMapProfile).Assembly.GetType(
-                "Zjcs.Presentation.World.Map13OfflinePlayerConditionEvaluator", true);
-            object evaluator = Activator.CreateInstance(evaluatorType,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                null, new object[] { Array.Empty<Map13RuntimePlayerCondition>(), (Func<int, long>)(_ => 0),
-                    (Func<string, int>)(_ => 0), (Func<string, int>)(_ => 0), (Func<int, int>)(_ => 0),
-                    (Func<int, int, int>)((_, _) => 0), (Func<string, bool>)(value => value == tag) }, null);
-            MethodInfo evaluate = evaluatorType.GetMethod("Evaluate");
-            bool Evaluate(string value, int not) => (bool)evaluate.Invoke(evaluator, new object[] {
-                "MapLogicEntityEndByTag", new Map13RuntimePlayerConditionData { Tag = value }, null, not });
-            if (!Evaluate(tag, 0) || Evaluate(tag, 1) || Evaluate("another-tag", 0) || !Evaluate("another-tag", 1))
-                throw new InvalidDataException("Shared mainline completed-tag story condition changed.");
-        }
+        public static void ValidateWhaleIslandStoryCondition() => OfficialMainlineMapModuleProbe.ValidateWhaleIslandStoryCondition();
 
-        public static void RunInteractionCatalogs()
-        {
-            Type type = typeof(OfficialMainlineMapProfile).Assembly.GetType(
-                "Zjcs.Presentation.World.OfficialMainlineInteractionCatalog", true);
-            MethodInfo loadMap = type.GetMethod("Load", new[] { typeof(int) });
-            for (int map = 10; map <= 15; map++)
-            {
-                var heroes = (Array)type.GetField("heroes").GetValue(loadMap.Invoke(null, new object[] { map }));
-                if (heroes.Length != 4) throw new InvalidDataException("Historical hero selection changed: " + map);
-            }
-            object catalog = loadMap.Invoke(null, new object[] { 16 });
-            var variants = (Array)type.GetField("heroes").GetValue(catalog);
-            int[] ids = variants.Cast<object>().Select(hero => (int)hero.GetType().GetField("EntityClassId").GetValue(hero)).ToArray();
-            if (!ids.SequenceEqual(new[] { 6570, 6571, 6572, 6573, 6574, 6575 }))
-                throw new InvalidDataException("Whale Island profile did not load all six original hero variants.");
-            var regions = (Array)type.GetField("regions").GetValue(catalog);
-            if (regions.Length != 43 || regions.Cast<object>().Any(region =>
-                (int)region.GetType().GetField("MapClassId").GetValue(region) != 16))
-                throw new InvalidDataException("Whale Island profile did not load its 43 original interaction regions.");
-            MethodInfo load = type.GetMethod("Load", new[] { typeof(string), typeof(string), typeof(int), typeof(int) });
-            foreach (object[] invalid in new[] {
-                new object[] { "Map16/interactions", "871_156598", 16, 43 },
-                new object[] { "Map16/interactions", "884_156692", 13, 43 },
-                new object[] { "Map16/interactions", "884_156692", 16, 42 } })
-            {
-                try { load.Invoke(null, invalid); }
-                catch (TargetInvocationException error) when (error.InnerException is InvalidDataException) { continue; }
-                throw new InvalidDataException("The shared interaction loader accepted another source identity.");
-            }
-            Debug.Log("Shared interaction catalog validation passed: historical maps 10-15, six Whale Island heroes and source identity guards.");
-        }
+        public static void RunInteractionCatalogs() => OfficialMainlineMapModuleProbe.RunInteractionCatalogs();
 
         public static void Run()
         {
@@ -147,8 +101,7 @@ namespace Zjcs.Editor
             SessionState.SetString(Key, Path.GetFullPath(args[index + 1]));
             Hook();
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-            typeof(Home.HomeAcceptanceLauncher).GetMethod("ConfigurePortraitGameView", BindingFlags.Static | BindingFlags.NonPublic)
-                .Invoke(null, new object[] { 540, 960 });
+            Home.HomeAcceptanceLauncher.ConfigurePortraitGameView(540, 960);
             EditorWindow gameView = EditorWindow.GetWindow(typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView"));
             gameView.maximized = true;
             EditorApplication.isPlaying = true;
@@ -179,8 +132,7 @@ namespace Zjcs.Editor
 
         public static void BuildWindowsPlayer()
         {
-            string repository = Path.GetFullPath(Path.Combine(Application.dataPath, "..", ".."));
-            string destination = Path.Combine(repository, ".tools", "mainline-refactor-player", "杖剑传说.exe");
+            string destination = null;
             string[] args = Environment.GetCommandLineArgs();
             int output = Array.IndexOf(args, "-mainline-player-output");
             bool releaseProbe = args.Contains("-mainline-release-probe");
@@ -188,6 +140,13 @@ namespace Zjcs.Editor
             {
                 if (output + 1 >= args.Length) throw new ArgumentException("Pass a Windows executable path after -mainline-player-output.");
                 destination = Path.GetFullPath(args[output + 1]);
+            }
+            if (destination == null)
+            {
+                string workspace = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+                if (string.IsNullOrWhiteSpace(workspace))
+                    throw new ArgumentException("Set ZJCS_VALIDATION_DIR or pass -mainline-player-output.");
+                destination = Path.Combine(Path.GetFullPath(workspace), "player", "杖剑传说.exe");
             }
             Directory.CreateDirectory(Path.GetDirectoryName(destination));
             ScriptingImplementation previous = PlayerSettings.GetScriptingBackend(NamedBuildTarget.Standalone);
