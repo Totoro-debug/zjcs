@@ -69,6 +69,7 @@ namespace Zjcs.Offline.Progression
         public OfflineFruitTreeProgress FruitTree = new OfflineFruitTreeProgress();
         public OfflineMaterialGatheringProgress MaterialGathering = new OfflineMaterialGatheringProgress();
         public List<string> AppliedInventoryEventIds = new List<string>();
+        public List<DailyDungeonSettlementRecord> DailyDungeonSettlements = new List<DailyDungeonSettlementRecord>();
         public long InventoryRandomState;
         public List<int> UnlockedMapClassIds = new List<int>();
         public List<OfflineRankUnlockTime> RankUnlockTimes = new List<OfflineRankUnlockTime>();
@@ -1106,6 +1107,24 @@ namespace Zjcs.Offline.Progression
 
         private OfficialMainlineTaskCatalog FriendshipCatalog => catalog ?? DefaultFriendshipCatalog.Value;
 
+        private static bool ValidateDungeonSettlements(OfflinePlayerProgress player)
+        {
+            if (player.DailyDungeonSettlements == null) return false;
+            var receipts = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var record in player.DailyDungeonSettlements)
+            {
+                if (record == null || string.IsNullOrWhiteSpace(record.Receipt)
+                    || !receipts.Add(record.Receipt) || !player.AppliedInventoryEventIds.Contains(record.Receipt)
+                    || record.Items == null || record.EquipmentInstanceIds == null) return false;
+                var items = new HashSet<int>();
+                foreach (var item in record.Items)
+                    if (item == null || item.ItemId <= 0 || item.Count <= 0 || !items.Add(item.ItemId)) return false;
+                if (record.EquipmentInstanceIds.Any(id => id <= 0)
+                    || record.EquipmentInstanceIds.Distinct().Count() != record.EquipmentInstanceIds.Count) return false;
+            }
+            return true;
+        }
+
         public ProgressionResult ApplyInventoryTransaction(string eventId, Action<OfflineMainlineSave> mutation)
         {
             return ApplyInventoryTransactionCore(eventId, mutation, null, 0);
@@ -1330,6 +1349,7 @@ namespace Zjcs.Offline.Progression
                     || item.UnitRecords.Any(record => record == null || record.AcquiredAtUnixSeconds < 0
                         || record.ExpiresAtUnixSeconds < 0)) { reason = "inventory"; return false; }
             if (!UniqueStrings(save.Player.AppliedCharacterEventIds) || !UniqueStrings(save.Player.AppliedInventoryEventIds)
+                || !ValidateDungeonSettlements(save.Player)
                 || !ValidateWardrobe(save.Player.Wardrobe, save.Player.Inventory)
                 || !ValidateEquipment(save.Player.Equipment)) { reason = "player-records"; return false; }
             if (!UniquePositiveIds(save.Player.UnlockedMapClassIds)) { reason = "unlocked-maps"; return false; }
@@ -1395,6 +1415,7 @@ namespace Zjcs.Offline.Progression
             if (save.Player.Inventory == null) save.Player.Inventory = new List<OfflineItemStack>();
             if (save.Player.NpcFollowerClassIds == null) save.Player.NpcFollowerClassIds = new List<int>();
             if (save.Player.AppliedInventoryEventIds == null) save.Player.AppliedInventoryEventIds = new List<string>();
+            if (save.Player.DailyDungeonSettlements == null) save.Player.DailyDungeonSettlements = new List<DailyDungeonSettlementRecord>();
             if (save.Player.CommerceStateJson == null) save.Player.CommerceStateJson = string.Empty;
             if (save.Player.Wishes == null) save.Player.Wishes = new OfflineWishProgress();
             OfflineWishProgress.Normalize(save.Player.Wishes);

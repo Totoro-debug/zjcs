@@ -92,8 +92,8 @@ namespace Zjcs.Presentation.Home
             canClaim = false;
             canPurchase = false;
             SetNamedText(transform, "CommonBtn_CostItem", "已领取");
-            SetButtonInteractable("Content/WinObj/DailyDungeonCostMoneyContent/CommonBtn_CostItem", false);
-            SetButtonInteractable("Content/WinObj/DailyDungeonCostMoneyContent/CommonBtn_Add", false);
+            SetButtonInteractable("Content/WinObj/Content/DailyDungeonCostMoneyContent/CommonBtn_CostItem", false);
+            SetButtonInteractable("Content/WinObj/Content/DailyDungeonCostMoneyContent/CommonBtn_Add", false);
             SetNamedText(transform, "ReturnText", "奖励已发放至背包");
         }
 
@@ -226,17 +226,17 @@ namespace Zjcs.Presentation.Home
 
         private void BindButtons()
         {
-            BindButton("Content/WinObj/DailyDungeonCostMoneyContent/CommonBtn_CostItem",
+            BindButton("Content/WinObj/Content/DailyDungeonCostMoneyContent/CommonBtn_CostItem",
                 canClaim ? claim : canPurchase ? purchase : null);
-            BindButton("Content/WinObj/DailyDungeonCostMoneyContent/CommonBtn_Add",
+            BindButton("Content/WinObj/Content/DailyDungeonCostMoneyContent/CommonBtn_Add",
                 canPurchase ? purchase : null);
             BindButton("Content/WinObj/Content/CloseBtn", close);
 
-            SetNamedText(transform, "Content/WinObj/DailyDungeonCostMoneyContent/CommonBtn_CostItem",
+            SetNamedText(transform, "Content/WinObj/Content/DailyDungeonCostMoneyContent/CommonBtn_CostItem",
                 canClaim ? "领取奖励" : canPurchase ? "购买次数" : "次数不足");
-            SetButtonInteractable("Content/WinObj/DailyDungeonCostMoneyContent/CommonBtn_CostItem",
+            SetButtonInteractable("Content/WinObj/Content/DailyDungeonCostMoneyContent/CommonBtn_CostItem",
                 canClaim || canPurchase);
-            SetButtonInteractable("Content/WinObj/DailyDungeonCostMoneyContent/CommonBtn_Add", canPurchase);
+            SetButtonInteractable("Content/WinObj/Content/DailyDungeonCostMoneyContent/CommonBtn_Add", canPurchase);
         }
 
         private void BindButton(string path, Action action)

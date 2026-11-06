@@ -11,7 +11,7 @@ using Zjcs.Offline.World;
 
 namespace Zjcs.Editor
 {
-    public static class DailyDungeonModuleRuleAcceptance
+    public static partial class DailyDungeonModuleRuleAcceptance
     {
         [MenuItem("Zjcs/Validation/Daily Dungeon Module Rules")]
         public static void Run()
@@ -179,6 +179,7 @@ namespace Zjcs.Editor
                 throw new InvalidOperationException("Completing a route without claiming consumed a claim or advanced the claim achievement.");
 
             DailyDungeonPendingClaimSave pending = module.PendingClaims.Single();
+            ValidateSettlement(slots, catalog, pending);
             DailyDungeonRuntimeGradeReward gradeReward = module.FindMap(pending.run.mapGroupId)?.gradeRewards
                 ?.FirstOrDefault(value => value != null && value.difficulty == pending.run.difficulty
                     && value.grade == pending.run.grade);

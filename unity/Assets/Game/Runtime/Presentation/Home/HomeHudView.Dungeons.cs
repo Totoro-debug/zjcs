@@ -1203,10 +1203,8 @@ namespace Zjcs.Presentation.Home
             {
                 IReadOnlyList<DailyDungeonClaimRewardDisplayItem> receivedRewards =
                     Array.Empty<DailyDungeonClaimRewardDisplayItem>();
-                bool claimed = host.DailyDungeons.ClaimPendingReward(pending.id,
-                    (receipt, run, claimTimes) => host.GrantDailyDungeonRewardsForSettlement(receipt,
-                        run, host.DailyDungeons.ConfiguredRewardRuleIds(run, true), claimTimes,
-                        out receivedRewards), awardTimes);
+                bool claimed = host.ClaimDailyDungeonRewards(pending.id, awardTimes, out receivedRewards,
+                    out bool hasRewardDetails);
                 if (!claimed)
                 {
                     Notify("副本奖励领取失败，请重试");
@@ -1214,7 +1212,7 @@ namespace Zjcs.Presentation.Home
                 }
                 dailyDungeonResultPanelAdapter?.ShowClaimedRewards(receivedRewards);
                 RefreshDailyDungeonEntryPage();
-                Notify("副本奖励领取成功");
+                Notify(hasRewardDetails ? "副本奖励领取成功" : "历史奖励已入库，明细不可恢复");
             }, OpenDailyDungeonBuyCountDialog, () =>
             {
                 CloseDailyDungeonClaimConfirm();
@@ -1428,8 +1426,7 @@ namespace Zjcs.Presentation.Home
 
         private void GrantDailyDungeonRoomRewards(string receipt, Zjcs.Offline.World.DailyDungeonRunSave run)
         {
-            int[] rules = host.DailyDungeons.ConfiguredRewardRuleIds(run, run.grade > 0);
-            if (!host.GrantDailyDungeonRewards(receipt, run, rules))
+            if (!host.SettleDailyDungeonRooms(receipt, run))
                 throw new InvalidOperationException("Official daily dungeon reward settlement failed.");
         }
 
