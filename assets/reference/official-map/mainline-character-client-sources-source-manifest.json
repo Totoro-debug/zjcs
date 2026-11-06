@@ -48,13 +48,13 @@
     },
     {
       "path": "assets/reference/official-map/mainline-character-components-source-manifest.json",
-      "sha256": "abf4b449353c07cc2a2d966c940206a216acb14557ad426126ad5326edb26cc1"
+      "sha256": "e9a1850b9f5488a1a855c373a4b2422001a095584f13a8b058e54114b4f9b186"
     }
   ],
   "tools": [
     {
       "path": "scripts/recover_mainline_character_sources.py",
-      "sha256": "6e11f759f23225d816c4ead05c3dbdc000821557a9825bf2e5be24b076f0da86"
+      "sha256": "097b57b70c6ac8b907cb65208021a9a93aeb46f2a37825c24df829c78fe9887e"
     },
     {
       "path": ".tools/dotnet/dotnet.exe",
@@ -79,6 +79,14 @@
       "sha256": "88a18f7c04f7cde432668b67e5298b8237f2720747d8cf9371c08d2d21d86203"
     },
     {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/IMapEntityMoveHandler.cs",
+      "sha256": "b92356eea96a4a01447bc437ff691c2015cff724fb7628442bca87ca2fbe5f3f"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/IMoveEffectSupport.cs",
+      "sha256": "233c7b646e4408deefeb1141e389df33479aecad758bb911382aa3c02ffb0d18"
+    },
+    {
       "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MapCharacterMoveEffectSupport.cs",
       "sha256": "240fea65e648e39e45393f655547b4ea942988bc25e72fb880a4eb1e7e0543d9"
     },
@@ -89,6 +97,18 @@
     {
       "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MapControllerEntityRadar.cs",
       "sha256": "f5c36182328c2829837ad7fca61bda847802a3bca16e34aba6d2e789c287bcb1"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MapEntityMoveHandlerBase.cs",
+      "sha256": "029e5f3b9ee3c6ac894933553cea670f2d08e0cc351e392b23858b81e03f3683"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MapEntityMoveHandlerCharacterBase.cs",
+      "sha256": "abee2417c5a14209d3bc0ca682ebc6976a5237de7401813097bef07a1d66fd56"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MapEntityMoveHandlerCharacterOther.cs",
+      "sha256": "0fdf1e380e47566591365322846b960f68e449a97c721ca9c3881c7d8304c4d1"
     },
     {
       "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MapEntityTag.cs",
@@ -231,12 +251,24 @@
       "sha256": "9192fe7435eab0ca2d4d9df410e1a849695fc724317a74410ff055285fae253a"
     },
     {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/MapMoveType.cs",
+      "sha256": "905a61f020088d4bda1ab57beb45db2546256d34f5c2fe6619f37748063e505e"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/MapMoveUtils.cs",
+      "sha256": "178ff3ec3bc9cdd9a8f4310214e1fb89c00327be62aacd6b3f2237fd87d8b913"
+    },
+    {
       "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/NpcFollowerControllerComponent.cs",
       "sha256": "8ac231bbcda6324d1a0af1e34af8ba9bce30ea2de92cfed62a7406713f68e4e8"
     },
     {
       "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/NpcFollowerControllerComponentInfo.cs",
       "sha256": "49ba03af1772a6ffeee3f7149b6bedb9230e5bd0bfa4a48af3bd60e332c4d2da"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/TimeManager.cs",
+      "sha256": "958d55463753ffe05a7bbba1a5364de6702807d49dd64767d01d7cbf24767aa7"
     },
     {
       "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/VisibilityComponent.cs",

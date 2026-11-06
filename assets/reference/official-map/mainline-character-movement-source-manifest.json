@@ -1,0 +1,167 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MoveAgent.cs",
+      "sha256": "9cdedc9f1f5528273e3220921750766ec588fb4b99f61b9064ae81f20bc9b254"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/IMapEntityMoveHandler.cs",
+      "sha256": "b92356eea96a4a01447bc437ff691c2015cff724fb7628442bca87ca2fbe5f3f"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MapEntityMoveHandlerBase.cs",
+      "sha256": "029e5f3b9ee3c6ac894933553cea670f2d08e0cc351e392b23858b81e03f3683"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MapEntityMoveHandlerCharacterBase.cs",
+      "sha256": "abee2417c5a14209d3bc0ca682ebc6976a5237de7401813097bef07a1d66fd56"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/MapEntityMoveHandlerCharacterOther.cs",
+      "sha256": "0fdf1e380e47566591365322846b960f68e449a97c721ca9c3881c7d8304c4d1"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/client-source/IMoveEffectSupport.cs",
+      "sha256": "233c7b646e4408deefeb1141e389df33479aecad758bb911382aa3c02ffb0d18"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/MapMoveType.cs",
+      "sha256": "905a61f020088d4bda1ab57beb45db2546256d34f5c2fe6619f37748063e505e"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/MapMoveUtils.cs",
+      "sha256": "178ff3ec3bc9cdd9a8f4310214e1fb89c00327be62aacd6b3f2237fd87d8b913"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/TimeManager.cs",
+      "sha256": "958d55463753ffe05a7bbba1a5364de6702807d49dd64767d01d7cbf24767aa7"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/mainline-character-client-sources-source-manifest.json",
+      "sha256": "ed5ba2756106f2c0f93fa68f9ff5493a31fb01b92a16a424524cf9f5f17d521a"
+    },
+    {
+      "path": "assets/reference/official-map/map14-entity-lifecycle-source-manifest.json",
+      "sha256": "b87248060d1f755e091c630e0d3f9fe38403f07fc898a8819bc56c5c99c6a342"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/SafeAction.cs",
+      "sha256": "e798e1f556d7fd4311ed67a47f45c851efb6fc63dc80ae34fa8dabd217ad8668"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_mainline_character_movement.py",
+      "sha256": "f9f855b4d274ca90bc59a5205d578bf947cb8aeeebced838d796d7e334ab3bd5"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MoveAgent.cs",
+      "sha256": "275a3807f297e1148da988d26b9d6143ac9058f4e962b386eec28c2af9ec7acf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MoveAgent.cs.meta",
+      "sha256": "4062e93b8c9df83cdb36c7f7e76864440f8a21c00942aa853191170a54adab67"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/IMapEntityMoveHandler.cs",
+      "sha256": "1368d46577c3559bad18194e5167141a552b55cf87e734daf2d05bf4cebc7a8c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/IMapEntityMoveHandler.cs.meta",
+      "sha256": "f6487a288435be74ffe25e0c3a70e03bf6470fb622ca432fbfbcb02637ba2ca6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MapEntityMoveHandlerBase.cs",
+      "sha256": "7b0301d9d0e7e5fbc03b51123313722207a1cd15f1588a58c2857dae566ccb48"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MapEntityMoveHandlerBase.cs.meta",
+      "sha256": "a5d58611ecd9392da290f50f95bd2019f5f080ecc66fd4699e240a6ab0ad920c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MapEntityMoveHandlerCharacterBase.cs",
+      "sha256": "64c0b2620ee81d177573e3bff2474c5ede2b7a3adf9a8e1de756ab352b24f173"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MapEntityMoveHandlerCharacterBase.cs.meta",
+      "sha256": "a66ee1ffbfc01a8176c61b100780d7c37b9287b920b6a4d6d829cd612c8cd6a4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MapEntityMoveHandlerCharacterOther.cs",
+      "sha256": "38c6d143997fd4152427a2144520c909f244383fcfb37c322b085dc462f105ad"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MapEntityMoveHandlerCharacterOther.cs.meta",
+      "sha256": "bd9b5b00077c5b9272e67184f14ce885a8206d125ac41389f6ea94d420372e20"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/IMoveEffectSupport.cs",
+      "sha256": "de86cf581def9ac9793f49b6e80486f439f4645b26d635ce61edce360b3e686f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/IMoveEffectSupport.cs.meta",
+      "sha256": "afa187e38a3ed57199cd38b247ad007c350650df9d944b9ee5c43850dfd81e91"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MapMoveType.cs",
+      "sha256": "9bbb951c41b73885cbef83ae2021457df1cb0f3ab40c956ea9fc46cab9d43ad9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MapMoveType.cs.meta",
+      "sha256": "e75c40b23c100b5f8aa2d68ae16ddc9a03bf017d5badca13238fe5ff1cf09e5a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/Zjcs.Official.EntityClientComponents.asmdef",
+      "sha256": "fe8a197d49e70267895e58c282eae7bc6c110efb797b8688ff88a03f4072e314"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientComponents/Zjcs.Offline.World.NativeMap14ClientComponents.asmdef",
+      "sha256": "9aac704f5567292ec707b5a3006b0636a289c5784c8a9ef4661fb8bbc513effa"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef",
+      "sha256": "873c8dc1c08bc8438a8fc76e1b601a0a3bfe46f74db0839fa0934b3c616e0559"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/IMapEntityMovementRuntime.cs",
+      "sha256": "428f328e4319fb7783bfe5631fe243fdd5af6046f394e84d87ca69ddb7c8b2de"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/IMapEntityMovementRuntime.cs.meta",
+      "sha256": "27971a89d6ea1632a8e5db46744ba062629aab756864406d1e7a9d97ee393afd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientComponents/NativeMap14MovementRuntime.cs",
+      "sha256": "f5d8fd8929bcaf5282a31d46293836f13f49b0fc39666e8aa901e32b7c83d78f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientComponents/NativeMap14MovementRuntime.cs.meta",
+      "sha256": "3597e6e436f4ef4ad8ef12435bcf83afd91807caece4632ba07176c431a460a7"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.CharacterMovement.cs",
+      "sha256": "f5613c91f7d8be092958ef03b143ba7f2b6b970277937d1adc51c55a2d195bb6"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.CharacterMovement.cs.meta",
+      "sha256": "922ed8fd6cc90bfd6657bb287512979e862afc9d3cb19d366170552a16b0a0ad"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientContext.cs",
+      "sha256": "5d7f005a983669963b06c789497d165dab996e3a1627e005dc4e638b83997a99"
+    }
+  ],
+  "validation": {
+    "entry": "Zjcs.Editor.MainlineWorldStartup.OfficialMainlineWorldStartupAcceptance.RunClientContext"
+  },
+  "operation": "Copy complete original MoveAgent, movement-handler interface and three-class implementation chain, move-effect interface and MapMoveType. Preserve path conversion, clock-based interpolation, correction thresholds, turn/scale, path updates, forced/nonforced stop, callbacks, effects and removal cleanup. Original Console TimeManager and MapMoveUtils are called through an explicit runtime adapter, without copying their rules. Reuse the existing separately sourced original SafeAction. Replace DI/logger metadata, repair explicit Unity conversions, and expose the unchanged per-frame body to deterministic driving. Bind runtime before original Awake.",
+  "limitations": [
+    "Formal complete character prefab and map input/native minimap integration remain unfinished; movement fixtures do not prove effect rendering."
+  ]
+}

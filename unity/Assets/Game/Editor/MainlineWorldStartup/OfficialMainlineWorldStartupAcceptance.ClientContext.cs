@@ -151,7 +151,9 @@ namespace Zjcs.Editor.MainlineWorldStartup
                     VerifyLiveViewCache(world);
                     using (var characterComponents = new CharacterClientComponents(world))
                     using (var characterVisibility = new CharacterVisibilityComponents(world))
+                    using (var characterMovement = new CharacterMovementComponents(world))
                     {
+                        characterMovement.Verify(world);
                         characterVisibility.Verify(world);
                         characterComponents.Verify(world);
                         var minimap = Zjcs.Offline.World.MainlineMiniMapEntities.MainlineMiniMapSharedWorld.Create(world, new WorldTagQueries(world));
@@ -159,6 +161,7 @@ namespace Zjcs.Editor.MainlineWorldStartup
                         {
                             var prior = VerifyLiveMiniMap(world, minimap, null);
                             if (supportPrivate && supportPublic) VerifyRegionTransition(world, player, regionStates, publicId);
+                            characterMovement.Verify(world);
                             characterVisibility.Verify(world);
                             characterComponents.Verify(world);
                             VerifyLiveMiniMap(world, minimap, prior);

@@ -38,7 +38,7 @@
   "dependencies": [
     {
       "path": "assets/reference/official-map/mainline-character-client-sources-source-manifest.json",
-      "sha256": "62b93bcc05d29624783c5e99407511974cf5a586b1fa954ee0592a5362e2f11b"
+      "sha256": "ed5ba2756106f2c0f93fa68f9ff5493a31fb01b92a16a424524cf9f5f17d521a"
     },
     {
       "path": "assets/reference/official-map/map14-entity-root-visibility-source-manifest.json",
@@ -46,7 +46,7 @@
     },
     {
       "path": "assets/reference/official-map/map14-native-visibility-source-manifest.json",
-      "sha256": "1ab26451838f8396223b8591613feaed505ec237d48e7035090bf5c4efa40473"
+      "sha256": "95db07e40828cd4449a4c1a5c4f9a3408d37d6bc236098b9b0b5966ce4c85e62"
     }
   ],
   "tools": [
@@ -56,7 +56,7 @@
     },
     {
       "path": "scripts/prepare_unity_map14_client_components.py",
-      "sha256": "4e8c56a17e899b6276d2336c041bb356978dd57f1d58be9c6ab6fd943f15075d"
+      "sha256": "232a239d67032a0fbaba02bf46e5bc73cfa153f82a18b704bf298dd56561c3f2"
     },
     {
       "path": "scripts/prepare_unity_map14_native_visibility.py",
@@ -86,7 +86,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/Zjcs.Official.EntityClientComponents.asmdef",
-      "sha256": "c81dbff6fdb6d58848497780c2631e15d6ce510f1340ac8b3cffa4c17918c2e8"
+      "sha256": "fe8a197d49e70267895e58c282eae7bc6c110efb797b8688ff88a03f4072e314"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientComponents/NativeMap14ClientComponentBindings.cs",
@@ -114,11 +114,11 @@
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/OfficialMainlineWorldStartupAcceptance.ClientContext.cs",
-      "sha256": "79a68d8c621fd5c92dbc19aff1d59f25f3c68f7efbe31bad81f716d58a4df2e3"
+      "sha256": "5d7f005a983669963b06c789497d165dab996e3a1627e005dc4e638b83997a99"
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineWorldStartup/Zjcs.Editor.MainlineWorldStartup.asmdef",
-      "sha256": "1df4c97b3d6e1425d915d6348bdc79365dbc0a20a87b1b8d45114b71511b6c2e"
+      "sha256": "873c8dc1c08bc8438a8fc76e1b601a0a3bfe46f74db0839fa0934b3c616e0559"
     }
   ],
   "operation": "Copy both complete original character scripts. Verify the complete reused generic MyVisibility body against matching recovered historical IL after the existing ABI/DI substitutions. Bind the real custom visibility component through the existing native flag/event adapter and expose original Info identity. Bind the original follower controller and Info without implementing follower rules.",
