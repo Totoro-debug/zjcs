@@ -5,7 +5,7 @@ using Zjcs.Offline.World.NativeMap14SharedEntities;
 using Zjcs.Offline.World.NativeMap14SharedViews;
 namespace Zjcs.Offline.World.NativeMap14ClientComponents
 {
-    public sealed class NativeMap14ClientComponentBindings
+    public sealed partial class NativeMap14ClientComponentBindings
     {
         private readonly NativeMap14SharedAssemblies shared;
         public NativeMap14ClientComponentBindings(NativeMap14SharedAssemblies shared)
@@ -20,6 +20,7 @@ namespace Zjcs.Offline.World.NativeMap14ClientComponents
             Bind(view, "MapStatusAgentComponent", value => new CharacterMapStatus(value));
             Bind(view, "CharacterComponent", value => new CharacterState(value));
             Bind(view, "GridMoverComponent", value => new CharacterGridMover(value));
+            Bind(view, "ActionAgentComponent", value => new CharacterActionAgent(shared, value));
             Bind(view, "StageBehTouchComponent", value => new Touch(value));
             Bind(view, "StageResultAwardExtraPropComponent", value => new ExtraProp(value));
             Bind(view, "StageResultAwardStatusEffectComponent", value => new StatusEffect(value));

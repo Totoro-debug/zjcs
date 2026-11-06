@@ -79,7 +79,11 @@ def main():
     names = sorted({row["type"] for row in identities if row["hierarchy"] == "3001"}) + ["MyMapCharacterBase`2", "EMapEntityTagType"]
     targets = [(name, "Assembly-CSharp.dll", "client-source") for name in names]
     targets.extend(("Common." + name, "Console.dll", "common-source/Common")
-                   for name in ("CharacterComponent", "GridMoverComponent", "GridMoverComponentInfo"))
+                   for name in ("CharacterComponent", "GridMoverComponent", "GridMoverComponentInfo",
+                                "ActionAgentComponent", "ActionAgentComponentImplement", "ActionComponent",
+                                "ActionRuntimeData", "ActionType", "ActionAgentStartEventDelegate",
+                                "ActionAgentEndEventDelegate", "EcEntityEndEventDelegate",
+                                "EventDelegateBasicBase`2", "EventDelegateBase`4"))
     dotnet = ROOT / ".tools/dotnet/dotnet.exe"
     ilspy = ROOT / ".tools/ilspycmd/tools/net10.0/any/ilspycmd.dll"
 
@@ -101,7 +105,8 @@ def main():
         result = subprocess.run([str(dotnet), str(ilspy), "-t", name, str(managed / assembly)],
                                 capture_output=True, check=True, timeout=120)
         source = result.stdout.decode("utf-8-sig")
-        if name.rsplit(".", 1)[-1].split("`")[0] not in source or "using " not in source:
+        if (name.rsplit(".", 1)[-1].split("`")[0] not in source
+                or not any(token in source for token in ("class ", "enum ", "interface ", "struct "))):
             raise ValueError("Historical source decompilation returned no type: " + name)
         # ILSpy's update notice is stderr; never retain notices as C# source.
         if "You are not using the latest version" in source:
@@ -121,7 +126,7 @@ def main():
         manifest_input=dict(**selected, cached=record(manifest_path)), assemblies=recovered,
         inputs=[record(pin_path), record(identity_path)], tools=[record(Path(__file__).resolve()), record(dotnet), record(ilspy)],
         outputs=sources,
-        operation="Read the historical source profile from its committed Git identity without changing the active profile. Verify the original manifest size/MD5/SHA256 and each DLL bundle size/MD5; reuse the official assembly AES-CBC decode. Require decoded Assembly-CSharp and Console hashes to equal the existing original lifecycle pins. Decompile all original 3001 root script types, their generic character base, tag flags and three consumed shared types into a separate historical source directory. Reuse source cache only when its recorded hash, originating IL and decompiler hash match; do not substitute current code for removed historical serialized fields.")))
+        operation="Read the historical source profile from its committed Git identity without changing the active profile. Verify the original manifest size/MD5/SHA256 and each DLL bundle size/MD5; reuse the official assembly AES-CBC decode. Require decoded Assembly-CSharp and Console hashes to equal the existing original lifecycle pins. Decompile all original 3001 root script types, their generic character base, tag flags and consumed character, movement and action shared types into a separate historical source directory. Reuse source cache only when its recorded hash, originating IL and decompiler hash match; do not substitute current code for removed historical serialized fields.")))
     print("Recovered historical original character source types:", len(sources), flush=True)
 
 

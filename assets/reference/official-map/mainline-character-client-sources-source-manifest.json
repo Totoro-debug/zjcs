@@ -48,13 +48,13 @@
     },
     {
       "path": "assets/reference/official-map/mainline-character-components-source-manifest.json",
-      "sha256": "dc6aa74c848d31510716fe034df019cc4cfbfc67a8cb2278530ab5be7e2a46fc"
+      "sha256": "40b8780141e1a003f71405bd15d35ae204154129e0dd1106c214ed7a6bb344d4"
     }
   ],
   "tools": [
     {
       "path": "scripts/recover_mainline_character_sources.py",
-      "sha256": "6ab755078540cee59cf4f8454b7861256f6b224fea0d41a7c9a5b5dfef225110"
+      "sha256": "921213fda97cbc1c8bd867e6155c2ed71fd04caf0885e3c41aa28db127072e3a"
     },
     {
       "path": ".tools/dotnet/dotnet.exe",
@@ -175,8 +175,48 @@
       "sha256": "61e3933d8904500bd18788b2ba43828f47c5c089a41845604b3e3d6df93467e5"
     },
     {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/ActionAgentComponent.cs",
+      "sha256": "9bb4f6197b46786dbf71a552215a5ba5abdab32d6872816a4e5d51df6fbda336"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/ActionAgentComponentImplement.cs",
+      "sha256": "fcb986d70786413ae43e7a95c2a1122ed18c9bde288f3abe1eed824daebf0a4f"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/ActionAgentEndEventDelegate.cs",
+      "sha256": "e0fcf3a7070b7fcb4f9ec6463544cbe31695945d7d5e189731b9a09655ba8145"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/ActionAgentStartEventDelegate.cs",
+      "sha256": "92250b2c808209119112f940af7853ff34178d297c24b28c2e557798d794f850"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/ActionComponent.cs",
+      "sha256": "574e476645f5e9f86b9f5015ed794a2aac103df4be65f9beef9fd762107cc1c7"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/ActionRuntimeData.cs",
+      "sha256": "f4bbf6c1c4c95950610e9814d5cb921141b28504e7faf4cce5d0b3cb294398da"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/ActionType.cs",
+      "sha256": "438bf1708a569790a40923106594dbeed3f4e95af8bdf7c7fc707dfa15f56ebe"
+    },
+    {
       "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/CharacterComponent.cs",
       "sha256": "74a85ccda51e1af6f1362f9bf171d555d6666ff3b70940fdffae1abc96d5d00e"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/EcEntityEndEventDelegate.cs",
+      "sha256": "23e23f2963d1760343b674e73fec58c68071b2eac75bd7d24dd6ebd114c893cf"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/EventDelegateBase.cs",
+      "sha256": "0625aca3acdc2ab1527ee13d7f9493b93d45c724a11e74f65b33d2355a510498"
+    },
+    {
+      "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/EventDelegateBasicBase.cs",
+      "sha256": "5cb6109813ce25ca66d62cf15d6ad2f8abd1011b49e43b406cc7d938391632e4"
     },
     {
       "path": ".tools/source-packages/recovered/871_156598/official-code/common-source/Common/GridMoverComponent.cs",
@@ -187,5 +227,5 @@
       "sha256": "9192fe7435eab0ca2d4d9df410e1a849695fc724317a74410ff055285fae253a"
     }
   ],
-  "operation": "Read the historical source profile from its committed Git identity without changing the active profile. Verify the original manifest size/MD5/SHA256 and each DLL bundle size/MD5; reuse the official assembly AES-CBC decode. Require decoded Assembly-CSharp and Console hashes to equal the existing original lifecycle pins. Decompile all original 3001 root script types, their generic character base, tag flags and three consumed shared types into a separate historical source directory. Reuse source cache only when its recorded hash, originating IL and decompiler hash match; do not substitute current code for removed historical serialized fields."
+  "operation": "Read the historical source profile from its committed Git identity without changing the active profile. Verify the original manifest size/MD5/SHA256 and each DLL bundle size/MD5; reuse the official assembly AES-CBC decode. Require decoded Assembly-CSharp and Console hashes to equal the existing original lifecycle pins. Decompile all original 3001 root script types, their generic character base, tag flags and consumed character, movement and action shared types into a separate historical source directory. Reuse source cache only when its recorded hash, originating IL and decompiler hash match; do not substitute current code for removed historical serialized fields."
 }

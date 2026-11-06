@@ -91,6 +91,7 @@ namespace Zjcs.Editor.MainlineWorldStartup
                         || !ReferenceEquals(NativeMap14SharedPrefabs.Get(character, "Entity"), world.ClientCharacter))
                         throw new InvalidDataException("Original character Start did not select the local player.");
                     VerifyClientCharacter(world, map, startX, startY);
+                    VerifyCharacterActions(world);
                     if (!world.IsReady || !ReferenceEquals(playerProperty.GetValue(manager), player)
                         || !ReferenceEquals(NativeMap14SharedPrefabs.Get(map, "MapContainer"), world.Root.Container))
                         throw new InvalidDataException("Public client startup did not bind the real player and map.");

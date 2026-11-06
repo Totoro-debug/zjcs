@@ -31,7 +31,10 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                 receiverType.FullName != "Common.IEcContainerRemoveEntityEventReceiver" &&
                 receiverType.FullName != "Common.IEcContainerDestroyEntityEventReceiver" &&
                 receiverType.FullName != "Common.IEcContainerPrepareReplaceEntityEventReceiver" &&
-                receiverType.FullName != "Common.IEcContainerReplaceEntityEventReceiver")
+                receiverType.FullName != "Common.IEcContainerReplaceEntityEventReceiver" &&
+                receiverType.FullName != "Common.IActionAgentStartEventReceiver" &&
+                receiverType.FullName != "Common.IActionAgentEndEventReceiver" &&
+                receiverType.FullName != "Common.IEcEntityEndEventReceiver")
                 throw new NotSupportedException("Original application receiver is not bound: " + receiverType.FullName);
             receiver = Activator.CreateInstance(Proxy(receiverType), callback);
             var add = Operator(dispatcher.GetType(), "op_Addition", receiverType);
