@@ -61,6 +61,107 @@ namespace Zjcs.Offline.World
             return result;
         }
 
+        public DailyDungeonSettlementResult Preview(string claimId, int requestedTimes)
+        {
+            if (string.IsNullOrWhiteSpace(claimId)) return new DailyDungeonSettlementResult();
+            profile.Reload();
+            string receipt = "daily-dungeon:claim:" + claimId;
+            if (profile.Save.Player.AppliedInventoryEventIds.Contains(receipt)) return ReadCommitted(receipt);
+
+            DailyDungeonPendingClaimSave pending = dailyDungeons.PendingClaims.FirstOrDefault(value =>
+                value != null && value.id == claimId);
+            DailyDungeonRunSave run = pending?.run;
+            DailyDungeonLevelDefinition level = run == null ? null
+                : dailyDungeons.ResolveLevel(run.dungeonId, run.difficulty);
+            int awardTimes = pending != null && pending.awardTimes > 0
+                ? pending.awardTimes : requestedTimes;
+            if (run == null || level == null || level.IsPrivateRoute || run.grade <= 0
+                || awardTimes <= 0 || awardTimes > dailyDungeons.MaxAwardTimesPerClaim
+                || awardTimes > dailyDungeons.RemainEntries)
+                return new DailyDungeonSettlementResult { Receipt = receipt };
+
+            var random = new DailyDungeonRewardRandom(receipt);
+            Dictionary<int, long> rolledItems = RollItemCounts(receipt, run,
+                dailyDungeons.ConfiguredRewardRuleIds(run, true), awardTimes, random);
+            var displayCounts = new Dictionary<int, long>();
+            OfficialEquipmentCatalog equipment = progression.EquipmentCatalog;
+            DailyDungeonRuntimeEquipmentDrop dropRange = dailyDungeons.FindMap(run.mapGroupId)?.equipmentDrops?
+                .FirstOrDefault(value => value.difficulty == run.difficulty);
+            long nextInstanceId = profile.Save.Player.Equipment.NextInstanceId;
+            foreach (KeyValuePair<int, long> reward in rolledItems.OrderBy(value => value.Key))
+            {
+                int itemType = progression.Catalog.ItemType(reward.Key);
+                bool randomEquipment = itemType == 110;
+                bool isEquipment = equipment?.Find("equip", reward.Key) != null;
+                DailyDungeonRuntimeEquipmentPool pool = randomEquipment
+                    ? dailyDungeons.Catalog.randomEquipmentPools?.FirstOrDefault(value => value.id == reward.Key)
+                    : null;
+                if (randomEquipment && (pool?.equipIds == null || pool.weights == null
+                    || pool.equipIds.Length != pool.weights.Length || !pool.weights.Any(value => value > 0)))
+                    return new DailyDungeonSettlementResult {
+                        Receipt = receipt,
+                        Message = "The official daily dungeon random equipment pool is unavailable: " + reward.Key
+                    };
+                if (!randomEquipment && !isEquipment)
+                {
+                    Add(displayCounts, reward.Key, reward.Value);
+                    continue;
+                }
+                if (equipment == null || dropRange == null)
+                    return new DailyDungeonSettlementResult {
+                        Receipt = receipt,
+                        Message = "Official daily dungeon equipment drop range is unavailable."
+                    };
+
+                long weightTotal = randomEquipment
+                    ? pool.weights.Where(value => value > 0).Sum(value => (long)value) : 0;
+                for (long index = 0; index < reward.Value; index++)
+                {
+                    int equipId = reward.Key;
+                    if (randomEquipment)
+                    {
+                        long pick = (long)(random.NextDouble() * weightTotal);
+                        int selected = -1;
+                        for (int poolIndex = 0; poolIndex < pool.weights.Length; poolIndex++)
+                        {
+                            if (pool.weights[poolIndex] <= 0) continue;
+                            pick -= pool.weights[poolIndex];
+                            if (pick < 0) { selected = poolIndex; break; }
+                        }
+                        if (selected < 0)
+                            return new DailyDungeonSettlementResult {
+                                Receipt = receipt, Message = "Daily dungeon equipment selection failed."
+                            };
+                        equipId = pool.equipIds[selected];
+                    }
+                    OfflineEquipmentInstance item = OfficialEquipmentGenerator.Generate(equipment,
+                        equipId, nextInstanceId++,
+                        new EquipmentRollContext
+                        {
+                            DropLevel = Math.Max(1, profile.Save.Player.Level),
+                            PlayerLevel = profile.Save.Player.Level,
+                            SubRank = profile.Save.Player.SubRank,
+                            SourceOperate = 61,
+                            Daily = true,
+                            MinimumLevel = dropRange.minimumLevel,
+                            MaximumLevel = dropRange.maximumLevel,
+                            MinimumBlessLevel = dropRange.minimumBlessLevel,
+                            MaximumBlessLevel = dropRange.maximumBlessLevel
+                        }, random.NextFloat);
+                    Add(displayCounts, item.ItemId, 1);
+                }
+            }
+
+            return new DailyDungeonSettlementResult
+            {
+                Receipt = receipt,
+                HasRewardDetails = true,
+                Items = displayCounts.OrderBy(value => value.Key)
+                    .Select(value => new DailyDungeonSettlementItem { ItemId = value.Key, Count = value.Value })
+                    .ToArray()
+            };
+        }
+
         public DailyDungeonSettlementResult SettleClearedRooms(string receipt, DailyDungeonRunSave run)
         {
             return Grant(receipt, run, dailyDungeons.ConfiguredRewardRuleIds(run, run?.grade > 0));
@@ -86,9 +187,31 @@ namespace Zjcs.Offline.World
             else item.Count = checked(item.Count + count);
         }
 
+        private static void Add(IDictionary<int, long> counts, int itemId, long count)
+        {
+            counts[itemId] = counts.TryGetValue(itemId, out long current)
+                ? checked(current + count) : count;
+        }
+
         private long Now() => now();
         private long DailyDungeonCombatRating() => progression.PropertyCalculator
             .Evaluate(profile.Save.Player, profile.Save.World, Now()).CombatRating;
+
+        private Dictionary<int, long> RollItemCounts(string receipt, DailyDungeonRunSave run,
+            int[] rewardRuleIds, int awardTimes, Zjcs.Offline.World.IDailyDungeonRandom random)
+        {
+            var itemCounts = new Dictionary<int, long>();
+            int profession = profile.Save.Player.Wardrobe.Profession;
+            long combatRating = DailyDungeonCombatRating();
+            Zjcs.Offline.World.DailyDungeonRewardRoll roll = dailyDungeons.RollRewards(run,
+                run.grade > 0, profile.Save.Player.Level, profile.Save.Player.SubRank,
+                rule => DailyDungeonRewardConditionMet(rule, profession, combatRating), receipt,
+                Math.Max(1, awardTimes), rewardRuleIds, random);
+            foreach (Zjcs.Offline.World.DailyDungeonRewardRollItem reward in roll.Items)
+                if (reward != null && reward.ItemId > 0 && reward.Count > 0)
+                    Add(itemCounts, reward.ItemId, reward.Count);
+            return itemCounts;
+        }
 
         private DailyDungeonSettlementResult Grant(string receipt, DailyDungeonRunSave run,
             int[] rewardRuleIds, int awardTimes = 1)
@@ -98,19 +221,7 @@ namespace Zjcs.Offline.World
             profile.Reload();
             if (profile.Save.Player.AppliedInventoryEventIds.Contains(receipt)) return ReadCommitted(receipt);
             var random = new DailyDungeonRewardRandom(receipt);
-            var itemCounts = new Dictionary<int, long>();
-            int profession = profile.Save.Player.Wardrobe.Profession;
-            long combatRating = DailyDungeonCombatRating();
-            Zjcs.Offline.World.DailyDungeonRewardRoll roll = dailyDungeons.RollRewards(run,
-                run.grade > 0, profile.Save.Player.Level, profile.Save.Player.SubRank,
-                rule => DailyDungeonRewardConditionMet(rule, profession, combatRating), receipt,
-                Math.Max(1, awardTimes), rewardRuleIds, random);
-            foreach (Zjcs.Offline.World.DailyDungeonRewardRollItem reward in roll.Items)
-            {
-                if (reward == null || reward.ItemId <= 0 || reward.Count <= 0) continue;
-                itemCounts[reward.ItemId] = itemCounts.TryGetValue(reward.ItemId, out long current)
-                    ? checked(current + reward.Count) : reward.Count;
-            }
+            Dictionary<int, long> itemCounts = RollItemCounts(receipt, run, rewardRuleIds, awardTimes, random);
             OfficialEquipmentCatalog equipment = progression.EquipmentCatalog;
             var dropRange = dailyDungeons.FindMap(run.mapGroupId)?.equipmentDrops?
                 .FirstOrDefault(value => value.difficulty == run.difficulty);

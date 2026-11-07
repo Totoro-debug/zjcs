@@ -50,6 +50,15 @@ namespace Zjcs.Presentation.Home
             return result.Committed;
         }
 
+        public IReadOnlyList<DailyDungeonClaimRewardDisplayItem> PreviewDailyDungeonRewards(string claimId,
+            int times, out bool hasRewardDetails)
+        {
+            DailyDungeonSettlementResult result = DungeonSettlement().Preview(claimId, times);
+            hasRewardDetails = result.HasRewardDetails;
+            return result.Items.Select(value => new DailyDungeonClaimRewardDisplayItem(value.ItemId, value.Count))
+                .ToArray();
+        }
+
         public bool SettleDailyDungeonRooms(string receipt, DailyDungeonRunSave run)
         {
             DailyDungeonSettlementResult result = DungeonSettlement().SettleClearedRooms(receipt, run);

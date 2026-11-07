@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -11,6 +12,13 @@ namespace Zjcs.Editor
 {
     public static partial class DailyDungeonModuleRuleAcceptance
     {
+        private static string SettlementItems(IEnumerable<DailyDungeonSettlementItem> items)
+        {
+            return string.Join(",", (items ?? Array.Empty<DailyDungeonSettlementItem>())
+                .OrderBy(value => value.ItemId)
+                .Select(value => value.ItemId + ":" + value.Count));
+        }
+
         private static void ValidateSettlement(ProfileSlotCatalog slots, DailyDungeonRuntimeData catalog,
             DailyDungeonPendingClaimSave pending)
         {
@@ -35,6 +43,13 @@ namespace Zjcs.Editor
                 var settlement = new OfflineDailyDungeonSettlementModule(dungeon, profile, progression, () => 1700000000);
                 if (settlement.Claim(pending.id, 0).Committed || settlement.Claim(pending.id, remaining + 1).Committed)
                     throw new InvalidOperationException("Invalid claim counts were accepted.");
+                string playerBeforePreview = JsonUtility.ToJson(profile.Save.Player);
+                string dungeonBeforePreview = JsonUtility.ToJson(dungeon.Save);
+                DailyDungeonSettlementResult preview = settlement.Preview(pending.id, 1);
+                if (!preview.HasRewardDetails || preview.InventoryCommitted || preview.Committed
+                    || JsonUtility.ToJson(profile.Save.Player) != playerBeforePreview
+                    || JsonUtility.ToJson(dungeon.Save) != dungeonBeforePreview)
+                    throw new InvalidOperationException("Settlement preview changed saved state or returned no details.");
                 string blocked = phase == "inventory" ? slots.GetProgressPath(slot) + ".tmp" : dungeonPath + ".tmp";
                 if (phase == "confirmation")
                 {
@@ -64,6 +79,7 @@ namespace Zjcs.Editor
                 string saved = JsonUtility.ToJson(profile.Save.Player);
                 var repeated = settlement.Claim(pending.id, 1);
                 if (!recovered.Committed || !recovered.HasRewardDetails || !repeated.Committed
+                    || SettlementItems(preview.Items) != SettlementItems(recovered.Items)
                     || JsonUtility.ToJson(profile.Save.Player) != saved || dungeon.RemainEntries != remaining - 1
                     || dungeon.DailyDungeonGetRewardCount != 1 || dungeon.PendingClaims.Count != 0
                     || profile.Save.Player.DailyDungeonSettlements.Count != 1

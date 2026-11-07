@@ -2179,6 +2179,10 @@ namespace Zjcs.Presentation.Home
             InvokePrivate(runtime.Hud, "RefreshDailyDungeonEntryPage");
             InvokePrivate(runtime.Hud, "OpenPendingDailyDungeonClaim");
             GameObject resultPanel = GetPrivateGameObject(runtime.Hud, "dailyDungeonClaimConfirmRoot");
+            var resultPopup = resultPanel.GetComponent<Zjcs.Official.WorldUI.WorldPopupWindow>();
+            float resultAnimationDeadline = Time.realtimeSinceStartup + 4f;
+            while (resultPopup != null && resultPopup.State == Zjcs.Official.WorldUI.WorldPopupWindow.EState.Showing
+                && Time.realtimeSinceStartup < resultAnimationDeadline) yield return null;
             DailyDungeonPendingClaimSave pending = runtime.DailyDungeons.PendingClaims
                 .FirstOrDefault(value => value != null && value.run != null);
             DailyDungeonSettlementHudModel settlement = pending == null ? null
@@ -2188,8 +2192,29 @@ namespace Zjcs.Presentation.Home
             {
                 AssertModalOnTop(resultPanel, "official daily dungeon result");
                 DumpModalState("dungeon-result", resultPanel);
+                foreach (string path in new[] { "Content", "Content/WinObj", "Content/WinObj/GoTitleBg",
+                    "Content/WinObj/DifficultyTitleGo/TitleText", "Content/WinObj/Content",
+                    "Content/WinObj/Content/PlayerTeam", "Content/WinObj/Content/PlayerTeam/DailyDungeonLocalPlayer",
+                    "Content/WinObj/Content/PlayerTeam/DailyDungeonLocalPlayer/Content/GoLayout/PlayerName",
+                    "Content/WinObj/Content/GameEndRewardContent",
+                    "Content/WinObj/Content/GameEndRewardContent/Title",
+                    "Content/WinObj/Content/GameEndRewardContent/ScrollRect",
+                    "Content/WinObj/Content/GameEndRewardContent/ScrollRect/ViewPort",
+                    "Content/WinObj/Content/GameEndRewardContent/ScrollRect/ViewPort/Grid",
+                    "Content/WinObj/Content/CloseBtn",
+                    "Content/WinObj/Content/DailyDungeonCostMoneyContent/CommonBtn_CostItem" })
+                    DumpDungeonResultNode(resultPanel, path);
                 Assert(resultPanel.GetComponent<DailyDungeonResultPanelAdapter>() != null,
                     "official result panel adapter is missing");
+                Assert(resultPopup != null && resultPopup.State == Zjcs.Official.WorldUI.WorldPopupWindow.EState.Show,
+                    "original result popup show animation did not finish");
+                CanvasGroup contentGroup = resultPanel.transform.Find("Content/WinObj/Content").GetComponent<CanvasGroup>();
+                Image background = resultPanel.transform.Find("Content/WinObj/Bg").GetComponent<Image>();
+                Assert(contentGroup.alpha > 0.99f && Math.Abs(background.color.a - 76f / 255f) < 0.0001f,
+                    "original result animation left the content or background invisible");
+                Assert(resultPanel.GetComponentsInChildren<Image>(true).Where(value => value.isActiveAndEnabled)
+                    .All(value => value.material == null || value.material.shader.isSupported),
+                    "result contains an unsupported Image shader");
                 int[] gradeRuleIds = runtime.DailyDungeons.FindMap(settlement.Run.mapGroupId)
                     .gradeRewards.First(value => value.difficulty == settlement.Run.difficulty
                         && value.grade == settlement.Run.grade).rewardRuleIds;
@@ -2211,12 +2236,16 @@ namespace Zjcs.Presentation.Home
             ok = Check("dungeons-successful-claim", () =>
             {
                 int awardTimes = settlement.AwardTimes;
-                ClickUi(claimButton);
+                ClickPartnerUi(claimButton);
                 Assert(runtime.DailyDungeons.PendingClaims.Count == 0
                     && runtime.DailyDungeons.Save.usedEntries == usedBeforeClaim + awardTimes
                     && runtime.DailyDungeons.RemainEntries == remainingBeforeClaim - awardTimes
                     && runtime.DailyDungeons.DailyDungeonGetRewardCount == claimedBefore + awardTimes,
                     "successful result claim did not atomically charge and persist its award times");
+                TMP_Text claimText = claimButton == null ? null : claimButton.GetComponentInChildren<TMP_Text>(true);
+                Assert(claimButton != null && !claimButton.interactable && claimText != null
+                    && claimText.text == "已领取",
+                    "successful result claim did not update the official button state and label");
                 DailyDungeonModule reload = DailyDungeonModule.Open(
                     new ProfileSlotCatalog(Root), runtime.ActiveProfileSlotId);
                 Assert(reload.Save.usedEntries == usedBeforeClaim + awardTimes
@@ -2407,6 +2436,7 @@ namespace Zjcs.Presentation.Home
 
         private void DumpModalState(string label, GameObject panel)
         {
+            Canvas.ForceUpdateCanvases();
             Canvas modalCanvas = panel == null ? null : panel.GetComponent<Canvas>();
             RectTransform panelRect = panel == null ? null : panel.transform as RectTransform;
             log.Add("PANEL " + label + " active=" + (panel != null && panel.activeInHierarchy)
@@ -2428,7 +2458,39 @@ namespace Zjcs.Presentation.Home
                 log.Add("PANELTEXT " + label + " " + PathOf(text.transform) + " text=" + text.text
                     + " color=" + text.color + " renderer=" + text.canvasRenderer.GetAlpha()
                     + " culled=" + text.canvasRenderer.cull + " rect=" + text.rectTransform.rect);
-            Canvas.ForceUpdateCanvases();
+        }
+
+        private void DumpDungeonResultNode(GameObject panel, string path)
+        {
+            Transform node = panel.transform.Find(path);
+            RectTransform rect = node as RectTransform;
+            if (node == null || rect == null)
+            {
+                log.Add("RESULTNODE " + path + " missing");
+                return;
+            }
+            Vector3[] corners = new Vector3[4];
+            rect.GetWorldCorners(corners);
+            string groups = string.Join("|", node.GetComponentsInParent<CanvasGroup>(true)
+                .Select(value => PathOf(value.transform) + ":" + value.alpha + ":" + value.interactable
+                    + ":" + value.blocksRaycasts));
+            LayoutGroup layout = node.GetComponent<LayoutGroup>();
+            ContentSizeFitter fitter = node.GetComponent<ContentSizeFitter>();
+            ScrollRect scroll = node.GetComponent<ScrollRect>();
+            Graphic graphic = node.GetComponent<Graphic>();
+            TMP_Text text = node.GetComponent<TMP_Text>();
+            log.Add("RESULTNODE " + path + " active=" + node.gameObject.activeInHierarchy
+                + " rect=" + rect.rect + " anchored=" + rect.anchoredPosition
+                + " screen=" + RectTransformUtility.WorldToScreenPoint(null, corners[0]) + "/"
+                + RectTransformUtility.WorldToScreenPoint(null, corners[2])
+                + " scale=" + rect.lossyScale + " groups=" + groups
+                + " layout=" + (layout == null ? "none" : layout.GetType().Name + ":" + layout.isActiveAndEnabled)
+                + " fitter=" + (fitter == null ? "none" : fitter.horizontalFit + "/" + fitter.verticalFit)
+                + " scroll=" + (scroll == null ? "none" : scroll.isActiveAndEnabled + ":" + scroll.viewport
+                    + ":" + scroll.content)
+                + " graphic=" + (graphic == null ? "none" : graphic.isActiveAndEnabled + ":" + graphic.color
+                    + ":" + graphic.canvasRenderer.cull)
+                + " text=" + (text == null ? "none" : text.text + ":" + text.isActiveAndEnabled));
         }
 
         private static int[] FindRewardRoomPath(DailyDungeonModule module,
