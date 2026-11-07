@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成
+状态：未完成（Map14 道路助战子模块已完成）
 
 ## 功能简介
 
@@ -36,7 +36,7 @@ Map14 道路属性门槛按官方属性类型与标准累加玩家和已选 NPC 
 
 scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的 ChangeBattlePosArea SpriteRenderer 直接提取 ImgChangeBattlePosArea，并保留原颜色、边界、PPU、DrawMode、TileMode 与 SortingOrder；从 prefabs_ecentity_fight_fightcharacter_3100 的 PrepareBattlePlayerDrag 提取 DownKeepTime 与 DragThreshold。新增 assets/official/dungeon-ui/ImgChangeBattlePosArea-41679de83e.png 为官方同版本 PNG 解码，无自绘或新版替换。输入原对象与源包 URL／哈希、输出 SHA256 归入 assets/reference/dungeon-ui/source-manifest.json；ChangeBattlePosHandler、PrepareBattlePlayerDrag／Base、FightComponent、GridGroundComponentInfo 和 Pos2d 代码 SHA256 由  保存。
 
-Map14 道路窗口使用选定 `884_156692` 的 `RoadblockTeamPropStageDialog`、条目、五种门预览图、五种区域背景和 `RuleDialog`／`TipInfo1`。`prepare_map14_roadblock_ui.py` 解码原层级、锚点、尺寸、颜色、布局、组件字段与本地化，`OfficialMap11UiTools.Roadblocks` 显式恢复 Windows 原生 prefab、原弹窗曲线、按钮控制器、规则说明、头像和音效绑定；两个窗口按原 MaskType=3 复用已迁移的官方全局模糊遮罩，并保留其历史来源版本。五种门体、Animator、粒子和材质经原生转换后通过 `OfficialMainlineMapRuntime.RoadblockDisplays` 接入原实体生命周期与阶段事件，`ElementDoor` 原提示图按玩家自身属性达标且阶段为 0 显示。输入与输出分别见道路 UI、原生视图及补充资源来源凭据。选人条目复用原 `TeamInvitePlayerInfoView.SetProp` 与 `PropInfo` 的序列化图标／数值控件，本地宿主绑定既有官方属性图标与数值格式。道路地面读取原 `GridTransformComponent` 与 `StageResultOverrideBodyGroundTypeComponent`：关闭时三格均为 Block，完成后恢复中央 None、两侧石柱 Block；导航与冷读使用相同占位。871／884 的 34 个共享 Map14 表及 `MapInfoWrap` 字节一致；五个门的身份在加载后再与 884 元数据核对。规则持久化测试、隔离工程静态检查、Unity 导入／编译、`ProjectTools.Validate` 与 Play Mode 主流程通过。模拟点击覆盖规则弹窗、邀请／移除／取消、属性不足／达标、一次性开门、实际通行和冷读后再次通行；原窗口、元素图标、门体及冷读画面已查看。Windows Player 构建与发布仍在进行，暂不将该道路子模块记为交付完成。
+Map14 道路窗口使用选定 `884_156692` 的 `RoadblockTeamPropStageDialog`、条目、五种门预览图、五种区域背景和 `RuleDialog`／`TipInfo1`。`prepare_map14_roadblock_ui.py` 解码原层级、锚点、尺寸、颜色、布局、组件字段与本地化，`OfficialMap11UiTools.Roadblocks` 显式恢复 Windows 原生 prefab、原弹窗曲线、按钮控制器、规则说明、头像和音效绑定；两个窗口按原 MaskType=3 复用已迁移的官方全局模糊遮罩，并保留其历史来源版本。五种门体、Animator、粒子和材质经原生转换后通过 `OfficialMainlineMapRuntime.RoadblockDisplays` 接入原实体生命周期与阶段事件，`ElementDoor` 原提示图按玩家自身属性达标且阶段为 0 显示。输入与输出分别见道路 UI、原生视图及补充资源来源凭据。选人条目复用原 `TeamInvitePlayerInfoView.SetProp` 与 `PropInfo` 的序列化图标／数值控件，本地宿主绑定既有官方属性图标与数值格式。道路地面读取原 `GridTransformComponent` 与 `StageResultOverrideBodyGroundTypeComponent`：关闭时三格均为 Block，完成后恢复中央 None、两侧石柱 Block；导航与冷读使用相同占位。871／884 的 34 个共享 Map14 表及 `MapInfoWrap` 字节一致；五个门的身份在加载后再与 884 元数据核对。
 
 通天塔地图组（map 15）任务 HUD：`scripts/prepare_map15_ui.py` 从固定版任务 prefab 与语言包提取 81 条任务、366 项文本及原控件状态字段，复用已转换地图 UI 和战力颜色配置。未重建开发素材 ZIP，本地新增 `assets/official/map15-ui.json` 尚未进入完整快照。
 
@@ -45,6 +45,8 @@ Map14 道路窗口使用选定 `884_156692` 的 `RoadblockTeamPropStageDialog`�
 ## 完整还原部分
 
 已接入圣兽试炼、双影幻境、普通日常副本、主线地图常规战斗、山之国私图／战斗碑，以及 Map14 道路门的原窗口、属性门槛和本地通行存档。探索首领、节庆首领、联合行动和羁绊冒险的完整邀请、战斗与结算流程仍未完成。
+
+Map14 道路助战子模块已完成，Windows 可执行版本发布至 `D:/Desktop/杖剑传说/杖剑传说.exe`。道路资源来源校验、规则持久化测试、静态检查、Unity 导入／编译、`ProjectTools.Validate` 与 Play Mode 主流程通过。独立 Windows Player 在内置屏以 540×960 实际运行，使用隔离角色存档和模拟鼠标，覆盖五种属性门的原窗口预览与取消；风属性门进一步覆盖规则弹窗、伙伴邀请／移除／取消、属性不足／达标、一次性开门、实际穿越、冷读恢复及再次通行，确认不产生战斗或奖励、不重复扣次。原窗口、元素图标、伙伴列表、关闭／开启门体与冷读后的地形画面均已实际查看。 发布目录中的 Player 已再次通过风属性门流程，全部 6,331 个交付文件与验收构建逐文件 SHA-256 一致；测试存档始终保存在独立验证目录。
 
 - `assets/official/rules.json` 与规则来源清单提供 `npc`、`npc_level_detail`、`npc_profession_detail`、`player_robot_invite`、`skill` 数据。`FightOfficialNpcAssistanceCatalog.Load` 校验规则哈希，按 `NpcType=4`、`CanDevelop`、战斗实体 `FightEntityId` 和等级详情筛伙伴候选，并读取遇见限制、助战条件和玩法次数规则。
 - `FightOfficialNpcAssistanceCatalog.CreateUnit` 按官方等级详情与职业配置计算 NPC 属性、主动技能、被动技能、冷却和状态。被动属性按官方 `NpcFightData.CalcPropsWithSkill` 的基础属性计算与 `BattleFormula.CalcFinalProps` 顺序合成。

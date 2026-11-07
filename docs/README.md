@@ -34,7 +34,7 @@
 | [世界阶段手动推进](features/manual-world-stage.md) | 未完成 |
 | [素材秘境与快速采集](features/material-gathering.md) | 未完成 |
 | [月卡与星眷累计奖励](features/monthly-card.md) | 未完成 |
-| [NPC邀请、站位与战前准备](features/npc-assistance.md) | 未完成 |
+| [NPC邀请、站位与战前准备](features/npc-assistance.md) | 未完成（道路助战子模块已完成） |
 | [离线开放条件与单机范围](features/offline-access.md) | 未完成 |
 | [伙伴旅行、品质与保底](features/partner-travel.md) | 未完成 |
 | [NPC伙伴、好感与餐桌通话](features/partners.md) | 未完成 |
@@ -65,7 +65,7 @@
 | [11 森之国](maps/map-11.md) | 未完成 |
 | [12 山之国](maps/map-12.md) | 未完成 |
 | [13 泽之国](maps/map-13.md) | 未完成 |
-| [14 龙之国](maps/map-14.md) | 未完成 |
+| [14 龙之国](maps/map-14.md) | 未完成（道路属性门子模块已完成） |
 | [16 鲸背岛](maps/map-16.md) | 未完成 |
 | [17 羽之国](maps/map-17.md) | 未完成 |
 | [18 虚空碎片](maps/map-18.md) | 未完成 |
