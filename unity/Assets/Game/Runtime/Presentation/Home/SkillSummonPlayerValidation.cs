@@ -112,7 +112,13 @@ namespace Zjcs.Presentation.Home
             }
             Require(start!=null && controller.Phase==FightBattlePhase.Preparing,
                 "Original battle start button is unavailable; phase="+controller.Phase);
-            yield return new WaitForEndOfFrame();Capture("summon-preparation");Click(start);
+            yield return new WaitForEndOfFrame();Capture("summon-preparation");
+            bool clicked=false;
+            UnityEngine.Events.UnityAction observeClick=()=>clicked=true;
+            start.onClick.AddListener(observeClick);
+            try { yield return ClickGridControl(start); }
+            finally { if(start!=null) start.onClick.RemoveListener(observeClick); }
+            Require(clicked,"The native summon start button did not receive the simulated pointer click.");
             bool captured=false;
             while(runner!=null)
             {
@@ -130,18 +136,51 @@ namespace Zjcs.Presentation.Home
         }
         private static void Click(Button control)
         {
-            Canvas.ForceUpdateCanvases();var rect=(RectTransform)control.transform;
+            Require(TryClickPoint(control, out var point, out var description),
+                "Original start control has no exposed native hit area: " + description);
             var pointer=new PointerEventData(EventSystem.current) {button=PointerEventData.InputButton.Left,
-                position=RectTransformUtility.WorldToScreenPoint(null,rect.TransformPoint(rect.rect.center))};
+                position=point};
             var hits=new List<RaycastResult>();EventSystem.current.RaycastAll(pointer,hits);
-            Require(hits.Count>0 && (hits[0].gameObject==control.gameObject || hits[0].gameObject.transform.IsChildOf(control.transform)),
-                "Original start control is obstructed.");
             ExecuteEvents.ExecuteHierarchy(hits[0].gameObject,pointer,ExecuteEvents.pointerDownHandler);
             ExecuteEvents.ExecuteHierarchy(hits[0].gameObject,pointer,ExecuteEvents.pointerUpHandler);
             ExecuteEvents.ExecuteHierarchy(hits[0].gameObject,pointer,ExecuteEvents.pointerClickHandler);
         }
-        private static IEnumerator ClickGridControl(Selectable control)
-        { Click((Button)control); yield return null; }
+        private static bool TryClickPoint(Button control, out Vector2 point, out string description)
+        {
+            Canvas.ForceUpdateCanvases();
+            var canvas=control.GetComponentInParent<Canvas>();
+            var camera=canvas==null || canvas.renderMode==RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+            var rect=(RectTransform)control.transform;
+            point=RectTransformUtility.WorldToScreenPoint(camera,rect.TransformPoint(rect.rect.center));
+            var candidates=new List<Vector2> {point};
+            foreach(var graphic in control.GetComponentsInChildren<Graphic>())
+                if(graphic.raycastTarget) candidates.Add(RectTransformUtility.WorldToScreenPoint(camera,
+                    graphic.rectTransform.TransformPoint(graphic.rectTransform.rect.center)));
+            var hits=new List<RaycastResult>();
+            foreach(var candidate in candidates)
+            {
+                hits.Clear();EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) {position=candidate},hits);
+                if(hits.Count>0 && ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject)==control.gameObject)
+                {point=candidate;description=null;return true;}
+            }
+            description=control.name+" at "+point+"; screen="+Screen.width+"x"+Screen.height
+                +"; canvas="+(canvas==null ? "null" : canvas.name+"/"+canvas.renderMode+"/enabled="+canvas.enabled)
+                +"; groups="+string.Join(", ",control.GetComponentsInParent<CanvasGroup>(true)
+                    .Select(value=>value.name+"/alpha="+value.alpha+"/raycast="+value.blocksRaycasts))
+                +"; scene canvases="+string.Join(", ",Resources.FindObjectsOfTypeAll<Canvas>()
+                    .Where(value=>value.gameObject.scene.IsValid()).Select(value=>value.name
+                        +"/active="+value.gameObject.activeInHierarchy+"/enabled="+value.enabled
+                        +"/scale="+value.scaleFactor+"/rect="+((RectTransform)value.transform).rect))
+                +"; raycast="+string.Join(", ",hits.Select(value=>value.gameObject.name));
+            return false;
+        }
+        private IEnumerator ClickGridControl(Selectable control)
+        {
+            float deadline=Time.realtimeSinceStartup+5f;
+            while(!TryClickPoint((Button)control,out _,out _) && Time.realtimeSinceStartup<deadline) yield return null;
+            yield return new WaitForEndOfFrame();Capture("grid-start-hit-area");
+            Click((Button)control);yield return null;
+        }
         private IEnumerator CaptureGridFrame(string name)
         { yield return new WaitForEndOfFrame(); Capture(name); }
         private void Capture(string name)

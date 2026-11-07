@@ -13,6 +13,16 @@ namespace Zjcs.Combat.Official
             return ReadGameplayTags(RequiredEntity(entityId));
         }
 
+        public bool TryGetEntityGameplayTags(int entityId, out long[] tags)
+        {
+            tags = null;
+            if (!entities.TryGetValue(entityId, out var components)) return false;
+            var component = Component(components, "FightGameplayTagComponent");
+            if (component == null || Component(component, "GameplayTag") == null) return false;
+            tags = ReadGameplayTags(components);
+            return true;
+        }
+
         private static long[] ReadGameplayTags(Dictionary<string, object> components)
         {
             var component = Component(components, "FightGameplayTagComponent");

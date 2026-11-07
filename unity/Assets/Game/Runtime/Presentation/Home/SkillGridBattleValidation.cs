@@ -43,6 +43,7 @@ namespace Zjcs.Presentation.Home
                 if (!value.Event.GridViewEvents.Any(e => e.Kind == FightBattleGridViewEventKind.Create)) return;
                 creation = value; runner.enabled = false;
             };
+            yield return WaitForHud(home);
             yield return capture("grid-preparation");
             yield return Start(controller, click);
             float deadline = Time.realtimeSinceStartup + 60f;
@@ -84,6 +85,7 @@ namespace Zjcs.Presentation.Home
                 && FightBattleCheckpointSerializer.Save(controller.Checkpoint) == before,
                 "Cold grid resume changed state or replayed its creation/damage receipt.");
             OfficialBattleGridLifecycleValidation.RequireActive(controller, ids);
+            yield return WaitForHud(home);
             yield return new WaitForSeconds(.15f);
             yield return capture("grid-cold-resume");
             FightBattleStepEvent expiry = null;
@@ -121,6 +123,19 @@ namespace Zjcs.Presentation.Home
             Debug.Log("[Native grid battle] original 13050/13052/13055: delayed nine-cell native fire, nine hits on one large body, cold resume without replay, per-cell expiry and saved normal victory passed.");
         }
 
+        private static IEnumerator WaitForHud(HomeFeatureRuntime home)
+        {
+            float deadline = Time.realtimeSinceStartup + 45f;
+            Transform hud;
+            while ((hud = home.Hud.CanvasTransform.Find("FightMainPanel")) == null || !hud.gameObject.activeInHierarchy)
+            {
+                Require(Time.realtimeSinceStartup < deadline, "Original delayed battle HUD did not mount.");
+                yield return null;
+            }
+            yield return null;
+            Canvas.ForceUpdateCanvases();
+        }
+
         private static IEnumerator Start(OfficialBattleRuntimeController controller, Func<Selectable, IEnumerator> click)
         {
             float deadline = Time.realtimeSinceStartup + 45f;
@@ -129,7 +144,16 @@ namespace Zjcs.Presentation.Home
                 Require(Time.realtimeSinceStartup < deadline, "Original grid battle start control is unavailable.");
                 var start = UnityEngine.Object.FindObjectsOfType<Button>().FirstOrDefault(value => value.isActiveAndEnabled
                     && value.interactable && value.transform.parent.name == "StartBtn");
-                if (start != null) yield return click(start);
+                if (start != null)
+                {
+                    bool clicked = false;
+                    UnityEngine.Events.UnityAction observeClick = () => clicked = true;
+                    start.onClick.AddListener(observeClick);
+                    try { yield return click(start); }
+                    finally { if (start != null) start.onClick.RemoveListener(observeClick); }
+                    Require(clicked, "The native start button did not receive the simulated pointer click.");
+                    Debug.Log("[Native grid battle] Original start button received the simulated pointer click.");
+                }
                 yield return null;
             }
         }

@@ -26,6 +26,8 @@ namespace Zjcs.Presentation.Combat
             summon.LimitedTimes = 1;
             player.Skills.Add(summon); player.SkillState.Slots.Add(catalog.CreateSkillSlot(summon, 0));
             player.Statuses.Add(catalog.CreateStatus(25012, 1, 1, 9925012, 0, 0, 5, 20, 1));
+            foreach (int id in new[] { 25068, 25112, 25281 })
+                player.Statuses.Add(catalog.CreateStatus(id, 1, 1, 9900000 + id, 0, 0, 5, 20, 1));
             var removal = catalog.CreateStatus(25015, 1, 1, 9925015, 0, 0, 5, 20, 1);
             player.Statuses.Add(removal);
             return new Probe(catalog, attack, removal);
@@ -39,6 +41,7 @@ namespace Zjcs.Presentation.Combat
             private int summonId, calls;
             private FightBattleStatusState healing;
             private bool healed;
+            private bool summonTagsVerified;
             private readonly bool checkConditional = Environment.GetEnvironmentVariable("ZJCS_CONDITIONAL_HIT_ACCEPTANCE") == "1";
             private FightBattleStatusState conditional;
             private bool conditionalVerified;
@@ -58,6 +61,22 @@ namespace Zjcs.Presentation.Combat
                     summonId = summon.Id;
                     Require(summon.Statuses.Any(value => value.ClassId == 24070),
                         "Official 25012 did not apply its creation status to the real summon.");
+                    Require(summon.MonsterTemplateId == 3196
+                        && summon.Statuses.Any(value => value.ClassId == 24071)
+                        && !summon.Statuses.Any(value => value.ClassId == 24072)
+                        && summon.Statuses.Any(value => value.ClassId == 24206),
+                        "Official summon entity tags did not select 24071/24206 and exclude 24072.");
+                    var tagSave = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(cp));
+                    foreach (int id in new[] { 25068, 25112, 25281 })
+                    {
+                        var tag = tagSave.Units.Single(value => value.Id == 1).Statuses
+                            .Single(value => value.ClassId == id).Components.HitSummon;
+                        Require(tag.DefinitionResolved && tag.HasSummonEntityTagFilter && !tag.HasUnsupportedFilter
+                            && tag.SummonEntityTagQuery.Count == 1 && tag.TriggeredCount == (id == 25112 ? 0 : 1),
+                            "Runtime checkpoint lost the summon tag definition or trigger count.");
+                    }
+                    summonTagsVerified = true;
+                    Debug.Log("[HitSummon tags] entity 3196: 25068/25281 matched, 25112 excluded; runtime checkpoint retained queries and counts.");
                     // Isolated fixture: official 12202 supplies a finite creator-clock lifetime.
                     // No business callback or removal flag is invoked by this probe.
                     var life = catalog.CreateStatus(12202, summonId, 1, 9912202, 12140, 0, 5, 20, 1);
@@ -143,7 +162,8 @@ namespace Zjcs.Presentation.Combat
 
             public void Verify(string host, FightBattleCheckpoint checkpoint)
             {
-                Require(summonId > 0 && calls == 1 && removal.Components.HitSummon.TriggeredCount == 1 && healed,
+                Require(summonId > 0 && calls == 1 && removal.Components.HitSummon.TriggeredCount == 1 && healed
+                    && summonTagsVerified,
                     host + " did not execute the original summon lifecycle exactly once.");
                 Require(!checkConditional || conditionalVerified,host+" did not execute the conditional hit status.");
             }

@@ -64,6 +64,75 @@ public static class BattleHitSummonHarness
         Removal(catalog,items,formula,false);
         Removal(catalog,items,formula,true);
         Revival(catalog,items,formula);
+        SummonTags(catalog,items,formula,12140,10095,3196,false);
+        SummonTags(catalog,items,formula,10710,10019,3181,true);
+        TagBoundaries(catalog,items,formula);
+    }
+    static void SummonTags(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
+        FightDamageFormula formula, int skillId, int itemId, int monsterId, bool matchesBeast)
+    {
+        var player=Unit(1,1,5,5,1000);var enemy=Unit(2,2,6,5);
+        foreach(int id in new[]{25068,25112,25281}) player.Statuses.Add(Status(catalog,id,1,id));
+        Equip(player,catalog.CreateSkill(skillId,0,itemId,5,20,1,null));
+        var cp=State(player,enemy);
+        var runner=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),catalog,items);
+        for(int i=1;i<=5 && !cp.Units.Exists(u=>u.MasterId==1);i++) runner.Step(0,i);
+        var summon=cp.Units.Find(u=>u.MasterId==1);
+        Check(summon!=null && summon.MonsterId==monsterId,"Official tagged summon was not created.");
+        int[] statuses={25068,25112,25281}, children={24071,24072,24206};
+        bool[] expected={true,matchesBeast,!matchesBeast};
+        for(int i=0;i<statuses.Length;i++)
+        {
+            var trigger=player.Statuses.Find(s=>s.ClassId==statuses[i]).Components.HitSummon;
+            Check(trigger.DefinitionResolved && !trigger.HasUnsupportedFilter
+                && trigger.HasSummonEntityTagFilter,"Original summon tag query was not resolved.");
+            Check(trigger.TriggeredCount==(expected[i]?1:0)
+                && summon.Statuses.Exists(s=>s.ClassId==children[i])==expected[i],
+                "Original summon entity tag filtering failed for "+statuses[i]+" / "+monsterId);
+        }
+        var saved=FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(cp));
+        var restored=saved.Units.Find(u=>u.Id==1).Statuses.Find(s=>s.ClassId==25281).Components.HitSummon;
+        Check(restored.HasSummonEntityTagFilter && restored.SummonEntityTagQuery.Count==1
+            && restored.SummonEntityTagQuery[0].Tags[0]==4295065600L
+            && restored.TriggeredCount==(!matchesBeast?1:0),"Summon query or counter was lost in JSON.");
+        var copy=restored.Copy();copy.SummonEntityTagQuery[0].Tags[0]=0;
+        Check(restored.SummonEntityTagQuery[0].Tags[0]==4295065600L,"Summon query clone aliases its mask.");
+        restored.DefinitionResolved=false;restored.HasUnsupportedFilter=true;
+        restored.HasSummonEntityTagFilter=false;restored.SummonEntityTagQuery.Clear();
+        FightBattleExecutor.Restore(saved,formula,new FightDamageSettlement(),catalog,items);
+        restored=saved.Units.Find(u=>u.Id==1).Statuses.Find(s=>s.ClassId==25281).Components.HitSummon;
+        Check(restored.DefinitionResolved && !restored.HasUnsupportedFilter
+            && restored.SummonEntityTagQuery[0].Tags[0]==4295065600L
+            && restored.TriggeredCount==(!matchesBeast?1:0),"Legacy restore reset the counter or omitted the tag query.");
+    }
+    static void TagBoundaries(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
+        FightDamageFormula formula)
+    {
+        // Lifecycle fixtures isolate filtering before probability/count consumption; the two
+        // preceding cases exercise actual official skills through the normal summon factory.
+        var player=Unit(1,1,5,5,1000);var enemy=Unit(2,2,6,5);
+        var trigger=Status(catalog,25281,1,1);player.Statuses.Add(trigger);
+        var summon=Unit(3,1,5,7);summon.MasterId=summon.Turn.MasterId=1;summon.MonsterId=3181;
+        var cp=State(player,enemy,summon);
+        var runner=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),catalog,items);
+        var invoke=typeof(FightBattleExecutor).GetMethod("ExecuteMissingHitSummon",
+            System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
+        Action fire=()=>invoke.Invoke(runner,new object[]{summon,true});
+        fire();Check(trigger.Components.HitSummon.TriggeredCount==0,"Excluded tag consumed MaxCount.");
+        summon.MonsterId=3201;summon.MonsterTemplateId=3201;
+        Check(!catalog.TryGetEntityGameplayTags(3201,out var absent),"Missing-tag fixture gained tags.");
+        fire();Check(trigger.Components.HitSummon.TriggeredCount==0,"Without query accepted missing tags.");
+        summon.MonsterId=3192;summon.MonsterTemplateId=0;
+        fire();Check(trigger.Components.HitSummon.TriggeredCount==0,"Monster template lookup used the monster row id as tags.");
+        summon.MonsterId=3196;summon.MonsterTemplateId=3196;
+        trigger.Components.HitSummon.Rate=0;
+        fire();Check(trigger.Components.HitSummon.TriggeredCount==0,"Zero probability consumed MaxCount.");
+        trigger.Components.HitSummon.Rate=1;
+        fire();Check(trigger.Components.HitSummon.TriggeredCount==1
+            && summon.Statuses.Exists(s=>s.ClassId==24206),"First matching summon did not trigger.");
+        fire();Check(trigger.Components.HitSummon.TriggeredCount==1,"MaxCount did not limit repeat creation.");
+        trigger.Components.HitSummon.TriggeredCount=0;trigger.Components.HitSummon.HasUnsupportedFilter=true;
+        fire();Check(trigger.Components.HitSummon.TriggeredCount==0,"Unknown filter was enabled.");
     }
     static void Removal(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
         FightDamageFormula formula, bool expiry)

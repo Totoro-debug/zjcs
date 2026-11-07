@@ -287,6 +287,7 @@ namespace Zjcs.Combat.Official
             Dictionary<string, object> hitSummon = Component(components,
                 "FightStatusHitSummonComponent");
             if (hitSummon != null)
+            {
                 result.HitSummon = new FightBattleStatusHitSummonComponentState
                 {
                     Rate = Float(hitSummon, "Rate", 1f),
@@ -297,9 +298,13 @@ namespace Zjcs.Combat.Official
                     MaxCount = Int(hitSummon, "MaxCount", -1),
                     CheckSummonLifeDuration = Bool(hitSummon, "CheckSummonLifeDuration"),
                     FilterSubstitute = Bool(hitSummon, "FilterSubstitute"),
-                    HasUnsupportedFilter = hitSummon.ContainsKey("FilterCondition")
-                        && hitSummon["FilterCondition"] != null
+                    DefinitionResolved = true
                 };
+                var filter = Component(hitSummon, "FilterCondition");
+                result.HitSummon.HasSummonEntityTagFilter = filter != null;
+                result.HitSummon.HasUnsupportedFilter = !ReadSourceSkillTagFilter(filter,
+                    result.HitSummon.SummonEntityTagQuery);
+            }
             return result;
         }
 

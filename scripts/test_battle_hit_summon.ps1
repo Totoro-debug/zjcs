@@ -16,4 +16,4 @@ $items = [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load(
     $rulesJson, $rulesProof.output_sha256, $rulesProof.manifest)
 $formula = $catalog.CreateDamageFormula($rulesJson, $rulesProof.output_sha256, $rulesProof.manifest)
 [BattleHitSummonHarness]::Run($catalog, $items, $formula)
-Write-Output 'HitSummon checks passed: official summon creation, substitute filter, removal anchor/range/side/time, expiry, checkpoint and immediate revival.'
+Write-Output 'HitSummon checks passed: official summon creation, summon entity All/Without tags, template binding, missing tags, probability/MaxCount, deep copy/JSON/legacy restore, substitute filter, removal anchor/range/side/time, expiry and immediate revival.'

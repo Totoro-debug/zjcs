@@ -87,6 +87,7 @@ namespace Zjcs.Combat.Official
                             RestoreHpChangeStackDefinition(status);
                             RestoreRoundStartDefinition(status);
                             RestoreConditionalHitDefinition(status);
+                            RestoreHitSummonDefinition(status);
                         }
                 units.Add(unit);
                 unitById.Add(unit.Id, unit);

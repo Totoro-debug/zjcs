@@ -355,6 +355,7 @@ namespace Zjcs.Combat.Official
                 if (component.FilterSubstitute && summon.IsVoodooDoll) continue;
                 if (component.CheckSummonLifeDuration
                     && !summon.HitSummonHasLifeDuration) continue;
+                if (!MatchesSummonEntityTags(component, summon)) continue;
                 if (!RollComponent(component.Rate)) continue;
 
                 component.TriggeredCount++;
@@ -392,6 +393,36 @@ namespace Zjcs.Combat.Official
                 Math.Max(delay, duration));
             movementStartContext.ActionDuration = Math.Max(movementStartContext.ActionDuration,
                 actionDuration);
+        }
+
+        private bool MatchesSummonEntityTags(FightBattleStatusHitSummonComponentState component,
+            FightBattleUnitState summon)
+        {
+            if (!component.HasSummonEntityTagFilter) return true;
+            // The confirmed offline binding is the newly created role entity, not its skill.
+            int entityId = summon.MonsterTemplateId > 0 ? summon.MonsterTemplateId
+                : statusCatalog.MonsterTemplateId(summon.MonsterId);
+            if (!statusCatalog.TryGetEntityGameplayTags(entityId, out var tags)
+                || component.SummonEntityTagQuery == null) return false;
+            foreach (var clause in component.SummonEntityTagQuery)
+                if (!clause.Matches(tags)) return false;
+            return true;
+        }
+
+        private void RestoreHitSummonDefinition(FightBattleStatusState status)
+        {
+            var previous = status?.Components?.HitSummon;
+            if (previous == null || previous.DefinitionResolved
+                || !previous.Create && !previous.Remove || statusCatalog == null) return;
+            var template = statusCatalog.CreateStatus(status.ClassId, status.OwnerId, status.CreatorId,
+                status.InstanceId, status.RootSkillId, status.ApplyingSkillItemId, status.SourceSkillRank,
+                status.SourceSkillLevel, status.SourceSubRank, status.SourceProperties,
+                replacementProperties: status.ReplacementProperties,
+                blessPropertyScales: status.BlessPropertyScales);
+            var definition = template.Components?.HitSummon;
+            if (definition == null) return;
+            definition.TriggeredCount = previous.TriggeredCount;
+            status.Components.HitSummon = definition;
         }
 
         private static bool HasSummonLifeDuration(FightBattleUnitState summon)

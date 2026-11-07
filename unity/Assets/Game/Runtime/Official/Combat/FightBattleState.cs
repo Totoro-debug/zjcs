@@ -665,10 +665,21 @@ namespace Zjcs.Combat.Official
         public bool CheckSummonLifeDuration;
         public bool FilterSubstitute;
         public bool HasUnsupportedFilter;
+        public bool DefinitionResolved;
+        public bool HasSummonEntityTagFilter;
+        public List<FightGameplayTagClause> SummonEntityTagQuery = new List<FightGameplayTagClause>();
         public int TriggeredCount;
 
-        public FightBattleStatusHitSummonComponentState Copy() =>
-            (FightBattleStatusHitSummonComponentState)MemberwiseClone();
+        public FightBattleStatusHitSummonComponentState Copy()
+        {
+            var result = (FightBattleStatusHitSummonComponentState)MemberwiseClone();
+            result.SummonEntityTagQuery = new List<FightGameplayTagClause>();
+            if (SummonEntityTagQuery != null)
+                foreach (var clause in SummonEntityTagQuery)
+                    result.SummonEntityTagQuery.Add(new FightGameplayTagClause
+                        { Type = clause.Type, Tags = (long[])clause.Tags.Clone() });
+            return result;
+        }
     }
 
     [Serializable]
