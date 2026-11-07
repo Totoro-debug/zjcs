@@ -49,7 +49,7 @@ namespace Zjcs.Presentation.Home
         private OfflineNpcTravelService npcTravel;
         private OfficialNpcTravelCatalog npcTravelCatalog;
         private OfflineNpcTravelPropertyCalculator npcTravelProperties;
-        private OfflineDailyDungeonModule dailyDungeons;
+        private DailyDungeonModule dailyDungeons;
         private OfficialFantasyTowerCatalog fantasyTowerCatalog;
         private OfflineFantasyTowerSession fantasyTower;
         private WeeklyChallengeBattleRunner weeklyChallengeBattle;
@@ -157,7 +157,7 @@ namespace Zjcs.Presentation.Home
                 progression.Catalog, npcTravelCatalog);
             return npcTravelProperties.QuickSelect(profile.Save.Player, travelId, eligibleNpcIds);
         }
-        public OfflineDailyDungeonModule DailyDungeons => dailyDungeons;
+        public DailyDungeonModule DailyDungeons => dailyDungeons;
         public OfflineFantasyTowerSession FantasyTower => fantasyTower;
         internal OfficialFantasyTowerCatalog FantasyTowerCatalog =>
             fantasyTowerCatalog ?? (fantasyTowerCatalog = OfficialFantasyTowerCatalog.LoadDefault());
@@ -608,7 +608,7 @@ namespace Zjcs.Presentation.Home
             profile.Reload();
             dailyChallenges = new OfflineDailyChallengeService(
                 Path.Combine(slots.GetSlotDirectory(slotId), "daily-challenges.json"));
-            dailyDungeons = OfflineDailyDungeonModule.Open(slots, slotId);
+            dailyDungeons = DailyDungeonModule.Open(slots, slotId);
             fantasyTower = OfflineFantasyTowerSession.Open(slots, slotId);
             npcAssistanceProgress = OfflineNpcAssistanceProgress.Open(slots, slotId);
             npcAssistanceCatalog = OfficialCombatAssetCatalog.LoadDefault().LoadNpcAssistance();

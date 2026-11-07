@@ -23,7 +23,7 @@ namespace Zjcs.Presentation.World
         private WorldTabItem[] tabs;
         private Button[] lockButtons;
         private UnityAction[] lockHandlers;
-        private OfflineDailyDungeonSession session;
+        private DailyDungeonModule module;
         private DailyDungeonRuntimeBattle info;
         private int difficulty;
         private Action<int> changed;
@@ -37,7 +37,7 @@ namespace Zjcs.Presentation.World
             if (source != null && tabs != null) InitContent();
         }
 
-        internal void Initialize(OfflineDailyDungeonSession localSession, int initialDifficulty,
+        internal void Initialize(DailyDungeonModule localModule, int initialDifficulty,
             Action<int> onChanged, Action<string> showNotice, Func<string, string> language)
         {
             if (source != null) throw new InvalidOperationException("Private difficulty content was already initialized.");
@@ -45,8 +45,8 @@ namespace Zjcs.Presentation.World
             source = JsonUtility.FromJson<Binding>(File.ReadAllText(path));
             if (source?.manifest != "871_156598" || source.dungeonId != 21 || source.tabs?.Length != 5)
                 throw new InvalidDataException("Original private difficulty references are missing.");
-            session = localSession ?? throw new ArgumentNullException(nameof(localSession));
-            info = session.FindDungeon(source.dungeonId);
+            module = localModule ?? throw new ArgumentNullException(nameof(localModule));
+            info = module.FindDungeon(source.dungeonId);
             if (info?.difficulties == null || !info.difficulties.Any(value => value.difficulty == initialDifficulty))
                 throw new InvalidDataException("Original private display difficulty is missing.");
             // Both selected-source display difficulties have no tab condition. Fail explicitly
@@ -104,7 +104,7 @@ namespace Zjcs.Presentation.World
                 tabs[index].gameObject.SetActive(position >= 0);
                 if (position < 0) continue;
                 visibleCount++;
-                bool unlocked = position <= 0 || session.IsUnlocked(info.id, info.difficulties[position - 1].difficulty);
+                bool unlocked = position <= 0 || module.IsUnlocked(info.id, info.difficulties[position - 1].difficulty);
                 var states = new WorldStateGameObjectData {
                     GoConfig = data.unlockStates.Select(value => new WorldStateGameObjectData.StateGameObjectKV {
                         State = value.state, GameObjects = value.objects.Select(item => Node(item).gameObject).ToList()
@@ -162,11 +162,11 @@ namespace Zjcs.Presentation.World
         internal static string PrivateDifficultyName(int difficulty) => LoadDocument().routeStyles.privateDisplay
             .difficulties.Single(value => value.value == difficulty).name;
 
-        internal static void InitializePrivateDifficulty(GameObject root, OfflineDailyDungeonSession session,
+        internal static void InitializePrivateDifficulty(GameObject root, DailyDungeonModule module,
             int initialDifficulty, Action<int> changed, Action<string> notice)
         {
             root.AddComponent<OfficialDungeonPrivateDifficultyController>()
-                .Initialize(session, initialDifficulty, changed, notice, RouteText);
+                .Initialize(module, initialDifficulty, changed, notice, RouteText);
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Zjcs.Offline.World
 
     public static class DailyDungeonSettlementHudModelBuilder
     {
-        public static DailyDungeonSettlementHudModel Build(OfflineDailyDungeonModule module,
+        public static DailyDungeonSettlementHudModel Build(DailyDungeonModule module,
             DailyDungeonPendingClaimSave pending, int requestedAwardTimes, int playerLevel, int subRank)
         {
             if (module == null) throw new ArgumentNullException(nameof(module));

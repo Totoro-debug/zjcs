@@ -12,18 +12,18 @@ namespace Zjcs.Presentation.World
     // Shared DailyDungeonBigMapDialog rendering; callers retain room/exit decisions.
     public sealed class OfficialDungeonRoutePresenter : MonoBehaviour, LoopScrollDataSource
     {
-        private OfflineDailyDungeonSession session;
+        private DailyDungeonModule module;
         private Action<int> selectRoom;
         private UnityEngine.Events.UnityAction closeHandler;
         private WorldDailyDungeonRoute route;
         private int mapGroupId;
         private bool initialized, choosing;
 
-        public static void Refresh(GameObject root, OfflineDailyDungeonSession session,
+        public static void Refresh(GameObject root, DailyDungeonModule module,
             Action<int> selectRoom, Action close)
         {
             if (root == null) throw new ArgumentNullException(nameof(root));
-            if (session == null) throw new ArgumentNullException(nameof(session));
+            if (module == null) throw new ArgumentNullException(nameof(module));
             if (selectRoom == null) throw new ArgumentNullException(nameof(selectRoom));
             if (close == null) throw new ArgumentNullException(nameof(close));
             var presenter = root.GetComponent<OfficialDungeonRoutePresenter>()
@@ -37,18 +37,19 @@ namespace Zjcs.Presentation.World
             if (presenter.closeHandler != null) closeButton.onClick.RemoveListener(presenter.closeHandler);
             presenter.closeHandler = () => close();
             closeButton.onClick.AddListener(presenter.closeHandler);
-            presenter.session = session;
+            presenter.module = module;
             presenter.selectRoom = selectRoom;
             presenter.Render();
         }
 
         private void Render()
         {
-            DailyDungeonRunSave run = session.ActiveRun;
-            if (run == null) return;
-            DailyDungeonRuntimeMap map = session.FindMap(run.mapGroupId);
+            DailyDungeonRouteHudModel hud = module.BuildRouteHudModel();
+            if (hud == null) return;
+            DailyDungeonRunSave run = hud.Run;
+            DailyDungeonRuntimeMap map = hud.Map;
             if (map == null) throw new InvalidDataException("Original dungeon route map is missing.");
-            choosing = run.clearedRoomIds.Contains(run.currentRoomId) && !run.privateRouteComplete;
+            choosing = hud.IsSelectingNextRoom;
             var window = OfficialDungeonUiBindingRuntime.ConfigureRouteWindow(gameObject, choosing);
             if (window.Grid == null || window.Scroll == null)
                 throw new InvalidDataException("Original dungeon route grid/scroll bindings are incomplete.");
@@ -58,7 +59,7 @@ namespace Zjcs.Presentation.World
                     ColumnCount = map.columnCount, RowCount = map.rowCount, RoomArray = map.roomArray };
                 foreach (int roomId in map.roomArray.Where(value => value > 0).Distinct())
                 {
-                    DailyDungeonRuntimeRoom room = session.FindRoom(roomId);
+                    DailyDungeonRuntimeRoom room = module.FindRoom(roomId);
                     if (room == null) throw new InvalidDataException("Original route room is missing: " + roomId);
                     route.Rooms.Add(roomId, new WorldDailyDungeonRoute.Room {
                         Id = roomId, Type = room.type, NextRoomIds = room.nextRoomIds ?? Array.Empty<int>() });
@@ -75,8 +76,7 @@ namespace Zjcs.Presentation.World
             int index = route.GetIndexByCoordinates(coordinates.x + (choosing ? -1 : -2), coordinates.y);
             window.Scroll.RefillCells(Mathf.Clamp(index, 0, window.Scroll.totalCount));
             OfficialDungeonUiBindingRuntime.RefreshRouteGrades(gameObject, window,
-                map.gradeRows.Where(value => value.difficulty == run.difficulty)
-                    .Select(value => new KeyValuePair<int, int>(value.grade, value.row)), map.rowCount);
+                hud.GradeRows, map.rowCount);
         }
 
         public void ProvideData(Transform cell, int index)
@@ -85,7 +85,7 @@ namespace Zjcs.Presentation.World
             WorldDailyDungeonRoomItem view = OfficialDungeonUiBindingRuntime.BindRouteRoom(cell.gameObject);
             view.RefreshView(roomId, route, choosing);
             cell.name = "Room_" + roomId;
-            DailyDungeonRunSave run = session.ActiveRun;
+            DailyDungeonRunSave run = module.ActiveRun;
             view.ClickBtn.interactable = run != null && roomId > 0 && !run.privateRouteComplete
                 && !run.clearedRoomIds.Contains(roomId) && (roomId == run.currentRoomId
                     || run.clearedRoomIds.Contains(run.currentRoomId)

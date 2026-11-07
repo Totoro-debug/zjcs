@@ -19,7 +19,7 @@
 - `OfficialMainlineMapRuntime` 已接入本图地图状态、原生主体、地形分区及区域环境资源；地图交互仍依赖正式入口、角色移动和完整 HUD 接线。
 - 主线实体操作、剧情空间、区域标签、固定宝箱数据、机关目录及本地图部分战斗数据已有运行载荷或本地规则接线。原始配置和绑定入口见上述来源清单。
 - 战斗碑已接入本地窗口上下文、目标身份、原奖励预览输入和队伍事件生命周期；正式 Team 页面、助战队伍及完整战斗入口仍未接通。
-- 私有副本复用[日常副本](../features/dungeons.md)的路线展示与[战斗执行](../features/battle-execution.md)的公共战斗宿主；本图提供私图路线和房间状态。
+- 私有副本通过 `DailyDungeonModule.OpenPrivateMap` 复用[日常副本](../features/dungeons.md)的目录、路线 HUD、次数边界、奖励结算与[战斗执行](../features/battle-execution.md)公共战斗宿主；本图只提供私图路线适配器和房间状态。
 - 共享实体探索记录接入[主线地图公共模块](../features/mainline-map-modules.md)。Map12 专用 UI、迷你地图、动画与音频载荷仍需在正式地图流程内接通。
 
 ## 自定义实现

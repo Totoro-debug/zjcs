@@ -23,7 +23,7 @@ namespace Zjcs.Editor
             var controller = dialog.GetComponent<OfficialDungeonPrivateDifficultyController>();
             var group = dialog.GetComponentsInChildren<WorldTabGroup>(true).Single();
             var tabs = group.GetAllTabs().OrderBy(value => value.transform.GetSiblingIndex()).ToArray();
-            var session = RuntimeField<OfflineDailyDungeonSession>("map12PrivateDungeonSession");
+            var session = RuntimeField<DailyDungeonModule>("map12PrivateDungeonSession");
             byte[] profileBefore = File.ReadAllBytes(profilePath);
             string savePath = Path.Combine(Path.GetDirectoryName(profilePath), "daily-dungeon-save.json");
             if (controller == null || controller.Difficulty != 0 || tabs.Length != 5

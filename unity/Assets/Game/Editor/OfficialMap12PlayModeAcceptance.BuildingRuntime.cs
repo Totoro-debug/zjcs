@@ -247,7 +247,7 @@ namespace Zjcs.Editor
             while (RuntimeField<GameObject>("map12PrivateDungeonDialog") != null && Time.realtimeSinceStartup < deadline) yield return null;
             if (RuntimeField<GameObject>("map12PrivateDungeonDialog") != null)
                 throw new InvalidDataException("Successful private stage entry did not close its original detail window.");
-            var privateSession = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
+            var privateSession = Zjcs.Offline.World.DailyDungeonModule.OpenPrivateMap(slots, slot);
             var run = privateSession.ActiveRun;
             if (run == null || run.dungeonId != 121 || run.difficulty != 50 || run.currentRoomId != 12101)
                 throw new InvalidDataException("Private entry did not create the official 121/50 start-room route.");
@@ -339,7 +339,7 @@ namespace Zjcs.Editor
                     + $"view={(battleViewRoot == null ? "null" : battleViewRoot.name + ":" + battleViewRoot.localScale)}, "
                     + $"entity={(battleEntityRoot == null ? "null" : battleEntityRoot.name + ":" + battleEntityRoot.localScale)}; "
                     + "hierarchy=" + hierarchy + ".");
-            privateSession = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
+            privateSession = Zjcs.Offline.World.DailyDungeonModule.OpenPrivateMap(slots, slot);
             run = privateSession.ActiveRun;
             if (run == null || run.currentRoomId != 12102 || !run.clearedRoomIds.Contains(12101)
                 || privateSession.Save.usedEntries != 0 || privateSession.Save.purchasedEntries != 0
@@ -374,7 +374,7 @@ namespace Zjcs.Editor
                 || mapCharacter.localRotation != originalMapCharacterRotation
                 || mapCharacter.localScale != originalMapCharacterScale)
                 throw new InvalidDataException("The private battle did not restore the original Map12 character transform.");
-            privateSession = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
+            privateSession = Zjcs.Offline.World.DailyDungeonModule.OpenPrivateMap(slots, slot);
             run = privateSession.ActiveRun;
             if (RuntimeField<GameObject>("map12PrivateDungeonDialog") != null)
                 throw new InvalidDataException("Private battle return reopened a detail window that the original stage entry closed.");
@@ -422,7 +422,7 @@ namespace Zjcs.Editor
                     throw new InvalidDataException("Official private route did not expose next room " + roomId + ".");
                 SimulateUiClick(roomButton, roomButton.GetComponentInParent<Canvas>().worldCamera);
 
-                OfflineDailyDungeonSession session = OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
+                DailyDungeonModule session = DailyDungeonModule.OpenPrivateMap(slots, slot);
                 DailyDungeonRunSave run = session.ActiveRun;
                 DailyDungeonRuntimeRoom room = session.FindRoom(roomId);
                 DailyDungeonRuntimeStage stage = room == null ? null : session.FindStage(room.stageId);
@@ -473,7 +473,7 @@ namespace Zjcs.Editor
                 }
                 else yield return null;
 
-                session = OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
+                session = DailyDungeonModule.OpenPrivateMap(slots, slot);
                 run = session.ActiveRun;
                 if (run == null || run.currentRoomId != roomId
                     || (hasBattle && !run.clearedRoomIds.Contains(roomId))
@@ -484,7 +484,7 @@ namespace Zjcs.Editor
                 Debug.Log("Map12 private victory route persisted room " + roomId + ".");
             }
 
-            OfflineDailyDungeonSession completed = OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
+            DailyDungeonModule completed = DailyDungeonModule.OpenPrivateMap(slots, slot);
             if (completed.ActiveRun == null || !completed.ActiveRun.privateRouteComplete
                 || !completed.ActiveRun.clearedRoomIds.Contains(12104)
                 || !completed.ActiveRun.clearedRoomIds.Contains(12107))
@@ -506,7 +506,7 @@ namespace Zjcs.Editor
             if (picker == null) throw new InvalidDataException("Private battle room did not open the original partner invitation panel.");
             yield return new WaitForEndOfFrame();
             var slots = new ProfileSlotCatalog(root);
-            OfflineDailyDungeonSession session = OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
+            DailyDungeonModule session = DailyDungeonModule.OpenPrivateMap(slots, slot);
             DailyDungeonRunSave run = session.ActiveRun;
             if (run == null) throw new InvalidDataException("Private invitation panel has no active route.");
             ScreenCapture.CaptureScreenshot(Path.Combine(output,
@@ -581,7 +581,7 @@ namespace Zjcs.Editor
             File.WriteAllText(dungeonPath, JsonUtility.ToJson(new Zjcs.Offline.World.DailyDungeonSave {
                 claimStateVersion = 3, localDate = previousDay, usedEntries = 2, purchasedEntries = 1 }, true));
             byte[] dungeonBefore = File.ReadAllBytes(dungeonPath);
-            var session = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, settlementSlot);
+            var session = Zjcs.Offline.World.DailyDungeonModule.OpenPrivateMap(slots, settlementSlot);
             if (!File.ReadAllBytes(dungeonPath).SequenceEqual(dungeonBefore) || session.Save.localDate != previousDay
                 || session.Save.usedEntries != 2 || session.Save.purchasedEntries != 1)
                 throw new InvalidDataException("Opening a private route ran the public dungeon daily reset.");
@@ -595,7 +595,7 @@ namespace Zjcs.Editor
                 throw new InvalidDataException("Private settlement fixture could not advance through official bonfire 12101.");
             if (!session.RecordPrivateBattleResult(12102, false))
                 throw new InvalidDataException("Private battle failure result could not be stored in the local route save.");
-            session = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, settlementSlot);
+            session = Zjcs.Offline.World.DailyDungeonModule.OpenPrivateMap(slots, settlementSlot);
             var run = session.ActiveRun;
             if (run.lastBattleRoomId != 12102 || run.lastBattleOutcome != 2 || run.clearedRoomIds.Contains(12102)
                 || session.Save.usedEntries != 2 || session.Save.purchasedEntries != 1
@@ -603,7 +603,7 @@ namespace Zjcs.Editor
                 throw new InvalidDataException("Private battle failure changed character, public counts or room completion after cold read.");
             if (!session.RecordPrivateBattleResult(12102, true))
                 throw new InvalidDataException("Private battle victory result could not be stored after retry.");
-            session = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, settlementSlot);
+            session = Zjcs.Offline.World.DailyDungeonModule.OpenPrivateMap(slots, settlementSlot);
             run = session.ActiveRun;
             if (run.lastBattleRoomId != 12102 || run.lastBattleOutcome != 1 || !run.clearedRoomIds.Contains(12102)
                 || session.Save.usedEntries != 2 || session.Save.purchasedEntries != 1
@@ -614,7 +614,7 @@ namespace Zjcs.Editor
                 || !session.ChooseNextRoom(12107) || !session.RecordPrivateBattleResult(12107, true)
                 || !session.ChooseNextRoom(12108) || !session.CompletePrivateRoute(12108))
                 throw new InvalidDataException("Private Map12 official 12102 branch did not complete through terminal room 12108.");
-            session = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, settlementSlot);
+            session = Zjcs.Offline.World.DailyDungeonModule.OpenPrivateMap(slots, settlementSlot);
             run = session.ActiveRun;
             if (!run.privateRouteComplete || run.currentRoomId != 12108 || session.Save.usedEntries != 2
                 || session.Save.purchasedEntries != 1 || session.Save.localDate != previousDay || !File.ReadAllBytes(profilePath).SequenceEqual(profileBefore))
@@ -623,7 +623,7 @@ namespace Zjcs.Editor
             string alternateSlot = slots.CreateSlot();
             string alternatePath = slots.GetProgressPath(alternateSlot);
             File.WriteAllText(alternatePath, JsonUtility.ToJson(new OfflineMainlineSave(), true));
-            var alternate = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, alternateSlot);
+            var alternate = Zjcs.Offline.World.DailyDungeonModule.OpenPrivateMap(slots, alternateSlot);
             byte[] alternateProfile = File.ReadAllBytes(alternatePath);
             if (!alternate.TryBegin(121, 50, null, null, null, 0,
                     System.DateTimeOffset.UtcNow.ToUnixTimeSeconds(), out error)
@@ -634,7 +634,7 @@ namespace Zjcs.Editor
                 || !alternate.RecordPrivateBattleResult(12107, true) || !alternate.ChooseNextRoom(12108)
                 || !alternate.CompletePrivateRoute(12108))
                 throw new InvalidDataException("Private Map12 official 12103 branch did not complete through terminal room 12108.");
-            alternate = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, alternateSlot);
+            alternate = Zjcs.Offline.World.DailyDungeonModule.OpenPrivateMap(slots, alternateSlot);
             if (alternate.ActiveRun?.privateRouteComplete != true || alternate.Save.usedEntries != 0
                 || alternate.Save.purchasedEntries != 0 || !File.ReadAllBytes(alternatePath).SequenceEqual(alternateProfile))
                 throw new InvalidDataException("Alternate private route completion changed character, rewards or public counts.");

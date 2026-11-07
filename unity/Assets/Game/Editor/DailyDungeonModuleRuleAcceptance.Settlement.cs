@@ -30,7 +30,7 @@ namespace Zjcs.Editor
                 var state = new DailyDungeonSave();
                 state.pendingClaims.Add(JsonUtility.FromJson<DailyDungeonPendingClaimSave>(JsonUtility.ToJson(pending)));
                 File.WriteAllText(dungeonPath, JsonUtility.ToJson(state));
-                var dungeon = OfflineDailyDungeonModule.Open(slots, slot, catalog);
+                var dungeon = DailyDungeonModule.Open(slots, slot, catalog);
                 int remaining = dungeon.RemainEntries;
                 var settlement = new OfflineDailyDungeonSettlementModule(dungeon, profile, progression, () => 1700000000);
                 if (settlement.Claim(pending.id, 0).Committed || settlement.Claim(pending.id, remaining + 1).Committed)
@@ -58,7 +58,7 @@ namespace Zjcs.Editor
                 progression = new OfflineCharacterProgressionService(profile, character);
                 progression.AttachEquipmentCatalog(equipment);
                 progression.AttachSkillRules(characterAssets.LoadSkillRules());
-                dungeon = OfflineDailyDungeonModule.Open(slots, slot, catalog);
+                dungeon = DailyDungeonModule.Open(slots, slot, catalog);
                 settlement = new OfflineDailyDungeonSettlementModule(dungeon, profile, progression, () => 1700000000);
                 var recovered = settlement.Claim(pending.id, 1);
                 string saved = JsonUtility.ToJson(profile.Save.Player);

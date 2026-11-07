@@ -301,14 +301,17 @@ namespace Zjcs.Offline.World
         bool Consume(string receipt, int itemId, long count);
     }
 
-    public sealed class OfflineDailyDungeonModule : OfflineDailyDungeonSession
+    // Compatibility implementation for the public DailyDungeonModule seam.
+    // Keep this type while older callers and saved validation entry points move
+    // to the common module name.
+    public class OfflineDailyDungeonModule : OfflineDailyDungeonSession
     {
         private readonly IDailyDungeonLevelAdapter levelAdapter;
         private readonly IDailyDungeonLeaderboardAdapter leaderboardAdapter;
         private readonly DailyDungeonModuleOptions options;
         private readonly DailyDungeonAchievementRules achievementRules;
 
-        private OfflineDailyDungeonModule(string path, DailyDungeonRuntimeData catalog, DailyDungeonSave save,
+        protected OfflineDailyDungeonModule(string path, DailyDungeonRuntimeData catalog, DailyDungeonSave save,
             IDailyDungeonRouteAdapter routeAdapter, IDailyDungeonLevelAdapter levelAdapter,
             IDailyDungeonLeaderboardAdapter leaderboardAdapter, DailyDungeonModuleOptions options)
             : base(path, catalog, save, routeAdapter)

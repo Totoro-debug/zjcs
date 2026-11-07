@@ -1918,7 +1918,7 @@ namespace Zjcs.Presentation.Home
                     && runtime.DailyDungeons.ActiveRun.currentRoomId == routeStartRoomId
                     && runtime.DailyDungeons.Save.usedEntries == usedEntries,
                     "saving and returning discarded the route or charged an entry");
-                OfflineDailyDungeonSession reload = OfflineDailyDungeonSession.Open(
+                DailyDungeonModule reload = DailyDungeonModule.Open(
                     new ProfileSlotCatalog(Root), runtime.ActiveProfileSlotId);
                 Assert(reload.ActiveRun != null && reload.ActiveRun.currentRoomId == routeStartRoomId
                     && reload.Save.usedEntries == usedEntries,
@@ -1996,7 +1996,7 @@ namespace Zjcs.Presentation.Home
                     "leaving changed entry count or retained the route");
                 Assert(expectedRoomRewards.Length > 0,
                     "official cleared room has no configured reward rules");
-                OfflineDailyDungeonSession reload = OfflineDailyDungeonSession.Open(
+                DailyDungeonModule reload = DailyDungeonModule.Open(
                     new ProfileSlotCatalog(Root), runtime.ActiveProfileSlotId);
                 Assert(reload.ActiveRun == null && reload.Save.usedEntries == usedEntries,
                     "daily dungeon leave state did not survive reload: difficulty=" + runDifficulty
@@ -2056,7 +2056,7 @@ namespace Zjcs.Presentation.Home
             DailyDungeonPendingClaimSave pending = runtime.DailyDungeons.PendingClaims
                 .FirstOrDefault(value => value != null && value.run != null);
             DailyDungeonSettlementHudModel settlement = pending == null ? null
-                : DailyDungeonSettlementHudModelBuilder.Build(runtime.DailyDungeons, pending,
+                : runtime.DailyDungeons.BuildSettlementHudModel(pending,
                     runtime.DailyDungeons.MaxAwardTimesPerClaim, runtime.Level, runtime.SubRank);
             ok = Check("dungeons-settlement-panel", () =>
             {
@@ -2091,7 +2091,7 @@ namespace Zjcs.Presentation.Home
                     && runtime.DailyDungeons.RemainEntries == remainingBeforeClaim - awardTimes
                     && runtime.DailyDungeons.DailyDungeonGetRewardCount == claimedBefore + awardTimes,
                     "successful result claim did not atomically charge and persist its award times");
-                OfflineDailyDungeonSession reload = OfflineDailyDungeonSession.Open(
+                DailyDungeonModule reload = DailyDungeonModule.Open(
                     new ProfileSlotCatalog(Root), runtime.ActiveProfileSlotId);
                 Assert(reload.Save.usedEntries == usedBeforeClaim + awardTimes
                     && reload.DailyDungeonGetRewardCount == claimedBefore + awardTimes,
@@ -2196,10 +2196,10 @@ namespace Zjcs.Presentation.Home
             Canvas.ForceUpdateCanvases();
         }
 
-        private static int[] FindRewardRoomPath(OfflineDailyDungeonSession session,
+        private static int[] FindRewardRoomPath(DailyDungeonModule module,
             DailyDungeonRunSave run)
         {
-            if (session == null || run == null) return Array.Empty<int>();
+            if (module == null || run == null) return Array.Empty<int>();
             var pending = new Queue<int[]>();
             pending.Enqueue(new[] { run.currentRoomId });
             var visited = new HashSet<int>();
@@ -2208,7 +2208,7 @@ namespace Zjcs.Presentation.Home
                 int[] path = pending.Dequeue();
                 int roomId = path[path.Length - 1];
                 if (!visited.Add(roomId)) continue;
-                DailyDungeonRuntimeRoom room = session.FindRoom(roomId);
+                DailyDungeonRuntimeRoom room = module.FindRoom(roomId);
                 if (room == null) continue;
                 int[] nextRoomIds = (room.nextRoomIds ?? Array.Empty<int>())
                     .Where(value => value > 0).ToArray();
@@ -2223,10 +2223,10 @@ namespace Zjcs.Presentation.Home
             return Array.Empty<int>();
         }
 
-        private static int[] FindTerminalRoomPath(OfflineDailyDungeonSession session,
+        private static int[] FindTerminalRoomPath(DailyDungeonModule module,
             DailyDungeonRunSave run)
         {
-            if (session == null || run == null) return Array.Empty<int>();
+            if (module == null || run == null) return Array.Empty<int>();
             var pending = new Queue<int[]>();
             pending.Enqueue(new[] { run.currentRoomId });
             var visited = new HashSet<int>();
@@ -2235,7 +2235,7 @@ namespace Zjcs.Presentation.Home
                 int[] path = pending.Dequeue();
                 int roomId = path[path.Length - 1];
                 if (!visited.Add(roomId)) continue;
-                DailyDungeonRuntimeRoom room = session.FindRoom(roomId);
+                DailyDungeonRuntimeRoom room = module.FindRoom(roomId);
                 if (room == null) continue;
                 int[] nextRoomIds = (room.nextRoomIds ?? Array.Empty<int>())
                     .Where(value => value > 0).ToArray();

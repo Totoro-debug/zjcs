@@ -23,12 +23,12 @@ namespace Zjcs.Offline.World
     // Reward rolls and equipment generation retain the migrated official ordering.
     public sealed class OfflineDailyDungeonSettlementModule
     {
-        private readonly OfflineDailyDungeonModule dailyDungeons;
+        private readonly DailyDungeonModule dailyDungeons;
         private readonly OfflineMainlineProgressSession profile;
         private readonly OfflineCharacterProgressionService progression;
         private readonly Func<long> now;
 
-        public OfflineDailyDungeonSettlementModule(OfflineDailyDungeonModule dailyDungeons,
+        public OfflineDailyDungeonSettlementModule(DailyDungeonModule dailyDungeons,
             OfflineMainlineProgressSession profile, OfflineCharacterProgressionService progression, Func<long> now)
         {
             this.dailyDungeons = dailyDungeons ?? throw new ArgumentNullException(nameof(dailyDungeons));

@@ -427,12 +427,11 @@ namespace Zjcs.Presentation.Home
             }
             else SetPrefabActive(dailyDungeonRoot, "GoToBtn", false);
             int publicCount = 0;
-            IReadOnlyList<DailyDungeonRuntimeBattle> publicDungeons =
-                Array.Empty<DailyDungeonRuntimeBattle>();
+            DailyDungeonEntryPageModel page = null;
             try
             {
-                publicDungeons = host.DailyDungeons.PublicDungeons(IsMapRegionPublic).ToArray();
-                publicCount = publicDungeons.Count;
+                page = host.DailyDungeons.BuildEntryPageModel(IsMapRegionPublic);
+                publicCount = page.Entries.Count;
             }
             catch (InvalidOperationException)
             {
@@ -451,21 +450,22 @@ namespace Zjcs.Presentation.Home
             foreach (Transform child in list) UnityEngine.Object.Destroy(child.gameObject);
             GameObject itemPrefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonEntryPanelItem");
             if (itemPrefab == null) throw new InvalidOperationException("Official daily dungeon list item is missing.");
-            foreach (var dungeon in publicDungeons)
+            foreach (DailyDungeonEntryModel dungeon in page?.Entries
+                ?? Array.Empty<DailyDungeonEntryModel>())
             {
                 GameObject item = UnityEngine.Object.Instantiate(itemPrefab, list, false);
-                item.name = "Dungeon_" + dungeon.id;
+                item.name = "Dungeon_" + dungeon.DungeonId;
                 ApplyOfficialDungeonBindings(item, "DailyDungeonEntryPanelItem");
-                BindDungeonListArtwork(item, dungeon.id);
-                SetNamedText(item.transform, "TitleGo", dungeon.title);
-                SetNamedText(item.transform, "DescTxt", "最高评级：" + BestGradeText(dungeon.id));
+                BindDungeonListArtwork(item, dungeon.DungeonId);
+                SetNamedText(item.transform, "TitleGo", dungeon.Title);
+                SetNamedText(item.transform, "DescTxt", "最高评级：" + BestGradeText(dungeon.BestGrade));
                 Button select = item.GetComponent<Button>();
                 if (select == null)
                 {
                     select = item.AddComponent<Button>();
                     select.targetGraphic = item.GetComponent<Graphic>();
                 }
-                int id = dungeon.id;
+                int id = dungeon.DungeonId;
                 select.onClick.AddListener(() => OpenDailyDungeonDetail(id));
             }
             RectTransform listRect = list as RectTransform;
@@ -484,8 +484,8 @@ namespace Zjcs.Presentation.Home
                 .OrderBy(value => value.GetSiblingIndex()).ToList();
             if (rows.Count == 0) return;
 
-            IReadOnlyList<DailyDungeonAchievementMilestone> visible =
-                host.DailyDungeons.DailyDungeonAchievementRows(rows.Count);
+            DailyDungeonGiftModel gift = host.DailyDungeons.BuildGiftModel(rows.Count);
+            IReadOnlyList<DailyDungeonAchievementMilestone> visible = gift.Achievements;
             dailyDungeonVisibleAchievements.Clear();
             dailyDungeonVisibleAchievements.AddRange(visible);
             if (!dailyDungeonAchievementButtonsBound)
@@ -506,7 +506,7 @@ namespace Zjcs.Presentation.Home
                 dailyDungeonAchievementButtonsBound = true;
             }
 
-            long progress = host.DailyDungeons.DailyDungeonGetRewardCount;
+            long progress = gift.ClaimProgress;
             for (int index = 0; index < rows.Count; index++)
             {
                 Transform row = rows[index];
@@ -1186,8 +1186,8 @@ namespace Zjcs.Presentation.Home
                 "Dungeons/UI/884_156692/Native/Prefabs/UI/Fight/GameEndPanelDailyDungeon");
             if (prefab == null)
                 throw new InvalidOperationException("Official daily dungeon result panel is missing.");
-            DailyDungeonSettlementHudModel settlement = DailyDungeonSettlementHudModelBuilder.Build(
-                host.DailyDungeons, pending, awardTimes, host.Level, host.SubRank);
+            DailyDungeonSettlementHudModel settlement = host.DailyDungeons.BuildSettlementHudModel(
+                pending, awardTimes, host.Level, host.SubRank);
             if (settlement == null)
             {
                 CloseDailyDungeonClaimConfirm();
@@ -1471,15 +1471,7 @@ namespace Zjcs.Presentation.Home
             dailyDungeonLeaveConfirmRoot = null;
         }
 
-        private string BestGradeText(int dungeonId)
-        {
-            var dungeon = host.DailyDungeons.FindDungeon(dungeonId);
-            int grade = (dungeon?.difficulties ?? Array.Empty<Zjcs.Offline.World.DailyDungeonRuntimeDifficulty>())
-                .Where(value => host.DailyDungeons.ResolveLevel(dungeonId, value.difficulty)?.IsPrivateRoute != true)
-                .Select(value => host.DailyDungeons.BestGrade(dungeonId, value.difficulty))
-                .DefaultIfEmpty(0).Max();
-            return grade <= 0 ? "暂无" : grade.ToString();
-        }
+        private static string BestGradeText(int grade) => grade <= 0 ? "暂无" : grade.ToString();
 
         private static void SetNamedText(Transform root, string name, string value)
         {

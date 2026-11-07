@@ -46,7 +46,7 @@ namespace Zjcs.Editor
 
             var slots = new ProfileSlotCatalog(Path.Combine(actualRoot, "profiles"));
             string slotId = slots.CreateSlot();
-            DailyDungeonRuntimeData catalog = OfflineDailyDungeonSession.LoadCatalog();
+            DailyDungeonRuntimeData catalog = DailyDungeonModule.LoadCatalog();
             DailyDungeonRuntimeCondition dayCondition = (catalog.conditions ?? Array.Empty<DailyDungeonRuntimeCondition>())
                 .FirstOrDefault(value => value != null && value.type == "ServerRankUnlockDaysCondition" && value.days > 0);
             if (dayCondition == null)
@@ -55,12 +55,12 @@ namespace Zjcs.Editor
             long nowUnixSeconds = DateTimeOffset.Now.ToUnixTimeSeconds();
             File.WriteAllText(createdAtPath,
                 (nowUnixSeconds - dayCondition.days * 86400L + 60L).ToString(CultureInfo.InvariantCulture));
-            OfflineDailyDungeonModule module = OfflineDailyDungeonModule.Open(slots, slotId, catalog);
+            DailyDungeonModule module = DailyDungeonModule.Open(slots, slotId, catalog);
             if (module.IsConditionMet(dayCondition.id, 0, 0, 0, null, null, null))
                 throw new InvalidOperationException("A rank unlock became available before the configured profile age.");
             File.WriteAllText(createdAtPath,
                 (nowUnixSeconds - dayCondition.days * 86400L).ToString(CultureInfo.InvariantCulture));
-            module = OfflineDailyDungeonModule.Open(slots, slotId, catalog);
+            module = DailyDungeonModule.Open(slots, slotId, catalog);
             if (!module.IsConditionMet(dayCondition.id, 0, 0, 0, null, null, null))
                 throw new InvalidOperationException("A rank unlock stayed locked after the configured profile age.");
             int initialClaims = module.RemainEntries;
@@ -80,7 +80,7 @@ namespace Zjcs.Editor
             };
             File.WriteAllText(Path.Combine(slots.GetSlotDirectory(migrationSlotId), "daily-dungeon-save.json"),
                 JsonUtility.ToJson(legacyClaimState));
-            OfflineDailyDungeonModule migratedClaims = OfflineDailyDungeonModule.Open(
+            DailyDungeonModule migratedClaims = DailyDungeonModule.Open(
                 slots, migrationSlotId, catalog);
             if (migratedClaims.Save.claimStateVersion != 3
                 || migratedClaims.Save.giftedAvailableClaims != 0
@@ -250,7 +250,7 @@ namespace Zjcs.Editor
                 || economy.Count != prices[0] || module.RemainEntries != beforePurchase + 1)
                 throw new InvalidOperationException("Official purchase pricing or claim-pool accounting failed.");
 
-            OfflineDailyDungeonModule reloaded = OfflineDailyDungeonModule.Open(slots, slotId);
+            DailyDungeonModule reloaded = DailyDungeonModule.Open(slots, slotId);
             if (reloaded.RemainEntries != module.RemainEntries
                 || reloaded.DailyDungeonGetRewardCount != module.DailyDungeonGetRewardCount
                 || reloaded.Save.purchasedAvailableEntries != module.Save.purchasedAvailableEntries)
@@ -285,7 +285,7 @@ namespace Zjcs.Editor
                     return true;
                 }) || rewardGrantCalls != 1)
                 throw new InvalidOperationException("A daily dungeon achievement reward was granted more than once.");
-            reloaded = OfflineDailyDungeonModule.Open(slots, slotId);
+            reloaded = DailyDungeonModule.Open(slots, slotId);
             if (!reloaded.Save.claimedAchievementIndexes.Contains(cycleSeed.Index)
                 || reloaded.DailyDungeonGetRewardCount != cycleSeed.RequiredCount)
                 throw new InvalidOperationException("Claimed daily dungeon achievement state did not survive reload.");
@@ -368,7 +368,7 @@ namespace Zjcs.Editor
                 throw new InvalidOperationException("A failed checkpoint save did not cancel the new assist transaction.");
         }
 
-        private static List<int> FindTerminalRoute(OfflineDailyDungeonModule module, int startRoomId)
+        private static List<int> FindTerminalRoute(DailyDungeonModule module, int startRoomId)
         {
             var parents = new Dictionary<int, int> { [startRoomId] = startRoomId };
             var queue = new Queue<int>();

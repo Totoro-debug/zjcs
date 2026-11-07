@@ -35,7 +35,7 @@ namespace Zjcs.Presentation.Home
         private bool privateMapEntry;
         private int privateMapRoomId;
         private OfficialBattleHostPresentation privateMapPresentation;
-        private OfflineDailyDungeonSession privateMapDungeons;
+        private DailyDungeonModule privateMapDungeons;
         private OfflineNpcAssistanceProgress privateMapAssistProgress;
         private FightOfficialNpcAssistanceCatalog privateMapAssistCatalog;
         private string portraitSlotId, portraitSavesRoot;
@@ -105,7 +105,7 @@ namespace Zjcs.Presentation.Home
         }
 
         public void BeginPrivateMapRoom(OfflineMainlineProgressSession profile,
-            OfflineCharacterProgressionService progression, OfflineDailyDungeonSession dungeons,
+            OfflineCharacterProgressionService progression, DailyDungeonModule dungeons,
             Transform player, Transform canvas, OfficialBattleHostPresentation presentation,
             string slotId, string savesRoot, Action<bool> onCompleted,
             OfflineNpcAssistanceProgress assistProgress = null,

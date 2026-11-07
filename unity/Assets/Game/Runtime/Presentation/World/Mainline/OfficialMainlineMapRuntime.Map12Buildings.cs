@@ -26,7 +26,7 @@ namespace Zjcs.Presentation.World
         private GameObject map12PrivateDungeonDialog;
         private GameObject map12PrivateDungeonRouteDialog;
         private GameObject map12PrivateDungeonRunner;
-        private OfflineDailyDungeonModule map12PrivateDungeonSession;
+        private DailyDungeonModule map12PrivateDungeonSession;
         private OfflineNpcAssistanceProgress map12PrivateDungeonAssistProgress;
         private FightOfficialNpcAssistanceCatalog map12PrivateDungeonAssistCatalog;
         private OfficialBattleModelCatalog map12PrivateDungeonBattleModels;
@@ -140,7 +140,7 @@ namespace Zjcs.Presentation.World
             {
                 OfficialDungeonUiBindingRuntime.Apply(map12PrivateDungeonDialog, "DailyDungeonDialogPrivateMap", PostMap12PopupSound);
                 var slots = new ProfileSlotCatalog(persistentDataPath);
-                map12PrivateDungeonSession = OfflineDailyDungeonModule.OpenPrivateMap(slots, slotId);
+                map12PrivateDungeonSession = DailyDungeonModule.OpenPrivateMap(slots, slotId);
                 int displayId = OfficialDungeonUiBindingRuntime.PrivateDisplayDungeonId;
                 var display = map12PrivateDungeonSession.FindDungeon(displayId);
                 int difficulty = display.difficulties.Where(value => map12PrivateDungeonSession.IsUnlocked(displayId, value.difficulty))
@@ -208,7 +208,7 @@ namespace Zjcs.Presentation.World
         {
             if (map12PrivateDungeonBattleActive || closed || battleController != null) return;
             var slots = new ProfileSlotCatalog(persistentDataPath);
-            map12PrivateDungeonSession = OfflineDailyDungeonModule.OpenPrivateMap(slots, slotId);
+            map12PrivateDungeonSession = DailyDungeonModule.OpenPrivateMap(slots, slotId);
             DailyDungeonRunSave run = map12PrivateDungeonSession.ActiveRun;
             if (run == null)
             {

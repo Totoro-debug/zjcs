@@ -22,13 +22,15 @@
 
 ### 日常副本
 
-`HomeFeatureRuntime` 使用 `OfflineDailyDungeonModule` 与 `OfflineDailyDungeonSession` 加载目录、路线和存档；`DailyDungeonBattleRunner` 使用原战斗配置接入战斗控制器。已接入区域开放、难度与入场条件、房间推进、战斗检查点、评级、奖励预览及待领取结算。原 `RandomReward` 装备占位项按配置权重生成装备实例。
+`HomeFeatureRuntime` 使用公共 `DailyDungeonModule` 加载目录、路线和存档；旧 `OfflineDailyDungeonModule` 仅作为兼容适配器保留。世界之树、机神山、海之宫遗迹及目录中的其他公开关卡，以及 Map12 私有路线，都通过同一个模块打开。模块用 `DailyDungeonEntryPageModel`、`DailyDungeonRouteHudModel`、`DailyDungeonSettlementHudModel` 和 `DailyDungeonGiftModel` 聚合入口页、关卡/HUD、结算预览和 Type 22 馈赠状态；调用方只提供区域可见性、玩家条件、经济和奖励发放适配器。`DailyDungeonBattleRunner` 使用原战斗配置接入战斗控制器。已接入区域开放、难度与入场条件、房间推进、战斗检查点、评级、奖励预览及待领取结算。原 `RandomReward` 装备占位项按配置权重生成装备实例。
+
+公共模块还统一处理难度解锁、评分与评级行、各难度奖励概率、评级奖励翻倍、每日领奖次数与购买、个人排行榜记录及 Type 22 累计领奖馈赠；路线、关卡、榜单、翻倍概率和经济差异分别通过 `IDailyDungeonRouteAdapter`、`IDailyDungeonLevelAdapter`、`IDailyDungeonLeaderboardAdapter`、`IDailyDungeonRewardDoubleChanceAdapter` 与 `IDailyDungeonEconomyAdapter` 接入。关卡只选择目录行、参数和适配器，不复制副本规则。
 
 日常副本、Map12 私有副本和每日挑战的入场一致性由 `DailyDungeonBattleEntryModule` 统一处理：恢复时核对关卡、StageType、助战身份与 checkpoint 快照；新战斗按“提交助战 → 挂载战斗 → 首次保存 checkpoint”顺序执行，挂载或保存失败只回滚本次提交。三条入口仍各自保留玩法条件、存档适配器、挑战结算及空助战／已结束恢复分支。
 
 本次入场事务由 `DailyDungeonModuleRuleAcceptance` 验证了提交、挂载、保存顺序及失败回滚；完整副本功能仍按本页“尚未实现”项继续验证。
 
-公共副本保存个人最佳评级，不创建虚构玩家榜单。路线、清理房间、战斗结果、领奖和背包更新写入本地存档事务，领奖回执防止重放。
+公共副本保存个人最佳评级，不创建虚构玩家榜单。路线、清理房间、战斗结果、领奖和背包更新写入本地存档事务，领奖回执防止重放。目录、路线、结算和馈赠页面均从 `DailyDungeonModule` 的聚合模型读取，关卡差异通过官方目录行以及 route/level/leaderboard/reward adapters 提供，不在页面复制关卡规则。
 
 奖励结算由 `OfflineDailyDungeonSettlementModule.Claim`／`SettleClearedRooms` 统一承担，保留“预留领取次数 → 主档奖励与明细同时入库 → 确认副本次数与领取状态”的顺序。展示读取已提交的实际物品及装备实例标识，不再重复抽取或扫描装备序号；零掉落也保存回执。主档已提交而副本确认失败时，重新打开后读取回执补齐确认，不再生成奖励。
 
@@ -59,6 +61,6 @@ Map12 的 121／50 机神山路线共用日常副本运行时，其奖励、次�
 
 ## 代码与资源入口
 
-[OfflineDailyDungeonModule.cs](../../unity/Assets/Game/Runtime/Offline/World/OfflineDailyDungeonModule.cs)、[OfflineDailyDungeonSession.cs](../../unity/Assets/Game/Runtime/Offline/World/OfflineDailyDungeonSession.cs)、[DailyDungeonBattleEntryModule.cs](../../unity/Assets/Game/Runtime/Offline/World/DailyDungeonBattleEntryModule.cs)、[OfflineArenaSession.cs](../../unity/Assets/Game/Runtime/Offline/World/OfflineArenaSession.cs)、[DailyDungeonBattleRunner.cs](../../unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs)。
+[DailyDungeonModule.cs](../../unity/Assets/Game/Runtime/Offline/World/DailyDungeonModule.cs)、[OfflineDailyDungeonModule.cs](../../unity/Assets/Game/Runtime/Offline/World/OfflineDailyDungeonModule.cs)、[OfflineDailyDungeonSession.cs](../../unity/Assets/Game/Runtime/Offline/World/OfflineDailyDungeonSession.cs)、[DailyDungeonBattleEntryModule.cs](../../unity/Assets/Game/Runtime/Offline/World/DailyDungeonBattleEntryModule.cs)、[OfflineArenaSession.cs](../../unity/Assets/Game/Runtime/Offline/World/OfflineArenaSession.cs)、[DailyDungeonBattleRunner.cs](../../unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs)。
 
 [日常副本规则与资源](../../assets/reference/dungeons-runtime-source-manifest.json)、[竞技场来源版本与范围](../../assets/reference/SOURCES.md)、[副本界面绑定](../../assets/reference/dungeon-ui/prefab-binding-source-manifest.json)。
