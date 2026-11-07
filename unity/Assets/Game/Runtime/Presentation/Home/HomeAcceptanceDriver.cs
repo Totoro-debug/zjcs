@@ -2305,6 +2305,12 @@ namespace Zjcs.Presentation.Home
                 GameObject leaderboard = GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaderboardRoot");
                 ClickPartnerUi(leaderboard.GetComponentsInChildren<WorldTabItem>(true)
                     .Single(value => value.name == "DailyDungeonTopPanelAchievementTabBottomBtn"));
+                Button receive = leaderboard.GetComponentsInChildren<Button>(true)
+                    .First(value => value.name == "ReceiveBtn" && value.isActiveAndEnabled && value.interactable);
+                Image chest = receive.transform.parent.parent.GetComponentsInChildren<Image>(true)
+                    .Single(value => value.name == "FinishedChestImg");
+                Assert(chest.isActiveAndEnabled && chest.sprite != null,
+                    "the chest shared by Completed and Received was hidden by another state");
                 return "completed the isolated route fixtures and selected the native gift tab";
             });
             if (!ok) { completed(false); yield break; }

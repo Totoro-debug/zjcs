@@ -173,6 +173,8 @@ def build():
     code_paths.extend(code / "common-source/Common" / (name + ".cs") for name in
                       ("Tables", table_type, "DailyDungeonBattleInfo", "TbItemInfo", "ItemInfo"))
     code_paths.append(code / "framework-firstpass-source/NoDrawingRayCast.cs")
+    code_paths.extend(code / "framework-source" / (name + ".cs") for name in
+                      ("StateGameObjectConfig", "StateGameObjectData"))
     receipt = dict(manifest=apk.version, apk_manifest=apk.source.apk_version, apk_sha256=apk.source.apk_sha256,
         operation="Read original Image/TMP/Transform, localization and leaderboard object-state fields; native hierarchy, layout and loop-scroll are imported by prepare_daily_dungeon_result_ui.py.",
         inputs=inputs, language_inputs=language_inputs, missing_translation_keys=missing,

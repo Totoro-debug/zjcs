@@ -36,7 +36,7 @@
 
 公共 `DailyDungeonLevelDefinition.LeaderboardGrades` 独立读取所选 `884_156692` 的 `DailyDungeonBattleInfo.TopRecordGradeTypeDict`，不从路线全部评级行推导上榜页签。原表由 APK 优先的 `config_luban` 原始字节及当前官方 Luban 构造函数重新解码，136 个副本／难度组合均只开放 S 评级榜；私有副本不开放。规则验证覆盖世界之树 S 评级榜和机神山私有路线隔离，来源与哈希见[排行榜来源](../../assets/reference/dungeon-ui/daily-dungeon-leaderboard-source-manifest.json)。
 
-`DailyDungeonModule.BuildLeaderboardGiftModel` 与 `ClaimLeaderboardGift` 读取当前官方 Type 57 的 409 条固定奖励门槛，按官方 Group／Index 生成成就标识。`FinishAndPersist` 在公开路线成功完成的同一存档事务内累计指定副本、难度、准确评级的次数；未通关退出、私有路线及重复完成不累计。领奖将固定回执交给主档奖励事务，再保存已领取状态。规则验证覆盖四次世界之树 S 通关、难度隔离、领奖次数独立、失败发奖、写入失败后的同回执重试和冷打开去重；来源与配置见[排行榜馈赠来源](../../assets/reference/dungeon-ui/daily-dungeon-top-achievements-source-manifest.json)。官方表有 137 个奖励组，其中 44／Hell 无上榜配置且缺对应标题文本，保留原行与缺项记录，不开放其入口。原生馈赠页恢复原对象／颜色状态、`NoDrawingRayCast` 点击区域、进度条，以及经输入哈希核实同源的 Windows `UI/Gray` 材质；Play Mode 的射线模拟点击已通过页签切换、四次通关夹具达标、领取后背包增量和冷打开已领取检查，已查看未达标／达标／已领取实际画面。该夹具不代表完整战斗验证，可领取宝箱特效仍未恢复。
+`DailyDungeonModule.BuildLeaderboardGiftModel` 与 `ClaimLeaderboardGift` 读取当前官方 Type 57 的 409 条固定奖励门槛，按官方 Group／Index 生成成就标识。`FinishAndPersist` 在公开路线成功完成的同一存档事务内累计指定副本、难度、准确评级的次数；未通关退出、私有路线及重复完成不累计。领奖将固定回执交给主档奖励事务，再保存已领取状态。规则验证覆盖四次世界之树 S 通关、难度隔离、领奖次数独立、失败发奖、写入失败后的同回执重试和冷打开去重；来源与配置见[排行榜馈赠来源](../../assets/reference/dungeon-ui/daily-dungeon-top-achievements-source-manifest.json)。官方表有 137 个奖励组，其中 44／Hell 无上榜配置且缺对应标题文本，保留原行与缺项记录，不开放其入口。原生馈赠页恢复原对象／颜色状态、`NoDrawingRayCast` 点击区域、进度条，以及经输入哈希核实同源的 Windows `UI/Gray` 材质；Play Mode 的射线模拟点击已通过页签切换、四次通关夹具达标、领取后背包增量和冷打开已领取检查，已查看未达标／达标／已领取实际画面。该夹具不代表完整战斗验证。对象切换沿原 `StateGameObjectConfig` 顺序保留跨状态共用对象；可领取与已领取共用的宝箱图片已通过激活状态断言和实际截图检查。
 
 `DailyDungeonRewardAssetCatalog` 为所有副本奖励预览、随机装备池和两类馈赠共用的图标目录，1,164 个道具标识显式绑定到 586 张原 Sprite；`DailyDungeonResultItemIconAdapter` 从该目录读取原道具品质、类型和图标，不再依赖只覆盖家园物品的图标子集。贴图按原逻辑矩形恢复留白，并保留原 Sprite 打包旋转、紧密网格遮罩、pivot、border 和 PPU。资源、配置及处理哈希见[奖励图标来源](../../assets/reference/dungeon-ui/daily-dungeon-reward-icons-source-manifest.json)。
 
@@ -66,7 +66,7 @@ Map12 的 121／50 机神山路线共用日常副本运行时，其奖励、次�
 ## 尚未实现
 
 - 游记入口、日常副本与竞技的完整官方界面还原。游记页仍缺部分原始图像素材；详情存在未绑定内容、默认外语文本和遮罩问题。
-- 排行榜队伍头像、首通队伍展示与个人记录区域尚未完成；Type 57 可领取状态的宝箱特效，以及副本奖励图标的原详情弹窗和附属交互尚未恢复。
+- 排行榜队伍头像、首通队伍展示与个人记录区域尚未完成；副本奖励图标的原详情弹窗和附属交互尚未恢复。
 - 匹配倒计时、在线目标更新和服务器榜单不属于已迁移流程；完整的原生界面输入、战斗结算、关闭重开及冷启动存档恢复仍需接通并实际验证。
 - 本功能尚未完成 Unity Play Mode／Windows Player 的全部功能与视觉还原验证；上述结算专项通过不代表完整副本功能完成。
 - 本地档案尚未接入官方 `PlayerBenefitManager` 的有效期与 `DailyDungeonExtraClaim` 数据源；公共模块已保留 `IDailyDungeonAwardTimesAdapter`，未接入时按基础 1 次结算。奖励找回数据及服务器批量领奖上限配置仍有缺项。

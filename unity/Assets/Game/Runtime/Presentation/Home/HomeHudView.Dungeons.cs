@@ -1015,13 +1015,26 @@ namespace Zjcs.Presentation.Home
 
         private static void SetLeaderboardObjectState(GameObject root, DungeonLeaderboardState[] states, int state)
         {
+            // Original StateGameObjectConfig retains objects shared by states,
+            // disables the other objects first, then enables the selected list.
+            string[] selected = states?.FirstOrDefault(row => row.state == state)?.objects;
             foreach (DungeonLeaderboardState row in states ?? Array.Empty<DungeonLeaderboardState>())
+            {
+                if (row.state == state) continue;
                 foreach (string path in row.objects)
                 {
+                    if (selected != null && selected.Contains(path)) continue;
                     Transform target = FindOfficialBindingNode(root.transform, path, null);
                     if (target == null) throw new InvalidOperationException("Official leaderboard state target is missing: " + path);
-                    target.gameObject.SetActive(row.state == state);
+                    target.gameObject.SetActive(false);
                 }
+            }
+            foreach (string path in selected ?? Array.Empty<string>())
+            {
+                Transform target = FindOfficialBindingNode(root.transform, path, null);
+                if (target == null) throw new InvalidOperationException("Official leaderboard state target is missing: " + path);
+                target.gameObject.SetActive(true);
+            }
         }
 
         private static string FormatDailyDungeonFinishTime(long ticks)
