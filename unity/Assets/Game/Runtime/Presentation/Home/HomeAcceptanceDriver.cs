@@ -2233,11 +2233,13 @@ namespace Zjcs.Presentation.Home
 
             Button claimButton = resultPanel.GetComponentsInChildren<Button>(true)
                 .FirstOrDefault(value => value.name == "CommonBtn_CostItem");
+            int pendingBeforeClaim = runtime.DailyDungeons.PendingClaims.Count;
             ok = Check("dungeons-successful-claim", () =>
             {
                 int awardTimes = settlement.AwardTimes;
                 ClickPartnerUi(claimButton);
-                Assert(runtime.DailyDungeons.PendingClaims.Count == 0
+                Assert(runtime.DailyDungeons.PendingClaims.Count == pendingBeforeClaim - 1
+                    && runtime.DailyDungeons.PendingClaims.All(value => value == null || value.id != pending.id)
                     && runtime.DailyDungeons.Save.usedEntries == usedBeforeClaim + awardTimes
                     && runtime.DailyDungeons.RemainEntries == remainingBeforeClaim - awardTimes
                     && runtime.DailyDungeons.DailyDungeonGetRewardCount == claimedBefore + awardTimes,
@@ -2249,7 +2251,9 @@ namespace Zjcs.Presentation.Home
                 DailyDungeonModule reload = DailyDungeonModule.Open(
                     new ProfileSlotCatalog(Root), runtime.ActiveProfileSlotId);
                 Assert(reload.Save.usedEntries == usedBeforeClaim + awardTimes
-                    && reload.DailyDungeonGetRewardCount == claimedBefore + awardTimes,
+                    && reload.DailyDungeonGetRewardCount == claimedBefore + awardTimes
+                    && reload.PendingClaims.Count == pendingBeforeClaim - 1
+                    && reload.PendingClaims.All(value => value == null || value.id != pending.id),
                     "successful result claim did not survive reload");
                 return "successful pointer claim charged " + awardTimes
                     + " award time(s) after granting the result";
@@ -2301,7 +2305,17 @@ namespace Zjcs.Presentation.Home
                 Assert(records.content.GetComponentsInChildren<TMP_Text>(true)
                     .Any(value => value.name == "ScoreText" && !string.IsNullOrEmpty(value.text)),
                     "official leaderboard row did not bind the completion duration");
-                return "completed local route populated the original loop-scroll row with completion time";
+                Transform personalRow = team.GetComponentsInChildren<Transform>(true)
+                    .FirstOrDefault(value => value.name == "TopRankTeamItem"
+                        && value.parent != null && value.parent.name == "Content"
+                        && value.parent.parent != null && value.parent.parent.name == "TeamTopContent");
+                TMP_Text personalRank = personalRow == null ? null : personalRow.Find("RankText")?.GetComponent<TMP_Text>();
+                TMP_Text personalTime = personalRow == null ? null : personalRow.Find("ScoreText")?.GetComponent<TMP_Text>();
+                Assert(personalRow != null && personalRow.gameObject.activeInHierarchy
+                    && personalRank != null && personalRank.text == "1"
+                    && personalTime != null && !string.IsNullOrEmpty(personalTime.text),
+                    "official personal leaderboard row did not show the local rank and completion duration");
+                return "completed local route populated the list and official personal row with rank and completion time";
             });
             if (!ok) { completed(false); yield break; }
             yield return null;

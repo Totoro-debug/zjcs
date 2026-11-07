@@ -892,54 +892,73 @@ namespace Zjcs.Presentation.Home
             LoopVerticalScrollRect scroll = scrollNode == null ? null : scrollNode.GetComponent<LoopVerticalScrollRect>();
             if (scroll == null || scroll.content == null)
                 throw new InvalidOperationException("Official daily dungeon leaderboard content is missing.");
-            IReadOnlyList<DailyDungeonLeaderboardEntry> entries = grade <= 0
+            IReadOnlyList<DailyDungeonLeaderboardEntry> rankedEntries = grade <= 0
                 ? Array.Empty<DailyDungeonLeaderboardEntry>()
                 : host.DailyDungeons.Leaderboard(selectedDungeonId, selectedDifficulty, grade,
-                    host.DailyDungeons.Options.LeaderboardLimit);
+                    int.MaxValue);
+            IReadOnlyList<DailyDungeonLeaderboardEntry> entries = rankedEntries
+                .Take(host.DailyDungeons.Options.LeaderboardLimit).ToArray();
+            DailyDungeonLeaderboardEntry myEntry = rankedEntries.FirstOrDefault(value => value.IsSelf);
+            DungeonLeaderboardBinding rowBinding = LoadDungeonOfficialBindings("TopRankTeamItem").leaderboard;
             scroll.dataSource = new DailyDungeonLeaderboardRows((rowTransform, index) =>
             {
-                DailyDungeonLeaderboardEntry entry = entries[index];
-                GameObject row = rowTransform.gameObject;
-                ApplyOfficialDungeonBindings(row, "TopRankTeamItem");
-                SetNamedText(row.transform, "RankText", entry.Rank.ToString());
-                SetNamedText(row.transform, "ScoreText", FormatDailyDungeonFinishTime(entry.FinishTicks));
-                SetNamedText(row.transform, "Name", entry.PlayerName);
-                Transform team = Find(row.transform, "Team");
-                if (team != null)
-                {
-                    bool showedPlayer = false;
-                    foreach (Transform member in team)
-                    {
-                        bool playerSlot = !showedPlayer && member.name.StartsWith(
-                            "TopRankTeamMemberIcon", StringComparison.Ordinal);
-                        if (member.name.StartsWith("TopRankTeamMemberIcon", StringComparison.Ordinal))
-                        {
-                            member.gameObject.SetActive(playerSlot);
-                            showedPlayer |= playerSlot;
-                            if (playerSlot)
-                            {
-                                SetPrefabActive(member.gameObject, "NpcIcon", false);
-                                SetPrefabActive(member.gameObject, "ImgEmpty", false);
-                                var portrait = member.GetComponent<DailyDungeonResultPlayerRowAdapter>()
-                                    ?? member.gameObject.AddComponent<DailyDungeonResultPlayerRowAdapter>();
-                                portrait.Configure(host);
-                            }
-                        }
-                    }
-                }
-                DungeonLeaderboardBinding rowBinding = LoadDungeonOfficialBindings("TopRankTeamItem").leaderboard;
-                SetLeaderboardObjectState(row, rowBinding.mMeStateSwitcher, entry.IsSelf ? 1 : 0);
-                SetLeaderboardObjectState(row, rowBinding.mTopStateSwticher, entry.Rank);
+                BindDailyDungeonLeaderboardRow(rowTransform.gameObject, entries[index], rowBinding, true);
             });
             scroll.totalCount = entries.Count;
             SetLeaderboardObjectState(dailyDungeonLeaderboardRoot, binding.mEmptyStateSwitcher, entries.Count == 0 ? 1 : 0);
-            SetLeaderboardObjectState(dailyDungeonLeaderboardRoot, binding.mMyTopStateSwitcher, 0);
+            if (myEntry == null)
+            {
+                SetLeaderboardObjectState(dailyDungeonLeaderboardRoot, binding.mMyTopStateSwitcher, 0);
+            }
+            else
+            {
+                Transform myTopItem = FindOfficialBindingNode(dailyDungeonLeaderboardRoot.transform,
+                    binding.mMeTopItem, null);
+                if (myTopItem == null)
+                    throw new InvalidOperationException("Official daily dungeon personal leaderboard row is missing.");
+                BindDailyDungeonLeaderboardRow(myTopItem.gameObject, myEntry, rowBinding, false);
+                SetLeaderboardObjectState(dailyDungeonLeaderboardRoot, binding.mMyTopStateSwitcher, 1);
+            }
             // The server callback arrives after the original panel has laid out.
             // A local reply must also wait for its first valid viewport.
             host.StartCoroutine(FillDailyDungeonLeaderboard(dailyDungeonLeaderboardRoot, scroll, scroll.dataSource));
             Transform content = FindOfficialBindingNode(dailyDungeonLeaderboardRoot.transform, binding.mContent, null);
             CanvasGroup group = content == null ? null : content.GetComponent<CanvasGroup>();
             if (group != null) { group.alpha = 1f; group.interactable = true; group.blocksRaycasts = true; }
+        }
+
+        private void BindDailyDungeonLeaderboardRow(GameObject row, DailyDungeonLeaderboardEntry entry,
+            DungeonLeaderboardBinding rowBinding, bool applyPrefabBindings)
+        {
+            if (applyPrefabBindings) ApplyOfficialDungeonBindings(row, "TopRankTeamItem");
+            SetNamedText(row.transform, "RankText", entry.Rank.ToString());
+            SetNamedText(row.transform, "ScoreText", FormatDailyDungeonFinishTime(entry.FinishTicks));
+            SetNamedText(row.transform, "Name", entry.PlayerName);
+            Transform team = Find(row.transform, "Team");
+            if (team != null)
+            {
+                bool showedPlayer = false;
+                foreach (Transform member in team)
+                {
+                    bool playerSlot = !showedPlayer && member.name.StartsWith(
+                        "TopRankTeamMemberIcon", StringComparison.Ordinal);
+                    if (member.name.StartsWith("TopRankTeamMemberIcon", StringComparison.Ordinal))
+                    {
+                        member.gameObject.SetActive(playerSlot);
+                        showedPlayer |= playerSlot;
+                        if (playerSlot)
+                        {
+                            SetPrefabActive(member.gameObject, "NpcIcon", false);
+                            SetPrefabActive(member.gameObject, "ImgEmpty", false);
+                            var portrait = member.GetComponent<DailyDungeonResultPlayerRowAdapter>()
+                                ?? member.gameObject.AddComponent<DailyDungeonResultPlayerRowAdapter>();
+                            portrait.Configure(host);
+                        }
+                    }
+                }
+            }
+            SetLeaderboardObjectState(row, rowBinding.mMeStateSwitcher, entry.IsSelf ? 1 : 0);
+            SetLeaderboardObjectState(row, rowBinding.mTopStateSwticher, entry.Rank);
         }
 
         private void RefreshDailyDungeonLeaderboardGifts()
