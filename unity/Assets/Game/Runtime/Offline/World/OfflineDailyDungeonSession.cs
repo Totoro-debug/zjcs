@@ -261,6 +261,8 @@ namespace Zjcs.Offline.World
         public int remainingClaims;
         public long lifetimeClaimedRewardTimes;
         public List<int> claimedAchievementIndexes = new List<int>();
+        public List<int> claimedLeaderboardGiftIds = new List<int>();
+        public List<DailyDungeonCompletionCountSave> completionCounts = new List<DailyDungeonCompletionCountSave>();
         public int purchasedAvailableEntries; // Legacy source split; cleared by claim-state migration.
         public int giftedAvailableClaims; // Legacy save field; cleared by claim-state migration.
         public List<string> entryPurchaseReceipts = new List<string>();
@@ -270,6 +272,15 @@ namespace Zjcs.Offline.World
         public List<DailyDungeonGiftSave> gifts = new List<DailyDungeonGiftSave>();
         public List<DailyDungeonPendingClaimSave> pendingClaims = new List<DailyDungeonPendingClaimSave>();
         public DailyDungeonRunSave activeRun;
+    }
+
+    [Serializable]
+    public sealed class DailyDungeonCompletionCountSave
+    {
+        public int dungeonId;
+        public int difficulty;
+        public int grade;
+        public long count;
     }
 
     [Serializable]
@@ -639,6 +650,12 @@ namespace Zjcs.Offline.World
             if (best == null) next.bestGrades.Add(new DailyDungeonBestGradeSave
             { dungeonId = completed.dungeonId, difficulty = completed.difficulty, grade = grade });
             else best.grade = Math.Max(best.grade, grade);
+            DailyDungeonCompletionCountSave count = next.completionCounts.FirstOrDefault(value =>
+                value.dungeonId == completed.dungeonId && value.difficulty == completed.difficulty
+                && value.grade == completed.grade);
+            if (count == null) next.completionCounts.Add(new DailyDungeonCompletionCountSave
+            { dungeonId = completed.dungeonId, difficulty = completed.difficulty, grade = completed.grade, count = 1 });
+            else count.count = checked(count.count + 1);
             next.pendingClaims.Add(new DailyDungeonPendingClaimSave { id = completed.id, run = completed });
             next.activeRun = null;
             addCompletionData?.Invoke(next, completed);
@@ -888,6 +905,12 @@ namespace Zjcs.Offline.World
                         || data.claimedAchievementIndexes.Distinct().Count() != data.claimedAchievementIndexes.Count)) return false;
                 if (data.pendingClaims != null
                     && data.pendingClaims.Select(value => value.id).Distinct().Count() != data.pendingClaims.Count) return false;
+                if (data.claimedLeaderboardGiftIds != null && (data.claimedLeaderboardGiftIds.Any(value => value <= 0)
+                    || data.claimedLeaderboardGiftIds.Distinct().Count() != data.claimedLeaderboardGiftIds.Count)) return false;
+                if (data.completionCounts != null && (data.completionCounts.Any(value => value == null
+                    || value.dungeonId <= 0 || value.difficulty < 0 || value.grade <= 0 || value.count <= 0)
+                    || data.completionCounts.Select(value => (value.dungeonId, value.difficulty, value.grade))
+                        .Distinct().Count() != data.completionCounts.Count)) return false;
                 return data.unlocked.Select(value => value.dungeonId + ":" + value.difficulty).Distinct().Count()
                     == data.unlocked.Count && data.bestGrades.Select(value => value.dungeonId + ":" + value.difficulty)
                     .Distinct().Count() == data.bestGrades.Count;
@@ -905,6 +928,8 @@ namespace Zjcs.Offline.World
             if (data.pendingClaims == null) data.pendingClaims = new List<DailyDungeonPendingClaimSave>();
             if (data.entryPurchaseReceipts == null) data.entryPurchaseReceipts = new List<string>();
             if (data.claimedAchievementIndexes == null) data.claimedAchievementIndexes = new List<int>();
+            if (data.claimedLeaderboardGiftIds == null) data.claimedLeaderboardGiftIds = new List<int>();
+            if (data.completionCounts == null) data.completionCounts = new List<DailyDungeonCompletionCountSave>();
             if (data.purchasedAvailableEntries < 0) data.purchasedAvailableEntries = 0;
             if (data.giftedAvailableClaims < 0) data.giftedAvailableClaims = 0;
             if (data.lifetimeClaimedRewardTimes < 0) data.lifetimeClaimedRewardTimes = 0;

@@ -4,7 +4,7 @@
   "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
   "generator": {
     "path": "scripts/prepare_daily_dungeon_result_ui.py",
-    "sha256": "8facb225aa2d7563872182133d391557b3abecf78a0555003a6df57acf3f4d12"
+    "sha256": "deb08551d21c1f5f0ca594d97b182713556165d596caa040bfa4b451ddac8337"
   },
   "operation": "Resolve original UI roots APK-first from the pinned APK and its verified selected CDN source; copy each AssetRipper asset and importer metadata without overwriting changed files. An existing converted file is reused only when the pinned prior receipt confirms the source hash, assigned GUID, and unchanged importer metadata; the actual on-disk asset hash is recorded. Preserve an existing runtime prefab GUID when its source and prior output hashes match, and remap nested references to that GUID. Clone dependent prefabs into a Windows Resources tree and bind migrated UGUI/TMP components. Android DLL payloads are recorded but not copied into Unity/Player.",
   "native_roots": [
@@ -6411,7 +6411,7 @@
       "source_guid": "4accf761b76ec4b44ad32e2e9d249c39",
       "guid": "a38b6906d02472b439d491ea15c4f516",
       "source_sha256": "bcf57d3addabbbfada5473fa970d76be898b796f285ec5a1211391f50a72e25a",
-      "sha256": "7f88eb03f8a7a2f4a4716a53ea8f41c790defc540f0ab99fd8d5d47e4e261afa",
+      "sha256": "9397f0aad45af27d135d43d7d77dab1e2eb2676e89e57331a5221d72326b0036",
       "meta_sha256": "2165c5d5ede7d299c1df9c042b45b39f73eabbf29c721897481ac4fb0cfe27b5",
       "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v5-loopscroll-tabs-layout"
     },
@@ -6422,7 +6422,7 @@
       "source_guid": "3ca317f0d21c6d6408a154026d4b5b97",
       "guid": "8fbac35203cf506f9b46e2d8b8491b4d",
       "source_sha256": "5364188c80e3c34145c5fc63731a70cffb5aebf6bd242afb78e441a4414a49cc",
-      "sha256": "c997ec809a661ba80ec19a22770cbde0b3ef227a6a5b4c33df7a54cc26609660",
+      "sha256": "900031402fb75647c3109cdcfbb3d3a2f75948775a424f8a8be8ae0cdcb250d0",
       "meta_sha256": "cd3984521083663f3b48cc238a31bf5682ca93fd373c4f14ef1dceeb9c4e8630",
       "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v5-loopscroll-tabs-layout"
     },
@@ -6466,7 +6466,7 @@
       "source_guid": "bf80a7797f973464db8b589bd065fb7e",
       "guid": "b78b809c53d85344a9a2a152569e42a2",
       "source_sha256": "bd5bdfc633e448dffa148690a66837b52a0b1c67861daecb4d3e7763e658b1cf",
-      "sha256": "be40b796a84fc1a3c36c65b3d5a090a04d3588da4adb30e6cd3460adf9009c04",
+      "sha256": "ccbae1748d534ce85fa335da5f21b4e28ad8edee217e0588157e527853901863",
       "meta_sha256": "a279ffb6dc538399ba288b4672a3c4e6af5b6ce18a74a00040dcd8a0f2a36d66",
       "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v5-loopscroll-tabs-layout"
     }

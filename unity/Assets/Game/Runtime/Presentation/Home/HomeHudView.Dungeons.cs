@@ -843,7 +843,7 @@ namespace Zjcs.Presentation.Home
             SetPrefabActive(dailyDungeonLeaderboardRoot, "FirstGo", false);
             SetPrefabActive(dailyDungeonLeaderboardRoot, "TeamInfo", false);
             SetPrefabActive(dailyDungeonLeaderboardRoot, "MemberInfo", false);
-            SetPrefabActive(dailyDungeonLeaderboardRoot, "DailyDungeonTopPanelAchievementTabBottomBtn", false);
+            SetPrefabActive(dailyDungeonLeaderboardRoot, "AchievementPanel", false);
             SetPrefabActive(dailyDungeonLeaderboardRoot, "SwitchTopRangeBtn", false);
             SetPrefabActive(dailyDungeonLeaderboardRoot, "TopLimitTime", false);
 
@@ -870,12 +870,22 @@ namespace Zjcs.Presentation.Home
             if (selectedLeaderboardGrade <= 0) selectedLeaderboardGrade = grades.FirstOrDefault(value => value > 0);
             for (int index = 0; index < gradeTabs.Length && index < grades.Length; index++)
                 gradeTabs[index].SetIsOnWithoutNotify(grades[index] == selectedLeaderboardGrade, true);
+            Transform giftTabNode = Find(dailyDungeonLeaderboardRoot.transform, "DailyDungeonTopPanelAchievementTabBottomBtn");
+            var giftTab = giftTabNode == null ? null : giftTabNode.GetComponent<Zjcs.Official.WorldUI.WorldTabItem>();
+            if (giftTab != null)
+            {
+                giftTab.gameObject.SetActive(true);
+                giftTab.SetIsOnWithoutNotify(false, true);
+                giftTab.OnValueChanged.AddListener(isOn => { if (isOn) RefreshDailyDungeonLeaderboardGifts(); });
+            }
             RefreshDailyDungeonLeaderboard(selectedLeaderboardGrade);
         }
 
         private void RefreshDailyDungeonLeaderboard(int grade)
         {
             if (dailyDungeonLeaderboardRoot == null) return;
+            SetPrefabActive(dailyDungeonLeaderboardRoot, "AchievementPanel", false);
+            SetPrefabActive(dailyDungeonLeaderboardRoot, "TeamTopContent", true);
             selectedLeaderboardGrade = grade;
             DungeonLeaderboardBinding binding = LoadDungeonOfficialBindings("DailyDungeonTopPanel").leaderboard;
             Transform scrollNode = FindOfficialBindingNode(dailyDungeonLeaderboardRoot.transform, binding.mScrollRect, null);
@@ -930,6 +940,60 @@ namespace Zjcs.Presentation.Home
             Transform content = FindOfficialBindingNode(dailyDungeonLeaderboardRoot.transform, binding.mContent, null);
             CanvasGroup group = content == null ? null : content.GetComponent<CanvasGroup>();
             if (group != null) { group.alpha = 1f; group.interactable = true; group.blocksRaycasts = true; }
+        }
+
+        private void RefreshDailyDungeonLeaderboardGifts()
+        {
+            if (dailyDungeonLeaderboardRoot == null) return;
+            SetPrefabActive(dailyDungeonLeaderboardRoot, "TeamTopContent", false);
+            SetPrefabActive(dailyDungeonLeaderboardRoot, "AchievementPanel", true);
+            DungeonOfficialPrefabBinding binding = LoadDungeonOfficialBindings("DailyDungeonTopPanel");
+            IReadOnlyList<DailyDungeonLeaderboardGift> gifts = host.DailyDungeons.BuildLeaderboardGiftModel(
+                selectedDungeonId, selectedDifficulty);
+            DungeonLeaderboardAchievementBinding[] rows = binding.achievementRows
+                ?? throw new InvalidOperationException("Original leaderboard achievement rows are missing.");
+            for (int index = 0; index < rows.Length; index++)
+            {
+                DungeonLeaderboardAchievementBinding rowBinding = rows[index];
+                Transform row = FindOfficialBindingNode(dailyDungeonLeaderboardRoot.transform, rowBinding.path, null);
+                if (row == null) throw new InvalidOperationException("Original leaderboard achievement row is missing.");
+                row.gameObject.SetActive(index < gifts.Count);
+                if (index >= gifts.Count) continue;
+                DailyDungeonLeaderboardGift gift = gifts[index];
+                SetNamedText(row, "TitleTxt", gift.Title);
+                SetNamedText(row, "ProgressTxt", Math.Min(gift.Progress, gift.RequiredCount) + "/" + gift.RequiredCount);
+                Slider slider = row.GetComponentInChildren<Slider>(true);
+                if (slider != null)
+                {
+                    slider.minValue = 0; slider.maxValue = gift.RequiredCount;
+                    slider.value = Math.Min(gift.Progress, gift.RequiredCount);
+                }
+                SetLeaderboardObjectState(dailyDungeonLeaderboardRoot, rowBinding.states, (int)gift.State);
+                foreach (DungeonLeaderboardColorState color in rowBinding.colors ?? Array.Empty<DungeonLeaderboardColorState>())
+                {
+                    if (color.state != (int)gift.State) continue;
+                    foreach (string path in color.objects)
+                    {
+                        Transform node = FindOfficialBindingNode(dailyDungeonLeaderboardRoot.transform, path, null);
+                        Graphic graphic = node == null ? null : node.GetComponent<Graphic>();
+                        if (graphic != null) graphic.color = ReadColor(color.color);
+                    }
+                }
+                Button receive = Find(row, "ReceiveBtn")?.GetComponent<Button>();
+                if (receive != null)
+                {
+                    receive.onClick.RemoveAllListeners();
+                    receive.interactable = gift.State == DailyDungeonAchievementState.Completed;
+                    int id = gift.Id;
+                    receive.onClick.AddListener(() =>
+                    {
+                        if (!host.ClaimDailyDungeonLeaderboardGift(id)) Notify("馈赠奖励领取失败");
+                        RefreshDailyDungeonLeaderboardGifts();
+                    });
+                }
+                RefreshDailyDungeonAchievementRewards(row, gift.Rewards);
+            }
+            Canvas.ForceUpdateCanvases();
         }
 
         private IEnumerator FillDailyDungeonLeaderboard(GameObject root, LoopVerticalScrollRect scroll,
@@ -1611,6 +1675,13 @@ namespace Zjcs.Presentation.Home
                 image.preserveAspect = imageBinding.preserveAspect;
                 image.raycastTarget = imageBinding.raycastTarget;
                 image.maskable = imageBinding.maskable;
+                if (!string.IsNullOrEmpty(imageBinding.materialResource))
+                {
+                    image.material = Resources.Load<Material>(imageBinding.materialResource);
+                    if (image.material == null || !image.material.shader.isSupported)
+                        throw new InvalidOperationException("Official dungeon UI material is unavailable: "
+                            + imageBinding.materialResource);
+                }
                 if (imageBinding.sprite != null)
                 {
                     DungeonOfficialSpriteBinding spriteBinding = imageBinding.sprite;
@@ -1778,6 +1849,7 @@ namespace Zjcs.Presentation.Home
         {
             public string name;
             public DungeonLeaderboardBinding leaderboard;
+            public DungeonLeaderboardAchievementBinding[] achievementRows;
             public DungeonOfficialTransformBinding[] transforms;
             public DungeonOfficialImageBinding[] images;
             public DungeonOfficialTextBinding[] texts;
@@ -1785,6 +1857,22 @@ namespace Zjcs.Presentation.Home
             public DungeonOfficialAspectRatioBinding[] aspectRatioFitters;
             public DungeonOfficialRaycastBinding[] raycastGraphics;
             public DungeonOfficialEntryButtonBinding[] entryButtons;
+        }
+
+        [Serializable]
+        private sealed class DungeonLeaderboardAchievementBinding
+        {
+            public string path;
+            public DungeonLeaderboardState[] states;
+            public DungeonLeaderboardColorState[] colors;
+        }
+
+        [Serializable]
+        private sealed class DungeonLeaderboardColorState
+        {
+            public int state;
+            public string[] objects;
+            public float[] color;
         }
 
         [Serializable]
@@ -1862,6 +1950,7 @@ namespace Zjcs.Presentation.Home
             public bool preserveAspect;
             public bool raycastTarget;
             public bool maskable;
+            public string materialResource;
             public DungeonOfficialSpriteBinding sprite;
         }
 

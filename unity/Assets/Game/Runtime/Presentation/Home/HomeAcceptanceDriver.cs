@@ -1691,7 +1691,8 @@ namespace Zjcs.Presentation.Home
                 || hits[0].gameObject.transform.IsChildOf(target.transform)),
                 "partner pointer blocked at " + target.name + " at " + pointer.position
                     + " (rect=" + rect.rect + ", world=" + rect.TransformPoint(rect.rect.center)
-                    + ", hits=" + string.Join(",", hits.Take(4).Select(value => value.gameObject.name)) + ")");
+                    + ", hits=" + string.Join(",", hits.Take(4).Select(value => PathOf(value.gameObject.transform)
+                        + ":sort=" + value.sortingOrder)) + ")");
             pointer.pointerCurrentRaycast = hits[0];
             ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerDownHandler);
             ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerUpHandler);
@@ -1896,7 +1897,7 @@ namespace Zjcs.Presentation.Home
                 Image icon = rewardIcon == null ? null
                     : rewardIcon.Find("Content/mask/icon")?.GetComponent<Image>();
                 Assert(adapter != null && icon != null
-                    && icon.sprite == runtime.ItemIcon(reward.Item.ItemId),
+                    && icon.sprite == DailyDungeonRewardAssetCatalog.LoadDefault().Find(reward.Item.ItemId)?.sprite,
                     "official item-icon prefab did not bind the configured dungeon gift sprite");
                 return "official cumulative gift page rendered its configured reward through the native item icon prefab";
             });
@@ -1975,6 +1976,21 @@ namespace Zjcs.Presentation.Home
                 return "pointer raycast selected the original grade tab";
             });
             if (!ok) { completed(false); yield break; }
+            ok = Check("dungeons-leaderboard-gifts-input", () =>
+            {
+                GameObject leaderboard = GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaderboardRoot");
+                WorldTabItem giftsTab = leaderboard.GetComponentsInChildren<WorldTabItem>(true)
+                    .Single(value => value.name == "DailyDungeonTopPanelAchievementTabBottomBtn");
+                ClickPartnerUi(giftsTab);
+                Assert(giftsTab.isOn && leaderboard.GetComponentsInChildren<Transform>(true)
+                    .Any(value => value.name == "AchievementPanel" && value.gameObject.activeInHierarchy),
+                    "original leaderboard gift tab did not open its panel");
+                return "pointer raycast opened the original leaderboard gift panel";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return null;
+            yield return Capture("dungeons-leaderboard-gifts.png");
             ok = Check("dungeons-leaderboard-close-input", () =>
             {
                 GameObject leaderboard = GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaderboardRoot");
@@ -2261,6 +2277,59 @@ namespace Zjcs.Presentation.Home
             if (!ok) { completed(false); yield break; }
             yield return null;
             yield return null;
+            DailyDungeonLeaderboardGift giftFixture = runtime.DailyDungeons.BuildLeaderboardGiftModel(
+                settlement.Run.dungeonId, settlement.Run.difficulty).First(row => row.RequiredCount == 4);
+            while (giftFixture.Progress < giftFixture.RequiredCount)
+            {
+                Assert(runtime.DailyDungeons.TryBegin(settlement.Run.dungeonId, settlement.Run.difficulty,
+                    _ => true, (_, __) => true, (_, __, ___) => true,
+                    runtime.DailyDungeons.Catalog.settings.DailyDungeonBuyCostItemId,
+                    DateTimeOffset.Now.ToUnixTimeSeconds(), out string giftError), giftError);
+                int[] giftPath = FindTerminalRoomPath(runtime.DailyDungeons, runtime.DailyDungeons.ActiveRun);
+                Assert(giftPath.Length > 0, "leaderboard gift fixture has no terminal path");
+                foreach (int room in giftPath)
+                {
+                    if (runtime.DailyDungeons.ActiveRun.currentRoomId != room)
+                        Assert(runtime.DailyDungeons.ChooseNextRoom(room), "gift fixture could not select next room");
+                    Assert(runtime.DailyDungeons.RecordRoomCleared(room, string.Empty), "gift fixture room did not clear");
+                }
+                Assert(runtime.DailyDungeons.CurrentGrade() == giftFixture.Grade
+                    && runtime.DailyDungeons.Finish(giftFixture.Grade), "gift fixture did not finish with the configured grade");
+                giftFixture = runtime.DailyDungeons.BuildLeaderboardGiftModel(settlement.Run.dungeonId,
+                    settlement.Run.difficulty).Single(row => row.Id == giftFixture.Id);
+            }
+            Dictionary<int, long> beforeGift = giftFixture.Rewards.ToDictionary(row => row.ItemId,
+                row => runtime.Profile.InventoryCount(row.ItemId));
+            ok = Check("dungeons-leaderboard-gift-completed-input", () =>
+            {
+                GameObject leaderboard = GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaderboardRoot");
+                ClickPartnerUi(leaderboard.GetComponentsInChildren<WorldTabItem>(true)
+                    .Single(value => value.name == "DailyDungeonTopPanelAchievementTabBottomBtn"));
+                return "completed the isolated route fixtures and selected the native gift tab";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return null;
+            yield return Capture("dungeons-leaderboard-gift-ready.png");
+            ok = Check("dungeons-leaderboard-gift-claim-input", () =>
+            {
+                GameObject leaderboard = GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaderboardRoot");
+                Button receive = leaderboard.GetComponentsInChildren<Button>(true)
+                    .First(value => value.name == "ReceiveBtn" && value.isActiveAndEnabled && value.interactable);
+                ClickPartnerUi(receive);
+                DailyDungeonModule reload = DailyDungeonModule.Open(new ProfileSlotCatalog(Root), runtime.ActiveProfileSlotId);
+                Assert(reload.BuildLeaderboardGiftModel(settlement.Run.dungeonId, settlement.Run.difficulty)
+                    .Single(row => row.Id == giftFixture.Id).State == DailyDungeonAchievementState.Received,
+                    "leaderboard gift receipt did not persist");
+                foreach (DailyDungeonAchievementReward reward in giftFixture.Rewards)
+                    Assert(runtime.Profile.InventoryCount(reward.ItemId) == beforeGift[reward.ItemId] + reward.Count,
+                        "leaderboard gift did not grant its official item count");
+                return "pointer raycast claimed the official Type 57 rewards and cold reopen preserved Received";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return null;
+            yield return Capture("dungeons-leaderboard-gift-received.png");
             InvokePrivate(runtime.Hud, "CloseDailyDungeonLeaderboard");
             InvokePrivate(runtime.Hud, "CloseDungeonDetail");
 

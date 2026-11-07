@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Zjcs.Offline.Progression;
 using Zjcs.Offline.World;
 
 namespace Zjcs.Presentation.Home
@@ -14,6 +15,25 @@ namespace Zjcs.Presentation.Home
 
     public sealed partial class HomeFeatureRuntime
     {
+        public bool ClaimDailyDungeonLeaderboardGift(int id)
+        {
+            if (dailyDungeons == null || profile == null) return false;
+            bool claimed = dailyDungeons.ClaimLeaderboardGift(id, (receipt, rewards) =>
+            {
+                long now = Now();
+                ProgressionResult result = profile.ApplyInventoryTransaction(receipt, save =>
+                {
+                    foreach (DailyDungeonAchievementReward reward in rewards)
+                        if (!OfflineInventoryOperations.Grant(save.Player, reward.ItemId, reward.Count, now).IsApplied)
+                            throw new InvalidOperationException("Daily dungeon leaderboard gift could not be saved.");
+                });
+                return result.Status == ProgressionResultStatus.Applied
+                    || result.Status == ProgressionResultStatus.Unchanged || result.Status == ProgressionResultStatus.Ready;
+            });
+            if (claimed) { ReloadContext(); hud?.RefreshAll(); }
+            return claimed;
+        }
+
         private OfflineDailyDungeonSettlementModule DungeonSettlement()
         {
             EnsureProgression();

@@ -15,7 +15,7 @@ namespace Zjcs.Offline.World
     /// Mountain, Sea Palace Ruins and private routes therefore use the same
     /// entry, route, settlement and gift models.
     /// </summary>
-    public sealed class DailyDungeonModule : OfflineDailyDungeonModule
+    public sealed partial class DailyDungeonModule : OfflineDailyDungeonModule
     {
         private DailyDungeonModule(string path, DailyDungeonRuntimeData catalog,
             DailyDungeonSave save, IDailyDungeonRouteAdapter routeAdapter,

@@ -337,6 +337,10 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 日常副本公共领奖与 Type 22 累计成就配置按历史官方 `854_156383` 的原 achievement 表、参数及奖励数量提取，版本身份单独保留；输入、原代码及输出哈希见 [累计领奖成就来源](daily-dungeon-achievements-source-manifest.json)，工具为 `scripts/prepare_daily_dungeon_achievement_runtime.py`。
 
+日常副本 Type 57 排行榜馈赠使用当前所选 `884_156692` 的 APK 优先 `config_luban/achievement.g.bytes`，按该版本原 Luban 构造函数解码，保留原分组、参数、奖励与成就标识计算；中文文本沿原 `AchievementContentDailyDungeonGradeTop`／`LanguageUtils` 的键读取。原始载荷、程序集反编译来源、缺失的未开放标题键及输出哈希见[排行榜馈赠来源](dungeon-ui/daily-dungeon-top-achievements-source-manifest.json)，生成器为 `scripts/prepare_daily_dungeon_top_achievements.py`。
+
+日常副本奖励图标由 `scripts/prepare_daily_dungeon_reward_icons.py` 根据运行奖励、随机装备池及两类馈赠配置收集道具标识，再以当前所选 `884_156692` 的原 `ItemInfo.RawIcon` 解析 Sprite、图集与纹理，保留原打包旋转、紧密网格遮罩、逻辑矩形留白、pivot、border 与 PPU，生成显式资源目录。历史规则配置的版本身份保持原样；图像输入版本、官方道具构造函数、各输入输出哈希见[公共奖励图标来源](dungeon-ui/daily-dungeon-reward-icons-source-manifest.json)。未生成完整素材快照。
+
 日常副本结算与排行榜使用所选 `884_156692`（APK 清单 `881_156673`）的八个原 prefab 根、七张原评级 Sprite 及依赖；Windows UGUI／TMP／LoopVerticalScrollRect 脚本绑定、原对象、GUID、转换和输出哈希见 [原生面板来源](dungeon-ui/daily-dungeon-result-ui-source-manifest.json)，入口为 `scripts/prepare_daily_dungeon_result_ui.py`。排行榜原始 Transform、Image／TMP、本地化与对象状态、48 张原 Sprite，以及 APK 优先读取的 `config_luban/daily_dungeon_battle.g.bytes`、原 Luban 构造函数与 `TopRecordGradeTypeDict` 输出哈希另见 [排行榜绑定来源](dungeon-ui/daily-dungeon-leaderboard-source-manifest.json)，入口为 `scripts/prepare_daily_dungeon_leaderboard_bindings.py`。历史 `871_156598` 副本绑定保持原版本身份。未生成完整素材快照。
 
 公共副本路线：`record_dungeon_route_presenter.py` 将既有 `871_156598` 路线窗、房间与评级原生 prefab，以及未改写的历史 `official-bindings.json`／原来源清单登记在 `dungeon-ui/route-presenter-source-manifest.json`；当前 `884_156692` 原路线代码、已迁移的路线／房间类、公共显示器与两个调用方分别登记哈希。未新增美术或音频载荷，也未改写旧版来源身份。

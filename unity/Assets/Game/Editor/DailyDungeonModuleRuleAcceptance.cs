@@ -73,6 +73,7 @@ namespace Zjcs.Editor
                 throw new InvalidOperationException("A rank unlock stayed locked after the configured profile age.");
             int initialClaims = module.RemainEntries;
             long initialAchievementProgress = module.DailyDungeonGetRewardCount;
+            ValidateLeaderboardGifts(slots, catalog);
             if (initialClaims != module.Catalog.settings.DailyDungeonDailyFreeCount)
                 throw new InvalidOperationException("A new profile did not receive the official daily free claim count.");
             if (module.MaxAwardTimesPerClaim != 1)

@@ -10,6 +10,7 @@ namespace Zjcs.Presentation.Home
     public sealed class DailyDungeonResultItemIconAdapter : MonoBehaviour
     {
         private static OfficialCharacterAssetCatalog itemAssets;
+        private static DailyDungeonRewardAssetCatalog rewardAssets;
 
         public void Configure(HomeFeatureRuntime host, int itemId, long count)
         {
@@ -24,15 +25,20 @@ namespace Zjcs.Presentation.Home
             if (quality == null || icon == null || countRoot == null || countText == null)
                 throw new InvalidOperationException("Official daily dungeon item icon bindings are incomplete.");
 
-            HomeItemRecord item = host.Rules?.Item(itemId);
+            rewardAssets ??= DailyDungeonRewardAssetCatalog.LoadDefault();
+            DailyDungeonRewardAssetCatalog.Item item = rewardAssets.Find(itemId);
+            if (item == null)
+                throw new InvalidOperationException("Official daily dungeon reward binding is missing: " + itemId);
             itemAssets ??= OfficialCharacterAssetCatalog.LoadDefault();
             quality.sprite = itemAssets.FindQualityBackgroundSprite(item?.quality ?? 0);
             quality.enabled = quality.sprite != null;
-            icon.sprite = host.ItemIcon(itemId);
+            icon.sprite = item.sprite;
+            if (icon.sprite == null)
+                throw new InvalidOperationException("Official daily dungeon reward icon is missing: " + itemId);
             icon.enabled = icon.sprite != null;
             icon.preserveAspect = true;
 
-            bool showCount = count > 1 && item?.type != 110;
+            bool showCount = count > 1 && item.itemType != 110;
             countRoot.gameObject.SetActive(showCount);
             countText.text = showCount ? count.ToString() : string.Empty;
             Transform bottomText = FindPath(content, "BottomText");

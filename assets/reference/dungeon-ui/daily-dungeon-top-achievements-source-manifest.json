@@ -1,0 +1,119 @@
+{
+  "manifest": "884_156692",
+  "apk_manifest": "881_156673",
+  "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+  "table": {
+    "bundle": "defaultpackage_assets_config_luban.bundle",
+    "bundle_hash": "c127151ca016b1013e487423db2b7090",
+    "path_id": "2512796603372558678",
+    "origin": "apk_zip",
+    "manifest": "884_156692",
+    "apk_manifest": "881_156673",
+    "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+    "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+    "raw_size": 2142435,
+    "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+  },
+  "raw_sha256": "50c66bef98508617c93ccd17c9fc0e5a8d355adef49f1c71bd4551649d69fb3a",
+  "language_inputs": {
+    "wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile": {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/WwiseBnk/495eff606d09ccff377d3b54ba4c1bc4.rawfile",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "raw_size": 5556,
+      "raw_sha256": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365",
+      "sha256": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365",
+      "bytes": 5556,
+      "md5": "495eff606d09ccff377d3b54ba4c1bc4"
+    },
+    "wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile": {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/WwiseBnk/7457975a4ff474fa84c666b9b720bb3d.rawfile",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "raw_size": 5300206,
+      "raw_sha256": "a7e72b9478ce455a7ef12974f16e3f78e684ded497b7750f7901dacb66eacfad",
+      "sha256": "a7e72b9478ce455a7ef12974f16e3f78e684ded497b7750f7901dacb66eacfad",
+      "bytes": 5300206,
+      "md5": "7457975a4ff474fa84c666b9b720bb3d"
+    }
+  },
+  "missing_inactive_title_keys": [
+    "ui_daily_dungeon_item_title_44_Hell"
+  ],
+  "operation": "Decode original Luban achievement table; filter Type 57 Domain rows; retain group/index achievement ID, dungeon/difficulty/grade, Count and rewards without cycle generation.",
+  "code_sources": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbAchievementRawInfo.cs",
+      "sha256": "730feaa79bd7fa09ce6ae285a1fc38e803e59a9f8ecec4a09fb8fcb7ca5f7829"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Tables.cs",
+      "sha256": "0e4882f1ad41958e5ec017543447e17f5196c5453f8168c685926ea2c134c9bc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementTaskDailyDungeonGradeTop.cs",
+      "sha256": "494deff4aa2e4fb4621306c01d0930cbd9d2b9cf543c2528e5c339e620c50cfc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementDataDailyDungeonGradeTop.cs",
+      "sha256": "cb4509bb30ad5f9cfbc8cfcc7253f209a66226b912f821687bb1589789da1001"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementDataKeyDailyDungeonGradeTop.cs",
+      "sha256": "d07e25672252de2ae3dcb4e5ca4ef63263fa6012601019882217ac1b6868d4c1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementInfo.cs",
+      "sha256": "f8e542e362bc04d5c7ec2643b7737b3125e973ee23a8be9c25af9a3e193c0093"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DailyDungeonDifficulty.cs",
+      "sha256": "4dd0d86ee4569eb20f0f1bbdb068c3354ef3490a9535b95afcf7c1d345bf3bfd"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleResultGradeType.cs",
+      "sha256": "07861fdfaf96161cd6cfd5488a781b1dcc5ba9a8a57bbd7967196aaf3c0ed53d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/DailyDungeonTopPanel.cs",
+      "sha256": "a5d8f91b5c134eda6c7158bc663e09eca95c569347636840ac62f737a9829e75"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AchievementContentDailyDungeonGradeTop.cs",
+      "sha256": "9cfeff0eb36a5fd19e80dde205298c5e8059eed39d550fb13e53763fab9b5fb4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AchievementPanelItem.cs",
+      "sha256": "c3ac99b742acd58042ae33cfce3833a2645697c8a1beadecf99dd553f2596a99"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LanguageUtils.cs",
+      "sha256": "ddc94bb5dd46f8c71b6d58ab0f03e2048cde72911de11e343304ce73e4b9a61c"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_daily_dungeon_top_achievements.py",
+      "sha256": "bea33c2b3b04b9d565436eec58894c44ae4840df20d6db64a21e697b8bd88cae"
+    },
+    {
+      "path": "scripts/official_tables.py",
+      "sha256": "77762a9b2aba2d92a6ad3ebd8ce5f7d0bb42a6b4cfc872ae7094c1d10b1e0473"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/daily-dungeon-top-achievements.json",
+      "sha256": "29d4b6d565c3a7cd14bb740082c55e926884f807bd8168dfd275c2a841cb8e3f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/daily-dungeon-top-achievements.json.meta",
+      "sha256": "4052a0f193bed021385b13d451d4e15c007ff9a77d0dac1a32e2beb1dfc52f5c"
+    }
+  ],
+  "rows": 409
+}
