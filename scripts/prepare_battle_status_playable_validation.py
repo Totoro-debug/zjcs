@@ -7,7 +7,7 @@ import shutil
 from prepare_battle_movement_effect_validation import prepare, ROOT
 
 
-def build(work):
+def build(work, include_grid_entities=False):
     project = prepare(work)
     # The shared combat assembly also contains native shader implementations;
     # keep their assets alongside the metadata copied by the base helper.
@@ -63,6 +63,23 @@ def build(work):
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(path, target)
     editor = project / 'Assets/Game/Editor/BattleStatusPlayables'
+    if not include_grid_entities:
+        # Keep the particle-only fixture independent of entity/world modules.
+        # The complete native entity fixture supplies those committed modules.
+        for suffix in ('', '.meta'):
+            path = editor / ('OfficialBattleStatusPlayableAcceptance.GridEntities.cs' + suffix)
+            if path.is_file(): path.unlink()
+        main = editor / 'OfficialBattleStatusPlayableAcceptance.cs'
+        text = main.read_text(encoding='utf-8-sig')
+        text = text.replace('                IEnumerator grids = GridEntitySteps();\n'
+                            '                while (grids.MoveNext()) yield return grids.Current;\n', '')
+        main.write_text(text, encoding='utf-8')
+        definition = editor / 'Zjcs.Editor.BattleStatusPlayables.asmdef'
+        assembly = json.loads(definition.read_bytes())
+        excluded = {'Zjcs.Official.BattleGridItemEntities', 'Zjcs.Official.BattleSkillPlayables',
+                    'Zjcs.Official.EntityLifecycle', 'Zjcs.Official.EntityViews'}
+        assembly['references'] = [name for name in assembly['references'] if name not in excluded]
+        definition.write_text(json.dumps(assembly, indent=2) + '\n', encoding='utf-8')
     shutil.copy2(ROOT / 'scripts/fixtures/battle_grid_item_harness.cs', editor / 'BattleGridItemHarness.cs')
     (editor / 'BurningGridValidation.cs').write_text('''using System;
 using System.IO;
@@ -83,6 +100,8 @@ namespace Zjcs.Editor
         }
         public static void Run()
         {
+            Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
+            Environment.SetEnvironmentVariable("ZJCS_CREATION_AUTOMATION", "1");
             string skills = Read("skill-rules"), battle = Read("battle-rules"), rules = Read("rules");
             var catalog = FightOfficialCombatCatalog.Load(skills, Hash(skills), "854_156383", battle, Hash(battle), "854_156383");
             var items = FightOfficialSkillItemCatalog.Load(rules, Hash(rules), "854_156383");

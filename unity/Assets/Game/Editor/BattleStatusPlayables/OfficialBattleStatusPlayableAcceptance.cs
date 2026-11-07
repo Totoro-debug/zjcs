@@ -269,6 +269,8 @@ namespace Zjcs.Editor
                 while (death.MoveNext()) yield return death.Current;
                 IEnumerator burns = BurnSteps();
                 while (burns.MoveNext()) yield return burns.Current;
+                IEnumerator grids = GridEntitySteps();
+                while (grids.MoveNext()) yield return grids.Current;
             }
 
             public void Dispose()
