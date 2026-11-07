@@ -47,14 +47,13 @@
 | [共用界面、文字与资源运行](features/shared-ui.md) | 未完成 |
 | [主题签到与长期活动入口](features/sign-ins.md) | 未完成 |
 | [技能、方案与培养](features/skills.md) | 未完成 |
-| [主线地图公共模块](features/mainline-map-modules.md) | 公共模块完成／单图未完成 |
 | [主线任务进度](features/tasks.md) | 未完成 |
 | [古遗物扭蛋与女神牌](features/treasure-gacha.md) | 未完成 |
 | [Unity 工程与启动流程](features/unity-project.md) | 未完成 |
 | [虚空裂隙与混沌侵袭](features/weekly-challenges.md) | 未完成 |
 | [技能祈愿、材料购买与兑换](features/wishes.md) | 未完成 |
 | [命运果实探寻](features/world-exploration.md) | 未完成 |
-| [世界地图](features/world-map.md) | 未完成 |
+| [世界地图与主线公共模块](features/world-map.md) | 未完成（主线公共模块已完成／单图未完成） |
 
 ## 地图验收
 

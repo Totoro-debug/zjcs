@@ -6,7 +6,7 @@
 
 ## 地图简介
 
-初始岛使用主线地图公共运行时和公共战斗执行器。地图特有的交互、剧情和完整存档流程由本页维护；共享规则见[主线地图公共模块](../features/mainline-map-modules.md)与[世界地图](../features/world-map.md)。
+初始岛使用主线地图公共运行时和公共战斗执行器。地图特有的交互、剧情和完整存档流程由本页维护；共享规则见[世界地图与主线公共模块](../features/world-map.md)。
 
 ## 原始官方实现
 
@@ -23,7 +23,7 @@
 
 - 缺少可移植的官方 GLES 着色器时，水面与蝴蝶使用按原材质参数和纹理恢复的 Windows Shader；不保证与 GLES 逐像素一致。
 - `RemoveMapExclusiveNpcNode` 在配置了 playable 时先播放，再移除 NPC 并继续 Exit 分支；未配置时直接移除。
-- 地图公共状态、存档恢复和单机差异见[主线地图公共模块](../features/mainline-map-modules.md)，不在此重复。
+- 地图公共状态、存档恢复和单机差异见[主线地图公共模块](../features/world-map.md#主线地图公共模块)，不在此重复。
 
 ## 尚未实现
 
@@ -36,4 +36,4 @@
 
 [OfficialMainlineMapRuntime.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs)、[OfficialMap10TerrainView.cs](../../unity/Assets/Game/Runtime/Presentation/World/OfficialMap10TerrainView.cs)、[OfficialMap10MonsterView.cs](../../unity/Assets/Game/Runtime/Presentation/World/OfficialMap10MonsterView.cs)、[OfficialMap10EnvironmentView.cs](../../unity/Assets/Game/Runtime/Presentation/World/OfficialMap10EnvironmentView.cs)、[OfficialMap10AudioPlayer.cs](../../unity/Assets/Game/Runtime/Presentation/World/OfficialMap10AudioPlayer.cs)。
 
-本图官方资源来源见[来源总表](../../assets/reference/SOURCES.md)；公共地图与战斗规则分别见[主线地图公共模块](../features/mainline-map-modules.md)和[战斗执行](../features/battle-execution.md)。
+本图官方资源来源见[来源总表](../../assets/reference/SOURCES.md)；公共地图与战斗规则分别见[主线地图公共模块](../features/world-map.md#主线地图公共模块)和[战斗执行](../features/battle-execution.md)。

@@ -6,7 +6,7 @@
 
 ## 地图简介
 
-山之国使用官方世界地图、主线、日常副本、战斗碑、固定宝箱及机关配置。地图入口、状态和跨图规则见[主线地图公共模块](../features/mainline-map-modules.md)；战斗及助战规则见[战斗执行](../features/battle-execution.md)。
+山之国使用官方世界地图、主线、日常副本、战斗碑、固定宝箱及机关配置。地图入口、状态和跨图规则见[主线地图公共模块](../features/world-map.md#主线地图公共模块)；战斗及助战规则见[战斗执行](../features/battle-execution.md)。
 
 ## 原始官方实现
 
@@ -20,7 +20,7 @@
 - 主线实体操作、剧情空间、区域标签、固定宝箱数据、机关目录及本地图部分战斗数据已有运行载荷或本地规则接线。原始配置和绑定入口见上述来源清单。
 - 战斗碑已接入本地窗口上下文、目标身份、原奖励预览输入、队伍事件生命周期和原生 NPC 邀请列表；确认的伙伴会按官方资格、人数上限和可行走入口创建为实际战斗单位，并在战斗完成、取消或挂载异常时清理本地状态。
 - 私有副本通过 `DailyDungeonModule.OpenPrivateMap` 复用[日常副本](../features/dungeons.md)的目录、路线 HUD、次数边界、奖励结算与[战斗执行](../features/battle-execution.md)公共战斗宿主；本图只提供私图路线适配器和房间状态。
-- 共享实体探索记录接入[主线地图公共模块](../features/mainline-map-modules.md)。Map12 专用 UI、迷你地图、动画与音频载荷仍需在正式地图流程内接通。
+- 共享实体探索记录接入[主线地图公共模块](../features/world-map.md#主线地图公共模块)。Map12 专用 UI、迷你地图、动画与音频载荷仍需在正式地图流程内接通。
 
 ## 自定义实现
 
@@ -41,5 +41,5 @@
 ## 代码与资源入口
 
 - 地图宿主：[OfficialMainlineMapRuntime.NativeMap12.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.NativeMap12.cs)。
-- 公共路线与规则：[日常副本](../features/dungeons.md)、[战斗执行](../features/battle-execution.md)、[主线地图公共模块](../features/mainline-map-modules.md)。
+- 公共路线与规则：[日常副本](../features/dungeons.md)、[战斗执行](../features/battle-execution.md)、[主线地图公共模块](../features/world-map.md#主线地图公共模块)。
 - 配置与资源来源：[Map12 来源清单](../../assets/reference/official-map/map12-source-manifest.json)、[Map12 Unity 转换清单](../../assets/reference/official-map/map12-unity-source-manifest.json)、[剧情载荷来源](../../assets/reference/official-map/map12-runtime-source-manifest.json)。

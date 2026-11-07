@@ -2,15 +2,21 @@
 
 [总索引](../README.md)
 
-状态：未完成
+状态：未完成；Map10–16 主线公共模块已完成，各地图整体迁移未完成
 
 ## 功能简介
 
-本页描述 Unity 世界地图共享底层迁移状态，包括原地图数据、导航与进度。单张地图只有在其官方资源、交互、存档及实际游玩流程完成验证后才可标记完成。
+本页统一维护世界地图的数据、导航、进度、共享规则与 Map10–16 主线公共运行时。主线公共模块的完成范围及验证记录见[主线地图公共模块](#主线地图公共模块)；每张地图的专属场景、条件、剧情、资源与缺项见所属地图页。单张地图只有在其官方资源、交互、存档及实际游玩流程完成验证并发布 Windows Player 后才可标记完成。
+
+地图角色属性通过统一工厂完成装备与技能装配，剧情转职重载时保留完整属性来源；依赖与计算对照见[人物属性的共享计算边界](character.md#属性来源与共享计算边界)。
 
 ## 原始官方实现
 
 原世界地图包括大陆总览、地图／地区配置、导航格、原地形、放置实体、小地图、探索点和进度计算；剧情、机关、条件和奖励按各自配置调用。
+
+主线地图由官方程序集、配置、实体容器、地区进度、导航、剧情和地图 UI 共同驱动。共享数据生命周期、地图规则和资源来源见 [官方来源总览](../../assets/reference/SOURCES.md) 与 [地图来源清单](../../assets/reference/official-map/)。
+
+客户端通过请求与响应调用服务器处理部分剧情、实体和地图状态。APK 未包含对应服务器实现时，本页只记录客户端可证行为及已确认的单机方案，不将离线适配描述为官方服务器逻辑。
 
 ### 官方代码与资源依据
 
@@ -27,8 +33,6 @@
 原 WorldStage 组件、原始剧情图及对话图像在本地执行。NPC Touch 与 Function 分开提供交谈和委托，支持原始提交物品流程。私有／公共区域生成条件、区域状态条件和原探索度的 100 点激活加成已接入。无女神像区域在私有探索全部完成后转为公共状态，是缺少服务端实现时的单机适配；没有把该判断标为原服务端规则。原战斗属性计算仍使用项目的本地规则。
 
 活动的 522 条原始关卡配置保留赛季和关卡各自进度。踩石板接入方向、进入次数和传送落点事件；活动棋盘和世界机关的完成标记分别保存，离开地图再返回恢复当前棋盘。
-
-当前地图功能及剩余实现范围见 [世界地图功能文档](world-map.md)。
 
 踩石板解法工具 `scripts/solve_map_plates.py` 使用独立开发目录 `.tools/map-solver-python` 中的 OR-Tools 9.15.6755，不进入运行资源。
 
@@ -88,9 +92,35 @@ Unity 已建立地图数据模型与 `IWorldMapAssets.Load(int)` 资源接口。
 
 `WorldMapProgressCondition` 按是否指定地区分别检查单区或整图进度；整图进度汇总地区进度并按原最大值归一化，全部地区公开时增加原完成值。原进度节点达到配置百分比后由玩家手动领取，世界地图入口显示可领取红点。此进度与命运探寻、女神像激活分开处理。
 
-Map10–16 共用主线地图运行时，按地图配置加载原地图、区域、实体、导航、剧情和界面数据；共享状态、存档与离线适配见[主线地图公共模块](mainline-map-modules.md)。各图仍有未接入的资源、交互或流程，具体范围见所属地图页；共享运行时可用不代表单图完成。
-
 地图转换工具集中在 `scripts/prepare_map_*.py`、`prepare_unity_map10_*.py`、`map_native_animation.py`、`map_player_assets.py` 与 `official_ec_codec.py`；剧情／动作／时间轴转换沿用 `prepare_story_*.py`、`extract_story_character_actions.mjs` 及相应来源清单。保存这些工具和地图文档不等于其全部输出已接入 Unity；运行时只消费随工程打包的本地载荷。
+
+### 主线地图公共模块
+
+公共 seam 由 [`IMainlineMapModule`](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/IMainlineMapModule.cs) 定义，`OfficialMainlineMapRuntime` 是当前官方规则与资源的 Adapter。Map10–16 等同类可交互大地图通过同一接口完成打开、网格移动、放置实体交互和只读状态投影；Unity 输入帧仍由宿主统一调度，地图差异只进入 `OfficialMainlineMapProfile`、地图数据目录和专用 Adapter。接口不暴露 Map10 私有实体、UI 控件或服务器请求，调用方只需持有地图 ID、放置 ID 和 `MainlineMapStateSnapshot`。
+
+`MainlineMapStateSnapshot` 是 HUD、小地图和验证入口共用的快照 seam，包含玩家网格坐标、地图／区域探索度、已公开区域、四类雕像的放置点、激活态与每日访问额度、当前活动实体、白雾压缩字节、已探索实体锚点、命运探寻总数／当日次数，以及资源点的体力交互代数、下一次刷新时间和待结算战斗状态。地图宿主内部继续集中持有地图建模、子区域解锁、女神／失落女神／英雄／魔女雕像、每日访问额度、网格白雾、探索与命运探寻奖励、迷你地图标志、已探索资源点体力消耗及刷新状态；这些状态通过既有官方配置、`OfflineMapGridVisibility`、`OfflineWorldExplorationService`、雕像事务和 `OfflineMapStaminaService` 接入本地存档。新增地图只需提供同一 profile 与对应资源／规则 Adapter，不复制一套地图宿主。
+
+`OfficialMainlineMapProfile.Capabilities` 是地图 Adapter 的能力声明：`MapModel`、`Hud`、`Regions`、`Statues`、`Exploration`、`ResourceStamina`、`CrossMapState` 为公共主线管线，是否存在 `GridFog` 与 `MiniMap` 由该地图的官方资源绑定决定。Map10 初始岛、Map11 森之国、Map12 山之国、Map13 泽之国、Map14 龙之国和 Map15 通天塔入口已注册 profile；Map16 鲸背岛已登记数据 profile，但 `IsRuntimeEntryReady=false`，不会被入口误认为可玩。
+
+- `MainlineSharedWorld` 管理官方程序集、地图配置、实体数据和容器作用域；`MainlineSharedWorldStateModule` 持有投影玩家并集中执行激活、原始地区点数、实体／地区状态和角色位置的发布顺序；`OfficialMainlineMapRuntime` 按地图 profile 装配导航、地图状态、HUD、区域、交互及退出清理。
+- 本地地图进度、地区私有／公开状态、探索记录、神像状态和已发现实体由地图存档读取。跨图读取复用同一实体状态解析，不创建场景对象。
+- `OfflineMapGridVisibility` 和 `OfficialMainlineGridFog` 提供地图揭格及白雾状态；公共迷你地图、地图标记和资源点使用地图 profile 及本地图目录。
+- 公共剧情运行时复用原节点、状态机、动画和声音入口；各图通过独立目录绑定原资源。通用剧情与实体表现不代替所属地图的正式入口和完整流程。
+- 公共路线、战斗、物品提交及探索记录分别维护在[日常副本](dungeons.md)、[战斗执行](battle-execution.md)、[背包](inventory.md)和[世界探索](world-exploration.md)。
+
+地图保存成功后，宿主只提供当前实体展示状态和角色坐标；公共世界状态模块先发布神像／巫师激活与原始地区点数，再调用官方实体状态及地区 `prepare → remove → add → status` 顺序，最后同步角色位置。首次加载沿同一发布顺序恢复保存状态，然后启动原始 Client。
+
+#### 当前验证范围
+
+状态发布顺序已由 `MainlineMapModuleValidation` 在主线模块验证入口中检查；`OfficialMainlineMapModuleProbe` 还会通过 `IMainlineMapModule` 冷读快照，核对 profile 能力声明、四类雕像／资源点状态投影和白雾快照的不可变副本。主线地图完整流程仍按本页“尚未实现”项继续验证。
+
+主线探针与对应 Editor 入口不再反射读取宿主私有字段或调用私有业务方法。地区条件、剧情条件和交互目录直接使用模块接口；女神、英雄、采集与探索通过场景实体和原按钮接收模拟指针，滚动列表接收模拟拖拽，退出通过可注入的 Escape 输入进入正常保存与销毁流程。初始坐标、地区和随机状态只在隔离存档或已有事务接口中准备，随后重新开图；位置、探索、奖励及跨图快照从本地存档和现有只读模块检查。官方资产序列化、动态类型加载及 Unity 编辑器视图设置所需反射保留。
+
+Play Mode 已通过 Map10／11 导航、迷你地图页签与筛选冷读、女神公开与原阴影动画、英雄首次／每日交互、体力采集／奖励动画／重生、探索概率与明细／令牌滚动选择／扣费／十连／历史翻页，以及正常退出与冷恢复；Map15 进入、导航和重开也通过。画面检查仍可见原有实体材质／贴图表现缺项，公共模块验证不等于整张地图完成。
+
+Map10／14 白雾专项已通过原白雾节点挂载、实际指针移动揭格、保存字节扩展、正常退出后的精确冷恢复，以及跨图只读快照不改写存档；玩家所在格的可见性由官方压缩解码接口直接检查。
+
+动态加载的原客户端依赖 `System.Memory`，Windows 构建由 `MainlineWindowsCompatibilityBuild` 交付固定 Unity Mono 兼容程序集，保留原类型转发，不改写官方 IL。该依赖缺失会使原 `Player.ClientInit` 失败；上下文同时保留初始化与清理异常，探针遇到首个失败立即停止，避免后续点击掩盖原因。来源和原字节绑定见[Windows 兼容依赖来源](../../assets/reference/official-map/mainline-windows-compatibility-source-manifest.json)。构建回调自动补齐依赖的最终 Windows Player 已通过上述 Map10／11／15 整体与 Map10／14 白雾专项，已查看输入后的实际画面并核对隔离存档冷恢复；现有实体贴图与场景表现缺项仍未消除。
 
 ### 已迁移代码与局部资源
 
@@ -105,16 +135,33 @@ Map10–16 共用主线地图运行时，按地图配置加载原地图、区域
 - 按 `official-source.json` 选择输入，优先核对 APK，再读所选版本已校验的云端缓存；既有转换保留真实版本，跨版同哈希复用另记凭据，不冒充原版本补齐。
 - Map14 对话音频的时间轴路由与本地素材核对见[龙之国地图页](../maps/map-14.md)；该路由键不作为单条直接语音事件处理。
 - 地图、区域、位置、格访问、公共／私人实体、剧情、机关、活动、货架、战斗及领取状态须共同持久化，失败回滚，时钟回拨不刷新。旧 official.play.adventure 是规则映射参考，Unity 完整存档接线尚未完成。
-- 已确认的跨图小地图规则：浏览其他已到访地图时，显示曾探索到的实体及公开地区实体，再按本地最新状态处理隐藏和图标。白雾和女神像公开地区继续使用已有本地记录；原客户端请求与消费代码不提供服务器筛选实现，此项为单机决定。公共原生小地图已增加本地快照筛选与最新状态消费适配，正式存档投影及跨图页签接入仍待完成，范围见[公共模块](mainline-map-modules.md#自定义实现)。
-- 已确认的公共分线规则：每张地图固定一个本地分线，按原 HUD 的“分线数≤1”条件隐藏按钮，保留地区私有／公开状态与玩法。公共原生小地图 HUD 已绑定本地单分线适配，正式世界地图宿主接线仍待完成，范围见[公共模块](mainline-map-modules.md#自定义实现)。
+- 已确认的跨图小地图规则：浏览其他已到访地图时，显示曾探索到的实体及公开地区实体，再按本地最新状态处理隐藏和图标。白雾和女神像公开地区继续使用已有本地记录；原客户端请求与消费代码不提供服务器筛选实现，此项为单机决定。公共原生小地图已增加本地快照筛选与最新状态消费适配，正式存档投影及跨图页签接入仍待完成，公共状态与验证范围见[主线地图公共模块](#主线地图公共模块)。
+- 已确认的公共分线规则：每张地图固定一个本地分线，按原 HUD 的“分线数≤1”条件隐藏按钮，保留地区私有／公开状态与玩法。公共原生小地图 HUD 已绑定本地单分线适配，正式世界地图宿主接线仍待完成，公共状态与验证范围见[主线地图公共模块](#主线地图公共模块)。
 - 服务器与运营日历开放采用[离线政策](offline-access.md)，个人等级、阶位、材料与真实地图目标继续检查。地图活动首次打开目录建立本地起点，内部阶段按原日界及 UnlockHours 推进；身份、回合、机关与领奖回执分别保存，共享地形不合并活动进度。
 
-各图当前运行状态与缺项见[主线地图公共模块](mainline-map-modules.md)、[命运探寻](world-exploration.md)及所属地图页。
+### 主线地图离线适配
+
+- 所有主线地图的国度商店经验按实际消耗的专属货币 1:1 累计；商品、价格、库存和刷新周期仍取各地图官方配置。地图专属等级阈值及刷新规则在所属地图页维护。
+- 新档和缺少地图字段的旧存档按已确认的本地初始化规则恢复玩家位置、地区状态和探索记录；不推导客户端未保存的服务器状态。
+- 地图内时间、实体可见性、探索快照和商店进度使用本地存档与离线时钟；服务器控制的随机、首次开放或剧情结果只按已有客户端规则或用户确认的单机方案接入。
+- 国度商店、剧情节点、地图机关和奖励的本地事务必须在所属页面说明具体差异；此处只维护所有地图共用的规则。
+
+命运探寻专属规则见[命运探寻](world-exploration.md)；各图当前运行状态与专属缺项见所属地图页。
 
 ## 尚未实现
 
-以下缺项是所有地图的共同基线；地图页只维护各图专属配置、规则、离线差异和资源状态。
+以下列出所有地图的共同基线及 Map10–16 公共运行时尚缺的接线；地图页只维护各图专属配置、规则、离线差异和资源状态。
 
 - 补齐 Map10–16 各自尚缺的官方资源与交互，并迁移其余地图的地形、区域、MiniMap、放置实体和角色资源绑定。
 - 接通各地图的正式入口、玩家移动／镜头、实体交互、剧情、机关、战斗、领奖、退出恢复及本地存档。
-- 各地图独立完成实际游玩流程与 Windows Player 发布；共享 DTO、单图数据或导航规则不代表地图完成。
+- Map10–16 的原始小地图完整页面、全部地图标记与详情、公共地区资源层及跨图返回流程仍有缺项。
+- Map10–16 的原 Timeline、角色动画、粒子、音频和摄像机演出尚未全量接入正式地图宿主。
+- 各地图独立完成模拟输入、画面、状态保存／冷读、失败恢复及 Windows Player 流程与发布；公共模块、共享 DTO、单图数据或导航规则不代表地图完成。
+
+## 代码与资源入口
+
+- 公共地图 seam 与状态投影：[IMainlineMapModule.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/IMainlineMapModule.cs)、[OfficialMainlineMapRuntime.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs)。
+- 主线地图档案：[OfficialMainlineMapProfile.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs)。
+- 离线地图规则：[Runtime/Offline/World](../../unity/Assets/Game/Runtime/Offline/World/)。
+- 公共世界状态发布：[MainlineSharedWorldStateModule.cs](../../unity/Assets/Game/Runtime/Offline/World/MainlinePlayerState/MainlineSharedWorldStateModule.cs)、[MainlineSharedPlayerProjection.cs](../../unity/Assets/Game/Runtime/Offline/World/MainlinePlayerState/MainlineSharedPlayerProjection.cs)。
+- 通用地图、资源和来源记录：[地图来源清单](../../assets/reference/official-map/)、[来源总览](../../assets/reference/SOURCES.md)。

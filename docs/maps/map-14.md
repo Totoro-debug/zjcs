@@ -6,7 +6,7 @@
 
 ## 地图简介
 
-龙之国地图 ID 为 14，含 111 个地区、2,961 个放置实体及 280×280 导航网格；默认入口 101 位于 (247,115)。主线地图生命周期、跨图状态和存档规则见[主线地图公共模块](../features/mainline-map-modules.md)。
+龙之国地图 ID 为 14，含 111 个地区、2,961 个放置实体及 280×280 导航网格；默认入口 101 位于 (247,115)。主线地图生命周期、跨图状态和存档规则见[主线地图公共模块](../features/world-map.md#主线地图公共模块)。
 
 ## 原始官方实现
 
@@ -17,7 +17,7 @@
 - 主线宿主已加载原生地形、环境、地区标签、实体目录和本地玩家状态；入口、区域揭示及实体进度使用公共地图状态。
 - Map14 的原生地图资源、实体 prefab 目录、剧情／战斗数据和机关目录已恢复到 Unity 工程。载荷恢复不代表完整实体视图、地图界面或玩法已接通。
 - Map14 的物品提交窗口和部分原生 UI 资源已恢复；正式故事入口、角色移动、背包交易和地图存档流程仍有缺项。
-- 地区公开／私有状态、玩家冷读和实体阶段展示复用[主线地图公共模块](../features/mainline-map-modules.md)。战斗数据复用[战斗执行](../features/battle-execution.md)。
+- 地区公开／私有状态、玩家冷读和实体阶段展示复用[主线地图公共模块](../features/world-map.md#主线地图公共模块)。战斗数据复用[战斗执行](../features/battle-execution.md)。
 
 ## 自定义实现
 
@@ -36,5 +36,5 @@
 ## 代码与资源入口
 
 - 地图定义及主线宿主：[OfficialMainlineMapProfile.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs)、[OfficialMainlineMapRuntime.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs)。
-- 通用地图／战斗规则：[主线地图公共模块](../features/mainline-map-modules.md)、[战斗执行](../features/battle-execution.md)。
+- 通用地图／战斗规则：[主线地图公共模块](../features/world-map.md#主线地图公共模块)、[战斗执行](../features/battle-execution.md)。
 - 来源：[Map14 来源清单](../../assets/reference/official-map/map14-source-manifest.json)、[实体目录来源](../../assets/reference/official-map/map14-entity-catalog-source-manifest.json)、[剧情来源](../../assets/reference/official-map/map14-story-runtime-source-manifest.json)、[机关来源](../../assets/reference/official-map/map14-puzzles-source-manifest.json)。

@@ -56,15 +56,15 @@ Map11 的家园资源图标按原 Sprite 对象绑定，来源与显式加载路
 
 ## 完整还原部分
 
-正式入口的原世界加载、原玩家与放置实体状态同步及退出释放统一使用[主线地图公共模块](../features/mainline-map-modules.md)。该公共接线不代表本图完整表现与交互已完成。未验证跨图快照窗口或 Windows Player，整图状态仍为未完成。
+正式入口的原世界加载、原玩家与放置实体状态同步及退出释放统一使用[主线地图公共模块](../features/world-map.md#主线地图公共模块)。该公共接线不代表本图完整表现与交互已完成。未验证跨图快照窗口或 Windows Player，整图状态仍为未完成。
 
-本图完整小地图根按所选884版数据加载，包含531个原序列化对象、原接缝线与地区说明引用；本图数据采用240×180导航及77个地区。共享生命周期和状态适配见[主线地图公共模块](../features/mainline-map-modules.md)。正式离线响应、白雾／标记、HUD输入和地图存档仍待接通。来源见[当前完整小地图根](../../assets/reference/official-map/map11-current-minimap-root-source-manifest.json)。
+本图完整小地图根按所选884版数据加载，包含531个原序列化对象、原接缝线与地区说明引用；本图数据采用240×180导航及77个地区。共享生命周期和状态适配见[主线地图公共模块](../features/world-map.md#主线地图公共模块)。正式离线响应、白雾／标记、HUD输入和地图存档仍待接通。来源见[当前完整小地图根](../../assets/reference/official-map/map11-current-minimap-root-source-manifest.json)。
 
-Map11 地区小地图使用原 Grid、77 个地区插槽和 Tilemap，通过共享 `MainlineMiniMapRegions` 读取公开状态。正式小地图根、标记、白雾、HUD 输入和存档接线仍未完成；来源见[地区小地图清单](../../assets/reference/official-map/map11-current-minimap-regions-source-manifest.json)，共享行为见[主线地图公共模块](../features/mainline-map-modules.md)。
+Map11 地区小地图使用原 Grid、77 个地区插槽和 Tilemap，通过共享 `MainlineMiniMapRegions` 读取公开状态。正式小地图根、标记、白雾、HUD 输入和存档接线仍未完成；来源见[地区小地图清单](../../assets/reference/official-map/map11-current-minimap-regions-source-manifest.json)，共享行为见[主线地图公共模块](../features/world-map.md#主线地图公共模块)。
 
 共用原生 UI 导入器补回 `6010_11_DialogIcon` 的 `GoddessDialogIcon` 原状态清单，未激活／已激活图标按原对象组互斥显示。不代表本图完整游玩或存档验证。
 
-地图公共能力由 `OfficialMainlineMapRuntime` 组装 HUD、区域／雾、四类雕像、导航、体力、探寻、小地图七个独立状态模块；本图资源、剧情和进度按地图 ID 注入。模块边界、共享规则与未接入项见[主线地图公共模块](../features/mainline-map-modules.md)。按地图 ID 装载本图资源，沿用本图存档与回执。
+地图公共能力由 `OfficialMainlineMapRuntime` 组装 HUD、区域／雾、四类雕像、导航、体力、探寻、小地图七个独立状态模块；本图资源、剧情和进度按地图 ID 注入。模块边界、共享规则与未接入项见[主线地图公共模块](../features/world-map.md#主线地图公共模块)。按地图 ID 装载本图资源，沿用本图存档与回执。
 
 Map11 UI 图片以原 Sprite 元数据导入；`OfficialMap11UiTools.RestoreSpriteMetadata` 可恢复 Texture2D、Single Sprite、无 mipmap／NPOT 缩放、Clamp、Bilinear 与无压缩 Alpha 设置。来源凭据见[来源总表](../../assets/reference/SOURCES.md)。
 
@@ -105,7 +105,7 @@ Map11 已接入地图加载、实体显示、踏板、战斗碑、故事路由�
 共享地图定义、寻路／探索和演出代码已接入。战斗怪物头像覆盖Map10／Map11共38个原IconId；对白切换等待原动画半程事件，关闭或替换对白后旧回调不会覆盖新内容。森之国当前战斗状态和结算流程已接入公共运行时；地图HUD叠加、角色与镜头比例及场景排序仍未完整恢复。
 
 
-森之国73份 `LightRegion` 原生阴影已绑定 `OfficialMainlineRegionFog`，保留原形状／falloff网格、衰减贴图、Multiply光照及女神解锁时2.01666665秒的消雾曲线。原资源不含地区21／28／57／62；日夜装饰、局部灯光和小地图未探索遮罩仍待接入。来源见[主线地图公共模块](../features/mainline-map-modules.md)。
+森之国73份 `LightRegion` 原生阴影已绑定 `OfficialMainlineRegionFog`，保留原形状／falloff网格、衰减贴图、Multiply光照及女神解锁时2.01666665秒的消雾曲线。原资源不含地区21／28／57／62；日夜装饰、局部灯光和小地图未探索遮罩仍待接入。来源见[主线地图公共模块](../features/world-map.md#主线地图公共模块)。
 
 ### 森之国地图状态
 

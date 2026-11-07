@@ -6,7 +6,7 @@
 
 ## 地图简介
 
-泽之国地图 ID 为 13，含 106 个地区、2,690 个放置实体及 240×240 导航网格，后继地图为鲸背岛。新档入口、跨图状态与国度商店通用规则见[主线地图公共模块](../features/mainline-map-modules.md)。
+泽之国地图 ID 为 13，含 106 个地区、2,690 个放置实体及 240×240 导航网格，后继地图为鲸背岛。新档入口、跨图状态与国度商店通用规则见[主线地图公共模块](../features/world-map.md#主线地图公共模块)。
 
 ## 原始官方实现
 
@@ -18,7 +18,7 @@
 
 - 主线地图运行时已加载 Map13 导航、地区与实体数据，并接入本地地图进度、部分故事条件、地区标签及共享战斗载荷；正式地图主体、实体视图和整图流程尚未完成。
 - 原地形、环境分区、区域光照、地图文字、剧情和战斗载荷已恢复到 Unity 资源目录。载荷可用不代表正式场景、角色或 UI 已接通。
-- 部分原剧情节点、跟随者名单、商店进度、手动水路及终端规则已有本地适配。通用入口、探索记录和国度商店规则集中见[主线地图公共模块](../features/mainline-map-modules.md)。
+- 部分原剧情节点、跟随者名单、商店进度、手动水路及终端规则已有本地适配。通用入口、探索记录和国度商店规则集中见[主线地图公共模块](../features/world-map.md#主线地图公共模块)。
 - 公共战斗、物品提交窗口及伙伴显示分别复用[战斗执行](../features/battle-execution.md)、[物品与背包](../features/inventory.md)及共享角色资源；Map13 的正式业务入口仍有缺项。
 
 ## 自定义实现
@@ -28,7 +28,7 @@
 - 已接入的剧情节点包括区域进入／离开、附近实体等待、`Talk1`–`Talk4` 黑板触发、职业条件、`Rank` 故事属性，以及 `WorldStopMoveNode` 的本地点击移动锁定。完整节点清单和运行数据见剧情来源清单。
 - 三个 `HandInItemNode` 按原配置分别提交 2203×1、40502×5、43039×5，各限一次；按用户确认，只有本地原子扣除成功后才增加提交次数，取消、中断或失败不扣除。
 - 水路和升降机按原路径／阶段顺序执行；用户确认路径受阻时不移动，载人保留原偏移，水位变化不发放额外奖励。五处终端的重置、道具回执和开路状态按原实体清单保存。
-- Map13 商店等级阈值为 0／3500／8000／13000，使用商店 131–134 的官方固定商品和刷新配置；货币消耗计入商店经验的共用单机规则见[主线地图公共模块](../features/mainline-map-modules.md#自定义实现)。
+- Map13 商店等级阈值为 0／3500／8000／13000，使用商店 131–134 的官方固定商品和刷新配置；货币消耗计入商店经验的共用单机规则见[主线地图公共模块](../features/world-map.md#主线地图离线适配)。
 
 ## 尚未实现
 
@@ -40,5 +40,5 @@
 ## 代码与资源入口
 
 - 地图宿主与状态：[OfficialMainlineMapRuntime.NativeMap13.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.NativeMap13.cs)、[离线导航会话](../../unity/Assets/Game/Runtime/Offline/World/Map13Navigation/OfflineMap13NavigationSession.cs)、[水路会话](../../unity/Assets/Game/Runtime/Offline/World/OfflineMap13WaterSession.cs)。
-- 公共规则：[主线地图公共模块](../features/mainline-map-modules.md)、[战斗执行](../features/battle-execution.md)。
+- 公共规则：[主线地图公共模块](../features/world-map.md#主线地图公共模块)、[战斗执行](../features/battle-execution.md)。
 - 来源：[Map13 来源清单](../../assets/reference/official-map/map13-source-manifest.json)、[剧情来源清单](../../assets/reference/official-map/map13-story-runtime-source-manifest.json)。
