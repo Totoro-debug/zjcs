@@ -118,6 +118,15 @@ namespace Zjcs.Editor
                     yield return RunBodyRangeHost(home, slot, root, output, click, value => home = value);
                     yield break;
                 }
+                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_GRID_ACCEPTANCE") == "1")
+                {
+                    Combat.BattleGameViewInput.Focus();
+                    yield return Combat.BattleGameViewInput.ResizePortrait(450);
+                    yield return SkillGridBattleValidation.Exercise(home, slot, root, output,
+                        control => Combat.BattleGameViewInput.Click((Button)control),
+                        name => Capture(output, name), value => home = value);
+                    yield break;
+                }
                 if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_LEAVE") == "1")
                 {
                     yield return RunLeaveHosts(home, slot, root, output, click, value => home = value);

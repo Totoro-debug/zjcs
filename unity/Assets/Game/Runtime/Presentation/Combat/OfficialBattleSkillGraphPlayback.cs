@@ -23,6 +23,7 @@ namespace Zjcs.Presentation.Combat
         private readonly OfflineBattleNativePlayableScope scope;
         private readonly OfficialBattleSkillEntityPlayback entityViews;
         private readonly List<ScheduledCast> pending = new List<ScheduledCast>();
+        private OfficialBattleGridEntityPlayback gridViews;
         private bool disposed;
 
         public OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog catalog,
@@ -36,6 +37,17 @@ namespace Zjcs.Presentation.Combat
 
         public int CatalogCount => catalog.Count;
         public OfflineBattleNativePlayableScope Scope => scope;
+        public Transform TryGetGridTransform(int id) => gridViews?.TryGetTransform(id);
+        public void RefreshGridSnapshot(FightBattleCheckpoint checkpoint) => gridViews?.RefreshSnapshot(checkpoint);
+
+        public void BindGridEntities(Transform root, OfficialBattleGridMapper mapper,
+            FightBattleCheckpoint checkpoint, Func<int, Transform> unitTransform, Func<int, bool> hasStatusIcon)
+        {
+            if (gridViews != null) throw new InvalidOperationException("Native grid entities are already bound.");
+            gridViews = new OfficialBattleGridEntityPlayback(root, mapper, scope, entityViews,
+                checkpoint, unitTransform, hasStatusIcon);
+            gridViews.Restore();
+        }
 
         public void BindSourceDeathView(Zjcs.Official.StoryPlayables.IBattleSourceDeathView view)
             => scope.BindSourceDeathView(view);
@@ -51,12 +63,15 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillGraphPlayback));
             if (stepEvent?.SkillCasts == null || checkpoint?.Units == null || unitTransform == null) return;
+            gridViews?.Enqueue(stepEvent, checkpoint);
+            gridViews?.DispatchDue();
+            Func<int, Transform> resolveTransform = id => gridViews?.TryGetTransform(id) ?? unitTransform(id);
             foreach (FightBattleSkillCastEvent cast in stepEvent.SkillCasts)
             {
                 if (cast == null || cast.ActorId <= 0 || cast.SkillEntityId <= 0) continue;
                 FightBattleUnitState actor = FindUnit(checkpoint, cast.ActorId);
-                Transform source = cast.IsPetSupport ? petTransform?.Invoke(cast.ActorId) : unitTransform(cast.ActorId);
-                if (actor == null || source == null) continue;
+                Transform source = cast.IsPetSupport ? petTransform?.Invoke(cast.ActorId) : resolveTransform(cast.ActorId);
+                if (actor == null || source == null && actor.CharacterType != 6) continue;
                 int targetId = TargetId(cast);
                 string direction = ResolveDirection(cast.Presentation?.FacingIndex ?? actor.Direction);
                 GameObject prefab = catalog.Find(cast.SkillEntityId, direction);
@@ -65,11 +80,11 @@ namespace Zjcs.Presentation.Combat
                 {
                     Cast = cast,
                     Prefab = prefab,
-                    UnitTransform = unitTransform,
+                    UnitTransform = resolveTransform,
                     PetTransform = petTransform,
                     Remaining = Mathf.Max(0f, cast.Delay)
                 };
-                if (scheduled.Remaining <= 0f) Start(scheduled, prefab, source, unitTransform(targetId));
+                if (scheduled.Remaining <= 0f && source != null) Start(scheduled, prefab, source, resolveTransform(targetId));
                 else
                 {
                     int index = pending.FindIndex(value => value.Remaining > scheduled.Remaining);
@@ -85,21 +100,30 @@ namespace Zjcs.Presentation.Combat
             if (float.IsNaN(deltaTime) || float.IsInfinity(deltaTime) || deltaTime < 0f)
                 throw new ArgumentOutOfRangeException(nameof(deltaTime));
             float remaining = deltaTime;
-            while (pending.Count > 0 && pending[0].Remaining <= remaining)
+            while (true)
             {
-                float elapsed = pending[0].Remaining;
+                float nextCast = pending.Count == 0 ? float.PositiveInfinity : pending[0].Remaining;
+                float nextGrid = gridViews?.NextDelay ?? float.PositiveInfinity;
+                float elapsed = Mathf.Min(nextCast, nextGrid);
+                if (elapsed > remaining) break;
                 if (elapsed > 0f) entityViews.Tick(elapsed);
                 remaining -= elapsed;
                 foreach (ScheduledCast value in pending) value.Remaining -= elapsed;
-                ScheduledCast scheduled = pending[0];
-                pending.RemoveAt(0);
-                Transform source = scheduled.Cast.IsPetSupport
-                    ? scheduled.PetTransform?.Invoke(scheduled.Cast.ActorId) : scheduled.UnitTransform(scheduled.Cast.ActorId);
-                if (source == null) continue;
-                Transform target = scheduled.UnitTransform(TargetId(scheduled.Cast));
-                Start(scheduled, scheduled.Prefab, source, target);
+                gridViews?.AdvanceTimers(elapsed);
+                gridViews?.DispatchDue();
+                while (pending.Count > 0 && pending[0].Remaining <= 0f)
+                {
+                    ScheduledCast scheduled = pending[0];
+                    pending.RemoveAt(0);
+                    Transform source = scheduled.Cast.IsPetSupport
+                        ? scheduled.PetTransform?.Invoke(scheduled.Cast.ActorId) : scheduled.UnitTransform(scheduled.Cast.ActorId);
+                    if (source == null) continue;
+                    Transform target = scheduled.UnitTransform(TargetId(scheduled.Cast));
+                    Start(scheduled, scheduled.Prefab, source, target);
+                }
             }
             foreach (ScheduledCast value in pending) value.Remaining -= remaining;
+            gridViews?.AdvanceTimers(remaining);
             entityViews.Tick(remaining);
         }
 
@@ -123,6 +147,8 @@ namespace Zjcs.Presentation.Combat
             if (disposed) return;
             disposed = true;
             pending.Clear();
+            gridViews?.Dispose();
+            gridViews = null;
             entityViews.Dispose();
         }
 
@@ -130,6 +156,8 @@ namespace Zjcs.Presentation.Combat
         {
             foreach (FightBattleUnitState unit in checkpoint.Units)
                 if (unit != null && unit.Id == id) return unit;
+            foreach (var item in checkpoint.GridItems)
+                if (item != null && item.HasRuntime && item.Id == id) return item.Runtime;
             return null;
         }
 

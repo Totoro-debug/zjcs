@@ -98,26 +98,34 @@ namespace Zjcs.Combat.Official
                 if (ground < 0 || ground >= 31 || (definition.MoveMask & (1 << ground)) == 0
                     || !definition.IgnoreGridBlocked && checkpoint.Grid.BlockedPositions != null
                         && checkpoint.Grid.BlockedPositions.Contains(point)) continue;
-                // User-confirmed offline override: end every overridden item/status before creating
-                // its replacement, regardless of faction. Ordinary actors may share a burning cell.
-                foreach (var previous in checkpoint.GridItems)
-                    if (previous != null && !previous.Ended && previous.X == point.X && previous.Y == point.Y
-                        && Array.IndexOf(definition.OverrideTypes, previous.GridItemClassId) >= 0)
-                        FightGridItemRuntime.End(previous);
-                var item = FightGridItemRuntime.Create(NextSummonUnitId(), definition.ClassId,
-                    actor, reference, point, hit.Delay + cell.Delay);
-                checkpoint.GridItems.Add(item);
-                lastCreation = Math.Max(lastCreation, item.CreationDelay);
-                unitById.Add(item.Id, item.Runtime);
-                item.Runtime.StatusStarted = OnStatusStarted;
-                item.Runtime.StatusEnded = OnStatusEnded;
-                item.Runtime.StatusRoundResolver = StatusClockRound;
-                item.Runtime.RoundStartClockResolver = RoundStartClockRound;
-                float previousTime = movementStartContext == null ? 0f : movementStartContext.StatusStartTime;
-                if (movementStartContext != null) movementStartContext.StatusStartTime = item.CreationDelay;
-                foreach (int statusId in hit.SummonStatusIds)
-                    ApplySummonStatus(item.Runtime, actor, skill, statusId);
-                if (movementStartContext != null) movementStartContext.StatusStartTime = previousTime;
+                float? previousViewTime = gridViewTimeOverride;
+                try
+                {
+                    gridViewTimeOverride = Math.Max(0f, hit.Delay + cell.Delay);
+                    // User-confirmed offline override: end every overridden item/status before creating
+                    // its replacement, regardless of faction. Ordinary actors may share a burning cell.
+                    foreach (var previous in checkpoint.GridItems)
+                        if (previous != null && !previous.Ended && previous.X == point.X && previous.Y == point.Y
+                            && Array.IndexOf(definition.OverrideTypes, previous.GridItemClassId) >= 0)
+                            FightGridItemRuntime.End(previous);
+                    var item = FightGridItemRuntime.Create(NextSummonUnitId(), definition.ClassId,
+                        actor, reference, point, hit.Delay + cell.Delay);
+                    checkpoint.GridItems.Add(item);
+                    lastCreation = Math.Max(lastCreation, item.CreationDelay);
+                    unitById.Add(item.Id, item.Runtime);
+                    RecordGridViewCreate(item);
+                    item.Runtime.StatusStarted = OnStatusStarted;
+                    item.Runtime.StatusEnded = OnStatusEnded;
+                    item.Runtime.StatusForbiddenChanged = OnStatusForbiddenChanged;
+                    item.Runtime.StatusRoundResolver = StatusClockRound;
+                    item.Runtime.RoundStartClockResolver = RoundStartClockRound;
+                    float previousTime = movementStartContext == null ? 0f : movementStartContext.StatusStartTime;
+                    if (movementStartContext != null) movementStartContext.StatusStartTime = item.CreationDelay;
+                    foreach (int statusId in hit.SummonStatusIds)
+                        ApplySummonStatus(item.Runtime, actor, skill, statusId);
+                    if (movementStartContext != null) movementStartContext.StatusStartTime = previousTime;
+                }
+                finally { gridViewTimeOverride = previousViewTime; }
             }
             return lastCreation;
         }

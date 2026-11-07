@@ -102,6 +102,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Dictionary<int, UnitLease> pets = new Dictionary<int, UnitLease>();
         private OfficialBattlePetFollowerCatalog petCatalog;
         private readonly Dictionary<EcEntityIdentifier, MyEntity> entities = new Dictionary<EcEntityIdentifier, MyEntity>();
+        private readonly HashSet<int> nativeGridIds = new HashSet<int>();
         private readonly List<ActiveCast> casts = new List<ActiveCast>();
         private int serial;
         private bool disposed;
@@ -132,6 +133,21 @@ namespace Zjcs.Presentation.Combat
         public MyEntity GetEntity(EcEntityIdentifier id) =>
             entities.TryGetValue(id, out var entity) ? entity : null;
 
+        public MyEntity EnsureUnit(int id, Transform transform) => BindUnit(id, transform).Entity;
+
+        public void RegisterGrid(int id, MyEntity entity)
+        {
+            if (entity == null || entities.ContainsKey(UnitId(id)))
+                throw new InvalidOperationException("Native battle grid identity is already registered: " + id);
+            nativeGridIds.Add(id);
+            entities.Add(UnitId(id), entity);
+        }
+
+        public void RemoveGrid(int id)
+        {
+            if (nativeGridIds.Remove(id)) entities.Remove(UnitId(id));
+        }
+
         public Vector3 GridToPos(Pos2d position) => root.InverseTransformPoint(
             gridMapper.GridToWorld(new FightGridPoint(position.X, position.Y)));
 
@@ -147,11 +163,18 @@ namespace Zjcs.Presentation.Combat
             if (cast.Presentation == null)
                 throw new InvalidOperationException("A native skill requires its creation-time presentation snapshot.");
             var binding = catalog.Find(cast.SkillEntityId);
-            var sourceLease = BindUnit(cast.ActorId, source, cast.IsPetSupport);
-            sourceLease.Projection.Position = new Pos2d(cast.Presentation.SourceX, cast.Presentation.SourceY);
-            sourceLease.Projection.Facing = Facing(cast.Presentation.FacingIndex);
-            sourceLease.Projection.Mirrored = cast.Presentation.FlipX;
-            if (cast.Presentation.TargetId > 0 && target != null)
+            var sourcePosition = new Pos2d(cast.Presentation.SourceX, cast.Presentation.SourceY);
+            var sourceFacing = Facing(cast.Presentation.FacingIndex);
+            if (!nativeGridIds.Contains(cast.ActorId) || cast.IsPetSupport)
+            {
+                var sourceLease = BindUnit(cast.ActorId, source, cast.IsPetSupport);
+                sourceLease.Projection.Position = sourcePosition;
+                sourceLease.Projection.Facing = sourceFacing;
+                sourceLease.Projection.Mirrored = cast.Presentation.FlipX;
+            }
+            // Original grid prefabs already own their bound transform and its event
+            // subscriptions. A child cast must not replace that component projection.
+            if (cast.Presentation.TargetId > 0 && target != null && !nativeGridIds.Contains(cast.Presentation.TargetId))
                 BindUnit(cast.Presentation.TargetId, target);
             var go = new GameObject(cast.SkillEntityId.ToString(CultureInfo.InvariantCulture));
             go.SetActive(false);
@@ -168,8 +191,8 @@ namespace Zjcs.Presentation.Combat
             state.Configuration.Cast = cast.Presentation;
             state.Data = new EntityData { TypeId = cast.SkillEntityId,
                 Identifier = new EcEntityIdentifier(2, ++serial), Skill = state,
-                Grid = new Grid { Position = sourceLease.Projection.Position,
-                    Facing = sourceLease.Projection.Facing, Mirrored = cast.Presentation.FlipX,
+                Grid = new Grid { Position = sourcePosition,
+                    Facing = sourceFacing, Mirrored = cast.Presentation.FlipX,
                     ToPosition = GridToPos, ToGrid = PositionToGrid } };
             entity.Bind(positionContainer, state.Data, true);
             casts.Add(new ActiveCast { Entity = entity, Remaining = cast.Presentation.Duration < 0f
@@ -269,7 +292,7 @@ namespace Zjcs.Presentation.Combat
             casts.Clear();
             foreach (var lease in units.Values) ReleaseUnit(lease);
             foreach (var lease in pets.Values) ReleaseUnit(lease);
-            units.Clear(); pets.Clear(); entities.Clear();
+            units.Clear(); pets.Clear(); entities.Clear(); nativeGridIds.Clear();
             if (positionContainer) Destroy(positionContainer.gameObject);
         }
 

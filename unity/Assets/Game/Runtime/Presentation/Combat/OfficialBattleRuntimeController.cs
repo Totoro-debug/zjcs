@@ -62,7 +62,8 @@ namespace Zjcs.Presentation.Combat
 
         public FightBattleCheckpoint Checkpoint => executor == null ? null : executor.State;
         public FightBattleReport FinalReport => finalReport;
-        public Transform TryGetUnitTransform(int unitId) => sceneView?.TryGetUnitTransform(unitId);
+        public Transform TryGetUnitTransform(int unitId) => sceneView?.TryGetUnitTransform(unitId)
+            ?? skillGraphPlayback?.TryGetGridTransform(unitId);
         /// <summary>Presentation length of the last step, from the official skill/hit timing.</summary>
         public float LastStepSeconds { get; private set; } = 0.35f;
         public FightBattlePhase Phase => phases.Phase;
@@ -89,6 +90,7 @@ namespace Zjcs.Presentation.Combat
             if (returning && Checkpoint != null)
             {
                 sceneView?.Refresh(Checkpoint, null);
+                skillGraphPlayback?.RefreshGridSnapshot(Checkpoint);
                 hudView?.Refresh(Checkpoint);
                 hudView?.RefreshSkillSlots(Checkpoint, skillIconResolver);
                 hudView?.RefreshPet(Checkpoint, statueProgress?.Save?.Player);
@@ -211,7 +213,8 @@ namespace Zjcs.Presentation.Combat
                     try
                     {
                         var entityViews = new OfficialBattleSkillEntityPlayback(worldRoot, gridMapper, nativeScope,
-                            id => nextExecutor.State.Units.Find(unit => unit.Id == id));
+                            id => nextExecutor.State.Units.Find(unit => unit.Id == id)
+                                ?? nextExecutor.State.GridItems.Find(item => item != null && item.HasRuntime && item.Id == id)?.Runtime);
                         entityViews.SkillStarted += nextHud.OnSkillStarted;
                         entityViews.SkillEnded += nextHud.OnSkillEnded;
                         entityViews.CastStarted += nextHud.OnPetSkillStarted;
@@ -243,6 +246,8 @@ namespace Zjcs.Presentation.Combat
                 hudView = nextHud;
                 sceneView = nextScene;
                 nextSkillGraphPlayback?.BindSourceDeathView(nextScene);
+                nextSkillGraphPlayback?.BindGridEntities(worldRoot, gridMapper, checkpoint,
+                    nextScene.Body, id => resolvedHudCatalog.TryGetStatusSprites(id, out var icon, out _, out _) && icon != null);
                 nativeModelLibrary = nextNativeModels;
                 skillGraphPlayback = nextSkillGraphPlayback;
                 environmentView = nextEnvironment;

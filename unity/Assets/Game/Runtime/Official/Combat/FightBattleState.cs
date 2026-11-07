@@ -400,6 +400,7 @@ namespace Zjcs.Combat.Official
         public bool HasRuntime;
         public int ReferenceUnitId;
         public float CreationDelay;
+        [NonSerialized] internal Action<FightBattleGridItemState> ViewRemoved;
     }
 
     [Serializable]
@@ -1658,6 +1659,7 @@ namespace Zjcs.Combat.Official
         public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>();
         public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>();
         public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>();
+        public List<FightBattleGridViewEvent> GridViewEvents = new List<FightBattleGridViewEvent>();
         public List<FightBattleBodyAnimatorTriggerEvent> BodyAnimatorTriggers =
             new List<FightBattleBodyAnimatorTriggerEvent>();
         public List<FightBattleStatusCustomActionEvent> StatusCustomActions =

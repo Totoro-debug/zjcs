@@ -21,6 +21,7 @@ public static class BattleGridItemHarness
     {
         Boundaries(catalog,items,formula);
         MultiCell(catalog,items,formula);
+        PresentationClock(catalog,items,formula);
         var creator=Unit(1,1,5,5,1000);var reference=Unit(2,2,6,5,1);
         var item=FightGridItemRuntime.Create(3,3320,creator,reference,new FightGridPoint(6,5),0.78f);
         Check(item.OwnerId==1 && item.ReferenceUnitId==2 && item.Runtime.Side==2
@@ -54,6 +55,18 @@ public static class BattleGridItemHarness
         FightBattleStepEvent step=null;
         for(int i=0;i<10 && cp.GridItems.Count==0;i++) step=runner.Step(0,cp.Counter+1).Event;
         Check(cp.GridItems.Count==9,"Original 13050/13051 did not create its nine burning cells.");
+        Check(step.GridViewEvents.Count==18,"Native grid creation/status events were merged or omitted.");
+        for(int i=0;i<step.GridViewEvents.Count;i+=2)
+        {
+            var created=step.GridViewEvents[i];var started=step.GridViewEvents[i+1];
+            Check(created.Kind==FightBattleGridViewEventKind.Create
+                && started.Kind==FightBattleGridViewEventKind.StatusStart
+                && created.GridId==started.GridId && created.Grid.Id==created.GridId
+                && created.Grid.EntityClassId==3051 && started.Status.ClassId==13052
+                && started.Status.CreatorId==1 && started.Status.StackCount==1
+                && Math.Abs(created.Delay-0.78f)<0.0001f && created.Delay==started.Delay,
+                "Original grid/status view creation order, source, or 0.78-second delay changed.");
+        }
         Check(cp.Units.Count==2,"Grid items entered the ordinary turn/victory roster.");
         var underEnemy=cp.GridItems.Find(g=>g.X==enemy.X && g.Y==enemy.Y);
         Check(underEnemy!=null && underEnemy.Runtime.Statuses.Count==1,
@@ -80,6 +93,11 @@ public static class BattleGridItemHarness
         actor.VoodooDoll=new FightVoodooDollLink();enemy.VoodooDoll=new FightVoodooDollLink();
         Check(!actor.IsVoodooDoll && !enemy.IsVoodooDoll,
             "An empty serialized link was mistaken for a real substitute.");
+        string saved=FightBattleCheckpointSerializer.Save(cp);
+        var restored=FightBattleCheckpointSerializer.Load(saved);
+        Check(FightBattleCheckpointSerializer.Save(restored)==saved
+            && restored.Receipts[restored.Receipts.Count-1].Event.GridViewEvents.Count==18,
+            "Actual checkpoint persistence lost or changed grid lifecycle receipts.");
         return cp;
     }
 
@@ -89,7 +107,20 @@ public static class BattleGridItemHarness
         int count=cp.GridItems.Count;
         var runner=FightBattleExecutor.Restore(cp,formula,new FightDamageSettlement(),catalog,items);
         for(int i=0;i<30 && cp.GridItems.Exists(g=>!g.Ended);i++)
-            runner.Step(0,cp.Counter+1);
+        {
+            var step=runner.Step(0,cp.Counter+1).Event;
+            Check(!step.GridViewEvents.Exists(e=>e.Kind==FightBattleGridViewEventKind.Create),
+                "Restored grids replayed their historical creation events.");
+            foreach(var removed in step.GridViewEvents.FindAll(e=>e.Kind==FightBattleGridViewEventKind.Remove))
+            {
+                int index=step.GridViewEvents.IndexOf(removed);
+                int statusEnd=step.GridViewEvents.FindIndex(e=>e.Kind==FightBattleGridViewEventKind.StatusEnd
+                    && e.GridId==removed.GridId);
+                Check(statusEnd>=0 && statusEnd<index
+                    && step.GridViewEvents[statusEnd].Delay==removed.Delay,
+                    "Grid expiration removed its entity before ending the original status view.");
+            }
+        }
         Check(cp.GridItems.Count==count && cp.GridItems.TrueForAll(g=>g.Ended && g.Runtime.Ended
             && g.Runtime.Statuses.Count==0),"Restored grids failed to expire and end their statuses.");
     }
@@ -143,11 +174,23 @@ public static class BattleGridItemHarness
         previous.Runtime.Statuses.Add(catalog.CreateStatus(13052,50,2,51,13480));
         cp.GridItems.Add(previous);
         var runner=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),catalog,items);
-        for(int i=0;i<10 && cp.GridItems.Count==1;i++) runner.Step(0,cp.Counter+1);
+        FightBattleStepEvent boundaryStep=null;
+        for(int i=0;i<10 && cp.GridItems.Count==1;i++) boundaryStep=runner.Step(0,cp.Counter+1).Event;
         Check(cp.GridItems.FindAll(g=>!g.Ended).Count==8 && cp.GridItems.Count==9,
             "Burning ground ignored the original terrain mask or failed to override an opposing item.");
         Check(previous.Ended && previous.Runtime.Statuses.Count==0,
             "Opposing 3328 or its old status survived the 3320 replacement.");
+        int ended=boundaryStep.GridViewEvents.FindIndex(e=>e.GridId==50
+            && e.Kind==FightBattleGridViewEventKind.StatusEnd);
+        var replacement=cp.GridItems.Find(g=>!g.Ended && g.X==2 && g.Y==1);
+        int created=boundaryStep.GridViewEvents.FindIndex(e=>e.GridId==replacement.Id
+            && e.Kind==FightBattleGridViewEventKind.Create);
+        Check(ended>=0 && created>ended+1
+            && boundaryStep.GridViewEvents[ended+1].Kind==FightBattleGridViewEventKind.Remove
+            && boundaryStep.GridViewEvents[ended+1].GridId==50
+            && Math.Abs(boundaryStep.GridViewEvents[ended].Delay-0.78f)<0.0001f
+            && boundaryStep.GridViewEvents[created].Delay==boundaryStep.GridViewEvents[ended].Delay,
+            "Native overwrite did not end old status/entity before creating its replacement at the same cell time.");
         Check(!cp.GridItems.Exists(g=>!g.Ended && g.X==3 && g.Y==2)
             && cp.GridItems.Exists(g=>!g.Ended && g.X==2 && g.Y==1)
             && cp.GridItems.Exists(g=>!g.Ended && g.X==3 && g.Y==1),
@@ -191,5 +234,29 @@ public static class BattleGridItemHarness
         invocations=FightStatusTriggerRuntime.CollectMoveNearSkills(boss,owners,
             FightStatusTriggerRuntime.MoveNearEventEnterRange,moved,new FightRandomStream(13));
         Check(invocations.Count==9,"Body entry did not independently enter each overlapping grid.");
+    }
+
+    static void PresentationClock(FightOfficialCombatCatalog catalog,FightOfficialSkillItemCatalog items,
+        FightDamageFormula formula)
+    {
+        var actor=Unit(1,1,2,5,1000);var enemy=Unit(2,2,14,5,1);
+        actor.Properties.Add(new FightPropertyValue {Id=formula.PropertyId("MoveDist"),Value=20});
+        var skill=catalog.CreateSkill(13050,0,10130,5,20,1,null);
+        actor.Skills.Add(skill);actor.SkillState.Slots.Add(catalog.CreateSkillSlot(skill,0));
+        var cp=new FightBattleCheckpoint {StageId=1001,RandomSeed=13,
+            Grid=new FightBattleGrid {Width=20,Height=20,DefaultGroundType=0},
+            ResultRules=new FightBattleResultRules()};cp.Units.AddRange(new[] {actor,enemy});
+        var runner=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),catalog,items);
+        FightBattleStepEvent step=null;
+        for(int i=0;i<10 && cp.GridItems.Count==0;i++) step=runner.Step(0,cp.Counter+1).Event;
+        var cast=step.SkillCasts.Find(value=>value.ActorId==1 && value.SkillEntityId==13050);
+        Check(cast!=null && cast.Delay>0 && step.Movements.Exists(value=>value.UnitId==1),
+            "Delayed grid fixture did not approach through the real movement/cast scheduler.");
+        Check(step.GridViewEvents.Count==18 && step.GridViewEvents.TrueForAll(value=>
+            Math.Abs(value.Delay-(cast.Delay+0.78f))<0.0001f),
+            "Grid/status creation lost the outer cast's completed approach offset.");
+        Check(step.DamageEvents.Exists(value=>cp.GridItems.Exists(grid=>grid.Id==value.SourceId)
+            && Math.Abs(value.Delay-(cast.Delay+0.78f))<0.0001f),
+            "Nested burning damage and native creation no longer share their original absolute time.");
     }
 }

@@ -33,11 +33,13 @@ namespace Zjcs.Combat.Official
             }
             try
             {
+                BeginGridViewEvents();
                 CleanupGridItems();
                 return StepCore(sequence, counter);
             }
             finally
             {
+                ClearGridViewEvents();
                 // Include units summoned during this step. No delegate or executor is retained
                 // by the checkpoint, including when a configuration fails during a nested cast.
                 foreach (var unit in StatusOwners(true))
@@ -58,6 +60,7 @@ namespace Zjcs.Combat.Official
 
         private void OnStatusEnded(FightBattleUnitState owner, FightBattleStatusState ended)
         {
+            RecordGridStatus(owner, ended, FightBattleGridViewEventKind.StatusEnd);
             if (ended != null) ended.StackChanged = null;
             statusMutex.Remove(owner, ended);
             if (statusCatalog != null && ended != null && ended.HasPropertyComponent)
@@ -80,6 +83,7 @@ namespace Zjcs.Combat.Official
             statusMutex.Add(owner, status);
             if (statusCatalog != null && status != null && status.HasPropertyComponent)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
+            RecordGridStatus(owner, status, FightBattleGridViewEventKind.StatusStart);
             var context = movementStartContext;
             if (context == null || statusCatalog == null || status == null
                 || owner == null || owner.Ended) return;
@@ -110,6 +114,8 @@ namespace Zjcs.Combat.Official
 
         private void OnStatusStackChanged(FightBattleStatusState status)
         {
+            if (status != null && unitById.TryGetValue(status.OwnerId, out var statusOwner))
+                RecordGridStatus(statusOwner, status, FightBattleGridViewEventKind.StatusUpdate);
             if (status == null || !status.HasStackCountTrigger
                 || !unitById.TryGetValue(status.OwnerId, out var owner)) return;
             status.StackCountStartChecked = true;

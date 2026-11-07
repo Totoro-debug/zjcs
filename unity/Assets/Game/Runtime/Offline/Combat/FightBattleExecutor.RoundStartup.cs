@@ -10,6 +10,7 @@ namespace Zjcs.Combat.Official
         private void OnStatusForbiddenChanged(FightBattleUnitState owner,
             FightBattleStatusState status, bool wasForbidden)
         {
+            RecordGridStatus(owner, status, FightBattleGridViewEventKind.StatusUpdate);
             if (statusCatalog != null)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             var listener = roundStartNotForbiddenListener;

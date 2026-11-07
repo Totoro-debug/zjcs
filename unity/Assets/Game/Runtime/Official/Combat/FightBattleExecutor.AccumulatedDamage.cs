@@ -42,7 +42,7 @@ namespace Zjcs.Combat.Official
                         checkpoint.Statistics.RecordCast(source.Id, skill.EntityId, skill.ItemId);
                         int firstDamage = damageEvents.Count;
                         ExecuteSkill(source, skill, targets, casts, damageEvents, movements,
-                            out float delay, owner, allowDeadSource: source.Hp <= 0);
+                            out float delay, owner, allowDeadSource: source.Hp <= 0, presentationCast: cast);
                         CompleteCastPresentation(cast, skill, delay);
                         long hpDamage = 0;
                         for (int i = firstDamage; i < damageEvents.Count; i++)

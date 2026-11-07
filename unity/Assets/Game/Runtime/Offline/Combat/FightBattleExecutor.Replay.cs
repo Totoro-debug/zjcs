@@ -157,11 +157,13 @@ namespace Zjcs.Combat.Official
                     int damageStart = damageEvents.Count;
                     int movementStart = movements.Count;
                     var cast = new FightBattleSkillCastEvent { ActorId = source.Id, Slot = next.Slot,
+                        Presentation = FightBattleSkillCastPresentation.Capture(source, next, targets),
                         SkillEntityId = next.EntityId, SkillItemId = next.ItemId, IsReplay = true, ReplayType = request.ReplayType, ReplayStatusInstanceId = request.StatusInstanceId };
                     foreach (var target in targets) cast.TargetIds.Add(target.Id);
                     casts.Add(cast);
                     ExecuteSkill(source, next, targets, casts, damageEvents, movements,
-                        out float delay, out float nestedDuration, out float nestedActionDuration);
+                        out float delay, out float nestedDuration, out float nestedActionDuration, presentationCast: cast);
+                    CompleteCastPresentation(cast, next, delay);
                     OffsetSkillEvents(casts, castStart, damageEvents, damageStart, movements,
                         movementStart, replayStart);
                     maxDuration = Math.Max(maxDuration, replayStart + Math.Max(

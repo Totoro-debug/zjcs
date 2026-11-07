@@ -90,6 +90,13 @@ namespace Zjcs.Presentation.Home
             var home=HomeFeatureRuntime.Begin(slot,saveRoot,null);
             home.TutorialAutoStartEnabled=false;
             yield return null;
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_GRID_ACCEPTANCE") == "1")
+            {
+                yield return SkillGridBattleValidation.Exercise(home, slot, saveRoot, output,
+                    ClickGridControl, CaptureGridFrame, value => home = value);
+                File.WriteAllText(Path.Combine(output,"result.json"),JsonUtility.ToJson(new Result {passed=true},true));
+                Destroy(home.gameObject);Application.Quit(0);yield break;
+            }
             FightBattleCheckpoint settled=null;
             var runner=home.StartWeeklyChallengeBattle(4800,cp=>settled=cp);
             var controller=runner.Controller;
@@ -133,6 +140,10 @@ namespace Zjcs.Presentation.Home
             ExecuteEvents.ExecuteHierarchy(hits[0].gameObject,pointer,ExecuteEvents.pointerUpHandler);
             ExecuteEvents.ExecuteHierarchy(hits[0].gameObject,pointer,ExecuteEvents.pointerClickHandler);
         }
+        private static IEnumerator ClickGridControl(Selectable control)
+        { Click((Button)control); yield return null; }
+        private IEnumerator CaptureGridFrame(string name)
+        { yield return new WaitForEndOfFrame(); Capture(name); }
         private void Capture(string name)
         {
             var texture=ScreenCapture.CaptureScreenshotAsTexture();

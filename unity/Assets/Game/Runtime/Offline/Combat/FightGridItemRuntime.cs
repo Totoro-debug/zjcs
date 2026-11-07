@@ -38,6 +38,7 @@ namespace Zjcs.Combat.Official
             foreach (var status in new List<FightBattleStatusState>(item.Runtime.Statuses))
                 FightStatusLifecycle.End(item.Runtime, status);
             item.Runtime.Ended = true;
+            item.ViewRemoved?.Invoke(item);
         }
 
         private static List<FightPropertyValue> Copy(IList<FightPropertyValue> source)

@@ -337,12 +337,18 @@ namespace Zjcs.Combat.Official
                 // FightSkillAgentComponentImplement.UpdateSkillDataOnRun records this
                 // release before its end callbacks can check LimitedTimes or modify CD.
                 var presentation = FightBattleSkillCastPresentation.Capture(actor, skill, targets);
+                var cast = new FightBattleSkillCastEvent
+                {
+                    ActorId = actor.Id, Presentation = presentation, Slot = skill.Slot,
+                    SkillEntityId = skill.EntityId, SkillItemId = skill.ItemId
+                };
+                foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
                 int skillCastStart = casts.Count, skillDamageStart = damageEvents.Count;
                 int skillMovementStart = movements.Count;
                 skillState.RunSkill(skill.Slot);
                 ExecuteSkill(actor, skill, targets, casts, damageEvents, movements,
                     out float castLastDelay, out float skillStartDuration,
-                    out float skillStartActionDuration);
+                    out float skillStartActionDuration, presentationCast: cast);
                 checkpoint.Statistics.RecordCast(actor.Id, skill.EntityId, skill.ItemId);
                 stepDuration = Math.Max(stepDuration,
                     petSupportDuration + approachEnd + Math.Max(ResolveDuration(skill, castLastDelay), skillStartDuration));
@@ -353,15 +359,6 @@ namespace Zjcs.Combat.Official
                     stepActionDuration = Math.Max(stepActionDuration, petSupportDuration + approachEnd + skillStartActionDuration);
                 checkedSlots.Add(skill.Slot);
                 performedTargets.AddRange(targets);
-                var cast = new FightBattleSkillCastEvent
-                {
-                    ActorId = actor.Id,
-                    Presentation = presentation,
-                    Slot = skill.Slot,
-                    SkillEntityId = skill.EntityId,
-                    SkillItemId = skill.ItemId
-                };
-                foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
                 CompleteCastPresentation(cast, skill, castLastDelay);
                 casts.Add(cast);
                 float cooldownDuration = 0f, cooldownActionDuration = -1f;
@@ -432,8 +429,16 @@ namespace Zjcs.Combat.Official
             turn.ActionRound = actor.SkillState.Round;
             SynchronizeTurn(actor);
             turns.Finish(turn);
-            FightStatusLifecycle.TickTurn(actor, StatusOwners(), actorRound, FightStatusLifecycle.TimingEnd);
-            CleanupGridItems();
+            float? previousGridViewTime = gridViewTimeOverride;
+            try
+            {
+                // Round expiration follows action end, independently of lingering
+                // skill lifetime tails. This clock changes presentation only.
+                gridViewTimeOverride = Math.Max(0f, stepActionDuration);
+                FightStatusLifecycle.TickTurn(actor, StatusOwners(), actorRound, FightStatusLifecycle.TimingEnd);
+                CleanupGridItems();
+            }
+            finally { gridViewTimeOverride = previousGridViewTime; }
             RebuildBattleProperties();
             ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
                 ref statusEndDelay, ref stepDuration, ref stepActionDuration);
@@ -460,6 +465,7 @@ namespace Zjcs.Combat.Official
             var stepEvent = CreateEvent(actor, eventSkill, performedTargets, before,
                 globalRound, movements, casts, damageEvents, currentStepSpawnedUnitIds,
                 statusCustomActions, stepDuration, stepActionDuration);
+            CompleteGridViewEvents(stepEvent);
             // Phase entry is round-driven, so the original body transition still occurs when
             // break/control prevents the one allowed 18130 release.
             if (checkpoint.StageId == ChaosInvasionStageId
@@ -591,7 +597,7 @@ namespace Zjcs.Combat.Official
                 try
                 {
                     ExecuteSkill(caster, skill, targets, casts, damageEvents, movements,
-                        out lastDelay, out skillDuration, out actionDuration);
+                        out lastDelay, out skillDuration, out actionDuration, presentationCast: cast);
                 }
                 finally
                 {
@@ -667,11 +673,11 @@ namespace Zjcs.Combat.Official
             List<FightBattleUnitState> targets, List<FightBattleSkillCastEvent> casts,
             List<FightBattleDamageEvent> damageEvents, List<FightBattleMovementEvent> movements,
             out float lastDelay, FightBattleUnitState targetPosition = null, bool allowDeadSource = false,
-            double externalDamageFactor = 1.0)
+            double externalDamageFactor = 1.0, FightBattleSkillCastEvent presentationCast = null)
         {
             ExecuteSkill(actor, skill, targets, casts, damageEvents, movements, out lastDelay,
                 out float nestedDuration, out float nestedActionDuration,
-                targetPosition, allowDeadSource, externalDamageFactor);
+                targetPosition, allowDeadSource, externalDamageFactor, presentationCast: presentationCast);
             if (movementStartContext != null)
             {
                 movementStartContext.Duration = Math.Max(movementStartContext.Duration, nestedDuration);
@@ -686,12 +692,16 @@ namespace Zjcs.Combat.Official
             out float lastDelay, out float statusTriggerDuration,
             out float statusTriggerActionDuration, FightBattleUnitState targetPosition = null,
             bool allowDeadSource = false, double externalDamageFactor = 1.0,
-            FightBattleUnitState targetingSource = null)
+            FightBattleUnitState targetingSource = null, FightBattleSkillCastEvent presentationCast = null)
         {
             // Movement listeners have local times, just like other nested skills. Return
             // their lifetime to the caller before that caller offsets the whole cast.
             var previousMovementContext = movementStartContext;
             var previousConditionalProperties = conditionalHitProperties;
+            var previousGridViewCast = gridViewCast;
+            var previousGridViewTime = gridViewTimeOverride;
+            gridViewCast = presentationCast;
+            gridViewTimeOverride = null;
             conditionalHitProperties = new FightConditionalHitProperties(actor, skill, skillItems, units, statusCatalog, checkpoint.GridItems);
             movementStartContext = new MovementStartContext { Casts = casts, DamageEvents = damageEvents, Movements = movements };
             try
@@ -709,6 +719,8 @@ namespace Zjcs.Combat.Official
                 SynchronizePetEnergyHp(actor);
                 conditionalHitProperties = previousConditionalProperties;
                 movementStartContext = previousMovementContext;
+                gridViewCast = previousGridViewCast;
+                gridViewTimeOverride = previousGridViewTime;
             }
         }
 
@@ -1646,7 +1658,7 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleUnitState unit in targets) cast.TargetIds.Add(unit.Id);
             casts.Add(cast);
             ExecuteSkill(actor, skill, targets, casts, damageEvents, movements,
-                out float delay, target);
+                out float delay, target, presentationCast: cast);
             CompleteCastPresentation(cast, skill, delay);
             if (delay > lastDelay) lastDelay = delay;
         }
@@ -1716,7 +1728,7 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
                 casts.Add(cast);
                 ExecuteSkill(actor, extraSkill, targets, casts, damageEvents, movements,
-                    out float delay);
+                    out float delay, presentationCast: cast);
                 CompleteCastPresentation(cast, extraSkill, delay);
                 if (delay > lastDelay) lastDelay = delay;
             }
@@ -1784,7 +1796,7 @@ namespace Zjcs.Combat.Official
                 };
                 foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
                 casts.Add(cast);
-                ExecuteSkill(owner, skill, targets, casts, damageEvents, movements, out float delay);
+                ExecuteSkill(owner, skill, targets, casts, damageEvents, movements, out float delay, presentationCast: cast);
                 CompleteCastPresentation(cast, skill, delay);
                 if (delay > lastDelay) lastDelay = delay;
             }
@@ -1845,7 +1857,7 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
                 casts.Add(cast);
                 ExecuteSkill(owner, skill, targets, casts, damageEvents, movements,
-                    out float delay, targetPosition);
+                    out float delay, targetPosition, presentationCast: cast);
                 CompleteCastPresentation(cast, skill, delay);
                 if (delay > lastDelay) lastDelay = delay;
                 maxDuration = Math.Max(maxDuration, ResolveDuration(skill, delay));
@@ -1930,7 +1942,7 @@ namespace Zjcs.Combat.Official
                     out float delay, out float nestedDuration, out float nestedActionDuration,
                     !invocation.SelectTargets || invocation.UseTargetPositionWithSelection
                         ? targetPosition : null, invocation.AllowDeadSource || IsGridSkillSource(source),
-                    invocation.DamageFactor);
+                    invocation.DamageFactor, presentationCast: cast);
                 CompleteCastPresentation(cast, skill, delay);
                 // FightStatusMoveNearComponentInfo.SkillTriggerDelayTime delays the entire skill,
                 // including its nested triggers. Keep each event relative until execution returns.
