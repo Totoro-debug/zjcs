@@ -1118,6 +1118,7 @@ namespace Zjcs.Combat.Official
                 // through StatusStarted. Sweep only still-pending HP starts, once each.
                 foreach (var status in new List<FightBattleStatusState>(summon.Statuses))
                     if (summon.Statuses.Contains(status)) StartHpStatus(summon, status);
+                ExecuteMissingHitSummon(summon, true);
                 RebuildBattleProperties();
             }
         }
@@ -2253,6 +2254,7 @@ namespace Zjcs.Combat.Official
                     if (status != null && status.StartRound < 0)
                         FightStatusLifecycle.Initialize(status, StatusClockRound(status));
             FinishVoodooDolls();
+            ApplyMissingHitSummonRemovalTriggers();
             if (statusCatalog != null)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             checkpoint.Statistics.RecordPendingShieldGrants(units);

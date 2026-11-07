@@ -329,5 +329,75 @@ namespace Zjcs.Combat.Official
                     actionDuration);
             }
         }
+
+        /// <summary>
+        /// Applies the official FightStatusHitSummonComponent at the two summon lifecycle
+        /// boundaries that are observable by the offline battle loop. The server filter field is
+        /// not present in the client payload and therefore remains an explicit unsupported case.
+        /// </summary>
+        private void ExecuteMissingHitSummon(FightBattleUnitState summon, bool created)
+        {
+            if (statusCatalog == null || summon == null || summon.MasterId <= 0
+                || summon.Statuses == null) return;
+            FightBattleUnitState owner = ResolveUnit(summon.MasterId);
+            if (owner?.Statuses == null) return;
+            var invocations = new List<FightBattleStatusSkillInvocation>();
+            foreach (FightBattleStatusState status in new List<FightBattleStatusState>(owner.Statuses))
+            {
+                FightBattleStatusHitSummonComponentState component = status?.Components?.HitSummon;
+                if (component == null || !owner.Statuses.Contains(status)
+                    || (created ? !component.Create : !component.Remove)
+                    || component.MaxCount >= 0 && component.TriggeredCount >= component.MaxCount)
+                    continue;
+                if (!created && component.FilterSubstitute && summon.VoodooDoll != null) continue;
+                if (!created && component.CheckSummonLifeDuration
+                    && !HasSummonLifeDuration(summon)) continue;
+                if (!RollComponent(component.Rate)) continue;
+
+                component.TriggeredCount++;
+                if (created && component.SummonStatusId > 0)
+                    ApplyComponentStatus(status, component.SummonStatusId, summon, null);
+                if (component.SkillId > 0)
+                {
+                    AppendComponentInvocation(status, new FightBattleStatusStateTrigger
+                    {
+                        EntityId = component.SkillId,
+                        Source = 0,
+                        Target = 0,
+                        TargetPos = created ? 1 : 0
+                    }, owner, summon, invocations, created);
+                    if (!created && invocations.Count > 0)
+                        invocations[invocations.Count - 1].AllowDeadTarget = true;
+                }
+            }
+            if (invocations.Count == 0 || movementStartContext == null) return;
+            float delay = 0f;
+            ExecuteConfiguredStatusSkills(invocations, movementStartContext.Casts,
+                movementStartContext.DamageEvents, movementStartContext.Movements, ref delay,
+                out float duration, out float actionDuration);
+            movementStartContext.Duration = Math.Max(movementStartContext.Duration,
+                Math.Max(delay, duration));
+            movementStartContext.ActionDuration = Math.Max(movementStartContext.ActionDuration,
+                actionDuration);
+        }
+
+        private static bool HasSummonLifeDuration(FightBattleUnitState summon)
+        {
+            if (summon?.Statuses == null) return false;
+            foreach (FightBattleStatusState status in summon.Statuses)
+                if (status != null && status.DurationRound >= 0) return true;
+            return false;
+        }
+
+        private void ApplyMissingHitSummonRemovalTriggers()
+        {
+            foreach (FightBattleUnitState summon in units)
+            {
+                if (summon == null || summon.MasterId <= 0 || summon.MonsterId <= 0
+                    || !summon.Ended || summon.HitSummonRemoveProcessed) continue;
+                summon.HitSummonRemoveProcessed = true;
+                ExecuteMissingHitSummon(summon, false);
+            }
+        }
     }
 }

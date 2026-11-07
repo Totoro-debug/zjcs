@@ -60,6 +60,7 @@ namespace Zjcs.Combat.Official
         public long MaxResilience;
         public int BrokenRound = -1;
         public bool Ended;
+        [NonSerialized] internal bool HitSummonRemoveProcessed;
         public FightVoodooDollLink VoodooDoll;
         public List<FightPropertyValue> Properties = new List<FightPropertyValue>();
         public List<FightBattleSkillDefinition> Skills = new List<FightBattleSkillDefinition>();
