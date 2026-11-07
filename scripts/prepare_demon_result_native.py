@@ -135,12 +135,14 @@ class DemonResultBinding(PartnerPanelBinding):
         self.selections, self.roots = {}, {}
         code = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code'
         for relative in (['client-source/' + name + '.cs' for name in (
-            'GameEndPanelDemonKing', 'GameEndPanelBoss', 'GameEndPlayerSettleGroup', 'GameEndPlayerSettleItem',
+            'GameEndPanelDemonKing', 'GameEndPanelBoss', 'GameEndUIHandler', 'GameEndPlayerSettleGroup', 'GameEndPlayerSettleItem',
             'FightThumbsUpUI', 'AwardContent', 'AwardPanelItem', 'ItemAwardIcon', 'AwardLoopScrollRect',
             'FightMainPanelLeaveBtnUI', 'ItemAwardIconManager', 'ItemIconManager', 'TempRTUI',
             'ItemDetailDialog', 'ItemDetailDialogFactory', 'ItemDetailDialogUseResult', 'ItemDetailDialogAddition',
             'ItemSourceGo', 'ItemSourceItem', 'ItemDecomposContent', 'OutputAdditionDetailButton', 'UseResultIcon')]
             + ['common-source/Common/FightUtilsHandler.cs', 'common-source/Common/LanguageUtils.cs',
+               'common-source/Common/StageInfoParser.cs', 'common-source/Common/StageType.cs',
+               'common-source/Common/GameBattleEndType.cs', 'common-source/Common/GameSettings.cs',
                'common-source/Common/ItemSourceDataManager.cs', 'common-source/Common/ItemCountLimitInfoParser.cs',
                'common-source/GlobalColors.cs', 'client-source/GMFunction/ItemDetailGmTools.cs']):
             path = code / relative
@@ -214,6 +216,12 @@ class DemonResultBinding(PartnerPanelBinding):
         tables_path = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-data/tables.json'
         tables = json.loads(tables_path.read_bytes())
         self.inputs[tables_path.relative_to(ROOT).as_posix()] = sha(tables_path.read_bytes())
+        self.dynamic_proof['result_timing'] = {
+            'normal': tables['game_settings']['GameEndDelayTime'],
+            'round_limit': tables['game_settings']['GameEndOverRoundDelayTime'],
+        }
+        if any(value < 0 for value in self.dynamic_proof['result_timing'].values()):
+            raise ValueError('Original result delays must be nonnegative')
         item, = [row for row in tables['item'] if row['ClassId'] == 41021]
         if item['ItemType'] != 108 or item['IconEffect'] or not item['CanOverlap']:
             raise ValueError('Reinspect original demon reward icon branch')
@@ -450,6 +458,7 @@ class DemonResultBinding(PartnerPanelBinding):
         self.inputs.update(inputs)
         colors = self.dynamic_proof['colors']['fields']
         payload = dict(schema=1, manifest=self.recovery.apk.version, item=self.dynamic_proof['reward_item'],
+            end_delays=self.dynamic_proof['result_timing'],
             item_detail=self.dynamic_proof['item_detail'],
             attachments=[dict(type=row['type'], guid=row['guid']) for row in self.dynamic_proof['attachments']['selected']],
             images=[dict(path=self.dynamic_proof['reward_item']['RawIcon'],

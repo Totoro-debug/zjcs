@@ -174,7 +174,6 @@ namespace Zjcs.Editor
                 yield return null;
             }
             yield return SettleUi();
-            verifyHome();
             Require(completed != null && completed.PartEnded && completed.Counter == counter
                 && !completed.Outcome.Won && completed.Outcome.CanSettle,
                 "Chaos partial exit advanced actions or fabricated victory/invalidity.");
@@ -186,6 +185,8 @@ namespace Zjcs.Editor
             Require(damage > 0 && session.DemonKingDamage(period) == previousDamage + damage
                 && !session.TryResumeBattle(4800, out _, out _),
                 "Chaos partial exit lost actual damage or retained a resumable battle.");
+            yield return ExerciseDemonResultPanel(home, completed, report, output, weekly.FinalChallengeAward);
+            verifyHome();
             yield return Capture(output, "chaos-partial-returned");
             Debug.Log("[Battle partial leave] daily native confirmation/current grade and chaos actual damage/report-before-result/cold persistence passed.");
         }

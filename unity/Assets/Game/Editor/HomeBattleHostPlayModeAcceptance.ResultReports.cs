@@ -93,6 +93,7 @@ namespace Zjcs.Editor
                 int resultId = result.GetInstanceID();
                 var common = result.GetComponent<OfficialBattleResultReport>();
                 Require(common != null, "The activity result did not use the common report lifecycle.");
+                string finalSnapshot = JsonUtility.ToJson(common.FinalReport);
                 VerifyDomainBossActualRank(home, activity, checkpoint);
                 var native = result.GetComponentInChildren<GameEndPanelBase>();
                 Require(native != null && native.ReportButton != null,
@@ -147,6 +148,8 @@ namespace Zjcs.Editor
                 yield return SettleUi();
                 Require(!common.IsOpen && result != null && result.GetInstanceID() == resultId,
                     "Closing the report did not return to the same result instance.");
+                Require(common.FinalReport != null && JsonUtility.ToJson(common.FinalReport) == finalSnapshot,
+                    "Closing the report discarded or changed its immutable final statistics.");
                 Require(Root("BattleResultReportLifetime") == null && Root("skill_plain_detail") == null,
                     "Closing the report leaked its appearance/detail lifetime.");
                 click(native.ReportButton);

@@ -163,7 +163,12 @@ namespace Zjcs.Editor
             home.CloseForNavigation(); yield return null; yield return null;
             home = HomeFeatureRuntime.Begin(slot, savesRoot, null); adoptHome(home);
             home.TutorialAutoStartEnabled = false;
-            weekly = home.StartWeeklyChallengeBattle(4800, _ => { }); weekly.enabled = false;
+            FightBattleCheckpoint settled = null;
+            FightBattleReport finalReport = null;
+            OfflineWeeklyChallengeSession.ChallengeAward award = null;
+            weekly = home.StartWeeklyChallengeBattle(4800, value => {
+                settled = value; finalReport = weekly.FinalReport; award = weekly.FinalChallengeAward;
+            }); weekly.enabled = false;
             controller = weekly.Controller;
             main = controller.Checkpoint.Units.Single(value => value.Id == 1);
             Require(controller.Checkpoint.Counter == counter && controller.Checkpoint.Units.Single(value => value.Id == boss.Id).Hp == hp
@@ -178,7 +183,22 @@ namespace Zjcs.Editor
                 "Restored battle controls did not finish their original Show animation.");
             Require(controller.Checkpoint.Counter == counter, "Waiting for the restored HUD advanced combat.");
             yield return Capture(output, "body-range-cold-resume");
-            UnityEngine.Object.Destroy(weekly); yield return null;
+            if (Environment.GetEnvironmentVariable("ZJCS_DEMON_RESULT_PANEL") == "1")
+            {
+                yield return ClickBattleLeave();
+                yield return new WaitForSecondsRealtime(2);
+                yield return Combat.BattleGameViewInput.Click(Active<Zjcs.Official.WorldUI.WorldConfirmDialog>().Single().ConfirmBtn);
+                deadline = Time.realtimeSinceStartup + 30;
+                while (settled == null)
+                {
+                    Require(Time.realtimeSinceStartup < deadline, "The restored melee battle did not settle.");
+                    yield return null;
+                }
+                Require(finalReport != null && finalReport.Units.Any(value => value.Side == 1 && value.DamageDealt > 0),
+                    "The resumed melee settlement lost its actual damage.");
+                yield return ExerciseDemonResultPanel(home, settled, finalReport, output, award);
+            }
+            else { UnityEngine.Object.Destroy(weekly); yield return null; }
             Debug.Log("[Battle body range] original 10011/4800 body-edge approach, movement playback, melee damage and cold resume passed.");
         }
     }

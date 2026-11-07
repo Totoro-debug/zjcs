@@ -482,7 +482,12 @@ namespace Zjcs.Presentation.Home
             weeklyChallengeBattle = runner;
             runner.Completed += checkpoint =>
             {
-                if (weeklyChallengeBattle == runner) weeklyChallengeBattle = null;
+                if (checkpoint.StageId == 4800)
+                    Hud.ShowDemonResult(checkpoint, runner.FinalReport, runner.FinalChallengeAward, () => {
+                        if (runner) runner.ReleaseResult();
+                        if (weeklyChallengeBattle == runner) weeklyChallengeBattle = null;
+                    });
+                else if (weeklyChallengeBattle == runner) weeklyChallengeBattle = null;
                 completed?.Invoke(checkpoint);
             };
             runner.Left += () =>

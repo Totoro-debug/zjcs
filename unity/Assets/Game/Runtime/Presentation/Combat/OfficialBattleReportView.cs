@@ -249,6 +249,7 @@ namespace Zjcs.Presentation.Combat
             foreach (WorldMultiLanguageText text in target.GetComponentsInChildren<WorldMultiLanguageText>(true))
             {
                 text.Localizer = LocalizeReportText;
+                if (presentation.Font != null) text.FontProvider = () => presentation.Font;
                 text.Refresh();
             }
         }

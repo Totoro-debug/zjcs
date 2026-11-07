@@ -1396,6 +1396,7 @@ namespace Zjcs.Presentation.Home
 
         public void Dispose()
         {
+            if (demonResult) demonResult.Release();
             host.EndAstrologicalCharge();
             ClearAstrologicalRows();
             homeSkin?.Close();

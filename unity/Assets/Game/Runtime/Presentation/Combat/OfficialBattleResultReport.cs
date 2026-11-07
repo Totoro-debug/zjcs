@@ -95,7 +95,6 @@ namespace Zjcs.Presentation.Combat
             var released = lifetime;
             Action callback = closed;
             report = null;
-            finalReport = null;
             lifetime = null;
             closed = null;
             previous?.Dispose();

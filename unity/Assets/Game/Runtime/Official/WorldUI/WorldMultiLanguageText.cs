@@ -19,6 +19,7 @@ namespace Zjcs.Official.WorldUI
         public static Func<string, string> Localize { get; set; }
         // The map supplies the same language service for this window's lifetime.
         [NonSerialized] public Func<string, string> Localizer;
+        [NonSerialized] public Func<TMP_FontAsset> FontProvider;
         public static Func<TMP_FontAsset> LanguageFont { get; set; }
         private TMP_Text CacheText => mCacheText != null ? mCacheText : (mCacheText = GetComponent<TMP_Text>());
         public string Text => CacheText.text;
@@ -50,7 +51,7 @@ namespace Zjcs.Official.WorldUI
         }
         public void Refresh()
         {
-            TMP_FontAsset font = LanguageFont?.Invoke();
+            TMP_FontAsset font = (FontProvider ?? LanguageFont)?.Invoke();
             if (font != null && CacheText.font != font)
             {
                 CacheText.font = font;

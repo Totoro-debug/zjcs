@@ -51,7 +51,7 @@ namespace Zjcs.Editor.Combat
             Canvas.ForceUpdateCanvases();
         }
 
-        public static IEnumerator Click(Button button)
+        public static IEnumerator Click(Selectable button)
         {
             if (button == null || !button.isActiveAndEnabled || !button.IsInteractable())
                 throw new InvalidOperationException("The battle input target is not interactable.");

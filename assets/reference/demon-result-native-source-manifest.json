@@ -9,6 +9,7 @@
     ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/source-manifest.json": "09b81e5260175a1524a2178d37bea2b78752bdc85f130751e2d95398171fbe0b",
     ".tools/source-packages/current/884_156692/official-code/client-source/GameEndPanelDemonKing.cs": "b8374ba2ad5a7454d626114d6a82d1d399df8d59437dd21b2086bf4a17e63899",
     ".tools/source-packages/current/884_156692/official-code/client-source/GameEndPanelBoss.cs": "a7176da059aa26f359b34e9d8fa7f7b8d07e9701c1a5fc7264a3f29e2da6a969",
+    ".tools/source-packages/current/884_156692/official-code/client-source/GameEndUIHandler.cs": "7eae09fb462ce7956b5f7f9740586f320b8e26c95df4c03715afb688643992d7",
     ".tools/source-packages/current/884_156692/official-code/client-source/GameEndPlayerSettleGroup.cs": "dff8dde97ba461995b353018fd7b34744aea21bf17d38ea45b667d0db114b811",
     ".tools/source-packages/current/884_156692/official-code/client-source/GameEndPlayerSettleItem.cs": "0cf231e78363342451ba52ad48cc9742ccbef694fe37a8aba5e02a61a77c5869",
     ".tools/source-packages/current/884_156692/official-code/client-source/FightThumbsUpUI.cs": "e50df5537f5acb62ca4c4c16fa341a0e50b4d99b0b5a74185e2310fb3f89cace",
@@ -31,6 +32,10 @@
     ".tools/source-packages/current/884_156692/official-code/client-source/UseResultIcon.cs": "06fbd612d1362ea6afb907711dffab065ff69c1fddce45b96a2494cf0a176aba",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightUtilsHandler.cs": "6cff15412b844d47ecb14f7201a7b164af4932be9b7ceef8ee938957ebf84a8f",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/LanguageUtils.cs": "ddc94bb5dd46f8c71b6d58ab0f03e2048cde72911de11e343304ce73e4b9a61c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/StageInfoParser.cs": "f8fd8076a9635c141055c6f2cf81c29712029a58e885852255e0e0ecfcc297fa",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/StageType.cs": "5f9513e58049bf5311882bc2d4f0c67c8832ad2f52307510e095be0d05d87107",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameBattleEndType.cs": "877e0287a8d76a57719b1876965543d4ae80134349c86c9993f883a9b1182ed1",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameSettings.cs": "4f9c9d2d6e8ef856d8f705db4aad133d44237062ff0413ac6f7ee1b953336916",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemSourceDataManager.cs": "02fcded047db50c7d254227c819bdb6aa80806f43d88dc5f640b2d343716cc0a",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemCountLimitInfoParser.cs": "35f9e49f40548dcbd1ad82669339394edf51bc396ba679bc77b24340dfd9e8ab",
     ".tools/source-packages/current/884_156692/official-code/common-source/GlobalColors.cs": "d1001c536d42e6121e5571f055e7152eb4b961adbaf2514247d55096a4ea5153",
@@ -4070,7 +4075,7 @@
     "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Multicolour.asset.meta": "d6afdac346622009557a91c91162bd995ec81eae4528d5025b50a70fc41bb99f",
     "Converted/10d13b4fc29327fe.asset": "45e020a43c07facca6e08ddd576dffb3cb6b51a3ff0b9d64cd3d40b447211ecd",
     "Converted/10d13b4fc29327fe.asset.meta": "b773d4e64395962d28ad5c353503b5be3e6901c4d61033d549107814aa36d752",
-    "bindings.json": "c703a4f5f0b1b76a8f64aa8d37bd088c998b42f3c0cece07e9aebaf51fbd718f",
+    "bindings.json": "53d09d32bff04257bc307a80113a22e765a1dd9adb8ef0f9a490644b34528c8f",
     "bindings.json.meta": "87dbb99342fff5788dd2ae8bfbf89e96f398ecb0a9ee4b212e69ce6d077b021e",
     "Resources/Combat/DemonResult/audio.asset": "29946d09bc9d0d6bb299639da14205c9a66b0b655ae7f713574728d343169c14",
     "Resources/Combat/DemonResult/audio.asset.meta": "c6995ea67012786c2951298c70bb27965065ff1b891bfc63d49d920d06d2c641",
@@ -4118,7 +4123,7 @@
         "pendingBindings": {},
         "output": "GameEndPanelDemonKing.json",
         "nativeMeta_sha256": "f98251caacb26a16df5516e5678ed2db731b2f5d38959c7cc9be7f10ea3ab9b3",
-        "output_sha256": "e9f5fc246e500e9955981172bfaba8832b060bdbc6dcc594fcaac365102af404"
+        "output_sha256": "86ea40b252fd6daf1a681436bb447f20d0b699d6dfcb3debf4d32ac2d3085849"
       },
       {
         "name": "GameEndPlayerSettleItem",
@@ -4141,7 +4146,7 @@
         "pendingBindings": {},
         "output": "GameEndPlayerSettleItem.json",
         "nativeMeta_sha256": "be06a4faad2362f2bb168c5f08ed0f53ddb68720f66e973b0336eca0410b52f4",
-        "output_sha256": "855ad8ac0b9b0152a7b2c2b0a45ea9c3a66353b3651829ad15a1b63ca70f73af"
+        "output_sha256": "97961ec963bce4379d63963a5a91db65d437fe52210f63a3a4ae7e5252fd26a8"
       },
       {
         "name": "AwardPanelItem",
@@ -4399,7 +4404,7 @@
         "pendingBindings": {},
         "output": "GameEndPanelDemonKing.json",
         "nativeMeta_sha256": "f98251caacb26a16df5516e5678ed2db731b2f5d38959c7cc9be7f10ea3ab9b3",
-        "output_sha256": "e9f5fc246e500e9955981172bfaba8832b060bdbc6dcc594fcaac365102af404"
+        "output_sha256": "86ea40b252fd6daf1a681436bb447f20d0b699d6dfcb3debf4d32ac2d3085849"
       },
       "root": 1709254077376921,
       "original": "cab-ff03a0a47f870cb36b1d538e91841e1e:4351619233202796210",
@@ -9381,6 +9386,10 @@
         }
       ]
     },
+    "result_timing": {
+      "normal": 0.800000011920929,
+      "round_limit": 2.0
+    },
     "reward_item": {
       "ClassId": 41021,
       "Name": "混沌晶块",
@@ -10479,7 +10488,7 @@
         "guid": "231cab3c6fd951b7a2d14633a5465cbf",
         "type": 3
       },
-      "sha256": "490825671794bffc638d37170ab39c2e1523cd8bbfdb016cf4bf4e0966ea63ad",
+      "sha256": "99a73c950330a27ca9a3ccce31905c4c8aef70deba9e76c8fd377535aded9cef",
       "meta_sha256": "b3800ddfd9284bb2c13282b37175e83c6b21673564bc1683db546fc6cd6e2d38"
     },
     "MaintainGlobalScaleUI": {
@@ -13985,7 +13994,7 @@
       }
     }
   },
-  "generator_sha256": "f7235dd8b66e2dc46e0cdf54723662a41f0992379f232c1c9d9726a8e174cc1d",
+  "generator_sha256": "4f7fbcaa3f8025bd4a143d8cb605f8fc2163ac7aa54d38f68be4a8b4e14b8a5d",
   "installed_output_sha256": {
     "unity/Assets/Official/Combat/DemonResult/Prefabs/UI/Fight/GameEndPanelBoss_Show.anim": "78c4d9779f40353e630f3c03e0170ed7527e9141b4bb5dcd01e711076427fdec",
     "unity/Assets/Official/Combat/DemonResult/Prefabs/UI/Fight/GameEndPanelBoss_Show.anim.meta": "f9e7a939a7a45d680e242439deeb3c5820ef1f98bb9246efc483e1cf335c5825",
@@ -14301,7 +14310,7 @@
     "unity/Assets/Official/Combat/DemonResult/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Multicolour.asset.meta": "d6afdac346622009557a91c91162bd995ec81eae4528d5025b50a70fc41bb99f",
     "unity/Assets/Official/Combat/DemonResult/Converted/10d13b4fc29327fe.asset": "45e020a43c07facca6e08ddd576dffb3cb6b51a3ff0b9d64cd3d40b447211ecd",
     "unity/Assets/Official/Combat/DemonResult/Converted/10d13b4fc29327fe.asset.meta": "b773d4e64395962d28ad5c353503b5be3e6901c4d61033d549107814aa36d752",
-    "unity/Assets/Official/Combat/DemonResult/bindings.json": "c703a4f5f0b1b76a8f64aa8d37bd088c998b42f3c0cece07e9aebaf51fbd718f",
+    "unity/Assets/Official/Combat/DemonResult/bindings.json": "53d09d32bff04257bc307a80113a22e765a1dd9adb8ef0f9a490644b34528c8f",
     "unity/Assets/Official/Combat/DemonResult/bindings.json.meta": "87dbb99342fff5788dd2ae8bfbf89e96f398ecb0a9ee4b212e69ce6d077b021e",
     "unity/Assets/Official/Combat/DemonResult/Resources/Combat/DemonResult/audio.asset": "29946d09bc9d0d6bb299639da14205c9a66b0b655ae7f713574728d343169c14",
     "unity/Assets/Official/Combat/DemonResult/Resources/Combat/DemonResult/audio.asset.meta": "c6995ea67012786c2951298c70bb27965065ff1b891bfc63d49d920d06d2c641",

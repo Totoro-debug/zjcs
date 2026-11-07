@@ -121,9 +121,19 @@ namespace Zjcs.Presentation.Home
                 checkpoint.Outcome != null && checkpoint.Outcome.Won,
                 stageId == 4800 ? PlayerDamageDealt(finalReport) : 0, host.GrantBattleReward);
             complete = true;
-            DisposeBattle();
+            // GameEndUIHandler opens the native panel while the fight root still
+            // exists. GameEndPanelDemonKing.LeaveGame releases it on native leave.
+            if (stageId != 4800) DisposeBattle();
             Completed?.Invoke(checkpoint);
-            Destroy(this);
+            if (stageId != 4800) Destroy(this);
+        }
+
+        public void ReleaseResult()
+        {
+            if (!complete || stageId != 4800)
+                throw new InvalidOperationException("Only a settled demon result can release its battle.");
+            DisposeBattle();
+            Destroy(gameObject);
         }
 
         public void OnBattleHudControlClicked(string path)

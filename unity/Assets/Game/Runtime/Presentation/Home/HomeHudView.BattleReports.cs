@@ -25,9 +25,6 @@ namespace Zjcs.Presentation.Home
         private void BindDailyChallengeBattleReport(GameObject result, string resource,
             FightBattleCheckpoint checkpoint, FightBattleReport finalReport)
         {
-            var data = Resources.Load<TextAsset>("Combat/BattleReport/result-report-bindings");
-            if (data == null) throw new InvalidOperationException("Original result report bindings are absent.");
-            var bindings = JsonUtility.FromJson<ResultReportBindings>(data.text);
             string originalName = resource.Substring(resource.LastIndexOf('/') + 1);
             var actionPrefab = Resources.Load<GameObject>("Combat/ResultActions/" + originalName);
             if (actionPrefab == null) throw new InvalidOperationException("Original result action module is absent: " + originalName);
@@ -48,6 +45,20 @@ namespace Zjcs.Presentation.Home
             // original subtree replaces the legacy export's omitted scripts.
             var legacy = result.transform.Find("Content/BtnGroup");
             if (legacy != null) legacy.gameObject.SetActive(false);
+            BindNativeBattleResultReport(result, native, checkpoint, finalReport);
+            native.InitMsg(new BattleResultData {
+                StageId = checkpoint?.StageId ?? 0,
+                Win = checkpoint?.Outcome != null && checkpoint.Outcome.Won,
+                Players = Array.Empty<BattleResultPlayer>()
+            });
+        }
+
+        private void BindNativeBattleResultReport(GameObject result, GameEndPanelBase native,
+            FightBattleCheckpoint checkpoint, FightBattleReport finalReport)
+        {
+            var data = Resources.Load<TextAsset>("Combat/BattleReport/result-report-bindings");
+            if (data == null) throw new InvalidOperationException("Original result report bindings are absent.");
+            var bindings = JsonUtility.FromJson<ResultReportBindings>(data.text);
             var report = OfficialBattleResultReport.Attach(result, new OfficialBattleResultReport.Binding {
                 Report = native.ReportButton, BindReportButton = false,
                 PopupParent = canvas.transform, Checkpoint = checkpoint, FinalReport = finalReport,
@@ -89,13 +100,8 @@ namespace Zjcs.Presentation.Home
                 }
             });
             native.Bind(new LocalResultActions(checkpoint, report));
-            native.InitMsg(new BattleResultData {
-                StageId = checkpoint?.StageId ?? 0,
-                Win = checkpoint?.Outcome != null && checkpoint.Outcome.Won,
-                Players = Array.Empty<BattleResultPlayer>()
-            });
-            native.SetSkillItemReportBtn(checkpoint != null && checkpoint.Finished
-                && checkpoint.Outcome != null && !checkpoint.Outcome.Invalid);
+            // Attach owns availability before InitMsg; the native setter requires
+            // ResultMsg and would hide a freshly bound result at this point.
         }
 
         // Confirmed offline choice: original local statistics remain available;

@@ -826,6 +826,15 @@ namespace Zjcs.Editor
                 Time.timeScale = hpListener == null && hpRecovery == null && hpCost == null && hpSubstitute == null && roundStartup == null && roundTargets == null && roundProps == null && roundMeet == null && roundRandom == null && roundSource == null && roundMergeFormula == null && statusSources == null && roundDelay == null && roundForbidden == null ? 5 : 1;
                 while (runner != null)
                 {
+                    var demonResult = UnityEngine.Object.FindObjectOfType<DemonResultWindow>();
+                    if (runner is WeeklyChallengeBattleRunner && demonResult && demonResult.IsReady)
+                    {
+                        yield return Capture(output, name + "-native-result");
+                        yield return Combat.BattleGameViewInput.Click(demonResult.Panel
+                            .GetComponent<Zjcs.Official.BattleResultUI.GameEndPanelDemonKing>().LeaveGameBtn);
+                        yield return null;
+                        continue;
+                    }
                     triggerTiming?.ObservePresentation();
                     hpStartup?.ObservePresentation();
                     hpListener?.ObservePresentation();

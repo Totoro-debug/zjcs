@@ -53,7 +53,6 @@ namespace Zjcs.Editor
                     yield return null;
                 }
                 yield return SettleUi();
-                verifyHome();
                 Require(completed.PartEnded && completed.Counter == 0 && !completed.Outcome.Won
                     && completed.Outcome.CanSettle && report.Units.All(value => value.DamageDealt == 0),
                     "Zero-damage exit fabricated actions, damage or victory.");
@@ -64,8 +63,8 @@ namespace Zjcs.Editor
                     receipt = award.Receipt;
                 }
                 else Require(award == null, "Same-period second exit granted a duplicate challenge award.");
-                if (Environment.GetEnvironmentVariable("ZJCS_DEMON_RESULT_PANEL") == "1")
-                    yield return ExerciseDemonResultPanel(home, completed, report, output, award);
+                yield return ExerciseDemonResultPanel(home, completed, report, output, award);
+                verifyHome();
                 Require(home.ItemCount(41021) == initialItems + 300
                     && home.Profile.Save.Player.AppliedInventoryEventIds.Count(value => value == receipt) == 1,
                     "Demon reward inventory and receipt are inconsistent.");

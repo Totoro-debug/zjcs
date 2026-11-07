@@ -166,7 +166,9 @@ namespace Zjcs.Presentation.Combat
                 bool partnerBinding = partnerNpcBindings.Contains(binding);
                 if (binding == null || string.IsNullOrEmpty(binding.key) || binding.skeleton == null
                     || (byKey.ContainsKey(binding.key) && !partnerBinding))
-                    throw new InvalidOperationException("Official battle model catalog contains an invalid binding.");
+                    throw new InvalidOperationException("Official battle model catalog contains an invalid binding: "
+                        + (binding?.key ?? "<null>") + "; skeleton=" + (binding?.skeleton ? binding.skeleton.name : "<unbound>")
+                        + "; duplicate=" + (binding != null && binding.key != null && byKey.ContainsKey(binding.key)));
                 if (binding.animations == null || binding.animations.Length == 0 || binding.scale <= 0)
                     throw new InvalidOperationException("Official battle model animation metadata is incomplete: " + binding.key);
                 foreach (OfficialBattleAnimationAlias animation in binding.animations)
