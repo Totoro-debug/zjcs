@@ -3196,6 +3196,7 @@ namespace Zjcs.Combat.Official
             var result = new FightBattleHitEntity
             {
                 EntityId = id,
+                ScopeTransform = ReadHitScopeTransform(components),
                 MiniHitTargetCount = 1,
                 HemophagiaProperty = hemophagia == null ? 0 : Int(hemophagia, "HemophagiaPropType")
             };
@@ -3256,6 +3257,34 @@ namespace Zjcs.Combat.Official
                 result.FilterOutOfGroundScope = Bool(random, "FilterOutOfGroundScope", true);
             }
             return result;
+        }
+
+        private static FightBattleHitScopeTransform ReadHitScopeTransform(
+            Dictionary<string, object> components)
+        {
+            Dictionary<string, object> grid = Component(components, "GridTransformComponent");
+            List<object> center = grid != null && grid.TryGetValue("RealCenter", out var rawCenter)
+                && rawCenter != null ? Array(rawCenter, "GridTransformComponent.RealCenter") : null;
+            return new FightBattleHitScopeTransform
+            {
+                RealCenterX = center == null ? 0f : Convert.ToSingle(center[0], CultureInfo.InvariantCulture),
+                RealCenterY = center == null ? 0f : Convert.ToSingle(center[1], CultureInfo.InvariantCulture)
+            };
+        }
+
+        // Older checkpoints stored hit graphs before local-scope metadata was persisted.
+        // Restore only this immutable configuration; retain cooldowns, counters and graph state.
+        internal void RestoreHitScopeTransforms(FightBattleSkillDefinition skill)
+        {
+            if (skill == null) return;
+            foreach (FightBattleHitEntity hit in skill.HitGraphEntities ?? new List<FightBattleHitEntity>())
+                if (hit != null && hit.ScopeTransform == null
+                    && entities.TryGetValue(hit.EntityId, out var components))
+                    hit.ScopeTransform = ReadHitScopeTransform(components);
+            foreach (FightBattleHitDefinition hit in skill.Hits ?? new List<FightBattleHitDefinition>())
+                if (hit != null && hit.ScopeTransform == null
+                    && entities.TryGetValue(hit.EntityId, out var components))
+                    hit.ScopeTransform = ReadHitScopeTransform(components);
         }
 
         private static void AddSummonConfig(Dictionary<string, object> component,

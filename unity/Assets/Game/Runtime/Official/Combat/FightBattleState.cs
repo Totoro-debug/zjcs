@@ -1337,6 +1337,12 @@ namespace Zjcs.Combat.Official
     }
 
     [Serializable]
+    public sealed class FightBattleHitScopeTransform
+    {
+        public float RealCenterX, RealCenterY;
+    }
+
+    [Serializable]
     public sealed class FightBattleHitDefinition
     {
         public int EntityId;
@@ -1357,6 +1363,7 @@ namespace Zjcs.Combat.Official
         public bool RandomTargetNotSameGrid;
         public bool RandomTargetFilterOutOfGroundScope = true;
         public List<FightGridPoint> RandomTargetScope = new List<FightGridPoint>();
+        public FightBattleHitScopeTransform RandomTargetScopeTransform;
         // Official ActionType from FightHitBaseComponentInfo.DamageActionType: 4 Damage, 5 Cure,
         // 0 None. Synthetic definitions default to Damage.
         public int ActionType = 4;
@@ -1371,6 +1378,8 @@ namespace Zjcs.Combat.Official
         // Official HitScopCfg.Pos offsets: the damage area around the hit anchor. Empty means the
         // hit only applies to the selected target(s).
         public List<FightGridPoint> Scope = new List<FightGridPoint>();
+        // Null preserves explicitly authored world offsets; catalog scopes are local coordinates.
+        public FightBattleHitScopeTransform ScopeTransform;
         public bool AllowEmptyScope;
         // Official FightDamageComponent.StatusList entries applied when this hit lands.
         public List<FightBattleStatusApplication> AppliedStatuses = new List<FightBattleStatusApplication>();
@@ -1446,6 +1455,7 @@ namespace Zjcs.Combat.Official
         public bool BreakResilience;
         public int ActionType = 4;
         public List<FightGridPoint> Scope = new List<FightGridPoint>();
+        public FightBattleHitScopeTransform ScopeTransform;
         public bool AllowEmptyScope;
         public bool IgnoreShield;
         public bool IsSummon;

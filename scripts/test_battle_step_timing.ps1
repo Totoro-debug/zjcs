@@ -119,5 +119,10 @@ $walkExecutor = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
 $walkResult = $walkExecutor.Step(0, 1)
 Assert-Timing ($walkResult.Event.Movements.Count -eq 1 -and $walkResult.Event.Movements[0].Path.Count -eq 3) 'Skill did not move into range before hitting'
 Assert-Timing ($walkResult.Event.Duration -ge 1.0) 'Step duration did not include the movement time of two cells'
+$walk = $walkResult.Event.Movements[0]
+$travel = ($walk.Path.Count - 1) * 0.5 # Synthetic roles use MovementSecondsPerCell.
+Assert-Timing ([Math]::Abs($walkResult.Event.SkillCasts[0].Delay - $travel) -lt 0.0001) 'Approach and skill playback overlap'
+Assert-Timing ([Math]::Abs($walkResult.Event.DamageEvents[0].Delay - $travel) -lt 0.0001) 'Approach and damage playback overlap'
+Assert-Timing ([Math]::Abs($walkResult.Event.Duration - ($travel + 0.2)) -lt 0.0001) 'Approach did not prefix the full skill lifetime'
 
 Write-Output 'Battle step timing checks passed: configured hit delays, root anchor/delay, action duration, lifetime duration and movement pacing.'

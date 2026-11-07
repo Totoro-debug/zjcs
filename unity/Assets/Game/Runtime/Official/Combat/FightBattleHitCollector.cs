@@ -16,6 +16,7 @@ namespace Zjcs.Combat.Official
             public bool NotSameGrid;
             public bool FilterOutOfGroundScope;
             public List<FightGridPoint> Scope;
+            public FightBattleHitScopeTransform ScopeTransform;
         }
 
         public static List<FightBattleHitDefinition> Collect(IReadOnlyList<FightBattleHitEntity> entities,
@@ -142,6 +143,7 @@ namespace Zjcs.Combat.Official
                         || randomTargetContext.Scope == null
                         ? new List<FightGridPoint>()
                         : new List<FightGridPoint>(randomTargetContext.Scope),
+                    RandomTargetScopeTransform = randomTargetContext?.ScopeTransform,
                     ActionType = entity.ActionType,
                     Delay = entity.Delay,
                     DelayDistFactor = entity.DelayDistFactor,
@@ -152,6 +154,7 @@ namespace Zjcs.Combat.Official
                     BreakResilience = entity.BreakResilience,
                     Scope = entity.Scope == null
                         ? new List<FightGridPoint>() : new List<FightGridPoint>(entity.Scope),
+                    ScopeTransform = entity.ScopeTransform,
                     AllowEmptyScope = entity.AllowEmptyScope,
                     AppliedStatuses = entity.AppliedStatuses == null
                         ? new List<FightBattleStatusApplication>()
@@ -202,7 +205,8 @@ namespace Zjcs.Combat.Official
                     NotSameGrid = entity.NotSameGrid,
                     FilterOutOfGroundScope = entity.FilterOutOfGroundScope,
                     Scope = entity.Scope == null ? new List<FightGridPoint>()
-                        : new List<FightGridPoint>(entity.Scope)
+                        : new List<FightGridPoint>(entity.Scope),
+                    ScopeTransform = entity.ScopeTransform
                 };
             CollectChildren(entities, entity.RandomTargetHits, result, branch, depth + 1, 2,
                 Math.Max(1, entity.MiniHitTargetCount), childRandomTargetContext,

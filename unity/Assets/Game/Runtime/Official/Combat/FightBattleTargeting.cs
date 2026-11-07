@@ -274,14 +274,7 @@ namespace Zjcs.Combat.Official
             for (int i = 0; i < candidates.Count; i++)
             {
                 FightBattleUnitState target = candidates[i];
-                int dx = target.X - actor.X;
-                int dy = target.Y - actor.Y;
-                for (int rangeIndex = 0; rangeIndex < skill.Range.Count; rangeIndex++)
-                    if (skill.Range[rangeIndex].X == dx && skill.Range[rangeIndex].Y == dy)
-                    {
-                        inRange.Add(target);
-                        break;
-                    }
+                if (RangeIndex(actor, target, skill.Range) >= 0) inRange.Add(target);
             }
             if (inRange.Count == 0) return inRange;
 
@@ -302,19 +295,20 @@ namespace Zjcs.Combat.Official
         public static List<FightBattleUnitState> SelectScopeTargets(FightBattleUnitState actor,
             IReadOnlyList<FightBattleUnitState> units, FightBattleSkillDefinition skill,
             FightBattleUnitState primary, FightBattleHitDefinition hit,
-            FightRandomStream random = null)
+            FightRandomStream random = null, FightBattleSkillCastPresentation cast = null)
         {
             var result = new List<FightBattleUnitState>();
             if (actor == null || units == null || hit == null || hit.Scope == null
                 || hit.Scope.Count == 0) return result;
             int centerX = hit.Anchor == 0 && primary != null ? primary.X : actor.X;
             int centerY = hit.Anchor == 0 && primary != null ? primary.Y : actor.Y;
+            IReadOnlyList<FightGridPoint> scope = TransformScope(hit.Scope, hit.ScopeTransform, actor, cast);
             foreach (FightBattleUnitState unit in ScopeCandidates(actor, units,
                 skill == null ? 1 : skill.TargetType, skill))
             {
                 // GridGroundComponent.EnterPosSub registers the entity in every body cell.
                 // Reuse the same footprint intersection as the AI coverage checks, once per entity.
-                if (InScope(unit, centerX, centerY, hit.Scope)) result.Add(unit);
+                if (InScope(unit, centerX, centerY, scope)) result.Add(unit);
             }
             Dictionary<int, double> randomPriorities = CreateRandomPriorities(actor,
                 result, skill, random);
@@ -324,6 +318,23 @@ namespace Zjcs.Combat.Official
                 skill != null && skill.ReleaseWhileRidicule ? RidiculeSourceId(actor) : 0);
             if (hit.TargetMode != 1 && hit.TargetMode != 2 && result.Count > 1)
                 result.RemoveRange(1, result.Count - 1);
+            return result;
+        }
+
+        internal static IReadOnlyList<FightGridPoint> TransformScope(
+            IReadOnlyList<FightGridPoint> scope, FightBattleHitScopeTransform transform,
+            FightBattleUnitState actor, FightBattleSkillCastPresentation cast = null)
+        {
+            if (transform == null || scope == null) return scope;
+            int facing = cast == null ? actor.Direction : cast.FacingIndex;
+            // Local Pos2d.FourDirs is Down/Left/Up/Right; Common.Direction is Up/Down/Left/Right.
+            int direction = facing == 0 ? 1 : facing == 1 ? 2 : facing == 2 ? 0 : facing;
+            bool flip = cast == null ? (actor.HasFlipX ? actor.FlipX : facing == 1) : cast.FlipX;
+            var result = new List<FightGridPoint>(scope.Count);
+            foreach (FightGridPoint position in scope)
+                result.Add(FightGridTransformMath.CalcLocalToWorldPos(position,
+                    new FightGridPoint(0, 0), transform.RealCenterX, transform.RealCenterY,
+                    direction, flip));
             return result;
         }
 
@@ -498,7 +509,8 @@ namespace Zjcs.Combat.Official
             bool notSameTarget, ISet<int> excludedTargetIds,
             bool notSameEmptyScope, ISet<FightGridPoint> excludedEmptyPositions,
             bool notSameGrid, ISet<FightGridPoint> excludedGridPositions,
-            bool filterOutOfGroundScope)
+            bool filterOutOfGroundScope, FightBattleHitScopeTransform transform = null,
+            FightBattleSkillCastPresentation cast = null)
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
             if (units == null) throw new ArgumentNullException(nameof(units));
@@ -513,7 +525,7 @@ namespace Zjcs.Combat.Official
             var visited = new HashSet<FightGridPoint>();
             bool hasGridBounds = grid != null && grid.Width > 0 && grid.Height > 0;
 
-            foreach (FightGridPoint offset in scope)
+            foreach (FightGridPoint offset in TransformScope(scope, transform, actor, cast))
             {
                 var position = new FightGridPoint(centerX + offset.X, centerY + offset.Y);
                 if (!visited.Add(position)) continue;
@@ -795,15 +807,38 @@ namespace Zjcs.Combat.Official
             var position = new FightGridPoint(target.X, target.Y);
             if (skill == null || skill.Range == null || skill.Range.Count == 0) return position;
             int bestDistance = Int32.MaxValue;
-            foreach (FightGridPoint offset in skill.Range)
+            foreach (FightGridPoint candidate in CastingPositions(target, skill.Range))
             {
-                var candidate = new FightGridPoint(target.X - offset.X, target.Y - offset.Y);
                 int distance = Math.Abs(candidate.X - actor.X) + Math.Abs(candidate.Y - actor.Y);
                 if (distance >= bestDistance) continue;
                 position = candidate;
                 bestDistance = distance;
             }
             return position;
+        }
+
+        /// <summary>
+        /// Confirmed offline rule: cast from the caster's centre when Range covers any target
+        /// body cell. Enumerate each possible casting position once, in configured range order.
+        /// Pathfinding still decides whether the caster's entire body can reach and fit there.
+        /// </summary>
+        public static IEnumerable<FightGridPoint> CastingPositions(FightBattleUnitState target,
+            IReadOnlyList<FightGridPoint> range)
+        {
+            if (target == null) throw new ArgumentNullException(nameof(target));
+            if (range == null) yield break;
+            var visited = new HashSet<FightGridPoint>();
+            foreach (FightGridPoint offset in range)
+            {
+                var centre = new FightGridPoint(target.X - offset.X, target.Y - offset.Y);
+                if (visited.Add(centre)) yield return centre;
+                if (target.BodyOffsets == null) continue;
+                foreach (FightGridPoint body in target.BodyOffsets)
+                {
+                    FightGridPoint position = centre + body;
+                    if (visited.Add(position)) yield return position;
+                }
+            }
         }
 
         private static int NearbyEnemyCount(FightBattleUnitState actor,
@@ -870,14 +905,8 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState target, FightBattleSkillDefinition skill)
         {
             if (skill == null || skill.Range == null || skill.Range.Count == 0) return 0;
-            int best = Int32.MaxValue;
-            foreach (FightGridPoint offset in skill.Range)
-            {
-                int destinationX = target.X - offset.X;
-                int destinationY = target.Y - offset.Y;
-                best = Math.Min(best, Math.Abs(destinationX - actor.X) + Math.Abs(destinationY - actor.Y));
-            }
-            return best;
+            FightGridPoint position = ApproachPosition(actor, target, skill);
+            return Math.Abs(position.X - actor.X) + Math.Abs(position.Y - actor.Y);
         }
 
         private static int HitCoverageCount(FightBattleUnitState actor,
@@ -891,10 +920,16 @@ namespace Zjcs.Combat.Official
                 if (hit == null || hit.Scope == null || hit.Scope.Count == 0) continue;
                 int centerX = hit.Anchor == 0 ? primary.X : actor.X;
                 int centerY = hit.Anchor == 0 ? primary.Y : actor.Y;
+                var facing = new FightBattleSkillCastPresentation
+                {
+                    FacingIndex = DirectionTo(actor, primary),
+                    FlipX = actor.HasFlipX ? actor.FlipX : DirectionTo(actor, primary) == 1
+                };
+                var scope = TransformScope(hit.Scope, hit.ScopeTransform, actor, facing);
                 foreach (FightBattleUnitState unit in ScopeCandidates(actor, units,
                     skill.TargetType, skill))
                 {
-                    if (InScope(unit, centerX, centerY, hit.Scope)) count++;
+                    if (InScope(unit, centerX, centerY, scope)) count++;
                 }
             }
             return count;
@@ -911,16 +946,22 @@ namespace Zjcs.Combat.Official
                 if (hit == null || hit.Scope == null || hit.Scope.Count == 0) continue;
                 int centerX = hit.Anchor == 0 ? primary.X : actor.X;
                 int centerY = hit.Anchor == 0 ? primary.Y : actor.Y;
+                var facing = new FightBattleSkillCastPresentation
+                {
+                    FacingIndex = DirectionTo(actor, primary),
+                    FlipX = actor.HasFlipX ? actor.FlipX : DirectionTo(actor, primary) == 1
+                };
+                var scope = TransformScope(hit.Scope, hit.ScopeTransform, actor, facing);
                 foreach (FightBattleUnitState unit in ScopeCandidates(actor, units,
                     skill.TargetType, skill))
                 {
                     if (unit.BodyOffsets == null || unit.BodyOffsets.Count == 0)
                     {
-                        if (ContainsScopePoint(hit.Scope, unit.X - centerX, unit.Y - centerY)) count++;
+                        if (ContainsScopePoint(scope, unit.X - centerX, unit.Y - centerY)) count++;
                         continue;
                     }
                     foreach (FightGridPoint offset in unit.BodyOffsets)
-                        if (ContainsScopePoint(hit.Scope, unit.X + offset.X - centerX,
+                        if (ContainsScopePoint(scope, unit.X + offset.X - centerX,
                             unit.Y + offset.Y - centerY)) count++;
                 }
             }
@@ -947,10 +988,16 @@ namespace Zjcs.Combat.Official
                     || hit.AppliedStatuses == null || hit.AppliedStatuses.Count == 0) continue;
                 int centerX = hit.Anchor == 0 ? primary.X : actor.X;
                 int centerY = hit.Anchor == 0 ? primary.Y : actor.Y;
+                var facing = new FightBattleSkillCastPresentation
+                {
+                    FacingIndex = DirectionTo(actor, primary),
+                    FlipX = actor.HasFlipX ? actor.FlipX : DirectionTo(actor, primary) == 1
+                };
+                var scope = TransformScope(hit.Scope, hit.ScopeTransform, actor, facing);
                 foreach (FightBattleUnitState unit in ScopeCandidates(actor, units,
                     skill.TargetType, skill))
                 {
-                    if (!InScope(unit, centerX, centerY, hit.Scope)) continue;
+                    if (!InScope(unit, centerX, centerY, scope)) continue;
                     foreach (FightBattleStatusApplication application in hit.AppliedStatuses)
                         if (application != null && application.StatusId > 0
                             && !HasStatus(unit, application.StatusId)) count++;
@@ -1053,10 +1100,9 @@ namespace Zjcs.Combat.Official
         private static int RangeIndex(FightBattleUnitState actor, FightBattleUnitState target,
             IReadOnlyList<FightGridPoint> range)
         {
-            int dx = target.X - actor.X;
-            int dy = target.Y - actor.Y;
             for (int i = 0; i < range.Count; i++)
-                if (range[i].X == dx && range[i].Y == dy) return i;
+                if (OccupiesPosition(target,
+                    new FightGridPoint(actor.X + range[i].X, actor.Y + range[i].Y))) return i;
             return -1;
         }
 

@@ -1,0 +1,37 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GridTransformComponent.cs": "6317a98b45782f004e871886effb70264ad7cb708b6d8665933970c1dd7160e9",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MyMath.cs": "795306c241422873365b1a1973f84694c494accb2e8c4a2e342e7c432afff5fe",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Direction.cs": "49b1383e892381fbff9077b8fb04337cddce0f096e425217030923985bd4c16b",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GridGroundComponent.cs": "ed9dfb597d9082f4a5a6aaa2d33698f70898c7d96b688dc2c96d6247b2e1b2da",
+    ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitBase.cs": "815ca26f5525f3023a5deb90a0753a8ee00daad936e596d2fb1bce1ad02c98fc",
+    ".tools/source-packages/current/884_156692/official-code/client-source/MyFightAI.cs": "03804629f097d4da9333fb9be66e6cd7736473a2a2f80e30ccbf8cb002bf9970",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightActionSkillMoveComponent.cs": "a9abaf1448ee70438a1a6886fc68122f6120c0404c76e7e4f1e726d1c6ef115e",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActionAgentComponentImplement.cs": "814723477428d3ca910e36fbc1184f74f4bccaf0e0cbb72773cafa78e47b1e30",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActionType.cs": "438bf1708a569790a40923106594dbeed3f4e95af8bdf7c7fc707dfa15f56ebe",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActionBehaviour.cs": "c0267af535276b78030e45a7c606c3a5dc6ec4c8172f084e52c65771ddd1a8dc",
+    ".tools/source-packages/current/884_156692/official-data/tables.json": "8d9e905e55967a46ebf59484ac8faf0356515e1c214faaeebcbc303fc03de333"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/Combat/FightGridTransformMath.cs": "1e5eff39dc3d12ffe23449ee0fc16047431200c5e418d33d9e2e38430d651b3e",
+    "unity/Assets/Game/Runtime/Official/Combat/FightGridTransformMath.cs.meta": "98bba1325fda7a1c153f64c9963cc7f5e671534811b02f73811c4b4d749e5462",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs": "3a8b3ece46c8ff441483d9c6d365890b5289479b05e86d1dee91e2c007d8b349",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleTargeting.cs": "8a424302ef1db4a2b93a542d71acdf7647446e462de4df71ca4a64782b0622ab",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleHitCollector.cs": "2fb80ce80d4b10fdea5af71df12feefb00a61987974897c3343fae168fc40fad",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs": "215145239b0895ac1abb68d3c000987cd5d2d84558902db1ce1f75f7dfda6464",
+    "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs": "2bb9498846fb02ed543145385409dc2c2417e05feb70e45cb135745a6eb40952"
+  },
+  "generator": {
+    "path": "scripts/prepare_battle_grid_transform.py",
+    "sha256": "e9bb9edb71f4e2eb1f00c150279bf32c507fdb6b6c2825ba95836ab3f3b5985f"
+  },
+  "processing": [
+    "Port GridTransformComponent.CalcLocalToWorldPos/Dir and MyMath.Rotate using FightGridPoint instead of Pos2d and scalar float parameters instead of Vector2.",
+    "Preserve original Direction values (Up=0, Down=1, Left=2, Right=3), float arithmetic, reflection before rotation, real-centre offset and Math.Round ties-to-even conversion.",
+    "The unsupported-direction branch keeps the original unrotated vector; the pure module does not reference the original Unity logger.",
+    "GridGroundComponent and MyFightHitBase record footprint registration and local-scope presentation evidence. MyFightAI is an empty client proxy, not a server targeting implementation.",
+    "User-confirmed offline rule: hit entities inherit the current skill's captured direction and flip, using each original hit entity's RealCenter. Convert local Down/Left/Up/Right indices explicitly to Common.Direction. Carry separate random-parent scope metadata and restore missing immutable metadata in legacy checkpoints.",
+    "ActionAgentComponentImplement.CanStartActiveSkill waits for Move (1) when state_mutex discards Skill (2). Prefix ordinary skill, damage and nested movement timelines with accumulated approach time; FightActionSkillMoveComponent.GetTotalMoveDuration counts each destination cell, whereas the local path includes its source cell."
+  ]
+}

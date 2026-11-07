@@ -75,6 +75,8 @@ namespace Zjcs.Combat.Official
                 ApplyMonsterInfo(unit);
                 InitializeUnitResilience(unit);
                 ApplySkillAiPriorities(unit);
+                if (statusCatalog != null && unit.Skills != null)
+                    foreach (var skill in unit.Skills) statusCatalog.RestoreHitScopeTransforms(skill);
                 if (statusCatalog != null && unit.Statuses != null)
                     foreach (FightBattleStatusState status in unit.Statuses)
                         if (status != null && statusCatalog.ContainsEntity(status.ClassId))
@@ -91,6 +93,10 @@ namespace Zjcs.Combat.Official
                 SynchronizeTurn(unit);
             }
             RestoreGridItems();
+            if (statusCatalog != null)
+                foreach (var item in checkpoint.GridItems)
+                    if (item?.Runtime?.Skills != null)
+                        foreach (var skill in item.Runtime.Skills) statusCatalog.RestoreHitScopeTransforms(skill);
             if (!unitById.ContainsKey(1))
                 throw new ArgumentException("Fight roster does not contain the main player unit.", nameof(checkpoint));
             turns = new FightTurnQueue(checkpoint.Timeline, Turns());
@@ -289,6 +295,7 @@ namespace Zjcs.Combat.Official
                 checkedSlots.Add(chaosInvasionPhaseSkillSlot);
             int ordinaryCastStart = casts.Count;
             int ordinaryDamageStart = damageEvents.Count, ordinaryMovementStart = movements.Count;
+            float approachEnd = 0f;
             while (true)
             {
                 FightBattleSkillDefinition skill = FightBattleTargeting.FindReadySkill(
@@ -305,10 +312,20 @@ namespace Zjcs.Combat.Official
                     units, skill, random: random);
                 if (skill.Slot == chaosInvasionPhaseSkillSlot)
                     targets = ChaosInvasionPlayerTargets(actor);
+                int approachCastStart = casts.Count, approachDamageStart = damageEvents.Count;
+                int approachMovementStart = movements.Count;
                 if (skill.Slot != chaosInvasionPhaseSkillSlot && targets.Count == 0
                     && MoveIntoSkillRange(actor, skill, movements))
+                {
+                    // ActionSkillMove runs each path segment before the active skill can start.
+                    // Its path here includes the source cell; the original component's does not.
+                    OffsetSkillEvents(casts, approachCastStart, damageEvents, approachDamageStart,
+                        movements, approachMovementStart, approachEnd);
+                    FightBattleMovementEvent approach = movements[approachMovementStart];
+                    approachEnd = Math.Max(0f, approach.Delay) + MovementDuration(approach);
                     targets = FightBattleTargeting.SelectInSkillRange(actor, units, skill,
                         random: random);
+                }
                 if (actor.Hp <= 0) break;
                 if (targets.Count == 0 && skill.TargetType != 5
                     && !FightBattleTargeting.HasCasterAreaTargets(actor, units, skill))
@@ -320,18 +337,20 @@ namespace Zjcs.Combat.Official
                 // FightSkillAgentComponentImplement.UpdateSkillDataOnRun records this
                 // release before its end callbacks can check LimitedTimes or modify CD.
                 var presentation = FightBattleSkillCastPresentation.Capture(actor, skill, targets);
+                int skillCastStart = casts.Count, skillDamageStart = damageEvents.Count;
+                int skillMovementStart = movements.Count;
                 skillState.RunSkill(skill.Slot);
                 ExecuteSkill(actor, skill, targets, casts, damageEvents, movements,
                     out float castLastDelay, out float skillStartDuration,
                     out float skillStartActionDuration);
                 checkpoint.Statistics.RecordCast(actor.Id, skill.EntityId, skill.ItemId);
                 stepDuration = Math.Max(stepDuration,
-                    petSupportDuration + Math.Max(ResolveDuration(skill, castLastDelay), skillStartDuration));
+                    petSupportDuration + approachEnd + Math.Max(ResolveDuration(skill, castLastDelay), skillStartDuration));
                 float actionDuration = ResolveActionDuration(skill, castLastDelay);
                 if (actionDuration >= 0)
-                    stepActionDuration = Math.Max(stepActionDuration, petSupportDuration + actionDuration);
+                    stepActionDuration = Math.Max(stepActionDuration, petSupportDuration + approachEnd + actionDuration);
                 if (skillStartActionDuration >= 0f)
-                    stepActionDuration = Math.Max(stepActionDuration, petSupportDuration + skillStartActionDuration);
+                    stepActionDuration = Math.Max(stepActionDuration, petSupportDuration + approachEnd + skillStartActionDuration);
                 checkedSlots.Add(skill.Slot);
                 performedTargets.AddRange(targets);
                 var cast = new FightBattleSkillCastEvent
@@ -345,8 +364,15 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
                 CompleteCastPresentation(cast, skill, castLastDelay);
                 casts.Add(cast);
+                float cooldownDuration = 0f, cooldownActionDuration = -1f;
                 ExecutePendingCooldownModifySkills(casts, damageEvents, movements,
-                    ref stepDuration, ref stepActionDuration);
+                    ref cooldownDuration, ref cooldownActionDuration);
+                stepDuration = Math.Max(stepDuration, petSupportDuration + approachEnd + cooldownDuration);
+                if (cooldownActionDuration >= 0f)
+                    stepActionDuration = Math.Max(stepActionDuration,
+                        petSupportDuration + approachEnd + cooldownActionDuration);
+                OffsetSkillEvents(casts, skillCastStart, damageEvents, skillDamageStart,
+                    movements, skillMovementStart, approachEnd);
                 CollectStatusCustomActions(statusCustomActions);
             }
 
@@ -699,6 +725,7 @@ namespace Zjcs.Combat.Official
             // Support settles against the owner state, but its original target
             // filters (notably TargetType.Master) belong to the pet source.
             targetingSource = targetingSource ?? actor;
+            var hitCast = FightBattleSkillCastPresentation.Capture(actor, skill, targets, targetPosition);
             // User-confirmed solo rule: a successful 18130 directly kills opposing player units;
             // the original 18131 single-cell hit is self-targeted in the client data.
             bool chaosInvasionWipe = IsChaosInvasionPhaseSkill(actor, skill);
@@ -792,7 +819,7 @@ namespace Zjcs.Combat.Official
                                 groupState.TargetIds, hit.RandomTargetNotSameEmptyScope,
                                 groupState.EmptyPositions, hit.RandomTargetNotSameGrid,
                                 groupState.GridPositions,
-                                hit.RandomTargetFilterOutOfGroundScope);
+                                hit.RandomTargetFilterOutOfGroundScope, hit.RandomTargetScopeTransform, hitCast);
                         foreach (FightBattleRandomScopeSelection selection in selections)
                         {
                             groupState.GridPositions.Add(selection.Position);
@@ -838,11 +865,12 @@ namespace Zjcs.Combat.Official
                         {
                             Anchor = 0,
                             TargetMode = hit.TargetMode,
-                            Scope = hit.Scope
+                            Scope = hit.Scope,
+                            ScopeTransform = hit.ScopeTransform
                         };
                         foreach (FightBattleUnitState selectedTarget in selectedTargets)
                             hitTargets.AddRange(FightBattleTargeting.SelectScopeTargets(targetingSource,
-                                units, skill, selectedTarget, randomTargetEffect, random));
+                                units, skill, selectedTarget, randomTargetEffect, random, hitCast));
                     }
                     else hitTargets.AddRange(selectedTargets);
                 }
@@ -850,7 +878,7 @@ namespace Zjcs.Combat.Official
                 {
                     List<FightBattleUnitState> scopeTargets = FightBattleTargeting.SelectScopeTargets(
                         targetingSource, units, skill, targetPosition
-                            ?? (targets.Count > 0 ? targets[0] : null), hit, random);
+                            ?? (targets.Count > 0 ? targets[0] : null), hit, random, hitCast);
                     hitTargets = hit.TargetMode == 2
                         ? FightBattleTargeting.SelectHitTargets(scopeTargets, 2, hit.RandomCount, random)
                         : scopeTargets;
@@ -2479,15 +2507,23 @@ namespace Zjcs.Combat.Official
             var occupied = OccupiedPositions(actor.Id);
 
             List<FightGridPoint> bestPath = null;
+            bool bestReachesPosition = false;
             foreach (FightBattleUnitState target in targets)
-                foreach (FightGridPoint range in skill.Range)
+                foreach (FightGridPoint desired in FightBattleTargeting.CastingPositions(target, skill.Range))
                 {
-                    var desired = new FightGridPoint(target.X - range.X, target.Y - range.Y);
                     List<FightGridPoint> path = grid.FindPath(
                         new FightGridPoint(actor.X, actor.Y), desired, actor.MoveMask,
                         actor.MoveDist + 2, 0, true, actor.BodyOffsets, occupied);
                     if (path == null || path.Count <= 1) continue;
-                    if (bestPath == null || path.Count < bestPath.Count) bestPath = path;
+                    // FindPath also returns a closest partial path for blocked destinations.
+                    // Such a short fallback must not hide a reachable casting position.
+                    bool reachesPosition = path[path.Count - 1].Equals(desired);
+                    if (bestPath == null || reachesPosition && !bestReachesPosition
+                        || reachesPosition == bestReachesPosition && path.Count < bestPath.Count)
+                    {
+                        bestPath = path;
+                        bestReachesPosition = reachesPosition;
+                    }
                 }
 
             if (bestPath == null) return false;
