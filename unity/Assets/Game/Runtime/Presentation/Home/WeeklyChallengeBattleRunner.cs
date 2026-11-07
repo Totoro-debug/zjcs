@@ -70,6 +70,10 @@ namespace Zjcs.Presentation.Home
             battleRoot.position = playerTransform.position - new Vector3(origin.X + player.X,
                 origin.Y + player.Y, origin.Z);
             OfficialCombatAssetCatalog assets = OfficialCombatAssetCatalog.LoadDefault();
+            var options = OfficialMapBattleSessionOptionsBuilder.Create(stage, true, 3, 3, player.X, player.Y);
+            // The packaged 4800 row disables LeaveInPlaying; the user-confirmed solo
+            // policy explicitly permits mid-battle partial settlement for this activity.
+            if (stage.Id == 4800) options.LeaveInPlaying = true;
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             controller.Begin(new OfficialBattleRequest
             {
@@ -94,10 +98,10 @@ namespace Zjcs.Presentation.Home
                 CombatAssets = assets,
                 // Legacy saves made before the first initialization have no
                 // timeline. An initialized/advanced checkpoint must retain it.
-                RestoreCheckpoint = checkpoint.Counter > 0 || checkpoint.Timeline.Entries.Count > 0,
+                RestoreCheckpoint = checkpoint.Finished || checkpoint.Counter > 0 || checkpoint.Timeline.Entries.Count > 0,
                 EnvironmentGameId = stage.GameId,
                 StatueProgress = host.Profile,
-                Options = OfficialMapBattleSessionOptionsBuilder.Create(stage, true, 3, 3, player.X, player.Y),
+                Options = options,
                 InitialStepDelay = 0f
             });
         }
@@ -123,7 +127,15 @@ namespace Zjcs.Presentation.Home
 
         public void OnBattleHudControlClicked(string path)
         {
-            if (path == null || !path.EndsWith("/CloseBtn/CloseBtn_normal", StringComparison.Ordinal)) return;
+            if (path != OfficialBattleHudView.CloseButtonPath || complete) return;
+            // DemonKing/LegionBoss use PartEndGame, not a resumable LeaveGame.
+            if (controller.Checkpoint.StageType == 14 || controller.Checkpoint.StageType == 12)
+            {
+                if (controller.RequestPartEnd())
+                    session.SaveBattleCheckpoint(stageId, periodStartLocalTicks,
+                        FightBattleCheckpointSerializer.Save(controller.Checkpoint));
+                return;
+            }
             complete = true;
             DisposeBattle();
             Left?.Invoke();

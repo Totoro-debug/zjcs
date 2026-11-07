@@ -221,7 +221,14 @@ namespace Zjcs.Presentation.Home
         public FightBattleReport FinalReport { get; private set; }
         public void OnBattleReportReady(FightBattleReport report) { FinalReport = report; }
 
-        public void OnBattleHudControlClicked(string path) { }
+        public void OnBattleHudControlClicked(string path)
+        {
+            if (path != OfficialBattleHudView.CloseButtonPath || backgroundExecution || resultHandled) return;
+            // Explicit abandonment is separate from SetBackgroundExecution(true).
+            controller.EndBattle();
+            SetAutoPush(false);
+            Complete(false);
+        }
 
         private void Complete(bool won)
         {

@@ -1,0 +1,114 @@
+{
+  "manifest": "884_156692",
+  "language_inputs": [
+    {
+      "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile",
+      "sha256": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365",
+      "entries": 108,
+      "source": {
+        "origin": "apk_zip",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "path": "assets/yoo/WwiseBnk/495eff606d09ccff377d3b54ba4c1bc4.rawfile",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "bundle_size": 5556,
+        "bundle_md5": "495eff606d09ccff377d3b54ba4c1bc4",
+        "bundle_sha256": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365",
+        "bundle_hash": "495eff606d09ccff377d3b54ba4c1bc4"
+      }
+    },
+    {
+      "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile",
+      "sha256": "a7e72b9478ce455a7ef12974f16e3f78e684ded497b7750f7901dacb66eacfad",
+      "entries": 100242,
+      "source": {
+        "origin": "apk_zip",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "path": "assets/yoo/WwiseBnk/7457975a4ff474fa84c666b9b720bb3d.rawfile",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "bundle_size": 5300206,
+        "bundle_md5": "7457975a4ff474fa84c666b9b720bb3d",
+        "bundle_sha256": "a7e72b9478ce455a7ef12974f16e3f78e684ded497b7750f7901dacb66eacfad",
+        "bundle_hash": "7457975a4ff474fa84c666b9b720bb3d"
+      }
+    }
+  ],
+  "offline_wording": {
+    "rows": [
+      {
+        "key": "ui_daily_dungeon_end_panel_leave_game_tip",
+        "text": "退出将按已通过行数结算当前评级奖励及房间掉落，确认要离开副本吗？"
+      }
+    ],
+    "decision": "User confirmed that daily dungeon exit awards the grade reached by cleared rows plus cleared-room drops. Original wording is retained in texts; the solo override avoids saying that grading is forfeited."
+  },
+  "implementation_inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightMainPanelLeaveModule.cs",
+      "sha256": "ccb72a2200170ea9e48864298d5056c1075ab4b61f03997c0e1348e9b09cff5d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightDailyDungeonMainPanel.cs",
+      "sha256": "0c6412f4566c95243154398f2248eb0e29d57748703d755361dffc914d3565cc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightMainPanelLeaveHandler.cs",
+      "sha256": "55d31b5dadc8f0cca5781c4601a241fa414fdd1917c5e8bca9a401877b3dcdb1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/DefaultFightMainPanelLeaveHandler.cs",
+      "sha256": "a30a89cc5c045806e3771defc32e0c09fd1c865ea770afd9beff5cd256ed667e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/DailyDungeonMainPanelLeaveHandler.cs",
+      "sha256": "5ab06a530308717205d53a9d9cc83ef6c89bba5814212fc6803ce43cf0b08657"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/VoidFissureMainPanelLeaveHandler.cs",
+      "sha256": "fda68e2e288f0ac24331b20395e89e304c57aa93d9c9e6764eab5afa622430d2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/DemonBattlefieldMainPanelLeaveHandler.cs",
+      "sha256": "9559bd067f569f61120c0e32fe22fa0472fa5cb2a221b1f4672e6e997c6b12a9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FreeBattleMainPanelLeaveHandler.cs",
+      "sha256": "5f426277d6af32c1e9e8c712dfea89a02bad1cb2fae060f113fc992828c6943c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/DemonKingMainPanelLeaveHandler.cs",
+      "sha256": "20f6d11f43455bd084141139a9acd60d9fcc6013171a1e530b2620a300f71c76"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/LegionBossMainPanelLeaveHandler.cs",
+      "sha256": "e1e45e0e3b2eaa2dada606b0c9368c4ea062c8e8602571f76dd32a1c39c35f68"
+    },
+    {
+      "path": "assets/reference/partner-confirm-dialog-source-manifest.json",
+      "sha256": "84e7d749039d87da5b0207e4c6a47619920fd67d88e1b6954d7a4bcff04dbd0c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLeaveAssetCatalog.cs.meta",
+      "sha256": "7d6a53f866522547bf7c2ee0b9237ee38b1a8de6a45f8e3a511649ea92828b41"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/Confirm/ConfirmDialog.prefab",
+      "sha256": "a62ab40aa101b42347e65613e10e848f6663c15d25290ffd7c202582548a0a1e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Partners/OfficialPartnerConfirmAssetCatalog.asset",
+      "sha256": "7b2f9a6cf6ce5fdc2ef00559550896eeb35a6241d22fe21779636673a727f7fb"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Partners/OfficialPartnerPromptAssetCatalog.asset",
+      "sha256": "1d440ce1e0a57da7432819d72b5b74b94e98a7e6d10dcf5846cfba794f9c1a45"
+    }
+  ],
+  "outputs": {
+    "unity/Assets/Game/Resources/Combat/BattleLeave/leave-texts.json": "ff7379cd70a5398eb0864935a6da5cee9a64ce1d7b96a1f68a1888440fbd0d49",
+    "unity/Assets/Game/Resources/Combat/BattleLeave/OfficialBattleLeaveAssetCatalog.asset": "2df9a739b15cc98c11517e9962a7aad92caa3460ab5b0ddfedd0deebc9509501"
+  },
+  "operation": "xxHash64 lookup in verified official Chinese language rawfiles; reuse the already recovered native ConfirmDialog and WindowMask through their explicit asset catalogs, without duplicating or changing their native payloads.",
+  "generator_sha256": "6b5507be32f7a968b4467b03c27afcbf275dad6a08a1fea6d63d732ba80e14d1"
+}

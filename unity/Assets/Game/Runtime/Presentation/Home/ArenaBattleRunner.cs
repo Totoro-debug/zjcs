@@ -196,7 +196,12 @@ namespace Zjcs.Presentation.Home
         public FightBattleReport FinalReport { get; private set; }
         public void OnBattleReportReady(FightBattleReport report) { FinalReport = report; }
 
-        public void OnBattleHudControlClicked(string path) { }
+        public void OnBattleHudControlClicked(string path)
+        {
+            if (path != OfficialBattleHudView.CloseButtonPath || resultHandled) return;
+            controller.EndBattle();
+            FinishBattle(false);
+        }
 
         private void FinishBattle(bool isWon)
         {

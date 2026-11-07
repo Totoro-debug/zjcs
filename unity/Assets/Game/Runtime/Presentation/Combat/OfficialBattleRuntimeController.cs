@@ -46,6 +46,7 @@ namespace Zjcs.Presentation.Combat
         private bool battleCompletedRaised;
         private FightBattleReport finalReport;
         private IOfficialBattleModeAdapter modeAdapter;
+        private readonly OfficialBattleLeaveDialog leaveDialog = new OfficialBattleLeaveDialog();
 
         // The game uses mouse input; acceptance can feed the same pointer path without OS input.
         public Func<OfficialBattlePointerFrame> PreparationPointerProvider { get; set; }
@@ -78,11 +79,23 @@ namespace Zjcs.Presentation.Combat
 
         public void SetHudVisible(bool visible)
         {
+            bool returning = visible && !hudVisible;
             hudVisible = visible;
+            if (!visible) leaveDialog.Dispose();
             if (!visible) cameraView?.SetVisible(false);
             hostPresentation?.SetVisible(visible);
             if (visible) cameraView?.SetVisible(true);
             if (hudRoot != null) hudRoot.SetActive(visible);
+            if (returning && Checkpoint != null)
+            {
+                sceneView?.Refresh(Checkpoint, null);
+                hudView?.Refresh(Checkpoint);
+                hudView?.RefreshSkillSlots(Checkpoint, skillIconResolver);
+                hudView?.RefreshPet(Checkpoint, statueProgress?.Save?.Player);
+                hudView?.RefreshTimeline(Checkpoint, timelinePortraitResolver, timelineFactionResolver, false, null);
+                hudView?.RefreshBoss(Checkpoint, UnitName);
+                hudView?.RefreshStageStatus(Checkpoint);
+            }
         }
         public bool HasBattleEnvironment => environmentView != null;
         public bool OwnsPresentationCamera => cameraView != null;
@@ -332,23 +345,29 @@ namespace Zjcs.Presentation.Combat
             {
                 FightBattleExecutionResult result = executor.Step(executor.State.Sequence,
                     executor.State.Counter + 1);
-                sceneView.Refresh(result.Checkpoint, result.Event);
-                if (hudRoot != null)
+                // Background tower battles keep the same executor and step timing, but
+                // their inactive native models cannot receive Animator/skill-graph leaves.
+                // Rebuild the visible snapshot when the host returns to the foreground.
+                if (hudVisible)
                 {
-                    hudView.Refresh(result.Checkpoint);
-                    hudView.RefreshSkillSlots(result.Checkpoint, skillIconResolver);
-                    hudView.RefreshPet(result.Checkpoint, statueProgress?.Save?.Player);
-                    hudView.RefreshTimeline(result.Checkpoint, timelinePortraitResolver,
-                        timelineFactionResolver, true, result.Event);
-                    hudView.RefreshBoss(result.Checkpoint, UnitName);
-                    hudView.RefreshStageStatus(result.Checkpoint);
+                    sceneView.Refresh(result.Checkpoint, result.Event);
+                    if (hudRoot != null)
+                    {
+                        hudView.Refresh(result.Checkpoint);
+                        hudView.RefreshSkillSlots(result.Checkpoint, skillIconResolver);
+                        hudView.RefreshPet(result.Checkpoint, statueProgress?.Save?.Player);
+                        hudView.RefreshTimeline(result.Checkpoint, timelinePortraitResolver,
+                            timelineFactionResolver, true, result.Event);
+                        hudView.RefreshBoss(result.Checkpoint, UnitName);
+                        hudView.RefreshStageStatus(result.Checkpoint);
+                    }
+                    // Install the settled CD snapshot before native zero-delay starts.
+                    // Delayed starts and each skill's own Remove drive subsequent states.
+                    skillGraphPlayback?.Play(result.Event, result.Checkpoint,
+                        sceneView.Body, sceneView.TryGetPetTransform);
+                    if (!result.Replayed)
+                        sceneView.ShowDamageFloats(result.Event, result.Checkpoint, hudCatalog.Font, damageColors);
                 }
-                // Install the settled CD snapshot before native zero-delay starts.
-                // Delayed starts and each skill's own Remove drive subsequent states.
-                skillGraphPlayback?.Play(result.Event, result.Checkpoint,
-                    sceneView.Body, sceneView.TryGetPetTransform);
-                if (!result.Replayed)
-                    sceneView.ShowDamageFloats(result.Event, result.Checkpoint, hudCatalog.Font, damageColors);
                 LastStepSeconds = result.Event != null && result.Event.Duration > 0f
                     ? result.Event.Duration : 0.35f;
                 if (result.Event != null)
@@ -383,6 +402,15 @@ namespace Zjcs.Presentation.Combat
                 "statue-battle-end:" + Guid.NewGuid().ToString("N"));
             if (result.Status == ProgressionResultStatus.InvalidState)
                 throw new InvalidOperationException("Statue battle effects could not be cleared: " + result.Message);
+        }
+
+        /// <summary>Stop future actions and complete the current presentation through the normal
+        /// report-before-result handoff. The mode persists Checkpoint before returning.</summary>
+        public bool RequestPartEnd()
+        {
+            if (!CanLeaveBattle() || !Zjcs.Offline.Combat.OfflineBattlePartEnd.Finish(Checkpoint)) return false;
+            if (phases.IsPreparing) phases.BeginBattleEnd();
+            return true;
         }
 
         private static void ApplyPendingStatueEffects(FightBattleCheckpoint checkpoint,
@@ -513,7 +541,7 @@ namespace Zjcs.Presentation.Combat
                 // Defer handoff until Update so the caller can finish attaching hosts
                 // after Begin, and use the normal report/completion ordering once.
                 if (executor != null && executor.State.Finished
-                    && stepPlayback == null && !battleCompletedRaised)
+                    && !IsPresentingStep && !battleCompletedRaised)
                     CompleteStepPresentation();
             }
         }
@@ -564,6 +592,7 @@ namespace Zjcs.Presentation.Combat
 
         public void DisposeSession()
         {
+            leaveDialog.Dispose();
             // Original graph Stop callbacks still need the live camera and unit hosts.
             skillGraphPlayback?.Dispose();
             skillGraphPlayback = null;
@@ -640,9 +669,31 @@ namespace Zjcs.Presentation.Combat
                 Ready();
                 return;
             }
+            if (path == OfficialBattleHudView.CloseButtonPath)
+            {
+                if (!CanLeaveBattle()) return;
+                string key = FightBattleLeaveRules.ConfirmationKey(Checkpoint.StageType, Phase,
+                    sessionOptions?.VoidFissureLayer);
+                if (key == null) DispatchLeave();
+                else leaveDialog.Show(hudRoot.transform.parent, hudCatalog.Font, key, DispatchLeave);
+                return;
+            }
             IOfficialBattleModeAdapter adapter = modeAdapter;
             HudControlClicked?.Invoke(path);
             adapter?.OnBattleHudControlClicked(path);
+        }
+
+        private bool CanLeaveBattle() => Checkpoint != null && !Checkpoint.Finished
+            && FightBattleLeaveRules.CanLeave(Phase, sessionOptions == null || sessionOptions.LeaveInPreparing,
+                sessionOptions == null || sessionOptions.LeaveInPlaying);
+
+        private void DispatchLeave()
+        {
+            // A live battle can finish while the original confirmation window is open.
+            if (!CanLeaveBattle()) return;
+            var adapter = modeAdapter;
+            HudControlClicked?.Invoke(OfficialBattleHudView.CloseButtonPath);
+            adapter?.OnBattleHudControlClicked(OfficialBattleHudView.CloseButtonPath);
         }
 
         private void OnSpeedCycled()

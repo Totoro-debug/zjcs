@@ -1586,6 +1586,8 @@ namespace Zjcs.Combat.Official
         public FightBattleResultRules ResultRules;
         public FightDamageTestRules DamageTest;
         // Local session persistence; absent fields in older saves retain legacy resume behavior.
+        // User-confirmed offline partial settlement; never denotes a victory or a killed enemy.
+        public bool PartEnded;
         public bool PreparationPending;
         public double PreparationSecondsRemaining;
         public FightBattleStatistics Statistics = new FightBattleStatistics();
@@ -1713,6 +1715,8 @@ namespace Zjcs.Combat.Official
                 || checkpoint.Outcome.EnemyHp > checkpoint.Outcome.EnemyMaxHp
                 || checkpoint.Outcome.Finished != checkpoint.Finished)
                 throw new ArgumentException("Fight checkpoint timeline or outcome is invalid.", nameof(checkpoint));
+            if (checkpoint.PartEnded && (!checkpoint.Finished || checkpoint.Outcome.Won || checkpoint.Outcome.Invalid))
+                throw new ArgumentException("Partial settlement requires a finished, valid non-victory.", nameof(checkpoint));
             FightBattleStageStatusConfig stageStatus = checkpoint.StageStatus;
             if (stageStatus != null)
             {

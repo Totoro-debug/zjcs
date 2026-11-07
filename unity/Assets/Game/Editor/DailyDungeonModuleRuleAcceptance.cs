@@ -202,6 +202,7 @@ namespace Zjcs.Editor
             }
             if (selectedDungeon == null || selectedDifficulty == null || route == null)
                 throw new InvalidOperationException("No public official daily dungeon route with grade rows is available for rule acceptance.");
+            ValidatePartialLeave(slots, catalog, selectedDungeon, selectedDifficulty, route);
             DailyDungeonEntryPageModel entryPage = module.BuildEntryPageModel((_, __) => true);
             DailyDungeonEntryModel entry = entryPage.Entries.FirstOrDefault(value =>
                 value != null && value.DungeonId == selectedDungeon.id);

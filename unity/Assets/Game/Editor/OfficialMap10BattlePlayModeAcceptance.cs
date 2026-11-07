@@ -43,6 +43,15 @@ namespace Zjcs.Editor
         [MenuItem("Zjcs/Validate/Map10 Battle Real Input Play Mode")]
         public static void RunRealInput() => Start(false, true);
 
+        public static void RunLeave()
+        {
+            ProjectTools.Validate();
+            Environment.SetEnvironmentVariable("ZJCS_BATTLE_TEST_LEAVE", "1");
+            Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_OUTPUT",
+                Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"));
+            RunRealInput();
+        }
+
         public static void RunSharedReport()
         {
             ProjectTools.Validate();
@@ -120,7 +129,8 @@ namespace Zjcs.Editor
                 SessionState.SetString(RootKey, root);
                 SessionState.SetString(SlotKey, slot);
                 SessionState.SetInt(ResultKey, 2);
-                SessionState.SetFloat(DeadlineKey, (float)EditorApplication.timeSinceStartup + 240f);
+                SessionState.SetFloat(DeadlineKey, (float)EditorApplication.timeSinceStartup
+                    + (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_LEAVE") == "1" ? 600f : 240f));
                 SessionState.SetBool(PortraitOnlyKey, portraitOnly);
                 SessionState.SetBool(RealInputKey, realInput);
                 SessionState.SetBool(ActiveKey, true);
@@ -185,7 +195,7 @@ namespace Zjcs.Editor
             }
             if (EditorApplication.timeSinceStartup > SessionState.GetFloat(DeadlineKey, 0f))
             {
-                Finish(false, new TimeoutException("Map10 battle acceptance did not start before its deadline."));
+                Finish(false, new TimeoutException("Map10 battle acceptance exceeded its overall deadline."));
                 return;
             }
             if (started) return;
@@ -275,6 +285,17 @@ namespace Zjcs.Editor
                 FieldInfo stageIds = entity.GetType().GetField("StageIds");
                 int[] ids = stageIds == null ? null : (int[])stageIds.GetValue(entity);
                 if (ids == null || !ids.Any(value => value > 0)) continue;
+                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_LEAVE") == "1")
+                {
+                    var resolveStage = typeof(OfficialMainlineMapRuntime).GetMethod("ResolveEntityStageId",
+                        BindingFlags.Instance | BindingFlags.NonPublic);
+                    int resolvedId = (int)resolveStage.Invoke(runtime, new[] { entity });
+                    var stageRows = (System.Collections.IDictionary)OfficialMainlineMapInspection.Get(runtime, "stages");
+                    var leaveStage = stageRows[resolvedId] as Map10RuntimeStage;
+                    // Tutorial 1001 intentionally has no leave button in either phase.
+                    if (leaveStage == null || !leaveStage.LeaveInPlaying) continue;
+                    Debug.Log("Map leave fixture uses official stage " + resolvedId);
+                }
                 startStage.Invoke(runtime, new[] { entity, null });
                 yield return null;
                 GameObject invitation = GameObject.Find("BattleAssistSelection");
@@ -299,6 +320,47 @@ namespace Zjcs.Editor
             Require(worldHudStates.All(value => !value.Value || !value.Key.activeInHierarchy),
                 "The battle did not suspend the separate native world HUD.");
             VerifyCommonBattleInterface(sceneController);
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_LEAVE") == "1")
+            {
+                // Hold only the test mode's executor loop, as in the existing real-input fixture.
+                // Original UI, animations and the production leave callback remain live.
+                runtime.enabled = false;
+                float leaveDeadline = Time.realtimeSinceStartup + 30;
+                while (sceneController.Phase == Zjcs.Combat.Official.FightBattlePhase.Preparing
+                    || !UnityEngine.Object.FindObjectsOfType<Button>().Any(value =>
+                        value.name == "CloseBtn_normal" && value.transform.parent.name == "CloseBtn"))
+                {
+                    Require(Time.realtimeSinceStartup < leaveDeadline, "Map leave HUD did not finish its original delayed mount.");
+                    var start = UnityEngine.Object.FindObjectsOfType<Button>().FirstOrDefault(value =>
+                        value.name == "Btn" && value.transform.parent.name == "StartBtn" && value.interactable);
+                    if (start != null) yield return Combat.BattleGameViewInput.Click(start);
+                    yield return null;
+                }
+                var beforeLeave = ReadLeaveSaveReceipt();
+                Require(!string.IsNullOrEmpty(beforeLeave.activeBattle) && beforeLeave.activeBattleStageId > 0,
+                    "The map leave fixture never persisted an active battle.");
+                var close = UnityEngine.Object.FindObjectsOfType<Button>().Single(value =>
+                    value.name == "CloseBtn_normal" && value.transform.parent.name == "CloseBtn");
+                yield return Combat.BattleGameViewInput.Click(close);
+                yield return new WaitForSecondsRealtime(.5f);
+                var confirmation = UnityEngine.Object.FindObjectsOfType<Zjcs.Official.WorldUI.WorldConfirmDialog>().Single();
+                yield return Capture("map-leave-confirm.png");
+                yield return Combat.BattleGameViewInput.Click(confirmation.ConfirmBtn);
+                yield return new WaitForSecondsRealtime(.5f);
+                Require(controllerField.GetValue(runtime) == null && sceneController == null,
+                    "The original close path did not reach the map leave transaction.");
+                Require(worldTerrain.activeInHierarchy && Mathf.Approximately(Camera.main.orthographicSize, worldCameraSize)
+                    && worldHudStates.All(value => value.Key.activeSelf == value.Value)
+                    && playerAnimator.transform.parent == worldModelParent && playerAnimator.transform.localScale == worldModelScale,
+                    "Map abandonment did not restore the terrain, world HUD, camera and original player parent/scale.");
+                var receipt = ReadLeaveSaveReceipt();
+                Require(string.IsNullOrEmpty(receipt.activeBattle) && receipt.activeBattleStageId == 0
+                    && receipt.activeBattlePlacementId == 0, "Map abandonment retained its disk battle checkpoint.");
+                yield return Capture("map-left.png");
+                Debug.Log("Map10 battle leave passed: simulated original close/confirm input, abort transaction, disk checkpoint cleanup and world restoration.");
+                Finish(true, null);
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_SLOT_BLESSING") == "1")
             {
                 var player = sceneController.Checkpoint.Units.Single(value => value.Id == 1);
@@ -843,6 +905,19 @@ namespace Zjcs.Editor
             Require(Mathf.Approximately(Camera.main.orthographicSize, expected),
                 "The battle camera differs from the original aspect adapter: expected=" + expected
                 + " actual=" + Camera.main.orthographicSize + " aspect=" + Camera.main.aspect);
+        }
+
+        [Serializable] private sealed class LeaveSaveReceipt
+        {
+            public string activeBattle;
+            public int activeBattleStageId, activeBattlePlacementId;
+        }
+
+        private static LeaveSaveReceipt ReadLeaveSaveReceipt()
+        {
+            var slots = new ProfileSlotCatalog(SessionState.GetString(RootKey, string.Empty));
+            return JsonUtility.FromJson<LeaveSaveReceipt>(File.ReadAllText(Path.Combine(
+                slots.GetSlotDirectory(SessionState.GetString(SlotKey, string.Empty)), "map-10-save.json")));
         }
 
         private static IEnumerator Capture(string filename)

@@ -14,6 +14,8 @@ namespace Zjcs.Presentation.Combat
         public float ShowMainPanelDelay;
         public bool LeaveInPreparing = true;
         public bool LeaveInPlaying = true;
+        // StagePartInfoVoidFissure.Layer; null preserves the original missing-part branch.
+        public int? VoidFissureLayer;
         public bool ChangeCameraMode;
         public bool CanFastforward;
         public bool CanChangePosition;

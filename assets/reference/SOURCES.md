@@ -684,3 +684,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 圣兽页面数据来源：`record_activity_battle_page_data.py` 记录884原共享 `RewardRuleInfoParser`／`ItemDropInfo`、已选871规则载荷和本地页面数据适配的逐文件SHA256；固定／概率显示分支保持原算法，输入边界校验所选奖励行不含条件、等级或阶级倍率，未重新选择或混入其他规则版本。来源见[页面数据输入与输出](daily-challenges/activity-page-data-source-manifest.json)，实现与验证范围仅在[所属功能页](../../docs/features/daily-challenges.md)维护。
 
 地图入口补充接线来源见[地图公共接线来源](official-map/mainline-map-integration-source-manifest.json)：记录主线小地图版本选择、地图战斗公共构造、山之国私图助战与其公共副本内核依赖、Unity 导入后的地图元数据及源码哈希；原美术载荷与 GUID 保持既有来源，导入器自动扩展字段不声明为原始官方配置。验证范围维护在[主线地图公共模块](../../docs/features/world-map.md#主线地图公共模块)及[山之国](../../docs/maps/map-12.md)。
+
+公共战斗退出来源：`prepare_battle_leave_texts.py` 记录所选版本目录中已核实反编译的 `FightMainPanelLeaveModule`、各单人退出 handler、884 官方语言文件及既有原生 ConfirmDialog 的输入 SHA256，生成六条原文与独立资源目录的显式 prefab／mask 绑定，见[退出来源清单](battle-rules/leave-source-manifest.json)。复用原生载荷，不重新绘制或更换版本；玩法离开裁决见所属功能页。

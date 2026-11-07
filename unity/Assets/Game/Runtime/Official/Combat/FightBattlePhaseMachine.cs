@@ -121,7 +121,7 @@ namespace Zjcs.Combat.Official
         public bool BeginBattleEnd()
         {
             if (Phase != FightBattlePhase.Play && Phase != FightBattlePhase.PlayStart
-                && Phase != FightBattlePhase.Pause) return false;
+                && Phase != FightBattlePhase.Pause && Phase != FightBattlePhase.Preparing) return false;
             return Transition(FightBattlePhase.BattleEnd);
         }
 
@@ -147,7 +147,9 @@ namespace Zjcs.Combat.Official
             switch (from)
             {
                 case FightBattlePhase.Preparing:
-                    return to == FightBattlePhase.PlayStart || to == FightBattlePhase.End;
+                    // Offline partial settlement can leave preparation without starting a turn.
+                    return to == FightBattlePhase.PlayStart || to == FightBattlePhase.BattleEnd
+                        || to == FightBattlePhase.End;
                 case FightBattlePhase.PlayStart:
                     return to == FightBattlePhase.Play || to == FightBattlePhase.BattleEnd
                         || to == FightBattlePhase.End;

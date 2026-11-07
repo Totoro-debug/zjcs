@@ -1506,6 +1506,13 @@ namespace Zjcs.Presentation.Home
         private void OnDailyDungeonBattleFinished(bool won)
         {
             activeDungeonBattle = null;
+            if (host.DailyDungeons.ActiveRun == null)
+            {
+                CloseDungeonDetail();
+                RefreshDailyDungeonEntryPage();
+                OpenPendingDailyDungeonClaim();
+                return;
+            }
             if (!won)
             {
                 Notify("战斗失败，当前房间未清理，可再次挑战");
@@ -1536,7 +1543,8 @@ namespace Zjcs.Presentation.Home
             CloseDailyDungeonLeaveConfirm();
             CloseDungeonDetail();
             RefreshDailyDungeonEntryPage();
-            Notify("已离开路线，已结算清理房间的配置掉落；未完成不消耗领奖次数");
+            if (host.DailyDungeons.PendingClaims.Count > 0) OpenPendingDailyDungeonClaim();
+            else Notify("已离开路线，已结算清理房间掉落；尚未达到评级，不消耗领奖次数");
         }
 
         private void GrantDailyDungeonRoomRewards(string receipt, Zjcs.Offline.World.DailyDungeonRunSave run)
@@ -1569,7 +1577,7 @@ namespace Zjcs.Presentation.Home
             PlaceModalCanvasOnTop(dailyDungeonLeaveConfirmRoot);
             ApplyOfficialDungeonBindings(dailyDungeonLeaveConfirmRoot, "DailyDungeonConfirmEnterPanel");
             SetNamedText(dailyDungeonLeaveConfirmRoot.transform, "TitleText", "离开副本路线");
-            SetNamedText(dailyDungeonLeaveConfirmRoot.transform, "Txt", "离开后将结算已清理房间的配置掉落，未完成不消耗领奖次数");
+            SetNamedText(dailyDungeonLeaveConfirmRoot.transform, "Txt", "离开后按已通过行数结算当前评级奖励及房间掉落；未达到评级时仅结算房间掉落");
             SetNamedText(dailyDungeonLeaveConfirmRoot.transform, "CommonBtn_11", "保存并返回");
             SetNamedText(dailyDungeonLeaveConfirmRoot.transform, "CommonBtn_12", "离开并结算");
             BindPrefabButton(dailyDungeonLeaveConfirmRoot, "CommonBtn_11", () =>

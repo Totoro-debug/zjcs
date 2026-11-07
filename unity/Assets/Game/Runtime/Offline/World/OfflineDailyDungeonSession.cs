@@ -632,16 +632,17 @@ namespace Zjcs.Offline.World
         }
 
         protected bool FinishAndPersist(int grade,
-            Action<DailyDungeonSave, DailyDungeonRunSave> addCompletionData)
+            Action<DailyDungeonSave, DailyDungeonRunSave> addCompletionData, bool partial = false)
         {
             int officialGrade = CurrentGrade();
             DailyDungeonRuntimeRoom current = save.activeRun == null ? null : FindRoom(save.activeRun.currentRoomId);
             if (save.activeRun == null || current == null || current.nextRoomIds == null
-                || current.nextRoomIds.Length != 0 || !save.activeRun.clearedRoomIds.Contains(current.id)
+                || !partial && (current.nextRoomIds.Length != 0 || !save.activeRun.clearedRoomIds.Contains(current.id))
                 || RouteAdapter.IsPrivateDifficulty(save.activeRun.difficulty)
                 || officialGrade <= 0 || grade != officialGrade) return false;
             DailyDungeonRunSave completed = Clone(save.activeRun);
             completed.grade = officialGrade;
+            completed.activeBattleCheckpoint = string.Empty;
             completed.finishedAtUnixSeconds = DateTimeOffset.Now.ToUnixTimeSeconds();
             completed.finishedAtUtcTicks = DateTime.UtcNow.Ticks;
             DailyDungeonSave next = Clone(save);
@@ -650,12 +651,17 @@ namespace Zjcs.Offline.World
             if (best == null) next.bestGrades.Add(new DailyDungeonBestGradeSave
             { dungeonId = completed.dungeonId, difficulty = completed.difficulty, grade = grade });
             else best.grade = Math.Max(best.grade, grade);
-            DailyDungeonCompletionCountSave count = next.completionCounts.FirstOrDefault(value =>
-                value.dungeonId == completed.dungeonId && value.difficulty == completed.difficulty
-                && value.grade == completed.grade);
-            if (count == null) next.completionCounts.Add(new DailyDungeonCompletionCountSave
-            { dungeonId = completed.dungeonId, difficulty = completed.difficulty, grade = completed.grade, count = 1 });
-            else count.count = checked(count.count + 1);
+            // A partial grade earns its configured rewards, but is not a cleared dungeon
+            // for completion achievements or the full-route leaderboard.
+            if (!partial)
+            {
+                DailyDungeonCompletionCountSave count = next.completionCounts.FirstOrDefault(value =>
+                    value.dungeonId == completed.dungeonId && value.difficulty == completed.difficulty
+                    && value.grade == completed.grade);
+                if (count == null) next.completionCounts.Add(new DailyDungeonCompletionCountSave
+                { dungeonId = completed.dungeonId, difficulty = completed.difficulty, grade = completed.grade, count = 1 });
+                else count.count = checked(count.count + 1);
+            }
             next.pendingClaims.Add(new DailyDungeonPendingClaimSave { id = completed.id, run = completed });
             next.activeRun = null;
             addCompletionData?.Invoke(next, completed);
@@ -676,6 +682,13 @@ namespace Zjcs.Offline.World
         public virtual bool Leave(Action<string, DailyDungeonRunSave> grantClearedRoomRewards)
         {
             if (save.activeRun == null || grantClearedRoomRewards == null) return false;
+            // Confirmed offline rule: leaving uses the grade reached by cleared rows.
+            // Reuse the normal pending-claim transaction and its reward multipliers.
+            if (!RouteAdapter.IsPrivateDifficulty(save.activeRun.difficulty) && CurrentGrade() > 0)
+            {
+                int grade = CurrentGrade();
+                return Finish(grade) || FinishAndPersist(grade, null, true);
+            }
             DailyDungeonRunSave left = Clone(save.activeRun);
             DailyDungeonSave next = Clone(save);
             next.activeRun = null;

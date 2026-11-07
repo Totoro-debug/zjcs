@@ -461,7 +461,7 @@ namespace Zjcs.Presentation.World
 
         public void OnBattleHudControlClicked(string path)
         {
-            if (!string.IsNullOrEmpty(path) && path.IndexOf("Leave", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (path == OfficialBattleHudView.CloseButtonPath)
                 LeaveBattle();
         }
 

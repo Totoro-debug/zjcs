@@ -10,7 +10,7 @@ namespace Zjcs.Presentation.Combat
         private const string ReadyRootPath = PrepareRootPath + "/Content/ReadyBtn";
         private const string JoinRootPath = PrepareRootPath + "/Content/JoinBtn";
         private const string TimeoutRootPath = "/FightMainPanel/Content/Center/TimeOutTipUI/TimeoutUI";
-        private const string CloseButtonPath = "/FightMainPanel/Content/Bottom/Anim/CloseBtn/CloseBtn_normal";
+        public const string CloseButtonPath = "/FightMainPanel/Content/Bottom/Anim/CloseBtn/CloseBtn_normal";
 
         /// <summary>
         /// Local solo branch of StartGameBtn.IsShowBtn and the stage-controlled leave button.
@@ -27,9 +27,8 @@ namespace Zjcs.Presentation.Combat
             renderer.SetActive(JoinRootPath, false);
             renderer.SetActive("/FightMainPanel/Content/Center/PrepareKickout/Content", false);
             if (!preparing) renderer.SetActive(TimeoutRootPath, false);
-            bool canLeave = options == null || (preparing
-                ? options.LeaveInPreparing : options.LeaveInPlaying);
-            renderer.SetActive(CloseButtonPath, canLeave && phase != FightBattlePhase.End);
+            renderer.SetActive(CloseButtonPath, FightBattleLeaveRules.CanLeave(phase,
+                options == null || options.LeaveInPreparing, options == null || options.LeaveInPlaying));
         }
 
         /// <summary>GameTimeoutUI's label and clock are shown only for an actual deadline.</summary>

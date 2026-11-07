@@ -62,6 +62,26 @@ namespace Zjcs.Editor.Combat
             Canvas canvas = button.GetComponentInParent<Canvas>();
             Camera camera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
             Vector2 point = RectTransformUtility.WorldToScreenPoint(camera, rect.TransformPoint(rect.rect.center));
+            // Some original buttons place the clickable graphic away from the container's
+            // centre. Use an actual raycast into that graphic, preserving its original hit area.
+            var hits = new List<RaycastResult>();
+            Func<Vector2, bool> targetsButton = candidate =>
+            {
+                hits.Clear();
+                EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = candidate }, hits);
+                return hits.Count > 0 && ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject) == button.gameObject;
+            };
+            if (!targetsButton(point))
+                foreach (Graphic graphic in button.GetComponentsInChildren<Graphic>())
+                {
+                    if (!graphic.raycastTarget) continue;
+                    Vector2 candidate = RectTransformUtility.WorldToScreenPoint(camera,
+                        graphic.rectTransform.TransformPoint(graphic.rectTransform.rect.center));
+                    if (targetsButton(candidate)) { point = candidate; break; }
+                }
+            if (!targetsButton(point))
+                throw new InvalidOperationException("No exposed native hit area for " + button.name
+                    + "; raycast=" + string.Join(", ", hits.ConvertAll(hit => hit.gameObject.name)));
             string label = button.name;
             yield return ClickScreenPoint(point, label);
         }

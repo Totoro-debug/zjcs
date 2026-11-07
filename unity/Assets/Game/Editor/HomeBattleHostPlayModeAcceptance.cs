@@ -108,6 +108,16 @@ namespace Zjcs.Editor
                         || result.Status == ProgressionResultStatus.Unchanged, "Could not publish fixture region.");
                 }
                 yield return new WaitForSecondsRealtime(1);
+                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_LEAVE") == "1")
+                {
+                    yield return RunLeaveHosts(home, slot, root, output, click, value => home = value);
+                    yield break;
+                }
+                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_PART_END") == "1")
+                {
+                    yield return RunPartialLeaveHosts(home, slot, root, output, click, value => home = value);
+                    yield break;
+                }
                 if (Environment.GetEnvironmentVariable("ZJCS_ACTIVITY_TEAM") == "1")
                 {
                     yield return ExerciseActivityTeam(output, click);

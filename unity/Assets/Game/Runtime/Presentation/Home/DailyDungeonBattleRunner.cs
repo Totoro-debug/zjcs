@@ -78,14 +78,14 @@ namespace Zjcs.Presentation.Home
             if (restore)
             {
                 checkpoint = FightBattleCheckpointSerializer.Load(run.activeBattleCheckpoint);
-                if (checkpoint.StageId != stage.id || checkpoint.Finished)
+                if (checkpoint.StageId != stage.id || checkpoint.Finished && !checkpoint.PartEnded)
                     throw new InvalidOperationException("Saved daily dungeon battle checkpoint does not match the active room.");
                 if (checkpoint.StageType == 0) checkpoint.StageType = 11;
                 selectedNpcIds = checkpoint.Units.Where(unit => unit.NpcClassId > 0)
                     .Select(unit => unit.NpcClassId).ToArray();
                 if (activeAssist != null && !(activeAssist.npcClassIds ?? new List<int>()).SequenceEqual(selectedNpcIds))
                     throw new InvalidOperationException("日常副本助战快照与战斗 checkpoint 不一致。");
-                if (activeAssist == null && selectedNpcIds.Length > 0)
+                if (activeAssist == null && selectedNpcIds.Length > 0 && !checkpoint.Finished)
                     throw new InvalidOperationException("日常副本的战斗 checkpoint 缺少已提交的助战快照。");
             }
             else
@@ -97,7 +97,7 @@ namespace Zjcs.Presentation.Home
             }
 
             DailyDungeonBattleEntryModule.PreparedEntry prepared = battleEntry.Prepare(stage.id, 11,
-                assistPlayType, assistEntryId, restore, checkpoint, selectedNpcIds, activeAssist, false);
+                assistPlayType, assistEntryId, restore, checkpoint, selectedNpcIds, activeAssist, checkpoint.PartEnded);
             battleEntry.Enter(prepared, inviteRule, host.NpcAssistanceProgress,
                 ResolveAssistMaxPlayer(inviteRule), false, DateTimeOffset.Now.ToUnixTimeSeconds(),
                 value => MountBattle(value, scene, combatAssets, restore, false),
@@ -353,6 +353,14 @@ namespace Zjcs.Presentation.Home
             FinishBattleAssist(checkpoint.StageId);
             IReadOnlyList<OfficialChallengeReward> rewards = Array.Empty<OfficialChallengeReward>();
             if (challengeMode) rewards = FinalizeChallenge(checkpoint, won);
+            else if (checkpoint.PartEnded)
+            {
+                if (!host.DailyDungeons.Leave((receipt, run) =>
+                {
+                    if (!host.SettleDailyDungeonRooms(receipt, run))
+                        throw new InvalidOperationException("Daily dungeon partial room rewards could not be settled.");
+                })) throw new InvalidOperationException("Daily dungeon partial grade could not be settled.");
+            }
             else if (won)
             {
                 if (!host.DailyDungeons.RecordRoomCleared(roomId,
@@ -360,7 +368,7 @@ namespace Zjcs.Presentation.Home
                     throw new InvalidOperationException("Daily dungeon room result could not be recorded.");
             }
             if (challengeMode) host.DailyChallenges.SaveBattleCheckpoint(challengeActivityId, string.Empty);
-            else if (!won) host.DailyDungeons.SaveBattleCheckpoint(string.Empty);
+            else if (!won && !checkpoint.PartEnded) host.DailyDungeons.SaveBattleCheckpoint(string.Empty);
             Action<bool> callback = completed;
             DisposeBattle();
             if (challengeMode) host.Hud.OpenDailyChallengeResult(challengeActivityId, won, checkpoint, rewards, FinalReport);
@@ -425,8 +433,9 @@ namespace Zjcs.Presentation.Home
 
         public void OnBattleHudControlClicked(string path)
         {
-            if (path != null && path.IndexOf("Exit", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (path == OfficialBattleHudView.CloseButtonPath && !resultHandled)
             {
+                if (!privateMapEntry && !challengeMode && !controller.RequestPartEnd()) return;
                 string serialized = FightBattleCheckpointSerializer.Save(controller.Checkpoint);
                 if (challengeMode) host.DailyChallenges.SaveBattleCheckpoint(challengeActivityId, serialized);
                 else if (privateMapEntry) privateMapDungeons.SaveBattleCheckpoint(serialized);
