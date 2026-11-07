@@ -110,8 +110,11 @@ namespace Zjcs.Presentation.Home
             var runner=home.StartWeeklyChallengeBattle(4800,cp=>settled=cp);
             var controller=runner.Controller;
             bool checkClones = Environment.GetEnvironmentVariable("ZJCS_PLAYER_CLONE_ACCEPTANCE") == "1";
+            bool checkDeath = Environment.GetEnvironmentVariable("ZJCS_PLAYER_DEATH_ACCEPTANCE") == "1";
+            Require(!checkClones || !checkDeath,"Select one isolated player diagnostic per battle.");
             var cloneProbe = checkClones ? OfficialBattlePlayerCloneValidation.Configure(controller.Checkpoint) : null;
-            var probe = checkClones ? null : OfficialSummonLifecycleValidation.Configure(controller.Checkpoint);
+            var deathProbe = checkDeath ? OfficialBattlePlayerDeathValidation.Configure(controller.Checkpoint) : null;
+            var probe = checkClones || checkDeath ? null : OfficialSummonLifecycleValidation.Configure(controller.Checkpoint);
             controller.StepCompleted+=step=> { probe?.ObserveStep(controller); cloneProbe?.ObserveStep(controller); };
             Button start=null;
             float preparationDeadline=Time.realtimeSinceStartup+45f;
@@ -134,8 +137,11 @@ namespace Zjcs.Presentation.Home
             while(runner!=null)
             {
                 cloneProbe?.ObserveFrame();
+                deathProbe?.ObserveFrame(controller);
                 if (cloneProbe?.CaptureName != null)
                 { yield return new WaitForEndOfFrame(); Capture(cloneProbe.CaptureName); captured = true; }
+                if (deathProbe?.CaptureName != null)
+                { yield return new WaitForEndOfFrame(); Capture(deathProbe.CaptureName); captured = true; }
                 if(!captured && probe != null && probe.ReadyToCapture)
                 {yield return new WaitForEndOfFrame();Capture("summon-removal");captured=true;}
                 yield return null;
@@ -143,6 +149,7 @@ namespace Zjcs.Presentation.Home
             Require(captured && settled!=null && settled.Finished,"Summon battle did not finish.");
             probe?.Verify("Windows Player",settled);
             cloneProbe?.Verify(settled);
+            deathProbe?.Verify(settled);
             File.WriteAllText(Path.Combine(output,"summon-final.json"),FightBattleCheckpointSerializer.Save(settled));
             yield return new WaitForSecondsRealtime(.4f);
             yield return new WaitForEndOfFrame();Capture("summon-result");

@@ -34,7 +34,7 @@
 
 `ApplyOnStopCheckSourceDie` 已经独立的死亡视图接口，在技能图实例化、Awake 订阅前由 scope 注入；公共战斗控制器把本场共享场景传给技能图调度器。场景仅匹配当前检查点仍保留的来源实体根对象，并在结算后仍为零血时清除待播动作、停止旧动作并强制重播已有死亡动画；存活、即时复活、空来源、模型子对象及已移除实体不重播，不重新创建已移除的场景对象。原生模型／已有 Spine 绑定支持强制重新开始，附挂 Animator 使用同一重播入口。人物宿主 `OfficialBattlePlayerNativeModelView` 已引用原 `playable_die`／`playable_die_onStart` 及死亡生命周期适配器，死亡图通过原 `die`／`immediately_die` Animator 参数驱动；这一绑定不能代替人物死亡、复活和强制重播的完整公共战斗／Windows Player 画面验证，分身公共战斗目前仅验证首段，完整连段仍未完成。
 
-`OfficialBattleCharacterDeathPlayback` 迁移原角色视图死亡播放、暂停恢复、强制重播和复活停止，并由显式依赖解析实体根和死亡状态。人物模型宿主已接入这些死亡方法，完整死亡／复活公共流程与画面验证仍缺，详见[人物死亡图来源](../../assets/reference/battle-animation/character-death-assets-source-manifest.json)。
+`OfficialBattleCharacterDeathPlayback` 迁移原角色视图死亡播放、暂停恢复、强制重播和复活停止，并由显式依赖解析实体根和死亡状态。人物模型宿主已接入这些死亡方法，完整死亡／复活公共流程与画面验证仍缺，详见[人物死亡图来源](../../assets/reference/battle-animation/character-death-assets-source-manifest.json)。 新增 `ZJCS_PLAYER_DEATH_ACCEPTANCE` 公共宿主诊断入口，使用隔离战斗输入观察实际致死命中、原 `die` 参数图与 `Die` 状态、身体／武器贴图和退出释放；已通过完整工程编译、`ProjectTools.Validate`、隔离工程静态元数据检查（134,568 个 GUID）、公共 weekly 4800 Play Mode 与实际 Windows Player；两端均由原开始按钮的模拟鼠标点击进入，原 18050 命中使人物实际死亡，`die` 图设置原布尔参数、`Die` 状态推进后生成可见原生身体／武器几何和真实贴图，败北结算并保存检查点，退出后原人物对象释放，已查看死亡及返回家园截图。仅此普通人物死亡分支通过，复活、强制重播和带死亡恢复的公共战斗仍未验证；共享工作区静态检查及既有家园画面缺项不计为通过，未正式发布。
 
 `PlayerModel_Game` 保留原层级、变换、外观及裁剪组件引用；默认控制器没有动画，人物初始化须按职业切换 Game 控制器。`SkeletonClipAttachment` 与 `SkeletonRendererWeaponClipSet` 保留附件身份、材质／粒子分支和生命周期。完整人物工厂、动作混合／物理及生产战斗绑定仍待完成，来源见[人物 prefab 与裁剪清单](../../assets/reference/battle-animation/player-model-prefab-source-manifest.json)。
 
