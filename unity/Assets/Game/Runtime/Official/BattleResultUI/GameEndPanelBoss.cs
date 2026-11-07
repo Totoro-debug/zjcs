@@ -44,7 +44,7 @@ namespace Zjcs.Official.BattleResultUI
                 foreach (Transform child in BossSlot) Destroy(child.gameObject);
                 foreach (Transform child in NormalSlot) Destroy(child.gameObject);
                 // UIUtils.Instantiate(... KeepScale) restores the source prefab scale.
-                Instantiate(boss.Prefab, boss.IsNormal ? NormalSlot : BossSlot, false);
+                host.InstantiateUi(boss.Prefab, boss.IsNormal ? NormalSlot : BossSlot);
             }
             BossNameText.SetKey(boss.StageNameKey);
         }

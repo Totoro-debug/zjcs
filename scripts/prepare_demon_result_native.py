@@ -109,6 +109,12 @@ class DemonResultBinding(PartnerPanelBinding):
             if full not in self.scripts:
                 raise ValueError('Original result script has not been migrated: ' + full)
             panel['documents'][row['nativeFileID']]['MonoBehaviour']['m_Script'] = self.scripts[full]
+            if row['type'] in ('AkEvent', 'UIClickSound'):
+                owner = self.original(row['original'])
+                field = 'data' if row['type'] == 'AkEvent' else 'AkEvent'
+                # Keep the original event reference on the native component;
+                # decode its PCM as well for the local event-ID sound host.
+                self.sound(self.recovery.fields(owner)[field], owner)
         target_guid = hashlib.md5(('zjcs:official-demon-result:' + name).encode()).hexdigest()
         resolved = self.replace(panel['documents'])
         self.queue.append((Path(name + '.prefab'), target_guid, resolved))
@@ -193,6 +199,41 @@ class DemonResultBinding(PartnerPanelBinding):
         self.dynamic_proof['reward_item'] = item
         self.dynamic_proof['reward_sprite'] = dict(source=self.recovery.apk.provenance(sprite),
             original_sha256=sha(sprite.get_raw_data()), manifest_asset=row)
+        self.bind_language_font(records)
+
+    def bind_language_font(self, records):
+        config, = [row for row in records if row['path'] ==
+            'Assets/TextMesh Pro/Assets/Fonts & Materials/MultiLanguageFontConfig.json']
+        obj = self.recovery.apk.asset(config['bundle'], config['path'])
+        name = json.loads(obj.read().m_Script)['RegionFontAssetDict']['CN']['Default']
+        selected, = [row for row in records if row['path'] == name or row['address'] == name]
+        obj = self.recovery.apk.asset(selected['bundle'], selected['path'])
+        native = self.native / selected['path'].removeprefix('Assets/')
+        source_guid = guid(Path(str(native) + '.meta'))
+        self.objects[source_guid] = obj
+        self.load(source_guid)
+        font = self.chinese_font(records)
+        font_data, = [data for _, key, data in self.queue if key == font['font_asset']['guid']]
+        fields = font_data[font['font_asset']['fileID']]['MonoBehaviour']
+        for key in ('m_SourceFontFile', 'm_SourceFontFile_EditorRef'): fields[key] = font['source_font']
+        fields['m_SourceFontFileGUID'] = font['source_font']['guid']
+        # Reproduce MultiLanguageText.RefreshFont's CN runtime selection. The
+        # serialized preview font has no raw source font bound on Android.
+        font['localized_texts'] = []
+        language_script = self.scripts['MultiLanguageText']
+        for target, _, data in self.queue:
+            if not isinstance(data, dict): continue
+            language_objects = {row['MonoBehaviour']['m_GameObject']['fileID']
+                for row in data.values() if row.get('MonoBehaviour', {}).get('m_Script') == language_script}
+            for file_id, row in data.items():
+                text = row.get('MonoBehaviour', {})
+                if 'm_fontAsset' not in text or text['m_GameObject']['fileID'] not in language_objects: continue
+                font['localized_texts'].append(dict(output=target.as_posix(), component=file_id,
+                    preview_font=text['m_fontAsset'], preview_material=text['m_sharedMaterial']))
+                text['m_fontAsset'] = font['font_asset']
+                text['m_sharedMaterial'] = fields['material']
+        if not font['localized_texts']: raise ValueError('No original demon result language fields were bound')
+        self.dynamic_proof['font'] = font
 
     def build(self):
         self.prepare()
@@ -208,7 +249,7 @@ class DemonResultBinding(PartnerPanelBinding):
             for path, key, _ in self.queue}
         def remap(value):
             if isinstance(value, dict):
-                return {key: aliases.get(child, child) if key == 'guid' else remap(child)
+                return {key: aliases.get(child, child) if key in ('guid', 'm_SourceFontFileGUID') else remap(child)
                     for key, child in value.items()}
             if isinstance(value, list): return [remap(child) for child in value]
             return value
@@ -277,6 +318,19 @@ class DemonResultBinding(PartnerPanelBinding):
         script = ROOT / 'unity/Assets/Game/Runtime/Presentation/Home/OfficialDemonResultAssets.cs'
         self.inputs[script.relative_to(ROOT).as_posix()] = sha(script.read_bytes())
         self.inputs[script.relative_to(ROOT).as_posix() + '.meta'] = sha(Path(str(script) + '.meta').read_bytes())
+        audio_script = ROOT / 'unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionAudioCatalog.cs'
+        for path in (audio_script, Path(str(audio_script) + '.meta')):
+            self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+        audio_guid = hashlib.md5(b'zjcs:official-demon-result:audio-catalog').hexdigest()
+        audio_fields = dict(m_ObjectHideFlags=0, m_CorrespondingSourceObject=dict(fileID=0), m_PrefabInstance=dict(fileID=0),
+            m_PrefabAsset=dict(fileID=0), m_GameObject=dict(fileID=0), m_Enabled=1, m_EditorHideFlags=0,
+            m_Script=dict(fileID=11500000, guid=guid(Path(str(audio_script) + '.meta')), type=3),
+            m_Name='Original demon result audio', m_EditorClassIdentifier='',
+            Events=[dict(EventId=row['event']['id'], Clip=row['pointer'])
+                for row in sorted(self.audio_proof.values(), key=lambda row: row['event']['id'])])
+        if not audio_fields['Events'] or len({row['EventId'] for row in audio_fields['Events']}) != len(audio_fields['Events']):
+            raise ValueError('Original demon result audio catalog is empty or duplicated')
+        self.queue.append((Path('Resources/Combat/DemonResult/audio.asset'), audio_guid, {11400000: dict(MonoBehaviour=audio_fields)}))
         fields = dict(m_ObjectHideFlags=0, m_CorrespondingSourceObject=dict(fileID=0), m_PrefabInstance=dict(fileID=0),
             m_PrefabAsset=dict(fileID=0), m_GameObject=dict(fileID=0), m_Enabled=1, m_EditorHideFlags=0,
             m_Script=dict(fileID=11500000, guid=guid(Path(str(script) + '.meta')), type=3),
@@ -284,6 +338,8 @@ class DemonResultBinding(PartnerPanelBinding):
             Panel=self.roots['GameEndPanelDemonKing'], AwardIcon=self.roots['ItemAwardIcon'],
             ItemIcon=self.roots['ItemIconDefault'], Boss=self.roots['MonsterIcon_3803'],
             ItemConfig=self.roots['ItemIconConfig'], RewardIcon=self.roots['RewardIcon'],
+            Font=self.dynamic_proof['font']['font_asset'],
+            Audio=dict(fileID=11400000, guid=audio_guid, type=2),
             Bindings=dict(fileID=4900000, guid=bindings_guid, type=3))
         self.queue.append((Path('Resources/Combat/DemonResult/catalog.asset'),
             hashlib.md5(b'zjcs:official-demon-result:catalog-asset').hexdigest(), {11400000: dict(MonoBehaviour=fields)}))

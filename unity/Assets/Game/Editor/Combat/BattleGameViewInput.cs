@@ -79,6 +79,31 @@ namespace Zjcs.Editor.Combat
                         graphic.rectTransform.TransformPoint(graphic.rectTransform.rect.center));
                     if (targetsButton(candidate)) { point = candidate; break; }
                 }
+            // Full-screen "click blank space to close" buttons deliberately
+            // sit behind the model. Find an exposed point in their original
+            // graphic without changing raycast targets or invoking callbacks.
+            if (!targetsButton(point))
+                foreach (Graphic graphic in button.GetComponentsInChildren<Graphic>())
+                {
+                    if (!graphic.raycastTarget) continue;
+                    bool found = false;
+                    foreach (float y in new[] { .1f, .5f, .9f })
+                    {
+                        foreach (float x in new[] { .1f, .5f, .9f })
+                        {
+                            Rect area = graphic.rectTransform.rect;
+                            var local = new Vector2(Mathf.Lerp(area.xMin, area.xMax, x),
+                                Mathf.Lerp(area.yMin, area.yMax, y));
+                            Vector2 candidate = RectTransformUtility.WorldToScreenPoint(camera,
+                                graphic.rectTransform.TransformPoint(local));
+                            if (candidate.x < 0 || candidate.y < 0 || candidate.x >= Screen.width
+                                || candidate.y >= Screen.height || !targetsButton(candidate)) continue;
+                            point = candidate; found = true; break;
+                        }
+                        if (found) break;
+                    }
+                    if (found) break;
+                }
             if (!targetsButton(point))
                 throw new InvalidOperationException("No exposed native hit area for " + button.name
                     + "; raycast=" + string.Join(", ", hits.ConvertAll(hit => hit.gameObject.name)));

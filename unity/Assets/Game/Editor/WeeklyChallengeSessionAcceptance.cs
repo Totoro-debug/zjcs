@@ -11,6 +11,10 @@ namespace Zjcs.Editor
         {
             string root = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
             if (string.IsNullOrWhiteSpace(root)) throw new InvalidOperationException("Validation workspace is required.");
+            // The clock rollback guard is durable. A repeated invocation must
+            // not reopen the previous test's deliberately future-dated period.
+            root = Path.Combine(root, "weekly-session-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(root);
             string path = Path.Combine(root, "weekly-challenge-session-test.json");
             var session = new OfflineWeeklyChallengeSession(path);
             var receipts = new System.Collections.Generic.HashSet<string>();

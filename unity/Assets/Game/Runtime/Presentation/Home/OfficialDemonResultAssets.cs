@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using TMPro;
+using Zjcs.Offline.ProfessionUI;
 using Zjcs.Official.ProfessionUI;
 
 namespace Zjcs.Presentation.Home
@@ -11,6 +13,8 @@ namespace Zjcs.Presentation.Home
         public ItemIconConfig ItemConfig;
         public Sprite RewardIcon;
         public TextAsset Bindings;
+        public OfflineProfessionAudioCatalog Audio;
+        public TMP_FontAsset Font;
         public static OfficialDemonResultAssets Load() => Resources.Load<OfficialDemonResultAssets>(ResourcePath)
             ?? throw new InvalidOperationException("Original demon result assets are unbound.");
     }

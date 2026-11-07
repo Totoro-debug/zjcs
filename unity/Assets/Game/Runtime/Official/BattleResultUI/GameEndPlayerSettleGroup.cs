@@ -24,8 +24,7 @@ namespace Zjcs.Official.BattleResultUI
             foreach (var group in groups)
             {
                 long damage = Damage(result.StageType, group);
-                var item = Instantiate(mSettlePrefab, transform, false).GetComponent<GameEndPlayerSettleItem>();
-                host.BindPlayerRow(item.gameObject);
+                var item = host.InstantiateUi(mSettlePrefab, transform).GetComponent<GameEndPlayerSettleItem>();
                 item.Bind(host);
                 items.Add(item);
                 item.Init(result.StageType, result.GameId, host.ResolvePlayer(group.TargetId), damage,

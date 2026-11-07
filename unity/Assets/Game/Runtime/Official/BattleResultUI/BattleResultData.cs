@@ -52,7 +52,9 @@ namespace Zjcs.Official.BattleResultUI
         string PlayerName(IProfessionInfoTarget target);
         bool IsTeamMember(long playerId);
         IFightThumbsUpUIHost ThumbsUp { get; }
-        void BindPlayerRow(GameObject row);
+        // Preserve the source local transform and bind actor/resource/RT
+        // providers while inactive, before the instance's first activation.
+        GameObject InstantiateUi(GameObject prefab, Transform parent);
         void LeaveGame();
     }
 
