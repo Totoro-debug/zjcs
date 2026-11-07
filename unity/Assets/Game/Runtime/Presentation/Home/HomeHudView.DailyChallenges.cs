@@ -227,52 +227,50 @@ namespace Zjcs.Presentation.Home
 
         private List<OfficialBattleAssistSelectionView.Candidate> DailyAssistCandidates(out int maxPlayer)
         {
-            IReadOnlyList<int> candidates = host.NpcAssistanceCatalog.FightAssistNpcClassIds();
             var friendships = (host.Profile.Save.Player.CharacterProperties.NpcFriendships
                     ?? new System.Collections.Generic.List<OfflineNpcFriendship>())
                 .Where(value => value != null && value.NpcClassId > 0)
                 .ToDictionary(value => value.NpcClassId, value => value.Level);
             FightOfficialNpcInviteRule invite = host.NpcAssistanceCatalog.InviteRule(dailyAssistPlayType);
             OfficialBattleModelCatalog battleModels = OfficialBattleModelCatalog.LoadDefault();
-            NpcAssistRefreshCycle cycle = (NpcAssistRefreshCycle)invite.RefreshCycle;
             long now = DateTimeOffset.Now.ToUnixTimeSeconds();
             maxPlayer = Math.Max(0, Math.Min(3, invite.MaxPlayer));
-            var rows = new List<OfficialBattleAssistSelectionView.Candidate>();
             int[] existing = host.NpcAssistanceProgress.Selected(dailyAssistPlayType, dailyAssistEntryId).ToArray();
-            var validSelection = new List<int>();
-            int selectedCount = 0;
-            for (int index = 0; index < candidates.Count; index++)
+            IReadOnlyList<OfflineNpcAssistCandidate> candidates = OfflineNpcAssistanceCandidates.Build(
+                host.NpcAssistanceCatalog, OfflineNpcAssistCandidateMode.FightAssist,
+                dailyAssistPlayType, host.Profile.Save.Player.Level, friendships,
+                host.Profile.StoryCount, npcId => battleModels.HasNpcBattleAnimations(npcId),
+                (npcId, cycle, timestamp) => host.NpcAssistanceProgress.AssistCount(
+                    dailyAssistPlayType, npcId, cycle, timestamp), existing, maxPlayer, now, true);
+            var rows = new List<OfficialBattleAssistSelectionView.Candidate>(candidates.Count);
+            foreach (OfflineNpcAssistCandidate candidate in candidates)
             {
-                int npcId = candidates[index];
-                bool met = host.NpcAssistanceCatalog.AssistConditionMet(npcId,
-                    host.Profile.Save.Player.Level, friendships, host.Profile.StoryCount);
-                bool encountered = friendships.ContainsKey(npcId);
-                bool modelAvailable = battleModels.HasNpcBattleAnimations(npcId);
-                bool available = modelAvailable
-                    && host.NpcAssistanceCatalog.CanInviteNpc(npcId, encountered, met)
-                    && (invite.OneNpcMaxInviteCount <= 0
-                        || host.NpcAssistanceProgress.AssistCount(dailyAssistPlayType, npcId, cycle, now)
-                            < invite.OneNpcMaxInviteCount);
-                bool selected = existing.Contains(npcId) && available && selectedCount < maxPlayer;
-                if (selected)
-                {
-                    selectedCount++;
-                    validSelection.Add(npcId);
-                }
+                int npcId = candidate.NpcClassId;
                 rows.Add(new OfficialBattleAssistSelectionView.Candidate {
                     Id = npcId, Name = host.Catalog.LocalizedText(host.NpcAssistanceCatalog.NpcNameKey(npcId), "伙伴 " + npcId),
                     Portrait = catalog.FindDynamicSprite(NpcTravelIconKey(host.NpcTravelCatalog.Npc(npcId))),
-                    Available = available, Selected = selected,
-                    FriendshipLevel = friendships.TryGetValue(npcId, out int friendshipLevel) ? friendshipLevel : 1,
-                    FriendshipBlocked = !encountered && host.NpcAssistanceCatalog.RequiresEncounter(npcId),
-                    Reason = !modelAvailable ? "本地战斗动画未安装" : !encountered && host.NpcAssistanceCatalog.RequiresEncounter(npcId)
-                        ? "尚未相识" : !met ? "未满足助战条件" : !available ? "今日助战次数已用完" : string.Empty });
+                    Available = candidate.Available, Selected = candidate.Selected,
+                    FriendshipLevel = candidate.FriendshipLevel,
+                    FriendshipBlocked = candidate.FriendshipBlocked,
+                    Reason = DailyAssistReason(candidate) });
             }
+            IReadOnlyList<int> validSelection = OfflineNpcAssistanceCandidates.SelectedIds(candidates);
             if (!existing.SequenceEqual(validSelection))
                 host.NpcAssistanceProgress.SetSelection(dailyAssistPlayType, dailyAssistEntryId,
                     validSelection, maxPlayer);
             return rows;
+        }
 
+        private static string DailyAssistReason(OfflineNpcAssistCandidate candidate)
+        {
+            switch (candidate.BlockReason)
+            {
+                case OfflineNpcAssistBlockReason.MissingBattleModel: return "本地战斗动画未安装";
+                case OfflineNpcAssistBlockReason.NotEncountered: return "尚未相识";
+                case OfflineNpcAssistBlockReason.Condition: return "未满足助战条件";
+                case OfflineNpcAssistBlockReason.InviteLimit: return "今日助战次数已用完";
+                default: return string.Empty;
+            }
         }
 
         private void SelectDailyAssistCandidate(int npcId, bool selected)

@@ -158,7 +158,6 @@ namespace Zjcs.Presentation.World
             scroll.scrollSensitivity = 35f;
             var listRect = content as RectTransform;
 
-            IReadOnlyList<int> candidates = map12NpcCatalog.TeamInviteNpcClassIds();
             var friendships = (progressionSave.Save.Player.CharacterProperties.NpcFriendships
                     ?? new List<OfflineNpcFriendship>())
                 .Where(value => value != null && value.NpcClassId > 0)
@@ -166,20 +165,18 @@ namespace Zjcs.Presentation.World
             int maxNpcs = Math.Max(0, map12Steles.Data.TeamMaxPlayer - 1);
             string entryId = Map12SteleAssistKey(stele.PlacementId);
             int[] selected = map12NpcProgress.Selected(WorldBattleSteleTeamTarget.TargetCatalog, entryId).ToArray();
-            var retained = new List<int>();
+            IReadOnlyList<OfflineNpcAssistCandidate> candidates = OfflineNpcAssistanceCandidates.Build(
+                map12NpcCatalog, OfflineNpcAssistCandidateMode.TeamInvite, 0,
+                progression.Player.Level, friendships, progressionSave.StoryCount,
+                npcId => OfficialMap12NpcBattleModelView.HasBinding(npcId), null, selected,
+                maxNpcs, DateTimeOffset.UtcNow.ToUnixTimeSeconds(), false);
+            IReadOnlyList<int> retained = OfflineNpcAssistanceCandidates.SelectedIds(candidates);
             var rows = new List<Map12SteleNpcEntry>(candidates.Count);
-            int selectedCount = 0;
-            for (int index = 0; index < candidates.Count; index++)
+            foreach (OfflineNpcAssistCandidate candidate in candidates)
             {
-                int npcId = candidates[index];
-                bool met = map12NpcCatalog.AssistConditionMet(npcId, progression.Player.Level,
-                    friendships, progressionSave.StoryCount);
-                bool encountered = friendships.ContainsKey(npcId);
-                bool hasModel = OfficialMap12NpcBattleModelView.HasBinding(npcId);
-                bool available = hasModel && map12NpcCatalog.CanInviteTeamNpc(npcId, encountered, met);
-                bool isSelected = selected.Contains(npcId) && available && selectedCount < maxNpcs;
-                if (isSelected) { selectedCount++; retained.Add(npcId); }
-                rows.Add(new Map12SteleNpcEntry(npcId, available, isSelected, encountered, met, hasModel));
+                rows.Add(new Map12SteleNpcEntry(candidate.NpcClassId, candidate.Available,
+                    candidate.Selected, candidate.Encountered, candidate.ConditionMet,
+                    candidate.ModelAvailable));
             }
             if (!selected.SequenceEqual(retained))
                 map12NpcProgress.SetSelection(WorldBattleSteleTeamTarget.TargetCatalog, entryId, retained, maxNpcs);
@@ -558,13 +555,17 @@ namespace Zjcs.Presentation.World
                     ?? new List<OfflineNpcFriendship>())
                 .Where(value => value != null && value.NpcClassId > 0)
                 .ToDictionary(value => value.NpcClassId, value => value.Level);
-            IReadOnlyList<int> candidates = map12NpcCatalog.TeamInviteNpcClassIds();
+            IReadOnlyList<OfflineNpcAssistCandidate> candidateRows =
+                OfflineNpcAssistanceCandidates.Build(map12NpcCatalog,
+                    OfflineNpcAssistCandidateMode.TeamInvite, 0, progression.Player.Level,
+                    friendships, progressionSave.StoryCount,
+                    npcId => OfficialMap12NpcBattleModelView.HasBinding(npcId), null, selected,
+                    maximum, DateTimeOffset.UtcNow.ToUnixTimeSeconds(), false);
+            var candidateById = candidateRows.ToDictionary(value => value.NpcClassId);
             foreach (int npcId in selected)
             {
-                bool met = map12NpcCatalog.AssistConditionMet(npcId, progression.Player.Level,
-                    friendships, progressionSave.StoryCount);
-                if (!candidates.Contains(npcId) || !OfficialMap12NpcBattleModelView.HasBinding(npcId)
-                    || !map12NpcCatalog.CanInviteTeamNpc(npcId, friendships.ContainsKey(npcId), met))
+                if (!candidateById.TryGetValue(npcId, out OfflineNpcAssistCandidate candidate)
+                    || !candidate.Available)
                     throw new InvalidOperationException("Selected Map12 stele NPC no longer meets the original assistance conditions: " + npcId);
             }
             if (playerFaction.EntryPosList == null || playerFaction.EntryPosList.Length == 0)

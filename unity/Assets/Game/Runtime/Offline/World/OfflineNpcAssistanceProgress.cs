@@ -10,7 +10,12 @@ namespace Zjcs.Offline.World
     /// <summary>Official play types that can share the battle assist session.</summary>
     public enum NpcAssistPlayType
     {
+        PropGate = 1,
+        PrivateDungeon = 2,
+        TeamInvite = 3,
+        JointStrike = 4,
         FestivalBoss = 5,
+        BondAdventure = 6,
         All = 10
     }
 
