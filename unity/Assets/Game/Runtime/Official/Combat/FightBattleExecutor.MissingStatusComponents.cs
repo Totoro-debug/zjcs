@@ -301,13 +301,24 @@ namespace Zjcs.Combat.Official
                 return;
             foreach (FightBattleStatusState status in new List<FightBattleStatusState>(owner.Statuses))
             {
-                FightBattleStatusRoundIntervalComponentState component = status.Components?.RoundInterval;
-                if (component == null || !RollComponent(component.Rate)) continue;
+                FightBattleStatusRoundIntervalComponentState component = status?.Components?.RoundInterval;
+                if (component == null || component.HasUnsupportedFilter
+                    || FightStatusLifecycle.ResolveTargetUnitId(status, units) != listener?.Id)
+                    continue;
+                int round = listener.SkillState == null ? turns.GlobalRound() : listener.SkillState.Round;
+                if (component.LastTriggeredRound == round) continue;
+                // The two official round-start phases share one listener clock. Consume the
+                // probability once so a failed phase-0 roll cannot be retried in phase 5.
+                component.LastTriggeredRound = round;
+                if (!RollComponent(component.Rate)) continue;
+                if (component.RoundIntervalPercent != 0f && owner.Turn != null)
+                    turns.ChangeInterval(owner.Id, component.FastForward
+                        ? component.RoundIntervalPercent : -component.RoundIntervalPercent);
                 var invocations = new List<FightBattleStatusSkillInvocation>();
                 foreach (FightBattleStatusStateTrigger trigger in component.SkillTriggers)
                     AppendComponentInvocation(status, trigger, owner, listener, invocations, true);
+                component.TriggeredCount++;
                 if (invocations.Count == 0) continue;
-                component.TriggeredCount += invocations.Count;
                 float delay = 0f;
                 ExecuteConfiguredStatusSkills(invocations, movementStartContext.Casts,
                     movementStartContext.DamageEvents, movementStartContext.Movements, ref delay,

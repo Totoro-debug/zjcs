@@ -207,7 +207,11 @@ namespace Zjcs.Combat.Official
                 {
                     Rate = Float(roundInterval, "Rate", 1f),
                     RoundIntervalPercent = Float(roundInterval, "RoundIntervalPercent", 0f),
-                    FastForward = Bool(roundInterval, "FastForward")
+                    FastForward = Bool(roundInterval, "FastForward"),
+                    // FilterCondition is a server-side entity query. Keep the component
+                    // in the checkpoint, but do not fire it until that query is available.
+                    HasUnsupportedFilter = roundInterval.ContainsKey("FilterCondition")
+                        && roundInterval["FilterCondition"] != null
                 };
                 AddTriggerSkills(roundInterval, "StatusTriggerSkillCfgs",
                     result.RoundInterval.SkillTriggers);

@@ -515,6 +515,8 @@ namespace Zjcs.Combat.Official
         public float RoundIntervalPercent;
         public bool FastForward;
         public int TriggeredCount;
+        public int LastTriggeredRound = -1;
+        public bool HasUnsupportedFilter;
         public List<FightBattleStatusStateTrigger> SkillTriggers = new List<FightBattleStatusStateTrigger>();
 
         public FightBattleStatusRoundIntervalComponentState Copy()

@@ -86,6 +86,10 @@ namespace Zjcs.Combat.Official
                 direct = direct == Int64.MinValue ? Int64.MinValue + 1 : -Math.Abs(direct);
                 direct = ScaleDamage(direct, skillDamageScale);
                 direct = ApplyExtDamageScale(target, hit, direct);
+                result.Type = FightBattleHitComponentRuntime.ApplyDamageGetType(target, skill,
+                    skill == null ? 0 : skill.ElementType, result.Type, random);
+                if (result.Type.Blinding || result.Type.Dodge || result.Type.Immunity)
+                    direct = 0;
                 double reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
                     skill, result.Type, false, random);
                 direct = (long)(direct / Math.Max(1.0 + reduction, 0.1));
@@ -93,11 +97,14 @@ namespace Zjcs.Combat.Official
                     direct, processedFalloffStatuses);
                 direct = FightStatusDamageProcessRuntime.BeforeShield(actor, target, direct, formula, 1);
                 direct = FightStatusCreatorDamageBoostRuntime.BeforeShield(actor, target, direct, formula);
+                long absoluteDirect = direct;
+                FightBattleHitComponentRuntime.ApplyDamageReduceAbsolute(target, skill,
+                    ref direct, ref absoluteDirect, random);
                 if (damageTest != null) direct = damageTest.Damage(stageType, actor, target, direct);
                 long absorbed = FightBattleShieldRuntime.AbsorbDamage(random, target, hit,
                     direct, out result.ShieldDamage, result.TriggeredStatusSkills, skill,
                     result.TriggeredStatusSkillInvocations);
-                result.Formula = new FightDamageFormulaResult { Damage = absorbed, AbsoluteDamage = direct };
+                result.Formula = new FightDamageFormulaResult { Damage = absorbed, AbsoluteDamage = absoluteDirect };
                 result.Settlement = damageTest == null ? settlement.Apply(damageId, sourceEntity, targetEntity, absorbed)
                     : damageTest.Settle(settlement, stageType, damageId, sourceEntity, targetEntity, target, absorbed);
             }
@@ -128,6 +135,8 @@ namespace Zjcs.Combat.Official
                     IsPvp = isPvp
                 };
                 result.Type = formula.CalculateDamageType(random, sourceProps, targetProps, hit.DamageType);
+                result.Type = FightBattleHitComponentRuntime.ApplyDamageGetType(target, skill,
+                    skill == null ? 0 : skill.ElementType, result.Type, random);
                 double reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
                     skill, result.Type, false, random);
                 formula.AddPropertyValue(targetProps, "StatusDmgReducePer", reduction);
@@ -163,6 +172,10 @@ namespace Zjcs.Combat.Official
                     damage = FightStatusDamageProcessRuntime.BeforeShield(actor, target, damage, formula, 1);
                     damage = FightStatusCreatorDamageBoostRuntime.BeforeShield(actor, target, damage, formula);
                 }
+                long absoluteDamage = result.Formula.AbsoluteDamage;
+                FightBattleHitComponentRuntime.ApplyDamageReduceAbsolute(target, skill,
+                    ref damage, ref absoluteDamage, random);
+                result.Formula.AbsoluteDamage = absoluteDamage;
                 if (damageTest != null) damage = damageTest.Damage(stageType, actor, target, damage);
                 damage = FightBattleShieldRuntime.AbsorbDamage(random, target, hit, damage,
                     out result.ShieldDamage, result.TriggeredStatusSkills, skill,
