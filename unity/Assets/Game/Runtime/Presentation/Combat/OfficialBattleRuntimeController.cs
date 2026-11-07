@@ -508,6 +508,13 @@ namespace Zjcs.Presentation.Combat
             {
                 skillGraphPlayback?.Tick(Time.deltaTime);
                 stepPlayback?.Tick(Time.deltaTime);
+                // A disk checkpoint can contain the final settled hit before its
+                // presentation callback was delivered. No Step can run in that state.
+                // Defer handoff until Update so the caller can finish attaching hosts
+                // after Begin, and use the normal report/completion ordering once.
+                if (executor != null && executor.State.Finished
+                    && stepPlayback == null && !battleCompletedRaised)
+                    CompleteStepPresentation();
             }
         }
 
