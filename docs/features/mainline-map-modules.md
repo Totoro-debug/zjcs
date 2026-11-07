@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成
+状态：公共模块已完成；Map10–16 各地图整体迁移未完成
 
 ## 功能简介
 
@@ -20,7 +20,9 @@
 
 公共 seam 由 [`IMainlineMapModule`](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/IMainlineMapModule.cs) 定义，`OfficialMainlineMapRuntime` 是当前官方规则与资源的 Adapter。所有可交互的大地图（Map10–16，以及后续森之国、山之国、通天塔、鲸背岛等同类地图）通过同一接口完成打开、网格移动、放置实体交互和只读状态投影；Unity 输入帧仍由宿主统一调度，地图差异只进入 `OfficialMainlineMapProfile`、地图数据目录和专用 Adapter。接口不暴露 Map10 私有实体、UI 控件或服务器请求，调用方只需持有地图 ID、放置 ID 和 `MainlineMapStateSnapshot`。
 
-`MainlineMapStateSnapshot` 是 HUD、小地图和验证入口共用的快照 seam，包含玩家网格坐标、区域探索度、已公开区域、已激活魔女放置点、当前活动实体、白雾压缩字节和已探索实体锚点。地图宿主内部继续集中持有地图建模、子区域解锁、女神／失落女神／英雄／魔女雕像、每日访问额度、网格白雾、探索与命运探寻奖励、迷你地图标志、已探索资源点体力消耗及刷新状态；这些状态通过既有官方配置、`OfflineMapGridVisibility`、`OfflineWorldExplorationService`、雕像事务和 `OfflineMapStaminaService` 接入本地存档。新增地图只需提供同一 profile 与对应资源／规则 Adapter，不复制一套地图宿主。
+`MainlineMapStateSnapshot` 是 HUD、小地图和验证入口共用的快照 seam，包含玩家网格坐标、地图／区域探索度、已公开区域、四类雕像的放置点、激活态与每日访问额度、当前活动实体、白雾压缩字节、已探索实体锚点、命运探寻总数／当日次数，以及资源点的体力交互代数、下一次刷新时间和待结算战斗状态。地图宿主内部继续集中持有地图建模、子区域解锁、女神／失落女神／英雄／魔女雕像、每日访问额度、网格白雾、探索与命运探寻奖励、迷你地图标志、已探索资源点体力消耗及刷新状态；这些状态通过既有官方配置、`OfflineMapGridVisibility`、`OfflineWorldExplorationService`、雕像事务和 `OfflineMapStaminaService` 接入本地存档。新增地图只需提供同一 profile 与对应资源／规则 Adapter，不复制一套地图宿主。
+
+`OfficialMainlineMapProfile.Capabilities` 是地图 Adapter 的能力声明：`MapModel`、`Hud`、`Regions`、`Statues`、`Exploration`、`ResourceStamina`、`CrossMapState` 为公共主线管线，是否存在 `GridFog` 与 `MiniMap` 由该地图的官方资源绑定决定。Map10 初始岛、Map11 森之国、Map12 山之国、Map13 泽之国、Map14 龙之国和 Map15 通天塔入口已注册 profile；Map16 鲸背岛已登记数据 profile，但 `IsRuntimeEntryReady=false`，不会被入口误认为可玩。
 
 - `MainlineSharedWorld` 管理官方程序集、地图配置、实体数据和容器作用域；`MainlineSharedWorldStateModule` 持有投影玩家并集中执行激活、原始地区点数、实体／地区状态和角色位置的发布顺序；`OfficialMainlineMapRuntime` 按地图 profile 装配导航、地图状态、HUD、区域、交互及退出清理。
 - 本地地图进度、地区私有／公开状态、探索记录、神像状态和已发现实体由地图存档读取。跨图读取复用同一实体状态解析，不创建场景对象。
@@ -30,7 +32,7 @@
 
 地图保存成功后，宿主只提供当前实体展示状态和角色坐标；公共世界状态模块先发布神像／巫师激活与原始地区点数，再调用官方实体状态及地区 `prepare → remove → add → status` 顺序，最后同步角色位置。首次加载沿同一发布顺序恢复保存状态，然后启动原始 Client。
 
-状态发布顺序已由 `MainlineMapModuleValidation` 在主线模块验证入口中检查；主线地图完整流程仍按本页“尚未实现”项继续验证。
+状态发布顺序已由 `MainlineMapModuleValidation` 在主线模块验证入口中检查；`OfficialMainlineMapModuleProbe` 还会通过 `IMainlineMapModule` 冷读快照，核对 profile 能力声明、四类雕像／资源点状态投影和白雾快照的不可变副本。主线地图完整流程仍按本页“尚未实现”项继续验证。
 
 主线探针与对应 Editor 入口不再反射读取宿主私有字段或调用私有业务方法。地区条件、剧情条件和交互目录直接使用模块接口；女神、英雄、采集与探索通过场景实体和原按钮接收模拟指针，滚动列表接收模拟拖拽，退出通过可注入的 Escape 输入进入正常保存与销毁流程。初始坐标、地区和随机状态只在隔离存档或已有事务接口中准备，随后重新开图；位置、探索、奖励及跨图快照从本地存档和现有只读模块检查。官方资产序列化、动态类型加载及 Unity 编辑器视图设置所需反射保留。
 
@@ -49,7 +51,7 @@ Map10／14 白雾专项已通过原白雾节点挂载、实际指针移动揭格
 
 ## 尚未实现
 
-- Map10–16 的正式世界入口、角色和实体表现、HUD、迷你地图、剧情、交互、战斗及奖励尚未全部接通。
+- 公共接口、状态快照和 profile 能力声明已完成；Map10–16 的正式世界入口、角色和实体表现、HUD、迷你地图、剧情、交互、战斗及奖励仍未全部接通。
 - 原始小地图完整页面、全部地图标记与详情、公共地区资源层及跨图返回流程仍有缺项。
 - 原 Timeline、角色动画、粒子、音频和摄像机演出尚未全量接入正式地图宿主。
 - 每张地图仍需分别完成模拟输入、画面、状态保存／冷读、失败恢复和 Windows Player 流程；公共模块完成不代表单张地图完成。

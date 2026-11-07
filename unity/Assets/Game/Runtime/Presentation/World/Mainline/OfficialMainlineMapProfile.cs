@@ -81,6 +81,7 @@ namespace Zjcs.Presentation.World
         public string EntityPrefabManifest { get; }
         public string BattleDataManifest { get; }
         public string StoryDataManifest { get; }
+        public MainlineMapFeatures Capabilities { get; }
 
         private OfficialMainlineMapProfile(int id, int stages, int stories, string nativeUiRoot, int[] conditions,
             bool runtimeEntryReady, int regionShadowCount = 0, int regionCount = 0, int defaultEntryPlacementId = 0,
@@ -106,6 +107,12 @@ namespace Zjcs.Presentation.World
             InteractionResource = interactionResource;
             InteractionManifest = interactionManifest;
             RequiresMiniMapPrefab = requiresMiniMapPrefab;
+            Capabilities = MainlineMapFeatures.MapModel | MainlineMapFeatures.Hud
+                | MainlineMapFeatures.Regions | MainlineMapFeatures.Statues
+                | MainlineMapFeatures.Exploration | MainlineMapFeatures.ResourceStamina
+                | MainlineMapFeatures.CrossMapState;
+            if (!string.IsNullOrWhiteSpace(visibilityResource)) Capabilities |= MainlineMapFeatures.GridFog;
+            if (requiresMiniMapPrefab) Capabilities |= MainlineMapFeatures.MiniMap;
             if (localChannelCount < 1) throw new ArgumentOutOfRangeException(nameof(localChannelCount));
             LocalChannelCount = localChannelCount;
             PlayerViewResource = playerViewResource ?? (nativeUiRoot == null ? null : "Map" + id + "/BaseGround/player-view");

@@ -243,8 +243,36 @@ namespace Zjcs.Presentation.World
                 .OrderBy(value => value).ToArray();
             byte[] visibility = mapGridVisibility?.Snapshot() ?? Array.Empty<byte>();
             var explored = mapGridVisibility?.ExploredEntityIds ?? localSave.exploredEntityPlacements ?? Array.Empty<int>();
+            string today = DateTime.Now.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
+            bool dailyVisitAvailable = !progressionSave.HasVisitedStatueOn(today);
+            var statues = mapEntities.Values.Select(value =>
+            {
+                MainlineStatueKind? kind = value.EntityClassId == 6011 ? MainlineStatueKind.LostGoddess
+                    : value.TypeId == 202 ? MainlineStatueKind.Goddess
+                    : value.TypeId == 223 ? MainlineStatueKind.Hero
+                    : value.EntityClassId == 6620 ? MainlineStatueKind.Witch : (MainlineStatueKind?)null;
+                if (!kind.HasValue) return null;
+                bool activated = kind == MainlineStatueKind.Goddess
+                    ? publicRegions.Contains(value.Region)
+                    : kind == MainlineStatueKind.Hero ? this.statues.HeroActivated(value)
+                    : kind == MainlineStatueKind.Witch && progressionSave.Save.World.ActivatedWitches.Any(v =>
+                        v.MapClassId == mapClassId && v.PlacementId == value.PlacementId);
+                return new MainlineStatueState(value.PlacementId, value.Region, kind.Value,
+                    value.Active, activated, dailyVisitAvailable && (kind == MainlineStatueKind.Hero || kind == MainlineStatueKind.Witch));
+            }).Where(value => value != null).OrderBy(value => value.PlacementId).ToArray();
+            var resources = mapEntities.Values.Where(OfficialMainlineStaminaModule.IsStaminaPoint)
+                .Select(value => new { Entity = value, State = progressionSave.Save.World.MapInteractions.SingleOrDefault(v =>
+                    v.MapClassId == mapClassId && v.PlacementId == value.PlacementId) })
+                .Where(value => value.State != null)
+                .Select(value => new MainlineResourceState(value.State.PlacementId, value.Entity.EntityClassId,
+                    value.State.AvailableAt, value.State.Generation, !string.IsNullOrEmpty(value.State.BattleEventId))).OrderBy(value => value.PlacementId).ToArray();
+            int mapProgress = OfficialMapProgressCalculator.CalculateMapProgress(session.Definition,
+                this.regions.regionPoints.OrderBy(value => value.Key).Select(value => OfficialMapProgressCalculator.CalculateRegionProgress(
+                    session.Definition, value.Key, value.Value)).ToArray(), publicRegions.Length >= this.regions.regionPointLimits.Count);
+            var exploration = progressionSave.Save.World.Exploration;
             return new MainlineMapStateSnapshot(mapClassId, navigation.currentGrid, regions, publicRegions, witches, active,
-                visibility, explored.ToArray());
+                visibility, explored.ToArray(), mapProgress, statues, resources,
+                exploration.TotalCount, exploration.Day == today ? exploration.DailyCount : 0);
         }
 
         public void Close()

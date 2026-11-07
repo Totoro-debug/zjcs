@@ -483,6 +483,28 @@ namespace Zjcs.Presentation.World
             observedProgress ??= OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(root), slot);
             runtime.KeyDownProvider = key => { bool result = key == KeyCode.Escape && escape; escape = false; return result; };
             runtime.Begin(id, slot, root, canvas, model, name, null);
+            ValidatePublicMapModule(id);
+        }
+
+        private void ValidatePublicMapModule(int id)
+        {
+            IMainlineMapModule module = runtime;
+            MainlineMapStateSnapshot state = module.ReadState();
+            Require(state.MapClassId == id && state.RegionProgress != null
+                && state.Statues != null && state.ResourcePoints != null,
+                "Public mainline map module exposes a complete state projection");
+            Require((module.Profile.Capabilities & MainlineMapFeatures.MapModel) != 0
+                && (module.Profile.Capabilities & MainlineMapFeatures.Regions) != 0
+                && (module.Profile.Capabilities & MainlineMapFeatures.Statues) != 0
+                && (module.Profile.Capabilities & MainlineMapFeatures.Exploration) != 0,
+                "Map profile advertises the shared mainline capabilities");
+            if (state.GridVisibility.Length > 0)
+            {
+                byte original = state.GridVisibility[0];
+                state.GridVisibility[0] ^= 0xFF;
+                Require(module.ReadState().GridVisibility[0] == original,
+                    "Map state snapshot does not mutate the live fog save");
+            }
         }
 
         private IEnumerator VerifyPointerMovement(OfficialWorldMapSession session)
