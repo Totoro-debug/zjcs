@@ -18,6 +18,10 @@
 
 ## 完整还原部分
 
+公共 seam 由 [`IMainlineMapModule`](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/IMainlineMapModule.cs) 定义，`OfficialMainlineMapRuntime` 是当前官方规则与资源的 Adapter。所有可交互的大地图（Map10–16，以及后续森之国、山之国、通天塔、鲸背岛等同类地图）通过同一接口完成打开、网格移动、放置实体交互和只读状态投影；Unity 输入帧仍由宿主统一调度，地图差异只进入 `OfficialMainlineMapProfile`、地图数据目录和专用 Adapter。接口不暴露 Map10 私有实体、UI 控件或服务器请求，调用方只需持有地图 ID、放置 ID 和 `MainlineMapStateSnapshot`。
+
+`MainlineMapStateSnapshot` 是 HUD、小地图和验证入口共用的快照 seam，包含玩家网格坐标、区域探索度、已公开区域、已激活魔女放置点、当前活动实体、白雾压缩字节和已探索实体锚点。地图宿主内部继续集中持有地图建模、子区域解锁、女神／失落女神／英雄／魔女雕像、每日访问额度、网格白雾、探索与命运探寻奖励、迷你地图标志、已探索资源点体力消耗及刷新状态；这些状态通过既有官方配置、`OfflineMapGridVisibility`、`OfflineWorldExplorationService`、雕像事务和 `OfflineMapStaminaService` 接入本地存档。新增地图只需提供同一 profile 与对应资源／规则 Adapter，不复制一套地图宿主。
+
 - `MainlineSharedWorld` 管理官方程序集、地图配置、实体数据和容器作用域；`MainlineSharedWorldStateModule` 持有投影玩家并集中执行激活、原始地区点数、实体／地区状态和角色位置的发布顺序；`OfficialMainlineMapRuntime` 按地图 profile 装配导航、地图状态、HUD、区域、交互及退出清理。
 - 本地地图进度、地区私有／公开状态、探索记录、神像状态和已发现实体由地图存档读取。跨图读取复用同一实体状态解析，不创建场景对象。
 - `OfflineMapGridVisibility` 和 `OfficialMainlineGridFog` 提供地图揭格及白雾状态；公共迷你地图、地图标记和资源点使用地图 profile 及本地图目录。
@@ -52,6 +56,7 @@ Map10／14 白雾专项已通过原白雾节点挂载、实际指针移动揭格
 
 ## 代码与资源入口
 
+- 公共地图 seam 与状态投影：[IMainlineMapModule.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/IMainlineMapModule.cs)、[OfficialMainlineMapRuntime.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs)。
 - 主线运行时：[OfficialMainlineMapRuntime.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs)、[OfficialMainlineMapProfile.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs)。
 - 离线地图规则：[Runtime/Offline/World](../../unity/Assets/Game/Runtime/Offline/World/)。
 - 公共世界状态发布：[MainlineSharedWorldStateModule.cs](../../unity/Assets/Game/Runtime/Offline/World/MainlinePlayerState/MainlineSharedWorldStateModule.cs)、[MainlineSharedPlayerProjection.cs](../../unity/Assets/Game/Runtime/Offline/World/MainlinePlayerState/MainlineSharedPlayerProjection.cs)。

@@ -25,7 +25,7 @@ namespace Zjcs.Presentation.World
 {
     [UnityEngine.Scripting.APIUpdating.MovedFrom(true, "Zjcs.Presentation.World", null, "OfficialMap10GameRuntime")]
     [DisallowMultipleComponent]
-    public sealed partial class OfficialMainlineMapRuntime : MonoBehaviour, IOfficialBattleModeAdapter
+    public sealed partial class OfficialMainlineMapRuntime : MonoBehaviour, IOfficialBattleModeAdapter, IMainlineMapModule
     {
 
         private sealed class Map10RuntimeStoryFrame
@@ -128,6 +128,10 @@ namespace Zjcs.Presentation.World
         private string NativeUiResource(string path) => MapProfile.NativeUi(path);
         private string MapReceiptPrefix => "map" + mapClassId + ":";
 
+        public int MapClassId => mapClassId;
+        public OfficialMainlineMapProfile Profile => MapProfile;
+        public bool IsOpen => session != null && !closed;
+
         public static int ResolveHomeReturnMap(OfflineMainlineSave save)
         {
             if (save == null) throw new ArgumentNullException(nameof(save));
@@ -207,6 +211,48 @@ namespace Zjcs.Presentation.World
                 throw;
             }
         }
+
+        void IMainlineMapModule.Begin(int selectedMapClassId, string selectedSlotId, string savesRoot,
+            Transform targetUiParent, GameObject characterModel, string displayName, Action onClose) =>
+            Begin(selectedMapClassId, selectedSlotId, savesRoot, targetUiParent, characterModel, displayName, onClose);
+
+        public bool TryMove(MapGridPoint target)
+        {
+            if (!IsOpen || navigation.movementPath != null || battleController != null) return false;
+            navigation.StartMovement(target, null);
+            return navigation.movementPath != null || navigation.currentGrid.Equals(target);
+        }
+
+        public bool TryInteract(int placementId)
+        {
+            if (!IsOpen || navigation.movementPath != null || battleController != null
+                || !mapEntities.TryGetValue(placementId, out Map10RuntimeEntity entity)) return false;
+            navigation.StartMovement(entity.Grid, entity);
+            return navigation.movementPath != null || navigation.pendingInteraction == null;
+        }
+
+        public MainlineMapStateSnapshot ReadState()
+        {
+            if (!IsOpen) throw new InvalidOperationException("The mainline map is not open.");
+            var regions = new Dictionary<int, int>(this.regions.regionPoints);
+            var publicRegions = progressionSave.Save.World.ActivatedGoddessRegions
+                .Where(value => value.MapClassId == mapClassId).Select(value => value.Region).Distinct().OrderBy(value => value).ToArray();
+            var witches = progressionSave.Save.World.ActivatedWitches
+                .Where(value => value.MapClassId == mapClassId).Select(value => value.PlacementId).Distinct().OrderBy(value => value).ToArray();
+            var active = mapEntities.Values.Where(value => value.Active).Select(value => value.PlacementId)
+                .OrderBy(value => value).ToArray();
+            byte[] visibility = mapGridVisibility?.Snapshot() ?? Array.Empty<byte>();
+            var explored = mapGridVisibility?.ExploredEntityIds ?? localSave.exploredEntityPlacements ?? Array.Empty<int>();
+            return new MainlineMapStateSnapshot(mapClassId, navigation.currentGrid, regions, publicRegions, witches, active,
+                visibility, explored.ToArray());
+        }
+
+        public void Close()
+        {
+            if (session != null) CloseMap();
+        }
+
+        void IDisposable.Dispose() => Close();
 
         public Func<KeyCode, bool> KeyDownProvider { private get; set; }
 
