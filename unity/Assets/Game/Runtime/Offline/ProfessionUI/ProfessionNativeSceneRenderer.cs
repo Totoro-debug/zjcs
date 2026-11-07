@@ -37,6 +37,8 @@ namespace Zjcs.Offline.ProfessionUI
         // returns before consulting either custom depth or draw-order depth.
         public bool UseCustomZSpacing => false;
         public float ZSpacing => settings?.ZSpacing ?? 0;
+        public Vector2 PhysicsPositionInheritanceFactor => settings?.PhysicsPositionInheritanceFactor ?? Vector2.zero;
+        public float PhysicsRotationInheritanceFactor => settings?.PhysicsRotationInheritanceFactor ?? 0;
         public int UpdateWhenInvisible => settings?.UpdateWhenInvisible ?? 0;
         public int UpdateMode => State != null && HasVisibleGeometry() ? 3 : UpdateWhenInvisible;
         public string SkeletonDataName => initializedAsset ? "character_" + (State.Source.Sex == "male" ? "Male" : "Female") + "_1" : null;

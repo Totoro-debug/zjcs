@@ -22,6 +22,7 @@ namespace Zjcs.Presentation.Combat
         private ProfessionNativeSceneRenderer rendererGraph;
         private ProfessionNativeAppearanceSkeleton skeleton;
         private ProfessionNativePlayerPhysicsPose physics;
+        private readonly ProfessionNativeScenePhysicsMovement movement = new ProfessionNativeScenePhysicsMovement();
         private Track current;
         private string pendingName;
         private bool pendingLoop;
@@ -46,6 +47,8 @@ namespace Zjcs.Presentation.Combat
         {
             skeleton = rendererGraph.State;
             physics = skeleton == null ? null : new ProfessionNativePlayerPhysicsPose(skeleton.Source);
+            if (skeleton == null) movement.Reset();
+            else movement.Reset(transform);
             current = null;
             if (skeleton != null && pendingName != null)
             {
@@ -92,6 +95,8 @@ namespace Zjcs.Presentation.Combat
             if (!rendererGraph || rendererGraph.State == null) return;
             if (!ReferenceEquals(skeleton, rendererGraph.State)) OnRebuild(rendererGraph);
             if (rendererGraph.UpdateMode == 0) return;
+            movement.Apply(transform, skeleton.Source.DataScale, rendererGraph.PhysicsPositionInheritanceFactor,
+                rendererGraph.PhysicsRotationInheritanceFactor, physics.Translate, physics.Rotate);
             if (current != null) current.Time += deltaTime;
             Apply(deltaTime);
         }

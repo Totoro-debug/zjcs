@@ -87,6 +87,13 @@ namespace Zjcs.Offline.ProfessionUI
                 || Int(result.skeleton, "updateTiming") != 1 || Flag(result.skeleton, "unscaledTime")
                 || result.UpdateWhenInvisible != 3)
                 throw new NotSupportedException("Bind additional original clone animation clock settings.");
+            var reference = Obj(result.skeleton["physicsMovementRelativeTo"]);
+            if (Convert.ToInt64(reference["m_PathID"]) != 0 || Int(reference, "m_FileID") != 0)
+                throw new NotSupportedException("Bind the original clone's relative physics reference transform.");
+            var factor = result.PhysicsPositionInheritanceFactor;
+            if (float.IsNaN(factor.x) || float.IsInfinity(factor.x) || float.IsNaN(factor.y) || float.IsInfinity(factor.y)
+                || float.IsNaN(result.PhysicsRotationInheritanceFactor) || float.IsInfinity(result.PhysicsRotationInheritanceFactor))
+                throw new InvalidOperationException("Nonfinite original clone physics inheritance factor.");
             return result;
         }
 

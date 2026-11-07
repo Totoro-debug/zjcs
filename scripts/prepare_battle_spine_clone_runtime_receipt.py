@@ -47,7 +47,9 @@ def main():
         'Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Parts.cs',
         'Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Effects.cs',
         'Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs',
+        'Runtime/Offline/ProfessionUI/ProfessionNativeScenePhysicsMovement.cs',
         'Editor/Combat/AnimatorPlayback/OfficialBattleSpineCloneAnimationValidation.cs',
+        'Editor/Combat/AnimatorPlayback/OfficialBattleWeaponHostMotionNumericalValidation.cs',
         'Editor/Combat/AnimatorPlayback/OfficialBattleSourceDeathValidation.cs'))
     proof = dict(manifest=record['manifest'], code_receipt=identity(receipt), assembly=identity(assembly),
         official_sources=[identity(p) for p in sources],
@@ -57,6 +59,9 @@ def main():
             'scripts/test_battle_skill_graph_dispatch.ps1',
             'scripts/fixtures/battle_skill_graph_dispatch_harness.cs')],
         clone_settings_receipt=identity(ROOT / 'assets/reference/battle-animation/spine-clone-settings-source-manifest.json'),
+        physics_observations=identity(ROOT / 'scripts/fixtures/battle_weapon_host_motion_reference.json'),
+        physics_observation_source=identity(ROOT / 'assets/reference/battle-animation/weapon-host-movement-source-manifest.json'),
+        public_documentation='https://esotericsoftware.com/spine-unity-main-components-4.2#Setting-Advanced-Parameters',
         generator=identity(Path(__file__).resolve()),
         operation='Retain clone init/activate/play and clear/deactivate/stop order, original duration, '
             'player appearance source and empty PreviewTool marker. Bind source renderer selection '
@@ -71,8 +76,11 @@ def main():
             'through the original playable. Retain ungrouped clone renderer orders and slot depths, without '
             'promoting fragment or weapon insertion keys to global sorting priorities. Preserve the '
             'actual initialized controller parameter/layer contract while the original graph hides '
-            'its source model; reject unknown parameters without reactivating that model.',
-        limits=['Physics inheritance of world movement requires a separate binding and validation. '
+            'its source model; reject unknown parameters without reactivating that model. Reuse the '
+            'existing native absolute world movement sampler in the independent clone Update, with '
+            'the original position/rotation factors and skeleton data scale. Replays and mesh redraws '
+            'do not reset or resample that movement history; skeleton rebuilds start a new sample.',
+        limits=['Non-null relative physics reference transforms are explicitly rejected. '
             'Attached player death motions and the complete original death playable binding remain incomplete. '
             'Source mapping and successful prefab loading alone do not prove those effects work.',
             'The public diagnostic covers the first 13100 segment only. Server combo sequencing and '

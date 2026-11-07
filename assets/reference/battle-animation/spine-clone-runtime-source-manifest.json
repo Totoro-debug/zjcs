@@ -93,7 +93,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSpineCloneAnimation.cs",
-      "sha256": "62e416a82801ed26897e93277b12427993f93c4084e07d61ceb1af765f2837c5"
+      "sha256": "0e020c92581460d3cfa4531bec11aa37bcb8c86b066fe3eba9bbaf63b2b5c4b8"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerClonePrefab.cs",
@@ -145,7 +145,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs",
-      "sha256": "b9ed8b6c66e5f7fe1ecd2569075abe8043dc105e4b1dd63c922a6afbcc7ee1a3"
+      "sha256": "1157f559e72afce8bd6b8d636eeaf3ac9f7815580a6e4ae0e41d336905bf4e10"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Parts.cs",
@@ -157,11 +157,19 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs",
-      "sha256": "b7c58eb1d276f3af3bcc33c37135f7743faf85b43a5ad85873abb08e4f59e73f"
+      "sha256": "9ac6c96f1633c69694b9697d3f7b9f1f74539ddc04953ac94be3693bb8046a48"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeScenePhysicsMovement.cs",
+      "sha256": "57f01f44f9d8d9227ee936c5ec96d9548e837de1f5df9e77771ce33b26d36f93"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSpineCloneAnimationValidation.cs",
-      "sha256": "9c6dd05c2ad1f27ab07fddf7d4a09197c28c07b629b11539016058c586147722"
+      "sha256": "a6b849f9d23a69da9f39b50011880e538a4025fa5165ac14bcd25b7de8d8cf4f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleWeaponHostMotionNumericalValidation.cs",
+      "sha256": "1b11c560300ccbd7cefc4284c7aa80ba41b9ad801dad050decfcd2cb5346c50c"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSourceDeathValidation.cs",
@@ -278,8 +286,16 @@
       "sha256": "a2ed58ecb2fb97845e252e4cf359f54d5ce9e91e4ce105e77b821dd752002c08"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeScenePhysicsMovement.cs.meta",
+      "sha256": "d5599f8d92a694e0e4f76b466ccbcedce44a06b3b42f383636389f0bc6418f02"
+    },
+    {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSpineCloneAnimationValidation.cs.meta",
       "sha256": "ec0ced7cb0120f081a4d3efba67e1a379dd9734bb68babed53be2d504978b822"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleWeaponHostMotionNumericalValidation.cs.meta",
+      "sha256": "04a7510c4f418e5c9db7ce7d57e1de9f0e78a2292c08d158f3c415530e252095"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSourceDeathValidation.cs.meta",
@@ -300,13 +316,22 @@
     "path": "assets/reference/battle-animation/spine-clone-settings-source-manifest.json",
     "sha256": "817440aec6c39ef1706d5b1e3e572d100d2f7b07e6ec3c39cb22c4b87f75549c"
   },
+  "physics_observations": {
+    "path": "scripts/fixtures/battle_weapon_host_motion_reference.json",
+    "sha256": "7ed4fe9ab17c6e65b6f10f7dbb2850a0a131d7e5b7523d7d1e5faf45612f0e17"
+  },
+  "physics_observation_source": {
+    "path": "assets/reference/battle-animation/weapon-host-movement-source-manifest.json",
+    "sha256": "8991ba3418655abf3d96aa5ed95f1d5b78345467926b859c632ec66472a69c6b"
+  },
+  "public_documentation": "https://esotericsoftware.com/spine-unity-main-components-4.2#Setting-Advanced-Parameters",
   "generator": {
     "path": "scripts/prepare_battle_spine_clone_runtime_receipt.py",
-    "sha256": "2c8e53e745967e2375257091d3b357235490e08be9fea53c820f9e3bd1c66b8e"
+    "sha256": "6bfb234a6eed735a71768a1f19896f395d3612b3cc5c9c2a1f5e334fa37b3f05"
   },
-  "operation": "Retain clone init/activate/play and clear/deactivate/stop order, original duration, player appearance source and empty PreviewTool marker. Bind source renderer selection through IProfessionFollowerRenderer and serialized targets through Component, so current native characters can participate without an SDK renderer. Expose the original track-zero, zero-mix, immediate-pose animation request and read-only state through an independent native track and physical clock. Load all renderer/clock settings from five verified original clone targets; replace EC view lookup with a scene dependency injected before Awake. Restart the still-present dead source through the shared scene, retaining original stop-then-replay behavior. Adapt each inactive original clone target in place, bind its existing appearance/character/part components to the battle resource owner, exchange only the renderer endpoint, then activate through the original playable. Retain ungrouped clone renderer orders and slot depths, without promoting fragment or weapon insertion keys to global sorting priorities. Preserve the actual initialized controller parameter/layer contract while the original graph hides its source model; reject unknown parameters without reactivating that model.",
+  "operation": "Retain clone init/activate/play and clear/deactivate/stop order, original duration, player appearance source and empty PreviewTool marker. Bind source renderer selection through IProfessionFollowerRenderer and serialized targets through Component, so current native characters can participate without an SDK renderer. Expose the original track-zero, zero-mix, immediate-pose animation request and read-only state through an independent native track and physical clock. Load all renderer/clock settings from five verified original clone targets; replace EC view lookup with a scene dependency injected before Awake. Restart the still-present dead source through the shared scene, retaining original stop-then-replay behavior. Adapt each inactive original clone target in place, bind its existing appearance/character/part components to the battle resource owner, exchange only the renderer endpoint, then activate through the original playable. Retain ungrouped clone renderer orders and slot depths, without promoting fragment or weapon insertion keys to global sorting priorities. Preserve the actual initialized controller parameter/layer contract while the original graph hides its source model; reject unknown parameters without reactivating that model. Reuse the existing native absolute world movement sampler in the independent clone Update, with the original position/rotation factors and skeleton data scale. Replays and mesh redraws do not reset or resample that movement history; skeleton rebuilds start a new sample.",
   "limits": [
-    "Physics inheritance of world movement requires a separate binding and validation. Attached player death motions and the complete original death playable binding remain incomplete. Source mapping and successful prefab loading alone do not prove those effects work.",
+    "Non-null relative physics reference transforms are explicitly rejected. Attached player death motions and the complete original death playable binding remain incomplete. Source mapping and successful prefab loading alone do not prove those effects work.",
     "The public diagnostic covers the first 13100 segment only. Server combo sequencing and AIRandomTargetFallbackSpawner behavior remain unimplemented pending an offline decision."
   ]
 }
