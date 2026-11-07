@@ -329,6 +329,7 @@ namespace Zjcs.Presentation.Home
             yield return new WaitForSecondsRealtime(.4f);
             Require(report.GetComponentsInChildren<Zjcs.Official.WorldUI.WorldBattleReportSkillRow>().Length > 0,
                 "The native skill report did not show skill rows.");
+            RequireReportLanguage(report);
             ScreenCapture.CaptureScreenshot(Path.Combine(outputDirectory, "skills-damage-report.png"));
             SaveLayoutDiagnostics(Path.Combine(outputDirectory, "skills-report-layout.txt"));
             yield return null;
@@ -433,6 +434,21 @@ namespace Zjcs.Presentation.Home
                 + " legacyText=" + text.text + " rect=" + text.rectTransform.rect + " pos=" + text.rectTransform.position
                 + " color=" + text.color + " canvasAlpha=" + text.canvasRenderer.GetInheritedAlpha()));
             File.WriteAllLines(path, rows);
+        }
+
+        private static void RequireReportLanguage(Transform report)
+        {
+            var labels = report.GetComponentsInChildren<Zjcs.Official.WorldUI.WorldMultiLanguageText>(true);
+            int checkedLabels = 0;
+            foreach (var label in labels)
+            {
+                if (string.IsNullOrEmpty(label.myKey)) continue;
+                string original = Zjcs.Official.WorldUI.WorldBattleReportTextService.GetText(label.myKey);
+                if (original == label.myKey || original.Contains("{")) continue;
+                Require(label.Text == original, "The public battle report lost its original text: " + label.myKey);
+                checkedLabels++;
+            }
+            Require(checkedLabels > 5, "The public report language check did not cover its title and column labels.");
         }
 
         private static void RequireReportPortrait(Transform report)

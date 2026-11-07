@@ -277,6 +277,19 @@ namespace Zjcs.Editor
                 if (ids == null || !ids.Any(value => value > 0)) continue;
                 startStage.Invoke(runtime, new[] { entity, null });
                 yield return null;
+                GameObject invitation = GameObject.Find("BattleAssistSelection");
+                if (invitation != null)
+                {
+                    // The production map adapter now offers NPC assistance before
+                    // opening the shared session. Confirm the native window through input.
+                    Combat.BattleGameViewInput.Focus();
+                    yield return new WaitForSecondsRealtime(.5f);
+                    yield return Capture("battle-assistance.png");
+                    Button confirm = invitation.transform.Find("BgPanel1/Content/MiddleGo/FriendRobotGo/BottomGo")
+                        .GetComponentsInChildren<Button>().Single(value => value.name == "CommonBtn_12");
+                    yield return Combat.BattleGameViewInput.Click(confirm);
+                    yield return null;
+                }
                 controller = controllerField.GetValue(runtime);
                 if (controller != null) break;
             }

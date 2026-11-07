@@ -22,7 +22,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var record in records)
             {
                 var row = UnityEngine.Object.Instantiate(prefab, slot, false);
-                BindFont(row);
+                BindPresentation(row);
                 var view = row.GetComponent<WorldBattleReportPlayerRow>();
                 if (view.PlayerIcon == null) view.PlayerIcon = row.transform.Find("PublicPlayerIcon");
                 if (view.PlayerIcon == null) throw new InvalidOperationException("The original report player icon slot is missing.");
@@ -52,13 +52,11 @@ namespace Zjcs.Presentation.Combat
             {
                 var split = UnityEngine.Object.Instantiate(Resources.Load<GameObject>(
                     "Combat/BattleReport/FightEndReportSplit"), slot, false);
-                BindFont(split);
+                BindPresentation(split);
                 Transform title = split.transform;
                 if (!string.IsNullOrEmpty(bindings.player.splitTitle))
                     foreach (string part in bindings.player.splitTitle.Split('/')) title = title.GetChild(int.Parse(part));
                 var language = title.GetComponent<WorldMultiLanguageText>();
-                language.Localizer = value => WorldBattleReportTextService.ProcessText(
-                    bindings.texts.Single(entry => entry.key == value).text);
                 language.SetKey(key);
                 BuildPlayerRows(slot, group, settings);
                 selectablePlayers.AddRange(group.Players);

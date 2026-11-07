@@ -100,7 +100,7 @@ namespace Zjcs.Presentation.Combat
             {
                 root.transform.SetAsLastSibling();
                 PutAboveHost();
-                BindFont(root);
+                BindPresentation(root);
                 Node(bindings.window.round).GetComponent<WorldMultiLanguageText>()
                     .SetKey("ui_battle_data_round", ReportRound());
                 Node(bindings.window.close).GetComponent<Button>().onClick.AddListener(Close);
@@ -209,7 +209,7 @@ namespace Zjcs.Presentation.Combat
         public void ProvideData(Transform item, int index)
         {
             if (disposed || index < 0 || index >= skills.Length) throw new ArgumentOutOfRangeException(nameof(index));
-            BindFont(item.gameObject);
+            BindPresentation(item.gameObject);
             FightBattleReportSkill skill = skills[index];
             FightBattleUnitState unit = checkpoint.Units.Single(value => value.Id == skill.UnitId);
             var snapshots = unit.Skills.Concat(unit.ReportSkillSnapshots ?? new List<FightBattleSkillDefinition>());
@@ -232,11 +232,25 @@ namespace Zjcs.Presentation.Combat
             });
         }
 
-        private void BindFont(GameObject target)
+        private string LocalizeReportText(string key)
         {
-            if (presentation.Font == null) return;
-            foreach (TMP_Text text in target.GetComponentsInChildren<TMP_Text>(true))
-            { text.font = presentation.Font; text.fontSharedMaterial = presentation.Font.material; }
+            Text entry = bindings.texts?.FirstOrDefault(value => value.key == key);
+            return entry != null ? WorldBattleReportTextService.ProcessText(entry.text)
+                : WorldBattleReportTextService.GetText(key);
+        }
+
+        private void BindPresentation(GameObject target)
+        {
+            if (presentation.Font != null)
+                foreach (TMP_Text text in target.GetComponentsInChildren<TMP_Text>(true))
+                { text.font = presentation.Font; text.fontSharedMaterial = presentation.Font.material; }
+            // A host may install a partial language catalog. The shared report owns its
+            // original texts, including pooled rows, without changing the host's resolver.
+            foreach (WorldMultiLanguageText text in target.GetComponentsInChildren<WorldMultiLanguageText>(true))
+            {
+                text.Localizer = LocalizeReportText;
+                text.Refresh();
+            }
         }
 
         private void PutAboveHost()

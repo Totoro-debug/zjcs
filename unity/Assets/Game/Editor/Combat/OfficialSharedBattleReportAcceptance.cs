@@ -20,6 +20,11 @@ namespace Zjcs.Editor.Combat
             Require(checkpoint.Finished && checkpoint.Outcome != null && !checkpoint.Outcome.Invalid,
                 "The shared report must consume a completed real battle.");
             FightBattleReport finalReport = FightBattleReportBuilder.Build(checkpoint);
+            var owner = FightBattleReportGrouping.Build(finalReport, 1).Players.Single(value => value.TargetId == 1);
+            var ownerUnits = new HashSet<int>(owner.Normal.Concat(owner.Summon).Select(value => value.UnitId));
+            var skillCatalog = OfficialCombatAssetCatalog.LoadDefault().LoadSkillItems();
+            int expectedSkills = finalReport.Skills.Count(value => ownerUnits.Contains(value.UnitId)
+                && (!skillCatalog.TryGet(value.SkillItemId, out var item) || item.UserType != 4));
             var fixture = new GameObject("SharedBattleReportFixture", typeof(RectTransform), typeof(Canvas),
                 typeof(CanvasScaler), typeof(GraphicRaycaster));
             var canvas = fixture.GetComponent<Canvas>();
@@ -32,6 +37,9 @@ namespace Zjcs.Editor.Combat
             string output = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
             File.WriteAllText(Path.Combine(output, "shared-report-checkpoint.json"),
                 FightBattleCheckpointSerializer.Save(checkpoint));
+            var hostLocalizer = WorldMultiLanguageText.Localize;
+            Func<string, string> unrelatedLocalizer = key => "host-catalog:" + key;
+            WorldMultiLanguageText.Localize = unrelatedLocalizer;
             try
             {
                 for (int pass = 0; pass < 2; pass++)
@@ -46,6 +54,9 @@ namespace Zjcs.Editor.Combat
                         float deadline = Time.realtimeSinceStartup + 10f;
                         while (!view.IsReady && Time.realtimeSinceStartup < deadline) yield return null;
                         Require(view.IsReady, "The original report blur mask did not finish preparing.");
+                        VerifyReportLanguage(view);
+                        Require(ReferenceEquals(WorldMultiLanguageText.Localize, unrelatedLocalizer),
+                            "The shared report replaced the host's language resolver.");
                         Require(fixture.GetComponentsInChildren<RawImage>().Any(image =>
                             image.name == "BlurMask" && image.texture is RenderTexture),
                             "The native report blur mask did not receive its captured background.");
@@ -72,26 +83,30 @@ namespace Zjcs.Editor.Combat
                         yield return null;
                         var scroll = view.Root.GetComponentInChildren<LoopVerticalScrollRect>();
                         yield return Capture(output, "shared-report-skills-" + pass);
-                        Require(tabs[1].isOn && scroll != null && scroll.totalCount > 0
-                            && scroll.GetComponentsInChildren<WorldBattleReportSkillRow>().Length > 0,
+                        VerifyReportLanguage(view);
+                        Require(tabs[1].isOn && scroll != null && scroll.totalCount == expectedSkills
+                            && (scroll.GetComponentsInChildren<WorldBattleReportSkillRow>().Length > 0) == (expectedSkills > 0),
                             "The native skill tab did not populate its real completed-battle statistics: selected="
                             + tabs[1].isOn + ", list=" + (scroll != null) + ", count=" + scroll?.totalCount
                             + ", rows=" + scroll?.GetComponentsInChildren<WorldBattleReportSkillRow>().Length);
-                        var pointer = new PointerEventData(EventSystem.current) {
-                            position = new Vector2(Screen.width * .7f, Screen.height * .6f),
-                            button = PointerEventData.InputButton.Left };
-                        ExecuteEvents.Execute(scroll.gameObject, pointer, ExecuteEvents.initializePotentialDrag);
-                        ExecuteEvents.Execute(scroll.gameObject, pointer, ExecuteEvents.beginDragHandler);
-                        pointer.delta = new Vector2(-Screen.width * .65f, 0);
-                        pointer.position += pointer.delta;
-                        ExecuteEvents.Execute(scroll.gameObject, pointer, ExecuteEvents.dragHandler);
-                        ExecuteEvents.Execute(scroll.gameObject, pointer, ExecuteEvents.endDragHandler);
-                        yield return new WaitForEndOfFrame();
-                        Require(scroll.content.anchoredPosition.x < -1f,
-                            "The shared report did not reveal later columns through simulated dragging.");
-                        yield return Capture(output, "shared-report-columns-" + pass);
                         if (expectAllPlayers)
                             yield return ExerciseDropdown(view, checkpoint, populatedSkillUnits, output, pass);
+                        if (scroll.totalCount > 0)
+                        {
+                            var pointer = new PointerEventData(EventSystem.current) {
+                                position = new Vector2(Screen.width * .7f, Screen.height * .6f),
+                                button = PointerEventData.InputButton.Left };
+                            ExecuteEvents.Execute(scroll.gameObject, pointer, ExecuteEvents.initializePotentialDrag);
+                            ExecuteEvents.Execute(scroll.gameObject, pointer, ExecuteEvents.beginDragHandler);
+                            pointer.delta = new Vector2(-Screen.width * .65f, 0);
+                            pointer.position += pointer.delta;
+                            ExecuteEvents.Execute(scroll.gameObject, pointer, ExecuteEvents.dragHandler);
+                            ExecuteEvents.Execute(scroll.gameObject, pointer, ExecuteEvents.endDragHandler);
+                            yield return new WaitForEndOfFrame();
+                            Require(scroll.content.anchoredPosition.x < -1f,
+                                "The shared report did not reveal later columns through simulated dragging.");
+                            yield return Capture(output, "shared-report-columns-" + pass);
+                        }
                         Click(tabs[0]);
                         yield return null;
                         Require(tabs[0].isOn && tabs.Count(value => value.isOn) == 1,
@@ -110,7 +125,21 @@ namespace Zjcs.Editor.Combat
                     "completed real battle: two native windows, player/skill tab clicks, statistics rows and close/disposal passed\n");
                 Debug.Log("Shared battle report input passed: completed real battle, two native windows, player/skill statistics and close/disposal.");
             }
-            finally { UnityEngine.Object.Destroy(fixture); }
+            finally
+            {
+                WorldMultiLanguageText.Localize = hostLocalizer;
+                UnityEngine.Object.Destroy(fixture);
+            }
+        }
+
+        private static void VerifyReportLanguage(OfficialBattleReportView view)
+        {
+            var texts = view.Root.GetComponentsInChildren<WorldMultiLanguageText>(true);
+            Require(texts.Any(value => value.myKey == "ui_battle_end_skill_report_title"
+                && value.Text == WorldBattleReportTextService.GetText(value.myKey)
+                && value.Text != value.myKey), "The shared report title did not use its original Chinese text.");
+            Require(texts.All(value => !value.Text.StartsWith("host-catalog:", StringComparison.Ordinal)),
+                "A native report label or dynamic row leaked the host's unrelated language catalog.");
         }
 
         private static IEnumerator Capture(string directory, string name)
