@@ -272,12 +272,12 @@ namespace Zjcs.Presentation.Combat
                 }
                 skillGraphPlayback?.BindSceneHosts(cameraView, visibilityHost: sceneView, masterResolver: sceneView);
                 if (hudRoot != null) hudRoot.SetActive(hudVisible);
+                ConfigureSpeeds(combatCatalog.SpeedSettings, request.SpeedModeType, request.SpeedConditionMet);
             }
             catch
             {
                 if (executor == nextExecutor)
                 {
-                    nextSkillGraphPlayback?.Dispose();
                     DisposeSession();
                 }
                 else
@@ -421,7 +421,7 @@ namespace Zjcs.Presentation.Combat
         /// speeds whose official conditions hold for this local character. Speed labels are shown by
         /// the HUD; the applied multiplier always comes from the official speed table.
         /// </summary>
-        public void ConfigureSpeeds(FightBattleSpeedSettings settings, int modeType,
+        private void ConfigureSpeeds(FightBattleSpeedSettings settings, int modeType,
             Func<int, bool> conditionMet)
         {
             speedSettings = settings != null ? settings : FightBattleSpeedSettings.Default();

@@ -302,6 +302,7 @@ namespace Zjcs.Presentation.Home
                 HostPresentation = privateMapEntry ? privateMapPresentation : new OfficialBattleHostPresentation(
                     host.Scene.Camera, host.Scene.Root.transform, battleCanvas, host.SetBattlePresentationActive),
                 ModeAdapter = this,
+                SpeedConditionMet = IsBattleSpeedConditionMet,
                 SkillIcon = itemId => skillIcons == null ? fallback : skillIcons.Find(itemId) ?? fallback,
                 TimelinePortrait = unit => characterPortrait(unit) ?? (unit.CharacterType != 1
                     && unit.MonsterId > 0 ? portraits?.Find(combat.MonsterIconId(unit.MonsterId)) : null),
@@ -310,7 +311,6 @@ namespace Zjcs.Presentation.Home
                 RestoreCheckpoint = restore,
                 StatueProgress = battleProfile
             });
-            controller.ConfigureSpeeds(combatAssets.Load().SpeedSettings, 0, IsBattleSpeedConditionMet);
             return controller.Checkpoint;
         }
 

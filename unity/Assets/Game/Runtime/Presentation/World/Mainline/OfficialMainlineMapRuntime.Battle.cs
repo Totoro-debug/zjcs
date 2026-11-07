@@ -177,6 +177,7 @@ namespace Zjcs.Presentation.World
                 HostPresentation = new OfficialBattleHostPresentation(worldCamera, null, hud.ui.OverlayRoot,
                     additionalHudRoots: new[] { hud.ui.Find("WorldCanvas", "/WorldCanvas").transform }),
                 ModeAdapter = this,
+                SpeedConditionMet = IsBattleSpeedConditionMet,
                 SkillIcon = skillIconResolver,
                 TimelinePortrait = unit => characterPortrait(unit) ?? (unit.CharacterType != 1
                     && unit.MonsterId > 0 ? monsterPortraits?.Find(combatCatalog.MonsterIconId(unit.MonsterId)) : null),
@@ -193,9 +194,6 @@ namespace Zjcs.Presentation.World
                         "Map12BattleNpc_" + unit.Id)
                     : null
             });
-            battleController.ConfigureSpeeds(
-                OfficialCombatAssetCatalog.LoadDefault().Load().SpeedSettings, 0,
-                IsBattleSpeedConditionMet);
             SuspendWorldForBattle();
             battleStepTimer = 0f;
             navigation.pendingInteraction = entity;

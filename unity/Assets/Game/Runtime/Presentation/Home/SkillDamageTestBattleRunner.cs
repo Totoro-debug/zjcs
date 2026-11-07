@@ -62,7 +62,6 @@ namespace Zjcs.Presentation.Home
                 scene.FightGridGroundComponent.OriginPos.Y + player.Y,
                 scene.FightGridGroundComponent.OriginPos.Z);
             OfficialCombatAssetCatalog assets = OfficialCombatAssetCatalog.LoadDefault();
-            FightOfficialCombatCatalog combat = assets.Load();
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             controller.Begin(new OfficialBattleRequest
             {
@@ -72,6 +71,11 @@ namespace Zjcs.Presentation.Home
                     () => host.Profile.Save.Player, id => host.DailyDungeonProgression.Catalog.ItemType(id)),
                 HudParent = host.Hud.CanvasTransform,
                 ModeAdapter = this,
+                SpeedConditionMet = conditionId => {
+                    var context = new OfficialConditionContext { Level = host.Level };
+                    foreach (int map in host.Profile.Save.Player.UnlockedMapClassIds ?? new List<int>()) context.UnlockedMapClassIds.Add(map);
+                    return host.DailyDungeonProgression.Catalog.EvaluateCondition(conditionId, context);
+                },
                 TimelinePortrait = OfficialBattleCharacterPortraits.ForProfile(battleRoot.gameObject,
                     host.DailyDungeonProgression, host.ActiveProfileSlotId, host.SavesRoot),
                 HostPresentation = new OfficialBattleHostPresentation(host.Scene.Camera,
@@ -82,11 +86,6 @@ namespace Zjcs.Presentation.Home
                 StatueProgress = host.Profile,
                 Options = OfficialMapBattleSessionOptionsBuilder.Create(stage, true, 3, 3, player.X, player.Y),
                 InitialStepDelay = 0f
-            });
-            controller.ConfigureSpeeds(combat.SpeedSettings, 0, conditionId => {
-                var context = new OfficialConditionContext { Level = host.Level };
-                foreach (int map in host.Profile.Save.Player.UnlockedMapClassIds ?? new List<int>()) context.UnlockedMapClassIds.Add(map);
-                return host.DailyDungeonProgression.Catalog.EvaluateCondition(conditionId, context);
             });
         }
 

@@ -173,8 +173,6 @@ namespace Zjcs.Presentation.Home
             guardScale.x = Mathf.Abs(guardScale.x) * (guardUnit.Direction == 1 ? -1f : 1f);
             guardTransform.localScale = guardScale;
             controller.AttachUnitTransform(2, guardTransform);
-            controller.ConfigureSpeeds(combatAssets.Load().SpeedSettings, 0,
-                _ => false);
             host.Arena.RecordBattleCheckpoint(FightBattleCheckpointSerializer.Save(checkpoint));
         }
 

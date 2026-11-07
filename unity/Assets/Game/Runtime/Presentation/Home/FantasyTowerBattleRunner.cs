@@ -175,13 +175,13 @@ namespace Zjcs.Presentation.Home
                 HostPresentation = new OfficialBattleHostPresentation(host.Scene.Camera,
                     host.Scene.Root.transform, host.Hud.CanvasTransform, host.SetBattlePresentationActive),
                 ModeAdapter = this,
+                SpeedConditionMet = IsBattleSpeedConditionMet,
                 AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
                 CombatAssets = combatAssets,
                 RestoreCheckpoint = restore,
                 StatueProgress = host.Profile,
                 Options = OfficialMapBattleSessionOptionsBuilder.Create(stage, true, 3, 3, player.X, player.Y)
             });
-            controller.ConfigureSpeeds(combat.SpeedSettings, 0, IsBattleSpeedConditionMet);
         }
 
         private void Update()

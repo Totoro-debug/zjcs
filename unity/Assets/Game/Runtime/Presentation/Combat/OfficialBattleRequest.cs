@@ -26,6 +26,11 @@ namespace Zjcs.Presentation.Combat
         // Optional mode adapter. The controller invokes it at the same completion boundaries
         // exposed by its public events, so mode runners do not need to subscribe manually.
         public IOfficialBattleModeAdapter ModeAdapter;
+        // The common module resolves Battle.Speeds/PlayModeSpeeds from CombatAssets during Begin.
+        // The mode supplies only its official condition evaluation; absent evaluation keeps
+        // conditional speeds locked. No second initialization call is required.
+        public int SpeedModeType;
+        public Func<int, bool> SpeedConditionMet;
         // Optional presentation adapters. Omitted resolvers use the shared official catalogs;
         // maps with a captured player portrait or a version-specific NPC catalog override them.
         public Func<int, Sprite> SkillIcon;

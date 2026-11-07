@@ -623,6 +623,10 @@ namespace Zjcs.Editor
             var controller = runner.GetComponent<OfficialBattleRuntimeController>();
             Require(controller != null && controller.Checkpoint != null && controller.HasBattleEnvironment,
                 name + " did not mount the common battle module/environment.");
+            Require(controller.UnlockedSpeedIndices.Count > 0
+                && controller.UnlockedSpeedIndices.Contains(controller.SpeedIndex)
+                && controller.SpeedMultiplier > 0,
+                name + " Begin did not initialize the official battle speed configuration.");
             var adapterField = typeof(OfficialBattleRuntimeController).GetField("modeAdapter",
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             Require(adapterField != null && ReferenceEquals(adapterField.GetValue(controller), runner),
