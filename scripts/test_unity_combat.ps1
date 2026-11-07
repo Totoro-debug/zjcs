@@ -391,6 +391,11 @@ try {
 } catch { $badFormulaRulesRejected = $true }
 Assert-Combat $badFormulaRulesRejected 'Official damage formula accepted a rules payload with a mismatched source digest'
 $reference = Get-Content (Join-Path $root 'assets/reference/battle-rules/damage-reference.json') -Raw | ConvertFrom-Json
+Assert-Combat ($reference.code_manifest -eq '884_156692' -and $reference.configuration_manifest -eq '854_156383' -and $reference.cases.Count -ge 400) 'Original damage reference version or coverage mismatch'
+foreach ($inputIdentity in @($reference.original_code) + @($reference.input) + @($reference.assembly, $reference.code_receipt, $reference.generator)) {
+    $actualHash = (Get-FileHash (Join-Path $root $inputIdentity.path) -Algorithm SHA256).Hash.ToLowerInvariant()
+    Assert-Combat ($actualHash -eq $inputIdentity.sha256) "Original damage reference input changed: $($inputIdentity.path); regenerate with prepare_battle_damage_reference.py --record"
+}
 
 $schema = [Zjcs.Combat.Official.FightDamagePropertySchema]::new()
 foreach ($property in $skillRules.prop_names.PSObject.Properties) {
@@ -701,7 +706,8 @@ Assert-Combat ($skillState.LeftCooldown(0) -eq 3) 'Cooldown display phase mismat
 $skillState.RunSkill(0); $skillState.RunSkill(0)
 Assert-Combat (-not $skillState.CanRelease(0)) 'Limited skill release count mismatch'
 
-$firstVector = $reference.cases[0]
+$firstVector = $reference.cases | Where-Object { $_.name -eq 'baseline' } | Select-Object -First 1
+Assert-Combat ($null -ne $firstVector -and $firstVector.expected.damage -lt 0 -and $firstVector.expected.damage -gt -1000) 'Original damage reference needs a nonlethal baseline for settlement validation'
 $request = New-DamageRequest $firstVector.info $schema
 $settlement = [Zjcs.Combat.Official.FightDamageSettlement]::new()
 $events = [System.Collections.Generic.List[string]]::new()
@@ -712,7 +718,7 @@ $resolver = [Zjcs.Combat.Official.FightDamageResolver]::new($formula, $settlemen
 $source = [Zjcs.Combat.Official.FightEntityState]::new(1, 1000, 1000)
 $target = [Zjcs.Combat.Official.FightEntityState]::new(2, 1000, 1000)
 $resolved = $resolver.Resolve([Zjcs.Combat.Official.FightRandomStream]::new(1), $request, 700, $source, $target, 3)
-Assert-Combat ($resolved.Formula.Damage -eq -50 -and $resolved.Settlement.RealDamageValue -eq -50 -and $target.Hp -eq 950) 'Formula-to-entity hit execution mismatch'
+Assert-Combat ($resolved.Formula.Damage -eq $firstVector.expected.damage -and $resolved.Settlement.RealDamageValue -eq $firstVector.expected.damage -and $target.Hp -eq (1000 + $firstVector.expected.damage)) 'Formula-to-entity hit execution mismatch'
 Assert-Combat (($events -join ',') -eq 'target,source,battle') 'Official damage callback ordering mismatch'
 
 $combatUnit = [Zjcs.Combat.Official.FightBattleUnitState]::new()
@@ -1491,5 +1497,7 @@ $petUnits.Add($petOwner)
 Assert-Combat ($petOwner.PetEnergy.CurrentEnergy -eq 10) 'Pet energy did not initialize from the configured initial energy'
 [Zjcs.Combat.Official.FightBattlePetEnergyRuntime]::RecordOwnerDamage($petUnits, 1, 25)
 Assert-Combat ($petOwner.PetEnergy.CurrentEnergy -eq 22.0 -and [Math]::Abs($petOwner.PetEnergy.OwnerDamageAccumulator - 5.0) -lt 0.001) 'Pet owner damage threshold did not exclude remainder or restore energy'
+Assert-Combat (-not [Zjcs.Combat.Official.FightBattlePetEnergyRuntime]::ConsumeForRelease($petOwner.PetEnergy) -and $petOwner.PetEnergy.CurrentEnergy -eq 22.0) 'Pet energy was consumed without an equipped skill'
+$petOwner.PetEnergy.SkillEntityId = [int](($rules.skill | Where-Object { $_.ClassId -eq 16100 } | Select-Object -First 1).EcEntityId)
 Assert-Combat ([Zjcs.Combat.Official.FightBattlePetEnergyRuntime]::ConsumeForRelease($petOwner.PetEnergy) -and $petOwner.PetEnergy.CurrentEnergy -eq 2.0) 'Pet energy release did not consume the configured threshold'
 Write-Output "Unity combat core checks passed: $($reference.cases.Count) pinned formula vectors, official catalog loading and digest validation, AI priority groups and filters, skill/status assembly, HP accumulated damage triggers, no-release turn progression, passive status initialization, status damage reduction, shield and skill cost execution, official chained hit graph, status falloff, battle victory, checkpoint replay, random stream, timeline, targeting, multi-target falloff, cross-wave spawn selection, official summon execution/caps and pool-specific release, conditional tentacle repair, and pet energy timing."
