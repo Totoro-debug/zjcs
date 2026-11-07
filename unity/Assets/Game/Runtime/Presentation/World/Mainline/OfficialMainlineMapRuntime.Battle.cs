@@ -115,6 +115,11 @@ namespace Zjcs.Presentation.World
             }
             FightBattleCheckpoint resume = completed == null
                 ? TryLoadActiveBattle(stageId, entity.PlacementId) : null;
+            if (resume == null && ShouldOfferMainlineAssist(entity, completed))
+            {
+                OpenMainlineBattleAssistPicker(entity, stage, roster, scene, completed);
+                return;
+            }
             BeginBattle(entity, stage, roster, scene, completed, resume);
         }
 
@@ -122,7 +127,22 @@ namespace Zjcs.Presentation.World
             Map10RuntimeRoster roster, Map10RuntimeBattleScene scene, Action completed,
             FightBattleCheckpoint resume = null)
         {
-            FightBattleCheckpoint checkpoint = resume ?? BuildCheckpoint(entity, stage, roster, scene);
+            int[] selectedAssistNpcIds = ResolveMainlineAssistSelection(entity, stage, resume,
+                completed == null);
+            FightBattleCheckpoint checkpoint = resume;
+            if (checkpoint == null)
+            {
+                CommitMainlineAssistSelection(entity, stage, selectedAssistNpcIds);
+                try
+                {
+                    checkpoint = BuildCheckpoint(entity, stage, roster, scene, selectedAssistNpcIds);
+                }
+                catch
+                {
+                    CancelMainlineBattleAssist(stage.Id);
+                    throw;
+                }
+            }
             if (entity != null && OfficialMainlineStaminaModule.IsStaminaPoint(entity))
             {
                 long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -130,6 +150,7 @@ namespace Zjcs.Presentation.World
                 if (cost.Status != ProgressionResultStatus.Applied && cost.Status != ProgressionResultStatus.Unchanged)
                 {
                     if (cost.Status == ProgressionResultStatus.InvalidState) stamina.StaminaCanStart(entity);
+                    CancelMainlineBattleAssist(stage.Id);
                     return;
                 }
                 hud.RefreshWorldTopBar();
@@ -167,33 +188,41 @@ namespace Zjcs.Presentation.World
             FightOfficialCombatCatalog combatCatalog = OfficialCombatAssetCatalog.LoadDefault().Load();
             var characterPortrait = Zjcs.Presentation.Character.OfficialBattleCharacterPortraits.ForProfile(
                 battleRoot.gameObject, progression, slotId, persistentDataPath);
-            battleController.Begin(new OfficialBattleRequest
+            try
             {
-                Checkpoint = checkpoint,
-                WorldRoot = battleRoot,
-                PlayerAppearance = new OfficialBattlePlayerAppearanceSource(1, 1,
-                    () => progressionSave.Save.Player, id => progression.Catalog.ItemType(id)),
-                HudParent = uiParent,
-                HostPresentation = new OfficialBattleHostPresentation(worldCamera, null, hud.ui.OverlayRoot,
-                    additionalHudRoots: new[] { hud.ui.Find("WorldCanvas", "/WorldCanvas").transform }),
-                ModeAdapter = this,
-                SpeedConditionMet = IsBattleSpeedConditionMet,
-                SkillIcon = skillIconResolver,
-                TimelinePortrait = unit => characterPortrait(unit) ?? (unit.CharacterType != 1
-                    && unit.MonsterId > 0 ? monsterPortraits?.Find(combatCatalog.MonsterIconId(unit.MonsterId)) : null),
-                RestoreCheckpoint = resume != null,
-                EnvironmentGameId = scene.GameId,
-                AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
-                StatueProgress = progressionSave,
-                Options = OfficialMapBattleSessionOptionsBuilder.Create(stage,
-                    !stage.JoinInMiddle, changePositionCenterX: playerEntry.X,
-                    changePositionCenterY: playerEntry.Y),
-                NativeNpcFactory = unit => mapClassId == 12 && unit != null && unit.Id != 1
-                    && OfficialMap12NpcBattleModelView.HasBinding(unit.MonsterId)
-                    ? new OfficialMap12NpcBattleModelView(unit.MonsterId, battleRoot,
-                        "Map12BattleNpc_" + unit.Id)
-                    : null
-            });
+                battleController.Begin(new OfficialBattleRequest
+                {
+                    Checkpoint = checkpoint,
+                    WorldRoot = battleRoot,
+                    PlayerAppearance = new OfficialBattlePlayerAppearanceSource(1, 1,
+                        () => progressionSave.Save.Player, id => progression.Catalog.ItemType(id)),
+                    HudParent = uiParent,
+                    HostPresentation = new OfficialBattleHostPresentation(worldCamera, null, hud.ui.OverlayRoot,
+                        additionalHudRoots: new[] { hud.ui.Find("WorldCanvas", "/WorldCanvas").transform }),
+                    ModeAdapter = this,
+                    SpeedConditionMet = IsBattleSpeedConditionMet,
+                    SkillIcon = skillIconResolver,
+                    TimelinePortrait = unit => characterPortrait(unit) ?? (unit.CharacterType != 1
+                        && unit.MonsterId > 0 ? monsterPortraits?.Find(combatCatalog.MonsterIconId(unit.MonsterId)) : null),
+                    RestoreCheckpoint = resume != null,
+                    EnvironmentGameId = scene.GameId,
+                    AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
+                    StatueProgress = progressionSave,
+                    Options = OfficialMapBattleSessionOptionsBuilder.Create(stage,
+                        !stage.JoinInMiddle, changePositionCenterX: playerEntry.X,
+                        changePositionCenterY: playerEntry.Y),
+                    NativeNpcFactory = unit => mapClassId == 12 && unit != null && unit.Id != 1
+                        && OfficialMap12NpcBattleModelView.HasBinding(unit.MonsterId)
+                        ? new OfficialMap12NpcBattleModelView(unit.MonsterId, battleRoot,
+                            "Map12BattleNpc_" + unit.Id)
+                        : null
+                });
+            }
+            catch
+            {
+                CancelMainlineBattleAssist(stage.Id);
+                throw;
+            }
             SuspendWorldForBattle();
             battleStepTimer = 0f;
             navigation.pendingInteraction = entity;
@@ -275,7 +304,8 @@ namespace Zjcs.Presentation.World
         private int lastActiveSaveCounter;
 
         private FightBattleCheckpoint BuildCheckpoint(Map10RuntimeEntity entity, Map10RuntimeStage stage,
-            Map10RuntimeRoster roster, Map10RuntimeBattleScene scene)
+            Map10RuntimeRoster roster, Map10RuntimeBattleScene scene,
+            IReadOnlyList<int> selectedAssistNpcIds = null)
         {
             if (scene.FightGridGroundComponent == null || scene.FightGridGroundComponent.Size == null
                 || scene.FightGridGroundComponent.PosInfos == null)
@@ -377,6 +407,10 @@ namespace Zjcs.Presentation.World
             if (stele != null)
                 AddMap12SteleNpcUnits(checkpoint, scene,
                     scene.FightComponent.FactionInfoList.First(value => value.Faction == 0), moveMask, stele);
+            else if (selectedAssistNpcIds != null && selectedAssistNpcIds.Count > 0)
+                AddMainlineAssistNpcUnits(checkpoint, scene,
+                    scene.FightComponent.FactionInfoList.First(value => value.Faction == 0),
+                    moveMask, selectedAssistNpcIds);
             return checkpoint;
         }
 
@@ -456,6 +490,7 @@ namespace Zjcs.Presentation.World
             {
                 // Invalid duels have no settlement: never run loss, resource, attempt or reward
                 // consumers. Mode-specific reservations must likewise use Outcome.CanSettle.
+                CancelMainlineBattleAssist(checkpoint.StageId);
                 ClearActiveBattle();
                 if (map14StoryStageBattle) map14StoryStageWon = false;
                 Action invalidCompleted = DestroyBattleSession();
@@ -536,6 +571,7 @@ namespace Zjcs.Presentation.World
                 }
             }
 
+            FinishMainlineBattleAssist(checkpoint.StageId);
             ClearActiveBattle();
             Action completed = DestroyBattleSession();
             SaveLocalProgress();
@@ -553,6 +589,7 @@ namespace Zjcs.Presentation.World
                 return;
             }
             battleController.EndBattle();
+            CancelMainlineBattleAssist(battleController.Checkpoint?.StageId ?? 0);
             stamina.FinishStaminaBattle(navigation.pendingInteraction, false);
             ClearActiveBattle();
             Action callback = DestroyBattleSession();
@@ -563,6 +600,7 @@ namespace Zjcs.Presentation.World
         private void AbortBattle()
         {
             if (battleController == null) return;
+            CancelMainlineBattleAssist(battleController.Checkpoint?.StageId ?? 0);
             stamina.FinishStaminaBattle(navigation.pendingInteraction, false);
             ClearActiveBattle();
             DestroyBattleSession();

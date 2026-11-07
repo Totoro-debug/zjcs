@@ -44,7 +44,7 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 
 ## 完整还原部分
 
-已接入圣兽试炼、双影幻境、普通日常副本及山之国私图战斗房间的候选选择、存档、战斗单位与次数事务；道路、探索首领、节庆首领、联合行动和羁绊冒险入口、多人伙伴队伍及完整进程冷启动恢复仍未完成。
+已接入圣兽试炼、双影幻境、普通日常副本、主线地图常规战斗及山之国私图／战斗碑的候选选择、存档、战斗单位与次数事务；道路、探索首领、节庆首领、联合行动和羁绊冒险入口及完整进程冷启动恢复仍未完成。
 
 - `assets/official/rules.json` 与规则来源清单提供 `npc`、`npc_level_detail`、`npc_profession_detail`、`player_robot_invite`、`skill` 数据。`FightOfficialNpcAssistanceCatalog.Load` 校验规则哈希，按 `NpcType=4`、`CanDevelop`、战斗实体 `FightEntityId` 和等级详情筛伙伴候选，并读取遇见限制、助战条件和玩法次数规则。
 - `FightOfficialNpcAssistanceCatalog.CreateUnit` 按官方等级详情与职业配置计算 NPC 属性、主动技能、被动技能、冷却和状态。被动属性按官方 `NpcFightData.CalcPropsWithSkill` 的基础属性计算与 `BattleFormula.CalcFinalProps` 顺序合成。
@@ -54,6 +54,7 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 - `OfficialMainlineMapRuntime.Map12Buildings` 在素材秘境战斗房间打开同一官方邀请视图，按路线运行和房间保存 `PrivateDungeon`（2）选择。确认后 `DailyDungeonBattleRunner.BeginPrivateMapRoom` 重读存档并复核候选资格、单 NPC 次数和队伍上限，以主角等级／阶位创建伙伴；`CommitBattle` 在战斗挂载前提交次数，挂载失败回滚本次提交。私图 checkpoint 保存在路线档案，助战快照保存在助战档案；恢复时核对玩法、入口、关卡和伙伴列表，既有快照不重复扣次，胜负结算清除活动快照。空队伍仍可单人进入。角色档案、公开奖励、公共次数和购买次数均未改变。完整进程冷启动恢复及多伙伴实战仍待验证。
 - `OfficialBattleAssistOptions` 将助战 PlayType、入口标识和人数上限作为战斗宿主适配参数，开始时复制调用方配置；日常／每日挑战默认使用官方 `All=10`，私图使用 `PrivateDungeon=2`，节庆首领可传入 5。恢复时检查玩法、入口、关卡及伙伴快照，非空伙伴 checkpoint 缺少已提交快照时拒绝恢复，避免重新扣次；只回滚本次新提交的事务。
 - `OfficialBattleAssistSelectionView` 提供公共原生邀请视图，输入为候选展示资料、人数上限及选择／确认／取消回调。日常副本与每日挑战共用该视图，宿主继续计算资格、剩余次数和存档选择；原 `LoopVerticalScrollRect` 负责条目复用，不再由玩法入口手排条目或复制确认按钮。确认空选择时沿用单人开战，非空选择按宿主既有事务处理。
+- `OfficialMainlineMapRuntime.BattleAssist` 将同一原生邀请窗口接入主线地图常规战斗。使用官方 `TeamInvite=3` 候选链，确认后在开战前提交次数，按战斗场景可行走格创建 `CreateTeamInviteUnit` 伙伴；战斗完成清理快照，离开、挂载异常和地图关闭回滚本次次数。地图 12 战斗碑的 `TargetCatalog=9` 专用窗口继续使用独立的战斗碑选择与队伍上限。
 - 公共视图复用已有 `Map12/Team/TeamInvitePanel`／`TeamInvitePanelRobotItem` 原生资源，替代日常目录中缺少 Sprite／字体绑定的旧副本。`record_battle_assist_selection.py` 实际读取选定884 APK，核对面板340节点／1,559对象和条目82节点／346对象；保留使用的序列化内容相同，外部引用表编号差异解析为同一原对象且原始载荷哈希相同。条目中被离线视图移除的旧在线 `AppearanceUI` 单独记录，不把它认作当前代码相同。历史871资源身份与当前884核对凭据分别保留于[公共选择视图来源](../../assets/reference/battle-hud/assist-selection-source-manifest.json)。没有新绘图片、替代布局或修改原资源载荷。排序／职业筛选、完整NPC头像与外观、条件提示参数及战力字段仍未在公共视图接通，不计作完整邀请UI迁移。
 
 山之国战斗碑沿原 `TeamInviteNpc` 候选链筛选伙伴：排除探索首领，再按 `IsFightAssist`、遇见状态和助战条件过滤。当前候选为 95 名，含 9 名导师及 1 名商人；`TeamInviteNpcClassIds`、`CanInviteTeamNpc` 和 `CreateTeamInviteUnit` 服务于该入口，既有伙伴 API 仍按原 85 名范围运行。
@@ -137,4 +138,4 @@ NPC 动画按原 Animator 状态时钟驱动骨骼混合、路径、挂点与背
 
 原生伙伴附着的编辑器校验显式引用外观跟随端口和剧情播放程序集，以解析原附着组件使用的类型；动画绑定校验另外显式引用原剧情动画控制程序集。
 
-Unity 当前实现：规则目录 `unity/Assets/Game/Runtime/Official/Combat/FightOfficialNpcAssistanceCatalog.cs`、统一资格 `unity/Assets/Game/Runtime/Offline/World/OfflineNpcAssistanceCandidates.cs`、次数与战斗快照 `unity/Assets/Game/Runtime/Offline/World/OfflineNpcAssistanceProgress.cs`、官方 Team picker `unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAssistSelectionView.cs`、战斗接线 `unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs`。普通日常副本入口位于 `HomeHudView.Dungeons.SelectDailyDungeonRoom`；山之国私图入口位于 `OfficialMainlineMapRuntime.Map12Buildings.EnterMap12PrivateDungeonBattle`。道路、探索首领、节庆首领、联合行动和羁绊冒险入口仍未接线。TeamInvitePanel 的 bundle 输入、45 项官方依赖、6 个运行时 prefab 与 52 项共享绑定记录见 [team-ui-source-manifest.json](../../assets/reference/npc-assistance/team-ui-source-manifest.json)。
+Unity 当前实现：规则目录 `unity/Assets/Game/Runtime/Official/Combat/FightOfficialNpcAssistanceCatalog.cs`、统一资格 `unity/Assets/Game/Runtime/Offline/World/OfflineNpcAssistanceCandidates.cs`、次数与战斗快照 `unity/Assets/Game/Runtime/Offline/World/OfflineNpcAssistanceProgress.cs`、官方 Team picker `unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAssistSelectionView.cs`、主线接线 `unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.BattleAssist.cs`、日常战斗接线 `unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs`。普通日常副本入口位于 `HomeHudView.Dungeons.SelectDailyDungeonRoom`；主线地图入口位于 `OfficialMainlineMapRuntime.StartEntityStage`；山之国私图入口位于 `OfficialMainlineMapRuntime.Map12Buildings.EnterMap12PrivateDungeonBattle`。道路、探索首领、节庆首领、联合行动和羁绊冒险入口仍未接线。TeamInvitePanel 的 bundle 输入、45 项官方依赖、6 个运行时 prefab 与 52 项共享绑定记录见 [team-ui-source-manifest.json](../../assets/reference/npc-assistance/team-ui-source-manifest.json)。

@@ -280,6 +280,7 @@ namespace Zjcs.Presentation.World
                 else if (dialogueWaiting) RequestDialogueAdvance();
                 else if (storyRunning) { }
                 else if (battleController != null) LeaveBattle();
+                else if (mainlineAssistView != null) CloseMainlineAssistPicker();
                 else if (statues.goddessDialog != null) statues.goddessDialog.Close();
                 else if (selectedStageEntity != null) CloseStageDialog();
                 else if (map12PrivateDungeonDialog != null) CloseMap12PrivateDungeonDialog();
@@ -610,6 +611,8 @@ namespace Zjcs.Presentation.World
 
         private void DisposeRuntime()
         {
+            DisposeMainlineBattleAssistPicker();
+            CancelMainlineBattleAssist(battleController?.Checkpoint?.StageId ?? 0);
             CloseMap12PrivateDungeonAssistPicker();
             CloseMap15PreparationDialog();
             CloseHandInView();
