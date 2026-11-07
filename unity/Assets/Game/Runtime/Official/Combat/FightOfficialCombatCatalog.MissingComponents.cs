@@ -239,14 +239,15 @@ namespace Zjcs.Combat.Official
             {
                 result.RoundInterval = new FightBattleStatusRoundIntervalComponentState
                 {
+                    DefinitionResolved = true,
                     Rate = Float(roundInterval, "Rate", 1f),
                     RoundIntervalPercent = Float(roundInterval, "RoundIntervalPercent", 0f),
-                    FastForward = Bool(roundInterval, "FastForward"),
-                    // FilterCondition is a server-side entity query. Keep the component
-                    // in the checkpoint, but do not fire it until that query is available.
-                    HasUnsupportedFilter = roundInterval.ContainsKey("FilterCondition")
-                        && roundInterval["FilterCondition"] != null
+                    FastForward = Bool(roundInterval, "FastForward")
                 };
+                // FightStatusRoundIntervalComponentInfo explicitly passes ApplyEntity.
+                // 24387's original LogicNotFilter excludes EntityCharacterTypeFilter's list.
+                result.RoundInterval.HasUnsupportedFilter = !ReadRoundIntervalApplyFilter(
+                    Component(roundInterval, "FilterCondition"), result.RoundInterval.ExcludedApplyCharacterTypes);
                 AddTriggerSkills(roundInterval, "StatusTriggerSkillCfgs",
                     result.RoundInterval.SkillTriggers);
             }
@@ -418,6 +419,17 @@ namespace Zjcs.Combat.Official
                 result.Range.Add(new FightGridPoint(Int(point, "X"), Int(point, "Y")));
             }
             return result;
+        }
+
+        private static bool ReadRoundIntervalApplyFilter(Dictionary<string, object> filter,
+            List<int> excludedTypes)
+        {
+            if (filter == null) return true;
+            if (StringField(filter, "_type") != "LogicNotFilter") return false;
+            var target = Component(filter, "TargetFilter");
+            if (target == null || StringField(target, "_type") != "EntityCharacterTypeFilter") return false;
+            excludedTypes.AddRange(IntArray(target, "CharacterTypes"));
+            return true;
         }
 
         private static bool ReadSourceSkillTagFilter(Dictionary<string,object> filter,List<FightGameplayTagClause> clauses)

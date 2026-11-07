@@ -306,6 +306,8 @@ namespace Zjcs.Combat.Official
                 if (component == null || component.HasUnsupportedFilter
                     || FightStatusLifecycle.ResolveTargetUnitId(status, units) != listener?.Id)
                     continue;
+                if (component.ExcludedApplyCharacterTypes != null
+                    && component.ExcludedApplyCharacterTypes.Contains(owner.CharacterType)) continue;
                 int round = listener.SkillState == null ? turns.GlobalRound() : listener.SkillState.Round;
                 if (component.LastTriggeredRound == round) continue;
                 // The two official round-start phases share one listener clock. Consume the
@@ -407,6 +409,24 @@ namespace Zjcs.Combat.Official
             foreach (var clause in component.SummonEntityTagQuery)
                 if (!clause.Matches(tags)) return false;
             return true;
+        }
+
+        private void RestoreRoundIntervalDefinition(FightBattleStatusState status)
+        {
+            var previous = status?.Components?.RoundInterval;
+            if (previous == null || previous.DefinitionResolved || statusCatalog == null
+                || !previous.HasUnsupportedFilter && previous.RoundIntervalPercent == 0f
+                    && (previous.SkillTriggers == null || previous.SkillTriggers.Count == 0)) return;
+            var template = statusCatalog.CreateStatus(status.ClassId, status.OwnerId, status.CreatorId,
+                status.InstanceId, status.RootSkillId, status.ApplyingSkillItemId, status.SourceSkillRank,
+                status.SourceSkillLevel, status.SourceSubRank, status.SourceProperties,
+                replacementProperties: status.ReplacementProperties,
+                blessPropertyScales: status.BlessPropertyScales);
+            var definition = template.Components?.RoundInterval;
+            if (definition == null) return;
+            definition.TriggeredCount = previous.TriggeredCount;
+            definition.LastTriggeredRound = previous.LastTriggeredRound;
+            status.Components.RoundInterval = definition;
         }
 
         private void RestoreHitSummonDefinition(FightBattleStatusState status)

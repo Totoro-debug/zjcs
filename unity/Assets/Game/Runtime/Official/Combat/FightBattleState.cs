@@ -595,17 +595,20 @@ namespace Zjcs.Combat.Official
     [Serializable]
     public sealed class FightBattleStatusRoundIntervalComponentState
     {
+        public bool DefinitionResolved;
         public float Rate = 1f;
         public float RoundIntervalPercent;
         public bool FastForward;
         public int TriggeredCount;
         public int LastTriggeredRound = -1;
         public bool HasUnsupportedFilter;
+        public List<int> ExcludedApplyCharacterTypes = new List<int>();
         public List<FightBattleStatusStateTrigger> SkillTriggers = new List<FightBattleStatusStateTrigger>();
 
         public FightBattleStatusRoundIntervalComponentState Copy()
         {
             var result = (FightBattleStatusRoundIntervalComponentState)MemberwiseClone();
+            result.ExcludedApplyCharacterTypes = new List<int>(ExcludedApplyCharacterTypes ?? new List<int>());
             result.SkillTriggers = new List<FightBattleStatusStateTrigger>(SkillTriggers ?? new List<FightBattleStatusStateTrigger>());
             return result;
         }

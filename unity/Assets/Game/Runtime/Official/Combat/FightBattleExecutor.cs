@@ -88,6 +88,7 @@ namespace Zjcs.Combat.Official
                             RestoreRoundStartDefinition(status);
                             RestoreConditionalHitDefinition(status);
                             RestoreHitSummonDefinition(status);
+                            RestoreRoundIntervalDefinition(status);
                         }
                 units.Add(unit);
                 unitById.Add(unit.Id, unit);
