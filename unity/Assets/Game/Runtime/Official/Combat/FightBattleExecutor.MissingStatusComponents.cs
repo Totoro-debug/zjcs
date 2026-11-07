@@ -367,7 +367,14 @@ namespace Zjcs.Combat.Official
                         TargetPos = created ? 1 : 0
                     }, owner, summon, invocations, created);
                     if (!created && invocations.Count > 0)
+                    {
+                        // The confirmed offline rule casts from the summoner's unit while
+                        // retaining the removed summon as the position anchor. Target selection
+                        // therefore follows the skill's own side/action filters around that cell.
+                        invocations[invocations.Count - 1].SelectTargets = true;
+                        invocations[invocations.Count - 1].UseTargetPositionWithSelection = true;
                         invocations[invocations.Count - 1].AllowDeadTarget = true;
+                    }
                 }
             }
             if (invocations.Count == 0 || movementStartContext == null) return;

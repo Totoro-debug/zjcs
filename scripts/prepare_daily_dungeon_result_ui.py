@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+from functools import lru_cache
 import json
 from pathlib import Path
 import re
@@ -42,6 +43,12 @@ PACKAGE_SCRIPT_GUIDS = {
     ("67dfb1fdfb2b407222eda8e23ac8b724", 1453722849): "f4688fdb7df04437aeb418b961361dc5",  # TextMeshProUGUI
 }
 LOCAL_TYPE_REMAPS = {
+    ("39197805e5534dfcbda4e4ad194e81d7", -1222992475): "LoopVerticalScrollRect",
+    ("06dd3d5416bf43ea368cc39ff96e6d5a", -381060941): "WorldTabItem",
+    ("06dd3d5416bf43ea368cc39ff96e6d5a", 1229101730): "WorldTabGroup",
+    ("06dd3d5416bf43ea368cc39ff96e6d5a", -671063624): "WorldTabAnimatorTransition",
+    ("06dd3d5416bf43ea368cc39ff96e6d5a", 582128686): "WorldLayoutElementClamper",
+    ("222c78078da8821ea09910124a9225a2", 756123093): "WorldUI/HorizontalLayoutGroupJSZX.cs",
     ("7aa338e2f5263348de25eb85a28aad0d", -736795330): "WorldSafeArea",
     ("06dd3d5416bf43ea368cc39ff96e6d5a", -1486259055): "EndPanelAnimEventReceiver",
     ("06dd3d5416bf43ea368cc39ff96e6d5a", -2141185159): "GameEndPanelBase",
@@ -53,6 +60,10 @@ LOCAL_TYPE_REMAPS = {
 }
 
 ROOTS = {
+    "Assets/Prefabs/UI/DailyDungeon/DailyDungeonTopPanel.prefab":
+        "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+    "Assets/Prefabs/UI/Top/TopRankTeamItem.prefab":
+        "defaultpackage_assets_prefabs_ui_top.bundle",
     "Assets/Prefabs/UI/Fight/GameEndPanelDailyDungeon.prefab":
         "defaultpackage_assets_prefabs_ui_fight_gameendpaneldailydungeon.bundle",
     "Assets/Prefabs/UI/DailyDungeon/DailyDungeonEndPanelItem.prefab":
@@ -127,6 +138,7 @@ def write_text_asset_meta(path: Path, previous_record: dict | None = None) -> Pa
     return meta
 
 
+@lru_cache(maxsize=None)
 def local_type_guid(type_name: str) -> str | None:
     suffix = type_name.replace("\\", "/")
     if not suffix.endswith(".cs"):
@@ -594,7 +606,7 @@ def build() -> dict:
             "resource": "Dungeons/UI/884_156692/Native/" + relative.with_suffix("").as_posix(),
             "source": relative.as_posix(), "source_guid": source_guid, "guid": runtime_guid,
             "source_sha256": sha(source), "sha256": sha(target), "meta_sha256": sha(target_meta),
-            "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v4-safearea",
+            "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v5-loopscroll-tabs-layout",
         })
 
     grade_resource_records = []
@@ -654,6 +666,8 @@ def build() -> dict:
         "manifest": apk.version,
         "apk_manifest": apk.source.apk_version,
         "apk_sha256": apk.source.apk_sha256,
+        "generator": {"path": Path(__file__).resolve().relative_to(ROOT).as_posix(),
+                      "sha256": sha(Path(__file__).resolve())},
         "operation": "Resolve original UI roots APK-first from the pinned APK and its verified selected CDN source; copy each AssetRipper asset and importer metadata without overwriting changed files. An existing converted file is reused only when the pinned prior receipt confirms the source hash, assigned GUID, and unchanged importer metadata; the actual on-disk asset hash is recorded. Preserve an existing runtime prefab GUID when its source and prior output hashes match, and remap nested references to that GUID. Clone dependent prefabs into a Windows Resources tree and bind migrated UGUI/TMP components. Android DLL payloads are recorded but not copied into Unity/Player.",
         "native_roots": native_roots,
         "grade_settings": {"path": GRADE_SETTINGS_SOURCE, "source": settings_provenance,
@@ -684,4 +698,4 @@ def build() -> dict:
 
 
 if __name__ == "__main__":
-    print(json.dumps(build(), ensure_ascii=False, indent=2))
+    build()

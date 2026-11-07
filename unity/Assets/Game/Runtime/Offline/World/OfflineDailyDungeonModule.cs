@@ -110,22 +110,39 @@ namespace Zjcs.Offline.World
         public int EntryRegionId { get; internal set; }
         public bool IsPrivateRoute { get; internal set; }
         public bool SupportsLeaderboard { get; internal set; }
+        public IReadOnlyList<int> LeaderboardGrades { get; internal set; } = Array.Empty<int>();
         public int RetrieveGrade { get; internal set; }
     }
 
     public sealed class CatalogDailyDungeonLevelAdapter : IDailyDungeonLevelAdapter
     {
         private readonly IDailyDungeonRouteAdapter routeAdapter;
+        private readonly Dictionary<(int dungeonId, int difficulty), int[]> leaderboardGrades;
+
+        [Serializable] private sealed class LeaderboardConfiguration
+        { public string manifest; public LeaderboardLevel[] levels; }
+        [Serializable] private sealed class LeaderboardLevel
+        { public int dungeonId, difficulty; public int[] grades; }
 
         public CatalogDailyDungeonLevelAdapter(IDailyDungeonRouteAdapter routeAdapter = null)
         {
             this.routeAdapter = routeAdapter ?? ConfiguredDailyDungeonRouteAdapter.LoadDefault();
+            TextAsset source = Resources.Load<TextAsset>("Dungeons/daily-dungeon-leaderboards")
+                ?? throw new InvalidDataException("Official daily dungeon leaderboard configuration is missing.");
+            LeaderboardConfiguration configuration = JsonUtility.FromJson<LeaderboardConfiguration>(source.text);
+            if (configuration == null || configuration.manifest != "884_156692" || configuration.levels == null)
+                throw new InvalidDataException("Official daily dungeon leaderboard configuration is invalid.");
+            leaderboardGrades = configuration.levels.ToDictionary(value => (value.dungeonId, value.difficulty),
+                value => value.grades ?? Array.Empty<int>());
         }
 
         public DailyDungeonLevelDefinition Resolve(DailyDungeonRuntimeBattle dungeon,
             DailyDungeonRuntimeDifficulty difficulty)
         {
             if (dungeon == null || difficulty == null) return null;
+            bool privateRoute = routeAdapter.IsPrivateDifficulty(difficulty.difficulty);
+            int[] grades = leaderboardGrades.TryGetValue((dungeon.id, difficulty.difficulty), out int[] configured)
+                ? configured : Array.Empty<int>();
             return new DailyDungeonLevelDefinition
             {
                 DungeonId = dungeon.id,
@@ -134,8 +151,9 @@ namespace Zjcs.Offline.World
                 MapGroupId = difficulty.mapGroupId,
                 EntryMapClassId = dungeon.entryMapClassId,
                 EntryRegionId = dungeon.entryRegionId,
-                IsPrivateRoute = routeAdapter.IsPrivateDifficulty(difficulty.difficulty),
-                SupportsLeaderboard = !routeAdapter.IsPrivateDifficulty(difficulty.difficulty),
+                IsPrivateRoute = privateRoute,
+                SupportsLeaderboard = !privateRoute && grades.Length > 0,
+                LeaderboardGrades = privateRoute ? Array.Empty<int>() : grades,
                 RetrieveGrade = difficulty.retrieveGrade
             };
         }

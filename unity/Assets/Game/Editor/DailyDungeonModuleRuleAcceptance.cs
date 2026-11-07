@@ -56,6 +56,14 @@ namespace Zjcs.Editor
             File.WriteAllText(createdAtPath,
                 (nowUnixSeconds - dayCondition.days * 86400L + 60L).ToString(CultureInfo.InvariantCulture));
             DailyDungeonModule module = DailyDungeonModule.Open(slots, slotId, catalog);
+            DailyDungeonLevelDefinition worldTree = module.ResolveLevel(11, 0);
+            if (worldTree == null || !worldTree.SupportsLeaderboard
+                || !worldTree.LeaderboardGrades.SequenceEqual(new[] { 7 }))
+                throw new InvalidOperationException("World Tree leaderboard tabs must use the official S-only TopRecordGradeTypeDict, not all completion grades.");
+            DailyDungeonLevelDefinition privateMountain = module.ResolveLevel(121, 50);
+            if (privateMountain == null || privateMountain.SupportsLeaderboard
+                || privateMountain.LeaderboardGrades.Count != 0)
+                throw new InvalidOperationException("Private dungeon routes must not acquire public leaderboard tabs.");
             if (module.IsConditionMet(dayCondition.id, 0, 0, 0, null, null, null))
                 throw new InvalidOperationException("A rank unlock became available before the configured profile age.");
             File.WriteAllText(createdAtPath,

@@ -1935,6 +1935,58 @@ namespace Zjcs.Presentation.Home
             yield return null;
             yield return Capture("dungeons-detail.png");
 
+            GameObject detailLeaderboard = GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot");
+            Button leaderboardButton = detailLeaderboard.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(value => value.name == "DailyDungeonTopGrade");
+            ok = Check("dungeons-leaderboard-input", () =>
+            {
+                Assert(leaderboardButton != null && leaderboardButton.interactable,
+                    "official dungeon leaderboard button is unavailable");
+                ClickPartnerUi(leaderboardButton);
+                GameObject leaderboard = GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaderboardRoot");
+                AssertModalOnTop(leaderboard, "dungeon leaderboard");
+                Transform content = leaderboard.GetComponentsInChildren<Transform>(true)
+                    .FirstOrDefault(value => value.name == "TeamTopContent");
+                Assert(content != null, "official dungeon leaderboard content is missing");
+                LoopVerticalScrollRect records = content.GetComponentInChildren<LoopVerticalScrollRect>(true);
+                Assert(records != null && records.content != null,
+                    "official dungeon leaderboard record scroll binding is missing");
+                Assert(leaderboard.GetComponentsInChildren<Image>(true)
+                    .Any(value => value.isActiveAndEnabled && value.sprite != null),
+                    "official dungeon leaderboard rendered no bound artwork");
+                DumpModalState("dungeon-leaderboard", leaderboard);
+                return "official dungeon leaderboard panel opened with grade tabs and local record content";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return null;
+            yield return Capture("dungeons-leaderboard.png");
+            ok = Check("dungeons-leaderboard-grade-input", () =>
+            {
+                GameObject leaderboard = GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaderboardRoot");
+                WorldTabItem[] tabs = leaderboard.GetComponentsInChildren<WorldTabItem>(true)
+                    .Where(value => value.isActiveAndEnabled && value.name.StartsWith(
+                        "DailyDungeonTopPanelTabBottomBtn", StringComparison.Ordinal)).ToArray();
+                Assert(tabs.Length > 0, "official leaderboard grade tab bindings are missing");
+                WorldTabItem next = tabs.FirstOrDefault(value => !value.isOn) ?? tabs[0];
+                ClickPartnerUi(next);
+                Assert(next.isOn && tabs.Count(value => value.isOn) == 1,
+                    "official leaderboard grade tabs did not switch selection");
+                return "pointer raycast selected the original grade tab";
+            });
+            if (!ok) { completed(false); yield break; }
+            ok = Check("dungeons-leaderboard-close-input", () =>
+            {
+                GameObject leaderboard = GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaderboardRoot");
+                Button close = leaderboard.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value.name == "CloseBtn_dark");
+                ClickPartnerUi(close);
+                Assert(GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaderboardRoot") == null,
+                    "official leaderboard close button did not return to dungeon details");
+                return "official leaderboard close button returned to dungeon details";
+            });
+            if (!ok) { completed(false); yield break; }
+
             GameObject detail = GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot");
             Button enter = detail.GetComponentsInChildren<Button>(true)
                 .FirstOrDefault(value => value.name == "BattleBtn" || value.name == "GoToBtn");
@@ -2161,6 +2213,56 @@ namespace Zjcs.Presentation.Home
             yield return null;
             yield return null;
             yield return Capture("dungeons-result-claimed.png");
+
+            ok = Check("dungeons-leaderboard-record", () =>
+            {
+                MethodInfo open = runtime.Hud.GetType().GetMethod("OpenDailyDungeonDetail",
+                    BindingFlags.Instance | BindingFlags.NonPublic);
+                Assert(open != null, "dungeon detail entry is missing");
+                open.Invoke(runtime.Hud, new object[] { settlement.Run.dungeonId, (int?)settlement.Run.difficulty });
+                return "official detail reopened after the successful local claim";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return null;
+            ok = Check("dungeons-leaderboard-record-open-input", () =>
+            {
+                GameObject recordDetail = GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot");
+                Button top = recordDetail.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value.name == "DailyDungeonTopGrade");
+                ClickPartnerUi(top);
+                GameObject leaderboard = GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaderboardRoot");
+                AssertModalOnTop(leaderboard, "dungeon leaderboard after settlement");
+                return "official leaderboard reopened after the successful local claim";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return null;
+            yield return Capture("dungeons-leaderboard-record.png");
+            ok = Check("dungeons-leaderboard-record-rows", () =>
+            {
+                GameObject leaderboard = GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaderboardRoot");
+                Transform team = leaderboard.GetComponentsInChildren<Transform>(true)
+                    .FirstOrDefault(value => value.name == "TeamTopContent");
+                LoopVerticalScrollRect records = team == null ? null : team.GetComponentInChildren<LoopVerticalScrollRect>(true);
+                DumpModalState("dungeon-leaderboard-record", leaderboard);
+                Assert(records != null && records.totalCount > 0 && records.content.childCount > 0,
+                    "completed local route did not populate the official leaderboard list: "
+                    + (records == null ? "no scroll" : "count=" + records.totalCount + ", children="
+                        + records.content.childCount + ", active=" + records.isActiveAndEnabled
+                        + ", viewport=" + records.viewport.rect + ", content=" + records.content.rect)
+                    + ", local records=" + runtime.DailyDungeons.Leaderboard(settlement.Run.dungeonId,
+                        settlement.Run.difficulty, settlement.Run.grade).Count);
+                Assert(records.content.GetComponentsInChildren<TMP_Text>(true)
+                    .Any(value => value.name == "ScoreText" && !string.IsNullOrEmpty(value.text)),
+                    "official leaderboard row did not bind the completion duration");
+                return "completed local route populated the original loop-scroll row with completion time";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return null;
+            InvokePrivate(runtime.Hud, "CloseDailyDungeonLeaderboard");
+            InvokePrivate(runtime.Hud, "CloseDungeonDetail");
 
             ok = Check("arena-panel", () =>
             {

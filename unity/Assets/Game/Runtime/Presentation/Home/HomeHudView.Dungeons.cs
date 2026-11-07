@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -830,27 +831,27 @@ namespace Zjcs.Presentation.Home
             DailyDungeonLevelDefinition level = host.DailyDungeons.ResolveLevel(
                 selectedDungeonId, selectedDifficulty);
             if (level?.SupportsLeaderboard != true) return;
-            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonTopPanel");
+            GameObject prefab = Resources.Load<GameObject>(
+                "Dungeons/UI/884_156692/Native/Prefabs/UI/DailyDungeon/DailyDungeonTopPanel");
             if (prefab == null) throw new InvalidOperationException("Official daily dungeon leaderboard panel is missing.");
             dailyDungeonLeaderboardRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             dailyDungeonLeaderboardRoot.name = "DailyDungeonTopPanel";
             dailyDungeonLeaderboardRoot.transform.SetAsLastSibling();
             PlaceModalCanvasOnTop(dailyDungeonLeaderboardRoot);
+            ApplyOfficialDungeonBindings(dailyDungeonLeaderboardRoot, "DailyDungeonTopPanel");
             BindPrefabButton(dailyDungeonLeaderboardRoot, "CloseBtn_dark", CloseDailyDungeonLeaderboard);
             SetPrefabActive(dailyDungeonLeaderboardRoot, "FirstGo", false);
             SetPrefabActive(dailyDungeonLeaderboardRoot, "TeamInfo", false);
             SetPrefabActive(dailyDungeonLeaderboardRoot, "MemberInfo", false);
             SetPrefabActive(dailyDungeonLeaderboardRoot, "DailyDungeonTopPanelAchievementTabBottomBtn", false);
             SetPrefabActive(dailyDungeonLeaderboardRoot, "SwitchTopRangeBtn", false);
+            SetPrefabActive(dailyDungeonLeaderboardRoot, "TopLimitTime", false);
 
-            DailyDungeonRuntimeMap map = host.DailyDungeons.FindMap(level.MapGroupId);
-            int[] grades = (map?.gradeRows ?? Array.Empty<DailyDungeonRuntimeGradeRow>())
-                .Where(value => value != null && value.difficulty == selectedDifficulty && value.grade > 0)
-                .Select(value => value.grade).Distinct().OrderByDescending(value => value).ToArray();
-            if (grades.Length == 0) grades = new[] { host.DailyDungeons.BestGrade(selectedDungeonId, selectedDifficulty) };
+            int[] grades = level.LeaderboardGrades.ToArray();
             Transform tabGroup = Find(dailyDungeonLeaderboardRoot.transform, "TabGroup");
-            Button[] gradeTabs = tabGroup == null ? Array.Empty<Button>()
-                : tabGroup.GetComponentsInChildren<Button>(true)
+            Zjcs.Official.WorldUI.WorldTabItem[] gradeTabs = tabGroup == null
+                ? Array.Empty<Zjcs.Official.WorldUI.WorldTabItem>()
+                : tabGroup.GetComponentsInChildren<Zjcs.Official.WorldUI.WorldTabItem>(true)
                     .Where(value => value.transform.name.StartsWith("DailyDungeonTopPanelTabBottomBtn",
                         StringComparison.Ordinal)).ToArray();
             for (int index = 0; index < gradeTabs.Length; index++)
@@ -859,15 +860,16 @@ namespace Zjcs.Presentation.Home
                 gradeTabs[index].gameObject.SetActive(active);
                 if (!active) continue;
                 int grade = grades[index];
-                SetNamedText(gradeTabs[index].transform, "Text", grade.ToString());
-                SetNamedText(gradeTabs[index].transform, "text", grade.ToString());
-                gradeTabs[index].onClick.AddListener(() => RefreshDailyDungeonLeaderboard(grade));
+                gradeTabs[index].OnValueChanged.AddListener(isOn =>
+                {
+                    if (isOn) RefreshDailyDungeonLeaderboard(grade);
+                });
             }
             selectedLeaderboardGrade = grades.FirstOrDefault(value => value == host.DailyDungeons.BestGrade(
                 selectedDungeonId, selectedDifficulty));
             if (selectedLeaderboardGrade <= 0) selectedLeaderboardGrade = grades.FirstOrDefault(value => value > 0);
-            SetNamedText(dailyDungeonLeaderboardRoot.transform, "TitleText",
-                (level.Title ?? "日常副本") + " · 难度 " + selectedDifficulty + " 个人记录");
+            for (int index = 0; index < gradeTabs.Length && index < grades.Length; index++)
+                gradeTabs[index].SetIsOnWithoutNotify(grades[index] == selectedLeaderboardGrade, true);
             RefreshDailyDungeonLeaderboard(selectedLeaderboardGrade);
         }
 
@@ -875,24 +877,22 @@ namespace Zjcs.Presentation.Home
         {
             if (dailyDungeonLeaderboardRoot == null) return;
             selectedLeaderboardGrade = grade;
-            Transform teamContent = Find(dailyDungeonLeaderboardRoot.transform, "TeamTopContent");
-            ScrollRect scroll = teamContent == null ? null : teamContent.GetComponentInChildren<ScrollRect>(true);
-            Transform rows = scroll == null || scroll.content == null ? null : scroll.content;
-            if (rows == null)
+            DungeonLeaderboardBinding binding = LoadDungeonOfficialBindings("DailyDungeonTopPanel").leaderboard;
+            Transform scrollNode = FindOfficialBindingNode(dailyDungeonLeaderboardRoot.transform, binding.mScrollRect, null);
+            LoopVerticalScrollRect scroll = scrollNode == null ? null : scrollNode.GetComponent<LoopVerticalScrollRect>();
+            if (scroll == null || scroll.content == null)
                 throw new InvalidOperationException("Official daily dungeon leaderboard content is missing.");
-            foreach (Transform child in rows) UnityEngine.Object.Destroy(child.gameObject);
             IReadOnlyList<DailyDungeonLeaderboardEntry> entries = grade <= 0
                 ? Array.Empty<DailyDungeonLeaderboardEntry>()
                 : host.DailyDungeons.Leaderboard(selectedDungeonId, selectedDifficulty, grade,
                     host.DailyDungeons.Options.LeaderboardLimit);
-            GameObject itemPrefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonTopPanelItem");
-            if (itemPrefab == null) throw new InvalidOperationException("Official daily dungeon leaderboard row is missing.");
-            foreach (DailyDungeonLeaderboardEntry entry in entries)
+            scroll.dataSource = new DailyDungeonLeaderboardRows((rowTransform, index) =>
             {
-                GameObject row = UnityEngine.Object.Instantiate(itemPrefab, rows, false);
-                row.name = "DailyDungeonLocalRecord_" + entry.Rank;
+                DailyDungeonLeaderboardEntry entry = entries[index];
+                GameObject row = rowTransform.gameObject;
+                ApplyOfficialDungeonBindings(row, "TopRankTeamItem");
                 SetNamedText(row.transform, "RankText", entry.Rank.ToString());
-                SetNamedText(row.transform, "FinishTimeText", FormatDailyDungeonFinishTime(entry.FinishTicks));
+                SetNamedText(row.transform, "ScoreText", FormatDailyDungeonFinishTime(entry.FinishTicks));
                 SetNamedText(row.transform, "Name", entry.PlayerName);
                 Transform team = Find(row.transform, "Team");
                 if (team != null)
@@ -906,17 +906,58 @@ namespace Zjcs.Presentation.Home
                         {
                             member.gameObject.SetActive(playerSlot);
                             showedPlayer |= playerSlot;
+                            if (playerSlot)
+                            {
+                                SetPrefabActive(member.gameObject, "NpcIcon", false);
+                                SetPrefabActive(member.gameObject, "ImgEmpty", false);
+                                var portrait = member.GetComponent<DailyDungeonResultPlayerRowAdapter>()
+                                    ?? member.gameObject.AddComponent<DailyDungeonResultPlayerRowAdapter>();
+                                portrait.Configure(host);
+                            }
                         }
                     }
                 }
-                SetPrefabActive(row, "MeOutLineImg", entry.IsSelf);
-                SetPrefabActive(row, "Top1Icon", entry.Rank == 1);
-                SetPrefabActive(row, "Top2Icon", entry.Rank == 2);
-                SetPrefabActive(row, "Top3Icon", entry.Rank == 3);
-            }
-            SetPrefabActive(dailyDungeonLeaderboardRoot, "EmptyGo", entries.Count == 0);
-            if (scroll != null) scroll.verticalNormalizedPosition = 1f;
-            if (rows is RectTransform contentRect) LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
+                DungeonLeaderboardBinding rowBinding = LoadDungeonOfficialBindings("TopRankTeamItem").leaderboard;
+                SetLeaderboardObjectState(row, rowBinding.mMeStateSwitcher, entry.IsSelf ? 1 : 0);
+                SetLeaderboardObjectState(row, rowBinding.mTopStateSwticher, entry.Rank);
+            });
+            scroll.totalCount = entries.Count;
+            SetLeaderboardObjectState(dailyDungeonLeaderboardRoot, binding.mEmptyStateSwitcher, entries.Count == 0 ? 1 : 0);
+            SetLeaderboardObjectState(dailyDungeonLeaderboardRoot, binding.mMyTopStateSwitcher, 0);
+            // The server callback arrives after the original panel has laid out.
+            // A local reply must also wait for its first valid viewport.
+            host.StartCoroutine(FillDailyDungeonLeaderboard(dailyDungeonLeaderboardRoot, scroll, scroll.dataSource));
+            Transform content = FindOfficialBindingNode(dailyDungeonLeaderboardRoot.transform, binding.mContent, null);
+            CanvasGroup group = content == null ? null : content.GetComponent<CanvasGroup>();
+            if (group != null) { group.alpha = 1f; group.interactable = true; group.blocksRaycasts = true; }
+        }
+
+        private IEnumerator FillDailyDungeonLeaderboard(GameObject root, LoopVerticalScrollRect scroll,
+            LoopScrollDataSource source)
+        {
+            yield return null;
+            if (root == null || root != dailyDungeonLeaderboardRoot || scroll == null
+                || !ReferenceEquals(scroll.dataSource, source)) yield break;
+            Canvas.ForceUpdateCanvases();
+            scroll.RefillCells();
+        }
+
+        private sealed class DailyDungeonLeaderboardRows : LoopScrollDataSource
+        {
+            private readonly Action<Transform, int> provide;
+            public DailyDungeonLeaderboardRows(Action<Transform, int> provide) { this.provide = provide; }
+            public void ProvideData(Transform transform, int index) { provide(transform, index); }
+        }
+
+        private static void SetLeaderboardObjectState(GameObject root, DungeonLeaderboardState[] states, int state)
+        {
+            foreach (DungeonLeaderboardState row in states ?? Array.Empty<DungeonLeaderboardState>())
+                foreach (string path in row.objects)
+                {
+                    Transform target = FindOfficialBindingNode(root.transform, path, null);
+                    if (target == null) throw new InvalidOperationException("Official leaderboard state target is missing: " + path);
+                    target.gameObject.SetActive(row.state == state);
+                }
         }
 
         private static string FormatDailyDungeonFinishTime(long ticks)
@@ -1623,11 +1664,13 @@ namespace Zjcs.Presentation.Home
         {
             if (dungeonOfficialBindings.TryGetValue(prefabName, out DungeonOfficialPrefabBinding cached))
                 return cached;
-            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "official-bindings.json");
+            bool leaderboard = prefabName == "DailyDungeonTopPanel" || prefabName == "TopRankTeamItem";
+            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI",
+                leaderboard ? "leaderboard-bindings.json" : "official-bindings.json");
             if (!File.Exists(path)) throw new FileNotFoundException("Official dungeon UI bindings are missing.", path);
             DungeonOfficialBindingsDocument document = JsonUtility.FromJson<DungeonOfficialBindingsDocument>(
                 File.ReadAllText(path));
-            if (document == null || document.manifest != "871_156598" || document.prefabs == null)
+            if (document == null || document.manifest != (leaderboard ? "884_156692" : "871_156598") || document.prefabs == null)
                 throw new FormatException("Official dungeon UI bindings have an unsupported manifest.");
             DungeonOfficialPrefabBinding binding = document.prefabs.FirstOrDefault(value =>
                 value != null && string.Equals(value.name, prefabName, StringComparison.Ordinal));
@@ -1734,6 +1777,7 @@ namespace Zjcs.Presentation.Home
         private sealed class DungeonOfficialPrefabBinding
         {
             public string name;
+            public DungeonLeaderboardBinding leaderboard;
             public DungeonOfficialTransformBinding[] transforms;
             public DungeonOfficialImageBinding[] images;
             public DungeonOfficialTextBinding[] texts;
@@ -1741,6 +1785,20 @@ namespace Zjcs.Presentation.Home
             public DungeonOfficialAspectRatioBinding[] aspectRatioFitters;
             public DungeonOfficialRaycastBinding[] raycastGraphics;
             public DungeonOfficialEntryButtonBinding[] entryButtons;
+        }
+
+        [Serializable]
+        private sealed class DungeonLeaderboardBinding
+        {
+            public string mScrollRect, mContent, mMeTopItem, mRankText;
+            public DungeonLeaderboardState[] mEmptyStateSwitcher, mMyTopStateSwitcher, mMeStateSwitcher, mTopStateSwticher;
+        }
+
+        [Serializable]
+        private sealed class DungeonLeaderboardState
+        {
+            public int state;
+            public string[] objects;
         }
 
         [Serializable]
