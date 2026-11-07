@@ -24,9 +24,9 @@ namespace Zjcs.Offline.ProfessionUI
         public static BattleNativeMonsterRenderer CreatePrefab(GameObject prefab, Transform parent,
             IProfessionAppearanceUILiteBindings appearance)
         {
-            if (!prefab || appearance == null) throw new ArgumentNullException();
+            if (!prefab) throw new ArgumentNullException(nameof(prefab));
             var source = prefab.GetComponent<BattleNativeMonsterRenderer>();
-            if (!source || !source.nativeAssets || !prefab.GetComponent<AppearanceRendererLite>())
+            if (!source || !source.nativeAssets || (prefab.GetComponent<AppearanceRendererLite>() && appearance == null))
                 throw new ArgumentException("Bind the complete original native battle prefab and appearance resources.");
             var staging = new GameObject("Inactive original battle prefab binding");
             staging.SetActive(false);
@@ -55,7 +55,10 @@ namespace Zjcs.Offline.ProfessionUI
                 throw new InvalidOperationException("Bind the verified original RT prefab variant.");
             if (Int(Obj(row["renderer"]), "updateTiming") != 1)
                 throw new NotSupportedException("Bind the original prefab animation update timing.");
-            var originals = GetComponent<MeshRenderer>().sharedMaterials.Distinct().ToArray();
+            var originals = GetComponentsInChildren<MeshRenderer>(true).SelectMany(value => value.sharedMaterials)
+                .Concat(GetComponentsInChildren<BattleNativeMonsterMeshCopy>(true).SelectMany(value => value.SerializedMaterials))
+                .Concat(GetComponentsInChildren<BattleNativeMonsterMaterialOverrides>(true).SelectMany(value => value.SerializedMaterials))
+                .Where(value => value).Distinct().ToArray();
             prefabMaterials = Arr(row["materials"]).Select(value => {
                 string name = (string)Obj(Obj(value)["fields"])["m_Name"];
                 return originals.Single(material => material && material.name == name);

@@ -1,0 +1,992 @@
+{
+  "schema": 1,
+  "manifest": "884_156692",
+  "item": {
+    "ClassId": 41021,
+    "Name": "混沌晶块",
+    "RawIcon": "ItemIcon/Materials/item_41021",
+    "ShowPieceIcon": false,
+    "IconEffect": "",
+    "ItemType": 108,
+    "Rank": -1,
+    "Quality": 3,
+    "ElementType": 0,
+    "Price": {},
+    "CanRepeat": true,
+    "AgioItemId": 0,
+    "AgioAmount": 0,
+    "AgioRuleIdList": null,
+    "CanDrop": true,
+    "CanDropWhenExist": true,
+    "ShowInBag": true,
+    "CanOverlap": true,
+    "CanUse": false,
+    "CanUseInBatches": false,
+    "ItemUseEffectType": 0,
+    "Effects": null,
+    "ShowUseDetail": false,
+    "ShowPlayerItemCount": true,
+    "LimitRank": 1,
+    "RedDotType": 0,
+    "RecycleReward": null,
+    "IsShowGained": false,
+    "RecycleGroupCount": 1
+  },
+  "texts": [
+    {
+      "key": "ArrestMonsterPanel_RewardTitle",
+      "text": "首次参战奖励"
+    },
+    {
+      "key": "item_41021_name",
+      "text": "混沌晶块"
+    },
+    {
+      "key": "stage_4800_name",
+      "text": "混沌君主讨伐战"
+    },
+    {
+      "key": "ui_ItemIcon_count_key",
+      "text": "{0}"
+    },
+    {
+      "key": "ui_any_click_close",
+      "text": "点击空白处关闭"
+    },
+    {
+      "key": "ui_battle_win_text",
+      "text": "战斗胜利"
+    },
+    {
+      "key": "ui_legionboss_game_end",
+      "text": "战斗结束"
+    },
+    {
+      "key": "ui_make_damage",
+      "text": "造成伤害"
+    },
+    {
+      "key": "ui_new_mark_text",
+      "text": "新"
+    }
+  ],
+  "colors": {
+    "Green": {
+      "r": 0.7960784435272217,
+      "g": 0.8117647171020508,
+      "b": 0.3803921639919281,
+      "a": 1.0
+    },
+    "White": {
+      "r": 0.886274516582489,
+      "g": 0.886274516582489,
+      "b": 0.886274516582489,
+      "a": 1.0
+    },
+    "TextColorConfig": {
+      "TextColorLists": [
+        {
+          "ThemeColorType": 0,
+          "TypeList": [
+            0,
+            2,
+            5
+          ],
+          "TextColors": [
+            {
+              "Color": {
+                "r": 1.0,
+                "g": 0.9803921580314636,
+                "b": 0.929411768913269,
+                "a": 1.0
+              },
+              "EnableGradient": 0,
+              "GradientColor": {
+                "key0": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key1": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key2": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key3": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key4": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key5": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key6": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key7": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "ctime0": 0,
+                "ctime1": 65535,
+                "ctime2": 0,
+                "ctime3": 0,
+                "ctime4": 0,
+                "ctime5": 0,
+                "ctime6": 0,
+                "ctime7": 0,
+                "atime0": 0,
+                "atime1": 65535,
+                "atime2": 0,
+                "atime3": 0,
+                "atime4": 0,
+                "atime5": 0,
+                "atime6": 0,
+                "atime7": 0,
+                "m_Mode": 0,
+                "m_ColorSpace": -1,
+                "m_NumColorKeys": 2,
+                "m_NumAlphaKeys": 2
+              }
+            },
+            {
+              "Color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "EnableGradient": 0,
+              "GradientColor": {
+                "key0": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key1": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key2": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key3": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key4": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key5": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key6": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key7": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "ctime0": 0,
+                "ctime1": 65535,
+                "ctime2": 0,
+                "ctime3": 0,
+                "ctime4": 0,
+                "ctime5": 0,
+                "ctime6": 0,
+                "ctime7": 0,
+                "atime0": 0,
+                "atime1": 65535,
+                "atime2": 0,
+                "atime3": 0,
+                "atime4": 0,
+                "atime5": 0,
+                "atime6": 0,
+                "atime7": 0,
+                "m_Mode": 0,
+                "m_ColorSpace": -1,
+                "m_NumColorKeys": 2,
+                "m_NumAlphaKeys": 2
+              }
+            },
+            {
+              "Color": {
+                "r": 1.0,
+                "g": 0.7333333492279053,
+                "b": 0.21568627655506134,
+                "a": 1.0
+              },
+              "EnableGradient": 0,
+              "GradientColor": {
+                "key0": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key1": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key2": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key3": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key4": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key5": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key6": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key7": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "ctime0": 0,
+                "ctime1": 65535,
+                "ctime2": 0,
+                "ctime3": 0,
+                "ctime4": 0,
+                "ctime5": 0,
+                "ctime6": 0,
+                "ctime7": 0,
+                "atime0": 0,
+                "atime1": 65535,
+                "atime2": 0,
+                "atime3": 0,
+                "atime4": 0,
+                "atime5": 0,
+                "atime6": 0,
+                "atime7": 0,
+                "m_Mode": 0,
+                "m_ColorSpace": -1,
+                "m_NumColorKeys": 2,
+                "m_NumAlphaKeys": 2
+              }
+            }
+          ]
+        },
+        {
+          "ThemeColorType": 1,
+          "TypeList": [
+            0,
+            1,
+            3,
+            4,
+            5
+          ],
+          "TextColors": [
+            {
+              "Color": {
+                "r": 0.13333334028720856,
+                "g": 0.13333334028720856,
+                "b": 0.13333334028720856,
+                "a": 1.0
+              },
+              "EnableGradient": 0,
+              "GradientColor": {
+                "key0": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key1": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key2": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key3": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key4": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key5": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key6": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key7": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "ctime0": 0,
+                "ctime1": 65535,
+                "ctime2": 0,
+                "ctime3": 0,
+                "ctime4": 0,
+                "ctime5": 0,
+                "ctime6": 0,
+                "ctime7": 0,
+                "atime0": 0,
+                "atime1": 65535,
+                "atime2": 0,
+                "atime3": 0,
+                "atime4": 0,
+                "atime5": 0,
+                "atime6": 0,
+                "atime7": 0,
+                "m_Mode": 0,
+                "m_ColorSpace": -1,
+                "m_NumColorKeys": 2,
+                "m_NumAlphaKeys": 2
+              }
+            },
+            {
+              "Color": {
+                "r": 0.6196078658103943,
+                "g": 0.6666666865348816,
+                "b": 0.7137255072593689,
+                "a": 1.0
+              },
+              "EnableGradient": 0,
+              "GradientColor": {
+                "key0": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key1": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key2": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key3": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key4": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key5": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key6": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key7": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "ctime0": 0,
+                "ctime1": 65535,
+                "ctime2": 0,
+                "ctime3": 0,
+                "ctime4": 0,
+                "ctime5": 0,
+                "ctime6": 0,
+                "ctime7": 0,
+                "atime0": 0,
+                "atime1": 65535,
+                "atime2": 0,
+                "atime3": 0,
+                "atime4": 0,
+                "atime5": 0,
+                "atime6": 0,
+                "atime7": 0,
+                "m_Mode": 0,
+                "m_ColorSpace": -1,
+                "m_NumColorKeys": 2,
+                "m_NumAlphaKeys": 2
+              }
+            },
+            {
+              "Color": {
+                "r": 0.9686274528503418,
+                "g": 0.32156863808631897,
+                "b": 0.21568627655506134,
+                "a": 1.0
+              },
+              "EnableGradient": 0,
+              "GradientColor": {
+                "key0": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key1": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key2": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key3": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key4": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key5": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key6": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key7": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "ctime0": 0,
+                "ctime1": 65535,
+                "ctime2": 0,
+                "ctime3": 0,
+                "ctime4": 0,
+                "ctime5": 0,
+                "ctime6": 0,
+                "ctime7": 0,
+                "atime0": 0,
+                "atime1": 65535,
+                "atime2": 0,
+                "atime3": 0,
+                "atime4": 0,
+                "atime5": 0,
+                "atime6": 0,
+                "atime7": 0,
+                "m_Mode": 0,
+                "m_ColorSpace": -1,
+                "m_NumColorKeys": 2,
+                "m_NumAlphaKeys": 2
+              }
+            },
+            {
+              "Color": {
+                "r": 0.29411765933036804,
+                "g": 0.7490196228027344,
+                "b": 0.3686274588108063,
+                "a": 1.0
+              },
+              "EnableGradient": 0,
+              "GradientColor": {
+                "key0": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key1": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key2": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key3": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key4": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key5": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key6": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key7": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "ctime0": 0,
+                "ctime1": 65535,
+                "ctime2": 0,
+                "ctime3": 0,
+                "ctime4": 0,
+                "ctime5": 0,
+                "ctime6": 0,
+                "ctime7": 0,
+                "atime0": 0,
+                "atime1": 65535,
+                "atime2": 0,
+                "atime3": 0,
+                "atime4": 0,
+                "atime5": 0,
+                "atime6": 0,
+                "atime7": 0,
+                "m_Mode": 0,
+                "m_ColorSpace": -1,
+                "m_NumColorKeys": 2,
+                "m_NumAlphaKeys": 2
+              }
+            },
+            {
+              "Color": {
+                "r": 0.7137255072593689,
+                "g": 0.5372549295425415,
+                "b": 0.3490196168422699,
+                "a": 1.0
+              },
+              "EnableGradient": 0,
+              "GradientColor": {
+                "key0": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key1": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key2": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key3": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key4": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key5": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key6": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key7": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "ctime0": 0,
+                "ctime1": 65535,
+                "ctime2": 0,
+                "ctime3": 0,
+                "ctime4": 0,
+                "ctime5": 0,
+                "ctime6": 0,
+                "ctime7": 0,
+                "atime0": 0,
+                "atime1": 65535,
+                "atime2": 0,
+                "atime3": 0,
+                "atime4": 0,
+                "atime5": 0,
+                "atime6": 0,
+                "atime7": 0,
+                "m_Mode": 0,
+                "m_ColorSpace": -1,
+                "m_NumColorKeys": 2,
+                "m_NumAlphaKeys": 2
+              }
+            }
+          ]
+        },
+        {
+          "ThemeColorType": 2,
+          "TypeList": [
+            0,
+            2,
+            5
+          ],
+          "TextColors": [
+            {
+              "Color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "EnableGradient": 0,
+              "GradientColor": {
+                "key0": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key1": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key2": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key3": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key4": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key5": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key6": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key7": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "ctime0": 0,
+                "ctime1": 65535,
+                "ctime2": 0,
+                "ctime3": 0,
+                "ctime4": 0,
+                "ctime5": 0,
+                "ctime6": 0,
+                "ctime7": 0,
+                "atime0": 0,
+                "atime1": 65535,
+                "atime2": 0,
+                "atime3": 0,
+                "atime4": 0,
+                "atime5": 0,
+                "atime6": 0,
+                "atime7": 0,
+                "m_Mode": 0,
+                "m_ColorSpace": -1,
+                "m_NumColorKeys": 2,
+                "m_NumAlphaKeys": 2
+              }
+            },
+            {
+              "Color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "EnableGradient": 0,
+              "GradientColor": {
+                "key0": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key1": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key2": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key3": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key4": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key5": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key6": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key7": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "ctime0": 0,
+                "ctime1": 65535,
+                "ctime2": 0,
+                "ctime3": 0,
+                "ctime4": 0,
+                "ctime5": 0,
+                "ctime6": 0,
+                "ctime7": 0,
+                "atime0": 0,
+                "atime1": 65535,
+                "atime2": 0,
+                "atime3": 0,
+                "atime4": 0,
+                "atime5": 0,
+                "atime6": 0,
+                "atime7": 0,
+                "m_Mode": 0,
+                "m_ColorSpace": -1,
+                "m_NumColorKeys": 2,
+                "m_NumAlphaKeys": 2
+              }
+            },
+            {
+              "Color": {
+                "r": 1.0,
+                "g": 0.7333333492279053,
+                "b": 0.21568627655506134,
+                "a": 1.0
+              },
+              "EnableGradient": 0,
+              "GradientColor": {
+                "key0": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key1": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key2": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key3": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key4": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key5": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key6": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "key7": {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                },
+                "ctime0": 0,
+                "ctime1": 65535,
+                "ctime2": 0,
+                "ctime3": 0,
+                "ctime4": 0,
+                "ctime5": 0,
+                "ctime6": 0,
+                "ctime7": 0,
+                "atime0": 0,
+                "atime1": 65535,
+                "atime2": 0,
+                "atime3": 0,
+                "atime4": 0,
+                "atime5": 0,
+                "atime6": 0,
+                "atime7": 0,
+                "m_Mode": 0,
+                "m_ColorSpace": -1,
+                "m_NumColorKeys": 2,
+                "m_NumAlphaKeys": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

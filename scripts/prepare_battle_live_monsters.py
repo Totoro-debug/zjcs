@@ -213,10 +213,18 @@ def build(roles, pet_roles=(), rt_roles=()):
         atlas = schemas.read(atlas_obj)
         atlas_bytes = text(pointer(atlas_obj, atlas["atlasFile"]))
         regions = atlas_regions(atlas_bytes.decode("utf-8"))
-        appearance_obj, = [obj for obj in components.get("AppearanceRendererLite", [])
+        appearance_objects = [obj for obj in components.get("AppearanceRendererLite", [])
             if schemas.read(obj)["SkeletonRenderer"] == dict(m_FileID=0, m_PathID=renderer_obj.path_id)]
-        appearance = schemas.read(record(appearance_obj))
-        resolution = {0: "None", 1: "Low", 2: "High"}[appearance["LevelOfResolution"]]
+        if appearance_objects:
+            appearance_obj, = appearance_objects
+            appearance = schemas.read(record(appearance_obj))
+            resolution = {0: "None", 1: "Low", 2: "High"}[appearance["LevelOfResolution"]]
+        elif rt_prefab:
+            # Some original RT variants bind their atlas textures directly and
+            # have no appearance/placeholder loader component (e.g. 3803).
+            appearance, resolution = None, "None"
+        else:
+            raise ValueError("Original monster appearance renderer is unbound: " + str(entity))
         skeleton_name = data_obj.read(check_read=False).m_Name.removesuffix("_SkeletonData")
         loader_locations = [row for row in locations if row["path"] == skeleton_paths.get(skeleton_name, "")
             + "/" + skeleton_name + "_TextureLoader_" + resolution + ".asset"]

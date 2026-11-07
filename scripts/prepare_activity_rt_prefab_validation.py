@@ -14,18 +14,22 @@ from prepare_partner_input_dialog import metadata
 from validation_workspace import validation_directory
 
 
-def install(project, proof, stage):
-    destination = project / 'Assets/Official/DailyChallenges/ActivityRtPrefab'
-    resource = Path('Resources/DailyChallenges/ActivityRtPrefab')
+def install(project, proof, stage, *, entity_id=3706, destination_relative=None, resource_relative=None):
+    destination = project / (destination_relative or 'Assets/Official/DailyChallenges/ActivityRtPrefab')
+    resource = Path('Resources') / (resource_relative or 'DailyChallenges/ActivityRtPrefab')
     aliases, paths = {}, {}
     for relative, expected in proof['outputs'].items():
         source = stage / relative
         if sha(source.read_bytes()) != expected: raise ValueError('Staged RT closure changed: ' + relative)
         if relative.endswith('.meta'):
             old = guid(source)
-            aliases[old] = hashlib.md5(('zjcs:activity-rt-prefab-closure:' + old).encode()).hexdigest()
+            # Preserve the established 3706 identities. Other complete RT
+            # closures own their assets, including shared original shaders.
+            namespace = 'zjcs:activity-rt-prefab-closure:' + ('' if entity_id == 3706 else str(entity_id) + ':')
+            aliases[old] = hashlib.md5((namespace + old).encode()).hexdigest()
             item = relative.removesuffix('.meta')
-            paths[old] = resource / ('MonsterModel_3706_RT.prefab' if item == 'MonsterModel_3706_RT.prefab' else 'Payload/' + item)
+            name = f'MonsterModel_{entity_id}_RT.prefab'
+            paths[old] = resource / (name if item == name else 'Payload/' + item)
     outputs = {}
     for relative in proof['outputs']:
         source = stage / relative
@@ -41,11 +45,15 @@ def install(project, proof, stage):
         target.write_bytes(raw)
         outputs[target.relative_to(project).as_posix()] = sha(raw)
     def pointer(row): return dict(row, guid=aliases.get(row['guid'], row['guid']))
-    config, = [row for row in proof['dynamic_assets'] if row['path'].endswith('/AppearanceConfig.asset')]
+    configs = [row for row in proof['dynamic_assets'] if row['path'].endswith('/AppearanceConfig.asset')]
+    if not configs:
+        return dict(staged_source=proof, outputs=outputs, guid_aliases=aliases,
+            scope='Complete original hierarchy with direct atlas textures; rendered validation pending.')
+    config, = configs
     script = ROOT / 'unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerNativeDetailActorAssets.cs'
     fields = dict(m_ObjectHideFlags=0, m_CorrespondingSourceObject=dict(fileID=0), m_PrefabInstance=dict(fileID=0),
         m_PrefabAsset=dict(fileID=0), m_GameObject=dict(fileID=0), m_Enabled=1, m_EditorHideFlags=0,
-        m_Script=dict(fileID=11500000, guid=guid(metadata(script)), type=3), m_Name='Original 3706 RT appearance assets',
+        m_Script=dict(fileID=11500000, guid=guid(metadata(script)), type=3), m_Name=f'Original {entity_id} RT appearance assets',
         m_EditorClassIdentifier='', config=pointer(config['asset']),
         assets=[dict(Path=row['path'], Resource='', Asset=pointer(row['asset'])) for row in proof['dynamic_assets']],
         prefabs=[], textures=[dict(Guid=row['guid'], Resource=paths[row['asset']['guid']].relative_to('Resources').with_suffix('').as_posix())

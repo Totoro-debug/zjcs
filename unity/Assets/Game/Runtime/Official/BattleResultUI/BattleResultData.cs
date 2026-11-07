@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using Zjcs.Combat.Official;
+using Zjcs.Official.ProfessionUI;
 
 namespace Zjcs.Official.BattleResultUI
 {
@@ -13,6 +16,9 @@ namespace Zjcs.Official.BattleResultUI
         public bool Win;
         public long SelfAccDamage, TeamAccDamage;
         public IReadOnlyList<BattleResultPlayer> Players;
+        public int StageType;
+        public long DamageValue;
+        public FightBattleReport Report;
     }
 
     public sealed class BattleResultPlayer
@@ -29,6 +35,25 @@ namespace Zjcs.Official.BattleResultUI
     public sealed class BattleResultStage
     {
         public int Id, Type;
+    }
+
+    public sealed class BattleResultBoss
+    {
+        public GameObject Prefab;
+        public bool IsNormal;
+        public string StageNameKey;
+    }
+
+    public interface IBattleBossResultHost
+    {
+        BattleResultBoss GetBoss(int stageId);
+        IProfessionInfoTarget ResolvePlayer(int reportTargetId);
+        long MainPlayerId { get; }
+        string PlayerName(IProfessionInfoTarget target);
+        bool IsTeamMember(long playerId);
+        IFightThumbsUpUIHost ThumbsUp { get; }
+        void BindPlayerRow(GameObject row);
+        void LeaveGame();
     }
 
     // Original settings/parser/record/report operations consumed by

@@ -1,0 +1,148 @@
+Shader "Spine/Default-Stencil" {
+Properties {
+
+_MainTex ("Main Texture", 2D) = "black" { }
+
+_MaskTex ("Mask", 2D) = "white" { }
+
+_StencilRef ("Stencil Reference", Float) = 1.0
+
+[Enum(UnityEngine.Rendering.CompareFunction)] _StencilComp ("Stencil Compare", Float) = 8.0
+
+[Enum(UnityEngine.Rendering.StencilOp)] _StencilOp ("Stencil Operation", Float) = 0.0
+
+_ColorMask ("ColorMask", Float) = 0.0
+
+[MaterialToggle] _ZWrite ("ZWrite", Float) = 1.0
+
+}
+SubShader {
+LOD 0
+Tags { "IGNOREPROJECTOR"="true" "QUEUE"="Transparent" "RenderPipeline"="UniversalPipeline" "RenderType"="Transparent" }
+Pass {
+Tags { "IGNOREPROJECTOR"="true" "LIGHTMODE"="Universal2D" "QUEUE"="Transparent" "RenderPipeline"="UniversalPipeline" "RenderType"="Transparent" }
+Cull Off
+ZWrite [_ZWrite]
+ZTest LEqual
+Blend One OneMinusSrcAlpha, One OneMinusSrcAlpha
+BlendOp Add, Add
+ColorMask [_ColorMask]
+Stencil { Ref [_StencilRef] ReadMask 255 WriteMask 255 Comp [_StencilComp] Pass [_StencilOp] Fail Keep ZFail Keep }
+AlphaToMask Off
+CGPROGRAM
+#pragma target 4.5
+#pragma vertex vert
+#pragma fragment frag
+#include "UnityCG.cginc"
+struct Input { float3 vertex:POSITION; float4 color:COLOR0; float2 uv:TEXCOORD0; };
+struct Varying { float4 position:SV_POSITION; float4 color:COLOR0; float2 uv:TEXCOORD0; };
+
+float2 _GlobalMipBias;
+float4 Xhlslcc_UnusedXhlslcc_mtx4x4unity_MatrixPreviousMI[4];
+float4 Xhlslcc_UnusedXhlslcc_mtx4x4unity_MatrixPreviousM[4];
+float4 Xhlslcc_UnusedXunity_DynamicLightmapST;
+float4 Xhlslcc_UnusedXunity_LODFade;
+float4 Xhlslcc_UnusedXunity_LightmapST;
+float4 Xhlslcc_UnusedXunity_MotionVectorsParams;
+float4 Xhlslcc_UnusedXunity_ProbesOcclusion;
+float4 Xhlslcc_UnusedXunity_RendererBounds_Max;
+float4 Xhlslcc_UnusedXunity_RendererBounds_Min;
+float4 Xhlslcc_UnusedXunity_RenderingLayer;
+float4 Xhlslcc_UnusedXunity_SpecCube0_BoxMax;
+float4 Xhlslcc_UnusedXunity_SpecCube0_BoxMin;
+float4 Xhlslcc_UnusedXunity_SpecCube0_ProbePosition;
+float4 Xhlslcc_UnusedXunity_SpecCube1_BoxMax;
+float4 Xhlslcc_UnusedXunity_SpecCube1_BoxMin;
+float4 Xhlslcc_UnusedXunity_SpecCube1_ProbePosition;
+half4 Xhlslcc_UnusedXunity_LightData;
+half4 Xhlslcc_UnusedXunity_LightIndices[2];
+half4 Xhlslcc_UnusedXunity_SHAb;
+half4 Xhlslcc_UnusedXunity_SHAg;
+half4 Xhlslcc_UnusedXunity_SHAr;
+half4 Xhlslcc_UnusedXunity_SHBb;
+half4 Xhlslcc_UnusedXunity_SHBg;
+half4 Xhlslcc_UnusedXunity_SHBr;
+half4 Xhlslcc_UnusedXunity_SHC;
+half4 Xhlslcc_UnusedXunity_SpecCube0_HDR;
+half4 Xhlslcc_UnusedXunity_SpecCube1_HDR;
+half4 Xhlslcc_UnusedXunity_WorldTransformParams;
+sampler2D _MainTex;
+Varying vert(Input input) { Varying output = (Varying)0;
+float4 u_xlat0;
+half4 u_xlat16_0;
+float4 u_xlat1;
+half4 u_xlat16_1;
+bool3 u_xlatb1;
+half3 u_xlat16_2;
+half3 u_xlat16_3;
+bool3 u_xlatb4;
+
+    u_xlat0 = input.vertex.yyyy * float4(unity_ObjectToWorld[0][1],unity_ObjectToWorld[1][1],unity_ObjectToWorld[2][1],unity_ObjectToWorld[3][1]);
+    u_xlat0 = float4(unity_ObjectToWorld[0][0],unity_ObjectToWorld[1][0],unity_ObjectToWorld[2][0],unity_ObjectToWorld[3][0]) * input.vertex.xxxx + u_xlat0;
+    u_xlat0 = float4(unity_ObjectToWorld[0][2],unity_ObjectToWorld[1][2],unity_ObjectToWorld[2][2],unity_ObjectToWorld[3][2]) * input.vertex.zzzz + u_xlat0;
+    u_xlat0 = u_xlat0 + float4(unity_ObjectToWorld[0][3],unity_ObjectToWorld[1][3],unity_ObjectToWorld[2][3],unity_ObjectToWorld[3][3]);
+    u_xlat1 = u_xlat0.yyyy * float4(UNITY_MATRIX_VP[0][1],UNITY_MATRIX_VP[1][1],UNITY_MATRIX_VP[2][1],UNITY_MATRIX_VP[3][1]);
+    u_xlat1 = float4(UNITY_MATRIX_VP[0][0],UNITY_MATRIX_VP[1][0],UNITY_MATRIX_VP[2][0],UNITY_MATRIX_VP[3][0]) * u_xlat0.xxxx + u_xlat1;
+    u_xlat1 = float4(UNITY_MATRIX_VP[0][2],UNITY_MATRIX_VP[1][2],UNITY_MATRIX_VP[2][2],UNITY_MATRIX_VP[3][2]) * u_xlat0.zzzz + u_xlat1;
+    output.position = float4(UNITY_MATRIX_VP[0][3],UNITY_MATRIX_VP[1][3],UNITY_MATRIX_VP[2][3],UNITY_MATRIX_VP[3][3]) * u_xlat0.wwww + u_xlat1;
+    u_xlat16_2.xyz = input.color.xyz / input.color.www;
+    u_xlat16_3.xyz = u_xlat16_2.xyz + float3(0.0549999997,0.0549999997,0.0549999997);
+    u_xlat16_3.xyz = u_xlat16_3.xyz * float3(0.947867334,0.947867334,0.947867334);
+    u_xlat0.xyz = log2(abs(u_xlat16_3.xyz));
+    u_xlat0.xyz = u_xlat0.xyz * float3(2.4000001,2.4000001,2.4000001);
+    u_xlat0.xyz = exp2(u_xlat0.xyz);
+    u_xlat16_3.xyz = u_xlat16_2.xyz * float3(0.0773993805,0.0773993805,0.0773993805);
+    u_xlatb1.xyz = (float4(0.0404499993,0.0404499993,0.0404499993,0.0) >= u_xlat16_2.xyzx).xyz;
+    u_xlat16_2.x = (u_xlatb1.x) ? u_xlat16_3.x : u_xlat0.x;
+    u_xlat16_2.y = (u_xlatb1.y) ? u_xlat16_3.y : u_xlat0.y;
+    u_xlat16_2.z = (u_xlatb1.z) ? u_xlat16_3.z : u_xlat0.z;
+    u_xlat16_0.xyz = u_xlat16_2.xyz * input.color.www;
+    u_xlat16_2.xyz = input.color.xyz + float3(0.0549999997,0.0549999997,0.0549999997);
+    u_xlat16_2.xyz = u_xlat16_2.xyz * float3(0.947867334,0.947867334,0.947867334);
+    u_xlat1.xyz = log2(abs(u_xlat16_2.xyz));
+    u_xlat1.xyz = u_xlat1.xyz * float3(2.4000001,2.4000001,2.4000001);
+    u_xlat1.xyz = exp2(u_xlat1.xyz);
+    u_xlat16_2.xyz = input.color.xyz * float3(0.0773993805,0.0773993805,0.0773993805);
+    u_xlatb4.xyz = (float4(0.0404499993,0.0404499993,0.0404499993,0.0) >= input.color.xyzx).xyz;
+    u_xlat16_1.x = (u_xlatb4.x) ? u_xlat16_2.x : u_xlat1.x;
+    u_xlat16_1.y = (u_xlatb4.y) ? u_xlat16_2.y : u_xlat1.y;
+    u_xlat16_1.z = (u_xlatb4.z) ? u_xlat16_2.z : u_xlat1.z;
+    u_xlatb4.x = input.color.w==0.0;
+    u_xlat16_1.w = 0.0;
+    u_xlat16_0.w = input.color.w;
+    u_xlat16_0 = (u_xlatb4.x) ? u_xlat16_1 : u_xlat16_0;
+    u_xlatb4.x = u_xlat16_0.w==0.0;
+    u_xlat16_2.xyz = u_xlat16_0.xyz / u_xlat16_0.www;
+    output.color.xyz = (u_xlatb4.x) ? u_xlat16_0.xyz : u_xlat16_2.xyz;
+    output.color.w = u_xlat16_0.w;
+    output.uv.xy = input.uv.xy;
+    return output;
+
+}
+half4 frag(Varying input) : SV_Target { half4 result = 0;
+half4 u_xlat16_0;
+bool u_xlatb0;
+half4 u_xlat16_1;
+half u_xlat16_2;
+
+    u_xlat16_0 = tex2Dbias(_MainTex, float4(input.uv.xy, 0, _GlobalMipBias.x));
+    u_xlat16_1 = u_xlat16_0 * input.color;
+    u_xlatb0 = input.color.w==0.0;
+    if(u_xlatb0){
+        result.xyz = u_xlat16_1.www * u_xlat16_1.xyz;
+        result.w = u_xlat16_1.w;
+        return result;
+    }
+    u_xlat16_2 = u_xlat16_0.w * input.color.w + -0.100000001;
+    u_xlatb0 = u_xlat16_2<0.0;
+    if(u_xlatb0){clip(-1);}
+    result.xyz = u_xlat16_1.www * u_xlat16_1.xyz;
+    result.w = u_xlat16_1.w;
+    return result;
+
+}
+ENDCG
+}
+}
+Fallback Off
+}

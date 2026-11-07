@@ -2719,6 +2719,18 @@ unity/Assets/Official/Partners/Resources/PartnerDetailActors/**/*.meta whitespac
 # Preserve the existing official Map14 puzzle payload bytes.
 unity/Assets/Official/World/Map/14/Resources/Map14/puzzle-rules.json -text
 
+# Preserve the verified demon result native payloads and source binding bytes.
+unity/Assets/Official/Combat/DemonResult*/** -text whitespace=cr-at-eol,-blank-at-eol
+unity/Assets/Official/Combat/DemonResult*.meta -text whitespace=cr-at-eol,-blank-at-eol
+unity/Assets/Game/Runtime/Official/BattleResultUI/** -text whitespace=-blank-at-eol
+unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterMaterialOverrides.cs* -text whitespace=cr-at-eol
+unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterMeshCopy.cs* -text whitespace=cr-at-eol
+unity/Assets/Game/Runtime/Presentation/Home/OfficialDemonResultAssets.cs* -text whitespace=cr-at-eol
+scripts/prepare_demon_result*.py text eol=lf
+assets/reference/demon-result-native-source-manifest.json text eol=lf
+assets/reference/battle-animation/demon-result-rt-*-source-manifest.json text eol=lf
+unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.DemonResultAssets.cs* text eol=lf
+
 # Preserve the verified native roadblock payloads and their recorded byte hashes.
 unity/Assets/Official/World/Map/14/NativeRoadblocks/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 unity/Assets/Official/World/Map/14/NativeRoadblocks.meta -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof

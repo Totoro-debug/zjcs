@@ -17,6 +17,13 @@ NAME = 'activity-rt-prefab-source-manifest.json'
 
 
 class ActivityRtPrefabBinding(PartnerDetailActorBinding):
+    def __init__(self, work, entity_id=3706, *, native_assets_root=None, resource_path=None):
+        self.entity_id = entity_id
+        self.native_assets_root = Path(native_assets_root) if native_assets_root else (
+            ROOT / 'unity/Assets/Official/DailyChallenges/ActivityRtMonsters')
+        self.resource_path = resource_path or 'DailyChallenges/ActivityRtMonsters/catalog'
+        super().__init__(work)
+
     def replace(self, value):
         # This closure has no partner panel state or animation-script remaps.
         # Preserve the native empty strings before the common pointer resolver.
@@ -35,6 +42,8 @@ class ActivityRtPrefabBinding(PartnerDetailActorBinding):
             'Spine.Unity.SkeletonMecanim': runtime / 'Offline/ProfessionUI/BattleNativeMonsterRenderer.cs',
             'AppearanceSystem.AppearanceRendererLite': runtime / 'Official/ProfessionUI/AppearanceRendererLite.cs',
             'AttachmentFollower': runtime / 'Official/BattleSpinePlayables/AttachmentFollower.cs',
+            'Spine.Unity.SkeletonRendererCustomMaterials': runtime / 'Offline/ProfessionUI/BattleNativeMonsterMaterialOverrides.cs',
+            'Spine.Extension.CustomRenderExistingMesh': runtime / 'Offline/ProfessionUI/BattleNativeMonsterMeshCopy.cs',
             'AppearanceSystem.AppearanceConfig': runtime / 'Official/ProfessionUI/AppearanceConfig.cs',
             'AppearanceSystem.YooAssetTextureLoader': runtime / 'Official/ProfessionUI/YooAssetTextureLoader.cs',
         }
@@ -47,11 +56,12 @@ class ActivityRtPrefabBinding(PartnerDetailActorBinding):
     def load(self, source_guid):
         obj = self.objects.get(source_guid)
         if obj is not None and obj.type.name == 'AnimatorController':
-            if obj.read().m_Name != 'monster_3706_Controller':
+            if obj.read().m_Name != f'monster_{self.entity_id}_Controller':
                 raise ValueError('Reinspect additional original RT Animator')
             catalog = json.loads((self.work / 'live-monsters/catalog.json').read_bytes())
             model, = catalog['models']
-            target = ROOT / 'unity/Assets/Official/DailyChallenges/ActivityRtMonsters' / model['nativeController']
+            if model['entityId'] != self.entity_id: raise ValueError('Original RT model identity differs')
+            target = self.native_assets_root / model['nativeController']
             pointer = dict(fileID=9100000, guid=guid(Path(str(target) + '.meta')), type=2)
             self.script_guids.add(pointer['guid'])
             for path in (target, Path(str(target) + '.meta')):
@@ -60,23 +70,24 @@ class ActivityRtPrefabBinding(PartnerDetailActorBinding):
         return super().load(source_guid)
 
     def build(self):
-        relative = 'Prefabs/Appearance/Monster/3706/MonsterModel_3706_RT.prefab'
-        self.recovery.recover('MonsterModel_3706_RT', self.work / 'native-rt-prefab',
-            bundle='defaultpackage_assets_prefabs_appearance_monster_3706.bundle', native_relative=relative)
+        relative = f'Prefabs/Appearance/Monster/{self.entity_id}/MonsterModel_{self.entity_id}_RT.prefab'
+        self.recovery.recover(f'MonsterModel_{self.entity_id}_RT', self.work / 'native-rt-prefab',
+            bundle=f'defaultpackage_assets_prefabs_appearance_monster_{self.entity_id}.bundle', native_relative=relative)
         self.recovery.finalize()
         native, _, prefab, evidence = self.recovery.outputs[-1]
         for path in (native, Path(str(native) + '.meta')):
             expected = self.checked[path.relative_to(self.cache / 'native-export-all').as_posix()]
             if sha(path.read_bytes()) != expected: raise ValueError('Original RT prefab changed')
             self.inputs[path.relative_to(ROOT).as_posix()] = expected
-        if len(prefab['documents']) != 373 or len(prefab['scripts']) != 22 or prefab['unresolved']:
+        if prefab['unresolved'] or (self.entity_id == 3706 and (
+                len(prefab['documents']) != 373 or len(prefab['scripts']) != 22)):
             raise ValueError('Original complete RT hierarchy differs')
         for key, pointer in prefab['external'].items(): self.objects[pointer['guid']] = self.original(key)
         for key, file_id in prefab['objectMap'].items():
             owner = self.original(key)
             self.learn(self.recovery.fields(owner), next(iter(prefab['documents'][file_id].values())), owner)
         data = prefab['documents']
-        catalog = ROOT / 'unity/Assets/Official/DailyChallenges/ActivityRtMonsters/Resources/DailyChallenges/ActivityRtMonsters/catalog.asset'
+        catalog = self.native_assets_root / 'Resources' / (self.resource_path + '.asset')
         catalog_pointer = dict(fileID=11400000, guid=guid(metadata(catalog)), type=2)
         self.script_guids.add(catalog_pointer['guid'])
         for row in prefab['scripts']:
@@ -85,7 +96,7 @@ class ActivityRtPrefabBinding(PartnerDetailActorBinding):
             fields['m_Script'] = self.scripts[full_name]
             if row['type'] == 'SkeletonMecanim':
                 fields.pop('skeletonDataAsset')
-                fields.update(nativeAssets=catalog_pointer, nativeEntityId=3706)
+                fields.update(nativeAssets=catalog_pointer, nativeEntityId=self.entity_id)
                 go = fields['m_GameObject']['fileID']
                 mesh_part_id = max(data) + 1
                 data[go]['GameObject']['m_Component'].append(dict(component=dict(fileID=mesh_part_id)))
@@ -97,8 +108,11 @@ class ActivityRtPrefabBinding(PartnerDetailActorBinding):
         resolved = self.replace(data)
         # Original runtime-selected Low loader and appearance configuration.
         table = read_asset_manifest(self.recovery.apk.source.manifest_bytes('DefaultPackage', self.recovery.apk.archive))
-        requests = ['Assets/AppearanceAssets/Monster/monster_3706/monster_3706_TextureLoader_Low.asset']
-        requests += [row['path'] for row in table if row['path'].endswith('/AppearanceConfig.asset')]
+        model, = json.loads((self.work / 'live-monsters/catalog.json').read_bytes())['models']
+        loader_location = model['rtPrefab']['textureLoader']
+        requests = [loader_location['path']] if loader_location else []
+        if model['rtPrefab']['appearance'] is not None:
+            requests += [row['path'] for row in table if row['path'].endswith('/AppearanceConfig.asset')]
         for path in requests:
             entry, = [row for row in table if row['path'] == path]
             obj = self.recovery.apk.asset(entry['bundle'], entry['path'])
@@ -107,9 +121,7 @@ class ActivityRtPrefabBinding(PartnerDetailActorBinding):
             self.objects[source_guid] = obj
             pointer = self.load(source_guid)
             self.dynamic_assets.append(dict(path=path, asset=pointer, source=self.recovery.apk.provenance(obj), original=identity(obj)))
-        loader = self.dynamic_assets[0]
-        obj = self.original(loader['original'])
-        fields = self.recovery.fields(obj)
+        fields = self.recovery.fields(self.original(self.dynamic_assets[0]['original'])) if loader_location else {'placeholderMap': []}
         # Resolve the original requested GUIDs, rather than the placeholder textures.
         by_guid = {row['guid']: row for row in table}
         for mapping in fields['placeholderMap']:
@@ -122,8 +134,8 @@ class ActivityRtPrefabBinding(PartnerDetailActorBinding):
         for _, _, payload in self.queue:
             if isinstance(payload, dict):
                 replacement = self.replace(payload); payload.clear(); payload.update(replacement)
-        target_guid = hashlib.md5(b'zjcs:activity-rt-prefab:3706').hexdigest()
-        self.queue.append((Path('MonsterModel_3706_RT.prefab'), target_guid, resolved))
+        target_guid = hashlib.md5(f'zjcs:activity-rt-prefab:{self.entity_id}'.encode()).hexdigest()
+        self.queue.append((Path(f'MonsterModel_{self.entity_id}_RT.prefab'), target_guid, resolved))
         outputs = {}
         stage = self.work / 'rt-prefab-assets'
         for relative, key, payload in self.queue:
@@ -141,7 +153,7 @@ class ActivityRtPrefabBinding(PartnerDetailActorBinding):
             native_atlases=list(self.native_atlases.values()),
             root=dict(fileID=prefab['root'], guid=target_guid, type=3),
             adaptations=['Replace the native SDK renderer with the shared battle pose and mesh module.',
-                'Keep all 373 original objects and serialized application components; add one native mesh adapter.',
+                f'Keep all {len(prefab["objectMap"])} original objects and serialized application components; add one native mesh adapter.',
                 'Reuse the verified original RT Animator closure and Low texture request mappings.'],
             generator_sha256=sha(Path(__file__).read_bytes()), scope='Complete original RT hierarchy staged; runtime validation and production binding pending.')
         (self.work / NAME).write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')

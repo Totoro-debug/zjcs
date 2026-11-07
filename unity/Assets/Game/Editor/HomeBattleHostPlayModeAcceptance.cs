@@ -29,6 +29,11 @@ namespace Zjcs.Editor
 
         public static IEnumerator Exercise(string slot, string root, string output, Action<Selectable> click)
         {
+            if (Environment.GetEnvironmentVariable("ZJCS_DEMON_RESULT_ASSETS") == "1")
+            {
+                yield return ExerciseDemonResultAssets(output);
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_ACTIVITY_HEALTH") == "1")
             {
                 var input = new GameObject("Activity control fixture input", typeof(UnityEngine.EventSystems.EventSystem),
