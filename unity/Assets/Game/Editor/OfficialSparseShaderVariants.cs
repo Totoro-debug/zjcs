@@ -49,6 +49,11 @@ namespace Zjcs.Editor
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/WeaponPrefab_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Official/Combat/NativeMonsters/OriginalSkeletonEffect.shader"] = 768,
             ["Assets/Official/Combat/NativePartnerAssets/OriginalSkeletonEffect.shader"] = 768,
+            ["Assets/Official/Combat/DemonResultRtModels/OriginalSkeletonEffect.shader"] = 768,
+            ["Assets/Official/Combat/DemonResultRtModels/shaders/0acd001ab2a50fe9138876feb10a6193dd286155a16607a22e1c5900ec55c414.shader"] = 3,
+            ["Assets/Official/Combat/DemonResultRtPrefab/Resources/Combat/DemonResultRtPrefab/Payload/Converted/59de19d261370c02.shader"] = 260,
+            ["Assets/Official/Combat/DemonResultRtPrefab/Resources/Combat/DemonResultRtPrefab/Payload/Converted/a6ffae7daff41fb6.shader"] = 3,
+            ["Assets/Official/Combat/DemonResultRtPrefab/Resources/Combat/DemonResultRtPrefab/Payload/Converted/b29a473e62738eea.shader"] = 768,
             ["Assets/Official/Combat/NativeMonsters/shaders/0acd001ab2a50fe9138876feb10a6193dd286155a16607a22e1c5900ec55c414.shader"] = 3,
             ["Assets/Official/DailyChallenges/ActivityRtMonsters/OriginalSkeletonEffect.shader"] = 768,
             ["Assets/Official/DailyChallenges/ActivityRtPrefab/Resources/DailyChallenges/ActivityRtPrefab/Payload/Converted/59de19d261370c02.shader"] = 260,
@@ -91,7 +96,7 @@ namespace Zjcs.Editor
                 selections.Add(original.Key, selection);
                 stages += selection.PassCount * selection.Programs.Count * 2;
             }
-            if (stages != 45692) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            if (stages != 49816) throw new BuildFailedException("Original shader stage domain changed: " + stages);
             Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
@@ -131,7 +136,7 @@ namespace Zjcs.Editor
                 }
             }
             finally { ShaderUtil.allowAsyncCompilation = previousAsync; }
-            if (stages != 45692) throw new BuildFailedException("Original shader stage count changed: " + stages);
+            if (stages != 49816) throw new BuildFailedException("Original shader stage count changed: " + stages);
             Debug.Log("Original sparse shaders: all " + stages + " Windows GPU stages across "
                 + originalPrograms.Count + " original shader assets compiled.");
             ProjectTools.Validate();
