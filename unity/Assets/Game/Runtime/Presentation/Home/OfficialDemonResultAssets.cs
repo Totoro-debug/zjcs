@@ -15,6 +15,10 @@ namespace Zjcs.Presentation.Home
         public TextAsset Bindings;
         public OfflineProfessionAudioCatalog Audio;
         public TMP_FontAsset Font;
+        public GameObject ItemDetail;
+        public Sprite DetailQualityBackground;
+        public ItemIconAttachmentConfig AttachmentConfig;
+        public GameObject[] AttachmentPrefabs;
         public static OfficialDemonResultAssets Load() => Resources.Load<OfficialDemonResultAssets>(ResourcePath)
             ?? throw new InvalidOperationException("Original demon result assets are unbound.");
     }

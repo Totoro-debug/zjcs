@@ -64,8 +64,8 @@ namespace Zjcs.Editor
                     receipt = award.Receipt;
                 }
                 else Require(award == null, "Same-period second exit granted a duplicate challenge award.");
-                if (attempt == 1 && Environment.GetEnvironmentVariable("ZJCS_DEMON_RESULT_PANEL") == "1")
-                    yield return ExerciseDemonResultPanel(home, completed, report, output);
+                if (Environment.GetEnvironmentVariable("ZJCS_DEMON_RESULT_PANEL") == "1")
+                    yield return ExerciseDemonResultPanel(home, completed, report, output, award);
                 Require(home.ItemCount(41021) == initialItems + 300
                     && home.Profile.Save.Player.AppliedInventoryEventIds.Count(value => value == receipt) == 1,
                     "Demon reward inventory and receipt are inconsistent.");

@@ -11,6 +11,7 @@ using Zjcs.Offline.PartnersUI;
 using Zjcs.Offline.ProfessionUI;
 using Zjcs.Offline.Progression;
 using Zjcs.Official.BattleResultUI;
+using Zjcs.Official.ItemDetailUI;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.WorldUI;
 using Zjcs.Presentation.Combat;
@@ -20,10 +21,11 @@ namespace Zjcs.Editor
 {
     public static partial class HomeBattleHostPlayModeAcceptance
     {
-        // Exercises the actual full panel for the same-period, no-new-award
-        // result. The first-award/detail-dialog branch is a separate migration.
+        // The grant is produced by the real zero-step PartEnd transaction;
+        // this fixture only displays that persisted result.
         private static IEnumerator ExerciseDemonResultPanel(HomeFeatureRuntime home,
-            FightBattleCheckpoint checkpoint, FightBattleReport report, string output)
+            FightBattleCheckpoint checkpoint, FightBattleReport report, string output,
+            OfflineWeeklyChallengeSession.ChallengeAward award)
         {
             var assets = OfficialDemonResultAssets.Load();
             Require(assets.Audio && assets.Audio.Events.Select(value => value.EventId).OrderBy(value => value)
@@ -70,7 +72,9 @@ namespace Zjcs.Editor
                     Players = new[] { new BattleResultPlayer { TargetData = new BattleResultTarget {
                         TargetId = bindings.MainPlayerId } } }
                 });
-                panel.RefreshAward(Array.Empty<OfficialBattleAwardEntry>());
+                panel.RefreshAward(award == null ? Array.Empty<OfficialBattleAwardEntry>() : new[] {
+                    new OfficialBattleAwardEntry { ItemId = award.ItemId, Count = award.Count }
+                });
                 var window = content.GetComponent<WorldPopupWindow>();
                 if (window.Canvas) window.SetCanvasSortingOrder(5000);
                 window.Show();
@@ -79,6 +83,9 @@ namespace Zjcs.Editor
                 Require(rows.Length == 1 && rows[0].gameObject.activeInHierarchy
                     && rows[0].PlayerId == bindings.MainPlayerId && !rows[0].IsNpc,
                     "The full demon result did not bind its native self statistics row.");
+                foreach (var info in rows[0].GetComponentsInChildren<PlayerInfoUI>())
+                    if (info.ProfessionIcon && info.ProfessionIcon.gameObject.activeInHierarchy)
+                        Require(info.ProfessionIcon.sprite, "Original settlement profession sprite is unbound.");
                 Require(panel.GameEndPanelBoss.BossNameText.Text == bindings.Localize("stage_4800_name"),
                     "The full demon result has a different boss name.");
                 Require(panel.GameEndPanelBoss.DamageText.Text.Contains("0"),
@@ -95,14 +102,52 @@ namespace Zjcs.Editor
                 foreach (var label in content.GetComponentsInChildren<TMP_Text>())
                     Require(label.font && label.font.HasCharacters(label.text, out _, false, true),
                         "The original result font is missing displayed characters: " + label.name);
-                yield return Capture(output, "demon-result-full-no-award");
+                yield return Capture(output, award == null ? "demon-result-full-no-award" : "demon-result-first-award");
                 yield return Combat.BattleGameViewInput.Click(actions.ReportButton);
                 Require(bindings.ReportClicks == 1, "The original result report button did not route input.");
+                if (award != null)
+                {
+                    float deadline = Time.realtimeSinceStartup + 20;
+                    ItemAwardIcon reward;
+                    while (!(reward = content.GetComponentInChildren<ItemAwardIcon>()) || !reward.ItemIcon)
+                    {
+                        Require(Time.realtimeSinceStartup < deadline, "Original delayed challenge award icon did not appear.");
+                        yield return null;
+                    }
+                    var icon = reward.ItemIcon;
+                    Require(icon.myInfo.ClassId == 41021 && icon.myText.Text.Contains("300")
+                        && icon.myBottomText.Text == bindings.Localize("item_41021_name")
+                        && icon.IconSprite == assets.RewardIcon && icon.IconGameObject.activeInHierarchy,
+                        "The original challenge award name/count did not bind.");
+                    long inventory = home.ItemCount(41021);
+                    yield return Combat.BattleGameViewInput.Click(icon.Button);
+                    yield return new WaitForSeconds(1);
+                    Require(bindings.ItemDetailContent && bindings.ItemDetailContent.activeInHierarchy,
+                        "The original reward click did not open ItemDetailDialog.");
+                    var detail = bindings.ItemDetailContent.GetComponent<ItemDetailDialog>();
+                    Require(detail.ItemInfo.ClassId == 41021
+                        && detail.NameText.Text == bindings.Localize("item_41021_name")
+                        && detail.TypeText.Text == bindings.Localize("ItemType.MonsterProduct")
+                        && detail.ItemImage.sprite == assets.RewardIcon && detail.QualityBg.sprite == assets.DetailQualityBackground
+                        && detail.ItemCountGo.activeSelf && detail.ItemCountText.Text.Contains(inventory.ToString())
+                        && !detail.ItemSourceObj.activeSelf && home.ItemCount(41021) == inventory,
+                        "Original item details differ from the committed reward inventory/configuration.");
+                    yield return Capture(output, "demon-result-award-item-detail");
+                    Require(bindings.ItemDetailMask && bindings.ItemDetailMask.AttachWindow
+                        == bindings.ItemDetailContent.GetComponent<WorldPopupWindow>(),
+                        "Original main-container blur mask did not attach to the item detail.");
+                    yield return Combat.BattleGameViewInput.Click(bindings.ItemDetailMask.Button);
+                    yield return new WaitForSeconds(1);
+                    Require(!bindings.ItemDetailContent && !bindings.ItemDetailMask
+                        && home.ItemCount(41021) == inventory && panel.gameObject.activeInHierarchy,
+                        "Original item-detail mask close did not restore the result without changing inventory.");
+                    Debug.Log("[Demon result first award] Native delayed icon, simulated reward click, original item detail hierarchy/name/type/quality/count, native blur mask close and unchanged inventory passed.");
+                }
                 yield return Combat.BattleGameViewInput.Click(panel.LeaveGameBtn);
                 yield return null;
                 Require(bindings.LeaveClicks == 1 && !content.activeSelf && bindings.Rt.Owners.Count == 0,
                     "The original result leave button did not release its render seat.");
-                Debug.Log("[Demon result panel] Full native no-new-award panel, local actor statistics, boss RT, simulated report/leave input and render-seat release passed. Report popup, first-award icons and bloom output are not covered here.");
+                Debug.Log("[Demon result panel] Full native panel, local actor statistics, boss RT, simulated report/leave input and render-seat release passed. First-award coverage is logged separately; report popup and bloom output remain pending.");
             }
             finally
             {
@@ -133,10 +178,18 @@ namespace Zjcs.Editor
             private readonly ISet<int> unsupported = new HashSet<int>();
             public readonly DemonResultRtFixtureBindings Rt = new DemonResultRtFixtureBindings();
             public GameObject Panel;
+            public GameObject ItemDetailContent;
+            public WorldWindowBlurMask ItemDetailMask;
+            private readonly OfficialPartnerFriendshipWindowAssetCatalog windowAssets;
+            private readonly PartnerWindowBlurCapture blurCapture;
+            public readonly OfflineDemonResultItemBindings Items;
             public int ReportClicks, LeaveClicks;
             public DemonResultPanelFixture(HomeFeatureRuntime home, OfficialDemonResultAssets assets, Transform parent)
             {
                 this.home = home; this.assets = assets;
+                windowAssets = OfficialPartnerFriendshipWindowAssetCatalog.LoadDefault();
+                blurCapture = parent.gameObject.AddComponent<PartnerWindowBlurCapture>();
+                blurCapture.Initialize(windowAssets.BlurMaterial);
                 parent.gameObject.AddComponent<OfflineProfessionSoundHost>().Bind(assets.Audio);
                 font = new OfflineUiFontInstance(assets.Font);
                 var identities = home.Profile.EnsureLocalActorIdentities();
@@ -146,6 +199,7 @@ namespace Zjcs.Editor
                 texts = JsonUtility.FromJson<Texts>(assets.Bindings.text).texts.ToDictionary(row => row.key, row => row.text);
                 images = ScriptableObject.CreateInstance<OfflineProfessionImageCatalog>();
                 images.Entries = home.PartnerRosterAssets.Images.Entries
+                    .Concat(Resources.Load<OfflineProfessionImageCatalog>("Partners/OfficialPartnerNpcIconImages").Entries)
                     .Concat(OfficialPartnerStarGodAssetCatalog.LoadDefault().CreateImageCatalog().Entries)
                     .Concat(home.PartnerGiftAssets.Images.Entries)
                     .GroupBy(row => row.Path).Select(group => group.First()).ToArray();
@@ -167,11 +221,16 @@ namespace Zjcs.Editor
                 skinClip = new OfflineProfessionNativeSkinClipBindings();
                 module = OfflineUiBindingModule.Register(parent, new OfflineUiBindings {
                     Localize = Localize, Font = () => font.Font,
-                    Images = image => resources, SkinClip = new OfflineProfessionCurrentUiSkinClipBindings(skinClip)
+                    Images = image => Items?.Resources ?? resources,
+                    Pool = (scope, prefab, parentNode, keepWorld) => !keepWorld ? InstantiateUi(prefab, parentNode)
+                        : throw new NotSupportedException("Inspect the original pooled UI world-transform branch."),
+                    SkinClip = new OfflineProfessionCurrentUiSkinClipBindings(skinClip)
                 });
                 var inactive = new GameObject("Bind original result before activation");
                 inactive.SetActive(false); inactive.transform.SetParent(parent, false); staging = inactive.transform;
                 player = actors.PlayerInfo.BuildData(actors.PlayerInfo.MainPlayer).TargetData;
+                Items = new OfflineDemonResultItemBindings(home, assets, images, InstantiateUi, parent,
+                    ShowItemDetail, CloseItemDetail);
             }
             public string Localize(string key) => texts.TryGetValue(key, out var value) ? value : key;
             public GameObject InstantiateUi(GameObject prefab, Transform parent)
@@ -179,6 +238,7 @@ namespace Zjcs.Editor
                 var instance = UnityEngine.Object.Instantiate(prefab, staging, false);
                 instance.SetActive(false); instance.transform.SetParent(parent, false);
                 actors.BindTree(instance);
+                Items?.BindTree(instance);
                 foreach (var text in instance.GetComponentsInChildren<WorldMultiLanguageText>(true))
                 { text.Localizer = Localize; text.Refresh(); }
                 foreach (var view in instance.GetComponentsInChildren<Zjcs.Official.ActivityBattleUI.TempRTUI>(true)) view.Bindings = Rt;
@@ -187,6 +247,35 @@ namespace Zjcs.Editor
                 foreach (var sound in instance.GetComponentsInChildren<WorldAnimationSoundPlayer>(true)) sound.Post = PostSound;
                 instance.SetActive(true);
                 return instance;
+            }
+            private void ShowItemDetail(GameObject window)
+            {
+                ItemDetailContent = window;
+                window.SetActive(false);
+                var popup = window.GetComponent<WorldPopupWindow>();
+                popup.SetMaskClickAction(() => CloseItemDetail(window));
+                var mask = UnityEngine.Object.Instantiate(windowAssets.BlurMaskPrefab, staging, false);
+                mask.SetActive(false); mask.transform.SetParent(window.transform.parent, false);
+                ItemDetailMask = mask.GetComponent<WorldWindowBlurMask>();
+                ItemDetailMask.BlurManager = blurCapture;
+                blurCapture.StartCoroutine(PrepareItemDetail(window, popup));
+            }
+            private IEnumerator PrepareItemDetail(GameObject window, WorldPopupWindow popup)
+            {
+                yield return ItemDetailMask.Prepare(popup, false);
+                if (!window || ItemDetailContent != window) yield break;
+                window.SetActive(true);
+                popup.SetCanvasSortingOrder(5010); popup.Show();
+                ItemDetailMask.AttachToWindow(popup);
+            }
+            private void CloseItemDetail(GameObject window)
+            {
+                Require(window == ItemDetailContent, "An unrelated native window requested item-detail close.");
+                window.GetComponent<WorldPopupWindow>().Hide(() => {
+                    ItemDetailMask.UnattachToWindow();
+                    UnityEngine.Object.Destroy(ItemDetailMask.gameObject); ItemDetailMask = null;
+                    UnityEngine.Object.Destroy(window); ItemDetailContent = null;
+                });
             }
             private static void PostSound(AudioClip clip, GameObject emitter)
             {
@@ -230,6 +319,7 @@ namespace Zjcs.Editor
                 module.Dispose();
                 ProfessionAppearanceTextureBindings.Current = actorTextures;
                 actors.Dispose(); manager.Dispose(); skinClip.Dispose(); Rt.RenderSeats.Dispose();
+                Items.Dispose();
                 font.Dispose();
                 UnityEngine.Object.Destroy(images);
             }

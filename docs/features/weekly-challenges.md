@@ -16,6 +16,8 @@
 
 魔王结算原入口为 `GameEndPanelDemonKing`，由 `GameEndPanelBoss`、`GameEndPlayerSettleGroup`／`Item`、`AwardContent`／`AwardLoopScrollRect` 和原奖励图标工厂组成。统计行沿 `FightUtilsHandler` 汇总本体、召唤物与幻兽的伤害及护盾伤害；期次累计沿下述已确认的实际生命伤害规则。`MonsterIcon_3803` 使用 `TempRTUI` 展示 `MonsterModel_3803_RT`，直接绑定图集材质，没有 `AppearanceRendererLite` 或贴图加载器；其整体材质替换和两份 `CustomRenderExistingMesh` 保留在原层级中。
 
+挑战奖励 41021 沿 `ItemDetailDialogFactory` 的普通物品分支打开原 `ItemDetailDialog`：可堆叠、显示背包数量，不可使用，没有数量上限或产出加成组。原物品来源代理不为它生成来源入口；地图来源另从 APK 的 `config_luban_map` 解码 `item_map_location` 后核对。`ItemIcon` 即使没有中心提示也会创建 `HintTip`，`ItemAwardIcon` 即使不显示额外掉落也会创建 `ExtraGetTip`；两者沿原 `ItemIconAttachmentConfig` 的 GUID 加载原 prefab，不能跳过附件池。物品详情的空白关闭使用 `MainCanvas` 默认窗口容器内的原模糊遮罩，不启用隐藏的分享按钮代替关闭。
+
 ## 完整还原部分
 
 - `OfflineWeeklyChallengeBattleCatalog` 加载虚空与混沌关卡；`WeeklyChallengeBattleRunner` 接入公共战斗执行器。
@@ -37,6 +39,7 @@
 - 用户确认魔王每期首次结算即领取挑战奖励，零伤害主动退出也消耗资格并领取；次数上限沿 `DemonInvadeConfig.ChallengeVaildCount=1`，奖励沿 `ChallengeAwardRuleId=43000`。这是缺失服务端资格裁决的单机决策。`OfflineWeeklyChallengeSession.CompleteBattle` 先准备期次变更，通过 `HomeFeatureRuntime.GrantBattleReward` 将物品与稳定的期次收据一起提交到角色存档，再保存领取次数、伤害与检查点清除；中断重试使用同一收据，不重复加物品。期次写入失败保留当前会话的原检查点；跨期恢复仍结算到入场期次，非魔王战斗不消耗此资格。
 - 包内 4800 配置的 `LeaveInPlaying` 为 false；单机按上述已确认退出方案只为该关卡启用战斗中退出，不修改原始配置，也不将此开关标为官方服务端行为。准备阶段仍保留原退出限制。
 - Windows 中文字体沿原 CN 区域配置选择字体与 TTF。`OfflineUiFontInstance` 为窗口创建字体、材质和图集副本，保留原参数和初始像素；运行时字形缓存写入自有副本，关闭窗口时释放这些副本。
+- `OfflineDemonResultItemBindings` 只读取已经持久化的挑战奖励与当前背包；点击图标或查看详情不再次发奖。该适配限定原 41021 普通物品分支；可使用、过期、分解、产出加成及 GM 管理分支尚未迁完，遇到不支持的配置会明确报错。模糊遮罩复用同一 884 版本的伙伴弹窗资源与 `PartnerWindowBlurCapture`，按原十三分之一尺寸和 shader 模糊流程适配 Windows Overlay Canvas 截屏。
 
 ## 尚未实现
 
@@ -46,12 +49,12 @@
 - 魔王部分退出的公共宿主回归已通过隔离内置屏 Play Mode：原确认框模拟点击、实际技能命中后退出、保留当前步骤、战报先于结果、当前期次伤害持久化及清除检查点；已查看确认和返回画面。该回归未覆盖正式活动入口或原生结算页，且使用隔离数值与原长射程技能保证可观测命中，不证明魔王战斗平衡；身体格选敌验证见[战斗执行](battle-execution.md)。
 - 首次挑战奖励的内置屏 Play Mode 回归通过：模拟原开始与退出确认按钮，在零步骤／零伤害下部分结算，角色背包增加 `300 × 41021` 且只有一条期次收据；关闭宿主页并从磁盘重开后再次退出，同期不再发奖，资格与检查点状态正确。期次、旧检查点恢复、跨期归属、无发奖绑定、发奖后中断和冷重试检查通过；Unity 编译、`ProjectTools.Validate` 与静态元数据检查通过。已查看两次原确认框和冷重开画面；返回家园仍有既有人物／头像与贴图缺项，未验证音效输出。该变更未完成 Windows Player 构建、运行或发布；原生魔王结算面板仍未接线。
 - 本功能尚未完成 Unity Play Mode 全流程验证和 Windows Player 发布。
-- 原生结算资源在内置屏 Play Mode 验证：完整 prefab 无丢失脚本，3803 原 RT 参数、28 个变换节点、原整体材质替换、两份网格复制的引用和启用状态正确；1024×1024 离屏纹理与实际 Game View 均有可见模型，原 Animator 的顶点及像素随时间变化，原 14 份粒子系统正常推进，固定骨骼姿态后关闭粒子会改变 193993 个像素，已查看星空纹理与流动效果；关闭／重开及相机、纹理与注册释放通过。恢复原生 YAML 的 Rect 版本标签，保留原 `(0,0,1,1)` UV，修复二进制字段恢复后的黑屏。共用路径的既有 3706 模型回归通过，原外观绑定、四页图集、20 个跟随节点和 Animator 网格继续工作；Unity 编译、`ProjectTools.Validate` 与 134557 项 GUID 静态检查通过。完整面板另以实际同一期第二次零伤害退出的检查点与战报激活：原 CN 字体覆盖全部显示文字，原本地玩家统计行、3803 模型和粒子正常显示；原战报按钮路由、空白区域关闭的模拟点击和 RT 注册释放通过，已查看完整面板运行画面。验证窗口隔离了家园的独立 Canvas，并提供官方 RT 所需的主相机渲染回调；不表示正式窗口容器、模糊遮罩或战后场景交接已迁移。原五个音频事件已完成 PCM 与事件 ID 绑定且面板激活无未绑定事件异常，未验证实际音效输出。退出后 240 个结算资源文件的哈希与来源清单一致，字形缓存没有改写源图集；Unity 编译、公共规则与期次检查、静态元数据检查通过。此验证未覆盖首次奖励图标与物品详情、真实战报弹窗、泛光合成或 Windows Player。
+- 原生结算资源在内置屏 Play Mode 验证：完整 prefab 无丢失脚本，3803 原 RT 参数、28 个变换节点、原整体材质替换、两份网格复制的引用和启用状态正确；1024×1024 离屏纹理与实际 Game View 均有可见模型，原 Animator 的顶点及像素随时间变化，原 14 份粒子系统正常推进，固定骨骼姿态后关闭粒子会改变 193993 个像素，已查看星空纹理与流动效果；关闭／重开及相机、纹理与注册释放通过。恢复原生 YAML 的 Rect 版本标签，保留原 `(0,0,1,1)` UV，修复二进制字段恢复后的黑屏。共用路径的既有 3706 模型回归通过，原外观绑定、四页图集、20 个跟随节点和 Animator 网格继续工作；Unity 编译、`ProjectTools.Validate` 与 134557 项 GUID 静态检查通过。完整面板另以实际同一期第二次零伤害退出的检查点与战报激活：原 CN 字体覆盖全部显示文字，原本地玩家统计行、3803 模型和粒子正常显示；原战报按钮路由、空白区域关闭的模拟点击和 RT 注册释放通过，已查看完整面板运行画面。验证窗口隔离了家园的独立 Canvas，并提供官方 RT 所需的主相机渲染回调；不表示正式窗口容器、模糊遮罩或战后场景交接已迁移。原五个音频事件已完成 PCM 与事件 ID 绑定且面板激活无未绑定事件异常，未验证实际音效输出。首次奖励分支使用实际首结算发放的 `300 × 41021` 激活，原延迟奖励图标、品质框、数量、名称、玩家职业小图和点击后的原普通物品详情均已核对；模拟点击原模糊遮罩关闭详情，再点击结算页空白关闭，背包数量不变。已查看首次奖励、详情模糊背景与无新奖励画面；同一期冷重开再次零伤害退出不重复发奖。退出后 330 个结算资源文件的哈希与来源清单一致，字形缓存没有改写源图集；Unity 编译、公共规则与期次检查、`ProjectTools.Validate` 及静态元数据检查通过。此验证仍使用隔离窗口宿主，未覆盖正式结算交接、真实战报弹窗、泛光合成或 Windows Player。
 
 ## 代码与资源入口
 
 [OfflineWeeklyChallengeBattleCatalog.cs](../../unity/Assets/Game/Runtime/Presentation/World/OfflineWeeklyChallengeBattleCatalog.cs)、[OfflineWeeklyChallengeSession.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineWeeklyChallengeSession.cs)、[WeeklyChallengeBattleRunner.cs](../../unity/Assets/Game/Runtime/Presentation/Home/WeeklyChallengeBattleRunner.cs)。
 
-结算控制代码位于 `Runtime/Official/BattleResultUI/`；资源入口为 [OfficialDemonResultAssets.cs](../../unity/Assets/Game/Runtime/Presentation/Home/OfficialDemonResultAssets.cs) 与 `Assets/Official/Combat/DemonResult*`，字体缓存隔离位于 [OfflineUiFontInstance.cs](../../unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineUiFontInstance.cs)。原始对象、重绑定与输出哈希见[结算资源清单](../../assets/reference/demon-result-native-source-manifest.json)、[魔王模型清单](../../assets/reference/battle-animation/demon-result-rt-model-source-manifest.json)和[原模型层级清单](../../assets/reference/battle-animation/demon-result-rt-prefab-source-manifest.json)。
+结算控制代码位于 `Runtime/Official/BattleResultUI/`，普通物品详情代码位于 `Runtime/Official/ItemDetailUI/`，本地背包和原图标附件池由 [OfflineDemonResultItemBindings.cs](../../unity/Assets/Game/Runtime/Presentation/Home/OfflineDemonResultItemBindings.cs) 绑定；资源入口为 [OfficialDemonResultAssets.cs](../../unity/Assets/Game/Runtime/Presentation/Home/OfficialDemonResultAssets.cs) 与 `Assets/Official/Combat/DemonResult*`，字体缓存隔离位于 [OfflineUiFontInstance.cs](../../unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineUiFontInstance.cs)。原始对象、重绑定与输出哈希见[结算资源清单](../../assets/reference/demon-result-native-source-manifest.json)、[魔王模型清单](../../assets/reference/battle-animation/demon-result-rt-model-source-manifest.json)和[原模型层级清单](../../assets/reference/battle-animation/demon-result-rt-prefab-source-manifest.json)。
 
 关卡来源见[周常战斗清单](../../assets/reference/weekly-challenges/battle-stages-source-manifest.json)；官方客户端来源见[来源总表](../../assets/reference/SOURCES.md)。

@@ -59,6 +59,17 @@ class DemonResultBinding(PartnerPanelBinding):
         paths['MePlayerItemUI'] = official / 'ProfessionUI/MePlayerItemUI.cs'
         paths['ItemIconCustomAttachment'] = official / 'ProfessionUI/ItemIconCustomAttachment.cs'
         paths['TempRTUI'] = official / 'ActivityBattleUI/TempRTUI.cs'
+        paths.update({name: official / 'ItemDetailUI' / (name + '.cs') for name in (
+            'ItemDetailDialog', 'ItemDetailDialogUseResult', 'ItemDetailDialogAddition',
+            'ItemSourceGo', 'ItemSourceItem', 'ItemDecomposContent', 'OutputAdditionDetailButton', 'UseResultIcon')})
+        paths['GMFunction.ItemDetailGmTools'] = official / 'ItemDetailUI/ItemDetailGmTools.cs'
+        paths['LoopVerticalScrollWithMaxHeight'] = official / 'SkillsUI/LoopVerticalScrollWithMaxHeight.cs'
+        paths['UIToggleObject'] = official / 'SkillsUI/UIToggleObject.cs'
+        paths['ShowRemainTimeInfo'] = official / 'ProfessionUI/ShowRemainTimeInfo.cs'
+        paths['BgDialogElement'] = official / 'WorldUI/WorldBgDialogElement.cs'
+        paths['AwardPanelLayoutElement'] = official / 'WorldUI/AwardPanelLayoutElement.cs'
+        for name in ('ItemIconAttachmentConfig', 'ItemIconAttachmentCell', 'ItemIconAttachmentHint'):
+            paths[name] = official / 'ProfessionUI' / (name + '.cs')
         for full_name, path in paths.items():
             metadata = Path(str(path) + '.meta')
             pointer = dict(fileID=11500000, guid=guid(metadata), type=3)
@@ -126,9 +137,15 @@ class DemonResultBinding(PartnerPanelBinding):
         for relative in (['client-source/' + name + '.cs' for name in (
             'GameEndPanelDemonKing', 'GameEndPanelBoss', 'GameEndPlayerSettleGroup', 'GameEndPlayerSettleItem',
             'FightThumbsUpUI', 'AwardContent', 'AwardPanelItem', 'ItemAwardIcon', 'AwardLoopScrollRect',
-            'FightMainPanelLeaveBtnUI', 'ItemAwardIconManager', 'ItemIconManager', 'TempRTUI')]
-            + ['common-source/Common/FightUtilsHandler.cs', 'common-source/Common/LanguageUtils.cs']):
+            'FightMainPanelLeaveBtnUI', 'ItemAwardIconManager', 'ItemIconManager', 'TempRTUI',
+            'ItemDetailDialog', 'ItemDetailDialogFactory', 'ItemDetailDialogUseResult', 'ItemDetailDialogAddition',
+            'ItemSourceGo', 'ItemSourceItem', 'ItemDecomposContent', 'OutputAdditionDetailButton', 'UseResultIcon')]
+            + ['common-source/Common/FightUtilsHandler.cs', 'common-source/Common/LanguageUtils.cs',
+               'common-source/Common/ItemSourceDataManager.cs', 'common-source/Common/ItemCountLimitInfoParser.cs',
+               'common-source/GlobalColors.cs', 'client-source/GMFunction/ItemDetailGmTools.cs']):
             path = code / relative
+            self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+        for path in code.rglob('ItemSource*Agent.cs'):
             self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
         self.prefab('GameEndPanelDemonKing',
             'defaultpackage_assets_prefabs_ui_fight_gameendpaneldemonking.bundle',
@@ -139,6 +156,8 @@ class DemonResultBinding(PartnerPanelBinding):
             'Prefabs/UI/Item/ItemIconDefault.prefab')
         self.prefab('MonsterIcon_3803', 'defaultpackage_assets_prefabs_appearance_monster_3803.bundle',
             'Prefabs/Appearance/Monster/3803/MonsterIcon_3803.prefab')
+        self.prefab('ItemDetailDialog', 'defaultpackage_assets_prefabs_ui_itemdetail.bundle',
+            'Prefabs/UI/ItemDetail/ItemDetailDialog.prefab')
         self.dynamic()
 
     def dynamic(self):
@@ -170,6 +189,28 @@ class DemonResultBinding(PartnerPanelBinding):
         colors = self.recovery.fields(colors_obj)
         self.dynamic_proof = dict(factories=factory_proof, colors=dict(source=self.recovery.apk.provenance(colors_obj),
             original_sha256=sha(colors_obj.get_raw_data()), fields=colors))
+        attachment = self.recovery.apk.asset('scriptableconfig_modules_itemicon', '/ItemIconAttachmentConfig.asset')
+        attachment_fields = self.recovery.fields(attachment)
+        config_row, = [row for row in records if row['path'].endswith('/ItemIconAttachmentConfig.asset')]
+        native = self.native / config_row['path'].removeprefix('Assets/')
+        config_guid = guid(Path(str(native) + '.meta'))
+        self.objects[config_guid] = attachment
+        self.roots['AttachmentConfig'] = self.load(config_guid)
+        self.script_guids.add(self.roots['AttachmentConfig']['guid'])
+        attachments = []
+        # Ordinary ItemIcon always creates HintTip, even with no hint to show;
+        # ItemAwardIcon similarly creates then hides ExtraGetTip.
+        for attachment_type in (1, 13):
+            definition, = [row for row in attachment_fields['Templates'] if row['Type'] == attachment_type]
+            selected, = [row for row in records if row['guid'] == definition['GuidProxy']['mAssetGuid']]
+            obj, = [ref.deref() for path, ref in self.recovery.apk.container(selected['bundle'])
+                if path.casefold() == selected['path'].casefold() and ref.deref().type.name == 'GameObject']
+            name = obj.read().m_Name
+            self.prefab(name, selected['bundle'], selected['path'].removeprefix('Assets/'))
+            attachments.append(dict(type=attachment_type, guid=selected['guid'], name=name,
+                asset=selected, pointer=self.roots[name]))
+        self.dynamic_proof['attachments'] = dict(source=self.recovery.apk.provenance(attachment),
+            original_sha256=sha(attachment.get_raw_data()), fields=attachment_fields, selected=attachments)
         tables_path = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-data/tables.json'
         tables = json.loads(tables_path.read_bytes())
         self.inputs[tables_path.relative_to(ROOT).as_posix()] = sha(tables_path.read_bytes())
@@ -199,7 +240,98 @@ class DemonResultBinding(PartnerPanelBinding):
         self.dynamic_proof['reward_item'] = item
         self.dynamic_proof['reward_sprite'] = dict(source=self.recovery.apk.provenance(sprite),
             original_sha256=sha(sprite.get_raw_data()), manifest_asset=row)
+        self.item_detail(records, tables, item)
         self.bind_language_font(records)
+
+    def item_detail(self, records, tables, item):
+        # The generic dialog factory is selected by the original CanUse/type
+        # branches. Do not silently route another item through this closure.
+        if item['ClassId'] != 41021 or item['CanUse'] or item['ShowUseDetail'] or item['RecycleReward']:
+            raise ValueError('Reinspect original ordinary-item detail branches')
+        if any(row['ClassId'] == item['ClassId'] for row in tables['item_count_limit']):
+            raise ValueError('Reinspect original detail count-limit branch')
+        groups = tables['game_settings']['OutputAdditionSetting']['ItemOutputGroupTypeDict']
+        if str(item['ClassId']) in groups: raise ValueError('Reinspect original detail output-addition branch')
+        path = 'Assets/Image/UI/ItemDetailDialog/ImgPurple_PopUps.png'
+        selected, = [row for row in records if row['path'] == path]
+        sprite, = [ref.deref() for source, ref in self.recovery.apk.container(selected['bundle'])
+            if source.casefold() == path.casefold() and ref.deref().type.name == 'Sprite']
+        render_key, render_id = self.recovery.fields(sprite)['m_RenderDataKey']
+        render_guid = ''.join(format(render_key['data[' + str(i) + ']'], '08x')[::-1] for i in range(4))
+        if render_guid != selected['guid']: raise ValueError('Detail quality sprite identity differs')
+        candidates = []
+        name = self.name_key(sprite.read(check_read=False).m_Name)
+        for key in [name] + [name + str(i) for i in range(100)]:
+            for native in self.by_name.get(key, []):
+                if native.suffix != '.asset': continue
+                docs = documents(native.read_text('utf8'))
+                if len(docs) == 1 and next(iter(docs.values())).get('Sprite', {}).get('m_RenderDataKey') == {render_guid: render_id}:
+                    candidates.append(native)
+        native, = candidates
+        source_guid = guid(Path(str(native) + '.meta')); self.objects[source_guid] = sprite
+        self.roots['DetailQualityBackground'] = self.load(source_guid)
+        self.script_guids.add(self.roots['DetailQualityBackground']['guid'])
+        colors = self.dynamic_proof['colors']['fields']['QualityColorConfig']['TextColorLists']
+        normal, = [row for row in colors if row['ThemeColorType'] == 0]
+        color = normal['TextColors'][normal['TypeList'].index(item['Quality'])]
+        if color['EnableGradient']: raise ValueError('Migrate original gradient quality text before showing this item')
+        self.dynamic_proof['item_detail'] = dict(
+            item_id=item['ClassId'], type_key='ItemType.MonsterProduct', name_key='item_41021_name',
+            description_key='item_41021_desc', function_description_key='item_41021_func_desc',
+            show_player_item_count=item['ShowPlayerItemCount'], is_count_limit=False, show_use_detail=False,
+            has_output_addition_group=False, quality_text_color=color,
+            quality_background=dict(source=self.recovery.apk.provenance(sprite),
+                original_sha256=sha(sprite.get_raw_data()), manifest_asset=selected))
+        self.dynamic_proof['item_detail']['source_analysis'] = self.item_sources(tables, item)
+
+    def item_sources(self, tables, item):
+        # Evaluate the selected item's closed branches in every registered
+        # ItemSourceDataManager agent. Do not infer map sources from a table
+        # missing in the shared System-table export: Map has a separate bundle.
+        item_id, item_type = item['ClassId'], item['ItemType']
+        columns = {'quick_buy': 'ItemId', 'item_source': 'Id',
+            'item_source_redirect': 'SourceItemId', 'item_merge': 'ProductId',
+            'cooking': 'Id', 'shop_goods': 'ItemId', 'trading_post_item': 'ClassId',
+            'treasure': 'ClassId'}
+        for table, column in columns.items():
+            if any(row[column] == item_id for row in tables[table]):
+                raise ValueError('Migrate original item source agent for ' + table)
+        settings = tables['game_settings']
+        if str(item_type) in settings['SkillTypes'] or item_type in settings['SkillPieceTypes'] or item_type in (305, 306):
+            raise ValueError('Migrate original skill/treasure source agents')
+        # All explicit 41021 reward rules belong to DemonInvade/top rewards.
+        # Stage and chest source agents consume Awards/RewardRules instead.
+        rules = {row['Id'] for row in tables['reward_rule'] if item_id in row['IdList']}
+        for table, field in (('stage', 'Awards'), ('chest', 'RewardRules')):
+            if any(rules.intersection(row[field] or []) for row in tables[table]):
+                raise ValueError('Migrate original reward-derived source agent for ' + table)
+        for row in tables['random_reward']:
+            selector = row['RandomItemRangeSelector']
+            if item_id in (row['IdList'] or []) or item_type in (row['ItemTypes'] or []):
+                raise ValueError('Migrate original random reward source expansion')
+            if selector and selector['_type'] not in ('RandomItemRangeProfessionSkillSelector', 'RandomItemRangeTreasureGachaSelector'):
+                raise ValueError('Inspect new random item range selector')
+            if not row['IdList'] and not row['ItemTypes'] and not selector:
+                raise ValueError('Inspect unconstrained original random reward')
+        from official_tables import Constructors
+        code = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code'
+        constructors = Constructors(code)
+        obj = self.recovery.apk.asset('config_luban_map', '/item_map_location.g.bytes')
+        raw = obj.read().m_Script.encode('utf8', 'surrogateescape')
+        locations = constructors.table(raw, 'TbItemMapLocationInfo')
+        if any(row['ItemId'] == item_id for row in locations):
+            raise ValueError('Migrate original map-resource item source')
+        for name in constructors.sources:
+            for folder in ('common-source/Common', 'common-source/Common.LubanGen'):
+                path = code / folder / (name + '.cs')
+                if path.is_file(): self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+        path = ROOT / 'scripts/official_tables.py'
+        self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+        # PetGacha and Legion agents yield no entries in the official client.
+        # ArenaSeasonLimitedTreasure derives only Treasure/Piece item ids.
+        return dict(has_sources=False, direct_columns=columns, reward_rule_ids=sorted(rules),
+            map_locations=dict(source=self.recovery.apk.provenance(obj),
+                payload_sha256=sha(raw), count=len(locations), matching_count=0))
 
     def bind_language_font(self, records):
         config, = [row for row in records if row['path'] ==
@@ -305,13 +437,27 @@ class DemonResultBinding(PartnerPanelBinding):
             elif isinstance(value, list):
                 for child in value: collect(child)
         for _, _, value in self.queue: collect(value)
+        # GM fixed-count button labels are literal keys. The original language
+        # service returns those keys when no dictionary entry exists.
+        literal_keys = {'+1', '+10', '+100', '-1', '-10', '-100'}
+        self.dynamic_proof['literal_text_keys'] = sorted(keys & literal_keys)
+        keys -= literal_keys
+        keys.update(('ItemType.MonsterProduct', 'Quality.Purple'))
+        optional, optional_inputs = language({'item_41021_desc', 'item_41021_func_desc'})
+        keys.update(optional); self.inputs.update(optional_inputs)
         texts, inputs = language(keys)
         if set(texts) != keys: raise ValueError('Original result language is absent: ' + repr(keys - texts.keys()))
         self.inputs.update(inputs)
         colors = self.dynamic_proof['colors']['fields']
         payload = dict(schema=1, manifest=self.recovery.apk.version, item=self.dynamic_proof['reward_item'],
+            item_detail=self.dynamic_proof['item_detail'],
+            attachments=[dict(type=row['type'], guid=row['guid']) for row in self.dynamic_proof['attachments']['selected']],
+            images=[dict(path=self.dynamic_proof['reward_item']['RawIcon'],
+                guid=self.dynamic_proof['reward_sprite']['manifest_asset']['guid']),
+                dict(path='UI/ItemDetailDialog/ImgPurple_PopUps',
+                guid=self.dynamic_proof['item_detail']['quality_background']['manifest_asset']['guid'])],
             texts=[dict(key=k, text=texts[k]) for k in sorted(texts)],
-            colors={k: colors[k] for k in ('Green', 'White', 'TextColorConfig')})
+            colors={k: colors[k] for k in ('Green', 'White', 'TextColorConfig', 'QualityColorConfig')})
         bindings_guid = hashlib.md5(b'zjcs:official-demon-result:bindings').hexdigest()
         self.queue.append((Path('bindings.json'), bindings_guid,
             (json.dumps(payload, ensure_ascii=False, indent=2) + '\n').encode('utf8')))
@@ -340,6 +486,9 @@ class DemonResultBinding(PartnerPanelBinding):
             ItemConfig=self.roots['ItemIconConfig'], RewardIcon=self.roots['RewardIcon'],
             Font=self.dynamic_proof['font']['font_asset'],
             Audio=dict(fileID=11400000, guid=audio_guid, type=2),
+            ItemDetail=self.roots['ItemDetailDialog'], DetailQualityBackground=self.roots['DetailQualityBackground'],
+            AttachmentConfig=self.roots['AttachmentConfig'],
+            AttachmentPrefabs=[row['pointer'] for row in self.dynamic_proof['attachments']['selected']],
             Bindings=dict(fileID=4900000, guid=bindings_guid, type=3))
         self.queue.append((Path('Resources/Combat/DemonResult/catalog.asset'),
             hashlib.md5(b'zjcs:official-demon-result:catalog-asset').hexdigest(), {11400000: dict(MonoBehaviour=fields)}))
