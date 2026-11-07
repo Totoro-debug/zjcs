@@ -14,7 +14,7 @@
   "migrated_outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFadeEffectSequence.cs",
-      "sha256": "167e5de5e8e94e28bf385c6a69cab88479d52334efd35a3b4ff6640e986df4ef"
+      "sha256": "2cc5eb8b283c0049e0aabda4bf7034622f7d63ef285e8f69c45334653ae66fc9"
     }
   ],
   "meta_outputs": [
@@ -23,6 +23,6 @@
       "sha256": "968c453784b643d1200fc5ce0e49be454dd460e2f27dec105eb64323568fe6eb"
     }
   ],
-  "adaptation": "Preserve the original serialized start-time/duration/effect array order, cumulative frame delta timing, immediate due entries, next-frame progression between entries, and per-effect FadeOut call. Unity Coroutine carries the original cancel-and-restart lifecycle in place of the generated UniTask state machine.",
-  "runtime_validation": "The missing Zjcs.Official.StoryPlayables namespace import was required for Unity compilation and is recorded in the output hash. Unity Play Mode timing/cancellation checks remain pending."
+  "adaptation": "Reconstruct the original UniTask state machine using the existing UniTask runtime: accumulate current Time.deltaTime before each threshold check, process at most one serialized entry per frame, await NextFrame with the original cancellation token, and cancel/dispose on replay, explicit stop, final effect or destruction. An inactive trigger does not cancel the original asynchronous sequence.",
+  "runtime_validation": "Isolated Unity Play Mode passed with native wave particles: current-frame threshold, equal-time entries on separate frames, serialized unsorted order, replay reset/cancellation, explicit cancellation, inactive trigger continuation, missing effect and destruction cancellation. The existing ten native movement graphs / seventeen follow-node checks also passed and actual raster screenshots were inspected. Production-flow and Windows Player fade coverage remain pending."
 }

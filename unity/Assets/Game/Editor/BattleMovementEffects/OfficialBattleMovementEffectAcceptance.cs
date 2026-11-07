@@ -13,7 +13,7 @@ using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Editor
 {
-    public static class OfficialBattleMovementEffectAcceptance
+    public static partial class OfficialBattleMovementEffectAcceptance
     {
         private const string Key = "Zjcs.Battle.MovementEffectAcceptance";
         private static bool started;
@@ -167,6 +167,8 @@ namespace Zjcs.Editor
             other.Tick(.5f); yield return null;
             Require(world.GetComponentsInChildren<MyPlayableSequence>(true).Length == 0, "last cell releases its graph");
             effects.Dispose(); other.Dispose();
+            var fades = FadeSequenceSteps(world.transform);
+            while (fades.MoveNext()) yield return fades.Current;
             UnityEngine.Object.Destroy(world); yield return null;
         }
         private static void Capture(Vector3 position, string name)

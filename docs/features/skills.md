@@ -70,15 +70,15 @@
 
 官方 `MyPlayableFixFlipXTrigger` 已迁入 EntityLifecycle，保留按 source/target 选择角色并调用 `MyGridTransform.SetScaleByFlipX` 的触发行为；来源见[翻转触发器来源清单](../../assets/reference/battle-animation/skill-trigger-playable-runtime-source-manifest.json)。
 
-官方 `MyPlayableFadeEffectSequence` 已迁入 StoryFollowBone，按序列化数组的 StartTime 累计帧时间并调用对应 `MyEffectFadeOut.FadeOut(Duration)`；重复触发会先取消前一序列，销毁时停止协程。Unity Coroutine 承接原逐帧 UniTask 时序，运行验收尚未执行；来源见[效果淡出触发序列来源](../../assets/reference/battle-animation/skill-trigger-fade-sequence-source-manifest.json)。
+官方 `MyPlayableFadeEffectSequence` 已迁入 StoryFollowBone，从原 UniTask 状态机恢复异步执行：先累加本帧 `Time.deltaTime` 再判断 `StartTime`，按序列化数组每帧最多推进一项并调用原 `MyEffectFadeOut.FadeOut(Duration)`，不排序或合并同时到期项。重复播放重置时间并取消旧序列，显式停止、最后一项及销毁取消令牌；单独停用触发器对象仍继续原异步任务。修复了先前 Coroutine 适配导致的首帧延后及停用即停止差异。隔离 Unity Play Mode 已使用官方波纹粒子通过首帧阈值、同时间项分帧、原数组顺序、重播重置、显式取消、停用继续、空效果引用及销毁取消，并通过既有十份移动效果图／17 个跟随节点回归；已查看实际原生粒子截图。完整生产技能和 Windows Player 对应淡出流程仍未验证；来源见[效果淡出触发序列来源](../../assets/reference/battle-animation/skill-trigger-fade-sequence-source-manifest.json)。
 
 官方 `MyPlayableCameraShake` 已迁入战斗技能 Playable 程序集，保留可序列化的 `CinemachineImpulseSource`、默认偏移 `(0,0,-250)`、按施法者世界坐标定位和即时 `GenerateImpulse`，并返回原配置持续时间。尚未接到各战斗模式，生产视觉验证未完成；来源见[相机震动代码凭据](../../assets/reference/battle-animation/skill-camera-shake-runtime-source-manifest.json)。
 
-官方 `ApplyOverrideToMaster` 已迁入：按 `UseSourceDataToOverride` 从原施法者或目标查找角色母体，再按 `OverrideSource` 替换 Playable 的 source 或 target；scope 通过显式 `IBattleMasterEntityResolver` 提供母体查询。尚未取得这两条断言的运行结果。生产实体容器尚无 `MasterId → GameObject` resolver 绑定，完整技能图与生产调度仍未接通；官方来源与范围见[母体覆盖来源凭据](../../assets/reference/battle-animation/skill-master-override-runtime-source-manifest.json)。
+官方 `ApplyOverrideToMaster` 已迁入：按 `UseSourceDataToOverride` 从原施法者或目标查找角色母体，再按 `OverrideSource` 替换 Playable 的 source 或 target；scope 通过显式 `IBattleMasterEntityResolver` 提供母体查询。公共控制器已将共享 `OfficialBattleSceneView` 绑定到技能图调度器，按当前检查点直接 `MasterId` 查找对应场景实体；缺失、已移除或模型子对象不补造来源，仍保留的死亡实体可提供母体。现有独立检查入口为 `OfficialBattleAnimatorPlaybackAcceptance.RunMasterBindings`；本批未重跑该入口，完整公共战斗和 Windows Player 的对应画面仍待验证。官方来源与范围见[母体覆盖来源凭据](../../assets/reference/battle-animation/skill-master-override-runtime-source-manifest.json)。
 
 主线、日常副本、竞技场与幻想阶梯的技能等级、秘法属性和状态统一读取 `SkillProgression.SlotLevel(..., SkillContext().CurrentSeasonId)`，只合并基础槽级和当前赛季祝福；其他赛季不参与。沿用原 `PlayerSkllSlotDataExt.GetSkillSlotLevel`，不改变技能品阶、子技能实体或计算公式。
 
-技能演出 cue 保留原施法者、技能实体、目标、延迟及重放状态；GroundEffect、相机来源选择、抓钩、组合皮肤、残影和战斗镜头组件已迁入对应官方适配。技能图资源与调度入口已接入；生产相机、声音、角色母体与部件显隐仍缺少宿主绑定，完整战斗演出未完成。具体代码来源见各技能演出清单及[战斗执行](battle-execution.md)。
+技能演出 cue 保留原施法者、技能实体、目标、延迟及重放状态；GroundEffect、相机来源选择、抓钩、组合皮肤、残影和战斗镜头组件已迁入对应官方适配。技能图资源与调度入口已接入，公共控制器通过 `BindSceneHosts` 绑定实际战斗相机、角色母体查询与原部件显隐；这项代码接线不代表各技能及模式均已完成画面验证。生产声音仍缺少原事件 DSP 宿主，完整战斗演出未完成。具体代码来源见各技能演出清单及[战斗执行](battle-execution.md)。
 
 技能列表附件已按原 `ItemIconAttachmentConfig` 的层级顺序恢复：`CenterHintContent`（点击合成）、`ProfessionMismatch`（职业不符）、`NewMark` 和 `RedDotContent` 均使用原 prefab、字体及组件字段。红点沿 `RedDotMultiItem` 组合原升阶、装配及合成条件；原行项目是否考虑职业、碎片列表不挂这些附件等分支保持客户端配置。装配附件属于技能皮肤页的原附件类型 12，不额外叠加到原列表。新获得标记按原 `ItemNewMarkManager` 的零数量到正数量、正数量到零数量分支更新，点击技能、刷新列表或关闭技能列表时移除上次列表涉及的标记（包括视口外项目），当前玩家会话共享，重新登录清空；不写入主档案。同帧重复的数据投影不会提前消费尚未显示的新技能标记；刷新停止旧列表惯性并恢复首项。
 

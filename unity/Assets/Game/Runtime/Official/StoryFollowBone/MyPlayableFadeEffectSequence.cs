@@ -1,4 +1,5 @@
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zjcs.Official.StoryPlayables;
 
@@ -17,7 +18,7 @@ namespace Zjcs.Official.StoryFollowBone
         [SerializeField]
         private MyPlayableFadeEffectCfg[] myTriggerCfgs;
 
-        private Coroutine fadeRoutine;
+        private CancellationTokenSource fadeCancellation;
         private int currentIndex;
 
         private void OnDestroy() => StopFadeTask();
@@ -27,38 +28,37 @@ namespace Zjcs.Official.StoryFollowBone
             base.Play(playable);
             StopFadeTask();
             currentIndex = 0;
-            fadeRoutine = StartCoroutine(PlayEffects());
+            fadeCancellation = new CancellationTokenSource();
+            PlayEffects(fadeCancellation.Token).Forget();
         }
 
         public void StopFadeTask()
         {
-            if (fadeRoutine == null) return;
-            StopCoroutine(fadeRoutine);
-            fadeRoutine = null;
+            if (fadeCancellation == null) return;
+            fadeCancellation.Cancel();
+            fadeCancellation.Dispose();
+            fadeCancellation = null;
         }
 
-        private IEnumerator PlayEffects()
+        private async UniTaskVoid PlayEffects(CancellationToken cancellationToken)
         {
             float time = 0f;
             MyPlayableFadeEffectCfg cfg = GetNextEffectCfg();
             while (cfg != null)
             {
-                while (time < cfg.StartTime)
+                time += Time.deltaTime;
+                if (time >= cfg.StartTime)
                 {
-                    yield return null;
-                    time += Time.deltaTime;
+                    if (cfg.Effect) cfg.Effect.FadeOut(cfg.Duration);
+                    cfg = GetNextEffectCfg();
+                    if (cfg == null)
+                    {
+                        StopFadeTask();
+                        return;
+                    }
                 }
-
-                if (cfg.Effect) cfg.Effect.FadeOut(cfg.Duration);
-                cfg = GetNextEffectCfg();
-                if (cfg != null)
-                {
-                    yield return null;
-                    time += Time.deltaTime;
-                }
+                await UniTask.NextFrame(cancellationToken, false);
             }
-
-            fadeRoutine = null;
         }
 
         private MyPlayableFadeEffectCfg GetNextEffectCfg()
