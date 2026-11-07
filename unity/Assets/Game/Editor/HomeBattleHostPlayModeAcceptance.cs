@@ -333,6 +333,11 @@ namespace Zjcs.Editor
 
         private static IEnumerator RunDirectHosts(HomeFeatureRuntime home, string output, Action<Selectable> click)
         {
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ONLY") == "activityRunners")
+            {
+                yield return RunActivityBattleAdapters(home, output, click);
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ONLY") == "dailyChallenge")
             {
                 yield return OpenTravel(home, click);
