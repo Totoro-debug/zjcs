@@ -716,7 +716,7 @@ namespace Zjcs.Presentation.Home
                 Notify(error ?? "当前竞技挑战不可开始");
                 return;
             }
-            if (!host.Arena.CompleteChallenge(true, host.GrantArenaReward))
+            if (!host.Arena.CompleteChallenge(true, host.GrantBattleReward))
                 throw new InvalidOperationException("Direct arena victory settlement failed.");
             RefreshArenaPanel();
             Notify("竞技挑战直接胜利，已结算奖励");

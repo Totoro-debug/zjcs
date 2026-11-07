@@ -1,0 +1,54 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    ".tools/source-packages/current/884_156692/official-data/tables.json": "8d9e905e55967a46ebf59484ac8faf0356515e1c214faaeebcbc303fc03de333"
+  },
+  "generator": {
+    "path": "scripts/prepare_demon_challenge_award.py",
+    "sha256": "51c62318427e08c73021c166318392d90e0bf70c7b254fc1787d5bdd0f9caffb"
+  },
+  "selected_settings": {
+    "DemonKingActivityClassId": 24,
+    "MaxBreathCountCanGet": 100,
+    "ShopId": 102,
+    "MapClassId": 91,
+    "DemonRebornDelay": [
+      5.0,
+      6.0
+    ],
+    "ChallengeVaildCount": 1,
+    "ChallengeAwardRuleId": 43000,
+    "DemonBreathItemId": 41020,
+    "DemonKingBreathItemId": 41021,
+    "PublicStepAwardId": 1000,
+    "DemonInvadeRankRewardMailId": 200,
+    "DemonInvadeStepRewardMailId": 201,
+    "SettleMessagePushTimeAgo": 2,
+    "MaxHistoryPeroidDataCount": 5
+  },
+  "selected_reward_rule": {
+    "Id": 43000,
+    "Order": -1,
+    "Condition": null,
+    "Percent": 1.0,
+    "IdList": [
+      41021
+    ],
+    "WeightList": [
+      100
+    ],
+    "CountList": [
+      300.0
+    ],
+    "LevelCountId": null,
+    "SubRankCountId": null,
+    "IndexMininum": [],
+    "RecordSharedId": null
+  },
+  "resourcePath": "WeeklyChallenges/demon-challenge-award",
+  "outputs": {
+    "unity/Assets/Game/Resources/WeeklyChallenges/demon-challenge-award.json": "194d64348e18452951a5dac4b46785a92e83591697175d63b2d960cee5de579d",
+    "unity/Assets/Game/Resources/WeeklyChallenges/demon-challenge-award.json.meta": "62de4c2fb5ad5898710846345f31348869de7b0a6eeb8893e32ab6b76732785a"
+  },
+  "processing": "Retain original ChallengeVaildCount and ChallengeAwardRuleId; verify fixed single-item rule semantics before converting its exact integral CountList amount to a local inventory count."
+}

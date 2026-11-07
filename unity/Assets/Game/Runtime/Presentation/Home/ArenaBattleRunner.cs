@@ -208,7 +208,7 @@ namespace Zjcs.Presentation.Home
             if (resultHandled) return;
             resultHandled = true;
             won = isWon;
-            host.Arena.CompleteChallenge(won, host.GrantArenaReward);
+            host.Arena.CompleteChallenge(won, host.GrantBattleReward);
             Action<bool> callback = completed;
             DisposeBattle();
             callback?.Invoke(won);

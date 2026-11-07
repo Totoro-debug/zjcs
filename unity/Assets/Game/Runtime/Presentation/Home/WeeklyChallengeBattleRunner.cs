@@ -26,6 +26,7 @@ namespace Zjcs.Presentation.Home
         public event Action Left;
         public OfficialBattleRuntimeController Controller => controller;
         public FightBattleReport FinalReport => finalReport;
+        public OfflineWeeklyChallengeSession.ChallengeAward FinalChallengeAward { get; private set; }
 
         public void Begin(HomeFeatureRuntime runtime, int stageId)
         {
@@ -116,10 +117,10 @@ namespace Zjcs.Presentation.Home
             if (complete || checkpoint == null) return;
             if (stageId == 4800 && finalReport == null)
                 throw new InvalidOperationException("Weekly challenge settlement requires the shared final battle report.");
-            complete = true;
-            session.CompleteBattle(stageId, periodStartLocalTicks,
+            FinalChallengeAward = session.CompleteBattle(stageId, periodStartLocalTicks,
                 checkpoint.Outcome != null && checkpoint.Outcome.Won,
-                stageId == 4800 ? PlayerDamageDealt(finalReport) : 0);
+                stageId == 4800 ? PlayerDamageDealt(finalReport) : 0, host.GrantBattleReward);
+            complete = true;
             DisposeBattle();
             Completed?.Invoke(checkpoint);
             Destroy(this);

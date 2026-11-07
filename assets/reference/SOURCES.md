@@ -691,6 +691,8 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 公共格网变换来源：`prepare_battle_grid_transform.py` 记录所选版本的 `GridTransformComponent`、`MyMath`、`Direction`、身体占格登记、`MyFightHitBase`、移动时长与主动技能等待动作的反编译输入及原表 SHA256，并记录纯 C# 坐标变换、命中元数据解析与恢复、普通／随机范围接线及其哈希；清单区分原计算与用户确认的朝向继承规则，处理方法见[格网变换来源清单](battle-rules/grid-transform-source-manifest.json)。
 
+混沌首次挑战奖励来源：`prepare_demon_challenge_award.py` 从所选版本原始表提取 `game_settings.DemonInvade` 与所引用的 `reward_rule`，先核对固定单项、无额外条件和数量缩放的语义，再生成 `WeeklyChallenges/demon-challenge-award` 本地资源。原表、生成器、JSON 与元数据哈希见[挑战奖励来源清单](battle-rules/demon-challenge-award-source-manifest.json)。
+
 灼烧地块配置来源：`prepare_battle_grid_items.py` 从所选 884 官方 APK／已校验本地资源读取 `grid_item.g.bytes`、`entity_grid_mover.g.bytes` 和 `FightGridItem_part1.g.bytes`，按同版生成的 Luban／MessagePack 格式解码 3320→3051、3328→3054 的完整表项与实体，编译原地形掩码及覆盖标记。输入版本、bundle／PathID、程序集、原代码、原始与输出 SHA256 见[地块来源清单](battle-rules/grid-items-source-manifest.json)。未修改既有 854 战斗载荷或其预期哈希；此项未新增美术载荷，规则与验证范围见[技能页](../../docs/features/skills.md)。
 
 持续灼烧演出来源：`prepare_battle_burning_assets.py` 复用已校验的 884 原生导出与原 APK／本地云资源，恢复 `playable13052`、`playable13482` 的完整依赖、原纹理 mip 和 Windows shader；不删除组件、粒子或序列叶节点。原 bundle／对象身份、导出输入、转换输出、脚本映射及显式加载资源名见[持续火焰资产来源](battle-animation/status-burn-assets-source-manifest.json)，`AutoStopOnSourceDie` 的程序集、方法比对、异步适配和绑定输入见[组件来源](battle-animation/grid-playable-runtime-source-manifest.json)。此批新增资产尚未生成完整素材快照；实现及实际验证范围仅在[技能页](../../docs/features/skills.md)维护。

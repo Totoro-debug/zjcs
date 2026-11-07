@@ -288,21 +288,21 @@ namespace Zjcs.Presentation.Home
             return true;
         }
 
-        public void GrantArenaReward(string receipt, int itemId, long count)
+        public void GrantBattleReward(string receipt, int itemId, long count)
         {
             if (string.IsNullOrWhiteSpace(receipt) || itemId <= 0 || count <= 0)
-                throw new ArgumentException("A valid arena reward receipt and amount are required.");
+                throw new ArgumentException("A valid battle reward receipt and amount are required.");
             ProgressionResult result = profile.ApplyInventoryTransaction(receipt, save =>
             {
                 InventoryOperationResult granted = OfflineInventoryOperations.Grant(
                     save.Player, itemId, count, Now());
                 if (!granted.IsApplied)
-                    throw new InvalidOperationException("Arena reward item could not be granted.");
+                    throw new InvalidOperationException("Battle reward item could not be granted.");
             });
             if (result.Status != ProgressionResultStatus.Applied
                 && result.Status != ProgressionResultStatus.Unchanged
                 && result.Status != ProgressionResultStatus.Ready)
-                throw new InvalidOperationException("Arena reward settlement failed.");
+                throw new InvalidOperationException("Battle reward settlement failed.");
             ReloadContext();
             hud?.RefreshAll();
         }

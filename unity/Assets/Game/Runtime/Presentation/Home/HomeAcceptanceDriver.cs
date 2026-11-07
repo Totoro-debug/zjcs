@@ -2394,7 +2394,7 @@ namespace Zjcs.Presentation.Home
                 ArenaRuntimeGuard guard = runtime.Arena.FindGuard(guardId);
                 Assert(guard != null && guard.appendAppearances.Any(value => value.sex == guardSex),
                     "arena challenge did not persist an official guard appearance");
-                Assert(runtime.Arena.CompleteChallenge(true, runtime.GrantArenaReward),
+                Assert(runtime.Arena.CompleteChallenge(true, runtime.GrantBattleReward),
                     "arena victory settlement failed");
                 Assert(runtime.Arena.Rank == opponentRank && runtime.Arena.Wins == 1,
                     "arena victory did not move the player to the opponent rank");
