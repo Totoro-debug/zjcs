@@ -2839,5 +2839,29 @@
       ]
     }
   ],
-  "operation": "APK-first original NpcInfo, full Texture2D PNG and exact full-rect Sprite metadata. Explicit NpcClassId bindings cover available icons. Configured missing paths, MapExploreBoss legacy and empty icons are not substituted."
+  "selected_resource_check": {
+    "manifest": "884_156692",
+    "resource_version": "202610291150884",
+    "package": "DefaultPackage",
+    "package_manifest_sha256": "89288d53cf6b2948673be7e844e86a6a6800df94b7373cf1b457a35c6379fa23",
+    "package_manifest_md5": "78a1abc1fa243f50ed3bf2849a6d45bc",
+    "apk_manifest": "881_156673",
+    "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+    "npcClassIds": [11015, 11016, 11017, 11018, 11019, 11020, 11021, 11022],
+    "searchedObjectTypes": ["Sprite", "Texture2D"],
+    "matchingOriginalObjects": [],
+    "inspectedBundles": [
+      {"bundle": "defaultpackage_assets_image_ui_npc_npc_icon_map_9.bundle", "bundle_hash": "75c50e5277993934da6e16d97aa29187", "origin": "official_cdn", "bundle_size": 151661, "bundle_sha256": "1f09b6a28c36972584e36b3aadb941011eb7b9610f4a6a79e0338e19d9b561d9", "object_count": 49},
+      {"bundle": "defaultpackage_assets_image_ui_npc_npc_icon_map_11.bundle", "bundle_hash": "9d0e314d57385d1c815d6f39efea684b", "origin": "apk_zip", "apk_manifest": "881_156673", "raw_size": 115642, "raw_sha256": "c6487a60c45df5deb37adb0b2d1c4949a0c40c1c382c80a95df9f9d1e258fa23", "object_count": 35},
+      {"bundle": "defaultpackage_assets_image_ui_npc_npc_icon_map_12.bundle", "bundle_hash": "348f01373d281aa671eb3f8bca408f3b", "origin": "apk_zip", "apk_manifest": "881_156673", "raw_size": 42115, "raw_sha256": "d6540fce5807c378809d0fcb0e4bb340a169ea855380afd6542dcafe2aec2c37", "object_count": 13},
+      {"bundle": "defaultpackage_assets_image_ui_npc_npc_icon_map_13.bundle", "bundle_hash": "b73da18a7f9842c30a05bfcf0c62af48", "origin": "apk_zip", "apk_manifest": "881_156673", "raw_size": 34957, "raw_sha256": "cda741d57ab55315c63657a2d8b3132b75f8803906a43ea22fb2ad978ca378b", "object_count": 11},
+      {"bundle": "defaultpackage_assets_image_ui_npc_npc_icon_map_14.bundle", "bundle_hash": "f96139f40b35c0ea409aa6bf794d16fb", "origin": "official_cdn", "bundle_size": 63847, "bundle_sha256": "2ba227d7094f06372c01e8e934c6d719a1c873c8119e45e5f7d5793a78ffba5e", "object_count": 19},
+      {"bundle": "defaultpackage_assets_image_ui_npc_npc_icon_map_17.bundle", "bundle_hash": "1e29dda994b722d9bab005f1268a861c", "origin": "apk_zip", "apk_manifest": "881_156673", "raw_size": 52473, "raw_sha256": "e77c726b79f2d6cb26cddd85b363688ab2890539e359244a0bdf894fb682c10d", "object_count": 15},
+      {"bundle": "defaultpackage_assets_image_ui_npc_npc_icon_map_19.bundle", "bundle_hash": "6c2a0e8833eacbdfc1829b1b893ff7dd", "origin": "official_cdn", "bundle_size": 58170, "bundle_sha256": "668a7bf496a72d0a669e4b89984d8db538fdb0a30fb5b1c471abd3e364f4a387", "object_count": 17},
+      {"bundle": "defaultpackage_assets_image_ui_npc_npc_icon_map_21.bundle", "bundle_hash": "56fc11a211e0f449f2fe2fede741b00f", "origin": "official_cdn", "bundle_size": 57632, "bundle_sha256": "d8c237e0324b9671aba9458723fbb112fe8ba7ade3e3e2db1792296d818da030", "object_count": 17},
+      {"bundle": "defaultpackage_assets_image_ui_npc_npc_icon_map_23.bundle", "bundle_hash": "86e901cf2d9ce8b1c6b1f2a8e5f928cc", "origin": "official_cdn", "bundle_size": 49502, "bundle_sha256": "eee55e475b774d1aa85bd432b7f197b681e2206cdf2b6a9a4006155c3dc5b5bd", "object_count": 15}
+    ],
+    "method": "Apk.current() opened the pinned 884_156692 DefaultPackage manifest and inspected every Sprite and Texture2D in all nine indexed NPC icon bundles, using APK entries when packaged and verified 202610291150884 cloud files otherwise."
+  },
+  "operation": "APK-first original NpcInfo, full Texture2D PNG and exact full-rect Sprite metadata. Explicit NpcClassId bindings cover available icons. Configured missing paths, MapExploreBoss legacy and empty icons remain null in the image catalog; this source process produces no replacement image payloads."
 }

@@ -54,12 +54,16 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 - `OfficialMainlineMapRuntime.Map12Buildings` 在素材秘境战斗房间打开同一官方邀请视图，按路线运行和房间保存 `PrivateDungeon`（2）选择。确认后 `DailyDungeonBattleRunner.BeginPrivateMapRoom` 重读存档并复核候选资格、单 NPC 次数和队伍上限，以主角等级／阶位创建伙伴；`CommitBattle` 在战斗挂载前提交次数，挂载失败回滚本次提交。私图 checkpoint 保存在路线档案，助战快照保存在助战档案；恢复时核对玩法、入口、关卡和伙伴列表，既有快照不重复扣次，胜负结算清除活动快照。空队伍仍可单人进入。角色档案、公开奖励、公共次数和购买次数均未改变。完整进程冷启动恢复及多伙伴实战仍待验证。
 - `OfficialBattleAssistOptions` 将助战 PlayType、入口标识和人数上限作为战斗宿主适配参数，开始时复制调用方配置；日常／每日挑战默认使用官方 `All=10`，私图使用 `PrivateDungeon=2`，节庆首领可传入 5。恢复时检查玩法、入口、关卡及伙伴快照，非空伙伴 checkpoint 缺少已提交快照时拒绝恢复，避免重新扣次；只回滚本次新提交的事务。
 - `OfficialBattleAssistSelectionView` 提供公共原生邀请视图，输入为候选展示资料、人数上限及选择／确认／取消回调。日常副本与每日挑战共用该视图，宿主继续计算资格、剩余次数和存档选择；原 `LoopVerticalScrollRect` 负责条目复用，不再由玩法入口手排条目或复制确认按钮。确认空选择时沿用单人开战，非空选择按宿主既有事务处理。
-- `OfficialMainlineMapRuntime.BattleAssist` 将同一原生邀请窗口接入主线地图常规战斗。使用官方 `TeamInvite=3` 候选链，确认后在开战前提交次数，按战斗场景可行走格创建 `CreateTeamInviteUnit` 伙伴；战斗完成清理快照，离开、挂载异常和地图关闭回滚本次次数。地图 12 战斗碑的 `TargetCatalog=9` 专用窗口继续使用独立的战斗碑选择与队伍上限。
-- 公共视图复用已有 `Map12/Team/TeamInvitePanel`／`TeamInvitePanelRobotItem` 原生资源，替代日常目录中缺少 Sprite／字体绑定的旧副本。`record_battle_assist_selection.py` 实际读取选定884 APK，核对面板340节点／1,559对象和条目82节点／346对象；保留使用的序列化内容相同，外部引用表编号差异解析为同一原对象且原始载荷哈希相同。条目中被离线视图移除的旧在线 `AppearanceUI` 单独记录，不把它认作当前代码相同。历史871资源身份与当前884核对凭据分别保留于[公共选择视图来源](../../assets/reference/battle-hud/assist-selection-source-manifest.json)。没有新绘图片、替代布局或修改原资源载荷。排序／职业筛选、完整NPC头像与外观、条件提示参数及战力字段仍未在公共视图接通，不计作完整邀请UI迁移。
+- `OfficialMainlineMapRuntime.BattleAssist` 将同一原生邀请窗口接入主线地图常规战斗。使用官方 `TeamInvite=3` 候选链，确认后在开战前提交次数，按战斗场景可行走格创建 `CreateTeamInviteUnit` 伙伴；战斗完成清理快照，离开、挂载异常、地图关闭或启动异常回滚本次次数并显示原生地图提示。地图 12 战斗碑的 `TargetCatalog=9` 专用窗口继续使用独立的战斗碑选择与队伍上限。
+- 公共视图复用已有 `Map12/Team/TeamInvitePanel`／`TeamInvitePanelRobotItem` 原生资源，替代日常目录中缺少 Sprite／字体绑定的旧副本。`record_battle_assist_selection.py` 实际读取选定884 APK，核对面板340节点／1,559对象和条目82节点／346对象；保留使用的序列化内容相同，外部引用表编号差异解析为同一原对象且原始载荷哈希相同。条目中被离线视图移除的旧在线 `AppearanceUI` 单独记录，不把它认作当前代码相同。头像绑定为空时原生控件清理上一条目的图片引用，避免复用残影；这只说明运行时绑定为空，不代表 APK／云端来源已核实缺失，也不计作正式头像完成。历史871资源身份与当前884核对凭据分别保留于[公共选择视图来源](../../assets/reference/battle-hud/assist-selection-source-manifest.json)。没有新绘图片、替代布局或修改原资源载荷。排序／职业筛选、完整NPC外观、条件提示参数及战力字段仍未在公共视图接通，不计作完整邀请UI迁移。
+
+当前公共视图验收通过 Unity 窗口 Play Mode 模拟输入，覆盖候选选择／取消、确认／关闭、列表缩放、窗口释放和实际画面；额外检查 11015 姓名占位沿用官方候选姓名颜色、11014 不显示占位。`scripts/check_unity_project.py` 通过；`ProjectTools.Validate` 在本次姓名对比度调整前通过，调整后的再次运行因同一工程已有 Unity 实例而被拒绝，最终代码编译及面板流程由上述 Play Mode 验收确认。
+
+伙伴头像另按[头像来源清单](../../assets/reference/battle-hud/npc-portraits-source-manifest.json)检查。当前选定 `884_156692` 的 APK／云端资源扫描了全部 9 个 `npc_icon_map_*` bundle（地图 9、11–14、17、19、21、23），未发现 `npc_icon_11015`–`11022` 的原始 Sprite 或 Texture2D。按用户确认，这 8 名联动伙伴在原生头像区域显示姓名文字，限定于这 8 个 ID；没有绘制或替换贴图。它们仍按[离线访问决定](offline-access.md#暂不开放的联动活动及伙伴)暂停开放，且当前本地战斗模型缺失，因此不可助战。
 
 山之国战斗碑沿原 `TeamInviteNpc` 候选链筛选伙伴：排除探索首领，再按 `IsFightAssist`、遇见状态和助战条件过滤。当前候选为 95 名，含 9 名导师及 1 名商人；`TeamInviteNpcClassIds`、`CanInviteTeamNpc` 和 `CreateTeamInviteUnit` 服务于该入口，既有伙伴 API 仍按原 85 名范围运行。
 
-战斗碑组队调用 `TeamPanelHelper` 的普通 Player 邀请页，再切换 NPC 标签；该入口没有初始化 `TeamInviteRobotPanel` 的 `RobotInvitePlayType`，因此这里不套用日常助战的 All=10 配置。原 Team 页及邀请依赖的10份 prefab／645节点／1105个脚本载荷已完整解码并核对引用，战斗碑使用已转换的 Map12 TeamInvitePanel、NPC 列表与本地战斗碑进度接线；更广泛的其他地图／玩法 Team 窗口仍待接通，见[山之国](../maps/map-12.md)。
+战斗碑组队调用 `TeamPanelHelper` 的普通 Player 邀请页，再切换 NPC 标签；该入口没有初始化 `TeamInviteRobotPanel` 的 `RobotInvitePlayType`，因此这里不套用日常助战的 All=10 配置。原 Team 页及邀请依赖的10份 prefab／645节点／1105个脚本载荷已完整解码并核对引用，战斗碑使用已转换的 Map12 TeamInvitePanel、NPC 列表、本地战斗碑进度和 `CreateTeamInviteUnit` 实际战斗接线；Player 邀请仍未接入本地多人模拟，更广泛的其他地图／玩法 Team 窗口仍待接通，见[山之国](../maps/map-12.md)。
 
 山之国原队伍邀请新增直接迁移的 `PlayerPlayTeamAction`，保留原 Team 动作与 NoneParam，并复用原状态互斥检查。原 NPC 邀请窗口和本地队伍事务尚未绑定，不代表可从正式地图邀请。
 

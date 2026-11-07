@@ -12,6 +12,8 @@ namespace Zjcs.Presentation.Combat
     /// <summary>Original native invitation window with host-owned eligibility and selection.</summary>
     public sealed class OfficialBattleAssistSelectionView : IDisposable, LoopScrollDataSource
     {
+        private static readonly HashSet<int> PortraitNamePlaceholderIds = new HashSet<int>
+            { 11015, 11016, 11017, 11018, 11019, 11020, 11021, 11022 };
         public sealed class Candidate
         {
             public int Id;
@@ -147,8 +149,12 @@ namespace Zjcs.Presentation.Combat
             if (index < 0 || index >= candidates.Count) throw new ArgumentOutOfRangeException(nameof(index));
             Candidate value = candidates[index]; GameObject row = cell.gameObject;
             row.name = "Npc_" + value.Id; RemoveNetworkLogic(row); Localize(row);
+            TMP_Text candidateName = null;
             foreach (TMP_Text text in row.GetComponentsInChildren<TMP_Text>(true))
-            { if (text.name == "NameTxt") text.text = value.Name; if (text.name == "TipText") text.text = value.Reason ?? string.Empty; }
+            {
+                if (text.name == "NameTxt") { text.text = value.Name; candidateName = text; }
+                if (text.name == "TipText") text.text = value.Reason ?? string.Empty;
+            }
             foreach (WorldMultiLanguageText text in row.GetComponentsInChildren<WorldMultiLanguageText>(true))
             {
                 if (text.name == "LevelText") text.SetKey("{0}", value.FriendshipLevel);
@@ -160,13 +166,30 @@ namespace Zjcs.Presentation.Combat
             if (portrait != null)
             {
                 portrait.enabled = value.Portrait != null;
-                if (portrait is Image image) image.sprite = value.Portrait;
-                if (portrait is RawImage raw && value.Portrait != null)
+                if (portrait is Image image)
                 {
-                    raw.texture = value.Portrait.texture; Rect rect = value.Portrait.textureRect;
-                    raw.uvRect = new Rect(rect.x / raw.texture.width, rect.y / raw.texture.height,
-                        rect.width / raw.texture.width, rect.height / raw.texture.height);
+                    image.sprite = value.Portrait;
                 }
+                if (portrait is RawImage raw)
+                {
+                    if (value.Portrait == null)
+                    {
+                        raw.texture = null;
+                        raw.uvRect = new Rect(0f, 0f, 1f, 1f);
+                    }
+                    else
+                    {
+                        raw.texture = value.Portrait.texture; Rect rect = value.Portrait.textureRect;
+                        raw.uvRect = new Rect(rect.x / raw.texture.width, rect.y / raw.texture.height,
+                            rect.width / raw.texture.width, rect.height / raw.texture.height);
+                    }
+                }
+                if (value.Portrait == null && PortraitNamePlaceholderIds.Contains(value.Id))
+                    BindMissingPortraitName(portrait, string.IsNullOrWhiteSpace(value.Name)
+                        ? "伙伴 " + value.Id.ToString() : value.Name,
+                        candidateName == null ? Color.black : candidateName.color);
+                else
+                    SetMissingPortraitNameActive(portrait, false);
             }
             SetActive(row, "MyPlayerModel_UI", false);
             SetActive(row, "LimitedGo", !value.Available); SetActive(row, "ImgSelected", value.Selected);
@@ -178,6 +201,42 @@ namespace Zjcs.Presentation.Combat
             toggle.SetIsOnWithoutNotify(value.Selected);
             toggle.enabled = true; toggle.interactable = value.Available || value.Selected;
             toggle.onValueChanged.RemoveAllListeners(); toggle.onValueChanged.AddListener(selected => select(value.Id, selected));
+        }
+        private void BindMissingPortraitName(Graphic portrait, string name, Color nameColor)
+        {
+            Transform fallbackTransform = portrait.transform.Find("OfflineNpcNameFallback");
+            if (fallbackTransform == null)
+            {
+                var fallbackObject = new GameObject("OfflineNpcNameFallback", typeof(RectTransform),
+                    typeof(TextMeshProUGUI));
+                RectTransform rect = (RectTransform)fallbackObject.transform;
+                rect.SetParent(portrait.transform, false);
+                rect.anchorMin = Vector2.zero;
+                rect.anchorMax = Vector2.one;
+                rect.offsetMin = Vector2.zero;
+                rect.offsetMax = Vector2.zero;
+                fallbackTransform = rect;
+            }
+            fallbackTransform.SetAsLastSibling();
+            fallbackTransform.gameObject.SetActive(true);
+            TextMeshProUGUI label = fallbackTransform.GetComponent<TextMeshProUGUI>();
+            if (label == null) return;
+            label.font = font;
+            label.fontSharedMaterial = font.material;
+            label.text = name;
+            label.color = nameColor;
+            label.fontSize = 16;
+            label.enableAutoSizing = true;
+            label.fontSizeMin = 8;
+            label.fontSizeMax = 16;
+            label.alignment = TextAlignmentOptions.Center;
+            label.enableWordWrapping = true;
+            label.raycastTarget = false;
+        }
+        private static void SetMissingPortraitNameActive(Graphic portrait, bool active)
+        {
+            Transform fallback = portrait.transform.Find("OfflineNpcNameFallback");
+            if (fallback != null) fallback.gameObject.SetActive(active);
         }
         private void Localize(GameObject root)
         {

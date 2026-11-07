@@ -90,7 +90,10 @@ namespace Zjcs.Editor
             scaler.screenMatchMode = (CanvasScaler.ScreenMatchMode)settings.screenMatchMode;
             scaler.matchWidthOrHeight = settings.matchWidthOrHeight;
             var candidates = Enumerable.Range(1, 20).Select(id => new OfficialBattleAssistSelectionView.Candidate {
-                Id = id, Name = "Candidate " + id, Available = id != 2,
+                Id = id == 3 ? 11015 : id == 4 ? 11014 : id >= 5 && id <= 11 ? 11011 + id : id,
+                Name = id == 4 ? "Candidate 11014" : id >= 3 && id <= 11
+                    ? "联动伙伴 " + (id == 3 ? 11015 : 11011 + id) : "Candidate " + id,
+                Available = id != 2,
                 FriendshipBlocked = id == 2, Reason = id == 2 ? "Unavailable" : string.Empty }).ToArray();
             int changed = 0, confirmed = 0, cancelled = 0;
             OfficialBattleAssistSelectionView view = null;
@@ -106,6 +109,18 @@ namespace Zjcs.Editor
             Toggle first = panel.GetComponentsInChildren<Transform>().Single(value => value.name == "Npc_1").Find("Content/NormalGo/Option2").GetComponent<Toggle>();
             Toggle blocked = panel.GetComponentsInChildren<Transform>().Single(value => value.name == "Npc_2").Find("Content/NormalGo/Option2").GetComponent<Toggle>();
             Require(!blocked.IsInteractable(), "unavailable candidate cannot be selected");
+            Transform linkedRow = panel.GetComponentsInChildren<Transform>(true).Single(value => value.name == "Npc_11015");
+            Graphic linkedPortrait = linkedRow.GetComponentsInChildren<Graphic>(true).Single(value => value.name == "HeadImg");
+            TMP_Text linkedName = linkedPortrait.transform.Find("OfflineNpcNameFallback")?.GetComponent<TMP_Text>();
+            TMP_Text linkedDisplayName = linkedRow.GetComponentsInChildren<TMP_Text>(true)
+                .Single(value => value.name == "NameTxt");
+            Require(linkedName != null && linkedName.text == "联动伙伴 11015"
+                && linkedName.color == linkedDisplayName.color && !linkedName.raycastTarget,
+                "approved missing portrait shows its candidate name in the native portrait slot");
+            Transform ordinaryRow = panel.GetComponentsInChildren<Transform>(true).Single(value => value.name == "Npc_11014");
+            Graphic ordinaryPortrait = ordinaryRow.GetComponentsInChildren<Graphic>(true).Single(value => value.name == "HeadImg");
+            Require(ordinaryPortrait.transform.Find("OfflineNpcNameFallback") == null,
+                "missing portrait name is not applied to unrelated candidate ids");
             Click(first); yield return null;
             Require(changed == 1 && candidates[0].Selected && first.isOn, "selection refresh through public interface");
             Click(first); yield return null;

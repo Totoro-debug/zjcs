@@ -145,7 +145,16 @@ namespace Zjcs.Presentation.World
         {
             Action start = mainlineAssistStart;
             CloseMainlineAssistPicker();
-            start?.Invoke();
+            try
+            {
+                start?.Invoke();
+            }
+            catch (Exception error)
+            {
+                Debug.LogException(error, this);
+                CancelMainlineBattleAssist(0);
+                if (hud != null) hud.ShowOfficialNotice("伙伴助战无法进入战斗");
+            }
         }
 
         private void CloseMainlineAssistPicker()
@@ -170,8 +179,9 @@ namespace Zjcs.Presentation.World
         private string MainlineAssistName(int npcClassId)
         {
             string key = mainlineAssistCatalog.NpcNameKey(npcClassId);
-            return WorldMultiLanguageText.Localize == null
-                ? "伙伴 " + npcClassId.ToString() : WorldMultiLanguageText.Localize(key);
+            string localized = WorldMultiLanguageText.Localize?.Invoke(key);
+            return string.IsNullOrWhiteSpace(localized) || localized == key
+                ? "伙伴 " + npcClassId.ToString() : localized;
         }
 
         private string MainlineAssistKey(int placementId, int stageId) =>
