@@ -150,7 +150,9 @@ namespace Zjcs.Combat.Official
         private void ExecuteRoundStartTriggers(FightBattleUnitState owner, FightBattleUnitState listener, int phase = 0)
         {
             foreach (var status in new List<FightBattleStatusState>(owner.Statuses))
-                if (owner.Statuses.Contains(status)) ExecuteRoundStartStatus(owner, listener, status, false, phase);
+                if (owner.Statuses.Contains(status))
+                    ExecuteRoundStartStatus(owner, listener, status, false, phase);
+            ExecuteMissingRoundInterval(owner, listener);
         }
 
         private int ExecuteRoundStartStatus(FightBattleUnitState owner, FightBattleUnitState listener,

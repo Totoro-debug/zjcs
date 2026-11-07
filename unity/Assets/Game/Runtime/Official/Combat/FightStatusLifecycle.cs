@@ -195,6 +195,7 @@ namespace Zjcs.Combat.Official
             {
                 InstanceId = instanceId,
                 Origin = origin.Copy(),
+                Components = template.Components?.Copy() ?? new FightBattleStatusComponentState(),
                 ClassId = template.ClassId,
                 StatusType = template.StatusType,
                 RemoveApplyEntityOnEnd = template.RemoveApplyEntityOnEnd,

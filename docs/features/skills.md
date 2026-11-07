@@ -46,6 +46,14 @@
 
 ## 完整还原部分
 
+### 战斗技能与状态运行时覆盖
+
+本次迁移把官方 `skill-rules.json`／`battle-rules.json` 中的技能图、命中节点和状态组件保留到离线战斗检查点。`FightOfficialCombatCatalog` 继续从官方实体字段创建主动技能、被动秘法、子技能、状态、增益／减益及触发配置；状态副本现在同时保存 `FightStatusHitSkillComponent`、`FightStatusDamageSkillComponent`、`FightStatusHitApplyDamageComponent`、`FightStatusHitDmgAddPerComponent`、`FightStatusDamageGetTypeComponent`、`FightStatusDamageReduceAbsoluteComponent`、`FightStatusHpIncreaseUnitComponent`、`FightStatusRoundIntervalComponent`、`FightStatusStartComponent`、`FightStatusStackChangeComponent` 和 `FightStatusHitSummonComponent` 的参数、嵌套技能／状态列表及触发计数，存档恢复沿用同一副本。
+
+命中结算入口 `FightBattleExecutor` 已接入官方 `FightHitTriggerSkillComponent`、低生命值额外伤害倍率、命中条件计数、来源／目标解析、概率／最大次数、命中后子技能与状态、驱散、状态开始附加、叠层变化和回合间隔技能；`FightBattleHitExecutor` 在结算前保留 `FightHitExtApplyDamageComponent` 的低生命值倍率。触发技能使用现有 `FightBattleStatusSkillInvocation`，继续经过统一目标选择、伤害公式、状态生命周期、动画 cue、人物动作和战报事件链，而不是另建一套离线伤害实现。相关入口为 `FightBattleState`、`FightStatusLifecycle`、`FightBattleExecutor.MissingStatusComponents`、`FightOfficialCombatCatalog.MissingComponents` 与 `FightBattleHitCollector`。
+
+本地检查已覆盖官方实体数量统计（1,906 个技能实体、1,595 个状态实体）和新增组件的 Unity 导入／C# 编译、`Zjcs.Editor.ProjectTools.Validate` 及静态元数据检查；构建出的 Windows Player 已实际启动并通过模拟窗口点击从官方健康忠告进入本地存档选择页。复杂 `FightStatusLogicComponent`／`FightSkillLogicComponent` 图、低频组件的逐字段行为、全量角色动作／特效资源绑定和正式技能战斗流程的 Play Mode 画面仍属于未完成项，不能以当前运行时入口声明全系统完成。
+
 官方 `MyPlayableAnimation`、`MyPlayableDefault`、`MyPlayableRenderSortLayer`、`MyPlayableLight` 和 `MyPlayableLight2D` 已迁入 StoryPlayables，保留动作播放、Transform 持续时间、Renderer 排序以及 Light／Light2D 强度曲线和循环行为；来源见[动作 Playable 来源清单](../../assets/reference/battle-animation/skill-animation-playable-runtime-source-manifest.json)。
 
 官方 `MyPlayableFixFlipXTrigger` 已迁入 EntityLifecycle，保留按 source/target 选择角色并调用 `MyGridTransform.SetScaleByFlipX` 的触发行为；来源见[翻转触发器来源清单](../../assets/reference/battle-animation/skill-trigger-playable-runtime-source-manifest.json)。

@@ -83,6 +83,7 @@ namespace Zjcs.Combat.Official
             // existing entity does not enter this callback.
             FightStatusLifecycle.Initialize(status, StatusClockRound(status));
             InitializeRoundStartDelay(status);
+            ApplyMissingStatusStart(owner, status);
             StartHpStatus(owner, status);
             StartRoundStatus(owner, status);
             OnStatusStackChanged(status);
@@ -108,6 +109,7 @@ namespace Zjcs.Combat.Official
             status.StackCountStartChecked = true;
             FightStatusTriggerRuntime.ApplyStackCount(owner, status, statusCatalog, units, random,
                 movementStartContext == null ? null : (Action<System.Collections.Generic.List<FightBattleStatusSkillInvocation>>)ExecuteHpStartupSkills);
+            ApplyMissingStatusStackChange(status);
         }
     }
 }

@@ -85,6 +85,7 @@ namespace Zjcs.Combat.Official
                 long direct = custom.HasValue ? custom.Value : 0;
                 direct = direct == Int64.MinValue ? Int64.MinValue + 1 : -Math.Abs(direct);
                 direct = ScaleDamage(direct, skillDamageScale);
+                direct = ApplyExtDamageScale(target, hit, direct);
                 double reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
                     skill, result.Type, false, random);
                 direct = (long)(direct / Math.Max(1.0 + reduction, 0.1));
@@ -146,6 +147,9 @@ namespace Zjcs.Combat.Official
                 damage = ScaleDamage(damage, skillDamageScale);
                 result.Formula.AbsoluteDamage = ScaleDamage(result.Formula.AbsoluteDamage,
                     skillDamageScale);
+                damage = ApplyExtDamageScale(target, hit, damage);
+                result.Formula.AbsoluteDamage = ApplyExtDamageScale(target, hit,
+                    result.Formula.AbsoluteDamage);
                 if (hit.UseDamageRate)
                 {
                     damage = (long)(damage * hit.DamageRate);
@@ -179,6 +183,16 @@ namespace Zjcs.Combat.Official
             if (scaled >= long.MaxValue) return long.MaxValue;
             if (scaled <= long.MinValue) return long.MinValue;
             return (long)Math.Round(scaled, MidpointRounding.AwayFromZero);
+        }
+
+        private static long ApplyExtDamageScale(FightBattleUnitState target,
+            FightBattleHitDefinition hit, long damage)
+        {
+            if (target == null || hit == null || hit.ExtApplyDamageTargetHpLessThan < 0f
+                || target.MaxHp <= 0 || target.Hp / (double)target.MaxHp
+                    >= hit.ExtApplyDamageTargetHpLessThan)
+                return damage;
+            return ScaleDamage(damage, hit.ExtApplyDamageScale);
         }
 
         private long? CustomDamage(FightBattleUnitState actor, FightBattleUnitState target,

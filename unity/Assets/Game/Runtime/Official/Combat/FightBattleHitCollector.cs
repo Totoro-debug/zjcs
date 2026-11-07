@@ -85,7 +85,7 @@ namespace Zjcs.Combat.Official
             if (entity == null) return;
             var branch = new HashSet<int>(ancestors) { entityId };
 
-            if (entity.HasFixedDamage || entity.IsSummon)
+            if (entity.HasFixedDamage || entity.IsSummon || entity.TriggerSkill != null)
                 result.Add(new FightBattleHitDefinition
                 {
                     EntityId = entity.EntityId,
@@ -112,6 +112,9 @@ namespace Zjcs.Combat.Official
                         ? new List<int>() : new List<int>(entity.SummonStatusIds),
                     SummonPositions = entity.SummonPositions == null
                         ? new List<FightGridPoint>() : new List<FightGridPoint>(entity.SummonPositions),
+                    TriggerSkill = entity.TriggerSkill?.Copy(),
+                    ExtApplyDamageTargetHpLessThan = entity.ExtApplyDamageTargetHpLessThan,
+                    ExtApplyDamageScale = entity.ExtApplyDamageScale,
                     TargetMode = targetMode,
                     RandomCount = randomCount,
                     RandomTargetGroupId = randomTargetContext == null ? 0

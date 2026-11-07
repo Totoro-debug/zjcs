@@ -947,6 +947,8 @@ namespace Zjcs.Combat.Official
                     TransmitVoodooDamage(target, damage, damageEvents, casts);
                     var triggerSkills = new List<int>();
                     var configuredTriggerSkills = new List<FightBattleStatusStateTrigger>();
+                    var configuredComponentInvocations =
+                        new List<FightBattleStatusSkillInvocation>();
                     var configuredHpTriggerSkills = new List<FightBattleStatusSkillInvocation>();
                     var configuredKillSkillInvocations =
                         new List<FightBattleStatusSkillInvocation>();
@@ -962,6 +964,9 @@ namespace Zjcs.Combat.Official
                         actualHpLoss, statusCatalog, random, configuredTriggerSkills, skill);
                     ApplyHitStatuses(actor, target, skill, hit, random, skillCostHp,
                         actualHpLoss);
+                    CollectHitTriggerSkill(actor, target, skill, hit, configuredComponentInvocations);
+                    ApplyMissingStatusComponentsOnHit(actor, target, skill, hit, resolved,
+                        actualHpLoss, configuredComponentInvocations);
                     ApplyResilienceHit(actor, target, skill, hit, resolved, casts,
                         damageEvents, movements, ref lastDelay);
                     ApplyHitDisperse(actor, target, hit, random);
@@ -989,6 +994,9 @@ namespace Zjcs.Combat.Official
                             ref lastDelay);
                     if (configuredTriggerSkills.Count > 0)
                         ExecuteConfiguredTriggerSkills(target, configuredTriggerSkills, casts,
+                            damageEvents, movements, ref lastDelay, out _, out _);
+                    if (configuredComponentInvocations.Count > 0)
+                        ExecuteConfiguredStatusSkills(configuredComponentInvocations, casts,
                             damageEvents, movements, ref lastDelay, out _, out _);
                     if (configuredHpTriggerSkills.Count > 0)
                         ExecuteConfiguredStatusSkills(configuredHpTriggerSkills, casts,

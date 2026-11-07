@@ -256,6 +256,334 @@ namespace Zjcs.Combat.Official
         }
     }
 
+    // The original status component graph is data driven. These compact runtime records keep
+    // component parameters with the status instance so checkpoints and refreshed applications
+    // retain the same trigger counters and nested skill/status configurations.
+    [Serializable]
+    public sealed class FightBattleStatusComponentState
+    {
+        public FightBattleStatusHitSkillComponentState HitSkill;
+        public FightBattleStatusDamageSkillComponentState DamageSkill;
+        public FightBattleStatusHitApplyDamageComponentState HitApplyDamage;
+        public FightBattleStatusHitDmgAddPerComponentState HitDmgAddPer;
+        public FightBattleStatusDamageGetTypeComponentState DamageGetType;
+        public FightBattleStatusDamageReduceAbsoluteComponentState DamageReduceAbsolute;
+        public FightBattleStatusHpUnitComponentState HpIncreaseUnit;
+        public FightBattleStatusRoundIntervalComponentState RoundInterval;
+        public FightBattleStatusStartComponentState Start;
+        public FightBattleStatusStackChangeComponentState StackChange;
+        public FightBattleStatusHitSummonComponentState HitSummon;
+
+        public FightBattleStatusComponentState Copy()
+        {
+            return new FightBattleStatusComponentState
+            {
+                HitSkill = HitSkill?.Copy(),
+                DamageSkill = DamageSkill?.Copy(),
+                HitApplyDamage = HitApplyDamage?.Copy(),
+                HitDmgAddPer = HitDmgAddPer?.Copy(),
+                DamageGetType = DamageGetType?.Copy(),
+                DamageReduceAbsolute = DamageReduceAbsolute?.Copy(),
+                HpIncreaseUnit = HpIncreaseUnit?.Copy(),
+                RoundInterval = RoundInterval?.Copy(),
+                Start = Start?.Copy(),
+                StackChange = StackChange?.Copy(),
+                HitSummon = HitSummon?.Copy()
+            };
+        }
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusHitSkillComponentState
+    {
+        public int HitSourceType;
+        public float Rate;
+        public bool Block;
+        public bool Crit;
+        public bool Damage = true;
+        public bool Cure;
+        public bool IsTrueDamage;
+        public bool IsApplyOneHit;
+        public List<int> HitSkillTypes = new List<int>();
+        public List<int> TargetActionTypes = new List<int>();
+        public List<int> HitSkillElementTypes = new List<int>();
+        public List<int> HitSkillEntityClassIds = new List<int>();
+        public int ConditionCount = 1;
+        public int MaxInvokeCount = -1;
+        public bool AutoRemove;
+        public int RoundResetCount = -1;
+        public int ConditionProgress;
+        public int InvokeCount;
+        public int SkillId;
+        public bool IsSkillTargetPos = true;
+        public int TargetStatusId;
+        public List<int> DisperseActionTypes = new List<int>();
+        public int StatusId;
+        public bool IsOverflow;
+        public float StatusCustomParamByOverflow;
+        public List<FightBattleStatusStateTrigger> SkillTriggers = new List<FightBattleStatusStateTrigger>();
+        public List<FightBattleStatusStateTrigger> StatusTriggers = new List<FightBattleStatusStateTrigger>();
+
+        public FightBattleStatusHitSkillComponentState Copy()
+        {
+            var result = (FightBattleStatusHitSkillComponentState)MemberwiseClone();
+            result.HitSkillTypes = new List<int>(HitSkillTypes ?? new List<int>());
+            result.TargetActionTypes = new List<int>(TargetActionTypes ?? new List<int>());
+            result.HitSkillElementTypes = new List<int>(HitSkillElementTypes ?? new List<int>());
+            result.HitSkillEntityClassIds = new List<int>(HitSkillEntityClassIds ?? new List<int>());
+            result.DisperseActionTypes = new List<int>(DisperseActionTypes ?? new List<int>());
+            result.SkillTriggers = new List<FightBattleStatusStateTrigger>(SkillTriggers ?? new List<FightBattleStatusStateTrigger>());
+            result.StatusTriggers = new List<FightBattleStatusStateTrigger>(StatusTriggers ?? new List<FightBattleStatusStateTrigger>());
+            return result;
+        }
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusDamageSkillComponentState
+    {
+        public float Rate;
+        public bool Block;
+        public bool Crit;
+        public bool Damage = true;
+        public bool Cure;
+        public int RangeCondition;
+        public int SkillTargetType = 1;
+        public int ConditionCount = 1;
+        public int MaxCount = -1;
+        public bool AutoDestroy;
+        public float GreaterThanMaxHpPer = -1f;
+        public int DamageMove;
+        public int SkillId;
+        public int SourceStatusId;
+        public int StatusId;
+        public float SkillCustomDamageByHpChangeValue;
+        public int EachRoundMaxCount = -1;
+        public int ConditionProgress;
+        public int RoundTriggeredCount;
+        public bool IsAttackerTarget;
+        public List<int> ElementTypes = new List<int>();
+        public List<FightBattleStatusStateTrigger> SkillTriggers = new List<FightBattleStatusStateTrigger>();
+        public List<FightBattleStatusStateTrigger> StatusTriggers = new List<FightBattleStatusStateTrigger>();
+
+        public FightBattleStatusDamageSkillComponentState Copy()
+        {
+            var result = (FightBattleStatusDamageSkillComponentState)MemberwiseClone();
+            result.ElementTypes = new List<int>(ElementTypes ?? new List<int>());
+            result.SkillTriggers = new List<FightBattleStatusStateTrigger>(SkillTriggers ?? new List<FightBattleStatusStateTrigger>());
+            result.StatusTriggers = new List<FightBattleStatusStateTrigger>(StatusTriggers ?? new List<FightBattleStatusStateTrigger>());
+            return result;
+        }
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusHitApplyDamageComponentState
+    {
+        public int DamageType;
+        public bool IsCheckTargetShield;
+        public int CharacterType;
+        public List<int> TargetSkillEntityClassIds = new List<int>();
+        public int ReducePercentPropertyId;
+        public int AddPercentPropertyId;
+        public int ScaleByHpType;
+        public float HpDecreaseUnit;
+        public float MaxHpScale;
+        public bool ApplyTargetCharacterTypeIfSubstitute = true;
+        public int ConsumeStatusId;
+        public int ConsumeStackCount;
+        public int ConsumeStackMinCount;
+        public bool ConsumeScaleByStatusTypeCount;
+        public bool RemoveFollowRootParent;
+
+        public FightBattleStatusHitApplyDamageComponentState Copy()
+        {
+            var result = (FightBattleStatusHitApplyDamageComponentState)MemberwiseClone();
+            result.TargetSkillEntityClassIds = new List<int>(TargetSkillEntityClassIds ?? new List<int>());
+            return result;
+        }
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusHitDmgAddPerComponentState
+    {
+        public int HitSourceType;
+        public float Rate = 1f;
+        public bool Block;
+        public bool Crit;
+        public bool Damage = true;
+        public bool Cure;
+        public bool IsTrueDamage;
+        public int ConditionCount = 1;
+        public int MaxInvokeCount = -1;
+        public bool AutoRemove;
+        public int RoundResetCount = -1;
+        public int ConditionProgress;
+        public int InvokeCount;
+        public int StatusTarget;
+        public List<int> StatusTypes = new List<int>();
+        public float TargetHpPercent = -1f;
+        public int TargetHpComparison;
+        public int DurationSkillCount = -1;
+        public List<int> OnlySkillActions = new List<int>();
+        public int OnlySkillType;
+        public bool ScalePropByStatusTypeCount;
+        public int ConsumeStatusId;
+        public int ConsumeStackCount;
+        public int ConsumeStackMinCount;
+        public bool ConsumeScaleByStatusTypeCount;
+
+        public FightBattleStatusHitDmgAddPerComponentState Copy()
+        {
+            var result = (FightBattleStatusHitDmgAddPerComponentState)MemberwiseClone();
+            result.StatusTypes = new List<int>(StatusTypes ?? new List<int>());
+            result.OnlySkillActions = new List<int>(OnlySkillActions ?? new List<int>());
+            return result;
+        }
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusDamageGetTypeComponentState
+    {
+        public float Rate = 1f;
+        public List<FightBattleStatusDamageElementRule> Elements = new List<FightBattleStatusDamageElementRule>();
+        public int DamageType;
+        public bool Value;
+        public bool IsCheckSkillTrigger;
+        public int MaxCount = -1;
+        public int TriggeredCount;
+        public List<int> FilterSkillIds = new List<int>();
+
+        public FightBattleStatusDamageGetTypeComponentState Copy()
+        {
+            var result = (FightBattleStatusDamageGetTypeComponentState)MemberwiseClone();
+            result.Elements = new List<FightBattleStatusDamageElementRule>();
+            if (Elements != null)
+                foreach (FightBattleStatusDamageElementRule entry in Elements)
+                    result.Elements.Add(entry?.Copy());
+            result.FilterSkillIds = new List<int>(FilterSkillIds ?? new List<int>());
+            return result;
+        }
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusDamageElementRule
+    {
+        public int ElementType;
+        public int DamageType;
+        public bool Value;
+        public FightBattleStatusDamageElementRule Copy() => (FightBattleStatusDamageElementRule)MemberwiseClone();
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusDamageReduceAbsoluteComponentState
+    {
+        public float Rate = 1f;
+        public float DamageGreaterMaxHpPer = -1f;
+        public int MaxCount = -1;
+        public bool AutoRemove;
+        public bool IsCheckSkillTrigger;
+        public int TriggeredCount;
+        public FightBattleStatusDamageReduceAbsoluteComponentState Copy() =>
+            (FightBattleStatusDamageReduceAbsoluteComponentState)MemberwiseClone();
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusHpUnitComponentState
+    {
+        public int TargetType;
+        public float UnitHpPer = -1f;
+        public int MaxCount = -1;
+        public int TriggeredCount;
+        public bool TryAtStart;
+        public bool TriggerWhenHpLessThan0;
+        public int InvokeMaxCountOnHpChange = -1;
+        public List<FightBattleStatusStateTrigger> Statuses = new List<FightBattleStatusStateTrigger>();
+        public List<FightBattleStatusStateTrigger> Skills = new List<FightBattleStatusStateTrigger>();
+
+        public FightBattleStatusHpUnitComponentState Copy()
+        {
+            var result = (FightBattleStatusHpUnitComponentState)MemberwiseClone();
+            result.Statuses = new List<FightBattleStatusStateTrigger>(Statuses ?? new List<FightBattleStatusStateTrigger>());
+            result.Skills = new List<FightBattleStatusStateTrigger>(Skills ?? new List<FightBattleStatusStateTrigger>());
+            return result;
+        }
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusRoundIntervalComponentState
+    {
+        public float Rate = 1f;
+        public float RoundIntervalPercent;
+        public bool FastForward;
+        public int TriggeredCount;
+        public List<FightBattleStatusStateTrigger> SkillTriggers = new List<FightBattleStatusStateTrigger>();
+
+        public FightBattleStatusRoundIntervalComponentState Copy()
+        {
+            var result = (FightBattleStatusRoundIntervalComponentState)MemberwiseClone();
+            result.SkillTriggers = new List<FightBattleStatusStateTrigger>(SkillTriggers ?? new List<FightBattleStatusStateTrigger>());
+            return result;
+        }
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusStartComponentState
+    {
+        public List<FightBattleStatusStateTrigger> Statuses = new List<FightBattleStatusStateTrigger>();
+        public int ForbiddenTarget;
+        public int ForbiddenStatusId;
+        public bool Forbidden;
+
+        public FightBattleStatusStartComponentState Copy()
+        {
+            var result = (FightBattleStatusStartComponentState)MemberwiseClone();
+            result.Statuses = new List<FightBattleStatusStateTrigger>(Statuses ?? new List<FightBattleStatusStateTrigger>());
+            return result;
+        }
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusStackChangeComponentState
+    {
+        public List<FightBattleStatusStackChangeRule> Changes = new List<FightBattleStatusStackChangeRule>();
+        public int MaxCount = -1;
+        public int TriggeredCount;
+
+        public FightBattleStatusStackChangeComponentState Copy()
+        {
+            var result = (FightBattleStatusStackChangeComponentState)MemberwiseClone();
+            result.Changes = new List<FightBattleStatusStackChangeRule>();
+            if (Changes != null)
+                foreach (FightBattleStatusStackChangeRule change in Changes)
+                    result.Changes.Add(change?.Copy());
+            return result;
+        }
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusStackChangeRule
+    {
+        public int StatusId;
+        public int ChangeValue;
+        public FightBattleStatusStackChangeRule Copy() => (FightBattleStatusStackChangeRule)MemberwiseClone();
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusHitSummonComponentState
+    {
+        public float Rate = 1f;
+        public int SummonStatusId;
+        public int SkillId;
+        public bool Create;
+        public bool Remove;
+        public int MaxCount = -1;
+        public bool CheckSummonLifeDuration;
+        public bool FilterSubstitute;
+        public int TriggeredCount;
+
+        public FightBattleStatusHitSummonComponentState Copy() =>
+            (FightBattleStatusHitSummonComponentState)MemberwiseClone();
+    }
+
     [Serializable]
     public sealed class FightBattleStatusReportSource
     {
@@ -289,6 +617,7 @@ namespace Zjcs.Combat.Official
     public sealed class FightBattleStatusState
     {
         public FightBattleStatusOrigin Origin;
+        public FightBattleStatusComponentState Components = new FightBattleStatusComponentState();
         public bool RemoveApplyEntityOnEnd;
         public int InstanceId;
         public int ClassId;
@@ -988,6 +1317,9 @@ namespace Zjcs.Combat.Official
         public List<FightBattleSummonPool> SummonPools = new List<FightBattleSummonPool>();
         public List<int> SummonStatusIds = new List<int>();
         public List<FightGridPoint> SummonPositions = new List<FightGridPoint>();
+        public FightBattleHitTriggerSkillState TriggerSkill;
+        public float ExtApplyDamageTargetHpLessThan = -1f;
+        public float ExtApplyDamageScale = 1f;
     }
 
     [Serializable]
@@ -1035,6 +1367,9 @@ namespace Zjcs.Combat.Official
         public List<FightBattleSummonPool> SummonPools = new List<FightBattleSummonPool>();
         public List<int> SummonStatusIds = new List<int>();
         public List<FightGridPoint> SummonPositions = new List<FightGridPoint>();
+        public FightBattleHitTriggerSkillState TriggerSkill;
+        public float ExtApplyDamageTargetHpLessThan = -1f;
+        public float ExtApplyDamageScale = 1f;
         public List<FightBattleStatusApplication> AppliedStatuses = new List<FightBattleStatusApplication>();
         public bool StatusListRandomOne;
         public int HemophagiaProperty;
@@ -1047,6 +1382,24 @@ namespace Zjcs.Combat.Official
         public int DisperseCount;
         public bool DisperseRandom;
         public FightBattleSkillMove HitMove;
+    }
+
+    [Serializable]
+    public sealed class FightBattleHitTriggerSkillState
+    {
+        public List<int> SkillIds = new List<int>();
+        public bool UseTargetPosition;
+        public bool UseSkillAsNewSkillParent;
+
+        public FightBattleHitTriggerSkillState Copy()
+        {
+            return new FightBattleHitTriggerSkillState
+            {
+                SkillIds = new List<int>(SkillIds ?? new List<int>()),
+                UseTargetPosition = UseTargetPosition,
+                UseSkillAsNewSkillParent = UseSkillAsNewSkillParent
+            };
+        }
     }
 
     [Serializable]

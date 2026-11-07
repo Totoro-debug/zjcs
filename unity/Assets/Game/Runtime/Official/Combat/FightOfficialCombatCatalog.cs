@@ -1610,6 +1610,7 @@ namespace Zjcs.Combat.Official
                 result.Rate = Number(falloff, "Rate", 1.0);
                 result.Scope = Int(falloff, "Scope");
             }
+            result.Components = ParseStatusComponents(components);
             return result;
         }
 
@@ -3178,7 +3179,7 @@ namespace Zjcs.Combat.Official
             Dictionary<string, object> damage = null;
             foreach (string name in new[] { "FightHitSummonComponent", "FightHitChainedComponent",
                 "FightHitCustomTargetComponent", "FightHitRandomTargetComponent",
-                "FightHitFixedComponent" })
+                "FightHitFixedComponent", "FightHitTriggerSkillComponent" })
             {
                 damage = Component(components, name);
                 if (damage != null) break;
@@ -3221,6 +3222,7 @@ namespace Zjcs.Combat.Official
                 result.BreakResilience = Bool(damage, "IsBreakResilience");
             }
             if (summon != null) AddSummonConfig(summon, result);
+            ParseHitExtraComponents(components, result);
             foreach (Dictionary<string, object> holder in new[] { chained, custom, random, damage })
             {
                 if (holder == null || !holder.ContainsKey("Scope")) continue;
