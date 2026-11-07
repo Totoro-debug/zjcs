@@ -113,6 +113,11 @@ namespace Zjcs.Editor
                         || result.Status == ProgressionResultStatus.Unchanged, "Could not publish fixture region.");
                 }
                 yield return new WaitForSecondsRealtime(1);
+                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TIMEOUT_UI") == "1")
+                {
+                    yield return RunTimeoutUiHost(home, slot, root, output, click);
+                    yield break;
+                }
                 if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_DEMON_AWARD") == "1")
                 {
                     yield return RunDemonAwardHost(home, slot, root, output, click, value => home = value);

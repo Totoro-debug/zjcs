@@ -78,7 +78,9 @@ namespace Zjcs.Editor
                         "The actual report is missing displayed glyphs: " + text.name);
                 }
                 yield return Capture(output, "demon-result-host-report-" + open + (award == null ? "-repeat" : "-first"));
-                if (open == 0 && report.Skills.Any(value => value.Damage > 0))
+                // The default skill tab shows this player's skills. Damage
+                // caused only by the opposing boss does not create a row here.
+                if (open == 0 && report.Skills.Any(value => value.UnitId == 1 && value.Damage > 0))
                 {
                     var tabs = popup.GetComponentsInChildren<WorldTabGroup>(true)
                         .Single(value => value.GetAllTabs().Length == 2);

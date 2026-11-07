@@ -49,7 +49,9 @@ namespace Zjcs.Presentation.Home
         private WorldWindowBlurMask mask;
         private WorldWindowBlurMask itemMask;
         private GameObject itemDetail;
+        private GameObject timeoutRoot;
         public GameObject Panel { get; private set; }
+        public GameTimeoutUI TimeoutTip { get; private set; }
         public GameObject ItemDetail => itemDetail;
         public WorldWindowBlurMask ItemMask => itemMask;
         public bool IsReady => Panel && Panel.activeInHierarchy
@@ -125,8 +127,21 @@ namespace Zjcs.Presentation.Home
             var popup = Panel.GetComponent<WorldPopupWindow>();
             popup.SetMaskClickAction(LeaveGame);
             // Selected solo DemonKing is neither a team challenge nor playback.
-            yield return new WaitForSeconds(checkpoint.Outcome.Reason == 3 || checkpoint.Outcome.Reason == 4
-                ? endDelays.round_limit : endDelays.normal);
+            bool roundLimit = checkpoint.Outcome.Reason == 3 || checkpoint.Outcome.Reason == 4;
+            float delay = roundLimit ? endDelays.round_limit : endDelays.normal;
+            if (roundLimit)
+            {
+                // Local reasons 3/4 exhaust global/player rounds. Neither denotes
+                // the distinct official TimeLimit (wall-clock) result.
+                var bindings = Resources.Load<TextAsset>("Combat/TimeoutUI/bindings");
+                var prefab = Resources.Load<GameObject>("Combat/TimeoutUI/FightMainPanelTimeout");
+                if (!bindings || !prefab) throw new InvalidOperationException("Original battle timeout assets are unbound.");
+                foreach (var row in JsonUtility.FromJson<Texts>(bindings.text).texts) texts[row.key] = row.text;
+                timeoutRoot = InstantiateBound(prefab, popupParent, true);
+                TimeoutTip = timeoutRoot.GetComponentInChildren<GameTimeoutUI>(true);
+                TimeoutTip.Play(delay, "game_end_roundlimit");
+            }
+            yield return new WaitForSeconds(delay);
             yield return mask.Prepare(popup, false);
             if (closing || !Panel) yield break;
             Panel.SetActive(true);
@@ -224,9 +239,11 @@ namespace Zjcs.Presentation.Home
             // are still alive. Child OnDisable releases its original registrations.
             if (itemDetail) itemDetail.SetActive(false);
             if (Panel) Panel.SetActive(false);
+            if (timeoutRoot) timeoutRoot.SetActive(false);
             ReleaseMask(ref itemMask); ReleaseMask(ref mask);
             if (itemDetail) Destroy(itemDetail);
             if (Panel) Destroy(Panel);
+            if (timeoutRoot) Destroy(timeoutRoot);
             foreach (var scope in scopes) scope.Dispose();
             scopes.Clear();
             if (ProfessionAppearanceTextureBindings.Current == textures)

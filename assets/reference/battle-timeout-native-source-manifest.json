@@ -1,0 +1,364 @@
+{
+  "manifest": "884_156692",
+  "selection": {
+    "source": {
+      "name": "FightMainPanel",
+      "originalRoot": "cab-af668be24e8d18043bffc26c8f701a1f:-5660125702193225572",
+      "originalSource": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightmainpanel_fightmainpanel.bundle",
+        "bundle_hash": "255543441ba4e6f9b18441d1a3efea72",
+        "path_id": "-5660125702193225572",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/255543441ba4e6f9b18441d1a3efea72.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 28251,
+        "bundle_sha256": "d19692dcc1dbbe68948fb814a00814805f1290fd018e6fdab168b647755d9f8f"
+      },
+      "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Fight/FightMainPanel/FightMainPanel.prefab",
+      "native_sha256": "2d310245dd0abc2d3a28703bf9b86847fafd4c66039f4ed3fe04c08216bf4fc1",
+      "mapped_objects": 621,
+      "recovered_components": 239,
+      "unresolved": 0,
+      "pendingBindings": {},
+      "output": "FightMainPanel.json",
+      "nativeMeta_sha256": "b6434cdabc4a77129b338ef9a09197c4a83149e5e8594fbfb217527529b6cf32",
+      "output_sha256": "4a8b3d1304059bf1b9f932f22d1368ba04dcffd0e65113b712a373a7a15a53fe"
+    },
+    "component": {
+      "nativeFileID": 114055535033279528,
+      "original": "cab-af668be24e8d18043bffc26c8f701a1f:-1529640411758206820",
+      "namespace": "",
+      "type": "GameTimeoutUI",
+      "assembly": "Assembly-CSharp",
+      "scriptFileID": 1737974229
+    },
+    "timeout_root": 1918264173551851,
+    "original_root": 1709254077376921,
+    "objects": 26,
+    "retained_ancestors": [
+      1302127217294661,
+      1618682377417806,
+      1709254077376921
+    ],
+    "adaptation": "Exact TimeOutTipUI subtree and ancestor RectTransforms/Content.SafeArea; other HUD branches remain owned by the battle HUD. Runtime language font is supplied by the host."
+  },
+  "inputs": {
+    "scripts/prepare_current_partner_native.py": "21eed29e19b3b3fbd370eb0736c10fa663d35c749b7fa1f9686a57774c6d2cea",
+    "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
+    "scripts/official_manifest.py": "1aae5bd86af587511466e17308719c2e6b356be4117942809c7e6ba89e2d7399",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c",
+    ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-textures/source-manifest.json": "095eb422b8a241e6468abd81940e22aff9ad22f89bc78161dbdba8bd1f45b3b0",
+    ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/source-manifest.json": "09b81e5260175a1524a2178d37bea2b78752bdc85f130751e2d95398171fbe0b",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Fight/FightMainPanel/FightMainPanel.prefab": "2d310245dd0abc2d3a28703bf9b86847fafd4c66039f4ed3fe04c08216bf4fc1",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Fight/FightMainPanel/FightMainPanel.prefab.meta": "b6434cdabc4a77129b338ef9a09197c4a83149e5e8594fbfb217527529b6cf32",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/C_none_0.asset": "7f65da2cd60acfe24a9bbf3c7ec0216e0f2fc312203b606728809af3387395cf",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset": "c775159727acc550a82b0ecc2ad98ff788ac29d2643147df18222189b88e8e70",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat": "f465cf50b955ba2a9f593f4594bcc53e831682c68fce2eec2bfca9e873f8b69a",
+    ".tools/source-packages/current/884_156692/official-code/client-source/GameTimeoutUI.cs": "76536981fe495fa5ed15bf54bb782af32cdeefa83fec25b9d949aca5771ffcb1",
+    ".tools/source-packages/current/884_156692/official-code/client-source/GameEndUIHandler.cs": "7eae09fb462ce7956b5f7f9740586f320b8e26c95df4c03715afb688643992d7",
+    ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/SafeArea.cs": "1aabb4bc2a5745bb3f532a323acad7a13918c439f015dfd751c9341327121509",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameBattleEndType.cs": "877e0287a8d76a57719b1876965543d4ae80134349c86c9993f883a9b1182ed1",
+    ".tools/source-packages/WwiseBnk/wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365",
+    ".tools/source-packages/WwiseBnk/wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile": "a7e72b9478ce455a7ef12974f16e3f78e684ded497b7750f7901dacb66eacfad"
+  },
+  "scripts": {
+    "MultiLanguageText": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldMultiLanguageText.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "231cab3c6fd951b7a2d14633a5465cbf",
+        "type": 3
+      },
+      "sha256": "99a73c950330a27ca9a3ccce31905c4c8aef70deba9e76c8fd377535aded9cef",
+      "meta_sha256": "b3800ddfd9284bb2c13282b37175e83c6b21673564bc1683db546fc6cd6e2d38"
+    },
+    "TMPro.TextMeshProUGUI": {
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshProUGUI.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "f4688fdb7df04437aeb418b961361dc5",
+        "type": 3
+      },
+      "sha256": "f25b03386b3b6eaef0f6f164ae0230b74f09ea53145fdf8bcb6d4a01786af425",
+      "meta_sha256": "dabd328cbb3096519a4356686931a62663f4c934771d9525260ca4d6972620fd"
+    },
+    "TMPro.TMP_FontAsset": {
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TMP_FontAsset.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "71c1514a6bd24e1e882cebbe1904ce04",
+        "type": 3
+      },
+      "sha256": "4944761e316e6c3e6053507283f4c1b310dd47312830346ef7efc4715ac403af",
+      "meta_sha256": "788d1b900702d38deac8b40940ddb3f065752ee2a1bbb9714dc2a63c6b669e12"
+    },
+    "UnityEngine.UI.Image": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Image.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+        "type": 3
+      },
+      "sha256": "351dd72516d240f5722c55f72f8e95a0a92cf71e83358bbc922eee47bdb78502",
+      "meta_sha256": "5d5268c445723f854020175a8fdfe91d4ca7fbc62f360438d4224a3ecca32066"
+    },
+    "UnityEngine.UI.VerticalLayoutGroup": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/VerticalLayoutGroup.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "59f8146938fff824cb5fd77236b75775",
+        "type": 3
+      },
+      "sha256": "55ec0610da9479b4752008b23990fe486df9df4ff78958f92027edf86906d035",
+      "meta_sha256": "9d257813a1280923de2cd30de064f0f4487036b6f80435b97caca6776d0f47cb"
+    },
+    "LayoutElementClamper": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldLayoutElementClamper.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "af15cc145e0c5ce081a320cbc5d9d74d",
+        "type": 3
+      },
+      "sha256": "250d04905b53b80c55f8c384c4eb29c9dc0feea11e64d9354dcf6f5e0ff6940c",
+      "meta_sha256": "47bd284bfc1638c77d1032b87587a00b7a6cd3b9bfe5cf62c05599a185950d87"
+    },
+    "SafeArea": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldSafeArea.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "c2d0088124f9085b5533afccb0f57c20",
+        "type": 3
+      },
+      "sha256": "c1830ecf97ec03faa73750c501ffc29f461fc9dd465387053e67e2104d0040e9",
+      "meta_sha256": "9932fda5602ab090b04d88b8ab7881a3f4fdb998a5dbc738888d5c373a18bf8b"
+    },
+    "GameTimeoutUI": {
+      "path": "unity/Assets/Game/Runtime/Official/BattleResultUI/GameTimeoutUI.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "7e26ec61685b4d638b663508e606c29c",
+        "type": 3
+      },
+      "sha256": "9d830731dbf52957ee491f59fb53e283fdc111a5381eeacc3d4b175c1820e781",
+      "meta_sha256": "e7998ea01627eec1d6477c06f1522d49a9133e8a31e8a798895283eae4c18249"
+    }
+  },
+  "resources": {
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:7027170908951735255": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "7027170908951735255",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "SpriteAtlas",
+      "original_sha256": "9d36c5be785859e80ca6304999830c104562d08a109dcd23ec500706c5c3fbd2",
+      "usage": "Packed sprite render data"
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:-6201727972171027686": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-6201727972171027686",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "73f8e0b4f17d8d9838fad0f678437b3e0ed26585c7e2525ce6ac4bd90ab90699",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/C_none_0.asset",
+      "output": "Image/UI/Common/Common_Atlas/C_none_0.asset",
+      "guid": "f3b0b2fcddb51274e6595ff1cdcb4ab5",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:-1054575886599457342": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "-1054575886599457342",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "MonoBehaviour",
+      "original_sha256": "993fe9f48bba80bc3f729c6cfabf269fdf7b91ac69fb2d013625ee8ac8a68031",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset",
+      "output": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset",
+      "guid": "b088a249154abaf4e9a07cad25d5aef4",
+      "geometry": null
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:8668477128756491714": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "8668477128756491714",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "Material",
+      "original_sha256": "57b7f2adeb457a8f4f3b3842127ac1bdf497f87992d883bbfee812a4525383be",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat",
+      "output": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat",
+      "guid": "08ba59cf78205b78fb2c9a69237994ea",
+      "geometry": null
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:8373551068376853463": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "8373551068376853463",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Texture2D",
+      "original_sha256": "53995e743aa5f4d717ce30a69b8100e7c73f21cfcc0c8f351a9f3a808f319cd0",
+      "native_path": null,
+      "output": "Converted/65b73523b080e5e7.asset",
+      "guid": "b40761794afa424fcfa0a6d493b5c729",
+      "geometry": null
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:3935595767026349506": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "3935595767026349506",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "Texture2D",
+      "original_sha256": "5100748872e5a73c20864292b0f19fb862964e3c2c50785768804056276fd4d8",
+      "native_path": null,
+      "output": "Converted/ac573a40fda4c096.asset",
+      "guid": "595049c2e6a1f516bcabc0f0a8cab09f",
+      "geometry": null
+    },
+    "cab-014000ed2538cb87d1aa4612be612002:-4286560471751938018": {
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "465300f28c23d7564868393936041212",
+        "path_id": "-4286560471751938018",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/465300f28c23d7564868393936041212.bundle",
+        "raw_size": 2909118,
+        "raw_sha256": "991da192cbcd00a1b3a2714b7ca649b7f416881f87b656dac17f5f1123da2e46"
+      },
+      "type": "Shader",
+      "original_sha256": "82cc97a220222d38ceeb7b173dd31fccede81cc11f4eca3a2c052177f11acd81",
+      "native_path": null,
+      "output": "Converted/f2e1ff40e17239bc.shader",
+      "guid": "0b5a526f51d54805e059fe74dc7aade8",
+      "geometry": null
+    }
+  },
+  "native_recovery": {
+    "manifest": "884_156692",
+    "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+    "stage": "Recovered original hierarchy/fields only; runtime script and resource binding pending",
+    "generator_sha256": "21eed29e19b3b3fbd370eb0736c10fa663d35c749b7fa1f9686a57774c6d2cea",
+    "component_cache": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/component-fields-all/source-manifest.json",
+      "sha256": "c82db6a6903d36856807688d11573793cdaef98d1da13d0d6108b6f3f04aeec5"
+    },
+    "prefabs": [
+      {
+        "name": "FightMainPanel",
+        "originalRoot": "cab-af668be24e8d18043bffc26c8f701a1f:-5660125702193225572",
+        "originalSource": {
+          "bundle": "defaultpackage_assets_prefabs_ui_fight_fightmainpanel_fightmainpanel.bundle",
+          "bundle_hash": "255543441ba4e6f9b18441d1a3efea72",
+          "path_id": "-5660125702193225572",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/255543441ba4e6f9b18441d1a3efea72.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 28251,
+          "bundle_sha256": "d19692dcc1dbbe68948fb814a00814805f1290fd018e6fdab168b647755d9f8f"
+        },
+        "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Fight/FightMainPanel/FightMainPanel.prefab",
+        "native_sha256": "2d310245dd0abc2d3a28703bf9b86847fafd4c66039f4ed3fe04c08216bf4fc1",
+        "mapped_objects": 621,
+        "recovered_components": 239,
+        "unresolved": 0,
+        "pendingBindings": {},
+        "output": "FightMainPanel.json",
+        "nativeMeta_sha256": "b6434cdabc4a77129b338ef9a09197c4a83149e5e8594fbfb217527529b6cf32",
+        "output_sha256": "4a8b3d1304059bf1b9f932f22d1368ba04dcffd0e65113b712a373a7a15a53fe"
+      }
+    ],
+    "additional_bundles": [
+      "defaultpackage_assets_prefabs_ui_fight_fightmainpanel_fightmainpanel.bundle"
+    ]
+  },
+  "installed": {
+    "unity/Assets/Official/Combat/TimeoutUI/Resources/Combat/TimeoutUI/FightMainPanelTimeout.prefab": "f4021b39e6f9780fe8c02aec0a2f9e7a7d86f8210d3bae5193aaa5450f4076fb",
+    "unity/Assets/Official/Combat/TimeoutUI/Resources/Combat/TimeoutUI/FightMainPanelTimeout.prefab.meta": "9e4456b369e5d6607763b7f860aa29bf1339da974866d25e6c4ffcf76a7cffb4",
+    "unity/Assets/Official/Combat/TimeoutUI/Resources/Combat/TimeoutUI.meta": "25bb9711d1a2179d895935d8a588c3c8e6d5401855dc130d0c85b17211d525af",
+    "unity/Assets/Official/Combat/TimeoutUI/Resources/Combat.meta": "c10f2d84a4fe8362d0ca80ef14264d403bdfc0cfa4bd272645166d28dd8e1ecb",
+    "unity/Assets/Official/Combat/TimeoutUI/Resources.meta": "d61e1d71b7f2f9216adc0cedede905afe43d8d84ab4ca060efa3f2fcb3908b54",
+    "unity/Assets/Official/Combat/TimeoutUI.meta": "7087d389ffb339f1fbe7b6708b6fc7cbf8e1c021aea46705a7f8a76a9481b061",
+    "unity/Assets/Official/Combat/TimeoutUI/Resources/Combat/TimeoutUI/bindings.json": "201ccbfca1ca88ee9975255570c8cb82c82c10a5505ea23722ac21b9bd60fb73",
+    "unity/Assets/Official/Combat/TimeoutUI/Resources/Combat/TimeoutUI/bindings.json.meta": "11e8dccf1c57ec104cf0a31ebecc107125e2a24e780ae6081146da7ed0e727cf"
+  },
+  "shared_resources": {
+    "unity/Assets/Official/Partners/UI/Card/Image/UI/Common/Common_Atlas/C_none_0.asset": {
+      "sha256": "fae893cc28b978408f3c9605fa899395950b59600b31616caefdc3465439cb12",
+      "guid": "f3b0b2fcddb51274e6595ff1cdcb4ab5"
+    },
+    "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset": {
+      "sha256": "8371c8c321efb85060bcc96875419a2125babcbeb7c15f34a4dfd2526c3caab2",
+      "guid": "b088a249154abaf4e9a07cad25d5aef4"
+    },
+    "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat": {
+      "sha256": "361207bd73188c9fa55778c632ae3ed8459a8eb4f1b81ac88346bcac134464e2",
+      "guid": "08ba59cf78205b78fb2c9a69237994ea"
+    },
+    "unity/Assets/Official/Partners/UI/Card/Converted/65b73523b080e5e7.asset": {
+      "sha256": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446",
+      "guid": "b40761794afa424fcfa0a6d493b5c729"
+    },
+    "unity/Assets/Official/Partners/UI/Card/Converted/ac573a40fda4c096.asset": {
+      "sha256": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
+      "guid": "595049c2e6a1f516bcabc0f0a8cab09f"
+    },
+    "unity/Assets/Official/Partners/UI/Card/Converted/f2e1ff40e17239bc.shader": {
+      "sha256": "6175d73864092e26c113b2a49d5379d8b72dd5f0e5e413765530ff0b1f1268dd",
+      "guid": "0b5a526f51d54805e059fe74dc7aade8"
+    }
+  },
+  "generator_sha256": "9da2072cd7dd99f6ba781546389b7e673d8fc2d4df391f9af7cf8e365494e7b1"
+}
