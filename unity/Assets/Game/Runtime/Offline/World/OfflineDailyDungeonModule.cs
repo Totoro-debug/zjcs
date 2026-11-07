@@ -165,16 +165,11 @@ namespace Zjcs.Offline.World
 
     public sealed class DailyDungeonEntryAllowanceState
     {
-        public int FreeClaimed { get; internal set; }
-        public int PaidClaimed { get; internal set; }
-        public int FreeLimit { get; internal set; }
-        public int PaidLimit { get; internal set; }
-        public int FreeRemaining { get; internal set; }
-        public int PaidRemaining { get; internal set; }
+        public int TotalRemaining { get; internal set; }
+        public int DailyFreeLimit { get; internal set; }
         public int PurchaseRemaining { get; internal set; }
         public int UsedEntries { get; internal set; }
         public int PurchasedEntries { get; internal set; }
-        public int TotalRemaining => FreeRemaining + PaidRemaining;
     }
 
     public sealed class DailyDungeonLeaderboardEntry
@@ -288,8 +283,8 @@ namespace Zjcs.Offline.World
             return (records ?? Array.Empty<DailyDungeonLeaderboardRecordSave>())
                 .Where(value => value != null && value.dungeonId == dungeonId
                     && value.difficulty == difficulty && (grade <= 0 || value.grade == grade))
-                .OrderBy(value => value.finishTicks <= 0 ? long.MaxValue : value.finishTicks)
-                .ThenByDescending(value => value.grade)
+                .OrderByDescending(value => value.grade)
+                .ThenBy(value => value.finishTicks <= 0 ? long.MaxValue : value.finishTicks)
                 .ThenBy(value => value.id, StringComparer.Ordinal)
                 .Take(Math.Max(0, limit))
                 .Select((value, index) => new DailyDungeonLeaderboardEntry
@@ -402,7 +397,8 @@ namespace Zjcs.Offline.World
                 FindDungeon(dungeonId)?.difficulties?.FirstOrDefault(value => value.difficulty == difficulty));
         }
 
-        public DailyDungeonHudModel BuildHudModel(int dungeonId, int difficulty, bool conditionMet = true)
+        public DailyDungeonHudModel BuildHudModel(int dungeonId, int difficulty,
+            Func<int, bool> conditionMet = null)
         {
             DailyDungeonLevelDefinition level = ResolveLevel(dungeonId, difficulty);
             DailyDungeonRunSave run = ActiveRun != null && ActiveRun.dungeonId == dungeonId
@@ -417,8 +413,7 @@ namespace Zjcs.Offline.World
                 EntryAllowance = EntryAllowance(),
                 RemainingEntries = RemainEntries,
                 DailyDungeonGetRewardCount = this.DailyDungeonGetRewardCount,
-                IsUnlocked = conditionMet && (difficulty == 0
-                    || RouteAdapter.IsPrivateDifficulty(difficulty) || IsUnlocked(dungeonId, difficulty))
+                IsUnlocked = IsDifficultyUnlocked(dungeonId, difficulty, conditionMet)
             };
         }
 
@@ -524,24 +519,13 @@ namespace Zjcs.Offline.World
 
         public DailyDungeonEntryAllowanceState EntryAllowance()
         {
-            int freeLimit = DailyFreeClaimLimit;
-            int paidLimit = Math.Max(0, Catalog.settings.DailyDungeonMaxLimitCount - freeLimit);
-            int usedEntries = Math.Max(0, Save.usedEntries);
-            int remainingEntries = RemainEntries;
-            int paidRemaining = Math.Min(remainingEntries, Math.Max(0, Save.purchasedAvailableEntries));
-            int freeRemaining = Math.Max(0, remainingEntries - paidRemaining);
             return new DailyDungeonEntryAllowanceState
             {
-                FreeClaimed = Math.Max(0, freeLimit - Math.Min(freeLimit, freeRemaining)),
-                PaidClaimed = Math.Min(paidLimit,
-                    Math.Max(0, Save.purchasedEntries - Save.purchasedAvailableEntries)),
-                FreeLimit = freeLimit,
-                PaidLimit = paidLimit,
-                FreeRemaining = freeRemaining,
-                PaidRemaining = paidRemaining,
+                TotalRemaining = RemainEntries,
+                DailyFreeLimit = DailyFreeClaimLimit,
                 PurchaseRemaining = Math.Max(0,
                     (Catalog.settings.DailyDungeonBuyCostCountList?.Length ?? 0) - Save.purchasedEntries),
-                UsedEntries = usedEntries,
+                UsedEntries = Math.Max(0, Save.usedEntries),
                 PurchasedEntries = Save.purchasedEntries
             };
         }
@@ -599,10 +583,6 @@ namespace Zjcs.Offline.World
             if (claimed == null) return false;
             for (int index = 0; index < awardTimes; index++)
             {
-                if (next.purchasedAvailableEntries > 0)
-                {
-                    next.purchasedAvailableEntries--;
-                }
                 next.remainingClaims--;
                 next.usedEntries++;
             }

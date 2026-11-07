@@ -70,6 +70,35 @@ namespace Zjcs.Editor
             if (module.MaxAwardTimesPerClaim != 1)
                 throw new InvalidOperationException("A module without daily dungeon claim benefits did not use the official base award count.");
 
+            DailyDungeonRuntimeBattle conditionLockedDungeon = (catalog.dungeons
+                    ?? Array.Empty<DailyDungeonRuntimeBattle>())
+                .FirstOrDefault(dungeon => dungeon?.difficulties?.Any(value => value != null
+                    && value.difficulty == 0 && value.unlockConditionId > 0) == true);
+            DailyDungeonRuntimeDifficulty conditionLockedDifficulty = conditionLockedDungeon?.difficulties?
+                .FirstOrDefault(value => value != null && value.difficulty == 0 && value.unlockConditionId > 0);
+            if (conditionLockedDungeon == null || conditionLockedDifficulty == null)
+                throw new InvalidOperationException("No official first-difficulty unlock condition is available for rule acceptance.");
+            DailyDungeonEntryPageModel lockedEntryPage = module.BuildEntryPageModel((_, __) => true,
+                (_, conditionId) => conditionId != conditionLockedDifficulty.unlockConditionId);
+            DailyDungeonEntryModel lockedDungeonEntry = lockedEntryPage.Entries.FirstOrDefault(value =>
+                value != null && value.DungeonId == conditionLockedDungeon.id);
+            DailyDungeonDifficultyModel lockedDifficultyEntry = lockedDungeonEntry?.Difficulties?
+                .FirstOrDefault(value => value.Difficulty == conditionLockedDifficulty.difficulty);
+            if (lockedDifficultyEntry == null || lockedDifficultyEntry.IsUnlocked
+                || module.CanEnter(conditionLockedDungeon.id, conditionLockedDifficulty.difficulty, true,
+                    _ => false))
+                throw new InvalidOperationException("A public dungeon hid or entered its condition-locked first difficulty.");
+            DailyDungeonEntryPageModel unlockedEntryPage = module.BuildEntryPageModel((_, __) => true,
+                (_, conditionId) => conditionId == conditionLockedDifficulty.unlockConditionId);
+            DailyDungeonDifficultyModel unlockedDifficultyEntry = unlockedEntryPage.Entries
+                .First(value => value.DungeonId == conditionLockedDungeon.id).Difficulties
+                .First(value => value.Difficulty == conditionLockedDifficulty.difficulty);
+            if (!unlockedDifficultyEntry.IsUnlocked
+                || !module.CanEnter(conditionLockedDungeon.id, conditionLockedDifficulty.difficulty, true,
+                    conditionId => conditionId == conditionLockedDifficulty.unlockConditionId
+                        || conditionId == conditionLockedDifficulty.entryConditionId))
+                throw new InvalidOperationException("A public dungeon did not unlock its first difficulty after the official condition passed.");
+
             string migrationSlotId = slots.CreateSlot();
             var legacyClaimState = new DailyDungeonSave
             {
@@ -84,10 +113,33 @@ namespace Zjcs.Editor
                 JsonUtility.ToJson(legacyClaimState));
             DailyDungeonModule migratedClaims = DailyDungeonModule.Open(
                 slots, migrationSlotId, catalog);
-            if (migratedClaims.Save.claimStateVersion != 3
+            if (migratedClaims.Save.claimStateVersion != 4
                 || migratedClaims.Save.giftedAvailableClaims != 0
+                || migratedClaims.Save.purchasedAvailableEntries != 0
                 || migratedClaims.RemainEntries != Math.Min(3, catalog.settings.DailyDungeonMaxLimitCount))
                 throw new InvalidOperationException("Legacy gift fields were not cleared while preserving the claim pool.");
+
+            string rolloverSlotId = slots.CreateSlot();
+            var rolloverState = new DailyDungeonSave
+            {
+                claimStateVersion = 4,
+                localDate = DateTime.Now.AddDays(-1).ToString("yyyyMMdd", CultureInfo.InvariantCulture),
+                usedEntries = 2,
+                purchasedEntries = 1,
+                purchasedAvailableEntries = 1,
+                remainingClaims = 3,
+                entryPurchaseReceipts = new List<string> { "previous-day-purchase" }
+            };
+            File.WriteAllText(Path.Combine(slots.GetSlotDirectory(rolloverSlotId), "daily-dungeon-save.json"),
+                JsonUtility.ToJson(rolloverState));
+            DailyDungeonModule rolloverModule = DailyDungeonModule.Open(slots, rolloverSlotId, catalog);
+            DailyDungeonEntryAllowanceState rolloverAllowance = rolloverModule.EntryAllowance();
+            if (rolloverModule.RemainEntries != Math.Max(3, catalog.settings.DailyDungeonDailyFreeCount)
+                || rolloverModule.Save.usedEntries != 0 || rolloverModule.Save.purchasedEntries != 0
+                || rolloverModule.Save.purchasedAvailableEntries != 0
+                || rolloverModule.Save.entryPurchaseReceipts.Count != 0
+                || rolloverAllowance.PurchaseRemaining != catalog.settings.DailyDungeonBuyCostCountList.Length)
+                throw new InvalidOperationException("Daily reset did not carry the total claim pool and reset purchase state.");
 
             DailyDungeonRuntimeReward probabilityRule = (catalog.rewardRules
                     ?? Array.Empty<DailyDungeonRuntimeReward>())
@@ -289,6 +341,31 @@ namespace Zjcs.Editor
                 selectedDungeon.id, selectedDifficulty.difficulty, grade);
             if (records.Count != 1 || !records[0].IsSelf || records[0].IsNpc)
                 throw new InvalidOperationException("The completed route did not produce a local personal leaderboard record.");
+            IReadOnlyList<DailyDungeonLeaderboardEntry> orderedRecords =
+                new OfflineDailyDungeonLeaderboardAdapter().Rank(new[]
+                {
+                    new DailyDungeonLeaderboardRecordSave
+                    {
+                        id = "slow-high-grade", dungeonId = selectedDungeon.id,
+                        difficulty = selectedDifficulty.difficulty, grade = grade + 1,
+                        finishTicks = 200, playerId = 2, playerName = "高评级"
+                    },
+                    new DailyDungeonLeaderboardRecordSave
+                    {
+                        id = "fast-low-grade", dungeonId = selectedDungeon.id,
+                        difficulty = selectedDifficulty.difficulty, grade = grade,
+                        finishTicks = 100, playerId = 3, playerName = "低评级"
+                    },
+                    new DailyDungeonLeaderboardRecordSave
+                    {
+                        id = "fast-same-grade", dungeonId = selectedDungeon.id,
+                        difficulty = selectedDifficulty.difficulty, grade = grade + 1,
+                        finishTicks = 50, playerId = 4, playerName = "同评级快通"
+                    }
+                }, selectedDungeon.id, selectedDifficulty.difficulty, 0, 10, 0);
+            if (orderedRecords.Count != 3 || orderedRecords[0].PlayerId != 4
+                || orderedRecords[1].PlayerId != 2 || orderedRecords[2].PlayerId != 3)
+                throw new InvalidOperationException("The local leaderboard did not sort by official grade and then completion time.");
 
             int grantedAwardTimes = 0;
             if (!module.ClaimPendingReward(pending.id, (_, __, awardTimes) =>

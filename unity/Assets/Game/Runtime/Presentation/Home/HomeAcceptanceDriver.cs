@@ -1861,6 +1861,64 @@ namespace Zjcs.Presentation.Home
             yield return null;
             yield return Capture("dungeons-entry.png");
 
+            GameObject giftEntryPanel = GetPrivateGameObject(runtime.Hud, "dailyDungeonRoot");
+            Button giftTab = giftEntryPanel.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(value => value.name == "AchievementTabGroupItem_11");
+            ok = Check("dungeons-gift-page-input", () =>
+            {
+                ClickUi(giftTab);
+                Transform giftPanel = giftEntryPanel.GetComponentsInChildren<Transform>(true)
+                    .FirstOrDefault(value => value.name == "AchievementPanel");
+                Assert(giftPanel != null && giftPanel.gameObject.activeInHierarchy,
+                    "official cumulative dungeon gift panel did not open");
+                Transform rewardGrid = giftPanel.GetComponentsInChildren<Transform>(true)
+                    .FirstOrDefault(value => value.name == "Grid");
+                Assert(rewardGrid != null, "official cumulative dungeon gift rows are missing");
+                var giftModel = runtime.DailyDungeons.BuildGiftModel(5);
+                var reward = giftModel.Achievements.Select((milestone, index) => new { milestone, index })
+                    .SelectMany(value => value.milestone.Rewards.Select(item => new
+                        { RowIndex = value.index, Item = item }))
+                    .FirstOrDefault(value => value.Item != null && value.Item.ItemId > 0
+                        && value.Item.Count > 0);
+                Assert(reward != null, "official cumulative dungeon gift catalog has no reward icon fixture");
+                Transform[] rows = rewardGrid.GetComponentsInChildren<Transform>(true)
+                    .Where(value => (value.name == "AchievementPanelItem"
+                        || value.name.StartsWith("AchievementPanelItem (", StringComparison.Ordinal))
+                        && value.gameObject.activeInHierarchy)
+                    .OrderBy(value => value.GetSiblingIndex()).ToArray();
+                Assert(reward.RowIndex < rows.Length,
+                    "official cumulative dungeon gift reward row did not render");
+                Transform row = rows[reward.RowIndex];
+                Transform rewardIcon = row.GetComponentsInChildren<Transform>(true)
+                    .FirstOrDefault(value => value.name == "OfflineReward_" + reward.Item.ItemId);
+                DailyDungeonResultItemIconAdapter adapter = rewardIcon == null ? null
+                    : rewardIcon.GetComponent<DailyDungeonResultItemIconAdapter>();
+                Image icon = rewardIcon == null ? null
+                    : rewardIcon.Find("Content/mask/icon")?.GetComponent<Image>();
+                Assert(adapter != null && icon != null
+                    && icon.sprite == runtime.ItemIcon(reward.Item.ItemId),
+                    "official item-icon prefab did not bind the configured dungeon gift sprite");
+                return "official cumulative gift page rendered its configured reward through the native item icon prefab";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return null;
+            yield return Capture("dungeons-gifts.png");
+
+            Button entriesTab = giftEntryPanel.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(value => value.name == "DailyDungeonEntryPanelTabGroupItem_11");
+            ok = Check("dungeons-gift-return-input", () =>
+            {
+                ClickUi(entriesTab);
+                Transform selectContent = giftEntryPanel.GetComponentsInChildren<Transform>(true)
+                    .FirstOrDefault(value => value.name == "SelectContent");
+                Assert(selectContent != null && selectContent.gameObject.activeInHierarchy,
+                    "official dungeon directory tab did not return from cumulative gifts");
+                return "official dungeon directory tab returned from the cumulative gift page";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+
             GameObject entryPanel = GetPrivateGameObject(runtime.Hud, "dailyDungeonRoot");
             Button dungeonRow = entryPanel.GetComponentsInChildren<Button>(true)
                 .FirstOrDefault(value => value.name.StartsWith("Dungeon_", StringComparison.Ordinal));

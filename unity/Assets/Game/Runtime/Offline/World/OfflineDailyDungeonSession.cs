@@ -261,7 +261,7 @@ namespace Zjcs.Offline.World
         public int remainingClaims;
         public long lifetimeClaimedRewardTimes;
         public List<int> claimedAchievementIndexes = new List<int>();
-        public int purchasedAvailableEntries;
+        public int purchasedAvailableEntries; // Legacy source split; cleared by claim-state migration.
         public int giftedAvailableClaims; // Legacy save field; cleared by claim-state migration.
         public List<string> entryPurchaseReceipts = new List<string>();
         public List<DailyDungeonDifficultySave> unlocked = new List<DailyDungeonDifficultySave>();
@@ -404,6 +404,26 @@ namespace Zjcs.Offline.World
             return save.unlocked.Any(value => value.dungeonId == dungeonId && value.difficulty == difficulty);
         }
 
+        // The first public difficulty can be gated by its own unlock condition.
+        // Later difficulties require the persisted unlock operation, matching the
+        // official client flow where the player confirms the unlock before entry.
+        public bool IsDifficultyUnlocked(int dungeonId, int difficulty,
+            Func<int, bool> conditionMet = null)
+        {
+            DailyDungeonRuntimeDifficulty data = FindDifficulty(dungeonId, difficulty);
+            if (data == null) return false;
+            if (RouteAdapter.IsPrivateDifficulty(difficulty) || IsUnlocked(dungeonId, difficulty))
+                return true;
+            DailyDungeonRuntimeBattle dungeon = FindDungeon(dungeonId);
+            int firstPublicDifficulty = (dungeon?.difficulties
+                ?? Array.Empty<DailyDungeonRuntimeDifficulty>())
+                .Where(value => value != null && !RouteAdapter.IsPrivateDifficulty(value.difficulty))
+                .Select(value => value.difficulty).DefaultIfEmpty(-1).Min();
+            if (difficulty != firstPublicDifficulty) return false;
+            return data.unlockConditionId <= 0
+                || conditionMet != null && conditionMet(data.unlockConditionId);
+        }
+
         public int BestGrade(int dungeonId, int difficulty)
         {
             DailyDungeonBestGradeSave row = save.bestGrades.FirstOrDefault(value =>
@@ -473,7 +493,7 @@ namespace Zjcs.Offline.World
             DailyDungeonRuntimeDifficulty data = FindDifficulty(dungeonId, difficulty);
             if ((!isPublic && !RouteAdapter.IsPrivateDifficulty(difficulty)) || data == null || data.entryConditionId > 0
                 && (conditionMet == null || !conditionMet(data.entryConditionId))) return false;
-            return difficulty == 0 || RouteAdapter.IsPrivateDifficulty(difficulty) || IsUnlocked(dungeonId, difficulty);
+            return IsDifficultyUnlocked(dungeonId, difficulty, conditionMet);
         }
 
         public bool TryBegin(int dungeonId, int difficulty, Func<int, bool> isPublic,
@@ -528,7 +548,6 @@ namespace Zjcs.Offline.World
                 return false;
             DailyDungeonSave next = Clone(save);
             next.purchasedEntries += count;
-            next.purchasedAvailableEntries += count;
             next.remainingClaims += count;
             next.entryPurchaseReceipts.Add(receipt);
             Persist(next);
@@ -788,7 +807,10 @@ namespace Zjcs.Offline.World
             next.localDate = day;
             next.usedEntries = 0;
             next.purchasedEntries = 0;
-            next.remainingClaims = Math.Max(next.remainingClaims, DailyFreeClaimLimit);
+            next.purchasedAvailableEntries = 0;
+            // Official GetDailyRemainCount carries the previous total balance
+            // across the reset, with the free daily allowance as a floor.
+            next.remainingClaims = Math.Max(save.remainingClaims, DailyFreeClaimLimit);
             next.entryPurchaseReceipts.Clear();
             Persist(next);
         }
@@ -912,6 +934,12 @@ namespace Zjcs.Offline.World
                 // Keep the persisted total pool, but stop treating server-only gifts as a local source.
                 data.giftedAvailableClaims = 0;
                 data.claimStateVersion = 3;
+            }
+            if (data.claimStateVersion < 4)
+            {
+                // The official client persists one claim balance, not a free/paid source split.
+                data.purchasedAvailableEntries = 0;
+                data.claimStateVersion = 4;
             }
             foreach (DailyDungeonGiftSave gift in data.gifts)
             {

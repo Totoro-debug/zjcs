@@ -430,7 +430,8 @@ namespace Zjcs.Presentation.Home
             DailyDungeonEntryPageModel page = null;
             try
             {
-                page = host.DailyDungeons.BuildEntryPageModel(IsMapRegionPublic);
+                page = host.DailyDungeons.BuildEntryPageModel(IsMapRegionPublic,
+                    (dungeonId, conditionId) => IsDailyDungeonConditionMet(dungeonId, conditionId));
                 publicCount = page.Entries.Count;
             }
             catch (InvalidOperationException)
@@ -544,27 +545,19 @@ namespace Zjcs.Presentation.Home
             foreach (Transform child in grid.Cast<Transform>().Where(value => value.name.StartsWith(
                     "OfflineReward_", StringComparison.Ordinal)).ToArray())
                 UnityEngine.Object.Destroy(child.gameObject);
+            GameObject itemIconPrefab = Resources.Load<GameObject>(
+                "Dungeons/UI/884_156692/Native/Prefabs/UI/Item/ItemIcon");
+            if (itemIconPrefab == null)
+                throw new InvalidOperationException("Official daily dungeon item icon prefab is missing.");
             foreach (DailyDungeonAchievementReward reward in rewards ?? Array.Empty<DailyDungeonAchievementReward>())
             {
                 if (reward == null || reward.ItemId <= 0 || reward.Count <= 0) continue;
-                GameObject iconObject = new GameObject("OfflineReward_" + reward.ItemId,
-                    typeof(RectTransform), typeof(Image));
-                iconObject.transform.SetParent(grid, false);
-                RectTransform iconRect = (RectTransform)iconObject.transform;
-                iconRect.sizeDelta = new Vector2(56f, 56f);
-                Image icon = iconObject.GetComponent<Image>();
-                icon.sprite = host.ItemIcon(reward.ItemId);
-                icon.preserveAspect = true;
-                icon.raycastTarget = false;
-                TextMeshProUGUI count = CreateLabel(iconObject.transform, "Count", 14,
-                    Vector2.zero, TextAlignmentOptions.BottomRight);
-                count.text = "×" + reward.Count;
-                count.raycastTarget = false;
-                RectTransform countRect = count.rectTransform;
-                countRect.anchorMin = Vector2.zero;
-                countRect.anchorMax = Vector2.one;
-                countRect.offsetMin = new Vector2(0f, 0f);
-                countRect.offsetMax = new Vector2(-2f, -2f);
+                GameObject iconObject = UnityEngine.Object.Instantiate(itemIconPrefab, grid, false);
+                iconObject.name = "OfflineReward_" + reward.ItemId;
+                DailyDungeonResultItemIconAdapter adapter = iconObject
+                    .GetComponent<DailyDungeonResultItemIconAdapter>();
+                if (adapter == null) adapter = iconObject.AddComponent<DailyDungeonResultItemIconAdapter>();
+                adapter.Configure(host, reward.ItemId, reward.Count);
             }
         }
 
@@ -1001,17 +994,21 @@ namespace Zjcs.Presentation.Home
         private void RefreshDailyDungeonDetail()
         {
             if (dailyDungeonDialogRoot == null) return;
-            bool unlocked = selectedDifficulty == 0 || host.DailyDungeons.IsUnlocked(
-                selectedDungeonId, selectedDifficulty);
+            bool unlocked = host.DailyDungeons.IsDifficultyUnlocked(selectedDungeonId,
+                selectedDifficulty, conditionId => IsDailyDungeonConditionMet(selectedDungeonId, conditionId));
             DailyDungeonHudModel model = host.DailyDungeons.BuildHudModel(
-                selectedDungeonId, selectedDifficulty, unlocked);
+                selectedDungeonId, selectedDifficulty,
+                conditionId => IsDailyDungeonConditionMet(selectedDungeonId, conditionId));
             unlocked = model.IsUnlocked;
             int best = model.BestGrade;
             SetNamedText(dailyDungeonDialogRoot.transform, "DescTxt",
                 "難度 " + selectedDifficulty + " · 最高评级 " + (best <= 0 ? "暂无" : best.ToString())
                 + " · 今日剩余领奖次数 " + model.RemainingEntries);
             RefreshDailyDungeonUnlockConditions(unlocked);
-            SetPrefabActive(dailyDungeonDialogRoot, "UnlockBtn", !unlocked && selectedDifficulty > 0);
+            SetPrefabActive(dailyDungeonDialogRoot, "UnlockBtn", !unlocked
+                && (selectedDifficulty > 0 || host.DailyDungeons.FindDungeon(selectedDungeonId)
+                    ?.difficulties?.FirstOrDefault(value => value.difficulty == selectedDifficulty)
+                    ?.unlockConditionId > 0));
             SetPrefabActive(dailyDungeonDialogRoot, "BattleBtn", unlocked);
             SetPrefabActive(dailyDungeonDialogRoot, "GoToBtn", unlocked);
             World.OfficialDungeonEntryBindings.RefreshCatalogueDetail(dailyDungeonDialogRoot, unlocked,

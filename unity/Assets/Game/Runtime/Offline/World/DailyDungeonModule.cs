@@ -60,22 +60,21 @@ namespace Zjcs.Offline.World
         /// or how a level is adapted to a route.
         /// </summary>
         public DailyDungeonEntryPageModel BuildEntryPageModel(
-            Func<int, int, bool> regionIsPublic)
+            Func<int, int, bool> regionIsPublic,
+            Func<int, int, bool> conditionMet = null)
         {
             if (regionIsPublic == null) throw new ArgumentNullException(nameof(regionIsPublic));
             var entries = new List<DailyDungeonEntryModel>();
             foreach (DailyDungeonRuntimeBattle dungeon in PublicDungeons(regionIsPublic))
             {
-                var difficulties = (dungeon.difficulties ?? Array.Empty<DailyDungeonRuntimeDifficulty>())
-                    .Where(value => value != null)
-                    .OrderBy(value => value.difficulty)
+                Func<int, bool> dungeonCondition = conditionMet == null ? null
+                    : id => conditionMet(dungeon.id, id);
+                var difficulties = VisibleDifficulties(dungeon.id, dungeonCondition)
                     .Select(value => new DailyDungeonDifficultyModel
                     {
                         Difficulty = value.difficulty,
                         IsPrivateRoute = ResolveLevel(dungeon.id, value.difficulty)?.IsPrivateRoute == true,
-                        IsUnlocked = value.difficulty == 0
-                            || ResolveLevel(dungeon.id, value.difficulty)?.IsPrivateRoute == true
-                            || IsUnlocked(dungeon.id, value.difficulty),
+                        IsUnlocked = IsDifficultyUnlocked(dungeon.id, value.difficulty, dungeonCondition),
                         BestGrade = BestGrade(dungeon.id, value.difficulty)
                     }).ToArray();
                 entries.Add(new DailyDungeonEntryModel
