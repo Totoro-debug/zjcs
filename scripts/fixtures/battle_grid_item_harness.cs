@@ -22,6 +22,7 @@ public static class BattleGridItemHarness
         Boundaries(catalog,items,formula);
         MultiCell(catalog,items,formula);
         PresentationClock(catalog,items,formula);
+        ProbabilisticFire(catalog,items,formula);
         var creator=Unit(1,1,5,5,1000);var reference=Unit(2,2,6,5,1);
         var item=FightGridItemRuntime.Create(3,3320,creator,reference,new FightGridPoint(6,5),0.78f);
         Check(item.OwnerId==1 && item.ReferenceUnitId==2 && item.Runtime.Side==2
@@ -258,5 +259,33 @@ public static class BattleGridItemHarness
         Check(step.DamageEvents.Exists(value=>cp.GridItems.Exists(grid=>grid.Id==value.SourceId)
             && Math.Abs(value.Delay-(cast.Delay+0.78f))<0.0001f),
             "Nested burning damage and native creation no longer share their original absolute time.");
+    }
+
+    static void ProbabilisticFire(FightOfficialCombatCatalog catalog,FightOfficialSkillItemCatalog items,
+        FightDamageFormula formula)
+    {
+        var actor=Unit(1,1,3,5,1000);var boss=Unit(2,2,6,5,1);
+        for(int x=-2;x<=2;x++) for(int y=-2;y<=2;y++) boss.BodyOffsets.Add(new FightGridPoint(x,y));
+        var skill=catalog.CreateSkill(13480,0,10179,5,20,1,null);
+        var summon=skill.HitGraphEntities.Find(value=>value.SummonGridItemClassId==3320);
+        actor.Skills.Add(skill);actor.SkillState.Slots.Add(catalog.CreateSkillSlot(skill,0));
+        var cp=new FightBattleCheckpoint {StageId=1001,RandomSeed=13,
+            Grid=new FightBattleGrid {Width=20,Height=20,DefaultGroundType=0},
+            ResultRules=new FightBattleResultRules()};cp.Units.AddRange(new[] {actor,boss});
+        var runner=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),catalog,items);
+        FightBattleStepEvent step=null;
+        for(int i=0;i<10 && cp.GridItems.Count==0;i++) step=runner.Step(0,cp.Counter+1).Event;
+        Check(cp.GridItems.Count>0 && cp.GridItems.Count<29
+            && cp.GridItems.TrueForAll(value=>summon.GridSummonCells.Exists(cell=>
+                    cell.Position.X==value.X-actor.X && cell.Position.Y==value.Y-actor.Y)
+                && value.EntityClassId==3051 && value.Runtime.Statuses.Count==1
+                && value.Runtime.Statuses[0].ClassId==13482 && value.Runtime.Statuses[0].RootSkillId==13480),
+            "Original 13480 lost its caster anchor, per-cell probability, burning entity or status root.");
+        Check(step.GridViewEvents.Count==cp.GridItems.Count*2
+            && step.GridViewEvents.TrueForAll(value=>Math.Abs(value.Delay-0.6f)<0.0001f)
+            && step.SkillCasts.Exists(value=>value.SkillEntityId==13485)
+            && step.DamageEvents.Exists(value=>value.TargetId==2 && value.DamageValue<0
+                && cp.GridItems.Exists(grid=>grid.Id==value.SourceId)),
+            "Original 13482/13485 did not create native view receipts and actual damage at the configured time.");
     }
 }

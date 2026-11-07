@@ -60,7 +60,8 @@ def main():
     # These official client wrappers have literally no body. Their common/server
     # component types are supplied through a host-owned projection, not recreated.
     empty = ['MyFightRoleGrid', 'MyFightGameplayTag', 'MyFightGridMover',
-             'MyFightProp', 'MyStatusEnd', 'MyStatusAutoRemove', 'MyFightStatusMoveNear']
+             'MyFightProp', 'MyStatusEnd', 'MyStatusAutoRemove', 'MyFightStatusMoveNear',
+             'MyFightStatusItemTrigger']
     for name in empty:
         text = original(name)
         assert re.search(r'public class ' + name + r'\s*:[^{]+\{\s*\}\s*$', text)
@@ -196,7 +197,7 @@ def main():
     write_changed(RECEIPT, json.dumps(dict(manifest='884_156692', code_manifest=identity(manifest),
         assembly=identity(assembly), original_code=inputs, outputs=outputs,
         generator=identity(Path(__file__)),
-        adaptation=['Host-owned component data replaces unavailable server component classes; the seven empty client wrappers remain empty.',
+        adaptation=['Host-owned component data replaces unavailable server component classes; the eight empty client wrappers remain empty.',
                     'Original role/master registration and summon callbacks use an explicit scene registry instead of global player/fight services.',
                     'PVP stage membership and nullable entity faction lookup are supplied from original stage settings and current entity state.',
                     'Original playable order, owner/faction selection, null branches and stop behavior are retained.',

@@ -8,6 +8,8 @@ using Zjcs.Official.BattleGridItemEntities;
 using Zjcs.Official.EntityViews;
 using Zjcs.Official.StoryAttachment;
 using Zjcs.Official.StoryPlayables;
+using Zjcs.Official.BattleStatusPlayables;
+using Zjcs.Official.ProfessionUI;
 
 namespace Zjcs.Editor
 {
@@ -89,10 +91,18 @@ namespace Zjcs.Editor
         {
             private IEnumerator GridEntitySteps()
             {
+                var previousSoundHost = OfficialWwiseEvent.Host;
+                OfficialWwiseEvent.Host = new BurnSound();
+                try
+                {
                 var data = Resources.Load<TextAsset>("Combat/grid-entities");
                 Require(data != null, "Native grid entity catalog is missing.");
                 var entries = JsonUtility.FromJson<OrbitCatalog>(data.text).graphs;
-                Require(entries.Length == 4, "Native grid/status prefab count differs.");
+                Require(entries.Length == 41 && entries.Count(value => value.id >= 10000) == 38,
+                    "Native grid/status prefab count differs from the complete configured status set.");
+                foreach (var dependency in Resources.LoadAll<GameObject>("Combat/GridEntities"))
+                    Require(dependency.GetComponentsInChildren<Component>(true).All(value => value != null),
+                        "An original grid/status dependency contains a missing script: " + dependency.name);
                 var staging = new GameObject("Inactive original grid prefab staging");
                 staging.transform.SetParent(root.transform, false); staging.SetActive(false);
                 foreach (var entry in entries)
@@ -104,7 +114,34 @@ namespace Zjcs.Editor
                     Require(prefab.GetComponentsInChildren<Component>(true).All(value => value != null),
                         "Native grid/status prefab contains a missing script.");
                     var go = UnityEngine.Object.Instantiate(prefab, staging.transform, false);
-                    if (entry.id >= 10000) { UnityEngine.Object.Destroy(go); continue; }
+                    if (entry.id >= 10000)
+                    {
+                        var view = go.GetComponent<MyFightStatus>();
+                        var state = new State(1);
+                        var agent = sourceA.GetComponent<MyFightStatusAgent>();
+                        view.Bind(new Context { State = state, Owner = sourceA, Creator = sourceB,
+                            Master = sourceB, Agent = agent }, manager);
+                        go.transform.SetParent(root.transform, false);
+                        view.OnStart(true);
+                        // Render while advancing so Unity's automatic particle culling
+                        // observes the camera before the raster sample is taken.
+                        for (int frame = 0; frame < 8; frame++) { yield return null; Flush(); camera.Render(); }
+                        Require(agent.MyStatuses.Contains(view), "Original grid status did not register: " + entry.id);
+                        Capture("grid-status-" + entry.id);
+                        view.OnEnd();
+                        for (int frame = 0; frame < 10; frame++) { yield return null; Flush(); }
+                        Require(state.Listeners == 0 && !agent.MyStatuses.Contains(view) && burnDeaths.Count == 0,
+                            "Original grid status retained component or death subscriptions: " + entry.id);
+                        view.OnStart(false);
+                        yield return null; Flush();
+                        view.OnEnd();
+                        for (int frame = 0; frame < 10; frame++) { yield return null; Flush(); }
+                        Require(state.Listeners == 0 && !agent.MyStatuses.Contains(view) && burnDeaths.Count == 0,
+                            "Restored original grid status retained subscriptions: " + entry.id);
+                        UnityEngine.Object.Destroy(go);
+                        manager.RemoveAllPlayable(true); center.RemoveAll();
+                        continue;
+                    }
                     var attach = new UnityEditor.SerializedObject(prefab.GetComponent<AttachAgent>());
                     var names = attach.FindProperty("myBoneNameList");
                     Require(names.arraySize == 2 && names.GetArrayElementAtIndex(0).stringValue == ""
@@ -119,7 +156,9 @@ namespace Zjcs.Editor
                     Require(role != null && driver.GetView<ECFightRoleStatusDisplayView>() != null,
                         "Original SerializeReference view registry was not restored.");
                     var graphs = new HashSet<GameObject>(); role.TryGetPlayables(ref graphs);
-                    Require(graphs.Count == 1 && graphs.Single().name == "playable13061_fire_die",
+                    bool hasDeathGraph = entry.id != 3050;
+                    Require(hasDeathGraph ? graphs.Count == 1 && graphs.Single().name == "playable13061_fire_die"
+                        : graphs.Count == 0,
                         "Grid view lost the original fire-specific death graph.");
                     var binding = go.AddComponent<GridViewBinding>(); binding.Data = new GridViewData { Type = entry.id };
                     driver.ServiceProvider = new GridViewServices { Manager = manager };
@@ -134,8 +173,9 @@ namespace Zjcs.Editor
                     Require(handle.GetValue(role) == null, "Living grid incorrectly played its death graph.");
                     binding.Data.Role.SetDie(true);
                     for (int frame = 0; frame < 8; frame++) { yield return null; Flush(); }
-                    Require(handle.GetValue(role) is MyPlayable, "Original death view did not dispatch its configured graph.");
-                    Capture("grid-" + entry.id + "-death");
+                    Require(hasDeathGraph ? handle.GetValue(role) is MyPlayable : handle.GetValue(role) == null,
+                        "Original death view did not respect its configured or null graph.");
+                    if (hasDeathGraph) Capture("grid-" + entry.id + "-death");
                     binding.Data.Role.SetDie(false);
                     Require(handle.GetValue(role) == null, "Original view failed to stop its death graph.");
                     binding.Data.End(); binding.RemoveViews();
@@ -153,6 +193,8 @@ namespace Zjcs.Editor
                 }
                 UnityEngine.Object.Destroy(staging);
                 Debug.Log("Native grid entity prefabs passed: complete hierarchy, script bindings, original managed view registry, configured death graph, actual driver load/unload and event cleanup. Entity events are fixture adapters; production binding remains separate.");
+                }
+                finally { OfficialWwiseEvent.Host = previousSoundHost; }
             }
         }
     }

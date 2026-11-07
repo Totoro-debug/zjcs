@@ -14,14 +14,59 @@ from prepare_battle_scene_appearance_runtime import identity, meta, write_change
 DEST = ROOT / 'unity/Assets/Official/Combat/GridItemSources'
 RECEIPT = ROOT / 'assets/reference/battle-animation/grid-item-views-source-manifest.json'
 ROOTS = {
+    3050: 'fightgriditem_3050.bundle',
     3051: 'fightgriditem_3051.bundle',
     3054: 'fightgriditem_3054.bundle',
     13052: 'fightskill_13050.bundle',
     13482: 'fightskill_13480.bundle',
+    11542: 'fightskill_11540.bundle',
+    11582: 'fightskill_11580.bundle',
+    11632: 'fightskill_11630.bundle',
+    16524: 'fightskill_16520.bundle',
+    16832: 'fightskill_16830.bundle',
+    16942: 'fightskill_16940.bundle',
+    17002: 'fightskill_17000.bundle',
+    17302: 'fightskill_17300.bundle',
+    17392: 'fightskill_17390.bundle',
+    17582: 'fightskill_17580.bundle',
+    17883: 'fightskill_17880.bundle',
+    19554: 'fightskill_19550.bundle',
+    54372: 'fightskill_54370.bundle',
+    56132: 'fightskill_56130.bundle',
+    56502: 'fightskill_56500.bundle',
+    56512: 'fightskill_56510.bundle',
+    56622: 'fightskill_56620.bundle',
+    56694: 'fightskill_56690.bundle',
+    57723: 'fightskill_57720.bundle',
+    57724: 'fightskill_57720.bundle',
+    58493: 'fightskill_58490.bundle',
+    58775: 'fightskill_58770.bundle',
+    59202: 'fightskill_59200.bundle',
+    59234: 'fightskill_59230.bundle',
+    59453: 'fightskill_59450.bundle',
+    60674: 'fightskill_60670.bundle',
+    60813: 'fightskill_60810.bundle',
+    61715: 'fightskill_61700.bundle',
+    62173: 'fightskill_62170.bundle',
+    62303: 'fightskill_62300.bundle',
+    62405: 'fightskill_62400.bundle',
+    62484: 'fightskill_62480.bundle',
+    62523: 'fightskill_62520.bundle',
+    62882: 'fightskill_62880.bundle',
+    62983: 'fightskill_62980.bundle',
+    68582: 'fightskill_68580.bundle',
 }
 
 
 def main():
+    skill_rules = ROOT / 'unity/Assets/Official/Combat/skill-rules.json'
+    entities = json.loads(skill_rules.read_bytes())['entities']
+    statuses = {status for entity in entities.values() for component in entity.values()
+                if isinstance(component, dict) and isinstance(component.get('SummonCfg'), dict)
+                and component['SummonCfg'].get('_type') == 'FightHitSummonGridItemCfg'
+                for status in component['SummonCfg']['SummonStatus']}
+    if statuses != set(ROOTS) - {3050, 3051, 3054}:
+        raise ValueError('Review the original prefab bundle for each configured grid status')
     DEST.mkdir(parents=True, exist_ok=True)
     with Apk.current() as apk:
         if apk.version != '884_156692':
@@ -91,7 +136,8 @@ def main():
         outputs.append(Path(str(DEST) + '.meta'))
         proof = dict(manifest=apk.version, generator=identity(Path(__file__)),
             decoder=identity(ROOT / 'scripts/official_unity_schema.py'),
-            code_manifest=identity(code_manifest), assemblies=list(assemblies.values()),
+            code_manifest=identity(code_manifest), skill_rules=identity(skill_rules),
+            assemblies=list(assemblies.values()),
             original_code=[identity(path) for path in sorted(sources)], inputs=inputs,
             schemas=schemas.records, outputs=[identity(path) for path in outputs],
             operation='APK-first verified bundles; traverse every original GameObject, component and child in order. '

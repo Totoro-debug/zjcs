@@ -12,16 +12,22 @@ import yaml
 from official_apk import Apk, ROOT
 from official_unity_schema import ScriptSchemas
 from prepare_battle_grid_entity_runtime import main as prepare_runtime
+from prepare_battle_grid_item_views import ROOTS as SOURCE_ROOTS
 from prepare_battle_ground_effect_assets import EXPORTED, GUID
 from prepare_battle_scene_appearance_runtime import identity, write_changed
 from prepare_battle_status_orbit_assets import build, SCRIPTS
+from prepare_battle_cast_assets import EVENT_ASSET
 
 RECEIPT = ROOT / 'assets/reference/battle-animation/grid-entity-assets-source-manifest.json'
 DEST = ROOT / 'unity/Assets/Official/Combat/GridEntities/Resources/Combat/GridEntities'
-ROOTS = {3051: 'Prefabs/EcEntity/Fight/FightGridItem/3051.prefab',
+GRID_ENTITIES = (3050, 3051, 3054)
+ROOTS = {3050: 'Prefabs/EcEntity/Fight/FightGridItem/3050.prefab',
+         3051: 'Prefabs/EcEntity/Fight/FightGridItem/3051.prefab',
          3054: 'Prefabs/EcEntity/Fight/FightGridItem/3054.prefab',
-         13052: 'Prefabs/EcEntity/Fight/FightSkill/13050/13052.prefab',
-         13482: 'Prefabs/EcEntity/Fight/FightSkill/13480/13482.prefab'}
+         **{key: 'Prefabs/EcEntity/Fight/FightSkill/'
+                  + re.fullmatch(r'fightskill_(\d+)\.bundle', bundle)[1]
+                  + '/' + str(key) + '.prefab'
+            for key, bundle in SOURCE_ROOTS.items() if key not in GRID_ENTITIES}}
 
 
 def script_id(name, namespace=''):
@@ -49,7 +55,7 @@ def main():
     restored, registrations, registry_objects, field_restorations = {}, [], [], []
     with Apk.current() as apk:
         schemas = ScriptSchemas(code_root=ROOT / '.tools/source-packages/current/884_156692/official-code')
-        for key in (3051, 3054):
+        for key in GRID_ENTITIES:
             driver = next(c for node in raw[key]['nodes'] for c in node['components']
                           if c.get('script', {}).get('name') == 'ECViewDriver')
             component = next(obj for obj in apk.objects(driver['source']['bundle'])
@@ -121,7 +127,7 @@ def main():
     folders = {name: 'BattleGridItemEntities' for name in (
         'GameCharacterZSet', 'MyActionAgent', 'MyFightRoleGridItem', 'MyFightRoleCharacter', 'MyFightRoleGrid',
         'MyFightRound', 'MyFightProp', 'MyFightGridMover', 'MyFightGameplayTag',
-        'MyFightStatusMoveNear', 'MyStatusEnd', 'MyStatusAutoRemove')}
+        'MyFightStatusMoveNear', 'MyStatusEnd', 'MyStatusAutoRemove', 'MyFightStatusItemTrigger')}
     folders.update(MyEntity='EntityLifecycle', MyTransform='EntityLifecycle',
                    MyGridTransform='EntityLifecycle', AttachAgent='StoryAttachment',
                    MyAction='EntityActions',
@@ -136,10 +142,15 @@ def main():
             target_namespace=namespace, runtime=path.relative_to(ROOT).as_posix())
     mapped = dict(SCRIPTS)
     mapped[script_id('MyPlayableAttachToBone')] = ('StoryAttachment', 'MyPlayableAttachToBone')
+    mapped.update({1640720687: ('StorySounds', 'MyPlayableSound'),
+                   -638476292: ('BattleGridItemPlayables', 'AutoStopOnSourceDie')})
     build(DEST=DEST, DATA=ROOT / 'unity/Assets/Game/Resources/Combat/grid-entities.json',
           RECEIPT=RECEIPT, ROOTS={}, graph_roots=ROOTS, family='GridEntities',
           shader_prefix='GridEntity_', MAPPED=mapped, source_scripts=bindings,
           external_assets=external, native_preprocess=restore_native_fields,
+          reference_scripts={-210918009: dict(name='WwiseEventReference', native_asset=EVENT_ASSET,
+              runtime='unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs',
+              receipt='assets/reference/profession-ui/audio-source-manifest.json')},
           native_scripts=[('unity/Assets/Game/Runtime/Official/BattleGridItemEntities/' + name + '.cs')
                           for name in ('ECFightRoleCharacterView', 'ECFightRoleStatusDisplayView')],
           generator=Path(__file__), limits=[

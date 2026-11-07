@@ -38,6 +38,10 @@
       "sha256": "bb36ecf389d8ef0643d63785bb4f13e91c1456f49b630188fcfff72631251f0d"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusItemTrigger.cs",
+      "sha256": "8dffc66fe3adc68980b31b72d7f369de58fb697db1db6eec31ff13bc3a0318c2"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusBase.cs",
       "sha256": "a9f09e63f27b288122261418314a11fb471893e51e2bbaa29347d1f6c77c938c"
     },
@@ -128,6 +132,14 @@
       "sha256": "decd93706e3ec509717dfeab6c3780c5625717fb2cba1f5be4f6c629c9bf4ef1"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusItemTrigger.cs",
+      "sha256": "869518ec7744295e24a5922b1e80feec707d337f9ce9bc52883f14b60e9d3342"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusItemTrigger.cs.meta",
+      "sha256": "17ccaecb90c223356742bf7a6758671b92769ecdbec7944663de3e469915a160"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusBase.cs",
       "sha256": "4df6e14a01c24112e16a4c47d17eb7fdf3fa68fe56a2f58d983da0293acf1efe"
     },
@@ -214,10 +226,10 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_grid_entity_runtime.py",
-    "sha256": "43a4ea1c66c6371d18e44790b122e74cdadb79404e0893338a51db13b6be5217"
+    "sha256": "3c4020c3d1113cb5ae5c5a1641e802a200ab19537711b303910420a75c760a34"
   },
   "adaptation": [
-    "Host-owned component data replaces unavailable server component classes; the seven empty client wrappers remain empty.",
+    "Host-owned component data replaces unavailable server component classes; the eight empty client wrappers remain empty.",
     "Original role/master registration and summon callbacks use an explicit scene registry instead of global player/fight services.",
     "PVP stage membership and nullable entity faction lookup are supplied from original stage settings and current entity state.",
     "Original playable order, owner/faction selection, null branches and stop behavior are retained.",
