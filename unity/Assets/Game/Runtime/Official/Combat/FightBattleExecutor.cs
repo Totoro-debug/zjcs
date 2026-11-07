@@ -90,6 +90,7 @@ namespace Zjcs.Combat.Official
                 unitById.Add(unit.Id, unit);
                 SynchronizeTurn(unit);
             }
+            RestoreGridItems();
             if (!unitById.ContainsKey(1))
                 throw new ArgumentException("Fight roster does not contain the main player unit.", nameof(checkpoint));
             turns = new FightTurnQueue(checkpoint.Timeline, Turns());
@@ -217,7 +218,8 @@ namespace Zjcs.Combat.Official
             float stepDuration = 0f;
             float stepActionDuration = -1f;
 
-            if (FightStatusLifecycle.TickTurn(actor, units, actorRound, FightStatusLifecycle.TimingStart) > 0)
+            CleanupGridItems();
+            if (FightStatusLifecycle.TickTurn(actor, StatusOwners(), actorRound, FightStatusLifecycle.TimingStart) > 0)
                 RebuildBattleProperties();
             ApplyMissingHitSummonRemovalTriggers();
             if (statusCatalog != null)
@@ -354,7 +356,7 @@ namespace Zjcs.Combat.Official
             FightBattleSkillDefinition eventSkill = null;
             if (casts.Count > ordinaryCastStart)
                 eventSkill = FindSkillBySlot(actor, casts[ordinaryCastStart].Slot);
-            else if (movements.Count == 0 && actor.VoodooDoll == null)
+            else if (movements.Count == 0 && !actor.IsVoodooDoll)
                 MoveAwayFromNearestEnemy(actor, movements);
             // Keep unavailable-skill turns non-damaging; the local retreat rule may still move
             // the actor when a legal grid destination increases its distance from enemies.
@@ -404,7 +406,8 @@ namespace Zjcs.Combat.Official
             turn.ActionRound = actor.SkillState.Round;
             SynchronizeTurn(actor);
             turns.Finish(turn);
-            FightStatusLifecycle.TickTurn(actor, units, actorRound, FightStatusLifecycle.TimingEnd);
+            FightStatusLifecycle.TickTurn(actor, StatusOwners(), actorRound, FightStatusLifecycle.TimingEnd);
+            CleanupGridItems();
             RebuildBattleProperties();
             ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
                 ref statusEndDelay, ref stepDuration, ref stepActionDuration);
@@ -859,6 +862,12 @@ namespace Zjcs.Combat.Official
                 }
                 if (hit.IsSummon)
                 {
+                    if (hit.SummonConfigType == "FightHitSummonGridItemCfg")
+                    {
+                        lastDelay = Math.Max(lastDelay, SpawnGridItems(actor, skill, hit,
+                            hasRandomTargetContext ? hitTargets : targets, targetPosition));
+                        continue;
+                    }
                     SpawnSummons(actor, skill, hit,
                         hasRandomTargetContext ? hitTargets : targets);
                     continue;
@@ -867,7 +876,7 @@ namespace Zjcs.Combat.Official
                 {
                     if (!allowDeadSource && actor.Hp <= 0) break;
                     if (target.Hp <= 0 || target.Ended) continue;
-                    if (target.VoodooDoll != null && (hit.ActionType == 5 || skill.SkillType == 3)) continue;
+                    if (target.IsVoodooDoll && (hit.ActionType == 5 || skill.SkillType == 3)) continue;
                     float hitDelay = HitDelay(actor, target, hit);
                     if (hitDelay > lastDelay) lastDelay = hitDelay;
                     movementStartContext.StatusStartTime = Math.Max(0f, hitDelay);
@@ -1051,6 +1060,7 @@ namespace Zjcs.Combat.Official
                     // Death listeners and immediate revival settle before a summoned unit is
                     // considered removed. Property rebuilds alone are not removal boundaries.
                     ApplyMissingHitSummonRemovalTriggers(target);
+                    CleanupGridItems();
                     ApplyChildSkill(actor, target, skill, hit, casts, damageEvents, movements, ref lastDelay);
                 }
             }
@@ -1342,14 +1352,14 @@ namespace Zjcs.Combat.Official
 
         private int StatusClockRound(FightBattleStatusState status)
         {
-            int id = FightStatusLifecycle.ResolveTargetUnitId(status, units);
+            int id = FightStatusLifecycle.ResolveTargetUnitId(status, StatusOwners(true));
             return unitById.TryGetValue(id, out var clock) ? clock.SkillState.Round : 0;
         }
 
         private int NextSummonUnitId()
         {
             int maximum = checkpoint.SummonSerial;
-            foreach (FightBattleUnitState unit in units)
+            foreach (FightBattleUnitState unit in unitById.Values)
                 if (unit != null && unit.Id > maximum) maximum = unit.Id;
             if (maximum == int.MaxValue) throw new InvalidOperationException("Summoned unit id space is exhausted.");
             checkpoint.SummonSerial = maximum + 1;
@@ -1359,7 +1369,7 @@ namespace Zjcs.Combat.Official
         private int NextStatusInstanceId()
         {
             int maximum = checkpoint.StatusInstanceSerial;
-            foreach (FightBattleUnitState unit in units)
+            foreach (FightBattleUnitState unit in unitById.Values)
                 if (unit != null && unit.Statuses != null)
                     foreach (FightBattleStatusState status in unit.Statuses)
                         if (status != null && status.InstanceId > maximum) maximum = status.InstanceId;
@@ -1836,7 +1846,7 @@ namespace Zjcs.Combat.Official
                     || !unitById.TryGetValue(invocation.TargetPositionUnitId,
                         out FightBattleUnitState targetPosition)
                     || (!FightBattleTargeting.IsSelectable(source)
-                        && !invocation.AllowDeadSource)
+                        && !invocation.AllowDeadSource && !IsGridSkillSource(source))
                     || (!invocation.SelectTargets && !FightBattleTargeting.IsSelectable(target)
                         && !invocation.AllowDeadTarget)
                     || (!invocation.SelectTargets && !FightBattleTargeting.IsSelectable(targetPosition)
@@ -1891,7 +1901,7 @@ namespace Zjcs.Combat.Official
                 ExecuteSkill(source, skill, targets, casts, damageEvents, movements,
                     out float delay, out float nestedDuration, out float nestedActionDuration,
                     !invocation.SelectTargets || invocation.UseTargetPositionWithSelection
-                        ? targetPosition : null, invocation.AllowDeadSource,
+                        ? targetPosition : null, invocation.AllowDeadSource || IsGridSkillSource(source),
                     invocation.DamageFactor);
                 CompleteCastPresentation(cast, skill, delay);
                 // FightStatusMoveNearComponentInfo.SkillTriggerDelayTime delays the entire skill,
@@ -1925,7 +1935,7 @@ namespace Zjcs.Combat.Official
         {
             if (statusCatalog == null) return;
             List<FightBattleStatusSkillInvocation> invocations =
-                FightStatusTriggerRuntime.CollectMoveNearSkills(roundActor, units, eventKind,
+                FightStatusTriggerRuntime.CollectMoveNearSkills(roundActor, StatusOwners(), eventKind,
                     movement, random);
             if (invocations.Count == 0) return;
             float triggerDelay = 0f;

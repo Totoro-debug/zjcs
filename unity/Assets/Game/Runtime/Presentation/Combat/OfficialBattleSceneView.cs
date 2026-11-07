@@ -505,6 +505,7 @@ namespace Zjcs.Presentation.Combat
                 if (units.TryGetValue(state.Id, out UnitView healthView)) healthView.PartnerHp?.Refresh(state);
                 if (state.Hp <= 0)
                 {
+                    NotifySourceDeath(state.Id);
                     Transform deadAttached = attachedTransforms.TryGetValue(state.Id, out Transform deadBody)
                         ? deadBody : null;
                     if (deadAttached != null)
@@ -515,6 +516,7 @@ namespace Zjcs.Presentation.Combat
                     continue;
                 }
                 present.Add(state.Id);
+                notifiedSourceDeaths.Remove(state.Id);
                 if (attachedTransforms.TryGetValue(state.Id, out Transform attached) && attached != null)
                 {
                     PlaceUnit(state.Id, attached, state, stepEvent);
@@ -1287,6 +1289,8 @@ namespace Zjcs.Presentation.Combat
 
         public void Dispose()
         {
+            sourceDeathListeners.Clear();
+            notifiedSourceDeaths.Clear();
             ReleasePetFollowers();
             ReleaseAttachedShadows();
             movementEffects?.Dispose();

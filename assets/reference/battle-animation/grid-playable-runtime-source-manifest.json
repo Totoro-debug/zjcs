@@ -1,0 +1,70 @@
+{
+  "manifest": "884_156692",
+  "source": {
+    "path": ".tools/source-packages/current/884_156692/official-code/client-source/AutoStopOnSourceDie.cs",
+    "sha256": "7b6855a33f1e64dcedfa4072a37783829592a4e0e6536d81b995cc5922b30cac"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "code_manifest": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "unchanged_method_bodies": {
+    "Component_OnDie": "85791e73d120c40f326eee52d0f15b8461e5e6e6ac5001cb6126cdea96211808",
+    "StopImpl": "6aeb8c1a99d971d801320972605e613994da4ee639f6e96eb6b3f7d84d9564b5",
+    "PlayImpl": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemPlayables/AutoStopOnSourceDie.cs",
+      "sha256": "5d408d837e4082e7b39d09defa7dc6152cc5a02d650f47d00d7ea39be58169cf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemPlayables/Zjcs.Official.BattleGridItemPlayables.asmdef",
+      "sha256": "ff371c7ab67903dafeb60c3ec24ad44c6b0a9f697d6c8474aa44f18f7112db08"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IBattleSourceDeathEvents.cs",
+      "sha256": "f233f55e06ee4e715e0b6bcd5ce239761c82bc4a8fd7ce5926cd3fbfb3a0471b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.SourceDeathEvents.cs",
+      "sha256": "a90847e199b07419c0e38f54ae386b2dc5acddede414533d9e643f34bb82ad7f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemPlayables/AutoStopOnSourceDie.cs.meta",
+      "sha256": "9ef573dc0a2f522c86e904b33a21c1a8ef7888a7b2107176256cfb57a5efa51e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemPlayables/Zjcs.Official.BattleGridItemPlayables.asmdef.meta",
+      "sha256": "df809b201fc9fe5a919e983a233e798e03f429be76ae9de31a8033454bd1c466"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IBattleSourceDeathEvents.cs.meta",
+      "sha256": "3c0d1779537775b2c29b39a0403bdda29a046bf029f7aedf023995d21613b87e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.SourceDeathEvents.cs.meta",
+      "sha256": "9093134836a5bb3bae44a5529c040b54bf9c53697fd0f048be4df1966b8cc34b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemPlayables.meta",
+      "sha256": "5de1502f43ee1aeb681db64def6e1c2ec73d32fc60aa2007a59a90b374562a37"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_burning_assets.py",
+    "sha256": "6088f9d74e3188f03c4decb9bf3d8beb1edc36eff3538747ba69964ef813466e"
+  },
+  "host_binding": {
+    "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
+    "sha256": "5f620f0ea1a1c17ee4dde623036a40c3a40562926dbd8d1c5dcf412c2dbd09a6"
+  },
+  "adaptation": "Original stop branch/method bodies; ILSpy async state machine recompiled with the same UniTask delay, scaled time, player-loop timing 8 and cancellation token. Scene-owned disposable OnDie subscription replaces the unavailable MyFightRoleCharacter lookup; source death is emitted at the existing scene death-view boundary.",
+  "limits": [
+    "Native graph extraction does not establish production grid/status lifecycle binding or full battle death animation timing."
+  ]
+}

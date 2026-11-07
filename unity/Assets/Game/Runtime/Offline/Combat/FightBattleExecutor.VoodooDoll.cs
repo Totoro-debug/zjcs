@@ -42,7 +42,7 @@ namespace Zjcs.Combat.Official
             List<FightBattleDamageEvent> events, List<FightBattleSkillCastEvent> casts,
             HashSet<int> visited = null)
         {
-            if (doll.VoodooDoll == null) return;
+            if (!doll.IsVoodooDoll) return;
             if (visited == null) visited = new HashSet<int>();
             if (!visited.Add(doll.Id)) throw new InvalidOperationException("Cyclic substitute link.");
             if (!unitById.TryGetValue(doll.VoodooDoll.TargetId, out var target)) return;
@@ -69,7 +69,7 @@ namespace Zjcs.Combat.Official
         {
             foreach (FightBattleUnitState doll in units)
             {
-                if (doll.VoodooDoll == null) continue;
+                if (!doll.IsVoodooDoll) continue;
                 unitById.TryGetValue(doll.VoodooDoll.TargetId, out var target);
                 if (target == null || target.Hp <= 0 || target.Ended) doll.Ended = true;
                 if (doll.Hp > 0 && !doll.Ended) continue;

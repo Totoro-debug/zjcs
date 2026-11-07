@@ -686,3 +686,9 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 地图入口补充接线来源见[地图公共接线来源](official-map/mainline-map-integration-source-manifest.json)：记录主线小地图版本选择、地图战斗公共构造、山之国私图助战与其公共副本内核依赖、Unity 导入后的地图元数据及源码哈希；原美术载荷与 GUID 保持既有来源，导入器自动扩展字段不声明为原始官方配置。验证范围维护在[主线地图公共模块](../../docs/features/world-map.md#主线地图公共模块)及[山之国](../../docs/maps/map-12.md)。
 
 公共战斗退出来源：`prepare_battle_leave_texts.py` 记录所选版本目录中已核实反编译的 `FightMainPanelLeaveModule`、各单人退出 handler、884 官方语言文件及既有原生 ConfirmDialog 的输入 SHA256，生成六条原文与独立资源目录的显式 prefab／mask 绑定，见[退出来源清单](battle-rules/leave-source-manifest.json)。复用原生载荷，不重新绘制或更换版本；玩法离开裁决见所属功能页。
+
+灼烧地块配置来源：`prepare_battle_grid_items.py` 从所选 884 官方 APK／已校验本地资源读取 `grid_item.g.bytes`、`entity_grid_mover.g.bytes` 和 `FightGridItem_part1.g.bytes`，按同版生成的 Luban／MessagePack 格式解码 3320→3051、3328→3054 的完整表项与实体，编译原地形掩码及覆盖标记。输入版本、bundle／PathID、程序集、原代码、原始与输出 SHA256 见[地块来源清单](battle-rules/grid-items-source-manifest.json)。未修改既有 854 战斗载荷或其预期哈希；此项未新增美术载荷，规则与验证范围见[技能页](../../docs/features/skills.md)。
+
+持续灼烧演出来源：`prepare_battle_burning_assets.py` 复用已校验的 884 原生导出与原 APK／本地云资源，恢复 `playable13052`、`playable13482` 的完整依赖、原纹理 mip 和 Windows shader；不删除组件、粒子或序列叶节点。原 bundle／对象身份、导出输入、转换输出、脚本映射及显式加载资源名见[持续火焰资产来源](battle-animation/status-burn-assets-source-manifest.json)，`AutoStopOnSourceDie` 的程序集、方法比对、异步适配和绑定输入见[组件来源](battle-animation/grid-playable-runtime-source-manifest.json)。此批新增资产尚未生成完整素材快照；实现及实际验证范围仅在[技能页](../../docs/features/skills.md)维护。
+
+地块视图输入来源：`prepare_battle_grid_item_views.py` 从同一 884 官方 bundle 遍历 3051／3054 与 13052／13482 prefab 的全部节点和组件，使用所选程序集严格解码 MonoBehaviour，并恢复原生 YAML 未保留的 `ECViewDriver` 序列化引用注册表。原对象指针、bundle／PathID、原始字节、解码字段、程序集凭据及输出 SHA256 见[地块视图输入来源](battle-animation/grid-item-views-source-manifest.json)；不将解码 JSON 当作可见原生 prefab 的替代品。

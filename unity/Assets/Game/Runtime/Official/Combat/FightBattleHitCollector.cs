@@ -103,6 +103,11 @@ namespace Zjcs.Combat.Official
                     SummonInheritProps = entity.SummonInheritProps,
                     SummonConfigType = entity.SummonConfigType,
                     SummonReferenceType = entity.SummonReferenceType,
+                    SummonGridItemClassId = entity.SummonGridItemClassId,
+                    GridItemFindAdjacentIfBlocked = entity.GridItemFindAdjacentIfBlocked,
+                    GridSummonCells = entity.GridSummonCells == null
+                        ? new List<FightBattleGridSummonCell>()
+                        : new List<FightBattleGridSummonCell>(entity.GridSummonCells),
                     SummonLevelType = entity.SummonLevelType,
                     SummonLifespanStatusId = entity.SummonLifespanStatusId,
                     SummonPools = entity.SummonPools == null

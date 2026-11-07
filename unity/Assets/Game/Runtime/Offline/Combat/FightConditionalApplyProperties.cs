@@ -29,7 +29,7 @@ namespace Zjcs.Combat.Official
                 if(c.CharacterType!=0)
                 {
                     var character=target;
-                    if(c.ApplyTargetCharacterTypeIfSubstitute && target.VoodooDoll!=null)
+                    if(c.ApplyTargetCharacterTypeIfSubstitute && target.IsVoodooDoll)
                     {
                         character=null;
                         if(units!=null) foreach(var unit in units)

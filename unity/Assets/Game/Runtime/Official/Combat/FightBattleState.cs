@@ -65,6 +65,9 @@ namespace Zjcs.Combat.Official
         public bool HitSummonRemoveProcessed;
         public bool HitSummonHasLifeDuration;
         public FightVoodooDollLink VoodooDoll;
+        // JsonUtility materializes null inline classes as empty objects. A real
+        // substitute always has a positive linked target identity.
+        public bool IsVoodooDoll => VoodooDoll != null && VoodooDoll.TargetId > 0;
         public List<FightPropertyValue> Properties = new List<FightPropertyValue>();
         public List<FightBattleSkillDefinition> Skills = new List<FightBattleSkillDefinition>();
         // Original report items retain rank/level even after their passive status expires.
@@ -390,6 +393,22 @@ namespace Zjcs.Combat.Official
         public int X;
         public int Y;
         public bool Ended;
+        // Grid items have a status/property actor, but no HP-based turn or victory slot.
+        public FightBattleUnitState Runtime;
+        // JsonUtility may materialize an absent inline class; legacy count-only entries
+        // must not acquire a fabricated grid actor on load.
+        public bool HasRuntime;
+        public int ReferenceUnitId;
+        public float CreationDelay;
+    }
+
+    [Serializable]
+    public sealed class FightBattleGridSummonCell
+    {
+        public FightGridPoint ScopePosition;
+        public FightGridPoint Position;
+        public float Rate = 1f;
+        public float Delay;
     }
 
     [Serializable]
@@ -701,6 +720,8 @@ namespace Zjcs.Combat.Official
         public int RoundTarget;
         public int RoundUpdateTiming;
         public bool RemoveAtRoundTargetDestroy;
+        public bool RemoveAtRoundTargetDie;
+        public bool RemoveAtApplyEnded;
         public int ActionBehOfSameStatus;
         public bool CanDispersed;
         public bool IsAddDurationRound;
@@ -1380,6 +1401,9 @@ namespace Zjcs.Combat.Official
         public bool SummonInheritProps;
         public string SummonConfigType;
         public int SummonReferenceType;
+        public int SummonGridItemClassId;
+        public bool GridItemFindAdjacentIfBlocked;
+        public List<FightBattleGridSummonCell> GridSummonCells = new List<FightBattleGridSummonCell>();
         public int SummonLevelType;
         public int SummonLifespanStatusId;
         public List<FightBattleSummonPool> SummonPools = new List<FightBattleSummonPool>();
@@ -1430,6 +1454,9 @@ namespace Zjcs.Combat.Official
         public bool SummonInheritProps;
         public string SummonConfigType;
         public int SummonReferenceType;
+        public int SummonGridItemClassId;
+        public bool GridItemFindAdjacentIfBlocked;
+        public List<FightBattleGridSummonCell> GridSummonCells = new List<FightBattleGridSummonCell>();
         public int SummonLevelType;
         public int SummonLifespanStatusId;
         public List<FightBattleSummonPool> SummonPools = new List<FightBattleSummonPool>();

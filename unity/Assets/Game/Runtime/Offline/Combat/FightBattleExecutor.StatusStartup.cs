@@ -6,13 +6,13 @@ namespace Zjcs.Combat.Official
     {
         public FightBattleExecutionResult Step(int sequence, int counter)
         {
-            foreach (var unit in units)
+            foreach (var unit in StatusOwners())
                 if (unit.StatusStarted != null || unit.StatusEnded != null || unit.StatusForbiddenChanged != null
                     || unit.HpUpdated != null || unit.HpIncreased != null || unit.StatusRoundResolver != null
                     || unit.RoundStartClockResolver != null)
                     throw new InvalidOperationException("A battle unit is already executing a step.");
             bool mutexChanged = false;
-            foreach (var unit in units)
+            foreach (var unit in StatusOwners())
             {
                 foreach (var status in unit.Statuses) RestoreStackCountDefinition(status);
                 mutexChanged |= SynchronizeDeathForbidden(unit);
@@ -20,7 +20,7 @@ namespace Zjcs.Combat.Official
             }
             if (mutexChanged && statusCatalog != null)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
-            foreach (var unit in units)
+            foreach (var unit in StatusOwners())
             {
                 unit.StatusStarted = OnStatusStarted;
                 unit.StatusEnded = OnStatusEnded;
@@ -31,12 +31,16 @@ namespace Zjcs.Combat.Official
                 unit.RoundStartClockResolver = RoundStartClockRound;
                 foreach (var status in unit.Statuses) status.StackChanged = OnStatusStackChanged;
             }
-            try { return StepCore(sequence, counter); }
+            try
+            {
+                CleanupGridItems();
+                return StepCore(sequence, counter);
+            }
             finally
             {
                 // Include units summoned during this step. No delegate or executor is retained
                 // by the checkpoint, including when a configuration fails during a nested cast.
-                foreach (var unit in units)
+                foreach (var unit in StatusOwners(true))
                 {
                     unit.StatusStarted = null;
                     unit.StatusEnded = null;
@@ -90,8 +94,8 @@ namespace Zjcs.Combat.Official
             StartRoundStatus(owner, status);
             OnStatusStackChanged(status);
             if (!status.HasMoveNear || !status.MoveNearTryAtStart || !status.MoveNearRulesSupported
-                || owner.Hp <= 0 || !owner.Statuses.Contains(status)) return;
-            var invocations = FightStatusTriggerRuntime.CollectMoveNearSkills(owner, units,
+                || owner.Hp <= 0 && !IsGridSkillSource(owner) || !owner.Statuses.Contains(status)) return;
+            var invocations = FightStatusTriggerRuntime.CollectMoveNearSkills(owner, StatusOwners(),
                 FightStatusTriggerRuntime.MoveNearEventStart, null, random, status);
             if (invocations.Count == 0) return;
             FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);

@@ -22,7 +22,7 @@ namespace Zjcs.Combat.Official
         public static FightBattleDamageEvent Transmit(FightBattleUnitState doll,
             FightBattleUnitState target, FightBattleDamageEvent suffered, int damageId)
         {
-            if (doll?.VoodooDoll == null || target == null || target.Hp <= 0 || target.Ended
+            if (doll == null || !doll.IsVoodooDoll || target == null || target.Hp <= 0 || target.Ended
                 || suffered == null || suffered.IsCure || !suffered.HasDamageValue
                 || suffered.DamageValue >= 0 || suffered.TargetId != doll.Id
                 || doll.VoodooDoll.TargetId != target.Id) return null;
@@ -48,7 +48,7 @@ namespace Zjcs.Combat.Official
             IReadOnlyList<FightBattleUnitState> units, Func<int> nextInstanceId,
             FightRandomStream random = null)
         {
-            if (doll?.VoodooDoll == null || doll.VoodooDoll.DebuffsTransferred) return 0;
+            if (doll == null || !doll.IsVoodooDoll || doll.VoodooDoll.DebuffsTransferred) return 0;
             doll.VoodooDoll.DebuffsTransferred = true;
             if (target == null || target.Hp <= 0 || target.Ended) return 0;
             int count = 0;

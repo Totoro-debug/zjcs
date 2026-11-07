@@ -1,0 +1,4677 @@
+{
+  "manifest": "884_156692",
+  "generator": {
+    "path": "scripts/prepare_battle_grid_item_views.py",
+    "sha256": "f5402d5f5cf655a0fe6685617a23b8a2865ba98527b030a8cd83dd231810e29d"
+  },
+  "decoder": {
+    "path": "scripts/official_unity_schema.py",
+    "sha256": "934af3c56159da97a5c6d97a1412547b3ca847f71303bd961bbd37bee8b3aceb"
+  },
+  "code_manifest": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+    }
+  ],
+  "original_code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AttachAgent.cs",
+      "sha256": "5cb97759a33d2a7f81736445c630f776826fa8684ad167dedf2216f1f8dda915"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ECFightRoleCharacterView.cs",
+      "sha256": "6845b6511d5aae48ab3818735b8452f1c152009e2fc8ee22a9521ff415bccac0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ECFightRoleStatusDisplayView.cs",
+      "sha256": "2d57b4d9691be5c2232d9a7fdb9d91fa67c75a35b9b6de7599c57b843ed3b574"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ECViewDriver.cs",
+      "sha256": "46808b5f955b1e120c939a78bbe64aed8f5b1d66d2e290b11e84c08c20ec07d7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/GameCharacterZSet.cs",
+      "sha256": "d0ec504811429d94b60ef5d05a7a06cb26bc3b2a547211a2a9983d329d8e2543"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyAction.cs",
+      "sha256": "6adf75aa0f477aab0ada42d10bd0b3ea7e8b3a77b111e02206faa7aa15e9a140"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyActionAgent.cs",
+      "sha256": "b5ed46aeb39e8e872b7af0fd23de65fbe98a57256f51173d1c828be6b1378a41"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntity.cs",
+      "sha256": "1d3cb29ee8e21bb2e8717aa95c8922434f1a20bf90fafb941b5ffcbf26bd2ae1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightGameplayTag.cs",
+      "sha256": "9803582a17b79d53729d221bedb09b899025ee3b79dddf5801548a28b7bb39ef"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightGridMover.cs",
+      "sha256": "51aa6f51622834e297f145286d81b3cacb3d6dffcd1180542efb2eb924992fff"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightProp.cs",
+      "sha256": "a6906148037fd5c8fede72908697eeeccc421ddbe8448c135fdc031c78a559d0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightRoleCharacter.cs",
+      "sha256": "4d0935f892cce5ecb4e797f5a5b4f3fa0913f4bac33aef0fe44bd402c58df3c6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightRoleGrid.cs",
+      "sha256": "8b707259ab0fd0cf30e8a9b37c6db2d4d0a4df9cf9b6381541b8201d78ff32d3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightRoleGridItem.cs",
+      "sha256": "ba1b4b4daf326b3a98bb3023c19f01c836374a01059814630bfbde1e618623e8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightRound.cs",
+      "sha256": "054d8271631f1138ad6e1af5174a34b76bb4c55ce7498828ec6c13e27e222254"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatus.cs",
+      "sha256": "6703467530851893a67bd76e3d6a2d15253cf336d3c6abe23b6a1a104ddace1d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusAgent.cs",
+      "sha256": "0ddc9ca4c35266438fbe33ac424b32566012608f6bc19bf4342621f1819f9693"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusMoveNear.cs",
+      "sha256": "bb36ecf389d8ef0643d63785bb4f13e91c1456f49b630188fcfff72631251f0d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyGridTransform.cs",
+      "sha256": "6568a690831e9fc20eb95fcd659f4f8cca5b780d7b735b579406f1a9af8de0bd"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStatusAutoRemove.cs",
+      "sha256": "8ed02cd689b37dc0ad311ea54fec6d8f98a96b978403a459307c71b18e637a24"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStatusEnd.cs",
+      "sha256": "5808ac593737763cbdf2a530f0197eb9bd9571d466ebab250a861c650d103a65"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyTransform.cs",
+      "sha256": "75775226b2ff4efbc2853dff3d9964d5f11cd5032ca69ccd304d298944f5d5b9"
+    }
+  ],
+  "inputs": [
+    {
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "-2535602983851359044",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "9008fba9888e882c7de1d6b13ad65197e35a0754da925b273158a0b6dda6a88f",
+      "fields": {
+        "m_Component": [
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -2693910162021382980
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -4826932744835005252
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 6159506289470178492
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 4076802912002999484
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -6062990585689635652
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 8507313678429095100
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -1013428493182401348
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -8581250996312374084
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -6781438819590699844
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -2776734739245595460
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 2991463359501010108
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -4091366883627989828
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 2739360823823991996
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -8637479545469827908
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -6995372496834952004
+            }
+          }
+        ],
+        "m_Layer": 0,
+        "m_Name": "3051",
+        "m_Tag": 0,
+        "m_IsActive": true
+      }
+    },
+    {
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "-2693910162021382980",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "755b3e6b9aa1705aa238f290d864366b9b82a8794cac88f1cfa7a377a8703adc",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2535602983851359044
+        },
+        "m_LocalRotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "m_LocalPosition": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "m_LocalScale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "m_Children": [
+          {
+            "m_FileID": 0,
+            "m_PathID": 1486395066338870460
+          }
+        ],
+        "m_Father": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "-4826932744835005252",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "7c70510febc984ce2bb3c19d9b9dd8467beb918f7453949f9d19811152de25a8",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2535602983851359044
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6091562175442622485
+        },
+        "m_Name": "",
+        "myContainer": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyEntity"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "6159506289470178492",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "159c431604177a4f3318b163942b2673cac216cdabab455189dc936ccd1686dd",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2535602983851359044
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 9179275838071259798
+        },
+        "m_Name": "",
+        "mSetZ": 0
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyTransform"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "4076802912002999484",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "39c6fcc1a0104549799325ac2b3d378a76cf0fbdcb1b216f02aeae11b3c701f7",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2535602983851359044
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8102050695952345120
+        },
+        "m_Name": "",
+        "UpdatePosImmediately": 0,
+        "mSetZ": 0,
+        "mOffsetZ": 0.0,
+        "mFlipTransform": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "ClientOverrideEntityDimensionBounds": []
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyGridTransform"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "-6062990585689635652",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "95e0bc6cf27b929e46104483bb8ef78707eec7c53702e589fc7fbb9492db6c5a",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2535602983851359044
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1992464269187059580
+        },
+        "m_Name": "",
+        "myBoneNameList": [
+          "",
+          "3300"
+        ],
+        "myBoneList": [
+          {
+            "m_FileID": 0,
+            "m_PathID": -2693910162021382980
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -2693910162021382980
+          }
+        ]
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "AttachAgent"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "8507313678429095100",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "997d36015d5a0e1d8ddb523bb68d514eaa3f50d301a0e11a0df1dcca0087f31c",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2535602983851359044
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -6132626620859873577
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyActionAgent"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "-1013428493182401348",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "be60f9b6dd41de3749abb3bea71c4e993bd368468d10bf9d81bcd2a7e0b58099",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2535602983851359044
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -1958008996929747494
+        },
+        "m_Name": "",
+        "GridFriendEffectPlayable": {
+          "m_FileID": 2,
+          "m_PathID": 2913870022576905801
+        },
+        "GridEnemyEffectPlayable": {
+          "m_FileID": 2,
+          "m_PathID": -6751946865522934129
+        },
+        "Playable": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightRoleGridItem"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "-8581250996312374084",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "380c08077cdddcfe44c293aa7590c3d141c7716adb7b634ac2e824d2a921dc04",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2535602983851359044
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -5513919939100864213
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightStatusAgent"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "-6781438819590699844",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "b79bb819417769e55007fdce1e3f17be67e6d55f560b7b1afde9bcb1da8d6021",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2535602983851359044
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -1587517927444263784
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightRoleGrid"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "-2776734739245595460",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "4fb14fe327b5481bc5dc6ec11c6bc18fc3661b6aa0fd295811e51d8ccf0b6f34",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2535602983851359044
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -6821506064380758728
+        },
+        "m_Name": "",
+        "mIsShowOnRoundProgress": 0
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightRound"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "2991463359501010108",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "7bbacc2b9e0bd7bc809eaa051a9136a0f5f7d6dafa88351b582e7363956cc58a",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2535602983851359044
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8527236930278201984
+        },
+        "m_Name": "",
+        "Transform": {
+          "m_FileID": 0,
+          "m_PathID": 6159506289470178492
+        },
+        "mOffsetZ": 0.0
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "GameCharacterZSet"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "-4091366883627989828",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "a5a250f83aa0bfbc2548570589c51c0de7d29dac0dc49d9e91fa8d32e1159299",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2535602983851359044
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 9020372185152959169
+        },
+        "m_Name": "",
+        "mIsSoul": 0
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightRoleCharacter"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "2739360823823991996",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "b14d90fb78f0c3a3e3680c69673190d193b276f3ae87ceca60fa2fcda5925ea9",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2535602983851359044
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1188829995090786706
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightProp"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "-8637479545469827908",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "d3c442d1d570ce7e70b82d7de3b0ec259fad24db71998de75a5b739164cd9e61",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2535602983851359044
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8480546919127541558
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightGridMover"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "-6995372496834952004",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "1abc0c17ae533f215e859a1c221c04963d6833a93b09ad9ae98647ffde524f3f",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2535602983851359044
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 9219114533342545905
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightGameplayTag"
+      }
+    },
+    {
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "8579952616745698492",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "3e5c0ab303cadc76182b97c4b317dcb2ca297fd463937ccb1f947d17f20962b8",
+      "fields": {
+        "m_Component": [
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 1486395066338870460
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -7604474152751889220
+            }
+          }
+        ],
+        "m_Layer": 0,
+        "m_Name": "0templateGrideItem_view",
+        "m_Tag": 0,
+        "m_IsActive": true
+      }
+    },
+    {
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "1486395066338870460",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "313d0a51fafc44e683619f684c88bb0f8d6ca1552c4171fd6aa282242783c1ee",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 8579952616745698492
+        },
+        "m_LocalRotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "m_LocalPosition": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "m_LocalScale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "m_Children": [],
+        "m_Father": {
+          "m_FileID": 0,
+          "m_PathID": -2693910162021382980
+        }
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3051.bundle",
+        "bundle_hash": "6f4c9fee0e58fb8d37c874faa359c214",
+        "path_id": "-7604474152751889220",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6f4c9fee0e58fb8d37c874faa359c214.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2490,
+        "bundle_sha256": "782a9a899bcd90948d8eb1eafa167caff8d44b879d852a6043b93be56e601291"
+      },
+      "payload_sha256": "7ca86a333973cdc0fd4baec529d077adb74d4cf38a6e8d8611f570faf2a3d2ef",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 8579952616745698492
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 2491674463829926342
+        },
+        "m_Name": "",
+        "mECViews": [
+          {
+            "rid": 3986547892861534291
+          },
+          {
+            "rid": 3986547898241515764
+          }
+        ],
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": 3986547892861534291,
+              "type": {
+                "class": "ECFightRoleCharacterView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mSpriteList": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mPlayerHUD": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mPlayerAppearance": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mDieOnStartPlayable": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mDiePlayable": {
+                  "m_FileID": 1,
+                  "m_PathID": 5487843103087784566
+                },
+                "mTryDiePlayableOnStart": 0,
+                "mGeneratePlayable": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mGenerateDelayTime": 0.0,
+                "mGeneratePlayableNeedDelay": 0,
+                "mDelayVisibilityParts": []
+              }
+            },
+            {
+              "rid": 3986547898241515764,
+              "type": {
+                "class": "ECFightRoleStatusDisplayView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mStatusItem": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mStatusItemSlot": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mMaxCountOfRow": 1,
+                "mMaxRowCount": 1
+              }
+            }
+          ]
+        }
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "ECViewDriver"
+      }
+    },
+    {
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "4144821568607161872",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "cec9818bf4d4991e8674fa3c4e51307070afe7e8fa255ed8974d8e97e47bbc5c",
+      "fields": {
+        "m_Component": [
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -5673523770903884272
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -4078715043631657456
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -1895298939740418544
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -5950107056193991152
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 7527843209118354960
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 5631793852957724176
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -7724964200973398512
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -6755615029239869936
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -3477547222901453296
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -5817463440673206768
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 2228962953113046544
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -6036849574884143600
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 2840102185848344080
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -5460634772796731888
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 745352059192741392
+            }
+          }
+        ],
+        "m_Layer": 0,
+        "m_Name": "3054",
+        "m_Tag": 0,
+        "m_IsActive": true
+      }
+    },
+    {
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "-5673523770903884272",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "2a87bbec29a03c594da25e486ad70526daefef6d84983cac6927798dcc1af0f5",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4144821568607161872
+        },
+        "m_LocalRotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "m_LocalPosition": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "m_LocalScale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "m_Children": [
+          {
+            "m_FileID": 0,
+            "m_PathID": 8018602637443403280
+          }
+        ],
+        "m_Father": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "-4078715043631657456",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "1e7bcc840b51d537699b8e6875eaf3550067e51f6b4aad8d2a2270d7ea0514e9",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4144821568607161872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6091562175442622485
+        },
+        "m_Name": "",
+        "myContainer": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyEntity"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "-1895298939740418544",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "1927a25c6c6e19b3cc7299ecf2c4ad1f44c80803b08422ed8bebc001f2ebdfc9",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4144821568607161872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 9179275838071259798
+        },
+        "m_Name": "",
+        "mSetZ": 0
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyTransform"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "-5950107056193991152",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "023909c2532b06f199d2b6987fd2376fa4ad21ef2e4e86d4caa3538c96625b7d",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4144821568607161872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8102050695952345120
+        },
+        "m_Name": "",
+        "UpdatePosImmediately": 0,
+        "mSetZ": 0,
+        "mOffsetZ": 0.0,
+        "mFlipTransform": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "ClientOverrideEntityDimensionBounds": []
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyGridTransform"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "7527843209118354960",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "2a1ae75e1a9dde23d99950b3871e8e935bcb1590f414517e07dd33683aa71e20",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4144821568607161872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1992464269187059580
+        },
+        "m_Name": "",
+        "myBoneNameList": [
+          "",
+          "3300"
+        ],
+        "myBoneList": [
+          {
+            "m_FileID": 0,
+            "m_PathID": -5673523770903884272
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -5673523770903884272
+          }
+        ]
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "AttachAgent"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "5631793852957724176",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "60a7fcfc65b49f264d82c490af64c10d29d7e866a84ff3ebb5cdceb001024ef9",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4144821568607161872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -6132626620859873577
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyActionAgent"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "-7724964200973398512",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "7b825d113e634eaad4cc51b4f3e4278e1f5ce7c1dae83e47f6c64b513afe123d",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4144821568607161872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -1958008996929747494
+        },
+        "m_Name": "",
+        "GridFriendEffectPlayable": {
+          "m_FileID": 1,
+          "m_PathID": 2913870022576905801
+        },
+        "GridEnemyEffectPlayable": {
+          "m_FileID": 1,
+          "m_PathID": -6751946865522934129
+        },
+        "Playable": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightRoleGridItem"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "-6755615029239869936",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "c3d8523fc9e2c1942c899a3161976534f2de3f92591b33c66adc7a0733334e85",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4144821568607161872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -5513919939100864213
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightStatusAgent"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "-3477547222901453296",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "3049bff59918f5dfcb951be0c3d8cbbd29183026cb83773b80d1da0987fbede5",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4144821568607161872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -1587517927444263784
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightRoleGrid"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "-5817463440673206768",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "e6d3e7abecb15d4aa0d84fcbfbd4f38f891838d62a1ef5e83b3b83beee619721",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4144821568607161872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -6821506064380758728
+        },
+        "m_Name": "",
+        "mIsShowOnRoundProgress": 0
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightRound"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "2228962953113046544",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "bf71f5edf62401bd64747fa8a2c6dcfdf1575f6cf5a48b654de258863097bb24",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4144821568607161872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8527236930278201984
+        },
+        "m_Name": "",
+        "Transform": {
+          "m_FileID": 0,
+          "m_PathID": -1895298939740418544
+        },
+        "mOffsetZ": 0.0
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "GameCharacterZSet"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "-6036849574884143600",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "1b7e52bde9a9e7cdc0648abfa37257ea3b108b44111bf287a37db697dad21376",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4144821568607161872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 9020372185152959169
+        },
+        "m_Name": "",
+        "mIsSoul": 0
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightRoleCharacter"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "2840102185848344080",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "e693f36ed91a00651bac2236055bf619d7b1c01c35de9a3bfc511c237f8823bd",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4144821568607161872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1188829995090786706
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightProp"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "-5460634772796731888",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "6604f1fb8963f1661897016b6e8a3423b6093fa3d8fe5c618d54e64aae0a4675",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4144821568607161872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8480546919127541558
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightGridMover"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "745352059192741392",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "73fb1106b2c2e4d4dc202f8f91ac768e197871e83b3b12b13c58bc5920f5fab6",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4144821568607161872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 9219114533342545905
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightGameplayTag"
+      }
+    },
+    {
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "3795549880754572816",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "b2091c5dba9166c220f53cc09be656a7f6c0a715091fe1b2f74e2cb4c4400acb",
+      "fields": {
+        "m_Component": [
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 8018602637443403280
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 130190974546611728
+            }
+          }
+        ],
+        "m_Layer": 0,
+        "m_Name": "0templateGrideItem_view",
+        "m_Tag": 0,
+        "m_IsActive": true
+      }
+    },
+    {
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "8018602637443403280",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "3a012a7ddf98f9b07eb54a3d6e0003d628b671db7f31f8ac708c01199dcc3a15",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 3795549880754572816
+        },
+        "m_LocalRotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "m_LocalPosition": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "m_LocalScale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "m_Children": [],
+        "m_Father": {
+          "m_FileID": 0,
+          "m_PathID": -5673523770903884272
+        }
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightgriditem_3054.bundle",
+        "bundle_hash": "f9839ef57c31e45c38b5f14ed417e121",
+        "path_id": "130190974546611728",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f9839ef57c31e45c38b5f14ed417e121.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2493,
+        "bundle_sha256": "182630f0a29abdf51a97f2a8695f5eaa7438bc906d79f8fa66e0227a2758baf8"
+      },
+      "payload_sha256": "2551c02028c408dfe2e5f0d5b3a5e1503dbd746b8af0abf7681c76b0a448b435",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 3795549880754572816
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 2491674463829926342
+        },
+        "m_Name": "",
+        "mECViews": [
+          {
+            "rid": 3986547892861534291
+          },
+          {
+            "rid": 3986547898241515764
+          }
+        ],
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": 3986547892861534291,
+              "type": {
+                "class": "ECFightRoleCharacterView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mSpriteList": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mPlayerHUD": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mPlayerAppearance": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mDieOnStartPlayable": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mDiePlayable": {
+                  "m_FileID": 2,
+                  "m_PathID": 5487843103087784566
+                },
+                "mTryDiePlayableOnStart": 0,
+                "mGeneratePlayable": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mGenerateDelayTime": 0.0,
+                "mGeneratePlayableNeedDelay": 0,
+                "mDelayVisibilityParts": []
+              }
+            },
+            {
+              "rid": 3986547898241515764,
+              "type": {
+                "class": "ECFightRoleStatusDisplayView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mStatusItem": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mStatusItemSlot": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mMaxCountOfRow": 1,
+                "mMaxRowCount": 1
+              }
+            }
+          ]
+        }
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "ECViewDriver"
+      }
+    },
+    {
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13050.bundle",
+        "bundle_hash": "19cbd12c6e4c6550edb9607004399e3a",
+        "path_id": "1473878287265821255",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/19cbd12c6e4c6550edb9607004399e3a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 136844,
+        "bundle_sha256": "b4fb2922bd05e7226e89a1dfab87bb2bbee64d5af590e15dd3643df055958bc4"
+      },
+      "payload_sha256": "f8ca461d94785064da14f8de8146844313b2cdafce840c7b21d26742bd0cc0b3",
+      "fields": {
+        "m_Component": [
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -210068782682869177
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -312445784955882937
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 4433161479911502407
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 2583259679220560455
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -5672990855900761529
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -2359771742377741753
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 7510060802485187143
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 357822472939303495
+            }
+          }
+        ],
+        "m_Layer": 0,
+        "m_Name": "13052",
+        "m_Tag": 0,
+        "m_IsActive": true
+      }
+    },
+    {
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13050.bundle",
+        "bundle_hash": "19cbd12c6e4c6550edb9607004399e3a",
+        "path_id": "-210068782682869177",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/19cbd12c6e4c6550edb9607004399e3a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 136844,
+        "bundle_sha256": "b4fb2922bd05e7226e89a1dfab87bb2bbee64d5af590e15dd3643df055958bc4"
+      },
+      "payload_sha256": "b7b49aeb12ed74040f50f2a18158327628d0dbd7bf442a56122df570a0be6591",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 1473878287265821255
+        },
+        "m_LocalRotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "m_LocalPosition": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "m_LocalScale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "m_Children": [],
+        "m_Father": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13050.bundle",
+        "bundle_hash": "19cbd12c6e4c6550edb9607004399e3a",
+        "path_id": "-312445784955882937",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/19cbd12c6e4c6550edb9607004399e3a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 136844,
+        "bundle_sha256": "b4fb2922bd05e7226e89a1dfab87bb2bbee64d5af590e15dd3643df055958bc4"
+      },
+      "payload_sha256": "63b467ee29944ebb399ebfd77bd80226a37ca291660618340f350f9dcd1e300e",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 1473878287265821255
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6091562175442622485
+        },
+        "m_Name": "",
+        "myContainer": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyEntity"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13050.bundle",
+        "bundle_hash": "19cbd12c6e4c6550edb9607004399e3a",
+        "path_id": "4433161479911502407",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/19cbd12c6e4c6550edb9607004399e3a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 136844,
+        "bundle_sha256": "b4fb2922bd05e7226e89a1dfab87bb2bbee64d5af590e15dd3643df055958bc4"
+      },
+      "payload_sha256": "9025ea588a61ae438f02d9113fb49c2849fd330b858958e9d3b35a4884b4d548",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 1473878287265821255
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 7646124506615962003
+        },
+        "m_Name": "",
+        "myEffect": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEffectStopOnDestroy": 0,
+        "myEndEffect": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndEffectStopOnDestroy": 0,
+        "PlayOnStart": 1,
+        "Duration": -1.0,
+        "LoopEffectPlayable": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "LoopEffectPlayableIsMutext": 0
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyAction"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13050.bundle",
+        "bundle_hash": "19cbd12c6e4c6550edb9607004399e3a",
+        "path_id": "2583259679220560455",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/19cbd12c6e4c6550edb9607004399e3a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 136844,
+        "bundle_sha256": "b4fb2922bd05e7226e89a1dfab87bb2bbee64d5af590e15dd3643df055958bc4"
+      },
+      "payload_sha256": "c81df52f3c0d457c9b9d85999f8131bb8452d22ef90157cb2d5b520290d270db",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 1473878287265821255
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 7447247474051633116
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 5180708164649388068
+        },
+        "StackedPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "StackPlayableMap": [],
+        "ShowSpriteAbovePlayer": 1,
+        "InvokePlayable": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "StackPlayable": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "MasterCastPlayable": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsIconShowStatusRoundReplaceStack": 0,
+        "IsIconShowCustomCount": 0
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightStatus"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13050.bundle",
+        "bundle_hash": "19cbd12c6e4c6550edb9607004399e3a",
+        "path_id": "-5672990855900761529",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/19cbd12c6e4c6550edb9607004399e3a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 136844,
+        "bundle_sha256": "b4fb2922bd05e7226e89a1dfab87bb2bbee64d5af590e15dd3643df055958bc4"
+      },
+      "payload_sha256": "dcfdddc4d9b812dbae4528bc379eff54edd9f14d45e38600a0de37479e6d11d2",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 1473878287265821255
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2416159729234540613
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightStatusMoveNear"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13050.bundle",
+        "bundle_hash": "19cbd12c6e4c6550edb9607004399e3a",
+        "path_id": "-2359771742377741753",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/19cbd12c6e4c6550edb9607004399e3a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 136844,
+        "bundle_sha256": "b4fb2922bd05e7226e89a1dfab87bb2bbee64d5af590e15dd3643df055958bc4"
+      },
+      "payload_sha256": "d8c1630510bb3079ffbb6cff5b4d79df93d7f27bd0e85c101ecfc27b90cefaa3",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 1473878287265821255
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 918528219113942132
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyStatusEnd"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13050.bundle",
+        "bundle_hash": "19cbd12c6e4c6550edb9607004399e3a",
+        "path_id": "7510060802485187143",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/19cbd12c6e4c6550edb9607004399e3a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 136844,
+        "bundle_sha256": "b4fb2922bd05e7226e89a1dfab87bb2bbee64d5af590e15dd3643df055958bc4"
+      },
+      "payload_sha256": "c689653ad5b3017290d8a44153900a6e7b4ebb30301cec1de5daed59e5ec95fb",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 1473878287265821255
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -1999476116070922505
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyStatusAutoRemove"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13050.bundle",
+        "bundle_hash": "19cbd12c6e4c6550edb9607004399e3a",
+        "path_id": "357822472939303495",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/19cbd12c6e4c6550edb9607004399e3a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 136844,
+        "bundle_sha256": "b4fb2922bd05e7226e89a1dfab87bb2bbee64d5af590e15dd3643df055958bc4"
+      },
+      "payload_sha256": "9bd477003be726f3dfe9c525d303c1b6c95dc7b73d0a4f1c7ef4875ef90e3604",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 1473878287265821255
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 9219114533342545905
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightGameplayTag"
+      }
+    },
+    {
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13480.bundle",
+        "bundle_hash": "06a2fee4382f0a76ef6afd0c4b4a3a7c",
+        "path_id": "5318807786683761704",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/06a2fee4382f0a76ef6afd0c4b4a3a7c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 19806,
+        "bundle_sha256": "e185657e61f3cf86eb66163dc688c88dc99467827888d1e093038da7627eee90"
+      },
+      "payload_sha256": "bddc5cd42eb9486498533057cf06de301ec83dfe056f9e613dbf6a6254722269",
+      "fields": {
+        "m_Component": [
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -2852856483563371480
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -476285948798761944
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -1442742212328684504
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 4731683799472735272
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 8804509222663881768
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -8237443075348167640
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": 7628414073458590760
+            }
+          },
+          {
+            "component": {
+              "m_FileID": 0,
+              "m_PathID": -1695071443732593624
+            }
+          }
+        ],
+        "m_Layer": 0,
+        "m_Name": "13482",
+        "m_Tag": 0,
+        "m_IsActive": true
+      }
+    },
+    {
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13480.bundle",
+        "bundle_hash": "06a2fee4382f0a76ef6afd0c4b4a3a7c",
+        "path_id": "-2852856483563371480",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/06a2fee4382f0a76ef6afd0c4b4a3a7c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 19806,
+        "bundle_sha256": "e185657e61f3cf86eb66163dc688c88dc99467827888d1e093038da7627eee90"
+      },
+      "payload_sha256": "5511fbb072cfcee6332d714a7d04549f66f0261ae0ac074ad74a7d4c890ba5ff",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 5318807786683761704
+        },
+        "m_LocalRotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "m_LocalPosition": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "m_LocalScale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "m_Children": [],
+        "m_Father": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13480.bundle",
+        "bundle_hash": "06a2fee4382f0a76ef6afd0c4b4a3a7c",
+        "path_id": "-476285948798761944",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/06a2fee4382f0a76ef6afd0c4b4a3a7c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 19806,
+        "bundle_sha256": "e185657e61f3cf86eb66163dc688c88dc99467827888d1e093038da7627eee90"
+      },
+      "payload_sha256": "0b84baf6bd50939484d56fe04bfe87ee1f3da832a0a618f5621a3dfe7f7037b9",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 5318807786683761704
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6091562175442622485
+        },
+        "m_Name": "",
+        "myContainer": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyEntity"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13480.bundle",
+        "bundle_hash": "06a2fee4382f0a76ef6afd0c4b4a3a7c",
+        "path_id": "-1442742212328684504",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/06a2fee4382f0a76ef6afd0c4b4a3a7c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 19806,
+        "bundle_sha256": "e185657e61f3cf86eb66163dc688c88dc99467827888d1e093038da7627eee90"
+      },
+      "payload_sha256": "f796fa3976282c6b7f4cfcecdea9afb00f0f6419aba41fd0bc54307c7f917739",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 5318807786683761704
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 7646124506615962003
+        },
+        "m_Name": "",
+        "myEffect": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEffectStopOnDestroy": 0,
+        "myEndEffect": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndEffectStopOnDestroy": 0,
+        "PlayOnStart": 1,
+        "Duration": -1.0,
+        "LoopEffectPlayable": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "LoopEffectPlayableIsMutext": 0
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyAction"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13480.bundle",
+        "bundle_hash": "06a2fee4382f0a76ef6afd0c4b4a3a7c",
+        "path_id": "4731683799472735272",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/06a2fee4382f0a76ef6afd0c4b4a3a7c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 19806,
+        "bundle_sha256": "e185657e61f3cf86eb66163dc688c88dc99467827888d1e093038da7627eee90"
+      },
+      "payload_sha256": "4f55cd707af30f0183c254aa1bba92686f5b90c97625eb3ec73c74b87cb97b3c",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 5318807786683761704
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 7447247474051633116
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": -5191428611863421888
+        },
+        "StackedPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "StackPlayableMap": [],
+        "ShowSpriteAbovePlayer": 1,
+        "InvokePlayable": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "StackPlayable": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "MasterCastPlayable": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsIconShowStatusRoundReplaceStack": 0,
+        "IsIconShowCustomCount": 0
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightStatus"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13480.bundle",
+        "bundle_hash": "06a2fee4382f0a76ef6afd0c4b4a3a7c",
+        "path_id": "8804509222663881768",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/06a2fee4382f0a76ef6afd0c4b4a3a7c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 19806,
+        "bundle_sha256": "e185657e61f3cf86eb66163dc688c88dc99467827888d1e093038da7627eee90"
+      },
+      "payload_sha256": "23b054fbfdeab1727906cfd6b5e0a43c0671f95d8e8b88be1788296491e4ff67",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 5318807786683761704
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2416159729234540613
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightStatusMoveNear"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13480.bundle",
+        "bundle_hash": "06a2fee4382f0a76ef6afd0c4b4a3a7c",
+        "path_id": "-8237443075348167640",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/06a2fee4382f0a76ef6afd0c4b4a3a7c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 19806,
+        "bundle_sha256": "e185657e61f3cf86eb66163dc688c88dc99467827888d1e093038da7627eee90"
+      },
+      "payload_sha256": "6cd1c25a9d56a425ee0c31ff2dbb01ff9eb3d9ba001f110997f120af7d78198a",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 5318807786683761704
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 918528219113942132
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyStatusEnd"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13480.bundle",
+        "bundle_hash": "06a2fee4382f0a76ef6afd0c4b4a3a7c",
+        "path_id": "7628414073458590760",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/06a2fee4382f0a76ef6afd0c4b4a3a7c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 19806,
+        "bundle_sha256": "e185657e61f3cf86eb66163dc688c88dc99467827888d1e093038da7627eee90"
+      },
+      "payload_sha256": "60ad24e8bdae8a51b2c23a5a9d83f82aedf6e6847b87efb415d7a792ca8b40ca",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 5318807786683761704
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -1999476116070922505
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyStatusAutoRemove"
+      }
+    },
+    {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13480.bundle",
+        "bundle_hash": "06a2fee4382f0a76ef6afd0c4b4a3a7c",
+        "path_id": "-1695071443732593624",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/06a2fee4382f0a76ef6afd0c4b4a3a7c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 19806,
+        "bundle_sha256": "e185657e61f3cf86eb66163dc688c88dc99467827888d1e093038da7627eee90"
+      },
+      "payload_sha256": "b622ea87699b6b03a4184617a0cbc4e131f1e555550c6dfe0ec15747c74b8885",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 5318807786683761704
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 9219114533342545905
+        },
+        "m_Name": ""
+      },
+      "script": {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "name": "MyFightGameplayTag"
+      }
+    }
+  ],
+  "schemas": {
+    "Assembly-CSharp:MyEntity": [
+      {
+        "level": 0,
+        "type": "MyEntity",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$MyContainer>",
+        "name": "myContainer",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp:MyTransform": [
+      {
+        "level": 0,
+        "type": "MyTransform",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "mSetZ",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:MyGridTransform": [
+      {
+        "level": 0,
+        "type": "MyGridTransform",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "UpdatePosImmediately",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "mSetZ",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "float",
+        "name": "mOffsetZ",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$Transform>",
+        "name": "mFlipTransform",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "ClientOverrideEntityDimensionBounds",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Pos2d",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "X",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "Y",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp:AttachAgent": [
+      {
+        "level": 0,
+        "type": "AttachAgent",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "myBoneNameList",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "string",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "myBoneList",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "PPtr<$Transform>",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp:MyActionAgent": [
+      {
+        "level": 0,
+        "type": "MyActionAgent",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:MyFightRoleGridItem": [
+      {
+        "level": 0,
+        "type": "MyFightRoleGridItem",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "GridFriendEffectPlayable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "GridEnemyEffectPlayable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "Playable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp:MyFightStatusAgent": [
+      {
+        "level": 0,
+        "type": "MyFightStatusAgent",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:MyFightRoleGrid": [
+      {
+        "level": 0,
+        "type": "MyFightRoleGrid",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:MyFightRound": [
+      {
+        "level": 0,
+        "type": "MyFightRound",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "mIsShowOnRoundProgress",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:GameCharacterZSet": [
+      {
+        "level": 0,
+        "type": "GameCharacterZSet",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$MyTransform>",
+        "name": "Transform",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "float",
+        "name": "mOffsetZ",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp:MyFightRoleCharacter": [
+      {
+        "level": 0,
+        "type": "MyFightRoleCharacter",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "mIsSoul",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:MyFightProp": [
+      {
+        "level": 0,
+        "type": "MyFightProp",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:MyFightGridMover": [
+      {
+        "level": 0,
+        "type": "MyFightGridMover",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:MyFightGameplayTag": [
+      {
+        "level": 0,
+        "type": "MyFightGameplayTag",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:ECViewDriver": [
+      {
+        "level": 0,
+        "type": "ECViewDriver",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "mECViews",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "managedReference",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "SInt64",
+        "name": "rid",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "ManagedReferencesRegistry",
+        "name": "references",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "version",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "RefIds",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "ReferencedObject",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "SInt64",
+        "name": "rid",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "ReferencedManagedType",
+        "name": "type",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "string",
+        "name": "class",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 8,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "string",
+        "name": "ns",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 8,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "string",
+        "name": "asm",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 8,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "ReferencedObjectData",
+        "name": "data",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp.dll:ECFightRoleCharacterView": [
+      {
+        "level": 0,
+        "type": "ECFightRoleCharacterView",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$SpriteRendererList>",
+        "name": "mSpriteList",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GamePlayerHUD>",
+        "name": "mPlayerHUD",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$PlayerAnimatorAppearance>",
+        "name": "mPlayerAppearance",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "mDieOnStartPlayable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "mDiePlayable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "mTryDiePlayableOnStart",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "mGeneratePlayable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "float",
+        "name": "mGenerateDelayTime",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "mGeneratePlayableNeedDelay",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "mDelayVisibilityParts",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "PPtr<$GameObject>",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp.dll:ECFightRoleStatusDisplayView": [
+      {
+        "level": 0,
+        "type": "ECFightRoleStatusDisplayView",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$FightStatusItem>",
+        "name": "mStatusItem",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$Transform>",
+        "name": "mStatusItemSlot",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "mMaxCountOfRow",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "mMaxRowCount",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp:MyAction": [
+      {
+        "level": 0,
+        "type": "MyAction",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "myEffect",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "myEffectStopOnDestroy",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "myEndEffect",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "myEndEffectStopOnDestroy",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "PlayOnStart",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "float",
+        "name": "Duration",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "LoopEffectPlayable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "LoopEffectPlayableIsMutext",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:MyFightStatus": [
+      {
+        "level": 0,
+        "type": "MyFightStatus",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "myPlayablePrefab",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "StackedPlayablePrefab",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "StackPlayableMap",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "StackCountPlayableMap",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "StackCount",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "MaxStackCount",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "PPtr<$GameObject>",
+        "name": "PlayablePrefab",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "PPtr<$GameObject>",
+        "name": "BeginPlayable",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "PPtr<$GameObject>",
+        "name": "EndPlayable",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "ShowSpriteAbovePlayer",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "InvokePlayable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "StackPlayable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$GameObject>",
+        "name": "MasterCastPlayable",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsIconShowStatusRoundReplaceStack",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsIconShowCustomCount",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:MyFightStatusMoveNear": [
+      {
+        "level": 0,
+        "type": "MyFightStatusMoveNear",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:MyStatusEnd": [
+      {
+        "level": 0,
+        "type": "MyStatusEnd",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:MyStatusAutoRemove": [
+      {
+        "level": 0,
+        "type": "MyStatusAutoRemove",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/Combat/GridItemSources/3051-source.json",
+      "sha256": "0092f74f0f83114e27779c3aaf575bbd415fa5d249c54de030c88cc13b952da3"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/GridItemSources/3051-source.json.meta",
+      "sha256": "03105b5ae2ebd880c1ce278736b22c7ef0392ff062a04e3748c00398ae621b32"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/GridItemSources/3054-source.json",
+      "sha256": "7f81f542498c4c0ba8c213f74d3a1e3447c72be7a874bbd43ef98101b4f81b29"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/GridItemSources/3054-source.json.meta",
+      "sha256": "3a347cdb2bbe3afe87cb7f6e4c454de3132073ab6d45ffb43f1914e7635e0aea"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/GridItemSources/13052-source.json",
+      "sha256": "b9b320c29452af234a99d1c217f18b4aa4b78d7bdd4f759e6dc3c9b481bda230"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/GridItemSources/13052-source.json.meta",
+      "sha256": "9a771e3f13b7331e6050a0577b0f62f5da4032d05f26efeaa07b2f69774c4e85"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/GridItemSources/13482-source.json",
+      "sha256": "17ba05e80ff4f8158fb1ebd24a135c555480c8b44f5597b97ed9c7ac246ca569"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/GridItemSources/13482-source.json.meta",
+      "sha256": "c0ed5ac6948012bb27b154354378a57612de63a52abffea437b8d5b3c77242a4"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/GridItemSources.meta",
+      "sha256": "eb0dffee2f899407074b0afd4465e30200ec5debd1acdc59e754787678436fb7"
+    }
+  ],
+  "operation": "APK-first verified bundles; traverse every original GameObject, component and child in order. Decode MonoBehaviour fields with the selected official assemblies, including ECViewDriver SerializeReference registries that the native YAML exporter omits. Retain original pointers and raw object hashes without replacing or filtering components.",
+  "limits": [
+    "Decoded prefab inputs only; native prefab conversion, component migration and production grid/status lifecycle are separate. These JSON inputs are not visible runtime substitutes."
+  ]
+}

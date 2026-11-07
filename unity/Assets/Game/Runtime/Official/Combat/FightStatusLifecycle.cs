@@ -178,7 +178,7 @@ namespace Zjcs.Combat.Official
         {
             if (unit == null) throw new ArgumentNullException(nameof(unit));
             if (template == null) throw new ArgumentNullException(nameof(template));
-            if (unit.VoodooDoll != null && template.StatusType == 1) return null;
+            if (unit.IsVoodooDoll && template.StatusType == 1) return null;
             if (unit.Statuses == null) unit.Statuses = new List<FightBattleStatusState>();
             var origin = FightBattleStatusOrigin.Resolve(template);
             FightBattleStatusState existing = FindMatchingStatus(unit, template, origin);
@@ -209,6 +209,8 @@ namespace Zjcs.Combat.Official
                 RoundTarget = template.RoundTarget,
                 RoundUpdateTiming = template.RoundUpdateTiming,
                 RemoveAtRoundTargetDestroy = template.RemoveAtRoundTargetDestroy,
+                RemoveAtRoundTargetDie = template.RemoveAtRoundTargetDie,
+                RemoveAtApplyEnded = template.RemoveAtApplyEnded,
                 ActionBehOfSameStatus = template.ActionBehOfSameStatus,
                 CanDispersed = template.CanDispersed,
                 IsAddDurationRound = template.IsAddDurationRound,

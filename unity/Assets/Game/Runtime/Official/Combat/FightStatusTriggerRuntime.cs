@@ -912,7 +912,8 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleUnitState source in units)
             {
                 if (source == null || source.Statuses == null) continue;
-                if (eventKind == MoveNearEventStart && (source.Ended || source.Hp <= 0)) continue;
+                if (source.Ended || eventKind == MoveNearEventStart
+                    && source.Hp <= 0 && source.CharacterType != 6) continue;
                 // TryAtStart belongs to status startup, including owners without a turn.
                 // Only TryAtRound waits for the status owner's personal round.
                 if (eventKind == MoveNearEventRound
@@ -1033,10 +1034,20 @@ namespace Zjcs.Combat.Official
         private static bool IsMoveNearInRange(FightBattleUnitState source,
             FightBattleUnitState candidate, List<FightGridPoint> range)
         {
-            if (range == null || range.Count == 0) return false;
-            int dx = candidate.X - source.X, dy = candidate.Y - source.Y;
-            foreach (FightGridPoint offset in range)
-                if (offset.X == dx && offset.Y == dy) return true;
+            return IsMoveNearInRangeAt(source, candidate, candidate.X, candidate.Y, range);
+        }
+
+        private static bool IsMoveNearInRangeAt(FightBattleUnitState source,
+            FightBattleUnitState candidate, int x, int y, List<FightGridPoint> range)
+        {
+            if (IsMoveNearInRange(source.X, source.Y, x, y, range)) return true;
+            // User-confirmed offline grid rule: each special cell settles independently.
+            // A multi-cell target may therefore receive one hit from each overlapping grid
+            // item, while a single grid item selects the target entity only once.
+            if (source.CharacterType == 6 && candidate.BodyOffsets != null)
+                foreach (var body in candidate.BodyOffsets)
+                    if (IsMoveNearInRange(source.X, source.Y, x + body.X, y + body.Y, range))
+                        return true;
             return false;
         }
 
@@ -1046,7 +1057,7 @@ namespace Zjcs.Combat.Official
         {
             if (movement == null || movement.Path == null || movement.Path.Count < 2) return false;
             FightGridPoint start = movement.Path[0];
-            bool outside = !IsMoveNearInRange(source.X, source.Y, start.X, start.Y, range);
+            bool outside = !IsMoveNearInRangeAt(source, candidate, start.X, start.Y, range);
             return outside && IsMoveNearInRange(source, candidate, range);
         }
 
@@ -1056,7 +1067,7 @@ namespace Zjcs.Combat.Official
         {
             if (movement == null || movement.Path == null || movement.Path.Count < 2) return false;
             FightGridPoint start = movement.Path[0];
-            return IsMoveNearInRange(source.X, source.Y, start.X, start.Y, range)
+            return IsMoveNearInRangeAt(source, candidate, start.X, start.Y, range)
                 && IsMoveNearInRange(source, candidate, range);
         }
 

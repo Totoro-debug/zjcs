@@ -60,12 +60,18 @@ def prepare(work):
             patterns.update('guid: '+v for v in re.findall(r'guid: ([a-f0-9]{32})',path.read_text(encoding='utf-8-sig')) if not v.startswith('0000000000000000'))
         if not patterns: break
         pattern_file=work/'movement-pipeline-guids.txt';pattern_file.write_bytes(('\n'.join(sorted(patterns))+'\n').encode())
-        result=subprocess.run(['git','grep','-l','-F','-f',str(pattern_file),'--','unity/**/*.meta'],cwd=ROOT,capture_output=True,check=False)
+        # Find tracked GUIDs in Git's object store, then verify each selected
+        # live sidecar before copying. Opening every working-tree sidecar makes
+        # this small fixture depend on the full repository's disk scan.
+        result=subprocess.run(['git','grep','--cached','-l','-F','-f',str(pattern_file),'--','unity/**/*.meta'],cwd=ROOT,capture_output=True,check=False)
         assert result.returncode in (0,1),result.stderr.decode(errors='replace')
         pending=[]
         for value in result.stdout.decode().splitlines():
             path=ROOT/value[:-5]
             if path in copied or path.is_relative_to(ROOT/'unity/Packages'): continue
+            live_guids={'guid: '+v for v in re.findall(r'guid: ([a-f0-9]{32})',path.with_name(path.name+'.meta').read_text(encoding='utf-8-sig'))}
+            if not patterns.intersection(live_guids):
+                raise ValueError('Tracked pipeline GUID differs from its live sidecar: '+str(path))
             copied.add(path);copy(path);copy(path.with_name(path.name+'.meta'))
             if path.suffix in ('.asset','.mat','.prefab'):pending.append(path)
     manifest=json.loads((ROOT/'unity/Packages/manifest.json').read_bytes())

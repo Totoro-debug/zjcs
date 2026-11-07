@@ -352,7 +352,7 @@ namespace Zjcs.Combat.Official
                     || (created ? !component.Create : !component.Remove)
                     || component.MaxCount >= 0 && component.TriggeredCount >= component.MaxCount)
                     continue;
-                if (component.FilterSubstitute && summon.VoodooDoll != null) continue;
+                if (component.FilterSubstitute && summon.IsVoodooDoll) continue;
                 if (component.CheckSummonLifeDuration
                     && !summon.HitSummonHasLifeDuration) continue;
                 if (!RollComponent(component.Rate)) continue;

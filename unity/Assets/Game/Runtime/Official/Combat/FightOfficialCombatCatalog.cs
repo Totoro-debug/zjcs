@@ -1038,6 +1038,10 @@ namespace Zjcs.Combat.Official
                 RoundTarget = Int(status, "RoundTarget"),
                 RoundUpdateTiming = Int(status, "RoundUpdateTiming"),
                 RemoveAtRoundTargetDestroy = Bool(status, "RemoveAtRoundTargetDestroy"),
+                RemoveAtRoundTargetDie = Component(components, "StatusAutoRemoveComponent") != null
+                    && Bool(Component(components, "StatusAutoRemoveComponent"), "RemoveAtRoundTargetDie"),
+                RemoveAtApplyEnded = Component(components, "StatusAutoRemoveComponent") != null
+                    && Bool(Component(components, "StatusAutoRemoveComponent"), "RemoveAtApplyEnded"),
                 ActionBehOfSameStatus = Int(status, "ActionBehOfSameStatus"),
                 CanDispersed = Bool(status, "CanDispersed"),
                 IsAddDurationRound = Bool(status, "IsAddDurationRound"),
@@ -3267,6 +3271,11 @@ namespace Zjcs.Combat.Official
             output.SummonConfigType = config.TryGetValue("_type", out object summonType)
                 ? Convert.ToString(summonType, CultureInfo.InvariantCulture) : null;
             output.SummonReferenceType = Int(config, "ReferenceType");
+            if (output.SummonConfigType == "FightHitSummonGridItemCfg")
+            {
+                output.SummonGridItemClassId = Int(config, "SummonId");
+                output.GridItemFindAdjacentIfBlocked = Bool(config, "GridItemFindAdjacentIfBlocked");
+            }
             output.SummonLevelType = Int(config, "LevelType");
             output.SummonLifespanStatusId = Int(config, "LifespanStatusId");
             if (config.TryGetValue("SummonStatus", out object rawStatusIds) && rawStatusIds != null)
@@ -3313,10 +3322,24 @@ namespace Zjcs.Combat.Official
                         ? null : Component(baseScope, "Pos");
                     if (position == null) continue;
                     Dictionary<string, object> offset = Component(scope, "SummonOffset");
+                    if (output.SummonGridItemClassId > 0)
+                        output.GridSummonCells.Add(new FightBattleGridSummonCell
+                        {
+                            ScopePosition = new FightGridPoint(Int(position, "X"), Int(position, "Y")),
+                            Position = new FightGridPoint(
+                                Int(position, "X") + (offset == null ? 0 : Int(offset, "X")),
+                                Int(position, "Y") + (offset == null ? 0 : Int(offset, "Y"))),
+                            Rate = Float(scope, "Rate", 1f), Delay = Float(baseScope, "Delay", 0f)
+                        });
                     output.SummonPositions.Add(new FightGridPoint(
                         Int(position, "X") + (offset == null ? 0 : Int(offset, "X")),
                         Int(position, "Y") + (offset == null ? 0 : Int(offset, "Y"))));
                 }
+            // Original FightHitSummonComponentInfo.Init / Pos2d.Magnitude ordering.
+            output.GridSummonCells.Sort((left, right) =>
+                (int)(10000f * (left.Delay - right.Delay))
+                + Math.Abs(left.ScopePosition.X) + Math.Abs(left.ScopePosition.Y)
+                - Math.Abs(right.ScopePosition.X) - Math.Abs(right.ScopePosition.Y));
         }
 
         private static void AddHitChildren(Dictionary<string, object> skill, Queue<int> pending,

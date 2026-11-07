@@ -95,10 +95,16 @@ namespace Zjcs.Presentation.Home
             var controller=runner.Controller;
             var probe=OfficialSummonLifecycleValidation.Configure(controller.Checkpoint);
             controller.StepCompleted+=step=>probe.ObserveStep(controller);
-            yield return new WaitForSecondsRealtime(.5f);
-            var start=FindObjectsOfType<Button>().FirstOrDefault(value=>value.isActiveAndEnabled
-                && value.interactable && value.transform.parent.name=="StartBtn");
-            Require(start!=null && controller.Phase==FightBattlePhase.Preparing,"Original battle start button is unavailable.");
+            Button start=null;
+            float preparationDeadline=Time.realtimeSinceStartup+45f;
+            while(start==null && Time.realtimeSinceStartup<preparationDeadline)
+            {
+                start=FindObjectsOfType<Button>().FirstOrDefault(value=>value.isActiveAndEnabled
+                    && value.interactable && value.transform.parent.name=="StartBtn");
+                if(start==null) yield return null;
+            }
+            Require(start!=null && controller.Phase==FightBattlePhase.Preparing,
+                "Original battle start button is unavailable; phase="+controller.Phase);
             yield return new WaitForEndOfFrame();Capture("summon-preparation");Click(start);
             bool captured=false;
             while(runner!=null)

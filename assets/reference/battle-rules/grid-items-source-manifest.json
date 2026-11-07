@@ -1,0 +1,366 @@
+{
+  "manifest": "884_156692",
+  "code_manifest": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "inputs": [
+    {
+      "asset": "/grid_item.g.bytes",
+      "provenance": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "-4978921881657461440",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      },
+      "payload_sha256": "7f679958faf49d139fe78d5801e695ed964b0d0dfaff1dde36031641b829688c",
+      "bytes": 205
+    },
+    {
+      "asset": "/EC/entity_grid_mover.g.bytes",
+      "provenance": {
+        "bundle": "defaultpackage_assets_config_luban_ec.bundle",
+        "bundle_hash": "63c23eae2715809080bd1c246b6f063e",
+        "path_id": "-4165658816141399837",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/63c23eae2715809080bd1c246b6f063e.bundle",
+        "raw_size": 31317,
+        "raw_sha256": "f55910165fbc464ea485bec9f4f8c0bc3643931127a4d5276809a83d43a53e39"
+      },
+      "payload_sha256": "276907e3a6b8fb8aaaa96ca768e51a6a4b30b401468c3a535c364ec15ce20657",
+      "bytes": 50
+    },
+    {
+      "asset": "/FightGridItem_part1.g.bytes",
+      "provenance": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "path_id": "2419698898296059720",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "raw_size": 6876458,
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+      },
+      "payload_sha256": "2a8dc29b039b51beb262cb6f626cf5b067e20093e451e120d846750c557d0da5",
+      "bytes": 2111
+    }
+  ],
+  "sources": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightRoleGridItem.cs",
+      "sha256": "ba1b4b4daf326b3a98bb3023c19f01c836374a01059814630bfbde1e618623e8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightRoleGridItemSpawner.cs",
+      "sha256": "c9d6f0911d916d9de268ade4998bfd71b4e0340e4d9ef3774bb44dc762561635"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusMoveNear.cs",
+      "sha256": "bb36ecf389d8ef0643d63785bb4f13e91c1456f49b630188fcfff72631251f0d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityGridMoverInfo.cs",
+      "sha256": "7093e61ecc974675061d1fcd58eb8ba038ee04685bc9e1dee10cc8c3b2754279"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitSummonCfgBase.cs",
+      "sha256": "fee98c017f5fb664e8523d53807f02554ab2eb69fbb7c9019023e2abae6d4e06"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitSummonComponentInfo.cs",
+      "sha256": "23e8602ce8140c5cacc537b135224cc4882477aa25cf660bb7780edc16b0e862"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitSummonGridItemCfg.cs",
+      "sha256": "4678062ebe90e17e869b28a15681d4688d6ebc48c04c8f5dc04250a24f3b9e11"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightRoleGridItemComponent.cs",
+      "sha256": "672657fb82637affb9fdfa5c200aecdb49d2e123dc9f542608399fdccc96df6b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightRoleGridItemSpawnerComponent.cs",
+      "sha256": "91d353c0aac60d741e995699b25a849175d119d6f0a4f5431eeaff16f299a47c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GridItemInfo.cs",
+      "sha256": "337d0aba445f299357dbd9268012442556b106e98f3e216804d3a69784ad4fd5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GridMoverComponentInfo.cs",
+      "sha256": "9192fe7435eab0ca2d4d9df410e1a849695fc724317a74410ff055285fae253a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Pos2d.cs",
+      "sha256": "8129206cd36eefdedf3d3d6a2a011d0c52325e35a7690a42b350ad96669fa8ea"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/StatusAutoRemoveComponentInfo.cs",
+      "sha256": "99209260af7cd628bb5de8282fba97ffa46ab451f6af45b1e2323ebfa74fbb63"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbEntityGridMoverInfo.cs",
+      "sha256": "23149d3cf20b35c1bfda9f68888a856413db13f3d8e26861b9ae2cbf0741b94f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbGridItemInfo.cs",
+      "sha256": "4e04233fa48b985ca50ed4889e088c203a115c54c4a356f9c801b5fe74bb9c79"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightGameplayTagComponentInfoFormatter.cs",
+      "sha256": "4f8ece00ffd3d26aee1ad32f3631cf63443b40fbcef9f3ece1417daca550327a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightGridMoverComponentInfoFormatter.cs",
+      "sha256": "21f1b4381d7db596baf6ddb3986f02782313dab8cad81c6198cb1415e12d781b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightRoleCharacterComponentInfoFormatter.cs",
+      "sha256": "1d52c68f7f9bcde85e1f7d75f4582859dfa63a215c9bd9d4ea240fa65f908731"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightRoleGridComponentInfoFormatter.cs",
+      "sha256": "0ca4dbc0d6b06bd83c0158338bd68fa951e5ca5c0ff1058444d7a2aa0a32f6ba"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightRolePotatoMinesComponentInfoFormatter.cs",
+      "sha256": "7290757b06db4d2119c08ac00a052a837064a4e2ee8743ff8f8bdfc512e7ab44"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightRoundComponentInfoFormatter.cs",
+      "sha256": "78e87688d47770329d69f947e4b870967729188dfea2dc0fb1c3f9506a4ffb57"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightStatusAgentComponentInfoFormatter.cs",
+      "sha256": "585d05a159670ec1bd2f26250304978ee1b24eb60a9635db10e2b33f803e62de"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GameCharacterTypeFormatter.cs",
+      "sha256": "4f0cfe2340b1331caf498f7fcc95eb58b783abfcce2905815d2a04d2fd12e722"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GameplayTagFormatter.cs",
+      "sha256": "c671044fc198651d70cdd531e2ec6a904fc54d8d0d3bf86286e6a128ba14400c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GridTransformComponentBodyPosInfoFormatter.cs",
+      "sha256": "50ade9afa83a6ad54577f4d31772eb38728a563601e53a8d81ebba050f91d8b9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GridTransformComponentInfoFormatter.cs",
+      "sha256": "cc512519f920485ca7d9cbfcdb033c84003121db28761cbbb015f47cd8f97092"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GroundTypeFormatter.cs",
+      "sha256": "48f32fbc167d3a9f69f0824c14d864bc77ee00abfc9e44cb1b05100077a4ae20"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitTargetTypeFormatter.cs",
+      "sha256": "f26070c6d1ad7e7dd2f26519990fbc2298dcbb0d3bc6461319d5cb8049dacd7d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/Pos2dFormatter.cs",
+      "sha256": "7625a36013d02ba1732aa27c15ad8b131f41b56ffff72095b93781fe47d3fd4c"
+    }
+  ],
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll",
+    "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+  },
+  "definitions": [
+    {
+      "table": {
+        "Id": 3320,
+        "TempEntityId": 3051,
+        "GroundType": 0,
+        "DestoryOnOwnerDie": false,
+        "DestoryOnOwnerDestory": false,
+        "DestoryDelayTime": 0.0,
+        "ActionBehOfSameStatus": 1,
+        "CheckGridCanStand": true,
+        "IgnoreGridBlocked": true,
+        "BlockedByTypes": [],
+        "OverrideTypes": [
+          3320,
+          3328
+        ]
+      },
+      "entity": {
+        "TransformComponent": {},
+        "GridTransformComponent": {
+          "BodyRangeInfos": [
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 0
+              },
+              "GroundType": 0,
+              "IgnoreClick": false,
+              "OverrideGroundType": false
+            }
+          ],
+          "BodyCrossBlockedInfos": [],
+          "UnlockWholeRequestCount": 1,
+          "RealCenter": [
+            0.0,
+            0.0
+          ],
+          "IsRigidBody": true
+        },
+        "ActionAgentComponent": {},
+        "FightRoleGridItemComponent": {},
+        "FightStatusAgentComponent": {
+          "InitStatusEntityClassIds": [],
+          "SourceLimitType": 4
+        },
+        "FightRoleGridComponent": {
+          "GroundHeight": 0
+        },
+        "FightRoundComponent": {
+          "RoundType": 0
+        },
+        "FightRoleCharacterComponent": {
+          "DestroyOnDie": true,
+          "DestroyDelayTime": 1.2000000476837158,
+          "CharacterType": 6,
+          "MoveSkillId": 0,
+          "FixSpeedMoveSkillId": 0,
+          "BackMoveSkillId": 0,
+          "CanAirCombo": false,
+          "CanStand": true
+        },
+        "FightPropComponent": {},
+        "FightGridMoverComponent": {
+          "MoveActionId": 0,
+          "WalkableGroundTypeKey": 5,
+          "WalkableGroundTypeServerOverrideKey": 0
+        },
+        "FightGameplayTagComponent": {
+          "GameplayTag": {
+            "V0": 4294983680,
+            "V1": 0,
+            "V2": 0,
+            "V3": 0
+          }
+        }
+      },
+      "walkable_ground_types": [
+        0,
+        1
+      ]
+    },
+    {
+      "table": {
+        "Id": 3328,
+        "TempEntityId": 3054,
+        "GroundType": 0,
+        "DestoryOnOwnerDie": false,
+        "DestoryOnOwnerDestory": false,
+        "DestoryDelayTime": 0.0,
+        "ActionBehOfSameStatus": 1,
+        "CheckGridCanStand": false,
+        "IgnoreGridBlocked": false,
+        "BlockedByTypes": [],
+        "OverrideTypes": [
+          3320,
+          3328
+        ]
+      },
+      "entity": {
+        "TransformComponent": {},
+        "GridTransformComponent": {
+          "BodyRangeInfos": [
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 0
+              },
+              "GroundType": 0,
+              "IgnoreClick": false,
+              "OverrideGroundType": false
+            }
+          ],
+          "BodyCrossBlockedInfos": [],
+          "UnlockWholeRequestCount": 1,
+          "RealCenter": [
+            0.0,
+            0.0
+          ],
+          "IsRigidBody": true
+        },
+        "ActionAgentComponent": {},
+        "FightRoleGridItemComponent": {},
+        "FightStatusAgentComponent": {
+          "InitStatusEntityClassIds": [],
+          "SourceLimitType": 4
+        },
+        "FightRoleGridComponent": {
+          "GroundHeight": 0
+        },
+        "FightRoundComponent": {
+          "RoundType": 0
+        },
+        "FightRoleCharacterComponent": {
+          "DestroyOnDie": true,
+          "DestroyDelayTime": 1.2000000476837158,
+          "CharacterType": 6,
+          "MoveSkillId": 0,
+          "FixSpeedMoveSkillId": 0,
+          "BackMoveSkillId": 0,
+          "CanAirCombo": false,
+          "CanStand": true
+        },
+        "FightPropComponent": {},
+        "FightGridMoverComponent": {
+          "MoveActionId": 0,
+          "WalkableGroundTypeKey": 7,
+          "WalkableGroundTypeServerOverrideKey": 0
+        },
+        "FightGameplayTagComponent": {
+          "GameplayTag": {
+            "V0": 4294983680,
+            "V1": 0,
+            "V2": 0,
+            "V3": 0
+          }
+        }
+      },
+      "walkable_ground_types": [
+        0,
+        1,
+        3,
+        6
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialGridItemRules.cs",
+      "sha256": "a8048781489f8e324f8ef86ff154cb44ab043f60d0a7d6f6027b3803015822a0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialGridItemRules.cs.meta",
+      "sha256": "413a6d4ad35ce9bf8c500781d7506afb59eae7addd17e3a00e89778dd92005f0"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_grid_items.py",
+    "sha256": "31bd027821fd63ce729cf8cbab6e5f7bf0a1efd6cf592528421bd6785d778e98"
+  },
+  "conversion": "Original table flags and entity mover mask compiled together. Empty property configuration is preserved; snapshot inheritance is a separately confirmed offline rule.",
+  "limits": [
+    "Only 3320/3051 and 3328/3054 are bound. This receipt does not assert runtime spawning or visual lifecycle completion."
+  ]
+}

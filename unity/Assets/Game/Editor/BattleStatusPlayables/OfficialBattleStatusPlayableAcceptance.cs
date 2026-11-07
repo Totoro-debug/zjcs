@@ -125,6 +125,8 @@ namespace Zjcs.Editor
                 }
                 foreach (var priority in instance.GetComponentsInChildren<ApplyEffectByPriority>(true))
                     priority.MyPlayableCenter = center;
+                foreach (var leaf in instance.GetComponentsInChildren<MonoBehaviour>(true))
+                    if (leaf is IBattleSourceDeathPlayable death) death.BindSourceDeathView(burnDeaths);
                 return instance;
             }
 
@@ -265,6 +267,8 @@ namespace Zjcs.Editor
                 while (orbits.MoveNext()) yield return orbits.Current;
                 IEnumerator death = DeathForbiddenSteps();
                 while (death.MoveNext()) yield return death.Current;
+                IEnumerator burns = BurnSteps();
+                while (burns.MoveNext()) yield return burns.Current;
             }
 
             public void Dispose()
