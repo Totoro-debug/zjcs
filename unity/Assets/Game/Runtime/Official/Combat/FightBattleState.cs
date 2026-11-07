@@ -61,6 +61,9 @@ namespace Zjcs.Combat.Official
         public int BrokenRound = -1;
         public bool Ended;
         [NonSerialized] internal bool HitSummonRemoveProcessed;
+        [NonSerialized] internal long HpBeforeLastUpdate;
+        [NonSerialized] internal long HpIncreaseForLastUpdate;
+        [NonSerialized] internal bool HpUpdateCaptured;
         public FightVoodooDollLink VoodooDoll;
         public List<FightPropertyValue> Properties = new List<FightPropertyValue>();
         public List<FightBattleSkillDefinition> Skills = new List<FightBattleSkillDefinition>();

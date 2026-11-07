@@ -84,10 +84,14 @@ namespace Zjcs.Combat.Official
         {
             SynchronizePetEnergyHp(changed);
             if (statusCatalog == null) return;
+            long hpIncreaseDelta = changed != null && changed.HpUpdateCaptured
+                ? changed.HpIncreaseForLastUpdate : -1L;
+            if (changed != null) changed.HpUpdateCaptured = false;
             var simple = new List<FightBattleStatusStateTrigger>();
             var configured = new List<FightBattleStatusSkillInvocation>();
             FightStatusTriggerRuntime.Apply(changed, statusCatalog, false, simple,
-                random, sourceSkill, units, configured, executeHpSkills: ExecuteHpStartupSkills);
+                random, sourceSkill, units, configured, executeHpSkills: ExecuteHpStartupSkills,
+                hpIncreaseDelta: hpIncreaseDelta);
             foreach (var trigger in simple)
                 configured.Add(new FightBattleStatusSkillInvocation
                 {

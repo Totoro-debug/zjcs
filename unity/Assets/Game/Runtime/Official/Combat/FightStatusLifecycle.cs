@@ -552,7 +552,11 @@ namespace Zjcs.Combat.Official
             if (round >= 0) InitializeRoundStartDelay(unit, applied);
             if (applied.HasBackToLifeComponent)
             {
+                long previousHp = unit.Hp;
                 unit.Hp = 1;
+                unit.HpBeforeLastUpdate = previousHp;
+                unit.HpIncreaseForLastUpdate = Math.Max(0L, unit.Hp - previousHp);
+                unit.HpUpdateCaptured = true;
                 unit.HpUpdated?.Invoke(unit);
             }
             FightStatusCooldownRuntime.Invoke(unit, applied, random);

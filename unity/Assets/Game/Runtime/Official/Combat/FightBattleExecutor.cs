@@ -982,7 +982,8 @@ namespace Zjcs.Combat.Official
                     SynchronizePetEnergyHp(target);
                     FightStatusTriggerRuntime.Apply(target, statusCatalog, false, hpTriggerSkills,
                         random, skill, units, configuredHpTriggerSkills,
-                        executeHpSkills: ExecuteHpStartupSkills);
+                        executeHpSkills: ExecuteHpStartupSkills,
+                        hpIncreaseDelta: Math.Max(0L, target.Hp - beforeHp));
                     RebuildBattleProperties();
                     float endedDuration = 0f, endedActionDuration = -1f;
                     ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,

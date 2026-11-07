@@ -9,16 +9,24 @@ namespace Zjcs.Combat.Official
             FightOfficialCombatCatalog catalog, FightDamageFormula formula)
         {
             if (units == null || catalog == null || formula == null) return;
-            var hpChanges = new List<FightBattleUnitState>();
+            var hpChanges = new Dictionary<FightBattleUnitState, long>();
             foreach (FightBattleUnitState unit in units)
             {
                 if (unit == null) continue;
                 long previousHp = unit.Hp;
                 Rebuild(unit, units, catalog, formula);
-                if (unit.Hp != previousHp) hpChanges.Add(unit);
+                if (unit.Hp != previousHp) hpChanges[unit] = previousHp;
             }
-            foreach (FightBattleUnitState unit in hpChanges)
+            foreach (KeyValuePair<FightBattleUnitState, long> change in hpChanges)
+            {
+                // Capture the exact delta before the callback can recursively rebuild another
+                // property set. HP increase unit components consume this per-update boundary.
+                FightBattleUnitState unit = change.Key;
+                unit.HpBeforeLastUpdate = change.Value;
+                unit.HpIncreaseForLastUpdate = Math.Max(0L, unit.Hp - change.Value);
+                unit.HpUpdateCaptured = true;
                 unit.HpUpdated?.Invoke(unit);
+            }
         }
 
         public static void Rebuild(FightBattleUnitState unit,
