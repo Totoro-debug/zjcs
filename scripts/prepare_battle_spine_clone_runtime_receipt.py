@@ -31,9 +31,21 @@ def main():
         'CombatAppearance/AppearanceCharacter.cs', 'ProfessionUI/AppearanceAnimationPartHandler.cs'))
     outputs.extend(ROOT / 'unity/Assets/Game' / name for name in (
         'Runtime/Presentation/Combat/OfficialBattleSpineCloneAnimation.cs',
+        'Runtime/Presentation/Combat/OfficialBattlePlayerClonePrefab.cs',
+        'Runtime/Presentation/Combat/OfficialBattlePlayerCloneValidation.cs',
+        'Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs',
+        'Runtime/Presentation/Combat/OfficialBattleAnimatorPlayback.cs',
+        'Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs',
+        'Runtime/Presentation/Combat/OfficialBattleSceneView.Players.cs',
+        'Runtime/Presentation/Combat/OfficialBattleSceneView.cs',
+        'Runtime/Presentation/Home/SkillSummonPlayerValidation.cs',
         'Runtime/Presentation/Combat/OfficialBattleSceneView.SourceDeath.cs',
         'Runtime/Offline/BattleNativePlayables/OfflineBattleNativePlayableScope.cs',
+        'Runtime/Offline/ProfessionUI/OfflineProfessionBattlePlayerResources.cs',
+        'Runtime/Offline/ProfessionUI/OfflineProfessionSceneCloneBindings.cs',
         'Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs',
+        'Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Parts.cs',
+        'Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Effects.cs',
         'Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs',
         'Editor/Combat/AnimatorPlayback/OfficialBattleSpineCloneAnimationValidation.cs',
         'Editor/Combat/AnimatorPlayback/OfficialBattleSourceDeathValidation.cs'))
@@ -41,6 +53,9 @@ def main():
         official_sources=[identity(p) for p in sources],
         migrated_components_and_ports=[identity(p) for p in outputs],
         metadata=[identity(Path(str(p) + '.meta')) for p in outputs],
+        validation_tools=[identity(ROOT / name) for name in (
+            'scripts/test_battle_skill_graph_dispatch.ps1',
+            'scripts/fixtures/battle_skill_graph_dispatch_harness.cs')],
         clone_settings_receipt=identity(ROOT / 'assets/reference/battle-animation/spine-clone-settings-source-manifest.json'),
         generator=identity(Path(__file__).resolve()),
         operation='Retain clone init/activate/play and clear/deactivate/stop order, original duration, '
@@ -50,11 +65,18 @@ def main():
             'zero-mix, immediate-pose animation request and read-only state through an independent native '
             'track and physical clock. Load all renderer/clock settings from five verified original clone '
             'targets; replace EC view lookup with a scene dependency injected before Awake. Restart the '
-            'still-present dead source through the shared scene, retaining original stop-then-replay behavior.',
-        limits=['Appearance renderer/resource injection and physics inheritance of world movement '
-            'require production scene binding and actual Play Mode/Windows Player validation. '
+            'still-present dead source through the shared scene, retaining original stop-then-replay behavior. '
+            'Adapt each inactive original clone target in place, bind its existing appearance/character/part '
+            'components to the battle resource owner, exchange only the renderer endpoint, then activate '
+            'through the original playable. Retain ungrouped clone renderer orders and slot depths, without '
+            'promoting fragment or weapon insertion keys to global sorting priorities. Preserve the '
+            'actual initialized controller parameter/layer contract while the original graph hides '
+            'its source model; reject unknown parameters without reactivating that model.',
+        limits=['Physics inheritance of world movement requires a separate binding and validation. '
             'Attached player death motions and the complete original death playable binding remain incomplete. '
-            'Source mapping and successful prefab loading alone do not prove those effects work.'])
+            'Source mapping and successful prefab loading alone do not prove those effects work.',
+            'The public diagnostic covers the first 13100 segment only. Server combo sequencing and '
+            'AIRandomTargetFallbackSpawner behavior remain unimplemented pending an offline decision.'])
     target = ROOT / 'assets/reference/battle-animation/spine-clone-runtime-source-manifest.json'
     write_changed(target, json.dumps(proof, ensure_ascii=False, indent=2) + '\n')
     # The graph receipt references this runtime proof and the migrated leaf.
@@ -70,6 +92,25 @@ def main():
             if row['path'] == target.relative_to(ROOT).as_posix():
                 row.update(identity(target))
         write_changed(graph_receipt, json.dumps(graph, ensure_ascii=False, indent=2) + '\n')
+    # Shared Animator playback is also identified by existing consumer receipts.
+    # Refresh this code identity only; preserve their original inputs and assets.
+    playback = identity(ROOT / 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAnimatorPlayback.cs')
+    def refresh_playback(value):
+        if isinstance(value, dict):
+            if value.get('path') == playback['path']:
+                value.update(playback)
+            for child in value.values():
+                refresh_playback(child)
+        elif isinstance(value, list):
+            for child in value:
+                refresh_playback(child)
+    for relative in ('battle-animation/scene-skill-motions-source-manifest.json',
+                     'partner-native-playables-source-manifest.json',
+                     'partner-native-role-views-source-manifest.json'):
+        consumer = ROOT / 'assets/reference' / relative
+        data = json.loads(consumer.read_bytes())
+        refresh_playback(data)
+        write_changed(consumer, json.dumps(data, ensure_ascii=False, indent=2) + '\n')
     print('Recorded original skill clone sources and explicit dependency boundaries.')
 
 

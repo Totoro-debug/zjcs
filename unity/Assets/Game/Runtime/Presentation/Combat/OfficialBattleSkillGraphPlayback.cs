@@ -24,6 +24,7 @@ namespace Zjcs.Presentation.Combat
         private readonly OfficialBattleSkillEntityPlayback entityViews;
         private readonly List<ScheduledCast> pending = new List<ScheduledCast>();
         private OfficialBattleGridEntityPlayback gridViews;
+        private Action<GameObject> bindPlayerClones;
         private bool disposed;
 
         public OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog catalog,
@@ -32,7 +33,11 @@ namespace Zjcs.Presentation.Combat
             this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
             this.scope = scope ?? throw new ArgumentNullException(nameof(scope));
             this.entityViews = entityViews ?? throw new ArgumentNullException(nameof(entityViews));
-            this.scope.BindNativePrefabAdapter(Zjcs.Offline.ProfessionUI.PartnerNativeSkillSkeleton.BindOriginalPrefab);
+            this.scope.BindNativePrefabAdapter(instance =>
+            {
+                Zjcs.Offline.ProfessionUI.PartnerNativeSkillSkeleton.BindOriginalPrefab(instance);
+                bindPlayerClones?.Invoke(instance);
+            });
         }
 
         public int CatalogCount => catalog.Count;
@@ -51,6 +56,12 @@ namespace Zjcs.Presentation.Combat
 
         public void BindSourceDeathView(Zjcs.Official.StoryPlayables.IBattleSourceDeathView view)
             => scope.BindSourceDeathView(view);
+
+        public void BindPlayerClonePrefabs(Action<GameObject> bind)
+        {
+            if (bindPlayerClones != null) throw new InvalidOperationException("Player clone prefabs are already bound.");
+            bindPlayerClones = bind ?? throw new ArgumentNullException(nameof(bind));
+        }
 
         public void BindSceneHosts(IBattleCameraOffsetHost cameraHost,
             IBattleCharacterPartVisibilityHost visibilityHost = null, IBattleMasterEntityResolver masterResolver = null)

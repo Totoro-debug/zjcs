@@ -29,10 +29,16 @@ namespace Zjcs.Presentation.Home
             var args=Environment.GetCommandLineArgs();
             int index=Array.IndexOf(args,"--zjcs-validate-skills");
             if(index<0 || index+1>=args.Length) return;
+            StartDiagnostic(args[index+1]);
+        }
+
+        public static void StartDiagnostic(string output)
+        {
+            if (!Application.isPlaying) throw new InvalidOperationException("Run the skill diagnostic in Play Mode or Player.");
             var host=new GameObject("SkillSummonPlayerValidation");DontDestroyOnLoad(host);
             var driver=host.AddComponent<SkillSummonPlayerValidation>();
-            driver.output=Path.GetFullPath(args[index+1]);Directory.CreateDirectory(driver.output);
-            driver.deadline=Time.realtimeSinceStartup+300f;Application.runInBackground=true;
+            driver.output=Path.GetFullPath(output);Directory.CreateDirectory(driver.output);
+            driver.deadline=Time.realtimeSinceStartup+(Application.isEditor ? 900f : 300f);Application.runInBackground=true;
             Application.logMessageReceived+=driver.ObserveLog;
             driver.StartCoroutine(driver.Guard(driver.Run()));
         }
@@ -58,6 +64,9 @@ namespace Zjcs.Presentation.Home
                 }
                 catch(Exception error)
                 {
+                    foreach (var controller in FindObjectsOfType<OfficialBattleRuntimeController>())
+                        if (controller.Checkpoint != null)
+                            File.WriteAllText(Path.Combine(output,"failure-checkpoint.json"),JsonUtility.ToJson(controller.Checkpoint,true));
                     File.WriteAllText(Path.Combine(output,"result.json"),JsonUtility.ToJson(new Result {error=error.ToString()},true));
                     Debug.LogException(error);Application.Quit(1);yield break;
                 }
@@ -100,8 +109,10 @@ namespace Zjcs.Presentation.Home
             FightBattleCheckpoint settled=null;
             var runner=home.StartWeeklyChallengeBattle(4800,cp=>settled=cp);
             var controller=runner.Controller;
-            var probe=OfficialSummonLifecycleValidation.Configure(controller.Checkpoint);
-            controller.StepCompleted+=step=>probe.ObserveStep(controller);
+            bool checkClones = Environment.GetEnvironmentVariable("ZJCS_PLAYER_CLONE_ACCEPTANCE") == "1";
+            var cloneProbe = checkClones ? OfficialBattlePlayerCloneValidation.Configure(controller.Checkpoint) : null;
+            var probe = checkClones ? null : OfficialSummonLifecycleValidation.Configure(controller.Checkpoint);
+            controller.StepCompleted+=step=> { probe?.ObserveStep(controller); cloneProbe?.ObserveStep(controller); };
             Button start=null;
             float preparationDeadline=Time.realtimeSinceStartup+45f;
             while(start==null && Time.realtimeSinceStartup<preparationDeadline)
@@ -122,12 +133,16 @@ namespace Zjcs.Presentation.Home
             bool captured=false;
             while(runner!=null)
             {
-                if(!captured && probe.ReadyToCapture)
+                cloneProbe?.ObserveFrame();
+                if (cloneProbe?.CaptureName != null)
+                { yield return new WaitForEndOfFrame(); Capture(cloneProbe.CaptureName); captured = true; }
+                if(!captured && probe != null && probe.ReadyToCapture)
                 {yield return new WaitForEndOfFrame();Capture("summon-removal");captured=true;}
                 yield return null;
             }
             Require(captured && settled!=null && settled.Finished,"Summon battle did not finish.");
-            probe.Verify("Windows Player",settled);
+            probe?.Verify("Windows Player",settled);
+            cloneProbe?.Verify(settled);
             File.WriteAllText(Path.Combine(output,"summon-final.json"),FightBattleCheckpointSerializer.Save(settled));
             yield return new WaitForSecondsRealtime(.4f);
             yield return new WaitForEndOfFrame();Capture("summon-result");

@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.ProfessionUI;
 
@@ -10,6 +11,14 @@ namespace Zjcs.Presentation.Combat
         private OfflineProfessionBattlePlayerResources playerResources;
 
         private bool CanCreatePlayer(FightBattleUnitState state) => playerAppearance?.Matches(state) == true;
+
+        public void BindPlayerClonePrefab(GameObject instance)
+        {
+            if (!instance) throw new ArgumentNullException(nameof(instance));
+            if (instance.GetComponentsInChildren<MyPlayableSpineClone>(true).Length == 0) return;
+            playerResources ??= new OfflineProfessionBattlePlayerResources();
+            OfficialBattlePlayerClonePrefab.Bind(instance, playerResources);
+        }
 
         private UnitView TryCreatePlayer(FightBattleUnitState state)
         {

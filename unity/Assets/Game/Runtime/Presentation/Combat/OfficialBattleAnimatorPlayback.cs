@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Zjcs.Official.StoryAnimation;
 using Zjcs.Official.StoryPlayables;
@@ -10,6 +11,32 @@ namespace Zjcs.Presentation.Combat
     /// <summary>Binds extracted battle cues to the migrated official Animator playables.</summary>
     public sealed class OfficialBattleAnimatorPlayback : IDisposable
     {
+        private sealed class ControllerBinding
+        {
+            internal readonly AnimatorControllerParameter[] Parameters;
+            internal readonly HashSet<string> Layers = new HashSet<string>();
+            internal ControllerBinding(Animator animator)
+            {
+                Parameters = animator.parameters;
+                for (int index = 0; index < animator.layerCount; index++) Layers.Add(animator.GetLayerName(index));
+            }
+        }
+        private static readonly ConditionalWeakTable<RuntimeAnimatorController, ControllerBinding> bindings
+            = new ConditionalWeakTable<RuntimeAnimatorController, ControllerBinding>();
+
+        private static ControllerBinding ReadBinding(Animator animator)
+        {
+            var controller = animator.runtimeAnimatorController;
+            if (!controller) return null;
+            if (bindings.TryGetValue(controller, out var binding)) return binding;
+            // Original skill graphs can hide the source model. Unity then has
+            // no live Animator parameters; retain the actual initialized
+            // controller contract, without activating the model for inspection.
+            if (!animator.gameObject.activeInHierarchy || !animator.isInitialized) return null;
+            binding = new ControllerBinding(animator);
+            bindings.Add(controller, binding);
+            return binding;
+        }
         private readonly Animator animator;
         private readonly RuntimeAnimatorController originalController;
         private readonly RuntimeAnimatorController ownedController;
@@ -23,11 +50,12 @@ namespace Zjcs.Presentation.Combat
         public static bool Supports(Animator animator, OfficialBattleSkillPlayableCue cue)
         {
             if (animator == null || animator.runtimeAnimatorController == null || cue == null) return false;
-            if (!HasParameter(animator, cue.my_bool_param, AnimatorControllerParameterType.Bool)
-                || !HasParameter(animator, cue.my_float_param, AnimatorControllerParameterType.Float)
-                || !HasParameter(animator, cue.int_param, AnimatorControllerParameterType.Int)
-                || !HasParameter(animator, cue.trigger_param, AnimatorControllerParameterType.Trigger)) return false;
-            if (!string.IsNullOrEmpty(cue.layer_name) && animator.GetLayerIndex(cue.layer_name) < 0) return false;
+            var binding = ReadBinding(animator);
+            if (binding == null || !HasParameter(binding, cue.my_bool_param, AnimatorControllerParameterType.Bool)
+                || !HasParameter(binding, cue.my_float_param, AnimatorControllerParameterType.Float)
+                || !HasParameter(binding, cue.int_param, AnimatorControllerParameterType.Int)
+                || !HasParameter(binding, cue.trigger_param, AnimatorControllerParameterType.Trigger)) return false;
+            if (!string.IsNullOrEmpty(cue.layer_name) && !binding.Layers.Contains(cue.layer_name)) return false;
             if (cue.kind != 1 || string.IsNullOrEmpty(cue.origin_clip_name)) return true;
             if (animator.runtimeAnimatorController is AnimatorOverrideController overridden)
             {
@@ -42,10 +70,10 @@ namespace Zjcs.Presentation.Combat
             return false;
         }
 
-        private static bool HasParameter(Animator animator, string name, AnimatorControllerParameterType type)
+        private static bool HasParameter(ControllerBinding binding, string name, AnimatorControllerParameterType type)
         {
             if (string.IsNullOrEmpty(name)) return true;
-            foreach (var parameter in animator.parameters)
+            foreach (var parameter in binding.Parameters)
                 if (parameter.name == name && parameter.type == type) return true;
             return false;
         }
@@ -54,6 +82,7 @@ namespace Zjcs.Presentation.Combat
             AnimationController existingController = null)
         {
             this.animator = animator != null ? animator : throw new ArgumentNullException(nameof(animator));
+            ReadBinding(animator);
             originalController = animator.runtimeAnimatorController;
             root = new GameObject("OfficialBattleAnimatorPlayables");
             root.transform.SetParent(parent, false);

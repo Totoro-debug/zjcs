@@ -1000,7 +1000,11 @@ namespace Zjcs.Presentation.Combat
                     if (cue.Movement != null && movementCues.TryGetValue(cue.Movement, out var partnerMoves))
                     {
                         if (!partnerMoves.TrueForAll(value => role.Supports(value.SkillPlayable)))
-                            throw new InvalidOperationException("Original role movement Animator parameters are unbound.");
+                            throw new InvalidOperationException("Original role movement Animator parameters are unbound: unit="
+                                + cue.UnitId + ", movement=" + cue.Movement.MoveBehaviourId
+                                + ", moveSkill=" + cue.Movement.MoveSkillEntityId + ", cues="
+                                + string.Join(";", partnerMoves.FindAll(value => !role.Supports(value.SkillPlayable))
+                                    .ConvertAll(value => JsonUtility.ToJson(value.SkillPlayable))));
                         foreach (var original in partnerMoves)
                             pendingUnitAnimations.Add(new PendingUnitAnimation { Cue = original, Serial = ++pendingAnimationSerial });
                         continue;

@@ -38,6 +38,7 @@ namespace Zjcs.Offline.ProfessionUI
 
         private void AddEffectOrderingCuts(IProfessionSkinClipSlot[] order, SortedSet<int> cuts)
         {
+            if (UsesUngroupedCloneOrder) return;
             foreach (var item in effectDrawOrders)
             {
                 int draw = EffectSlotDrawIndex(item, order);

@@ -46,6 +46,11 @@ namespace Zjcs.Offline.ProfessionUI
                 var renderer = item.Part.SkeletonTarget.GetComponent<MeshRenderer>();
                 if (renderer.sortingLayerID != first.sortingLayerID || renderer.sortingOrder != first.sortingOrder)
                     throw new NotSupportedException("Bind original independent weapon and body sorting differences first.");
+                if (UsesUngroupedCloneOrder)
+                {
+                    if (item.Group) item.Group.enabled = false;
+                    continue;
+                }
                 int key = checked(first.sortingOrder + 2 * draw + 1);
                 if (key < short.MinValue || key > short.MaxValue) throw new NotSupportedException("Native independent part ordering exceeds Unity's local range.");
                 item.Group.sortingLayerID = first.sortingLayerID; item.Group.sortingOrder = key;
@@ -67,7 +72,8 @@ namespace Zjcs.Offline.ProfessionUI
             {
                 var body = owner.GetComponentInParent<SortingGroup>(true);
                 var parent = part.GameObject.transform.parent;
-                if (!body || !parent || parent.GetComponentInParent<SortingGroup>(true) != body)
+                if (!parent || parent.GetComponentInParent<SortingGroup>(true) != body
+                    || !body && !owner.UsesUngroupedCloneOrder)
                     throw new InvalidOperationException("Native body and independent weapon must share the original character's sorting group.");
                 order = part.GameObject.GetComponent<ProfessionNativeScenePartOrder>();
                 if (!order)
@@ -78,7 +84,9 @@ namespace Zjcs.Offline.ProfessionUI
                 }
                 if (order.Owner) throw new InvalidOperationException("The independent native part is already attached to another skeleton.");
                 this.owner = owner; Part = part;
-                Group = order.Group; order.Owner = owner; Group.enabled = true;
+                Group = body ? order.Group : part.GameObject.GetComponent<SortingGroup>();
+                order.Owner = owner;
+                if (Group) Group.enabled = body;
             }
             internal void Suspend()
             {

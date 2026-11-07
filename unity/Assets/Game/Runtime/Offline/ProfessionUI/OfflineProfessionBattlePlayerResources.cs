@@ -60,6 +60,13 @@ namespace Zjcs.Offline.ProfessionUI
             return player;
         }
 
+        public void BindCloneAppearance(Zjcs.Official.CombatAppearance.AppearanceRenderer appearance,
+            Component originalRenderer, ProfessionNativeSceneRenderer native)
+        {
+            ThrowIfDisposed();
+            OfflineProfessionSceneCloneBindings.Bind(appearance, originalRenderer, native, characters, manager, parts, pool);
+        }
+
         // Called by the battle host. Multiple role views cannot advance shared
         // cache timers twice within one Unity frame; this never ticks an actor.
         public void Update()

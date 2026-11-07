@@ -8,7 +8,7 @@ using UnityEngine;
 // Records the native playback seam; compiles the actual catalog and dispatcher below it.
 namespace UnityEngine
 {
-    public class GameObject { public string name; public GameObject(string value) { name = value; } }
+    public class GameObject { public string name; public int PartnerAdapters; public GameObject(string value) { name = value; } }
     public class Transform { public GameObject gameObject; public Transform(string name) { gameObject = new GameObject(name); } }
     public class TextAsset { public string text = "catalog"; }
     public static class Resources
@@ -17,12 +17,13 @@ namespace UnityEngine
         public static T Load<T>(string path) where T : class { return Assets.TryGetValue(path, out var value) ? value as T : null; }
     }
     public static class JsonUtility { public static object Data; public static T FromJson<T>(string text) { return (T)Data; } }
-    public static class Mathf { public static float Max(float a, float b) { return Math.Max(a, b); } }
+    public static class Mathf { public static float Max(float a, float b) { return Math.Max(a, b); } public static float Min(float a, float b) => Math.Min(a, b); }
 }
 namespace Zjcs.Combat.Official
 {
-    public class FightBattleUnitState { public int Id, Direction; public long Hp; }
-    public class FightBattleCheckpoint { public List<FightBattleUnitState> Units = new List<FightBattleUnitState>(); }
+    public class FightBattleUnitState { public int Id, Direction, CharacterType; public long Hp; }
+    public class GridItem { public int Id; public bool HasRuntime; public FightBattleUnitState Runtime; }
+    public class FightBattleCheckpoint { public List<FightBattleUnitState> Units = new List<FightBattleUnitState>(); public List<GridItem> GridItems = new List<GridItem>(); }
     public class FightBattleSkillCastPresentation { public int FacingIndex, TargetId; }
     public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId; public bool IsPetSupport; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(); }
     public class FightBattleStepEvent { public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); }
@@ -40,6 +41,22 @@ namespace Zjcs.Official.StoryPlayables
 }
 namespace Zjcs.Presentation.Combat
 {
+    // This fixture leaves the separately tested grid lifecycle seam unbound.
+    public class OfficialBattleGridMapper {}
+    public class OfficialBattleGridEntityPlayback : IDisposable
+    {
+        public OfficialBattleGridEntityPlayback(Transform root, OfficialBattleGridMapper mapper,
+            OfflineBattleNativePlayableScope scope, OfficialBattleSkillEntityPlayback views,
+            FightBattleCheckpoint checkpoint, Func<int, Transform> resolve, Func<int, bool> icons) {}
+        public float NextDelay => float.PositiveInfinity;
+        public Transform TryGetTransform(int id) => null;
+        public void RefreshSnapshot(FightBattleCheckpoint checkpoint) {}
+        public void Restore() {}
+        public void Enqueue(FightBattleStepEvent step, FightBattleCheckpoint checkpoint) {}
+        public void DispatchDue() {}
+        public void AdvanceTimers(float delta) {}
+        public void Dispose() {}
+    }
     // Exercise dispatch through its real entity-lifecycle seam. Native entity
     // playback is verified in Unity with the actual original MyFightSkill.
     public class OfficialBattleSkillEntityPlayback : IDisposable
@@ -60,7 +77,8 @@ namespace Zjcs.Offline.BattleNativePlayables
     {
         public readonly Transform PlayableSlot = new Transform("slot");
         public readonly List<int> EntitiesStarted = new List<int>();
-        public void BindNativePrefabAdapter(Action<GameObject> adapter) {}
+        private Action<GameObject> nativeAdapter;
+        public void BindNativePrefabAdapter(Action<GameObject> adapter) { nativeAdapter = adapter; }
         public readonly List<string> Plays = new List<string>();
         public readonly List<string> Sources = new List<string>();
         public readonly List<float> Times = new List<float>();
@@ -76,12 +94,13 @@ namespace Zjcs.Offline.BattleNativePlayables
         public void LateTick() { LateTicks++; }
         public void Play(GameObject prefab, GameObject source, GameObject target, float speed,
             GameObject parent, Dictionary<string, object> parameters)
-        { Plays.Add(prefab.name + ":" + target.name); Sources.Add(source.name); Times.Add(Clock); }
+        { nativeAdapter?.Invoke(new GameObject(prefab.name));
+          Plays.Add(prefab.name + ":" + target.name); Sources.Add(source.name); Times.Add(Clock); }
         public void Dispose() { Disposed = true; }
     }
 }
 namespace Zjcs.Offline.ProfessionUI
-{ public static class PartnerNativeSkillSkeleton { public static void BindOriginalPrefab(GameObject value) {} } }
+{ public static class PartnerNativeSkillSkeleton { public static void BindOriginalPrefab(GameObject value) { value.PartnerAdapters++; } } }
 public static class BattleSkillGraphDispatchHarness
 {
     static void Require(bool value, string message) { if (!value) throw new Exception(message); }
@@ -182,6 +201,13 @@ public static class BattleSkillGraphDispatchHarness
         actor.Direction = 2;
         var timed = new OfflineBattleNativePlayableScope();
         var queue = new OfficialBattleSkillGraphPlayback(catalog, timed, new OfficialBattleSkillEntityPlayback(timed));
+        int cloneBindings = 0;
+        queue.BindPlayerClonePrefabs(instance => {
+            Require(instance.PartnerAdapters == 1, "Clone binding replaced or preceded the original partner adapter");
+            cloneBindings++;
+        });
+        try { queue.BindPlayerClonePrefabs(_ => {}); throw new Exception("Clone binding was replaced"); }
+        catch (InvalidOperationException) {}
         queue.Play(new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> {
             Cast(10, .75f), Cast(20, .25f), Cast(10, .25f), Cast(999, 0) } }, checkpoint, resolve);
         Require(timed.Plays.Count == 0, "Delayed casts played immediately");
@@ -191,6 +217,7 @@ public static class BattleSkillGraphDispatchHarness
         queue.Tick(.875f); // One long frame crosses all three cues.
         Require(string.Join(",", timed.Plays) == "fallback:target,UpPlayablePrefab:target,UpPlayablePrefab:target", "Cue order or same-time stability changed");
         Require(timed.Times[0] == .25f && timed.Times[1] == .25f && timed.Times[2] == .75f && timed.Clock == 1f, "Native graph clock did not split at cue times");
+        Require(cloneBindings == 3, "Original instantiated skill graphs did not all receive composed clone binding");
         queue.LateTick();
         Require(timed.LateTicks == 1 && timed.Clock == 1f, "PostProcessFrame phase advanced the clock or was not dispatched");
         queue.Play(new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> { Cast(20, 1) } }, checkpoint, resolve);

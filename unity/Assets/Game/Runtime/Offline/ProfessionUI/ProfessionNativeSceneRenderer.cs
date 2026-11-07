@@ -179,6 +179,21 @@ namespace Zjcs.Offline.ProfessionUI
 
         private void ApplySlotDrawOrder(int[] cuts)
         {
+            if (UsesUngroupedCloneOrder)
+            {
+                // Original skill clones have no character SortingGroup. Keep
+                // their authored equal renderer orders and actual slot depths;
+                // local insertion keys would become global priorities here.
+                foreach (var part in backend.PartsRenderers)
+                {
+                    var group = part.GameObject.GetComponent<SortingGroup>();
+                    if (group) group.enabled = false;
+                }
+                UpdateScenePartOrder(State.DrawOrder, cuts, backend.PartsRenderers[0].MeshRenderer);
+                RestoreEffectDrawOrder();
+                SortingGroup.UpdateAllSortingGroups();
+                return;
+            }
             // Keep each fragment contiguous in Unity's transparent renderer list.
             // Equal renderer orders otherwise permit material/submesh interleaving.
             // The original renderer fields stay intact; odd keys are the insertion
@@ -203,6 +218,9 @@ namespace Zjcs.Offline.ProfessionUI
             UpdateEffectDrawOrder(State.DrawOrder, first);
             SortingGroup.UpdateAllSortingGroups();
         }
+
+        private bool UsesUngroupedCloneOrder => independentAnimationNode != null
+            && !GetComponentInParent<SortingGroup>(true);
 
         private Material MaterialFor(ProfessionNativeMeshBatches.Batch batch)
         {
