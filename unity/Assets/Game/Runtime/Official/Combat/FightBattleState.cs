@@ -381,8 +381,40 @@ namespace Zjcs.Combat.Official
     }
 
     [Serializable]
+    public sealed class FightBattleGridItemState
+    {
+        public int Id;
+        public int GridItemClassId;
+        public int EntityClassId;
+        public int OwnerId;
+        public int X;
+        public int Y;
+        public bool Ended;
+    }
+
+    [Serializable]
+    public sealed class FightBattleEntityCountConfig
+    {
+        public int EntityClassId;
+        public int MaxCount;
+        public int ResultOffset;
+        public List<FightGridPoint> Range = new List<FightGridPoint>();
+
+        public FightBattleEntityCountConfig Copy()
+        {
+            var result = (FightBattleEntityCountConfig)MemberwiseClone();
+            result.Range = new List<FightGridPoint>(Range);
+            return result;
+        }
+    }
+
+    [Serializable]
     public sealed class FightBattleStatusHitApplyDamageComponentState
     {
+        public bool DefinitionResolved;
+        public bool HasUnsupportedFilter;
+        public bool HasEntityCountScale;
+        public FightBattleEntityCountConfig EntityCountScale;
         public int DamageType;
         public bool IsCheckTargetShield;
         public int CharacterType;
@@ -398,11 +430,18 @@ namespace Zjcs.Combat.Official
         public int ConsumeStackMinCount;
         public bool ConsumeScaleByStatusTypeCount;
         public bool RemoveFollowRootParent;
+        public List<int> ConsumeTriggerSkillIds = new List<int>();
+        public List<FightGameplayTagClause> SourceSkillTagQuery = new List<FightGameplayTagClause>();
 
         public FightBattleStatusHitApplyDamageComponentState Copy()
         {
             var result = (FightBattleStatusHitApplyDamageComponentState)MemberwiseClone();
             result.TargetSkillEntityClassIds = new List<int>(TargetSkillEntityClassIds ?? new List<int>());
+            result.ConsumeTriggerSkillIds = new List<int>(ConsumeTriggerSkillIds ?? new List<int>());
+            result.EntityCountScale = EntityCountScale?.Copy();
+            result.SourceSkillTagQuery = new List<FightGameplayTagClause>();
+            foreach(var clause in SourceSkillTagQuery ?? new List<FightGameplayTagClause>())
+                result.SourceSkillTagQuery.Add(new FightGameplayTagClause {Type=clause.Type,Tags=(long[])clause.Tags.Clone()});
             return result;
         }
     }
@@ -410,6 +449,17 @@ namespace Zjcs.Combat.Official
     [Serializable]
     public sealed class FightBattleStatusHitDmgAddPerComponentState
     {
+        public bool DefinitionResolved;
+        public bool IsApplyOneHit;
+        public List<int> HitSkillTypes = new List<int>();
+        public List<int> TargetActionTypes = new List<int>();
+        public List<int> HitSkillElementTypes = new List<int>();
+        public List<int> HitSkillEntityClassIds = new List<int>();
+        public FightBattleStatusTypeCountFilter StatusFilter;
+        public bool HasUnsupportedStatusLogicTags;
+        public bool UpdateDurationSkillCountIfTrigger;
+        public List<int> ConsumeTriggerSkillIds = new List<int>();
+        public int LastResetRound = -1;
         public int HitSourceType;
         public float Rate = 1f;
         public bool Block;
@@ -439,6 +489,12 @@ namespace Zjcs.Combat.Official
         public FightBattleStatusHitDmgAddPerComponentState Copy()
         {
             var result = (FightBattleStatusHitDmgAddPerComponentState)MemberwiseClone();
+            result.HitSkillTypes = new List<int>(HitSkillTypes ?? new List<int>());
+            result.TargetActionTypes = new List<int>(TargetActionTypes ?? new List<int>());
+            result.HitSkillElementTypes = new List<int>(HitSkillElementTypes ?? new List<int>());
+            result.HitSkillEntityClassIds = new List<int>(HitSkillEntityClassIds ?? new List<int>());
+            result.StatusFilter = StatusFilter?.Clone();
+            result.ConsumeTriggerSkillIds = new List<int>(ConsumeTriggerSkillIds ?? new List<int>());
             result.StatusTypes = new List<int>(StatusTypes ?? new List<int>());
             result.OnlySkillActions = new List<int>(OnlySkillActions ?? new List<int>());
             return result;
@@ -794,6 +850,7 @@ namespace Zjcs.Combat.Official
         public int RoundEndMaxCount = -1;
         public int RoundEndTriggeredCount;
         public bool RoundEndAutoRemove;
+        public FightBattleEntityCountConfig RoundEndEntityCount;
         public List<FightBattleStatusStateTrigger> RoundEndSkills =
             new List<FightBattleStatusStateTrigger>();
         public bool HasSkillStartTrigger;
@@ -1520,6 +1577,7 @@ namespace Zjcs.Combat.Official
         public int WaveIndex;
         public bool Finished;
         public List<FightBattleUnitState> Units = new List<FightBattleUnitState>();
+        public List<FightBattleGridItemState> GridItems = new List<FightBattleGridItemState>();
         public List<FightBattleWaveState> Waves = new List<FightBattleWaveState>();
         public FightBattleStageStatusConfig StageStatus;
         public FightBattleGrid Grid;

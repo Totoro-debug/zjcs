@@ -206,7 +206,7 @@ namespace Zjcs.Combat.Official
 
         public static List<FightBattleStatusSkillInvocation> CollectRoundEndSkills(
             FightBattleUnitState listener, IReadOnlyList<FightBattleUnitState> units,
-            FightRandomStream random)
+            FightRandomStream random, IReadOnlyList<FightBattleGridItemState> gridItems = null)
         {
             var result = new List<FightBattleStatusSkillInvocation>();
             if (listener == null || units == null || !FightBattleTargeting.IsSelectable(listener))
@@ -223,12 +223,15 @@ namespace Zjcs.Combat.Official
                             && status.RoundEndTriggeredCount >= status.RoundEndMaxCount)
                         || FightStatusLifecycle.ResolveTargetUnitId(status,
                             status.RoundEndListenTarget, units) != listener.Id) continue;
+                    if(status.RoundEndEntityCount!=null && (status.ForbiddenType!=0
+                        || FightBattleEntityCountRuntime.Count(status.RoundEndEntityCount,statusOwner,gridItems)<=0)) continue;
 
                     int added = 0;
                     foreach (FightBattleStatusStateTrigger trigger in status.RoundEndSkills)
                     {
                         if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
-                            || trigger.Source != 2 || trigger.Target != 5 || trigger.UseAI
+                            || trigger.Source != 2 || (trigger.Target != 5
+                                && !(status.ClassId==25098 && trigger.Target==2)) || trigger.UseAI
                             || trigger.TargetPos != 1 || trigger.StackedCountToDamageFactor
                             || !Roll(trigger.BasePercent, random)) continue;
                         result.Add(new FightBattleStatusSkillInvocation

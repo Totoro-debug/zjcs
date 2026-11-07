@@ -70,13 +70,21 @@ namespace Zjcs.Presentation.Home
             string saveRoot=Path.Combine(output,"save-"+Guid.NewGuid().ToString("N"));
             var slots=new ProfileSlotCatalog(saveRoot);
             string slot=slots.CreateSlot();
+            var assets=OfficialCharacterAssetCatalog.LoadDefault();
             var save=new OfflineMainlineSave();
             save.Player.CharacterCreated=true;save.Player.CharacterName="召唤验证";
-            save.Player.Level=40;save.Player.Rank=1;save.Player.SubRank=2;
+            save.Player.Level=40;save.Player.Rank=1;
+            save.Player.SubRank=assets.Load().LevelLimits.Where(value=>value.PlayerLevel>=40
+                && value.PlayerBlessLevel==0).Min(value=>value.SubRank);
             save.Player.InitialWeaponType=200;save.Player.Wardrobe.Profession=1;
-            save.Player.Experience=OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[40];
+            save.Player.Experience=assets.Load().CumulativeLevelExperience[40];
             save.Player.Skills.Skills.Add(new Zjcs.Offline.Skills.OfflineOwnedSkill {ClassId=10014,Rank=1});
             File.WriteAllText(slots.GetProgressPath(slot),JsonUtility.ToJson(save,true));
+            var session=OfflineMainlineProgressSession.OpenCharacter(slots,slot);
+            var progression=new OfflineCharacterProgressionService(session,assets.Load());
+            progression.InitializeWardrobe("skill-summon-player-wardrobe");
+            progression.AttachSkillRules(assets.LoadSkillRules(),assets.LoadSkillRecommendations().recommendations);
+            Require(progression.EquipSkill(10014,0).IsApplied,"Could not equip the summon Player skill.");
             foreach(var canvas in FindObjectsOfType<Canvas>()) canvas.gameObject.SetActive(false);
             foreach(var camera in FindObjectsOfType<Camera>()) camera.enabled=false;
             var home=HomeFeatureRuntime.Begin(slot,saveRoot,null);

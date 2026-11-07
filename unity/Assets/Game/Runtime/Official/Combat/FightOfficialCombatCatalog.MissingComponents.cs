@@ -82,8 +82,16 @@ namespace Zjcs.Combat.Official
             if (hitApply != null)
             {
                 Dictionary<string, object> consume = Component(hitApply, "FightStatusConsumeStackCfg");
+                Dictionary<string, object> entityCount = Component(hitApply, "ScaleByEntityCount");
+                var tagQuery = new List<FightGameplayTagClause>();
+                bool filterSupported = ReadSourceSkillTagFilter(Component(hitApply, "FilterCondition"),tagQuery);
                 result.HitApplyDamage = new FightBattleStatusHitApplyDamageComponentState
                 {
+                    DefinitionResolved = true,
+                    HasUnsupportedFilter = !filterSupported,
+                    SourceSkillTagQuery = tagQuery,
+                    HasEntityCountScale = entityCount != null && Int(entityCount, "EntityClassId") != 0,
+                    EntityCountScale = ParseEntityCount(entityCount),
                     DamageType = Int(hitApply, "DamageType"),
                     IsCheckTargetShield = Bool(hitApply, "IsCheckTargertShield"),
                     CharacterType = Int(hitApply, "CharacterType"),
@@ -103,6 +111,8 @@ namespace Zjcs.Combat.Official
                         "TriggerApplyStackMinCount"),
                     ConsumeScaleByStatusTypeCount = consume != null
                         && Bool(consume, "ScalePropByStatusTypeCount"),
+                    ConsumeTriggerSkillIds = consume == null ? new List<int>()
+                        : new List<int>(IntArray(consume, "TriggerSkillEntityClassIds")),
                     RemoveFollowRootParent = Bool(hitApply, "IsRemoveFollowRootParent")
                 };
             }
@@ -115,6 +125,30 @@ namespace Zjcs.Combat.Official
                 Dictionary<string, object> consume = Component(hitDmgAdd, "FightStatusConsumeStackCfg");
                 result.HitDmgAddPer = new FightBattleStatusHitDmgAddPerComponentState
                 {
+                    DefinitionResolved = true,
+                    IsApplyOneHit = Bool(hitDmgAdd, "IsApplyOneHit"),
+                    HitSkillTypes = new List<int>(IntArray(hitDmgAdd, "HitSkillTypes")),
+                    TargetActionTypes = new List<int>(IntArray(hitDmgAdd, "TargetActionTypes")),
+                    HitSkillElementTypes = new List<int>(IntArray(hitDmgAdd, "HitSkillElementTypes")),
+                    HitSkillEntityClassIds = new List<int>(IntArray(hitDmgAdd, "HitSkillEntityClassIds")),
+                    UpdateDurationSkillCountIfTrigger = Bool(hitDmgAdd, "UpdateDurationSkillCountIfTrigger"),
+                    ConsumeTriggerSkillIds = consume == null ? new List<int>()
+                        : new List<int>(IntArray(consume, "TriggerSkillEntityClassIds")),
+                    HasUnsupportedStatusLogicTags = statusType != null
+                        && IntArray(statusType, "AnyLogicTags").Length > 0,
+                    StatusFilter = statusType == null ? null : new FightBattleStatusTypeCountFilter
+                    {
+                        IsCondition = Bool(statusType, "IsCondition", true),
+                        Target = Int(statusType, "Target"),
+                        AnyStatusTypes = new List<int>(IntArray(statusType, "AnyStatusTypes")),
+                        AnyActionTypes = new List<int>(IntArray(statusType, "AnyActionTypes")),
+                        CountType = Int(statusType, "CountType", 1),
+                        MaxStatusCount = Int(statusType, "MaxStatusCount", -1),
+                        Unit = Float(statusType, "Unit", 1f),
+                        IsAdditionCount = Bool(statusType, "IsAdditionCount"),
+                        IsOpenZeroCheckWhenCalcStatus = Bool(statusType, "IsOpenZeroCheckWhenCalcStatus"),
+                        IsCalculateStack = Bool(statusType, "IsCalculateStack")
+                    },
                     HitSourceType = Int(hitDmgAdd, "HitSourceType"),
                     Rate = Float(hitDmgAdd, "Rate", 1f),
                     Block = Bool(hitDmgAdd, "Block"),
@@ -362,6 +396,43 @@ namespace Zjcs.Combat.Official
             if (component == null || !component.TryGetValue(field, out object raw) || raw == null)
                 return new List<object>();
             return Array(raw, field);
+        }
+
+        private static FightBattleEntityCountConfig ParseEntityCount(Dictionary<string, object> source)
+        {
+            if (source == null || Int(source, "EntityClassId") == 0) return null;
+            var result = new FightBattleEntityCountConfig
+            {
+                EntityClassId = Int(source, "EntityClassId"),
+                MaxCount = Int(source, "MaxCount"),
+                ResultOffset = Int(source, "ResultOffset")
+            };
+            foreach (object value in Array(Required(source, "Range"), "EntityCount.Range"))
+            {
+                var point = Object(value, "EntityCount.Range point");
+                result.Range.Add(new FightGridPoint(Int(point, "X"), Int(point, "Y")));
+            }
+            return result;
+        }
+
+        private static bool ReadSourceSkillTagFilter(Dictionary<string,object> filter,List<FightGameplayTagClause> clauses)
+        {
+            if(filter==null) return true;
+            if(StringField(filter,"_type")!="SourceEntityGameplayTagFilter") return false;
+            var query=Object(Required(filter,"Query"),"source skill tag query");
+            var desc=Object(Required(query,"Desc"),"source skill tag clauses");
+            int length=Int(query,"Length");
+            if(length<0 || length>8) throw new FormatException("Original tag query exceeds eight clauses.");
+            for(int i=0;i<length;i++)
+            {
+                var source=Object(Required(desc,"V"+i),"source skill tag clause");
+                var tags=Object(Required(source,"Tags"),"source skill tag mask");
+                var clause=new FightGameplayTagClause {Type=Int(source,"Type")};
+                if(clause.Type<0 || clause.Type>2) return false;
+                for(int word=0;word<4;word++) clause.Tags[word]=Long(tags,"V"+word);
+                clauses.Add(clause);
+            }
+            return true;
         }
     }
 }

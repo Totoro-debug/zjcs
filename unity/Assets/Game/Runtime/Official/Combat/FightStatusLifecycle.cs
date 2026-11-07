@@ -339,6 +339,7 @@ namespace Zjcs.Combat.Official
                 RoundEndMaxCount = template.RoundEndMaxCount,
                 RoundEndTriggeredCount = template.RoundEndTriggeredCount,
                 RoundEndAutoRemove = template.RoundEndAutoRemove,
+                RoundEndEntityCount = template.RoundEndEntityCount?.Copy(),
                 RoundEndSkills = CopyTriggers(template.RoundEndSkills),
                 HasSkillStartTrigger = template.HasSkillStartTrigger,
                 SkillStartRulesSupported = template.SkillStartRulesSupported,

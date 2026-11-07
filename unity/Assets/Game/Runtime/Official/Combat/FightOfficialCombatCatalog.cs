@@ -1120,7 +1120,8 @@ namespace Zjcs.Combat.Official
                 RoundStartRemoveWhenNotEnoughTimes = roundStart != null
                     && Bool(roundStart, "RemoveWhenNotEnoughTimes"),
                 HasRoundEndTrigger = roundEnd != null,
-                RoundEndRulesSupported = roundEnd != null && SupportsRoundEnd(roundEnd),
+                RoundEndRulesSupported = roundEnd != null && SupportsRoundEnd(roundEnd, classId == 25098),
+                RoundEndEntityCount = roundEnd == null ? null : ParseEntityCount(Component(roundEnd, "EntityCount")),
                 RoundEndListenTarget = roundEnd == null ? 0
                     : Int(roundEnd, "ListenTargetType"),
                 RoundEndMaxCount = roundEnd == null ? -1 : Int(roundEnd, "MaxCount", -1),
@@ -2690,7 +2691,7 @@ namespace Zjcs.Combat.Official
                 || Bool(target, "SupportCustomFilter"));
         }
 
-        private static bool SupportsRoundEnd(Dictionary<string, object> component)
+        private static bool SupportsRoundEnd(Dictionary<string, object> component, bool burningGround = false)
         {
             int listener = Int(component, "ListenTargetType");
             Dictionary<string, object> entityCount = Component(component, "EntityCount");
@@ -2700,7 +2701,7 @@ namespace Zjcs.Combat.Official
                 || ArrayCount(component, "StatusReplacePropertyValues") > 0
                 || ArrayCount(component, "TriggerStatusCfgs") > 0
                 || HasNonNull(component, "FilterCondition")
-                || entityCount != null && (ArrayCount(entityCount, "Range") > 0
+                || !burningGround && entityCount != null && (ArrayCount(entityCount, "Range") > 0
                     || Int(entityCount, "EntityClassId") != 0
                     || Int(entityCount, "MaxCount") != 0
                     || Int(entityCount, "ResultOffset") != 0)) return false;
@@ -2712,7 +2713,7 @@ namespace Zjcs.Combat.Official
                 Dictionary<string, object> custom = Component(trigger, "CustomDamageInfo");
                 Dictionary<string, object> propTarget = Component(trigger, "PropTarget");
                 if (Bool(trigger, "AffectedByProp") || Int(trigger, "Source") != 2
-                    || Int(trigger, "Target") != 5 || Bool(trigger, "UseAI")
+                    || Int(trigger, "Target") != (burningGround ? 2 : 5) || Bool(trigger, "UseAI")
                     || Bool(trigger, "StackedCountToDamageFactor")
                     || Int(trigger, "TargetPos") != 1
                     || Float(trigger, "BasePercent", 1f) < 0f

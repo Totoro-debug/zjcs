@@ -20,6 +20,7 @@ namespace Zjcs.Combat.Official
         public int PassiveGroupLevelPropId;
         public int PassiveRankFactorId;
         public int[] PassiveStatusIds = Array.Empty<int>();
+        public int[] SkillSortTypes = Array.Empty<int>();
         public Dictionary<int, long> PassivePropFactors = new Dictionary<int, long>();
     }
 
@@ -93,6 +94,7 @@ namespace Zjcs.Combat.Official
                         "PassiveGroupLevelPropId"),
                     PassiveRankFactorId = FightOfficialCombatCatalog.ReadInt(skill, "PassiveRankFactorId"),
                     PassiveStatusIds = FightOfficialCombatCatalog.ReadIntArray(skill, "PassiveStatusIdList"),
+                    SkillSortTypes = FightOfficialCombatCatalog.ReadIntArray(skill, "SkillSortTypes"),
                     PassivePropFactors = FightOfficialCombatCatalog.ReadLongMap(skill,
                         "PassivePropFactors")
                 };

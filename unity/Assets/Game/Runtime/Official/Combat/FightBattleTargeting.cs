@@ -312,12 +312,9 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleUnitState unit in ScopeCandidates(actor, units,
                 skill == null ? 1 : skill.TargetType, skill))
             {
-                int dx = unit.X - centerX;
-                int dy = unit.Y - centerY;
-                bool inScope = false;
-                for (int i = 0; i < hit.Scope.Count; i++)
-                    if (hit.Scope[i].X == dx && hit.Scope[i].Y == dy) { inScope = true; break; }
-                if (inScope) result.Add(unit);
+                // GridGroundComponent.EnterPosSub registers the entity in every body cell.
+                // Reuse the same footprint intersection as the AI coverage checks, once per entity.
+                if (InScope(unit, centerX, centerY, hit.Scope)) result.Add(unit);
             }
             Dictionary<int, double> randomPriorities = CreateRandomPriorities(actor,
                 result, skill, random);

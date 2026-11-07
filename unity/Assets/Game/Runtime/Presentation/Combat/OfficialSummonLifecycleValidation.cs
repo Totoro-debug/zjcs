@@ -39,7 +39,10 @@ namespace Zjcs.Presentation.Combat
             private int summonId, calls;
             private FightBattleStatusState healing;
             private bool healed;
-            public bool ReadyToCapture => healed;
+            private readonly bool checkConditional = Environment.GetEnvironmentVariable("ZJCS_CONDITIONAL_HIT_ACCEPTANCE") == "1";
+            private FightBattleStatusState conditional;
+            private bool conditionalVerified;
+            public bool ReadyToCapture => healed && (!checkConditional || conditionalVerified);
             public Probe(FightOfficialCombatCatalog catalog,
                 FightBattleSkillDefinition attack, FightBattleStatusState removal)
             { this.catalog = catalog; this.attack = attack; this.removal = removal; }
@@ -109,9 +112,32 @@ namespace Zjcs.Presentation.Combat
                     player.Skills.Add(attack); player.SkillState.Slots.Add(catalog.CreateSkillSlot(attack, 0));
                     foreach (var enemy in cp.Units.Where(value => value.Side != player.Side))
                         enemy.Hp = enemy.Turn.Hp = Math.Min(enemy.Hp, 1);
+                    if(checkConditional)
+                    {
+                        conditional=catalog.CreateStatus(60290,1,1,9960290,attack.EntityId,0,5,20,1);
+                        player.Statuses.Add(conditional);
+                    }
                     Debug.Log("[HP increase hosts] official 12040 -> 25034/25131/24242, actual=" + change
                         + ", count=" + healing.Components.HpIncreaseUnit.TriggeredCount
                         + ", remainder=" + healing.Components.HpIncreaseUnit.AccumulatedHp);
+                }
+                if(checkConditional && healed && !conditionalVerified)
+                {
+                    if(conditional.Components.HitDmgAddPer.InvokeCount>0)
+                    {
+                        Require(step.DamageEvents.Any(value=>value.SourceId==1 && !value.IsCure && value.Damage<0),
+                            "Conditional status counted without an actual damage settlement.");
+                        conditionalVerified=true;
+                        Debug.Log("[Conditional hit hosts] official 60290 target-debuff gate, count="
+                            + conditional.Components.HitDmgAddPer.InvokeCount);
+                    }
+                    else foreach(var enemy in cp.Units.Where(value=>value.Side!=player.Side && value.Hp>0))
+                        if(!enemy.Statuses.Any(value=>value.ClassId==24009))
+                        {
+                            var debuff=catalog.CreateStatus(24009,enemy.Id,1,9924009+enemy.Id,
+                                attack.EntityId,0,5,20,1);
+                            FightStatusLifecycle.Apply(enemy,debuff,enemy.SkillState.Round,debuff.InstanceId);
+                        }
                 }
             }
 
@@ -119,6 +145,7 @@ namespace Zjcs.Presentation.Combat
             {
                 Require(summonId > 0 && calls == 1 && removal.Components.HitSummon.TriggeredCount == 1 && healed,
                     host + " did not execute the original summon lifecycle exactly once.");
+                Require(!checkConditional || conditionalVerified,host+" did not execute the conditional hit status.");
             }
         }
         private static void Require(bool condition, string message)

@@ -46,6 +46,7 @@ namespace Zjcs.Combat.Official
             public float ActionDuration = -1f;
         }
         private MovementStartContext movementStartContext;
+        private FightConditionalHitProperties conditionalHitProperties;
         private bool applyingActionExistStatuses;
         private readonly FightStatusMutexRuntime statusMutex;
         private FightBattleExecutor(FightBattleCheckpoint checkpoint, FightDamageFormula formula,
@@ -83,6 +84,7 @@ namespace Zjcs.Combat.Official
                             status.HasCreatorDamageBoost = statusCatalog.StatusHasCreatorDamageBoost(status.ClassId);
                             RestoreHpChangeStackDefinition(status);
                             RestoreRoundStartDefinition(status);
+                            RestoreConditionalHitDefinition(status);
                         }
                 units.Add(unit);
                 unitById.Add(unit.Id, unit);
@@ -379,7 +381,7 @@ namespace Zjcs.Combat.Official
             if (statusCatalog != null)
             {
                 List<FightBattleStatusSkillInvocation> roundEndSkills =
-                    FightStatusTriggerRuntime.CollectRoundEndSkills(actor, units, random);
+                    FightStatusTriggerRuntime.CollectRoundEndSkills(actor, units, random, checkpoint.GridItems);
                 if (roundEndSkills.Count > 0)
                 {
                     float triggerDelay = 0f;
@@ -660,12 +662,15 @@ namespace Zjcs.Combat.Official
             // Movement listeners have local times, just like other nested skills. Return
             // their lifetime to the caller before that caller offsets the whole cast.
             var previousMovementContext = movementStartContext;
+            var previousConditionalProperties = conditionalHitProperties;
+            conditionalHitProperties = new FightConditionalHitProperties(actor, skill, skillItems, units, statusCatalog, checkpoint.GridItems);
             movementStartContext = new MovementStartContext { Casts = casts, DamageEvents = damageEvents, Movements = movements };
             try
             {
                 ExecuteSkillCore(actor, skill, targets, casts, damageEvents, movements,
                     out lastDelay, out statusTriggerDuration, out statusTriggerActionDuration,
                     targetPosition, allowDeadSource, externalDamageFactor, targetingSource);
+                conditionalHitProperties.EndCast();
                 statusTriggerDuration = Math.Max(statusTriggerDuration, movementStartContext.Duration);
                 statusTriggerActionDuration = Math.Max(statusTriggerActionDuration,
                     movementStartContext.ActionDuration);
@@ -673,6 +678,7 @@ namespace Zjcs.Combat.Official
             finally
             {
                 SynchronizePetEnergyHp(actor);
+                conditionalHitProperties = previousConditionalProperties;
                 movementStartContext = previousMovementContext;
             }
         }
@@ -900,7 +906,7 @@ namespace Zjcs.Combat.Official
                             resolved = hitExecutor.Apply(random, damageId, actor, target,
                                 skill, hit, checkpoint.StageType, checkpoint.IsPvp, elementConfrontation,
                                 new List<int>(), allowDeadSource, skillDamageScale
-                                    * (hit.UseDamageFactor ? externalDamageFactor : 1.0));
+                                    * (hit.UseDamageFactor ? externalDamageFactor : 1.0), conditionalHitProperties);
                         }
                         finally
                         {

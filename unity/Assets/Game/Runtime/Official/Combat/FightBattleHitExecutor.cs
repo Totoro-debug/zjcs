@@ -35,7 +35,7 @@ namespace Zjcs.Combat.Official
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
             int stageType, bool isPvp, double elementConfrontation = 0.0,
             List<int> processedFalloffStatuses = null, bool allowDeadSource = false,
-            double skillDamageScale = 1.0)
+            double skillDamageScale = 1.0, FightConditionalHitProperties conditionalProperties = null)
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
             if (target == null) throw new ArgumentNullException(nameof(target));
@@ -57,6 +57,8 @@ namespace Zjcs.Combat.Official
             if (hit.ActionType == 5 || (skill != null && skill.SkillType == 3))
             {
                 result.IsCure = true;
+                conditionalProperties?.Merge(target, hit, result.Type, true, random, sourceProps);
+                custom = CustomDamage(actor, target, skill, hit, sourceProps, targetProps);
                 double reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
                     skill, result.Type, true, random);
                 long? customCure = skill.HasCustomCure ? (long?)skill.CustomCure : custom;
@@ -88,6 +90,7 @@ namespace Zjcs.Combat.Official
                 direct = ApplyExtDamageScale(target, hit, direct);
                 result.Type = FightBattleHitComponentRuntime.ApplyDamageGetType(target, skill,
                     skill == null ? 0 : skill.ElementType, result.Type, random);
+                conditionalProperties?.Merge(target, hit, result.Type, false, random, sourceProps);
                 if (result.Type.Blinding || result.Type.Dodge || result.Type.Immunity)
                     direct = 0;
                 double reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
@@ -137,6 +140,8 @@ namespace Zjcs.Combat.Official
                 result.Type = formula.CalculateDamageType(random, sourceProps, targetProps, hit.DamageType);
                 result.Type = FightBattleHitComponentRuntime.ApplyDamageGetType(target, skill,
                     skill == null ? 0 : skill.ElementType, result.Type, random);
+                conditionalProperties?.Merge(target, hit, result.Type, false, random, sourceProps);
+                custom = CustomDamage(actor, target, skill, hit, sourceProps, targetProps);
                 double reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
                     skill, result.Type, false, random);
                 formula.AddPropertyValue(targetProps, "StatusDmgReducePer", reduction);
