@@ -8,7 +8,7 @@ namespace Zjcs.Combat.Official
         {
             foreach (var unit in units)
                 if (unit.StatusStarted != null || unit.StatusEnded != null || unit.StatusForbiddenChanged != null
-                    || unit.HpUpdated != null || unit.StatusRoundResolver != null
+                    || unit.HpUpdated != null || unit.HpIncreased != null || unit.StatusRoundResolver != null
                     || unit.RoundStartClockResolver != null)
                     throw new InvalidOperationException("A battle unit is already executing a step.");
             bool mutexChanged = false;
@@ -25,6 +25,7 @@ namespace Zjcs.Combat.Official
                 unit.StatusStarted = OnStatusStarted;
                 unit.StatusEnded = OnStatusEnded;
                 unit.HpUpdated = OnHpUpdated;
+                unit.HpIncreased = OnHpIncreased;
                 unit.StatusForbiddenChanged = OnStatusForbiddenChanged;
                 unit.StatusRoundResolver = StatusClockRound;
                 unit.RoundStartClockResolver = RoundStartClockRound;
@@ -40,6 +41,7 @@ namespace Zjcs.Combat.Official
                     unit.StatusStarted = null;
                     unit.StatusEnded = null;
                     unit.HpUpdated = null;
+                    unit.HpIncreased = null;
                     unit.StatusForbiddenChanged = null;
                     unit.StatusRoundResolver = null;
                     unit.RoundStartClockResolver = null;

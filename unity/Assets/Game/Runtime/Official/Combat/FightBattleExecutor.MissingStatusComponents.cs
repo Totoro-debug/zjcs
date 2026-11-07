@@ -279,6 +279,7 @@ namespace Zjcs.Combat.Official
 
         private void ApplyMissingStatusStackChange(FightBattleStatusState changed)
         {
+            if (changed?.ClassId == 25131) return;
             FightBattleStatusStackChangeComponentState component = changed?.Components?.StackChange;
             if (component == null || component.MaxCount >= 0 && component.TriggeredCount >= component.MaxCount)
                 return;
@@ -332,8 +333,8 @@ namespace Zjcs.Combat.Official
 
         /// <summary>
         /// Applies the official FightStatusHitSummonComponent at the two summon lifecycle
-        /// boundaries that are observable by the offline battle loop. The server filter field is
-        /// not present in the client payload and therefore remains an explicit unsupported case.
+        /// boundaries that are observable by the offline battle loop. Unknown filter records
+        /// remain disabled until their official query semantics have been recovered.
         /// </summary>
         private void ExecuteMissingHitSummon(FightBattleUnitState summon, bool created)
         {
@@ -341,17 +342,19 @@ namespace Zjcs.Combat.Official
                 || summon.Statuses == null) return;
             FightBattleUnitState owner = ResolveUnit(summon.MasterId);
             if (owner?.Statuses == null) return;
+            summon.HitSummonHasLifeDuration |= HasSummonLifeDuration(summon);
             var invocations = new List<FightBattleStatusSkillInvocation>();
             foreach (FightBattleStatusState status in new List<FightBattleStatusState>(owner.Statuses))
             {
                 FightBattleStatusHitSummonComponentState component = status?.Components?.HitSummon;
-                if (component == null || !owner.Statuses.Contains(status)
+                if (component == null || component.HasUnsupportedFilter
+                    || status.ForbiddenType != 0 || !owner.Statuses.Contains(status)
                     || (created ? !component.Create : !component.Remove)
                     || component.MaxCount >= 0 && component.TriggeredCount >= component.MaxCount)
                     continue;
-                if (!created && component.FilterSubstitute && summon.VoodooDoll != null) continue;
-                if (!created && component.CheckSummonLifeDuration
-                    && !HasSummonLifeDuration(summon)) continue;
+                if (component.FilterSubstitute && summon.VoodooDoll != null) continue;
+                if (component.CheckSummonLifeDuration
+                    && !summon.HitSummonHasLifeDuration) continue;
                 if (!RollComponent(component.Rate)) continue;
 
                 component.TriggeredCount++;
@@ -374,6 +377,9 @@ namespace Zjcs.Combat.Official
                         invocations[invocations.Count - 1].SelectTargets = true;
                         invocations[invocations.Count - 1].UseTargetPositionWithSelection = true;
                         invocations[invocations.Count - 1].AllowDeadTarget = true;
+                        invocations[invocations.Count - 1].TargetPositionUnitId = summon.Id;
+                        invocations[invocations.Count - 1].Delay = movementStartContext == null
+                            ? 0f : Math.Max(0f, movementStartContext.StatusStartTime);
                     }
                 }
             }
@@ -392,16 +398,19 @@ namespace Zjcs.Combat.Official
         {
             if (summon?.Statuses == null) return false;
             foreach (FightBattleStatusState status in summon.Statuses)
-                if (status != null && status.DurationRound >= 0) return true;
+                if (status != null && status.RemoveApplyEntityOnEnd
+                    && status.DurationRound >= 0) return true;
             return false;
         }
 
-        private void ApplyMissingHitSummonRemovalTriggers()
+        private void ApplyMissingHitSummonRemovalTriggers(FightBattleUnitState settledUnit = null)
         {
-            foreach (FightBattleUnitState summon in units)
+            if (movementStartContext == null) return;
+            foreach (FightBattleUnitState summon in new List<FightBattleUnitState>(units))
             {
                 if (summon == null || summon.MasterId <= 0 || summon.MonsterId <= 0
-                    || !summon.Ended || summon.HitSummonRemoveProcessed) continue;
+                    || settledUnit != null && summon != settledUnit
+                    || summon.Hp > 0 && !summon.Ended || summon.HitSummonRemoveProcessed) continue;
                 summon.HitSummonRemoveProcessed = true;
                 ExecuteMissingHitSummon(summon, false);
             }

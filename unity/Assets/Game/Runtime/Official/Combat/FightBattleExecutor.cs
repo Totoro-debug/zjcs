@@ -66,6 +66,10 @@ namespace Zjcs.Combat.Official
             hitExecutor = new FightBattleHitExecutor(formula, settlement, checkpoint.DamageTest);
             foreach (FightBattleUnitState unit in checkpoint.Units)
             {
+                // Checkpoints are recorded between atomic steps. Legacy saves did not keep
+                // the removal receipt, but their already removed units must not emit new casts.
+                if (!initialize && unit.MasterId > 0 && (unit.Hp <= 0 || unit.Ended))
+                    unit.HitSummonRemoveProcessed = true;
                 FightBattlePetEnergyRuntime.Initialize(unit);
                 ApplyMonsterInfo(unit);
                 InitializeUnitResilience(unit);
@@ -213,6 +217,7 @@ namespace Zjcs.Combat.Official
 
             if (FightStatusLifecycle.TickTurn(actor, units, actorRound, FightStatusLifecycle.TimingStart) > 0)
                 RebuildBattleProperties();
+            ApplyMissingHitSummonRemovalTriggers();
             if (statusCatalog != null)
                 foreach (FightBattleUnitState summonOwner in new List<FightBattleUnitState>(units))
                     FightStatusTriggerRuntime.ApplyRoleSummonCount(summonOwner, units,
@@ -404,6 +409,7 @@ namespace Zjcs.Combat.Official
             RestoreResilienceAfterPersonalRound(actor, actorRound);
             CollectStatusCustomActions(statusCustomActions);
             FightStatusLifecycle.RemoveDestroyedTargets(units);
+            ApplyMissingHitSummonRemovalTriggers();
             ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
                 ref statusEndDelay, ref stepDuration, ref stepActionDuration);
 
@@ -904,6 +910,7 @@ namespace Zjcs.Combat.Official
                     }
                     if (resolved.Formula == null && resolved.Settlement == null) continue;
                     SynchronizePetEnergyHp(target);
+                    long targetHpIncrease = Math.Max(0L, target.Hp - beforeHp);
                     var damage = new FightBattleDamageEvent
                     {
                         DamageId = damageId,
@@ -971,8 +978,8 @@ namespace Zjcs.Combat.Official
                         damageEvents, movements, ref lastDelay);
                     ApplyHitDisperse(actor, target, hit, random);
                     ApplyHitMove(actor, target, skill, hit, movements);
-                    bool recoveredHp = ApplyHemophagia(actor, hit, damage, hitDelay, skill, damageEvents);
-                    if (recoveredHp && actor != target)
+                    long recoveredHp = ApplyHemophagia(actor, hit, damage, hitDelay, skill, damageEvents);
+                    if (recoveredHp > 0 && actor != target)
                     {
                         SynchronizePetEnergyHp(actor);
                         FightStatusTriggerRuntime.Apply(actor, statusCatalog, false, hemophagiaTriggerSkills,
@@ -982,8 +989,9 @@ namespace Zjcs.Combat.Official
                     SynchronizePetEnergyHp(target);
                     FightStatusTriggerRuntime.Apply(target, statusCatalog, false, hpTriggerSkills,
                         random, skill, units, configuredHpTriggerSkills,
-                        executeHpSkills: ExecuteHpStartupSkills,
-                        hpIncreaseDelta: Math.Max(0L, target.Hp - beforeHp));
+                        executeHpSkills: ExecuteHpStartupSkills);
+                    ApplyHpIncreaseTriggers(target, targetHpIncrease, skill);
+                    if (recoveredHp > 0) ApplyHpIncreaseTriggers(actor, recoveredHp, skill);
                     RebuildBattleProperties();
                     float endedDuration = 0f, endedActionDuration = -1f;
                     ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
@@ -1010,7 +1018,7 @@ namespace Zjcs.Combat.Official
                             ref lastDelay);
                     // Confirm death after this hit's HP effects and immediate revival,
                     // including role-death responses, rather than on the first zero HP.
-                    if (recoveredHp && actor != target) SynchronizeDeathForbidden(actor);
+                    if (recoveredHp > 0 && actor != target) SynchronizeDeathForbidden(actor);
                     if (target.Hp <= 0)
                     {
                         List<FightBattleStatusSkillInvocation> roleDieInvocations =
@@ -1034,6 +1042,9 @@ namespace Zjcs.Combat.Official
                             statusTriggerActionDuration = Math.Max(statusTriggerActionDuration,
                                 killActionDuration);
                     }
+                    // Death listeners and immediate revival settle before a summoned unit is
+                    // considered removed. Property rebuilds alone are not removal boundaries.
+                    ApplyMissingHitSummonRemovalTriggers(target);
                     ApplyChildSkill(actor, target, skill, hit, casts, damageEvents, movements, ref lastDelay);
                 }
             }
@@ -1098,6 +1109,7 @@ namespace Zjcs.Combat.Official
                 summon.StatusStarted = OnStatusStarted;
                 summon.StatusEnded = OnStatusEnded;
                 summon.HpUpdated = OnHpUpdated;
+                summon.HpIncreased = OnHpIncreased;
                 summon.StatusForbiddenChanged = OnStatusForbiddenChanged;
                 summon.StatusRoundResolver = StatusClockRound;
                 summon.RoundStartClockResolver = RoundStartClockRound;
@@ -2013,23 +2025,23 @@ namespace Zjcs.Combat.Official
         /// table does not mark it, so the scale is an explicit local assumption) and the heal is
         /// recorded as a cure event so statistics and replay stay consistent.
         /// </summary>
-        private bool ApplyHemophagia(FightBattleUnitState actor, FightBattleHitDefinition hit,
+        private long ApplyHemophagia(FightBattleUnitState actor, FightBattleHitDefinition hit,
             FightBattleDamageEvent applied, float delay, FightBattleSkillDefinition skill,
             List<FightBattleDamageEvent> events)
         {
-            if (hit.HemophagiaProperty <= 0 || applied == null || applied.IsCure) return false;
+            if (hit.HemophagiaProperty <= 0 || applied == null || applied.IsCure) return 0L;
             long dealt = Math.Abs(applied.Damage);
-            if (dealt <= 0) return false;
+            if (dealt <= 0) return 0L;
             long property = GetProperty(actor, hit.HemophagiaProperty);
-            if (property <= 0) return false;
+            if (property <= 0) return 0L;
             double rate = property / 10000.0;
             if (rate > 1.0) rate = 1.0;
             long heal = (long)Math.Round(dealt * rate);
-            if (heal <= 0) return false;
+            if (heal <= 0) return 0L;
             long before = actor.Hp;
             actor.Hp = Math.Min(actor.MaxHp, actor.Hp + heal);
             long actual = actor.Hp - before;
-            if (actual <= 0) return false;
+            if (actual <= 0) return 0L;
             var cure = new FightBattleDamageEvent
             {
                 DamageId = applied.DamageId,
@@ -2050,7 +2062,7 @@ namespace Zjcs.Combat.Official
             };
             events.Add(cure);
             checkpoint.Statistics.RecordHit(cure);
-            return true;
+            return actual;
         }
 
         /// <summary>
@@ -2255,7 +2267,6 @@ namespace Zjcs.Combat.Official
                     if (status != null && status.StartRound < 0)
                         FightStatusLifecycle.Initialize(status, StatusClockRound(status));
             FinishVoodooDolls();
-            ApplyMissingHitSummonRemovalTriggers();
             if (statusCatalog != null)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             checkpoint.Statistics.RecordPendingShieldGrants(units);

@@ -15,7 +15,7 @@ public static class BattleVoodooDollHarness
         u.Turn = new FightTurnUnit {Id=id,Hp=hp,Speed=speed}; return u;
     }
     static FightBattleStatusState Debuff(int id, int owner) => new FightBattleStatusState {
-        InstanceId=id, ClassId=90001, StatusType=2, OwnerId=owner, CreatorId=1,
+        InstanceId=id, ClassId=90001, StatusType=2, OwnerId=owner, CreatorId=1, RootSkillId=90010,
         RoundTarget=2, DurationRound=4, CurDurationRound=4, StartRound=1,
         StackCount=4, HpAccTriggeredCount=7
     };

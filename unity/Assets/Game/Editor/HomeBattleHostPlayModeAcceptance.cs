@@ -650,6 +650,9 @@ namespace Zjcs.Editor
             HpRecoveryProbe hpRecovery = ConfigureHpRecoveryProbe(checkpoint);
             HpCostProbe hpCost = ConfigureHpCostProbe(checkpoint);
             HpSubstituteProbe hpSubstitute = ConfigureHpSubstituteProbe(checkpoint);
+            OfficialSummonLifecycleValidation.Probe hitSummon =
+                Environment.GetEnvironmentVariable("ZJCS_BATTLE_HIT_SUMMON_ACCEPTANCE") == "1"
+                    ? OfficialSummonLifecycleValidation.Configure(checkpoint) : null;
             RoundStartupProbe roundStartup = ConfigureRoundStartupProbe(checkpoint);
             RoundTargetsProbe roundTargets = ConfigureRoundTargetsProbe(checkpoint);
             RoundPropsProbe roundProps = ConfigureRoundPropsProbe(checkpoint);
@@ -677,6 +680,7 @@ namespace Zjcs.Editor
                 roundForbidden?.ObserveStep(controller);
                 hpCost?.ObserveStep(controller);
                 hpSubstitute?.ObserveStep(controller);
+                hitSummon?.ObserveStep(controller);
                 roundStartup?.ObserveStep(controller);
                 roundTargets?.ObserveStep(controller);
                 roundProps?.ObserveStep(controller);
@@ -769,7 +773,8 @@ namespace Zjcs.Editor
                     if (roundDelay != null && capturedCure) Time.timeScale = 5;
                     if (roundForbidden != null && capturedCure) Time.timeScale = 5;
                     if (hpSubstitute != null && hpSubstitute.MayAccelerate) Time.timeScale = 5;
-                    if (!capturedCure && (hpListener != null && hpListener.ReadyToCapture
+                    if (!capturedCure && (hitSummon != null && hitSummon.ReadyToCapture
+                        || hpListener != null && hpListener.ReadyToCapture
                         || hpRecovery != null && hpRecovery.ReadyToCapture
                         || hpCost != null && hpCost.ReadyToCapture
                         || hpSubstitute != null && hpSubstitute.ReadyToCapture
@@ -786,7 +791,8 @@ namespace Zjcs.Editor
                     {
                         float captureTimeScale = Time.timeScale;
                         Time.timeScale = 0f;
-                        try { yield return Capture(output, name + (roundForbidden != null ? "-round-forbidden"
+                        try { yield return Capture(output, name + (hitSummon != null ? "-hit-summon"
+                            : roundForbidden != null ? "-round-forbidden"
                             : roundDelay != null ? "-round-delay"
                             : statusSources != null ? "-status-sources"
                             : roundMergeFormula != null ? "-round-merge-formula"
@@ -854,6 +860,7 @@ namespace Zjcs.Editor
             roundForbidden?.Verify(name, checkpoint);
             hpCost?.Verify(name, checkpoint);
             hpSubstitute?.Verify(name, checkpoint);
+            hitSummon?.Verify(name, checkpoint);
             roundStartup?.Verify(name, checkpoint);
             roundTargets?.Verify(name, checkpoint);
             roundProps?.Verify(name, checkpoint);

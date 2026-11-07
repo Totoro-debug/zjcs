@@ -1234,8 +1234,7 @@ namespace Zjcs.Combat.Official
             IReadOnlyList<FightBattleUnitState> units = null,
             List<FightBattleStatusSkillInvocation> configuredTriggerSkills = null,
             FightBattleStatusState startingStatus = null,
-            Action<List<FightBattleStatusSkillInvocation>> executeHpSkills = null,
-            long hpIncreaseDelta = -1L)
+            Action<List<FightBattleStatusSkillInvocation>> executeHpSkills = null)
         {
             if (unit == null || catalog == null || unit.Statuses == null || unit.MaxHp <= 0) return 0;
             int applied = 0;
@@ -1254,9 +1253,6 @@ namespace Zjcs.Combat.Official
                     if (status == null || !owner.Statuses.Contains(status)
                         || startingStatus != null && !ReferenceEquals(status, startingStatus)) continue;
                     if (!FightSkillTriggerPolicy.AllowsStatus(sourceSkill, status)) continue;
-                    if (owner == unit && status.Components?.HpIncreaseUnit != null)
-                        applied += ApplyHpIncreaseUnit(owner, unit, status, catalog, atStart,
-                            units, random, configuredTriggerSkills, executeHpSkills, hpIncreaseDelta);
                     if (owner == unit && status.HpTriggerPer > 0f)
                     {
                         bool hasStatuses = status.HpTriggerStatuses != null && status.HpTriggerStatuses.Count > 0;
@@ -1311,58 +1307,6 @@ namespace Zjcs.Combat.Official
                 }
             }
             return applied;
-        }
-
-        private static int ApplyHpIncreaseUnit(FightBattleUnitState owner,
-            FightBattleUnitState changed, FightBattleStatusState source,
-            FightOfficialCombatCatalog catalog, bool atStart,
-            IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
-            List<FightBattleStatusSkillInvocation> configured,
-            Action<List<FightBattleStatusSkillInvocation>> executeSkills,
-            long hpIncreaseDelta)
-        {
-            FightBattleStatusHpUnitComponentState component = source.Components.HpIncreaseUnit;
-            if (component == null || component.TargetType != 2
-                || atStart && !component.TryAtStart
-                || !atStart && hpIncreaseDelta <= 0
-                || changed.Hp <= 0 && !component.TriggerWhenHpLessThan0
-                || component.MaxCount >= 0 && component.TriggeredCount >= component.MaxCount)
-                return 0;
-            int count = atStart ? 1 : HpIncreaseUnitCount(component, changed, hpIncreaseDelta);
-            if (component.InvokeMaxCountOnHpChange >= 0)
-                count = Math.Min(count, component.InvokeMaxCountOnHpChange);
-            if (component.MaxCount >= 0)
-                count = Math.Min(count, component.MaxCount - component.TriggeredCount);
-            int applied = 0;
-            for (int index = 0; index < count; index++)
-            {
-                int fired = 0;
-                int configuredStart = configured == null ? 0 : configured.Count;
-                foreach (FightBattleStatusStateTrigger trigger in component.Statuses)
-                    if (ApplyThresholdStatus(owner, source, trigger, catalog, units, random,
-                        changed, true)) fired++;
-                foreach (FightBattleStatusStateTrigger trigger in component.Skills)
-                    if (AppendThresholdSkill(owner, source, trigger, random, configured, null,
-                        units, changed, true)) fired++;
-                source.Components.HpIncreaseUnit.TriggeredCount++;
-                applied += fired > 0 ? 1 : 0;
-                if (executeSkills != null && configured != null && configured.Count > configuredStart)
-                {
-                    var pending = configured.GetRange(configuredStart,
-                        configured.Count - configuredStart);
-                    configured.RemoveRange(configuredStart, configured.Count - configuredStart);
-                    executeSkills(pending);
-                }
-            }
-            return applied;
-        }
-
-        private static int HpIncreaseUnitCount(FightBattleStatusHpUnitComponentState component,
-            FightBattleUnitState changed, long hpIncreaseDelta)
-        {
-            if (component.UnitHpPer <= 0f || changed.MaxHp <= 0) return 0;
-            long threshold = Math.Max(1L, (long)Math.Ceiling(changed.MaxHp * component.UnitHpPer));
-            return (int)Math.Min(int.MaxValue, hpIncreaseDelta / threshold);
         }
 
         private static bool ApplyHpLessThan(FightBattleUnitState owner, FightBattleUnitState changed,

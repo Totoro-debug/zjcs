@@ -25,6 +25,7 @@ namespace Zjcs.Presentation.Character
             string[] args = Environment.GetCommandLineArgs();
             int index = Array.IndexOf(args, "--zjcs-validate-skills");
             if (index < 0 || index + 1 >= args.Length) return;
+            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_VALIDATE_SUMMON_ONLY") == "1") return;
             Application.runInBackground = true;
             var host = new GameObject("SkillPlayerValidation");
             DontDestroyOnLoad(host);

@@ -189,6 +189,7 @@ namespace Zjcs.Combat.Official
                 RefreshExisting(unit, existing, template, origin, round);
                 if (existing.IsOpenStack) FightStatusCooldownRuntime.Invoke(unit, existing, random);
                 RecordApplication(unit, template);
+                FightHealingStackReduction.Apply(unit, existing);
                 return existing;
             }
             var applied = new FightBattleStatusState
@@ -552,15 +553,14 @@ namespace Zjcs.Combat.Official
             if (round >= 0) InitializeRoundStartDelay(unit, applied);
             if (applied.HasBackToLifeComponent)
             {
-                long previousHp = unit.Hp;
+                long beforeHp = unit.Hp;
                 unit.Hp = 1;
-                unit.HpBeforeLastUpdate = previousHp;
-                unit.HpIncreaseForLastUpdate = Math.Max(0L, unit.Hp - previousHp);
-                unit.HpUpdateCaptured = true;
                 unit.HpUpdated?.Invoke(unit);
+                if (beforeHp < 1) unit.HpIncreased?.Invoke(unit, 1 - beforeHp);
             }
             FightStatusCooldownRuntime.Invoke(unit, applied, random);
             RecordApplication(unit, template);
+            FightHealingStackReduction.Apply(unit, applied);
             unit.StatusStarted?.Invoke(unit, applied);
             return applied;
         }

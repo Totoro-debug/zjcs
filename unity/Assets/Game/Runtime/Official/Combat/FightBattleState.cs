@@ -60,10 +60,10 @@ namespace Zjcs.Combat.Official
         public long MaxResilience;
         public int BrokenRound = -1;
         public bool Ended;
-        [NonSerialized] internal bool HitSummonRemoveProcessed;
-        [NonSerialized] internal long HpBeforeLastUpdate;
-        [NonSerialized] internal long HpIncreaseForLastUpdate;
-        [NonSerialized] internal bool HpUpdateCaptured;
+        // Persist lifecycle receipt: restoring a checkpoint must not release an ended
+        // summon's removal skill for a second time.
+        public bool HitSummonRemoveProcessed;
+        public bool HitSummonHasLifeDuration;
         public FightVoodooDollLink VoodooDoll;
         public List<FightPropertyValue> Properties = new List<FightPropertyValue>();
         public List<FightBattleSkillDefinition> Skills = new List<FightBattleSkillDefinition>();
@@ -76,6 +76,7 @@ namespace Zjcs.Combat.Official
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusStarted;
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusEnded;
         [NonSerialized] internal Action<FightBattleUnitState> HpUpdated;
+        [NonSerialized] internal Action<FightBattleUnitState, long> HpIncreased;
         internal Action<FightBattleUnitState, FightBattleStatusState, bool> StatusForbiddenChanged;
         internal Func<FightBattleStatusState, int> StatusRoundResolver;
         internal Func<FightBattleStatusState, int> RoundStartClockResolver;
@@ -497,6 +498,9 @@ namespace Zjcs.Combat.Official
         public float UnitHpPer = -1f;
         public int MaxCount = -1;
         public int TriggeredCount;
+        // User-confirmed offline rule: actual restored HP is accumulated, including fractions
+        // left by percentage thresholds. Initial HP and overheal never enter this balance.
+        public double AccumulatedHp;
         public bool TryAtStart;
         public bool TriggerWhenHpLessThan0;
         public int InvokeMaxCountOnHpChange = -1;
@@ -584,6 +588,7 @@ namespace Zjcs.Combat.Official
         public int MaxCount = -1;
         public bool CheckSummonLifeDuration;
         public bool FilterSubstitute;
+        public bool HasUnsupportedFilter;
         public int TriggeredCount;
 
         public FightBattleStatusHitSummonComponentState Copy() =>

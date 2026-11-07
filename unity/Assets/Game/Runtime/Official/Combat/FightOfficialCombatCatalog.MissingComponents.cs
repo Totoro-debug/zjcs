@@ -262,7 +262,9 @@ namespace Zjcs.Combat.Official
                     Remove = Bool(hitSummon, "Remove"),
                     MaxCount = Int(hitSummon, "MaxCount", -1),
                     CheckSummonLifeDuration = Bool(hitSummon, "CheckSummonLifeDuration"),
-                    FilterSubstitute = Bool(hitSummon, "FilterSubstitute")
+                    FilterSubstitute = Bool(hitSummon, "FilterSubstitute"),
+                    HasUnsupportedFilter = hitSummon.ContainsKey("FilterCondition")
+                        && hitSummon["FilterCondition"] != null
                 };
             return result;
         }
