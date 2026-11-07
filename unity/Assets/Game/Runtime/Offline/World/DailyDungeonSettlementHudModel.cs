@@ -25,6 +25,7 @@ namespace Zjcs.Offline.World
         public DailyDungeonLevelDefinition Level { get; internal set; }
         public DailyDungeonRunSave Run { get; internal set; }
         public int AwardTimes { get; internal set; }
+        public int MaxAwardTimesPerClaim { get; internal set; }
         public int RemainingClaims { get; internal set; }
         public int PurchaseRemaining { get; internal set; }
         public bool IsPrivateRoute { get; internal set; }
@@ -92,6 +93,7 @@ namespace Zjcs.Offline.World
                 Level = level,
                 Run = run,
                 AwardTimes = Math.Max(0, awardTimes),
+                MaxAwardTimesPerClaim = module.MaxAwardTimesPerClaim,
                 RemainingClaims = remaining,
                 PurchaseRemaining = allowance.PurchaseRemaining,
                 IsPrivateRoute = privateRoute,

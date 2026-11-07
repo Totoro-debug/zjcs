@@ -96,7 +96,8 @@ namespace Zjcs.Offline.World
                 EntryAllowance = EntryAllowance(),
                 PendingClaimCount = PendingClaims.Count,
                 HasActiveRun = ActiveRun != null,
-                RewardProgress = DailyDungeonGetRewardCount
+                RewardProgress = DailyDungeonGetRewardCount,
+                MaxAwardTimesPerClaim = MaxAwardTimesPerClaim
             };
         }
 
@@ -184,6 +185,7 @@ namespace Zjcs.Offline.World
         public int PendingClaimCount { get; internal set; }
         public bool HasActiveRun { get; internal set; }
         public long RewardProgress { get; internal set; }
+        public int MaxAwardTimesPerClaim { get; internal set; }
     }
 
     public sealed class DailyDungeonEntryModel

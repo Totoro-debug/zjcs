@@ -67,6 +67,8 @@ namespace Zjcs.Editor
             long initialAchievementProgress = module.DailyDungeonGetRewardCount;
             if (initialClaims != module.Catalog.settings.DailyDungeonDailyFreeCount)
                 throw new InvalidOperationException("A new profile did not receive the official daily free claim count.");
+            if (module.MaxAwardTimesPerClaim != 1)
+                throw new InvalidOperationException("A module without daily dungeon claim benefits did not use the official base award count.");
 
             string migrationSlotId = slots.CreateSlot();
             var legacyClaimState = new DailyDungeonSave
@@ -139,6 +141,19 @@ namespace Zjcs.Editor
             }
             if (selectedDungeon == null || selectedDifficulty == null || route == null)
                 throw new InvalidOperationException("No public official daily dungeon route with grade rows is available for rule acceptance.");
+            DailyDungeonEntryPageModel entryPage = module.BuildEntryPageModel((_, __) => true);
+            DailyDungeonEntryModel entry = entryPage.Entries.FirstOrDefault(value =>
+                value != null && value.DungeonId == selectedDungeon.id);
+            if (entry == null || entry.Difficulties == null
+                || entry.Difficulties.All(value => value.Difficulty != selectedDifficulty.difficulty)
+                || entryPage.EntryAllowance.TotalRemaining != initialClaims
+                || entryPage.MaxAwardTimesPerClaim != 1)
+                throw new InvalidOperationException("The shared entry page model did not expose the official dungeon difficulty and allowance state.");
+            module.Options.AwardTimesAdapter = new AcceptanceAwardTimesAdapter(3);
+            if (module.MaxAwardTimesPerClaim != 3
+                || module.BuildEntryPageModel((_, __) => true).MaxAwardTimesPerClaim != 3)
+                throw new InvalidOperationException("The daily dungeon award-times adapter did not expose the configured extra-claim benefit.");
+            module.Options.AwardTimesAdapter = null;
             DailyDungeonHudModel initialHud = module.BuildHudModel(
                 selectedDungeon.id, selectedDifficulty.difficulty);
             if (initialHud.DailyDungeonGetRewardCount != initialAchievementProgress)
@@ -152,6 +167,11 @@ namespace Zjcs.Editor
                 throw new InvalidOperationException("Could not begin the uncharged daily dungeon route: " + errorMessage);
             if (module.RemainEntries != initialClaims)
                 throw new InvalidOperationException("Entering a daily dungeon consumed a claim.");
+            DailyDungeonRouteHudModel routeHud = module.BuildRouteHudModel();
+            if (routeHud == null || routeHud.Run != module.ActiveRun
+                || routeHud.Rooms == null || routeHud.Rooms.All(value => !value.IsCurrent)
+                || routeHud.IsSelectingNextRoom)
+                throw new InvalidOperationException("The shared route HUD model did not expose the active official route.");
             if (!module.Leave((_, __) => { }))
                 throw new InvalidOperationException("The failed-run route could not be left.");
             if (module.RemainEntries != initialClaims
@@ -168,6 +188,13 @@ namespace Zjcs.Editor
                 if (module.ActiveRun.currentRoomId != route[index]
                     || !module.RecordRoomCleared(route[index], string.Empty))
                     throw new InvalidOperationException("The official test route could not record room " + route[index] + ".");
+                if (index == 0)
+                {
+                    routeHud = module.BuildRouteHudModel();
+                    if (routeHud == null || !routeHud.IsSelectingNextRoom
+                        || routeHud.Rooms.All(value => !value.IsCleared || !value.IsCurrent))
+                        throw new InvalidOperationException("The shared route HUD model did not expose the cleared-room selection state.");
+                }
                 if (index + 1 < route.Count && !module.ChooseNextRoom(route[index + 1]))
                     throw new InvalidOperationException("The official test route could not choose room " + route[index + 1] + ".");
             }
@@ -179,6 +206,41 @@ namespace Zjcs.Editor
                 throw new InvalidOperationException("Completing a route without claiming consumed a claim or advanced the claim achievement.");
 
             DailyDungeonPendingClaimSave pending = module.PendingClaims.Single();
+            module.Options.AwardTimesAdapter = new AcceptanceAwardTimesAdapter(3);
+            DailyDungeonSettlementHudModel settlementHud = module.BuildSettlementHudModel(
+                pending, 3, 40, 0);
+            if (settlementHud == null || settlementHud.MaxAwardTimesPerClaim != 3
+                || settlementHud.AwardTimes != 3
+                || settlementHud.CanClaim != (settlementHud.RemainingClaims >= 3))
+                throw new InvalidOperationException("The shared settlement HUD model did not apply the extra-claim benefit.");
+            module.Options.AwardTimesAdapter = null;
+            string awardTimesSlotId = slots.CreateSlot();
+            var extraClaimPending = JsonUtility.FromJson<DailyDungeonPendingClaimSave>(
+                JsonUtility.ToJson(pending));
+            extraClaimPending.awardTimes = 0;
+            var extraClaimState = new DailyDungeonSave
+            {
+                claimStateVersion = 3,
+                localDate = DateTime.Now.ToString("yyyyMMdd", CultureInfo.InvariantCulture),
+                remainingClaims = 3,
+                pendingClaims = new List<DailyDungeonPendingClaimSave> { extraClaimPending }
+            };
+            File.WriteAllText(Path.Combine(slots.GetSlotDirectory(awardTimesSlotId),
+                "daily-dungeon-save.json"), JsonUtility.ToJson(extraClaimState));
+            var extraClaimOptions = DailyDungeonModuleOptions.Default;
+            extraClaimOptions.AwardTimesAdapter = new AcceptanceAwardTimesAdapter(3);
+            DailyDungeonModule extraClaimModule = DailyDungeonModule.Open(slots, awardTimesSlotId,
+                catalog, null, null, extraClaimOptions);
+            int receivedAwardTimes = 0;
+            if (!extraClaimModule.ClaimPendingReward(extraClaimPending.id, (_, __, times) =>
+                {
+                    receivedAwardTimes = times;
+                    return true;
+                }, 2)
+                || receivedAwardTimes != 2
+                || extraClaimModule.RemainEntries != 1
+                || extraClaimModule.DailyDungeonGetRewardCount != 2)
+                throw new InvalidOperationException("The extra-claim benefit did not change the shared claim transaction limit.");
             ValidateSettlement(slots, catalog, pending);
             DailyDungeonRuntimeGradeReward gradeReward = module.FindMap(pending.run.mapGroupId)?.gradeRewards
                 ?.FirstOrDefault(value => value != null && value.difficulty == pending.run.difficulty
@@ -289,6 +351,11 @@ namespace Zjcs.Editor
             if (!reloaded.Save.claimedAchievementIndexes.Contains(cycleSeed.Index)
                 || reloaded.DailyDungeonGetRewardCount != cycleSeed.RequiredCount)
                 throw new InvalidOperationException("Claimed daily dungeon achievement state did not survive reload.");
+            DailyDungeonGiftModel gift = reloaded.BuildGiftModel(5, true);
+            if (gift.ClaimProgress != cycleSeed.RequiredCount
+                || gift.Achievements == null
+                || !gift.ClaimedIndexes.Contains(cycleSeed.Index))
+                throw new InvalidOperationException("The shared Type 22 gift model did not expose cumulative progress and claimed state.");
 
             ValidateBattleEntryTransaction(slots, slotId);
         }
@@ -427,6 +494,18 @@ namespace Zjcs.Editor
             }
 
             public DailyDungeonRewardDoubleChanceSources GetSources(DailyDungeonRunSave run, int rewardRuleId) => sources;
+        }
+
+        private sealed class AcceptanceAwardTimesAdapter : IDailyDungeonAwardTimesAdapter
+        {
+            private readonly int maxAwardTimes;
+
+            public AcceptanceAwardTimesAdapter(int maxAwardTimes)
+            {
+                this.maxAwardTimes = maxAwardTimes;
+            }
+
+            public int GetMaxAwardTimesPerClaim() => maxAwardTimes;
         }
 
         private sealed class AcceptanceRewardRandom : IDailyDungeonRandom

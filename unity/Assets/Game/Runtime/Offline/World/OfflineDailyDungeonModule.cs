@@ -249,6 +249,17 @@ namespace Zjcs.Offline.World
         DailyDungeonRewardDoubleChanceSources GetSources(DailyDungeonRunSave run, int rewardRuleId);
     }
 
+    /// <summary>
+    /// Supplies the maximum number of reward claims that one completed public
+    /// dungeon result may consume.  The official client starts at one and
+    /// adds the ExtraClaimCount from active DailyDungeonExtraClaim benefits;
+    /// the benefit store stays outside this module and is supplied here.
+    /// </summary>
+    public interface IDailyDungeonAwardTimesAdapter
+    {
+        int GetMaxAwardTimesPerClaim();
+    }
+
     public sealed class DailyDungeonHudModel
     {
         public DailyDungeonLevelDefinition Level { get; internal set; }
@@ -328,9 +339,18 @@ namespace Zjcs.Offline.World
         public IDailyDungeonLevelAdapter LevelAdapter => levelAdapter;
         public IDailyDungeonLeaderboardAdapter LeaderboardAdapter => leaderboardAdapter;
         public IDailyDungeonRewardDoubleChanceAdapter RewardDoubleChanceAdapter => options.RewardDoubleChanceAdapter;
+        public IDailyDungeonAwardTimesAdapter AwardTimesAdapter => options.AwardTimesAdapter;
         public DailyDungeonAchievementRules AchievementRules => achievementRules;
         public DailyDungeonModuleOptions Options => options;
-        public int MaxAwardTimesPerClaim => Math.Max(1, options.MaxAwardTimesPerClaim);
+        public int MaxAwardTimesPerClaim
+        {
+            get
+            {
+                int configured = Math.Max(1, options.MaxAwardTimesPerClaim);
+                int adapted = options.AwardTimesAdapter?.GetMaxAwardTimesPerClaim() ?? configured;
+                return Math.Max(1, adapted);
+            }
+        }
 
         public IReadOnlyList<DailyDungeonAchievementMilestone> DailyDungeonAchievementRows(
             int showCount = 5, bool showReceived = false)
@@ -671,6 +691,7 @@ namespace Zjcs.Offline.World
         public int LeaderboardLimit = 50;
         public int MaxAwardTimesPerClaim = 1;
         public IDailyDungeonRewardDoubleChanceAdapter RewardDoubleChanceAdapter;
+        public IDailyDungeonAwardTimesAdapter AwardTimesAdapter;
         public long PlayerId = 1;
         public string PlayerName = "本地玩家";
 
