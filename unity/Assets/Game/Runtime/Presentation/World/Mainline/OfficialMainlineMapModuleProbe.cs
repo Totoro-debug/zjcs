@@ -114,6 +114,8 @@ namespace Zjcs.Presentation.World
                     ? "Exploration pointer flow: native HUD, confirmation, probability/detail/history, token scrolling/selection/cost, guide chest reward without stamina, ten-times exploration and cold reload passed."
                     : Environment.GetCommandLineArgs().Contains("-verify-map15-only")
                     ? "Whale Island verified data binding, Map15 pointer navigation and cold reload, shared statue visit transaction and cold reload passed."
+                    : Environment.GetCommandLineArgs().Contains("-verify-roadblocks-only")
+                    ? "Map14 original roadblock display, property dialog, partner invitation, one-use completion, opened path and cold save restore passed."
                     : "Map10/11 shared runtime: region conditions, pointer navigation, HUD, minimap tabs/filter, goddess activation, hero UI/permanent rewards/daily effects, stamina gathering/award animation/respawn, exploration and cold save reload passed.");
             Debug.Log("Shared mainline map modules passed: " + output);
             Complete(true);
@@ -257,16 +259,31 @@ namespace Zjcs.Presentation.World
             scaler.matchWidthOrHeight = .5f;
             var slots = new ProfileSlotCatalog(root);
             slot = slots.CreateSlot();
+            bool roadblocksOnly = Environment.GetCommandLineArgs().Contains("-verify-roadblocks-only");
             var save = new OfflineMainlineSave { CreatedAtUnixSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds() };
             save.Player.CharacterCreated = true;
             save.Player.CharacterName = "公共地图验证";
             save.Player.InitialWeaponType = 200;
-            save.Player.Level = 31;
-            save.Player.Experience = OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[31];
+            save.Player.Level = roadblocksOnly ? 200 : 31;
+            save.Player.Experience = OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[save.Player.Level];
             save.Player.Rank = save.Player.SubRank = save.Player.SeasonRank = 1;
             save.Player.SubRank = OfficialCharacterAssetCatalog.LoadDefault().Load().LevelLimits
                 .Where(value => value.PlayerLevel >= save.Player.Level).Min(value => value.SubRank);
             save.Player.Wardrobe.Profession = 1;
+            if (roadblocksOnly)
+            {
+                var assistance = Zjcs.Presentation.Combat.OfficialCombatAssetCatalog.LoadDefault()
+                    .LoadNpcAssistance();
+                save.Player.CharacterProperties.NpcFriendships = assistance.TeamInviteNpcClassIds()
+                    .Distinct().Select(id => new OfflineNpcFriendship
+                    {
+                        NpcClassId = id,
+                        Level = 10,
+                        IsCollected = true
+                    }).ToList();
+                save.Player.Rank = save.Player.SeasonRank = OfficialCharacterAssetCatalog.LoadDefault()
+                    .Load().RankOfSubRank(save.Player.SubRank);
+            }
             save.Tasks.ClaimedMainlineTaskIds.AddRange(OfficialMainlineTaskCatalog.LoadDefault().OrderedTasks
                 .Where(value => value.classId <= 1040).Select(value => value.classId));
             File.WriteAllText(slots.GetProgressPath(slot), JsonUtility.ToJson(save));
@@ -275,6 +292,12 @@ namespace Zjcs.Presentation.World
             OfflineCharacterProgressionService.Create(progress, new CharacterProgressionInputs(characterAssets.Load(),
                 Zjcs.Offline.Equipment.OfficialEquipmentAssetCatalog.LoadDefault().Load(), characterAssets.LoadSkillRules()))
                 .InitializeWardrobe("shared-map-probe-wardrobe");
+            if (roadblocksOnly)
+            {
+                yield return VerifyRoadblocks(canvas.transform, slots);
+                Destroy(canvas);
+                yield break;
+            }
             if (Environment.GetCommandLineArgs().Contains("-verify-visibility-maps"))
             {
                 yield return VerifyVisibilityMaps(canvas.transform, slots);
@@ -466,6 +489,300 @@ namespace Zjcs.Presentation.World
                     "Both visited maps remain readable after their live scenes are disposed");
         }
 
+        private IEnumerator VerifyRoadblocks(Transform canvas, ProfileSlotCatalog slots)
+        {
+            WorldMapAssets map = OfficialWorldMapAssetCatalog.LoadDefault().LoadMap(14);
+            Open(14, canvas);
+            yield return new WaitForSecondsRealtime(2);
+            foreach (var region in map.Definition.MaxRegionProgress)
+                Require(Progress.SetMapRegionProgress(14, region.Region, 10000).IsApplied,
+                    "Roadblock probe unlocks the original Map14 region " + region.Region);
+            yield return ExitMap();
+            yield return null;
+            Open(14, canvas);
+            yield return new WaitForSecondsRealtime(2);
+            foreach (var rule in OfficialMainlineRoadblockRules.All.Skip(1)
+                .Where(_ => !Environment.GetCommandLineArgs().Contains("-verify-roadblock-core-only")))
+            {
+                var placement = Entity(rule.PlacementId);
+                var center = new MapGridPoint(placement.Grid[0], placement.Grid[1]);
+                var placements = runtime.GetComponentInChildren<OfficialMap10EntityView>().EntityInfos;
+                var adjacent = new[] { new MapGridPoint(center.X - 1, center.Y), new MapGridPoint(center.X + 1, center.Y),
+                    new MapGridPoint(center.X, center.Y - 1), new MapGridPoint(center.X, center.Y + 1) }
+                    .First(point => mapSession.Movement.IsFit(point)
+                        && !placements.Any(value => value.Active && value.Grid[0] == point.X && value.Grid[1] == point.Y));
+                yield return At(adjacent);
+                var nativeGate = runtime.GetComponentInChildren<OfficialMap10EntityView>().FindEntityObject(rule.PlacementId);
+                float readyAt = Time.realtimeSinceStartup + 120f;
+                while (nativeGate.GetComponentsInChildren<SpriteRenderer>(true).Length == 0
+                    && Time.realtimeSinceStartup < readyAt) yield return null;
+                Require(nativeGate.GetComponentsInChildren<SpriteRenderer>(true).Length > 0,
+                    "Original gate variant is mounted: " + rule.EntityClassId);
+                yield return ClickEntity(rule.PlacementId);
+                yield return new WaitForSecondsRealtime(.7f);
+                var preview = SceneRoot("RoadblockTeamPropStageDialog");
+                Require(preview != null && preview.activeInHierarchy,
+                    "Simulated pointer opens original gate variant: " + rule.EntityClassId);
+                yield return WaitForRoadblockPopup(preview);
+                Require(preview.GetComponentsInChildren<TMPro.TMP_Text>().Any(value => value.text ==
+                    OfficialRoadblockUiData.Load().Localize("entity_" + rule.EntityClassId + "_name")),
+                    "Original gate variant title is localized");
+                yield return Capture("map-14-roadblock-" + rule.PlacementId);
+                yield return Click(RoadblockTopMask());
+                Require(!MapSave.completedRoadblockPlacements.Contains(rule.PlacementId),
+                    "Closing the variant preview does not complete the gate");
+            }
+            OfficialMap10EntityInfo gate = Entity(701);
+            Require(gate.EntityClassId == 8625 && gate.Active,
+                "Original Map14 first roadblock entity is loaded and visible");
+            var gateGrid = new MapGridPoint(gate.Grid[0], gate.Grid[1]);
+            var info = runtime.GetComponentInChildren<OfficialMap10EntityView>().EntityInfos;
+            MapGridPoint leftInteract = new MapGridPoint(gateGrid.X, gateGrid.Y - 1);
+            MapGridPoint rightInteract = new MapGridPoint(gateGrid.X, gateGrid.Y + 1);
+            bool IsOccupied(MapGridPoint point) => info.Any(value => value.Active
+                && value.Grid[0] == point.X && value.Grid[1] == point.Y);
+            bool startOnLeft = !IsOccupied(leftInteract);
+            MapGridPoint interactFrom = startOnLeft ? leftInteract : rightInteract;
+            int destinationY = startOnLeft ? gateGrid.Y + 1 : gateGrid.Y - 1;
+            MapGridPoint crossTo = new[] { 0, 1, -1, 2, -2, 3, -3 }
+                .Select(offset => new MapGridPoint(gateGrid.X + offset, destinationY))
+                .First(point => !IsOccupied(point) && mapSession.Movement.IsFit(point));
+            MapGridPoint returnTo = interactFrom;
+            Require(!IsOccupied(interactFrom) && !IsOccupied(crossTo) && !IsOccupied(returnTo),
+                "Original roadblock interaction and passage cells have no unrelated entity collision");
+
+            yield return At(interactFrom);
+            var gateObject = runtime.GetComponentInChildren<OfficialMap10EntityView>().FindEntityObject(701);
+            float displayDeadline = Time.realtimeSinceStartup + 120f;
+            while (gateObject.GetComponentsInChildren<SpriteRenderer>(true).Length == 0
+                && Time.realtimeSinceStartup < displayDeadline) yield return null;
+            Require(gateObject.GetComponentsInChildren<SpriteRenderer>(true).Length > 0,
+                "Original roadblock native display is mounted on the actual placement");
+            Require(!mapSession.Movement.IsFit(gateGrid), "Original stage zero blocks the gate center");
+            yield return Capture("map-14-roadblock-closed");
+            yield return ClickEntity(701);
+            GameObject dialog = SceneRoot("RoadblockTeamPropStageDialog");
+            float dialogDeadline = Time.realtimeSinceStartup + 15f;
+            while (dialog == null && Time.realtimeSinceStartup < dialogDeadline)
+            {
+                yield return null;
+                dialog = SceneRoot("RoadblockTeamPropStageDialog");
+            }
+            Require(dialog != null && dialog.activeInHierarchy,
+                "Simulated map pointer opens the original Map14 roadblock window");
+            yield return WaitForRoadblockPopup(dialog);
+            yield return new WaitForSecondsRealtime(.7f);
+            yield return Click(RoadblockButton(dialog.transform,
+                "BgDialog3WorldMap/Content/DialogContent (1)/TitleGo/TitleGo/RuleBtn"));
+            yield return new WaitForSecondsRealtime(.7f);
+            var rules = SceneRoot("RoadblockRuleDialog");
+            Require(rules != null && rules.activeInHierarchy && rules.GetComponentsInChildren<Zjcs.Official.ProfessionUI.TipInfo>().Length == 3,
+                "Original roadblock rules show all three localized rows");
+            yield return WaitForRoadblockPopup(rules);
+            yield return Capture("map-14-roadblock-rules");
+            var masks = Resources.FindObjectsOfTypeAll<Zjcs.Presentation.Combat.OfficialBattlePopupMask>()
+                .Where(value => value.gameObject.scene.IsValid() && value.IsReady).ToArray();
+            Require(masks.Length >= 2, "Nested original popup blur masks are ready");
+            yield return Click(RoadblockTopMask());
+            Require(SceneRoot("RoadblockRuleDialog") == null && dialog.activeInHierarchy,
+                "Simulated mask click closes only the original rules popup");
+
+            Button stageConfirm = RoadblockButton(dialog.transform,
+                "BgDialog3WorldMap/Content/DialogContent (1)/BottomContent/CommonBtn_12");
+            bool initiallyMet = stageConfirm.gameObject.activeInHierarchy && stageConfirm.IsInteractable();
+            yield return Capture("map-14-roadblock-requirement");
+            var catalog = Zjcs.Presentation.Combat.OfficialCombatAssetCatalog.LoadDefault()
+                .LoadNpcAssistance();
+            const int playType = (int)NpcAssistPlayType.PropGate;
+            var invite = catalog.InviteRule(playType);
+            int maximum = Math.Max(0, Math.Min(3, invite.MaxPlayer));
+            Require(maximum > 0, "Original PropGate rule allows at least one partner");
+            var selectedNpcs = new List<int>();
+            for (int index = 0; index < maximum && (!initiallyMet || selectedNpcs.Count == 0); index++)
+            {
+                Button inviteButton = RoadblockButton(dialog.transform,
+                    "BgDialog3WorldMap/Content/DialogContent (1)/TeamGo/PlayersGo/Player"
+                    + (index + 1) + "/InviteBtn");
+                yield return Click(inviteButton);
+                GameObject picker = SceneRoot("BattleAssistSelection");
+                Require(picker != null && picker.activeInHierarchy,
+                    "Simulated pointer opens the original partner invitation list");
+                yield return WaitForRoadblockPopup(picker);
+                yield return Capture("map-14-roadblock-partners-" + (index + 1));
+                int selectedNpc = 0;
+                yield return SelectRoadblockCandidate(picker, value => selectedNpc = value);
+                Require(selectedNpc > 0, "A qualified official partner is selected");
+                selectedNpcs.Add(selectedNpc);
+                Button pickerConfirm = picker.transform.Find(
+                    "BgPanel1/Content/MiddleGo/FriendRobotGo/BottomGo")
+                    .GetComponentsInChildren<Button>(true).Single(value => value.name == "CommonBtn_12");
+                yield return Click(pickerConfirm);
+                dialog = SceneRoot("RoadblockTeamPropStageDialog");
+                Require(dialog != null && dialog.activeInHierarchy,
+                    "Partner picker returns to the original roadblock window");
+                if (index == 0)
+                {
+                    yield return Click(RoadblockButton(dialog.transform,
+                        "BgDialog3WorldMap/Content/DialogContent (1)/TeamGo/PlayersGo/Player1/PublicPlayerIcon/ExitBtn"));
+                    var pending = OfflineNpcAssistanceProgress.Open(slots, slot);
+                    Require(pending.Selected(playType, "map14:roadblock:701").Count == 0,
+                        "Simulated remove button removes the selected partner");
+                    yield return Click(inviteButton);
+                    picker = SceneRoot("BattleAssistSelection");
+                    selectedNpc = 0;
+                    yield return SelectRoadblockCandidate(picker, value => selectedNpc = value);
+                    selectedNpcs[0] = selectedNpc;
+                    pickerConfirm = picker.transform.Find("BgPanel1/Content/MiddleGo/FriendRobotGo/BottomGo")
+                        .GetComponentsInChildren<Button>(true).Single(value => value.name == "CommonBtn_12");
+                    yield return Click(pickerConfirm);
+                }
+                stageConfirm = RoadblockButton(dialog.transform,
+                    "BgDialog3WorldMap/Content/DialogContent (1)/BottomContent/CommonBtn_12");
+                if (stageConfirm.gameObject.activeInHierarchy && stageConfirm.IsInteractable()) break;
+            }
+            yield return Capture("map-14-roadblock-qualified");
+            Require(stageConfirm.gameObject.activeInHierarchy && stageConfirm.IsInteractable(),
+                "Official player and selected partner properties meet the original gate threshold; active="
+                + stageConfirm.gameObject.activeSelf + "; interactive=" + stageConfirm.IsInteractable()
+                + "; labels=" + string.Join("|", dialog.GetComponentsInChildren<TMPro.TMP_Text>(true).Select(t => t.text)));
+            yield return Click(RoadblockTopMask());
+            Require(SceneRoot("RoadblockTeamPropStageDialog") == null,
+                "Simulated mask click cancels the roadblock dialog");
+            var unconsumed = OfflineNpcAssistanceProgress.Open(slots, slot);
+            long selectedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            Require(!MapSave.completedRoadblockPlacements.Contains(701)
+                && selectedNpcs.All(npc => unconsumed.AssistCount(playType, npc,
+                    (NpcAssistRefreshCycle)invite.RefreshCycle, selectedAt) == 0),
+                "Invitation, removal and dialog cancellation do not consume a gate attempt");
+            yield return ClickEntity(701);
+            yield return new WaitForSecondsRealtime(.7f);
+            dialog = SceneRoot("RoadblockTeamPropStageDialog");
+            Require(dialog != null && unconsumed.Selected(playType, "map14:roadblock:701").SequenceEqual(selectedNpcs),
+                "Reopening the gate preserves the selected partners");
+            stageConfirm = RoadblockButton(dialog.transform,
+                "BgDialog3WorldMap/Content/DialogContent (1)/BottomContent/CommonBtn_12");
+
+            string playerBefore = JsonUtility.ToJson(Progress.Save.Player);
+            string battlesBefore = JsonUtility.ToJson(MapSave.battleResults);
+            Button currentConfirm = stageConfirm;
+            yield return Click(currentConfirm);
+            Map10LocalSave completed = MapSave;
+            Require(completed.completedRoadblockPlacements.Contains(701),
+                "Confirmed roadblock is persisted as completed");
+            Require(string.IsNullOrEmpty(completed.activeBattle)
+                && JsonUtility.ToJson(completed.battleResults) == battlesBefore,
+                "Roadblock completion does not create or change a battle");
+            Progress.Reload();
+            Require(JsonUtility.ToJson(Progress.Save.Player) == playerBefore,
+                "Roadblock completion grants no player inventory or progression reward");
+
+            var assistProgress = OfflineNpcAssistanceProgress.Open(new ProfileSlotCatalog(root), slot);
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            foreach (int npcId in selectedNpcs)
+                Require(assistProgress.AssistCount(playType, npcId,
+                    (NpcAssistRefreshCycle)invite.RefreshCycle, now) == 1,
+                    "Original PropGate invite usage persists for partner " + npcId);
+            yield return Capture("map-14-roadblock-open");
+
+            var passage = mapSession.FindPath(new OfficialMapPathRequest
+            {
+                Start = interactFrom,
+                End = crossTo,
+                PreciseTarget = true,
+                BodyOffsets = new[] { new MapGridPoint(0, 0) }
+            });
+            Require(passage != null && passage.Contains(gateGrid),
+                "Opened Map14 roadblock is present in the actual runtime path");
+            worldPress = GridToWorld(crossTo);
+            float crossingDeadline = Time.realtimeSinceStartup + 15f;
+            while (!Position.Equals(crossTo) && Time.realtimeSinceStartup < crossingDeadline)
+                yield return null;
+            Require(Position.Equals(crossTo),
+                "Simulated pointer crosses the completed roadblock through its opened ground");
+            yield return ExitMap();
+            yield return null;
+            Open(14, canvas);
+            yield return new WaitForSecondsRealtime(2);
+            Require(MapSave.completedRoadblockPlacements.Contains(701)
+                && Position.Equals(crossTo),
+                "Roadblock completion, opened path and player position restore after a cold map reload");
+            var restoredGate = runtime.GetComponentInChildren<OfficialMap10EntityView>().FindEntityObject(701);
+            float restoredDisplayDeadline = Time.realtimeSinceStartup + 120f;
+            while (restoredGate.GetComponentsInChildren<SpriteRenderer>(true).Length == 0
+                && Time.realtimeSinceStartup < restoredDisplayDeadline) yield return null;
+            Require(restoredGate.GetComponentsInChildren<SpriteRenderer>(true).Length > 0,
+                "Cold reload restores the original gate display before capture");
+            yield return new WaitForSecondsRealtime(.5f);
+            yield return Capture("map-14-roadblock-open-cold");
+            passage = mapSession.FindPath(new OfficialMapPathRequest
+            {
+                Start = crossTo,
+                End = returnTo,
+                PreciseTarget = true,
+                BodyOffsets = new[] { new MapGridPoint(0, 0) }
+            });
+            Require(passage != null && passage.Contains(gateGrid),
+                "Cold reload restores the Map14 roadblock overlay to the actual pathfinder");
+            worldPress = GridToWorld(returnTo);
+            crossingDeadline = Time.realtimeSinceStartup + 15f;
+            while (!Position.Equals(returnTo) && Time.realtimeSinceStartup < crossingDeadline)
+                yield return null;
+            Require(Position.Equals(returnTo),
+                "Restored roadblock remains traversable through its saved ground overlay");
+            yield return ExitMap();
+        }
+
+        private IEnumerator SelectRoadblockCandidate(GameObject picker, Action<int> selected)
+        {
+            Transform content = picker.transform.Find(
+                "BgPanel1/Content/MiddleGo/FriendRobotGo/Scroll/Viewport/Content");
+            Require(content != null, "Original invitation virtual list content is present");
+            LoopVerticalScrollRect scroll = content.GetComponentInParent<LoopVerticalScrollRect>();
+            Require(scroll != null, "Original NPC invitation scroll is present");
+            for (int page = 0; page < 20; page++)
+            {
+                foreach (Transform row in content)
+                {
+                    Toggle toggle = row.GetComponentInChildren<Toggle>(true);
+                    if (toggle == null || !toggle.isActiveAndEnabled || !toggle.interactable || toggle.isOn
+                        || !row.name.StartsWith("Npc_", StringComparison.Ordinal)
+                        || !int.TryParse(row.name.Substring(4), out int npcId)) continue;
+                    yield return Click(toggle);
+                    selected(npcId);
+                    yield break;
+                }
+                yield return DragScroll(scroll);
+            }
+            throw new InvalidOperationException("No available official roadblock partner appeared in the invite list.");
+        }
+
+        private static Button RoadblockButton(Transform root, string path)
+        {
+            Transform node = root == null ? null : root.Find(path);
+            Button button = node == null ? null : node.GetComponent<Button>()
+                ?? node.GetComponentInChildren<Button>(true);
+            return button ?? throw new InvalidOperationException("Roadblock probe button is missing: " + path);
+        }
+
+        private static Button RoadblockTopMask() => Resources.FindObjectsOfTypeAll<Button>()
+            .Where(value => value.gameObject.scene.IsValid() && value.isActiveAndEnabled && value.name == "BlurMask")
+            .OrderByDescending(value => value.GetComponentInParent<Canvas>().sortingOrder).First();
+
+        private static IEnumerator WaitForRoadblockPopup(GameObject window)
+        {
+            var mask = window.GetComponent<Zjcs.Presentation.Combat.OfficialBattlePopupMask>();
+            var group = window.GetComponent<CanvasGroup>();
+            float until = Time.realtimeSinceStartup + 15f;
+            while ((mask != null && !mask.IsReady || group != null &&
+                (group.alpha < .99f || !group.interactable || !group.blocksRaycasts))
+                && Time.realtimeSinceStartup < until) yield return null;
+            Require(mask == null || mask.IsReady, "Original popup backdrop is ready");
+            Require(group == null || group.alpha >= .99f && group.interactable && group.blocksRaycasts,
+                "Original popup animation and input have become visible");
+            yield return new WaitForSecondsRealtime(.6f);
+            yield return null;
+        }
+
         private void Open(int id, Transform canvas)
         {
             GameObject model = CharacterCreationNativeModelFactory.CreateWorldModel(slot, root, out string name);
@@ -483,6 +800,7 @@ namespace Zjcs.Presentation.World
             observedProgress ??= OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(root), slot);
             runtime.KeyDownProvider = key => { bool result = key == KeyCode.Escape && escape; escape = false; return result; };
             runtime.Begin(id, slot, root, canvas, model, name, null);
+            mapSession = runtime.CurrentSession;
             ValidatePublicMapModule(id);
         }
 
@@ -954,6 +1272,28 @@ namespace Zjcs.Presentation.World
                 + "; position=" + position + "; rect=" + ((RectTransform)button.transform).rect
                 + "; hits=" + string.Join(",", hits.Take(6).Select(value => value.gameObject.name)));
             var pointer = new PointerEventData(EventSystem.current) { position = position, button = PointerEventData.InputButton.Left };
+            ExecuteEvents.Execute(target, pointer, ExecuteEvents.pointerDownHandler);
+            yield return null;
+            ExecuteEvents.Execute(target, pointer, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.Execute(target, pointer, ExecuteEvents.pointerClickHandler);
+            yield return new WaitForSecondsRealtime(.3f);
+        }
+
+        private static IEnumerator Click(Toggle toggle)
+        {
+            Require(toggle != null && toggle.isActiveAndEnabled && toggle.IsInteractable(),
+                "Pointer target is active and interactable: " + (toggle == null ? "missing" : toggle.name));
+            Canvas.ForceUpdateCanvases();
+            RectTransform rect = (RectTransform)toggle.transform;
+            Vector2 position = RectTransformUtility.WorldToScreenPoint(null,
+                rect.TransformPoint(rect.rect.center));
+            var hits = Hits(position);
+            GameObject target = hits.Count > 0
+                ? ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject) : null;
+            Require(target == toggle.gameObject, "Original partner toggle receives the topmost raycast: "
+                + toggle.name + "; hits=" + string.Join(",", hits.Take(6).Select(value => value.gameObject.name)));
+            var pointer = new PointerEventData(EventSystem.current)
+            { position = position, button = PointerEventData.InputButton.Left };
             ExecuteEvents.Execute(target, pointer, ExecuteEvents.pointerDownHandler);
             yield return null;
             ExecuteEvents.Execute(target, pointer, ExecuteEvents.pointerUpHandler);

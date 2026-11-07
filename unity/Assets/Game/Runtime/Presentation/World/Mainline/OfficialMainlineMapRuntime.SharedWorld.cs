@@ -74,6 +74,11 @@ namespace Zjcs.Presentation.World
         private void SynchronizeOriginalMapEntities()
         {
             if (mainlineSharedWorld?.IsLoaded != true) return;
+            if (mapClassId == 14 && !roadblockSourceValidated)
+            {
+                ValidateRoadblocksAgainstOriginalMapData();
+                roadblockSourceValidated = true;
+            }
             var presentation = CreateEntityPresentation();
             var states = mapEntities.ToDictionary(pair => pair.Key,
                 pair => new MainlineSharedEntityState(pair.Value.EntityClassId,
@@ -97,6 +102,7 @@ namespace Zjcs.Presentation.World
                 finally
                 {
                     mainlineSharedWorld = null;
+                    roadblockSourceValidated = false;
                     mainlineSharedState?.Dispose();
                     mainlineSharedState = null;
                     mainlineSharedPlayer = null;

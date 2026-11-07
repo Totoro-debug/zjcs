@@ -2718,3 +2718,25 @@ unity/Assets/Official/Partners/Resources/PartnerDetailActors/**/*.meta whitespac
 
 # Preserve the existing official Map14 puzzle payload bytes.
 unity/Assets/Official/World/Map/14/Resources/Map14/puzzle-rules.json -text
+
+# Preserve the verified native roadblock payloads and their recorded byte hashes.
+unity/Assets/Official/World/Map/14/NativeRoadblocks/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Official/World/Map/14/NativeRoadblocks.meta -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Official/World/Map/14/UI/Roadblock/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Official/World/Map/14/UI/Roadblock.meta -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/RoadblockAnimations/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/RoadblockAnimations.meta -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/RoadblockTeamPropStageDialog*.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/RuleDialog.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/TipInfo1.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/roadblock-*.json* text eol=lf whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/Native/roadblock-display-catalog.asset* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+assets/reference/npc-assistance/roadblock-*.json text eol=lf whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/8625_14_DialogIcon.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/8626_14_DialogIcon.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/8633_14_DialogIcon.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/8634_14_DialogIcon.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/8637_14_DialogIcon.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.RoadblockDisplays.cs.meta whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialRoadblockDisplayCatalog.cs.meta whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Runtime/Presentation/World/Mainline/RoadblockTipGraphRuntime.cs.meta whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof

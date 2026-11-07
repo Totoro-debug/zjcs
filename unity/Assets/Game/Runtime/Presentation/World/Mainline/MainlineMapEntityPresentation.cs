@@ -53,6 +53,9 @@ namespace Zjcs.Presentation.World
             bool goddess = map.HasNativeUi && entity.TypeId == 202;
             if (tags.TryGetValue(entity.PlacementId, out var tag))
                 state = local.mapLogicStates.FirstOrDefault(value => value != null && value.Tag == tag.Tag)?.State ?? state;
+            if (map.MapClassId == 14 && local.completedRoadblockPlacements.Contains(entity.PlacementId)
+                && OfficialMainlineRoadblockRules.Find(entity.PlacementId) != null)
+                state = 1;
             if (goddess && IsPublic(entity.Region)) state = 1;
             if (entity.TypeId == 223)
                 state = HeroState(profile, map.MapClassId, entity.PlacementId, IsPublic(entity.Region));

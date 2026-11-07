@@ -123,6 +123,7 @@ namespace Zjcs.Presentation.World
         private int mapClassId = 10;
         private bool localSaveCreated;
 
+        internal OfficialWorldMapSession CurrentSession => session;
         private OfficialMainlineMapProfile MapProfile => OfficialMainlineMapProfile.Get(mapClassId);
         private string MapResource(string path) => MapProfile.Resource(path);
         private string NativeUiResource(string path) => MapProfile.NativeUi(path);
@@ -308,6 +309,8 @@ namespace Zjcs.Presentation.World
                 else if (dialogueWaiting) RequestDialogueAdvance();
                 else if (storyRunning) { }
                 else if (battleController != null) LeaveBattle();
+                else if (roadblockAssistView != null) CloseRoadblockAssistPicker();
+                else if (roadblockDialogView != null) CloseRoadblockDialog();
                 else if (mainlineAssistView != null) CloseMainlineAssistPicker();
                 else if (statues.goddessDialog != null) statues.goddessDialog.Close();
                 else if (selectedStageEntity != null) CloseStageDialog();
@@ -446,7 +449,13 @@ namespace Zjcs.Presentation.World
             if (entityData == null) throw new InvalidOperationException("Official Map" + mapClassId + " entity data is missing.");
             Vector2 mapOrigin = new Vector2(session.Definition.Navigation.Origin.X,
                 session.Definition.Navigation.Origin.Y);
-            if (!string.IsNullOrWhiteSpace(MapProfile.EntityPrefabCatalogResource))
+            if (mapClassId == 14)
+            {
+                // Map14's EC catalog contains logical configuration prefabs.
+                // Its display prefabs are mounted after the shared entities start.
+                entityView.NativeVisualFactory = (info, host) => true;
+            }
+            else if (!string.IsNullOrWhiteSpace(MapProfile.EntityPrefabCatalogResource))
             {
                 var prefabAsset = Resources.Load<ScriptableObject>(MapProfile.EntityPrefabCatalogResource);
                 var prefabProvider = prefabAsset as IMainlineEntityPrefabProvider;
@@ -481,6 +490,7 @@ namespace Zjcs.Presentation.World
                 }
                 mapEntities.Add(info.PlacementId, entity);
             }
+            ApplyCompletedRoadblockOverlays();
             if (MapProfile.HasNativeUi) { exploration.ExploreService.Cleanup(OfficialMainlineExplorationModule.ExploreNow); exploration.SynchronizeExploreEntities(); }
             InitializeMap11WorldMonsters();
             InitializeStorySpatial();
@@ -643,6 +653,7 @@ namespace Zjcs.Presentation.World
             CancelMainlineBattleAssist(battleController?.Checkpoint?.StageId ?? 0);
             CloseMap12PrivateDungeonAssistPicker();
             CloseMap15PreparationDialog();
+            DisposeRoadblockDialog();
             CloseHandInView();
             if (map12BuildingDialog != null) Destroy(map12BuildingDialog);
             map12BuildingDialog = null;

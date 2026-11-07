@@ -491,6 +491,8 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 NPC 原始战斗头像沿固定 `854_156383` 的 `NpcInfo.Icon` 路径和原 Sprite 元数据恢复；来源清单同时保留历史 `854_156383`／`871_156598` 检查与当前选定 `884_156692` 的九个图标 bundle 实际对象核查。11015–11022 未找到原始 Sprite／Texture2D，按离线访问决定暂停助战；输入、输出与扫描 bundle 哈希见[NPC头像来源](battle-hud/npc-portraits-source-manifest.json)，实现边界见[NPC邀请](../../docs/features/npc-assistance.md)。
 
+Map14 道路输入取自选定 `884_156692`，逐项按 APK 优先、匹配 CDN 后查找。两个道路 prefab、五种门预览、区域背景、规则说明窗及原组件／本地化由 `prepare_map14_roadblock_ui.py` 解码；五种实体视图的原生闭包由 `prepare_map14_roadblock_native_inputs.py` 核对后转换，`prepare_map14_roadblock_native.py` 显式绑定脚本、原材质与原 Sprite。`prepare_map14_roadblock_supplements.py` 提取 `ElementDoor` 图及当前 Wwise 事件，按原增益转为 PCM，不做响度归一。APK／CDN 对象、871／884 共享表兼容性、转换方法及输入输出哈希分别见 [道路输入](npc-assistance/roadblock-source-manifest.json)、[UI来源](npc-assistance/roadblock-ui-source-manifest.json)、[原生视图来源](npc-assistance/roadblock-native-source-manifest.json)和[补充资源来源](npc-assistance/roadblock-supplements-source-manifest.json)。
+
 竞技场既有871原生面板的布局输入按[原副本面板来源](dungeon-ui/prefab-binding-source-manifest.json)所记历史官方CDN地址恢复，保留原bundle MD5／SHA256／字节数并验证全部887个原生层级路径；历史布局与当前884入口数据分别记录于[入口初始化来源](dungeon-ui/matching-panel-source-manifest.json)，生成器为 `scripts/prepare_dungeon_matching_panels.py`。资源版本及运行边界见[副本](../../docs/features/dungeons.md)。
 
 伙伴主角物理输入沿用所选 `884_156692` 当前角色数据包及其原骨骼／约束／待机通道；原包与对象身份引用当前 [scene-core 来源](battle-animation/scene-core-source-manifest.json)。[主角物理来源清单](partner-player-physics-source-manifest.json) 记录实际数据包、公开调用所用既有二进制及取样／回放文件的哈希与处理方式；可选数值取样仅写隔离目录，未复制 SDK 实现或新增素材载荷。

@@ -67,6 +67,14 @@ namespace Zjcs.Editor
 
         public static void RunInteractionCatalogs() => OfficialMainlineMapModuleProbe.RunInteractionCatalogs();
 
+        public static void RunRoadblocks()
+        {
+            OfficialMap11UiTools.ImportMap14Roadblocks();
+            ProjectTools.Validate();
+            RoadblockAssistanceAcceptance.Run();
+            StartPlayMode();
+        }
+
         public static void Run()
         {
             OfficialMap11UiTools.Import();

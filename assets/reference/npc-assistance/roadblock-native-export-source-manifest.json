@@ -1,0 +1,75 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "mapClassId": 14,
+  "input_receipt": {
+    "path": "output/validation/npc-assist-roadblock-1a3cce85850f48ca96e2b26af960ee71/roadblock-native-closure/input-source-manifest.json",
+    "sha256": "909fa2233919554e3bf25fd98f59f796086302d70fa416ee44908d68d34164df"
+  },
+  "tool": {
+    "path": "output/validation/npc-assist-roadblock-1a3cce85850f48ca96e2b26af960ee71/roadblock-native-closure/runner/AssetRipper.GUI.Free.exe",
+    "sha256": "11ec892dcd70b1b86f2e52db631e83e007f6103daa20a9616ecaa7a95baa9f21",
+    "version": "1.3.14.0"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_map13_water_entity_export.py",
+    "sha256": "35e4b41b8b4bddba4bb99776f591fbaf62f2cfe0fcd37553f13fc10ff8146b3b"
+  },
+  "entry": {
+    "path": "scripts/prepare_map14_roadblock_native_inputs.py",
+    "sha256": "0de2846ac86702eab28e03c330e656fd3964cab9d960e5277dd058c95ee0789c"
+  },
+  "verification_library": {
+    "path": "scripts/official_native_yaml_verification.py",
+    "sha256": "d7027e10c3fc96f910f169eb0cb4b45942d0cf6ef532fa8ba96efa9dedfbba7b"
+  },
+  "counts": {
+    "empty_registries": 0,
+    "source_identities": 10,
+    "checked_values": 1157,
+    "native_pointers": 216,
+    "registries": 10,
+    "reference_records": 65
+  },
+  "outputs": [
+    {
+      "input": "output/validation/npc-assist-roadblock-1a3cce85850f48ca96e2b26af960ee71/roadblock-native-closure/export/ExportedProject/Assets/Prefabs/Map/Map_14/EntityDisplays/WorldDoor/8625_14_view.prefab",
+      "input_sha256": "9d8395aa5d5f3fad59faef928d8a250cb6b6be0308330e2d30c7f824ddde08d0",
+      "path": "output/validation/npc-assist-roadblock-1a3cce85850f48ca96e2b26af960ee71/roadblock-native-closure/restored/Prefabs/Map/Map_14/EntityDisplays/WorldDoor/8625_14_view.prefab",
+      "sha256": "a873cb542aae214f47bb1d8047d0fbee074dd1476b564feb3f48326ed6a13a4c",
+      "registries": 2
+    },
+    {
+      "input": "output/validation/npc-assist-roadblock-1a3cce85850f48ca96e2b26af960ee71/roadblock-native-closure/export/ExportedProject/Assets/Prefabs/Map/Map_14/EntityDisplays/WorldDoor/8626_14_view.prefab",
+      "input_sha256": "856fb5a00d2c53df976fee0c8544f3f4276032fa64474034b0fec4d2207e4b1b",
+      "path": "output/validation/npc-assist-roadblock-1a3cce85850f48ca96e2b26af960ee71/roadblock-native-closure/restored/Prefabs/Map/Map_14/EntityDisplays/WorldDoor/8626_14_view.prefab",
+      "sha256": "72de5277c376e2b28afc06daad224d113b37f3ad50caf1e446bd39e33e0451a4",
+      "registries": 2
+    },
+    {
+      "input": "output/validation/npc-assist-roadblock-1a3cce85850f48ca96e2b26af960ee71/roadblock-native-closure/export/ExportedProject/Assets/Prefabs/Map/Map_14/EntityDisplays/WorldDoor/8633_14_view.prefab",
+      "input_sha256": "883f71b4205293dc3f720268d77bb0acc6837016168c91200566cafff258956d",
+      "path": "output/validation/npc-assist-roadblock-1a3cce85850f48ca96e2b26af960ee71/roadblock-native-closure/restored/Prefabs/Map/Map_14/EntityDisplays/WorldDoor/8633_14_view.prefab",
+      "sha256": "888a92a335ff4303c39dd6213a65ca0dd0c439ea2ef4f8b9125d878ddf68d241",
+      "registries": 2
+    },
+    {
+      "input": "output/validation/npc-assist-roadblock-1a3cce85850f48ca96e2b26af960ee71/roadblock-native-closure/export/ExportedProject/Assets/Prefabs/Map/Map_14/EntityDisplays/WorldDoor/8634_14_view.prefab",
+      "input_sha256": "431520302b8d95f169d39eb552944cf9c8dc6c47d9ff3a149da16718f2cdd091",
+      "path": "output/validation/npc-assist-roadblock-1a3cce85850f48ca96e2b26af960ee71/roadblock-native-closure/restored/Prefabs/Map/Map_14/EntityDisplays/WorldDoor/8634_14_view.prefab",
+      "sha256": "e9f6c6b1f2d955d8950ca34fdd88a629d2c89c9b19fb5440eb142d172bea3f02",
+      "registries": 2
+    },
+    {
+      "input": "output/validation/npc-assist-roadblock-1a3cce85850f48ca96e2b26af960ee71/roadblock-native-closure/export/ExportedProject/Assets/Prefabs/Map/Map_14/EntityDisplays/WorldDoor/8637_14_view.prefab",
+      "input_sha256": "fb9084f559ae584f83bb5701114a2ed31ab79e89b54b84e9140fed882e693402",
+      "path": "output/validation/npc-assist-roadblock-1a3cce85850f48ca96e2b26af960ee71/roadblock-native-closure/restored/Prefabs/Map/Map_14/EntityDisplays/WorldDoor/8637_14_view.prefab",
+      "sha256": "6ba9eaec0e0dc28de89639d7d46d166c08ae11c3c057a98f2b2b39737fc56827",
+      "registries": 2
+    }
+  ],
+  "operation": "AssetRipper 1.3.14 UnityProject export of the verified input closure; restore typed registry vectors to original ordered RefIds while retaining exported YAML record text, including empty registries. Strip and verify temporary source CAB/path IDs. Compare every original reference field/list/scalar, original float32/float64 bits, descriptor and RID; decode packed primitive arrays with their original type and width. Resolve every non-null pointer on both sides and compare native component type and complete original GameObject hierarchy (or named asset identity), with source IDs for registry components.",
+  "limitations": [
+    "Cache conversion only. Original runtime migration, explicit assembly/script binding, Windows shaders/import, Play Mode interaction and saves are not implemented by this step."
+  ]
+}

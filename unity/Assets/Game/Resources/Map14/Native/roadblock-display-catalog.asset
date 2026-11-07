@@ -1,0 +1,274 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3352c17a2e4f3943b25956c98f776bb, type: 3}
+  m_Name: roadblock-display-catalog
+  m_EditorClassIdentifier: 
+  manifest: 884_156692
+  entries:
+  - classId: 8625
+    prefab: {fileID: 1709254077376921, guid: 21ebca3d9f9e57d0a4e36c92dfd6ee2a, type: 3}
+    dialogIcon: {fileID: 6222534076970723402, guid: bb6befe0ca0b3734e821eed895ce173a, type: 3}
+  - classId: 8626
+    prefab: {fileID: 1709254077376921, guid: 3f6e75d929365738a89b82b7851f0952, type: 3}
+    dialogIcon: {fileID: 7086171615212991124, guid: d9b9fb0b7a96ec54faa9586dee63cd47, type: 3}
+  - classId: 8634
+    prefab: {fileID: 1709254077376921, guid: ae4d1dd4cf7453159f9c4bb9b14e1edb, type: 3}
+    dialogIcon: {fileID: 4061573648991915893, guid: c3c93c7942fa5ba45afe011745142c29, type: 3}
+  - classId: 8637
+    prefab: {fileID: 1709254077376921, guid: 758c3afeef415ed59b23caba3a56d919, type: 3}
+    dialogIcon: {fileID: 2642137436759540870, guid: 07806852fb2c7d643b6e279f32541431, type: 3}
+  - classId: 8633
+    prefab: {fileID: 1709254077376921, guid: ee163e4f28a35700a4ffffca704cb4f2, type: 3}
+    dialogIcon: {fileID: 2560123860629884367, guid: c895fd9007659f24e863fb7e4871282e, type: 3}
+  activationSound: {fileID: 8300000, guid: a5b9c989374eed5394289a8516c54f0e, type: 3}
+  backgrounds:
+  - areaTag: IgnoreKey
+    sprite: {fileID: 21300000, guid: 24391bf2449bc320eddcd6091fa8fbe5, type: 3}
+  - areaTag: Bamboo
+    sprite: {fileID: 21300000, guid: 4e35dd5a33fd9ca305af17f148328fa5, type: 3}
+  - areaTag: Rotten
+    sprite: {fileID: 21300000, guid: f034af20cc0fccb8044976dba027b600, type: 3}
+  - areaTag: Bronze
+    sprite: {fileID: 21300000, guid: 6806a6eccc02a295616127034088c76f, type: 3}
+  - areaTag: Snow
+    sprite: {fileID: 21300000, guid: d584413bbb2e5a30a30d76a87b1965a7, type: 3}
+  areas:
+  - area: 0
+    areaTag: 
+  - area: 1
+    areaTag: Bamboo
+  - area: 2
+    areaTag: 
+  - area: 3
+    areaTag: 
+  - area: 4
+    areaTag: Bamboo
+  - area: 5
+    areaTag: 
+  - area: 6
+    areaTag: 
+  - area: 7
+    areaTag: Bamboo
+  - area: 8
+    areaTag: Bamboo
+  - area: 9
+    areaTag: Bamboo
+  - area: 10
+    areaTag: 
+  - area: 11
+    areaTag: 
+  - area: 12
+    areaTag: 
+  - area: 13
+    areaTag: 
+  - area: 14
+    areaTag: 
+  - area: 15
+    areaTag: 
+  - area: 16
+    areaTag: 
+  - area: 17
+    areaTag: 
+  - area: 18
+    areaTag: 
+  - area: 19
+    areaTag: 
+  - area: 20
+    areaTag: 
+  - area: 21
+    areaTag: Lake
+  - area: 22
+    areaTag: 
+  - area: 23
+    areaTag: 
+  - area: 24
+    areaTag: 
+  - area: 25
+    areaTag: 
+  - area: 26
+    areaTag: 
+  - area: 27
+    areaTag: Lake
+  - area: 28
+    areaTag: Lake
+  - area: 29
+    areaTag: Lake
+  - area: 30
+    areaTag: Lake
+  - area: 31
+    areaTag: 
+  - area: 32
+    areaTag: Bronze
+  - area: 33
+    areaTag: 
+  - area: 34
+    areaTag: 
+  - area: 35
+    areaTag: 
+  - area: 36
+    areaTag: Rotten
+  - area: 37
+    areaTag: Rotten
+  - area: 38
+    areaTag: Rotten
+  - area: 39
+    areaTag: Rotten
+  - area: 40
+    areaTag: Rotten
+  - area: 41
+    areaTag: Rotten
+  - area: 42
+    areaTag: Rotten
+  - area: 43
+    areaTag: Rotten
+  - area: 44
+    areaTag: Rotten
+  - area: 45
+    areaTag: Rotten
+  - area: 46
+    areaTag: Bronze
+  - area: 47
+    areaTag: Bronze
+  - area: 48
+    areaTag: Bronze
+  - area: 49
+    areaTag: Bronze
+  - area: 50
+    areaTag: Bronze
+  - area: 51
+    areaTag: Bronze
+  - area: 52
+    areaTag: Bronze
+  - area: 53
+    areaTag: Bronze
+  - area: 54
+    areaTag: Bronze
+  - area: 55
+    areaTag: Bronze
+  - area: 56
+    areaTag: Bronze
+  - area: 57
+    areaTag: Lake
+  - area: 58
+    areaTag: Bronze
+  - area: 59
+    areaTag: Bronze
+  - area: 60
+    areaTag: Bronze
+  - area: 61
+    areaTag: Bronze
+  - area: 62
+    areaTag: Bronze
+  - area: 63
+    areaTag: Bronze
+  - area: 64
+    areaTag: Bronze
+  - area: 65
+    areaTag: Bronze
+  - area: 66
+    areaTag: Bronze
+  - area: 67
+    areaTag: Bronze
+  - area: 68
+    areaTag: Bronze
+  - area: 69
+    areaTag: Bronze
+  - area: 70
+    areaTag: Bronze
+  - area: 71
+    areaTag: Bronze
+  - area: 72
+    areaTag: Bronze
+  - area: 73
+    areaTag: Snow
+  - area: 74
+    areaTag: Snow
+  - area: 76
+    areaTag: Snow
+  - area: 75
+    areaTag: Snow
+  - area: 77
+    areaTag: Snow
+  - area: 78
+    areaTag: Snow
+  - area: 79
+    areaTag: Snow
+  - area: 80
+    areaTag: Snow
+  - area: 81
+    areaTag: Snow
+  - area: 82
+    areaTag: Snow
+  - area: 83
+    areaTag: Snow
+  - area: 84
+    areaTag: Snow
+  - area: 85
+    areaTag: Snow
+  - area: 86
+    areaTag: Snow
+  - area: 87
+    areaTag: Snow
+  - area: 88
+    areaTag: Snow
+  - area: 89
+    areaTag: Snow
+  - area: 90
+    areaTag: Snow
+  - area: 91
+    areaTag: Snow
+  - area: 92
+    areaTag: Snow
+  - area: 93
+    areaTag: Snow
+  - area: 94
+    areaTag: Snow
+  - area: 95
+    areaTag: Snow
+  - area: 96
+    areaTag: Snow
+  - area: 97
+    areaTag: 
+  - area: 98
+    areaTag: Rotten
+  - area: 99
+    areaTag: Snow
+  - area: 100
+    areaTag: 
+  - area: 101
+    areaTag: 
+  - area: 102
+    areaTag: Rotten
+  - area: 103
+    areaTag: 
+  - area: 104
+    areaTag: Bronze
+  - area: 105
+    areaTag: Bronze
+  - area: 106
+    areaTag: Bronze
+  - area: 107
+    areaTag: Bronze
+  - area: 108
+    areaTag: Snow
+  - area: 109
+    areaTag: Snow
+  - area: 110
+    areaTag: Bronze
+  - area: 111
+    areaTag: Rotten
+  - area: 112
+    areaTag: Bronze
+  - area: 113
+    areaTag: Snow
+  - area: 114
+    areaTag: 

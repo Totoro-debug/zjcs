@@ -34,6 +34,16 @@ public class PropInfo : MonoBehaviour
 		mIcon.sprite = mDisposableBag.Add(services.Icons.PlayerInfo.Resources.LoadAsset<Sprite>(icon)).Result;
 		mValue.SetKey("{0}", services.PropValue(propType, propValue, includeUnit: false, includePropDesc: false, -1L));
 	}
+
+	// The local host supplies the same configured icon and formatted value when
+	// the online invitation service is not installed. Keep the original fields.
+	public void Refresh(Sprite icon, string formattedValue)
+	{
+		mDisposableBag.Dispose();
+		mDisposableBag = new TeamInviteResourceOperationBag();
+		mIcon.sprite = icon;
+		mValue.SetKey("{0}", formattedValue);
+	}
 }
 
 }

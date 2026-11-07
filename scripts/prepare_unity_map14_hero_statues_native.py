@@ -41,17 +41,32 @@ GUID = re.compile(r'(?m)^guid: ([0-9a-f]{32})$')
 PTR = re.compile(r'\{fileID: (-?\d+), guid: ([0-9a-f]{32}), type: (\d+)\}')
 
 
-def build():
-    cache = workspace()
+def verified_text_hash(path, expected):
+    data = path.read_bytes()
+    # Git's Windows checkout may expand LF in tracked YAML/JSON/meta files.
+    # Compare the exact recorded bytes first, then the reversible checkout form.
+    return sha(data) == expected or (b'\r\n' in data and
+                                     sha(data.replace(b'\r\n', b'\n')) == expected)
+
+
+def build(*, cache=None, class_ids=(6570, 6571, 6572, 6573), destination=None,
+          receipt_path=None, additional_scripts=None, additional_types=None,
+          source_manifest="871_156598"):
+    global DEST, RECEIPT
+    if destination is not None:
+        DEST = destination
+    if receipt_path is not None:
+        RECEIPT = receipt_path
+    cache = cache if cache is not None else workspace()
     export = cache / 'export/ExportedProject/Assets'
     proof = json.loads((cache / 'export-source-manifest.json').read_bytes())
     restored = {Path(row['input']).relative_to(Path(source_path(export))): row for row in proof['outputs']}
     graph = json.loads((SOURCE / 'native-entity-object-graph.json').read_bytes())
-    if proof['manifest'] != '871_156598' or graph['manifest'] != proof['manifest']:
+    if proof['manifest'] != source_manifest or graph['manifest'] != '871_156598':
         raise ValueError('Original statue versions differ')
     source_proof = json.loads((ROOT / 'assets/reference/official-map/map14-native-entity-object-graph-source-manifest.json').read_bytes())
     expected, = [row for row in source_proof['outputs'] if row['path'] == source_path(SOURCE / 'native-entity-object-graph.json')]
-    if sha((SOURCE / 'native-entity-object-graph.json').read_bytes()) != expected['sha256']:
+    if not verified_text_hash(SOURCE / 'native-entity-object-graph.json', expected['sha256']):
         raise ValueError('Verified original statue object graph changed')
     apk = Apk.current()
     indexed = {(row['cab'], row['path_id']): row for row in graph['objects']}
@@ -77,7 +92,7 @@ def build():
     # CAB comparisons are case-insensitive; source graph retains original spelling.
     materials = {(cab.lower(), pid): p for (cab, pid), p in materials.items()}
     script_guids = {}
-    for name, relative in SCRIPT_PATHS.items():
+    for name, relative in dict(SCRIPT_PATHS, **(additional_scripts or {})).items():
         target = ROOT / 'unity/Assets/Game/Runtime/Official' / relative
         if not target.is_file():
             # Some existing source modules use a nested application-code directory.
@@ -139,9 +154,9 @@ def build():
             return
         if relative in material_records:
             record = material_records[relative]
-            if sha(path.read_bytes()) != record['sha256'] or sha(Path(str(path) + '.meta').read_bytes()) != record['meta_sha256']:
+            if not verified_text_hash(path, record['sha256']) or not verified_text_hash(Path(str(path) + '.meta'), record['meta_sha256']):
                 raise ValueError('Verified native material changed: ' + relative)
-        elif sha(path.read_bytes()) != sprite_outputs[relative] or sha(Path(str(path) + '.meta').read_bytes()) != sprite_outputs[relative + '.meta']:
+        elif not verified_text_hash(path, sprite_outputs[relative]) or not verified_text_hash(Path(str(path) + '.meta'), sprite_outputs[relative + '.meta']):
             raise ValueError('Verified native default material changed')
         material_checks.add(relative)
 
@@ -257,9 +272,10 @@ def build():
                               body, count=len(fields['m_Materials'])) if fields.get('m_Materials') else body
             def replace_type(match):
                 name = match[1]
-                if name not in TYPE_MODULES:
+                modules = dict(TYPE_MODULES, **(additional_types or {}))
+                if name not in modules:
                     raise ValueError('Migrate original managed reference first: ' + name)
-                module = TYPE_MODULES[name]
+                module = modules[name]
                 migrated_name = 'WorldStateGameObjectConfig' if name == 'StateGameObjectConfig' else name
                 return 'class: ' + migrated_name + '\n        ns: Zjcs.Official.' + module + '\n        asm: Zjcs.Official.' + module
             body = re.sub(r'class: (\w+)\n        ns:[^\n]*\n        asm:[^\n]*', replace_type, body)
@@ -301,7 +317,7 @@ def build():
     material_guids = {meta(path, 'NativeFormatImporter') for path in materials.values()}
     binder_guid = meta(RUNTIME / 'NativeMap14HeroStatueSprites.cs', 'MonoImporter')
     prefabs = []
-    for class_id in (6570, 6571, 6572, 6573):
+    for class_id in class_ids:
         root, = [r for r in graph['roots'] if r['path'].endswith('/' + str(class_id) + '_14_view.prefab')]
         path, guid = use_asset(export / Path(root['path']).relative_to('Assets'), (root['cab'], root['path_id']))
         prefabs.append(dict(classId=class_id, path=source_path(path), guid=guid))

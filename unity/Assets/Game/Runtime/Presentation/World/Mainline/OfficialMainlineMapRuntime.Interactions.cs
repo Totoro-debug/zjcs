@@ -26,6 +26,7 @@ namespace Zjcs.Presentation.World
     {
         private void Interact(Map10RuntimeEntity entity)
         {
+            if (TryInteractRoadblock(entity)) return;
             if (mapClassId == 14 && entity.PlacementId == 103)
             {
                 ShowMap15PreparationDialog();

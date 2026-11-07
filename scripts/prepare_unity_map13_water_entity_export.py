@@ -49,9 +49,11 @@ def convert(cache=CACHE):
         source, target = distribution / name, runner / name
         if not target.is_file() or sha(target.read_bytes()) != sha(source.read_bytes()):
             shutil.copyfile(source, target)
-    settings = json.loads((distribution / "AssetRipper.Settings.json").read_bytes())
-    settings["Export"]["SaveSettingsToDisk"] = False
-    write(runner / "AssetRipper.Settings.json", encode(settings))
+    settings_path = distribution / "AssetRipper.Settings.json"
+    if settings_path.is_file():
+        settings = json.loads(settings_path.read_bytes())
+        settings["Export"]["SaveSettingsToDisk"] = False
+        write(runner / "AssetRipper.Settings.json", encode(settings))
     with socket.socket() as listener:
         listener.bind(("127.0.0.1", 0))
         port = listener.getsockname()[1]
@@ -71,6 +73,17 @@ def convert(cache=CACHE):
                 if process.poll() is not None or time.monotonic() >= deadline:
                     raise RuntimeError("Private AssetRipper server did not start")
                 time.sleep(0.25)
+        if not settings_path.is_file():
+            settings = dict(ShaderExportMode="Yaml", SpriteExportMode="Yaml", TextExportMode="Bytes",
+                            BundledAssetsExportMode="DirectExport", ScriptContentLevel="Level1",
+                            DefaultVersion="2022.3.57f1", TargetVersion="2022.3.57f1",
+                            ExportUnreadableAssets="on")
+            write(cache / "converter-settings.json", encode(settings))
+            request = urllib.request.Request(base + "/Settings/Update",
+                data=urllib.parse.urlencode(settings).encode(), method="POST")
+            with urllib.request.urlopen(request, timeout=30) as response:
+                if response.status != 200:
+                    raise RuntimeError("Native converter settings were rejected")
         for endpoint, folder in [("/LoadFolder", cache / "inputs"), ("/Export/UnityProject", cache / "export")]:
             print("Private native converter:", endpoint, flush=True)
             request = urllib.request.Request(base + endpoint,
@@ -103,11 +116,12 @@ def original_identity(obj):
 
 
 def build(receipt_path=RECEIPT, component_path=OUTPUT, roots=ROOT_BUNDLES,
-          cache_root=CACHE, proof_path=PROOF, expected_counts=(22, 11), entry_path=None, map_class_id=13, subject="water entity"):
+          cache_root=CACHE, proof_path=PROOF, expected_counts=(22, 11), entry_path=None, map_class_id=13, subject="water entity",
+          expected_manifest="871_156598"):
     exported = cache_root / "export/ExportedProject/Assets"
     destination = cache_root / "restored"
     receipt = json.loads(receipt_path.read_bytes())
-    if receipt["manifest"] != "871_156598":
+    if receipt["manifest"] != expected_manifest:
         raise ValueError("Wrong water-entity input version")
     for entry in receipt["tools"] + receipt["outputs"]:
         raw = (ROOT / entry["path"]).read_bytes()

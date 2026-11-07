@@ -32,6 +32,7 @@ namespace Zjcs.Presentation.World
             save.completedStages ??= Array.Empty<int>();
             save.completedPeriodicityGroups ??= Array.Empty<int>();
             save.completedEntityPlacements ??= Array.Empty<int>();
+            save.completedRoadblockPlacements ??= Array.Empty<int>();
             save.mapLogicStates ??= Array.Empty<Map10RuntimeMapLogicState>();
             save.puzzleStates ??= Array.Empty<MapPuzzleEntityState>();
             save.receipts ??= Array.Empty<string>();
@@ -64,6 +65,8 @@ namespace Zjcs.Presentation.World
                     && (parsed.storyPlayCounts == null || parsed.storyPlayCounts.All(value => value != null
                         && !string.IsNullOrEmpty(value.key) && value.count >= 0))
                     && (parsed.completedEntityPlacements == null || parsed.completedEntityPlacements.All(value => value > 0))
+                    && (parsed.completedRoadblockPlacements == null || parsed.completedRoadblockPlacements.All(value => value > 0)
+                        && parsed.completedRoadblockPlacements.Distinct().Count() == parsed.completedRoadblockPlacements.Length)
                     && (parsed.aloneWorldClassIds == null || parsed.aloneWorldClassIds.All(value => value > 0)
                         && parsed.aloneWorldClassIds.Distinct().Count() == parsed.aloneWorldClassIds.Length)
                     && (parsed.completedPeriodicityGroups == null

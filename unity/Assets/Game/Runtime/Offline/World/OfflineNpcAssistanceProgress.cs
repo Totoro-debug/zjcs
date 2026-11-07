@@ -32,6 +32,7 @@ namespace Zjcs.Offline.World
         public int schema = 2;
         public List<OfflineNpcAssistSelection> selections = new List<OfflineNpcAssistSelection>();
         public List<OfflineNpcAssistCount> counts = new List<OfflineNpcAssistCount>();
+        public List<OfflineNpcAssistSelection> completedUsages = new List<OfflineNpcAssistSelection>();
         public OfflineNpcAssistBattle activeBattle;
     }
 
@@ -128,6 +129,51 @@ namespace Zjcs.Offline.World
             selection.npcClassIds = npcClassIds.ToList();
             Persist(next);
             return true;
+        }
+
+        public int[] RecordUsage(int playType, string entryId, int maxPlayer,
+            int oneNpcMaxInviteCount, int maxInviteCount,
+            NpcAssistRefreshCycle refreshCycle, long nowUnixSeconds)
+        {
+            ValidateKey(playType, entryId);
+            OfflineNpcAssistSelection completed = save.completedUsages.FirstOrDefault(value =>
+                value.playType == playType && value.entryId == entryId);
+            if (completed != null) return completed.npcClassIds.ToArray();
+            if (maxPlayer < 0 || oneNpcMaxInviteCount < -1 || maxInviteCount < -1
+                || nowUnixSeconds <= 0 || !Enum.IsDefined(typeof(NpcAssistRefreshCycle), refreshCycle))
+                throw new ArgumentOutOfRangeException(nameof(maxPlayer), "NPC assistance rule values are invalid.");
+            if (save.activeBattle != null && save.activeBattle.committed)
+                throw new InvalidOperationException("NPC assistance cannot be used while an assisted battle is active.");
+
+            OfflineNpcAssistSelection selection = FindSelection(save, playType, entryId);
+            int[] npcIds = selection == null ? Array.Empty<int>() : selection.npcClassIds.ToArray();
+            if (npcIds.Length > maxPlayer || (maxInviteCount > 0 && npcIds.Length > 0
+                && GetTotalCount(save, playType, refreshCycle, nowUnixSeconds) + npcIds.Length > maxInviteCount))
+                throw new InvalidOperationException("Selected NPCs exceed the official assistance limit.");
+            foreach (int npcId in npcIds)
+            {
+                OfflineNpcAssistCount count = GetOrCreateCount(save, playType, npcId, refreshCycle, nowUnixSeconds);
+                if (oneNpcMaxInviteCount > 0 && count.count >= oneNpcMaxInviteCount)
+                    throw new InvalidOperationException("An NPC has reached its official assistance limit: " + npcId);
+            }
+
+            OfflineNpcAssistanceSave next = Clone(save);
+            foreach (int npcId in npcIds)
+            {
+                OfflineNpcAssistCount count = GetOrCreateCount(next, playType, npcId, refreshCycle, nowUnixSeconds);
+                count.count = checked(count.count + 1);
+                count.refreshTimeUnixSeconds = RefreshTime(nowUnixSeconds, refreshCycle);
+            }
+            next.completedUsages.Add(new OfflineNpcAssistSelection
+            { playType = playType, entryId = entryId, npcClassIds = npcIds.ToList() });
+            Persist(next);
+            return npcIds;
+        }
+
+        public bool HasRecordedUsage(int playType, string entryId)
+        {
+            ValidateKey(playType, entryId);
+            return save.completedUsages.Any(value => value.playType == playType && value.entryId == entryId);
         }
 
         public OfflineNpcAssistBattle CommitBattle(int playType, string entryId, int stageId,
@@ -327,6 +373,13 @@ namespace Zjcs.Offline.World
                         || selection.npcClassIds.Distinct().Count() != selection.npcClassIds.Count
                         || !keys.Add(selection.playType + ":" + selection.entryId)) return false;
                 keys.Clear();
+                foreach (OfflineNpcAssistSelection usage in data.completedUsages ?? new List<OfflineNpcAssistSelection>())
+                    if (usage == null || usage.playType <= 0 || string.IsNullOrWhiteSpace(usage.entryId)
+                        || usage.entryId.Length > 256 || usage.npcClassIds == null
+                        || usage.npcClassIds.Any(value => value <= 0)
+                        || usage.npcClassIds.Distinct().Count() != usage.npcClassIds.Count
+                        || !keys.Add(usage.playType + ":" + usage.entryId)) return false;
+                keys.Clear();
                 foreach (OfflineNpcAssistCount count in data.counts)
                     if (count == null || count.playType <= 0 || count.npcClassId <= 0 || count.count < 0
                         || count.refreshTimeUnixSeconds < 0
@@ -348,6 +401,7 @@ namespace Zjcs.Offline.World
         {
             if (data.selections == null) data.selections = new List<OfflineNpcAssistSelection>();
             if (data.counts == null) data.counts = new List<OfflineNpcAssistCount>();
+            if (data.completedUsages == null) data.completedUsages = new List<OfflineNpcAssistSelection>();
             foreach (OfflineNpcAssistSelection selection in data.selections)
             {
                 if (selection.npcClassIds == null) selection.npcClassIds = new List<int>();

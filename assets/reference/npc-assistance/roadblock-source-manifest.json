@@ -1,0 +1,1518 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "resourceVersion": "202610291150884",
+  "bundle": {
+    "name": "defaultpackage_assets_prefabs_ui_roadblock.bundle",
+    "md5": "3ef54ddace54f23957a86297bf2bb012",
+    "sha256": "76c0577920b734bfada1a0993d72885dd77886209e697cae8440e070c09b572c",
+    "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3ef54ddace54f23957a86297bf2bb012.bundle"
+  },
+  "apk": {
+    "path": ".tools/source-packages/zjcs_M509085.apk",
+    "sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+    "manifest": "881_156673"
+  },
+  "operation": "Verify original 884 APK/CDN object identities and the completed raw AssetRipper export. Record separately the Windows prefab restored through the shared native UI converter; never overwrite that binding with raw Android YAML.",
+  "inputs": [
+    {
+      "path": "official-source.json",
+      "sha256": "a29067dd1363590c8fde67a7d5326fcb5a4632441e8c73ae8b64300aa491a3a6",
+      "bytes": 2673
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json",
+      "sha256": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c",
+      "bytes": 114378086
+    },
+    {
+      "path": "assets/reference/official-map/map14-entity-catalog-source-manifest.json",
+      "sha256": "f2c240c00a4176b9465962b361a3c7c26c0ef6e4166b758499b5ac50d8dde93b",
+      "bytes": 1809
+    },
+    {
+      "path": "assets/reference/official-map/map14-source-manifest.json",
+      "sha256": "04a160772dd26a9d367858ab8e9eac6a82f1886d02248d27a0d403804d5c8a2e",
+      "bytes": 1110205
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/map14.json",
+      "sha256": "7acb3d00fbfa754569138253b08c86d0a43f8c1f9667c8bb1e1511ac46ed1897",
+      "bytes": 12567550
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/entities.json",
+      "sha256": "68ca0a9513a2036b725cb7bf585d3b95211b4fb34d34ff8372966303afa25e8b",
+      "bytes": 3205740
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/catalog.json",
+      "sha256": "017f6306a5b3a541e51503861f25eb82fc01a0ba2edfee4c821a18d59ecd2ca6",
+      "bytes": 31431
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/14/catalog.json",
+      "sha256": "4defb849e52b12261da9abe926228c25d4b784c5d6c41d8e30589ff7c4cdb03b",
+      "bytes": 37691
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedWorldDataCurrent/Resources/MainlineSharedWorld/Payload/MapInfoWrap/mapinfowrap_14.g.bytes",
+      "sha256": "f42e9f4d9a6d8f130241bcfb155469fbfb52dec567e2cfc0cae316f3dfab780e",
+      "bytes": 97706
+    },
+    {
+      "path": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/placement-expected.json",
+      "sha256": "8a6c51c9142059ca8f8057b8b0bf475e1b80f06ef75cb699f0c43dd8fbf0201d",
+      "bytes": 44685
+    },
+    {
+      "path": "assets/reference/official-map/mainline-shared-world-data-source-manifest.json",
+      "sha256": "fae2cf0545035403da426ae48e8a36c6aaceb8df3c717be8c8fd04198d24c995",
+      "bytes": 323516
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/tables.json",
+      "sha256": "8d9e905e55967a46ebf59484ac8faf0356515e1c214faaeebcbc303fc03de333",
+      "bytes": 53962431
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/RoadblockPropStageTouchUI.cs",
+      "sha256": "67f61982ba3aece1cd3d5208f41c6c79b36574687e8a5777afb532fd30f7f9ac",
+      "bytes": 1733
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/RoadblockTeamPropStageTouchUI.cs",
+      "sha256": "80140a326d78e944608d0ae24836f27d3bb667ca4c25cb5e8dad13732c4fce5c",
+      "bytes": 5776
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/RoadblockTeamPropStageTouchUIItem.cs",
+      "sha256": "90320a6f1409262868b1da7ab72ca1a5223b41dd884c744d78d370c6f89b5d27",
+      "bytes": 3569
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ConditionItem.cs",
+      "sha256": "795b87e00934adc325aa86974bf92f50b713c63aa2fa6364358a4cfa22996902",
+      "bytes": 415
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/EcStageResultOverrideBodyGroundTypeView.cs",
+      "sha256": "7a7defbdffd45d864dc66fe9393fdbb6f0c1d440efdbc7a14c7f47aeab7f69c5",
+      "bytes": 73
+    },
+    {
+      "path": "unity/Assets/Official/Combat/rules-source-manifest.json",
+      "sha256": "fbe2d8b778cc089d851f9eef60efa6e12842b42732627c14e20e167b746942a2",
+      "bytes": 1799
+    },
+    {
+      "path": "assets/reference/npc-assistance/team-ui-source-manifest.json",
+      "sha256": "8ff25560547ee92cad3bb5bbd3cef31c7004410bc60fca124b57113fb5ce2d56",
+      "bytes": 40527
+    },
+    {
+      "path": "assets/reference/battle-hud/assist-selection-source-manifest.json",
+      "sha256": "8bffbec184fa0acbf458df9bdddeb14001f1d0d110b539bcbf60bc3c6badb5c5",
+      "bytes": 49479
+    },
+    {
+      "path": "assets/reference/npc-assistance/roadblock-ui-source-manifest.json",
+      "sha256": "6db28b1ab4e883b785244ce3241e9bd7f64f6db6af6e90227144f98ade87d20d",
+      "bytes": 16417
+    },
+    {
+      "path": "assets/reference/npc-assistance/roadblock-native-source-manifest.json",
+      "sha256": "2cd498c2617d56acbd5d08ea1b6d3d7b2594eca4c94cb5b211d67e7a785d1692",
+      "bytes": 103962
+    },
+    {
+      "path": "assets/reference/npc-assistance/roadblock-supplements-source-manifest.json",
+      "sha256": "887e6745a1e98b53e497224dbb75906d860a2ccd228a285fa1e8f9cb453b5de1",
+      "bytes": 25687
+    }
+  ],
+  "prefabObjects": [
+    {
+      "name": "RoadblockTeamPropStageDialog",
+      "path_id": "3188668159187020033",
+      "object_sha256": "661fad638f6c6e3c2ae490df8910a0c8e0e4d852350904783f6fd1439592d87d",
+      "provenance": {
+        "bundle": "defaultpackage_assets_prefabs_ui_roadblock.bundle",
+        "bundle_hash": "3ef54ddace54f23957a86297bf2bb012",
+        "path_id": "3188668159187020033",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3ef54ddace54f23957a86297bf2bb012.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 245326,
+        "bundle_sha256": "76c0577920b734bfada1a0993d72885dd77886209e697cae8440e070c09b572c"
+      }
+    },
+    {
+      "name": "RoadblockTeamPropStageDialogItem",
+      "path_id": "-8879869485790403775",
+      "object_sha256": "442841e94083c18711aae5e872ee0a4771a1da2085ae79f9e198166cc4158040",
+      "provenance": {
+        "bundle": "defaultpackage_assets_prefabs_ui_roadblock.bundle",
+        "bundle_hash": "3ef54ddace54f23957a86297bf2bb012",
+        "path_id": "-8879869485790403775",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3ef54ddace54f23957a86297bf2bb012.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 245326,
+        "bundle_sha256": "76c0577920b734bfada1a0993d72885dd77886209e697cae8440e070c09b572c"
+      }
+    }
+  ],
+  "nativeExport": {
+    "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json",
+    "sha256": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c",
+    "converter": null,
+    "directory": "native-export-all"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/RoadblockTeamPropStageDialog.prefab",
+      "sha256": "225c68b7c76e30c6ba017c3aef2c83c35faa8353c42fc9797b459ce9e469eaee",
+      "bytes": 645854
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/RoadblockTeamPropStageDialog.prefab.meta",
+      "sha256": "36545b8acf1283cf68a17b37f024000e45e97f0f3b656994366e1eb3d8b49508",
+      "bytes": 333
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/RoadblockTeamPropStageDialogItem.prefab",
+      "sha256": "7040a66fa79a5c7168f711f189c37600283920a8177a5a737d16883dd9888687",
+      "bytes": 55784
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/RoadblockTeamPropStageDialogItem.prefab.meta",
+      "sha256": "37cd62a8f692fae60614084d53ac7d242d1756669872226f8c35cf3d48e049fa",
+      "bytes": 333
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/roadblock-display-catalog.asset",
+      "sha256": "8b03cbb797e68361a30e7bd6a7dc878ee5af11b976c135d610ee8cce38edfc7f",
+      "bytes": 5616
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/roadblock-display-catalog.asset.meta",
+      "sha256": "f1a4822a001e687bb9cbf06212b7b2796f47d0c7e83ab4a02e8135d48ff3fba4",
+      "bytes": 189
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/8625_14_DialogIcon.prefab",
+      "sha256": "0936450340c82e6669ae75daf6d79223a2df80d5fd5a4566c8f3368a43426308",
+      "bytes": 6618
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/8625_14_DialogIcon.prefab.meta",
+      "sha256": "a2f0b1ef132be52da12b02a85c9a8e575def2ffd1f115a6a85ba77d5d8a367b0",
+      "bytes": 154
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/8626_14_DialogIcon.prefab",
+      "sha256": "3cb495f12cffc946bfc2ced349e4eea2f70316ed786f86461f78528970c99f94",
+      "bytes": 6609
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/8626_14_DialogIcon.prefab.meta",
+      "sha256": "74115f2dfe7750870689f1d564a82d4140e9821d627bfce14d5a1f3039aa75a5",
+      "bytes": 154
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/8633_14_DialogIcon.prefab",
+      "sha256": "2603f643e94daa25785d3d3fac358f4341be8b187cb75aa2711bfd7332c55891",
+      "bytes": 6620
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/8633_14_DialogIcon.prefab.meta",
+      "sha256": "1bcd47b2c24aae818c291562dfc06208dc4610098e3ba3d09c3b46692aed3874",
+      "bytes": 154
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/8634_14_DialogIcon.prefab",
+      "sha256": "514f05780087de5691c90bca9269f005493191bc4fa3d4189dd1bffed4d37878",
+      "bytes": 6617
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/8634_14_DialogIcon.prefab.meta",
+      "sha256": "92b52eab85cb81eb525ac0f671012aa9525bc0e880258f3872f03d41a22afe1e",
+      "bytes": 154
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/8637_14_DialogIcon.prefab",
+      "sha256": "642beafb4f3af34bee11f81d2134df62c0b0b895b111764984add905683128a1",
+      "bytes": 6633
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/8637_14_DialogIcon.prefab.meta",
+      "sha256": "b7a1c0e8fc010434b45868a78e66eeee059202108fb7fd23ef42b23fc52ec35c",
+      "bytes": 154
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/roadblock-texts.json",
+      "sha256": "9952a331a1cb0078d2ec67cba1bb724d9c80cbda889b8619189989d409678d7f",
+      "bytes": 14954
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/roadblock-texts.json.meta",
+      "sha256": "b922793d5d486ccc88ca854377f8ef15adcc00b5d0acd344ee2abad99fab130f",
+      "bytes": 158
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/roadblock-tip-graph.json",
+      "sha256": "760b24054f629a5c36968cac0abc5db3993a333ccacc7d8fa1e243aa840e1ef8",
+      "bytes": 547
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/roadblock-tip-graph.json.meta",
+      "sha256": "144cef58ec246688a5837b3d56a362d9e15dfca713d75adb49c072cae21fabfe",
+      "bytes": 99
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/RoadblockAnimations/UIDialog_Hide.anim",
+      "sha256": "b33632f2a57479faaa25304b8665de570e204dfc5d4bba573bcfbf72df6f41d8",
+      "bytes": 5295
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/RoadblockAnimations/UIDialog_Hide.anim.meta",
+      "sha256": "3c18e4874dd6b1c43b984c85f9798368bdb8385382b107f66dd2b9a005747bab",
+      "bytes": 188
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/RoadblockAnimations/UIDialog_Show.anim",
+      "sha256": "45193a2a93ce79c89989b8a3fdde951f06fa408eb5f48859890c54c059614fcb",
+      "bytes": 6290
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/RoadblockAnimations/UIDialog_Show.anim.meta",
+      "sha256": "70011a8cde1dbd7ec994b13f714eec0969fc91d09f86a33caa02e365d554119a",
+      "bytes": 188
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/RoadblockAnimations.meta",
+      "sha256": "ed978569fe887bc9d39f784604fa1c38d68e3e67dfd25f4a7ebc16203c0ecf0b",
+      "bytes": 172
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/RuleDialog.prefab",
+      "sha256": "0d3c2066f4fa3e673cf0f58a3c4a766b2067152b9715604bcbf17ad8a5713b95",
+      "bytes": 25895
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/RuleDialog.prefab.meta",
+      "sha256": "df7646acc00bad721d9f40ad80e05fda3b60103081bde6a99055eb358c630d91",
+      "bytes": 154
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/TipInfo1.prefab",
+      "sha256": "fa3f1ceefc9b6dfa9412d393205ae7ce60c8ab3134174b3eff787dd5a968f08b",
+      "bytes": 9503
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/TipInfo1.prefab.meta",
+      "sha256": "c1ec52481875efa0f68e8e05dfc84424e919ee174e092762bc279197312249f4",
+      "bytes": 154
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/element-door-graph.json",
+      "sha256": "d9149d8ea76521f68416bdff2e7b8fd42f6e919711ebfc6f2ce3e6900a652bfd",
+      "bytes": 14346
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/element-door-graph.json.meta",
+      "sha256": "b9d00f4c3e732d659be5253c9f0acc620721b3eafb779479de719ea6665c6476",
+      "bytes": 99
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Main_Cursor_Fail.wav",
+      "sha256": "36291f63203645a0629d2139fa236d3458005fd21a67e49a996bb0a19c8032bd",
+      "bytes": 76844
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Main_Cursor_Fail.wav.meta",
+      "sha256": "c4b65880a76887bac145337560f449755ae3b478f9207e63430b928587ae029c",
+      "bytes": 503
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Map_Entity_Activate_ElementDoor.wav",
+      "sha256": "710b20ed556266797e3bc98a3f6231151235e7c499f011236fcbdfdcc85c22f3",
+      "bytes": 247004
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Map_Entity_Activate_ElementDoor.wav.meta",
+      "sha256": "94482e3e267a727c3370bc4855c444dc6f69c2ba465e20fbe9141e463fdeecec",
+      "bytes": 503
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/roadblock-ui.json",
+      "sha256": "d7402e63a2e1b5358b6e2aed6eb6caf878da1f801c1482995a204040cffd54e3",
+      "bytes": 1859923
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/roadblock-ui.json.meta",
+      "sha256": "2f47095ce156ddf5a253c4fad3bb40a56c846fe273bc51bde2e24938de0ccdfd",
+      "bytes": 99
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/350-97c46f6b11.png",
+      "sha256": "97c46f6b11b3e58c326eab583f0252316a1876815687d50e2ef51f372f89c50d",
+      "bytes": 4706
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/350-97c46f6b11.png.meta",
+      "sha256": "e7922369230916ba596a65614c1019adb98f0c2918cc61f0faa1af24117dfd8c",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/BtnExclamation-d4394fc937.png",
+      "sha256": "d4394fc93798db8d2d7f25d847932cdc88a21572a7b9a57a58ce6331f49242c3",
+      "bytes": 3234
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/BtnExclamation-d4394fc937.png.meta",
+      "sha256": "1f9006c4a0ccf8fa818b2ab59d59472921a30c499f11b1c13596021d9f725f38",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/BtnExit-f75cf6f2c1.png",
+      "sha256": "f75cf6f2c11ccd8263dd484bb7c7ceff4b43d12f0b4638b7688b660fb7980c11",
+      "bytes": 1173
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/BtnExit-f75cf6f2c1.png.meta",
+      "sha256": "1bbff2e5769a430c3ef22ef923ce5abbf016d9563db2f368b5dde9b3a92266d8",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/BtnLook-a5d744a5fa.png",
+      "sha256": "a5d744a5fa0e641d85000826c7dac7fe8abb826c0518394bda61ee45a481e34c",
+      "bytes": 1381
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/BtnLook-a5d744a5fa.png.meta",
+      "sha256": "6b82cb9ce4c757a3ea68f05f23a720c29efa113799ae73cd02c404b21f810de2",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/BtnOk-27952bd12b.png",
+      "sha256": "27952bd12b6b60e0cfcc870ea8e3278f0aa47cd48c7048a1a7868b745648d599",
+      "bytes": 15689
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/BtnOk-27952bd12b.png.meta",
+      "sha256": "f0824cbde77d543c6a8915f887a6c0316d86c570156bb440d66dad6382298686",
+      "bytes": 2741
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgate_dark-26f9d867e4.png",
+      "sha256": "26f9d867e4785485d571bff36743dc036879a1b912004fd6fd0b989d64c1c4d1",
+      "bytes": 3618
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgate_dark-26f9d867e4.png.meta",
+      "sha256": "e086faa4595c28d571c0444314510c3bbea41229539450840213ce1291d8895c",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgate_fire-41aafa9a01.png",
+      "sha256": "41aafa9a0111615d7c8c4d86ea48de8083dc5ece2d55453ca64693854b25ef0a",
+      "bytes": 3905
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgate_fire-41aafa9a01.png.meta",
+      "sha256": "85d3d6d8f731747d26245862ac2872a08c97009a8f0028434f6e891080147f1d",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgate_light-641fabf1eb.png",
+      "sha256": "641fabf1eb27d22e9fe9131ba882157c6ea4cb47aad8336d38c604234fac28f3",
+      "bytes": 4410
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgate_light-641fabf1eb.png.meta",
+      "sha256": "8f56ee978c648f05d7ea63e29fa27f34e89578fed3dbf5323aa671ad0a3ebc30",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgate_water-9ee110f352.png",
+      "sha256": "9ee110f352ad132729b17bb54fea6d0a6120e5490fb1bdd59de7e6c15feb8c9a",
+      "bytes": 3349
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgate_water-9ee110f352.png.meta",
+      "sha256": "f75f235ac3c1008b267d5de8c3acc62339eb81a71a03c559e0c02975bada5cf7",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgate_wind-bc5c61f0cb.png",
+      "sha256": "bc5c61f0cb65be8157e7a5dfac86ec312657500980ae00bfa27c71ae50f117ac",
+      "bytes": 4371
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgate_wind-bc5c61f0cb.png.meta",
+      "sha256": "db441924caf1c7559e75cf3342da34dd35db8ffb75d9de5792f432fc9bffec16",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgatedragon_dark-f5376f7eef.png",
+      "sha256": "f5376f7eeff67ecab96f32802fe4f1644b10921fadf3d7957a011e195f06efe5",
+      "bytes": 41121
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgatedragon_dark-f5376f7eef.png.meta",
+      "sha256": "6256e24d4d73aed1c6d46d01196b2ebcb81552e3f62ea7a5d5ed492b02cedd42",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgatedragon_fire-6f016d6f1f.png",
+      "sha256": "6f016d6f1fe2443d2271358b77a7580a66e916c167920827846754bdaefdffa1",
+      "bytes": 40841
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgatedragon_fire-6f016d6f1f.png.meta",
+      "sha256": "47d8c4dd350b1a0b506d4c635ed48d74fc74aec06077c60837198b2addc70ede",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgatedragon_light-c5e848d123.png",
+      "sha256": "c5e848d1235404b843e655eac4e9d0363e7edba8cec34d6f2684ca28fe665adc",
+      "bytes": 41125
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgatedragon_light-c5e848d123.png.meta",
+      "sha256": "8ac909eabae73e7eacf240a6e67a874e2ee336035a15e77b8e045395c5bc6fa9",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgatedragon_water-eff04c0fbf.png",
+      "sha256": "eff04c0fbfce611519296431f30e8e4a7f4eb9623ed75cd138b28035d344e00d",
+      "bytes": 40962
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgatedragon_water-eff04c0fbf.png.meta",
+      "sha256": "0343edf93efd88874f6d5c8ccfaf15a1e12371032b19672f68d276c8c4568600",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgatedragon_wind-cefa0d6627.png",
+      "sha256": "cefa0d662736628b92192a8a8e71136b97d03b4927558b63ceb842efd25089ab",
+      "bytes": 40945
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/building_elementgatedragon_wind-cefa0d6627.png.meta",
+      "sha256": "a081c88184b366eb023185280f97631a46f9bc1b39397c91a6420636adc17632",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/C_none-d73d644cfd.png",
+      "sha256": "d73d644cfd6ed4f7f4f28801217e9712825adf277bf39eb37543dc5d932423b4",
+      "bytes": 103
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/C_none-d73d644cfd.png.meta",
+      "sha256": "29e1da0b9520cb996c8665f8dd6733fa79c7f722cdca27598d037e5faca7351a",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBg_CountText-31498f0e88.png",
+      "sha256": "31498f0e8895dce861cf88210bb81c26ac96ed09df5556edc6614418fc574f71",
+      "bytes": 629
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBg_CountText-31498f0e88.png.meta",
+      "sha256": "08f48c9c502649521432404769748c7a9597b09f4b140a98aee53093913f0701",
+      "bytes": 2741
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBg_List-d73b106df0.png",
+      "sha256": "d73b106df0a68000d94bbfe5ee13dd658202b42957ea9f74087f153b3089a785",
+      "bytes": 873
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBg_List-d73b106df0.png.meta",
+      "sha256": "175f463cfc2dcdff7812ebe2fdcca1b6e8591cabfec05fa36333995535f26f7c",
+      "bytes": 2741
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBg_PopUps-20ee64ac9f.png",
+      "sha256": "20ee64ac9f8b6824c26ca389c68ecd05b2862d66305dc2bfb6fcec4b6b113920",
+      "bytes": 12783
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBg_PopUps-20ee64ac9f.png.meta",
+      "sha256": "2305639dca1c3a702ed08c5886da7fa1e8cfb84f96fa7b1b9d517693bd5cece4",
+      "bytes": 2744
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBg_PopUpsTitle-4b683e8fe6.png",
+      "sha256": "4b683e8fe6816c3ff7f4e127beb8e577cfb5e9331626e5b31fa81595a3064599",
+      "bytes": 9877
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBg_PopUpsTitle-4b683e8fe6.png.meta",
+      "sha256": "5e869735445d55a41fcd1fd0fa152714a1d14e7401d98cda2b38e170a8ee686d",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBg_PopUpsWenLi-68058e4df2.png",
+      "sha256": "68058e4df2fc9aa171d0e654156dedd97995be2187490d9e0a0c798b4d3a5339",
+      "bytes": 8227
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBg_PopUpsWenLi-68058e4df2.png.meta",
+      "sha256": "ebb67b039d1aa9e25ec33c8cb0c34cdb8303fc14755b9654605c7358f0e24f5b",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBg_Star1-1fd7ac09a7.png",
+      "sha256": "1fd7ac09a78e11832955e73babbefb6f707ce9d4580fe606444d5d99c16c683f",
+      "bytes": 495
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBg_Star1-1fd7ac09a7.png.meta",
+      "sha256": "e3c7cfcaf78a861369f97e2acf254d65e60326feef9b7ae60348d536e244b129",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBg_TipInfo-e26851fa21.png",
+      "sha256": "e26851fa21de312e3d6176d0ba3495ed23282d5c988a679826ea08573334d55f",
+      "bytes": 4372
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBg_TipInfo-e26851fa21.png.meta",
+      "sha256": "087b589c9923d03b8f0cb63278c385819120a705ce748f7f713e4d03a4dcd6f3",
+      "bytes": 2744
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBgCondition_WenLi-072d0454e3.png",
+      "sha256": "072d0454e362567914801c08c8fc0be7ab270eb36ebb8f66b8a9f64be6f0fc1b",
+      "bytes": 604
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBgCondition_WenLi-072d0454e3.png.meta",
+      "sha256": "a1033ebcd2b744b05b180fa0d1265572d9ca77f7b8d5c2827ca046cd7a08fd51",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBgHead_Bg-1559fa4fa0.png",
+      "sha256": "1559fa4fa0fb2ed456b303c9c33861e65da07fced934366edf4a00d5a5f06abb",
+      "bytes": 2151
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBgHead_Bg-1559fa4fa0.png.meta",
+      "sha256": "cba1dac36043daab5e016600131c5054e0d7c9d8f31bce2853f5f432d077042e",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBlue-852756b231.png",
+      "sha256": "852756b23165ca4c2a377acee93125060d2948f3157b9b29094debbd5aa8d913",
+      "bytes": 1580
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBlue-852756b231.png.meta",
+      "sha256": "89ddf7b36f263db9375e66d507970c10ce121067d6abfcc4c975c7ea832cdbd9",
+      "bytes": 2739
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBlue_Upgrade-f77095c4c9.png",
+      "sha256": "f77095c4c9da7a0b4544f2117b6e048084f17d724229e0992de796fe7add22f1",
+      "bytes": 1790
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBlue_Upgrade-f77095c4c9.png.meta",
+      "sha256": "3e1508bdd8ba08e7c604384fb4a413888a6d06d2ab228a2881c86cbdc391c7d5",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBlueDot-d245e09217.png",
+      "sha256": "d245e092178e3753282c32c895dc1f8c050c9013f4dbfb50c59be696074a3261",
+      "bytes": 2066
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgBlueDot-d245e09217.png.meta",
+      "sha256": "09c6250febce4928ff20e30f967f0f18ebd5227f89e09b4e111b449f0017bd90",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgItemEmpty-7b3c0f610e.png",
+      "sha256": "7b3c0f610eff0813145ac3d180f5adca4afc5596ded8fa4fbdb5743b81d6ae76",
+      "bytes": 13865
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgItemEmpty-7b3c0f610e.png.meta",
+      "sha256": "ce8199bca4d532f6fa9542d5df7af77d3f787e8f93c3456ad641cfdeb0b3bef3",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgLeader-d3e432d3b3.png",
+      "sha256": "d3e432d3b34cb68f1ac5a5a9cb64b7d713fdbdb8f8f12e6612125c252ca91cb5",
+      "bytes": 2826
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgLeader-d3e432d3b3.png.meta",
+      "sha256": "ea98475f03520a8a949f47dfa629b682a095c3110ba6f8fb41fb680e2ea57d1a",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgMask-4b8fcf1e08.png",
+      "sha256": "4b8fcf1e081b5f29b8e698c0dd9d297a11e0ac8a992e25d43d0d175ef805dfea",
+      "bytes": 2524
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgMask-4b8fcf1e08.png.meta",
+      "sha256": "5d5dd3c6c51a3ed51cae90b626a4edc159aa701ca8cf03aa71c570c8693254eb",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgMask_BgCondition-cf5272a4dd.png",
+      "sha256": "cf5272a4dd8303428ca3ab64c262586220989770feefcae8f73ef32e9295fee6",
+      "bytes": 1106
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgMask_BgCondition-cf5272a4dd.png.meta",
+      "sha256": "518ff22fca12f92db60803de6b8c3351750d8437bdab09c792be64b5dd146257",
+      "bytes": 2741
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgMask_BgDialog3-89be95b6ea.png",
+      "sha256": "89be95b6ea6e00fa690a1ec710527e0420493ddd8a2d343e683f7c969385d8a8",
+      "bytes": 1157
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgMask_BgDialog3-89be95b6ea.png.meta",
+      "sha256": "7e69a2a58431a9b160c70e3b41a3c80eba746018e99589bc22ecbd8ea996780a",
+      "bytes": 2741
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgNew-f37ed67204.png",
+      "sha256": "f37ed6720455fd649b8458d715dccfc2771655cdf4b8cb8d2f5598e5056a1021",
+      "bytes": 5136
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgNew-f37ed67204.png.meta",
+      "sha256": "1925a2f1a819e8eef2b58a70d283fe8b0e458ca3e13b5ac83a46259da54613c2",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgNpcPanelNpcItem_Pinned-9c5bffe391.png",
+      "sha256": "9c5bffe3917dec5714950f8083c1e71e3e1abc6f1bcd7760330a6040c3e3d51a",
+      "bytes": 3362
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgNpcPanelNpcItem_Pinned-9c5bffe391.png.meta",
+      "sha256": "2501e6cc57979a98f1d72a6bcaec0442f82b08e6765a3c275b0d779cfcbf2d73",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgRedDot-02ebb92c90.png",
+      "sha256": "02ebb92c906b1b9fe1166b9882dbdd92e545769b61dfc7462f2b410965c8a81c",
+      "bytes": 1977
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgRedDot-02ebb92c90.png.meta",
+      "sha256": "6532ad6accd119aafac2ef3733d3503ae5f5b475db8da9b655b83f6ed5501233",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgTop_Zs2-84ab8f64d4.png",
+      "sha256": "84ab8f64d42dd38b61a0135e148b9b55700cd0cd2c1c2a4a18644e351e3f7bca",
+      "bytes": 362
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgTop_Zs2-84ab8f64d4.png.meta",
+      "sha256": "3718a4f347f25d9a7be476dc3c6475088ec881e573ffb5df5d9a8ac4c343bf41",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgTouxiang_1-fbef961552.png",
+      "sha256": "fbef9615526035f3668764c0fe1e4dab01b11b0ea436459c32840cb77c0a0aea",
+      "bytes": 5198
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgTouxiang_1-fbef961552.png.meta",
+      "sha256": "22ac6dd004d7ec19b06fd04c288bc261521ec9bb4d8f3f6c74caed315e02f3ca",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgTxt_Bg-4a09b60bb6.png",
+      "sha256": "4a09b60bb6db1de9b7190701bfdd353498296be70224801a10df7b4794980cb5",
+      "bytes": 2982
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/ImgTxt_Bg-4a09b60bb6.png.meta",
+      "sha256": "a3a41a1f214fb44e78e03a5ac333981b4ab4b37c0f3c6ecdf94f217cb24984b7",
+      "bytes": 2739
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/map_11_stage_bg-738424c381.png",
+      "sha256": "738424c381ad29c59a4af8e01bcb045ab9dc3682fb35fc425bb64a7834d5e91a",
+      "bytes": 231228
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/map_11_stage_bg-738424c381.png.meta",
+      "sha256": "947eab7248b0510e263870b7b80818f1f30cee372b811ff3cbf61845abc776e0",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/map_14_bamboo_stage_bg-61398ac177.png",
+      "sha256": "61398ac1773ab470b7095e79cebb26f33c46f1b724160384429ce7a6c04d7829",
+      "bytes": 243141
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/map_14_bamboo_stage_bg-61398ac177.png.meta",
+      "sha256": "6c7ecda5ca340134bc3cd67498115ae4a217b4528b60c654a436a88f553939cc",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/map_14_bronze_stage_bg-03c2a352c9.png",
+      "sha256": "03c2a352c9eed2428ee231955823d5e24029765a3bca00033b7fe1c9abd553b3",
+      "bytes": 242840
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/map_14_bronze_stage_bg-03c2a352c9.png.meta",
+      "sha256": "efa86dabaa9370f0566f952db865e25c630ff54444d8719eaef7fdfa12effc70",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/map_14_rotten_stage_bg-8bd5b79dcd.png",
+      "sha256": "8bd5b79dcd3a38d7dccd79672d825a376a4d86d4a90c33244691875411773b23",
+      "bytes": 231625
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/map_14_rotten_stage_bg-8bd5b79dcd.png.meta",
+      "sha256": "98f06444dab591dcff517ff5bac8f21a69f7e3b90dc26c8ffd4b04d4a0f755a4",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/map_14_snow_stage_bg-baf9aa7071.png",
+      "sha256": "baf9aa70713715ff4eee693588e7578b35126ace2d47ff77a18f0412ed7c34bf",
+      "bytes": 205837
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/map_14_snow_stage_bg-baf9aa7071.png.meta",
+      "sha256": "c379e8474481a9b156c560aed7a73da66d0702a0582fbef16e45255cef9bbbba",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/map_14_stage_bg-6c4c105d82.png",
+      "sha256": "6c4c105d82adab39082ca4944fb09c5b9739834e3f9d34b836c4677170370e4a",
+      "bytes": 237502
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/map_14_stage_bg-6c4c105d82.png.meta",
+      "sha256": "a5f69d6ac923a945f030d087e259eb8b336b1dcee15ba41c2d2265cc21c1cd47",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/Money_57_Tili-2fea42ade2.png",
+      "sha256": "2fea42ade269b656b5222a7dcb99a6e3d37c89b5320a698019233d39eba1dcfb",
+      "bytes": 22949
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/Money_57_Tili-2fea42ade2.png.meta",
+      "sha256": "32f35c8d22b634d1ed6cbc85afe1cc29cc4aa45a80c2b33fbd1d8dfa9f362814",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/npc_icon_8441-77268c3e23.png",
+      "sha256": "77268c3e23a243ed75c3f5e30c498c31e662a21efab7588220ab3e8f1d1e0450",
+      "bytes": 25882
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/npc_icon_8441-77268c3e23.png.meta",
+      "sha256": "70d654e389e1e8d3c422802deeba509742a9c081f026c6b57a10e4d7875d5284",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/Temporary1-7cbc40c36f.png",
+      "sha256": "7cbc40c36f42bd9fa46912547731781b3c93afbacc0541059906105b8cbccbb1",
+      "bytes": 79565
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites/Temporary1-7cbc40c36f.png.meta",
+      "sha256": "22de34a4675c13c35c53ce06fe58c59625f91fe142f7e0e3023faa5eb974ce54",
+      "bytes": 2737
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Sprites.meta",
+      "sha256": "fa0b00b6bdde60bdcd806c9a92326f82e991a10689bec223044b7211f0d6654f",
+      "bytes": 169
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock.meta",
+      "sha256": "0da45baf0df2b7415100fe80f6d6ab8c455603d8b067255d1d802a7cc49bfeba",
+      "bytes": 169
+    }
+  ],
+  "integration": [
+    {
+      "path": "scripts/prepare_map14_roadblock_resources.py",
+      "sha256": "f759d0711439b5c1fb7a86701dec08a1784ab76c13778a5a233b782e87899810",
+      "bytes": 23064,
+      "normalization": "LF"
+    },
+    {
+      "path": "scripts/prepare_map14_roadblock_ui.py",
+      "sha256": "27c0f8543f183b6c886abe33e80a22fe13d0aee5ebe05162bc37456b469a3c28",
+      "bytes": 15155,
+      "normalization": "LF"
+    },
+    {
+      "path": "scripts/prepare_map14_roadblock_native.py",
+      "sha256": "c4d95e4e0919e9ecdc25344e35a9762ba9e911c91a4e85bd7c45a31e70d03a14",
+      "bytes": 1640,
+      "normalization": "LF"
+    },
+    {
+      "path": "scripts/prepare_map14_roadblock_native_inputs.py",
+      "sha256": "0de2846ac86702eab28e03c330e656fd3964cab9d960e5277dd058c95ee0789c",
+      "bytes": 7598,
+      "normalization": "LF"
+    },
+    {
+      "path": "scripts/prepare_map14_roadblock_supplements.py",
+      "sha256": "47591d314a8e8171c37c458b9e5420e0caf795b27f4cd1a38e333314af80d1dd",
+      "bytes": 6412,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.Roadblocks.cs",
+      "sha256": "ebdeab8e18ae5f63b94432432340b6dc8f6b0bea831082ec9bc443ae1d40ffdd",
+      "bytes": 17863,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldConditionItem.cs",
+      "sha256": "e3c92d2c0a9f0cdedbe20911cb10569f7fb47f2c33f1f20dcc3904c56b97c884",
+      "bytes": 647,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/EcStageResultOverrideBodyGroundTypeView.cs",
+      "sha256": "f008553570768d6cfeedcf9654de31b697a9437c1feda50a65d6d033c53844f8",
+      "bytes": 262,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMap14RoadblockRules.cs",
+      "sha256": "e23e96528d54cdb05302d5e6707bba9e7f543207d1750b7cca0299dbdb058226",
+      "bytes": 2115,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMap14RoadblockDialogView.cs",
+      "sha256": "5e1f31fa15134262d1606c08934d437dcc3179483293f66a76a07646fb766e04",
+      "bytes": 16404,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Roadblocks.cs",
+      "sha256": "394fd79e38039176110c62ad1a616be1c01b2ef929cb24bee1a1eee95f324a46",
+      "bytes": 28366,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.RoadblockDisplays.cs",
+      "sha256": "fa1577ec389f19be3eddb6767c39fa9428dbf7decde5336ec8311f6364617f04",
+      "bytes": 13473,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialRoadblockDisplayCatalog.cs",
+      "sha256": "7bcbe0f67c14a4974cb8706f5fbeb6845f4327f8ff42ba888e2ab6d561bb6b34",
+      "bytes": 641,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/RoadblockTipGraphRuntime.cs",
+      "sha256": "8414aa05e3c271e1d7514cd284ba721dc2603f2cf8803aa3d018e7dd0db0b9c5",
+      "bytes": 3270,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Interactions.cs",
+      "sha256": "ad3cb16a61b63b6e492d57934e3558536be204e99d4ae88c71c675350b32ce82",
+      "bytes": 16436,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.SharedWorld.cs",
+      "sha256": "aca6547be9e10405fa0f176a05fc3cea556115245b2dc7eb102e00e69f4bb951",
+      "bytes": 5389,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Persistence.cs",
+      "sha256": "839ca3c4df4ee959405ab9b662aa94dd6e474daeffd4ca6056a482e3133ab506",
+      "bytes": 2576,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/MainlineMapEntityPresentation.cs",
+      "sha256": "6ec6cb8d1d8dc1cdb94e3ae699d26abfa6085e1c3b164ed3e8d968f188a41e52",
+      "bytes": 4519,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/OfflineNpcAssistanceProgress.cs",
+      "sha256": "2a8c8550c91594233acb942e855a97c4280650c69cd5f27089556795619ab365",
+      "bytes": 21935,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAssistSelectionView.cs",
+      "sha256": "e67617ce80efcb5e7b593dd6e5359f4b10f0978f1b4207d0684390a2659e48bd",
+      "bytes": 17889,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/PropInfo.cs",
+      "sha256": "901471dc2f06c77ce8cc0c11127ef7212b113ffacc2d9f2dbfbc243180e5407d",
+      "bytes": 1453,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInvitePlayerInfoView.cs",
+      "sha256": "1a41d8d1ec55e69154f00a8a8b5a82fbd55ef2e32d632ccd2eb05f8a79560975",
+      "bytes": 1913,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInviteRobotComparer.cs",
+      "sha256": "65d8a033b95b8c5d105d4378337db3fc37c38fbba7285a07a6dcc19fdca94da7",
+      "bytes": 4701,
+      "normalization": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInviteComparer.cs",
+      "sha256": "ffb5fb6896b7bd6c6df604fc75acb4faef556084ddf19c4be1664454822672eb",
+      "bytes": 4933,
+      "normalization": "LF"
+    }
+  ],
+  "sourceCompatibility": {
+    "legacyManifest": "871_156598",
+    "currentManifest": "884_156692",
+    "sharedSerializedTableCount": 34,
+    "sharedSerializedTableSha256": {
+      "Config/EC/ActionCommon_part1.g.bytes": "214b5d1ef9d9560d1d2d6fb0fd7aeccb2fa9723a01fe7c0e4506ae407758976c",
+      "Config/EC/ActionWorldBuilding_part2.g.bytes": "47fe913d9b0f7927e60bdd0d86632fa64764b42f860a6ed3d049c9f6451925bc",
+      "Config/EC/ActionWorldCommon_part1.g.bytes": "ad83230ea82a6563d9c0732c3d809dc52094778259f9d3f8384f4c02f647a2c1",
+      "Config/EC/ActionWorldInteraction_part1.g.bytes": "640c638afd9255d9b7fa4d425cc30275394715feb70278e0145f6cac8ed30dac",
+      "Config/EC/ActionWorldMonsterChest_part1.g.bytes": "27dc912fdb8ae516416762a7cc2662a3097870813dd73cb15acfe4101440ba83",
+      "Config/EC/ActionWorldPuzzle_part1.g.bytes": "154f16acad8958c66eb90728486ae86c6eb1582d104108bf45b93cd34efc6dec",
+      "Config/EC/ActionWorldSpecial_part2.g.bytes": "85688c134eeede3f6e52ba8dbb8f64962080f096f7ea7242d36552389d309604",
+      "Config/EC/MapRootEntityLite/14.g.bytes": "ca976d874301354925448b040560f73d3bac99107ba5a18bbb3b087105348dce",
+      "Config/EC/MapRoot_14.g.bytes": "56c2ae414097ac46bba1a6f21c8aa4f11d0b3ae495651b2b66f313899eeae4c6",
+      "Config/EC/WorldBonus_part1.g.bytes": "1a0bda024209a390eb6961100d04c94dd07d1ba0c117bffab2b6ccea2487cc90",
+      "Config/EC/WorldBonus_part3.g.bytes": "e02bd7eb37729a88d282d2d02fe4595c17cc81328196d3f96998bdd564a6e4d4",
+      "Config/EC/WorldBonus_part4.g.bytes": "6e894dc7b237dd32037902191eed30128f8bbc2fdfc7534a8f989cabfb53d0f5",
+      "Config/EC/WorldBonus_part5.g.bytes": "71c83fa9d9692ff5c436a341e675a5fe338be5b7dbc789bc732985c93736ebc2",
+      "Config/EC/WorldBonus_part6.g.bytes": "9b39c32b7ad8c35b29b3a8c0944b5424a72252b6ba806b6c1088528b80065d87",
+      "Config/EC/WorldBonus_part7.g.bytes": "9b340fb48e0df383c2568c602f6b56d4547eebe4a5cee6c9cb1985503aea3e6d",
+      "Config/EC/WorldBonus_part8.g.bytes": "1915b80d82348313673c5bc2a7cc8d75ec905952552f92d8929eea6797ed37b1",
+      "Config/EC/WorldBuilding_part1.g.bytes": "0aa5f5e357e6f238ce833e91b971b6ff3deb211e6de1844ab0e1740eab72477f",
+      "Config/EC/WorldBuilding_part2.g.bytes": "2bffd4564f4f4d42d20470374588d471d5f6877c3eb4e6cee035f122f68905b2",
+      "Config/EC/WorldBuilding_part4.g.bytes": "1931e6568282aed4e133c1509089cca6cf410bbc13ca7637d4fa166cd6639079",
+      "Config/EC/WorldBuilding_part5.g.bytes": "6fb90a4bb9bbe313a31937172a51a27d57c698710482a5c82c0371727e125a75",
+      "Config/EC/WorldBuilding_part6.g.bytes": "2528bba63f6875977710279f20b816d1b1bf0cf6d0e91a08d866a6ca2fed0003",
+      "Config/EC/WorldDoor_part1.g.bytes": "4cae4408addd31e335ea6cf2006d0548de844b08b5b280ac167067a59004fa5c",
+      "Config/EC/WorldDoor_part2.g.bytes": "6f731e23623e6e538c6754dff8b7db737ddd2d7e4710a1f28ec9969b0c5a2135",
+      "Config/EC/WorldGamePlay_part1.g.bytes": "7bfbd7fd2e4904641434b1bb9dd6d44abef35936300e1fd36a5d3ffa9296abbe",
+      "Config/EC/WorldGamePlay_part2.g.bytes": "557c863d0c2357fe331801ee3cd2ab55bc0aa88b30b960f077c14ae8924a35fe",
+      "Config/EC/WorldGamePlay_part3.g.bytes": "04027347152e9b4bda096b2040d0506ef85e448d68a4901de45fc8324aa20501",
+      "Config/EC/WorldGamePlay_part4.g.bytes": "083923e922b1b63aa66df7430b0375506331f9150eedad4163c2ec29eaaf2b9e",
+      "Config/EC/WorldGamePlay_part5.g.bytes": "4609379f7d25dc63c853c2b41ec97f6be53ef7b68b0c09db1d009de22c59efac",
+      "Config/EC/WorldMapCharacter_part1.g.bytes": "8d2c0e2294aee8123f2711296e5e2b37003591b23e04dc1e1e621ba9a1afe477",
+      "Config/EC/WorldMonster_part1.g.bytes": "a2346df6ee7a9f7efd0be29b48f73745be008132a4de569868b1006d4e25a26b",
+      "Config/EC/WorldMonster_part2.g.bytes": "6af918553d78a19e8239c7011b5dbe9f7b02a6185ea526e20c7820e0d0d6aba9",
+      "Config/EC/WorldNPC_part3.g.bytes": "0d8d71d464992419e0baea44678ad924d5cb80e9ab517e4fca68d61d8e390a00",
+      "Config/EC/map_14.g.bytes": "adc9eacc4569772b5df415d9c7909301fe0fccb9275ee1328a1f54cbec1cb08b",
+      "Config/MapInfoWrap/mapinfowrap_14.g.bytes": "f42e9f4d9a6d8f130241bcfb155469fbfb52dec567e2cfc0cae316f3dfab780e"
+    },
+    "mapInfoWrap": {
+      "legacySha256": "f42e9f4d9a6d8f130241bcfb155469fbfb52dec567e2cfc0cae316f3dfab780e",
+      "currentSha256": "f42e9f4d9a6d8f130241bcfb155469fbfb52dec567e2cfc0cae316f3dfab780e",
+      "identicalBytes": true,
+      "currentSourceManifest": "assets/reference/official-map/mainline-shared-world-data-source-manifest.json"
+    },
+    "currentPlacementDigest": {
+      "mapClassId": 14,
+      "entityCount": 2961,
+      "entitySha256": "65146dbe29c0e4cafd4a98ef36a79acdacfa4b523c229d1a66df0cac78e5e39f",
+      "source": "unity/Assets/Official/World/Shared/SharedMapConfiguration/Resources/MainlineSharedWorld/MapConfiguration/placement-expected.json"
+    },
+    "roadblocks": [
+      {
+        "placementId": 701,
+        "entityClassId": 8625,
+        "region": 6,
+        "grid": [
+          205,
+          96
+        ],
+        "propertyType": 415,
+        "propertyStandard": 6215,
+        "levelNumberId": 330,
+        "levelNumberIndex": 102,
+        "closedBodyGroundTypes": [
+          2,
+          2,
+          2
+        ],
+        "completedBody": [
+          [
+            [
+              0,
+              0
+            ],
+            0,
+            true,
+            false
+          ],
+          [
+            [
+              1,
+              0
+            ],
+            2,
+            true,
+            false
+          ],
+          [
+            [
+              -1,
+              0
+            ],
+            2,
+            true,
+            false
+          ]
+        ],
+        "stageGroundOperations": [
+          [
+            [
+              [
+                [
+                  [
+                    0,
+                    0
+                  ],
+                  2,
+                  false,
+                  false
+                ],
+                [
+                  [
+                    1,
+                    0
+                  ],
+                  2,
+                  false,
+                  false
+                ],
+                [
+                  [
+                    -1,
+                    0
+                  ],
+                  2,
+                  false,
+                  false
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              0,
+              false
+            ],
+            [
+              0,
+              true
+            ]
+          ]
+        ]
+      },
+      {
+        "placementId": 2701,
+        "entityClassId": 8626,
+        "region": 26,
+        "grid": [
+          129,
+          108
+        ],
+        "propertyType": 411,
+        "propertyStandard": 7280,
+        "levelNumberId": 330,
+        "levelNumberIndex": 110,
+        "closedBodyGroundTypes": [
+          2,
+          2,
+          2
+        ],
+        "completedBody": [
+          [
+            [
+              0,
+              0
+            ],
+            0,
+            true,
+            false
+          ],
+          [
+            [
+              1,
+              0
+            ],
+            2,
+            true,
+            false
+          ],
+          [
+            [
+              -1,
+              0
+            ],
+            2,
+            true,
+            false
+          ]
+        ],
+        "stageGroundOperations": [
+          [
+            [
+              [
+                [
+                  [
+                    0,
+                    0
+                  ],
+                  2,
+                  false,
+                  false
+                ],
+                [
+                  [
+                    1,
+                    0
+                  ],
+                  2,
+                  false,
+                  false
+                ],
+                [
+                  [
+                    -1,
+                    0
+                  ],
+                  2,
+                  false,
+                  false
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              0,
+              false
+            ],
+            [
+              0,
+              true
+            ]
+          ]
+        ]
+      },
+      {
+        "placementId": 3801,
+        "entityClassId": 8634,
+        "region": 37,
+        "grid": [
+          106,
+          63
+        ],
+        "propertyType": 419,
+        "propertyStandard": 7525,
+        "levelNumberId": 330,
+        "levelNumberIndex": 112,
+        "closedBodyGroundTypes": [
+          2,
+          2,
+          2
+        ],
+        "completedBody": [
+          [
+            [
+              0,
+              0
+            ],
+            0,
+            true,
+            false
+          ],
+          [
+            [
+              0,
+              1
+            ],
+            2,
+            true,
+            false
+          ],
+          [
+            [
+              0,
+              -1
+            ],
+            2,
+            true,
+            false
+          ]
+        ],
+        "stageGroundOperations": [
+          [
+            [
+              [
+                [
+                  [
+                    0,
+                    0
+                  ],
+                  2,
+                  false,
+                  false
+                ],
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  2,
+                  false,
+                  false
+                ],
+                [
+                  [
+                    0,
+                    -1
+                  ],
+                  2,
+                  false,
+                  false
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              0,
+              false
+            ],
+            [
+              0,
+              true
+            ]
+          ]
+        ]
+      },
+      {
+        "placementId": 6401,
+        "entityClassId": 8637,
+        "region": 63,
+        "grid": [
+          81,
+          177
+        ],
+        "propertyType": 417,
+        "propertyStandard": 8680,
+        "levelNumberId": 330,
+        "levelNumberIndex": 121,
+        "closedBodyGroundTypes": [
+          2,
+          2,
+          2
+        ],
+        "completedBody": [
+          [
+            [
+              0,
+              0
+            ],
+            0,
+            true,
+            false
+          ],
+          [
+            [
+              0,
+              1
+            ],
+            2,
+            true,
+            false
+          ],
+          [
+            [
+              0,
+              -1
+            ],
+            2,
+            true,
+            false
+          ]
+        ],
+        "stageGroundOperations": [
+          [
+            [
+              [
+                [
+                  [
+                    0,
+                    0
+                  ],
+                  2,
+                  false,
+                  false
+                ],
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  2,
+                  false,
+                  false
+                ],
+                [
+                  [
+                    0,
+                    -1
+                  ],
+                  2,
+                  false,
+                  false
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              0,
+              false
+            ],
+            [
+              0,
+              true
+            ]
+          ]
+        ]
+      },
+      {
+        "placementId": 9101,
+        "entityClassId": 8633,
+        "region": 90,
+        "grid": [
+          127,
+          242
+        ],
+        "propertyType": 418,
+        "propertyStandard": 10055,
+        "levelNumberId": 330,
+        "levelNumberIndex": 130,
+        "closedBodyGroundTypes": [
+          2,
+          2,
+          2
+        ],
+        "completedBody": [
+          [
+            [
+              0,
+              0
+            ],
+            0,
+            true,
+            false
+          ],
+          [
+            [
+              0,
+              1
+            ],
+            2,
+            true,
+            false
+          ],
+          [
+            [
+              0,
+              -1
+            ],
+            2,
+            true,
+            false
+          ]
+        ],
+        "stageGroundOperations": [
+          [
+            [
+              [
+                [
+                  [
+                    0,
+                    0
+                  ],
+                  2,
+                  false,
+                  false
+                ],
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  2,
+                  false,
+                  false
+                ],
+                [
+                  [
+                    0,
+                    -1
+                  ],
+                  2,
+                  false,
+                  false
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              0,
+              false
+            ],
+            [
+              0,
+              true
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "runtimeBinding": {
+    "dialog": "Resources.Load<GameObject>(\"Map14/UI/RoadblockTeamPropStageDialog\")",
+    "item": "RoadblockTeamPropStageDialogItem.prefab is retained from the same bundle; the original dialog hierarchy carries its slots."
+  },
+  "limitations": [
+    "Windows prefab hashes record explicit converter output; source identity verification alone does not prove visual fidelity or interaction.",
+    "The 871 Map14 placement identity is checked against the byte-identical 884 MapInfoWrap, then each roadblock is compared with the loaded 884 placement metadata at runtime."
+  ]
+}

@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Official.WorldUI;
 using Zjcs.Official.ProfessionUI;
+using Zjcs.Official.TeamUI;
 
 namespace Zjcs.Presentation.Combat
 {
@@ -19,6 +20,9 @@ namespace Zjcs.Presentation.Combat
             public int Id;
             public int FriendshipLevel = 1;
             public string CombatRating;
+            public string PropertyValue;
+            public long PropertyAmount;
+            public Sprite PropertyIcon;
             public string Name, Reason;
             public Sprite Portrait;
             public bool Available, Selected, FriendshipBlocked;
@@ -34,6 +38,10 @@ namespace Zjcs.Presentation.Combat
         private int maximum;
         private bool disposed;
         private readonly WindowAdapter windows;
+        private readonly WorldMultiLanguageText selectedProperty;
+        private readonly string propertyName;
+        private readonly long playerProperty;
+        private readonly Button confirmation;
         private sealed class WindowAdapter : IProfessionWindowService
         {
             private readonly Action cancel;
@@ -48,8 +56,11 @@ namespace Zjcs.Presentation.Combat
         public GameObject Root { get; }
 
         public OfficialBattleAssistSelectionView(Transform parent, IReadOnlyList<Candidate> candidates,
-            int maximum, Action<int, bool> select, Action confirm, Action cancel)
+            int maximum, Action<int, bool> select, Action confirm, Action cancel,
+            string propertyName = null, long playerProperty = 0)
         {
+            this.propertyName = propertyName;
+            this.playerProperty = playerProperty;
             this.select = select ?? throw new ArgumentNullException(nameof(select));
             windows = new WindowAdapter(cancel);
             font = Resources.Load<TMP_FontAsset>("Combat/FZY4K-Dynamic");
@@ -71,6 +82,9 @@ namespace Zjcs.Presentation.Combat
                 Canvas parentCanvas = parent.GetComponentInParent<Canvas>();
                 foreach (Canvas canvas in Root.GetComponentsInChildren<Canvas>(true))
                     canvas.worldCamera = parentCanvas == null ? null : parentCanvas.rootCanvas.worldCamera;
+                if (propertyName != null)
+                    selectedProperty = Root.GetComponentInChildren<TeamInviteRobotPanel>(true)
+                        .SelectedPlayerPropValueType;
                 RemoveNetworkLogic(Root);
                 foreach (CanvasGroup group in Root.GetComponentsInChildren<CanvasGroup>(true))
                 { group.interactable = true; group.blocksRaycasts = true; }
@@ -96,7 +110,7 @@ namespace Zjcs.Presentation.Combat
                 scroll.viewport = list.Find("Viewport") as RectTransform;
                 scroll.DefaultPrefabSource = new LoopScrollSinglePrefabSource { Prefab = rowTemplate };
                 scroll.dataSource = this;
-                Button confirmation = Node("BgPanel1/Content/MiddleGo/FriendRobotGo/BottomGo")
+                confirmation = Node("BgPanel1/Content/MiddleGo/FriendRobotGo/BottomGo")
                     .GetComponentsInChildren<Button>(true).First(value => value.name == "CommonBtn_12");
                 confirmation.onClick.RemoveAllListeners(); confirmation.onClick.AddListener(() => confirm?.Invoke());
                 Button close = Root.GetComponentsInChildren<Button>(true).First(value => value.name == "CloseBtn_dark");
@@ -143,6 +157,13 @@ namespace Zjcs.Presentation.Combat
             int count = candidates.Count(value => value.Selected);
             foreach (WorldMultiLanguageText text in Root.GetComponentsInChildren<WorldMultiLanguageText>(true))
                 if (text.myKey == "ui_team_robot_selected_count_text") text.SetKey(text.myKey, count, maximum);
+            if (selectedProperty != null)
+            {
+                selectedProperty.gameObject.SetActive(true);
+                selectedProperty.SetKey(selectedProperty.myKey, propertyName,
+                    checked(playerProperty + candidates.Where(value => value.Selected).Sum(value => value.PropertyAmount)));
+                confirmation.interactable = count > 0;
+            }
         }
         public void ProvideData(Transform cell, int index)
         {
@@ -162,6 +183,12 @@ namespace Zjcs.Presentation.Combat
             }
             // The original robot item initializes friendship gain to zero, hiding its gain row.
             SetActive(row, "AddExpGo", false);
+            if (propertyName != null)
+            {
+                row.GetComponentInChildren<TeamInvitePlayerInfoView>(true)
+                    .SetProp(value.PropertyIcon, value.PropertyValue);
+                SetActive(row, "TxtCombatRating", false);
+            }
             Graphic portrait = row.GetComponentsInChildren<Graphic>(true).FirstOrDefault(item => item.name == "HeadImg");
             if (portrait != null)
             {

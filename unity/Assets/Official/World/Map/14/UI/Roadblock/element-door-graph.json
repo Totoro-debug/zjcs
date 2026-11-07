@@ -1,0 +1,478 @@
+{
+  "manifest": "884_156692",
+  "source": {
+    "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_map_world.bundle",
+    "bundle_hash": "ff5ca9a925e1da9fa219d41f76a95263",
+    "path_id": "-7221676844537161820",
+    "origin": "official_cdn",
+    "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ff5ca9a925e1da9fa219d41f76a95263.bundle",
+    "manifest": "884_156692",
+    "bundle_size": 54088,
+    "bundle_sha256": "979ce10fc3b70074d8ac6cbf2eb2312bd596d66fa48ee4518ba2e465bbb41560"
+  },
+  "fields": {
+    "m_GameObject": {
+      "m_FileID": 0,
+      "m_PathID": 0
+    },
+    "m_Enabled": 1,
+    "m_Script": {
+      "m_FileID": 1,
+      "m_PathID": -8529226852921705281
+    },
+    "m_Name": "ElementDoor",
+    "nodes": [
+      {
+        "m_FileID": 0,
+        "m_PathID": 4566705566908274596
+      },
+      {
+        "m_FileID": 0,
+        "m_PathID": -3775851552391440476
+      },
+      {
+        "m_FileID": 0,
+        "m_PathID": 5874621817429022628
+      }
+    ],
+    "Type": 1,
+    "Scope": 2
+  },
+  "nodes": [
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_map_world.bundle",
+        "bundle_hash": "ff5ca9a925e1da9fa219d41f76a95263",
+        "path_id": "4566705566908274596",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ff5ca9a925e1da9fa219d41f76a95263.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 54088,
+        "bundle_sha256": "979ce10fc3b70074d8ac6cbf2eb2312bd596d66fa48ee4518ba2e465bbb41560"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 5724687058716032082
+        },
+        "m_Name": "[0][State]根节点",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -7221676844537161820
+        },
+        "position": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 4566705566908274596
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 4566705566908274596
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Parents",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": -3775851552391440476
+                  },
+                  "reroutePoints": []
+                },
+                {
+                  "fieldName": "Parents",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 5874621817429022628
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": 1,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "根节点",
+        "SelectedType": "TipDotCommonNode",
+        "NodeName": "Root",
+        "TipDotNodeId": 0,
+        "TipDotNode": {
+          "rid": 9165166296117805058
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 4,
+          "NeedAllShow": 1,
+          "IsRoot": 1,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 9165166296117805058,
+              "type": {
+                "class": "TipDotCommonNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "ElementDoor",
+                  "NodeName": "Root"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0
+              }
+            }
+          ]
+        }
+      },
+      "payloadSha256": "9f73f323119489089ecd3fbfb0ba86a1b79838a8f91a094129017ad8092783be"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_map_world.bundle",
+        "bundle_hash": "ff5ca9a925e1da9fa219d41f76a95263",
+        "path_id": "-3775851552391440476",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ff5ca9a925e1da9fa219d41f76a95263.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 54088,
+        "bundle_sha256": "979ce10fc3b70074d8ac6cbf2eb2312bd596d66fa48ee4518ba2e465bbb41560"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 1122313616411804370
+        },
+        "m_Name": "[1][Cnd]MyStageConPropStandard属性是否满足",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -7221676844537161820
+        },
+        "position": {
+          "x": 680.0,
+          "y": -280.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": -3775851552391440476
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Childs",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 4566705566908274596
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": -3775851552391440476
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": 2,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "",
+        "SelectedType": "TipDotMapStageConLevelCondtionNode",
+        "NodeName": "",
+        "TipDotNodeId": 1,
+        "TipDotNode": {
+          "rid": 4232108853172633614
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 4,
+          "NeedAllShow": 0,
+          "IsRoot": 0,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 4232108853172633614,
+              "type": {
+                "class": "TipDotMapStageConPropStandardCondtionNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "ElementDoor",
+                  "NodeName": "78819d7b-2cbe-49b6-a686-6a088f890b6e"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0
+              }
+            }
+          ]
+        }
+      },
+      "payloadSha256": "a61d2edd7b69ce697adaa14e844eb110c56a0add1f80e28809af4b540681a91c"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_map_world.bundle",
+        "bundle_hash": "ff5ca9a925e1da9fa219d41f76a95263",
+        "path_id": "5874621817429022628",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ff5ca9a925e1da9fa219d41f76a95263.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 54088,
+        "bundle_sha256": "979ce10fc3b70074d8ac6cbf2eb2312bd596d66fa48ee4518ba2e465bbb41560"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 1122313616411804370
+        },
+        "m_Name": "[2][Cnd]地图物件状态是否满足",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -7221676844537161820
+        },
+        "position": {
+          "x": 680.0,
+          "y": 120.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 5874621817429022628
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Childs",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 4566705566908274596
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 5874621817429022628
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": 3,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "",
+        "SelectedType": "TipDotMapWorldStageStateCondtionNode",
+        "NodeName": "",
+        "TipDotNodeId": 2,
+        "TipDotNode": {
+          "rid": 9165166296117805066
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 4,
+          "NeedAllShow": 0,
+          "IsRoot": 0,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 9165166296117805066,
+              "type": {
+                "class": "TipDotMapWorldStageStateCondtionNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "ElementDoor",
+                  "NodeName": "803e121f-e9c5-48b9-a287-6844dbc824cb"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0,
+                "TargetState": 0
+              }
+            }
+          ]
+        }
+      },
+      "payloadSha256": "b355f65f6678868e11c1cdcc84e9d696ba33e95ca02598fcf52827a987c68b6a"
+    }
+  ]
+}

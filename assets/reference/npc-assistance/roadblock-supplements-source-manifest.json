@@ -1,0 +1,710 @@
+{
+  "manifest": "884_156692",
+  "graphSource": {
+    "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_map_world.bundle",
+    "bundle_hash": "ff5ca9a925e1da9fa219d41f76a95263",
+    "path_id": "-7221676844537161820",
+    "origin": "official_cdn",
+    "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ff5ca9a925e1da9fa219d41f76a95263.bundle",
+    "manifest": "884_156692",
+    "bundle_size": 54088,
+    "bundle_sha256": "979ce10fc3b70074d8ac6cbf2eb2312bd596d66fa48ee4518ba2e465bbb41560"
+  },
+  "graphNodes": [
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_map_world.bundle",
+        "bundle_hash": "ff5ca9a925e1da9fa219d41f76a95263",
+        "path_id": "4566705566908274596",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ff5ca9a925e1da9fa219d41f76a95263.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 54088,
+        "bundle_sha256": "979ce10fc3b70074d8ac6cbf2eb2312bd596d66fa48ee4518ba2e465bbb41560"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 5724687058716032082
+        },
+        "m_Name": "[0][State]根节点",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -7221676844537161820
+        },
+        "position": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 4566705566908274596
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 4566705566908274596
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Parents",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": -3775851552391440476
+                  },
+                  "reroutePoints": []
+                },
+                {
+                  "fieldName": "Parents",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 5874621817429022628
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": 1,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "根节点",
+        "SelectedType": "TipDotCommonNode",
+        "NodeName": "Root",
+        "TipDotNodeId": 0,
+        "TipDotNode": {
+          "rid": 9165166296117805058
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 4,
+          "NeedAllShow": 1,
+          "IsRoot": 1,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 9165166296117805058,
+              "type": {
+                "class": "TipDotCommonNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "ElementDoor",
+                  "NodeName": "Root"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0
+              }
+            }
+          ]
+        }
+      },
+      "payloadSha256": "9f73f323119489089ecd3fbfb0ba86a1b79838a8f91a094129017ad8092783be"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_map_world.bundle",
+        "bundle_hash": "ff5ca9a925e1da9fa219d41f76a95263",
+        "path_id": "-3775851552391440476",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ff5ca9a925e1da9fa219d41f76a95263.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 54088,
+        "bundle_sha256": "979ce10fc3b70074d8ac6cbf2eb2312bd596d66fa48ee4518ba2e465bbb41560"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 1122313616411804370
+        },
+        "m_Name": "[1][Cnd]MyStageConPropStandard属性是否满足",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -7221676844537161820
+        },
+        "position": {
+          "x": 680.0,
+          "y": -280.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": -3775851552391440476
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Childs",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 4566705566908274596
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": -3775851552391440476
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": 2,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "",
+        "SelectedType": "TipDotMapStageConLevelCondtionNode",
+        "NodeName": "",
+        "TipDotNodeId": 1,
+        "TipDotNode": {
+          "rid": 4232108853172633614
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 4,
+          "NeedAllShow": 0,
+          "IsRoot": 0,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 4232108853172633614,
+              "type": {
+                "class": "TipDotMapStageConPropStandardCondtionNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "ElementDoor",
+                  "NodeName": "78819d7b-2cbe-49b6-a686-6a088f890b6e"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0
+              }
+            }
+          ]
+        }
+      },
+      "payloadSha256": "a61d2edd7b69ce697adaa14e844eb110c56a0add1f80e28809af4b540681a91c"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_map_world.bundle",
+        "bundle_hash": "ff5ca9a925e1da9fa219d41f76a95263",
+        "path_id": "5874621817429022628",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ff5ca9a925e1da9fa219d41f76a95263.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 54088,
+        "bundle_sha256": "979ce10fc3b70074d8ac6cbf2eb2312bd596d66fa48ee4518ba2e465bbb41560"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 1122313616411804370
+        },
+        "m_Name": "[2][Cnd]地图物件状态是否满足",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -7221676844537161820
+        },
+        "position": {
+          "x": 680.0,
+          "y": 120.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 5874621817429022628
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Childs",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 4566705566908274596
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 5874621817429022628
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": 3,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "",
+        "SelectedType": "TipDotMapWorldStageStateCondtionNode",
+        "NodeName": "",
+        "TipDotNodeId": 2,
+        "TipDotNode": {
+          "rid": 9165166296117805066
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 4,
+          "NeedAllShow": 0,
+          "IsRoot": 0,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 9165166296117805066,
+              "type": {
+                "class": "TipDotMapWorldStageStateCondtionNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "ElementDoor",
+                  "NodeName": "803e121f-e9c5-48b9-a287-6844dbc824cb"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0,
+                "TargetState": 0
+              }
+            }
+          ]
+        }
+      },
+      "payloadSha256": "b355f65f6678868e11c1cdcc84e9d696ba33e95ca02598fcf52827a987c68b6a"
+    }
+  ],
+  "audio": [
+    {
+      "event": "Map_Entity_Activate_ElementDoor",
+      "eventId": 3132674326,
+      "graph": "../236876705.bnk #s21 #i  #v -4.0dB  ##179758358.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 236876705-0447-event.txtp\n# - output/validation/npc-assist-roadblock-1a3cce85850f48ca96e2b26af960ee71/official-audio-iey21r4w/236876705.bnk\n#\n# PATH\n#   CAkEvent[447] 3132674326\n#\n#     CAkActionPlay[446] 965380193\n#\n#       CAkSound[56] 932098752\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 179758358\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+      "packages": {
+        "wwisebnk_assets_wwisedata_android_eventbankmapping_bytes.rawfile": {
+          "bundle": {
+            "name": "wwisebnk_assets_wwisedata_android_eventbankmapping_bytes.rawfile",
+            "hash": "2e55b8c2241efc3d9e3ce77943fa39f6",
+            "size": 91379,
+            "record_offset": 765,
+            "unity_crc": 0,
+            "file_crc": 1753126625,
+            "encrypted": false,
+            "dependencies": [],
+            "tags": [
+              "Payd_Base"
+            ],
+            "file": "2e55b8c2241efc3d9e3ce77943fa39f6.rawfile"
+          },
+          "source": {
+            "origin": "apk_zip",
+            "entry": "assets/yoo/WwiseBnk/2e55b8c2241efc3d9e3ce77943fa39f6.rawfile",
+            "apkSha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+          },
+          "sha256": "414beb90ac963d195d1bb8f34d8f558798813cc7a11675b62b478fddd0df2c23",
+          "apkCheckedFirst": {
+            "entry": "assets/yoo/WwiseBnk/2e55b8c2241efc3d9e3ce77943fa39f6.rawfile",
+            "packaged": true
+          },
+          "banks": []
+        },
+        "wwisebnk_assets_wwisedata_android_map_sfx_01_pck.rawfile": {
+          "bundle": {
+            "name": "wwisebnk_assets_wwisedata_android_map_sfx_01_pck.rawfile",
+            "hash": "ebc1ce893f389585c3d511b2f6bb6b93",
+            "size": 5295424,
+            "record_offset": 4737,
+            "unity_crc": 0,
+            "file_crc": 4204880227,
+            "encrypted": false,
+            "dependencies": [],
+            "tags": [
+              "Payd_Base"
+            ],
+            "file": "ebc1ce893f389585c3d511b2f6bb6b93.rawfile"
+          },
+          "source": {
+            "origin": "apk_zip",
+            "entry": "assets/yoo/WwiseBnk/ebc1ce893f389585c3d511b2f6bb6b93.rawfile",
+            "apkSha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+          },
+          "sha256": "6ad6db841e87aa9c26270a4f86282576dabd81ea7d75c9892303b72f4b311d59",
+          "apkCheckedFirst": {
+            "entry": "assets/yoo/WwiseBnk/ebc1ce893f389585c3d511b2f6bb6b93.rawfile",
+            "packaged": true
+          },
+          "banks": [
+            {
+              "bankId": 236876705,
+              "sha256": "74322d4f44c3366d6f209510e22aa46905aff1483600cbe32418fe450c6929c1"
+            }
+          ]
+        },
+        "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile": {
+          "bundle": {
+            "name": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+            "hash": "273dd41a6aa90c198997fbaa7030e010",
+            "size": 41485,
+            "record_offset": 4861,
+            "unity_crc": 0,
+            "file_crc": 467591049,
+            "encrypted": false,
+            "dependencies": [],
+            "tags": [
+              "Payd_Base"
+            ],
+            "file": "273dd41a6aa90c198997fbaa7030e010.rawfile"
+          },
+          "source": {
+            "origin": "apk_zip",
+            "entry": "assets/yoo/WwiseBnk/273dd41a6aa90c198997fbaa7030e010.rawfile",
+            "apkSha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+          },
+          "sha256": "86d9cefc05acd4d96851f140809757f8eb69fd9abb469d84a8aa16f8abd5dc78",
+          "apkCheckedFirst": {
+            "entry": "assets/yoo/WwiseBnk/273dd41a6aa90c198997fbaa7030e010.rawfile",
+            "packaged": true
+          },
+          "banks": [
+            {
+              "bankId": 1355168291,
+              "sha256": "2ed65f923340d3194e4efca3d905d9a343dc2c4342b36918ba4a8881905e9efd"
+            },
+            {
+              "bankId": 3844515483,
+              "sha256": "caebe0a00e8b21f1fcdacd3a1a9c24beca84d9b1c04e71f60318217e30c3381c"
+            }
+          ]
+        }
+      },
+      "outputSha256": "710b20ed556266797e3bc98a3f6231151235e7c499f011236fcbdfdcc85c22f3"
+    },
+    {
+      "event": "Main_Cursor_Fail",
+      "eventId": 2458796094,
+      "graph": "../3844515483.bnk #s4 #i  #v -8.0dB  ##768850253.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0014-event.txtp\n# - output/validation/npc-assist-roadblock-1a3cce85850f48ca96e2b26af960ee71/official-audio-iey21r4w/3844515483.bnk\n#\n# PATH\n#   CAkEvent[14] 2458796094\n#\n#     CAkActionPlay[13] 918004023\n#\n#       CAkSound[3] 308932270\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 768850253\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+      "packages": {
+        "wwisebnk_assets_wwisedata_android_eventbankmapping_bytes.rawfile": {
+          "bundle": {
+            "name": "wwisebnk_assets_wwisedata_android_eventbankmapping_bytes.rawfile",
+            "hash": "2e55b8c2241efc3d9e3ce77943fa39f6",
+            "size": 91379,
+            "record_offset": 765,
+            "unity_crc": 0,
+            "file_crc": 1753126625,
+            "encrypted": false,
+            "dependencies": [],
+            "tags": [
+              "Payd_Base"
+            ],
+            "file": "2e55b8c2241efc3d9e3ce77943fa39f6.rawfile"
+          },
+          "source": {
+            "origin": "apk_zip",
+            "entry": "assets/yoo/WwiseBnk/2e55b8c2241efc3d9e3ce77943fa39f6.rawfile",
+            "apkSha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+          },
+          "sha256": "414beb90ac963d195d1bb8f34d8f558798813cc7a11675b62b478fddd0df2c23",
+          "apkCheckedFirst": {
+            "entry": "assets/yoo/WwiseBnk/2e55b8c2241efc3d9e3ce77943fa39f6.rawfile",
+            "packaged": true
+          },
+          "banks": []
+        },
+        "wwisebnk_assets_wwisedata_android_map_sfx_01_pck.rawfile": {
+          "bundle": {
+            "name": "wwisebnk_assets_wwisedata_android_map_sfx_01_pck.rawfile",
+            "hash": "ebc1ce893f389585c3d511b2f6bb6b93",
+            "size": 5295424,
+            "record_offset": 4737,
+            "unity_crc": 0,
+            "file_crc": 4204880227,
+            "encrypted": false,
+            "dependencies": [],
+            "tags": [
+              "Payd_Base"
+            ],
+            "file": "ebc1ce893f389585c3d511b2f6bb6b93.rawfile"
+          },
+          "source": {
+            "origin": "apk_zip",
+            "entry": "assets/yoo/WwiseBnk/ebc1ce893f389585c3d511b2f6bb6b93.rawfile",
+            "apkSha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+          },
+          "sha256": "6ad6db841e87aa9c26270a4f86282576dabd81ea7d75c9892303b72f4b311d59",
+          "apkCheckedFirst": {
+            "entry": "assets/yoo/WwiseBnk/ebc1ce893f389585c3d511b2f6bb6b93.rawfile",
+            "packaged": true
+          },
+          "banks": [
+            {
+              "bankId": 236876705,
+              "sha256": "74322d4f44c3366d6f209510e22aa46905aff1483600cbe32418fe450c6929c1"
+            }
+          ]
+        },
+        "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile": {
+          "bundle": {
+            "name": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+            "hash": "273dd41a6aa90c198997fbaa7030e010",
+            "size": 41485,
+            "record_offset": 4861,
+            "unity_crc": 0,
+            "file_crc": 467591049,
+            "encrypted": false,
+            "dependencies": [],
+            "tags": [
+              "Payd_Base"
+            ],
+            "file": "273dd41a6aa90c198997fbaa7030e010.rawfile"
+          },
+          "source": {
+            "origin": "apk_zip",
+            "entry": "assets/yoo/WwiseBnk/273dd41a6aa90c198997fbaa7030e010.rawfile",
+            "apkSha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+          },
+          "sha256": "86d9cefc05acd4d96851f140809757f8eb69fd9abb469d84a8aa16f8abd5dc78",
+          "apkCheckedFirst": {
+            "entry": "assets/yoo/WwiseBnk/273dd41a6aa90c198997fbaa7030e010.rawfile",
+            "packaged": true
+          },
+          "banks": [
+            {
+              "bankId": 1355168291,
+              "sha256": "2ed65f923340d3194e4efca3d905d9a343dc2c4342b36918ba4a8881905e9efd"
+            },
+            {
+              "bankId": 3844515483,
+              "sha256": "caebe0a00e8b21f1fcdacd3a1a9c24beca84d9b1c04e71f60318217e30c3381c"
+            }
+          ]
+        }
+      },
+      "outputSha256": "36291f63203645a0629d2139fa236d3458005fd21a67e49a996bb0a19c8032bd"
+    }
+  ],
+  "originalCode": [
+    {
+      "path": ".tools\\source-packages\\current\\884_156692\\official-code\\client-source\\TipDotCommonNode.cs",
+      "sha256": "b20f67a818ea0c7bc2ea2d813e53fb2d76e32488c95cd6063140cbb39513fa93"
+    },
+    {
+      "path": ".tools\\source-packages\\current\\884_156692\\official-code\\client-source\\TipDotMapStageConPropStandardCondtionNode.cs",
+      "sha256": "fe2ca3c5b84632bea5d5bc79e3db5b1f21dc966de608b699540fda9db8884994"
+    },
+    {
+      "path": ".tools\\source-packages\\current\\884_156692\\official-code\\client-source\\TipDotMapWorldStageStateCondtionNode.cs",
+      "sha256": "0be04837ca4b95e75f109579b643b3dd9a6c2ac13b9340407d4a3a176108dfa0"
+    }
+  ],
+  "tool": {
+    "path": "scripts/prepare_map14_roadblock_supplements.py",
+    "sha256": "bfdad4bfb2cf7ca9c32959f4abbf63cf8045bb4aa3edd404818994eacbd07b65"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/element-door-graph.json",
+      "sha256": "d9149d8ea76521f68416bdff2e7b8fd42f6e919711ebfc6f2ce3e6900a652bfd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/element-door-graph.json.meta",
+      "sha256": "b9d00f4c3e732d659be5253c9f0acc620721b3eafb779479de719ea6665c6476"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/roadblock-tip-graph.json",
+      "sha256": "760b24054f629a5c36968cac0abc5db3993a333ccacc7d8fa1e243aa840e1ef8"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/roadblock-tip-graph.json.meta",
+      "sha256": "144cef58ec246688a5837b3d56a362d9e15dfca713d75adb49c072cae21fabfe"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Map_Entity_Activate_ElementDoor.wav",
+      "sha256": "710b20ed556266797e3bc98a3f6231151235e7c499f011236fcbdfdcc85c22f3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Map_Entity_Activate_ElementDoor.wav.meta",
+      "sha256": "94482e3e267a727c3370bc4855c444dc6f69c2ba465e20fbe9141e463fdeecec"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Main_Cursor_Fail.wav",
+      "sha256": "36291f63203645a0629d2139fa236d3458005fd21a67e49a996bb0a19c8032bd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/Roadblock/Main_Cursor_Fail.wav.meta",
+      "sha256": "c4b65880a76887bac145337560f449755ae3b478f9207e63430b928587ae029c"
+    }
+  ]
+}

@@ -642,6 +642,7 @@ namespace Zjcs.Presentation.World
         public int[] completedStages = Array.Empty<int>();
         public int[] completedPeriodicityGroups = Array.Empty<int>();
         public int[] completedEntityPlacements = Array.Empty<int>();
+        public int[] completedRoadblockPlacements = Array.Empty<int>();
         public Map10RuntimeMapLogicState[] mapLogicStates = Array.Empty<Map10RuntimeMapLogicState>();
         public Zjcs.Offline.World.MapPuzzleEntityState[] puzzleStates = Array.Empty<Zjcs.Offline.World.MapPuzzleEntityState>();
         public Map11PendingPuzzleOperation pendingPuzzleOperation;

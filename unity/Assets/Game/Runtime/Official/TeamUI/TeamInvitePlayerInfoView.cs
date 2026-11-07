@@ -64,6 +64,13 @@ public class TeamInvitePlayerInfoView : MonoBehaviour
 		((Component)mFriendShipInfo).gameObject.SetActive(false);
 		((Component)mPropInfo).gameObject.SetActive(false);
 	}
+
+	public void SetProp(Sprite icon, string formattedValue)
+	{
+		HideAllExcludeItem();
+		mPropInfo.gameObject.SetActive(true);
+		mPropInfo.Refresh(icon, formattedValue);
+	}
 }
 
 }
