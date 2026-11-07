@@ -36,6 +36,7 @@ namespace Zjcs.Presentation.Combat
             this.scope.BindNativePrefabAdapter(instance =>
             {
                 Zjcs.Offline.ProfessionUI.PartnerNativeSkillSkeleton.BindOriginalPrefab(instance);
+                Zjcs.Offline.ProfessionUI.EmbeddedMonsterNativeSkeleton.BindOriginalPrefab(instance);
                 bindPlayerClones?.Invoke(instance);
             });
         }

@@ -8,7 +8,7 @@ using UnityEngine;
 // Records the native playback seam; compiles the actual catalog and dispatcher below it.
 namespace UnityEngine
 {
-    public class GameObject { public string name; public int PartnerAdapters; public GameObject(string value) { name = value; } }
+    public class GameObject { public string name; public int PartnerAdapters, EmbeddedAdapters; public GameObject(string value) { name = value; } }
     public class Transform { public GameObject gameObject; public Transform(string name) { gameObject = new GameObject(name); } }
     public class TextAsset { public string text = "catalog"; }
     public static class Resources
@@ -100,7 +100,10 @@ namespace Zjcs.Offline.BattleNativePlayables
     }
 }
 namespace Zjcs.Offline.ProfessionUI
-{ public static class PartnerNativeSkillSkeleton { public static void BindOriginalPrefab(GameObject value) { value.PartnerAdapters++; } } }
+{
+    public static class PartnerNativeSkillSkeleton { public static void BindOriginalPrefab(GameObject value) { value.PartnerAdapters++; } }
+    public static class EmbeddedMonsterNativeSkeleton { public static void BindOriginalPrefab(GameObject value) { value.EmbeddedAdapters++; } }
+}
 public static class BattleSkillGraphDispatchHarness
 {
     static void Require(bool value, string message) { if (!value) throw new Exception(message); }
@@ -204,6 +207,7 @@ public static class BattleSkillGraphDispatchHarness
         int cloneBindings = 0;
         queue.BindPlayerClonePrefabs(instance => {
             Require(instance.PartnerAdapters == 1, "Clone binding replaced or preceded the original partner adapter");
+            Require(instance.EmbeddedAdapters == 1, "Clone binding replaced or preceded the original embedded monster adapter");
             cloneBindings++;
         });
         try { queue.BindPlayerClonePrefabs(_ => {}); throw new Exception("Clone binding was replaced"); }
