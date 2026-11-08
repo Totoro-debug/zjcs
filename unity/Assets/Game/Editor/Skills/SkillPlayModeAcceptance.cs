@@ -38,6 +38,7 @@ namespace Zjcs.Editor.Skills
         private static bool started;
         private static bool reloadLocked;
         private static Exception runtimeFailure;
+        [Serializable] private sealed class RuntimeDiagnosticResult { public bool passed; public string error; }
         [InitializeOnLoadMethod]
         private static void AutoRunInWindowedEditor()
         {
@@ -244,6 +245,21 @@ namespace Zjcs.Editor.Skills
                 yield return null;
             }
             yield return null;
+            if (Environment.GetEnvironmentVariable("ZJCS_STATUS_ABSORPTION_ACCEPTANCE") == "1")
+            {
+                string resultPath = Path.Combine(ValidationDirectory, "result.json");
+                Zjcs.Presentation.Home.SkillSummonPlayerValidation.StartDiagnostic(ValidationDirectory, false);
+                float deadline = Time.realtimeSinceStartup + 900f;
+                while (!File.Exists(resultPath))
+                {
+                    Require(Time.realtimeSinceStartup < deadline, "Status absorption diagnostic timed out.");
+                    yield return null;
+                }
+                var result = JsonUtility.FromJson<RuntimeDiagnosticResult>(File.ReadAllText(resultPath));
+                Require(result.passed, result.error ?? "Runtime absorption diagnostic failed.");
+                Finish(true, null);
+                yield break;
+            }
             foreach (Canvas existing in UnityEngine.Object.FindObjectsOfType<Canvas>(true))
                 existing.gameObject.SetActive(false);
             foreach (GraphicRaycaster raycaster in UnityEngine.Object.FindObjectsOfType<GraphicRaycaster>(true))

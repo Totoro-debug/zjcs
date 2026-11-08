@@ -22,6 +22,7 @@ namespace Zjcs.Presentation.Home
         private string output;
         private Exception failure;
         private float deadline;
+        private bool waitForStartup;
         [Serializable] private sealed class Result { public bool passed; public string error; }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -34,11 +35,12 @@ namespace Zjcs.Presentation.Home
             StartDiagnostic(args[index+1]);
         }
 
-        public static void StartDiagnostic(string output)
+        public static void StartDiagnostic(string output, bool waitForStartup = true)
         {
             if (!Application.isPlaying) throw new InvalidOperationException("Run the skill diagnostic in Play Mode or Player.");
             var host=new GameObject("SkillSummonPlayerValidation");DontDestroyOnLoad(host);
             var driver=host.AddComponent<SkillSummonPlayerValidation>();
+            driver.waitForStartup=waitForStartup;
             driver.output=Path.GetFullPath(output);Directory.CreateDirectory(driver.output);
             driver.deadline=Time.realtimeSinceStartup+(Application.isEditor ? 900f : 300f);Application.runInBackground=true;
             Application.logMessageReceived+=driver.ObserveLog;
@@ -77,7 +79,7 @@ namespace Zjcs.Presentation.Home
         }
         private IEnumerator Run()
         {
-            while(GameObject.Find("OfficialSaveSelectionPanel")==null) yield return null;
+            while(waitForStartup && GameObject.Find("OfficialSaveSelectionPanel")==null) yield return null;
             string saveRoot=Path.Combine(output,"save-"+Guid.NewGuid().ToString("N"));
             var slots=new ProfileSlotCatalog(saveRoot);
             string slot=slots.CreateSlot();
@@ -114,31 +116,38 @@ namespace Zjcs.Presentation.Home
             if (!string.IsNullOrEmpty(sourceActorSetting))
                 Require(int.TryParse(sourceActorSetting, out sourceActor) && sourceActor > 0, "Invalid embedded source actor diagnostic.");
             OfficialBattleEmbeddedMonsterValidation embeddedProbe = null;
-            if (sourceActor != 0)
+            bool checkAbsorption = Environment.GetEnvironmentVariable("ZJCS_STATUS_ABSORPTION_ACCEPTANCE") == "1";
+            OfficialBattleStatusAbsorptionValidation absorptionProbe = null;
+            if (sourceActor != 0 || checkAbsorption)
             {
                 var weekly = OfflineWeeklyChallengeBattleCatalog.LoadDefault();
                 Require(weekly.TryGetBattle(4800, out var stage, out var roster, out var scene), "Original weekly fixture is unavailable.");
                 var checkpoint = OfficialMapBattleCheckpointBuilder.Create(new OfficialMapBattleCheckpointRequest {
                     Stage = stage, Roster = roster, Scene = scene, Player = home.Profile.Save.Player,
                     World = home.Profile.Save.World, Progression = home.DailyDungeonProgression, RandomSeed = 43 });
-                embeddedProbe = OfficialBattleEmbeddedMonsterValidation.Configure(checkpoint, sourceActor);
+                Require(sourceActor == 0 || !checkAbsorption, "Select one original source diagnostic.");
+                if (checkAbsorption) absorptionProbe = OfficialBattleStatusAbsorptionValidation.Configure(checkpoint);
+                else embeddedProbe = OfficialBattleEmbeddedMonsterValidation.Configure(checkpoint, sourceActor);
                 File.WriteAllText(Path.Combine(output,"source-actor-initial.json"),FightBattleCheckpointSerializer.Save(checkpoint));
                 var weeklySession = new OfflineWeeklyChallengeSession(Path.Combine(saveRoot, "saves", slot, "weekly-challenge-save.json"));
                 weeklySession.StartBattle(4800, weeklySession.CurrentPeriodStartLocalTicks(DateTime.Now), FightBattleCheckpointSerializer.Save(checkpoint));
             }
             var runner=home.StartWeeklyChallengeBattle(4800,cp=>settled=cp);
             var controller=runner.Controller;
+            absorptionProbe?.BindPresentation(controller);
             bool checkClones = Environment.GetEnvironmentVariable("ZJCS_PLAYER_CLONE_ACCEPTANCE") == "1";
             bool checkDeath = Environment.GetEnvironmentVariable("ZJCS_PLAYER_DEATH_ACCEPTANCE") == "1";
             bool checkEmbedded = sourceActor != 0 || Environment.GetEnvironmentVariable("ZJCS_EMBEDDED_MONSTER_ACCEPTANCE") == "1";
-            Require((checkClones ? 1 : 0) + (checkDeath ? 1 : 0) + (checkEmbedded ? 1 : 0) <= 1,
+            Require((checkClones ? 1 : 0) + (checkDeath ? 1 : 0) + (checkEmbedded ? 1 : 0)
+                + (checkAbsorption ? 1 : 0) <= 1,
                 "Select one isolated player diagnostic per battle.");
             var cloneProbe = checkClones ? OfficialBattlePlayerCloneValidation.Configure(controller.Checkpoint) : null;
             var deathProbe = checkDeath ? OfficialBattlePlayerDeathValidation.Configure(controller.Checkpoint) : null;
             embeddedProbe ??= checkEmbedded ? OfficialBattleEmbeddedMonsterValidation.Configure(controller.Checkpoint) : null;
-            var probe = checkClones || checkDeath || checkEmbedded ? null : OfficialSummonLifecycleValidation.Configure(controller.Checkpoint);
+            var probe = checkClones || checkDeath || checkEmbedded || checkAbsorption ? null : OfficialSummonLifecycleValidation.Configure(controller.Checkpoint);
             controller.StepCompleted+=step=> {
                 probe?.ObserveStep(controller); cloneProbe?.ObserveStep(controller); embeddedProbe?.ObserveStep(controller);
+                absorptionProbe?.ObserveStep(controller);
                 if (sourceActor != 0) File.WriteAllText(Path.Combine(output,"source-actor-last-step.json"),FightBattleCheckpointSerializer.Save(controller.Checkpoint));
             };
             Button start=null;
@@ -159,11 +168,25 @@ namespace Zjcs.Presentation.Home
             finally { if(start!=null) start.onClick.RemoveListener(observeClick); }
             Require(clicked,"The native summon start button did not receive the simulated pointer click.");
             bool captured=false;
+            bool resultCaptured=false;
             while(runner!=null)
             {
+                var nativeResult=FindObjectOfType<DemonResultWindow>();
+                if(nativeResult && nativeResult.IsReady)
+                {
+                    Require(settled!=null && settled.Finished,"Native result opened before settlement.");
+                    yield return new WaitForEndOfFrame();Capture("summon-result");
+                    resultCaptured=true;
+                    Click(nativeResult.Panel.GetComponent<Zjcs.Official.BattleResultUI.GameEndPanelDemonKing>().LeaveGameBtn);
+                    yield return null;
+                    continue;
+                }
                 cloneProbe?.ObserveFrame();
                 deathProbe?.ObserveFrame(controller);
                 embeddedProbe?.ObserveFrame(controller);
+                absorptionProbe?.ObserveFrame(controller);
+                if (absorptionProbe?.CaptureName != null)
+                { yield return new WaitForEndOfFrame(); Capture(absorptionProbe.CaptureName); captured = true; }
                 if (cloneProbe?.CaptureName != null)
                 { yield return new WaitForEndOfFrame(); Capture(cloneProbe.CaptureName); captured = true; }
                 if (deathProbe?.CaptureName != null)
@@ -175,13 +198,16 @@ namespace Zjcs.Presentation.Home
                 yield return null;
             }
             if (settled != null) File.WriteAllText(Path.Combine(output,"summon-final.json"),FightBattleCheckpointSerializer.Save(settled));
-            Require(captured && settled!=null && settled.Finished,"Summon battle did not finish or no diagnostic graph was visible.");
+            Require(captured && resultCaptured && settled!=null && settled.Finished,
+                "Summon battle did not finish, leave its native result, or show its diagnostic graph.");
             probe?.Verify("Windows Player",settled);
             cloneProbe?.Verify(settled);
             deathProbe?.Verify(settled);
             embeddedProbe?.Verify(settled);
+            absorptionProbe?.Verify(settled);
             yield return new WaitForSecondsRealtime(.4f);
-            yield return new WaitForEndOfFrame();Capture("summon-result");
+            Require(!FindObjectOfType<DemonResultWindow>(),"Native weekly result remained after simulated leave.");
+            yield return new WaitForEndOfFrame();Capture("summon-return");
             File.WriteAllText(Path.Combine(output,"result.json"),JsonUtility.ToJson(new Result {passed=true},true));
             Destroy(home.gameObject);Application.Quit(0);
         }
@@ -205,8 +231,18 @@ namespace Zjcs.Presentation.Home
             point=RectTransformUtility.WorldToScreenPoint(camera,rect.TransformPoint(rect.rect.center));
             var candidates=new List<Vector2> {point};
             foreach(var graphic in control.GetComponentsInChildren<Graphic>())
-                if(graphic.raycastTarget) candidates.Add(RectTransformUtility.WorldToScreenPoint(camera,
-                    graphic.rectTransform.TransformPoint(graphic.rectTransform.rect.center)));
+            {
+                if(!graphic.raycastTarget) continue;
+                var area=graphic.rectTransform;
+                candidates.Add(RectTransformUtility.WorldToScreenPoint(camera,area.TransformPoint(area.rect.center)));
+                // Native full-screen blank-space buttons sit behind the result model.
+                // Search their actual hit area without changing graphic raycast settings.
+                foreach(float y in new[] {.1f,.5f,.9f})
+                    foreach(float x in new[] {.1f,.5f,.9f})
+                        candidates.Add(RectTransformUtility.WorldToScreenPoint(camera,area.TransformPoint(
+                            new Vector3(Mathf.Lerp(area.rect.xMin,area.rect.xMax,x),
+                                Mathf.Lerp(area.rect.yMin,area.rect.yMax,y),0f))));
+            }
             var hits=new List<RaycastResult>();
             foreach(var candidate in candidates)
             {

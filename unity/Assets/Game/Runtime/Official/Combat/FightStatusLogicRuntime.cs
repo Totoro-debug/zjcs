@@ -132,6 +132,13 @@ namespace Zjcs.Combat.Official
                 return supported && !child;
             }
             if (type == "RateFilter") return random == null || random.Next() < Double(filter, "Rate", 1d);
+            if (type == "SkillClassIdByEcIdKeyFilter")
+            {
+                // Confirmed binding: DamageSkill is this hit's actual skill entity, not its root.
+                if (KeyId(filter, "SkillEntityIdKey") != 1025 || skill == null || hit == null)
+                { supported = false; return false; }
+                return skill.EntityId == Int(filter, "SkillClassId");
+            }
             if (type == "CounterLessFilter" || type == "CounterLessEqualFilter"
                 || type == "CounterEqualFilter" || type == "CounterGreaterFilter"
                 || type == "CounterGreaterEqualFilter")
@@ -161,10 +168,10 @@ namespace Zjcs.Combat.Official
             }
             if (type == "EntityHpPercentFilter")
             {
-                if (iteration != null && KeyId(filter, "EntityKey") != 1)
-                { supported = false; return false; }
-                FightBattleUnitState entity = ResolveEntity(Object(filter, "EntityKey"), owner, actor, target, units);
-                if (entity == null || entity.MaxHp <= 0) return false;
+                int port = KeyId(filter, "EntityKey");
+                FightBattleUnitState entity = port == 1 ? owner : port == 1022 && hit != null ? target : null;
+                if (entity == null) { supported = false; return false; }
+                if (entity.MaxHp <= 0) return false;
                 double current = (double)Math.Max(0L, entity.Hp) / entity.MaxHp;
                 return Compare(current, Double(filter, "HpPercent", 0d), Int(filter, "Relation", 4));
             }
@@ -301,6 +308,9 @@ namespace Zjcs.Combat.Official
             if (type == "FightHandleCfgChangeStatusStack")
                 return ChangeStatusStacks(handle, owner, status, actor, target, skill, hit,
                     units, catalog, random);
+            if (type == "FightHandleCfgAbsorbStatusStack")
+                return AbsorbStatusStacks(handle, owner, status, actor, target, skill, hit,
+                    units, random);
             return false;
         }
 
@@ -333,29 +343,9 @@ namespace Zjcs.Combat.Official
             long change = value * Int(handle, "Multiplier", 1);
             if (change < int.MinValue || change > int.MaxValue) return false;
             int delta = (int)change;
-            var iteration = new StatusIteration();
-            var matches = new List<FightBattleStatusState>();
-            Dictionary<string, object> filter = Object(handle, "FilterCondition");
-            // Validate even an empty collection, so an unknown filter cannot create a status.
-            bool supported;
-            bool visited = false;
-            foreach (FightBattleStatusState candidate in owner.Statuses == null
-                ? new List<FightBattleStatusState>() : new List<FightBattleStatusState>(owner.Statuses))
-            {
-                if (candidate == null) continue;
-                visited = true;
-                iteration.Candidate = candidate;
-                bool matched = MatchesFilter(filter, owner, mainStatus, actor, target, skill, hit,
-                    units, random, out supported, iteration);
-                if (!supported) return false;
-                if (matched) matches.Add(candidate);
-            }
-            if (!visited)
-            {
-                MatchesFilter(filter, owner, mainStatus, actor, target, skill, hit, units,
-                    random, out supported, iteration);
-                if (!supported) return false;
-            }
+            List<FightBattleStatusState> matches;
+            if (!TryMatchStatuses(owner, Object(handle, "FilterCondition"), owner, mainStatus,
+                actor, target, skill, hit, units, random, out matches)) return false;
             if (matches.Count == 0 && delta > 0 && Int(handle, "CreateStatusClassId") > 0)
             {
                 if (catalog == null) return false;
@@ -393,6 +383,59 @@ namespace Zjcs.Combat.Official
                         -changed, catalog, random, skill);
             }
             return true;
+        }
+
+        private static bool AbsorbStatusStacks(Dictionary<string, object> handle,
+            FightBattleUnitState owner, FightBattleStatusState mainStatus,
+            FightBattleUnitState actor, FightBattleUnitState target,
+            FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
+            IReadOnlyList<FightBattleUnitState> units, FightRandomStream random)
+        {
+            int port = KeyId(handle, "TargetEntityKey");
+            FightBattleUnitState destination = port == 1 ? owner : port == 1022 && hit != null ? target : null;
+            int outputKey = KeyId(handle, "OutputCountKey");
+            if (destination == null || outputKey == 0) return false;
+            List<FightBattleStatusState> matches;
+            if (!TryMatchStatuses(destination, Object(handle, "FilterCondition"), owner, mainStatus,
+                actor, target, skill, hit, units, random, out matches)) return false;
+            long count = 0;
+            foreach (FightBattleStatusState candidate in matches) count += Math.Max(0, candidate.StackCount);
+            if (count > int.MaxValue) return false;
+            // Snapshot every layer before end callbacks can change the remaining instances.
+            SetBlackboard(mainStatus, outputKey, count);
+            if (Bool(handle, "RemoveStatus", true))
+                foreach (FightBattleStatusState candidate in matches)
+                    FightStatusLifecycle.End(destination, candidate);
+            // The original configuration has no consumption-notification option.
+            return true;
+        }
+
+        private static bool TryMatchStatuses(FightBattleUnitState destination,
+            Dictionary<string, object> filter, FightBattleUnitState owner,
+            FightBattleStatusState mainStatus, FightBattleUnitState actor, FightBattleUnitState target,
+            FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
+            IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
+            out List<FightBattleStatusState> matches)
+        {
+            matches = new List<FightBattleStatusState>();
+            var iteration = new StatusIteration();
+            bool supported, visited = false;
+            foreach (FightBattleStatusState candidate in destination.Statuses == null
+                ? new List<FightBattleStatusState>() : new List<FightBattleStatusState>(destination.Statuses))
+            {
+                if (candidate == null) continue;
+                visited = true;
+                iteration.Candidate = candidate;
+                bool matched = MatchesFilter(filter, owner, mainStatus, actor, target, skill, hit,
+                    units, random, out supported, iteration);
+                if (!supported) return false;
+                if (matched) matches.Add(candidate);
+            }
+            // An empty collection must not bypass an unsupported condition and allow creation.
+            if (visited) return true;
+            MatchesFilter(filter, owner, mainStatus, actor, target, skill, hit, units,
+                random, out supported, iteration);
+            return supported;
         }
 
         private static FightBattleStatusStateTrigger TriggerSkill(Dictionary<string, object> cfg,

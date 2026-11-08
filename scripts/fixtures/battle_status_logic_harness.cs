@@ -66,6 +66,8 @@ public static class BattleStatusLogicHarness
         FilterBoundaries(catalog);
         ChangeStatusStacks(catalog);
         OriginalStackStartup(catalog);
+        AbsorbStatusStacks(catalog);
+        AbsorbExecutor(catalog, items, formula);
         SkillDefinitionCheckpoints(catalog, items, formula);
     }
 
@@ -164,6 +166,144 @@ public static class BattleStatusLogicHarness
 
     private static string StatusFilter(int classId)
         => "{\"_type\":\"IteratingAgentStatusClassIdFilter\",\"StatusClassId\":" + classId + "}";
+
+    private static void AbsorbStatusStacks(FightOfficialCombatCatalog catalog)
+    {
+        var owner = Unit(1, 1); var target = Unit(2, 2);
+        var main = catalog.CreateStatus(24774, 1, 1, 80, 64280);
+        owner.Statuses.Add(main);
+        var skill = catalog.CreateSkill(64280, 0, 0, 1, 1, 0, null);
+        FightStatusLogicRuntime.Apply(owner, main, FightStatusLogicEvent.StatusSelfInit,
+            owner, target, null, null, new[] { owner, target }, catalog, new FightRandomStream(31));
+        var energy = owner.Statuses.Single(v => v.ClassId == 24752);
+        energy.StackCount = 30;
+        var own = catalog.CreateStatus(24750, 1, 1, 81); own.StackCount = 2; owner.Statuses.Add(own);
+        var a = catalog.CreateStatus(24750, 2, 1, 82); a.StackCount = 3; target.Statuses.Add(a);
+        var b = catalog.CreateStatus(24750, 2, 9, 83); b.StackCount = 4; target.Statuses.Add(b);
+        var observer = catalog.CreateStatus(24669, 2, 2, 84);
+        observer.HasConsumeStackCount = observer.ConsumeStackCountRulesSupported = true;
+        observer.ConsumeStackCountTargetStatusId = 24750;
+        observer.ConsumeStackCountThreshold = 10;
+        observer.ConsumeStackCountStatuses.Clear(); target.Statuses.Add(observer);
+        int ended = 0;
+        target.StatusEnded += (unit, status) => {
+            if (status.ClassId != 24750) return;
+            ended++;
+            // The snapshot must retain B's four layers even if A's end callback changes B.
+            if (ReferenceEquals(status, a)) b.StackCount = 1;
+        };
+        FightStatusLogicRuntime.Apply(owner, main, FightStatusLogicEvent.DoDamage,
+            owner, target, skill, FightBattleHitCollector.CollectAll(skill)[0], new[] { owner, target }, catalog, new FightRandomStream(31));
+        Check(energy.StackCount == 100 && ended == 2 && !target.Statuses.Contains(a)
+            && !target.Statuses.Contains(b) && owner.Statuses.Contains(own)
+            && main.LogicBlackboard.Single(v => v.KeyId == 619624960).LongValue == 7
+            && observer.ConsumeStackCountProgress == 0 && main.LogicRulesSupported,
+            "Original 24774 failed target-only snapshot absorption, x10 capped gain or emitted consumption.");
+        FightStatusLogicRuntime.Apply(owner, main, FightStatusLogicEvent.DoDamage,
+            owner, target, skill, FightBattleHitCollector.CollectAll(skill)[0], new[] { owner, target }, catalog, new FightRandomStream(31));
+        Check(energy.StackCount == 100
+            && main.LogicBlackboard.Single(v => v.KeyId == 619624960).LongValue == 0,
+            "No-match absorption reused a stale output count.");
+
+        target.Statuses.Add(catalog.CreateStatus(24750, 2, 1, 85));
+        var mismatch = catalog.CreateSkill(12000, 0, 0, 1, 1, 0, null);
+        mismatch.RootEntityId = 64280;
+        FightStatusLogicRuntime.Apply(owner, main, FightStatusLogicEvent.DoDamage,
+            owner, target, mismatch, FightBattleHitCollector.CollectAll(mismatch)[0], new[] { owner, target }, catalog, new FightRandomStream(31));
+        Check(target.Statuses.Any(v => v.ClassId == 24750),
+            "The skill condition used the root skill instead of this hit's actual skill entity.");
+
+        string originalGraph = main.LogicDefinitionJson;
+        const string absorb = "{\"_type\":\"FightHandleCfgAbsorbStatusStack\","
+            + "\"TargetEntityKey\":{\"Id\":1022},\"FilterCondition\":FILTER,"
+            + "\"RemoveStatus\":false,\"OutputCountKey\":{\"Id\":7001}}";
+        RunAbsorbFlow(main, owner, target, catalog, skill, absorb.Replace("FILTER", StatusFilter(24750)));
+        Check(target.Statuses.Any(v => v.ClassId == 24750)
+            && main.LogicBlackboard.Single(v => v.KeyId == 7001).LongValue == 1,
+            "RemoveStatus=false removed a status or failed to count its layers.");
+        string failedTail = ",{\"_type\":\"FightHandleCfgCounterAdd\","
+            + "\"CounterBBKey\":{\"Id\":7002},\"DeltaValue\":1}";
+        RunAbsorbFlow(main, owner, target, catalog, skill, absorb.Replace("false", "true")
+            .Replace("FILTER", "{\"_type\":\"LogicFilter\",\"LogicType\":1,\"SubFilters\":["
+                + StatusFilter(24750) + ",{\"_type\":\"UnknownServerFilter\"}]}") + failedTail);
+        Check(target.Statuses.Any(v => v.ClassId == 24750) && !main.LogicRulesSupported
+            && main.LogicBlackboard.Single(v => v.KeyId == 7001).LongValue == 1
+            && !main.LogicBlackboard.Any(v => v.KeyId == 7002),
+            "Unsupported absorption filter changed statuses/output or ran the dependent tail.");
+        RunAbsorbFlow(main, owner, target, catalog, skill, absorb.Replace("FILTER", StatusFilter(24750))
+            .Replace("1022", "1079") + failedTail);
+        Check(!main.LogicRulesSupported && target.Statuses.Any(v => v.ClassId == 24750)
+            && !main.LogicBlackboard.Any(v => v.KeyId == 7002),
+            "Unbound absorption target fell back to the owner or continued the flow.");
+        RunAbsorbFlow(main, owner, target, catalog, skill, absorb.Replace("FILTER", StatusFilter(24750))
+            .Replace("false", "true") + failedTail,
+            "{\"_type\":\"LogicNotFilter\",\"TargetFilter\":{\"_type\":\"EntityHpPercentFilter\","
+                + "\"EntityKey\":{\"Id\":1079},\"HpPercent\":1,\"Relation\":4}}");
+        Check(!main.LogicRulesSupported && target.Statuses.Any(v => v.ClassId == 24750)
+            && !main.LogicBlackboard.Any(v => v.KeyId == 7002),
+            "An unbound HP port in the outer NOT condition allowed absorption.");
+        main.LogicDefinitionJson = originalGraph; main.LogicRulesSupported = true;
+        skill.RootEntityId = 12000;
+        energy.StackCount = 20;
+        FightStatusLogicRuntime.Apply(owner, main, FightStatusLogicEvent.DoDamage,
+            owner, target, skill, FightBattleHitCollector.CollectAll(skill)[0], new[] { owner, target }, catalog, new FightRandomStream(31));
+        Check(energy.StackCount == 30 && !target.Statuses.Any(v => v.ClassId == 24750),
+            "Actual 64280 hit was rejected because its root skill differed.");
+    }
+
+    private static void RunAbsorbFlow(FightBattleStatusState main, FightBattleUnitState owner,
+        FightBattleUnitState target, FightOfficialCombatCatalog catalog,
+        FightBattleSkillDefinition skill, string handles, string filter = "null")
+    {
+        main.LogicRulesSupported = true;
+        main.LogicDefinitionJson = "{\"Triggers\":[{\"_type\":\"FightOnDoDamageTriggerCfg\","
+            + "\"Flow\":{\"FilterCondition\":" + filter + ",\"HandleCfgs\":[" + handles + "]}}]}";
+        FightStatusLogicRuntime.Apply(owner, main, FightStatusLogicEvent.DoDamage,
+            owner, target, skill, FightBattleHitCollector.CollectAll(skill)[0], new[] { owner, target }, catalog, new FightRandomStream(31));
+    }
+
+    private static void AbsorbExecutor(FightOfficialCombatCatalog catalog,
+        FightOfficialSkillItemCatalog items, FightDamageFormula formula)
+    {
+        var owner = Unit(1, 1); var target = Unit(2, 2);
+        owner.X = 4; target.X = 6; owner.Y = target.Y = 4;
+        owner.Turn.Speed = 100; target.Turn.Speed = 1;
+        foreach (var unit in new[] { owner, target })
+        {
+            unit.Level = unit.SubRank = 1;
+            unit.Properties.Add(new FightPropertyValue { Id = catalog.PropertyType("MaxHp"), Value = 1000000 });
+            unit.Properties.Add(new FightPropertyValue { Id = catalog.PropertyType("Attack"), Value = 1000 });
+            unit.BaseProperties = unit.Properties.Select(v => new FightPropertyValue { Id = v.Id, Value = v.Value }).ToList();
+        }
+        var main = catalog.CreateStatus(24774, 1, 1, 90, 64280);
+        owner.Statuses.Add(main);
+        var skill = catalog.CreateSkill(64280, 0, 0, 1, 1, 0, null);
+        owner.Skills.Add(skill);
+        owner.SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = -1 });
+        var checkpoint = new FightBattleCheckpoint { StageId = 1001, RandomSeed = 31,
+            Grid = new FightBattleGrid { Width = 20, Height = 20, DefaultGroundType = 2 },
+            ResultRules = new FightBattleResultRules() };
+        checkpoint.Units.Add(owner); checkpoint.Units.Add(target);
+        var runner = FightBattleExecutor.Begin(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+        runner.Step(0, 1);
+        owner.Statuses.Single(v => v.ClassId == 24752).StackCount = 20;
+        var absorbed = catalog.CreateStatus(24750, 2, 1, 91); absorbed.StackCount = 3;
+        target.Statuses.Add(absorbed);
+        bool hit = false;
+        for (int i = 0; i < 8 && !hit; i++)
+            hit |= runner.Step(checkpoint.Sequence, checkpoint.Counter + 1).Event.DamageEvents
+                .Any(v => v.SkillEntityId == 64280 && v.TargetId == 2);
+        Check(hit && !target.Statuses.Contains(absorbed)
+            && owner.Statuses.Single(v => v.ClassId == 24752).StackCount == 50,
+            "Production 64280 absorption failed: hit=" + hit + "; absorbed=" + !target.Statuses.Contains(absorbed)
+                + "; energy=" + owner.Statuses.Single(v => v.ClassId == 24752).StackCount
+                + "; casts=" + string.Join(",", checkpoint.Receipts.SelectMany(v => v.Event.SkillCasts)
+                    .Select(v => v.SkillEntityId)) + "; positions=" + owner.X + "," + owner.Y
+                + "/" + target.X + "," + target.Y);
+        var restored = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+        Check(restored.Units[0].Statuses.Single(v => v.ClassId == 24752).StackCount == 50,
+            "Production absorption result was lost during checkpoint restore.");
+    }
 
     private static void OriginalStackStartup(FightOfficialCombatCatalog catalog)
     {
