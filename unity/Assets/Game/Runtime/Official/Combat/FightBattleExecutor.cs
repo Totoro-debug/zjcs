@@ -76,7 +76,11 @@ namespace Zjcs.Combat.Official
                 InitializeUnitResilience(unit);
                 ApplySkillAiPriorities(unit);
                 if (statusCatalog != null && unit.Skills != null)
-                    foreach (var skill in unit.Skills) statusCatalog.RestoreHitScopeTransforms(skill);
+                    foreach (var skill in unit.Skills)
+                    {
+                        statusCatalog.RestoreHitScopeTransforms(skill);
+                        statusCatalog.RestoreSkillLogicDefinition(skill);
+                    }
                 if (statusCatalog != null && unit.Statuses != null)
                     foreach (FightBattleStatusState status in unit.Statuses)
                         if (status != null && statusCatalog.ContainsEntity(status.ClassId))
@@ -98,7 +102,11 @@ namespace Zjcs.Combat.Official
             if (statusCatalog != null)
                 foreach (var item in checkpoint.GridItems)
                     if (item?.Runtime?.Skills != null)
-                        foreach (var skill in item.Runtime.Skills) statusCatalog.RestoreHitScopeTransforms(skill);
+                        foreach (var skill in item.Runtime.Skills)
+                        {
+                            statusCatalog.RestoreHitScopeTransforms(skill);
+                            statusCatalog.RestoreSkillLogicDefinition(skill);
+                        }
             if (!unitById.ContainsKey(1))
                 throw new ArgumentException("Fight roster does not contain the main player unit.", nameof(checkpoint));
             turns = new FightTurnQueue(checkpoint.Timeline, Turns());

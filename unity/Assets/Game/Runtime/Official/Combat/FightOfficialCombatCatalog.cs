@@ -685,6 +685,7 @@ namespace Zjcs.Combat.Official
             };
 
             ReadSkillTriggerPolicy(skill, result);
+            RestoreSkillLogicDefinition(result);
             AddSourceMoves(skill, result.SourceMoves);
             Dictionary<string, object> extSkill = Component(components, "FightSkillExtSkillComponent");
             if (extSkill != null) AddExtraSkills(extSkill, result.ExtraSkills);
@@ -730,6 +731,18 @@ namespace Zjcs.Combat.Official
             if (result.HitGraphEntities.Count == 0)
                 throw new InvalidOperationException("Official skill has no resolved hit graph: " + entityId);
             return result;
+        }
+
+        // Legacy checkpoints predate skill-logic configuration. Restore immutable source data
+        // without changing their cooldowns, source information, hit graphs or cast counters.
+        internal void RestoreSkillLogicDefinition(FightBattleSkillDefinition skill)
+        {
+            if (skill == null || skill.LogicDefinitionResolved
+                || !entities.TryGetValue(skill.EntityId, out var components)) return;
+            var logic = Component(components, "FightSkillLogicComponent");
+            skill.HasLogicComponent = logic != null;
+            skill.LogicDefinitionJson = logic == null ? null : OfficialJson.Stringify(logic);
+            skill.LogicDefinitionResolved = true;
         }
 
         /// <summary>Response gates for an already settled effect; this context is never cast.</summary>

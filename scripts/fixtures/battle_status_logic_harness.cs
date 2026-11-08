@@ -64,6 +64,56 @@ public static class BattleStatusLogicHarness
         Check(restoredRunner != null && restoredLogic.LogicTriggeredCount >= 0,
             "Status logic checkpoint could not be restored by the official executor.");
         FilterBoundaries(catalog);
+        SkillDefinitionCheckpoints(catalog, items, formula);
+    }
+
+    private static void SkillDefinitionCheckpoints(FightOfficialCombatCatalog catalog,
+        FightOfficialSkillItemCatalog items, FightDamageFormula formula)
+    {
+        int[] ids = { 13640, 13730, 13740, 13820, 13830, 13840, 13870, 13960,
+            13970, 50210, 50213, 50230, 54370, 54373, 64450 };
+        var player = Unit(1, 1);
+        foreach (int id in ids)
+        {
+            // 50213 is officially a logic-only skill with an empty HitList. Its execution
+            // remains unavailable until OnSkillStart is implemented; retain its graph here.
+            var skill = id == 50213 ? new FightBattleSkillDefinition { EntityId = id }
+                : catalog.CreateSkill(id, 0, 0, 1, 1, 0, new List<FightPropertyValue>());
+            catalog.RestoreSkillLogicDefinition(skill);
+            Check(skill.HasLogicComponent && skill.LogicDefinitionResolved,
+                "Original skill logic was discarded: " + id);
+            var graph = (Dictionary<string, object>)OfficialJson.Parse(skill.LogicDefinitionJson);
+            Check(graph.Count == 4 && graph.ContainsKey("OnDoHit")
+                && graph.ContainsKey("OnDoHitTransient") && graph.ContainsKey("OnSkillStart")
+                && graph.ContainsKey("OnHitFinish"), "Original skill event fields were changed: " + id);
+            player.Skills.Add(skill);
+        }
+        var checkpoint = new FightBattleCheckpoint
+        {
+            StageId = 1001, RandomSeed = 31,
+            Grid = new FightBattleGrid { Width = 20, Height = 20 },
+            ResultRules = new FightBattleResultRules()
+        };
+        checkpoint.Units.Add(player); checkpoint.Units.Add(Unit(2, 2));
+        var restored = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+        for (int i = 0; i < ids.Length; i++)
+            Check(restored.Units[0].Skills[i].LogicDefinitionJson == player.Skills[i].LogicDefinitionJson,
+                "Checkpoint changed polymorphic skill logic: " + ids[i]);
+
+        // Simulate an old checkpoint with no logic fields, through the production restore path.
+        string original = restored.Units[0].Skills[0].LogicDefinitionJson;
+        restored.Units[0].Skills[0].HasLogicComponent = false;
+        restored.Units[0].Skills[0].LogicDefinitionResolved = false;
+        restored.Units[0].Skills[0].LogicDefinitionJson = null;
+        restored.Units[0].Skills[0].FalloffCastId = 731;
+        FightBattleExecutor.Restore(restored, formula, new FightDamageSettlement(), catalog, items);
+        Check(restored.Units[0].Skills[0].LogicDefinitionJson == original
+            && restored.Units[0].Skills[0].HasLogicComponent
+            && restored.Units[0].Skills[0].FalloffCastId == 731,
+            "Legacy skill logic restoration lost configuration or modified cast state.");
+        var plain = catalog.CreateSkill(12000, 0, 0, 1, 1, 0, new List<FightPropertyValue>());
+        Check(plain.LogicDefinitionResolved && !plain.HasLogicComponent && plain.LogicDefinitionJson == null,
+            "A skill without an original logic component acquired a fabricated graph.");
     }
 
     private static void FilterBoundaries(FightOfficialCombatCatalog catalog)

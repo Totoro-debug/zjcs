@@ -1267,6 +1267,11 @@ namespace Zjcs.Combat.Official
         public int ActionType;
         public int HitTargetActionType;
         public long[] GameplayTags;
+        // Preserve the original polymorphic skill graph separately from execution support.
+        // Checkpoints are saved between atomic casts; these fields contain configuration only.
+        public bool HasLogicComponent;
+        public bool LogicDefinitionResolved;
+        public string LogicDefinitionJson;
         public List<int> BlockingSourceActionTypes = new List<int>();
         public List<int> BlockingTargetActionTypes = new List<int>();
         public int SkillTargetType;
