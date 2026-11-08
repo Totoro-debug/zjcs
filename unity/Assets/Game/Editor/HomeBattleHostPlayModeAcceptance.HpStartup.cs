@@ -50,7 +50,13 @@ namespace Zjcs.Editor
                 counted.HpLessThanStatuses.Clear();
                 player.Statuses.Add(counted);
             }
-            return new HpStartupProbe(summon, counted);
+            FightBattleStatusState logic = null;
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_STATUS_LOGIC_ACCEPTANCE") == "1")
+            {
+                logic = catalog.CreateStatus(24669, 1, 1, 9924669);
+                player.Statuses.Add(logic);
+            }
+            return new HpStartupProbe(summon, counted, logic);
         }
 
         private static HpForbiddenProbe ConfigureHpForbiddenProbe(FightBattleCheckpoint checkpoint)
@@ -469,8 +475,10 @@ namespace Zjcs.Editor
             private OfficialBattleSceneView sceneView;
             private bool renderedSummon;
             private readonly FightBattleStatusState counted;
-            public HpStartupProbe(bool requiresSummon, FightBattleStatusState counted)
-            { this.requiresSummon = requiresSummon; this.counted = counted; }
+            private readonly FightBattleStatusState logic;
+            public HpStartupProbe(bool requiresSummon, FightBattleStatusState counted,
+                FightBattleStatusState logic = null)
+            { this.requiresSummon = requiresSummon; this.counted = counted; this.logic = logic; }
             public void ObserveStep(OfficialBattleRuntimeController controller)
             {
                 if (observedStep) return;
@@ -480,6 +488,21 @@ namespace Zjcs.Editor
                 if (counted != null)
                     Require(counted.HpLessThanTriggeredCount == 3 && !cp.Units[0].Statuses.Contains(counted),
                         "HP automatic removal did not wait for its configured three invocations.");
+                if (logic != null)
+                {
+                    Require(logic.LogicSelfInitialized && logic.LogicStartInitialized
+                        && logic.LogicBlackboard.Single(value => value.KeyId == 619624960).LongValue == -1,
+                        "Actual battle startup did not initialize the original 24669 blackboard.");
+                    string logicCheckpoint = FightBattleCheckpointSerializer.Save(cp);
+                    var restoredLogic = FightBattleCheckpointSerializer.Load(logicCheckpoint).Units
+                        .Single(value => value.Id == 1).Statuses.Single(value => value.InstanceId == logic.InstanceId);
+                    Require(restoredLogic.LogicSelfInitialized && restoredLogic.LogicStartInitialized
+                        && restoredLogic.LogicDefinitionJson == logic.LogicDefinitionJson
+                        && restoredLogic.LogicBlackboard.Single(value => value.KeyId == 619624960).LongValue == -1,
+                        "The real battle checkpoint lost the original 24669 graph/blackboard.");
+                    Debug.Log("[Status logic hosts] " + controller.GetType().Name
+                        + ": original 24669 startup and Unity battle checkpoint passed.");
+                }
                 var original = step.SkillCasts.Where(value => value.SkillEntityId == 10170).ToArray();
                 var moving = step.SkillCasts.Where(value => value.SkillEntityId == 13500).ToArray();
                 Require(original.Length == 1 && moving.Length == 1
@@ -508,7 +531,8 @@ namespace Zjcs.Editor
                         queuedAnimation = true;
                     }
                 }
-                Require(queuedAnimation, "The HP startup skill did not reach the real scene animation queue.");
+                if (logic == null)
+                    Require(queuedAnimation, "The HP startup skill did not reach the real scene animation queue.");
                 observedStep = true;
             }
 
@@ -534,7 +558,8 @@ namespace Zjcs.Editor
 
             public void Verify(string host, FightBattleCheckpoint checkpoint)
             {
-                Require(observedStep && queuedAnimation && boundAnimation, host + " did not queue and bind HP startup animation.");
+                Require(observedStep && (logic != null || queuedAnimation && boundAnimation),
+                    host + " did not complete its configured startup probe.");
                 Require(!requiresSummon || renderedSummon, host + " did not render its real HP startup summon.");
                 Require(checkpoint.Receipts.SelectMany(value => value.Event.SkillCasts)
                     .Count(value => value.ActorId == 1 && value.SkillEntityId == 10170) == 1,
@@ -542,6 +567,18 @@ namespace Zjcs.Editor
                 string saved = FightBattleCheckpointSerializer.Save(checkpoint);
                 Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
                     host + " lost HP startup markers after checkpoint reload.");
+                if (logic != null)
+                {
+                    var restored = FightBattleCheckpointSerializer.Load(saved).Units
+                        .Single(value => value.Id == 1).Statuses.Single(value => value.InstanceId == logic.InstanceId);
+                    Require(restored.LogicSelfInitialized && restored.LogicStartInitialized
+                        && restored.LogicDefinitionJson == logic.LogicDefinitionJson
+                        && restored.LogicBlackboard.Single(value => value.KeyId == 619624960).LongValue == -1,
+                        host + " lost the original logic graph/blackboard in the Unity checkpoint.");
+                    Debug.Log("[Status logic hosts] " + host
+                        + ": original 24669 self-init and Unity checkpoint graph/blackboard passed.");
+                    return; // This mode does not assert the HP skill's scene animation binding.
+                }
                 Debug.Log("[HP startup hosts] " + host + ": original 24202 -> 10170; legacy 13500 at zero time;"
                     + " no personal turn consumed; original marker bound by real Animator; checkpoint passed."
                     + " Skill 41 bone motion remains unconverted and is not asserted by this probe.");
