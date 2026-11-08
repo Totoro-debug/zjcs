@@ -6,6 +6,7 @@ using System.Reflection;
 using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Presentation.Combat;
+using Zjcs.Offline.ProfessionUI;
 
 namespace Zjcs.Editor
 {
@@ -468,17 +469,52 @@ namespace Zjcs.Editor
         private sealed class HpStartupProbe
         {
             private bool observedStep;
-            private bool queuedAnimation;
-            private bool boundAnimation;
             private readonly bool requiresSummon;
             private int summonId;
             private OfficialBattleSceneView sceneView;
             private bool renderedSummon;
             private readonly FightBattleStatusState counted;
             private readonly FightBattleStatusState logic;
+            private ProfessionNativeSceneRenderer nativeRenderer;
+            private Matrix4x4[] firstSkillPose;
+            private float firstSkillTime = -1;
+            private int skillPoseFrames;
+            private bool nativePoseAdvanced, nativeGeometryVisible;
+            private int originalNativeCasts, movingNativeCasts;
+            public bool ReadyToCapture => nativePoseAdvanced && nativeGeometryVisible;
             public HpStartupProbe(bool requiresSummon, FightBattleStatusState counted,
                 FightBattleStatusState logic = null)
             { this.requiresSummon = requiresSummon; this.counted = counted; this.logic = logic; }
+            public void BindPresentation(OfficialBattleRuntimeController controller)
+            {
+                if (logic != null) return;
+                var body = controller.TryGetUnitTransform(1);
+                nativeRenderer = body == null ? null : body.GetComponentInChildren<ProfessionNativeSceneRenderer>(true);
+                Require(nativeRenderer != null, "HP startup requires the actual native player renderer.");
+                nativeRenderer.OnClipApplied += (animation, name, layer, weight, time, previous, backward) =>
+                {
+                    if (name != "200/skill_41" || weight <= 0) return;
+                    skillPoseFrames++;
+                    if (firstSkillPose == null)
+                    {
+                        firstSkillTime = time;
+                        firstSkillPose = Enumerable.Range(0, nativeRenderer.State.Pose.Count)
+                            .Select(nativeRenderer.State.Pose.World).ToArray();
+                    }
+                    else if (time > firstSkillTime && firstSkillPose.Where((pose, index) =>
+                        pose != nativeRenderer.State.Pose.World(index)).Any()) nativePoseAdvanced = true;
+                };
+                var graph = (OfficialBattleSkillGraphPlayback)typeof(OfficialBattleRuntimeController)
+                    .GetField("skillGraphPlayback", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(controller);
+                var entities = (OfficialBattleSkillEntityPlayback)typeof(OfficialBattleSkillGraphPlayback)
+                    .GetField("entityViews", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(graph);
+                entities.CastStarted += cast =>
+                {
+                    if (cast.ActorId != 1) return;
+                    if (cast.SkillEntityId == 10170) originalNativeCasts++;
+                    else if (cast.SkillEntityId == 13500) movingNativeCasts++;
+                };
+            }
             public void ObserveStep(OfficialBattleRuntimeController controller)
             {
                 if (observedStep) return;
@@ -520,24 +556,18 @@ namespace Zjcs.Editor
                     summonId = summon.Id;
                     Require(step.SpawnedUnitIds.Contains(summonId), "HP startup did not publish the real 10710 summon.");
                 }
-                var pending = (IEnumerable)typeof(OfficialBattleSceneView).GetField("pendingUnitAnimations",
-                    BindingFlags.Instance | BindingFlags.NonPublic).GetValue(scene);
-                foreach (object item in pending)
-                {
-                    var cue = (OfficialBattleAnimationCue)item.GetType().GetField("Cue").GetValue(item);
-                    if (cue.UnitId == 1 && cue.SkillPlayable?.animation == "200/skill_41")
-                    {
-                        Require(cue.Delay == 0f, "HP startup animation acquired a personal-turn delay.");
-                        queuedAnimation = true;
-                    }
-                }
                 if (logic == null)
-                    Require(queuedAnimation, "The HP startup skill did not reach the real scene animation queue.");
+                    Require(originalNativeCasts == 1 && movingNativeCasts == 1,
+                        "HP startup did not create both original native skill graph entities.");
                 observedStep = true;
             }
 
             public void ObservePresentation()
             {
+                if (nativePoseAdvanced && nativeRenderer != null)
+                    nativeGeometryVisible |= nativeRenderer.GetComponentsInChildren<MeshRenderer>(true)
+                        .Any(value => value.enabled && value.isVisible && !value.forceRenderingOff
+                            && value.GetComponent<MeshFilter>()?.sharedMesh?.vertexCount > 0);
                 if (requiresSummon && summonId > 0 && !renderedSummon && sceneView != null)
                 {
                     var body = (Transform)typeof(OfficialBattleSceneView).GetMethod("Body",
@@ -546,19 +576,12 @@ namespace Zjcs.Editor
                         .Any(value => value.enabled && !value.forceRenderingOff && value.isVisible
                             && value.GetComponent<MeshFilter>()?.sharedMesh?.vertexCount > 0);
                 }
-                if (!queuedAnimation || boundAnimation) return;
-                var player = GameObject.Find("HomePlayer");
-                var animator = player == null ? null : player.GetComponentInChildren<Animator>(true);
-                if (animator == null || !(animator.runtimeAnimatorController is AnimatorOverrideController controller)) return;
-                var overrides = new List<KeyValuePair<AnimationClip, AnimationClip>>();
-                controller.GetOverrides(overrides);
-                boundAnimation = overrides.Any(value => value.Value != null
-                    && value.Value.name.StartsWith("200/skill_41", StringComparison.Ordinal));
             }
 
             public void Verify(string host, FightBattleCheckpoint checkpoint)
             {
-                Require(observedStep && (logic != null || queuedAnimation && boundAnimation),
+                Require(observedStep && (logic != null || originalNativeCasts == 1 && movingNativeCasts == 1
+                    && skillPoseFrames >= 2 && nativePoseAdvanced && nativeGeometryVisible),
                     host + " did not complete its configured startup probe.");
                 Require(!requiresSummon || renderedSummon, host + " did not render its real HP startup summon.");
                 Require(checkpoint.Receipts.SelectMany(value => value.Event.SkillCasts)
@@ -580,8 +603,8 @@ namespace Zjcs.Editor
                     return; // This mode does not assert the HP skill's scene animation binding.
                 }
                 Debug.Log("[HP startup hosts] " + host + ": original 24202 -> 10170; legacy 13500 at zero time;"
-                    + " no personal turn consumed; original marker bound by real Animator; checkpoint passed."
-                    + " Skill 41 bone motion remains unconverted and is not asserted by this probe.");
+                    + " no personal turn consumed; both native MyFightSkill graphs started; 200/skill_41"
+                    + " advanced through real renderer poses with visible geometry; checkpoint passed.");
                 if (requiresSummon) Debug.Log("[HP startup hosts] " + host + ": original 10710 -> 3181 spawn event and visible native geometry passed.");
                 if (counted != null) Debug.Log("[HP startup hosts] " + host + ": finite HP threshold invoked three times before automatic removal.");
             }

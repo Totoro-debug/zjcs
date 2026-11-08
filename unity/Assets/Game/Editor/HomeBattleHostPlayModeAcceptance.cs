@@ -730,6 +730,7 @@ namespace Zjcs.Editor
             StatusReplayProbe statusReplays = ConfigureStatusReplayProbe(checkpoint);
             TriggerTimingProbe triggerTiming = ConfigureTriggerTimingProbe(checkpoint);
             HpStartupProbe hpStartup = ConfigureHpStartupProbe(checkpoint);
+            hpStartup?.BindPresentation(controller);
             HpListenerProbe hpListener = ConfigureHpListenerProbe(checkpoint);
             HpForbiddenProbe hpForbidden = ConfigureHpForbiddenProbe(checkpoint);
             HpRecoveryProbe hpRecovery = ConfigureHpRecoveryProbe(checkpoint);
@@ -839,7 +840,7 @@ namespace Zjcs.Editor
             float previousTimeScale = Time.timeScale;
             try
             {
-                Time.timeScale = hpListener == null && hpRecovery == null && hpCost == null && hpSubstitute == null && roundStartup == null && roundTargets == null && roundProps == null && roundMeet == null && roundRandom == null && roundSource == null && roundMergeFormula == null && statusSources == null && roundDelay == null && roundForbidden == null ? 5 : 1;
+                Time.timeScale = hpStartup == null && hpListener == null && hpRecovery == null && hpCost == null && hpSubstitute == null && roundStartup == null && roundTargets == null && roundProps == null && roundMeet == null && roundRandom == null && roundSource == null && roundMergeFormula == null && statusSources == null && roundDelay == null && roundForbidden == null ? 5 : 1;
                 while (runner != null)
                 {
                     var arenaResult = UnityEngine.Object.FindObjectOfType<ArenaResultWindow>();
@@ -877,6 +878,7 @@ namespace Zjcs.Editor
                     if (roundForbidden != null && capturedCure) Time.timeScale = 5;
                     if (hpSubstitute != null && hpSubstitute.MayAccelerate) Time.timeScale = 5;
                     if (!capturedCure && (hitSummon != null && hitSummon.ReadyToCapture
+                        || hpStartup != null && hpStartup.ReadyToCapture
                         || hpListener != null && hpListener.ReadyToCapture
                         || hpRecovery != null && hpRecovery.ReadyToCapture
                         || hpCost != null && hpCost.ReadyToCapture
@@ -895,6 +897,7 @@ namespace Zjcs.Editor
                         float captureTimeScale = Time.timeScale;
                         Time.timeScale = 0f;
                         try { yield return Capture(output, name + (hitSummon != null ? "-hit-summon"
+                            : hpStartup != null ? "-hp-native-skill"
                             : roundForbidden != null ? "-round-forbidden"
                             : roundDelay != null ? "-round-delay"
                             : statusSources != null ? "-status-sources"

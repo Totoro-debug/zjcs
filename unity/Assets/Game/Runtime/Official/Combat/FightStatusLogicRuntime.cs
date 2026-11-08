@@ -172,10 +172,13 @@ namespace Zjcs.Combat.Official
                 return status != null && status.ClassId == Int(filter, "StatusClassId");
             if (type == "EntityClassIdFilter")
             {
+                // Status/pet/summon/removed-entity ports require their own event context.
+                // Do not silently reinterpret them as the current damage actor.
+                if (KeyId(filter, "EntityKey") != 1) { supported = false; return false; }
                 FightBattleUnitState entity = ResolveEntity(Object(filter, "EntityKey"), owner, actor, target, units);
-                return entity != null && (entity.MonsterTemplateId == Int(filter, "EntityClassId")
-                    || entity.NpcClassId == Int(filter, "EntityClassId")
-                    || entity.RoleEntityId == Int(filter, "EntityClassId"));
+                int classId = Int(filter, "ClassId");
+                return entity != null && classId > 0 && (entity.MonsterTemplateId == classId
+                    || entity.NpcClassId == classId || entity.RoleEntityId == classId);
             }
             supported = false;
             return false;

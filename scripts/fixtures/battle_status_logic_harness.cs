@@ -104,6 +104,22 @@ public static class BattleStatusLogicHarness
             "{\"_type\":\"UnknownServerHandle\"}," + counter);
         Check(status.LogicBlackboard.Single(value => value.KeyId == 9001).LongValue == 1
             && !status.LogicRulesSupported, "A missing handle allowed its dependent tail to run.");
+
+        owner.MonsterTemplateId = 3201;
+        RunFlow(status, owner, catalog,
+            "{\"_type\":\"EntityClassIdFilter\",\"EntityKey\":{\"Id\":1},\"ClassId\":3202}", counter);
+        Check(status.LogicBlackboard.Single(value => value.KeyId == 9001).LongValue == 1,
+            "A different configured ClassId matched an unrelated zero-valued identity field.");
+        RunFlow(status, owner, catalog,
+            "{\"_type\":\"EntityClassIdFilter\",\"EntityKey\":{\"Id\":1},\"ClassId\":3201}", counter);
+        Check(status.LogicBlackboard.Single(value => value.KeyId == 9001).LongValue == 2,
+            "EntityClassIdFilter did not read the official ClassId field.");
+        RunFlow(status, owner, catalog,
+            "{\"_type\":\"LogicNotFilter\",\"TargetFilter\":{\"_type\":\"EntityClassIdFilter\","
+            + "\"EntityKey\":{\"Id\":1072},\"ClassId\":24772}}", counter);
+        Check(status.LogicBlackboard.Single(value => value.KeyId == 9001).LongValue == 2
+            && !status.LogicRulesSupported,
+            "Official IteratingAgentStatusEntity port must fail closed until status iteration is bound.");
     }
 
     private static void RunFlow(FightBattleStatusState status, FightBattleUnitState owner,
