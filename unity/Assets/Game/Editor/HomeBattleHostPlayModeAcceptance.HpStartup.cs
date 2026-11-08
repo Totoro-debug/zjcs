@@ -52,12 +52,18 @@ namespace Zjcs.Editor
                 player.Statuses.Add(counted);
             }
             FightBattleStatusState logic = null;
+            FightBattleStatusState[] stackLogic = null;
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_STATUS_LOGIC_ACCEPTANCE") == "1")
             {
                 logic = catalog.CreateStatus(24669, 1, 1, 9924669);
                 player.Statuses.Add(logic);
+                stackLogic = new[] {
+                    catalog.CreateStatus(24745, 1, 1, 9924745, 64280, 10594, 5, 20, 1),
+                    catalog.CreateStatus(24774, 1, 1, 9924774, 64280, 10594, 5, 20, 1)
+                };
+                player.Statuses.AddRange(stackLogic);
             }
-            return new HpStartupProbe(summon, counted, logic);
+            return new HpStartupProbe(summon, counted, logic, stackLogic);
         }
 
         private static HpForbiddenProbe ConfigureHpForbiddenProbe(FightBattleCheckpoint checkpoint)
@@ -475,6 +481,7 @@ namespace Zjcs.Editor
             private bool renderedSummon;
             private readonly FightBattleStatusState counted;
             private readonly FightBattleStatusState logic;
+            private readonly FightBattleStatusState[] stackLogic;
             private ProfessionNativeSceneRenderer nativeRenderer;
             private Matrix4x4[] firstSkillPose;
             private float firstSkillTime = -1;
@@ -483,8 +490,11 @@ namespace Zjcs.Editor
             private int originalNativeCasts, movingNativeCasts;
             public bool ReadyToCapture => nativePoseAdvanced && nativeGeometryVisible;
             public HpStartupProbe(bool requiresSummon, FightBattleStatusState counted,
-                FightBattleStatusState logic = null)
-            { this.requiresSummon = requiresSummon; this.counted = counted; this.logic = logic; }
+                FightBattleStatusState logic = null, FightBattleStatusState[] stackLogic = null)
+            {
+                this.requiresSummon = requiresSummon; this.counted = counted;
+                this.logic = logic; this.stackLogic = stackLogic;
+            }
             public void BindPresentation(OfficialBattleRuntimeController controller)
             {
                 if (logic != null) return;
@@ -526,6 +536,7 @@ namespace Zjcs.Editor
                         "HP automatic removal did not wait for its configured three invocations.");
                 if (logic != null)
                 {
+                    VerifyStackLogic(cp);
                     Require(logic.LogicSelfInitialized && logic.LogicStartInitialized
                         && logic.LogicBlackboard.Single(value => value.KeyId == 619624960).LongValue == -1,
                         "Actual battle startup did not initialize the original 24669 blackboard.");
@@ -592,6 +603,7 @@ namespace Zjcs.Editor
                     host + " lost HP startup markers after checkpoint reload.");
                 if (logic != null)
                 {
+                    VerifyStackLogic(checkpoint);
                     var restored = FightBattleCheckpointSerializer.Load(saved).Units
                         .Single(value => value.Id == 1).Statuses.Single(value => value.InstanceId == logic.InstanceId);
                     Require(restored.LogicSelfInitialized && restored.LogicStartInitialized
@@ -607,6 +619,30 @@ namespace Zjcs.Editor
                     + " advanced through real renderer poses with visible geometry; checkpoint passed.");
                 if (requiresSummon) Debug.Log("[HP startup hosts] " + host + ": original 10710 -> 3181 spawn event and visible native geometry passed.");
                 if (counted != null) Debug.Log("[HP startup hosts] " + host + ": finite HP threshold invoked three times before automatic removal.");
+            }
+
+            private void VerifyStackLogic(FightBattleCheckpoint checkpoint)
+            {
+                var player = checkpoint.Units.Single(value => value.Id == 1);
+                foreach (var source in stackLogic)
+                {
+                    Require(source.LogicSelfInitialized && source.LogicStartInitialized,
+                        "Original stack graph was not initialized by the battle lifecycle: " + source.ClassId);
+                    int id = source.ClassId == 24745 ? 24748 : 24752;
+                    int layers = source.ClassId == 24745 ? 60 : 100;
+                    var status = player.Statuses.Single(value => value.ClassId == id);
+                    Require(status.StackCount == layers && status.CreatorId == 1
+                        && status.RootSkillId == 64280 && status.ApplyingSkillItemId == 10594
+                        && status.SourceSkillRank == 5 && status.SourceSkillLevel == 20,
+                        "Original stack graph lost requested layers/source: " + source.ClassId);
+                    var restored = FightBattleCheckpointSerializer.Load(
+                        FightBattleCheckpointSerializer.Save(checkpoint)).Units.Single(value => value.Id == 1)
+                        .Statuses.Single(value => value.InstanceId == status.InstanceId);
+                    Require(restored.StackCount == layers && restored.RootSkillId == 64280,
+                        "Created status layers/source were lost in the actual Unity checkpoint.");
+                }
+                Debug.Log("[Status stack hosts] original 24745 -> 24748 x60 and 24774 -> 24752 x100;"
+                    + " startup lifecycle, source inheritance and Unity checkpoint passed.");
             }
         }
     }

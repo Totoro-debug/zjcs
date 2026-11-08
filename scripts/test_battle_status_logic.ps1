@@ -16,4 +16,4 @@ $items = [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load(
     $rulesJson, $rulesProof.output_sha256, $rulesProof.manifest)
 $formula = $catalog.CreateDamageFormula($rulesJson, $rulesProof.output_sha256, $rulesProof.manifest)
 [BattleStatusLogicHarness]::Run($catalog, $items, $formula)
-Write-Output 'Logic checks passed: status self-init, persistent blackboard/checkpoint restore, official NOT/BBInt/ClassId operands, unsupported entity ports, unknown/malformed conditions and dependent handles fail closed; all 15 skill graphs retained, checkpointed and restored for legacy saves.'
+Write-Output 'Logic checks passed: status self-init, persistent blackboard/checkpoint restore, official NOT/BBInt/ClassId operands, filtered stack changes/multipliers/self identity/zero-layer end/actual consumption/source creation/caps, original 24745 and 24774 startup graphs, unsupported ports and unknown conditions fail closed; all 15 skill graphs retained and restored for legacy saves.'

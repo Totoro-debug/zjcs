@@ -64,7 +64,150 @@ public static class BattleStatusLogicHarness
         Check(restoredRunner != null && restoredLogic.LogicTriggeredCount >= 0,
             "Status logic checkpoint could not be restored by the official executor.");
         FilterBoundaries(catalog);
+        ChangeStatusStacks(catalog);
+        OriginalStackStartup(catalog);
         SkillDefinitionCheckpoints(catalog, items, formula);
+    }
+
+    private static void ChangeStatusStacks(FightOfficialCombatCatalog catalog)
+    {
+        var owner = Unit(1, 1);
+        var main = catalog.CreateStatus(24723, 1, 9, 71, 13820, 10594, 5, 20, 1);
+        var other = catalog.CreateStatus(24723, 1, 8, 72, 13820, 10594, 5, 20, 1);
+        Check(main.IsOpenStack, "Original 24723 must be stackable for the self-instance test.");
+        main.StackCount = 3; other.StackCount = 5;
+        main.LogicBlackboard.Add(new FightBattleLogicBlackboardValue { KeyId = 9002, LongValue = -1 });
+        owner.Statuses.Add(main); owner.Statuses.Add(other);
+        const string selfFilter = "{\"_type\":\"LogicFilter\",\"LogicType\":0,\"SubFilters\":["
+            + "{\"_type\":\"IteratingAgentStatusClassIdFilter\",\"StatusClassId\":24723},"
+            + "{\"_type\":\"EntityKeyEqualsEntityFilter\",\"LhsEntityKey\":{\"Id\":1072},"
+            + "\"RhsEntityKey\":{\"Id\":2}}]}";
+        RunStack(main, owner, catalog, selfFilter, 0, 1);
+        Check(main.StackCount == 2 && other.StackCount == 5 && main.LogicRulesSupported,
+            "24723's original self-instance filter changed another source or lost the main status binding.");
+
+        var a = catalog.CreateStatus(24752, 1, 9, 73);
+        var b = catalog.CreateStatus(24752, 1, 8, 74);
+        Check(a.IsOpenStack && b.IsOpenStack, "Original 24752 must support layer arithmetic.");
+        a.StackCount = 4; b.StackCount = 2;
+        owner.Statuses.Add(a); owner.Statuses.Add(b);
+        var observer = catalog.CreateStatus(24669, 1, 1, 75);
+        observer.HasConsumeStackCount = true;
+        observer.ConsumeStackCountRulesSupported = true;
+        observer.ConsumeStackCountTargetStatusId = 24752;
+        observer.ConsumeStackCountThreshold = 5;
+        observer.ConsumeStackCountStatuses.Clear();
+        owner.Statuses.Add(observer);
+        main.LogicBlackboard.Single(v => v.KeyId == 9002).LongValue = 4;
+        int ended = 0;
+        owner.StatusEnded += (unit, status) => { if (status.ClassId == 24752) ended++; };
+        RunStack(main, owner, catalog, StatusFilter(24752), 0, -1, consume: true);
+        Check(!owner.Statuses.Contains(a) && !owner.Statuses.Contains(b) && ended == 2
+            && observer.ConsumeStackCountProgress == 1 && other.StackCount == 5,
+            "Multiplier, zero-layer end, all-instance snapshot or actual consumed-layer notification failed.");
+
+        // No matching status: create the requested layers before the lifecycle start callback.
+        int layersAtStart = 0;
+        owner.StatusStarted += (unit, status) => {
+            if (status.ClassId == 24752) layersAtStart = status.StackCount;
+        };
+        main.LogicBlackboard.Single(v => v.KeyId == 9002).LongValue = 2;
+        RunStack(main, owner, catalog, StatusFilter(24752), 24752, 1);
+        var created = owner.Statuses.Single(v => v.ClassId == 24752);
+        Check(created.StackCount == 2 && layersAtStart == 2 && created.CreatorId == 9
+            && created.RootSkillId == 13820 && created.ApplyingSkillItemId == 10594
+            && created.SourceSkillRank == 5 && created.SourceSkillLevel == 20
+            && created.InstanceId > observer.InstanceId,
+            "Unmatched positive creation lost requested layers, identity, source or skill cultivation.");
+        RunStack(main, owner, catalog, StatusFilter(24752), 24752, 1, consume: true);
+        Check(owner.Statuses.Count(v => v.ClassId == 24752) == 1 && created.StackCount == 4
+            && observer.ConsumeStackCountProgress == 1,
+            "A matched status was recreated or a positive change emitted consumption.");
+        created.StackCount = created.MaxStackedCount;
+        RunStack(main, owner, catalog, StatusFilter(24752), 24752, 10);
+        Check(created.StackCount == created.MaxStackedCount,
+            "Original maximum stack limit was bypassed.");
+        FightStatusLifecycle.End(owner, created);
+        RunStack(main, owner, catalog, StatusFilter(24752), 24752, 1, noSource: true);
+        created = owner.Statuses.Single(v => v.ClassId == 24752);
+        Check(created.StackCount == 2 && created.CreatorId == 0 && created.RootSkillId == 0
+            && created.ApplyingSkillItemId == 0 && created.SourceProperties == null,
+            "UseDefaultSourceInfoOnCreate retained the main status's source information.");
+
+        const string tail = ",{\"_type\":\"FightHandleCfgCounterAdd\","
+            + "\"CounterBBKey\":{\"Id\":9003},\"DeltaValue\":1}";
+        RunStack(main, owner, catalog, StatusFilter(24752), 24752, -1, port: 1079, tail: tail);
+        Check(created.StackCount == 2 && !main.LogicRulesSupported
+            && !main.LogicBlackboard.Any(v => v.KeyId == 9003),
+            "Unbound PetEntity port modified the owner or executed dependent handles.");
+        RunStack(main, owner, catalog, "{\"_type\":\"LogicFilter\",\"LogicType\":1,\"SubFilters\":["
+            + StatusFilter(24752) + ",{\"_type\":\"UnknownServerFilter\"}]}",
+            24752, -1, tail: tail);
+        Check(created.StackCount == 2 && !main.LogicRulesSupported
+            && !main.LogicBlackboard.Any(v => v.KeyId == 9003),
+            "Partially supported OR filter caused a partial mutation or ran its dependent tail.");
+        RunStack(main, owner, catalog, "{\"_type\":\"EntityClassIdFilter\","
+            + "\"EntityKey\":{\"Id\":1072},\"ClassId\":24752}", 0, -1);
+        Check(!owner.Statuses.Contains(created) && main.LogicRulesSupported,
+            "Iterating status ClassId was interpreted as the main unit's monster identity.");
+        RunStack(main, owner, catalog, StatusFilter(24752), 24752, -1);
+        main.LogicBlackboard.Single(v => v.KeyId == 9002).LongValue = 0;
+        RunStack(main, owner, catalog, StatusFilter(24752), 24752, 1);
+        Check(!owner.Statuses.Any(v => v.ClassId == 24752),
+            "Zero or negative unmatched changes created a status.");
+        owner.Statuses.Clear(); owner.Statuses.Add(null);
+        main.LogicBlackboard.Single(v => v.KeyId == 9002).LongValue = 2;
+        RunStack(main, owner, catalog, "{\"_type\":\"UnknownServerFilter\"}", 24752, 1, tail: tail);
+        Check(owner.Statuses.Count == 1 && !main.LogicRulesSupported,
+            "An empty status collection bypassed an unknown filter and created a status.");
+    }
+
+    private static string StatusFilter(int classId)
+        => "{\"_type\":\"IteratingAgentStatusClassIdFilter\",\"StatusClassId\":" + classId + "}";
+
+    private static void OriginalStackStartup(FightOfficialCombatCatalog catalog)
+    {
+        var owner = Unit(1, 1);
+        foreach (int id in new[] { 24745, 24774 })
+        {
+            var source = catalog.CreateStatus(id, 1, 9, id, 64280, 10594, 5, 20, 1);
+            owner.Statuses.Add(source);
+            FightStatusLogicRuntime.Apply(owner, source, FightStatusLogicEvent.StatusSelfInit,
+                owner, owner, null, null, new[] { owner }, catalog, new FightRandomStream(31));
+            int createdId = id == 24745 ? 24748 : 24752;
+            var created = owner.Statuses.Single(v => v.ClassId == createdId);
+            Check(created.StackCount == (id == 24745 ? 60 : 100)
+                && created.CreatorId == 9 && created.RootSkillId == 64280 && source.LogicRulesSupported,
+                "Untouched official startup graph failed its blackboard -> filtered creation: " + id);
+        }
+        var checkpoint = new FightBattleCheckpoint {
+            StageId = 1001, RandomSeed = 31,
+            Grid = new FightBattleGrid { Width = 20, Height = 20 },
+            ResultRules = new FightBattleResultRules()
+        };
+        checkpoint.Units.Add(owner);
+        var restored = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+        Check(restored.Units[0].Statuses.Single(v => v.ClassId == 24748).StackCount == 60
+            && restored.Units[0].Statuses.Single(v => v.ClassId == 24752).StackCount == 100,
+            "Created status layers were lost in the checkpoint.");
+        var main = owner.Statuses.Single(v => v.ClassId == 24745);
+        RunFlow(main, owner, catalog, "null", "{\"_type\":\"FightHandleRemoveStatusCfg\","
+            + "\"TargetEntityKey\":{\"Id\":1},\"FilterCondition\":" + StatusFilter(24748) + "}");
+        Check(owner.Statuses.All(v => v.ClassId != 24748)
+            && owner.Statuses.Any(v => v.ClassId == 24752) && owner.Statuses.Contains(main),
+            "Binding status iteration broke the existing filtered removal handler.");
+    }
+
+    private static void RunStack(FightBattleStatusState main, FightBattleUnitState owner,
+        FightOfficialCombatCatalog catalog, string filter, int create, int multiplier,
+        bool consume = false, bool noSource = false, int port = 1, string tail = "")
+    {
+        RunFlow(main, owner, catalog, "null", "{\"_type\":\"FightHandleCfgChangeStatusStack\","
+            + "\"TargetEntityKey\":{\"Id\":" + port + "},\"FilterCondition\":" + filter
+            + ",\"ChangeValueKey\":{\"Id\":9002},\"CreateStatusClassId\":" + create
+            + ",\"Multiplier\":" + multiplier + ",\"InvokeConsumeEvent\":"
+            + (consume ? "true" : "false") + ",\"UseDefaultSourceInfoOnCreate\":"
+            + (noSource ? "true" : "false") + "}" + tail);
     }
 
     private static void SkillDefinitionCheckpoints(FightOfficialCombatCatalog catalog,
