@@ -201,6 +201,12 @@ namespace Zjcs.Presentation.Character
             if (skillPanel != null && skillPanel.IsOpen) SetSkillPageState(true, true);
         }
 
+        public void OpenCombatPromotion(bool skill)
+        {
+            if (skill) OpenSkillPanel();
+            else equipSlots.OpenWeaponPromotion();
+        }
+
 
         private void OnDestroy()
         {

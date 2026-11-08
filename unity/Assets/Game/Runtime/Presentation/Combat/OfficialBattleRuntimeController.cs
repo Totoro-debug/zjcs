@@ -419,6 +419,13 @@ namespace Zjcs.Presentation.Combat
             return true;
         }
 
+        public bool RequestForfeit()
+        {
+            if (!CanLeaveBattle() || !Zjcs.Offline.Combat.OfflineBattleForfeit.Finish(Checkpoint)) return false;
+            if (phases.IsPreparing) phases.BeginBattleEnd();
+            return true;
+        }
+
         private static void ApplyPendingStatueEffects(FightBattleCheckpoint checkpoint,
             FightOfficialCombatCatalog combat, OfflinePlayerProgress playerProgress)
         {

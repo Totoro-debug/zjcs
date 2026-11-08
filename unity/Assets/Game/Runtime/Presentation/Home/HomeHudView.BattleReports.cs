@@ -55,6 +55,11 @@ namespace Zjcs.Presentation.Home
 
         private void BindNativeBattleResultReport(GameObject result, GameEndPanelBase native,
             FightBattleCheckpoint checkpoint, FightBattleReport finalReport)
+            => BindNativeBattleResultReport(result, native, checkpoint, finalReport, null);
+
+        private void BindNativeBattleResultReport(GameObject result, GameEndPanelBase native,
+            FightBattleCheckpoint checkpoint, FightBattleReport finalReport,
+            Action<OfficialBattleReportView.Presentation, CharacterSkillPanel, GameObject> bindIdentity)
         {
             var data = Resources.Load<TextAsset>("Combat/BattleReport/result-report-bindings");
             if (data == null) throw new InvalidOperationException("Original result report bindings are absent.");
@@ -69,6 +74,11 @@ namespace Zjcs.Presentation.Home
                     adapter.Initialize(OfficialCharacterAssetCatalog.LoadDefault(), host.DailyDungeonProgression,
                         host.ActiveProfileSlotId, host.SavesRoot);
                     var presentation = adapter.CreateBattleReportPresentation(lifetime, checkpoint.MaxRound, canvas.transform);
+                    if (bindIdentity != null)
+                    {
+                        bindIdentity(presentation, adapter, lifetime);
+                        return presentation;
+                    }
                     var partners = OfficialPartnerAssetCatalog.LoadDefault();
                     var images = Resources.Load<OfflineProfessionImageCatalog>("Partners/OfficialPartnerNpcIconImages");
                     if (images == null) throw new InvalidOperationException("Original NPC report icons are absent.");

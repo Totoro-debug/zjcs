@@ -26,6 +26,7 @@ namespace Zjcs.Editor
             int callbacks = 0;
             root.AddComponent<ArenaBattleRunner>().Begin(home, won => {
                 Require(!won, "Abandoning arena awarded a victory."); callbacks++;
+                root.GetComponent<ArenaBattleRunner>().LeaveResult();
             });
             var controller = root.GetComponent<OfficialBattleRuntimeController>();
             // Keep both isolated participants alive while the native confirmation is cancelled/reopened.

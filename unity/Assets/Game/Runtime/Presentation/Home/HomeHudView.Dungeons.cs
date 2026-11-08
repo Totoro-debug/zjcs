@@ -23,7 +23,7 @@ namespace Zjcs.Presentation.Home
         private GameObject dailyDungeonBuyCountRoot;
         private Slider dailyDungeonBuyCountSlider;
         private int dailyDungeonBuyCountLimit;
-        private GameObject arenaConfirmRoot;
+        private Zjcs.Presentation.Combat.OfficialBattleLeaveDialog arenaChallengeConfirm;
         private GameObject arenaRoot;
         private GameObject dailyChallengeRoot;
         private GameObject fantasyTowerRoot;
@@ -716,10 +716,10 @@ namespace Zjcs.Presentation.Home
                 Notify(error ?? "当前竞技挑战不可开始");
                 return;
             }
-            if (!host.Arena.CompleteChallenge(true, host.GrantBattleReward))
+            if (!host.Arena.CompleteChallenge(true, host.GrantBattleReward, true))
                 throw new InvalidOperationException("Direct arena victory settlement failed.");
-            RefreshArenaPanel();
-            Notify("竞技挑战直接胜利，已结算奖励");
+            if (arenaRoot != null) arenaRoot.SetActive(false);
+            ShowArenaResult(null, null, ReturnFromArenaResult);
         }
 
         private void ResumeArenaChallenge()
@@ -749,10 +749,19 @@ namespace Zjcs.Presentation.Home
 
         private void OnArenaBattleFinished(bool won)
         {
+            var runner = activeArenaBattle;
+            ShowArenaResult(runner.FinalCheckpoint, runner.FinalReport, () =>
+            {
+                runner.LeaveResult();
+                ReturnFromArenaResult();
+            });
+        }
+
+        private void ReturnFromArenaResult()
+        {
             activeArenaBattle = null;
             if (arenaRoot != null) arenaRoot.SetActive(true);
             RefreshArenaPanel();
-            Notify(won ? "竞技挑战胜利，已结算奖励" : "竞技挑战失败，已结算奖励");
         }
 
         private void CloseArena()
@@ -766,34 +775,31 @@ namespace Zjcs.Presentation.Home
         private void ShowArenaConfirm(string title, string message, string cancelText,
             string confirmText, Action confirm, Action cancel = null)
         {
-            if (arenaConfirmRoot != null) return;
-            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonConfirmEnterPanel");
-            if (prefab == null) throw new InvalidOperationException("Official confirmation panel is missing.");
-            arenaConfirmRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
-            arenaConfirmRoot.name = "ArenaConfirm";
-            arenaConfirmRoot.transform.SetAsLastSibling();
-            PlaceModalCanvasOnTop(arenaConfirmRoot);
-            ApplyOfficialDungeonBindings(arenaConfirmRoot, "DailyDungeonConfirmEnterPanel");
-            SetNamedText(arenaConfirmRoot.transform, "TitleText", title);
-            SetNamedText(arenaConfirmRoot.transform, "Txt", message);
-            SetNamedText(arenaConfirmRoot.transform, "CommonBtn_11", cancelText);
-            SetNamedText(arenaConfirmRoot.transform, "CommonBtn_12", confirmText);
-            BindPrefabButton(arenaConfirmRoot, "CommonBtn_11", () =>
-            {
-                CloseArenaConfirm();
-                cancel?.Invoke();
-            });
-            BindPrefabButton(arenaConfirmRoot, "CommonBtn_12", () =>
+            if (arenaChallengeConfirm?.IsOpen == true) return;
+            arenaChallengeConfirm = new Zjcs.Presentation.Combat.OfficialBattleLeaveDialog();
+            arenaChallengeConfirm.Show(canvas.transform, host.Catalog.Font, message, () =>
             {
                 CloseArenaConfirm();
                 confirm?.Invoke();
-            });
+            }, dialog =>
+            {
+                dialog.gameObject.name = "ArenaConfirm";
+                dialog.SetTitleTextKey(title);
+                dialog.SetCancelTextKey(cancelText);
+                dialog.SetConfirmTextKey(confirmText);
+                // Dismissal must not select the local normal-challenge option.
+                dialog.SetCancelCallbackAutoExecute(false);
+            }, () =>
+            {
+                CloseArenaConfirm();
+                cancel?.Invoke();
+            }, deferChoiceUntilHidden: true);
         }
 
         private void CloseArenaConfirm()
         {
-            if (arenaConfirmRoot != null) UnityEngine.Object.Destroy(arenaConfirmRoot);
-            arenaConfirmRoot = null;
+            arenaChallengeConfirm?.Dispose();
+            arenaChallengeConfirm = null;
         }
 
         private void OpenDailyDungeonDetail(int dungeonId, int? requestedDifficulty = null)

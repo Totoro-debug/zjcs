@@ -1718,6 +1718,8 @@ namespace Zjcs.Presentation.Character
             if (statusText != null) statusText.text = LastMessage;
         }
 
+        public void OpenWeaponPromotion() => OpenPromote(10); // Common.EquipPos.Weapon
+
         private void OpenPromote(int position)
         {
             if (equipment == null || position <= 0) return;

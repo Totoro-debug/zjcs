@@ -9,6 +9,12 @@ namespace Zjcs.Offline.ProfessionUI
         {
             public uint EventId;
             public AudioClip Clip;
+            public uint[] TargetIds;
+            public uint[] StopTargetIds;
+            public float[] StopSeconds;
+            public int[] StopCurves;
+            public float FadeInSeconds;
+            public int FadeInCurve;
         }
         public Entry[] Events;
     }

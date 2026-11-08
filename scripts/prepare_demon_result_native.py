@@ -24,6 +24,10 @@ DESTINATION = ROOT / 'unity/Assets/Official/Combat/DemonResult'
 
 
 class DemonResultBinding(PartnerPanelBinding):
+    # Result graphs share native serialization/resource conversion. Their
+    # selection, catalog and identities remain owned by each result module.
+    result_name = 'demon-result'
+    generator_path = Path(__file__)
     def restore(self, data):
         super().restore(data)
         # Binary typetrees omit YAML's version tags. In particular Rect v1
@@ -115,6 +119,9 @@ class DemonResultBinding(PartnerPanelBinding):
             self.inputs[path.relative_to(ROOT).as_posix()] = self.checked[key]
         original, = [key for key, value in panel['objectMap'].items() if value == panel['root']]
         self.selections[name] = dict(source=record, root=panel['root'], original=original, objects=len(panel['documents']))
+        missing = sorted({'.'.join(filter(None, [row['namespace'], row['type']]))
+            for row in panel['scripts']} - self.scripts.keys())
+        if missing: raise ValueError('Original result scripts have not been migrated: ' + ', '.join(missing))
         for row in panel['scripts']:
             full = '.'.join(filter(None, [row['namespace'], row['type']]))
             if full not in self.scripts:
@@ -385,7 +392,7 @@ class DemonResultBinding(PartnerPanelBinding):
                 data.update(resolved)
         self.catalog()
         self.queue.extend((path, key, raw) for path, (key, raw) in self.audio_outputs.items())
-        aliases = {key: hashlib.md5(('zjcs:demon-result-resource:' + path.as_posix()).encode()).hexdigest()
+        aliases = {key: hashlib.md5(('zjcs:' + self.result_name + '-resource:' + path.as_posix()).encode()).hexdigest()
             for path, key, _ in self.queue}
         def remap(value):
             if isinstance(value, dict):
@@ -395,7 +402,7 @@ class DemonResultBinding(PartnerPanelBinding):
             return value
         self.roots = remap(self.roots)
         self.recovery.finalize()
-        folder = self.work / 'demon-result-assets'
+        folder = self.work / (self.result_name + '-assets')
         outputs = {}
         for target, target_guid, data in self.queue:
             path = folder / target
@@ -431,9 +438,9 @@ class DemonResultBinding(PartnerPanelBinding):
         receipt = dict(manifest=self.recovery.apk.version, inputs=self.inputs, objects=self.proof,
             outputs=outputs, native_recovery=self.recovery.proof, selections=self.selections,
             roots=self.roots, guid_aliases=aliases, dynamic=self.dynamic_proof, script_bindings=self.script_sources, audio=self.audio_proof,
-            generator_sha256=sha(Path(__file__).read_bytes()))
-        (self.work / NAME).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
-        print('Staged complete demon result:', len(outputs), 'files', flush=True)
+            generator_sha256=sha(self.generator_path.read_bytes()))
+        (self.work / (self.result_name + '-native-source-manifest.json')).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
+        print('Staged complete ' + self.result_name + ':', len(outputs), 'files', flush=True)
 
     def catalog(self):
         from npc_travel_language import language

@@ -113,6 +113,11 @@ namespace Zjcs.Editor
                         || result.Status == ProgressionResultStatus.Unchanged, "Could not publish fixture region.");
                 }
                 yield return new WaitForSecondsRealtime(1);
+                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_ARENA_RESULT") == "1")
+                {
+                    yield return RunArenaResultHost(home, slot, root, output, click);
+                    yield break;
+                }
                 if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TIMEOUT_UI") == "1")
                 {
                     yield return RunTimeoutUiHost(home, slot, root, output, click);
@@ -528,7 +533,9 @@ namespace Zjcs.Editor
             int callbacks = 0;
             var first = new GameObject("ArenaBattleRunnerBeforeReload");
             first.transform.SetParent(home.transform, false);
-            first.AddComponent<ArenaBattleRunner>().Begin(home, _ => callbacks++);
+            first.AddComponent<ArenaBattleRunner>().Begin(home, _ => {
+                callbacks++; first.GetComponent<ArenaBattleRunner>().LeaveResult();
+            });
             var controller = first.GetComponent<OfficialBattleRuntimeController>();
             controller.StepCompleted += result => {
                 if (result.Checkpoint.Finished == restoreFinished) controller.SetPaused(true);
@@ -577,7 +584,9 @@ namespace Zjcs.Editor
             Action verifyHome = CaptureHomeRestoration(home);
             var resumed = new GameObject("ArenaBattleRunnerAfterReload");
             resumed.transform.SetParent(home.transform, false);
-            resumed.AddComponent<ArenaBattleRunner>().Begin(home, _ => callbacks++);
+            resumed.AddComponent<ArenaBattleRunner>().Begin(home, _ => {
+                callbacks++; resumed.GetComponent<ArenaBattleRunner>().LeaveResult();
+            });
             var restored = resumed.GetComponent<OfficialBattleRuntimeController>();
             int reports = 0, steps = 0;
             restored.BattleReportReady += report => {
@@ -685,7 +694,9 @@ namespace Zjcs.Editor
             bool callback = false;
             var arena = new GameObject("ArenaBattleRunner");
             arena.transform.SetParent(home.transform, false);
-            arena.AddComponent<ArenaBattleRunner>().Begin(home, _ => callback = true);
+            arena.AddComponent<ArenaBattleRunner>().Begin(home, _ => {
+                callback = true; arena.GetComponent<ArenaBattleRunner>().LeaveResult();
+            });
             yield return RunBattle<ArenaBattleRunner>("arena", output, click);
             verifyHome();
             Require(callback && !home.Arena.HasActiveChallenge && home.Arena.Tickets == tickets - 1
@@ -831,6 +842,15 @@ namespace Zjcs.Editor
                 Time.timeScale = hpListener == null && hpRecovery == null && hpCost == null && hpSubstitute == null && roundStartup == null && roundTargets == null && roundProps == null && roundMeet == null && roundRandom == null && roundSource == null && roundMergeFormula == null && statusSources == null && roundDelay == null && roundForbidden == null ? 5 : 1;
                 while (runner != null)
                 {
+                    var arenaResult = UnityEngine.Object.FindObjectOfType<ArenaResultWindow>();
+                    if (runner is ArenaBattleRunner && arenaResult && arenaResult.IsReady)
+                    {
+                        yield return Capture(output, name + "-native-result");
+                        yield return Combat.BattleGameViewInput.Click(arenaResult.Panel
+                            .GetComponent<Zjcs.Official.BattleResultUI.GameEndPanelArena>().LeaveBtn);
+                        yield return null;
+                        continue;
+                    }
                     var demonResult = UnityEngine.Object.FindObjectOfType<DemonResultWindow>();
                     if (runner is WeeklyChallengeBattleRunner && demonResult && demonResult.IsReady)
                     {

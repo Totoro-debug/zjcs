@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cadc7a9ce7e32506e1715abe977865c0, type: 3}
+  m_Name: Original arena result audio
+  m_EditorClassIdentifier: ''
+  Events:
+  - EventId: 1949434252
+    Clip: {fileID: 0}
+    TargetIds: []
+    StopTargetIds:
+    - 402280749
+    StopSeconds:
+    - 0.25
+    StopCurves:
+    - 1
+    FadeInSeconds: 0
+    FadeInCurve: 1
+  - EventId: 2220187861
+    Clip: {fileID: 8300000, guid: 289942ea7fb9a91799c9f6047f466d1b, type: 3}
+    TargetIds:
+    - 277788926
+    - 402280749
+    - 998897414
+    - 352051345
+    - 801348951
+    StopTargetIds:
+    - 947257528
+    StopSeconds:
+    - 0
+    StopCurves:
+    - 1
+    FadeInSeconds: 0.25
+    FadeInCurve: 1
+  - EventId: 2817602138
+    Clip: {fileID: 8300000, guid: cf61668d22e9562b0fcdd93d733793a8, type: 3}
+    TargetIds:
+    - 372993409
+    - 402280749
+    - 998897414
+    - 352051345
+    - 801348951
+    StopTargetIds:
+    - 947257528
+    StopSeconds:
+    - 0
+    StopCurves:
+    - 1
+    FadeInSeconds: 0.25
+    FadeInCurve: 1

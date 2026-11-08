@@ -194,13 +194,14 @@ namespace Zjcs.Presentation.Home
         }
 
         public FightBattleReport FinalReport { get; private set; }
+        public FightBattleCheckpoint FinalCheckpoint => controller?.Checkpoint;
         public void OnBattleReportReady(FightBattleReport report) { FinalReport = report; }
 
         public void OnBattleHudControlClicked(string path)
         {
             if (path != OfficialBattleHudView.CloseButtonPath || resultHandled) return;
-            controller.EndBattle();
-            FinishBattle(false);
+            if (controller.RequestForfeit())
+                host.Arena.RecordBattleCheckpoint(FightBattleCheckpointSerializer.Save(controller.Checkpoint));
         }
 
         private void FinishBattle(bool isWon)
@@ -208,10 +209,18 @@ namespace Zjcs.Presentation.Home
             if (resultHandled) return;
             resultHandled = true;
             won = isWon;
-            host.Arena.CompleteChallenge(won, host.GrantBattleReward);
+            if (FinalReport == null || controller?.Checkpoint?.Outcome == null || !controller.Checkpoint.Outcome.CanSettle)
+                throw new InvalidOperationException("Arena settlement requires the normal final report handoff.");
+            if (!host.Arena.CompleteChallenge(won, host.GrantBattleReward))
+                throw new InvalidOperationException("Arena challenge settlement failed.");
             Action<bool> callback = completed;
-            DisposeBattle();
             callback?.Invoke(won);
+        }
+
+        public void LeaveResult()
+        {
+            if (!resultHandled) throw new InvalidOperationException("An unfinished arena battle cannot leave its result.");
+            DisposeBattle();
             Destroy(gameObject);
         }
 

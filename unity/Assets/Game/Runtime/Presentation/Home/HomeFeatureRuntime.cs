@@ -1856,10 +1856,24 @@ namespace Zjcs.Presentation.Home
             homeRenderPipeline = null;
         }
 
-        private void OnPartnerRosterAdded(int id, NpcMeetType type) => partnerTipDots?.Refresh();
-        private void OnPartnerRosterFriendshipUpdated(int id) => partnerTipDots?.Refresh();
-        private void OnPartnerGiftFriendshipUpdated(int id, int oldLevel, int newLevel) => partnerTipDots?.Refresh();
-        private void OnPartnerGiftInventoryUpdated(IProfessionItemData item, long previous, object context) => partnerTipDots?.Refresh();
+        private void OnPartnerRosterAdded(int id, NpcMeetType type) => RefreshPartnerDerivedState();
+        private void OnPartnerRosterFriendshipUpdated(int id) => RefreshPartnerDerivedState();
+        private void OnPartnerGiftFriendshipUpdated(int id, int oldLevel, int newLevel) => RefreshPartnerDerivedState();
+        private void OnPartnerGiftInventoryUpdated(IProfessionItemData item, long previous, object context)
+            => RefreshPartnerDerivedState();
+
+        // Partner transactions replace the character save object. Refresh the
+        // home condition context and derived property consumers immediately so
+        // unlocks, home income and the next battle all read the committed state
+        // without requiring a home reload.
+        private void RefreshPartnerDerivedState()
+        {
+            if (profile == null || progression == null || rules == null) return;
+            ReloadContext();
+            if (session != null && homeProgression != null) RefreshIncomeCatalog();
+            partnerTipDots?.Refresh();
+            hud?.RefreshAll();
+        }
 
         private void DisposePartnerTipDots()
         {

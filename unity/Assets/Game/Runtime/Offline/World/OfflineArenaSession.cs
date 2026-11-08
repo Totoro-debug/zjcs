@@ -178,6 +178,15 @@ namespace Zjcs.Offline.World
     }
 
     [Serializable]
+    public sealed class ArenaChallengeResult
+    {
+        public string challengeId = string.Empty;
+        public bool won, fastVictory;
+        public int previousRank, currentRank, guardTemplateId, guardSex, awardItemId;
+        public long awardCount;
+    }
+
+    [Serializable]
     public sealed class ArenaSave
     {
         public int schema = 1;
@@ -195,6 +204,7 @@ namespace Zjcs.Offline.World
         public int activeGuardSex;
         public string activeBattleCheckpoint = string.Empty;
         public string activeChallengeId = string.Empty;
+        public ArenaChallengeResult lastResult;
     }
 
     public sealed class OfflineArenaSession
@@ -219,6 +229,7 @@ namespace Zjcs.Offline.World
         public int ActiveGuardSex => save.activeGuardSex;
         public string ActiveBattleCheckpoint => save.activeBattleCheckpoint;
         public bool HasActiveChallenge => !string.IsNullOrEmpty(save.activeChallengeId);
+        public ArenaChallengeResult LastResult => string.IsNullOrEmpty(save.lastResult?.challengeId) ? null : save.lastResult;
 
         private OfflineArenaSession(string path, ArenaRuntimeData catalog, ArenaSave state)
         {
@@ -342,7 +353,7 @@ namespace Zjcs.Offline.World
             return true;
         }
 
-        public bool CompleteChallenge(bool won, Action<string, int, long> grantReward)
+        public bool CompleteChallenge(bool won, Action<string, int, long> grantReward, bool fastVictory = false)
         {
             if (!HasActiveChallenge || grantReward == null) return false;
             ArenaSave completed = Clone(save);
@@ -354,6 +365,13 @@ namespace Zjcs.Offline.World
             else completed.losses++;
             int amount = checked((int)(won ? Catalog.settings.AttackWinCoinReward
                 : Catalog.settings.AttackLoseCoinReward));
+            completed.lastResult = new ArenaChallengeResult
+            {
+                challengeId = completed.activeChallengeId, won = won, fastVictory = fastVictory,
+                previousRank = save.rank, currentRank = completed.rank,
+                guardTemplateId = completed.activeGuardTemplateId, guardSex = completed.activeGuardSex,
+                awardItemId = Catalog.settings.CoinId, awardCount = amount
+            };
             grantReward("arena:challenge-result:" + completed.activeChallengeId,
                 Catalog.settings.CoinId, amount);
             completed.activeOpponentRank = 0;
@@ -505,6 +523,17 @@ namespace Zjcs.Offline.World
                     || data.opponents == null || data.activeChallengeId == null || data.activeBattleCheckpoint == null)
                     return false;
                 if (data.opponents.Any(value => value == null || value.rank <= 0 || value.guardTemplateId <= 0)) return false;
+                ArenaChallengeResult result = data.lastResult;
+                if (result != null && !string.IsNullOrEmpty(result.challengeId) && (result.previousRank <= 0
+                    || result.currentRank <= 0 || result.guardTemplateId <= 0 || result.guardSex < 0
+                    || result.guardSex > 1 || result.awardItemId <= 0 || result.awardCount < 0
+                    || (result.fastVictory && !result.won))) return false;
+                // JsonUtility writes a null serializable class as a default
+                // object. The all-default object means no historical result.
+                if (result != null && string.IsNullOrEmpty(result.challengeId)
+                    && (result.won || result.fastVictory || result.previousRank != 0 || result.currentRank != 0
+                        || result.guardTemplateId != 0 || result.guardSex != 0 || result.awardItemId != 0
+                        || result.awardCount != 0)) return false;
                 return string.IsNullOrEmpty(data.activeChallengeId)
                     ? data.activeOpponentRank == 0 && data.activeGuardTemplateId == 0 && data.activeGuardSex == 0
                     : data.activeOpponentRank > 0 && data.activeGuardTemplateId > 0;

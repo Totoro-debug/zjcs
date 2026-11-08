@@ -30,6 +30,7 @@ $checkpoint.Units.Add([Zjcs.Combat.Official.FightBattleUnitState]@{ Id = 2; Side
 foreach ($unit in $checkpoint.Units) { $unit.Turn.Id = $unit.Id; $unit.Turn.Hp = $unit.Hp }
 $checkpoint.Statistics.Units.Add([Zjcs.Combat.Official.FightBattleUnitStatistics]@{ UnitId = 1; DamageDealt = 200 })
 $checkpoint.Units[0].SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; Cooldown = 3; LimitedTimes = -1 })
+$inProgress = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($checkpoint)
 Assert-Leave ([Zjcs.Offline.Combat.OfflineBattlePartEnd]::Finish($checkpoint)) 'Partial battle did not finish'
 Assert-Leave ($checkpoint.PartEnded -and $checkpoint.Finished -and $checkpoint.Outcome.CanSettle -and -not $checkpoint.Outcome.Won) 'Partial battle fabricated a victory or invalid result'
 Assert-Leave ($checkpoint.Counter -eq 0 -and $checkpoint.Sequence -eq 0 -and $checkpoint.Units[0].SkillState.Slots[0].Cooldown -eq 3 -and $checkpoint.Units[1].Hp -eq 800) 'Partial settlement advanced a turn, cooldown or enemy death'
@@ -39,6 +40,14 @@ $restored = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load($saved)
 $report = [Zjcs.Combat.Official.FightBattleReportBuilder]::Build($restored)
 Assert-Leave ($restored.PartEnded -and $report.Units[0].DamageDealt -eq 200 -and $report.PlayerHp -eq 55 -and $report.EnemyHp -eq 800 -and $report.Round -eq 2) 'Cold partial settlement lost damage or HP statistics'
 Assert-Leave (-not [Zjcs.Offline.Combat.OfflineBattlePartEnd]::Finish($restored)) 'Partial settlement accepted a duplicate request'
+$abandoned = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load($inProgress)
+Assert-Leave ([Zjcs.Offline.Combat.OfflineBattleForfeit]::Finish($abandoned)) 'Forfeit did not finish a live challenge'
+Assert-Leave ($abandoned.Finished -and -not $abandoned.PartEnded -and $abandoned.Outcome.CanSettle -and -not $abandoned.Outcome.Won -and $abandoned.Outcome.Reason -eq 2) 'Forfeit did not preserve its distinct defeat outcome'
+Assert-Leave ($abandoned.Counter -eq 0 -and $abandoned.Sequence -eq 0 -and $abandoned.RandomSeed -eq 42 -and $abandoned.Units[0].SkillState.Slots[0].Cooldown -eq 3 -and $abandoned.Units[1].Hp -eq 800) 'Forfeit changed combat state or fabricated dead units'
+$abandoned = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($abandoned))
+$forfeitReport = [Zjcs.Combat.Official.FightBattleReportBuilder]::Build($abandoned)
+Assert-Leave ($forfeitReport.Units[0].DamageDealt -eq 200 -and $forfeitReport.PlayerHp -eq 55 -and $forfeitReport.EnemyHp -eq 800 -and $forfeitReport.Round -eq 2) 'Cold forfeit lost actual damage, HP or round statistics'
+Assert-Leave (-not [Zjcs.Offline.Combat.OfflineBattleForfeit]::Finish($abandoned)) 'Forfeit accepted a duplicate request'
 $preparation = [Zjcs.Combat.Official.FightBattlePhaseMachine]::new(10)
 $preparation.Begin($false)
 Assert-Leave ($preparation.BeginBattleEnd() -and -not $preparation.Ready()) 'Preparation exit started a turn instead of settling'

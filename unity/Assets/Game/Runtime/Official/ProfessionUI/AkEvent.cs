@@ -16,6 +16,8 @@ namespace Zjcs.Official.ProfessionUI
         }
         public const int EnableTrigger = unchecked((int)0xece0d9f2);
         public const int StartTrigger = 0x4c66e1f7;
+        public const int DisableTrigger = 716467161;
+        private AkTriggerDisable disableTrigger;
         public List<int> triggerList;
         public bool useOtherObject;
         public int actionOnEventType, curveInterpolation;
@@ -34,9 +36,20 @@ namespace Zjcs.Official.ProfessionUI
         {
             if (enableActionOnEvent || useCallbacks || (Callbacks != null && Callbacks.Length != 0))
                 throw new InvalidOperationException("This native profession event needs its original callback/action host.");
-            if (triggerList == null || triggerList.Exists(value => value != EnableTrigger && value != StartTrigger))
+            if (triggerList == null || triggerList.Exists(value => value != EnableTrigger && value != StartTrigger
+                && value != DisableTrigger))
                 throw new InvalidOperationException("This native profession event needs its original trigger handler.");
+            if (triggerList.Contains(DisableTrigger))
+            {
+                disableTrigger = GetComponent<AkTriggerDisable>();
+                // Original AkTriggerHandler.RegisterTriggers adds the trigger
+                // component when GetComponent returns null (APK RVA 0x79E0598).
+                if (!disableTrigger) disableTrigger = gameObject.AddComponent<AkTriggerDisable>();
+                disableTrigger.triggerDelegate += HandleEvent;
+            }
         }
+        private void OnDestroy()
+        { if (disableTrigger) disableTrigger.triggerDelegate -= HandleEvent; }
         private void OnEnable()
         {
             if (triggerList.Contains(EnableTrigger)) HandleEvent(null);

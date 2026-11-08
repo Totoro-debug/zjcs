@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Zjcs.Official.ProfessionUI;
 
@@ -17,7 +18,14 @@ namespace Zjcs.Offline.ProfessionUI
             public bool DefaultListeners, EnvironmentInitialized;
         }
         private readonly Dictionary<int, SoundObject> objects = new Dictionary<int, SoundObject>();
-        private readonly Dictionary<uint, AudioClip> clips = new Dictionary<uint, AudioClip>();
+        private readonly Dictionary<uint, OfflineProfessionAudioCatalog.Entry> events = new Dictionary<uint, OfflineProfessionAudioCatalog.Entry>();
+        private sealed class Voice
+        {
+            public OfflineProfessionSoundVoice Player;
+            public uint[] Targets;
+        }
+        // Wwise Stop_E acts across emitting objects and nested UI hosts.
+        private static readonly List<Voice> voices = new List<Voice>();
         private uint nextPlayingId;
         private IProfessionSoundHost previous;
         private bool bound;
@@ -61,9 +69,13 @@ namespace Zjcs.Offline.ProfessionUI
             if (catalog == null || catalog.Events == null) throw new ArgumentNullException(nameof(catalog));
             foreach (var entry in catalog.Events)
             {
-                if (entry == null || entry.EventId == 0 || entry.Clip == null || clips.ContainsKey(entry.EventId))
+                if (entry == null || entry.EventId == 0 || events.ContainsKey(entry.EventId)
+                    || (!entry.Clip && (entry.StopTargetIds == null || entry.StopTargetIds.Length == 0)))
                     throw new InvalidOperationException("Profession source audio catalog is incomplete or duplicated.");
-                clips.Add(entry.EventId, entry.Clip);
+                int stops = entry.StopTargetIds?.Length ?? 0;
+                if (stops != 0 && (entry.StopSeconds?.Length != stops || entry.StopCurves?.Length != stops))
+                    throw new InvalidOperationException("Original Wwise stop actions are incomplete.");
+                events.Add(entry.EventId, entry);
             }
             previous = OfficialWwiseEvent.Host;
             OfficialWwiseEvent.Host = this;
@@ -72,8 +84,15 @@ namespace Zjcs.Offline.ProfessionUI
         public uint PostEvent(uint eventId, GameObject emitter)
         {
             if (!bound) throw new InvalidOperationException("Profession sound catalog is unbound.");
-            if (!clips.TryGetValue(eventId, out AudioClip clip))
+            if (!events.TryGetValue(eventId, out var entry))
                 throw new InvalidOperationException("Unmigrated profession source event: " + eventId);
+            voices.RemoveAll(value => !value.Player);
+            for (int index = 0; index < (entry.StopTargetIds?.Length ?? 0); index++)
+                foreach (var active in voices)
+                    if (active.Targets != null && active.Targets.Contains(entry.StopTargetIds[index]))
+                        active.Player.Stop(entry.StopSeconds[index], entry.StopCurves[index]);
+            if (!entry.Clip) return 0;
+            AudioClip clip = entry.Clip;
             var voice = new GameObject("ProfessionSound:" + eventId);
             if (emitter != null) voice.transform.position = emitter.transform.position;
             DontDestroyOnLoad(voice);
@@ -83,7 +102,10 @@ namespace Zjcs.Offline.ProfessionUI
             source.loop = false;
             source.clip = clip;
             source.Play();
-            voice.AddComponent<OfflineProfessionSoundVoice>().ReleaseAfter(clip.length);
+            var player = voice.AddComponent<OfflineProfessionSoundVoice>();
+            player.ReleaseAfter(clip.length);
+            player.FadeIn(entry.FadeInSeconds, entry.FadeInCurve);
+            voices.Add(new Voice { Player = player, Targets = entry.TargetIds });
             unchecked { nextPlayingId++; }
             if (nextPlayingId == 0) nextPlayingId = 1;
             return nextPlayingId;
