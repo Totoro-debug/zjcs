@@ -56,7 +56,9 @@ Map12 的 121／50 机神山路线共用日常副本运行时，其奖励、次�
 
 竞技场结算迁移所选 884 的完整原生 `GameEndPanelArena` 及 `ArenaShowFightResult`、`ArenaOpponentIcon`、`CombatRatingPromoteWayItem`，保留原对象层级、胜负分支、标题、守卫与本人外观、名次变化、奖励数量、动画和 Wwise 事件绑定。覆盖本地主动挑战守卫分支；防守通知及他人战斗不生成虚构记录。结算使用已经提交的实际胜负、前后名次、守卫与奖励快照，窗口和统计重开不再次发奖。正常战斗在最终演出和战报交接后显示结果，战场保留至原按钮离开；直接胜利不创建战斗和统计。原“提升技能／装备”按钮离开战斗后进入现有角色功能；装备目的页仍受[装备功能](equipment.md)的还原缺项限制。
 
-资源与转换见[竞技场结算来源](../../assets/reference/arena-result-native-source-manifest.json)，入口为 `HomeHudView.ArenaResult`、`ArenaResultWindow` 与 `OfficialArenaResultAssets`。内置屏 Play Mode 使用真实入口和模拟点击，已通过胜利、失败、主动退出的取消／确认及直接胜利；核对一张入场票、胜负次数、前后名次、原奖励入库、磁盘冷打开结果及重复结算去重，正常战斗战报两次重开、双方姓名／头像、保留战场和原按钮离开后的释放均通过。已查看四类结果及统计运行截图；测试仅调整隔离存档的对手、生命、攻击和速度以缩短实际战斗，不直接调用完成回调。场景进入结果前仍有既有无 AudioListener 提示，未验证音效输出；Windows Player 构建、实际运行及发布尚未完成。
+资源与转换见[竞技场结算来源](../../assets/reference/arena-result-native-source-manifest.json)，入口为 `HomeHudView.ArenaResult`、`ArenaResultWindow` 与 `OfficialArenaResultAssets`。内置屏 Play Mode 使用真实入口和模拟点击，已通过胜利、失败、主动退出的取消／确认及直接胜利；核对一张入场票、胜负次数、前后名次、原奖励入库、磁盘冷打开结果及重复结算去重，正常战斗战报两次重开、双方姓名／头像、保留战场和原按钮离开后的释放均通过。已查看四类结果及统计运行截图；测试仅调整隔离存档的对手、生命、攻击和速度以缩短实际战斗，不直接调用完成回调。场景进入结果前仍有既有无 AudioListener 提示；Windows Player 已构建并实际运行专项入口，四类流程和原生结果／统计截图通过，音效输出仍未单独验证。
+竞技场 Windows Player 专项入口为 `ArenaResultPlayerValidation`，通过显式参数 `--zjcs-validate-arena-result <验证输出目录>` 启用。它等待真实启动页后创建独立存档，模拟游记、竞技、挑战、开始、退出、统计与离开按钮；只缩短测试生命／攻击／速度并选取原守卫，不调用完成回调。检查结果、截图与存档保留在指定验证目录；专项 Player 已返回通过，实际查看胜利、失败和技能统计画面，四类流程均完成。
+
 
 ## 自定义实现
 
