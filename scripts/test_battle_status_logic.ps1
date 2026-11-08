@@ -16,4 +16,4 @@ $items = [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load(
     $rulesJson, $rulesProof.output_sha256, $rulesProof.manifest)
 $formula = $catalog.CreateDamageFormula($rulesJson, $rulesProof.output_sha256, $rulesProof.manifest)
 [BattleStatusLogicHarness]::Run($catalog, $items, $formula)
-Write-Output 'Status logic checks passed: official self-init event, persistent blackboard, checkpoint round-trip and executor restore.'
+Write-Output 'Status logic checks passed: self-init, persistent blackboard/checkpoint restore, official NOT/BBInt operands, unknown/malformed conditions and dependent handles fail closed.'

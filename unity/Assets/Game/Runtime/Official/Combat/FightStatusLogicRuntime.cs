@@ -46,8 +46,9 @@ namespace Zjcs.Combat.Official
                 Dictionary<string, object> flow = Object(trigger, "Flow");
                 if (flow == null) continue;
                 bool supported;
-                if (!MatchesFilter(Object(flow, "FilterCondition"), owner, status, actor, target,
-                        skill, hit, units, random, out supported))
+                bool matched = MatchesFilter(Object(flow, "FilterCondition"), owner, status, actor, target,
+                    skill, hit, units, random, out supported);
+                if (!supported || !matched)
                 {
                     if (!supported) status.LogicRulesSupported = false;
                     continue;
@@ -58,7 +59,13 @@ namespace Zjcs.Combat.Official
                 {
                     if (!(rawHandle is Dictionary<string, object> handle)) continue;
                     if (!ApplyHandle(handle, owner, status, actor, target, skill, hit, units,
-                        catalog, random, result)) status.LogicRulesSupported = false;
+                        catalog, random, result))
+                    {
+                        status.LogicRulesSupported = false;
+                        // A later handle may depend on the missing handle's blackboard outputs.
+                        // Stop this flow rather than executing it with default/old values.
+                        break;
+                    }
                 }
                 status.LogicTriggeredCount++;
             }
@@ -96,26 +103,33 @@ namespace Zjcs.Combat.Official
             {
                 List<object> sub = Array(filter, "SubFilters");
                 int logicType = Int(filter, "LogicType");
+                if (logicType != 0 && logicType != 1) { supported = false; return false; }
                 bool value = logicType == 1 ? false : true;
                 foreach (object raw in sub)
                 {
                     bool childSupported;
-                    bool child = MatchesFilter(raw as Dictionary<string, object>, owner, status, actor,
+                    if (!(raw is Dictionary<string, object> childFilter))
+                    {
+                        supported = false;
+                        continue;
+                    }
+                    bool child = MatchesFilter(childFilter, owner, status, actor,
                         target, skill, hit, units, random, out childSupported);
                     supported &= childSupported;
                     value = logicType == 1 ? value || child : value && child;
                 }
-                return value;
+                return supported && value;
             }
             if (type == "LogicNotFilter")
             {
                 Dictionary<string, object> nested = Object(filter, "SubFilter")
-                    ?? Object(filter, "FilterCondition");
+                    ?? Object(filter, "FilterCondition") ?? Object(filter, "TargetFilter");
+                if (nested == null) { supported = false; return false; }
                 bool childSupported;
                 bool child = MatchesFilter(nested, owner, status, actor, target, skill, hit,
                     units, random, out childSupported);
                 supported = childSupported;
-                return !child;
+                return supported && !child;
             }
             if (type == "RateFilter") return random == null || random.Next() < Double(filter, "Rate", 1d);
             if (type == "CounterLessFilter" || type == "CounterLessEqualFilter"
@@ -135,7 +149,7 @@ namespace Zjcs.Combat.Official
                 || type == "BBIntLessFilter" || type == "BBIntLessEqualFilter"
                 || type == "BBIntGreaterFilter" || type == "BBIntGreaterEqualFilter")
             {
-                int key = KeyId(filter, "BBKey");
+                int key = KeyId(filter, "LhsBBKey");
                 long value = Blackboard(status, key);
                 long expected = Long(filter, "Value");
                 if (type == "BBIntEqualFilter") return value == expected;

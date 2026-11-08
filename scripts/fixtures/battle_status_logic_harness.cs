@@ -63,5 +63,56 @@ public static class BattleStatusLogicHarness
             new FightDamageSettlement(), catalog, items);
         Check(restoredRunner != null && restoredLogic.LogicTriggeredCount >= 0,
             "Status logic checkpoint could not be restored by the official executor.");
+        FilterBoundaries(catalog);
+    }
+
+    private static void FilterBoundaries(FightOfficialCombatCatalog catalog)
+    {
+        var owner = Unit(1, 1);
+        var status = catalog.CreateStatus(24669, 1, 1, 77, 0, 0, 1, 1, 1);
+        const string counter = "{\"_type\":\"FightHandleCfgCounterAdd\","
+            + "\"CounterBBKey\":{\"Id\":9001},\"DeltaValue\":1}";
+        string[] rejectedFilters = {
+            "{\"_type\":\"LogicNotFilter\",\"TargetFilter\":{\"_type\":\"UnknownServerFilter\"}}",
+            "{\"_type\":\"LogicFilter\",\"LogicType\":1,\"SubFilters\":["
+                + "{\"_type\":\"CounterEqualFilter\",\"CounterBBKey\":{\"Id\":9001},\"Value\":0},"
+                + "{\"_type\":\"UnknownServerFilter\"}]}",
+            "{\"_type\":\"LogicNotFilter\"}",
+            "{\"_type\":\"LogicFilter\",\"LogicType\":7,\"SubFilters\":[]}",
+            "{\"_type\":\"LogicFilter\",\"LogicType\":0,\"SubFilters\":[null]}"
+        };
+        foreach (string filter in rejectedFilters)
+        {
+            RunFlow(status, owner, catalog, filter, counter);
+            Check(status.LogicBlackboard.Count == 0 && !status.LogicRulesSupported,
+                "Unknown/malformed composed condition must not execute its dependent handle.");
+        }
+
+        // Use the actual official TargetFilter and LhsBBKey field names. An unrecognized
+        // operand must not turn a NOT into true or a comparison into an implicit zero read.
+        status.LogicBlackboard.Add(new FightBattleLogicBlackboardValue { KeyId = 9002, LongValue = 3 });
+        RunFlow(status, owner, catalog,
+            "{\"_type\":\"LogicNotFilter\",\"TargetFilter\":{\"_type\":\"BBIntEqualFilter\","
+            + "\"LhsBBKey\":{\"Id\":9002},\"Value\":3}}", counter);
+        Check(!status.LogicBlackboard.Any(value => value.KeyId == 9001)
+            && status.LogicRulesSupported, "Known NOT condition did not use its official operand.");
+        RunFlow(status, owner, catalog,
+            "{\"_type\":\"BBIntEqualFilter\",\"LhsBBKey\":{\"Id\":9002},\"Value\":3}", counter);
+        Check(status.LogicBlackboard.Single(value => value.KeyId == 9001).LongValue == 1,
+            "Official BBInt compare did not read LhsBBKey.");
+        RunFlow(status, owner, catalog, "null",
+            "{\"_type\":\"UnknownServerHandle\"}," + counter);
+        Check(status.LogicBlackboard.Single(value => value.KeyId == 9001).LongValue == 1
+            && !status.LogicRulesSupported, "A missing handle allowed its dependent tail to run.");
+    }
+
+    private static void RunFlow(FightBattleStatusState status, FightBattleUnitState owner,
+        FightOfficialCombatCatalog catalog, string filter, string handles)
+    {
+        status.LogicRulesSupported = true;
+        status.LogicDefinitionJson = "{\"Triggers\":[{\"_type\":\"FightOnStatusSelfInitTriggerCfg\","
+            + "\"Flow\":{\"FilterCondition\":" + filter + ",\"HandleCfgs\":[" + handles + "]}}]}";
+        FightStatusLogicRuntime.Apply(owner, status, FightStatusLogicEvent.StatusSelfInit,
+            owner, owner, null, null, new[] { owner }, catalog, new FightRandomStream(31));
     }
 }
