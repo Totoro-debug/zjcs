@@ -35,7 +35,7 @@ namespace Zjcs.Editor.ProfessionUI
                 if (string.IsNullOrEmpty(work) || !Path.IsPathRooted(work)) throw new InvalidDataException("Owned monster validation workspace required.");
                 string root = Path.Combine(work, "live-monsters");
                 var catalog = JsonUtility.FromJson<Catalog>(File.ReadAllText(Path.Combine(root, "catalog.json")));
-                if (catalog?.manifest != "884_156692" || catalog.models?.Length != 61)
+                if (catalog?.manifest != "884_156692" || catalog.models?.Length != 64)
                     throw new InvalidDataException("Configured original monster shadow inventory differs.");
                 var results = new Results { models = catalog.models.Length };
                 var motions = new List<Motion>();
@@ -56,7 +56,7 @@ namespace Zjcs.Editor.ProfessionUI
                         try
                         {
                             var animation = new ProfessionNativeAnimationChannels(source, name, originalBezierSegments: true);
-                            var physics = source.Constraints.Any(value => value.Kind == "physics") ? new ProfessionNativePlayerPhysicsPose(source) : null;
+                            var physics = source.Constraints.Any(value => value.Kind == "physics") ? new ProfessionNativeOrderedPhysicsPose(source) : null;
                             for (int i = 0; i <= 8; i++)
                             {
                                 float time = animation.Duration * i / 8;

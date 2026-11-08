@@ -1,0 +1,1642 @@
+{
+  "manifest": "884_156692",
+  "selected_entities": [
+    3331,
+    3481,
+    3620
+  ],
+  "installed_entities": [
+    3198,
+    3206,
+    3207,
+    3331,
+    3481,
+    3620,
+    3709,
+    3803,
+    3903,
+    3904,
+    3905,
+    3909,
+    3910,
+    3911,
+    3912,
+    3913,
+    3914,
+    3915,
+    3917,
+    3920,
+    3923,
+    3925,
+    3948,
+    3949,
+    9201,
+    9202,
+    9203,
+    9204,
+    9205,
+    9206,
+    9207,
+    9208,
+    9209,
+    9210,
+    9211,
+    9212,
+    9213,
+    9214,
+    9215,
+    9216,
+    9217,
+    9218,
+    9219,
+    9220,
+    9222,
+    9301,
+    9302,
+    9303,
+    9304,
+    9305,
+    9306,
+    9307,
+    9308,
+    9309,
+    9310,
+    9311,
+    9312,
+    9314,
+    9315,
+    9316,
+    9317,
+    9318,
+    9320,
+    9322
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_embedded_source_actors.py",
+    "sha256": "b799a4bdfdc3cb4175348f0317d1930a126e1437dbb8439ff770e7b091497cf4"
+  },
+  "serializer_template": {
+    "source": {
+      "path": "unity/Assets/Official/Combat/NativeMonsters/textures/87eec55ac622d4084ca884b0b3470d8748f0ff36cacec305425fa44975de58a4.asset",
+      "sha256": "99370df2fbf9db9e44e108eaf1a28c6a75c39ecce82491aeed01718ea3d8fa66"
+    },
+    "normalized_header": "2800000 -> 1",
+    "sha256": "33ffba1b932471c014af2616c9b6cd39a300fc73c9c314ff7759d6a39e51237c"
+  },
+  "dependent_manifests": [
+    {
+      "path": "assets/reference/battle-animation/live-monsters-source-manifest.json",
+      "sha256": "a11cbc296c63b43298c0d4cbff96d7a5cd5f1b103814853c0d5cc3bff518ff2b"
+    },
+    {
+      "path": "assets/reference/battle-animation/monster-animator-bindings-source-manifest.json",
+      "sha256": "10e93bcc88ac829383d13b08eb713422c69a91bb54708bade8a8c9f8655e61e8"
+    },
+    {
+      "path": "assets/reference/battle-animation/monster-animation-controllers-source-manifest.json",
+      "sha256": "6e9ac3980f00b81a60523ea88f76a52ea4a538dd1d8c6de7594284a426dc286f"
+    },
+    {
+      "path": "assets/reference/battle-animation/monster-attachments-source-manifest.json",
+      "sha256": "5a3444bf0b23173f9d82b940ec2d60787f1b113905f37b59da8ec940f0fc29d8"
+    },
+    {
+      "path": "assets/reference/battle-animation/monster-additional-shadows-source-manifest.json",
+      "sha256": "9f4215f595cc9fee1a6be76b238b5ea2b32c78ab92b5d11cd74aef4f6964f0bc"
+    }
+  ],
+  "original_loadout_bindings": {
+    "originals": {
+      "monster_group": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "-5059552782443174708",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "object_sha256": "784218e48035f84c119b88e6685f4b057411a8445f08fc5a4a4969fce2f8ff78",
+        "payload_sha256": "4b85269ea6e5a90133030a715b064d1441971656e88443a06add9d1ab00a481c",
+        "rows": [
+          {
+            "MonsterId": 3331,
+            "GroupNo": 0,
+            "ResilienceInfo": {
+              "DisappearStatusIds": null,
+              "DisappearSkillId": 0,
+              "SkillMaxHpPercent": 0,
+              "SkillAtkPercent": 0,
+              "ResetRound": 0
+            },
+            "ActiveSkills": [
+              14678,
+              14679
+            ],
+            "PassiveSkills": [],
+            "DeactivePassiveSkills": [],
+            "HpPliesId": 0,
+            "PropCfg": {
+              "PropGroupId": 10,
+              "PropFactors": {
+                "100": 50000,
+                "3": 10000,
+                "1": 11000,
+                "2": 10000,
+                "4": 10500,
+                "6": 0,
+                "58": 10000,
+                "350": 9000,
+                "351": 10000,
+                "354": 10000,
+                "355": 11000,
+                "62": 5000,
+                "27": 10000,
+                "29": 10000,
+                "28": 10000,
+                "26": 10000,
+                "352": 10000,
+                "353": 10000,
+                "356": 10000,
+                "357": 10000,
+                "32": 10000,
+                "33": 10000,
+                "79": 10000,
+                "80": 10000,
+                "81": 10000,
+                "82": 10000,
+                "420": 10000,
+                "421": 10000,
+                "410": 10000,
+                "411": 10000,
+                "412": 10000,
+                "413": 10000,
+                "414": 10000,
+                "415": 10000,
+                "416": 10000,
+                "417": 10000,
+                "418": 10000,
+                "419": 10000,
+                "303": 10000,
+                "302": 10000,
+                "68": 10000,
+                "69": 10000,
+                "60": 10000,
+                "64": 15000,
+                "59": 10000,
+                "63": 10000,
+                "306": 10000,
+                "324": 10000,
+                "325": 10000
+              }
+            },
+            "ExtraProps": {}
+          },
+          {
+            "MonsterId": 3481,
+            "GroupNo": 0,
+            "ResilienceInfo": {
+              "DisappearStatusIds": [
+                24278
+              ],
+              "DisappearSkillId": 10130,
+              "SkillMaxHpPercent": 500,
+              "SkillAtkPercent": 10000,
+              "ResetRound": 2
+            },
+            "ActiveSkills": [
+              14237,
+              14238,
+              14239
+            ],
+            "PassiveSkills": [],
+            "DeactivePassiveSkills": [],
+            "HpPliesId": 0,
+            "PropCfg": {
+              "PropGroupId": 11,
+              "PropFactors": {
+                "100": 70000,
+                "3": 9000,
+                "1": 11800,
+                "2": 9000,
+                "4": 10200,
+                "6": 10000,
+                "58": 10000,
+                "350": 10000,
+                "351": 10000,
+                "354": 10000,
+                "355": 10000,
+                "62": 10000,
+                "27": 10000,
+                "29": 10000,
+                "28": 10000,
+                "26": 10000,
+                "352": 10000,
+                "353": 10000,
+                "356": 10000,
+                "357": 10000,
+                "32": 10000,
+                "33": 10000,
+                "79": 10000,
+                "80": 10000,
+                "81": 10000,
+                "82": 10000,
+                "420": 10000,
+                "421": 10000,
+                "410": 10000,
+                "411": 10000,
+                "412": 10000,
+                "413": 10000,
+                "414": 10000,
+                "415": 10000,
+                "416": 10000,
+                "417": 10000,
+                "418": 10000,
+                "419": 10000,
+                "303": 10000,
+                "302": 10000,
+                "68": 10000,
+                "69": 10000,
+                "60": 10000,
+                "64": 10000,
+                "59": 10000,
+                "63": 10000,
+                "306": 10000,
+                "324": 10000,
+                "325": 10000
+              }
+            },
+            "ExtraProps": {}
+          },
+          {
+            "MonsterId": 3620,
+            "GroupNo": 0,
+            "ResilienceInfo": {
+              "DisappearStatusIds": [
+                24278
+              ],
+              "DisappearSkillId": 10130,
+              "SkillMaxHpPercent": 500,
+              "SkillAtkPercent": 10000,
+              "ResetRound": 2
+            },
+            "ActiveSkills": [
+              14278,
+              14279,
+              14280,
+              14281
+            ],
+            "PassiveSkills": [],
+            "DeactivePassiveSkills": [],
+            "HpPliesId": 0,
+            "PropCfg": {
+              "PropGroupId": 12,
+              "PropFactors": {
+                "100": 70000,
+                "3": 7700,
+                "1": 10750,
+                "2": 10000,
+                "4": 10500,
+                "6": 10000,
+                "58": 10000,
+                "350": 10000,
+                "351": 10000,
+                "354": 10000,
+                "355": 10000,
+                "62": 10000,
+                "27": 10000,
+                "29": 10000,
+                "28": 10000,
+                "26": 10000,
+                "352": 10000,
+                "353": 10000,
+                "356": 10000,
+                "357": 10000,
+                "32": 10000,
+                "33": 10000,
+                "79": 10000,
+                "80": 10000,
+                "81": 10000,
+                "82": 10000,
+                "420": 10000,
+                "421": 10000,
+                "410": 10000,
+                "411": 10000,
+                "412": 10000,
+                "413": 10000,
+                "414": 10000,
+                "415": 10000,
+                "416": 10000,
+                "417": 10000,
+                "418": 10000,
+                "419": 10000,
+                "303": 10000,
+                "302": 10000,
+                "68": 10000,
+                "69": 10000,
+                "60": 10000,
+                "64": 10000,
+                "59": 10000,
+                "63": 10000,
+                "306": 10000,
+                "324": 10000,
+                "325": 10000
+              }
+            },
+            "ExtraProps": {}
+          }
+        ]
+      },
+      "skill": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "1398458758611605706",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "object_sha256": "5f5cf749e0186ca524be7bce5c36c14cbb73d1579a62c510632a445434bf5b34",
+        "payload_sha256": "5da6dd4982bdb6259e13043da7e2b7b4dc6b655beff1661b5f92f4fd65e0c81f",
+        "rows": [
+          {
+            "ClassId": 14237,
+            "EcEntityId": 18160,
+            "DirectionEcEntityId": {},
+            "RandomSkillWeightList": [],
+            "RandomSkillEntityId": [],
+            "TryAtStartType": 0,
+            "UpgradeMaterialId": 12001,
+            "Tags": [
+              4
+            ],
+            "SkillSortTypes": null,
+            "OuterTag": 4,
+            "PassiveRankPropId": 0,
+            "PassiveGroupLevelPropId": 0,
+            "PassiveRankFactorId": 0,
+            "PassivePropFactors": {},
+            "PassiveStatusIdList": [],
+            "InitEnergy": 0,
+            "TriggerNeedEnergy": 0,
+            "ViewPropEntities": [
+              18160
+            ],
+            "ViewPropBlackList": [],
+            "HyperLinkTypes": [],
+            "HyperLinkDatas": [],
+            "UserType": 2,
+            "Invisible": false,
+            "MaxRankLimit": 0,
+            "AiPriorityId": -1,
+            "LastAiPriorityId": -1
+          },
+          {
+            "ClassId": 14238,
+            "EcEntityId": 18170,
+            "DirectionEcEntityId": {},
+            "RandomSkillWeightList": [],
+            "RandomSkillEntityId": [],
+            "TryAtStartType": 0,
+            "UpgradeMaterialId": 12001,
+            "Tags": [
+              4
+            ],
+            "SkillSortTypes": null,
+            "OuterTag": 4,
+            "PassiveRankPropId": 0,
+            "PassiveGroupLevelPropId": 0,
+            "PassiveRankFactorId": 0,
+            "PassivePropFactors": {},
+            "PassiveStatusIdList": [],
+            "InitEnergy": 0,
+            "TriggerNeedEnergy": 0,
+            "ViewPropEntities": [
+              18170
+            ],
+            "ViewPropBlackList": [],
+            "HyperLinkTypes": [],
+            "HyperLinkDatas": [],
+            "UserType": 2,
+            "Invisible": false,
+            "MaxRankLimit": 0,
+            "AiPriorityId": -1,
+            "LastAiPriorityId": -1
+          },
+          {
+            "ClassId": 14239,
+            "EcEntityId": 18180,
+            "DirectionEcEntityId": {},
+            "RandomSkillWeightList": [],
+            "RandomSkillEntityId": [],
+            "TryAtStartType": 0,
+            "UpgradeMaterialId": 12001,
+            "Tags": [
+              4
+            ],
+            "SkillSortTypes": null,
+            "OuterTag": 4,
+            "PassiveRankPropId": 0,
+            "PassiveGroupLevelPropId": 0,
+            "PassiveRankFactorId": 0,
+            "PassivePropFactors": {},
+            "PassiveStatusIdList": [],
+            "InitEnergy": 0,
+            "TriggerNeedEnergy": 0,
+            "ViewPropEntities": [
+              18180
+            ],
+            "ViewPropBlackList": [],
+            "HyperLinkTypes": [],
+            "HyperLinkDatas": [],
+            "UserType": 2,
+            "Invisible": false,
+            "MaxRankLimit": 0,
+            "AiPriorityId": -1,
+            "LastAiPriorityId": -1
+          },
+          {
+            "ClassId": 14278,
+            "EcEntityId": 18590,
+            "DirectionEcEntityId": {},
+            "RandomSkillWeightList": [],
+            "RandomSkillEntityId": [],
+            "TryAtStartType": 0,
+            "UpgradeMaterialId": 12001,
+            "Tags": [
+              4
+            ],
+            "SkillSortTypes": null,
+            "OuterTag": 4,
+            "PassiveRankPropId": 0,
+            "PassiveGroupLevelPropId": 0,
+            "PassiveRankFactorId": 0,
+            "PassivePropFactors": {},
+            "PassiveStatusIdList": [],
+            "InitEnergy": 0,
+            "TriggerNeedEnergy": 0,
+            "ViewPropEntities": [
+              18590
+            ],
+            "ViewPropBlackList": [],
+            "HyperLinkTypes": [],
+            "HyperLinkDatas": [],
+            "UserType": 2,
+            "Invisible": false,
+            "MaxRankLimit": 0,
+            "AiPriorityId": -1,
+            "LastAiPriorityId": -1
+          },
+          {
+            "ClassId": 14279,
+            "EcEntityId": 18600,
+            "DirectionEcEntityId": {},
+            "RandomSkillWeightList": [],
+            "RandomSkillEntityId": [],
+            "TryAtStartType": 0,
+            "UpgradeMaterialId": 12001,
+            "Tags": [
+              4
+            ],
+            "SkillSortTypes": null,
+            "OuterTag": 4,
+            "PassiveRankPropId": 0,
+            "PassiveGroupLevelPropId": 0,
+            "PassiveRankFactorId": 0,
+            "PassivePropFactors": {},
+            "PassiveStatusIdList": [],
+            "InitEnergy": 0,
+            "TriggerNeedEnergy": 0,
+            "ViewPropEntities": [
+              18600
+            ],
+            "ViewPropBlackList": [],
+            "HyperLinkTypes": [
+              0
+            ],
+            "HyperLinkDatas": [
+              "{EntryId:25}"
+            ],
+            "UserType": 2,
+            "Invisible": false,
+            "MaxRankLimit": 0,
+            "AiPriorityId": -1,
+            "LastAiPriorityId": -1
+          },
+          {
+            "ClassId": 14280,
+            "EcEntityId": 18610,
+            "DirectionEcEntityId": {},
+            "RandomSkillWeightList": [],
+            "RandomSkillEntityId": [],
+            "TryAtStartType": 0,
+            "UpgradeMaterialId": 12001,
+            "Tags": [
+              4
+            ],
+            "SkillSortTypes": null,
+            "OuterTag": 4,
+            "PassiveRankPropId": 0,
+            "PassiveGroupLevelPropId": 0,
+            "PassiveRankFactorId": 0,
+            "PassivePropFactors": {},
+            "PassiveStatusIdList": [],
+            "InitEnergy": 0,
+            "TriggerNeedEnergy": 0,
+            "ViewPropEntities": [
+              18610
+            ],
+            "ViewPropBlackList": [],
+            "HyperLinkTypes": [
+              0
+            ],
+            "HyperLinkDatas": [
+              "{EntryId:25}"
+            ],
+            "UserType": 2,
+            "Invisible": false,
+            "MaxRankLimit": 0,
+            "AiPriorityId": -1,
+            "LastAiPriorityId": -1
+          },
+          {
+            "ClassId": 14281,
+            "EcEntityId": 18620,
+            "DirectionEcEntityId": {},
+            "RandomSkillWeightList": [],
+            "RandomSkillEntityId": [],
+            "TryAtStartType": 0,
+            "UpgradeMaterialId": 12001,
+            "Tags": [
+              4,
+              11
+            ],
+            "SkillSortTypes": null,
+            "OuterTag": 11,
+            "PassiveRankPropId": 0,
+            "PassiveGroupLevelPropId": 0,
+            "PassiveRankFactorId": 0,
+            "PassivePropFactors": {},
+            "PassiveStatusIdList": [],
+            "InitEnergy": 0,
+            "TriggerNeedEnergy": 0,
+            "ViewPropEntities": [
+              18620
+            ],
+            "ViewPropBlackList": [],
+            "HyperLinkTypes": [],
+            "HyperLinkDatas": [],
+            "UserType": 2,
+            "Invisible": false,
+            "MaxRankLimit": 0,
+            "AiPriorityId": -1,
+            "LastAiPriorityId": -1
+          },
+          {
+            "ClassId": 14678,
+            "EcEntityId": 59460,
+            "DirectionEcEntityId": {},
+            "RandomSkillWeightList": [],
+            "RandomSkillEntityId": [],
+            "TryAtStartType": 0,
+            "UpgradeMaterialId": 12001,
+            "Tags": [
+              4
+            ],
+            "SkillSortTypes": null,
+            "OuterTag": 4,
+            "PassiveRankPropId": 0,
+            "PassiveGroupLevelPropId": 0,
+            "PassiveRankFactorId": 0,
+            "PassivePropFactors": {},
+            "PassiveStatusIdList": [],
+            "InitEnergy": 0,
+            "TriggerNeedEnergy": 0,
+            "ViewPropEntities": [
+              59460
+            ],
+            "ViewPropBlackList": [],
+            "HyperLinkTypes": [],
+            "HyperLinkDatas": [],
+            "UserType": 2,
+            "Invisible": false,
+            "MaxRankLimit": 0,
+            "AiPriorityId": -1,
+            "LastAiPriorityId": -1
+          },
+          {
+            "ClassId": 14679,
+            "EcEntityId": 59470,
+            "DirectionEcEntityId": {},
+            "RandomSkillWeightList": [],
+            "RandomSkillEntityId": [],
+            "TryAtStartType": 0,
+            "UpgradeMaterialId": 12001,
+            "Tags": [
+              4
+            ],
+            "SkillSortTypes": null,
+            "OuterTag": 4,
+            "PassiveRankPropId": 0,
+            "PassiveGroupLevelPropId": 0,
+            "PassiveRankFactorId": 0,
+            "PassivePropFactors": {},
+            "PassiveStatusIdList": [],
+            "InitEnergy": 0,
+            "TriggerNeedEnergy": 0,
+            "ViewPropEntities": [
+              59470
+            ],
+            "ViewPropBlackList": [],
+            "HyperLinkTypes": [],
+            "HyperLinkDatas": [],
+            "UserType": 2,
+            "Invisible": false,
+            "MaxRankLimit": 0,
+            "AiPriorityId": -1,
+            "LastAiPriorityId": -1
+          }
+        ]
+      }
+    },
+    "constructors": [
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemPartInfo.cs",
+        "sha256": "685012dc0b4db06adf6b1b5f4d37e04ac1197b2391763694badfdbf1ae278cea"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MonsterGroupInfo.cs",
+        "sha256": "70d9b5c80e550f1f486d56e0a3a7404ecea85efc83b0f8d580faf7c637703684"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillInfo.cs",
+        "sha256": "b403f503798af59fe02a307c8f4d6fbfd1dfb94d11431d17d007a68f5945745d"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Tables.cs",
+        "sha256": "0e4882f1ad41958e5ec017543447e17f5196c5453f8168c685926ea2c134c9bc"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbMonsterGroupInfo.cs",
+        "sha256": "c315b5f9502612252718dabff370433170cf9095c8f1e1ef9be52045c589a332"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbSkillInfo.cs",
+        "sha256": "b2322998e0b8972434132a2d9f744e3a3a8f63c3ab244c1d982b8f47d75521f8"
+      }
+    ],
+    "runtime_inputs": [
+      {
+        "path": "unity/Assets/Official/Combat/battle-rules.json",
+        "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/rules.json",
+        "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+      }
+    ],
+    "operation": "Compare original group-zero skill item/entity bindings only. Do not substitute numerical rules from another input version."
+  },
+  "original_18160_branch": {
+    "graph_manifest": {
+      "path": "assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json",
+      "sha256": "fbacbd255d47e6644cca19e5329381afae161fade36b646c9698c5c06cab0654"
+    },
+    "original_records": [
+      {
+        "path": "",
+        "type": "GameObject",
+        "class_name": "",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "9159936388396317859",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "fa835788955d67a0ffa5edebe409e23aa1696e8a831bf0ce046ac5e90dd0f1f2",
+        "fields": {
+          "m_Component": [
+            {
+              "component": {
+                "m_FileID": 0,
+                "m_PathID": 7990893090674867363
+              }
+            },
+            {
+              "component": {
+                "m_FileID": 0,
+                "m_PathID": 622175447144365219
+              }
+            }
+          ],
+          "m_Layer": 0,
+          "m_Name": "playable18160",
+          "m_Tag": 0,
+          "m_IsActive": true
+        }
+      },
+      {
+        "path": "",
+        "type": "Transform",
+        "class_name": "",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "7990893090674867363",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "36000a62be309dc9d8e6a701a4071e0e820aa9e54e98b85606119a7c8cc2694a",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 9159936388396317859
+          },
+          "m_LocalRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "m_LocalPosition": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "m_LocalScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "m_Children": [
+            {
+              "m_FileID": 0,
+              "m_PathID": -2619948458704929629
+            },
+            {
+              "m_FileID": 0,
+              "m_PathID": -7480497385227912029
+            },
+            {
+              "m_FileID": 0,
+              "m_PathID": -8901379772010693469
+            },
+            {
+              "m_FileID": 0,
+              "m_PathID": 6448818767462366371
+            },
+            {
+              "m_FileID": 0,
+              "m_PathID": 957679240462302371
+            }
+          ],
+          "m_Father": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          }
+        }
+      },
+      {
+        "path": "",
+        "type": "MonoBehaviour",
+        "class_name": "MyPlayableSequence",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "622175447144365219",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "68a91ecab506b12c7eb82bbb5b76f204e185a2efe67c993d4d744a7954e0c0e8",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 9159936388396317859
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": -8433484863279068627
+          },
+          "m_Name": "",
+          "Prefab": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mySource": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "myTarget": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "myApplyComponent": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "myEndDestroy": 1,
+          "DestroyOnRemove": 1,
+          "mySpeed": 1.0,
+          "myFadeInDuration": 0.0,
+          "myFadeOutDuration": 0.0,
+          "myTriggerList": [],
+          "myFadeoutTrigerList": [],
+          "myEndTrigerList": [],
+          "myPlayables": [
+            {
+              "myTime": 0.0,
+              "myPlayable": {
+                "m_FileID": 0,
+                "m_PathID": 4647435126678256803
+              }
+            },
+            {
+              "myTime": 0.46700000762939453,
+              "myPlayable": {
+                "m_FileID": 0,
+                "m_PathID": -1722410118458344285
+              }
+            },
+            {
+              "myTime": 0.46700000762939453,
+              "myPlayable": {
+                "m_FileID": 0,
+                "m_PathID": -6081473346248934237
+              }
+            },
+            {
+              "myTime": 0.7870000004768372,
+              "myPlayable": {
+                "m_FileID": 0,
+                "m_PathID": -6759092033065091933
+              }
+            }
+          ]
+        }
+      },
+      {
+        "path": "effect",
+        "type": "GameObject",
+        "class_name": "",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "7570407091502742691",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "4c2becfa5a1e5f933997acd5b8d3a1ccb96c77abbb2f79fda6508c448bcd9a6d",
+        "fields": {
+          "m_Component": [
+            {
+              "component": {
+                "m_FileID": 0,
+                "m_PathID": 6448818767462366371
+              }
+            },
+            {
+              "component": {
+                "m_FileID": 0,
+                "m_PathID": -6081473346248934237
+              }
+            },
+            {
+              "component": {
+                "m_FileID": 0,
+                "m_PathID": -8720883929056445277
+              }
+            },
+            {
+              "component": {
+                "m_FileID": 0,
+                "m_PathID": 2367638600068529315
+              }
+            }
+          ],
+          "m_Layer": 0,
+          "m_Name": "effect",
+          "m_Tag": 0,
+          "m_IsActive": true
+        }
+      },
+      {
+        "path": "effect",
+        "type": "Transform",
+        "class_name": "",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "6448818767462366371",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "f0331a78d621d0c489900279e971dccfeda563cf1ec038fb975d626ccbcb1e99",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 7570407091502742691
+          },
+          "m_LocalRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "m_LocalPosition": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "m_LocalScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "m_Children": [
+            {
+              "m_FileID": 0,
+              "m_PathID": -989406899266880349
+            }
+          ],
+          "m_Father": {
+            "m_FileID": 0,
+            "m_PathID": 7990893090674867363
+          }
+        }
+      },
+      {
+        "path": "effect",
+        "type": "MonoBehaviour",
+        "class_name": "MyPlayableFollowBone",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "-6081473346248934237",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "f11bd8bf8d7e60a108bab2a6b27539e47e22ea9a93adc109b6f951f19c22aa44",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 7570407091502742691
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 1612966794289033905
+          },
+          "m_Name": "",
+          "Prefab": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mySource": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "myTarget": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "myApplyComponent": {
+            "m_FileID": 0,
+            "m_PathID": -989406899266880349
+          },
+          "myEndDestroy": 1,
+          "DestroyOnRemove": 1,
+          "mySpeed": 1.0,
+          "myFadeInDuration": 0.0,
+          "myFadeOutDuration": 0.0,
+          "myTriggerList": [],
+          "myFadeoutTrigerList": [],
+          "myEndTrigerList": [],
+          "myAttach": {
+            "AttachTo": 1,
+            "myBoneName": "body",
+            "myOffset": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "myRotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "w": 1.0
+            },
+            "myScale": 1.0
+          },
+          "IsStatic": 0,
+          "IsFollowPos": 1,
+          "IsFollowRot": 0,
+          "IsFollowScale": 1,
+          "IsFollowShowHideNode": 0,
+          "myFollowDuration": 0.0,
+          "myStopFollowWhileFadeout": 0,
+          "myDuration": 0.800000011920929,
+          "ScaleByGridSizeType": 0,
+          "mIsOpenStateMutex": 0,
+          "mStateMutexUniqueId": "",
+          "mMutexAction": 2,
+          "IsEnableFollowTargetActive": 0,
+          "mIsZEquipY": 0,
+          "mIsReset": 0
+        }
+      },
+      {
+        "path": "effect",
+        "type": "MonoBehaviour",
+        "class_name": "ApplyEnableOnPlay",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "-8720883929056445277",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "a306d57dc5c62132cd54ec27acda1842af306dbc1e8f6aaaf155518492e9d352",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 7570407091502742691
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 6388509206121812930
+          },
+          "m_Name": ""
+        }
+      },
+      {
+        "path": "effect",
+        "type": "MonoBehaviour",
+        "class_name": "ApplyOnStopFadeOut",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "2367638600068529315",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "8cb865926d882496dbb7adb0d24ee3bafa5bc39af64be7d4500a2d12db6fd5f3",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 7570407091502742691
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": -4789613383355788036
+          },
+          "m_Name": ""
+        }
+      },
+      {
+        "path": "effect (1)",
+        "type": "GameObject",
+        "class_name": "",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "6516443679070518435",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "4f998a0a9b9be644942ff94643577ec810b27be79b483cfe6194b196866a4a07",
+        "fields": {
+          "m_Component": [
+            {
+              "component": {
+                "m_FileID": 0,
+                "m_PathID": 957679240462302371
+              }
+            },
+            {
+              "component": {
+                "m_FileID": 0,
+                "m_PathID": 872494695556742307
+              }
+            },
+            {
+              "component": {
+                "m_FileID": 0,
+                "m_PathID": -4722510294172271453
+              }
+            },
+            {
+              "component": {
+                "m_FileID": 0,
+                "m_PathID": 3883813754883177635
+              }
+            }
+          ],
+          "m_Layer": 0,
+          "m_Name": "effect (1)",
+          "m_Tag": 0,
+          "m_IsActive": true
+        }
+      },
+      {
+        "path": "effect (1)",
+        "type": "Transform",
+        "class_name": "",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "957679240462302371",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "aba3fc99bd0854fd116db121f094b8cf4a795146a5f64ef8f6776e1d4527fafe",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 6516443679070518435
+          },
+          "m_LocalRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "m_LocalPosition": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "m_LocalScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "m_Children": [
+            {
+              "m_FileID": 0,
+              "m_PathID": 1296931290962820259
+            }
+          ],
+          "m_Father": {
+            "m_FileID": 0,
+            "m_PathID": 7990893090674867363
+          }
+        }
+      },
+      {
+        "path": "effect (1)",
+        "type": "MonoBehaviour",
+        "class_name": "MyPlayableFollowBone",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "872494695556742307",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "c0b68f82e8899d8fbc532e5ea36e1838efe8ddcdf0d193624f035c7a607a1e5e",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 6516443679070518435
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 1612966794289033905
+          },
+          "m_Name": "",
+          "Prefab": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mySource": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "myTarget": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "myApplyComponent": {
+            "m_FileID": 0,
+            "m_PathID": 1296931290962820259
+          },
+          "myEndDestroy": 1,
+          "DestroyOnRemove": 1,
+          "mySpeed": 1.0,
+          "myFadeInDuration": 0.0,
+          "myFadeOutDuration": 0.0,
+          "myTriggerList": [],
+          "myFadeoutTrigerList": [],
+          "myEndTrigerList": [],
+          "myAttach": {
+            "AttachTo": 1,
+            "myBoneName": "body",
+            "myOffset": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "myRotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "w": 1.0
+            },
+            "myScale": 0.30000001192092896
+          },
+          "IsStatic": 0,
+          "IsFollowPos": 1,
+          "IsFollowRot": 0,
+          "IsFollowScale": 0,
+          "IsFollowShowHideNode": 0,
+          "myFollowDuration": 0.0,
+          "myStopFollowWhileFadeout": 0,
+          "myDuration": 0.800000011920929,
+          "ScaleByGridSizeType": 0,
+          "mIsOpenStateMutex": 0,
+          "mStateMutexUniqueId": "",
+          "mMutexAction": 2,
+          "IsEnableFollowTargetActive": 0,
+          "mIsZEquipY": 0,
+          "mIsReset": 0
+        }
+      },
+      {
+        "path": "effect (1)",
+        "type": "MonoBehaviour",
+        "class_name": "ApplyEnableOnPlay",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "-4722510294172271453",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "75b153ae7527394ed81a1426af88dddc46c171d8b2aec852791646ec5444cc8e",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 6516443679070518435
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 6388509206121812930
+          },
+          "m_Name": ""
+        }
+      },
+      {
+        "path": "effect (1)",
+        "type": "MonoBehaviour",
+        "class_name": "ApplyOnStopFadeOut",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "3883813754883177635",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "575f916ee1c6c69185b066f1f2d179b46474c02bcfd0f20e290573ecd3f48209",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 6516443679070518435
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": -4789613383355788036
+          },
+          "m_Name": ""
+        }
+      },
+      {
+        "path": "effect (1)/Spine GameObject (monster_3481)",
+        "type": "GameObject",
+        "class_name": "",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "5091383224593513635",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "0edbf05f7f739035c9cecd23ecc93cfe74bae968b2fe98481f7abf3ddb258739",
+        "fields": {
+          "m_Component": [
+            {
+              "component": {
+                "m_FileID": 0,
+                "m_PathID": 1296931290962820259
+              }
+            },
+            {
+              "component": {
+                "m_FileID": 0,
+                "m_PathID": -852434269111681885
+              }
+            },
+            {
+              "component": {
+                "m_FileID": 0,
+                "m_PathID": 9185501514350820515
+              }
+            },
+            {
+              "component": {
+                "m_FileID": 0,
+                "m_PathID": -6420320180596540253
+              }
+            }
+          ],
+          "m_Layer": 0,
+          "m_Name": "Spine GameObject (monster_3481)",
+          "m_Tag": 0,
+          "m_IsActive": false
+        }
+      },
+      {
+        "path": "effect (1)/Spine GameObject (monster_3481)",
+        "type": "Transform",
+        "class_name": "",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "1296931290962820259",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "e744e014af8034de571fa7231c5eebcbf85720753ddabdceb4011fd0f1f0ae72",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 5091383224593513635
+          },
+          "m_LocalRotation": {
+            "x": -0.0,
+            "y": -0.0,
+            "z": -0.0,
+            "w": 1.0
+          },
+          "m_LocalPosition": {
+            "x": 0.20000000298023224,
+            "y": 1.100000023841858,
+            "z": 0.0
+          },
+          "m_LocalScale": {
+            "x": 0.30000001192092896,
+            "y": 0.30000001192092896,
+            "z": 0.30000001192092896
+          },
+          "m_Children": [],
+          "m_Father": {
+            "m_FileID": 0,
+            "m_PathID": 957679240462302371
+          }
+        }
+      },
+      {
+        "path": "effect (1)/Spine GameObject (monster_3481)",
+        "type": "MonoBehaviour",
+        "class_name": "SkeletonAnimation",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_18160.bundle",
+          "bundle_hash": "e95887f7223eec3f1dfb37ca25c17b24",
+          "path_id": "-6420320180596540253",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/e95887f7223eec3f1dfb37ca25c17b24.bundle",
+          "raw_size": 7040,
+          "raw_sha256": "25a3e0df9a44bf6fe7156277ef0a2c23e3a0283c81085390591ea50ef7b9e7e6"
+        },
+        "object_sha256": "8565d31dde565ce0761601ad4322ebd83203e39bbd2c5db614eb4767247700de",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 5091383224593513635
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 175525945580115722
+          },
+          "m_Name": "",
+          "skeletonDataAsset": {
+            "m_FileID": 5,
+            "m_PathID": -1610510695635165167
+          },
+          "initialSkinName": "",
+          "initialFlipX": 0,
+          "initialFlipY": 0,
+          "updateWhenInvisible": 3,
+          "separatorSlotNames": [],
+          "zSpacing": 0.0,
+          "useClipping": 1,
+          "immutableTriangles": 0,
+          "pmaVertexColors": 1,
+          "clearStateOnDisable": 0,
+          "tintBlack": 0,
+          "singleSubmesh": 0,
+          "fixDrawOrder": 0,
+          "addNormals": 0,
+          "calculateTangents": 0,
+          "maskInteraction": 0,
+          "maskMaterials": {
+            "materialsMaskDisabled": [],
+            "materialsInsideMask": [],
+            "materialsOutsideMask": []
+          },
+          "disableRenderingOnOverride": 1,
+          "physicsPositionInheritanceFactor": {
+            "x": 1.0,
+            "y": 1.0
+          },
+          "physicsRotationInheritanceFactor": 1.0,
+          "physicsMovementRelativeTo": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "updateTiming": 1,
+          "unscaledTime": 0,
+          "_animationName": "skill_01_1",
+          "loop": 1,
+          "timeScale": 1.0
+        }
+      }
+    ],
+    "operation": "18160 schedules the particle effect, not effect (1). Preserve the unused skeleton inactive; do not force-enable it for validation."
+  },
+  "portrait": {
+    "source": {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+      "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+      "path_id": "4556392354998269576",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+      "raw_size": 993057,
+      "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+    },
+    "legacy_receipt": {
+      "path": "assets/reference/battle-hud/monster-portraits-source-manifest.json",
+      "sha256": "2e5a0f53a2aad18dc876215c6bff97dcd24a48dc8fe7834c1d5ab960ebd593b6"
+    },
+    "identical_legacy_bundle_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+    "sprite_sha256": "c60651d0e948d5c6745b38cae8be64f9c983461898a22ba864fd73c9a65b95d9",
+    "texture": {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+      "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+      "path_id": "-4640443632192178552",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+      "raw_size": 993057,
+      "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+    },
+    "texture_sha256": "54897e72e4227df73bdd2fd1f34906eb99237b44a7c4daaeda492fc67e35cbff",
+    "texture_sampling": {
+      "mip_count": 1,
+      "color_space": 1,
+      "filter_mode": 1,
+      "aniso": 1,
+      "mip_bias": 0.0,
+      "wrap_u": 1,
+      "wrap_v": 1,
+      "wrap_w": 1
+    },
+    "windows_conversion": "Original decoded RGBA pixels; Standalone RGBA32, no additional block compression or alpha bleeding.",
+    "pixels_per_unit": 100.0,
+    "pivot": [
+      0.5,
+      0.5
+    ],
+    "rect": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 192.0,
+      "height": 192.0
+    },
+    "outputs": {
+      "unity/Assets/Official/Combat/EmbeddedSourcePortraits/G_3620.png": "cbe5497df352cc1eafc5bfdf2799c5f78421b135a937ddabb4eec5c9d5c99249",
+      "unity/Assets/Official/Combat/EmbeddedSourcePortraits/G_3620.png.meta": "70f9c25898fd564c761dc9770c06dc8bd2645fb497a37a78e44a6fa391e1d946",
+      "unity/Assets/Game/Resources/Combat/EmbeddedSourceMonsterPortraitCatalog.asset": "ddf2a026097aebef566980dfdc3f91bb48709e45168a6c2d39ba400ccbeca57c",
+      "unity/Assets/Game/Resources/Combat/EmbeddedSourceMonsterPortraitCatalog.asset.meta": "36fb98d4ed787cadcbab249e4618ac0c0599ec6c8e062bec552ff67900bab2cc",
+      "unity/Assets/Official/Combat/EmbeddedSourcePortraits.meta": "4757d0cbbe5be63787981629161351f007c851a40235819210aeeaa5bcdd3841"
+    },
+    "operation": "Original APK-first G_3620 sprite. Separate supplemental catalog preserves every existing portrait binding."
+  },
+  "implementation": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/OfficialBattleMonsterDataValidation.cs",
+      "sha256": "9e0797d00f92bd360a1740101d96a92c24c5ec9610998598b3625accf26e19bb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleEmbeddedMonsterValidation.cs",
+      "sha256": "fee0f6869576c1f162c54c4e38031f6e7bf69137db3a8c6b3fac236faca46ad5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMonsterPortraitCatalog.cs",
+      "sha256": "8a70302a3fe93041a127af28bece518096a9adf96928bd38f64c3fb86a2bf133"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/SkillSummonPlayerValidation.cs",
+      "sha256": "b6bcb8ab387483f331646ce76aac31034adb4dd03a06e88d277b8013d4d74a7d"
+    }
+  ],
+  "operation": "APK-first full original source caster skeletons, textures, controllers, attachment registries and shadows. Preserve installed models; no server rules or skill loadouts are changed."
+}
