@@ -239,7 +239,7 @@ namespace Zjcs.Presentation.Home
                 Canvas.ForceUpdateCanvases();
                 Vector2 center = RectTransformUtility.WorldToScreenPoint(null,
                     ((RectTransform)arena.transform).TransformPoint(((RectTransform)arena.transform).rect.center));
-                if (RectTransformUtility.RectangleContainsScreenPoint(scroll.viewport, center)) return;
+                if (RectTransformUtility.RectangleContainsScreenPoint(scroll.viewport, center)) yield break;
                 ExecuteEvents.Execute(scroll.gameObject, pointer, ExecuteEvents.scrollHandler);
                 yield return null;
             }
