@@ -113,7 +113,11 @@ namespace Zjcs.Presentation.Home
             yield return Settle();
             Click(home.Hud.CanvasTransform.GetComponentsInChildren<Selectable>().First(value => value.name == "UnlockObj"
                 && value.transform.parent.name == "TravelNote"));
-            yield return Settle(); Click(Button("ArenaAreaEntry", "EntryBtn")); yield return Settle();
+            yield return Settle();
+            yield return Capture("arena-travel-top");
+            yield return ScrollTravelNotesToArena();
+            yield return Capture("arena-travel-arena");
+            Click(Button("ArenaAreaEntry", "EntryBtn")); yield return Settle();
             var guard = home.Arena.Catalog.runtime.guards.OrderBy(row => row.id).First();
             var formula = OfficialCombatAssetCatalog.LoadDefault().LoadDamageFormula();
             for (int kind = 0; kind < 4; kind++)
@@ -217,16 +221,70 @@ namespace Zjcs.Presentation.Home
         private static Button LeaveButton() => FindObjectsOfType<Button>().Single(value => value.isActiveAndEnabled
             && value.name == "CloseBtn_normal" && value.transform.parent.name == "CloseBtn" && value.interactable);
         private static IEnumerator Settle() { yield return new WaitForSecondsRealtime(1); }
+        private IEnumerator ScrollTravelNotesToArena()
+        {
+            Transform root = Root("TravelNotesPanel");
+            ScrollRect scroll = root.GetComponentInChildren<ScrollRect>();
+            Check(scroll && scroll.viewport && scroll.content, "Travel Notes scroll container is missing.");
+            var pointer = new PointerEventData(EventSystem.current)
+            {
+                button = PointerEventData.InputButton.Left,
+                position = RectTransformUtility.WorldToScreenPoint(null,
+                    scroll.viewport.TransformPoint(scroll.viewport.rect.center)),
+                scrollDelta = new Vector2(0, -6)
+            };
+            GameObject arena = Root("ArenaAreaEntry").gameObject;
+            for (int attempt = 0; attempt < 36; attempt++)
+            {
+                Canvas.ForceUpdateCanvases();
+                Vector2 center = RectTransformUtility.WorldToScreenPoint(null,
+                    ((RectTransform)arena.transform).TransformPoint(((RectTransform)arena.transform).rect.center));
+                if (RectTransformUtility.RectangleContainsScreenPoint(scroll.viewport, center)) return;
+                ExecuteEvents.Execute(scroll.gameObject, pointer, ExecuteEvents.scrollHandler);
+                yield return null;
+            }
+            throw new InvalidOperationException("Arena entry did not enter the original Travel Notes viewport after simulated wheel input.");
+        }
         private static void Click(Selectable control)
         {
             Canvas.ForceUpdateCanvases(); var rect = (RectTransform)control.transform;
-            var pointer = new PointerEventData(EventSystem.current) { button = PointerEventData.InputButton.Left,
-                position = RectTransformUtility.WorldToScreenPoint(null, rect.TransformPoint(rect.rect.center)) };
-            Check(pointer.position.x >= 0 && pointer.position.x < Screen.width && pointer.position.y >= 0
-                && pointer.position.y < Screen.height, "Player control is outside the screen: " + control.name);
-            var hits = new List<RaycastResult>(); EventSystem.current.RaycastAll(pointer, hits);
-            Check(hits.Count > 0 && (hits[0].gameObject == control.gameObject
-                || hits[0].gameObject.transform.IsChildOf(control.transform)), "Player control is obstructed: " + control.name);
+            var pointer = new PointerEventData(EventSystem.current) { button = PointerEventData.InputButton.Left };
+            var hits = new List<RaycastResult>();
+            bool TargetsControl(Vector2 position)
+            {
+                if (position.x < 0 || position.x >= Screen.width || position.y < 0 || position.y >= Screen.height)
+                    return false;
+                pointer.position = position;
+                hits.Clear(); EventSystem.current.RaycastAll(pointer, hits);
+                if (hits.Count == 0) return false;
+                GameObject target = ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject);
+                return target != null && (target == control.gameObject || target.transform.IsChildOf(control.transform));
+            }
+            Vector2 position = RectTransformUtility.WorldToScreenPoint(null, rect.TransformPoint(rect.rect.center));
+            bool found = TargetsControl(position);
+            if (!found)
+            {
+                var samples = new List<Vector2> { position };
+                foreach (Graphic graphic in control.GetComponentsInChildren<Graphic>())
+                {
+                    if (graphic == null || !graphic.raycastTarget) continue;
+                    RectTransform graphicRect = graphic.rectTransform;
+                    samples.Add(RectTransformUtility.WorldToScreenPoint(null,
+                        graphicRect.TransformPoint(graphicRect.rect.center)));
+                    for (int y = 0; y < 3; y++)
+                        for (int x = 0; x < 3; x++)
+                        {
+                            Vector2 local = new Vector2(Mathf.Lerp(graphicRect.rect.xMin, graphicRect.rect.xMax, (x + .5f) / 3f),
+                                Mathf.Lerp(graphicRect.rect.yMin, graphicRect.rect.yMax, (y + .5f) / 3f));
+                            samples.Add(RectTransformUtility.WorldToScreenPoint(null, graphicRect.TransformPoint(local)));
+                        }
+                }
+                foreach (Vector2 candidate in samples)
+                    if (TargetsControl(candidate)) { position = candidate; found = true; break; }
+            }
+            Check(found, "Player control has no exposed original hit area: " + control.name
+                + "; tested=" + position + "; topHit=" + (hits.Count == 0 ? "none" : hits[0].gameObject.name));
+            pointer.position = position;
             ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerDownHandler);
             ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerUpHandler);
             ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerClickHandler);
