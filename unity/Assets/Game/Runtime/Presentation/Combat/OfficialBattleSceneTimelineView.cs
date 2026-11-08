@@ -53,7 +53,26 @@ namespace Zjcs.Presentation.Combat
             var all = checkpoint.Units.Where(u => u != null).ToDictionary(u => u.Id);
             var states = all.Values.Where(u => u.Hp > 0 && !u.Ended && IsSpawned(checkpoint, u.Id)
                 && ShowOnRoundProgress(u)).ToDictionary(u => u.Id);
-            var entries = checkpoint.Timeline.Entries.Where(e => e != null && states.ContainsKey(e.Id)).ToArray();
+            var entryList = checkpoint.Timeline == null || checkpoint.Timeline.Entries == null
+                ? new List<FightTurnEntry>()
+                : checkpoint.Timeline.Entries.Where(e => e != null && states.ContainsKey(e.Id))
+                    .OrderBy(e => e.Next).ToList();
+            // FightRoundUI inserts CurActingEntityId before the sorted queue. The local
+            // executor persists the same identity in Timeline.Acting while the completed
+            // action is being presented, so the first card cannot be inferred from Next.
+            // Keeping this order also preserves the official spacing when the acting entry's
+            // Next value is later than another queued entry.
+            if (checkpoint.Timeline != null && checkpoint.Timeline.Acting > 0)
+            {
+                int actingIndex = entryList.FindIndex(e => e.Id == checkpoint.Timeline.Acting);
+                if (actingIndex > 0)
+                {
+                    FightTurnEntry acting = entryList[actingIndex];
+                    entryList.RemoveAt(actingIndex);
+                    entryList.Insert(0, acting);
+                }
+            }
+            var entries = entryList.ToArray();
             // OnRoundDataInsert updates all positions immediately in the client.
             if (entries.Any(e => !cards.ContainsKey(e.Id))) animate = false;
             // Damage notifications precede role removal in GameRoundUI. Keep the
@@ -76,7 +95,11 @@ namespace Zjcs.Presentation.Combat
                 }
                 else Destroy(old.Root);
             }
-            double total = states.Count == 0 ? 0 : states.Values.Max(u => Math.Max(0, u.Turn.IntervalTicks));
+            double total = entries.Length == 0 ? 0 : entries.Max(e =>
+            {
+                FightBattleUnitState unit = states[e.Id];
+                return Math.Max(0, unit.Turn == null ? 0 : unit.Turn.IntervalTicks);
+            });
             var times = new double[entries.Length];
             for (int i = 1; i < times.Length; i++) times[i] = times[i - 1] + Math.Max(entries[i].Next - entries[i - 1].Next, total * assets.MinDistance);
             double duration = times.Length == 0 ? total : Math.Max(times[times.Length - 1], total);

@@ -19,6 +19,9 @@ namespace Zjcs.Editor.Combat
             private readonly Texture2D temporaryTexture;
             private readonly Sprite temporarySprite;
             private readonly OfficialBattleSceneTimelineView timeline;
+            private readonly OfficialBattleHudView view;
+            private readonly FightBattleCheckpoint checkpoint;
+            private readonly Func<FightBattleUnitState, Sprite> portrait;
 
             public Fixture(Sprite playerPortrait = null)
             {
@@ -35,11 +38,11 @@ namespace Zjcs.Editor.Combat
                 scaler.referenceResolution = new Vector2(1080, 1920);
                 scaler.matchWidthOrHeight = 1;
                 var prior = UnityEngine.Object.FindObjectsOfType<OfficialBattleSceneTimelineView>(true);
-                var view = new OfficialBattleHudView(OfficialBattleHudCatalog.LoadDefault());
+                view = new OfficialBattleHudView(OfficialBattleHudCatalog.LoadDefault());
                 view.Mount(canvas.transform);
                 foreach (Graphic graphic in canvas.GetComponentsInChildren<Graphic>(true)) graphic.enabled = false;
                 timeline = UnityEngine.Object.FindObjectsOfType<OfficialBattleSceneTimelineView>(true).Except(prior).Single();
-                var checkpoint = new FightBattleCheckpoint();
+                checkpoint = new FightBattleCheckpoint();
                 AddUnit(checkpoint, 1, 0, 0);
                 AddUnit(checkpoint, 2, 3206, 0);
                 AddUnit(checkpoint, 3, 0, 8401);
@@ -48,7 +51,8 @@ namespace Zjcs.Editor.Combat
                 OfficialBattleMonsterPortraitCatalog monsters = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
                 OfficialBattleNpcPortraitCatalog npcs = OfficialBattleNpcPortraitCatalog.Load();
                 // The official NPC branch resolves NpcInfo.Icon independently of player/monster callbacks.
-                view.RefreshTimeline(checkpoint, unit => unit.MonsterId > 0 ? monsters.Find(unit.MonsterId) : playerPortrait, null, false);
+                portrait = unit => unit.MonsterId > 0 ? monsters.Find(unit.MonsterId) : playerPortrait;
+                view.RefreshTimeline(checkpoint, portrait, null, false);
                 Transform player = Card(1).Find("IconGo/PlayerHeadETC2Go/HeadImg");
                 if (player.GetComponent<WorldCircleSpriteRenderer>().Sprite != playerPortrait)
                     throw new InvalidOperationException("Player circle did not bind its resolved head texture.");
@@ -69,6 +73,60 @@ namespace Zjcs.Editor.Combat
                         || card.Find("IconGo/MonsterIconImg").gameObject.activeSelf)
                         throw new InvalidOperationException("NPC class " + npcId + " did not bind its separate original circular portrait.");
                 }
+            }
+
+            public IEnumerator VerifyActionOrder()
+            {
+                var timelineAssets = OfficialBattleTimelineAssets.Load();
+                float width = timelineAssets.ScenePrefab.transform.Find(timelineAssets.SceneBindings.line)
+                    .GetComponent<SpriteRenderer>().size.x * timelineAssets.ScenePrefab.transform
+                    .Find(timelineAssets.SceneBindings.line).localScale.x;
+                void CheckFirst(int id)
+                {
+                    Transform card = Card(id);
+                    if (Mathf.Abs(card.localPosition.x - width / 2f) > .00001f
+                        || card.GetSiblingIndex() != card.parent.childCount - 1
+                        || !card.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0)
+                            .IsName("UIGameRound_Acting"))
+                        throw new InvalidOperationException("Current action portrait is not first/Acting: " + id);
+                }
+                // Settled step: the actor was already reinserted behind its opponent.
+                checkpoint.Timeline.Acting = 3;
+                checkpoint.Timeline.Entries.Single(entry => entry.Id == 3).Next = 20000;
+                view.RefreshTimeline(checkpoint, portrait, null, true);
+                yield return new WaitForSecondsRealtime(.4f);
+                CheckFirst(3);
+                string output = Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_OUTPUT");
+                if (!string.IsNullOrEmpty(output))
+                {
+                    ScreenCapture.CaptureScreenshot(Path.Combine(output, "timeline-current-actor.png"));
+                    yield return new WaitForSecondsRealtime(.3f);
+                }
+                if (checkpoint.Timeline.Entries.First().Id != 1
+                    || checkpoint.Timeline.Entries.Single(entry => entry.Id == 3).Next != 20000)
+                    throw new InvalidOperationException("Timeline presentation changed the authoritative queue.");
+                checkpoint.Timeline.Acting = 2;
+                view.RefreshTimeline(checkpoint, portrait, null, true);
+                yield return new WaitForSecondsRealtime(.4f);
+                CheckFirst(2);
+                // Restore the serialized identity while its future entry remains later.
+                var restored = JsonUtility.FromJson<FightBattleCheckpoint>(JsonUtility.ToJson(checkpoint));
+                restored.Timeline.Acting = 3;
+                view.RefreshTimeline(restored, portrait, null, false);
+                yield return new WaitForSecondsRealtime(.4f);
+                CheckFirst(3);
+                restored.Units.Single(unit => unit.Id == 3).Hp = 0;
+                view.RefreshTimeline(restored, portrait, null, true);
+                yield return new WaitForSecondsRealtime(.8f);
+                CheckFirst(1);
+                if (Card(3) != null) throw new InvalidOperationException("Dead acting portrait was retained.");
+                restored.Timeline.Acting = 0;
+                restored.Timeline.Entries.Clear();
+                view.RefreshTimeline(restored, portrait, null, false);
+                yield return null;
+                if (timeline.transform.Find("Slot").childCount != 0)
+                    throw new InvalidOperationException("Empty timeline retained portraits.");
+                Debug.Log("Battle timeline action order passed: settled actor, switch, original Acting state, immutable queue, serialized restore, dead actor fallback and empty queue.");
             }
 
             private Transform Card(int id) => timeline.transform.Find("Slot/GameRoundCharacterItem_" + id);
@@ -105,6 +163,7 @@ namespace Zjcs.Editor.Combat
                         ScreenCapture.CaptureScreenshot(Path.Combine(output, "timeline-npcs.png"));
                     }
                     yield return new WaitForSecondsRealtime(.3f);
+                    yield return fixture.VerifyActionOrder();
                 }
                 yield return null;
                 Debug.Log("NPC timeline portrait Play Mode verification passed: three original NPC icons, circular meshes and exclusive branches.");
