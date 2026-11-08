@@ -42,7 +42,7 @@ namespace Zjcs.Presentation.Home
             var driver=host.AddComponent<SkillSummonPlayerValidation>();
             driver.waitForStartup=waitForStartup;
             driver.output=Path.GetFullPath(output);Directory.CreateDirectory(driver.output);
-            driver.deadline=Time.realtimeSinceStartup+(Application.isEditor ? 900f : 300f);Application.runInBackground=true;
+            driver.deadline=Time.realtimeSinceStartup+1800f;Application.runInBackground=true;
             Application.logMessageReceived+=driver.ObserveLog;
             driver.StartCoroutine(driver.Guard(driver.Run()));
         }
@@ -118,7 +118,10 @@ namespace Zjcs.Presentation.Home
             OfficialBattleEmbeddedMonsterValidation embeddedProbe = null;
             bool checkAbsorption = Environment.GetEnvironmentVariable("ZJCS_STATUS_ABSORPTION_ACCEPTANCE") == "1";
             OfficialBattleStatusAbsorptionValidation absorptionProbe = null;
-            if (sourceActor != 0 || checkAbsorption)
+            bool checkCombo = Environment.GetEnvironmentVariable("ZJCS_PLAYER_COMBO_ACCEPTANCE") == "1";
+            bool checkClones = Environment.GetEnvironmentVariable("ZJCS_PLAYER_CLONE_ACCEPTANCE") == "1";
+            OfficialBattlePlayerCloneValidation cloneProbe = null;
+            if (sourceActor != 0 || checkAbsorption || checkCombo || checkClones)
             {
                 var weekly = OfflineWeeklyChallengeBattleCatalog.LoadDefault();
                 Require(weekly.TryGetBattle(4800, out var stage, out var roster, out var scene), "Original weekly fixture is unavailable.");
@@ -126,7 +129,8 @@ namespace Zjcs.Presentation.Home
                     Stage = stage, Roster = roster, Scene = scene, Player = home.Profile.Save.Player,
                     World = home.Profile.Save.World, Progression = home.DailyDungeonProgression, RandomSeed = 43 });
                 Require(sourceActor == 0 || !checkAbsorption, "Select one original source diagnostic.");
-                if (checkAbsorption) absorptionProbe = OfficialBattleStatusAbsorptionValidation.Configure(checkpoint);
+                if (checkCombo || checkClones) cloneProbe = OfficialBattlePlayerCloneValidation.Configure(checkpoint);
+                else if (checkAbsorption) absorptionProbe = OfficialBattleStatusAbsorptionValidation.Configure(checkpoint);
                 else embeddedProbe = OfficialBattleEmbeddedMonsterValidation.Configure(checkpoint, sourceActor);
                 File.WriteAllText(Path.Combine(output,"source-actor-initial.json"),FightBattleCheckpointSerializer.Save(checkpoint));
                 var weeklySession = new OfflineWeeklyChallengeSession(Path.Combine(saveRoot, "saves", slot, "weekly-challenge-save.json"));
@@ -135,13 +139,12 @@ namespace Zjcs.Presentation.Home
             var runner=home.StartWeeklyChallengeBattle(4800,cp=>settled=cp);
             var controller=runner.Controller;
             absorptionProbe?.BindPresentation(controller);
-            bool checkClones = Environment.GetEnvironmentVariable("ZJCS_PLAYER_CLONE_ACCEPTANCE") == "1";
             bool checkDeath = Environment.GetEnvironmentVariable("ZJCS_PLAYER_DEATH_ACCEPTANCE") == "1";
             bool checkEmbedded = sourceActor != 0 || Environment.GetEnvironmentVariable("ZJCS_EMBEDDED_MONSTER_ACCEPTANCE") == "1";
             Require((checkClones ? 1 : 0) + (checkDeath ? 1 : 0) + (checkEmbedded ? 1 : 0)
                 + (checkAbsorption ? 1 : 0) <= 1,
                 "Select one isolated player diagnostic per battle.");
-            var cloneProbe = checkClones ? OfficialBattlePlayerCloneValidation.Configure(controller.Checkpoint) : null;
+            cloneProbe ??= checkClones ? OfficialBattlePlayerCloneValidation.Configure(controller.Checkpoint) : null;
             var deathProbe = checkDeath ? OfficialBattlePlayerDeathValidation.Configure(controller.Checkpoint) : null;
             embeddedProbe ??= checkEmbedded ? OfficialBattleEmbeddedMonsterValidation.Configure(controller.Checkpoint) : null;
             var probe = checkClones || checkDeath || checkEmbedded || checkAbsorption ? null : OfficialSummonLifecycleValidation.Configure(controller.Checkpoint);
@@ -160,6 +163,8 @@ namespace Zjcs.Presentation.Home
             }
             Require(start!=null && controller.Phase==FightBattlePhase.Preparing,
                 "Original battle start button is unavailable; phase="+controller.Phase);
+            // Cold native asset loading must not spend the battle's own budget.
+            deadline=Time.realtimeSinceStartup+(Application.isEditor ? 900f : 300f);
             yield return new WaitForEndOfFrame();Capture("summon-preparation");
             bool clicked=false;
             UnityEngine.Events.UnityAction observeClick=()=>clicked=true;

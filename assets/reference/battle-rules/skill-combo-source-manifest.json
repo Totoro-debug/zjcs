@@ -1,0 +1,3343 @@
+{
+  "manifest": "884_156692",
+  "code_receipt": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll",
+      "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+    }
+  ],
+  "official_sources": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightSkillCombo.cs",
+      "sha256": "2ff4f56a815daff7ecbef4d1dd30100f26e6a776760b35c7aea8e47f1f0a8215"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightSkillAIRandomTargetFallbackSpawner.cs",
+      "sha256": "1fd37c57bfe5932c3c41e7978a2df6cbb5c7bda799d371111d3bbfc6c565c864"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillComboComponentInfo.cs",
+      "sha256": "f97b0d79c97f6f9d7cf62398c23b5c0f3d8044bf5910afcde3c44cc6894ade61"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillAIRandomTargetFallbackSpawnerComponentInfo.cs",
+      "sha256": "eaa2006c244263b1ff14fa3f78efff7da44804d315a82e2de54c5ac4af92d349"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSKillMoveCfg.cs",
+      "sha256": "04e9c5fd0575872c0ee70d2440ea68834dde2e7da976292718e1d437e4761466"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillAiCfg.cs",
+      "sha256": "50ff812b7e933e2d8c96ed252ac73904db2b77138a648869dae9b94df156fe96"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Direction.cs",
+      "sha256": "49b1383e892381fbff9077b8fb04337cddce0f096e425217030923985bd4c16b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GridTransformComponent.cs",
+      "sha256": "6317a98b45782f004e871886effb70264ad7cb708b6d8665933970c1dd7160e9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Pos2d.cs",
+      "sha256": "8129206cd36eefdedf3d3d6a2a011d0c52325e35a7690a42b350ad96669fa8ea"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/HitAnchor.cs",
+      "sha256": "07d40c2d02fa1256bcbb4d79f4ac6b9462f2f4756eee01fb7e08f6c934c6530c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/HitExecAnchor.cs",
+      "sha256": "263bea3637bd3d9be4f64f3b448c9440931e8e2f4658b2125c35acb2ad0ec876"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/HitAnchorExtensions.cs",
+      "sha256": "a470570976cb592abef19a7ac7a2f57a3dcb18734f291b63c6a9d41b32839e69"
+    }
+  ],
+  "configuration_inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    }
+  ],
+  "definitions": {
+    "13100": {
+      "FightSkillComponent": {
+        "SkillType": 0,
+        "CostType": 0,
+        "SkillTargetType": 3,
+        "TargetType": 1,
+        "HitTargetActionType": 0,
+        "ElementType": 0,
+        "RangeType": 0,
+        "Range": [
+          {
+            "X": 0,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": 1
+          },
+          {
+            "X": 0,
+            "Y": -1
+          },
+          {
+            "X": -1,
+            "Y": 0
+          },
+          {
+            "X": 1,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -2
+          },
+          {
+            "X": 0,
+            "Y": 2
+          },
+          {
+            "X": -1,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": -1
+          },
+          {
+            "X": -2,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -1
+          },
+          {
+            "X": 2,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -2
+          },
+          {
+            "X": 2,
+            "Y": -1
+          },
+          {
+            "X": -2,
+            "Y": -1
+          },
+          {
+            "X": 0,
+            "Y": 3
+          },
+          {
+            "X": 1,
+            "Y": -2
+          },
+          {
+            "X": -3,
+            "Y": 0
+          },
+          {
+            "X": 2,
+            "Y": 1
+          },
+          {
+            "X": -2,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": 2
+          },
+          {
+            "X": -1,
+            "Y": 2
+          },
+          {
+            "X": 3,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -3
+          }
+        ],
+        "HitList": [
+          {
+            "ClassId": 13101,
+            "Delay": 0.8500000238418579,
+            "ActOnSouce": 3,
+            "IgnoreAICount": false
+          }
+        ],
+        "SourceMoveList": [
+          {
+            "MoveBehaviourId": 13102,
+            "Delay": 0.766700029373169,
+            "Offset": {
+              "X": 0,
+              "Y": -1
+            },
+            "TowardsTargetPos": true,
+            "SkillMoveDirection": 1,
+            "Distance": -1,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "AiMustMoveTo": true,
+            "AIIgnore": false,
+            "CanExpandOffset": false,
+            "CancelDiagonally": false,
+            "DoMoveConditions": []
+          }
+        ],
+        "ActionDuration": 1.0499999523162842,
+        "AllEndedActionDuration": -1.0,
+        "AllRelevantEndedActionDuration": -1.0,
+        "Duration": 3.4000000953674316,
+        "AllEndedDuration": -1.0,
+        "AllRelevantEndedDuration": 0.009999999776482582,
+        "LimitedTimes": -1,
+        "ResetCDAtStart": false,
+        "ExtSkill": [],
+        "Replay": {
+          "Rate": 0.0,
+          "ReplaceSkillArrayOnReplay": [
+            13100
+          ]
+        },
+        "ReplayMaxCountEachRound": 1,
+        "CanTriggerChild": true,
+        "CanTriggerStatusEntityIds": [],
+        "Ai": {
+          "DontKeepDistance": true,
+          "AiPriorityTypes": [
+            0,
+            1,
+            9,
+            6
+          ],
+          "LastAIPriorityTypes": [
+            0,
+            1,
+            9,
+            6
+          ],
+          "IgnoreStatusArray": [],
+          "AIPriroityCharacterType": 8,
+          "ReleaseWhileRidicule": false,
+          "ReleaseWhileConfusion": false,
+          "IsReleaseSkillAfterMove": true,
+          "IsFixSkillDirection": false,
+          "FixedDirection": 0,
+          "MoveByTeleport": false,
+          "AIPriorityHpLowerCharacterTypeFilter": [],
+          "AiPriorityPropType": 0,
+          "AiPriorityFindMax": true,
+          "AIPriorityCharacterTypeGroups": []
+        },
+        "ActionType": 2,
+        "FlipSource": true,
+        "NeedConditionStatusMeetToRelease": false,
+        "MustHaveValidCost": false,
+        "IsFixedProp": false,
+        "ResetReleasedTimeOnNextWave": false
+      },
+      "FightSkillComboComponent": {
+        "ComboSkills": [
+          13104,
+          13105,
+          13106,
+          13107,
+          13108
+        ]
+      }
+    },
+    "13104": {
+      "FightSkillComponent": {
+        "SkillType": 0,
+        "CostType": 0,
+        "SkillTargetType": 3,
+        "TargetType": 1,
+        "HitTargetActionType": 0,
+        "ElementType": 0,
+        "RangeType": 0,
+        "Range": [
+          {
+            "X": 0,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": 1
+          },
+          {
+            "X": -1,
+            "Y": 0
+          },
+          {
+            "X": 1,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": 1
+          },
+          {
+            "X": -2,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": 2
+          },
+          {
+            "X": 1,
+            "Y": 1
+          },
+          {
+            "X": 2,
+            "Y": 0
+          },
+          {
+            "X": -2,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": 2
+          },
+          {
+            "X": -3,
+            "Y": 0
+          },
+          {
+            "X": 2,
+            "Y": 1
+          },
+          {
+            "X": -1,
+            "Y": 2
+          },
+          {
+            "X": 0,
+            "Y": 3
+          },
+          {
+            "X": 3,
+            "Y": 0
+          }
+        ],
+        "HitList": [
+          {
+            "ClassId": 13101,
+            "Delay": 0.11670000106096268,
+            "ActOnSouce": 3,
+            "IgnoreAICount": false
+          }
+        ],
+        "SourceMoveList": [
+          {
+            "MoveBehaviourId": 13102,
+            "Delay": 0.0,
+            "Offset": {
+              "X": 0,
+              "Y": -1
+            },
+            "TowardsTargetPos": true,
+            "SkillMoveDirection": 1,
+            "Distance": -1,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "AiMustMoveTo": true,
+            "AIIgnore": false,
+            "CanExpandOffset": false,
+            "CancelDiagonally": false,
+            "DoMoveConditions": []
+          }
+        ],
+        "ActionDuration": 0.3666999936103821,
+        "AllEndedActionDuration": -1.0,
+        "AllRelevantEndedActionDuration": -1.0,
+        "Duration": -1.0,
+        "AllEndedDuration": 0.5,
+        "AllRelevantEndedDuration": -1.0,
+        "LimitedTimes": -1,
+        "ResetCDAtStart": false,
+        "ExtSkill": [],
+        "Replay": {
+          "Rate": 0.0,
+          "ReplaceSkillArrayOnReplay": [
+            13104,
+            13105,
+            13106,
+            13107,
+            13108
+          ]
+        },
+        "ReplayMaxCountEachRound": 5,
+        "CanTriggerChild": true,
+        "CanTriggerStatusEntityIds": [],
+        "Ai": {
+          "DontKeepDistance": true,
+          "AiPriorityTypes": [
+            13
+          ],
+          "LastAIPriorityTypes": [
+            13
+          ],
+          "IgnoreStatusArray": [],
+          "AIPriroityCharacterType": 8,
+          "ReleaseWhileRidicule": false,
+          "ReleaseWhileConfusion": false,
+          "IsReleaseSkillAfterMove": true,
+          "IsFixSkillDirection": true,
+          "FixedDirection": 0,
+          "MoveByTeleport": true,
+          "AIPriorityHpLowerCharacterTypeFilter": [],
+          "AiPriorityPropType": 0,
+          "AiPriorityFindMax": true,
+          "AIPriorityCharacterTypeGroups": []
+        },
+        "ActionType": 10,
+        "FlipSource": true,
+        "NeedConditionStatusMeetToRelease": false,
+        "MustHaveValidCost": false,
+        "IsFixedProp": false,
+        "ResetReleasedTimeOnNextWave": false
+      },
+      "FightSkillAIRandomTargetFallbackSpawnerComponent": {
+        "ReplaceSkills": [
+          13104,
+          13105,
+          13106,
+          13107
+        ],
+        "FixedRange": [
+          {
+            "X": 0,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": 1
+          },
+          {
+            "X": 0,
+            "Y": -1
+          },
+          {
+            "X": -1,
+            "Y": 0
+          },
+          {
+            "X": 1,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -2
+          },
+          {
+            "X": 0,
+            "Y": 2
+          },
+          {
+            "X": -1,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": -1
+          },
+          {
+            "X": -2,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -1
+          },
+          {
+            "X": 2,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -2
+          },
+          {
+            "X": 2,
+            "Y": -1
+          },
+          {
+            "X": -2,
+            "Y": -1
+          },
+          {
+            "X": 0,
+            "Y": 3
+          },
+          {
+            "X": 1,
+            "Y": -2
+          },
+          {
+            "X": -3,
+            "Y": 0
+          },
+          {
+            "X": 2,
+            "Y": 1
+          },
+          {
+            "X": -2,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": 2
+          },
+          {
+            "X": -1,
+            "Y": 2
+          },
+          {
+            "X": 3,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -3
+          }
+        ]
+      }
+    },
+    "13105": {
+      "FightSkillComponent": {
+        "SkillType": 0,
+        "CostType": 0,
+        "SkillTargetType": 3,
+        "TargetType": 1,
+        "HitTargetActionType": 0,
+        "ElementType": 0,
+        "RangeType": 0,
+        "Range": [
+          {
+            "X": 0,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": 1
+          },
+          {
+            "X": 0,
+            "Y": -1
+          },
+          {
+            "X": -2,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": 1
+          },
+          {
+            "X": 0,
+            "Y": -2
+          },
+          {
+            "X": -1,
+            "Y": -1
+          },
+          {
+            "X": 0,
+            "Y": 2
+          },
+          {
+            "X": -1,
+            "Y": 2
+          },
+          {
+            "X": -3,
+            "Y": 0
+          },
+          {
+            "X": -2,
+            "Y": -1
+          },
+          {
+            "X": 0,
+            "Y": -3
+          },
+          {
+            "X": 0,
+            "Y": 3
+          },
+          {
+            "X": -2,
+            "Y": 1
+          },
+          {
+            "X": -1,
+            "Y": -2
+          }
+        ],
+        "HitList": [
+          {
+            "ClassId": 13101,
+            "Delay": 0.11670000106096268,
+            "ActOnSouce": 3,
+            "IgnoreAICount": false
+          }
+        ],
+        "SourceMoveList": [
+          {
+            "MoveBehaviourId": 13102,
+            "Delay": 0.0,
+            "Offset": {
+              "X": 1,
+              "Y": 0
+            },
+            "TowardsTargetPos": true,
+            "SkillMoveDirection": 1,
+            "Distance": -1,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "AiMustMoveTo": true,
+            "AIIgnore": false,
+            "CanExpandOffset": false,
+            "CancelDiagonally": false,
+            "DoMoveConditions": []
+          }
+        ],
+        "ActionDuration": 0.2833000123500824,
+        "AllEndedActionDuration": -1.0,
+        "AllRelevantEndedActionDuration": -1.0,
+        "Duration": -1.0,
+        "AllEndedDuration": 0.5,
+        "AllRelevantEndedDuration": -1.0,
+        "LimitedTimes": -1,
+        "ResetCDAtStart": false,
+        "ExtSkill": [],
+        "Replay": {
+          "Rate": 0.0,
+          "ReplaceSkillArrayOnReplay": [
+            13104,
+            13105,
+            13106,
+            13107,
+            13108
+          ]
+        },
+        "ReplayMaxCountEachRound": 5,
+        "CanTriggerChild": true,
+        "CanTriggerStatusEntityIds": [],
+        "Ai": {
+          "DontKeepDistance": true,
+          "AiPriorityTypes": [
+            13
+          ],
+          "LastAIPriorityTypes": [
+            13
+          ],
+          "IgnoreStatusArray": [],
+          "AIPriroityCharacterType": 8,
+          "ReleaseWhileRidicule": false,
+          "ReleaseWhileConfusion": false,
+          "IsReleaseSkillAfterMove": true,
+          "IsFixSkillDirection": true,
+          "FixedDirection": 0,
+          "MoveByTeleport": true,
+          "AIPriorityHpLowerCharacterTypeFilter": [],
+          "AiPriorityPropType": 0,
+          "AiPriorityFindMax": true,
+          "AIPriorityCharacterTypeGroups": []
+        },
+        "ActionType": 10,
+        "FlipSource": true,
+        "NeedConditionStatusMeetToRelease": false,
+        "MustHaveValidCost": false,
+        "IsFixedProp": false,
+        "ResetReleasedTimeOnNextWave": false
+      },
+      "FightSkillAIRandomTargetFallbackSpawnerComponent": {
+        "ReplaceSkills": [
+          13104,
+          13105,
+          13106,
+          13107
+        ],
+        "FixedRange": [
+          {
+            "X": 0,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": 1
+          },
+          {
+            "X": 0,
+            "Y": -1
+          },
+          {
+            "X": -1,
+            "Y": 0
+          },
+          {
+            "X": 1,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -2
+          },
+          {
+            "X": 0,
+            "Y": 2
+          },
+          {
+            "X": -1,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": -1
+          },
+          {
+            "X": -2,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -1
+          },
+          {
+            "X": 2,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -2
+          },
+          {
+            "X": 2,
+            "Y": -1
+          },
+          {
+            "X": -2,
+            "Y": -1
+          },
+          {
+            "X": 0,
+            "Y": 3
+          },
+          {
+            "X": 1,
+            "Y": -2
+          },
+          {
+            "X": -3,
+            "Y": 0
+          },
+          {
+            "X": 2,
+            "Y": 1
+          },
+          {
+            "X": -2,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": 2
+          },
+          {
+            "X": -1,
+            "Y": 2
+          },
+          {
+            "X": 3,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -3
+          }
+        ]
+      }
+    },
+    "13106": {
+      "FightSkillComponent": {
+        "SkillType": 0,
+        "CostType": 0,
+        "SkillTargetType": 3,
+        "TargetType": 1,
+        "HitTargetActionType": 0,
+        "ElementType": 0,
+        "RangeType": 0,
+        "Range": [
+          {
+            "X": 0,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": 1
+          },
+          {
+            "X": 0,
+            "Y": -1
+          },
+          {
+            "X": 1,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -2
+          },
+          {
+            "X": 0,
+            "Y": 2
+          },
+          {
+            "X": 1,
+            "Y": -1
+          },
+          {
+            "X": 1,
+            "Y": 1
+          },
+          {
+            "X": 2,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": 3
+          },
+          {
+            "X": 1,
+            "Y": 2
+          },
+          {
+            "X": 0,
+            "Y": -3
+          },
+          {
+            "X": 2,
+            "Y": 1
+          },
+          {
+            "X": 2,
+            "Y": -1
+          },
+          {
+            "X": 1,
+            "Y": -2
+          },
+          {
+            "X": 3,
+            "Y": 0
+          }
+        ],
+        "HitList": [
+          {
+            "ClassId": 13101,
+            "Delay": 0.06669999659061432,
+            "ActOnSouce": 3,
+            "IgnoreAICount": false
+          }
+        ],
+        "SourceMoveList": [
+          {
+            "MoveBehaviourId": 13102,
+            "Delay": 0.0,
+            "Offset": {
+              "X": -1,
+              "Y": 0
+            },
+            "TowardsTargetPos": true,
+            "SkillMoveDirection": 1,
+            "Distance": -1,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "AiMustMoveTo": true,
+            "AIIgnore": false,
+            "CanExpandOffset": false,
+            "CancelDiagonally": false,
+            "DoMoveConditions": []
+          }
+        ],
+        "ActionDuration": 0.30000001192092896,
+        "AllEndedActionDuration": -1.0,
+        "AllRelevantEndedActionDuration": -1.0,
+        "Duration": -1.0,
+        "AllEndedDuration": 0.5,
+        "AllRelevantEndedDuration": -1.0,
+        "LimitedTimes": -1,
+        "ResetCDAtStart": false,
+        "ExtSkill": [],
+        "Replay": {
+          "Rate": 0.0,
+          "ReplaceSkillArrayOnReplay": [
+            13104,
+            13105,
+            13106,
+            13107,
+            13108
+          ]
+        },
+        "ReplayMaxCountEachRound": 5,
+        "CanTriggerChild": true,
+        "CanTriggerStatusEntityIds": [],
+        "Ai": {
+          "DontKeepDistance": true,
+          "AiPriorityTypes": [
+            13
+          ],
+          "LastAIPriorityTypes": [
+            13
+          ],
+          "IgnoreStatusArray": [],
+          "AIPriroityCharacterType": 8,
+          "ReleaseWhileRidicule": false,
+          "ReleaseWhileConfusion": false,
+          "IsReleaseSkillAfterMove": true,
+          "IsFixSkillDirection": true,
+          "FixedDirection": 0,
+          "MoveByTeleport": true,
+          "AIPriorityHpLowerCharacterTypeFilter": [],
+          "AiPriorityPropType": 0,
+          "AiPriorityFindMax": true,
+          "AIPriorityCharacterTypeGroups": []
+        },
+        "ActionType": 10,
+        "FlipSource": true,
+        "NeedConditionStatusMeetToRelease": false,
+        "MustHaveValidCost": false,
+        "IsFixedProp": false,
+        "ResetReleasedTimeOnNextWave": false
+      },
+      "FightSkillAIRandomTargetFallbackSpawnerComponent": {
+        "ReplaceSkills": [
+          13104,
+          13105,
+          13106,
+          13107
+        ],
+        "FixedRange": [
+          {
+            "X": 0,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": 1
+          },
+          {
+            "X": 0,
+            "Y": -1
+          },
+          {
+            "X": -1,
+            "Y": 0
+          },
+          {
+            "X": 1,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -2
+          },
+          {
+            "X": 0,
+            "Y": 2
+          },
+          {
+            "X": -1,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": -1
+          },
+          {
+            "X": -2,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -1
+          },
+          {
+            "X": 2,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -2
+          },
+          {
+            "X": 2,
+            "Y": -1
+          },
+          {
+            "X": -2,
+            "Y": -1
+          },
+          {
+            "X": 0,
+            "Y": 3
+          },
+          {
+            "X": 1,
+            "Y": -2
+          },
+          {
+            "X": -3,
+            "Y": 0
+          },
+          {
+            "X": 2,
+            "Y": 1
+          },
+          {
+            "X": -2,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": 2
+          },
+          {
+            "X": -1,
+            "Y": 2
+          },
+          {
+            "X": 3,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -3
+          }
+        ]
+      }
+    },
+    "13107": {
+      "FightSkillComponent": {
+        "SkillType": 0,
+        "CostType": 0,
+        "SkillTargetType": 3,
+        "TargetType": 1,
+        "HitTargetActionType": 0,
+        "ElementType": 0,
+        "RangeType": 0,
+        "Range": [
+          {
+            "X": 0,
+            "Y": 0
+          },
+          {
+            "X": 1,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -1
+          },
+          {
+            "X": -1,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -1
+          },
+          {
+            "X": 0,
+            "Y": -2
+          },
+          {
+            "X": -2,
+            "Y": 0
+          },
+          {
+            "X": 2,
+            "Y": 0
+          },
+          {
+            "X": 1,
+            "Y": -1
+          },
+          {
+            "X": 2,
+            "Y": -1
+          },
+          {
+            "X": 1,
+            "Y": -2
+          },
+          {
+            "X": 3,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -2
+          },
+          {
+            "X": -2,
+            "Y": -1
+          },
+          {
+            "X": -3,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -3
+          }
+        ],
+        "HitList": [
+          {
+            "ClassId": 13101,
+            "Delay": 0.06669999659061432,
+            "ActOnSouce": 3,
+            "IgnoreAICount": false
+          }
+        ],
+        "SourceMoveList": [
+          {
+            "MoveBehaviourId": 13102,
+            "Delay": 0.0,
+            "Offset": {
+              "X": 0,
+              "Y": 1
+            },
+            "TowardsTargetPos": true,
+            "SkillMoveDirection": 1,
+            "Distance": -1,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "AiMustMoveTo": true,
+            "AIIgnore": false,
+            "CanExpandOffset": false,
+            "CancelDiagonally": false,
+            "DoMoveConditions": []
+          }
+        ],
+        "ActionDuration": 0.4000000059604645,
+        "AllEndedActionDuration": -1.0,
+        "AllRelevantEndedActionDuration": -1.0,
+        "Duration": -1.0,
+        "AllEndedDuration": 0.5,
+        "AllRelevantEndedDuration": -1.0,
+        "LimitedTimes": -1,
+        "ResetCDAtStart": false,
+        "ExtSkill": [],
+        "Replay": {
+          "Rate": 0.0,
+          "ReplaceSkillArrayOnReplay": [
+            13104,
+            13105,
+            13106,
+            13107,
+            13108
+          ]
+        },
+        "ReplayMaxCountEachRound": 5,
+        "CanTriggerChild": true,
+        "CanTriggerStatusEntityIds": [],
+        "Ai": {
+          "DontKeepDistance": true,
+          "AiPriorityTypes": [
+            13
+          ],
+          "LastAIPriorityTypes": [
+            13
+          ],
+          "IgnoreStatusArray": [],
+          "AIPriroityCharacterType": 8,
+          "ReleaseWhileRidicule": false,
+          "ReleaseWhileConfusion": false,
+          "IsReleaseSkillAfterMove": true,
+          "IsFixSkillDirection": true,
+          "FixedDirection": 1,
+          "MoveByTeleport": true,
+          "AIPriorityHpLowerCharacterTypeFilter": [],
+          "AiPriorityPropType": 0,
+          "AiPriorityFindMax": true,
+          "AIPriorityCharacterTypeGroups": []
+        },
+        "ActionType": 10,
+        "FlipSource": true,
+        "NeedConditionStatusMeetToRelease": false,
+        "MustHaveValidCost": false,
+        "IsFixedProp": false,
+        "ResetReleasedTimeOnNextWave": false
+      },
+      "FightSkillAIRandomTargetFallbackSpawnerComponent": {
+        "ReplaceSkills": [
+          13104,
+          13105,
+          13106,
+          13107
+        ],
+        "FixedRange": [
+          {
+            "X": 0,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": 1
+          },
+          {
+            "X": 0,
+            "Y": -1
+          },
+          {
+            "X": -1,
+            "Y": 0
+          },
+          {
+            "X": 1,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -2
+          },
+          {
+            "X": 0,
+            "Y": 2
+          },
+          {
+            "X": -1,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": -1
+          },
+          {
+            "X": -2,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -1
+          },
+          {
+            "X": 2,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -2
+          },
+          {
+            "X": 2,
+            "Y": -1
+          },
+          {
+            "X": -2,
+            "Y": -1
+          },
+          {
+            "X": 0,
+            "Y": 3
+          },
+          {
+            "X": 1,
+            "Y": -2
+          },
+          {
+            "X": -3,
+            "Y": 0
+          },
+          {
+            "X": 2,
+            "Y": 1
+          },
+          {
+            "X": -2,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": 2
+          },
+          {
+            "X": -1,
+            "Y": 2
+          },
+          {
+            "X": 3,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -3
+          }
+        ]
+      }
+    },
+    "13108": {
+      "FightSkillComponent": {
+        "SkillType": 0,
+        "CostType": 0,
+        "SkillTargetType": 3,
+        "TargetType": 1,
+        "HitTargetActionType": 0,
+        "ElementType": 0,
+        "RangeType": 0,
+        "Range": [
+          {
+            "X": 0,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": 1
+          },
+          {
+            "X": 0,
+            "Y": -1
+          },
+          {
+            "X": -1,
+            "Y": 0
+          },
+          {
+            "X": 1,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -2
+          },
+          {
+            "X": 0,
+            "Y": 2
+          },
+          {
+            "X": -1,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": -1
+          },
+          {
+            "X": -2,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -1
+          },
+          {
+            "X": 2,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -2
+          },
+          {
+            "X": 2,
+            "Y": -1
+          },
+          {
+            "X": -2,
+            "Y": -1
+          },
+          {
+            "X": 0,
+            "Y": 3
+          },
+          {
+            "X": 1,
+            "Y": -2
+          },
+          {
+            "X": -3,
+            "Y": 0
+          },
+          {
+            "X": 2,
+            "Y": 1
+          },
+          {
+            "X": -2,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": 2
+          },
+          {
+            "X": -1,
+            "Y": 2
+          },
+          {
+            "X": 3,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -3
+          }
+        ],
+        "HitList": [
+          {
+            "ClassId": 13101,
+            "Delay": 0.30000001192092896,
+            "ActOnSouce": 3,
+            "IgnoreAICount": false
+          }
+        ],
+        "SourceMoveList": [
+          {
+            "MoveBehaviourId": 13102,
+            "Delay": 0.0,
+            "Offset": {
+              "X": 0,
+              "Y": 1
+            },
+            "TowardsTargetPos": true,
+            "SkillMoveDirection": 1,
+            "Distance": -1,
+            "BasePercent": 1.0,
+            "AffectedByProp": false,
+            "AiMustMoveTo": true,
+            "AIIgnore": false,
+            "CanExpandOffset": false,
+            "CancelDiagonally": false,
+            "DoMoveConditions": []
+          }
+        ],
+        "ActionDuration": 0.9330000281333923,
+        "AllEndedActionDuration": -1.0,
+        "AllRelevantEndedActionDuration": -1.0,
+        "Duration": 0.9330000281333923,
+        "AllEndedDuration": -1.0,
+        "AllRelevantEndedDuration": -1.0,
+        "LimitedTimes": -1,
+        "ResetCDAtStart": false,
+        "ExtSkill": [],
+        "Replay": {
+          "Rate": 0.0,
+          "ReplaceSkillArrayOnReplay": [
+            13104,
+            13105,
+            13106,
+            13107,
+            13108
+          ]
+        },
+        "ReplayMaxCountEachRound": 5,
+        "CanTriggerChild": true,
+        "CanTriggerStatusEntityIds": [],
+        "Ai": {
+          "DontKeepDistance": true,
+          "AiPriorityTypes": [
+            13
+          ],
+          "LastAIPriorityTypes": [
+            13
+          ],
+          "IgnoreStatusArray": [],
+          "AIPriroityCharacterType": 8,
+          "ReleaseWhileRidicule": false,
+          "ReleaseWhileConfusion": false,
+          "IsReleaseSkillAfterMove": true,
+          "IsFixSkillDirection": true,
+          "FixedDirection": 0,
+          "MoveByTeleport": true,
+          "AIPriorityHpLowerCharacterTypeFilter": [],
+          "AiPriorityPropType": 0,
+          "AiPriorityFindMax": true,
+          "AIPriorityCharacterTypeGroups": []
+        },
+        "ActionType": 10,
+        "FlipSource": true,
+        "NeedConditionStatusMeetToRelease": false,
+        "MustHaveValidCost": false,
+        "IsFixedProp": false,
+        "ResetReleasedTimeOnNextWave": false
+      },
+      "FightSkillAIRandomTargetFallbackSpawnerComponent": {
+        "ReplaceSkills": [
+          13104,
+          13105,
+          13106,
+          13107
+        ],
+        "FixedRange": [
+          {
+            "X": 0,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": 1
+          },
+          {
+            "X": 0,
+            "Y": -1
+          },
+          {
+            "X": -1,
+            "Y": 0
+          },
+          {
+            "X": 1,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -2
+          },
+          {
+            "X": 0,
+            "Y": 2
+          },
+          {
+            "X": -1,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": -1
+          },
+          {
+            "X": -2,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -1
+          },
+          {
+            "X": 2,
+            "Y": 0
+          },
+          {
+            "X": -1,
+            "Y": -2
+          },
+          {
+            "X": 2,
+            "Y": -1
+          },
+          {
+            "X": -2,
+            "Y": -1
+          },
+          {
+            "X": 0,
+            "Y": 3
+          },
+          {
+            "X": 1,
+            "Y": -2
+          },
+          {
+            "X": -3,
+            "Y": 0
+          },
+          {
+            "X": 2,
+            "Y": 1
+          },
+          {
+            "X": -2,
+            "Y": 1
+          },
+          {
+            "X": 1,
+            "Y": 2
+          },
+          {
+            "X": -1,
+            "Y": 2
+          },
+          {
+            "X": 3,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -3
+          }
+        ]
+      }
+    }
+  },
+  "selected_configuration": {
+    "manifest": "884_156692",
+    "fragments": [
+      {
+        "path": "Assets/Config/EC/FightSkill_part153.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "-2707859747474087309",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "98b3b281d9a1960b61ff390e3638f98b0ff2e4a8a7fdd15cd43fca58c71aca5b",
+        "payload_sha256": "19766c4889d1b659d02bf5c4e226ed5700a561bafd13b22d894c27ef2b85a36a",
+        "legacy_prefix": false,
+        "entities": {
+          "13100": {
+            "parent": 0,
+            "components": {
+              "FightSkillComponent": {
+                "SkillType": 0,
+                "CostType": 0,
+                "SkillTargetType": 3,
+                "TargetType": 1,
+                "HitTargetActionType": 0,
+                "ElementType": 0,
+                "RangeType": 0,
+                "Range": [
+                  {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 1
+                  },
+                  {
+                    "X": 0,
+                    "Y": -1
+                  },
+                  {
+                    "X": -1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -2
+                  },
+                  {
+                    "X": 0,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -1
+                  },
+                  {
+                    "X": 2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -2
+                  },
+                  {
+                    "X": 2,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": -1
+                  },
+                  {
+                    "X": 0,
+                    "Y": 3
+                  },
+                  {
+                    "X": 1,
+                    "Y": -2
+                  },
+                  {
+                    "X": -3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 2,
+                    "Y": 1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 2
+                  },
+                  {
+                    "X": 3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -3
+                  }
+                ],
+                "HitList": [
+                  {
+                    "ClassId": 13101,
+                    "Delay": 0.8500000238418579,
+                    "ActOnSouce": 3,
+                    "IgnoreAICount": false
+                  }
+                ],
+                "SourceMoveList": [
+                  {
+                    "MoveBehaviourId": 13102,
+                    "Delay": 0.766700029373169,
+                    "Offset": {
+                      "X": 0,
+                      "Y": -1
+                    },
+                    "TowardsTargetPos": true,
+                    "SkillMoveDirection": 1,
+                    "Distance": -1,
+                    "BasePercent": 1.0,
+                    "AffectedByProp": false,
+                    "AiMustMoveTo": true,
+                    "AIIgnore": false,
+                    "CanExpandOffset": false,
+                    "CancelDiagonally": false,
+                    "DoMoveConditions": []
+                  }
+                ],
+                "ActionDuration": 1.0499999523162842,
+                "AllEndedActionDuration": -1.0,
+                "AllRelevantEndedActionDuration": -1.0,
+                "Duration": 3.4000000953674316,
+                "AllEndedDuration": -1.0,
+                "AllRelevantEndedDuration": 0.009999999776482582,
+                "LimitedTimes": -1,
+                "ResetCDAtStart": false,
+                "ExtSkill": [],
+                "Replay": {
+                  "Rate": 0.0,
+                  "ReplaceSkillArrayOnReplay": [
+                    13100
+                  ]
+                },
+                "ReplayMaxCountEachRound": 1,
+                "CanTriggerChild": true,
+                "CanTriggerStatusEntityIds": [],
+                "Ai": {
+                  "DontKeepDistance": true,
+                  "AiPriorityTypes": [
+                    0,
+                    1,
+                    9,
+                    6
+                  ],
+                  "LastAIPriorityTypes": [
+                    0,
+                    1,
+                    9,
+                    6
+                  ],
+                  "IgnoreStatusArray": [],
+                  "AIPriroityCharacterType": 8,
+                  "ReleaseWhileRidicule": false,
+                  "ReleaseWhileConfusion": false,
+                  "IsReleaseSkillAfterMove": true,
+                  "IsFixSkillDirection": false,
+                  "FixedDirection": 0,
+                  "MoveByTeleport": false,
+                  "AIPriorityHpLowerCharacterTypeFilter": [],
+                  "AiPriorityPropType": 0,
+                  "AiPriorityFindMax": true,
+                  "AIPriorityCharacterTypeGroups": []
+                },
+                "ActionType": 2,
+                "FlipSource": true,
+                "NeedConditionStatusMeetToRelease": false,
+                "MustHaveValidCost": false,
+                "IsFixedProp": false,
+                "ResetReleasedTimeOnNextWave": false
+              },
+              "FightSkillComboComponent": {
+                "ComboSkills": [
+                  13104,
+                  13105,
+                  13106,
+                  13107,
+                  13108
+                ]
+              }
+            }
+          },
+          "13104": {
+            "parent": 0,
+            "components": {
+              "FightSkillComponent": {
+                "SkillType": 0,
+                "CostType": 0,
+                "SkillTargetType": 3,
+                "TargetType": 1,
+                "HitTargetActionType": 0,
+                "ElementType": 0,
+                "RangeType": 0,
+                "Range": [
+                  {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 1
+                  },
+                  {
+                    "X": -1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 1,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": 1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 2
+                  },
+                  {
+                    "X": 1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -2,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 2
+                  },
+                  {
+                    "X": -3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 2,
+                    "Y": 1
+                  },
+                  {
+                    "X": -1,
+                    "Y": 2
+                  },
+                  {
+                    "X": 0,
+                    "Y": 3
+                  },
+                  {
+                    "X": 3,
+                    "Y": 0
+                  }
+                ],
+                "HitList": [
+                  {
+                    "ClassId": 13101,
+                    "Delay": 0.11670000106096268,
+                    "ActOnSouce": 3,
+                    "IgnoreAICount": false
+                  }
+                ],
+                "SourceMoveList": [
+                  {
+                    "MoveBehaviourId": 13102,
+                    "Delay": 0.0,
+                    "Offset": {
+                      "X": 0,
+                      "Y": -1
+                    },
+                    "TowardsTargetPos": true,
+                    "SkillMoveDirection": 1,
+                    "Distance": -1,
+                    "BasePercent": 1.0,
+                    "AffectedByProp": false,
+                    "AiMustMoveTo": true,
+                    "AIIgnore": false,
+                    "CanExpandOffset": false,
+                    "CancelDiagonally": false,
+                    "DoMoveConditions": []
+                  }
+                ],
+                "ActionDuration": 0.3666999936103821,
+                "AllEndedActionDuration": -1.0,
+                "AllRelevantEndedActionDuration": -1.0,
+                "Duration": -1.0,
+                "AllEndedDuration": 0.5,
+                "AllRelevantEndedDuration": -1.0,
+                "LimitedTimes": -1,
+                "ResetCDAtStart": false,
+                "ExtSkill": [],
+                "Replay": {
+                  "Rate": 0.0,
+                  "ReplaceSkillArrayOnReplay": [
+                    13104,
+                    13105,
+                    13106,
+                    13107,
+                    13108
+                  ]
+                },
+                "ReplayMaxCountEachRound": 5,
+                "CanTriggerChild": true,
+                "CanTriggerStatusEntityIds": [],
+                "Ai": {
+                  "DontKeepDistance": true,
+                  "AiPriorityTypes": [
+                    13
+                  ],
+                  "LastAIPriorityTypes": [
+                    13
+                  ],
+                  "IgnoreStatusArray": [],
+                  "AIPriroityCharacterType": 8,
+                  "ReleaseWhileRidicule": false,
+                  "ReleaseWhileConfusion": false,
+                  "IsReleaseSkillAfterMove": true,
+                  "IsFixSkillDirection": true,
+                  "FixedDirection": 0,
+                  "MoveByTeleport": true,
+                  "AIPriorityHpLowerCharacterTypeFilter": [],
+                  "AiPriorityPropType": 0,
+                  "AiPriorityFindMax": true,
+                  "AIPriorityCharacterTypeGroups": []
+                },
+                "ActionType": 10,
+                "FlipSource": true,
+                "NeedConditionStatusMeetToRelease": false,
+                "MustHaveValidCost": false,
+                "IsFixedProp": false,
+                "ResetReleasedTimeOnNextWave": false
+              },
+              "FightSkillAIRandomTargetFallbackSpawnerComponent": {
+                "ReplaceSkills": [
+                  13104,
+                  13105,
+                  13106,
+                  13107
+                ],
+                "FixedRange": [
+                  {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 1
+                  },
+                  {
+                    "X": 0,
+                    "Y": -1
+                  },
+                  {
+                    "X": -1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -2
+                  },
+                  {
+                    "X": 0,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -1
+                  },
+                  {
+                    "X": 2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -2
+                  },
+                  {
+                    "X": 2,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": -1
+                  },
+                  {
+                    "X": 0,
+                    "Y": 3
+                  },
+                  {
+                    "X": 1,
+                    "Y": -2
+                  },
+                  {
+                    "X": -3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 2,
+                    "Y": 1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 2
+                  },
+                  {
+                    "X": 3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -3
+                  }
+                ]
+              }
+            }
+          },
+          "13105": {
+            "parent": 0,
+            "components": {
+              "FightSkillComponent": {
+                "SkillType": 0,
+                "CostType": 0,
+                "SkillTargetType": 3,
+                "TargetType": 1,
+                "HitTargetActionType": 0,
+                "ElementType": 0,
+                "RangeType": 0,
+                "Range": [
+                  {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 1
+                  },
+                  {
+                    "X": 0,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 0,
+                    "Y": -2
+                  },
+                  {
+                    "X": -1,
+                    "Y": -1
+                  },
+                  {
+                    "X": 0,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 2
+                  },
+                  {
+                    "X": -3,
+                    "Y": 0
+                  },
+                  {
+                    "X": -2,
+                    "Y": -1
+                  },
+                  {
+                    "X": 0,
+                    "Y": -3
+                  },
+                  {
+                    "X": 0,
+                    "Y": 3
+                  },
+                  {
+                    "X": -2,
+                    "Y": 1
+                  },
+                  {
+                    "X": -1,
+                    "Y": -2
+                  }
+                ],
+                "HitList": [
+                  {
+                    "ClassId": 13101,
+                    "Delay": 0.11670000106096268,
+                    "ActOnSouce": 3,
+                    "IgnoreAICount": false
+                  }
+                ],
+                "SourceMoveList": [
+                  {
+                    "MoveBehaviourId": 13102,
+                    "Delay": 0.0,
+                    "Offset": {
+                      "X": 1,
+                      "Y": 0
+                    },
+                    "TowardsTargetPos": true,
+                    "SkillMoveDirection": 1,
+                    "Distance": -1,
+                    "BasePercent": 1.0,
+                    "AffectedByProp": false,
+                    "AiMustMoveTo": true,
+                    "AIIgnore": false,
+                    "CanExpandOffset": false,
+                    "CancelDiagonally": false,
+                    "DoMoveConditions": []
+                  }
+                ],
+                "ActionDuration": 0.2833000123500824,
+                "AllEndedActionDuration": -1.0,
+                "AllRelevantEndedActionDuration": -1.0,
+                "Duration": -1.0,
+                "AllEndedDuration": 0.5,
+                "AllRelevantEndedDuration": -1.0,
+                "LimitedTimes": -1,
+                "ResetCDAtStart": false,
+                "ExtSkill": [],
+                "Replay": {
+                  "Rate": 0.0,
+                  "ReplaceSkillArrayOnReplay": [
+                    13104,
+                    13105,
+                    13106,
+                    13107,
+                    13108
+                  ]
+                },
+                "ReplayMaxCountEachRound": 5,
+                "CanTriggerChild": true,
+                "CanTriggerStatusEntityIds": [],
+                "Ai": {
+                  "DontKeepDistance": true,
+                  "AiPriorityTypes": [
+                    13
+                  ],
+                  "LastAIPriorityTypes": [
+                    13
+                  ],
+                  "IgnoreStatusArray": [],
+                  "AIPriroityCharacterType": 8,
+                  "ReleaseWhileRidicule": false,
+                  "ReleaseWhileConfusion": false,
+                  "IsReleaseSkillAfterMove": true,
+                  "IsFixSkillDirection": true,
+                  "FixedDirection": 0,
+                  "MoveByTeleport": true,
+                  "AIPriorityHpLowerCharacterTypeFilter": [],
+                  "AiPriorityPropType": 0,
+                  "AiPriorityFindMax": true,
+                  "AIPriorityCharacterTypeGroups": []
+                },
+                "ActionType": 10,
+                "FlipSource": true,
+                "NeedConditionStatusMeetToRelease": false,
+                "MustHaveValidCost": false,
+                "IsFixedProp": false,
+                "ResetReleasedTimeOnNextWave": false
+              },
+              "FightSkillAIRandomTargetFallbackSpawnerComponent": {
+                "ReplaceSkills": [
+                  13104,
+                  13105,
+                  13106,
+                  13107
+                ],
+                "FixedRange": [
+                  {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 1
+                  },
+                  {
+                    "X": 0,
+                    "Y": -1
+                  },
+                  {
+                    "X": -1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -2
+                  },
+                  {
+                    "X": 0,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -1
+                  },
+                  {
+                    "X": 2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -2
+                  },
+                  {
+                    "X": 2,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": -1
+                  },
+                  {
+                    "X": 0,
+                    "Y": 3
+                  },
+                  {
+                    "X": 1,
+                    "Y": -2
+                  },
+                  {
+                    "X": -3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 2,
+                    "Y": 1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 2
+                  },
+                  {
+                    "X": 3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -3
+                  }
+                ]
+              }
+            }
+          },
+          "13106": {
+            "parent": 0,
+            "components": {
+              "FightSkillComponent": {
+                "SkillType": 0,
+                "CostType": 0,
+                "SkillTargetType": 3,
+                "TargetType": 1,
+                "HitTargetActionType": 0,
+                "ElementType": 0,
+                "RangeType": 0,
+                "Range": [
+                  {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 1
+                  },
+                  {
+                    "X": 0,
+                    "Y": -1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -2
+                  },
+                  {
+                    "X": 0,
+                    "Y": 2
+                  },
+                  {
+                    "X": 1,
+                    "Y": -1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 2,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 3
+                  },
+                  {
+                    "X": 1,
+                    "Y": 2
+                  },
+                  {
+                    "X": 0,
+                    "Y": -3
+                  },
+                  {
+                    "X": 2,
+                    "Y": 1
+                  },
+                  {
+                    "X": 2,
+                    "Y": -1
+                  },
+                  {
+                    "X": 1,
+                    "Y": -2
+                  },
+                  {
+                    "X": 3,
+                    "Y": 0
+                  }
+                ],
+                "HitList": [
+                  {
+                    "ClassId": 13101,
+                    "Delay": 0.06669999659061432,
+                    "ActOnSouce": 3,
+                    "IgnoreAICount": false
+                  }
+                ],
+                "SourceMoveList": [
+                  {
+                    "MoveBehaviourId": 13102,
+                    "Delay": 0.0,
+                    "Offset": {
+                      "X": -1,
+                      "Y": 0
+                    },
+                    "TowardsTargetPos": true,
+                    "SkillMoveDirection": 1,
+                    "Distance": -1,
+                    "BasePercent": 1.0,
+                    "AffectedByProp": false,
+                    "AiMustMoveTo": true,
+                    "AIIgnore": false,
+                    "CanExpandOffset": false,
+                    "CancelDiagonally": false,
+                    "DoMoveConditions": []
+                  }
+                ],
+                "ActionDuration": 0.30000001192092896,
+                "AllEndedActionDuration": -1.0,
+                "AllRelevantEndedActionDuration": -1.0,
+                "Duration": -1.0,
+                "AllEndedDuration": 0.5,
+                "AllRelevantEndedDuration": -1.0,
+                "LimitedTimes": -1,
+                "ResetCDAtStart": false,
+                "ExtSkill": [],
+                "Replay": {
+                  "Rate": 0.0,
+                  "ReplaceSkillArrayOnReplay": [
+                    13104,
+                    13105,
+                    13106,
+                    13107,
+                    13108
+                  ]
+                },
+                "ReplayMaxCountEachRound": 5,
+                "CanTriggerChild": true,
+                "CanTriggerStatusEntityIds": [],
+                "Ai": {
+                  "DontKeepDistance": true,
+                  "AiPriorityTypes": [
+                    13
+                  ],
+                  "LastAIPriorityTypes": [
+                    13
+                  ],
+                  "IgnoreStatusArray": [],
+                  "AIPriroityCharacterType": 8,
+                  "ReleaseWhileRidicule": false,
+                  "ReleaseWhileConfusion": false,
+                  "IsReleaseSkillAfterMove": true,
+                  "IsFixSkillDirection": true,
+                  "FixedDirection": 0,
+                  "MoveByTeleport": true,
+                  "AIPriorityHpLowerCharacterTypeFilter": [],
+                  "AiPriorityPropType": 0,
+                  "AiPriorityFindMax": true,
+                  "AIPriorityCharacterTypeGroups": []
+                },
+                "ActionType": 10,
+                "FlipSource": true,
+                "NeedConditionStatusMeetToRelease": false,
+                "MustHaveValidCost": false,
+                "IsFixedProp": false,
+                "ResetReleasedTimeOnNextWave": false
+              },
+              "FightSkillAIRandomTargetFallbackSpawnerComponent": {
+                "ReplaceSkills": [
+                  13104,
+                  13105,
+                  13106,
+                  13107
+                ],
+                "FixedRange": [
+                  {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 1
+                  },
+                  {
+                    "X": 0,
+                    "Y": -1
+                  },
+                  {
+                    "X": -1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -2
+                  },
+                  {
+                    "X": 0,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -1
+                  },
+                  {
+                    "X": 2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -2
+                  },
+                  {
+                    "X": 2,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": -1
+                  },
+                  {
+                    "X": 0,
+                    "Y": 3
+                  },
+                  {
+                    "X": 1,
+                    "Y": -2
+                  },
+                  {
+                    "X": -3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 2,
+                    "Y": 1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 2
+                  },
+                  {
+                    "X": 3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -3
+                  }
+                ]
+              }
+            }
+          },
+          "13107": {
+            "parent": 0,
+            "components": {
+              "FightSkillComponent": {
+                "SkillType": 0,
+                "CostType": 0,
+                "SkillTargetType": 3,
+                "TargetType": 1,
+                "HitTargetActionType": 0,
+                "ElementType": 0,
+                "RangeType": 0,
+                "Range": [
+                  {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  {
+                    "X": 1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -1
+                  },
+                  {
+                    "X": -1,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -1
+                  },
+                  {
+                    "X": 0,
+                    "Y": -2
+                  },
+                  {
+                    "X": -2,
+                    "Y": 0
+                  },
+                  {
+                    "X": 2,
+                    "Y": 0
+                  },
+                  {
+                    "X": 1,
+                    "Y": -1
+                  },
+                  {
+                    "X": 2,
+                    "Y": -1
+                  },
+                  {
+                    "X": 1,
+                    "Y": -2
+                  },
+                  {
+                    "X": 3,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -2
+                  },
+                  {
+                    "X": -2,
+                    "Y": -1
+                  },
+                  {
+                    "X": -3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -3
+                  }
+                ],
+                "HitList": [
+                  {
+                    "ClassId": 13101,
+                    "Delay": 0.06669999659061432,
+                    "ActOnSouce": 3,
+                    "IgnoreAICount": false
+                  }
+                ],
+                "SourceMoveList": [
+                  {
+                    "MoveBehaviourId": 13102,
+                    "Delay": 0.0,
+                    "Offset": {
+                      "X": 0,
+                      "Y": 1
+                    },
+                    "TowardsTargetPos": true,
+                    "SkillMoveDirection": 1,
+                    "Distance": -1,
+                    "BasePercent": 1.0,
+                    "AffectedByProp": false,
+                    "AiMustMoveTo": true,
+                    "AIIgnore": false,
+                    "CanExpandOffset": false,
+                    "CancelDiagonally": false,
+                    "DoMoveConditions": []
+                  }
+                ],
+                "ActionDuration": 0.4000000059604645,
+                "AllEndedActionDuration": -1.0,
+                "AllRelevantEndedActionDuration": -1.0,
+                "Duration": -1.0,
+                "AllEndedDuration": 0.5,
+                "AllRelevantEndedDuration": -1.0,
+                "LimitedTimes": -1,
+                "ResetCDAtStart": false,
+                "ExtSkill": [],
+                "Replay": {
+                  "Rate": 0.0,
+                  "ReplaceSkillArrayOnReplay": [
+                    13104,
+                    13105,
+                    13106,
+                    13107,
+                    13108
+                  ]
+                },
+                "ReplayMaxCountEachRound": 5,
+                "CanTriggerChild": true,
+                "CanTriggerStatusEntityIds": [],
+                "Ai": {
+                  "DontKeepDistance": true,
+                  "AiPriorityTypes": [
+                    13
+                  ],
+                  "LastAIPriorityTypes": [
+                    13
+                  ],
+                  "IgnoreStatusArray": [],
+                  "AIPriroityCharacterType": 8,
+                  "ReleaseWhileRidicule": false,
+                  "ReleaseWhileConfusion": false,
+                  "IsReleaseSkillAfterMove": true,
+                  "IsFixSkillDirection": true,
+                  "FixedDirection": 1,
+                  "MoveByTeleport": true,
+                  "AIPriorityHpLowerCharacterTypeFilter": [],
+                  "AiPriorityPropType": 0,
+                  "AiPriorityFindMax": true,
+                  "AIPriorityCharacterTypeGroups": []
+                },
+                "ActionType": 10,
+                "FlipSource": true,
+                "NeedConditionStatusMeetToRelease": false,
+                "MustHaveValidCost": false,
+                "IsFixedProp": false,
+                "ResetReleasedTimeOnNextWave": false
+              },
+              "FightSkillAIRandomTargetFallbackSpawnerComponent": {
+                "ReplaceSkills": [
+                  13104,
+                  13105,
+                  13106,
+                  13107
+                ],
+                "FixedRange": [
+                  {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 1
+                  },
+                  {
+                    "X": 0,
+                    "Y": -1
+                  },
+                  {
+                    "X": -1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -2
+                  },
+                  {
+                    "X": 0,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -1
+                  },
+                  {
+                    "X": 2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -2
+                  },
+                  {
+                    "X": 2,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": -1
+                  },
+                  {
+                    "X": 0,
+                    "Y": 3
+                  },
+                  {
+                    "X": 1,
+                    "Y": -2
+                  },
+                  {
+                    "X": -3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 2,
+                    "Y": 1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 2
+                  },
+                  {
+                    "X": 3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -3
+                  }
+                ]
+              }
+            }
+          },
+          "13108": {
+            "parent": 0,
+            "components": {
+              "FightSkillComponent": {
+                "SkillType": 0,
+                "CostType": 0,
+                "SkillTargetType": 3,
+                "TargetType": 1,
+                "HitTargetActionType": 0,
+                "ElementType": 0,
+                "RangeType": 0,
+                "Range": [
+                  {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 1
+                  },
+                  {
+                    "X": 0,
+                    "Y": -1
+                  },
+                  {
+                    "X": -1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -2
+                  },
+                  {
+                    "X": 0,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -1
+                  },
+                  {
+                    "X": 2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -2
+                  },
+                  {
+                    "X": 2,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": -1
+                  },
+                  {
+                    "X": 0,
+                    "Y": 3
+                  },
+                  {
+                    "X": 1,
+                    "Y": -2
+                  },
+                  {
+                    "X": -3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 2,
+                    "Y": 1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 2
+                  },
+                  {
+                    "X": 3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -3
+                  }
+                ],
+                "HitList": [
+                  {
+                    "ClassId": 13101,
+                    "Delay": 0.30000001192092896,
+                    "ActOnSouce": 3,
+                    "IgnoreAICount": false
+                  }
+                ],
+                "SourceMoveList": [
+                  {
+                    "MoveBehaviourId": 13102,
+                    "Delay": 0.0,
+                    "Offset": {
+                      "X": 0,
+                      "Y": 1
+                    },
+                    "TowardsTargetPos": true,
+                    "SkillMoveDirection": 1,
+                    "Distance": -1,
+                    "BasePercent": 1.0,
+                    "AffectedByProp": false,
+                    "AiMustMoveTo": true,
+                    "AIIgnore": false,
+                    "CanExpandOffset": false,
+                    "CancelDiagonally": false,
+                    "DoMoveConditions": []
+                  }
+                ],
+                "ActionDuration": 0.9330000281333923,
+                "AllEndedActionDuration": -1.0,
+                "AllRelevantEndedActionDuration": -1.0,
+                "Duration": 0.9330000281333923,
+                "AllEndedDuration": -1.0,
+                "AllRelevantEndedDuration": -1.0,
+                "LimitedTimes": -1,
+                "ResetCDAtStart": false,
+                "ExtSkill": [],
+                "Replay": {
+                  "Rate": 0.0,
+                  "ReplaceSkillArrayOnReplay": [
+                    13104,
+                    13105,
+                    13106,
+                    13107,
+                    13108
+                  ]
+                },
+                "ReplayMaxCountEachRound": 5,
+                "CanTriggerChild": true,
+                "CanTriggerStatusEntityIds": [],
+                "Ai": {
+                  "DontKeepDistance": true,
+                  "AiPriorityTypes": [
+                    13
+                  ],
+                  "LastAIPriorityTypes": [
+                    13
+                  ],
+                  "IgnoreStatusArray": [],
+                  "AIPriroityCharacterType": 8,
+                  "ReleaseWhileRidicule": false,
+                  "ReleaseWhileConfusion": false,
+                  "IsReleaseSkillAfterMove": true,
+                  "IsFixSkillDirection": true,
+                  "FixedDirection": 0,
+                  "MoveByTeleport": true,
+                  "AIPriorityHpLowerCharacterTypeFilter": [],
+                  "AiPriorityPropType": 0,
+                  "AiPriorityFindMax": true,
+                  "AIPriorityCharacterTypeGroups": []
+                },
+                "ActionType": 10,
+                "FlipSource": true,
+                "NeedConditionStatusMeetToRelease": false,
+                "MustHaveValidCost": false,
+                "IsFixedProp": false,
+                "ResetReleasedTimeOnNextWave": false
+              },
+              "FightSkillAIRandomTargetFallbackSpawnerComponent": {
+                "ReplaceSkills": [
+                  13104,
+                  13105,
+                  13106,
+                  13107
+                ],
+                "FixedRange": [
+                  {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 1
+                  },
+                  {
+                    "X": 0,
+                    "Y": -1
+                  },
+                  {
+                    "X": -1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -2
+                  },
+                  {
+                    "X": 0,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -1
+                  },
+                  {
+                    "X": 2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -2
+                  },
+                  {
+                    "X": 2,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": -1
+                  },
+                  {
+                    "X": 0,
+                    "Y": 3
+                  },
+                  {
+                    "X": 1,
+                    "Y": -2
+                  },
+                  {
+                    "X": -3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 2,
+                    "Y": 1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 2
+                  },
+                  {
+                    "X": 3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -3
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    ],
+    "skill_item_bindings": null,
+    "runtime_source_manifests": [
+      {
+        "path": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+        "sha256": "9b447a15838602a598b7530eb0398a3b0c9e1a6d93d7eb8d0e194932cd24d8bf"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/battle-rules-source-manifest.json",
+        "sha256": "cef8b0b5a12460f2bdb2b4d8031f95fb8d560a391a9170641e401b67ef08968b"
+      }
+    ],
+    "formatters": [
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ActionTypeFormatter.cs",
+        "sha256": "186c98deb85a7221c8dd1c3474f9ded798c356cdf8cab3130dd4adf990980c7d"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/AiPriorityTypeFormatter.cs",
+        "sha256": "a46e4606b4d2e3ff9548272cbe3ec051df29605101e83b2e1f9b682fa9750c57"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/DirectionFormatter.cs",
+        "sha256": "baeb424b8215f6df8d00696f458eb6622fa91b8ef4bc5d15ab5b190dddfe7982"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/EFightSkillCostTypeFormatter.cs",
+        "sha256": "b81a0173c287f0eb0def7db0b228840ad7e2bb97d4ced503d3e6291b63edafb4"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ElementTypeFormatter.cs",
+        "sha256": "78b8ed62cb6acc289a886758b602f8b271d1bbae983ae547ad36ec5437a43df0"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ESkillMoveDirectionFormatter.cs",
+        "sha256": "828a781d0b93f1d5c1906ef38749df7d551f433dd963ea4b5256e41188f8e40d"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightSkillAIRandomTargetFallbackSpawnerComponentInfoFormatter.cs",
+        "sha256": "56dbee50b31ab5639bc09e41797f9cd000a86db5598e1b306b4dd0afeba8d9cc"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightSkillComboComponentInfoFormatter.cs",
+        "sha256": "0c8e20286c97c9cfda62cc715d2cbaccb497cb4b960475f018de60f88c68c675"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightSkillComponentInfoFormatter.cs",
+        "sha256": "4e4b6dbf5a6da01a230cd045e55009453e396b252de3bcd0655ce15e0803ac02"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightSKillMoveCfgFormatter.cs",
+        "sha256": "92bcd7a160761b784273342187c5cadc0605007f5f79284f297a90a4f4051595"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightSkillReplayCfgFormatter.cs",
+        "sha256": "9784d406374db418e719d4ec5058368120cad55f4e1e49b6599ea754dcf46b68"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GameCharacterTypeFormatter.cs",
+        "sha256": "4f0cfe2340b1331caf498f7fcc95eb58b783abfcce2905815d2a04d2fd12e722"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitAnchorFormatter.cs",
+        "sha256": "ad2601d0490d0cca17466565a960c3d859d195e8794cc1335e9f8259e6dea8a1"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitCfgFormatter.cs",
+        "sha256": "09f74504e8e09e69420d558f7956aee1b85fb0ae77d11d7c0a3ce8b17fe2c1bc"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitTargetTypeFormatter.cs",
+        "sha256": "f26070c6d1ad7e7dd2f26519990fbc2298dcbb0d3bc6461319d5cb8049dacd7d"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/Pos2dFormatter.cs",
+        "sha256": "7625a36013d02ba1732aa27c15ad8b131f41b56ffff72095b93781fe47d3fd4c"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/PropTypeFormatter.cs",
+        "sha256": "139c97ed0ff65c426fd6d7e1bc4a85186275b0c0eb58fafff9f3ece905d946ec"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SkillAiCfgFormatter.cs",
+        "sha256": "739c172510869289b85ea494d4cd68f880ad5403bc9fe5aa46306f551dbfbb8a"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SkillRangeTypeFormatter.cs",
+        "sha256": "4cc7bff2a4304deb1139d5cf0a0ccd17a0171dac7db6fb729f5a2db8d205874a"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SkillTargetTypeFormatter.cs",
+        "sha256": "c4aaca29bae4b1d7a61108688e48aedeb5ec967aecde98adef3439b6bfe9216c"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SkillTypeFormatter.cs",
+        "sha256": "c3d104e7a24ee38fb39f92744ee6352ab65e30bef68f2c38a6200af0b0a3a755"
+      }
+    ],
+    "verifier": {
+      "path": "scripts/verify_battle_skill_graph_rules.py",
+      "sha256": "a8b77eee0fdcbe360125d9ba4ec077321306ef888192effb88a79d04d0bdfa3c"
+    },
+    "operation": "Decode the selected APK-first EC fragments with their own generated formatters. Compare every migrated component field for the requested entities; retain historical runtime source manifests separately. No configuration or expected hash is replaced."
+  },
+  "operation": "Reuse official HitAnchor/HitExecAnchor mapping. Preserve original combo order, skill parameters, fixed facing, offsets, mandatory-move flags and fallback range. The two empty client executors are implemented using the user-confirmed offline sequence/fallback and nearest-legal-body-cell selection rules; these execution rules are not attributed to the missing server.",
+  "generator": {
+    "path": "scripts/prepare_battle_skill_combo_sources.py",
+    "sha256": "8a45cb3f0d57ba20c9eeaf311d1692d10e14372e0d86a183c09a0dd07314cdf2"
+  }
+}

@@ -29,12 +29,27 @@ namespace Zjcs.Presentation.Combat
             var controller = animator.runtimeAnimatorController;
             if (!controller) return null;
             if (bindings.TryGetValue(controller, out var binding)) return binding;
+            var chain = new List<RuntimeAnimatorController>();
+            for (var current = controller; current && !chain.Contains(current);)
+            {
+                chain.Add(current);
+                if (bindings.TryGetValue(current, out binding)) break;
+                current = current is AnimatorOverrideController overridden
+                    ? overridden.runtimeAnimatorController : null;
+            }
             // Original skill graphs can hide the source model. Unity then has
             // no live Animator parameters; retain the actual initialized
             // controller contract, without activating the model for inspection.
-            if (!animator.gameObject.activeInHierarchy || !animator.isInitialized) return null;
-            binding = new ControllerBinding(animator);
-            bindings.Add(controller, binding);
+            if (binding == null)
+            {
+                if (!animator.gameObject.activeInHierarchy || !animator.isInitialized) return null;
+                binding = new ControllerBinding(animator);
+            }
+            // Overrides replace clips, while parameters and layers belong to
+            // the same underlying controller. Appearance refreshes can replace
+            // the override instance even while a skill hides the source.
+            foreach (var entry in chain)
+                if (!bindings.TryGetValue(entry, out _)) bindings.Add(entry, binding);
             return binding;
         }
         private readonly Animator animator;
@@ -82,7 +97,7 @@ namespace Zjcs.Presentation.Combat
             AnimationController existingController = null)
         {
             this.animator = animator != null ? animator : throw new ArgumentNullException(nameof(animator));
-            ReadBinding(animator);
+            var binding = ReadBinding(animator);
             originalController = animator.runtimeAnimatorController;
             root = new GameObject("OfficialBattleAnimatorPlayables");
             root.transform.SetParent(parent, false);
@@ -100,6 +115,13 @@ namespace Zjcs.Presentation.Combat
                 controller.CreateOverrideController = true;
                 controller.Init();
                 ownedController = controller.RuntimeAnimatorController;
+                // Wrapping preserves the actual controller's parameters and
+                // layers. A consecutive skill can create this wrapper while
+                // the original graph still hides the source Animator, so its
+                // contract must not depend on another active-frame read.
+                if (binding != null && ownedController != null
+                    && !bindings.TryGetValue(ownedController, out _))
+                    bindings.Add(ownedController, binding);
             }
         }
 

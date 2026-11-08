@@ -25,6 +25,8 @@ namespace Zjcs.Editor.Skills
         private const string SlotKey = "Zjcs.Skills.Acceptance.Slot";
         private const string ResultKey = "Zjcs.Skills.Acceptance.Passed";
         private const string ExitKey = "Zjcs.Skills.Acceptance.ExitPending";
+        private const string ShaderOverrideKey = "Zjcs.Skills.Acceptance.ShaderOverride";
+        private const string PreviousAsyncShaderKey = "Zjcs.Skills.Acceptance.PreviousAsyncShader";
         private const string PartnerBattleModelKey = "Zjcs.Skills.Acceptance.PartnerBattleModel";
         public static bool PartnerBattleModelAcceptanceRequested => SessionState.GetBool(PartnerBattleModelKey, false);
         private static string ValidationDirectory {
@@ -81,6 +83,7 @@ namespace Zjcs.Editor.Skills
             try { BeginValidation(); }
             catch (Exception error)
             {
+                RestoreShaderCompilation();
                 EditorApplication.update -= AutoRunTick;
                 Debug.LogException(error);
                 if (Application.isBatchMode || Environment.GetEnvironmentVariable("ZJCS_SKILLS_AUTORUN") == "1")
@@ -105,9 +108,12 @@ namespace Zjcs.Editor.Skills
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 throw new InvalidOperationException("Exit Play Mode before running skill acceptance.");
+            ConfigureShaderCompilation();
             // A previous acceptance may have left an empty, unsaved scene.
             // Restore its startup scene; isolated battle mode supplies its own profile.
             EditorSceneManager.OpenScene("Assets/Game/Scenes/Bootstrap.unity", OpenSceneMode.Single);
+            if (Environment.GetEnvironmentVariable("ZJCS_PLAYER_COMBO_ACCEPTANCE") == "1")
+                ProjectTools.Validate();
             OfficialSkillAssetTools.Validate();
             if ((Application.isBatchMode || Environment.GetEnvironmentVariable("ZJCS_SKILLS_AUTORUN") == "1")
                 && Environment.GetEnvironmentVariable("ZJCS_SKILLS_PET_UI_ONLY") != "1")
@@ -152,6 +158,7 @@ namespace Zjcs.Editor.Skills
             }
             if (!SessionState.GetBool(ActiveKey, false))
                 return;
+            ConfigureShaderCompilation();
             EditorApplication.update -= OnUpdate;
             EditorApplication.update += OnUpdate;
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
@@ -165,6 +172,7 @@ namespace Zjcs.Editor.Skills
             EditorApplication.QueuePlayerLoopUpdate();
             if (started)
                 return;
+            ConfigureShaderCompilation();
             started = true;
             EditorApplication.LockReloadAssemblies();
             reloadLocked = true;
@@ -245,18 +253,19 @@ namespace Zjcs.Editor.Skills
                 yield return null;
             }
             yield return null;
-            if (Environment.GetEnvironmentVariable("ZJCS_STATUS_ABSORPTION_ACCEPTANCE") == "1")
+            if (Environment.GetEnvironmentVariable("ZJCS_STATUS_ABSORPTION_ACCEPTANCE") == "1"
+                || Environment.GetEnvironmentVariable("ZJCS_PLAYER_CLONE_ACCEPTANCE") == "1")
             {
                 string resultPath = Path.Combine(ValidationDirectory, "result.json");
                 Zjcs.Presentation.Home.SkillSummonPlayerValidation.StartDiagnostic(ValidationDirectory, false);
-                float deadline = Time.realtimeSinceStartup + 900f;
+                float deadline = Time.realtimeSinceStartup + 2760f;
                 while (!File.Exists(resultPath))
                 {
-                    Require(Time.realtimeSinceStartup < deadline, "Status absorption diagnostic timed out.");
+                    Require(Time.realtimeSinceStartup < deadline, "Native skill runtime diagnostic timed out.");
                     yield return null;
                 }
                 var result = JsonUtility.FromJson<RuntimeDiagnosticResult>(File.ReadAllText(resultPath));
-                Require(result.passed, result.error ?? "Runtime absorption diagnostic failed.");
+                Require(result.passed, result.error ?? "Native skill runtime diagnostic failed.");
                 Finish(true, null);
                 yield break;
             }
@@ -1347,8 +1356,27 @@ namespace Zjcs.Editor.Skills
                 throw new InvalidOperationException(message);
         }
 
+        private static void ConfigureShaderCompilation()
+        {
+            if (Environment.GetEnvironmentVariable("ZJCS_PLAYER_CLONE_ACCEPTANCE") != "1"
+                || SessionState.GetBool(ShaderOverrideKey, false)) return;
+            // Unity's async editor fallback is plain cyan. Capture the actual original
+            // material even when a skill requests its shader variant for the first time.
+            SessionState.SetBool(PreviousAsyncShaderKey, EditorSettings.asyncShaderCompilation);
+            SessionState.SetBool(ShaderOverrideKey, true);
+            EditorSettings.asyncShaderCompilation = false;
+        }
+
+        private static void RestoreShaderCompilation()
+        {
+            if (!SessionState.GetBool(ShaderOverrideKey, false)) return;
+            EditorSettings.asyncShaderCompilation = SessionState.GetBool(PreviousAsyncShaderKey, true);
+            SessionState.SetBool(ShaderOverrideKey, false);
+        }
+
         private static void Finish(bool passed, Exception error)
         {
+            RestoreShaderCompilation();
             Application.logMessageReceived -= CaptureRuntimeFailure;
             if (error == null)
                 Debug.Log("[Skills acceptance] " + (passed ? "passed" : "failed"));
@@ -1367,6 +1395,7 @@ namespace Zjcs.Editor.Skills
         {
             if (state != PlayModeStateChange.EnteredEditMode)
                 return;
+            RestoreShaderCompilation();
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
             EditorApplication.update -= OnUpdate;
             string root = SessionState.GetString(RootKey, string.Empty);

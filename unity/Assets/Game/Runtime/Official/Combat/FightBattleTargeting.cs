@@ -300,8 +300,8 @@ namespace Zjcs.Combat.Official
             var result = new List<FightBattleUnitState>();
             if (actor == null || units == null || hit == null || hit.Scope == null
                 || hit.Scope.Count == 0) return result;
-            int centerX = hit.Anchor == 0 && primary != null ? primary.X : actor.X;
-            int centerY = hit.Anchor == 0 && primary != null ? primary.Y : actor.Y;
+            var center = FightHitAnchorExtensions.ResolveCenter(hit.Anchor, actor, primary, cast);
+            int centerX = center.X, centerY = center.Y;
             IReadOnlyList<FightGridPoint> scope = TransformScope(hit.Scope, hit.ScopeTransform, actor, cast);
             foreach (FightBattleUnitState unit in ScopeCandidates(actor, units,
                 skill == null ? 1 : skill.TargetType, skill))
@@ -406,7 +406,7 @@ namespace Zjcs.Combat.Official
             }
         }
 
-        private static bool CanReleaseUnderControl(FightBattleUnitState actor,
+        internal static bool CanReleaseUnderControl(FightBattleUnitState actor,
             FightBattleSkillDefinition skill)
         {
             if (actor == null || skill == null || actor.Statuses == null) return true;
@@ -581,7 +581,7 @@ namespace Zjcs.Combat.Official
             return false;
         }
 
-        private static bool OccupiesPosition(FightBattleUnitState unit, FightGridPoint position)
+        internal static bool OccupiesPosition(FightBattleUnitState unit, FightGridPoint position)
         {
             if (unit == null || !IsSelectable(unit)) return false;
             if (unit.X == position.X && unit.Y == position.Y) return true;
@@ -918,8 +918,8 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleHitEntity hit in skill.HitGraphEntities)
             {
                 if (hit == null || hit.Scope == null || hit.Scope.Count == 0) continue;
-                int centerX = hit.Anchor == 0 ? primary.X : actor.X;
-                int centerY = hit.Anchor == 0 ? primary.Y : actor.Y;
+                int centerX = ((FightHitAnchor)hit.Anchor).AIAssumesOnSourceCastPos() ? actor.X : primary.X;
+                int centerY = ((FightHitAnchor)hit.Anchor).AIAssumesOnSourceCastPos() ? actor.Y : primary.Y;
                 var facing = new FightBattleSkillCastPresentation
                 {
                     FacingIndex = DirectionTo(actor, primary),
@@ -944,8 +944,8 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleHitEntity hit in skill.HitGraphEntities)
             {
                 if (hit == null || hit.Scope == null || hit.Scope.Count == 0) continue;
-                int centerX = hit.Anchor == 0 ? primary.X : actor.X;
-                int centerY = hit.Anchor == 0 ? primary.Y : actor.Y;
+                int centerX = ((FightHitAnchor)hit.Anchor).AIAssumesOnSourceCastPos() ? actor.X : primary.X;
+                int centerY = ((FightHitAnchor)hit.Anchor).AIAssumesOnSourceCastPos() ? actor.Y : primary.Y;
                 var facing = new FightBattleSkillCastPresentation
                 {
                     FacingIndex = DirectionTo(actor, primary),
@@ -986,8 +986,8 @@ namespace Zjcs.Combat.Official
             {
                 if (hit == null || hit.Scope == null || hit.Scope.Count == 0
                     || hit.AppliedStatuses == null || hit.AppliedStatuses.Count == 0) continue;
-                int centerX = hit.Anchor == 0 ? primary.X : actor.X;
-                int centerY = hit.Anchor == 0 ? primary.Y : actor.Y;
+                int centerX = ((FightHitAnchor)hit.Anchor).AIAssumesOnSourceCastPos() ? actor.X : primary.X;
+                int centerY = ((FightHitAnchor)hit.Anchor).AIAssumesOnSourceCastPos() ? actor.Y : primary.Y;
                 var facing = new FightBattleSkillCastPresentation
                 {
                     FacingIndex = DirectionTo(actor, primary),

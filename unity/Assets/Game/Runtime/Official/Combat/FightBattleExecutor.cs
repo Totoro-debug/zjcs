@@ -337,6 +337,8 @@ namespace Zjcs.Combat.Official
                         random: random);
                 }
                 if (actor.Hp <= 0) break;
+                if (skill.ComboSkills.Count > 0)
+                    targets.RemoveAll(target => !ComboTargetAllowed(actor, skill, target));
                 if (targets.Count == 0 && skill.TargetType != 5
                     && !FightBattleTargeting.HasCasterAreaTargets(actor, units, skill))
                 {
@@ -346,7 +348,14 @@ namespace Zjcs.Combat.Official
 
                 // FightSkillAgentComponentImplement.UpdateSkillDataOnRun records this
                 // release before its end callbacks can check LimitedTimes or modify CD.
-                var presentation = FightBattleSkillCastPresentation.Capture(actor, skill, targets);
+                FightBattleUnitState comboTargetPosition = null;
+                if (skill.ComboSkills.Count > 0 || skill.FallbackSkills.Count > 0)
+                {
+                    if (targets.Count > 0)
+                        TryComboTargetPosition(actor, skill, targets[0], out comboTargetPosition);
+                    ApplyComboFacing(actor, skill);
+                }
+                var presentation = FightBattleSkillCastPresentation.Capture(actor, skill, targets, comboTargetPosition);
                 var cast = new FightBattleSkillCastEvent
                 {
                     ActorId = actor.Id, Presentation = presentation, Slot = skill.Slot,
@@ -356,9 +365,10 @@ namespace Zjcs.Combat.Official
                 int skillCastStart = casts.Count, skillDamageStart = damageEvents.Count;
                 int skillMovementStart = movements.Count;
                 skillState.RunSkill(skill.Slot);
+                if (skill.ComboSkills.Count > 0) casts.Add(cast);
                 ExecuteSkill(actor, skill, targets, casts, damageEvents, movements,
                     out float castLastDelay, out float skillStartDuration,
-                    out float skillStartActionDuration, presentationCast: cast);
+                    out float skillStartActionDuration, targetPosition: comboTargetPosition, presentationCast: cast);
                 checkpoint.Statistics.RecordCast(actor.Id, skill.EntityId, skill.ItemId);
                 stepDuration = Math.Max(stepDuration,
                     petSupportDuration + approachEnd + Math.Max(ResolveDuration(skill, castLastDelay), skillStartDuration));
@@ -370,7 +380,7 @@ namespace Zjcs.Combat.Official
                 checkedSlots.Add(skill.Slot);
                 performedTargets.AddRange(targets);
                 CompleteCastPresentation(cast, skill, castLastDelay);
-                casts.Add(cast);
+                if (skill.ComboSkills.Count == 0) casts.Add(cast);
                 float cooldownDuration = 0f, cooldownActionDuration = -1f;
                 ExecutePendingCooldownModifySkills(casts, damageEvents, movements,
                     ref cooldownDuration, ref cooldownActionDuration);
@@ -815,10 +825,13 @@ namespace Zjcs.Combat.Official
             IReadOnlyList<FightBattleHitDefinition> hits = FightBattleHitCollector.CollectAll(skill);
             var randomTargetGroups = new Dictionary<int, RandomTargetGroupState>();
             var damageHitTargets = new HashSet<int>();
+            var completedSourceMoves = new HashSet<FightBattleSkillMove>();
 
             foreach (FightBattleHitDefinition hit in hits)
             {
                 if (!allowDeadSource && actor.Hp <= 0) break;
+                ApplySourceMoves(actor, skill, targets, movements, ref lastDelay,
+                    hit.Delay, completedSourceMoves, targetPosition);
                 if (hit.Delay > lastDelay) lastDelay = hit.Delay;
                 List<FightBattleUnitState> hitTargets;
                 bool hasRandomTargetContext = hit.RandomTargetGroupId > 0;
@@ -838,10 +851,9 @@ namespace Zjcs.Combat.Official
                     var selectedTargets = new List<FightBattleUnitState>();
                     if (hit.RandomTargetScope != null && hit.RandomTargetScope.Count > 0)
                     {
-                        FightBattleUnitState scopeAnchor = hit.RandomTargetAnchor == 0
-                            ? targetPosition ?? (targets != null && targets.Count > 0
-                                ? targets[0] : null)
-                            : actor;
+                        var scopeCenter = FightHitAnchorExtensions.ResolveCenter(hit.RandomTargetAnchor,
+                            actor, targetPosition ?? (targets != null && targets.Count > 0 ? targets[0] : null), hitCast);
+                        var scopeAnchor = new FightBattleUnitState { X = scopeCenter.X, Y = scopeCenter.Y };
                         List<FightBattleRandomScopeSelection> selections =
                             FightBattleTargeting.SelectRandomScopePositions(targetingSource, units, skill,
                                 scopeAnchor, hit.RandomTargetScope, checkpoint.Grid,
@@ -1142,7 +1154,8 @@ namespace Zjcs.Combat.Official
                 }
             }
             movementStartContext.StatusStartTime = 0f;
-            ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);
+            ApplySourceMoves(actor, skill, targets, movements, ref lastDelay,
+                float.PositiveInfinity, completedSourceMoves, targetPosition);
             FightDamageFalloff.EndCast(units, skill);
             ApplyExtraSkills(actor, skill, casts, damageEvents, movements, ref lastDelay);
             if (statusCatalog != null)
@@ -1168,6 +1181,8 @@ namespace Zjcs.Combat.Official
                             actionEndActionDuration);
                 }
             }
+            ApplySkillCombo(actor, skill, targets, casts, damageEvents, movements, lastDelay,
+                ref statusTriggerDuration, ref statusTriggerActionDuration);
             ApplySkillReplay(actor, skill, casts, damageEvents, movements, lastDelay,
                 ref statusTriggerDuration, ref statusTriggerActionDuration);
         }
@@ -1514,7 +1529,8 @@ namespace Zjcs.Combat.Official
         /// </summary>
         private void ApplySourceMoves(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             List<FightBattleUnitState> targets, List<FightBattleMovementEvent> movements,
-            ref float lastDelay)
+            ref float lastDelay, float until, HashSet<FightBattleSkillMove> completed,
+            FightBattleUnitState targetPosition)
         {
             if (skill.SourceMoves == null || skill.SourceMoves.Count == 0) return;
             if (movements == null) return;
@@ -1522,6 +1538,7 @@ namespace Zjcs.Combat.Official
             {
                 if (actor.Hp <= 0) break;
                 if (move == null) continue;
+                if (move.Delay > until || !completed.Add(move)) continue;
                 if (statusCatalog != null && !statusCatalog.CanStartEntityAction(actor,
                     move.MoveBehaviourId)) continue;
                 FightBattleUnitState target = null;
@@ -1533,7 +1550,22 @@ namespace Zjcs.Combat.Official
                 if (move.Distance < 0)
                 {
                     int movementIndex = movements.Count;
-                    MoveNextToTarget(actor, target, move, movements);
+                    if (move.AiMustMoveTo && !move.AIIgnore && !move.CanExpandOffset
+                        && move.Direction == 1 && move.TowardsTargetPos && statusCatalog != null)
+                    {
+                        if (!TryRequiredSourceLanding(actor, target, skill, move, out var landing, targetPosition)) continue;
+                        var start = new FightGridPoint(actor.X, actor.Y);
+                        if (landing.Equals(start)) continue;
+                        if (skill.MoveByTeleport)
+                        {
+                            var movement = new FightBattleMovementEvent { UnitId = actor.Id };
+                            movement.Path.Add(start); movement.Path.Add(landing);
+                            actor.X = landing.X; actor.Y = landing.Y;
+                            movements.Add(movement);
+                        }
+                        else TryMoveActor(actor, landing, 64, movements);
+                    }
+                    else MoveNextToTarget(actor, target, move, movements);
                     ApplyMovementAction(movements, movementIndex, move, skill);
                     continue;
                 }
@@ -1635,7 +1667,7 @@ namespace Zjcs.Combat.Official
             {
                 FightGridPoint previous = path[i - 1];
                 FightGridPoint next = path[i];
-                actor.Direction = Direction(previous, next);
+                UpdateMovementDirection(actor, previous, next);
                 actor.X = next.X;
                 actor.Y = next.Y;
                 movement.Path.Add(next);
@@ -2437,7 +2469,7 @@ namespace Zjcs.Combat.Official
         private static float HitDelay(FightBattleUnitState actor, FightBattleUnitState target,
             FightBattleHitDefinition hit)
         {
-            if (hit.Anchor != 0) return hit.Delay;
+            if (((FightHitAnchor)hit.Anchor).ResolveExecAnchor() != FightHitExecAnchor.TargetPos) return hit.Delay;
             double dx = target.X - actor.X;
             double dy = target.Y - actor.Y;
             return hit.Delay + (float)(Math.Sqrt(dx * dx + dy * dy) * hit.DelayDistFactor);
@@ -2589,7 +2621,7 @@ namespace Zjcs.Combat.Official
             {
                 FightGridPoint previous = bestPath[i - 1];
                 FightGridPoint next = bestPath[i];
-                actor.Direction = Direction(previous, next);
+                UpdateMovementDirection(actor, previous, next);
                 actor.X = next.X;
                 actor.Y = next.Y;
                 movement.Path.Add(next);
@@ -2645,7 +2677,7 @@ namespace Zjcs.Combat.Official
             {
                 FightGridPoint previous = bestPath[i - 1];
                 FightGridPoint next = bestPath[i];
-                actor.Direction = Direction(previous, next);
+                UpdateMovementDirection(actor, previous, next);
                 actor.X = next.X;
                 actor.Y = next.Y;
                 movement.Path.Add(next);
@@ -2682,6 +2714,17 @@ namespace Zjcs.Combat.Official
                     occupied.Add(new FightGridPoint(unit.X + offset.X, unit.Y + offset.Y));
             }
             return occupied;
+        }
+
+        private static void UpdateMovementDirection(FightBattleUnitState actor,
+            FightGridPoint from, FightGridPoint to)
+        {
+            // Original GridTransform.GetFlipX returns null for vertical movement.
+            // A combo's fixed direction must not freeze its next ordinary move's mirror.
+            if (!actor.HasFlipX) actor.FlipX = actor.Direction == 1;
+            if (from.X != to.X) actor.FlipX = to.X < from.X;
+            actor.HasFlipX = true;
+            actor.Direction = Direction(from, to);
         }
 
         private static int Direction(FightGridPoint from, FightGridPoint to)

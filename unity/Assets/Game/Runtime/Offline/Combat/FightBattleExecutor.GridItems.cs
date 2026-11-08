@@ -85,7 +85,7 @@ namespace Zjcs.Combat.Official
             var reference = ResolveSummonReference(actor, hit.SummonReferenceType, targets);
             if (reference == null || checkpoint.Grid == null) return 0f;
             var primary = targetPosition ?? (targets.Count > 0 ? targets[0] : null);
-            var center = hit.Anchor == 0 && primary != null ? primary : actor;
+            var center = FightHitAnchorExtensions.ResolveCenter(hit.Anchor, actor, primary, gridViewCast?.Presentation);
             float lastCreation = 0f;
             foreach (var cell in hit.GridSummonCells)
             {

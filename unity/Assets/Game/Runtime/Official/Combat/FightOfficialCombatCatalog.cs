@@ -737,12 +737,66 @@ namespace Zjcs.Combat.Official
         // without changing their cooldowns, source information, hit graphs or cast counters.
         internal void RestoreSkillLogicDefinition(FightBattleSkillDefinition skill)
         {
+            RestoreSkillSequenceDefinition(skill);
             if (skill == null || skill.LogicDefinitionResolved
                 || !entities.TryGetValue(skill.EntityId, out var components)) return;
             var logic = Component(components, "FightSkillLogicComponent");
             skill.HasLogicComponent = logic != null;
             skill.LogicDefinitionJson = logic == null ? null : OfficialJson.Stringify(logic);
             skill.LogicDefinitionResolved = true;
+        }
+
+        internal bool TryGetFixedSkillFacing(int entityId, out int facing)
+        {
+            facing = 0;
+            if (!entities.TryGetValue(entityId, out var components)) return false;
+            var source = Component(components, "FightSkillComponent");
+            var ai = source == null ? null : Component(source, "Ai");
+            if (ai == null || !Bool(ai, "IsFixSkillDirection")) return false;
+            // Common.Direction is Up, Down, Left, Right; Pos2d.FourDirs is Down, Left, Up, Right.
+            switch (Int(ai, "FixedDirection"))
+            {
+                case 0: facing = 2; break;
+                case 1: facing = 0; break;
+                case 2: facing = 1; break;
+                case 3: facing = 3; break;
+                default: throw new InvalidOperationException("Unknown official fixed skill direction: " + entityId);
+            }
+            return true;
+        }
+
+        private void RestoreSkillSequenceDefinition(FightBattleSkillDefinition skill)
+        {
+            if (skill == null || skill.SequenceDefinitionResolved
+                || !entities.TryGetValue(skill.EntityId, out var components)) return;
+            var combo = Component(components, "FightSkillComboComponent");
+            var fallback = Component(components, "FightSkillAIRandomTargetFallbackSpawnerComponent");
+            skill.ComboSkills = combo == null ? new List<int>() : new List<int>(IntArray(combo, "ComboSkills"));
+            skill.FallbackSkills = fallback == null ? new List<int>() : new List<int>(IntArray(fallback, "ReplaceSkills"));
+            skill.FallbackRange = new List<FightGridPoint>();
+            if (fallback != null && fallback.TryGetValue("FixedRange", out object raw) && raw != null)
+                foreach (object value in Array(raw, "fallback range"))
+                {
+                    var point = Object(value, "fallback point");
+                    skill.FallbackRange.Add(new FightGridPoint(Int(point, "X"), Int(point, "Y")));
+                }
+            var source = Component(components, "FightSkillComponent");
+            var ai = source == null ? null : Component(source, "Ai");
+            skill.MoveByTeleport = ai != null && Bool(ai, "MoveByTeleport");
+            // Old checkpoints already contain the movement numeric configuration. Restore
+            // only the formerly omitted immutable AI/offset policy, not their runtime state.
+            if (source != null && skill.SourceMoves != null && skill.SourceMoves.Count > 0)
+            {
+                var moves = new List<FightBattleSkillMove>();
+                AddSourceMoves(source, moves);
+                for (int i = 0; i < Math.Min(moves.Count, skill.SourceMoves.Count); i++)
+                {
+                    skill.SourceMoves[i].AiMustMoveTo = moves[i].AiMustMoveTo;
+                    skill.SourceMoves[i].AIIgnore = moves[i].AIIgnore;
+                    skill.SourceMoves[i].CanExpandOffset = moves[i].CanExpandOffset;
+                }
+            }
+            skill.SequenceDefinitionResolved = true;
         }
 
         /// <summary>Response gates for an already settled effect; this context is never cast.</summary>
@@ -2323,6 +2377,9 @@ namespace Zjcs.Combat.Official
                 AffectedByProp = Bool(row, "AffectedByProp"),
                 CancelDiagonally = Bool(row, "CancelDiagonally"),
                 HasConditions = conditions,
+                AiMustMoveTo = Bool(row, "AiMustMoveTo"),
+                AIIgnore = Bool(row, "AIIgnore"),
+                CanExpandOffset = Bool(row, "CanExpandOffset"),
                 Conditions = moveConditions
             };
             if (entities.TryGetValue(result.MoveBehaviourId,

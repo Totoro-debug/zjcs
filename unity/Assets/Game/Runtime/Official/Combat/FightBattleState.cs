@@ -1272,6 +1272,11 @@ namespace Zjcs.Combat.Official
         public bool HasLogicComponent;
         public bool LogicDefinitionResolved;
         public string LogicDefinitionJson;
+        public bool SequenceDefinitionResolved;
+        public List<int> ComboSkills = new List<int>();
+        public List<int> FallbackSkills = new List<int>();
+        public List<FightGridPoint> FallbackRange = new List<FightGridPoint>();
+        public bool MoveByTeleport;
         public List<int> BlockingSourceActionTypes = new List<int>();
         public List<int> BlockingTargetActionTypes = new List<int>();
         public int SkillTargetType;
@@ -1371,6 +1376,9 @@ namespace Zjcs.Combat.Official
         public bool AffectedByProp;
         public bool CancelDiagonally;
         public bool HasConditions;
+        public bool AiMustMoveTo;
+        public bool AIIgnore;
+        public bool CanExpandOffset;
         public List<FightBattleSkillMoveCondition> Conditions = new List<FightBattleSkillMoveCondition>();
     }
 
