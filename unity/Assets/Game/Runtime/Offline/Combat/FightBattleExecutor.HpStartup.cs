@@ -47,12 +47,19 @@ namespace Zjcs.Combat.Official
                     || status.HpTriggerPer > 0f && status.HpTriggerAtStart || status.HasHpLimit);
         }
 
+        private static bool IsPendingLogicStart(FightBattleStatusState status)
+        {
+            return status != null && status.HasLogicComponent && status.LogicDefinitionResolved
+                && !status.LogicStartInitialized;
+        }
+
         private bool HasPendingStatusStarts()
         {
             if (statusCatalog == null) return false;
             foreach (var owner in units)
                 foreach (var status in owner.Statuses)
                     if (IsPendingHpStart(owner, status) || IsPendingRoundStart(owner, status)
+                        || IsPendingLogicStart(status)
                         || IsPendingStackCountStart(owner, status)) return true;
             return false;
         }
@@ -117,6 +124,25 @@ namespace Zjcs.Combat.Official
             context.ActionDuration = Math.Max(context.ActionDuration, actionDuration);
         }
 
+        private void ApplyLogicStart(FightBattleUnitState owner, FightBattleStatusState status)
+        {
+            if (!IsPendingLogicStart(status) || movementStartContext == null || statusCatalog == null)
+                return;
+            var invocations = new List<FightBattleStatusSkillInvocation>();
+            if (!status.LogicSelfInitialized)
+            {
+                invocations.AddRange(FightStatusLogicRuntime.Apply(owner, status,
+                    FightStatusLogicEvent.StatusSelfInit, owner, owner, null, null, units,
+                    statusCatalog, random));
+                status.LogicSelfInitialized = true;
+            }
+            invocations.AddRange(FightStatusLogicRuntime.Apply(owner, status,
+                FightStatusLogicEvent.StatusStart, owner, owner, null, null, units,
+                statusCatalog, random));
+            status.LogicStartInitialized = true;
+            ExecuteHpStartupSkills(invocations);
+        }
+
         private FightBattleExecutionResult ExecutePendingStatusStarts(int sequence, int counter)
         {
             if (!HasPendingStatusStarts()) return null;
@@ -144,11 +170,13 @@ namespace Zjcs.Combat.Official
                         for (int index = statuses.Count - 1; index >= 0; index--)
                             if (owner.Statuses.Contains(statuses[index])
                                 && (IsPendingHpStart(owner, statuses[index]) || IsPendingRoundStart(owner, statuses[index])
+                                    || IsPendingLogicStart(statuses[index])
                                     || IsPendingStackCountStart(owner, statuses[index])))
                             {
                                 if (firstOwner == null) firstOwner = owner;
                                 changed += StartHpStatus(owner, statuses[index]);
                                 changed += StartRoundStatus(owner, statuses[index]);
+                                ApplyLogicStart(owner, statuses[index]);
                                 if (IsPendingStackCountStart(owner, statuses[index]))
                                     OnStatusStackChanged(statuses[index]);
                             }

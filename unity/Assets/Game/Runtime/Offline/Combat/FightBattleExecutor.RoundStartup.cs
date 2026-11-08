@@ -152,7 +152,13 @@ namespace Zjcs.Combat.Official
         {
             foreach (var status in new List<FightBattleStatusState>(owner.Statuses))
                 if (owner.Statuses.Contains(status))
+                {
                     ExecuteRoundStartStatus(owner, listener, status, false, phase);
+                    var logicInvocations = FightStatusLogicRuntime.Apply(owner, status,
+                        FightStatusLogicEvent.RoundStart, owner, listener, null, null, units,
+                        statusCatalog, random);
+                    if (logicInvocations.Count > 0) ExecuteHpStartupSkills(logicInvocations);
+                }
             ExecuteMissingRoundInterval(owner, listener);
         }
 

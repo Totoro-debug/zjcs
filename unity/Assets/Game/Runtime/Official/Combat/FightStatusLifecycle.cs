@@ -540,6 +540,14 @@ namespace Zjcs.Combat.Official
                 ShieldRemainValue = template.ShieldRemainValue,
                 ShieldInitialized = template.ShieldInitialized,
                 ShieldGrantPending = template.ShieldKind != FightBattleShieldKind.None,
+                HasLogicComponent = template.HasLogicComponent,
+                LogicDefinitionResolved = template.LogicDefinitionResolved,
+                LogicRulesSupported = template.LogicRulesSupported,
+                LogicDefinitionJson = template.LogicDefinitionJson,
+                LogicSelfInitialized = template.LogicSelfInitialized,
+                LogicStartInitialized = template.LogicStartInitialized,
+                LogicTriggeredCount = template.LogicTriggeredCount,
+                LogicBlackboard = CopyLogicBlackboard(template.LogicBlackboard),
                 FalloffTarget = template.FalloffTarget,
                 DamageId = template.DamageId,
                 RootSkillIds = template.RootSkillIds == null ? Array.Empty<int>() : (int[])template.RootSkillIds.Clone(),
@@ -721,6 +729,16 @@ namespace Zjcs.Combat.Official
         private static List<int> Copy(List<int> values)
         {
             return values == null ? new List<int>() : new List<int>(values);
+        }
+
+        private static List<FightBattleLogicBlackboardValue> CopyLogicBlackboard(
+            List<FightBattleLogicBlackboardValue> values)
+        {
+            var result = new List<FightBattleLogicBlackboardValue>();
+            if (values != null)
+                foreach (FightBattleLogicBlackboardValue value in values)
+                    if (value != null) result.Add(value.Copy());
+            return result;
         }
 
         private static List<FightBattleStatusStateTrigger> CopyTriggers(

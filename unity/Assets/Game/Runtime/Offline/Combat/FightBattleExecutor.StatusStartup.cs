@@ -65,6 +65,23 @@ namespace Zjcs.Combat.Official
             statusMutex.Remove(owner, ended);
             if (statusCatalog != null && ended != null && ended.HasPropertyComponent)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
+            if (movementStartContext != null && statusCatalog != null && owner != null && ended != null)
+            {
+                var logicInvocations = FightStatusLogicRuntime.Apply(owner, ended,
+                    FightStatusLogicEvent.StatusEnd, owner, owner, null, null, units,
+                    statusCatalog, random);
+                if (logicInvocations.Count > 0)
+                {
+                    float logicDelay = 0f;
+                    ExecuteConfiguredStatusSkills(logicInvocations, movementStartContext.Casts,
+                        movementStartContext.DamageEvents, movementStartContext.Movements,
+                        ref logicDelay, out float logicDuration, out float logicActionDuration);
+                    movementStartContext.Duration = Math.Max(movementStartContext.Duration,
+                        Math.Max(logicDelay, logicDuration));
+                    movementStartContext.ActionDuration = Math.Max(movementStartContext.ActionDuration,
+                        logicActionDuration);
+                }
+            }
             if (movementStartContext == null || statusCatalog == null || owner == null
                 || owner.Ended || ended == null || ended.ActionType != 70) return;
             foreach (var listener in new System.Collections.Generic.List<FightBattleStatusState>(owner.Statuses))
@@ -93,6 +110,27 @@ namespace Zjcs.Combat.Official
             // existing entity does not enter this callback.
             FightStatusLifecycle.Initialize(status, StatusClockRound(status));
             InitializeRoundStartDelay(status);
+            var logicInvocations = new System.Collections.Generic.List<FightBattleStatusSkillInvocation>();
+            if (!status.LogicSelfInitialized)
+            {
+                logicInvocations.AddRange(FightStatusLogicRuntime.Apply(owner, status,
+                    FightStatusLogicEvent.StatusSelfInit, owner, owner, null, null, units,
+                    statusCatalog, random));
+                status.LogicSelfInitialized = true;
+            }
+            logicInvocations.AddRange(FightStatusLogicRuntime.Apply(owner, status,
+                FightStatusLogicEvent.StatusStart, owner, owner, null, null, units,
+                statusCatalog, random));
+            if (logicInvocations.Count > 0)
+            {
+                float logicDelay = Math.Max(0f, context.StatusStartTime);
+                ExecuteConfiguredStatusSkills(logicInvocations, context.Casts, context.DamageEvents,
+                    context.Movements, ref logicDelay, out float logicDuration,
+                    out float logicActionDuration);
+                context.Duration = Math.Max(context.Duration, Math.Max(logicDelay, logicDuration));
+                context.ActionDuration = Math.Max(context.ActionDuration, logicActionDuration);
+            }
+            status.LogicStartInitialized = true;
             ApplyMissingStatusStart(owner, status);
             StartHpStatus(owner, status);
             StartRoundStatus(owner, status);

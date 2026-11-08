@@ -1113,6 +1113,31 @@ namespace Zjcs.Combat.Official
         public bool ShieldInitialized;
         // Set only by a successful new lifecycle application, never inferred from a restored shield.
         public bool ShieldGrantPending;
+        // Original FightStatusLogicComponent data is retained per status instance.  The APK
+        // exposes only an empty client shell, so the offline executor must keep the exact
+        // polymorphic graph and its persistent blackboard values in the checkpoint.
+        public bool HasLogicComponent;
+        public bool LogicDefinitionResolved;
+        public bool LogicRulesSupported;
+        public string LogicDefinitionJson;
+        public bool LogicSelfInitialized;
+        public bool LogicStartInitialized;
+        public int LogicTriggeredCount;
+        public List<FightBattleLogicBlackboardValue> LogicBlackboard =
+            new List<FightBattleLogicBlackboardValue>();
+    }
+
+    [Serializable]
+    public sealed class FightBattleLogicBlackboardValue
+    {
+        public int KeyId;
+        public int ValueType;
+        public long LongValue;
+        public double DoubleValue;
+        public bool BoolValue;
+        public int EntityId;
+
+        public FightBattleLogicBlackboardValue Copy() => (FightBattleLogicBlackboardValue)MemberwiseClone();
     }
 
     [Serializable]

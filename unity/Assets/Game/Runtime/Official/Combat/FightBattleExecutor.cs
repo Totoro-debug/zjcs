@@ -409,6 +409,15 @@ namespace Zjcs.Combat.Official
             {
                 List<FightBattleStatusSkillInvocation> roundEndSkills =
                     FightStatusTriggerRuntime.CollectRoundEndSkills(actor, units, random, checkpoint.GridItems);
+                foreach (FightBattleUnitState logicOwner in new List<FightBattleUnitState>(units))
+                {
+                    if (logicOwner == null || logicOwner.Statuses == null) continue;
+                    foreach (FightBattleStatusState logicStatus in new List<FightBattleStatusState>(logicOwner.Statuses))
+                        if (logicStatus != null && logicOwner.Statuses.Contains(logicStatus))
+                            roundEndSkills.AddRange(FightStatusLogicRuntime.Apply(logicOwner, logicStatus,
+                                FightStatusLogicEvent.RoundEnd, actor, actor, null, null, units,
+                                statusCatalog, random));
+                }
                 if (roundEndSkills.Count > 0)
                 {
                     float triggerDelay = 0f;
@@ -1031,6 +1040,18 @@ namespace Zjcs.Combat.Official
                     CollectHitTriggerSkill(actor, target, skill, hit, configuredComponentInvocations);
                     ApplyMissingStatusComponentsOnHit(actor, target, skill, hit, resolved,
                         actualHpLoss, configuredComponentInvocations);
+                    foreach (FightBattleUnitState logicOwner in new[] { actor, target })
+                    {
+                        if (logicOwner == null || logicOwner.Statuses == null) continue;
+                        foreach (FightBattleStatusState logicStatus in new List<FightBattleStatusState>(logicOwner.Statuses))
+                        {
+                            if (logicStatus == null || !logicOwner.Statuses.Contains(logicStatus)) continue;
+                            configuredComponentInvocations.AddRange(FightStatusLogicRuntime.Apply(logicOwner,
+                                logicStatus, ReferenceEquals(logicOwner, actor)
+                                    ? FightStatusLogicEvent.DoDamage : FightStatusLogicEvent.BeDamage,
+                                actor, target, skill, hit, units, statusCatalog, random));
+                        }
+                    }
                     ApplyResilienceHit(actor, target, skill, hit, resolved, casts,
                         damageEvents, movements, ref lastDelay);
                     ApplyHitDisperse(actor, target, hit, random);
@@ -1049,6 +1070,12 @@ namespace Zjcs.Combat.Official
                         executeHpSkills: ExecuteHpStartupSkills);
                     ApplyHpIncreaseTriggers(target, targetHpIncrease, skill);
                     if (recoveredHp > 0) ApplyHpIncreaseTriggers(actor, recoveredHp, skill);
+                    if (target.Statuses != null)
+                        foreach (FightBattleStatusState logicStatus in new List<FightBattleStatusState>(target.Statuses))
+                            if (logicStatus != null && target.Statuses.Contains(logicStatus))
+                                configuredComponentInvocations.AddRange(FightStatusLogicRuntime.Apply(target,
+                                    logicStatus, FightStatusLogicEvent.AfterBeDamage, actor, target,
+                                    skill, hit, units, statusCatalog, random));
                     RebuildBattleProperties();
                     float endedDuration = 0f, endedActionDuration = -1f;
                     ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
@@ -1117,6 +1144,11 @@ namespace Zjcs.Combat.Official
                 if (FightStatusTriggerRuntime.ApplySkillEndStatuses(actor, skill, units,
                     statusCatalog, random, actionEndSkills) > 0)
                     RebuildBattleProperties();
+                foreach (FightBattleStatusState logicStatus in new List<FightBattleStatusState>(actor.Statuses))
+                    if (logicStatus != null && actor.Statuses.Contains(logicStatus))
+                        actionEndSkills.AddRange(FightStatusLogicRuntime.Apply(actor, logicStatus,
+                            FightStatusLogicEvent.SkillEnd, actor, actor, skill, null, units,
+                            statusCatalog, random));
                 if (actionEndSkills.Count > 0)
                 {
                     ExecuteConfiguredStatusSkills(actionEndSkills, casts, damageEvents,

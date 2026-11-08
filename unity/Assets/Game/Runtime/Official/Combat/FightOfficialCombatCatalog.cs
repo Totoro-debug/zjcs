@@ -995,6 +995,8 @@ namespace Zjcs.Combat.Official
                 Component(components, "FightStatusHpAccDecreaseComponent");
             Dictionary<string, object> unflinchingOnDamage =
                 Component(components, "FightStatusUnflinchingOnDamageComponent");
+            Dictionary<string, object> logicComponent =
+                Component(components, "FightStatusLogicComponent");
             Dictionary<string, object> skillCondition =
                 Component(components, "FightStatusSkillConditionComponent");
             Dictionary<string, object> damageCustomProps =
@@ -1031,6 +1033,12 @@ namespace Zjcs.Combat.Official
                     && Bool(Component(components, "StatusEndComponent"), "RemoveApplyEntity"),
                 ActionType = action == null ? 0 : Int(action, "ActionType"),
                 HasBackToLifeComponent = HasBackToLifeComponent(classId),
+                HasLogicComponent = logicComponent != null,
+                LogicDefinitionResolved = logicComponent != null
+                    && logicComponent.TryGetValue("Triggers", out object logicTriggers)
+                    && logicTriggers is List<object>,
+                LogicRulesSupported = logicComponent != null,
+                LogicDefinitionJson = logicComponent == null ? null : OfficialJson.Stringify(logicComponent),
                 SkillReplay = ReadStatusReplay(components),
                 DurationRound = durationRound,
                 CurDurationRound = durationRound,
@@ -3667,6 +3675,80 @@ namespace Zjcs.Combat.Official
             parser.Space();
             if (parser.position != text.Length) throw parser.Error("Trailing JSON content");
             return value;
+        }
+
+        // The combat catalog keeps the original polymorphic component graph as dictionaries.
+        // A small canonical writer lets runtime state retain only the component that belongs to
+        // a status, so a checkpoint can restore the same official logic graph without exposing
+        // the parser's mutable dictionaries to gameplay code.
+        public static string Stringify(object value)
+        {
+            var builder = new StringBuilder();
+            WriteValue(builder, value);
+            return builder.ToString();
+        }
+
+        private static void WriteValue(StringBuilder builder, object value)
+        {
+            if (value == null) { builder.Append("null"); return; }
+            if (value is string text)
+            {
+                builder.Append('"');
+                foreach (char ch in text)
+                {
+                    switch (ch)
+                    {
+                        case '"': builder.Append("\\\""); break;
+                        case '\\': builder.Append("\\\\"); break;
+                        case '\b': builder.Append("\\b"); break;
+                        case '\f': builder.Append("\\f"); break;
+                        case '\n': builder.Append("\\n"); break;
+                        case '\r': builder.Append("\\r"); break;
+                        case '\t': builder.Append("\\t"); break;
+                        default:
+                            if (ch < 0x20) builder.Append("\\u").Append(((int)ch).ToString("x4"));
+                            else builder.Append(ch);
+                            break;
+                    }
+                }
+                builder.Append('"');
+                return;
+            }
+            if (value is bool boolean) { builder.Append(boolean ? "true" : "false"); return; }
+            if (value is IDictionary<string, object> dictionary)
+            {
+                builder.Append('{');
+                bool first = true;
+                foreach (var pair in dictionary)
+                {
+                    if (!first) builder.Append(',');
+                    first = false;
+                    WriteValue(builder, pair.Key);
+                    builder.Append(':');
+                    WriteValue(builder, pair.Value);
+                }
+                builder.Append('}');
+                return;
+            }
+            if (value is IEnumerable<object> sequence)
+            {
+                builder.Append('[');
+                bool first = true;
+                foreach (object item in sequence)
+                {
+                    if (!first) builder.Append(',');
+                    first = false;
+                    WriteValue(builder, item);
+                }
+                builder.Append(']');
+                return;
+            }
+            if (value is IFormattable formattable)
+            {
+                builder.Append(formattable.ToString(null, CultureInfo.InvariantCulture));
+                return;
+            }
+            throw new InvalidOperationException("Unsupported official JSON value: " + value.GetType());
         }
 
         private object Value()
