@@ -919758,11 +919758,11 @@
       },
       "migrated": {
         "path": "unity/Assets/Spine/Runtime/spine-unity/Asset Types/SpineAtlasAsset.cs",
-        "sha256": "c5fa815e0d9015e3fbc7e7737f0e08e248c0706404dd35aa169fb7b7893dd858"
+        "sha256": "1b4f8140bb0912e5e57143a00948d79d4dadd8d9fae67ed7402a3d623efbfb9d"
       },
       "migrated_script": {
         "path": "unity/Assets/Spine/Runtime/spine-unity/Asset Types/SpineAtlasAsset.cs",
-        "sha256": "c5fa815e0d9015e3fbc7e7737f0e08e248c0706404dd35aa169fb7b7893dd858"
+        "sha256": "1b4f8140bb0912e5e57143a00948d79d4dadd8d9fae67ed7402a3d623efbfb9d"
       },
       "migrated_meta": {
         "path": "unity/Assets/Spine/Runtime/spine-unity/Asset Types/SpineAtlasAsset.cs.meta",
@@ -920031,7 +920031,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_skill_graph_assets.py",
-    "sha256": "cf453b74ce170e4695099d51495a5c89e477aa31f6f21aa0118660f5f1cd5fb6"
+    "sha256": "cb72f8f4bd66e851baaf4890687bf71bb5580711de50c015da6058d43a20f382"
   },
   "graph_asset_adapter": {
     "path": "scripts/prepare_battle_status_orbit_assets.py",
@@ -1090216,7 +1090216,7 @@
     },
     {
       "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110.prefab",
-      "sha256": "72e395121ca9cd3b54dac3493a70201693b9de8914ca1f3423fc633f25d94f84"
+      "sha256": "f52b7427760b869ac745022ffe277707b7973c17b5501221f6dcb1ad4f1fe043"
     },
     {
       "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110.prefab.meta",
@@ -1090224,7 +1090224,7 @@
     },
     {
       "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110down.prefab",
-      "sha256": "a9615392430f8a172bbf3c4791612bfee61aa9e5b414578e546ba7aa519dff51"
+      "sha256": "bc5a32609707f857b79f055fdd852b38df771e56e11fd41f1dc519cdfed48fc2"
     },
     {
       "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110down.prefab.meta",
@@ -1090232,7 +1090232,7 @@
     },
     {
       "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110up.prefab",
-      "sha256": "e4c67561158dba30721f3b6affa6e42aa7c3800f8016efe3793ddb2b8f9bd07a"
+      "sha256": "ae2c3d5f15575bb3213d53892985363c04c52dfd29018e39471af7c6c249f8ca"
     },
     {
       "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110up.prefab.meta",
@@ -1121297,6 +1121297,14 @@
     {
       "path": "unity/Assets/Official/Combat/SkillGraphRuntime.meta",
       "sha256": "3e7e021ef134a0d12eb735af10e3d152bf73f6a306c67b5f35e3931d8f2cbd00"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AnimationClip/Eff_Monster_3511_Skill02_3.legacy.anim",
+      "sha256": "56e9daf03155209605936957cac74a0444d239d8d25b481c83a85c7ead5859f0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AnimationClip/Eff_Monster_3511_Skill02_3.legacy.anim.meta",
+      "sha256": "67cea12de7b7c0c1b4ec25a8e8f8a5d9436b44b7e98f676e4bcf46e324328426"
     }
   ],
   "operation": "Full original graphs: no components, sequence leaves or local objects removed. Preserve native local fileIDs, transforms, particles, orbit configuration and dependencies. Remap migrated application scripts/GUIDs, decode all original texture mips through hash-matched conversion cache and use verified full Windows shaders.",
@@ -1150183,5 +1150191,9 @@
       "70150/playable70150_Down.prefab",
       "70150/playable70150_Up.prefab"
     ]
+  },
+  "legacy_animation_binding_adapter": {
+    "path": "scripts/prepare_battle_legacy_animation_bindings.py",
+    "sha256": "cfe66be07604ee2912201e4ae4e66c182d72f769b257829bcc399731395e72a3"
   }
 }

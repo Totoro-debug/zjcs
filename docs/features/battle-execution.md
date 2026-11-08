@@ -14,6 +14,10 @@
 
 官方代码、配置和资源的输入版本、哈希与处理方法见[来源总览](../../assets/reference/SOURCES.md)。
 
+原 `AppearanceOnDemandTextureLoader.GetPlaceholderTextureName` 返回图集页名加 `_placeholder`。部分导出图集在外观加载器绑定前即被解析；原生材质加载适配仅在加载器未绑定时接受这个原命名，保留已绑定加载器的原查询。使用现存材质及其贴图，不改名、不重绘，也不把占位页视为完整换装贴图；来源见[图集占位页绑定](../../assets/reference/battle-animation/atlas-placeholder-binding-source-manifest.json)。
+
+官方 63110 技能图的 `Eff_Monster_3511_Skill02_3` 同时被 Animator 控制器和三个自动播放的 `Animation` 对象引用，原包的片段 `m_Legacy` 为 false。Windows 适配为这三个 `Animation` 引用生成仅将 `m_Legacy` 设为 true 的副本，保留全部原曲线、事件及其他字段；Animator 仍引用原非 Legacy 片段。来源与确定性转换见[动画双用途绑定](../../assets/reference/battle-animation/legacy-animation-bindings-source-manifest.json)；该适配不代表该技能整套表现已验证。
+
 所选版本共享代码 `Common/GridGroundComponent.EnterPosSub` 将同一实体登记到 `GridTransformComponentInfo.BodyRangeInfos` 的各个身体格，`GetPosEntitys` 按格返回实体集合。客户端 `MyFightAI` 只有空代理，未包含服务端选敌和接近决策；下方身体格选敌规则属于用户确认的单机实现。
 
 `MyFightHitBase.PlayScopePlayable` 通过命中实体的 `GridTransform.LocalToWorldPos(scope.Pos)` 放置各命中格。原 `GridTransformComponent.CalcLocalToWorldDir` 保留 `RealCenter`，先做 X 翻转，再调用 `MyMath.Rotate`，最后用 `Math.Round` 转回整数格；`Common.Direction` 为 Up=0、Down=1、Left=2、Right=3，与本地 AI 的四向索引不同。`FightGridTransformMath` 已移植这段计算，来源及哈希见[格网变换清单](../../assets/reference/battle-rules/grid-transform-source-manifest.json)。命中实体创建时的方向／翻转赋值是服务端缺口，单机处理见下方用户确认规则。
@@ -77,6 +81,7 @@
 - 官方服务器缺失的 AI、随机、结果裁决及复杂触发条件尚未完整恢复；未确认的行为不作推测。
 - 完整技能／命中／状态覆盖、同来源与叠层边界、特殊组件时序和实体生命周期仍有缺项。身体格选敌／接近和命中局部坐标变换已有指定原技能的 Play Mode 回归，尚未完成全部技能与 Windows Player 验证。
 - 原人物、NPC、幻兽、召唤物的完整模型、动作、骨骼、挂点、粒子、音频和材质表现尚未全部接通。
+- 命中实体的原生表现生命周期尚未接通：`MyFightHitBase` 的施法起点到命中位置连线、命中自身 Playable、逐范围格 Playable 及其延迟／清理，以及 `MyFightHitChained` 的前一命中起点仍须迁移。现有 `MyFightSkill` 原生技能图播放和伤害飘字不包含这些命中实体表现。
 - 正式入口中的准备输入、战斗过程、胜负返回、存档恢复、模拟鼠标交互和 Windows Player 尚未完成整体验收。
 - 活动挑战、私有副本和裂隙的退出事务尚未完整接通；已接线玩法仍须分别完成奖励页面及整体验证，公共按钮可用不代表所有玩法完成。
 
@@ -89,7 +94,10 @@
 - 官方格网变换与原配置命中选择检查通过：四个原方向、半格中心、翻转先于旋转、ties-to-even 舍入及未知方向回退；原 10011 的三段四向命中、技能开始方向快照、已复现的魔王身体边缘位置、56051 半格中心、随机父范围及旧检查点补全均通过。原有命中区域、选敌与原配置回合目标回归在当前代码上通过；接近结束后出手的步骤时序、连锁时序、技能位移、命中延迟、击退／拉拽及宠物支援回归通过。
 - 原 10011／4800 已通过内置屏 Play Mode 回归：使用原地图、魔王占格、技能、命中配置和公式，以及受控生命／攻击夹具，模拟点击开始，角色从 `(6,14)` 沿原移动配置接近到 `(10,14)`，三段仅各生成一次对魔王的伤害；移动位置实际随播放变化。检查原技能实体创建时角色已在最终落点，技能与命中延迟不早于原移动结束；已查看接近、挥剑、命中与冷恢复运行画面。销毁会话并从磁盘重开后，行动计数、魔王生命及技能状态保持一致，原 HUD 的 Show 动画完成后完整显示。Unity 编译、`ProjectTools.Validate` 和静态元数据检查通过；场景仍有既有无 AudioListener 提示，未验证音效输出。
 - 公共速度初始化收口已通过 Unity 编译和 `ProjectTools.Validate`；阶段机制、技能位移、战报及 Map10 战斗集成规则检查通过，静态元数据检查通过。
-- 行动进度 HUD 已按官方 `GameRoundUI` 的 `CurActingEntityId` 优先顺序修复；内置屏 Play Mode 专项验证通过，覆盖行动者重排、行动切换、检查点序列化恢复、死亡移除及空队列。Windows Mono Player 构建成功；指定参考竖屏尺寸后，正式发布目录的技能伤害 Player 自检通过真实战斗、结果页、报告切换及返回设置，并检查隔离存档和运行截图。Arena 战报 Player 自检首次确认入口卡片位于 Travel Notes 滚动区下方；现已改为模拟原滚轮输入并采样原始 Graphic 命中区域，但隔离 Player 重建被并行编辑的 `FightStatusLogicRuntime.cs` 未定义成员编译错误阻断，更新后的 Arena 入口专项尚未通过。
+- 63110 三个原 `Animation` 引用经 Unity 加载及内置屏 Play Mode 检查通过：Animator 保留原非 Legacy 片段，三个 `Animation` 使用兼容副本；在受控播放夹具中逐帧核对计时和原旋转曲线确实驱动对象，已查看三个原特效运行画面。夹具仅降低播放速率以避开加载长帧，生产片段及参数保持原样；未覆盖该技能主图、命中图、目标、全段时序或正式战斗生命周期，不能视为 63110 整技能演出完成。
+- 图集占位页绑定经 Unity 实际加载核对，`npc_middle_model_Atlas` 的 168 个原图集页均解析到原材质及原贴图；此前这些页在构建时逐项报缺少材质。转换器也验证了 Git 原输入的 LF／CRLF 处理与重复执行；更新后的隔离 Windows Mono Player 已完成竞技场结果流程；完整换装贴图及所有角色动画仍须分别验证。
+- 行动进度 HUD 已按官方 `GameRoundUI` 的 `CurActingEntityId` 优先顺序修复；内置屏 Play Mode 专项验证通过，覆盖行动者重排、行动切换、检查点序列化恢复、死亡移除及空队列。Windows Mono Player 构建成功；指定参考竖屏尺寸后，正式发布目录的技能伤害 Player 自检通过真实战斗、结果页、报告切换及返回设置，并检查隔离存档和运行截图。
+- Arena 结果自检兼容原生旅行页不含 `ScrollRect` 的布局；有滚动容器时仍模拟原滚轮，并采样原 Graphic 的实际射线命中区域。运行复现了 884 旅行页生成绑定遗漏 `NoDrawingRayCast`、按钮采样点命中 `Bg` 的问题。按同一官方 bundle 及原对象哈希运行 `prepare_travel_entry_layout.py`，恢复 3 个 `SafeArea`、1 个比例适配器、10 个透明射线 Graphic 和 3 个入口按钮引用后，隔离内置屏 Play Mode 通过真实胜利、失败、取消／确认退出判负和直接胜利；检查扣票、对应奖励、战报两次打开及存档去重，并已查看实际结算、统计和返回截图。主工程恢复后的绑定与该验证副本 SHA-256 一致；旅行页及竞技场宿主页仍有既有贴图／材质和动态文本缺项。Unity 编译、`ProjectTools.Validate` 和静态元数据检查通过；隔离 Windows Mono Player 构建成功，内置屏实际启动后以模拟指针完成同样四种结果、奖励、两次战报开关和返回流程，检查磁盘结算去重，已查看运行截图；验证存档独立于用户目录，验证前后用户存档文件哈希一致。构建／导入仍出现既有缺失脚本及 Burst 插件引用诊断，不代表全工程资源问题已消除。
 - 内置屏 Play Mode 的日常副本、竞技场、幻想塔和周常公共宿主回归通过，检查了模拟准备／速度输入、实际战斗推进、演出后结果回调、官方速度初始化及最终战报。已查看准备、战斗和返回画面；返回页仍可见已有贴图／表现缺项，逻辑通过不表示完整美术还原。
 - 活动 209／212／226／217 使用生产 `BeginChallenge` 和官方关卡、类型、期次与次数配置，公共宿主 Play Mode 回归通过，检查实际战斗推进、演出后结算回调、统计及宿主恢复，并查看四项配置的准备／战斗画面。这是公共战斗 seam 的验证；正式活动页仍在战斗启动前因 `GoToBtn` 不在可交互层级而失败，不能据此前者宣称活动页面入口通过。
 - 竞技场真实战斗后的全人物公共战报已通过内置屏 Play Mode 回归：玩家／技能页切换、逐人选择、技能统计与真实记录对应、空技能统计、水平拖动、关闭及重开通过。回归特意安装无关的宿主页全局文案解析器，确认标题、列名和动态统计行仍使用官方文案，且全局解析器未被替换；已查看双方汇总及对手技能统计的运行截图。

@@ -1,0 +1,103 @@
+{
+  "manifest": "884_156692",
+  "original_clip": {
+    "source": {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_63110.bundle",
+      "bundle_hash": "775a866033c06fc6a60c520800c9a092",
+      "path_id": "8527544002861423624",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/775a866033c06fc6a60c520800c9a092.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 267803,
+      "bundle_sha256": "a6fa206dd7efdf3828024ef6f6368789736290b618c666206e2caceae1bd2d47"
+    },
+    "object_sha256": "574a5b77db31d79e7e96e691a093302191bc4a031a2a68bb8ee317a3b7c5ece0",
+    "name": "Eff_Monster_3511_Skill02_3",
+    "legacy": false
+  },
+  "native_export_receipt": {
+    "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json",
+    "sha256": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c"
+  },
+  "native_inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AnimationClip/Eff_Monster_3511_Skill02_3.anim",
+      "sha256": "6b900ff03a105800dde87b215b098d546e7c10a07ce3f0fb79301a53553e744e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AnimationClip/Eff_Monster_3511_Skill02_3.anim.meta",
+      "sha256": "c5f7c60699ccdc906cf0ed45562fa26c2452b0df0b1dcef92286b6dc8abfee5b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110.prefab",
+      "sha256": "3743db9fdca73e341854f563590865157ebf5d0ab05a3f2d129c8993e75d353e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110.prefab.meta",
+      "sha256": "7a5f3a0e567b6899685edab77c8355b810c983dbb7f1344c06521c047f91ed06"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110up.prefab",
+      "sha256": "b1f05590633cd20a08ed46ee61ae82ee68a81a3382a9a3fbcc7ed730d00f7664"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110up.prefab.meta",
+      "sha256": "11a085ca617ba934169727ec8cf2d44da0c8ca34f52be1b158c0204e584983fd"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110down.prefab",
+      "sha256": "e177fe6c37004d637d760c2df56a7b08f8833d7c4ca569453246e91e9a299d4b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110down.prefab.meta",
+      "sha256": "0dbaa642ce85a8d55516da45e16d90070ca3a1b41cdfbebcfae9226c9cf39940"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_legacy_animation_bindings.py",
+    "sha256": "cfe66be07604ee2912201e4ae4e66c182d72f769b257829bcc399731395e72a3"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AnimationClip/Eff_Monster_3511_Skill02_3.legacy.anim",
+      "sha256": "56e9daf03155209605936957cac74a0444d239d8d25b481c83a85c7ead5859f0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AnimationClip/Eff_Monster_3511_Skill02_3.legacy.anim.meta",
+      "sha256": "67cea12de7b7c0c1b4ec25a8e8f8a5d9436b44b7e98f676e4bcf46e324328426"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110.prefab",
+      "sha256": "f52b7427760b869ac745022ffe277707b7973c17b5501221f6dcb1ad4f1fe043"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110up.prefab",
+      "sha256": "ae2c3d5f15575bb3213d53892985363c04c52dfd29018e39471af7c6c249f8ca"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110down.prefab",
+      "sha256": "bc5a32609707f857b79f055fdd852b38df771e56e11fd41f1dc519cdfed48fc2"
+    }
+  ],
+  "bindings": [
+    {
+      "prefab": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110.prefab",
+      "original_animation_component": "--- !u!111 &111641631609468814",
+      "animator_clip_guid": "5f3dc8a1482f54a3948d307f0d380e7e",
+      "animation_clip_guid": "7541ae1c0b6555e2aabe34fbc49240c3"
+    },
+    {
+      "prefab": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110up.prefab",
+      "original_animation_component": "--- !u!111 &111641631609468814",
+      "animator_clip_guid": "5f3dc8a1482f54a3948d307f0d380e7e",
+      "animation_clip_guid": "7541ae1c0b6555e2aabe34fbc49240c3"
+    },
+    {
+      "prefab": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/63110/playable63110down.prefab",
+      "original_animation_component": "--- !u!111 &111641631609468814",
+      "animator_clip_guid": "5f3dc8a1482f54a3948d307f0d380e7e",
+      "animation_clip_guid": "7541ae1c0b6555e2aabe34fbc49240c3"
+    }
+  ],
+  "operation": "Preserve every original curve, event and clip setting. Copy the dual-use non-Legacy clip with only m_Legacy=1 for the three original Animation consumers. Animator controllers retain the original non-Legacy clip."
+}

@@ -1,0 +1,33 @@
+{
+  "manifest": "884_156692",
+  "official_source": {
+    "path": "official-source.json",
+    "sha256": "a29067dd1363590c8fde67a7d5326fcb5a4632441e8c73ae8b64300aa491a3a6"
+  },
+  "source": {
+    "path": ".tools/source-packages/official-code/client-source/AppearanceSystem.Runtime/AppearanceOnDemandTextureLoader.cs",
+    "sha256": "2b3619bb979fce0483e373c14bd8854c2848a228d0ab5743695815da7eda7463",
+    "method": "AppearanceOnDemandTextureLoader.GetPlaceholderTextureName"
+  },
+  "native_loader_input": {
+    "path": "unity/Assets/Spine/Runtime/spine-unity/Asset Types/SpineAtlasAsset.cs",
+    "sha256": "c5fa815e0d9015e3fbc7e7737f0e08e248c0706404dd35aa169fb7b7893dd858",
+    "lf_sha256": "81d6e94c9b37647613a1bc9561191b32b8264225b7a5bfda22f0b61d7de995b2"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Spine/Runtime/spine-unity/Asset Types/SpineAtlasAsset.cs",
+      "sha256": "1b4f8140bb0912e5e57143a00948d79d4dadd8d9fae67ed7402a3d623efbfb9d"
+    },
+    {
+      "path": "assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json",
+      "sha256": "3b0c2f186637e56ed1f2806376b65cbb87df926c51a814f2712f050c356b0a69"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_atlas_placeholder_binding.py",
+    "sha256": "91a2ac8a1b31d3cdaac4563cb65ec06a4702f90ddb5592647ec9cca9f4751622"
+  },
+  "binding": "MaterialsTextureLoader.Load matches the exact existing official placeholder material when the appearance loader is not yet bound; explicit loaders retain their own mapping.",
+  "payload_changes": "None; original atlas, materials, texture pixels, names and dimensions are preserved."
+}

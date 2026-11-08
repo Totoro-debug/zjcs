@@ -269,7 +269,10 @@ namespace Spine.Unity {
 					return;
 				}
 				string textureName = other.mainTexture.name;
+				// Official AppearanceOnDemandTextureLoader.GetPlaceholderTextureName:
+				// exported atlases can be parsed before their appearance loader is bound.
 				if (textureName == name ||
+					(atlasAsset.OnDemandTextureLoader == null && textureName == name + "_placeholder") ||
 					(atlasAsset.OnDemandTextureLoader != null &&
 					textureName == atlasAsset.OnDemandTextureLoader.GetPlaceholderTextureName(name))) {
 					material = other;

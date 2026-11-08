@@ -4,6 +4,10 @@
 
 本页只记录官方输入与来源凭据。各模块的原始实现、转换／绑定细节、当前实现和验证边界见所属功能／地图页；逐文件记录以模块来源清单为准。
 
+图集占位页命名取所选版本 `AppearanceSystem.Runtime/AppearanceOnDemandTextureLoader.GetPlaceholderTextureName`；原应用代码、既有图集加载器输入、适配输出及技能图引用凭据的哈希见[图集占位页绑定来源](battle-animation/atlas-placeholder-binding-source-manifest.json)，处理入口为 `scripts/prepare_battle_atlas_placeholder_binding.py`。不新增或修改美术载荷；实现与验证边界见[战斗执行](../../docs/features/battle-execution.md)。
+
+63110 技能图的原 `Eff_Monster_3511_Skill02_3` 片段及三个 `Animation` 引用来自同版官方缓存包与已校验原生导出；原对象、包／输出哈希、Legacy 副本及引用转换见[原动画双用途绑定来源](battle-animation/legacy-animation-bindings-source-manifest.json)，入口为 `scripts/prepare_battle_legacy_animation_bindings.py`，亦由技能图转换器调用。不重绘或重采样动画；功能及验证边界见[战斗执行](../../docs/features/battle-execution.md)。
+
 完整骨骼怪物输入取所选 `884_156692` 的20份原实体 prefab、完整骨骼二进制、AppearanceConfig／Low加载器、图集、材质及控制器闭包；按APK优先、已下载同版云缓存次序解析。原对象／包、固定MIT格式读取器、原生转换输入、控制器逐字段核对、21张原贴图全部ASTC mip至Unity RGBA32的转换与输出哈希见[完整骨骼怪物来源](battle-animation/live-monsters-source-manifest.json)。提取与绑定入口为 `scripts/prepare_battle_live_monsters.py`／`scripts/prepare_battle_live_monster_assets.py`；Unity仅提供原生纹理序列化模板，保留原图像、mip、色彩空间和采样参数。未生成完整素材快照；实现及验证边界见[战斗执行](../../docs/features/battle-execution.md)。
 
 当前怪物Animator状态绑定复用上述20份已核验控制器及原AnimationClip闭包；255个原状态路径、原Motion PPtr、空状态和重复动作状态均原样登记，不猜测别名。同时核验既有原死亡prefab的 `die` 持有／结束恢复字段；输入／输出、原死亡叶及 `MyPlayableOverrideAnimator` 应用代码SHA256见[怪物Animator状态绑定来源](battle-animation/monster-animator-bindings-source-manifest.json)，入口为 `scripts/prepare_battle_monster_animator_bindings.py`，运行通过 `Combat/monster-animator-bindings` 显式加载。此项仅增加文本绑定，不新增／重绘美术或生成完整素材快照；接入与验证范围见[战斗执行](../../docs/features/battle-execution.md)。

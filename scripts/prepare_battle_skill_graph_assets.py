@@ -166,6 +166,8 @@ def main():
     proof['outputs'] = [identity(DATA) if row['path'] == DATA.relative_to(ROOT).as_posix()
                         else row for row in proof['outputs']]
     write_changed(RECEIPT, json.dumps(proof, ensure_ascii=False, indent=2) + '\n')
+    from prepare_battle_legacy_animation_bindings import prepare as prepare_legacy_animations
+    prepare_legacy_animations()
     print('Active-version skill graph bindings:', len(skills),
           'official skill entities;', len(roots), 'directed graph roots;',
           len(set(resources.values())), 'distinct converted graph assets.')

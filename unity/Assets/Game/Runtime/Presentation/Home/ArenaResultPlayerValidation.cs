@@ -225,12 +225,16 @@ namespace Zjcs.Presentation.Home
         {
             Transform root = Root("TravelNotesPanel");
             ScrollRect scroll = root.GetComponentInChildren<ScrollRect>();
-            Check(scroll && scroll.viewport && scroll.content, "Travel Notes scroll container is missing.");
+            // The selected native panel can expose the cards without a ScrollRect.
+            // In that case Click still requires an unobstructed original raycast hit.
+            if (!scroll) yield break;
+            Check(scroll.content, "Travel Notes scroll content is missing.");
+            RectTransform viewport = scroll.viewport ? scroll.viewport : (RectTransform)scroll.transform;
             var pointer = new PointerEventData(EventSystem.current)
             {
                 button = PointerEventData.InputButton.Left,
                 position = RectTransformUtility.WorldToScreenPoint(null,
-                    scroll.viewport.TransformPoint(scroll.viewport.rect.center)),
+                    viewport.TransformPoint(viewport.rect.center)),
                 scrollDelta = new Vector2(0, -6)
             };
             GameObject arena = Root("ArenaAreaEntry").gameObject;
@@ -239,7 +243,7 @@ namespace Zjcs.Presentation.Home
                 Canvas.ForceUpdateCanvases();
                 Vector2 center = RectTransformUtility.WorldToScreenPoint(null,
                     ((RectTransform)arena.transform).TransformPoint(((RectTransform)arena.transform).rect.center));
-                if (RectTransformUtility.RectangleContainsScreenPoint(scroll.viewport, center)) yield break;
+                if (RectTransformUtility.RectangleContainsScreenPoint(viewport, center)) yield break;
                 ExecuteEvents.Execute(scroll.gameObject, pointer, ExecuteEvents.scrollHandler);
                 yield return null;
             }
