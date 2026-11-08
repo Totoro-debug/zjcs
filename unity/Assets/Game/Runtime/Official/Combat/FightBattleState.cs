@@ -1480,6 +1480,9 @@ namespace Zjcs.Combat.Official
     public sealed class FightBattleHitEntity
     {
         public int EntityId;
+        public string HitComponentType;
+        public FightBattleHitTrajectory Trajectory;
+        public float DestroyDelay;
         public int DamageId;
         public bool HasFixedDamage;
         public int DamageType;
@@ -1490,6 +1493,15 @@ namespace Zjcs.Combat.Official
         public List<int> ChainedHits = new List<int>();
         public List<int> CustomTargetHits = new List<int>();
         public List<int> RandomTargetHits = new List<int>();
+        // Every HitCfg is an occurrence, even when several edges refer to the same class.
+        // Keep the ID lists above for older checkpoint/executor compatibility.
+        public List<FightBattleHitLink> ChainedHitLinks = new List<FightBattleHitLink>();
+        public List<FightBattleHitLink> CustomTargetHitLinks = new List<FightBattleHitLink>();
+        public List<FightBattleHitLink> RandomTargetHitLinks = new List<FightBattleHitLink>();
+        public bool IsChained;
+        public bool Repeat;
+        public bool Back;
+        public bool PreferUnvisited;
         public int MiniHitTargetCount = 1;
         public bool NotSameTarget;
         public bool NotSameEmptyScope;
@@ -1508,6 +1520,8 @@ namespace Zjcs.Combat.Official
         public bool BreakResilience;
         public int ActionType = 4;
         public List<FightGridPoint> Scope = new List<FightGridPoint>();
+        // Original HitScopCfg entries, including their independent presentation/timing values.
+        public List<FightBattleHitScopeEntry> ScopeEntries = new List<FightBattleHitScopeEntry>();
         public FightBattleHitScopeTransform ScopeTransform;
         public bool AllowEmptyScope;
         public bool IgnoreShield;
@@ -1540,6 +1554,37 @@ namespace Zjcs.Combat.Official
         public int DisperseCount;
         public bool DisperseRandom;
         public FightBattleSkillMove HitMove;
+    }
+
+    [Serializable]
+    public sealed class FightBattleHitLink
+    {
+        public int EntityId;
+        public float Delay;
+        public int Anchor;
+        public bool IgnoreAICount;
+    }
+
+    [Serializable]
+    public sealed class FightBattleHitTrajectory
+    {
+        public float OffsetX, OffsetY, OffsetZ;
+        public float TargetOffsetX, TargetOffsetY, TargetOffsetZ;
+        public bool IsUseCenterRotation;
+        public float RotateCenterOffsetX, RotateCenterOffsetY, RotateCenterOffsetZ;
+    }
+
+    [Serializable]
+    public sealed class FightBattleHitScopeEntry
+    {
+        public FightGridPoint Position;
+        public float Delay;
+        public float DamageOffsetX, DamageOffsetY, DamageOffsetZ;
+        public float DamageRotationX, DamageRotationY, DamageRotationZ;
+        public float DamageRotationW = 1f;
+        public float DamageRotZOffset;
+        public bool FlipBySourceX = true;
+        public bool FlipByTargetY = true;
     }
 
     [Serializable]

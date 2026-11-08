@@ -3260,12 +3260,13 @@ namespace Zjcs.Combat.Official
         {
             Dictionary<string, object> summon = Component(components, "FightHitSummonComponent");
             Dictionary<string, object> damage = null;
+            string hitComponentType = null;
             foreach (string name in new[] { "FightHitSummonComponent", "FightHitChainedComponent",
                 "FightHitCustomTargetComponent", "FightHitRandomTargetComponent",
                 "FightHitFixedComponent", "FightHitTriggerSkillComponent" })
             {
                 damage = Component(components, name);
-                if (damage != null) break;
+                if (damage != null) { hitComponentType = name; break; }
             }
             Dictionary<string, object> hemophagia = Component(components, "FightHitExtHemophagiaComponent");
             Dictionary<string, object> chained = Component(components, "FightHitChainedComponent");
@@ -3274,6 +3275,11 @@ namespace Zjcs.Combat.Official
             var result = new FightBattleHitEntity
             {
                 EntityId = id,
+                HitComponentType = hitComponentType,
+                IsChained = chained != null,
+                Repeat = chained != null && Bool(chained, "Repeat"),
+                Back = chained != null && Bool(chained, "Back"),
+                PreferUnvisited = chained != null && Bool(chained, "PreferUnvisited"),
                 ScopeTransform = ReadHitScopeTransform(components),
                 MiniHitTargetCount = 1,
                 HemophagiaProperty = hemophagia == null ? 0 : Int(hemophagia, "HemophagiaPropType")
@@ -3286,6 +3292,8 @@ namespace Zjcs.Combat.Official
             }
             if (damage != null)
             {
+                result.Trajectory = ReadHitTrajectory(damage);
+                result.DestroyDelay = Float(damage, "DestroyDelay", 0f);
                 result.HasFixedDamage = Int(damage, "DamageId") > 0
                     || Int(damage, "DamageType") != 0;
                 result.DelayDistFactor = Float(damage, "DelayDistFactor", 0f);
@@ -3318,14 +3326,23 @@ namespace Zjcs.Combat.Official
                     if (!scope.TryGetValue("Pos", out rawPos) || rawPos == null) continue;
                     Dictionary<string, object> pos = Object(rawPos, "hit scope position");
                     result.Scope.Add(new FightGridPoint(Int(pos, "X"), Int(pos, "Y")));
+                    result.ScopeEntries.Add(ReadHitScopeEntry(scope, pos));
                 }
                 break;
             }
-            if (chained != null) AddIntArray(chained, "NextHitList", result.ChainedHits, pending, references);
-            if (custom != null) AddIntArray(custom, "HitList", result.CustomTargetHits, pending, references);
+            if (hitComponentType == "FightHitFixedComponent" || chained != null)
+                result.ScopeEntries.Sort((left, right) =>
+                    (int)(100000f * (left.Delay - right.Delay))
+                    + Math.Abs(left.Position.X) + Math.Abs(left.Position.Y)
+                    - Math.Abs(right.Position.X) - Math.Abs(right.Position.Y));
+            if (chained != null) AddIntArray(chained, "NextHitList", result.ChainedHits,
+                pending, references, result.ChainedHitLinks);
+            if (custom != null) AddIntArray(custom, "HitList", result.CustomTargetHits,
+                pending, references, result.CustomTargetHitLinks);
             if (random != null)
             {
-                AddIntArray(random, "HitList", result.RandomTargetHits, pending, references);
+                AddIntArray(random, "HitList", result.RandomTargetHits, pending, references,
+                    result.RandomTargetHitLinks);
                 result.MiniHitTargetCount = Int(random, "MiniHitTargetCount", 1);
                 result.AllowEmptyScope = Bool(random, "AllowEmptyScope", true);
                 result.NotSameTarget = Bool(random, "NotSameTarget");
@@ -3334,6 +3351,52 @@ namespace Zjcs.Combat.Official
                 result.NotSameGrid = Bool(random, "NotSameGrid");
                 result.FilterOutOfGroundScope = Bool(random, "FilterOutOfGroundScope", true);
             }
+            return result;
+        }
+
+        private static FightBattleHitScopeEntry ReadHitScopeEntry(
+            Dictionary<string, object> scope, Dictionary<string, object> position)
+        {
+            float[] offset = ReadHitFloatArray(scope, "DamageOffset", new[] { 0f, 0f, 0f });
+            float[] rotation = ReadHitFloatArray(scope, "DamageRotation", new[] { 0f, 0f, 0f, 1f });
+            return new FightBattleHitScopeEntry
+            {
+                Position = new FightGridPoint(Int(position, "X"), Int(position, "Y")),
+                Delay = Float(scope, "Delay", 0f),
+                DamageOffsetX = offset[0], DamageOffsetY = offset[1], DamageOffsetZ = offset[2],
+                DamageRotationX = rotation[0], DamageRotationY = rotation[1],
+                DamageRotationZ = rotation[2], DamageRotationW = rotation[3],
+                DamageRotZOffset = Float(scope, "DamageRotZOffset", 0f),
+                FlipBySourceX = Bool(scope, "FlipBySourceX", true),
+                FlipByTargetY = Bool(scope, "FlipByTargetY", true)
+            };
+        }
+
+        private static FightBattleHitTrajectory ReadHitTrajectory(Dictionary<string, object> component)
+        {
+            float[] offset = ReadHitFloatArray(component, "Offset", new[] { 0f, 0f, 0f });
+            float[] target = ReadHitFloatArray(component, "TargetOffset", new[] { 0f, 0f, 0f });
+            float[] rotationCenter = ReadHitFloatArray(component, "RotateCenterOffset", new[] { 0f, 0f, 0f });
+            return new FightBattleHitTrajectory
+            {
+                OffsetX = offset[0], OffsetY = offset[1], OffsetZ = offset[2],
+                TargetOffsetX = target[0], TargetOffsetY = target[1], TargetOffsetZ = target[2],
+                IsUseCenterRotation = Bool(component, "IsUseCenterRotation"),
+                RotateCenterOffsetX = rotationCenter[0], RotateCenterOffsetY = rotationCenter[1],
+                RotateCenterOffsetZ = rotationCenter[2]
+            };
+        }
+
+        private static float[] ReadHitFloatArray(Dictionary<string, object> value,
+            string field, float[] fallback)
+        {
+            if (!value.TryGetValue(field, out object raw) || raw == null) return fallback;
+            List<object> items = Array(raw, field);
+            if (items.Count != fallback.Length)
+                throw new InvalidOperationException("Invalid original hit " + field + " length.");
+            var result = new float[items.Count];
+            for (int i = 0; i < result.Length; i++)
+                result[i] = Convert.ToSingle(items[i], CultureInfo.InvariantCulture);
             return result;
         }
 
@@ -3350,15 +3413,40 @@ namespace Zjcs.Combat.Official
             };
         }
 
-        // Older checkpoints stored hit graphs before local-scope metadata was persisted.
-        // Restore only this immutable configuration; retain cooldowns, counters and graph state.
+        // Older checkpoints omitted local-scope values and individual child references.
+        // Restore only immutable configuration; retain cooldowns, counters and graph state.
         internal void RestoreHitScopeTransforms(FightBattleSkillDefinition skill)
         {
             if (skill == null) return;
             foreach (FightBattleHitEntity hit in skill.HitGraphEntities ?? new List<FightBattleHitEntity>())
-                if (hit != null && hit.ScopeTransform == null
-                    && entities.TryGetValue(hit.EntityId, out var components))
-                    hit.ScopeTransform = ReadHitScopeTransform(components);
+            {
+                if (hit == null || !entities.TryGetValue(hit.EntityId, out var components)) continue;
+                if (hit.ScopeTransform == null) hit.ScopeTransform = ReadHitScopeTransform(components);
+                Dictionary<string, object> chained = Component(components, "FightHitChainedComponent");
+                hit.IsChained = chained != null;
+                hit.Repeat = chained != null && Bool(chained, "Repeat");
+                hit.Back = chained != null && Bool(chained, "Back");
+                hit.PreferUnvisited = chained != null && Bool(chained, "PreferUnvisited");
+                if (hit.Trajectory == null || hit.HitComponentType == null
+                    || hit.ScopeEntries == null || hit.ChainedHitLinks == null
+                    || hit.CustomTargetHitLinks == null || hit.RandomTargetHitLinks == null
+                    || hit.ScopeEntries.Count != (hit.IsSummon
+                        ? hit.SummonPositions?.Count ?? 0 : hit.Scope?.Count ?? 0)
+                    || hit.ChainedHitLinks.Count != (hit.ChainedHits?.Count ?? 0)
+                    || hit.CustomTargetHitLinks.Count != (hit.CustomTargetHits?.Count ?? 0)
+                    || hit.RandomTargetHitLinks.Count != (hit.RandomTargetHits?.Count ?? 0))
+                {
+                    FightBattleHitEntity original = CreateHitEntity(hit.EntityId, components,
+                        new Queue<int>(), new Dictionary<int, FightBattleHitReference>());
+                    hit.ScopeEntries = original.ScopeEntries;
+                    hit.ChainedHitLinks = original.ChainedHitLinks;
+                    hit.CustomTargetHitLinks = original.CustomTargetHitLinks;
+                    hit.RandomTargetHitLinks = original.RandomTargetHitLinks;
+                    hit.HitComponentType = original.HitComponentType;
+                    hit.Trajectory = original.Trajectory;
+                    hit.DestroyDelay = original.DestroyDelay;
+                }
+            }
             foreach (FightBattleHitDefinition hit in skill.Hits ?? new List<FightBattleHitDefinition>())
                 if (hit != null && hit.ScopeTransform == null
                     && entities.TryGetValue(hit.EntityId, out var components))
@@ -3428,6 +3516,7 @@ namespace Zjcs.Combat.Official
                     Dictionary<string, object> position = baseScope == null
                         ? null : Component(baseScope, "Pos");
                     if (position == null) continue;
+                    output.ScopeEntries.Add(ReadHitScopeEntry(baseScope, position));
                     Dictionary<string, object> offset = Component(scope, "SummonOffset");
                     if (output.SummonGridItemClassId > 0)
                         output.GridSummonCells.Add(new FightBattleGridSummonCell
@@ -3443,6 +3532,10 @@ namespace Zjcs.Combat.Official
                         Int(position, "Y") + (offset == null ? 0 : Int(offset, "Y"))));
                 }
             // Original FightHitSummonComponentInfo.Init / Pos2d.Magnitude ordering.
+            output.ScopeEntries.Sort((left, right) =>
+                (int)(10000f * (left.Delay - right.Delay))
+                + Math.Abs(left.Position.X) + Math.Abs(left.Position.Y)
+                - Math.Abs(right.Position.X) - Math.Abs(right.Position.Y));
             output.GridSummonCells.Sort((left, right) =>
                 (int)(10000f * (left.Delay - right.Delay))
                 + Math.Abs(left.ScopePosition.X) + Math.Abs(left.ScopePosition.Y)
@@ -3484,7 +3577,8 @@ namespace Zjcs.Combat.Official
         }
 
         private static void AddIntArray(Dictionary<string, object> component, string field,
-            List<int> output, Queue<int> pending, Dictionary<int, FightBattleHitReference> references)
+            List<int> output, Queue<int> pending, Dictionary<int, FightBattleHitReference> references,
+            List<FightBattleHitLink> links = null)
         {
             object raw;
             if (!component.TryGetValue(field, out raw) || raw == null) return;
@@ -3496,6 +3590,13 @@ namespace Zjcs.Combat.Official
                     : Int(reference, "ClassId");
                 output.Add(id);
                 pending.Enqueue(id);
+                links?.Add(new FightBattleHitLink
+                {
+                    EntityId = id,
+                    Delay = reference == null ? 0f : Float(reference, "Delay", 0f),
+                    Anchor = reference == null ? 0 : Int(reference, "ActOnSouce"),
+                    IgnoreAICount = reference != null && Bool(reference, "IgnoreAICount")
+                });
                 if (reference != null)
                     AddReference(references, id, Float(reference, "Delay", 0f),
                         Int(reference, "ActOnSouce"), Bool(reference, "IgnoreAICount"));

@@ -148,6 +148,28 @@ Assert-Combat ($null -ne $plainHit -and $plainHit.Scope.Count -eq 1 -and $plainH
 $delaySkill = $officialCatalog.CreateSkill(12330, 0, 0, 1, 1, 0, $null)
 $delayHit = $delaySkill.HitGraphEntities | Where-Object { $_.EntityId -eq 12331 } | Select-Object -First 1
 Assert-Combat ($null -ne $delayHit -and [Math]::Abs($delayHit.DelayDistFactor - 0.04) -lt 0.0001) 'Official delay distance factor mapping mismatch'
+$randomLinkHit = $officialCatalog.CreateSkill(10910, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 10911 } | Select-Object -First 1
+Assert-Combat ($null -ne $randomLinkHit -and $randomLinkHit.RandomTargetHitLinks.Count -eq 7) 'Repeated original random-target hit references were collapsed'
+for ($linkIndex = 0; $linkIndex -lt 7; $linkIndex++) {
+    $link = $randomLinkHit.RandomTargetHitLinks[$linkIndex]
+    Assert-Combat ($link.EntityId -eq 10912 -and [Math]::Abs($link.Delay - $linkIndex * 0.1) -lt 0.0001 -and $link.Anchor -eq 0 -and -not $link.IgnoreAICount) 'A repeated original hit reference lost its own delay, anchor or AI flag'
+}
+Assert-Combat (-not [object]::ReferenceEquals($randomLinkHit.RandomTargetHitLinks[0], $randomLinkHit.RandomTargetHitLinks[1])) 'Repeated hit occurrences share mutable reference state'
+$chainLinkHit = $officialCatalog.CreateSkill(10820, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 10821 } | Select-Object -First 1
+Assert-Combat ($chainLinkHit.IsChained -and -not $chainLinkHit.Repeat -and -not $chainLinkHit.Back -and -not $chainLinkHit.PreferUnvisited -and $chainLinkHit.ChainedHitLinks.Count -eq 1 -and $chainLinkHit.ChainedHitLinks[0].EntityId -eq 10822 -and [Math]::Abs($chainLinkHit.ChainedHitLinks[0].Delay - 0.02) -lt 0.0001 -and [Math]::Abs($chainLinkHit.ScopeEntries[0].Delay - 0.05) -lt 0.0001) 'Chain edge delay, scope delay or selection flags were not preserved independently'
+$scopeViewHit = $officialCatalog.CreateSkill(16120, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 16121 } | Select-Object -First 1
+Assert-Combat ($scopeViewHit.ScopeEntries.Count -eq $scopeViewHit.Scope.Count -and $scopeViewHit.ScopeEntries[0].Position.X -eq -1 -and $scopeViewHit.ScopeEntries[0].DamageOffsetY -eq 1 -and $scopeViewHit.ScopeEntries[0].DamageRotationW -eq 1 -and $scopeViewHit.ScopeEntries[0].FlipBySourceX -and $scopeViewHit.ScopeEntries[0].FlipByTargetY) 'Original scope presentation parameters were dropped'
+$scopeNoFlipHit = $officialCatalog.CreateSkill(13300, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 13303 } | Select-Object -First 1
+Assert-Combat ($null -ne $scopeNoFlipHit -and $scopeNoFlipHit.ScopeEntries[0].DamageRotationW -eq 0 -and -not $scopeNoFlipHit.ScopeEntries[0].FlipBySourceX -and -not $scopeNoFlipHit.ScopeEntries[0].FlipByTargetY) 'Explicit original zero rotation or disabled scope flips were replaced with defaults'
+$trajectoryHit = $officialCatalog.CreateSkill(13050, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 13051 } | Select-Object -First 1
+Assert-Combat ($trajectoryHit.HitComponentType -eq 'FightHitSummonComponent' -and [Math]::Abs($trajectoryHit.Trajectory.OffsetX + 0.1) -lt 0.0001 -and [Math]::Abs($trajectoryHit.Trajectory.OffsetY - 0.3) -lt 0.0001 -and -not $trajectoryHit.Trajectory.IsUseCenterRotation -and $trajectoryHit.DestroyDelay -eq 0.5) 'Original hit trajectory or destruction timing was dropped'
+$summonScopeHit = $officialCatalog.CreateSkill(11540, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 11541 } | Select-Object -First 1
+Assert-Combat ($summonScopeHit.ScopeEntries.Count -eq 9 -and $summonScopeHit.Scope.Count -eq 0 -and $summonScopeHit.ScopeEntries[0].Position.X -eq 0 -and $summonScopeHit.ScopeEntries[0].Position.Y -eq 0 -and $summonScopeHit.ScopeEntries[0].Delay -eq 0.5) 'Summon BaseScopes were not reconstructed in original Init order'
+$fixedOrderHit = $officialCatalog.CreateSkill(10780, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 10781 } | Select-Object -First 1
+$fixedOrderPositions = @($fixedOrderHit.ScopeEntries | ForEach-Object { '{0},{1}' -f $_.Position.X, $_.Position.Y })
+Assert-Combat ($fixedOrderPositions.Count -eq 6 -and ($fixedOrderPositions -join '|') -eq '1,1|1,2|0,1|0,2|-1,1|-1,2' -and [Math]::Abs($fixedOrderHit.ScopeEntries[0].Delay - 0.03) -lt 0.0001 -and [Math]::Abs($fixedOrderHit.ScopeEntries[2].Delay - 0.07) -lt 0.0001 -and [Math]::Abs($fixedOrderHit.ScopeEntries[4].Delay - 0.12) -lt 0.0001) 'Fixed hit scope Init lost original delay and Manhattan-distance ordering'
+$randomOrderHit = $officialCatalog.CreateSkill(10920, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 10921 } | Select-Object -First 1
+Assert-Combat ($randomOrderHit.ScopeEntries.Count -eq 25 -and $randomOrderHit.ScopeEntries[0].Position.X -eq -1 -and $randomOrderHit.ScopeEntries[0].Position.Y -eq 0 -and $randomOrderHit.ScopeEntries[1].Position.X -eq 1 -and $randomOrderHit.ScopeEntries[1].Position.Y -eq 0) 'Random-target scope order was changed by fixed-hit initialization'
 $cureHit = $officialCatalog.CreateSkill(12400, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 12401 } | Select-Object -First 1
 Assert-Combat ($null -ne $cureHit -and $cureHit.ActionType -eq 5) 'Official cure hit action mapping mismatch'
 $noneHit = $officialCatalog.CreateSkill(12980, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 12981 } | Select-Object -First 1
@@ -452,6 +474,22 @@ $integrationRestored = [Zjcs.Combat.Official.FightBattleExecutor]::Restore(
 $integrationReplay = $integrationRestored.Step(0, 1)
 Assert-Combat ($integrationReplay.Replayed -and $integrationEnemy.Hp -eq 0 -and $integrationCheckpoint.DamageEventSerial -eq 6) 'Configured battle checkpoint replay applied official hit nodes twice'
 Assert-Combat (@($integrationReplay.Event.StatusCustomActions | Where-Object { $_.UnitId -eq 2 -and $_.Action -eq 2 }).Count -eq $integrationUnflinchingActions) 'Unflinching custom action was not preserved by receipt replay'
+$legacyHitMetadata = $integrationPlayer.Skills[0].HitGraphEntities | Where-Object { $_.EntityId -eq 12861 } | Select-Object -First 1
+$legacyHitMetadata.ScopeEntries = $null
+$legacyHitMetadata.Trajectory = $null
+$legacyHitMetadata.HitComponentType = $null
+$legacyHitMetadata.DestroyDelay = 0
+$legacyHitMetadata.ChainedHitLinks = $null
+$legacyHitMetadata.CustomTargetHitLinks = $null
+$legacyHitMetadata.RandomTargetHitLinks = $null
+$legacyHitMetadata.IsChained = $legacyHitMetadata.Repeat = $legacyHitMetadata.Back = $legacyHitMetadata.PreferUnvisited = $false
+$legacyHpBefore = $integrationPlayer.Hp
+$legacyCdBefore = [Zjcs.Combat.Official.FightSkillState]::new($integrationPlayer.SkillState).LeftCooldown(0)
+$legacyMetadataRestored = [Zjcs.Combat.Official.FightBattleExecutor]::Restore(
+    $integrationCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(), $officialCatalog)
+Assert-Combat ($legacyHitMetadata.IsChained -and $legacyHitMetadata.Repeat -and $legacyHitMetadata.Back -and $legacyHitMetadata.PreferUnvisited -and $legacyHitMetadata.ChainedHitLinks.Count -eq 1 -and $legacyHitMetadata.ChainedHitLinks[0].EntityId -eq 12862 -and $legacyHitMetadata.ScopeEntries.Count -eq 1 -and $legacyHitMetadata.ScopeEntries[0].DamageRotationW -eq 0 -and $null -ne $legacyHitMetadata.Trajectory -and $legacyHitMetadata.HitComponentType -eq 'FightHitChainedComponent' -and $legacyHitMetadata.DestroyDelay -eq 0.5) 'Legacy checkpoint did not recover immutable original hit metadata'
+$legacyCdAfter = [Zjcs.Combat.Official.FightSkillState]::new($integrationPlayer.SkillState).LeftCooldown(0)
+Assert-Combat ($integrationPlayer.Hp -eq $legacyHpBefore -and $legacyCdAfter -eq $legacyCdBefore -and $integrationCheckpoint.DamageEventSerial -eq 6 -and $integrationCheckpoint.Statistics.Unit(1).DamageDealt -eq 236) 'Restoring hit metadata changed HP, cooldown, hit receipts or statistics'
 foreach ($vector in $reference.cases) {
     $request = New-DamageRequest $vector.info $schema
     $flags = [Zjcs.Combat.Official.FightDamageTypeData]::new()
