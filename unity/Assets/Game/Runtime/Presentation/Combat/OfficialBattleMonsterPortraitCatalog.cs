@@ -44,7 +44,10 @@ namespace Zjcs.Presentation.Combat
             // Pet and other catalogs use their own id namespace.
             if (this != TryLoadDefault()) return null;
             var additional = Resources.Load<OfficialBattleMonsterPortraitCatalog>("Combat/EmbeddedSourceMonsterPortraitCatalog");
-            return additional != null && additional != this ? additional.Find(iconId) : null;
+            Sprite supplemental = additional != null && additional != this ? additional.Find(iconId) : null;
+            if (supplemental != null) return supplemental;
+            var statusGraph = Resources.Load<OfficialBattleMonsterPortraitCatalog>("Combat/StatusGraphMonsterPortraitCatalog");
+            return statusGraph != null && statusGraph != this ? statusGraph.Find(iconId) : null;
         }
 
         public int Count => bindings == null ? 0 : bindings.Length;

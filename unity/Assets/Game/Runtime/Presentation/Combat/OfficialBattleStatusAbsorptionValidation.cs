@@ -111,6 +111,12 @@ namespace Zjcs.Presentation.Combat
             var source = controller.TryGetUnitTransform(actorId);
             if (!source || !source.GetComponentsInChildren<MeshRenderer>().Any(value => value.isVisible
                 && value.enabled && !value.forceRenderingOff && value.GetComponent<MeshFilter>()?.sharedMesh?.vertexCount > 0)) return;
+            var portrait = OfficialBattleMonsterPortraitCatalog.TryLoadDefault()?.Find(3665);
+            var card = GameObject.Find("GameRoundCharacterItem_" + actorId);
+            Require(portrait && portrait.name == "G_3665" && portrait.texture.format == TextureFormat.RGBA32
+                && card && card.GetComponentsInChildren<SpriteRenderer>(true).Any(value =>
+                    value.gameObject.activeInHierarchy && value.sprite == portrait),
+                "Public timeline did not bind the original 3665 portrait.");
             captured = true; CaptureName = "status-absorption";
         }
 
