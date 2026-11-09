@@ -34,6 +34,7 @@ def main():
             'FightHandleBlackboardReadListCountAndStorage', 'LogicFilter', 'EntityClassIdFilter',
             'SameFactionFilter', 'RangeFilter', 'FightHandleCfgForeachEntities', 'FightHandleForeachEntities',
             'FightHandleCfgTriggerSkillBySkill', 'FightHandleTriggerSkillBySkill',
+            'FightHandleCfgGetMasterEntityAndStore', 'FightHandleGetMasterEntityAndStore',
             'FightHitFixedComponentInfo', 'FightHitRandomTargetComponentInfo', 'HitScopCfg',
             'FightStatusDamageFalloffComponentInfo')]
     paths = [ROOT / 'unity/Assets/Official/Combat' / name
@@ -43,12 +44,15 @@ def main():
         for key, value in json.loads(path.read_text(encoding='utf-8-sig'))['entities'].items():
             entities.setdefault(key, {}).update(value)
     definitions = {key: entities[key] for key in ('13730', '13740', '13741', '13745', '13746', '13820', '13830', '13840', '50210',
-                                                '24031', '24266', '24697', '24823')}
+                                                '24031', '24266', '24697', '24823', '54370', '54371', '54372', '54373', '54374', '54375', '54376', '9320')}
     item_path = ROOT / 'unity/Assets/Official/Combat/rules.json'
     skill_items = [row for row in json.loads(item_path.read_text(encoding='utf-8-sig'))['skill']
-                   if row['EcEntityId'] in (13730, 13740, 13820, 13830, 13840, 50210)]
+                   if row['EcEntityId'] in (13730, 13740, 13820, 13830, 13840, 50210, 54370)]
     assert [(row['ClassId'], row['EcEntityId']) for row in skill_items] == [
-        (10192, 13730), (10193, 13740), (10196, 13820), (10197, 13830), (10198, 13840), (16020, 50210)]
+        (10192, 13730), (10193, 13740), (10196, 13820), (10197, 13830), (10198, 13840), (16020, 50210), (16442, 54370)]
+    pet_evolution = next(row for row in json.loads(item_path.read_text(encoding='utf-8-sig'))['pet_evolution']
+                         if row['ClassId'] == 1620 and row['EvolutionPhase'] == 2)
+    assert pet_evolution['FightEntityClassId'] == 9320 and 16442 in pet_evolution['EntityActiveSkills']
     logic_definitions = {key: value for key, value in entities.items()
                          if 'FightSkillLogicComponent' in value}
     assert len(logic_definitions) == 15, 'Review the complete skill-logic configuration scope.'
@@ -101,13 +105,29 @@ def main():
     assert len(collect['FilterCondition']['SubFilters'][2]['Range']) == 12
     assert definitions['13740']['FightSkillComponent']['CanTriggerChild']
     assert not definitions['13745']['FightSkillComponent']['CanTriggerChild']
+    master = definitions['54370']['FightSkillLogicComponent']
+    read, trigger = master['OnSkillStart']['HandleCfgs']
+    assert read['_type'] == 'FightHandleCfgGetMasterEntityAndStore'
+    assert read['EntityKey']['Id'] == 1 and read['StorageBBKey']['Id'] == 796681548
+    assert trigger['_type'] == 'FightHandleCfgTriggerSkillBySkill' and trigger['SkillEntityClassId'] == 54373
+    assert trigger['SourceEntityKey']['Id'] == 1 and trigger['TargetEntityKey']['Id'] == 796681548 and trigger['Rate'] == 1
+    trigger, = definitions['54373']['FightSkillLogicComponent']['OnDoHit']['HandleCfgs']
+    assert trigger['_type'] == 'FightHandleCfgTriggerSkillBySkill' and trigger['SkillEntityClassId'] == 54375
+    assert trigger['SourceEntityKey']['Id'] == 1 and trigger['TargetEntityKey']['Id'] == 2003 and trigger['Rate'] == 1
+    for key in ('54370', '54373', '54375'):
+        assert definitions[key]['FightSkillComponent']['CanTriggerChild']
+    for key in ('54371', '54376'):
+        hit = definitions[key]['FightHitSummonComponent']
+        assert hit['SummonCfg'] == {'SummonId': 3320, 'SummonStatus': [54372], 'ReferenceType': 1,
+                                   'GridItemFindAdjacentIfBlocked': False, '_type': 'FightHitSummonGridItemCfg'}
+        assert all(cell['Rate'] == .5 for cell in hit['SummonScope'])
     output = ROOT / 'assets/reference/battle-rules/skill-logic-stack-source-manifest.json'
     proof = dict(manifest=version, code_receipt=identity(receipt), assemblies=assemblies,
         official_sources=[identity(current / 'official-code' / name) for name in source_names],
         configuration_inputs=[identity(path) for path in paths + [item_path]],
-        definitions=definitions, skill_items=skill_items, selected_configuration=selected_configuration,
+        definitions=definitions, skill_items=skill_items, pet_evolution=pet_evolution, selected_configuration=selected_configuration,
         configuration_only_skill_logic_ids=sorted(
-            (int(key) for key in logic_definitions if key not in ('13730', '13740', '13820', '13830', '13840', '50210'))),
+            (int(key) for key in logic_definitions if key not in ('13730', '13740', '13820', '13830', '13840', '50210', '54370', '54373'))),
         generator=identity(Path(__file__)),
         operation='Verify complete components for all 15 skill-logic entities against the selected version. '
             'Preserve the two transient stack graphs, the 13820 charge start/scale graph and status configuration. '
@@ -123,9 +143,12 @@ def main():
             'once per 13741 execution, triggering one inherited 13745 per tile without consumption or extra action; '
             'the confirmed area attack rule settles each occupied body cell separately, preserving original '
             'cell delays and explicit random selection constraints and applying existing falloff per occurrence; '
+            '54370 follows the official MasterId lookup contract and triggers 54373 at the explicit master; '
+            '54373 triggers 54375 once per original hit execution at SkillTargetEntity, retaining child policy, '
+            'caster identity, inherited cultivation and original grid-spawn configuration; '
             'other skill graphs remain outside this implementation.')
     output.write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    print('Verified all 15 original skill-logic configurations; recorded 13730/13740, 13820, 13830/13840 and 50210 inputs.')
+    print('Verified all 15 original skill-logic configurations; recorded 13730/13740, 13820, 13830/13840 50210 and 54370/54373 inputs.')
 
 
 if __name__ == '__main__':

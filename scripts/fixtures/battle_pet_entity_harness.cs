@@ -74,7 +74,8 @@ public static class BattlePetEntityHarness
         FieldInfo casterField = executorType.GetField("petEnergyHpCaster", flags);
         MethodInfo synchronize = executorType.GetMethod("SynchronizePetEnergyHp", flags);
         MethodInfo executeSkill = executorType.GetMethods(flags).Single(method =>
-            method.Name == "ExecuteSkill" && method.GetParameters().Length == 10);
+            method.Name == "ExecuteSkill" && method.GetParameters()[6].IsOut
+                && !method.GetParameters()[7].IsOut);
         Require(ownerField != null && casterField != null && synchronize != null,
             "Pet energy HP synchronization context is missing.");
 
@@ -111,7 +112,7 @@ public static class BattlePetEntityHarness
             {
                 owner, costSkill, new List<FightBattleUnitState> { owner },
                 new List<FightBattleSkillCastEvent>(), new List<FightBattleDamageEvent>(),
-                new List<FightBattleMovementEvent>(), 0f, null, false, 1.0
+                new List<FightBattleMovementEvent>(), 0f, null, false, 1.0, null
             };
             executeSkill.Invoke(executor, arguments);
             Require(owner.Hp == lowHp - costSkill.SkillCost && caster.Hp == owner.Hp

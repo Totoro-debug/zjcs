@@ -779,6 +779,10 @@ namespace Zjcs.Combat.Official
 
             var skillLogic = FightSkillLogicRuntime.Create(actor, skill, units, statusCatalog, random, checkpoint.GridItems);
             if (skillLogic != null && skillLogic.OnSkillStart()) RebuildBattleProperties();
+            ExecuteLogicChildSkills(actor, skill, skillLogic, null,
+                targetPosition ?? (targets.Count > 0 ? targets[0] : null), hitCast,
+                casts, damageEvents, movements, ref lastDelay,
+                ref statusTriggerDuration, ref statusTriggerActionDuration);
 
             if (statusCatalog != null)
             {
@@ -788,8 +792,10 @@ namespace Zjcs.Combat.Official
                 {
                     float triggerDelay = 0f;
                     ExecuteConfiguredStatusSkills(actionStartSkills, casts, damageEvents,
-                        movements, ref triggerDelay, out statusTriggerDuration,
-                        out statusTriggerActionDuration);
+                        movements, ref triggerDelay, out float startDuration,
+                        out float startActionDuration);
+                    statusTriggerDuration = Math.Max(statusTriggerDuration, startDuration);
+                    statusTriggerActionDuration = Math.Max(statusTriggerActionDuration, startActionDuration);
                     lastDelay = Math.Max(lastDelay, triggerDelay);
                 }
                 List<FightBattleStatusSkillInvocation> skillStartSkills =
@@ -799,8 +805,10 @@ namespace Zjcs.Combat.Official
                 {
                     float triggerDelay = 0f;
                     ExecuteConfiguredStatusSkills(skillStartSkills, casts, damageEvents,
-                        movements, ref triggerDelay, out statusTriggerDuration,
-                        out statusTriggerActionDuration);
+                        movements, ref triggerDelay, out float startDuration,
+                        out float startActionDuration);
+                    statusTriggerDuration = Math.Max(statusTriggerDuration, startDuration);
+                    statusTriggerActionDuration = Math.Max(statusTriggerActionDuration, startActionDuration);
                     lastDelay = Math.Max(lastDelay, triggerDelay);
                 }
             }
@@ -849,7 +857,7 @@ namespace Zjcs.Combat.Official
                     plannedHits = selection.Occurrences;
                     hitTargets = selection.Targets;
                 }
-                ExecuteBurningExplosions(actor, skill, skillLogic, hit,
+                ExecuteLogicChildSkills(actor, skill, skillLogic, hit,
                     targetPosition ?? (targets.Count > 0 ? targets[0] : null), hitCast,
                     casts, damageEvents, movements, ref lastDelay,
                     ref statusTriggerDuration, ref statusTriggerActionDuration);

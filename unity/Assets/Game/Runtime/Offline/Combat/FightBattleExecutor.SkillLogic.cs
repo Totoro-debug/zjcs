@@ -5,7 +5,7 @@ namespace Zjcs.Combat.Official
 {
     public sealed partial class FightBattleExecutor
     {
-        private void ExecuteBurningExplosions(FightBattleUnitState actor,
+        private void ExecuteLogicChildSkills(FightBattleUnitState actor,
             FightBattleSkillDefinition parent, FightSkillLogicRuntime logic,
             FightBattleHitDefinition hit, FightBattleUnitState primary,
             FightBattleSkillCastPresentation parentCast, List<FightBattleSkillCastEvent> casts,
@@ -13,20 +13,21 @@ namespace Zjcs.Combat.Official
             ref float lastDelay, ref float triggerDuration, ref float triggerActionDuration)
         {
             if (statusCatalog == null || logic == null) return;
-            var positions = logic.CollectBurningExplosions(hit, primary, parentCast);
-            foreach (var position in positions)
+            var requests = logic.CollectChildSkills(hit, primary, parentCast);
+            foreach (var request in requests)
             {
                 if (actor.Hp <= 0 || actor.Ended) break;
                 int rank = Math.Max(1, parent.Rank), level = Math.Max(1, parent.Level), subRank = Math.Max(1, parent.SubRank);
-                var child = statusCatalog.CreateSkill(13745, -1, parent.ItemId, rank, level, subRank,
-                    ToPropertyList(statusCatalog.CalculateSkillProps(13745, rank, level, subRank)));
+                var child = statusCatalog.CreateSkill(request.SkillId, -1, parent.ItemId, rank, level, subRank,
+                    ToPropertyList(statusCatalog.CalculateSkillProps(request.SkillId, rank, level, subRank)));
                 child.RootEntityId = parent.RootEntityId > 0 ? parent.RootEntityId : parent.EntityId;
                 child.StatusOrigin = FightBattleStatusOrigin.Resolve(parent, actor.Id).Copy();
                 InheritBlessingScales(child, parent.BlessPropertyScales);
-                var anchor = new FightBattleUnitState { X = position.X, Y = position.Y };
+                var anchor = request.Target ?? new FightBattleUnitState { X = request.Position.X, Y = request.Position.Y };
                 var childHits = FightBattleHitCollector.CollectAll(child);
                 var targets = new List<FightBattleUnitState>();
-                if (childHits.Count > 0)
+                if (request.Target != null) targets.Add(request.Target);
+                else if (childHits.Count > 0)
                     foreach (var occurrence in PlanHitPattern(actor, child, childHits[0], targets, anchor, null))
                         if (!targets.Exists(value => value.Id == occurrence.Target.Id)) targets.Add(occurrence.Target);
                 int castStart = casts.Count, damageStart = damageEvents.Count, movementStart = movements.Count;
@@ -42,7 +43,7 @@ namespace Zjcs.Combat.Official
                     out float delay, out float nestedDuration, out float nestedActionDuration,
                     anchor, presentationCast: cast);
                 CompleteCastPresentation(cast, child, delay);
-                float offset = Math.Max(0f, hit.Delay);
+                float offset = request.Delay;
                 OffsetSkillEvents(casts, castStart, damageEvents, damageStart, movements, movementStart, offset);
                 lastDelay = Math.Max(lastDelay, offset + delay);
                 triggerDuration = Math.Max(triggerDuration, offset + Math.Max(ResolveDuration(child, delay), nestedDuration));

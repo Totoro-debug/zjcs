@@ -8,7 +8,7 @@ using UnityEngine;
 // Records the native playback seam; compiles the actual catalog and dispatcher below it.
 namespace UnityEngine
 {
-    public class GameObject { public string name; public int PartnerAdapters, EmbeddedAdapters; public GameObject(string value) { name = value; } }
+    public class GameObject { public string name; public int PartnerAdapters, EmbeddedAdapters, MecanimAdapters; public GameObject(string value) { name = value; } }
     public class Transform { public GameObject gameObject; public Transform(string name) { gameObject = new GameObject(name); } }
     public class TextAsset { public string text = "catalog"; }
     public static class Resources
@@ -63,8 +63,14 @@ namespace Zjcs.Presentation.Combat
     {
         private readonly OfflineBattleNativePlayableScope scope;
         public OfficialBattleSkillEntityPlayback(OfflineBattleNativePlayableScope scope) { this.scope = scope; }
-        public void Start(FightBattleSkillCastEvent cast, GameObject prefab, Transform source, Transform target)
+        public void Start(FightBattleSkillCastEvent cast, Transform source, Transform target)
             { scope.EntitiesStarted.Add(cast.SkillEntityId);
+              // Native entity playback owns directional prefab selection now.
+              // This seam supplies a prefab; the actual entity is checked in Unity.
+              int facing = cast.Presentation?.FacingIndex ?? 2;
+              string field = facing == 2 ? "UpPlayablePrefab" : facing == 0 ? "DownPlayablePrefab"
+                  : facing == 1 ? "LeftPlayablePrefab" : "RightPlayablePrefab";
+              var prefab = OfficialBattleSkillGraphCatalog.TryLoadDefault().Find(cast.SkillEntityId, field);
               if (prefab != null) scope.Play(prefab, source.gameObject, target?.gameObject ?? source.gameObject, 1,
                 scope.PlayableSlot.gameObject, new Dictionary<string, object>()); }
         public void Tick(float delta) => scope.Tick(delta);
@@ -77,8 +83,8 @@ namespace Zjcs.Offline.BattleNativePlayables
     {
         public readonly Transform PlayableSlot = new Transform("slot");
         public readonly List<int> EntitiesStarted = new List<int>();
-        private Action<GameObject> nativeAdapter;
-        public void BindNativePrefabAdapter(Action<GameObject> adapter) { nativeAdapter = adapter; }
+        private Action<GameObject, GameObject> nativeAdapter;
+        public void BindNativePrefabAdapter(Action<GameObject, GameObject> adapter) { nativeAdapter = adapter; }
         public readonly List<string> Plays = new List<string>();
         public readonly List<string> Sources = new List<string>();
         public readonly List<float> Times = new List<float>();
@@ -94,13 +100,20 @@ namespace Zjcs.Offline.BattleNativePlayables
         public void LateTick() { LateTicks++; }
         public void Play(GameObject prefab, GameObject source, GameObject target, float speed,
             GameObject parent, Dictionary<string, object> parameters)
-        { nativeAdapter?.Invoke(new GameObject(prefab.name));
+        { nativeAdapter?.Invoke(prefab, new GameObject(prefab.name));
           Plays.Add(prefab.name + ":" + target.name); Sources.Add(source.name); Times.Add(Clock); }
         public void Dispose() { Disposed = true; }
     }
 }
 namespace Zjcs.Offline.ProfessionUI
 {
+    public sealed class EmbeddedMonsterMecanimResources : IDisposable
+    {
+        public void BindOriginalPrefab(GameObject source, GameObject instance)
+        { if (source == null) throw new Exception("Original asset identity was lost"); instance.MecanimAdapters++; }
+        public void Update() {}
+        public void Dispose() {}
+    }
     public static class PartnerNativeSkillSkeleton { public static void BindOriginalPrefab(GameObject value) { value.PartnerAdapters++; } }
     public static class EmbeddedMonsterNativeSkeleton { public static void BindOriginalPrefab(GameObject value) { value.EmbeddedAdapters++; } }
 }
@@ -109,8 +122,8 @@ public static class BattleSkillGraphDispatchHarness
     static void Require(bool value, string message) { if (!value) throw new Exception(message); }
     static OfficialBattleSkillGraphBinding Binding(string field, string resource)
         { return new OfficialBattleSkillGraphBinding { field = field, resource = resource }; }
-    static FightBattleSkillCastEvent Cast(int skill, float delay)
-        { return new FightBattleSkillCastEvent { ActorId = 1, SkillEntityId = skill, Delay = delay, TargetIds = new List<int> { 2 } }; }
+    static FightBattleSkillCastEvent Cast(int skill, float delay, int facing = 2)
+        { return new FightBattleSkillCastEvent { ActorId = 1, SkillEntityId = skill, Delay = delay, Presentation = new FightBattleSkillCastPresentation { FacingIndex = facing, TargetId = 2 }, TargetIds = new List<int> { 2 } }; }
     public static void Run()
     {
         Resources.Assets.Clear();
@@ -137,7 +150,7 @@ public static class BattleSkillGraphDispatchHarness
             var scope = new OfflineBattleNativePlayableScope();
             using (var playback = new OfficialBattleSkillGraphPlayback(catalog, scope, new OfficialBattleSkillEntityPlayback(scope)))
             {
-                playback.Play(new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> { Cast(10, 0) } }, checkpoint, resolve);
+                playback.Play(new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> { Cast(10, 0, actor.Direction) } }, checkpoint, resolve);
                 Require(scope.Plays.Count == 1 && scope.Plays[0] == fields[direction] + ":target", "Official direction or settled-dead cast was lost");
             }
         }
@@ -207,6 +220,7 @@ public static class BattleSkillGraphDispatchHarness
         int cloneBindings = 0;
         queue.BindPlayerClonePrefabs(instance => {
             Require(instance.PartnerAdapters == 1, "Clone binding replaced or preceded the original partner adapter");
+            Require(instance.MecanimAdapters == 1, "Clone binding preceded source-aware Mecanim binding");
             Require(instance.EmbeddedAdapters == 1, "Clone binding replaced or preceded the original embedded monster adapter");
             cloneBindings++;
         });

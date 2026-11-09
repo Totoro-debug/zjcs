@@ -17,7 +17,7 @@ def identity(path):
                 sha256=hashlib.sha256(path.read_bytes()).hexdigest())
 
 
-def verify_selected_components(definitions, skill_items=None):
+def verify_selected_components(definitions, skill_items=None, *, entity_paths=None):
     apk = Apk.current()
     assert apk.version == '884_156692', 'Review the selected EC version.'
     code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
@@ -30,6 +30,12 @@ def verify_selected_components(definitions, skill_items=None):
         for key, record in doc.get('selected', doc.get('entities', {}).get('selected', {})).items():
             paths.setdefault(key, record['path'])
     wanted = set(definitions)
+    # Entity IDs can move between EC fragments across official releases. Keep
+    # historical input manifests unchanged and record explicit selected-version
+    # locations. The APK payload and every requested component still must match.
+    overrides = dict(entity_paths or {})
+    assert not set(overrides) - wanted, 'An EC location override must belong to the requested entities.'
+    paths.update(overrides)
     groups = {}
     for key in wanted:
         groups.setdefault(paths[key], set()).add(key)
@@ -89,6 +95,7 @@ def verify_selected_components(definitions, skill_items=None):
     finally:
         apk.archive.close()
     return dict(manifest=apk.version, fragments=records, skill_item_bindings=item_binding,
+        selected_entity_path_overrides=overrides,
         runtime_source_manifests=[identity(path) for path in manifests],
         formatters=[identity(path) for path in sorted(set(formats.sources.values()))],
         verifier=identity(Path(__file__)),

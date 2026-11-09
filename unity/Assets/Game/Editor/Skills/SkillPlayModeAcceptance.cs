@@ -114,6 +114,7 @@ namespace Zjcs.Editor.Skills
             EditorSceneManager.OpenScene("Assets/Game/Scenes/Bootstrap.unity", OpenSceneMode.Single);
             if (Environment.GetEnvironmentVariable("ZJCS_PLAYER_COMBO_ACCEPTANCE") == "1"
                 || Environment.GetEnvironmentVariable("ZJCS_SKILL_STACK_ACCEPTANCE") == "1"
+                || Environment.GetEnvironmentVariable("ZJCS_MASTER_CHILD_ACCEPTANCE") == "1"
                 || Environment.GetEnvironmentVariable("ZJCS_RANDOM_HIT_ACCEPTANCE") == "1")
                 ProjectTools.Validate();
             OfficialSkillAssetTools.Validate();
@@ -257,6 +258,7 @@ namespace Zjcs.Editor.Skills
             yield return null;
             if (Environment.GetEnvironmentVariable("ZJCS_STATUS_ABSORPTION_ACCEPTANCE") == "1"
                 || Environment.GetEnvironmentVariable("ZJCS_SKILL_STACK_ACCEPTANCE") == "1"
+                || Environment.GetEnvironmentVariable("ZJCS_MASTER_CHILD_ACCEPTANCE") == "1"
                 || Environment.GetEnvironmentVariable("ZJCS_RANDOM_HIT_ACCEPTANCE") == "1"
                 || Environment.GetEnvironmentVariable("ZJCS_PLAYER_CLONE_ACCEPTANCE") == "1")
             {

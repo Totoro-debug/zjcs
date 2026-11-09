@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Zjcs.Combat.Official
 {
     // MyFightSkillLogic has no server implementation in the APK. Only the
-    // explicitly confirmed charge, transient stack and burning-grid flows are enabled here.
+    // evidence-backed and explicitly confirmed graph capabilities are enabled here.
     internal sealed partial class FightSkillLogicRuntime
     {
         private readonly FightBattleUnitState actor;
@@ -32,6 +32,7 @@ namespace Zjcs.Combat.Official
             this.gridItems = gridItems;
             this.hitFlow = hitFlow;
             damageScaleSource = CreateDamageScale(skill.EntityId);
+            childSkillSource = CreateChildSkillProvider(skill.EntityId);
         }
 
         internal static FightSkillLogicRuntime Create(FightBattleUnitState actor,
@@ -40,19 +41,19 @@ namespace Zjcs.Combat.Official
             IReadOnlyList<FightBattleGridItemState> gridItems = null)
         {
             if (actor == null || skill == null || catalog == null
-                || (skill.EntityId != 13730 && skill.EntityId != 13740 && skill.EntityId != 13820 && skill.EntityId != 13830 && skill.EntityId != 13840 && skill.EntityId != 50210)) return null;
+                || (skill.EntityId != 13730 && skill.EntityId != 13740 && skill.EntityId != 13820 && skill.EntityId != 13830 && skill.EntityId != 13840 && skill.EntityId != 50210 && skill.EntityId != 54370 && skill.EntityId != 54373)) return null;
             catalog.RestoreSkillLogicDefinition(skill);
             if (!skill.HasLogicComponent || string.IsNullOrEmpty(skill.LogicDefinitionJson)) return null;
             var component = OfficialJson.Parse(skill.LogicDefinitionJson) as Dictionary<string, object>;
             var flow = Object(component, "OnDoHitTransient");
-            return flow == null && Object(component, "OnDoHit") == null ? null : new FightSkillLogicRuntime(actor, skill, units, catalog, random, flow,
+            return flow == null && Object(component, "OnDoHit") == null && Object(component, "OnSkillStart") == null ? null : new FightSkillLogicRuntime(actor, skill, units, catalog, random, flow,
                 Object(component, "OnSkillStart"), Object(component, "OnDoHit"), gridItems);
         }
 
         internal void OnDoHitTransient(FightBattleUnitState target, FightBattleHitDefinition hit,
             FightDamageTypeData type)
         {
-            if (skill.EntityId == 13730 || skill.EntityId == 13740 || skill.EntityId == 13820 || skill.EntityId == 50210 || target == null || type.Dodge || type.Blinding) return;
+            if (flow == null || skill.EntityId == 13730 || skill.EntityId == 13740 || skill.EntityId == 13820 || skill.EntityId == 50210 || target == null || type.Dodge || type.Blinding) return;
             var filter = Object(flow, "FilterCondition");
             if (flow.TryGetValue("FilterCondition", out object rawFilter)
                 && rawFilter != null && filter == null) return;
@@ -164,64 +165,6 @@ namespace Zjcs.Combat.Official
             blackboard[2004] = damage.Damage;
             decimal difference = Math.Abs((decimal)damage.Damage - previous);
             blackboard[122229964] = difference >= long.MaxValue ? long.MaxValue : (long)difference;
-        }
-
-        // The approved OnDoHit binding belongs to the hit entity, once before
-        // iterating its victims. Snapshot positions so nested effects cannot change the collection.
-        internal List<FightGridPoint> CollectBurningExplosions(FightBattleHitDefinition hit,
-            FightBattleUnitState primary, FightBattleSkillCastPresentation cast)
-        {
-            var result = new List<FightGridPoint>();
-            if (skill.EntityId != 13740 || !skill.CanTriggerChild || hit == null
-                || hit.EntityId != 13741 || !EmptyFilter(hitFlow)) return result;
-            var handlers = Array(hitFlow, "HandleCfgs");
-            if (handlers.Count != 2 || !(handlers[0] is Dictionary<string, object> collect)
-                || !(handlers[1] is Dictionary<string, object> each)
-                || String(collect, "_type") != "FightHandleCfgCollectionEntitiesByRoleRoot"
-                || Int(collect, "CharacterType") != 6 || !IsPort(collect, "SourceEntityKey", 1, false)
-                || !IsPort(collect, "ResultEntityArrayKey", 406339594, false)
-                || String(each, "_type") != "FightHandleCfgForeachEntities"
-                || !IsPort(each, "EntityArrayKey", 406339594, false) || Int(each, "ForeachCount") != -1) return result;
-            var nested = Array(each, "HandleCfgs");
-            if (nested.Count != 1 || !(nested[0] is Dictionary<string, object> trigger)
-                || String(trigger, "_type") != "FightHandleCfgTriggerSkillBySkill"
-                || Int(trigger, "SkillEntityClassId") != 13745
-                || !trigger.TryGetValue("Rate", out object rate) || Convert.ToDouble(rate) != 1.0
-                || !IsPort(trigger, "SourceEntityKey", 3, false)
-                || !IsPort(trigger, "TargetEntityKey", 1, false)) return result;
-            var filter = Object(collect, "FilterCondition");
-            var filters = Array(filter, "SubFilters");
-            if (String(filter, "_type") != "LogicFilter" || Int(filter, "LogicType") != 0
-                || filters.Count != 3 || !(filters[0] is Dictionary<string, object> faction)
-                || !(filters[1] is Dictionary<string, object> entity)
-                || !(filters[2] is Dictionary<string, object> range)
-                || String(faction, "_type") != "SameFactionFilter"
-                || !IsPort(faction, "CheckEntityKey", 3, false) || !IsPort(faction, "MainEntityKey", 1, false)
-                || String(entity, "_type") != "EntityClassIdFilter" || Int(entity, "ClassId") != 3051
-                || !IsPort(entity, "EntityKey", 1, false)
-                || String(range, "_type") != "RangeFilter" || !IsPort(range, "CenterEntity", 2001, false)
-                || !IsPort(range, "TargetEntityKey", 1, false)
-                || !Bool(range, "UseWorldPosByCenterEntityTransform") || !Bool(range, "ConsiderTargetBodySize")) return result;
-            var local = new List<FightGridPoint>();
-            var unique = new HashSet<FightGridPoint>();
-            foreach (object value in Array(range, "Range"))
-            {
-                if (!(value is Dictionary<string, object> point) || !point.ContainsKey("X") || !point.ContainsKey("Y")) return result;
-                var offset = new FightGridPoint(Int(point, "X"), Int(point, "Y"));
-                if (offset.X < -1 || offset.X > 1 || offset.Y < 1 || offset.Y > 4 || !unique.Add(offset)) return result;
-                local.Add(offset);
-            }
-            if (unique.Count != 12) return result;
-            var offsets = new HashSet<FightGridPoint>(FightBattleTargeting.TransformScope(local, hit.ScopeTransform, actor, cast));
-            var center = FightHitAnchorExtensions.ResolveCenter(hit.Anchor, actor, primary, cast);
-            var seen = new HashSet<int>();
-            if (gridItems != null) foreach (var item in gridItems)
-                if (item != null && !item.Ended && item.EntityClassId == 3051
-                    && item.HasRuntime && item.Runtime != null && !item.Runtime.Ended
-                    && item.Runtime.Side == actor.Side && seen.Add(item.Id)
-                    && offsets.Contains(new FightGridPoint(item.X - center.X, item.Y - center.Y)))
-                    result.Add(new FightGridPoint(item.X, item.Y));
-            return result;
         }
 
         private static long ScaleDamage(long value, decimal factor)
