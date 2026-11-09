@@ -7,7 +7,7 @@ using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.StoryPlayableManager;
 using Zjcs.Official.StoryPlayables;
 
-[MyPlayableApply(new[] { typeof(SkeletonRenderer) })]
+[MyPlayableApply(new[] { typeof(IProfessionAfterimageTarget), typeof(SkeletonRenderer) })]
 public class MyPlayableAfterimage : MyPlayable, IBattleAfterimagePlayable
 {
     public List<AfterimageData> AfterimageDatas = new List<AfterimageData>();
@@ -20,7 +20,7 @@ public class MyPlayableAfterimage : MyPlayable, IBattleAfterimagePlayable
     private readonly Stack<RTRenderer> rendererPool = new Stack<RTRenderer>();
     private readonly List<MeshRenderer> renderers = new List<MeshRenderer>();
     private readonly List<Material> materials = new List<Material>();
-    private SkeletonRenderer skeletonRenderer;
+    private IProfessionAfterimageTarget target;
     private IAfterimageRTParamsProvider parameters;
     private IBattleAfterimageHost host;
 
@@ -29,14 +29,15 @@ public class MyPlayableAfterimage : MyPlayable, IBattleAfterimagePlayable
     protected override void PlayImpl()
     {
         base.PlayImpl();
-        skeletonRenderer = (SkeletonRenderer)myApplyComponent;
+        target = myApplyComponent as IProfessionAfterimageTarget;
+        if (target == null && myApplyComponent is SkeletonRenderer legacy) target = new SpineAfterimageTarget(legacy);
         parameters = GetComponent<IAfterimageRTParamsProvider>();
     }
 
     protected override bool ProcessFrameImpl(float deltaTime)
     {
         bool result = base.ProcessFrameImpl(deltaTime);
-        if (skeletonRenderer == null || parameters == null || host == null) return result;
+        if (myApplyComponent == null || target == null || parameters == null || host == null) return result;
         float time = Time;
         foreach (AfterimageData data in AfterimageDatas)
         {
@@ -51,7 +52,7 @@ public class MyPlayableAfterimage : MyPlayable, IBattleAfterimagePlayable
 
     protected override void StopImpl()
     {
-        if (skeletonRenderer != null && parameters != null && host != null)
+        if (myApplyComponent != null && target != null && parameters != null && host != null)
         {
             for (int i = AfterimageDatas.Count - 1; i >= 0; i--)
             {
@@ -74,7 +75,7 @@ public class MyPlayableAfterimage : MyPlayable, IBattleAfterimagePlayable
         CommandBuffer command = CommandBufferPool.Get("Playable Afterimage CommandBuffer");
         try
         {
-            Vector3 targetPosition = parameters.GetTargetPos(skeletonRenderer);
+            Vector3 targetPosition = parameters.GetTargetPos(target);
             command.SetRenderTarget(texture);
             command.ClearRenderTarget(true, true, Color.clear);
             command.SetViewProjectionMatrices(BattleAfterimageRTUtils.GetViewMatrix(targetPosition),
@@ -107,24 +108,35 @@ public class MyPlayableAfterimage : MyPlayable, IBattleAfterimagePlayable
     }
 
     private void CollectRenderers()
-    {
-        renderers.Clear();
-        DynamicSkeletonRenderSeparator separator = skeletonRenderer.GetComponent<DynamicSkeletonRenderSeparator>();
-        if (separator != null)
-        {
-            foreach (SkeletonPartsRenderer part in separator.partsRenderers)
-                if (part != null && part.MeshRenderer != null) renderers.Add(part.MeshRenderer);
-        }
-        else if (skeletonRenderer.TryGetComponent(out MeshRenderer main)) renderers.Add(main);
+        => target.CollectRenderers(renderers, comparer);
 
-        AppearanceRendererPartHandler appearance = skeletonRenderer.GetComponent<AppearanceRendererPartHandler>();
-        if (appearance != null)
-            foreach (AppearanceSkeletonPartEntry part in appearance.LoadedSkeletonDict.Values)
+    // Existing migrated SDK targets retain the original selection as well.
+    private sealed class SpineAfterimageTarget : IProfessionAfterimageTarget
+    {
+        private readonly SkeletonRenderer skeletonRenderer;
+        internal SpineAfterimageTarget(SkeletonRenderer renderer) { skeletonRenderer = renderer; }
+        public Vector3 GetCapturePosition(string boneName, Vector3 worldOffset)
+            => skeletonRenderer.transform.TransformPoint(new Vector3(0, skeletonRenderer.Skeleton.FindBone(boneName).WorldY)) + worldOffset;
+        public void CollectRenderers(List<MeshRenderer> renderers, Comparer<MeshRenderer> comparer)
+        {
+            renderers.Clear();
+            DynamicSkeletonRenderSeparator separator = skeletonRenderer.GetComponent<DynamicSkeletonRenderSeparator>();
+            if (separator != null)
             {
-                MeshRenderer renderer = part.Part.SkeletonTarget.GetComponent<MeshRenderer>();
-                if (renderer != null) renderers.Add(renderer);
+                foreach (SkeletonPartsRenderer part in separator.partsRenderers)
+                    if (part != null && part.MeshRenderer != null) renderers.Add(part.MeshRenderer);
             }
-        renderers.Sort(comparer);
+            else if (skeletonRenderer.TryGetComponent(out MeshRenderer main)) renderers.Add(main);
+
+            AppearanceRendererPartHandler appearance = skeletonRenderer.GetComponent<AppearanceRendererPartHandler>();
+            if (appearance != null)
+                foreach (AppearanceSkeletonPartEntry part in appearance.LoadedSkeletonDict.Values)
+                {
+                    MeshRenderer renderer = part.Part.SkeletonTarget.GetComponent<MeshRenderer>();
+                    if (renderer != null) renderers.Add(renderer);
+                }
+            renderers.Sort(comparer);
+        }
     }
 
     private RTRenderer GetRenderer()

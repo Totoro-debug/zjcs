@@ -17,6 +17,8 @@ namespace Zjcs.Presentation.Combat
         private bool settled, animated, captured;
         private int nativeCasts, nativeChildren;
         private float castTime;
+        private readonly OfficialBattleAfterimageValidation afterimages = Environment.GetEnvironmentVariable("ZJCS_AFTERIMAGE_ACCEPTANCE") == "1"
+            ? new OfficialBattleAfterimageValidation() : null;
         public string CaptureName { get; private set; }
 
         private OfficialBattleGraphCapabilityValidation(FightOfficialCombatCatalog catalog,
@@ -148,8 +150,10 @@ namespace Zjcs.Presentation.Combat
         public void ObserveFrame(OfficialBattleRuntimeController controller)
         {
             CaptureName = null;
+            bool afterimageVisible = afterimages?.Observe() ?? false;
             if (captured || !settled || !animated || nativeCasts != 1
-                || skillId == 13640 && nativeChildren != 2 || Time.realtimeSinceStartup - castTime < .85f) return;
+                || skillId == 13640 && nativeChildren != 2
+                || (afterimages != null ? !afterimageVisible : Time.realtimeSinceStartup - castTime < .85f)) return;
             var source = controller.TryGetUnitTransform(1);
             if (!source || !source.GetComponentsInChildren<MeshRenderer>().Any(value => value.enabled
                 && value.isVisible && !value.forceRenderingOff
@@ -159,6 +163,7 @@ namespace Zjcs.Presentation.Combat
 
         public void Verify(FightBattleCheckpoint checkpoint)
         {
+            afterimages?.Verify();
             Require(settled && animated && captured && nativeCasts == 1 && checkpoint.Finished
                 && (skillId != 13640 || nativeChildren == 2), "Native graph, action, input or settlement is incomplete.");
         }

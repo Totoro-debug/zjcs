@@ -1,6 +1,5 @@
-using Spine;
-using Spine.Unity;
 using UnityEngine;
+using Zjcs.Official.ProfessionUI;
 
 public class SpineBoneAfterimageRTParamsProvider : MonoBehaviour, IAfterimageRTParamsProvider
 {
@@ -14,9 +13,6 @@ public class SpineBoneAfterimageRTParamsProvider : MonoBehaviour, IAfterimageRTP
 	public int RTHeight => mRTHeight;
 	public float OrthoSize => mOrthoSize;
 
-	public Vector3 GetTargetPos(SkeletonRenderer skeletonRenderer)
-	{
-		Bone bone = skeletonRenderer.Skeleton.FindBone(mBoneName);
-		return skeletonRenderer.transform.TransformPoint(new Vector3(0f, bone.WorldY)) + mOffset;
-	}
+	public Vector3 GetTargetPos(IProfessionAfterimageTarget target)
+		=> target.GetCapturePosition(mBoneName, mOffset);
 }

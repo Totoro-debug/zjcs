@@ -17,12 +17,24 @@
     {
       "path": ".tools/source-packages/official-code/client-source/RTUtils.cs",
       "sha256": "90d8f12cd3fe6712776ee300ec27f7650080e219b2417145c2b1c21703b6b5f8"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/IAfterimageRTParamsProvider.cs",
+      "sha256": "2a989c580e336bcc67f9455b8b678fd05477f11c73bc762e54f77204e1ca3215"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/SpineBoneAfterimageRTParamsProvider.cs",
+      "sha256": "635b002fe8c484d7ffcea19298ba9ca7512d3bc973314c8bed27e59f7bc306c0"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/AppearancePortraitUtils.cs",
+      "sha256": "dc6baca920535b5c6e4124c997f9526435a0893fb3c37fadc5f716bd24c121f8"
     }
   ],
   "migrated_outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableAfterimage.cs",
-      "sha256": "fd73b4f2b0aaf98241b6a9111dceca99655a0274d6b98c72e7c4df417015d504"
+      "sha256": "3dc62962c3b27eeda918cfeb522ec5ba1006908ce5ab1bc4bb99f12bf7bf0113"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/AfterimageData.cs",
@@ -47,6 +59,22 @@
     {
       "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleNativePlayableScope.cs",
       "sha256": "eb133108cb6385fde77da9fa7ab23e5081528f2b2923116f071a2222dd87cfad"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/IAfterimageRTParamsProvider.cs",
+      "sha256": "f2f84041be2cf4b2b5730ab9f01364a51bdeaf13d63daa7520a4cd373957e322"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SpineBoneAfterimageRTParamsProvider.cs",
+      "sha256": "72c708aa993e05941bd8d5f11f484f73655a44a5dd2222735becc55d78a3dddb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionAfterimageTarget.cs",
+      "sha256": "b9d00bc5789c02c0595ee234fffa10fe5c2bfed1b4f23856c766687171af90dd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAfterimageTargets.cs",
+      "sha256": "17e7bfce55d331787331d98d29ecd81dfb0fa5e9e06a03d350ff2502d8f3ac74"
     }
   ],
   "meta_outputs": [
@@ -69,8 +97,24 @@
     {
       "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/BattleAfterimageTexturePool.cs.meta",
       "sha256": "99fde1cd288cea507a3272a6ea524b2cf49e9b2716f4a358c12ee0f27c21579d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/IAfterimageRTParamsProvider.cs.meta",
+      "sha256": "c938f37e36f21a16d9c257e59036d46fef14dc9cbb69f902cbf11aea6e004e89"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SpineBoneAfterimageRTParamsProvider.cs.meta",
+      "sha256": "8f06419f7de1cda54f133f509ca08ab7a621178d0762a1cf5914bdc7a8bace6d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionAfterimageTarget.cs.meta",
+      "sha256": "4bb963aaf316bf936e4ee1f3f4af3adc91d90fe8eeb57c08736040ac872456fa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAfterimageTargets.cs.meta",
+      "sha256": "9305cbf5eede9d33de45b59d96144b46f6a998bf82c793188072c8ccbabc7e6d"
     }
   ],
   "adaptation": "Port the official capture timing, fade curves, renderer selection and Z sort. Replace Framework.DependencyInjection RenderTexturePool with a battle-scope RTHandle pool preserving the 5 MiB active allocation limit, 128-pixel clamp, RGBA8 format, point filtering, clamp wrapping and disposal at scope end. Instantiate the authored RTRenderer prefab directly; bind the pool through the native battle playable scope.",
-  "runtime_validation": "Unity import, compilation and Zjcs.Editor.ProjectTools.Validate passed. Actual original skill graph Play Mode capture remains pending."
+  "runtime_validation": "Unity import, compilation and Zjcs.Editor.ProjectTools.Validate passed. Windowed original 13970 Play Mode passed native body/appearance mesh selection, four original 300x300 GPU captures (7817/8019/8160/8160 nontransparent pixels), original fade colors, actual visible afterimages, simulated original start/leave input, damage/checkpoint/result and returned capture resources. Runtime screenshots were inspected. Scripts-only Windows build and actual internal-display Player passed the same original graph, four nonempty native GPU captures, fade colors, visible afterimages, simulated start/leave input, damage/checkpoint/result and returned capture resources; all six Player images were inspected. Other afterimage graphs and native monster capture remain unverified."
 }
