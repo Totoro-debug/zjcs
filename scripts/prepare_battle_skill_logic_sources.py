@@ -1,4 +1,4 @@
-"""Verify skill-graph configurations and record the confirmed charge and transient stack inputs."""
+"""Verify skill-graph configurations and record the confirmed charge, stack and burning-grid inputs."""
 import json
 from pathlib import Path
 
@@ -28,20 +28,24 @@ def main():
             'FightHandleCfgGetStatusStackCount', 'FightHandleGetStatusStackCount',
             'FightHandleCfgDamageScaleBase', 'FightHandleCfgDamageScaleByScale',
             'FightHandleDamageScale', 'FightHandleDamageScaleByScale',
-            'EntityHasAnyStatusByEntityKeyFilter', 'IteratingAgentStatusClassIdFilter')]
+            'EntityHasAnyStatusByEntityKeyFilter', 'IteratingAgentStatusClassIdFilter',
+            'FightHandleCfgCollectionEntitiesByRoleRoot', 'FightHandleCollectionEntitiesByRoleRoot',
+            'FightHandleCfgBlackboardReadEcIdArrayCountAndStorage', 'FightHandleBlackboardReadEcIdArrayCountAndStorage',
+            'FightHandleBlackboardReadListCountAndStorage', 'LogicFilter', 'EntityClassIdFilter',
+            'SameFactionFilter', 'RangeFilter')]
     paths = [ROOT / 'unity/Assets/Official/Combat' / name
              for name in ('skill-rules.json', 'battle-rules.json')]
     entities = {}
     for path in paths:
         for key, value in json.loads(path.read_text(encoding='utf-8-sig'))['entities'].items():
             entities.setdefault(key, {}).update(value)
-    definitions = {key: entities[key] for key in ('13820', '13830', '13840', '50210',
+    definitions = {key: entities[key] for key in ('13730', '13820', '13830', '13840', '50210',
                                                 '24031', '24266', '24697', '24823')}
     item_path = ROOT / 'unity/Assets/Official/Combat/rules.json'
     skill_items = [row for row in json.loads(item_path.read_text(encoding='utf-8-sig'))['skill']
-                   if row['EcEntityId'] in (13820, 13830, 13840, 50210)]
+                   if row['EcEntityId'] in (13730, 13820, 13830, 13840, 50210)]
     assert [(row['ClassId'], row['EcEntityId']) for row in skill_items] == [
-        (10196, 13820), (10197, 13830), (10198, 13840), (16020, 50210)]
+        (10192, 13730), (10196, 13820), (10197, 13830), (10198, 13840), (16020, 50210)]
     logic_definitions = {key: value for key, value in entities.items()
                          if 'FightSkillLogicComponent' in value}
     assert len(logic_definitions) == 15, 'Review the complete skill-logic configuration scope.'
@@ -69,13 +73,27 @@ def main():
     assert scale['ScaleCountKey']['Id'] == read['StackCountKey']['Id']
     assert not scale['ScaleCountKey']['IsPersistentBlackboard'] and scale['StorageAsAbs']
     assert not definitions['50210']['FightSkillComponent']['CanTriggerChild']
+    burn_graph = definitions['13730']['FightSkillLogicComponent']
+    assert not any(burn_graph[name] for name in ('OnDoHit', 'OnSkillStart', 'OnHitFinish'))
+    collect, read, scale = burn_graph['OnDoHitTransient']['HandleCfgs']
+    assert collect['_type'] == 'FightHandleCfgCollectionEntitiesByRoleRoot' and collect['CharacterType'] == 6
+    entity, faction, area = collect['FilterCondition']['SubFilters']
+    assert collect['FilterCondition']['_type'] == 'LogicFilter' and collect['FilterCondition']['LogicType'] == 0
+    assert entity['_type'] == 'EntityClassIdFilter' and entity['ClassId'] == 3051
+    assert faction['_type'] == 'SameFactionFilter' and faction['CheckEntityKey']['Id'] == 3
+    assert area['_type'] == 'RangeFilter' and area['CenterEntity']['Id'] == 2002
+    assert len(area['Range']) == 13 and not area['UseWorldPosByCenterEntityTransform'] and area['ConsiderTargetBodySize']
+    assert read['_type'] == 'FightHandleCfgBlackboardReadEcIdArrayCountAndStorage'
+    assert read['ListBBKey']['Id'] == collect['ResultEntityArrayKey']['Id'] == 406339594
+    assert read['StorageBBKey']['Id'] == scale['ScaleCountKey']['Id'] == 511879177
+    assert scale['_type'] == 'FightHandleCfgDamageScaleByScale' and scale['ScaleValue'] == 500 and scale['StorageAsAbs']
     output = ROOT / 'assets/reference/battle-rules/skill-logic-stack-source-manifest.json'
     proof = dict(manifest=version, code_receipt=identity(receipt), assemblies=assemblies,
         official_sources=[identity(current / 'official-code' / name) for name in source_names],
         configuration_inputs=[identity(path) for path in paths + [item_path]],
         definitions=definitions, skill_items=skill_items, selected_configuration=selected_configuration,
         configuration_only_skill_logic_ids=sorted(
-            (int(key) for key in logic_definitions if key not in ('13820', '13830', '13840', '50210'))),
+            (int(key) for key in logic_definitions if key not in ('13730', '13820', '13830', '13840', '50210'))),
         generator=identity(Path(__file__)),
         operation='Verify complete components for all 15 skill-logic entities against the selected version. '
             'Preserve the two transient stack graphs, the 13820 charge start/scale graph and status configuration. '
@@ -85,9 +103,11 @@ def main():
             'segment by 1 + 0.07 * snapshot, truncating toward zero before shield/HP settlement; '
             'the confirmed 50210 graph rereads all valid owner 24823 stacks for each segment without consuming '
             'them and scales damage and AbsoluteDamage by 1 + 0.2 * current stacks, independently of CanTriggerChild; '
+            'the confirmed 13730 graph rereads live same-faction 3051 grid entities within the original 13 cells '
+            'around each hit target and scales each segment by 1 + 0.05 * entity count without consumption or an extra cap; '
             'other skill graphs remain outside this implementation.')
     output.write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    print('Verified all 15 original skill-logic configurations; recorded 13820, 13830/13840 and 50210 inputs.')
+    print('Verified all 15 original skill-logic configurations; recorded 13730, 13820, 13830/13840 and 50210 inputs.')
 
 
 if __name__ == '__main__':

@@ -82,6 +82,42 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/IteratingAgentStatusClassIdFilter.cs",
       "sha256": "db30a494b753fc9c98e2d129fedfa9eb36b7f16cabb5eeaddfab706d871574a8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleCfgCollectionEntitiesByRoleRoot.cs",
+      "sha256": "1441f59e1789f8337bf62f5f79d7a631681fadc57f76a1d7aa12024a7ede8270"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleCollectionEntitiesByRoleRoot.cs",
+      "sha256": "5d76263ef170549205e23996c5e35cc668db365c98c01bad00e2fc8aa1a0fa7e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleCfgBlackboardReadEcIdArrayCountAndStorage.cs",
+      "sha256": "fdb29adf0cfedb6902e9d6cd2a61f1d083b8fcb788f2024a921632c74a8514a7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleBlackboardReadEcIdArrayCountAndStorage.cs",
+      "sha256": "65e1a686a281ba8c4fa1c998a630d9276a08d1dc4d915a3c827a068af214219d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleBlackboardReadListCountAndStorage.cs",
+      "sha256": "ca534bd4379d053713d6a2a0b40500daebe30631ba3b93ca83bb741a2da7fdfe"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LogicFilter.cs",
+      "sha256": "6fa10ba1a5fbcb05d4499a3348cd340ad971a7642abd0b5fb916ee47a98888b9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityClassIdFilter.cs",
+      "sha256": "6605f6216c2f0e23a5e20717b759b53edaf6c249cf993c5ed2dd146c41e27113"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SameFactionFilter.cs",
+      "sha256": "8eed1e0877a0adf55535572e0ada2c4f48bbe2df70f3e53c2ba2bb0456f868d8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RangeFilter.cs",
+      "sha256": "90aec44642e11f4b99dd8c57621855693baf07077429844f45a739df1ebe368a"
     }
   ],
   "configuration_inputs": [
@@ -99,6 +135,270 @@
     }
   ],
   "definitions": {
+    "13730": {
+      "FightSkillComponent": {
+        "SkillType": 0,
+        "CostType": 0,
+        "SkillTargetType": 0,
+        "TargetType": 1,
+        "HitTargetActionType": 0,
+        "ElementType": 102,
+        "RangeType": 0,
+        "Range": [
+          {
+            "X": 0,
+            "Y": 0
+          }
+        ],
+        "HitList": [
+          {
+            "ClassId": 13731,
+            "Delay": 0.8299999833106995,
+            "ActOnSouce": 1,
+            "IgnoreAICount": false
+          }
+        ],
+        "SourceMoveList": [],
+        "ActionDuration": 1.2000000476837158,
+        "AllEndedActionDuration": -1.0,
+        "AllRelevantEndedActionDuration": -1.0,
+        "Duration": 1.5,
+        "AllEndedDuration": -1.0,
+        "AllRelevantEndedDuration": -1.0,
+        "LimitedTimes": -1,
+        "ResetCDAtStart": false,
+        "ExtSkill": [],
+        "Replay": {
+          "Rate": 0.0,
+          "ReplaceSkillArrayOnReplay": []
+        },
+        "ReplayMaxCountEachRound": -1,
+        "CanTriggerChild": true,
+        "CanTriggerStatusEntityIds": [],
+        "Ai": {
+          "DontKeepDistance": false,
+          "AiPriorityTypes": [],
+          "LastAIPriorityTypes": [],
+          "IgnoreStatusArray": [],
+          "AIPriroityCharacterType": 8,
+          "ReleaseWhileRidicule": false,
+          "ReleaseWhileConfusion": false,
+          "IsReleaseSkillAfterMove": false,
+          "IsFixSkillDirection": false,
+          "FixedDirection": 0,
+          "MoveByTeleport": false,
+          "AIPriorityHpLowerCharacterTypeFilter": [],
+          "AiPriorityPropType": 0,
+          "AiPriorityFindMax": true,
+          "AIPriorityCharacterTypeGroups": []
+        },
+        "ActionType": 2,
+        "FlipSource": true,
+        "NeedConditionStatusMeetToRelease": false,
+        "MustHaveValidCost": false,
+        "IsFixedProp": false,
+        "ResetReleasedTimeOnNextWave": false
+      },
+      "GridTransformComponent": {
+        "BodyRangeInfos": [
+          {
+            "Pos": {
+              "X": 0,
+              "Y": 0
+            },
+            "GroundType": 0,
+            "IgnoreClick": false,
+            "OverrideGroundType": false
+          }
+        ],
+        "BodyCrossBlockedInfos": [],
+        "UnlockWholeRequestCount": 1,
+        "RealCenter": [
+          0.0,
+          0.0
+        ],
+        "IsRigidBody": true
+      },
+      "TransformComponent": {},
+      "FightSkillLogicComponent": {
+        "OnDoHit": null,
+        "OnDoHitTransient": {
+          "FilterCondition": null,
+          "HandleCfgs": [
+            {
+              "FilterCondition": {
+                "LogicType": 0,
+                "SubFilters": [
+                  {
+                    "EntityKey": {
+                      "Id": 1,
+                      "Name": "MainEntity",
+                      "PortType": 0,
+                      "IsPersistentBlackboard": false
+                    },
+                    "ClassId": 3051,
+                    "_type": "EntityClassIdFilter"
+                  },
+                  {
+                    "CheckEntityKey": {
+                      "Id": 3,
+                      "Name": "SourceEntity",
+                      "PortType": 0,
+                      "IsPersistentBlackboard": false
+                    },
+                    "MainEntityKey": {
+                      "Id": 1,
+                      "Name": "MainEntity",
+                      "PortType": 0,
+                      "IsPersistentBlackboard": false
+                    },
+                    "_type": "SameFactionFilter"
+                  },
+                  {
+                    "CenterEntity": {
+                      "Id": 2002,
+                      "Name": "HitTargetEntity",
+                      "PortType": 0,
+                      "IsPersistentBlackboard": false
+                    },
+                    "Range": [
+                      {
+                        "X": 0,
+                        "Y": 0
+                      },
+                      {
+                        "X": 0,
+                        "Y": 1
+                      },
+                      {
+                        "X": -1,
+                        "Y": 0
+                      },
+                      {
+                        "X": 1,
+                        "Y": 0
+                      },
+                      {
+                        "X": 0,
+                        "Y": -1
+                      },
+                      {
+                        "X": 0,
+                        "Y": 2
+                      },
+                      {
+                        "X": -1,
+                        "Y": 1
+                      },
+                      {
+                        "X": 1,
+                        "Y": 1
+                      },
+                      {
+                        "X": 0,
+                        "Y": -2
+                      },
+                      {
+                        "X": -1,
+                        "Y": -1
+                      },
+                      {
+                        "X": 1,
+                        "Y": -1
+                      },
+                      {
+                        "X": -2,
+                        "Y": 0
+                      },
+                      {
+                        "X": 2,
+                        "Y": 0
+                      }
+                    ],
+                    "UseWorldPosByCenterEntityTransform": false,
+                    "TargetEntityKey": {
+                      "Id": 1,
+                      "Name": "MainEntity",
+                      "PortType": 0,
+                      "IsPersistentBlackboard": false
+                    },
+                    "ConsiderTargetBodySize": true,
+                    "_type": "RangeFilter"
+                  }
+                ],
+                "_type": "LogicFilter"
+              },
+              "CharacterType": 6,
+              "SourceEntityKey": {
+                "Id": 1,
+                "Name": "MainEntity",
+                "PortType": 0,
+                "IsPersistentBlackboard": false
+              },
+              "ResultEntityArrayKey": {
+                "Id": 406339594,
+                "Name": "Entities",
+                "PortType": 1,
+                "IsPersistentBlackboard": false
+              },
+              "_type": "FightHandleCfgCollectionEntitiesByRoleRoot"
+            },
+            {
+              "ListBBKey": {
+                "Id": 406339594,
+                "Name": "Entities",
+                "PortType": 0,
+                "IsPersistentBlackboard": false
+              },
+              "StorageBBKey": {
+                "Id": 511879177,
+                "Name": "DamageScaleCount",
+                "PortType": 1,
+                "IsPersistentBlackboard": false
+              },
+              "_type": "FightHandleCfgBlackboardReadEcIdArrayCountAndStorage"
+            },
+            {
+              "DamageKey": {
+                "Id": 2004,
+                "Name": "HitTransientDamage",
+                "PortType": 0,
+                "IsPersistentBlackboard": false
+              },
+              "BaseScaleKey": {
+                "Id": 774082833,
+                "Name": "BaseScaleKey",
+                "PortType": 0,
+                "IsPersistentBlackboard": false
+              },
+              "ScaleValue": 500,
+              "StorageDamageKey": {
+                "Id": 2004,
+                "Name": "HitTransientDamage",
+                "PortType": 1,
+                "IsPersistentBlackboard": false
+              },
+              "DeltaDamageKey": {
+                "Id": 122229964,
+                "Name": "DeltaDamage",
+                "PortType": 1,
+                "IsPersistentBlackboard": false
+              },
+              "StorageAsAbs": true,
+              "ScaleCountKey": {
+                "Id": 511879177,
+                "Name": "DamageScaleCount",
+                "PortType": 0,
+                "IsPersistentBlackboard": false
+              },
+              "_type": "FightHandleCfgDamageScaleByScale"
+            }
+          ]
+        },
+        "OnSkillStart": null,
+        "OnHitFinish": null
+      }
+    },
     "13820": {
       "FightSkillComponent": {
         "SkillType": 0,
@@ -1532,6 +1832,40 @@
     }
   },
   "skill_items": [
+    {
+      "ClassId": 10192,
+      "EcEntityId": 13730,
+      "DirectionEcEntityId": {},
+      "RandomSkillWeightList": [],
+      "RandomSkillEntityId": [],
+      "TryAtStartType": 0,
+      "UpgradeMaterialId": 12001,
+      "Tags": [
+        22
+      ],
+      "SkillSortTypes": [
+        4
+      ],
+      "OuterTag": 0,
+      "PassiveRankPropId": 0,
+      "PassiveGroupLevelPropId": 0,
+      "PassiveRankFactorId": 2050,
+      "PassivePropFactors": {},
+      "PassiveStatusIdList": [],
+      "InitEnergy": 0,
+      "TriggerNeedEnergy": 0,
+      "ViewPropEntities": [
+        13730
+      ],
+      "ViewPropBlackList": [],
+      "HyperLinkTypes": [],
+      "HyperLinkDatas": [],
+      "UserType": 1,
+      "Invisible": false,
+      "MaxRankLimit": 0,
+      "AiPriorityId": -1,
+      "LastAiPriorityId": -1
+    },
     {
       "ClassId": 10196,
       "EcEntityId": 13820,
@@ -14139,6 +14473,10 @@
       "payload_sha256": "5da6dd4982bdb6259e13043da7e2b7b4dc6b655beff1661b5f92f4fd65e0c81f",
       "rows": [
         {
+          "ClassId": 10192,
+          "EcEntityId": 13730
+        },
+        {
           "ClassId": 10196,
           "EcEntityId": 13820
         },
@@ -14498,7 +14836,6 @@
   },
   "configuration_only_skill_logic_ids": [
     13640,
-    13730,
     13740,
     13870,
     13960,
@@ -14511,7 +14848,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_skill_logic_sources.py",
-    "sha256": "ec564426f5ff085ba5e4b6b6eb86679a8d1dc393180e1196a52d4498ff54111e"
+    "sha256": "f806819d8d511f4ab9d429de9167002d652fd9feed40cf227255d3d623245b11"
   },
-  "operation": "Verify complete components for all 15 skill-logic entities against the selected version. Preserve the two transient stack graphs, the 13820 charge start/scale graph and status configuration. The APK exposes empty client/handler classes; execution uses the confirmed per-target, pre-HP, miss/immune/shield and child-status rules. Existing stack lifecycle is shared; The confirmed 13820 cast snapshot consumes valid charge instances at start and scales each damage segment by 1 + 0.07 * snapshot, truncating toward zero before shield/HP settlement; the confirmed 50210 graph rereads all valid owner 24823 stacks for each segment without consuming them and scales damage and AbsoluteDamage by 1 + 0.2 * current stacks, independently of CanTriggerChild; other skill graphs remain outside this implementation."
+  "operation": "Verify complete components for all 15 skill-logic entities against the selected version. Preserve the two transient stack graphs, the 13820 charge start/scale graph and status configuration. The APK exposes empty client/handler classes; execution uses the confirmed per-target, pre-HP, miss/immune/shield and child-status rules. Existing stack lifecycle is shared; The confirmed 13820 cast snapshot consumes valid charge instances at start and scales each damage segment by 1 + 0.07 * snapshot, truncating toward zero before shield/HP settlement; the confirmed 50210 graph rereads all valid owner 24823 stacks for each segment without consuming them and scales damage and AbsoluteDamage by 1 + 0.2 * current stacks, independently of CanTriggerChild; the confirmed 13730 graph rereads live same-faction 3051 grid entities within the original 13 cells around each hit target and scales each segment by 1 + 0.05 * entity count without consumption or an extra cap; other skill graphs remain outside this implementation."
 }

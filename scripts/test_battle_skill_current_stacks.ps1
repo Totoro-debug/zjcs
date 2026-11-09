@@ -35,7 +35,7 @@ $a=$catalog.CreateStatus(24823,1,1,101);$a.StackCount=2;$actor.Statuses.Add($a)
 $b=$catalog.CreateStatus(24823,1,99,102);$b.StackCount=3;$actor.Statuses.Add($b)
 $forbidden=$catalog.CreateStatus(24823,1,1,103);$forbidden.StackCount=7;$forbidden.ForbiddenType=1;$actor.Statuses.Add($forbidden)
 $targetOnly=$catalog.CreateStatus(24823,2,2,104);$targetOnly.StackCount=9;$target.Statuses.Add($targetOnly)
-$logic=$create.Invoke($null,@($actor,$skill,$units,$catalog,$random))
+$logic=$create.Invoke($null,@($actor,$skill,$units,$catalog,$random,$null))
 Assert-Logic ($null -ne $logic -and -not $start.Invoke($logic,@())) '50210 initialization fabricated a start graph.'
 function Invoke-Segment($flow,[long]$damage=-101,[bool]$cure=$false) {
  $context=[Zjcs.Combat.Official.FightBattleTransientDamageContext]::new([Zjcs.Combat.Official.FightDamageTypeData]::new(),$damage,[Math]::Abs($damage),$cure)
@@ -76,7 +76,7 @@ Assert-Logic ($scaled.ShieldDamage -eq [long][decimal]::Truncate([decimal]$plain
 $bad=$catalog.CreateSkill(50210,0,0,1,1,1,$null)
 $bad.LogicDefinitionJson=$bad.LogicDefinitionJson.Replace('"StatusId":24823','"StatusId":24031')
 Assert-Logic ($bad.LogicDefinitionJson -ne $skill.LogicDefinitionJson) 'Malformed-graph fixture did not modify the original read.'
-$badFlow=$create.Invoke($null,@($actor,$bad,$units,$catalog,$random))
+$badFlow=$create.Invoke($null,@($actor,$bad,$units,$catalog,$random,$null))
 $badHit=Invoke-Segment $badFlow
 Assert-Logic ($badHit.Damage -eq -101) 'An unknown status-read graph modified damage.'
 Write-Output '50210 current layers, source filtering, no consumption, per-segment refresh, child flag, rounding, DeltaDamage, zero, cure, shield and malformed-graph checks passed.'

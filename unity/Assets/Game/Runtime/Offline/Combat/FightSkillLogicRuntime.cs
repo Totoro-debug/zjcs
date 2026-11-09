@@ -4,12 +4,13 @@ using System.Collections.Generic;
 namespace Zjcs.Combat.Official
 {
     // MyFightSkillLogic has no server implementation in the APK. Only the
-    // explicitly confirmed charge and transient stack flows are enabled here.
+    // explicitly confirmed charge, transient stack and burning-grid flows are enabled here.
     internal sealed class FightSkillLogicRuntime
     {
         private readonly FightBattleUnitState actor;
         private readonly FightBattleSkillDefinition skill;
         private readonly IReadOnlyList<FightBattleUnitState> units;
+        private readonly IReadOnlyList<FightBattleGridItemState> gridItems;
         private readonly FightOfficialCombatCatalog catalog;
         private readonly FightRandomStream random;
         private readonly Dictionary<string, object> flow;
@@ -20,30 +21,33 @@ namespace Zjcs.Combat.Official
 
         private FightSkillLogicRuntime(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             IReadOnlyList<FightBattleUnitState> units, FightOfficialCombatCatalog catalog,
-            FightRandomStream random, Dictionary<string, object> flow, Dictionary<string, object> startFlow)
+            FightRandomStream random, Dictionary<string, object> flow, Dictionary<string, object> startFlow,
+            IReadOnlyList<FightBattleGridItemState> gridItems)
         {
             this.actor = actor; this.skill = skill; this.units = units;
             this.catalog = catalog; this.random = random; this.flow = flow; this.startFlow = startFlow;
+            this.gridItems = gridItems;
         }
 
         internal static FightSkillLogicRuntime Create(FightBattleUnitState actor,
             FightBattleSkillDefinition skill, IReadOnlyList<FightBattleUnitState> units,
-            FightOfficialCombatCatalog catalog, FightRandomStream random)
+            FightOfficialCombatCatalog catalog, FightRandomStream random,
+            IReadOnlyList<FightBattleGridItemState> gridItems = null)
         {
             if (actor == null || skill == null || catalog == null
-                || (skill.EntityId != 13820 && skill.EntityId != 13830 && skill.EntityId != 13840 && skill.EntityId != 50210)) return null;
+                || (skill.EntityId != 13730 && skill.EntityId != 13820 && skill.EntityId != 13830 && skill.EntityId != 13840 && skill.EntityId != 50210)) return null;
             catalog.RestoreSkillLogicDefinition(skill);
             if (!skill.HasLogicComponent || string.IsNullOrEmpty(skill.LogicDefinitionJson)) return null;
             var component = OfficialJson.Parse(skill.LogicDefinitionJson) as Dictionary<string, object>;
             var flow = Object(component, "OnDoHitTransient");
             return flow == null ? null : new FightSkillLogicRuntime(actor, skill, units, catalog, random, flow,
-                Object(component, "OnSkillStart"));
+                Object(component, "OnSkillStart"), gridItems);
         }
 
         internal void OnDoHitTransient(FightBattleUnitState target, FightBattleHitDefinition hit,
             FightDamageTypeData type)
         {
-            if (skill.EntityId == 13820 || skill.EntityId == 50210 || target == null || type.Dodge || type.Blinding) return;
+            if (skill.EntityId == 13730 || skill.EntityId == 13820 || skill.EntityId == 50210 || target == null || type.Dodge || type.Blinding) return;
             var filter = Object(flow, "FilterCondition");
             if (flow.TryGetValue("FilterCondition", out object rawFilter)
                 && rawFilter != null && filter == null) return;
@@ -161,6 +165,11 @@ namespace Zjcs.Combat.Official
                         if (count > int.MaxValue) return; // Original output is an integer blackboard port.
                     }
             }
+            else if (skill.EntityId == 13730)
+            {
+                if (!TryCountBurningTiles(target, handlers, out count, out scale)) return;
+                scaleKey = 511879177; scaleValue = 500; persistent = false;
+            }
             else return;
             if (String(scale, "_type") != "FightHandleCfgDamageScaleByScale"
                 || !IsPort(scale, "DamageKey", 2004, false)
@@ -181,6 +190,52 @@ namespace Zjcs.Combat.Official
             blackboard[2004] = damage.Damage;
             decimal difference = Math.Abs((decimal)damage.Damage - previous);
             blackboard[122229964] = difference >= long.MaxValue ? long.MaxValue : (long)difference;
+        }
+
+        private bool TryCountBurningTiles(FightBattleUnitState target, List<object> handlers,
+            out long count, out Dictionary<string, object> scale)
+        {
+            count = 0; scale = null;
+            if (handlers.Count != 3 || !(handlers[0] is Dictionary<string, object> collect)
+                || !(handlers[1] is Dictionary<string, object> read)
+                || !(handlers[2] is Dictionary<string, object> multiply)
+                || String(collect, "_type") != "FightHandleCfgCollectionEntitiesByRoleRoot"
+                || Int(collect, "CharacterType") != 6 || !IsPort(collect, "SourceEntityKey", 1, false)
+                || !IsPort(collect, "ResultEntityArrayKey", 406339594, false)
+                || String(read, "_type") != "FightHandleCfgBlackboardReadEcIdArrayCountAndStorage"
+                || !IsPort(read, "ListBBKey", 406339594, false)
+                || !IsPort(read, "StorageBBKey", 511879177, false)) return false;
+            var filter = Object(collect, "FilterCondition");
+            var filters = Array(filter, "SubFilters");
+            if (String(filter, "_type") != "LogicFilter" || Int(filter, "LogicType") != 0
+                || filters.Count != 3 || !(filters[0] is Dictionary<string, object> entity)
+                || !(filters[1] is Dictionary<string, object> faction)
+                || !(filters[2] is Dictionary<string, object> range)
+                || String(entity, "_type") != "EntityClassIdFilter" || Int(entity, "ClassId") != 3051
+                || !IsPort(entity, "EntityKey", 1, false)
+                || String(faction, "_type") != "SameFactionFilter"
+                || !IsPort(faction, "CheckEntityKey", 3, false) || !IsPort(faction, "MainEntityKey", 1, false)
+                || String(range, "_type") != "RangeFilter" || !IsPort(range, "CenterEntity", 2002, false)
+                || !IsPort(range, "TargetEntityKey", 1, false)
+                || Bool(range, "UseWorldPosByCenterEntityTransform") || !Bool(range, "ConsiderTargetBodySize")) return false;
+            var offsets = new HashSet<FightGridPoint>();
+            foreach (object value in Array(range, "Range"))
+            {
+                if (!(value is Dictionary<string, object> point) || !point.ContainsKey("X") || !point.ContainsKey("Y")
+                    || !offsets.Add(new FightGridPoint(Int(point, "X"), Int(point, "Y")))) return false;
+            }
+            if (offsets.Count != 13 || !offsets.Contains(new FightGridPoint(0, 0))) return false;
+            // Each live grid entity contributes once. Its stored faction is the
+            // confirmed creation snapshot, independently of its creator's current faction.
+            var seen = new HashSet<int>();
+            if (gridItems != null) foreach (var item in gridItems)
+                if (item != null && !item.Ended && item.EntityClassId == 3051
+                    && item.HasRuntime && item.Runtime != null && !item.Runtime.Ended
+                    && item.Runtime.Side == actor.Side
+                    && offsets.Contains(new FightGridPoint(item.X - target.X, item.Y - target.Y))
+                    && seen.Add(item.Id)) count++;
+            scale = multiply;
+            return true;
         }
 
         private static long ScaleDamage(long value, decimal factor)

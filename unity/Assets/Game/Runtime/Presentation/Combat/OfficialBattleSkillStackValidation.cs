@@ -23,17 +23,17 @@ namespace Zjcs.Presentation.Combat
             FightBattleSkillDefinition attack, int skillId)
         {
             this.catalog = catalog; this.attack = attack; this.skillId = skillId;
-            itemId = skillId == 50210 ? 16020 : skillId == 13820 ? 10196 : skillId == 13830 ? 10197 : 10198;
+            itemId = skillId == 13730 ? 10192 : skillId == 50210 ? 16020 : skillId == 13820 ? 10196 : skillId == 13830 ? 10197 : 10198;
             statusId = skillId == 50210 ? 24823 : skillId == 13840 ? 24697 : 24031;
-            animationName = skillId == 50210 ? "skill_01" : skillId == 13820 ? "100/skill_71"
+            animationName = skillId == 13730 ? "200/skill_40" : skillId == 50210 ? "skill_01" : skillId == 13820 ? "100/skill_71"
                 : skillId == 13830 ? "100/skill_11_2" : "100/skill_17";
         }
 
         public static OfficialBattleSkillStackValidation Configure(FightBattleCheckpoint checkpoint)
         {
             Require(int.TryParse(Environment.GetEnvironmentVariable("ZJCS_SKILL_STACK_ENTITY"), out int id)
-                && (id == 13820 || id == 13830 || id == 13840 || id == 50210),
-                "Select original 13820, 13830, 13840 or 50210.");
+                && (id == 13730 || id == 13820 || id == 13830 || id == 13840 || id == 50210),
+                "Select original 13730, 13820, 13830, 13840 or 50210.");
             var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
             var player = checkpoint.Units.Single(value => value.Id == 1);
             var enemy = checkpoint.Units.First(value => value.Id != 1);
@@ -63,6 +63,20 @@ namespace Zjcs.Presentation.Combat
                 unit.Turn.Speed = unit == player ? 1000 : 1;
             }
             if (id == 13840) enemy.Statuses.Add(catalog.CreateStatus(24266, enemy.Id, player.Id, 9913840));
+            if (id == 13730)
+            {
+                Require(checkpoint.GridItems.Count == 0, "The isolated burn fixture expects an empty grid-item list.");
+                for (int offset = -2; offset <= 0; offset++)
+                {
+                    var position = new FightGridPoint(enemy.X + offset, enemy.Y);
+                    Require(checkpoint.Grid.Contains(position), "The burn fixture is outside the battlefield.");
+                    var item = FightGridItemRuntime.Create(9913732 + offset, 3320,
+                        player, player, position, 0);
+                    item.Runtime.Statuses.Add(catalog.CreateStatus(13052, item.Id, player.Id,
+                        9913742 + offset, 13730, 10192, 5, 20, player.SubRank, player.Properties));
+                    checkpoint.GridItems.Add(item);
+                }
+            }
             if (id == 13820)
             {
                 var own = catalog.CreateStatus(24031, player.Id, player.Id, 9913820);
@@ -126,7 +140,19 @@ namespace Zjcs.Presentation.Combat
             var player = checkpoint.Units.Single(value => value.Id == 1);
             var hits = step.DamageEvents.Where(value => value.SourceId == 1 && value.SkillEntityId == skillId).ToArray();
             var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
-            if (skillId == 50210)
+            if (skillId == 13730)
+            {
+                Require(hits.Length > 0 && checkpoint.GridItems.Count == 3
+                    && checkpoint.GridItems.All(value => !value.Ended && value.Runtime.Side == player.Side
+                        && value.Runtime.Statuses.Any(status => status.ClassId == 13052)),
+                    "The original burn skill did not retain the three friendly grid entities.");
+                Require(saved.GridItems.Count == 3 && saved.GridItems.All(value => !value.Ended
+                    && value.HasRuntime && value.Runtime.Side == player.Side
+                    && value.Runtime.Statuses.Any(status => status.ClassId == 13052))
+                    && saved.Units.Single(value => value.Id == 1).SkillState.Slots[0].ReleasedTimes == 1,
+                    "Burn tiles, factions or the single equipped release were lost in the checkpoint.");
+            }
+            else if (skillId == 50210)
             {
                 Require(hits.Length > 0 && player.Statuses.Single(value => value.InstanceId == 9950210).StackCount == 5,
                     "The pet support hit consumed its current charge layers.");
@@ -165,7 +191,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var property in player.Properties.Concat(player.BaseProperties ?? player.Properties))
                 if (property.Id == catalog.PropertyType("Attack")) property.Value = 100000000;
             Debug.Log("[Skill stack] actual " + skillId + " hit count=" + hits.Length
-                + (skillId == 13820 ? "; consumed five charge layers" : skillId == 50210
+                + (skillId == 13730 ? "; retained three friendly burn tiles" : skillId == 13820 ? "; consumed five charge layers" : skillId == 50210
                     ? "; preserved five original layers and subsequent grants" : "; per-hit charge layers passed")
                 + "; original item/cultivation, one release and checkpoint passed.");
         }

@@ -783,7 +783,7 @@ namespace Zjcs.Combat.Official
                 SynchronizeDeathForbidden(actor);
             }
 
-            var skillLogic = FightSkillLogicRuntime.Create(actor, skill, units, statusCatalog, random);
+            var skillLogic = FightSkillLogicRuntime.Create(actor, skill, units, statusCatalog, random, checkpoint.GridItems);
             if (skillLogic != null && skillLogic.OnSkillStart()) RebuildBattleProperties();
 
             if (statusCatalog != null)

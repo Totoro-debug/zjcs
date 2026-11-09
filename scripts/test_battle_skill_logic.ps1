@@ -29,7 +29,7 @@ $units.Add($actor); $units.Add($target)
 $random = [Zjcs.Combat.Official.FightRandomStream]::new(91)
 $skill = $catalog.CreateSkill(13830,0,10197,5,20,1,$null)
 $skill.RootEntityId=13100
-$runtime = $create.Invoke($null,@($actor,$skill,$units,$catalog,$random))
+$runtime = $create.Invoke($null,@($actor,$skill,$units,$catalog,$random,$null))
 Assert-Logic ($null -ne $runtime) 'Original 13830 graph was not restored.'
 $hit = [Zjcs.Combat.Official.FightBattleHitCollector]::CollectAll($skill)[0]
 $hit.HasCustomDamage=$true; $hit.CustomDamage=100
@@ -69,7 +69,7 @@ for ($index=0; $index -lt 30; $index++) {
 Assert-Logic ($charge.StackCount -eq 20) 'The original 20-layer cap or whitelist was lost.'
 
 $skill2 = $catalog.CreateSkill(13840,0,10198,5,20,1,$null)
-$runtime2 = $create.Invoke($null,@($actor,$skill2,$units,$catalog,$random))
+$runtime2 = $create.Invoke($null,@($actor,$skill2,$units,$catalog,$random,$null))
 $hit2 = [Zjcs.Combat.Official.FightBattleHitCollector]::CollectAll($skill2)[0]
 $clean = New-Unit 3 2 5 5; $units.Add($clean)
 $transient.Invoke($runtime2,@($clean,$hit2,[Zjcs.Combat.Official.FightDamageTypeData]::new())) | Out-Null
@@ -84,7 +84,7 @@ $charge2 = $actor.Statuses | Where-Object ClassId -eq 24697
 Assert-Logic ($charge2.Count -eq 1 -and $charge2.StackCount -eq 12) 'Per-target status filter or original 12-layer cap failed.'
 
 $isolated = New-Unit 4 1 3 4; $units.Add($isolated)
-$fresh = $create.Invoke($null,@($isolated,$skill,$units,$catalog,$random))
+$fresh = $create.Invoke($null,@($isolated,$skill,$units,$catalog,$random,$null))
 Assert-Logic (-not [object]::ReferenceEquals(
     $logicType.GetField('blackboard',[Reflection.BindingFlags]'Instance,NonPublic').GetValue($runtime),
     $logicType.GetField('blackboard',[Reflection.BindingFlags]'Instance,NonPublic').GetValue($fresh))) 'Separate casts share the same blackboard.'
@@ -96,7 +96,7 @@ foreach ($replacement in @(
     $invalid=$catalog.CreateSkill(13830,0,10197,5,20,1,$null)
     $invalid.LogicDefinitionJson=$invalid.LogicDefinitionJson.Replace($replacement[0],$replacement[1])
     Assert-Logic ($invalid.LogicDefinitionJson.Contains($replacement[1])) 'Invalid graph fixture did not change the intended field.'
-    $invalidRuntime=$create.Invoke($null,@($isolated,$invalid,$units,$catalog,$random))
+    $invalidRuntime=$create.Invoke($null,@($isolated,$invalid,$units,$catalog,$random,$null))
     $transient.Invoke($invalidRuntime,@($target,$hit,[Zjcs.Combat.Official.FightDamageTypeData]::new())) | Out-Null
     Assert-Logic ($isolated.Statuses.Count -eq 0) 'An unknown handler/filter or unbound entity port created a status.'
 }

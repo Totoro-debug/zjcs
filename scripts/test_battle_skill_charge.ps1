@@ -35,7 +35,7 @@ $forbidden=$catalog.CreateStatus(24031,11,11,103);$forbidden.StackCount=4;$forbi
 $charged.Statuses.Add($a);$charged.Statuses.Add($b);$charged.Statuses.Add($forbidden)
 $blast=$catalog.CreateSkill(13820,0,10196,5,20,1,$null)
 $blastHit=[Zjcs.Combat.Official.FightBattleHitCollector]::CollectAll($blast)[0]
-$blastLogic=$create.Invoke($null,@($charged,$blast,$chargeUnits,$catalog,$random))
+$blastLogic=$create.Invoke($null,@($charged,$blast,$chargeUnits,$catalog,$random,$null))
 Assert-Logic ($start.Invoke($blastLogic,@())) 'Charge start graph failed.'
 Assert-Logic (-not $charged.Statuses.Contains($a) -and -not $charged.Statuses.Contains($b) -and $charged.Statuses.Contains($forbidden)) 'Snapshot did not consume all and only valid source instances.'
 $later=$catalog.CreateStatus(24031,11,11,104);$later.StackCount=1;$charged.Statuses.Add($later)
@@ -45,7 +45,7 @@ $scale.Invoke($blastLogic,@($victim,$blastHit,$context))|Out-Null
 Assert-Logic ($context.Damage -eq -136 -and $context.AbsoluteDamage -eq 136) 'Five-charge signed damage did not truncate toward zero.'
 $castBB=$logicType.GetField('blackboard',[Reflection.BindingFlags]'Instance,NonPublic').GetValue($blastLogic)
 Assert-Logic ($castBB[122229964] -eq 35) 'DeltaDamage did not record absolute new-old difference.'
-$otherLogic=$create.Invoke($null,@($charged,$blast,$chargeUnits,$catalog,$random))
+$otherLogic=$create.Invoke($null,@($charged,$blast,$chargeUnits,$catalog,$random,$null))
 Assert-Logic ($start.Invoke($otherLogic,@())) 'A second cast did not capture new charge.'
 $one=[Zjcs.Combat.Official.FightBattleTransientDamageContext]::new([Zjcs.Combat.Official.FightDamageTypeData]::new(),-101,101,$false)
 $scale.Invoke($otherLogic,@($victim,$blastHit,$one))|Out-Null
@@ -115,7 +115,7 @@ foreach($change in @(@('"StatusId":24031','"StatusId":9999'),@('"SourceEntityKey
  $owner=New-Unit 21 1 4 4;$stored=$catalog.CreateStatus(24031,21,21,1);$stored.StackCount=3;$owner.Statuses.Add($stored)
  $invalid=$catalog.CreateSkill(13820,0,10196,5,20,1,$null);$invalid.LogicDefinitionJson=$invalid.LogicDefinitionJson.Replace($change[0],$change[1])
  Assert-Logic ($invalid.LogicDefinitionJson.Contains($change[1])) 'Malformed charge fixture did not modify its graph.'
- $runtime=$create.Invoke($null,@($owner,$invalid,$chargeUnits,$catalog,$random))
+ $runtime=$create.Invoke($null,@($owner,$invalid,$chargeUnits,$catalog,$random,$null))
  Assert-Logic (-not $start.Invoke($runtime,@()) -and $stored.StackCount -eq 3) 'Unsupported charge graph consumed layers.'
 }
 Write-Output 'Actual 13820 execution matches the charge-free damage control; malformed start graphs leave charges intact.'
@@ -133,7 +133,7 @@ $onConsume=[Zjcs.Combat.Official.FightBattleStatusStateTrigger]::new()
 $onConsume.EntityId=24031;$onConsume.BasePercent=1;$onConsume.Target=2
 $listener.ConsumeStackCountStatuses.Add($onConsume)
 $owner.Statuses.Add($first);$owner.Statuses.Add($second);$owner.Statuses.Add($listener)
-$runtime=$create.Invoke($null,@($owner,$blast,$chargeUnits,$catalog,$random))
+$runtime=$create.Invoke($null,@($owner,$blast,$chargeUnits,$catalog,$random,$null))
 Assert-Logic ($start.Invoke($runtime,@())) 'Reentrant consumption fixture did not start.'
 $remaining=@($owner.Statuses|Where-Object ClassId -eq 24031|ForEach-Object StackCount|Measure-Object -Sum)[0].Sum
 Assert-Logic ($remaining -eq 2 -and $listener.ConsumeStackCountProgress -eq 1) 'Reentrant gains were consumed or notifications used the wrong actual layer count.'
