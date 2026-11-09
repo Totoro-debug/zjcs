@@ -4,6 +4,8 @@
 
 本页只记录官方输入与来源凭据。各模块的原始实现、转换／绑定细节、当前实现和验证边界见所属功能／地图页；逐文件记录以模块来源清单为准。
 
+完整技能／命中图的原 Wwise Event 资产、所选 EventBankMapping、对应 PCK／BNK 与 APK ARM64 音频库的版本函数按 APK 优先次序读取；原 GUID、名称、事件 ID、有序动作、HIRC 字节位置及 SHA256 见[原声音来源清单](battle-animation/native-sound-sources-source-manifest.json)，提取核验入口为 `scripts/prepare_battle_native_sound_sources.py`。本项不新增或转换音频载荷；实现及验证范围见[战斗执行](../../docs/features/battle-execution.md)。
+
 图集占位页命名取所选版本 `AppearanceSystem.Runtime/AppearanceOnDemandTextureLoader.GetPlaceholderTextureName`；原应用代码、既有图集加载器输入、适配输出及技能图引用凭据的哈希见[图集占位页绑定来源](battle-animation/atlas-placeholder-binding-source-manifest.json)，处理入口为 `scripts/prepare_battle_atlas_placeholder_binding.py`。不新增或修改美术载荷；实现与验证边界见[战斗执行](../../docs/features/battle-execution.md)。
 
 63110 技能图的原 `Eff_Monster_3511_Skill02_3` 片段及三个 `Animation` 引用来自同版官方缓存包与已校验原生导出；原对象、包／输出哈希、Legacy 副本及引用转换见[原动画双用途绑定来源](battle-animation/legacy-animation-bindings-source-manifest.json)，入口为 `scripts/prepare_battle_legacy_animation_bindings.py`，亦由技能图转换器调用。不重绘或重采样动画；功能及验证边界见[战斗执行](../../docs/features/battle-execution.md)。

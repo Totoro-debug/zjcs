@@ -38,6 +38,8 @@
 
 57784 的 `playable_16040_SourceToHit` 保留原 3205 `SkeletonMecanim` 轨道及其未激活祖先。`EmbeddedMonsterMecanimResources` 按原 prefab 身份绑定免费原生骨骼、`monster_3205_SkeletonData`、低清图集、`monster_3205_Controller` 及原层混合参数。组件夹具显式激活祖先仅用于检查骨骼本身；正式图和受控命中视图均保留原 `activeSelf`，不会主动播放这条休眠轨道。专项来源与确定性输出见[内嵌 Mecanim 绑定](../../assets/reference/battle-animation/embedded-mecanim-source-manifest.json)。
 
+完整原技能／命中图保留 1,735 个 Wwise Event 资产引用，对应 1,734 个事件 ID；两份不同 GUID 的 `Skill_14054` 引用保持独立。`prepare_battle_native_sound_sources.py` 将原事件名称的 FNV ID 与官方 EventBankMapping 比较，并按 APK 优先次序核验 25 个映射音频包和 Minimum 包的实际 bank。事件中 1,703 份引用有一个动作、32 份有两个动作；原顺序及 1,766 个独立 Play／Stop 动作的全部字段、HIRC 原字节哈希和位置均保留，不把多动作事件展开成单个 WAV。APK ARM64 `libAkSoundEngine.so` 的两个导出版本函数及原指令确认运行库为 `2022.1.18.8567`；版本、原包及绑定哈希见[原声音来源](../../assets/reference/battle-animation/native-sound-sources-source-manifest.json)。
+
 ## 完整还原部分
 
 - `OfficialBattleRuntimeController` 连接战斗会话、准备界面、场景宿主与结算回调；`FightBattleCheckpoint` 保存可恢复的本地战斗状态。
@@ -106,6 +108,7 @@
 - 官方服务器缺失的 AI、随机、结果裁决及复杂触发条件尚未完整恢复；未确认的行为不作推测。
 - 完整技能／命中／状态覆盖、同来源与叠层边界、特殊组件时序和实体生命周期仍有缺项。身体格选敌／接近和命中局部坐标变换已有指定原技能的 Play Mode 回归，尚未完成全部技能与 Windows Player 验证。
 - 原人物、NPC、幻兽、召唤物的完整模型、动作、骨骼、挂点、粒子、音频和材质表现尚未全部接通。
+- 正式战斗未提供 `SkillPlayableSoundHost`，原图声音节点仍由静音宿主处理。已有 21 种移动技能／动作的 PCM 提取和完整图事件至实际 bank 的来源核验；尚未接入 Windows Wwise 运行库，也未完成媒体／RTPC／Switch／State 的传递闭包、原总线 EQ／压缩器／限幅器／TimeStretch 和实际声音输出验证。原游戏速度参数为 RTPC `414249091`，不得用 `AudioSource.pitch` 代替原曲线。原生版本函数、全部映射事件及有序动作的来源检查通过，静态元数据检查通过（144,772 个 GUID），仅证明所述输入身份，不表示战斗音效已还原；本次只新增来源工具与凭据，未修改或运行 Unity 场景，未发布新 Player。
 - 命中实体视图及本地加载绑定已迁移，2,260 个原 prefab 的加载和六类代表命中图已通过隔离 Play Mode；正式执行器的真实命中创建／移除事件仍未接入表现。仍须覆盖全部原图、施法起点到命中位置连线、逐范围格时序及清理、连锁逐跳通知与特殊状态替换。现有正式技能图播放和伤害飘字仍不包含这些命中实体表现。
 - 正式技能宿主已改为加载完整原技能实体 prefab，保留原默认／四向图、角色组件和序列化引用，复用原加载、End／Remove／FIFO 池与选图流程；代表图、状态快照及对象池复用已通过隔离 Play Mode 与 Windows Player，全部原技能和完整人物演出尚未覆盖。
 - 57784 命中图的原骨骼适配、受控实体创建及复用已有专项验证，但所选配置中的 57780 只引用 57781 召唤命中；全部已安装战斗实体中未找到指向 57784 的父引用。保留该未引用内容及其原休眠层级，不自行接入技能；此项验证不表示 57780 整套战斗演出已经还原。
