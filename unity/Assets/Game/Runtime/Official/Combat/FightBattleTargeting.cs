@@ -64,7 +64,8 @@ namespace Zjcs.Combat.Official
 
         public static FightBattleSkillDefinition FindReadySkill(FightBattleUnitState actor,
             IReadOnlyList<FightBattleUnitState> units, int round, bool driving = true,
-            ISet<int> excludedSlots = null, int globalRound = 0)
+            ISet<int> excludedSlots = null, int globalRound = 0,
+            Func<FightBattleSkillDefinition, bool?> configuredCureAvailability = null)
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
             if (units == null) throw new ArgumentNullException(nameof(units));
@@ -92,8 +93,9 @@ namespace Zjcs.Combat.Official
                     && !HasCasterAreaTargets(actor, units, skill)) continue;
                 if (skill.SkillType == 3)
                 {
-                    bool needsHealing = false;
-                    foreach (FightBattleUnitState target in targets)
+                    bool? configured = configuredCureAvailability?.Invoke(skill);
+                    bool needsHealing = configured ?? false;
+                    if (!configured.HasValue) foreach (FightBattleUnitState target in targets)
                         if (target.Hp < target.MaxHp) { needsHealing = true; break; }
                     if (!needsHealing) continue;
                 }

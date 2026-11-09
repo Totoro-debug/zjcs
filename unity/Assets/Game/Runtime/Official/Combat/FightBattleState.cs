@@ -186,6 +186,17 @@ namespace Zjcs.Combat.Official
 
         public FightBattleStatusOrigin Origin;
 
+        public FightBattleStatusStateTrigger Copy()
+        {
+            var result = (FightBattleStatusStateTrigger)MemberwiseClone();
+            result.Origin = Origin?.Copy();
+            result.PropTarget = PropTarget?.Copy();
+            result.TargetWithoutStatusIds = TargetWithoutStatusIds == null ? null : (int[])TargetWithoutStatusIds.Clone();
+            result.StatusReplacementProperties = FightStatusPropertyModifiers.Copy(StatusReplacementProperties);
+            result.BlessPropertyScales = FightStatusPropertyModifiers.Copy(BlessPropertyScales);
+            return result;
+        }
+
         public FightBattleStatusStateTrigger WithSource(FightBattleStatusState status)
         {
             var result = (FightBattleStatusStateTrigger)MemberwiseClone();
@@ -270,6 +281,7 @@ namespace Zjcs.Combat.Official
     [Serializable]
     public sealed class FightBattleStatusComponentState
     {
+        public FightBattleStatusCureReduceState CureReduce;
         public FightBattleStatusHitSkillComponentState HitSkill;
         public FightBattleStatusDamageSkillComponentState DamageSkill;
         public FightBattleStatusHitApplyDamageComponentState HitApplyDamage;
@@ -286,6 +298,7 @@ namespace Zjcs.Combat.Official
         {
             return new FightBattleStatusComponentState
             {
+                CureReduce = CureReduce?.Copy(),
                 HitSkill = HitSkill?.Copy(),
                 DamageSkill = DamageSkill?.Copy(),
                 HitApplyDamage = HitApplyDamage?.Copy(),

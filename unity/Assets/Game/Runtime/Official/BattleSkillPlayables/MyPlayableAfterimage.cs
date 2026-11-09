@@ -30,7 +30,7 @@ public class MyPlayableAfterimage : MyPlayable, IBattleAfterimagePlayable
     {
         base.PlayImpl();
         skeletonRenderer = (SkeletonRenderer)myApplyComponent;
-        parameters = myApplyComponent.GetComponent<IAfterimageRTParamsProvider>();
+        parameters = GetComponent<IAfterimageRTParamsProvider>();
     }
 
     protected override bool ProcessFrameImpl(float deltaTime)

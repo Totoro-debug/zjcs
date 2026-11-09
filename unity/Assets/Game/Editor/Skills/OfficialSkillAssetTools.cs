@@ -40,6 +40,13 @@ namespace Zjcs.Editor.Skills
                 OfficialSkillRuntimeShaderBuild.Prepare();
                 BuildOptions buildOptions = Environment.GetEnvironmentVariable("ZJCS_CLEAN_BUILD_CACHE") == "1"
                     ? BuildOptions.CleanBuildCache : BuildOptions.None;
+                if (Environment.GetEnvironmentVariable("ZJCS_WINDOWS_SCRIPTS_ONLY") == "1")
+                {
+                    if (buildOptions != BuildOptions.None || !File.Exists(destination)
+                        || !Directory.Exists(Path.Combine(root, "Player", "杖剑传说_Data")))
+                        throw new BuildFailedException("Scripts-only validation requires an existing complete Player and retained build cache.");
+                    buildOptions = BuildOptions.BuildScriptsOnly;
+                }
                 var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
                     scenes = EditorBuildSettings.scenes.Where(value => value.enabled).Select(value => value.path).ToArray(),
                     locationPathName = destination, target = BuildTarget.StandaloneWindows64, options = buildOptions

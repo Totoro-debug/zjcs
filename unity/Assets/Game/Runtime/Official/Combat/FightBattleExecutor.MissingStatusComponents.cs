@@ -200,7 +200,7 @@ namespace Zjcs.Combat.Official
 
         private void ApplyComponentStatuses(FightBattleStatusState source,
             List<FightBattleStatusStateTrigger> triggers, FightBattleUnitState actor,
-            FightBattleUnitState target)
+            FightBattleUnitState target, long customParam = 0)
         {
             if (triggers == null) return;
             foreach (FightBattleStatusStateTrigger trigger in triggers)
@@ -210,13 +210,13 @@ namespace Zjcs.Combat.Official
                 FightBattleUnitState destination = trigger.ApplyTarget == 1 ? actor
                     : trigger.ApplyTarget == 3 ? ResolveUnit(source.CreatorId) : target;
                 ApplyComponentStatus(source, trigger.EntityId, destination, null,
-                    trigger.StatusReplacementProperties);
+                    trigger.StatusReplacementProperties, customParam);
             }
         }
 
         private void ApplyComponentStatus(FightBattleStatusState source, int classId,
             FightBattleUnitState destination, FightBattleSkillDefinition skill,
-            List<FightStatusReplacementValue> replacements = null)
+            List<FightStatusReplacementValue> replacements = null, long customParam = 0)
         {
             if (source == null || classId <= 0 || destination == null || statusCatalog == null
                 || destination.Hp <= 0 && !statusCatalog.HasBackToLifeComponent(classId)) return;
@@ -226,7 +226,7 @@ namespace Zjcs.Combat.Official
             FightBattleStatusState template = statusCatalog.CreateStatus(classId, destination.Id,
                 source.CreatorId > 0 ? source.CreatorId : source.OwnerId, instanceId,
                 source.RootSkillId, source.ApplyingSkillItemId, source.SourceSkillRank,
-                source.SourceSkillLevel, source.SourceSubRank, source.SourceProperties, 0,
+                source.SourceSkillLevel, source.SourceSubRank, source.SourceProperties, customParam,
                 replacements ?? source.ReplacementProperties, source.BlessPropertyScales);
             template.ReportSource = FightBattleStatusReportSource.Resolve(source).Copy();
             template.Origin = FightBattleStatusOrigin.Resolve(source).Copy();

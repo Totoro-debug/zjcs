@@ -729,7 +729,7 @@ namespace Zjcs.Combat.Official
                 }
                 if (summonLimit > 0) result.SummonCountLimit = summonLimit;
             }
-            if (result.HitGraphEntities.Count == 0)
+            if (result.HitGraphEntities.Count == 0 && (entityId != 50213 || !result.HasLogicComponent))
                 throw new InvalidOperationException("Official skill has no resolved hit graph: " + entityId);
             return result;
         }

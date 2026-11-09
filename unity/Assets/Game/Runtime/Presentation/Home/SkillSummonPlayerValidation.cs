@@ -118,6 +118,14 @@ namespace Zjcs.Presentation.Home
             OfficialBattleEmbeddedMonsterValidation embeddedProbe = null;
             bool checkAbsorption = Environment.GetEnvironmentVariable("ZJCS_STATUS_ABSORPTION_ACCEPTANCE") == "1";
             OfficialBattleStatusAbsorptionValidation absorptionProbe = null;
+            string explicitMode = Environment.GetEnvironmentVariable("ZJCS_EXPLICIT_GRAPH_ACCEPTANCE");
+            bool checkExplicitGraph = !string.IsNullOrEmpty(explicitMode) && explicitMode != "0";
+            OfficialBattleExplicitGraphValidation explicitGraphProbe = null;
+            string graphMode = Environment.GetEnvironmentVariable("ZJCS_GRAPH_CAPABILITY_ACCEPTANCE");
+            bool checkGraphCapability = !string.IsNullOrEmpty(graphMode) && graphMode != "0";
+            OfficialBattleGraphCapabilityValidation graphCapabilityProbe = null;
+            bool checkHitFinish = Environment.GetEnvironmentVariable("ZJCS_HIT_FINISH_ACCEPTANCE") == "1";
+            OfficialBattleHitFinishValidation hitFinishProbe = null;
             bool checkMasterChildren = Environment.GetEnvironmentVariable("ZJCS_MASTER_CHILD_ACCEPTANCE") == "1";
             OfficialBattleMasterChildValidation masterChildProbe = null;
             bool checkRandomHits = Environment.GetEnvironmentVariable("ZJCS_RANDOM_HIT_ACCEPTANCE") == "1";
@@ -127,7 +135,7 @@ namespace Zjcs.Presentation.Home
             bool checkCombo = Environment.GetEnvironmentVariable("ZJCS_PLAYER_COMBO_ACCEPTANCE") == "1";
             bool checkClones = Environment.GetEnvironmentVariable("ZJCS_PLAYER_CLONE_ACCEPTANCE") == "1";
             OfficialBattlePlayerCloneValidation cloneProbe = null;
-            if (sourceActor != 0 || checkAbsorption || checkCombo || checkClones || checkStacks || checkRandomHits || checkMasterChildren)
+            if (sourceActor != 0 || checkAbsorption || checkCombo || checkClones || checkStacks || checkRandomHits || checkMasterChildren || checkHitFinish || checkGraphCapability || checkExplicitGraph)
             {
                 var weekly = OfflineWeeklyChallengeBattleCatalog.LoadDefault();
                 Require(weekly.TryGetBattle(4800, out var stage, out var roster, out var scene), "Original weekly fixture is unavailable.");
@@ -136,6 +144,9 @@ namespace Zjcs.Presentation.Home
                     World = home.Profile.Save.World, Progression = home.DailyDungeonProgression, RandomSeed = 43 });
                 Require(sourceActor == 0 || !checkAbsorption, "Select one original source diagnostic.");
                 if (checkCombo || checkClones) cloneProbe = OfficialBattlePlayerCloneValidation.Configure(checkpoint);
+                else if (checkExplicitGraph) explicitGraphProbe = OfficialBattleExplicitGraphValidation.Configure(checkpoint);
+                else if (checkGraphCapability) graphCapabilityProbe = OfficialBattleGraphCapabilityValidation.Configure(checkpoint);
+                else if (checkHitFinish) hitFinishProbe = OfficialBattleHitFinishValidation.Configure(checkpoint);
                 else if (checkMasterChildren) masterChildProbe = OfficialBattleMasterChildValidation.Configure(checkpoint);
                 else if (checkRandomHits) randomHitProbe = OfficialBattleRandomHitValidation.Configure(checkpoint);
                 else if (checkStacks) stackProbe = OfficialBattleSkillStackValidation.Configure(checkpoint);
@@ -151,21 +162,27 @@ namespace Zjcs.Presentation.Home
             stackProbe?.BindPresentation(controller);
             randomHitProbe?.BindPresentation(controller);
             masterChildProbe?.BindPresentation(controller);
+            hitFinishProbe?.BindPresentation(controller);
+            graphCapabilityProbe?.BindPresentation(controller);
+            explicitGraphProbe?.BindPresentation(controller);
             bool checkDeath = Environment.GetEnvironmentVariable("ZJCS_PLAYER_DEATH_ACCEPTANCE") == "1";
             bool checkEmbedded = sourceActor != 0 || Environment.GetEnvironmentVariable("ZJCS_EMBEDDED_MONSTER_ACCEPTANCE") == "1";
             Require((checkClones ? 1 : 0) + (checkDeath ? 1 : 0) + (checkEmbedded ? 1 : 0)
-                + (checkAbsorption ? 1 : 0) + (checkStacks ? 1 : 0) + (checkRandomHits ? 1 : 0) + (checkMasterChildren ? 1 : 0) <= 1,
+                + (checkAbsorption ? 1 : 0) + (checkStacks ? 1 : 0) + (checkRandomHits ? 1 : 0) + (checkMasterChildren ? 1 : 0) + (checkHitFinish ? 1 : 0) + (checkGraphCapability ? 1 : 0) + (checkExplicitGraph ? 1 : 0) <= 1,
                 "Select one isolated player diagnostic per battle.");
             cloneProbe ??= checkClones ? OfficialBattlePlayerCloneValidation.Configure(controller.Checkpoint) : null;
             var deathProbe = checkDeath ? OfficialBattlePlayerDeathValidation.Configure(controller.Checkpoint) : null;
             embeddedProbe ??= checkEmbedded ? OfficialBattleEmbeddedMonsterValidation.Configure(controller.Checkpoint) : null;
-            var probe = checkClones || checkDeath || checkEmbedded || checkAbsorption || checkStacks || checkRandomHits || checkMasterChildren ? null : OfficialSummonLifecycleValidation.Configure(controller.Checkpoint);
+            var probe = checkClones || checkDeath || checkEmbedded || checkAbsorption || checkStacks || checkRandomHits || checkMasterChildren || checkHitFinish || checkGraphCapability || checkExplicitGraph ? null : OfficialSummonLifecycleValidation.Configure(controller.Checkpoint);
             controller.StepCompleted+=step=> {
                 probe?.ObserveStep(controller); cloneProbe?.ObserveStep(controller); embeddedProbe?.ObserveStep(controller);
                 absorptionProbe?.ObserveStep(controller);
                 stackProbe?.ObserveStep(controller);
                 randomHitProbe?.ObserveStep(controller);
                 masterChildProbe?.ObserveStep(controller);
+                hitFinishProbe?.ObserveStep(controller);
+                graphCapabilityProbe?.ObserveStep(controller);
+                explicitGraphProbe?.ObserveStep(controller);
                 if (sourceActor != 0) File.WriteAllText(Path.Combine(output,"source-actor-last-step.json"),FightBattleCheckpointSerializer.Save(controller.Checkpoint));
             };
             Button start=null;
@@ -208,6 +225,15 @@ namespace Zjcs.Presentation.Home
                 stackProbe?.ObserveFrame(controller);
                 randomHitProbe?.ObserveFrame(controller);
                 masterChildProbe?.ObserveFrame(controller);
+                hitFinishProbe?.ObserveFrame(controller);
+                graphCapabilityProbe?.ObserveFrame(controller);
+                explicitGraphProbe?.ObserveFrame(controller);
+                if (explicitGraphProbe?.CaptureName != null)
+                { yield return new WaitForEndOfFrame(); Capture(explicitGraphProbe.CaptureName); captured = true; }
+                if (graphCapabilityProbe?.CaptureName != null)
+                { yield return new WaitForEndOfFrame(); Capture(graphCapabilityProbe.CaptureName); captured = true; }
+                if (hitFinishProbe?.CaptureName != null)
+                { yield return new WaitForEndOfFrame(); Capture(hitFinishProbe.CaptureName); captured = true; }
                 if (masterChildProbe?.CaptureName != null)
                 { yield return new WaitForEndOfFrame(); Capture(masterChildProbe.CaptureName); captured = true; }
                 if (randomHitProbe?.CaptureName != null)
@@ -237,6 +263,9 @@ namespace Zjcs.Presentation.Home
             stackProbe?.Verify(settled);
             randomHitProbe?.Verify(settled);
             masterChildProbe?.Verify(settled);
+            hitFinishProbe?.Verify(settled);
+            graphCapabilityProbe?.Verify(settled);
+            explicitGraphProbe?.Verify(settled);
             yield return new WaitForSecondsRealtime(.4f);
             Require(!FindObjectOfType<DemonResultWindow>(),"Native weekly result remained after simulated leave.");
             yield return new WaitForEndOfFrame();Capture("summon-return");

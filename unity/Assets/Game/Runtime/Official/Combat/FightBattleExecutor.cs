@@ -85,6 +85,7 @@ namespace Zjcs.Combat.Official
                             RestoreHpChangeStackDefinition(status);
                             RestoreRoundStartDefinition(status);
                             RestoreConditionalHitDefinition(status);
+                            statusCatalog.RestoreCureReduceDefinition(status);
                             RestoreHitSummonDefinition(status);
                             RestoreRoundIntervalDefinition(status);
                         }
@@ -304,13 +305,15 @@ namespace Zjcs.Combat.Official
             {
                 FightBattleSkillDefinition skill = FightBattleTargeting.FindReadySkill(
                     actor, units, actorRound, excludedSlots: checkedSlots,
-                    globalRound: globalRound);
+                    globalRound: globalRound,
+                    configuredCureAvailability: candidate => ConfiguredCureAvailability(actor, candidate));
                 if (skill == null) break;
 
                 var excludedForNextSkill = new HashSet<int>(checkedSlots) { skill.Slot };
                 skill.UseLastAiPriority = FightBattleTargeting.FindReadySkill(actor, units,
                     actorRound, excludedSlots: excludedForNextSkill,
-                    globalRound: globalRound) == null;
+                    globalRound: globalRound,
+                    configuredCureAvailability: candidate => ConfiguredCureAvailability(actor, candidate)) == null;
 
                 List<FightBattleUnitState> targets = FightBattleTargeting.SelectInSkillRange(actor,
                     units, skill, random: random);
@@ -779,6 +782,8 @@ namespace Zjcs.Combat.Official
 
             var skillLogic = FightSkillLogicRuntime.Create(actor, skill, units, statusCatalog, random, checkpoint.GridItems);
             if (skillLogic != null && skillLogic.OnSkillStart()) RebuildBattleProperties();
+            if (skillLogic != null && skillLogic.OnConfiguredSkillStart(
+                targetPosition ?? (targets.Count > 0 ? targets[0] : null))) RebuildBattleProperties();
             ExecuteLogicChildSkills(actor, skill, skillLogic, null,
                 targetPosition ?? (targets.Count > 0 ? targets[0] : null), hitCast,
                 casts, damageEvents, movements, ref lastDelay,
@@ -873,6 +878,8 @@ namespace Zjcs.Combat.Official
                         hasRandomTargetContext ? hitTargets : targets);
                     continue;
                 }
+                decimal hitRemovedHp = 0m;
+                float hitFinishDelay = Math.Max(0f, hit.Delay);
                 for (int targetIndex = 0; targetIndex < hitTargets.Count; targetIndex++)
                 {
                     FightBattleUnitState target = hitTargets[targetIndex];
@@ -882,6 +889,7 @@ namespace Zjcs.Combat.Official
                     if (target.IsVoodooDoll && (hit.ActionType == 5 || skill.SkillType == 3)) continue;
                     float hitDelay = HitDelay(actor, target, hit) + (occurrence == null ? 0f : occurrence.Delay);
                     if (hitDelay > lastDelay) lastDelay = hitDelay;
+                    hitFinishDelay = Math.Max(hitFinishDelay, hitDelay);
                     movementStartContext.StatusStartTime = Math.Max(0f, hitDelay);
                     long beforeHp = target.Hp;
                     int damageId = NextDamageId();
@@ -920,9 +928,13 @@ namespace Zjcs.Combat.Official
                                 new List<int>(), allowDeadSource, skillDamageScale
                                     * (hit.UseDamageFactor ? externalDamageFactor : 1.0), conditionalHitProperties,
                                 skillLogic == null ? (Action<FightDamageTypeData>)null
-                                    : type => skillLogic.OnDoHitTransient(target, hit, type),
+                                    : type => {
+                                        skillLogic.OnDoHitTransient(target, hit, type);
+                                        if (skillLogic.OnConfiguredTransient(target, hit, type)) RebuildBattleProperties();
+                                    },
                                 skillLogic == null ? (Action<FightBattleTransientDamageContext>)null
-                                    : damage => skillLogic.OnTransientDamage(target, hit, damage));
+                                    : damage => skillLogic.OnTransientDamage(target, hit, damage),
+                                cure => ApplyCureInterceptors(actor, target, skill, cure));
                         }
                         finally
                         {
@@ -931,6 +943,10 @@ namespace Zjcs.Combat.Official
                         }
                     }
                     if (resolved.Formula == null && resolved.Settlement == null) continue;
+                    // Capture only this occurrence's HP change before any HP sharing,
+                    // status response or child skill can change a participant's state.
+                    if (!resolved.IsCure)
+                        hitRemovedHp += Math.Max(0m, (decimal)beforeHp - target.Hp);
                     SynchronizePetEnergyHp(target);
                     long targetHpIncrease = Math.Max(0L, target.Hp - beforeHp);
                     var damage = new FightBattleDamageEvent
@@ -1091,6 +1107,10 @@ namespace Zjcs.Combat.Official
                     CleanupGridItems();
                     ApplyChildSkill(actor, target, skill, hit, casts, damageEvents, movements, ref lastDelay);
                 }
+                ExecuteLogicChildRequests(actor, skill,
+                    skillLogic?.CollectHitFinishSkills(hit, hitRemovedHp, hitFinishDelay),
+                    casts, damageEvents, movements, ref lastDelay,
+                    ref statusTriggerDuration, ref statusTriggerActionDuration);
             }
             movementStartContext.StatusStartTime = 0f;
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay,

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Zjcs.Combat.Official
 {
     // MyFightSkillLogic has no server implementation in the APK. Only the
-    // evidence-backed and explicitly confirmed graph capabilities are enabled here.
+    // explicitly confirmed charge, transient stack and burning-grid flows are enabled here.
     internal sealed partial class FightSkillLogicRuntime
     {
         private readonly FightBattleUnitState actor;
@@ -16,6 +16,7 @@ namespace Zjcs.Combat.Official
         private readonly Dictionary<string, object> flow;
         private readonly Dictionary<string, object> startFlow;
         private readonly Dictionary<string, object> hitFlow;
+        private readonly Dictionary<string, object> finishFlow;
         private readonly IFightSkillDamageScale damageScaleSource;
         private readonly Dictionary<int, long> persistentBlackboard = new Dictionary<int, long>();
         private bool startHandled;
@@ -24,15 +25,18 @@ namespace Zjcs.Combat.Official
         private FightSkillLogicRuntime(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             IReadOnlyList<FightBattleUnitState> units, FightOfficialCombatCatalog catalog,
             FightRandomStream random, Dictionary<string, object> flow, Dictionary<string, object> startFlow,
-            Dictionary<string, object> hitFlow,
+            Dictionary<string, object> hitFlow, Dictionary<string, object> finishFlow,
             IReadOnlyList<FightBattleGridItemState> gridItems)
         {
             this.actor = actor; this.skill = skill; this.units = units;
             this.catalog = catalog; this.random = random; this.flow = flow; this.startFlow = startFlow;
             this.gridItems = gridItems;
-            this.hitFlow = hitFlow;
+            this.hitFlow = hitFlow; this.finishFlow = finishFlow;
+            hitFinishSource = skill.EntityId == 13960 ? new HemophagiaHitFinish() : null;
             damageScaleSource = CreateDamageScale(skill.EntityId);
             childSkillSource = CreateChildSkillProvider(skill.EntityId);
+            startEffect = skill.EntityId == 50213 ? new MasterStartStatus() : null;
+            transientEffect = skill.EntityId == 64450 ? new UnmarkedTargetStatus() : null;
         }
 
         internal static FightSkillLogicRuntime Create(FightBattleUnitState actor,
@@ -41,19 +45,19 @@ namespace Zjcs.Combat.Official
             IReadOnlyList<FightBattleGridItemState> gridItems = null)
         {
             if (actor == null || skill == null || catalog == null
-                || (skill.EntityId != 13730 && skill.EntityId != 13740 && skill.EntityId != 13820 && skill.EntityId != 13830 && skill.EntityId != 13840 && skill.EntityId != 50210 && skill.EntityId != 54370 && skill.EntityId != 54373)) return null;
+                || (skill.EntityId != 13640 && skill.EntityId != 13730 && skill.EntityId != 13740 && skill.EntityId != 13820 && skill.EntityId != 13830 && skill.EntityId != 13840 && skill.EntityId != 13870 && skill.EntityId != 13970 && skill.EntityId != 13960 && skill.EntityId != 50210 && skill.EntityId != 50213 && skill.EntityId != 50230 && skill.EntityId != 64450 && skill.EntityId != 54370 && skill.EntityId != 54373)) return null;
             catalog.RestoreSkillLogicDefinition(skill);
             if (!skill.HasLogicComponent || string.IsNullOrEmpty(skill.LogicDefinitionJson)) return null;
             var component = OfficialJson.Parse(skill.LogicDefinitionJson) as Dictionary<string, object>;
             var flow = Object(component, "OnDoHitTransient");
             return flow == null && Object(component, "OnDoHit") == null && Object(component, "OnSkillStart") == null ? null : new FightSkillLogicRuntime(actor, skill, units, catalog, random, flow,
-                Object(component, "OnSkillStart"), Object(component, "OnDoHit"), gridItems);
+                Object(component, "OnSkillStart"), Object(component, "OnDoHit"), Object(component, "OnHitFinish"), gridItems);
         }
 
         internal void OnDoHitTransient(FightBattleUnitState target, FightBattleHitDefinition hit,
             FightDamageTypeData type)
         {
-            if (flow == null || skill.EntityId == 13730 || skill.EntityId == 13740 || skill.EntityId == 13820 || skill.EntityId == 50210 || target == null || type.Dodge || type.Blinding) return;
+            if (flow == null || skill.EntityId == 13730 || skill.EntityId == 13740 || skill.EntityId == 13820 || skill.EntityId == 13870 || skill.EntityId == 13970 || skill.EntityId == 50210 || target == null || type.Dodge || type.Blinding) return;
             var filter = Object(flow, "FilterCondition");
             if (flow.TryGetValue("FilterCondition", out object rawFilter)
                 && rawFilter != null && filter == null) return;
@@ -100,6 +104,7 @@ namespace Zjcs.Combat.Official
         // snapshot belongs to this cast and is independent of later start triggers.
         internal bool OnSkillStart()
         {
+            hitFinishSource?.CaptureStart(this);
             if (skill.EntityId != 13820 || startHandled || startFlow == null
                 || !EmptyFilter(startFlow)) return false;
             var handlers = Array(startFlow, "HandleCfgs");
@@ -140,7 +145,7 @@ namespace Zjcs.Combat.Official
         internal void OnTransientDamage(FightBattleUnitState target, FightBattleHitDefinition hit,
             FightBattleTransientDamageContext damage)
         {
-            if (target == null || damage == null || damage.IsCure || !EmptyFilter(flow)) return;
+            if (target == null || damage == null || damage.IsCure) return;
             if (damageScaleSource == null || !damageScaleSource.TryRead(this, target, out var selected)) return;
             var scale = selected.Handle;
             long count = selected.Count;

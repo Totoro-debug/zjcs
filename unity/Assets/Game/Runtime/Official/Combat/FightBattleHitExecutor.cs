@@ -52,7 +52,8 @@ namespace Zjcs.Combat.Official
             List<int> processedFalloffStatuses = null, bool allowDeadSource = false,
             double skillDamageScale = 1.0, FightConditionalHitProperties conditionalProperties = null,
             Action<FightDamageTypeData> onTransient = null,
-            Action<FightBattleTransientDamageContext> onTransientDamage = null)
+            Action<FightBattleTransientDamageContext> onTransientDamage = null,
+            Action<FightCureFormulaResult> beforeCureSettlement = null)
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
             if (target == null) throw new ArgumentNullException(nameof(target));
@@ -93,6 +94,8 @@ namespace Zjcs.Combat.Official
                 }
                 ProcessTransient(result.Type, ref result.Cure.Cure, ref result.Cure.AbsoluteCure,
                     true, onTransient, onTransientDamage);
+                beforeCureSettlement?.Invoke(result.Cure);
+                sourceEntity = actor.EntityState(); targetEntity = target.EntityState();
                 result.Settlement = settlement.Apply(damageId, sourceEntity, targetEntity,
                     result.Cure.Cure);
             }

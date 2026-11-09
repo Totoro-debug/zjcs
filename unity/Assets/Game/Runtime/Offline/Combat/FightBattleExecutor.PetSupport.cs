@@ -40,7 +40,8 @@ namespace Zjcs.Combat.Official
                     support.Hp = owner.Hp; support.MaxHp = owner.MaxHp;
                     support.Properties = owner.Properties;
                     FightBattleSkillDefinition skill = FightBattleTargeting.FindReadySkill(
-                        support, units, round, excludedSlots: checkedSlots, globalRound: globalRound);
+                        support, units, round, excludedSlots: checkedSlots, globalRound: globalRound,
+                        configuredCureAvailability: candidate => ConfiguredCureAvailability(support, candidate));
                     if (skill == null) break;
                     checkedSlots.Add(skill.Slot);
                     List<FightBattleUnitState> targets = FightBattleTargeting.SelectInSkillRange(

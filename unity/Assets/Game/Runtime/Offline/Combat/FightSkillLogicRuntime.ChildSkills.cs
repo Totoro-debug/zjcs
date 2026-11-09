@@ -20,6 +20,8 @@ namespace Zjcs.Combat.Official
             internal FightBattleUnitState Target;
             internal FightGridPoint Position;
             internal float Delay;
+            internal bool HasCustomCure;
+            internal long CustomCure;
         }
 
         private readonly IFightSkillChildProvider childSkillSource;
@@ -28,7 +30,9 @@ namespace Zjcs.Combat.Official
         {
             switch (skillId)
             {
+                case 13640: return new LowestHpChildSkills();
                 case 13740: return new BurningTileChildSkills();
+                case 50230: return new MasterRecoveryChildSkill();
                 case 54370: return new MasterChildSkill();
                 case 54373: return new TargetChildSkill();
                 default: return null;
@@ -38,7 +42,7 @@ namespace Zjcs.Combat.Official
         internal List<ChildSkillRequest> CollectChildSkills(FightBattleHitDefinition hit,
             FightBattleUnitState target, FightBattleSkillCastPresentation presentation)
         {
-            if (!skill.CanTriggerChild || childSkillSource == null)
+            if (childSkillSource == null)
                 return new List<ChildSkillRequest>();
             return childSkillSource.Collect(this, hit, target, presentation);
         }
@@ -64,7 +68,8 @@ namespace Zjcs.Combat.Official
                 FightBattleSkillCastPresentation presentation)
             {
                 var result = new List<ChildSkillRequest>();
-                if (hit != null || context.startHandled || !EmptyFilter(context.startFlow)) return result;
+                if (!context.skill.CanTriggerChild || hit != null || context.startHandled
+                    || !EmptyFilter(context.startFlow)) return result;
                 var handles = Array(context.startFlow, "HandleCfgs");
                 if (handles.Count != 2 || !(handles[0] is Dictionary<string, object> read)
                     || !(handles[1] is Dictionary<string, object> trigger)
@@ -93,7 +98,7 @@ namespace Zjcs.Combat.Official
                 FightBattleSkillCastPresentation presentation)
             {
                 var result = new List<ChildSkillRequest>();
-                if (hit == null || hit.EntityId != 54374 || target == null
+                if (!context.skill.CanTriggerChild || hit == null || hit.EntityId != 54374 || target == null
                     || target.Ended || !EmptyFilter(context.hitFlow)) return result;
                 var handles = Array(context.hitFlow, "HandleCfgs");
                 if (handles.Count != 1 || !(handles[0] is Dictionary<string, object> trigger)

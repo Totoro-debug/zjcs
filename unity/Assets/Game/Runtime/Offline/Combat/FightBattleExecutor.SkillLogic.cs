@@ -14,12 +14,24 @@ namespace Zjcs.Combat.Official
         {
             if (statusCatalog == null || logic == null) return;
             var requests = logic.CollectChildSkills(hit, primary, parentCast);
+            ExecuteLogicChildRequests(actor, parent, requests, casts, damageEvents, movements,
+                ref lastDelay, ref triggerDuration, ref triggerActionDuration);
+        }
+
+        private void ExecuteLogicChildRequests(FightBattleUnitState actor,
+            FightBattleSkillDefinition parent, List<FightSkillLogicRuntime.ChildSkillRequest> requests,
+            List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damageEvents,
+            List<FightBattleMovementEvent> movements, ref float lastDelay,
+            ref float triggerDuration, ref float triggerActionDuration)
+        {
+            if (statusCatalog == null || requests == null) return;
             foreach (var request in requests)
             {
                 if (actor.Hp <= 0 || actor.Ended) break;
                 int rank = Math.Max(1, parent.Rank), level = Math.Max(1, parent.Level), subRank = Math.Max(1, parent.SubRank);
                 var child = statusCatalog.CreateSkill(request.SkillId, -1, parent.ItemId, rank, level, subRank,
                     ToPropertyList(statusCatalog.CalculateSkillProps(request.SkillId, rank, level, subRank)));
+                child.HasCustomCure = request.HasCustomCure; child.CustomCure = request.CustomCure;
                 child.RootEntityId = parent.RootEntityId > 0 ? parent.RootEntityId : parent.EntityId;
                 child.StatusOrigin = FightBattleStatusOrigin.Resolve(parent, actor.Id).Copy();
                 InheritBlessingScales(child, parent.BlessPropertyScales);

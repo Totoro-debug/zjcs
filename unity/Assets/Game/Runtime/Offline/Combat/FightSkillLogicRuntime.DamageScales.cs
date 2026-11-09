@@ -27,6 +27,8 @@ namespace Zjcs.Combat.Official
                 case 13820: return new ChargeSnapshotScale();
                 case 50210: return new CurrentStatusStackScale();
                 case 13730: return new BurningGridScale();
+                case 13870: return new TargetHpScale();
+                case 13970: return new OwnerStatusScale();
                 default: return null;
             }
         }
@@ -37,7 +39,7 @@ namespace Zjcs.Combat.Official
             {
                 selection = null;
                 var handlers = Array(cast.flow, "HandleCfgs");
-                if (!cast.startHandled || handlers.Count != 1
+                if (!EmptyFilter(cast.flow) || !cast.startHandled || handlers.Count != 1
                     || !(handlers[0] is Dictionary<string, object> scale)
                     || !cast.persistentBlackboard.TryGetValue(884090696, out long count)) return false;
                 selection = new DamageScaleSelection { Handle = scale, Count = count,
@@ -52,7 +54,7 @@ namespace Zjcs.Combat.Official
             {
                 selection = null;
                 var handlers = Array(cast.flow, "HandleCfgs");
-                if (handlers.Count != 2 || !(handlers[0] is Dictionary<string, object> read)
+                if (!EmptyFilter(cast.flow) || handlers.Count != 2 || !(handlers[0] is Dictionary<string, object> read)
                     || !(handlers[1] is Dictionary<string, object> scale)
                     || String(read, "_type") != "FightHandleCfgGetStatusStackCount"
                     || !IsPort(read, "SourceEntityKey", 1, false)
@@ -77,7 +79,7 @@ namespace Zjcs.Combat.Official
             public bool TryRead(FightSkillLogicRuntime cast, FightBattleUnitState target, out DamageScaleSelection selection)
             {
                 selection = null;
-                if (!TryCount(cast, target, Array(cast.flow, "HandleCfgs"), out long count, out var scale)) return false;
+                if (!EmptyFilter(cast.flow) || !TryCount(cast, target, Array(cast.flow, "HandleCfgs"), out long count, out var scale)) return false;
                 selection = new DamageScaleSelection { Handle = scale, Count = count,
                     Key = 511879177, Value = 500 };
                 return true;

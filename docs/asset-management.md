@@ -114,6 +114,8 @@ Windows 构建入口同时检查 `BuildReport` 和构建过程的 Error／Except
 
 更改 shader 构建筛选后，首次验证设置 `ZJCS_CLEAN_BUILD_CACHE=1` 强制重建 Player 数据；仅重建脚本可能沿用旧 shader 产物。正常增量构建不设置此变量，继续复用缓存。
 
+技能验证入口 `OfficialSkillAssetTools.BuildWindowsValidation` 支持 `ZJCS_WINDOWS_SCRIPTS_ONLY=1`，用于资源、场景与 shader 均未改变时更新脚本。必须复用同一验证目录内完整构建的 Player 与原构建缓存，不能与 `ZJCS_CLEAN_BUILD_CACHE=1` 同用；缺少原可执行文件或数据目录时入口拒绝执行。脚本增量验证不证明新资源已进入 Player，资源改变后须完成正常构建。
+
 ### 常见失败的处理顺序
 
 先保留原异常与路径，依次查来源哈希、版本／BuildTarget、CAB、对象引用、脚本／插件、shader／平台格式和显式加载。序列化头错误属于导入问题，不据此反复安装 Hub／编辑器。编译失败时先修复 C#／程序集依赖，再检查 executeMethod 入口；静态或隔离检查通过不能替代完整启动链。
