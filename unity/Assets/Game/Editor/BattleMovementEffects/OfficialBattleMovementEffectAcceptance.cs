@@ -206,7 +206,12 @@ namespace Zjcs.Editor
             var sceneMapper = new OfficialBattleGridMapper(sceneRoot.transform, grid);
             var model = new GameObject("Movement scene attached model");
             using (var scene = new OfficialBattleSceneView(OfficialBattleModelCatalog.LoadDefault(),
-                sceneRoot.transform, _ => null, sceneMapper, null, (_, __) => { }))
+                sceneRoot.transform, _ => null, sceneMapper, null, (target, state) =>
+                {
+                    var scale = target.localScale;
+                    scale.x = Mathf.Abs(scale.x) * (state.HasFlipX && state.FlipX ? -1f : 1f);
+                    target.localScale = scale;
+                }))
             {
                 var unit = new FightBattleUnitState { Id = 1, CharacterType = 1,
                     X = 2, Y = 2, Hp = 100, MaxHp = 100 };
@@ -241,6 +246,30 @@ namespace Zjcs.Editor
                     "production movement and effect clocks share the exact last landing");
                 Require(sceneRoot.GetComponentsInChildren<MyPlayableSequence>(true).Length == 0,
                     "production scene releases the final cell graph");
+                var reverse = new FightBattleStepEvent { ActorId = unit.Id };
+                reverse.Movements.Add(new FightBattleMovementEvent { UnitId = unit.Id,
+                    MoveBehaviourId = 15321, MoveDuration = .5f, HasFacing = true, EndFlipX = false,
+                    Path = new List<FightGridPoint> { new FightGridPoint(5, 2),
+                        new FightGridPoint(4, 2), new FightGridPoint(3, 2) } });
+                unit.X = 3; unit.HasFlipX = true; unit.FlipX = false;
+                scene.Refresh(checkpoint, reverse);
+                Transform flipTarget = model.transform.parent;
+                Require(flipTarget.localScale.x < 0f,
+                    "the first cell faces travel before its original graph is created, without waiting for Tick");
+                scene.Tick(0f);
+                scene.Refresh(checkpoint);
+                Require(flipTarget.localScale.x < 0f, "paused refresh preserves the current movement facing");
+                scene.Tick(.5f);
+                Require(flipTarget.localScale.x > 0f, "the last cell restores authoritative facing at its start");
+                scene.Tick(.5f); yield return null;
+                reverse.Movements[0].Delay = .25f;
+                scene.Refresh(checkpoint, reverse);
+                Require(flipTarget.localScale.x > 0f, "delayed movement retains authoritative facing before action start");
+                scene.Tick(.25f);
+                Require(flipTarget.localScale.x < 0f, "delayed first-cell graph starts after the original turn");
+                scene.Tick(1f); yield return null;
+                Require(flipTarget.localScale.x > 0f && Mathf.Abs(flipTarget.localScale.x - .3f) < 1e-7f,
+                    "movement completion preserves the original visual scale magnitude");
             }
             UnityEngine.Object.Destroy(model); UnityEngine.Object.Destroy(sceneRoot); yield return null;
             var fades = FadeSequenceSteps(world.transform);

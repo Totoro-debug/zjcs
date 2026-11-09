@@ -519,8 +519,8 @@ namespace Zjcs.Presentation.Combat
                 notifiedSourceDeaths.Remove(state.Id);
                 if (attachedTransforms.TryGetValue(state.Id, out Transform attached) && attached != null)
                 {
-                    PlaceUnit(state.Id, attached, state, stepEvent);
                     orientUnit(attachedModels.TryGetValue(state.Id, out var model) ? model.Model : attached, state);
+                    PlaceUnit(state.Id, attached, state, stepEvent);
                     RefreshAttachedAnimation(state, attached, stepEvent);
                     RefreshAttachedHud(state, attached);
                     continue;
@@ -536,8 +536,8 @@ namespace Zjcs.Presentation.Combat
                 view.Hud?.Refresh(state, checkpoint.Units);
                 Transform body = Body(state.Id);
                 if (body == null) continue;
-                PlaceUnit(state.Id, body, state, stepEvent);
                 orientUnit(body, state);
+                PlaceUnit(state.Id, body, state, stepEvent);
                 if (stepEvent != null && (stepEvent.ActorId == state.Id
                     || (stepEvent.TargetIds != null && stepEvent.TargetIds.Contains(state.Id))))
                 {
@@ -641,7 +641,9 @@ namespace Zjcs.Presentation.Combat
             Vector3 target = gridToWorld(new FightGridPoint(state.X, state.Y));
             if (HasMovement(stepEvent, unitId))
                 BeginMotion(unitId, body, stepEvent);
-            else if (!motions.ContainsKey(unitId))
+            else if (motions.TryGetValue(unitId, out var motion))
+                ApplyMotionFacing(unitId, body, motion);
+            else
                 body.position = target;
         }
 
@@ -774,6 +776,7 @@ namespace Zjcs.Presentation.Combat
                         continue;
                     }
                     motion.Elapsed += deltaTime;
+                    ApplyMotionFacing(unitId, body, motion);
                     bool complete = true;
                     for (int index = 0; index < motion.SegmentDurations.Count; index++)
                     {
@@ -783,15 +786,6 @@ namespace Zjcs.Presentation.Combat
                             body.position = motion.Points[index];
                             complete = false;
                             break;
-                        }
-                        int facing = motion.SegmentFacing[index];
-                        if (facing >= 0)
-                        {
-                            Transform flipTarget = attachedModels.TryGetValue(unitId, out var attachedModel)
-                                ? attachedModel.Model : body;
-                            Vector3 scale = flipTarget.localScale;
-                            scale.x = Mathf.Abs(scale.x) * (facing == 1 ? -1f : 1f);
-                            flipTarget.localScale = scale;
                         }
                         float segmentDuration = motion.SegmentDurations[index];
                         float progress = segmentDuration <= 0f ? 1f
@@ -814,6 +808,21 @@ namespace Zjcs.Presentation.Combat
                         motions.Remove(unitId);
                     }
                 }
+            }
+        }
+
+        private void ApplyMotionFacing(int unitId, Transform body, UnitMotion motion)
+        {
+            for (int index = motion.SegmentStarts.Count - 1; index >= 0; index--)
+            {
+                int facing = motion.SegmentFacing[index];
+                if (motion.Elapsed < motion.SegmentStarts[index] || facing < 0) continue;
+                Transform flipTarget = attachedModels.TryGetValue(unitId, out var attachedModel)
+                    ? attachedModel.Model : body;
+                Vector3 scale = flipTarget.localScale;
+                scale.x = Mathf.Abs(scale.x) * (facing == 1 ? -1f : 1f);
+                flipTarget.localScale = scale;
+                return;
             }
         }
 
@@ -872,6 +881,7 @@ namespace Zjcs.Presentation.Combat
             if (motion.SegmentDurations.Count == 0) return;
             body.position = motion.Points[0];
             motions[unitId] = motion;
+            ApplyMotionFacing(unitId, body, motion);
             movementEffects?.Schedule(unitId, body, stepEvent, gridToWorld);
         }
 

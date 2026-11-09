@@ -36,6 +36,8 @@
 
 正式 `OfficialBattleSceneView` 将角色推进作为移动效果宿主的依赖，在每段原序列更新前按同一段时长更新角色位置和朝向；跨格触发读取相应落点，剩余半格再继续推进跟随效果。角色路径的累计时间和段起点同样使用 double，进入原曲线计算时转回 float；原轨迹数据、曲线求值及挂点同步公式保持原样，未启用原移动效果的场景继续直接推进角色。
 
+原 `PlayMovePlayable` 在创建动作图前调用 `DoMoveSourceTurn`；场景先恢复状态朝向，再按已经开始的当前格施加移动朝向，因此立即起步无需等待首个 Tick，延迟起步在到点前不提前转身。移动中的普通刷新重新应用当前格朝向，末格仍恢复权威 FlipX；共享处理只改变 X 缩放的符号，保留原缩放幅度。
+
 `GameEndUIHandler.Delay` 对 `RoundLimit`／`TimeLimit` 分别显示 `game_end_roundlimit`／`game_end_timelimit`，沿原 `GameEndOverRoundDelayTime` 等待。`GameTimeoutUI` 用实时秒更新整数倒计时，结算等待本身使用缩放时间；倒计时结束仅通知，不自行隐藏内容。所选 884 的原 `FightMainPanel/Content/Center/TimeOutTipUI` 子树及祖先共保留 26 个对象，`Content.SafeArea` 在运行时恢复父级尺寸。原组件、原生绑定、文本与资源依赖见[超时提示来源](../../assets/reference/battle-timeout-native-source-manifest.json)。
 
 官方 `AssemblyGSerializableBaseTypes` 注册表包含非 abstract 基类及具体叶类。`official_ec_codec.Formats` 按该注册表读取小端 ushort 类型编号，再直接消费对应具体 formatter，避免重复读取类型编号；组件 Info 类型沿原非泛型继承链追溯至泛型基类声明并缓存（包括回血状态继承扣血状态配置），仍严格检查整段字节消费。原程序集、注册表、formatter、配置分片、历史载荷及工具哈希见[当前实体配置对照来源](../../assets/reference/battle-rules/active-entity-configuration-source-manifest.json)。来源工具按单实体解析历史 JSON，并在验证工作区使用临时 SQLite 缓存；`--all-components` 纳入状态、伤害等全部已安装战斗实体，解析失败不会作为完整实体计数。对照只读取输入，不激活或改写历史配置数值。
@@ -123,9 +125,7 @@
 
 - 完整原图声音的来源检查通过：1,735 个原 Event 资产引用、1,734 个不同事件及其 1,766 项有序动作，传递核对 2,913 个对象、2,977 条引用、2,942 份原 HIRC 载荷、4 个原全局设置块、1,562 份完整媒体及 2 份匹配的流式预取片段；7 个引用 RTPC 均在 8 项原全局默认值中解析。原 HIRC 的长度、类型、身份与 SHA256，媒体完整／预取身份及全部包的输入哈希已检查；原插件编号与 HIRC 编号分别处理，Actor-Mixer 的兄弟列表不启动无关声音，各包重复原载荷仍分别保留。静态元数据检查通过（144,784 个 GUID）。来源工具不改 Unity 场景或生产声音播放，未据此运行声音专项或发布 Player；运行库兼容性与实际输出仍是缺项。来源见[声音事件](../../assets/reference/battle-animation/native-sound-sources-source-manifest.json)及[传递依赖](../../assets/reference/battle-animation/native-sound-dependencies-source-manifest.json)。
 
-- 逐格移动效果的时间推进已在旧实现复现“换格前最后一段不触发”的失败；修复后通过内置屏隔离 Play Mode、Unity 编译和 `ProjectTools.Validate`。检查原创建帧不累计时间、两个宿主互不推进、结束前叶节点触发一次、结束后叶节点取消、一次更新跨越两格及精确终点释放；同时保留 10 个原生移动图、17 个 FollowBone 节点及原序列淡出回归。验证入口与正式战斗共用原渲染管线绑定和作用域，并提供实际输出相机；三张 Editor 运行画面均已查看。Windows Mono Player 增量构建及内置屏实际运行通过，同样检查创建帧、末段触发、取消、跨格更新和精确终点释放；两张 Player 原生特效截图均已查看，退出码为 0，用户存档文件哈希前后一致。静态元数据检查通过（144,784 个 GUID），279 项原素材输出哈希不变。本项时间推进专项不覆盖完整战斗、全体角色与特效的联合检查、HUD 交互或音频输出；位置采样的新增检查见下一项，未据此发布正式版本。
-
-- 角色位置与移动效果的联合检查已在原场景入口复现跨格触发采样位置错误；修复后通过内置屏隔离 Play Mode、Unity 编译和 `ProjectTools.Validate`。正式 `SceneView.Refresh／AttachUnitTransform／Tick` 使用 15321 原动作图，核对延迟创建、旧格末段触发所见落点、跨两格后剩余半格的原 FollowBone 挂点位置，以及最终落点与图释放；10 个原生图、17 个 FollowBone 和原序列淡出回归同时通过，四张 Editor 实际运行截图均已查看。Windows Mono Player 增量构建及内置屏实际运行通过同一联合检查，三张 Player 实际运行截图均已查看，退出码为 0，用户存档文件哈希前后一致。静态元数据检查通过（144,799 个 GUID），279 项原素材输出哈希不变。此项使用正式挂接层级和空模型验证位置采样，不覆盖完整角色模型、HUD 交互和音频；未据此发布正式版本。
+- 逐格移动效果通过内置屏隔离 Play Mode、Unity 编译、`ProjectTools.Validate`、Windows Mono Player 增量构建及实际运行。原实现中的末段漏触发、跨格采样位置过晚和首格转向滞后均已先复现失败再修复。检查原创建帧不累计时间、两个宿主互不推进、末段叶节点触发一次、越期叶节点取消、一次更新跨两格和精确终点释放；正式 `SceneView.Refresh／AttachUnitTransform／Tick` 使用 15321 原图，核对延迟创建、旧格触发所见落点、剩余半格的原 FollowBone 挂点、最终落点及图释放，并检查立即起步先转向、暂停刷新保留朝向、延迟起步与末格恢复、原 0.3 模型缩放不变。10 个原生图、17 个 FollowBone 和原序列淡出回归通过，四张 Editor 与三张 Player 实际画面均已查看；Player 退出码为 0，用户存档文件哈希前后一致。静态元数据检查通过（144,799 个 GUID），279 项原素材输出哈希不变。正式场景检查使用原挂接层级和空模型验证位置／朝向，不覆盖完整人物模型、全体特效、HUD 交互和音频输出；未据此发布正式版本。
 
 - `OfficialEmbeddedMecanimProbe` 已通过内置屏隔离 Play Mode、Unity 编译和 `ProjectTools.Validate`：两份 3205 组件实例使用独立骨骼状态、原低清图集及 Animator 时钟，有限网格和释放检查通过；已查看四张实际运行画面。新增命中夹具先验证同类技能并发时 ID 不同、精确到期后旧 ID 注销，以及 FIFO 复用原对象时分配新 ID、旧 ID 不会指向新施法；该身份夹具仅将生命期设为 0.125 秒。随后直接使用创建函数返回的真实 57780 施法身份，单独将未引用的 57784 原定义交给生产加载器，核对注册、两次创建间的 FIFO 实体复用、移除与完整图释放；原休眠祖先和未初始化的骨骼状态保持一致，已查看两张原粒子运行截图。Windows Mono Player 代码增量构建及内置屏实际运行通过，同样六张截图均已查看；运行退出码为 0，用户存档文件哈希前后一致。静态元数据检查通过（144,755 个 GUID）。本次原生资产的 20 项输出哈希均保持不变。该夹具不新增配置引用，不覆盖正式执行器通知、HUD 交互、伤害结算或音频。未据此发布正式版本。
 
