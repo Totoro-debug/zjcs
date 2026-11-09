@@ -19,6 +19,7 @@ namespace Zjcs.Editor
         private static readonly Dictionary<string, int> originalPrograms = new Dictionary<string, int>
         {
             ["Assets/Game/Runtime/Official/ProfessionUI/SpineSkeletonGraphicHeightClip.shader"] = 16,
+            ["Assets/Game/Runtime/Official/Dungeons/Spine/SpineSkeletonGraphic_884_156692.shader"] = 6,
             ["Assets/Game/Runtime/Official/World/NativeWater/Shaders/EnvironmentNoise.shader"] = 260,
             ["Assets/Game/Runtime/Official/Combat/Shaders/OfficialSummonSkeletonEffect2D.shader"] = 768,
             ["Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpineSkeletonGraphicCustom_05649282.shader"] = 16,
@@ -96,7 +97,7 @@ namespace Zjcs.Editor
                 selections.Add(original.Key, selection);
                 stages += selection.PassCount * selection.Programs.Count * 2;
             }
-            if (stages != 49816) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            if (stages != 49828) throw new BuildFailedException("Original shader stage domain changed: " + stages);
             Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
@@ -136,7 +137,7 @@ namespace Zjcs.Editor
                 }
             }
             finally { ShaderUtil.allowAsyncCompilation = previousAsync; }
-            if (stages != 49816) throw new BuildFailedException("Original shader stage count changed: " + stages);
+            if (stages != 49828) throw new BuildFailedException("Original shader stage count changed: " + stages);
             Debug.Log("Original sparse shaders: all " + stages + " Windows GPU stages across "
                 + originalPrograms.Count + " original shader assets compiled.");
             ProjectTools.Validate();

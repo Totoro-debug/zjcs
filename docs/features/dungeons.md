@@ -42,6 +42,8 @@
 
 `DailyDungeonUiBindingModule.Apply` 共用入口、详情、排行榜和结算的原生资源绑定，外部只传入官方 prefab 标识和实例；原版本选择、字段结构、坐标、Sprite、TMP、材质及资源缓存封装在模块内。结算页与玩家、奖励容器和道具子项读取当前 `884_156692` 的六个原 prefab 字段及 61 张 Sprite，难度标题沿原 `LanguageUtils.GetDailyDungeonNameKey` 读取。`UIImgAdd` 保留原材质全部参数，使用同一原 shader 对象哈希对应的 Windows 转换，保留四组 GLES3 关键字变体；`UIGray` 经输入身份核实后复用已迁移的同源材质。原 `GameEndPanelBase_Show` 保留曲线和事件，按 Windows UGUI／TMP 脚本身份绑定后交给已迁移 `WorldPopupWindow` 播放。输入输出与处理记录见[结算绑定来源](../../assets/reference/dungeon-ui/daily-dungeon-result-bindings-source-manifest.json)。
 
+`OfficialSparseShaderVariants` 已登记默认 Spine UI shader 的六组原程序，构建时只编译原包保留的关键字组合；`OfficialSkillAssetTools.BuildWindowsValidation` 在构建前核对全部登记程序域。所选 APK 的原对象、六份 GLES3 程序及现有 Windows shader 分支已逐项核对，shader 与材质载荷未改动；清理构建缓存后的完整 Windows 构建已通过，实际编译日志确认顶点、片元阶段均由八种组合筛选为原六种；该项不等同于副本页面的 Player 画面验收。
+
 奖励结算由 `OfflineDailyDungeonSettlementModule.Preview`／`Claim`／`SettleClearedRooms` 统一承担，保留“预留领取次数 → 主档奖励与明细同时入库 → 确认副本次数与领取状态”的顺序。领取前预览以领取回执为种子，复用正式结算的奖励顺序、概率和装备生成随机流，不修改存档；领取时用同一回执重放该结果，并将实际物品与装备明细写入主档。已提交的历史回执直接显示存档明细，不重复抽取；零掉落也保存回执。主档已提交而副本确认失败时，重新打开后读取回执补齐确认，不再生成奖励。
 
 结算规则验证覆盖预留、入库、确认写入失败后的冷打开、重复提交、非法次数及装备实例关联；Unity 导入、编译和 `ProjectTools.Validate` 通过。Play Mode 与最终 Windows Player 的模拟点击已验证保存路线、退出清理房间奖励、最终领奖、次数及重新读取存档，竞技场守卫胜利与保存回读亦通过。该流程同时修正了结果页领奖按钮相对官方 prefab 漏掉 `Content` 的绑定路径。窗口化 Play Mode 又以模拟指针验证预览奖励、最终领奖与次数回读，并确认领取后原按钮显示“已领取”且不可交互；实际截图仍有既存材质洋红与字体显示问题，不能据此宣称结果界面还原完成。

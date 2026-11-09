@@ -23,6 +23,7 @@ namespace Zjcs.Editor.Skills
             if (string.IsNullOrWhiteSpace(root) || !Path.IsPathRooted(root))
                 throw new BuildFailedException("A skills Windows validation requires ZJCS_VALIDATION_DIR.");
             Validate();
+            OfficialSparseShaderVariants.ValidateProgramDomains();
             ScriptingImplementation previous = PlayerSettings.GetScriptingBackend(NamedBuildTarget.Standalone);
             int loggedErrors = 0;
             string firstError = null;
