@@ -13,13 +13,6 @@ namespace Zjcs.Combat.Official
 
     public sealed partial class FightBattleExecutor
     {
-        private sealed class RandomTargetGroupState
-        {
-            public readonly HashSet<int> TargetIds = new HashSet<int>();
-            public readonly HashSet<FightGridPoint> EmptyPositions = new HashSet<FightGridPoint>();
-            public readonly HashSet<FightGridPoint> GridPositions = new HashSet<FightGridPoint>();
-        }
-
         /// <summary>Official GameMoveTime used by the scene view for one grid cell.</summary>
         public const float MovementSecondsPerCell = 0.5f;
         private const float DefaultStepSeconds = 0.35f;
@@ -827,7 +820,7 @@ namespace Zjcs.Combat.Official
 
             FightDamageFalloff.BeginCast(skill, ref checkpoint.FalloffSerial);
             IReadOnlyList<FightBattleHitDefinition> hits = FightBattleHitCollector.CollectAll(skill);
-            var randomTargetGroups = new Dictionary<int, RandomTargetGroupState>();
+            var hitTargetSelectors = new FightHitTargetSelectors();
             var damageHitTargets = new HashSet<int>();
             var completedSourceMoves = new HashSet<FightBattleSkillMove>();
 
@@ -844,93 +837,17 @@ namespace Zjcs.Combat.Official
                     hitTargets = targets.Where(target => target != null
                         && target.CharacterType == 1 && target.Side != actor.Side
                         && target.Hp > 0 && !target.Ended).ToList();
-                else if (hasRandomTargetContext)
-                {
-                    if (!randomTargetGroups.TryGetValue(hit.RandomTargetGroupId,
-                        out RandomTargetGroupState groupState))
-                    {
-                        groupState = new RandomTargetGroupState();
-                        randomTargetGroups.Add(hit.RandomTargetGroupId, groupState);
-                    }
-
-                    var selectedTargets = new List<FightBattleUnitState>();
-                    if (hit.RandomTargetScope != null && hit.RandomTargetScope.Count > 0)
-                    {
-                        var scopeCenter = FightHitAnchorExtensions.ResolveCenter(hit.RandomTargetAnchor,
-                            actor, targetPosition ?? (targets != null && targets.Count > 0 ? targets[0] : null), hitCast);
-                        var scopeAnchor = new FightBattleUnitState { X = scopeCenter.X, Y = scopeCenter.Y };
-                        List<FightBattleRandomScopeSelection> selections =
-                            FightBattleTargeting.SelectRandomScopePositions(targetingSource, units, skill,
-                                scopeAnchor, hit.RandomTargetScope, checkpoint.Grid,
-                                hit.RandomCount, random, hit.RandomTargetAllowEmptyScope,
-                                hit.RandomTargetNotAllowHitEmpty, hit.RandomTargetNotSameTarget,
-                                groupState.TargetIds, hit.RandomTargetNotSameEmptyScope,
-                                groupState.EmptyPositions, hit.RandomTargetNotSameGrid,
-                                groupState.GridPositions,
-                                hit.RandomTargetFilterOutOfGroundScope, hit.RandomTargetScopeTransform, hitCast);
-                        foreach (FightBattleRandomScopeSelection selection in selections)
-                        {
-                            groupState.GridPositions.Add(selection.Position);
-                            if (selection.IsEmpty)
-                                groupState.EmptyPositions.Add(selection.Position);
-                            foreach (FightBattleUnitState selectedTarget in selection.Targets)
-                            {
-                                if (hit.RandomTargetNotSameTarget)
-                                    groupState.TargetIds.Add(selectedTarget.Id);
-                                if (!hit.RandomTargetNotSameTarget
-                                    || !selectedTargets.Exists(target => target.Id == selectedTarget.Id))
-                                    selectedTargets.Add(selectedTarget);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var randomCandidates = new List<FightBattleUnitState>();
-                        foreach (FightBattleUnitState candidate in targets ??
-                            new List<FightBattleUnitState>())
-                            if ((!hit.RandomTargetNotSameGrid
-                                    || !groupState.GridPositions.Contains(
-                                        new FightGridPoint(candidate.X, candidate.Y)))
-                                && (!hit.RandomTargetNotSameTarget
-                                    || !groupState.TargetIds.Contains(candidate.Id)))
-                                randomCandidates.Add(candidate);
-                        selectedTargets = FightBattleTargeting.SelectRandomHitTargets(
-                            randomCandidates, hit.RandomCount, random,
-                            hit.RandomTargetNotSameTarget ? groupState.TargetIds : null);
-                        foreach (FightBattleUnitState selectedTarget in selectedTargets)
-                        {
-                            groupState.TargetIds.Add(selectedTarget.Id);
-                            groupState.GridPositions.Add(new FightGridPoint(
-                                selectedTarget.X, selectedTarget.Y));
-                        }
-                    }
-                    if (selectedTargets.Count == 0) continue;
-
-                    hitTargets = new List<FightBattleUnitState>();
-                    if (hit.Scope != null && hit.Scope.Count > 0)
-                    {
-                        var randomTargetEffect = new FightBattleHitDefinition
-                        {
-                            Anchor = 0,
-                            TargetMode = hit.TargetMode,
-                            Scope = hit.Scope,
-                            ScopeTransform = hit.ScopeTransform,
-                            ScopeEntries = hit.ScopeEntries, ActionType = hit.ActionType, IsSummon = hit.IsSummon
-                        };
-                        var randomOccurrences = new List<FightHitOccurrence>();
-                        foreach (FightBattleUnitState selectedTarget in selectedTargets)
-                            randomOccurrences.AddRange(PlanHitPattern(targetingSource, skill, randomTargetEffect,
-                                selectedTargets, selectedTarget, hitCast, true));
-                        plannedHits = randomOccurrences;
-                        foreach (var occurrence in randomOccurrences) hitTargets.Add(occurrence.Target);
-                    }
-                    else hitTargets.AddRange(selectedTargets);
-                }
                 else
                 {
-                    plannedHits = PlanHitPattern(targetingSource, skill, hit, targets,
-                        targetPosition ?? (targets.Count > 0 ? targets[0] : null), hitCast);
-                    hitTargets = plannedHits.Select(value => value.Target).ToList();
+                    var selection = hitTargetSelectors.For(hit).Select(new FightHitTargetSelectionContext {
+                        Source = actor, TargetingSource = targetingSource, Units = units,
+                        Skill = skill, Hit = hit, Targets = targets,
+                        Primary = targetPosition ?? (targets.Count > 0 ? targets[0] : null),
+                        Cast = hitCast, Grid = checkpoint.Grid, Random = random
+                    });
+                    if (selection == null) continue;
+                    plannedHits = selection.Occurrences;
+                    hitTargets = selection.Targets;
                 }
                 ExecuteBurningExplosions(actor, skill, skillLogic, hit,
                     targetPosition ?? (targets.Count > 0 ? targets[0] : null), hitCast,

@@ -113,7 +113,8 @@ namespace Zjcs.Editor.Skills
             // Restore its startup scene; isolated battle mode supplies its own profile.
             EditorSceneManager.OpenScene("Assets/Game/Scenes/Bootstrap.unity", OpenSceneMode.Single);
             if (Environment.GetEnvironmentVariable("ZJCS_PLAYER_COMBO_ACCEPTANCE") == "1"
-                || Environment.GetEnvironmentVariable("ZJCS_SKILL_STACK_ACCEPTANCE") == "1")
+                || Environment.GetEnvironmentVariable("ZJCS_SKILL_STACK_ACCEPTANCE") == "1"
+                || Environment.GetEnvironmentVariable("ZJCS_RANDOM_HIT_ACCEPTANCE") == "1")
                 ProjectTools.Validate();
             OfficialSkillAssetTools.Validate();
             if ((Application.isBatchMode || Environment.GetEnvironmentVariable("ZJCS_SKILLS_AUTORUN") == "1")
@@ -256,6 +257,7 @@ namespace Zjcs.Editor.Skills
             yield return null;
             if (Environment.GetEnvironmentVariable("ZJCS_STATUS_ABSORPTION_ACCEPTANCE") == "1"
                 || Environment.GetEnvironmentVariable("ZJCS_SKILL_STACK_ACCEPTANCE") == "1"
+                || Environment.GetEnvironmentVariable("ZJCS_RANDOM_HIT_ACCEPTANCE") == "1"
                 || Environment.GetEnvironmentVariable("ZJCS_PLAYER_CLONE_ACCEPTANCE") == "1")
             {
                 string resultPath = Path.Combine(ValidationDirectory, "result.json");
