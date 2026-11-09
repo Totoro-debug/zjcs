@@ -16,7 +16,7 @@ namespace Zjcs.Presentation.Combat
         private sealed class Playback
         {
             public int UnitId;
-            public float Start, End;
+            public double Start, End;
             public Record Record;
             public GameObject Source, Target, Instance;
             public MyPlayableSequence Sequence;
@@ -29,7 +29,7 @@ namespace Zjcs.Presentation.Combat
         private readonly MyPlayableCenter center = new MyPlayableCenter();
         private readonly IPlayableGroundEffectHost groundEffects;
         private readonly Transform parent;
-        private float clock;
+        private double clock;
         private bool disposed;
 
         public OfficialBattleMovementEffects(Transform parent, IPlayableGroundEffectHost groundEffects)
@@ -55,14 +55,14 @@ namespace Zjcs.Presentation.Combat
             if (step?.Movements == null) return;
             for (int i = playbacks.Count - 1; i >= 0; i--)
             {
-                if (playbacks[i].UnitId != unitId || float.IsPositiveInfinity(playbacks[i].End)) continue;
+                if (playbacks[i].UnitId != unitId || double.IsPositiveInfinity(playbacks[i].End)) continue;
                 Release(playbacks[i]); playbacks.RemoveAt(i);
             }
-            float cursor = 0f;
+            double cursor = 0;
             foreach (var movement in step.Movements)
             {
                 if (movement == null || movement.UnitId != unitId || movement.Path == null || movement.Path.Count < 2) continue;
-                cursor = Mathf.Max(cursor, Mathf.Max(0f, movement.Delay));
+                cursor = Math.Max(cursor, Math.Max(0f, movement.Delay));
                 if (skills.TryGetValue(movement.MoveSkillEntityId, out var skill))
                     Enqueue(unitId, source, skill, cursor, -1f, gridToWorld(movement.Path[movement.Path.Count - 1]));
                 actions.TryGetValue(movement.MoveBehaviourId, out var action);
@@ -77,7 +77,7 @@ namespace Zjcs.Presentation.Combat
             StartDue();
         }
 
-        private void Enqueue(int unitId, Transform source, Record record, float start, float duration, Vector3 targetPosition)
+        private void Enqueue(int unitId, Transform source, Record record, double start, float duration, Vector3 targetPosition)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             EnsureAttachment(unitId, source);
@@ -85,7 +85,7 @@ namespace Zjcs.Presentation.Combat
             target.transform.SetParent(parent, false);
             target.transform.position = targetPosition;
             playbacks.Add(new Playback { UnitId = unitId, Source = source.gameObject, Target = target,
-                Record = record, Start = clock + start, End = duration < 0f ? float.PositiveInfinity : clock + start + duration });
+                Record = record, Start = clock + start, End = duration < 0f ? double.PositiveInfinity : clock + start + duration });
         }
 
         private void EnsureAttachment(int unitId, Transform source)
@@ -141,21 +141,57 @@ namespace Zjcs.Presentation.Combat
         public void Tick(float deltaTime)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleMovementEffects));
+            if (float.IsNaN(deltaTime) || float.IsInfinity(deltaTime) || deltaTime < 0f)
+                throw new ArgumentOutOfRangeException(nameof(deltaTime));
             if (deltaTime <= 0f) return;
-            clock += deltaTime;
-            StartDue();
+            double end = clock + deltaTime;
+            DispatchDue();
+            while (clock < end)
+            {
+                double next = end;
+                foreach (var playback in playbacks)
+                {
+                    double boundary = !playback.Started ? playback.Start
+                        : !playback.Stopped ? playback.End : double.PositiveInfinity;
+                    if (boundary > clock && boundary < next) next = boundary;
+                }
+                // Deliver the old cell's final interval before StopMove/next Play.
+                // Original MyPlayable.ProcessFrame still owns its creation-frame guard.
+                center.Update((float)(next - clock)); center.LateUpdate();
+                clock = next;
+                DispatchDue();
+            }
+        }
+
+        private bool StopDue()
+        {
+            bool stopped = false;
             foreach (var playback in playbacks)
             {
                 if (playback.Stopped || !playback.Started || clock < playback.End) continue;
-                playback.Sequence?.Stop(); playback.Stopped = true;
+                playback.Sequence?.Stop(); playback.Stopped = true; stopped = true;
             }
-            center.Update(deltaTime); center.LateUpdate();
+            return stopped;
+        }
+
+        private void DispatchDue()
+        {
+            if (StopDue()) FlushStops();
+            StartDue();
+            if (StopDue()) FlushStops(); // A zero-duration cell still plays its original time-zero leaves.
             for (int i = playbacks.Count - 1; i >= 0; i--)
             {
                 var playback = playbacks[i];
                 if (!playback.Started || playback.Sequence != null && playback.Sequence.myStatus != MyPlayable.PlayableStatus.Stop) continue;
                 Release(playback); playbacks.RemoveAt(i);
             }
+        }
+
+        private void FlushStops()
+        {
+            // Original Stop requests are consumed by PostProcessFrame. Flush them
+            // before the next cell so no stopped sequence receives another interval.
+            center.Update(0f); center.LateUpdate();
         }
 
         public void RemoveUnit(int unitId)

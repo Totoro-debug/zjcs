@@ -82,10 +82,18 @@ namespace Zjcs.Editor
         { if (!condition) throw new InvalidOperationException("Movement effect: " + message); }
         private static IEnumerator Steps()
         {
+            var pipeline = Resources.Load<OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets");
+            Require(pipeline != null, "original battle render pipeline binding");
+            using var pipelineScope = pipeline.Enter();
             var world = new GameObject("Movement effects world"); world.transform.position = new Vector3(3, 4, 0);
             var source = new GameObject("Official entity"); source.transform.SetParent(world.transform, false);
             source.transform.localPosition = new Vector3(2, 2, 0);
             var body = new GameObject("body"); body.transform.SetParent(source.transform, false);
+            var view = new GameObject("Movement effects output camera").AddComponent<Camera>();
+            view.transform.SetParent(world.transform, false);
+            view.transform.position = source.transform.position + new Vector3(0, 0, -20);
+            view.orthographic = true; view.orthographicSize = 4;
+            view.clearFlags = CameraClearFlags.SolidColor; view.backgroundColor = Color.black;
             var grid = new FightBattleGrid { Width = 8, Height = 8, DefaultGroundType = 0 };
             var mapper = new OfficialBattleGridMapper(world.transform, grid);
             Require(mapper.GetGroundType(source.transform.localPosition) == GroundType.None, "local-position ground lookup");
@@ -159,17 +167,60 @@ namespace Zjcs.Editor
             effects.RemoveUnit(1); yield return null;
             var first = world.GetComponentsInChildren<MyPlayableSequence>(true);
             Require(first.Length == 1, "unit removal leaves the other host alive");
+            Require(first[0].Time == 0f, "original creation frame does not advance the graph");
             int firstInstance = first[0].GetInstanceID();
+            int due = 0, afterEnd = 0;
+            AddTimingLeaf(first[0], .3f, () => due++);
+            AddTimingLeaf(first[0], .8f, () => afterEnd++);
             other.Tick(.49f); yield return null;
+            Require(due == 1 && afterEnd == 0,
+                "the old cell's final interval executes due leaves and cancels leaves beyond its end");
             var second = world.GetComponentsInChildren<MyPlayableSequence>(true);
             Require(second.Length == 1 && second[0].GetInstanceID() != firstInstance,
                 "cell boundary stops the first graph and starts a distinct second graph");
             other.Tick(.5f); yield return null;
             Require(world.GetComponentsInChildren<MyPlayableSequence>(true).Length == 0, "last cell releases its graph");
+            step.Movements[0].Delay = 0f;
+            step.Movements[0].Path.Add(new FightGridPoint(5, 2));
+            effects.Schedule(1, source.transform, step, mapper.GridToWorld);
+            var largeFrame = world.GetComponentsInChildren<MyPlayableSequence>(true);
+            Require(largeFrame.Length == 1, "large update starts from one active cell");
+            int largeDue = 0, largeAfterEnd = 0;
+            AddTimingLeaf(largeFrame[0], .3f, () => largeDue++);
+            AddTimingLeaf(largeFrame[0], .8f, () => largeAfterEnd++);
+            yield return null;
+            effects.Tick(1.25f); yield return null;
+            Require(largeDue == 1 && largeAfterEnd == 0
+                && world.GetComponentsInChildren<MyPlayableSequence>(true).Length == 1,
+                "one large update traverses two cell boundaries and retains only the third cell");
+            effects.Tick(.25f); yield return null;
+            var finalCell = world.GetComponentsInChildren<MyPlayableSequence>(true);
+            string remaining = "";
+            foreach (var sequence in finalCell)
+                remaining += " " + sequence.name + ":" + sequence.myStatus + ":" + sequence.Time;
+            Require(finalCell.Length == 0,
+                "the exact final deadline releases the third cell; remaining=" + remaining);
             effects.Dispose(); other.Dispose();
             var fades = FadeSequenceSteps(world.transform);
             while (fades.MoveNext()) yield return fades.Current;
             UnityEngine.Object.Destroy(world); yield return null;
+        }
+        private static void AddTimingLeaf(MyPlayableSequence sequence, float delay, Action onPlay)
+        {
+            var go = new GameObject("Movement timing fixture leaf");
+            go.transform.SetParent(sequence.transform, false);
+            var leaf = go.AddComponent<MovementTimingLeaf>();
+            leaf.MyPlayableCenter = sequence.MyPlayableCenter;
+            leaf.myTriggerList = new List<MyPlayableTriggerTimeCfg>();
+            leaf.myFadeoutTrigerList = new List<MyPlayableTrigger>();
+            leaf.myEndTrigerList = new List<MyPlayableTrigger>();
+            leaf.Init(sequence.mySource, sequence.myTarget);
+            leaf.OnPlay += _ => onPlay();
+            sequence.myPlayables.Add(new MyPlayableSequence.MyPlayableTimeCfg { myTime = delay, myPlayable = leaf });
+        }
+        public sealed class MovementTimingLeaf : MyPlayable
+        {
+            public override float GetDuration() => -1f;
         }
         private static void Capture(Vector3 position, string name)
         {
