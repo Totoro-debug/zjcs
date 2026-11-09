@@ -8,7 +8,7 @@ using Zjcs.Offline.ProfessionUI;
 
 namespace Zjcs.Presentation.Combat
 {
-    public sealed class OfficialEmbeddedMecanimProbe : MonoBehaviour
+    public sealed partial class OfficialEmbeddedMecanimProbe : MonoBehaviour
     {
         private string output;
         private Action<bool, string> completed;
@@ -55,6 +55,7 @@ namespace Zjcs.Presentation.Combat
                 if (!more || failure != null) break;
                 yield return next;
             }
+            hitPlayback?.Dispose(); hitPlayback = null;
             scope?.Dispose(); resources?.Dispose();
             pipeline?.Dispose(); pipeline = null;
             scope = null; resources = null;
@@ -152,6 +153,8 @@ namespace Zjcs.Presentation.Combat
             yield return null;
             Require(natives.All(value => !value), "Native graph resources survived release.");
             Debug.Log("[Embedded Mecanim] Original 3205 source identity, authored dormancy, two independent component instances, Low atlas, finite geometry, Animator clocks and release passed.");
+            var hitCheck = CheckHitEntity();
+            while (hitCheck.MoveNext()) yield return hitCheck.Current;
         }
 
         private void Log(string message, string stack, LogType type)

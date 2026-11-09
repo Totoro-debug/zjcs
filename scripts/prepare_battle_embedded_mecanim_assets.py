@@ -143,6 +143,7 @@ def main():
         'unity/Assets/Game/Runtime/Offline/ProfessionUI/EmbeddedMonsterMecanimResources.cs',
         'unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterRenderer.Prefab.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialEmbeddedMecanimProbe.cs',
+        'unity/Assets/Game/Runtime/Presentation/Combat/OfficialEmbeddedMecanimProbe.HitEntity.cs',
         'unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs',
         'unity/Assets/Game/Editor/OfficialEmbeddedMecanimValidation.cs')]
     proof.update(generator_sha256=sha(Path(__file__).read_bytes()),
