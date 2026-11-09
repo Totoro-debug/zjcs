@@ -12,7 +12,9 @@ namespace Zjcs.Presentation.Combat
     internal sealed class OfficialBattleAfterimageValidation
     {
         private readonly HashSet<AfterimageData> captures = new HashSet<AfterimageData>();
+        private readonly int expectedCaptures;
         private bool hasPixels, visible;
+        internal OfficialBattleAfterimageValidation(int expectedCaptures) { this.expectedCaptures = expectedCaptures; }
         internal bool Observe()
         {
             bool visibleNow = false;
@@ -66,7 +68,8 @@ namespace Zjcs.Presentation.Combat
 
         internal void Verify()
         {
-            Require(captures.Count > 0 && hasPixels && visible, "No visible native afterimage was captured.");
+            Require(captures.Count == expectedCaptures && hasPixels && visible,
+                "Original capture count or visible native afterimage differs: " + captures.Count + "/" + expectedCaptures);
             Require(captures.All(value => !value.RTHandle && !value.RTRenderer), "Capture resources were not returned on stop.");
         }
         private static void Require(bool value, string message)

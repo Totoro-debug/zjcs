@@ -14,33 +14,46 @@ namespace Zjcs.Presentation.Combat
         private readonly FightBattleSkillDefinition finisher;
         private readonly int skillId;
         private readonly string clipName;
-        private bool settled, animated, captured;
+        private bool settled, animated, captured, finisherScheduled;
         private int nativeCasts, nativeChildren;
         private float castTime;
-        private readonly OfficialBattleAfterimageValidation afterimages = Environment.GetEnvironmentVariable("ZJCS_AFTERIMAGE_ACCEPTANCE") == "1"
-            ? new OfficialBattleAfterimageValidation() : null;
+        private readonly OfficialBattleAfterimageValidation afterimages;
         public string CaptureName { get; private set; }
 
         private OfficialBattleGraphCapabilityValidation(FightOfficialCombatCatalog catalog,
             FightBattleSkillDefinition finisher, int skillId, string clipName)
-        { this.catalog = catalog; this.finisher = finisher; this.skillId = skillId; this.clipName = clipName; }
+        {
+            this.catalog = catalog; this.finisher = finisher; this.skillId = skillId; this.clipName = clipName;
+            if (Environment.GetEnvironmentVariable("ZJCS_AFTERIMAGE_ACCEPTANCE") == "1")
+                afterimages = new OfficialBattleAfterimageValidation(skillId == 13970 ? 4 : 6);
+        }
 
         public static OfficialBattleGraphCapabilityValidation Configure(FightBattleCheckpoint checkpoint)
         {
             string mode = Environment.GetEnvironmentVariable("ZJCS_GRAPH_CAPABILITY_ACCEPTANCE");
-            Require(int.TryParse(mode, out int id) && (id == 13640 || id == 13870 || id == 13970), "Unknown original graph.");
+            Require(int.TryParse(mode, out int id) && (id == 13640 || id == 13870 || id == 13970
+                || id == 11510 || id == 12260), "Unknown original graph.");
             var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
             var player = checkpoint.Units.Single(value => value.Id == 1);
             var enemy = checkpoint.Units.First(value => value.Side != player.Side);
             var probe = new OfficialBattleGraphCapabilityValidation(catalog,
                 player.Skills.First(value => value.Slot == 0), id,
-                id == 13640 ? "200/skill_07" : id == 13870 ? "100/skill_72" : "100/skill_02");
-            enemy.MonsterId = 3665; enemy.MonsterGroupNo = 0;
-            enemy.CharacterType = catalog.MonsterCharacterType(3665);
-            enemy.MonsterType = catalog.MonsterType(3665); enemy.AiType = catalog.MonsterAiType(3665);
-            enemy.MaxHpPlies = catalog.MonsterHpPliesFor(3665, 0, enemy.Level);
+                id == 13640 ? "200/skill_07" : id == 13870 ? "100/skill_72"
+                    : id == 11510 ? "100/skill_55" : id == 12260 ? "100/skill_56" : "100/skill_02");
+            int monster = id == 11510 ? 3331 : 3665;
+            enemy.MonsterId = monster; enemy.MonsterGroupNo = 0;
+            enemy.CharacterType = catalog.MonsterCharacterType(monster);
+            enemy.MonsterType = catalog.MonsterType(monster); enemy.AiType = catalog.MonsterAiType(monster);
+            enemy.MaxHpPlies = catalog.MonsterHpPliesFor(monster, 0, enemy.Level);
             OfficialBattleUnitAssembler.ApplyMonsterIdentity(catalog, enemy);
             player.X = enemy.X; player.Y = enemy.Y - 2;
+            string layout = Environment.GetEnvironmentVariable("ZJCS_AFTERIMAGE_LAYOUT");
+            if (!string.IsNullOrEmpty(layout))
+            {
+                Require(id == 13970 && (layout == "down" || layout == "left" || layout == "right"), "Unknown afterimage layout.");
+                player.X = enemy.X + (layout == "left" ? 2 : layout == "right" ? -2 : 0);
+                player.Y = enemy.Y + (layout == "down" ? 2 : 0);
+            }
             if (id == 13640)
             {
                 var ally = new FightBattleUnitState {
@@ -80,7 +93,8 @@ namespace Zjcs.Presentation.Combat
             }
             if (id == 13870) enemy.Hp = enemy.Turn.Hp = 200000000;
             if (id == 13970) player.Statuses.Add(catalog.CreateStatus(24721, player.Id, player.Id, 9913970));
-            int item = id == 13640 ? 10204 : id == 13870 ? 10201 : 10209;
+            int item = id == 13640 ? 10204 : id == 13870 ? 10201
+                : id == 11510 ? 10067 : id == 12260 ? 10110 : 10209;
             var skill = catalog.CreateSkill(id, 0, item, 5, 20, player.SubRank,
                 catalog.CalculateSkillProps(id, 5, 20, player.SubRank)
                     .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
@@ -142,15 +156,20 @@ namespace Zjcs.Presentation.Combat
                 "Graph checkpoint differs.");
             Debug.Log("[Graph capability] " + skillId + ": actual original graph, one release and checkpoint passed.");
             settled = true; player.Skills.Clear(); player.SkillState.Slots.Clear();
-            player.Skills.Add(finisher); player.SkillState.Slots.Add(catalog.CreateSkillSlot(finisher, 0));
-            foreach (var property in player.Properties.Concat(player.BaseProperties ?? player.Properties))
-                if (property.Id == catalog.PropertyType("Attack")) property.Value = 1000000000;
         }
 
         public void ObserveFrame(OfficialBattleRuntimeController controller)
         {
             CaptureName = null;
             bool afterimageVisible = afterimages?.Observe() ?? false;
+            if (captured && !finisherScheduled)
+            {
+                var player = controller.Checkpoint.Units.Single(value => value.Id == 1);
+                player.Skills.Add(finisher); player.SkillState.Slots.Add(catalog.CreateSkillSlot(finisher, 0));
+                foreach (var property in player.Properties.Concat(player.BaseProperties ?? player.Properties))
+                    if (property.Id == catalog.PropertyType("Attack")) property.Value = 1000000000;
+                finisherScheduled = true;
+            }
             if (captured || !settled || !animated || nativeCasts != 1
                 || skillId == 13640 && nativeChildren != 2
                 || (afterimages != null ? !afterimageVisible : Time.realtimeSinceStartup - castTime < .85f)) return;
