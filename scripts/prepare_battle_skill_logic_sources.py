@@ -32,20 +32,23 @@ def main():
             'FightHandleCfgCollectionEntitiesByRoleRoot', 'FightHandleCollectionEntitiesByRoleRoot',
             'FightHandleCfgBlackboardReadEcIdArrayCountAndStorage', 'FightHandleBlackboardReadEcIdArrayCountAndStorage',
             'FightHandleBlackboardReadListCountAndStorage', 'LogicFilter', 'EntityClassIdFilter',
-            'SameFactionFilter', 'RangeFilter')]
+            'SameFactionFilter', 'RangeFilter', 'FightHandleCfgForeachEntities', 'FightHandleForeachEntities',
+            'FightHandleCfgTriggerSkillBySkill', 'FightHandleTriggerSkillBySkill',
+            'FightHitFixedComponentInfo', 'FightHitRandomTargetComponentInfo', 'HitScopCfg',
+            'FightStatusDamageFalloffComponentInfo')]
     paths = [ROOT / 'unity/Assets/Official/Combat' / name
              for name in ('skill-rules.json', 'battle-rules.json')]
     entities = {}
     for path in paths:
         for key, value in json.loads(path.read_text(encoding='utf-8-sig'))['entities'].items():
             entities.setdefault(key, {}).update(value)
-    definitions = {key: entities[key] for key in ('13730', '13820', '13830', '13840', '50210',
+    definitions = {key: entities[key] for key in ('13730', '13740', '13741', '13745', '13746', '13820', '13830', '13840', '50210',
                                                 '24031', '24266', '24697', '24823')}
     item_path = ROOT / 'unity/Assets/Official/Combat/rules.json'
     skill_items = [row for row in json.loads(item_path.read_text(encoding='utf-8-sig'))['skill']
-                   if row['EcEntityId'] in (13730, 13820, 13830, 13840, 50210)]
+                   if row['EcEntityId'] in (13730, 13740, 13820, 13830, 13840, 50210)]
     assert [(row['ClassId'], row['EcEntityId']) for row in skill_items] == [
-        (10192, 13730), (10196, 13820), (10197, 13830), (10198, 13840), (16020, 50210)]
+        (10192, 13730), (10193, 13740), (10196, 13820), (10197, 13830), (10198, 13840), (16020, 50210)]
     logic_definitions = {key: value for key, value in entities.items()
                          if 'FightSkillLogicComponent' in value}
     assert len(logic_definitions) == 15, 'Review the complete skill-logic configuration scope.'
@@ -87,13 +90,24 @@ def main():
     assert read['ListBBKey']['Id'] == collect['ResultEntityArrayKey']['Id'] == 406339594
     assert read['StorageBBKey']['Id'] == scale['ScaleCountKey']['Id'] == 511879177
     assert scale['_type'] == 'FightHandleCfgDamageScaleByScale' and scale['ScaleValue'] == 500 and scale['StorageAsAbs']
+    explosion = definitions['13740']['FightSkillLogicComponent']
+    assert not any(explosion[name] for name in ('OnDoHitTransient', 'OnSkillStart', 'OnHitFinish'))
+    collect, each = explosion['OnDoHit']['HandleCfgs']
+    assert collect['_type'] == 'FightHandleCfgCollectionEntitiesByRoleRoot' and collect['CharacterType'] == 6
+    assert each['_type'] == 'FightHandleCfgForeachEntities' and each['ForeachCount'] == -1
+    trigger, = each['HandleCfgs']
+    assert trigger['_type'] == 'FightHandleCfgTriggerSkillBySkill' and trigger['SkillEntityClassId'] == 13745 and trigger['Rate'] == 1
+    assert trigger['SourceEntityKey']['Id'] == 3 and trigger['TargetEntityKey']['Id'] == 1
+    assert len(collect['FilterCondition']['SubFilters'][2]['Range']) == 12
+    assert definitions['13740']['FightSkillComponent']['CanTriggerChild']
+    assert not definitions['13745']['FightSkillComponent']['CanTriggerChild']
     output = ROOT / 'assets/reference/battle-rules/skill-logic-stack-source-manifest.json'
     proof = dict(manifest=version, code_receipt=identity(receipt), assemblies=assemblies,
         official_sources=[identity(current / 'official-code' / name) for name in source_names],
         configuration_inputs=[identity(path) for path in paths + [item_path]],
         definitions=definitions, skill_items=skill_items, selected_configuration=selected_configuration,
         configuration_only_skill_logic_ids=sorted(
-            (int(key) for key in logic_definitions if key not in ('13730', '13820', '13830', '13840', '50210'))),
+            (int(key) for key in logic_definitions if key not in ('13730', '13740', '13820', '13830', '13840', '50210'))),
         generator=identity(Path(__file__)),
         operation='Verify complete components for all 15 skill-logic entities against the selected version. '
             'Preserve the two transient stack graphs, the 13820 charge start/scale graph and status configuration. '
@@ -105,9 +119,13 @@ def main():
             'them and scales damage and AbsoluteDamage by 1 + 0.2 * current stacks, independently of CanTriggerChild; '
             'the confirmed 13730 graph rereads live same-faction 3051 grid entities within the original 13 cells '
             'around each hit target and scales each segment by 1 + 0.05 * entity count without consumption or an extra cap; '
+            'the confirmed 13740 OnDoHit graph snapshots matching same-faction 3051 tiles in the original 12 cells '
+            'once per 13741 execution, triggering one inherited 13745 per tile without consumption or extra action; '
+            'the confirmed area attack rule settles each occupied body cell separately, preserving original '
+            'cell delays and explicit random selection constraints and applying existing falloff per occurrence; '
             'other skill graphs remain outside this implementation.')
     output.write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    print('Verified all 15 original skill-logic configurations; recorded 13730, 13820, 13830/13840 and 50210 inputs.')
+    print('Verified all 15 original skill-logic configurations; recorded 13730/13740, 13820, 13830/13840 and 50210 inputs.')
 
 
 if __name__ == '__main__':

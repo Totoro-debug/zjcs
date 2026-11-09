@@ -27,6 +27,9 @@ namespace Zjcs.Combat.Official
         public bool IsSkillCost;
         public float Delay;
         public int Anchor;
+        // Actual scope cell; absent in legacy checkpoints and point-target hits.
+        public bool HasHitGridPosition;
+        public int HitGridX, HitGridY;
         public bool IsCure;
         public bool Critical;
         public bool Block;

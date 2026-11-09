@@ -152,9 +152,12 @@ namespace Zjcs.Combat.Official
                     TrueDamage = entity.TrueDamage,
                     UseDamageFactor = entity.UseDamageFactor,
                     BreakResilience = entity.BreakResilience,
-                    Scope = entity.Scope == null
-                        ? new List<FightGridPoint>() : new List<FightGridPoint>(entity.Scope),
+                    Scope = entity.ScopeEntries != null && entity.ScopeEntries.Count > 0
+                        ? entity.ScopeEntries.ConvertAll(entry => entry.Position)
+                        : entity.Scope == null ? new List<FightGridPoint>() : new List<FightGridPoint>(entity.Scope),
                     ScopeTransform = entity.ScopeTransform,
+                    ScopeEntries = entity.ScopeEntries == null
+                        ? new List<FightBattleHitScopeEntry>() : new List<FightBattleHitScopeEntry>(entity.ScopeEntries),
                     AllowEmptyScope = entity.AllowEmptyScope,
                     AppliedStatuses = entity.AppliedStatuses == null
                         ? new List<FightBattleStatusApplication>()

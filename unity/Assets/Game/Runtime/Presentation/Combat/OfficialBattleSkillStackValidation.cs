@@ -16,6 +16,7 @@ namespace Zjcs.Presentation.Combat
         private readonly string animationName;
         private bool stacked, animated, captured;
         private int nativeCasts;
+        private int explosionNativeCasts;
         private float castTime;
         public string CaptureName { get; private set; }
 
@@ -23,17 +24,17 @@ namespace Zjcs.Presentation.Combat
             FightBattleSkillDefinition attack, int skillId)
         {
             this.catalog = catalog; this.attack = attack; this.skillId = skillId;
-            itemId = skillId == 13730 ? 10192 : skillId == 50210 ? 16020 : skillId == 13820 ? 10196 : skillId == 13830 ? 10197 : 10198;
+            itemId = skillId == 13730 ? 10192 : skillId == 13740 ? 10193 : skillId == 50210 ? 16020 : skillId == 13820 ? 10196 : skillId == 13830 ? 10197 : 10198;
             statusId = skillId == 50210 ? 24823 : skillId == 13840 ? 24697 : 24031;
-            animationName = skillId == 13730 ? "200/skill_40" : skillId == 50210 ? "skill_01" : skillId == 13820 ? "100/skill_71"
+            animationName = skillId == 13730 ? "200/skill_40" : skillId == 13740 ? "200/skill_42_1" : skillId == 50210 ? "skill_01" : skillId == 13820 ? "100/skill_71"
                 : skillId == 13830 ? "100/skill_11_2" : "100/skill_17";
         }
 
         public static OfficialBattleSkillStackValidation Configure(FightBattleCheckpoint checkpoint)
         {
             Require(int.TryParse(Environment.GetEnvironmentVariable("ZJCS_SKILL_STACK_ENTITY"), out int id)
-                && (id == 13730 || id == 13820 || id == 13830 || id == 13840 || id == 50210),
-                "Select original 13730, 13820, 13830, 13840 or 50210.");
+                && (id == 13730 || id == 13740 || id == 13820 || id == 13830 || id == 13840 || id == 50210),
+                "Select original 13730, 13740, 13820, 13830, 13840 or 50210.");
             var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
             var player = checkpoint.Units.Single(value => value.Id == 1);
             var enemy = checkpoint.Units.First(value => value.Id != 1);
@@ -48,22 +49,23 @@ namespace Zjcs.Presentation.Combat
             Require(enemy.BodyOffsets.Count == 9, "Retain the original nine-cell target.");
             player.X = enemy.X - 2; player.Y = enemy.Y;
             Require(checkpoint.Grid.Contains(new FightGridPoint(player.X, player.Y)), "Source is outside the battlefield.");
+            long fixtureHp = id == 13740 ? 1000000000L : 5000000L;
             foreach (var unit in checkpoint.Units)
             {
                 unit.Statuses.Clear();
                 foreach (var property in unit.Properties.Concat(unit.BaseProperties ?? unit.Properties))
                 {
-                    if (property.Id == catalog.PropertyType("MaxHp")) property.Value = 5000000;
+                    if (property.Id == catalog.PropertyType("MaxHp")) property.Value = fixtureHp;
                     if (property.Id == catalog.PropertyType("Attack")) property.Value = 100;
                     if (property.Id == catalog.PropertyType("Speed")) property.Value = unit == player ? 1000 : 1;
                     if (property.Id == catalog.PropertyType("DodgePercent")
                         || property.Id == catalog.PropertyType("BlindingPercent")) property.Value = 0;
                 }
-                unit.Hp = unit.Turn.Hp = unit.MaxHp = unit.LastMaxHp = 5000000;
+                unit.Hp = unit.Turn.Hp = unit.MaxHp = unit.LastMaxHp = fixtureHp;
                 unit.Turn.Speed = unit == player ? 1000 : 1;
             }
             if (id == 13840) enemy.Statuses.Add(catalog.CreateStatus(24266, enemy.Id, player.Id, 9913840));
-            if (id == 13730)
+            if (id == 13730 || id == 13740)
             {
                 Require(checkpoint.GridItems.Count == 0, "The isolated burn fixture expects an empty grid-item list.");
                 for (int offset = -2; offset <= 0; offset++)
@@ -73,7 +75,7 @@ namespace Zjcs.Presentation.Combat
                     var item = FightGridItemRuntime.Create(9913732 + offset, 3320,
                         player, player, position, 0);
                     item.Runtime.Statuses.Add(catalog.CreateStatus(13052, item.Id, player.Id,
-                        9913742 + offset, 13730, 10192, 5, 20, player.SubRank, player.Properties));
+                        9913742 + offset, id, probe.itemId, 5, 20, player.SubRank, player.Properties));
                     checkpoint.GridItems.Add(item);
                 }
             }
@@ -86,7 +88,9 @@ namespace Zjcs.Presentation.Combat
             }
             enemy.Skills.Clear(); enemy.SkillState.Slots.Clear();
             player.Skills.Clear(); player.SkillState.Slots.Clear();
-            var skill = catalog.CreateSkill(id, id == 50210 ? -2 : 0, probe.itemId, 5, 20, player.SubRank, null);
+            var skillProperties = catalog.CalculateSkillProps(id, 5, 20, player.SubRank)
+                .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList();
+            var skill = catalog.CreateSkill(id, id == 50210 ? -2 : 0, probe.itemId, 5, 20, player.SubRank, skillProperties);
             skill.LimitedTimes = 1;
             if (id == 50210)
             {
@@ -116,6 +120,7 @@ namespace Zjcs.Presentation.Combat
             var entities = (OfficialBattleSkillEntityPlayback)typeof(OfficialBattleSkillGraphPlayback)
                 .GetField("entityViews", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(graph);
             entities.CastStarted += cast => {
+                if (skillId == 13740 && cast.ActorId == 1 && cast.SkillEntityId == 13745) explosionNativeCasts++;
                 if (cast.ActorId != 1 || cast.SkillEntityId != skillId) return;
                 nativeCasts++; castTime = Time.realtimeSinceStartup;
                 if (skillId == 50210)
@@ -140,7 +145,7 @@ namespace Zjcs.Presentation.Combat
             var player = checkpoint.Units.Single(value => value.Id == 1);
             var hits = step.DamageEvents.Where(value => value.SourceId == 1 && value.SkillEntityId == skillId).ToArray();
             var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
-            if (skillId == 13730)
+            if (skillId == 13730 || skillId == 13740)
             {
                 Require(hits.Length > 0 && checkpoint.GridItems.Count == 3
                     && checkpoint.GridItems.All(value => !value.Ended && value.Runtime.Side == player.Side
@@ -151,6 +156,19 @@ namespace Zjcs.Presentation.Combat
                     && value.Runtime.Statuses.Any(status => status.ClassId == 13052))
                     && saved.Units.Single(value => value.Id == 1).SkillState.Slots[0].ReleasedTimes == 1,
                     "Burn tiles, factions or the single equipped release were lost in the checkpoint.");
+                if (skillId == 13740)
+                {
+                    var explosions = step.SkillCasts.Where(value => value.SkillEntityId == 13745).ToArray();
+                    var explosionHits = step.DamageEvents.Where(value => value.SkillEntityId == 13745).ToArray();
+                    int bossId = checkpoint.Units.Single(value => value.MonsterId == 3665).Id;
+                    Require(hits.Length == 9 && hits.All(value => value.Damage < 0 && value.AfterHp < value.BeforeHp)
+                        && explosions.Length == 2 && explosionHits.Length == 9
+                        && explosionHits.All(value => value.TargetId == bossId && value.HasHitGridPosition
+                            && value.Damage < 0 && value.AfterHp < value.BeforeHp),
+                        "The 12-cell parent or two cross explosions did not settle all occupied body cells.");
+                    Require(saved.Receipts.Last().Event.DamageEvents.Count(value => value.SkillEntityId == 13745
+                        && value.HasHitGridPosition) == 9, "Explosion cells were lost on checkpoint restore.");
+                }
             }
             else if (skillId == 50210)
             {
@@ -189,9 +207,9 @@ namespace Zjcs.Presentation.Combat
             player.Skills.Clear(); player.SkillState.Slots.Clear();
             player.Skills.Add(attack); player.SkillState.Slots.Add(catalog.CreateSkillSlot(attack, 0));
             foreach (var property in player.Properties.Concat(player.BaseProperties ?? player.Properties))
-                if (property.Id == catalog.PropertyType("Attack")) property.Value = 100000000;
+                if (property.Id == catalog.PropertyType("Attack")) property.Value = skillId == 13740 ? 1000000000L : 100000000L;
             Debug.Log("[Skill stack] actual " + skillId + " hit count=" + hits.Length
-                + (skillId == 13730 ? "; retained three friendly burn tiles" : skillId == 13820 ? "; consumed five charge layers" : skillId == 50210
+                + (skillId == 13740 ? "; two original explosions; nine parent and nine child body-cell hits; retained three tiles" : skillId == 13730 ? "; retained three friendly burn tiles" : skillId == 13820 ? "; consumed five charge layers" : skillId == 50210
                     ? "; preserved five original layers and subsequent grants" : "; per-hit charge layers passed")
                 + "; original item/cultivation, one release and checkpoint passed.");
         }
@@ -206,7 +224,8 @@ namespace Zjcs.Presentation.Combat
                 var native = pet ? pet.GetComponentInChildren<BattleNativeMonsterRenderer>(true) : null;
                 animated |= native && native.Animation == animationName && native.AnimatorFrame.Current.Time > .04f;
             }
-            if (!animated || nativeCasts == 0 || Time.realtimeSinceStartup - castTime < .2f) return;
+            if (!animated || nativeCasts == 0 || Time.realtimeSinceStartup - castTime < (skillId == 13740 ? .95f : .2f)) return;
+            if (skillId == 13740 && explosionNativeCasts < 2) return;
             var source = skillId == 50210 ? PetTransform(controller) : controller.TryGetUnitTransform(1);
             var renderer = source ? source.GetComponentInChildren<ProfessionNativeSceneRenderer>(true) : null;
             if (!source || (skillId != 50210 && (!renderer || renderer.PlayerPhysicsTime <= 0))

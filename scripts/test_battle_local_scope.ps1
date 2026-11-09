@@ -23,7 +23,8 @@ for ($direction=0; $direction -lt 4; $direction++) {
     }
 }
 # Freeze skill-facing before later movement/listeners change the actor's facing.
-$cast = [Zjcs.Combat.Official.FightBattleSkillCastPresentation]@{FacingIndex=3;FlipX=$false}
+$cast = [Zjcs.Combat.Official.FightBattleSkillCastPresentation]::Capture(
+    $actor, $skill, [Zjcs.Combat.Official.FightBattleUnitState[]]@($target))
 $actor.Direction=2; $target.X=11; $target.Y=10
 $selected = [Zjcs.Combat.Official.FightBattleTargeting]::SelectScopeTargets($actor,$units,$skill,$target,$hits[0],$null,$cast)
 Assert-LocalScope ($selected.Count -eq 1) 'Hit did not inherit the captured skill orientation'

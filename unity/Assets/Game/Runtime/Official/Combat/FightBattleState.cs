@@ -1433,6 +1433,7 @@ namespace Zjcs.Combat.Official
         public List<FightGridPoint> Scope = new List<FightGridPoint>();
         // Null preserves explicitly authored world offsets; catalog scopes are local coordinates.
         public FightBattleHitScopeTransform ScopeTransform;
+        public List<FightBattleHitScopeEntry> ScopeEntries = new List<FightBattleHitScopeEntry>();
         public bool AllowEmptyScope;
         // Official FightDamageComponent.StatusList entries applied when this hit lands.
         public List<FightBattleStatusApplication> AppliedStatuses = new List<FightBattleStatusApplication>();

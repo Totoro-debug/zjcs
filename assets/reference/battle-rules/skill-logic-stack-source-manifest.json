@@ -118,6 +118,38 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RangeFilter.cs",
       "sha256": "90aec44642e11f4b99dd8c57621855693baf07077429844f45a739df1ebe368a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleCfgForeachEntities.cs",
+      "sha256": "cdac20631b279e2bfeab1d67219a46884bb43f640d40ff122ce7115a48e60f6b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleForeachEntities.cs",
+      "sha256": "c4bf0140ceb48cf40d9c1d454efe2d4dab067d712a2bd4f0cdbd170935c250a2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleCfgTriggerSkillBySkill.cs",
+      "sha256": "59ecd82ae9fba4c8cd2ce7c6b27fd6a9db2e0e4840ec3d69ea7a89ea7b083a85"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleTriggerSkillBySkill.cs",
+      "sha256": "aa3fff7a9c2ee6477e8c4dabba680f7a4912f3c5d6a90aaac1ea6a1a5b22b513"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitFixedComponentInfo.cs",
+      "sha256": "5b4b346f898921bdb054017fe7e6fcb7ac7437b2f23437e793cd18bd2addd4d8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitRandomTargetComponentInfo.cs",
+      "sha256": "67d99a67a9a0154ca380daadb306210b47d88b5261226d333ad92f393131f817"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/HitScopCfg.cs",
+      "sha256": "86a386d620ab98e0ef53f5fc85a8419fee71edb69f843524cead081a65bc0191"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusDamageFalloffComponentInfo.cs",
+      "sha256": "d043b191c248778b8f25c9f9e60adae35b2f780fc4d1c768e341b9988a6cf0a4"
     }
   ],
   "configuration_inputs": [
@@ -397,6 +429,817 @@
         },
         "OnSkillStart": null,
         "OnHitFinish": null
+      }
+    },
+    "13740": {
+      "FightSkillComponent": {
+        "SkillType": 0,
+        "CostType": 0,
+        "SkillTargetType": 0,
+        "TargetType": 1,
+        "HitTargetActionType": 0,
+        "ElementType": 102,
+        "RangeType": 1,
+        "Range": [
+          {
+            "X": 0,
+            "Y": 1
+          },
+          {
+            "X": -1,
+            "Y": 0
+          },
+          {
+            "X": 1,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -1
+          }
+        ],
+        "HitList": [
+          {
+            "ClassId": 13741,
+            "Delay": 0.7599999904632568,
+            "ActOnSouce": 1,
+            "IgnoreAICount": false
+          }
+        ],
+        "SourceMoveList": [],
+        "ActionDuration": 1.5,
+        "AllEndedActionDuration": -1.0,
+        "AllRelevantEndedActionDuration": -1.0,
+        "Duration": 1.5,
+        "AllEndedDuration": -1.0,
+        "AllRelevantEndedDuration": -1.0,
+        "LimitedTimes": -1,
+        "ResetCDAtStart": false,
+        "ExtSkill": [],
+        "Replay": {
+          "Rate": 0.0,
+          "ReplaceSkillArrayOnReplay": []
+        },
+        "ReplayMaxCountEachRound": -1,
+        "CanTriggerChild": true,
+        "CanTriggerStatusEntityIds": [],
+        "Ai": {
+          "DontKeepDistance": false,
+          "AiPriorityTypes": [],
+          "LastAIPriorityTypes": [],
+          "IgnoreStatusArray": [],
+          "AIPriroityCharacterType": 8,
+          "ReleaseWhileRidicule": false,
+          "ReleaseWhileConfusion": false,
+          "IsReleaseSkillAfterMove": false,
+          "IsFixSkillDirection": false,
+          "FixedDirection": 0,
+          "MoveByTeleport": false,
+          "AIPriorityHpLowerCharacterTypeFilter": [],
+          "AiPriorityPropType": 0,
+          "AiPriorityFindMax": true,
+          "AIPriorityCharacterTypeGroups": []
+        },
+        "ActionType": 2,
+        "FlipSource": true,
+        "NeedConditionStatusMeetToRelease": false,
+        "MustHaveValidCost": false,
+        "IsFixedProp": false,
+        "ResetReleasedTimeOnNextWave": false
+      },
+      "GridTransformComponent": {
+        "BodyRangeInfos": [
+          {
+            "Pos": {
+              "X": 0,
+              "Y": 0
+            },
+            "GroundType": 0,
+            "IgnoreClick": false,
+            "OverrideGroundType": false
+          }
+        ],
+        "BodyCrossBlockedInfos": [],
+        "UnlockWholeRequestCount": 1,
+        "RealCenter": [
+          0.0,
+          0.0
+        ],
+        "IsRigidBody": true
+      },
+      "TransformComponent": {},
+      "FightSkillLogicComponent": {
+        "OnDoHit": {
+          "FilterCondition": null,
+          "HandleCfgs": [
+            {
+              "FilterCondition": {
+                "LogicType": 0,
+                "SubFilters": [
+                  {
+                    "CheckEntityKey": {
+                      "Id": 3,
+                      "Name": "SourceEntity",
+                      "PortType": 0,
+                      "IsPersistentBlackboard": false
+                    },
+                    "MainEntityKey": {
+                      "Id": 1,
+                      "Name": "MainEntity",
+                      "PortType": 0,
+                      "IsPersistentBlackboard": false
+                    },
+                    "_type": "SameFactionFilter"
+                  },
+                  {
+                    "EntityKey": {
+                      "Id": 1,
+                      "Name": "MainEntity",
+                      "PortType": 0,
+                      "IsPersistentBlackboard": false
+                    },
+                    "ClassId": 3051,
+                    "_type": "EntityClassIdFilter"
+                  },
+                  {
+                    "CenterEntity": {
+                      "Id": 2001,
+                      "Name": "SkillHitEntity",
+                      "PortType": 0,
+                      "IsPersistentBlackboard": false
+                    },
+                    "Range": [
+                      {
+                        "X": 0,
+                        "Y": 1
+                      },
+                      {
+                        "X": 0,
+                        "Y": 2
+                      },
+                      {
+                        "X": 0,
+                        "Y": 3
+                      },
+                      {
+                        "X": 0,
+                        "Y": 4
+                      },
+                      {
+                        "X": -1,
+                        "Y": 1
+                      },
+                      {
+                        "X": 1,
+                        "Y": 1
+                      },
+                      {
+                        "X": -1,
+                        "Y": 2
+                      },
+                      {
+                        "X": 1,
+                        "Y": 2
+                      },
+                      {
+                        "X": -1,
+                        "Y": 3
+                      },
+                      {
+                        "X": 1,
+                        "Y": 3
+                      },
+                      {
+                        "X": -1,
+                        "Y": 4
+                      },
+                      {
+                        "X": 1,
+                        "Y": 4
+                      }
+                    ],
+                    "UseWorldPosByCenterEntityTransform": true,
+                    "TargetEntityKey": {
+                      "Id": 1,
+                      "Name": "MainEntity",
+                      "PortType": 0,
+                      "IsPersistentBlackboard": false
+                    },
+                    "ConsiderTargetBodySize": true,
+                    "_type": "RangeFilter"
+                  }
+                ],
+                "_type": "LogicFilter"
+              },
+              "CharacterType": 6,
+              "SourceEntityKey": {
+                "Id": 1,
+                "Name": "MainEntity",
+                "PortType": 0,
+                "IsPersistentBlackboard": false
+              },
+              "ResultEntityArrayKey": {
+                "Id": 406339594,
+                "Name": "Entities",
+                "PortType": 1,
+                "IsPersistentBlackboard": false
+              },
+              "_type": "FightHandleCfgCollectionEntitiesByRoleRoot"
+            },
+            {
+              "HandleCfgs": [
+                {
+                  "SkillEntityClassId": 13745,
+                  "Rate": 1.0,
+                  "SourceEntityKey": {
+                    "Id": 3,
+                    "Name": "SourceEntity",
+                    "PortType": 0,
+                    "IsPersistentBlackboard": false
+                  },
+                  "TargetEntityKey": {
+                    "Id": 1,
+                    "Name": "MainEntity",
+                    "PortType": 0,
+                    "IsPersistentBlackboard": false
+                  },
+                  "_type": "FightHandleCfgTriggerSkillBySkill"
+                }
+              ],
+              "EntityArrayKey": {
+                "Id": 406339594,
+                "Name": "Entities",
+                "PortType": 0,
+                "IsPersistentBlackboard": false
+              },
+              "ForeachCount": -1,
+              "_type": "FightHandleCfgForeachEntities"
+            }
+          ]
+        },
+        "OnDoHitTransient": null,
+        "OnSkillStart": null,
+        "OnHitFinish": null
+      }
+    },
+    "13741": {
+      "GridTransformComponent": {
+        "BodyRangeInfos": [
+          {
+            "Pos": {
+              "X": 0,
+              "Y": 0
+            },
+            "GroundType": 0,
+            "IgnoreClick": false,
+            "OverrideGroundType": false
+          }
+        ],
+        "BodyCrossBlockedInfos": [],
+        "UnlockWholeRequestCount": 1,
+        "RealCenter": [
+          0.0,
+          0.0
+        ],
+        "IsRigidBody": true
+      },
+      "TransformComponent": {},
+      "FightHitFixedComponent": {
+        "DamageId": 10026,
+        "DamageType": 1,
+        "DamageBasicProp": 1,
+        "DamageProp": 200,
+        "FixedDamageProp": 190,
+        "DamageParam": 0,
+        "DamageActionType": 4,
+        "DelayDistFactor": 0.0,
+        "Offset": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "TargetOffset": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "IsUseCenterRotation": false,
+        "RotateCenterOffset": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "UseDamageFactor": false,
+        "DamageIgnoreShield": false,
+        "IsTrueDamage": false,
+        "AirCombo": {
+          "AirComboStatusId": 0,
+          "BasePercent": 0.0,
+          "AffectedByProp": false
+        },
+        "DestroyDelay": 0.5,
+        "IsBreakResilience": false,
+        "Scope": [
+          {
+            "Pos": {
+              "X": 0,
+              "Y": 1
+            },
+            "Delay": 0.0,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          },
+          {
+            "Pos": {
+              "X": 0,
+              "Y": 2
+            },
+            "Delay": 0.019999999552965164,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          },
+          {
+            "Pos": {
+              "X": 0,
+              "Y": 3
+            },
+            "Delay": 0.05999999865889549,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          },
+          {
+            "Pos": {
+              "X": 0,
+              "Y": 4
+            },
+            "Delay": 0.11999999731779099,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          },
+          {
+            "Pos": {
+              "X": -1,
+              "Y": 1
+            },
+            "Delay": 0.0,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          },
+          {
+            "Pos": {
+              "X": 1,
+              "Y": 1
+            },
+            "Delay": 0.0,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          },
+          {
+            "Pos": {
+              "X": -1,
+              "Y": 2
+            },
+            "Delay": 0.019999999552965164,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          },
+          {
+            "Pos": {
+              "X": 1,
+              "Y": 2
+            },
+            "Delay": 0.019999999552965164,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          },
+          {
+            "Pos": {
+              "X": -1,
+              "Y": 3
+            },
+            "Delay": 0.05999999865889549,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          },
+          {
+            "Pos": {
+              "X": 1,
+              "Y": 3
+            },
+            "Delay": 0.05999999865889549,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          },
+          {
+            "Pos": {
+              "X": -1,
+              "Y": 4
+            },
+            "Delay": 0.11999999731779099,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          },
+          {
+            "Pos": {
+              "X": 1,
+              "Y": 4
+            },
+            "Delay": 0.11999999731779099,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          }
+        ]
+      }
+    },
+    "13745": {
+      "FightSkillComponent": {
+        "SkillType": 0,
+        "CostType": 0,
+        "SkillTargetType": 0,
+        "TargetType": 1,
+        "HitTargetActionType": 0,
+        "ElementType": 102,
+        "RangeType": 1,
+        "Range": [],
+        "HitList": [
+          {
+            "ClassId": 13746,
+            "Delay": 0.15000000596046448,
+            "ActOnSouce": 0,
+            "IgnoreAICount": false
+          }
+        ],
+        "SourceMoveList": [],
+        "ActionDuration": -1.0,
+        "AllEndedActionDuration": 0.0,
+        "AllRelevantEndedActionDuration": -1.0,
+        "Duration": -1.0,
+        "AllEndedDuration": 0.5,
+        "AllRelevantEndedDuration": -1.0,
+        "LimitedTimes": -1,
+        "ResetCDAtStart": false,
+        "ExtSkill": [],
+        "Replay": {
+          "Rate": 0.0,
+          "ReplaceSkillArrayOnReplay": []
+        },
+        "ReplayMaxCountEachRound": -1,
+        "CanTriggerChild": false,
+        "CanTriggerStatusEntityIds": [],
+        "Ai": {
+          "DontKeepDistance": false,
+          "AiPriorityTypes": [],
+          "LastAIPriorityTypes": [],
+          "IgnoreStatusArray": [],
+          "AIPriroityCharacterType": 8,
+          "ReleaseWhileRidicule": false,
+          "ReleaseWhileConfusion": false,
+          "IsReleaseSkillAfterMove": false,
+          "IsFixSkillDirection": false,
+          "FixedDirection": 0,
+          "MoveByTeleport": false,
+          "AIPriorityHpLowerCharacterTypeFilter": [],
+          "AiPriorityPropType": 0,
+          "AiPriorityFindMax": true,
+          "AIPriorityCharacterTypeGroups": []
+        },
+        "ActionType": 0,
+        "FlipSource": false,
+        "NeedConditionStatusMeetToRelease": false,
+        "MustHaveValidCost": false,
+        "IsFixedProp": false,
+        "ResetReleasedTimeOnNextWave": false
+      },
+      "GridTransformComponent": {
+        "BodyRangeInfos": [
+          {
+            "Pos": {
+              "X": 0,
+              "Y": 0
+            },
+            "GroundType": 0,
+            "IgnoreClick": false,
+            "OverrideGroundType": false
+          }
+        ],
+        "BodyCrossBlockedInfos": [],
+        "UnlockWholeRequestCount": 1,
+        "RealCenter": [
+          0.0,
+          0.0
+        ],
+        "IsRigidBody": true
+      },
+      "TransformComponent": {}
+    },
+    "13746": {
+      "GridTransformComponent": {
+        "BodyRangeInfos": [
+          {
+            "Pos": {
+              "X": 0,
+              "Y": 0
+            },
+            "GroundType": 0,
+            "IgnoreClick": false,
+            "OverrideGroundType": false
+          }
+        ],
+        "BodyCrossBlockedInfos": [],
+        "UnlockWholeRequestCount": 1,
+        "RealCenter": [
+          0.0,
+          0.0
+        ],
+        "IsRigidBody": true
+      },
+      "TransformComponent": {},
+      "FightHitFixedComponent": {
+        "DamageId": 10023,
+        "DamageType": 1,
+        "DamageBasicProp": 1,
+        "DamageProp": 200,
+        "FixedDamageProp": 190,
+        "DamageParam": 0,
+        "DamageActionType": 4,
+        "DelayDistFactor": 0.0,
+        "Offset": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "TargetOffset": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "IsUseCenterRotation": false,
+        "RotateCenterOffset": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "UseDamageFactor": false,
+        "DamageIgnoreShield": false,
+        "IsTrueDamage": false,
+        "AirCombo": {
+          "AirComboStatusId": 0,
+          "BasePercent": 0.0,
+          "AffectedByProp": false
+        },
+        "DestroyDelay": 0.0,
+        "IsBreakResilience": false,
+        "Scope": [
+          {
+            "Pos": {
+              "X": 0,
+              "Y": 0
+            },
+            "Delay": 0.0,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          },
+          {
+            "Pos": {
+              "X": -1,
+              "Y": 0
+            },
+            "Delay": 0.0,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          },
+          {
+            "Pos": {
+              "X": 0,
+              "Y": -1
+            },
+            "Delay": 0.0,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          },
+          {
+            "Pos": {
+              "X": 0,
+              "Y": 1
+            },
+            "Delay": 0.0,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          },
+          {
+            "Pos": {
+              "X": 1,
+              "Y": 0
+            },
+            "Delay": 0.0,
+            "DamageOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "DamageRotation": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "DamageRotZOffset": 0.0,
+            "FlipBySourceX": true,
+            "FlipByTargetY": true
+          }
+        ]
       }
     },
     "13820": {
@@ -1865,6 +2708,47 @@
       "MaxRankLimit": 0,
       "AiPriorityId": -1,
       "LastAiPriorityId": -1
+    },
+    {
+      "ClassId": 10193,
+      "EcEntityId": 13740,
+      "DirectionEcEntityId": {},
+      "RandomSkillWeightList": [],
+      "RandomSkillEntityId": [],
+      "TryAtStartType": 0,
+      "UpgradeMaterialId": 12001,
+      "Tags": [
+        22
+      ],
+      "SkillSortTypes": [
+        4
+      ],
+      "OuterTag": 0,
+      "PassiveRankPropId": 0,
+      "PassiveGroupLevelPropId": 0,
+      "PassiveRankFactorId": 2050,
+      "PassivePropFactors": {},
+      "PassiveStatusIdList": [],
+      "InitEnergy": 0,
+      "TriggerNeedEnergy": 0,
+      "ViewPropEntities": [
+        13740,
+        13745
+      ],
+      "ViewPropBlackList": [],
+      "HyperLinkTypes": [
+        0,
+        0
+      ],
+      "HyperLinkDatas": [
+        "{EntryId:121}",
+        "{EntryId:124}"
+      ],
+      "UserType": 1,
+      "Invisible": false,
+      "MaxRankLimit": 0,
+      "AiPriorityId": 12,
+      "LastAiPriorityId": 13
     },
     {
       "ClassId": 10196,
@@ -3684,6 +4568,575 @@
                 "OnDoHitTransient": null,
                 "OnSkillStart": null,
                 "OnHitFinish": null
+              }
+            }
+          },
+          "13741": {
+            "parent": 0,
+            "components": {
+              "GridTransformComponent": {
+                "BodyRangeInfos": [
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  }
+                ],
+                "BodyCrossBlockedInfos": [],
+                "UnlockWholeRequestCount": 1,
+                "RealCenter": [
+                  0.0,
+                  0.0
+                ],
+                "IsRigidBody": true
+              },
+              "TransformComponent": {},
+              "FightHitFixedComponent": {
+                "DamageId": 10026,
+                "DamageType": 1,
+                "DamageBasicProp": 1,
+                "DamageProp": 200,
+                "FixedDamageProp": 190,
+                "DamageParam": 0,
+                "DamageActionType": 4,
+                "DelayDistFactor": 0.0,
+                "Offset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "TargetOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "IsUseCenterRotation": false,
+                "RotateCenterOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "UseDamageFactor": false,
+                "DamageIgnoreShield": false,
+                "IsTrueDamage": false,
+                "AirCombo": {
+                  "AirComboStatusId": 0,
+                  "BasePercent": 0.0,
+                  "AffectedByProp": false
+                },
+                "DestroyDelay": 0.5,
+                "IsBreakResilience": false,
+                "Scope": [
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 1
+                    },
+                    "Delay": 0.0,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 2
+                    },
+                    "Delay": 0.019999999552965164,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 3
+                    },
+                    "Delay": 0.05999999865889549,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 4
+                    },
+                    "Delay": 0.11999999731779099,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 1
+                    },
+                    "Delay": 0.0,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 1
+                    },
+                    "Delay": 0.0,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 2
+                    },
+                    "Delay": 0.019999999552965164,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 2
+                    },
+                    "Delay": 0.019999999552965164,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 3
+                    },
+                    "Delay": 0.05999999865889549,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 3
+                    },
+                    "Delay": 0.05999999865889549,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 4
+                    },
+                    "Delay": 0.11999999731779099,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 4
+                    },
+                    "Delay": 0.11999999731779099,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  }
+                ]
+              }
+            }
+          },
+          "13745": {
+            "parent": 0,
+            "components": {
+              "GridTransformComponent": {
+                "BodyRangeInfos": [
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  }
+                ],
+                "BodyCrossBlockedInfos": [],
+                "UnlockWholeRequestCount": 1,
+                "RealCenter": [
+                  0.0,
+                  0.0
+                ],
+                "IsRigidBody": true
+              },
+              "TransformComponent": {},
+              "FightSkillComponent": {
+                "SkillType": 0,
+                "CostType": 0,
+                "SkillTargetType": 0,
+                "TargetType": 1,
+                "HitTargetActionType": 0,
+                "ElementType": 102,
+                "RangeType": 1,
+                "Range": [],
+                "HitList": [
+                  {
+                    "ClassId": 13746,
+                    "Delay": 0.15000000596046448,
+                    "ActOnSouce": 0,
+                    "IgnoreAICount": false
+                  }
+                ],
+                "SourceMoveList": [],
+                "ActionDuration": -1.0,
+                "AllEndedActionDuration": 0.0,
+                "AllRelevantEndedActionDuration": -1.0,
+                "Duration": -1.0,
+                "AllEndedDuration": 0.5,
+                "AllRelevantEndedDuration": -1.0,
+                "LimitedTimes": -1,
+                "ResetCDAtStart": false,
+                "ExtSkill": [],
+                "Replay": {
+                  "Rate": 0.0,
+                  "ReplaceSkillArrayOnReplay": []
+                },
+                "ReplayMaxCountEachRound": -1,
+                "CanTriggerChild": false,
+                "CanTriggerStatusEntityIds": [],
+                "Ai": {
+                  "DontKeepDistance": false,
+                  "AiPriorityTypes": [],
+                  "LastAIPriorityTypes": [],
+                  "IgnoreStatusArray": [],
+                  "AIPriroityCharacterType": 8,
+                  "ReleaseWhileRidicule": false,
+                  "ReleaseWhileConfusion": false,
+                  "IsReleaseSkillAfterMove": false,
+                  "IsFixSkillDirection": false,
+                  "FixedDirection": 0,
+                  "MoveByTeleport": false,
+                  "AIPriorityHpLowerCharacterTypeFilter": [],
+                  "AiPriorityPropType": 0,
+                  "AiPriorityFindMax": true,
+                  "AIPriorityCharacterTypeGroups": []
+                },
+                "ActionType": 0,
+                "FlipSource": false,
+                "NeedConditionStatusMeetToRelease": false,
+                "MustHaveValidCost": false,
+                "IsFixedProp": false,
+                "ResetReleasedTimeOnNextWave": false
+              }
+            }
+          },
+          "13746": {
+            "parent": 0,
+            "components": {
+              "GridTransformComponent": {
+                "BodyRangeInfos": [
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  }
+                ],
+                "BodyCrossBlockedInfos": [],
+                "UnlockWholeRequestCount": 1,
+                "RealCenter": [
+                  0.0,
+                  0.0
+                ],
+                "IsRigidBody": true
+              },
+              "TransformComponent": {},
+              "FightHitFixedComponent": {
+                "DamageId": 10023,
+                "DamageType": 1,
+                "DamageBasicProp": 1,
+                "DamageProp": 200,
+                "FixedDamageProp": 190,
+                "DamageParam": 0,
+                "DamageActionType": 4,
+                "DelayDistFactor": 0.0,
+                "Offset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "TargetOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "IsUseCenterRotation": false,
+                "RotateCenterOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "UseDamageFactor": false,
+                "DamageIgnoreShield": false,
+                "IsTrueDamage": false,
+                "AirCombo": {
+                  "AirComboStatusId": 0,
+                  "BasePercent": 0.0,
+                  "AffectedByProp": false
+                },
+                "DestroyDelay": 0.0,
+                "IsBreakResilience": false,
+                "Scope": [
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "Delay": 0.0,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 0
+                    },
+                    "Delay": 0.0,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": -1
+                    },
+                    "Delay": 0.0,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 1
+                    },
+                    "Delay": 0.0,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 0
+                    },
+                    "Delay": 0.0,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  }
+                ]
               }
             }
           }
@@ -14477,6 +15930,10 @@
           "EcEntityId": 13730
         },
         {
+          "ClassId": 10193,
+          "EcEntityId": 13740
+        },
+        {
           "ClassId": 10196,
           "EcEntityId": 13820
         },
@@ -14526,6 +15983,10 @@
       {
         "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActionComponent.cs",
         "sha256": "574e476645f5e9f86b9f5015ed794a2aac103df4be65f9beef9fd762107cc1c7"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitFixedComponent.cs",
+        "sha256": "fc2c0dd435e46afe53fa6ffc79d17dbb844ff794c5470465cbb48362eed1a7e5"
       },
       {
         "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillComponent.cs",
@@ -14676,6 +16137,10 @@
         "sha256": "433c59b62831748626f2a011706e12f1bef3df00bf10dd36aa90c6c425e4c0a1"
       },
       {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightHitFixedComponentInfoFormatter.cs",
+        "sha256": "9f86c02ec221f12eced2d1dd98d9f12a8ef2590f1b36d5dce273493d128f52a7"
+      },
+      {
         "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightLogicFlowConfigFormatter.cs",
         "sha256": "420a1fbea162b64264edbb54358fd9e1cca5dbaf9f0e79c57a9fc1f7b8187f67"
       },
@@ -14744,12 +16209,24 @@
         "sha256": "48f32fbc167d3a9f69f0824c14d864bc77ee00abfc9e44cb1b05100077a4ae20"
       },
       {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitAirComboCfgFormatter.cs",
+        "sha256": "baeb2fb38be079871c8e669cb46c60f4952c580d5f452ce59c0ced74b80f4aca"
+      },
+      {
         "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitAnchorFormatter.cs",
         "sha256": "ad2601d0490d0cca17466565a960c3d859d195e8794cc1335e9f8259e6dea8a1"
       },
       {
         "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitCfgFormatter.cs",
         "sha256": "09f74504e8e09e69420d558f7956aee1b85fb0ae77d11d7c0a3ce8b17fe2c1bc"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitDamageTypeFormatter.cs",
+        "sha256": "931b9e7015ee7a22be48724d11c193ad1325ac9e41fe7fdfcb6630d269ae968f"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitScopCfgFormatter.cs",
+        "sha256": "026f24488d8939b3c8c2cead1929d18d806d0dc8db6b23a4338859096a976960"
       },
       {
         "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitTargetTypeFormatter.cs",
@@ -14836,7 +16313,6 @@
   },
   "configuration_only_skill_logic_ids": [
     13640,
-    13740,
     13870,
     13960,
     13970,
@@ -14848,7 +16324,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_skill_logic_sources.py",
-    "sha256": "f806819d8d511f4ab9d429de9167002d652fd9feed40cf227255d3d623245b11"
+    "sha256": "c978225575cd20d360e95d86a6457cad39ed8a6fb31f9d144e1936bd0cc884ea"
   },
-  "operation": "Verify complete components for all 15 skill-logic entities against the selected version. Preserve the two transient stack graphs, the 13820 charge start/scale graph and status configuration. The APK exposes empty client/handler classes; execution uses the confirmed per-target, pre-HP, miss/immune/shield and child-status rules. Existing stack lifecycle is shared; The confirmed 13820 cast snapshot consumes valid charge instances at start and scales each damage segment by 1 + 0.07 * snapshot, truncating toward zero before shield/HP settlement; the confirmed 50210 graph rereads all valid owner 24823 stacks for each segment without consuming them and scales damage and AbsoluteDamage by 1 + 0.2 * current stacks, independently of CanTriggerChild; the confirmed 13730 graph rereads live same-faction 3051 grid entities within the original 13 cells around each hit target and scales each segment by 1 + 0.05 * entity count without consumption or an extra cap; other skill graphs remain outside this implementation."
+  "operation": "Verify complete components for all 15 skill-logic entities against the selected version. Preserve the two transient stack graphs, the 13820 charge start/scale graph and status configuration. The APK exposes empty client/handler classes; execution uses the confirmed per-target, pre-HP, miss/immune/shield and child-status rules. Existing stack lifecycle is shared; The confirmed 13820 cast snapshot consumes valid charge instances at start and scales each damage segment by 1 + 0.07 * snapshot, truncating toward zero before shield/HP settlement; the confirmed 50210 graph rereads all valid owner 24823 stacks for each segment without consuming them and scales damage and AbsoluteDamage by 1 + 0.2 * current stacks, independently of CanTriggerChild; the confirmed 13730 graph rereads live same-faction 3051 grid entities within the original 13 cells around each hit target and scales each segment by 1 + 0.05 * entity count without consumption or an extra cap; the confirmed 13740 OnDoHit graph snapshots matching same-faction 3051 tiles in the original 12 cells once per 13741 execution, triggering one inherited 13745 per tile without consumption or extra action; the confirmed area attack rule settles each occupied body cell separately, preserving original cell delays and explicit random selection constraints and applying existing falloff per occurrence; other skill graphs remain outside this implementation."
 }

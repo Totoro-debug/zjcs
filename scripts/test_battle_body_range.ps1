@@ -33,7 +33,7 @@ function New-BodySkill {
     $hit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
     $hit.EntityId = 9001; $hit.DamageId = 9002; $hit.DamageType = 8
     $hit.HasCustomDamage = $true; $hit.CustomDamage = 17; $hit.TargetMode = 1; $hit.Anchor = 1
-    # Several covered cells belong to the same boss; it must take one hit.
+    # Three covered cells belong to the boss; each deals damage in one skill release.
     foreach ($point in @(@(1,0), @(1,1), @(2,0), @(0,1), @(0,-1), @(-1,0))) {
         $hit.Scope.Add([Zjcs.Combat.Official.FightGridPoint]::new($point[0], $point[1]))
     }
@@ -70,19 +70,19 @@ $player = New-BodyUnit 1 1 2 4
 $boss = New-BodyBoss
 $battle = New-BodyBattle $player $boss
 $result = Invoke-BodyStep $battle
-Assert-Body ($result.Event.DamageEvents.Count -eq 1 -and $boss.Hp -eq 983) 'Melee did not hit the boss body edge exactly once'
+Assert-Body ($result.Event.DamageEvents.Count -eq 3 -and $boss.Hp -eq 949) 'The three covered boss cells did not each take one hit'
 Assert-Body ($result.Event.Movements.Count -eq 0) 'An already reachable body edge caused movement'
 Assert-Body ($player.SkillState.Slots[0].ReleasedTimes -eq 1) 'Body coverage multiplied the skill release count'
 $cooldown = [Zjcs.Combat.Official.FightSkillState]::new($player.SkillState)
 Assert-Body ($cooldown.LeftCooldown(0) -gt 0) 'Body-edge hit did not consume the skill cooldown'
 $restored = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
     [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($battle))
-Assert-Body ($restored.Units[1].BodyOffsets.Count -eq 25 -and $restored.Units[1].Hp -eq 983) 'Checkpoint lost the body footprint or damage'
+Assert-Body ($restored.Units[1].BodyOffsets.Count -eq 25 -and $restored.Units[1].Hp -eq 949) 'Checkpoint lost the body footprint or per-cell damage'
 Assert-Body ($restored.Units[0].SkillState.Slots[0].ReleasedTimes -eq 1) 'Cold resume lost skill release state'
 Assert-Body ([Zjcs.Offline.Combat.OfflineBattlePartEnd]::Finish($restored)) 'Could not settle body-edge combat'
 $report = [Zjcs.Combat.Official.FightBattleReportBuilder]::Build($restored)
 $playerReport = @($report.Units | Where-Object UnitId -eq 1)[0]
-Assert-Body ($playerReport.DamageDealt -eq 17) 'Body cells multiplied report damage'
+Assert-Body ($playerReport.DamageDealt -eq 51) 'Report omitted damage from covered body cells'
 
 # Approach the body edge, with the boss footprint blocking every interior tile.
 $movingPlayer = New-BodyUnit 1 1 0 4; $movingPlayer.MoveDist = 2
@@ -91,7 +91,7 @@ $movingBattle = New-BodyBattle $movingPlayer $movingBoss
 $movingResult = Invoke-BodyStep $movingBattle
 Assert-Body ($movingPlayer.X -eq 2 -and $movingPlayer.Y -eq 4) 'Approach did not stop at a legal body-edge casting position'
 Assert-Body ($movingResult.Event.Movements.Count -eq 1 -and $movingResult.Event.Movements[0].Path.Count -eq 3) 'Body-edge approach exceeded movement distance'
-Assert-Body ($movingResult.Event.DamageEvents.Count -eq 1 -and $movingBoss.Hp -eq 983) 'Approach failed to cast against the boss body'
+Assert-Body ($movingResult.Event.DamageEvents.Count -eq 3 -and $movingBoss.Hp -eq 949) 'Approach failed to damage each covered boss cell'
 foreach ($point in $movingResult.Event.Movements[0].Path) {
     Assert-Body ($point.X -lt 3) 'Approach entered the occupied boss body'
 }
@@ -101,7 +101,7 @@ $blockedPlayer = New-BodyUnit 1 1 0 4; $blockedPlayer.MoveDist = 3
 $blockedBattle = New-BodyBattle $blockedPlayer (New-BodyBoss)
 $blockedBattle.Grid.BlockedPositions.Add([Zjcs.Combat.Official.FightGridPoint]::new(2,4))
 $blockedResult = Invoke-BodyStep $blockedBattle
-Assert-Body ($blockedResult.Event.DamageEvents.Count -eq 1) 'A blocked closest tile prevented a reachable alternate edge cast'
+Assert-Body ($blockedResult.Event.DamageEvents.Count -eq 3) 'A blocked closest tile prevented the alternate edge cast or omitted covered cells'
 foreach ($movement in $blockedResult.Event.Movements) {
     Assert-Body ($movement.Path.Count -le 4) 'Alternate approach exceeded movement distance'
     foreach ($point in $movement.Path) {
@@ -148,4 +148,4 @@ $prioritySkill.Range.RemoveAt(1)
 $chosen = [Zjcs.Combat.Official.FightBattleTargeting]::Select($priorityPlayer,$targets,1,0,$false,$false,$prioritySkill)
 Assert-Body ($chosen.Count -eq 1 -and $chosen[0].Id -eq 3) 'Shortest-approach priority ignored the target body'
 
-Write-Output 'Body range checks passed: melee edge hit, one release/CD/report, cold footprint restore, legal approach, alternate edge, wall, caster-centre origin, single-cell regression and target priority.'
+Write-Output 'Body range checks passed: per-cell edge damage/report, one release/CD, cold footprint restore, legal approach, alternate edge, wall, caster-centre origin, single-cell regression and target priority.'

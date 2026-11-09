@@ -86,6 +86,7 @@ namespace Zjcs.Combat.Official
                         if (status != null && statusCatalog.ContainsEntity(status.ClassId))
                         {
                             if (status.SkillReplay == null) status.SkillReplay = statusCatalog.StatusReplayDefinition(status.ClassId);
+                            statusCatalog.RestoreSharedStackDefinition(status);
                             status.AiMoreHit = statusCatalog.StatusMoreHit(status.ClassId);
                             status.HasCreatorDamageBoost = statusCatalog.StatusHasCreatorDamageBoost(status.ClassId);
                             RestoreHpChangeStackDefinition(status);
@@ -837,6 +838,7 @@ namespace Zjcs.Combat.Official
                     hit.Delay, completedSourceMoves, targetPosition);
                 if (hit.Delay > lastDelay) lastDelay = hit.Delay;
                 List<FightBattleUnitState> hitTargets;
+                IReadOnlyList<FightHitOccurrence> plannedHits = null;
                 bool hasRandomTargetContext = hit.RandomTargetGroupId > 0;
                 if (chaosInvasionWipe)
                     hitTargets = targets.Where(target => target != null
@@ -912,28 +914,28 @@ namespace Zjcs.Combat.Official
                             Anchor = 0,
                             TargetMode = hit.TargetMode,
                             Scope = hit.Scope,
-                            ScopeTransform = hit.ScopeTransform
+                            ScopeTransform = hit.ScopeTransform,
+                            ScopeEntries = hit.ScopeEntries, ActionType = hit.ActionType, IsSummon = hit.IsSummon
                         };
+                        var randomOccurrences = new List<FightHitOccurrence>();
                         foreach (FightBattleUnitState selectedTarget in selectedTargets)
-                            hitTargets.AddRange(FightBattleTargeting.SelectScopeTargets(targetingSource,
-                                units, skill, selectedTarget, randomTargetEffect, random, hitCast));
+                            randomOccurrences.AddRange(PlanHitPattern(targetingSource, skill, randomTargetEffect,
+                                selectedTargets, selectedTarget, hitCast, true));
+                        plannedHits = randomOccurrences;
+                        foreach (var occurrence in randomOccurrences) hitTargets.Add(occurrence.Target);
                     }
                     else hitTargets.AddRange(selectedTargets);
                 }
-                else if (hit.Scope != null && hit.Scope.Count > 0)
-                {
-                    List<FightBattleUnitState> scopeTargets = FightBattleTargeting.SelectScopeTargets(
-                        targetingSource, units, skill, targetPosition
-                            ?? (targets.Count > 0 ? targets[0] : null), hit, random, hitCast);
-                    hitTargets = hit.TargetMode == 2
-                        ? FightBattleTargeting.SelectHitTargets(scopeTargets, 2, hit.RandomCount, random)
-                        : scopeTargets;
-                }
                 else
                 {
-                    hitTargets = FightBattleTargeting.SelectHitTargets(targets,
-                        hit.TargetMode, hit.RandomCount, random);
+                    plannedHits = PlanHitPattern(targetingSource, skill, hit, targets,
+                        targetPosition ?? (targets.Count > 0 ? targets[0] : null), hitCast);
+                    hitTargets = plannedHits.Select(value => value.Target).ToList();
                 }
+                ExecuteBurningExplosions(actor, skill, skillLogic, hit,
+                    targetPosition ?? (targets.Count > 0 ? targets[0] : null), hitCast,
+                    casts, damageEvents, movements, ref lastDelay,
+                    ref statusTriggerDuration, ref statusTriggerActionDuration);
                 if (hit.IsSummon)
                 {
                     if (hit.SummonConfigType == "FightHitSummonGridItemCfg")
@@ -946,12 +948,14 @@ namespace Zjcs.Combat.Official
                         hasRandomTargetContext ? hitTargets : targets);
                     continue;
                 }
-                foreach (FightBattleUnitState target in hitTargets)
+                for (int targetIndex = 0; targetIndex < hitTargets.Count; targetIndex++)
                 {
+                    FightBattleUnitState target = hitTargets[targetIndex];
+                    FightHitOccurrence occurrence = plannedHits == null ? null : plannedHits[targetIndex];
                     if (!allowDeadSource && actor.Hp <= 0) break;
                     if (target.Hp <= 0 || target.Ended) continue;
                     if (target.IsVoodooDoll && (hit.ActionType == 5 || skill.SkillType == 3)) continue;
-                    float hitDelay = HitDelay(actor, target, hit);
+                    float hitDelay = HitDelay(actor, target, hit) + (occurrence == null ? 0f : occurrence.Delay);
                     if (hitDelay > lastDelay) lastDelay = hitDelay;
                     movementStartContext.StatusStartTime = Math.Max(0f, hitDelay);
                     long beforeHp = target.Hp;
@@ -1020,6 +1024,9 @@ namespace Zjcs.Combat.Official
                         ElementConfrontationUnresolved = !elementConfrontationResolved,
                         Delay = hitDelay,
                         Anchor = hit.Anchor,
+                        HasHitGridPosition = occurrence != null && occurrence.HasGridPosition,
+                        HitGridX = occurrence == null ? 0 : occurrence.GridPosition.X,
+                        HitGridY = occurrence == null ? 0 : occurrence.GridPosition.Y,
                         IsCure = resolved.IsCure,
                         Critical = resolved.Type.Critical,
                         Block = resolved.Type.Block,
