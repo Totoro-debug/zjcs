@@ -19,9 +19,10 @@ namespace Zjcs.Presentation.Combat
         private readonly string expectedAnimation;
         private readonly bool combo;
         private readonly HashSet<string> expectedTracks = new HashSet<string>();
-        private readonly Dictionary<MyPlayableSpineClone, int> captureStages = new Dictionary<MyPlayableSpineClone, int>();
-        private int expectedInstances = 1;
+        private readonly Dictionary<object, int> captureStages = new Dictionary<object, int>();
+        private int expectedPlays = 1;
         private readonly HashSet<string> observed = new HashSet<string>();
+        private readonly List<object> plays = new List<object>();
         private readonly List<ProfessionNativeSceneRenderer> renderers = new List<ProfessionNativeSceneRenderer>();
         private bool cast;
         private bool checkedHiddenSource;
@@ -89,12 +90,12 @@ namespace Zjcs.Presentation.Combat
                     .Where(value => value.ActorId == 1).OrderBy(value => value.Delay).ToArray();
                 Require(casts.Length == 6 && casts[0].SkillEntityId == 13100,
                     "The public combo did not execute its five continuation stages.");
-                expectedInstances = 0;
+                expectedPlays = 0;
                 foreach (var segment in casts)
                     if (segment.SkillEntityId >= 13100 && segment.SkillEntityId <= 13107)
                     {
                         int index = segment.SkillEntityId == 13100 ? 1 : segment.SkillEntityId - 13102;
-                        expectedTracks.Add("100/skill_62_" + index); expectedInstances++;
+                        expectedTracks.Add("100/skill_62_" + index); expectedPlays++;
                     }
                 var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(controller.Checkpoint));
                 Require(saved.Units.Single(value => value.Id == 1).SkillState.Slots[0].ReleasedTimes == 1,
@@ -112,7 +113,8 @@ namespace Zjcs.Presentation.Combat
         public void ObserveFrame()
         {
             CaptureName = null;
-            if (cast && expectedTracks.Count > 0 && expectedTracks.All(observed.Contains)
+            if (cast && plays.Count == expectedPlays
+                && expectedTracks.Count > 0 && expectedTracks.All(observed.Contains)
                 && (!combo || !UnityEngine.Object.FindObjectsOfType<MyPlayableSpineClone>(true)
                     .Any(value => value.gameObject.activeInHierarchy))) Time.timeScale = 5f;
             foreach (var playable in UnityEngine.Object.FindObjectsOfType<MyPlayableSpineClone>(true))
@@ -152,7 +154,9 @@ namespace Zjcs.Presentation.Combat
                         Require(native.GetComponent<Current.AppearanceCharacter>().TryGetSkinName(pair.Key, out var skin)
                             && skin == expected, "A clone lost or copied a different source skin.");
                 var meshes = native.GetComponentsInChildren<MeshFilter>(true)
-                    .Where(value => value.gameObject.activeInHierarchy && value.sharedMesh && value.sharedMesh.vertexCount > 0).ToArray();
+                    .Where(value => value.gameObject.activeInHierarchy && value.sharedMesh && value.sharedMesh.vertexCount > 0
+                        && value.TryGetComponent<MeshRenderer>(out var renderer)
+                        && renderer.enabled && !renderer.forceRenderingOff).ToArray();
                 Require(meshes.Length > 0, "The active clone produced no native body/part geometry.");
                 var materials = meshes.Select(value => value.GetComponent<MeshRenderer>()).Where(value => value)
                     .SelectMany(value => value.sharedMaterials).Where(value => value).ToArray();
@@ -162,8 +166,13 @@ namespace Zjcs.Presentation.Combat
                     "The clone body/weapon renderer orders or original slot depth changed.");
                 Require(materials.Length > 0 && materials.All(value => value.mainTexture
                     && !value.mainTexture.name.EndsWith("_placeholder", StringComparison.Ordinal)),
-                    "The clone's actual body/part textures were not loaded.");
+                    "The clone's rendered body/part textures were not loaded; track=" + playable.AnimName
+                    + "; status=" + playable.myStatus + "; time=" + playable.Time);
                 if (!renderers.Contains(native)) renderers.Add(native);
+                // The official prefab pool may reuse a renderer between continuation casts.
+                // Each actual PlayAnimation creates its own independent track.
+                object play = animation.AnimState.GetCurrent(0);
+                if (!plays.Contains(play)) plays.Add(play);
                 if (observed.Add(playable.AnimName))
                 {
                     DumpVisibleMaterials();
@@ -171,11 +180,11 @@ namespace Zjcs.Presentation.Combat
                     Debug.Log("[Player clone] original " + playable.AnimName
                         + ": source appearance, independent skeleton/clock, native body/parts and textures verified.");
                 }
-                int stage = captureStages.TryGetValue(playable, out int value) ? value : 0;
+                int stage = captureStages.TryGetValue(play, out int value) ? value : 0;
                 if (stage < 3 && animation.AnimationTime >= new[] { .03f, .12f, .25f }[stage])
                 {
-                    captureStages[playable] = stage + 1;
-                    CaptureName = "clone-" + renderers.IndexOf(native) + "-" + playable.AnimName.Replace('/', '-') + "-" + stage;
+                    captureStages[play] = stage + 1;
+                    CaptureName = "clone-" + plays.IndexOf(play) + "-" + playable.AnimName.Replace('/', '-') + "-" + stage;
                     DumpVisibleMaterials(CaptureName);
                 }
             }
@@ -186,7 +195,9 @@ namespace Zjcs.Presentation.Combat
             Time.timeScale = 1f;
             Require(cast && checkpoint.Finished && observed.SetEquals(expectedTracks) && checkedHiddenSource,
                 "The public " + skillEntityId + " isolated segment or its hidden source binding was not verified: " + string.Join(",", observed));
-            Require(renderers.Count == expectedInstances && renderers.All(value => !value), "The battle retained or omitted original clone renderers after release.");
+            Require(plays.Count == expectedPlays && renderers.All(value => !value),
+                "The battle retained clone renderers or omitted independent plays; observed=" + plays.Count
+                + "; expected=" + expectedPlays + "; alive=" + renderers.Count(value => value));
             Debug.Log("[Player clone] public " + skillEntityId + (combo ? " combo" : " isolated segment")
                 + " completed: appearance/body/parts, independent clock, hidden source movement binding and battle release passed.");
         }
