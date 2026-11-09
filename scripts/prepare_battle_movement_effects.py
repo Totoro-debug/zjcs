@@ -326,6 +326,8 @@ def main():
                 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGridMapper.cs',
                 'unity/Assets/Game/Runtime/Presentation/Combat/Zjcs.Presentation.Combat.asmdef',
                 'unity/Assets/Game/Editor/BattleMovementEffects/OfficialBattleMovementEffectAcceptance.cs',
+                'unity/Assets/Game/Editor/BattleMovementEffects/OfficialBattlePublicMovementAcceptance.cs',
+                'unity/Assets/Game/Editor/BattleMovementEffects/OfficialBattlePublicMovementAcceptance.cs.meta',
                 'unity/Assets/Game/Editor/BattleMovementEffects/Zjcs.Editor.BattleMovementEffects.asmdef',
                 'scripts/prepare_battle_movement_effect_validation.py')],
             outputs=[identity(p) for p in sorted(set(paths))],
