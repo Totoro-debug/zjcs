@@ -10,6 +10,10 @@
 
 63110 技能图的原 `Eff_Monster_3511_Skill02_3` 片段及三个 `Animation` 引用来自同版官方缓存包与已校验原生导出；原对象、包／输出哈希、Legacy 副本及引用转换见[原动画双用途绑定来源](battle-animation/legacy-animation-bindings-source-manifest.json)，入口为 `scripts/prepare_battle_legacy_animation_bindings.py`，亦由技能图转换器调用。不重绘或重采样动画；功能及验证边界见[战斗执行](../../docs/features/battle-execution.md)。
 
+伙伴旅行与羁绊节点配置从所选 `884_156692` `config_luban` 的 `game_settings`、`npc_adventure`、`npc_adventure_travel`、`npc`、`reward_rule` 五个 TextAsset 读取，经 APK 优先来源解析和同版 Luban 构造器投影为 Unity 运行目录；输入对象／path ID、APK 与资源来源、原始表及构造器哈希、工具和输出哈希见[伙伴旅行配置来源](partner-travel/travel-catalog-source-manifest.json)。入口为 `scripts/prepare_unity_npc_travel_catalog.py`，不复制或重绘美术；UI 载荷的版本和功能限制见[伙伴旅行](../../docs/features/partner-travel.md)。
+
+游记入口、羁绊选择窗、伙伴条目、节点奖励与结算窗的选定 884 prefab 组件绑定，由 `scripts/prepare_unity_npc_adventure_ui_bindings.py` 复用官方字段解码与图集转换工具提取；输入 bundle、转换工具、图像与绑定输出哈希见[羁绊窗口来源](partner-travel/npc-adventure-ui-source-manifest.json)。原生 prefab 依赖、原 UIMesh 脚本、`CommonJieSuanDown` 材质及已核验 Windows shader 转换的输入／输出哈希见[羁绊原生依赖来源](npc-adventure-ui/884_156692/source-manifest.json)；入口为 `prepare_dungeon_ui_assets.py --npc-adventure-only`。
+
 完整骨骼怪物输入取所选 `884_156692` 的20份原实体 prefab、完整骨骼二进制、AppearanceConfig／Low加载器、图集、材质及控制器闭包；按APK优先、已下载同版云缓存次序解析。原对象／包、固定MIT格式读取器、原生转换输入、控制器逐字段核对、21张原贴图全部ASTC mip至Unity RGBA32的转换与输出哈希见[完整骨骼怪物来源](battle-animation/live-monsters-source-manifest.json)。提取与绑定入口为 `scripts/prepare_battle_live_monsters.py`／`scripts/prepare_battle_live_monster_assets.py`；Unity仅提供原生纹理序列化模板，保留原图像、mip、色彩空间和采样参数。未生成完整素材快照；实现及验证边界见[战斗执行](../../docs/features/battle-execution.md)。
 
 当前怪物Animator状态绑定复用上述20份已核验控制器及原AnimationClip闭包；255个原状态路径、原Motion PPtr、空状态和重复动作状态均原样登记，不猜测别名。同时核验既有原死亡prefab的 `die` 持有／结束恢复字段；输入／输出、原死亡叶及 `MyPlayableOverrideAnimator` 应用代码SHA256见[怪物Animator状态绑定来源](battle-animation/monster-animator-bindings-source-manifest.json)，入口为 `scripts/prepare_battle_monster_animator_bindings.py`，运行通过 `Combat/monster-animator-bindings` 显式加载。此项仅增加文本绑定，不新增／重绘美术或生成完整素材快照；接入与验证范围见[战斗执行](../../docs/features/battle-execution.md)。

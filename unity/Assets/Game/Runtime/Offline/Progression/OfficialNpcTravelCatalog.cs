@@ -40,6 +40,7 @@ namespace Zjcs.Offline.Progression
     [Serializable] public sealed class NpcTravelPayload
     {
         public string manifest;
+        public int daily_battle_limit, daily_reset_hour, daily_reset_minute;
         public int daily_start_limit, npc_daily_limit, refresh_cost_item_id;
         public int base_reward_item_id, base_reward_item_count;
         public long[] refresh_costs;
@@ -64,14 +65,16 @@ namespace Zjcs.Offline.Progression
             string path = Path.Combine(Application.streamingAssetsPath, "Home", "travel-catalog.json");
             if (!File.Exists(path)) throw new FileNotFoundException("Official NPC travel catalog is missing.", path);
             NpcTravelPayload data = JsonUtility.FromJson<NpcTravelPayload>(File.ReadAllText(path));
-            if (data == null || data.manifest != "854_156383" || data.positions == null
+            if (data == null || data.manifest != "884_156692" || data.positions == null
                 || data.positions.Length != 4 || data.qualities == null || data.travels == null
-                || data.travels.Length != 1728 || data.nodes == null || data.npcs == null
+                || data.travels.Length != 1728 || data.nodes == null || data.nodes.Length != 880
+                || data.npcs == null || data.npcs.Length != 148
                 || data.refresh_costs == null || data.refresh_costs.Length == 0
                 || data.reward_rules == null || data.reward_rules.Length != 4
                 || data.travel_npc_prop_types == null || data.travel_npc_prop_types.Length != 3
                 || data.travel_treasure_prop_types == null || data.travel_treasure_prop_types.Length != 3
                 || data.travel_node_prop_types == null || data.travel_node_prop_types.Length != 3
+                || data.daily_battle_limit != 10 || data.daily_reset_hour != 8 || data.daily_reset_minute != 0
                 || data.daily_start_limit != 4 || data.npc_daily_limit != 1)
                 throw new InvalidDataException("Official NPC travel catalog is incomplete or from an unsupported manifest.");
             if (data.reward_rules.Any(rule => rule == null || rule.id <= 0 || rule.percent < 0f
@@ -99,10 +102,38 @@ namespace Zjcs.Offline.Progression
         public NpcTravelNpc Npc(int id) => Data.npcs.FirstOrDefault(row => row.id == id);
         public NpcTravelRewardRule RewardRule(int id) => Data.reward_rules.FirstOrDefault(row => row.id == id);
         public NpcTravelNode FirstNode => Data.nodes.Where(row => row.stage_id > 0)
-            .OrderBy(row => row.stage_id).ThenBy(row => row.map_group_id).ThenBy(row => row.region_id)
+            .OrderBy(row => row.map_group_id).ThenBy(row => row.region_id)
             .ThenBy(row => row.node_id).FirstOrDefault();
         public NpcTravelNode Node(int mapGroupId, int regionId, int nodeId) => Data.nodes.FirstOrDefault(row =>
             row.map_group_id == mapGroupId && row.region_id == regionId && row.node_id == nodeId);
+
+        /// <summary>
+        /// Returns the cumulative travel-node bonus through the saved adventure node.
+        /// The official client walks NpcAdventureInfoParser.SortedInfoList and sums every
+        /// node up to the saved node instead of using only the current row.
+        /// </summary>
+        public NpcTravelNode AccumulatedNodeBonus(int mapGroupId, int regionId, int nodeId)
+        {
+            NpcTravelNode target = Node(mapGroupId, regionId, nodeId);
+            if (target == null) return null;
+            var result = new NpcTravelNode
+            {
+                map_group_id = target.map_group_id,
+                region_id = target.region_id,
+                node_id = target.node_id,
+                stage_id = target.stage_id
+            };
+            foreach (NpcTravelNode row in Data.nodes.Where(value => value != null && value.stage_id > 0)
+                         .OrderBy(value => value.map_group_id).ThenBy(value => value.region_id)
+                         .ThenBy(value => value.node_id))
+            {
+                if (CompareNode(row, target) > 0) break;
+                result.base_add_count = checked(result.base_add_count + row.base_add_count);
+                result.base_add_percent = checked(result.base_add_percent + row.base_add_percent);
+                result.extra_probability_add = checked(result.extra_probability_add + row.extra_probability_add);
+            }
+            return result;
+        }
 
         public int MeetConditionCount(int travelId, System.Collections.Generic.IReadOnlyList<int> npcIds)
         {
@@ -156,6 +187,14 @@ namespace Zjcs.Offline.Progression
                 if (roll < 0) return value;
             }
             return values[values.Length - 1];
+        }
+
+        private static int CompareNode(NpcTravelNode left, NpcTravelNode right)
+        {
+            int result = left.map_group_id.CompareTo(right.map_group_id);
+            if (result != 0) return result;
+            result = left.region_id.CompareTo(right.region_id);
+            return result != 0 ? result : left.node_id.CompareTo(right.node_id);
         }
     }
 }

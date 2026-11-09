@@ -80,6 +80,7 @@ namespace Zjcs.Offline.Progression
         public OfflinePlayerHealthProgress Health = new OfflinePlayerHealthProgress();
         public OfflineCharacterPropertyProgress CharacterProperties = new OfflineCharacterPropertyProgress();
         public OfflineNpcTravelProgress NpcTravel = new OfflineNpcTravelProgress();
+        public OfflineNpcAdventureProgress NpcAdventure = new OfflineNpcAdventureProgress();
         public List<OfflineStoryProgress> Stories = new List<OfflineStoryProgress>();
         public List<OfflineHandInItemProgress> HandInItems = new List<OfflineHandInItemProgress>();
         public List<OfflineProfessionLevel> ProfessionLevels = new List<OfflineProfessionLevel>();
@@ -1299,6 +1300,7 @@ namespace Zjcs.Offline.Progression
                 || save.Player.CharacterProperties == null
                 || !OfflineCharacterPropertyProgress.IsValid(save.Player.CharacterProperties)
                 || save.Player.NpcTravel == null || !OfflineNpcTravelProgress.IsValid(save.Player.NpcTravel)
+                || save.Player.NpcAdventure == null || !OfflineNpcAdventureProgress.IsValid(save.Player.NpcAdventure)
                 || save.Player.ProfessionLevels == null || save.Player.ProfessionLevels.Count > 100
                 || save.Player.ProfessionLevels.Any(value => value == null || value.Profession < 0 || value.Level < 0)
                 || save.Player.ProfessionLevels.Select(value => value.Profession).Distinct().Count()
@@ -1472,6 +1474,8 @@ namespace Zjcs.Offline.Progression
             OfflineCharacterPropertyProgress.Normalize(save.Player.CharacterProperties);
             if (save.Player.NpcTravel == null) save.Player.NpcTravel = new OfflineNpcTravelProgress();
             OfflineNpcTravelProgress.Normalize(save.Player.NpcTravel);
+            if (save.Player.NpcAdventure == null) save.Player.NpcAdventure = new OfflineNpcAdventureProgress();
+            OfflineNpcAdventureProgress.Normalize(save.Player.NpcAdventure);
             if (save.Player.ProfessionLevels == null)
                 save.Player.ProfessionLevels = new List<OfflineProfessionLevel>();
             if (save.Player.HomeShop == null) save.Player.HomeShop = new OfflineHomeShopProgress();

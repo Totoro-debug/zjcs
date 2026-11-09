@@ -5,27 +5,73 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zjcs.Official.World.NativeLabelUI;
+using Zjcs.Official.World.NativeLabelUI.Framework;
+using Zjcs.Offline.World.NativeLabelResources;
 
 namespace Zjcs.Presentation.Home
 {
     /// <summary>Restores official daily-dungeon view bindings for every shared native prefab.</summary>
-    public sealed class DailyDungeonUiBindingModule
+    public sealed class DailyDungeonUiBindingModule : IDisposable
     {
         private readonly TMP_FontAsset font;
+        private readonly DungeonLanguageTypeService languageType = new DungeonLanguageTypeService();
+        private readonly LocalizationBinaryTextService languageTexts;
         private DungeonOfficialDifficultyTitle[] difficultyTitles;
+        private DungeonOfficialArtwork[] artwork;
+        private DungeonNpcAdventureRewardBinding[] npcAdventureRewards;
         private readonly Dictionary<string, DungeonOfficialPrefabBinding> dungeonOfficialBindings =
             new Dictionary<string, DungeonOfficialPrefabBinding>(StringComparer.Ordinal);
         private readonly Dictionary<string, Sprite> dungeonUiSprites =
             new Dictionary<string, Sprite>(StringComparer.Ordinal);
+        private bool disposed;
         private static readonly HashSet<string> ResultPrefabs = new HashSet<string>(StringComparer.Ordinal)
         {
             "GameEndPanelDailyDungeon", "DailyDungeonEndPanelItem", "DailyDungeonEndPaneAwardlItem",
-            "AwardPanelItem", "ItemAwardIcon", "ItemIcon"
+            "AwardPanelItem", "ItemAwardIcon", "ItemIcon", "ProbabilityGo", "EquipDetailDialog",
+            "ItemDetailDialog", "CommonEquipPieceUseDetailDialog", "CommonItemPieceUseDetailDialog"
         };
 
         public DailyDungeonUiBindingModule(TMP_FontAsset officialFont)
         {
             font = officialFont != null ? officialFont : throw new ArgumentNullException(nameof(officialFont));
+            languageTexts = new LocalizationBinaryTextService(languageType, null,
+                new ILanguageTextDataProvider[]
+                {
+                    new LaunchLanguageBinaryTextDataProvider("Assets/Launch/"),
+                    new GameLanguageBinaryTextDataProvider("Assets/Config/")
+                }, new LocalLanguageFiles(Application.streamingAssetsPath));
+        }
+
+        internal string LocalizedText(string key, params object[] arguments)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(DailyDungeonUiBindingModule));
+            string template = languageTexts.GetText(key, LanguageType.zh_CN);
+            return arguments == null || arguments.Length == 0
+                ? template : string.Format(template, arguments);
+        }
+
+        internal void ApplyLocalizedText(GameObject root, string prefabName, string key,
+            params object[] arguments)
+        {
+            if (root == null) throw new ArgumentNullException(nameof(root));
+            DungeonOfficialPrefabBinding binding = LoadBinding(prefabName);
+            DungeonOfficialLocalizationBinding[] matches = (binding.localizations
+                    ?? Array.Empty<DungeonOfficialLocalizationBinding>())
+                .Where(value => value != null && string.Equals(value.key, key, StringComparison.Ordinal))
+                .ToArray();
+            if (matches.Length == 0)
+                throw new InvalidOperationException("Original dungeon localization binding is missing: "
+                    + prefabName + "/" + key);
+            foreach (DungeonOfficialLocalizationBinding item in matches)
+            {
+                Transform node = FindNode(root.transform, item.path, item.objects);
+                TMP_Text text = node == null ? null : node.GetComponent<TMP_Text>();
+                if (text == null)
+                    throw new InvalidOperationException("Original dungeon localized TMP binding does not match prefab "
+                        + prefabName + " at " + item.path);
+                text.text = LocalizedText(key, arguments);
+            }
         }
 
         internal string DifficultyTitle(int dungeonId, int difficulty)
@@ -37,19 +83,48 @@ namespace Zjcs.Presentation.Home
                 "Official dungeon result difficulty title is missing: " + dungeonId + "/" + difficulty);
         }
 
+        internal void ApplyArtwork(GameObject root, string prefabName, int dungeonId)
+        {
+            DungeonOfficialPrefabBinding binding = LoadBinding(prefabName);
+            DungeonOfficialArtwork row = artwork?.SingleOrDefault(value => value.dungeonId == dungeonId)
+                ?? throw new InvalidOperationException("Official dungeon appearance is missing: " + dungeonId);
+            foreach (DungeonOfficialImageBinding image in binding.images)
+            {
+                string name = image.sprite?.name ?? string.Empty;
+                DungeonOfficialSpriteBinding sprite = name.StartsWith("ListImg_", StringComparison.Ordinal) ? row.entry
+                    : name.StartsWith("DetailBg_", StringComparison.Ordinal) ? row.background
+                    : name.StartsWith("DetailBuilding_", StringComparison.Ordinal) ? row.icon : null;
+                if (sprite == null) continue;
+                Transform node = FindNode(root.transform, image.path, image.objects);
+                Image target = node == null ? null : node.GetComponent<Image>();
+                if (target == null) throw new InvalidOperationException("Official dungeon artwork target is missing.");
+                target.sprite = LoadBoundDungeonUiSprite(sprite);
+            }
+        }
+
         public void Apply(GameObject root, string prefabName)
         {
+            if (disposed) throw new ObjectDisposedException(nameof(DailyDungeonUiBindingModule));
             if (root == null) throw new ArgumentNullException(nameof(root));
             DungeonOfficialPrefabBinding binding = LoadBinding(prefabName);
-            if (prefabName == "GameEndPanelDailyDungeon")
+            if (prefabName == "GameEndPanelDailyDungeon" && string.IsNullOrEmpty(binding.resultPopup?.showClipResource))
             {
-                if (string.IsNullOrEmpty(binding.resultPopup?.showClipResource))
-                    throw new InvalidOperationException("Original dungeon result popup binding is missing.");
+                throw new InvalidOperationException("Original dungeon result popup binding is missing.");
+            }
+            if (binding.resultPopup != null && !string.IsNullOrEmpty(binding.resultPopup.showClipResource))
+            {
+                if (string.IsNullOrEmpty(binding.resultPopup.showClipResource)
+                    || string.IsNullOrEmpty(binding.resultPopup.showClipName))
+                    throw new InvalidOperationException("Original dungeon popup show animation binding is missing: " + prefabName);
                 var popup = root.GetComponent<Zjcs.Official.WorldUI.WorldPopupWindow>()
                     ?? root.AddComponent<Zjcs.Official.WorldUI.WorldPopupWindow>();
                 popup.mShowClip = Resources.Load<AnimationClip>(binding.resultPopup.showClipResource);
                 if (popup.mShowClip == null || popup.mShowClip.name != binding.resultPopup.showClipName)
-                    throw new InvalidOperationException("Original dungeon result animation is missing.");
+                    throw new InvalidOperationException("Original dungeon popup show animation is missing: " + prefabName);
+                popup.mHideClip = LoadOptionalPopupClip(binding.resultPopup.hideClipResource,
+                    binding.resultPopup.hideClipName, prefabName, "hide");
+                popup.mLoopClip = LoadOptionalPopupClip(binding.resultPopup.loopClipResource,
+                    binding.resultPopup.loopClipName, prefabName, "loop");
                 popup.CloseByClickMask = binding.resultPopup.closeByClickMask;
             }
             foreach (DungeonOfficialTransformBinding transformBinding in binding.transforms)
@@ -170,6 +245,19 @@ namespace Zjcs.Presentation.Home
                 textCount++;
             }
 
+            foreach (DungeonOfficialLocalizationBinding item in binding.localizations
+                ?? Array.Empty<DungeonOfficialLocalizationBinding>())
+            {
+                if (item == null || !item.enabled || string.IsNullOrEmpty(item.key)
+                    || item.key[0] == '{') continue;
+                Transform node = FindNode(root.transform, item.path, item.objects);
+                TMP_Text text = node == null ? null : node.GetComponent<TMP_Text>();
+                if (text == null)
+                    throw new InvalidOperationException("Original dungeon localized TMP binding does not match prefab "
+                        + prefabName + " at " + item.path);
+                text.text = LocalizedText(item.key);
+            }
+
             World.OfficialDungeonEntryBindings.Apply(root, prefabName,
                 (clip, emitter) => World.OfficialDungeonUiAudio.Post(clip, emitter, (source, active) =>
                 {
@@ -181,20 +269,83 @@ namespace Zjcs.Presentation.Home
                 throw new InvalidOperationException("Official dungeon UI binding count mismatch: " + prefabName);
         }
 
+        private static AnimationClip LoadOptionalPopupClip(string resource, string expectedName,
+            string prefabName, string field)
+        {
+            if (string.IsNullOrEmpty(resource) && string.IsNullOrEmpty(expectedName)) return null;
+            if (string.IsNullOrEmpty(resource) || string.IsNullOrEmpty(expectedName))
+                throw new InvalidOperationException("Original dungeon popup " + field + " animation binding is incomplete: " + prefabName);
+            AnimationClip clip = Resources.Load<AnimationClip>(resource);
+            if (clip == null || clip.name != expectedName)
+                throw new InvalidOperationException("Original dungeon popup " + field + " animation is missing: " + prefabName);
+            return clip;
+        }
+
+        internal void ApplyNpcAdventureRewardIcon(GameObject root, int itemId, long count)
+        {
+            if (npcAdventureRewards == null) LoadBinding("GameEndPanelNpcAdventure");
+            var item = npcAdventureRewards?.SingleOrDefault(value => value.itemId == itemId)
+                ?? throw new InvalidOperationException("Official NPC Adventure reward binding is missing: " + itemId);
+            Transform content = root.transform.Find("Content");
+            Image quality = content?.Find("QualityImg")?.GetComponent<Image>();
+            Image icon = content?.Find("mask/icon")?.GetComponent<Image>();
+            Transform countRoot = content?.Find("BgCountText");
+            TMP_Text countText = countRoot?.Find("CountText")?.GetComponent<TMP_Text>();
+            if (!quality || !icon || !countRoot || !countText)
+                throw new InvalidOperationException("Original NPC Adventure ItemIcon hierarchy is incomplete.");
+            quality.sprite = Zjcs.Offline.Progression.OfficialCharacterAssetCatalog.LoadDefault()
+                .FindQualityBackgroundSprite(item.quality);
+            quality.enabled = quality.sprite != null;
+            icon.sprite = LoadBoundDungeonUiSprite(item.sprite);
+            icon.enabled = true;
+            icon.preserveAspect = true;
+            bool showCount = count > 1 && item.itemType != 110;
+            countRoot.gameObject.SetActive(showCount);
+            countText.text = showCount ? count.ToString() : string.Empty;
+            Transform bottom = content.Find("BottomText");
+            if (bottom) bottom.gameObject.SetActive(false);
+            foreach (Button button in root.GetComponentsInChildren<Button>(true)) button.interactable = false;
+        }
+
+        public void Dispose()
+        {
+            if (disposed) return;
+            disposed = true;
+            languageTexts.Dispose();
+            foreach (Sprite sprite in dungeonUiSprites.Values)
+            {
+                if (sprite == null) continue;
+                Texture2D texture = sprite.texture;
+                UnityEngine.Object.Destroy(sprite);
+                if (texture != null) UnityEngine.Object.Destroy(texture);
+            }
+            dungeonUiSprites.Clear();
+            dungeonOfficialBindings.Clear();
+            difficultyTitles = null;
+        }
+
         internal DungeonOfficialPrefabBinding LoadBinding(string prefabName)
         {
             if (dungeonOfficialBindings.TryGetValue(prefabName, out DungeonOfficialPrefabBinding cached))
                 return cached;
             bool leaderboard = prefabName == "DailyDungeonTopPanel" || prefabName == "TopRankTeamItem";
             bool result = ResultPrefabs.Contains(prefabName);
-            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI",
-                result ? "result-bindings.json" : leaderboard ? "leaderboard-bindings.json" : "official-bindings.json");
+            bool adventure = prefabName.Contains("NpcAdventure") || prefabName == "TravelNotesPanel";
+            string fileName = adventure ? "npc-adventure-bindings.json" : result ? "result-bindings.json"
+                : leaderboard ? "leaderboard-bindings.json" : "official-bindings.json";
+            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "884_156692", fileName);
+            bool selectedVersion = File.Exists(path);
+            if (!selectedVersion)
+                path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", fileName);
             if (!File.Exists(path)) throw new FileNotFoundException("Official dungeon UI bindings are missing.", path);
             DungeonOfficialBindingsDocument document = JsonUtility.FromJson<DungeonOfficialBindingsDocument>(
                 File.ReadAllText(path));
-            if (document == null || document.manifest != (leaderboard || result ? "884_156692" : "871_156598") || document.prefabs == null)
+            string expectedManifest = selectedVersion || result || leaderboard || adventure ? "884_156692" : "871_156598";
+            if (document == null || document.manifest != expectedManifest || document.prefabs == null)
                 throw new FormatException("Official dungeon UI bindings have an unsupported manifest.");
             if (result) difficultyTitles = document.difficulties;
+            if (adventure && document.rewardItems != null) npcAdventureRewards = document.rewardItems;
+            if (document.artwork != null) artwork = document.artwork;
             DungeonOfficialPrefabBinding binding = document.prefabs.FirstOrDefault(value =>
                 value != null && string.Equals(value.name, prefabName, StringComparison.Ordinal));
             if (binding == null || binding.transforms == null || binding.images == null || binding.texts == null)
@@ -209,8 +360,11 @@ namespace Zjcs.Presentation.Home
             if (binding.file.Contains("..") || Path.IsPathRooted(binding.file))
                 throw new FormatException("Official dungeon UI sprite path is invalid: " + binding.file);
             string relative = binding.file.Replace('/', Path.DirectorySeparatorChar);
-            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", relative);
-            if (!File.Exists(path)) throw new FileNotFoundException("Official dungeon UI sprite is missing.", path);
+            string path = HomeAssetCatalog.LocalFilePath(Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "884_156692", relative));
+            if (!File.Exists(path))
+                path = HomeAssetCatalog.LocalFilePath(Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", relative));
+            if (!File.Exists(path))
+                throw new FileNotFoundException("Official dungeon UI sprite is missing: " + binding.file, path);
             string cacheKey = binding.file;
             if (dungeonUiSprites.TryGetValue(cacheKey, out Sprite cached)) return cached;
             Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
@@ -294,9 +448,25 @@ namespace Zjcs.Presentation.Home
     [Serializable]
     internal sealed class DungeonOfficialBindingsDocument
     {
+        public DungeonNpcAdventureRewardBinding[] rewardItems;
         public string manifest;
         public DungeonOfficialPrefabBinding[] prefabs;
         public DungeonOfficialDifficultyTitle[] difficulties;
+        public DungeonOfficialArtwork[] artwork;
+    }
+
+    [Serializable]
+    internal sealed class DungeonNpcAdventureRewardBinding
+    {
+        public int itemId, quality, itemType;
+        public DungeonOfficialSpriteBinding sprite;
+    }
+
+    [Serializable]
+    internal sealed class DungeonOfficialArtwork
+    {
+        public int dungeonId;
+        public DungeonOfficialSpriteBinding entry, background, icon;
     }
 
     [Serializable]
@@ -315,6 +485,7 @@ namespace Zjcs.Presentation.Home
         public DungeonOfficialTransformBinding[] transforms;
         public DungeonOfficialImageBinding[] images;
         public DungeonOfficialTextBinding[] texts;
+        public DungeonOfficialLocalizationBinding[] localizations;
         public DungeonOfficialSafeAreaBinding[] safeAreas;
         public DungeonOfficialAspectRatioBinding[] aspectRatioFitters;
         public DungeonOfficialRaycastBinding[] raycastGraphics;
@@ -323,9 +494,35 @@ namespace Zjcs.Presentation.Home
     }
 
     [Serializable]
+    internal sealed class DungeonOfficialLocalizationBinding
+    {
+        public string path;
+        public string[] objects;
+        public string key;
+        public bool enabled;
+    }
+
+    internal sealed class DungeonLanguageTypeService : ILanguageTypeService
+    {
+        public LanguageType CurrentLanguage
+        {
+            get => LanguageType.zh_CN;
+            set
+            {
+                if (value != LanguageType.zh_CN)
+                    throw new NotSupportedException("Daily dungeon prefabs use the selected official zh_CN language closure.");
+            }
+        }
+
+        public bool IsShowLanguageKey { get; set; }
+        public bool IsShowMissingKeyText { get; set; }
+        public event Action<LanguageType> OnLanguageChanged { add { } remove { } }
+    }
+
+    [Serializable]
     internal sealed class DungeonOfficialPopupBinding
     {
-        public string showClipResource, showClipName;
+        public string showClipResource, showClipName, hideClipResource, hideClipName, loopClipResource, loopClipName;
         public bool closeByClickMask;
         public int maskType;
     }

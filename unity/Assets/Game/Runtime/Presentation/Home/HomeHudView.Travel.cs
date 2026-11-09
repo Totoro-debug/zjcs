@@ -53,12 +53,19 @@ namespace Zjcs.Presentation.Home
 
         private void OpenNpcAdventureTravelFromNotes()
         {
-            if (!NpcTravelUnlocked)
+            bool bondAdventureUnlocked = NpcAdventureBattleUnlocked;
+            if (!NpcTravelUnlocked && !bondAdventureUnlocked)
             {
                 Notify("伙伴羁绊第一节点开放后可使用伙伴旅行");
                 return;
             }
-            NpcTravelNode node = ResolveNpcTravelNodeFromMainline();
+            NpcTravelNode node = bondAdventureUnlocked ? host.NpcAdventure.NextNode : null;
+            if (node == null && !NpcTravelUnlocked)
+            {
+                Notify("已开放的羁绊冒险关卡已完成");
+                return;
+            }
+            node ??= ResolveNpcTravelNodeFromMainline();
             if (node == null)
             {
                 Notify("当前主线进度尚未解锁可用的伙伴旅行位置");
@@ -96,7 +103,7 @@ namespace Zjcs.Presentation.Home
 
         private void OpenNpcAdventurePage(int mapGroupId, int regionId)
         {
-            if (!NpcTravelUnlocked)
+            if (!NpcTravelUnlocked && !NpcAdventureBattleUnlocked)
             {
                 Notify("伙伴羁绊第一节点开放后可使用伙伴旅行");
                 return;
@@ -130,6 +137,8 @@ namespace Zjcs.Presentation.Home
             npcTravelMapRoot = npcTravelMapRenderer.Create(MapPanelKey(mapGroupId, regionId), mapSlot,
                 BindNpcTravelMapButton);
             RefreshNpcTravelMap();
+            if (!npcTravelPageRenderer.PlayAnimation("NpcAdventurePanel_MapSwitchCloud"))
+                throw new InvalidOperationException("Official NPC adventure map transition animation is missing.");
         }
 
         private void BindNpcTravelPageButton(string path, GameObject node)
@@ -141,8 +150,10 @@ namespace Zjcs.Presentation.Home
             else if (path.EndsWith("/RefreshBtn (1)", StringComparison.Ordinal))
                 button.onClick.AddListener(RefreshNpcTravelOffers);
             else if (path.EndsWith("/BattleBtn", StringComparison.Ordinal)
-                || path.EndsWith("/FastBattleBtn", StringComparison.Ordinal))
-                button.onClick.AddListener(() => Notify("旅行页的战斗入口按官方客户端范围关闭"));
+                || path.EndsWith("/ChangeBtn", StringComparison.Ordinal))
+                button.onClick.AddListener(OpenNpcAdventureBattleSelection);
+            else if (path.EndsWith("/FastBattleBtn", StringComparison.Ordinal))
+                button.onClick.AddListener(SweepNpcAdventureNextStage);
         }
 
         private void BindNpcTravelMapButton(string path, GameObject node)
@@ -224,8 +235,8 @@ namespace Zjcs.Presentation.Home
                         target == null ? string.Empty : (target.ExtraProbability / 100.0).ToString("0.##") + "%");
             }
             npcTravelPageRenderer.SetTextByName("BattleLimitTipText",
-                "今日剩余派遣次数 " + Math.Max(0, host.NpcTravelCatalog.Data.daily_start_limit
-                    - state.DailyStartedCount) + "/" + host.NpcTravelCatalog.Data.daily_start_limit);
+                "今日羁绊冒险挑战次数已用完");
+            RefreshNpcAdventureBattleButtons();
         }
 
         private void OpenNpcTravelDetail(int positionId)
@@ -300,8 +311,10 @@ namespace Zjcs.Presentation.Home
                 + AggregateNpcTravelProperty(host.NpcTravelCatalog.Data.travel_npc_prop_types[1]);
             npcTravelDialogRenderer.SetText(root + "/TopGo/Reward/BaseRewardGo/RewardTipText",
                 (1.0 + baseAdd / 10000.0).ToString("P0"));
-            long nodeAdd = host.NpcTravelCatalog.Node(npcTravelMapGroupId, npcTravelRegionId,
-                selectedTravel.node_id)?.base_add_count ?? 0;
+            OfflineNpcAdventureProgress adventure = host.Profile.Save.Player.NpcAdventure;
+            NpcTravelNode node = host.NpcTravelCatalog.AccumulatedNodeBonus(adventure.MapGroupId,
+                adventure.RegionId, adventure.NodeId);
+            long nodeAdd = node?.base_add_count ?? 0;
             long baseReward = target == null
                 ? OfflineNpcTravelService.CalcBaseReward(host.NpcTravelCatalog.Data.base_reward_item_count,
                     nodeAdd, CurrentNpcTravelTreasureProperty(host.NpcTravelCatalog.Data.travel_treasure_prop_types[1]),
@@ -576,7 +589,7 @@ namespace Zjcs.Presentation.Home
         private void ShowTravelConfirm(string title, string message, Action confirm)
         {
             if (npcTravelConfirmRoot != null) return;
-            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonConfirmEnterPanel");
+            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/884_156692/DailyDungeonConfirmEnterPanel");
             if (prefab == null) throw new InvalidOperationException("Official confirmation panel is missing.");
             npcTravelConfirmRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             npcTravelConfirmRoot.name = "NpcTravelConfirm";
@@ -652,7 +665,9 @@ namespace Zjcs.Presentation.Home
         private int CalculateTravelExtraProbability()
         {
             NpcTravelQuality quality = host.NpcTravelCatalog.Quality(selectedTravel.quality);
-            NpcTravelNode node = host.NpcTravelCatalog.Node(npcTravelMapGroupId, npcTravelRegionId, selectedTravel.node_id);
+            OfflineNpcAdventureProgress adventure = host.Profile.Save.Player.NpcAdventure;
+            NpcTravelNode node = host.NpcTravelCatalog.AccumulatedNodeBonus(adventure.MapGroupId,
+                adventure.RegionId, adventure.NodeId);
             int meetCount = host.NpcTravelCatalog.MeetConditionCount(selectedTravel.travel_id, selectedTravelNpcIds);
             double probability = OfflineNpcTravelService.CalcExtraRewardProbability(
                 AggregateNpcTravelProperty(host.NpcTravelCatalog.Data.travel_npc_prop_types[2]),

@@ -17,6 +17,7 @@ using Zjcs.Official.Partners;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Offline.PartnersUI;
 using Zjcs.Official.WorldUI;
+using Zjcs.Presentation.World;
 
 namespace Zjcs.Presentation.Home
 {
@@ -69,6 +70,16 @@ namespace Zjcs.Presentation.Home
             yield return null;
             yield return null;
             yield return null;
+
+            if (Environment.GetCommandLineArgs().Contains("-npcAdventureAcceptance"))
+            {
+                HideForeignCanvases();
+                DumpFullscreen();
+                bool passed = false;
+                yield return VerifyNpcAdventure(runtime, value => passed = value);
+                Finish(passed);
+                yield break;
+            }
 
             if (Environment.GetCommandLineArgs().Contains("-partnersAcceptance"))
             {
@@ -948,6 +959,296 @@ namespace Zjcs.Presentation.Home
                 return false;
             }
         }
+
+        private IEnumerator VerifyNpcAdventure(HomeFeatureRuntime runtime, Action<bool> completed)
+        {
+            bool ok = Check("npc-adventure-unlock", () =>
+            {
+                // The generic Home fixture skips character creation. Populate the
+                // original default appearance before mounting an actual battle actor.
+                if (runtime.Profile.Save.Player.Wardrobe.BaseSkins.Count == 0)
+                {
+                    var config = Resources.Load<AppearanceConfig>("Combat/SceneAppearance/AppearanceConfig");
+                    var tables = ProfessionAppearanceTables.Load(
+                        Resources.Load<TextAsset>("Combat/SceneAppearance/appearance-tables").text);
+                    var wardrobe = runtime.Profile.Save.Player.Wardrobe;
+                    var appearance = new ProfessionAppearanceResolver(tables).BuildDefaultAppearanceData(
+                        config, (Sex)wardrobe.Sex, (Zjcs.Official.ProfessionUI.Profession)wardrobe.Profession);
+                    ProgressionResult prepared = runtime.Profile.ApplyCharacterMutationIfChanged(player =>
+                    {
+                        foreach (var pair in appearance.SkinMap)
+                            player.Wardrobe.BaseSkins.Add(new OfflineAppearanceSkin
+                                { Type = (int)pair.Key, Id = pair.Value.SkinId });
+                        foreach (var pair in appearance.DyeMap)
+                            player.Wardrobe.Dyes.Add(new OfflineAppearanceDye
+                            {
+                                Type = (int)pair.Key, ColorId = pair.Value.ColorId,
+                                Hue = pair.Value.Hsv.H, Saturation = pair.Value.Hsv.S, Value = pair.Value.Hsv.V
+                            });
+                        return true;
+                    });
+                    Assert(prepared.IsApplied, "could not prepare the isolated original character appearance");
+                }
+                if (!runtime.Profile.Save.Player.UnlockedMapClassIds.Contains(17))
+                {
+                    ProgressionResult unlock = runtime.Profile.ApplyCharacterMutationIfChanged(player =>
+                    {
+                        if (!player.UnlockedMapClassIds.Contains(17)) player.UnlockedMapClassIds.Add(17);
+                        return true;
+                    });
+                    Assert(unlock.IsApplied || unlock.Status == ProgressionResultStatus.Unchanged,
+                        "could not prepare the isolated Feather Kingdom unlock");
+                }
+                Assert(runtime.NpcAdventure.RemainingBattleCount(DateTime.Now) == 10,
+                    "the isolated profile must start with all ten daily attempts");
+                return "Feather Kingdom unlock and isolated daily attempts are ready";
+            });
+            if (!ok) { completed(false); yield break; }
+
+            NpcTravelNode node = runtime.NpcAdventure.NextNode;
+            ok = Check("npc-adventure-page", () =>
+            {
+                Assert(node != null, "the first authorized official Bond Adventure node is missing");
+                MethodInfo open = typeof(HomeHudView).GetMethod("OpenNpcAdventurePage",
+                    BindingFlags.Instance | BindingFlags.NonPublic);
+                Assert(open != null, "the original NPC Adventure page entry is missing");
+                open.Invoke(runtime.Hud, new object[] { node.map_group_id, node.region_id });
+                GameObject page = PrivateField<GameObject>(runtime.Hud, "npcTravelRoot");
+                Assert(page && page.name == "NpcAdventurePanel",
+                    "the original NPC Adventure page did not open");
+                return "original NPC Adventure page opened for " + node.stage_id;
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return new WaitForSecondsRealtime(1.1f);
+            yield return new WaitForEndOfFrame();
+            yield return Capture("npc-adventure-page.png");
+
+            ok = Check("npc-adventure-battle-entry", () =>
+            {
+                GameObject page = PrivateField<GameObject>(runtime.Hud, "npcTravelRoot");
+                Button battle = page.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value && value.name == "BattleBtn");
+                Assert(battle && battle.gameObject.activeInHierarchy,
+                    "the original BattleBtn is missing or inactive");
+                ClickPartnerUi(battle);
+                GameObject selection = PrivateField<GameObject>(runtime.Hud, "npcAdventureSelectRoot");
+                Assert(selection && selection.name == "NpcAdventureSelectNpcDialog",
+                    "BattleBtn did not open the original three-partner selection window");
+                return "BattleBtn opened the original partner picker";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return new WaitForEndOfFrame();
+            ok = Check("npc-adventure-selection-cancel", () =>
+            {
+                GameObject selection = PrivateField<GameObject>(runtime.Hud, "npcAdventureSelectRoot");
+                Button cancel = selection.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value && value.name == "CancelBtn");
+                Assert(cancel, "the original partner selection cancel button is missing");
+                ClickPartnerUi(cancel);
+                Assert(PrivateField<GameObject>(runtime.Hud, "npcAdventureSelectRoot") == null,
+                    "the original partner selection window did not close");
+                Assert(runtime.NpcAdventure.State.DailyBattleCount == 0
+                    && runtime.NpcAssistanceProgress.ActiveBattle == null,
+                    "opening and cancelling selection must not consume an attempt or commit assistance");
+                return "BattleBtn opened the original partner picker; cancel left counts and assistance unchanged";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+
+            ok = Check("npc-adventure-sweep-fixture", () =>
+            {
+                Assert(string.IsNullOrEmpty(runtime.NpcAdventure.CreateSweepReceipt(node, DateTime.Now)),
+                    "the first stage must not authorize a sweep");
+                int[] candidates = ((IReadOnlyList<int>)typeof(HomeHudView).GetMethod("CandidateNpcIds",
+                    BindingFlags.Instance | BindingFlags.NonPublic).Invoke(runtime.Hud, null)).Take(3).ToArray();
+                // Isolated rule fixture only; the manual battle's rendering is checked below.
+                Assert(runtime.NpcAdventure.SetSelectedNpcClassIds(candidates).IsApplied,
+                    "the sweep fixture could not select three partners");
+                Assert(runtime.NpcAdventure.BeginBattle(node, DateTime.Now).IsApplied,
+                    "the sweep fixture could not begin its first manual stage");
+                string firstReceipt = runtime.NpcAdventure.State.ActiveBattleReceipt;
+                ulong seed = unchecked((ulong)NpcAdventureBattleRunner.StableSeed(firstReceipt, node.stage_id));
+                var firstRewards = runtime.NpcAdventureBattleCatalog.RollRewards(node.stage_id,
+                    runtime.Profile.Save.Player.Level, runtime.Profile.Save.Player.SubRank, ref seed);
+                Assert(runtime.NpcAdventure.CompleteBattle(node.stage_id, true, firstRewards.Select(value =>
+                    new KeyValuePair<int, long>(value.ItemId, value.Count)).ToArray(), firstReceipt).IsApplied,
+                    "the isolated first-stage completion fixture failed");
+                runtime.NpcAdventure.SetSelectedNpcClassIds(Array.Empty<int>());
+                node = runtime.NpcAdventure.NextNode;
+                typeof(HomeHudView).GetMethod("CloseNpcTravelPages", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(runtime.Hud, null);
+                typeof(HomeHudView).GetMethod("OpenNpcAdventurePage", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(runtime.Hud, new object[] { node.map_group_id, node.region_id });
+                return "first-stage sweep rejected; isolated completed-first-stage fixture prepared";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return new WaitForSecondsRealtime(1.1f);
+            yield return new WaitForEndOfFrame();
+
+            string receipt = runtime.NpcAdventure.CreateSweepReceipt(node, DateTime.Now);
+            List<NpcAdventureRewardItem> expectedRewards = null;
+            ok = Check("npc-adventure-sweep-preview", () =>
+            {
+                Assert(!string.IsNullOrEmpty(receipt), "the current next stage did not authorize a sweep");
+                ulong random = unchecked((ulong)NpcAdventureBattleRunner.StableSeed(receipt, node.stage_id));
+                expectedRewards = runtime.NpcAdventureBattleCatalog.RollRewards(node.stage_id,
+                    runtime.Profile.Save.Player.Level, runtime.Profile.Save.Player.SubRank, ref random);
+                return "rolled " + expectedRewards.Count + " configured stage.Awards rows";
+            });
+            if (!ok) { completed(false); yield break; }
+            Dictionary<int, long> expectedRewardCounts = expectedRewards.GroupBy(value => value.ItemId)
+                .ToDictionary(value => value.Key, value => value.Sum(item => item.Count));
+            Dictionary<int, long> before = runtime.Profile.Save.Player.Inventory
+                .GroupBy(value => value.ItemId).ToDictionary(value => value.Key, value => value.Sum(item => item.Count));
+
+            ok = Check("npc-adventure-sweep-input", () =>
+            {
+                GameObject page = PrivateField<GameObject>(runtime.Hud, "npcTravelRoot");
+                Button sweep = page.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value && value.name == "FastBattleBtn");
+                Assert(sweep && sweep.gameObject.activeInHierarchy,
+                    "the original FastBattleBtn is missing or inactive");
+                ClickPartnerUi(sweep);
+                runtime.Profile.Reload();
+                OfflineNpcAdventureProgress sweepState = runtime.NpcAdventure.State;
+                Assert(sweepState.DailyBattleCount == 2,
+                    "one-click sweep did not consume exactly one shared daily attempt");
+                Assert(sweepState.ActiveStageId == 0
+                    && sweepState.MapGroupId == node.map_group_id
+                    && sweepState.RegionId == node.region_id
+                    && sweepState.NodeId == node.node_id,
+                    "one-click sweep did not complete only the current next node");
+                Assert(!SameNode(runtime.NpcAdventure.NextNode, node),
+                    "one-click sweep did not advance beyond its completed node");
+                GameObject result = PrivateField<GameObject>(runtime.Hud, "npcAdventureResultRoot");
+                Assert(result && result.name == "NpcAdventureBattleResult",
+                    "one-click sweep did not show the original Bond Adventure result panel");
+                foreach (int rewardId in expectedRewardCounts.Keys)
+                {
+                    Transform reward = result.GetComponentsInChildren<Transform>(true)
+                        .SingleOrDefault(value => value.name == "AwardPanelItem_" + rewardId);
+                    Image icon = reward?.GetComponentsInChildren<Image>(true)
+                        .SingleOrDefault(value => value.name == "icon");
+                    Assert(icon && icon.sprite && icon.gameObject.activeInHierarchy,
+                        "configured sweep reward icon was not restored: " + rewardId);
+                }
+                Dictionary<int, long> after = runtime.Profile.Save.Player.Inventory
+                    .GroupBy(value => value.ItemId).ToDictionary(value => value.Key, value => value.Sum(item => item.Count));
+                foreach (int itemId in before.Keys.Concat(after.Keys).Concat(expectedRewardCounts.Keys).Distinct())
+                {
+                    long prior = before.TryGetValue(itemId, out long count) ? count : 0;
+                    long awarded = expectedRewardCounts.TryGetValue(itemId, out long expected) ? expected : 0;
+                    long current = after.TryGetValue(itemId, out long total) ? total : 0;
+                    Assert(current - prior == awarded,
+                        "sweep inventory delta differs from this stage's stage.Awards item " + itemId);
+                }
+                return "simulated FastBattleBtn click committed one attempt, exact stage.Awards, next node, and original result panel";
+            });
+            if (ok)
+            {
+                yield return null;
+                yield return new WaitForEndOfFrame();
+                yield return Capture("npc-adventure-sweep-result.png");
+            }
+            if (!ok) { completed(false); yield break; }
+
+            node = runtime.NpcAdventure.NextNode;
+            ok = Check("npc-adventure-assist-continue", () =>
+            {
+                GameObject result = PrivateField<GameObject>(runtime.Hud, "npcAdventureResultRoot");
+                Button continueButton = result == null ? null : result.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value && value.name == "ContinueBtn" && value.gameObject.activeInHierarchy);
+                Assert(continueButton, "the original sweep result did not expose its continue button");
+                ClickPartnerUi(continueButton);
+                GameObject selection = PrivateField<GameObject>(runtime.Hud, "npcAdventureSelectRoot");
+                Assert(selection && selection.name == "NpcAdventureSelectNpcDialog",
+                    "the original continue button did not open the partner picker");
+                Assert(PrivateField<List<GameObject>>(runtime.Hud, "npcAdventureSelectItems").Count >= 3,
+                    "fewer than three model-backed Bond Adventure partners are available");
+                return "original result continue opened the official partner picker";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return new WaitForEndOfFrame();
+            yield return Capture("npc-adventure-assist-selection.png");
+
+            for (int slot = 0; slot < OfflineNpcAdventureSession.MaximumCompanions; slot++)
+            {
+                int selectedNpcId = 0;
+                ok = Check("npc-adventure-assist-select-" + (slot + 1), () =>
+                {
+                    List<int> selected = PrivateField<List<int>>(runtime.Hud, "npcAdventureSelectedNpcIds");
+                    string prefix = "NpcAdventureSelectNpcItem_";
+                    GameObject item = PrivateField<List<GameObject>>(runtime.Hud, "npcAdventureSelectItems")
+                        .FirstOrDefault(value => value && value.name.StartsWith(prefix, StringComparison.Ordinal)
+                            && int.TryParse(value.name.Substring(prefix.Length), out int id) && !selected.Contains(id));
+                    Assert(item, "the official picker has no additional unselected model-backed partner");
+                    Assert(int.TryParse(item.name.Substring(prefix.Length), out selectedNpcId),
+                        "the official partner item id is malformed");
+                    Button select = item.GetComponentsInChildren<Button>(true)
+                        .FirstOrDefault(value => value && value.name == "SelectBtn");
+                    Assert(select, "an original partner item has no SelectBtn");
+                    ClickPartnerUi(select);
+                    return "simulated original SelectBtn click selected NPC " + selectedNpcId;
+                });
+                if (!ok) { completed(false); yield break; }
+                yield return null;
+            }
+
+            NpcAdventureBattleRunner battle = null;
+            ok = Check("npc-adventure-assist-confirm", () =>
+            {
+                GameObject selection = PrivateField<GameObject>(runtime.Hud, "npcAdventureSelectRoot");
+                Button confirm = selection == null ? null : selection.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value && value.name == "ConfirmBtn");
+                Assert(confirm, "the original partner picker confirm button is missing");
+                ClickPartnerUi(confirm);
+                battle = UnityEngine.Object.FindObjectOfType<NpcAdventureBattleRunner>();
+                Assert(battle && battle.Controller, "confirming three partners did not mount the official battle runner");
+                return "simulated original ConfirmBtn click mounted the Bond Adventure battle";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return new WaitForEndOfFrame();
+
+            ok = Check("npc-adventure-assist-battle", () =>
+            {
+                OfflineNpcAdventureProgress state = runtime.NpcAdventure.State;
+                OfflineNpcAssistBattle assist = runtime.NpcAssistanceProgress.ActiveBattle;
+                int[] expected = state.SelectedNpcClassIds.OrderBy(value => value).ToArray();
+                Assert(state.DailyBattleCount == 3 && state.ActiveStageId == node.stage_id,
+                    "starting the assisted battle did not consume exactly one additional attempt: count="
+                        + state.DailyBattleCount + ", activeStage=" + state.ActiveStageId + ", expected=" + node.stage_id);
+                Assert(assist != null && assist.playType == (int)NpcAssistPlayType.BondAdventure
+                    && assist.stageId == node.stage_id && assist.npcClassIds != null
+                    && assist.npcClassIds.OrderBy(value => value).SequenceEqual(expected),
+                    "the assisted battle did not commit its PlayType 6 snapshot");
+                Assert(battle && battle.Controller && battle.Controller.HasBattleEnvironment,
+                    "the original battle environment failed to mount");
+                int[] actual = battle.Controller.Checkpoint.Units
+                    .Where(value => expected.Contains(value.NpcClassId))
+                    .Select(value => value.NpcClassId).OrderBy(value => value).ToArray();
+                Assert(expected.Length == OfflineNpcAdventureSession.MaximumCompanions
+                    && actual.SequenceEqual(expected),
+                    "the battle checkpoint does not contain the three selected partner units");
+                Assert(!string.IsNullOrEmpty(state.ActiveBattleCheckpoint),
+                    "the initial assisted battle checkpoint was not persisted");
+                return "PlayType 6 snapshot and all three selected partners are present in the mounted battle";
+            });
+            if (ok)
+            {
+                yield return new WaitForEndOfFrame();
+                yield return Capture("npc-adventure-assist-preparation.png");
+            }
+            completed(ok);
+        }
+
+        private static bool SameNode(NpcTravelNode left, NpcTravelNode right) => left != null && right != null
+            && left.map_group_id == right.map_group_id && left.region_id == right.region_id
+            && left.node_id == right.node_id && left.stage_id == right.stage_id;
 
         private IEnumerator VerifyPartners(HomeFeatureRuntime runtime, Action<bool> completed)
         {

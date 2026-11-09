@@ -15,7 +15,7 @@
 | [成长试炼与活动小游戏](features/activity-minigames.md) | 未完成 |
 | [星命契约与累计属性](features/astrological.md) | 未完成 |
 | [战斗执行](features/battle-execution.md) | 未完成 |
-| [羁绊冒险](features/bond-adventure.md) | 未完成 |
+| [羁绊冒险](features/bond-adventure.md) | 部分完成 |
 | [新建存档与角色创建](features/character-creation.md) | 未完成 |
 | [人物属性、经验、位阶与衣柜](features/character.md) | 未完成 |
 | [主城、家园与离线产出](features/city-and-home.md) | 未完成 |

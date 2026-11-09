@@ -167,7 +167,9 @@ namespace Zjcs.Offline.Progression
                 }
                 EnsureRandomState(state, save.CreatedAtUnixSeconds, state.LocalDayKey);
                 System.Random random = NextRandom(state);
-                NpcTravelNode node = catalog.Node(offer.map_group_id, offer.region_id, offer.node_id);
+                OfflineNpcAdventureProgress adventure = save.Player.NpcAdventure;
+                NpcTravelNode node = catalog.AccumulatedNodeBonus(adventure.MapGroupId,
+                    adventure.RegionId, adventure.NodeId);
                 NpcTravelQuality qualityData = catalog.Quality(quality);
                 double npcBasePercent = Property(npcProperties, catalog.Data.travel_npc_prop_types[1]);
                 double treasureBasePercent = Property(treasureProperties, catalog.Data.travel_treasure_prop_types[1]);

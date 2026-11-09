@@ -305,7 +305,15 @@ namespace Zjcs.Presentation.Home
                 : scale != null && scale.Length >= 2 ? new Vector3(scale[0], scale[1], 1) : Vector3.one;
             rect.localEulerAngles = new Vector3(0, 0, source.rotation);
             gameObject.SetActive(source.active);
-            if (HasScript(source, "SafeArea")) ApplyDesktopSafeArea(rect);
+            if (HasScript(source, "SafeArea"))
+            {
+                var safe = gameObject.AddComponent<Zjcs.Official.WorldUI.WorldSafeArea>();
+                if (source.safe_area != null && source.safe_area.Length >= 2)
+                {
+                    safe.PaddingTop = source.safe_area[0];
+                    safe.PaddingBottom = source.safe_area[1];
+                }
+            }
             string path = string.IsNullOrEmpty(source.path) ? source.name : source.path;
             nodes[path] = gameObject;
             foreach (HomeUiAnimation animation in source.animations ?? Array.Empty<HomeUiAnimation>())
@@ -336,9 +344,9 @@ namespace Zjcs.Presentation.Home
                 }
                 image.color = tint;
                 image.enabled = (!source.image.component_flags || source.image.enabled) && sprite != null;
+                image.raycastTarget = source.image.raycast_target;
                 if (source.image.component_flags)
                 {
-                    image.raycastTarget = source.image.raycast_target;
                     image.maskable = source.image.maskable;
                     image.fillCenter = source.image.fill_center;
                     image.fillMethod = (Image.FillMethod)Mathf.Clamp(source.image.fill_method, 0,
@@ -383,7 +391,7 @@ namespace Zjcs.Presentation.Home
                 fitter.aspectMode = (AspectRatioFitter.AspectMode)Mathf.Clamp(source.aspect_fitter.mode, 0, 4);
                 fitter.aspectRatio = Mathf.Max(0.001f, source.aspect_fitter.ratio);
             }
-            if (source.alpha > 0f && source.alpha < 0.999f)
+            if (HasScript(source, "CanvasGroup") || source.alpha >= 0f && source.alpha < 0.999f)
             {
                 CanvasGroup group = gameObject.AddComponent<CanvasGroup>();
                 group.alpha = Mathf.Clamp01(source.alpha);

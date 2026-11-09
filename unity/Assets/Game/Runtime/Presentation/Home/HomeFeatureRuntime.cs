@@ -48,7 +48,9 @@ namespace Zjcs.Presentation.Home
         private OfflineDailyChallengeService dailyChallenges;
         private OfflineNpcTravelService npcTravel;
         private OfficialNpcTravelCatalog npcTravelCatalog;
+        private OfficialNpcAdventureBattleCatalog npcAdventureBattleCatalog;
         private OfflineNpcTravelPropertyCalculator npcTravelProperties;
+        private OfflineNpcAdventureSession npcAdventure;
         private DailyDungeonModule dailyDungeons;
         private OfficialFantasyTowerCatalog fantasyTowerCatalog;
         private OfflineFantasyTowerSession fantasyTower;
@@ -143,6 +145,16 @@ namespace Zjcs.Presentation.Home
         public OfflineDailyChallengeService DailyChallenges => dailyChallenges;
         public OfflineNpcTravelService NpcTravel => npcTravel;
         public OfficialNpcTravelCatalog NpcTravelCatalog => npcTravelCatalog;
+        public OfficialNpcAdventureBattleCatalog NpcAdventureBattleCatalog =>
+            npcAdventureBattleCatalog ?? (npcAdventureBattleCatalog = OfficialNpcAdventureBattleCatalog.LoadDefault());
+        public OfflineNpcAdventureSession NpcAdventure
+        {
+            get
+            {
+                npcAdventure ??= new OfflineNpcAdventureSession(profile, npcTravelCatalog);
+                return npcAdventure;
+            }
+        }
         public IReadOnlyDictionary<int, long> NpcTravelNpcProperties(int npcClassId)
         {
             EnsureProgression();
@@ -619,6 +631,7 @@ namespace Zjcs.Presentation.Home
             npcAssistanceCatalog = OfficialCombatAssetCatalog.LoadDefault().LoadNpcAssistance();
             arena = OfflineArenaSession.Open(slots, slotId);
             npcTravelCatalog = OfficialNpcTravelCatalog.LoadDefault();
+            npcAdventureBattleCatalog = OfficialNpcAdventureBattleCatalog.LoadDefault();
             npcTravel = new OfflineNpcTravelService(profile, npcTravelCatalog);
             fruitTree = new OfflineFruitTreeService(profile);
             catalog = HomeAssetCatalog.LoadDefault();

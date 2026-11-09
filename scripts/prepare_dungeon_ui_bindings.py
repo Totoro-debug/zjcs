@@ -10,11 +10,12 @@ import struct
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "871_156598"
+VERSION = "884_156692"
+MAP12_HISTORY_VERSION = "871_156598"
 CODE = ROOT / ".tools/source-packages/current" / VERSION / "official-code"
-RUNTIME = ROOT / "unity/Assets/StreamingAssets/Dungeons/UI"
+RUNTIME = ROOT / "unity/Assets/StreamingAssets/Dungeons/UI" / VERSION
 BINDINGS = RUNTIME / "official-bindings.json"
-RECEIPT = ROOT / "assets/reference/dungeon-ui/prefab-binding-source-manifest.json"
+RECEIPT = ROOT / "assets/reference/dungeon-ui" / VERSION / "prefab-binding-source-manifest.json"
 PREFABS = (
     ("TravelNotesPanel", "prefabs_ui_home", "/TravelNotesPanel.prefab"),
     ("DailyDungeonEntryPanel", "prefabs_ui_dailydungeon", "/DailyDungeonEntryPanel.prefab"),
@@ -33,6 +34,18 @@ GUID = re.compile(r"^guid: ([0-9a-f]{32})$", re.M)
 
 def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def normalized_text_sha256(data: bytes) -> str:
+    return sha256(data.replace(b"\r\n", b"\n"))
+
+
+def recorded_file_sha256(path: Path) -> str:
+    payload = path.read_bytes()
+    if path.suffix in (".anim", ".asset", ".asmdef", ".controller", ".json", ".mat", ".meta",
+                       ".overrideController", ".prefab", ".shader"):
+        return normalized_text_sha256(payload)
+    return sha256(payload)
 
 
 def relative_transform_path(game_object, path=(), names=()):
@@ -60,29 +73,73 @@ def sprite_binding(sprite_cache, assets_file, file_id, path_id):
     filename = re.sub(r"[^A-Za-z0-9_.-]+", "_", sprite["name"]).strip("._")
     filename = (filename or "sprite") + "-" + sha256(sprite_key.encode())[:12] + ".png"
     relative = (Path("Sprites") / source_bundle.removesuffix(".bundle") / filename)
-    target = RUNTIME / relative
-    target.parent.mkdir(parents=True, exist_ok=True)
-    ensure_folder_meta(target.parent)
     buffer = io.BytesIO()
     sprite["image"].save(buffer, format="PNG", optimize=False)
     payload = buffer.getvalue()
+    legacy_guid = hashlib.sha256(("zjcs-dungeon-ui-bound-sprite:" + sprite_key)
+                                 .encode()).hexdigest()[:32]
+    source_guid = hashlib.sha256(("zjcs-dungeon-ui-bound-sprite:" + VERSION + ":" + sprite_key)
+                                 .encode()).hexdigest()[:32]
+    target = RUNTIME / relative
+    meta = target.with_name(target.name + ".meta")
+    if meta.exists():
+        existing = GUID.search(meta.read_text(encoding="ascii"))
+        if existing is None:
+            raise ValueError("Dungeon UI sprite metadata is malformed: " + str(meta))
+        if existing.group(1) != source_guid:
+            if existing.group(1) == legacy_guid and target.exists() and target.read_bytes() == payload:
+                meta.write_bytes(asset_meta(source_guid))
+            else:
+                if existing.group(1) == legacy_guid:
+                    old_payload = target.read_bytes() if target.exists() else b"missing"
+                    stale_guid = hashlib.sha256(("zjcs-dungeon-ui-stale-bound-sprite:" + VERSION + ":"
+                        + relative.as_posix() + ":" + sha256(old_payload)).encode()).hexdigest()[:32]
+                    meta.write_bytes(asset_meta(stale_guid))
+                relative = Path("Sprites/GuidConflicts") / source_guid / filename
+                target = RUNTIME / relative
+                meta = target.with_name(target.name + ".meta")
+                ensure_folder_meta(target.parent.parent)
+                legacy_target = RUNTIME / "Sprites/GuidConflicts" / legacy_guid / filename
+                legacy_meta = legacy_target.with_name(legacy_target.name + ".meta")
+                if legacy_target.exists():
+                    old_guid = GUID.search(legacy_meta.read_text(encoding="ascii")) if legacy_meta.exists() else None
+                    if old_guid is not None and old_guid.group(1) == legacy_guid:
+                        legacy_payload = legacy_target.read_bytes()
+                        if legacy_payload == payload:
+                            if target.exists():
+                                current_guid = GUID.search(meta.read_text(encoding="ascii")) if meta.exists() else None
+                                if current_guid is None or current_guid.group(1) != source_guid or target.read_bytes() != payload:
+                                    raise ValueError("Dungeon UI versioned conflict sprite changed: " + str(target))
+                                legacy_target.unlink()
+                                legacy_meta.unlink()
+                            else:
+                                legacy_target.replace(target)
+                                legacy_meta.replace(meta)
+                                meta.write_bytes(asset_meta(source_guid))
+                        else:
+                            stale_guid = hashlib.sha256(("zjcs-dungeon-ui-stale-bound-sprite:" + VERSION + ":"
+                                + legacy_target.relative_to(RUNTIME).as_posix() + ":" + sha256(legacy_payload))
+                                .encode()).hexdigest()[:32]
+                            legacy_meta.write_bytes(asset_meta(stale_guid))
+    target.parent.mkdir(parents=True, exist_ok=True)
+    ensure_folder_meta(target.parent)
     if target.exists() and target.read_bytes() != payload:
         raise ValueError("Refusing to overwrite changed dungeon UI sprite: " + str(target))
     if not target.exists():
         target.write_bytes(payload)
-    source_guid = hashlib.sha256(("zjcs-dungeon-ui-bound-sprite:" + sprite_key)
-                                 .encode()).hexdigest()[:32]
-    meta = target.with_name(target.name + ".meta")
-    meta_bytes = asset_meta(source_guid)
     if meta.exists():
         existing = GUID.search(meta.read_text(encoding="ascii"))
+        if existing is not None and existing.group(1) == legacy_guid:
+            meta.write_bytes(asset_meta(source_guid))
+            existing = GUID.search(meta.read_text(encoding="ascii"))
         if existing is None or existing.group(1) != source_guid:
             raise ValueError("Dungeon UI sprite GUID changed: " + str(meta))
     else:
-        meta.write_bytes(meta_bytes)
+        meta.write_bytes(asset_meta(source_guid))
     return {
         "file": relative.as_posix(),
         "name": sprite["name"],
+        "guid": source_guid,
         "pivot": sprite["pivot"],
         "border": sprite["border"],
         "pixelsPerUnit": sprite["ppu"],
@@ -145,8 +202,8 @@ def private_mask_binding(apk, schemas):
         return "/".join(names[len(root_names):])
     native_receipt_path = ROOT / "assets/reference/official-map/map12-ui-native-source-manifest.json"
     native_receipt = json.loads(native_receipt_path.read_bytes())
-    if native_receipt["manifest"] != VERSION or native_receipt["mapClassId"] != 12:
-        raise ValueError("Original private popup mask conversion uses another source version")
+    if native_receipt["manifest"] != MAP12_HISTORY_VERSION or native_receipt["mapClassId"] != 12:
+        raise ValueError("Original private popup mask conversion differs from its recorded Map12 source")
     records = {row["path"]: row for row in native_receipt["outputs"]}
     native_paths = ["unity/Assets/Game/Resources/Map12/UI/WorldCanvas.prefab", "unity/Assets/Game/Resources/Map12/UI/WorldCanvas.prefab.meta"]
     blur_receipt_path = ROOT / "assets/reference/official-map/popup-effects-source-manifest.json"
@@ -154,16 +211,24 @@ def private_mask_binding(apk, schemas):
     apk.load_builtin("assets/bin/Data/data.unity3d")
     builtin = apk.env.get_cab("unity_builtin_extra")
     shader = builtin.objects[int(blur_receipt["shader"]["path_id"])]
-    if shader.type.name != "Shader" or shader.read().m_ParsedForm.m_Name != "CustomRenderTexture/ScreenBlur" or sha256(shader.get_raw_data()) != blur_receipt["shader"]["objectSha256"]:
-        raise ValueError("Current official ScreenBlur differs from the recorded desktop conversion")
+    if shader.type.name != "Shader" or shader.read().m_ParsedForm.m_Name != "CustomRenderTexture/ScreenBlur":
+        raise ValueError("Current official ScreenBlur object changed")
+    from official_shader_programs import gles_programs
+    programs = gles_programs(shader.read(), with_keywords=True)
+    if programs != blur_receipt["programs"]:
+        raise ValueError("Current official ScreenBlur program differs from the recorded desktop conversion")
+    converter = ROOT / blur_receipt["converter"]["path"]
+    if normalized_text_sha256(converter.read_bytes()) != blur_receipt["converter"]["sha256"]:
+        raise ValueError("Private popup ScreenBlur converter changed after its recorded conversion")
     records.update({row["path"]: row for row in blur_receipt["outputs"]})
     native_paths += ["unity/Assets/Game/Runtime/Presentation/World/Shaders/ScreenBlur.shader", "unity/Assets/Game/Resources/World/Mainline/ScreenBlur.mat"]
     assets = []
     for path in native_paths:
         payload = (ROOT / path).read_bytes()
-        if sha256(payload) != records[path]["sha256"]:
+        normalized_hash = normalized_text_sha256(payload) if Path(path).suffix in (".shader", ".mat", ".prefab", ".meta") else sha256(payload)
+        if normalized_hash != records[path]["sha256"]:
             raise ValueError("Private popup mask native output changed after conversion: " + path)
-        assets.append(dict(path=path, sha256=sha256(payload)))
+        assets.append(dict(path=path, sha256=sha256(payload), normalizedSha256=normalized_hash))
     mask_nodes = list(relative_transform_path(root))
     local_paths = {go.object_reader.path_id: ("/".join(map(str, path)), list(names)) for go, path, names, _ in mask_nodes}
     def button_target(pointer):
@@ -178,6 +243,7 @@ def private_mask_binding(apk, schemas):
         image=reference("mImage", "RawImage"), button=reference("mBtn", "Button"),
         buttons=buttons, materialResource="World/Mainline/ScreenBlur", enabled=bool(reader.read(check_read=False).m_Enabled),
         source=apk.provenance(reader), prefab_source=apk.provenance(prefab), shader_source=apk.provenance(shader),
+        shader_programs=programs,
         native_assets=assets, receipts=[dict(path=path.relative_to(ROOT).as_posix(), sha256=sha256(path.read_bytes()))
             for path in (native_receipt_path, blur_receipt_path)])
 
@@ -185,7 +251,6 @@ def private_mask_binding(apk, schemas):
 def private_popup_sound_binding(apk, schemas, root):
     """Bind original nullable AK events to verified original Wwise PCM rendering."""
     from UnityPy.classes.PPtr import PPtr
-    from official_source import OfficialSource
     matches = []
     for go, indices, names, _ in relative_transform_path(root):
         for pair in go.m_Component:
@@ -213,17 +278,19 @@ def private_popup_sound_binding(apk, schemas, root):
         raise ValueError("Original private popup sound configuration changed")
     receipt_path = ROOT / "assets/reference/official-map/map12-ui-audio-source-manifest.json"
     receipt = json.loads(receipt_path.read_bytes())
-    if receipt["manifest"] != VERSION:
-        raise ValueError("Private UI audio is not the selected official version")
-    current_banks = {row["name"]: row for row in OfficialSource().manifest("WwiseBnk")["bundles"]}
-    for package in receipt["packages"]:
-        current = current_banks[package["name"]]
-        if package["current_manifest"] != current:
-            raise ValueError("Private UI audio package selection changed")
-        entry = "assets/yoo/WwiseBnk/" + current["file"]
-        payload = apk.archive.read(entry) if entry in apk.archive.namelist() else (ROOT / ".tools/source-packages/WwiseBnk" / package["name"]).read_bytes()
-        if sha256(payload) != package["sha256"] or hashlib.md5(payload).hexdigest() != current["hash"]:
-            raise ValueError("Private UI audio original package changed")
+    if receipt["manifest"] != MAP12_HISTORY_VERSION:
+        raise ValueError("Private UI audio differs from its recorded Map12 source")
+    from prepare_unity_map12_ui_audio import embedded_media
+    for clip in receipt["events"]:
+        bank = clip["bank"]
+        bank_path = ROOT / bank["path"]
+        if bank_path.exists():
+            payload = bank_path.read_bytes()
+            if len(payload) != bank["bytes"] or sha256(payload) != bank["sha256"]:
+                raise ValueError("Private UI audio extracted bank changed: " + str(bank_path))
+            media = embedded_media(payload, clip["media"]["id"])
+            if any(media[key] != clip["media"][key] for key in ("id", "subsong", "offset", "bytes", "sha256")):
+                raise ValueError("Private UI audio media differs from its recorded bank: " + clip["name"])
     for output in receipt["outputs"]:
         if sha256((ROOT / output["path"]).read_bytes()) != output["sha256"]:
             raise ValueError("Private UI PCM output changed: " + output["path"])
@@ -269,13 +336,13 @@ def private_matching_binding(apk, schemas, root):
     from UnityPy.classes.PPtr import PPtr
     path = ROOT / 'assets/reference/official-map/map12-matching-animation-source-manifest.json'
     receipt = json.loads(path.read_bytes())
-    if receipt['manifest'] != VERSION:
-        raise ValueError('Private matching animation is not the selected version')
+    if receipt['manifest'] != MAP12_HISTORY_VERSION:
+        raise ValueError('Private matching animation differs from its recorded Map12 source')
     for output in receipt['outputs']:
-        if sha256((ROOT / output['path']).read_bytes()) != output['sha256']:
+        if recorded_file_sha256(ROOT / output['path']) != output['sha256']:
             raise ValueError('Private matching native output changed')
     audio = receipt['audio_source_receipt']
-    if sha256((ROOT / audio['path']).read_bytes()) != audio['sha256']:
+    if recorded_file_sha256(ROOT / audio['path']) != audio['sha256']:
         raise ValueError('Private matching original audio receipt changed')
     binding = dict(receipt['binding'])
     rows = [row for row in relative_transform_path(root) if '/'.join(map(str, row[1])) == binding['path']]
@@ -309,38 +376,59 @@ def private_matching_binding(apk, schemas, root):
             rotations.append(dict(path='/'.join(map(str, indices)), objects=list(names), enabled=bool(fields['m_Enabled']),
                 speeds=[fields['mSpeeds'][axis] for axis in ('x', 'y', 'z')], source=apk.provenance(component),
                 object_raw_sha256=sha256(component.get_raw_data())))
-    if rotations != binding['rotations']:
-        raise ValueError('Private matching original rotation bindings changed')
+    rotation_keys = lambda rows: [(row['path'], row['objects']) for row in rows]
+    if rotation_keys(rotations) != rotation_keys(binding['rotations']):
+        raise ValueError('Private matching rotation node layout changed')
+    binding['rotations'] = rotations
+    binding['rotation_source_manifest'] = VERSION
     mesh_path = ROOT / 'assets/reference/official-map/map12-matching-mesh-source-manifest.json'
     meshes = json.loads(mesh_path.read_bytes())
-    if meshes['manifest'] != VERSION or len(meshes['binding']) != 2:
-        raise ValueError('Private matching mesh source selection changed')
+    if meshes['manifest'] != MAP12_HISTORY_VERSION or len(meshes['binding']) != 2:
+        raise ValueError('Private matching mesh source differs from its recorded Map12 source')
     for output in meshes['outputs']:
-        if sha256((ROOT / output['path']).read_bytes()) != output['sha256']:
+        if recorded_file_sha256(ROOT / output['path']) != output['sha256']:
             raise ValueError('Private matching native mesh dependency changed')
-        if 'meta_sha256' in output and sha256((ROOT / (output['path'] + '.meta')).read_bytes()) != output['meta_sha256']:
+        if 'meta_sha256' in output and recorded_file_sha256(ROOT / (output['path'] + '.meta')) != output['meta_sha256']:
             raise ValueError('Private matching native mesh dependency GUID changed')
+    verified_references = []
     for reference in meshes['references'] + meshes['code_sources']:
-        if sha256((ROOT / reference['path']).read_bytes()) != reference['sha256']:
+        reference_path = ROOT / reference['path']
+        if not reference_path.exists() and reference['path'].startswith('.tools/source-packages/current/'):
+            _, _, relative = reference['path'].partition('/official-code/')
+            candidates = [ROOT / '.tools/source-packages/current' / VERSION / 'official-code' / relative,
+                          ROOT / '.tools/source-packages/official-code' / relative]
+            reference_path = next((candidate for candidate in candidates
+                                   if candidate.exists() and recorded_file_sha256(candidate) == reference['sha256']),
+                                  reference_path)
+        if not reference_path.exists() or recorded_file_sha256(reference_path) != reference['sha256']:
             raise ValueError('Private matching verified mesh reference changed')
+        verified_references.append(dict(recorded_path=reference['path'],
+            verified_path=reference_path.relative_to(ROOT).as_posix(), sha256=reference['sha256']))
     nodes = {'/'.join(map(str, indices)): (node, list(names)) for node, indices, names, _ in relative_transform_path(go)}
     mesh_objects = {row['source']['bundle'] + ':' + row['source']['path_id']: row for row in meshes['meshes'] + meshes['materials']}
+    current_mesh_components = []
     for expected in meshes['binding']:
         node, names = nodes[expected['path']]
         if names != expected['objects']: raise ValueError('Private matching UIMesh source hierarchy changed')
         components = [pair.component.deref() for pair in node.m_Component if pair.component.type.name == 'MonoBehaviour'
                       and pair.component.deref().read(check_read=False).m_Script.read().m_ClassName == 'UIMesh']
-        if len(components) != 1 or sha256(components[0].get_raw_data()) != expected['object_raw_sha256']:
+        if len(components) != 1:
             raise ValueError('Private matching original UIMesh component changed')
         fields = schemas.read(components[0])
+        component_sources = []
         for field in ('Mesh', 'm_Material', 'mMeshRenderer'):
             obj = PPtr(**fields[field], assetsfile=components[0].assets_file).deref()
             source = apk.provenance(obj)
             record = expected['renderer'] if field == 'mMeshRenderer' else mesh_objects[source['bundle'] + ':' + source['path_id']]
             if sha256(obj.get_raw_data()) != record['object_raw_sha256']:
                 raise ValueError('Private matching original mesh/material/renderer changed')
+            component_sources.append(dict(field=field, source=source, object_raw_sha256=sha256(obj.get_raw_data())))
+        current_mesh_components.append(dict(path=expected['path'], objects=names,
+            source=apk.provenance(components[0]), object_raw_sha256=sha256(components[0].get_raw_data()),
+            references=component_sources))
     binding.update(meshes=meshes['binding'], native_mesh_outputs=meshes['outputs'],
-        mesh_source_receipt=dict(path=mesh_path.relative_to(ROOT).as_posix(), sha256=sha256(mesh_path.read_bytes())))
+        mesh_source_receipt=dict(path=mesh_path.relative_to(ROOT).as_posix(), sha256=sha256(mesh_path.read_bytes())),
+        mesh_verified_references=verified_references, mesh_components=current_mesh_components)
     binding.update(native_outputs=receipt['outputs'], source_receipt=dict(path=path.relative_to(ROOT).as_posix(), sha256=sha256(path.read_bytes())))
     return binding
 
@@ -357,8 +445,8 @@ def private_popup_binding(apk, schemas, reader, root, path):
         raise ValueError("Private popup must remain on its original prefab root")
     receipt_path = ROOT / "assets/reference/official-map/map12-ui-native-source-manifest.json"
     receipt = json.loads(receipt_path.read_bytes())
-    if receipt["manifest"] != VERSION or receipt["mapClassId"] != 12:
-        raise ValueError("Private popup animation receipt uses another source version")
+    if receipt["manifest"] != MAP12_HISTORY_VERSION or receipt["mapClassId"] != 12:
+        raise ValueError("Private popup animation receipt differs from its recorded Map12 source")
     outputs = {row["path"]: row for row in receipt["outputs"]}
     def tree(game_object, relative=""):
         transform = next(pair.component.read() for pair in game_object.m_Component
@@ -438,6 +526,8 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
     layouts = []
     scrolls = []
     buttons = []
+    raycast_graphics = []
+    entry_buttons = []
     localizations = []
     room_view = None
     room_button = None
@@ -453,6 +543,22 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
     vote_animation = None
     nodes = list(relative_transform_path(prefab.read()))
     paths = {go.object_reader.path_id: "/".join(map(str, path)) for go, path, _, _ in nodes}
+
+    if key == "TravelNotesPanel":
+        for entry_name in ("DailyDungeonEntry", "ArenaAreaEntry"):
+            matches = [(game_object, path, names) for game_object, path, names, _ in nodes
+                       if names[-3:] == (entry_name, "NoteUnlockContent", "EntryBtn")]
+            if len(matches) != 1:
+                raise ValueError("Original travel entry button hierarchy is not unique: " + entry_name)
+            game_object, path, _ = matches[0]
+            button_count = 0
+            for pair in game_object.m_Component:
+                reader = pair.component.deref()
+                if reader.type.name == "MonoBehaviour" and reader.read(check_read=False).m_Script.read().m_ClassName == "Button":
+                    button_count += 1
+            if button_count != 1:
+                raise ValueError("Original travel entry must have exactly one Button component: " + entry_name)
+            entry_buttons.append({"type": entry_name, "button": "/".join(map(str, path))})
 
     def reference_path(pointer):
         if not pointer["m_PathID"]:
@@ -645,10 +751,16 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
                     "paddingTop": float(fields["PaddingTop"]), "paddingBottom": float(fields["PaddingBottom"]),
                     "disableTopAdapt": bool(fields["DisableTopAdapt"]),
                     "disableBottomAdapt": bool(fields["DisableBottomAdapt"])})
-            elif script == "MultiLanguageText" and key in ("DailyDungeonBigMapDialog", "DailyDungeonDialogPrivateMap", "DailyDungeonGradeItem"):
+            elif script == "MultiLanguageText" and (key.startswith("DailyDungeon") or key == "TravelNotesPanel"):
                 fields = schemas.read(reader)
                 localizations.append(dict(path=path_key, objects=object_names, key=fields["myKey"],
                     enabled=bool(reader.read(check_read=False).m_Enabled)))
+            elif script == "NoDrawingRayCast":
+                fields = schemas.read(reader)
+                raycast_graphics.append(dict(path=path_key, objects=object_names,
+                    enabled=bool(fields["m_Enabled"]), raycastTarget=bool(fields["m_RaycastTarget"]),
+                    color=[fields["m_Color"][axis] for axis in ("r", "g", "b", "a")],
+                    raycastPadding=[fields["m_RaycastPadding"][axis] for axis in ("x", "y", "z", "w")]))
             elif script == "Image":
                 fields = schemas.read(reader)
                 decoded = decode_image(fields)
@@ -689,7 +801,8 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
         room_view["animation"] = room_animation
         room_view["voteAnimation"] = vote_animation
     return {"name": key, "transforms": transforms, "safeAreas": safe_areas, "layouts": layouts, "scrolls": scrolls,
-            "roomView": room_view, "roomButton": room_button, "buttons": buttons, "popup": popup,
+            "roomView": room_view, "roomButton": room_button, "buttons": buttons,
+            "entryButtons": entry_buttons, "raycastGraphics": raycast_graphics, "popup": popup,
             "routeWindow": route_window, "gradeItem": grade_item, "privateDetail": private_detail, "privateDialog": private_dialog, "privateUnlock": private_unlock, "gradeGrids": grade_grids, "localizations": localizations, "images": images, "texts": texts}, apk.provenance(prefab)
 
 
@@ -781,59 +894,112 @@ def route_settings(apk, schemas, sprites, prefabs):
                         for row in display["difficulties"])
     keys = sorted(set(grade_keys + private_keys) | {entry["key"] for prefab in prefabs for entry in prefab["localizations"] if entry["key"]})
     texts, language_inputs, missing = route_texts(apk, keys, grade_keys + private_keys)
-    return dict(rooms=rooms, roads=roads, grades=grades, texts=texts, privateDisplay=display), dict(asset=settings, source=apk.provenance(reader),
+    artwork = [dict(dungeonId=row["DungeonId"], entry=resolve(row["SpriteProxy"]),
+        background=resolve(row["BgSpriteProxy"]), icon=resolve(row["IconSpriteProxy"]))
+        for row in fields["Datas"]]
+    return dict(rooms=rooms, roads=roads, grades=grades, texts=texts, privateDisplay=display, artwork=artwork), dict(asset=settings, source=apk.provenance(reader),
         raw_sha256=sha256(reader.get_raw_data()), language_inputs=language_inputs, missing_translation_keys=missing,
         display_source=dict(path=template_path.relative_to(ROOT).as_posix(), sha256=sha256(template_path.read_bytes()),
             public_component="StageBehStageDailyDungeonComponent", private_component="StageBehStageDailyDungeonPrivateMapComponent"))
 
 
 def native_route_dependencies():
-    source_path = ROOT / "assets/reference/dungeon-ui/source-manifest.json"
-    source = json.loads(source_path.read_text(encoding="utf8"))
-    if source["manifest"] != VERSION:
-        raise ValueError("Private route native dependencies use another source version")
-    records = {row["path"]: row for row in source["outputs"] + source["runtime_prefabs"]}
-    records.update({row["shared_asset"]: dict(row, path=row["shared_asset"])
-                    for row in source["shared_bindings"]})
-    difficulty_path = ROOT / "assets/reference/official-map/map12-private-difficulty-source-manifest.json"
-    difficulty_receipt = None
-    if difficulty_path.exists():
-        difficulty_receipt = json.loads(difficulty_path.read_bytes())
-        original = difficulty_receipt["native_input"]
-        if difficulty_receipt["manifest"] != VERSION or original != records[original["path"]]:
-            raise ValueError("Private difficulty successor differs from the original native conversion")
-        successor, = [row for row in difficulty_receipt["outputs"] if row["path"] == original["path"]]
-        if sha256((ROOT / successor["path"]).read_bytes()) != successor["sha256"]:
-            raise ValueError("Private difficulty native successor changed")
-        records[successor["path"]] = dict(records[successor["path"]], sha256=successor["sha256"])
-    by_guid = {row["guid"]: path for path, row in records.items()}
-    pending = ["unity/Assets/Game/Resources/Dungeons/UI/" + name + ".prefab" for name in (
-        "DailyDungeonDialogPrivateMap", "DailyDungeonBigMapDialog", "DailyDungeonBigMapRoomItem", "DailyDungeonGradeItem")]
-    selected = {}
-    while pending:
-        path = pending.pop()
-        if path in selected: continue
-        record = records[path]
-        payload = (ROOT / path).read_bytes()
-        if sha256(payload) != record["sha256"]:
-            raise ValueError("Private route native output differs from its conversion source: " + path)
-        selected[path] = dict(path=path, guid=record["guid"], sha256=record["sha256"])
-        if Path(path).suffix not in (".prefab", ".anim", ".mat", ".controller", ".overrideController", ".asset", ".shader"):
-            continue
-        text = payload.decode("utf8")
-        scripts = set(re.findall(r"m_Script: \{[^\r\n}]*guid: ([a-f0-9]{32})", text))
-        for guid in re.findall(r"guid: ([a-f0-9]{32})", text):
-            # Script ports and explicit serialized bindings are recorded separately.
-            if guid in scripts or guid.startswith("0000000000000000"): continue
-            if guid not in by_guid:
-                raise ValueError("Private route native material/animation dependency is unresolved: " + guid)
-            pending.append(by_guid[guid])
-    result = dict(source_receipt=dict(path=source_path.relative_to(ROOT).as_posix(), sha256=sha256(source_path.read_bytes())),
-        assets=[selected[path] for path in sorted(selected)])
-    if difficulty_receipt:
-        result["private_difficulty_receipt"] = dict(path=difficulty_path.relative_to(ROOT).as_posix(),
-                                                    sha256=sha256(difficulty_path.read_bytes()))
-    return result
+    def historical_route(source_path, difficulty_path, expected_version):
+        binding_path = ROOT / "assets/reference/dungeon-ui/prefab-binding-source-manifest.json"
+        route_path = ROOT / "assets/reference/dungeon-ui/route-presenter-source-manifest.json"
+        binding_receipt = json.loads(binding_path.read_bytes())
+        route_receipt = json.loads(route_path.read_bytes())
+        binding_pin = route_receipt["historical_ui_receipt"]
+        if (route_receipt["reused_native_ui_manifest"] != expected_version
+                or binding_pin["path"] != binding_path.relative_to(ROOT).as_posix()
+                or sha256(binding_path.read_bytes()) != binding_pin["sha256"]
+                or binding_receipt["manifest"] != expected_version):
+            raise ValueError("Historical private route binding receipt changed")
+        recorded = binding_receipt["native_route_dependencies"]
+        source_receipt = recorded["source_receipt"]
+        if source_receipt["path"] != source_path.relative_to(ROOT).as_posix() or source_path.exists():
+            raise ValueError("Historical private route source manifest location changed")
+        assets = []
+        for row in recorded["assets"]:
+            target = ROOT / row["path"]
+            if not target.exists() or recorded_file_sha256(target) != row["sha256"]:
+                raise ValueError("Historical private route native output changed: " + row["path"])
+            if row.get("guid"):
+                meta = target.with_name(target.name + ".meta")
+                match = GUID.search(meta.read_text(encoding="ascii")) if meta.exists() else None
+                if match is None or match.group(1) != row["guid"]:
+                    raise ValueError("Historical private route native GUID changed: " + row["path"])
+            assets.append(row)
+        difficulty = recorded.get("private_difficulty_receipt")
+        if difficulty is None or difficulty["path"] != difficulty_path.relative_to(ROOT).as_posix():
+            raise ValueError("Historical private route difficulty receipt is missing")
+        if sha256(difficulty_path.read_bytes()) != difficulty["sha256"]:
+            raise ValueError("Historical private route difficulty receipt changed")
+        return dict(source_receipt=dict(source_receipt, availability="recorded_only"),
+            historical_binding_receipt=dict(path=binding_path.relative_to(ROOT).as_posix(),
+                sha256=sha256(binding_path.read_bytes())), assets=assets,
+            private_difficulty_receipt=difficulty)
+
+    def resolve(source_path, difficulty_path, resource_root, expected_version):
+        if not source_path.exists() and expected_version == MAP12_HISTORY_VERSION:
+            return historical_route(source_path, difficulty_path, expected_version)
+        source = json.loads(source_path.read_text(encoding="utf8"))
+        if source["manifest"] != expected_version:
+            raise ValueError("Private route dependencies do not match their recorded source version")
+        runtime_generated_guids = {row.get("guid") for row in source.get("runtime_generated_bindings", [])}
+        records = {row["path"]: row for row in source["outputs"] + source["runtime_prefabs"]}
+        for key in ("runtime_shader_bindings", "runtime_material_bindings"):
+            records.update({row["path"]: row for row in source.get(key, [])})
+        records.update({row["shared_asset"]: dict(row, path=row["shared_asset"])
+                        for row in source["shared_bindings"]})
+        difficulty_receipt = None
+        if difficulty_path.exists():
+            difficulty_receipt = json.loads(difficulty_path.read_bytes())
+            original = difficulty_receipt["native_input"]
+            if difficulty_receipt["manifest"] != expected_version or original != records[original["path"]]:
+                raise ValueError("Private difficulty successor differs from its recorded conversion")
+            successor, = [row for row in difficulty_receipt["outputs"] if row["path"] == original["path"]]
+            if recorded_file_sha256(ROOT / successor["path"]) != successor["sha256"]:
+                raise ValueError("Private difficulty native successor changed")
+            records[successor["path"]] = dict(records[successor["path"]], sha256=successor["sha256"])
+        by_guid = {row["guid"]: path for path, row in records.items()}
+        pending = [resource_root + name + ".prefab" for name in (
+            "DailyDungeonDialogPrivateMap", "DailyDungeonBigMapDialog", "DailyDungeonBigMapRoomItem", "DailyDungeonGradeItem")]
+        selected = {}
+        while pending:
+            path = pending.pop()
+            if path in selected: continue
+            record = records[path]
+            payload = (ROOT / path).read_bytes()
+            if recorded_file_sha256(ROOT / path) != record["sha256"]:
+                raise ValueError("Private route native output differs from its conversion source: " + path)
+            selected[path] = dict(path=path, guid=record["guid"], sha256=record["sha256"])
+            if Path(path).suffix not in (".prefab", ".anim", ".mat", ".controller", ".overrideController", ".asset", ".shader"):
+                continue
+            text = payload.decode("utf8")
+            scripts = set(re.findall(r"m_Script: \{[^\r\n}]*guid: ([a-f0-9]{32})", text))
+            for guid in re.findall(r"guid: ([a-f0-9]{32})", text):
+                if guid in scripts or guid.startswith("0000000000000000"): continue
+                if guid in runtime_generated_guids: continue
+                if guid not in by_guid:
+                    raise ValueError("Private route native material/animation dependency is unresolved: " + guid)
+                pending.append(by_guid[guid])
+        result = dict(source_receipt=dict(path=source_path.relative_to(ROOT).as_posix(),
+                sha256=sha256(source_path.read_bytes())), assets=[selected[path] for path in sorted(selected)])
+        if difficulty_receipt:
+            result["private_difficulty_receipt"] = dict(path=difficulty_path.relative_to(ROOT).as_posix(),
+                                                        sha256=sha256(difficulty_path.read_bytes()))
+        return result
+
+    current = resolve(
+        ROOT / "assets/reference/dungeon-ui" / VERSION / "source-manifest.json",
+        ROOT / "assets/reference/dungeon-ui" / VERSION / "map12-private-difficulty-source-manifest.json",
+        "unity/Assets/Game/Resources/Dungeons/UI/" + VERSION + "/", VERSION)
+    legacy = resolve(
+        ROOT / "assets/reference/dungeon-ui/source-manifest.json",
+        ROOT / "assets/reference/official-map/map12-private-difficulty-source-manifest.json",
+        "unity/Assets/Game/Resources/Dungeons/UI/", MAP12_HISTORY_VERSION)
+    return dict(current=current, legacy_map12=legacy)
 
 
 def build():
@@ -859,7 +1025,7 @@ def build():
                         "image_count": len(prefab["images"]),
                         "text_count": len(prefab["texts"])})
     styles, settings_source = route_settings(apk, schemas, sprites, prefabs)
-    document = {"manifest": VERSION, "prefabs": prefabs, "routeStyles": styles}
+    document = {"manifest": VERSION, "prefabs": prefabs, "routeStyles": styles, "artwork": styles["artwork"]}
     encoded = (json.dumps(document, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
     BINDINGS.parent.mkdir(parents=True, exist_ok=True)
     update = "--update" in sys.argv[1:]
@@ -876,6 +1042,8 @@ def build():
                         "  assetBundleVariant: \n", encoding="ascii")
     sprite_outputs = []
     all_sprites = [entry["sprite"] for prefab in prefabs for entry in prefab["images"] if entry["sprite"]]
+    all_sprites.extend(sprite for row in styles["artwork"] for key, sprite in row.items()
+        if key != "dungeonId" and sprite is not None)
     all_sprites.extend(sprite for room in styles["rooms"] for key, sprite in room.items()
                        if key != "type" and sprite is not None)
     all_sprites.extend(styles["privateDisplay"][key] for key in ("background", "icon"))

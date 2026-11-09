@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成（旅行配置、主页面、详情、伙伴选择和本地事务已接通；选择已结识伙伴派遣，计时完成后领取一次奖励；召回遵循用户确认的离线规则：不发奖励，移除旅行，退还仍属于派遣日的次数并恢复原位置委托。
+状态：未完成（旅行配置、主页面、详情、伙伴选择和本地事务已接通；选择已结识伙伴派遣，计时完成后领取一次奖励；召回遵循用户确认的离线规则：不发奖励，移除旅行，退还仍属于派遣日的次数并恢复原位置委托。）
 
 入口沿用主城 `TravelNote` 页签中的官方 `NpcAdventureEntry`，羁绊第一节点为基础前置；实际开放还要求从已通关主线进度解析出有效官方旅行节点。联网战斗入口按离线范围关闭。
 
@@ -24,11 +24,13 @@
 
 ## 完整还原部分
 
-旅行配置从官方 `npc_adventure_travel`、`npc_adventure`、`NpcAdventureSettings` 和 `npc` 表导出到 `unity/Assets/StreamingAssets/Home/travel-catalog.json`，并包含 NPC 配置的 `FigureImage`、`Icon`、`FigureModelUI`、`FigureModelWithWeaponUI`、`IdleAnimName` 和 `RunAnimName`。官方主面板、详情、选择页及36张地图树载入 `unity/Assets/StreamingAssets/Home/Travel/ui.json`；运行时校验固定版本 `871_156598`。官方 `NpcAdventureTravelSelectNpcItem.InitContent` 优先用 `NpcInfo.FigureImage` 调用 `LoadSprite`；资源缺失时尝试同一 NPC 配置的 `Icon`。97个可派遣 NPC 中已取得并绑定87个 `FigureImage`、2个配置 `Icon`，8个头像缺项列在生成回执中。头像缺失不再禁用伙伴选择；缺图伙伴仍按旅行中及每日次数规则处理。18个条件图标按来源绑定并记录哈希，映射按 `NpcAdventureSettings.MapGroupDatas`、`ProfessionDatas`、`PreferenceDatas` 的官方顺序对应 `NpcAdventure_1..18`。
+旅行与羁绊数据现由 `scripts/prepare_unity_npc_travel_catalog.py` 直接读取 APK 优先解析的 `884_156692` `config_luban` 对象，使用同版本 Luban 构造器完整解码 `game_settings`、`npc_adventure`、`npc_adventure_travel`、`npc` 与 `reward_rule`，输出 880 个节点、1728 条委托及 148 名 NPC。每日挑战上限、每日刷新时间与旅行参数均来自当前选定的原配置。输入对象、path ID、APK／资源版本、表与构造器哈希和输出 SHA256 见 [旅行配置来源清单](../../assets/reference/partner-travel/travel-catalog-source-manifest.json)。
 
-主城入口复用原 `NpcAdventureEntry`。位置由 `HomeHudView.Travel.ResolveNpcTravelNodeFromMainline` 按用户确认规则推导：离线主线 `MapClassId` 匹配旅行节点 `MapGroupId`，且同区域 `Progress > 0`；有多个区域时按官方节点 `StageId` 取最高的已推进位置。地图位置按当前委托切换节点并显示奖励品质、概率和倒计时。详情显示官方文案、时长、基础奖励、额外奖励和职业／国度／偏好条件；伙伴选择遵循官方状态顺序，显示已结识且可派遣伙伴，旅行中或当日次数耗尽的伙伴保留在列表但不可选。快速选择沿官方贪心步骤选人。人数不足和条件未满足分别确认后派遣。每日刷新、手动刷新道具检查与确认、领取、召回和本地计时均已接线。
+原 `NpcAdventureTravelSelectNpcItem.InitContent` 优先用 `NpcInfo.FigureImage` 调用 `LoadSprite`；资源缺失时尝试同一 NPC 配置的 `Icon`。97个可派遣 NPC 中已取得并绑定87个 `FigureImage`、2个配置 `Icon`，8个头像缺项列在生成回执中。18个条件图标按来源绑定并记录哈希，映射按 `NpcAdventureSettings.MapGroupDatas`、`ProfessionDatas`、`PreferenceDatas` 的官方顺序对应 `NpcAdventure_1..18`。
 
-服务入口为 `unity/Assets/Game/Runtime/Offline/Progression/OfflineNpcTravelService.cs`，存档模型位于同目录 `OfflineNpcTravelProgress.cs`，目录和抽样位于 `OfficialNpcTravelCatalog.cs`。属性入口 `OfflineNpcTravelPropertyCalculator.Calculate` 汇总伙伴好感等级和天赋节点属性，并按官方旅行属性类型筛选；`HomeFeatureRuntime.NpcTravelNpcProperties` 按需加载。载荷生成脚本为 `scripts/prepare_unity_npc_travel_catalog.py` 和 `scripts/prepare_unity_npc_travel_ui.py`；后者导出官方 UI 索引中的旅行面板、地图树、动态头像及条件图标。
+主城入口复用原 `NpcAdventureEntry`。位置由 `HomeHudView.Travel.ResolveNpcTravelNodeFromMainline` 按用户确认规则推导：离线主线 `MapClassId` 匹配旅行节点 `MapGroupId`，且同区域 `Progress > 0`；有多个区域时按官方节点 `StageId` 取最高的已推进位置。地图位置按当前委托切换节点并显示奖励品质、概率和倒计时。详情显示官方文案、时长、基础奖励、额外奖励和职业／国度／偏好条件；伙伴选择遵循官方状态顺序，显示已结识且可派遣伙伴，旅行中或当日次数耗尽的伙伴保留在列表但不可选。快速选择沿官方贪心步骤选人。人数不足和条件未满足分别确认后派遣。每日刷新、手动刷新道具检查与确认、领取、召回和本地计时均已接线。当前这些界面树的输入仍是历史 `854_156383`；与 884 数据载荷的版本统一尚未完成，因此该流程仍处于未完成状态。
+
+服务入口为 `unity/Assets/Game/Runtime/Offline/Progression/OfflineNpcTravelService.cs`，存档模型位于同目录 `OfflineNpcTravelProgress.cs`，目录和抽样位于 `OfficialNpcTravelCatalog.cs`。属性入口 `OfflineNpcTravelPropertyCalculator.Calculate` 汇总伙伴好感等级和天赋节点属性，并按官方旅行属性类型筛选；`HomeFeatureRuntime.NpcTravelNpcProperties` 按需加载。`scripts/prepare_unity_npc_travel_catalog.py` 生成当前选定版本的数据目录；`scripts/prepare_unity_npc_travel_ui.py` 仍从历史 UI 树载荷导出旅行面板、地图树、动态头像及条件图标。
 
 ### 已迁移代码与局部资源
 
@@ -40,11 +42,13 @@ Unity 离线旅行 UI 载荷由 `scripts/prepare_unity_npc_travel_ui.py` 从固�
 
 候选按当前位置、地域和品质过滤，使用官方配置权重在本地抽样；用户已确认这作为服务端生成的离线近似。抽样种子与保底、委托结果放在同一档案事务内提交。首轮自动／手动刷新使用官方固定列表；多品质保底同时触发时低品质先行。稀有5、史诗30、传说100 的保底计数跨每日刷新保留，仅生成对应品质时重置。
 
-每日按固定版 `GameSettings.DailyResetTime`（08:00）对应的本地时间切日并刷新四位置，未领取旅行保留。同日主线推进到新地图区域时，空闲位置按新位置重抽，进行中的委托及其快照保留，当日派遣／伙伴计数不重置。每天最多启动4次，每名伙伴每日1次；旅行时长和伙伴人数读取品质配置。基础奖励、额外奖励种类和额外物品在派遣事务中按本地配置抽样并保存快照，进行中属性变化不重算。额外物品按官方 `RewardRule` Percent/Weight/Count 本地抽样；单条规则内重复物品 ID 按官方 `RewardRuleInfoParser.GetRewardDropInfosByRuleList` 合并（权重相加、数量取最大值），跨规则则累加。此抽样和客户端概率／倍率公式作为用户确认的离线近似，不声称复现不可见的服务端随机源。派遣、伙伴计数和奖励快照通过 `OfflineMainlineProgressSession.ApplyInventoryTransaction` 原子提交；时钟回拨不会提前完成旅行。
+每日以当前 `884_156692` `GameSettings.DailyResetTime`（08:00）对应的本地时间切日并刷新四位置，未领取旅行保留。同日主线推进到新地图区域时，空闲位置按新位置重抽，进行中的委托及其快照保留，当日派遣／伙伴计数不重置。每天最多启动4次，每名伙伴每日1次；旅行时长和伙伴人数读取品质配置。奇景品质概率为稀有70%、史诗26%、传说3.5%、奇迹0.5%；手动刷新品质保底为史诗5次、传说30次、奇迹100次。羁绊关卡通关后，委派基础数量、基础百分比和额外成功概率按官方 `PlayerNpcAdventureDataExt.GetNpcAdventureTravelNodeProps`，依 `MapGroupId → RegionId → NodeId` 累加已完成节点；派遣预览与派遣时读取同一累计值。基础奖励、额外奖励种类和额外物品在派遣事务中按本地配置抽样并保存快照，进行中属性变化不重算。额外物品按官方 `RewardRule` Percent/Weight/Count 本地抽样；单条规则内重复物品 ID 按官方 `RewardRuleInfoParser.GetRewardDropInfosByRuleList` 合并（权重相加、数量取最大值），跨规则则累加。此抽样和客户端概率／倍率公式作为用户确认的离线近似，不声称复现不可见的服务端随机源。派遣、伙伴计数和奖励快照通过 `OfflineMainlineProgressSession.ApplyInventoryTransaction` 原子提交；时钟回拨不会提前完成旅行。
 
 召回不发奖励并恢复原委托。派遣日未切换时退还每日派遣次数和所选伙伴的当日次数；跨日后只移除旧旅行，不扣新一天的计数。该差异由用户确认。
 
 ## 尚未实现
+
+- 主面板、地图树和旅行子窗口载荷仍来自 `854_156383`，与当前 `884_156692` 配置目录不一致；须迁移并验证所选版本的官方 UI／资源绑定后，才可将旅行流程标为完成。
 
 头像实现已按官方配置改为 `FigureImage` 优先、同 NPC 的 `Icon` 回退；头像资源缺失不再锁定选择。97 名候选中 87 名有 FigureImage、2 名有 Icon，11015–11022 的两条配置路径均无可用图像。回执 `unity/Assets/StreamingAssets/Home/Travel/source-manifest.json` 记录8人的缺失配置与模型路由。
 

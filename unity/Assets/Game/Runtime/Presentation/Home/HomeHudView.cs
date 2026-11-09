@@ -98,6 +98,7 @@ namespace Zjcs.Presentation.Home
 
         public bool AnyModalOpen => CharacterPageOpen || activeDialog != null || inventoryRoot != null || host.FeatureModalOpen || skillDamageTest != null
             || DungeonModalOpen
+            || npcAdventureSelectRoot != null || npcAdventureResultRoot != null
             || (functionsPanel != null && functionsPanel.activeSelf) || homeSkin != null && homeSkin.IsOpen;
 
         public void Build()
@@ -1396,6 +1397,8 @@ namespace Zjcs.Presentation.Home
 
         public void Dispose()
         {
+            dungeonUiBindingModule?.Dispose();
+            dungeonUiBindingModule = null;
             if (demonResult) demonResult.Release();
             host.EndAstrologicalCharge();
             ClearAstrologicalRows();

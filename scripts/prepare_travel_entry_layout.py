@@ -15,8 +15,8 @@ from official_apk import Apk, ROOT
 from official_unity_schema import ScriptSchemas
 from prepare_dungeon_ui_bindings import relative_transform_path
 
-BINDING = ROOT / "unity/Assets/StreamingAssets/Dungeons/UI/official-bindings.json"
-RECEIPT = ROOT / "assets/reference/dungeon-ui/prefab-binding-source-manifest.json"
+BINDING = ROOT / "unity/Assets/StreamingAssets/Dungeons/UI/884_156692/official-bindings.json"
+RECEIPT = ROOT / "assets/reference/dungeon-ui/884_156692/prefab-binding-source-manifest.json"
 
 
 def fingerprint(path):

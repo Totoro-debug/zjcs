@@ -10,12 +10,12 @@ import re
 import UnityPy
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "871_156598"
+VERSION = "884_156692"
 EXTRACTED = ROOT / ".tools/source-packages/extracted"
-ASSETS = ROOT / "unity/Assets/StreamingAssets/Dungeons/UI/Sprites"
+ASSETS = ROOT / "unity/Assets/StreamingAssets/Dungeons/UI" / VERSION / "Sprites"
 MANIFEST = ROOT / ".tools/source-packages/manifest-assets.json"
 BUNDLE_SOURCES = EXTRACTED / "bundle-sources.json"
-RECEIPT = ROOT / "assets/reference/dungeon-ui/sprite-source-manifest.json"
+RECEIPT = ROOT / "assets/reference/dungeon-ui" / VERSION / "sprite-source-manifest.json"
 MAP_CLASSES = (11, 12, 13, 14, 17, 19, 21, 23)
 BUNDLES = (
     "defaultpackage_assets_image_ui_arena.bundle",
@@ -45,6 +45,7 @@ def asset_meta(asset_guid: str) -> bytes:
 
 
 def ensure_folder_meta(path: Path) -> None:
+    path.mkdir(parents=True, exist_ok=True)
     relative = path.relative_to(ROOT / "unity/Assets").as_posix()
     meta = path.with_name(path.name + ".meta")
     folder_guid = hashlib.sha256(("zjcs-dungeon-ui-folder:" + relative).encode()).hexdigest()[:32]

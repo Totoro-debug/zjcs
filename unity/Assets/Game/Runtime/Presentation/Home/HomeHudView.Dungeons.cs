@@ -58,7 +58,7 @@ namespace Zjcs.Presentation.Home
         private void OpenTravelNotes()
         {
             if (travelNotesRoot != null) return;
-            GameObject prefab = Resources.Load<GameObject>("Travel/TravelNotesPanel");
+            GameObject prefab = Resources.Load<GameObject>("Travel/884_156692/TravelNotesPanel");
             if (prefab == null) throw new InvalidOperationException("Official TravelNotesPanel is missing.");
             travelNotesRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             travelNotesRoot.name = "TravelNotesPanel";

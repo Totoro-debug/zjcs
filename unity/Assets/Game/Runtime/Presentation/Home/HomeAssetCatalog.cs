@@ -200,7 +200,7 @@ namespace Zjcs.Presentation.Home
         public bool preserve_aspect;
         public bool component_flags;
         public bool enabled = true;
-        public bool raycast_target;
+        public bool raycast_target = true;
         public bool maskable = true;
         public bool fill_center = true;
         public int fill_method;
@@ -284,6 +284,7 @@ namespace Zjcs.Presentation.Home
         public float[] anchor_max;
         public float[] anchored_position;
         public float[] size_delta;
+        public float[] safe_area;
         public float[] pivot;
         public float[] scale;
         public float rotation;
@@ -302,7 +303,7 @@ namespace Zjcs.Presentation.Home
         public int[] size_fitter;
         public HomeUiLayoutElement layout_element;
         public HomeUiAspect aspect_fitter;
-        public float alpha;
+        public float alpha = 1f;
         public bool button;
         public HomeUiScroll scroll;
         public HomeUiAnimation[] animations;
@@ -372,6 +373,7 @@ namespace Zjcs.Presentation.Home
         public float[] anchor_max;
         public float[] anchored_position;
         public float[] size_delta;
+        public float[] safe_area;
         public float[] pivot;
         public float[] scale;
         public float rotation;
@@ -390,7 +392,7 @@ namespace Zjcs.Presentation.Home
         public int[] size_fitter;
         public HomeUiLayoutElement layout_element;
         public HomeUiAspect aspect_fitter;
-        public float alpha;
+        public float alpha = 1f;
         public bool button;
         public HomeUiScroll scroll;
         public HomeUiAnimation[] animations;
@@ -404,6 +406,7 @@ namespace Zjcs.Presentation.Home
             anchor_max = anchor_max,
             anchored_position = anchored_position,
             size_delta = size_delta,
+            safe_area = safe_area,
             pivot = pivot,
             scale = scale,
             rotation = rotation,
@@ -587,6 +590,7 @@ namespace Zjcs.Presentation.Home
 
         private static T Read<T>(string path) where T : class
         {
+            path = LocalFilePath(path);
             if (!File.Exists(path)) throw new FileNotFoundException("Home payload is missing.", path);
             return JsonUtility.FromJson<T>(File.ReadAllText(path));
         }
@@ -737,9 +741,9 @@ namespace Zjcs.Presentation.Home
         {
             if (string.IsNullOrEmpty(file)) return null;
             if (textures.TryGetValue(file, out Texture2D cached)) return cached;
-            string path = Path.Combine(Folder, "sprites", file);
+            string path = LocalFilePath(Path.Combine(Folder, "sprites", file));
             if (!File.Exists(path))
-                path = additionalSpriteFolders.Select(folder => Path.Combine(folder, file)).FirstOrDefault(File.Exists);
+                path = additionalSpriteFolders.Select(folder => LocalFilePath(Path.Combine(folder, file))).FirstOrDefault(File.Exists);
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return null;
             var texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
             if (!texture.LoadImage(File.ReadAllBytes(path)))
@@ -751,6 +755,15 @@ namespace Zjcs.Presentation.Home
             texture.wrapMode = TextureWrapMode.Clamp;
             textures[file] = texture;
             return texture;
+        }
+
+        internal static string LocalFilePath(string path)
+        {
+            if (Path.DirectorySeparatorChar != '\\' || path.StartsWith(@"\\?\", StringComparison.Ordinal))
+                return path;
+            string full = Path.GetFullPath(path);
+            return full.StartsWith(@"\\", StringComparison.Ordinal)
+                ? @"\\?\UNC\" + full.Substring(2) : @"\\?\" + full;
         }
 
         public TMP_FontAsset Font
