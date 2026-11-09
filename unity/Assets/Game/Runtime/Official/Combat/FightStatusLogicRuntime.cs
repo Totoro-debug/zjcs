@@ -329,16 +329,17 @@ namespace Zjcs.Combat.Official
 
         // User-confirmed offline semantics for the server-only FightHandleChangeStatusStack.
         // Keep the main status/blackboard distinct from the status currently being filtered.
-        private static bool ChangeStatusStacks(Dictionary<string, object> handle,
+        internal static bool ChangeStatusStacks(Dictionary<string, object> handle,
             FightBattleUnitState owner, FightBattleStatusState mainStatus,
             FightBattleUnitState actor, FightBattleUnitState target,
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
             IReadOnlyList<FightBattleUnitState> units, FightOfficialCombatCatalog catalog,
-            FightRandomStream random)
+            FightRandomStream random, long? suppliedValue = null,
+            Func<int, int, FightBattleStatusState> createFromSkill = null)
         {
             // PetEntity and graph-local entity ports are not bound by the supported events.
             if (KeyId(handle, "TargetEntityKey") != 1 || owner == null) return false;
-            long value = Blackboard(mainStatus, KeyId(handle, "ChangeValueKey"));
+            long value = suppliedValue ?? Blackboard(mainStatus, KeyId(handle, "ChangeValueKey"));
             if (value < int.MinValue || value > int.MaxValue) return false;
             long change = value * Int(handle, "Multiplier", 1);
             if (change < int.MinValue || change > int.MaxValue) return false;
@@ -355,14 +356,17 @@ namespace Zjcs.Combat.Official
                         if (existing != null && existing.InstanceId >= instanceId)
                             instanceId = checked(existing.InstanceId + 1);
                 bool noSource = Bool(handle, "UseDefaultSourceInfoOnCreate");
+                if (!noSource && mainStatus == null && createFromSkill == null) return false;
                 FightBattleStatusState created = noSource
                     ? catalog.CreateStatus(Int(handle, "CreateStatusClassId"), owner.Id, 0, instanceId)
+                    : createFromSkill != null
+                    ? createFromSkill(Int(handle, "CreateStatusClassId"), instanceId)
                     : catalog.CreateStatus(Int(handle, "CreateStatusClassId"), owner.Id, mainStatus.CreatorId,
                         instanceId, mainStatus.RootSkillId, mainStatus.ApplyingSkillItemId,
                         mainStatus.SourceSkillRank, mainStatus.SourceSkillLevel, mainStatus.SourceSubRank,
                         mainStatus.SourceProperties, 0, mainStatus.ReplacementProperties,
                         mainStatus.BlessPropertyScales);
-                if (!noSource)
+                if (!noSource && createFromSkill == null)
                 {
                     created.Origin = FightBattleStatusOrigin.Resolve(mainStatus).Copy();
                     created.ReportSource = FightBattleStatusReportSource.Resolve(mainStatus).Copy();

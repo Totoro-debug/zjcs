@@ -1,0 +1,69 @@
+"""Verify skill-graph configurations and record the confirmed transient stack inputs."""
+import json
+from pathlib import Path
+
+from prepare_battle_skill_combo_sources import ROOT, identity
+from verify_battle_skill_graph_rules import verify_selected_components
+
+
+def main():
+    selected = json.loads((ROOT / 'official-source.json').read_text(encoding='utf-8-sig'))
+    version = selected['active']
+    assert version == '884_156692', 'Review a changed official source version.'
+    current = ROOT / '.tools/source-packages/current' / version
+    receipt = current / 'code-manifest.json'
+    code = json.loads(receipt.read_text(encoding='utf-8-sig'))
+    assert code['manifest'] == version
+    assert code['apk_sha256'] == selected['profiles'][version]['apk']['sha256']
+    assemblies = []
+    for name in ('Assembly-CSharp.dll', 'Console.dll'):
+        record = identity(current / 'official-code/managed/decoded' / name)
+        assert record['sha256'] == code['assemblies'][name]['decoded_sha256']
+        assemblies.append(record)
+    source_names = ['client-source/MyFightSkillLogic.cs'] + [
+        'common-source/Common/' + name + '.cs' for name in (
+            'FightSkillLogicComponent', 'FightSkillLogicComponentInfo', 'EFightBlackBoardKeyValue',
+            'FightHandleCfgNewIntInBB', 'FightHandleCfgNewInBB', 'FightHandleNewIntInBB',
+            'FightHandleCfgChangeStatusStack', 'FightHandleChangeStatusStack',
+            'EntityHasAnyStatusByEntityKeyFilter', 'IteratingAgentStatusClassIdFilter')]
+    paths = [ROOT / 'unity/Assets/Official/Combat' / name
+             for name in ('skill-rules.json', 'battle-rules.json')]
+    entities = {}
+    for path in paths:
+        for key, value in json.loads(path.read_text(encoding='utf-8-sig'))['entities'].items():
+            entities.setdefault(key, {}).update(value)
+    definitions = {key: entities[key] for key in ('13830', '13840', '24031', '24266', '24697')}
+    item_path = ROOT / 'unity/Assets/Official/Combat/rules.json'
+    skill_items = [row for row in json.loads(item_path.read_text(encoding='utf-8-sig'))['skill']
+                   if row['EcEntityId'] in (13830, 13840)]
+    assert [(row['ClassId'], row['EcEntityId']) for row in skill_items] == [
+        (10197, 13830), (10198, 13840)]
+    logic_definitions = {key: value for key, value in entities.items()
+                         if 'FightSkillLogicComponent' in value}
+    assert len(logic_definitions) == 15, 'Review the complete skill-logic configuration scope.'
+    selected_configuration = verify_selected_components(
+        {**logic_definitions, **definitions}, skill_items)
+    for key in ('13830', '13840'):
+        graph = definitions[key]['FightSkillLogicComponent']
+        assert not any(graph[name] for name in ('OnDoHit', 'OnSkillStart', 'OnHitFinish'))
+        assert [handle['_type'] for handle in graph['OnDoHitTransient']['HandleCfgs']] == [
+            'FightHandleCfgNewIntInBB', 'FightHandleCfgChangeStatusStack']
+    output = ROOT / 'assets/reference/battle-rules/skill-logic-stack-source-manifest.json'
+    proof = dict(manifest=version, code_receipt=identity(receipt), assemblies=assemblies,
+        official_sources=[identity(current / 'official-code' / name) for name in source_names],
+        configuration_inputs=[identity(path) for path in paths + [item_path]],
+        definitions=definitions, skill_items=skill_items, selected_configuration=selected_configuration,
+        configuration_only_skill_logic_ids=sorted(
+            (int(key) for key in logic_definitions if key not in ('13830', '13840'))),
+        generator=identity(Path(__file__)),
+        operation='Verify complete components for all 15 skill-logic entities against the selected version. '
+            'Preserve the original two transient stack graphs and status configuration. '
+            'The APK exposes empty client/handler classes; execution uses the confirmed per-target, pre-HP, '
+            'miss/immune/shield and child-status rules. Existing stack lifecycle is shared; '
+            'other skill graphs remain outside this implementation.')
+    output.write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    print('Verified all 15 original skill-logic configurations; recorded confirmed 13830/13840 stack inputs.')
+
+
+if __name__ == '__main__':
+    main()

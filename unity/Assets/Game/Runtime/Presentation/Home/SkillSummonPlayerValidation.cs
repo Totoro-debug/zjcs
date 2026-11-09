@@ -118,10 +118,12 @@ namespace Zjcs.Presentation.Home
             OfficialBattleEmbeddedMonsterValidation embeddedProbe = null;
             bool checkAbsorption = Environment.GetEnvironmentVariable("ZJCS_STATUS_ABSORPTION_ACCEPTANCE") == "1";
             OfficialBattleStatusAbsorptionValidation absorptionProbe = null;
+            bool checkStacks = Environment.GetEnvironmentVariable("ZJCS_SKILL_STACK_ACCEPTANCE") == "1";
+            OfficialBattleSkillStackValidation stackProbe = null;
             bool checkCombo = Environment.GetEnvironmentVariable("ZJCS_PLAYER_COMBO_ACCEPTANCE") == "1";
             bool checkClones = Environment.GetEnvironmentVariable("ZJCS_PLAYER_CLONE_ACCEPTANCE") == "1";
             OfficialBattlePlayerCloneValidation cloneProbe = null;
-            if (sourceActor != 0 || checkAbsorption || checkCombo || checkClones)
+            if (sourceActor != 0 || checkAbsorption || checkCombo || checkClones || checkStacks)
             {
                 var weekly = OfflineWeeklyChallengeBattleCatalog.LoadDefault();
                 Require(weekly.TryGetBattle(4800, out var stage, out var roster, out var scene), "Original weekly fixture is unavailable.");
@@ -130,6 +132,7 @@ namespace Zjcs.Presentation.Home
                     World = home.Profile.Save.World, Progression = home.DailyDungeonProgression, RandomSeed = 43 });
                 Require(sourceActor == 0 || !checkAbsorption, "Select one original source diagnostic.");
                 if (checkCombo || checkClones) cloneProbe = OfficialBattlePlayerCloneValidation.Configure(checkpoint);
+                else if (checkStacks) stackProbe = OfficialBattleSkillStackValidation.Configure(checkpoint);
                 else if (checkAbsorption) absorptionProbe = OfficialBattleStatusAbsorptionValidation.Configure(checkpoint);
                 else embeddedProbe = OfficialBattleEmbeddedMonsterValidation.Configure(checkpoint, sourceActor);
                 File.WriteAllText(Path.Combine(output,"source-actor-initial.json"),FightBattleCheckpointSerializer.Save(checkpoint));
@@ -139,18 +142,20 @@ namespace Zjcs.Presentation.Home
             var runner=home.StartWeeklyChallengeBattle(4800,cp=>settled=cp);
             var controller=runner.Controller;
             absorptionProbe?.BindPresentation(controller);
+            stackProbe?.BindPresentation(controller);
             bool checkDeath = Environment.GetEnvironmentVariable("ZJCS_PLAYER_DEATH_ACCEPTANCE") == "1";
             bool checkEmbedded = sourceActor != 0 || Environment.GetEnvironmentVariable("ZJCS_EMBEDDED_MONSTER_ACCEPTANCE") == "1";
             Require((checkClones ? 1 : 0) + (checkDeath ? 1 : 0) + (checkEmbedded ? 1 : 0)
-                + (checkAbsorption ? 1 : 0) <= 1,
+                + (checkAbsorption ? 1 : 0) + (checkStacks ? 1 : 0) <= 1,
                 "Select one isolated player diagnostic per battle.");
             cloneProbe ??= checkClones ? OfficialBattlePlayerCloneValidation.Configure(controller.Checkpoint) : null;
             var deathProbe = checkDeath ? OfficialBattlePlayerDeathValidation.Configure(controller.Checkpoint) : null;
             embeddedProbe ??= checkEmbedded ? OfficialBattleEmbeddedMonsterValidation.Configure(controller.Checkpoint) : null;
-            var probe = checkClones || checkDeath || checkEmbedded || checkAbsorption ? null : OfficialSummonLifecycleValidation.Configure(controller.Checkpoint);
+            var probe = checkClones || checkDeath || checkEmbedded || checkAbsorption || checkStacks ? null : OfficialSummonLifecycleValidation.Configure(controller.Checkpoint);
             controller.StepCompleted+=step=> {
                 probe?.ObserveStep(controller); cloneProbe?.ObserveStep(controller); embeddedProbe?.ObserveStep(controller);
                 absorptionProbe?.ObserveStep(controller);
+                stackProbe?.ObserveStep(controller);
                 if (sourceActor != 0) File.WriteAllText(Path.Combine(output,"source-actor-last-step.json"),FightBattleCheckpointSerializer.Save(controller.Checkpoint));
             };
             Button start=null;
@@ -190,6 +195,9 @@ namespace Zjcs.Presentation.Home
                 deathProbe?.ObserveFrame(controller);
                 embeddedProbe?.ObserveFrame(controller);
                 absorptionProbe?.ObserveFrame(controller);
+                stackProbe?.ObserveFrame(controller);
+                if (stackProbe?.CaptureName != null)
+                { yield return new WaitForEndOfFrame(); Capture(stackProbe.CaptureName); captured = true; }
                 if (absorptionProbe?.CaptureName != null)
                 { yield return new WaitForEndOfFrame(); Capture(absorptionProbe.CaptureName); captured = true; }
                 if (cloneProbe?.CaptureName != null)
@@ -210,6 +218,7 @@ namespace Zjcs.Presentation.Home
             deathProbe?.Verify(settled);
             embeddedProbe?.Verify(settled);
             absorptionProbe?.Verify(settled);
+            stackProbe?.Verify(settled);
             yield return new WaitForSecondsRealtime(.4f);
             Require(!FindObjectOfType<DemonResultWindow>(),"Native weekly result remained after simulated leave.");
             yield return new WaitForEndOfFrame();Capture("summon-return");

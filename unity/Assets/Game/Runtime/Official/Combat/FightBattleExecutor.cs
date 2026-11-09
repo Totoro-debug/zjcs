@@ -822,6 +822,7 @@ namespace Zjcs.Combat.Official
             }
 
             FightDamageFalloff.BeginCast(skill, ref checkpoint.FalloffSerial);
+            var skillLogic = FightSkillLogicRuntime.Create(actor, skill, units, statusCatalog, random);
             IReadOnlyList<FightBattleHitDefinition> hits = FightBattleHitCollector.CollectAll(skill);
             var randomTargetGroups = new Dictionary<int, RandomTargetGroupState>();
             var damageHitTargets = new HashSet<int>();
@@ -986,7 +987,9 @@ namespace Zjcs.Combat.Official
                             resolved = hitExecutor.Apply(random, damageId, actor, target,
                                 skill, hit, checkpoint.StageType, checkpoint.IsPvp, elementConfrontation,
                                 new List<int>(), allowDeadSource, skillDamageScale
-                                    * (hit.UseDamageFactor ? externalDamageFactor : 1.0), conditionalHitProperties);
+                                    * (hit.UseDamageFactor ? externalDamageFactor : 1.0), conditionalHitProperties,
+                                skillLogic == null ? (Action<FightDamageTypeData>)null
+                                    : type => skillLogic.OnDoHitTransient(target, hit, type));
                         }
                         finally
                         {

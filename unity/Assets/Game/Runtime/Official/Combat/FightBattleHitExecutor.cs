@@ -35,7 +35,8 @@ namespace Zjcs.Combat.Official
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
             int stageType, bool isPvp, double elementConfrontation = 0.0,
             List<int> processedFalloffStatuses = null, bool allowDeadSource = false,
-            double skillDamageScale = 1.0, FightConditionalHitProperties conditionalProperties = null)
+            double skillDamageScale = 1.0, FightConditionalHitProperties conditionalProperties = null,
+            Action<FightDamageTypeData> onTransient = null)
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
             if (target == null) throw new ArgumentNullException(nameof(target));
@@ -74,12 +75,14 @@ namespace Zjcs.Combat.Official
                     result.Cure.Cure = (long)(result.Cure.Cure * scale);
                     result.Cure.AbsoluteCure = (long)(result.Cure.AbsoluteCure * scale);
                 }
+                onTransient?.Invoke(result.Type);
                 result.Settlement = settlement.Apply(damageId, sourceEntity, targetEntity,
                     result.Cure.Cure);
             }
             else if (hit.DamageType == 0)
             {
                 result.Formula = new FightDamageFormulaResult();
+                onTransient?.Invoke(result.Type);
                 result.Settlement = settlement.Apply(damageId, sourceEntity, targetEntity, 0);
             }
             else if (hit.DamageType == 8)
@@ -104,6 +107,7 @@ namespace Zjcs.Combat.Official
                 FightBattleHitComponentRuntime.ApplyDamageReduceAbsolute(target, skill,
                     ref direct, ref absoluteDirect, random);
                 if (damageTest != null) direct = damageTest.Damage(stageType, actor, target, direct);
+                onTransient?.Invoke(result.Type);
                 long absorbed = FightBattleShieldRuntime.AbsorbDamage(random, target, hit,
                     direct, out result.ShieldDamage, result.TriggeredStatusSkills, skill,
                     result.TriggeredStatusSkillInvocations);
@@ -182,6 +186,7 @@ namespace Zjcs.Combat.Official
                     ref damage, ref absoluteDamage, random);
                 result.Formula.AbsoluteDamage = absoluteDamage;
                 if (damageTest != null) damage = damageTest.Damage(stageType, actor, target, damage);
+                onTransient?.Invoke(result.Type);
                 damage = FightBattleShieldRuntime.AbsorbDamage(random, target, hit, damage,
                     out result.ShieldDamage, result.TriggeredStatusSkills, skill,
                     result.TriggeredStatusSkillInvocations);
