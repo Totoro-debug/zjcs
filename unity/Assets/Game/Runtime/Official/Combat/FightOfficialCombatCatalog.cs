@@ -602,6 +602,7 @@ namespace Zjcs.Combat.Official
             Dictionary<string, object> battleSettings = Object(Required(gameSettings, "Battle"), "Battle settings");
             SpeedSettings = ReadSpeedSettings(battleSettings);
             ReadStatusMutexGroups(battleSettings);
+            ReadSharedStackLimits(battleSettings);
             var config = new FightDamageFormulaConfig
             {
                 FixedDamageLimitPercent = Int(battleSettings, "FixedDmgLimitPercent"),
@@ -1690,6 +1691,7 @@ namespace Zjcs.Combat.Official
                 result.Rate = Number(falloff, "Rate", 1.0);
                 result.Scope = Int(falloff, "Scope");
             }
+            BindSharedStackDefinition(result, components);
             result.Components = ParseStatusComponents(components);
             return result;
         }

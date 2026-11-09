@@ -290,7 +290,7 @@ namespace Zjcs.Combat.Official
                 FightBattleStatusState target = owner?.Statuses?.Find(value => value != null
                     && value.ClassId == entry.StatusId);
                 if (target == null) continue;
-                FightStatusLifecycle.AddStack(target, entry.ChangeValue);
+                FightStatusLifecycle.AddStack(owner, target, entry.ChangeValue);
             }
             component.TriggeredCount++;
         }

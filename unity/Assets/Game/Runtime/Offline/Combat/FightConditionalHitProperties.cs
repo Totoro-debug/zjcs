@@ -62,7 +62,7 @@ namespace Zjcs.Combat.Official
                 {
                     int consumed=Math.Min(stacks.StackCount,Math.Max(0,c.ConsumeStackCount));
                     if(c.ConsumeScaleByStatusTypeCount) scale*=consumed;
-                    FightStatusLifecycle.AddStack(stacks,-consumed);
+                    FightStatusLifecycle.AddStack(actor,stacks,-consumed);
                     if(stacks.StackCount==0) FightStatusLifecycle.End(actor,stacks);
                 }
                 foreach(var property in status.StatusProperties ?? status.ResolvedProperties ?? new List<FightPropertyValue>())

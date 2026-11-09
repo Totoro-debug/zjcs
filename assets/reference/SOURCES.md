@@ -728,3 +728,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 技能内嵌 Mecanim 来源：`scripts/prepare_battle_embedded_mecanim_sources.py` 按所选 884_156692 的 APK 优先来源提取 57780 原 prefab 内的 3205 骨骼、控制器、外观加载器和 Low 图集；`scripts/prepare_battle_embedded_mecanim_assets.py` 复用已校验的原生 prefab／Animator 转换，生成完整骨骼载荷及 Windows 原生贴图，并逐项校验现有转换输入哈希。输入来源、CAB／path ID、原对象及输出 SHA-256、公共外观服务历史来源与原技能链接凭据记于 `battle-animation/embedded-mecanim-source-manifest.json`；本来源记录不代表战斗触发或运行验收，新增载荷尚未进入素材快照。
 
 状态序列倍率回归输入见 [status-sequence-multiplier.json](battle-rules/status-sequence-multiplier.json)：由上述 884 实体配置对照中 24679／24680 的原 `FightStatusLogicComponent` 无损投影，保留原分片、APK／bundle／对象与二进制摘要；另记录原 `FightHandleCfgBBPickFloatByIndex`／`FightHandleCfgTriggerSkills` 描述及字段源码的 SHA-256。未写入运行时配置或新增美术载荷。
+
+共享层数的七份所选 884 状态配置、APK 片段路径／原始哈希、共享上限 24029=10／25300=5 和四份官方实现输入见 [shared-stack-source-manifest.json](battle-rules/shared-stack-source-manifest.json)，由 `scripts/prepare_battle_shared_stack_runtime.py` 对现有实体配置与已核验原始片段的规范化摘要逐一比对后生成；本地生命周期适配与确认的首次分配规则由战斗执行所属页维护。

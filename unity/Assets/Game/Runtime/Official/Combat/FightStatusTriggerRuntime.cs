@@ -344,7 +344,7 @@ namespace Zjcs.Combat.Official
                     && existing.StackCount != desired)
                 {
                     int previous = existing.StackCount;
-                    existing.StackCount = desired;
+                    existing.StackCount = previous + FightStatusSharedStacks.Constrain(owner, existing, desired - previous);
                     FightStatusPropertyRuntime.OnStackChanged(existing, previous);
                     sourceStatus.RoleSummonCountLastCount = desired;
                     continue;
@@ -1371,7 +1371,7 @@ namespace Zjcs.Combat.Official
                         if (status.HpLessThanChangeStackUnit < 0)
                             ConsumeStacks(owner, status, (int)Math.Min(int.MaxValue,
                                 -(long)status.HpLessThanChangeStackUnit), catalog, random);
-                        else FightStatusLifecycle.AddStack(status, status.HpLessThanChangeStackUnit);
+                        else FightStatusLifecycle.AddStack(owner, status, status.HpLessThanChangeStackUnit);
                     }
                     // Execute the immediate invocation before testing the resulting HP. The
                     // running marker prevents its own cure callback from recursively entering

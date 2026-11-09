@@ -751,6 +751,8 @@ namespace Zjcs.Combat.Official
         public FightBattleStatusDamageProcessInfo DamageProcess;
         public bool FollowRoundUpdateTimingOnGlobalRound;
         public bool IsFixedProp;
+        public int SharedStackId;
+        public int SharedStackLimit;
         public int StackCount = 1;
         public int AddStackedCount = 1;
         public int AddStackedRandomMinCount = 1;

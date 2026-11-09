@@ -403,7 +403,7 @@ namespace Zjcs.Combat.Official
                     if (!removalSnapshot.TryGetValue(candidate, out int layers)) continue;
                     appliedDelta = -(int)Math.Min(-(long)delta, Math.Max(0, layers));
                 }
-                int changed = FightStatusLifecycle.AddStack(candidate, appliedDelta);
+                int changed = FightStatusLifecycle.AddStack(owner, candidate, appliedDelta);
                 if (changed < 0 && candidate.StackCount == 0) FightStatusLifecycle.End(owner, candidate);
                 if (changed < 0 && Bool(handle, "InvokeConsumeEvent"))
                     FightStatusTriggerRuntime.NotifyStackConsumed(owner, candidate.ClassId,

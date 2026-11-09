@@ -126,10 +126,19 @@ namespace Zjcs.Combat.Official
         public static int AddStack(FightBattleStatusState status, int delta)
         {
             if (status == null || !status.IsOpenStack || delta == 0) return 0;
+            if (status.SharedStackId > 0)
+                throw new InvalidOperationException("Shared stack changes require their owner.");
+            return AddStack(null, status, delta);
+        }
+
+        public static int AddStack(FightBattleUnitState owner, FightBattleStatusState status, int delta)
+        {
+            if (status == null || !status.IsOpenStack || delta == 0) return 0;
             int previous = status.StackCount;
             long next = previous + (long)delta;
             if (status.MaxStackedCount > 0) next = Math.Min(next, status.MaxStackedCount);
             if (next < 0) next = 0;
+            next = previous + FightStatusSharedStacks.Constrain(owner, status, (int)next - previous);
             status.StackCount = (int)next;
             FightStatusPropertyRuntime.OnStackChanged(status, previous);
             return status.StackCount - previous;
@@ -225,6 +234,8 @@ namespace Zjcs.Combat.Official
                 DamageProcess = template.DamageProcess == null ? null : template.DamageProcess.Copy(),
                 FollowRoundUpdateTimingOnGlobalRound = template.FollowRoundUpdateTimingOnGlobalRound,
                 IsFixedProp = template.IsFixedProp,
+                SharedStackId = template.SharedStackId,
+                SharedStackLimit = template.SharedStackLimit,
                 StackCount = template.StackCount,
                 AddStackedCount = template.AddStackedCount,
                 AddStackedRandomMinCount = template.AddStackedRandomMinCount,
@@ -560,6 +571,7 @@ namespace Zjcs.Combat.Official
                 Rate = template.Rate,
                 Scope = template.Scope
             };
+            if (!FightStatusSharedStacks.Allocate(unit, applied)) return null;
             unit.Statuses.Add(applied);
             if (round >= 0) InitializeRoundStartDelay(unit, applied);
             if (applied.HasBackToLifeComponent)
@@ -582,7 +594,10 @@ namespace Zjcs.Combat.Official
         {
             var origin = FightBattleStatusOrigin.Resolve(template);
             var existing = FindMatchingStatus(unit, template, origin);
-            if (existing == null) unit.Statuses.Add(template);
+            if (existing == null)
+            {
+                if (FightStatusSharedStacks.Allocate(unit, template)) unit.Statuses.Add(template);
+            }
             else if (existing.StartRound >= 0) Apply(unit, template, -1, template.InstanceId);
             else RefreshExisting(unit, existing, template, origin, -1);
         }
@@ -611,7 +626,7 @@ namespace Zjcs.Combat.Official
                     throw new InvalidOperationException("Refreshing this status requires its actual round clock.");
             }
             RefreshSource(existing, template, origin);
-            if (existing.IsOpenStack) AddStack(existing, template.StackCount > 0 ? template.StackCount : 1);
+            if (existing.IsOpenStack) AddStack(unit, existing, template.StackCount > 0 ? template.StackCount : 1);
             if (existing.IsAddDurationRound) ExtendDurationOnStack(existing, refreshRound);
             else ResetDurationOnStack(existing, refreshRound);
             existing.DurationPreparedBeforeStart = refreshRound < 0;

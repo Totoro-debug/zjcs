@@ -20,7 +20,7 @@ namespace Zjcs.Combat.Official
                         || target.CreatorId != source.CreatorId || target.RootSkillId != source.RootSkillId
                         || !FightBattleStatusOrigin.Matches(FightBattleStatusOrigin.Resolve(target),
                             FightBattleStatusOrigin.Resolve(source))) continue;
-                    FightStatusLifecycle.AddStack(target, rule.ChangeValue);
+                    FightStatusLifecycle.AddStack(owner, target, rule.ChangeValue);
                     if (target.StackCount == 0) FightStatusLifecycle.End(owner, target);
                 }
             }
