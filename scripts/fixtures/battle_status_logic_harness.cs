@@ -196,13 +196,13 @@ public static class BattleStatusLogicHarness
             owner, target, skill, FightBattleHitCollector.CollectAll(skill)[0], new[] { owner, target }, catalog, new FightRandomStream(31));
         Check(energy.StackCount == 100 && ended == 2 && !target.Statuses.Contains(a)
             && !target.Statuses.Contains(b) && owner.Statuses.Contains(own)
-            && main.LogicBlackboard.Single(v => v.KeyId == 619624960).LongValue == 7
+            && !main.LogicBlackboard.Any(v => v.KeyId == 619624960)
             && observer.ConsumeStackCountProgress == 0 && main.LogicRulesSupported,
             "Original 24774 failed target-only snapshot absorption, x10 capped gain or emitted consumption.");
         FightStatusLogicRuntime.Apply(owner, main, FightStatusLogicEvent.DoDamage,
             owner, target, skill, FightBattleHitCollector.CollectAll(skill)[0], new[] { owner, target }, catalog, new FightRandomStream(31));
         Check(energy.StackCount == 100
-            && main.LogicBlackboard.Single(v => v.KeyId == 619624960).LongValue == 0,
+            && !main.LogicBlackboard.Any(v => v.KeyId == 619624960),
             "No-match absorption reused a stale output count.");
 
         target.Statuses.Add(catalog.CreateStatus(24750, 2, 1, 85));
@@ -216,13 +216,13 @@ public static class BattleStatusLogicHarness
         string originalGraph = main.LogicDefinitionJson;
         const string absorb = "{\"_type\":\"FightHandleCfgAbsorbStatusStack\","
             + "\"TargetEntityKey\":{\"Id\":1022},\"FilterCondition\":FILTER,"
-            + "\"RemoveStatus\":false,\"OutputCountKey\":{\"Id\":7001}}";
+            + "\"RemoveStatus\":false,\"OutputCountKey\":{\"Id\":7001,\"IsPersistentBlackboard\":true}}";
         RunAbsorbFlow(main, owner, target, catalog, skill, absorb.Replace("FILTER", StatusFilter(24750)));
         Check(target.Statuses.Any(v => v.ClassId == 24750)
             && main.LogicBlackboard.Single(v => v.KeyId == 7001).LongValue == 1,
             "RemoveStatus=false removed a status or failed to count its layers.");
         string failedTail = ",{\"_type\":\"FightHandleCfgCounterAdd\","
-            + "\"CounterBBKey\":{\"Id\":7002},\"DeltaValue\":1}";
+            + "\"CounterBBKey\":{\"Id\":7002,\"IsPersistentBlackboard\":true},\"DeltaValue\":1}";
         RunAbsorbFlow(main, owner, target, catalog, skill, absorb.Replace("false", "true")
             .Replace("FILTER", "{\"_type\":\"LogicFilter\",\"LogicType\":1,\"SubFilters\":["
                 + StatusFilter(24750) + ",{\"_type\":\"UnknownServerFilter\"}]}") + failedTail);
@@ -344,7 +344,7 @@ public static class BattleStatusLogicHarness
     {
         RunFlow(main, owner, catalog, "null", "{\"_type\":\"FightHandleCfgChangeStatusStack\","
             + "\"TargetEntityKey\":{\"Id\":" + port + "},\"FilterCondition\":" + filter
-            + ",\"ChangeValueKey\":{\"Id\":9002},\"CreateStatusClassId\":" + create
+            + ",\"ChangeValueKey\":{\"Id\":9002,\"IsPersistentBlackboard\":true},\"CreateStatusClassId\":" + create
             + ",\"Multiplier\":" + multiplier + ",\"InvokeConsumeEvent\":"
             + (consume ? "true" : "false") + ",\"UseDefaultSourceInfoOnCreate\":"
             + (noSource ? "true" : "false") + "}" + tail);
@@ -404,11 +404,11 @@ public static class BattleStatusLogicHarness
         var owner = Unit(1, 1);
         var status = catalog.CreateStatus(24669, 1, 1, 77, 0, 0, 1, 1, 1);
         const string counter = "{\"_type\":\"FightHandleCfgCounterAdd\","
-            + "\"CounterBBKey\":{\"Id\":9001},\"DeltaValue\":1}";
+            + "\"CounterBBKey\":{\"Id\":9001,\"IsPersistentBlackboard\":true},\"DeltaValue\":1}";
         string[] rejectedFilters = {
             "{\"_type\":\"LogicNotFilter\",\"TargetFilter\":{\"_type\":\"UnknownServerFilter\"}}",
             "{\"_type\":\"LogicFilter\",\"LogicType\":1,\"SubFilters\":["
-                + "{\"_type\":\"CounterEqualFilter\",\"CounterBBKey\":{\"Id\":9001},\"Value\":0},"
+                + "{\"_type\":\"CounterEqualFilter\",\"CounterBBKey\":{\"Id\":9001,\"IsPersistentBlackboard\":true},\"Value\":0},"
                 + "{\"_type\":\"UnknownServerFilter\"}]}",
             "{\"_type\":\"LogicNotFilter\"}",
             "{\"_type\":\"LogicFilter\",\"LogicType\":7,\"SubFilters\":[]}",
@@ -426,11 +426,11 @@ public static class BattleStatusLogicHarness
         status.LogicBlackboard.Add(new FightBattleLogicBlackboardValue { KeyId = 9002, LongValue = 3 });
         RunFlow(status, owner, catalog,
             "{\"_type\":\"LogicNotFilter\",\"TargetFilter\":{\"_type\":\"BBIntEqualFilter\","
-            + "\"LhsBBKey\":{\"Id\":9002},\"Value\":3}}", counter);
+            + "\"LhsBBKey\":{\"Id\":9002,\"IsPersistentBlackboard\":true},\"Value\":3}}", counter);
         Check(!status.LogicBlackboard.Any(value => value.KeyId == 9001)
             && status.LogicRulesSupported, "Known NOT condition did not use its official operand.");
         RunFlow(status, owner, catalog,
-            "{\"_type\":\"BBIntEqualFilter\",\"LhsBBKey\":{\"Id\":9002},\"Value\":3}", counter);
+            "{\"_type\":\"BBIntEqualFilter\",\"LhsBBKey\":{\"Id\":9002,\"IsPersistentBlackboard\":true},\"Value\":3}", counter);
         Check(status.LogicBlackboard.Single(value => value.KeyId == 9001).LongValue == 1,
             "Official BBInt compare did not read LhsBBKey.");
         RunFlow(status, owner, catalog, "null",

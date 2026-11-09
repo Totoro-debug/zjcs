@@ -38,6 +38,9 @@ namespace Zjcs.Combat.Official
             if (component == null || !(component.TryGetValue("Triggers", out object rawTriggers)
                 && rawTriggers is List<object> triggers)) return result;
 
+            RemoveLegacyRuntimeValues(status, triggers);
+            // User-confirmed offline rule: one Runtime board per event, shared by its flows.
+            var runtime = new Dictionary<int, FightBattleLogicBlackboardValue>();
             foreach (object raw in triggers)
             {
                 if (!(raw is Dictionary<string, object> trigger)) continue;
@@ -47,7 +50,7 @@ namespace Zjcs.Combat.Official
                 if (flow == null) continue;
                 bool supported;
                 bool matched = MatchesFilter(Object(flow, "FilterCondition"), owner, status, actor, target,
-                    skill, hit, units, random, out supported);
+                    skill, hit, units, random, out supported, runtime: runtime);
                 if (!supported || !matched)
                 {
                     if (!supported) status.LogicRulesSupported = false;
@@ -59,7 +62,7 @@ namespace Zjcs.Combat.Official
                 {
                     if (!(rawHandle is Dictionary<string, object> handle)) continue;
                     if (!ApplyHandle(handle, owner, status, actor, target, skill, hit, units,
-                        catalog, random, result))
+                        catalog, random, result, runtime))
                     {
                         status.LogicRulesSupported = false;
                         // A later handle may depend on the missing handle's blackboard outputs.
@@ -94,7 +97,8 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState actor, FightBattleUnitState target,
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
             IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
-            out bool supported, StatusIteration iteration = null)
+            out bool supported, StatusIteration iteration = null,
+            Dictionary<int, FightBattleLogicBlackboardValue> runtime = null)
         {
             supported = true;
             if (filter == null) return true;
@@ -114,7 +118,7 @@ namespace Zjcs.Combat.Official
                         continue;
                     }
                     bool child = MatchesFilter(childFilter, owner, status, actor,
-                        target, skill, hit, units, random, out childSupported, iteration);
+                        target, skill, hit, units, random, out childSupported, iteration, runtime);
                     supported &= childSupported;
                     value = logicType == 1 ? value || child : value && child;
                 }
@@ -127,7 +131,7 @@ namespace Zjcs.Combat.Official
                 if (nested == null) { supported = false; return false; }
                 bool childSupported;
                 bool child = MatchesFilter(nested, owner, status, actor, target, skill, hit,
-                    units, random, out childSupported, iteration);
+                    units, random, out childSupported, iteration, runtime);
                 supported = childSupported;
                 return supported && !child;
             }
@@ -143,8 +147,7 @@ namespace Zjcs.Combat.Official
                 || type == "CounterEqualFilter" || type == "CounterGreaterFilter"
                 || type == "CounterGreaterEqualFilter")
             {
-                int key = KeyId(filter, "CounterBBKey");
-                long value = Blackboard(status, key);
+                long value = Blackboard(status, Object(filter, "CounterBBKey"), runtime);
                 long expected = Long(filter, "Value");
                 if (type == "CounterLessFilter") return value < expected;
                 if (type == "CounterLessEqualFilter") return value <= expected;
@@ -156,8 +159,7 @@ namespace Zjcs.Combat.Official
                 || type == "BBIntLessFilter" || type == "BBIntLessEqualFilter"
                 || type == "BBIntGreaterFilter" || type == "BBIntGreaterEqualFilter")
             {
-                int key = KeyId(filter, "LhsBBKey");
-                long value = Blackboard(status, key);
+                long value = Blackboard(status, Object(filter, "LhsBBKey"), runtime);
                 long expected = Long(filter, "Value");
                 if (type == "BBIntEqualFilter") return value == expected;
                 if (type == "BBIntNotEqualFilter") return value != expected;
@@ -217,27 +219,39 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState actor, FightBattleUnitState target,
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
             IReadOnlyList<FightBattleUnitState> units, FightOfficialCombatCatalog catalog,
-            FightRandomStream random, List<FightBattleStatusSkillInvocation> output)
+            FightRandomStream random, List<FightBattleStatusSkillInvocation> output,
+            Dictionary<int, FightBattleLogicBlackboardValue> runtime)
         {
             string type = StringField(handle, "_type");
             if (type == "FightHandleCfgCounterAdd")
             {
-                AddBlackboard(status, KeyId(handle, "CounterBBKey"), Long(handle, "DeltaValue"));
+                SetBlackboard(status, Object(handle, "CounterBBKey"), runtime,
+                    Blackboard(status, Object(handle, "CounterBBKey"), runtime) + Long(handle, "DeltaValue"));
                 return true;
             }
             if (type == "FightHandleCfgCounterReset")
             {
-                SetBlackboard(status, KeyId(handle, "CounterBBKey"), Long(handle, "ResetValue"));
+                SetBlackboard(status, Object(handle, "CounterBBKey"), runtime, Long(handle, "ResetValue"));
                 return true;
             }
             if (type == "FightHandleCfgNewIntInBB" || type == "FightHandleCfgNewLongInBB")
             {
-                SetBlackboard(status, KeyId(handle, "BBKey"), Long(handle, "Value"));
+                SetBlackboard(status, Object(handle, "BBKey"), runtime, Long(handle, "Value"));
                 return true;
             }
             if (type == "FightHandleCfgNewBoolInBB")
             {
-                SetBlackboard(status, KeyId(handle, "BBKey"), Bool(handle, "Value") ? 1 : 0);
+                SetBlackboard(status, Object(handle, "BBKey"), runtime, Bool(handle, "Value") ? 1 : 0);
+                return true;
+            }
+            if (type == "FightHandleCfgBBPickFloatByIndex")
+            {
+                List<object> values = Array(handle, "Values");
+                long index = Blackboard(status, Object(handle, "IndexKey"), runtime);
+                // Official description: an out-of-range index uses the last value; empty uses 1.
+                double value = values.Count == 0 ? 1d : DoubleValue(values[
+                    index < 0 || index >= values.Count ? values.Count - 1 : (int)index]);
+                SetDoubleBlackboard(status, Object(handle, "StorageKey"), runtime, value);
                 return true;
             }
             if (type == "FightHandleCfgTriggerSkills")
@@ -255,6 +269,7 @@ namespace Zjcs.Combat.Official
                     output.Add(new FightBattleStatusSkillInvocation
                     {
                         Trigger = trigger,
+                        DamageFactor = DoubleBlackboard(status, Object(handle, "DamageFactorKey"), runtime, 1d),
                         SourceUnitId = source.Id,
                         TargetUnitId = destination.Id,
                         TargetPositionUnitId = destination.Id,
@@ -299,7 +314,7 @@ namespace Zjcs.Combat.Official
                 {
                     bool supported;
                     if (MatchesFilter(filter, destination, status, actor, target, skill, hit, units,
-                        random, out supported, new StatusIteration { Candidate = candidate })
+                        random, out supported, new StatusIteration { Candidate = candidate }, runtime)
                         && (filter == null || supported))
                         FightStatusLifecycle.End(destination, candidate);
                 }
@@ -307,10 +322,10 @@ namespace Zjcs.Combat.Official
             }
             if (type == "FightHandleCfgChangeStatusStack")
                 return ChangeStatusStacks(handle, owner, status, actor, target, skill, hit,
-                    units, catalog, random);
+                    units, catalog, random, runtime: runtime);
             if (type == "FightHandleCfgAbsorbStatusStack")
                 return AbsorbStatusStacks(handle, owner, status, actor, target, skill, hit,
-                    units, random);
+                    units, random, runtime);
             return false;
         }
 
@@ -336,18 +351,19 @@ namespace Zjcs.Combat.Official
             IReadOnlyList<FightBattleUnitState> units, FightOfficialCombatCatalog catalog,
             FightRandomStream random, long? suppliedValue = null,
             Func<int, int, FightBattleStatusState> createFromSkill = null,
-            IReadOnlyDictionary<FightBattleStatusState, int> removalSnapshot = null)
+            IReadOnlyDictionary<FightBattleStatusState, int> removalSnapshot = null,
+            Dictionary<int, FightBattleLogicBlackboardValue> runtime = null)
         {
             // PetEntity and graph-local entity ports are not bound by the supported events.
             if (KeyId(handle, "TargetEntityKey") != 1 || owner == null) return false;
-            long value = suppliedValue ?? Blackboard(mainStatus, KeyId(handle, "ChangeValueKey"));
+            long value = suppliedValue ?? Blackboard(mainStatus, Object(handle, "ChangeValueKey"), runtime);
             if (value < int.MinValue || value > int.MaxValue) return false;
             long change = value * Int(handle, "Multiplier", 1);
             if (change < int.MinValue || change > int.MaxValue) return false;
             int delta = (int)change;
             List<FightBattleStatusState> matches;
             if (!TryMatchStatuses(owner, Object(handle, "FilterCondition"), owner, mainStatus,
-                actor, target, skill, hit, units, random, out matches)) return false;
+                actor, target, skill, hit, units, random, out matches, runtime)) return false;
             if (matches.Count == 0 && delta > 0 && Int(handle, "CreateStatusClassId") > 0)
             {
                 if (catalog == null) return false;
@@ -400,7 +416,8 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState owner, FightBattleStatusState mainStatus,
             FightBattleUnitState actor, FightBattleUnitState target,
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
-            IReadOnlyList<FightBattleUnitState> units, FightRandomStream random)
+            IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
+            Dictionary<int, FightBattleLogicBlackboardValue> runtime)
         {
             int port = KeyId(handle, "TargetEntityKey");
             FightBattleUnitState destination = port == 1 ? owner : port == 1022 && hit != null ? target : null;
@@ -408,12 +425,12 @@ namespace Zjcs.Combat.Official
             if (destination == null || outputKey == 0) return false;
             List<FightBattleStatusState> matches;
             if (!TryMatchStatuses(destination, Object(handle, "FilterCondition"), owner, mainStatus,
-                actor, target, skill, hit, units, random, out matches)) return false;
+                actor, target, skill, hit, units, random, out matches, runtime)) return false;
             long count = 0;
             foreach (FightBattleStatusState candidate in matches) count += Math.Max(0, candidate.StackCount);
             if (count > int.MaxValue) return false;
             // Snapshot every layer before end callbacks can change the remaining instances.
-            SetBlackboard(mainStatus, outputKey, count);
+            SetBlackboard(mainStatus, Object(handle, "OutputCountKey"), runtime, count);
             if (Bool(handle, "RemoveStatus", true))
                 foreach (FightBattleStatusState candidate in matches)
                     FightStatusLifecycle.End(destination, candidate);
@@ -426,7 +443,8 @@ namespace Zjcs.Combat.Official
             FightBattleStatusState mainStatus, FightBattleUnitState actor, FightBattleUnitState target,
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
             IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
-            out List<FightBattleStatusState> matches)
+            out List<FightBattleStatusState> matches,
+            Dictionary<int, FightBattleLogicBlackboardValue> runtime)
         {
             matches = new List<FightBattleStatusState>();
             var iteration = new StatusIteration();
@@ -438,14 +456,14 @@ namespace Zjcs.Combat.Official
                 visited = true;
                 iteration.Candidate = candidate;
                 bool matched = MatchesFilter(filter, owner, mainStatus, actor, target, skill, hit,
-                    units, random, out supported, iteration);
+                    units, random, out supported, iteration, runtime);
                 if (!supported) return false;
                 if (matched) matches.Add(candidate);
             }
             // An empty collection must not bypass an unsupported condition and allow creation.
             if (visited) return true;
             MatchesFilter(filter, owner, mainStatus, actor, target, skill, hit, units,
-                random, out supported, iteration);
+                random, out supported, iteration, runtime);
             return supported;
         }
 
@@ -479,25 +497,72 @@ namespace Zjcs.Combat.Official
             return actor ?? owner ?? target;
         }
 
-        private static long Blackboard(FightBattleStatusState status, int key)
+        private static void RemoveLegacyRuntimeValues(FightBattleStatusState status, object graph)
         {
-            if (status?.LogicBlackboard == null) return 0;
-            foreach (FightBattleLogicBlackboardValue value in status.LogicBlackboard)
-                if (value != null && value.KeyId == key) return value.LongValue;
-            return 0;
+            if (status.LogicBlackboard == null || status.LogicBlackboard.Count == 0) return;
+            var transient = new HashSet<int>();
+            var persistent = new HashSet<int>();
+            CollectPorts(graph, transient, persistent);
+            status.LogicBlackboard.RemoveAll(value => value != null
+                && transient.Contains(value.KeyId) && !persistent.Contains(value.KeyId));
         }
 
-        private static void SetBlackboard(FightBattleStatusState status, int key, long value)
+        private static void CollectPorts(object graph, HashSet<int> transient, HashSet<int> persistent)
         {
-            if (status == null || key == 0) return;
+            if (graph is Dictionary<string, object> fields)
+            {
+                // Only explicit port metadata authorizes migration of old persisted values.
+                if (fields.ContainsKey("IsPersistentBlackboard") && fields.ContainsKey("Id"))
+                    (Bool(fields, "IsPersistentBlackboard") ? persistent : transient).Add(Int(fields, "Id"));
+                foreach (object value in fields.Values) CollectPorts(value, transient, persistent);
+            }
+            else if (graph is List<object> values)
+                foreach (object value in values) CollectPorts(value, transient, persistent);
+        }
+
+        private static FightBattleLogicBlackboardValue BlackboardValue(FightBattleStatusState status,
+            Dictionary<string, object> port, Dictionary<int, FightBattleLogicBlackboardValue> runtime, bool create)
+        {
+            int key = KeyId(port, null);
+            if (key == 0) return null;
+            if (runtime != null && !Bool(port, "IsPersistentBlackboard"))
+            {
+                if (runtime.TryGetValue(key, out var value)) return value;
+                if (!create) return null;
+                return runtime[key] = new FightBattleLogicBlackboardValue { KeyId = key };
+            }
+            if (status == null) return null;
+            if (status.LogicBlackboard != null)
+                foreach (var value in status.LogicBlackboard)
+                    if (value != null && value.KeyId == key) return value;
+            if (!create) return null;
             if (status.LogicBlackboard == null) status.LogicBlackboard = new List<FightBattleLogicBlackboardValue>();
-            foreach (FightBattleLogicBlackboardValue current in status.LogicBlackboard)
-                if (current != null && current.KeyId == key) { current.LongValue = value; return; }
-            status.LogicBlackboard.Add(new FightBattleLogicBlackboardValue { KeyId = key, LongValue = value });
+            var added = new FightBattleLogicBlackboardValue { KeyId = key };
+            status.LogicBlackboard.Add(added);
+            return added;
         }
 
-        private static void AddBlackboard(FightBattleStatusState status, int key, long value)
-            => SetBlackboard(status, key, Blackboard(status, key) + value);
+        private static long Blackboard(FightBattleStatusState status, Dictionary<string, object> port,
+            Dictionary<int, FightBattleLogicBlackboardValue> runtime)
+            => BlackboardValue(status, port, runtime, false)?.LongValue ?? 0L;
+
+        private static void SetBlackboard(FightBattleStatusState status, Dictionary<string, object> port,
+            Dictionary<int, FightBattleLogicBlackboardValue> runtime, long value)
+        {
+            var current = BlackboardValue(status, port, runtime, true);
+            if (current != null) current.LongValue = value;
+        }
+
+        private static double DoubleBlackboard(FightBattleStatusState status, Dictionary<string, object> port,
+            Dictionary<int, FightBattleLogicBlackboardValue> runtime, double fallback)
+            => BlackboardValue(status, port, runtime, false)?.DoubleValue ?? fallback;
+
+        private static void SetDoubleBlackboard(FightBattleStatusState status, Dictionary<string, object> port,
+            Dictionary<int, FightBattleLogicBlackboardValue> runtime, double value)
+        {
+            var current = BlackboardValue(status, port, runtime, true);
+            if (current != null) current.DoubleValue = value;
+        }
 
         private static bool Compare(double left, double right, int relation)
         {

@@ -1,0 +1,333 @@
+{
+  "manifest": "884_156692",
+  "entities": [
+    {
+      "entity_id": 24679,
+      "path": "Assets/Config/EC/FightSkill_part734.g.bytes",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "path_id": "5098883125212907637",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "raw_size": 6876458,
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+      },
+      "raw_sha256": "49861dfe293617d19d77680c73df0027adeb28e474e57f17e05848b715cfbf40",
+      "logic": {
+        "StatusReplacePropertyValues": [],
+        "Triggers": [
+          {
+            "Flow": {
+              "FilterCondition": {
+                "CounterBBKey": {
+                  "Id": 2081371075,
+                  "Name": "Counter",
+                  "PortType": 0,
+                  "IsPersistentBlackboard": true
+                },
+                "Value": 8,
+                "_type": "CounterLessFilter"
+              },
+              "HandleCfgs": [
+                {
+                  "IndexKey": {
+                    "Id": 2081371075,
+                    "Name": "Counter",
+                    "PortType": 0,
+                    "IsPersistentBlackboard": true
+                  },
+                  "Values": [
+                    1,
+                    1,
+                    1,
+                    1,
+                    2,
+                    2,
+                    2,
+                    2
+                  ],
+                  "StorageKey": {
+                    "Id": 348958083,
+                    "Name": "DamageFactor",
+                    "PortType": 1,
+                    "IsPersistentBlackboard": false
+                  },
+                  "_type": "FightHandleCfgBBPickFloatByIndex"
+                },
+                {
+                  "TriggerSkillCfgs": [
+                    {
+                      "SkillId": 13625,
+                      "BasePercent": 1,
+                      "AffectedByProp": false,
+                      "Source": 3,
+                      "UseAI": false,
+                      "PropTarget": {
+                        "IsEnemy": false,
+                        "RoleType": [],
+                        "IncludeApplicator": false,
+                        "PropType": 0,
+                        "Heighest": false,
+                        "SupportCustomFilter": false
+                      },
+                      "Target": 2,
+                      "TargetPos": 1,
+                      "StackedCountToDamageFactor": false,
+                      "CustomDamageInfo": {
+                        "TargetType": 0,
+                        "BaseProp": 0,
+                        "BaseCurrentHp": false,
+                        "DamageProp": 0,
+                        "UpperLimitTarget": 0,
+                        "UpperLimitPropType": 0,
+                        "UpperLimitPercent": 0
+                      },
+                      "StatusReplacePropertyValues": [],
+                      "TargetWithoutStatusIds": []
+                    }
+                  ],
+                  "SourceEntityKey": {
+                    "Id": 1,
+                    "Name": "MainEntity",
+                    "PortType": 0,
+                    "IsPersistentBlackboard": false
+                  },
+                  "TargetEntityKey": {
+                    "Id": 1,
+                    "Name": "MainEntity",
+                    "PortType": 0,
+                    "IsPersistentBlackboard": false
+                  },
+                  "UseDamagePos": false,
+                  "DamagePosEntityKey": {
+                    "Id": 1023,
+                    "Name": "DamageEntity",
+                    "PortType": 0,
+                    "IsPersistentBlackboard": false
+                  },
+                  "DamageFactorKey": {
+                    "Id": 348958083,
+                    "Name": "DamageFactor",
+                    "PortType": 0,
+                    "IsPersistentBlackboard": false
+                  },
+                  "_type": "FightHandleCfgTriggerSkills"
+                },
+                {
+                  "CounterBBKey": {
+                    "Id": 2081371075,
+                    "Name": "Counter",
+                    "PortType": 1,
+                    "IsPersistentBlackboard": true
+                  },
+                  "DeltaValue": 1,
+                  "_type": "FightHandleCfgCounterAdd"
+                }
+              ]
+            },
+            "_type": "FightOnRoundStartTriggerCfg"
+          },
+          {
+            "Flow": {
+              "FilterCondition": {
+                "CounterBBKey": {
+                  "Id": 2081371075,
+                  "Name": "Counter",
+                  "PortType": 0,
+                  "IsPersistentBlackboard": true
+                },
+                "Value": 8,
+                "_type": "CounterGreaterEqualFilter"
+              },
+              "HandleCfgs": [
+                {
+                  "StatusKey": {
+                    "Id": 2,
+                    "Name": "MainStatus",
+                    "PortType": 0,
+                    "IsPersistentBlackboard": false
+                  },
+                  "_type": "FightHandleRemoveSelfStatusCfg"
+                }
+              ]
+            },
+            "_type": "FightOnRoundStartTriggerCfg"
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": 24680,
+      "path": "Assets/Config/EC/FightSkill_part734.g.bytes",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "path_id": "5098883125212907637",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "raw_size": 6876458,
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+      },
+      "raw_sha256": "49861dfe293617d19d77680c73df0027adeb28e474e57f17e05848b715cfbf40",
+      "logic": {
+        "StatusReplacePropertyValues": [],
+        "Triggers": [
+          {
+            "Flow": {
+              "FilterCondition": {
+                "CounterBBKey": {
+                  "Id": 2081371075,
+                  "Name": "Counter",
+                  "PortType": 0,
+                  "IsPersistentBlackboard": true
+                },
+                "Value": 8,
+                "_type": "CounterLessFilter"
+              },
+              "HandleCfgs": [
+                {
+                  "IndexKey": {
+                    "Id": 2081371075,
+                    "Name": "Counter",
+                    "PortType": 0,
+                    "IsPersistentBlackboard": true
+                  },
+                  "Values": [
+                    1,
+                    1,
+                    1,
+                    1,
+                    2,
+                    2,
+                    2,
+                    2
+                  ],
+                  "StorageKey": {
+                    "Id": 348958083,
+                    "Name": "DamageFactor",
+                    "PortType": 1,
+                    "IsPersistentBlackboard": false
+                  },
+                  "_type": "FightHandleCfgBBPickFloatByIndex"
+                },
+                {
+                  "TriggerSkillCfgs": [
+                    {
+                      "SkillId": 13635,
+                      "BasePercent": 1,
+                      "AffectedByProp": false,
+                      "Source": 3,
+                      "UseAI": false,
+                      "PropTarget": {
+                        "IsEnemy": false,
+                        "RoleType": [],
+                        "IncludeApplicator": false,
+                        "PropType": 0,
+                        "Heighest": false,
+                        "SupportCustomFilter": false
+                      },
+                      "Target": 2,
+                      "TargetPos": 1,
+                      "StackedCountToDamageFactor": false,
+                      "CustomDamageInfo": {
+                        "TargetType": 0,
+                        "BaseProp": 0,
+                        "BaseCurrentHp": false,
+                        "DamageProp": 0,
+                        "UpperLimitTarget": 0,
+                        "UpperLimitPropType": 0,
+                        "UpperLimitPercent": 0
+                      },
+                      "StatusReplacePropertyValues": [],
+                      "TargetWithoutStatusIds": []
+                    }
+                  ],
+                  "SourceEntityKey": {
+                    "Id": 1,
+                    "Name": "MainEntity",
+                    "PortType": 0,
+                    "IsPersistentBlackboard": false
+                  },
+                  "TargetEntityKey": {
+                    "Id": 1,
+                    "Name": "MainEntity",
+                    "PortType": 0,
+                    "IsPersistentBlackboard": false
+                  },
+                  "UseDamagePos": false,
+                  "DamagePosEntityKey": {
+                    "Id": 1023,
+                    "Name": "DamageEntity",
+                    "PortType": 0,
+                    "IsPersistentBlackboard": false
+                  },
+                  "DamageFactorKey": {
+                    "Id": 348958083,
+                    "Name": "DamageFactor",
+                    "PortType": 0,
+                    "IsPersistentBlackboard": false
+                  },
+                  "_type": "FightHandleCfgTriggerSkills"
+                },
+                {
+                  "CounterBBKey": {
+                    "Id": 2081371075,
+                    "Name": "Counter",
+                    "PortType": 1,
+                    "IsPersistentBlackboard": true
+                  },
+                  "DeltaValue": 1,
+                  "_type": "FightHandleCfgCounterAdd"
+                }
+              ]
+            },
+            "_type": "FightOnRoundStartTriggerCfg"
+          },
+          {
+            "Flow": {
+              "FilterCondition": {
+                "CounterBBKey": {
+                  "Id": 2081371075,
+                  "Name": "Counter",
+                  "PortType": 0,
+                  "IsPersistentBlackboard": true
+                },
+                "Value": 8,
+                "_type": "CounterGreaterEqualFilter"
+              },
+              "HandleCfgs": [
+                {
+                  "StatusKey": {
+                    "Id": 2,
+                    "Name": "MainStatus",
+                    "PortType": 0,
+                    "IsPersistentBlackboard": false
+                  },
+                  "_type": "FightHandleRemoveSelfStatusCfg"
+                }
+              ]
+            },
+            "_type": "FightOnRoundStartTriggerCfg"
+          }
+        ]
+      }
+    }
+  ],
+  "schema_sources": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleCfgBBPickFloatByIndex.cs",
+      "sha256": "0c3811a7691efc7b10eee0363c6e9d135ceda60b4e5bcaee8d0de97ef78a9d72"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleCfgTriggerSkills.cs",
+      "sha256": "76449acffaac163a9a4e6215293a4c8e517ffe3fe5a839ccb3c5016954f3cf18"
+    }
+  ]
+}
