@@ -23,15 +23,16 @@ namespace Zjcs.Presentation.Combat
             FightBattleSkillDefinition attack, int skillId)
         {
             this.catalog = catalog; this.attack = attack; this.skillId = skillId;
-            itemId = skillId == 13830 ? 10197 : 10198;
-            statusId = skillId == 13830 ? 24031 : 24697;
-            animationName = skillId == 13830 ? "100/skill_11_2" : "100/skill_17";
+            itemId = skillId == 13820 ? 10196 : skillId == 13830 ? 10197 : 10198;
+            statusId = skillId == 13840 ? 24697 : 24031;
+            animationName = skillId == 13820 ? "100/skill_71"
+                : skillId == 13830 ? "100/skill_11_2" : "100/skill_17";
         }
 
         public static OfficialBattleSkillStackValidation Configure(FightBattleCheckpoint checkpoint)
         {
             Require(int.TryParse(Environment.GetEnvironmentVariable("ZJCS_SKILL_STACK_ENTITY"), out int id)
-                && (id == 13830 || id == 13840), "Select original 13830 or 13840.");
+                && (id == 13820 || id == 13830 || id == 13840), "Select original 13820, 13830 or 13840.");
             var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
             var player = checkpoint.Units.Single(value => value.Id == 1);
             var enemy = checkpoint.Units.First(value => value.Id != 1);
@@ -61,6 +62,13 @@ namespace Zjcs.Presentation.Combat
                 unit.Turn.Speed = unit == player ? 1000 : 1;
             }
             if (id == 13840) enemy.Statuses.Add(catalog.CreateStatus(24266, enemy.Id, player.Id, 9913840));
+            if (id == 13820)
+            {
+                var own = catalog.CreateStatus(24031, player.Id, player.Id, 9913820);
+                var other = catalog.CreateStatus(24031, player.Id, enemy.Id, 9913821);
+                own.StackCount = 2; other.StackCount = 3;
+                player.Statuses.Add(own); player.Statuses.Add(other);
+            }
             enemy.Skills.Clear(); enemy.SkillState.Slots.Clear();
             player.Skills.Clear(); player.SkillState.Slots.Clear();
             var skill = catalog.CreateSkill(id, 0, probe.itemId, 5, 20, player.SubRank, null);
@@ -95,23 +103,37 @@ namespace Zjcs.Presentation.Combat
             if (stacked || !step.SkillCasts.Any(value => value.ActorId == 1 && value.SkillEntityId == skillId)) return;
             var player = checkpoint.Units.Single(value => value.Id == 1);
             var hits = step.DamageEvents.Where(value => value.SourceId == 1 && value.SkillEntityId == skillId).ToArray();
-            var status = player.Statuses.Single(value => value.ClassId == statusId);
-            Require(hits.Length > 0 && status.StackCount == hits.Length
-                && (skillId != 13830 || hits.Length == 3), "Actual transient target count and charge layers differ.");
-            Require(status.CreatorId == 1 && status.RootSkillId == skillId && status.ApplyingSkillItemId == itemId
-                && status.Origin.SkillEntityId == skillId && status.SourceSkillRank == 5,
-                "Created status lost its actual skill identity or cultivation.");
             var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
-            Require(saved.Units.Single(value => value.Id == 1).Statuses.Single(value => value.ClassId == statusId)
-                .StackCount == hits.Length && saved.Units.Single(value => value.Id == 1).SkillState.Slots[0].ReleasedTimes == 1,
-                "The actual charge layers or single equipped release were lost in the checkpoint.");
+            if (skillId == 13820)
+            {
+                Require(hits.Length > 0 && !player.Statuses.Any(value => value.ClassId == 24031),
+                    "The real blast did not consume all five source charge layers.");
+                var savedPlayer = saved.Units.Single(value => value.Id == 1);
+                Require(!savedPlayer.Statuses.Any(value => value.ClassId == 24031)
+                    && savedPlayer.SkillState.Slots[0].ReleasedTimes == 1,
+                    "Consumed charge or the single blast release was lost in the checkpoint.");
+            }
+            else
+            {
+                var status = player.Statuses.Single(value => value.ClassId == statusId);
+                Require(hits.Length > 0 && status.StackCount == hits.Length
+                    && (skillId != 13830 || hits.Length == 3), "Actual transient target count and charge layers differ.");
+                Require(status.CreatorId == 1 && status.RootSkillId == skillId && status.ApplyingSkillItemId == itemId
+                    && status.Origin.SkillEntityId == skillId && status.SourceSkillRank == 5,
+                    "Created status lost its actual skill identity or cultivation.");
+                Require(saved.Units.Single(value => value.Id == 1).Statuses.Single(value => value.ClassId == statusId)
+                    .StackCount == hits.Length && saved.Units.Single(value => value.Id == 1).SkillState.Slots[0].ReleasedTimes == 1,
+                    "The actual charge layers or single equipped release were lost in the checkpoint.");
+    
+            }
             stacked = true;
             player.Skills.Clear(); player.SkillState.Slots.Clear();
             player.Skills.Add(attack); player.SkillState.Slots.Add(catalog.CreateSkillSlot(attack, 0));
             foreach (var property in player.Properties.Concat(player.BaseProperties ?? player.Properties))
                 if (property.Id == catalog.PropertyType("Attack")) property.Value = 100000000;
-            Debug.Log("[Skill stack] actual " + skillId + " hit count=" + hits.Length + ", own " + statusId
-                + " layers=" + status.StackCount + "; original item/cultivation, one release and checkpoint passed.");
+            Debug.Log("[Skill stack] actual " + skillId + " hit count=" + hits.Length
+                + (skillId == 13820 ? "; consumed five charge layers" : "; per-hit charge layers passed")
+                + "; original item/cultivation, one release and checkpoint passed.");
         }
 
         public void ObserveFrame(OfficialBattleRuntimeController controller)

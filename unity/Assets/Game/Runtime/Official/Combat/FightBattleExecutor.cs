@@ -783,6 +783,9 @@ namespace Zjcs.Combat.Official
                 SynchronizeDeathForbidden(actor);
             }
 
+            var skillLogic = FightSkillLogicRuntime.Create(actor, skill, units, statusCatalog, random);
+            if (skillLogic != null && skillLogic.OnSkillStart()) RebuildBattleProperties();
+
             if (statusCatalog != null)
             {
                 List<FightBattleStatusSkillInvocation> actionStartSkills =
@@ -822,7 +825,6 @@ namespace Zjcs.Combat.Official
             }
 
             FightDamageFalloff.BeginCast(skill, ref checkpoint.FalloffSerial);
-            var skillLogic = FightSkillLogicRuntime.Create(actor, skill, units, statusCatalog, random);
             IReadOnlyList<FightBattleHitDefinition> hits = FightBattleHitCollector.CollectAll(skill);
             var randomTargetGroups = new Dictionary<int, RandomTargetGroupState>();
             var damageHitTargets = new HashSet<int>();
@@ -989,7 +991,9 @@ namespace Zjcs.Combat.Official
                                 new List<int>(), allowDeadSource, skillDamageScale
                                     * (hit.UseDamageFactor ? externalDamageFactor : 1.0), conditionalHitProperties,
                                 skillLogic == null ? (Action<FightDamageTypeData>)null
-                                    : type => skillLogic.OnDoHitTransient(target, hit, type));
+                                    : type => skillLogic.OnDoHitTransient(target, hit, type),
+                                skillLogic == null ? (Action<FightBattleTransientDamageContext>)null
+                                    : damage => skillLogic.OnTransientDamage(target, hit, damage));
                         }
                         finally
                         {

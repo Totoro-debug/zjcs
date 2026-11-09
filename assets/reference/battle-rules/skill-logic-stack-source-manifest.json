@@ -52,6 +52,30 @@
       "sha256": "94ead88d6f5edf617041b0b350d870d2dda1e1439effb44447811d9a54304fac"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleCfgGetStatusStackCount.cs",
+      "sha256": "bab11319d4d706775e8be96542cf5fb0d7acc9358d3a4d0b06a9143d5ecd7b0f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleGetStatusStackCount.cs",
+      "sha256": "b7f2cd997be72563c5047bf16376da64a437cf367937092932d6740335506108"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleCfgDamageScaleBase.cs",
+      "sha256": "7dadb263fef2c8a20aba514c5204509c30d24a8d0eef29d88dd2e5bd637a6b2d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleCfgDamageScaleByScale.cs",
+      "sha256": "39a002f9c308c1080368d55239c2ffac5adf92696ff322c6243b24590059031e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleDamageScale.cs",
+      "sha256": "ec245b0dd2709b29662f95edc306549e71ce29545bcb326b787eeea98ad3a1a6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleDamageScaleByScale.cs",
+      "sha256": "538081f2e274a1bb5337868f970807ffeb7d6957a158e900f468ff202d3cb587"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityHasAnyStatusByEntityKeyFilter.cs",
       "sha256": "0e313a736e170fc5fe99cc18f65210bcd9d0701cf2d916f61fefb04eb867326b"
     },
@@ -75,6 +99,202 @@
     }
   ],
   "definitions": {
+    "13820": {
+      "FightSkillComponent": {
+        "SkillType": 0,
+        "CostType": 0,
+        "SkillTargetType": 0,
+        "TargetType": 1,
+        "HitTargetActionType": 0,
+        "ElementType": 103,
+        "RangeType": 0,
+        "Range": [
+          {
+            "X": 0,
+            "Y": 1
+          },
+          {
+            "X": -1,
+            "Y": 0
+          },
+          {
+            "X": 1,
+            "Y": 0
+          },
+          {
+            "X": 0,
+            "Y": -1
+          }
+        ],
+        "HitList": [
+          {
+            "ClassId": 13821,
+            "Delay": 1.2699999809265137,
+            "ActOnSouce": 1,
+            "IgnoreAICount": false
+          }
+        ],
+        "SourceMoveList": [],
+        "ActionDuration": 1.600000023841858,
+        "AllEndedActionDuration": -1.0,
+        "AllRelevantEndedActionDuration": -1.0,
+        "Duration": 2.0,
+        "AllEndedDuration": -1.0,
+        "AllRelevantEndedDuration": -1.0,
+        "LimitedTimes": -1,
+        "ResetCDAtStart": false,
+        "ExtSkill": [],
+        "Replay": {
+          "Rate": 0.0,
+          "ReplaceSkillArrayOnReplay": []
+        },
+        "ReplayMaxCountEachRound": -1,
+        "CanTriggerChild": true,
+        "CanTriggerStatusEntityIds": [],
+        "Ai": {
+          "DontKeepDistance": false,
+          "AiPriorityTypes": [],
+          "LastAIPriorityTypes": [],
+          "IgnoreStatusArray": [],
+          "AIPriroityCharacterType": 8,
+          "ReleaseWhileRidicule": false,
+          "ReleaseWhileConfusion": false,
+          "IsReleaseSkillAfterMove": false,
+          "IsFixSkillDirection": false,
+          "FixedDirection": 0,
+          "MoveByTeleport": false,
+          "AIPriorityHpLowerCharacterTypeFilter": [],
+          "AiPriorityPropType": 0,
+          "AiPriorityFindMax": true,
+          "AIPriorityCharacterTypeGroups": []
+        },
+        "ActionType": 2,
+        "FlipSource": true,
+        "NeedConditionStatusMeetToRelease": false,
+        "MustHaveValidCost": false,
+        "IsFixedProp": false,
+        "ResetReleasedTimeOnNextWave": false
+      },
+      "GridTransformComponent": {
+        "BodyRangeInfos": [
+          {
+            "Pos": {
+              "X": 0,
+              "Y": 0
+            },
+            "GroundType": 0,
+            "IgnoreClick": false,
+            "OverrideGroundType": false
+          }
+        ],
+        "BodyCrossBlockedInfos": [],
+        "UnlockWholeRequestCount": 1,
+        "RealCenter": [
+          0.0,
+          0.0
+        ],
+        "IsRigidBody": true
+      },
+      "TransformComponent": {},
+      "FightSkillLogicComponent": {
+        "OnDoHit": null,
+        "OnDoHitTransient": {
+          "FilterCondition": null,
+          "HandleCfgs": [
+            {
+              "DamageKey": {
+                "Id": 2004,
+                "Name": "HitTransientDamage",
+                "PortType": 0,
+                "IsPersistentBlackboard": false
+              },
+              "BaseScaleKey": {
+                "Id": 774082833,
+                "Name": "BaseScaleKey",
+                "PortType": 0,
+                "IsPersistentBlackboard": false
+              },
+              "ScaleValue": 700,
+              "StorageDamageKey": {
+                "Id": 2004,
+                "Name": "HitTransientDamage",
+                "PortType": 1,
+                "IsPersistentBlackboard": false
+              },
+              "DeltaDamageKey": {
+                "Id": 122229964,
+                "Name": "DeltaDamage",
+                "PortType": 1,
+                "IsPersistentBlackboard": false
+              },
+              "StorageAsAbs": true,
+              "ScaleCountKey": {
+                "Id": 884090696,
+                "Name": "ChargeCount",
+                "PortType": 0,
+                "IsPersistentBlackboard": true
+              },
+              "_type": "FightHandleCfgDamageScaleByScale"
+            }
+          ]
+        },
+        "OnSkillStart": {
+          "FilterCondition": null,
+          "HandleCfgs": [
+            {
+              "BBKey": {
+                "Id": 884090696,
+                "Name": "ChargeCount",
+                "PortType": 1,
+                "IsPersistentBlackboard": true
+              },
+              "Value": 0,
+              "_type": "FightHandleCfgNewIntInBB"
+            },
+            {
+              "SourceEntityKey": {
+                "Id": 1,
+                "Name": "MainEntity",
+                "PortType": 0,
+                "IsPersistentBlackboard": false
+              },
+              "StackCountKey": {
+                "Id": 884090696,
+                "Name": "ChargeCount",
+                "PortType": 1,
+                "IsPersistentBlackboard": true
+              },
+              "StatusId": 24031,
+              "_type": "FightHandleCfgGetStatusStackCount"
+            },
+            {
+              "TargetEntityKey": {
+                "Id": 1,
+                "Name": "MainEntity",
+                "PortType": 0,
+                "IsPersistentBlackboard": false
+              },
+              "FilterCondition": {
+                "StatusClassId": 24031,
+                "_type": "IteratingAgentStatusClassIdFilter"
+              },
+              "CreateStatusClassId": 0,
+              "ChangeValueKey": {
+                "Id": 884090696,
+                "Name": "ChargeCount",
+                "PortType": 0,
+                "IsPersistentBlackboard": true
+              },
+              "Multiplier": -1,
+              "InvokeConsumeEvent": true,
+              "UseDefaultSourceInfoOnCreate": false,
+              "_type": "FightHandleCfgChangeStatusStack"
+            }
+          ]
+        },
+        "OnHitFinish": null
+      }
+    },
     "13830": {
       "FightSkillComponent": {
         "SkillType": 0,
@@ -494,6 +714,44 @@
     }
   },
   "skill_items": [
+    {
+      "ClassId": 10196,
+      "EcEntityId": 13820,
+      "DirectionEcEntityId": {},
+      "RandomSkillWeightList": [],
+      "RandomSkillEntityId": [],
+      "TryAtStartType": 0,
+      "UpgradeMaterialId": 12001,
+      "Tags": [
+        22
+      ],
+      "SkillSortTypes": [
+        4
+      ],
+      "OuterTag": 0,
+      "PassiveRankPropId": 0,
+      "PassiveGroupLevelPropId": 0,
+      "PassiveRankFactorId": 2050,
+      "PassivePropFactors": {},
+      "PassiveStatusIdList": [],
+      "InitEnergy": 0,
+      "TriggerNeedEnergy": 0,
+      "ViewPropEntities": [
+        13820
+      ],
+      "ViewPropBlackList": [],
+      "HyperLinkTypes": [
+        0
+      ],
+      "HyperLinkDatas": [
+        "{EntryId:24031}"
+      ],
+      "UserType": 1,
+      "Invisible": false,
+      "MaxRankLimit": 0,
+      "AiPriorityId": -1,
+      "LastAiPriorityId": -1
+    },
     {
       "ClassId": 10197,
       "EcEntityId": 13830,
@@ -12909,6 +13167,10 @@
       "payload_sha256": "5da6dd4982bdb6259e13043da7e2b7b4dc6b655beff1661b5f92f4fd65e0c81f",
       "rows": [
         {
+          "ClassId": 10196,
+          "EcEntityId": 13820
+        },
+        {
           "ClassId": 10197,
           "EcEntityId": 13830
         },
@@ -13242,7 +13504,6 @@
     13640,
     13730,
     13740,
-    13820,
     13870,
     13960,
     13970,
@@ -13255,7 +13516,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_skill_logic_sources.py",
-    "sha256": "b83817032555700ea359063ea86642ffb67acd134767b94ea25f1361832118d4"
+    "sha256": "be82d1ca6a878532f365a8b3541c1b99f24eb7a33474edd2f9fefb4a19b473be"
   },
-  "operation": "Verify complete components for all 15 skill-logic entities against the selected version. Preserve the original two transient stack graphs and status configuration. The APK exposes empty client/handler classes; execution uses the confirmed per-target, pre-HP, miss/immune/shield and child-status rules. Existing stack lifecycle is shared; other skill graphs remain outside this implementation."
+  "operation": "Verify complete components for all 15 skill-logic entities against the selected version. Preserve the two transient stack graphs, the 13820 charge start/scale graph and status configuration. The APK exposes empty client/handler classes; execution uses the confirmed per-target, pre-HP, miss/immune/shield and child-status rules. Existing stack lifecycle is shared; The confirmed 13820 cast snapshot consumes valid charge instances at start and scales each damage segment by 1 + 0.07 * snapshot, truncating toward zero before shield/HP settlement; other skill graphs remain outside this implementation."
 }

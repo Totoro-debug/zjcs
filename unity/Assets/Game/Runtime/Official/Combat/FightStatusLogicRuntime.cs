@@ -335,7 +335,8 @@ namespace Zjcs.Combat.Official
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
             IReadOnlyList<FightBattleUnitState> units, FightOfficialCombatCatalog catalog,
             FightRandomStream random, long? suppliedValue = null,
-            Func<int, int, FightBattleStatusState> createFromSkill = null)
+            Func<int, int, FightBattleStatusState> createFromSkill = null,
+            IReadOnlyDictionary<FightBattleStatusState, int> removalSnapshot = null)
         {
             // PetEntity and graph-local entity ports are not bound by the supported events.
             if (KeyId(handle, "TargetEntityKey") != 1 || owner == null) return false;
@@ -380,7 +381,13 @@ namespace Zjcs.Combat.Official
             {
                 // Ending/consumption callbacks can remove other entries from the snapshot.
                 if (!owner.Statuses.Contains(candidate)) continue;
-                int changed = FightStatusLifecycle.AddStack(candidate, delta);
+                int appliedDelta = delta;
+                if (delta < 0 && removalSnapshot != null)
+                {
+                    if (!removalSnapshot.TryGetValue(candidate, out int layers)) continue;
+                    appliedDelta = -(int)Math.Min(-(long)delta, Math.Max(0, layers));
+                }
+                int changed = FightStatusLifecycle.AddStack(candidate, appliedDelta);
                 if (changed < 0 && candidate.StackCount == 0) FightStatusLifecycle.End(owner, candidate);
                 if (changed < 0 && Bool(handle, "InvokeConsumeEvent"))
                     FightStatusTriggerRuntime.NotifyStackConsumed(owner, candidate.ClassId,

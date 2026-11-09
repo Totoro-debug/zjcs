@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Zjcs.Combat.Official
 {
     // MyFightSkillLogic has no server implementation in the APK. Only the
-    // explicitly confirmed 13830/13840 transient stack flows are enabled here.
+    // explicitly confirmed charge and transient stack flows are enabled here.
     internal sealed class FightSkillLogicRuntime
     {
         private readonly FightBattleUnitState actor;
@@ -13,14 +13,17 @@ namespace Zjcs.Combat.Official
         private readonly FightOfficialCombatCatalog catalog;
         private readonly FightRandomStream random;
         private readonly Dictionary<string, object> flow;
+        private readonly Dictionary<string, object> startFlow;
+        private readonly Dictionary<int, long> persistentBlackboard = new Dictionary<int, long>();
+        private bool startHandled;
         private readonly Dictionary<int, long> blackboard = new Dictionary<int, long>();
 
         private FightSkillLogicRuntime(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             IReadOnlyList<FightBattleUnitState> units, FightOfficialCombatCatalog catalog,
-            FightRandomStream random, Dictionary<string, object> flow)
+            FightRandomStream random, Dictionary<string, object> flow, Dictionary<string, object> startFlow)
         {
             this.actor = actor; this.skill = skill; this.units = units;
-            this.catalog = catalog; this.random = random; this.flow = flow;
+            this.catalog = catalog; this.random = random; this.flow = flow; this.startFlow = startFlow;
         }
 
         internal static FightSkillLogicRuntime Create(FightBattleUnitState actor,
@@ -28,18 +31,19 @@ namespace Zjcs.Combat.Official
             FightOfficialCombatCatalog catalog, FightRandomStream random)
         {
             if (actor == null || skill == null || catalog == null
-                || (skill.EntityId != 13830 && skill.EntityId != 13840)) return null;
+                || (skill.EntityId != 13820 && skill.EntityId != 13830 && skill.EntityId != 13840)) return null;
             catalog.RestoreSkillLogicDefinition(skill);
             if (!skill.HasLogicComponent || string.IsNullOrEmpty(skill.LogicDefinitionJson)) return null;
             var component = OfficialJson.Parse(skill.LogicDefinitionJson) as Dictionary<string, object>;
             var flow = Object(component, "OnDoHitTransient");
-            return flow == null ? null : new FightSkillLogicRuntime(actor, skill, units, catalog, random, flow);
+            return flow == null ? null : new FightSkillLogicRuntime(actor, skill, units, catalog, random, flow,
+                Object(component, "OnSkillStart"));
         }
 
         internal void OnDoHitTransient(FightBattleUnitState target, FightBattleHitDefinition hit,
             FightDamageTypeData type)
         {
-            if (target == null || type.Dodge || type.Blinding) return;
+            if (skill.EntityId == 13820 || target == null || type.Dodge || type.Blinding) return;
             var filter = Object(flow, "FilterCondition");
             if (flow.TryGetValue("FilterCondition", out object rawFilter)
                 && rawFilter != null && filter == null) return;
@@ -81,6 +85,89 @@ namespace Zjcs.Combat.Official
                 else return;
             }
         }
+
+        // Validate all three original handlers before consuming any state. The
+        // snapshot belongs to this cast and is independent of later start triggers.
+        internal bool OnSkillStart()
+        {
+            if (skill.EntityId != 13820 || startHandled || startFlow == null
+                || !EmptyFilter(startFlow)) return false;
+            var handlers = Array(startFlow, "HandleCfgs");
+            if (handlers.Count != 3) return false;
+            var initialize = handlers[0] as Dictionary<string, object>;
+            var read = handlers[1] as Dictionary<string, object>;
+            var consume = handlers[2] as Dictionary<string, object>;
+            const int chargeKey = 884090696;
+            if (String(initialize, "_type") != "FightHandleCfgNewIntInBB"
+                || !IsPort(initialize, "BBKey", chargeKey, true) || Int(initialize, "Value") != 0
+                || String(read, "_type") != "FightHandleCfgGetStatusStackCount"
+                || !IsPort(read, "SourceEntityKey", 1, false)
+                || !IsPort(read, "StackCountKey", chargeKey, true) || Int(read, "StatusId") != 24031
+                || String(consume, "_type") != "FightHandleCfgChangeStatusStack"
+                || !IsPort(consume, "TargetEntityKey", 1, false)
+                || !IsPort(consume, "ChangeValueKey", chargeKey, true)
+                || Int(consume, "Multiplier") != -1 || Int(consume, "CreateStatusClassId") != 0
+                || !Bool(consume, "InvokeConsumeEvent") || Bool(consume, "UseDefaultSourceInfoOnCreate")) return false;
+            var filter = Object(consume, "FilterCondition");
+            if (String(filter, "_type") != "IteratingAgentStatusClassIdFilter"
+                || Int(filter, "StatusClassId") != 24031) return false;
+            var snapshot = new Dictionary<FightBattleStatusState, int>();
+            long count = 0;
+            foreach (var status in actor.Statuses)
+                if (status != null && status.ClassId == 24031
+                    && status.ForbiddenType == 0 && status.StackCount > 0)
+                {
+                    count += status.StackCount;
+                    if (count > int.MaxValue) return false;
+                    snapshot[status] = status.StackCount;
+                }
+            persistentBlackboard[chargeKey] = count;
+            startHandled = true;
+            return FightStatusLogicRuntime.ChangeStatusStacks(consume, actor, null, actor, null,
+                skill, null, units, catalog, random, count, null, snapshot);
+        }
+
+        internal void OnTransientDamage(FightBattleUnitState target, FightBattleHitDefinition hit,
+            FightBattleTransientDamageContext damage)
+        {
+            if (skill.EntityId != 13820 || !startHandled || target == null || damage == null
+                || damage.IsCure || !EmptyFilter(flow)) return;
+            var handlers = Array(flow, "HandleCfgs");
+            if (handlers.Count != 1 || !(handlers[0] is Dictionary<string, object> scale)
+                || String(scale, "_type") != "FightHandleCfgDamageScaleByScale"
+                || !IsPort(scale, "DamageKey", 2004, false)
+                || !IsPort(scale, "StorageDamageKey", 2004, false)
+                || !IsPort(scale, "BaseScaleKey", 774082833, false)
+                || !IsPort(scale, "DeltaDamageKey", 122229964, false)
+                || !IsPort(scale, "ScaleCountKey", 884090696, true)
+                || Int(scale, "ScaleValue") != 700 || !Bool(scale, "StorageAsAbs")
+                || !persistentBlackboard.TryGetValue(884090696, out long count)) return;
+            long previous = damage.Damage;
+            decimal factor = 10000m + 700m * count;
+            damage.Damage = ScaleDamage(previous, factor);
+            damage.AbsoluteDamage = ScaleDamage(damage.AbsoluteDamage, factor);
+            blackboard[2004] = damage.Damage;
+            decimal difference = Math.Abs((decimal)damage.Damage - previous);
+            blackboard[122229964] = difference >= long.MaxValue ? long.MaxValue : (long)difference;
+        }
+
+        private static long ScaleDamage(long value, decimal factor)
+        {
+            if (value == 0 || factor == 10000m) return value;
+            decimal magnitude = Math.Abs((decimal)value);
+            if (factor > 0 && magnitude > decimal.MaxValue / factor)
+                return value < 0 ? long.MinValue : long.MaxValue;
+            decimal result = decimal.Truncate(value * factor / 10000m);
+            return result >= long.MaxValue ? long.MaxValue
+                : result <= long.MinValue ? long.MinValue : (long)result;
+        }
+
+        private static bool EmptyFilter(Dictionary<string, object> value)
+            => value != null && (!value.TryGetValue("FilterCondition", out object raw) || raw == null);
+        private static bool IsPort(Dictionary<string, object> value, string key, int id, bool persistent)
+            => Port(value, key) == id && Persistent(value, key) == persistent;
+        private static bool Bool(Dictionary<string, object> value, string key)
+            => value != null && value.TryGetValue(key, out object raw) && Convert.ToBoolean(raw);
 
         private FightBattleStatusState CreateStatus(int statusId, int instanceId)
         {

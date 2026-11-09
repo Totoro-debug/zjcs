@@ -3,6 +3,21 @@ using System.Collections.Generic;
 
 namespace Zjcs.Combat.Official
 {
+    // Mutable values for the confirmed skill-graph stage before shield/HP settlement.
+    public sealed class FightBattleTransientDamageContext
+    {
+        public FightDamageTypeData Type { get; }
+        public bool IsCure { get; }
+        public long Damage;
+        public long AbsoluteDamage;
+        public FightBattleTransientDamageContext(FightDamageTypeData type, long damage,
+            long absoluteDamage, bool isCure)
+        {
+            Type = type;
+            Damage = damage; AbsoluteDamage = absoluteDamage; IsCure = isCure;
+        }
+    }
+
     public sealed class FightBattleHitResult
     {
         public FightDamageTypeData Type;
@@ -36,7 +51,8 @@ namespace Zjcs.Combat.Official
             int stageType, bool isPvp, double elementConfrontation = 0.0,
             List<int> processedFalloffStatuses = null, bool allowDeadSource = false,
             double skillDamageScale = 1.0, FightConditionalHitProperties conditionalProperties = null,
-            Action<FightDamageTypeData> onTransient = null)
+            Action<FightDamageTypeData> onTransient = null,
+            Action<FightBattleTransientDamageContext> onTransientDamage = null)
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
             if (target == null) throw new ArgumentNullException(nameof(target));
@@ -75,14 +91,16 @@ namespace Zjcs.Combat.Official
                     result.Cure.Cure = (long)(result.Cure.Cure * scale);
                     result.Cure.AbsoluteCure = (long)(result.Cure.AbsoluteCure * scale);
                 }
-                onTransient?.Invoke(result.Type);
+                ProcessTransient(result.Type, ref result.Cure.Cure, ref result.Cure.AbsoluteCure,
+                    true, onTransient, onTransientDamage);
                 result.Settlement = settlement.Apply(damageId, sourceEntity, targetEntity,
                     result.Cure.Cure);
             }
             else if (hit.DamageType == 0)
             {
                 result.Formula = new FightDamageFormulaResult();
-                onTransient?.Invoke(result.Type);
+                long zeroDamage = 0, zeroAbsolute = 0;
+                ProcessTransient(result.Type, ref zeroDamage, ref zeroAbsolute, false, onTransient, onTransientDamage);
                 result.Settlement = settlement.Apply(damageId, sourceEntity, targetEntity, 0);
             }
             else if (hit.DamageType == 8)
@@ -107,7 +125,7 @@ namespace Zjcs.Combat.Official
                 FightBattleHitComponentRuntime.ApplyDamageReduceAbsolute(target, skill,
                     ref direct, ref absoluteDirect, random);
                 if (damageTest != null) direct = damageTest.Damage(stageType, actor, target, direct);
-                onTransient?.Invoke(result.Type);
+                ProcessTransient(result.Type, ref direct, ref absoluteDirect, false, onTransient, onTransientDamage);
                 long absorbed = FightBattleShieldRuntime.AbsorbDamage(random, target, hit,
                     direct, out result.ShieldDamage, result.TriggeredStatusSkills, skill,
                     result.TriggeredStatusSkillInvocations);
@@ -186,7 +204,8 @@ namespace Zjcs.Combat.Official
                     ref damage, ref absoluteDamage, random);
                 result.Formula.AbsoluteDamage = absoluteDamage;
                 if (damageTest != null) damage = damageTest.Damage(stageType, actor, target, damage);
-                onTransient?.Invoke(result.Type);
+                ProcessTransient(result.Type, ref damage, ref result.Formula.AbsoluteDamage,
+                    false, onTransient, onTransientDamage);
                 damage = FightBattleShieldRuntime.AbsorbDamage(random, target, hit, damage,
                     out result.ShieldDamage, result.TriggeredStatusSkills, skill,
                     result.TriggeredStatusSkillInvocations);
@@ -197,6 +216,17 @@ namespace Zjcs.Combat.Official
 
             target.Hp = targetEntity.Hp;
             return result;
+        }
+
+        private static void ProcessTransient(FightDamageTypeData type, ref long damage,
+            ref long absoluteDamage, bool isCure, Action<FightDamageTypeData> notify,
+            Action<FightBattleTransientDamageContext> apply)
+        {
+            notify?.Invoke(type);
+            if (apply == null) return;
+            var context = new FightBattleTransientDamageContext(type, damage, absoluteDamage, isCure);
+            apply(context);
+            damage = context.Damage; absoluteDamage = context.AbsoluteDamage;
         }
 
         private static long ScaleDamage(long damage, double scale)
