@@ -43,5 +43,24 @@ class OfficialEcConfigurationTests(unittest.TestCase):
             self.decode(self.payload + b'\x00')
 
 
+    # Original 884 FightSkill_part2533, entity 60680: the component
+    # inherits its configuration through FightStatusHpDecreaseUnitComponent.
+    # Its untagged float cannot be decoded as an ordinary MessagePack array.
+    def test_original_healing_component_uses_inherited_configuration(self):
+        payload = bytes.fromhex('9990023e19999aff9196cded0a3f800000c296c290c200c2c2029090c3c2ff')
+        actual = self.formats.component('Common.FightStatusHpIncreaseUnitComponent', payload)
+        self.assertAlmostEqual(actual['UnitHpPer'], 0.15)
+        self.assertEqual(actual['TargetType'], 2)
+        self.assertEqual(actual['MaxCount'], -1)
+        self.assertEqual(actual['InvokeMaxCountOnHpChange'], -1)
+        self.assertEqual(len(actual['StatusList']), 1)
+        self.assertEqual(actual['Skills'], [])
+        self.assertTrue(actual['TryAtStart'])
+        self.assertFalse(actual['TriggerWhenHpLessThan0'])
+        self.assertEqual(actual, self.formats.component(
+            'Common.FightStatusHpDecreaseUnitComponent', payload))
+        self.assertIn('component:FightStatusHpIncreaseUnitComponent', self.formats.sources)
+        self.assertIn('component:FightStatusHpDecreaseUnitComponent', self.formats.sources)
+
 if __name__ == '__main__':
     unittest.main()

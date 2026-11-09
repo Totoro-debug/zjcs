@@ -171,14 +171,20 @@ class Formats:
         }.get(name,info)
         if name not in self.component_infos:
             short=name.removeprefix('Common.')
-            source=self.source/'Common'/(short+'.cs')
-            if source.exists():
+            visited=set()
+            while short not in visited:
+                visited.add(short)
+                source=self.source/'Common'/(short+'.cs')
+                if not source.exists():break
                 declaration=re.search(r'public (?:(?:abstract|sealed|partial) )*class '
-                    +re.escape(short)+r'\s*:\s*[\w.]+<([\w.]+Info)>',
+                    +re.escape(short)+r'\s*:\s*([\w.]+)(?:<([\w.]+Info)>)?',
                     source.read_text('utf-8-sig'))
-                if declaration:
-                    info=declaration[1]
-                    self.sources['component:'+short]=source
+                if declaration is None:break
+                self.sources['component:'+short]=source
+                if declaration[2]:
+                    info=declaration[2]
+                    break
+                short=declaration[1].removeprefix('Common.')
             self.component_infos[name]=info
         info=self.component_infos[name]
         r=Reader(data);value=self.read(r,info)
