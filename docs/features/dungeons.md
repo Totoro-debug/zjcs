@@ -87,4 +87,6 @@ Map12 的 121／50 机神山路线共用日常副本运行时，其奖励、次�
 
 [DailyDungeonModule.cs](../../unity/Assets/Game/Runtime/Offline/World/DailyDungeonModule.cs)、[OfflineDailyDungeonModule.cs](../../unity/Assets/Game/Runtime/Offline/World/OfflineDailyDungeonModule.cs)、[OfflineDailyDungeonSession.cs](../../unity/Assets/Game/Runtime/Offline/World/OfflineDailyDungeonSession.cs)、[DailyDungeonBattleEntryModule.cs](../../unity/Assets/Game/Runtime/Offline/World/DailyDungeonBattleEntryModule.cs)、[OfflineArenaSession.cs](../../unity/Assets/Game/Runtime/Offline/World/OfflineArenaSession.cs)、[DailyDungeonBattleRunner.cs](../../unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs)。
 
+排行榜 NPC 图标的伙伴数据由[伙伴 NPC 运行时程序集](../../unity/Assets/Game/Runtime/Offline/PartnersNpc/Zjcs.Offline.PartnersNpc.asmdef)提供，[Home 程序集](../../unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef)为此显式声明直接引用。
+
 [日常副本规则与资源](../../assets/reference/dungeons-runtime-source-manifest.json)、[竞技场来源版本与范围](../../assets/reference/SOURCES.md)、[副本界面绑定](../../assets/reference/dungeon-ui/prefab-binding-source-manifest.json)。
