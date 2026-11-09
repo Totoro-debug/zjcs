@@ -31,7 +31,7 @@ namespace Zjcs.Combat.Official
             FightOfficialCombatCatalog catalog, FightRandomStream random)
         {
             if (actor == null || skill == null || catalog == null
-                || (skill.EntityId != 13820 && skill.EntityId != 13830 && skill.EntityId != 13840)) return null;
+                || (skill.EntityId != 13820 && skill.EntityId != 13830 && skill.EntityId != 13840 && skill.EntityId != 50210)) return null;
             catalog.RestoreSkillLogicDefinition(skill);
             if (!skill.HasLogicComponent || string.IsNullOrEmpty(skill.LogicDefinitionJson)) return null;
             var component = OfficialJson.Parse(skill.LogicDefinitionJson) as Dictionary<string, object>;
@@ -43,7 +43,7 @@ namespace Zjcs.Combat.Official
         internal void OnDoHitTransient(FightBattleUnitState target, FightBattleHitDefinition hit,
             FightDamageTypeData type)
         {
-            if (skill.EntityId == 13820 || target == null || type.Dodge || type.Blinding) return;
+            if (skill.EntityId == 13820 || skill.EntityId == 50210 || target == null || type.Dodge || type.Blinding) return;
             var filter = Object(flow, "FilterCondition");
             if (flow.TryGetValue("FilterCondition", out object rawFilter)
                 && rawFilter != null && filter == null) return;
@@ -130,20 +130,52 @@ namespace Zjcs.Combat.Official
         internal void OnTransientDamage(FightBattleUnitState target, FightBattleHitDefinition hit,
             FightBattleTransientDamageContext damage)
         {
-            if (skill.EntityId != 13820 || !startHandled || target == null || damage == null
-                || damage.IsCure || !EmptyFilter(flow)) return;
+            if (target == null || damage == null || damage.IsCure || !EmptyFilter(flow)) return;
             var handlers = Array(flow, "HandleCfgs");
-            if (handlers.Count != 1 || !(handlers[0] is Dictionary<string, object> scale)
-                || String(scale, "_type") != "FightHandleCfgDamageScaleByScale"
+            Dictionary<string, object> scale;
+            long count;
+            int scaleKey, scaleValue;
+            bool persistent;
+            if (skill.EntityId == 13820)
+            {
+                if (!startHandled || handlers.Count != 1
+                    || !(handlers[0] is Dictionary<string, object> chargedScale)
+                    || !persistentBlackboard.TryGetValue(884090696, out count)) return;
+                scale = chargedScale; scaleKey = 884090696; scaleValue = 700; persistent = true;
+            }
+            else if (skill.EntityId == 50210)
+            {
+                if (handlers.Count != 2 || !(handlers[0] is Dictionary<string, object> read)
+                    || !(handlers[1] is Dictionary<string, object> stackedScale)
+                    || String(read, "_type") != "FightHandleCfgGetStatusStackCount"
+                    || !IsPort(read, "SourceEntityKey", 1, false)
+                    || !IsPort(read, "StackCountKey", 719180550, false)
+                    || Int(read, "StatusId") != 24823) return;
+                scale = stackedScale; scaleKey = 719180550; scaleValue = 2000; persistent = false;
+                count = 0;
+                foreach (var status in actor.Statuses)
+                    if (status != null && status.ClassId == 24823
+                        && status.ForbiddenType == 0 && status.StackCount > 0)
+                    {
+                        count += status.StackCount;
+                        if (count > int.MaxValue) return; // Original output is an integer blackboard port.
+                    }
+            }
+            else return;
+            if (String(scale, "_type") != "FightHandleCfgDamageScaleByScale"
                 || !IsPort(scale, "DamageKey", 2004, false)
                 || !IsPort(scale, "StorageDamageKey", 2004, false)
                 || !IsPort(scale, "BaseScaleKey", 774082833, false)
                 || !IsPort(scale, "DeltaDamageKey", 122229964, false)
-                || !IsPort(scale, "ScaleCountKey", 884090696, true)
-                || Int(scale, "ScaleValue") != 700 || !Bool(scale, "StorageAsAbs")
-                || !persistentBlackboard.TryGetValue(884090696, out long count)) return;
+                || !IsPort(scale, "ScaleCountKey", scaleKey, persistent)
+                || Int(scale, "ScaleValue") != scaleValue || !Bool(scale, "StorageAsAbs")) return;
+            if (!persistent)
+            {
+                blackboard.Clear();
+                blackboard[scaleKey] = count;
+            }
             long previous = damage.Damage;
-            decimal factor = 10000m + 700m * count;
+            decimal factor = 10000m + (decimal)scaleValue * count;
             damage.Damage = ScaleDamage(previous, factor);
             damage.AbsoluteDamage = ScaleDamage(damage.AbsoluteDamage, factor);
             blackboard[2004] = damage.Damage;

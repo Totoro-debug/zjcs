@@ -23,16 +23,17 @@ namespace Zjcs.Presentation.Combat
             FightBattleSkillDefinition attack, int skillId)
         {
             this.catalog = catalog; this.attack = attack; this.skillId = skillId;
-            itemId = skillId == 13820 ? 10196 : skillId == 13830 ? 10197 : 10198;
-            statusId = skillId == 13840 ? 24697 : 24031;
-            animationName = skillId == 13820 ? "100/skill_71"
+            itemId = skillId == 50210 ? 16020 : skillId == 13820 ? 10196 : skillId == 13830 ? 10197 : 10198;
+            statusId = skillId == 50210 ? 24823 : skillId == 13840 ? 24697 : 24031;
+            animationName = skillId == 50210 ? "skill_01" : skillId == 13820 ? "100/skill_71"
                 : skillId == 13830 ? "100/skill_11_2" : "100/skill_17";
         }
 
         public static OfficialBattleSkillStackValidation Configure(FightBattleCheckpoint checkpoint)
         {
             Require(int.TryParse(Environment.GetEnvironmentVariable("ZJCS_SKILL_STACK_ENTITY"), out int id)
-                && (id == 13820 || id == 13830 || id == 13840), "Select original 13820, 13830 or 13840.");
+                && (id == 13820 || id == 13830 || id == 13840 || id == 50210),
+                "Select original 13820, 13830, 13840 or 50210.");
             var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
             var player = checkpoint.Units.Single(value => value.Id == 1);
             var enemy = checkpoint.Units.First(value => value.Id != 1);
@@ -71,9 +72,25 @@ namespace Zjcs.Presentation.Combat
             }
             enemy.Skills.Clear(); enemy.SkillState.Slots.Clear();
             player.Skills.Clear(); player.SkillState.Slots.Clear();
-            var skill = catalog.CreateSkill(id, 0, probe.itemId, 5, 20, player.SubRank, null);
+            var skill = catalog.CreateSkill(id, id == 50210 ? -2 : 0, probe.itemId, 5, 20, player.SubRank, null);
             skill.LimitedTimes = 1;
-            player.Skills.Add(skill); player.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
+            if (id == 50210)
+            {
+                var charge = catalog.CreateStatus(24823, player.Id, player.Id, 9950210);
+                charge.StackCount = 5; player.Statuses.Add(charge);
+                player.PetEnergy = new FightBattlePetEnergyState {
+                    OwnerUnitId = player.Id, PetUnitId = player.Id, PetClassId = 1620, PetEvolutionPhase = 1
+                };
+                player.PetEnergy.SupportSkills.Add(skill);
+                player.PetEnergy.SupportSkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
+                player.ReportSkillSnapshots.Add(skill);
+                player.Skills.Add(probe.attack);
+                player.SkillState.Slots.Add(catalog.CreateSkillSlot(probe.attack, 0));
+            }
+            else
+            {
+                player.Skills.Add(skill); player.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
+            }
             checkpoint.MaxRound = 8;
             return probe;
         }
@@ -87,6 +104,11 @@ namespace Zjcs.Presentation.Combat
             entities.CastStarted += cast => {
                 if (cast.ActorId != 1 || cast.SkillEntityId != skillId) return;
                 nativeCasts++; castTime = Time.realtimeSinceStartup;
+                if (skillId == 50210)
+                {
+                    Require(cast.IsPetSupport, "50210 must use the original pet support source.");
+                    return;
+                }
                 var source = controller.TryGetUnitTransform(1);
                 var renderer = source ? source.GetComponentInChildren<ProfessionNativeSceneRenderer>(true) : null;
                 Require(renderer, "The public actor is not the original native player.");
@@ -104,7 +126,18 @@ namespace Zjcs.Presentation.Combat
             var player = checkpoint.Units.Single(value => value.Id == 1);
             var hits = step.DamageEvents.Where(value => value.SourceId == 1 && value.SkillEntityId == skillId).ToArray();
             var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
-            if (skillId == 13820)
+            if (skillId == 50210)
+            {
+                Require(hits.Length > 0 && player.Statuses.Single(value => value.InstanceId == 9950210).StackCount == 5,
+                    "The pet support hit consumed its current charge layers.");
+                var savedPlayer = saved.Units.Single(value => value.Id == 1);
+                Require(savedPlayer.Statuses.Single(value => value.InstanceId == 9950210).StackCount == 5
+                    && savedPlayer.Statuses.Where(value => value.ClassId == 24823).Sum(value => value.StackCount)
+                        == player.Statuses.Where(value => value.ClassId == 24823).Sum(value => value.StackCount)
+                    && savedPlayer.PetEnergy.SupportSkillState.Slots.Single().ReleasedTimes == 1,
+                    "Pet support release or retained charge layers were lost in the checkpoint.");
+            }
+            else if (skillId == 13820)
             {
                 Require(hits.Length > 0 && !player.Statuses.Any(value => value.ClassId == 24031),
                     "The real blast did not consume all five source charge layers.");
@@ -132,20 +165,36 @@ namespace Zjcs.Presentation.Combat
             foreach (var property in player.Properties.Concat(player.BaseProperties ?? player.Properties))
                 if (property.Id == catalog.PropertyType("Attack")) property.Value = 100000000;
             Debug.Log("[Skill stack] actual " + skillId + " hit count=" + hits.Length
-                + (skillId == 13820 ? "; consumed five charge layers" : "; per-hit charge layers passed")
+                + (skillId == 13820 ? "; consumed five charge layers" : skillId == 50210
+                    ? "; preserved five original layers and subsequent grants" : "; per-hit charge layers passed")
                 + "; original item/cultivation, one release and checkpoint passed.");
         }
 
         public void ObserveFrame(OfficialBattleRuntimeController controller)
         {
             CaptureName = null;
-            if (captured || !animated || nativeCasts == 0 || Time.realtimeSinceStartup - castTime < .2f) return;
-            var source = controller.TryGetUnitTransform(1);
+            if (captured) return;
+            if (skillId == 50210 && nativeCasts > 0)
+            {
+                var pet = PetTransform(controller);
+                var native = pet ? pet.GetComponentInChildren<BattleNativeMonsterRenderer>(true) : null;
+                animated |= native && native.Animation == animationName && native.AnimatorFrame.Current.Time > .04f;
+            }
+            if (!animated || nativeCasts == 0 || Time.realtimeSinceStartup - castTime < .2f) return;
+            var source = skillId == 50210 ? PetTransform(controller) : controller.TryGetUnitTransform(1);
             var renderer = source ? source.GetComponentInChildren<ProfessionNativeSceneRenderer>(true) : null;
-            if (!renderer || renderer.PlayerPhysicsTime <= 0 || !source.GetComponentsInChildren<MeshRenderer>()
+            if (!source || (skillId != 50210 && (!renderer || renderer.PlayerPhysicsTime <= 0))
+                || !source.GetComponentsInChildren<MeshRenderer>()
                 .Any(value => value.enabled && value.isVisible && !value.forceRenderingOff
                     && value.GetComponent<MeshFilter>()?.sharedMesh?.vertexCount > 0)) return;
             captured = true; CaptureName = "skill-stack-" + skillId;
+        }
+
+        private static Transform PetTransform(OfficialBattleRuntimeController controller)
+        {
+            var scene = (OfficialBattleSceneView)typeof(OfficialBattleRuntimeController)
+                .GetField("sceneView", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(controller);
+            return scene.TryGetPetTransform(1);
         }
 
         public void Verify(FightBattleCheckpoint checkpoint)
