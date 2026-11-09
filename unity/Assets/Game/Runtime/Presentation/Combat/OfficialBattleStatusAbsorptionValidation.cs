@@ -48,7 +48,10 @@ namespace Zjcs.Presentation.Combat
             player.Statuses.Add(catalog.CreateStatus(24202, player.Id, player.Id, 9964202));
             var toAbsorb = catalog.CreateStatus(24750, player.Id, actor.Id, 9964750, 64280, 17392);
             toAbsorb.StackCount = 3; player.Statuses.Add(toAbsorb);
-            actor.Statuses.Add(catalog.CreateStatus(24774, actor.Id, actor.Id, 9964774, 64280, 17392));
+            actor.Statuses.Add(catalog.CreateStatus(24745, actor.Id, actor.Id, 9964745,
+                64280, 17392, 5, 20, actor.SubRank));
+            actor.Statuses.Add(catalog.CreateStatus(24774, actor.Id, actor.Id, 9964774,
+                64280, 17392, 5, 20, actor.SubRank));
             actor.Skills.Clear(); actor.SkillState.Slots.Clear();
             var skill = catalog.CreateSkill(64280, 0, 17392, 1, 1, actor.SubRank, null);
             actor.Skills.Add(skill); actor.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
@@ -79,6 +82,29 @@ namespace Zjcs.Presentation.Combat
             {
                 Require(energy.StackCount == 100 && checkpoint.Units.All(value => value.SkillState.Round == 0),
                     "Original startup must create 100 layers before the first personal turn.");
+                foreach (int sourceId in new[] { 24745, 24774 })
+                {
+                    var source = actor.Statuses.Single(value => value.ClassId == sourceId);
+                    int createdId = sourceId == 24745 ? 24748 : 24752;
+                    var created = actor.Statuses.Single(value => value.ClassId == createdId);
+                    Require(source.LogicSelfInitialized && source.LogicStartInitialized
+                        && created.StackCount == (sourceId == 24745 ? 60 : 100)
+                        && created.CreatorId == actorId && created.RootSkillId == 64280
+                        && created.ApplyingSkillItemId == 17392 && created.SourceSkillRank == 5
+                        && created.SourceSkillLevel == 20 && created.SourceSubRank == actor.SubRank,
+                        "Original initialization graph lost its layers/source: " + sourceId);
+                    var startupCheckpoint = FightBattleCheckpointSerializer.Load(
+                        FightBattleCheckpointSerializer.Save(checkpoint));
+                    var restoredStatus = startupCheckpoint.Units.Single(value => value.Id == actorId)
+                        .Statuses.Single(value => value.InstanceId == created.InstanceId);
+                    Require(restoredStatus.StackCount == created.StackCount
+                        && restoredStatus.RootSkillId == created.RootSkillId
+                        && restoredStatus.CreatorId == actorId && restoredStatus.SourceSkillRank == 5
+                        && restoredStatus.SourceSkillLevel == 20,
+                        "Initialization layers/source were lost in the actual Unity checkpoint.");
+                }
+                Debug.Log("[Status stack hosts] original 24745 -> 24748 x60 and 24774 -> 24752 x100;"
+                    + " startup lifecycle, source inheritance and Unity checkpoint passed.");
                 FightStatusLifecycle.AddStack(energy, -80);
                 armed = true;
             }
