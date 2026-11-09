@@ -272,6 +272,58 @@ namespace Zjcs.Editor
                     "movement completion preserves the original visual scale magnitude");
             }
             UnityEngine.Object.Destroy(model); UnityEngine.Object.Destroy(sceneRoot); yield return null;
+            var monsterRoot = new GameObject("Original monster movement fixture");
+            monsterRoot.transform.SetParent(world.transform, false);
+            var monsterMapper = new OfficialBattleGridMapper(monsterRoot.transform, grid);
+            using (var scope = new Zjcs.Offline.BattleNativePlayables.OfflineBattleNativePlayableScope(monsterRoot.transform, null))
+            using (var scene = new OfficialBattleSceneView(null, monsterRoot.transform, null, monsterMapper,
+                null, (target, state) =>
+                {
+                    var scale = target.localScale;
+                    scale.x = Mathf.Abs(scale.x) * (state.HasFlipX && state.FlipX ? -1f : 1f);
+                    target.localScale = scale;
+                }, nativePlayableScope: scope))
+            {
+                var monster = new FightBattleUnitState { Id = 2, MonsterId = 3206, MonsterTemplateId = 3206,
+                    CharacterType = 2, X = 2, Y = 2, Hp = 100, MaxHp = 100 };
+                var checkpoint = new FightBattleCheckpoint { Grid = grid };
+                checkpoint.Units.Add(monster); scene.Refresh(checkpoint);
+                var entity = scene.TryGetUnitTransform(monster.Id);
+                var native = entity.GetComponentInChildren<Zjcs.Offline.ProfessionUI.BattleNativeMonsterRenderer>();
+                Require(native != null && native.GetComponent<MeshFilter>().sharedMesh.vertexCount > 0,
+                    "original 3206 monster uses its native skeleton, atlas and live mesh");
+                Require(!(native.Animator.runtimeAnimatorController is AnimatorOverrideController),
+                    "monster movement retains its original application controller");
+                var rules = OfficialCombatAssetCatalog.LoadDefault().Load();
+                var movement = rules.CreateRoleMovement(monster, false);
+                Require(movement.MoveBehaviourId == 19811 && movement.MoveDuration < 0f
+                    && Mathf.Approximately(movement.MoveSpeed, 5f), "original 3206 movement configuration");
+                movement.Path.AddRange(new[] { new FightGridPoint(2, 2),
+                    new FightGridPoint(3, 2), new FightGridPoint(4, 2) });
+                movement.Delay = .25f; rules.ApplyMovementFacing(monster, movement);
+                var monsterStep = new FightBattleStepEvent { ActorId = monster.Id }; monsterStep.Movements.Add(movement);
+                monster.X = 4; scene.Refresh(checkpoint, monsterStep);
+                bool ran = false, followed = false;
+                for (int frame = 0; frame < 90; frame++)
+                {
+                    scope.Tick(1f / 60); scene.Tick(1f / 60); scope.LateTick();
+                    ran |= native.Animator.GetBool("run") && native.AnimatorFrame.Current.Animation?.Name == "run_01";
+                    foreach (var follow in monsterRoot.GetComponentsInChildren<MyPlayableFollowBone>(true))
+                        if (follow.myStatus != MyPlayable.PlayableStatus.Stop && follow.myApplyComponent != null)
+                        {
+                            Vector3 expected = follow.myAttach.GetBone(follow).TransformPoint(follow.myAttach.myOffset);
+                            Require((follow.myApplyComponent.transform.position - expected).sqrMagnitude < 1e-7f,
+                                "original monster effect follows its actual body attachment");
+                            followed = true;
+                        }
+                    if (frame == 20 || frame == 40) Capture(entity.position, "monster-3206-movement-" + frame);
+                    yield return null;
+                }
+                Require(ran && followed, "actual monster movement drives the original run animation and native effect");
+                Require((entity.position - monsterMapper.GridToWorld(new FightGridPoint(4, 2))).sqrMagnitude < 1e-7f
+                    && !native.Animator.GetBool("run"), "original monster lands and releases its run state");
+            }
+            UnityEngine.Object.Destroy(monsterRoot); yield return null;
             var fades = FadeSequenceSteps(world.transform);
             while (fades.MoveNext()) yield return fades.Current;
             UnityEngine.Object.Destroy(world); yield return null;
