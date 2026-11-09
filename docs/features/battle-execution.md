@@ -26,6 +26,8 @@
 
 `GameEndUIHandler.Delay` 对 `RoundLimit`／`TimeLimit` 分别显示 `game_end_roundlimit`／`game_end_timelimit`，沿原 `GameEndOverRoundDelayTime` 等待。`GameTimeoutUI` 用实时秒更新整数倒计时，结算等待本身使用缩放时间；倒计时结束仅通知，不自行隐藏内容。所选 884 的原 `FightMainPanel/Content/Center/TimeOutTipUI` 子树及祖先共保留 26 个对象，`Content.SafeArea` 在运行时恢复父级尺寸。原组件、原生绑定、文本与资源依赖见[超时提示来源](../../assets/reference/battle-timeout-native-source-manifest.json)。
 
+官方 `AssemblyGSerializableBaseTypes` 注册表包含非 abstract 基类及具体叶类。`official_ec_codec.Formats` 按该注册表读取小端 ushort 类型编号，再直接消费对应具体 formatter，避免重复读取类型编号；组件 Info 类型取原泛型基类声明并缓存，仍严格检查整段字节消费。原程序集、注册表、formatter、配置分片、历史载荷及工具哈希见[当前实体配置对照来源](../../assets/reference/battle-rules/active-entity-configuration-source-manifest.json)。对照只读取输入，不激活或改写历史配置数值。
+
 ## 完整还原部分
 
 - `OfficialBattleRuntimeController` 连接战斗会话、准备界面、场景宿主与结算回调；`FightBattleCheckpoint` 保存可恢复的本地战斗状态。
@@ -89,6 +91,7 @@
 
 ## 当前验证范围
 
+- 现有 1,906 个技能实体与 2,260 个命中实体已逐组件对照所选 884 原配置：4,166 项全部解码，无解析错误或未定位项；4,159 项同值，10840、12010、12900、13140、13811、13990、60741 共七项存在配置差异，尚未激活。13871／13941 的原定义已分别移动到 194／197 号分片，扫描同版技能分片后各仅有一个定义，历史分片记录仍保留。原 12030 附加子技能字节、已注册具体叶类、空多态条目、未知类型编号、截断和尾随字节的五项解码回归通过。此检查不覆盖其他配置表、属性、新实体成员或战斗运行行为。
 - 命中配置读取、原范围初始化排序与旧检查点补全的规则回归通过：10781 恢复延迟与曼哈顿距离排序，10921 保留随机范围原序；10911 七次同 ID 引用保留各自延迟，10821 区分下一跳与范围延迟，16121 保留伤害偏移，13303 保留显式零旋转和禁用翻转，13051 保留轨迹偏移与 DestroyDelay，11541 恢复九格 BaseScopes；12861 补回连锁标志、范围、子引用及轨迹配置，HP、CD、命中回执和统计不变。现有 460 组公式及战斗核心回归一并通过；两个规则文件另在已提交代码基线上独立编译并通过同一组规则回归。这是配置读取与存档兼容的检查，不代表新增连锁执行或原生命中播放已完成。
 
 - `GameTimeoutUI` 在实际魔王战斗的全局／主角回合耗尽路径通过内置屏 Play Mode 验证：原生父级与 `SafeArea`、原中文与字形、可见的 `2 → 1`、一次超时通知、等待后显示结果、保留战场及原按钮离开后的释放均已核对并查看运行截图。回合数与生命／速度仅在隔离夹具中缩短，不直接调用完成回调；`TimeLimit`、观战及其他玩法的提示接线仍未完成运行覆盖。玩法奖励与战报交接范围见[混沌侵袭](weekly-challenges.md)。

@@ -59,7 +59,17 @@ class Formats:
         if resolver.exists():
             self.unions={int(opcode):name for opcode,name in re.findall(
                 r'(\d+) => .*?new StaticGSerializableFormatter<([^>]+)>', resolver.read_text('utf-8-sig'))}
+            self.sources['polymorphic-opcodes']=resolver
+        self.base_types=set()
+        declarations=self.source/'Properties/AssemblyInfo.cs'
+        if declarations.exists():
+            registration=re.search(r'AssemblyGSerializableBaseTypes\s*\(\s*new Type\[\]\s*\{(.*?)\}\s*\)',
+                                   declarations.read_text('utf-8-sig'), re.S)
+            if registration:
+                self.base_types=set(re.findall(r'typeof\(([^)]+)\)',registration[1]))
+                self.sources['polymorphic-base-types']=declarations
         self.abstracts={}
+        self.component_infos={}
 
     def abstract(self, typ):
         if typ not in self.abstracts:
@@ -91,6 +101,19 @@ class Formats:
         self.cache[typ]=fields;return fields
     def read(self,r,typ):
         typ=typ.strip().removeprefix('Common.').removeprefix('UnityEngine.')
+        if typ in self.base_types:
+            # Registration, rather than the abstract modifier, selects the
+            # original static polymorphic formatter. Concrete base types and
+            # even a registered concrete leaf can occur in these fields.
+            opcode=struct.unpack('<H',r.take(2))[0]
+            if opcode==0:return None
+            concrete=self.unions.get(opcode)
+            if concrete is None:raise ValueError(f'Unknown official {typ} opcode {opcode}')
+            value=self._read(r,concrete)
+            if not isinstance(value,dict):raise ValueError('Union formatter must return an object: '+concrete)
+            return dict(value,_type=concrete)
+        return self._read(r,typ)
+    def _read(self,r,typ):
         if typ in ['Single','float']:return struct.unpack('>f',r.take(4))[0]
         if typ in ['Double','double']:
             value=r.value()
@@ -120,7 +143,7 @@ class Formats:
             if opcode==0:return None
             concrete=self.unions.get(opcode)
             if concrete is None:raise ValueError(f'Unknown official {typ} opcode {opcode}')
-            value=self.read(r,concrete)
+            value=self._read(r,concrete)
             if not isinstance(value,dict):raise ValueError('Union formatter must return an object: '+concrete)
             return dict(value,_type=concrete)
         if schema is None:return r.value()
@@ -146,6 +169,18 @@ class Formats:
             'Common.WorldBulletTargetStateCompleteComponent':'Common.WorldBulletTargetBaseComponentInfo',
             'Common.StageResultChangeMapComponent':'Common.LoStageResultChangeMapComponentInfo',
         }.get(name,info)
+        if name not in self.component_infos:
+            short=name.removeprefix('Common.')
+            source=self.source/'Common'/(short+'.cs')
+            if source.exists():
+                declaration=re.search(r'public (?:(?:abstract|sealed|partial) )*class '
+                    +re.escape(short)+r'\s*:\s*[\w.]+<([\w.]+Info)>',
+                    source.read_text('utf-8-sig'))
+                if declaration:
+                    info=declaration[1]
+                    self.sources['component:'+short]=source
+            self.component_infos[name]=info
+        info=self.component_infos[name]
         r=Reader(data);value=self.read(r,info)
         if r.pos!=len(data):raise ValueError(f'{name}: consumed {r.pos}/{len(data)}')
         return value
