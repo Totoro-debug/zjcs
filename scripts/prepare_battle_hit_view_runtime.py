@@ -280,6 +280,7 @@ def main():
     outputs.extend((identity(asmdef), identity(Path(str(asmdef) + '.meta'))))
     local_bindings = [identity(ROOT / path) for path in (
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHitEntityPlayback.cs',
+        'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHitEntityData.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/Zjcs.Presentation.Combat.asmdef',

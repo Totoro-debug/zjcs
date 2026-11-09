@@ -214,13 +214,13 @@ namespace Zjcs.Editor.Combat
                     id => checkpoint.Units.SingleOrDefault(unit => unit.Id == id));
                 entities.CastStarted += view.OnPetSkillStarted;
                 void Start(int actorId, int itemId) => entities.Start(new FightBattleSkillCastEvent {
-                    ActorId = actorId, Slot = -1, SkillEntityId = 50000, SkillItemId = itemId,
+                    ActorId = actorId, Slot = -1, SkillEntityId = 10100, SkillItemId = itemId,
                     Presentation = new FightBattleSkillCastPresentation { TargetId = actorId == 1 ? 2 : 1,
                         TargetX = 1, FacingIndex = 3, SkillTargetType = 1, Duration = .5f }
-                }, null, actorId == 1 ? actor.transform : victim.transform,
+                }, actorId == 1 ? actor.transform : victim.transform,
                     actorId == 1 ? victim.transform : actor.transform);
                 // The native entity/agent path is real; this notification fixture
-                // intentionally omits the world's full skill-effect graph.
+                // uses original empty skill 10100 to isolate the HUD notification.
                 Start(2, 16000); Start(1, 10032);
                 Require(Mathf.Abs(group.alpha - .7f) < .00001f, "Foreign/unrelated skills animated the pet HUD.");
                 Start(1, 16000);

@@ -44,7 +44,7 @@ namespace Zjcs.Editor.Combat
             }
             try
             {
-                playback.Start(Cast(11170, 1, .3f), prefab, actor.transform, target.transform);
+                playback.Start(Cast(11170, 1, .3f), actor.transform, target.transform);
                 var first = root.GetComponentsInChildren<MyFightSkill>().Single();
                 var graph = root.GetComponentsInChildren<MyPlayable>().First(value => value.mySource == actor);
                 Require(first.Source.gameObject == actor && first.Target.gameObject == target
@@ -65,7 +65,7 @@ namespace Zjcs.Editor.Combat
                     "production duration publishes ended once while retaining graph input lifetime");
 
                 // 10820's original prefab prefers position even for entity-target skills.
-                playback.Start(Cast(10820, 1, .1f), prefab, actor.transform, target.transform);
+                playback.Start(Cast(10820, 1, .1f), actor.transform, target.transform);
                 var positional = root.GetComponentsInChildren<MyFightSkill>().Single(view => view != first);
                 Require(applied == 1 && positional.PreferredPosToPlayable
                     && positional.GetPlayableTargetGo() != target

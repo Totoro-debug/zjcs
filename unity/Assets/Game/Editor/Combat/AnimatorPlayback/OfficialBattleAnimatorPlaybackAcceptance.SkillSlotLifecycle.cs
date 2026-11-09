@@ -49,7 +49,11 @@ namespace Zjcs.Editor.Combat
             checkpoint.Units.Add(new FightBattleUnitState { Id = 2, MonsterId = 10001, Direction = 3 });
             Sprite icon = catalog.FindSprite("C_none-fa3e084e40.png");
             Require(icon, "existing official HUD icon is available to the isolated timing fixture");
-            view.Mount(canvas.transform); view.RefreshSkillSlots(checkpoint, _ => icon);
+            view.Mount(canvas.transform);
+            view.RefreshPhase(FightBattlePhase.Play, null);
+            view.Refresh(checkpoint);
+            view.RefreshPetFunction(false);
+            view.RefreshSkillSlots(checkpoint, _ => icon);
             var bindings = OfficialBattleSkillSlotBindings.Load();
             var borrowed = target.GetComponent<MyFightSkillAgent>(); bool ownsBorrowed = !borrowed;
             if (!borrowed) borrowed = target.AddComponent<MyFightSkillAgent>();
@@ -100,6 +104,9 @@ namespace Zjcs.Editor.Combat
             }
             try
             {
+                // Let the original HUD entrance animation finish before checking
+                // cast timing; otherwise its skill row is still below the camera.
+                yield return Pump(64);
                 // A player trigger can belong to another unit's step. Only the
                 // actual source agent and its creation/removal times drive the UI.
                 var cast = Cast(1, 0, .5f); cast.Delay = .25f;
@@ -111,13 +118,18 @@ namespace Zjcs.Editor.Combat
                 Require(notifications.SequenceEqual(new[] { "1/0/start" }), "delayed original start forwarded exactly once");
                 view.RefreshSkillSlots(checkpoint, _ => icon); State(view, 0, 2);
                 GameObject lateRoot = lateView.Mount(canvas.transform);
+                lateView.RefreshPhase(FightBattlePhase.Play, null);
+                lateView.Refresh(checkpoint);
+                lateView.RefreshPetFunction(false);
                 lateView.RefreshSkillSlots(checkpoint, _ => icon); State(lateView, 0, 2); lateRoot.SetActive(false);
                 Capture("applied");
-                // No graph is needed to exercise the original agent's filtering
-                // and negative-slot branches. The primary cast above uses 11170.
-                entities.Start(Cast(2, 2, .0625f), null, target.transform, actor.transform);
+                // Original empty skill 10100 isolates the agent filtering and
+                // negative-slot branches. The primary cast above uses 11170.
+                var foreign = Cast(2, 2, .0625f); foreign.SkillEntityId = 10100;
+                entities.Start(foreign, target.transform, actor.transform);
                 MyFightSkill other = world.GetComponentsInChildren<MyFightSkill>().Last();
-                entities.Start(Cast(1, -1, .0625f), null, actor.transform, target.transform);
+                var triggered = Cast(1, -1, .0625f); triggered.SkillEntityId = 10100;
+                entities.Start(triggered, actor.transform, target.transform);
                 State(view, 2, 1);
                 yield return Pump(31); State(view, 0, 2); State(view, 2, 1);
                 yield return Pump(1); State(view, 0, 4); State(lateView, 0, 4); Capture("ended");
@@ -133,7 +145,7 @@ namespace Zjcs.Editor.Combat
                 yield return Pump(1); State(view, 0, 3);
                 Require(notifications.Count == beforeEmpty, "known empty graph retains its delay");
                 yield return Pump(1); State(view, 0, 2);
-                Require(world.GetComponentsInChildren<MyFightSkill>().Any(value => value.gameObject.name == "10100" && value.myPlayablePrefab == null),
+                Require(world.GetComponentsInChildren<MyFightSkill>().Any(value => value.myEntity.Entity.ClassId == 10100 && value.myPlayablePrefab == null),
                     "known empty graph created its original skill entity");
                 yield return Pump(2); State(view, 0, 4);
                 Require(notifications.Skip(beforeEmpty).SequenceEqual(new[] { "1/0/start", "1/0/end" }),

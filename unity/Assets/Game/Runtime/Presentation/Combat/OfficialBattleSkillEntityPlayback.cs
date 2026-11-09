@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.BattleNativePlayables;
@@ -10,11 +9,13 @@ using Zjcs.Official.EntityTransformViews;
 using Zjcs.Official.EntityViews;
 using Zjcs.Official.StoryPlayables;
 using Zjcs.Official.World.NativeTerrain.Common;
+using Zjcs.Official.EntityViewPlayables;
+using Zjcs.Offline.World.NativeMap14EntityLifecycle;
 
 namespace Zjcs.Presentation.Combat
 {
     /// <summary>Projects settled cast inputs into the original MyFightSkill lifecycle.</summary>
-    public sealed class OfficialBattleSkillEntityPlayback : IFightHitViewServices, IDisposable
+    public sealed class OfficialBattleSkillEntityPlayback : IFightHitViewServices, IServiceProvider, IECViewInjection, IDisposable
     {
         private sealed class Grid : ECGridTransformData
         {
@@ -41,13 +42,14 @@ namespace Zjcs.Presentation.Combat
             public EcEntityIdentifier Identifier;
             public Grid Grid;
             public SkillState Skill;
+            public OfficialBattleSkillPrefabData Additional;
             public override int ClassId => TypeId;
             public override EcEntityIdentifier Id => Identifier;
             public override T GetComponent<T>()
             {
                 object value = typeof(T) == typeof(ECGridTransformData) ? Grid
                     : typeof(T) == typeof(FightSkillComponent) ? Skill : null;
-                return value == null ? default : (T)value;
+                return value == null ? Additional == null ? default : Additional.GetComponent<T>() : (T)value;
             }
         }
 
@@ -95,7 +97,8 @@ namespace Zjcs.Presentation.Combat
         private readonly Transform root;
         private readonly OfficialBattleEntityPositionContainer positionContainer;
         private readonly OfficialBattleGridMapper gridMapper;
-        private readonly OfficialBattleSkillEntityViewCatalog catalog;
+        private readonly FightOfficialCombatCatalog combatCatalog;
+        private readonly OfficialBattleNativeEntityLoader skillViews;
         private readonly OfflineBattleNativePlayableScope scope;
         private readonly Func<int, FightBattleUnitState> unitState;
         private readonly Dictionary<int, UnitLease> units = new Dictionary<int, UnitLease>();
@@ -123,15 +126,17 @@ namespace Zjcs.Presentation.Combat
             this.gridMapper = gridMapper ?? throw new ArgumentNullException(nameof(gridMapper));
             this.scope = scope ?? throw new ArgumentNullException(nameof(scope));
             this.unitState = unitState ?? throw new ArgumentNullException(nameof(unitState));
-            catalog = OfficialBattleSkillEntityViewCatalog.Load();
+            combatCatalog = OfficialCombatAssetCatalog.LoadDefault().Load();
             var containerRoot = new GameObject("Battle presentation entity coordinates");
             containerRoot.transform.SetParent(root, false);
             positionContainer = containerRoot.AddComponent<OfficialBattleEntityPositionContainer>();
             positionContainer.EntitySlot = root;
+            skillViews = new OfficialBattleNativeEntityLoader(root, positionContainer, scope, true,
+                PrepareSkillInstance, PrepareBoundSkill);
         }
 
         public MyEntity GetEntity(EcEntityIdentifier id) =>
-            entities.TryGetValue(id, out var entity) ? entity : hitViews?.GetEntity(id);
+            entities.TryGetValue(id, out var entity) ? entity : skillViews.GetEntity(id) ?? hitViews?.GetEntity(id);
 
         public MyEntity EnsureUnit(int id, Transform transform) => BindUnit(id, transform).Entity;
 
@@ -170,12 +175,11 @@ namespace Zjcs.Presentation.Combat
             return new Pos2d(point.X, point.Y);
         }
 
-        public void Start(FightBattleSkillCastEvent cast, GameObject prefab, Transform source, Transform target)
+        public void Start(FightBattleSkillCastEvent cast, Transform source, Transform target)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillEntityPlayback));
             if (cast.Presentation == null)
                 throw new InvalidOperationException("A native skill requires its creation-time presentation snapshot.");
-            var binding = catalog.Find(cast.SkillEntityId);
             var sourcePosition = new Pos2d(cast.Presentation.SourceX, cast.Presentation.SourceY);
             var sourceFacing = Facing(cast.Presentation.FacingIndex);
             if (!nativeGridIds.Contains(cast.ActorId) || cast.IsPetSupport)
@@ -189,31 +193,51 @@ namespace Zjcs.Presentation.Combat
             // subscriptions. A child cast must not replace that component projection.
             if (cast.Presentation.TargetId > 0 && target != null && !nativeGridIds.Contains(cast.Presentation.TargetId))
                 BindUnit(cast.Presentation.TargetId, target);
-            var go = new GameObject(cast.SkillEntityId.ToString(CultureInfo.InvariantCulture));
-            go.SetActive(false);
-            go.transform.SetParent(root, false);
-            var entity = go.AddComponent<MyEntity>();
-            var view = go.AddComponent<MyFightSkill>();
-            view.PreferredPosToPlayable = binding.preferredPosToPlayable;
-            view.ShowSkillReplay = binding.showSkillReplay;
-            // The dispatcher has already selected the original directional field.
-            view.myPlayablePrefab = prefab;
-            view.ViewServices = this;
-            view.myPlayableManager = scope;
             var state = new SkillState { Cast = cast };
             state.Configuration.Cast = cast.Presentation;
             state.Data = new EntityData { TypeId = cast.SkillEntityId,
                 Identifier = new EcEntityIdentifier(2, ++serial), Skill = state,
+                Additional = new OfficialBattleSkillPrefabData(combatCatalog, cast.SkillEntityId),
                 Grid = new Grid { Position = sourcePosition,
                     Facing = sourceFacing, Mirrored = cast.Presentation.FlipX,
                     ToPosition = GridToPos, ToGrid = PositionToGrid } };
-            entity.Bind(positionContainer, state.Data, true);
-            entities.Add(state.Data.Id, entity);
+            var entity = skillViews.Create(state.Data);
             casts.Add(new ActiveCast { Entity = entity, Remaining = cast.Presentation.Duration < 0f
                 ? float.PositiveInfinity : cast.Presentation.Duration });
-            go.SetActive(true);
             scope.Dispatch(entity.MyStart);
             CastStarted?.Invoke(cast);
+        }
+
+        // Original ECViewDriver injects its serialized views during Awake.
+        // The loader holds new roots inactive until these bindings and Bind finish.
+        private void PrepareSkillInstance(GameObject instance)
+        {
+            var skill = instance.GetComponent<MyFightSkill>();
+            if (!skill) throw new InvalidOperationException("Original skill prefab has no MyFightSkill.");
+            skill.ViewServices = this; skill.myPlayableManager = scope;
+            foreach (var driver in instance.GetComponentsInChildren<ECViewDriver>(true))
+            {
+                if (!instance.GetComponent<ECViewEntityBinding>()) instance.AddComponent<NativeMyEntityBinding>();
+                driver.ServiceProvider = this;
+                driver.ClientVisibilitySupporterFactory = new ConstantClientVisibilitySupporterFactory();
+            }
+        }
+
+        private void PrepareBoundSkill(MyEntity entity)
+        {
+            var data = (EntityData)entity.Entity;
+            var context = new OfficialBattleSkillSourceStatusSnapshot(data.Skill.Cast.Presentation,
+                data.Skill.SrcEntityId, combatCatalog);
+            foreach (var view in entity.GetComponents<PlayableOverrideByStatusStack>()) view.StatusServices = context;
+            foreach (var view in entity.GetComponents<MyFightHitExtDelayInfoOverriderByStatusStack>()) view.StatusServices = context;
+        }
+
+        public object GetService(Type type) => null;
+        public void Inject(object value)
+        {
+            if (value is ECPlayableSupporterView playable)
+            { playable.MyPlayableManager = scope; playable.ServiceProvider = this; }
+            else throw new InvalidOperationException("Unbound original skill entity view: " + value?.GetType().FullName);
         }
 
         // Split native updates at entity removal as well as cast creation. Original
@@ -292,7 +316,7 @@ namespace Zjcs.Presentation.Combat
         private void Remove(ActiveCast cast)
         {
             cast.Removed = true;
-            if (cast.Entity != null) scope.Dispatch(() => { cast.Entity.End(null); cast.Entity.Remove(null); });
+            if (cast.Entity != null) skillViews.Remove(cast.Entity.Id);
         }
 
         public void Dispose()
@@ -302,9 +326,9 @@ namespace Zjcs.Presentation.Combat
             hitViews?.Dispose();
             hitViews = null;
             foreach (var cast in casts) if (!cast.Removed) Remove(cast);
-            // Graphs may still reference Skill/its cached target after entity removal.
+            // Original entity FIFO pools release only after all live removals.
+            skillViews.Dispose();
             scope.Dispose();
-            foreach (var cast in casts) if (cast.Entity != null) Destroy(cast.Entity.gameObject);
             casts.Clear();
             foreach (var lease in units.Values) ReleaseUnit(lease);
             foreach (var lease in pets.Values) ReleaseUnit(lease);

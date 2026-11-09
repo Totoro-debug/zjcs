@@ -7,12 +7,28 @@ namespace Zjcs.Combat.Official
     [Serializable]
     public sealed class FightBattleSkillCastPresentation
     {
+        [Serializable]
+        public sealed class SourceStatus
+        {
+            public int InstanceId, ClassId, StackCount;
+        }
+
+        [Serializable]
+        public sealed class SourceSharedStack
+        {
+            public int ShareId, StackCount;
+        }
+
         public int SourceX, SourceY, TargetX, TargetY, TargetId;
         // The executor indexes Pos2d.FourDirs (Down, Left, Up, Right), not Common.Direction.
         public int FacingIndex;
         public bool FlipX, FlipSource;
         public int SkillTargetType;
         public float Duration = -1f, ActionDuration = -1f;
+        // Original view queries must observe this cast, even when the executor
+        // has already consumed stacks or settled another cast before rendering.
+        public List<SourceStatus> SourceStatuses = new List<SourceStatus>();
+        public List<SourceSharedStack> SourceSharedStacks = new List<SourceSharedStack>();
 
         public static FightBattleSkillCastPresentation Capture(FightBattleUnitState source,
             FightBattleSkillDefinition skill, IList<FightBattleUnitState> targets,
@@ -22,7 +38,7 @@ namespace Zjcs.Combat.Official
             if (skill == null) throw new ArgumentNullException(nameof(skill));
             FightBattleUnitState target = targets != null && targets.Count > 0 ? targets[0] : null;
             FightBattleUnitState position = targetPosition ?? target ?? source;
-            return new FightBattleSkillCastPresentation
+            var result = new FightBattleSkillCastPresentation
             {
                 SourceX = source.X, SourceY = source.Y,
                 TargetX = position.X, TargetY = position.Y, TargetId = target?.Id ?? 0,
@@ -30,6 +46,22 @@ namespace Zjcs.Combat.Official
                 FlipX = source.HasFlipX ? source.FlipX : source.Direction == 1,
                 FlipSource = skill.FlipSource, SkillTargetType = skill.SkillTargetType
             };
+            if (source.Statuses != null)
+            {
+                var shared = new HashSet<int>();
+                foreach (var status in source.Statuses)
+                {
+                    if (status == null) continue;
+                    result.SourceStatuses.Add(new SourceStatus { InstanceId = status.InstanceId,
+                        ClassId = status.ClassId, StackCount = status.StackCount });
+                    if (status.SharedStackId <= 0 || !shared.Add(status.SharedStackId)) continue;
+                    int total = FightStatusSharedStacks.Total(source, status.SharedStackId);
+                    // Original ChangeShareStack removes zero totals from the map.
+                    if (total > 0) result.SourceSharedStacks.Add(new SourceSharedStack {
+                        ShareId = status.SharedStackId, StackCount = total });
+                }
+            }
+            return result;
         }
     }
 

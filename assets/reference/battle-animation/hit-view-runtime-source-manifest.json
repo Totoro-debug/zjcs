@@ -1029,7 +1029,11 @@
   "local_resource_and_identity_bindings": [
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHitEntityPlayback.cs",
-      "sha256": "087106d8aaf13950d0d8427480086419e9ca8a6bec3912e12bb941038026ed3f"
+      "sha256": "096febe5cf38258ada4626a6b1d936b1a10d960c36fdeba2b1e5db232160b7b6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs",
+      "sha256": "8e98ac1eb0ca81f4c44f9b6f70c251699f5b224dea8b93934d24539c12fd3b27"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHitEntityData.cs",
@@ -1037,11 +1041,11 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs",
-      "sha256": "01cb8de8abcc7fc89d331fa44023f68bfb227dddb03d36f48c200ca484be1dbf"
+      "sha256": "6bfae88f39018b9eb658a434191b179ea5981314cbff67ac8dc895844a3223b8"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/Zjcs.Presentation.Combat.asmdef",
-      "sha256": "4a35fabc7aedb4aa9bf01f07593352513ba257fd1b8a146c422c2d2f523c32d6"
+      "sha256": "e8f5c83613311a36d4572fc1d5cedc61468e09d0b0dd1ab546981c1d5d9c7ba8"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleNativePlayableScope.cs",
@@ -1057,12 +1061,12 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleHitPlaybackAcceptance.cs",
-      "sha256": "1ac3ce6658f262f8b057eb7594fe46685c713282134f3afd6c400718c793aa6a"
+      "sha256": "b93f34bb7a3908788393104dafce4bff3c197326652c15645970a7d30e084c12"
     }
   ],
   "generator": {
     "path": "scripts/prepare_battle_hit_view_runtime.py",
-    "sha256": "bdd22b2b5ad5868296ff810db656477ea2ae49e384805e2058b50d19b7c2c3bc"
+    "sha256": "58e9fc82bb67b866f2ec9aa8714b97fd31141b8b097a63985c4bd26ec5ae2d97"
   },
   "adaptations": [
     "Namespace and existing Unity entity/Playable types.",

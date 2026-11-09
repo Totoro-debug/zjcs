@@ -220,12 +220,12 @@ namespace Zjcs.Editor.Combat
                 });
             });
             views = new OfficialBattleSkillEntityPlayback(root, mapper, scope, id => units.FirstOrDefault(x => x.Id == id));
-            var skill = new FightBattleSkillDefinition { EntityId = 10500, Slot = -1, Duration = -1f,
+            var skill = new FightBattleSkillDefinition { EntityId = 10100, Slot = -1, Duration = -1f,
                 FlipSource = false, SkillTargetType = 1 };
             var cast = new FightBattleSkillCastEvent { ActorId = 1, Slot = -1, SkillEntityId = skill.EntityId,
                 Presentation = FightBattleSkillCastPresentation.Capture(units[0], skill,
                     new List<FightBattleUnitState> { units[1] }) };
-            views.Start(cast, null, source, target);
+            views.Start(cast, source, target);
             var skillEntity = root.GetComponentInChildren<MyFightSkill>().myEntity;
             Require(views.GetEntity(skillEntity.Id) == skillEntity, "Hit resolves the actual cast identity.");
             foreach (int id in new[] { 10501, 10721, 10821, 11541 })

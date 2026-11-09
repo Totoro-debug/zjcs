@@ -13,7 +13,6 @@ namespace Zjcs.Presentation.Combat
         private sealed class ScheduledCast
         {
             public FightBattleSkillCastEvent Cast;
-            public GameObject Prefab;
             public Func<int, Transform> UnitTransform;
             public Func<int, Transform> PetTransform;
             public float Remaining;
@@ -88,18 +87,15 @@ namespace Zjcs.Presentation.Combat
                 Transform source = cast.IsPetSupport ? petTransform?.Invoke(cast.ActorId) : resolveTransform(cast.ActorId);
                 if (actor == null || source == null && actor.CharacterType != 6) continue;
                 int targetId = TargetId(cast);
-                string direction = ResolveDirection(cast.Presentation?.FacingIndex ?? actor.Direction);
-                GameObject prefab = catalog.Find(cast.SkillEntityId, direction);
-                if (prefab == null && !catalog.ContainsSkill(cast.SkillEntityId)) continue;
+                if (!catalog.ContainsSkill(cast.SkillEntityId)) continue;
                 var scheduled = new ScheduledCast
                 {
                     Cast = cast,
-                    Prefab = prefab,
                     UnitTransform = resolveTransform,
                     PetTransform = petTransform,
                     Remaining = Mathf.Max(0f, cast.Delay)
                 };
-                if (scheduled.Remaining <= 0f && source != null) Start(scheduled, prefab, source, resolveTransform(targetId));
+                if (scheduled.Remaining <= 0f && source != null) Start(scheduled, source, resolveTransform(targetId));
                 else
                 {
                     int index = pending.FindIndex(value => value.Remaining > scheduled.Remaining);
@@ -135,7 +131,7 @@ namespace Zjcs.Presentation.Combat
                         ? scheduled.PetTransform?.Invoke(scheduled.Cast.ActorId) : scheduled.UnitTransform(scheduled.Cast.ActorId);
                     if (source == null) continue;
                     Transform target = scheduled.UnitTransform(TargetId(scheduled.Cast));
-                    Start(scheduled, scheduled.Prefab, source, target);
+                    Start(scheduled, source, target);
                 }
             }
             foreach (ScheduledCast value in pending) value.Remaining -= remaining;
@@ -149,9 +145,9 @@ namespace Zjcs.Presentation.Combat
             scope.LateTick();
         }
 
-        private void Start(ScheduledCast scheduled, GameObject prefab, Transform source, Transform target)
+        private void Start(ScheduledCast scheduled, Transform source, Transform target)
         {
-            entityViews.Start(scheduled.Cast, prefab, source, target);
+            entityViews.Start(scheduled.Cast, source, target);
         }
 
         private static int TargetId(FightBattleSkillCastEvent cast) => cast.Presentation != null
@@ -178,17 +174,5 @@ namespace Zjcs.Presentation.Combat
             return null;
         }
 
-        private static string ResolveDirection(int direction)
-        {
-            switch (direction)
-            {
-                // Combat directions index the original Pos2d.FourDirs list.
-                case 0: return "DownPlayablePrefab";
-                case 1: return "LeftPlayablePrefab";
-                case 2: return "UpPlayablePrefab";
-                case 3: return "RightPlayablePrefab";
-                default: return "myPlayablePrefab";
-            }
-        }
     }
 }

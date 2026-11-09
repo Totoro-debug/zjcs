@@ -22,13 +22,13 @@
 
 `MyFightHitBase.PlayScopePlayable` 通过命中实体的 `GridTransform.LocalToWorldPos(scope.Pos)` 放置各命中格。原 `GridTransformComponent.CalcLocalToWorldDir` 保留 `RealCenter`，先做 X 翻转，再调用 `MyMath.Rotate`，最后用 `Math.Round` 转回整数格；`Common.Direction` 为 Up=0、Down=1、Left=2、Right=3，与本地 AI 的四向索引不同。`FightGridTransformMath` 已移植这段计算，来源及哈希见[格网变换清单](../../assets/reference/battle-rules/grid-transform-source-manifest.json)。命中实体创建时的方向／翻转赋值是服务端缺口，单机处理见下方用户确认规则。
 
-`MyFightHitBase`、六类命中视图、三个命中图初始化器及 `CalcSkillHitDelay`／`CalcSkillStartPos` 已按所选 884 客户端和共享实现迁移到 `Official/BattleSkillPlayables`。原范围条目的顺序与相对等待、命中位置订阅、连锁起点的世界坐标偏移顺序均保留。`OfficialBattleHitEntityPlayback` 仅提供本地资源和共享实体身份，复用现有完整 `MyEntityLoadHandler`；其六个官方加载／对象池实现与当前所选版本的源文件哈希一致。所选原 `game_settings.g.bytes` 已与官方 bundle 核对并完整解析，`ECIsUseGameObjectPool=true`；命中移除沿原 End、Remove、回池顺序，连锁起点同级对象随池实体复用。同版 2,260 份完整命中实体 prefab 及其播放图依赖已转换并写入本地 Resources，完整资源目录同时保留 1,884 个技能的播放图绑定。来源见[命中视图迁移](../../assets/reference/battle-animation/hit-view-runtime-source-manifest.json)。命中专项验证入口显式设置现有 `ZJCS_BATTLE_INPUT_AUTOMATION` 启动开关，使用独立验证场景，避免进入默认游戏启动流程。命中 prefab 与六类代表图已通过下方隔离运行验证，正式战斗的命中创建通知仍未接入。
+`MyFightHitBase`、六类命中视图、三个命中图初始化器及 `CalcSkillHitDelay`／`CalcSkillStartPos` 已按所选 884 客户端和共享实现迁移到 `Official/BattleSkillPlayables`。原范围条目的顺序与相对等待、命中位置订阅、连锁起点的世界坐标偏移顺序均保留。`OfficialBattleNativeEntityLoader` 为技能和命中提供本地资源、共享身份及激活前注入，复用现有完整 `MyEntityLoadHandler`；其六个官方加载／对象池实现与当前所选版本的源文件哈希一致。所选原 `game_settings.g.bytes` 已与官方 bundle 核对并完整解析，`ECIsUseGameObjectPool=true`；命中移除沿原 End、Remove、回池顺序，连锁起点同级对象随池实体复用。同版 2,260 份完整命中实体 prefab 及其播放图依赖已转换并写入本地 Resources，完整资源目录同时保留 1,884 份原技能实体 prefab 与播放图绑定。来源见[命中视图迁移](../../assets/reference/battle-animation/hit-view-runtime-source-manifest.json)。命中专项验证入口显式设置现有 `ZJCS_BATTLE_INPUT_AUTOMATION` 启动开关，使用独立验证场景，避免进入默认游戏启动流程。命中 prefab 与六类代表图已通过下方隔离运行验证，正式战斗的命中创建通知仍未接入。
 
 `FightOfficialCombatCatalog` 为每条 `HitCfg` 保留独立的 `FightBattleHitLink`，包含原顺序、重复 ID、Delay、ActOnSouce 和 IgnoreAICount；旧 ID 列表仍供现有执行器与检查点兼容使用。`ScopeEntries` 保存原 `HitScopCfg` 的位置、逐格延迟、伤害偏移、旋转及翻转开关，显式零旋转和 false 不用默认值覆盖；固定命中及连锁按原 Init 排序，随机目标保留配置顺序，召唤范围按原 `FightHitSummonComponentInfo.Init` 排序后提取 Base。命中类型、轨迹起终点偏移、旋转中心、DestroyDelay 和连锁的 Repeat、Back、PreferUnvisited 分别读取；旧检查点只补全这些不可变配置，保留生命、CD、命中回执及统计。配置 payload 的固定版本仍以[技能规则来源](../../unity/Assets/Official/Combat/skill-rules-source-manifest.json)为准。这些新增配置尚未替换现有扁平命中执行及其时序。
 
 `OfficialBattleHitEntityData` 要求共享格网及实际技能／命中身份，将这些快照桥接为六类原命中组件的 Info、GetScopes 与位置通知。884 命中表现资源与固定配置 payload 分别追溯。
 
-对 1,884 个原技能实体 prefab 的脚本组件审计发现 18 种客户端组件。`prepare_battle_skill_prefab_runtime.py` 另迁移八类原始空代理，以及 `MyPlayableOverrider`、`PlayableOverrideByStatusStack`、`FightSkillPlayableOverrideByStatusStack` 和原序列化 DTO／接口；来源见[额外技能 prefab 代码清单](../../assets/reference/battle-animation/skill-prefab-runtime-source-manifest.json)。状态替换保留首次查询后的层数缓存、越界取最后一个图、无对应状态时不替换、禁用时还原，以及四向图替换后的刷新顺序。原 `Source -> MyFightStatusAgent -> ApplyStatusDict` 查询通过显式宿主接口接入，尚未绑定正式战斗状态。
+对 1,884 个原技能实体 prefab 的脚本组件审计发现 18 种客户端组件。`prepare_battle_skill_prefab_runtime.py` 另迁移八类原始空代理，以及 `MyPlayableOverrider`、`PlayableOverrideByStatusStack`、`FightSkillPlayableOverrideByStatusStack` 和原序列化 DTO／接口；来源见[额外技能 prefab 代码清单](../../assets/reference/battle-animation/skill-prefab-runtime-source-manifest.json)。状态替换保留首次查询后的层数缓存、越界取最后一个图、无对应状态时不替换、禁用时还原，以及四向图替换后的刷新顺序。原 `Source -> MyFightStatusAgent -> ApplyStatusDict` 查询由 `OfficialBattleSkillSourceStatusSnapshot` 绑定施法创建时的状态实例、层数及共享总层数；保留原状态／技能代理缺席检查。快照来自 `FightBattleSkillCastPresentation.Capture`，不会从已结算到后续施法的单位状态反查，也不会在状态消耗后改写已创建的表现。13200 的五次 `playable13200`、五次 `playable13203` 和一次 `playable13204` 按原顺序绑定；54383 的 `EcView/ECViewDriver.mECViews` 按同版 APK 程序集 schema 恢复原 RID、`ECPlayableSupporterView` 类型及原 `mAppearPlayable=playable54380` 引用，并由原 ECViewDriver 生命周期执行。
 
 `ActionAgentComponentImplement.CanStartActiveSkill` 在动作互斥为 Discard、且动作属于 `Battle.Ai.ActiveSkillWaitActionTypes` 时等待；原表该列表为 Move=1，Move 对 Skill=2 的互斥为 Discard=2。`FightActionSkillMoveComponent.GetTotalMoveDuration` 按每个目标格累计移动时长。本地事件路径额外包含起点，因此按路径边数累计，普通技能、命中和其连锁事件统一从接近结束后播放。
 
@@ -81,6 +81,8 @@
 
 ## 自定义实现
 
+- 用户确认按全新游戏制作，不新增旧存档兼容规则；当前游戏的检查点保存与恢复继续验证。
+
 - 用户确认状态蓝图采用事件级 Runtime 黑板：同一次事件的各流程共享非持久键，事件结束丢弃；`IsPersistentBlackboard=true` 的键保存于所属状态，并随检查点恢复。两个黑板按端口属性分开，同一数值 ID 不串读；触发技能先捕获倍率，再结束事件。该规则适用于现有计数器、整数、布尔和新增倍率读写；不会在新事件中使用先前 Runtime 输出。旧存档中已保存的已知 Runtime 键按原图端口元数据清除；同 ID 的持久端口和图中未声明的键保留。
 
 - APK 未提供服务器裁决的分支只按客户端证据或用户确认的离线规则处理；离线随机、结果和 AI 适配不得标成官方服务器实现。未确认的条件、奖励和状态结果保留为缺项。
@@ -95,7 +97,7 @@
 - 用户确认连锁命中按逐跳起点处理：首跳从本次技能的施法位置开始，后续每跳从上一跳实际命中落点开始。官方 `MyFightHitChained.myHitToNextHitPlayable` 的字段注释也明确说明“第一次 hit 的起点是技能位置”；共享 `StartGridPos` 的赋值实现未随客户端提供。下一跳按用户确认限制处理：`Repeat=false` 排除本链已命中过的目标，`Back=false` 排除上一跳目标，`PreferUnvisited=true` 优先未命中过的目标，其余按距离、实体 ID 排序，无候选则停止。原 `Scope` 是伤害范围（10821 仅有当前格），下一跳搜索范围的服务端实现未提供，用户确认以上一跳实际落点为中心，平移原技能 `Range` 搜索；伤害范围仍使用各命中节点的原 `Scope`。这些规则尚待接入真实命中创建事件，不能据此视为连锁执行已经完整还原。
 - 地图专属等级、选向、奖励和失败回滚只在所属地图／功能页维护，避免在本页重复定义。
 
-- 用户确认共享状态首次施加按剩余额度分配；不足时部分分配，剩余额度为 0 则不创建新状态。已有状态加层使用同一总上限，状态结束释放占用。首次创建前的分配裁决是单机规则，APK 已有后续增减与结束回收公式。 用户进一步确认按全新游戏制作，无须兼容旧版本存档；当前版本自身的检查点保存与读取仍保留。
+- 用户确认共享状态首次施加按剩余额度分配；不足时部分分配，剩余额度为 0 则不创建新状态。已有状态加层使用同一总上限，状态结束释放占用。首次创建前的分配裁决是单机规则，APK 已有后续增减与结束回收公式。
 
 ## 尚未实现
 
@@ -103,9 +105,7 @@
 - 完整技能／命中／状态覆盖、同来源与叠层边界、特殊组件时序和实体生命周期仍有缺项。身体格选敌／接近和命中局部坐标变换已有指定原技能的 Play Mode 回归，尚未完成全部技能与 Windows Player 验证。
 - 原人物、NPC、幻兽、召唤物的完整模型、动作、骨骼、挂点、粒子、音频和材质表现尚未全部接通。
 - 命中实体视图及本地加载绑定已迁移，2,260 个原 prefab 的加载和六类代表命中图已通过隔离 Play Mode；正式执行器的真实命中创建／移除事件仍未接入表现。仍须覆盖全部原图、施法起点到命中位置连线、逐范围格时序及清理、连锁逐跳通知与特殊状态替换。现有正式技能图播放和伤害飘字仍不包含这些命中实体表现。
-- 正式技能宿主仍手工创建 `MyFightSkill`，尚未加载完整原技能实体 prefab。额外技能角色及状态层数替换类的代码移植不表示原 prefab 的组件、序列化引用和状态查询已恢复；还须接通 `MyAction`、层数替换、命中延迟替换及特殊技能的原 `ECViewDriver` 数据与生命周期，再进行实际技能流程验证。
-- 13200 的状态层数替换原表按顺序引用五次 `playable13200`、五次 `playable13203` 和一次 `playable13204`。后两份原图已从同版 bundle 与导出文件定位；隔离转换已保留三组原图的顺序及真实 GUID／fileID，引用及 Unity 加载校验通过，尚未安装到正式 Resources 或验证实际播放。
-- 54383 的导出 prefab 遗漏 `EcView/ECViewDriver.mECViews`。按 884 原程序集 schema 严格读取同版 `fightskill_54380` bundle 后，已定位原 `ECPlayableSupporterView` 及其 `mAppearPlayable=playable54380` 引用；隔离转换已恢复原托管引用 RID、类型与出现图引用，结构及输出哈希校验通过；Unity 已实际加载并核对托管视图类型与原出现图绑定，尚未安装到正式工程或接通生命周期。
+- 正式技能宿主已改为加载完整原技能实体 prefab，保留原默认／四向图、角色组件和序列化引用，复用原加载、End／Remove／FIFO 池与选图流程；代表图、状态快照及对象池复用已通过隔离 Play Mode 与 Windows Player，全部原技能和完整人物演出尚未覆盖。
 - 57780 技能的 57784 命中引用 `playable_16040_SourceToHit` 中的原 `SkeletonMecanim`；所选 `monster_3205_SkeletonData`、`monster_3205_Controller` 及原自定义层混合参数已经定位。正式技能图宿主现已绑定原生骨骼与 Mecanim 资源适配，但本轮六类命中夹具尚未覆盖该特殊图，不能据此视作 57780／57784 的完整战斗演出已经还原。
 - 正式入口中的准备输入、战斗过程、胜负返回、存档恢复、模拟鼠标交互和 Windows Player 尚未完成整体验收。
 - 活动挑战、私有副本和裂隙的退出事务尚未完整接通；已接线玩法仍须分别完成奖励页面及整体验证，公共按钮可用不代表所有玩法完成。
@@ -118,7 +118,7 @@
 
 - 全部 7,920 个已安装战斗实体已逐组件对照所选 884 原配置，无解析错误、未定位实体或未定位伤害依赖：6,484 项同值，1,436 项有差异。其中原 1,906 个技能、2,260 个命中的逐项结果保持一致，10840、12010、12900、13140、13811、13990、60741 共七项差异尚未激活；其余差异也仍保留为来源对照。13871／13941／13985 的原定义分别由 191／194／197 号分片移动到 194／197／200，扫描同版分片后各仅有一个定义。13811 当前引用的伤害实体 13812 已取得唯一原定义，含命中后施加状态 24234 的配置；本地实体表仍未补入该依赖。六项二进制解码回归（含原 12030 多态及原 60680 继承配置）和三组嵌套／转义／Unicode／精确 64 位整数 JSON 对照通过。此检查不覆盖其他配置表、属性、其他新增实体成员或战斗运行行为。
 - 本批全工程静态元数据检查通过，共 142,651 个 GUID；Unity 编译和 `ProjectTools.Validate` 通过。2,260 个原命中 prefab 全部加载，检查原 MyEntity、六类命中组件与缺失脚本。六类代表命中通过内置屏隔离 Play Mode，已查看六张实际运行画面：10501 投射、10721 范围、10821 连锁、随机父命中、召唤及触发技能；检查实际 Playable、位置通知、范围回调、暂停／加速、移除与池复用。对象池实例工厂在正常创建和异常通知后均恢复原解析器。夹具直接提供受控共享数据给原加载器，不覆盖正式战斗通知、HUD 输入或所有原技能；Windows Mono Player 已实际运行通过，六张截图均已查看并显示原投射、范围、连锁、召唤、随机父命中和触发技能特效；夹具使用正式战斗管线入口，拒绝仅有背景的截图，结束后核对原管线恢复。运行检查及退出码均通过，用户存档文件哈希前后一致；未覆盖正式战斗通知、HUD 输入、全部技能及音频输出，未据此发布正式版本。
-- 八类额外技能空代理及按状态层数替换播放图的原客户端类，通过现有 Unity 引用和编译参数的响应文件检查；13200 和 54383 的完整原技能 prefab 已通过隔离 Unity 加载、缺失脚本和序列化绑定检查；尚未运行其层数替换及出现图生命周期。
+- 完整原技能实体宿主通过 Unity 编译、`ProjectTools.Validate` 与全部 1,884 份技能／2,260 份命中 prefab 的加载和缺失脚本检查。隔离内置屏 Play Mode 通过 13200 五层／十层选图、原图实际粒子、回池后恢复并重新替换、状态消耗后的施法快照隔离、12030 共享层数和原十项延迟偏移、54383 原托管视图出现图及回池后重新注册播放；三张实际运行截图已查看。`test_battle_skill_cast_snapshot.ps1` 通过有序状态身份、重复类型、共享总层数、零总数移除、连续施法隔离、原坐标／朝向及当前游戏检查点保存恢复后的快照隔离检查，战斗核心 460 条公式回归通过，静态元数据检查通过（144,647 个 GUID）。完整资源 Windows Player 已构建并真实启动，同样通过五层／十层选图、状态快照、原延迟偏移、54383 托管视图和回池复用，三张 Player 实际截图已查看；共用加载器下的范围、弹道、连锁、随机父节点、召唤及触发技能六类命中回归也在新 Windows Player 中通过，六张截图已查看，并再次通过打包后的共享层数／检查点检查。两次隔离运行前后用户数据哈希一致。真实男女角色、直接／控制器动画路径下的 11170／10820 原技能实体、正／负／其他角色槽位、延迟施放、准确结束、已挂载与延迟挂载 HUD、空图 10100 及借用代理清理回归通过；技能槽夹具按正式流程刷新战斗阶段并等待原入场动画，已查看 CD 数字、施放高亮和结束画面，未把原空白占位图标视为技能图标覆盖。新增技能实体专项仍未覆盖全部人物动作、正式战斗输入、全部技能或音频输出。
 - 命中配置读取、原范围初始化排序与旧检查点补全的规则回归通过：10781 恢复延迟与曼哈顿距离排序，10921 保留随机范围原序；10911 七次同 ID 引用保留各自延迟，10821 区分下一跳与范围延迟，16121 保留伤害偏移，13303 保留显式零旋转和禁用翻转，13051 保留轨迹偏移与 DestroyDelay，11541 恢复九格 BaseScopes；12861 补回连锁标志、范围、子引用及轨迹配置，HP、CD、命中回执和统计不变。现有 460 组公式及战斗核心回归一并通过；两个规则文件另在已提交代码基线上独立编译并通过同一组规则回归。这是配置读取与存档兼容的检查，不代表新增连锁执行或原生命中播放已完成。
 - 2,260 个 884 命中视图的实体 ID 和六类组件类型对应固定配置；48 个当前命中运行时输出与已通过 Play Mode 的隔离文件逐项 SHA-256 一致。未据此将历史配置数值视作 884 数值，也不表示正式执行器已创建这些命中视图。
 

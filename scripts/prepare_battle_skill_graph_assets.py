@@ -1,4 +1,4 @@
-"""Convert every active-version graph referenced by an official FightSkill entity."""
+"""Convert complete official skill/hit entities and their original graph closure."""
 import json
 import os
 import subprocess
@@ -28,8 +28,12 @@ def main():
     source = json.loads(audit)
     (work/'skill-graph-binding-audit.json').write_text(audit, encoding='utf-8')
     print(f"SkillGraphs: audited {len(source['skills'])} entities", flush=True)
-    roots, skills = {}, []
+    roots, skills, skill_entities = {}, [], {}
     for row in source['skills']:
+        entity_key = f"skill:{row['skill_id']}:entity"
+        entity_path = (EXPORT_PREFIX / row['entity_prefab']).as_posix()
+        roots[entity_key] = entity_path
+        skill_entities[row['skill_id']] = entity_path
         bindings = {}
         for field, ref in row['playables'].items():
             if 'path' not in ref:
@@ -38,7 +42,7 @@ def main():
             key = f"{row['skill_id']}:{field}"
             roots[key] = root_path
             bindings[field] = key
-        skills.append(dict(skill_entity_id=row['skill_id'], entity_prefab=row['entity_prefab'],
+        skills.append(dict(skill_entity_id=row['skill_id'], entity_key=entity_key, entity_prefab=row['entity_prefab'],
                            entity_prefab_sha256=row['entity_prefab_sha256'], playables=bindings))
 
     from inspect_battle_hit_graph_bindings import inspect as inspect_hits
@@ -60,6 +64,9 @@ def main():
             component_enabled=row['component_enabled'], source_to_me_anchor=row['source_to_me_anchor'],
             flags=row['flags'], playables=bindings))
     print(f"SkillGraphs: audited {len(hits)} original hit view bindings", flush=True)
+
+    from battle_skill_entity_prefabs import SkillEntityManagedViews, skill_entity_scripts
+    managed_views = SkillEntityManagedViews(skill_entities)
 
     mapped = dict(SCRIPTS)
     mapped.update({-822603460: ('StoryPlayables', 'ApplyBySource'),
@@ -96,9 +103,11 @@ def main():
         116049708: ('BattleTrackPlayables', 'ParabolicTrack')})
     build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS={}, graph_roots=roots,
         MAPPED=mapped, family='SkillGraphs', shader_prefix='SkillGraph_',
+        native_preprocess=managed_views.preprocess,
         runtime_receipts=('track-runtime-source-manifest.json',
             'spine-clone-runtime-source-manifest.json',
-            'hit-view-runtime-source-manifest.json'), generator=Path(__file__),
+            'hit-view-runtime-source-manifest.json',
+            'skill-prefab-runtime-source-manifest.json'), generator=Path(__file__),
         reference_scripts={-210918009: dict(name='WwiseEventReference',
             native_asset=EVENT_ASSET,
             runtime='unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs',
@@ -142,7 +151,7 @@ def main():
             runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SkeletonRendererHighTexturePreview.cs',
             source='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SkeletonRendererHighTexturePreview.cs',
             verify_file_id_hash=True)},
-        source_scripts={**hit_entity_scripts(),
+        source_scripts={**hit_entity_scripts(), **skill_entity_scripts(),
             1126251125: dict(name='MyPtSubPlayable', namespace='GameFramework',
                 source_root='game-framework-source/GameFramework', source='MyPtSubPlayable.cs',
                 target_namespace='Zjcs.Official.StoryPlayableManager',
@@ -197,6 +206,8 @@ def main():
             runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableGrapplingLine.cs')},
         limits=['Converted roots are taken from active-version FightSkill entity prefab fields. '
                 'Production battle entity binding and runtime Playable lifecycle are tracked separately.'])
+    if managed_views.restore_count != {54383: 2}:
+        raise ValueError('Original skill managed views must be restored for dependency scanning and conversion.')
 
     rows = json.loads(DATA.read_text(encoding='utf-8'))['graphs']
     resources = {row['id']: row['resource'] for row in rows}
@@ -204,6 +215,7 @@ def main():
     for skill in skills:
         catalog['skills'].append(dict(
             skill_entity_id=skill['skill_entity_id'],
+            entity_resource=resources[skill['entity_key']],
             # JsonUtility cannot deserialize dynamic object keys (the original
             # fields are default/0/1/2/3), so persist the same binding as a
             # deterministic typed list consumed by Unity.
@@ -222,6 +234,10 @@ def main():
     proof = json.loads(RECEIPT.read_text(encoding='utf-8'))
     proof['official_entity_binding_source'] = source
     proof['official_hit_entity_binding_source'] = hit_source
+    proof['original_skill_managed_views'] = dict(
+        registrations=managed_views.registrations, pointers=managed_views.pointer_bindings,
+        schemas=managed_views.schemas.records,
+        adapter=identity(ROOT / 'scripts/battle_skill_entity_prefabs.py'))
     proof['outputs'] = [identity(DATA) if row['path'] == DATA.relative_to(ROOT).as_posix()
                         else row for row in proof['outputs']]
     write_changed(RECEIPT, json.dumps(proof, ensure_ascii=False, indent=2) + '\n')

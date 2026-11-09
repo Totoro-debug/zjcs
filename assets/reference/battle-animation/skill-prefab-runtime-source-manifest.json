@@ -182,8 +182,42 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_skill_prefab_runtime.py",
-    "sha256": "e948bd8afa17f5bd2afae032af6decd1d2927526c06be44ff2794964d2dfdd4c"
+    "sha256": "0e8ad952eafa224a69f14ef57fdd460d9ddf7c4848e34aea81788aad9aa393f1"
   },
+  "local_resource_and_identity_bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs",
+      "sha256": "6bfae88f39018b9eb658a434191b179ea5981314cbff67ac8dc895844a3223b8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs",
+      "sha256": "8e98ac1eb0ca81f4c44f9b6f70c251699f5b224dea8b93934d24539c12fd3b27"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillPrefabData.cs",
+      "sha256": "0be7f780147d33380772788c9f1785480629fd0173b633e5598bd65b4818a601"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillSourceStatusSnapshot.cs",
+      "sha256": "02ac444811af7be84bc02fc03ad14905292f1445763501ef54820bd0168cc85d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs",
+      "sha256": "cd4aab95b933f8227bcda4e75a818157412383882d96851c11385a26f8359d6f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/Zjcs.Presentation.Combat.asmdef",
+      "sha256": "e8f5c83613311a36d4572fc1d5cedc61468e09d0b0dd1ab546981c1d5d9c7ba8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleSkillCastPresentation.cs",
+      "sha256": "f787736eac53c9f3cb4ebf268449fa1212ff17b500a00f23e2481ffb37bc6524"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSkillPrefabPlaybackAcceptance.cs",
+      "sha256": "944ba327c0761a4795f0b8795104a7b67db30f126d6335a8cc28e21b1544727e"
+    }
+  ],
   "adaptations": [
     "Existing entity lifecycle namespaces and Unity types.",
     "Empty original client roles retain their original absence of view behavior.",
