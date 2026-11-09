@@ -51,8 +51,9 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
 
     def read(path):
         raw = path.read_bytes()
-        assert sha(raw) == verified[path.relative_to(CACHE/'native-export-all').as_posix()], path
-        inputs[path.as_posix()] = identity(path)
+        digest = sha(raw)
+        assert digest == verified[path.relative_to(CACHE/'native-export-all').as_posix()], path
+        inputs[path.as_posix()] = dict(path=path.relative_to(ROOT).as_posix(), sha256=digest)
         return raw
 
     index_path = work/'status-orbit-guid-index.json'
@@ -79,7 +80,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
             # Selected assets are still individually hash-verified by read().
             if shutil.which('rg'):
                 scan = subprocess.run(['rg', '--hidden', '--no-ignore', '--with-filename',
-                    '--no-heading', '--color', 'never', '--glob', '*.meta',
+                    '--no-heading', '--color', 'never', '--max-count', '1', '--glob', '*.meta',
                     r'^guid: [a-f0-9]{32}\r?$', str(EXPORTED)],
                     capture_output=True, text=True, encoding='utf-8', check=True)
                 for line in scan.stdout.splitlines():
@@ -199,6 +200,8 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         path = pending.pop()
         if path in found: continue
         found.add(path)
+        if len(found) % 2048 == 0:
+            print(f"{family}: checked {len(found)} dependency assets", flush=True)
         raw = read(path); read(Path(str(path)+'.meta'))
         if path.suffix in ('.png', '.bytes'): continue
         try:
@@ -358,28 +361,27 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
             differences = [max(hi for lo, hi in ImageChops.difference(exported, sample).getextrema())
                            for sample in (image, image.transpose(Image.Transpose.FLIP_TOP_BOTTOM))]
             return min(differences)
-        targets, replacements = {}, dict(external_replacements)
-        for path in sorted(found):
+        targets, target_guids, replacements = {}, {}, dict(external_replacements)
+        for ordinal, path in enumerate(sorted(found), 1):
+            if ordinal % 2000 == 0:
+                print(f"{family}: mapping output identities {ordinal}/{len(found)}", flush=True)
             target = DEST/path.relative_to(EXPORTED)
             if path.suffix == '.png': target = target.with_name(target.stem+'.texture.asset')
             elif '/Shaders/' in path.as_posix():
                 target = ROOT/'unity/Assets/Game/Runtime/Presentation/Combat/Shaders'/(shader_prefix+path.stem+'.shader')
-            target.parent.mkdir(parents=True, exist_ok=True)
-            if target.is_relative_to(DEST):
+            expected = uuid.uuid5(uuid.NAMESPACE_URL,
+                'zjcs/profession/character-resource/' + target.relative_to(ROOT).as_posix()).hex
+            if not target.is_relative_to(DEST):
                 sidecar = Path(str(target)+'.meta')
                 if sidecar.exists():
-                    expected = uuid.uuid5(uuid.NAMESPACE_URL,
-                        'zjcs/profession/character-resource/' + target.relative_to(ROOT).as_posix()).hex
-                    if GUID.search(sidecar.read_text(encoding='utf-8-sig'))[1] != expected:
-                        sidecar.unlink()
-            meta(target)
+                    assert GUID.search(sidecar.read_text(encoding='utf-8-sig'))[1] == expected, target
             old = GUID.search(read(Path(str(path)+'.meta')).decode('utf-8-sig'))[1]
-            new = GUID.search(Path(str(target)+'.meta').read_text(encoding='utf-8-sig'))[1]
-            targets[path] = target; replacements[old] = new
-        texture_guids = {replacements[GUID.search(read(Path(str(path)+'.meta')).decode())[1]]
-                         for path in found if path.suffix == '.png'}
-        shader_guids = {GUID.search(Path(str(target)+'.meta').read_text(encoding='utf-8-sig'))[1]
-                        for target in targets.values() if target.suffix == '.shader'}
+            targets[path] = target; target_guids[path] = expected; replacements[old] = expected
+        # Keep deterministic output identities in memory. Unity can delete an
+        # orphan sidecar while its asset is still awaiting conversion.
+        texture_guids = {target_guids[path] for path in found if path.suffix == '.png'}
+        shader_guids = {target_guids[path] for path, target in targets.items()
+                        if target.suffix == '.shader'}
         textures, shaders, binary_assets, converted_inputs = [], [], [], []
         print(f"{family}: converting {len(targets)} assets", flush=True)
         for ordinal, (path, target) in enumerate(targets.items(), 1):
@@ -479,17 +481,13 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                 text = re.sub(r'(fileID: 4800000, guid: )([a-f0-9]{32})(, type: )2',
                     lambda m: m[1]+m[2]+m[3]+('3' if m[2] in shader_guids else '2'), text)
                 raw = text.encode()
+            target.parent.mkdir(parents=True, exist_ok=True)
             if target.suffix == '.bytes':
                 if not target.exists() or target.read_bytes() != raw:
                     target.write_bytes(raw)
             else:
                 write_changed(target, raw.decode('utf-8'))
-            # Concurrent asset conversion can leave an existing output without
-            # its sidecar; restore the Unity GUID before recording the receipt.
-            sidecar = Path(str(target)+'.meta')
-            if not sidecar.exists():
-                meta(target)
-            guid = GUID.search(Path(str(target)+'.meta').read_text(encoding='utf-8-sig'))[1]
+            guid = target_guids[path]
             importer = ('ShaderImporter' if target.suffix == '.shader' else
                 'PrefabImporter' if target.suffix == '.prefab' else
                 'TextScriptImporter' if target.suffix == '.bytes' else 'NativeFormatImporter')

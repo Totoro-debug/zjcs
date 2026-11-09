@@ -14,7 +14,7 @@ using Zjcs.Official.World.NativeTerrain.Common;
 namespace Zjcs.Presentation.Combat
 {
     /// <summary>Projects settled cast inputs into the original MyFightSkill lifecycle.</summary>
-    public sealed class OfficialBattleSkillEntityPlayback : IFightSkillViewServices, IDisposable
+    public sealed class OfficialBattleSkillEntityPlayback : IFightHitViewServices, IDisposable
     {
         private sealed class Grid : ECGridTransformData
         {
@@ -131,7 +131,7 @@ namespace Zjcs.Presentation.Combat
         }
 
         public MyEntity GetEntity(EcEntityIdentifier id) =>
-            entities.TryGetValue(id, out var entity) ? entity : null;
+            entities.TryGetValue(id, out var entity) ? entity : hitViews?.GetEntity(id);
 
         public MyEntity EnsureUnit(int id, Transform transform) => BindUnit(id, transform).Entity;
 
@@ -150,6 +150,19 @@ namespace Zjcs.Presentation.Combat
 
         public Vector3 GridToPos(Pos2d position) => root.InverseTransformPoint(
             gridMapper.GridToWorld(new FightGridPoint(position.X, position.Y)));
+
+        public Vector3 ToWorldPos(Vector3 position) => root.TransformPoint(position);
+
+        private OfficialBattleHitEntityPlayback hitViews;
+
+        public MyEntity CreateHit(ECViewEntityData data)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillEntityPlayback));
+            hitViews ??= new OfficialBattleHitEntityPlayback(root, positionContainer, this, scope);
+            return hitViews.Create(data);
+        }
+
+        public void RemoveHit(EcEntityIdentifier id) => hitViews?.Remove(id);
 
         private Pos2d PositionToGrid(Vector3 position)
         {
@@ -195,6 +208,7 @@ namespace Zjcs.Presentation.Combat
                     Facing = sourceFacing, Mirrored = cast.Presentation.FlipX,
                     ToPosition = GridToPos, ToGrid = PositionToGrid } };
             entity.Bind(positionContainer, state.Data, true);
+            entities.Add(state.Data.Id, entity);
             casts.Add(new ActiveCast { Entity = entity, Remaining = cast.Presentation.Duration < 0f
                 ? float.PositiveInfinity : cast.Presentation.Duration });
             go.SetActive(true);
@@ -285,6 +299,8 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) return;
             disposed = true;
+            hitViews?.Dispose();
+            hitViews = null;
             foreach (var cast in casts) if (!cast.Removed) Remove(cast);
             // Graphs may still reference Skill/its cached target after entity removal.
             scope.Dispose();

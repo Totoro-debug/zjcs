@@ -85,6 +85,8 @@ namespace Zjcs.Offline.BattleNativePlayables
             foreach (var playable in instance.GetComponentsInChildren<MyPlayable>(true)) playable.MyPlayableCenter = center;
             foreach (MonoBehaviour component in instance.GetComponentsInChildren<MonoBehaviour>(true))
             {
+                if (component is MyPtSubPlayable subPlayable)
+                    subPlayable.mMyPlayableManager = this;
                 if (component is IBattleCameraPlayable cameraPlayable)
                     cameraPlayable.BindCameraOffsetHost(cameraOffsetHost);
                 if (component is IBattleCharacterPartVisibilityPlayable visibilityPlayable)
@@ -191,8 +193,26 @@ namespace Zjcs.Offline.BattleNativePlayables
         private T WithSound<T>(Func<T> action)
         {
             var previous = OfficialWwiseEvent.Host;
-            try { OfficialWwiseEvent.Host = sound; return action(); }
-            finally { OfficialWwiseEvent.Host = previous; }
+            var previousFactory = StoryPlayableInstantiation.Resolve;
+            try
+            {
+                OfficialWwiseEvent.Host = sound;
+                // Original entity FIFO pools also instantiate through the scene container.
+                // Hit entities live beside the playable root under the battle's entity root.
+                StoryPlayableInstantiation.Resolve = transform =>
+                {
+                    Transform battleRoot = root.transform.parent;
+                    return transform && (transform == root.transform || transform.IsChildOf(root.transform)
+                        || battleRoot && (transform == battleRoot || transform.IsChildOf(battleRoot)))
+                        ? this : previousFactory?.Invoke(transform);
+                };
+                return action();
+            }
+            finally
+            {
+                StoryPlayableInstantiation.Resolve = previousFactory;
+                OfficialWwiseEvent.Host = previous;
+            }
         }
 
         private void RequireLive()

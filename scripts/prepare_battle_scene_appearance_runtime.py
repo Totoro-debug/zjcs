@@ -25,7 +25,18 @@ def meta(path, folder=False):
 def write_changed(path, text):
     raw = text.encode("utf-8")
     if not path.exists() or path.read_bytes().replace(b"\r\n", b"\n") != raw:
-        path.write_bytes(raw)
+        if path.suffix != ".json":
+            path.write_bytes(raw)
+            return
+        # Publish complete catalogs/receipts in one replacement. A failed reopen
+        # on Windows must not truncate the previous verified JSON document.
+        temporary = path.with_name("." + path.name + "." + uuid.uuid4().hex + ".tmp")
+        try:
+            with temporary.open("xb") as stream:
+                stream.write(raw)
+            temporary.replace(path)
+        finally:
+            temporary.unlink(missing_ok=True)
 
 
 def common(path):

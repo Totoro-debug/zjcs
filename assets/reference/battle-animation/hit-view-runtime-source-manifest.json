@@ -1,0 +1,1074 @@
+{
+  "manifest": "884_156692",
+  "official_source": {
+    "path": "official-source.json",
+    "sha256": "a29067dd1363590c8fde67a7d5326fcb5a4632441e8c73ae8b64300aa491a3a6"
+  },
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+      "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll",
+      "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Framework.dll",
+      "sha256": "19a952a1e686e76db0a34556062e4b928fc0d0ae6d33158912542147638af4fb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Framework.FirstPass.Runtime.dll",
+      "sha256": "e4af045ab17cc6cb3a80403913c03ef5f15a736875c57bf67f3e44cff415627e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/GameFramework.Runtime.dll",
+      "sha256": "737c1e6b4313b330530aa84b6d9b59dd01a470c69937d95a6cf69cd13c61e253"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/framework-source/GameObjectPoolEmbed.cs",
+      "sha256": "4b9bf8bd72bd2e4492271f5b69dfc60eeb4023acfa51718ba27aa28337bcf482"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/framework-source/TTLGameObjectPool.cs",
+      "sha256": "29e00f1d22052652148ee9bda61818a9bbec8d730ab9f4fe2ab35d4bf6b175b6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/framework-source/TTLGameObjectPoolCollection.cs",
+      "sha256": "eddfab58a1bd465e0c9a8e76f718dc84a314b5a8681b9ba48fd99f8115a79a56"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework.Collections/SortedValueDictionary.cs",
+      "sha256": "4aa2a9d4370b531500f0a8c92a5555bcfd21594fb4516b61cd9840e805d41784"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/IEntityLoadHandler.cs",
+      "sha256": "831e87b6665feb55bfb89d7a1877cb4889b6eecb9ff59c632c2dab0f326f1dfe"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntityLoadHandler.cs",
+      "sha256": "26593bfd66e44dffdc24492d01e4491c60eb979707b6cb70e1d462570286d624"
+    },
+    {
+      "path": "assets/reference/official-map/map14-entity-loading-source-manifest.json",
+      "sha256": "83687f5e4b6efe1279b69bf2c303b7be4abb98f0e725982e21b5e6b60d8e9bf5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/global-metadata.dat",
+      "sha256": "c0fe5e062fb3ed1814781e54fd1b4859757970632655138adc091820ded88e0e"
+    },
+    {
+      "path": "scripts/official_tables.py",
+      "sha256": "77762a9b2aba2d92a6ad3ebd8ce5f7d0bb42a6b4cfc872ae7094c1d10b1e0473"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivePaySetting.cs",
+      "sha256": "ce162fba3797df7875488dddf71a42189930d61eaec2c3d1ca4edfaebc6f3f0a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivityComebackSetting.cs",
+      "sha256": "a8c9d7780faf61554dcf1517f4174fc6c70691efe599ecca046c88a7923ea12f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivityGachaSetting.cs",
+      "sha256": "1a3e9d40a7cca72097305f4e0390021fd47549b4d094659e22de214b6372c8df"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivityGrowthAccelerationSetting.cs",
+      "sha256": "43af5f3d64eaaa21f5e46d0552647e981286f1711916e25a93d316b94c089c8b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivityGrowthFundSetting.cs",
+      "sha256": "6b28811c44155405b52e9ebb557c1ab9179776097795328ab0a777ae077428a9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivityJumpGameSetting.cs",
+      "sha256": "ea216032de01271dfd5528635042abd37a597696b71c3a2c60068ec058f0ff68"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivityMatch3GameSetting.cs",
+      "sha256": "498f3f788b9cb13097c4b3f753239d6959ee94982622c84fbd05bbc1d9e9d4b6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivityPayRebateSetting.cs",
+      "sha256": "51c88948a346e156bc7397e3eecab8d0859064fc758403132b1f29c8f106ceec"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivitySetting.cs",
+      "sha256": "8f3769714f483f286d456a1e14bc82685777ce226bb8e24d44fd55f6f7367e7c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/AppearanceGiftSetting.cs",
+      "sha256": "572f7fc920d38a729c5deed392f58a3814e817fb3dee7f80790b1b494963b480"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ArenaSetting.cs",
+      "sha256": "85f95fa85f3d8450531dfd673f6d710e8f21d2500cc3be120f4d1b3e8c41583d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/AstrologicalContractChargeRateStage.cs",
+      "sha256": "5f960c2958331e785a3eb0aee5c11e73608a88198dd864e4139aacfbff3abdcf"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/AstrologicalSeasonSetting.cs",
+      "sha256": "a5ecc083e83cd3d364a968492b75f901a638fd393c3174b169814247cd47c442"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/AuctionSetting.cs",
+      "sha256": "fd4f4685176848cc49dfa3e930046ce36b338688ecd955ea7696f01b3fa3226f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/AwardRetrieveNpcActionCondition.cs",
+      "sha256": "7525bac31846c8216a58eedc00fe877d386b5ff5a6414121de0a9fd14ccab5a9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/AwardRetrieveNpcDialogCondition.cs",
+      "sha256": "2d5605e52733e2f2e5e00ba182fd3d83ff5b8ebc8362f1633ab6b5b1b233f233"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/AwardRetrieveSetting.cs",
+      "sha256": "71b826d485fefd2ce86cdabca45cf456536c7fdf79d624aa130c58841425d574"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BBQSetting.cs",
+      "sha256": "2f5a8a4d656bfcbe6b583b96c299b83d9337da85d2c5fdd41d033466ecaa74ff"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BagSetting.cs",
+      "sha256": "5b12db04681b9a9819c9b8ff8f51f7216cdecde9befd8921cf63af1b4a47cacb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleAISetting.cs",
+      "sha256": "7bbbd83863678f46292c40442a9b99d974bb5f5d01559572a191281781a3ec22"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleRoyaleSetting.cs",
+      "sha256": "a2e10a06e0843e3919e186a0850c79d3fd2cf60652a50881a38dcd66eaf682a5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleSettings.cs",
+      "sha256": "a580f47d38633596e945fea04fadc77e63d54f31f7bf4c7a75fd5e4bcfc81d00"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BindEmailSettings.cs",
+      "sha256": "7872b51bb1a66bfc9a751ec614cce23d3a061349979b9829df1ad255942b3ff1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BindPhoneSettings.cs",
+      "sha256": "2faa3570a067b5812d3244847fc4d0496238454f5bee7ffe06b03112c0c4db7f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BlessLevelSettings.cs",
+      "sha256": "9a4aacb1b8349aefc695c42c6c19c1f5f8241083b65ed00e7d648809623c81f0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BulletScreenSetting.cs",
+      "sha256": "f8a1fc7ee597cfec9655121a2dffb7d626284295fc78f619b728533dedf94ab5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ChallengeStorySetting.cs",
+      "sha256": "22a6f70833e4299fc282ca1464686d9d9c2e1f27348b91b257b65794ca238f40"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ChallengeStorySettingNPCInfo.cs",
+      "sha256": "1c18d2c4ff52983bed2bc6f1ae6f6a0a3218fc5cf796fc45b1ee036696657bd5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ChangeProfessionSetting.cs",
+      "sha256": "842b865f55217adfe3f6e2684af2c32875a272805dc4c77dba57ea5d1491820f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ClientVersionUpdateActivitySetting.cs",
+      "sha256": "078432f90fe6069fcd1c3bad425e2a7e11a501108829b3c7f93a44808a06d34c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/CloudDouDownloadClientSetting.cs",
+      "sha256": "ec27d3d534ebf917dfd55b7a2b8f42680e898138ee1e3851296b686791eb8666"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/CommonRetrySetting.cs",
+      "sha256": "0e359b767a53eafd5bbbbcd284f1f9f44c62fd0d410c499f9162f08433213e83"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/CompanionSetting.cs",
+      "sha256": "6622fb86558a5be29db16d46f21c3d435de5935282a0b37ae9eb3d612f97ee77"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DailyDungeonSetting.cs",
+      "sha256": "ebec345f71c8586146e6bb4f6bf9be4c702a7930d20b7414f907986d5fecb3ea"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DailySignInfo.cs",
+      "sha256": "3b07198ba3d29b80d4e9035d7b5f55f7484741bff9a8988898ce7da6255b594b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DamageTestSetting.cs",
+      "sha256": "106c2e0c89c3713af7f9ec6c3e94328af81f88a98883ddf64a644e6dc29cc834"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DebugLoginSetting.cs",
+      "sha256": "95747bedd134d22af7ea8ce978335116b0efc26dbc48fbd95d6e5f8d4af78f92"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DemonBattlefieldGameSettings.cs",
+      "sha256": "e9b9efda54a5ad99a83ad39947090374ee7c7c202eeb0050462a7c26ec37af3f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DemonInvadeConfig.cs",
+      "sha256": "47c55e9fc8775633fd71a62652feb84a72307ff6a17a0390470b37f20cade70e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DemonKingBattleSetting.cs",
+      "sha256": "f00763744bfd02b620f20b2c810bc1010b5ce930ae5e3033b0229e1945a59173"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DialogSetting.cs",
+      "sha256": "d03364194c03c0ec13e8564e599bdcfadb160072ca24cee6dfc65ef47e3bbfed"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DomainTeamChallengeArrangeDivisionSetting.cs",
+      "sha256": "571e59492e7206767b18b936e13316e13967298e13906b162bc09106907a1767"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DomainTeamChallengeSetting.cs",
+      "sha256": "e4eec449510a154e3a9b5c0e8af1b09a7d9d7e5e7ae2530d492e04c998a5a464"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DomainTeamChallengeSettingPlayData.cs",
+      "sha256": "1f1f6213adafb5f550bf9fe6f785d2fc8c4d3b8d6d6d89ebe19196daf5d43122"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EnterGameSetting.cs",
+      "sha256": "81e6ef2f520625e4b03aee5291cce6cdeb899ca3137609c4c030b064910eb6b2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillEntityAIPriorityOverride.cs",
+      "sha256": "7144e1b2fb3fc224d0bb935f41e498fd8a3562173731a015283157e3831902a9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillExtPassiveSkill.cs",
+      "sha256": "eb3c3959e9a94f3a2d15d5f7e789e526e9e2a942d56c76f15364b2781fe0ed8c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillSetting.cs",
+      "sha256": "1de38f15c32c0ae1eaf048373265a005c08f822eaf27732bc2dc597763e9b813"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FirstPaySetting.cs",
+      "sha256": "89ca8bfeaeb614d633438d689b474bce25ef88a934ef56da2a302909101e6119"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FreeBattleSetting.cs",
+      "sha256": "28962ab3925fbeb2873204f0d440829cae27ff2e94daa3971288ecb1a0170e93"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GachaByproductsItems.cs",
+      "sha256": "765eefacc6d3045d1700db8b9d8af7168edd06839964f90e4a8d63dda649ed1b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameMatchInfo.cs",
+      "sha256": "fe4dfe020f5756b598a4ea17f162f96095152817858cdf5544615186126bf851"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GamePlayModeBattleSpeed.cs",
+      "sha256": "ccc2f68700bed5f2e3b70392fff9f2bee4ab9100e823a60458c63fee29bac9c0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GamePlayModeSpeed.cs",
+      "sha256": "9644cda7bb23569ac4060b3628f064f05facb854a997201454cd2e411257d109"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameSettings.cs",
+      "sha256": "4f9c9d2d6e8ef856d8f705db4aad133d44237062ff0413ac6f7ee1b953336916"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameSettingsFightRecord.cs",
+      "sha256": "2909d59c92d09afc36b9d6859ea433fbd7b80cee3cbb442421ba989bf62cf1e7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameSettingsFightRound.cs",
+      "sha256": "1c359e6f4252f15b953abc3c4dba2384b819f403937adf81dc2eefee21758ae7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameSettingsFightVoteLeave.cs",
+      "sha256": "680ae2ac27ae77c4971d9a06bf372fc2aee51548cc2c96e47da7eeeda6649c13"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameSettingsJointStrike.cs",
+      "sha256": "49f314fa9c42c1508fedec8a8d5fd08d8049d5bee6cf8547cc4d0e9aeee45bc9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GemMergeStorySetting.cs",
+      "sha256": "869fc2ad3043d24e3c0026899f6d46ca77f915b1b4ccd8310a0ae34310b598f0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GlobalIdData.cs",
+      "sha256": "7fdcc348043781ed154892c77cb32ca9179273f6d7232be49b86685e5fd431a8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GoogleLevelUpSettings.cs",
+      "sha256": "6b6c0f40e86625fe3d963950846fe71a386089cce513035245f453c0ed5f2781"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/HomeVisitSetting.cs",
+      "sha256": "f72ad05a6a96df0a5ff78c583d5155a168d28f3f5339cfc91b5b18df59ac0639"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ImportantDelegateTaskRefreshConfig.cs",
+      "sha256": "dcab2830c934bf94717bb74ad94e4f06a15fcc3e955b800a561d45a6304f8428"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/InheritSetting.cs",
+      "sha256": "fd283d37373de23a14ddbf077816b49421dd5f30ec807f17021f2ddd0329e052"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemSwapSettings.cs",
+      "sha256": "7899e7919b2d42bbb9a681b1688c957d3e0904ea5e1d022f0dbe26153341ade2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/JigsawFastCompleteSetting.cs",
+      "sha256": "c7f03b8118fff5735a3a555465185e7cd92b49b7419dceb3e581f0f273c91dab"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/KnowledgeQuizSetting.cs",
+      "sha256": "ab682c497a804cf03b4901e787e478aa6f83bea0e5a64101fbe77a5fc9eb572e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LegionActivityTopSetting.cs",
+      "sha256": "50e73910310e43abc862413eb476cc4ee84ffd9bedf8e90b573f543704420edf"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LegionFightSettings.cs",
+      "sha256": "2cee825fa6783307acc0070018a26bb975a3d591427a790ee66e181dcbf6afbc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LegionMapSetting.cs",
+      "sha256": "b0499e0ab50294a8bcdfdafb5eabe73655e39c8d91d49a172e549f7e1d71d929"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LegionPlunderSetting.cs",
+      "sha256": "94e255f6854b8767ce71686291fdb5a7aad34312349da72dd03e1610c1ce1d72"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelSubRankData.cs",
+      "sha256": "2e3cadec183460a5ffb5534438be4db17d2df61090f294009d8ec73ab3838777"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LostImportantPlayerSetting.cs",
+      "sha256": "422702df1371ed684e61fb6554448421b0c0cfd41d23941243d5c6748cf0a744"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapChannelStatusLimitConfig.cs",
+      "sha256": "06210c9eb9be7f59aade5aca4941690376d210ffa1506b31fc7a4d6ece927891"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapExploreSetting.cs",
+      "sha256": "6a396f16911d1c6210a70358e1aeb8e70bab6e573062d1a14c699197b8c719d7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapHideAndSeekConfig.cs",
+      "sha256": "c64cef83a3a8412d7b1cfea5e9b2d540e90434043d0b99496c4449d40c43f030"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapKitchenConfig.cs",
+      "sha256": "925f249f498c8e19498d69ae5c094bf14c5be62c74ca09a01b04401809938ae5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapLostGoddessPropInfo.cs",
+      "sha256": "860b6b8c95efa17a0e5426e875fb2cd43c16e65d63109a64ffb2378d1d3d13f7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapLostGoddessPropInfos.cs",
+      "sha256": "ba00431568b5395941cea69c6aa8ec722ab5fe51c4698203b3caf79c01c812c2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapRegionUnhandleEntityConfig.cs",
+      "sha256": "072b5fde9db233d08ee54ccc91090aa76066dd1bd4707e52287bd28e27969a35"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapSelectUISetting.cs",
+      "sha256": "8f6f529304ce99dbfefbc7f1d54ab6e07efa6875b645d060bef217195d0faa70"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Match3SkillScoreConfig.cs",
+      "sha256": "bf39806c621faefad0b17670d1a8b65e939402717c68b7f2724d82d2b02ccbdc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MaxRegisterInfo.cs",
+      "sha256": "74db7757e32fc7900d884bdef9295c80cb8c955a572589c716eb5af424036355"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MessagePushTimeSetting.cs",
+      "sha256": "8e5337367b5ef3bd0601562dda3e270dfe448f13052c2c7441e47c976a4f7ae2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MiniGameSettings.cs",
+      "sha256": "b4c60183a9b547483c964370eba0a6107e5b8b470b2b30fe688d8b72075feaa4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MopUp.cs",
+      "sha256": "200ede81f35b69b69968e4f5bcc37abd8a65ed6a85d9dce46b35b8383c019bf2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MultiGroupRivalryGameSettings.cs",
+      "sha256": "02c5ea13cccc3c51a40d059d881898899b776ad450579338593fb3d725225121"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MultiplayerBattleSetting.cs",
+      "sha256": "41900af1a4abb38c00b94d31aef4cc012933ba7456a05a4550a485234303f4ba"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MusicFestivalActivitySetting.cs",
+      "sha256": "db63cb586f507f0f9f3d8899ecb108ff9360684eaba7084a5d6aea3e926d656a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/NewPlayerCompensationSettings.cs",
+      "sha256": "dacded63d3108776c862f833685a4ff7f93516d06f729347b26b2e4f82c4f40c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcAdventureSettings.cs",
+      "sha256": "2b71e1cb3156820390a9846fa15188f0835433ea5d91b5e44d743dc26986a864"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcFightProps.cs",
+      "sha256": "d95400881a3ca16a0af56626f662c2ddbb823d1587e0a1a73b8cc6b4dd7d093f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcFriendshipTagSettings.cs",
+      "sha256": "3b0d4af1ed4879451c5be93b5aa161efe5f2b8c352724a5fc8195a44671bb294"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcTalentTreeSetting.cs",
+      "sha256": "cbe4713e571a9348df278b5ca342873e1b711cd07a1c0a6e672f450ca555cebc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/OutputAdditionSetting.cs",
+      "sha256": "53ac244846299e5706d61e5d384b13910c18bab3012ba18c6e55f47f9629e384"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Pay.cs",
+      "sha256": "293ebb0bda9faea2dfd5e0f15f3e4e0492e7f64bb52ec4eec8f3ec2a3fb655b7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PayTestSetting.cs",
+      "sha256": "d00a76746f5100c9c65aa2204869169c6e14a1b86fbf3415846ee75f9dfcf095"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PeriodicPayGiftSetting.cs",
+      "sha256": "04a5d066503d155f7f1654a149732c8f4ceb5ed98ccef6bf2c65f1dcfbab823f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PetSetting.cs",
+      "sha256": "3227064bc821034092e7e70633958aa5506e3a6c154beb065e9aecf396d99a8b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesIconConfigSetting.cs",
+      "sha256": "4bbbc73a6829e95275dd4b195c57a7761b04bfc2d749cf833092cc418acf3efe"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesMergeConfig.cs",
+      "sha256": "448e97987106773f19a2e9d2b320ee1921e0eb5b3e77dfb8753c8ae6b5f7501a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesMergeNoticeConfig.cs",
+      "sha256": "f15511d44104b34f2edfdd583ef82eb45f629e1e82c72aaa7805e8e930e28ce9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesMergeStepConfig.cs",
+      "sha256": "959a0b420dd95d3ebb680a3bc6fab2fa2e5e24c641631edf671aafdc52aa030f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesMergeTimeConfig.cs",
+      "sha256": "0cb2918f55c3c86738706c712858a353e08c30457ed32f93726b5c0ce77d6eeb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesSearchRegionConfig.cs",
+      "sha256": "77b4b1fe4d1e94d78733b80867dad9f71aa81ade8804c318d7589de04b26cc27"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesSearchSetting.cs",
+      "sha256": "6b5db68ee2ac922916b0180bc194c27f20315b15d4ed07e4f46a2e557288973f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerChatDataSetting.cs",
+      "sha256": "1abd9eb6f71a12afb6424700ce8a63908e8a2f20950d0c0908401816a65a59e6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerCreateTemplateInfo.cs",
+      "sha256": "9d63c14c6dc8e70f71e0ca470eccb109fb554998ce5b3d6d95350992e0708de0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common.LubanGen/Pos2d.cs",
+      "sha256": "872527a4acb6bc4a8d538b5f1ee730773ebb0bf8334afaa1762e078dfa9c840a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PurifySetting.cs",
+      "sha256": "5b12da9f9ddc4a19cb2941a3aea3a3f92e1037392b50aa21adfb1d8093c6847a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RandomProbabilityDisplaySetting.cs",
+      "sha256": "cc300f18f090c89a9539eedbee3d67d6ef42ff5b5fedd48ccfdc171b2f34be44"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RecentBuddySetting.cs",
+      "sha256": "ecd12804ea79ff314b0b0f132df49b80565062616a5c1845c8f88744e87a82a5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RecordFightNpcSetting.cs",
+      "sha256": "bd9d2abe2e002cd93b693ede13b5c16b5c8e0e9aa8420e7cc165ef66bd70c5a0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RefundBanRegionConfig.cs",
+      "sha256": "4abf0c2b5879502fa466b858bc14b338134079602f38a922826a84268a305ef3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RefundBanRule.cs",
+      "sha256": "e227b789ecd83b453c1ac42087a34996c6b445e77006523838c0dcb4969cdc38"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RefundBanSettings.cs",
+      "sha256": "812729ea2026cafef022b9e9908cc182aed4c965b643b702c21ffcd7b9136935"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ResetSkillSetting.cs",
+      "sha256": "019b8d0fd8cbf34134388e61e8d975493fbff86535d5cdf571a137f3fb5efecd"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RoleTradeSetting.cs",
+      "sha256": "539847d37b8e5d5683db84dbd7e2a91ac6efee555611b11262897b9c2b9b8b24"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RoomMatchInfo.cs",
+      "sha256": "4ab31d55200a904088e1390663fe6b114f748ab4a7eb13e45ef35cb9fdfd3a3e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ScratchCardActivitySetting.cs",
+      "sha256": "2fde08b4c13c7f7a8ba7e13ac262c9d7d42360efae5ea56bd22b8d25259ee108"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Season5Settings.cs",
+      "sha256": "5ce90e06373ba2a0972d2bb433402d177b250525f55d4579922c1bf624debe44"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SecretAreaSettings.cs",
+      "sha256": "7a11183097530b6a2a890b3b3de2ebe733d1ffe792aa5e574dc2ede42e5e940c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ServerManageConfig.cs",
+      "sha256": "96fb07314972b08fabab530a4522d50c3b9402d84f582713c635d31108f91909"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ShopBatchBuySetting.cs",
+      "sha256": "58c24ebc8627a7c92aec42b55ae59702df9b1752685112acca42f9be2f2f0ed2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillGachaCustomSelectionSettings.cs",
+      "sha256": "9f2e13d250ed13bb541393bb89b96bab5082d8ccd4c93fdf518b907f77a2deb8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillGachaSettings.cs",
+      "sha256": "36dbf94fb67c661e23584d056aace4ef808ecbf9c4f5bd0bbddc0d3493e58d48"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillPieceChestSetting.cs",
+      "sha256": "c5df20d27afc828e4ee679171ba3602136d955d90d2d73805b8b8d4a83717e0a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SplitSettings.cs",
+      "sha256": "22f3a42a522684e11dc6243c4c3dc08ac3d85559c36c33c12cf072830c3516e1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/StatusMutexGroup.cs",
+      "sha256": "1c2a4ddb6ee8e1d9d77d83753bc921d9720fc25d3a4c803ce755ae5804418f7a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/StoreReviewSetting.cs",
+      "sha256": "9ffdbf6e0f8c1d8bb0c8b061a8d9276e26187059a73f52ad27255319786ea9f9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/StoreReviewURL.cs",
+      "sha256": "82a9a9debf0df52fb1ce2dbde054a4482b4fd8f9d34b53d2a2776540b07ef143"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TDAReportSetting.cs",
+      "sha256": "8e0c366f41f575757c5bccf7bc7f4f5aefcd036ed190db02bb66c9d6685220d3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TaskSettings.cs",
+      "sha256": "4539747a5ab8447409606b55193544bf4b156caf0d9f09cf45cfbc75d2f2a80a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbGameSettings.cs",
+      "sha256": "95041b47680bfc881a61e96b931025b532a04dd5afe857460cbecd539c06b820"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TeamChallengeSetting.cs",
+      "sha256": "10141a9323acfd60a916e2f9f9da2c353d5c625facfbff9cdc0e4532907b7f6a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TeamMatchSetting.cs",
+      "sha256": "c356260cdcc829f8cbb5afb7f1facf978ea0caf3df08bc0d8eb6e83985499693"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ThirdPartyPayPopupSetting.cs",
+      "sha256": "f981d9b97834c1d60687b70106b2928f7cde6054d4ae2914ba028632f9fe889c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ThumbsUpSettings.cs",
+      "sha256": "7ef2cd4cf904af3fa3cd97c90f91fcfe9afe93afbb5493c70e88c558682cab43"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TopUpRebateSetting.cs",
+      "sha256": "602c07d5dfd92d73c4cf221e2fd039f2e9ad37df279f62434116fe71b6a42d7a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TradingPostSetting.cs",
+      "sha256": "0fc8630b99f30b95bc7f33dc5177bd4f35ffd0c258f1f1a426b73187cfd8f443"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TreasureCommonMaterailSetting.cs",
+      "sha256": "4707b55f4f6ac9f9e9e503be9337acbfc7faeeadedbc7e0586e435377c79d1d5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TreasurePieceSplitSetting.cs",
+      "sha256": "7ad8ba16745e02e6df930557d678ac36623a046e6969167dfe7eaaec6790f4c2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TreasureSettings.cs",
+      "sha256": "f5d32468cc1b705af6e4788863ac4fd10a915bc92ac9461f439ea6e5e222447c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/UniverseAccountSetting.cs",
+      "sha256": "aeefb4d12c4b9b72d448d9d766f231160cc264dd12343fe5d3a78b006d5e917e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/VegetableDogActivitySetting.cs",
+      "sha256": "338c7c677690f1a8ddf490c9550e222fcfb2e14140a5def90c50c27b557ebbb5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/game_settings.g.bytes",
+      "sha256": "fca2ae301cb5d5fc345377fedb2a97634682e286f6bede6a738c1be96d1a890e",
+      "official_bundle": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "-3869022733471997335",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      }
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightEntityLoadHandler.cs",
+      "sha256": "1a1a4a507aecb6dab4f0c2ca80804bf6a544d3037c024acb2d3451150ae5e6db"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightLifecycleHandler.cs",
+      "sha256": "2c5d46c625a90fb021d1ad74145e7b806ed8bc74e01ceb9b6e38c7ea0cd7d4cb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/game-framework-source/GameFramework/MyPtStopPlayable.cs",
+      "sha256": "3f7085b013c3d2a83c703e3e6f89066dbbc8fb8cbc9536c76910805ada8e160b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/game-framework-source/GameFramework/MyPtSubPlayable.cs",
+      "sha256": "58b7e5fabfcce8e5fb456ea5ade487f8a886e809c3626c128917de63c82efdcd"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "sha256": "ce40db54d87030ded0a9f8a6dc95db5a3a4e46ae02bf76a9d273fe092a703d12"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/IBattleFormulaHandler.cs",
+      "sha256": "28641e0b22198954f899f047e8f661f4d600cbd328afa0ea9c138393743caeb5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitBase.cs",
+      "sha256": "815ca26f5525f3023a5deb90a0753a8ee00daad936e596d2fb1bce1ad02c98fc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitFixed.cs",
+      "sha256": "0ca7fd1d15c9892617490bbfcd624dc94f8755a9dbee122c36ee5603d7db82a6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitSummon.cs",
+      "sha256": "27818e6067ba335d29c1666a7600bfe3029df71744551c3ae6cbb1cf4c789742"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitRandomTarget.cs",
+      "sha256": "5f560f887ca8ac20dc05407e1266ef9235b2d68ba227885e28b36f281e70d56c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitCustomTarget.cs",
+      "sha256": "58f3e03e3d6587c1bd9b1aab1cd8b2e3ffd1844cd8bb82a6d335e8b08dd58c8e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitTriggerSkill.cs",
+      "sha256": "a6e1b883f8289cb6ade655612fab9eeb3e328541125322c029a717b96a188ea7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitChained.cs",
+      "sha256": "fd93da51b689b4a9a243b23ad2311ae5fe2637e42b460c2cfc8ffb0b327cb720"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitExtHemophagia.cs",
+      "sha256": "6b82430ef76d633cfa67ad0caae268a3eb60addbebd7977ae781ad6a078aae4e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitTransientPropDiff.cs",
+      "sha256": "b5da62b57c56ee8b7ea50179d82e74872abc99e4dec1e141fd9da21eba48eb08"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitTransientPropUpByCharacterType.cs",
+      "sha256": "def86b1e2f51382d38344b80b7c91aee1cb1e91ffb1bc66ab080aeef97f6cdde"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightDamageLimit.cs",
+      "sha256": "286cb22afd40b58cbc7e31fe7b4d4d8e71adcc864d04a09208d347f077d35297"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitExtApplyDamage.cs",
+      "sha256": "33d0c12ccedd441e1b78aa0bef38451e98af01ef7f8deda3b5c004a8ab184772"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ApplySkillHitOffsetForPlayableTrackOnInit.cs",
+      "sha256": "39d9fa3c9e9332946e1e1eb7f731c08c3842d89bbc287c0020bd2bb920846345"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/OverridePlayableTrackByHitOnInit.cs",
+      "sha256": "a127236594cb13ce7d3ff0491b98fda4adcafbc8820eb5d4eb356c5eece7a79c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/OverridePlayableAttachOffsetByHitOnInit.cs",
+      "sha256": "c20cdffa3d2a8948e1badf40d58e848ff2bb11b91f43adb2f72bb4ae90fd9b6c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitExtDelayInfoOverriderByStatusStack.cs",
+      "sha256": "b657a96a38539fb90f720f67625e681a71a8b21707736a86292bfdebb4e27dca"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitBaseComponent.cs",
+      "sha256": "e53d7686b71fe3895477902a1e71cca635429da591644be536de4bfbbcdb5472"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitBaseComponentInfo.cs",
+      "sha256": "26c9a3deef4680f8b6934525961bf75798f11058349fc2c38562f5cfcb8877b4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/HitCfg.cs",
+      "sha256": "1e097e60c9800c74dca5281e4ac54bc2ffcfa2c9736410671ab04abfefe4ea40"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/HitScopCfg.cs",
+      "sha256": "86a386d620ab98e0ef53f5fc85a8419fee71edb69f843524cead081a65bc0191"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Pos2d.cs",
+      "sha256": "8129206cd36eefdedf3d3d6a2a011d0c52325e35a7690a42b350ad96669fa8ea"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitFixedComponentInfo.cs",
+      "sha256": "5b4b346f898921bdb054017fe7e6fcb7ac7437b2f23437e793cd18bd2addd4d8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitChainedComponent.cs",
+      "sha256": "33634c3e9d141fbf6ab4c4a887d29cdac2ec3a9a932d56014ec83fb16932002e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitChainedComponentInfo.cs",
+      "sha256": "c26be6e1d1ee4461131de83322d70638cbcd4b62915451182f2bdbde516dcd88"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitSummonComponent.cs",
+      "sha256": "b1b0cf4d642dc700095e02aab2e178a8e5412f2d0e3ba24f864f1aab12bc7859"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitSummonComponentInfo.cs",
+      "sha256": "23e8602ce8140c5cacc537b135224cc4882477aa25cf660bb7780edc16b0e862"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitExtDelayInfoOverriderByStatusStackComponent.cs",
+      "sha256": "d9f07ad15c8ee5eea7ee59e25d32805f51767968c356cc7afe36651027191075"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitExtDelayInfoOverriderByStatusStackComponentInfo.cs",
+      "sha256": "bc359f1ef9bb9ac3cc1d11ce6c9745b1130dc27a19a516eb8e6f8ba9cb4e9d56"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/EFightHitSourceToMeAnchor.cs",
+      "sha256": "6a8dab4993e737322cd84bdfdf2bf1f56512c520618849176c0cc51f40ff0096"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/hit-native-settings.json",
+      "sha256": "ab33509bae76bb3053acd4468a2fb704be1fc96b4a24c354efb59b74844ab2a2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/hit-native-settings.json.meta",
+      "sha256": "5af43b084be69cdafe747c56d5388ea89fb3c497a131444c0118dba5ab320e30"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/MyFightEntityLoadHandler.cs",
+      "sha256": "26f40c3f92dd53bf308e2cabfb1cce49daaf180f559a689849e4f24618d29348"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/MyFightEntityLoadHandler.cs.meta",
+      "sha256": "12830161611d5e6d70963ccc85d452b175f1f51f0edec10af873d3f204928040"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/MyPtStopPlayable.cs",
+      "sha256": "b8ce197258f133f5e8d965e8893de95af4f0c14d3d7a82ca5be1798c09776e94"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/MyPtStopPlayable.cs.meta",
+      "sha256": "987c28a0cb8e28398ff3a57c48c3b0a6e7da7c7658814650390acd2126dd3ab4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/MyPtSubPlayable.cs",
+      "sha256": "602cad345b92baea2d74822c686c2a01e0ae3985c603805f6cad7351861a9b9e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/MyPtSubPlayable.cs.meta",
+      "sha256": "9b5dc5e43272fc068284b1e6abcb2757125da9568df858954a8e59002ab70d6b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightHitViewFormula.cs",
+      "sha256": "636d173e7af6fc855e44b33554c83913907447674d36de0eceb614bd01500441"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightHitViewFormula.cs.meta",
+      "sha256": "55cf725ab454a0229759f7a09a6219d50d8bc81ebf3f93854ea8609c86325725"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitBase.cs",
+      "sha256": "f3b86dccc24d4fd87b5089caf8524304c33640a4890b1b919563107d07cac63b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitBase.cs.meta",
+      "sha256": "9f908e6b659955b5670013fd3e355aff1237411a62e365cf32faf897dbd2df2f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitFixed.cs",
+      "sha256": "5aba2c02a219f33772f3bf5be7b8cd88847e34cc34eff883bf8f5258dfe9d5ce"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitFixed.cs.meta",
+      "sha256": "f380b03412a26a75434b3cdf057afc4cf5638aab6869d666f7f5961499d7c6f5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitSummon.cs",
+      "sha256": "abc1774f0b79c5678c337aacff5c8db06b09c8084c028b670762861877898b6d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitSummon.cs.meta",
+      "sha256": "853ecd30e663f8c7a1d3dc7ecfe2e239c5a780d71170472c3ebd89e8320f00d2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitRandomTarget.cs",
+      "sha256": "75015c008ba7685acfb298f1fe42e238262fe21615bd5cd1b8519cd3b941d846"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitRandomTarget.cs.meta",
+      "sha256": "1255cfc8be2cedbc4f79d0767a12361607c36ce17bd490b5c5da3b40f13e4747"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitCustomTarget.cs",
+      "sha256": "61e10c82e7daf0ccdcce5a8d291437ecbe0505cf25bbd1d6a30c0ae1055aba8a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitCustomTarget.cs.meta",
+      "sha256": "8835a1bb200d411ae84efec071841338d27437157549c3c42d8551b6a32fdb34"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitTriggerSkill.cs",
+      "sha256": "9b765bbee71b12d91e80929ce9d0574cd9d5642ced21445ebcd0e905e60e15a0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitTriggerSkill.cs.meta",
+      "sha256": "f7422d7851d4f43384432e21dbad7526bd4ec3e19549a7ab95939934f0bf2561"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitChained.cs",
+      "sha256": "b7e546f94f6a0336db1152081a9b4535797fa0690c4dc80a23257d8a8facd7c0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitChained.cs.meta",
+      "sha256": "908c491a15332a8c1ffadf16781f8ba188a1b5bc5bd6578e280da55449e89282"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitExtHemophagia.cs",
+      "sha256": "a60893be9c542456358036a0ee88dee800a3641017d61f3acb2fd90248f5c9a8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitExtHemophagia.cs.meta",
+      "sha256": "5855a014c27e748d260ca6aab4b0a90450bdce71e092ce0b89c0a6236cf18b32"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitTransientPropDiff.cs",
+      "sha256": "37d36fc671b7fbab250b1a84a4517ad70c4d8e1759a0de11bd52ed8ffd8c278a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitTransientPropDiff.cs.meta",
+      "sha256": "289e62c7cf3b3e4ca2dcaa54465b95ec9c496495724cf4d67a5f009948c89358"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitTransientPropUpByCharacterType.cs",
+      "sha256": "0d1dd94d82484a0ea6dee8436eb7b26345b869006efe90cbbf88dc8d13150a74"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitTransientPropUpByCharacterType.cs.meta",
+      "sha256": "751286104a4c1afb268a861cd088b90f37bd273824253698bfc786d9d1f1f61d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightDamageLimit.cs",
+      "sha256": "791af431ef3f1abcfdaf6040d027891ee40cefccb3d1819f279a68fbcda5d8d7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightDamageLimit.cs.meta",
+      "sha256": "bd26723a82a93f3419521c7a022250875ffd863c9efda0ad53bd3385e281f19c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitExtApplyDamage.cs",
+      "sha256": "4e895993fcb41d9a3aa53a59f76ad3a4cf376eea7cb41ce35dff82f565c64a1c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitExtApplyDamage.cs.meta",
+      "sha256": "cd1627127eb8ea0188f1b7d4d2b3525ecfe9497ef09c71c33bf403505259ea69"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ApplySkillHitOffsetForPlayableTrackOnInit.cs",
+      "sha256": "2d38b90730a2e70384d27e1a5c5819abb1e0e53901daa7f1ef241d5424528316"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ApplySkillHitOffsetForPlayableTrackOnInit.cs.meta",
+      "sha256": "5460b1a004c321aa3b5000a4f71426e91799fc3fb8df24f8c3d1d43e07e5e55c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/OverridePlayableTrackByHitOnInit.cs",
+      "sha256": "16c23e0b84fbfe1718abebf9ca0d349b99fceaaa9a940b20e300d68771887772"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/OverridePlayableTrackByHitOnInit.cs.meta",
+      "sha256": "6537f69cb619078196a0300ce1f5456a8b21e00701a4d7370266843b19a8f199"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/OverridePlayableAttachOffsetByHitOnInit.cs",
+      "sha256": "b48d906dbaddda69221a27b7022ea2bc88ca1bd242f9f9ce01be3f91e58dcb9b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/OverridePlayableAttachOffsetByHitOnInit.cs.meta",
+      "sha256": "439d46b97369bce487dd381e3c0a4d12538677f2e322e5c23a9b4fc206785fcb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitExtDelayInfoOverriderByStatusStack.cs",
+      "sha256": "228e50314646c0d3d5e3bcbab5f9f4318d2f5539d52dc14336520c7e780167f6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitExtDelayInfoOverriderByStatusStack.cs.meta",
+      "sha256": "fabad93f944db4189580cfa596754c4bdd4f3276ee8b929a45c710455b051133"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/EFightHitSourceToMeAnchor.cs",
+      "sha256": "2b0c76790671a3d6dced9dc5472c1d651a7ad041a36af76f2ae48e591a2d2fe1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/EFightHitSourceToMeAnchor.cs.meta",
+      "sha256": "e2311c9ac29930275e4738808d901fbf5c176afcefa4c160c0ecfca0891cd18b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightHitViewBindings.cs",
+      "sha256": "1b6ab56f6dccaf3170310a44d107d27ef6ab9273a8273e8fc454c3d949b5a0c1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightHitViewBindings.cs.meta",
+      "sha256": "3b9f5221ffd7f64dd1f2c11936e1467220d9b704c1a92c5922594feeb5b6733e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/Zjcs.Official.BattleSkillPlayables.asmdef",
+      "sha256": "74631d0738fbe68f82e2a7a68d91158d74f145777cfe76a4ee2a44b11a170fdb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/Zjcs.Official.BattleSkillPlayables.asmdef.meta",
+      "sha256": "cd61ff0eb66eaae7172148b238b84e15445068e0df692e74b484fbc4d6e217de"
+    }
+  ],
+  "selected_entity_loader_compatibility": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/framework-source/GameObjectPoolEmbed.cs",
+      "sha256": "4b9bf8bd72bd2e4492271f5b69dfc60eeb4023acfa51718ba27aa28337bcf482"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/framework-source/TTLGameObjectPool.cs",
+      "sha256": "29e00f1d22052652148ee9bda61818a9bbec8d730ab9f4fe2ab35d4bf6b175b6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/framework-source/TTLGameObjectPoolCollection.cs",
+      "sha256": "eddfab58a1bd465e0c9a8e76f718dc84a314b5a8681b9ba48fd99f8115a79a56"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework.Collections/SortedValueDictionary.cs",
+      "sha256": "4aa2a9d4370b531500f0a8c92a5555bcfd21594fb4516b61cd9840e805d41784"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/IEntityLoadHandler.cs",
+      "sha256": "831e87b6665feb55bfb89d7a1877cb4889b6eecb9ff59c632c2dab0f326f1dfe"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntityLoadHandler.cs",
+      "sha256": "26593bfd66e44dffdc24492d01e4491c60eb979707b6cb70e1d462570286d624"
+    }
+  ],
+  "local_resource_and_identity_bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHitEntityPlayback.cs",
+      "sha256": "087106d8aaf13950d0d8427480086419e9ca8a6bec3912e12bb941038026ed3f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHitEntityData.cs",
+      "sha256": "86f551763bff0f7b0639dded6247e179faf98ba053ceef38414602ced3ce78de"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs",
+      "sha256": "01cb8de8abcc7fc89d331fa44023f68bfb227dddb03d36f48c200ca484be1dbf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/Zjcs.Presentation.Combat.asmdef",
+      "sha256": "4a35fabc7aedb4aa9bf01f07593352513ba257fd1b8a146c422c2d2f523c32d6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleNativePlayableScope.cs",
+      "sha256": "eb133108cb6385fde77da9fa7ab23e5081528f2b2923116f071a2222dd87cfad"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
+      "sha256": "6cd6638f22c25ba08fc9e835c59b8383fff1ccacde60fa41c56a74ea95c6f418"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs",
+      "sha256": "1e5455210b7ed431e4b3f265f2b42d4897a455c463cbeb436b0e87bdda7411e9"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleHitPlaybackAcceptance.cs",
+      "sha256": "1ac3ce6658f262f8b057eb7594fe46685c713282134f3afd6c400718c793aa6a"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_hit_view_runtime.py",
+    "sha256": "bdd22b2b5ad5868296ff810db656477ea2ae49e384805e2058b50d19b7c2c3bc"
+  },
+  "adaptations": [
+    "Namespace and existing Unity entity/Playable types.",
+    "Explicit existing entity, local grid and world position queries.",
+    "The explicit source-status query preserves absent source/skill/status agent checks.",
+    "Original trajectory operations and branch/order retained.",
+    "Inactive coroutine error uses Unity logging."
+  ]
+}

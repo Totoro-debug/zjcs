@@ -41,6 +41,26 @@ def main():
         skills.append(dict(skill_entity_id=row['skill_id'], entity_prefab=row['entity_prefab'],
                            entity_prefab_sha256=row['entity_prefab_sha256'], playables=bindings))
 
+    from inspect_battle_hit_graph_bindings import inspect as inspect_hits
+    hit_source = inspect_hits()
+    (work / 'hit-graph-binding-audit.json').write_text(
+        json.dumps(hit_source, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    hits = []
+    for row in hit_source['hits']:
+        entity_key = f"hit:{row['hit_entity_id']}:entity"
+        roots[entity_key] = (EXPORT_PREFIX / row['entity_prefab']).as_posix()
+        bindings = {}
+        for field, ref in row['playables'].items():
+            key = f"hit:{row['hit_entity_id']}:{row['component_file_id']}:{field}"
+            roots[key] = (EXPORT_PREFIX / ref['path']).as_posix()
+            bindings[field] = key
+        hits.append(dict(hit_entity_id=row['hit_entity_id'], client_type=row['client_type'],
+            entity_key=entity_key,
+            component_file_id=row['component_file_id'], game_object_file_id=row['game_object_file_id'],
+            component_enabled=row['component_enabled'], source_to_me_anchor=row['source_to_me_anchor'],
+            flags=row['flags'], playables=bindings))
+    print(f"SkillGraphs: audited {len(hits)} original hit view bindings", flush=True)
+
     mapped = dict(SCRIPTS)
     mapped.update({-822603460: ('StoryPlayables', 'ApplyBySource'),
         -94696243: ('StoryAnimation', 'MyPlayableOverrideAnimator'),
@@ -77,15 +97,34 @@ def main():
     build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS={}, graph_roots=roots,
         MAPPED=mapped, family='SkillGraphs', shader_prefix='SkillGraph_',
         runtime_receipts=('track-runtime-source-manifest.json',
-            'spine-clone-runtime-source-manifest.json'), generator=Path(__file__),
+            'spine-clone-runtime-source-manifest.json',
+            'hit-view-runtime-source-manifest.json'), generator=Path(__file__),
         reference_scripts={-210918009: dict(name='WwiseEventReference',
             native_asset=EVENT_ASSET,
             runtime='unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs',
-            receipt='assets/reference/profession-ui/audio-source-manifest.json')},
+            receipt='assets/reference/profession-ui/audio-source-manifest.json'),
+            -1752031980: dict(name='AkEvent',
+                native_asset='Prefabs/EcEntity/Fight/FightSkill/11030/playable11031.prefab',
+                runtime='unity/Assets/Game/Runtime/Official/ProfessionUI/AkEvent.cs',
+                receipt='assets/reference/profession-ui/audio-source-manifest.json'),
+            -130519023: dict(name='AkGameObj',
+                native_asset='Prefabs/EcEntity/Fight/FightSkill/11030/playable11031.prefab',
+                runtime='unity/Assets/Game/Runtime/Official/ProfessionUI/AkGameObj.cs',
+                receipt='assets/reference/profession-ui/audio-source-manifest.json')},
         external_scripts={354902358: dict(name='SkeletonAnimation', namespace='Spine.Unity',
             native_meta='Plugins/spine-unity.dll.meta',
             runtime='unity/Assets/Spine/Runtime/spine-unity/Components/SkeletonAnimation.cs',
             source='unity/Assets/Spine/Runtime/spine-unity/Components/SkeletonAnimation.cs'),
+            1791324088: dict(name='SkeletonMecanim', namespace='Spine.Unity',
+                native_meta='Plugins/spine-unity.dll.meta',
+                runtime='unity/Assets/Spine/Runtime/spine-unity/Components/SkeletonMecanim.cs',
+                source='unity/Assets/Spine/Runtime/spine-unity/Components/SkeletonMecanim.cs',
+                verify_file_id_hash=True),
+            337831424: dict(name='TimelineAsset', namespace='UnityEngine.Timeline',
+                native_meta='Plugins/Unity.Timeline.dll.meta',
+                runtime='unity/Packages/com.unity.timeline/Runtime/TimelineAsset.cs',
+                source='unity/Packages/com.unity.timeline/Runtime/TimelineAsset.cs',
+                verify_file_id_hash=True),
             106799970: dict(name='SkeletonDataAsset', namespace='Spine.Unity',
             native_meta='Plugins/spine-unity.dll.meta',
             runtime='unity/Assets/Spine/Runtime/spine-unity/Asset Types/SkeletonDataAsset.cs',
@@ -103,7 +142,19 @@ def main():
             runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SkeletonRendererHighTexturePreview.cs',
             source='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SkeletonRendererHighTexturePreview.cs',
             verify_file_id_hash=True)},
-        source_scripts={1708465776: dict(name='DynamicSkeletonRenderSeparator',
+        source_scripts={**hit_entity_scripts(),
+            1126251125: dict(name='MyPtSubPlayable', namespace='GameFramework',
+                source_root='game-framework-source/GameFramework', source='MyPtSubPlayable.cs',
+                target_namespace='Zjcs.Official.StoryPlayableManager',
+                runtime='unity/Assets/Game/Runtime/Official/StoryPlayableManager/MyPtSubPlayable.cs'),
+            2132115665: dict(name='MyPtStopPlayable', namespace='GameFramework',
+                source_root='game-framework-source/GameFramework', source='MyPtStopPlayable.cs',
+                target_namespace='Zjcs.Official.StoryPlayableManager',
+                runtime='unity/Assets/Game/Runtime/Official/StoryPlayableManager/MyPtStopPlayable.cs'),
+            34885126: dict(name='AppearanceRendererLite', namespace='AppearanceSystem',
+                source='AppearanceSystem/AppearanceRendererLite.cs', target_namespace='Zjcs.Official.ProfessionUI',
+                runtime='unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererLite.cs'),
+            1708465776: dict(name='DynamicSkeletonRenderSeparator',
             namespace='AppearanceSystem.SpineExt',
             source='AppearanceSystem.SpineExt/DynamicSkeletonRenderSeparator.cs',
             runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/DynamicSkeletonRenderSeparator.cs'),
@@ -158,11 +209,19 @@ def main():
             # deterministic typed list consumed by Unity.
             playables=[dict(field=field, resource=resources[key])
                        for field, key in skill['playables'].items()]))
+    catalog['hits'] = []
+    for row in hits:
+        entry = dict(row)
+        entry['entity_resource'] = resources[entry.pop('entity_key')]
+        entry['playables'] = [dict(field=field, resource=resources[key])
+            for field, key in row['playables'].items()]
+        catalog['hits'].append(entry)
     write_changed(DATA, json.dumps(catalog, ensure_ascii=False, indent=2) + '\n')
     meta(DATA)
 
     proof = json.loads(RECEIPT.read_text(encoding='utf-8'))
     proof['official_entity_binding_source'] = source
+    proof['official_hit_entity_binding_source'] = hit_source
     proof['outputs'] = [identity(DATA) if row['path'] == DATA.relative_to(ROOT).as_posix()
                         else row for row in proof['outputs']]
     write_changed(RECEIPT, json.dumps(proof, ensure_ascii=False, indent=2) + '\n')
@@ -171,6 +230,25 @@ def main():
     print('Active-version skill graph bindings:', len(skills),
           'official skill entities;', len(roots), 'directed graph roots;',
           len(set(resources.values())), 'distinct converted graph assets.')
+
+
+def hit_entity_scripts():
+    from inspect_battle_hit_graph_bindings import MD4
+    import struct
+    names = {
+        'EntityLifecycle': ('MyEntity', 'MyGridTransform', 'MyTransform'),
+        'BattleGridItemEntities': ('MyFightGameplayTag',),
+        'BattleSkillPlayables': ('MyFightHitFixed', 'MyFightHitChained', 'MyFightHitSummon',
+            'MyFightHitRandomTarget', 'MyFightHitCustomTarget', 'MyFightHitTriggerSkill',
+            'MyFightHitExtHemophagia', 'MyFightHitTransientPropDiff',
+            'MyFightHitTransientPropUpByCharacterType', 'MyFightDamageLimit',
+            'MyFightHitExtApplyDamage', 'ApplySkillHitOffsetForPlayableTrackOnInit',
+            'OverridePlayableTrackByHitOnInit', 'OverridePlayableAttachOffsetByHitOnInit')}
+    return {struct.unpack('<i', MD4.new(('s\0\0\0' + name).encode()).digest()[:4])[0]:
+        dict(name=name, namespace='', target_namespace='Zjcs.Official.' + folder,
+             source=name + '.cs',
+             runtime='unity/Assets/Game/Runtime/Official/' + folder + '/' + name + '.cs')
+        for folder, entries in names.items() for name in entries}
 
 
 if __name__ == '__main__':

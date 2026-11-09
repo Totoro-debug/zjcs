@@ -3,6 +3,8 @@ import hashlib
 import json
 from pathlib import Path
 
+from prepare_battle_scene_appearance_runtime import write_changed
+
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / '.tools/source-packages/official-code/client-source/AppearanceSystem.Runtime/AppearanceOnDemandTextureLoader.cs'
 RUNTIME = ROOT / 'unity/Assets/Spine/Runtime/spine-unity/Asset Types/SpineAtlasAsset.cs'
@@ -60,7 +62,7 @@ def main():
                 updated += 1
     if updated != 2:
         raise ValueError('Expected the two existing skill graph atlas script bindings.')
-    graph_receipt.write_text(json.dumps(graphs, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    write_changed(graph_receipt, json.dumps(graphs, ensure_ascii=False, indent=2) + '\n')
     outputs.append(dict(path=graph_receipt.relative_to(ROOT).as_posix(), sha256=sha(graph_receipt.read_bytes())))
     proof = dict(manifest='884_156692',
         official_source=dict(path=selection.relative_to(ROOT).as_posix(), sha256=sha(selection.read_bytes())),
@@ -73,7 +75,7 @@ def main():
         binding='MaterialsTextureLoader.Load matches the exact existing official placeholder material when the appearance loader is not yet bound; explicit loaders retain their own mapping.',
         payload_changes='None; original atlas, materials, texture pixels, names and dimensions are preserved.')
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
-    RECEIPT.write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    write_changed(RECEIPT, json.dumps(proof, ensure_ascii=False, indent=2) + '\n')
     print('Recorded official native atlas placeholder material binding.')
 
 
