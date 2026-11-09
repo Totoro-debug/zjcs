@@ -6,6 +6,10 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using Zjcs.Combat.Official;
+using Zjcs.Offline.BattleNativePlayables;
+using Zjcs.Offline.ProfessionUI;
+using Zjcs.Offline.Progression;
+using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.StoryFollowBone;
 using Zjcs.Official.StoryGroundEffects;
 using Zjcs.Official.StoryPlayables;
@@ -324,9 +328,126 @@ namespace Zjcs.Editor
                     && !native.Animator.GetBool("run"), "original monster lands and releases its run state");
             }
             UnityEngine.Object.Destroy(monsterRoot); yield return null;
+            var players = PlayerMovementSteps(world.transform, grid);
+            while (players.MoveNext()) yield return players.Current;
             var fades = FadeSequenceSteps(world.transform);
             while (fades.MoveNext()) yield return fades.Current;
             UnityEngine.Object.Destroy(world); yield return null;
+        }
+        private static IEnumerator PlayerMovementSteps(Transform world, FightBattleGrid grid)
+        {
+            var config = Resources.Load<AppearanceConfig>("Combat/SceneAppearance/AppearanceConfig");
+            var resolver = new ProfessionAppearanceResolver(ProfessionAppearanceTables.Load(
+                Resources.Load<TextAsset>("Combat/SceneAppearance/appearance-tables").text));
+            var rules = OfficialCombatAssetCatalog.LoadDefault().Load();
+            float captureDelta = Time.captureDeltaTime;
+            Time.captureDeltaTime = 1f / 60;
+            try
+            {
+                foreach (Sex sex in new[] { Sex.Male, Sex.Female })
+                {
+                    var profile = new OfflinePlayerProgress { InitialWeaponType = 200 };
+                    profile.Wardrobe.Sex = (int)sex; profile.Wardrobe.Profession = 1;
+                    foreach (var pair in resolver.BuildDefaultAppearanceData(config, sex, (Profession)1).SkinMap)
+                        profile.Wardrobe.BaseSkins.Add(new OfflineAppearanceSkin { Type = (int)pair.Key, Id = pair.Value.SkinId });
+                    string saved = JsonUtility.ToJson(profile);
+                    var host = new GameObject("Original player movement " + sex); host.transform.SetParent(world, false);
+                    var mapper = new OfficialBattleGridMapper(host.transform, grid);
+                    using (var scope = new OfflineBattleNativePlayableScope(host.transform, null))
+                    using (var scene = new OfficialBattleSceneView(null, host.transform, null, mapper, null,
+                        (target, state) =>
+                        {
+                            var scale = target.localScale;
+                            scale.x = Mathf.Abs(scale.x) * (state.HasFlipX && state.FlipX ? -1f : 1f);
+                            target.localScale = scale;
+                        }, nativePlayableScope: scope,
+                        playerAppearance: new OfficialBattlePlayerAppearanceSource(1, 17, () => profile, _ => profile.InitialWeaponType)))
+                    {
+                        scope.BindNativePrefabAdapter(PartnerNativeSkillSkeleton.BindOriginalPrefab);
+                        var state = new FightBattleUnitState { Id = 1, CharacterType = 1, RoleEntityId = 3100,
+                            X = 4, Y = 2, Hp = 100, MaxHp = 100 };
+                        var checkpoint = new FightBattleCheckpoint { Grid = grid }; checkpoint.Units.Add(state);
+                        scene.Refresh(checkpoint);
+                        var entity = scene.TryGetUnitTransform(1);
+                        var renderer = entity.GetComponentInChildren<ProfessionNativeSceneRenderer>();
+                        var animator = renderer.GetComponent<Animator>();
+                        for (int frame = 0; frame < 12; frame++)
+                        { scene.Tick(1f / 60); scope.Tick(1f / 60); scope.LateTick(); yield return null; }
+                        Require(renderer.GetComponent<MeshFilter>().sharedMesh.vertexCount > 0,
+                            "original " + sex + " player uses its live body mesh");
+                        var application = entity.GetComponent<Zjcs.Official.StoryAnimation.AnimationController>();
+                        Require(application && application.myAnimator == animator && application.myInited
+                            && application.CreateOverrideController && application.NotCreateGraph
+                            && application.RuntimeAnimatorController == animator.runtimeAnimatorController
+                            && animator.runtimeAnimatorController is AnimatorOverrideController,
+                            "original player application creates and owns its configured override controller");
+                        Require(Array.Exists(animator.parameters, parameter => parameter.name == "run"
+                            && parameter.type == AnimatorControllerParameterType.Trigger),
+                            "original player run parameter is a trigger");
+                        var movement = rules.CreateRoleMovement(state, false);
+                        movement.Path.AddRange(new[] { new FightGridPoint(4, 2), new FightGridPoint(3, 2), new FightGridPoint(2, 2) });
+                        movement.Delay = .25f; rules.ApplyMovementFacing(state, movement);
+                        var step = new FightBattleStepEvent { ActorId = 1 }; step.Movements.Add(movement);
+                        state.X = 2; scene.Refresh(checkpoint, step);
+                        Require((entity.localScale.x < 0f) == movement.EndFlipX,
+                            "delayed native player retains its configured authoritative facing");
+                        bool ran = false, dustStayed = false, refreshed = false;
+                        var dustPositions = new Dictionary<MyPlayableFollowBone, Vector3>();
+                        for (int frame = 0; frame < 120; frame++)
+                        {
+                            scene.Tick(1f / 60); scope.Tick(1f / 60); scope.LateTick();
+                            foreach (var follow in host.GetComponentsInChildren<MyPlayableFollowBone>(true))
+                                if (follow.myStatus != MyPlayable.PlayableStatus.Stop && follow.myApplyComponent != null)
+                                {
+                                    Require(!follow.IsStatic && follow.IsFollowPos && follow.myFollowDuration == 0f,
+                                        "original 15300 dust samples the body attachment only at time zero");
+                                    Vector3 actual = follow.myApplyComponent.transform.position;
+                                    if (!dustPositions.TryGetValue(follow, out Vector3 initial))
+                                    {
+                                        Vector3 expected = follow.myAttach.GetBone(follow).TransformPoint(follow.myAttach.myOffset);
+                                        Require(follow.Time == 0f && (actual - expected).sqrMagnitude < 1e-7f,
+                                            "original player dust starts at its live body attachment: " + follow.name
+                                            + "; t=" + follow.Time + "; actual=" + actual + "; expected=" + expected);
+                                        dustPositions.Add(follow, actual);
+                                    }
+                                    else if (follow.Time > 0f)
+                                    {
+                                        Require((actual - initial).sqrMagnitude < 1e-7f,
+                                            "original player dust remains at its sampled world position");
+                                        dustStayed = true;
+                                    }
+                                }
+                            yield return null;
+                            if (!ran && Array.Exists(animator.GetCurrentAnimatorClipInfo(0), clip => clip.clip.name.Contains("run")))
+                            {
+                                ran = true; Capture(entity.position, "player-" + sex + "-movement-run");
+                            }
+                            if (!refreshed && frame == 18)
+                            {
+                                Vector3 before = entity.position; scene.Refresh(checkpoint);
+                                Require(entity.localScale.x < 0f && entity.position == before,
+                                    "active native player refresh retains the current cell facing and position");
+                                refreshed = true;
+                            }
+                        }
+                        Require(ran && dustStayed && dustPositions.Count == 2 && refreshed,
+                            "native " + sex + " player drives original movement animation and both sampled dust effects"
+                            + "; ran=" + ran + "; dustStayed=" + dustStayed + "; dust=" + dustPositions.Count + "; refreshed=" + refreshed);
+                        Require((entity.position - mapper.GridToWorld(new FightGridPoint(2, 2))).sqrMagnitude < 1e-7f
+                            && (entity.localScale.x < 0f) == movement.EndFlipX,
+                            "native player lands and restores original final facing");
+                        Require(Array.Exists(animator.GetCurrentAnimatorClipInfo(0), clip => clip.clip.name.Contains("idle")),
+                            "original player run trigger returns to its controller's idle animation");
+                        Require(JsonUtility.ToJson(profile) == saved, "movement leaves the supplied player profile unchanged");
+                        Debug.Log("Original player movement passed: " + sex + "; skill=" + movement.MoveSkillEntityId
+                            + "; action=" + movement.MoveBehaviourId + "; duration=" + movement.MoveDuration
+                            + "; speed=" + movement.MoveSpeed + "; finalFlip=" + movement.EndFlipX);
+                        Capture(entity.position, "player-" + sex + "-movement-end");
+                    }
+                    UnityEngine.Object.Destroy(host); yield return null;
+                }
+            }
+            finally { Time.captureDeltaTime = captureDelta; }
         }
         private static void AddTimingLeaf(MyPlayableSequence sequence, float delay, Action onPlay)
         {
