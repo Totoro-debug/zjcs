@@ -29,13 +29,16 @@ namespace Zjcs.Presentation.Combat
         private readonly MyPlayableCenter center = new MyPlayableCenter();
         private readonly IPlayableGroundEffectHost groundEffects;
         private readonly Transform parent;
+        private readonly Action<double> advanceSources;
         private double clock;
         private bool disposed;
 
-        public OfficialBattleMovementEffects(Transform parent, IPlayableGroundEffectHost groundEffects)
+        public OfficialBattleMovementEffects(Transform parent, IPlayableGroundEffectHost groundEffects,
+            Action<double> advanceSources = null)
         {
             this.parent = parent != null ? parent : throw new ArgumentNullException(nameof(parent));
             this.groundEffects = groundEffects ?? throw new ArgumentNullException(nameof(groundEffects));
+            this.advanceSources = advanceSources;
             var asset = Resources.Load<TextAsset>("Combat/movement-effects");
             if (asset == null) throw new InvalidOperationException("Missing original movement effect bindings.");
             var data = JsonUtility.FromJson<Data>(asset.text);
@@ -157,6 +160,7 @@ namespace Zjcs.Presentation.Combat
                 }
                 // Deliver the old cell's final interval before StopMove/next Play.
                 // Original MyPlayable.ProcessFrame still owns its creation-frame guard.
+                advanceSources?.Invoke(next - clock);
                 center.Update((float)(next - clock)); center.LateUpdate();
                 clock = next;
                 DispatchDue();

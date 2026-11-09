@@ -201,6 +201,48 @@ namespace Zjcs.Editor
             Require(finalCell.Length == 0,
                 "the exact final deadline releases the third cell; remaining=" + remaining);
             effects.Dispose(); other.Dispose();
+            var sceneRoot = new GameObject("Movement scene snapshot fixture");
+            sceneRoot.transform.SetParent(world.transform, false);
+            var sceneMapper = new OfficialBattleGridMapper(sceneRoot.transform, grid);
+            var model = new GameObject("Movement scene attached model");
+            using (var scene = new OfficialBattleSceneView(OfficialBattleModelCatalog.LoadDefault(),
+                sceneRoot.transform, _ => null, sceneMapper, null, (_, __) => { }))
+            {
+                var unit = new FightBattleUnitState { Id = 1, CharacterType = 1,
+                    X = 2, Y = 2, Hp = 100, MaxHp = 100 };
+                var checkpoint = new FightBattleCheckpoint { Grid = grid };
+                checkpoint.Units.Add(unit);
+                scene.Refresh(checkpoint);
+                scene.AttachUnitTransform(unit.Id, model.transform);
+                var movement = new FightBattleStepEvent { ActorId = unit.Id };
+                movement.Movements.Add(new FightBattleMovementEvent { UnitId = unit.Id,
+                    MoveBehaviourId = 15321, Delay = .2f, MoveDuration = .5f,
+                    Path = new List<FightGridPoint> { new FightGridPoint(2, 2),
+                        new FightGridPoint(3, 2), new FightGridPoint(4, 2), new FightGridPoint(5, 2) } });
+                unit.X = 5;
+                scene.Refresh(checkpoint, movement);
+                scene.Tick(.25f); yield return null;
+                var graphs = sceneRoot.GetComponentsInChildren<MyPlayableSequence>(true);
+                Require(graphs.Length == 1, "production scene creates the first movement graph after its delay");
+                Vector3 cueSource = new Vector3(float.NaN, 0, 0);
+                AddTimingLeaf(graphs[0], .3f, () => cueSource = graphs[0].mySource.transform.position);
+                scene.Tick(1f); yield return null;
+                Require((cueSource - sceneMapper.GridToWorld(new FightGridPoint(3, 2))).sqrMagnitude < 1e-8f,
+                    "a first-cell cue samples that cell's landing instead of the large update's final actor position");
+                var follow = sceneRoot.GetComponentInChildren<MyPlayableFollowBone>(true);
+                Require(follow != null && follow.myApplyComponent != null, "production scene retains the third cell's native effect");
+                Vector3 expectedFollow = follow.myAttach.GetBone(follow).TransformPoint(follow.myAttach.myOffset);
+                Require((follow.myApplyComponent.transform.position - expectedFollow).sqrMagnitude < 1e-8f,
+                    "native effect follows the actor after the remaining partial cell interval");
+                Capture(scene.TryGetUnitTransform(unit.Id).position, "scene-movement-native-follow");
+                scene.Tick(.5f); yield return null;
+                Require((scene.TryGetUnitTransform(unit.Id).position
+                    - sceneMapper.GridToWorld(new FightGridPoint(5, 2))).sqrMagnitude < 1e-8f,
+                    "production movement and effect clocks share the exact last landing");
+                Require(sceneRoot.GetComponentsInChildren<MyPlayableSequence>(true).Length == 0,
+                    "production scene releases the final cell graph");
+            }
+            UnityEngine.Object.Destroy(model); UnityEngine.Object.Destroy(sceneRoot); yield return null;
             var fades = FadeSequenceSteps(world.transform);
             while (fades.MoveNext()) yield return fades.Current;
             UnityEngine.Object.Destroy(world); yield return null;

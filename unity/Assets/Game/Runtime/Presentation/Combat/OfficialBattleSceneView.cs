@@ -72,12 +72,12 @@ namespace Zjcs.Presentation.Combat
         private sealed class UnitMotion
         {
             public List<Vector3> Points;
-            public List<float> SegmentStarts;
+            public List<double> SegmentStarts;
             public List<float> SegmentDurations;
             public List<int> SegmentActions;
             public List<int> SegmentFacing;
             public bool SourceFlipped;
-            public float Elapsed;
+            public double Elapsed;
         }
 
         private sealed class UnitView
@@ -132,7 +132,7 @@ namespace Zjcs.Presentation.Combat
             movementAnimations = usesOfficialAnimationFallback ? new OfficialBattleMovementAnimationCatalog() : null;
             if (usesOfficialAnimationFallback)
                 movementEffects = new OfficialBattleMovementEffects(this.root,
-                    new OfficialBattleGroundEffectLibrary(() => gridMapper));
+                    new OfficialBattleGroundEffectLibrary(() => gridMapper), AdvanceMotions);
             this.animationGroupResolver = animationGroupResolver;
             this.nativeNpcFactory = nativeNpcFactory;
             this.nativePlayableScope = nativePlayableScope;
@@ -660,61 +660,8 @@ namespace Zjcs.Presentation.Combat
         public void Tick(float deltaTime)
         {
             if (deltaTime <= 0f) return;
-            if (motions.Count > 0)
-            {
-                motionScratch.Clear();
-                motionScratch.AddRange(motions.Keys);
-                foreach (int unitId in motionScratch)
-                {
-                    UnitMotion motion = motions[unitId];
-                    Transform body = Body(unitId);
-                    if (body == null)
-                    {
-                        motions.Remove(unitId);
-                        continue;
-                    }
-                    motion.Elapsed += deltaTime;
-                    bool complete = true;
-                    for (int index = 0; index < motion.SegmentDurations.Count; index++)
-                    {
-                        float segmentStart = motion.SegmentStarts[index];
-                        if (motion.Elapsed < segmentStart)
-                        {
-                            body.position = motion.Points[index];
-                            complete = false;
-                            break;
-                        }
-                        int facing = motion.SegmentFacing[index];
-                        if (facing >= 0)
-                        {
-                            Transform flipTarget = attachedModels.TryGetValue(unitId, out var attachedModel)
-                                ? attachedModel.Model : body;
-                            Vector3 scale = flipTarget.localScale;
-                            scale.x = Mathf.Abs(scale.x) * (facing == 1 ? -1f : 1f);
-                            flipTarget.localScale = scale;
-                        }
-                        float segmentDuration = motion.SegmentDurations[index];
-                        float progress = segmentDuration <= 0f ? 1f
-                            : Mathf.Clamp01((motion.Elapsed - segmentStart) / segmentDuration);
-                        if (progress < 1f && gridMotion.TryEvaluate(motion.SegmentActions[index],
-                                motion.Elapsed - segmentStart, motion.Points[index], motion.Points[index + 1],
-                                motion.SourceFlipped, out Vector3 trackPosition))
-                            body.position = trackPosition;
-                        else
-                            body.position = Vector3.Lerp(motion.Points[index], motion.Points[index + 1], progress);
-                        if (progress < 1f)
-                        {
-                            complete = false;
-                            break;
-                        }
-                    }
-                    if (complete)
-                    {
-                        body.position = motion.Points[motion.Points.Count - 1];
-                        motions.Remove(unitId);
-                    }
-                }
-            }
+            if (movementEffects != null) movementEffects.Tick(deltaTime);
+            else AdvanceMotions(deltaTime);
 
             TickPetFollowers(deltaTime);
 
@@ -777,7 +724,6 @@ namespace Zjcs.Presentation.Combat
             }
             AdvanceAttachedPlayableLifetimes(deltaTime);
             AdvancePendingUnitAnimations(deltaTime);
-            movementEffects?.Tick(deltaTime);
 
             foreach (int id in completedAttachedDeaths)
             {
@@ -812,24 +758,83 @@ namespace Zjcs.Presentation.Combat
             foreach (OfficialBattleUnitWorldHudView hud in attachedUnitHuds.Values) hud?.Tick(deltaTime);
         }
 
+        private void AdvanceMotions(double deltaTime)
+        {
+            if (motions.Count > 0)
+            {
+                motionScratch.Clear();
+                motionScratch.AddRange(motions.Keys);
+                foreach (int unitId in motionScratch)
+                {
+                    UnitMotion motion = motions[unitId];
+                    Transform body = Body(unitId);
+                    if (body == null)
+                    {
+                        motions.Remove(unitId);
+                        continue;
+                    }
+                    motion.Elapsed += deltaTime;
+                    bool complete = true;
+                    for (int index = 0; index < motion.SegmentDurations.Count; index++)
+                    {
+                        double segmentStart = motion.SegmentStarts[index];
+                        if (motion.Elapsed < segmentStart)
+                        {
+                            body.position = motion.Points[index];
+                            complete = false;
+                            break;
+                        }
+                        int facing = motion.SegmentFacing[index];
+                        if (facing >= 0)
+                        {
+                            Transform flipTarget = attachedModels.TryGetValue(unitId, out var attachedModel)
+                                ? attachedModel.Model : body;
+                            Vector3 scale = flipTarget.localScale;
+                            scale.x = Mathf.Abs(scale.x) * (facing == 1 ? -1f : 1f);
+                            flipTarget.localScale = scale;
+                        }
+                        float segmentDuration = motion.SegmentDurations[index];
+                        float progress = segmentDuration <= 0f ? 1f
+                            : Mathf.Clamp01((float)((motion.Elapsed - segmentStart) / segmentDuration));
+                        if (progress < 1f && gridMotion.TryEvaluate(motion.SegmentActions[index],
+                                (float)(motion.Elapsed - segmentStart), motion.Points[index], motion.Points[index + 1],
+                                motion.SourceFlipped, out Vector3 trackPosition))
+                            body.position = trackPosition;
+                        else
+                            body.position = Vector3.Lerp(motion.Points[index], motion.Points[index + 1], progress);
+                        if (progress < 1f)
+                        {
+                            complete = false;
+                            break;
+                        }
+                    }
+                    if (complete)
+                    {
+                        body.position = motion.Points[motion.Points.Count - 1];
+                        motions.Remove(unitId);
+                    }
+                }
+            }
+        }
+
         private void BeginMotion(int unitId, Transform body, FightBattleStepEvent stepEvent)
         {
             var motion = new UnitMotion
             {
                 Points = new List<Vector3>(),
-                SegmentStarts = new List<float>(),
+                SegmentStarts = new List<double>(),
                 SegmentDurations = new List<float>(),
                 SegmentActions = new List<int>(),
                 SegmentFacing = new List<int>(),
                 SourceFlipped = body.localScale.x < 0f
             };
-            float cursor = 0f;
+            double cursor = 0;
             if (stepEvent.Movements != null)
                 foreach (FightBattleMovementEvent movement in stepEvent.Movements)
                 {
                     if (movement == null || movement.UnitId != unitId
                         || movement.Path == null || movement.Path.Count <= 1) continue;
-                    cursor = Mathf.Max(cursor, Mathf.Max(0f, movement.Delay));
+                    cursor = Math.Max(cursor, Math.Max(0f, movement.Delay));
                     Vector3 first = gridToWorld(movement.Path[0]);
                     if (motion.Points.Count == 0) motion.Points.Add(first);
                     else if (motion.Points[motion.Points.Count - 1] != first)
@@ -875,8 +880,8 @@ namespace Zjcs.Presentation.Combat
             if (!motions.TryGetValue(unitId, out UnitMotion motion)) return false;
             for (int index = 0; index < motion.SegmentDurations.Count; index++)
             {
-                float start = motion.SegmentStarts[index];
-                float end = start + motion.SegmentDurations[index];
+                double start = motion.SegmentStarts[index];
+                double end = start + motion.SegmentDurations[index];
                 if (motion.Elapsed >= start && motion.Elapsed < end) return true;
             }
             return false;
