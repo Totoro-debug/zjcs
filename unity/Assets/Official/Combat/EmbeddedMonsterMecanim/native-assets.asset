@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Name: Original embedded monster 3205
+  m_EditorClassIdentifier: ''
+  m_Script: {fileID: 11500000, guid: 7c82caa682647b14ebcfc2dc80b360c8, type: 3}
+  inventory: {fileID: 4900000, guid: 802a35c0e4d75729b46238165d7f79b2, type: 3}
+  shader: {fileID: 4800000, guid: bea973857c0e5a73b312b11a46f2b33a, type: 3}
+  shaderBindings: []
+  bindings:
+  - File: monster_3205.native.bytes
+    Asset: {fileID: 4900000, guid: 66f94324aee8529ba57baada2ee25fc0, type: 3}
+  - File: monster_3205_Controller.controller
+    Asset: {fileID: 9100000, guid: 6d54ae4bc3f45642bc8ffc958dbb2b92, type: 2}

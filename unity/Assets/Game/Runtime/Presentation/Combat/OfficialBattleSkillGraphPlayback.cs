@@ -25,6 +25,7 @@ namespace Zjcs.Presentation.Combat
         private readonly List<ScheduledCast> pending = new List<ScheduledCast>();
         private OfficialBattleGridEntityPlayback gridViews;
         private Action<GameObject> bindPlayerClones;
+        private readonly Zjcs.Offline.ProfessionUI.EmbeddedMonsterMecanimResources embeddedMecanim;
         private bool disposed;
 
         public OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog catalog,
@@ -33,10 +34,12 @@ namespace Zjcs.Presentation.Combat
             this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
             this.scope = scope ?? throw new ArgumentNullException(nameof(scope));
             this.entityViews = entityViews ?? throw new ArgumentNullException(nameof(entityViews));
-            this.scope.BindNativePrefabAdapter(instance =>
+            embeddedMecanim = new Zjcs.Offline.ProfessionUI.EmbeddedMonsterMecanimResources();
+            this.scope.BindNativePrefabAdapter((sourcePrefab, instance) =>
             {
                 Zjcs.Offline.ProfessionUI.PartnerNativeSkillSkeleton.BindOriginalPrefab(instance);
                 Zjcs.Offline.ProfessionUI.EmbeddedMonsterNativeSkeleton.BindOriginalPrefab(instance);
+                embeddedMecanim.BindOriginalPrefab(sourcePrefab, instance);
                 bindPlayerClones?.Invoke(instance);
             });
         }
@@ -111,6 +114,7 @@ namespace Zjcs.Presentation.Combat
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillGraphPlayback));
             if (float.IsNaN(deltaTime) || float.IsInfinity(deltaTime) || deltaTime < 0f)
                 throw new ArgumentOutOfRangeException(nameof(deltaTime));
+            embeddedMecanim.Update();
             float remaining = deltaTime;
             while (true)
             {
@@ -161,7 +165,8 @@ namespace Zjcs.Presentation.Combat
             pending.Clear();
             gridViews?.Dispose();
             gridViews = null;
-            entityViews.Dispose();
+            try { entityViews.Dispose(); }
+            finally { embeddedMecanim.Dispose(); }
         }
 
         private static FightBattleUnitState FindUnit(FightBattleCheckpoint checkpoint, int id)

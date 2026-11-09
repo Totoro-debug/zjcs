@@ -1,0 +1,3014 @@
+{
+  "manifest": "884_156692",
+  "source": {
+    "manifest": "884_156692",
+    "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+    "authored_active": {
+      "": true,
+      "sound": true,
+      "track (1)": true,
+      "track (1)/Eff_Npc_WolfStone_Atk": false,
+      "track (1)/Eff_Npc_WolfStone_Atk/Particle System (1)": true,
+      "track (1)/Eff_Npc_WolfStone_Atk/Particle System (1)/Trail": true,
+      "track (2)": false,
+      "track (2)/Eff_Npc_WolfStone_Atk": false,
+      "track (2)/Eff_Npc_WolfStone_Atk/MonsterModel_3205": true
+    },
+    "appearance_fields": [
+      {
+        "path": "track (2)/Eff_Npc_WolfStone_Atk/MonsterModel_3205",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 1629285784820516805
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 936369779105115298
+          },
+          "m_Name": "",
+          "SkeletonRenderer": {
+            "m_FileID": 0,
+            "m_PathID": -1186255121120950331
+          },
+          "LevelOfResolution": 1,
+          "RenderExistingMeshes": []
+        }
+      }
+    ],
+    "texture_loaders": [
+      {
+        "name": "monster_3205_TextureLoader_High",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 1,
+            "m_PathID": -5619297173033417461
+          },
+          "m_Name": "monster_3205_TextureLoader_High",
+          "atlasAsset": {
+            "m_FileID": 0,
+            "m_PathID": -7167862597081163931
+          },
+          "skeletonDataAsset": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "maxPlaceholderSize": 128,
+          "unloadAfterSecondsUnused": 60.0,
+          "placeholderMap": [
+            {
+              "placeholderTexture": {
+                "m_FileID": 0,
+                "m_PathID": -7153466028357651489
+              },
+              "targetTextureReference": {
+                "AssetReference": {
+                  "mAssetGuid": "f73c1eb2e17388f43a4ffd0f864b9367"
+                }
+              },
+              "dyeTextureReference": {
+                "AssetReference": {
+                  "mAssetGuid": ""
+                }
+              }
+            }
+          ],
+          "LevelOfResolution": 2,
+          "PlaceholderPath": "",
+          "TargetTexturePath": "",
+          "DyeTexturePath": ""
+        },
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "-8809684030551226183",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        }
+      },
+      {
+        "name": "monster_3205_TextureLoader_Low",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 1,
+            "m_PathID": -5619297173033417461
+          },
+          "m_Name": "monster_3205_TextureLoader_Low",
+          "atlasAsset": {
+            "m_FileID": 0,
+            "m_PathID": -7167862597081163931
+          },
+          "skeletonDataAsset": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "maxPlaceholderSize": 128,
+          "unloadAfterSecondsUnused": 60.0,
+          "placeholderMap": [
+            {
+              "placeholderTexture": {
+                "m_FileID": 0,
+                "m_PathID": -7153466028357651489
+              },
+              "targetTextureReference": {
+                "AssetReference": {
+                  "mAssetGuid": "cd0b56e1db174e94598b1351c9423414"
+                }
+              },
+              "dyeTextureReference": {
+                "AssetReference": {
+                  "mAssetGuid": ""
+                }
+              }
+            }
+          ],
+          "LevelOfResolution": 1,
+          "PlaceholderPath": "",
+          "TargetTexturePath": "",
+          "DyeTexturePath": ""
+        },
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "-3458566582701963621",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        }
+      }
+    ],
+    "low_texture": {
+      "guid": "cd0b56e1db174e94598b1351c9423414",
+      "name": "monster_3205_Low",
+      "width": 151,
+      "height": 246,
+      "rgba_sha256": "6737382c58706e7165a5b3ff416595080addb8b87522f99c6fbfe46eea95d95d",
+      "rgba_bytes": 148584,
+      "profile": "LDR_SRGB",
+      "mips": [
+        {
+          "level": 0,
+          "width": 151,
+          "height": 246,
+          "astc_offset": 0,
+          "astc_size": 37696,
+          "astc_sha256": "f0d732b44eb231f169c3d56bf009d17bdfd10c0c183f2d9f89c8d8768c302108",
+          "rgba_offset": 0,
+          "rgba_size": 148584,
+          "rgba_sha256": "6737382c58706e7165a5b3ff416595080addb8b87522f99c6fbfe46eea95d95d"
+        }
+      ],
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+        "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+        "path_id": "2031220079289688539",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 132733,
+        "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+      },
+      "object_sha256": "4195e7fbf59e61baa9313ef84810f79e7f6123eb443d5cb0daadc8cf7cc0cec4"
+    },
+    "root": {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+      "bundle_hash": "387603bd80dfca42645d87011637acf5",
+      "path_id": "5734327683143305157",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 38779,
+      "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+    },
+    "root_sha256": "26768edd244c2247567be4dad8a103e0fe555480f0450648c928248da361f88e",
+    "skeleton_path": "track (2)/Eff_Npc_WolfStone_Atk/MonsterModel_3205",
+    "renderer": {
+      "skeletonDataAsset": {
+        "m_FileID": 27,
+        "m_PathID": 6573977942531155620
+      },
+      "initialSkinName": "",
+      "initialFlipX": false,
+      "initialFlipY": false,
+      "updateWhenInvisible": 3,
+      "separatorSlotNames": [],
+      "zSpacing": 0.0,
+      "useClipping": true,
+      "immutableTriangles": false,
+      "pmaVertexColors": true,
+      "clearStateOnDisable": false,
+      "tintBlack": false,
+      "singleSubmesh": true,
+      "fixDrawOrder": false,
+      "addNormals": false,
+      "calculateTangents": false,
+      "maskInteraction": 0,
+      "maskMaterials": {
+        "materialsMaskDisabled": [],
+        "materialsInsideMask": [],
+        "materialsOutsideMask": []
+      },
+      "disableRenderingOnOverride": true,
+      "physicsPositionInheritanceFactor": [
+        0.0,
+        0.0
+      ],
+      "physicsRotationInheritanceFactor": 0.0,
+      "physicsMovementRelativeTo": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "translator": {
+        "autoReset": true,
+        "useCustomMixMode": true,
+        "layerMixModes": [
+          1
+        ],
+        "layerBlendModes": [
+          1
+        ]
+      },
+      "updateTiming": 1,
+      "m_Enabled": true
+    },
+    "skeleton_data": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "m_Enabled": 1,
+      "m_Script": {
+        "m_FileID": 0,
+        "m_PathID": -6887505452609033796
+      },
+      "m_Name": "monster_3205_SkeletonData",
+      "atlasAssets": [
+        {
+          "m_FileID": 0,
+          "m_PathID": -7167862597081163931
+        }
+      ],
+      "scale": 0.009999999776482582,
+      "skeletonJSON": {
+        "m_FileID": 0,
+        "m_PathID": -2640405165178551988
+      },
+      "isUpgradingBlendModeMaterials": 0,
+      "blendModeMaterials": {
+        "requiresBlendModeMaterials": 0,
+        "applyAdditiveMaterial": 1,
+        "additiveMaterials": [],
+        "multiplyMaterials": [],
+        "screenMaterials": []
+      },
+      "skeletonDataModifiers": [],
+      "fromAnimation": [],
+      "toAnimation": [],
+      "duration": [],
+      "defaultMix": 0.20000000298023224,
+      "controller": {
+        "m_FileID": 0,
+        "m_PathID": 1267657357278079866
+      },
+      "zSlots": []
+    },
+    "skeleton_data_name": "monster_3205_SkeletonData",
+    "atlas_location": {
+      "address": "",
+      "path": "Assets/AppearanceAssets/Monster/monster_3205/monster_3205_Atlas.asset",
+      "guid": "1b0de6e2d260cfb4eb7c9427996a6a9b",
+      "tags": [],
+      "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle"
+    },
+    "skeleton_bytes": 53002,
+    "skeleton_sha256": "18dcf02ed331cf0491ebd1a8f8a82ea7bdc2e40752625bdd9c2faf20b57f048e",
+    "native_package_sha256": "25c63019787bf488d699996856aed2df3c7d9a66237a39d030c5b9213c05f6d4",
+    "native_package_bytes": 54089,
+    "animation_names": [
+      "block_01",
+      "dance_01",
+      "dance_02",
+      "dance_03",
+      "die_01",
+      "floating_01",
+      "hit_01",
+      "hit_02",
+      "idle_01",
+      "idle_02",
+      "run_01",
+      "run_02",
+      "skill_01",
+      "stun_01"
+    ],
+    "bone_count": 42,
+    "mesh_renderer": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 1629285784820516805
+      },
+      "m_Enabled": true,
+      "m_CastShadows": 0,
+      "m_ReceiveShadows": 0,
+      "m_DynamicOccludee": 1,
+      "m_StaticShadowCaster": 0,
+      "m_MotionVectors": 1,
+      "m_LightProbeUsage": 1,
+      "m_ReflectionProbeUsage": 1,
+      "m_RayTracingMode": 2,
+      "m_RayTraceProcedural": 0,
+      "m_RenderingLayerMask": 1,
+      "m_RendererPriority": 0,
+      "m_LightmapIndex": 65535,
+      "m_LightmapIndexDynamic": 65535,
+      "m_LightmapTilingOffset": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "m_LightmapTilingOffsetDynamic": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 0.0,
+        "w": 0.0
+      },
+      "m_Materials": [
+        {
+          "m_FileID": 27,
+          "m_PathID": -7833302864124617417
+        }
+      ],
+      "m_StaticBatchInfo": {
+        "firstSubMesh": 0,
+        "subMeshCount": 0
+      },
+      "m_StaticBatchRoot": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "m_ProbeAnchor": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "m_LightProbeVolumeOverride": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "m_SortingLayerID": 1182434123,
+      "m_SortingLayer": 18,
+      "m_SortingOrder": 0,
+      "m_AdditionalVertexStreams": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "m_EnlightenVertexStream": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      }
+    },
+    "animator": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 1629285784820516805
+      },
+      "m_Enabled": 1,
+      "m_Avatar": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "m_Controller": {
+        "m_FileID": 27,
+        "m_PathID": 1267657357278079866
+      },
+      "m_CullingMode": 1,
+      "m_UpdateMode": 0,
+      "m_ApplyRootMotion": false,
+      "m_LinearVelocityBlending": false,
+      "m_StabilizeFeet": false,
+      "m_HasTransformHierarchy": true,
+      "m_AllowConstantClipSamplingOptimization": true,
+      "m_KeepAnimatorStateOnDisable": false,
+      "m_WriteDefaultValuesOnDisable": false
+    },
+    "controller_name": "monster_3205_Controller",
+    "clips": [
+      {
+        "name": "idle_01",
+        "type": "AnimationClip",
+        "start": 0.0,
+        "stop": 2.6666667461395264,
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "1548848402380909434",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "daa62b525ec08203997962d9326d129d15f58e8421bc0f5ff8bf748dcb4951ae"
+      },
+      {
+        "name": "run_01",
+        "type": "AnimationClip",
+        "start": 0.0,
+        "stop": 0.46666669845581055,
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "-5415048032112710790",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "b766a52ddd769b4d835fee24cbea704be8d9185bc93f9a99a2f5dc05bdbe1c02"
+      },
+      {
+        "name": "hit_02",
+        "type": "AnimationClip",
+        "start": 0.0,
+        "stop": 0.6666666865348816,
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "-8952472307593221254",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "5fc559bb88e10d5ab20b9d74713e9032f83b929d132128a638ba460d0e42f9e3"
+      },
+      {
+        "name": "hit_01",
+        "type": "AnimationClip",
+        "start": 0.0,
+        "stop": 0.5,
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "8881946908278156154",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "0724113e2b82d9eea9dc82c3755fb53266e296a97310988362e5cc96fef8b972"
+      },
+      {
+        "name": "die_01",
+        "type": "AnimationClip",
+        "start": 0.0,
+        "stop": 1.0,
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "2639198080493710202",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "e60c2eb0ff9e9fcc13c7c76fdd235cb2f20cddf41e31b4e05dd3ae00ea809dbf"
+      },
+      {
+        "name": "stun_01",
+        "type": "AnimationClip",
+        "start": 0.0,
+        "stop": 2.6666667461395264,
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "3437079179851885434",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "f125250380739d0480a6ba7977bbaf9696369771c5a8fa0aa7b5e61a5ddffaed"
+      },
+      {
+        "name": "skill_01",
+        "type": "AnimationClip",
+        "start": 0.0,
+        "stop": 1.0,
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "-708567015731926150",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "34d6fbc9f66b74a006840043ec831a0afb8fef26b1f7e4d4d4e1eaf18d6119ba"
+      },
+      {
+        "name": "block_01",
+        "type": "AnimationClip",
+        "start": 0.0,
+        "stop": 0.5,
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "8036587654954642298",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "0bfd28ffaa82d34a40a9912fbaafde1043c52586ab316d1e1137aa76d5510452"
+      },
+      {
+        "name": "floating_01",
+        "type": "AnimationClip",
+        "start": 0.0,
+        "stop": 1.5000001192092896,
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "4688468817328565114",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "d5683d22656980bcf2e42c29f7bb36cc5ab4c5c9a0b8131428ff29df34506c9e"
+      }
+    ],
+    "materials": [
+      {
+        "name": "monster_3205_Material",
+        "fields": {
+          "m_Name": "monster_3205_Material",
+          "m_Shader": {
+            "m_FileID": 2,
+            "m_PathID": 9169776915593584302
+          },
+          "m_ValidKeywords": [
+            "_LIGHT_ON"
+          ],
+          "m_InvalidKeywords": [
+            "_STRAIGHT_ALPHA_INPUT"
+          ],
+          "m_LightmapFlags": 4,
+          "m_EnableInstancingVariants": false,
+          "m_DoubleSidedGI": false,
+          "m_CustomRenderQueue": -1,
+          "stringTagMap": [],
+          "disabledShaderPasses": [],
+          "m_SavedProperties": {
+            "m_TexEnvs": [
+              [
+                "_DissolveTex",
+                {
+                  "m_Texture": {
+                    "m_FileID": 3,
+                    "m_PathID": 5522781624651807727
+                  },
+                  "m_Scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                  },
+                  "m_Offset": {
+                    "x": 0.0,
+                    "y": 0.0
+                  }
+                }
+              ],
+              [
+                "_DistortionTex",
+                {
+                  "m_Texture": {
+                    "m_FileID": 0,
+                    "m_PathID": 0
+                  },
+                  "m_Scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                  },
+                  "m_Offset": {
+                    "x": 0.0,
+                    "y": 0.0
+                  }
+                }
+              ],
+              [
+                "_IceNoiseTex",
+                {
+                  "m_Texture": {
+                    "m_FileID": 4,
+                    "m_PathID": 5291583285710997780
+                  },
+                  "m_Scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                  },
+                  "m_Offset": {
+                    "x": 0.0,
+                    "y": 0.0
+                  }
+                }
+              ],
+              [
+                "_IceTex",
+                {
+                  "m_Texture": {
+                    "m_FileID": 5,
+                    "m_PathID": -9134332189341036574
+                  },
+                  "m_Scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                  },
+                  "m_Offset": {
+                    "x": 0.0,
+                    "y": 0.0
+                  }
+                }
+              ],
+              [
+                "_MainTex",
+                {
+                  "m_Texture": {
+                    "m_FileID": 0,
+                    "m_PathID": -7153466028357651489
+                  },
+                  "m_Scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                  },
+                  "m_Offset": {
+                    "x": 0.0,
+                    "y": 0.0
+                  }
+                }
+              ],
+              [
+                "_MaskTex",
+                {
+                  "m_Texture": {
+                    "m_FileID": 0,
+                    "m_PathID": 0
+                  },
+                  "m_Scale": {
+                    "x": 1.0,
+                    "y": 1.0
+                  },
+                  "m_Offset": {
+                    "x": 0.0,
+                    "y": 0.0
+                  }
+                }
+              ]
+            ],
+            "m_Ints": [],
+            "m_Floats": [
+              [
+                "_BaseStrength",
+                0.5
+              ],
+              [
+                "_ColorEnhancement",
+                1.0
+              ],
+              [
+                "_DissolveLineWidth",
+                0.10000000149011612
+              ],
+              [
+                "_DissolveOffsetThreshold",
+                0.5
+              ],
+              [
+                "_DissolveThreshold",
+                0.0
+              ],
+              [
+                "_Distortion",
+                0.0
+              ],
+              [
+                "_DistortionTex_Rota",
+                0.0
+              ],
+              [
+                "_DistortionTex_Rotator",
+                0.0
+              ],
+              [
+                "_ExtraStrength",
+                1.0
+              ],
+              [
+                "_FordingOffset",
+                0.0
+              ],
+              [
+                "_FordingScale",
+                1.0
+              ],
+              [
+                "_HitEffectBlend",
+                0.0
+              ],
+              [
+                "_Hue",
+                0.0
+              ],
+              [
+                "_Light",
+                1.0
+              ],
+              [
+                "_LightAffectsAdditive",
+                0.0
+              ],
+              [
+                "_LightAtten",
+                0.4000000059604645
+              ],
+              [
+                "_Saturation",
+                1.0
+              ],
+              [
+                "_StencilComp",
+                8.0
+              ],
+              [
+                "_StencilOp",
+                0.0
+              ],
+              [
+                "_StencilRef",
+                1.0
+              ],
+              [
+                "_StraightAlphaInput",
+                1.0
+              ],
+              [
+                "_TintBlack",
+                0.0
+              ],
+              [
+                "_Value",
+                1.0
+              ],
+              [
+                "_ZWrite",
+                1.0
+              ]
+            ],
+            "m_Colors": [
+              [
+                "_Black",
+                {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                }
+              ],
+              [
+                "_BoundingBox",
+                {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                }
+              ],
+              [
+                "_Color",
+                {
+                  "r": 1.0,
+                  "g": 1.0,
+                  "b": 1.0,
+                  "a": 1.0
+                }
+              ],
+              [
+                "_DissolveColor",
+                {
+                  "r": 1.0,
+                  "g": 1.0,
+                  "b": 1.0,
+                  "a": 1.0
+                }
+              ],
+              [
+                "_DissolveOffset",
+                {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.0,
+                  "a": 0.0
+                }
+              ],
+              [
+                "_DistortionTex_MoveCenter",
+                {
+                  "r": 0.0,
+                  "g": 0.0,
+                  "b": 0.5,
+                  "a": 0.5
+                }
+              ],
+              [
+                "_FordingColor",
+                {
+                  "r": 1.0,
+                  "g": 1.0,
+                  "b": 1.0,
+                  "a": 1.0
+                }
+              ],
+              [
+                "_HitEffectColor",
+                {
+                  "r": 1.0,
+                  "g": 1.0,
+                  "b": 1.0,
+                  "a": 1.0
+                }
+              ]
+            ]
+          },
+          "m_BuildTextureStacks": []
+        },
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "-7833302864124617417",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "842483dd7901c4d5538219fff17aaf17b73151dd4a6db8c6b92ae609c3819ae4"
+      }
+    ],
+    "component_types": [
+      {
+        "path": "",
+        "type": "MyPlayableSequence"
+      },
+      {
+        "path": "sound",
+        "type": "MyPlayableSound"
+      },
+      {
+        "path": "track (1)",
+        "type": "MyPlayableTrack"
+      },
+      {
+        "path": "track (1)",
+        "type": "ApplyEnableOnPlay"
+      },
+      {
+        "path": "track (1)",
+        "type": "ApplyOnStopFadeOut"
+      },
+      {
+        "path": "track (2)",
+        "type": "MyPlayableTrack"
+      },
+      {
+        "path": "track (2)",
+        "type": "ApplyEnableOnPlay"
+      },
+      {
+        "path": "track (2)",
+        "type": "ApplyOnStopFadeOut"
+      },
+      {
+        "path": "track (2)/Eff_Npc_WolfStone_Atk/MonsterModel_3205",
+        "type": "SkeletonMecanim"
+      },
+      {
+        "path": "track (2)/Eff_Npc_WolfStone_Atk/MonsterModel_3205",
+        "type": "AppearanceRendererLite"
+      }
+    ],
+    "sources": {
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:5734327683143305157": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "5734327683143305157",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "26768edd244c2247567be4dad8a103e0fe555480f0450648c928248da361f88e"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:6091056736229656517": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "6091056736229656517",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "afc292ef67b23b3b26a21aceffcc61a7aece581bddfd86efa498e8c65396c978"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-2811169029007145019": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-2811169029007145019",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "45bda6bf00f00e5f174642a1976ff008f1bc1f83dd9431811995345a7aa9bf77"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:6413753331976046533": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "6413753331976046533",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "f8f54d9faa5c716048c3ae64dfa4cf7f16cba7b6034e2ae287f7aea66a8b86d7"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-2248449593964603": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-2248449593964603",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "9186fceacf5a9dcf794d5cb0debf81810d3eeaecd349c777f7a302123743192c"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:7465589715860981701": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "7465589715860981701",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "7830bca04364baefd9261ae5ed442303972c0b2a9ec2ad8105193714e046a182"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-8364006957707950139": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-8364006957707950139",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "8e0b329832fd93c394da8bc51b7acc995f3c206b358d6658a096bccc950cbe5b"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:8604959913918924741": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "8604959913918924741",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "0515677528d8c80a95b87f192cd4371dfc124a1d587dbbf39d76c87cb4969640"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-2842914502642169915": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-2842914502642169915",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "a488e5a0e3dedc54807f5011cbcdabbf34ac0f861fccb01e6ba0f6b7d3c5b60c"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:2480417004499109829": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "2480417004499109829",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "1ba97d4b31c3a0e593bed871a1025920b94b767177a231ae4ae51fe1581b3c9d"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:7539703746636941253": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "7539703746636941253",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "f84348c57f7b624aa7050f018c4c3788097956178fbaff62eec7cdf88d19e4e6"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-5054661976705202235": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-5054661976705202235",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "bcdb6787a11101a2dac65ec5087226cbb934099af678ba13cd4ac4b995658786"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-4262333153934899259": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-4262333153934899259",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "80784493ab1aa4dab0bc00c98f82d6764b111747164332174a0b0d49154e8b84"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-13177832399829051": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-13177832399829051",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "f21474eb7b9325d0d3d2557de7692c73b5bb265fea878abc00eb57b76285882f"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-1662459948612909115": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-1662459948612909115",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "a2776e31639678a20bdadbc3e39bf80dd3815d7e4b7102f6b0db585c960070cf"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:7757886860028020677": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "7757886860028020677",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "778ba16a66c19c0587b4ad75e0d6b2b1680e5cb6fc85b27b14483727a59295f9"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:2825724870967691205": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "2825724870967691205",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "e21ae5a95bc7d839ac8550c49d2e7d25d805da483944a0b8793566494445c468"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-5763576031914489915": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-5763576031914489915",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "9562bd406a75ece9b8c4cc91479be1c97355f74b5e4a58942176cc168b81a487"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:4970928063947605957": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "4970928063947605957",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "c4be9985e4b12df376dd8a0ced43dde013291ecaa7415bf87497614e96cb1ef2"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-1771651930392885307": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-1771651930392885307",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "4831bd350528aebe66fd101f81317bb485dac4b1c042de43e383a358d99e7428"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:2729086529093306309": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "2729086529093306309",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "ea8be98d8391ac11526fe29896f39d054db858cbf2f89090b6473f0e73a28651"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-2387159603417315387": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-2387159603417315387",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "c03a8282c9cdcb482d7c55b264d3cde3adf34409c4cd29ed370feacbaca3e2d9"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:3176641554237163461": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "3176641554237163461",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "2eb1394f55389678c36a75f16f72fefb9ad540468e6981c6c927d01bab3c9182"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:2401950225623943109": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "2401950225623943109",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "b7407aa2d2ecc0b33ca24e10331947c46da2432791c0d852465abeeb55e8912a"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-8827577847688656955": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-8827577847688656955",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "e796bc81de3b1745a10e244bb92896518faa7a73ba4326c3622f0e4b6a0ad1aa"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-6387518329744652347": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-6387518329744652347",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "083398409a8da6825bba1ae2fc145e4aeaf64be03e706cee83067ebb4d3dbcbd"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:6830757203365857221": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "6830757203365857221",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "baddedd0cbd04b60543444c91cd7b766f3c9e1df22584b97870649a60fe6ec9d"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:1629285784820516805": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "1629285784820516805",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "2b1bbda66367af4f4e7ee5930be216554f06582dd873b955c15007620d2a1b92"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-6584979024373610555": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-6584979024373610555",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "b621253492d157815e47322b2ff4493ef4f7408729b344d6fe7b0a4b6b687433"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:6784575802430326725": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "6784575802430326725",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "bdb8bef4fbb8c61dcd9b2228be36a8338b6ffcc9a22016b65f6fc8eb103842d1"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-4380231808890828859": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-4380231808890828859",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "e678b45da22eb114b13bd4ae30fe4ab51d32ed025410037e71267715f9b5a4e0"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:-1186255121120950331": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "-1186255121120950331",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "87880ac2e7ea77b3529f00da84b1e8971161d23984cc6ce58c5909640f790081"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:2804598658313422789": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "2804598658313422789",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "61c2eceb2c62b32a16e7ee157b40874a216cf9be50ced1cb643131243b56c057"
+      },
+      "CAB-63a0ce75a2b274046b95b2e598eff1a1:5848440565037008837": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "5848440565037008837",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "object_sha256": "4d4ad3e00b7eb7f9a5574c62743173459d0ecbef62f4108a47dc881c5297a831"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:6573977942531155620": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "6573977942531155620",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "bc91c710ac10259e707eeb088c93087b77f5306e240d57787642cfc767176d7f"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:-2640405165178551988": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "-2640405165178551988",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "d0ce107962e8cd07ba5006dca975d5ccc0a5c26941c830c189ccf99346167fa6"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:-7167862597081163931": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "-7167862597081163931",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "f27472a491c3891c6d9ce2daf5d8417df3cbd5a459f691b6952660fe491717bd"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:3029459900560795005": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "3029459900560795005",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "28618ef76bdec876a238de5dbd645be53cb08f77ecdf3ca3e26e3618d4416070"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:1267657357278079866": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "1267657357278079866",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "3bfabde03bb64a5475b5c45f3c4973ad40a7c47be06af0d26659ee2e0f937b54"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:1548848402380909434": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "1548848402380909434",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "daa62b525ec08203997962d9326d129d15f58e8421bc0f5ff8bf748dcb4951ae"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:-5415048032112710790": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "-5415048032112710790",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "b766a52ddd769b4d835fee24cbea704be8d9185bc93f9a99a2f5dc05bdbe1c02"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:-8952472307593221254": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "-8952472307593221254",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "5fc559bb88e10d5ab20b9d74713e9032f83b929d132128a638ba460d0e42f9e3"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:8881946908278156154": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "8881946908278156154",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "0724113e2b82d9eea9dc82c3755fb53266e296a97310988362e5cc96fef8b972"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:2639198080493710202": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "2639198080493710202",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "e60c2eb0ff9e9fcc13c7c76fdd235cb2f20cddf41e31b4e05dd3ae00ea809dbf"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:3437079179851885434": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "3437079179851885434",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "f125250380739d0480a6ba7977bbaf9696369771c5a8fa0aa7b5e61a5ddffaed"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:-708567015731926150": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "-708567015731926150",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "34d6fbc9f66b74a006840043ec831a0afb8fef26b1f7e4d4d4e1eaf18d6119ba"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:8036587654954642298": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "8036587654954642298",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "0bfd28ffaa82d34a40a9912fbaafde1043c52586ab316d1e1137aa76d5510452"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:4688468817328565114": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "4688468817328565114",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "d5683d22656980bcf2e42c29f7bb36cc5ab4c5c9a0b8131428ff29df34506c9e"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:-7833302864124617417": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "-7833302864124617417",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "842483dd7901c4d5538219fff17aaf17b73151dd4a6db8c6b92ae609c3819ae4"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:-8809684030551226183": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "-8809684030551226183",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "12e1fca72083c4b9859fa8791735bd9a91c668eb0ba81658d1cb0e646c6b879b"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:-3458566582701963621": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "-3458566582701963621",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "0879dc45a246946c7286b022cc5ac03a1d9ce12a77c39178a71ddf1f966d3857"
+      },
+      "CAB-87834af4ab78d6292a1fdc8b7a54a85d:2031220079289688539": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3205.bundle",
+          "bundle_hash": "12ff0f7dfc86a36cb0cf09b62826cc74",
+          "path_id": "2031220079289688539",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/12ff0f7dfc86a36cb0cf09b62826cc74.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 132733,
+          "bundle_sha256": "7c26cc6babcc5ea958f8e46652545865b53f34722b561a63518c1fafa1569095"
+        },
+        "object_sha256": "4195e7fbf59e61baa9313ef84810f79e7f6123eb443d5cb0daadc8cf7cc0cec4"
+      },
+      "CAB-b0b8e1a9d931f1ba0e5a2bf6ea2369e4:2273363462957757819": {
+        "source": {
+          "bundle": "defaultpackage_assets_scriptableconfig_modules_appearance.bundle",
+          "bundle_hash": "5a17a658f628a398f6f1272f1bfa7ae6",
+          "path_id": "2273363462957757819",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/5a17a658f628a398f6f1272f1bfa7ae6.bundle",
+          "raw_size": 30329,
+          "raw_sha256": "9d673fc615519c9eec1930ce6a6e86a3137c2615fa09db93f1497ac1d303ace7"
+        },
+        "object_sha256": "3aa24959cb6d0fea6a78b7164c496a74ab76f74c2bda4c7c3db19cfdf1fd0f59"
+      }
+    }
+  },
+  "controller_graph": {
+    "verification": {
+      "parameters": [
+        {
+          "name": "stun",
+          "type": 4
+        },
+        {
+          "name": "die",
+          "type": 4
+        },
+        {
+          "name": "die_trigger",
+          "type": 9
+        },
+        {
+          "name": "damage",
+          "type": 9
+        },
+        {
+          "name": "knock_back",
+          "type": 9
+        },
+        {
+          "name": "skill_01",
+          "type": 9
+        },
+        {
+          "name": "block_01",
+          "type": 9
+        },
+        {
+          "name": "run",
+          "type": 4
+        },
+        {
+          "name": "floating",
+          "type": 9
+        }
+      ],
+      "layers": [
+        {
+          "layer": "Base Layer",
+          "states": [
+            "Idle",
+            "Run",
+            "Knock_Back",
+            "Damage",
+            "Die",
+            "Stun",
+            "Skill_01",
+            "block_01",
+            "Floating"
+          ],
+          "transitions": 15
+        }
+      ]
+    },
+    "inputs": {
+      ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Monster/monster_3205/monster_3205_Controller.controller": {
+        "sha256": "f82dbc1eab2f685ba4afa6fbb68945f09695ec33901bc941bf29817d8f71312a",
+        "meta_sha256": "8b85b76e6196ca86eee04dd03a3ed72fa6f3a328b497790e0df5981f201b87e2"
+      },
+      ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Monster/monster_3205/block_01.anim": {
+        "sha256": "29ed1c5d6e39b29c0a728ff35071c5d1e4281f6911a7fb1ba3abbe605610cbca",
+        "meta_sha256": "19b061dc1b29469cceb2bd9825ae77f24ededce17ebd256f00b8b58345b37732"
+      },
+      ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Monster/monster_3205/die_01.anim": {
+        "sha256": "eed28dda08af3e4fa85c991331f83c48d5167124b2ad9124979757060d2bb911",
+        "meta_sha256": "a33fae26cbf5abf108ece5254462d4df0a60ba42530d228fc15d4b18385f7339"
+      },
+      ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Monster/monster_3205/floating_01.anim": {
+        "sha256": "f811b30b44e2a77f3ecfe5ab9454ddd8d25796f791db15b541ea164b74edccea",
+        "meta_sha256": "50ebf6de853d514808155ec9f30ba9ae2981d42200f472ddf07361d3a4130148"
+      },
+      ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Monster/monster_3205/hit_01.anim": {
+        "sha256": "1f485f3591698ae06e98abe925c16e9da176c37dc9f8844a7a3fcb8bdaf980c9",
+        "meta_sha256": "a35dab9292e7a86e3290b6f495c92cf7f1df8905f9b56654a18a0fd156a4d26b"
+      },
+      ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Monster/monster_3205/hit_02.anim": {
+        "sha256": "4a555834163b74f414dde7c688f3e093d98394546fb6b0c152911e71c773fb9e",
+        "meta_sha256": "c647b60c5f58e3c9e87af87563562a953f255bcea6111590e00c4d16cab12e5e"
+      },
+      ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Monster/monster_3205/idle_01.anim": {
+        "sha256": "51d91678aee6edef7eb2d7ac855651ed8106a856ee7812f38a254cd3f166b35f",
+        "meta_sha256": "79790f313a9c89978678f60dc29058e4037437d1ff6d1e2228fb808ac2576b97"
+      },
+      ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Monster/monster_3205/run_01.anim": {
+        "sha256": "e96584abff42cad7907e3cccc187f69755f9ce6a1e8b7d7a73cdd4bed1e65e5d",
+        "meta_sha256": "74548c311c67a4440dde4feae3d627a6fb7d59e5b07c5c920786a5673e49038d"
+      },
+      ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Monster/monster_3205/skill_01.anim": {
+        "sha256": "eabe277f393ce5cdba48b641a0f66d7fdbbccd6fad6de4220b63bab329652dbb",
+        "meta_sha256": "ac6f03d7cb6e9cd2244db34669e8b1a1b0f3d7dcee4b7b78e2ed1d5999af4057"
+      },
+      ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Monster/monster_3205/stun_01.anim": {
+        "sha256": "0f741347a6fe98b09f0635f3e7d4148dee712db2b516fc5f794df7a7264f46f0",
+        "meta_sha256": "3789fd0f12e2455b5a9fcfb05ed9333c5e74df962deece8f56a86ce2e2821e89"
+      }
+    },
+    "skeleton_location": {
+      "SkeletonName": "monster_3205",
+      "Path": "Assets/AppearanceAssets/Monster/monster_3205"
+    }
+  },
+  "outputs": {
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/inventory.json": "17e27af1a10f48d25ad950a93eea62192a47b816158b1f8e38f085939d75ea22",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/inventory.json.meta": "4c206210b9ec2883db5f4ff7a267b269f9a32011cdf48d0f452ffc49c6986b57",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/monster_3205.native.bytes": "25c63019787bf488d699996856aed2df3c7d9a66237a39d030c5b9213c05f6d4",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/monster_3205.native.bytes.meta": "1c6dc6bcff0a3b44558a5fc69736103af5b8856cdd2226327329b24bfe918687",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/native-assets.asset": "e5cf90dab16bb04cbbb16e05d9dff5ec9e951e97dbf890c8b1a99981a2ba9439",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/native-assets.asset.meta": "112b642fd712337a10ec6b7c4f10f4100b6df63c26ba582d1545aff1457501c1",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/Resources/Combat/EmbeddedMonsterMecanim/monster_3205-Low.asset": "5decd060379d43fdf957875c05c89f2f891e0301fa7c074a64db790091fe5819",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/Resources/Combat/EmbeddedMonsterMecanim/monster_3205-Low.asset.meta": "5bc60d35ed7181dc60609dee4effb02012f611fa01e24ba6ca3633d906429358",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/atlas.asset": "51aadd3252388e69d2b7ee30d90176cdd006433946f2a280f0c3bf3928aaadcf",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/atlas.asset.meta": "5dc684204f6dbe223fe43090aeedef6a381bf1913b1a6ca2fc24efa437bd4d54",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/monster_3205_TextureLoader_Low.asset": "0d7974fbb0a21c750bfc92321adc33e9c2fb1ae1349c6caef615e02949a88172",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/monster_3205_TextureLoader_Low.asset.meta": "faca2968a70d63994fa04b9c00fffb29cba290c60fd0b07362f84fcfa15861d5",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/texture-resources.asset": "2d7953781e3178a76c6b1e0d840486a64db393bd3b52897860e14821aa80f0d2",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/texture-resources.asset.meta": "b147eddd4a505f3474ad9c69061035bdf49ee837be27b6414599d59f491d3332",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/Resources/Combat/EmbeddedMonsterMecanim/catalog.asset": "e7b7a92a198dd818c0d792c1b505e8a2cbcd6f9658963a43f68d0a2f3ae016be",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/Resources/Combat/EmbeddedMonsterMecanim/catalog.asset.meta": "214eacb7da888f58cd1972a4198cda9de365bda8ebebf5e4537a114283dabc96",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim.meta": "2caded755c4a544d7ea523793ef1cb4b6c45009dcae7fc6041e09883efe9cfdc",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/Resources.meta": "9a6aaa5b61bc0c2be9ad27c1504e54fa78a76afaf7cc08d7d8e9932658731417",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/Resources/Combat.meta": "ee1a2fc79b59276604b2f2560f334b6d3d1b5f6a2e883039d1717629b3ef9fdb",
+    "unity/Assets/Official/Combat/EmbeddedMonsterMecanim/Resources/Combat/EmbeddedMonsterMecanim.meta": "2bb8f43290dc4602f4c4949b20bb0a1901a543df2d7bbc5431661d98fbbf52df"
+  },
+  "reused_converted_inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/57780/playable_16040_SourceToHit.prefab",
+      "sha256": "da58985919bd17ceb02bf09cdd6cbc56099970d7f96d13a1a39a08d5a3bc8415"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/block_01.anim",
+      "sha256": "29ed1c5d6e39b29c0a728ff35071c5d1e4281f6911a7fb1ba3abbe605610cbca"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/block_01.anim.meta",
+      "sha256": "bad4ffe8256bd77019ffec4aef8ad51ed4609d40282fd4d312f72f3abd86d18a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/die_01.anim",
+      "sha256": "eed28dda08af3e4fa85c991331f83c48d5167124b2ad9124979757060d2bb911"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/die_01.anim.meta",
+      "sha256": "af48724619a6b7124c890ac868e1c3d62c124d5bb242ad050bf0bb7cb19d026b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/floating_01.anim",
+      "sha256": "f811b30b44e2a77f3ecfe5ab9454ddd8d25796f791db15b541ea164b74edccea"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/floating_01.anim.meta",
+      "sha256": "8a6ddd32537b9ce13b62291bf89d7eb8c329fdbfaf02d14d4d47c52f5e407d6b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/hit_01.anim",
+      "sha256": "1f485f3591698ae06e98abe925c16e9da176c37dc9f8844a7a3fcb8bdaf980c9"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/hit_01.anim.meta",
+      "sha256": "f248f77916ef47b60a34de1d8afa04eef93790cb601a4137da8b9143df6e809a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/hit_02.anim",
+      "sha256": "4a555834163b74f414dde7c688f3e093d98394546fb6b0c152911e71c773fb9e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/hit_02.anim.meta",
+      "sha256": "25ee578d02daa98e13c9e258c882b436839ada516cb5da14a5c13ccc7816aaf3"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/idle_01.anim",
+      "sha256": "51d91678aee6edef7eb2d7ac855651ed8106a856ee7812f38a254cd3f166b35f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/idle_01.anim.meta",
+      "sha256": "085c694d638a6b55dd7a4f7bd891ad41652320c73b6602d83c53eb9e89a123b3"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/monster_3205.atlas.txt",
+      "sha256": "55fe0bfca804edc5220db676252f79619cebf3342d4437b09ad97a95adeba168"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/monster_3205.atlas.txt.meta",
+      "sha256": "276424547e59d400b71a53cab2629571ed69fbaf34e6790d884861310458ee3f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/monster_3205.skel.bytes",
+      "sha256": "18dcf02ed331cf0491ebd1a8f8a82ea7bdc2e40752625bdd9c2faf20b57f048e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/monster_3205.skel.bytes.meta",
+      "sha256": "00b9580df7c0f1cf9f2d3876572c97fbe260ade16798590e614aecde3f0c6300"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/monster_3205_Atlas.asset",
+      "sha256": "fcec996a7a81fc0fbe176a19c1a4e34b71904dbba4c9693247ceecd542e1d27c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/monster_3205_Atlas.asset.meta",
+      "sha256": "24b1a5dde7efd7256514783ba65192a023691413fd01a89933c48bf213fe2af6"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/monster_3205_Controller.controller",
+      "sha256": "aae6b345347b887ebc625ce885fb0553f6bd366989fcaa9b22fc45e066397a96"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/monster_3205_Controller.controller.meta",
+      "sha256": "750bf8164086a4c6ed64107a722104674f2191fdfd50995f14e9a39ddf8d8533"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/monster_3205_Material.mat",
+      "sha256": "9f2bf50747a88957409b7c795f0ce4502df02bcde3842af49defad4dc1d62308"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/monster_3205_Material.mat.meta",
+      "sha256": "261b28b341e4b2c4917c0e7d1a13cdcbeca3066a3cf8d20fb5b42bfa437b8582"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/monster_3205_placeholder.texture.asset",
+      "sha256": "f85d0983d8e876a92ef20238a14f3686fb57f458a2e5f77808f77999be08ba0e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/monster_3205_placeholder.texture.asset.meta",
+      "sha256": "3a7ef2f8209f26388da7b077511617f8e69794dc55abeabbb26089f664a111b0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/monster_3205_SkeletonData.asset",
+      "sha256": "f8a5269ca66e102497d41532e1adf4069b54178f8a126aa8f35b71882174e66c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/monster_3205_SkeletonData.asset.meta",
+      "sha256": "086f3eb0d269a3438fa1a6cfdf8d607ded5d46ac9410e180ec11bce4ecb23dec"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/run_01.anim",
+      "sha256": "e96584abff42cad7907e3cccc187f69755f9ce6a1e8b7d7a73cdd4bed1e65e5d"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/run_01.anim.meta",
+      "sha256": "93238385d096c6ecd3f471da678a0027a043bcb2ba3b4c8255d73404b05568af"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/skill_01.anim",
+      "sha256": "eabe277f393ce5cdba48b641a0f66d7fdbbccd6fad6de4220b63bab329652dbb"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/skill_01.anim.meta",
+      "sha256": "b7c810ad5e025996f5492605eea8db21c61afeb15e4586c845be2589d3e0e64a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/stun_01.anim",
+      "sha256": "0f741347a6fe98b09f0635f3e7d4148dee712db2b516fc5f794df7a7264f46f0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/AppearanceAssets/Monster/monster_3205/stun_01.anim.meta",
+      "sha256": "b822b7a50054d0eb65fe0e3009d9ffff3c2b917826f574499611dfa039b1c52d"
+    }
+  ],
+  "shared_appearance_infrastructure": {
+    "path": "unity/Assets/Official/ProfessionUI/WeaponTextureLoader/appearance-asset-manager-config.asset",
+    "sha256": "22730dd754226949a2f5fb28728a74c0a12325aabef4e7e58baada5af2424ea8",
+    "source_receipt": "assets/reference/profession-ui/weapon-texture-loader-source-manifest.json",
+    "source_manifest": "871_156598",
+    "scope": "Existing common manager service. This non-UI Low loader does not request UI dye materials."
+  },
+  "implementation": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/EmbeddedMonsterMecanimCatalog.cs",
+      "sha256": "ec14ea85f62ea2b48ed151cbcb1fa33fd6bce20a091c9efa4d991b466bbcd9c6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/EmbeddedMonsterMecanimResources.cs",
+      "sha256": "e8347ed111e0b689fbd8f93172ddecfe1ea925730dbe1320f509c00ffccd20f5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterRenderer.Prefab.cs",
+      "sha256": "ff2a9958a7db87a9a175e393edccf47ca1a116e02f34e749fd156e5accb463f6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialEmbeddedMecanimProbe.cs",
+      "sha256": "4239058a194afc19e9c87c1a4ebdaaa16ed1873b63bc9a648c2bf3950524c396"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs",
+      "sha256": "33358666d43f75633dc195fc7b0a591841bedcf9cac973790b101bfe674c5610"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialEmbeddedMecanimValidation.cs",
+      "sha256": "699bd9fcd113a1c167b5a39f59eb39d3f2e5fc82fb9a20fa5224a02eecf0963a"
+    }
+  ],
+  "generator_sha256": "b9a563de78859d6541f4afcebceecafa8da62a2e0f060efb2334d65fc6e0ed9e",
+  "source_generator_sha256": "bfff14ef103cc59e70c9b8e90a7171295ccb345f9b1d04a42458b17a815e70aa",
+  "original_skill_links": {
+    "manifest": "884_156692",
+    "fragments": [
+      {
+        "path": "Assets/Config/EC/FightSkill_part2386.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "-8776972605304493348",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "cd4545021e4bb9d29429b208348e51d0470d7a83f5ac2d780267d57758e6c4b1",
+        "payload_sha256": "08faee11dd53025d07c306994dc5b9acdbf2cb86453c11739e475435d686f988",
+        "legacy_prefix": false,
+        "entities": {
+          "57780": {
+            "parent": 0,
+            "components": {
+              "GridTransformComponent": {
+                "BodyRangeInfos": [
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": -1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 2
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": -1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 2
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": -1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 2
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 2,
+                      "Y": -1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 2,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 2,
+                      "Y": 1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 2,
+                      "Y": 2
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  }
+                ],
+                "BodyCrossBlockedInfos": [],
+                "UnlockWholeRequestCount": 1,
+                "RealCenter": [
+                  0.5,
+                  0.5
+                ],
+                "IsRigidBody": true
+              },
+              "TransformComponent": {},
+              "FightSkillComponent": {
+                "SkillType": 4,
+                "CostType": 0,
+                "SkillTargetType": 0,
+                "TargetType": 5,
+                "HitTargetActionType": 0,
+                "ElementType": 0,
+                "RangeType": 1,
+                "Range": [
+                  {
+                    "X": 0,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -1
+                  }
+                ],
+                "HitList": [
+                  {
+                    "ClassId": 57781,
+                    "Delay": 0.5,
+                    "ActOnSouce": 1,
+                    "IgnoreAICount": false
+                  }
+                ],
+                "SourceMoveList": [],
+                "ActionDuration": 1.7999999523162842,
+                "AllEndedActionDuration": -1.0,
+                "AllRelevantEndedActionDuration": -1.0,
+                "Duration": 1.7999999523162842,
+                "AllEndedDuration": -1.0,
+                "AllRelevantEndedDuration": -1.0,
+                "LimitedTimes": -1,
+                "ResetCDAtStart": true,
+                "ExtSkill": [],
+                "Replay": {
+                  "Rate": 0.0,
+                  "ReplaceSkillArrayOnReplay": []
+                },
+                "ReplayMaxCountEachRound": -1,
+                "CanTriggerChild": true,
+                "CanTriggerStatusEntityIds": [],
+                "Ai": {
+                  "DontKeepDistance": false,
+                  "AiPriorityTypes": [],
+                  "LastAIPriorityTypes": [],
+                  "IgnoreStatusArray": [],
+                  "AIPriroityCharacterType": 8,
+                  "ReleaseWhileRidicule": false,
+                  "ReleaseWhileConfusion": false,
+                  "IsReleaseSkillAfterMove": false,
+                  "IsFixSkillDirection": false,
+                  "FixedDirection": 0,
+                  "MoveByTeleport": false,
+                  "AIPriorityHpLowerCharacterTypeFilter": [],
+                  "AiPriorityPropType": 0,
+                  "AiPriorityFindMax": true,
+                  "AIPriorityCharacterTypeGroups": []
+                },
+                "ActionType": 2,
+                "FlipSource": true,
+                "NeedConditionStatusMeetToRelease": false,
+                "MustHaveValidCost": false,
+                "IsFixedProp": false,
+                "ResetReleasedTimeOnNextWave": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "path": "Assets/Config/EC/FightSkill_part2389.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "1886859765228419040",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "a71a65e13b345d61fa1339a21e02541e36f7b510b3fd025b0062bc73ddb8501e",
+        "payload_sha256": "e700e6759721db23a17a7bf33e725d5632ca93c838aee3af4a230ca942cd94fb",
+        "legacy_prefix": false,
+        "entities": {
+          "57781": {
+            "parent": 0,
+            "components": {
+              "GridTransformComponent": {
+                "BodyRangeInfos": [
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": -1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 2
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": -1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 2
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": -1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 2
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 2,
+                      "Y": -1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 2,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 2,
+                      "Y": 1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 2,
+                      "Y": 2
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  }
+                ],
+                "BodyCrossBlockedInfos": [],
+                "UnlockWholeRequestCount": 1,
+                "RealCenter": [
+                  0.5,
+                  0.5
+                ],
+                "IsRigidBody": true
+              },
+              "TransformComponent": {},
+              "FightHitSummonComponent": {
+                "DamageId": 0,
+                "DamageType": 0,
+                "DamageBasicProp": 1,
+                "DamageProp": 200,
+                "FixedDamageProp": 190,
+                "DamageParam": 0,
+                "DamageActionType": 4,
+                "DelayDistFactor": 0.0,
+                "Offset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "TargetOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "IsUseCenterRotation": false,
+                "RotateCenterOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "UseDamageFactor": false,
+                "DamageIgnoreShield": false,
+                "IsTrueDamage": false,
+                "AirCombo": {
+                  "AirComboStatusId": 0,
+                  "BasePercent": 0.0,
+                  "AffectedByProp": false
+                },
+                "DestroyDelay": 0.10000000149011612,
+                "IsBreakResilience": false,
+                "Rate": 1.0,
+                "SummonScope": [
+                  {
+                    "Base": {
+                      "Pos": {
+                        "X": 1,
+                        "Y": 4
+                      },
+                      "Delay": 0.10000000149011612,
+                      "DamageOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "DamageRotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "DamageRotZOffset": 0.0,
+                      "FlipBySourceX": true,
+                      "FlipByTargetY": true
+                    },
+                    "SummonOffset": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "Rate": 1.0
+                  },
+                  {
+                    "Base": {
+                      "Pos": {
+                        "X": 2,
+                        "Y": 4
+                      },
+                      "Delay": 0.0,
+                      "DamageOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "DamageRotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "DamageRotZOffset": 0.0,
+                      "FlipBySourceX": true,
+                      "FlipByTargetY": true
+                    },
+                    "SummonOffset": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "Rate": 1.0
+                  }
+                ],
+                "BaseScopes": null,
+                "SummonCfg": {
+                  "SummonId": 3904,
+                  "SummonStatus": [
+                    57782
+                  ],
+                  "ReferenceType": 1,
+                  "SummonImmediateRound": false,
+                  "InheritProp": false,
+                  "LevelType": 2,
+                  "SummonPoolSetting": {
+                    "IsRandom": false,
+                    "SummonPools": []
+                  },
+                  "LifespanStatusId": 57782,
+                  "_type": "FightHitSummonMonsterCfg"
+                }
+              }
+            }
+          },
+          "57782": {
+            "parent": 0,
+            "components": {
+              "ActionComponent": {
+                "ActionType": 0
+              },
+              "FightStatusComponent": {
+                "_unused_0": null,
+                "RoundTarget": 2,
+                "DurationRound": 5,
+                "RoundUpdateTiming": 1,
+                "RemoveAtRoundTargetDestroy": false,
+                "ElementType": 0,
+                "ActionBehOfSameStatus": 0,
+                "StatusType": 0,
+                "CanDispersed": false,
+                "IsOpenStack": false,
+                "InitStackCount": 1,
+                "AddStackedCount": 1,
+                "MaxStackedCount": -1,
+                "IsAddDurationRound": false,
+                "MaxAddDurationRound": 100,
+                "ScalePropWhenChangeStacked": false,
+                "StatusSourceType": 1,
+                "ApplyIgnoreResilience": false,
+                "CheckTriggerLimitActions": true,
+                "AI": {
+                  "MoreHit": false
+                },
+                "ForbiddenOnApplicatorDie": false,
+                "StackRoundCondition": 0,
+                "StackCountCondition": 0,
+                "IsResetDurationWhenStack": false,
+                "AddStackedRandomMinCount": 1,
+                "AddStackedRandomMaxCount": 1,
+                "IsFixedProp": false,
+                "MutexChecker": null,
+                "FollowRoundUpdateTimingOnGlobalRound": false
+              },
+              "StatusEndComponent": {
+                "StatusReplacePropertyValues": [],
+                "NotStatusMutex": false,
+                "StatusTriggerSkillCfgs": [],
+                "StatusTriggerStatusCfgs": [],
+                "RemoveApplyEntity": true,
+                "AutoRemove": {
+                  "ResetTimerWhenInvoke": false,
+                  "Duration": -1.0,
+                  "MaxCount": -1,
+                  "RemoveStatusCfgs": [],
+                  "RemoveTarget": 0
+                },
+                "ForbiddenStatus": {
+                  "Target": 0,
+                  "StatusEntityClassId": 0,
+                  "Forbidden": false
+                },
+                "CheckApplyAlive": false
+              },
+              "FightStatusPropComponent": {
+                "StatusReplacePropertyValues": [],
+                "TransitionPropCfgs": [],
+                "MutexByBetter": false
+              }
+            }
+          },
+          "57784": {
+            "parent": 0,
+            "components": {
+              "GridTransformComponent": {
+                "BodyRangeInfos": [
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": -1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 2
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": -1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 2
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": -1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 2
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 2,
+                      "Y": -1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 2,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 2,
+                      "Y": 1
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  },
+                  {
+                    "Pos": {
+                      "X": 2,
+                      "Y": 2
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  }
+                ],
+                "BodyCrossBlockedInfos": [],
+                "UnlockWholeRequestCount": 1,
+                "RealCenter": [
+                  0.5,
+                  0.5
+                ],
+                "IsRigidBody": true
+              },
+              "TransformComponent": {},
+              "FightHitFixedComponent": {
+                "DamageId": 57785,
+                "DamageType": 1,
+                "DamageBasicProp": 1,
+                "DamageProp": 200,
+                "FixedDamageProp": 190,
+                "DamageParam": 0,
+                "DamageActionType": 4,
+                "DelayDistFactor": 0.10000000149011612,
+                "Offset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "TargetOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "IsUseCenterRotation": false,
+                "RotateCenterOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "UseDamageFactor": false,
+                "DamageIgnoreShield": false,
+                "IsTrueDamage": false,
+                "AirCombo": {
+                  "AirComboStatusId": 0,
+                  "BasePercent": 0.0,
+                  "AffectedByProp": false
+                },
+                "DestroyDelay": 0.10000000149011612,
+                "IsBreakResilience": false,
+                "Scope": [
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 4
+                    },
+                    "Delay": 0.0,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    ],
+    "skill_item_bindings": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "1398458758611605706",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      },
+      "object_sha256": "5f5cf749e0186ca524be7bce5c36c14cbb73d1579a62c510632a445434bf5b34",
+      "payload_sha256": "5da6dd4982bdb6259e13043da7e2b7b4dc6b655beff1661b5f92f4fd65e0c81f",
+      "rows": [
+        {
+          "ClassId": 14657,
+          "EcEntityId": 57780
+        }
+      ],
+      "constructors": [
+        {
+          "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemPartInfo.cs",
+          "sha256": "685012dc0b4db06adf6b1b5f4d37e04ac1197b2391763694badfdbf1ae278cea"
+        },
+        {
+          "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillInfo.cs",
+          "sha256": "b403f503798af59fe02a307c8f4d6fbfd1dfb94d11431d17d007a68f5945745d"
+        },
+        {
+          "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Tables.cs",
+          "sha256": "0e4882f1ad41958e5ec017543447e17f5196c5453f8168c685926ea2c134c9bc"
+        },
+        {
+          "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbSkillInfo.cs",
+          "sha256": "b2322998e0b8972434132a2d9f744e3a3a8f63c3ab244c1d982b8f47d75521f8"
+        }
+      ]
+    },
+    "runtime_source_manifests": [
+      {
+        "path": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+        "sha256": "9b447a15838602a598b7530eb0398a3b0c9e1a6d93d7eb8d0e194932cd24d8bf"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/battle-rules-source-manifest.json",
+        "sha256": "cef8b0b5a12460f2bdb2b4d8031f95fb8d560a391a9170641e401b67ef08968b"
+      }
+    ],
+    "formatters": [
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActionComponent.cs",
+        "sha256": "574e476645f5e9f86b9f5015ed794a2aac103df4be65f9beef9fd762107cc1c7"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitFixedComponent.cs",
+        "sha256": "fc2c0dd435e46afe53fa6ffc79d17dbb844ff794c5470465cbb48362eed1a7e5"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitSummonComponent.cs",
+        "sha256": "b1b0cf4d642dc700095e02aab2e178a8e5412f2d0e3ba24f864f1aab12bc7859"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillComponent.cs",
+        "sha256": "f8f1bfec783d0313e0719ced2b777bdb1ccd04f17e61be9900c35c3ac1495792"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusComponent.cs",
+        "sha256": "4f9b0133c6404da6ddcea3ed192fc760fc927f914a1276b987ee894872ecf68c"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusPropComponent.cs",
+        "sha256": "f07d2e86fa0d736d53bc7c6b2a931a9cc47b2ad3086786a199016a87b004783d"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GridTransformComponent.cs",
+        "sha256": "6317a98b45782f004e871886effb70264ad7cb708b6d8665933970c1dd7160e9"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/StatusEndComponent.cs",
+        "sha256": "3bedd406fde594a76718f0dd59bdca3dd609e374f8833c937816bf52b8aed854"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ActionBehaviourFormatter.cs",
+        "sha256": "29ee6c3e26000f043690ea14983a8b1f1a93927e9f43bdc45976cb823f15b9ca"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ActionComponentInfoFormatter.cs",
+        "sha256": "411f5e5de63ab3d144412a003d547b89fc387104aa19e665236786fe805a3d7b"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ActionTypeFormatter.cs",
+        "sha256": "186c98deb85a7221c8dd1c3474f9ded798c356cdf8cab3130dd4adf990980c7d"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/DirectionFormatter.cs",
+        "sha256": "baeb424b8215f6df8d00696f458eb6622fa91b8ef4bc5d15ab5b190dddfe7982"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/EFightHitSummonLevelTypeFormatter.cs",
+        "sha256": "aca6ea273b76e6fa60d72f3422900af87e1f98c81e6bf8afd76f50cac2900a61"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/EFightSkillCostTypeFormatter.cs",
+        "sha256": "b81a0173c287f0eb0def7db0b228840ad7e2bb97d4ced503d3e6291b63edafb4"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/EFightSummonReferenceTypeFormatter.cs",
+        "sha256": "a161b27ad3b2ef1876f4965caadbef7a14fbd537e949d73af5fc4e46e588e1ce"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ElementTypeFormatter.cs",
+        "sha256": "78b8ed62cb6acc289a886758b602f8b271d1bbae983ae547ad36ec5437a43df0"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/EStatusSourceTypeFormatter.cs",
+        "sha256": "9d242dc34328fd05d1cfa83930f6c9d879a32eb9d6fab5a0df9a292bc415f999"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightHitFixedComponentInfoFormatter.cs",
+        "sha256": "9f86c02ec221f12eced2d1dd98d9f12a8ef2590f1b36d5dce273493d128f52a7"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightHitSummonComponentInfoFormatter.cs",
+        "sha256": "22a4da2557f6f87d50f5503282d911e384dbc3eb7ce8e8a9d1edb059fe615624"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightHitSummonMonsterCfgFormatter.cs",
+        "sha256": "9ae59da097e1c0e3b30495bf41d4f92563f4250717fc9e0eb86cd9b9639b9d3a"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightSkillComponentInfoFormatter.cs",
+        "sha256": "4e4b6dbf5a6da01a230cd045e55009453e396b252de3bcd0655ce15e0803ac02"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightSkillReplayCfgFormatter.cs",
+        "sha256": "9784d406374db418e719d4ec5058368120cad55f4e1e49b6599ea754dcf46b68"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightStatusAiCfgFormatter.cs",
+        "sha256": "9c8be1891e61f412fe4f09156321ed87eb59a76cb7074b5c86be20790caebd04"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightStatusAutoRemoveCfgFormatter.cs",
+        "sha256": "e6152a64983db9cf29d986bf9719a5175ef18066d3517d72e1e5a2aa1e4e974b"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightStatusComponentInfoFormatter.cs",
+        "sha256": "921aa99e7c3f221071c6c1b237e7ee9d2ff7f4258743060ad2c0958ab7fd9b85"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightStatusForbiddenStatusCfgFormatter.cs",
+        "sha256": "c160dd6fb753e6f4f4855e9aa75864401651ecbd2a77d57d60af1a87218166ea"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightStatusPropComponentInfoFormatter.cs",
+        "sha256": "59c3bf195efc8124f58e7076081833230eea1fbccc251fe4c0aad7baa24959de"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GameCharacterTypeFormatter.cs",
+        "sha256": "4f0cfe2340b1331caf498f7fcc95eb58b783abfcce2905815d2a04d2fd12e722"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GridTransformComponentBodyPosInfoFormatter.cs",
+        "sha256": "50ade9afa83a6ad54577f4d31772eb38728a563601e53a8d81ebba050f91d8b9"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GridTransformComponentInfoFormatter.cs",
+        "sha256": "cc512519f920485ca7d9cbfcdb033c84003121db28761cbbb015f47cd8f97092"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GroundTypeFormatter.cs",
+        "sha256": "48f32fbc167d3a9f69f0824c14d864bc77ee00abfc9e44cb1b05100077a4ae20"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitAirComboCfgFormatter.cs",
+        "sha256": "baeb2fb38be079871c8e669cb46c60f4952c580d5f452ce59c0ced74b80f4aca"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitAnchorFormatter.cs",
+        "sha256": "ad2601d0490d0cca17466565a960c3d859d195e8794cc1335e9f8259e6dea8a1"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitCfgFormatter.cs",
+        "sha256": "09f74504e8e09e69420d558f7956aee1b85fb0ae77d11d7c0a3ce8b17fe2c1bc"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitDamageTypeFormatter.cs",
+        "sha256": "931b9e7015ee7a22be48724d11c193ad1325ac9e41fe7fdfcb6630d269ae968f"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitScopCfgFormatter.cs",
+        "sha256": "026f24488d8939b3c8c2cead1929d18d806d0dc8db6b23a4338859096a976960"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitTargetTypeFormatter.cs",
+        "sha256": "f26070c6d1ad7e7dd2f26519990fbc2298dcbb0d3bc6461319d5cb8049dacd7d"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/Pos2dFormatter.cs",
+        "sha256": "7625a36013d02ba1732aa27c15ad8b131f41b56ffff72095b93781fe47d3fd4c"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/PropTypeFormatter.cs",
+        "sha256": "139c97ed0ff65c426fd6d7e1bc4a85186275b0c0eb58fafff9f3ece905d946ec"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SkillAiCfgFormatter.cs",
+        "sha256": "739c172510869289b85ea494d4cd68f880ad5403bc9fe5aa46306f551dbfbb8a"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SkillRangeTypeFormatter.cs",
+        "sha256": "4cc7bff2a4304deb1139d5cf0a0ccd17a0171dac7db6fb729f5a2db8d205874a"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SkillTargetTypeFormatter.cs",
+        "sha256": "c4aaca29bae4b1d7a61108688e48aedeb5ec967aecde98adef3439b6bfe9216c"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SkillTypeFormatter.cs",
+        "sha256": "c3d104e7a24ee38fb39f92744ee6352ab65e30bef68f2c38a6200af0b0a3a755"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/StatusEndComponentInfoFormatter.cs",
+        "sha256": "7c3c498a54b879c454a07b0d9f9a26f04e714a8d04f5c229a9605f081e55c50a"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/StatusTargetTypeFormatter.cs",
+        "sha256": "83e4146589973f5ce9eca37926a399185b861603c2722ca89ef0bf966b6c56f0"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/StatusTriggerTargetFormatter.cs",
+        "sha256": "6a95c1bf25fb3ab84270b40a6360216ebcde328bb03ba736f57bf00ad1c29e59"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/StatusTypeFormatter.cs",
+        "sha256": "f3f6a835bbe4d8fceeed282c9ae3a1e6c846cc962af77b680c60ca55e08d8c86"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SummonHitScopCfgFormatter.cs",
+        "sha256": "4e8094b98e4dc215a3cf2b61b6e1c23dd6da94fc499728aa280942a11037b739"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SummonPoolSettingFormatter.cs",
+        "sha256": "48d03e85b6b8feb873621fa6b01e683dfd99acb000f0575a765434843701fc78"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Resolvers/GeneratedStaticGSerializableFormatterResolver.cs",
+        "sha256": "9e0eb448ce32ffcdd2f082db548d27df8211dfdf9ec98be78c9fa85adeb3af08"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Properties/AssemblyInfo.cs",
+        "sha256": "d85ed3684e7117155ebd5d8de5d415c29e4c83f090715776d9f74bf4f4a20785"
+      }
+    ],
+    "verifier": {
+      "path": "scripts/verify_battle_skill_graph_rules.py",
+      "sha256": "a8b77eee0fdcbe360125d9ba4ec077321306ef888192effb88a79d04d0bdfa3c"
+    },
+    "operation": "Decode the selected APK-first EC fragments with their own generated formatters. Compare every migrated component field for the requested entities; retain historical runtime source manifests separately. No configuration or expected hash is replaced."
+  },
+  "operation": "APK-first embedded 3205 Mecanim with original graph, skeleton, materials, low texture and appearance loader. Source-prefab identity prevents same-name cross-bundle binding. No unused 57784 combat branch is activated."
+}

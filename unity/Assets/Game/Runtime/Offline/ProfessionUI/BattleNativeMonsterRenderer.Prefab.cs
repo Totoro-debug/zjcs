@@ -47,12 +47,26 @@ namespace Zjcs.Offline.ProfessionUI
             finally { DestroyOwned(staging); }
         }
 
+        public static BattleNativeMonsterRenderer BindEmbedded(GameObject node, BattleNativeMonsterAssets assets, int entityId)
+        {
+            if (!node || !assets) throw new ArgumentNullException();
+            if (node.activeInHierarchy || node.GetComponent<BattleNativeMonsterRenderer>())
+                throw new InvalidOperationException("Bind the original embedded renderer once before Awake.");
+            var row = assets.Find(entityId);
+            if (row == null || !row.ContainsKey("embeddedPrefab") || !Equals(row["rendererKind"], "SkeletonMecanim"))
+                throw new InvalidOperationException("Bind the verified original embedded Mecanim source.");
+            var result = node.AddComponent<BattleNativeMonsterRenderer>();
+            result.nativeAssets = assets; result.nativeEntityId = entityId;
+            result.enabled = Flag(Obj(row["renderer"]), "m_Enabled");
+            return result;
+        }
+
         private void Awake()
         {
             if (!nativeAssets) return; // Factory-created battle models bind explicitly.
             var row = nativeAssets.Find(nativeEntityId);
-            if (row == null || !row.ContainsKey("rtPrefab"))
-                throw new InvalidOperationException("Bind the verified original RT prefab variant.");
+            if (row == null || !(row.ContainsKey("rtPrefab") || row.ContainsKey("embeddedPrefab")))
+                throw new InvalidOperationException("Bind the verified original prefab renderer source.");
             if (Int(Obj(row["renderer"]), "updateTiming") != 1)
                 throw new NotSupportedException("Bind the original prefab animation update timing.");
             var originals = GetComponentsInChildren<MeshRenderer>(true).SelectMany(value => value.sharedMaterials)

@@ -77,6 +77,8 @@ namespace Zjcs.Presentation.CharacterCreation
 #endif
             // Home acceptance creates the runtime with its own isolated profile.
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-homeAcceptance") >= 0) return;
+            // The embedded animation component diagnostic owns its camera and never opens a user profile.
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "--zjcs-validate-embedded-mecanim") >= 0) return;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD || ZJCS_MAINLINE_MODULE_VALIDATION
             if (Array.IndexOf(Environment.GetCommandLineArgs(), OfficialMainlineMapModuleProbe.Argument) >= 0) return;
 #endif

@@ -1,0 +1,513 @@
+{
+  "manifest": "884_156692",
+  "models": [
+    {
+      "entityId": 3205,
+      "skeletonName": "monster_3205",
+      "rendererKind": "SkeletonMecanim",
+      "renderer": {
+        "skeletonDataAsset": {
+          "m_FileID": 27,
+          "m_PathID": 6573977942531155620
+        },
+        "initialSkinName": "",
+        "initialFlipX": false,
+        "initialFlipY": false,
+        "updateWhenInvisible": 3,
+        "separatorSlotNames": [],
+        "zSpacing": 0.0,
+        "useClipping": true,
+        "immutableTriangles": false,
+        "pmaVertexColors": true,
+        "clearStateOnDisable": false,
+        "tintBlack": false,
+        "singleSubmesh": true,
+        "fixDrawOrder": false,
+        "addNormals": false,
+        "calculateTangents": false,
+        "maskInteraction": 0,
+        "maskMaterials": {
+          "materialsMaskDisabled": [],
+          "materialsInsideMask": [],
+          "materialsOutsideMask": []
+        },
+        "disableRenderingOnOverride": true,
+        "physicsPositionInheritanceFactor": [
+          0.0,
+          0.0
+        ],
+        "physicsRotationInheritanceFactor": 0.0,
+        "physicsMovementRelativeTo": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "translator": {
+          "autoReset": true,
+          "useCustomMixMode": true,
+          "layerMixModes": [
+            1
+          ],
+          "layerBlendModes": [
+            1
+          ]
+        },
+        "updateTiming": 1,
+        "m_Enabled": true
+      },
+      "skeletonData": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -6887505452609033796
+        },
+        "m_Name": "monster_3205_SkeletonData",
+        "atlasAssets": [
+          {
+            "m_FileID": 0,
+            "m_PathID": -7167862597081163931
+          }
+        ],
+        "scale": 0.009999999776482582,
+        "skeletonJSON": {
+          "m_FileID": 0,
+          "m_PathID": -2640405165178551988
+        },
+        "isUpgradingBlendModeMaterials": 0,
+        "blendModeMaterials": {
+          "requiresBlendModeMaterials": 0,
+          "applyAdditiveMaterial": 1,
+          "additiveMaterials": [],
+          "multiplyMaterials": [],
+          "screenMaterials": []
+        },
+        "skeletonDataModifiers": [],
+        "fromAnimation": [],
+        "toAnimation": [],
+        "duration": [],
+        "defaultMix": 0.20000000298023224,
+        "controller": {
+          "m_FileID": 0,
+          "m_PathID": 1267657357278079866
+        },
+        "zSlots": []
+      },
+      "skins": [
+        "default"
+      ],
+      "transforms": [],
+      "meshRenderer": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 1629285784820516805
+        },
+        "m_Enabled": true,
+        "m_CastShadows": 0,
+        "m_ReceiveShadows": 0,
+        "m_DynamicOccludee": 1,
+        "m_StaticShadowCaster": 0,
+        "m_MotionVectors": 1,
+        "m_LightProbeUsage": 1,
+        "m_ReflectionProbeUsage": 1,
+        "m_RayTracingMode": 2,
+        "m_RayTraceProcedural": 0,
+        "m_RenderingLayerMask": 1,
+        "m_RendererPriority": 0,
+        "m_LightmapIndex": 65535,
+        "m_LightmapIndexDynamic": 65535,
+        "m_LightmapTilingOffset": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 0.0,
+          "w": 0.0
+        },
+        "m_LightmapTilingOffsetDynamic": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 0.0,
+          "w": 0.0
+        },
+        "m_Materials": [
+          {
+            "m_FileID": 27,
+            "m_PathID": -7833302864124617417
+          }
+        ],
+        "m_StaticBatchInfo": {
+          "firstSubMesh": 0,
+          "subMeshCount": 0
+        },
+        "m_StaticBatchRoot": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_ProbeAnchor": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_LightProbeVolumeOverride": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_SortingLayerID": 1182434123,
+        "m_SortingLayer": 18,
+        "m_SortingOrder": 0,
+        "m_AdditionalVertexStreams": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_EnlightenVertexStream": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      },
+      "animator": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 1629285784820516805
+        },
+        "m_Enabled": 1,
+        "m_Avatar": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Controller": {
+          "m_FileID": 27,
+          "m_PathID": 1267657357278079866
+        },
+        "m_CullingMode": 1,
+        "m_UpdateMode": 0,
+        "m_ApplyRootMotion": false,
+        "m_LinearVelocityBlending": false,
+        "m_StabilizeFeet": false,
+        "m_HasTransformHierarchy": true,
+        "m_AllowConstantClipSamplingOptimization": true,
+        "m_KeepAnimatorStateOnDisable": false,
+        "m_WriteDefaultValuesOnDisable": false
+      },
+      "nativeController": "monster_3205_Controller.controller",
+      "package": "monster_3205.native.bytes",
+      "materials": [
+        {
+          "fields": {
+            "m_Name": "monster_3205_Material",
+            "m_Shader": {
+              "m_FileID": 2,
+              "m_PathID": 9169776915593584302
+            },
+            "m_ValidKeywords": [
+              "_LIGHT_ON"
+            ],
+            "m_InvalidKeywords": [
+              "_STRAIGHT_ALPHA_INPUT"
+            ],
+            "m_LightmapFlags": 4,
+            "m_EnableInstancingVariants": false,
+            "m_DoubleSidedGI": false,
+            "m_CustomRenderQueue": -1,
+            "stringTagMap": [],
+            "disabledShaderPasses": [],
+            "m_SavedProperties": {
+              "m_TexEnvs": [
+                [
+                  "_DissolveTex",
+                  {
+                    "m_Texture": {
+                      "m_FileID": 3,
+                      "m_PathID": 5522781624651807727
+                    },
+                    "m_Scale": {
+                      "x": 1.0,
+                      "y": 1.0
+                    },
+                    "m_Offset": {
+                      "x": 0.0,
+                      "y": 0.0
+                    }
+                  }
+                ],
+                [
+                  "_DistortionTex",
+                  {
+                    "m_Texture": {
+                      "m_FileID": 0,
+                      "m_PathID": 0
+                    },
+                    "m_Scale": {
+                      "x": 1.0,
+                      "y": 1.0
+                    },
+                    "m_Offset": {
+                      "x": 0.0,
+                      "y": 0.0
+                    }
+                  }
+                ],
+                [
+                  "_IceNoiseTex",
+                  {
+                    "m_Texture": {
+                      "m_FileID": 4,
+                      "m_PathID": 5291583285710997780
+                    },
+                    "m_Scale": {
+                      "x": 1.0,
+                      "y": 1.0
+                    },
+                    "m_Offset": {
+                      "x": 0.0,
+                      "y": 0.0
+                    }
+                  }
+                ],
+                [
+                  "_IceTex",
+                  {
+                    "m_Texture": {
+                      "m_FileID": 5,
+                      "m_PathID": -9134332189341036574
+                    },
+                    "m_Scale": {
+                      "x": 1.0,
+                      "y": 1.0
+                    },
+                    "m_Offset": {
+                      "x": 0.0,
+                      "y": 0.0
+                    }
+                  }
+                ],
+                [
+                  "_MainTex",
+                  {
+                    "m_Texture": {
+                      "m_FileID": 0,
+                      "m_PathID": -7153466028357651489
+                    },
+                    "m_Scale": {
+                      "x": 1.0,
+                      "y": 1.0
+                    },
+                    "m_Offset": {
+                      "x": 0.0,
+                      "y": 0.0
+                    }
+                  }
+                ],
+                [
+                  "_MaskTex",
+                  {
+                    "m_Texture": {
+                      "m_FileID": 0,
+                      "m_PathID": 0
+                    },
+                    "m_Scale": {
+                      "x": 1.0,
+                      "y": 1.0
+                    },
+                    "m_Offset": {
+                      "x": 0.0,
+                      "y": 0.0
+                    }
+                  }
+                ]
+              ],
+              "m_Ints": [],
+              "m_Floats": [
+                [
+                  "_BaseStrength",
+                  0.5
+                ],
+                [
+                  "_ColorEnhancement",
+                  1.0
+                ],
+                [
+                  "_DissolveLineWidth",
+                  0.10000000149011612
+                ],
+                [
+                  "_DissolveOffsetThreshold",
+                  0.5
+                ],
+                [
+                  "_DissolveThreshold",
+                  0.0
+                ],
+                [
+                  "_Distortion",
+                  0.0
+                ],
+                [
+                  "_DistortionTex_Rota",
+                  0.0
+                ],
+                [
+                  "_DistortionTex_Rotator",
+                  0.0
+                ],
+                [
+                  "_ExtraStrength",
+                  1.0
+                ],
+                [
+                  "_FordingOffset",
+                  0.0
+                ],
+                [
+                  "_FordingScale",
+                  1.0
+                ],
+                [
+                  "_HitEffectBlend",
+                  0.0
+                ],
+                [
+                  "_Hue",
+                  0.0
+                ],
+                [
+                  "_Light",
+                  1.0
+                ],
+                [
+                  "_LightAffectsAdditive",
+                  0.0
+                ],
+                [
+                  "_LightAtten",
+                  0.4000000059604645
+                ],
+                [
+                  "_Saturation",
+                  1.0
+                ],
+                [
+                  "_StencilComp",
+                  8.0
+                ],
+                [
+                  "_StencilOp",
+                  0.0
+                ],
+                [
+                  "_StencilRef",
+                  1.0
+                ],
+                [
+                  "_StraightAlphaInput",
+                  1.0
+                ],
+                [
+                  "_TintBlack",
+                  0.0
+                ],
+                [
+                  "_Value",
+                  1.0
+                ],
+                [
+                  "_ZWrite",
+                  1.0
+                ]
+              ],
+              "m_Colors": [
+                [
+                  "_Black",
+                  {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                  }
+                ],
+                [
+                  "_BoundingBox",
+                  {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                  }
+                ],
+                [
+                  "_Color",
+                  {
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                  }
+                ],
+                [
+                  "_DissolveColor",
+                  {
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                  }
+                ],
+                [
+                  "_DissolveOffset",
+                  {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                  }
+                ],
+                [
+                  "_DistortionTex_MoveCenter",
+                  {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.5,
+                    "a": 0.5
+                  }
+                ],
+                [
+                  "_FordingColor",
+                  {
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                  }
+                ],
+                [
+                  "_HitEffectColor",
+                  {
+                    "r": 1.0,
+                    "g": 1.0,
+                    "b": 1.0,
+                    "a": 1.0
+                  }
+                ]
+              ]
+            },
+            "m_BuildTextureStacks": []
+          }
+        }
+      ],
+      "textures": {},
+      "embeddedPrefab": {
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_57780.bundle",
+          "bundle_hash": "387603bd80dfca42645d87011637acf5",
+          "path_id": "5734327683143305157",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/387603bd80dfca42645d87011637acf5.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 38779,
+          "bundle_sha256": "065cb8ff4312aed5b12fad32573a3d453d20037a66a50fd698c67f02f1075752"
+        },
+        "root_sha256": "26768edd244c2247567be4dad8a103e0fe555480f0450648c928248da361f88e",
+        "path": "track (2)/Eff_Npc_WolfStone_Atk/MonsterModel_3205"
+      }
+    }
+  ]
+}
