@@ -83,10 +83,11 @@ namespace Zjcs.Presentation.Combat
                 TargetIds = new List<int> { 2 }, Presentation = FightBattleSkillCastPresentation.Capture(actor, skill,
                     new[] { victim }) };
             cast.Presentation.Duration = skill.Duration;
-            var step = new FightBattleStepEvent { ActorId = 1 }; step.SkillCasts.Add(cast);
-            hitPlayback.Play(step, checkpoint, id => id == 1 ? source : targetUnit);
-            var actualSkill = root.GetComponentsInChildren<MyFightSkill>(true)
-                .Single(value => value.myEntity.ClassId == 57780).myEntity;
+            CheckCastIdentities(entities, hitPlayback, actor, victim, skill, source, targetUnit);
+            var skillIdentity = entities.Start(cast, source, targetUnit);
+            var actualSkill = entities.GetEntity(skillIdentity);
+            Require(actualSkill && actualSkill.ClassId == 57780,
+                "The actual cast identity did not resolve its own original skill entity.");
             view.transform.position = new Vector3(5, 5, -20); view.orthographicSize = 6;
             MyEntity first = null;
             for (int replay = 0; replay < 2; replay++)
@@ -129,6 +130,37 @@ namespace Zjcs.Presentation.Combat
             yield return null;
             Require(!root, "The unused-hit diagnostic retained its original graph and pool hierarchy.");
             Debug.Log("[Embedded hit] Production 57780 skill identity, controlled orphan 57784 view, original dormant 3205 track, FIFO hit replay and complete graph release passed; no unused branch was added to battle rules.");
+        }
+
+        private static void CheckCastIdentities(OfficialBattleSkillEntityPlayback entities,
+            OfficialBattleSkillGraphPlayback playback, FightBattleUnitState actor,
+            FightBattleUnitState victim, FightBattleSkillDefinition skill, Transform source, Transform target)
+        {
+            EcEntityIdentifier Create()
+            {
+                var presentation = FightBattleSkillCastPresentation.Capture(actor, skill, new[] { victim });
+                // Controlled lifetime only for the identity/pool diagnostic.
+                presentation.Duration = .125f;
+                return entities.Start(new FightBattleSkillCastEvent { ActorId = actor.Id, Slot = -1,
+                    SkillEntityId = skill.EntityId, TargetIds = new List<int> { victim.Id },
+                    Presentation = presentation }, source, target);
+            }
+            var firstId = Create(); var first = entities.GetEntity(firstId);
+            var secondId = Create(); var second = entities.GetEntity(secondId);
+            Require(!firstId.Equals(secondId) && first && second && first != second
+                && first.ClassId == second.ClassId,
+                "Concurrent casts of one skill class did not retain distinct identities.");
+            playback.Tick(.125f);
+            Require(entities.GetEntity(firstId) == null && entities.GetEntity(secondId) == null,
+                "Ended skill identities remain registered.");
+            var reusedId = Create();
+            Require(!reusedId.Equals(firstId) && !reusedId.Equals(secondId)
+                && ReferenceEquals(entities.GetEntity(reusedId), first)
+                && entities.GetEntity(firstId) == null && entities.GetEntity(secondId) == null,
+                "FIFO reuse aliased a stale skill identity to a new cast.");
+            playback.Tick(.125f);
+            Require(entities.GetEntity(reusedId) == null, "The reused skill identity was not removed.");
+            Debug.Log("[Cast identity] Concurrent same-class casts, exact lifetime removal and fresh identities on FIFO reuse passed.");
         }
 
         private static bool IsDormantAsAuthored(BattleNativeMonsterRenderer native)

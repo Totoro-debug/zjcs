@@ -175,7 +175,7 @@ namespace Zjcs.Presentation.Combat
             return new Pos2d(point.X, point.Y);
         }
 
-        public void Start(FightBattleSkillCastEvent cast, Transform source, Transform target)
+        public EcEntityIdentifier Start(FightBattleSkillCastEvent cast, Transform source, Transform target)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillEntityPlayback));
             if (cast.Presentation == null)
@@ -206,6 +206,9 @@ namespace Zjcs.Presentation.Combat
                 ? float.PositiveInfinity : cast.Presentation.Duration });
             scope.Dispatch(entity.MyStart);
             CastStarted?.Invoke(cast);
+            // Return the assigned identity, not the pooled object whose Id can
+            // change on reuse. Dependent views belong to this exact cast.
+            return state.Data.Identifier;
         }
 
         // Original ECViewDriver injects its serialized views during Awake.

@@ -26,7 +26,7 @@
 
 `FightOfficialCombatCatalog` 为每条 `HitCfg` 保留独立的 `FightBattleHitLink`，包含原顺序、重复 ID、Delay、ActOnSouce 和 IgnoreAICount；旧 ID 列表仍供现有执行器与检查点兼容使用。`ScopeEntries` 保存原 `HitScopCfg` 的位置、逐格延迟、伤害偏移、旋转及翻转开关，显式零旋转和 false 不用默认值覆盖；固定命中及连锁按原 Init 排序，随机目标保留配置顺序，召唤范围按原 `FightHitSummonComponentInfo.Init` 排序后提取 Base。命中类型、轨迹起终点偏移、旋转中心、DestroyDelay 和连锁的 Repeat、Back、PreferUnvisited 分别读取；旧检查点只补全这些不可变配置，保留生命、CD、命中回执及统计。配置 payload 的固定版本仍以[技能规则来源](../../unity/Assets/Official/Combat/skill-rules-source-manifest.json)为准。这些新增配置尚未替换现有扁平命中执行及其时序。
 
-`OfficialBattleHitEntityData` 要求共享格网及实际技能／命中身份，将这些快照桥接为六类原命中组件的 Info、GetScopes 与位置通知。884 命中表现资源与固定配置 payload 分别追溯。
+`OfficialBattleHitEntityData` 要求共享格网及实际技能／命中身份，将这些快照桥接为六类原命中组件的 Info、GetScopes 与位置通知。884 命中表现资源与固定配置 payload 分别追溯。`OfficialBattleSkillEntityPlayback.Start` 返回本次实际分配的 `EcEntityIdentifier` 值；依赖视图直接使用该值关联施法，避免按技能类型查找，或保留会在 FIFO 复用时改写身份的对象引用。
 
 对 1,884 个原技能实体 prefab 的脚本组件审计发现 18 种客户端组件。`prepare_battle_skill_prefab_runtime.py` 另迁移八类原始空代理，以及 `MyPlayableOverrider`、`PlayableOverrideByStatusStack`、`FightSkillPlayableOverrideByStatusStack` 和原序列化 DTO／接口；来源见[额外技能 prefab 代码清单](../../assets/reference/battle-animation/skill-prefab-runtime-source-manifest.json)。状态替换保留首次查询后的层数缓存、越界取最后一个图、无对应状态时不替换、禁用时还原，以及四向图替换后的刷新顺序。原 `Source -> MyFightStatusAgent -> ApplyStatusDict` 查询由 `OfficialBattleSkillSourceStatusSnapshot` 绑定施法创建时的状态实例、层数及共享总层数；保留原状态／技能代理缺席检查。快照来自 `FightBattleSkillCastPresentation.Capture`，不会从已结算到后续施法的单位状态反查，也不会在状态消耗后改写已创建的表现。13200 的五次 `playable13200`、五次 `playable13203` 和一次 `playable13204` 按原顺序绑定；54383 的 `EcView/ECViewDriver.mECViews` 按同版 APK 程序集 schema 恢复原 RID、`ECPlayableSupporterView` 类型及原 `mAppearPlayable=playable54380` 引用，并由原 ECViewDriver 生命周期执行。
 
@@ -114,7 +114,7 @@
 
 ## 当前验证范围
 
-- `OfficialEmbeddedMecanimProbe` 已通过内置屏隔离 Play Mode、Unity 编译和 `ProjectTools.Validate`：两份 3205 组件实例使用独立骨骼状态、原低清图集及 Animator 时钟，有限网格和释放检查通过；已查看四张实际运行画面。新增命中夹具用真实 57780 施法身份，单独将未引用的 57784 原定义交给生产加载器，核对注册、两次创建间的 FIFO 实体复用、移除与完整图释放；原休眠祖先和未初始化的骨骼状态保持一致，已查看两张原粒子运行截图。Windows Mono Player 代码增量构建及内置屏实际运行通过，同样六张截图均已查看；运行退出码为 0，用户存档文件哈希前后一致。静态元数据检查通过（144,755 个 GUID）。本次原生资产的 20 项输出哈希均保持不变。该夹具不新增配置引用，不覆盖正式执行器通知、HUD 交互、伤害结算或音频。未据此发布正式版本。
+- `OfficialEmbeddedMecanimProbe` 已通过内置屏隔离 Play Mode、Unity 编译和 `ProjectTools.Validate`：两份 3205 组件实例使用独立骨骼状态、原低清图集及 Animator 时钟，有限网格和释放检查通过；已查看四张实际运行画面。新增命中夹具先验证同类技能并发时 ID 不同、精确到期后旧 ID 注销，以及 FIFO 复用原对象时分配新 ID、旧 ID 不会指向新施法；该身份夹具仅将生命期设为 0.125 秒。随后直接使用创建函数返回的真实 57780 施法身份，单独将未引用的 57784 原定义交给生产加载器，核对注册、两次创建间的 FIFO 实体复用、移除与完整图释放；原休眠祖先和未初始化的骨骼状态保持一致，已查看两张原粒子运行截图。Windows Mono Player 代码增量构建及内置屏实际运行通过，同样六张截图均已查看；运行退出码为 0，用户存档文件哈希前后一致。静态元数据检查通过（144,755 个 GUID）。本次原生资产的 20 项输出哈希均保持不变。该夹具不新增配置引用，不覆盖正式执行器通知、HUD 交互、伤害结算或音频。未据此发布正式版本。
 
 - 逐格命中能力通过 `test_battle_hit_patterns.ps1` 的接口 与真实执行器检查：多身体格、范围内其他敌人、格位与原延迟、重复身体声明排除、随机数量／已选随机锚点、治疗和死亡排除均通过；同一大怪三个身体格按原衰减依次造成 100／50／25 点伤害，独立目标不共用该衰减，整套只释放一次。伤害格位、延迟及生命状态检查点往返通过。460 条固定公式向量及既有战斗核心、范围、充能、瞬时加层、逐段增伤回归通过。Unity 编译、ProjectTools.Validate 及 13740 实际 Play Mode 通过；原方向范围、命中延迟、连段、随机／延迟回合及状态逻辑回归通过。方向快照夹具改用生产 Capture 入口保留原施法位置，避免以默认零坐标替代。Windows Player 已构建并以原竖屏比例在内置屏实际运行，13740 主技能与地块爆炸分别产生 9 次逐格扣血，原动作／特效、模拟开始与结算关闭、地块保留和检查点恢复通过，五张运行截图已查看。静态元数据检查通过（142,645 个 GUID）。顶部黑色遮挡及返回家园的既有视觉缺项仍在，未正式发布。
 
