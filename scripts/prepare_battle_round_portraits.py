@@ -9,7 +9,8 @@ SOURCE = ROOT / '.tools/source-packages/current/884_156692/official-code/client-
 DEST = ROOT / 'unity/Assets/Game/Runtime/Official/BattleRoundUI'
 NAMES = ('HeadCharacterPortrait', 'HeadCharacterPortraitETC2', 'HeadCharacterPortraitETC2Scene',
          'IFightDynamicTextureETC2', 'IGameRoundPortraitHandler', 'GameRoundPortraitNormalHandler',
-         'GameRoundPortraitETC2Handler', 'GameRoundPortraitETC2SceneHandler')
+         'GameRoundPortraitETC2Handler', 'GameRoundPortraitETC2SceneHandler',
+         'GameRoundPlayerPortrait', 'GamePlayManagerConfig', 'GameEffectData', 'FightDynamicTextureETC2')
 
 
 def sha(path):
@@ -30,6 +31,21 @@ def main():
         text = text.replace('appearanceData, sex, profession, needPersist', 'appearanceData, (int)sex, profession, needPersist')
         text = text.replace('CircleSpriteRenderer', 'WorldCircleSpriteRenderer')
         text = text.replace('\t[Inject]\n', '')
+        text = text.replace('using Framework;\n', '').replace('[ScriptableObjectConfig]\n', '')
+        # StageType is serialized as its original integer ordinal; the portrait
+        # module does not interpret the playback blacklist.
+        text = text.replace('List<StageType>', 'List<int>')
+        config = 'private IScriptableObjectConfig<GamePlayManagerConfig> mGamePlayConfig { get; set; }'
+        text = text.replace(config, 'private GamePlayManagerConfig mGamePlayConfig { get; set; }\n\n\tpublic void BindConfiguration(GamePlayManagerConfig config) => mGamePlayConfig = config ?? throw new System.ArgumentNullException(nameof(config));')
+        text = text.replace('mGamePlayConfig.Value', 'mGamePlayConfig')
+        if name == 'FightDynamicTextureETC2':
+            text = text.replace('using GameFramework;\n', '')
+            text = text.replace('SceneScopeBackgroundServiceBase, IFightScopeBackgroundService, IFightDynamicTextureETC2', 'System.IDisposable, IFightDynamicTextureETC2')
+            text = text.replace('private IResourceLoader mResourceLoader { get; set; }', 'private System.Func<string, Texture2D> mResourceLoader;')
+            text = text.replace('protected override void Initialize()', 'public void Initialize(GamePlayManagerConfig config, System.Func<string, Texture2D> resourceLoader)')
+            text = text.replace('base.Initialize();', 'BindConfiguration(config);\n\t\tmResourceLoader = resourceLoader ?? throw new System.ArgumentNullException(nameof(resourceLoader));')
+            text = text.replace('protected override void Dispose()', 'public void Dispose()').replace('\t\tbase.Dispose();\n', '')
+            text = text.replace('using AssetOperationHandle<Texture2D> assetOperationHandle = mResourceLoader.LoadTexture(data.FactionRoundImgETC2Path);\n\t\tTexture2D result = assetOperationHandle.Result;', 'Texture2D result = mResourceLoader(data.FactionRoundImgETC2Path);')
         injection = 'private IFightDynamicTextureETC2 mFightDynamicTextureETC2 { get; set; }'
         if injection in text:
             text = text.replace(injection, injection + '\n\n\tpublic void BindAtlas(IFightDynamicTextureETC2 atlas) => mFightDynamicTextureETC2 = atlas ?? throw new System.ArgumentNullException(nameof(atlas));')
@@ -47,6 +63,15 @@ def main():
         inputs[source.relative_to(ROOT).as_posix()] = sha(source)
         for p in (target, meta): outputs[p.relative_to(ROOT).as_posix()] = sha(p)
     receipt = ROOT / 'assets/reference/battle-hud/round-portrait-source-manifest.json'
+    native = SOURCE.parents[1] / 'native-conversion'
+    manifest = native / 'native-export-all-source-manifest.json'
+    exported = json.loads(manifest.read_bytes())
+    key = 'ExportedProject/Assets/ScriptableConfig/Modules/Fight/GamePlayManagerConfig.asset'
+    config = native / 'native-export-all' / key
+    expected, = [row['sha256'] for row in exported['outputs'] if row['path'] == key]
+    if exported['manifest'] != '884_156692' or sha(config) != expected:
+        raise ValueError('Changed original battle configuration export')
+    for p in (manifest, config): inputs[p.relative_to(ROOT).as_posix()] = sha(p)
     shared = ('CharacterPortraitBase', 'CharacterPortraitRequestor', 'CharacterPortraitCache',
               'CharacterPortraitTexture2D', 'ProfessionPortraitRequestKey')
     for name in shared:
@@ -62,9 +87,11 @@ def main():
         generator_sha256=sha(Path(__file__)), adaptations=[
             'Namespace isolation; reuse existing official portrait base/requestor/cache and request-key implementation.',
             'Reuse existing Sex/portrait-kind enums; profession integer and opaque appearance as in the existing offline portrait interface.',
-            'Explicit BindAtlas replaces framework injection without changing serialized fields or event order.',
+            'Explicit BindAtlas/BindConfiguration replace framework injection without changing serialized fields or event order.',
+            'Scene service Initialize/Dispose use explicit owner lifetime and a caller-owned texture loader instead of online resource handles.',
+            'Playback blacklist StageType values use serialized integer ordinals without interpretation in this module.',
             'Reuse the migrated original circle renderer and diagnostic adapter; remove IL comments.'],
-        scope='Original head request, scene/UGUI atlas notification and three portrait handlers. Full native card bindings and player-handler configuration selection are pending. No UI asset edits.'),
+        scope='Original head requests, three handlers, configuration selector, full configuration fields and scene atlas initialization/cache/disposal. Full native card/configuration asset bindings remain pending. No UI asset edits.'),
         ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
     print('Ported', len(NAMES), 'original portrait classes.')
 
