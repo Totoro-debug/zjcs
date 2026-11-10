@@ -15,13 +15,14 @@ namespace Zjcs.Editor
         private static string SettlementItems(IEnumerable<DailyDungeonSettlementItem> items)
         {
             return string.Join(",", (items ?? Array.Empty<DailyDungeonSettlementItem>())
-                .OrderBy(value => value.ItemId)
-                .Select(value => value.ItemId + ":" + value.Count));
+                .OrderBy(value => value.ItemId).ThenBy(value => value.IsGradeReward)
+                .Select(value => value.ItemId + ":" + value.Count + ":" + value.IsGradeReward));
         }
 
         private static void ValidateSettlement(ProfileSlotCatalog slots, DailyDungeonRuntimeData catalog,
             DailyDungeonPendingClaimSave pending)
         {
+            ValidateSettlementRewardOrigins(slots);
             var characterAssets = OfficialCharacterAssetCatalog.LoadDefault();
             var character = characterAssets.Load();
             var equipment = OfficialEquipmentAssetCatalog.LoadDefault().Load();
@@ -84,13 +85,49 @@ namespace Zjcs.Editor
                     || dungeon.DailyDungeonGetRewardCount != 1 || dungeon.PendingClaims.Count != 0
                     || profile.Save.Player.DailyDungeonSettlements.Count != 1
                     || JsonUtility.ToJson(profile.Save.Player.DailyDungeonSettlements.Single()) == "{}")
-                    throw new InvalidOperationException("Settlement recovery or duplicate receipt changed rewards/counts: " + phase);
+                    throw new InvalidOperationException("Settlement recovery or duplicate receipt changed rewards/counts: " + phase
+                        + "; preview=" + SettlementItems(preview.Items) + "; recovered=" + SettlementItems(recovered.Items)
+                        + "; committed=" + recovered.Committed + "; details=" + recovered.HasRewardDetails
+                        + "; message=" + recovered.Message);
                 var record = profile.Save.Player.DailyDungeonSettlements.Single();
                 if (record.EquipmentInstanceIds.Any(id => !profile.Save.Player.Equipment.Instances.Any(item => item.InstanceId == id))
                     || record.Items.Any(item => character.ItemType(item.ItemId) == 110))
                     throw new InvalidOperationException("Settlement details contain placeholders or missing equipment instances.");
             }
             Debug.Log("Dungeon settlement passed: durable reward details, reservation/inventory/confirmation failures, cold reopen and duplicate receipts.");
+        }
+
+        private static void ValidateSettlementRewardOrigins(ProfileSlotCatalog slots)
+        {
+            string slot = slots.CreateSlot();
+            var profile = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
+            const string receipt = "daily-dungeon:origin-test";
+            var result = profile.ApplyInventoryTransaction(receipt, save =>
+                save.Player.DailyDungeonSettlements.Add(new DailyDungeonSettlementRecord {
+                    Receipt = receipt,
+                    Items = new List<DailyDungeonSettlementItem> {
+                        new DailyDungeonSettlementItem { ItemId = 1, Count = 2 },
+                        new DailyDungeonSettlementItem { ItemId = 1, Count = 3, IsGradeReward = true }
+                    }
+                }));
+            if (!result.IsApplied) throw new InvalidOperationException("Mixed reward origins were rejected: " + result.Message);
+            profile = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
+            var record = profile.Save.Player.DailyDungeonSettlements.Single();
+            if (SettlementItems(record.Items) != "1:2:False,1:3:True")
+                throw new InvalidOperationException("Cold reopen lost mixed reward origins.");
+            string saved = JsonUtility.ToJson(profile.Save.Player);
+            foreach (bool grade in new[] { false, true })
+            {
+                result = profile.ApplyInventoryTransaction(receipt + ":duplicate:" + grade, save =>
+                    save.Player.DailyDungeonSettlements.Single().Items.Add(new DailyDungeonSettlementItem {
+                        ItemId = 1, Count = 1, IsGradeReward = grade
+                    }));
+                if (result.Status != ProgressionResultStatus.InvalidState)
+                    throw new InvalidOperationException("Duplicate item within one reward origin was accepted.");
+            }
+            profile = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
+            if (JsonUtility.ToJson(profile.Save.Player) != saved)
+                throw new InvalidOperationException("Rejected duplicate origins changed the saved receipt.");
         }
     }
 }

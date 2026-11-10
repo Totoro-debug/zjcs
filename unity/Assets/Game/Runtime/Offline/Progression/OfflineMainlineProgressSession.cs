@@ -1117,9 +1117,10 @@ namespace Zjcs.Offline.Progression
                 if (record == null || string.IsNullOrWhiteSpace(record.Receipt)
                     || !receipts.Add(record.Receipt) || !player.AppliedInventoryEventIds.Contains(record.Receipt)
                     || record.Items == null || record.EquipmentInstanceIds == null) return false;
-                var items = new HashSet<int>();
+                var items = new HashSet<(int ItemId, bool IsGradeReward)>();
                 foreach (var item in record.Items)
-                    if (item == null || item.ItemId <= 0 || item.Count <= 0 || !items.Add(item.ItemId)) return false;
+                    if (item == null || item.ItemId <= 0 || item.Count <= 0
+                        || !items.Add((item.ItemId, item.IsGradeReward))) return false;
                 if (record.EquipmentInstanceIds.Any(id => id <= 0)
                     || record.EquipmentInstanceIds.Distinct().Count() != record.EquipmentInstanceIds.Count) return false;
             }

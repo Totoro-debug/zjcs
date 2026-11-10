@@ -34,7 +34,7 @@
 
 奖励由 `OfflineDailyDungeonSettlementModule.Preview`／`Claim`／`SettleClearedRooms` 统一结算，保持“预留次数 → 主档奖励与实际明细入库 → 确认副本次数与领取状态”的顺序。预览以领取回执为种子重放正式概率、奖励顺序和装备随机流，不改存档；正式领取沿同一回执生成结果，零掉落也保存回执。历史已入库回执读取原明细，不重新抽取；主档已提交而副本确认失败时，冷打开补齐确认，不重复抽奖、发奖或扣次。结果页播放原 `GameEndPanelBase_Show`，使用原模糊遮罩，恢复与家园叠加画布一致的排序层及前后顺序；领取区按原 `DailyDungeonCostMoneyContent.Refresh` 顺序恢复 `FreeStateSwitcher` 与 `mAwardTimesSwitcher`，逐项保留 `StateGameObjectConfig` 的共用对象及 `StateMultiLanguageConfig` 文案；单次领奖隐藏原批量标记，领取后切换原已领取背景／文案且不可交互，次数参数同步更新。
 
-结算保留房间掉落与评级开箱奖励的来源标记；旧明细缺少该标记时保留原明细并显示在掉落区，不重抽或推测来源。主档实际发放与随机流顺序不变，原结果底部只展示房间掉落，评级奖励进入玩家行原宝箱。四种原 `map_baoXiang` 骨骼、atlas 和像素接入公共独立原生 Canvas 后端，按原评级选择与 `close_loop → open_01 → open_loop` 序列播放；奖励槽使用原 prefab、动画事件、逐项显示间隔与自动滚动参数。原九个开箱／品质 Playable 图、粒子、网格、Windows 材质和三个 Wwise PCM 事件在本地绑定。来源见[原生宝箱](../../assets/reference/dungeon-ui/884_156692/daily-dungeon-chest-native-source-manifest.json)与[结果特效](../../assets/reference/dungeon-ui/884_156692/daily-dungeon-result-playables-source-manifest.json)；内置屏 Play Mode 已实测机神山完整路线、开箱、逐项奖励与购买／领奖，已查看实际开箱前后画面；Windows Player 复验仍在执行。
+结算保留房间掉落与评级开箱奖励的来源标记；旧明细缺少该标记时保留原明细并显示在掉落区，不重抽或推测来源。主档实际发放与随机流顺序不变，原结果底部只展示房间掉落，评级奖励进入玩家行原宝箱。同一道具来自房间掉落与评级奖励时分别保存，存档按“道具 ID、奖励来源”联合校验，仍拒绝同一来源的重复行，避免合法的两类奖励被拒绝入库。四种原 `map_baoXiang` 骨骼、atlas 和像素接入公共独立原生 Canvas 后端，按原评级选择与 `close_loop → open_01 → open_loop` 序列播放；奖励槽使用原 prefab、动画事件、逐项显示间隔与自动滚动参数。原九个开箱／品质 Playable 图、粒子、网格、Windows 材质和三个 Wwise PCM 事件在本地绑定。来源见[原生宝箱](../../assets/reference/dungeon-ui/884_156692/daily-dungeon-chest-native-source-manifest.json)与[结果特效](../../assets/reference/dungeon-ui/884_156692/daily-dungeon-result-playables-source-manifest.json)；内置屏 Play Mode 已实测机神山完整路线、开箱、逐项奖励与购买／领奖，已查看实际开箱前后画面；Windows Player 复验仍在执行。
 
 `DailyDungeonBattleRunner` 按原房间战斗配置接入公共战斗控制器。`DailyDungeonBattleEntryModule` 统一公开副本、Map12 私有路线与每日挑战的入场一致性：恢复时核对关卡、StageType、助战身份及 checkpoint；新战斗按“提交助战 → 挂载战斗 → 首次保存 checkpoint”执行，失败只回滚本次提交。玩法各自保留入场条件、存档适配器、挑战结算和空助战／已结束恢复分支。路线、已清房间、战斗检查点及待领奖状态均持久化。
 
@@ -44,7 +44,9 @@ Type 22 按累计成功领奖次数生成原成就行，不增加每日次数。
 
 当前 884 UI 转换保留 `UIImgAdd`、默认／染色 Spine 材质参数与官方 shader 程序身份，Windows 绑定写入[原生 UI 来源](../../assets/reference/dungeon-ui/884_156692/source-manifest.json)。原显示／隐藏／循环动画的曲线与事件保留，脚本引用适配 Windows UGUI／TMP；默认 Spine UI 的原六组程序由 `OfficialSparseShaderVariants` 限定构建。依赖内 11 个原 DLL 保留字节、GUID 和来源哈希，但禁用所有 PluginImporter 平台入口，运行本地迁移代码。历史 871 Map12 界面继续保留历史版本身份，不修改预期哈希。
 
-验证已通过公共模块规则、Unity 导入／编译与 `ProjectTools.Validate`。规则覆盖目录与首档条件、跨日次数／购买重置、概率与翻倍适配、预留／入库／确认失败重试、冷打开去重、首通队伍在更快重跑及两次重开后保持、Type 57 难度隔离及失败重试。窗口化 Play Mode 通过目录、奖励预览、路线保存恢复、中途退出、结算领奖、榜单页签／关闭、Type 22 往返和 Type 57 未达标／达标／已领取；结算、榜单和馈赠按钮采用射线模拟指针，部分路线夹具通过模块推进，不冒充完整战斗。已查看实际目录、详情、伙伴邀请、战场、榜单、馈赠、结算与领取后画面；本轮结果页无洋红材质。
+开箱与品质 Playable 的原 `Noise_Mask_Pro` 另登记到同一 Windows 构建筛选器：保留两个 Pass 各自的 260 组原始关键词程序，仅编译原文件实际存在的组合，新增 1,040 个 GPU 阶段。载荷与原始来源哈希沿用上述结果特效凭据；登记后的专项 Windows 构建仍在验证，不作为开箱 Player 流程完成的依据。
+
+验证已通过公共模块规则、Unity 导入／编译与 `ProjectTools.Validate`。规则覆盖目录与首档条件、跨日次数／购买重置、概率与翻倍适配、预留／入库／确认失败重试、冷打开去重、同一道具的房间／评级双来源持久化及同来源重复拒绝、首通队伍在更快重跑及两次重开后保持、Type 57 难度隔离及失败重试。窗口化 Play Mode 通过目录、奖励预览、路线保存恢复、中途退出、结算领奖、榜单页签／关闭、Type 22 往返和 Type 57 未达标／达标／已领取；结算、榜单和馈赠按钮采用射线模拟指针，部分路线夹具通过模块推进，不冒充完整战斗。已查看实际目录、详情、伙伴邀请、战场、榜单、馈赠、结算与领取后画面；本轮结果页无洋红材质。
 
 `DailyDungeonPlayerValidation` 只在显式参数 `--zjcs-validate-daily-dungeon <输出目录>` 下运行：等待真实启动页，创建独立档案，模拟原按钮与房间点击，邀请伙伴，经 `DailyDungeonBattleRunner` 的真实战斗推进路线，再检查领奖扣次、冷打开、关闭去重和首通队伍。仅在隔离测试档案中通过已有额外属性来源提高角色生命、攻击与速度以缩短战斗；在战斗构造前准备，包含原开场状态结算，不调用完成回调。当前 Play Mode 已走过 8 个原房间与 4 场战斗；最终 Windows Player 及发布路径验证正在执行。`scripts/check_unity_project.py` 与 `scripts/test_dungeon_ui_binding_paths.py` 通过，后者重放 3,229 个原节点、原 Button Graphic 与点击／动画绑定；静态检查不代替上述实际运行。
 
