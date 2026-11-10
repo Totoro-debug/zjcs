@@ -9,14 +9,16 @@
 | 位置 | 用途 |
 | --- | --- |
 | `unity/Assets/Game/` | Git 管理的场景、C#、shader、配置与 `.meta`；官方迁移代码在 `Runtime/Official/`，单机适配在 `Runtime/Offline/` |
-| `unity/Assets/Official/` | 独立官方素材载荷与 `.meta`；不得放手写代码 |
-| `assets/official/`、`assets/characters/` | 独立配置／角色转换载荷，不进入 Git；运行所需内容须随 Player 打包 |
+| `unity/Assets/Official/` | Git 管理的官方素材载荷与 `.meta`；不得放手写代码 |
+| `assets/official/`、`assets/characters/` | Git 管理的配置／角色转换载荷；运行所需内容须随 Player 打包 |
 | `assets/reference/` | 来源身份、哈希及必要参照 |
 | `.tools/` | 原始包、工具、可复用转换缓存和素材快照；不进入游戏导出 |
 | `output/validation/<模块>-<GUID>/` | 单次验证的工程、Library、Player、日志、截图与隔离存档 |
 | `D:/Desktop/杖剑传说/` | 正式 Windows 交付目录 |
 
 Unity 缓存、IDE 输出、日志和临时构建不提交或进入素材快照。保留稳定 `.meta`／GUID，清理前核对静态／动态引用、生成器和旧存档兼容。
+
+`.gitignore` 按缓存、日志、临时文件和明确的输出目录排除产物，不再对 `docs/`、`assets/`、`assets/reference/` 或 `unity/Assets/Official/` 设置目录黑名单。必要代码、原生素材、插件 DLL、运行资源 ZIP、配置、来源清单及文档均可正常跟踪；`.tools/` 原始包／工具缓存和完整素材快照仍忽略，`asset-pack/` 中的布局与锁定元数据保留。新增或调整规则用 `git check-ignore --no-index` 核对实际路径与边界，避免仅因文件已被跟踪而漏查误排除；修改忽略规则不会自动暂存新出现的文件或移除既有跟踪。
 
 暂存文件超过 50 MB 时，提交钩子将其转为 LFS 指针并在同次提交登记精确路径。新克隆运行 `python -B scripts/install_lfs_size_hook.py`；要求 Git LFS 已安装，安装器保留自定义 pre-commit，LFS 推送钩子负责上传对象。
 
