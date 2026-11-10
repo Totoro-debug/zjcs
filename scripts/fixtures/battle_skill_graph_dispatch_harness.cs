@@ -9,7 +9,13 @@ using System.Linq;
 // Records the native playback seam; compiles the actual catalog and dispatcher below it.
 namespace UnityEngine
 {
-    public class GameObject { public string name; public int PartnerAdapters, EmbeddedAdapters, MecanimAdapters; public GameObject(string value) { name = value; } }
+    public class GameObject
+    {
+        public string name; public int PartnerAdapters, EmbeddedAdapters, MecanimAdapters;
+        public readonly Zjcs.Official.StoryGroundEffects.ApplyByGroundType GroundApply = new Zjcs.Official.StoryGroundEffects.ApplyByGroundType();
+        public GameObject(string value) { name = value; }
+        public T[] GetComponentsInChildren<T>(bool includeInactive) => new object[] { GroundApply }.OfType<T>().ToArray();
+    }
     public class Transform { public GameObject gameObject; public Transform(string name) { gameObject = new GameObject(name); } }
     public class TextAsset { public string text = "catalog"; }
     public static class Resources
@@ -42,6 +48,12 @@ namespace Zjcs.Official.StoryPlayables
 {
     public interface IBattleSourceDeathView {}
 }
+namespace Zjcs.Official.StoryGroundEffects
+{
+    public interface IPlayableGroundEffectHost {}
+    public sealed class GroundHost : IPlayableGroundEffectHost {}
+    public sealed class ApplyByGroundType { public IPlayableGroundEffectHost Host; }
+}
 namespace Zjcs.Presentation.Combat
 {
     // This fixture leaves the separately tested grid lifecycle seam unbound.
@@ -65,7 +77,8 @@ namespace Zjcs.Presentation.Combat
     public class OfficialBattleSkillEntityPlayback : IDisposable
     {
         private readonly OfflineBattleNativePlayableScope scope;
-        public OfficialBattleSkillEntityPlayback(OfflineBattleNativePlayableScope scope) { this.scope = scope; }
+        public Zjcs.Official.StoryGroundEffects.IPlayableGroundEffectHost GroundEffects { get; } = new Zjcs.Official.StoryGroundEffects.GroundHost();
+        public OfficialBattleSkillEntityPlayback(OfflineBattleNativePlayableScope scope) { this.scope = scope; scope.GroundEffectsHost = GroundEffects; }
         public void Start(FightBattleSkillCastEvent cast, Transform source, Transform target)
             { scope.EntitiesStarted.Add(cast.SkillEntityId);
               // Native entity playback owns directional prefab selection now.
@@ -92,6 +105,7 @@ namespace Zjcs.Offline.BattleNativePlayables
         public readonly List<int> EntitiesStarted = new List<int>();
         public readonly List<int> Moves = new List<int>();
         public readonly List<float> MoveTimes = new List<float>();
+        public Zjcs.Official.StoryGroundEffects.IPlayableGroundEffectHost GroundEffectsHost;
         private Action<GameObject, GameObject> nativeAdapter;
         public void BindNativePrefabAdapter(Action<GameObject, GameObject> adapter) { nativeAdapter = adapter; }
         public readonly List<string> Plays = new List<string>();
@@ -109,7 +123,8 @@ namespace Zjcs.Offline.BattleNativePlayables
         public void LateTick() { LateTicks++; }
         public void Play(GameObject prefab, GameObject source, GameObject target, float speed,
             GameObject parent, Dictionary<string, object> parameters)
-        { nativeAdapter?.Invoke(prefab, new GameObject(prefab.name));
+        { var instance = new GameObject(prefab.name); nativeAdapter?.Invoke(prefab, instance);
+          if (!ReferenceEquals(instance.GroundApply.Host, GroundEffectsHost)) throw new Exception("Native graph lost its ground-effect host");
           Plays.Add(prefab.name + ":" + target.name); Sources.Add(source.name); Times.Add(Clock); }
         public void Dispose() { Disposed = true; }
     }

@@ -52,7 +52,8 @@ def generate(destination, receipt):
               common / 'FightActionSkillMoveComponent.cs',
               common / 'FightActionSkillMoveComponentInfo.cs',
               common / 'FightMoveUtilsHandler.cs', common / 'BattleFormulaHandler.cs',
-              common / 'Pos2d.cs', common / 'ActionComponent.cs',
+              common / 'Pos2d.cs', common / 'GridTransformComponent.cs', common / 'Direction.cs',
+              common / 'ActionComponent.cs',
               common / 'ActionComponentImplement.cs', common / 'ActionComponentImplementBase.cs']
     original = {path.name: path.read_text(encoding='utf-8-sig') for path in inputs}
     position = ROOT / 'unity/Assets/Game/Runtime/Official/World/NativeTerrain/Common/Pos2d.cs'
@@ -178,6 +179,7 @@ using Zjcs.Official.World.NativeTerrain.Common;
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.cs',
             'scripts/test_battle_skill_moves.ps1',
             'scripts/test_battle_skill_combo.ps1',
+            'scripts/test_battle_hit_move.ps1',
             'scripts/test_battle_skill_graph_dispatch.ps1',
             'scripts/fixtures/battle_skill_graph_dispatch_harness.cs',
             'scripts/prepare_unity_map14_visibility_handlers.py',
@@ -192,10 +194,11 @@ using Zjcs.Official.World.NativeTerrain.Common;
         local_action_bindings=bindings,
         generator=identity(Path(__file__)),
         conversion=['Original client lifecycle and per-path timer; explicit manager injection and optional host timing.',
-            'Original shared duration, speed, distance and flip calculations; Unity logging replaces the shared logger.'],
+            'Original shared duration, speed, distance and flip calculations; Unity logging replaces the shared logger.',
+            'Unit grid rotation retains an existing native grid direction or the original new-grid Up default. Cast and action direction parameters are independent; original movement StartImpl changes FlipX without changing grid Direction.'],
         confirmed_offline_rules=[
-            'Self actions snapshot the settled skill direction before path settlement, preserving configured fixed direction; ordinary approach/retreat snapshot their creation-time unit direction. FlipX is independent.',
-            'For these settled paths without collision data, action lifetime is original total movement duration plus DelayDestroyTime, then original End/Remove and pooling. Forced target moves and missing collision information are not inferred.'],
+            'Self actions snapshot the settled skill direction before path settlement, preserving configured fixed direction; ordinary approach/retreat and forced target actions snapshot the moved unit direction at action creation. FlipX is independent; legacy receipts without direction keep their fallback.',
+            'For these settled paths without collision data, action lifetime is original total movement duration plus DelayDestroyTime, then original End/Remove and pooling. Path eligibility, probability, resistance and landing retain their existing configured rules; missing paths or collision information are not inferred.'],
         implementation_document='docs/features/skills.md'), ensure_ascii=False, indent=2) + '\n')
     print('Prepared original movement client, action base, configuration and timing methods:', len(outputs))
 

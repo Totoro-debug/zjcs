@@ -55,7 +55,7 @@ Assert-Combo ($f.Player.X -eq $casts[-1].Presentation.TargetX -and $f.Player.Y -
 Assert-Combo (@($r.Event.Movements | Where-Object { $_.Delay -gt 1.0 -and $_.Path.Count -gt 2 }).Count -eq 0) 'A teleport became a walking path'
 foreach ($movement in $r.Event.Movements) {
     if ($movement.UnitId -ne 1) {
-        Assert-Combo (!$movement.HasDirection) 'A forced target move acquired the self-action convention'
+        Assert-Combo ($movement.HasDirection) 'A forced target move lost its target direction snapshot'
         continue
     }
     $matching = @($casts | Where-Object {

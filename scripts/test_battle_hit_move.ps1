@@ -107,9 +107,20 @@ function Invoke-MoveBattle($skill, $player, $enemy, $restore = $false) {
 
 $player = New-Unit 1 1 0 0 1000
 $enemy = New-Unit 2 2 1 0 5000
+$enemy.Direction = 2
 $push = Invoke-MoveBattle (New-MoveSkill 1 1 $false $false) $player $enemy
 Assert-Move ($enemy.X -eq 2 -and $enemy.Y -eq 0) 'Knockback did not push the target away'
 Assert-Move ($push.Event.Movements.Count -eq 1 -and $push.Event.Movements[0].UnitId -eq 2 -and $push.Event.Movements[0].Path.Count -eq 2) 'Knockback movement event mismatch'
+$pushMovement = $push.Event.Movements[0]
+Assert-Move ($pushMovement.HasDirection -and $pushMovement.Direction -eq 2 -and $enemy.Direction -eq 3) 'Forced movement did not retain the target direction before its eastward path'
+$enemy.Direction = 0
+Assert-Move ($pushMovement.Direction -eq 2) 'A later target turn rewrote the forced action direction'
+$pushJson = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($push.Checkpoint)
+$pushRestored = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load($pushJson)
+$restoredMove = $pushRestored.Receipts[0].Event.Movements[0]
+Assert-Move ($restoredMove.HasDirection -and $restoredMove.Direction -eq 2) 'Checkpoint lost forced action direction'
+$legacyPush = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(($pushJson -replace '"HasDirection":true,', ''))
+Assert-Move (!$legacyPush.Receipts[0].Event.Movements[0].HasDirection) 'Legacy forced movement no longer uses its missing-direction fallback'
 
 $zeroChancePlayer = New-Unit 1 1 0 0 1000
 $zeroChanceEnemy = New-Unit 2 2 1 0 5000
@@ -157,8 +168,10 @@ Assert-Move ($overDistanceConditionEnemy.X -eq 4 -and $overDistanceCondition.Eve
 
 $sidePlayer = New-Unit 1 1 0 4 1000
 $sideEnemy = New-Unit 2 2 1 4 5000
+$sideEnemy.Direction = 1
 $side = Invoke-MoveBattle (New-MoveSkill 1 1 $true $false 2) $sidePlayer $sideEnemy
 Assert-Move ($sideEnemy.X -eq 1 -and $sideEnemy.Y -eq 5) 'Path-side displacement did not choose the first positive-Y side'
+Assert-Move ($side.Event.Movements[0].HasDirection -and $side.Event.Movements[0].Direction -eq 1 -and $sideEnemy.Direction -eq 2) 'Path-side movement lost its creation-time target direction'
 
 $sideFallbackPlayer = New-Unit 1 1 0 9 1000
 $sideFallbackEnemy = New-Unit 2 2 1 9 5000

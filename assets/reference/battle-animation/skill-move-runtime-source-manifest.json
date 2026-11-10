@@ -34,6 +34,14 @@
       "sha256": "8129206cd36eefdedf3d3d6a2a011d0c52325e35a7690a42b350ad96669fa8ea"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GridTransformComponent.cs",
+      "sha256": "6317a98b45782f004e871886effb70264ad7cb708b6d8665933970c1dd7160e9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Direction.cs",
+      "sha256": "49b1383e892381fbff9077b8fb04337cddce0f096e425217030923985bd4c16b"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActionComponent.cs",
       "sha256": "574e476645f5e9f86b9f5015ed794a2aac103df4be65f9beef9fd762107cc1c7"
     },
@@ -345,7 +353,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
-      "sha256": "05741a6e54b724390ef81dbc216bf2e681c4ee9d96ed14adba65edc7e3f0b030"
+      "sha256": "6908143268c1df9be5e2210f62db817429fd25e54c5cd8652728df080fd59225"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.Movement.cs",
@@ -365,7 +373,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.Movement.cs",
-      "sha256": "a05e0ebe152fe3722f8839894df2daea631a2ea919c6195e46201f305517f4ae"
+      "sha256": "c821d44af08700fd25a32a935d8eb9f6e3fc3cf00e04a2635c49e419d2d95792"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs",
@@ -373,11 +381,11 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs",
-      "sha256": "8a67b31003937175249f5f31599a1be026e7461d9ac9d09d8788d974abc3bc70"
+      "sha256": "c2b68dbc0650c290b72208510bb3583b9aeb071d7ba61172f8a1053c4839c5f9"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs",
-      "sha256": "f915cc889a09cd77c29cab8da1f854897601d76d51075266b3a8d2c4a0754541"
+      "sha256": "1ab49d15db6f8a556b32aa9fa336a0c21b54b5a29e1873349a430a4cb1d182fd"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
@@ -393,7 +401,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.cs",
-      "sha256": "be0bbeca855f80f58a794d8eaf08640cac5c9e05575ad478b43efb9f5df613dc"
+      "sha256": "a7d119947d1a806e8f771b63440401ec2de73dcdadf6bb267374a23eccf18c06"
     },
     {
       "path": "scripts/test_battle_skill_moves.ps1",
@@ -401,7 +409,11 @@
     },
     {
       "path": "scripts/test_battle_skill_combo.ps1",
-      "sha256": "ec8fc95310c165cd36cdb48d4c76cb764c6965f144965f8861096178a34c8619"
+      "sha256": "b1f7e48ad5699aec72d5c8c341268db54401fc5c1f6c54c7f8ac10269de17598"
+    },
+    {
+      "path": "scripts/test_battle_hit_move.ps1",
+      "sha256": "4e891817bda1cc60eef1820d0410abc1c98d17fe874f97faa5246e9eb329fe9f"
     },
     {
       "path": "scripts/test_battle_skill_graph_dispatch.ps1",
@@ -409,7 +421,7 @@
     },
     {
       "path": "scripts/fixtures/battle_skill_graph_dispatch_harness.cs",
-      "sha256": "c594e866ee38d0e651dab6a197d618d3e13752503e2503935e0878a0f609d5ac"
+      "sha256": "673626d4c76373a264b5b24f92521b3f206fd4d31fa9a9857a67fc140fef83c9"
     },
     {
       "path": "scripts/prepare_unity_map14_visibility_handlers.py",
@@ -426,15 +438,16 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_skill_move_runtime.py",
-    "sha256": "53c956ea30c502735e98cc4fbe335bb29e2ed7d2893164da1d01041c941d068a"
+    "sha256": "dbfa3e0b5a724fbc332f670f0521339c1d8a87ec72a8beb09bc9126d6ac8ce3b"
   },
   "conversion": [
     "Original client lifecycle and per-path timer; explicit manager injection and optional host timing.",
-    "Original shared duration, speed, distance and flip calculations; Unity logging replaces the shared logger."
+    "Original shared duration, speed, distance and flip calculations; Unity logging replaces the shared logger.",
+    "Unit grid rotation retains an existing native grid direction or the original new-grid Up default. Cast and action direction parameters are independent; original movement StartImpl changes FlipX without changing grid Direction."
   ],
   "confirmed_offline_rules": [
-    "Self actions snapshot the settled skill direction before path settlement, preserving configured fixed direction; ordinary approach/retreat snapshot their creation-time unit direction. FlipX is independent.",
-    "For these settled paths without collision data, action lifetime is original total movement duration plus DelayDestroyTime, then original End/Remove and pooling. Forced target moves and missing collision information are not inferred."
+    "Self actions snapshot the settled skill direction before path settlement, preserving configured fixed direction; ordinary approach/retreat and forced target actions snapshot the moved unit direction at action creation. FlipX is independent; legacy receipts without direction keep their fallback.",
+    "For these settled paths without collision data, action lifetime is original total movement duration plus DelayDestroyTime, then original End/Remove and pooling. Path eligibility, probability, resistance and landing retain their existing configured rules; missing paths or collision information are not inferred."
   ],
   "implementation_document": "docs/features/skills.md"
 }

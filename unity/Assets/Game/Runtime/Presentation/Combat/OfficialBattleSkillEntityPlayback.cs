@@ -190,7 +190,6 @@ namespace Zjcs.Presentation.Combat
             {
                 var sourceLease = BindUnit(cast.ActorId, source, cast.IsPetSupport);
                 sourceLease.Projection.Position = sourcePosition;
-                sourceLease.Projection.Facing = sourceFacing;
                 sourceLease.Projection.Mirrored = cast.Presentation.FlipX;
             }
             // Original grid prefabs already own their bound transform and its event
@@ -284,7 +283,6 @@ namespace Zjcs.Presentation.Combat
                 Projection = new Grid { ToPosition = GridToPos, ToGrid = PositionToGrid } };
             var state = unitState(id) ?? throw new InvalidOperationException("Native skill unit state is missing: " + id);
             lease.Projection.Position = new Pos2d(state.X, state.Y);
-            lease.Projection.Facing = Facing(state.Direction);
             lease.Projection.Mirrored = state.HasFlipX ? state.FlipX : state.Direction == 1;
             T Bind<T>() where T : Component
             {
@@ -295,6 +293,11 @@ namespace Zjcs.Presentation.Combat
             lease.Entity = Bind<MyEntity>();
             lease.GridView = Bind<MyGridTransform>();
             lease.PreviousGrid = lease.GridView.Component;
+            // Role grid rotation is independent of the cast/action direction parameter.
+            // The original movement StartImpl changes FlipX, not grid Direction. Keep
+            // an existing grid's orientation, or the original new-grid default (Up),
+            // so End.ResetRotation cannot rotate the character towards its skill aim.
+            lease.Projection.Facing = lease.PreviousGrid?.Direction ?? Direction.Up;
             lease.SkillAgent = Bind<MyFightSkillAgent>();
             if (!pet)
             {

@@ -26,6 +26,11 @@ namespace Zjcs.Presentation.Combat
         private int approachClass;
         private Vector3 approachFrom, approachTo;
         private bool approachObserved, approachAdvanced, approachArrived, approachRemoved, approachCaptured;
+        private int forcedTargetId;
+        private Quaternion forcedTargetRotation;
+        private int forcedFrames;
+        private int previousCaptureFramerate;
+        private bool ValidateForcedMovement => skillId == 13550;
         private bool ValidateMovement => skillId == 11510
             && Environment.GetEnvironmentVariable("ZJCS_NATIVE_MOVEMENT_ACCEPTANCE") == "1";
         private bool ValidateApproach => ValidateMovement
@@ -44,7 +49,7 @@ namespace Zjcs.Presentation.Combat
         {
             string mode = Environment.GetEnvironmentVariable("ZJCS_GRAPH_CAPABILITY_ACCEPTANCE");
             Require(int.TryParse(mode, out int id) && (id == 13640 || id == 13870 || id == 13970
-                || id == 11510 || id == 12260), "Unknown original graph.");
+                || id == 11510 || id == 12260 || id == 13550), "Unknown original graph.");
             var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
             var player = checkpoint.Units.Single(value => value.Id == 1);
             var enemy = checkpoint.Units.First(value => value.Side != player.Side);
@@ -52,13 +57,22 @@ namespace Zjcs.Presentation.Combat
                 player.Skills.First(value => value.Slot == 0), id,
                 id == 13640 ? "200/skill_07" : id == 13870 ? "100/skill_72"
                     : id == 11510 ? "100/skill_55" : id == 12260 ? "100/skill_56" : "100/skill_02");
-            int monster = id == 11510 ? 3331 : 3665;
+            int monster = id == 11510 || id == 13550 ? 3331 : 3665;
             enemy.MonsterId = monster; enemy.MonsterGroupNo = 0;
             enemy.CharacterType = catalog.MonsterCharacterType(monster);
             enemy.MonsterType = catalog.MonsterType(monster); enemy.AiType = catalog.MonsterAiType(monster);
             enemy.MaxHpPlies = catalog.MonsterHpPliesFor(monster, 0, enemy.Level);
             OfficialBattleUnitAssembler.ApplyMonsterIdentity(catalog, enemy);
             player.X = enemy.X; player.Y = enemy.Y - 2;
+            if (probe.ValidateForcedMovement)
+            {
+                // A cold resource-load frame can span the entire original 0.25s track.
+                // Sample this isolated visual check at a fixed cadence; gameplay is unchanged.
+                probe.previousCaptureFramerate = Time.captureFramerate;
+                Time.captureFramerate = 60;
+                enemy.Direction = 1; enemy.HasFlipX = true; enemy.FlipX = true;
+                probe.forcedTargetId = enemy.Id;
+            }
             if (probe.ValidateApproach) player.Y = enemy.Y - 6;
             string layout = Environment.GetEnvironmentVariable("ZJCS_AFTERIMAGE_LAYOUT");
             if (!string.IsNullOrEmpty(layout))
@@ -107,7 +121,7 @@ namespace Zjcs.Presentation.Combat
             if (id == 13870) enemy.Hp = enemy.Turn.Hp = 200000000;
             if (id == 13970) player.Statuses.Add(catalog.CreateStatus(24721, player.Id, player.Id, 9913970));
             int item = id == 13640 ? 10204 : id == 13870 ? 10201
-                : id == 11510 ? 10067 : id == 12260 ? 10110 : 10209;
+                : id == 11510 ? 10067 : id == 12260 ? 10110 : id == 13550 ? 10679 : 10209;
             var skill = catalog.CreateSkill(id, 0, item, 5, 20, player.SubRank,
                 catalog.CalculateSkillProps(id, 5, 20, player.SubRank)
                     .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
@@ -124,6 +138,8 @@ namespace Zjcs.Presentation.Combat
             var entities = (OfficialBattleSkillEntityPlayback)typeof(OfficialBattleSkillGraphPlayback)
                 .GetField("entityViews", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(graph);
             entityViews = entities;
+            if (ValidateForcedMovement)
+                forcedTargetRotation = controller.TryGetUnitTransform(forcedTargetId).localRotation;
             entities.CastStarted += cast => {
                 if (cast.ActorId != 1) return;
                 if (cast.SkillEntityId == 13643) nativeChildren++;
@@ -178,8 +194,11 @@ namespace Zjcs.Presentation.Combat
             else
             {
                 var hits = step.DamageEvents.Where(value => value.SkillEntityId == skillId).ToArray();
-                Require(hits.Length > 0 && hits.All(value => value.Damage < 0),
-                    "Conditional graph has no actual damage settlement.");
+                if (ValidateForcedMovement)
+                    Require(hits.Length == 1 && hits[0].HasDamageValue && !hits[0].Dodge && !hits[0].Immunity,
+                        "Original forced hit did not resolve.");
+                else Require(hits.Length > 0 && hits.All(value => value.Damage < 0),
+                        "Conditional graph has no actual damage settlement.");
                 if (skillId == 13970) Require(hits.Length > 1 && hits.All(value => value.HasHitGridPosition),
                     "Original area lost large-target cell occurrences.");
             }
@@ -190,6 +209,21 @@ namespace Zjcs.Presentation.Combat
                 Require(entityViews.OwnsMovement(movement) && movement.HasDirection && movement.HasFacing,
                     "Original 11513 action or its direction/facing snapshot is unbound.");
                 var start = movement.Path[0]; var end = movement.Path[movement.Path.Count - 1];
+                movementFrom = entityViews.ToWorldPos(entityViews.GridToPos(
+                    new Zjcs.Official.World.NativeTerrain.Common.Pos2d(start.X, start.Y)));
+                movementTo = entityViews.ToWorldPos(entityViews.GridToPos(
+                    new Zjcs.Official.World.NativeTerrain.Common.Pos2d(end.X, end.Y)));
+            }
+            if (ValidateForcedMovement)
+            {
+                var movement = step.Movements.Single(value => value.UnitId == forcedTargetId
+                    && value.MoveBehaviourId == 13553);
+                Require(entityViews.OwnsMovement(movement) && movement.HasDirection && movement.Direction == 1
+                    && movement.HasFacing && movement.EndFlipX,
+                    "Forced action lost the target direction or independent mirror.");
+                var start = movement.Path[0]; var end = movement.Path[movement.Path.Count - 1];
+                Require(start.X == end.X && end.Y > start.Y,
+                    "Forced fixture did not settle a distinct vertical knockback path.");
                 movementFrom = entityViews.ToWorldPos(entityViews.GridToPos(
                     new Zjcs.Official.World.NativeTerrain.Common.Pos2d(start.X, start.Y)));
                 movementTo = entityViews.ToWorldPos(entityViews.GridToPos(
@@ -208,6 +242,39 @@ namespace Zjcs.Presentation.Combat
             CaptureName = null;
             bool afterimageVisible = afterimages?.Observe() ?? false;
             afterimageObserved |= afterimageVisible;
+            if (ValidateForcedMovement && settled)
+            {
+                var target = controller.TryGetUnitTransform(forcedTargetId);
+                var action = target ? target.root.GetComponentsInChildren<MyFightActionSkillMove>()
+                    .FirstOrDefault(value => value.myEntity.Entity != null && value.myEntity.Entity.ClassId == 13553
+                        && value.myApplyEntity && value.myApplyEntity.transform == target) : null;
+                if (action)
+                {
+                    var parameters = (System.Collections.IDictionary)typeof(MyFightActionSkillMove)
+                        .GetField("mParam", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(action);
+                    Require(parameters != null && Convert.ToInt32(parameters["ParamSource2TargetDirection"]) == 2,
+                        "Original forced graph did not receive the left-facing target snapshot.");
+                    movementObserved = true;
+                    float travelled = Vector3.Distance(target.position, movementFrom);
+                    movementAdvanced |= travelled > .01f && travelled < Vector3.Distance(movementTo, movementFrom) - .01f;
+                    if (movementAdvanced && !movementCaptured)
+                    { movementCaptured = true; CaptureName = "native-forced-movement-13553"; return; }
+                }
+                else if (movementObserved && !movementRemoved)
+                {
+                    movementRemoved = true;
+                    Require(target && Vector3.Distance(target.position, movementTo) < .01f,
+                        "Forced action End did not restore the target's settled position.");
+                    Require(Quaternion.Angle(target.localRotation, forcedTargetRotation) < .01f,
+                        "Forced action direction rotated the role grid instead of its graph parameter.");
+                }
+                if (nativeCasts > 0 && ++forcedFrames == 120 && !captured)
+                    Require(false, "Forced frame observation incomplete: observed=" + movementObserved
+                        + ", advanced=" + movementAdvanced + ", removed=" + movementRemoved
+                        + ", captured=" + movementCaptured + ", nativeCasts=" + nativeCasts
+                        + ", target=" + (target ? target.position.ToString("F3") : "missing")
+                        + ", from=" + movementFrom.ToString("F3") + ", to=" + movementTo.ToString("F3"));
+            }
             if (ValidateApproach && approachClass != 0 && !approachRemoved)
             {
                 var approachingSource = controller.TryGetUnitTransform(1);
@@ -259,8 +326,9 @@ namespace Zjcs.Presentation.Combat
                     if (property.Id == catalog.PropertyType("Attack")) property.Value = 1000000000;
                 finisherScheduled = true;
             }
-            if (captured || !settled || !animated || nativeCasts != 1
+            if (captured || !settled || (!ValidateForcedMovement && !animated) || nativeCasts != 1
                 || skillId == 13640 && nativeChildren != 2
+                || ValidateForcedMovement && (!movementObserved || !movementAdvanced || !movementRemoved || !movementCaptured)
                 || ValidateApproach && (!approachObserved || !approachAdvanced || !approachArrived || !approachRemoved)
                 || (ValidateMovement ? !movementObserved || !movementAdvanced || !movementRemoved
                     || !loopObserved || !escapeObserved || afterimages != null && !afterimageObserved
@@ -274,6 +342,7 @@ namespace Zjcs.Presentation.Combat
 
         public void Verify(FightBattleCheckpoint checkpoint)
         {
+            if (ValidateForcedMovement) Time.captureFramerate = previousCaptureFramerate;
             afterimages?.Verify();
             if (ValidateApproach) Require(approachObserved && approachAdvanced && approachArrived
                 && approachRemoved && approachCaptured, "Original ordinary approach differs: observed=" + approachObserved
@@ -285,7 +354,10 @@ namespace Zjcs.Presentation.Combat
                     + ", advanced=" + movementAdvanced + ", removed=" + movementRemoved
                     + ", loop=" + loopObserved + ", escape=" + escapeObserved
                     + ", loopCaptured=" + loopCaptured + ", movementCaptured=" + movementCaptured);
-            Require(settled && animated && captured && nativeCasts == 1 && checkpoint.Finished
+            if (ValidateForcedMovement) Require(movementObserved && movementAdvanced && movementRemoved && movementCaptured,
+                "Forced action did not advance, end and remove: observed=" + movementObserved
+                    + ", advanced=" + movementAdvanced + ", removed=" + movementRemoved + ", captured=" + movementCaptured);
+            Require(settled && (ValidateForcedMovement || animated) && captured && nativeCasts == 1 && checkpoint.Finished
                 && (skillId != 13640 || nativeChildren == 2), "Native graph, action, input or settlement is incomplete.");
         }
         private static void Require(bool value, string message)

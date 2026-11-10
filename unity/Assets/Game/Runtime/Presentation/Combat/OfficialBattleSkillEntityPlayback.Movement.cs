@@ -24,7 +24,6 @@ namespace Zjcs.Presentation.Combat
             var lease = BindUnit(movement.UnitId, source);
             var end = movement.Path[movement.Path.Count - 1];
             lease.Projection.Position = new Pos2d(end.X, end.Y);
-            lease.Projection.Facing = Facing(movement.Direction);
             lease.Projection.Mirrored = movement.EndFlipX;
             moveViews.Create(MovementData(movement, new EcEntityIdentifier(5, ++movementSerial)));
         }
