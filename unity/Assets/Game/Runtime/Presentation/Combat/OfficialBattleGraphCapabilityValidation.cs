@@ -67,7 +67,7 @@ namespace Zjcs.Presentation.Combat
                 id == 11490 ? "200/skill_32" : id == 10500 ? "200/skill_01" : id == 13640 ? "200/skill_07" : id == 13870 ? "100/skill_72"
                     : (id == 11640 || id == 11650 || id == 11660) ? "100/skill_03"
                     : id == 11510 ? "100/skill_55" : id == 12260 ? "100/skill_56" : "100/skill_02");
-            int monster = id == 11510 || id == 13550 || probe.ValidateDirectional ? 3331 : 3665;
+            int monster = id == 11510 || id == 13550 || probe.ValidateDirectional || probe.ValidateFatalRevival ? 3331 : 3665;
             enemy.MonsterId = monster; enemy.MonsterGroupNo = 0;
             enemy.CharacterType = catalog.MonsterCharacterType(monster);
             enemy.MonsterType = catalog.MonsterType(monster); enemy.AiType = catalog.MonsterAiType(monster);
@@ -144,10 +144,11 @@ namespace Zjcs.Presentation.Combat
                         .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList()));
             if (probe.ValidateRevival)
             {
-                player.Hp = player.Turn.Hp = 0;
+                player.Hp = player.Turn.Hp = probe.ValidateFatalRevival ? 1 : 0;
                 player.EntryCombatRating = 1000;
                 player.Statuses.Add(catalog.CreateStatus(25014, player.Id, player.Id, 9925014,
                     25014, 10531, 2, 20, player.SubRank));
+                if (probe.ValidateFatalRevival) probe.ConfigureFatalRevival(player, enemy);
                 checkpoint.MaxRound = 8;
                 return probe;
             }
@@ -174,6 +175,7 @@ namespace Zjcs.Presentation.Combat
             if (ValidateForcedMovement)
                 forcedTargetRotation = controller.TryGetUnitTransform(forcedTargetId).localRotation;
             entities.CastStarted += cast => {
+                ObserveFatalRevivalCast(cast);
                 // The original starting skill can also be the skill under test.
                 // Its later finishing cast belongs to fixture cleanup, not this observation.
                 if (cast.ActorId != 1 || finisherScheduled) return;
@@ -235,6 +237,7 @@ namespace Zjcs.Presentation.Combat
                 ObserveFirstPromotionStep(checkpoint, step);
             else if (ValidateRevival)
             {
+                ObserveFatalRevivalStep(checkpoint, step);
                 Require(player.Hp > 1 && player.Statuses.Single(value => value.ClassId == 25014)
                     .RoleDieTriggeredCount == 1 && player.Statuses.Any(value => value.ClassId == 24233)
                     && player.Statuses.Any(value => value.ClassId == 24083 && value.RootSkillId == 25014
@@ -334,6 +337,7 @@ namespace Zjcs.Presentation.Combat
         {
             CaptureName = null;
             if (CaptureFirstPromotionFrame()) return;
+            if (CaptureFatalRevivalFrame()) return;
             bool afterimageVisible = afterimages?.Observe() ?? false;
             afterimageObserved |= afterimageVisible;
             if (ValidateApproach && ordinaryStarted)
@@ -446,7 +450,8 @@ namespace Zjcs.Presentation.Combat
 
         public void Verify(FightBattleCheckpoint checkpoint)
         {
-            if (ValidateForcedMovement || firstPromotionItemId != 0) Time.captureFramerate = previousCaptureFramerate;
+            if (ValidateForcedMovement || ValidateFatalRevival || firstPromotionItemId != 0) Time.captureFramerate = previousCaptureFramerate;
+            VerifyFatalRevival();
             if (firstPromotionItemId != 0) Require(firstPromotionFrameCount == FirstPromotionFrameTimes.Length,
                 "The original skill's early presentation frames were not captured.");
             if (ValidateApproach) Require(ordinaryStarted && ordinaryRemoved && ordinaryCaptured,
