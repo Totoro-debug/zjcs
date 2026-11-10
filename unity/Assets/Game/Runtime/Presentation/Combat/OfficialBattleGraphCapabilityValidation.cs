@@ -32,6 +32,8 @@ namespace Zjcs.Presentation.Combat
         private Quaternion forcedTargetRotation;
         private int forcedFrames;
         private int previousCaptureFramerate;
+        private bool ValidateSkillEnd => skillId == 10500;
+        private int ExpectedCasts => ValidateSkillEnd ? 4 : 1;
         private bool ValidateForcedMovement => skillId == 13550;
         private bool ValidateDirectional => skillId == 11640 || skillId == 11650 || skillId == 11660;
         private bool ValidateMovement => skillId == 11510
@@ -53,13 +55,13 @@ namespace Zjcs.Presentation.Combat
             string mode = Environment.GetEnvironmentVariable("ZJCS_GRAPH_CAPABILITY_ACCEPTANCE");
             Require(int.TryParse(mode, out int id) && (id == 13640 || id == 13870 || id == 13970
                 || id == 11510 || id == 12260 || id == 13550
-                || id == 11640 || id == 11650 || id == 11660), "Unknown original graph.");
+                || id == 11640 || id == 11650 || id == 11660 || id == 10500), "Unknown original graph.");
             var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
             var player = checkpoint.Units.Single(value => value.Id == 1);
             var enemy = checkpoint.Units.First(value => value.Side != player.Side);
             var probe = new OfficialBattleGraphCapabilityValidation(catalog,
                 player.Skills.First(value => value.Slot == 0), id,
-                id == 13640 ? "200/skill_07" : id == 13870 ? "100/skill_72"
+                id == 10500 ? "200/skill_01" : id == 13640 ? "200/skill_07" : id == 13870 ? "100/skill_72"
                     : (id == 11640 || id == 11650 || id == 11660) ? "100/skill_03"
                     : id == 11510 ? "100/skill_55" : id == 12260 ? "100/skill_56" : "100/skill_02");
             int monster = id == 11510 || id == 13550 || probe.ValidateDirectional ? 3331 : 3665;
@@ -132,16 +134,21 @@ namespace Zjcs.Presentation.Combat
             }
             if (id == 13870) enemy.Hp = enemy.Turn.Hp = 200000000;
             if (id == 13970) player.Statuses.Add(catalog.CreateStatus(24721, player.Id, player.Id, 9913970));
-            int item = id == 13640 ? 10204 : id == 13870 ? 10201
+            if (probe.ValidateSkillEnd)
+                player.Statuses.Add(catalog.CreateStatus(25029, player.Id, player.Id, 9925029,
+                    25029, 10564, 2, 20, player.SubRank,
+                    catalog.CalculateSkillProps(25029, 2, 20, player.SubRank)
+                        .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList()));
+            int item = id == 10500 ? 10000 : id == 13640 ? 10204 : id == 13870 ? 10201
                 : id == 11510 ? 10067 : id == 12260 ? 10110 : id == 13550 ? 10679 : 10209;
             if (probe.ValidateDirectional) item = 10026;
             int rootEntity = probe.ValidateDirectional ? 10780 : id;
             var skill = catalog.CreateSkill(rootEntity, 0, item, 5, 20, player.SubRank,
                 catalog.CalculateSkillProps(rootEntity, 5, 20, player.SubRank)
                     .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
-            skill.LimitedTimes = 1;
+            skill.LimitedTimes = probe.ExpectedCasts;
             player.Skills.Add(skill); player.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
-            checkpoint.MaxRound = 8;
+            checkpoint.MaxRound = probe.ValidateSkillEnd ? 12 : 8;
             return probe;
         }
 
@@ -209,7 +216,28 @@ namespace Zjcs.Presentation.Combat
             var checkpoint = controller.Checkpoint; var step = checkpoint.Receipts.Last().Event;
             if (!step.SkillCasts.Any(value => value.ActorId == 1 && value.SkillEntityId == skillId)) return;
             var player = checkpoint.Units.Single(value => value.Id == 1);
-            if (skillId == 13640)
+            if (ValidateSkillEnd)
+            {
+                var passive = player.Statuses.Single(value => value.ClassId == 25029);
+                int releases = player.SkillState.Slots[0].ReleasedTimes;
+                Require(releases >= 1 && releases <= 4 && passive.SkillEndMetCountProgress == releases % 4,
+                    "Passive skill-end progress differs from actual casts.");
+                var buffs = player.Statuses.Where(value => value.ClassId == 24221).ToArray();
+                if (releases < 4)
+                {
+                    Require(buffs.Length == 0, "Passive triggered before the fourth skill end.");
+                    return;
+                }
+                Require(buffs.Length == 1 && passive.SkillEndTriggeredCount == 1
+                    && buffs[0].SourceSkillRank == 2 && buffs[0].SourceSkillLevel == 20
+                    && buffs[0].ApplyingSkillItemId == 10564 && buffs[0].RootSkillId == 25029,
+                    "Passive buff lost its source, cultivation or fourth-end binding.");
+                var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+                Require(saved.Units.Single(value => value.Id == 1).Statuses
+                    .Any(value => value.ClassId == 24221 && value.ApplyingSkillItemId == 10564),
+                    "Passive buff did not survive checkpoint persistence.");
+            }
+            else if (skillId == 13640)
             {
                 var ally = checkpoint.Units.Single(value => value.Side == player.Side && value.Id != player.Id);
                 var children = step.SkillCasts.Where(value => value.SkillEntityId == 13643).ToArray();
@@ -231,7 +259,7 @@ namespace Zjcs.Presentation.Combat
                 if (skillId == 13970) Require(hits.Length > 1 && hits.All(value => value.HasHitGridPosition),
                     "Original area lost large-target cell occurrences.");
             }
-            Require(player.SkillState.Slots[0].ReleasedTimes == 1, "Graph spent extra ordinary releases.");
+            Require(player.SkillState.Slots[0].ReleasedTimes == ExpectedCasts, "Graph spent extra ordinary releases.");
             if (ValidateMovement)
             {
                 var movement = step.Movements.Single(value => value.UnitId == 1 && value.MoveBehaviourId == 11513);
@@ -262,7 +290,8 @@ namespace Zjcs.Presentation.Combat
             Require(restored.RandomSeed == checkpoint.RandomSeed
                 && restored.Receipts.Last().Event.SkillCasts.Count == step.SkillCasts.Count,
                 "Graph checkpoint differs.");
-            Debug.Log("[Graph capability] " + skillId + ": actual original graph, one release and checkpoint passed.");
+            Debug.Log("[Graph capability] " + skillId + ": actual original graph, "
+                + ExpectedCasts + " release(s) and checkpoint passed.");
             settled = true; player.Skills.Clear(); player.SkillState.Slots.Clear();
         }
 
@@ -364,7 +393,7 @@ namespace Zjcs.Presentation.Combat
                     if (property.Id == catalog.PropertyType("Attack")) property.Value = 1000000000;
                 finisherScheduled = true;
             }
-            if (captured || !settled || (!ValidateForcedMovement && !animated) || nativeCasts != 1
+            if (captured || !settled || (!ValidateForcedMovement && !animated) || nativeCasts != ExpectedCasts
                 || skillId == 13640 && nativeChildren != 2
                 || ValidateForcedMovement && (!movementObserved || !movementAdvanced || !movementRemoved || !movementCaptured)
                 || ValidateApproach && (!approachObserved || !approachAdvanced || !approachArrived || !approachRemoved)
@@ -397,7 +426,7 @@ namespace Zjcs.Presentation.Combat
             if (ValidateForcedMovement) Require(movementObserved && movementAdvanced && movementRemoved && movementCaptured,
                 "Forced action did not advance, end and remove: observed=" + movementObserved
                     + ", advanced=" + movementAdvanced + ", removed=" + movementRemoved + ", captured=" + movementCaptured);
-            Require(settled && (ValidateForcedMovement || animated) && captured && nativeCasts == 1 && checkpoint.Finished
+            Require(settled && (ValidateForcedMovement || animated) && captured && nativeCasts == ExpectedCasts && checkpoint.Finished
                 && (skillId != 13640 || nativeChildren == 2), "Native graph, action, input or settlement is incomplete.");
         }
         private static void Require(bool value, string message)

@@ -1218,7 +1218,9 @@ namespace Zjcs.Combat.Official
                 SkillStartMaxCount = skillStart == null ? -1
                     : Int(skillStart, "MaxCount", -1),
                 HasSkillEndTrigger = skillEnd != null,
-                SkillEndRulesSupported = skillEnd != null && SupportsSkillEnd(skillEnd),
+                SkillEndRulesSupported = skillEnd != null && SupportsSkillEnd(skillEnd, classId),
+                SkillEndLegacyStatusId = skillEnd != null && classId == 25029
+                    ? Int(skillEnd, "StatusEntClassId") : 0,
                 SkillEndMetCount = skillEnd == null ? 1 : Int(skillEnd, "MetCount", 1),
                 HasActionEndTrigger = actionEnd != null,
                 ActionEndRulesSupported = actionEnd != null && SupportsActionEnd(actionEnd),
@@ -1477,6 +1479,11 @@ namespace Zjcs.Combat.Official
                 result.SkillEndFilteredActionTypes.AddRange(IntArray(skillEnd, "FilterTypes"));
                 AddHpAccTriggerEntries(skillEnd, "StatusCfgs", "StatusId",
                     result.SkillEndStatuses, false);
+                if (result.SkillEndRulesSupported && result.SkillEndLegacyStatusId > 0)
+                    result.SkillEndStatuses.Add(new FightBattleStatusStateTrigger {
+                        EntityId = result.SkillEndLegacyStatusId, BasePercent = 1f,
+                        Target = FightStatusLifecycle.TargetApplicator
+                    });
             }
             if (actionEnd != null)
             {
@@ -2877,15 +2884,35 @@ namespace Zjcs.Combat.Official
             return true;
         }
 
-        private static bool SupportsSkillEnd(Dictionary<string, object> component)
+        internal void RestoreSkillEndDefinition(FightBattleStatusState status)
         {
+            if (status.ClassId != 25029 || status.SkillEndLegacyStatusId > 0
+                && status.SkillEndRulesSupported && status.SkillEndStatuses.Count > 0) return;
+            var definition = CreateStatus(status.ClassId, status.OwnerId, status.CreatorId,
+                status.InstanceId, status.RootSkillId, status.ApplyingSkillItemId,
+                status.SourceSkillRank, status.SourceSkillLevel, status.SourceSubRank,
+                status.SourceProperties, replacementProperties: status.ReplacementProperties,
+                blessPropertyScales: status.BlessPropertyScales);
+            status.HasSkillEndTrigger = definition.HasSkillEndTrigger;
+            status.SkillEndRulesSupported = definition.SkillEndRulesSupported;
+            status.SkillEndLegacyStatusId = definition.SkillEndLegacyStatusId;
+            status.SkillEndMetCount = definition.SkillEndMetCount;
+            status.SkillEndFilteredActionTypes = definition.SkillEndFilteredActionTypes;
+            status.SkillEndStatuses = definition.SkillEndStatuses;
+        }
+
+        private static bool SupportsSkillEnd(Dictionary<string, object> component, int classId)
+        {
+            bool legacy = classId == 25029 && Int(component, "StatusEntClassId") > 0
+                && ArrayCount(component, "StatusCfgs") == 0;
             if (Int(component, "MetCount", 1) <= 0
-                || Int(component, "StatusEntClassId") != 0
+                || !legacy && Int(component, "StatusEntClassId") != 0
                 || Bool(component, "IsCheckSkillCondition")
                 || ArrayCount(component, "ElementFilter") > 0
                 || ArrayCount(component, "FilterSkillClassIds") > 0
                 || ArrayCount(component, "StatusReplacePropertyValues") > 0
-                || ArrayCount(component, "StatusCfgs") == 0) return false;
+                || !legacy && ArrayCount(component, "StatusCfgs") == 0) return false;
+            if (legacy) return true;
             foreach (object item in Array(component["StatusCfgs"], "StatusCfgs"))
             {
                 Dictionary<string, object> trigger = Object(item, "skill end trigger status");

@@ -914,6 +914,8 @@ namespace Zjcs.Combat.Official
             new List<FightBattleStatusStateTrigger>();
         public bool HasSkillEndTrigger;
         public bool SkillEndRulesSupported;
+        // Confirmed legacy StatusEntClassId binding uses the responding passive's cultivation.
+        public int SkillEndLegacyStatusId;
         public int SkillEndMetCount = 1;
         public int SkillEndMetCountProgress;
         public int SkillEndTriggeredCount;

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Reflection;
 using System.Collections.Generic;
@@ -27,19 +27,18 @@ namespace Zjcs.Editor.Combat
         public static void Focus()
         {
             Type type = typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView", true);
-            foreach (EditorWindow old in Resources.FindObjectsOfTypeAll(type))
-                if (old.titleContent.text == "Battle input validation"
-                    || Application.isBatchMode
-                    || Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION") == "1") old.Close();
-            gameView = ScriptableObject.CreateInstance(type) as EditorWindow;
+            // A test must not create/show a native window: Show() can activate the app.
+            // The checked project layout already owns a Game view. Fail without UI if absent.
+            RestoreGameViewAfterReload();
+            Type playViewType = typeof(EditorWindow).Assembly.GetType("UnityEditor.PlayModeView", true);
+            PropertyInfo behavior = playViewType.GetProperty("enterPlayModeBehavior",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (UnityEngine.Object view in Resources.FindObjectsOfTypeAll(playViewType))
+                behavior.SetValue(view, Enum.Parse(behavior.PropertyType, "PlayUnfocused"));
             gameView.titleContent = new GUIContent("Battle input validation");
-            gameView.position = ValidationRect(450, 821);
-            gameView.Show();
-            gameView.position = ValidationRect(450, 821);
             type.GetProperty("selectedSizeIndex", BindingFlags.Public | BindingFlags.NonPublic
                 | BindingFlags.Instance)?.SetValue(gameView, 0);
             gameView.Repaint();
-
         }
 
         public static IEnumerator ResizePortrait(float width)

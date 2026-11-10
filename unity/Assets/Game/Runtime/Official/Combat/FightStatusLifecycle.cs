@@ -363,6 +363,7 @@ namespace Zjcs.Combat.Official
                 SkillStartSkills = CopyTriggers(template.SkillStartSkills),
                 HasSkillEndTrigger = template.HasSkillEndTrigger,
                 SkillEndRulesSupported = template.SkillEndRulesSupported,
+                SkillEndLegacyStatusId = template.SkillEndLegacyStatusId,
                 SkillEndMetCount = template.SkillEndMetCount,
                 SkillEndMetCountProgress = template.SkillEndMetCountProgress,
                 SkillEndTriggeredCount = template.SkillEndTriggeredCount,

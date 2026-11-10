@@ -560,6 +560,7 @@ namespace Zjcs.Combat.Official
             {
                 if (!FightSkillTriggerPolicy.AllowsStatus(skill, status)) continue;
                 if (status.HasSkillEndTrigger && status.SkillEndRulesSupported
+                    && status.ForbiddenType == 0 && actor.Statuses.Contains(status)
                     && !status.SkillEndFilteredActionTypes.Contains(skill.ActionType))
                 {
                     status.SkillEndMetCountProgress++;
@@ -584,10 +585,16 @@ namespace Zjcs.Combat.Official
                             foreach (FightBattleStatusState existing in target.Statuses)
                                 if (existing != null && existing.InstanceId >= instanceId)
                                     instanceId = existing.InstanceId + 1;
+                            bool passiveSource = status.SkillEndLegacyStatusId > 0;
                             FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId,
-                                target.Id, actor.Id, instanceId, skill.EntityId, skill.ItemId,
-                                skill.Rank, skill.Level, skill.SubRank, actor.Properties, 0, null,
-                                skill.BlessPropertyScales);
+                                target.Id, passiveSource ? status.CreatorId : actor.Id, instanceId,
+                                passiveSource ? status.RootSkillId : skill.EntityId,
+                                passiveSource ? status.ApplyingSkillItemId : skill.ItemId,
+                                passiveSource ? status.SourceSkillRank : skill.Rank,
+                                passiveSource ? status.SourceSkillLevel : skill.Level,
+                                passiveSource ? status.SourceSubRank : skill.SubRank,
+                                passiveSource ? status.SourceProperties : actor.Properties, 0, null,
+                                passiveSource ? status.BlessPropertyScales : skill.BlessPropertyScales);
                             template.ReportSource = FightBattleStatusReportSource.Resolve(status).Copy();
                             template.Origin = FightBattleStatusOrigin.Resolve(status).Copy();
                             FightStatusLifecycle.Apply(target, template, -1, instanceId, random);

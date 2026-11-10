@@ -86,6 +86,7 @@ namespace Zjcs.Combat.Official
                             RestoreRoundStartDefinition(status);
                             RestoreConditionalHitDefinition(status);
                             statusCatalog.RestoreCureReduceDefinition(status);
+                            statusCatalog.RestoreSkillEndDefinition(status);
                             RestoreHitSummonDefinition(status);
                             RestoreRoundIntervalDefinition(status);
                         }

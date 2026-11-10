@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -64,7 +64,9 @@ namespace Zjcs.Editor.Skills
             group.GetType().GetMethod("AddCustomSize").Invoke(group, new[] { size });
             int index = (int)group.GetType().GetMethod("GetTotalCount").Invoke(group, null) - 1;
             Type viewType = editor.GetType("UnityEditor.GameView");
-            EditorWindow view = EditorWindow.GetWindow(viewType, false, "Game", false);
+            EditorWindow view = Resources.FindObjectsOfTypeAll(viewType).OfType<EditorWindow>()
+                .OrderByDescending(value => value.titleContent.text == "Battle input validation").FirstOrDefault();
+            if (view == null) throw new InvalidOperationException("A background skill validation requires an existing Game view.");
             viewType.GetProperty("selectedSizeIndex", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).SetValue(view, index);
         }
 
