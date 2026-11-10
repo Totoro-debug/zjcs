@@ -97,6 +97,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Transform root;
         private readonly OfficialBattleEntityPositionContainer positionContainer;
         private readonly OfficialBattleGridMapper gridMapper;
+        internal Zjcs.Official.StoryGroundEffects.IPlayableGroundEffectHost GroundEffects { get; }
         private readonly FightOfficialCombatCatalog combatCatalog;
         private readonly OfficialBattleNativeEntityLoader skillViews;
         private readonly OfflineBattleNativePlayableScope scope;
@@ -124,6 +125,7 @@ namespace Zjcs.Presentation.Combat
         {
             this.root = root ?? throw new ArgumentNullException(nameof(root));
             this.gridMapper = gridMapper ?? throw new ArgumentNullException(nameof(gridMapper));
+            GroundEffects = new OfficialBattleGroundEffectLibrary(() => this.gridMapper);
             this.scope = scope ?? throw new ArgumentNullException(nameof(scope));
             this.unitState = unitState ?? throw new ArgumentNullException(nameof(unitState));
             combatCatalog = OfficialCombatAssetCatalog.LoadDefault().Load();

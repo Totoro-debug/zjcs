@@ -47,6 +47,8 @@ namespace Zjcs.Presentation.Combat
                 Zjcs.Offline.ProfessionUI.PartnerNativeSkillSkeleton.BindOriginalPrefab(instance);
                 Zjcs.Offline.ProfessionUI.EmbeddedMonsterNativeSkeleton.BindOriginalPrefab(instance);
                 embeddedMecanim.BindOriginalPrefab(sourcePrefab, instance);
+                foreach (var apply in instance.GetComponentsInChildren<Zjcs.Official.StoryGroundEffects.ApplyByGroundType>(true))
+                    apply.Host = entityViews.GroundEffects;
                 bindPlayerClones?.Invoke(instance);
             });
         }
