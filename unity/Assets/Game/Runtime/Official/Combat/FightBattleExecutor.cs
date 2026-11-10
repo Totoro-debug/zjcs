@@ -87,6 +87,7 @@ namespace Zjcs.Combat.Official
                             RestoreConditionalHitDefinition(status);
                             statusCatalog.RestoreCureReduceDefinition(status);
                             statusCatalog.RestoreSkillEndDefinition(status);
+                            RestoreRevivalDefinition(status);
                             RestoreHitSummonDefinition(status);
                             RestoreRoundIntervalDefinition(status);
                         }
@@ -568,6 +569,8 @@ namespace Zjcs.Combat.Official
             checkpoint.Timeline.Entries.Clear();
             checkpoint.Timeline.PendingChanges.Clear();
             turns.Initialize();
+            checkpoint.RoleDiePlayPending = units.Any(unit => unit.Statuses.Any(status =>
+                status.ClassId == 25014 && status.RoleDieRulesSupported));
             if (!HasPendingStatusStarts()) UpdateOutcome(1);
             checkpoint.RandomSeed = random.Seed;
         }
@@ -885,7 +888,7 @@ namespace Zjcs.Combat.Official
                     FightBattleUnitState target = hitTargets[targetIndex];
                     FightHitOccurrence occurrence = plannedHits == null ? null : plannedHits[targetIndex];
                     if (!allowDeadSource && actor.Hp <= 0) break;
-                    if (target.Hp <= 0 || target.Ended) continue;
+                    if (target.Hp <= 0 && hit.ActionType != 62 || target.Ended) continue;
                     if (target.IsVoodooDoll && (hit.ActionType == 5 || skill.SkillType == 3)) continue;
                     float hitDelay = HitDelay(actor, target, hit) + (occurrence == null ? 0f : occurrence.Delay);
                     if (hitDelay > lastDelay) lastDelay = hitDelay;
@@ -1086,9 +1089,12 @@ namespace Zjcs.Combat.Official
                         if (roleDieInvocations.Count > 0)
                             ExecuteConfiguredStatusSkills(roleDieInvocations, casts, damageEvents,
                                 movements, ref lastDelay, out _, out _);
+                        ExecuteRevivalSkills(casts, damageEvents, movements, ref lastDelay,
+                            ref statusTriggerDuration, ref statusTriggerActionDuration);
                         SynchronizeDeathForbidden(target);
-                        FightStatusTriggerRuntime.ApplyKillSkills(actor, target, skill, units,
-                            statusCatalog, random, configuredKillSkillInvocations);
+                        if (target.Hp <= 0)
+                            FightStatusTriggerRuntime.ApplyKillSkills(actor, target, skill, units,
+                                statusCatalog, random, configuredKillSkillInvocations);
                     }
                     else SynchronizeDeathForbidden(target);
                     if (configuredKillSkillInvocations.Count > 0)
@@ -1911,6 +1917,7 @@ namespace Zjcs.Combat.Official
             maxDuration = 0f;
             maxActionDuration = -1f;
             if (statusCatalog == null || invocations == null || invocations.Count == 0) return;
+            float sequentialEnd = lastDelay;
             foreach (FightBattleStatusSkillInvocation invocation in invocations)
             {
                 if (invocation == null || invocation.Trigger == null
@@ -1943,6 +1950,7 @@ namespace Zjcs.Combat.Official
                     continue;
                 }
                 skill.StatusOrigin = invocation.Trigger.Origin?.Copy();
+                if (invocation.SourceRootSkillId > 0) skill.RootEntityId = invocation.SourceRootSkillId;
                 InheritBlessingScales(skill, invocation.Trigger.BlessPropertyScales);
                 // SkillTargetType.Pos/PosCanStand/PosSkillDirectionCanStand use
                 // this unit as a position reference, not as the affected entity.
@@ -1982,12 +1990,14 @@ namespace Zjcs.Combat.Official
                 // FightStatusMoveNearComponentInfo.SkillTriggerDelayTime delays the entire skill,
                 // including its nested triggers. Keep each event relative until execution returns.
                 float offset = Math.Max(0f, invocation.Delay);
+                if (invocation.Sequential) offset = Math.Max(offset, sequentialEnd);
                 OffsetSkillEvents(casts, castStart, damageEvents, damageStart, movements,
                     movementStart, offset);
                 lastDelay = Math.Max(lastDelay, offset + delay);
                 maxDuration = Math.Max(maxDuration, offset + Math.Max(
                     ResolveDuration(skill, delay), nestedDuration));
                 float actionDuration = Math.Max(ResolveActionDuration(skill, delay), nestedActionDuration);
+                if (invocation.Sequential) sequentialEnd = offset + Math.Max(0f, actionDuration);
                 if (actionDuration >= 0f)
                     maxActionDuration = Math.Max(maxActionDuration, offset + actionDuration);
             }
@@ -2395,7 +2405,8 @@ namespace Zjcs.Combat.Official
             long customStatusValue = ResolveStatusCustomValue(application, skillCostHp,
                 actualHpLoss);
             FightBattleStatusState template = statusCatalog.CreateStatus(application.StatusId,
-                owner.Id, actor.Id, instanceId, skill == null ? 0 : skill.EntityId,
+                owner.Id, actor.Id, instanceId, skill == null ? 0
+                    : skill.RootEntityId > 0 ? skill.RootEntityId : skill.EntityId,
                 skill == null ? 0 : skill.ItemId, skill == null ? 1 : skill.Rank,
                 skill == null ? 1 : skill.Level, skill == null ? actor.SubRank : skill.SubRank,
                 actor.Properties, customStatusValue, null, skill?.BlessPropertyScales);

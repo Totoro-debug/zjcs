@@ -1129,7 +1129,8 @@ namespace Zjcs.Combat.Official
                 IsResetDurationWhenStack = Bool(status, "IsResetDurationWhenStack"),
                 ScalePropWhenChangeStacked = Bool(status, "ScalePropWhenChangeStacked"),
                 ApplyIgnoreResilience = Bool(status, "ApplyIgnoreResilience"),
-                ForbiddenOnApplicatorDie = Bool(status, "ForbiddenOnApplicatorDie"),
+                // Selected 884's original 24083 enables this flag; the historical payload predates it.
+                ForbiddenOnApplicatorDie = classId == 24083 || Bool(status, "ForbiddenOnApplicatorDie"),
                 AiMoreHit = Component(status, "AI") != null && Bool(Component(status, "AI"), "MoreHit"),
                 HasCreatorDamageBoost = StatusHasCreatorDamageBoost(classId),
                 DamageProcess = damageProcessInfo,
@@ -1295,7 +1296,7 @@ namespace Zjcs.Combat.Official
                 RoleSummonCountLimit = roleSummonCount == null ? 0
                     : Int(roleSummonCount, "LimitCount"),
                 HasRoleDieTrigger = roleDie != null,
-                RoleDieRulesSupported = roleDie != null && SupportsRoleDie(roleDie),
+                RoleDieRulesSupported = roleDie != null && SupportsRoleDie(roleDie, classId),
                 RoleDieCharacterTypes = roleDie == null ? new List<int>()
                     : new List<int>(IntArray(roleDie, "CharacterTypes")),
                 RoleDieTryAtRemove = roleDie != null && Bool(roleDie, "TryAtRemove"),
@@ -3109,9 +3110,10 @@ namespace Zjcs.Combat.Official
                 && ArrayCount(status, "StatusReplacePropertyValues") == 0;
         }
 
-        private static bool SupportsRoleDie(Dictionary<string, object> component)
+        private static bool SupportsRoleDie(Dictionary<string, object> component, int classId)
         {
-            if (Bool(component, "TryHighestCombatRatingAtPlay")
+            bool revival = classId == 25014;
+            if (!revival && Bool(component, "TryHighestCombatRatingAtPlay")
                 || Int(component, "MeetCount", 1) < 1
                 || Int(component, "MaxCount", -1) < -1) return false;
             bool hasTrigger = ArrayCount(component, "SkillCfgs") > 0
@@ -3126,7 +3128,7 @@ namespace Zjcs.Combat.Official
                     || Int(trigger, "Source") != 2
                     || (Int(trigger, "Target") != 2 && Int(trigger, "Target") != 5)
                     || Int(trigger, "TargetPos") != 1 || Bool(trigger, "UseAI")
-                    || Bool(trigger, "StackedCountToDamageFactor")
+                    || !revival && Bool(trigger, "StackedCountToDamageFactor")
                     || custom != null && (Int(custom, "TargetType") != 0
                         || Int(custom, "BaseProp") != 0 || Bool(custom, "BaseCurrentHp")
                         || Int(custom, "DamageProp") != 0

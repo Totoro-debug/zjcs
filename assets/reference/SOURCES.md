@@ -769,3 +769,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 
 行动进度原生卡片代码来源：`scripts/prepare_battle_round_card_runtime.py` 从所选 `884_156692` 的 `GameRoundCharacterItemScene`、`GameRoundCharacterItem` 和 `IGameRoundCharacterItem` 迁入两类原卡片逻辑；普通卡片图标地址另核对所选 `LanguageUtils`。原角色查询、资料请求、图标目录及拟态订阅由明确本地 interface 供给，原序列化字段、分支顺序、事件清理、动画与延时保留。原始代码、共享枚举与不透明回合数据凭据、适配、生成器和迁移输出哈希见[卡片代码清单](battle-hud/round-card-runtime-source-manifest.json)。实现和运行验证范围由[战斗执行](../../docs/features/battle-execution.md)维护。
+
+复活秘法输入来源：按 APK 优先解码并逐字段核对所选 884 的 10531、25014、11470／11490 及命中、伤害、复活和保护状态依赖；原 `FightStatusRoleDieComponent`／Info、`FightStatusBackToLifeComponent`、`FightHitFixedComponent` 与两个客户端处理器的输入身份和生成器哈希见[来源凭据](battle-rules/passive-revival-source-manifest.json)，由 `scripts/prepare_battle_passive_revival_sources.py` 生成。清单显式记录历史载荷与所选版本的空默认字段及 24083 字段差异；当前实现、单机规则和验证范围只在[技能页](../../docs/features/skills.md)维护。

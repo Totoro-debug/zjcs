@@ -58,7 +58,7 @@ namespace Zjcs.Combat.Official
             if (actor == null) throw new ArgumentNullException(nameof(actor));
             if (target == null) throw new ArgumentNullException(nameof(target));
             if (hit == null) throw new ArgumentNullException(nameof(hit));
-            if ((!allowDeadSource && actor.Hp <= 0) || target.Hp <= 0)
+            if ((!allowDeadSource && actor.Hp <= 0) || target.Hp <= 0 && hit.ActionType != 62)
                 throw new InvalidOperationException("Fight hit source and target must be alive.");
 
             Dictionary<int, long> sourceProps = Properties(actor.Properties);
@@ -67,9 +67,9 @@ namespace Zjcs.Combat.Official
             FightEntityState sourceEntity = actor.EntityState();
             FightEntityState targetEntity = target.EntityState();
             var result = new FightBattleHitResult { Type = new FightDamageTypeData() };
-            // DamageActionType is the action-mutex category. None has no HP settlement; other hit
-            // actions resolve the configured damage type and attached status effects.
-            if (hit.ActionType == 0) return result;
+            // DamageActionType is the action-mutex category. Cure skills such as original 11490
+            // still settle healing when that category is None.
+            if (hit.ActionType == 0 && (skill == null || skill.SkillType != 3)) return result;
             long? custom = CustomDamage(actor, target, skill, hit, sourceProps, targetProps);
 
             if (hit.ActionType == 5 || (skill != null && skill.SkillType == 3))

@@ -2476,6 +2476,12 @@ unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundUIBindings.cs* -text
 unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundUI.cs* -text whitespace=cr-at-eol
 unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundCharacterItem.cs* -text whitespace=cr-at-eol
 scripts/prepare_battle_round_manager_runtime.py -text
+
+# Keep the first-promotion skill provenance generators' recorded bytes exact.
+scripts/prepare_battle_directional_skill_sources.py -text
+scripts/prepare_battle_skill_end_sources.py -text
+scripts/prepare_battle_passive_revival_sources.py -text
+scripts/verify_battle_skill_graph_rules.py -text
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.Phases.cs -text whitespace=cr-at-eol
 
 # Preserve native round binding metadata bytes captured by source receipts.

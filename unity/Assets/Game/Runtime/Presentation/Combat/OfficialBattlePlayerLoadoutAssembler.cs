@@ -19,6 +19,8 @@ namespace Zjcs.Presentation.Combat
             if (combat == null || items == null || unit == null || player == null || progression == null)
                 throw new ArgumentException("Battle player loadout inputs are incomplete.");
 
+            unit.EntryCombatRating = progression.EvaluateProps(DateTimeOffset.UtcNow.ToUnixTimeSeconds()).CombatRating;
+
             int[] equipped = OfflineSkillProgression.EquippedActiveSkills(player.Skills);
             if (!equipped.Any(value => value > 0))
             {

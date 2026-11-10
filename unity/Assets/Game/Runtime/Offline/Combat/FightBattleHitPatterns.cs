@@ -79,7 +79,8 @@ namespace Zjcs.Combat.Official
                     Scope = hit.Scope, ScopeTransform = hit.ScopeTransform,
                     TargetMode = perCell || context.SelectedByRandomParent ? 1 : hit.TargetMode };
                 var candidates = FightBattleTargeting.SelectScopeTargets(context.Source,
-                    context.Units, context.Skill, context.Primary, selector, context.Random, context.Cast);
+                    context.Units, context.Skill, context.Primary, selector, context.Random, context.Cast,
+                    hit.ActionType == 62 ? context.Targets : null);
                 if (!context.SelectedByRandomParent && hit.TargetMode == 2)
                     candidates = FightBattleTargeting.SelectHitTargets(candidates, 2, hit.RandomCount, context.Random);
                 var result = new List<FightHitOccurrence>();

@@ -56,6 +56,7 @@ namespace Zjcs.Combat.Official
         private bool HasPendingStatusStarts()
         {
             if (statusCatalog == null) return false;
+            if (checkpoint.RoleDiePlayPending) return true;
             foreach (var owner in units)
                 foreach (var status in owner.Statuses)
                     if (IsPendingHpStart(owner, status) || IsPendingRoundStart(owner, status)
@@ -161,6 +162,13 @@ namespace Zjcs.Combat.Official
             int changed = 0;
             try
             {
+                if (checkpoint.RoleDiePlayPending)
+                {
+                    checkpoint.RoleDiePlayPending = false;
+                    float revivalDelay = 0f;
+                    ExecuteRevivalSkills(context.Casts, context.DamageEvents, context.Movements,
+                        ref revivalDelay, ref context.Duration, ref context.ActionDuration);
+                }
                 do
                 {
                     foreach (var owner in new List<FightBattleUnitState>(units))

@@ -41,6 +41,8 @@ namespace Zjcs.Combat.Official
         public int Level;
         public int SubRank;
         public int Profession;
+        // Immutable entry score for the confirmed offline revival target ordering.
+        public long EntryCombatRating;
         public int Wave;
         public int SkillCooldownChangeAtStart;
         public int MoveDist;
@@ -225,6 +227,8 @@ namespace Zjcs.Combat.Official
         public float Delay;
         public bool AllowDeadSource;
         public bool AllowDeadTarget;
+        public bool Sequential;
+        public int SourceRootSkillId;
         // Legacy threshold SkillId/SkillList without explicit source/target uses the skill AI.
         public bool SelectTargets;
         public bool UseTargetPositionWithSelection;
@@ -1729,6 +1733,7 @@ namespace Zjcs.Combat.Official
         public int SummonSerial;
         public int WaveIndex;
         public bool Finished;
+        public bool RoleDiePlayPending;
         public List<FightBattleUnitState> Units = new List<FightBattleUnitState>();
         public List<FightBattleGridItemState> GridItems = new List<FightBattleGridItemState>();
         public List<FightBattleWaveState> Waves = new List<FightBattleWaveState>();

@@ -33,6 +33,7 @@ namespace Zjcs.Presentation.Combat
         private int forcedFrames;
         private int previousCaptureFramerate;
         private bool ValidateSkillEnd => skillId == 10500;
+        private bool ValidateRevival => skillId == 11490;
         private int ExpectedCasts => ValidateSkillEnd ? 4 : 1;
         private bool ValidateForcedMovement => skillId == 13550;
         private bool ValidateDirectional => skillId == 11640 || skillId == 11650 || skillId == 11660;
@@ -55,13 +56,13 @@ namespace Zjcs.Presentation.Combat
             string mode = Environment.GetEnvironmentVariable("ZJCS_GRAPH_CAPABILITY_ACCEPTANCE");
             Require(int.TryParse(mode, out int id) && (id == 13640 || id == 13870 || id == 13970
                 || id == 11510 || id == 12260 || id == 13550
-                || id == 11640 || id == 11650 || id == 11660 || id == 10500), "Unknown original graph.");
+                || id == 11640 || id == 11650 || id == 11660 || id == 10500 || id == 11490), "Unknown original graph.");
             var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
             var player = checkpoint.Units.Single(value => value.Id == 1);
             var enemy = checkpoint.Units.First(value => value.Side != player.Side);
             var probe = new OfficialBattleGraphCapabilityValidation(catalog,
                 player.Skills.First(value => value.Slot == 0), id,
-                id == 10500 ? "200/skill_01" : id == 13640 ? "200/skill_07" : id == 13870 ? "100/skill_72"
+                id == 11490 ? "200/skill_32" : id == 10500 ? "200/skill_01" : id == 13640 ? "200/skill_07" : id == 13870 ? "100/skill_72"
                     : (id == 11640 || id == 11650 || id == 11660) ? "100/skill_03"
                     : id == 11510 ? "100/skill_55" : id == 12260 ? "100/skill_56" : "100/skill_02");
             int monster = id == 11510 || id == 13550 || probe.ValidateDirectional ? 3331 : 3665;
@@ -139,6 +140,15 @@ namespace Zjcs.Presentation.Combat
                     25029, 10564, 2, 20, player.SubRank,
                     catalog.CalculateSkillProps(25029, 2, 20, player.SubRank)
                         .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList()));
+            if (probe.ValidateRevival)
+            {
+                player.Hp = player.Turn.Hp = 0;
+                player.EntryCombatRating = 1000;
+                player.Statuses.Add(catalog.CreateStatus(25014, player.Id, player.Id, 9925014,
+                    25014, 10531, 2, 20, player.SubRank));
+                checkpoint.MaxRound = 8;
+                return probe;
+            }
             int item = id == 10500 ? 10000 : id == 13640 ? 10204 : id == 13870 ? 10201
                 : id == 11510 ? 10067 : id == 12260 ? 10110 : id == 13550 ? 10679 : 10209;
             if (probe.ValidateDirectional) item = 10026;
@@ -216,7 +226,24 @@ namespace Zjcs.Presentation.Combat
             var checkpoint = controller.Checkpoint; var step = checkpoint.Receipts.Last().Event;
             if (!step.SkillCasts.Any(value => value.ActorId == 1 && value.SkillEntityId == skillId)) return;
             var player = checkpoint.Units.Single(value => value.Id == 1);
-            if (ValidateSkillEnd)
+            if (ValidateRevival)
+            {
+                Require(player.Hp > 1 && player.Statuses.Single(value => value.ClassId == 25014)
+                    .RoleDieTriggeredCount == 1 && player.Statuses.Any(value => value.ClassId == 24233)
+                    && player.Statuses.Any(value => value.ClassId == 24083 && value.RootSkillId == 25014
+                        && value.ApplyingSkillItemId == 10531 && value.SourceSkillRank == 2),
+                    "Original revival/healing/protection or passive source differs.");
+                var originalCasts = step.SkillCasts.Where(value => value.ActorId == 1).ToArray();
+                Require(originalCasts.Select(value => value.SkillEntityId).SequenceEqual(new[] { 11470, 11490 })
+                    && originalCasts.All(value => value.Slot == -1)
+                    && originalCasts[1].Delay >= 1.2f && player.SkillState.Slots.Count == 0,
+                    "Original revival sequence, timing or non-equipped boundary differs.");
+                var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+                Require(saved.Units.Single(value => value.Id == 1).Statuses
+                    .Single(value => value.ClassId == 25014).RoleDieTriggeredCount == 1,
+                    "Revival one-per-battle counter did not persist.");
+            }
+            else if (ValidateSkillEnd)
             {
                 var passive = player.Statuses.Single(value => value.ClassId == 25029);
                 int releases = player.SkillState.Slots[0].ReleasedTimes;
@@ -259,7 +286,8 @@ namespace Zjcs.Presentation.Combat
                 if (skillId == 13970) Require(hits.Length > 1 && hits.All(value => value.HasHitGridPosition),
                     "Original area lost large-target cell occurrences.");
             }
-            Require(player.SkillState.Slots[0].ReleasedTimes == ExpectedCasts, "Graph spent extra ordinary releases.");
+            if (!ValidateRevival)
+                Require(player.SkillState.Slots[0].ReleasedTimes == ExpectedCasts, "Graph spent extra ordinary releases.");
             if (ValidateMovement)
             {
                 var movement = step.Movements.Single(value => value.UnitId == 1 && value.MoveBehaviourId == 11513);
@@ -291,7 +319,7 @@ namespace Zjcs.Presentation.Combat
                 && restored.Receipts.Last().Event.SkillCasts.Count == step.SkillCasts.Count,
                 "Graph checkpoint differs.");
             Debug.Log("[Graph capability] " + skillId + ": actual original graph, "
-                + ExpectedCasts + " release(s) and checkpoint passed.");
+                + ExpectedCasts + " cast(s) and checkpoint passed.");
             settled = true; player.Skills.Clear(); player.SkillState.Slots.Clear();
         }
 

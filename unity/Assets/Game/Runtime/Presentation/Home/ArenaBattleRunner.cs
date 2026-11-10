@@ -287,6 +287,7 @@ namespace Zjcs.Presentation.Home
             var opponent = MakeUnit(2, 2, guard.level, guard.subRank, guard.profession,
                 guardPos, moveMask, guardProperties, maxHpId, speedId, formula);
             opponent.CharacterType = 1;
+            opponent.EntryCombatRating = CalculateGuardCombatRating(host, guard);
             opponent.Direction = guardFaction.entryDirections != null && guardFaction.entryDirections.Length > 0
                 ? guardFaction.entryDirections[0] : 1;
             opponent.MonsterId = guard.monsterId;

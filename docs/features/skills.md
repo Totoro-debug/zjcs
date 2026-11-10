@@ -98,9 +98,13 @@
 
 `scripts/test_battle_directional_skills.ps1` 通过公开模块入口及实际执行器验证四向伤害、方向实体独立培养、单次槽位消费、回执去重和冷恢复；同时验证普通技能保持原定义、无目标／同格／无映射回退，以及仅在测试内给第二技能绑定方向字典后无需新增专用代码。后者仅证明复用，不将诊断映射写入官方配置。普通位移及连段回归通过。通用化后的上／下／左／右四向已全部通过原开始按钮模拟输入、实际 11640／11660／11650 实体、严格的官方 `100/skill_03` 动作推进、伤害、一次槽位消费、检查点、结算及返回的 Play Mode，并查看四向技能与返回画面；Unity 全工程导入／编译、`ProjectTools.Validate` 与静态元数据检查通过（145,655 个 GUID）。Windows 脚本增量构建成功，实际 Player 四向专项全部通过同一流程，已查看四向技能、原结算及返回画面；验证使用独立临时档案，未覆盖用户存档。返回家园仍有既有空头像、白块和黑色几何缺项；完整技能功能及正式发布尚未完成。
 
+`scripts/test_first_promotion_skill_casts.ps1` 另覆盖六职业范围内 50 个主动技能与 7 个内置主动项的 228 组四向输入：使用原范围选择有效距离，经公共执行器实际释放，核对原实体／装备来源、一次装备释放、步骤回放，以及从施放前检查点冷恢复后完整结算状态一致。该组保留原伤害、治疗及子技能图参与冷恢复比较；完整状态一致不代替各技能数值和触发条件的逐项预期断言，也不代替原生动画／特效验证。
+
 ### 战斗技能与状态运行时覆盖
 
 秘法 10564 的原 `25029 → 24221` 已接入公共技能结束状态链：读取原排除动作类型、四次累计和三层增益上限；状态被禁用或离场时不累计，继续遵守原子技能触发开关。增益继承秘法本身的培养、祝福及来源，计数、触发次数与增益随战斗检查点保存；旧检查点缺少已解析的不可变定义时从原配置补回，保留已有计数。原 `FightStatusSkillEndComponent`／Info、空客户端处理器及所选 884 配置逐字段核对记录于[技能结束触发来源](../../assets/reference/battle-rules/skill-end-source-manifest.json)，重建入口为 `scripts/prepare_battle_skill_end_sources.py`。`test_battle_status_skill_end.ps1` 已覆盖原 25011／60840 回归、排除与禁用、零伤害实际施法的第四次触发、培养来源、原三层上限及旧档恢复；静态检查（145,655 个 GUID）、Unity 导入／编译与 `ProjectTools.Validate` 已通过。公共 weekly 4800 的隔离 Play Mode 和实际 Windows Player 均通过四次原 10500 施法、原 `200/skill_01` 动作、第四次应用 24221、秘法培养来源及检查点；原开始与结算界面模拟点击、离开返回通过，两端各五张运行截图已查看。测试复用已有 Game View 并设置 PlayUnfocused，不创建或激活验证视图。Windows 脚本增量构建通过；该子模块未作为完整技能功能正式发布，返回家园的既有空头像及异常色块仍未完成视觉验收。
+
+秘法 10531 的原 `25014 → 11470 → 11490` 已接入公共执行器；原 11470 可选择指定死者，按原命中应用复活 24233（恢复为 1 HP）及保护 24083，再按原时长顺序执行 11490 治疗。ActionType=0 的治疗技能仍按原 SkillType=3 结算，其他无动作命中沿用既有行为。两个触发技能保留秘法培养、祝福与根来源，不占装备释放次数；整场一次计数和入场检查边界写入检查点，旧状态副本恢复时补回不可变定义。玩家入场战力取现有属性计算结果，竞技场守卫取现有守卫战力函数，均在入场固定。所选 884 与历史运行载荷的 24083 死亡禁用字段不同，目录适配按所选原值启用，不修改历史载荷或预期哈希；三处驱散组件遗漏的空人物排除列表仅用于原字段核对。来源及逐字段比较见[复活秘法来源](../../assets/reference/battle-rules/passive-revival-source-manifest.json)，重建入口为 `scripts/prepare_battle_passive_revival_sources.py`。`test_battle_passive_revival.ps1` 已通过入场死者、持有者死亡后复活自身或另一位高战力队友、真实致死命中后先复活再判胜负、最高入场战力与同战力排序、敌我／人物类型过滤、禁止状态、多个持有者重新选择剩余死者、原治疗与保护、顺序时长、来源及保存回放；原子技能、死亡禁用、技能结束、四向施法、范围命中、即时复活和治疗拦截等回归通过。Unity 编译与 `ProjectTools.Validate`、静态元数据检查（145,770 个 GUID）通过。公共 weekly 4800 的隔离 Play Mode 与实际 Windows Player 均已由原开始按钮模拟点击验证入场死亡后触发两份原技能、`200/skill_32` 人物动作与原治疗图、一次计数与检查点、正常结算返回，两端各五张实际运行截图已查看。Windows 完整资源构建与脚本增量构建通过，验证使用独立临时存档，未覆盖用户档案。该范围尚不包含完整死亡动画后再复活的公共画面验证，既有家园空头像和异常色块仍未通过视觉验收，未正式发布完整技能功能。
 
 本次迁移把官方 `skill-rules.json`／`battle-rules.json` 中的技能图、命中节点和状态组件保留到离线战斗检查点。`FightOfficialCombatCatalog` 继续从官方实体字段创建主动技能、被动秘法、子技能、状态、增益／减益及触发配置；状态副本现在同时保存 `FightStatusHitSkillComponent`、`FightStatusDamageSkillComponent`、`FightStatusHitApplyDamageComponent`、`FightStatusHitDmgAddPerComponent`、`FightStatusDamageGetTypeComponent`、`FightStatusDamageReduceAbsoluteComponent`、`FightStatusHpIncreaseUnitComponent`、`FightStatusRoundIntervalComponent`、`FightStatusStartComponent`、`FightStatusStackChangeComponent` 和 `FightStatusHitSummonComponent` 的参数、嵌套技能／状态列表及触发计数，存档恢复沿用同一副本。
 
@@ -206,6 +210,8 @@ Editor 程序集显式引用 `Zjcs.Presentation.Character`，以供技能 Play M
 普通移动实体现在通过独立能力接入：`IFightMovementSkillTiming`／`FightOrdinaryMovementTiming` 仅接受上述 22 个原配置，并检查无命中、无额外技能和无技能逻辑图的配置边界；普通 `CreateSkill` 仍拒绝未解析命中图，专用工厂只允许已核实的普通移动实体。角色原 MoveSkillId／BackMoveSkillId 生成移动事件时快照起点、方向、镜像和状态，合法路径结算后保存终点及两个独立计时，检查点保留这些数据；旧记录没有快照时沿用既有显示。接近后的主动技能按普通移动的原 ActionDuration 调度，实体移除按独立 Duration 调度，路径及动作 End 仍使用原公式与销毁延迟。`IBattleMovementSkillView` 负责原 `MyFightSkill` 创建／OnRemove，`IBattleMovementActionView` 继续负责原移动动作；原技能图自然结束，原动作延迟保留，不重复播放既有普通移动效果。规则测试覆盖 22 份原配置、竞争／零／禁用计时、完整 RealDistance／速度／DelayDestroyTime、创建快照和存档；真实调度器测试覆盖先建技能再开动作、非装备槽及同单位连续路径。原动作开始、击退和连段回归通过。Unity 导入／编译、ProjectTools.Validate、静态检查（145,652 个 GUID）和公共 weekly 4800 Play Mode 已通过：15300 非装备槽、先于 15301 创建、独立回收，随后 11510 的原移动／循环／结束动作、残影、一次装备释放、检查点、结算和模拟离开均通过，9 张实际截图已查看。规则结算、场景位置、原生动作和效果共用连续路径的开始边界，保留每次原前置延迟，最终 Play Mode 复验通过。Windows 脚本增量构建及内置屏 Player 同一流程已通过，9 张最终实际运行截图已查看；13100 的 Player 六段演出、一次装备释放和检查点回归通过，23 张截图已查看；13550 受击移动 Player 回归通过并查看 6 张截图。当前仅接通既有普通接近／退后入口；固定速度／特殊移动入口、普通移动技能的共享规则开始／结束通知与相关状态反应、22 个原角色各自完整演出仍待接入或逐项实测，不以本项声明完整普通移动技能已还原。
 
 ## 自定义实现
+
+用户确认秘法 10531 的单机规则：进入 Play 时检查一次，每次致死命中结算后、判定胜负前再检查；从原人物类型允许的同阵营死者中选择入场战力最高者，同战力按单位 ID 较小者。持有者死亡时，原状态未禁用仍可发动；依次执行原 11470、11490，遵守整场最多一次，保留秘法培养来源与检查点计数，不额外消耗装备槽。`MyFightStatusRoleDie` 缺少服务器调度实现，上述时机、死者排序和死亡持有者行为属于已确认的单机适配。
 
 用户确认秘法 10564 的单机规则：持有的 25029 有效且未被禁用时，每个符合原过滤条件的技能结束累计一次，不要求造成伤害；累计满四次向状态持有者施加一次原 24221，并将计数归零。计数与秘法原培养、祝福和来源随检查点保存。原客户端 `MyFightStatusSkillEnd` 没有服务器实现，旧 `StatusEntClassId` 未指定接收者；持有者绑定与上述累计行为属于已确认的单机适配。
 

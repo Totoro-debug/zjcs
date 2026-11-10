@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Zjcs.Combat.Official
 {
@@ -297,7 +298,8 @@ namespace Zjcs.Combat.Official
         public static List<FightBattleUnitState> SelectScopeTargets(FightBattleUnitState actor,
             IReadOnlyList<FightBattleUnitState> units, FightBattleSkillDefinition skill,
             FightBattleUnitState primary, FightBattleHitDefinition hit,
-            FightRandomStream random = null, FightBattleSkillCastPresentation cast = null)
+            FightRandomStream random = null, FightBattleSkillCastPresentation cast = null,
+            IReadOnlyList<FightBattleUnitState> explicitDeadTargets = null)
         {
             var result = new List<FightBattleUnitState>();
             if (actor == null || units == null || hit == null || hit.Scope == null
@@ -306,7 +308,7 @@ namespace Zjcs.Combat.Official
             int centerX = center.X, centerY = center.Y;
             IReadOnlyList<FightGridPoint> scope = TransformScope(hit.Scope, hit.ScopeTransform, actor, cast);
             foreach (FightBattleUnitState unit in ScopeCandidates(actor, units,
-                skill == null ? 1 : skill.TargetType, skill))
+                skill == null ? 1 : skill.TargetType, skill, explicitDeadTargets))
             {
                 // GridGroundComponent.EnterPosSub registers the entity in every body cell.
                 // Reuse the same footprint intersection as the AI coverage checks, once per entity.
@@ -359,12 +361,15 @@ namespace Zjcs.Combat.Official
 
         private static List<FightBattleUnitState> ScopeCandidates(FightBattleUnitState actor,
             IReadOnlyList<FightBattleUnitState> units, int targetType,
-            FightBattleSkillDefinition skill = null)
+            FightBattleSkillDefinition skill = null,
+            IReadOnlyList<FightBattleUnitState> explicitDeadTargets = null)
         {
             var result = new List<FightBattleUnitState>();
             foreach (FightBattleUnitState unit in units)
             {
-                if (!IsSelectable(unit) || HasIgnoredStatus(unit, skill)
+                bool explicitDead = unit != null && !unit.Ended && unit.Targetable && unit.Hp <= 0
+                    && explicitDeadTargets != null && explicitDeadTargets.Contains(unit);
+                if (!IsSelectable(unit) && !explicitDead || HasIgnoredStatus(unit, skill)
                     || IsActionBlockedByStatus(unit, skill == null ? null
                         : skill.BlockingTargetActionTypes)) continue;
                 bool isRidiculeSource = targetType == 1 && skill != null
