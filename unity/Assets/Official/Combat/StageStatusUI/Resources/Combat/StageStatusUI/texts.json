@@ -1,0 +1,45 @@
+{
+  "manifest": "884_156692",
+  "scaleStatusIds": [
+    26030
+  ],
+  "popup": {
+    "maskType": 3,
+    "closeByMask": true,
+    "mask": {
+      "prefabResource": "Map11/UI/WorldCanvas",
+      "prefabPath": "Content/Popup/BlurMask",
+      "blurMaterial": "World/Mainline/ScreenBlur",
+      "buttonPath": "",
+      "imagePath": "",
+      "uvRect": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "texts": [
+    {
+      "key": "FightStageStatusDialog_Title",
+      "text": "战场状态"
+    },
+    {
+      "key": "fight_status_props_has_scale",
+      "text": "本场战斗各效果降低至：{0}"
+    },
+    {
+      "key": "fight_status_props_not_scale",
+      "text": "本场战斗无衰减。"
+    },
+    {
+      "key": "fight_status_props_scale_format",
+      "text": "<color=#e17126>{0}</color>"
+    },
+    {
+      "key": "fight_status_props_scale_not_exist",
+      "text": "战斗开始后计算具体效果。"
+    }
+  ]
+}

@@ -748,3 +748,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 共享层数的七份所选 884 状态配置、APK 片段路径／原始哈希、共享上限 24029=10／25300=5 和四份官方实现输入见 [shared-stack-source-manifest.json](battle-rules/shared-stack-source-manifest.json)，由 `scripts/prepare_battle_shared_stack_runtime.py` 对现有实体配置与已核验原始片段的规范化摘要逐一比对后生成；本地生命周期适配与确认的首次分配规则由战斗执行所属页维护。
 
 状态逻辑图的单位端口类型依据所选 884 官方 `EFightBlackBoardKeyValue` 及技能触发、状态触发、状态移除三组配置／服务器空类。七份输入原码与本地适配输出哈希由 `scripts/record_battle_status_entity_port_sources.py` 记录在[状态实体端口来源](battle-rules/status-entity-ports-source-manifest.json)；行为及验证范围由[技能页](../../docs/features/skills.md)维护。
+
+战场状态说明窗口来源：`scripts/prepare_battle_stage_status_native.py` 按所选 `884_156692` 的 APK 优先规则与已校验云端载荷恢复 `FightStageStatusDialog`、`FightStageStatusDialogItemUI`，核对原生导出摘要、完整对象字段、脚本、循环行模板及原显示／隐藏动画，并解析同版 `FightSettings` 的动态说明类型与中文语言键。共享资产只在转换后字节一致时复用，转换变体分配独立 GUID；共用模糊遮罩、材质及 shader 保留既有 854 来源与独立摘要。原窗口关闭音效使用原事件对应的解码载荷；本条不代表战斗 Wwise 运行库已完成。APK／bundle／对象凭据、原代码、转换依赖、输入输出与生成器 SHA-256 见[战场状态窗口来源清单](battle-hud/stage-status-native-source-manifest.json)。新增素材尚未进入完整素材快照；当前行为及验证范围由[战斗执行](../../docs/features/battle-execution.md)维护。

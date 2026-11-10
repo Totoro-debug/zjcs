@@ -48,6 +48,8 @@
 
 完整原技能／命中图保留 1,735 个 Wwise Event 资产引用，对应 1,734 个事件 ID；两份不同 GUID 的 `Skill_14054` 引用保持独立。`prepare_battle_native_sound_sources.py` 将原事件名称的 FNV ID 与官方 EventBankMapping 比较，并按 APK 优先次序核验 25 个映射音频包和 Minimum 包的实际 bank。事件中 1,703 份引用有一个动作、32 份有两个动作；原顺序及 1,766 个独立 Play／Stop 动作的全部字段、HIRC 原字节哈希和位置均保留，不把多动作事件展开成单个 WAV。APK ARM64 `libAkSoundEngine.so` 的两个导出版本函数及原指令确认运行库为 `2022.1.18.8567`；版本、原包及绑定哈希见[原声音来源](../../assets/reference/battle-animation/native-sound-sources-source-manifest.json)。
 
+战场状态说明窗口改用所选 884 的原生 `FightStageStatusDialog` 和 `FightStageStatusDialogItemUI` prefab，保留原层级、布局、字体字段、图标背景、动画及 `LoopVerticalScrollRect` 的原始行模板引用。迁移的两个官方类沿原 `ClearCells → dataSource → totalCount → RefillCells` 顺序绑定，复用行启用时更新内容、禁用时释放动态说明订阅。`OfficialBattleStageStatusDialogView` 负责本地目录、窗口实例字体、原显示／隐藏图及现有原生模糊遮罩的接线；原 `FightSettings.FightStageStatusDescTypes` 仅把 26030 指定为倍率动态说明，准备阶段、倍率变化通知、三位小数与原百分比格式分别沿原 provider 分支处理。原生窗口来源为 884，共用模糊遮罩保留独立 854 来源，既有状态图标／文案继续使用已追溯的 HUD 目录；不把它们标为同版资源。原对象、绑定、脚本与输出哈希见[战场状态窗口来源](../../assets/reference/battle-hud/stage-status-native-source-manifest.json)。顶部状态条仍沿既有 HUD 实现，不属于本次原生窗口转换范围。
+
 ## 完整还原部分
 
 - `OfficialBattleRuntimeController` 连接战斗会话、准备界面、场景宿主与结算回调；`FightBattleCheckpoint` 保存可恢复的本地战斗状态。
@@ -92,6 +94,8 @@
 - 共享状态层数读取所选版本 `FightStatusShareStackComponent.ShareId` 与 `Battle.ShareStatusMaxStacks`：24022～24025 共享 25300（上限 5），24166／24385／24720 共享 24029（上限 10）。后续加减按原 `FightStatusAgentComponentImplement.CanAddShareStack／ChangeShareStack` 限额，个体上限保留；消耗、结束释放占用，不同角色与共享组互不串用。检查点保存各状态已占用的层数，恢复后按存活状态汇总，并重新绑定官方组与上限。
 
 ## 自定义实现
+
+- 状态 26030 的倍率由服务器 `MsgGameStartComplete／MsgGamePropsScaleUpdate` 下发，APK 的 `FightStatusPropsScaleFactorDescProvider` 只负责显示。用户确认单机固定为 1，不附加这项属性缩放；准备阶段仍显示原待计算说明，战斗开始后显示原“本场战斗无衰减”。受控验证额外输入 0.875 仅检查官方 provider 的更新与格式分支，不参与正式战斗裁决。
 
 - 用户确认按全新游戏制作，不新增旧存档兼容规则；当前游戏的检查点保存与恢复继续验证。
 
@@ -168,6 +172,8 @@
 - 主线原退出路径已通过隔离内置屏 Play Mode：根据原配置选择允许退出的普通关 1002，模拟助战确认、开始、原关闭按钮和确认框，核对战斗检查点及关卡／实体 ID 清零、地形／世界 HUD 的原激活状态、相机与角色父节点／缩放恢复。已查看确认和返回地图截图，返回画面的 HUD／人物仍有表现缺项；入口直接调用既有实体开战方法，未覆盖地图实体点击。教学关 1001 保留原有禁止退出配置。
 
 - `test_battle_shared_stacks.ps1` 已通过原始两组上限、首次个体上限、2＋2＋1 部分分配、零额度不创建、跨状态增减／结束再分配、不同角色隔离和真实检查点恢复验证。共享层数新增分支已通过 Unity 导入编译、`Zjcs.Editor.ProjectTools.Validate` 与 Play Mode 同组规则检查；Windows Mono Player 也使用打包的原配置通过同组规则与当前检查点恢复检查；尚未覆盖正式战斗交互，暂不作为整个战斗功能完成结论。
+
+- 原生战场状态说明窗口已通过 Unity 导入编译、`Zjcs.Editor.ProjectTools.Validate`、静态元数据检查，以及内置屏 Play Mode 和实际 Windows Mono Player 验证。永久入口 `Zjcs.Editor.BattleStageStatus.OfficialBattleStageStatusAcceptance.Run` 在受控公共 HUD 上使用模拟指针打开原窗口，以 14 项状态检查原滚动列表的行复用与滚轮、准备说明、默认倍率 1 的原无衰减说明、动态说明更新、原显示／隐藏动画、模糊遮罩关闭和重新打开；已查看编辑器和 Player 的实际画面。完整资源构建与后续代码增量构建通过，验证前后用户存档文件哈希一致。该验证未经过完整战斗控制器流程，未覆盖顶部状态条原生化、全部战斗 HUD、声音实际输出或各模式整合；Player 启动仍有既有帧呈现诊断。本模块尚未更新正式发布目录，不能作为整个战斗功能完成结论。
 
 ## 代码与来源入口
 

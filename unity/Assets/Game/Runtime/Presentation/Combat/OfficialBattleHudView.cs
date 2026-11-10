@@ -53,7 +53,6 @@ namespace Zjcs.Presentation.Combat
         private readonly OfficialBattleHudRenderer bossRenderer;
         private readonly OfficialBattleHudCatalog resolvedCatalog;
         private readonly OfficialBattleHudRenderer statusRenderer;
-        private readonly OfficialBattleHudRenderer stageStatusDialogRenderer;
         private const string SpeedRootPath = "/FightMainPanelSpeedUI";
         private const string SpeedButtonPath = "/FightMainPanelSpeedUI/Btn";
         private const string SpeedLabelPath = "/FightMainPanelSpeedUI/Btn/Text";
@@ -70,12 +69,11 @@ namespace Zjcs.Presentation.Combat
         private BossHpBarSprites bossHpBarSprites;
         private readonly List<GameObject> stageStatusItems = new List<GameObject>();
         private readonly List<int> stageStatusIds = new List<int>();
-        private readonly List<GameObject> stageStatusDialogItems = new List<GameObject>();
         private WorldGameSkillIcon[] skillSlots;
         private GameObject root;
         private OfficialBattleHudAnimationPlayer mainAnimationPlayer;
-        private GameObject stageStatusDialogRoot;
-        private Transform stageStatusDialogContent;
+        private OfficialBattleStageStatusDialogView stageStatusDialog;
+        private FightBattleCheckpoint stageStatusCheckpoint;
         private string roundTextFormat;
         private int? lastShownRound;
         private OfficialBattleSceneTimelineView sceneTimeline;
@@ -91,7 +89,6 @@ namespace Zjcs.Presentation.Combat
             speedRenderer = new OfficialBattleHudRenderer(resolved);
             bossRenderer = new OfficialBattleHudRenderer(resolved);
             statusRenderer = new OfficialBattleHudRenderer(resolved);
-            stageStatusDialogRenderer = new OfficialBattleHudRenderer(resolved);
         }
 
         public GameObject Mount(Transform parent, Camera sceneCamera = null)
@@ -107,7 +104,7 @@ namespace Zjcs.Presentation.Combat
             mainAnimationPlayer = renderer.InitializeAnimations("main", root);
             skillSlots = OfficialBattleSkillSlotBindings.Mount(renderer);
             OfficialBattleFunctionEntryBindings.Mount(renderer,
-                () => stageStatusDialogRoot != null && stageStatusDialogRoot.activeInHierarchy);
+                () => stageStatusDialog != null && stageStatusDialog.gameObject.activeInHierarchy);
             sceneTimeline = OfficialBattleSceneTimelineView.Mount(root, sceneCamera);
             speedRoot = speedRenderer.Create("speed", root.transform, (path, node) =>
             {
@@ -227,6 +224,8 @@ namespace Zjcs.Presentation.Combat
         public void RefreshStageStatus(FightBattleCheckpoint checkpoint)
         {
             if (checkpoint == null) return;
+            stageStatusCheckpoint = checkpoint;
+            if (stageStatusDialog != null) stageStatusDialog.Refresh(checkpoint);
             stageStatusIds.Clear();
             GameObject strip = renderer.Find(StageStatusPath);
             if (strip == null) return;
@@ -239,8 +238,7 @@ namespace Zjcs.Presentation.Combat
                     out _, out _, out _, out _) && icon != null)
                     displays.Add(statusId);
             stageStatusIds.AddRange(displays);
-            if (stageStatusIds.Count == 0 && stageStatusDialogRoot != null)
-                stageStatusDialogRoot.SetActive(false);
+            if (stageStatusIds.Count == 0 && stageStatusDialog != null) stageStatusDialog.Close();
 
             strip.SetActive(displays.Count > 0);
             RectTransform stripRect = strip.transform as RectTransform;
@@ -299,84 +297,11 @@ namespace Zjcs.Presentation.Combat
 
         private void OpenStageStatusDialog()
         {
-            if (stageStatusIds.Count == 0) return;
-            if (stageStatusDialogRoot == null)
-            {
-                stageStatusDialogRoot = stageStatusDialogRenderer.Create("stage_status", root.transform);
-                GameObject content = stageStatusDialogRenderer.Find(
-                    "/FightStageStatusDialog/BgDialog1/Content/LoopVerticalScrollRect/Content");
-                if (content == null)
-                    throw new InvalidOperationException("Official stage status dialog content is missing.");
-                stageStatusDialogContent = content.transform;
-                var overlay = new GameObject("OutsideClickBlocker", typeof(RectTransform),
-                    typeof(CanvasRenderer), typeof(Image), typeof(Button));
-                overlay.layer = stageStatusDialogRoot.layer;
-                RectTransform overlayRect = (RectTransform)overlay.transform;
-                overlayRect.SetParent(stageStatusDialogRoot.transform, false);
-                overlayRect.anchorMin = Vector2.zero;
-                overlayRect.anchorMax = Vector2.one;
-                overlayRect.offsetMin = Vector2.zero;
-                overlayRect.offsetMax = Vector2.zero;
-                Image overlayImage = overlay.GetComponent<Image>();
-                overlayImage.color = new Color(0f, 0f, 0f, 0f);
-                overlayImage.raycastTarget = true;
-                Button overlayButton = overlay.GetComponent<Button>();
-                overlayButton.transition = Selectable.Transition.None;
-                overlayButton.navigation = new Navigation { mode = Navigation.Mode.None };
-                overlayButton.onClick.AddListener(CloseStageStatusDialog);
-                overlay.transform.SetAsFirstSibling();
-            }
-
-            int shown = 0;
-            foreach (int statusId in stageStatusIds)
-            {
-                if (!resolvedCatalog.TryGetStatusDetails(statusId, out _, out _)) continue;
-                GameObject item = StageStatusDialogItem(shown++);
-                BindStageStatusDialogItem(item, statusId);
-                item.SetActive(true);
-            }
-            for (int index = shown; index < stageStatusDialogItems.Count; index++)
-                stageStatusDialogItems[index].SetActive(false);
-            if (shown == 0) return;
-            stageStatusDialogRoot.transform.SetAsLastSibling();
-            stageStatusDialogRoot.SetActive(true);
-        }
-
-        private GameObject StageStatusDialogItem(int index)
-        {
-            while (stageStatusDialogItems.Count <= index)
-            {
-                var itemRenderer = new OfficialBattleHudRenderer(resolvedCatalog);
-                GameObject item = itemRenderer.Create("stage_status_item", stageStatusDialogContent);
-                item.name = "FightStageStatusDialogItemUI_" + stageStatusDialogItems.Count
-                    .ToString(CultureInfo.InvariantCulture);
-                stageStatusDialogItems.Add(item);
-            }
-            return stageStatusDialogItems[index];
-        }
-
-        private void BindStageStatusDialogItem(GameObject item, int statusId)
-        {
-            if (!resolvedCatalog.TryGetStatusDetails(statusId, out string name, out string description))
-                return;
-            resolvedCatalog.TryGetStatusSprites(statusId, out Sprite icon, out Sprite background, out _);
-            Transform iconNode = item.transform.Find("Bg/IconImage");
-            Image iconImage = iconNode == null ? null : iconNode.GetComponent<Image>();
-            if (iconImage != null) iconImage.sprite = icon;
-            Transform backgroundNode = item.transform.Find("Bg");
-            Image backgroundImage = backgroundNode == null ? null : backgroundNode.GetComponent<Image>();
-            if (backgroundImage != null) backgroundImage.sprite = background;
-            Transform nameNode = item.transform.Find("Labels/NameText");
-            TMP_Text nameText = nameNode == null ? null : nameNode.GetComponent<TMP_Text>();
-            if (nameText != null) nameText.text = name;
-            Transform descriptionNode = item.transform.Find("Labels/ContentText");
-            TMP_Text descriptionText = descriptionNode == null ? null : descriptionNode.GetComponent<TMP_Text>();
-            if (descriptionText != null) descriptionText.text = description;
-        }
-
-        private void CloseStageStatusDialog()
-        {
-            if (stageStatusDialogRoot != null) stageStatusDialogRoot.SetActive(false);
+            if (stageStatusIds.Count == 0 || stageStatusDialog != null) return;
+            var shown = stageStatusIds.FindAll(id => resolvedCatalog.TryGetStatusDetails(id, out _, out _));
+            if (shown.Count == 0) return;
+            stageStatusDialog = OfficialBattleStageStatusDialogView.Open(root.transform,
+                resolvedCatalog, shown, stageStatusCheckpoint);
         }
 
         public void RefreshBoss(FightBattleCheckpoint checkpoint,
