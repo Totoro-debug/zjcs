@@ -1,0 +1,187 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Fx_Slash_HYX_002_NB_3
+  m_Shader: {fileID: 4800000, guid: fe86ab71622e5e3cb6667343f59313d8, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - USE_MAINTEX
+  m_InvalidKeywords:
+  - _BLENDMODE_BLEND
+  - _DISSOLVEFLIP_ON
+  - _DISTORT_ON
+  - _MAIN_REFINE
+  - _SOFTDISSOLVE_ON
+  - _USEDISSOLVE2_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap:
+    RenderType: Transparent
+  disabledShaderPasses: []
+  m_LockedProperties:
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+      _DissolveTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 0.8, y: 3.5}
+        m_Offset: {x: 1.4, y: 1.32}
+      _DistortionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _MainTex:
+        m_Texture: {fileID: 2800000, guid: 772fd4e88797583b9c4abd6d234b3768, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _NoiseTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: {}
+    m_Floats:
+      _AlphaClip: 0
+      _Blend: 0
+      _BlendMode: 1
+      _BlendOp: 0
+      _BloomFactor: 0
+      _CenterDissolve: 0
+      _ClampMainUV: 0
+      _ColorIntensity: 3
+      _ColorMask: 15
+      _Cull: 0
+      _CullMode: 0
+      _CustomRectClip: 0
+      _Cutoff: 0.5
+      _DissolveAlphaControl: 0
+      _DissolveAmount: 0
+      _DissolveControl: 0.5
+      _DissolveFlip: 1
+      _DissolveMoveSmooth: 0.5
+      _DissolveProgress: 0
+      _DissolveRange: 0
+      _DissolveSoftness: 0.05
+      _DissolveTexConstrast: 1
+      _DissolveTex_Rota: 0
+      _DissolveTex_Rotator: 0
+      _DistortMaskTexSecondUV: 0
+      _Distortion: 0
+      _DistortionTex_Rota: 0
+      _DistortionTex_Rotator: 0
+      _DstBlend: 10
+      _DstBlendAlpha: 10
+      _FresnelSwitch: 0
+      _Glow: 10
+      _GlowGlobal: 0.5
+      _IntensityAffectAlpha: 0
+      _Maintex_Rota: 0.5
+      _Maintex_Rotator: 0
+      _MaksPower: 1
+      _MaskRA: 0
+      _MaskStrength: 1
+      _Mask_Rota: 0
+      _Mask_Rotator: 0
+      _Noise_Rota: 0
+      _Noise_Rotator: 0
+      _PixelSize: 0
+      _Saturation: 0
+      _SoftParticleFactor: 1
+      _SoftParticleOn: 0
+      _SrcBlend: 5
+      _SrcBlendAlpha: 1
+      _Stencil: 0
+      _StencilComp: 0
+      _StencilFail: 0
+      _StencilOp: 0
+      _StencilReadMask: 255
+      _StencilWriteMask: 255
+      _Surface: 1
+      _UseCustomData: 0
+      _UseDissolve2: 1
+      _UseSoftDissolve: 0
+      _UseWind2D: 0
+      _WindAmplitude: 0.05
+      _WindAnchorFalloff: 1
+      _WindAnchorStart: 0.05
+      _WindFlutterAmplitude: 0.05
+      _WindSpeed: 2
+      _WindWaveFrequency: 3
+      _WorldClipHeight: -1000000
+      _ZOffset: 0
+      _ZTest: 8
+      _ZWrite: 0
+    m_Colors:
+      _AddTexBlendSetting: {r: 0, g: 0, b: 0, a: 0}
+      _AddTexChannel: {r: 0, g: 0, b: 0, a: 1}
+      _AddTexColor: {r: 1, g: 1, b: 1, a: 1}
+      _AddTexRefine: {r: 1, g: 1, b: 1, a: 0.5}
+      _AddTexRotMatr: {r: 1, g: 0, b: 0, a: 1}
+      _AddTexSetting: {r: 0, g: 0, b: 0, a: 0}
+      _AddTexUVSetting: {r: 0, g: 0, b: 0, a: 0}
+      _CustomRectArea: {r: 0, g: 0, b: 1, a: 1}
+      _DissolveAddTexChannel: {r: 0, g: 0, b: 0, a: 1}
+      _DissolveAddTexRotMatr: {r: 1, g: 0, b: 0, a: 1}
+      _DissolveAddTexSetting: {r: 1, g: 0, b: 0, a: 0}
+      _DissolveAddTexUVSetting: {r: 0, g: 0, b: 0, a: 0}
+      _DissolveAxisDir: {r: 0, g: 0, b: 0, a: 0}
+      _DissolveColor: {r: 1, g: 1, b: 1, a: 0.5}
+      _DissolveEdgeColor: {r: 1, g: 1, b: 1, a: 0}
+      _DissolveParameter: {r: 3, g: 0.3, b: 0.04, a: 0}
+      _DissolveTexChannel: {r: 1, g: 0, b: 0, a: 0}
+      _DissolveTexRotMatr: {r: 1, g: 0, b: 0, a: 1}
+      _DissolveTexSetting: {r: 0, g: 0, b: 0, a: 0}
+      _DissolveTexUVSetting: {r: 0, g: 0, b: 0, a: 0}
+      _DissolveTex_MoveCenter: {r: 0, g: 0, b: 0.5, a: 0.5}
+      _DistortMaskTexChannel: {r: 0, g: 0, b: 0, a: 1}
+      _DistortMaskTexUVSetting: {r: 0, g: 0, b: 0, a: 0}
+      _DistortSetting: {r: 0, g: 0, b: 0, a: 0}
+      _DistortTexChannel: {r: 1, g: 0, b: 0, a: 0}
+      _DistortTexRotMatr: {r: 1, g: 0, b: 0, a: 1}
+      _DistortTexSetting: {r: 0, g: 0, b: 0, a: 0}
+      _DistortTexUVSetting: {r: 0, g: 0, b: 0, a: 0.2}
+      _DistortionTex_MoveCenter: {r: 0, g: 0, b: 0.5, a: 0.5}
+      _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
+      _FresnelParams: {r: 1, g: 1, b: 1, a: 0}
+      _GlowColor: {r: 1, g: 1, b: 1, a: 1}
+      _IsDistortOtherTex: {r: 0, g: 0, b: 0, a: 1}
+      _MainColor: {r: 23.968628, g: 23.968628, b: 23.968628, a: 1}
+      _MainTexChannel: {r: 0, g: 0, b: 0, a: 1}
+      _MainTexColor: {r: 1.4506269, g: 0.7899749, b: 6.2490563, a: 1}
+      _MainTexRefine: {r: 1, g: 1, b: 1, a: 1}
+      _MainTexRotMatr: {r: 1, g: 0, b: 0, a: 1}
+      _MainTexSetting: {r: 0, g: 0, b: 0, a: 0}
+      _MainTexUVSetting: {r: 0, g: 0, b: 0, a: 0}
+      _MainTex_MoveCenter: {r: 0, g: 0, b: 0, a: 0}
+      _MaskTexChannel: {r: 0, g: 0, b: 0, a: 1}
+      _MaskTexRotMatr: {r: 1, g: 0, b: 0, a: 1}
+      _MaskTexSetting: {r: 0, g: 0, b: 0, a: 0}
+      _MaskTexUVSetting: {r: 0, g: 0, b: 0, a: 0}
+      _MaskTex_MoveCenter: {r: 0, g: 0, b: 0.5, a: 0.5}
+      _NoiseTex_MoveCenter: {r: 0, g: 0, b: 0.5, a: 0.5}
+      _TexUseCustomData: {r: 0, g: 0, b: 1, a: 1}
+      _UVDisotortSetting: {r: 0, g: 0.2, b: 0, a: 0}
+      _VTOAnimationParams: {r: 0, g: 0, b: 1, a: 10}
+      _VTOMaskTexChannel: {r: 1, g: 0, b: 0, a: 0}
+      _VTOMaskTexParams: {r: 0, g: 0, b: 0, a: 0}
+      _VTOMaskTexUVSetting: {r: 0, g: 0, b: 0, a: 0}
+      _VTOTexChannel: {r: 1, g: 0, b: 0, a: 0}
+      _VTOTexParams: {r: 0, g: 0, b: 0, a: 0}
+      _VTOTexSetting: {r: 1, g: 1, b: 0, a: 0}
+      _VTOTexUVSetting: {r: 0, g: 0, b: 0, a: 0}
+      _VtoMaskTexRotMatr: {r: 1, g: 0, b: 0, a: 1}
+      _VtoTexRotMatr: {r: 1, g: 0, b: 0, a: 1}
+      _WindDirection: {r: -1, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []

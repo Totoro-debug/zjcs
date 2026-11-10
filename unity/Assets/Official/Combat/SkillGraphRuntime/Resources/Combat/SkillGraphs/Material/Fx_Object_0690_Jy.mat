@@ -1,0 +1,225 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Fx_Object_0690_Jy
+  m_Shader: {fileID: 4800000, guid: fe86ab71622e5e3cb6667343f59313d8, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - USE_MAINTEX
+  m_InvalidKeywords:
+  - _BLENDMODE_BLEND
+  - _DISSOLVEFLIP_ON
+  - _LAYERTYPE_ONE
+  - _USELIGHTING_ON
+  - _USERIM_ON
+  - _WRAPMODE_DEFAULT
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap:
+    RenderType: Transparent
+  disabledShaderPasses: []
+  m_LockedProperties:
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+      _DissolveTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _DistortionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _MainTex:
+        m_Texture: {fileID: 2800000, guid: 2d9e52de2fd751a0bc2a3dcb4031d926, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _NoiseTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: {}
+    m_Floats:
+      _Alpha: 1
+      _BlendMode: 1
+      _BlendOp: 0
+      _BloomFactor: 0
+      _BumpScale: 1
+      _CenterDissolve: 0
+      _ClampMainUV: 0
+      _ColorIntensity: 1
+      _ColorMask: 14
+      _Cull: 2
+      _CullMode: 0
+      _Cutoff: 0.5
+      _DetailNormalMapScale: 1
+      _DetailTex_OffsetX_Custom: 0
+      _DetailTex_OffsetY_Custom: 0
+      _DissolveAlphaControl: 0
+      _DissolveAmount: 0
+      _DissolveAmount_Custom: 0
+      _DissolveControl: 0.5
+      _DissolveDistortStrength: 0
+      _DissolveDistortUVMode: 0
+      _DissolveDistortX: 0
+      _DissolveDistortY: 0
+      _DissolveFadeRange: 0.1
+      _DissolveFlip: 1
+      _DissolveMoveSmooth: 1
+      _DissolveProgress: 0
+      _DissolveRange: 0.5
+      _DissolveSoftness: 0.05
+      _DissolveTex_OffsetX_Custom: 0
+      _DissolveTex_OffsetY_Custom: 0
+      _DissolveTex_Rota: 0
+      _DissolveTex_Rotator: 0
+      _Distort0UVMode: 0
+      _Distort0X: 0
+      _Distort0Y: 0
+      _DistortStrength0: 0
+      _Distortion: 0
+      _DistortionTex_Rota: 0
+      _DistortionTex_Rotator: 0
+      _DstBlend: 10
+      _EffectMainLightIntensity: 0
+      _FadeEdgeRange1: 0.1
+      _FadeEdgeRange2: 0.1
+      _FadeEdgeStrength: 1
+      _FadeEdgeType: 0
+      _FadeGlowStrength: 0
+      _GlossMapScale: 1
+      _Glossiness: 0.5
+      _GlossyReflections: 1
+      _Glow: 10
+      _GlowGlobal: 0.5
+      _GlowStrength: 1
+      _IntensityAffectAlpha: 0
+      _Layer0UVMode: 0
+      _Layer1UVMode: 0
+      _Layer2UVMode: 0
+      _LayerMultiplier: 1
+      _LayerType: 0
+      _MainTex_OffsetX_Custom: 0
+      _MainTex_OffsetY_Custom: 0
+      _Maintex_Rota: 0
+      _Maintex_Rotator: 0
+      _MaksPower: 1
+      _MaskRA: 0
+      _Mask_Rota: 0
+      _Mask_Rotator: 0
+      _Metallic: 0
+      _Mode: 0
+      _Noise_Rota: 0
+      _Noise_Rotator: 0
+      _NormalMapStrength: 5
+      _OcclusionStrength: 1
+      _Parallax: 0.02
+      _PixelSize: 0
+      _ROTATIONTEX: 0
+      _ROTATIONTEXFOUR: 0
+      _ROTATIONTEXTHREE: 0
+      _ROTATIONTEXTWO: 0
+      _RimLevel: 1
+      _RimMode: 0
+      _RimSharp: 10.6
+      _RotateAngle: 0
+      _RotateAngle02: 0
+      _RotateAngle03: 0
+      _RotateAngle04: 0
+      _RotateCenterX: 0.5
+      _RotateCenterX02: 0.5
+      _RotateCenterX03: 0.5
+      _RotateCenterX04: 0.5
+      _RotateCenterY: 0.5
+      _RotateCenterY02: 0.5
+      _RotateCenterY03: 0.5
+      _RotateCenterY04: 0.5
+      _Scroll0X: 0
+      _Scroll0Y: 0
+      _Scroll1X: 0
+      _Scroll1Y: 0
+      _Scroll2X: 0
+      _Scroll2Y: 0
+      _SmoothnessTextureChannel: 0
+      _SpecularHighlights: 1
+      _SrcBlend: 5
+      _Stencil: 0
+      _StencilComp: 8
+      _StencilOp: 0
+      _StencilReadMask: 255
+      _StencilWriteMask: 255
+      _TranslationX: 0
+      _TranslationX02: 0
+      _TranslationX03: 0
+      _TranslationX04: 0
+      _TranslationY: 0
+      _TranslationY02: 0
+      _TranslationY03: 0
+      _TranslationY04: 0
+      _UVSec: 0
+      _UseCustomData: 0
+      _UseDissolve: 0
+      _UseDissolve2: 0
+      _UseDissolveAmountMinus: 0
+      _UseDissolveDistort: 0
+      _UseDistort0: 0
+      _UseFadeEdge: 0
+      _UseGradientMap0: 0
+      _UseLighting: 1
+      _UseNormalMapForRim: 0
+      _UseRim: 1
+      _UseRimMap: 0
+      _UseSoftDissolve: 0
+      _UseVertexOffset: 0
+      _UseWind2D: 0
+      _VertexAmplitude: 0
+      _VertexAmplitudeTexScroll0X: 0
+      _VertexAmplitudeTexScroll0Y: 0
+      _VertexAmplitudeX_Custom: 0
+      _VertexAmplitudeY_Custom: 0
+      _VertexAmplitude_Custom: 0
+      _VertexOffsetMode: 0
+      _WindAmplitude: 0.05
+      _WindAnchorFalloff: 1
+      _WindAnchorStart: 0.05
+      _WindFlutterAmplitude: 0.05
+      _WindSpeed: 2
+      _WindWaveFrequency: 3
+      _WorldClipHeight: -1000000
+      _WrapMode: 0
+      _ZTest: 4
+      _ZWrite: 0
+    m_Colors:
+      _Color: {r: 1, g: 1, b: 1, a: 1}
+      _DissolveAxisDir: {r: 0, g: 0, b: 0, a: 0}
+      _DissolveColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
+      _DissolveTex_MoveCenter: {r: 0, g: 0, b: 0.5, a: 0.5}
+      _DistortionTex_MoveCenter: {r: 0, g: 0, b: 0.5, a: 0.5}
+      _EffectAmbientLightColor: {r: 1, g: 1, b: 1, a: 1}
+      _EffectMainLightColor: {r: 1, g: 1, b: 1, a: 1}
+      _EffectMainLightDir: {r: -0.5, g: 0.5, b: 1, a: 0}
+      _EffectSSSColor: {r: 0, g: 0, b: 0, a: 1}
+      _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+      _FadeEdgeColor: {r: 1, g: 1, b: 1, a: 1}
+      _GlowColor: {r: 1, g: 1, b: 1, a: 1}
+      _LayerColor: {r: 0.5176471, g: 0.80584633, b: 1.4980392, a: 1}
+      _MainColor: {r: 1.4980394, g: 1.4980394, b: 1.4980394, a: 1}
+      _MainTex_MoveCenter: {r: 0, g: 0, b: 0, a: 0}
+      _MaskTex_MoveCenter: {r: 0, g: 0, b: 0.5, a: 0.5}
+      _NoiseTex_MoveCenter: {r: 0, g: 0, b: 0.5, a: 0.5}
+      _RimColor: {r: 0.41960788, g: 0.45613256, b: 1, a: 1}
+      _WindDirection: {r: -1, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
