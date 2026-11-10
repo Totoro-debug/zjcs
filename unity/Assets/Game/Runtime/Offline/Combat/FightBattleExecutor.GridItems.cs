@@ -95,7 +95,8 @@ namespace Zjcs.Combat.Official
                 int dx = actor.Direction == 1 ? -cell.Position.X : cell.Position.X;
                 var point = new FightGridPoint(center.X + dx, center.Y + cell.Position.Y);
                 int ground = checkpoint.Grid.GroundAt(point);
-                if (ground < 0 || ground >= 31 || (definition.MoveMask & (1 << ground)) == 0
+                if (!checkpoint.Grid.Contains(point)
+                    || definition.HasMover && (ground < 0 || ground >= 31 || (definition.MoveMask & (1 << ground)) == 0)
                     || !definition.IgnoreGridBlocked && checkpoint.Grid.BlockedPositions != null
                         && checkpoint.Grid.BlockedPositions.Contains(point)) continue;
                 float? previousViewTime = gridViewTimeOverride;

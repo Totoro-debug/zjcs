@@ -23,6 +23,7 @@ public static class BattleGridItemHarness
         MultiCell(catalog,items,formula);
         PresentationClock(catalog,items,formula);
         ProbabilisticFire(catalog,items,formula);
+        StaticGround(catalog,items,formula);
         var creator=Unit(1,1,5,5,1000);var reference=Unit(2,2,6,5,1);
         var item=FightGridItemRuntime.Create(3,3320,creator,reference,new FightGridPoint(6,5),0.78f);
         Check(item.OwnerId==1 && item.ReferenceUnitId==2 && item.Runtime.Side==2
@@ -259,6 +260,81 @@ public static class BattleGridItemHarness
         Check(step.DamageEvents.Exists(value=>cp.GridItems.Exists(grid=>grid.Id==value.SourceId)
             && Math.Abs(value.Delay-(cast.Delay+0.78f))<0.0001f),
             "Nested burning damage and native creation no longer share their original absolute time.");
+    }
+
+    static FightBattleCheckpoint StaticCase(FightOfficialCombatCatalog catalog,
+        FightOfficialSkillItemCatalog items, FightDamageFormula formula,
+        FightGridPoint? blocked = null, bool outside = false)
+    {
+        var actor=Unit(1,1,5,5,1000);var enemy=Unit(2,2,6,5,1);
+        var skill=catalog.CreateSkill(17880,0,0,1,1,1,null);
+        var hit=skill.HitGraphEntities.Find(value=>value.SummonGridItemClassId==3322);
+        Check(hit!=null && hit.SummonReferenceType==1 && hit.SummonStatusIds.Contains(17883),
+            "Original static-grid skill/status/reference was not preserved.");
+        if(outside) hit.GridSummonCells[0].Position=new FightGridPoint(40,0);
+        actor.Skills.Add(skill);actor.SkillState.Slots.Add(catalog.CreateSkillSlot(skill,0));
+        var cp=new FightBattleCheckpoint {StageId=1001,RandomSeed=13,
+            Grid=new FightBattleGrid {Width=20,Height=20,DefaultGroundType=3},
+            ResultRules=new FightBattleResultRules()};
+        cp.Units.AddRange(new[] {actor,enemy});
+        if(blocked.HasValue) cp.Grid.BlockedPositions.Add(blocked.Value);
+        var runner=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),catalog,items);
+        for(int i=0;i<10 && cp.GridItems.Count==0;i++) runner.Step(cp.Sequence,cp.Counter+1);
+        return cp;
+    }
+
+    static void StaticGround(FightOfficialCombatCatalog catalog,FightOfficialSkillItemCatalog items,
+        FightDamageFormula formula)
+    {
+        Check(!FightOfficialGridItemRules.Get(3322).HasMover
+            && FightOfficialGridItemRules.Get(3320).HasMover
+            && FightOfficialGridItemRules.Get(3328).HasMover,
+            "An absent original grid mover was confused with a terrain mask.");
+        var cp=StaticCase(catalog,items,formula);
+        Check(cp.GridItems.Count>0 && cp.GridItems.TrueForAll(value=>value.EntityClassId==3050
+            && value.GridItemClassId==3322 && cp.Grid.GroundAt(new FightGridPoint(value.X,value.Y))==3),
+            "Original 17880 failed to create its static grid on terrain outside the burning mask.");
+        var item=cp.GridItems[0];var creator=cp.Units[0];
+        Check(item.ReferenceUnitId==creator.Id && item.Runtime.Side==creator.Side
+            && item.Runtime.Level==creator.Level && item.Runtime.SubRank==creator.SubRank
+            && item.Runtime.Statuses.Exists(value=>value.ClassId==17883 && value.CreatorId==creator.Id
+                && value.OwnerId==item.Id && value.DurationRound==3),
+            "Static-grid snapshot identity, original status or duration changed.");
+        long attack=item.Runtime.Properties[0].Value;
+        creator.Properties[0].Value=1;creator.Level=1;
+        Check(item.Runtime.Properties[0].Value==attack && item.Runtime.Level==150,
+            "The static grid followed later reference properties.");
+        string saved=FightBattleCheckpointSerializer.Save(cp);
+        var restored=FightBattleCheckpointSerializer.Load(saved);
+        FightBattleExecutor.Restore(restored,formula,new FightDamageSettlement(),catalog,items);
+        Check(restored.GridItems.Count==cp.GridItems.Count
+            && restored.GridItems[0].Runtime.Statuses.Exists(value=>value.ClassId==17883),
+            "Static-grid cold recovery lost its original status.");
+        Check(StaticCase(catalog,items,formula,new FightGridPoint(item.X,item.Y)).GridItems.Count==0,
+            "Static ground ignored the original blocked-cell configuration.");
+        Check(StaticCase(catalog,items,formula,null,true).GridItems.Count==0,
+            "Static ground escaped the battlefield bounds.");
+        Console.WriteLine("Static grid checks passed: original 17880/3322/3050/17883, terrain, blockers, bounds, snapshot and cold recovery.");
+    }
+
+    public static void StaticCheckpoint(string saved,FightOfficialCombatCatalog catalog,
+        FightOfficialSkillItemCatalog items,FightDamageFormula formula)
+    {
+        var cp=FightBattleCheckpointSerializer.Load(saved);
+        var runner=FightBattleExecutor.Restore(cp,formula,new FightDamageSettlement(),catalog,items);
+        bool recovered=false;
+        for(int i=0;i<20000 && !cp.Finished;i++)
+        {
+            runner.Step(cp.Sequence,cp.Counter+1);
+            if(!recovered && cp.GridItems.Exists(value=>value.GridItemClassId==3322))
+            {
+                cp=FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(cp));
+                runner=FightBattleExecutor.Restore(cp,formula,new FightDamageSettlement(),catalog,items);
+                recovered=true;
+            }
+        }
+        Check(cp.Finished && recovered,"The captured sea battle did not finish after static-grid cold recovery.");
+        Console.WriteLine("Captured sea battle replay passed: stage "+cp.StageId+", static-grid cold recovery and normal completion.");
     }
 
     static void ProbabilisticFire(FightOfficialCombatCatalog catalog,FightOfficialSkillItemCatalog items,

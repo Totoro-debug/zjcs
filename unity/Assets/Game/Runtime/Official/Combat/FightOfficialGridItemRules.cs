@@ -8,6 +8,7 @@ namespace Zjcs.Combat.Official
         public int ClassId;
         public int EntityClassId;
         public int MoveMask;
+        public bool HasMover;
         public bool CheckGridCanStand;
         public bool IgnoreGridBlocked;
         public bool DestroyOnOwnerDie;
@@ -24,13 +25,23 @@ namespace Zjcs.Combat.Official
                 case 3320: return new FightBattleGridItemDefinition
                 {
                     ClassId = 3320, EntityClassId = 3051, MoveMask = 3,
+                    HasMover = true,
                     CheckGridCanStand = true, IgnoreGridBlocked = true,
                     DestroyOnOwnerDie = false, DestroyOnOwnerDestroy = false,
                     OverrideTypes = new[] { 3320, 3328 }
                 };
+                case 3322: return new FightBattleGridItemDefinition
+                {
+                    ClassId = 3322, EntityClassId = 3050, MoveMask = 0,
+                    HasMover = false,
+                    CheckGridCanStand = false, IgnoreGridBlocked = false,
+                    DestroyOnOwnerDie = false, DestroyOnOwnerDestroy = false,
+                    OverrideTypes = new[] { 3322 }
+                };
                 case 3328: return new FightBattleGridItemDefinition
                 {
                     ClassId = 3328, EntityClassId = 3054, MoveMask = 75,
+                    HasMover = true,
                     CheckGridCanStand = false, IgnoreGridBlocked = false,
                     DestroyOnOwnerDie = false, DestroyOnOwnerDestroy = false,
                     OverrideTypes = new[] { 3320, 3328 }

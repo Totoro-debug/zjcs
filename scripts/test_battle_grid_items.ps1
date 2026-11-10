@@ -1,4 +1,4 @@
-param([string]$StageCheckpoint)
+param([string]$StageCheckpoint, [string]$StaticCheckpoint)
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'combat_sources.ps1')
 $root = Split-Path -Parent $PSScriptRoot
@@ -37,4 +37,7 @@ if ($StageCheckpoint) {
         [BattleGridItemHarness]::OfficialStage($stage,$catalog,$items,$formula)
     } finally { $stageJson.Dispose() }
 }
-Write-Output 'Burning grid checks passed: original nine cells, terrain and battlefield bounds, opposing overwrite, independent snapshot, creator/applicator, actual damage and delays, saved expiry/death, and nine independent hits on one large body.'
+if ($StaticCheckpoint) {
+    [BattleGridItemHarness]::StaticCheckpoint([IO.File]::ReadAllText($StaticCheckpoint),$catalog,$items,$formula)
+}
+Write-Output 'Grid checks passed: original burning/static cells, terrain and battlefield bounds, opposing overwrite, independent snapshot, creator/applicator, actual damage and delays, saved expiry/death, and nine independent hits on one large body.'
