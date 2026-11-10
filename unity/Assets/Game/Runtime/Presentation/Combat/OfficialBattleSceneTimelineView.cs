@@ -16,7 +16,8 @@ namespace Zjcs.Presentation.Combat
         private sealed class Card
         {
             public GameObject Root;
-            public Animator Animator;
+            public GameRoundCharacterItemScene Native;
+            public OfficialBattleRoundCardContext Context;
             public bool Acting;
             public Vector3 From, Move, Target;
         }
@@ -26,7 +27,9 @@ namespace Zjcs.Presentation.Combat
         private Transform slot;
         private float start, end, moveTime;
         private bool moving;
-        private IGridDynamicAtlas playerPortraitAtlas;
+        private FightDynamicTextureETC2 playerPortraitAtlas;
+        private BattleRoundPortraitAssets portraitAssets;
+        private Transform inactiveCards;
 
         public static OfficialBattleSceneTimelineView Mount(GameObject hudRoot, Camera sceneCamera = null)
         {
@@ -45,6 +48,13 @@ namespace Zjcs.Presentation.Combat
             view.assets = assets;
             view.cardPrefab = cardPrefab;
             view.slot = scene.IconRoot;
+            view.portraitAssets = Resources.Load<BattleRoundPortraitAssets>("Combat/RoundUI/PortraitAssets");
+            if (view.portraitAssets == null) throw new InvalidOperationException("Restore the original battle portrait configuration.");
+            view.playerPortraitAtlas = new FightDynamicTextureETC2();
+            view.playerPortraitAtlas.Initialize(view.portraitAssets.Configuration, view.portraitAssets.LoadTexture);
+            var inactive = new GameObject("Native card injection");
+            inactive.SetActive(false); inactive.transform.SetParent(hudRoot.transform, false);
+            view.inactiveCards = inactive.transform;
             SpriteRenderer line = scene.Line;
             float width = line.size.x * line.transform.localScale.x;
             view.start = width / 2; view.end = -width / 2;
@@ -114,20 +124,34 @@ namespace Zjcs.Presentation.Combat
                 bool created = !cards.TryGetValue(unit.Id, out Card card);
                 if (created)
                 {
-                    GameObject root = Instantiate(cardPrefab, slot, false);
+                    GameObject root = Instantiate(cardPrefab, inactiveCards, false);
                     root.name = "GameRoundCharacterItem_" + unit.Id;
-                    card = new Card { Root = root, Animator = root.GetComponent<Animator>() };
+                    card = new Card { Root = root, Native = root.GetComponent<GameRoundCharacterItemScene>() };
                     cards.Add(unit.Id, card);
                     var summon = Resources.Load<OfficialSummonSkeletonData>("Combat/Summons/" + unit.MonsterId + "-data");
-                    BindPortrait(root, unit, unit.NpcClassId > 0 ? OfficialBattleNpcPortraitCatalog.Load().Find(unit.NpcClassId)
-                        : summon != null ? summon.Portrait : portrait(unit), faction?.Invoke(unit));
-                    card.Animator.Rebind(); card.Animator.Update(0);
+                    var context = new OfficialBattleRoundCardContext(unit,
+                        unit.NpcClassId > 0 ? OfficialBattleNpcPortraitCatalog.Load().Find(unit.NpcClassId)
+                        : summon != null ? summon.Portrait : portrait(unit), faction?.Invoke(unit), portraitAssets);
+                    card.Context = context;
+                    card.Native.Bind(context);
+                    foreach (var selector in root.GetComponentsInChildren<GameRoundPlayerPortrait>(true))
+                        selector.BindConfiguration(portraitAssets.Configuration);
+                    foreach (var head in root.GetComponentsInChildren<HeadCharacterPortraitETC2Scene>(true))
+                    { head.Bind(context); head.BindAtlas(playerPortraitAtlas); }
+                    foreach (var handler in root.GetComponentsInChildren<GameRoundPortraitETC2SceneHandler>(true))
+                        handler.BindAtlas(playerPortraitAtlas);
+                    root.SetActive(false);
+                    root.transform.SetParent(slot, false);
+                    root.SetActive(true);
+                    card.Native.Init(entries[i], i == 0, context.Role);
+                    card.Native.Animator.Rebind(); card.Native.Animator.Update(0);
                 }
                 bool acting = i == 0;
+                card.Native.UpdateRoundData(entries[i]);
                 if (created || card.Acting != acting)
                 {
-                    card.Animator.ResetTrigger(acting ? "Idle" : "Acting");
-                    card.Animator.SetTrigger(acting ? "Acting" : "Idle");
+                    if (!created) card.Native.Refresh(entries[i], acting, card.Context.Role);
+                    if (acting) card.Native.SetActing(); else card.Native.SetIdle();
                     card.Acting = acting;
                 }
                 card.From = card.Root.transform.localPosition;
@@ -140,46 +164,8 @@ namespace Zjcs.Presentation.Combat
             // All cards must exist before assigning the final reverse order.
             // Unity clamps an index beyond the current child count during insertion.
             for (int i = 0; i < entries.Length; i++)
-                cards[entries[i].Id].Root.transform.SetSiblingIndex(entries.Length - i - 1);
+                cards[entries[i].Id].Native.SetSiblingIndex(entries.Length - i - 1);
             moving = animate && entries.Length > 0; moveTime = 0;
-        }
-
-        private void BindPortrait(GameObject card, FightBattleUnitState unit, Sprite portrait, Sprite faction)
-        {
-            // Character guards retain a monster template for attributes, while
-            // GameRoundCharacterItemScene selects their player portrait first.
-            bool npc = unit.NpcClassId > 0, monster = !npc && unit.CharacterType != 1 && unit.MonsterId > 0;
-            var binding = assets.CardBindings;
-            card.transform.Find(binding.mainPlayerEffect).gameObject.SetActive(unit.Id == 1);
-            card.transform.Find(binding.playerRoot).gameObject.SetActive(!npc && !monster);
-            card.transform.Find(binding.monster).gameObject.SetActive(monster);
-            card.transform.Find(binding.npcRoot).gameObject.SetActive(npc);
-            if (portrait == null) throw new InvalidOperationException("Official battle timeline portrait is missing for unit " + unit.Id);
-            if (monster)
-            {
-                card.transform.Find(binding.monster).GetComponent<SpriteRenderer>().sprite = portrait;
-                card.transform.Find(binding.monsterHurt).GetComponent<SpriteRenderer>().sprite = portrait;
-            }
-            else
-            {
-                string path = npc ? binding.npc : binding.player;
-                // The public battle portrait provider returns the original, readable
-                // 100x120 head capture. Static fallback icons remain sprite assets;
-                // only the captured-player branch enters the client's dynamic atlas.
-                if (!npc && portrait.texture.isReadable && portrait.rect == new Rect(0, 0, 100, 120)
-                    && portrait.texture.width == 100 && portrait.texture.height == 120)
-                {
-                    playerPortraitAtlas ??= DynamicTexture2DAtlasUtils.CreateGridDynamicAtlas(
-                        1024, 1024, new Vector2Int(100, 120), null, true);
-                    GridSpriteInfo info = playerPortraitAtlas.ContainsKey(unit.Id) ? playerPortraitAtlas.Get(unit.Id)
-                        : playerPortraitAtlas.Add(portrait.texture, unit.Id).SpriteInfo;
-                    if (info == null || info.Sprite == null)
-                        throw new InvalidOperationException("Original battle portrait atlas rejected the captured head for unit " + unit.Id);
-                    portrait = info.Sprite;
-                }
-                card.transform.Find(path).GetComponent<WorldCircleSpriteRenderer>().SetSprite(portrait);
-            }
-            if (faction != null) card.transform.Find(binding.faction).GetComponent<SpriteRenderer>().sprite = faction;
         }
 
         private void OnDestroy()
@@ -205,15 +191,13 @@ namespace Zjcs.Presentation.Combat
         private IEnumerator Hurt(Card card, float delay)
         {
             if (delay > 0) yield return new WaitForSeconds(delay);
-            if (card.Root != null) card.Animator.SetTrigger("Hurt");
+            if (card.Root != null) card.Native.SetHurt();
         }
         private IEnumerator Die(Card card, float delay)
         {
             if (delay > 0) yield return new WaitForSeconds(delay);
             if (card.Root == null) yield break;
-            card.Animator.SetTrigger("Dead");
-            yield return new WaitForSeconds(assets.DeadTime);
-            if (card.Root != null) Destroy(card.Root);
+            card.Native.SetDead(() => { if (card.Root != null) Destroy(card.Root); });
         }
         private void Update()
         {

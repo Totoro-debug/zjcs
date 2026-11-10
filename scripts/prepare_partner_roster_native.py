@@ -127,7 +127,7 @@ class PartnerRosterBinding(PartnerGiftBinding):
             return self.redirects[source_guid]
         candidates = list(self.original_objects_by_guid.get(source_guid, {}).values())
         roots = [candidate for candidate in candidates if candidate.type.name == 'GameObject'
-            and candidate.read(check_read=False).m_Component[0].component.read(check_read=False).m_Father.path_id == 0]
+            and candidate.read(check_read=False).m_Component[0].component.deref().read(check_read=False).m_Father.path_id == 0]
         if roots:
             names = {candidate.read(check_read=False).m_Name for candidate in roots}
             if len(names) != 1:
@@ -135,7 +135,10 @@ class PartnerRosterBinding(PartnerGiftBinding):
             obj = roots[0]
         if source_guid not in self.redirects and obj is not None and obj.type.name == 'GameObject':
             name = obj.read(check_read=False).m_Name
-            self.recovery.recover(name, self.work / 'partner-native')
+            native = self.native_path(source_guid, obj)
+            self.recovery.recover(name, self.work / 'partner-native',
+                bundle=self.recovery.apk.provenance(obj)['bundle'],
+                native_relative=native.relative_to(self.native).as_posix())
             native, _, data, record = self.recovery.outputs[-1]
             original_root, = [key for key, value in data['objectMap'].items() if value == data['root']]
             if original_root != identity(obj) or guid(Path(str(native) + '.meta')) != source_guid:

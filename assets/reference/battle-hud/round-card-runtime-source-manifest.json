@@ -1,0 +1,32 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    ".tools/source-packages/current/884_156692/official-code/client-source/GameRoundCharacterItemScene.cs": "7474e6f45c431f317e40fba608189c79a95dcbb3c2b7bf4e5cc6bcde754cebf0",
+    ".tools/source-packages/current/884_156692/official-code/client-source/IGameRoundCharacterItem.cs": "9d4d578ad3730d117dd0dbfcf6b3fb77725caaa9c9bb4941d1511a450ee0f432",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RoundRuntimeData.cs": "9e7e1833e64dfa2ff5241abe2f1f482462df7e64ec24a780e54d4cd3880d90fc",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MonsterIconType.cs": "4f3a2925944507f860c64418efe3f11fed98260f758dd79483871b104aa3cf93"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundCharacterItemScene.cs": "346cb0ca4a3001671afe2a4a774f80e881c1e19468bbb661bf271727c64570f0",
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundCharacterItemScene.cs.meta": "beedba45ce4f03d9921d7c0fa6460b187b927ebca12be39b79dfc6b3f5ef3c3f",
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/IGameRoundCharacterItem.cs": "487f76f4a53393389fed95307348c7643a9b4fe6b24fa089cdadab77d7a877e4",
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/IGameRoundCharacterItem.cs.meta": "693e39e47ad192c6dc028487c429ac6273b0eed4a70552b03eaba4cf84914b47",
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundCardBindings.cs": "796c630045b62d8504b67a50ea121599a91574355013382ad7bd5a37351adde5",
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundCardBindings.cs.meta": "ae6f8afb5695ffee4a6d2aefa7229fdb2bedf80b55096085a6ef346a1259c5e3",
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundPortraitAssets.cs": "912f896e3843010e7172a4bc8a5c7b9760d8e204347d58a6aa93c19d0e1feacb",
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundPortraitAssets.cs.meta": "8517910d593ffffa08ffff76a4876cebb68ce7d027c376ff37390d98342d07f8",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRoundCardContext.cs": "cc29880c4a2c2d8565fec2eeec7229ed72b8479ca35575df667d5ffefdf3aada",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRoundCardContext.cs.meta": "8cc3734c6a77bf834d0daafd5cf09bbd237add544d127ba8cd137957c5e5731a",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneTimelineView.cs": "cbde389332fc927b7b91b4892d14902771e85466138dfb2590242f507eda209f",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneTimelineView.cs.meta": "91fb0009a627f5baed3edabc7ab245d06b877a5bae100ee607ceebf1f8416fd5"
+  },
+  "generator_sha256": "76b255fbde37b6bd6cdbbc8d674546f06bfb58f5da99691f6b1db8ace19c4694",
+  "adaptations": [
+    "Entity component/config/player queries are supplied at IBattleRoundCardBindings; original branch priority retained.",
+    "RoundRuntimeData is opaque to this view and retained as object; its rules remain in the battle timeline.",
+    "Resolved guard appearances replace online guard parser/wrapper queries; the three supported guard kinds are retained.",
+    "Reusable local player request and mimic subscription replace client managers; original waiting/reset/disposal order retained.",
+    "Existing portrait enums, circle renderer and Unity logging adapters; original serialized fields, animation and death/pool order retained."
+  ],
+  "scope": "Complete original scene card class and interface; explicit local projection of existing completed photographs, NPC/monster/pet icons and faction images. Native asset/config binding is recorded separately. Guard/mimic entity projection and the complete round manager remain pending."
+}

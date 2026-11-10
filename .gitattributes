@@ -2457,3 +2457,16 @@ unity/Assets/Game/Runtime/Official/ItemDetailUI.meta text eol=lf
 unity/Assets/Game/Runtime/Official/ItemDetailUI/**.meta whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 # Preserve the generated battle payload bytes used by the Home startup hash check.
 unity/Assets/Game/Resources/NpcAdventure/battle-stages.json text eol=lf
+
+# Keep native round-card payloads and their recorded generator/output bytes exact.
+unity/Assets/Official/Combat/RoundUI/** -text
+unity/Assets/Official/Combat/RoundUI.meta -text
+unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundCardBindings.cs* -text whitespace=cr-at-eol
+unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundPortraitAssets.cs* -text whitespace=cr-at-eol
+unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundCharacterItemScene.cs* -text whitespace=cr-at-eol
+unity/Assets/Game/Runtime/Official/BattleRoundUI/IGameRoundCharacterItem.cs* -text whitespace=cr-at-eol
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRoundCardContext.cs* -text whitespace=cr-at-eol
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneTimelineView.cs.meta -text whitespace=cr-at-eol,-blank-at-eol
+scripts/prepare_battle_round_card_runtime.py -text
+scripts/prepare_battle_round_scene_native.py -text
+scripts/prepare_partner_roster_native.py -text

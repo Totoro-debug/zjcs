@@ -25,6 +25,11 @@ namespace Zjcs.Editor.BattleRound
         private const string Key = "Zjcs.BattleRoundScene.Acceptance";
         private static bool started;
         private static int errors;
+        public static void ExportPlayerAssets()
+        {
+            Environment.SetEnvironmentVariable("ZJCS_ROUND_EXPORT_PLAYER_ASSETS", "1");
+            RunIsolated();
+        }
         public static void Run()
         {
             Environment.SetEnvironmentVariable("ZJCS_CREATION_AUTOMATION", "1");
@@ -102,6 +107,14 @@ namespace Zjcs.Editor.BattleRound
                     else yield return current.Current;
                 }
                 passed = errors == 0;
+                if (passed && Environment.GetEnvironmentVariable("ZJCS_ROUND_EXPORT_PLAYER_ASSETS") == "1")
+                {
+                    string[] paths = Resources.FindObjectsOfTypeAll<UnityEngine.Object>()
+                        .Select(AssetDatabase.GetAssetPath).Where(p => p.StartsWith("Assets/", StringComparison.Ordinal)
+                            && !p.EndsWith(".cs", StringComparison.Ordinal)).Distinct().ToArray();
+                    File.WriteAllLines(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"),
+                        "player-assets.txt"), AssetDatabase.GetDependencies(paths, true));
+                }
             }
             finally
             {
@@ -135,6 +148,14 @@ namespace Zjcs.Editor.BattleRound
    IGridDynamicAtlas portraitAtlas = null;
    try
    {
+    var portraitResources=Resources.Load<BattleRoundPortraitAssets>("Combat/RoundUI/PortraitAssets");
+    Require(portraitResources!=null && portraitResources.Configuration.EnablePlayerPortraitETC2
+     && portraitResources.Configuration.EnablePlayerPortraitETC2_Scene
+     && portraitResources.Configuration.PreCreateEffectCount==20
+     && portraitResources.Configuration.AutoStartWhenPlaybackBlackType.SequenceEqual(new[]{33})
+     && portraitResources.Configuration.FactionEffectDatas.Count==2
+     && portraitResources.Textures.Length==3 && portraitResources.Sprites.Length==3,
+     "Complete native portrait configuration or explicit faction resources were lost.");
     var pipeline=Resources.Load<OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets");
     Require(pipeline!=null,"Original battle render pipeline binding is missing.");
     renderPipelineScope=pipeline.Enter();
@@ -234,6 +255,11 @@ namespace Zjcs.Editor.BattleRound
     Require(timelineTexture!=maleHead && timelineTexture.GetPixels32().SequenceEqual(maleHead.GetPixels32()),"Public timeline did not use the original atlas fallback for a captured player head.");
     foreach(Transform card in scene.IconRoot)
     {
+     var native=card.GetComponent<GameRoundCharacterItemScene>();
+     Require(native!=null && native.RoundRuntimeData!=null && native.IsCurrent==(card.name=="GameRoundCharacterItem_1")
+      && card.GetComponentsInChildren<MonoBehaviour>(true).Length==7
+      && native.PlayerPortrait==card.GetComponentInChildren<GameRoundPlayerPortrait>(true)
+      && native.DeadTime==.5f,"Complete original card scripts, fields or initial data were lost.");
      var group=card.GetComponent<SortingGroup>();
      Require(group!=null && group.sortingLayerID==scene.Line.sortingLayerID
       && group.sortingOrder==1000+card.GetSiblingIndex() && group.sortingOrder>scene.Line.sortingOrder
@@ -243,6 +269,9 @@ namespace Zjcs.Editor.BattleRound
     state.Timeline.Acting=3;state.Timeline.Entries[2].Next=20000;
     hud.RefreshTimeline(state,portrait,null,true);yield return new WaitForSeconds(.4f);
     CheckActor(3);Require(state.Timeline.Entries[0].Id==1 && state.Timeline.Entries[2].Next==20000,"Presentation modified authoritative timeline.");
+    Require(scene.IconRoot.Find("GameRoundCharacterItem_3").GetComponent<GameRoundCharacterItemScene>().IsCurrent
+     && !scene.IconRoot.Find("GameRoundCharacterItem_1").GetComponent<GameRoundCharacterItemScene>().IsCurrent,
+     "Original card Refresh did not replace its current-actor flag.");
     capture("round-scene-acting");yield return null;
     var restored=JsonUtility.FromJson<FightBattleCheckpoint>(JsonUtility.ToJson(state));
     restored.Timeline.Acting=2;hud.RefreshTimeline(restored,portrait,null,true);yield return new WaitForSeconds(.4f);CheckActor(2);

@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1bc4b8a38383dd54f2422eba1f5e1e0, type: 3}
+  m_Name: GamePlayManagerConfig
+  m_EditorClassIdentifier: null
+  EnablePlayerPortraitETC2: 1
+  EnablePlayerPortraitETC2_Scene: 1
+  DefaultEffect:
+    FactionColor: {r: 0.854902, g: 0.31764707, b: 0.3137255, a: 1}
+    FactionRoundImgPath: ItemIcon/GameHeadIcon/Monster/ImgEnemy
+    FactionRoundImgETC2Path: ItemIcon/GameHeadIcon/Sources/ETC2/ImgEnemy
+    HpColor: {r: 0.854902, g: 0.31764707, b: 0.3137255, a: 1}
+    HpAddColor: {r: 0.854902, g: 0.31764707, b: 0.3137255, a: 0.8}
+    HpSubColor: {r: 0.504717, g: 0.98629427, b: 1, a: 1}
+    FillPointEffect: {fileID: 1709254077376921, guid: 3a365bad1ac91881f8bbbf06ef5fde08, type: 3}
+    OutLineEffect: {fileID: 1709254077376921, guid: 4a7f30fda5eab18ba45a565c39fc0d07, type: 3}
+  CharacterMeEffect:
+    FactionColor: {r: 0.7960785, g: 0.8117648, b: 0.3803922, a: 1}
+    FactionRoundImgPath: ItemIcon/GameHeadIcon/Monster/ImgWe
+    FactionRoundImgETC2Path: ItemIcon/GameHeadIcon/Sources/ETC2/ImgWe
+    HpColor: {r: 0.7960785, g: 0.8117648, b: 0.3803922, a: 1}
+    HpAddColor: {r: 0.7960785, g: 0.8117648, b: 0.3803922, a: 0.8}
+    HpSubColor: {r: 0.854902, g: 0.31764707, b: 0.3137255, a: 1}
+    FillPointEffect: {fileID: 1709254077376921, guid: 5149d96908030e689675a72379d8c61e, type: 3}
+    OutLineEffect: {fileID: 1709254077376921, guid: 06b5953a35ee5326a64874764bf16f89, type: 3}
+  SpactatedCharacterEffect:
+    FactionColor: {r: 0.79607844, g: 0.8117647, b: 0.38039216, a: 1}
+    FactionRoundImgPath: ItemIcon/GameHeadIcon/Monster/ImgWe
+    FactionRoundImgETC2Path: ItemIcon/GameHeadIcon/Sources/ETC2/ImgWe
+    HpColor: {r: 0.79607844, g: 0.8117647, b: 0.38039216, a: 1}
+    HpAddColor: {r: 0.79607844, g: 0.8117647, b: 0.38039216, a: 0.8}
+    HpSubColor: {r: 0.85490197, g: 0.31764707, b: 0.3137255, a: 1}
+    FillPointEffect: {fileID: 1709254077376921, guid: 5149d96908030e689675a72379d8c61e, type: 3}
+    OutLineEffect: {fileID: 1709254077376921, guid: 06b5953a35ee5326a64874764bf16f89, type: 3}
+  FactionEffectDatas:
+  - FactionColor: {r: 0.40784314, g: 0.62352943, b: 0.8117647, a: 1}
+    FactionRoundImgPath: ItemIcon/GameHeadIcon/Monster/ImgOther
+    FactionRoundImgETC2Path: ItemIcon/GameHeadIcon/Sources/ETC2/ImgOther
+    HpColor: {r: 0.40784314, g: 0.62352943, b: 0.8117647, a: 1}
+    HpAddColor: {r: 0.48584908, g: 0.9513068, b: 1, a: 0.8}
+    HpSubColor: {r: 0.8862745, g: 0.73054975, b: 0.35686272, a: 1}
+    FillPointEffect: {fileID: 1709254077376921, guid: 8cb587098ac7f547d261924189dea2d0, type: 3}
+    OutLineEffect: {fileID: 1709254077376921, guid: f51057f7951e9f52786bcc33965a19cc, type: 3}
+  - FactionColor: {r: 1, g: 0.5764706, b: 0.31764707, a: 1}
+    FactionRoundImgPath: ItemIcon/GameHeadIcon/Monster/ImgEnemy
+    FactionRoundImgETC2Path: ItemIcon/GameHeadIcon/Sources/ETC2/ImgEnemy
+    HpColor: {r: 1, g: 0.5764706, b: 0.31764707, a: 1}
+    HpAddColor: {r: 0.854902, g: 0.31764707, b: 0.3137255, a: 0.8}
+    HpSubColor: {r: 0.5058824, g: 0.9882353, b: 1, a: 1}
+    FillPointEffect: {fileID: 1709254077376921, guid: 3a365bad1ac91881f8bbbf06ef5fde08, type: 3}
+    OutLineEffect: {fileID: 1709254077376921, guid: 4a7f30fda5eab18ba45a565c39fc0d07, type: 3}
+  AutoStartWhenPlaybackBlackType: 21000000
+  PreCreateEffectCount: 20

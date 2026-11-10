@@ -64,28 +64,24 @@ namespace Zjcs.Editor.BattleRound
             {
                 var card=UnityEngine.Object.Instantiate(prefab,parent.transform,false);
                 parent.transform.position=new Vector3(-2048,-2048,-2048);
-                var circle=card.GetComponentsInChildren<WorldCircleSpriteRenderer>(true).First();
-                var head=circle.gameObject.AddComponent<SceneHead>();
-                var request=new CharacterPortraitRequestor();request.SetAnimationName("home/idle_01");
-                typeof(Head).GetField("mRequestor",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(head,request);
-                typeof(SceneHead).GetField("mCircleSpriteSr",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(head,circle);
+                var head=card.GetComponentInChildren<SceneHead>(true);
+                var request=(CharacterPortraitRequestor)typeof(Head).GetField("mRequestor",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(head);
+                string animation=request.GetAnimationName();
                 var manager=new Captures(male,female);head.Bind(manager);head.BindAtlas(atlas);
-                var handler=card.AddComponent<SceneHandler>();handler.HeadPlayerPortrait=head;
-                handler.HeadSr=circle;handler.PlayerIconGo=circle.gameObject;
-                handler.FactionBgSr=card.GetComponentInChildren<SpriteRenderer>(true);handler.BindAtlas(atlas);
-                var selector=card.AddComponent<Selector>();selector.BindConfiguration(config);
-                Field(selector,"mETC2SceneHandler",handler);
+                var handler=card.GetComponentInChildren<SceneHandler>(true);handler.BindAtlas(atlas);
+                var circle=handler.HeadSr;
+                var selector=card.GetComponentInChildren<Selector>(true);selector.BindConfiguration(config);
                 circle.gameObject.SetActive(true);parent.SetActive(true);
                 yield return null;
                 var appearance=new object();selector.SetPortraitData(101,Sex.Male,1,appearance);
                 selector.SetPortraitFactionImg("me");
                 Require(handler.FactionBgSr.sprite==atlas.Get("me".GetHashCode()).Sprite,"Selector did not delegate the original faction atlas lookup.");
                 selector.SetPortraitColor(Color.red);Require(circle.Color==Color.red,"Selector did not delegate portrait color.");
-                selector.SetPortraitActive(false);Require(!circle.gameObject.activeSelf,"Selector did not hide the portrait.");
+                selector.SetPortraitActive(false);Require(!handler.PlayerIconGo.activeSelf,"Selector did not hide the portrait.");
                 selector.SetPortraitActive(true);
                 long key=ProfessionPortraitRequestKey.GetLongHashCode(101,0);
                 Require(request.GetRequestId()==key && request.NeedPersist() && request.GetProfession()==1
-                    && request.GetAppearanceData()==appearance && request.GetAnimationName()=="home/idle_01",
+                    && request.GetAppearanceData()==appearance && request.GetAnimationName()==animation,
                     "Original head request fields or stable player key changed.");
                 Require(manager.Entries[key].Requestors.Count==1 && circle.Sprite==atlas.Get(key).Sprite
                     && circle.Sprite.texture.GetPixels32().SequenceEqual(male.GetPixels32()),"Original request did not bind the native male capture through the atlas.");

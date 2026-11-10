@@ -10,24 +10,115 @@ from official_apk import ROOT
 from prepare_activity_battle_selector_native import SelectorBinding, encode
 from prepare_partner_card_native import guid, script_id, sha
 from validation_workspace import validation_directory
-from prepare_current_partner_native import documents as native_documents
+from prepare_current_partner_native import documents as native_documents, identity
+from official_manifest import read_asset_manifest
 
 DESTINATION = ROOT / 'unity/Assets/Official/Combat/RoundUI'
 RECEIPT = ROOT / 'assets/reference/battle-hud/round-scene-native-source-manifest.json'
-NAMES = ('GameRoundScene', 'SpriteRendererCanvas', 'GameSceneObjectOrderLayer')
+NAMES = ('GameRoundScene', 'SpriteRendererCanvas', 'GameSceneObjectOrderLayer',
+    'GameRoundCharacterItemScene', 'GameRoundPlayerPortrait', 'GameRoundPortraitETC2SceneHandler',
+    'HeadCharacterPortraitETC2Scene', 'CircleSpriteRenderer', 'GamePlayManagerConfig')
 
 
 class RoundSceneBinding(SelectorBinding):
     def register_scripts(self):
         super().register_scripts()
+        path = ROOT / 'unity/Assets/Game/Runtime/Official/BattleUnitUI/BattleHpBloodEffect.cs'
+        pointer = dict(fileID=11500000, guid=guid(Path(str(path)+'.meta')), type=3)
+        self.scripts['BattleHpBloodEffect'] = self.class_ids[script_id('', 'BattleHpBloodEffect')] = pointer
+        self.script_guids.add(pointer['guid'])
+        self.script_sources['BattleHpBloodEffect'] = dict(path=path.relative_to(ROOT).as_posix(),
+            sha256=sha(path.read_bytes()), meta_sha256=sha(Path(str(path)+'.meta').read_bytes()), pointer=pointer)
         for name in NAMES:
-            path = ROOT / 'unity/Assets/Game/Runtime/Official/BattleRoundUI' / (name + '.cs')
+            path = (ROOT / 'unity/Assets/Game/Runtime/Official/WorldUI/WorldCircleSpriteRenderer.cs' if name == 'CircleSpriteRenderer'
+                else ROOT / 'unity/Assets/Game/Runtime/Official/BattleRoundUI' / (name + '.cs'))
             meta = Path(str(path) + '.meta')
             pointer = dict(fileID=11500000, guid=guid(meta), type=3)
             self.scripts[name] = self.class_ids[script_id('', name)] = pointer
             self.script_guids.add(pointer['guid'])
             self.script_sources[name] = dict(path=path.relative_to(ROOT).as_posix(),
                 sha256=sha(path.read_bytes()), meta_sha256=sha(meta.read_bytes()), pointer=pointer)
+
+    def load(self, source_guid):
+        obj = self.objects.get(source_guid)
+        if source_guid not in self.redirects and obj is not None and obj.type.name == 'GameObject':
+            # Use the inherited generic external-prefab path instead of its
+            # special NpcPanelNpcItem shortcut for an explicitly named object.
+            self.original_objects_by_guid.setdefault(source_guid, {})[identity(obj)] = obj
+            self.objects.pop(source_guid)
+        return super().load(source_guid)
+
+    def portrait_configuration(self):
+        for name in ('prepare_partner_card_native.py', 'prepare_partner_gift_native.py',
+            'prepare_partner_roster_native.py', 'prepare_activity_battle_selector_native.py'):
+            path = ROOT/'scripts'/name
+            self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+        records = read_asset_manifest(self.recovery.apk.source.manifest_bytes('DefaultPackage', self.recovery.apk.archive))
+        relative = 'ScriptableConfig/Modules/Fight/GamePlayManagerConfig.asset'
+        row, = [r for r in records if r['path'] == 'Assets/' + relative]
+        obj, = [ptr.deref() for path, ptr in self.recovery.apk.container(row['bundle'])
+            if path.casefold() == row['path'].casefold() and ptr.deref().type.name == 'MonoBehaviour']
+        path = self.native / relative
+        native_config = path
+        for item in (path, Path(str(path)+'.meta')):
+            key = item.relative_to(self.cache/'native-export-all').as_posix()
+            if sha(item.read_bytes()) != self.checked[key]: raise ValueError('Changed original battle portrait config')
+            self.inputs[item.relative_to(ROOT).as_posix()] = self.checked[key]
+        docs = native_documents(path.read_text(encoding='utf-8-sig'))
+        fields = docs[11400000]['MonoBehaviour']
+        original = self.recovery.fields(obj)
+        self.learn(original, fields, obj)
+        fields['m_Script'] = self.scripts['GamePlayManagerConfig']
+        value = hashlib.md5(b'zjcs:round-card:native-gameplay-config').hexdigest()
+        self.script_guids.add(value)
+        self.queue.append((Path('Resources/Combat/RoundUI/GamePlayManagerConfig.asset'), value, self.replace(docs)))
+        textures, sprites = [], []
+        effects = [original[name] for name in ('DefaultEffect','CharacterMeEffect','SpactatedCharacterEffect')] + original['FactionEffectDatas']
+        for field, kind, output in [('FactionRoundImgETC2Path','Texture2D',textures), ('FactionRoundImgPath','Sprite',sprites)]:
+            for address in sorted({effect[field] for effect in effects}):
+                record, = [r for r in records if r['path'] == 'Assets/Image/' + address + '.png']
+                resource, = [ptr.deref() for name,ptr in self.recovery.apk.container(record['bundle'])
+                    if name.casefold()==record['path'].casefold() and ptr.deref().type.name==kind]
+                if kind == 'Texture2D':
+                    sprite_path = self.native / 'Image' / (address + '.asset')
+                    for native_input in (sprite_path, Path(str(sprite_path)+'.meta')):
+                        key = native_input.relative_to(self.cache/'native-export-all').as_posix()
+                        if sha(native_input.read_bytes()) != self.checked[key]: raise ValueError('Faction native texture pointer source changed')
+                        self.inputs[native_input.relative_to(ROOT).as_posix()] = self.checked[key]
+                    sprite_fields = native_documents(sprite_path.read_text(encoding='utf-8-sig'))[21300000]['Sprite']
+                    if sprite_fields['m_RenderDataKey'] != {record['guid']:21300000}: raise ValueError('Faction image native render identity differs')
+                    texture_guid = sprite_fields['m_RD']['texture']['guid']
+                    candidates = list(self.by_name[self.name_key(resource.read(check_read=False).m_Name)])
+                    for suffix in range(100): candidates.extend(self.by_name.get(self.name_key(resource.read(check_read=False).m_Name)+str(suffix), []))
+                    # Texture native export GUID is learned from the corresponding
+                    # selected image's meta, never from name alone.
+                    matches = [p for p in candidates if p.suffix=='.png' and guid(Path(str(p)+'.meta'))==texture_guid]
+                    if len(matches)!=1: raise ValueError('Faction texture native identity: '+repr((address,record['guid'],[str(p) for p in candidates],matches)))
+                    native, = matches
+                else:
+                    render_key, source_id = self.recovery.fields(resource)['m_RenderDataKey']
+                    render_guid = ''.join(format(render_key['data['+str(i)+']'],'08x')[::-1] for i in range(4))
+                    if render_guid != record['guid']: raise ValueError('Faction sprite asset identity differs')
+                    candidates = list(self.by_name[self.name_key(resource.read(check_read=False).m_Name)])
+                    for suffix in range(100): candidates.extend(self.by_name.get(self.name_key(resource.read(check_read=False).m_Name)+str(suffix), []))
+                    matches=[]
+                    for p in candidates:
+                        if p.suffix=='.asset':
+                            parsed=native_documents(p.read_text(encoding='utf-8-sig'))
+                            if len(parsed)==1 and next(iter(parsed.values())).get('Sprite',{}).get('m_RenderDataKey')=={render_guid:source_id}:matches.append(p)
+                    if len(matches)!=1: raise ValueError('Faction sprite native identity: '+repr((address,render_guid,source_id,[str(p) for p in candidates],matches)))
+                    native, = matches
+                source_guid=guid(Path(str(native)+'.meta'))
+                self.objects[source_guid]=resource
+                pointer=self.load(source_guid)
+                output.append(dict(Path=address, **{('Texture' if kind=='Texture2D' else 'Sprite'):pointer}))
+        path = ROOT/'unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundPortraitAssets.cs'
+        pointer=dict(fileID=11500000,guid=guid(Path(str(path)+'.meta')),type=3)
+        self.script_guids.add(pointer['guid'])
+        catalog={11400000:dict(MonoBehaviour=dict(m_ObjectHideFlags=0,m_CorrespondingSourceObject=dict(fileID=0),m_PrefabInstance=dict(fileID=0),m_PrefabAsset=dict(fileID=0),m_GameObject=dict(fileID=0),m_Enabled=1,m_EditorHideFlags=0,m_Script=pointer,m_Name='BattleRoundPortraitAssets',m_EditorClassIdentifier='',Configuration=dict(fileID=11400000,guid=value,type=2),Textures=textures,Sprites=sprites))}
+        value=hashlib.md5(b'zjcs:round-card:portrait-assets-instance').hexdigest();self.script_guids.add(value)
+        self.queue.append((Path('Resources/Combat/RoundUI/PortraitAssets.asset'),value,catalog))
+        self.proof[identity(obj)]=dict(source=self.recovery.apk.provenance(obj),native_source=native_config.relative_to(ROOT).as_posix(),original_sha256=sha(obj.get_raw_data()),usage='Complete original GamePlayManagerConfig and explicit local faction image loading')
 
     def extract(self):
         self.recovery.recover('GameRoundScene', self.work / 'round-scene-native',
@@ -75,59 +166,23 @@ class RoundSceneBinding(SelectorBinding):
                 raise ValueError('Changed original timeline card source: ' + str(path))
             self.inputs[path.relative_to(ROOT).as_posix()] = self.checked[key]
         if card['unresolved']: raise ValueError('Unresolved original timeline card fields')
-        retained_path = ROOT / 'unity/Assets/Official/Combat/Timeline/Native/round_character_scene.prefab'
-        retained_source = ROOT / 'assets/reference/battle-hud/timeline-source-manifest.json'
-        retained = native_documents(retained_path.read_text(encoding='utf-8'))
-        available = {}
-        for meta in retained_path.parent.parent.rglob('*.meta'):
-            path = Path(str(meta)[:-5])
-            if path.is_file(): available[guid(meta)] = path
-        circle = ROOT / 'unity/Assets/Game/Runtime/Official/WorldUI/WorldCircleSpriteRenderer.cs'
-        available[guid(Path(str(circle) + '.meta'))] = circle
-        for meta in (ROOT / 'unity/Assets/Game/Runtime/Presentation/Combat/Shaders').glob('*.meta'):
-            path = Path(str(meta)[:-5])
-            if path.is_file(): available[guid(meta)] = path
-        pending = list(set(re.findall(rb'guid: ([0-9a-f]{32})', retained_path.read_bytes())))
-        self.retained_resources = {}
-        while pending:
-            value = pending.pop().decode()
-            if value in self.script_guids: continue
-            if value.startswith('0000000000000000'):
-                self.script_guids.add(value); continue
-            path = available.get(value)
-            if path is None: raise ValueError('Unresolved retained timeline dependency: ' + value)
-            meta = Path(str(path) + '.meta')
-            self.retained_resources[path.relative_to(ROOT).as_posix()] = dict(sha256=sha(path.read_bytes()),
-                meta_sha256=sha(meta.read_bytes()), guid=value)
-            self.script_guids.add(value)
-            pending.extend(set(re.findall(rb'guid: ([0-9a-f]{32})', path.read_bytes())))
-        root_transform, = [doc['Transform'] for doc in retained.values()
-            if 'Transform' in doc and doc['Transform']['m_Father']['fileID'] == 0]
-        root = root_transform['m_GameObject']['fileID']
-        order, = [row for row in card['scripts'] if row['type'] == 'GameSceneObjectOrderLayer']
-        order_id = order['nativeFileID']
-        order_doc = copy.deepcopy(card['documents'][order_id])
-        group_id = order_doc['MonoBehaviour']['mSortingGroup']['fileID']
-        group_doc = copy.deepcopy(card['documents'][group_id])
-        assert 'SortingGroup' in group_doc and order_doc['MonoBehaviour']['m_GameObject']['fileID'] == card['root']
-        assert group_doc['SortingGroup']['m_GameObject']['fileID'] == card['root']
-        assert group_id not in retained and order_id not in retained
-        order_doc['MonoBehaviour']['m_GameObject'] = dict(fileID=root)
-        order_doc['MonoBehaviour']['m_Script'] = self.scripts['GameSceneObjectOrderLayer']
-        group_doc['SortingGroup']['m_GameObject'] = dict(fileID=root)
-        retained[group_id] = group_doc; retained[order_id] = order_doc
-        retained[root]['GameObject']['m_Component'].extend(dict(component=dict(fileID=file_id))
-            for file_id in (group_id, order_id))
+        documents = copy.deepcopy(card['documents'])
+        for key, pointer in card['external'].items(): self.objects[pointer['guid']] = self.original(key)
+        for key, file_id in card['objectMap'].items():
+            owner = self.original(key)
+            self.learn(self.recovery.fields(owner), next(iter(documents[file_id].values())), owner)
+        for row in card['scripts']:
+            if row['namespace'] or row['type'] not in NAMES:
+                raise ValueError('Unmigrated native card script: ' + repr(row))
+            documents[row['nativeFileID']]['MonoBehaviour']['m_Script'] = self.scripts[row['type']]
+        # Keep the existing Resources identity while restoring the entire original
+        # hierarchy/components from the selected native export.
         value = hashlib.md5(b'zjcs:battle-round-native:retained-card-sorting').hexdigest()
         self.script_guids.add(value)
-        self.queue.append((Path('Resources/Combat/RoundUI/GameRoundCharacterItem_Scene.prefab'), value, retained))
-        for path in (retained_path, Path(str(retained_path) + '.meta'), retained_source):
-            self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
-        self.card_sorting = dict(original=card_record, component=order['original'],
-            native_order_file_id=order_id, native_sorting_group_file_id=group_id,
-            retained_card=dict(manifest='854_156383', prefab=retained_path.relative_to(ROOT).as_posix(),
-                source_manifest=retained_source.relative_to(ROOT).as_posix()),
-            operation='Retain the existing source-derived card unchanged; append the two original root sorting components and rebind their owner/script only. Full native card script migration is pending.')
+        self.queue.append((Path('Resources/Combat/RoundUI/GameRoundCharacterItem_Scene.prefab'), value, self.replace(documents)))
+        self.retained_resources = {}
+        self.card_sorting = dict(original=card_record,
+            operation='Restore all original native card objects and seven script bindings; preserve original fields, assets, animation and sorting. External entity data enters through the explicit local presentation seam.')
         native, _, round_ui, anchor_record = self.recovery.outputs[2]
         for path in (native, Path(str(native) + '.meta')):
             key = path.relative_to(self.cache / 'native-export-all').as_posix()
@@ -166,6 +221,7 @@ class RoundSceneBinding(SelectorBinding):
         for name in NAMES:
             path = code / (name + '.cs')
             self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+        self.portrait_configuration()
         return record
 
 
@@ -240,7 +296,7 @@ def main():
         'OfficialBattleSceneTimelineView.cs', 'OfficialBattleSceneTimelineView.cs.meta', 'Zjcs.Presentation.Combat.asmdef')]
     RECEIPT.write_bytes((json.dumps(dict(manifest=binding.recovery.apk.version, prefab=record,
         inputs=binding.inputs, native_recovery=binding.recovery.proof, resources=binding.proof,
-        scripts={name: binding.script_sources[name] for name in NAMES}, installed=installed,
+        scripts={name: binding.script_sources[name] for name in (*NAMES, 'BattleHpBloodEffect')}, installed=installed,
         shared_resources=shared, variant_guids=aliases, generator_sha256=sha(Path(__file__).read_bytes()),
         card_sorting=binding.card_sorting,
         retained_hud_anchor=binding.retained_hud_anchor,
