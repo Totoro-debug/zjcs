@@ -918,11 +918,13 @@ namespace Zjcs.Presentation.Home
         {
             var properties = PlayerProperties();
             session = OfflineHomeIncomeSession.Open(slots, slotId, new[] { PlaceholderDefinition() },
-                properties, FloatPropertyIds(), Array.Empty<OfflineHomeRandomRewardDefinition>(), Now());
-            OfflineHomeIncomeDefinition[] definitions = homeProgression.BuildIncomeDefinitions(
-                session, context, BlessingLevel);
-            OfflineHomeRandomRewardDefinition[] rewards = homeProgression.BuildRandomRewardDefinitions(session, context);
-            session.Reconfigure(definitions, properties, FloatPropertyIds(), rewards);
+                properties, FloatPropertyIds(), Array.Empty<OfflineHomeRandomRewardDefinition>(), Now(), restored =>
+                {
+                    OfflineHomeIncomeDefinition[] definitions = homeProgression.BuildIncomeDefinitions(
+                        restored, context, BlessingLevel);
+                    OfflineHomeRandomRewardDefinition[] rewards = homeProgression.BuildRandomRewardDefinitions(restored, context);
+                    restored.Reconfigure(definitions, properties, FloatPropertyIds(), rewards);
+                });
             return session;
         }
 

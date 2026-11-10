@@ -16,6 +16,8 @@
 
 ### 官方功能范围与判定依据
 
+后续迁移以 `official-source.json` 当前选择的 `884_156692` 为输入，真实客户端及共享反编译代码位于 `.tools/source-packages/current/884_156692/official-code/`，来源凭据见[客户端代码清单](../../assets/reference/official-client-code/source-manifest.json)。下文的 `871_156598` 是既有家园转换基线，不能据此宣称已经迁移当前版本；既有运行载荷及原生 prefab 保留，待逐项恢复真实脚本、序列化绑定和运行验证。
+
 官方基线为固定版本 `871_156598` 的客户端、共享代码、配置与 prefab。官方脚本来自 `.tools/source-packages/official-code/client-source/` 和 `common-source/Common/`；`assets/official/ui.json` 保存主城、顶部栏、底栏、头像与功能菜单的控件树，`assets/official/home.json` 保存场景层级、设施位置、相机及点击区域。原始联网功能保留在功能目录中，其单机处理单独注明；官方资源或脚本可取得，不代表已在 Unity 中恢复运行。
 
 | 范围 | 原始官方功能与关键调用关系 | 当前实现与剩余工作 |
@@ -170,6 +172,8 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 `unity/Assets/Official/Home/` 已保存来源清单登记的2,001个输出文件、265个目录及49个跨模块共享脚本绑定；输出包含1张场景、139个 prefab、261个 C# 文件及贴图、动画、材质等。文件哈希和 `.meta` GUID 与[来源总表](../../assets/reference/SOURCES.md)匹配；Unity 重序列化的内置 `Sprite-Lit-Default.asset` 保留原始及导入后哈希。261个本目录 C# 文件全部是带 `Dummy class` 注释的 AssetRipper 空占位类，包含 `HomeRoot`、`HomeUI`、`PublicBottomBar`、`BedFurniture`、`CartFurniture` 和 `HomeRandomReward`，不能作为官方逻辑恢复的证据。官方真实方法体可在反编译目录取得，须迁移到 `Assets/Game/Runtime/Official/` 或对应适配／展示层并重新绑定；不在 `Assets/Official/` 编写手工运行时代码。
 
 [`OfflineHangUpIncome`](../../unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncome.cs) 实现小时产量、容量、整数领取与单向时间检查点计算。新增 [`OfflineHomeIncomeSession`](../../unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs)，从调用方传入家园收益配置及角色属性，打开时按本地 Unix 时间补算并受存储时长上限限制；领取和加速奖励通过候选存档副本校验后原子写入本地 JSON，重复回执不会重复发放。新存档从打开时刻建立检查点，不会从 Unix 纪元错误累计；存档 schema 1 可迁移到 schema 2。加速收益按已确认的单机规则直接进背包，不受家具存储上限限制。
+
+家园打开顺序为先恢复家具／挂机解锁和等级，再由 `configureBeforeAdvance` 装配真实收益与随机奖励目录，最后推进本地时间检查点；不再用零产量占位目录提前消费离线时段。配置失败时尚未推进检查点或写入收益存档。`HomeIncomeRestoreValidation.Run` 已在隔离 Unity 2022.3.57f1c2 工程通过存档恢复、按已存等级补算、36 小时封顶、领取余数、重复回执、同时间重开、时钟回退及配置失败不写盘回归；该范围属于收益规则验证，家园窗口的 Play Mode 模拟点击、画面与 Windows Player 验证仍未完成。
 
 同一存档提供官方随机奖励类型/组/槽位定义、领取回执和随机状态；Unity 已装配 `home_random_reward_type` 刷新区间/上限、29 个槽位及奖励组权重，15 个当前开放槽位可生成动物/落叶，领取按本地事务扣槽并进入背包。官方服务端最终奖励裁决未包含在客户端，因此离线奖励使用已确认本地权重规则。邮箱本地读信、到期过滤、未读优先、单封/批量已读、附件领取和删除均已接存档事务，初始邮箱保持为空。六张官方教学图与步骤／队列已加载，执行器只完成已登记节点；不支持节点会显式暂停，不默认成功。
 

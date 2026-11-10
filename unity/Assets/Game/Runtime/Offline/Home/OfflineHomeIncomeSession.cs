@@ -183,7 +183,8 @@ namespace Zjcs.Offline.Home
         public static OfflineHomeIncomeSession Open(string savePath,
             IEnumerable<OfflineHomeIncomeDefinition> definitions,
             IReadOnlyDictionary<int, long> properties, ISet<int> floatPropertyIds,
-            IEnumerable<OfflineHomeRandomRewardDefinition> randomRewards, long nowUnixSeconds)
+            IEnumerable<OfflineHomeRandomRewardDefinition> randomRewards, long nowUnixSeconds,
+            Action<OfflineHomeIncomeSession> configureBeforeAdvance = null)
         {
             if (string.IsNullOrWhiteSpace(savePath)) throw new ArgumentException("A save path is required.", nameof(savePath));
             OfflineHomeIncomeDefinition[] catalog = (definitions ?? throw new ArgumentNullException(nameof(definitions))).ToArray();
@@ -198,6 +199,9 @@ namespace Zjcs.Offline.Home
             if (result.Json == null) save.LastLocalUnixSeconds = Math.Max(0, nowUnixSeconds);
             var session = new OfflineHomeIncomeSession(savePath, catalog, properties, floatPropertyIds,
                 rewardCatalog, save, result.Status);
+            // Unlocks and levels live in the restored save. Install their real catalog
+            // before advancing the checkpoint, otherwise the offline interval is lost.
+            configureBeforeAdvance?.Invoke(session);
             session.AdvanceTo(nowUnixSeconds);
             return session;
         }
@@ -205,12 +209,13 @@ namespace Zjcs.Offline.Home
         public static OfflineHomeIncomeSession Open(ProfileSlotCatalog slots, string slotId,
             IEnumerable<OfflineHomeIncomeDefinition> definitions,
             IReadOnlyDictionary<int, long> properties, ISet<int> floatPropertyIds,
-            IEnumerable<OfflineHomeRandomRewardDefinition> randomRewards, long nowUnixSeconds)
+            IEnumerable<OfflineHomeRandomRewardDefinition> randomRewards, long nowUnixSeconds,
+            Action<OfflineHomeIncomeSession> configureBeforeAdvance = null)
         {
             if (slots == null) throw new ArgumentNullException(nameof(slots));
             if (!slots.Contains(slotId)) throw new DirectoryNotFoundException("The selected profile slot does not exist.");
             return Open(slots.GetHomePath(slotId), definitions, properties, floatPropertyIds,
-                randomRewards, nowUnixSeconds);
+                randomRewards, nowUnixSeconds, configureBeforeAdvance);
         }
 
         public static IReadOnlyList<OfflineHomeSkinSelection> ReadSkinSelections(ProfileSlotCatalog slots,
