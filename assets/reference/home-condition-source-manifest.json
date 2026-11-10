@@ -1,0 +1,135 @@
+{
+  "manifest": "884_156692",
+  "source_sha256": {
+    "scripts/templates/home_conditions/HomeConditionRules.cs": "9ac5f63b85ada79b14e9192db3a99cfe3a735800997a221258c0c78452611160",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ICondition.cs": "12a4005edaf53df080240808b91e6e3e55fc08bceb91fd154e6c3993cdc704ff",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ConditionDataType.cs": "e067894427667bfe5da439df11bef5338c45fa6e3376cdfb307775ecc7ca7921",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ConditionType.cs": "99f4a625e61898abddfef171a4a762e41adc103badf44f9e2bddfcc1ca6ff783",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/SubRank.cs": "a4ed6930d7473456d13f7f102a708aa88510e52cda6521a034dc625cda40406e",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Rank.cs": "1a91cda306404d54e85e4c2731748da101aca3cf14e9ade5871dffb5e83ce3b6",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemType.cs": "8a1a33483ed28de00b9bc37dd60899ae0cb2fa7d7bd821b42f6e43cdcb3dbcaf",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/HasItemTypeCondition.cs": "6da637782893312e7684ec945db2a108b4271c442f37741852b67e107c5f827f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RankCondition.cs": "0164b794e73b71125d18dea7633f1dd1f3ceef0a6bbd11039c6bbe2c15951cdb",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/SubRankCondition.cs": "5754156223f0fba2094056f64be9f558868de2d2bd036201a67cdd9cfef5ce29",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MaxProfessionRankCondition.cs": "a2dbe26e8ac46e01db42d038fc4a86b6bae4ad4e460d20c307a417ab3becc7bf",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/StoryCountCondition.cs": "a3d4ce9ab5ac81304ab0ef1b25991b55eabd7609684e9351ed846453007849fc",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AnyMapGoddessActivedCondition.cs": "dc2c945985a87f2e651349acfe8016ac59fe5698e0629477d2c05fc472846a8b",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/StagePassCondition.cs": "f116338ed5c03a4f0ac22183861eb5a3eb2f5c63d09885356002217f5d4bf47a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/CompositeCondition.cs": "9e45aefb344d4e75fffe52fa8f0fcea3e4886d3e396b2c3fa10128ebe35cf54d",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/CompositeAndCondition.cs": "1a7d5ccf8f1dcf8401e1a46aeb4596bd464f5c8774edc50adcdb4d55b111571c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/CompositeOrCondition.cs": "b4d4f14990bcc59bb196a4bfcc360df4d38f1142e040ec9015c14211b6530aca",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Formula.cs": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/EnumExt.cs": "245e7b2e1352e2e86a3e85227bf8dc0e36b6b3d080c6070d67a403443b805d52",
+    "unity/Assets/Game/Runtime/Official/Partners/PartnerConditionRules.cs": "b60dbfbfac661fd48cf92a8fc07ad72f7d5fccb6520a1b9151c4efeccc0aaedb",
+    "unity/Assets/Game/Runtime/Official/Partners/NpcRosterRules.cs": "1cb9ff62f8b3dcf64ef36a0e7315c57fde1689356063b6f7675e7c73be582a18",
+    "unity/Assets/Game/Runtime/Official/Partners/Zjcs.Official.Partners.asmdef": "9786a236871b2debfbaebf648e4acab87518a23c976894c63c7e2725ec7e4a49"
+  },
+  "methods": {
+    "ICondition": {
+      "DataHub": "79cbcf7635ff4bc0900a214db12136df69bbd587ea9e0fbfdb6476b0f05f7323"
+    },
+    "HasItemTypeCondition": {
+      "public override bool IsMet(DataHub dataHub)": "3105635d095b7d65d1ed67888bc505b36801a69f5f89c8722fc8907a8a686e6a",
+      "public override (long current, long target) GetProgress(DataHub dataHub)": "94878d541cd21bd988f6ae8e45d24a020435c7358919c1a14d1d471f8173db8c",
+      "protected long GetValue(DataHub dataHub)": "cd7924c9acf4ed03fcb4cdfbe8fac6907cc16cd80c9e22ccce71b895837fe7ae"
+    },
+    "RankCondition": {
+      "public override bool IsMet(DataHub dataHub)": "0a278d776a4d4a6885f487653b1558ef3d1f13fb1d075feca82eca3bb6240857",
+      "private Rank GetData(DataHub hub)": "0133e0d2626052cc7cd751151f16c6d8ffa647c4fac42f22b8e1ec711b4c61cd"
+    },
+    "SubRankCondition": {
+      "public override bool IsMet(DataHub dataHub)": "1b14068b36de27161bc9e7d18d10944c8195bfc523eaefdc33b97fa4b17b3566",
+      "protected SubRank GetSubRank(DataHub hub)": "e4dcf28d007e78cfc5e41c5aedd0d6d739c28188f95d340aad88e5be1c1386f5"
+    },
+    "MaxProfessionRankCondition": {
+      "public override bool IsMet(DataHub dataHub)": "cfe8aa7b625cf56a236c62e1210a34a3619d00cd26fc2bea3422e7b5b8038c72",
+      "private int GetValue(DataHub dataHub)": "d1c8b5b7d77e7f39d207d455f490981fc9880fef3d4f3e463c9ca26d478a048e"
+    },
+    "StoryCountCondition": {
+      "public override bool IsMet(DataHub dataHub)": "8fbe3d06e00fb876ae905776d05302606e1957731c3c02a3d16f1f0613bf28aa"
+    },
+    "AnyMapGoddessActivedCondition": {
+      "public override bool IsMet(DataHub dataHub)": "375aef7b5a9303f9d6e406a090874b0dd51092559e0b9474685959f261618862",
+      "private bool IsAnyActived(DataHub dataHub)": "f918ce4a780761ec7e3c99887b288a9b8be0f7a7dbf03b54e9e9d645e56bc238"
+    },
+    "StagePassCondition": {
+      "public override bool IsMet(DataHub dataHub)": "e502e7a3f1f01c74049f7cc0c99275b9993d01f5e729a903ff476c49f1072003",
+      "private int GetCount(DataHub dataHub)": "ba3797aacba2b799018a02f43870c09f4bbc96c699523e2584acc6e4216c91bc"
+    },
+    "CompositeCondition": {
+      "public List<ICondition> GetConditions()": "3a657bd6eeb29e3e0c8d19c4c313acfa011e88b02c5652447d413942b92cef21"
+    },
+    "CompositeAndCondition": {
+      "public override bool IsMet(DataHub dataHub)": "b7e6ffe5f687141e93a0ea6bb62cf287e7ca61e23f08bf68c2b1f837dba1724b"
+    },
+    "CompositeOrCondition": {
+      "public override bool IsMet(DataHub dataHub)": "21c4b5546f905b49a99c347c2d4d3581f60a9be44389552e8f86685f36b50cca"
+    },
+    "Formula": {
+      "public static bool Compare<T>(T lhs, string op, T rhs) where T : IComparable<T>, IEquatable<T>": "08bee63598aba5a4622459f23793aa107656bc0e8310570bc8385d48094ca239"
+    },
+    "EnumExt": {
+      "public static Rank ToRank(this SubRank subRank)": "6ce5dc2ecbc912b1d8eefcc30f09a77558a2e7237ca8f5cf985e8bc76f5d9beb"
+    }
+  },
+  "generator_sha256": "429a3a3d7d9575fd5b4b6d515a89ddc10339509fc4b84bcb33aae5cbfe9e9008",
+  "configuration_sha256": "1d4ccbea525ef6b2b37e0cf4e4874f70410dc399899780da0a0332a909282d27",
+  "closure": {
+    "types": [
+      "AnyMapGoddessActivedCondition",
+      "CompositeAndCondition",
+      "CompositeOrCondition",
+      "HasItemTypeCondition",
+      "HasManualMeetNpcCondition",
+      "LevelCondition",
+      "MapUnlockCondition",
+      "MaxProfessionRankCondition",
+      "NoneCondition",
+      "RankCondition",
+      "StoryCountCondition"
+    ],
+    "condition_ids": [
+      14,
+      40,
+      111,
+      3011,
+      3018,
+      3030,
+      3031,
+      3035,
+      3038,
+      4003,
+      4178,
+      7000
+    ]
+  },
+  "outputs": {
+    "HomeConditionRules.cs": "a887084a577eef48c6fea5a3e911b90a68c8d597231aff279d5df9d6df86e643"
+  },
+  "adaptations": [
+    "Original IsMet/helper/compare methods and enum identities, with diagnostic logging omitted.",
+    "Reuse selected PartnerConditionRules for None/Always/Level/HasItem/MapUnlock/MapRegionActived/HasManualMeetNpc leaves.",
+    "Original composite traversal resolves current home condition IDs without flattening or changing short circuit.",
+    "Inventory and player values come through typed read-only ports; offline opening policy is explicitly injected.",
+    "Home evaluation only; feature/UI/save integration is not claimed by staged condition code."
+  ],
+  "installed_outputs": {
+    "unity/Assets/Game/Runtime/Official/HomeConditions.meta": "dadfa5424eb9159b5367ebffb71b1644078c236e1f39b57f2e5ae3511ef28e88",
+    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionRules.cs": "a887084a577eef48c6fea5a3e911b90a68c8d597231aff279d5df9d6df86e643",
+    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionRules.cs.meta": "353c3ce2021a27fb86a16a74ef45e627ad2eecc8836870f973a1ee59bbab0776",
+    "unity/Assets/Game/Runtime/Official/HomeConditions/Zjcs.Official.HomeConditions.asmdef": "dbd35eaf68cab6303e5b0fa05d4a86a3493d66592ff10989b0570f09c771df31",
+    "unity/Assets/Game/Runtime/Official/HomeConditions/Zjcs.Official.HomeConditions.asmdef.meta": "d5aa6a12212b0f7aba960a1c92b6ba27186056a474c57bd83b4c282b9924addf",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfficialCurrentHomeRuleAssetCatalog.cs": "a60ae16c8926c48c9a7e97c0c783b1f01cc9ed70e4b6451fbd903ca3147fc096",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfficialCurrentHomeRuleAssetCatalog.cs.meta": "09ec8321ae5d415915393613939721cca3eb4d8ea7c60823101dda6f05e9530e"
+  },
+  "bindings_sha256": {
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfficialCurrentHomeRuleAssetCatalog.cs": "a60ae16c8926c48c9a7e97c0c783b1f01cc9ed70e4b6451fbd903ca3147fc096",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef": "af3094a8d0114407c9a9e959b4542794a62fdfc4e189842470bc1ba808bcbabb"
+  },
+  "validation_sha256": {
+    "scripts/fixtures/home_condition_validation.cs": "e83a92fa0055265be6620013132da58312465d2abacc1ddbc730e0d45a372894",
+    "scripts/validate_home_conditions.py": "d67e8f39bf8232424219b45aa390937b29122c8353180fda9153d5cbbd0eefc5",
+    "scripts/prepare_home_conditions_validation.py": "9d48fcdfe2f8764fcc474f2262f777b32b718e0e2bfac1f6fbf702a4a1667daf"
+  },
+  "installer_sha256": "450e527fabd5eb9d9bf9f9ec91bef96bef04935982af3ae15bbe5e9ecdf5ec88"
+}
