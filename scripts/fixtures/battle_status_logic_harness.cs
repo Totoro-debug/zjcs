@@ -64,6 +64,7 @@ public static class BattleStatusLogicHarness
         Check(restoredRunner != null && restoredLogic.LogicTriggeredCount >= 0,
             "Status logic checkpoint could not be restored by the official executor.");
         FilterBoundaries(catalog);
+        EntityPortBoundaries(catalog);
         ChangeStatusStacks(catalog);
         OriginalStackStartup(catalog);
         AbsorbStatusStacks(catalog);
@@ -455,13 +456,86 @@ public static class BattleStatusLogicHarness
             "Official IteratingAgentStatusEntity port must fail closed until status iteration is bound.");
     }
 
-    private static void RunFlow(FightBattleStatusState status, FightBattleUnitState owner,
-        FightOfficialCombatCatalog catalog, string filter, string handles)
+    private static void EntityPortBoundaries(FightOfficialCombatCatalog catalog)
+    {
+        const string tail = ",{\"_type\":\"FightHandleCfgCounterAdd\","
+            + "\"CounterBBKey\":{\"Id\":9901,\"IsPersistentBlackboard\":true},\"DeltaValue\":1}";
+        const string skill = "{\"_type\":\"FightHandleCfgTriggerSkills\","
+            + "\"SourceEntityKey\":{\"Id\":SOURCE},\"TargetEntityKey\":{\"Id\":TARGET},"
+            + "\"TriggerSkillCfgs\":[{\"SkillId\":12000,\"BasePercent\":1}]}";
+        const string apply = "{\"_type\":\"FightHandleCfgTriggerStatuss\","
+            + "\"SourceEntityKey\":{\"Id\":SOURCE},\"TargetEntityKey\":{\"Id\":TARGET},"
+            + "\"TriggerStatusCfgs\":[{\"StatusId\":24823,\"BasePercent\":1}]}";
+        const string remove = "{\"_type\":\"FightHandleRemoveStatusCfg\","
+            + "\"TargetEntityKey\":{\"Id\":TARGET},\"FilterCondition\":FILTER}";
+        var owner = Unit(1, 1);
+        var main = catalog.CreateStatus(24669, 1, 1, 97);
+        var victim = catalog.CreateStatus(24750, 1, 1, 98);
+        owner.Statuses.Add(main); owner.Statuses.Add(victim);
+        foreach (int port in new[] { 0, 2, 3, 1022, 1023, 1079, 175187006, 999999 })
+            foreach (string handle in new[] {
+                skill.Replace("SOURCE", port.ToString()).Replace("TARGET", "1"),
+                skill.Replace("SOURCE", "1").Replace("TARGET", port.ToString()),
+                apply.Replace("SOURCE", port.ToString()).Replace("TARGET", "1"),
+                apply.Replace("SOURCE", "1").Replace("TARGET", port.ToString()),
+                remove.Replace("TARGET", port.ToString()).Replace("FILTER", "null") })
+            {
+                main.LogicBlackboard.Clear();
+                var random = new FightRandomStream(31);
+                var casts = RunFlow(main, owner, catalog, "null", handle + tail, random);
+                Check(casts.Count == 0 && owner.Statuses.Count == 2 && owner.Statuses.Contains(victim)
+                    && !main.LogicRulesSupported && main.LogicBlackboard.Count == 0 && random.Seed == 31,
+                    "Unbound/non-unit entity port consumed randomness, changed a unit or ran its dependent tail: " + port);
+            }
+        var positionRandom = new FightRandomStream(31);
+        RunFlow(main, owner, catalog, "null", skill.Replace("SOURCE", "1").Replace("TARGET", "1")
+            .Replace("\"TriggerSkillCfgs\"", "\"UseDamagePos\":true,\"DamagePosEntityKey\":{\"Id\":1023},\"TriggerSkillCfgs\"")
+            + tail, positionRandom);
+        Check(!main.LogicRulesSupported && main.LogicBlackboard.Count == 0 && positionRandom.Seed == 31,
+            "Unbound DamageResult.Pos was replaced by a unit position or continued the flow.");
+        foreach (bool empty in new[] { false, true })
+        {
+            if (empty) owner.Statuses.Clear();
+            RunFlow(main, owner, catalog, "null", remove.Replace("TARGET", "1")
+                .Replace("FILTER", "{\"_type\":\"UnknownServerFilter\"}") + tail);
+            Check(!main.LogicRulesSupported && main.LogicBlackboard.Count == 0
+                && owner.Statuses.Count == (empty ? 0 : 2),
+                "Unsupported removal filter continued a dependent flow, including an empty collection.");
+        }
+        owner.Statuses.Add(main); owner.Statuses.Add(victim);
+        int ends = 0;
+        owner.StatusEnded += (unit, ended) => {
+            if (ended == victim) { ends++; main.LogicBlackboard[0].LongValue = 0; }
+        };
+        var valid = RunFlow(main, owner, catalog, "null",
+            skill.Replace("SOURCE", "1").Replace("TARGET", "1") + tail);
+        Check(valid.Count == 1 && valid[0].SourceUnitId == owner.Id && valid[0].TargetUnitId == owner.Id,
+            "Explicit MainEntity skill ports no longer resolve to their owner.");
+        RunFlow(main, owner, catalog, "null", apply.Replace("SOURCE", "1").Replace("TARGET", "1") + tail);
+        Check(owner.Statuses.Any(value => value.ClassId == 24823), "Explicit MainEntity status ports failed.");
+        RunFlow(main, owner, catalog, "null", remove.Replace("TARGET", "1")
+            .Replace("FILTER", StatusFilter(24823)) + tail);
+        Check(main.LogicRulesSupported && owner.Statuses.Count == 2 && owner.Statuses.Contains(victim)
+            && main.LogicBlackboard.Single(value => value.KeyId == 9901).LongValue == 3,
+            "Supported filtered removal changed other states or interrupted the dependent flow.");
+        // The first end callback changes a value read by the next candidate's filter.
+        owner.Statuses.Remove(main);
+        var later = catalog.CreateStatus(24750, 1, 1, 99); owner.Statuses.Add(later);
+        main.LogicBlackboard[0].LongValue = 1;
+        RunFlow(main, owner, catalog, "null", remove.Replace("TARGET", "1")
+            .Replace("FILTER", "{\"_type\":\"BBIntEqualFilter\",\"LhsBBKey\":{\"Id\":9901,"
+                + "\"IsPersistentBlackboard\":true},\"Value\":1}"));
+        Check(ends == 1 && !owner.Statuses.Contains(victim) && owner.Statuses.Contains(later),
+            "Removal preflight changed the established filtering/end-callback interleaving.");
+    }
+
+    private static List<FightBattleStatusSkillInvocation> RunFlow(FightBattleStatusState status, FightBattleUnitState owner,
+        FightOfficialCombatCatalog catalog, string filter, string handles, FightRandomStream random = null)
     {
         status.LogicRulesSupported = true;
         status.LogicDefinitionJson = "{\"Triggers\":[{\"_type\":\"FightOnStatusSelfInitTriggerCfg\","
             + "\"Flow\":{\"FilterCondition\":" + filter + ",\"HandleCfgs\":[" + handles + "]}}]}";
-        FightStatusLogicRuntime.Apply(owner, status, FightStatusLogicEvent.StatusSelfInit,
-            owner, owner, null, null, new[] { owner }, catalog, new FightRandomStream(31));
+        return FightStatusLogicRuntime.Apply(owner, status, FightStatusLogicEvent.StatusSelfInit,
+            owner, owner, null, null, new[] { owner }, catalog, random ?? new FightRandomStream(31));
     }
 }

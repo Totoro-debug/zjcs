@@ -746,3 +746,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 状态序列倍率回归输入见 [status-sequence-multiplier.json](battle-rules/status-sequence-multiplier.json)：由上述 884 实体配置对照中 24679／24680 的原 `FightStatusLogicComponent` 无损投影，保留原分片、APK／bundle／对象与二进制摘要；另记录原 `FightHandleCfgBBPickFloatByIndex`／`FightHandleCfgTriggerSkills` 描述及字段源码的 SHA-256。未写入运行时配置或新增美术载荷。
 
 共享层数的七份所选 884 状态配置、APK 片段路径／原始哈希、共享上限 24029=10／25300=5 和四份官方实现输入见 [shared-stack-source-manifest.json](battle-rules/shared-stack-source-manifest.json)，由 `scripts/prepare_battle_shared_stack_runtime.py` 对现有实体配置与已核验原始片段的规范化摘要逐一比对后生成；本地生命周期适配与确认的首次分配规则由战斗执行所属页维护。
+
+状态逻辑图的单位端口类型依据所选 884 官方 `EFightBlackBoardKeyValue` 及技能触发、状态触发、状态移除三组配置／服务器空类。七份输入原码与本地适配输出哈希由 `scripts/record_battle_status_entity_port_sources.py` 记录在[状态实体端口来源](battle-rules/status-entity-ports-source-manifest.json)；行为及验证范围由[技能页](../../docs/features/skills.md)维护。

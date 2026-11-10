@@ -1,0 +1,47 @@
+{
+  "manifest": "884_156692",
+  "official_sources": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EFightBlackBoardKeyValue.cs",
+      "sha256": "d3895d9fae6581858c0cda2d9ff8d3d66a65423b2cfc209a66d782a630120fad"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleCfgTriggerSkills.cs",
+      "sha256": "76449acffaac163a9a4e6215293a4c8e517ffe3fe5a839ccb3c5016954f3cf18"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleTriggerSkillsByStatus.cs",
+      "sha256": "dc3efb14a78d88db0f167dfecf81dd3f6f36dd9e1c075e8bf62c8efb6ccfb6d7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleCfgTriggerStatuss.cs",
+      "sha256": "2b2e0ef8c4d9fddebbca1d49157e616bbc7da12e90b82afecf3c00a8a8db2850"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleTriggerStatussByStatus.cs",
+      "sha256": "c8a01c85b921a231200d0faf48bf5807a2431081462850f05050308f05103cd3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleRemoveStatusCfg.cs",
+      "sha256": "c1bc484365f61b65b2a1a1e2c3c6d21c1d023bbee9a3cf95cfa47c4e56915127"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleRemoveStatus.cs",
+      "sha256": "01d0f68a2526eabdeaaa6ae0fac8ab8245934c3f21451966cb509ffbea976b0a"
+    }
+  ],
+  "configuration_input": {
+    "path": "unity/Assets/Official/Combat/battle-rules.json",
+    "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+  },
+  "migrated_output": {
+    "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusLogicRuntime.cs",
+    "sha256": "9caeb97b65a6aa5ba1967d40a9fa0c22a383638c86c8b2e5525cd86478342b8f"
+  },
+  "adaptation": "Preserve MainEntity as a unit binding. MainStatus and DamageEntity retain their original distinct types; absent or unbound event/graph ports cannot be reinterpreted as a unit. Unsupported removal conditions stop the flow before mutation.",
+  "implementation_document": "docs/features/skills.md",
+  "generator": {
+    "path": "scripts/record_battle_status_entity_port_sources.py",
+    "sha256": "713fcd8c6a674519ae0a53ee3be7d0e4d022fa1b475ecc6b73c783c3360fbc29"
+  }
+}

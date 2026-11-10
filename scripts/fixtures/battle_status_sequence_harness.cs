@@ -110,6 +110,7 @@ public static class BattleStatusLogicRegression
             + "\"StorageKey\":{\"Id\":42},\"Values\":[0.5]},{\"_type\":\"FightHandleCfgCounterAdd\","
             + "\"CounterBBKey\":{\"Id\":42,\"IsPersistentBlackboard\":true},\"DeltaValue\":1}]}},"
             + "{\"_type\":\"FightOnRoundStartTriggerCfg\",\"Flow\":{\"HandleCfgs\":[{\"_type\":\"FightHandleCfgTriggerSkills\","
+            + "\"SourceEntityKey\":{\"Id\":1},\"TargetEntityKey\":{\"Id\":1},"
             + "\"DamageFactorKey\":{\"Id\":42},\"TriggerSkillCfgs\":[{\"SkillId\":13625}]}]}}]}";
         var owner = new FightBattleUnitState { Id = 1 };
         var status = Status(graph);

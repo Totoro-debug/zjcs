@@ -256,16 +256,20 @@ namespace Zjcs.Combat.Official
             }
             if (type == "FightHandleCfgTriggerSkills")
             {
+                // DamageResult.Pos needs its own damage-entity context; the unit target
+                // cannot substitute for that authored position port.
+                if (Bool(handle, "UseDamagePos")) return false;
+                FightBattleUnitState source = ResolveEntity(Object(handle, "SourceEntityKey"), owner, actor,
+                    target, units);
+                FightBattleUnitState destination = ResolveEntity(Object(handle, "TargetEntityKey"), owner,
+                    actor, target, units);
+                if (source == null || destination == null) return false;
                 foreach (object raw in Array(handle, "TriggerSkillCfgs"))
                 {
                     Dictionary<string, object> cfg = raw as Dictionary<string, object>;
                     int skillId = Int(cfg, "SkillId");
                     if (skillId <= 0 || !Roll(random, Float(cfg, "BasePercent", 1f))) continue;
                     FightBattleStatusStateTrigger trigger = TriggerSkill(cfg, status);
-                    FightBattleUnitState source = ResolveEntity(Object(handle, "SourceEntityKey"), owner, actor,
-                        target, units) ?? owner;
-                    FightBattleUnitState destination = ResolveEntity(Object(handle, "TargetEntityKey"), owner,
-                        actor, target, units) ?? target ?? owner;
                     output.Add(new FightBattleStatusSkillInvocation
                     {
                         Trigger = trigger,
@@ -282,8 +286,11 @@ namespace Zjcs.Combat.Official
             if (type == "FightHandleCfgTriggerStatuss")
             {
                 if (catalog == null) return false;
+                if (ResolveEntity(Object(handle, "SourceEntityKey"), owner, actor, target, units) == null)
+                    return false;
                 FightBattleUnitState destination = ResolveEntity(Object(handle, "TargetEntityKey"), owner,
-                    actor, target, units) ?? owner;
+                    actor, target, units);
+                if (destination == null) return false;
                 foreach (object raw in Array(handle, "TriggerStatusCfgs"))
                 {
                     Dictionary<string, object> cfg = raw as Dictionary<string, object>;
@@ -308,14 +315,18 @@ namespace Zjcs.Combat.Official
             if (type == "FightHandleRemoveStatusCfg")
             {
                 FightBattleUnitState destination = ResolveEntity(Object(handle, "TargetEntityKey"), owner,
-                    actor, target, units) ?? owner;
-                Dictionary<string, object> filter = Object(handle, "FilterCondition");
+                    actor, target, units);
+                if (destination == null || !TryMatchStatuses(destination, Object(handle, "FilterCondition"),
+                    owner, status, actor, target, skill, hit, units, null,
+                    out _, runtime)) return false;
+                // Preflight only support/bindings, without random draws. Preserve the
+                // existing interleaving of real filtering and lifecycle end callbacks.
                 foreach (FightBattleStatusState candidate in new List<FightBattleStatusState>(destination.Statuses))
                 {
                     bool supported;
-                    if (MatchesFilter(filter, destination, status, actor, target, skill, hit, units,
-                        random, out supported, new StatusIteration { Candidate = candidate }, runtime)
-                        && (filter == null || supported))
+                    if (MatchesFilter(Object(handle, "FilterCondition"), owner, status, actor, target,
+                        skill, hit, units, random, out supported,
+                        new StatusIteration { Candidate = candidate }, runtime) && supported)
                         FightStatusLifecycle.End(destination, candidate);
                 }
                 return true;
@@ -490,11 +501,10 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState owner, FightBattleUnitState actor, FightBattleUnitState target,
             IReadOnlyList<FightBattleUnitState> units)
         {
-            int id = KeyId(key, null);
-            if (id == 1) return owner ?? actor;
-            if (id == 1022 || id == 1023) return target;
-            if (id == 2) return owner;
-            return actor ?? owner ?? target;
+            // EFightBlackBoardKeyValue distinguishes MainStatus (2) and DamageEntity
+            // (1023) from units. Graph-local and event entity ports need explicit bindings.
+            // Never reinterpret an absent/unbound port as an actor, target or status owner.
+            return KeyId(key, null) == 1 ? owner : null;
         }
 
         private static void RemoveLegacyRuntimeValues(FightBattleStatusState status, object graph)
