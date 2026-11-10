@@ -174,7 +174,9 @@ namespace Zjcs.Presentation.Combat
             if (ValidateForcedMovement)
                 forcedTargetRotation = controller.TryGetUnitTransform(forcedTargetId).localRotation;
             entities.CastStarted += cast => {
-                if (cast.ActorId != 1) return;
+                // The original starting skill can also be the skill under test.
+                // Its later finishing cast belongs to fixture cleanup, not this observation.
+                if (cast.ActorId != 1 || finisherScheduled) return;
                 if (ValidateApproach && cast.SkillEntityId == 15300)
                 {
                     Require(cast.Slot == -1 && cast.Presentation != null
@@ -459,7 +461,9 @@ namespace Zjcs.Presentation.Combat
                 "Forced action did not advance, end and remove: observed=" + movementObserved
                     + ", advanced=" + movementAdvanced + ", removed=" + movementRemoved + ", captured=" + movementCaptured);
             Require(settled && (ValidateForcedMovement || animated) && captured && nativeCasts == ExpectedCasts && checkpoint.Finished
-                && (skillId != 13640 || nativeChildren == 2), "Native graph, action, input or settlement is incomplete.");
+                && (skillId != 13640 || nativeChildren == 2), "Native graph, action, input or settlement is incomplete: skill="
+                + skillId + ", settled=" + settled + ", animated=" + animated + ", captured=" + captured
+                + ", nativeCasts=" + nativeCasts + ", expected=" + ExpectedCasts + ", finished=" + checkpoint.Finished);
         }
         private static void Require(bool value, string message)
         { if (!value) throw new InvalidOperationException("Graph-capability diagnostic: " + message); }
