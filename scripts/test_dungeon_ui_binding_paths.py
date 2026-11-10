@@ -17,6 +17,10 @@ def main():
     fixture = (ROOT / "scripts/fixtures/dungeon_ui_binding_paths_harness.cs").read_text(encoding="utf8")
     dotnet = shutil.which("dotnet")
     if not dotnet:
+        unity_dotnet = Path("D:/Tool/Unity/Editor/Data/NetCoreRuntime/dotnet.exe")
+        if unity_dotnet.is_file():
+            dotnet = str(unity_dotnet)
+    if not dotnet:
         raise FileNotFoundError("The installed .NET runtime was not found.")
     runtimes = subprocess.check_output([dotnet, "--list-runtimes"], text=True)
     versions = re.findall(r"^Microsoft.NETCore.App (\S+) \[(.*?)\]$", runtimes, re.M)
@@ -34,7 +38,7 @@ def main():
         subprocess.run(arguments + [str(harness)], cwd=ROOT, check=True)
         output.with_suffix(".runtimeconfig.json").write_text(json.dumps({"runtimeOptions": {
             "tfm": "net" + version.split(".")[0] + ".0", "framework": {"name": "Microsoft.NETCore.App", "version": version}}}), encoding="utf8")
-        subprocess.run([dotnet, str(output), str(ROOT / "unity/Assets/StreamingAssets/Dungeons/UI/official-bindings.json")], cwd=ROOT, check=True)
+        subprocess.run([dotnet, str(output), str(ROOT / "unity/Assets/StreamingAssets/Dungeons/UI/884_156692/official-bindings.json")], cwd=ROOT, check=True)
 
 
 if __name__ == "__main__":

@@ -16,7 +16,7 @@ SOURCE_MANIFEST = ROOT / ".tools/source-packages/current/884_156692/native-conve
 OFFICIAL = UNITY / "Assets/Official/Dungeons/884_156692"
 RESOURCES = UNITY / "Assets/Game/Resources/Dungeons/UI/884_156692/Native"
 GRADE_RESOURCES = RESOURCES / "GradeSprites"
-RECEIPT = ROOT / "assets/reference/dungeon-ui/daily-dungeon-result-ui-source-manifest.json"
+RECEIPT = ROOT / "assets/reference/dungeon-ui/884_156692/daily-dungeon-result-ui-source-manifest.json"
 GUID_LINE = re.compile(r"^guid: ([0-9a-f]{32})$", re.M)
 SCRIPT = re.compile(r"m_Script: \{fileID: (-?\d+), guid: ([0-9a-f]{32}), type: 3\}")
 GUID = re.compile(r"guid: ([0-9a-f]{32})")
@@ -45,6 +45,7 @@ PACKAGE_SCRIPT_GUIDS = {
 }
 LOCAL_TYPE_REMAPS = {
     ("39197805e5534dfcbda4e4ad194e81d7", -1222992475): "LoopVerticalScrollRect",
+    ("7aa338e2f5263348de25eb85a28aad0d", 1857479261): "WorldPopupWindow",
     ("06dd3d5416bf43ea368cc39ff96e6d5a", -381060941): "WorldTabItem",
     ("06dd3d5416bf43ea368cc39ff96e6d5a", 1229101730): "WorldTabGroup",
     ("06dd3d5416bf43ea368cc39ff96e6d5a", -671063624): "WorldTabAnimatorTransition",
@@ -77,6 +78,14 @@ ROOTS = {
         "defaultpackage_assets_prefabs_ui_item.bundle",
     "Assets/Prefabs/UI/Item/ItemIcon.prefab":
         "defaultpackage_assets_prefabs_ui_item.bundle",
+    "Assets/Prefabs/UI/ItemDetail/EquipDetailDialog.prefab":
+        "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+    "Assets/Prefabs/UI/ItemDetail/ItemDetailDialog.prefab":
+        "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+    "Assets/Prefabs/UI/ItemDetail/CommonEquipPieceUseDetailDialog.prefab":
+        "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+    "Assets/Prefabs/UI/ItemDetail/CommonItemPieceUseDetailDialog.prefab":
+        "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
 }
 GRADE_SETTINGS = EXPORT / "ScriptableConfig/Modules/DailyDungeon/DailyDungeonSettings.asset"
 GRADE_SETTINGS_SOURCE = "Assets/ScriptableConfig/Modules/DailyDungeon/DailyDungeonSettings.asset"
@@ -323,10 +332,12 @@ def build() -> dict:
         raise FileNotFoundError("The verified 884 AssetRipper Unity export is missing: " + str(EXPORT))
 
     previous_receipt = None
-    if RECEIPT.is_file():
-        candidate = json.loads(RECEIPT.read_text(encoding="utf-8"))
-        if candidate.get("manifest") == apk.version and candidate.get("apk_sha256") == apk.source.apk_sha256:
-            previous_receipt = candidate
+    for prior_path in (RECEIPT, ROOT / "assets/reference/dungeon-ui/daily-dungeon-result-ui-source-manifest.json"):
+        if prior_path.is_file():
+            candidate = json.loads(prior_path.read_text(encoding="utf-8"))
+            if candidate.get("manifest") == apk.version and candidate.get("apk_sha256") == apk.source.apk_sha256:
+                previous_receipt = candidate
+                break
 
     previous_outputs = {}
     previous_runtime_prefabs = {}
@@ -391,14 +402,8 @@ def build() -> dict:
                 for row in previous_receipt.get("outputs", []) if row.get("source") and row.get("path")}
 
     if not can_reuse_guid_index:
-        by_guid.clear()
-        for meta in EXPORT.rglob("*.meta"):
-            asset = meta.with_suffix("")
-            asset_guid = meta_guid(meta)
-            if asset_guid and asset.is_file():
-                if asset_guid in by_guid:
-                    raise ValueError("Duplicate 884 AssetRipper GUID: " + asset_guid)
-                by_guid[asset_guid] = asset
+        from prepare_dungeon_ui_assets import INPUTS, asset_guid_index
+        by_guid = asset_guid_index(sha(INPUTS))
 
     roots = set()
     for row in native_roots:
@@ -429,14 +434,8 @@ def build() -> dict:
 
     selected, unresolved = resolve_dependencies(by_guid)
     if can_reuse_guid_index and (unresolved or selected != set(by_guid.values())):
-        by_guid.clear()
-        for meta in EXPORT.rglob("*.meta"):
-            asset = meta.with_suffix("")
-            asset_guid = meta_guid(meta)
-            if asset_guid and asset.is_file():
-                if asset_guid in by_guid:
-                    raise ValueError("Duplicate 884 AssetRipper GUID: " + asset_guid)
-                by_guid[asset_guid] = asset
+        from prepare_dungeon_ui_assets import INPUTS, asset_guid_index
+        by_guid = asset_guid_index(sha(INPUTS))
         selected, unresolved = resolve_dependencies(by_guid)
     if unresolved:
         guid, users = next(iter(unresolved.items()))
@@ -445,6 +444,7 @@ def build() -> dict:
 
     selected_source_guids = {}
     source_prefab_guids = {}
+    source_prefab_paths = {}
     for source in selected:
         source_meta = source.with_name(source.name + ".meta")
         source_guid = meta_guid(source_meta)
@@ -461,15 +461,26 @@ def build() -> dict:
             previous = previous_runtime_prefab_rows.get(runtime_path)
             existing_target = ROOT / runtime_path
             existing_meta = existing_target.with_name(existing_target.name + ".meta")
+            pinned_prefab = False
             # Reuse the existing GUID only for a pinned source; the prefab bytes
             # are checked against the current conversion before any replacement.
             if (previous and previous.get("source_guid") == source_guid
                     and previous.get("source_sha256") == sha(source)
                     and existing_target.is_file() and existing_meta.is_file()):
                 prior_imported_guid = meta_guid(existing_meta)
-                if prior_imported_guid:
+                if (prior_imported_guid and previous.get("guid") == prior_imported_guid
+                        and previous.get("sha256") == sha(existing_target)):
                     runtime_guid = prior_imported_guid
+                    pinned_prefab = True
+            if not pinned_prefab and (existing_target.exists() or existing_meta.exists()):
+                # Preserve a prefab already imported at the canonical Resource
+                # path by another session; bind this closure under a stable GUID.
+                runtime_guid = uuid.uuid5(uuid.NAMESPACE_URL,
+                    "zjcs/dungeons/ui/884_156692/prefab-conflict/" + relative.as_posix()
+                    + "/" + source_guid).hex
+                runtime_path = (RESOURCES / "GuidConflicts" / runtime_guid / relative).relative_to(ROOT).as_posix()
             source_prefab_guids[source_guid] = runtime_guid
+            source_prefab_paths[source_guid] = runtime_path
 
     # Reuse byte-identical original assets already imported by the project. A
     # differing asset with the same source GUID receives a private 884 GUID.
@@ -490,11 +501,34 @@ def build() -> dict:
                 if asset.is_file():
                     external[value] = (asset, sha(asset))
 
+    # The main UI importer may already have converted this exact 884 source.
+    # Reuse its verified output and GUID so both importers share Windows bindings.
+    pinned_assets = {}
+    ui_receipt_path = ROOT / "assets/reference/dungeon-ui/884_156692/source-manifest.json"
+    if ui_receipt_path.is_file():
+        ui_receipt = json.loads(ui_receipt_path.read_text(encoding="utf-8"))
+        if ui_receipt.get("manifest") != apk.version:
+            raise ValueError("Daily dungeon UI receipt has a different source version")
+        for row in ui_receipt.get("outputs", []):
+            if not all(row.get(key) for key in ("source", "source_guid", "source_sha256", "guid", "sha256", "meta_sha256", "path")):
+                continue
+            imported = ROOT / row["path"]
+            imported_meta = imported.with_name(imported.name + ".meta")
+            if (imported.is_file() and imported_meta.is_file()
+                    and sha(imported) == row["sha256"]
+                    and sha(imported_meta) == row["meta_sha256"]
+                    and meta_guid(imported_meta) == row["guid"]):
+                pinned_assets[row["source_guid"]] = row
+
     asset_guid_map: dict[str, str] = {}
     for source in selected:
         source_guid = meta_guid(source.with_name(source.name + ".meta"))
         if not source_guid:
             raise ValueError("Official 884 UI asset has no stable GUID: " + str(source))
+        pinned = pinned_assets.get(source_guid)
+        if pinned and pinned["source_sha256"] == sha(source):
+            asset_guid_map[source_guid] = pinned["guid"]
+            continue
         existing = external.get(source_guid)
         if existing and existing[1] == sha(source):
             asset_guid_map[source_guid] = source_guid
@@ -514,6 +548,10 @@ def build() -> dict:
         if source.suffix.casefold() in (".dll", ".pdb"):
             skipped_dlls.append({"source": relative.as_posix(), "guid": source_guid, "sha256": sha(source)})
             continue
+        pinned = pinned_assets.get(source_guid)
+        if pinned and pinned["source_sha256"] == sha(source):
+            copied_outputs.append(dict(pinned, preserved_existing=True))
+            continue
         existing = external.get(source_guid)
         if existing and existing[1] == sha(source):
             shared_assets.append({"source": relative.as_posix(), "guid": source_guid,
@@ -526,6 +564,13 @@ def build() -> dict:
         target = asset_output_paths.get(relative.as_posix())
         if target is None:
             target = OFFICIAL / ("GuidConflicts" if existing else "") / relative
+            target_meta = target.with_name(target.name + ".meta")
+            if (existing and target_meta.is_file()
+                    and meta_guid(target_meta) != assigned_guid):
+                # Another selected source package can already occupy the same
+                # relative conflict path with its own isolated GUID. Keep both
+                # assets by nesting this source under its deterministic GUID.
+                target = OFFICIAL / "GuidConflicts" / assigned_guid / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         folder = OFFICIAL
         for part in target.relative_to(OFFICIAL).parent.parts:
@@ -547,14 +592,28 @@ def build() -> dict:
         if target.exists() and digest(target.read_bytes()) != digest(payload):
             target_path = target.relative_to(ROOT).as_posix()
             previous = previous_outputs.get(target_path)
-            if not (previous
-                    and previous.get("source_sha256") == sha(source)
-                    and previous.get("guid") == assigned_guid
-                    and target_meta.is_file()
-                    and previous.get("meta_sha256") == sha(target_meta)
-                    and meta_guid(target_meta) == assigned_guid):
+            pinned = (previous
+                and previous.get("source_sha256") == sha(source)
+                and previous.get("guid") == assigned_guid
+                and target_meta.is_file()
+                and previous.get("meta_sha256") == sha(target_meta)
+                and meta_guid(target_meta) == assigned_guid)
+            if pinned:
+                preserved_existing = True
+            elif existing and not (len(target.relative_to(OFFICIAL).parts) > 1
+                                    and target.relative_to(OFFICIAL).parts[0] == "GuidConflicts"
+                                    and target.relative_to(OFFICIAL).parts[1] == assigned_guid):
+                # A previously imported package owns the default conflict path.
+                # Preserve it and place this source under its deterministic GUID.
+                target = OFFICIAL / "GuidConflicts" / assigned_guid / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                folder = OFFICIAL
+                for part in target.relative_to(OFFICIAL).parent.parts:
+                    folder = folder / part
+                    write_folder_meta(folder)
+                target_meta = target.with_name(target.name + ".meta")
+            else:
                 raise ValueError("Refusing to overwrite changed official daily dungeon UI asset: " + str(target))
-            preserved_existing = True
         if not target.exists():
             target.write_bytes(payload)
         expected_meta = source_meta.read_text(encoding="utf-8")
@@ -580,10 +639,10 @@ def build() -> dict:
         source_meta = source.with_name(source.name + ".meta")
         source_guid = meta_guid(source_meta)
         runtime_guid = source_prefab_guids[source_guid]
-        target = RESOURCES / relative
+        target = ROOT / source_prefab_paths[source_guid]
         target.parent.mkdir(parents=True, exist_ok=True)
         folder = RESOURCES
-        for part in relative.parent.parts:
+        for part in target.relative_to(RESOURCES).parent.parts:
             folder = folder / part
             write_folder_meta(folder)
         payload = runtime_prefab_bytes(source, prefab_guid_map, asset_guid_map)
@@ -604,7 +663,8 @@ def build() -> dict:
                                    encoding="utf-8", newline="\n")
         resource_prefabs.append({
             "path": target.relative_to(ROOT).as_posix(),
-            "resource": "Dungeons/UI/884_156692/Native/" + relative.with_suffix("").as_posix(),
+            "resource": "Dungeons/UI/884_156692/Native/"
+                + target.relative_to(RESOURCES).with_suffix("").as_posix(),
             "source": relative.as_posix(), "source_guid": source_guid, "guid": runtime_guid,
             "source_sha256": sha(source), "sha256": sha(target), "meta_sha256": sha(target_meta),
             "conversion": "884-prefab-guid-remap-and-local-ugui-script-bindings-v5-loopscroll-tabs-layout",

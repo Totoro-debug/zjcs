@@ -15,6 +15,66 @@
     },
     "sha256": "da276129e605494f2392572880d2cbc0354da14c4151bea6d7dcc90a69be7888"
   },
+  "settings_config": {
+    "source": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-3869022733471997335",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+    },
+    "sha256": "fca2ae301cb5d5fc345377fedb2a97634682e286f6bede6a738c1be96d1a890e"
+  },
+  "random_reward_config": {
+    "source": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "3530266630744679519",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+    },
+    "sha256": "2c25816ee2fa3a1490224514e55b6daa3cc19d248e9167fc59024820d502e69a"
+  },
+  "equip_piece_merge_config": {
+    "source": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-4552155947964623564",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+    },
+    "sha256": "66e07bf19c00ddef557dc70ce24ae0cc3bed489615c2f7a913e65374bbb3f091"
+  },
+  "item_piece_merge_config": {
+    "source": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "3377705298847128743",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+    },
+    "sha256": "cf710f2ac33245a0772664c2da9958d652e2d89a22a551f6f6d7ef1b63f1a37d"
+  },
   "configs": [
     {
       "path": "unity/Assets/Game/Resources/Dungeons/dungeons-runtime.json",
@@ -29,7 +89,7 @@
       "sha256": "29d4b6d565c3a7cd14bb740082c55e926884f807bd8168dfd275c2a841cb8e3f"
     }
   ],
-  "operation": "Resolve original ItemInfo.RawIcon; decode original texture, atlas rotation and tight mesh; restore sprite rect padding, pivot, border and pixels per unit; bind shared sprites explicitly by item id.",
+  "operation": "Resolve original ItemInfo.RawIcon; decode original texture, atlas rotation and tight mesh; restore sprite rect padding, pivot, border and pixels per unit; apply the selected ItemDetailDialogFactory branch order using ItemInfo and GameSettings; bind each reward and its original detail-dialog type explicitly by item id.",
   "sprites": {
     "equip_20008": {
       "guid": "7c92ca6efcd9814357d80ef19119f10c",
@@ -22351,12 +22411,75 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbItemInfo.cs",
       "sha256": "b93d21bb8d57aea59fbfee28c3f7bb789835be6ca8f7d0ec6b6e8f25cfcf90d5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemType.cs",
+      "sha256": "8a1a33483ed28de00b9bc37dd60899ae0cb2fa7d7bd821b42f6e43cdcb3dbcaf"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemUseEffectType.cs",
+      "sha256": "7b7ad1c4e0edd856c65ebf915b8cfccfd3c7557e6a97bedbe63c5a1f8d96598b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RandomRewardInfoParser.cs",
+      "sha256": "3338281e96e61af4685dd1a9e8ba143e9532865f0132e5b365130bfc2dba2e09"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RandomItemRangeProfessionSkillSelector.cs",
+      "sha256": "189397e4e1f058b2e32605bfe2bc7bcbdd596e90359462c0c5af6e9b761c202a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RandomItemRangeTreasureGachaSelector.cs",
+      "sha256": "5f7244dba61dab5be955e106471d06fcf875258241c5cc2c427ebebdf027966f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EquipPieceMergeInfo.cs",
+      "sha256": "503db58eee9454c8e9c9c0ccb0058876ad6c5a8b7b6a1759bd15535cbf2d33be"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemPieceMergeInfo.cs",
+      "sha256": "ff9958f77f22c1a1cbd3c77c886fe4d6451e11e7236740b476ca022adf68b13e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LanguageUtils.cs",
+      "sha256": "ddc94bb5dd46f8c71b6d58ab0f03e2048cde72911de11e343304ce73e4b9a61c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ItemDetailDialogFactory.cs",
+      "sha256": "30ef2a231fd1a90658426a598be3f248505704da2d42fcbbeef0996783b6f1c1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/CommonEquipPieceUseDetailDialog.cs",
+      "sha256": "c93e5411e3b9289cecaeb86b2a70a3d8a301e54ff1ecc386e91b35e6f5228b78"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/CommonItemPieceUseDetailDialog.cs",
+      "sha256": "cf522a16398869c5e262a25ef6e4a165e73545d03b6cb2b8e0b16d88dbf00083"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/DailyDungeonDialogAwardItemComparer.cs",
+      "sha256": "38d37a536912005da83e8dad6f2d0469d51a3da5ecde28ab13aa687ff2e9137a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/DailyDungeonUtils.cs",
+      "sha256": "3ca85e866570e2ffda05af5c3dc165ffca18af2ae7bad6bdf5e6f30c69a53280"
     }
   ],
+  "detail_dialog_types": {
+    "CommonEquipPieceUseDetailDialog": 71,
+    "CommonItemPieceUseDetailDialog": 1,
+    "EquipDetailDialog": 861,
+    "ItemDetailDialog": 231
+  },
   "tools": [
     {
       "path": "scripts/prepare_daily_dungeon_reward_icons.py",
-      "sha256": "e4c94ad2c84e0b1796cee3fd1603931b6e8499091890ba32f141d08fc00a4e8c"
+      "sha256": "577fc805b7e7e5a17d1c1dbe68db4aae4ff70fe7a5d5c859a826599030b15c7e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonRewardAssetCatalog.cs",
+      "sha256": "0ab01e8c64e6e23fb804a0ecd86c31230f74fa09a04f66faace512fb8cfc4b84",
+      "meta_sha256": "a8fd549ea6a99ea106c8c0f4412c737eac6c43a9d8c84f71eeb348165a7e84a6"
     }
   ],
   "outputs": [
@@ -27050,7 +27173,7 @@
     },
     {
       "path": "unity/Assets/Game/Resources/Dungeons/DailyDungeonRewardAssetCatalog.asset",
-      "sha256": "edd52ffd0d061b93376a40b6d8c5ec6265d9312d7298ff0a44d4a4a035ead7f9"
+      "sha256": "5625f6dd5fb2cc64094e619489baa802b223019060923732c4007f43b8b88a41"
     },
     {
       "path": "unity/Assets/Game/Resources/Dungeons/DailyDungeonRewardAssetCatalog.asset.meta",

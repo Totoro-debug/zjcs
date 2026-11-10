@@ -8,6 +8,7 @@ namespace Zjcs.Offline.Progression
     {
         public int ItemId;
         public long Count;
+        public bool IsGradeReward;
     }
 
     [Serializable]

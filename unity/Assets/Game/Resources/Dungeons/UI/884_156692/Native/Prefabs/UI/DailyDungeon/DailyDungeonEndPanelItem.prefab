@@ -59,6 +59,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   m_Component:
   - component: {fileID: 224000955326284023}
+  - component: {fileID: 114999999000000001}
   - component: {fileID: 222397768327470545}
   - component: {fileID: 114571718729274231}
   - component: {fileID: 114581786255902400}
@@ -1160,10 +1161,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1618682377417806}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 24781309, guid: ebe353a9e51fc6708625f16edcb81e06, type: 3}
+  m_Script: {fileID: 11500000, guid: ff59ed8c605b66c8b81c5f010666b6ad, type: 3}
   m_Name:
   m_EditorClassIdentifier:
-  m_Material: {fileID: 2100000, guid: 0627795339756134ebcea556c4cec2d2, type: 2}
+  m_Material: {fileID: 2100000, guid: 1204bb437dae54bb8d1514c806b842ad, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -1171,7 +1172,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  skeletonDataAsset: {fileID: 11400000, guid: 740b1ba4bbed7ca48b21acdf1af2285f, type: 2}
+  skeletonDataAsset: {fileID: 0}
   additiveMaterial: {fileID: 0}
   multiplyMaterial: {fileID: 0}
   screenMaterial: {fileID: 0}
@@ -1223,7 +1224,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1618682377417806}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -818336546, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+  m_Script: {fileID: 11500000, guid: f5b72f306912957474fd58c7806e5a18, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   mSkeletonGraphic: {fileID: 114571718729274231}
@@ -1311,7 +1312,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1703437598541787}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1367256648, guid: d3e719b59ab71ba3f6b398058c866280, type: 3}
+  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   m_Content: {fileID: 224743393880019028}
@@ -1341,7 +1342,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1703437598541787}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1149036886, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+  m_Script: {fileID: 11500000, guid: b13df9d4e3c1e5d562a6753d1df9f594, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   mScrollRect: {fileID: 114924050743934937}
@@ -4654,3 +4655,11 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &114999999000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 1618682377417806}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 916653fd02895f5eba39652a6ab6c969, type: 3}
+  graphic: {fileID: 114571718729274231}
+  renderRoot: {fileID: 224000955326284023}

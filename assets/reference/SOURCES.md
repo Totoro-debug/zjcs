@@ -359,6 +359,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 日常副本结算、排行榜与四类道具详情使用所选 `884_156692`（APK 清单 `881_156673`）的 12 个原 prefab 根、七张原评级 Sprite 及依赖；Windows UGUI／TMP／LoopVerticalScrollRect 脚本绑定、原对象、GUID、转换和输出哈希见 [原生面板来源](dungeon-ui/884_156692/daily-dungeon-result-ui-source-manifest.json)，入口为 `scripts/prepare_daily_dungeon_result_ui.py`。排行榜原始 Transform、Image／TMP、本地化与对象状态、48 张原 Sprite，以及 APK 优先读取的 `config_luban/daily_dungeon_battle.g.bytes`、原 Luban 构造函数与 `TopRecordGradeTypeDict` 输出哈希另见 [排行榜绑定来源](dungeon-ui/884_156692/daily-dungeon-leaderboard-source-manifest.json)，入口为 `scripts/prepare_daily_dungeon_leaderboard_bindings.py`。历史 `871_156598` 副本绑定保持原版本身份。未生成完整素材快照。
 
+日常副本结果宝箱使用所选 `884_156692` 的原 `map_baoXiang_01..04` 二进制骨骼、atlas 与纹理像素，由 `scripts/prepare_daily_dungeon_chest_native.py` 先核对 APK、再按同版云端依赖闭合，接入既有独立原生 Canvas 后端；评级映射、原开箱序列、奖励行字段、输入输出哈希和显式 Resources 绑定见[原生宝箱来源](dungeon-ui/884_156692/daily-dungeon-chest-native-source-manifest.json)。`scripts/prepare_daily_dungeon_result_playables.py` 恢复同版九个开箱／品质 Playable 图与原粒子、网格、材质、Windows shader、纹理及三条 Wwise PCM 事件；仅修复 Unity YAML 空流路径序列化，保留原网格数据。原对象、音频提取凭据、转换与输出哈希见[结果特效来源](dungeon-ui/884_156692/daily-dungeon-result-playables-source-manifest.json)。未生成完整素材快照。
+
 公共副本路线：`record_dungeon_route_presenter.py` 将既有 `871_156598` 路线窗、房间与评级原生 prefab，以及未改写的历史 `official-bindings.json`／原来源清单登记在 `dungeon-ui/route-presenter-source-manifest.json`；当前 `884_156692` 原路线代码、已迁移的路线／房间类、公共显示器与两个调用方分别登记哈希。未新增美术或音频载荷，也未改写旧版来源身份。
 
 

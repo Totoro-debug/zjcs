@@ -63,6 +63,9 @@ namespace Zjcs.Presentation.World
                 Find(root, content.path, content.objects).gameObject.SetActive(false);
         }
 
+        public static void ApplyLayouts(GameObject root, string serialized)
+            => OfficialDungeonUiBindingRuntime.RestoreEntryLayouts(root, serialized);
+
         private static Transform Find(GameObject root, string path, string[] objects)
         {
             var names = (string[])objects.Clone();

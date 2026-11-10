@@ -32,6 +32,18 @@ namespace Zjcs.Editor
 
         private static void RunRules()
         {
+            var perCandidateCounts = new DailyDungeonRuntimeReward
+            {
+                LevelCountId = 13,
+                LevelCountIds = new[] { 7, 9 }
+            };
+            var legacyCount = new DailyDungeonRuntimeReward { LevelCountId = 13 };
+            if (perCandidateCounts.LevelCountIdFor(0) != 7
+                || perCandidateCounts.LevelCountIdFor(1) != 9
+                || legacyCount.LevelCountIdFor(0) != 13
+                || legacyCount.LevelCountIdFor(1) != 13)
+                throw new InvalidOperationException("Daily dungeon level-count multipliers must preserve per-candidate official data and legacy scalar catalogs.");
+
             string validationRoot = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
             string repositoryRoot = Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT");
             if (string.IsNullOrWhiteSpace(validationRoot) || string.IsNullOrWhiteSpace(repositoryRoot))
@@ -202,6 +214,21 @@ namespace Zjcs.Editor
             }
             if (selectedDungeon == null || selectedDifficulty == null || route == null)
                 throw new InvalidOperationException("No public official daily dungeon route with grade rows is available for rule acceptance.");
+            IReadOnlyList<DailyDungeonRewardPreviewItem> rewardPreview = module.BuildRewardPreview(
+                selectedDungeon.id, selectedDifficulty.difficulty, 100, 0, _ => true,
+                new AcceptanceRewardItemMetadataAdapter());
+            if (rewardPreview.Count == 0 || rewardPreview.Any(value => value == null || value.ItemId <= 0
+                || value.Count < 0) || rewardPreview.Select(value => value.ItemId).Distinct().Count() != rewardPreview.Count)
+                throw new InvalidOperationException("The shared difficulty reward preview did not aggregate official items.");
+            for (int index = 1; index < rewardPreview.Count; index++)
+            {
+                DailyDungeonRewardItemMetadata previous = new AcceptanceRewardItemMetadataAdapter()
+                    .Get(rewardPreview[index - 1].ItemId);
+                DailyDungeonRewardItemMetadata current = new AcceptanceRewardItemMetadataAdapter()
+                    .Get(rewardPreview[index].ItemId);
+                if (CompareRewardPreviewItems(previous, current) > 0)
+                    throw new InvalidOperationException("The shared difficulty reward preview lost official item ordering.");
+            }
             ValidatePartialLeave(slots, catalog, selectedDungeon, selectedDifficulty, route);
             DailyDungeonEntryPageModel entryPage = module.BuildEntryPageModel((_, __) => true);
             DailyDungeonEntryModel entry = entryPage.Entries.FirstOrDefault(value =>
@@ -261,8 +288,59 @@ namespace Zjcs.Editor
                     throw new InvalidOperationException("The official test route could not choose room " + route[index + 1] + ".");
             }
             int grade = module.CurrentGrade();
+            DailyDungeonTeamMemberSave[] teamSnapshot =
+            {
+                new DailyDungeonTeamMemberSave { npcClassId = 700001, level = 40, subRank = 1 }
+            };
+            if (!module.SaveBattleCheckpoint(string.Empty, teamSnapshot))
+                throw new InvalidOperationException("The selected daily dungeon partner team was not saved with the run.");
+            module.ActiveRun.startedAtUtcTicks = 0;
+            module.ActiveRun.startedAtUnixSeconds -= 3600;
             if (grade <= 0 || !module.Finish(grade))
                 throw new InvalidOperationException("The official map grade row did not finish the route.");
+            module = DailyDungeonModule.Open(slots, slotId, catalog);
+            DailyDungeonLeaderboardEntry bestRecord = module.Leaderboard(selectedDungeon.id,
+                selectedDifficulty.difficulty, grade, int.MaxValue).FirstOrDefault(value =>
+                    value.PlayerId == (module.Options.PlayerId > 0 ? module.Options.PlayerId : 1));
+            if (bestRecord == null || bestRecord.TeamMembers.Count != teamSnapshot.Length
+                || bestRecord.TeamMembers[0].npcClassId != teamSnapshot[0].npcClassId
+                || bestRecord.TeamMembers[0].level != teamSnapshot[0].level
+                || bestRecord.TeamMembers[0].subRank != teamSnapshot[0].subRank)
+                throw new InvalidOperationException("The first-clear leaderboard snapshot did not retain its invited partner team.");
+
+            long firstClearFinishTicks = bestRecord.FinishTicks;
+            DailyDungeonPendingClaimSave firstClearPending = module.PendingClaims.Single();
+            DailyDungeonRunSave fasterRun = JsonUtility.FromJson<DailyDungeonRunSave>(
+                JsonUtility.ToJson(firstClearPending.run));
+            fasterRun.id += ":faster-repeat";
+            fasterRun.startedAtUtcTicks = DateTime.UtcNow.Ticks - TimeSpan.TicksPerSecond;
+            fasterRun.finishedAtUtcTicks = 0;
+            fasterRun.startedAtUnixSeconds = DateTimeOffset.Now.ToUnixTimeSeconds();
+            fasterRun.finishedAtUnixSeconds = 0;
+            fasterRun.teamMembers = new List<DailyDungeonTeamMemberSave>
+            {
+                new DailyDungeonTeamMemberSave { npcClassId = 700002, level = 45, subRank = 2 }
+            };
+            module.Save.activeRun = fasterRun;
+            if (!module.Finish(grade))
+                throw new InvalidOperationException("The faster repeat clear did not update the personal best.");
+            if (!module.DiscardPendingClaim(fasterRun.id))
+                throw new InvalidOperationException("The faster repeat-clear test could not remove its isolated pending claim.");
+            module = DailyDungeonModule.Open(slots, slotId, catalog);
+            DailyDungeonLeaderboardEntry updatedBest = module.Leaderboard(selectedDungeon.id,
+                selectedDifficulty.difficulty, grade, int.MaxValue).FirstOrDefault(value =>
+                    value.PlayerId == (module.Options.PlayerId > 0 ? module.Options.PlayerId : 1));
+            if (updatedBest == null)
+                throw new InvalidOperationException("The faster repeat clear lost the personal leaderboard row.");
+            DailyDungeonLeaderboardRecordSave persistedBest = module.Save.leaderboard.Single(value =>
+                value != null && value.dungeonId == updatedBest.DungeonId
+                    && value.difficulty == updatedBest.Difficulty && value.grade == updatedBest.Grade
+                    && value.playerId == updatedBest.PlayerId);
+            if (updatedBest.FinishTicks >= firstClearFinishTicks
+                || updatedBest.TeamMembers.Count != teamSnapshot.Length
+                || updatedBest.TeamMembers[0].npcClassId != teamSnapshot[0].npcClassId
+                || persistedBest.teamMembers[0].npcClassId != fasterRun.teamMembers[0].npcClassId)
+                throw new InvalidOperationException("A faster repeat clear replaced the displayed first-clear team instead of only updating the best-time roster.");
             if (module.RemainEntries != initialClaims
                 || module.DailyDungeonGetRewardCount != initialAchievementProgress)
                 throw new InvalidOperationException("Completing a route without claiming consumed a claim or advanced the claim achievement.");
@@ -349,7 +427,11 @@ namespace Zjcs.Editor
 
             IReadOnlyList<DailyDungeonLeaderboardEntry> records = module.Leaderboard(
                 selectedDungeon.id, selectedDifficulty.difficulty, grade);
-            if (records.Count != 1 || !records[0].IsSelf || records[0].IsNpc)
+            if (records.Count != 1 || !records[0].IsSelf || records[0].IsNpc
+                || records[0].TeamMembers.Count != 1
+                || records[0].TeamMembers[0].npcClassId != teamSnapshot[0].npcClassId
+                || records[0].TeamMembers[0].level != teamSnapshot[0].level
+                || records[0].TeamMembers[0].subRank != teamSnapshot[0].subRank)
                 throw new InvalidOperationException("The completed route did not produce a local personal leaderboard record.");
             IReadOnlyList<DailyDungeonLeaderboardEntry> orderedRecords =
                 new OfflineDailyDungeonLeaderboardAdapter().Rank(new[]
@@ -368,14 +450,36 @@ namespace Zjcs.Editor
                     },
                     new DailyDungeonLeaderboardRecordSave
                     {
-                        id = "fast-same-grade", dungeonId = selectedDungeon.id,
+                        id = "z-fast-same-grade", dungeonId = selectedDungeon.id,
                         difficulty = selectedDifficulty.difficulty, grade = grade + 1,
                         finishTicks = 50, playerId = 4, playerName = "同评级快通"
+                    },
+                    new DailyDungeonLeaderboardRecordSave
+                    {
+                        id = "a-tie-earlier-id", dungeonId = selectedDungeon.id,
+                        difficulty = selectedDifficulty.difficulty, grade = grade + 1,
+                        finishTicks = 50, playerId = 5, playerName = "同评级同时间"
                     }
                 }, selectedDungeon.id, selectedDifficulty.difficulty, 0, 10, 0);
-            if (orderedRecords.Count != 3 || orderedRecords[0].PlayerId != 4
-                || orderedRecords[1].PlayerId != 2 || orderedRecords[2].PlayerId != 3)
-                throw new InvalidOperationException("The local leaderboard did not sort by official grade and then completion time.");
+            if (orderedRecords.Count != 4 || orderedRecords[0].PlayerId != 4
+                || orderedRecords[1].PlayerId != 5 || orderedRecords[2].PlayerId != 2
+                || orderedRecords[3].PlayerId != 3)
+                throw new InvalidOperationException("The local leaderboard did not sort only by official grade and completion time while retaining tied input order.");
+            DailyDungeonLeaderboardRecordSave legacyRoster = new DailyDungeonLeaderboardRecordSave
+            {
+                id = "legacy-best-time-roster", dungeonId = selectedDungeon.id,
+                difficulty = selectedDifficulty.difficulty, grade = grade, finishTicks = 25,
+                playerId = 6, playerName = "旧档案",
+                teamMembers = new List<DailyDungeonTeamMemberSave>
+                {
+                    new DailyDungeonTeamMemberSave { npcClassId = 700003, level = 42, subRank = 1 }
+                }
+            };
+            DailyDungeonLeaderboardEntry legacyEntry = new OfflineDailyDungeonLeaderboardAdapter().Rank(
+                new[] { legacyRoster }, selectedDungeon.id, selectedDifficulty.difficulty,
+                grade, 1, 0).Single();
+            if (legacyEntry.TeamMembers.Count != 0)
+                throw new InvalidOperationException("A legacy best-time roster was incorrectly presented as a first-clear team.");
 
             int grantedAwardTimes = 0;
             if (!module.ClaimPendingReward(pending.id, (_, __, awardTimes) =>
@@ -554,6 +658,27 @@ namespace Zjcs.Editor
             }
             route.Reverse();
             return route;
+        }
+
+        private static int CompareRewardPreviewItems(DailyDungeonRewardItemMetadata left,
+            DailyDungeonRewardItemMetadata right)
+        {
+            return (Flag(left.IsFiltrationItem) - Flag(right.IsFiltrationItem)) * 10000
+                + (right.Quality - left.Quality) * 1000
+                + (Flag(right.IsEquipment) - Flag(left.IsEquipment)) * 100
+                + (Flag(right.IsCommonEquipmentPiece) - Flag(left.IsCommonEquipmentPiece)) * 10
+                + (Flag(right.IsRandomReward) - Flag(left.IsRandomReward));
+        }
+
+        private static int Flag(bool value) => value ? 1 : 0;
+
+        private sealed class AcceptanceRewardItemMetadataAdapter : IDailyDungeonRewardItemMetadataAdapter
+        {
+            public DailyDungeonRewardItemMetadata Get(int itemId)
+            {
+                return new DailyDungeonRewardItemMetadata(itemId, itemId % 8,
+                    itemId % 2 == 0, itemId % 3 == 0, itemId % 5 == 0, itemId % 7 == 0);
+            }
         }
 
         private sealed class AcceptanceEconomy : IDailyDungeonEconomyAdapter

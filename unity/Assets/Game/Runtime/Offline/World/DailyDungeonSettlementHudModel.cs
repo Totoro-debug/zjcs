@@ -64,8 +64,9 @@ namespace Zjcs.Offline.World
                 {
                     if (rule.IdList[index] <= 0 || rule.CountList[index] <= 0f) continue;
                     float count = rule.CountList[index];
-                    if (rule.LevelCountId > 0)
-                        count *= module.LevelNumber(rule.LevelCountId, playerLevel);
+                    int levelCountId = rule.LevelCountIdFor(index);
+                    if (levelCountId > 0)
+                        count *= module.LevelNumber(levelCountId, playerLevel);
                     if (rule.SubRankCountId != null && index < rule.SubRankCountId.Length
                         && rule.SubRankCountId[index] > 0)
                         count *= module.LevelNumber(rule.SubRankCountId[index], subRank);

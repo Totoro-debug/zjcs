@@ -1,5 +1,6 @@
 """Restore current official daily-dungeon result fields and Windows UI materials."""
 from pathlib import Path
+from functools import lru_cache
 import hashlib
 import json
 import re
@@ -11,6 +12,12 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 def digest(raw):
     return hashlib.sha256(raw).hexdigest()
+
+
+@lru_cache(maxsize=1)
+def load_native_export_receipt(path):
+    raw = path.read_bytes()
+    return json.loads(raw), digest(raw)
 
 
 def write_meta(path, importer="DefaultImporter"):
@@ -94,33 +101,115 @@ def restore_additive(apk, material):
 def restore_popup_clip(apk, component, fields):
     from UnityPy.classes import PPtr
     from prepare_daily_dungeon_result_ui import EXPORT, PACKAGE_SCRIPT_GUIDS, write_folder_meta
-    clip = PPtr(**fields["mShowClip"], assetsfile=component.assets_file).deref()
-    if clip.read().m_Name != "GameEndPanelBase_Show" or fields["mHideClip"]["m_PathID"] or fields["mLoopClip"]["m_PathID"]:
-        raise ValueError("Review original daily dungeon result popup clips")
-    source = EXPORT / "Prefabs/UI/Fight/GameEndPanelBase_Show.anim"
-    native_receipt = ROOT / "assets/reference/dungeon-ui/daily-dungeon-result-ui-source-manifest.json"
-    record, = [row for row in json.loads(native_receipt.read_bytes())["shared_assets"]
-               if row["source"] == "Prefabs/UI/Fight/GameEndPanelBase_Show.anim"]
-    if digest(source.read_bytes()) != record["sha256"]:
-        raise ValueError("Original shared result animation export changed")
-    text = source.read_text(encoding="utf-8-sig")
-    def remap(match):
-        guid = PACKAGE_SCRIPT_GUIDS.get((match.group(2), int(match.group(1))))
-        if not guid:
-            raise ValueError("Unbound result animation component script")
-        return "script: {fileID: 11500000, guid: " + guid + ", type: 3}"
-    text = re.sub(r"script: \{fileID: (-?\d+), guid: ([0-9a-f]{32}), type: 3\}", remap, text)
-    path = ROOT / "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Animations/GameEndPanelBase_Show.anim"
-    write_folder_meta(path.parent)
-    path.write_text(text, encoding="utf8", newline="\n")
-    metadata = write_meta(path, "NativeFormatImporter")
-    binding = dict(showClipResource="Dungeons/UI/884_156692/Animations/GameEndPanelBase_Show",
-                   showClipName=clip.read().m_Name, closeByClickMask=bool(fields["mCloseByClickMask"]),
-                   maskType=fields["mMaskType"])
-    receipt = dict(source=apk.provenance(clip), object_sha256=digest(clip.get_raw_data()),
-                   export=dict(path=source.relative_to(ROOT).as_posix(), sha256=digest(source.read_bytes())),
-                   source_receipt=dict(path=native_receipt.relative_to(ROOT).as_posix(), sha256=digest(native_receipt.read_bytes())))
-    return binding, receipt, [path, metadata, Path(str(path.parent) + ".meta")]
+    clip_bindings = {}
+    receipts = []
+    outputs = []
+    native_export_receipt = ROOT / ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json"
+    native_export, native_export_hash = load_native_export_receipt(native_export_receipt)
+    if native_export.get("manifest") != apk.version:
+        raise ValueError("Original shared item-detail animations use another official version")
+
+    for field in ("mShowClip", "mHideClip", "mLoopClip"):
+        pointer = fields[field]
+        if not pointer["m_PathID"]:
+            clip_bindings[field] = None
+            continue
+        clip = PPtr(**pointer, assetsfile=component.assets_file).deref()
+        clip_name = clip.read().m_Name
+        if clip_name == "GameEndPanelBase_Show" and field == "mShowClip":
+            source = EXPORT / "Prefabs/UI/Fight/GameEndPanelBase_Show.anim"
+            native_receipt = ROOT / "assets/reference/dungeon-ui" / apk.version / "daily-dungeon-result-ui-source-manifest.json"
+            if not native_receipt.exists():
+                native_receipt = ROOT / "assets/reference/dungeon-ui/daily-dungeon-result-ui-source-manifest.json"
+            native_source = json.loads(native_receipt.read_bytes())
+            if native_source["manifest"] != apk.version:
+                raise ValueError("Original shared result animation receipt uses another official version")
+            record, = [row for row in native_source["shared_assets"]
+                       if row["source"] == "Prefabs/UI/Fight/GameEndPanelBase_Show.anim"]
+            if digest(source.read_bytes()) != record["sha256"]:
+                raise ValueError("Original shared result animation export changed")
+            text = source.read_text(encoding="utf-8-sig")
+
+            def remap(match):
+                guid = PACKAGE_SCRIPT_GUIDS.get((match.group(2), int(match.group(1))))
+                if not guid:
+                    raise ValueError("Unbound result animation component script")
+                return "script: {fileID: 11500000, guid: " + guid + ", type: 3}"
+
+            text = re.sub(r"script: \{fileID: (-?\d+), guid: ([0-9a-f]{32}), type: 3\}", remap, text)
+            target = ROOT / "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Animations/GameEndPanelBase_Show.anim"
+            write_folder_meta(target.parent)
+            target.write_text(text, encoding="utf8", newline="\n")
+            outputs.extend((target, write_meta(target, "NativeFormatImporter"), Path(str(target.parent) + ".meta")))
+            receipts.append(dict(source=apk.provenance(clip), object_sha256=digest(clip.get_raw_data()),
+                export=dict(path=source.relative_to(ROOT).as_posix(), sha256=digest(source.read_bytes())),
+                source_receipt=dict(path=native_receipt.relative_to(ROOT).as_posix(),
+                                    sha256=digest(native_receipt.read_bytes()))))
+            clip_bindings[field] = dict(resource="Dungeons/UI/884_156692/Animations/GameEndPanelBase_Show",
+                                        name=clip_name)
+            continue
+
+        # The four detail prefabs use different original popup animation sets.
+        # Resolve the actual serialized clip, including its unique export path.
+        records = [row for row in native_export.get("outputs", [])
+                   if Path(row.get("path", "")).name == clip_name + ".anim"]
+        if len(records) != 1:
+            raise ValueError("Original popup animation export is ambiguous: " + field + "/" + clip_name)
+        record, = records
+        export_relative = record["path"]
+        source = EXPORT / Path(export_relative).relative_to("ExportedProject/Assets")
+        if not source.is_file() or digest(source.read_bytes()) != record.get("sha256"):
+            raise ValueError("Original 884 item-detail popup animation export changed: " + clip_name)
+        target = ROOT / "unity/Assets/Game/Resources/Dungeons/UI/884_156692/Animations" / (clip_name + ".anim")
+        write_folder_meta(target.parent)
+        target.write_bytes(source.read_bytes())
+        outputs.extend((target, write_meta(target, "NativeFormatImporter"), Path(str(target.parent) + ".meta")))
+        receipts.append(dict(source=apk.provenance(clip), object_sha256=digest(clip.get_raw_data()),
+            export=dict(path=source.relative_to(ROOT).as_posix(), sha256=digest(source.read_bytes())),
+            source_receipt=dict(path=native_export_receipt.relative_to(ROOT).as_posix(),
+                                sha256=native_export_hash)))
+        clip_bindings[field] = dict(resource="Dungeons/UI/884_156692/Animations/" + clip_name,
+                                    name=clip_name)
+
+    show, hide, loop = (clip_bindings.get(field) or {} for field in ("mShowClip", "mHideClip", "mLoopClip"))
+    if not show.get("resource") or not show.get("name"):
+        raise ValueError("Original daily dungeon popup has no supported show clip")
+    binding = dict(showClipResource=show.get("resource"), showClipName=show.get("name"),
+                   hideClipResource=hide.get("resource"), hideClipName=hide.get("name"),
+                   loopClipResource=loop.get("resource"), loopClipName=loop.get("name"),
+                   closeByClickMask=bool(fields["mCloseByClickMask"]), maskType=fields["mMaskType"])
+    return binding, receipts, outputs
+
+
+def result_claim_binding(root, fields, nodes):
+    paths = {go.object_reader.path_id: "/".join(map(str, path)) for go, path, _, _ in nodes}
+    references = {row["rid"]: row for row in fields["references"]["RefIds"]}
+
+    def pointer_path(pointer):
+        if pointer["m_FileID"] or not pointer["m_PathID"]:
+            raise ValueError("Result claim state must reference its original local hierarchy")
+        target = root.assets_file.objects[pointer["m_PathID"]].read(check_read=False)
+        target_id = target.m_GameObject.path_id if hasattr(target, "m_GameObject") else pointer["m_PathID"]
+        return paths[target_id]
+
+    def configs(name):
+        result = []
+        for pointer in fields[name]["mStateConfigs"]:
+            reference = references[pointer["rid"]]
+            kind, data = reference["type"]["class"], reference["data"]
+            if kind == "StateGameObjectConfig":
+                result.append(dict(objects=[dict(state=row["State"]["mValue"],
+                    paths=[pointer_path(value) for value in row["GameObjects"]])
+                    for row in data["mStateGameObjectData"]["GoConfig"]]))
+            elif kind == "StateMultiLanguageConfig":
+                language = data["mStateMultiLanguageTextData"]
+                result.append(dict(textPath=pointer_path(language["Text"]), texts=[
+                    dict(state=row["Key"]["mValue"], key=row["Value"])
+                    for row in language["Keys"]["mSerializeBuffer"]]))
+            else:
+                raise ValueError("Unbound original result claim state config: " + kind)
+        return result
+    return dict(freeStates=configs("FreeStateSwitcher"), awardTimesStates=configs("mAwardTimesSwitcher"))
 
 
 def build():
@@ -140,37 +229,65 @@ def build():
     gray = json.loads(gray_path.read_text(encoding="utf-8-sig"))["grayMaterial"]
     source_receipts, outputs, inputs, prefabs, keys = [], [], [], [], set()
     material_cache = {}
-    for asset, bundle in ROOTS.items():
+    roots = list(ROOTS.items()) + [("Assets/Prefabs/UI/Item/Attachments/ProbabilityGo.prefab",
+                                    "defaultpackage_assets_prefabs_ui_item.bundle")]
+    for asset, bundle in roots:
         name = Path(asset).stem
         if name in ("DailyDungeonTopPanel", "TopRankTeamItem"):
             continue
         binding, source = prefab_bindings(apk, schemas, sprites, name, bundle, "/" + name + ".prefab")
         root = apk.asset(bundle, "/" + name + ".prefab")
         localizations = {}
-        for go, path, names, _ in relative_transform_path(root.read()):
+        nodes = list(relative_transform_path(root.read()))
+        for go, path, names, _ in nodes:
             path_key = "/".join(map(str, path))
             for pair in go.m_Component:
                 obj = pair.component.deref()
                 if obj.type.name != "MonoBehaviour":
                     continue
                 cls = obj.read(check_read=False).m_Script.read().m_ClassName
-                if cls not in ("Image", "MultiLanguageText", "NoDrawingRayCast", "SafeArea", "AspectRatioFitter", "PopupWindow"):
+                if cls not in ("Image", "MultiLanguageText", "NoDrawingRayCast", "SafeArea", "AspectRatioFitter", "PopupWindow", "DailyDungeonCostMoneyContent", "AwardContent", "AwardPanelLayoutElement", "AwardLoopScrollRect"):
                     continue
                 fields = schemas.read(obj)
                 inputs.append(dict(prefab=name, objects=names, type=cls, source=apk.provenance(obj),
                                    sha256=digest(obj.get_raw_data())))
-                if cls == "PopupWindow":
-                    binding["resultPopup"], record, files = restore_popup_clip(apk, obj, fields)
-                    source_receipts.append(record)
+                if cls == "AwardLoopScrollRect":
+                    def local_path(pointer):
+                        if not pointer["m_PathID"]: return None
+                        if pointer["m_FileID"]: raise ValueError("External award scroll reference")
+                        target = root.assets_file.objects[pointer["m_PathID"]].read(check_read=False).m_GameObject.path_id
+                        return next("/".join(map(str, index)) for go2, index, _, _ in nodes
+                                    if go2.object_reader.path_id == target)
+                    binding["awardScroll"] = dict(path=path_key, content=local_path(fields["m_Content"]),
+                        viewport=local_path(fields["m_Viewport"]), reverseDirection=bool(fields["reverseDirection"]),
+                        reverseIndex=bool(fields["reverseIndex"]), horizontal=bool(fields["m_Horizontal"]), vertical=bool(fields["m_Vertical"]),
+                        movementType=fields["m_MovementType"], elasticity=fields["m_Elasticity"],
+                        inertia=bool(fields["m_Inertia"]), decelerationRate=fields["m_DecelerationRate"],
+                        scrollSensitivity=fields["m_ScrollSensitivity"])
+                elif cls == "AwardContent":
+                    binding["awardContent"] = dict(path=path_key, interval=fields["mPlayIntervalSeconds"],
+                        showDelay=fields["mShowItemIconTime"])
+                elif cls == "AwardPanelLayoutElement":
+                    pointer = fields["mContentLayoutGroup"]
+                    target = root.assets_file.objects[pointer["m_PathID"]].read(check_read=False).m_GameObject.path_id
+                    grid_path, = ["/".join(map(str, index)) for go2, index, _, _ in nodes
+                                   if go2.object_reader.path_id == target]
+                    binding["awardLayout"] = dict(path=path_key, grid=grid_path,
+                        minRow=fields["mMinRow"], maxHeight=fields["mMaxHeight"],
+                        priority=fields["mLayoutPriority"], currentRow=fields["mCurrentRow"])
+                elif cls == "DailyDungeonCostMoneyContent":
+                    binding["resultClaim"] = result_claim_binding(root, fields, nodes)
+                    for configs in binding["resultClaim"].values():
+                        keys.update(row["key"] for config in configs for row in config.get("texts", []))
+                elif cls == "PopupWindow":
+                    binding["resultPopup"], records, files = restore_popup_clip(apk, obj, fields)
+                    source_receipts.extend(records)
                     outputs.extend(files)
                 elif cls == "MultiLanguageText" and fields["myKey"]:
                     localizations[path_key] = fields["myKey"]
                     keys.add(fields["myKey"])
                 elif cls == "NoDrawingRayCast":
-                    binding.setdefault("raycastGraphics", []).append(dict(path=path_key, objects=names,
-                        enabled=bool(fields["m_Enabled"]), raycastTarget=bool(fields["m_RaycastTarget"]),
-                        color=[fields["m_Color"][key] for key in ("r", "g", "b", "a")],
-                        raycastPadding=[fields["m_RaycastPadding"][key] for key in ("x", "y", "z", "w")]))
+                    continue  # Restored by the shared native prefab binding extractor.
                 elif cls == "SafeArea":
                     binding["safeAreas"].append(dict(path=path_key, objects=names, enabled=bool(fields["m_Enabled"]),
                         paddingTop=fields["PaddingTop"], paddingBottom=fields["PaddingBottom"],
@@ -196,6 +313,7 @@ def build():
                     else:
                         raise ValueError("Unconverted original result Image material: " + material_name)
         binding["localizations"] = [dict(path=path, key=key) for path, key in localizations.items()]
+        binding["layoutJson"] = json.dumps(dict(layouts=binding["layouts"], scrolls=[], buttons=[]))
         prefabs.append(binding)
         inputs.append(dict(prefab=name, source=source, sha256=digest(root.get_raw_data())))
     # Original LanguageUtils.GetDailyDungeonNameKey is used for the result difficulty caption.
@@ -222,7 +340,7 @@ def build():
                 text["text"] = local[text["path"]]
     for row in difficulties:
         row["title"] = translated[row["key"]]
-    target = ROOT / "unity/Assets/StreamingAssets/Dungeons/UI/result-bindings.json"
+    target = ROOT / "unity/Assets/StreamingAssets/Dungeons/UI/884_156692/result-bindings.json"
     target.write_text(json.dumps(dict(manifest=apk.version, prefabs=prefabs, difficulties=difficulties),
                                 ensure_ascii=False, indent=2) + "\n", encoding="utf8", newline="\n")
     outputs += [target, write_meta(target, "TextScriptImporter")]
@@ -231,8 +349,10 @@ def build():
         path = target.parent / relative
         outputs.extend((path, Path(str(path) + ".meta")))
     code_paths = [code / "client-source" / (name + ".cs") for name in
-                  ("GameEndPanelDailyDungeon", "DailyDungeonEndPanelItem", "AwardPanelItem", "ItemAwardIcon", "ItemIcon")]
+                  ("GameEndPanelDailyDungeon", "DailyDungeonCostMoneyContent", "DailyDungeonEndPanelItem", "AwardPanelItem", "ItemAwardIcon", "ItemIcon", "AwardContent", "AwardPanelLayoutElement")]
     code_paths.append(code / "common-source/Common/LanguageUtils.cs")
+    code_paths.extend(code / "framework-source" / (name + ".cs") for name in
+                      ("StateSwitcher", "StateGameObjectConfig", "StateMultiLanguageConfig", "StateConfigValue"))
     receipt = dict(manifest=apk.version, apk_manifest=apk.source.apk_version, apk_sha256=apk.source.apk_sha256,
         operation="Restore original result prefab Transform/Image/TMP/localization/raycast fields and current Windows material conversion.",
         inputs=inputs, material_conversions=source_receipts, language_inputs=languages, missing_translation_keys=missing,
@@ -241,7 +361,7 @@ def build():
                (Path(__file__), ROOT / "scripts/prepare_dungeon_ui_bindings.py", ROOT / "scripts/current_component_schemas.py")],
         code_sources=[dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes())) for p in code_paths],
         outputs=[dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes())) for p in dict.fromkeys(outputs)])
-    receipt_path = ROOT / "assets/reference/dungeon-ui/daily-dungeon-result-bindings-source-manifest.json"
+    receipt_path = ROOT / "assets/reference/dungeon-ui/884_156692/daily-dungeon-result-bindings-source-manifest.json"
     receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf8", newline="\n")
     apk.close()
     print(json.dumps(dict(prefabs=len(prefabs), sprites=len(sprite_files), missing_translation_keys=missing)))

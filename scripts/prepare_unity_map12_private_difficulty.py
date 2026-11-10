@@ -16,11 +16,11 @@ from official_native_yaml_verification import documents
 from prepare_dungeon_ui_assets import convert_runtime_prefab
 from prepare_dungeon_ui_bindings import CODE, VERSION, relative_transform_path
 
-NATIVE = ROOT / 'unity/Assets/Game/Resources/Dungeons/UI/DailyDungeonDialogPrivateMap.prefab'
-SOURCE = ROOT / 'unity/Assets/Official/Dungeons/Prefabs/UI/DailyDungeon/DailyDungeonDialogPrivateMap.prefab'
-BINDINGS = ROOT / 'unity/Assets/StreamingAssets/Dungeons/UI/map12-private-difficulty.json'
-RECEIPT = ROOT / 'assets/reference/official-map/map12-private-difficulty-source-manifest.json'
-BASE_RECEIPT = ROOT / 'assets/reference/dungeon-ui/source-manifest.json'
+NATIVE = ROOT / 'unity/Assets/Game/Resources/Dungeons/UI/884_156692/DailyDungeonDialogPrivateMap.prefab'
+SOURCE = ROOT / 'unity/Assets/Official/Dungeons/884_156692/Prefabs/UI/DailyDungeon/DailyDungeonDialogPrivateMap.prefab'
+BINDINGS = ROOT / 'unity/Assets/StreamingAssets/Dungeons/UI/884_156692/map12-private-difficulty.json'
+RECEIPT = ROOT / 'assets/reference/dungeon-ui/884_156692/map12-private-difficulty-source-manifest.json'
+BASE_RECEIPT = ROOT / 'assets/reference/dungeon-ui/884_156692/source-manifest.json'
 PORTS = ('TabItem', 'TabGroup', 'TabAnimatorTransition')
 
 

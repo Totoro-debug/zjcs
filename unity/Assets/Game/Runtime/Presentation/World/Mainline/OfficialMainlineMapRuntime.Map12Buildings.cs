@@ -130,7 +130,7 @@ namespace Zjcs.Presentation.World
         private void OpenMap12PrivateDungeonDialog(Map10RuntimeEntity entity, Action<int> click)
         {
             if (map12PrivateDungeonDialog != null || map12PrivateDungeonBattleActive) return;
-            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonDialogPrivateMap");
+            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/884_156692/DailyDungeonDialogPrivateMap");
             if (prefab == null) throw new InvalidDataException("Original private daily dungeon window is missing.");
             var staging = new GameObject("Map12PrivateDungeonStaging", typeof(RectTransform));
             staging.SetActive(false);
@@ -226,7 +226,7 @@ namespace Zjcs.Presentation.World
         private void OpenMap12PrivateDungeonRoute()
         {
             if (map12PrivateDungeonRouteDialog != null) return;
-            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonBigMapDialog");
+            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/884_156692/DailyDungeonBigMapDialog");
             if (prefab == null) throw new InvalidOperationException("Official daily dungeon route map is missing.");
             map12PrivateDungeonRouteDialog = Instantiate(prefab, hud.ui.OverlayRoot, false);
             map12PrivateDungeonRouteDialog.name = "DailyDungeonBigMapDialog";

@@ -150,13 +150,13 @@ def build():
         for text in prefab["texts"]:
             if text["path"] in localized:
                 text["text"] = localized[text["path"]]
-    target = ROOT / "unity/Assets/StreamingAssets/Dungeons/UI/leaderboard-bindings.json"
+    target = ROOT / "unity/Assets/StreamingAssets/Dungeons/UI/884_156692/leaderboard-bindings.json"
     payload = (json.dumps(dict(manifest=apk.version, prefabs=prefabs, texts=texts),
                           ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode()
     target.write_bytes(payload)
     meta = target.with_name(target.name + ".meta")
     if not meta.exists():
-        meta.write_text("fileFormatVersion: 2\nguid: " + digest(b"zjcs-dungeon-leaderboard-bindings-884")[:32]
+        meta.write_text("fileFormatVersion: 2\nguid: " + digest(b"zjcs-dungeon-leaderboard-bindings-884_156692")[:32]
                         + "\nTextScriptImporter:\n  externalObjects: {}\n", encoding="ascii")
     outputs = [target, meta, config_path, config_meta]
     shared_assets = [gray_record_path, ROOT / gray_record["shaderPath"].replace("Assets/", "unity/Assets/", 1),
@@ -186,7 +186,7 @@ def build():
                (Path(__file__), ROOT / "scripts/prepare_dungeon_ui_bindings.py", ROOT / "scripts/current_component_schemas.py")],
         code_sources=[dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes())) for p in code_paths],
         outputs=[dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes())) for p in outputs])
-    receipt_path = ROOT / "assets/reference/dungeon-ui/daily-dungeon-leaderboard-source-manifest.json"
+    receipt_path = ROOT / "assets/reference/dungeon-ui/884_156692/daily-dungeon-leaderboard-source-manifest.json"
     receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf8", newline="\n")
     print(json.dumps(dict(prefabs=len(prefabs), sprites=len(sprite_files), missing_translation_keys=missing)))
 

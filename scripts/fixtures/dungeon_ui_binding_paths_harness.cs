@@ -10,6 +10,7 @@ internal sealed class Transform
     public string name;
     public Transform parent;
     public readonly List<Transform> children = new List<Transform>();
+    public int childCount => children.Count;
     public Transform GetChild(int index) => children[index];
 }
 
@@ -22,7 +23,7 @@ internal static class Paths
         try
         {
             using var document = JsonDocument.Parse(File.ReadAllText(args[0]));
-            int named = 0, references = 0, matchingHosts = 0, matchingGroups = 0, matchingTargets = 0, absentMatchingTargets = 0;
+            int named = 0, references = 0, entryButtonReferences = 0, matchingHosts = 0, matchingGroups = 0, matchingTargets = 0, absentMatchingTargets = 0;
             foreach (JsonElement prefab in document.RootElement.GetProperty("prefabs").EnumerateArray())
             {
                 var nodes = new Dictionary<string, Transform>();
@@ -54,6 +55,28 @@ internal static class Paths
                     string path = target.GetString();
                     if (Find(nodes[""], path, null) != nodes[path]) throw new Exception("Button Graphic reference resolved to another node.");
                     references++;
+                }
+                if (prefab.GetProperty("name").GetString() == "TravelNotesPanel")
+                {
+                    JsonElement[] entries = prefab.GetProperty("entryButtons").EnumerateArray().ToArray();
+                    string[] requiredTypes = { "DailyDungeonEntry", "ArenaAreaEntry" };
+                    if (requiredTypes.Any(type => !entries.Any(entry => entry.GetProperty("type").GetString() == type)))
+                        throw new Exception("The original daily dungeon and arena entry buttons are missing.");
+                    foreach (JsonElement entry in entries)
+                    {
+                        string type = entry.GetProperty("type").GetString();
+                        string path = entry.GetProperty("button").GetString();
+                        string[] expected = { type, "NoteUnlockContent", "EntryBtn" };
+                        JsonElement transform = prefab.GetProperty("transforms").EnumerateArray()
+                            .Single(row => row.GetProperty("path").GetString() == path);
+                        string[] objects = transform.GetProperty("objects").EnumerateArray()
+                            .Select(value => value.GetString()).ToArray();
+                        if (objects.Length < expected.Length || !objects.Skip(objects.Length - expected.Length).SequenceEqual(expected))
+                            throw new Exception("An original travel entry button path does not match its prefab hierarchy: " + type);
+                        if (Find(nodes[""], path, null) != nodes[path])
+                            throw new Exception("An original travel entry button path resolved to another node: " + type);
+                        entryButtonReferences++;
+                    }
                 }
                 if (prefab.TryGetProperty("popup", out JsonElement popup) && popup.ValueKind == JsonValueKind.Object
                     && popup.TryGetProperty("matching", out JsonElement matching))
@@ -108,9 +131,10 @@ internal static class Paths
                 if (!rejected) throw new Exception("Mismatched original parent names must still be rejected.");
             }
             if (references == 0) throw new Exception("No real Button Graphic references were replayed.");
+            if (entryButtonReferences < 2) throw new Exception("The original travel entry Button paths were not replayed.");
             if (matchingHosts != 1 || matchingGroups != 2 || matchingTargets != 17 || absentMatchingTargets != 3)
                 throw new Exception("The original matching animation host, groups or curve targets were not replayed.");
-            Console.WriteLine($"Dungeon path replay passed: {named} original nodes, {references} Button Graphic references, {matchingHosts} matching host, {matchingGroups} CanvasGroups, {matchingTargets} curve targets and {absentMatchingTargets} absent source target groups; wrong names and parents rejected.");
+            Console.WriteLine($"Dungeon path replay passed: {named} original nodes, {references} Button Graphic references, {entryButtonReferences} travel entry buttons, {matchingHosts} matching host, {matchingGroups} CanvasGroups, {matchingTargets} curve targets and {absentMatchingTargets} absent source target groups; wrong names and parents rejected.");
             return 0;
         }
         catch (Exception error)

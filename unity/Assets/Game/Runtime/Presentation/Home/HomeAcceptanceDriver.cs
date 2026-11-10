@@ -2237,6 +2237,54 @@ namespace Zjcs.Presentation.Home
             yield return null;
             yield return Capture("dungeons-detail.png");
 
+            ok = Check("dungeons-detail-rewards", () =>
+            {
+                const string prefix = "Dungeon_";
+                Assert(dungeonRow.name.StartsWith(prefix, StringComparison.Ordinal),
+                    "selected official dungeon row has no id");
+                Assert(int.TryParse(dungeonRow.name.Substring(prefix.Length), out int dungeonId),
+                    "selected official dungeon row id is invalid");
+                int difficulty = runtime.DailyDungeons.DefaultDifficulty(dungeonId);
+                DailyDungeonRewardAssetCatalog metadata = DailyDungeonRewardAssetCatalog.LoadDefault();
+                IReadOnlyList<DailyDungeonRewardPreviewItem> rewards =
+                    runtime.PreviewDailyDungeonDetailRewards(dungeonId, difficulty, metadata);
+                GameObject panel = GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot");
+                Transform awardGrid = panel.GetComponentsInChildren<Transform>(true)
+                    .FirstOrDefault(value => value.name == "AwardGrid");
+                Transform grid = awardGrid == null ? null : awardGrid.Find("ViewPort/Grid");
+                Assert(grid != null, "official difficulty reward grid is missing");
+                var rows = new List<Transform>();
+                const string iconPrefix = "ItemIcon_";
+                foreach (Transform child in grid)
+                    if (child.name.StartsWith(iconPrefix, StringComparison.Ordinal)) rows.Add(child);
+                Assert(rows.Count == rewards.Count,
+                    "official difficulty reward icon count differs from the shared module preview ("
+                    + rows.Count + " vs " + rewards.Count + ")");
+                for (int index = 0; index < rows.Count; index++)
+                {
+                    Transform row = rows[index];
+                    DailyDungeonResultItemIconAdapter adapter =
+                        row.GetComponentInChildren<DailyDungeonResultItemIconAdapter>(true);
+                    Assert(adapter != null, "official difficulty item icon adapter is missing");
+                    Assert(int.TryParse(row.name.Substring(iconPrefix.Length), out int itemId),
+                        "official difficulty item icon id is invalid");
+                    Assert(itemId == rewards[index].ItemId,
+                        "official difficulty reward grid order differs from the shared module preview");
+                    DailyDungeonRewardAssetCatalog.Item item = metadata.Find(itemId);
+                    Image icon = row.Find("Content/mask/icon")?.GetComponent<Image>();
+                    Assert(item != null && icon != null && icon.sprite == item.sprite,
+                        "official difficulty reward item did not bind its selected official sprite");
+                    Transform probability = row.Find("Content/ItemIconAttachment/ProbabilityGo");
+                    Assert((probability != null) == !item.isFiltrationItem,
+                        "official probability attachment differs from the item filtration rule for item "
+                        + itemId + " (present=" + (probability != null) + ", filtration="
+                        + item.isFiltrationItem + ")");
+                }
+                return "official reward grid rendered " + rows.Count
+                    + " item icons and the configured ProbabilityGo attachments";
+            });
+            if (!ok) { completed(false); yield break; }
+
             GameObject detailLeaderboard = GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot");
             Button leaderboardButton = detailLeaderboard.GetComponentsInChildren<Button>(true)
                 .FirstOrDefault(value => value.name == "DailyDungeonTopGrade");
@@ -2297,7 +2345,10 @@ namespace Zjcs.Presentation.Home
                 GameObject leaderboard = GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaderboardRoot");
                 Button close = leaderboard.GetComponentsInChildren<Button>(true)
                     .FirstOrDefault(value => value.name == "CloseBtn_dark");
+                bool closeClicked = false;
+                close?.onClick.AddListener(() => closeClicked = true);
                 ClickPartnerUi(close);
+                Assert(closeClicked, "official leaderboard close button did not receive its pointer click");
                 Assert(GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaderboardRoot") == null,
                     "official leaderboard close button did not return to dungeon details");
                 return "official leaderboard close button returned to dungeon details";
@@ -2482,7 +2533,7 @@ namespace Zjcs.Presentation.Home
             GameObject resultPanel = GetPrivateGameObject(runtime.Hud, "dailyDungeonClaimConfirmRoot");
             var resultPopup = resultPanel.GetComponent<Zjcs.Official.WorldUI.WorldPopupWindow>();
             float resultAnimationDeadline = Time.realtimeSinceStartup + 4f;
-            while (resultPopup != null && resultPopup.State == Zjcs.Official.WorldUI.WorldPopupWindow.EState.Showing
+            while (resultPopup != null && resultPopup.State != Zjcs.Official.WorldUI.WorldPopupWindow.EState.Show
                 && Time.realtimeSinceStartup < resultAnimationDeadline) yield return null;
             DailyDungeonPendingClaimSave pending = runtime.DailyDungeons.PendingClaims
                 .FirstOrDefault(value => value != null && value.run != null);
@@ -2929,6 +2980,7 @@ namespace Zjcs.Presentation.Home
             string path = Path.Combine(Output, file);
             yield return new WaitForSecondsRealtime(0.5f);
             yield return new WaitForEndOfFrame();
+            if (file.StartsWith("dungeons-", StringComparison.Ordinal)) DumpDungeonMaterialState(file);
             if (file.StartsWith("home-shop-", StringComparison.Ordinal)) DumpShopRenderState();
             ScreenCapture.CaptureScreenshot(path);
             for (int attempt = 0; attempt < 120 && !File.Exists(path); attempt++)
@@ -2939,6 +2991,51 @@ namespace Zjcs.Presentation.Home
                 yield break;
             }
             log.Add("PASS screenshot: " + file + " at " + Screen.width + "x" + Screen.height);
+        }
+
+        private void DumpDungeonMaterialState(string screenshot)
+        {
+            foreach (UIMesh mesh in FindObjectsOfType<UIMesh>(true)
+                .Where(value => value != null && value.isActiveAndEnabled && value.gameObject.activeInHierarchy))
+            {
+                var names = new List<string>();
+                for (Transform node = mesh.transform; node != null; node = node.parent) names.Add(node.name);
+                names.Reverse();
+                Material material = null;
+                string error = null;
+                try { material = mesh.materialForRendering; }
+                catch (Exception exception) { error = exception.GetType().Name + ": " + exception.Message; }
+                Shader shader = material == null ? null : material.shader;
+                log.Add("dungeon-uimesh " + screenshot + " path=" + string.Join("/", names)
+                    + " meshVertices=" + (mesh.Mesh == null ? 0 : mesh.Mesh.vertexCount)
+                    + " material=" + (material == null ? "<null>" : material.name)
+                    + " shader=" + (shader == null ? "<null>" : shader.name)
+                    + " supported=" + (shader != null && shader.isSupported)
+                    + (error == null ? string.Empty : " error=" + error));
+            }
+
+            foreach (Graphic graphic in FindObjectsOfType<Graphic>(true)
+                .Where(value => value != null && value.isActiveAndEnabled && value.gameObject.activeInHierarchy))
+            {
+                try
+                {
+                    Material material = graphic.materialForRendering;
+                    Shader shader = material == null ? null : material.shader;
+                    if (shader != null && shader.isSupported && !shader.name.Contains("InternalError")) continue;
+                    var names = new List<string>();
+                    for (Transform node = graphic.transform; node != null; node = node.parent) names.Add(node.name);
+                    names.Reverse();
+                    log.Add("dungeon-unsupported-graphic " + screenshot + " path=" + string.Join("/", names)
+                        + " material=" + (material == null ? "<null>" : material.name)
+                        + " shader=" + (shader == null ? "<null>" : shader.name)
+                        + " supported=" + (shader != null && shader.isSupported));
+                }
+                catch (Exception exception)
+                {
+                    log.Add("dungeon-graphic-inspection-error " + screenshot + " " + graphic.name + ": "
+                        + exception.GetType().Name + ": " + exception.Message);
+                }
+            }
         }
 
         private void DumpShopRenderState()

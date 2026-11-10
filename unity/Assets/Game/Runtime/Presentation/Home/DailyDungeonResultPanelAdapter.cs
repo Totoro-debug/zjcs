@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -8,7 +9,7 @@ using Zjcs.Offline.World;
 
 namespace Zjcs.Presentation.Home
 {
-    public sealed class DailyDungeonResultPanelAdapter : MonoBehaviour
+    public sealed class DailyDungeonResultPanelAdapter : MonoBehaviour, LoopScrollDataSource
     {
         [Serializable]
         private sealed class GradeSpriteCatalog
@@ -39,6 +40,14 @@ namespace Zjcs.Presentation.Home
         private bool canClaim;
         private bool canPurchase;
         private Transform rewardGrid;
+        private Zjcs.Official.BattleResultUI.AwardLoopScrollRect rewardScroll;
+        private readonly List<RewardDisplayRow> rewardRows = new List<RewardDisplayRow>();
+        private readonly Queue<GameObject> waitingRewards = new Queue<GameObject>();
+        private Coroutine rewardRoutine;
+        private DungeonOfficialAwardContentBinding awardTiming;
+        private Zjcs.Official.WorldUI.WorldWindowBlurMask mask;
+        private PartnerWindowBlurCapture blur;
+        private DailyDungeonResultPlayerRowAdapter playerRow;
 
         public static DailyDungeonResultPanelAdapter Create(GameObject prefab, Transform parent,
             DailyDungeonUiBindingModule bindings)
@@ -86,29 +95,69 @@ namespace Zjcs.Presentation.Home
             BindOfficialView();
             ShowPreviewRewards();
             BindButtons();
+            host.StartCoroutine(ShowWindow());
+        }
+
+        private IEnumerator ShowWindow()
+        {
+            var assets = Zjcs.Offline.PartnersUI.OfficialPartnerFriendshipWindowAssetCatalog.LoadDefault();
+            blur = host.gameObject.AddComponent<PartnerWindowBlurCapture>();
+            blur.Initialize(assets.BlurMaterial);
+            var staging = new GameObject("Daily dungeon original blur mask staging");
+            staging.SetActive(false);
+            GameObject root = UnityEngine.Object.Instantiate(assets.BlurMaskPrefab, staging.transform, false);
+            root.SetActive(false);
+            root.transform.SetParent(transform.parent, false);
+            UnityEngine.Object.Destroy(staging);
+            mask = root.GetComponent<Zjcs.Official.WorldUI.WorldWindowBlurMask>();
+            mask.BlurManager = blur;
+            var popup = GetComponent<Zjcs.Official.WorldUI.WorldPopupWindow>();
+            yield return mask.Prepare(popup, false);
+            if (!this) yield break;
+            int sortingLayer = popup.Canvas.sortingLayerID;
+            int sortingOrder = popup.Canvas.sortingOrder;
             gameObject.SetActive(true);
-            GetComponent<Zjcs.Official.WorldUI.WorldPopupWindow>().Show();
+            popup.Show();
+            popup.Canvas.sortingLayerID = sortingLayer;
+            popup.SetCanvasSortingOrder(sortingOrder);
+            mask.Canvas.sortingLayerID = sortingLayer;
+            mask.AttachToWindow(popup);
             Canvas.ForceUpdateCanvases();
             LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
-            Canvas.ForceUpdateCanvases();
+        }
+
+        private void OnDestroy()
+        {
+            if (rewardRoutine != null && host) host.StopCoroutine(rewardRoutine);
+            if (mask)
+            {
+                mask.UnattachToWindow();
+                UnityEngine.Object.Destroy(mask.gameObject);
+            }
+            if (blur) UnityEngine.Object.Destroy(blur);
         }
 
         public void ShowClaimedRewards(IReadOnlyList<DailyDungeonClaimRewardDisplayItem> rewards)
         {
             DrawRewards((rewards ?? Array.Empty<DailyDungeonClaimRewardDisplayItem>())
-                .Where(value => value != null && value.ItemId > 0 && value.Count > 0)
+                .Where(value => value != null && !value.IsGradeReward && value.ItemId > 0 && value.Count > 0)
                 .Select(value => new RewardDisplayRow { ItemId = value.ItemId, Count = value.Count }));
+            playerRow.OpenRewards((rewards ?? Array.Empty<DailyDungeonClaimRewardDisplayItem>())
+                .Where(value => value != null && value.IsGradeReward && value.ItemId > 0 && value.Count > 0).ToArray());
             canClaim = false;
             canPurchase = false;
+            uiBindings.ApplyResultClaimState(gameObject, 0, false);
+            RefreshClaimCount();
             SetNamedText(transform,
                 "Content/WinObj/Content/DailyDungeonCostMoneyContent/CommonBtn_CostItem", "已领取");
             SetButtonInteractable("Content/WinObj/Content/DailyDungeonCostMoneyContent/CommonBtn_CostItem", false);
-            SetButtonInteractable("Content/WinObj/Content/DailyDungeonCostMoneyContent/CommonBtn_Add", false);
+            SetButtonInteractable("Content/WinObj/Content/DailyDungeonCostMoneyContent/ShowCountTipGo/ShowCountTip/CommonBtn_Add", false);
             SetNamedText(transform, "ReturnText", "奖励已发放至背包");
         }
 
         private void BindOfficialView()
         {
+            RefreshClaimCount();
             SetNamedText(transform, "Content/WinObj/DifficultyTitleGo/TitleText",
                 uiBindings.DifficultyTitle(model.Run.dungeonId, model.Run.difficulty));
 
@@ -136,6 +185,8 @@ namespace Zjcs.Presentation.Home
                 if (playerAdapter == null)
                     throw new InvalidOperationException("Official daily dungeon local player row adapter is missing.");
                 playerAdapter.Configure(host);
+                playerAdapter.ConfigureSettlement(model.Run.grade, uiBindings, host);
+                playerRow = playerAdapter;
             }
 
             rewardGrid = FindPath(transform,
@@ -150,36 +201,35 @@ namespace Zjcs.Presentation.Home
             SetPrefabActive(gameObject, "Content/BtnGroup/ThumbUpReportSwitchBtn", false);
         }
 
+        private void RefreshClaimCount()
+        {
+            uiBindings.ApplyLocalizedText(gameObject, "GameEndPanelDailyDungeon",
+                "ui_daily_dungeon_dialog_remain_free_count_tip", host.DailyDungeons.RemainEntries,
+                host.DailyDungeons.Catalog.settings.DailyDungeonDailyFreeCount);
+        }
+
         private void ConfigureRewardScroll()
         {
-            GridLayoutGroup gridLayout = rewardGrid.GetComponent<GridLayoutGroup>();
-            if (gridLayout == null) gridLayout = rewardGrid.gameObject.AddComponent<GridLayoutGroup>();
-            gridLayout.padding = new RectOffset(0, 0, 8, 0);
-            gridLayout.childAlignment = TextAnchor.UpperLeft;
-            gridLayout.startCorner = GridLayoutGroup.Corner.UpperLeft;
-            gridLayout.startAxis = GridLayoutGroup.Axis.Horizontal;
-            gridLayout.cellSize = new Vector2(208f, 208f);
-            gridLayout.spacing = new Vector2(12f, 30f);
-            gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-            gridLayout.constraintCount = 5;
-
-            Transform scrollNode = FindPath(transform,
-                "Content/WinObj/Content/GameEndRewardContent/ScrollRect");
-            ScrollRect scroll = scrollNode == null ? null : scrollNode.GetComponent<ScrollRect>();
-            if (scrollNode != null && scroll == null) scroll = scrollNode.gameObject.AddComponent<ScrollRect>();
-            if (scroll != null)
-            {
-                scroll.horizontal = false;
-                scroll.vertical = true;
-                scroll.movementType = ScrollRect.MovementType.Elastic;
-                scroll.elasticity = 0.1f;
-                scroll.inertia = true;
-                scroll.decelerationRate = 0.135f;
-                scroll.scrollSensitivity = 1f;
-                scroll.viewport = FindPath(transform,
-                    "Content/WinObj/Content/GameEndRewardContent/ScrollRect/ViewPort") as RectTransform;
-                scroll.content = rewardGrid as RectTransform;
-            }
+            var binding = uiBindings.LoadBinding("GameEndPanelDailyDungeon");
+            var fields = binding.awardScroll
+                ?? throw new InvalidOperationException("Original award scroll fields are missing.");
+            awardTiming = binding.awardContent
+                ?? throw new InvalidOperationException("Original award show timing is missing.");
+            Transform node = DailyDungeonUiBindingModule.FindNode(transform, fields.path, null);
+            rewardScroll = node.GetComponent<Zjcs.Official.BattleResultUI.AwardLoopScrollRect>()
+                ?? node.gameObject.AddComponent<Zjcs.Official.BattleResultUI.AwardLoopScrollRect>();
+            rewardScroll.content = rewardGrid as RectTransform;
+            rewardScroll.viewport = DailyDungeonUiBindingModule.FindNode(transform, fields.viewport, null) as RectTransform;
+            rewardScroll.reverseDirection = fields.reverseDirection;
+            rewardScroll.reverseIndex = fields.reverseIndex;
+            rewardScroll.horizontal = fields.horizontal; rewardScroll.vertical = fields.vertical;
+            rewardScroll.movementType = (LoopScrollRectBase.MovementType)fields.movementType;
+            rewardScroll.elasticity = fields.elasticity; rewardScroll.inertia = fields.inertia;
+            rewardScroll.decelerationRate = fields.decelerationRate;
+            rewardScroll.scrollSensitivity = fields.scrollSensitivity;
+            rewardScroll.DefaultPrefabSource = new LoopScrollSinglePrefabSource { Prefab = Resources.Load<GameObject>(
+                "Dungeons/UI/884_156692/Native/Prefabs/UI/Award/AwardPanelItem") };
+            rewardScroll.dataSource = this;
         }
 
         private void ShowPreviewRewards()
@@ -187,7 +237,7 @@ namespace Zjcs.Presentation.Home
             IReadOnlyList<DailyDungeonClaimRewardDisplayItem> rewards = host.PreviewDailyDungeonRewards(
                 model.ClaimId, model.AwardTimes, out _);
             IEnumerable<RewardDisplayRow> rows = (rewards ?? Array.Empty<DailyDungeonClaimRewardDisplayItem>())
-                .Where(reward => reward != null && reward.ItemId > 0 && reward.Count > 0)
+                .Where(reward => reward != null && !reward.IsGradeReward && reward.ItemId > 0 && reward.Count > 0)
                 .Select(reward => new RewardDisplayRow { ItemId = reward.ItemId, Count = reward.Count });
             DrawRewards(rows);
         }
@@ -195,35 +245,58 @@ namespace Zjcs.Presentation.Home
         private void DrawRewards(IEnumerable<RewardDisplayRow> rows)
         {
             if (rewardGrid == null) return;
-            ClearChildren(rewardGrid);
-            GameObject slotPrefab = Resources.Load<GameObject>(
-                "Dungeons/UI/884_156692/Native/Prefabs/UI/Award/AwardPanelItem");
+            if (rewardRoutine != null) host.StopCoroutine(rewardRoutine);
+            rewardScroll.ClearCells();
+            rewardRows.Clear(); waitingRewards.Clear();
+            rewardRows.AddRange(rows ?? Array.Empty<RewardDisplayRow>());
+            rewardRoutine = host.StartCoroutine(ShowRewardRows());
+        }
+
+        private IEnumerator ShowRewardRows()
+        {
+            while (this && !gameObject.activeInHierarchy) yield return null;
+            if (!this) yield break;
+            if (awardTiming.showDelay > 0) yield return new WaitForSeconds(awardTiming.showDelay);
+            Canvas.ForceUpdateCanvases();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
+            rewardScroll.totalCount = rewardRows.Count;
+            rewardScroll.RefillCells();
+            yield return null;
+            while (waitingRewards.Count > 0)
+            {
+                yield return new WaitForSeconds(awardTiming.interval);
+                GameObject item = waitingRewards.Dequeue();
+                if (!item) continue;
+                item.transform.Find("DelayShow").gameObject.SetActive(true);
+                item.GetComponent<Animation>().Play();
+            }
+            rewardRoutine = null;
+        }
+
+        public void ProvideData(Transform itemTransform, int index)
+        {
+            RewardDisplayRow row = rewardRows[index];
+            GameObject slot = itemTransform.gameObject;
+            uiBindings.Apply(slot, "AwardPanelItem");
+            slot.name = "AwardPanelItem_" + row.ItemId;
+            Transform delay = FindPath(slot.transform, "DelayShow");
+            ClearChildren(delay);
+            delay.gameObject.SetActive(awardTiming.interval <= 0);
             GameObject awardIconPrefab = Resources.Load<GameObject>(
                 "Dungeons/UI/884_156692/Native/Prefabs/UI/Item/ItemAwardIcon");
             GameObject itemIconPrefab = Resources.Load<GameObject>(
                 "Dungeons/UI/884_156692/Native/Prefabs/UI/Item/ItemIcon");
-            if (slotPrefab == null || awardIconPrefab == null || itemIconPrefab == null)
-                throw new InvalidOperationException("Official daily dungeon reward item prefabs are missing.");
-
-            foreach (RewardDisplayRow row in rows ?? Array.Empty<RewardDisplayRow>())
-            {
-                GameObject slot = UnityEngine.Object.Instantiate(slotPrefab, rewardGrid, false);
-                uiBindings.Apply(slot, "AwardPanelItem");
-                slot.name = "AwardPanelItem_" + row.ItemId;
-                Transform delay = FindPath(slot.transform, "DelayShow") ?? slot.transform;
-                delay.gameObject.SetActive(true);
-                GameObject awardIcon = UnityEngine.Object.Instantiate(awardIconPrefab, delay, false);
-                uiBindings.Apply(awardIcon, "ItemAwardIcon");
-                Transform anchor = FindPath(awardIcon.transform, "Anchor");
-                if (anchor == null)
-                    throw new InvalidOperationException("Official item award anchor is missing.");
-                anchor.gameObject.SetActive(true);
-                GameObject icon = UnityEngine.Object.Instantiate(itemIconPrefab, anchor, false);
-                uiBindings.Apply(icon, "ItemIcon");
-                SetItemIcon(icon.transform, row.ItemId, row.Count);
-            }
-            Canvas.ForceUpdateCanvases();
-            LayoutRebuilder.ForceRebuildLayoutImmediate(rewardGrid as RectTransform);
+            if (awardIconPrefab == null || itemIconPrefab == null)
+                throw new InvalidOperationException("Original daily dungeon reward item prefabs are missing.");
+            GameObject awardIcon = UnityEngine.Object.Instantiate(awardIconPrefab, delay, false);
+            uiBindings.Apply(awardIcon, "ItemAwardIcon");
+            Transform anchor = FindPath(awardIcon.transform, "Anchor");
+            if (anchor == null) throw new InvalidOperationException("Original item award anchor is missing.");
+            anchor.gameObject.SetActive(true);
+            GameObject icon = UnityEngine.Object.Instantiate(itemIconPrefab, anchor, false);
+            uiBindings.Apply(icon, "ItemIcon");
+            SetItemIcon(icon.transform, row.ItemId, row.Count);
+            if (awardTiming.interval > 0) waitingRewards.Enqueue(slot);
         }
 
         private void SetItemIcon(Transform root, int itemId, long count)
@@ -236,9 +309,11 @@ namespace Zjcs.Presentation.Home
 
         private void BindButtons()
         {
+            uiBindings.ApplyResultClaimState(gameObject, model.IsPrivateRoute ? 3
+                : canClaim || canPurchase ? 1 : 2, model.AwardTimes > 1);
             BindButton("Content/WinObj/Content/DailyDungeonCostMoneyContent/CommonBtn_CostItem",
                 canClaim ? claim : canPurchase ? purchase : null);
-            BindButton("Content/WinObj/Content/DailyDungeonCostMoneyContent/CommonBtn_Add",
+            BindButton("Content/WinObj/Content/DailyDungeonCostMoneyContent/ShowCountTipGo/ShowCountTip/CommonBtn_Add",
                 canPurchase ? purchase : null);
             BindButton("Content/WinObj/Content/CloseBtn", close);
 
@@ -246,7 +321,7 @@ namespace Zjcs.Presentation.Home
                 canClaim ? "领取奖励" : canPurchase ? "购买次数" : "次数不足");
             SetButtonInteractable("Content/WinObj/Content/DailyDungeonCostMoneyContent/CommonBtn_CostItem",
                 canClaim || canPurchase);
-            SetButtonInteractable("Content/WinObj/Content/DailyDungeonCostMoneyContent/CommonBtn_Add", canPurchase);
+            SetButtonInteractable("Content/WinObj/Content/DailyDungeonCostMoneyContent/ShowCountTipGo/ShowCountTip/CommonBtn_Add", canPurchase);
         }
 
         private void BindButton(string path, Action action)

@@ -168,8 +168,11 @@ def build() -> dict:
     level_number_ids = set()
     for key in reward_rule_ids:
         for reward in reward_rows_by_id[key]:
-            if reward.get("LevelCountId"):
-                level_number_ids.add(int(reward["LevelCountId"]))
+            raw_level_count_ids = reward.get("LevelCountId") or []
+            level_count_ids = raw_level_count_ids if isinstance(raw_level_count_ids, list) else []
+            if not isinstance(raw_level_count_ids, list) and raw_level_count_ids:
+                level_number_ids.add(int(raw_level_count_ids))
+            level_number_ids.update(int(value) for value in level_count_ids if int(value) > 0)
             level_number_ids.update(int(value) for value in (reward.get("SubRankCountId") or []))
     missing_level_numbers = level_number_ids.difference(level_numbers)
     if missing_level_numbers:
@@ -181,6 +184,9 @@ def build() -> dict:
             condition = row.get("Condition") or {}
             condition_type = condition.get("_type", "")
             condition_children = [int(value) for value in condition.get("Ids", [])]
+            raw_level_count_ids = row.get("LevelCountId") or []
+            level_count_ids = ([int(value) for value in raw_level_count_ids]
+                               if isinstance(raw_level_count_ids, list) else [])
             if condition_type not in ("", "PlayerProfessionCondition", "PlayerProfessionFactionCondition",
                                       "CompositeAndCondition", "CompositeOrCondition"):
                 raise ValueError("Unsupported daily dungeon reward condition: " + repr(condition_type))
@@ -189,7 +195,9 @@ def build() -> dict:
             reward_output.append({
                 "Id": row["Id"], "Order": row["Order"], "Percent": row["Percent"],
                 "IdList": row["IdList"], "WeightList": row["WeightList"], "CountList": row["CountList"],
-                "LevelCountId": row["LevelCountId"] or 0,
+                "LevelCountIds": level_count_ids,
+                "LevelCountId": int(raw_level_count_ids or 0)
+                    if not isinstance(raw_level_count_ids, list) else 0,
                 "SubRankCountId": row["SubRankCountId"] or [],
                 "IndexMininum": row["IndexMininum"] or [],
                 "ConditionType": condition_type,

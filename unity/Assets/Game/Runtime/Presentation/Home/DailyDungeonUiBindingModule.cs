@@ -102,6 +102,43 @@ namespace Zjcs.Presentation.Home
             }
         }
 
+        internal void ApplyResultClaimState(GameObject root, int state, bool multipleAwards)
+        {
+            var binding = LoadBinding("GameEndPanelDailyDungeon").resultClaim
+                ?? throw new InvalidOperationException("Original daily dungeon claim states are missing.");
+            // DailyDungeonCostMoneyContent.Refresh resets the award switch first.
+            ApplyResultState(root, binding.awardTimesStates, 0);
+            ApplyResultState(root, binding.freeStates, state);
+            if (state == 1) ApplyResultState(root, binding.awardTimesStates, multipleAwards ? 1 : 0);
+        }
+
+        private void ApplyResultState(GameObject root, DungeonOfficialStateConfig[] configs, int state)
+        {
+            foreach (var config in configs)
+            {
+                if (config.objects != null)
+                {
+                    // Original StateGameObjectConfig preserves objects shared by states.
+                    var selected = config.objects.FirstOrDefault(value => value.state == state)?.paths;
+                    foreach (var row in config.objects)
+                    {
+                        if (row.state == state) continue;
+                        foreach (string path in row.paths)
+                            if (selected == null || !selected.Contains(path))
+                                FindNode(root.transform, path, null).gameObject.SetActive(false);
+                    }
+                    if (selected != null)
+                        foreach (string path in selected) FindNode(root.transform, path, null).gameObject.SetActive(true);
+                }
+                if (config.texts != null)
+                {
+                    var text = config.texts.FirstOrDefault(value => value.state == state);
+                    if (text != null)
+                        FindNode(root.transform, config.textPath, null).GetComponent<TMP_Text>().text = LocalizedText(text.key);
+                }
+            }
+        }
+
         public void Apply(GameObject root, string prefabName)
         {
             if (disposed) throw new ObjectDisposedException(nameof(DailyDungeonUiBindingModule));
@@ -257,6 +294,9 @@ namespace Zjcs.Presentation.Home
                         + prefabName + " at " + item.path);
                 text.text = LocalizedText(item.key);
             }
+
+            if (!string.IsNullOrEmpty(binding.layoutJson))
+                World.OfficialDungeonEntryBindings.ApplyLayouts(root, binding.layoutJson);
 
             World.OfficialDungeonEntryBindings.Apply(root, prefabName,
                 (clip, emitter) => World.OfficialDungeonUiAudio.Post(clip, emitter, (source, active) =>
@@ -479,6 +519,7 @@ namespace Zjcs.Presentation.Home
     [Serializable]
     internal sealed class DungeonOfficialPrefabBinding
     {
+        public DungeonOfficialResultClaimBinding resultClaim;
         public string name;
         public DungeonLeaderboardBinding leaderboard;
         public DungeonLeaderboardAchievementBinding[] achievementRows;
@@ -491,6 +532,55 @@ namespace Zjcs.Presentation.Home
         public DungeonOfficialRaycastBinding[] raycastGraphics;
         public DungeonOfficialEntryButtonBinding[] entryButtons;
         public DungeonOfficialPopupBinding resultPopup;
+        public string layoutJson;
+        public DungeonOfficialAwardLayoutBinding awardLayout;
+        public DungeonOfficialAwardContentBinding awardContent;
+        public DungeonOfficialAwardScrollBinding awardScroll;
+    }
+
+    [Serializable]
+    internal sealed class DungeonOfficialAwardScrollBinding
+    {
+        public string path, content, viewport;
+        public bool reverseDirection, reverseIndex, horizontal, vertical, inertia;
+        public int movementType;
+        public float elasticity, decelerationRate, scrollSensitivity;
+    }
+
+    [Serializable]
+    internal sealed class DungeonOfficialAwardLayoutBinding
+    { public string path, grid; public int minRow, maxHeight, priority, currentRow; }
+
+    [Serializable]
+    internal sealed class DungeonOfficialAwardContentBinding
+    { public string path; public float interval, showDelay; }
+
+    [Serializable]
+    internal sealed class DungeonOfficialResultClaimBinding
+    {
+        public DungeonOfficialStateConfig[] freeStates, awardTimesStates;
+    }
+
+    [Serializable]
+    internal sealed class DungeonOfficialStateConfig
+    {
+        public DungeonOfficialStateObjects[] objects;
+        public string textPath;
+        public DungeonOfficialStateText[] texts;
+    }
+
+    [Serializable]
+    internal sealed class DungeonOfficialStateObjects
+    {
+        public int state;
+        public string[] paths;
+    }
+
+    [Serializable]
+    internal sealed class DungeonOfficialStateText
+    {
+        public int state;
+        public string key;
     }
 
     [Serializable]

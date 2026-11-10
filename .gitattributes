@@ -2677,6 +2677,7 @@ scripts/prepare_daily_dungeon_*.py text eol=lf
 assets/reference/daily-dungeon-achievements-source-manifest.json text eol=lf
 assets/reference/dungeon-ui/daily-dungeon-result-ui-source-manifest.json text eol=lf
 unity/Assets/Game/Resources/Dungeons/UI/884_156692/** -text whitespace=-blank-at-eol
+unity/Assets/StreamingAssets/Dungeons/UI/884_156692/** -text whitespace=-blank-at-eol
 unity/Assets/Official/Dungeons/884_156692/** -text whitespace=-blank-at-eol
 unity/Assets/Game/Resources/Dungeons/daily-dungeon-achievements.json text eol=lf
 unity/Assets/Game/Resources/Dungeons/private-routes.json text eol=lf
@@ -2755,3 +2756,5 @@ unity/Assets/Game/Runtime/Presentation/World/Mainline/RoadblockTipGraphRuntime.c
 unity/Assets/Game/Runtime/Official/ItemDetailUI/** text eol=lf
 unity/Assets/Game/Runtime/Official/ItemDetailUI.meta text eol=lf
 unity/Assets/Game/Runtime/Official/ItemDetailUI/**.meta whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+# Preserve the generated battle payload bytes used by the Home startup hash check.
+unity/Assets/Game/Resources/NpcAdventure/battle-stages.json text eol=lf

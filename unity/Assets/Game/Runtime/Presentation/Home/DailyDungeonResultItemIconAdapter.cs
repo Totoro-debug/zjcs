@@ -14,10 +14,23 @@ namespace Zjcs.Presentation.Home
 
         public void Configure(HomeFeatureRuntime host, int itemId, long count)
         {
-            if (host == null) throw new ArgumentNullException(nameof(host));
-            if (itemId <= 0 || count <= 0) throw new ArgumentOutOfRangeException(nameof(itemId));
+            ConfigureCore(host, itemId, count, true, false);
+        }
 
-            Transform content = FindPath(transform, "Content");
+        public void ConfigurePreview(HomeFeatureRuntime host, int itemId, long count)
+        {
+            ConfigureCore(host, itemId, count, false, true);
+        }
+
+        private void ConfigureCore(HomeFeatureRuntime host, int itemId, long count,
+            bool showCount, bool allowZeroCount)
+        {
+            if (host == null) throw new ArgumentNullException(nameof(host));
+            if (itemId <= 0 || count < 0 || (!allowZeroCount && count == 0))
+                throw new ArgumentOutOfRangeException(nameof(itemId));
+
+            Transform itemIcon = FindItemIconRoot(transform);
+            Transform content = FindPath(itemIcon, "Content");
             Image quality = FindPath(content, "QualityImg")?.GetComponent<Image>();
             Image icon = FindPath(content, "mask/icon")?.GetComponent<Image>();
             Transform countRoot = FindPath(content, "BgCountText");
@@ -38,14 +51,21 @@ namespace Zjcs.Presentation.Home
             icon.enabled = icon.sprite != null;
             icon.preserveAspect = true;
 
-            bool showCount = count > 1 && item.itemType != 110;
+            showCount = showCount && count > 1 && item.itemType != 110;
             countRoot.gameObject.SetActive(showCount);
             countText.text = showCount ? count.ToString() : string.Empty;
             Transform bottomText = FindPath(content, "BottomText");
             if (bottomText != null) bottomText.gameObject.SetActive(false);
 
-            foreach (Button button in GetComponentsInChildren<Button>(true))
+            foreach (Button button in itemIcon.GetComponentsInChildren<Button>(true))
                 button.interactable = false;
+        }
+
+        private static Transform FindItemIconRoot(Transform source)
+        {
+            for (Transform current = source; current != null; current = current.parent)
+                if (FindPath(current, "Content") != null) return current;
+            throw new InvalidOperationException("Official daily dungeon item icon root is missing.");
         }
 
         private static Transform FindPath(Transform root, string path)

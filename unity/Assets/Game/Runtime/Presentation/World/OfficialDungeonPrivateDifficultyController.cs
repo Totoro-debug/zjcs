@@ -41,9 +41,9 @@ namespace Zjcs.Presentation.World
             Action<int> onChanged, Action<string> showNotice, Func<string, string> language)
         {
             if (source != null) throw new InvalidOperationException("Private difficulty content was already initialized.");
-            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "map12-private-difficulty.json");
+            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "884_156692", "map12-private-difficulty.json");
             source = JsonUtility.FromJson<Binding>(File.ReadAllText(path));
-            if (source?.manifest != "871_156598" || source.dungeonId != 21 || source.tabs?.Length != 5)
+            if (source?.manifest != "884_156692" || source.dungeonId != 21 || source.tabs?.Length != 5)
                 throw new InvalidDataException("Original private difficulty references are missing.");
             module = localModule ?? throw new ArgumentNullException(nameof(localModule));
             info = module.FindDungeon(source.dungeonId);

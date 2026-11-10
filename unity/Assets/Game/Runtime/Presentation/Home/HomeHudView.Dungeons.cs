@@ -6,7 +6,11 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zjcs.Offline.PartnersUI;
+using Zjcs.Offline.ProfessionUI;
 using Zjcs.Offline.World;
+using Zjcs.Official.TeamUI;
+using Zjcs.Official.WorldUI;
 using Zjcs.Presentation.World;
 
 namespace Zjcs.Presentation.Home
@@ -42,6 +46,8 @@ namespace Zjcs.Presentation.Home
         private int selectedLeaderboardGrade;
         private bool dailyDungeonShowingGifts;
         private bool dailyDungeonAchievementButtonsBound;
+        private OfflinePartnerActorUiRuntime dailyDungeonOwnedPartnerActorUi;
+        private OfflineProfessionImageCatalog dailyDungeonOwnedPartnerUiImages;
         private readonly List<DailyDungeonAchievementMilestone> dailyDungeonVisibleAchievements =
             new List<DailyDungeonAchievementMilestone>();
 
@@ -374,7 +380,7 @@ namespace Zjcs.Presentation.Home
             if (travelNotesRoot != null) UnityEngine.Object.Destroy(travelNotesRoot);
             travelNotesRoot = null;
             if (dailyDungeonRoot != null) UnityEngine.Object.Destroy(dailyDungeonRoot);
-            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonEntryPanel");
+            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/884_156692/DailyDungeonEntryPanel");
             if (prefab == null) throw new InvalidOperationException("Official daily dungeon entry panel is missing.");
             dailyDungeonRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             dailyDungeonRoot.name = "DailyDungeonEntryPanel";
@@ -401,7 +407,9 @@ namespace Zjcs.Presentation.Home
         private void RefreshDailyDungeonEntryPage()
         {
             if (dailyDungeonRoot == null) return;
-            SetPrefabText(dailyDungeonRoot, "FreeCount", host.DailyDungeons.RemainEntries.ToString());
+            DungeonUiBindings.ApplyLocalizedText(dailyDungeonRoot, "DailyDungeonEntryPanel",
+                "ui_daily_dungeon_remain_free_count_tip", host.DailyDungeons.RemainEntries,
+                host.DailyDungeons.Catalog.settings.DailyDungeonDailyFreeCount);
             Transform selectContent = Find(dailyDungeonRoot.transform, "SelectContent");
             if (selectContent != null) selectContent.gameObject.SetActive(!dailyDungeonShowingGifts);
             Transform achievementPanel = Find(dailyDungeonRoot.transform, "AchievementPanel");
@@ -412,44 +420,22 @@ namespace Zjcs.Presentation.Home
                 Canvas.ForceUpdateCanvases();
                 return;
             }
-            if (host.DailyDungeons.ActiveRun != null)
-            {
-                SetNamedText(dailyDungeonRoot.transform, "DescTxt", "存在未完成路线 · 今日剩余领奖次数 "
-                    + host.DailyDungeons.RemainEntries);
-                SetNamedText(dailyDungeonRoot.transform, "GoToBtn", "继续副本");
-                SetPrefabActive(dailyDungeonRoot, "GoToBtn", true);
-            }
-            else if (host.DailyDungeons.PendingClaims.Count > 0)
-            {
-                SetNamedText(dailyDungeonRoot.transform, "GoToBtn",
-                    "领取副本奖励（" + host.DailyDungeons.PendingClaims.Count + "）");
-                SetPrefabActive(dailyDungeonRoot, "GoToBtn", true);
-            }
-            else SetPrefabActive(dailyDungeonRoot, "GoToBtn", false);
-            int publicCount = 0;
+            SetPrefabActive(dailyDungeonRoot, "GoToBtn", host.DailyDungeons.ActiveRun != null
+                || host.DailyDungeons.PendingClaims.Count > 0);
             DailyDungeonEntryPageModel page = null;
             try
             {
                 page = host.DailyDungeons.BuildEntryPageModel(IsMapRegionPublic,
                     (dungeonId, conditionId) => IsDailyDungeonConditionMet(dungeonId, conditionId));
-                publicCount = page.Entries.Count;
             }
             catch (InvalidOperationException)
             {
-                publicCount = 0;
             }
-            SetPrefabText(dailyDungeonRoot, "DescTxt", host.DailyDungeons.ActiveRun != null
-                ? "存在未完成路线 · 今日剩余领奖次数 " + host.DailyDungeons.RemainEntries
-                : host.DailyDungeons.PendingClaims.Count > 0
-                    ? "有 " + host.DailyDungeons.PendingClaims.Count + " 份副本奖励待领取 · 今日剩余领奖次数 "
-                        + host.DailyDungeons.RemainEntries
-                : publicCount == 0 ? "尚无已公开的日常副本入口区域"
-                    : "已公开副本 " + publicCount + " 个 · 今日剩余领奖次数 " + host.DailyDungeons.RemainEntries);
             Transform list = FindPath(dailyDungeonRoot.transform,
                 "SelectContent/ScrollRect/Viewport/Content");
             if (list == null) return;
             foreach (Transform child in list) UnityEngine.Object.Destroy(child.gameObject);
-            GameObject itemPrefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonEntryPanelItem");
+            GameObject itemPrefab = Resources.Load<GameObject>("Dungeons/UI/884_156692/DailyDungeonEntryPanelItem");
             if (itemPrefab == null) throw new InvalidOperationException("Official daily dungeon list item is missing.");
             foreach (DailyDungeonEntryModel dungeon in page?.Entries
                 ?? Array.Empty<DailyDungeonEntryModel>())
@@ -458,8 +444,19 @@ namespace Zjcs.Presentation.Home
                 item.name = "Dungeon_" + dungeon.DungeonId;
                 ApplyOfficialDungeonBindings(item, "DailyDungeonEntryPanelItem");
                 BindDungeonListArtwork(item, dungeon.DungeonId);
-                SetNamedText(item.transform, "TitleGo", dungeon.Title);
-                SetNamedText(item.transform, "DescTxt", "最高评级：" + BestGradeText(dungeon.BestGrade));
+                SetNamedText(item.transform, "TitleGo", DungeonUiBindings.LocalizedText(
+                    DailyDungeonNameWithoutDifficultyKey(dungeon.DungeonId)));
+                int descriptionDifficulty = dungeon.DefaultDifficulty >= 0
+                    ? dungeon.DefaultDifficulty
+                    : dungeon.Difficulties.FirstOrDefault(value => !value.IsPrivateRoute)?.Difficulty ?? 0;
+                SetNamedText(item.transform, "DescTxt", DungeonUiBindings.LocalizedText(
+                    DailyDungeonDescriptionKey(dungeon.DungeonId, descriptionDifficulty)));
+                if (dungeon.BestGrade <= 0)
+                    DungeonUiBindings.ApplyLocalizedText(item, "DailyDungeonEntryPanelItem",
+                        "ui_daily_dungeon_dialog_without_score");
+                else
+                    DungeonUiBindings.ApplyLocalizedText(item, "DailyDungeonEntryPanelItem",
+                        "ui_daily_dungeon_dialog_best_score", DailyDungeonGradeText(dungeon.BestGrade));
                 Button select = item.GetComponent<Button>();
                 if (select == null)
                 {
@@ -515,7 +512,7 @@ namespace Zjcs.Presentation.Home
                 row.gameObject.SetActive(hasMilestone);
                 if (!hasMilestone) continue;
                 DailyDungeonAchievementMilestone milestone = visible[index];
-                SetNamedText(row, "TitleTxt", "累计领取 " + milestone.RequiredCount + " 次");
+                SetNamedText(row, "TitleTxt", DungeonUiBindings.LocalizedText("ui_achievement_content_22"));
                 SetNamedText(row, "ProgressTxt", Math.Min(progress, milestone.RequiredCount)
                     + "/" + milestone.RequiredCount);
                 Slider slider = row.GetComponentInChildren<Slider>(true);
@@ -590,7 +587,7 @@ namespace Zjcs.Presentation.Home
         {
             if (!IsArenaUnlocked()) return;
             CloseDungeonPages();
-            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/ArenaPanel");
+            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/884_156692/ArenaPanel");
             if (prefab == null) throw new InvalidOperationException("Official arena panel is missing.");
             arenaRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             arenaRoot.name = "ArenaPanel";
@@ -811,7 +808,7 @@ namespace Zjcs.Presentation.Home
             selectedDifficulty = requestedDifficulty ?? host.DailyDungeons.DefaultDifficulty(dungeonId);
             if (selectedDifficulty < 0) selectedDifficulty = 0;
             if (dailyDungeonDialogRoot != null) UnityEngine.Object.Destroy(dailyDungeonDialogRoot);
-            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonDialog");
+            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/884_156692/DailyDungeonDialog");
             if (prefab == null) throw new InvalidOperationException("Official daily dungeon detail panel is missing.");
             dailyDungeonDialogRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             dailyDungeonDialogRoot.name = "DailyDungeonDialog";
@@ -819,7 +816,6 @@ namespace Zjcs.Presentation.Home
             PlaceModalCanvasOnTop(dailyDungeonDialogRoot);
             ApplyOfficialDungeonBindings(dailyDungeonDialogRoot, "DailyDungeonDialog");
             BindDungeonArtwork(dailyDungeonDialogRoot, dungeonId, "BgDialog3", "IconImg");
-            SetNamedText(dailyDungeonDialogRoot.transform, "TitleTxt", dungeon.title);
             BindDifficultyTabs(dungeonId);
             RefreshDailyDungeonDetail();
             BindPrefabButton(dailyDungeonDialogRoot, "BattleBtn", BeginSelectedDailyDungeon);
@@ -943,28 +939,115 @@ namespace Zjcs.Presentation.Home
             Transform team = Find(row.transform, "Team");
             if (team != null)
             {
-                bool showedPlayer = false;
+                int memberIndex = 0;
+                IReadOnlyList<DailyDungeonTeamMemberSave> teamMembers = entry.TeamMembers
+                    ?? Array.Empty<DailyDungeonTeamMemberSave>();
                 foreach (Transform member in team)
                 {
-                    bool playerSlot = !showedPlayer && member.name.StartsWith(
-                        "TopRankTeamMemberIcon", StringComparison.Ordinal);
-                    if (member.name.StartsWith("TopRankTeamMemberIcon", StringComparison.Ordinal))
+                    if (!member.name.StartsWith("TopRankTeamMemberIcon", StringComparison.Ordinal)) continue;
+                    member.gameObject.SetActive(memberIndex == 0 || memberIndex - 1 < teamMembers.Count);
+                    if (memberIndex == 0)
                     {
-                        member.gameObject.SetActive(playerSlot);
-                        showedPlayer |= playerSlot;
-                        if (playerSlot)
-                        {
-                            SetPrefabActive(member.gameObject, "NpcIcon", false);
-                            SetPrefabActive(member.gameObject, "ImgEmpty", false);
-                            var portrait = member.GetComponent<DailyDungeonResultPlayerRowAdapter>()
-                                ?? member.gameObject.AddComponent<DailyDungeonResultPlayerRowAdapter>();
-                            portrait.Configure(host);
-                        }
+                        SetPrefabActive(member.gameObject, "PublicPlayerIcon", true);
+                        SetPrefabActive(member.gameObject, "HeadImg", true);
+                        SetPrefabActive(member.gameObject, "NpcIcon", false);
+                        SetPrefabActive(member.gameObject, "ImgEmpty", false);
+                        var portrait = member.GetComponent<DailyDungeonResultPlayerRowAdapter>()
+                            ?? member.gameObject.AddComponent<DailyDungeonResultPlayerRowAdapter>();
+                        portrait.Configure(host);
+                        var name = EnsureDailyDungeonMemberName(member);
+                        name.Localizer = key => key;
+                        name.SetKey("{0}", entry.IsSelf ? host.CharacterName : entry.PlayerName);
                     }
+                    else if (memberIndex - 1 < teamMembers.Count)
+                    {
+                        DailyDungeonTeamMemberSave partner = teamMembers[memberIndex - 1];
+                        SetPrefabActive(member.gameObject, "PublicPlayerIcon", false);
+                        SetPrefabActive(member.gameObject, "HeadImg", false);
+                        SetPrefabActive(member.gameObject, "ImgEmpty", false);
+                        SetPrefabActive(member.gameObject, "NpcIcon", false);
+                        TeamNpcIconUI npcIcon = EnsureDailyDungeonNpcIconController(member);
+                        if (npcIcon.NameText != null)
+                            npcIcon.NameText.Localizer = host.PartnerRosterAssets.CreateLocalizer();
+                        OfflinePartnerActorUiRuntime partnerRuntime = EnsureDailyDungeonPartnerActorUi();
+                        npcIcon.Configure(new DailyDungeonLeaderboardNpcIconServices(
+                            partnerRuntime.NpcRuntime, partnerRuntime.PlayerInfo,
+                            host.Profile.Save.Player.CharacterProperties.LocalActorIdentities.PlayerId,
+                            host.DailyDungeonProgression.Player.Rank, partner));
+                        npcIcon.Init(partner.npcClassId, partner.level, partner.subRank);
+                        SetPrefabActive(member.gameObject, "NpcIcon", true);
+                    }
+                    memberIndex++;
                 }
             }
             SetLeaderboardObjectState(row, rowBinding.mMeStateSwitcher, entry.IsSelf ? 1 : 0);
             SetLeaderboardObjectState(row, rowBinding.mTopStateSwticher, entry.Rank);
+        }
+
+        private static WorldMultiLanguageText EnsureDailyDungeonMemberName(Transform member)
+        {
+            Transform node = member.Find("Name");
+            if (node == null || node.GetComponent<TMP_Text>() == null)
+                throw new InvalidOperationException("The original leaderboard member name is missing.");
+            return node.GetComponent<WorldMultiLanguageText>()
+                ?? node.gameObject.AddComponent<WorldMultiLanguageText>();
+        }
+
+        private static TeamNpcIconUI EnsureDailyDungeonNpcIconController(Transform member)
+        {
+            Transform npcRoot = Find(member, "NpcIcon");
+            if (npcRoot == null) throw new InvalidOperationException("Official leaderboard NPC icon is missing.");
+            TeamNpcIconUI icon = npcRoot.GetComponent<TeamNpcIconUI>();
+            if (icon == null) icon = npcRoot.gameObject.AddComponent<TeamNpcIconUI>();
+            icon.NameText = EnsureDailyDungeonMemberName(member);
+            icon.ProfessionIconGo ??= Find(npcRoot, "ProfessionGo")?.gameObject;
+            icon.ProfessionIcon ??= npcRoot.Find("ProfessionGo/ImgProfession")?.GetComponent<Image>();
+            icon.NpcIcon ??= Find(npcRoot, "IconImg")?.GetComponent<Image>();
+            icon.Button ??= npcRoot.GetComponent<Button>();
+            if (icon.ProfessionIconGo == null || icon.ProfessionIcon == null || icon.NpcIcon == null)
+                throw new InvalidOperationException("Official leaderboard NPC icon bindings are incomplete.");
+            return icon;
+        }
+
+        private OfflinePartnerActorUiRuntime EnsureDailyDungeonPartnerActorUi()
+        {
+            if (partnerActorUi != null) return partnerActorUi;
+            if (partnerUiImages != null)
+                throw new InvalidOperationException("Partner icon images exist without their official actor runtime.");
+
+            try
+            {
+                OfficialPartnerStarGodAssetCatalog starGodAssets = OfficialPartnerStarGodAssetCatalog.LoadDefault();
+                partnerUiImages = ScriptableObject.CreateInstance<OfflineProfessionImageCatalog>();
+                var npcImages = Resources.Load<OfflineProfessionImageCatalog>("Partners/OfficialPartnerNpcIconImages");
+                if (!npcImages) throw new InvalidOperationException("The shared NPC icon catalog is missing.");
+                partnerUiImages.Entries = host.PartnerRosterAssets.Images.Entries
+                    .Concat(npcImages.Entries)
+                    .Concat(starGodAssets.CreateImageCatalog().Entries)
+                    .Concat(host.PartnerGiftAssets.Images.Entries)
+                    .GroupBy(value => value.Path).Select(group => group.First()).ToArray();
+                Func<string, string> panelFallback = WorldMultiLanguageText.Localize;
+                partnerActorUi = new OfflinePartnerActorUiRuntime(host.Profile,
+                    host.DailyDungeonProgression, host.PartnerCatalog,
+                    new OfflineProfessionImageResourceLoader(partnerUiImages),
+                    key => panelFallback == null ? key : panelFallback(key),
+                    npcId => host.OpenPartnerDetail(npcId), () =>
+                    {
+                        CloseDialog();
+                        OpenCharacterPage();
+                    });
+                dailyDungeonOwnedPartnerActorUi = partnerActorUi;
+                dailyDungeonOwnedPartnerUiImages = partnerUiImages;
+                return partnerActorUi;
+            }
+            catch
+            {
+                partnerActorUi?.Dispose();
+                partnerActorUi = null;
+                if (partnerUiImages) UnityEngine.Object.Destroy(partnerUiImages);
+                partnerUiImages = null;
+                throw;
+            }
         }
 
         private void RefreshDailyDungeonLeaderboardGifts()
@@ -1074,6 +1157,21 @@ namespace Zjcs.Presentation.Home
         {
             if (dailyDungeonLeaderboardRoot != null) UnityEngine.Object.Destroy(dailyDungeonLeaderboardRoot);
             dailyDungeonLeaderboardRoot = null;
+            if (dailyDungeonOwnedPartnerActorUi != null)
+            {
+                if (ReferenceEquals(partnerActorUi, dailyDungeonOwnedPartnerActorUi))
+                {
+                    partnerActorUi.Dispose();
+                    partnerActorUi = null;
+                }
+                if (partnerUiImages == dailyDungeonOwnedPartnerUiImages)
+                {
+                    if (partnerUiImages) UnityEngine.Object.Destroy(partnerUiImages);
+                    partnerUiImages = null;
+                }
+                dailyDungeonOwnedPartnerActorUi = null;
+                dailyDungeonOwnedPartnerUiImages = null;
+            }
         }
 
         private void NavigateDailyDungeon(int direction)
@@ -1143,10 +1241,7 @@ namespace Zjcs.Presentation.Home
                 selectedDungeonId, selectedDifficulty,
                 conditionId => IsDailyDungeonConditionMet(selectedDungeonId, conditionId));
             unlocked = model.IsUnlocked;
-            int best = model.BestGrade;
-            SetNamedText(dailyDungeonDialogRoot.transform, "DescTxt",
-                "難度 " + selectedDifficulty + " · 最高评级 " + (best <= 0 ? "暂无" : best.ToString())
-                + " · 今日剩余领奖次数 " + model.RemainingEntries);
+            ApplyDailyDungeonLocalizedValues(model);
             RefreshDailyDungeonUnlockConditions(unlocked);
             SetPrefabActive(dailyDungeonDialogRoot, "UnlockBtn", !unlocked
                 && (selectedDifficulty > 0 || host.DailyDungeons.FindDungeon(selectedDungeonId)
@@ -1157,6 +1252,142 @@ namespace Zjcs.Presentation.Home
             World.OfficialDungeonEntryBindings.RefreshCatalogueDetail(dailyDungeonDialogRoot, unlocked,
                 host.DailyDungeons.CanEnter(selectedDungeonId, selectedDifficulty, true,
                     condition => IsDailyDungeonConditionMet(selectedDungeonId, condition)));
+            SetPrefabActive(dailyDungeonDialogRoot, "MatchBtn", false);
+            SetPrefabActive(dailyDungeonDialogRoot, "UnMatchBtn", false);
+            SetPrefabActive(dailyDungeonDialogRoot, "TeamInviteBtn", false);
+            RefreshDailyDungeonDetailRewards();
+        }
+
+        private void ApplyDailyDungeonLocalizedValues(DailyDungeonHudModel model)
+        {
+            if (dailyDungeonDialogRoot == null) return;
+            string prefabName = dailyDungeonDialogRoot.name;
+            DailyDungeonUiBindingModule bindings = DungeonUiBindings;
+
+            string titleKey = model.Level?.IsPrivateRoute == true
+                ? DailyDungeonNameWithoutDifficultyKey(selectedDungeonId)
+                : "ui_daily_dungeon_item_title_" + selectedDungeonId + "_"
+                    + DifficultyName(selectedDifficulty);
+            SetNamedText(dailyDungeonDialogRoot.transform, "TitleTxt", bindings.LocalizedText(titleKey));
+            SetNamedText(dailyDungeonDialogRoot.transform, "DungeonDes",
+                bindings.LocalizedText(DailyDungeonDescriptionKey(selectedDungeonId, selectedDifficulty)));
+
+            int[] grades = model.Map?.gradeRows == null ? Array.Empty<int>()
+                : model.Map.gradeRows.Where(value => value != null
+                        && value.difficulty == selectedDifficulty)
+                    .Select(value => value.grade).Distinct().ToArray();
+            if (grades.Length > 0)
+                bindings.ApplyLocalizedText(dailyDungeonDialogRoot, prefabName,
+                    "ui_daily_dungeon_dialog_grade_range_text",
+                    DailyDungeonGradeText(grades.Min()), DailyDungeonGradeText(grades.Max()));
+
+            if (model.BestGrade <= 0)
+                bindings.ApplyLocalizedText(dailyDungeonDialogRoot, prefabName,
+                    "ui_daily_dungeon_dialog_without_score");
+            else
+                bindings.ApplyLocalizedText(dailyDungeonDialogRoot, prefabName,
+                    "ui_daily_dungeon_dialog_best_score", DailyDungeonGradeText(model.BestGrade));
+
+            bindings.ApplyLocalizedText(dailyDungeonDialogRoot, prefabName,
+                "ui_daily_dungeon_dialog_reward_title",
+                bindings.LocalizedText(DailyDungeonDifficultyTextKey(selectedDifficulty)));
+
+            DailyDungeonRuntimeEquipmentDrop[] drops = model.Map?.equipmentDrops == null
+                ? Array.Empty<DailyDungeonRuntimeEquipmentDrop>()
+                : model.Map.equipmentDrops.Where(value => value != null
+                    && value.difficulty == selectedDifficulty).ToArray();
+            if (drops.Length > 0)
+            {
+                int minimumLevel = drops.Min(value => value.minimumLevel)
+                    + drops.Min(value => value.minimumBlessLevel);
+                int maximumLevel = drops.Max(value => value.maximumLevel)
+                    + drops.Max(value => value.maximumBlessLevel);
+                bindings.ApplyLocalizedText(dailyDungeonDialogRoot, prefabName,
+                    "{0}-{1}", minimumLevel, maximumLevel);
+            }
+
+            bindings.ApplyLocalizedText(dailyDungeonDialogRoot, prefabName,
+                "ui_daily_dungeon_dialog_remain_free_count_tip", model.RemainingEntries,
+                host.DailyDungeons.Catalog.settings.DailyDungeonDailyFreeCount);
+        }
+
+        private static string DailyDungeonDifficultyTextKey(int difficulty) =>
+            "ui_daily_dungeon_difficulty_text_" + DifficultyName(difficulty);
+
+        private static string DailyDungeonNameWithoutDifficultyKey(int dungeonId) =>
+            "ui_daily_dungeon_item_title_without_difficulty_" + dungeonId;
+
+        private static string DailyDungeonDescriptionKey(int dungeonId, int difficulty) =>
+            "ui_daily_dungeon_dialog_desc_content_" + dungeonId + "_" + DifficultyName(difficulty);
+
+        private static string DifficultyName(int difficulty)
+        {
+            switch (difficulty)
+            {
+                case 0: return "Normal";
+                case 1: return "Hard";
+                case 2: return "Nightmare";
+                case 3: return "Hell";
+                case 4: return "Abyss";
+                case 50: return "PrivateMap";
+                default: throw new ArgumentOutOfRangeException(nameof(difficulty), difficulty,
+                    "Original daily dungeon difficulty is unsupported.");
+            }
+        }
+
+        private string DailyDungeonGradeText(int grade)
+        {
+            string[] names = { "None", "F", "E", "D", "C", "B", "A", "S", "SS", "SSS" };
+            if (grade < 0 || grade >= names.Length)
+                throw new ArgumentOutOfRangeException(nameof(grade), grade,
+                    "Original daily dungeon grade is unsupported.");
+            return DungeonUiBindings.LocalizedText("ui_daily_dungeon_grade_text_" + names[grade]);
+        }
+        private void RefreshDailyDungeonDetailRewards()
+        {
+            Transform awardGrid = Find(dailyDungeonDialogRoot.transform, "AwardGrid");
+            Transform grid = awardGrid == null ? null : awardGrid.Find("ViewPort/Grid");
+            if (grid == null)
+                throw new InvalidOperationException("Official daily dungeon reward list content is missing.");
+            for (int index = grid.childCount - 1; index >= 0; index--)
+                UnityEngine.Object.Destroy(grid.GetChild(index).gameObject);
+
+            const string itemIconPath = "Dungeons/UI/884_156692/Native/Prefabs/UI/Item/ItemIcon";
+            const string probabilityPath = "Dungeons/UI/884_156692/ProbabilityGo";
+            GameObject itemIconPrefab = Resources.Load<GameObject>(itemIconPath);
+            GameObject probabilityPrefab = Resources.Load<GameObject>(probabilityPath);
+            if (itemIconPrefab == null || probabilityPrefab == null)
+                throw new InvalidOperationException("Official daily dungeon reward icon assets are missing.");
+
+            DailyDungeonRewardAssetCatalog metadata = DailyDungeonRewardAssetCatalog.LoadDefault();
+            IReadOnlyList<DailyDungeonRewardPreviewItem> rewards = host.PreviewDailyDungeonDetailRewards(
+                selectedDungeonId, selectedDifficulty, metadata);
+            foreach (DailyDungeonRewardPreviewItem reward in rewards)
+            {
+                GameObject icon = UnityEngine.Object.Instantiate(itemIconPrefab, grid, false);
+                icon.name = "ItemIcon_" + reward.ItemId;
+                ApplyOfficialDungeonBindings(icon, "ItemIcon");
+                DailyDungeonResultItemIconAdapter adapter = icon.GetComponentInChildren<DailyDungeonResultItemIconAdapter>(true)
+                    ?? icon.AddComponent<DailyDungeonResultItemIconAdapter>();
+                adapter.ConfigurePreview(host, reward.ItemId, reward.Count);
+
+                DailyDungeonRewardAssetCatalog.Item item = metadata.Find(reward.ItemId);
+                if (item == null)
+                    throw new InvalidOperationException("Official daily dungeon reward metadata is missing: "
+                        + reward.ItemId);
+                if (!item.isFiltrationItem)
+                {
+                    Transform attachment = Find(icon.transform, "ItemIconAttachment");
+                    if (attachment == null)
+                        throw new InvalidOperationException("Official ItemIcon attachment anchor is missing.");
+                    GameObject probabilityTip = UnityEngine.Object.Instantiate(probabilityPrefab,
+                        attachment, false);
+                    probabilityTip.name = "ProbabilityGo";
+                    ApplyOfficialDungeonBindings(probabilityTip, "ProbabilityGo");
+                }
+            }
+            Canvas.ForceUpdateCanvases();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(grid as RectTransform);
         }
 
         private void RefreshDailyDungeonUnlockConditions(bool unlocked)
@@ -1180,6 +1411,8 @@ namespace Zjcs.Presentation.Home
                 value.type == "CombatRatingOrRankSuppressCondition");
             DailyDungeonRuntimeCondition grade = conditions.FirstOrDefault(value =>
                 value.type == "DailyDungeonPersonalGradeCondition");
+            DailyDungeonRuntimeCondition time = conditions.FirstOrDefault(value =>
+                value.type == "ServerRankUnlockDaysCondition");
             int requiredHighSubRank = rating == null ? 0
                 : host.DailyDungeonHighSubRank(rating.rank);
             bool rankSuppressed = rating != null
@@ -1191,19 +1424,34 @@ namespace Zjcs.Presentation.Home
             SetPrefabActive(lockRoot.gameObject, "CombatRatingLimitGo", rating != null && !rankSuppressed);
             SetPrefabActive(lockRoot.gameObject, "RankSuppressionGo", rankSuppressed);
             SetPrefabActive(lockRoot.gameObject, "BattleGradeLimitGo", grade != null);
-            SetPrefabActive(lockRoot.gameObject, "TimeLimitGo", false);
+            SetPrefabActive(lockRoot.gameObject, "TimeLimitGo", time != null);
             if (level != null)
-                SetNamedText(lockRoot, "LimitTxt", "等级达到 " + level.level);
+                DungeonUiBindings.ApplyLocalizedText(dailyDungeonDialogRoot,
+                    dailyDungeonDialogRoot.name,
+                    "ui_daily_dungeon_difficulty_unlock_level_limit_text", level.level);
             if (rating != null)
             {
-                SetNamedText(lockRoot, "CombatRatingLimitTxt", "战力达到 " + rating.combatRating);
-                SetNamedText(lockRoot, "RankSuppressionTxt", "或达到对应阶位压制");
+                string formattedRating = Zjcs.Official.WorldUI.WorldBattleReportNumberFormat
+                    .Compact(rating.combatRating);
+                DungeonUiBindings.ApplyLocalizedText(dailyDungeonDialogRoot,
+                    dailyDungeonDialogRoot.name,
+                    "ui_daily_dungeon_difficulty_combat_rating_limit_text", formattedRating);
+                DungeonUiBindings.ApplyLocalizedText(dailyDungeonDialogRoot,
+                    dailyDungeonDialogRoot.name,
+                    "ui_daily_dungeon_difficulty_rank_suppression_text");
             }
             if (grade != null)
-                SetNamedText(lockRoot, "BattleGradeLimitTxt", "副本 " + grade.dungeonId
-                    + " 难度 " + grade.difficulty + " 评级达到 " + grade.gradeType);
+                DungeonUiBindings.ApplyLocalizedText(dailyDungeonDialogRoot,
+                    dailyDungeonDialogRoot.name,
+                    "ui_daily_dungeon_difficulty_battle_count_limit_text",
+                    DungeonUiBindings.LocalizedText("ui_daily_dungeon_item_title_"
+                        + grade.dungeonId + "_" + DifficultyName(grade.difficulty)),
+                    DailyDungeonGradeText(grade.gradeType));
+            if (time != null)
+                DungeonUiBindings.ApplyLocalizedText(dailyDungeonDialogRoot,
+                    dailyDungeonDialogRoot.name,
+                    "ui_daily_dungeon_difficulty_unlock_time_limit_text", time.days);
         }
-
         private void CollectUnlockConditions(DailyDungeonRuntimeCondition condition,
             List<DailyDungeonRuntimeCondition> result, int depth)
         {
@@ -1279,7 +1527,7 @@ namespace Zjcs.Presentation.Home
         private void OpenDailyDungeonRoute()
         {
             CloseDungeonDetail();
-            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonBigMapDialog");
+            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/884_156692/DailyDungeonBigMapDialog");
             if (prefab == null) throw new InvalidOperationException("Official daily dungeon route map is missing.");
             dailyDungeonDialogRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             dailyDungeonDialogRoot.name = "DailyDungeonBigMapDialog";
@@ -1365,10 +1613,11 @@ namespace Zjcs.Presentation.Home
         private void OpenDailyDungeonBuyCountDialog()
         {
             if (dailyDungeonBuyCountRoot != null) return;
-            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonBuyCountDialog");
+            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/884_156692/DailyDungeonBuyCountDialog");
             if (prefab == null) throw new InvalidOperationException("Official daily dungeon count purchase dialog is missing.");
             dailyDungeonBuyCountRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             dailyDungeonBuyCountRoot.name = "DailyDungeonBuyCountDialog";
+            ApplyOfficialDungeonBindings(dailyDungeonBuyCountRoot, "DailyDungeonBuyCountDialog");
             dailyDungeonBuyCountRoot.transform.SetAsLastSibling();
             PlaceModalCanvasOnTop(dailyDungeonBuyCountRoot);
             DailyDungeonEntryAllowanceState allowance = host.DailyDungeons.EntryAllowance();
@@ -1394,9 +1643,13 @@ namespace Zjcs.Presentation.Home
             BindPrefabButton(dailyDungeonBuyCountRoot, "CommonBtn_Add", () =>
                 dailyDungeonBuyCountSlider.value = Mathf.Min(dailyDungeonBuyCountLimit,
                     dailyDungeonBuyCountSlider.value + 1f));
-            SetNamedText(dailyDungeonBuyCountRoot.transform, "TipText", "购买额外副本领奖次数");
+            SetNamedText(dailyDungeonBuyCountRoot.transform, "TipText",
+                DungeonUiBindings.LocalizedText("ui_daily_dungeon_buy_count_dialog_tip",
+                    host.ItemName(host.DailyDungeons.Catalog.settings.DailyDungeonBuyCostItemId)));
+            int purchaseLimit = host.DailyDungeons.Catalog.settings.DailyDungeonBuyCostCountList?.Length ?? 0;
             SetNamedText(dailyDungeonBuyCountRoot.transform, "LimitText",
-                "剩余可购买 " + allowance.PurchaseRemaining + " 次");
+                DungeonUiBindings.LocalizedText("ui_daily_dungeon_buy_count_dialog_limit_text",
+                    allowance.PurchasedEntries, purchaseLimit));
             RefreshDailyDungeonPurchaseCost(dailyDungeonBuyCountSlider.value);
         }
 
@@ -1442,6 +1695,7 @@ namespace Zjcs.Presentation.Home
             CloseDailyDungeonBuyCountDialog();
             CloseDailyDungeonClaimConfirm();
             RefreshDailyDungeonEntryPage();
+            Notify(DungeonUiBindings.LocalizedText("ui_daily_dungeon_buy_count_dialog_buy_success_tip"));
             OpenPendingDailyDungeonClaim();
         }
 
@@ -1595,7 +1849,7 @@ namespace Zjcs.Presentation.Home
                 return;
             }
             if (dailyDungeonLeaveConfirmRoot != null) return;
-            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonConfirmEnterPanel");
+            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/884_156692/DailyDungeonConfirmEnterPanel");
             if (prefab == null) throw new InvalidOperationException("Official daily dungeon confirmation panel is missing.");
             dailyDungeonLeaveConfirmRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             dailyDungeonLeaveConfirmRoot.name = "DailyDungeonLeaveConfirm";
@@ -1620,11 +1874,17 @@ namespace Zjcs.Presentation.Home
             dailyDungeonLeaveConfirmRoot = null;
         }
 
-        private static string BestGradeText(int grade) => grade <= 0 ? "暂无" : grade.ToString();
-
         private static void SetNamedText(Transform root, string name, string value)
         {
             Transform node = Find(root, name);
+            TMPro.TMP_Text text = node == null ? null : node.GetComponent<TMPro.TMP_Text>();
+            if (text == null && node != null) text = node.GetComponentInChildren<TMPro.TMP_Text>(true);
+            if (text != null) text.text = value ?? string.Empty;
+        }
+
+        private static void SetNamedTextAtPath(Transform root, string path, string value)
+        {
+            Transform node = FindPath(root, path);
             TMPro.TMP_Text text = node == null ? null : node.GetComponent<TMPro.TMP_Text>();
             if (text == null && node != null) text = node.GetComponentInChildren<TMPro.TMP_Text>(true);
             if (text != null) text.text = value ?? string.Empty;
@@ -1662,31 +1922,12 @@ namespace Zjcs.Presentation.Home
         private void BindDungeonArtwork(GameObject root, int dungeonId, string backgroundNode,
             string iconNode)
         {
-            var dungeon = host.DailyDungeons.FindDungeon(dungeonId);
-            if (dungeon == null) return;
-            int mapClass = dungeon.entryMapClassId;
-            int variant = host.DailyDungeons.Catalog.dungeons
-                .Where(value => value != null && value.entryMapClassId == mapClass)
-                .OrderBy(value => value.id).TakeWhile(value => value.id != dungeonId).Count() + 1;
-            string prefix = "Map_" + mapClass + "_" + variant;
-            string bundle = "defaultpackage_assets_image_ui_notes_dailydungeon_map_" + mapClass + ".bundle";
-            SetOfficialPrefabSprite(root, backgroundNode, LoadDungeonUiSprite(bundle,
-                "DetailBg_" + prefix));
-            SetOfficialPrefabSprite(root, iconNode, LoadDungeonUiSprite(bundle,
-                "DetailBuilding_" + prefix));
+            DungeonUiBindings.ApplyArtwork(root, "DailyDungeonDialog", dungeonId);
         }
 
         private void BindDungeonListArtwork(GameObject root, int dungeonId)
         {
-            var dungeon = host.DailyDungeons.FindDungeon(dungeonId);
-            if (dungeon == null) return;
-            int mapClass = dungeon.entryMapClassId;
-            int variant = host.DailyDungeons.Catalog.dungeons
-                .Where(value => value != null && value.entryMapClassId == mapClass)
-                .OrderBy(value => value.id).TakeWhile(value => value.id != dungeonId).Count() + 1;
-            string bundle = "defaultpackage_assets_image_ui_notes_dailydungeon_map_" + mapClass + ".bundle";
-            SetOfficialPrefabSprite(root, "Icon", LoadDungeonUiSprite(bundle,
-                "ListImg_Map_" + mapClass + "_" + variant));
+            DungeonUiBindings.ApplyArtwork(root, "DailyDungeonEntryPanelItem", dungeonId);
         }
 
         private void SetOfficialPrefabSprite(GameObject root, string nodeName, Sprite sprite)
@@ -1721,7 +1962,7 @@ namespace Zjcs.Presentation.Home
         {
             string key = bundle + "/" + spriteName;
             if (dungeonUiSprites.TryGetValue(key, out Sprite cached)) return cached;
-            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "Sprites",
+            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "884_156692", "Sprites",
                 Path.GetFileNameWithoutExtension(bundle), spriteName + ".png");
             if (!File.Exists(path)) return null;
             Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);

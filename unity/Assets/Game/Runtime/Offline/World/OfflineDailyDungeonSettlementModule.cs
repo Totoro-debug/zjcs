@@ -82,8 +82,9 @@ namespace Zjcs.Offline.World
 
             var random = new DailyDungeonRewardRandom(receipt);
             Dictionary<int, long> rolledItems = RollItemCounts(receipt, run,
-                dailyDungeons.ConfiguredRewardRuleIds(run, true), awardTimes, random);
+                dailyDungeons.ConfiguredRewardRuleIds(run, true), awardTimes, random, out var gradeCounts);
             var displayCounts = new Dictionary<int, long>();
+            var gradeDisplayCounts = new Dictionary<int, long>();
             OfficialEquipmentCatalog equipment = progression.EquipmentCatalog;
             DailyDungeonRuntimeEquipmentDrop dropRange = dailyDungeons.FindMap(run.mapGroupId)?.equipmentDrops?
                 .FirstOrDefault(value => value.difficulty == run.difficulty);
@@ -105,6 +106,8 @@ namespace Zjcs.Offline.World
                 if (!randomEquipment && !isEquipment)
                 {
                     Add(displayCounts, reward.Key, reward.Value);
+                    if (gradeCounts.TryGetValue(reward.Key, out long gradeCount))
+                        Add(gradeDisplayCounts, reward.Key, gradeCount);
                     continue;
                 }
                 if (equipment == null || dropRange == null)
@@ -149,6 +152,9 @@ namespace Zjcs.Offline.World
                             MaximumBlessLevel = dropRange.maximumBlessLevel
                         }, random.NextFloat);
                     Add(displayCounts, item.ItemId, 1);
+                    if (gradeCounts.TryGetValue(reward.Key, out long gradeCount)
+                        && index >= reward.Value - gradeCount)
+                        Add(gradeDisplayCounts, item.ItemId, 1);
                 }
             }
 
@@ -156,10 +162,18 @@ namespace Zjcs.Offline.World
             {
                 Receipt = receipt,
                 HasRewardDetails = true,
-                Items = displayCounts.OrderBy(value => value.Key)
-                    .Select(value => new DailyDungeonSettlementItem { ItemId = value.Key, Count = value.Value })
-                    .ToArray()
+                Items = DisplayItems(displayCounts, gradeDisplayCounts).ToArray()
             };
+        }
+
+        public IReadOnlyList<DailyDungeonRewardPreviewItem> PreviewCatalogRewards(int dungeonId,
+            int difficulty, IDailyDungeonRewardItemMetadataAdapter itemMetadata)
+        {
+            int profession = profile.Save.Player.Wardrobe.Profession;
+            long combatRating = DailyDungeonCombatRating();
+            return dailyDungeons.BuildRewardPreview(dungeonId, difficulty, profile.Save.Player.Level,
+                profile.Save.Player.SubRank,
+                reward => DailyDungeonRewardConditionMet(reward, profession, combatRating), itemMetadata);
         }
 
         public DailyDungeonSettlementResult SettleClearedRooms(string receipt, DailyDungeonRunSave run)
@@ -175,16 +189,32 @@ namespace Zjcs.Offline.World
                 Receipt = receipt, InventoryCommitted = committed, Committed = committed,
                 HasRewardDetails = record != null,
                 Items = record == null ? Array.Empty<DailyDungeonSettlementItem>() : record.Items
-                    .Select(value => new DailyDungeonSettlementItem { ItemId = value.ItemId, Count = value.Count }).ToArray(),
+                    .Select(value => new DailyDungeonSettlementItem { ItemId = value.ItemId, Count = value.Count,
+                        IsGradeReward = value.IsGradeReward }).ToArray(),
                 EquipmentInstanceIds = record?.EquipmentInstanceIds.ToArray() ?? Array.Empty<long>()
             };
         }
 
-        private static void Add(DailyDungeonSettlementRecord record, int itemId, long count)
+        private static void Add(DailyDungeonSettlementRecord record, int itemId, long count, bool isGradeReward = false)
         {
-            var item = record.Items.FirstOrDefault(value => value.ItemId == itemId);
-            if (item == null) record.Items.Add(new DailyDungeonSettlementItem { ItemId = itemId, Count = count });
+            if (count <= 0) return;
+            var item = record.Items.FirstOrDefault(value => value.ItemId == itemId && value.IsGradeReward == isGradeReward);
+            if (item == null) record.Items.Add(new DailyDungeonSettlementItem {
+                ItemId = itemId, Count = count, IsGradeReward = isGradeReward });
             else item.Count = checked(item.Count + count);
+        }
+
+        private static IEnumerable<DailyDungeonSettlementItem> DisplayItems(
+            IDictionary<int, long> totals, IDictionary<int, long> gradeCounts)
+        {
+            foreach (var row in totals.OrderBy(value => value.Key))
+            {
+                gradeCounts.TryGetValue(row.Key, out long grade);
+                if (row.Value > grade) yield return new DailyDungeonSettlementItem {
+                    ItemId = row.Key, Count = row.Value - grade };
+                if (grade > 0) yield return new DailyDungeonSettlementItem {
+                    ItemId = row.Key, Count = grade, IsGradeReward = true };
+            }
         }
 
         private static void Add(IDictionary<int, long> counts, int itemId, long count)
@@ -198,9 +228,11 @@ namespace Zjcs.Offline.World
             .Evaluate(profile.Save.Player, profile.Save.World, Now()).CombatRating;
 
         private Dictionary<int, long> RollItemCounts(string receipt, DailyDungeonRunSave run,
-            int[] rewardRuleIds, int awardTimes, Zjcs.Offline.World.IDailyDungeonRandom random)
+            int[] rewardRuleIds, int awardTimes, Zjcs.Offline.World.IDailyDungeonRandom random,
+            out Dictionary<int, long> gradeCounts)
         {
             var itemCounts = new Dictionary<int, long>();
+            gradeCounts = new Dictionary<int, long>();
             int profession = profile.Save.Player.Wardrobe.Profession;
             long combatRating = DailyDungeonCombatRating();
             Zjcs.Offline.World.DailyDungeonRewardRoll roll = dailyDungeons.RollRewards(run,
@@ -209,7 +241,10 @@ namespace Zjcs.Offline.World
                 Math.Max(1, awardTimes), rewardRuleIds, random);
             foreach (Zjcs.Offline.World.DailyDungeonRewardRollItem reward in roll.Items)
                 if (reward != null && reward.ItemId > 0 && reward.Count > 0)
+                {
                     Add(itemCounts, reward.ItemId, reward.Count);
+                    if (reward.IsGradeReward) Add(gradeCounts, reward.ItemId, reward.Count);
+                }
             return itemCounts;
         }
 
@@ -221,7 +256,8 @@ namespace Zjcs.Offline.World
             profile.Reload();
             if (profile.Save.Player.AppliedInventoryEventIds.Contains(receipt)) return ReadCommitted(receipt);
             var random = new DailyDungeonRewardRandom(receipt);
-            Dictionary<int, long> itemCounts = RollItemCounts(receipt, run, rewardRuleIds, awardTimes, random);
+            Dictionary<int, long> itemCounts = RollItemCounts(receipt, run, rewardRuleIds, awardTimes, random,
+                out var gradeCounts);
             OfficialEquipmentCatalog equipment = progression.EquipmentCatalog;
             var dropRange = dailyDungeons.FindMap(run.mapGroupId)?.equipmentDrops?
                 .FirstOrDefault(value => value.difficulty == run.difficulty);
@@ -276,7 +312,9 @@ namespace Zjcs.Offline.World
                                     MaximumBlessLevel = dropRange.maximumBlessLevel
                                 }, random.NextFloat);
                             record.EquipmentInstanceIds.Add(instanceId);
-                            Add(record, item.ItemId, 1);
+                            bool gradeReward = gradeCounts.TryGetValue(reward.Key, out long gradeCount)
+                                && index >= reward.Value - gradeCount;
+                            Add(record, item.ItemId, 1, gradeReward);
                             save.Player.Equipment.Instances.Add(item);
                             save.Player.Equipment.NextInstanceId++;
                         }
@@ -285,7 +323,9 @@ namespace Zjcs.Offline.World
                     {
                         InventoryOperationResult granted = OfflineInventoryOperations.Grant(save.Player,
                             reward.Key, reward.Value, now);
-                        Add(record, reward.Key, reward.Value);
+                        gradeCounts.TryGetValue(reward.Key, out long gradeCount);
+                        Add(record, reward.Key, reward.Value - gradeCount);
+                        Add(record, reward.Key, gradeCount, true);
                         if (!granted.IsApplied)
                             throw new InvalidOperationException("Unsupported daily dungeon reward item: " + reward.Key);
                     }

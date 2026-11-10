@@ -170,6 +170,9 @@ namespace Zjcs.Offline.World
         public long playerId;
         public string playerName;
         public bool npc;
+        public List<DailyDungeonTeamMemberSave> firstClearTeamMembers = new List<DailyDungeonTeamMemberSave>();
+        // Legacy best-time roster retained for old saves and NPC team templates.
+        public List<DailyDungeonTeamMemberSave> teamMembers = new List<DailyDungeonTeamMemberSave>();
     }
 
     [Serializable]
@@ -201,6 +204,8 @@ namespace Zjcs.Offline.World
         public string PlayerName { get; internal set; }
         public bool IsSelf { get; internal set; }
         public bool IsNpc { get; internal set; }
+        public IReadOnlyList<DailyDungeonTeamMemberSave> TeamMembers { get; internal set; }
+            = Array.Empty<DailyDungeonTeamMemberSave>();
     }
 
     public sealed class DailyDungeonScore
@@ -213,6 +218,7 @@ namespace Zjcs.Offline.World
 
     public sealed class DailyDungeonRewardRollItem
     {
+        public bool IsGradeReward { get; internal set; }
         public int ItemId { get; internal set; }
         public long Count { get; internal set; }
         public float Probability { get; internal set; }
@@ -303,7 +309,6 @@ namespace Zjcs.Offline.World
                     && value.difficulty == difficulty && (grade <= 0 || value.grade == grade))
                 .OrderByDescending(value => value.grade)
                 .ThenBy(value => value.finishTicks <= 0 ? long.MaxValue : value.finishTicks)
-                .ThenBy(value => value.id, StringComparer.Ordinal)
                 .Take(Math.Max(0, limit))
                 .Select((value, index) => new DailyDungeonLeaderboardEntry
                 {
@@ -315,7 +320,15 @@ namespace Zjcs.Offline.World
                     PlayerId = value.playerId,
                     PlayerName = value.playerName ?? string.Empty,
                     IsSelf = selfId != 0 && value.playerId == selfId,
-                    IsNpc = value.npc
+                    IsNpc = value.npc,
+                    TeamMembers = ((value.npc ? value.teamMembers : value.firstClearTeamMembers)
+                        ?? new List<DailyDungeonTeamMemberSave>())
+                        .Select(member => new DailyDungeonTeamMemberSave
+                        {
+                            npcClassId = member.npcClassId,
+                            level = member.level,
+                            subRank = member.subRank
+                        }).ToArray()
                 }).ToArray();
         }
     }
@@ -481,10 +494,12 @@ namespace Zjcs.Offline.World
             IDailyDungeonRandom random = randomSource ?? new StableDungeonRandom(receipt ?? run.id ?? string.Empty);
             var results = new List<DailyDungeonRewardRollItem>();
             int[] rules = (rewardRuleIds ?? ConfiguredRewardRuleIds(run, completed)).ToArray();
+            int roomRuleCount = ClearedRoomRewardRuleIds(run).Length;
             for (int awardTime = 0; awardTime < awardTimes; awardTime++)
             {
-                foreach (int ruleId in rules)
+                for (int ruleIndex = 0; ruleIndex < rules.Length; ruleIndex++)
                 {
+                    int ruleId = rules[ruleIndex];
                     DailyDungeonRuntimeReward rule = Catalog.rewardRules?.Where(value => value != null && value.Id == ruleId)
                         .OrderBy(value => value.Order < 0 ? int.MaxValue : value.Order)
                         .FirstOrDefault(value => conditionMet == null || conditionMet(value));
@@ -501,7 +516,8 @@ namespace Zjcs.Offline.World
                         float probability = RewardProbability(ruleId, index);
                         if (probability < 1f && !random.Roll(probability)) continue;
                         float count = rule.CountList[index];
-                        if (rule.LevelCountId > 0) count *= LevelNumber(rule.LevelCountId, level);
+                        int levelCountId = rule.LevelCountIdFor(index);
+                        if (levelCountId > 0) count *= LevelNumber(levelCountId, level);
                         if (rule.SubRankCountId != null && index < rule.SubRankCountId.Length
                             && rule.SubRankCountId[index] > 0)
                             count *= LevelNumber(rule.SubRankCountId[index], subRank);
@@ -509,7 +525,8 @@ namespace Zjcs.Offline.World
                         if (amount <= 0) continue;
                         ruleResults.Add(new DailyDungeonRewardRollItem
                         {
-                            ItemId = rule.IdList[index], Count = amount, Probability = probability
+                            ItemId = rule.IdList[index], Count = amount, Probability = probability,
+                            IsGradeReward = ruleIndex >= roomRuleCount
                         });
                     }
                     float doubleProbability = GradeRewardDoubleProbability(run, ruleId);
@@ -522,12 +539,13 @@ namespace Zjcs.Offline.World
                     results.AddRange(ruleResults);
                 }
             }
-            results = results.GroupBy(value => new { value.ItemId, value.Probability })
+            results = results.GroupBy(value => new { value.ItemId, value.Probability, value.IsGradeReward })
                 .Select(group => new DailyDungeonRewardRollItem
                 {
                     ItemId = group.Key.ItemId,
                     Count = group.Sum(value => value.Count),
                     Probability = group.Key.Probability
+                    , IsGradeReward = group.Key.IsGradeReward
                 }).ToList();
             return new DailyDungeonRewardRoll
             {
@@ -621,6 +639,9 @@ namespace Zjcs.Offline.World
                 string recordId = run.dungeonId + ":" + run.difficulty + ":" + run.grade + ":" + playerId;
                 DailyDungeonLeaderboardRecordSave record = next.leaderboard.FirstOrDefault(value =>
                     value != null && value.id == recordId);
+                long completionCount = next.completionCounts.FirstOrDefault(value =>
+                    value != null && value.dungeonId == run.dungeonId && value.difficulty == run.difficulty
+                    && value.grade == run.grade)?.count ?? 0;
                 if (record == null)
                 {
                     next.leaderboard.Add(new DailyDungeonLeaderboardRecordSave
@@ -628,7 +649,10 @@ namespace Zjcs.Offline.World
                         id = recordId, dungeonId = run.dungeonId, difficulty = run.difficulty,
                         grade = run.grade, finishTicks = finishTicks, playerId = playerId,
                         playerName = string.IsNullOrWhiteSpace(options.PlayerName) ? "本地玩家" : options.PlayerName,
-                        npc = false
+                        npc = false,
+                        firstClearTeamMembers = completionCount == 1
+                            ? CopyTeamMembers(run.teamMembers) : new List<DailyDungeonTeamMemberSave>(),
+                        teamMembers = CopyTeamMembers(run.teamMembers)
                     });
                 }
                 else if (record.finishTicks <= 0 || finishTicks < record.finishTicks)
@@ -636,8 +660,21 @@ namespace Zjcs.Offline.World
                     record.finishTicks = finishTicks;
                     record.playerName = string.IsNullOrWhiteSpace(options.PlayerName) ? "本地玩家" : options.PlayerName;
                     record.npc = false;
+                    record.teamMembers = CopyTeamMembers(run.teamMembers);
                 }
             });
+        }
+
+        private static List<DailyDungeonTeamMemberSave> CopyTeamMembers(
+            IEnumerable<DailyDungeonTeamMemberSave> teamMembers)
+        {
+            return (teamMembers ?? Array.Empty<DailyDungeonTeamMemberSave>())
+                .Select(value => new DailyDungeonTeamMemberSave
+                {
+                    npcClassId = value.npcClassId,
+                    level = value.level,
+                    subRank = value.subRank
+                }).ToList();
         }
 
         private DailyDungeonRuntimeDifficulty FindDifficultyForModule(int dungeonId, int difficulty)

@@ -227,12 +227,19 @@ namespace Zjcs.Offline.World
         public int[] IdList;
         public int[] WeightList;
         public float[] CountList;
+        public int[] LevelCountIds;
         public int LevelCountId;
         public int[] SubRankCountId;
         public int[] IndexMininum;
         public string ConditionType;
         public int ConditionProfession;
         public int[] ConditionIds;
+
+        public int LevelCountIdFor(int index)
+        {
+            return LevelCountIds != null && index >= 0 && index < LevelCountIds.Length
+                ? LevelCountIds[index] : LevelCountId;
+        }
     }
 
     [Serializable]
@@ -307,6 +314,14 @@ namespace Zjcs.Offline.World
     }
 
     [Serializable]
+    public sealed class DailyDungeonTeamMemberSave
+    {
+        public int npcClassId;
+        public int level;
+        public int subRank;
+    }
+
+    [Serializable]
     public sealed class DailyDungeonRunSave
     {
         public string id;
@@ -316,6 +331,7 @@ namespace Zjcs.Offline.World
         public int currentRoomId;
         public int grade;
         public List<int> clearedRoomIds = new List<int>();
+        public List<DailyDungeonTeamMemberSave> teamMembers = new List<DailyDungeonTeamMemberSave>();
         public string activeBattleCheckpoint = string.Empty;
         public int lastBattleRoomId;
         public int lastBattleOutcome;
@@ -619,9 +635,16 @@ namespace Zjcs.Offline.World
 
         public bool SaveBattleCheckpoint(string battleCheckpoint)
         {
-            if (save.activeRun == null) return false;
+            return SaveBattleCheckpoint(battleCheckpoint, null);
+        }
+
+        public bool SaveBattleCheckpoint(string battleCheckpoint,
+            IReadOnlyList<DailyDungeonTeamMemberSave> teamMembers)
+        {
+            if (save.activeRun == null || !IsValidTeamMembers(teamMembers)) return false;
             DailyDungeonSave next = Clone(save);
             next.activeRun.activeBattleCheckpoint = battleCheckpoint ?? string.Empty;
+            if (teamMembers != null) next.activeRun.teamMembers = CopyTeamMembers(teamMembers);
             Persist(next);
             return true;
         }
@@ -878,6 +901,25 @@ namespace Zjcs.Offline.World
                 throw new InvalidDataException("Official daily dungeon catalog failed validation.");
         }
 
+        private static bool IsValidTeamMembers(IReadOnlyList<DailyDungeonTeamMemberSave> teamMembers)
+        {
+            return teamMembers == null || (teamMembers.All(value => value != null
+                && value.npcClassId > 0 && value.level > 0 && value.subRank > 0)
+                && teamMembers.Select(value => value.npcClassId).Distinct().Count() == teamMembers.Count);
+        }
+
+        private static List<DailyDungeonTeamMemberSave> CopyTeamMembers(
+            IEnumerable<DailyDungeonTeamMemberSave> teamMembers)
+        {
+            return (teamMembers ?? Array.Empty<DailyDungeonTeamMemberSave>())
+                .Select(value => new DailyDungeonTeamMemberSave
+                {
+                    npcClassId = value.npcClassId,
+                    level = value.level,
+                    subRank = value.subRank
+                }).ToList();
+        }
+
         private static bool IsValidSave(string json)
         {
             try
@@ -894,6 +936,7 @@ namespace Zjcs.Offline.World
                     || data.activeRun.dungeonId <= 0 || data.activeRun.mapGroupId <= 0
                     || data.activeRun.currentRoomId <= 0 || data.activeRun.clearedRoomIds == null
                     || data.activeRun.activeBattleCheckpoint == null
+                    || !IsValidTeamMembers(data.activeRun.teamMembers)
                     || data.activeRun.lastBattleRoomId < 0 || data.activeRun.lastBattleOutcome < 0
                     || data.activeRun.lastBattleOutcome > 2
                     || (data.activeRun.lastBattleOutcome == 0) != (data.activeRun.lastBattleRoomId == 0))) return false;
@@ -902,14 +945,16 @@ namespace Zjcs.Offline.World
                         || value.difficulty < 0 || value.grade < 0)) return false;
                 if (data.leaderboard != null && data.leaderboard.Any(value => value == null
                     || string.IsNullOrWhiteSpace(value.id) || value.dungeonId <= 0
-                    || value.difficulty < 0 || value.grade < 0 || value.finishTicks < 0)) return false;
+                    || value.difficulty < 0 || value.grade < 0 || value.finishTicks < 0
+                    || !IsValidTeamMembers(value.teamMembers))) return false;
                 if (data.gifts != null && data.gifts.Any(value => value == null
                     || string.IsNullOrWhiteSpace(value.receipt) || value.count <= 0)) return false;
                 if (data.pendingClaims != null && data.pendingClaims.Any(value => value == null
                     || string.IsNullOrWhiteSpace(value.id) || value.awardTimes < 0 || value.run == null
                     || value.id != value.run.id || value.run.dungeonId <= 0
                     || value.run.difficulty < 0 || value.run.mapGroupId <= 0
-                    || value.run.grade <= 0 || value.run.finishedAtUnixSeconds <= 0)) return false;
+                    || value.run.grade <= 0 || value.run.finishedAtUnixSeconds <= 0
+                    || !IsValidTeamMembers(value.run.teamMembers))) return false;
                 if (data.entryPurchaseReceipts != null
                     && (data.entryPurchaseReceipts.Any(string.IsNullOrWhiteSpace)
                         || data.entryPurchaseReceipts.Distinct().Count() != data.entryPurchaseReceipts.Count)) return false;
@@ -943,6 +988,11 @@ namespace Zjcs.Offline.World
             if (data.claimedAchievementIndexes == null) data.claimedAchievementIndexes = new List<int>();
             if (data.claimedLeaderboardGiftIds == null) data.claimedLeaderboardGiftIds = new List<int>();
             if (data.completionCounts == null) data.completionCounts = new List<DailyDungeonCompletionCountSave>();
+            if (data.activeRun != null && data.activeRun.teamMembers == null)
+                data.activeRun.teamMembers = new List<DailyDungeonTeamMemberSave>();
+            foreach (DailyDungeonLeaderboardRecordSave record in data.leaderboard)
+                if (record != null && record.teamMembers == null)
+                    record.teamMembers = new List<DailyDungeonTeamMemberSave>();
             if (data.purchasedAvailableEntries < 0) data.purchasedAvailableEntries = 0;
             if (data.giftedAvailableClaims < 0) data.giftedAvailableClaims = 0;
             if (data.lifetimeClaimedRewardTimes < 0) data.lifetimeClaimedRewardTimes = 0;
@@ -994,6 +1044,7 @@ namespace Zjcs.Offline.World
                 if (pending.run == null) continue;
                 if (pending.run.id == null) pending.run.id = string.Empty;
                 if (pending.run.clearedRoomIds == null) pending.run.clearedRoomIds = new List<int>();
+                if (pending.run.teamMembers == null) pending.run.teamMembers = new List<DailyDungeonTeamMemberSave>();
                 if (pending.run.activeBattleCheckpoint == null) pending.run.activeBattleCheckpoint = string.Empty;
             }
             if (data.activeRun != null && IsEmptyRun(data.activeRun)) data.activeRun = null;

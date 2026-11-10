@@ -322,10 +322,10 @@ namespace Zjcs.Presentation.World
 
         public static void Apply(GameObject root, string prefabName, Action<AudioClip, GameObject> postSound = null)
         {
-            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "official-bindings.json");
+            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "884_156692", "official-bindings.json");
             if (!File.Exists(path)) throw new FileNotFoundException("Official dungeon UI bindings are missing.", path);
             Document document = LoadDocument();
-            Prefab binding = document?.manifest == "871_156598"
+            Prefab binding = document?.manifest == "884_156692"
                 ? document.prefabs?.FirstOrDefault(value => value.name == prefabName) : null;
             if (binding?.transforms == null || binding.images == null || binding.texts == null)
                 throw new InvalidDataException("Official dungeon UI bindings are incomplete: " + prefabName);
@@ -424,9 +424,9 @@ namespace Zjcs.Presentation.World
         private static Document LoadDocument()
         {
             if (cachedDocument != null) return cachedDocument;
-            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "official-bindings.json");
+            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "884_156692", "official-bindings.json");
             Document document = JsonUtility.FromJson<Document>(File.ReadAllText(path));
-            if (document?.manifest != "871_156598") throw new InvalidDataException("Official dungeon binding version mismatch.");
+            if (document?.manifest != "884_156692") throw new InvalidDataException("Official dungeon binding version mismatch.");
             cachedDocument = document;
             return document;
         }
@@ -524,9 +524,11 @@ namespace Zjcs.Presentation.World
                     group.reverseArrangement = item.flags[6] != 0;
                     group.enabled = item.enabled;
                 }
-                else if (item.type == "HorizontalLayoutGroupJSZX")
+                else if (item.type == "HorizontalLayoutGroupJSZX" || item.type == "VerticalLayoutGroupJSZX")
                 {
-                    var group = node.GetComponent<UGUIJszx.HorizontalLayoutGroupJSZX>() ?? node.AddComponent<UGUIJszx.HorizontalLayoutGroupJSZX>();
+                    UGUIJszx.HorizontalOrVerticalLayoutGroupJSZX group = item.type == "VerticalLayoutGroupJSZX"
+                        ? (UGUIJszx.HorizontalOrVerticalLayoutGroupJSZX)(node.GetComponent<UGUIJszx.VerticalLayoutGroupJSZX>() ?? node.AddComponent<UGUIJszx.VerticalLayoutGroupJSZX>())
+                        : node.GetComponent<UGUIJszx.HorizontalLayoutGroupJSZX>() ?? node.AddComponent<UGUIJszx.HorizontalLayoutGroupJSZX>();
                     group.padding = new RectOffset((int)item.padding[0], (int)item.padding[1], (int)item.padding[2], (int)item.padding[3]);
                     group.childAlignment = (TextAnchor)item.alignment;
                     group.spacing = item.layoutSpacing; group.spacingList = new List<float>(item.spacingList);
@@ -604,7 +606,7 @@ namespace Zjcs.Presentation.World
                 scroll.inertia = item.inertia;
                 scroll.decelerationRate = item.decelerationRate;
                 scroll.scrollSensitivity = item.scrollSensitivity;
-                var prefab = Resources.Load<GameObject>("Dungeons/UI/" + item.prefab);
+                var prefab = Resources.Load<GameObject>("Dungeons/UI/884_156692/" + item.prefab);
                 if (prefab == null) throw new InvalidDataException("Official dungeon scroll prefab is missing: " + item.prefab);
                 scroll.DefaultPrefabSource = new LoopScrollSinglePrefabSource { Prefab = prefab };
                 scroll.enabled = item.enabled;
@@ -699,7 +701,7 @@ namespace Zjcs.Presentation.World
             RouteStyles styles = LoadDocument().routeStyles;
             Prefab binding = LoadDocument().prefabs.Single(value => value.name == window.GradePrefab);
             GradeItemBinding fields = binding.gradeItem;
-            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/" + window.GradePrefab);
+            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/884_156692/" + window.GradePrefab);
             if (fields == null || prefab == null) throw new InvalidDataException("Official route grade item is missing.");
             int minimum = grades.Min(value => value.Key), maximum = grades.Max(value => value.Key);
             foreach (var grade in grades)
@@ -781,7 +783,38 @@ namespace Zjcs.Presentation.World
         {
             Transform node = root;
             if (!string.IsNullOrEmpty(path))
-                foreach (string part in path.Split('/')) node = node.GetChild(int.Parse(part));
+            {
+                string[] indices = path.Split('/');
+                for (int depth = 0; depth < indices.Length; depth++)
+                {
+                    if (!int.TryParse(indices[depth], out int index))
+                        throw new InvalidDataException("Official dungeon UI child index is invalid at " + path);
+                    string expectedName = names != null && depth + 1 < names.Length
+                        ? names[depth + 1] : null;
+                    Transform indexed = index >= 0 && index < node.childCount ? node.GetChild(index) : null;
+                    if (indexed != null && (expectedName == null || indexed.name == expectedName))
+                    {
+                        node = indexed;
+                        continue;
+                    }
+
+                    Transform named = null;
+                    if (expectedName != null)
+                    {
+                        for (int child = 0; child < node.childCount; child++)
+                        {
+                            Transform candidate = node.GetChild(child);
+                            if (!string.Equals(candidate.name, expectedName, StringComparison.Ordinal)) continue;
+                            if (named != null)
+                                throw new InvalidDataException("Official dungeon UI hierarchy has duplicate nodes at " + path);
+                            named = candidate;
+                        }
+                    }
+                    if (named == null)
+                        throw new InvalidDataException("Official dungeon UI hierarchy changed at " + path);
+                    node = named;
+                }
+            }
             else if (names != null && names.Length == 1 && node.name == names[0] + "(Clone)")
                 node.name = names[0];
             if (names == null) return node;
@@ -807,8 +840,10 @@ namespace Zjcs.Presentation.World
                 throw new InvalidDataException("Official dungeon UI Sprite path is invalid.");
             string key = binding.file + ":" + binding.sha256;
             if (loadedSprites.TryGetValue(key, out var cached) && cached != null) return cached;
-            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI",
-                binding.file.Replace('/', Path.DirectorySeparatorChar));
+            string spritePath = binding.file.Replace('/', Path.DirectorySeparatorChar);
+            string uiRoot = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI");
+            string versionedPath = Path.Combine(uiRoot, "884_156692", spritePath);
+            string path = File.Exists(versionedPath) ? versionedPath : Path.Combine(uiRoot, spritePath);
             if (!File.Exists(path)) throw new FileNotFoundException("Official dungeon UI Sprite is missing.", path);
             byte[] bytes = File.ReadAllBytes(path);
             if (!string.Equals(Hash(bytes), binding.sha256, StringComparison.OrdinalIgnoreCase))

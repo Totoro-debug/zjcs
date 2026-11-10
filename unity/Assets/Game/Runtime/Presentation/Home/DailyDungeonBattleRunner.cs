@@ -98,10 +98,32 @@ namespace Zjcs.Presentation.Home
 
             DailyDungeonBattleEntryModule.PreparedEntry prepared = battleEntry.Prepare(stage.id, 11,
                 assistPlayType, assistEntryId, restore, checkpoint, selectedNpcIds, activeAssist, checkpoint.PartEnded);
+            DailyDungeonTeamMemberSave[] teamMembers = CaptureTeamMembers(prepared.Checkpoint,
+                prepared.SelectedNpcIds);
             battleEntry.Enter(prepared, inviteRule, host.NpcAssistanceProgress,
                 ResolveAssistMaxPlayer(inviteRule), false, DateTimeOffset.Now.ToUnixTimeSeconds(),
                 value => MountBattle(value, scene, combatAssets, restore, false),
-                host.DailyDungeons.SaveBattleCheckpoint, DisposeBattle);
+                value => host.DailyDungeons.SaveBattleCheckpoint(value, teamMembers), DisposeBattle);
+        }
+
+        private static DailyDungeonTeamMemberSave[] CaptureTeamMembers(FightBattleCheckpoint checkpoint,
+            IReadOnlyList<int> selectedNpcIds)
+        {
+            if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
+            var units = checkpoint.Units ?? new List<FightBattleUnitState>();
+            return (selectedNpcIds ?? Array.Empty<int>()).Select(npcClassId =>
+            {
+                FightBattleUnitState unit = units.FirstOrDefault(value => value != null
+                    && value.NpcClassId == npcClassId);
+                if (npcClassId <= 0 || unit == null || unit.Level <= 0 || unit.SubRank <= 0)
+                    throw new InvalidOperationException("The selected daily dungeon partner is missing from its official battle checkpoint.");
+                return new DailyDungeonTeamMemberSave
+                {
+                    npcClassId = npcClassId,
+                    level = unit.Level,
+                    subRank = unit.SubRank
+                };
+            }).ToArray();
         }
 
         public void BeginPrivateMapRoom(OfflineMainlineProgressSession profile,

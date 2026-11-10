@@ -10,7 +10,9 @@ namespace Zjcs.Presentation.Home
     {
         public int ItemId { get; }
         public long Count { get; }
-        public DailyDungeonClaimRewardDisplayItem(int itemId, long count) { ItemId = itemId; Count = count; }
+        public bool IsGradeReward { get; }
+        public DailyDungeonClaimRewardDisplayItem(int itemId, long count, bool isGradeReward = false)
+        { ItemId = itemId; Count = count; IsGradeReward = isGradeReward; }
     }
 
     public sealed partial class HomeFeatureRuntime
@@ -45,7 +47,7 @@ namespace Zjcs.Presentation.Home
         {
             DailyDungeonSettlementResult result = DungeonSettlement().Claim(claimId, times);
             hasRewardDetails = result.HasRewardDetails;
-            rewards = result.Items.Select(value => new DailyDungeonClaimRewardDisplayItem(value.ItemId, value.Count)).ToArray();
+            rewards = result.Items.Select(value => new DailyDungeonClaimRewardDisplayItem(value.ItemId, value.Count, value.IsGradeReward)).ToArray();
             if (result.InventoryCommitted) { ReloadContext(); hud?.RefreshAll(); }
             return result.Committed;
         }
@@ -55,8 +57,15 @@ namespace Zjcs.Presentation.Home
         {
             DailyDungeonSettlementResult result = DungeonSettlement().Preview(claimId, times);
             hasRewardDetails = result.HasRewardDetails;
-            return result.Items.Select(value => new DailyDungeonClaimRewardDisplayItem(value.ItemId, value.Count))
+            return result.Items.Select(value => new DailyDungeonClaimRewardDisplayItem(value.ItemId, value.Count, value.IsGradeReward))
                 .ToArray();
+        }
+
+        public IReadOnlyList<DailyDungeonRewardPreviewItem> PreviewDailyDungeonDetailRewards(
+            int dungeonId, int difficulty, IDailyDungeonRewardItemMetadataAdapter itemMetadata)
+        {
+            if (dailyDungeons == null || profile == null) return Array.Empty<DailyDungeonRewardPreviewItem>();
+            return DungeonSettlement().PreviewCatalogRewards(dungeonId, difficulty, itemMetadata);
         }
 
         public bool SettleDailyDungeonRooms(string receipt, DailyDungeonRunSave run)

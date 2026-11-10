@@ -22,6 +22,7 @@ PREFABS = (
     ("DailyDungeonEntryPanelItem", "prefabs_ui_dailydungeon", "/DailyDungeonEntryPanelItem.prefab"),
     ("DailyDungeonConfirmEnterPanel", "prefabs_ui_dailydungeon", "/DailyDungeonConfirmEnterPanel.prefab"),
     ("DailyDungeonDialog", "prefabs_ui_dailydungeon", "/DailyDungeonDialog.prefab"),
+    ("DailyDungeonBuyCountDialog", "prefabs_ui_dailydungeon", "/DailyDungeonBuyCountDialog.prefab"),
     ("DailyDungeonDialogPrivateMap", "prefabs_ui_dailydungeon", "/DailyDungeonDialogPrivateMap.prefab"),
     ("DailyDungeonBigMapDialog", "prefabs_ui_dailydungeon", "/DailyDungeonBigMapDialog.prefab"),
     ("DailyDungeonGradeItem", "prefabs_ui_dailydungeon", "/DailyDungeonGradeItem.prefab"),
@@ -659,9 +660,9 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
                     ("image", "Image"), ("fill", "FillImage"), ("text", "GradeText"))}
             elif script == "PopupWindow" and key == "DailyDungeonDialogPrivateMap":
                 popup = private_popup_binding(apk, schemas, reader, prefab.read(), path_key)
-            elif script == "Button" and key in ("DailyDungeonBigMapDialog", "DailyDungeonBigMapRoomItem", "DailyDungeonDialogPrivateMap"):
+            elif script == "Button" and key in ("DailyDungeonBigMapDialog", "DailyDungeonBigMapRoomItem", "DailyDungeonDialogPrivateMap", "DailyDungeonBuyCountDialog"):
                 buttons.append(button_binding(reader, path_key, object_names, reference_path))
-            elif key in ("DailyDungeonBigMapDialog", "DailyDungeonDialogPrivateMap") and script in ("GridLayoutGroup", "ContentSizeFitter", "RectMask2D", "VerticalLayoutGroup", "HorizontalLayoutGroup", "HorizontalLayoutGroupJSZX", "LayoutElement", "LayoutElementClamper"):
+            elif key in ("DailyDungeonBigMapDialog", "DailyDungeonDialogPrivateMap", "GameEndPanelDailyDungeon", "DailyDungeonEndPanelItem", "AwardPanelItem", "ItemAwardIcon", "ItemIcon", "DailyDungeonBuyCountDialog") and script in ("GridLayoutGroup", "ContentSizeFitter", "RectMask2D", "VerticalLayoutGroup", "HorizontalLayoutGroup", "HorizontalLayoutGroupJSZX", "VerticalLayoutGroupJSZX", "LayoutElement", "LayoutElementClamper"):
                 raw = reader.get_raw_data()
                 layout = {"path": path_key, "objects": object_names, "type": script,
                           "enabled": bool(reader.read(check_read=False).m_Enabled)}
@@ -675,10 +676,10 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
                     if len(raw) != 84: raise ValueError("Unexpected official horizontal/vertical layout: " + path_key)
                     values = struct.unpack_from("<5if7i", raw, 32)
                     layout.update(padding=list(values[:4]), alignment=values[4], layoutSpacing=values[5], flags=list(values[6:]))
-                elif script in ("HorizontalLayoutGroupJSZX", "LayoutElement"):
+                elif script in ("HorizontalLayoutGroupJSZX", "VerticalLayoutGroupJSZX", "LayoutElement"):
                     from prepare_character_creation_opening import decode_layout_component
                     decoded = {"path": path_key}
-                    if not decode_layout_component(script, raw, decoded): raise ValueError("Unbound route layout")
+                    if not decode_layout_component("HorizontalLayoutGroupJSZX" if script == "VerticalLayoutGroupJSZX" else script, raw, decoded): raise ValueError("Unbound route layout")
                     if script == "LayoutElement": layout["element"] = decoded["layout_element"]
                     else:
                         value = decoded["horizontal_layout"]
