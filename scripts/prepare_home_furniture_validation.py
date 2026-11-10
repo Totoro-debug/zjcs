@@ -26,8 +26,10 @@ def main():
     editor.mkdir(exist_ok=True)
     shutil.copy2(ROOT/'scripts/fixtures/home_furniture_validation.cs',editor/'HomeFurnitureValidation.cs')
     shutil.copy2(ROOT/'scripts/fixtures/home_furniture_native_state.cs',editor/'HomeFurnitureNativeState.cs')
+    shutil.copy2(ROOT/'scripts/fixtures/home_furniture_host_validation.cs',editor/'HomeFurnitureHostValidation.cs')
     references=['Zjcs.Official.HomeConditions','Zjcs.Official.Partners','Zjcs.Offline.Home',
         'Zjcs.Offline.HomeUI','Zjcs.Offline.Progression','Zjcs.Offline.State','Zjcs.Editor',
+        'Zjcs.Presentation.Home','Zjcs.Offline.CharacterCreation',
         'Zjcs.Official.HomeUI','Zjcs.Offline.ProfessionUI','Zjcs.Official.ProfessionUI',
         'Zjcs.Official.World.NativeLabelUI',
         'Zjcs.Official.WorldUI','Zjcs.Official.World.NativeText','Zjcs.Offline.PartnersUI',

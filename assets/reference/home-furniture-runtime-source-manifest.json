@@ -39,10 +39,11 @@
     "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef": "36c7d718725544f934227e83a2db36a2a777c97b9f3065e8a88338273f6bd2a0"
   },
   "validation_sha256": {
-    "scripts/prepare_home_furniture_validation.py": "153c9dab53ae162ad5cc4d8e26cd67856dd236a677f13b0c5f304ee145a8015e",
+    "scripts/prepare_home_furniture_validation.py": "4696e25539d6ed61f5d0854b4f6bea4b1ca88b5c18ce92a886d0f35b21db32c2",
     "scripts/fixtures/home_furniture_validation.cs": "a0cb2df00e93ff8e4119c44066adec88e70a348e6b45a5d5bacb719ccb5585f5",
     "scripts/fixtures/home_furniture_native_state.cs": "311a9c61d82020a871f2c213f2f76f3cf938fec0483e13cd1f43ad1174173308",
-    "scripts/fixtures/home_repair_native_validation.cs": "e8352ee943e331efd07451c87244c2c55f56e24513db7664ca0e61cf1dedced2"
+    "scripts/fixtures/home_repair_native_validation.cs": "e8352ee943e331efd07451c87244c2c55f56e24513db7664ca0e61cf1dedced2",
+    "scripts/fixtures/home_furniture_host_validation.cs": "04b99707086fdb7beb10202dc1fd4be3bcb2b6a4d6ef857239ad9e6368dfc5c1"
   },
   "adaptations": [
     "Selected FurnitureInfo fields project to the existing scene/window records; condition object identity routes only these roots through the selected original parser. Historical hang-up and feature tables retain their separate version.",
@@ -51,5 +52,5 @@
     "Local BaseLevel projection excludes blessing levels using the current system_level_limit non-blessing maximum at the saved subrank; unranked creation profiles retain their saved level.",
     "AdditionalRepairList retains original item IDs and adds neither a prerequisite nor an automatic repair; confirmed fruit-tree decisions remain in the owning feature page."
   ],
-  "scope": "Current facility condition/ownership binding and local repair transaction only. Native scene lifecycle, furniture repair effects, complete HUD/tutorials and selected-version hang-up migration remain unfinished."
+  "scope": "Current facility condition/ownership binding and local repair transaction, including actual home-entry bed pointer and disk restoration checks with isolated profiles. Overall HUD and scene visuals have known defects; native scene lifecycle, furniture repair effects, complete HUD/tutorials and selected-version hang-up migration remain unfinished."
 }
