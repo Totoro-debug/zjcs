@@ -847,6 +847,8 @@ namespace Zjcs.Combat.Official
                 List<FightBattleUnitState> hitTargets;
                 IReadOnlyList<FightHitOccurrence> plannedHits = null;
                 FightHitTargetSelection hitSelection = null;
+                var hitFlight = FightBattleHitTiming.ResolveOverride(statusCatalog, skill,
+                    targetingSource, hitCast, hit);
                 bool hasRandomTargetContext = hit.RandomTargetGroupId > 0;
                 if (chaosInvasionWipe)
                     hitTargets = targets.Where(target => target != null
@@ -869,7 +871,7 @@ namespace Zjcs.Combat.Official
                         if (presentationCast.HitSelections == null)
                             presentationCast.HitSelections = new List<FightBattleHitSelectionSnapshot>();
                         presentationCast.HitSelections.Add(FightBattleHitSelectionSnapshot.Capture(
-                            presentationCast.HitSelections.Count + 1, hit, selection, hitCast));
+                            presentationCast.HitSelections.Count + 1, hit, selection, hitCast, hitFlight));
                     }
                 }
                 ExecuteLogicChildSkills(actor, skill, skillLogic, hit,
@@ -898,7 +900,7 @@ namespace Zjcs.Combat.Official
                     if (target.Hp <= 0 && hit.ActionType != 62 || target.Ended) continue;
                     if (target.IsVoodooDoll && (hit.ActionType == 5 || skill.SkillType == 3)) continue;
                     float hitDelay = hitSelection == null ? HitDelay(actor, target, hit)
-                        : FightBattleHitTiming.DamageDelay(hit, hitCast, hitSelection, targetIndex);
+                        : FightBattleHitTiming.DamageDelay(hit, hitCast, hitSelection, targetIndex, hitFlight);
                     if (hitDelay > lastDelay) lastDelay = hitDelay;
                     hitFinishDelay = Math.Max(hitFinishDelay, hitDelay);
                     movementStartContext.StatusStartTime = Math.Max(0f, hitDelay);

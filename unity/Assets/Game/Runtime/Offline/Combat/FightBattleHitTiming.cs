@@ -3,13 +3,13 @@ using System;
 namespace Zjcs.Combat.Official
 {
     /// <summary>Official CalcSkillHitDelay/CalcSkillStartPos, in the battle grid's unit coordinates.</summary>
-    public static class FightBattleHitTiming
+    public static partial class FightBattleHitTiming
     {
         public static float EffectDelay(FightBattleHitDefinition hit,
-            FightBattleSkillCastPresentation cast, FightGridPoint center)
+            FightBattleSkillCastPresentation cast, FightGridPoint center, Flight flight = null)
         {
             if (hit == null || cast == null) throw new ArgumentNullException();
-            var trajectory = hit.Trajectory;
+            var trajectory = flight == null ? hit.Trajectory : flight.Trajectory;
             float sx = cast.SourceX, sy = cast.SourceY, sz = 0f;
             float cx = sx, cy = sy, cz = sz;
             if (trajectory != null)
@@ -34,18 +34,20 @@ namespace Zjcs.Combat.Official
                 }
             }
             // Official client measures to the hit grid, not the target-offset point.
-            return hit.Delay + Length(center.X - sx, center.Y - sy, -sz) * hit.DelayDistFactor;
+            return hit.Delay + Length(center.X - sx, center.Y - sy, -sz)
+                * (flight == null ? hit.DelayDistFactor : flight.DelayDistFactor);
         }
 
         public static float DamageDelay(FightBattleHitDefinition hit,
-            FightBattleSkillCastPresentation cast, FightHitTargetSelection selection, int targetIndex)
+            FightBattleSkillCastPresentation cast, FightHitTargetSelection selection, int targetIndex,
+            Flight flight = null)
         {
             if (selection == null) throw new ArgumentNullException(nameof(selection));
             FightHitOccurrence occurrence = selection.Occurrences == null ? null : selection.Occurrences[targetIndex];
             int centerIndex = occurrence == null ? 0 : occurrence.EffectCenterIndex;
             if (centerIndex < 0 || centerIndex >= selection.EffectCenters.Count)
                 throw new InvalidOperationException("Actual hit selection has no corresponding effect centre.");
-            return EffectDelay(hit, cast, selection.EffectCenters[centerIndex])
+            return EffectDelay(hit, cast, selection.EffectCenters[centerIndex], flight)
                 + (occurrence == null ? 0f : occurrence.Delay);
         }
 

@@ -12,10 +12,12 @@ using Zjcs.Offline.BattleNativePlayables;
 using Zjcs.Official.BattleSkillPlayables;
 using Zjcs.Official.EntityLifecycle;
 using Zjcs.Official.EntityViews;
+using Zjcs.Official.EntityTransformViews;
 using Zjcs.Official.EntityViewPlayables;
 using Zjcs.Official.StoryPlayables;
 using Zjcs.Official.StoryPlayableManager;
 using Zjcs.Presentation.Combat;
+using Zjcs.Official.World.NativeTerrain.Common;
 
 namespace Zjcs.Editor.Combat
 {
@@ -65,6 +67,8 @@ namespace Zjcs.Editor.Combat
 
         private IEnumerator Start()
         {
+            AudioListener.volume = 0f;
+            Application.runInBackground = true;
             Application.logMessageReceived += Observe;
             var check = Check();
             while (true)
@@ -169,6 +173,47 @@ namespace Zjcs.Editor.Combat
                 "Reused original delay override retained the preceding cast's shared stacks.");
             yield return new WaitForSeconds(.25f);
 
+            var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            int hitSerial = 0;
+            foreach (int skillId in new[] { 12030, 13390, 14000 })
+            {
+                var definition = catalog.CreateSkill(skillId, -1, 0, 1, 1, 1, null);
+                var hitDefinition = FightBattleHitCollector.CollectAll(definition).Single();
+                var hitEntity = definition.HitGraphEntities.Single(value => value.EntityId == hitDefinition.EntityId);
+                for (int stack = 1; stack <= 10; stack++)
+                {
+                    actor.Statuses.Add(new FightBattleStatusState { InstanceId = 100 + stack, ClassId = 24166,
+                        StackCount = stack, SharedStackId = 24029, SharedStackLimit = 10 });
+                    var snapshot = FightBattleSkillCastPresentation.Capture(actor, definition,
+                        new List<FightBattleUnitState> { victim });
+                    var nativeSkill = StartCast(skillId, 1f);
+                    var flight = FightBattleHitTiming.ResolveOverride(catalog, definition, actor, snapshot, hitDefinition);
+                    var identity = new EcEntityIdentifier(4, ++hitSerial);
+                    var hitGrid = new HitGrid { ToPosition = views.GridToPos };
+                    var nativeHit = views.CreateHit(new OfficialBattleHitEntityData(identity, nativeSkill.myEntity.Id,
+                        hitEntity, hitGrid, new Pos2d(actor.X, actor.Y))).GetComponent<MyFightHitFixed>();
+                    Require(nativeHit && flight != null && nativeHit.DelayOverrideInfoIndex == flight.OverrideIndex,
+                        "Original hit and settlement selected different status offsets: " + skillId + "/" + stack);
+                    float originalDelay = hitDefinition.Delay + FightHitViewFormula.CalcSkillHitDelay(
+                        nativeHit.DelayInfoProvider, new Pos2d(actor.X, actor.Y), hitGrid.Pos, views, snapshot.FlipX);
+                    float settledDelay = FightBattleHitTiming.EffectDelay(hitDefinition, snapshot,
+                        new FightGridPoint(hitGrid.Pos.X, hitGrid.Pos.Y), flight);
+                    Require(Mathf.Abs(originalDelay - settledDelay) < .00001f,
+                        "Original hit and settlement flight times differ: " + skillId + "/" + stack);
+                    actor.Statuses.Clear();
+                    Require(nativeSkill.GetComponent<MyFightHitExtDelayInfoOverriderByStatusStack>().GetOverriderIndex()
+                        == stack - 1, "Original hit lost its creation-time stack after source status removal.");
+                    if (skillId == 12030 && (stack == 2 || stack == 10))
+                    {
+                        yield return new WaitForSeconds(.1f);
+                        Capture("skill-hit-stack-" + stack + ".png");
+                        yield return new WaitForSeconds(originalDelay + .15f);
+                    }
+                    views.RemoveHit(identity);
+                    views.Tick(1f);
+                }
+            }
+
             int before = played.Count;
             var special = StartCast(54383, 1.5f);
             var driver = special.GetComponentInChildren<ECViewDriver>();
@@ -190,6 +235,19 @@ namespace Zjcs.Editor.Combat
                 "skill-prefab-played-graphs.json"), JsonUtility.ToJson(new Played { graphs = played.ToArray() }, true));
         }
         [Serializable] private sealed class Played { public string[] graphs; }
+        private sealed class HitGrid : FightHitGridTransformData
+        {
+            public Func<Pos2d, Vector3> ToPosition;
+            public override Pos2d Pos => new Pos2d(6, 5);
+            public override Direction Direction => Direction.Up;
+            public override bool FlipX => false;
+            public override ECGridTransformInfo Info => null;
+            public override Vector3 GridToPosition(Pos2d position) => ToPosition(position);
+            public override Pos2d PositionToGrid(Vector3 position) => new Pos2d((int)position.x, (int)position.y);
+            public override void AddPosUpdatedReceiver(IGridTransformPosUpdatedEventReceiver receiver) { }
+            public override void RemovePosUpdatedReceiver(IGridTransformPosUpdatedEventReceiver receiver) { }
+            public override Pos2d LocalToWorldPos(Pos2d position) => new Pos2d(Pos.X + position.X, Pos.Y + position.Y);
+        }
         private void Update() { views?.Tick(Time.deltaTime); }
         private void LateUpdate() { scope?.LateTick(); }
         private void Observe(string text, string stack, LogType type)

@@ -22,6 +22,8 @@ namespace Zjcs.Combat.Official
         public bool FlipX;
         // Relative to the owning cast, so nested-cast step offsets are applied exactly once.
         public float Delay, DelayDistFactor;
+        public bool HasDelayOverride;
+        public int DelayOverrideIndex;
         // Preserve the actual draw and the centres consumed by scope projection;
         // never infer either from the settled targets later.
         public List<FightGridPoint> SelectedGridPositions = new List<FightGridPoint>();
@@ -30,7 +32,8 @@ namespace Zjcs.Combat.Official
         public List<TargetOccurrence> Targets = new List<TargetOccurrence>();
 
         public static FightBattleHitSelectionSnapshot Capture(int sequence, FightBattleHitDefinition hit,
-            FightHitTargetSelection selection, FightBattleSkillCastPresentation cast)
+            FightHitTargetSelection selection, FightBattleSkillCastPresentation cast,
+            FightBattleHitTiming.Flight flight = null)
         {
             if (sequence <= 0) throw new ArgumentOutOfRangeException(nameof(sequence));
             if (hit == null) throw new ArgumentNullException(nameof(hit));
@@ -40,12 +43,13 @@ namespace Zjcs.Combat.Official
                 Sequence = sequence, HitEntityId = hit.EntityId, RandomTargetGroupId = hit.RandomTargetGroupId,
                 Anchor = hit.Anchor, SourceX = cast.SourceX, SourceY = cast.SourceY,
                 FacingIndex = cast.FacingIndex, FlipX = cast.FlipX,
-                Delay = hit.Delay, DelayDistFactor = hit.DelayDistFactor,
+                Delay = hit.Delay, DelayDistFactor = flight == null ? hit.DelayDistFactor : flight.DelayDistFactor,
+                HasDelayOverride = flight != null, DelayOverrideIndex = flight == null ? 0 : flight.OverrideIndex,
                 SelectedGridPositions = new List<FightGridPoint>(selection.SelectedGridPositions),
                 EffectCenters = new List<FightGridPoint>(selection.EffectCenters)
             };
             foreach (var center in selection.EffectCenters)
-                result.EffectDelays.Add(FightBattleHitTiming.EffectDelay(hit, cast, center));
+                result.EffectDelays.Add(FightBattleHitTiming.EffectDelay(hit, cast, center, flight));
             for (int index = 0; index < selection.Targets.Count; index++)
             {
                 var target = selection.Targets[index];
