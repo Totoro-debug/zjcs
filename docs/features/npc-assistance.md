@@ -87,6 +87,8 @@ Map14 五个道路门使用原属性门槛窗口与 `PropGate` 邀请资格。�
 
 ## 尚未实现
 
+- 公共邀请窗口的部分锁定候选仍显示未格式化的好感门槛 `{0}`，并与本地不可用原因叠字；已在日常副本 Windows Player 的原邀请窗口实图中确认，尚待统一修复。
+
 完整骨骼分支已增加随包交付的本地资源目录与原生角色对象。`prepare_partner_native_battle_assets.py` 校验既有数据／Animator 凭据，再以 `PartnerNativeBattleAssetCatalog` 显式绑定35个骨骼包、35份原材质字段、28份运行时贴图和34个原控制器；原 shader 对象对应的 Windows 转换载荷按原字节安装至 `NativePartnerAssets/`。`PartnerNativeBattleActor` 恢复原 Transform 链、组合皮肤、材质参数与渲染设置，由原 Animator 驱动独立几何，并单独推进11005背饰；运行时只读取 Unity 本地对象引用。输入、输出、shader 对象及绑定元数据哈希见[本地绑定来源凭据](../../assets/reference/partner-native-battle-assets-source-manifest.json)。26名显示原贴图；11015–11022 显示与当前24×24原纹理对应的白色轮廓，不计作完整外观恢复，仍需继续核对所选来源。该角色对象尚未接入正式战斗的候选资格、事件播放、状态特效及附着点；未完成正式邀请入口、完整实战或 Windows Player 验证，未生成完整素材快照。
 
 完整骨骼分支的技能 Animator 节点已按当前版本单独恢复。`prepare_partner_native_battle_playables.py` 从选定884 APK的原 `npc_level_detail`、`npc_profession_detail`、`skill` 构造器读取34名伙伴的全部等级／阶位配置和主动技能，包含11038的随机技能列表，共75个技能、93个默认／方向分支和95个 Animator 节点。`Combat/partner-native-playables.json` 保留原节点顺序、延迟、方向分支、触发参数及其他参数字段；原 Sequence 没有可序列化的固定总时长，未编造持续时间。跟随骨骼／部位、音效、朝向和镜头等其他节点只记录原字段与来源，未据此宣称完整技能表现。配置构造器、组件模式、原对象载荷、应用源码和输出哈希见[伙伴技能节点来源](../../assets/reference/partner-native-playables-source-manifest.json)。
