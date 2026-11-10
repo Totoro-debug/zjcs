@@ -163,6 +163,25 @@ namespace Zjcs.Presentation.Home
 
     public static class HomeAudioSettings
     {
+        // Silence test output without changing the player's saved volume settings.
+        private static bool IsTestSession
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return true;
+#else
+                return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"));
+#endif
+            }
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void InitializeTestVolume()
+        {
+            if (IsTestSession) AudioListener.volume = 0f;
+        }
+
         public static float MusicVolume => ChannelVolume(HomeAudioChannel.Music);
         public static float VoiceVolume => ChannelVolume(HomeAudioChannel.Voice);
         private static readonly Dictionary<AudioSource, HomeAudioChannel> Sources =
@@ -185,7 +204,7 @@ namespace Zjcs.Presentation.Home
         {
             if (value == null) return;
             state = value;
-            AudioListener.volume = Mathf.Clamp01(state.allSound);
+            AudioListener.volume = IsTestSession ? 0f : Mathf.Clamp01(state.allSound);
             List<AudioSource> dead = null;
             foreach (KeyValuePair<AudioSource, HomeAudioChannel> entry in Sources)
             {
