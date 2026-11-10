@@ -566,11 +566,25 @@ namespace Zjcs.Combat.Official
 
             int count = Math.Min(Math.Max(1, randomCount), candidates.Count);
             var selected = new List<FightBattleRandomScopeSelection>(count);
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count && candidates.Count > 0; i++)
             {
                 int index = Math.Min((int)(random.Next() * candidates.Count), candidates.Count - 1);
-                selected.Add(candidates[index]);
+                FightBattleRandomScopeSelection selection = candidates[index];
+                selected.Add(selection);
                 candidates.RemoveAt(index);
+                if (!notSameTarget || selection.IsEmpty) continue;
+
+                // The authored distinct-target limit applies within this draw batch too.
+                // A large target's other body cells must not consume another target's quota.
+                var selectedIds = new HashSet<int>();
+                foreach (FightBattleUnitState target in selection.Targets) selectedIds.Add(target.Id);
+                for (int remaining = candidates.Count - 1; remaining >= 0; remaining--)
+                {
+                    FightBattleRandomScopeSelection candidate = candidates[remaining];
+                    if (candidate.IsEmpty) continue;
+                    candidate.Targets.RemoveAll(target => selectedIds.Contains(target.Id));
+                    if (candidate.Targets.Count == 0) candidates.RemoveAt(remaining);
+                }
             }
             return selected;
         }

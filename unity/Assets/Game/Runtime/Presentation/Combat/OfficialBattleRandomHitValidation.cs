@@ -15,18 +15,21 @@ namespace Zjcs.Presentation.Combat
         private bool settled, animated, captured;
         private int nativeCasts;
         private float castTime;
+        private readonly bool distinctSupport;
+        private int SkillId => distinctSupport ? 13990 : 13660;
         public string CaptureName { get; private set; }
 
         private OfficialBattleRandomHitValidation(FightOfficialCombatCatalog catalog,
-            FightBattleSkillDefinition finishingAttack)
-        { this.catalog = catalog; this.finishingAttack = finishingAttack; }
+            FightBattleSkillDefinition finishingAttack, bool distinctSupport)
+        { this.catalog = catalog; this.finishingAttack = finishingAttack; this.distinctSupport = distinctSupport; }
 
         public static OfficialBattleRandomHitValidation Configure(FightBattleCheckpoint checkpoint)
         {
             var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
             var source = checkpoint.Units.Single(value => value.Id == 1);
             var target = checkpoint.Units.First(value => value.Id != 1);
-            var probe = new OfficialBattleRandomHitValidation(catalog, source.Skills.First(value => value.Slot == 0));
+            bool distinct = Environment.GetEnvironmentVariable("ZJCS_RANDOM_HIT_DISTINCT") == "1";
+            var probe = new OfficialBattleRandomHitValidation(catalog, source.Skills.First(value => value.Slot == 0), distinct);
             target.MonsterId = 3665; target.MonsterGroupNo = 0;
             target.CharacterType = catalog.MonsterCharacterType(3665);
             target.MonsterType = catalog.MonsterType(3665); target.AiType = catalog.MonsterAiType(3665);
@@ -35,6 +38,19 @@ namespace Zjcs.Presentation.Combat
             Require(target.BodyOffsets.Count == 9, "Original nine-cell target identity is unavailable.");
             source.X = target.X - 2; source.Y = target.Y;
             Require(checkpoint.Grid.Contains(new FightGridPoint(source.X, source.Y)), "Source is outside the battlefield.");
+            if (distinct)
+            {
+                int nextId = checkpoint.Units.Max(value => value.Id) + 1;
+                foreach (var position in new[] {new FightGridPoint(source.X - 2, source.Y),
+                    new FightGridPoint(source.X, source.Y + 3)})
+                {
+                    var ally = JsonUtility.FromJson<FightBattleUnitState>(JsonUtility.ToJson(target));
+                    ally.Id = ally.Turn.Id = nextId++; ally.Side = source.Side;
+                    ally.X = position.X; ally.Y = position.Y;
+                    Require(checkpoint.Grid.Contains(position), "Distinct-target ally is outside the battlefield.");
+                    checkpoint.Units.Add(ally);
+                }
+            }
             foreach (var unit in checkpoint.Units)
             {
                 unit.Statuses.Clear(); unit.Skills.Clear(); unit.SkillState.Slots.Clear();
@@ -49,9 +65,9 @@ namespace Zjcs.Presentation.Combat
                 unit.Hp = unit.Turn.Hp = unit.MaxHp = unit.LastMaxHp = 1000000000;
                 unit.Turn.Speed = unit == source ? 1000 : 1;
             }
-            var properties = catalog.CalculateSkillProps(13660, 5, 20, source.SubRank)
+            var properties = catalog.CalculateSkillProps(probe.SkillId, 5, 20, source.SubRank)
                 .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList();
-            var skill = catalog.CreateSkill(13660, 0, 10188, 5, 20, source.SubRank, properties);
+            var skill = catalog.CreateSkill(probe.SkillId, 0, distinct ? 10211 : 10188, 5, 20, source.SubRank, properties);
             skill.LimitedTimes = 1;
             source.Skills.Add(skill); source.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
             checkpoint.MaxRound = 8;
@@ -65,13 +81,14 @@ namespace Zjcs.Presentation.Combat
             var entities = (OfficialBattleSkillEntityPlayback)typeof(OfficialBattleSkillGraphPlayback)
                 .GetField("entityViews", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(graph);
             entities.CastStarted += cast => {
-                if (cast.ActorId != 1 || cast.SkillEntityId != 13660) return;
+                if (cast.ActorId != 1 || cast.SkillEntityId != SkillId) return;
                 nativeCasts++; castTime = Time.realtimeSinceStartup;
                 var source = controller.TryGetUnitTransform(1);
                 var renderer = source ? source.GetComponentInChildren<ProfessionNativeSceneRenderer>(true) : null;
                 Require(renderer, "The source is not the original native player.");
                 renderer.OnClipApplied += (clip, name, layer, weight, time, previous, backward) => {
-                    if (name == "200/skill_45" && time > .04f && weight > 0) animated = true;
+                    if (name == (distinctSupport ? "100/skill_31" : "200/skill_45")
+                        && time > .04f && weight > 0) animated = true;
                 };
             };
         }
@@ -81,19 +98,31 @@ namespace Zjcs.Presentation.Combat
             if (settled) return;
             var checkpoint = controller.Checkpoint;
             var step = checkpoint.Receipts.Last().Event;
-            if (!step.SkillCasts.Any(value => value.ActorId == 1 && value.SkillEntityId == 13660)) return;
+            if (!step.SkillCasts.Any(value => value.ActorId == 1 && value.SkillEntityId == SkillId)) return;
             var source = checkpoint.Units.Single(value => value.Id == 1);
-            var hits = step.DamageEvents.Where(value => value.SourceId == 1 && value.SkillEntityId == 13660).ToArray();
-            Require(hits.Length > 9 && new[] {13662, 13663, 13664}.All(id => hits.Any(value => value.HitEntityId == id))
+            var hits = step.DamageEvents.Where(value => value.SourceId == 1 && value.SkillEntityId == SkillId).ToArray();
+            if (distinctSupport)
+            {
+                var allies = checkpoint.Units.Where(value => value.Side == source.Side).ToArray();
+                Require(allies.Length == 3 && hits.Length == 3
+                    && hits.Select(value => value.TargetId).Distinct().Count() == 3
+                    && allies.All(value => value.Statuses.Count(status => status.ClassId == 24719) == 1),
+                    "Original 13992 spent distinct-target quota on one ally's body cells or lost 24719.");
+            }
+            else Require(hits.Length > 9 && new[] {13662, 13663, 13664}.All(id => hits.Any(value => value.HitEntityId == id))
                 && hits.All(value => value.HasHitGridPosition && value.Damage < 0 && value.AfterHp < value.BeforeHp),
                 "The three original random hit nodes did not settle all covered body cells.");
             var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
             Require(saved.RandomSeed == checkpoint.RandomSeed
                 && saved.Units.Single(value => value.Id == 1).SkillState.Slots[0].ReleasedTimes == 1
-                && saved.Receipts.Last().Event.DamageEvents.Count(value => value.SkillEntityId == 13660) == hits.Length,
+                && saved.Receipts.Last().Event.DamageEvents.Count(value => value.SkillEntityId == SkillId) == hits.Length
+                && (!distinctSupport || saved.Units.Where(value => value.Side == source.Side)
+                    .All(value => value.Statuses.Count(status => status.ClassId == 24719) == 1)),
                 "Random stream, one ordinary release or body-cell events were lost in the checkpoint.");
-            Debug.Log("[Random hit] original 13660/10188: " + hits.Length
-                + " body-cell hits across three random nodes; one release and checkpoint passed.");
+            Debug.Log(distinctSupport
+                ? "[Random hit] original 13990/13992: source and both nine-cell allies receive 24719; one release and checkpoint passed."
+                : "[Random hit] original 13660/10188: " + hits.Length
+                    + " body-cell hits across three random nodes; one release and checkpoint passed.");
             settled = true;
             source.Skills.Clear(); source.SkillState.Slots.Clear(); source.Skills.Add(finishingAttack);
             source.SkillState.Slots.Add(catalog.CreateSkillSlot(finishingAttack, 0));
@@ -109,7 +138,7 @@ namespace Zjcs.Presentation.Combat
             if (!source || !source.GetComponentsInChildren<MeshRenderer>().Any(value => value.enabled
                 && value.isVisible && !value.forceRenderingOff
                 && value.GetComponent<MeshFilter>()?.sharedMesh?.vertexCount > 0)) return;
-            captured = true; CaptureName = "random-hit-13660";
+            captured = true; CaptureName = "random-hit-" + SkillId;
         }
 
         public void Verify(FightBattleCheckpoint checkpoint)
