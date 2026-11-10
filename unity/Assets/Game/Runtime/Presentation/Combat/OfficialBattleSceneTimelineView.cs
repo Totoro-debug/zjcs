@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zjcs.Official.BattleRoundUI;
+using Zjcs.Official.BattleRoundUI.DynamicTexture2DAtlas;
 using Zjcs.Combat.Official;
 using Zjcs.Official.WorldUI;
 
@@ -25,6 +26,7 @@ namespace Zjcs.Presentation.Combat
         private Transform slot;
         private float start, end, moveTime;
         private bool moving;
+        private IGridDynamicAtlas playerPortraitAtlas;
 
         public static OfficialBattleSceneTimelineView Mount(GameObject hudRoot, Camera sceneCamera = null)
         {
@@ -161,9 +163,29 @@ namespace Zjcs.Presentation.Combat
             else
             {
                 string path = npc ? binding.npc : binding.player;
+                // The public battle portrait provider returns the original, readable
+                // 100x120 head capture. Static fallback icons remain sprite assets;
+                // only the captured-player branch enters the client's dynamic atlas.
+                if (!npc && portrait.texture.isReadable && portrait.rect == new Rect(0, 0, 100, 120)
+                    && portrait.texture.width == 100 && portrait.texture.height == 120)
+                {
+                    playerPortraitAtlas ??= DynamicTexture2DAtlasUtils.CreateGridDynamicAtlas(
+                        1024, 1024, new Vector2Int(100, 120), null, true);
+                    GridSpriteInfo info = playerPortraitAtlas.ContainsKey(unit.Id) ? playerPortraitAtlas.Get(unit.Id)
+                        : playerPortraitAtlas.Add(portrait.texture, unit.Id).SpriteInfo;
+                    if (info == null || info.Sprite == null)
+                        throw new InvalidOperationException("Original battle portrait atlas rejected the captured head for unit " + unit.Id);
+                    portrait = info.Sprite;
+                }
                 card.transform.Find(path).GetComponent<WorldCircleSpriteRenderer>().SetSprite(portrait);
             }
             if (faction != null) card.transform.Find(binding.faction).GetComponent<SpriteRenderer>().sprite = faction;
+        }
+
+        private void OnDestroy()
+        {
+            playerPortraitAtlas?.Dispose();
+            playerPortraitAtlas = null;
         }
 
         private static bool IsSpawned(FightBattleCheckpoint checkpoint, int id)

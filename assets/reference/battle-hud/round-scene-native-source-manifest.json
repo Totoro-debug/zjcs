@@ -136,7 +136,7 @@
           }
         },
         "nativeMeta_sha256": "b6434cdabc4a77129b338ef9a09197c4a83149e5e8594fbfb217527529b6cf32",
-        "output_sha256": "df381676745a25fea74ff05a48de0365d16cc7520047f7126dc49184535cfb66"
+        "output_sha256": "277f118bc12d1857c9d196e54333877e36841d6a9d69d8c31f94444af6e11811"
       }
     ],
     "additional_bundles": [
@@ -377,45 +377,30 @@
     "unity/Assets/Official/Combat/RoundUI/Converted/8ce6a131132be6d1.shader.meta": "378cb49849d7f5be40642c1df3403dc0c66649f746723ece68a36afca1f57c3c"
   },
   "shared_resources": {
-    "unity/Assets/Game/Runtime/Official/WorldUI/WorldCircleSpriteRenderer.cs": {
-      "sha256": "62a059decae306d59c4dc758c376a43c09574af33a5e6970f4fa54e35ba6f1e4",
-      "meta_sha256": "8c4a29793917a8b450d197506c2517a7411bd3e57c552e55d1bcf7743b38ef23",
-      "guid": "d2d53da4b8f48d549970032f24625c5a"
-    },
-    "unity/Assets/Official/Combat/Timeline/Native/Sprites/Square.asset": {
-      "sha256": "fd4b0232e1d11f1ae6dad918f2761307d6247da3282257fdda7c94a2a1e45a8d",
-      "meta_sha256": "f46492524d63394c807fe0790f702a8d13b4e3302696a1978cb9075d02246e6e",
-      "guid": "28e6299396e6c754b8b35fa04b698dd2"
-    },
-    "unity/Assets/Official/Combat/Timeline/Source/Textures/Square-c4810c3a1722.png": {
-      "sha256": "5bd07bc0bd6890f6509ad8927e5351f0e837a15987a55f9bf7a7296ae1218830",
-      "meta_sha256": "f96c8007fa8303870eb0af6540f1223dac683334e057c5bba1a1bc0a91d1de3b",
-      "guid": "2bf4bbe7d91c18b4588bd97dd771e037"
-    },
     "unity/Assets/Official/Combat/Timeline/Native/Materials/GameRoundCharacterItem_Me.mat": {
       "sha256": "84d9f1efc3cb6dc4ef8e876d7e53cb76a3f00a0665c21d55421b3a35c505abe8",
       "meta_sha256": "9a317a2caee7ab06f09cd913b225379c13fe1b0e9760cc114d45b0132922e6bf",
       "guid": "a0bcf0b06abfe9c4cb40808d51d0dd87"
     },
-    "unity/Assets/Official/Combat/Timeline/Source/Textures/Mask_065_tex-eea71249e3bf.png": {
-      "sha256": "470e331de05453029d5bf9960469fc6f45d84608236081ab59c99c58127af794",
-      "meta_sha256": "8d9cbade817a6c897d662cc1be4c26c9557edea852b94adecb68f7fdb0fb7d29",
-      "guid": "1b019485ec163ab428fcef852ef6be95"
+    "unity/Assets/Official/Combat/Timeline/Source/Textures/Mask_007_tex-4079b37359ed.png": {
+      "sha256": "6cebf3bec0d6cb18d45c9edae999c1a91739e2c346e74f7636882183638939c8",
+      "meta_sha256": "d0a8e0a4a431c4a771b52d8e6a21c3e9a6d6e50934f703cba65ff3df535fc04b",
+      "guid": "dd852b98f666fbb4eb97f8c2c76e21cb"
     },
     "unity/Assets/Official/Combat/Timeline/Source/Textures/Trail_008_tex-d8bb36863f15.png": {
       "sha256": "d0f4a58363ced355ed06a696b640e25d4bc0f35e40d6e7aaa40316546302dd7a",
       "meta_sha256": "adf2d8941eb77d9491fac5f8015cd585c2d04775f9ef99bdd84cae6b19ea7aae",
       "guid": "9643404501ec9724585291b4e6a3796e"
     },
+    "unity/Assets/Official/Combat/Timeline/Source/Textures/Mask_065_tex-eea71249e3bf.png": {
+      "sha256": "470e331de05453029d5bf9960469fc6f45d84608236081ab59c99c58127af794",
+      "meta_sha256": "8d9cbade817a6c897d662cc1be4c26c9557edea852b94adecb68f7fdb0fb7d29",
+      "guid": "1b019485ec163ab428fcef852ef6be95"
+    },
     "unity/Assets/Game/Runtime/Presentation/Combat/Shaders/TimelineEffectDistort.shader": {
       "sha256": "50942af2c7b84c893e26469eac22afe75ee139aa90a90bd21365e22182f3ea29",
       "meta_sha256": "74e44475adcb1b673267d6fbf67ab46050e234cab28befb4a4a13eaeda53c101",
       "guid": "b6c64ded9041d6f4992b351150d77a2d"
-    },
-    "unity/Assets/Official/Combat/Timeline/Source/Textures/Mask_007_tex-4079b37359ed.png": {
-      "sha256": "6cebf3bec0d6cb18d45c9edae999c1a91739e2c346e74f7636882183638939c8",
-      "meta_sha256": "d0a8e0a4a431c4a771b52d8e6a21c3e9a6d6e50934f703cba65ff3df535fc04b",
-      "guid": "dd852b98f666fbb4eb97f8c2c76e21cb"
     },
     "unity/Assets/Official/Combat/Timeline/Native/Materials/SpriteZWrite.mat": {
       "sha256": "2d6a9448c4ffe49f9703ba4463bd6b7950808c77c49c01d08cf8064b14db0868",
@@ -437,65 +422,35 @@
       "meta_sha256": "59ecd05efc356d9cb447e19f00a4e89c449e5e776a4c55d0f141bac11360b8df",
       "guid": "225d9e3ffd602eb4b80dea588fca9873"
     },
-    "unity/Assets/Official/Combat/Timeline/Native/Sprites/ImgMask.asset": {
-      "sha256": "b8e9352db1ef8b03924c68c49ad8202934890198ee6d2fe9393a1e672fc6e950",
-      "meta_sha256": "1290e7bdccc64ac9e9a352de22c9d8943c5849edb95c0df3eeba2d940935f44b",
-      "guid": "be09e1e2a2a3b984d90c564abfd75337"
+    "unity/Assets/Official/Combat/Timeline/Source/Particles/Eff_UI_Icon_Death01.prefab": {
+      "sha256": "e986c725729c0fce15ca0954497932626e63a7b126a1f0dc5fb736b189fefefe",
+      "meta_sha256": "1b9da9537803b7a6010da71e9e3557c370b4745c3c92b795af9985c66d2b1a40",
+      "guid": "1fc38653cbe15e64b6e38461b7302c65"
     },
-    "unity/Assets/Official/Combat/Timeline/Source/Textures/ImgMask-14a16783d1a9.png": {
-      "sha256": "3cb8d73fca303795a8770f0ffb468e1128a3ef666ec9d7b074b7d46012d9b703",
-      "meta_sha256": "6f20c63f135fe9c97b677961720fe61aeded5af98c52c677ee281bf1f040c596",
-      "guid": "ee0d124924941cb479dfce14ae54a1ec"
+    "unity/Assets/Official/Combat/Timeline/Source/Particles/Fx_LiuTi_98 1.mat": {
+      "sha256": "7ffd35e19f75d3ec81f9e2c170ec2695312ed4d322f4ed12f8270416b80aca0f",
+      "meta_sha256": "a3a1a0552db12a2377898656825c3c155059da2611b932befc637778ba26b058",
+      "guid": "953109035ae55cddadf1bd15ee8a605b"
     },
-    "unity/Assets/Official/Combat/Timeline/Native/Sprites/G_3207.asset": {
-      "sha256": "eabc0b62ba34114efe2309b113f3ea0e46416fb5e69c465b4a12737d313e5ed2",
-      "meta_sha256": "693eee33c1857e59b32039e800855564af6d801544ea8680101cd517c23161a4",
-      "guid": "25c8098f498b95b40b63c7925e4866bf"
+    "unity/Assets/Game/Runtime/Presentation/Combat/Shaders/TimelineParticleMainTex.shader": {
+      "sha256": "d6dcb272c2d34379a6be41983447c1d975e722c4aa9e200c42a309178eba0a78",
+      "meta_sha256": "6818a07174a8e40c5e11a33dfd5827ef9536a74d2cd0bbaac55eec5b32018a7f",
+      "guid": "b4a58f3d0dc751ef8050f000aaca3cf7"
     },
-    "unity/Assets/Official/Combat/Timeline/Source/Textures/G_3207-3359896164fd.png": {
-      "sha256": "5fd440743e4aeb7ee734932473ef0c721a02cd6f43c7e55b3a8e91b1c21510b3",
-      "meta_sha256": "1d80397880119e4d4c14902aab89a9907be36c5004b369e954788ada05fd1ce7",
-      "guid": "323c5ca8c4a927e43bfe9e138cf6b8d3"
+    "unity/Assets/Official/Combat/Timeline/Source/Particles/Fx_LiuTi_98.png": {
+      "sha256": "2b4fe8dc289bcc80cb7f80bf563aae8e15989fff74bf05738831060977d6f24d",
+      "meta_sha256": "420015aff7f92562b2662e264bb98a4fccefec84fac77ddd6b52817085e3a4b9",
+      "guid": "d0ef600fea245d30b43b98ebfa294c17"
     },
-    "unity/Assets/Official/Combat/Timeline/Native/Materials/Sprite-Unlit-Default.mat": {
-      "sha256": "738af40ae5af8625b50443f1218429af8ad564e9538a1719ab24bcb34ab9dcc3",
-      "meta_sha256": "535102bf49365f868ade2e67e8d97aecb583b2d82fdce4edb374592aa40054a5",
-      "guid": "844e4f1668678d54cb5f1ea1df854ac1"
+    "unity/Assets/Official/Combat/Timeline/Source/Particles/Fx_GuangDian_90_1.mat": {
+      "sha256": "568f7cda28b00c3206f889f1e925ad359d538afdf3fefa85b69b4823ebf6195f",
+      "meta_sha256": "c6097bd57913268d0be1d015f9d8d26180e5c4a4a536ea117898ca66bb3db657",
+      "guid": "8e05129c31b758e08620b1991c29859b"
     },
-    "unity/Assets/Game/Runtime/Presentation/Combat/Shaders/TimelineSprite.shader": {
-      "sha256": "4910eb8252c32184b7c8e88c2224baab320a65fc6106e36a7ffc38e86b7992a3",
-      "meta_sha256": "86034100cd0edc29993a9d8b4994139bc60facc89a62ec8d7e8204fdb7208c23",
-      "guid": "f7f6d33551fda3444b37f8da7e4e9cfe"
-    },
-    "unity/Assets/Official/Combat/Timeline/Native/Sprites/Circle.asset": {
-      "sha256": "20a0a61f884cd2f8cf0f845aaf4c35d65bde1004ebca879e338e73a1cca78977",
-      "meta_sha256": "60f590e9773f71e4e4b4d9df7dbee137a5ea48e7c1c8795dc6e60494a6569166",
-      "guid": "6b9dfd5009fb47441a4434e836cf7655"
-    },
-    "unity/Assets/Official/Combat/Timeline/Source/Textures/Circle-8b182c1a3ba7.png": {
-      "sha256": "a61f823199a4cecfec8832df2bc6eb30218a6d6ff2250419c88c4b267d9a586b",
-      "meta_sha256": "fa0a014d53de74e3f2bae3602f6036c4ead8117fda73a700f4293f46e7d55086",
-      "guid": "3364817d090ff2547a244f9c2bd85c09"
-    },
-    "unity/Assets/Official/Combat/Timeline/Native/Sprites/ImgJianBian.asset": {
-      "sha256": "ee98081bcc8d2a1fa5433cd1dbd6de288cbb9b97c6998491ff480547210bff33",
-      "meta_sha256": "0dffb70c1e8eb04ac2d485b81d9bc67c512b4514b58fe383655ee7f2b212068f",
-      "guid": "8fe16b797b13d044195ed3510af43b3d"
-    },
-    "unity/Assets/Official/Combat/Timeline/Source/Textures/ImgJianBian-d7b9bd5bec13.png": {
-      "sha256": "8ab0c6b065922e93ee4e2364b5ecd1baef2607337bd2be804ff7a519a5700962",
-      "meta_sha256": "e197cd2baa7f66239399a9227652914907ed84b15457ecf070a7d208ec0a56d4",
-      "guid": "22ee3125dcd68d24a8bb03555225779b"
-    },
-    "unity/Assets/Official/Combat/Timeline/Native/Sprites/ImgArrow_Home.asset": {
-      "sha256": "a3807e7e0871c95da1c28de0964b4dc61fe3021a7ff2bc5d9fe33513a9477f2e",
-      "meta_sha256": "d21715c1bbbc1d75f6805df8a969a32b33b651e1c6e97f6f6583976b36ad115c",
-      "guid": "0270c47459270c545877afd595aacc56"
-    },
-    "unity/Assets/Official/Combat/Timeline/Source/Textures/ImgArrow_Home-a8d13e680883.png": {
-      "sha256": "19fc5de9ea5bdae3b580f210862bf5e111f94950fdb4e734c127892bdad5d5e7",
-      "meta_sha256": "8234c52731dd82fb1652e1b0cb1d29b25c52e6274adee8a317153c3ce7da27c7",
-      "guid": "52ca804a6d44811428e146e85c98a64e"
+    "unity/Assets/Official/Combat/Timeline/Source/Particles/Fx_GuangDian_90.png": {
+      "sha256": "abbc3b05535d6e8258ca7a2d51594481d45a9f86be3ec7c501918cbe77b7253d",
+      "meta_sha256": "d946196e516c3dec1f9e6ef1bf99a0639a5a5a15e9a07f14650725b8464b0100",
+      "guid": "9bb547661c14528d8466bb0e39f8d837"
     },
     "unity/Assets/Official/Combat/Timeline/Native/Sprites/ImgEnemy.asset": {
       "sha256": "49e25699ebb69a5c6f3b2b492ff38738deff2865e081cf4bc3adc9ed862bf3a1",
@@ -517,6 +472,11 @@
       "meta_sha256": "3e6df18b6b883caaf76a6274cae325cc47809e319f3a196ae75c1815301c864c",
       "guid": "3d413b155f0b61541883519c1d1638f3"
     },
+    "unity/Assets/Official/Combat/Timeline/Native/Animations/UIGameRound_Hurt_Scene.anim": {
+      "sha256": "8fb50e423855f5ea1e7506572a94480db065f891b91502f387fa85134c212d1c",
+      "meta_sha256": "0eb56f8a337b7705da1b0a82b58085bc2e9bebb98b8b3e0aa223e8ae372c4e48",
+      "guid": "34e28f2a83349a949a7ac315f7d4d5c9"
+    },
     "unity/Assets/Official/Combat/Timeline/Native/Animations/UIGameRound_Idle_Scene.anim": {
       "sha256": "a2438f6d9a1c695d99aa399256929b2120e3ba65bb5ec22a8e52207f5faa6855",
       "meta_sha256": "a311562cb10b94f61c56103fc8074702d60fa3377f2560c4ce52697b8ee8e2b2",
@@ -527,40 +487,80 @@
       "meta_sha256": "a0290fb5e68337b98a16a72ef64385903f98d9de4d0be82c6c26a8577ff4a7db",
       "guid": "36863b25567ff8e4f96b13b233add3e2"
     },
-    "unity/Assets/Official/Combat/Timeline/Native/Animations/UIGameRound_Hurt_Scene.anim": {
-      "sha256": "8fb50e423855f5ea1e7506572a94480db065f891b91502f387fa85134c212d1c",
-      "meta_sha256": "0eb56f8a337b7705da1b0a82b58085bc2e9bebb98b8b3e0aa223e8ae372c4e48",
-      "guid": "34e28f2a83349a949a7ac315f7d4d5c9"
+    "unity/Assets/Official/Combat/Timeline/Native/Sprites/ImgArrow_Home.asset": {
+      "sha256": "a3807e7e0871c95da1c28de0964b4dc61fe3021a7ff2bc5d9fe33513a9477f2e",
+      "meta_sha256": "d21715c1bbbc1d75f6805df8a969a32b33b651e1c6e97f6f6583976b36ad115c",
+      "guid": "0270c47459270c545877afd595aacc56"
     },
-    "unity/Assets/Official/Combat/Timeline/Source/Particles/Eff_UI_Icon_Death01.prefab": {
-      "sha256": "e986c725729c0fce15ca0954497932626e63a7b126a1f0dc5fb736b189fefefe",
-      "meta_sha256": "1b9da9537803b7a6010da71e9e3557c370b4745c3c92b795af9985c66d2b1a40",
-      "guid": "1fc38653cbe15e64b6e38461b7302c65"
+    "unity/Assets/Official/Combat/Timeline/Source/Textures/ImgArrow_Home-a8d13e680883.png": {
+      "sha256": "19fc5de9ea5bdae3b580f210862bf5e111f94950fdb4e734c127892bdad5d5e7",
+      "meta_sha256": "8234c52731dd82fb1652e1b0cb1d29b25c52e6274adee8a317153c3ce7da27c7",
+      "guid": "52ca804a6d44811428e146e85c98a64e"
     },
-    "unity/Assets/Official/Combat/Timeline/Source/Particles/Fx_GuangDian_90_1.mat": {
-      "sha256": "568f7cda28b00c3206f889f1e925ad359d538afdf3fefa85b69b4823ebf6195f",
-      "meta_sha256": "c6097bd57913268d0be1d015f9d8d26180e5c4a4a536ea117898ca66bb3db657",
-      "guid": "8e05129c31b758e08620b1991c29859b"
+    "unity/Assets/Official/Combat/Timeline/Native/Sprites/Square.asset": {
+      "sha256": "fd4b0232e1d11f1ae6dad918f2761307d6247da3282257fdda7c94a2a1e45a8d",
+      "meta_sha256": "f46492524d63394c807fe0790f702a8d13b4e3302696a1978cb9075d02246e6e",
+      "guid": "28e6299396e6c754b8b35fa04b698dd2"
     },
-    "unity/Assets/Official/Combat/Timeline/Source/Particles/Fx_GuangDian_90.png": {
-      "sha256": "abbc3b05535d6e8258ca7a2d51594481d45a9f86be3ec7c501918cbe77b7253d",
-      "meta_sha256": "d946196e516c3dec1f9e6ef1bf99a0639a5a5a15e9a07f14650725b8464b0100",
-      "guid": "9bb547661c14528d8466bb0e39f8d837"
+    "unity/Assets/Official/Combat/Timeline/Source/Textures/Square-c4810c3a1722.png": {
+      "sha256": "5bd07bc0bd6890f6509ad8927e5351f0e837a15987a55f9bf7a7296ae1218830",
+      "meta_sha256": "f96c8007fa8303870eb0af6540f1223dac683334e057c5bba1a1bc0a91d1de3b",
+      "guid": "2bf4bbe7d91c18b4588bd97dd771e037"
     },
-    "unity/Assets/Game/Runtime/Presentation/Combat/Shaders/TimelineParticleMainTex.shader": {
-      "sha256": "d6dcb272c2d34379a6be41983447c1d975e722c4aa9e200c42a309178eba0a78",
-      "meta_sha256": "6818a07174a8e40c5e11a33dfd5827ef9536a74d2cd0bbaac55eec5b32018a7f",
-      "guid": "b4a58f3d0dc751ef8050f000aaca3cf7"
+    "unity/Assets/Official/Combat/Timeline/Native/Sprites/Circle.asset": {
+      "sha256": "20a0a61f884cd2f8cf0f845aaf4c35d65bde1004ebca879e338e73a1cca78977",
+      "meta_sha256": "60f590e9773f71e4e4b4d9df7dbee137a5ea48e7c1c8795dc6e60494a6569166",
+      "guid": "6b9dfd5009fb47441a4434e836cf7655"
     },
-    "unity/Assets/Official/Combat/Timeline/Source/Particles/Fx_LiuTi_98 1.mat": {
-      "sha256": "7ffd35e19f75d3ec81f9e2c170ec2695312ed4d322f4ed12f8270416b80aca0f",
-      "meta_sha256": "a3a1a0552db12a2377898656825c3c155059da2611b932befc637778ba26b058",
-      "guid": "953109035ae55cddadf1bd15ee8a605b"
+    "unity/Assets/Official/Combat/Timeline/Source/Textures/Circle-8b182c1a3ba7.png": {
+      "sha256": "a61f823199a4cecfec8832df2bc6eb30218a6d6ff2250419c88c4b267d9a586b",
+      "meta_sha256": "fa0a014d53de74e3f2bae3602f6036c4ead8117fda73a700f4293f46e7d55086",
+      "guid": "3364817d090ff2547a244f9c2bd85c09"
     },
-    "unity/Assets/Official/Combat/Timeline/Source/Particles/Fx_LiuTi_98.png": {
-      "sha256": "2b4fe8dc289bcc80cb7f80bf563aae8e15989fff74bf05738831060977d6f24d",
-      "meta_sha256": "420015aff7f92562b2662e264bb98a4fccefec84fac77ddd6b52817085e3a4b9",
-      "guid": "d0ef600fea245d30b43b98ebfa294c17"
+    "unity/Assets/Official/Combat/Timeline/Native/Sprites/ImgMask.asset": {
+      "sha256": "b8e9352db1ef8b03924c68c49ad8202934890198ee6d2fe9393a1e672fc6e950",
+      "meta_sha256": "1290e7bdccc64ac9e9a352de22c9d8943c5849edb95c0df3eeba2d940935f44b",
+      "guid": "be09e1e2a2a3b984d90c564abfd75337"
+    },
+    "unity/Assets/Official/Combat/Timeline/Source/Textures/ImgMask-14a16783d1a9.png": {
+      "sha256": "3cb8d73fca303795a8770f0ffb468e1128a3ef666ec9d7b074b7d46012d9b703",
+      "meta_sha256": "6f20c63f135fe9c97b677961720fe61aeded5af98c52c677ee281bf1f040c596",
+      "guid": "ee0d124924941cb479dfce14ae54a1ec"
+    },
+    "unity/Assets/Official/Combat/Timeline/Native/Materials/Sprite-Unlit-Default.mat": {
+      "sha256": "738af40ae5af8625b50443f1218429af8ad564e9538a1719ab24bcb34ab9dcc3",
+      "meta_sha256": "535102bf49365f868ade2e67e8d97aecb583b2d82fdce4edb374592aa40054a5",
+      "guid": "844e4f1668678d54cb5f1ea1df854ac1"
+    },
+    "unity/Assets/Game/Runtime/Presentation/Combat/Shaders/TimelineSprite.shader": {
+      "sha256": "4910eb8252c32184b7c8e88c2224baab320a65fc6106e36a7ffc38e86b7992a3",
+      "meta_sha256": "86034100cd0edc29993a9d8b4994139bc60facc89a62ec8d7e8204fdb7208c23",
+      "guid": "f7f6d33551fda3444b37f8da7e4e9cfe"
+    },
+    "unity/Assets/Official/Combat/Timeline/Native/Sprites/ImgJianBian.asset": {
+      "sha256": "ee98081bcc8d2a1fa5433cd1dbd6de288cbb9b97c6998491ff480547210bff33",
+      "meta_sha256": "0dffb70c1e8eb04ac2d485b81d9bc67c512b4514b58fe383655ee7f2b212068f",
+      "guid": "8fe16b797b13d044195ed3510af43b3d"
+    },
+    "unity/Assets/Official/Combat/Timeline/Source/Textures/ImgJianBian-d7b9bd5bec13.png": {
+      "sha256": "8ab0c6b065922e93ee4e2364b5ecd1baef2607337bd2be804ff7a519a5700962",
+      "meta_sha256": "e197cd2baa7f66239399a9227652914907ed84b15457ecf070a7d208ec0a56d4",
+      "guid": "22ee3125dcd68d24a8bb03555225779b"
+    },
+    "unity/Assets/Official/Combat/Timeline/Native/Sprites/G_3207.asset": {
+      "sha256": "eabc0b62ba34114efe2309b113f3ea0e46416fb5e69c465b4a12737d313e5ed2",
+      "meta_sha256": "693eee33c1857e59b32039e800855564af6d801544ea8680101cd517c23161a4",
+      "guid": "25c8098f498b95b40b63c7925e4866bf"
+    },
+    "unity/Assets/Official/Combat/Timeline/Source/Textures/G_3207-3359896164fd.png": {
+      "sha256": "5fd440743e4aeb7ee734932473ef0c721a02cd6f43c7e55b3a8e91b1c21510b3",
+      "meta_sha256": "1d80397880119e4d4c14902aab89a9907be36c5004b369e954788ada05fd1ce7",
+      "guid": "323c5ca8c4a927e43bfe9e138cf6b8d3"
+    },
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldCircleSpriteRenderer.cs": {
+      "sha256": "62a059decae306d59c4dc758c376a43c09574af33a5e6970f4fa54e35ba6f1e4",
+      "meta_sha256": "8c4a29793917a8b450d197506c2517a7411bd3e57c552e55d1bcf7743b38ef23",
+      "guid": "d2d53da4b8f48d549970032f24625c5a"
     },
     "unity/Assets/Official/DailyChallenges/UI/ResultActions/Converted/8b719099802987ae.asset": {
       "sha256": "97c99f3b981f77421e75c75374ce143233d8e4dd58e897b1d9c8ffd5bab8909a",
@@ -636,7 +636,7 @@
         }
       },
       "nativeMeta_sha256": "b6434cdabc4a77129b338ef9a09197c4a83149e5e8594fbfb217527529b6cf32",
-      "output_sha256": "df381676745a25fea74ff05a48de0365d16cc7520047f7126dc49184535cfb66"
+      "output_sha256": "277f118bc12d1857c9d196e54333877e36841d6a9d69d8c31f94444af6e11811"
     },
     "retained_manifest": "854_156383",
     "anchor": "Content/Top/FixedContent/RoundUI/Linear",
@@ -787,6 +787,7 @@
     "comparison": "Original serialized float32 geometry; no UI field changes."
   },
   "runtime_ports": {
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/DynamicTexture2DAtlas.meta": "db24c4cd7a309cdfd61cff87799cda05d324fc6ed4fe24a23e69b2e44783fe6d",
     "unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundScene.cs": "03cbef095b4106531ed962cc78d3f60d8a772f3d980b142686196e94f95d3de5",
     "unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundScene.cs.meta": "5723f19db5cddef019ece6c88c88c65a9ce46de6f35db9413c8cc20388cbc7e6",
     "unity/Assets/Game/Runtime/Official/BattleRoundUI/GameSceneObjectOrderLayer.cs": "f4f794848b0f592adc42afac833adbae7bb4678a0fd128b6b78b411201c2cc62",
@@ -795,7 +796,7 @@
     "unity/Assets/Game/Runtime/Official/BattleRoundUI/SpriteRendererCanvas.cs.meta": "a8baf2ddbb646be6cf3d0721c0cbf6beca30f0d2686540557fbb3ba6edb6a021",
     "unity/Assets/Game/Runtime/Official/BattleRoundUI/Zjcs.Official.BattleRoundUI.asmdef": "461afd9a3fbc4e2100d94998a1c0dfff60b4012bd310541d746fd0599eda8a2f",
     "unity/Assets/Game/Runtime/Official/BattleRoundUI/Zjcs.Official.BattleRoundUI.asmdef.meta": "35c89aa57ab0c5165db2142df083a170744dc3d4ae6742debe26e574b64df3aa",
-    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneTimelineView.cs": "3edb39ef9543e3ad9d346d0f3585b6f5d9956b81ea1dcdfbddd2d2967d91193a",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneTimelineView.cs": "025102bc24c64c590b0fa90d89ddb06522a2ad439589a8dfb545e90b5614db0b",
     "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneTimelineView.cs.meta": "91fb0009a627f5baed3edabc7ab245d06b877a5bae100ee607ceebf1f8416fd5",
     "unity/Assets/Game/Runtime/Presentation/Combat/Zjcs.Presentation.Combat.asmdef": "5bc2e457937c0adbe9943248a1918940510ee2691796ecdcf3978fcd707d1231"
   }

@@ -5,7 +5,10 @@ using UnityEngine.UI;
 using Zjcs.Combat.Official;
 using Zjcs.Presentation.Combat;
 using Zjcs.Official.BattleRoundUI;
+using Zjcs.Official.BattleRoundUI.DynamicTexture2DAtlas;
 using Zjcs.Official.WorldUI;
+using Zjcs.Presentation.Character;
+using Zjcs.Presentation.CharacterCreation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -127,6 +130,9 @@ namespace Zjcs.Editor.BattleRound
    var root = new GameObject("Native timeline verification");
    GameRoundScene scene = null;
    IDisposable renderPipelineScope = null;
+   Texture2D maleHead = null, femaleHead = null;
+   Sprite playerPortrait = null;
+   IGridDynamicAtlas portraitAtlas = null;
    try
    {
     var pipeline=Resources.Load<OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets");
@@ -135,6 +141,42 @@ namespace Zjcs.Editor.BattleRound
     yield return null;
     Require(GraphicsSettings.currentRenderPipeline==pipeline.Pipeline && QualitySettings.renderPipeline==null,
      "Timeline verification must use the same original render pipeline as the public battle controller.");
+    Texture2D CaptureHead(int sex)
+    {
+     var settings=CharacterPortraitPhotography.LoadBattleHead();
+     var model=CharacterCreationNativeModelFactory.CreateArenaGuardModel(sex,1,null,settings.excludes);
+     try
+     {
+      model.transform.position=new Vector3(-1024,-1024,-1024);
+      var animator=model.GetComponent<Animator>();
+      Require(OfficialBattleCharacterAnimationCatalog.TryResolve(animator.runtimeAnimatorController,settings.animation,out string pose),"Original portrait pose missing.");
+      return CharacterNativePortraitCapture.Capture(model,settings,pose);
+     }
+     finally {UnityEngine.Object.Destroy(model);}
+    }
+    maleHead=CaptureHead(0);femaleHead=CaptureHead(1);
+    Require(maleHead.width==100 && maleHead.height==120 && femaleHead.width==100 && femaleHead.height==120
+     && maleHead.GetPixels32().Count(c=>c.a>128)>1000 && femaleHead.GetPixels32().Count(c=>c.a>128)>1000,
+     "Original male/female head capture is empty or incorrectly sized.");
+    portraitAtlas=DynamicTexture2DAtlasUtils.CreateGridDynamicAtlas(1024,1024,new Vector2Int(100,120),null,true);
+    Require((portraitAtlas is ETC2GridDynamicAtlas)==(DynamicTexture2DAtlasUtils.CanGraphicTextureCopy && DynamicTexture2DAtlasUtils.SupportETC2Fmt),"Original platform atlas selection changed.");
+    Require(portraitAtlas is FallBackGridDynamicAtlas,"This Windows verification requires the actual unsupported-ETC2 fallback.");
+    var maleInfo=portraitAtlas.Add(maleHead,101).SpriteInfo;
+    var femaleInfo=portraitAtlas.Add(femaleHead,102).SpriteInfo;
+    Require(maleInfo!=null && femaleInfo!=null && portraitAtlas.SpriteNum==2 && portraitAtlas.ContainsKey(101)
+     && portraitAtlas.Get(101)==maleInfo && maleInfo.TexAtlas!=maleHead && femaleInfo.TexAtlas!=femaleHead
+     && maleInfo.TexAtlas.GetPixels32().SequenceEqual(maleHead.GetPixels32())
+     && femaleInfo.TexAtlas.GetPixels32().SequenceEqual(femaleHead.GetPixels32())
+     && maleInfo.Sprite.pixelsPerUnit==100 && maleInfo.UVLB==Vector2.zero && maleInfo.UVRT==Vector2.one,
+     "Fallback atlas changed original portrait pixels, UVs, scale, cache or texture ownership.");
+    Texture2D removedTexture=maleInfo.TexAtlas;Sprite removedSprite=maleInfo.Sprite;
+    Require(portraitAtlas.Remove(101) && !portraitAtlas.ContainsKey(101) && portraitAtlas.SpriteNum==1,"Fallback atlas removal failed.");
+    Texture2D disposedTexture=femaleInfo.TexAtlas;Sprite disposedSprite=femaleInfo.Sprite;
+    portraitAtlas.Dispose();portraitAtlas=null;
+    yield return null;
+    Require(removedTexture==null && removedSprite==null && disposedTexture==null && disposedSprite==null
+     && maleHead!=null && femaleHead!=null,"Fallback atlas leaked owned assets or destroyed caller textures.");
+    playerPortrait=Sprite.Create(maleHead,new Rect(0,0,100,120),new Vector2(.5f,.5f),100);
     var cameraObject = new GameObject("Battle camera", typeof(Camera));
     cameraObject.transform.SetParent(root.transform, false);
     cameraObject.transform.position = new Vector3(0, 0, -30);
@@ -160,11 +202,11 @@ namespace Zjcs.Editor.BattleRound
     var state=new FightBattleCheckpoint();
     for(int id=1;id<=3;id++)
     {
-     var unit=new FightBattleUnitState { Id=id, NpcClassId=new[]{8401,8411,11001}[id-1], Side=1, Hp=1, MaxHp=1 };
+     var unit=new FightBattleUnitState { Id=id, CharacterType=id==1?1:0, NpcClassId=new[]{0,8411,11001}[id-1], Side=1, Hp=1, MaxHp=1 };
      unit.Turn.Id=id;unit.Turn.Hp=1;unit.Turn.Speed=100;unit.Turn.IntervalTicks=10000;
      state.Units.Add(unit);state.Timeline.Entries.Add(new FightTurnEntry {Id=id,Next=(id-1)*2500});
     }
-    Func<FightBattleUnitState,Sprite> portrait=u=>OfficialBattleNpcPortraitCatalog.Load().Find(u.NpcClassId);
+    Func<FightBattleUnitState,Sprite> portrait=u=>u.Id==1?playerPortrait:OfficialBattleNpcPortraitCatalog.Load().Find(u.NpcClassId);
     hud.RefreshTimeline(state,portrait,null,false);
     hud.RefreshPhase(FightBattlePhase.Play,new OfficialBattleSessionOptions());
     yield return new WaitForSeconds(.8f);
@@ -186,6 +228,9 @@ namespace Zjcs.Editor.BattleRound
       && card.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("UIGameRound_Acting"),"Current actor order/animation differs: "+id+" pos="+(card==null?"missing":card.localPosition.ToString())+" expectedX="+half+" sibling="+(card==null?-1:card.GetSiblingIndex())+" count="+scene.IconRoot.childCount+" state="+(card==null?0:card.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).shortNameHash));
     }
     yield return null;CheckProjection(); CheckActor(1);
+    var playerCircle=scene.IconRoot.Find("GameRoundCharacterItem_1/"+OfficialBattleTimelineAssets.Load().CardBindings.player).GetComponent<WorldCircleSpriteRenderer>();
+    Texture2D timelineTexture=playerCircle.Sprite.texture;
+    Require(timelineTexture!=maleHead && timelineTexture.GetPixels32().SequenceEqual(maleHead.GetPixels32()),"Public timeline did not use the original atlas fallback for a captured player head.");
     foreach(Transform card in scene.IconRoot)
     {
      var group=card.GetComponent<SortingGroup>();
@@ -200,6 +245,7 @@ namespace Zjcs.Editor.BattleRound
     capture("round-scene-acting");yield return null;
     var restored=JsonUtility.FromJson<FightBattleCheckpoint>(JsonUtility.ToJson(state));
     restored.Timeline.Acting=2;hud.RefreshTimeline(restored,portrait,null,true);yield return new WaitForSeconds(.4f);CheckActor(2);
+    Require(playerCircle.Sprite.texture==timelineTexture,"Refreshing/restoring the public timeline duplicated the cached portrait texture.");
     camera.orthographicSize=8;yield return null;yield return null;CheckProjection();
     scaler.referenceResolution=new Vector2(1080,2160);Canvas.ForceUpdateCanvases();yield return null;yield return null;CheckProjection();
     var animation=hudRoot.GetComponent<OfficialBattleHudAnimationPlayer>();animation.enabled=false;
@@ -224,11 +270,13 @@ namespace Zjcs.Editor.BattleRound
     capture("round-scene-after-death");yield return null;
     restored.Timeline.Entries.Clear();hud.RefreshTimeline(restored,portrait,null,false);yield return null;
     Require(scene.IconRoot.childCount==0,"Empty timeline retained cards.");
+    Require(timelineTexture!=null,"Portrait atlas was released before the battle scene scope ended.");
     UnityEngine.Object.Destroy(hudRoot);yield return null;yield return null;
-    Require(scene==null,"HUD lifetime leaked the native round scene.");
+    Require(scene==null && timelineTexture==null && maleHead!=null,"HUD lifetime leaked the native round scene/portrait atlas or destroyed the caller capture.");
+    Debug.Log("Native portrait atlas passed: actual Windows fallback selection, original male/female capture pixels, UV/scale, cache identity, removal/disposal ownership, public timeline reuse and scene lifetime.");
     Debug.Log("Native round scene passed: original references/materials/card sorting, public HUD, actor order/restore/death, camera/canvas/animated-anchor projection, hide/show, original empty alpha references, simulated speed pointer, empty queue and lifetime.");
    }
-   finally {UnityEngine.Object.Destroy(root);if(scene!=null)UnityEngine.Object.Destroy(scene.gameObject);renderPipelineScope?.Dispose();}
+   finally {portraitAtlas?.Dispose();UnityEngine.Object.Destroy(root);if(scene!=null)UnityEngine.Object.Destroy(scene.gameObject);UnityEngine.Object.Destroy(playerPortrait);UnityEngine.Object.Destroy(maleHead);UnityEngine.Object.Destroy(femaleHead);renderPipelineScope?.Dispose();}
    yield return null;
   }
         private sealed class Runner : MonoBehaviour { }
