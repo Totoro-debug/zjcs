@@ -29,7 +29,7 @@ namespace Zjcs.Combat.Official
 
         /// <summary>
         /// Collects every hit of a skill in execution order, applying the configured root-reference
-        /// delay/anchor to the first node of each root. Shared by the executor and by area targeting.
+        /// delay/anchor to that occurrence of each root. Shared by the executor and by area targeting.
         /// </summary>
         public static List<FightBattleHitDefinition> CollectAll(FightBattleSkillDefinition skill)
         {
@@ -41,13 +41,9 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleHitRoot root in skill.HitGraphRoots)
                 {
                     List<FightBattleHitDefinition> rootHits = CollectRoot(skill.HitGraphEntities,
-                        root.EntityId, ref nextRandomTargetGroupId);
-                    if (rootHits.Count > 0)
-                    {
-                        rootHits[0].Delay = root.Delay;
-                        rootHits[0].Anchor = root.Anchor;
-                        rootHits[0].IgnoreAICount = root.IgnoreAICount;
-                    }
+                        root.EntityId, ref nextRandomTargetGroupId, new FightBattleHitLink
+                        { EntityId = root.EntityId, Delay = root.Delay, Anchor = root.Anchor,
+                            IgnoreAICount = root.IgnoreAICount });
                     collected.AddRange(rootHits);
                 }
                 return collected;
@@ -68,23 +64,24 @@ namespace Zjcs.Combat.Official
 
         private static List<FightBattleHitDefinition> CollectRoot(
             IReadOnlyList<FightBattleHitEntity> entities, int rootEntityId,
-            ref int nextRandomTargetGroupId)
+            ref int nextRandomTargetGroupId, FightBattleHitLink incoming = null)
         {
             var result = new List<FightBattleHitDefinition>();
             Collect(entities, rootEntityId, result, new HashSet<int>(), 0, 0, 1, null,
-                ref nextRandomTargetGroupId);
+                ref nextRandomTargetGroupId, incoming);
             return result;
         }
 
         private static void Collect(IReadOnlyList<FightBattleHitEntity> entities, int entityId,
             List<FightBattleHitDefinition> result, HashSet<int> ancestors, int depth,
             int targetMode, int randomCount, RandomTargetContext randomTargetContext,
-            ref int nextRandomTargetGroupId)
+            ref int nextRandomTargetGroupId, FightBattleHitLink incoming = null, float parentDelay = 0f)
         {
             if (entityId <= 0 || depth > 12 || ancestors.Contains(entityId)) return;
             FightBattleHitEntity entity = Find(entities, entityId);
             if (entity == null) return;
             var branch = new HashSet<int>(ancestors) { entityId };
+            float occurrenceDelay = parentDelay + (incoming == null ? entity.Delay : incoming.Delay);
 
             if (entity.HasFixedDamage || entity.IsSummon || entity.TriggerSkill != null)
                 result.Add(new FightBattleHitDefinition
@@ -145,10 +142,10 @@ namespace Zjcs.Combat.Official
                         : new List<FightGridPoint>(randomTargetContext.Scope),
                     RandomTargetScopeTransform = randomTargetContext?.ScopeTransform,
                     ActionType = entity.ActionType,
-                    Delay = entity.Delay,
+                    Delay = occurrenceDelay,
                     DelayDistFactor = entity.DelayDistFactor,
-                    Anchor = entity.Anchor,
-                    IgnoreAICount = entity.IgnoreAICount,
+                    Anchor = incoming == null ? entity.Anchor : incoming.Anchor,
+                    IgnoreAICount = incoming == null ? entity.IgnoreAICount : incoming.IgnoreAICount,
                     TrueDamage = entity.TrueDamage,
                     UseDamageFactor = entity.UseDamageFactor,
                     BreakResilience = entity.BreakResilience,
@@ -192,15 +189,16 @@ namespace Zjcs.Combat.Official
                     }
                 });
 
-            CollectChildren(entities, entity.ChainedHits, result, branch, depth + 1,
+            CollectChildren(entities, entity.ChainedHits, entity.ChainedHitLinks, result, branch, depth + 1, occurrenceDelay,
                 targetMode, randomCount, randomTargetContext, ref nextRandomTargetGroupId);
-            CollectChildren(entities, entity.CustomTargetHits, result, branch, depth + 1,
+            CollectChildren(entities, entity.CustomTargetHits, entity.CustomTargetHitLinks, result, branch, depth + 1, occurrenceDelay,
                 1, 0, null, ref nextRandomTargetGroupId);
-            RandomTargetContext childRandomTargetContext = entity.RandomTargetHits == null
-                || entity.RandomTargetHits.Count == 0 ? null : new RandomTargetContext
+            bool hasRandomChildren = entity.RandomTargetHitLinks != null && entity.RandomTargetHitLinks.Count > 0
+                || entity.RandomTargetHits != null && entity.RandomTargetHits.Count > 0;
+            RandomTargetContext childRandomTargetContext = !hasRandomChildren ? null : new RandomTargetContext
                 {
                     GroupId = nextRandomTargetGroupId++,
-                    Anchor = entity.Anchor,
+                    Anchor = incoming == null ? entity.Anchor : incoming.Anchor,
                     NotSameTarget = entity.NotSameTarget,
                     AllowEmptyScope = entity.AllowEmptyScope,
                     NotSameEmptyScope = entity.NotSameEmptyScope,
@@ -211,7 +209,7 @@ namespace Zjcs.Combat.Official
                         : new List<FightGridPoint>(entity.Scope),
                     ScopeTransform = entity.ScopeTransform
                 };
-            CollectChildren(entities, entity.RandomTargetHits, result, branch, depth + 1, 2,
+            CollectChildren(entities, entity.RandomTargetHits, entity.RandomTargetHitLinks, result, branch, depth + 1, occurrenceDelay, 2,
                 Math.Max(1, entity.MiniHitTargetCount), childRandomTargetContext,
                 ref nextRandomTargetGroupId);
         }
@@ -231,10 +229,23 @@ namespace Zjcs.Combat.Official
         }
 
         private static void CollectChildren(IReadOnlyList<FightBattleHitEntity> entities,
-            List<int> children, List<FightBattleHitDefinition> result, HashSet<int> ancestors,
-            int depth, int targetMode, int randomCount,
+            List<int> children, List<FightBattleHitLink> links, List<FightBattleHitDefinition> result, HashSet<int> ancestors,
+            int depth, float parentDelay, int targetMode, int randomCount,
             RandomTargetContext randomTargetContext, ref int nextRandomTargetGroupId)
         {
+            // HitCfg belongs to an edge, not to its shared entity class. Never mutate
+            // the class while expanding repeated references. Parent configured delays accumulate
+            // by the confirmed offline rule. ID-only legacy graphs retain their old timing.
+            if (links != null && links.Count > 0)
+            {
+                foreach (FightBattleHitLink link in links)
+                {
+                    if (link == null) throw new InvalidOperationException("Null original HitCfg reference.");
+                    Collect(entities, link.EntityId, result, ancestors, depth, targetMode, randomCount,
+                        randomTargetContext, ref nextRandomTargetGroupId, link, parentDelay);
+                }
+                return;
+            }
             if (children == null) return;
             for (int i = 0; i < children.Count; i++)
                 Collect(entities, children[i], result, ancestors, depth, targetMode, randomCount,
