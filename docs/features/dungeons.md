@@ -36,6 +36,8 @@
 
 结算保留房间掉落与评级开箱奖励的来源标记；旧明细缺少该标记时保留原明细并显示在掉落区，不重抽或推测来源。主档实际发放与随机流顺序不变，原结果底部只展示房间掉落，评级奖励进入玩家行原宝箱。同一道具来自房间掉落与评级奖励时分别保存，存档按“道具 ID、奖励来源”联合校验，仍拒绝同一来源的重复行，避免合法的两类奖励被拒绝入库。四种原 `map_baoXiang` 骨骼、atlas 和像素接入公共独立原生 Canvas 后端，按原评级选择与 `close_loop → open_01 → open_loop` 序列播放；奖励槽使用原 prefab、动画事件、逐项显示间隔与自动滚动参数。原九个开箱／品质 Playable 图、粒子、网格、Windows 材质和三个 Wwise PCM 事件在本地绑定。来源见[原生宝箱](../../assets/reference/dungeon-ui/884_156692/daily-dungeon-chest-native-source-manifest.json)与[结果特效](../../assets/reference/dungeon-ui/884_156692/daily-dungeon-result-playables-source-manifest.json)；内置屏 Play Mode 已实测机神山完整路线、开箱、逐项奖励与购买／领奖，已查看实际开箱前后画面；Windows Player 复验仍在执行。
 
+公共路线倒计时由 `DailyDungeonModule` 保存起始 UTC 时刻并生成剩余秒数，`OfficialDungeonRoutePresenter` 使用原 `mNextStageConfirmTimeTxt` 与 `MultiLanguageText.Format` 显示；时长读取所选官方 `DailyDungeonSelectNextStageOverTime`（10 秒）。超时和手动选择都沿同一房间前进与伙伴邀请入口；旧路线首次显示选择页时初始化起点，已有起点在重开后保持。规则回归已覆盖优先级、同类顺序、10 秒边界、手动立即前进与冷恢复；内置屏 Play Mode 通过实际倒计时、超时前进、手动房间点击和中途结算，并已查看对应画面。Windows Player 复验仍在执行。
+
 `DailyDungeonBattleRunner` 按原房间战斗配置接入公共战斗控制器。`DailyDungeonBattleEntryModule` 统一公开副本、Map12 私有路线与每日挑战的入场一致性：恢复时核对关卡、StageType、助战身份及 checkpoint；新战斗按“提交助战 → 挂载战斗 → 首次保存 checkpoint”执行，失败只回滚本次提交。玩法各自保留入场条件、存档适配器、挑战结算和空助战／已结束恢复分支。路线、已清房间、战斗检查点及待领奖状态均持久化。
 
 排行榜使用当前原生 `DailyDungeonTopPanel`、`TopRankTeamItem`、原 `LoopVerticalScrollRect`、页签、对象状态与布局。`DailyDungeonLevelDefinition.LeaderboardGrades` 独立读取所选 884 `DailyDungeonBattleInfo.TopRecordGradeTypeDict`；APK 优先取得原 `config_luban` 字节并用同版 Luban 构造器解码，136 个副本／难度组合仅开放 S 榜，私有副本不开放。本人行按完整排序定位名次与用时，使用本地玩家原头像；伙伴图标使用原 NPC 图标控制器，接入公共 `OfficialPartnerNpcIconImages` 及原名称节点的本地化控制器；冷打开首通存档后已核对头像、中文名称、职业图标与遮挡。每个副本、难度、评级保存首次完整通关的实际邀请队伍，之后最快用时更新不替换首通队伍；旧最佳队伍字段不能证明首通阵容，不回填推测头像。来源见[排行榜配置与绑定](../../assets/reference/dungeon-ui/884_156692/daily-dungeon-leaderboard-source-manifest.json)。
@@ -67,6 +69,7 @@ Map12 的 121／50 机神山路线共用日常副本运行时，其奖励、次�
 ## 自定义实现
 
 - 每日领奖按官方存档的总剩余次数结转：跨日取前一日剩余次数与每日免费次数的较大值，购买次数、价格档位和购买回执每日重置。单机仅在成功领取最终奖励时扣总次数，进场、失败和未领奖均不扣；界面不把总次数拆成无法由官方存档证明的免费／购买余额。官方客户端单次批量领奖次数为 `min(1 + 当前有效福利 ExtraClaimCount, 今日总剩余领奖次数)`；无有效福利时最大为 1。Type 22 只累计成功领奖次数。
+- 按用户确认保留自动选路与倒计时，倒计时结束前手动点击房间立即前进，不等待在线投票。官方客户端 `DailyDungeonBigMapDialog.CountDown` 只读取服务器 `FightNextStageDailyDungeonData`，未包含超时选择算法；单机按已确认方案使用原 `DailyDungeonRoomPriorityList`，同类按原 `nextRoomIds` 配置顺序选择，不推断未提供的队伍血量或在线投票算法。房间清理时保存倒计时起点，路线页活动时处理到期；重新打开按已保存时刻继续，选择成功后清除旧起点，防止同一超时重复前进。私有剧情路线继续使用其原调用方的前进规则。
 - 首个公开难度也读取其自身 `unlockConditionId`；入口页显示锁定状态，公共模块在条件满足前拒绝进入，条件适配器只由调用方提供。
 - 离线排行榜只保留官方评级和通关时长两个排序字段：评级降序，同评级按通关时长升序；完全并列时保留存档原顺序，不再按记录 ID 排序，也不加入职业、伤害或客户端虚构的贡献分。本人行使用完整排序独立定位本地记录，不受滚动榜显示数量上限影响。公开副本开战保存公共伙伴邀请系统实际选中的 NPC 标识、等级与位阶；每个副本、难度、评级的首次完整通关队伍写入独立快照，后续最佳用时更新不改写队伍。旧最佳用时队伍不作为首通信息回填；没有首通快照的旧记录不显示推测队员。
 - 排行榜馈赠 Type 57 使用已确认的单机方案：按本档案在指定副本、难度、评级下的累计通关次数判断，保留官方奖励与数量阈值。旧存档没有历次通关总数，新计数字段从 0 开始累计；保留已有最佳评级、排行榜与奖励回执。

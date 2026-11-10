@@ -162,16 +162,46 @@ namespace Zjcs.Presentation.Home
             long lifetime = home.DailyDungeons.DailyDungeonGetRewardCount;
             string runId = home.DailyDungeons.ActiveRun.id;
             int battles = 0, rooms = 0;
+            bool verifyAutomaticRoom = Environment.GetCommandLineArgs().Contains("--zjcs-daily-dungeon-auto-room");
+            bool automaticRoomVerified = false;
             while (home.DailyDungeons.ActiveRun != null)
             {
                 var run = home.DailyDungeons.ActiveRun;
                 int room = run.currentRoomId;
                 if (run.clearedRoomIds.Contains(room))
                     room = home.DailyDungeons.FindRoom(room).nextRoomIds.First();
+                var selection = home.DailyDungeons.BuildRoomSelectionState(DateTime.UtcNow.Ticks);
+                bool waitForAutomaticRoom = verifyAutomaticRoom && !automaticRoomVerified && selection != null;
+                if (waitForAutomaticRoom) room = selection.NextRoomId;
                 Transform cell = Root("Room_" + room);
                 Check(cell, "The next original route cell is not visible: " + room);
+                var routeWindow = cell.GetComponentInParent<Zjcs.Presentation.World.OfficialDungeonRoutePresenter>();
+                Check(routeWindow, "The original route presenter is missing.");
+                Check(!routeWindow.GetComponentsInChildren<TMPro.TMP_Text>()
+                    .Any(text => text.isActiveAndEnabled && text.text.Contains("{0}")),
+                    "The route HUD contains an unformatted countdown.");
                 yield return Capture("daily-dungeon-route-" + rooms);
-                Click(cell.GetComponentsInChildren<Button>().First(button => button.interactable));
+                if (waitForAutomaticRoom)
+                {
+                    Check(selection.HasStarted && selection.RemainingSeconds > 0
+                        && selection.RemainingSeconds <= 10, "The official room countdown was not initialized.");
+                    yield return Capture("daily-dungeon-countdown");
+                    int previousRoom = run.currentRoomId;
+                    float deadline = Time.realtimeSinceStartup + 15;
+                    while (home.DailyDungeons.ActiveRun != null
+                        && home.DailyDungeons.ActiveRun.currentRoomId == previousRoom
+                        && Time.realtimeSinceStartup < deadline) yield return null;
+                    Check(home.DailyDungeons.ActiveRun != null && home.DailyDungeons.ActiveRun.currentRoomId == room,
+                        "The countdown did not automatically enter the configured priority room.");
+                    automaticRoomVerified = true;
+                    yield return Capture("daily-dungeon-auto-room");
+                }
+                else
+                {
+                    Click(cell.GetComponentsInChildren<Button>().First(button => button.interactable));
+                    Check(home.DailyDungeons.ActiveRun == null || home.DailyDungeons.ActiveRun.currentRoomId == room,
+                        "Manual room input did not advance immediately.");
+                }
                 yield return Settle();
                 Transform invitation = Root("BattleAssistSelection");
                 if (invitation)
@@ -231,6 +261,7 @@ namespace Zjcs.Presentation.Home
             }
             Check(battles > 0 && home.DailyDungeons.PendingClaims.Any(value => value.id == runId),
                 "The actual route did not create a pending settlement.");
+            Check(!verifyAutomaticRoom || automaticRoomVerified, "The automatic-room diagnostic did not exercise a countdown.");
             int grade = home.DailyDungeons.PendingClaims.Single(value => value.id == runId).run.grade;
             Check(home.DailyDungeons.RemainEntries == claims, "Entering or completing consumed a claim before collecting.");
             var result = FindObjectOfType<DailyDungeonResultPanelAdapter>();

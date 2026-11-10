@@ -35,6 +35,7 @@ namespace Zjcs.Offline.World
         public int DailyDungeonMaxLimitCount;
         public int SuppressUnlockRank;
         public float DailyDungeonSelectNextStageOverTime;
+        public int[] DailyDungeonRoomPriorityList;
         public int DailyDungeonBonfireEntityClassId;
     }
 
@@ -340,6 +341,7 @@ namespace Zjcs.Offline.World
         public long finishedAtUnixSeconds;
         public long startedAtUtcTicks;
         public long finishedAtUtcTicks;
+        public long nextRoomSelectionStartedAtUtcTicks;
     }
 
     public class OfflineDailyDungeonSession
@@ -589,17 +591,25 @@ namespace Zjcs.Offline.World
             DailyDungeonSave next = Clone(save);
             next.activeRun.currentRoomId = roomId;
             next.activeRun.activeBattleCheckpoint = string.Empty;
+            next.activeRun.nextRoomSelectionStartedAtUtcTicks = 0;
             Persist(next);
             return true;
         }
 
         public bool RecordRoomCleared(int roomId, string battleCheckpoint)
         {
+            return RecordRoomCleared(roomId, battleCheckpoint, DateTime.UtcNow.Ticks);
+        }
+
+        public bool RecordRoomCleared(int roomId, string battleCheckpoint, long selectionStartedAtUtcTicks)
+        {
+            if (selectionStartedAtUtcTicks <= 0 || selectionStartedAtUtcTicks > DateTime.MaxValue.Ticks) return false;
             if (save.activeRun == null || save.activeRun.currentRoomId != roomId
                 || FindRoom(roomId) == null || save.activeRun.clearedRoomIds.Contains(roomId)) return false;
             DailyDungeonSave next = Clone(save);
             next.activeRun.clearedRoomIds.Add(roomId);
             next.activeRun.activeBattleCheckpoint = battleCheckpoint ?? string.Empty;
+            next.activeRun.nextRoomSelectionStartedAtUtcTicks = selectionStartedAtUtcTicks;
             Persist(next);
             return true;
         }
@@ -1065,7 +1075,7 @@ namespace Zjcs.Offline.World
                 && string.IsNullOrEmpty(run.activeBattleCheckpoint) && run.lastBattleRoomId == 0
                 && run.lastBattleOutcome == 0 && run.startedAtUnixSeconds == 0
                 && run.finishedAtUnixSeconds == 0 && run.startedAtUtcTicks == 0
-                && run.finishedAtUtcTicks == 0;
+                && run.finishedAtUtcTicks == 0 && run.nextRoomSelectionStartedAtUtcTicks == 0;
         }
     }
 }

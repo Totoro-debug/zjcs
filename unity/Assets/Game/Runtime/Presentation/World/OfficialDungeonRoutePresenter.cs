@@ -18,6 +18,9 @@ namespace Zjcs.Presentation.World
         private WorldDailyDungeonRoute route;
         private int mapGroupId;
         private bool initialized, choosing;
+        private OfficialDungeonUiBindingRuntime.RouteWindowView window;
+        private DailyDungeonRoomSelectionState selection;
+        private int displayedSeconds = -1;
 
         public static void Refresh(GameObject root, DailyDungeonModule module,
             Action<int> selectRoom, Action close)
@@ -50,7 +53,10 @@ namespace Zjcs.Presentation.World
             DailyDungeonRuntimeMap map = hud.Map;
             if (map == null) throw new InvalidDataException("Original dungeon route map is missing.");
             choosing = hud.IsSelectingNextRoom;
-            var window = OfficialDungeonUiBindingRuntime.ConfigureRouteWindow(gameObject, choosing);
+            module.BeginRoomSelection(DateTime.UtcNow.Ticks);
+            window = OfficialDungeonUiBindingRuntime.ConfigureRouteWindow(gameObject, choosing);
+            displayedSeconds = -1;
+            RefreshCountdown();
             if (window.Grid == null || window.Scroll == null)
                 throw new InvalidDataException("Original dungeon route grid/scroll bindings are incomplete.");
             if (route == null || mapGroupId != run.mapGroupId)
@@ -79,11 +85,38 @@ namespace Zjcs.Presentation.World
                 hud.GradeRows, map.rowCount);
         }
 
+        private void RefreshCountdown()
+        {
+            selection = module.BuildRoomSelectionState(DateTime.UtcNow.Ticks);
+            window.Countdown.gameObject.SetActive(choosing && selection != null);
+            if (selection != null && displayedSeconds != selection.RemainingSeconds)
+            {
+                displayedSeconds = selection.RemainingSeconds;
+                window.Countdown.Format(displayedSeconds);
+            }
+        }
+
+        private void Update()
+        {
+            if (!initialized || !choosing || module == null || window == null) return;
+            RefreshCountdown();
+            if (module.TrySelectTimedOutRoom(DateTime.UtcNow.Ticks, out int roomId))
+                Advance(roomId);
+        }
+
+        private void Advance(int roomId)
+        {
+            choosing = false;
+            selectRoom(roomId);
+            if (this && module.ActiveRun != null) Render();
+        }
+
         public void ProvideData(Transform cell, int index)
         {
             int roomId = route.GetRoomIdByIndex(index);
             WorldDailyDungeonRoomItem view = OfficialDungeonUiBindingRuntime.BindRouteRoom(cell.gameObject);
             view.RefreshView(roomId, route, choosing);
+            if (choosing && selection != null) view.ShowSelectedRoom(selection.NextRoomId, route);
             cell.name = "Room_" + roomId;
             DailyDungeonRunSave run = module.ActiveRun;
             view.ClickBtn.interactable = run != null && roomId > 0 && !run.privateRouteComplete
@@ -93,7 +126,7 @@ namespace Zjcs.Presentation.World
             view.ClickBtn.onClick.RemoveAllListeners();
             view.ClickBtn.onClick.AddListener(() => {
                 if (roomId != route.CurrentRoomId) view.ShowSelectedRoom(roomId, route);
-                selectRoom(roomId);
+                Advance(roomId);
             });
         }
     }

@@ -109,6 +109,7 @@ namespace Zjcs.Presentation.World
             public GridLayoutGroup Grid;
             public Transform GradeSlot;
             public string GradePrefab;
+            public WorldMultiLanguageText Countdown;
         }
         [Serializable] private sealed class ButtonBinding
         {
@@ -678,18 +679,25 @@ namespace Zjcs.Presentation.World
 
         public static RouteWindowView ConfigureRouteWindow(GameObject root, bool choosing)
         {
-            RouteWindowBinding binding = LoadDocument().prefabs.Single(value => value.name == "DailyDungeonBigMapDialog").routeWindow;
+            Prefab definition = LoadDocument().prefabs.Single(value => value.name == "DailyDungeonBigMapDialog");
+            RouteWindowBinding binding = definition.routeWindow;
             if (binding?.chooseStates == null) throw new InvalidDataException("Official route window fields are missing.");
             SetObjectState(root, binding.chooseStates, choosing ? 1 : 0);
             Find(root.transform, binding.scroll, null).gameObject.SetActive(!choosing);
             // RefreshMember's no-active-faction branch: the offline route is outside a running fight.
             Find(root.transform, binding.team, null).gameObject.SetActive(false);
             Find(root.transform, binding.tip, null).gameObject.SetActive(true);
+            var countdownNode = Find(root.transform, binding.countdown, null);
+            var countdown = countdownNode.GetComponent<WorldMultiLanguageText>()
+                ?? countdownNode.gameObject.AddComponent<WorldMultiLanguageText>();
+            var styles = LoadDocument().routeStyles;
+            countdown.Localizer = key => styles.texts.Single(value => value.key == key).value.Replace("\\n", "\n");
+            countdown.SetKey(definition.localizations.Single(value => value.path == binding.countdown).key, 0);
             return new RouteWindowView {
                 Scroll = Find(root.transform, choosing ? binding.chooseScroll : binding.scroll, null).GetComponent<LoopVerticalScrollRect>(),
                 Grid = Find(root.transform, choosing ? binding.chooseGrid : binding.grid, null).GetComponent<GridLayoutGroup>(),
                 GradeSlot = Find(root.transform, choosing ? binding.chooseGradeSlot : binding.gradeSlot, null),
-                GradePrefab = binding.gradePrefab };
+                GradePrefab = binding.gradePrefab, Countdown = countdown };
         }
 
         public static void RefreshRouteGrades(GameObject root, RouteWindowView window,

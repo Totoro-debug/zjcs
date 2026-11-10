@@ -106,7 +106,9 @@ namespace Zjcs.Offline.World
         /// big-map HUD.  Room choice, battle and persistence remain commands on
         /// this same module; presentation only renders this projection.
         /// </summary>
-        public DailyDungeonRouteHudModel BuildRouteHudModel()
+        public DailyDungeonRouteHudModel BuildRouteHudModel() => BuildRouteHudModel(DateTime.UtcNow.Ticks);
+
+        public DailyDungeonRouteHudModel BuildRouteHudModel(long utcTicks)
         {
             DailyDungeonRunSave run = ActiveRun;
             if (run == null) return null;
@@ -138,6 +140,7 @@ namespace Zjcs.Offline.World
                 Run = run,
                 Map = map,
                 IsSelectingNextRoom = choosing,
+                RoomSelection = BuildRoomSelectionState(utcTicks),
                 CurrentGrade = CurrentGrade(),
                 Score = CalculateScore(run),
                 Rooms = rooms.AsReadOnly(),
@@ -146,6 +149,55 @@ namespace Zjcs.Offline.World
                     .Select(value => new KeyValuePair<int, int>(value.grade, value.row))
                     .ToArray()
             };
+        }
+
+        public DailyDungeonRoomSelectionState BuildRoomSelectionState(long utcTicks)
+        {
+            if (utcTicks <= 0 || utcTicks > DateTime.MaxValue.Ticks) throw new ArgumentOutOfRangeException(nameof(utcTicks));
+            var run = ActiveRun;
+            if (run == null || run.privateRouteComplete || !run.clearedRoomIds.Contains(run.currentRoomId)
+                || ResolveLevel(run.dungeonId, run.difficulty)?.IsPrivateRoute != false) return null;
+            var rooms = (FindRoom(run.currentRoomId)?.nextRoomIds ?? Array.Empty<int>())
+                .Select(FindRoom).Where(room => room != null && !run.clearedRoomIds.Contains(room.id)).ToArray();
+            if (rooms.Length == 0) return null;
+            var priorities = (Catalog.settings.DailyDungeonRoomPriorityList ?? Array.Empty<int>()).ToList();
+            int Priority(DailyDungeonRuntimeRoom room) {
+                int index = priorities.IndexOf(room.type);
+                return index < 0 ? int.MaxValue : index;
+            }
+            double duration = Catalog.settings.DailyDungeonSelectNextStageOverTime;
+            if (double.IsNaN(duration) || double.IsInfinity(duration) || duration < 0 || duration > int.MaxValue)
+                throw new InvalidDataException("Official daily dungeon room selection duration is invalid.");
+            bool started = run.nextRoomSelectionStartedAtUtcTicks > 0;
+            double elapsed = started ? Math.Max(0, (utcTicks - run.nextRoomSelectionStartedAtUtcTicks)
+                / (double)TimeSpan.TicksPerSecond) : 0;
+            return new DailyDungeonRoomSelectionState {
+                HasStarted = started,
+                RemainingSeconds = (int)Math.Ceiling(Math.Max(0, duration - elapsed)),
+                NextRoomId = rooms.OrderBy(Priority).First().id
+            };
+        }
+
+        public bool BeginRoomSelection(long utcTicks)
+        {
+            if (utcTicks <= 0 || utcTicks > DateTime.MaxValue.Ticks) throw new ArgumentOutOfRangeException(nameof(utcTicks));
+            var state = BuildRoomSelectionState(utcTicks);
+            if (state == null) return false;
+            if (state.HasStarted) return true;
+            var next = Clone(Save);
+            next.activeRun.nextRoomSelectionStartedAtUtcTicks = utcTicks;
+            Persist(next);
+            return true;
+        }
+
+        public bool TrySelectTimedOutRoom(long utcTicks, out int roomId)
+        {
+            roomId = 0;
+            var state = BuildRoomSelectionState(utcTicks);
+            if (state == null || !state.HasStarted || state.RemainingSeconds != 0
+                || !ChooseNextRoom(state.NextRoomId)) return false;
+            roomId = state.NextRoomId;
+            return true;
         }
 
         /// <summary>
@@ -339,10 +391,18 @@ namespace Zjcs.Offline.World
         public DailyDungeonRunSave Run { get; internal set; }
         public DailyDungeonRuntimeMap Map { get; internal set; }
         public bool IsSelectingNextRoom { get; internal set; }
+        public DailyDungeonRoomSelectionState RoomSelection { get; internal set; }
         public int CurrentGrade { get; internal set; }
         public DailyDungeonScore Score { get; internal set; }
         public IReadOnlyList<DailyDungeonRouteRoomModel> Rooms { get; internal set; }
         public IReadOnlyList<KeyValuePair<int, int>> GradeRows { get; internal set; }
+    }
+
+    public sealed class DailyDungeonRoomSelectionState
+    {
+        public bool HasStarted { get; internal set; }
+        public int RemainingSeconds { get; internal set; }
+        public int NextRoomId { get; internal set; }
     }
 
     public sealed class DailyDungeonRouteRoomModel

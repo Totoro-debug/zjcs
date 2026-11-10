@@ -59,6 +59,7 @@ namespace Zjcs.Editor
             var slots = new ProfileSlotCatalog(Path.Combine(actualRoot, "profiles"));
             string slotId = slots.CreateSlot();
             DailyDungeonRuntimeData catalog = DailyDungeonModule.LoadCatalog();
+            ValidateRoomSelection(slots, catalog);
             DailyDungeonRuntimeCondition dayCondition = (catalog.conditions ?? Array.Empty<DailyDungeonRuntimeCondition>())
                 .FirstOrDefault(value => value != null && value.type == "ServerRankUnlockDaysCondition" && value.days > 0);
             if (dayCondition == null)
