@@ -1,0 +1,42 @@
+{
+  "manifest": "884_156692",
+  "official_code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "sha256": "ce40db54d87030ded0a9f8a6dc95db5a3a4e46ae02bf76a9d273fe092a703d12"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormula.cs",
+      "sha256": "c3cc659319bed428ebac076b027832d9010a7589d824756fa4d10e0e7e713273"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PropType.cs",
+      "sha256": "265a81dbeab87b90e3a1c1423884610ed43ea9b535e488e20de0e0c41f9831b0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameCharacterType.cs",
+      "sha256": "dbd0806e477af1da85def813248f80d02bd16bdc34b4ab15bfc2142cdeebd9d6"
+    }
+  ],
+  "runtime_inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_suck_hp_sources.py",
+    "sha256": "b859e2ce4ea4f23ac44fd6f02ed0388a3ffe55014615fc17c78347b24c9936e3"
+  },
+  "extracted_methods": [
+    "CalcCureAdd",
+    "ApplyCureAddSoftCap",
+    "SuckHp",
+    "SuckHpByOnceHit"
+  ],
+  "extraction": "Original method bodies compiled in memory; only property access and settings use the separately hashed existing runtime tables. No asset version replacement."
+}

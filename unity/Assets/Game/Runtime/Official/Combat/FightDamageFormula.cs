@@ -104,7 +104,7 @@ namespace Zjcs.Combat.Official
         public long AbsoluteCure;
     }
 
-    public sealed class FightDamageFormula
+    public sealed partial class FightDamageFormula
     {
         private const int Player = 1;
         private const int Monster = 2;
