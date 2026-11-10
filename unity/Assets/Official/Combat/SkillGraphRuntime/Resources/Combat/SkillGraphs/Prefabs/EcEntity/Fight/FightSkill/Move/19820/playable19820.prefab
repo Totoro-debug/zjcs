@@ -1,0 +1,360 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1709254077376921
+GameObject:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Component:
+  - component: {fileID: 4703437598541787}
+  - component: {fileID: 114884547391421755}
+  m_Layer: 0
+  m_Name: playable19820
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1730242686860875
+GameObject:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Component:
+  - component: {fileID: 4099118695303065}
+  - component: {fileID: 114243736805655561}
+  - component: {fileID: 114061268324235159}
+  m_Layer: 0
+  m_Name: anim
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1724804207875695
+GameObject:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Component:
+  - component: {fileID: 4587765826080250}
+  - component: {fileID: 114709867586078768}
+  - component: {fileID: 114044625135789424}
+  m_Layer: 0
+  m_Name: effect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1618682377417806
+GameObject:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Component:
+  - component: {fileID: 4589667821646929}
+  - component: {fileID: 114372920208702427}
+  - component: {fileID: 114025901758691103}
+  m_Layer: 0
+  m_Name: effect (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4703437598541787
+Transform:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709254077376921}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 966.871, y: 656.5316, z: 44.64647}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4099118695303065}
+  - {fileID: 4587765826080250}
+  - {fileID: 4589667821646929}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
+--- !u!114 &114884547391421755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709254077376921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce1c23b143625ac322a4b9f11594d67, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  Prefab: {fileID: 0}
+  mySource: {fileID: 0}
+  myTarget: {fileID: 0}
+  myApplyComponent: {fileID: 0}
+  myEndDestroy: 1
+  DestroyOnRemove: 1
+  mySpeed: 1
+  myFadeInDuration: 0
+  myFadeOutDuration: 0
+  myTriggerList: []
+  myFadeoutTrigerList: []
+  myEndTrigerList: []
+  myPlayables:
+  - myTime: 0
+    myPlayable: {fileID: 114061268324235159}
+  - myTime: 0
+    myPlayable: {fileID: 114709867586078768}
+  - myTime: 0.5
+    myPlayable: {fileID: 114372920208702427}
+--- !u!4 &4099118695303065
+Transform:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730242686860875}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -947.37866, y: -655.19714, z: -42.986458}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4703437598541787}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114243736805655561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730242686860875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8811547e645bd6980ca21c58c99b9a4a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  ApplyTargetOfNullAttr: 0
+--- !u!114 &114061268324235159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730242686860875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48e0a7dd9c2fa77dda83de3b7e3dce53, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  Prefab: {fileID: 0}
+  mySource: {fileID: 0}
+  myTarget: {fileID: 0}
+  myApplyComponent: {fileID: 0}
+  myEndDestroy: 1
+  DestroyOnRemove: 1
+  mySpeed: 1
+  myFadeInDuration: 0
+  myFadeOutDuration: 0
+  myTriggerList: []
+  myFadeoutTrigerList: []
+  myEndTrigerList: []
+  myBoolParam:
+  myBoolValue: 0
+  myFloatParam:
+  myFloatValue: 0
+  IntParam:
+  IntValue: 0
+  myTriggerParam: run
+  PreStateNameAllowList: []
+  myDuration: 0
+  LayerName:
+  LayerWeight: 0
+  myEndResumeParam: 1
+--- !u!4 &4587765826080250
+Transform:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1724804207875695}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -947.37866, y: -655.19714, z: -42.986458}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4703437598541787}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114709867586078768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1724804207875695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a08ad30e138701bc8b6a36c102b7fee5, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  Prefab: {fileID: 0}
+  mySource: {fileID: 0}
+  myTarget: {fileID: 0}
+  myApplyComponent: {fileID: 0}
+  myEndDestroy: 1
+  DestroyOnRemove: 1
+  mySpeed: 1
+  myFadeInDuration: 0
+  myFadeOutDuration: 0
+  myTriggerList: []
+  myFadeoutTrigerList: []
+  myEndTrigerList: []
+  myAttach:
+    AttachTo: 0
+    myBoneName: body
+    myOffset: {x: 0, y: -0.419, z: 0}
+    myRotation: {x: 0, y: 0, z: 0, w: 1}
+    myScale: 1
+  IsStatic: 0
+  IsFollowPos: 1
+  IsFollowRot: 1
+  IsFollowScale: 1
+  IsFollowShowHideNode: 0
+  myFollowDuration: 0
+  myStopFollowWhileFadeout: 0
+  myDuration: 1
+  ScaleByGridSizeType: 0
+  mIsOpenStateMutex: 0
+  mStateMutexUniqueId:
+  mMutexAction: 2
+  IsEnableFollowTargetActive: 0
+  mIsZEquipY: 0
+  mIsReset: 0
+--- !u!114 &114044625135789424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1724804207875695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c3e8c9e47ad5f2f828e48a9e7421797, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  mAttachType: 0
+  mGroundTypeAssetToApplyDict:
+    mSerializeBuffer:
+    - Key: 0
+      Value:
+        <AssetGuidProxy>k__BackingField:
+          mAssetGuid: 4c9380a799575474285cd55a3759e8dc
+        <Slot>k__BackingField: {fileID: 4587765826080250}
+    - Key: 6
+      Value:
+        <AssetGuidProxy>k__BackingField:
+          mAssetGuid: f952ca09f5d495d4c89a343db347cf9d
+        <Slot>k__BackingField: {fileID: 4587765826080250}
+  mIsAutoUpdateApply: 0
+  mUpdateInterval: 0.05
+--- !u!4 &4589667821646929
+Transform:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618682377417806}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -947.37866, y: -655.19714, z: -42.986458}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4703437598541787}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114372920208702427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618682377417806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a08ad30e138701bc8b6a36c102b7fee5, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  Prefab: {fileID: 0}
+  mySource: {fileID: 0}
+  myTarget: {fileID: 0}
+  myApplyComponent: {fileID: 0}
+  myEndDestroy: 1
+  DestroyOnRemove: 1
+  mySpeed: 1
+  myFadeInDuration: 0
+  myFadeOutDuration: 0
+  myTriggerList: []
+  myFadeoutTrigerList: []
+  myEndTrigerList: []
+  myAttach:
+    AttachTo: 0
+    myBoneName: body
+    myOffset: {x: 0, y: -0.419, z: 0}
+    myRotation: {x: 0, y: 0, z: 0, w: 1}
+    myScale: 1
+  IsStatic: 0
+  IsFollowPos: 1
+  IsFollowRot: 1
+  IsFollowScale: 1
+  IsFollowShowHideNode: 0
+  myFollowDuration: 0
+  myStopFollowWhileFadeout: 0
+  myDuration: 1
+  ScaleByGridSizeType: 0
+  mIsOpenStateMutex: 0
+  mStateMutexUniqueId:
+  mMutexAction: 2
+  IsEnableFollowTargetActive: 0
+  mIsZEquipY: 0
+  mIsReset: 0
+--- !u!114 &114025901758691103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618682377417806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c3e8c9e47ad5f2f828e48a9e7421797, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  mAttachType: 0
+  mGroundTypeAssetToApplyDict:
+    mSerializeBuffer:
+    - Key: 0
+      Value:
+        <AssetGuidProxy>k__BackingField:
+          mAssetGuid: 4c9380a799575474285cd55a3759e8dc
+        <Slot>k__BackingField: {fileID: 4589667821646929}
+    - Key: 6
+      Value:
+        <AssetGuidProxy>k__BackingField:
+          mAssetGuid: f952ca09f5d495d4c89a343db347cf9d
+        <Slot>k__BackingField: {fileID: 4589667821646929}
+  mIsAutoUpdateApply: 0
+  mUpdateInterval: 0.05

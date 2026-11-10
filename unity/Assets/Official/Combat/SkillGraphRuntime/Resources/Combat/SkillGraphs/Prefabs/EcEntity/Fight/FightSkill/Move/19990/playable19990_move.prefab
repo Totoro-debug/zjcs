@@ -1,0 +1,384 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1709254077376921
+GameObject:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Component:
+  - component: {fileID: 4884547391421755}
+  - component: {fileID: 114099118695303065}
+  m_Layer: 0
+  m_Name: playable19990_move
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1730242686860875
+GameObject:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Component:
+  - component: {fileID: 4243736805655561}
+  - component: {fileID: 114061268324235159}
+  - component: {fileID: 114587765826080250}
+  m_Layer: 0
+  m_Name: anim
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1724804207875695
+GameObject:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Component:
+  - component: {fileID: 4709867586078768}
+  - component: {fileID: 114044625135789424}
+  - component: {fileID: 114589667821646929}
+  m_Layer: 0
+  m_Name: move
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1618682377417806
+GameObject:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Component:
+  - component: {fileID: 4372920208702427}
+  - component: {fileID: 114025901758691103}
+  m_Layer: 0
+  m_Name: sound (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1703437598541787
+GameObject:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Component:
+  - component: {fileID: 4985305603660343}
+  - component: {fileID: 114705390221481576}
+  m_Layer: 0
+  m_Name: sound (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4884547391421755
+Transform:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709254077376921}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4243736805655561}
+  - {fileID: 4709867586078768}
+  - {fileID: 4372920208702427}
+  - {fileID: 4985305603660343}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
+--- !u!114 &114099118695303065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709254077376921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce1c23b143625ac322a4b9f11594d67, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  Prefab: {fileID: 0}
+  mySource: {fileID: 0}
+  myTarget: {fileID: 0}
+  myApplyComponent: {fileID: 0}
+  myEndDestroy: 1
+  DestroyOnRemove: 1
+  mySpeed: 1
+  myFadeInDuration: 0
+  myFadeOutDuration: 0
+  myTriggerList: []
+  myFadeoutTrigerList: []
+  myEndTrigerList: []
+  myPlayables:
+  - myTime: 0
+    myPlayable: {fileID: 114587765826080250}
+  - myTime: 0
+    myPlayable: {fileID: 114044625135789424}
+  - myTime: 0.36
+    myPlayable: {fileID: 114025901758691103}
+  - myTime: 0.86
+    myPlayable: {fileID: 114705390221481576}
+--- !u!4 &4243736805655561
+Transform:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730242686860875}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -947.37866, y: -655.19714, z: -42.986458}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4884547391421755}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114061268324235159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730242686860875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8811547e645bd6980ca21c58c99b9a4a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  ApplyTargetOfNullAttr: 0
+--- !u!114 &114587765826080250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730242686860875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48e0a7dd9c2fa77dda83de3b7e3dce53, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  Prefab: {fileID: 0}
+  mySource: {fileID: 0}
+  myTarget: {fileID: 0}
+  myApplyComponent: {fileID: 0}
+  myEndDestroy: 1
+  DestroyOnRemove: 1
+  mySpeed: 1
+  myFadeInDuration: 0
+  myFadeOutDuration: 0
+  myTriggerList: []
+  myFadeoutTrigerList: []
+  myEndTrigerList: []
+  myBoolParam: run
+  myBoolValue: 1
+  myFloatParam:
+  myFloatValue: 0
+  IntParam:
+  IntValue: 0
+  myTriggerParam:
+  PreStateNameAllowList: []
+  myDuration: -1
+  LayerName:
+  LayerWeight: 0
+  myEndResumeParam: 1
+--- !u!4 &4709867586078768
+Transform:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1724804207875695}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4884547391421755}
+  m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
+--- !u!114 &114044625135789424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1724804207875695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f177812b08f9f533c757e69cfcf416cf, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  Prefab: {fileID: 0}
+  mySource: {fileID: 0}
+  myTarget: {fileID: 0}
+  myApplyComponent: {fileID: 0}
+  myEndDestroy: 1
+  DestroyOnRemove: 1
+  mySpeed: 1
+  myFadeInDuration: 0
+  myFadeOutDuration: 0
+  myTriggerList: []
+  myFadeoutTrigerList: []
+  myEndTrigerList: []
+  myTrack: {fileID: 114724804207875695, guid: 6c33382a1e7f596587547584ee4c40c0, type: 2}
+  myTrackSpeed: 1
+  myStartAttachPos:
+    AttachTo: 0
+    myBoneName:
+    myOffset: {x: 0, y: 0, z: 0}
+    myLinkDir: 0
+    myOffsetScale: 0
+    IsRotationTowardsTarget: 0
+  myEndAttachPos:
+    AttachTo: 1
+    myBoneName:
+    myOffset: {x: 0, y: 0, z: 0}
+    myLinkDir: 0
+    myOffsetScale: 0
+    IsRotationTowardsTarget: 0
+  myFixDuration: 1
+  myFollowTarget: 0
+  myAdditionScale: 1
+  myTrackEndStopTime: 0
+  myTrackTriggerList: []
+  myTrackTriggerReliable: 1
+  myUseTrackRotation: 0
+  myUseTrackScale: 0
+  myXScaleByRange: 1
+  myFlipBySourceX: 1
+  myFlipByTargetY: 1
+  mFlipByDirX: 0
+  mIsZEquipY: 0
+--- !u!114 &114589667821646929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1724804207875695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8811547e645bd6980ca21c58c99b9a4a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  ApplyTargetOfNullAttr: 0
+--- !u!4 &4372920208702427
+Transform:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618682377417806}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4884547391421755}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114025901758691103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618682377417806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cabc4e819ca0894e41470326f33fc671, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  Prefab: {fileID: 0}
+  mySource: {fileID: 0}
+  myTarget: {fileID: 0}
+  myApplyComponent: {fileID: 0}
+  myEndDestroy: 1
+  DestroyOnRemove: 1
+  mySpeed: 1
+  myFadeInDuration: 0
+  myFadeOutDuration: 0
+  myTriggerList: []
+  myFadeoutTrigerList: []
+  myEndTrigerList: []
+  SoundEvent:
+    idInternal: 0
+    valueGuidInternal:
+    WwiseObjectReference: {fileID: 11400000, guid: b85058b5816655f0bea1c5d8f144fd02, type: 2}
+  LoopInterval: -1
+  Duration: 0
+  StopSoundEvent:
+    idInternal: 0
+    valueGuidInternal:
+    WwiseObjectReference: {fileID: 0}
+--- !u!4 &4985305603660343
+Transform:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1703437598541787}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4884547391421755}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114705390221481576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1703437598541787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cabc4e819ca0894e41470326f33fc671, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  Prefab: {fileID: 0}
+  mySource: {fileID: 0}
+  myTarget: {fileID: 0}
+  myApplyComponent: {fileID: 0}
+  myEndDestroy: 1
+  DestroyOnRemove: 1
+  mySpeed: 1
+  myFadeInDuration: 0
+  myFadeOutDuration: 0
+  myTriggerList: []
+  myFadeoutTrigerList: []
+  myEndTrigerList: []
+  SoundEvent:
+    idInternal: 0
+    valueGuidInternal:
+    WwiseObjectReference: {fileID: 11400000, guid: a09f4aff8f085104b90672bc7574e809, type: 2}
+  LoopInterval: -1
+  Duration: 0
+  StopSoundEvent:
+    idInternal: 0
+    valueGuidInternal:
+    WwiseObjectReference: {fileID: 0}
