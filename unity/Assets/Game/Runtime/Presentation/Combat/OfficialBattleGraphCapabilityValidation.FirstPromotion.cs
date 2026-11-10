@@ -10,6 +10,19 @@ namespace Zjcs.Presentation.Combat
     {
         private int firstPromotionItemId;
         private int firstPromotionDispelAllyId;
+        private int firstPromotionFacingIndex;
+        private float firstPromotionCastClock;
+        private int firstPromotionFrameCount;
+        private static readonly float[] FirstPromotionFrameTimes = { .1f, .25f, .45f, .7f };
+
+        private bool CaptureFirstPromotionFrame()
+        {
+            if (firstPromotionItemId == 0 || nativeCasts == 0 || finisherScheduled
+                || firstPromotionFrameCount >= FirstPromotionFrameTimes.Length
+                || Time.time - firstPromotionCastClock < FirstPromotionFrameTimes[firstPromotionFrameCount]) return false;
+            CaptureName = "first-promotion-" + firstPromotionItemId + "-phase-" + (++firstPromotionFrameCount);
+            return true;
+        }
 
         public static (int Profession, int InitialWeaponType, int InitialSkillItemId) FirstPromotionSource()
         {
@@ -61,7 +74,8 @@ namespace Zjcs.Presentation.Combat
             Require(player.Profession == profession.Profession, "The diagnostic profile has the wrong original profession.");
             var enemy = checkpoint.Units.First(unit => unit.Side != player.Side);
             var probe = new OfficialBattleGraphCapabilityValidation(catalog, player.Skills.First(value => value.Slot == 0),
-                entityId, cue.animation) { firstPromotionItemId = itemId };
+                entityId, cue.animation) { firstPromotionItemId = itemId,
+                    firstPromotionFacingIndex = new[] { 2, 0, 1, 3 }[direction] };
             enemy.MonsterId = 3331; enemy.MonsterGroupNo = 0;
             enemy.CharacterType = catalog.MonsterCharacterType(3331);
             enemy.MonsterType = catalog.MonsterType(3331); enemy.AiType = catalog.MonsterAiType(3331);
@@ -104,6 +118,9 @@ namespace Zjcs.Presentation.Combat
             skill.LimitedTimes = 1;
             player.Skills.Add(skill); player.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
             checkpoint.MaxRound = 12;
+            // Preserve short authored particle/action phases across cold-loading frames.
+            probe.previousCaptureFramerate = Time.captureFramerate;
+            Time.captureFramerate = 60;
             return probe;
         }
 
@@ -112,7 +129,8 @@ namespace Zjcs.Presentation.Combat
             var player = checkpoint.Units.Single(unit => unit.Id == 1);
             var cast = step.SkillCasts.Single(value => value.ActorId == player.Id && value.Slot == 0);
             Require(cast.SkillItemId == firstPromotionItemId && cast.SkillEntityId == skillId
-                && cast.Presentation != null && player.SkillState.Slots[0].ReleasedTimes == 1,
+                && cast.Presentation != null && cast.Presentation.FacingIndex == firstPromotionFacingIndex
+                && player.SkillState.Slots[0].ReleasedTimes == 1,
                 "Original equipped source, directional entity or release count differs.");
             if (firstPromotionItemId == 10066)
                 foreach (var unit in new[] { player,

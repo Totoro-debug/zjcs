@@ -194,6 +194,7 @@ namespace Zjcs.Presentation.Combat
                 if (cast.SkillEntityId == 13643) nativeChildren++;
                 if (cast.SkillEntityId != skillId) return;
                 nativeCasts++; castTime = Time.realtimeSinceStartup;
+                if (firstPromotionItemId != 0) firstPromotionCastClock = Time.time;
                 var source = controller.TryGetUnitTransform(1);
                 var renderer = source ? source.GetComponentInChildren<ProfessionNativeSceneRenderer>(true) : null;
                 Require(renderer, "Original player renderer is absent.");
@@ -332,6 +333,7 @@ namespace Zjcs.Presentation.Combat
         public void ObserveFrame(OfficialBattleRuntimeController controller)
         {
             CaptureName = null;
+            if (CaptureFirstPromotionFrame()) return;
             bool afterimageVisible = afterimages?.Observe() ?? false;
             afterimageObserved |= afterimageVisible;
             if (ValidateApproach && ordinaryStarted)
@@ -433,7 +435,8 @@ namespace Zjcs.Presentation.Combat
                 || ValidateApproach && (!approachObserved || !approachAdvanced || !approachArrived || !approachRemoved)
                 || (ValidateMovement ? !movementObserved || !movementAdvanced || !movementRemoved
                     || !loopObserved || !escapeObserved || afterimages != null && !afterimageObserved
-                    : afterimages != null ? !afterimageVisible : Time.realtimeSinceStartup - castTime < .85f)) return;
+                    : afterimages != null ? !afterimageVisible : firstPromotionItemId != 0
+                        ? Time.time - firstPromotionCastClock < .85f : Time.realtimeSinceStartup - castTime < .85f)) return;
             var source = controller.TryGetUnitTransform(1);
             if (!source || !source.GetComponentsInChildren<MeshRenderer>().Any(value => value.enabled
                 && value.isVisible && !value.forceRenderingOff
@@ -443,7 +446,9 @@ namespace Zjcs.Presentation.Combat
 
         public void Verify(FightBattleCheckpoint checkpoint)
         {
-            if (ValidateForcedMovement) Time.captureFramerate = previousCaptureFramerate;
+            if (ValidateForcedMovement || firstPromotionItemId != 0) Time.captureFramerate = previousCaptureFramerate;
+            if (firstPromotionItemId != 0) Require(firstPromotionFrameCount == FirstPromotionFrameTimes.Length,
+                "The original skill's early presentation frames were not captured.");
             if (ValidateApproach) Require(ordinaryStarted && ordinaryRemoved && ordinaryCaptured,
                 "Original ordinary skill did not start before its action and remove independently.");
             afterimages?.Verify();
