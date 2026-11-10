@@ -53,6 +53,28 @@ for ($i=0; $i -lt 6; $i++) {
 Assert-Combo ($r.Event.DamageEvents.Count -eq 6) "Original hit count differs: $($r.Event.DamageEvents.Count); $($r.Event.DamageEvents.SkillEntityId -join ',')"
 Assert-Combo ($f.Player.X -eq $casts[-1].Presentation.TargetX -and $f.Player.Y -eq $casts[-1].Presentation.TargetY+1) 'Last segment did not use its actual target fixed offset'
 Assert-Combo (@($r.Event.Movements | Where-Object { $_.Delay -gt 1.0 -and $_.Path.Count -gt 2 }).Count -eq 0) 'A teleport became a walking path'
+foreach ($movement in $r.Event.Movements) {
+    if ($movement.UnitId -ne 1) {
+        Assert-Combo (!$movement.HasDirection) 'A forced target move acquired the self-action convention'
+        continue
+    }
+    $matching = @($casts | Where-Object {
+        $castCandidate = $_
+        $definition = $catalog.CreateSkill($castCandidate.SkillEntityId, -1, 10154, 5, 20, 1, $null)
+        @($definition.SourceMoves | Where-Object {
+            $_.MoveBehaviourId -eq $movement.MoveBehaviourId -and [Math]::Abs($castCandidate.Delay + $_.Delay - $movement.Delay) -lt 0.0002
+        }).Count -gt 0
+    })[-1]
+    Assert-Combo ($movement.HasDirection -and $movement.Direction -eq $matching.Presentation.FacingIndex) 'A combo movement lost its settled fixed skill direction'
+}
+$roleUnit = New-Unit 7 1 2 2 100
+$roleUnit.Direction = 2
+foreach ($retreat in $false, $true) {
+    $roleMovement = $catalog.CreateRoleMovement($roleUnit, $retreat)
+    $roleUnit.Direction = 1
+    Assert-Combo ($roleMovement.HasDirection -and $roleMovement.Direction -eq 2 -and $roleMovement.IsRetreat -eq $retreat) 'Role approach/retreat lost creation-time direction'
+    $roleUnit.Direction = 2
+}
 # Fixed facing preserves horizontal mirroring; the next ordinary move must still
 # update it horizontally and retain it on a subsequent vertical leg.
 $moveFlags=[Reflection.BindingFlags]'NonPublic,Instance'

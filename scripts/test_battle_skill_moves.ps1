@@ -125,4 +125,39 @@ $skipEnemy = New-Unit 2 2 4 0 5000 50
 $skipResult = Invoke-Battle $skipPlayer $skipEnemy
 Assert-Move ($skipPlayer.X -eq 0 -and $skipResult.Event.Movements.Count -eq 0) 'Conditional or unsupported skill move was applied'
 
-Write-Output 'Battle skill move checks passed: pull to target, probability gating, positive distance, occupied-cell fallback and unsupported-case skipping.'
+# The skill faces east but moves west. Its direction belongs to action creation,
+# independently of path settlement, later casts and the authoritative FlipX.
+$snapshotPlayer = New-Unit 1 1 4 4 1000 100
+$snapshotPlayer.Direction = 2
+$snapshotPlayer.MoveDist = 0
+$snapshotPlayer.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
+$snapshotPlayer.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = -1 })
+$snapshotSkill = New-Skill 3006 4
+$snapshotMove = [Zjcs.Combat.Official.FightBattleSkillMove]::new()
+$snapshotMove.Distance = 2; $snapshotMove.Direction = 1; $snapshotMove.TowardsTargetPos = $false
+$snapshotSkill.SourceMoves.Add($snapshotMove)
+$snapshotPlayer.Skills.Add($snapshotSkill)
+$snapshotEnemy = New-Unit 2 2 8 4 5000 50
+$snapshotResult = Invoke-Battle $snapshotPlayer $snapshotEnemy
+$snapshotEvent = $snapshotResult.Event.Movements[0]
+Assert-Move ($snapshotEvent.HasDirection -and $snapshotEvent.Direction -eq 3) 'Self movement lost its east-facing skill direction'
+Assert-Move ($snapshotPlayer.Direction -eq 1 -and $snapshotPlayer.X -eq 2) 'Fixture did not settle the distinct westward path'
+$snapshotPlayer.Direction = 0
+Assert-Move ($snapshotEvent.Direction -eq 3) 'A later unit direction rewrote the action snapshot'
+
+$snapshotCheckpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+$snapshotCheckpoint.StageId = 1; $snapshotCheckpoint.RandomSeed = 31
+$snapshotCheckpoint.Sequence = 1; $snapshotCheckpoint.Counter = 1
+$snapshotCheckpoint.Grid = [Zjcs.Combat.Official.FightBattleGrid]::new()
+$snapshotCheckpoint.Grid.Width = 12; $snapshotCheckpoint.Grid.Height = 12
+$snapshotCheckpoint.Units.Add($snapshotPlayer); $snapshotCheckpoint.Units.Add($snapshotEnemy)
+$snapshotReceipt = [Zjcs.Combat.Official.FightBattleStepReceipt]::new()
+$snapshotReceipt.Sequence = 1; $snapshotReceipt.Counter = 1; $snapshotReceipt.Event = $snapshotResult.Event
+$snapshotCheckpoint.Receipts.Add($snapshotReceipt)
+$snapshotJson = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($snapshotCheckpoint)
+$snapshotRestored = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load($snapshotJson)
+Assert-Move ($snapshotRestored.Receipts[0].Event.Movements[0].HasDirection -and $snapshotRestored.Receipts[0].Event.Movements[0].Direction -eq 3) 'Checkpoint lost action direction'
+$legacySnapshot = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(($snapshotJson -replace '"HasDirection":true,', ''))
+Assert-Move (!$legacySnapshot.Receipts[0].Event.Movements[0].HasDirection) 'Legacy action acquired an invented direction snapshot'
+
+Write-Output 'Battle skill move checks passed: target pull, probability, positive distance, occupied-cell fallback, unsupported branches, creation-time direction, later changes, checkpoint and legacy snapshots.'

@@ -1517,7 +1517,8 @@ namespace Zjcs.Combat.Official
                         if (landing.Equals(start)) continue;
                         if (skill.MoveByTeleport)
                         {
-                            var movement = new FightBattleMovementEvent { UnitId = actor.Id };
+                            var movement = new FightBattleMovementEvent { UnitId = actor.Id,
+                                HasDirection = true, Direction = actor.Direction };
                             movement.Path.Add(start); movement.Path.Add(landing);
                             actor.X = landing.X; actor.Y = landing.Y;
                             movements.Add(movement);
@@ -1606,11 +1607,11 @@ namespace Zjcs.Combat.Official
         private bool TryMoveActor(FightBattleUnitState actor, FightGridPoint desired, int maxStep,
             List<FightBattleMovementEvent> movements)
         {
-            return TryMoveUnit(actor, desired, maxStep, movements);
+            return TryMoveUnit(actor, desired, maxStep, movements, captureDirection: true);
         }
 
         private bool TryMoveUnit(FightBattleUnitState actor, FightGridPoint desired, int maxStep,
-            List<FightBattleMovementEvent> movements)
+            List<FightBattleMovementEvent> movements, bool captureDirection = false)
         {
             FightBattleGrid grid = checkpoint.Grid;
             if (grid == null || maxStep <= 0) return false;
@@ -1620,7 +1621,8 @@ namespace Zjcs.Combat.Official
                 maxStep + 1, 0, true, actor.BodyOffsets, occupied);
             if (path == null || path.Count <= 1) return false;
             int steps = Math.Min(maxStep, path.Count - 1);
-            var movement = new FightBattleMovementEvent { UnitId = actor.Id };
+            var movement = new FightBattleMovementEvent { UnitId = actor.Id,
+                                HasDirection = captureDirection, Direction = captureDirection ? actor.Direction : 0 };
             movement.Path.Add(start);
             for (int i = 1; i <= steps; i++)
             {
@@ -2220,7 +2222,8 @@ namespace Zjcs.Combat.Official
                     var desired = new FightGridPoint(mover.X + sideX * distance + move.OffsetX,
                         mover.Y + sideY * distance + move.OffsetY);
                     int movementIndex = movements.Count;
-                    if (!TryMoveUnit(mover, desired, distance, movements)) continue;
+                    if (!TryMoveUnit(mover, desired, distance, movements,
+                        captureDirection: mover.Id == source.Id)) continue;
                     ApplyMovementAction(movements, movementIndex, move, skill);
                     return true;
                 }
@@ -2574,7 +2577,8 @@ namespace Zjcs.Combat.Official
             if (bestPath == null) return false;
             int steps = Math.Min(actor.MoveDist, bestPath.Count - 1);
             var movement = statusCatalog?.CreateRoleMovement(actor, false)
-                ?? new FightBattleMovementEvent { UnitId = actor.Id };
+                ?? new FightBattleMovementEvent { UnitId = actor.Id,
+                    HasDirection = true, Direction = actor.Direction };
             movement.Path.Add(new FightGridPoint(actor.X, actor.Y));
             for (int i = 1; i <= steps; i++)
             {
@@ -2630,7 +2634,8 @@ namespace Zjcs.Combat.Official
             if (bestPath == null) return false;
 
             var movement = statusCatalog?.CreateRoleMovement(actor, true)
-                ?? new FightBattleMovementEvent { UnitId = actor.Id };
+                ?? new FightBattleMovementEvent { UnitId = actor.Id,
+                    HasDirection = true, Direction = actor.Direction };
             movement.Path.Add(start);
             for (int i = 1; i < bestPath.Count; i++)
             {

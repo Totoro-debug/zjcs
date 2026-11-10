@@ -15,7 +15,7 @@ using Zjcs.Offline.World.NativeMap14EntityLifecycle;
 namespace Zjcs.Presentation.Combat
 {
     /// <summary>Projects settled cast inputs into the original MyFightSkill lifecycle.</summary>
-    public sealed class OfficialBattleSkillEntityPlayback : IFightHitViewServices, IServiceProvider, IECViewInjection, IDisposable
+    public sealed partial class OfficialBattleSkillEntityPlayback : IFightHitViewServices, IServiceProvider, IECViewInjection, IDisposable
     {
         private sealed class Grid : ECGridTransformData
         {
@@ -133,10 +133,12 @@ namespace Zjcs.Presentation.Combat
             positionContainer.EntitySlot = root;
             skillViews = new OfficialBattleNativeEntityLoader(root, positionContainer, scope, true,
                 PrepareSkillInstance, PrepareBoundSkill);
+            moveViews = new OfficialBattleMoveActionPlayback(root, positionContainer, scope, GetEntity);
         }
 
         public MyEntity GetEntity(EcEntityIdentifier id) =>
-            entities.TryGetValue(id, out var entity) ? entity : skillViews.GetEntity(id) ?? hitViews?.GetEntity(id);
+            entities.TryGetValue(id, out var entity) ? entity
+                : skillViews.GetEntity(id) ?? hitViews?.GetEntity(id) ?? moveViews?.GetEntity(id);
 
         public MyEntity EnsureUnit(int id, Transform transform) => BindUnit(id, transform).Entity;
 
@@ -255,8 +257,10 @@ namespace Zjcs.Presentation.Combat
             {
                 float next = float.PositiveInfinity;
                 foreach (var cast in casts) if (!cast.Removed) next = Mathf.Min(next, cast.Remaining);
+                next = Mathf.Min(next, moveViews.NextDelay);
                 float elapsed = Mathf.Min(next, remaining);
                 if (elapsed > 0f) scope.Tick(elapsed);
+                moveViews.Advance(elapsed);
                 foreach (var cast in casts) if (!cast.Removed) cast.Remaining -= elapsed;
                 remaining -= elapsed;
                 foreach (var cast in casts)
@@ -326,6 +330,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) return;
             disposed = true;
+            moveViews.Dispose();
             hitViews?.Dispose();
             hitViews = null;
             foreach (var cast in casts) if (!cast.Removed) Remove(cast);

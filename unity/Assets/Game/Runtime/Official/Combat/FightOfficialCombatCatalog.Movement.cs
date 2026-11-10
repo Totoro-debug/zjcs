@@ -41,7 +41,8 @@ namespace Zjcs.Combat.Official
         // Keep that identity in the event instead of substituting one player animation.
         public FightBattleMovementEvent CreateRoleMovement(FightBattleUnitState unit, bool retreat)
         {
-            var result = new FightBattleMovementEvent { UnitId = unit.Id, IsRetreat = retreat };
+            var result = new FightBattleMovementEvent { UnitId = unit.Id, IsRetreat = retreat,
+                HasDirection = true, Direction = unit.Direction };
             int entityId = unit.RoleEntityId > 0 ? unit.RoleEntityId
                 : unit.NpcClassId > 0 ? unit.NpcClassId
                 : unit.CharacterType == 1 ? 3100

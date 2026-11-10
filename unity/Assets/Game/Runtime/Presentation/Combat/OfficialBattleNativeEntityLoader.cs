@@ -13,10 +13,12 @@ using Zjcs.Official.StoryPlayableManager;
 namespace Zjcs.Presentation.Combat
 {
     /// <summary>Local resources and shared identities for the original entity loader.</summary>
+    internal enum OfficialBattleNativeEntityKind { Skill, Hit, MoveAction }
+
     internal sealed class OfficialBattleNativeEntityLoader : IDisposable
     {
-        [Serializable] private sealed class Catalog { public string manifest; public Binding[] hits; public Binding[] skills; }
-        [Serializable] private sealed class Binding { public int hit_entity_id; public int skill_entity_id; public string entity_resource; }
+        [Serializable] private sealed class Catalog { public string manifest; public Binding[] hits; public Binding[] skills; public Binding[] moves; }
+        [Serializable] private sealed class Binding { public int hit_entity_id; public int skill_entity_id; public int action_entity_id; public string entity_resource; }
         [Serializable] private sealed class Settings { public string manifest; public bool ECIsUseGameObjectPool; }
         private sealed class Lease : IDisposable
         {
@@ -125,6 +127,12 @@ namespace Zjcs.Presentation.Combat
         public OfficialBattleNativeEntityLoader(Transform parent, MyContainer container,
             OfflineBattleNativePlayableScope scope, bool skills,
             Action<GameObject> prepareInstance, Action<MyEntity> prepareBound = null)
+            : this(parent, container, scope, skills ? OfficialBattleNativeEntityKind.Skill
+                : OfficialBattleNativeEntityKind.Hit, prepareInstance, prepareBound) { }
+
+        public OfficialBattleNativeEntityLoader(Transform parent, MyContainer container,
+            OfflineBattleNativePlayableScope scope, OfficialBattleNativeEntityKind kind,
+            Action<GameObject> prepareInstance, Action<MyEntity> prepareBound = null)
         {
             if (!parent) throw new ArgumentNullException(nameof(parent));
             this.container = container ? container : throw new ArgumentNullException(nameof(container));
@@ -138,18 +146,22 @@ namespace Zjcs.Presentation.Combat
             if (catalog == null || catalog.manifest != "884_156692" || catalog.hits == null
                 || settings == null || settings.manifest != "884_156692")
                 throw new InvalidOperationException("Original native entity catalog/settings are unavailable.");
-            var rows = skills ? catalog.skills : catalog.hits;
+            var rows = kind == OfficialBattleNativeEntityKind.Skill ? catalog.skills
+                : kind == OfficialBattleNativeEntityKind.Hit ? catalog.hits : catalog.moves;
             if (rows == null) throw new InvalidOperationException("Original native entity catalog is unavailable.");
             foreach (var binding in rows)
             {
-                int classId = binding == null ? 0 : skills ? binding.skill_entity_id : binding.hit_entity_id;
+                int classId = binding == null ? 0 : kind == OfficialBattleNativeEntityKind.Skill
+                    ? binding.skill_entity_id : kind == OfficialBattleNativeEntityKind.Hit
+                    ? binding.hit_entity_id : binding.action_entity_id;
                 if (classId <= 0
                     || string.IsNullOrEmpty(binding.entity_resource) || resources.ContainsKey(classId))
                     throw new InvalidOperationException("Original native entity catalog contains an invalid binding.");
                 resources.Add(classId, binding.entity_resource);
             }
             usePool = settings.ECIsUseGameObjectPool;
-            entityRoot = new GameObject(skills ? "Battle native skill entities" : "Battle native hit entities");
+            entityRoot = new GameObject(kind == OfficialBattleNativeEntityKind.Skill ? "Battle native skill entities"
+                : kind == OfficialBattleNativeEntityKind.Hit ? "Battle native hit entities" : "Battle native move actions");
             entityRoot.transform.SetParent(parent, false);
             staging = new GameObject("Inactive original entity injection");
             staging.SetActive(false); staging.transform.SetParent(entityRoot.transform, false);
@@ -157,6 +169,8 @@ namespace Zjcs.Presentation.Combat
             loader = new MyFightEntityLoadHandler(bindings, bindings);
         }
         public int Count => live.Count;
+        public Transform EntitySlot => entityRoot.transform;
+
         public bool ContainsClass(int classId) => resources.ContainsKey(classId);
         public MyEntity GetEntity(EcEntityIdentifier id) => live.TryGetValue(id, out var entity) ? entity : null;
 

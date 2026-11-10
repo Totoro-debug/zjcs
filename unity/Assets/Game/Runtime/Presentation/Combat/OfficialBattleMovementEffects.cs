@@ -52,7 +52,8 @@ namespace Zjcs.Presentation.Combat
         // actual path cell. Skill effects finish naturally, as MyFightSkill does;
         // action effects stop at their cell boundary, as MyFightActionSkillMove does.
         public void Schedule(int unitId, Transform source, FightBattleStepEvent step,
-            Func<FightGridPoint, Vector3> gridToWorld)
+            Func<FightGridPoint, Vector3> gridToWorld,
+            Func<FightBattleMovementEvent, bool> nativeOwnsAction = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleMovementEffects));
             if (step?.Movements == null) return;
@@ -69,6 +70,7 @@ namespace Zjcs.Presentation.Combat
                 if (skills.TryGetValue(movement.MoveSkillEntityId, out var skill))
                     Enqueue(unitId, source, skill, cursor, -1f, gridToWorld(movement.Path[movement.Path.Count - 1]));
                 actions.TryGetValue(movement.MoveBehaviourId, out var action);
+                if (nativeOwnsAction?.Invoke(movement) == true) action = null;
                 for (int i = 1; i < movement.Path.Count; i++)
                 {
                     float duration = movement.MoveDuration >= 0f ? movement.MoveDuration : movement.MoveSpeed > 0f

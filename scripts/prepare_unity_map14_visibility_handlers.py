@@ -28,7 +28,19 @@ def build():
     a=text.index('\t\t\tILogger logger = Logger;');b=text.index('\n\t\t}',a)
     text=text[:a]+'\t\t\tUnityEngine.Debug.LogWarning("Original MyAction apply entity is absent.");'+text[b:]
     text=text.replace('MyComponent<ActionComponent, ActionComponentInfo>','MyComponent<ActionComponentData, object>')
-    text=text.replace('myContainer.GetEntity(Component.ApplyId)','((Zjcs.Official.EntityContainers.MyContainer)myContainer).GetEntity(Component.ApplyId)')
+    apply_lookup='public MyEntity myApplyEntity => myContainer.GetEntity(Component.ApplyId);'
+    if text.count(apply_lookup)!=1:raise ValueError('Review a changed original MyAction apply-entity lookup.')
+    text=text.replace('public class MyAction :','''public interface IMyActionEntityLookup
+{
+    MyEntity GetEntity(EcEntityIdentifier id);
+}
+
+public class MyAction :''')
+    text=text.replace(apply_lookup,'''public IMyActionEntityLookup EntityLookup { get; set; }
+
+\tpublic MyEntity myApplyEntity => EntityLookup != null
+        ? EntityLookup.GetEntity(Component.ApplyId)
+        : ((Zjcs.Official.EntityContainers.MyContainer)myContainer).GetEntity(Component.ApplyId);''')
     text=text.replace('[Inject]\n\tprotected ','public ').replace('MySerializable userData','object userData')
     emit(action,'MyAction',text,'Zjcs.Official.EntityActions','using Zjcs.Official.EntityLifecycle;\nusing Zjcs.Official.EntityViews;\nusing Zjcs.Official.StoryPlayables;\nusing Zjcs.Official.StoryPlayableManager;\n')
     common='using Zjcs.Official.EntityViews;\nusing Zjcs.Official.StoryPlayables;\nusing Zjcs.Official.World.Map13EntityVisibilityViews;\nusing Zjcs.Official.World.Map13EntityEvents;\nusing IEventReceiver=Zjcs.Official.World.Map13EntityEvents.IEventReceiver;\n'

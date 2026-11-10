@@ -9,6 +9,11 @@ using UnityEngine;
 
 namespace Zjcs.Official.EntityActions
 {
+public interface IMyActionEntityLookup
+{
+    MyEntity GetEntity(EcEntityIdentifier id);
+}
+
 public class MyAction : MyComponent<ActionComponentData, object>
 {
 	public GameObject myEffect;
@@ -40,7 +45,11 @@ public class MyAction : MyComponent<ActionComponentData, object>
 
 	private float mPlayTime;
 
-	public MyEntity myApplyEntity => ((Zjcs.Official.EntityContainers.MyContainer)myContainer).GetEntity(Component.ApplyId);
+	public IMyActionEntityLookup EntityLookup { get; set; }
+
+	public MyEntity myApplyEntity => EntityLookup != null
+        ? EntityLookup.GetEntity(Component.ApplyId)
+        : ((Zjcs.Official.EntityContainers.MyContainer)myContainer).GetEntity(Component.ApplyId);
 
 	public GameObject ActionEffect
 	{

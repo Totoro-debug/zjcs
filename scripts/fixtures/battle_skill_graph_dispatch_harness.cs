@@ -4,6 +4,7 @@ using Zjcs.Presentation.Combat;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.BattleNativePlayables;
 using UnityEngine;
+using System.Linq;
 
 // Records the native playback seam; compiles the actual catalog and dispatcher below it.
 namespace UnityEngine
@@ -17,7 +18,7 @@ namespace UnityEngine
         public static T Load<T>(string path) where T : class { return Assets.TryGetValue(path, out var value) ? value as T : null; }
     }
     public static class JsonUtility { public static object Data; public static T FromJson<T>(string text) { return (T)Data; } }
-    public static class Mathf { public static float Max(float a, float b) { return Math.Max(a, b); } public static float Min(float a, float b) => Math.Min(a, b); }
+    public static class Mathf { public static float Max(float a, float b) { return Math.Max(a, b); } public static float Min(float a, float b) => Math.Min(a, b); public static float Min(params float[] values) => values.Min(); public static float Sqrt(float value) => (float)Math.Sqrt(value); }
 }
 namespace Zjcs.Combat.Official
 {
@@ -26,7 +27,9 @@ namespace Zjcs.Combat.Official
     public class FightBattleCheckpoint { public List<FightBattleUnitState> Units = new List<FightBattleUnitState>(); public List<GridItem> GridItems = new List<GridItem>(); }
     public class FightBattleSkillCastPresentation { public int FacingIndex, TargetId; }
     public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId; public bool IsPetSupport; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(); }
-    public class FightBattleStepEvent { public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); }
+    public class FightBattleGridPoint { public int X,Y; }
+    public class FightBattleMovementEvent { public int UnitId,MoveBehaviourId; public bool HasDirection,HasFacing; public float Delay,MoveDuration,MoveSpeed,NativeDuration; public List<FightBattleGridPoint> Path = new List<FightBattleGridPoint>(); }
+    public class FightBattleStepEvent { public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>(); }
 }
 namespace Zjcs.Official.StoryPlayableManager
 {
@@ -74,6 +77,10 @@ namespace Zjcs.Presentation.Combat
               if (prefab != null) scope.Play(prefab, source.gameObject, target?.gameObject ?? source.gameObject, 1,
                 scope.PlayableSlot.gameObject, new Dictionary<string, object>()); }
         public void Tick(float delta) => scope.Tick(delta);
+        public bool OwnsMovement(FightBattleMovementEvent movement) => movement.HasDirection && movement.HasFacing && movement.MoveBehaviourId == 777;
+        public float MovementDuration(FightBattleMovementEvent movement) => movement.NativeDuration;
+        public void StartMovement(FightBattleMovementEvent movement, Transform source)
+        { scope.Moves.Add(movement.UnitId); scope.MoveTimes.Add(scope.Clock); }
         public void Dispose() => scope.Dispose();
     }
 }
@@ -83,6 +90,8 @@ namespace Zjcs.Offline.BattleNativePlayables
     {
         public readonly Transform PlayableSlot = new Transform("slot");
         public readonly List<int> EntitiesStarted = new List<int>();
+        public readonly List<int> Moves = new List<int>();
+        public readonly List<float> MoveTimes = new List<float>();
         private Action<GameObject, GameObject> nativeAdapter;
         public void BindNativePrefabAdapter(Action<GameObject, GameObject> adapter) { nativeAdapter = adapter; }
         public readonly List<string> Plays = new List<string>();
@@ -244,6 +253,24 @@ public static class BattleSkillGraphDispatchHarness
         Require(timed.Disposed && timed.Plays.Count == 3, "Dispose played a pending cue");
         try { queue.Tick(1); throw new Exception("Disposed queue accepted a tick"); } catch (ObjectDisposedException) {}
         try { queue.LateTick(); throw new Exception("Disposed queue accepted a late tick"); } catch (ObjectDisposedException) {}
-        Console.WriteLine("Skill graph dispatch passed: official fields/fallback, delayed ordering, equal-time stability, long-frame clock splitting, settled-dead cast and disposal.");
+        var moveScope = new OfflineBattleNativePlayableScope();
+        using (var playback = new OfficialBattleSkillGraphPlayback(catalog, moveScope, new OfficialBattleSkillEntityPlayback(moveScope)))
+        {
+            Func<int,float,bool,float,FightBattleMovementEvent> move = (unit, delay, native, duration) => new FightBattleMovementEvent {
+                UnitId=unit, Delay=delay, HasDirection=native, HasFacing=native, MoveBehaviourId=777,
+                MoveDuration=duration, NativeDuration=.75f,
+                Path=new List<FightBattleGridPoint> {new FightBattleGridPoint(),new FightBattleGridPoint{X=1}} };
+            var step = new FightBattleStepEvent { Movements = new List<FightBattleMovementEvent> {
+                move(1,0,false,.25f), move(1,0,true,.01f), move(1,0,true,.01f), move(2,.125f,true,.01f) } };
+            playback.Play(step,checkpoint,resolve);
+            Require(moveScope.Moves.Count==0,"Native movement bypassed its delay or preceding fallback movement.");
+            playback.Tick(1.5f);
+            Require(moveScope.Moves.SequenceEqual(new[]{2,1,1})
+                && moveScope.MoveTimes.SequenceEqual(new[]{.125f,.25f,1f}) && moveScope.Clock==1.5f,
+                "Native movement lost independent unit clocks, original duration, fallback ordering or long-frame splitting.");
+            playback.Play(new FightBattleStepEvent {Movements=new List<FightBattleMovementEvent>{move(1,1,true,0)}},checkpoint,resolve);
+        }
+        Require(moveScope.Moves.Count==3,"Dispose started a pending movement.");
+        Console.WriteLine("Skill graph dispatch passed: official fields/fallback, delayed ordering, equal-time stability, native/fallback movement ordering, independent unit clocks, long-frame splitting, settled-dead cast and disposal.");
     }
 }

@@ -8,8 +8,15 @@ using Zjcs.Official.StoryPlayableManager;
 namespace Zjcs.Presentation.Combat
 {
     /// <summary>Dispatches each settled skill cast into its original FightSkill prefab.</summary>
-    public sealed class OfficialBattleSkillGraphPlayback : IDisposable
+    public sealed class OfficialBattleSkillGraphPlayback : IBattleMovementActionView, IDisposable
     {
+        private sealed class ScheduledMove
+        {
+            public FightBattleMovementEvent Movement;
+            public Func<int, Transform> UnitTransform;
+            public float Remaining;
+        }
+
         private sealed class ScheduledCast
         {
             public FightBattleSkillCastEvent Cast;
@@ -22,6 +29,7 @@ namespace Zjcs.Presentation.Combat
         private readonly OfflineBattleNativePlayableScope scope;
         private readonly OfficialBattleSkillEntityPlayback entityViews;
         private readonly List<ScheduledCast> pending = new List<ScheduledCast>();
+        private readonly List<ScheduledMove> pendingMoves = new List<ScheduledMove>();
         private OfficialBattleGridEntityPlayback gridViews;
         private Action<GameObject> bindPlayerClones;
         private readonly Zjcs.Offline.ProfessionUI.EmbeddedMonsterMecanimResources embeddedMecanim;
@@ -42,6 +50,8 @@ namespace Zjcs.Presentation.Combat
                 bindPlayerClones?.Invoke(instance);
             });
         }
+
+        public bool OwnsMovement(FightBattleMovementEvent movement) => entityViews.OwnsMovement(movement);
 
         public int CatalogCount => catalog.Count;
         public OfflineBattleNativePlayableScope Scope => scope;
@@ -103,6 +113,39 @@ namespace Zjcs.Presentation.Combat
                     else pending.Insert(index, scheduled);
                 }
             }
+            var cursors = new Dictionary<int, float>();
+            if (stepEvent.Movements != null) foreach (var movement in stepEvent.Movements)
+            {
+                if (movement?.Path == null || movement.Path.Count < 2) continue;
+                cursors.TryGetValue(movement.UnitId, out float cursor);
+                float start = Mathf.Max(cursor, Mathf.Max(0f, movement.Delay));
+                float duration = 0f;
+                for (int index = 1; index < movement.Path.Count; index++)
+                {
+                    var a = movement.Path[index - 1]; var b = movement.Path[index];
+                    float dx = b.X - a.X, dy = b.Y - a.Y;
+                    duration += movement.MoveDuration >= 0f ? movement.MoveDuration
+                        : movement.MoveSpeed > 0f ? Mathf.Sqrt(dx * dx + dy * dy) / movement.MoveSpeed : .5f;
+                }
+                if (OwnsMovement(movement)) duration = entityViews.MovementDuration(movement);
+                cursors[movement.UnitId] = start + duration;
+                if (!OwnsMovement(movement)) continue;
+                var scheduled = new ScheduledMove { Movement = movement,
+                    UnitTransform = resolveTransform, Remaining = start };
+                int insert = pendingMoves.FindIndex(value => value.Remaining > start);
+                if (insert < 0) pendingMoves.Add(scheduled); else pendingMoves.Insert(insert, scheduled);
+            }
+            DispatchMoves();
+        }
+
+        private void DispatchMoves()
+        {
+            while (pendingMoves.Count > 0 && pendingMoves[0].Remaining <= 0f)
+            {
+                var value = pendingMoves[0]; pendingMoves.RemoveAt(0);
+                var source = value.UnitTransform(value.Movement.UnitId);
+                if (source != null) entityViews.StartMovement(value.Movement, source);
+            }
         }
 
         public void Tick(float deltaTime)
@@ -116,11 +159,13 @@ namespace Zjcs.Presentation.Combat
             {
                 float nextCast = pending.Count == 0 ? float.PositiveInfinity : pending[0].Remaining;
                 float nextGrid = gridViews?.NextDelay ?? float.PositiveInfinity;
-                float elapsed = Mathf.Min(nextCast, nextGrid);
+                float nextMove = pendingMoves.Count == 0 ? float.PositiveInfinity : pendingMoves[0].Remaining;
+                float elapsed = Mathf.Min(nextCast, nextGrid, nextMove);
                 if (elapsed > remaining) break;
                 if (elapsed > 0f) entityViews.Tick(elapsed);
                 remaining -= elapsed;
                 foreach (ScheduledCast value in pending) value.Remaining -= elapsed;
+                foreach (var value in pendingMoves) value.Remaining -= elapsed;
                 gridViews?.AdvanceTimers(elapsed);
                 gridViews?.DispatchDue();
                 while (pending.Count > 0 && pending[0].Remaining <= 0f)
@@ -133,8 +178,10 @@ namespace Zjcs.Presentation.Combat
                     Transform target = scheduled.UnitTransform(TargetId(scheduled.Cast));
                     Start(scheduled, source, target);
                 }
+                DispatchMoves();
             }
             foreach (ScheduledCast value in pending) value.Remaining -= remaining;
+            foreach (var value in pendingMoves) value.Remaining -= remaining;
             gridViews?.AdvanceTimers(remaining);
             entityViews.Tick(remaining);
         }
@@ -159,6 +206,7 @@ namespace Zjcs.Presentation.Combat
             if (disposed) return;
             disposed = true;
             pending.Clear();
+            pendingMoves.Clear();
             gridViews?.Dispose();
             gridViews = null;
             try { entityViews.Dispose(); }

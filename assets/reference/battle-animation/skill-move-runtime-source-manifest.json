@@ -1,0 +1,440 @@
+{
+  "manifest": "884_156692",
+  "official_sources": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightActionSkillMove.cs",
+      "sha256": "87b1e139b0c6fde0e55fc3e35dcef835d60e2339d8276a7d74de8686899b7069"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyActionBase.cs",
+      "sha256": "a8be5dfa9c0451f61b4ec7e648f326f1237bad2b28b47abdfb53a80bb26c5866"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyAction.cs",
+      "sha256": "6adf75aa0f477aab0ada42d10bd0b3ea7e8b3a77b111e02206faa7aa15e9a140"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightActionSkillMoveComponent.cs",
+      "sha256": "a9abaf1448ee70438a1a6886fc68122f6120c0404c76e7e4f1e726d1c6ef115e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightActionSkillMoveComponentInfo.cs",
+      "sha256": "7f3b3ac4aaf6a3ab128af1eae7d480b53aa9d2678369015197021dbc57a5e4da"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightMoveUtilsHandler.cs",
+      "sha256": "98f88a0ff4b1a8cf3150f5fcdf03a0a8b02afe25ca84097537de7d5b13744d26"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "sha256": "ce40db54d87030ded0a9f8a6dc95db5a3a4e46ae02bf76a9d273fe092a703d12"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Pos2d.cs",
+      "sha256": "8129206cd36eefdedf3d3d6a2a011d0c52325e35a7690a42b350ad96669fa8ea"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActionComponent.cs",
+      "sha256": "574e476645f5e9f86b9f5015ed794a2aac103df4be65f9beef9fd762107cc1c7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActionComponentImplement.cs",
+      "sha256": "157914f1971963f1679a429cc0c418ed09a62d73840f88b902938b80f0d3bf1b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActionComponentImplementBase.cs",
+      "sha256": "9c6452236344fdfbd611212e96f524ff82851dff5945800961e7f97604ce2d09"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightActionSkillMove.cs",
+      "sha256": "7dd29e60436cf5c4bbcf6a1b046925875a3cfd0406ba2d0cb848ea1bd8ea97d0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightActionSkillMove.cs.meta",
+      "sha256": "185c772cdcc46912bfce187b1132146e021dbe21297d2fe401bf66210f42da37"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyActionBase.cs",
+      "sha256": "d31e834dd31f7f0dbf5a7976e15cfe5a2ba55e38a19cd36609cffcae3c9ddacf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyActionBase.cs.meta",
+      "sha256": "46973fbcbabe648d76841e5e029f580acb687a899f9df6f28dfd147b52b1fb25"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightActionSkillMoveComponentInfo.cs",
+      "sha256": "76186e0bd5e4b74f7a7e08cc5e192e52c7eb44ff56fddb2df34728011cbd83a8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightActionSkillMoveComponentInfo.cs.meta",
+      "sha256": "0f6cd7b958e43c06d769980ada6e22ba3a7b7830eee903cf4e05c4bca6c68456"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightActionSkillMoveComponent.cs",
+      "sha256": "72c3b93aa4ba0b5b894b713255de75830abd94f08711d8acac45065d3da9aff9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightActionSkillMoveComponent.cs.meta",
+      "sha256": "8bf9c435efde1396171b7a9d880151d3d60b3bfaa78c73db2d9301d872365321"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightMovementViewMath.cs",
+      "sha256": "aef18842fe75d77d32a6ef0015a448388adbca6d5eec123bda32b30e648b6007"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightMovementViewMath.cs.meta",
+      "sha256": "0bb89748f94d8bd06717be112151e7006405fe5efe8641784c8e30e78522ecb9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/Zjcs.Official.BattleSkillPlayables.asmdef",
+      "sha256": "b3f974a8d437d06ad0e7d0985ac6047c6527599a0eb9bc0723b9a3f444aeabc4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/Zjcs.Official.BattleSkillPlayables.asmdef.meta",
+      "sha256": "cd61ff0eb66eaae7172148b238b84e15445068e0df692e74b484fbc4d6e217de"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeTerrain/Common/Pos2d.cs",
+      "sha256": "b03c06ed220bf27da5aefebcad7c8e27f73316ebe9c3accec8ee39fb78dee78b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    },
+    {
+      "path": "assets/reference/battle-rules/active-entity-configuration-source-manifest.json",
+      "sha256": "043fa0e104aa6818d4b552709f833b666453c0b287bfb7d835d3a448979dd26f"
+    }
+  ],
+  "selected_configuration_actions": [
+    10584,
+    10643,
+    10672,
+    10682,
+    10703,
+    10853,
+    10873,
+    10973,
+    11073,
+    11083,
+    11123,
+    11272,
+    11343,
+    11353,
+    11373,
+    11513,
+    11532,
+    11732,
+    11734,
+    11833,
+    12083,
+    12103,
+    12293,
+    12323,
+    12441,
+    12878,
+    13102,
+    13122,
+    13128,
+    13135,
+    13215,
+    13433,
+    13505,
+    13553,
+    13803,
+    13863,
+    13953,
+    13973,
+    13983,
+    14055,
+    15301,
+    15311,
+    15321,
+    15331,
+    15341,
+    15523,
+    15544,
+    15652,
+    15932,
+    15942,
+    15982,
+    15983,
+    16153,
+    16272,
+    16285,
+    16374,
+    16453,
+    16472,
+    16493,
+    16643,
+    16688,
+    16742,
+    16822,
+    16892,
+    16952,
+    17003,
+    17035,
+    17092,
+    17142,
+    17144,
+    17192,
+    17243,
+    17252,
+    17583,
+    17613,
+    17824,
+    17852,
+    18202,
+    18212,
+    18222,
+    18322,
+    18323,
+    18392,
+    18622,
+    18712,
+    18782,
+    19362,
+    19363,
+    19383,
+    19452,
+    19553,
+    19592,
+    19612,
+    19622,
+    19624,
+    19632,
+    19662,
+    19672,
+    19801,
+    19811,
+    19821,
+    19831,
+    19841,
+    19851,
+    19871,
+    19891,
+    19901,
+    19911,
+    19921,
+    19931,
+    19951,
+    19961,
+    19971,
+    19981,
+    19991,
+    54033,
+    54332,
+    56162,
+    56232,
+    56234,
+    56252,
+    56322,
+    56324,
+    56332,
+    56513,
+    56522,
+    56523,
+    56832,
+    56833,
+    57072,
+    57312,
+    57483,
+    57523,
+    57532,
+    57595,
+    57622,
+    57624,
+    57714,
+    57862,
+    57912,
+    58062,
+    58064,
+    58083,
+    58342,
+    58344,
+    58552,
+    58553,
+    58602,
+    58643,
+    58673,
+    58692,
+    58762,
+    58875,
+    58928,
+    58932,
+    59032,
+    59062,
+    59073,
+    59152,
+    59154,
+    59162,
+    59275,
+    59403,
+    59495,
+    59524,
+    59542,
+    59552,
+    59572,
+    59635,
+    59732,
+    59734,
+    59752,
+    59754,
+    59922,
+    59932,
+    59942,
+    59953,
+    59973,
+    60044,
+    60082,
+    61532,
+    61565,
+    61648,
+    61771,
+    61803,
+    61995,
+    62002,
+    62082,
+    62084,
+    62212,
+    62272,
+    62402,
+    62404,
+    62442,
+    62445,
+    62732,
+    62752,
+    62773,
+    63244,
+    63461,
+    63482,
+    63572,
+    63574,
+    63793,
+    63864,
+    63882,
+    63884,
+    63952,
+    64363,
+    64373,
+    64543,
+    64812,
+    64814,
+    64834,
+    64844,
+    65015,
+    68543,
+    68552,
+    68583,
+    70092,
+    70102,
+    70152
+  ],
+  "local_action_bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityActions/MyAction.cs",
+      "sha256": "1ac1ea7452f26a80a61d9526068f3120ded1e678016272ccc047ab6f3fca95bd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
+      "sha256": "84b2e0e1174383d1ad82575dc29f0fb4101fce220dff408e34fd111088de3867"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
+      "sha256": "05741a6e54b724390ef81dbc216bf2e681c4ee9d96ed14adba65edc7e3f0b030"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.Movement.cs",
+      "sha256": "ba621422b964ae8465deb3b83b113138935331c24c12c036684691fa57b8649b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/IBattleMovementActionView.cs",
+      "sha256": "f433db0c3726e48c80e27ca801783846fcbdb0837a8694f43ab0648470116834"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMoveActionData.cs",
+      "sha256": "628471d7dff701bb49be4de99964d53f318b3908ee0b8b97c4b5c5613c926582"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMoveActionPlayback.cs",
+      "sha256": "2fd4bda73dd2372d7ac0cf88b0c23528b7544664b132e648fefe414273164283"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.Movement.cs",
+      "sha256": "a05e0ebe152fe3722f8839894df2daea631a2ea919c6195e46201f305517f4ae"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs",
+      "sha256": "f3fe6f71abcf0fb91fcaa54b4983c0630898635b108b8661024145e92f95422e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs",
+      "sha256": "8a67b31003937175249f5f31599a1be026e7461d9ac9d09d8788d974abc3bc70"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs",
+      "sha256": "f915cc889a09cd77c29cab8da1f854897601d76d51075266b3a8d2c4a0754541"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
+      "sha256": "16636712389471265d8cbab03102b596f5de23790c4ec8b79805d0242db33401"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMovementEffects.cs",
+      "sha256": "0faee440aad06a4da74107eae71f25774fcf788d81861ba11546c40ca81c457a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs",
+      "sha256": "e3929f626afc52e748c30dac669d9d3dc211c50f561034593b9dad0159ca33ef"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.cs",
+      "sha256": "d2e9ac7eda55477d23cf59ae59bf5873c3a5c8d5654f69fedc5b54095db3d028"
+    },
+    {
+      "path": "scripts/test_battle_skill_moves.ps1",
+      "sha256": "d7cacb261ac8107254b27d3f2d5402256c3633da57492222017c047ecf248c36"
+    },
+    {
+      "path": "scripts/test_battle_skill_combo.ps1",
+      "sha256": "ec8fc95310c165cd36cdb48d4c76cb764c6965f144965f8861096178a34c8619"
+    },
+    {
+      "path": "scripts/test_battle_skill_graph_dispatch.ps1",
+      "sha256": "74a80adcb11c75808212003d766b040918c96ac8009b03d2aacb393ba092fb02"
+    },
+    {
+      "path": "scripts/fixtures/battle_skill_graph_dispatch_harness.cs",
+      "sha256": "c594e866ee38d0e651dab6a197d618d3e13752503e2503935e0878a0f609d5ac"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_visibility_handlers.py",
+      "sha256": "a9d04aa559bbf0e50a104cf9b0c3bd6b43b206cfbc5e1954c8413e507e8e3b46"
+    },
+    {
+      "path": "scripts/inspect_battle_action_graph_bindings.py",
+      "sha256": "a407cc239aa3a311cad5a31e66c164e26289c583370f0893d20f38870a454a68"
+    },
+    {
+      "path": "scripts/prepare_battle_skill_graph_assets.py",
+      "sha256": "453be36a6418aedd3ad9b35a982165ba2bc18202b9cdd8ed5d5e01692b510701"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_skill_move_runtime.py",
+    "sha256": "53c956ea30c502735e98cc4fbe335bb29e2ed7d2893164da1d01041c941d068a"
+  },
+  "conversion": [
+    "Original client lifecycle and per-path timer; explicit manager injection and optional host timing.",
+    "Original shared duration, speed, distance and flip calculations; Unity logging replaces the shared logger."
+  ],
+  "confirmed_offline_rules": [
+    "Self actions snapshot the settled skill direction before path settlement, preserving configured fixed direction; ordinary approach/retreat snapshot their creation-time unit direction. FlipX is independent.",
+    "For these settled paths without collision data, action lifetime is original total movement duration plus DelayDestroyTime, then original End/Remove and pooling. Forced target moves and missing collision information are not inferred."
+  ],
+  "implementation_document": "docs/features/skills.md"
+}

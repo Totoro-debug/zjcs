@@ -4,6 +4,7 @@ using System.Reflection;
 using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.ProfessionUI;
+using Zjcs.Official.BattleSkillPlayables;
 
 namespace Zjcs.Presentation.Combat
 {
@@ -18,6 +19,17 @@ namespace Zjcs.Presentation.Combat
         private int nativeCasts, nativeChildren;
         private float castTime;
         private readonly OfficialBattleAfterimageValidation afterimages;
+        private OfficialBattleSkillEntityPlayback entityViews;
+        private bool movementObserved, movementAdvanced, movementRemoved, loopObserved, escapeObserved;
+        private bool afterimageObserved, loopCaptured, movementCaptured;
+        private Vector3 movementFrom, movementTo;
+        private int approachClass;
+        private Vector3 approachFrom, approachTo;
+        private bool approachObserved, approachAdvanced, approachArrived, approachRemoved, approachCaptured;
+        private bool ValidateMovement => skillId == 11510
+            && Environment.GetEnvironmentVariable("ZJCS_NATIVE_MOVEMENT_ACCEPTANCE") == "1";
+        private bool ValidateApproach => ValidateMovement
+            && Environment.GetEnvironmentVariable("ZJCS_NATIVE_MOVEMENT_APPROACH") == "1";
         public string CaptureName { get; private set; }
 
         private OfficialBattleGraphCapabilityValidation(FightOfficialCombatCatalog catalog,
@@ -47,6 +59,7 @@ namespace Zjcs.Presentation.Combat
             enemy.MaxHpPlies = catalog.MonsterHpPliesFor(monster, 0, enemy.Level);
             OfficialBattleUnitAssembler.ApplyMonsterIdentity(catalog, enemy);
             player.X = enemy.X; player.Y = enemy.Y - 2;
+            if (probe.ValidateApproach) player.Y = enemy.Y - 6;
             string layout = Environment.GetEnvironmentVariable("ZJCS_AFTERIMAGE_LAYOUT");
             if (!string.IsNullOrEmpty(layout))
             {
@@ -110,6 +123,7 @@ namespace Zjcs.Presentation.Combat
                 .GetField("skillGraphPlayback", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(controller);
             var entities = (OfficialBattleSkillEntityPlayback)typeof(OfficialBattleSkillGraphPlayback)
                 .GetField("entityViews", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(graph);
+            entityViews = entities;
             entities.CastStarted += cast => {
                 if (cast.ActorId != 1) return;
                 if (cast.SkillEntityId == 13643) nativeChildren++;
@@ -120,12 +134,32 @@ namespace Zjcs.Presentation.Combat
                 Require(renderer, "Original player renderer is absent.");
                 renderer.OnClipApplied += (clip, name, layer, weight, time, previous, backward) => {
                     if (name == clipName && time > .04f && weight > 0) animated = true;
+                    if (ValidateMovement && weight > 0f)
+                    {
+                        if (name == "100/skill_55_2" && time > .01f) loopObserved = true;
+                        if (name == "100/skill_55_3" && time > .04f) escapeObserved = true;
+                    }
                 };
             };
         }
 
         public void ObserveStep(OfficialBattleRuntimeController controller)
         {
+            if (ValidateApproach && approachClass == 0)
+            {
+                var approach = controller.Checkpoint.Receipts.Last().Event.Movements
+                    .FirstOrDefault(value => value.UnitId == 1 && value.MoveBehaviourId != 11513);
+                if (approach != null)
+                {
+                    Require(entityViews.OwnsMovement(approach), "Ordinary approach did not bind its original action.");
+                    approachClass = approach.MoveBehaviourId;
+                    var from = approach.Path[0]; var to = approach.Path[approach.Path.Count - 1];
+                    approachFrom = entityViews.ToWorldPos(entityViews.GridToPos(
+                        new Zjcs.Official.World.NativeTerrain.Common.Pos2d(from.X, from.Y)));
+                    approachTo = entityViews.ToWorldPos(entityViews.GridToPos(
+                        new Zjcs.Official.World.NativeTerrain.Common.Pos2d(to.X, to.Y)));
+                }
+            }
             if (settled) return;
             var checkpoint = controller.Checkpoint; var step = checkpoint.Receipts.Last().Event;
             if (!step.SkillCasts.Any(value => value.ActorId == 1 && value.SkillEntityId == skillId)) return;
@@ -150,6 +184,17 @@ namespace Zjcs.Presentation.Combat
                     "Original area lost large-target cell occurrences.");
             }
             Require(player.SkillState.Slots[0].ReleasedTimes == 1, "Graph spent extra ordinary releases.");
+            if (ValidateMovement)
+            {
+                var movement = step.Movements.Single(value => value.UnitId == 1 && value.MoveBehaviourId == 11513);
+                Require(entityViews.OwnsMovement(movement) && movement.HasDirection && movement.HasFacing,
+                    "Original 11513 action or its direction/facing snapshot is unbound.");
+                var start = movement.Path[0]; var end = movement.Path[movement.Path.Count - 1];
+                movementFrom = entityViews.ToWorldPos(entityViews.GridToPos(
+                    new Zjcs.Official.World.NativeTerrain.Common.Pos2d(start.X, start.Y)));
+                movementTo = entityViews.ToWorldPos(entityViews.GridToPos(
+                    new Zjcs.Official.World.NativeTerrain.Common.Pos2d(end.X, end.Y)));
+            }
             var restored = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
             Require(restored.RandomSeed == checkpoint.RandomSeed
                 && restored.Receipts.Last().Event.SkillCasts.Count == step.SkillCasts.Count,
@@ -162,6 +207,50 @@ namespace Zjcs.Presentation.Combat
         {
             CaptureName = null;
             bool afterimageVisible = afterimages?.Observe() ?? false;
+            afterimageObserved |= afterimageVisible;
+            if (ValidateApproach && approachClass != 0 && !approachRemoved)
+            {
+                var approachingSource = controller.TryGetUnitTransform(1);
+                var approach = approachingSource.root.GetComponentsInChildren<MyFightActionSkillMove>()
+                    .FirstOrDefault(value => value.myEntity.Entity != null
+                        && value.myEntity.Entity.ClassId == approachClass
+                        && value.myApplyEntity && value.myApplyEntity.transform == approachingSource);
+                approachArrived |= Vector3.Distance(approachingSource.position, approachTo) < .01f;
+                if (approach)
+                {
+                    approachObserved = true;
+                    float travelled = Vector3.Distance(approachingSource.position, approachFrom);
+                    approachAdvanced |= travelled > .01f && travelled < Vector3.Distance(approachTo, approachFrom) - .01f;
+                    if (approachAdvanced && !approachCaptured)
+                    { approachCaptured = true; CaptureName = "native-ordinary-approach"; return; }
+                }
+                else if (approachObserved) approachRemoved = true;
+            }
+            if (ValidateMovement && settled)
+            {
+                var movingSource = controller.TryGetUnitTransform(1);
+                var active = movingSource ? movingSource.root.GetComponentsInChildren<MyFightActionSkillMove>()
+                    .Where(value => value.myEntity.Entity != null && value.myEntity.Entity.ClassId == 11513
+                        && value.myApplyEntity && value.myApplyEntity.transform == movingSource).ToArray()
+                    : Array.Empty<MyFightActionSkillMove>();
+                if (active.Length > 0)
+                {
+                    movementObserved = true;
+                    float travelled = Vector3.Distance(movingSource.position, movementFrom);
+                    float length = Vector3.Distance(movementTo, movementFrom);
+                    movementAdvanced |= travelled > .01f && travelled < length - .01f;
+                    if (movementAdvanced && !movementCaptured)
+                    { movementCaptured = true; CaptureName = "native-movement-11513"; return; }
+                }
+                else if (movementObserved && !movementRemoved)
+                {
+                    movementRemoved = true;
+                    Require(Vector3.Distance(movingSource.position, movementTo) < .01f,
+                        "Original movement End did not restore the settled grid position.");
+                }
+                if (loopObserved && !loopCaptured)
+                { loopCaptured = true; CaptureName = "native-movement-loop-11510"; return; }
+            }
             if (captured && !finisherScheduled)
             {
                 var player = controller.Checkpoint.Units.Single(value => value.Id == 1);
@@ -172,7 +261,10 @@ namespace Zjcs.Presentation.Combat
             }
             if (captured || !settled || !animated || nativeCasts != 1
                 || skillId == 13640 && nativeChildren != 2
-                || (afterimages != null ? !afterimageVisible : Time.realtimeSinceStartup - castTime < .85f)) return;
+                || ValidateApproach && (!approachObserved || !approachAdvanced || !approachArrived || !approachRemoved)
+                || (ValidateMovement ? !movementObserved || !movementAdvanced || !movementRemoved
+                    || !loopObserved || !escapeObserved || afterimages != null && !afterimageObserved
+                    : afterimages != null ? !afterimageVisible : Time.realtimeSinceStartup - castTime < .85f)) return;
             var source = controller.TryGetUnitTransform(1);
             if (!source || !source.GetComponentsInChildren<MeshRenderer>().Any(value => value.enabled
                 && value.isVisible && !value.forceRenderingOff
@@ -183,6 +275,13 @@ namespace Zjcs.Presentation.Combat
         public void Verify(FightBattleCheckpoint checkpoint)
         {
             afterimages?.Verify();
+            if (ValidateApproach) Require(approachObserved && approachAdvanced && approachArrived
+                && approachRemoved && approachCaptured, "Original ordinary approach differs: observed=" + approachObserved
+                    + ", advanced=" + approachAdvanced + ", arrived=" + approachArrived
+                    + ", removed=" + approachRemoved + ", captured=" + approachCaptured);
+            if (ValidateMovement) Require(movementObserved && movementAdvanced && movementRemoved
+                && loopObserved && escapeObserved && loopCaptured && movementCaptured,
+                "Original native movement, loop/escape action or retirement was not observed.");
             Require(settled && animated && captured && nativeCasts == 1 && checkpoint.Finished
                 && (skillId != 13640 || nativeChildren == 2), "Native graph, action, input or settlement is incomplete.");
         }

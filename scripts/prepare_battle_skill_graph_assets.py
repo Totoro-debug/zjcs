@@ -65,6 +65,28 @@ def main():
             flags=row['flags'], playables=bindings))
     print(f"SkillGraphs: audited {len(hits)} original hit view bindings", flush=True)
 
+    from inspect_battle_action_graph_bindings import inspect as inspect_actions
+    rule_entities = json.loads((ROOT / 'unity/Assets/Official/Combat/battle-rules.json').read_bytes())['entities']
+    action_ids = sorted(int(key) for key, components in rule_entities.items()
+                        if 'FightActionSkillMoveComponent' in components)
+    action_source = inspect_actions(action_ids)
+    (work / 'action-graph-binding-audit.json').write_text(
+        json.dumps(action_source, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    moves = []
+    for row in action_source['actions']:
+        action_id = row['action_entity_id']
+        if row['view']['enabled'] != 1:
+            raise ValueError(f'Review an originally disabled movement view: {action_id}')
+        entity_key = f'action:{action_id}:entity'
+        roots[entity_key] = (EXPORT_PREFIX / row['entity_prefab']).as_posix()
+        bindings = {}
+        for field, ref in row['view']['playables'].items():
+            key = f'action:{action_id}:{field}'
+            roots[key] = (EXPORT_PREFIX / ref['path']).as_posix()
+            bindings[field] = key
+        moves.append(dict(action_entity_id=action_id, entity_key=entity_key, playables=bindings))
+    print(f'SkillGraphs: audited {len(moves)} original movement action bindings', flush=True)
+
     from battle_skill_entity_prefabs import SkillEntityManagedViews, skill_entity_scripts
     managed_views = SkillEntityManagedViews(skill_entities)
 
@@ -107,7 +129,8 @@ def main():
         runtime_receipts=('track-runtime-source-manifest.json',
             'spine-clone-runtime-source-manifest.json',
             'hit-view-runtime-source-manifest.json',
-            'skill-prefab-runtime-source-manifest.json'), generator=Path(__file__),
+            'skill-prefab-runtime-source-manifest.json',
+            'skill-move-runtime-source-manifest.json'), generator=Path(__file__),
         reference_scripts={-210918009: dict(name='WwiseEventReference',
             native_asset=EVENT_ASSET,
             runtime='unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs',
@@ -151,7 +174,7 @@ def main():
             runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SkeletonRendererHighTexturePreview.cs',
             source='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SkeletonRendererHighTexturePreview.cs',
             verify_file_id_hash=True)},
-        source_scripts={**hit_entity_scripts(), **skill_entity_scripts(),
+        source_scripts={**hit_entity_scripts(), **skill_entity_scripts(), **action_entity_scripts(),
             1126251125: dict(name='MyPtSubPlayable', namespace='GameFramework',
                 source_root='game-framework-source/GameFramework', source='MyPtSubPlayable.cs',
                 target_namespace='Zjcs.Official.StoryPlayableManager',
@@ -228,12 +251,19 @@ def main():
         entry['playables'] = [dict(field=field, resource=resources[key])
             for field, key in row['playables'].items()]
         catalog['hits'].append(entry)
+    catalog['moves'] = []
+    for row in moves:
+        catalog['moves'].append(dict(action_entity_id=row['action_entity_id'],
+            entity_resource=resources[row['entity_key']],
+            playables=[dict(field=field, resource=resources[key])
+                       for field, key in row['playables'].items()]))
     write_changed(DATA, json.dumps(catalog, ensure_ascii=False, indent=2) + '\n')
     meta(DATA)
 
     proof = json.loads(RECEIPT.read_text(encoding='utf-8'))
     proof['official_entity_binding_source'] = source
     proof['official_hit_entity_binding_source'] = hit_source
+    proof['official_move_entity_binding_source'] = action_source
     proof['original_skill_managed_views'] = dict(
         registrations=managed_views.registrations, pointers=managed_views.pointer_bindings,
         schemas=managed_views.schemas.records,
@@ -265,6 +295,17 @@ def hit_entity_scripts():
              source=name + '.cs',
              runtime='unity/Assets/Game/Runtime/Official/' + folder + '/' + name + '.cs')
         for folder, entries in names.items() for name in entries}
+
+
+def action_entity_scripts():
+    from inspect_battle_hit_graph_bindings import MD4
+    import struct
+    return {struct.unpack('<i', MD4.new(('s\0\0\0' + name).encode()).digest()[:4])[0]:
+        dict(name=name, namespace='', target_namespace='Zjcs.Official.' + folder,
+             source=name + '.cs',
+             runtime='unity/Assets/Game/Runtime/Official/' + folder + '/' + name + '.cs')
+        for name, folder in (('MyAction', 'EntityActions'),
+                             ('MyFightActionSkillMove', 'BattleSkillPlayables'))}
 
 
 if __name__ == '__main__':

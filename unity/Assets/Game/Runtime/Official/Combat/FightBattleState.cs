@@ -1796,6 +1796,10 @@ namespace Zjcs.Combat.Official
         public int MoveBehaviourId;
         public int MoveSkillEntityId;
         public bool IsRetreat;
+        // Confirmed offline action direction, captured before path settlement.
+        // Missing legacy snapshots remain false and use the existing presentation.
+        public bool HasDirection;
+        public int Direction;
         public bool HasFacing;
         public bool EndFlipX;
         public float Delay;
