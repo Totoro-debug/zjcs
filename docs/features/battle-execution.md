@@ -48,7 +48,9 @@
 
 完整原技能／命中图保留 1,735 个 Wwise Event 资产引用，对应 1,734 个事件 ID；两份不同 GUID 的 `Skill_14054` 引用保持独立。`prepare_battle_native_sound_sources.py` 将原事件名称的 FNV ID 与官方 EventBankMapping 比较，并按 APK 优先次序核验 25 个映射音频包和 Minimum 包的实际 bank。事件中 1,703 份引用有一个动作、32 份有两个动作；原顺序及 1,766 个独立 Play／Stop 动作的全部字段、HIRC 原字节哈希和位置均保留，不把多动作事件展开成单个 WAV。APK ARM64 `libAkSoundEngine.so` 的两个导出版本函数及原指令确认运行库为 `2022.1.18.8567`；版本、原包及绑定哈希见[原声音来源](../../assets/reference/battle-animation/native-sound-sources-source-manifest.json)。
 
-战场状态说明窗口改用所选 884 的原生 `FightStageStatusDialog` 和 `FightStageStatusDialogItemUI` prefab，保留原层级、布局、字体字段、图标背景、动画及 `LoopVerticalScrollRect` 的原始行模板引用。迁移的两个官方类沿原 `ClearCells → dataSource → totalCount → RefillCells` 顺序绑定，复用行启用时更新内容、禁用时释放动态说明订阅。`OfficialBattleStageStatusDialogView` 负责本地目录、窗口实例字体、原显示／隐藏图及现有原生模糊遮罩的接线；原 `FightSettings.FightStageStatusDescTypes` 仅把 26030 指定为倍率动态说明，准备阶段、倍率变化通知、三位小数与原百分比格式分别沿原 provider 分支处理。原生窗口来源为 884，共用模糊遮罩保留独立 854 来源，既有状态图标／文案继续使用已追溯的 HUD 目录；不把它们标为同版资源。原对象、绑定、脚本与输出哈希见[战场状态窗口来源](../../assets/reference/battle-hud/stage-status-native-source-manifest.json)。顶部状态条仍沿既有 HUD 实现，不属于本次原生窗口转换范围。
+战场状态说明窗口改用所选 884 的原生 `FightStageStatusDialog` 和 `FightStageStatusDialogItemUI` prefab，保留原层级、布局、字体字段、图标背景、动画及 `LoopVerticalScrollRect` 的原始行模板引用。迁移的两个官方类沿原 `ClearCells → dataSource → totalCount → RefillCells` 顺序绑定，复用行启用时更新内容、禁用时释放动态说明订阅。`OfficialBattleStageStatusDialogView` 负责本地目录、窗口实例字体、原显示／隐藏图及现有原生模糊遮罩的接线；原 `FightSettings.FightStageStatusDescTypes` 仅把 26030 指定为倍率动态说明，准备阶段、倍率变化通知、三位小数与原百分比格式分别沿原 provider 分支处理。原生窗口来源为 884，共用模糊遮罩保留独立 854 来源，既有状态图标／文案继续使用已追溯的 HUD 目录；不把它们标为同版资源。原对象、绑定、脚本与输出哈希见[战场状态窗口来源](../../assets/reference/battle-hud/stage-status-native-source-manifest.json)。
+
+顶部状态条从同版 `FightMainPanel/Content/Top/FixedContent/StageStatus` 分支恢复，31 个原对象、15 个脚本字段组件与 `mSlot／mStatusUIItem／mStatusBack／mBtn` 引用保持原样；`FightMainPanelStageStatus` 和 `FightStatusUIItem` 负责原模板克隆、去重后的状态顺序、图标／背景、零层数隐藏及原按钮开窗，`HorizontalLayoutGroupJSZX` 与 `ContentSizeFitter` 按原参数排列和定宽，不再手动设置图标位置。状态条挂接前已核对保留的 854 HUD 的 Content、Top、FixedContent 与 884 原父层级的锚点、位置、尺寸、缩放及旋转一致，来源单独记录。原主面板入场图中的状态条滑入和透明度曲线也逐键与 884 原动画核对；迁移宿主把原动画目标重新绑定到原生子树，沿原播放时钟与插值执行。`OfficialBattleStageStatusStripView` 只接本地目录、字体及经原事件引用解码的点击音；本地宿主拥有克隆行对象，状态更新或禁用时释放行，重新启用时按当前检查点重建。
 
 ## 完整还原部分
 
@@ -173,7 +175,7 @@
 
 - `test_battle_shared_stacks.ps1` 已通过原始两组上限、首次个体上限、2＋2＋1 部分分配、零额度不创建、跨状态增减／结束再分配、不同角色隔离和真实检查点恢复验证。共享层数新增分支已通过 Unity 导入编译、`Zjcs.Editor.ProjectTools.Validate` 与 Play Mode 同组规则检查；Windows Mono Player 也使用打包的原配置通过同组规则与当前检查点恢复检查；尚未覆盖正式战斗交互，暂不作为整个战斗功能完成结论。
 
-- 原生战场状态说明窗口已通过 Unity 导入编译、`Zjcs.Editor.ProjectTools.Validate`、静态元数据检查，以及内置屏 Play Mode 和实际 Windows Mono Player 验证。永久入口 `Zjcs.Editor.BattleStageStatus.OfficialBattleStageStatusAcceptance.Run` 在受控公共 HUD 上使用模拟指针打开原窗口，以 14 项状态检查原滚动列表的行复用与滚轮、准备说明、默认倍率 1 的原无衰减说明、动态说明更新、原显示／隐藏动画、模糊遮罩关闭和重新打开；已查看编辑器和 Player 的实际画面。完整资源构建与后续代码增量构建通过，验证前后用户存档文件哈希一致。该验证未经过完整战斗控制器流程，未覆盖顶部状态条原生化、全部战斗 HUD、声音实际输出或各模式整合；Player 启动仍有既有帧呈现诊断。本模块尚未更新正式发布目录，不能作为整个战斗功能完成结论。
+- 原生战场状态条和说明窗口已通过 Unity 导入编译、`Zjcs.Editor.ProjectTools.Validate`、静态元数据检查，以及内置屏 Play Mode 和实际 Windows Mono Player 验证。永久入口 `Zjcs.Editor.BattleStageStatus.OfficialBattleStageStatusAcceptance.Run` 在受控公共 HUD 上检查原滑入／淡入曲线绑定后的起点、中段与终点，14 项状态的原布局及宽度、重复状态去重、缩减至 3 项、清空后的图标／背景移除、禁用后重新启用及未变化数据的行对象保留；模拟指针从原状态条打开说明窗口，检查原滚动行复用与滚轮、准备说明、默认倍率 1 的原无衰减说明、动态说明更新、原显示／隐藏动画、模糊遮罩关闭和重新打开。已查看编辑器及 Player 的动画中段、状态条和窗口实际画面。完整资源构建与后续代码增量构建通过，验证前后用户存档文件哈希一致。该验证未经过完整战斗控制器或正式页面入口，未驱动完整准备倒计时及场景数据，也未覆盖其他战斗 HUD、声音实际输出或各模式整合；构建仍有既有缺失脚本／URP shader 诊断，Player 启动仍有既有帧呈现诊断。本模块尚未更新正式发布目录，不能作为整个战斗功能完成结论。
 
 ## 代码与来源入口
 

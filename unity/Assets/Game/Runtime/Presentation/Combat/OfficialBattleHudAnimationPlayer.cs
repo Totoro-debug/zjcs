@@ -78,6 +78,19 @@ namespace Zjcs.Presentation.Combat
             }
         }
 
+        internal void BindNativeSubtree(string path, Transform instance)
+        {
+            string prefix = path + "/";
+            foreach (string key in new List<string>(targets.Keys))
+            {
+                if (key != path && !key.StartsWith(prefix, StringComparison.Ordinal)) continue;
+                Transform target = key == path ? instance : instance.Find(key.Substring(prefix.Length));
+                if (target == null) throw new InvalidOperationException("Original HUD animation target is missing: " + key);
+                targets[key] = target.gameObject;
+            }
+            foreach (Playback playback in playbacks) Sample(playback, playback.elapsed);
+        }
+
         // Supplement omitted original channels without changing the shared
         // serialized HUD or giving the channel a second playback clock.
         internal void RestoreCurve(string ownerPath, string animationName,

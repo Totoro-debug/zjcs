@@ -22,7 +22,7 @@
       "pendingBindings": {},
       "output": "FightStageStatusDialog.json",
       "nativeMeta_sha256": "19eb3e56dea781286fb468261170c93538a6f953abb3c6651cbaf1e37d9a812f",
-      "output_sha256": "5851bb5bff6d293118f85f80cc728ebb5f92f781257a1c08b6da61627b5ed16f"
+      "output_sha256": "9d399a72778def0f24844b5ebf0db0934993e56ce4f90c258ea0f55ed82dea6d"
     },
     {
       "name": "FightStageStatusDialogItemUI",
@@ -45,7 +45,38 @@
       "pendingBindings": {},
       "output": "FightStageStatusDialogItemUI.json",
       "nativeMeta_sha256": "62a227309d7e0585c1aaca31e69664fa7ed380234a1e0570372131b105026d54",
-      "output_sha256": "c48d3c950d808f41aa5bb4affdf70bbdc30123b340b3a7b9570318754e04b4c2"
+      "output_sha256": "e0da6cbb5f7f55c5a089ad50ffd1a024ab7a5bc6190b1ae6b89e810a03a17002"
+    },
+    {
+      "name": "StageStatus",
+      "originalRoot": "cab-af668be24e8d18043bffc26c8f701a1f:-567942336766484324",
+      "originalSource": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightmainpanel_fightmainpanel.bundle",
+        "bundle_hash": "255543441ba4e6f9b18441d1a3efea72",
+        "path_id": "-567942336766484324",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/255543441ba4e6f9b18441d1a3efea72.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 28251,
+        "bundle_sha256": "d19692dcc1dbbe68948fb814a00814805f1290fd018e6fdab168b647755d9f8f"
+      },
+      "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Fight/FightMainPanel/FightMainPanel.prefab",
+      "native_sha256": "2d310245dd0abc2d3a28703bf9b86847fafd4c66039f4ed3fe04c08216bf4fc1",
+      "mapped_objects": 31,
+      "recovered_components": 15,
+      "unresolved": 0,
+      "pendingBindings": {},
+      "output": "StageStatus.json",
+      "subtree": {
+        "original_parent": {
+          "fileID": 224168105826085154
+        },
+        "detached_parent": {
+          "fileID": 0
+        }
+      },
+      "nativeMeta_sha256": "b6434cdabc4a77129b338ef9a09197c4a83149e5e8594fbfb217527529b6cf32",
+      "output_sha256": "5f0161dc081ea8037def12200e79e700ed95257d58dd12bf4f74ae53a5e4c33f"
     }
   ],
   "inputs": {
@@ -55,10 +86,15 @@
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c",
     ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-textures/source-manifest.json": "095eb422b8a241e6468abd81940e22aff9ad22f89bc78161dbdba8bd1f45b3b0",
     ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/source-manifest.json": "09b81e5260175a1524a2178d37bea2b78752bdc85f130751e2d95398171fbe0b",
+    "unity/Assets/Official/Combat/HUD/panels-runtime.json": "a8a0d36b8cda8798fbd0f3489b96c0fda8c4b7f8edd4d16bc7ac6e77c3da284e",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Fight/FightMainPanel/FightMainPanel_Show.anim": "95f7be88e1a9e00c70992cfe45e16fd7eed97d02133d258688a199598b697226",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Fight/FightMainPanel/FightMainPanel_Show.anim.meta": "c1a1692449befc3b6f868db6be90750f4a6ff0acdd155b6c2f5436b2a5843eba",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Fight/StageStatus/FightStageStatusDialog.prefab": "f63d4af4e435b747bef9ac17781f3b4b91034291f9e466fa64471b2e4305c98a",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Fight/StageStatus/FightStageStatusDialog.prefab.meta": "19eb3e56dea781286fb468261170c93538a6f953abb3c6651cbaf1e37d9a812f",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Fight/StageStatus/FightStageStatusDialogItemUI.prefab": "c7f6dec69ffe09cac8fc8c74a57c1c943c99e91782a278c50c20ebc48513a113",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Fight/StageStatus/FightStageStatusDialogItemUI.prefab.meta": "62a227309d7e0585c1aaca31e69664fa7ed380234a1e0570372131b105026d54",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Fight/FightMainPanel/FightMainPanel.prefab": "2d310245dd0abc2d3a28703bf9b86847fafd4c66039f4ed3fe04c08216bf4fc1",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Fight/FightMainPanel/FightMainPanel.prefab.meta": "b6434cdabc4a77129b338ef9a09197c4a83149e5e8594fbfb217527529b6cf32",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/UIDialog_Show_0.anim": "b51482cc68e10cb659e2eb690eef592ce64cce1fca63075b9646249ccfbb9cfc",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/UIDialog_Hide_0.anim": "0c08b977485b654e9f17da6fa62fe36aec7b02b13123ca5a5917e89f333f5815",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/BG/BG_Atlas/ImgBg_PopUps_0.asset": "25b405600503167d832ac49a9b2c3fe622469789910c532e5eea301ab24b05da",
@@ -70,6 +106,7 @@
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgList_Bg.asset": "5dde3090017010ed1769f2f1ae3997eb1cb82493f0d3d8c60d0ebebe7b1b32d1",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Props/Buff_Atlas/BG_Abnormal.asset": "3370652d86bd81b4d0b68d821ab68ae9d66bae954457ee1f3159d9f77f4808b6",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Props/Buff_Atlas/Abnormal_Confusion.asset": "9c1c30c4eb68a6fcae5fba25a8b56db2f816c00dbe698b38240003e86e034503",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Game/Game_Atlas/ImgBuff.asset": "6b29e7cceb599bb52de416b136e7de8835f61d8019652819f4cf985f06e5100c",
     ".tools/source-packages/WwiseBnk/wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365",
     ".tools/source-packages/WwiseBnk/wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile": "a7e72b9478ce455a7ef12974f16e3f78e684ded497b7750f7901dacb66eacfad",
     "unity/Assets/Official/Skills/skill-ui.json": "365560c582ccfc8e68f195a7bb2faa82d6f8566fd5a8dc79d35fa74efb7a767c",
@@ -83,6 +120,8 @@
     ".tools/source-packages/current/884_156692/official-code/client-source/FightStageStatusDialog.cs": "4fcbb946520a482839e689b97e0b045f76c7667c43c82943d913fbba0a836d1c",
     ".tools/source-packages/current/884_156692/official-code/client-source/FightStageStatusDialogItemUI.cs": "92e27e35acb5ded3160e304a422f51104b69b04495d5d48c000ac09803c0e6ab",
     ".tools/source-packages/current/884_156692/official-code/client-source/FightMainPanelStageStatus.cs": "ce8d724ad37abbf36331351fdedf6c08b4f81cce5c6576c1e4caf465694dc229",
+    ".tools/source-packages/current/884_156692/official-code/client-source/FightStatusUIItem.cs": "8ac8766c247ffcdf79946540a676973cecfc2070547123d1a6e0db22d0b2ebf1",
+    ".tools/source-packages/current/884_156692/official-code/client-source/FightStatusItemBase.cs": "a2eb4b8d0431eee2bab87be95e599e4d4e87371c1f20103c66efd3e4cd856143",
     ".tools/source-packages/current/884_156692/official-code/client-source/FightStatusDescProvider.cs": "a9febdb13990c60c929e53334edefc9a5d6cc73848a8813f1cf82e4967552a76",
     ".tools/source-packages/current/884_156692/official-code/client-source/FightStatusPropsScaleFactorDescProvider.cs": "5128d94280b8ffaf70aac578961bd3c5bd6ed135e82e972d30a4c92a5bc5679b",
     ".tools/source-packages/current/884_156692/official-code/client-source/IFightStatusDescUpdatable.cs": "67a7091b1753fd1d5a4db69bc3f6ba302741ba216d06a484de3d68eeeaabb56d",
@@ -122,7 +161,7 @@
         "pendingBindings": {},
         "output": "FightStageStatusDialog.json",
         "nativeMeta_sha256": "19eb3e56dea781286fb468261170c93538a6f953abb3c6651cbaf1e37d9a812f",
-        "output_sha256": "5851bb5bff6d293118f85f80cc728ebb5f92f781257a1c08b6da61627b5ed16f"
+        "output_sha256": "9d399a72778def0f24844b5ebf0db0934993e56ce4f90c258ea0f55ed82dea6d"
       },
       {
         "name": "FightStageStatusDialogItemUI",
@@ -145,12 +184,44 @@
         "pendingBindings": {},
         "output": "FightStageStatusDialogItemUI.json",
         "nativeMeta_sha256": "62a227309d7e0585c1aaca31e69664fa7ed380234a1e0570372131b105026d54",
-        "output_sha256": "c48d3c950d808f41aa5bb4affdf70bbdc30123b340b3a7b9570318754e04b4c2"
+        "output_sha256": "e0da6cbb5f7f55c5a089ad50ffd1a024ab7a5bc6190b1ae6b89e810a03a17002"
+      },
+      {
+        "name": "StageStatus",
+        "originalRoot": "cab-af668be24e8d18043bffc26c8f701a1f:-567942336766484324",
+        "originalSource": {
+          "bundle": "defaultpackage_assets_prefabs_ui_fight_fightmainpanel_fightmainpanel.bundle",
+          "bundle_hash": "255543441ba4e6f9b18441d1a3efea72",
+          "path_id": "-567942336766484324",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/255543441ba4e6f9b18441d1a3efea72.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 28251,
+          "bundle_sha256": "d19692dcc1dbbe68948fb814a00814805f1290fd018e6fdab168b647755d9f8f"
+        },
+        "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Fight/FightMainPanel/FightMainPanel.prefab",
+        "native_sha256": "2d310245dd0abc2d3a28703bf9b86847fafd4c66039f4ed3fe04c08216bf4fc1",
+        "mapped_objects": 31,
+        "recovered_components": 15,
+        "unresolved": 0,
+        "pendingBindings": {},
+        "output": "StageStatus.json",
+        "subtree": {
+          "original_parent": {
+            "fileID": 224168105826085154
+          },
+          "detached_parent": {
+            "fileID": 0
+          }
+        },
+        "nativeMeta_sha256": "b6434cdabc4a77129b338ef9a09197c4a83149e5e8594fbfb217527529b6cf32",
+        "output_sha256": "5f0161dc081ea8037def12200e79e700ed95257d58dd12bf4f74ae53a5e4c33f"
       }
     ],
     "additional_bundles": [
       "defaultpackage_assets_prefabs_ui_fight_stagestatus_fightstagestatusdialog.bundle",
-      "defaultpackage_assets_prefabs_ui_fight_stagestatus_fightstagestatusdialogitemui.bundle"
+      "defaultpackage_assets_prefabs_ui_fight_stagestatus_fightstagestatusdialogitemui.bundle",
+      "defaultpackage_assets_prefabs_ui_fight_fightmainpanel_fightmainpanel.bundle"
     ]
   },
   "resources": {
@@ -453,6 +524,47 @@
         "index_sha256": "eaf3ce067c7d7b66420a4f84c79f06c166755e17e1a9c1ecf6735885ce8d3545"
       }
     },
+    "cab-1c39c726b931a96a738348bad4b8625f:-8834430803358793438": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "-8834430803358793438",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bff6cee5399419c3e7b7cdd5d1d7d051.bundle",
+        "raw_size": 589349,
+        "raw_sha256": "421595d6414dbee3c736583a0ab27c2741edf3893334b4b7769a0b245c1ec625"
+      },
+      "type": "SpriteAtlas",
+      "original_sha256": "9cf87bbe03da43e5e58cb6599e48e937b00e35975c0df68578a5dfcc8e677971",
+      "usage": "Packed sprite render data"
+    },
+    "cab-1c39c726b931a96a738348bad4b8625f:-2321075986142836405": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "-2321075986142836405",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bff6cee5399419c3e7b7cdd5d1d7d051.bundle",
+        "raw_size": 589349,
+        "raw_sha256": "421595d6414dbee3c736583a0ab27c2741edf3893334b4b7769a0b245c1ec625"
+      },
+      "type": "Sprite",
+      "original_sha256": "f1b50f10386426944c1d5b1fca157bedef2d22ffda8e3f7f6ec6d901eeb363a9",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Game/Game_Atlas/ImgBuff.asset",
+      "output": "Image/UI/Game/Game_Atlas/ImgBuff.asset",
+      "guid": "2fe0d7208dce905c0d679c43298d5af8",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
     "cab-919f7bfeb57d2ef24dceebf11e1b4624:-7905913111627402023": {
       "source": {
         "bundle": "defaultpackage_assets_image_ui_bg.bundle",
@@ -572,6 +684,26 @@
       "output": "Converted/ff02f153ecc73798.asset",
       "guid": "3c0778e94d4a2beff5a244db8c318575",
       "geometry": null
+    },
+    "cab-1c39c726b931a96a738348bad4b8625f:528214093136511266": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "528214093136511266",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bff6cee5399419c3e7b7cdd5d1d7d051.bundle",
+        "raw_size": 589349,
+        "raw_sha256": "421595d6414dbee3c736583a0ab27c2741edf3893334b4b7769a0b245c1ec625"
+      },
+      "type": "Texture2D",
+      "original_sha256": "a82d6c1baea8036a3aa9288404963a045e56780737bbf91d1a035bd549b18a50",
+      "native_path": null,
+      "output": "Converted/8b719099802987ae.asset",
+      "guid": "d58151587e9a10d2d0b42ea177ab579d",
+      "geometry": null
     }
   },
   "scripts": {
@@ -584,6 +716,36 @@
       },
       "sha256": "99a73c950330a27ca9a3ccce31905c4c8aef70deba9e76c8fd377535aded9cef",
       "meta_sha256": "b3800ddfd9284bb2c13282b37175e83c6b21673564bc1683db546fc6cd6e2d38"
+    },
+    "NoDrawingRayCast": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/NoDrawingRayCast.cs",
+      "sha256": "4bd9084774d21b8a2b3bcde63358a0f1d4143c719172cf38c508c23d4b00ce57",
+      "meta_sha256": "5e7d19cee4ab59b784b51609205c2de4b78365584e30f1b8128de85bf5aab8e4",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "ca63bc8db6d14902aadb5682859d849b",
+        "type": 3
+      }
+    },
+    "ButtonSound": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldButtonSound.cs",
+      "sha256": "7f036dd701cc8f2ecdf9d45c6a14669b2863bb6a80a47bd1ee9efce04838c58e",
+      "meta_sha256": "e0206e2f91719f5c462d3975621de510f269a14d6a3d9eacd00d086326933b9a",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "7ca1062a147dbcee6f3b4734289d7e9a",
+        "type": 3
+      }
+    },
+    "TMPro.TMPEffect": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeText/TMPEffect.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "3e2d40fcb3febb5d237c6eaab0dd385a",
+        "type": 3
+      },
+      "sha256": "a91bca648f40bde3666d2d3f9bacf31edce18055bee1d35f590f27c510bef9da",
+      "meta_sha256": "af602f224b9bf014dc051480db5d18c7443115793fea4406cb9781abf643fcd3"
     },
     "TMPro.TextMeshProUGUI": {
       "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshProUGUI.cs",
@@ -604,6 +766,16 @@
       },
       "sha256": "4944761e316e6c3e6053507283f4c1b310dd47312830346ef7efc4715ac403af",
       "meta_sha256": "788d1b900702d38deac8b40940ddb3f065752ee2a1bbb9714dc2a63c6b669e12"
+    },
+    "UnityEngine.UI.Button": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Button.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "4e29b1a8efbd4b44bb3f3716e73f07ff",
+        "type": 3
+      },
+      "sha256": "e8f00d2c3b759c08408c97c75084e065a2a539662783b7f5835fae5d937e9e26",
+      "meta_sha256": "4430ccd81a742991bc19d4d0d230d7cc8e3c928673e3d98ba1d944f27a673415"
     },
     "UnityEngine.UI.GraphicRaycaster": {
       "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/GraphicRaycaster.cs",
@@ -712,6 +884,26 @@
       "pointer": {
         "fileID": 11500000,
         "guid": "eece6f4dd76e76c81f8b81898ec33320",
+        "type": 3
+      }
+    },
+    "FightMainPanelStageStatus": {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStageStatusUI/FightMainPanelStageStatus.cs",
+      "sha256": "55eca72d480c513eb5a2f7cef636b3325f3d9dd42b4609be1fb620a9654701af",
+      "meta_sha256": "ba014960a818f5f591abace2a838c3ee41ccaff61e4cc86c6ef53bdd7dab32d7",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "30831ecd68dd3f9d265036e558d282c1",
+        "type": 3
+      }
+    },
+    "FightStatusUIItem": {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStageStatusUI/FightStatusUIItem.cs",
+      "sha256": "69b7f03009a1a6c36a904eadd5f2d385a36b497fc0033bcd76d3130f0c182a85",
+      "meta_sha256": "5f53c36e10d33acc30da2744ed30ade83e6fc95bd16daf338da024721f412a98",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "f9caae82cf93e356b0fc2cfba9336f10",
         "type": 3
       }
     },
@@ -854,6 +1046,64 @@
         ".tools\\wwiser\\wwiser.py": "6a12fb9ba8ae3dc0724bfdcbf1ab1657e39e9c60e6bea091275cf044e3267323",
         ".tools\\vgmstream\\vgmstream-cli.exe": "10fb0691538d3133f0115a071f89775fc99f32210b7e5991cfc3c2869247e4b2"
       }
+    },
+    "cab-8ede2c00df79c3aff9bab2859b047085:5924382417553736613": {
+      "event": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -1230300647802800322
+        },
+        "m_Name": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3",
+        "objectName": "Main_Cursor_Normal",
+        "id": 3772241779,
+        "guid": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3"
+      },
+      "original_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
+      "source": {
+        "bundle": "defaultpackage_assets_wwise_scriptableobjects_event.bundle",
+        "bundle_hash": "d0ea86beaa052471f6138a9bddaa19f0",
+        "path_id": "5924382417553736613",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/d0ea86beaa052471f6138a9bddaa19f0.bundle",
+        "raw_size": 440942,
+        "raw_sha256": "c4009d466fcf8199fd5c4b7ba92f9915f0509ced7ea74c28ddec8b4867a6970a"
+      },
+      "bank": {
+        "id": 3844515483,
+        "language": 0,
+        "path": "Audio/Banks/wwisebnk_assets_wwisedata_android_minimum_pck.rawfile/3844515483-0.bnk",
+        "sha256": "caebe0a00e8b21f1fcdacd3a1a9c24beca84d9b1c04e71f60318217e30c3381c"
+      },
+      "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+      "txtp": "../banks/3844515483.bnk #s2 #i  #v -6.0dB  ##80286812.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0020-event.txtp\n# - banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[20] 3772241779\n#\n#     CAkActionPlay[19] 1026573382\n#\n#       CAkSound[1] 983794440\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 80286812\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n",
+      "gain_db": -6.0,
+      "media_id": 80286812,
+      "media_source": null,
+      "pcm": {
+        "channels": 2,
+        "rate": 48000,
+        "frames": 7200,
+        "sample_width": 2
+      },
+      "output": "Audio/Main_Cursor_Normal.wav",
+      "output_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+      "pointer": {
+        "fileID": 8300000,
+        "guid": "a349287c39df984af5f51e2338d53e9f",
+        "type": 3
+      },
+      "tools": {
+        ".tools\\wwiser\\wwiser.py": "6a12fb9ba8ae3dc0724bfdcbf1ab1657e39e9c60e6bea091275cf044e3267323",
+        ".tools\\vgmstream\\vgmstream-cli.exe": "10fb0691538d3133f0115a071f89775fc99f32210b7e5991cfc3c2869247e4b2"
+      }
     }
   },
   "installed": {
@@ -884,6 +1134,12 @@
     "unity/Assets/Official/Combat/StageStatusUI/Image/ItemIcon/Props/Buff_Atlas/Abnormal_Confusion.asset.meta": "b7a905d1b2619efc6e947f56db22cb0f83323476a8716723abf28740dbc1f6b4",
     "unity/Assets/Official/Combat/StageStatusUI/Resources/Combat/StageStatusUI/FightStageStatusDialogItemUI.prefab": "50beec9172250f9cfbf027f8aaf98b0a98394c405c212f1b0377eb813b53d7d6",
     "unity/Assets/Official/Combat/StageStatusUI/Resources/Combat/StageStatusUI/FightStageStatusDialogItemUI.prefab.meta": "de1fb11fbae8db1cec65a5351b8b489182e7f45d8d181ab3339574a66a88fc91",
+    "unity/Assets/Official/Combat/StageStatusUI/Image/UI/Game/Game_Atlas/ImgBuff.asset": "0b85ec5d9f73419082c173c684d144228ba0cd155d11617d2d6c8004d158dba0",
+    "unity/Assets/Official/Combat/StageStatusUI/Image/UI/Game/Game_Atlas/ImgBuff.asset.meta": "99f59afc3a20280307f2a7609362550c53c9d7124ea741c4eb72418175af85a6",
+    "unity/Assets/Official/Combat/StageStatusUI/Image/UI/Game/Game_Atlas.meta": "c093908d79107e63b8b4799a03b209091c9936122ea606e8d9bd13f12b5e15ce",
+    "unity/Assets/Official/Combat/StageStatusUI/Image/UI/Game.meta": "3e685081a9df4df9ec7707b629cae0508d95cc48323f053b80a3f513a847b90a",
+    "unity/Assets/Official/Combat/StageStatusUI/Resources/Combat/StageStatusUI/StageStatus.prefab": "978e88057c95de99afaf6ecb0d834d56f908af0c5bd27c9b3cf6918df1e2e150",
+    "unity/Assets/Official/Combat/StageStatusUI/Resources/Combat/StageStatusUI/StageStatus.prefab.meta": "1aa598e4fae84193b15cedf04ecfb7af3dc2406d6945bdb17ff26bab1d50fd61",
     "unity/Assets/Official/Combat/StageStatusUI/Resources/Combat/StageStatusUI/texts.json": "75e364e1f7a17c32ec5d6ae2ff28121be554c73d9025c91fc2e2193d276a0a1c",
     "unity/Assets/Official/Combat/StageStatusUI/Resources/Combat/StageStatusUI/texts.json.meta": "cec1eefb910682ee72c90c2cc90b42c03ceb2584c0d1f3d81f852a7def45c606",
     "unity/Assets/Official/Combat/StageStatusUI/Converted/ff02f153ecc73798.asset": "e8dd8cf707bffef9dbee5f28254ffc01032d6e10169a19e193b490b33063adf8",
@@ -926,6 +1182,11 @@
       "meta_sha256": "bfba9a13f14a913378c0e6b0676b79b4412528eb37daf16c12c51351c9522ec5",
       "guid": "043f1724fc36e6889dc752d46ef20e9e"
     },
+    "unity/Assets/Official/Partners/UI/Card/Audio/Main_Cursor_Normal.wav": {
+      "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+      "meta_sha256": "8f9ab35bdabe4e299e08971087abe7052acd77da183cb640c1e58a84a1893ba7",
+      "guid": "a349287c39df984af5f51e2338d53e9f"
+    },
     "unity/Assets/Official/Partners/UI/FriendshipDialog/Converted/2d18f5c143cd7b36.asset": {
       "sha256": "165174c8f2c1cfd663f84abbe4c4d18ac04d4e3748424dd98948a04c5ef983af",
       "meta_sha256": "54d049f4629c66a8326345402c88d9fbebd7a519ca01c67aebdc94a74ed7a236",
@@ -950,6 +1211,11 @@
       "sha256": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446",
       "meta_sha256": "72b156950e249ca94ae8df0294acf646dfd1ccf163fc31211826fe6343664471",
       "guid": "b40761794afa424fcfa0a6d493b5c729"
+    },
+    "unity/Assets/Official/DailyChallenges/UI/ResultActions/Converted/8b719099802987ae.asset": {
+      "sha256": "97c99f3b981f77421e75c75374ce143233d8e4dd58e897b1d9c8ffd5bab8909a",
+      "meta_sha256": "28c883d54f0ff24850444e7e1d8bbed5b83a81eb00e0d6194cc096ce076ecc0e",
+      "guid": "d58151587e9a10d2d0b42ea177ab579d"
     }
   },
   "variant_guids": {
@@ -960,24 +1226,243 @@
     "manifest": "854_156383",
     "source": "unity/Assets/Official/Skills/skill-ui.json"
   },
-  "generator_sha256": "e283fbd88e13aee2b177626711e0544639ad4dcd61416fc518fa5b8c4fafedcd",
+  "retained_stage_strip_parent": {
+    "manifest": "854_156383",
+    "source": "unity/Assets/Official/Combat/HUD/panels-runtime.json",
+    "matched_original_ancestors": [
+      {
+        "path": "/FightMainPanel/Content",
+        "fields": {
+          "m_AnchorMin": [
+            0,
+            0
+          ],
+          "m_AnchorMax": [
+            0,
+            0
+          ],
+          "m_AnchoredPosition": [
+            0,
+            0
+          ],
+          "m_SizeDelta": [
+            0,
+            0
+          ],
+          "m_Pivot": [
+            0,
+            0
+          ],
+          "m_LocalScale": [
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "path": "/FightMainPanel/Content/Top",
+        "fields": {
+          "m_AnchorMin": [
+            0,
+            1
+          ],
+          "m_AnchorMax": [
+            1,
+            1
+          ],
+          "m_AnchoredPosition": [
+            0,
+            0
+          ],
+          "m_SizeDelta": [
+            0,
+            1000
+          ],
+          "m_Pivot": [
+            0.5,
+            1
+          ],
+          "m_LocalScale": [
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "path": "/FightMainPanel/Content/Top/FixedContent",
+        "fields": {
+          "m_AnchorMin": [
+            0,
+            1
+          ],
+          "m_AnchorMax": [
+            1,
+            1
+          ],
+          "m_AnchoredPosition": [
+            0,
+            0
+          ],
+          "m_SizeDelta": [
+            0,
+            287
+          ],
+          "m_Pivot": [
+            0.5,
+            1
+          ],
+          "m_LocalScale": [
+            1,
+            1
+          ]
+        }
+      }
+    ],
+    "matched_original_show_tracks": [
+      {
+        "original": {
+          "serializedVersion": 2,
+          "curve": {
+            "serializedVersion": 2,
+            "m_Curve": [
+              {
+                "serializedVersion": 3,
+                "time": 0.21666667,
+                "value": -23,
+                "inSlope": 0,
+                "outSlope": 0,
+                "tangentMode": 0,
+                "weightedMode": 0,
+                "inWeight": 0.33333334,
+                "outWeight": 0.33333334
+              },
+              {
+                "serializedVersion": 3,
+                "time": 0.43333334,
+                "value": 0,
+                "inSlope": 0,
+                "outSlope": 0,
+                "tangentMode": 0,
+                "weightedMode": 0,
+                "inWeight": 0.33333334,
+                "outWeight": 0.33333334
+              }
+            ],
+            "m_PreInfinity": 2,
+            "m_PostInfinity": 2,
+            "m_RotationOrder": 4
+          },
+          "attribute": "m_AnchoredPosition.x",
+          "path": "Content/Top/FixedContent/StageStatus",
+          "classID": 224,
+          "script": {
+            "fileID": 0
+          },
+          "flags": 0
+        },
+        "retained": {
+          "path": "/FightMainPanel/Content/Top/FixedContent/StageStatus",
+          "property": "m_AnchoredPosition.x",
+          "keys": [
+            {
+              "time": 0.21666666865348816,
+              "value": -23.0,
+              "in_tangent": 0.0,
+              "out_tangent": 0.0
+            },
+            {
+              "time": 0.4333333373069763,
+              "value": 0.0,
+              "in_tangent": 0.0,
+              "out_tangent": 0.0
+            }
+          ]
+        }
+      },
+      {
+        "original": {
+          "serializedVersion": 2,
+          "curve": {
+            "serializedVersion": 2,
+            "m_Curve": [
+              {
+                "serializedVersion": 3,
+                "time": 0.21666667,
+                "value": 0,
+                "inSlope": 0,
+                "outSlope": 0,
+                "tangentMode": 0,
+                "weightedMode": 0,
+                "inWeight": 0.33333334,
+                "outWeight": 0.33333334
+              },
+              {
+                "serializedVersion": 3,
+                "time": 0.43333334,
+                "value": 1,
+                "inSlope": 0,
+                "outSlope": 0,
+                "tangentMode": 0,
+                "weightedMode": 0,
+                "inWeight": 0.33333334,
+                "outWeight": 0.33333334
+              }
+            ],
+            "m_PreInfinity": 2,
+            "m_PostInfinity": 2,
+            "m_RotationOrder": 4
+          },
+          "attribute": "m_Alpha",
+          "path": "Content/Top/FixedContent/StageStatus",
+          "classID": 225,
+          "script": {
+            "fileID": 0
+          },
+          "flags": 0
+        },
+        "retained": {
+          "path": "/FightMainPanel/Content/Top/FixedContent/StageStatus",
+          "property": "m_Alpha",
+          "keys": [
+            {
+              "time": 0.21666666865348816,
+              "value": 0.0,
+              "in_tangent": 0.0,
+              "out_tangent": 0.0
+            },
+            {
+              "time": 0.4333333373069763,
+              "value": 1.0,
+              "in_tangent": 0.0,
+              "out_tangent": 0.0
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "generator_sha256": "3a0105525f8e8cd687d063627f64b2cac2fb460efcb576270acd56aa2448f2de",
   "runtime_ports": {
+    "unity/Assets/Game/Runtime/Official/BattleStageStatusUI/FightMainPanelStageStatus.cs": "55eca72d480c513eb5a2f7cef636b3325f3d9dd42b4609be1fb620a9654701af",
+    "unity/Assets/Game/Runtime/Official/BattleStageStatusUI/FightMainPanelStageStatus.cs.meta": "ba014960a818f5f591abace2a838c3ee41ccaff61e4cc86c6ef53bdd7dab32d7",
     "unity/Assets/Game/Runtime/Official/BattleStageStatusUI/FightStageStatusDialog.cs": "80d06c14266d6b9cf85f56b8858b8d62d6fdc42abe377e246807ac684210fc7d",
     "unity/Assets/Game/Runtime/Official/BattleStageStatusUI/FightStageStatusDialog.cs.meta": "df964355e2ac0fb600be08b14eb2e041f7e3082d1232639f243bc0d8dd5ad70d",
     "unity/Assets/Game/Runtime/Official/BattleStageStatusUI/FightStageStatusDialogItemUI.cs": "91e296b71bd29ac706d5fcc249d9234b54343fa06bf37d59aef420c6075f811e",
     "unity/Assets/Game/Runtime/Official/BattleStageStatusUI/FightStageStatusDialogItemUI.cs.meta": "2cb9bde774493e18a708fb43c9d2f7c7d0d7599f7285216f204ac30e6dffc5cc",
     "unity/Assets/Game/Runtime/Official/BattleStageStatusUI/FightStageStatusPresentation.cs": "20dbe210c6edb97a0d8dd4abc3f8a1c1cc9242de2fa3549bb5a3db8c8c0c34dc",
     "unity/Assets/Game/Runtime/Official/BattleStageStatusUI/FightStageStatusPresentation.cs.meta": "96089c0032592056e3e194adaed88fc9593429526a88f05565aa4a3cd184b835",
+    "unity/Assets/Game/Runtime/Official/BattleStageStatusUI/FightStatusUIItem.cs": "69b7f03009a1a6c36a904eadd5f2d385a36b497fc0033bcd76d3130f0c182a85",
+    "unity/Assets/Game/Runtime/Official/BattleStageStatusUI/FightStatusUIItem.cs.meta": "5f53c36e10d33acc30da2744ed30ade83e6fc95bd16daf338da024721f412a98",
     "unity/Assets/Game/Runtime/Official/BattleStageStatusUI/Zjcs.Official.BattleStageStatusUI.asmdef": "b722abccdaa31db1ebe5c1631a865dfd32317f78ea87ed880b8fa6fa635412b8",
     "unity/Assets/Game/Runtime/Official/BattleStageStatusUI/Zjcs.Official.BattleStageStatusUI.asmdef.meta": "f123ace296be8d3744a1993f8fdb46292cd162beca21fb5fc2f3a1e8b7f2fbb5",
     "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleStageStatusDialogView.cs": "ffcec48b7d51167e890084877500d9d2956e7fba3d8e9974a2b0c3887bbb7c0c",
     "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleStageStatusDialogView.cs.meta": "a8b75f75bd8e094c03379eb9cae5481ae9a229ab0c902f024612f591e16edd54",
-    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs": "3542b04702b68421afc979b10ea2fc2970a703e8facd4825e01849d09f53fe30",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleStageStatusStripView.cs": "8e37761491c3eb6352dcf9f6ba30844ea52925c1a1ee54436fccf9825a03e927",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleStageStatusStripView.cs.meta": "80534f2f09520d972d8c702c45ab2793145dcda75be78a32288bc76302caeb58",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudAnimationPlayer.cs": "4970dcaa4210fb9161baac16107519aaeb565acf621d851474575b5e25f78d1b",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudAnimationPlayer.cs.meta": "0495aa4d99c3befb8e1f5103d059e1895244cebc1751ea4810ce8f58524fb43b",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs": "7317677b9ed1e5d6339d4287f0d670b80917f2e6c5a291913867311d885d962e",
     "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.Phases.cs": "d46685488a64dd41f15429732c284b3307b36a7851a2e41680457a7c3dadbbc4",
     "unity/Assets/Game/Runtime/Presentation/Combat/Zjcs.Presentation.Combat.asmdef": "1ace7a91c07b74ede40de1d653d9a7cb9831039b37f80304b8b85cb6c2d812e5"
-  },
-  "local_rule": {
-    "props_scale_factor": 1,
-    "decision": "User confirmed a fixed local scale of one; no extra server scaling is applied."
   }
 }

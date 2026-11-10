@@ -140,6 +140,40 @@ namespace Zjcs.Editor.BattleStageStatus
     var strip=canvasObject.transform.Find("FightMainPanel/Content/Top/FixedContent/StageStatus");
     if(strip==null) strip=canvasObject.GetComponentsInChildren<Button>(true).Select(b=>b.transform).First(t=>t.name=="StageStatus");
     var rect=(RectTransform)strip;
+    Require(strip.GetComponent<FightMainPanelStageStatus>()!=null,"The public HUD still uses the reconstructed status strip.");
+    var mainAnimation=strip.GetComponentInParent<OfficialBattleHudAnimationPlayer>();
+    Require(mainAnimation!=null,"Original main-panel animation player is missing.");
+    mainAnimation.enabled=false;
+    Require(mainAnimation.Play("/FightMainPanel","FightMainPanel_Show"),"Original main-panel show clip is missing.");
+    Require(Mathf.Abs(rect.anchoredPosition.x+23)<.001f&&strip.GetComponent<CanvasGroup>().alpha==0,"Original show animation still targets the replaced strip.");
+    mainAnimation.Tick(.325f);
+    Require(rect.anchoredPosition.x>-23&&rect.anchoredPosition.x<0&&strip.GetComponent<CanvasGroup>().alpha>0&&strip.GetComponent<CanvasGroup>().alpha<1,"Original strip slide/fade interpolation differs.");
+    capture("stage-strip-entering");yield return null;
+    mainAnimation.Tick(1);mainAnimation.enabled=true;
+    Require(Mathf.Abs(rect.anchoredPosition.x)<.001f&&Mathf.Abs(strip.GetComponent<CanvasGroup>().alpha-1)<.001f,"Original strip show animation did not finish.");
+    var layout=strip.GetComponent<UGUIJszx.HorizontalLayoutGroupJSZX>();
+    Require(layout!=null&&layout.padding.left==20&&layout.padding.right==20&&layout.spacing==0&&!layout.childControlWidth&&!layout.childScaleWidth,"Original horizontal layout settings differ.");
+    Require(strip.GetComponent<ContentSizeFitter>().horizontalFit==ContentSizeFitter.FitMode.PreferredSize,"Original strip size fitter differs.");
+    Require(rect.anchorMin==new Vector2(0,.5f)&&rect.anchorMax==rect.anchorMin&&Mathf.Abs(rect.anchoredPosition.y-85.8576f)<.001f,"Original strip anchors/position differ.");
+    var icons=strip.GetComponentsInChildren<FightStatusUIItem>();
+    Require(icons.Length==ids.Length&&Mathf.Abs(rect.rect.width-(40+60*ids.Length))<.01f,"Original layout did not size the native status rows.");
+    for(int i=0;i<icons.Length;i++)
+    {
+     Require(icons[i].IconImg.sprite!=null&&icons[i].BgImg.sprite!=null&&!icons[i].CountText.gameObject.activeSelf,"Native icon/background/zero-count binding differs.");
+     if(i>0) Require(Mathf.Abs(((RectTransform)icons[i].transform).anchoredPosition.x-((RectTransform)icons[i-1].transform).anchoredPosition.x-60)<.01f,"Original row stride differs.");
+    }
+    capture("stage-strip-many");yield return null;
+    int[] sameRows=icons.Select(x=>x.GetInstanceID()).ToArray();hud.RefreshStageStatus(state);yield return null;
+    Require(sameRows.SequenceEqual(strip.GetComponentsInChildren<FightStatusUIItem>().Select(x=>x.GetInstanceID())),"Unchanged status data rebuilt native rows.");
+    state.StageStatus.Status.Clear();state.StageStatus.Status.AddRange(new[]{26030,26004,26030,26005});hud.RefreshStageStatus(state);
+    for(int i=0;i<3;i++)yield return null;
+    Require(strip.GetComponentsInChildren<FightStatusUIItem>().Length==3&&Mathf.Abs(rect.rect.width-220)<.01f,"Native deduplication/shrinking layout differs.");
+    capture("stage-strip-few");yield return null;
+    state.StageStatus.Status.Clear();hud.RefreshStageStatus(state);for(int i=0;i<3;i++)yield return null;
+    Require(strip.GetComponentsInChildren<FightStatusUIItem>().Length==0&&!strip.Find("StatusBack").gameObject.activeSelf,"Empty status data retained icons or background.");
+    state.StageStatus.Status.AddRange(ids);hud.RefreshStageStatus(state);for(int i=0;i<3;i++)yield return null;
+    strip.gameObject.SetActive(false);yield return null;strip.gameObject.SetActive(true);for(int i=0;i<3;i++)yield return null;
+    Require(strip.GetComponentsInChildren<FightStatusUIItem>().Length==ids.Length&&Mathf.Abs(rect.rect.width-(40+60*ids.Length))<.01f,"Native strip disable/enable left duplicate or missing rows.");
     yield return Click(events,RectTransformUtility.WorldToScreenPoint(null,rect.TransformPoint(rect.rect.center)),strip);
     OfficialBattleStageStatusDialogView view=null;
     float readyDeadline=Time.unscaledTime+5;
@@ -182,6 +216,7 @@ namespace Zjcs.Editor.BattleStageStatus
     capture("stage-status-unscaled");yield return null;
     view.Refresh(state,.875d);Require(description.text.Contains("87.5%"),"Original percent formatter/update subscription differs: "+description.text);
     capture("stage-status-scale-updated");yield return null;
+    Debug.Log("Native stage-status strip passed: original slide/fade animation, layout, resizing, distinct status IDs, empty data, re-enable and public HUD pointer.");
     Debug.Log("Native stage-status dialog passed: public HUD pointer open, original loop virtualization/wheel, preparing description, scale notification, blur-mask pointer close, original clips and reopen.");
    }
    finally {UnityEngine.Object.Destroy(root);}

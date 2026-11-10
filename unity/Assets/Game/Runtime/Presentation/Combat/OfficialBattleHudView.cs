@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Combat.Official;
 using Zjcs.Official.WorldUI;
+using Zjcs.Official.BattleStageStatusUI;
 
 namespace Zjcs.Presentation.Combat
 {
@@ -67,7 +68,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Dictionary<string, BossHpBarRuntime> bossHpBarStates =
             new Dictionary<string, BossHpBarRuntime>(StringComparer.Ordinal);
         private BossHpBarSprites bossHpBarSprites;
-        private readonly List<GameObject> stageStatusItems = new List<GameObject>();
+        private FightMainPanelStageStatus stageStatusStrip;
         private readonly List<int> stageStatusIds = new List<int>();
         private WorldGameSkillIcon[] skillSlots;
         private GameObject root;
@@ -98,10 +99,12 @@ namespace Zjcs.Presentation.Combat
             {
                 Button button = node.GetComponent<Button>();
                 if (button == null) return;
-                if (path == StageStatusPath) button.onClick.AddListener(OpenStageStatusDialog);
-                else button.onClick.AddListener(() => ControlClicked?.Invoke(path));
+                if (path != StageStatusPath) button.onClick.AddListener(() => ControlClicked?.Invoke(path));
             });
             mainAnimationPlayer = renderer.InitializeAnimations("main", root);
+            stageStatusStrip = OfficialBattleStageStatusStripView.Mount(renderer.Find(StageStatusPath),
+                resolvedCatalog, OpenStageStatusDialog);
+            mainAnimationPlayer.BindNativeSubtree(StageStatusPath, stageStatusStrip.transform);
             skillSlots = OfficialBattleSkillSlotBindings.Mount(renderer);
             OfficialBattleFunctionEntryBindings.Mount(renderer,
                 () => stageStatusDialog != null && stageStatusDialog.gameObject.activeInHierarchy);
@@ -227,10 +230,6 @@ namespace Zjcs.Presentation.Combat
             stageStatusCheckpoint = checkpoint;
             if (stageStatusDialog != null) stageStatusDialog.Refresh(checkpoint);
             stageStatusIds.Clear();
-            GameObject strip = renderer.Find(StageStatusPath);
-            if (strip == null) return;
-            GameObject template = renderer.Find(StageStatusPath + "/StatusUI");
-            if (template == null) return;
             var displays = new List<int>();
             foreach (int statusId in checkpoint.StageStatus == null
                 ? new List<int>() : FightStageStatusRuntime.ViewStatusIds(checkpoint.StageStatus))
@@ -240,59 +239,7 @@ namespace Zjcs.Presentation.Combat
             stageStatusIds.AddRange(displays);
             if (stageStatusIds.Count == 0 && stageStatusDialog != null) stageStatusDialog.Close();
 
-            strip.SetActive(displays.Count > 0);
-            RectTransform stripRect = strip.transform as RectTransform;
-            RectTransform templateRect = template.transform as RectTransform;
-            if (stripRect != null && templateRect != null)
-            {
-                float itemWidth = templateRect.sizeDelta.x * templateRect.localScale.x;
-                float stride = itemWidth * 0.72f;
-                stripRect.sizeDelta = new Vector2(Mathf.Max(itemWidth,
-                    itemWidth + Math.Max(0, displays.Count - 1) * stride), stripRect.sizeDelta.y);
-                Transform background = strip.transform.Find("StatusBack");
-                if (background != null) background.gameObject.SetActive(displays.Count > 0);
-                for (int index = 0; index < displays.Count; index++)
-                {
-                    GameObject item = StageStatusItem(template, index);
-                    item.SetActive(true);
-                    RectTransform itemRect = item.transform as RectTransform;
-                    if (itemRect != null)
-                    {
-                        itemRect.anchorMin = itemRect.anchorMax = new Vector2(0f, 0.5f);
-                        itemRect.pivot = new Vector2(0.5f, 0.5f);
-                        itemRect.anchoredPosition = new Vector2(itemWidth * 0.5f + index * stride, 0f);
-                    }
-                    resolvedCatalog.TryGetStatusDisplay(displays[index], out Sprite icon,
-                        out Sprite backgroundSprite, out _, out _, out _, out _, out _);
-                    Image backgroundImage = item.GetComponent<Image>();
-                    if (backgroundImage != null) backgroundImage.sprite = backgroundSprite;
-                    Transform iconNode = item.transform.Find("StatusImg");
-                    Image iconImage = iconNode == null ? null : iconNode.GetComponent<Image>();
-                    if (iconImage != null) iconImage.sprite = icon;
-                    if (iconNode != null) iconNode.gameObject.SetActive(iconImage != null && icon != null);
-                    Transform countNode = item.transform.Find("CountTxt");
-                    if (countNode != null) countNode.gameObject.SetActive(false);
-                }
-            }
-            for (int index = displays.Count; index < stageStatusItems.Count; index++)
-                if (stageStatusItems[index] != template) stageStatusItems[index].SetActive(false);
-            if (displays.Count == 0) template.SetActive(false);
-        }
-
-        private GameObject StageStatusItem(GameObject template, int index)
-        {
-            if (index == 0)
-            {
-                if (stageStatusItems.Count == 0) stageStatusItems.Add(template);
-                return template;
-            }
-            while (stageStatusItems.Count <= index)
-            {
-                GameObject clone = UnityEngine.Object.Instantiate(template, template.transform.parent, false);
-                clone.name = "StatusUI_" + stageStatusItems.Count.ToString(CultureInfo.InvariantCulture);
-                stageStatusItems.Add(clone);
-            }
-            return stageStatusItems[index];
+            if (stageStatusStrip != null) stageStatusStrip.Refresh(displays);
         }
 
         private void OpenStageStatusDialog()
