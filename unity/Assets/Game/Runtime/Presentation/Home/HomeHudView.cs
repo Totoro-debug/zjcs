@@ -887,6 +887,10 @@ namespace Zjcs.Presentation.Home
 
         public void CloseDialog()
         {
+            repairWindows?.Dispose();
+            repairWindows = null;
+            if (repairCapture != null) UnityEngine.Object.Destroy(repairCapture);
+            repairCapture = null;
             ClosePartnerDialogueImmediate();
             DestroyPartnerPromptWindow();
             DestroyPartnerFriendshipWindow();
@@ -952,26 +956,7 @@ namespace Zjcs.Presentation.Home
 
         public void ShowRepair(int type)
         {
-            HomeFurnitureRecord record = host.Rules.FurnitureOf(type);
-            if (record == null) return;
-            OpenDialog("repair", (renderer, panel) =>
-            {
-                renderer.SetTextByName("NameTxt", host.Rules.FurnitureNameForType(type));
-                renderer.SetTextByName("SubTxt", host.Catalog.FurnitureTypeName(type));
-                renderer.SetTextByName("DescTxt", "维修后可启用该设施。");
-                Button repair = renderer.Find<Button>("/FurnitureRepairDialog/BgDialog3/BgImg/Mask/RepaireBtn");
-                if (repair == null) repair = FirstButton(renderer, "RepaireBtn");
-                if (repair != null) repair.onClick.AddListener(() =>
-                {
-                    if (host.TryRepair(type))
-                    {
-                        CloseDialog();
-                        Notify("维修完成");
-                        host.OnFruitTreeRepairDialogClosed(type);
-                    }
-                    else Notify("维修条件未满足");
-                });
-            });
+            ShowNativeRepair(type);
         }
 
         public void ShowBed()

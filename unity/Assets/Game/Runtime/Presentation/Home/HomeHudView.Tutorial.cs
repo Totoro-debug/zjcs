@@ -189,6 +189,8 @@ namespace Zjcs.Presentation.Home
         public Button FindTutorialButton(string storyUiKey)
         {
             if (string.IsNullOrWhiteSpace(storyUiKey)) return null;
+            if (storyUiKey == "FurnitureRepairDialog.RepaireBtn" && repairWindows?.RepairDialog != null)
+                return repairWindows.RepairDialog.RepairBtn;
             HomeUiRenderer renderer = activeDialogRenderer;
             string buttonName = storyUiKey.Substring(storyUiKey.LastIndexOf('.') + 1);
             if (storyUiKey == "FurnitureCartDialog.CommonBtn") buttonName = "CommonBtn_12";

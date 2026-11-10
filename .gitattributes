@@ -2487,3 +2487,15 @@ unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.Phases.cs -t
 # Preserve native round binding metadata bytes captured by source receipts.
 unity/Assets/Game/Runtime/Official/BattleRoundUI/*.meta -text whitespace=cr-at-eol
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.Phases.cs.meta -text whitespace=cr-at-eol
+
+# Preserve recovered home repair resources and their recorded source bytes.
+unity/Assets/Official/Home/UI/** -text
+unity/Assets/Official/Home/UI.meta -text
+unity/Assets/Game/Resources/Home/OfficialHomeRepairAssetCatalog.asset* -text
+unity/Assets/Game/Runtime/Official/HomeUI/** text eol=lf
+unity/Assets/Game/Runtime/Offline/HomeUI/** text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Repair.cs* text eol=lf
+scripts/prepare_home_repair_native.py text eol=lf
+scripts/prepare_home_repair_validation.py text eol=lf
+scripts/fixtures/home_repair_native_validation.cs text eol=lf
+assets/reference/home-repair-native-source-manifest.json text eol=lf
