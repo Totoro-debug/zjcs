@@ -13,7 +13,7 @@ namespace Zjcs.Presentation.Combat
 {
     // Receipts carry the settled draw; the original prefab still performs its own
     // flight and per-scope playback. This module only supplies creation/removal.
-    internal sealed class OfficialBattleFixedHitPlayback : IDisposable
+    internal sealed class OfficialBattleHitReceiptPlayback : IDisposable
     {
         private sealed class Grid : FightHitGridTransformData
         {
@@ -60,7 +60,7 @@ namespace Zjcs.Presentation.Combat
         private readonly List<Active> active = new List<Active>();
         private int serial;
 
-        public OfficialBattleFixedHitPlayback(OfficialBattleSkillEntityPlayback views, FightOfficialCombatCatalog catalog)
+        public OfficialBattleHitReceiptPlayback(OfficialBattleSkillEntityPlayback views, FightOfficialCombatCatalog catalog)
         { this.views = views; this.catalog = catalog; }
 
         public float NextDelay
@@ -90,7 +90,8 @@ namespace Zjcs.Presentation.Combat
                 if (definition == null)
                     throw new InvalidOperationException("Settled hit is absent from its official skill graph: "
                         + cast.SkillEntityId + "/" + selection.HitEntityId);
-                if (definition.HitComponentType != "FightHitFixedComponent") continue;
+                if (definition.HitComponentType != "FightHitFixedComponent"
+                    && definition.HitComponentType != "FightHitTriggerSkillComponent") continue;
                 float scopeEnd = 0f;
                 foreach (var entry in definition.ScopeEntries) scopeEnd = Mathf.Max(scopeEnd, entry.Delay);
                 for (int index = 0; index < selection.EffectCenters.Count; index++)
@@ -137,7 +138,9 @@ namespace Zjcs.Presentation.Combat
                 float flight = value.Flight;
                 if (!value.HasFlight)
                     flight = FightHitViewFormula.CalcSkillHitDelay(
-                        entity.GetComponent<MyFightHitFixed>().DelayInfoProvider,
+                        value.Data.Hit is FightHitFixedComponent
+                            ? entity.GetComponent<MyFightHitFixed>().DelayInfoProvider
+                            : entity.GetComponent<MyFightHitTriggerSkill>().DelayInfoProvider,
                         value.Source, value.Data.Hit.GridTransform.Pos, views, value.FlipX);
                 active.Add(new Active { Id = value.Data.Id, Remaining = Mathf.Max(0f, value.Lifetime + flight) });
             }

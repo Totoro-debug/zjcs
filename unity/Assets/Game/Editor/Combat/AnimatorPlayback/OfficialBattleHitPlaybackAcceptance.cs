@@ -167,6 +167,8 @@ namespace Zjcs.Editor.Combat
 
         private IEnumerator Check()
         {
+            AudioListener.volume = 0f;
+            Application.runInBackground = true;
             previousPipeline = UnityEngine.Rendering.GraphicsSettings.defaultRenderPipeline;
             previousQuality = QualitySettings.renderPipeline;
             var pipelineAssets = Resources.Load<OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets");
@@ -370,6 +372,76 @@ namespace Zjcs.Editor.Combat
             Capture("hit-trigger-skill.png");
             views.RemoveHit(triggerState.Data.Id);
             yield return null;
+
+            // Consume the production executor's eight independent random draws,
+            // including empty cells; no damage callback creates these views.
+            var assets = OfficialCombatAssetCatalog.LoadDefault();
+            var checkpoint = new FightBattleCheckpoint { StageId = 1, RandomSeed = 11,
+                Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+            for (int id = 1; id <= 2; id++)
+            {
+                var unit = Unit(id, 2 + 3 * (id - 1), 5);
+                unit.Side = id; unit.Level = 1; unit.Hp = unit.MaxHp = 5000;
+                unit.Turn = new FightTurnUnit { Id = id, Hp = 5000, Speed = 100 - id };
+                unit.Properties.Add(new FightPropertyValue { Id = 3, Value = 5000 });
+                unit.Properties.Add(new FightPropertyValue { Id = 4, Value = 100 - id });
+                if (id == 1)
+                {
+                    unit.Skills.Add(combatCatalog.CreateSkill(13520, 0, 0, 1, 1, 1, null));
+                    unit.SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = -1 });
+                }
+                checkpoint.Units.Add(unit);
+            }
+            var wave = new FightBattleWaveState(); wave.UnitIds.Add(2); checkpoint.Waves.Add(wave);
+            var execution = assets.BeginBattle(checkpoint).Step(0, 1);
+            var settledCast = execution.Event.SkillCasts.Single(value => value.SkillEntityId == 13520);
+            Require(settledCast.HitSelections.Count == 8
+                && settledCast.HitSelections.All(value => value.HitEntityId == 13522 && value.EffectCenters.Count == 1)
+                && settledCast.HitSelections.Any(value => value.Targets.Count == 0),
+                "Original 13520 did not retain its eight trigger occurrences and empty draws.");
+            var saved = FightBattleCheckpointSerializer.Save(checkpoint);
+            Time.timeScale = 0f;
+            before = played.Count;
+            var actualSkillId = views.Start(settledCast, source, target);
+            views.Tick(.79f);
+            Require(root.GetComponentsInChildren<MyFightHitTriggerSkill>().Length == 0,
+                "Receipt trigger hit started before its configured delay.");
+            views.Tick(.011f);
+            Require(root.GetComponentsInChildren<MyFightHitTriggerSkill>().Length == 1,
+                "Repeated trigger class IDs lost their independent creation times.");
+            var actualSkill = views.GetEntity(actualSkillId).GetComponent<MyFightSkill>();
+            Require(played.Skip(before).Any(value => value.Name == "playable13522"
+                && value.Source == actualSkill.GetPlayableTargetGo()),
+                "Receipt trigger trajectory lost the original skill playable target anchor.");
+            checkpoint.Units[1].X = 13;
+            Time.timeScale = 1f;
+            yield return new WaitForSeconds(.2f);
+            var triggerViews = root.GetComponentsInChildren<MyFightHitTriggerSkill>();
+            Require(triggerViews.Length == 8 && triggerViews.Select(value => value.myEntity.Id).Distinct().Count() == 8
+                && triggerViews.Select(value => value.Component.GridTransform.Pos).Distinct().Count() == 8,
+                "Repeated trigger receipts did not create eight independent native identities.");
+            foreach (var value in triggerViews)
+                Require(value.Component.SkillId.Equals(actualSkillId)
+                    && settledCast.HitSelections.Any(receipt => receipt.EffectCenters.Any(center =>
+                        value.Component.GridTransform.Pos.Equals(new Pos2d(center.X, center.Y)))),
+                    "Trigger hit lost its actual owning skill or frozen random cell.");
+            Capture("hit-trigger-production-receipts.png");
+            yield return new WaitForSeconds(1.1f);
+            Require(root.GetComponentsInChildren<MyFightHitTriggerSkill>().Length == 0,
+                "Trigger hit did not remove after original DestroyDelay.");
+            var restored = FightBattleCheckpointSerializer.Load(saved);
+            var legacy = restored.Receipts[0].Event.SkillCasts.Single(value => value.SkillEntityId == 13520);
+            foreach (var receipt in legacy.HitSelections) receipt.EffectDelays.Clear();
+            var legacySaved = FightBattleCheckpointSerializer.Save(restored);
+            views.Start(legacy, source, target);
+            yield return new WaitForSeconds(.95f);
+            Require(root.GetComponentsInChildren<MyFightHitTriggerSkill>().Length == 8,
+                "Legacy trigger receipts failed to resolve flight from their original view binding.");
+            yield return new WaitForSeconds(1.1f);
+            Require(root.GetComponentsInChildren<MyFightHitTriggerSkill>().Length == 0,
+                "Receipt playback leaked pooled trigger entities.");
+            Require(FightBattleCheckpointSerializer.Save(restored) == legacySaved,
+                "Receipt playback repeated settlement or changed its checkpoint.");
             Require(failure == null, failure ?? "Original native hit flow.");
             views.Dispose();
             views = null;

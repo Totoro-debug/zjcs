@@ -102,7 +102,7 @@ namespace Zjcs.Presentation.Combat
         private readonly OfficialBattleNativeEntityLoader skillViews;
         private readonly OfflineBattleNativePlayableScope scope;
         private readonly Func<int, FightBattleUnitState> unitState;
-        private readonly OfficialBattleFixedHitPlayback fixedHits;
+        private readonly OfficialBattleHitReceiptPlayback receiptHits;
         private readonly Dictionary<int, UnitLease> units = new Dictionary<int, UnitLease>();
         private readonly Dictionary<int, UnitLease> pets = new Dictionary<int, UnitLease>();
         private OfficialBattlePetFollowerCatalog petCatalog;
@@ -137,7 +137,7 @@ namespace Zjcs.Presentation.Combat
             skillViews = new OfficialBattleNativeEntityLoader(root, positionContainer, scope, true,
                 PrepareSkillInstance, PrepareBoundSkill);
             moveViews = new OfficialBattleMoveActionPlayback(root, positionContainer, scope, GetEntity);
-            fixedHits = new OfficialBattleFixedHitPlayback(this, combatCatalog);
+            receiptHits = new OfficialBattleHitReceiptPlayback(this, combatCatalog);
         }
 
         public MyEntity GetEntity(EcEntityIdentifier id) =>
@@ -210,7 +210,7 @@ namespace Zjcs.Presentation.Combat
             casts.Add(new ActiveCast { Entity = entity, Remaining = cast.Presentation.Duration < 0f
                 ? float.PositiveInfinity : cast.Presentation.Duration });
             scope.Dispatch(entity.MyStart);
-            fixedHits.Enqueue(cast, state.Data.Identifier);
+            receiptHits.Enqueue(cast, state.Data.Identifier);
             CastStarted?.Invoke(cast);
             // Return the assigned identity, not the pooled object whose Id can
             // change on reuse. Dependent views belong to this exact cast.
@@ -262,16 +262,16 @@ namespace Zjcs.Presentation.Combat
                 float next = float.PositiveInfinity;
                 foreach (var cast in casts) if (!cast.Removed) next = Mathf.Min(next, cast.Remaining);
                 next = Mathf.Min(next, moveViews.NextDelay);
-                next = Mathf.Min(next, fixedHits.NextDelay);
+                next = Mathf.Min(next, receiptHits.NextDelay);
                 float elapsed = Mathf.Min(next, remaining);
                 if (elapsed > 0f) scope.Tick(elapsed);
                 moveViews.Advance(elapsed);
-                fixedHits.Advance(elapsed);
+                receiptHits.Advance(elapsed);
                 foreach (var cast in casts) if (!cast.Removed) cast.Remaining -= elapsed;
                 remaining -= elapsed;
                 // Hits due at a cast's final boundary still resolve that exact
                 // skill identity before the original skill returns to its pool.
-                fixedHits.DispatchDue();
+                receiptHits.DispatchDue();
                 foreach (var cast in casts)
                     if (!cast.Removed && cast.Remaining <= 0f) Remove(cast);
                 if (remaining <= 0f) break;
@@ -344,7 +344,7 @@ namespace Zjcs.Presentation.Combat
             if (disposed) return;
             disposed = true;
             moveViews.Dispose();
-            fixedHits.Dispose();
+            receiptHits.Dispose();
             hitViews?.Dispose();
             hitViews = null;
             foreach (var cast in casts) if (!cast.Removed) Remove(cast);
