@@ -31,7 +31,8 @@ namespace Zjcs.Combat.Official
         /// Collects every hit of a skill in execution order, applying the configured root-reference
         /// delay/anchor to that occurrence of each root. Shared by the executor and by area targeting.
         /// </summary>
-        public static List<FightBattleHitDefinition> CollectAll(FightBattleSkillDefinition skill)
+        public static List<FightBattleHitDefinition> CollectAll(FightBattleSkillDefinition skill,
+            bool includeRootViews = false)
         {
             if (skill == null) throw new ArgumentNullException(nameof(skill));
             if (skill.HitGraphRoots != null && skill.HitGraphRoots.Count > 0)
@@ -43,7 +44,7 @@ namespace Zjcs.Combat.Official
                     List<FightBattleHitDefinition> rootHits = CollectRoot(skill.HitGraphEntities,
                         root.EntityId, ref nextRandomTargetGroupId, new FightBattleHitLink
                         { EntityId = root.EntityId, Delay = root.Delay, Anchor = root.Anchor,
-                            IgnoreAICount = root.IgnoreAICount });
+                            IgnoreAICount = root.IgnoreAICount }, includeRootViews);
                     collected.AddRange(rootHits);
                 }
                 return collected;
@@ -54,28 +55,34 @@ namespace Zjcs.Combat.Official
                 int nextRandomTargetGroupId = 1;
                 foreach (int rootEntityId in skill.HitGraphRootEntityIds)
                     collected.AddRange(CollectRoot(skill.HitGraphEntities, rootEntityId,
-                        ref nextRandomTargetGroupId));
+                        ref nextRandomTargetGroupId, includeRootViews: includeRootViews));
                 return collected;
             }
             if (skill.HitGraphRootEntityId > 0)
-                return Collect(skill.HitGraphEntities, skill.HitGraphRootEntityId);
+            {
+                int nextRandomTargetGroupId = 1;
+                return CollectRoot(skill.HitGraphEntities, skill.HitGraphRootEntityId,
+                    ref nextRandomTargetGroupId, includeRootViews: includeRootViews);
+            }
             return skill.Hits ?? new List<FightBattleHitDefinition>();
         }
 
         private static List<FightBattleHitDefinition> CollectRoot(
             IReadOnlyList<FightBattleHitEntity> entities, int rootEntityId,
-            ref int nextRandomTargetGroupId, FightBattleHitLink incoming = null)
+            ref int nextRandomTargetGroupId, FightBattleHitLink incoming = null,
+            bool includeRootViews = false)
         {
             var result = new List<FightBattleHitDefinition>();
             Collect(entities, rootEntityId, result, new HashSet<int>(), 0, 0, 1, null,
-                ref nextRandomTargetGroupId, incoming);
+                ref nextRandomTargetGroupId, incoming, includeRootView: includeRootViews);
             return result;
         }
 
         private static void Collect(IReadOnlyList<FightBattleHitEntity> entities, int entityId,
             List<FightBattleHitDefinition> result, HashSet<int> ancestors, int depth,
             int targetMode, int randomCount, RandomTargetContext randomTargetContext,
-            ref int nextRandomTargetGroupId, FightBattleHitLink incoming = null, float parentDelay = 0f)
+            ref int nextRandomTargetGroupId, FightBattleHitLink incoming = null, float parentDelay = 0f,
+            bool includeRootView = false)
         {
             if (entityId <= 0 || depth > 12 || ancestors.Contains(entityId)) return;
             FightBattleHitEntity entity = Find(entities, entityId);
@@ -83,9 +90,13 @@ namespace Zjcs.Combat.Official
             var branch = new HashSet<int>(ancestors) { entityId };
             float occurrenceDelay = parentDelay + (incoming == null ? entity.Delay : incoming.Delay);
 
-            if (entity.HasFixedDamage || entity.IsSummon || entity.TriggerSkill != null)
+            bool viewOnly = includeRootView && entity.HitComponentType == "FightHitRandomTargetComponent"
+                && entity.Scope != null && entity.Scope.Count > 0
+                && !entity.HasFixedDamage && !entity.IsSummon && entity.TriggerSkill == null;
+            if (entity.HasFixedDamage || entity.IsSummon || entity.TriggerSkill != null || viewOnly)
                 result.Add(new FightBattleHitDefinition
                 {
+                    IsViewOnly = viewOnly,
                     EntityId = entity.EntityId,
                     DamageId = entity.DamageId,
                     HasFixedDamage = entity.HasFixedDamage,

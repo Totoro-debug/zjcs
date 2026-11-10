@@ -1434,6 +1434,8 @@ namespace Zjcs.Combat.Official
     [Serializable]
     public sealed class FightBattleHitDefinition
     {
+        // A root wrapper owns a real client entity without applying a damage action.
+        public bool IsViewOnly;
         public int EntityId;
         public int DamageId;
         public int DamageType;

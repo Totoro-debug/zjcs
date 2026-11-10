@@ -833,7 +833,7 @@ namespace Zjcs.Combat.Official
             }
 
             FightDamageFalloff.BeginCast(skill, ref checkpoint.FalloffSerial);
-            IReadOnlyList<FightBattleHitDefinition> hits = FightBattleHitCollector.CollectAll(skill);
+            IReadOnlyList<FightBattleHitDefinition> hits = FightBattleHitCollector.CollectAll(skill, includeRootViews: true);
             var hitTargetSelectors = new FightHitTargetSelectors();
             var damageHitTargets = new HashSet<int>();
             var completedSourceMoves = new HashSet<FightBattleSkillMove>();
@@ -874,6 +874,7 @@ namespace Zjcs.Combat.Official
                             presentationCast.HitSelections.Count + 1, hit, selection, hitCast, hitFlight));
                     }
                 }
+                if (hit.IsViewOnly) continue;
                 ExecuteLogicChildSkills(actor, skill, skillLogic, hit,
                     targetPosition ?? (targets.Count > 0 ? targets[0] : null), hitCast,
                     casts, damageEvents, movements, ref lastDelay,

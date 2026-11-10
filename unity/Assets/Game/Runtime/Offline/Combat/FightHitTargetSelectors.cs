@@ -43,12 +43,28 @@ namespace Zjcs.Combat.Official
     public sealed class FightHitTargetSelectors
     {
         private static readonly IFightHitTargetSelector Direct = new DirectSelector();
+        private static readonly IFightHitTargetSelector RootView = new RootViewSelector();
         private readonly IFightHitTargetSelector randomParent = new RandomParentSelector();
 
         public IFightHitTargetSelector For(FightBattleHitDefinition hit)
         {
             if (hit == null) throw new ArgumentNullException(nameof(hit));
+            if (hit.IsViewOnly) return RootView;
             return hit.RandomTargetGroupId > 0 ? randomParent : Direct;
+        }
+
+        private sealed class RootViewSelector : IFightHitTargetSelector
+        {
+            public FightHitTargetSelection Select(FightHitTargetSelectionContext context)
+            {
+                Require(context);
+                // The wrapper exists at its authored anchor. Its children own the
+                // random draws, exclusions and damage; creating it consumes none.
+                return new FightHitTargetSelection(new List<FightBattleUnitState>(),
+                    new List<FightHitOccurrence>(), new List<FightGridPoint>(),
+                    new List<FightGridPoint> { FightHitAnchorExtensions.ResolveCenter(context.Hit.Anchor,
+                        context.Source, context.Primary, context.Cast) });
+            }
         }
 
         private sealed class DirectSelector : IFightHitTargetSelector

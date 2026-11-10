@@ -395,9 +395,10 @@ namespace Zjcs.Editor.Combat
             var wave = new FightBattleWaveState(); wave.UnitIds.Add(2); checkpoint.Waves.Add(wave);
             var execution = assets.BeginBattle(checkpoint).Step(0, 1);
             var settledCast = execution.Event.SkillCasts.Single(value => value.SkillEntityId == 13520);
-            Require(settledCast.HitSelections.Count == 8
-                && settledCast.HitSelections.All(value => value.HitEntityId == 13522 && value.EffectCenters.Count == 1)
-                && settledCast.HitSelections.Any(value => value.Targets.Count == 0),
+            var triggerReceipts = settledCast.HitSelections.Where(value => value.HitEntityId == 13522).ToArray();
+            Require(triggerReceipts.Length == 8
+                && triggerReceipts.All(value => value.EffectCenters.Count == 1)
+                && triggerReceipts.Any(value => value.Targets.Count == 0),
                 "Original 13520 did not retain its eight trigger occurrences and empty draws.");
             var saved = FightBattleCheckpointSerializer.Save(checkpoint);
             Time.timeScale = 0f;
