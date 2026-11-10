@@ -1,0 +1,202 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Fx_Trail_DJS_wx_030
+  m_Shader: {fileID: 4800000, guid: fe86ab71622e5e3cb6667343f59313d8, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - USE_DISSOLVE2
+  - USE_MAINTEX
+  m_InvalidKeywords:
+  - _BLENDMODE_BLEND
+  - _BLEND_NONE
+  - _CLAMPMAINUV_ON
+  - _DISSOLVEFLIP_ON
+  - _DISS_TEX_NO_ON
+  - _PARTICLE_DISS_ON_ON
+  - _PARTICLE_SPEEDUV_ON
+  - _USECUSTOMDATA_ON
+  - _USEDISSOLVE2_ON
+  - _USETEXTUREMASKALPHA_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap:
+    RenderType: Transparent
+  disabledShaderPasses: []
+  m_LockedProperties:
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+      _DissolveTex:
+        m_Texture: {fileID: 2800000, guid: bb643addb93258b788901f733ce2bec1, type: 2}
+        m_Scale: {x: 0.73, y: 2}
+        m_Offset: {x: 0, y: 0}
+      _DistortionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _MainTex:
+        m_Texture: {fileID: 2800000, guid: b2f4bc88351c5f568a4535d23d91cc08, type: 2}
+        m_Scale: {x: 1, y: 1.5}
+        m_Offset: {x: 0, y: -0.39}
+      _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _NoiseTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: {}
+    m_Floats:
+      _Alpha: 1
+      _AlphaClip: 0
+      _AlphaCutoff: 0.5
+      _Alpha_NO_R: 0
+      _Blend: 0
+      _BlendMode: 1
+      _BlendOp: 0
+      _BloomFactor: 0
+      _Brightness: 1
+      _BumpScale: 1
+      _CenterDissolve: 0
+      _ClampMainUV: 1
+      _ClearCoatMask: 0
+      _ClearCoatSmoothness: 0
+      _ColorIntensity: 1
+      _ColorMask: 14
+      _Cull: 2
+      _CullMode: 2
+      _Cutoff: 0.5
+      _Cutout: 0.07
+      _DetailAlbedoMapScale: 1
+      _DetailNormalMapScale: 1
+      _Diss_Edge_NO: 0
+      _Diss_Soft_value: 0.8
+      _Diss_Tex_NO: 1
+      _Diss_value: 0
+      _DissolveAlphaControl: 0
+      _DissolveControl: 0.5
+      _DissolveFlip: 1
+      _DissolveMoveSmooth: 1
+      _DissolveProgress: 0
+      _DissolveRange: 0.1
+      _DissolveSoftness: 0.05
+      _DissolveTex_Rota: 0
+      _DissolveTex_Rotator: 0
+      _Distortion: 0
+      _DistortionTex_Rota: 0
+      _DistortionTex_Rotator: 0
+      _Dst: 10
+      _DstBlend: 10
+      _EdgeWidth: 0
+      _EmissiveMultiply: 3
+      _EnvironmentReflections: 1
+      _Fresnel_Bias: 0
+      _Fresnel_ON: 0
+      _Fresnel_Power: 5
+      _Fresnel_Scale: 1
+      _Fresnel_speed: 0
+      _GlossMapScale: 0
+      _Glossiness: 0
+      _GlossyReflections: 0
+      _IntensityAffectAlpha: 0
+      _InvFade: 1
+      _MainTexturePower: 1
+      _Main_tex_Rotator: 0
+      _Maintex_Rota: 0
+      _Maintex_Rotator: 0
+      _MaksPower: 1
+      _MaskRA: 0
+      _Mask_A: 0
+      _Mask_Rota: 0
+      _Mask_Rotator: 0
+      _Mask_Tex_NO: 0
+      _Mask_Tex_Rotator: 0
+      _Metallic: 0
+      _Noise_Rota: 0
+      _Noise_Rotator: 0
+      _OcclusionStrength: 1
+      _OpacityMultiply: 2
+      _Parallax: 0.005
+      _Particle_SpeedUV: 1
+      _Particle_diss_ON: 1
+      _PixelSize: 0
+      _Polar_UV_offset: 0
+      _QueueControl: -1
+      _QueueOffset: 0
+      _ReceiveShadows: 1
+      _Smoothness: 0.5
+      _SmoothnessTextureChannel: 0
+      _SpecularHighlights: 1
+      _Src: 5
+      _SrcBlend: 5
+      _Stencil: 0
+      _StencilComp: 4
+      _StencilOp: 0
+      _StencilReadMask: 255
+      _StencilWriteMask: 255
+      _Surface: 0
+      _Tex2_A_NO_R: 0
+      _Tex2_NO: 0
+      _Tex2_Particle_SpeedUV: 0
+      _TimeScale1: -0.8
+      _TimeScale2: 0
+      _Turb_Diss_Value: 0
+      _Turb_MainTex_Value: 0
+      _Turb_Tex2_Value: 0
+      _Turb_Tex_ON: 0
+      _UVPolarSwitch: 0
+      _UseCustomData: 1
+      _UseDissolve2: 1
+      _UseSoftDissolve: 0
+      _UseTextureMaskAlpha: 1
+      _UseWind2D: 0
+      _Ver_Tex_NO: 0
+      _WindAmplitude: 0.05
+      _WindAnchorFalloff: 1
+      _WindAnchorStart: 0.05
+      _WindFlutterAmplitude: 0.05
+      _WindSpeed: 2
+      _WindWaveFrequency: 3
+      _WorkflowMode: 1
+      _WorldClipHeight: -1000000
+      _ZTest: 4
+      _ZWrite: 0
+    m_Colors:
+      _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+      _Color: {r: 1, g: 1, b: 1, a: 1}
+      _Diss_Edge_color: {r: 1, g: 1, b: 1, a: 1}
+      _Diss_UV: {r: 0, g: 0, b: 0, a: 0}
+      _DissolveAxisDir: {r: 0, g: 0, b: 0, a: 0}
+      _DissolveColor: {r: 0, g: 0.20754719, b: 0.017097354, a: 0.5}
+      _DissolveTex_MoveCenter: {r: 0, g: 0, b: 0.5, a: 0.5}
+      _DistortionTex_MoveCenter: {r: 0, g: 0, b: 0.5, a: 0.5}
+      _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+      _MainColor: {r: 2, g: 2, b: 2, a: 1}
+      _MainTex_MoveCenter: {r: 0, g: 0, b: 0, a: 0}
+      _MainTiling: {r: 1.16, g: 0.94, b: 0, a: 0}
+      _Main_Color: {r: 1.4980392, g: 1.4980392, b: 1.4980392, a: 1}
+      _Main_UV: {r: 0, g: 0, b: 0, a: 0}
+      _MaskTex_MoveCenter: {r: 0, g: 0, b: 0.5, a: 0.5}
+      _Mask_UV: {r: 0, g: 0, b: 0, a: 0}
+      _NoiseTex_MoveCenter: {r: 0, g: 0, b: 0.5, a: 0.5}
+      _Polar_UV: {r: 1, g: 1, b: 0, a: 0}
+      _Remap_01: {r: 0, g: 1, b: 0, a: 0}
+      _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+      _Tex_2_UV: {r: 0, g: 0, b: 0, a: 0}
+      _TintColor: {r: 0, g: 0.3616337, b: 1, a: 1}
+      _Turb_UV: {r: 0, g: 0, b: 0, a: 0}
+      _VertexOffset_UV: {r: 0, g: 0, b: 0, a: 0}
+      _VertexOffset_Value: {r: 0, g: 0, b: 0, a: 0}
+      _WindDirection: {r: -1, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
