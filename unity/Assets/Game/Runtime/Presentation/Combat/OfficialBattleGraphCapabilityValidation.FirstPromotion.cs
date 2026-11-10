@@ -10,6 +10,32 @@ namespace Zjcs.Presentation.Combat
     {
         private int firstPromotionItemId;
 
+        public static (int Profession, int InitialWeaponType, int InitialSkillItemId) FirstPromotionSource()
+        {
+            Require(int.TryParse(Environment.GetEnvironmentVariable("ZJCS_FIRST_PROMOTION_SKILL"), out int itemId),
+                "A first-promotion skill item is required.");
+            var assets = OfficialCombatAssetCatalog.LoadDefault();
+            var items = assets.LoadSkillItems();
+            var rows = JsonUtility.FromJson<FirstPromotionRules>(assets.Rules.text).profession_base;
+            var profession = ReadFirstPromotionProfession(rows, items, itemId);
+            var root = profession;
+            while (root.PrePro != 0) root = rows.Single(row => row.Profession == root.PrePro);
+            Require(root.Profession == 1 || root.Profession == 10, "Unknown initial weapon lineage.");
+            int weapon = root.Profession == 1 ? FightOfficialSkillItemCatalog.SwordInitialWeaponType
+                : FightOfficialSkillItemCatalog.WandInitialWeaponType;
+            return (profession.Profession, weapon, items.InitialActiveSkill(weapon));
+        }
+
+        private static FirstPromotionProfession ReadFirstPromotionProfession(FirstPromotionProfession[] rows,
+            FightOfficialSkillItemCatalog items, int itemId)
+        {
+            var profession = rows.SingleOrDefault(row => new[] { 1, 2, 6, 10, 11, 15 }.Contains(row.Profession)
+                && row.Skills.Concat(row.FightUsedSkills).Contains(itemId));
+            Require(profession != null && items.ItemTypeFor(itemId) == 100,
+                "The requested item is outside the six-profession active scope.");
+            return profession;
+        }
+
         private static OfficialBattleGraphCapabilityValidation ConfigureFirstPromotion(FightBattleCheckpoint checkpoint)
         {
             Require(int.TryParse(Environment.GetEnvironmentVariable("ZJCS_FIRST_PROMOTION_SKILL"), out int itemId),
@@ -17,9 +43,7 @@ namespace Zjcs.Presentation.Combat
             var assets = OfficialCombatAssetCatalog.LoadDefault();
             var items = assets.LoadSkillItems(); var catalog = assets.Load();
             var rules = JsonUtility.FromJson<FirstPromotionRules>(assets.Rules.text);
-            var professions = rules.profession_base.Where(row => new[] { 1, 2, 6, 10, 11, 15 }.Contains(row.Profession));
-            Require(professions.Any(row => row.Skills.Concat(row.FightUsedSkills).Contains(itemId))
-                && items.ItemTypeFor(itemId) == 100, "The requested item is outside the six-profession active scope.");
+            var profession = ReadFirstPromotionProfession(rules.profession_base, items, itemId);
             var binding = items.Required(itemId);
             var skill = catalog.CreateSkill(binding.EntityId, 0, itemId, 2, 20, 1,
                 catalog.CalculateSkillProps(binding.EntityId, 2, 20, 1)
@@ -33,6 +57,7 @@ namespace Zjcs.Presentation.Combat
                 .FirstOrDefault(value => value.kind == 1 && !string.IsNullOrEmpty(value.animation));
             Require(cue != null, "This diagnostic requires an authored body clip; use a dedicated probe for a pure logic graph.");
             var player = checkpoint.Units.Single(unit => unit.Id == 1);
+            Require(player.Profession == profession.Profession, "The diagnostic profile has the wrong original profession.");
             var enemy = checkpoint.Units.First(unit => unit.Side != player.Side);
             var probe = new OfficialBattleGraphCapabilityValidation(catalog, player.Skills.First(value => value.Slot == 0),
                 entityId, cue.animation) { firstPromotionItemId = itemId };
@@ -85,6 +110,6 @@ namespace Zjcs.Presentation.Combat
 
         [Serializable] private sealed class FirstPromotionRules { public FirstPromotionProfession[] profession_base; }
         [Serializable] private sealed class FirstPromotionProfession
-        { public int Profession; public int[] Skills; public int[] FightUsedSkills; }
+        { public int Profession; public int PrePro; public int[] Skills; public int[] FightUsedSkills; }
     }
 }

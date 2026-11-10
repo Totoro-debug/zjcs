@@ -90,14 +90,22 @@ namespace Zjcs.Presentation.Home
             save.Player.SubRank=assets.Load().LevelLimits.Where(value=>value.PlayerLevel>=40
                 && value.PlayerBlessLevel==0).Min(value=>value.SubRank);
             save.Player.InitialWeaponType=200;save.Player.Wardrobe.Profession=1;
+            int initialSkill = 10014;
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_FIRST_PROMOTION_SKILL")))
+            {
+                var source = OfficialBattleGraphCapabilityValidation.FirstPromotionSource();
+                save.Player.InitialWeaponType = source.InitialWeaponType;
+                save.Player.Wardrobe.Profession = source.Profession;
+                initialSkill = source.InitialSkillItemId;
+            }
             save.Player.Experience=assets.Load().CumulativeLevelExperience[40];
-            save.Player.Skills.Skills.Add(new Zjcs.Offline.Skills.OfflineOwnedSkill {ClassId=10014,Rank=1});
+            save.Player.Skills.Skills.Add(new Zjcs.Offline.Skills.OfflineOwnedSkill {ClassId=initialSkill,Rank=1});
             File.WriteAllText(slots.GetProgressPath(slot),JsonUtility.ToJson(save,true));
             var session=OfflineMainlineProgressSession.OpenCharacter(slots,slot);
             var progression=new OfflineCharacterProgressionService(session,assets.Load());
             progression.InitializeWardrobe("skill-summon-player-wardrobe");
             progression.AttachSkillRules(assets.LoadSkillRules(),assets.LoadSkillRecommendations().recommendations);
-            Require(progression.EquipSkill(10014,0).IsApplied,"Could not equip the summon Player skill.");
+            Require(progression.EquipSkill(initialSkill,0).IsApplied,"Could not equip the diagnostic's original initial skill.");
             foreach(var canvas in FindObjectsOfType<Canvas>()) canvas.gameObject.SetActive(false);
             foreach(var camera in FindObjectsOfType<Camera>()) camera.enabled=false;
             var home=HomeFeatureRuntime.Begin(slot,saveRoot,null);
