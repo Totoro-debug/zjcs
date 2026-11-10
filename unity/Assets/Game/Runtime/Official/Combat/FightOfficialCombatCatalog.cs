@@ -621,6 +621,10 @@ namespace Zjcs.Combat.Official
 
         public FightBattleSkillDefinition CreateSkill(int entityId, int slot, int itemId,
             int rank, int level, int subRank, IList<FightPropertyValue> properties)
+            => CreateSkillCore(entityId, slot, itemId, rank, level, subRank, properties, false);
+
+        private FightBattleSkillDefinition CreateSkillCore(int entityId, int slot, int itemId,
+            int rank, int level, int subRank, IList<FightPropertyValue> properties, bool ordinaryMovement)
         {
             Dictionary<string, object> components = RequiredEntity(entityId);
             Dictionary<string, object> skill = Component(components, "FightSkillComponent");
@@ -729,7 +733,7 @@ namespace Zjcs.Combat.Official
                 }
                 if (summonLimit > 0) result.SummonCountLimit = summonLimit;
             }
-            if (result.HitGraphEntities.Count == 0 && (entityId != 50213 || !result.HasLogicComponent))
+            if (!ordinaryMovement && result.HitGraphEntities.Count == 0 && (entityId != 50213 || !result.HasLogicComponent))
                 throw new InvalidOperationException("Official skill has no resolved hit graph: " + entityId);
             return result;
         }

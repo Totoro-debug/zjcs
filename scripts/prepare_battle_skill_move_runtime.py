@@ -53,6 +53,8 @@ def generate(destination, receipt):
               common / 'FightActionSkillMoveComponentInfo.cs',
               common / 'FightMoveUtilsHandler.cs', common / 'BattleFormulaHandler.cs',
               common / 'Pos2d.cs', common / 'GridTransformComponent.cs', common / 'Direction.cs',
+              common / 'FightSkillComponentInfo.cs', common / 'FightSkillComponentImplement.cs',
+              common / 'FightRoleCharacterComponentInfo.cs',
               common / 'ActionComponent.cs',
               common / 'ActionComponentImplement.cs', common / 'ActionComponentImplementBase.cs']
     original = {path.name: path.read_text(encoding='utf-8-sig') for path in inputs}
@@ -166,6 +168,10 @@ using Zjcs.Official.World.NativeTerrain.Common;
             'unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs',
             'unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs',
             'unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.Movement.cs',
+            'unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs',
+            'unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.OrdinaryMovement.cs',
+            'unity/Assets/Game/Runtime/Official/Combat/FightOrdinaryMovementTiming.cs',
+            'unity/Assets/Game/Runtime/Official/Combat/FightBattleSkillCastPresentation.cs',
             'unity/Assets/Game/Runtime/Presentation/Combat/IBattleMovementActionView.cs',
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMoveActionData.cs',
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMoveActionPlayback.cs',
@@ -180,6 +186,7 @@ using Zjcs.Official.World.NativeTerrain.Common;
             'scripts/test_battle_skill_moves.ps1',
             'scripts/test_battle_skill_combo.ps1',
             'scripts/test_battle_hit_move.ps1',
+            'scripts/test_battle_ordinary_movement.ps1',
             'scripts/test_battle_skill_graph_dispatch.ps1',
             'scripts/fixtures/battle_skill_graph_dispatch_harness.cs',
             'scripts/prepare_unity_map14_visibility_handlers.py',
@@ -198,7 +205,8 @@ using Zjcs.Official.World.NativeTerrain.Common;
             'Unit grid rotation retains an existing native grid direction or the original new-grid Up default. Cast and action direction parameters are independent; original movement StartImpl changes FlipX without changing grid Direction.'],
         confirmed_offline_rules=[
             'Self actions snapshot the settled skill direction before path settlement, preserving configured fixed direction; ordinary approach/retreat and forced target actions snapshot the moved unit direction at action creation. FlipX is independent; legacy receipts without direction keep their fallback.',
-            'For these settled paths without collision data, action lifetime is original total movement duration plus DelayDestroyTime, then original End/Remove and pooling. Path eligibility, probability, resistance and landing retain their existing configured rules; missing paths or collision information are not inferred.'],
+            'For these settled paths without collision data, action lifetime is original total movement duration plus DelayDestroyTime, then original End/Remove and pooling. Path eligibility, probability, resistance and landing retain their existing configured rules; missing paths or collision information are not inferred.',
+            'Only the 22 original ordinary movement skills use earliest nonnegative fixed/AllEnded/AllRelevantEnded entity and action timers independently; AllEnded starts at movement End including DelayDestroyTime. The native skill is created before its action with a negative slot and calls original MyFightSkill.OnRemove; graphs finish naturally. Current approach/retreat entry points carry creation snapshots; remaining special entry points and shared rule start/end reactions are not claimed complete.'],
         implementation_document='docs/features/skills.md'), ensure_ascii=False, indent=2) + '\n')
     print('Prepared original movement client, action base, configuration and timing methods:', len(outputs))
 

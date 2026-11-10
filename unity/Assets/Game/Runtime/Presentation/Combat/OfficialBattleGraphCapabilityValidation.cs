@@ -26,6 +26,8 @@ namespace Zjcs.Presentation.Combat
         private int approachClass;
         private Vector3 approachFrom, approachTo;
         private bool approachObserved, approachAdvanced, approachArrived, approachRemoved, approachCaptured;
+        private Zjcs.Official.StoryPlayables.EcEntityIdentifier ordinarySkillId;
+        private bool ordinaryStarted, ordinaryRemoved, ordinaryCaptured;
         private int forcedTargetId;
         private Quaternion forcedTargetRotation;
         private int forcedFrames;
@@ -142,6 +144,20 @@ namespace Zjcs.Presentation.Combat
                 forcedTargetRotation = controller.TryGetUnitTransform(forcedTargetId).localRotation;
             entities.CastStarted += cast => {
                 if (cast.ActorId != 1) return;
+                if (ValidateApproach && cast.SkillEntityId == 15300)
+                {
+                    Require(cast.Slot == -1 && cast.Presentation != null
+                        && Math.Abs(cast.Presentation.ActionDuration - .5f) < .0001f,
+                        "Ordinary movement lost its independent non-equipped skill clock.");
+                    var native = UnityEngine.Object.FindObjectsOfType<MyFightSkill>().Single(value =>
+                        value.Component?.Entity?.ClassId == 15300 && value.Source
+                        && value.Source.transform == controller.TryGetUnitTransform(1));
+                    ordinarySkillId = native.Component.Entity.Id;
+                    Require(!native.transform.root.GetComponentsInChildren<MyFightActionSkillMove>()
+                        .Any(value => value.myEntity.Entity?.ClassId == 15301),
+                        "Ordinary skill entity was created after its movement action.");
+                    ordinaryStarted = true;
+                }
                 if (cast.SkillEntityId == 13643) nativeChildren++;
                 if (cast.SkillEntityId != skillId) return;
                 nativeCasts++; castTime = Time.realtimeSinceStartup;
@@ -242,6 +258,15 @@ namespace Zjcs.Presentation.Combat
             CaptureName = null;
             bool afterimageVisible = afterimages?.Observe() ?? false;
             afterimageObserved |= afterimageVisible;
+            if (ValidateApproach && ordinaryStarted)
+            {
+                ordinaryRemoved |= entityViews.GetEntity(ordinarySkillId) == null;
+                if (!ordinaryCaptured)
+                {
+                    Require(!ordinaryRemoved, "Ordinary skill was removed before its first observable frame.");
+                    ordinaryCaptured = true; CaptureName = "native-ordinary-skill-15300"; return;
+                }
+            }
             if (ValidateForcedMovement && settled)
             {
                 var target = controller.TryGetUnitTransform(forcedTargetId);
@@ -343,6 +368,8 @@ namespace Zjcs.Presentation.Combat
         public void Verify(FightBattleCheckpoint checkpoint)
         {
             if (ValidateForcedMovement) Time.captureFramerate = previousCaptureFramerate;
+            if (ValidateApproach) Require(ordinaryStarted && ordinaryRemoved && ordinaryCaptured,
+                "Original ordinary skill did not start before its action and remove independently.");
             afterimages?.Verify();
             if (ValidateApproach) Require(approachObserved && approachAdvanced && approachArrived
                 && approachRemoved && approachCaptured, "Original ordinary approach differs: observed=" + approachObserved

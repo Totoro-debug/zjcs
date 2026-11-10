@@ -32,9 +32,19 @@ namespace Zjcs.Combat.Official
     public class GridItem { public int Id; public bool HasRuntime; public FightBattleUnitState Runtime; }
     public class FightBattleCheckpoint { public List<FightBattleUnitState> Units = new List<FightBattleUnitState>(); public List<GridItem> GridItems = new List<GridItem>(); }
     public class FightBattleSkillCastPresentation { public int FacingIndex, TargetId; }
-    public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId; public bool IsPetSupport; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(); }
-    public class FightBattleGridPoint { public int X,Y; }
-    public class FightBattleMovementEvent { public int UnitId,MoveBehaviourId; public bool HasDirection,HasFacing; public float Delay,MoveDuration,MoveSpeed,NativeDuration; public List<FightBattleGridPoint> Path = new List<FightBattleGridPoint>(); }
+    public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId, Slot; public bool IsPetSupport; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(); }
+    public class FightGridPoint { public int X,Y; }
+    public class FightBattleMovementEvent { public int UnitId,MoveBehaviourId,MoveSkillEntityId; public FightBattleSkillCastPresentation OrdinarySkillPresentation; public float OrdinaryMoveDelay; public bool HasDirection,HasFacing; public float Delay,MoveDuration,MoveSpeed,NativeDuration; public List<FightGridPoint> Path = new List<FightGridPoint>(); }
+    public sealed class FightBattleSkillMove { public float MoveDuration, MoveSpeed, Delay; }
+    public sealed class FightBattleSkillDefinition
+    {
+        public int EntityId, SkillType;
+        public bool HasReplay, HasLogicComponent;
+        public float Duration, AllEndedDuration, AllRelevantEndedDuration,
+            ActionDuration, AllEndedActionDuration, AllRelevantEndedActionDuration;
+        public List<FightBattleSkillMove> SourceMoves = new List<FightBattleSkillMove>();
+        public List<int> HitGraphEntities = new List<int>(), Hits = new List<int>(), ExtraSkills = new List<int>();
+    }
     public class FightBattleStepEvent { public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>(); }
 }
 namespace Zjcs.Official.StoryPlayableManager
@@ -80,7 +90,7 @@ namespace Zjcs.Presentation.Combat
         public Zjcs.Official.StoryGroundEffects.IPlayableGroundEffectHost GroundEffects { get; } = new Zjcs.Official.StoryGroundEffects.GroundHost();
         public OfficialBattleSkillEntityPlayback(OfflineBattleNativePlayableScope scope) { this.scope = scope; scope.GroundEffectsHost = GroundEffects; }
         public void Start(FightBattleSkillCastEvent cast, Transform source, Transform target)
-            { scope.EntitiesStarted.Add(cast.SkillEntityId);
+            { scope.EntitiesStarted.Add(cast.SkillEntityId); scope.CastSlots.Add(cast.Slot); scope.CastTimes.Add(scope.Clock);
               // Native entity playback owns directional prefab selection now.
               // This seam supplies a prefab; the actual entity is checked in Unity.
               int facing = cast.Presentation?.FacingIndex ?? 2;
@@ -103,6 +113,8 @@ namespace Zjcs.Offline.BattleNativePlayables
     {
         public readonly Transform PlayableSlot = new Transform("slot");
         public readonly List<int> EntitiesStarted = new List<int>();
+        public readonly List<int> CastSlots = new List<int>();
+        public readonly List<float> CastTimes = new List<float>();
         public readonly List<int> Moves = new List<int>();
         public readonly List<float> MoveTimes = new List<float>();
         public Zjcs.Official.StoryGroundEffects.IPlayableGroundEffectHost GroundEffectsHost;
@@ -159,6 +171,7 @@ public static class BattleSkillGraphDispatchHarness
         JsonUtility.Data = new OfficialBattleSkillGraphCatalogData { manifest = "884_156692", skills = new[] {
             new OfficialBattleSkillGraphRecord { skill_entity_id = 10, playables = bindings.ToArray() },
             new OfficialBattleSkillGraphRecord { skill_entity_id = 20, playables = new[] { Binding("myPlayablePrefab", "fallback") } },
+            new OfficialBattleSkillGraphRecord { skill_entity_id = 15300, playables = new[] { Binding("myPlayablePrefab", "fallback") } },
             new OfficialBattleSkillGraphRecord { skill_entity_id = 30, playables = Array.Empty<OfficialBattleSkillGraphBinding>() }
         } };
         var catalog = OfficialBattleSkillGraphCatalog.TryLoadDefault();
@@ -274,7 +287,7 @@ public static class BattleSkillGraphDispatchHarness
             Func<int,float,bool,float,FightBattleMovementEvent> move = (unit, delay, native, duration) => new FightBattleMovementEvent {
                 UnitId=unit, Delay=delay, HasDirection=native, HasFacing=native, MoveBehaviourId=777,
                 MoveDuration=duration, NativeDuration=.75f,
-                Path=new List<FightBattleGridPoint> {new FightBattleGridPoint(),new FightBattleGridPoint{X=1}} };
+                Path=new List<FightGridPoint> {new FightGridPoint(),new FightGridPoint{X=1}} };
             var step = new FightBattleStepEvent { Movements = new List<FightBattleMovementEvent> {
                 move(1,0,false,.25f), move(1,0,true,.01f), move(1,0,true,.01f), move(2,.125f,true,.01f) } };
             playback.Play(step,checkpoint,resolve);
@@ -286,6 +299,30 @@ public static class BattleSkillGraphDispatchHarness
             playback.Play(new FightBattleStepEvent {Movements=new List<FightBattleMovementEvent>{move(1,1,true,0)}},checkpoint,resolve);
         }
         Require(moveScope.Moves.Count==3,"Dispose started a pending movement.");
-        Console.WriteLine("Skill graph dispatch passed: official fields/fallback, delayed ordering, equal-time stability, native/fallback movement ordering, independent unit clocks, long-frame splitting, settled-dead cast and disposal.");
+        var ordinaryScope = new OfflineBattleNativePlayableScope();
+        using (var playback = new OfficialBattleSkillGraphPlayback(catalog, ordinaryScope, new OfficialBattleSkillEntityPlayback(ordinaryScope)))
+        {
+            Func<FightBattleMovementEvent> ordinary = () => new FightBattleMovementEvent {
+                UnitId = 1, Delay = .15f, OrdinaryMoveDelay = .15f, HasDirection = true, HasFacing = true,
+                MoveBehaviourId = 777, MoveSkillEntityId = 15300, NativeDuration = .75f,
+                OrdinarySkillPresentation = new FightBattleSkillCastPresentation(),
+                Path = new List<FightGridPoint> { new FightGridPoint(), new FightGridPoint { X = 1 } } };
+            var first = ordinary();
+            Require(((IBattleMovementSkillView)playback).OwnsMovementSkill(first), "Ordinary parent skill ownership was lost");
+            var legacy = ordinary(); legacy.OrdinarySkillPresentation = null;
+            Require(!playback.OwnsMovementSkill(legacy), "Legacy movement was assigned a missing parent snapshot");
+            playback.Play(new FightBattleStepEvent { Movements = new List<FightBattleMovementEvent> { first, ordinary() },
+                SkillCasts = new List<FightBattleSkillCastEvent> { Cast(20, 0) } }, checkpoint, resolve);
+            Require(ordinaryScope.EntitiesStarted.SequenceEqual(new[] { 15300, 20 }) && ordinaryScope.Moves.Count == 0,
+                "Ordinary entity must start before both its delayed action and a simultaneous active cast");
+            playback.Tick(1.5f);
+            Require(ordinaryScope.EntitiesStarted.SequenceEqual(new[] { 15300, 20, 15300 })
+                && ordinaryScope.CastSlots.SequenceEqual(new[] { -1, 0, -1 })
+                && Math.Abs(ordinaryScope.CastTimes[2] - .9f) < .0001f
+                && ordinaryScope.MoveTimes.Count == 2 && Math.Abs(ordinaryScope.MoveTimes[0] - .15f) < .0001f
+                && Math.Abs(ordinaryScope.MoveTimes[1] - 1.05f) < .0001f,
+                "Ordinary parent/action clocks lost their original delay, non-equipped slot or repeated path ordering");
+        }
+        Console.WriteLine("Skill graph dispatch passed: official fields/fallback, delayed ordering, equal-time stability, native/fallback movement ordering, ordinary parent creation and negative slots, independent unit clocks, long-frame splitting, settled-dead cast and disposal.");
     }
 }

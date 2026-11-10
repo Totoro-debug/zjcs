@@ -64,7 +64,27 @@ namespace Zjcs.Combat.Official
             result.Delay = move.Delay;
             result.MoveDuration = move.MoveDuration;
             result.MoveSpeed = move.MoveSpeed;
+            if (FightOrdinaryMovementTiming.Supports(skillId))
+            {
+                var definition = CreateOrdinaryMovementSkill(skillId);
+                result.OrdinarySkillPresentation = FightBattleSkillCastPresentation.Capture(unit, definition, null);
+                result.OrdinaryMoveDelay = move.Delay;
+            }
             return result;
+        }
+
+        public void CompleteRoleMovement(FightBattleMovementEvent movement)
+        {
+            if (movement?.OrdinarySkillPresentation == null) return;
+            var skill = CreateOrdinaryMovementSkill(movement.MoveSkillEntityId);
+            var action = Component(RequiredEntity(movement.MoveBehaviourId), "FightActionSkillMoveComponent")
+                ?? throw new System.InvalidOperationException("Original ordinary movement action is missing.");
+            var timing = FightOrdinaryMovementTiming.ForPath(skill, movement.Path, Float(action, "DelayDestroyTime", 0f));
+            var target = movement.Path[movement.Path.Count - 1];
+            movement.OrdinarySkillPresentation.TargetX = target.X;
+            movement.OrdinarySkillPresentation.TargetY = target.Y;
+            movement.OrdinarySkillPresentation.Duration = timing.EntityEndDelay;
+            movement.OrdinarySkillPresentation.ActionDuration = timing.ActionEndDelay;
         }
     }
 }

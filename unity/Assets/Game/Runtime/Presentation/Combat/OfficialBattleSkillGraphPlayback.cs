@@ -8,7 +8,7 @@ using Zjcs.Official.StoryPlayableManager;
 namespace Zjcs.Presentation.Combat
 {
     /// <summary>Dispatches each settled skill cast into its original FightSkill prefab.</summary>
-    public sealed class OfficialBattleSkillGraphPlayback : IBattleMovementActionView, IDisposable
+    public sealed class OfficialBattleSkillGraphPlayback : IBattleMovementActionView, IBattleMovementSkillView, IDisposable
     {
         private sealed class ScheduledMove
         {
@@ -55,6 +55,11 @@ namespace Zjcs.Presentation.Combat
 
         public bool OwnsMovement(FightBattleMovementEvent movement) => entityViews.OwnsMovement(movement);
 
+        public bool OwnsMovementSkill(FightBattleMovementEvent movement) => OwnsMovement(movement)
+            && movement.OrdinarySkillPresentation != null
+            && FightOrdinaryMovementTiming.Supports(movement.MoveSkillEntityId)
+            && catalog.ContainsSkill(movement.MoveSkillEntityId);
+
         public int CatalogCount => catalog.Count;
         public OfflineBattleNativePlayableScope Scope => scope;
         public Transform TryGetGridTransform(int id) => gridViews?.TryGetTransform(id);
@@ -92,6 +97,7 @@ namespace Zjcs.Presentation.Combat
             gridViews?.Enqueue(stepEvent, checkpoint);
             gridViews?.DispatchDue();
             Func<int, Transform> resolveTransform = id => gridViews?.TryGetTransform(id) ?? unitTransform(id);
+            ScheduleMovements(stepEvent, resolveTransform);
             foreach (FightBattleSkillCastEvent cast in stepEvent.SkillCasts)
             {
                 if (cast == null || cast.ActorId <= 0 || cast.SkillEntityId <= 0) continue;
@@ -115,12 +121,34 @@ namespace Zjcs.Presentation.Combat
                     else pending.Insert(index, scheduled);
                 }
             }
+            DispatchMoves();
+        }
+
+        private void ScheduleMovements(FightBattleStepEvent stepEvent, Func<int, Transform> resolveTransform)
+        {
             var cursors = new Dictionary<int, float>();
             if (stepEvent.Movements != null) foreach (var movement in stepEvent.Movements)
             {
                 if (movement?.Path == null || movement.Path.Count < 2) continue;
                 cursors.TryGetValue(movement.UnitId, out float cursor);
-                float start = Mathf.Max(cursor, Mathf.Max(0f, movement.Delay));
+                bool ownsSkill = OwnsMovementSkill(movement);
+                float start = (float)FightOrdinaryMovementTiming.ActionStartDelay(movement, cursor);
+                float skillStart = start - movement.OrdinaryMoveDelay;
+                if (ownsSkill)
+                {
+                    var cast = new ScheduledCast {
+                        Cast = new FightBattleSkillCastEvent { ActorId = movement.UnitId, Slot = -1,
+                            SkillEntityId = movement.MoveSkillEntityId, Delay = skillStart,
+                            Presentation = movement.OrdinarySkillPresentation },
+                        UnitTransform = resolveTransform, Remaining = skillStart };
+                    var source = resolveTransform(movement.UnitId);
+                    if (cast.Remaining <= 0f && source != null) Start(cast, source, null);
+                    else
+                    {
+                        int index = pending.FindIndex(value => value.Remaining > cast.Remaining);
+                        if (index < 0) pending.Add(cast); else pending.Insert(index, cast);
+                    }
+                }
                 float duration = 0f;
                 for (int index = 1; index < movement.Path.Count; index++)
                 {
@@ -137,7 +165,6 @@ namespace Zjcs.Presentation.Combat
                 int insert = pendingMoves.FindIndex(value => value.Remaining > start);
                 if (insert < 0) pendingMoves.Add(scheduled); else pendingMoves.Insert(insert, scheduled);
             }
-            DispatchMoves();
         }
 
         private void DispatchMoves()

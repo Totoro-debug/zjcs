@@ -53,7 +53,8 @@ namespace Zjcs.Presentation.Combat
         // action effects stop at their cell boundary, as MyFightActionSkillMove does.
         public void Schedule(int unitId, Transform source, FightBattleStepEvent step,
             Func<FightGridPoint, Vector3> gridToWorld,
-            Func<FightBattleMovementEvent, bool> nativeOwnsAction = null)
+            Func<FightBattleMovementEvent, bool> nativeOwnsAction = null,
+            Func<FightBattleMovementEvent, bool> nativeOwnsSkill = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleMovementEffects));
             if (step?.Movements == null) return;
@@ -66,8 +67,9 @@ namespace Zjcs.Presentation.Combat
             foreach (var movement in step.Movements)
             {
                 if (movement == null || movement.UnitId != unitId || movement.Path == null || movement.Path.Count < 2) continue;
-                cursor = Math.Max(cursor, Math.Max(0f, movement.Delay));
-                if (skills.TryGetValue(movement.MoveSkillEntityId, out var skill))
+                cursor = FightOrdinaryMovementTiming.ActionStartDelay(movement, cursor);
+                if (nativeOwnsSkill?.Invoke(movement) != true
+                    && skills.TryGetValue(movement.MoveSkillEntityId, out var skill))
                     Enqueue(unitId, source, skill, cursor, -1f, gridToWorld(movement.Path[movement.Path.Count - 1]));
                 actions.TryGetValue(movement.MoveBehaviourId, out var action);
                 if (nativeOwnsAction?.Invoke(movement) == true) action = null;

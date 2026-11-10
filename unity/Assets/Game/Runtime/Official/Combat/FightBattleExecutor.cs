@@ -329,7 +329,10 @@ namespace Zjcs.Combat.Official
                     OffsetSkillEvents(casts, approachCastStart, damageEvents, approachDamageStart,
                         movements, approachMovementStart, approachEnd);
                     FightBattleMovementEvent approach = movements[approachMovementStart];
-                    approachEnd = Math.Max(0f, approach.Delay) + MovementDuration(approach);
+                    approachEnd = approach.OrdinarySkillPresentation != null
+                        ? Math.Max(0f, approach.Delay - approach.OrdinaryMoveDelay)
+                            + approach.OrdinarySkillPresentation.ActionDuration
+                        : Math.Max(0f, approach.Delay) + MovementDuration(approach);
                     targets = FightBattleTargeting.SelectInSkillRange(actor, units, skill,
                         random: random);
                 }
@@ -2256,6 +2259,7 @@ namespace Zjcs.Combat.Official
             if (statusCatalog == null || movement == null
                 || !unitById.TryGetValue(movement.UnitId, out FightBattleUnitState mover)) return;
             statusCatalog.ApplyMovementFacing(mover, movement);
+            statusCatalog.CompleteRoleMovement(movement);
             if (movementStartContext == null) return;
             // ActionAgentComponentImplement.StartAction fires StartEvent after AddEntity;
             // FightActionSkillMoveComponent.StartImpl has already committed the path at that point.
@@ -2472,13 +2476,21 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleMovementEvent movement in movements)
                 {
                     if (movement == null || movement.Path == null || movement.Path.Count <= 1) continue;
-                    float start = Math.Max(0f, movement.Delay);
-                    if (movementEnds.TryGetValue(movement.UnitId, out float previousEnd))
-                        start = Math.Max(start, previousEnd);
+                    movementEnds.TryGetValue(movement.UnitId, out float previousEnd);
+                    float start = (float)FightOrdinaryMovementTiming.ActionStartDelay(movement, previousEnd);
                     float movementDuration = MovementDuration(movement);
                     float end = start + movementDuration;
                     movementEnds[movement.UnitId] = end;
                     movementSeconds = Math.Max(movementSeconds, end);
+                    if (movement.OrdinarySkillPresentation != null)
+                    {
+                        float skillStart = start - movement.OrdinaryMoveDelay;
+                        var presentation = movement.OrdinarySkillPresentation;
+                        if (presentation.Duration >= 0f)
+                            movementSeconds = Math.Max(movementSeconds, skillStart + presentation.Duration);
+                        if (presentation.ActionDuration >= 0f)
+                            actionDuration = Math.Max(actionDuration, skillStart + presentation.ActionDuration);
+                    }
                 }
             }
             float duration = Math.Max(skillDuration, movementSeconds);

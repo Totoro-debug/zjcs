@@ -8,4 +8,10 @@ namespace Zjcs.Presentation.Combat
     {
         bool OwnsMovement(FightBattleMovementEvent movement);
     }
+
+    // Parent skill lifecycle is separate from the movement action and its track.
+    public interface IBattleMovementSkillView
+    {
+        bool OwnsMovementSkill(FightBattleMovementEvent movement);
+    }
 }

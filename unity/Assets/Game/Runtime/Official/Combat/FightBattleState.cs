@@ -1795,6 +1795,10 @@ namespace Zjcs.Combat.Official
         public int UnitId;
         public int MoveBehaviourId;
         public int MoveSkillEntityId;
+        // Ordinary movement owns a separate skill entity before its action starts.
+        // Null in legacy receipts and in forced/self skill actions.
+        public FightBattleSkillCastPresentation OrdinarySkillPresentation;
+        public float OrdinaryMoveDelay;
         public bool IsRetreat;
         // Confirmed offline action direction, captured before path settlement.
         // Missing legacy snapshots remain false and use the existing presentation.

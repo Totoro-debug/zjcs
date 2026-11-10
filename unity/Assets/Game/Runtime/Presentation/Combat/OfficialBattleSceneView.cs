@@ -854,7 +854,7 @@ namespace Zjcs.Presentation.Combat
                 {
                     if (movement == null || movement.UnitId != unitId
                         || movement.Path == null || movement.Path.Count <= 1) continue;
-                    cursor = Math.Max(cursor, Math.Max(0f, movement.Delay));
+                    cursor = FightOrdinaryMovementTiming.ActionStartDelay(movement, cursor);
                     Vector3 first = gridToWorld(movement.Path[0]);
                     if (motion.Points.Count == 0) motion.Points.Add(first);
                     else if (motion.Points[motion.Points.Count - 1] != first)
@@ -896,7 +896,8 @@ namespace Zjcs.Presentation.Combat
             motions[unitId] = motion;
             ApplyMotionFacing(unitId, body, motion);
             movementEffects?.Schedule(unitId, body, stepEvent, gridToWorld,
-                movement => movementActions?.OwnsMovement(movement) == true);
+                movement => movementActions?.OwnsMovement(movement) == true,
+                movement => (movementActions as IBattleMovementSkillView)?.OwnsMovementSkill(movement) == true);
         }
 
         private bool IsMotionRunning(int unitId)

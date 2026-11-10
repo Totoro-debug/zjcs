@@ -42,6 +42,18 @@
       "sha256": "49b1383e892381fbff9077b8fb04337cddce0f096e425217030923985bd4c16b"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillComponentInfo.cs",
+      "sha256": "a8fd469ff28f0aa1142f3ab9e8a643d8d7ededd80c70dc0ee88a371155445008"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillComponentImplement.cs",
+      "sha256": "4e4b33efb54d32ada48f3ac6e46bb11f50e5b1c33499a063cdc06c91b463368d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightRoleCharacterComponentInfo.cs",
+      "sha256": "382d1ebe9938ac7b10b4b39d5b01cb1bc8240ea00912acbea1f70d96770497c6"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActionComponent.cs",
       "sha256": "574e476645f5e9f86b9f5015ed794a2aac103df4be65f9beef9fd762107cc1c7"
     },
@@ -349,19 +361,35 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
-      "sha256": "84b2e0e1174383d1ad82575dc29f0fb4101fce220dff408e34fd111088de3867"
+      "sha256": "d06797e0988828b3beddc38c81a7f159089a1dd2f6e9fa4f6e70302df7c0b307"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
-      "sha256": "6908143268c1df9be5e2210f62db817429fd25e54c5cd8652728df080fd59225"
+      "sha256": "6acc58c1ed6f4876a360e4e448a667332bc3937b70678f0b7c6e57cda50e88de"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.Movement.cs",
-      "sha256": "ba621422b964ae8465deb3b83b113138935331c24c12c036684691fa57b8649b"
+      "sha256": "0b3b4cad7de061356311fadbf742d16e2ab8360c53e374d8d191eab72b83ed77"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs",
+      "sha256": "f9146b1198d0fa090b4c3ff13d5e65edad1835a52071198ab56b87f7fc618f66"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.OrdinaryMovement.cs",
+      "sha256": "5ccf2380ef282a5429f3ab657887b51d90c1484dfeff0f7941ee01e5f2cb54e0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOrdinaryMovementTiming.cs",
+      "sha256": "2d265e5b9e5bf94cf4f22c07cabfe3c3c7c07e142f63db57e3dc308b601c4ab2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleSkillCastPresentation.cs",
+      "sha256": "f787736eac53c9f3cb4ebf268449fa1212ff17b500a00f23e2481ffb37bc6524"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/IBattleMovementActionView.cs",
-      "sha256": "f433db0c3726e48c80e27ca801783846fcbdb0837a8694f43ab0648470116834"
+      "sha256": "c6272e96f4c44708fb14486d238e8292b5c257436b471bd9f13b44d81fefaf32"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMoveActionData.cs",
@@ -385,15 +413,15 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs",
-      "sha256": "1ab49d15db6f8a556b32aa9fa336a0c21b54b5a29e1873349a430a4cb1d182fd"
+      "sha256": "c8c698d67d428b2e2fa5b54038a7b3a5ca82862a6bcf87e3572a980d34f55d65"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
-      "sha256": "16636712389471265d8cbab03102b596f5de23790c4ec8b79805d0242db33401"
+      "sha256": "f14b563eb15c2b161508ddb6b36377e2fd95fdbdf6b4cc9a522b640f23a97b02"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMovementEffects.cs",
-      "sha256": "0faee440aad06a4da74107eae71f25774fcf788d81861ba11546c40ca81c457a"
+      "sha256": "bf31bff3eb6b8360e349e8466cb59a90dc301051efc799161b81652e8d29c943"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs",
@@ -401,7 +429,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.cs",
-      "sha256": "a7d119947d1a806e8f771b63440401ec2de73dcdadf6bb267374a23eccf18c06"
+      "sha256": "50a5b97d715d2bb928b9ca1db813acef0f2a720d6fdd32114a042a50a64dc132"
     },
     {
       "path": "scripts/test_battle_skill_moves.ps1",
@@ -416,12 +444,16 @@
       "sha256": "4e891817bda1cc60eef1820d0410abc1c98d17fe874f97faa5246e9eb329fe9f"
     },
     {
+      "path": "scripts/test_battle_ordinary_movement.ps1",
+      "sha256": "1dc0a34e1a3fd6a0828cf481e9e74535b3da61b991bdeb837fc3d479ffbf6cd8"
+    },
+    {
       "path": "scripts/test_battle_skill_graph_dispatch.ps1",
-      "sha256": "74a80adcb11c75808212003d766b040918c96ac8009b03d2aacb393ba092fb02"
+      "sha256": "e793ea31e3bcba07df3301d93854f9631c4a8fe94e64fce8b83e0b4f409735c3"
     },
     {
       "path": "scripts/fixtures/battle_skill_graph_dispatch_harness.cs",
-      "sha256": "673626d4c76373a264b5b24f92521b3f206fd4d31fa9a9857a67fc140fef83c9"
+      "sha256": "cad251a41be327346684cb9adeed3c13ef0b7c007dddfa2670eb470fda407682"
     },
     {
       "path": "scripts/prepare_unity_map14_visibility_handlers.py",
@@ -438,7 +470,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_skill_move_runtime.py",
-    "sha256": "dbfa3e0b5a724fbc332f670f0521339c1d8a87ec72a8beb09bc9126d6ac8ce3b"
+    "sha256": "e376f17773b89eeb1dc0e4ec4552547f076eca67a9d352fe50c20a0378ebdbd5"
   },
   "conversion": [
     "Original client lifecycle and per-path timer; explicit manager injection and optional host timing.",
@@ -447,7 +479,8 @@
   ],
   "confirmed_offline_rules": [
     "Self actions snapshot the settled skill direction before path settlement, preserving configured fixed direction; ordinary approach/retreat and forced target actions snapshot the moved unit direction at action creation. FlipX is independent; legacy receipts without direction keep their fallback.",
-    "For these settled paths without collision data, action lifetime is original total movement duration plus DelayDestroyTime, then original End/Remove and pooling. Path eligibility, probability, resistance and landing retain their existing configured rules; missing paths or collision information are not inferred."
+    "For these settled paths without collision data, action lifetime is original total movement duration plus DelayDestroyTime, then original End/Remove and pooling. Path eligibility, probability, resistance and landing retain their existing configured rules; missing paths or collision information are not inferred.",
+    "Only the 22 original ordinary movement skills use earliest nonnegative fixed/AllEnded/AllRelevantEnded entity and action timers independently; AllEnded starts at movement End including DelayDestroyTime. The native skill is created before its action with a negative slot and calls original MyFightSkill.OnRemove; graphs finish naturally. Current approach/retreat entry points carry creation snapshots; remaining special entry points and shared rule start/end reactions are not claimed complete."
   ],
   "implementation_document": "docs/features/skills.md"
 }
