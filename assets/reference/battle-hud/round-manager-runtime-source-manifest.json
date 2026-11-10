@@ -1,0 +1,23 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    ".tools/source-packages/current/884_156692/official-code/client-source/GameRoundUI.cs": "51d0626faf4f39f94180742d30b1266490c345bdbf6216ec49ff5c22addad757",
+    ".tools/source-packages/current/884_156692/official-code/client-source/GameUIBase.cs": "a672138a63be29bb02a1e5cc72347a375858c13ad6fc3c7ef8667a7816c93d35",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/CharacterRoundDriverUpdateState.cs": "71d7b173e38f9524666b0f2f5fe5eecf58f0e1e959cd3f35157d8a44eb1c2f09",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RoundRuntimeData.cs": "9e7e1833e64dfa2ff5241abe2f1f482462df7e64ec24a780e54d4cd3880d90fc",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightRoundDriverComponent.cs": "b342e54c978aa08f0ec42e128d4ea7e269f0800b3a9e58ac6eae5fc9790ed7d4"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundUI.cs": "25035270c9d666b88a7dc6023a2772c9656343befd6ffe5337a66b2acc86177b",
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundUI.cs.meta": "9a8fed402520d5e9ae293248fd5b5cb1e348745a5ac4348ff71dae2c43c94a45",
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundUIBindings.cs": "28c3eb3e272a47d4adf2ec586e8c9d0fcfe91173d337ea64edb31e37ab3998ee",
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundUIBindings.cs.meta": "fbcc37e0156d16e3a3d3572939785ec0590ebccbfd415a0fff41b176cb7de2e6"
+  },
+  "generator_sha256": "860fbbcf9b37ed3f0e279ff34abd24333398f13f5d0b27c006b06b9fa13a26c1",
+  "adaptations": [
+    "Explicit local driver/entity/event projections replace live FightRoot and Common server proxies.",
+    "The original GameUIBase initialized notification enters through Initialize and the existing UIBase lifecycle.",
+    "PrepareCard supplies local entity/photograph bindings before the original Init/Refresh calls.",
+    "Original pooling, ordering, availability/waiting, death queue, minimum spacing, wrap and interpolation retained."
+  ]
+}

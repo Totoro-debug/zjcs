@@ -17,7 +17,9 @@ DESTINATION = ROOT / 'unity/Assets/Official/Combat/RoundUI'
 RECEIPT = ROOT / 'assets/reference/battle-hud/round-scene-native-source-manifest.json'
 NAMES = ('GameRoundScene', 'SpriteRendererCanvas', 'GameSceneObjectOrderLayer',
     'GameRoundCharacterItemScene', 'GameRoundPlayerPortrait', 'GameRoundPortraitETC2SceneHandler',
-    'HeadCharacterPortraitETC2Scene', 'CircleSpriteRenderer', 'GamePlayManagerConfig')
+    'HeadCharacterPortraitETC2Scene', 'CircleSpriteRenderer', 'GamePlayManagerConfig',
+    'GameRoundCharacterItem', 'GameRoundPortraitETC2Handler', 'GameRoundPortraitNormalHandler',
+    'HeadCharacterPortrait', 'HeadCharacterPortraitETC2', 'GameRoundUI')
 
 
 class RoundSceneBinding(SelectorBinding):
@@ -38,6 +40,77 @@ class RoundSceneBinding(SelectorBinding):
             self.script_guids.add(pointer['guid'])
             self.script_sources[name] = dict(path=path.relative_to(ROOT).as_posix(),
                 sha256=sha(path.read_bytes()), meta_sha256=sha(meta.read_bytes()), pointer=pointer)
+        runtime = ROOT / 'unity/Assets/Game/Runtime'
+        paths = {name: runtime / 'Official/ProfessionUI' / (name.rsplit('.', 1)[-1] + '.cs') for name in (
+            'AppearanceUIPartHandler', 'OffScreenUISpinePlayer', 'UIBloomPlayerElement',
+            'AppearanceSystem.PlayerAppearance', 'AppearanceSystem.Runtime.AppearanceCharacter',
+            'AppearanceSystem.Runtime.AppearanceSkinClip', 'AppearanceSystem.Runtime.AppearanceUI')}
+        paths.update({name: runtime / 'Official/WorldUI' / (name + '.cs')
+            for name in ('UIMesh', 'GraphicCapsuleMeshClipper')})
+        paths['Spine.Unity.SkeletonGraphic'] = runtime / 'Offline/ProfessionUI/ProfessionNativeUiGraphic.cs'
+        paths.update({name: runtime / 'Official/BattleRoundUI' / (name.replace('.', '/') + '.cs')
+            for name in ('DynamicTexture2DAtlas.GridSpriteImage', 'DynamicTexture2DAtlas.GridSpriteRawImage')})
+        for name, path in paths.items():
+            meta = Path(str(path) + '.meta')
+            pointer = dict(fileID=11500000, guid=guid(meta), type=3)
+            self.scripts[name] = pointer
+            namespace, _, leaf = name.rpartition('.')
+            self.class_ids[script_id(namespace, leaf)] = pointer
+            self.script_guids.add(pointer['guid'])
+            self.script_sources[name] = dict(path=path.relative_to(ROOT).as_posix(),
+                sha256=sha(path.read_bytes()), meta_sha256=sha(meta.read_bytes()), pointer=pointer)
+
+    def normal_card(self):
+        self.recovery.recover('GameRoundCharacterItem', self.work / 'round-scene-native',
+            bundle='defaultpackage_assets_prefabs_ui_fight_gameroundcharacteritem.bundle',
+            native_relative='Prefabs/UI/Fight/GameRoundCharacterItem.prefab')
+        self.recovery.finalize()
+        native, _, card, record = self.recovery.outputs[-1]
+        for path in (native, Path(str(native) + '.meta')):
+            key = path.relative_to(self.cache / 'native-export-all').as_posix()
+            if sha(path.read_bytes()) != self.checked[key]: raise ValueError('Changed original UGUI round card source')
+            self.inputs[path.relative_to(ROOT).as_posix()] = self.checked[key]
+        if card['unresolved']: raise ValueError('Unresolved original UGUI round card fields')
+        documents = copy.deepcopy(card['documents'])
+        for document in documents.values():
+            fields = document.get('MonoBehaviour', {})
+            if 'm_UVRect' in fields:
+                # Current Unity's Rect reader needs its native serialized version;
+                # without it the APK's 0,0,1,1 UV rect imports as 0,0,0,0.
+                fields['m_UVRect'] = dict(serializedVersion=2, **fields['m_UVRect'])
+        for key, pointer in card['external'].items(): self.objects[pointer['guid']] = self.original(key)
+        for key, file_id in card['objectMap'].items():
+            owner = self.original(key)
+            self.learn(self.recovery.fields(owner), next(iter(documents[file_id].values())), owner)
+        for row in card['scripts']:
+            name = '.'.join(filter(None, (row['namespace'], row['type'])))
+            documents[row['nativeFileID']]['MonoBehaviour']['m_Script'] = self.scripts[name]
+        value = hashlib.md5(b'zjcs:battle-round-native:GameRoundCharacterItem.prefab').hexdigest()
+        self.script_guids.add(value)
+        self.queue.append((Path('Resources/Combat/RoundUI/GameRoundCharacterItem.prefab'), value, self.replace(documents)))
+        self.normal_card_proof = dict(original=record, objects=len(documents), scripts=card['scripts'],
+            operation='Complete original UGUI card; serialized hierarchy/field values preserved, RawImage UV Rect native serializedVersion=2 restored, existing native animation and appearance ports explicitly bound.')
+
+    def round_manager(self):
+        native, _, panel, record = self.recovery.outputs[2]
+        documents = copy.deepcopy(panel['documents'])
+        for key, pointer in panel['external'].items(): self.objects[pointer['guid']] = self.original(key)
+        for key, file_id in panel['objectMap'].items():
+            owner = self.original(key)
+            self.learn(self.recovery.fields(owner), next(iter(documents[file_id].values())), owner)
+        for row in panel['scripts']:
+            name = '.'.join(filter(None, (row['namespace'], row['type'])))
+            documents[row['nativeFileID']]['MonoBehaviour']['m_Script'] = self.scripts[name]
+        for name, key in (('GameRoundCharacterItem', 'zjcs:battle-round-native:GameRoundCharacterItem.prefab'),
+                          ('GameRoundCharacterItem_Scene', 'zjcs:battle-round-native:retained-card-sorting')):
+            _, _, card, card_record = next(row for row in self.recovery.outputs if row[3]['name'] == name)
+            source_guid = guid(Path(str(self.native / ('Prefabs/UI/Fight/' + name + '.prefab')) + '.meta'))
+            self.redirects[source_guid] = dict(fileID=card['root'], guid=hashlib.md5(key.encode()).hexdigest(), type=3)
+        value = hashlib.md5(b'zjcs:battle-round-native:RoundUI.prefab').hexdigest()
+        self.script_guids.add(value)
+        self.queue.append((Path('Resources/Combat/RoundUI/RoundUI.prefab'), value, self.replace(documents)))
+        self.round_manager_proof = dict(original=record, objects=len(documents), scripts=panel['scripts'],
+            operation='Full original RoundUI subtree with both original card references and GameRoundUI; no geometry or serialized parameter changes.')
 
     def load(self, source_guid):
         obj = self.objects.get(source_guid)
@@ -46,7 +119,28 @@ class RoundSceneBinding(SelectorBinding):
             # special NpcPanelNpcItem shortcut for an explicitly named object.
             self.original_objects_by_guid.setdefault(source_guid, {})[identity(obj)] = obj
             self.objects.pop(source_guid)
-        return super().load(source_guid)
+        pointer = super().load(source_guid)
+        if obj is not None and obj.type.name == 'Mesh':
+            # Unity's native hex-buffer loader requires plain hex scalars, and
+            # block channel records. The generic YAML writer quotes index bytes.
+            from prepare_unity_map12_matching_meshes import native_mesh
+            from prepare_unity_map12_matching_meshes import MESH_TEMPLATE
+            for source in (ROOT/'scripts/prepare_unity_map12_matching_meshes.py', MESH_TEMPLATE):
+                self.inputs[source.relative_to(ROOT).as_posix()] = sha(source.read_bytes())
+            raw = native_mesh(obj.read_typetree())
+            raw = re.sub(rb"(?m)^(\s*m_IndexBuffer:) ['\"]([0-9a-f]+)['\"]$", rb'\1 \2', raw)
+            raw = re.sub(rb'(?m): null$', b':', raw)
+            for index, (relative, value, data) in enumerate(self.queue):
+                if value == pointer['guid']:
+                    self.queue[index] = (relative, value, raw)
+                    proof = self.proof[identity(obj)]
+                    proof['geometry'] = dict(vertices=obj.read_typetree()['m_VertexData']['m_VertexCount'],
+                        vertex_sha256=sha(bytes(obj.read_typetree()['m_VertexData']['m_DataSize'])),
+                        index_sha256=sha(bytes(obj.read_typetree()['m_IndexBuffer'])),
+                        operation='All source fields independently checked by native_mesh; native block channels, plain hex buffers and blank empty byte arrays.')
+                    break
+            else: raise ValueError('Native round mesh queue entry missing')
+        return pointer
 
     def portrait_configuration(self):
         for name in ('prepare_partner_card_native.py', 'prepare_partner_gift_native.py',
@@ -222,6 +316,8 @@ class RoundSceneBinding(SelectorBinding):
             path = code / (name + '.cs')
             self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
         self.portrait_configuration()
+        self.normal_card()
+        self.round_manager()
         return record
 
 
@@ -293,12 +389,15 @@ def main():
             installed[meta.relative_to(ROOT).as_posix()] = sha(meta.read_bytes()); parent = parent.parent
     runtime = ROOT / 'unity/Assets/Game/Runtime/Official/BattleRoundUI'
     ports = list(runtime.glob('*')) + [ROOT / 'unity/Assets/Game/Runtime/Presentation/Combat' / name for name in (
-        'OfficialBattleSceneTimelineView.cs', 'OfficialBattleSceneTimelineView.cs.meta', 'Zjcs.Presentation.Combat.asmdef')]
+        'OfficialBattleSceneTimelineView.cs', 'OfficialBattleSceneTimelineView.cs.meta',
+        'OfficialBattleHudView.Phases.cs', 'OfficialBattleHudView.Phases.cs.meta', 'Zjcs.Presentation.Combat.asmdef')]
     RECEIPT.write_bytes((json.dumps(dict(manifest=binding.recovery.apk.version, prefab=record,
         inputs=binding.inputs, native_recovery=binding.recovery.proof, resources=binding.proof,
-        scripts={name: binding.script_sources[name] for name in (*NAMES, 'BattleHpBloodEffect')}, installed=installed,
+        scripts=binding.script_sources, installed=installed,
         shared_resources=shared, variant_guids=aliases, generator_sha256=sha(Path(__file__).read_bytes()),
         card_sorting=binding.card_sorting,
+        normal_card=binding.normal_card_proof,
+        round_manager=binding.round_manager_proof,
         retained_hud_anchor=binding.retained_hud_anchor,
         runtime_ports={path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in ports if path.is_file()}),
         ensure_ascii=False, indent=2) + '\n').encode())

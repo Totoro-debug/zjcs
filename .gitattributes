@@ -2470,3 +2470,14 @@ unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneTimelineView.cs
 scripts/prepare_battle_round_card_runtime.py -text
 scripts/prepare_battle_round_scene_native.py -text
 scripts/prepare_partner_roster_native.py -text
+
+# Preserve the complete generated native round manager and UGUI card bytes.
+unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundUIBindings.cs* -text whitespace=cr-at-eol
+unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundUI.cs* -text whitespace=cr-at-eol
+unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundCharacterItem.cs* -text whitespace=cr-at-eol
+scripts/prepare_battle_round_manager_runtime.py -text
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.Phases.cs -text whitespace=cr-at-eol
+
+# Preserve native round binding metadata bytes captured by source receipts.
+unity/Assets/Game/Runtime/Official/BattleRoundUI/*.meta -text whitespace=cr-at-eol
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.Phases.cs.meta -text whitespace=cr-at-eol

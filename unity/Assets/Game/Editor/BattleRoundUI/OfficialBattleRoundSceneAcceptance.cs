@@ -213,12 +213,31 @@ namespace Zjcs.Editor.BattleRound
     scaler.referenceResolution=new Vector2(1080,1920); scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.Expand;
     var eventsObject=new GameObject("EventSystem",typeof(EventSystem)); eventsObject.transform.SetParent(root.transform,false);
     var events=eventsObject.GetComponent<EventSystem>();
-    var hud=new OfficialBattleHudView(OfficialBattleHudCatalog.LoadDefault());
+    var hudCatalog=OfficialBattleHudCatalog.LoadDefault();
+    Require(hudCatalog.Font.material.shader.isSupported,"Original HUD font shader is unsupported.");
+    var hud=new OfficialBattleHudView(hudCatalog);
     GameObject hudRoot=hud.Mount(canvasObject.transform,camera);
     scene=UnityEngine.Object.FindObjectOfType<GameRoundScene>();
     Require(scene!=null && scene.IconRoot.name=="Slot" && scene.Line.name=="Linear", "Original scene component references were lost.");
     Require(scene.GetComponentsInChildren<Transform>(true).Length==4, "Native round scene hierarchy was reconstructed or extended.");
     Require(scene.Line.size==new Vector2(6.4f,.15f) && scene.Line.sortingOrder==-2, "Original round line geometry/order differs.");
+    var roundUI=hudRoot.transform.Find("Content/Top/FixedContent/RoundUI").GetComponent<GameRoundUI>();
+    Require(roundUI!=null && roundUI.IconInitExtendCount==16 && roundUI.MinDist==.05f
+     && roundUI.IconMoveDuration==.2f && roundUI.IconPrefab!=null && roundUI.IconPrefabScene!=null
+     && roundUI.IconBack.name=="Linear" && roundUI.IconSlot.name=="Slot",
+     "Complete native manager subtree/references/serialized parameters were lost.");
+    var nativeUGUI=roundUI.IconPrefab.GetComponent<GameRoundCharacterItem>();
+    Require(nativeUGUI!=null && nativeUGUI.GetComponentsInChildren<MonoBehaviour>(true).Length==37
+     && nativeUGUI.FactionBgImg!=null && nativeUGUI.MonsterIconImg!=null && nativeUGUI.MonsterHurtImg!=null
+     && nativeUGUI.NpcIconImg!=null && nativeUGUI.PlayerPortrait!=null && nativeUGUI.Animator!=null,
+     "Complete native UGUI card script/field closure is missing.");
+    var originalMesh=nativeUGUI.GetComponentInChildren<UIMesh>(true).Mesh;
+    Require(originalMesh.vertexCount==4 && originalMesh.GetVertexBufferStride(0)==20
+     && originalMesh.triangles.SequenceEqual(new[]{0,1,2,0,2,3})
+     && originalMesh.vertices.SequenceEqual(new[]{new Vector3(1.27f,-1.27f,0),new Vector3(1.27f,1.27f,0),
+       new Vector3(-1.27f,1.27f,0),new Vector3(-1.27f,-1.27f,0)})
+     && originalMesh.uv.SequenceEqual(new[]{new Vector2(0,0),new Vector2(0,1),new Vector2(1,1),new Vector2(1,0)}),
+     "Original UGUI plane mesh bytes failed native deserialization.");
     foreach(var renderer in scene.GetComponentsInChildren<SpriteRenderer>())
      Require(renderer.sprite!=null && renderer.sharedMaterial!=null && renderer.sharedMaterial.shader.isSupported,"Native timeline sprite/material failed: "+renderer.name);
     var state=new FightBattleCheckpoint();
@@ -229,9 +248,19 @@ namespace Zjcs.Editor.BattleRound
      state.Units.Add(unit);state.Timeline.Entries.Add(new FightTurnEntry {Id=id,Next=(id-1)*2500});
     }
     Func<FightBattleUnitState,Sprite> portrait=u=>u.Id==1?playerPortrait:OfficialBattleNpcPortraitCatalog.Load().Find(u.NpcClassId);
-    hud.RefreshTimeline(state,portrait,null,false);
+    var unqueued=new FightBattleUnitState {Id=99,Hp=1,MaxHp=1};
+    state.Units.Add(unqueued);
+    hud.RefreshTimeline(state,unit=>unit.Id==99?throw new InvalidOperationException("Unqueued entity requested a portrait."):portrait(unit),null,false);
+    state.Units.Remove(unqueued);
+    hud.RefreshPhase(FightBattlePhase.Preparing,new OfficialBattleSessionOptions());
+    Require(!scene.GetComponent<OfficialBattleSceneTimelineView>().IsPlaying,
+     "Round manager's original play-only gate is open during preparation.");
     hud.RefreshPhase(FightBattlePhase.Play,new OfficialBattleSessionOptions());
+    Require(scene.GetComponent<OfficialBattleSceneTimelineView>().IsPlaying,
+     "Round manager's original play-only gate did not follow the public HUD phase.");
     yield return new WaitForSeconds(.8f);
+    Require(scene.GetComponentsInChildren<GameRoundCharacterItemScene>(true).Length==16,
+     "Original manager did not precreate its serialized sixteen scene cards.");
     var anchor=(RectTransform)hudRoot.transform.Find(OfficialBattleTimelineAssets.Load().Anchor);
     void CheckProjection()
     {
@@ -266,7 +295,8 @@ namespace Zjcs.Editor.BattleRound
       && card.GetComponent<GameSceneObjectOrderLayer>()!=null,"Original card sorting was lost; timeline line can cover the portrait.");
     }
     capture("round-scene-initial");yield return null;
-    state.Timeline.Acting=3;state.Timeline.Entries[2].Next=20000;
+    state.Timeline.Acting=3;state.Timeline.Current=5000;
+    state.Timeline.Entries[0].Next=10000;state.Timeline.Entries[1].Next=12500;state.Timeline.Entries[2].Next=20000;
     hud.RefreshTimeline(state,portrait,null,true);yield return new WaitForSeconds(.4f);
     CheckActor(3);Require(state.Timeline.Entries[0].Id==1 && state.Timeline.Entries[2].Next==20000,"Presentation modified authoritative timeline.");
     Require(scene.IconRoot.Find("GameRoundCharacterItem_3").GetComponent<GameRoundCharacterItemScene>().IsCurrent
@@ -274,7 +304,14 @@ namespace Zjcs.Editor.BattleRound
      "Original card Refresh did not replace its current-actor flag.");
     capture("round-scene-acting");yield return null;
     var restored=JsonUtility.FromJson<FightBattleCheckpoint>(JsonUtility.ToJson(state));
-    restored.Timeline.Acting=2;hud.RefreshTimeline(restored,portrait,null,true);yield return new WaitForSeconds(.4f);CheckActor(2);
+    hud.RefreshTimeline(restored,portrait,null,false);yield return new WaitForSeconds(.4f);CheckActor(3);
+    var driver=scene.GetComponent<OfficialBattleSceneTimelineView>().Driver;
+    Require(driver.FindData(3).NextTime==5000 && restored.Timeline.Entries[2].Next==20000,
+     "Restoring a checkpoint displayed the actor's future turn or mutated the checkpoint.");
+    restored.Timeline.Acting=2;restored.Timeline.Current=7500;
+    hud.RefreshTimeline(restored,portrait,null,true);yield return new WaitForSeconds(.4f);CheckActor(2);
+    Require(driver.FindData(3).NextTime==20000 && driver.FindData(2).NextTime==7500,
+     "Changing actors did not restore the previous actor's next-turn display time.");
     Require(playerCircle.Sprite.texture==timelineTexture,"Refreshing/restoring the public timeline duplicated the cached portrait texture.");
     camera.orthographicSize=8;yield return null;yield return null;CheckProjection();
     scaler.referenceResolution=new Vector2(1080,2160);Canvas.ForceUpdateCanvases();yield return null;yield return null;CheckProjection();
@@ -295,9 +332,49 @@ namespace Zjcs.Editor.BattleRound
     Transform speed=hudRoot.transform.Find("FightMainPanelSpeedUI/Btn");
     yield return Click(events,RectTransformUtility.WorldToScreenPoint(null,((RectTransform)speed).TransformPoint(((RectTransform)speed).rect.center)),speed);
     Require(speedClicks==1,"Native scene blocked the original HUD speed pointer.");
+    var hurt=new FightBattleStepEvent();
+    hurt.DamageEvents.Add(new FightBattleDamageEvent {TargetId=1,Damage=-1,HitEntityId=1,DamageType=1});
+    hud.RefreshTimeline(restored,portrait,null,true,hurt);yield return new WaitForSeconds(.05f);
+    Require(scene.IconRoot.Find("GameRoundCharacterItem_1").GetComponent<Animator>()
+     .GetCurrentAnimatorStateInfo(0).IsName("UIGameRound_Hurt"),"Original manager did not consume the public damage notification.");
+    yield return new WaitForSeconds(.4f);
     restored.Units[1].Hp=0;hud.RefreshTimeline(restored,portrait,null,true);yield return new WaitForSeconds(.8f);
     Require(scene.IconRoot.Find("GameRoundCharacterItem_2")==null,"Dead actor card was retained.");
     capture("round-scene-after-death");yield return null;
+    scene.SetVisible(false);
+    var view=scene.GetComponent<OfficialBattleSceneTimelineView>();
+    var inactive=new GameObject("UGUI card injection");inactive.SetActive(false);inactive.transform.SetParent(root.transform,false);
+    var uiConfig=UnityEngine.Object.Instantiate(portraitResources.Configuration);
+    uiConfig.EnablePlayerPortraitETC2_Scene=false;
+    var uiAtlas=new FightDynamicTextureETC2();uiAtlas.Initialize(uiConfig,portraitResources.LoadTexture);
+    bool slotWasActive=roundUI.IconSlot.gameObject.activeSelf;
+    roundUI.IconSlot.gameObject.SetActive(true);
+    try
+    {
+     foreach(bool etc2 in new[]{true,false})
+     {
+      uiConfig.EnablePlayerPortraitETC2=etc2;
+      var cardRoot=UnityEngine.Object.Instantiate(roundUI.IconPrefab,inactive.transform,false);
+      foreach(var selector in cardRoot.GetComponentsInChildren<GameRoundPlayerPortrait>(true))selector.BindConfiguration(uiConfig);
+      foreach(var head in cardRoot.GetComponentsInChildren<HeadCharacterPortraitETC2>(true))head.BindAtlas(uiAtlas);
+      foreach(var handler in cardRoot.GetComponentsInChildren<GameRoundPortraitETC2Handler>(true))handler.BindAtlas(uiAtlas);
+      cardRoot.transform.SetParent(roundUI.IconSlot,false);cardRoot.SetActive(true);
+      var card=cardRoot.GetComponent<GameRoundCharacterItem>();view.PrepareCard(card,1);
+      card.Init(new BattleRoundData{EntityId=1,Interval=10000},true,view.GetRole(1));card.SetActing();
+      yield return new WaitForSeconds(.3f);
+      var images=cardRoot.GetComponentsInChildren<RawImage>(false);
+      Require(images.Any(image=>image.texture!=null && image.texture.width==100 && image.texture.height==120),
+       "Complete native UGUI card did not display the original head photograph: ETC2="+etc2);
+      Require(images.Any(image=>image.uvRect==new Rect(0,0,1,1)
+       && image.rectTransform.rect.size==new Vector2(100,120)),
+       "Original full UV rectangle/native head dimensions failed to deserialize.");
+      Require(card.MainPlayerEffect.activeSelf && card.IsCurrent && card.RoundRuntimeData!=null,
+       "Original UGUI card data/main-player effect missing.");
+      capture(etc2?"round-card-ugui-atlas":"round-card-ugui-normal");yield return null;
+      cardRoot.SetActive(false);UnityEngine.Object.Destroy(cardRoot);yield return null;
+     }
+    }
+    finally {roundUI.IconSlot.gameObject.SetActive(slotWasActive);uiAtlas.Dispose();UnityEngine.Object.Destroy(uiConfig);UnityEngine.Object.Destroy(inactive);scene.SetVisible(true);}
     restored.Timeline.Entries.Clear();hud.RefreshTimeline(restored,portrait,null,false);yield return null;
     Require(scene.IconRoot.childCount==0,"Empty timeline retained cards.");
     Require(timelineTexture!=null,"Portrait atlas was released before the battle scene scope ended.");

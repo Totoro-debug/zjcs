@@ -51,7 +51,10 @@ namespace Zjcs.Presentation.Combat
             result = new BattleRoundMonsterIcon { Type = Role.PetEntityClassId.HasValue ? 3 : 1, Path = icon.name };
             return id == Role.MonsterId;
         }
-        public Sprite GetSprite(string path) => path == icon.name ? icon : resources.LoadSprite(path);
+        public Sprite GetSprite(string path) => path == icon.name
+            || !Role.PlayerId.HasValue && path == "ItemIcon/GameHeadIcon/Monster/G_" + Role.MonsterId
+            || Role.PetEntityClassId.HasValue && path == "ItemIcon/GameHeadIcon/Pet/G_" + Role.PetEntityClassId.Value
+            ? icon : resources.LoadSprite(path);
         public IBattleRoundPlayerRequest CreatePlayerRequest(Action<BattleRoundPlayer> onResult) => new PlayerRequest(player, onResult);
         private sealed class PlayerRequest : IBattleRoundPlayerRequest
         {

@@ -20,6 +20,7 @@ namespace Zjcs.Presentation.Combat
         public void RefreshPhase(FightBattlePhase phase, OfficialBattleSessionOptions options)
         {
             if (root == null) return;
+            if (sceneTimeline != null) sceneTimeline.IsPlaying = phase == FightBattlePhase.Play;
             if (stageStatusDialog != null) stageStatusDialog.Refresh(stageStatusCheckpoint);
             bool preparing = phase == FightBattlePhase.Preparing;
             renderer.SetActive(PrepareRootPath, preparing);

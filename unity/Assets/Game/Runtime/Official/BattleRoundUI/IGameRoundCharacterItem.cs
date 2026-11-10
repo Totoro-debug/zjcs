@@ -27,6 +27,9 @@ public interface IGameRoundCharacterItem
 	void UpdateRoundData(object newData);
 
 	void SetSiblingIndex(int index);
+	void OnGameObjectPoolReset();
+
+	void OnGameObjectPoolClear();
 }
 
 }

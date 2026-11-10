@@ -1,4 +1,4 @@
-"""Migrate the original scene card, adapting only its external entity/data seam."""
+"""Migrate both original round cards at their external entity/data seam."""
 from pathlib import Path
 import hashlib
 import json
@@ -23,8 +23,9 @@ def replace_method(text, name, body):
     return text[:start] + '\n' + body + '\n\t}' + text[end:]
 
 
-def main():
-    source = SOURCE / 'client-source/GameRoundCharacterItemScene.cs'
+def port(name):
+    source = SOURCE / 'client-source' / (name + '.cs')
+    scene = name.endswith('Scene')
     text = source.read_text(encoding='utf-8-sig')
     text = re.sub(r'^using (?:Common|Framework(?:\.[\w.]+)?|GFrameCore[\w.]*|Microsoft[\w.]*|ZLogger);\n', '', text, flags=re.M)
     text = re.sub(r'^\s*//IL_[^\n]*\n', '', text, flags=re.M)
@@ -85,12 +86,35 @@ def main():
 		case 3: RefreshMonsterIconImpl(config.Path); return;
 		}
 		Debug.LogError("Invalid monster icon type " + monsterId + " " + config.Type);''')
+    if not scene:
+        # The UGUI card intentionally uses the original pet/monster path split,
+        # rather than the scene card's MonsterIconType dispatch.
+        text = text.replace('RefreshMonsterIcon(mGameCharacter.PetEntityClassId.Value);',
+            'RefreshMonsterIcon(mGameCharacter.PetEntityClassId.Value, isPet: true);')
+        text = text.replace('RefreshMonsterIcon(mGameCharacter.MonsterId);',
+            'RefreshMonsterIcon(mGameCharacter.MonsterId, isPet: false);')
+        text = replace_method(text, 'RefreshNpcIcon', '''\t\tNpcIconGO.gameObject.SetActive(true);
+\t\tif (!bindings.TryGetNpcIcon(npcClassId, out string icon))
+\t\t\tDebug.LogError("[Config] can`t find npc Info, npcClassId:" + npcClassId);
+\t\telse NpcIconImg.sprite = bindings.GetSprite(icon);''')
+        text = replace_method(text, 'RefreshMonsterIcon', '''\t\tstring iconName = isPet ? "ItemIcon/GameHeadIcon/Pet/G_" + monsterId : "ItemIcon/GameHeadIcon/Monster/G_" + monsterId;
+\t\tSprite dynamicTextureSprite = bindings.GetSprite(iconName);
+\t\tMonsterIconImg.sprite = dynamicTextureSprite;
+\t\t((Component)MonsterIconImg).gameObject.SetActive(true);
+\t\tMonsterHurtImg.sprite = dynamicTextureSprite;''')
     text = text.replace('mFightRoot.GetDynamicTextureSprite(', 'bindings.GetSprite(')
     if re.search(r'\b(?:Common|Inject|ILogger|GLogger|FightRole\w+|MeManager|Parsers|PlayerLiteInfoManager)\b', text):
         raise ValueError('Unadapted external dependency')
-    text = '// Official GameRoundCharacterItemScene; external data supplied at the local presentation seam.\nnamespace Zjcs.Official.BattleRoundUI\n{\nusing Zjcs.Official.ProfessionUI;\nusing Zjcs.Official.WorldUI;\n' + text + '\n}\n'
+    text = '// Official ' + name + '; external data supplied at the local presentation seam.\nnamespace Zjcs.Official.BattleRoundUI\n{\nusing Zjcs.Official.ProfessionUI;\nusing Zjcs.Official.WorldUI;\n' + text + '\n}\n'
+    return source, text
+
+
+def main():
     outputs = {}
-    for name, content in [('GameRoundCharacterItemScene', text)]:
+    sources = []
+    for name in ('GameRoundCharacterItemScene', 'GameRoundCharacterItem'):
+        source, content = port(name)
+        sources.append(source)
         path = DEST / (name + '.cs'); path.write_text(content, encoding='utf-8', newline='\n')
         meta = Path(str(path) + '.meta')
         if not meta.exists(): meta.write_text('fileFormatVersion: 2\nguid: '+hashlib.md5(('zjcs:round-card:'+name).encode()).hexdigest()+'\n', encoding='utf-8')
@@ -98,6 +122,7 @@ def main():
     interface = SOURCE / 'client-source/IGameRoundCharacterItem.cs'
     value = interface.read_text(encoding='utf-8-sig').replace('using Common;','').replace('FightRoleCharacterComponent', 'BattleRoundRole')
     value = re.sub(r'\bRoundRuntimeData (?=\w)', 'object ', value)
+    value = value.replace('\n}', '\n\tvoid OnGameObjectPoolReset();\n\n\tvoid OnGameObjectPoolClear();\n}')
     path = DEST / interface.name; path.write_text('namespace Zjcs.Official.BattleRoundUI\n{\n'+value+'\n}\n',encoding='utf-8',newline='\n')
     meta = Path(str(path)+'.meta')
     if not meta.exists(): meta.write_text('fileFormatVersion: 2\nguid: '+hashlib.md5(b'zjcs:round-card:interface').hexdigest()+'\n',encoding='utf-8')
@@ -109,7 +134,7 @@ def main():
         'OfficialBattleSceneTimelineView.cs','OfficialBattleSceneTimelineView.cs.meta'):
         p=ROOT/'unity/Assets/Game/Runtime/Presentation/Combat'/name
         outputs[p.relative_to(ROOT).as_posix()]=sha(p)
-    inputs = {p.relative_to(ROOT).as_posix():sha(p) for p in (source,interface,SOURCE/'common-source/Common/RoundRuntimeData.cs',SOURCE/'common-source/Common/MonsterIconType.cs')}
+    inputs = {p.relative_to(ROOT).as_posix():sha(p) for p in (*sources,interface,SOURCE/'common-source/Common/RoundRuntimeData.cs',SOURCE/'common-source/Common/MonsterIconType.cs',SOURCE/'common-source/Common/LanguageUtils.cs')}
     receipt = ROOT/'assets/reference/battle-hud/round-card-runtime-source-manifest.json'
     receipt.write_text(json.dumps(dict(manifest='884_156692',inputs=inputs,outputs=outputs,generator_sha256=sha(Path(__file__)),
         adaptations=['Entity component/config/player queries are supplied at IBattleRoundCardBindings; original branch priority retained.',
@@ -117,8 +142,8 @@ def main():
             'Resolved guard appearances replace online guard parser/wrapper queries; the three supported guard kinds are retained.',
             'Reusable local player request and mimic subscription replace client managers; original waiting/reset/disposal order retained.',
             'Existing portrait enums, circle renderer and Unity logging adapters; original serialized fields, animation and death/pool order retained.'],
-        scope='Complete original scene card class and interface; explicit local projection of existing completed photographs, NPC/monster/pet icons and faction images. Native asset/config binding is recorded separately. Guard/mimic entity projection and the complete round manager remain pending.'),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-    print('Ported original scene card and interface.')
+        scope='Both original round card classes and interface; explicit local projection of existing completed photographs, NPC/monster/pet icons and faction images. Native asset/config binding is recorded separately. Guard/mimic entity projection remains pending; the original round manager has a separate source receipt.'),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print('Ported both original round cards and interface.')
 
 
 if __name__ == '__main__': main()
