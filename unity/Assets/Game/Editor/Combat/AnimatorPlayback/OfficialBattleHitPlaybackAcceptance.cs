@@ -442,6 +442,49 @@ namespace Zjcs.Editor.Combat
                 "Receipt playback leaked pooled trigger entities.");
             Require(FightBattleCheckpointSerializer.Save(restored) == legacySaved,
                 "Receipt playback repeated settlement or changed its checkpoint.");
+
+            units[0].X = 5; units[1].X = 8;
+            source.localPosition = new Vector3(5, 5, 0);
+            target.localPosition = new Vector3(8, 5, 0);
+            foreach (int summonSkill in new[] { 11540, 12140, 12200, 57780 })
+            {
+                var summonBattle = SummonBattle(summonSkill, out var summonCast);
+                var receipt = summonCast.HitSelections.Single(value =>
+                    combatCatalog.CreateSkill(summonSkill, 0, 0, 5, 20, 1, null).HitGraphEntities
+                        .Any(definition => definition.EntityId == value.HitEntityId && definition.IsSummon));
+                if (summonSkill == 12140) receipt.EffectDelays.Clear();
+                var beforePlayback = FightBattleCheckpointSerializer.Save(summonBattle);
+                Time.timeScale = 0f;
+                before = played.Count;
+                var summonSkillId = views.Start(summonCast, source, target);
+                views.Tick(receipt.Delay + .001f);
+                var nativeSummon = root.GetComponentsInChildren<MyFightHitSummon>().Single();
+                Require(nativeSummon.Component.SkillId.Equals(summonSkillId),
+                    "Summon hit lost its actual owning cast identity.");
+                var originalCells = nativeSummon.Component.GetScopes().Select(cell =>
+                    nativeSummon.Component.GridTransform.LocalToWorldPos(cell.Pos)).ToArray();
+                var spawned = summonBattle.Units.Where(unit => unit.MasterId == 1).OrderBy(unit => unit.Id)
+                    .Select(unit => new Pos2d(unit.X, unit.Y)).ToArray();
+                if (summonSkill == 11540)
+                    Require(nativeSummon.myPlayable && originalCells.Length == 9 && summonBattle.GridItems.Count > 0
+                        && summonBattle.GridItems.All(item => originalCells.Contains(new Pos2d(item.X, item.Y))),
+                        "Original nine-cell summon scope lost its settled grid-item cells.");
+                else
+                    Require(spawned.SequenceEqual(originalCells) && !nativeSummon.myPlayable
+                        && !nativeSummon.myScopePlayable && !nativeSummon.SourceToMePlayable,
+                        "Summon position/order or original empty hit graph changed: " + summonSkill);
+                Time.timeScale = 1f;
+                yield return new WaitForSeconds(summonSkill == 11540 ? .6f : .03f);
+                if (summonSkill == 11540)
+                    Require(played.Skip(before).Any(value => value.Name == "playable11541"
+                        && value.Source == nativeSummon.gameObject && value.Target == nativeSummon.gameObject),
+                        "Production summon receipt did not play its own original graph.");
+                Capture("hit-summon-production-" + summonSkill + ".png");
+                yield return new WaitForSeconds(summonSkill == 11540 ? 1.2f : .8f);
+                Require(root.GetComponentsInChildren<MyFightHitSummon>().Length == 0
+                    && FightBattleCheckpointSerializer.Save(summonBattle) == beforePlayback,
+                    "Summon receipt playback leaked its view or repeated summon creation.");
+            }
             Require(failure == null, failure ?? "Original native hit flow.");
             views.Dispose();
             views = null;
@@ -451,6 +494,33 @@ namespace Zjcs.Editor.Combat
                 x.name.StartsWith("ChainedHit_") || x.name == "tmp_scope_obj"
                     || x.name == "Battle native hit entities"),
                 "Battle disposal releases the original hit pool and its sibling anchors.");
+        }
+
+        private FightBattleCheckpoint SummonBattle(int skillId, out FightBattleSkillCastEvent cast)
+        {
+            var checkpoint = new FightBattleCheckpoint { StageId = 1, RandomSeed = 11,
+                Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 0 } };
+            for (int id = 1; id <= 2; id++)
+            {
+                var unit = Unit(id, 5 + 3 * (id - 1), 5);
+                unit.Side = id; unit.Level = 150; unit.SubRank = 1;
+                unit.Hp = unit.MaxHp = 1000000; unit.MoveMask = 5;
+                unit.Turn = new FightTurnUnit { Id = id, Hp = 1000000, Speed = 100 - id };
+                unit.Properties.Add(new FightPropertyValue { Id = 1, Value = 10001 });
+                unit.Properties.Add(new FightPropertyValue { Id = 2, Value = 10003 });
+                unit.Properties.Add(new FightPropertyValue { Id = 3, Value = 1000000 });
+                unit.Properties.Add(new FightPropertyValue { Id = 4, Value = 100 - id });
+                if (id == 1)
+                {
+                    unit.Skills.Add(combatCatalog.CreateSkill(skillId, 0, 0, 5, 20, 1, null));
+                    unit.SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = -1 });
+                }
+                checkpoint.Units.Add(unit);
+            }
+            var wave = new FightBattleWaveState(); wave.UnitIds.Add(2); checkpoint.Waves.Add(wave);
+            var result = OfficialCombatAssetCatalog.LoadDefault().BeginBattle(checkpoint).Step(0, 1);
+            cast = result.Event.SkillCasts.Single(value => value.SkillEntityId == skillId);
+            return checkpoint;
         }
 
         private State NewState(int id, EcEntityIdentifier skillId, OfficialBattleSkillEntityPlayback playback, int x, int y)

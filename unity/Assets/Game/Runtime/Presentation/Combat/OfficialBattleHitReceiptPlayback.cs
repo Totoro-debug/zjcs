@@ -91,6 +91,7 @@ namespace Zjcs.Presentation.Combat
                     throw new InvalidOperationException("Settled hit is absent from its official skill graph: "
                         + cast.SkillEntityId + "/" + selection.HitEntityId);
                 if (definition.HitComponentType != "FightHitFixedComponent"
+                    && definition.HitComponentType != "FightHitSummonComponent"
                     && definition.HitComponentType != "FightHitTriggerSkillComponent") continue;
                 float scopeEnd = 0f;
                 foreach (var entry in definition.ScopeEntries) scopeEnd = Mathf.Max(scopeEnd, entry.Delay);
@@ -140,6 +141,8 @@ namespace Zjcs.Presentation.Combat
                     flight = FightHitViewFormula.CalcSkillHitDelay(
                         value.Data.Hit is FightHitFixedComponent
                             ? entity.GetComponent<MyFightHitFixed>().DelayInfoProvider
+                            : value.Data.Hit is FightHitSummonComponent
+                                ? entity.GetComponent<MyFightHitSummon>().DelayInfoProvider
                             : entity.GetComponent<MyFightHitTriggerSkill>().DelayInfoProvider,
                         value.Source, value.Data.Hit.GridTransform.Pos, views, value.FlipX);
                 active.Add(new Active { Id = value.Data.Id, Remaining = Mathf.Max(0f, value.Lifetime + flight) });

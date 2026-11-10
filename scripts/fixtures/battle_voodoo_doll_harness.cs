@@ -33,7 +33,7 @@ public static class BattleVoodooDollHarness
         var doll=state.Units.Find(u=>u.VoodooDoll!=null);
         Check(doll!=null,"Official 12200 did not generate its 4600 substitute entity.");
         Check(doll.VoodooDoll.TargetId==2 && doll.CharacterType==2 && doll.Side==2
-            && doll.Level==20 && doll.X==5 && doll.Y==7,"Substitute lost target identity/side, skill level or caster-front spawn.");
+            && doll.Level==20 && doll.X==7 && doll.Y==5,"Substitute lost target identity/side, skill level or native caster-front scope.");
         Check(doll.Properties.Find(p=>p.Id==2).Value==6001,"Substitute did not inherit target defence at 60%.");
         var buff=new FightBattleStatusState {ClassId=90002,StatusType=1};
         Check(FightStatusLifecycle.Apply(doll,buff,0,100)==null,"Substitute accepted a buff.");
@@ -50,7 +50,7 @@ public static class BattleVoodooDollHarness
         doll.BaseProperties.Find(p=>p.Id==3).Value=500000;
         player.Skills.Clear();player.SkillState.Slots.Clear();
         var attack=new FightBattleSkillDefinition {EntityId=90010,Slot=0,TargetType=1};
-        attack.Range.Add(new FightGridPoint(0,2));
+        attack.Range.Add(new FightGridPoint(doll.X-player.X,doll.Y-player.Y));
         attack.Hits.Add(new FightBattleHitDefinition {EntityId=90011,DamageType=8,
             HasCustomDamage=true,CustomDamage=-1000000});
         player.Skills.Add(attack);player.SkillState.Slots.Add(new FightSkillSlotState {Slot=0,LimitedTimes=-1});
@@ -113,7 +113,7 @@ public static class BattleVoodooDollHarness
         doll.BaseProperties.Find(value=>value.Id==3).Value=500000;
         player.Skills.Clear();player.SkillState.Slots.Clear();
         var attack=new FightBattleSkillDefinition {EntityId=90010,Slot=0,TargetType=1};
-        attack.Range.Add(new FightGridPoint(0,2));
+        attack.Range.Add(new FightGridPoint(doll.X-player.X,doll.Y-player.Y));
         attack.Hits.Add(new FightBattleHitDefinition {EntityId=90011,DamageType=8,
             HasCustomDamage=true,CustomDamage=1600000,Delay=0.4f});
         player.Skills.Add(attack);player.SkillState.Slots.Add(new FightSkillSlotState {Slot=0,LimitedTimes=-1});

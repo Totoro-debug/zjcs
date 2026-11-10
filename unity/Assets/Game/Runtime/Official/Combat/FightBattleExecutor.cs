@@ -887,7 +887,7 @@ namespace Zjcs.Combat.Official
                         continue;
                     }
                     SpawnSummons(actor, skill, hit,
-                        hasRandomTargetContext ? hitTargets : targets);
+                        hasRandomTargetContext ? hitTargets : targets, hitSelection, hitCast);
                     continue;
                 }
                 decimal hitRemovedHp = 0m;
@@ -1163,7 +1163,8 @@ namespace Zjcs.Combat.Official
         }
 
         private void SpawnSummons(FightBattleUnitState actor, FightBattleSkillDefinition skill,
-            FightBattleHitDefinition hit, List<FightBattleUnitState> targets)
+            FightBattleHitDefinition hit, List<FightBattleUnitState> targets,
+            FightHitTargetSelection selection, FightBattleSkillCastPresentation cast)
         {
             if (statusCatalog == null || skillItems == null)
                 throw new InvalidOperationException("Official combat and skill item catalogs are required to spawn monsters.");
@@ -1173,16 +1174,26 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState reference = ResolveSummonReference(actor, hit.SummonReferenceType,
                 targets);
             if (reference == null) return;
-            for (int i = 0; i < hit.SummonPositions.Count; i++)
+            // ReferenceType supplies inherited information/faction, not the hit's
+            // grid origin. Use the same captured centres and ordered Base scopes
+            // as MyFightHitSummon, including original RealCenter/flip/rotation.
+            var localPositions = hit.ScopeEntries != null && hit.ScopeEntries.Count > 0
+                ? hit.ScopeEntries.ConvertAll(entry => entry.Position) : hit.SummonPositions;
+            var offsets = FightBattleTargeting.TransformScope(localPositions, hit.ScopeTransform, actor, cast);
+            var centers = selection == null
+                ? new List<FightGridPoint> { FightHitAnchorExtensions.ResolveCenter(hit.Anchor, actor,
+                    targets != null && targets.Count > 0 ? targets[0] : null, cast) }
+                : selection.EffectCenters;
+            var positions = new List<FightGridPoint>();
+            foreach (var center in centers)
+                foreach (var offset in offsets) positions.Add(center + offset);
+            for (int i = 0; i < positions.Count; i++)
             {
                 FightBattleSummonPool pool = SelectSummonPool(actor.Id, hit);
                 if (pool == null) break;
 
                 bool isDoll = hit.SummonConfigType == "FightHitSummonVoodooDollCfg";
-                FightBattleUnitState origin = isDoll ? actor : reference;
-                FightGridPoint offset = hit.SummonPositions[i];
-                if (origin.Direction == 1) offset.X = -offset.X;
-                var position = new FightGridPoint(origin.X + offset.X, origin.Y + offset.Y);
+                var position = positions[i];
                 int level = hit.SummonLevelType == 1 ? Math.Max(1, skill.Level)
                     : Math.Max(1, actor.Level);
                 FightBattleUnitState summon = isDoll
