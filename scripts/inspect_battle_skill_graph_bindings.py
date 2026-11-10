@@ -23,6 +23,32 @@ def script_file_id():
     return SERIALIZED_MY_FIGHT_SKILL_FILE_ID
 
 
+def ordinary_movement_configuration(skills):
+    rules_path = ROOT / 'unity/Assets/Official/Combat/battle-rules.json'
+    receipt_path = ROOT / 'assets/reference/battle-rules/active-entity-configuration-source-manifest.json'
+    rules = json.loads(rules_path.read_bytes())['entities']
+    receipt = json.loads(receipt_path.read_bytes())
+    if receipt['manifest'] != '884_156692':
+        raise ValueError('Ordinary movement configuration must use the selected official audit.')
+    audited = {row['entity_id']: row for row in receipt['rows']}
+    rows = []
+    for skill in skills:
+        if not skill['entity_prefab'].startswith('Move/'):
+            continue
+        key = skill['skill_id']
+        digest = sha256(json.dumps(rules[str(key)], ensure_ascii=False, sort_keys=True,
+            separators=(',', ':')).encode('utf-8')).hexdigest()
+        row = audited.get(key)
+        if row is None or row['changed'] or row['installed_components_sha256'] != digest \
+                or row['selected_components_sha256'] != digest:
+            raise ValueError('Review ordinary movement configuration against the selected source: ' + str(key))
+        rows.append({'entity_id': key, 'components_sha256': digest})
+    if len(rows) != 22:
+        raise ValueError('Review the original ordinary movement skill membership.')
+    return {'audit': {'path': receipt_path.relative_to(ROOT).as_posix(),
+                      'sha256': sha256(receipt_path.read_bytes()).hexdigest()}, 'rows': rows}
+
+
 def main():
     export_receipt = json.loads(EXPORT_RECEIPT.read_text(encoding='utf-8'))
     verified = {row['path']: row['sha256'] for row in export_receipt['outputs']}
@@ -35,7 +61,12 @@ def main():
     component_id = script_file_id()
     skills = []
     entity_ids = set()
-    for path in sorted(EXPORT.glob('[0-9]*/[0-9]*.prefab')):
+    # Ordinary movement skills retain the same original MyFightSkill view in
+    # the separate Move subtree. Include their complete entities, not just the
+    # effect-only projections used by the earlier movement renderer.
+    entity_paths = list(EXPORT.glob('[0-9]*/[0-9]*.prefab'))
+    entity_paths.extend((EXPORT / 'Move').glob('[0-9]*/[0-9]*.prefab'))
+    for path in sorted(entity_paths):
         # Numeric directories group a skill with its children. Each numeric
         # prefab names its own entity (10160/10163 is entity 10163).
         skill_id = int(path.stem)
@@ -87,6 +118,9 @@ def main():
         'native_exported_files': len(export_receipt['outputs']),
         'skills': skills,
         'unique_playable_prefabs': sorted(referenced),
+        'binding_audit': {'path': Path(__file__).relative_to(ROOT).as_posix(),
+                          'sha256': sha256(Path(__file__).read_bytes()).hexdigest()},
+        'ordinary_movement_configuration': ordinary_movement_configuration(skills),
     }
     print(json.dumps(result, ensure_ascii=False, separators=(',', ':')))
 

@@ -1370,8 +1370,9 @@ namespace Zjcs.Editor.Skills
 
         private static void ConfigureShaderCompilation()
         {
-            if (Environment.GetEnvironmentVariable("ZJCS_PLAYER_CLONE_ACCEPTANCE") != "1"
-                || SessionState.GetBool(ShaderOverrideKey, false)) return;
+            bool captureOriginalMaterials = Environment.GetEnvironmentVariable("ZJCS_PLAYER_CLONE_ACCEPTANCE") == "1"
+                || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_GRAPH_CAPABILITY_ACCEPTANCE"));
+            if (!captureOriginalMaterials || SessionState.GetBool(ShaderOverrideKey, false)) return;
             // Unity's async editor fallback is plain cyan. Capture the actual original
             // material even when a skill requests its shader variant for the first time.
             SessionState.SetBool(PreviousAsyncShaderKey, EditorSettings.asyncShaderCompilation);

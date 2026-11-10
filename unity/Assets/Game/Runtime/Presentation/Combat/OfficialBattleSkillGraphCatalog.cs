@@ -15,6 +15,7 @@ namespace Zjcs.Presentation.Combat
     public sealed class OfficialBattleSkillGraphRecord
     {
         public int skill_entity_id;
+        public string entity_resource;
         public OfficialBattleSkillGraphBinding[] playables;
     }
 

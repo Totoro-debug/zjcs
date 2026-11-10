@@ -281,7 +281,10 @@ namespace Zjcs.Presentation.Combat
                     + ", removed=" + approachRemoved + ", captured=" + approachCaptured);
             if (ValidateMovement) Require(movementObserved && movementAdvanced && movementRemoved
                 && loopObserved && escapeObserved && loopCaptured && movementCaptured,
-                "Original native movement, loop/escape action or retirement was not observed.");
+                "Original native movement differs: observed=" + movementObserved
+                    + ", advanced=" + movementAdvanced + ", removed=" + movementRemoved
+                    + ", loop=" + loopObserved + ", escape=" + escapeObserved
+                    + ", loopCaptured=" + loopCaptured + ", movementCaptured=" + movementCaptured);
             Require(settled && animated && captured && nativeCasts == 1 && checkpoint.Finished
                 && (skillId != 13640 || nativeChildren == 2), "Native graph, action, input or settlement is incomplete.");
         }
