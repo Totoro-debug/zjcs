@@ -95,6 +95,21 @@ namespace Zjcs.Combat.Official
         {
             new FightGridPoint(0, 0)
         };
+
+        // Position probes share read-only combat inputs; they never settle an action or status.
+        internal FightBattleUnitState ProbeAt(FightGridPoint position)
+        {
+            var probe = (FightBattleUnitState)MemberwiseClone();
+            probe.X = position.X;
+            probe.Y = position.Y;
+            probe.HasFlipX = true;
+            probe.FlipX = position.X == X ? (HasFlipX ? FlipX : Direction == 1) : position.X < X;
+            int dx = position.X - X, dy = position.Y - Y;
+            if (dx != 0 || dy != 0)
+                probe.Direction = Math.Abs(dx) >= Math.Abs(dy)
+                    ? dx < 0 ? 1 : 3 : dy > 0 ? 2 : 0;
+            return probe;
+        }
     }
 
     [Serializable]

@@ -323,7 +323,7 @@ namespace Zjcs.Combat.Official
                     targets = ChaosInvasionPlayerTargets(actor);
                 int approachCastStart = casts.Count, approachDamageStart = damageEvents.Count;
                 int approachMovementStart = movements.Count;
-                if (skill.Slot != chaosInvasionPhaseSkillSlot && targets.Count == 0
+                if (skill.Slot != chaosInvasionPhaseSkillSlot
                     && MoveIntoSkillRange(actor, skill, movements))
                 {
                     // ActionSkillMove runs each path segment before the active skill can start.
@@ -397,10 +397,7 @@ namespace Zjcs.Combat.Official
             FightBattleSkillDefinition eventSkill = null;
             if (casts.Count > ordinaryCastStart)
                 eventSkill = FindSkillBySlot(actor, casts[ordinaryCastStart].Slot);
-            else if (movements.Count == 0 && !actor.IsVoodooDoll)
-                MoveAwayFromNearestEnemy(actor, movements);
-            // Keep unavailable-skill turns non-damaging; the local retreat rule may still move
-            // the actor when a legal grid destination increases its distance from enemies.
+            // Unavailable skills never cause an unconditional retreat from their targets.
 
             if (statusCatalog != null)
                 for (int movementIndex = 0; movementIndex < movements.Count; movementIndex++)
@@ -2559,8 +2556,8 @@ namespace Zjcs.Combat.Official
                 {
                     FightGridPoint previous = movement.Path[index - 1];
                     FightGridPoint next = movement.Path[index];
-                    int distance = Math.Abs(next.X - previous.X) + Math.Abs(next.Y - previous.Y);
-                    duration += distance / movement.MoveSpeed;
+                    double dx = (double)next.X - previous.X, dy = (double)next.Y - previous.Y;
+                    duration += (float)(Math.Sqrt(dx * dx + dy * dy) / movement.MoveSpeed);
                 }
                 else
                     duration += MovementSecondsPerCell;
@@ -2577,117 +2574,20 @@ namespace Zjcs.Combat.Official
                     FightOfficialCombatCatalog.MoveActionType))
                 return false;
 
-            List<FightBattleUnitState> targets = FightBattleTargeting.Select(actor, units,
-                skill.TargetType, skill: skill, random: random);
-            if (targets.Count == 0) return false;
-
-            var occupied = OccupiedPositions(actor.Id);
-
-            List<FightGridPoint> bestPath = null;
-            bool bestReachesPosition = false;
-            foreach (FightBattleUnitState target in targets)
-                foreach (FightGridPoint desired in FightBattleTargeting.CastingPositions(target, skill.Range))
-                {
-                    List<FightGridPoint> path = grid.FindPath(
-                        new FightGridPoint(actor.X, actor.Y), desired, actor.MoveMask,
-                        actor.MoveDist + 2, 0, true, actor.BodyOffsets, occupied);
-                    if (path == null || path.Count <= 1) continue;
-                    // FindPath also returns a closest partial path for blocked destinations.
-                    // Such a short fallback must not hide a reachable casting position.
-                    bool reachesPosition = path[path.Count - 1].Equals(desired);
-                    if (bestPath == null || reachesPosition && !bestReachesPosition
-                        || reachesPosition == bestReachesPosition && path.Count < bestPath.Count)
-                    {
-                        bestPath = path;
-                        bestReachesPosition = reachesPosition;
-                    }
-                }
-
-            if (bestPath == null) return false;
-            int steps = Math.Min(actor.MoveDist, bestPath.Count - 1);
+            var start = new FightGridPoint(actor.X, actor.Y);
+            FightGridPoint landing = FightBattleTargeting.PlanOrdinaryLanding(actor, units, skill, grid);
+            if (landing.Equals(start)) return false;
             var movement = statusCatalog?.CreateRoleMovement(actor, false)
                 ?? new FightBattleMovementEvent { UnitId = actor.Id,
                     HasDirection = true, Direction = actor.Direction };
-            movement.Path.Add(new FightGridPoint(actor.X, actor.Y));
-            for (int i = 1; i <= steps; i++)
-            {
-                FightGridPoint previous = bestPath[i - 1];
-                FightGridPoint next = bestPath[i];
-                UpdateMovementDirection(actor, previous, next);
-                actor.X = next.X;
-                actor.Y = next.Y;
-                movement.Path.Add(next);
-            }
-            if (movement.Path.Count <= 1) return false;
-            movements.Add(movement);
-            NotifyMovementStart(movement, FightOfficialCombatCatalog.MoveActionType, movements);
-            return true;
-        }
-
-        private bool MoveAwayFromNearestEnemy(FightBattleUnitState actor,
-            List<FightBattleMovementEvent> movements)
-        {
-            FightBattleGrid grid = checkpoint.Grid;
-            if (grid == null || actor == null || actor.MoveDist <= 0
-                || statusCatalog != null && !statusCatalog.CanStartAction(actor,
-                    FightOfficialCombatCatalog.MoveActionType)) return false;
-            var enemies = new List<FightBattleUnitState>();
-            foreach (FightBattleUnitState unit in units)
-                if (unit != null && unit.Side != actor.Side && FightBattleTargeting.IsSelectable(unit))
-                    enemies.Add(unit);
-            if (enemies.Count == 0) return false;
-
-            FightGridPoint start = new FightGridPoint(actor.X, actor.Y);
-            int startDistance = NearestEnemyDistance(start, enemies);
-            int bestDistance = startDistance;
-            List<FightGridPoint> bestPath = null;
-            HashSet<FightGridPoint> occupied = OccupiedPositions(actor.Id);
-            int minimumX = Math.Max(0, actor.X - actor.MoveDist);
-            int maximumX = Math.Min(grid.Width - 1, actor.X + actor.MoveDist);
-            int minimumY = Math.Max(0, actor.Y - actor.MoveDist);
-            int maximumY = Math.Min(grid.Height - 1, actor.Y + actor.MoveDist);
-            for (int x = minimumX; x <= maximumX; x++)
-                for (int y = minimumY; y <= maximumY; y++)
-                {
-                    var desired = new FightGridPoint(x, y);
-                    if (Manhattan(start, desired) == 0 || Manhattan(start, desired) > actor.MoveDist)
-                        continue;
-                    List<FightGridPoint> path = grid.FindPath(start, desired, actor.MoveMask,
-                        actor.MoveDist + 2, 0, true, actor.BodyOffsets, occupied);
-                    if (path == null || path.Count <= 1 || path.Count - 1 > actor.MoveDist) continue;
-                    int distance = NearestEnemyDistance(path[path.Count - 1], enemies);
-                    if (distance <= bestDistance) continue;
-                    bestDistance = distance;
-                    bestPath = path;
-                }
-            if (bestPath == null) return false;
-
-            var movement = statusCatalog?.CreateRoleMovement(actor, true)
-                ?? new FightBattleMovementEvent { UnitId = actor.Id,
-                    HasDirection = true, Direction = actor.Direction };
             movement.Path.Add(start);
-            for (int i = 1; i < bestPath.Count; i++)
-            {
-                FightGridPoint previous = bestPath[i - 1];
-                FightGridPoint next = bestPath[i];
-                UpdateMovementDirection(actor, previous, next);
-                actor.X = next.X;
-                actor.Y = next.Y;
-                movement.Path.Add(next);
-            }
+            movement.Path.Add(landing);
+            UpdateMovementDirection(actor, start, landing);
+            actor.X = landing.X;
+            actor.Y = landing.Y;
             movements.Add(movement);
             NotifyMovementStart(movement, FightOfficialCombatCatalog.MoveActionType, movements);
             return true;
-        }
-
-        private static int NearestEnemyDistance(FightGridPoint position,
-            IReadOnlyList<FightBattleUnitState> enemies)
-        {
-            int nearest = int.MaxValue;
-            foreach (FightBattleUnitState enemy in enemies)
-                nearest = Math.Min(nearest, Manhattan(position,
-                    new FightGridPoint(enemy.X, enemy.Y)));
-            return nearest;
         }
 
         private static int Manhattan(FightGridPoint left, FightGridPoint right)
@@ -2724,10 +2624,9 @@ namespace Zjcs.Combat.Official
         {
             int dx = to.X - from.X;
             int dy = to.Y - from.Y;
-            if (dx == -1) return 1;
-            if (dx == 1) return 3;
-            if (dy == 1) return 2;
-            return 0;
+            return Math.Abs(dx) >= Math.Abs(dy)
+                ? dx < 0 ? 1 : 3
+                : dy > 0 ? 2 : 0;
         }
 
         private static FightBattleSkillDefinition FindSkillBySlot(FightBattleUnitState actor, int slot)

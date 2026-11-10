@@ -11,7 +11,7 @@ namespace Zjcs.Combat.Official
         public List<FightBattleUnitState> Targets = new List<FightBattleUnitState>();
     }
 
-    public static class FightBattleTargeting
+    public static partial class FightBattleTargeting
     {
         private const int ConfusionActionType = 54;
         private const int RidiculeActionType = 58;
@@ -32,6 +32,16 @@ namespace Zjcs.Combat.Official
             bool confused = false, bool releaseWhileConfused = false,
             FightBattleSkillDefinition skill = null, FightRandomStream random = null)
         {
+            return SelectCandidates(actor, units, targetType, ridiculeTargetId, confused,
+                releaseWhileConfused, skill, random);
+        }
+
+        private static List<FightBattleUnitState> SelectCandidates(FightBattleUnitState actor,
+            IReadOnlyList<FightBattleUnitState> units, int targetType, int ridiculeTargetId = 0,
+            bool confused = false, bool releaseWhileConfused = false,
+            FightBattleSkillDefinition skill = null, FightRandomStream random = null,
+            bool inRangeOnly = false, bool keepAllCandidates = false)
+        {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
             if (units == null) throw new ArgumentNullException(nameof(units));
             var candidates = new List<FightBattleUnitState>();
@@ -49,7 +59,9 @@ namespace Zjcs.Combat.Official
                         : skill.BlockingTargetActionTypes)) continue;
                 bool isRidiculeSource = targetType == 1 && ridiculeTargetId > 0
                     && unit.Id == ridiculeTargetId;
-                if (isRidiculeSource || MatchesTargetType(actor, unit, targetType, confusionAllowed))
+                if ((isRidiculeSource || MatchesTargetType(actor, unit, targetType, confusionAllowed))
+                    && (!inRangeOnly || skill == null || skill.Range == null || skill.Range.Count == 0
+                        || RangeIndex(actor, unit, skill.Range) >= 0))
                     candidates.Add(unit);
             }
 
@@ -58,7 +70,8 @@ namespace Zjcs.Combat.Official
             candidates.Sort((left, right) => CompareCandidates(actor, left, right, skill,
                 units, randomPriorities));
             PrioritizeRidiculeSource(candidates, targetType, ridiculeTargetId);
-            if (targetType == 1 || targetType == 2 || targetType == 3 || targetType == 8 || targetType == 9)
+            if (!keepAllCandidates && (targetType == 1 || targetType == 2 || targetType == 3
+                || targetType == 8 || targetType == 9))
                 if (candidates.Count > 1) candidates.RemoveRange(1, candidates.Count - 1);
             return candidates;
         }
@@ -269,8 +282,13 @@ namespace Zjcs.Combat.Official
             int ridiculeTargetId = 0, bool confused = false, bool releaseWhileConfused = false,
             FightRandomStream random = null)
         {
-            List<FightBattleUnitState> candidates = Select(actor, units, skill.TargetType,
-                ridiculeTargetId, confused, releaseWhileConfused, skill, random);
+            List<FightBattleUnitState> candidates = SelectCandidates(actor, units, skill.TargetType,
+                ridiculeTargetId, confused, releaseWhileConfused, skill, random,
+                inRangeOnly: true, keepAllCandidates: true);
+            RankOrdinaryAttackCandidates(actor, units, skill, candidates, ridiculeTargetId, confused);
+            if (skill.TargetType == 1 || skill.TargetType == 2 || skill.TargetType == 3
+                || skill.TargetType == 8 || skill.TargetType == 9)
+                if (candidates.Count > 1) candidates.RemoveRange(1, candidates.Count - 1);
             if (skill.Range == null || skill.Range.Count == 0) return candidates;
 
             var inRange = new List<FightBattleUnitState>();
@@ -352,6 +370,7 @@ namespace Zjcs.Combat.Official
             IReadOnlyList<FightBattleUnitState> units, FightBattleSkillDefinition skill)
         {
             if (actor == null || skill == null || skill.SkillTargetType != 0) return false;
+            if (!MeetsPreferredAreaTarget(actor, units, skill)) return false;
             List<FightBattleHitDefinition> hits = FightBattleHitCollector.CollectAll(skill);
             foreach (FightBattleHitDefinition hit in hits)
                 if (hit != null && hit.Scope != null && hit.Scope.Count > 0
@@ -626,7 +645,7 @@ namespace Zjcs.Combat.Official
             // Confirmed offline order: eligibility/control constraints first (at the caller),
             // then hostile marked targets, then the original skill priorities and tie breakers.
             bool attackAllies = skill != null && (skill.TargetType == 1 || skill.TargetType == 4);
-            bool attack = skill == null || skill.SkillType != 3;
+            bool attack = skill == null || skill.SkillType == 0 || skill.SkillType == 1;
             bool leftMarked = attack && (left.Side != actor.Side || attackAllies) && HasMoreHitStatus(left);
             bool rightMarked = attack && (right.Side != actor.Side || attackAllies) && HasMoreHitStatus(right);
             if (leftMarked != rightMarked) return leftMarked ? -1 : 1;

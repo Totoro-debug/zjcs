@@ -35,7 +35,7 @@ $ordered = New-Skill @(@(1, 0), @(2, 0))
 $selected = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $units, 1, 0, $false, $false, $ordered)
 Assert-Range ($selected[0].Id -eq 2) 'Range order did not prefer the nearer target'
 $inRange = [Zjcs.Combat.Official.FightBattleTargeting]::SelectInSkillRange($actor, $units, $ordered)
-Assert-Range ($inRange.Count -eq 1 -and $inRange[0].Id -eq 2) 'SelectInSkillRange did not keep the nearest enemy target'
+Assert-Range ($inRange.Count -eq 1 -and $inRange[0].Id -eq 3) 'Confirmed ordinary attack selection did not prefer lower HP percentage after equal higher priorities'
 $allOrdered = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $units, 4, 0, $false, $false, $ordered)
 Assert-Range ($allOrdered.Count -eq 4 -and $allOrdered[0].Id -eq 2 -and $allOrdered[1].Id -eq 3 -and $allOrdered[2].Id -eq 1 -and $allOrdered[3].Id -eq 4) 'All-target range ordering mismatch'
 

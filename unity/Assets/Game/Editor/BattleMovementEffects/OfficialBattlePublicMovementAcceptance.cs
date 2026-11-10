@@ -15,6 +15,8 @@ using Zjcs.Offline.ProfessionUI;
 using Zjcs.Official.BattleSkillPlayables;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Presentation.Combat;
+using Zjcs.Presentation.Character;
+using Zjcs.Presentation.CharacterCreation;
 
 
 namespace Zjcs.Editor
@@ -35,16 +37,60 @@ namespace Zjcs.Editor
         {
             Environment.SetEnvironmentVariable("ZJCS_CREATION_AUTOMATION", "1");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
-            Type.GetType("Zjcs.Editor.Home.HomeAcceptanceLauncher, Zjcs.Editor", true)
-                .GetMethod("ConfigurePortraitGameView", System.Reflection.BindingFlags.Static
-                    | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)
-                .Invoke(null, new object[] { 450, 975 });
+            ConfigureBackgroundGameView();
             SessionState.SetBool(Key, true);
             SessionState.SetInt(Key + ".result", 1);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 300);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Hook();
             EditorApplication.isPlaying = true;
+        }
+        private static void ConfigureBackgroundGameView()
+        {
+            // EditorWindow.Show/GetWindow always focus a newly created native window in
+            // this editor version. Use the verified ContainerWindow entry with setFocus=false.
+            const System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance
+                | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
+            var editor = typeof(EditorWindow).Assembly;
+            var sizesType = editor.GetType("UnityEditor.GameViewSizes", true);
+            var singleton = typeof(ScriptableSingleton<>).MakeGenericType(sizesType);
+            var sizes = singleton.GetProperty("instance").GetValue(null);
+            var group = sizesType.GetMethod("GetGroup").Invoke(sizes, new[] {
+                Enum.Parse(editor.GetType("UnityEditor.GameViewSizeGroupType", true), "Standalone") });
+            int count = (int)group.GetType().GetMethod("GetTotalCount").Invoke(group, null), selected = -1;
+            for (int i = 0; i < count; i++)
+            {
+                var size = group.GetType().GetMethod("GetGameViewSize").Invoke(group, new object[] { i });
+                if ((int)size.GetType().GetProperty("width").GetValue(size) == 450
+                    && (int)size.GetType().GetProperty("height").GetValue(size) == 975) { selected = i; break; }
+            }
+            if (selected < 0)
+            {
+                var size = Activator.CreateInstance(editor.GetType("UnityEditor.GameViewSize", true), flags,
+                    null, new[] { Enum.ToObject(editor.GetType("UnityEditor.GameViewSizeType", true), 1),
+                        (object)450, 975, "Public battle verification" }, null);
+                group.GetType().GetMethod("AddCustomSize").Invoke(group, new[] { size });
+                selected = count;
+            }
+            var viewType = editor.GetType("UnityEditor.GameView", true);
+            foreach (EditorWindow old in Resources.FindObjectsOfTypeAll(viewType)) old.Close();
+            var view = (EditorWindow)ScriptableObject.CreateInstance(viewType);
+            var bounds = EditorGUIUtility.GetMainWindowPosition();
+            view.titleContent = new GUIContent("Public battle verification");
+            view.position = new Rect(bounds.x + 40, bounds.y + 40, 450, 996);
+            var hostType = editor.GetType("UnityEditor.HostView", true);
+            var host = ScriptableObject.CreateInstance(hostType);
+            hostType.GetProperty("actualView", flags).SetValue(host, view);
+            var containerType = editor.GetType("UnityEditor.ContainerWindow", true);
+            var container = ScriptableObject.CreateInstance(containerType);
+            containerType.GetProperty("position", flags).SetValue(container, view.position);
+            containerType.GetProperty("rootView", flags).SetValue(container, host);
+            typeof(EditorWindow).GetMethod("MakeParentsSettingsMatchMe", flags).Invoke(view, null);
+            containerType.GetMethod("Show", flags).Invoke(container, new[] {
+                Enum.Parse(editor.GetType("UnityEditor.ShowMode", true), "NormalWindow"),
+                (object)false, true, false });
+            viewType.GetProperty("selectedSizeIndex", flags).SetValue(view, selected);
+            view.Repaint();
         }
         [InitializeOnLoadMethod] private static void Hook()
         {
@@ -73,6 +119,7 @@ namespace Zjcs.Editor
             }
             if (started || !EditorApplication.isPlaying || EditorApplication.isCompiling) return;
             started = true;
+            AudioListener.volume = 0f;
             Application.logMessageReceived += Observe;
             new GameObject("Public movement verification runner").AddComponent<Runner>().StartCoroutine(Verify());
         }
@@ -141,6 +188,8 @@ namespace Zjcs.Editor
             eventObject.transform.SetParent(root.transform, false);
             var events = eventObject.GetComponent<EventSystem>();
             var controller = world.AddComponent<OfficialBattleRuntimeController>();
+            Texture2D head = null;
+            Sprite portrait = null;
             float previousCaptureDelta = Time.captureDeltaTime;
             Time.captureDeltaTime = 1f / 60;
             try
@@ -161,7 +210,7 @@ namespace Zjcs.Editor
                     ResultRules = new FightBattleResultRules() };
                 var player = Unit(1, 1, 1, 2, 2, monsterActs ? 1 : 100);
                 player.RoleEntityId = 3100;
-                var monster = Unit(2, 2, 2, 6, 2, monsterActs ? 100 : 1);
+                var monster = Unit(2, 2, 2, 6, 4, monsterActs ? 100 : 1);
                 monster.MonsterId = monster.MonsterTemplateId = 3206;
                 monster.RoleEntityId = 3206;
                 var actor = monsterActs ? monster : player;
@@ -181,10 +230,26 @@ namespace Zjcs.Editor
                 actor.SkillState.Slots.Add(rules.CreateSkillSlot(skill, cooldown));
                 state.Units.Add(player);
                 state.Units.Add(monster);
+                var photography = CharacterPortraitPhotography.LoadBattleHead();
+                var portraitModel = CharacterCreationNativeModelFactory.CreateArenaGuardModel(0, 1, null, photography.excludes);
+                try
+                {
+                    portraitModel.transform.position = new Vector3(-1024, -1024, -1024);
+                    Require(OfficialBattleCharacterAnimationCatalog.TryResolve(
+                        portraitModel.GetComponent<Animator>().runtimeAnimatorController, photography.animation,
+                        out string pose), "Original head photography pose is unavailable.");
+                    head = CharacterNativePortraitCapture.Capture(portraitModel, photography, pose);
+                    Require(head.width == 100 && head.height == 120
+                        && head.GetPixels32().Count(pixel => pixel.a > 128) > 1000,
+                        "Original player head photograph is empty or incorrectly sized.");
+                    portrait = Sprite.Create(head, new Rect(0, 0, 100, 120), new Vector2(.5f, .5f), 100);
+                }
+                finally { UnityEngine.Object.Destroy(portraitModel); }
                 controller.Begin(new OfficialBattleRequest
                 {
                     Checkpoint = state, WorldRoot = world.transform, HudParent = canvasObject.transform,
                     InitialStepDelay = 0, CombatAssets = assets,
+                    TimelinePortrait = unit => unit.Id == player.Id ? portrait : null,
                     PlayerAppearance = new OfficialBattlePlayerAppearanceSource(1, 17, () => profile,
                         _ => profile.InitialWeaponType),
                     Options = new OfficialBattleSessionOptions { SkipPrepareStatus = false }
@@ -217,6 +282,11 @@ namespace Zjcs.Editor
                         prefix + "-no-approach.json"), FightBattleCheckpointSerializer.Save(state));
                 Require(movementResult != null, "Actual executor did not produce player movement.");
                 var movement = movementResult.Event.Movements.First(m => m.UnitId == actor.Id && m.Path.Count > 1);
+                Require(movement.Path.Count == 2, "Ordinary movement must contain one original jump segment.");
+                var jump = movement.Path[1] - movement.Path[0];
+                Require(jump.X * jump.X + jump.Y * jump.Y <= 16
+                    && Math.Abs(jump.X) + Math.Abs(jump.Y) > 4,
+                    "The controlled jump must exercise a legal Euclidean landing beyond four walk steps.");
                 Require(movement.MoveSkillEntityId == (monsterActs ? 19810 : 15300)
                     && movement.MoveBehaviourId == (monsterActs ? 19811 : 15301),
                     "Actual executor replaced the original movement identity.");
@@ -299,6 +369,8 @@ namespace Zjcs.Editor
             finally
             {
                 controller.DisposeSession();
+                if (portrait != null) UnityEngine.Object.Destroy(portrait);
+                if (head != null) UnityEngine.Object.Destroy(head);
                 Time.captureDeltaTime = previousCaptureDelta;
                 UnityEngine.Object.Destroy(root);
             }

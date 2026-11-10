@@ -1322,19 +1322,10 @@ $idleRunner = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
     $idleCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(),
     $officialCatalog, $skillItems)
 $idleStartX = $idleActor.X; $idleStartY = $idleActor.Y
-$idleMaximumReachableDistance = 0
-for ($x = [Math]::Max(0, $idleStartX - $idleMoveDist); $x -le [Math]::Min($idleCheckpoint.Grid.Width - 1, $idleStartX + $idleMoveDist); $x++) {
-    for ($y = [Math]::Max(0, $idleStartY - $idleMoveDist); $y -le [Math]::Min($idleCheckpoint.Grid.Height - 1, $idleStartY + $idleMoveDist); $y++) {
-        if ([Math]::Abs($x - $idleStartX) + [Math]::Abs($y - $idleStartY) -gt $idleMoveDist) { continue }
-        $distance = [Math]::Abs($x - $idleEnemy.X) + [Math]::Abs($y - $idleEnemy.Y)
-        $idleMaximumReachableDistance = [Math]::Max($idleMaximumReachableDistance, $distance)
-    }
-}
 $cooldownBeforeIdle = [Zjcs.Combat.Official.FightSkillState]::new($idleActor.SkillState).LeftCooldown(0)
 $idleStep = $idleRunner.Step(0, 1)
 $cooldownAfterIdle = [Zjcs.Combat.Official.FightSkillState]::new($idleActor.SkillState).LeftCooldown(0)
-$idleFinalDistance = [Math]::Abs($idleActor.X - $idleEnemy.X) + [Math]::Abs($idleActor.Y - $idleEnemy.Y)
-Assert-Combat ($idleStep.Event.SkillCasts.Count -eq 0 -and $idleStep.Event.DamageEvents.Count -eq 0 -and $idleStep.Event.Movements.Count -eq 1 -and $idleFinalDistance -eq $idleMaximumReachableDistance -and $idleEnemy.Hp -eq 1000 -and $idleActor.SkillState.Round -eq 1 -and $idleCheckpoint.Counter -eq 1 -and $cooldownAfterIdle -lt $cooldownBeforeIdle) 'No-release turn did not choose the farthest reachable position, advance its round/cooldown and avoid inventing an attack'
+Assert-Combat ($idleStep.Event.SkillCasts.Count -eq 0 -and $idleStep.Event.DamageEvents.Count -eq 0 -and $idleStep.Event.Movements.Count -eq 0 -and $idleActor.X -eq $idleStartX -and $idleActor.Y -eq $idleStartY -and $idleEnemy.Hp -eq 1000 -and $idleActor.SkillState.Round -eq 1 -and $idleCheckpoint.Counter -eq 1 -and $cooldownAfterIdle -lt $cooldownBeforeIdle) 'No-release turn must hold position, advance its round/cooldown and avoid inventing an attack'
 
 $restrictedActor = New-WaveUnit 1 1 1 1 1000
 $restrictedActor.MoveMask = 4
