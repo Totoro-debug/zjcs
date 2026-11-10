@@ -32,8 +32,6 @@ unity/Assets/StreamingAssets/Opening/action-motion.json text eol=lf
 unity/Assets/Game/Resources/Combat/battle-status-icons.json text eol=lf
 unity/Assets/Game/Resources/Combat/unit-bars-runtime.json text eol=lf
 unity/Assets/Game/Resources/Combat/battle-custom-action-world-runtime.json text eol=lf
-unity/Assets/Official/Combat/HUD/Sprites/ImgLoad_HpBar-f915a5bb0c.png.meta -text
-unity/Assets/Official/Combat/HUD/Sprites/ImgBg_HpBar-8bcbf4b323.png.meta -text
 unity/Assets/StreamingAssets/CharacterCreation/creation-meshes.zip filter=lfs diff=lfs merge=lfs -text
 unity/Assets/StreamingAssets/Character/character-models.zip filter=lfs diff=lfs merge=lfs -text
 # Combat migration outputs and generator fingerprints retain their exact bytes.
@@ -50,8 +48,6 @@ scripts/prepare_battle_scene_bindings.py text eol=lf
 unity/Assets/Game/Resources/Combat/OfficialBattleCharacterAnimationCatalog.asset -text
 unity/Assets/Game/Editor/Combat/OfficialBattleCharacterAnimationTools.cs text eol=lf
 scripts/prepare_native_character_geometry.py text eol=lf
-scripts/convert_official_skeletons.py text eol=lf
-scripts/test_convert_official_skeletons.py text eol=lf
 scripts/prepare_battle_accumulated_damage.py text eol=lf
 scripts/prepare_battle_function_entry.py text eol=lf
 unity/Assets/Game/Resources/Combat/battle-function-entry.json text eol=lf
@@ -69,7 +65,7 @@ scripts/prepare_battle_portraits.py text eol=lf
 unity/Assets/Official/Combat/Portraits/Resources/Combat/*.json text eol=lf
 unity/Assets/Game/Runtime/Presentation/Character/CharacterNativePortraitCapture.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Character/CharacterNativeAttachmentGeometry.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Character/CharacterCreationNativeModelFactory.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Character/CharacterCreationNativeModelFactory.cs eol=lf
 scripts/prepare_battle_timeline.py text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleTimelineTools.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/Shaders/* text eol=lf
@@ -96,7 +92,6 @@ unity/Assets/Game/Runtime/Official/WorldUI/WorldGameSkillIcon.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillSlotBindings.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillQuality*.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs text eol=lf
 unity/Assets/Game/Resources/Combat/battle-skill-*.json* text eol=lf
 unity/Assets/Game/Resources/Combat/OfficialBattleSkillQualityCatalog.asset* text eol=lf
 assets/reference/battle-hud/skill-*-source-manifest.json text eol=lf
@@ -113,12 +108,10 @@ assets/reference/battle-rules/element-confrontation-source-manifest.json text eo
 # Original damage-display evidence and adapted source hashes.
 scripts/prepare_battle_damage_display.py text eol=lf
 scripts/test_battle_damage_display.ps1 text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleDamageDisplayAcceptance.cs text eol=lf
 assets/reference/battle-hud/damage-display-source-manifest.json text eol=lf
 scripts/prepare_battle_world_damage.py text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudCatalog.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudRenderer.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudAnimationPlayer.cs text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleWorldDamageAssetTools.cs text eol=lf
 unity/Assets/Official/Combat/Numbers/**/*.json text eol=lf
@@ -137,7 +130,6 @@ unity/Assets/Game/Runtime/Official/WorldUI/DamageAutoSizeTextBack.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleElementFeedback*.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudMaterialAssets.cs text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleElementFeedback*.cs text eol=lf
-unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/Shaders/World*.shader* text eol=lf
 unity/Assets/Official/Combat/ElementFeedback/** -text
 unity/Assets/Official/Combat/ElementFeedback.meta -text
@@ -171,10 +163,8 @@ unity/Assets/Game/Editor/Combat/OfficialBattleWorldTipsAcceptance.cs text eol=lf
 unity/Assets/Game/Resources/Combat/world-tips.json text eol=lf
 assets/reference/battle-hud/world-tips-source-manifest.json text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleWorldTipsAssetTools.cs text eol=lf
-unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs text eol=lf
 scripts/test_battle_status_disperse.ps1 text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageFloat.cs text eol=lf
-unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleUnitWorldHudView.cs text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleStatusCounterAcceptance.cs text eol=lf
 scripts/test_battle_status_lifecycle.ps1 text eol=lf
@@ -210,7 +200,6 @@ unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowCo
 unity/Assets/Game/Runtime/Offline/State/ProfileSelectionPreference.cs* -text
 unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs -text
 unity/Assets/Game/Runtime/Presentation/Character/CharacterCreationNativeModelFactory.cs -text
-scripts/test_battle_report_averages.ps1 text eol=lf
 scripts/record_battle_report_statistics.py text eol=lf
 assets/reference/battle-rules/report-statistics-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs text eol=lf
@@ -231,7 +220,6 @@ unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportSkillScrollSync.cs.m
 scripts/restore_battle_report_dropdown.py text eol=lf
 scripts/battle_report_font_receipt.py text eol=lf
 assets/reference/battle-hud/report-dropdown-source-manifest.json text eol=lf
-unity/Assets/Game/Resources/Combat/BattleReport/DropdownItem.prefab text eol=lf
 unity/Assets/Game/Resources/Combat/BattleReport/DropdownItem.prefab.meta text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleReportDropdownAcceptance.cs text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleReportDropdownAcceptance.cs.meta text eol=lf
@@ -294,8 +282,6 @@ unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportPlayerView.cs.meta t
 # Embedded Unity URP payloads and original package metadata retain recorded bytes.
 unity/Packages/com.unity.render-pipelines.universal/** -text
 unity/Packages/com.cysharp.unitask/** -text
-unity/Assets/Official/World/Map/13/NativeScene/** -text
-unity/Assets/Official/World/Map/13/NativeScene.meta -text
 unity/Assets/Game/Runtime/Official/World/NativeEnvironment/** text eol=lf
 unity/Assets/Game/Runtime/Official/World/NativeEnvironment.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeEnvironment/** text eol=lf
@@ -349,12 +335,7 @@ unity/Assets/Official/World/Map/12/UI/** -text
 unity/Assets/Official/World/Map/12/UI.meta -text
 unity/Assets/Official/World/Map/12/Source/ui-prefabs* -text
 scripts/prepare_unity_map12_ui.py -text
-scripts/prepare_unity_map11_ui.py -text
-scripts/map11_support_ui.py -text
 scripts/map11_exploration_ui.py -text
-scripts/map11_minimap_ui.py -text
-unity/Assets/Game/Editor/OfficialMap11UiTools.cs -text
-unity/Assets/Game/Editor/OfficialMap11UiTools.Support.cs -text
 unity/Assets/Game/Editor/OfficialMap11UiTools.Animation.cs -text
 unity/Assets/Game/Editor/OfficialMap11UiTools.MiniMap.cs -text
 unity/Assets/Game/Editor/OfficialMap11UiTools.Sprites.cs -text
@@ -395,8 +376,6 @@ scripts/prepare_unity_map12_native_terrain.py -text
 unity/Assets/Official/World/Map/12/NativeTerrain/** -text
 unity/Assets/Official/World/Map/12/NativeTerrain.meta -text
 unity/Assets/Game/Editor/OfficialMap12TerrainTools.cs -text
-unity/Assets/Game/Resources/Map12/Native/** -text
-unity/Assets/Game/Resources/Map12/Native.meta -text
 # Preserve original Map13 non-label partition payloads.
 unity/Assets/Official/World/Map/13/NativeEnvironmentScene/** -text
 unity/Assets/Official/World/Map/13/NativeEnvironmentScene.meta -text
@@ -474,30 +453,25 @@ unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.cs text eol=lf
 scripts/prepare_unity_map12_native_world.py text eol=lf
 unity/Assets/Game/Editor/Map12/OfficialMap12NativeWorldTools.cs text eol=lf
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.NativeWorld.cs text eol=lf
-unity/Assets/Game/Runtime/Official/World/NativeTerrain/PartitionLoader.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.NativeMap12.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.Goddess.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Map12WorldEnvironment.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Map12WorldLabels.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/World/NativeMap12/OfficialMap12NativeWorldAssets.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/World/NativeMap12/OfficialMap12NativeWorldView.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Zjcs.Presentation.World.NativeMap12.asmdef text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Map12WorldEnvironment.cs eol=lf
+unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Map12WorldLabels.cs eol=lf
+unity/Assets/Game/Runtime/Presentation/World/NativeMap12/OfficialMap12NativeWorldAssets.cs eol=lf
+unity/Assets/Game/Runtime/Presentation/World/NativeMap12/OfficialMap12NativeWorldView.cs eol=lf
+unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Zjcs.Presentation.World.NativeMap12.asmdef eol=lf
 unity/Assets/Game/Runtime/Presentation/World/Zjcs.Presentation.World.asmdef text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/NativeMap12/** -text
 unity/Assets/Game/Runtime/Presentation/World/NativeMap12.meta -text
-unity/Assets/Game/Resources/Map12/Native/world-assets.asset -text
-unity/Assets/Game/Resources/Map12/Native/world-assets.asset.meta -text
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.PlayerView.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/OfficialMap10EntityView.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/OfficialMap10MonsterView.cs text eol=lf
 unity/Assets/Game/Editor/Map12/OfficialMap12NativeWorldAcceptance.cs text eol=lf
 scripts/prepare_unity_map11_base_ground.py text eol=lf
-scripts/prepare_unity_map13_entity_inputs.py text eol=lf
 scripts/prepare_unity_map13_entity_export.py text eol=lf
 scripts/map13_entity_native_schemas.py text eol=lf
 scripts/map13_entity_dynamic_textures.py text eol=lf
 scripts/prepare_unity_map13_water_entity_inputs.py text eol=lf
-scripts/prepare_unity_map13_water_entity_export.py text eol=lf
 scripts/official_native_yaml_verification.py text eol=lf
 # Original mountain building operations and native dialog geometry.
 scripts/prepare_unity_map12_building_operations.py text eol=lf
@@ -536,38 +510,28 @@ scripts/prepare_unity_map13_entity_events.py text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13EntityEvents/** text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13EntityEvents.meta text eol=lf
 unity/Assets/Game/Editor/Map13EntityEvents/** text eol=lf
-unity/Assets/Game/Editor/Map13EntityEvents.meta text eol=lf
 scripts/prepare_unity_map13_entity_materials.py text eol=lf
 scripts/prepare_unity_map13_entity_shaders.py text eol=lf
 unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/** text eol=lf
 unity/Assets/Game/Runtime/Official/World/NativeMap13Entities.meta text eol=lf
 unity/Assets/Game/Editor/Map13EntityShaders/** text eol=lf
-unity/Assets/Game/Editor/Map13EntityShaders.meta text eol=lf
 unity/Assets/Official/World/Map/13/Source/EntityShaders/** -text
 unity/Assets/Official/World/Map/13/Source/EntityShaders.meta -text
-scripts/prepare_unity_map13_entity_graph.py text eol=lf
 scripts/official_engine_shader_equivalence.py text eol=lf
 scripts/prepare_unity_map13_entity_shader_bindings.py text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13EntityAssets/** text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13EntityAssets.meta text eol=lf
 unity/Assets/Game/Editor/Map13EntityBindings/** text eol=lf
-unity/Assets/Game/Editor/Map13EntityBindings.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/** text eol=lf
-unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity.meta text eol=lf
 unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/** -text
 unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders.meta -text
 unity/Assets/StreamingAssets/Combat/native-battle-meshes.zip filter=lfs diff=lfs merge=lfs -text
 # Map13 story conversion tools are hashed by their source receipts.
 scripts/prepare_unity_map13_story_play*.py text eol=lf
-scripts/prepare_unity_map13_story_runtime.py text eol=lf
-scripts/test_prepare_unity_map13_story_runtime.py text eol=lf
 # Map14 hand-in native bindings retain the bytes recorded in source manifests.
 scripts/map14_handin_ui_source.py text eol=lf
 scripts/prepare_unity_map14_handin_ui.py text eol=lf
 scripts/record_unity_map14_handin_ui.py text eol=lf
 unity/Assets/Game/Runtime/Official/UI/Map14HandInGray.shader text eol=lf
-unity/Assets/Game/Resources/Map14/UI/HandIn/** -text
-unity/Assets/Official/World/Map/14/UI/HandIn/** -text
 assets/reference/official-map/map14-handin-ui*-source-manifest.json text eol=lf
 # Map13 UI source receipts hash these exact converter and native asset bytes.
 scripts/prepare_unity_map13_ui*.py text eol=lf
@@ -609,7 +573,6 @@ unity/Assets/Official/World/Map/14/UI/** -text
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Map14Ui.cs* text eol=lf
 # Current Map14 statue/template source and explicit runtime binding bytes.
 scripts/prepare_unity_map11_runtime_data.py text eol=lf
-scripts/prepare_unity_map14_interactions.py text eol=lf
 scripts/test_prepare_unity_map14_interactions.py text eol=lf
 scripts/prepare_unity_map14_story_runtime.py text eol=lf
 assets/reference/official-map/map14-interactions-source-manifest.json text eol=lf
@@ -621,7 +584,6 @@ unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Map14Statues.cs* text e
 scripts/prepare_unity_map13_story_dependencies.py text eol=lf
 scripts/test_prepare_unity_map13_story_runtime.py text eol=lf
 unity/Assets/Game/Resources/Map13/stories.json* text eol=lf
-assets/reference/official-map/map13-story-dependencies-source-manifest.json text eol=lf
 # Preserve verified Map12 popup audio payload and importer hashes.
 unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/** -text
 unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound.meta -text
@@ -631,13 +593,9 @@ unity/Packages/com.unity.timeline/** -text
 scripts/prepare_unity_map13_camera_source.py text eol=lf
 scripts/prepare_unity_map13_camera_timeline_packages.py text eol=lf
 unity/Assets/Game/Editor/Map13CameraPackages/** text eol=lf
-assets/reference/official-map/map13-world-camera-source-manifest.json text eol=lf
-assets/reference/official-map/map13-camera-timeline-packages-source-manifest.json text eol=lf
 # Map13 original camera controller ports and runtime source hashes.
 scripts/prepare_unity_map13_camera_controllers.py text eol=lf
 scripts/test_prepare_unity_map13_camera.py text eol=lf
-scripts/prepare_unity_map13_story_playable_inputs.py text eol=lf
-assets/reference/official-map/map13-camera-controller-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/World/NativeCamera* text eol=lf
 unity/Assets/Game/Runtime/Official/World/NativeCamera/** text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeCamera* text eol=lf
@@ -646,16 +604,9 @@ unity/Assets/Game/Resources/Map13/Native/camera-settings.json* text eol=lf
 unity/Assets/Game/Resources/Map13/Native/camera-controller-bindings.json* text eol=lf
 unity/Assets/Official/ProfessionAudio/** -text
 unity/Assets/Official/ProfessionAudio.meta -text
-unity/Assets/Game/Runtime/Offline/ProfessionUI/** text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI.meta text eol=lf
-unity/Assets/Game/Editor/ProfessionUI/ProfessionAudioPlaybackValidation.cs* text eol=lf
-scripts/prepare_unity_profession_windows_audio.py text eol=lf
 # Map13 camera Volume native fields and explicit source/catalog bindings.
 scripts/prepare_unity_map13_camera_volume.py text eol=lf
-assets/reference/official-map/map13-camera-volume-source-manifest.json text eol=lf
-unity/Assets/Official/World/Map/13/NativeCamera* text eol=lf
-unity/Assets/Official/World/Map/13/NativeCamera/** text eol=lf
-unity/Assets/Official/World/Map/13/Source/native-camera-volume.json* text eol=lf
 unity/Assets/Game/Resources/Map13/Native/native-camera-catalog.asset* text eol=lf
 unity/Assets/Official/World/Map/12/Resources/Map12/Matching/** -text
 unity/Assets/Official/World/Map/12/Resources/Map12/Matching.meta -text
@@ -675,22 +626,12 @@ scripts/prepare_unity_map13_entity_material_shaders.py text eol=lf
 scripts/prepare_unity_map13_entity_materials_native.py text eol=lf
 unity/Assets/Game/Editor/Map13EntityMaterials* text eol=lf
 unity/Assets/Game/Editor/Map13EntityMaterials/** text eol=lf
-unity/Assets/Official/World/Map/13/NativeEntityMaterials* text eol=lf
-unity/Assets/Official/World/Map/13/NativeEntityMaterials/** text eol=lf
-unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders* text eol=lf
-unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/** text eol=lf
-unity/Assets/Official/World/Map/13/Source/native-entity-material-bindings.json* text eol=lf
 unity/Assets/Game/Resources/Map13/Native/native-entity-materials-catalog.asset* text eol=lf
-assets/reference/official-map/map13-entity-material-shaders-source-manifest.json text eol=lf
-assets/reference/official-map/map13-native-entity-materials-native-source-manifest.json text eol=lf
-assets/reference/official-map/map13-native-entity-materials-binding-source-manifest.json text eol=lf
 # Map13 complete entity graph, lossless skeleton sources and lazy animation bytes.
 scripts/prepare_unity_map13_entity_graph.py text eol=lf
 scripts/prepare_unity_map13_entity_skeletons.py text eol=lf
 unity/Assets/Official/World/Map/13/Source/EntitySkeletons* -text
 unity/Assets/Official/World/Map/13/Source/EntitySkeletons/** -text whitespace=cr-at-eol
-unity/Assets/Official/World/Map/13/Source/native-entity-skeletons.json* text eol=lf
-assets/reference/official-map/map13-entity-skeletons-source-manifest.json text eol=lf
 # Map13 native prop skeleton geometry and original renderer profiles.
 scripts/map13_native_skeleton_geometry.py text eol=lf
 scripts/prepare_unity_map13_native_skeleton_models.py text eol=lf
@@ -698,10 +639,8 @@ unity/Assets/Game/Editor/Map13Skeletons* text eol=lf
 unity/Assets/Game/Editor/Map13Skeletons/** text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons* text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/** text eol=lf
-unity/Assets/Official/World/Map/13/NativeSkeletonModels* text eol=lf
-unity/Assets/Official/World/Map/13/NativeSkeletonModels/** text eol=lf
-unity/Assets/Game/Resources/Map13/Native/Skeletons* -text whitespace=cr-at-eol,-blank-at-eol
-unity/Assets/Game/Resources/Map13/Native/Skeletons/** -text whitespace=cr-at-eol,-blank-at-eol
+unity/Assets/Game/Resources/Map13/Native/Skeletons* whitespace=cr-at-eol,-blank-at-eol
+unity/Assets/Game/Resources/Map13/Native/Skeletons/** whitespace=cr-at-eol,-blank-at-eol
 assets/reference/official-map/map13-native-skeleton-model*-source-manifest.json text eol=lf
 # Skill native preview and source receipts retain their recorded output bytes.
 unity/Assets/Game/Runtime/Official/Character/NativeSkillPreviewDye.shader -text whitespace=cr-at-eol
@@ -721,8 +660,6 @@ scripts/prepare_unity_map13_prop_animators.py text eol=lf
 scripts/verify_map13_prop_animators.py text eol=lf
 unity/Assets/Official/World/Map/13/NativePropAnimators.meta -text
 unity/Assets/Official/World/Map/13/NativePropAnimators/** -text whitespace=cr-at-eol,-blank-at-eol
-unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13AnimatorLibrary.cs* text eol=lf
-unity/Assets/Game/Editor/Map13Skeletons/OfficialMap13AnimatorAcceptance.cs* text eol=lf
 assets/reference/official-map/map13-native-prop-animators*-source-manifest.json text eol=lf
 scripts/prepare_unity_map12_steles.py text eol=lf
 unity/Assets/Game/Runtime/Offline/Progression/OfflineWorldExplorationService.Map12Steles.cs* text eol=lf
@@ -754,25 +691,16 @@ unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.ConfirmUi.cs* text eol=
 # Map13 original prop hierarchy and renderer sub-prefab byte provenance.
 scripts/prepare_unity_map13_prop_hierarchies.py text eol=lf
 scripts/prepare_unity_map13_prop_parts.py text eol=lf
-unity/Assets/Official/World/Map/13/Source/native-prop-*.json* text eol=lf
 unity/Assets/Official/World/Map/13/NativePropPartsArt* -text
 unity/Assets/Official/World/Map/13/NativePropPartsArt/** -text whitespace=cr-at-eol,-blank-at-eol
-unity/Assets/Game/Resources/Map13/Native/PropParts* -text
-unity/Assets/Game/Resources/Map13/Native/PropParts/** -text whitespace=cr-at-eol,-blank-at-eol
+unity/Assets/Game/Resources/Map13/Native/PropParts/** whitespace=cr-at-eol,-blank-at-eol
 unity/Assets/Game/Runtime/Official/World/Map13Rendering* text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13Rendering/** text eol=lf
-unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13Part*.cs* text eol=lf
-unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13PropMecanim.cs* text eol=lf
-unity/Assets/Game/Editor/Map13Skeletons/OfficialMap13PropPartsAcceptance.cs* text eol=lf
-assets/reference/official-map/map13-native-prop-hierarchies-source-manifest.json text eol=lf
 assets/reference/official-map/map13-native-prop-parts*-source-manifest.json text eol=lf
 # Map13 original application attachment follower and native pose boundary.
 scripts/prepare_unity_map13_attachment_follower.py text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13Attachment* text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13Attachment/** text eol=lf
-unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13ApplicationPose.cs* text eol=lf
-unity/Assets/Game/Editor/Map13Skeletons/OfficialMap13AttachmentFollowerAcceptance.cs* text eol=lf
-unity/Assets/Official/World/Map/13/Source/native-attachment-followers.json* text eol=lf
 assets/reference/official-map/map13-native-attachment-follower*-source-manifest.json text eol=lf
 # Map12 original stele performances, source ports and explicit native bindings.
 scripts/prepare_unity_map12_stele_playable*.py text eol=lf
@@ -788,7 +716,6 @@ assets/reference/official-map/map12-stele-playable-input-source-manifest.json te
 assets/reference/official-map/map12-native-stele-playables-source-manifest.json text eol=lf
 # Map13 original native image bundles and exact source component bindings.
 scripts/prepare_unity_map13_entity_sprites.py text eol=lf
-unity/Assets/Game/Runtime/Offline/World/NativeMap13EntityAssets/NativeMap13EntitySprite*.cs* text eol=lf
 unity/Assets/Game/Editor/Map13EntitySprites* text eol=lf
 unity/Assets/Game/Editor/Map13EntitySprites/** text eol=lf
 unity/Assets/Game/Resources/Map13/Native/entity-sprite-catalog.asset* text eol=lf
@@ -808,7 +735,6 @@ unity/Assets/Game/Runtime/Official/World/Map13EntityRendering* text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13EntityRendering/** text eol=lf
 unity/Assets/Game/Editor/Map13EntityRendering* text eol=lf
 unity/Assets/Game/Editor/Map13EntityRendering/** text eol=lf
-unity/Assets/Official/World/Map/13/Source/native-entity-sliced-renderers.json* text eol=lf
 assets/reference/official-map/map13-entity-rendering*-source-manifest.json text eol=lf
 # Map13 original tree Model subtrees and native dissolve clock.
 scripts/prepare_unity_map13_tree_model*.py text eol=lf
@@ -857,7 +783,6 @@ scripts/prepare_unity_map13_entity_fade_handlers.py text eol=lf
 scripts/prepare_unity_map13_tree_playable_runtime.py text eol=lf
 scripts/prepare_unity_map13_tree_playable_sources.py text eol=lf
 scripts/prepare_unity_map13_tree_playable_prefabs.py text eol=lf
-unity/Assets/Official/World/Map/13/Source/native-tree-playables.json* text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13TreePlayables* text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/** text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13EntityFadeHandlers* text eol=lf
@@ -868,16 +793,7 @@ unity/Assets/Game/Editor/Map13TreePlayables* text eol=lf
 unity/Assets/Game/Editor/Map13TreePlayables/** text eol=lf
 unity/Assets/Game/Resources/Map13/Native/TreePlayables* text eol=lf
 unity/Assets/Game/Resources/Map13/Native/TreePlayables/** text eol=lf
-assets/reference/official-map/map13-entity-fade-handlers-source-manifest.json text eol=lf
-assets/reference/official-map/map13-tree-playable-runtime-source-manifest.json text eol=lf
-assets/reference/official-map/map13-native-tree-playables-source-manifest.json text eol=lf
-assets/reference/official-map/map13-native-tree-playable-prefabs-source-manifest.json text eol=lf
-assets/reference/official-map/map13-native-tree-playables-playmode-source-manifest.json text eol=lf
-# Map13 complete original tree entities
-assets/reference/official-map/map13-native-tree-entities-playmode-source-manifest.json text eol=lf
-assets/reference/official-map/map13-native-tree-entities-source-manifest.json text eol=lf
 scripts/prepare_unity_map13_tree_entities.py text eol=lf
-unity/Assets/Game/Editor/Map13TreeEntities.meta text eol=lf
 unity/Assets/Game/Editor/Map13TreeEntities/OfficialMap13TreeEntityAcceptance.cs text eol=lf
 unity/Assets/Game/Editor/Map13TreeEntities/OfficialMap13TreeEntityAcceptance.cs.meta text eol=lf
 unity/Assets/Game/Editor/Map13TreeEntities/OfficialMap13TreeEntityPlayAcceptance.cs text eol=lf
@@ -894,69 +810,22 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap13TreeEntities/NativeMap13TreeE
 unity/Assets/Game/Runtime/Offline/World/NativeMap13TreeEntities/NativeMap13TreeEntityBinding.cs.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13TreeEntities/Zjcs.Offline.World.NativeMap13TreeEntities.asmdef text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13TreeEntities/Zjcs.Offline.World.NativeMap13TreeEntities.asmdef.meta text eol=lf
-# Map13 original grid visibility
-assets/reference/official-map/map13-grid-visibility-rules-source-manifest.json text eol=lf
-assets/reference/official-map/map13-grid-visibility-source-manifest.json text eol=lf
 scripts/fixtures/map13_grid_visibility_boundaries.cs text eol=lf
 scripts/prepare_unity_map13_grid_visibility.py text eol=lf
-unity/Assets/Game/Editor/Map13GridVisibility.meta text eol=lf
 unity/Assets/Game/Editor/Map13GridVisibility/OfficialMap13GridVisibilityAcceptance.cs text eol=lf
 unity/Assets/Game/Editor/Map13GridVisibility/OfficialMap13GridVisibilityAcceptance.cs.meta text eol=lf
 unity/Assets/Game/Editor/Map13GridVisibility/Zjcs.Editor.Map13.GridVisibility.asmdef text eol=lf
 unity/Assets/Game/Editor/Map13GridVisibility/Zjcs.Editor.Map13.GridVisibility.asmdef.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13GridVisibility.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/EcContainerStartEntityEventDelegate.cs text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/EcContainerStartEntityEventDelegate.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridTransformPosUpdatedEventDelegate.cs text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridTransformPosUpdatedEventDelegate.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridVisibilityAgentComponent.cs text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridVisibilityAgentComponent.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridVisibilityAgentComponentInfo.cs text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridVisibilityAgentComponentInfo.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridVisibilityAgentHandle.cs text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridVisibilityAgentHandle.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridVisibilityCompressUtils.cs text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridVisibilityCompressUtils.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/IEcContainerStartEntityEventReceiver.cs text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/IEcContainerStartEntityEventReceiver.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/IGridTransformPosUpdatedEventReceiver.cs text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/IGridTransformPosUpdatedEventReceiver.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/MapActivedRegionGridInfo.cs text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/MapActivedRegionGridInfo.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/MapActivedRegionGridInfoEnumerator.cs text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/MapActivedRegionGridInfoEnumerator.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/MapGroundGridBoolData.cs text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/MapGroundGridBoolData.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/VisibilityRangeMath.cs text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/VisibilityRangeMath.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/VisibilityRangeQuery.cs text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/VisibilityRangeQuery.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/VisibilitySourceBoundaries.cs text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/VisibilitySourceBoundaries.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/Zjcs.Official.World.Map13GridVisibility.asmdef text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/Zjcs.Official.World.Map13GridVisibility.asmdef.meta text eol=lf
-unity/Assets/Official/World/Map/13/Resources/Map13/grid-visibility.json text eol=lf
-unity/Assets/Official/World/Map/13/Resources/Map13/grid-visibility.json.meta text eol=lf
-# Map13 formal entity rules, body geometry and local visibility integration.
-scripts/map13_puzzle_rules.py text eol=lf
-scripts/prepare_unity_map13_entity_catalog.py text eol=lf
-scripts/prepare_unity_map13_story_spatial.py text eol=lf
 unity/Assets/Game/Editor/Map13Mainline/** text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13GridVisibility/** text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/** text eol=lf
-unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.NativeMap13.cs* text eol=lf
 # Keep the migrated skill component bytes identical to their source receipts.
 unity/Assets/Game/Runtime/Official/SkillsUI/** -text
 # Map13 formal entity rules and verification.
 scripts/map13_puzzle_rules.py text eol=lf
-scripts/prepare_unity_map13_entity_catalog.py text eol=lf
 scripts/prepare_unity_map13_story_runtime.py text eol=lf
 scripts/prepare_unity_map13_story_spatial.py text eol=lf
-unity/Assets/Game/Editor/Map13Mainline.meta text eol=lf
-unity/Assets/Game/Editor/Map13Mainline/OfficialMap13MainlinePlayAcceptance.cs text eol=lf
-unity/Assets/Game/Editor/Map13Mainline/OfficialMap13MainlinePlayAcceptance.cs.meta text eol=lf
-unity/Assets/Game/Editor/Map13Mainline/Zjcs.Editor.Map13Mainline.asmdef text eol=lf
-unity/Assets/Game/Editor/Map13Mainline/Zjcs.Editor.Map13Mainline.asmdef.meta text eol=lf
 # Map13 native story prefab conversion and original NPC sequence bindings.
 scripts/prepare_unity_map13_npc_story_playables.py text eol=lf
 scripts/verify_unity_map13_story_playable_hierarchy.py text eol=lf
@@ -972,16 +841,13 @@ scripts/prepare_unity_map13_story_playables.py text eol=lf
 scripts/prepare_unity_map13_story_playable_inputs.py text eol=lf
 scripts/prepare_unity_map13_story_playable_export.py text eol=lf
 scripts/prepare_unity_map13_water_entity_export.py text eol=lf
-unity/Assets/Game/Editor/Map13NpcAppearancePlayables.meta text eol=lf
 unity/Assets/Game/Editor/Map13NpcAppearancePlayables/** text eol=lf
 unity/Assets/Game/Resources/Map13/Native/native-npc-appearance-playables-catalog.asset* text eol=lf
 # Map13 original request resource and native pool boundaries.
 scripts/prepare_unity_map13_story_playable_requests.py text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13StoryPlayables.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13StoryPlayables/** text eol=lf
-unity/Assets/Game/Editor/Map13StoryPlayableRequests.meta text eol=lf
 unity/Assets/Game/Editor/Map13StoryPlayableRequests/** text eol=lf
-unity/Assets/Official/World/Map/13/Resources/Map13/grid-entities.json* text eol=lf
 unity/Assets/Game/Editor/Map13GridVisibility/OfficialMap13LocalVisibilityAcceptance.cs* text eol=lf
 # Map13 formal native entry, original tree entities and local state adapters.
 scripts/prepare_unity_map13_tree_world.py text eol=lf
@@ -990,17 +856,12 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap13TreeWorld/** text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.NativeMap13.cs* text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map13Trees.cs* text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map13StoryPlayables.cs* text eol=lf
-unity/Assets/Game/Editor/Map13Mainline/OfficialMap13TreeWorldAssetTools.cs* text eol=lf
 unity/Assets/Game/Resources/Map13/Native/tree-world-assets.asset* text eol=lf
 # Map13 original minimap source and mask migration.
 scripts/prepare_unity_map13_minimap_*.py text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMap.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMap/** text eol=lf
-unity/Assets/Game/Editor/Map13MiniMap.meta text eol=lf
 unity/Assets/Game/Editor/Map13MiniMap/** text eol=lf
-unity/Assets/Official/World/Map/13/Source/NativeMiniMapSource.meta text eol=lf
-unity/Assets/Official/World/Map/13/Source/NativeMiniMapSource/** text eol=lf
-unity/Assets/Official/World/Map/13/Source/minimap-mask-patterns.json* text eol=lf
 # Preserve original entity index, platform payload and source receipt bytes.
 scripts/prepare_unity_map14_entity_index.py text eol=lf
 assets/reference/official-map/map14-entity-index-source-manifest.json text eol=lf
@@ -1015,16 +876,10 @@ unity/Assets/Official/World/Map/14/Resources/Map14/EntityLoading.meta -text
 # Map13 original minimap visible range.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapView.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapView/** text eol=lf
-# Map13 original regional minimap native assets.
-unity/Assets/Official/World/Map/13/NativeMiniMapRegions.meta text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapRegions/** text eol=lf
-unity/Assets/Official/World/Map/13/Source/MiniMapShaders.meta text eol=lf
-unity/Assets/Official/World/Map/13/Source/MiniMapShaders/** text eol=lf
 # Preserve original client component and native binding receipt bytes.
 scripts/prepare_unity_map14_client_components.py text eol=lf
 assets/reference/official-map/map14-client-components-source-manifest.json text eol=lf
 assets/reference/official-map/map14-client-entity-state-source-manifest.json text eol=lf
-assets/reference/official-map/map14-shared-view-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/EntityClientComponents/** -text
 unity/Assets/Game/Runtime/Official/EntityClientComponents.meta -text
 unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientComponents/** -text
@@ -1039,8 +894,6 @@ unity/Assets/Game/Runtime/Official/World/Map13MiniMapRegions/** text eol=lf
 # Map13 original minimap camera and complete settings.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapCamera.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapCamera/** text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapSettings.meta text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapSettings/** text eol=lf
 # Map14 original world entity touch input.
 unity/Assets/Game/Runtime/Official/EntityWorldInput.meta text eol=lf
 unity/Assets/Game/Runtime/Official/EntityWorldInput/** text eol=lf
@@ -1058,8 +911,6 @@ unity/Assets/Game/Editor/Map14/EntityAwardHook/** text eol=lf
 # Map13 original minimap non-maskable layer.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapNonMaskable.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapNonMaskable/** text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapNonMaskable.meta text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapNonMaskable/** text eol=lf
 # Map12 original team panel, complete atlases and source receipts retain LF bytes.
 unity/Assets/Game/Runtime/Official/TeamUI/** text eol=lf
 unity/Assets/Game/Runtime/Official/PlayerPlay/PlayerPlayConfirmEnv.cs* text eol=lf
@@ -1086,8 +937,6 @@ unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints.meta text eo
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints/** text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13MiniMapResources.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13MiniMapResources/** text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints.meta text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/** text eol=lf
 # Map14 original combined radar tip.
 unity/Assets/Game/Runtime/Official/EntityRadarCombined.meta text eol=lf
 unity/Assets/Game/Runtime/Official/EntityRadarCombined/** text eol=lf
@@ -1122,8 +971,6 @@ unity/Assets/Game/Editor/Map14/RadarFastKill/** text eol=lf
 # Map13 original minimap descriptions, pooled borders and native village display.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapDescriptions.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapDescriptions/** text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapDescriptions.meta text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapDescriptions/** text eol=lf
 # Map14 original statue cost radar prefab.
 unity/Assets/Official/World/Map/14/NativeRadarTips.meta text eol=lf
 unity/Assets/Official/World/Map/14/NativeRadarTips/** text eol=lf
@@ -1137,7 +984,6 @@ unity/Assets/Game/Resources/Map14/Native/radar-tips-catalog.asset.meta text eol=
 scripts/prepare_unity_map12_team_invite_panels.py text eol=lf
 unity/Assets/Game/Runtime/Official/WorldUI/WorldGAction.cs text eol=lf
 unity/Assets/Game/Runtime/Official/WorldUI/WorldGAction.cs.meta text eol=lf
-unity/Assets/Game/Runtime/Official/WorldUI/WorldPopupWindow.cs text eol=lf
 # Map14 original statue entity roots.
 unity/Assets/Official/World/Map/14/NativeStatueEntities.meta text eol=lf
 unity/Assets/Official/World/Map/14/NativeStatueEntities/** text eol=lf
@@ -1150,8 +996,6 @@ unity/Assets/Game/Resources/Map14/Native/statue-entity-catalog.asset.meta text e
 # Map13 original active/offline minimap mask managers and native fog assets.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMasks.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMasks/** text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapMasks.meta text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapMasks/** text eol=lf
 # Map12 original invitation dependency source bytes.
 scripts/prepare_unity_map12_team_invite_extra_sources.py text eol=lf
 scripts/prepare_unity_map12_team_invite_extra_native.py text eol=lf
@@ -1160,8 +1004,6 @@ unity/Assets/Official/World/Map/12/Source/native-team-invite-extra-prefabs.json*
 # Map13 original minimap player marker, animation and native UI camera.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapCharacter.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapCharacter/** text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapCharacter.meta text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapCharacter/** text eol=lf
 # Map14 original shared visibility projection.
 unity/Assets/Game/Runtime/Offline/World/NativeMap14Visibility.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14Visibility/** text eol=lf
@@ -1200,8 +1042,6 @@ unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarks.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarks/** text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapWindows.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapWindows/** text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapMarkDialogs.meta text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapMarkDialogs/** text eol=lf
 # Map12 original NPC invitation model source and native conversion proof.
 scripts/prepare_unity_map12_team_npc_*.py text eol=lf
 unity/Assets/Official/World/Map/12/Source/team-npc-prefabs.json* text eol=lf
@@ -1209,7 +1049,6 @@ unity/Assets/Official/World/Map/12/Source/native-team-npc-prefabs.json* text eol
 # Map13 complete original live and offline minimap marker data.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkData.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkData/** text eol=lf
-unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMarkDataAcceptance.cs* text eol=lf
 unity/Assets/Game/Runtime/Official/EntityActions/** text eol=lf
 unity/Assets/Game/Runtime/Official/EntityActions.meta text eol=lf
 unity/Assets/Game/Runtime/Official/EntityVisibilityHandlers/** text eol=lf
@@ -1221,14 +1060,10 @@ unity/Assets/Game/Editor/Map14/VisibilityHandlers.meta text eol=lf
 # Map13 original minimap marker spawning and full pool lifetime.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkSpawn.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkSpawn/** text eol=lf
-unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMarkSpawnAcceptance.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientViewBindings/** text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientViewBindings.meta text eol=lf
 unity/Assets/Game/Editor/Map14/ClientViewBindings/** text eol=lf
 unity/Assets/Game/Editor/Map14/ClientViewBindings.meta text eol=lf
-# Map12 lossless NPC skeleton data and independent native graph adapter.
-scripts/prepare_unity_map12_team_npc_skeletons.py text eol=lf
-scripts/prepare_unity_map12_team_npc_data.py text eol=lf
 unity/Assets/Official/World/Map/12/Source/team-npc-skeletons.json* text eol=lf
 unity/Assets/Official/World/Map/12/Source/TeamNpcSkeletons.meta text eol=lf
 unity/Assets/Official/World/Map/12/Source/TeamNpcSkeletons/** -text
@@ -1241,7 +1076,6 @@ unity/Assets/Game/Editor/ProfessionUI/Map12NpcDataValidation.cs* text eol=lf
 # Map13 original live/region/offline minimap marker managers.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkManagers.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkManagers/** text eol=lf
-unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMarkManagersAcceptance.cs* text eol=lf
 unity/Assets/Game/Runtime/Official/EntityBufferedEvents/** text eol=lf
 unity/Assets/Game/Runtime/Official/EntityBufferedEvents.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14BufferedEvents/** text eol=lf
@@ -1251,32 +1085,22 @@ unity/Assets/Game/Editor/Map14/BufferedEvents.meta text eol=lf
 unity/Assets/Game/Runtime/Official/SharedLaunch/ConfigConst.cs text eol=lf
 unity/Assets/Game/Runtime/Official/SharedLaunch/ConfigConst.cs.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedData.cs text eol=lf
-# Map13 original minimap marker native assets and state supporters.
-unity/Assets/Official/World/Map/13/NativeMiniMapMarks.meta text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapMarks/** text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkSupports.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkSupports/** text eol=lf
-unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMarkSupportsAcceptance.cs* text eol=lf
 unity/Assets/Game/Runtime/Official/EntityRootComponents/** text eol=lf
 unity/Assets/Game/Runtime/Official/EntityRootComponents.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14RootComponents/** text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14RootComponents.meta text eol=lf
 unity/Assets/Game/Editor/Map14/RootComponents/** text eol=lf
 unity/Assets/Game/Editor/Map14/RootComponents.meta text eol=lf
-# Map13 original minimap click and sliced camera frame.
-unity/Assets/Official/World/Map/13/NativeMiniMapClickFrame.meta text eol=lf
-unity/Assets/Official/World/Map/13/NativeMiniMapClickFrame/** text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkClick.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkClick/** text eol=lf
-unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMarkClickAcceptance.cs* text eol=lf
 scripts/prepare_unity_map14_root_fog.py text eol=lf
 scripts/prepare_unity_map14_root_inputs.py text eol=lf
 unity/Assets/Game/Runtime/Official/MapRootFog/** text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14RootFog/** text eol=lf
 unity/Assets/Game/Editor/Map14/RootFog/** text eol=lf
 unity/Assets/Official/World/Map/14/RootFog/**/*.shader text eol=lf
-# Map12 independent original NPC local animation channels.
-scripts/prepare_unity_map12_team_npc_channels.py text eol=lf
 assets/reference/official-map/map12-team-npc-channels-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimationChannels.cs* text eol=lf
 unity/Assets/Game/Editor/ProfessionUI/Map12NpcAnimationValidation.cs* text eol=lf
@@ -1380,7 +1204,6 @@ unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterAssetCatalog.cs t
 # Preserve the original partner CN whitelist and gift configuration bindings.
 scripts/prepare_partner_gift_configuration.py text eol=lf
 scripts/prepare_partner_gift_configuration_validation.py text eol=lf
-scripts/templates/partner_gift_controller/OfflinePartnerGiftConfiguration.cs text eol=lf
 scripts/fixtures/partner_gift_configuration_validation.cs text eol=lf
 assets/reference/partner-gift-configuration-source-manifest.json text eol=lf
 unity/Assets/Official/Partners/partner-custom-characters.txt -text
@@ -1444,7 +1267,6 @@ unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/PartnerRewardPrev
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerFriendshipProperties.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerFriendshipDialogServices.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerFriendshipAssetCatalog.cs* text eol=lf
-unity/Assets/Game/Resources/Partners/OfficialPartnerFriendshipAssetCatalog.asset* text eol=lf
 
 # Preserve selected native gift page resources and local service bindings.
 scripts/prepare_partner_gift_services.py text eol=lf
@@ -1455,9 +1277,6 @@ assets/reference/partner-gift-services-source-manifest.json text eol=lf
 assets/reference/partner-gift-presentation-assets-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftUiServices.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerGiftPageAssetCatalog.cs* text eol=lf
-unity/Assets/Game/Resources/Partners/OfficialPartnerGiftPageAssetCatalog.asset* text eol=lf
-unity/Assets/Game/Resources/Partners/OfficialPartnerGiftPageImages.asset* text eol=lf
-unity/Assets/Game/Resources/Partners/OfficialPartnerRelationshipImages.asset* text eol=lf
 unity/Assets/Official/Partners/UI/GiftPresentation.meta text eol=lf
 unity/Assets/Official/Partners/UI/GiftPresentation/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
@@ -1477,18 +1296,11 @@ unity/Assets/Game/Runtime/Presentation/Combat/OfficialEquipmentBattlePassives.cs
 unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.EquipmentTerms.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/Equipment/OfficialEquipmentCatalog.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/Equipment/OfficialEquipmentCatalog.TermReplacement.cs* text eol=lf
-unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs text eol=lf
-
-# Preserve raw identities of the original status parameter adapter.
-scripts/prepare_battle_status_parameters.py text eol=lf
 scripts/test_battle_status_parameters.ps1 text eol=lf
 assets/reference/battle-rules/status-parameters-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.StatusParameter*.cs* text eol=lf
 unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.StatusReplay.cs text eol=lf
 unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.StatusReplay.cs text eol=lf
-
-# Preserve status property initialization adapters and their source identities.
-scripts/prepare_battle_status_property_reference.py text eol=lf
 scripts/test_battle_status_properties.ps1 text eol=lf
 scripts/test_battle_report_averages.ps1 text eol=lf
 assets/reference/battle-rules/status-properties-source-manifest.json text eol=lf
@@ -1507,14 +1319,11 @@ assets/reference/partner-detail-properties-*-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/PartnersUI/Detail.meta text eol=lf
 unity/Assets/Game/Runtime/Official/PartnersUI/Detail/** text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/*DetailPropert*.cs* text eol=lf
-unity/Assets/Game/Resources/Partners/OfficialPartnerDetailPropertyAssetCatalog.asset* text eol=lf
 unity/Assets/Official/Partners/UI/DetailProperties.meta text eol=lf
 unity/Assets/Official/Partners/UI/DetailProperties/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
 # Current partner native portrait payloads and generated sources
 /unity/Assets/Official/Partners/Portraits/** -text
-/unity/Assets/Game/Resources/Partners/Portraits/** text eol=lf
-/unity/Assets/Game/Resources/Partners/Portraits.meta text eol=lf
 /assets/reference/partner-portrait-assets-source-manifest.json text eol=lf
 /scripts/prepare_partner_native_portraits*.py text eol=lf
 /scripts/prepare_partner_portrait*.py text eol=lf
@@ -1589,7 +1398,6 @@ unity/Assets/Game/Resources/Map13/entity-presentation.json text eol=lf
 
 # Partner window host source and recorded importer bytes.
 scripts/partner_panel_language.py text eol=lf
-scripts/prepare_partner_panel_host_validation.py text eol=lf
 scripts/fixtures/partner_panel_host_validation.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerPanelView.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerPanelView.cs.meta -text whitespace=-blank-at-eol
@@ -1602,10 +1410,6 @@ unity/Assets/Official/World/Mainline/** -text whitespace=-blank-at-eol
 scripts/prepare_mainline_grid_fog.py text eol=lf
 
 scripts/prepare_mainline_grid_visibility_data.py text eol=lf
-
-# Partner conversation configuration and recorded Unity script importer bytes.
-scripts/prepare_partner_dialogue_configuration.py text eol=lf
-scripts/prepare_partner_dialogue_rules.py text eol=lf
 scripts/prepare_partner_conversation_binding_validation.py text eol=lf
 scripts/test_partner_conversation_rules.py text eol=lf
 scripts/templates/partner_dialogue/*.cs text eol=lf
@@ -1629,9 +1433,6 @@ unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationPlayer.c
 scripts/prepare_partner_conversation_world*.py text eol=lf
 unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationWorld.cs* text eol=lf
 unity/Assets/Official/Partners/partner-conversation-world.json* -text
-
-# Partner saved-dialogue UI adaptation and notification validation.
-scripts/prepare_partner_dialogue_local_ui_validation.py text eol=lf
 scripts/record_partner_dialogue_local_ui_sources.py text eol=lf
 scripts/fixtures/partner_dialogue_local_ui_validation.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDialogueUiServices.cs* text eol=lf
@@ -1645,11 +1446,6 @@ unity/Assets/Game/Runtime/Offline/Progression/OfflineNpcConversationDayLimit.cs*
 scripts/prepare_partner_conversation_transaction_validation.py text eol=lf
 scripts/record_partner_conversation_transaction_sources.py text eol=lf
 unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationService.cs* text eol=lf
-
-# Partner dialogue playback preserves official native bytes and code hashes.
-scripts/prepare_partner_dialogue_playback_ui.py text eol=lf
-scripts/prepare_partner_dialogue_playback_native.py text eol=lf
-scripts/prepare_partner_dialogue_playback_validation.py text eol=lf
 scripts/partner_dialogue_playback_language.py text eol=lf
 scripts/record_partner_dialogue_playback_sources.py text eol=lf
 scripts/fixtures/partner_dialogue_playback_validation.cs text eol=lf
@@ -1670,9 +1466,6 @@ unity/Assets/Game/Resources/Partners/OfficialPartnerDialoguePlaybackAssetCatalog
 unity/Assets/Official/World/Map/11/map11.json text eol=lf
 # Map15 uses the same original-byte source verification.
 unity/Assets/Official/World/Map/15/map15.json text eol=lf
-# Original Map14 table guards compare the original LF bytes.
-unity/Assets/Official/World/Map/14/Source/templates.json text eol=lf
-unity/Assets/Official/World/Map/14/Source/tables.json text eol=lf
 scripts/prepare_mainline_interaction_maps.py text eol=lf
 scripts/prepare_unity_map14_interactions.py text eol=lf
 unity/Assets/Game/Resources/Map12/interactions.json* text eol=lf
@@ -1684,36 +1477,17 @@ unity/Assets/Official/World/Map/15/source-manifest.json text eol=lf
 
 # Keep the native MixNext source fingerprints stable on Windows checkout.
 scripts/record_battle_native_mix_next.py text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneMixNext.cs* text eol=lf
-assets/reference/battle-animation/scene-native-renderer-source-manifest.json text eol=lf
-assets/reference/battle-animation/scene-character-appearance-source-manifest.json text eol=lf
-assets/reference/battle-animation/scene-player-appearance-source-manifest.json text eol=lf
-assets/reference/battle-animation/scene-player-animator-source-manifest.json text eol=lf
-assets/reference/battle-animation/native-animator-pose-source-manifest.json text eol=lf
-assets/reference/battle-animation/scene-mecanim-parts-source-manifest.json text eol=lf
-assets/reference/battle-animation/native-mix-next-source-manifest.json text eol=lf
 
 # Preserve unified scene MixNext drawing and notification fingerprints.
 scripts/record_battle_scene_bound_mix_next.py text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneBoundMixNext.cs* text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneMecanimParts.cs text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAnimator.cs text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAppearance.cs text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs text eol=lf
-assets/reference/battle-animation/scene-bound-mix-next-source-manifest.json text eol=lf
 
 # Preserve complete current original scene motion payloads and their fingerprints.
 unity/Assets/Official/Combat/SceneMotionSources/** -text
 unity/Assets/Official/Combat/SceneMotionSources.meta -text
-unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneMotionCatalog.cs* -text
 scripts/prepare_battle_scene_motions.py text eol=lf
 scripts/record_battle_scene_skill_motions.py text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneSkillMotions.cs* text eol=lf
 assets/reference/battle-animation/scene-motions-source-manifest.json text eol=lf
-assets/reference/battle-animation/scene-skill-motions-source-manifest.json text eol=lf
-assets/reference/battle-animation/scene-weapon-playback-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeaponPlayback.cs* text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneWeaponPlayback.cs* text eol=lf
 scripts/record_battle_scene_weapon_playback.py text eol=lf
 
 # Preserve the decoded substitute mover and its source fingerprints.
@@ -1753,7 +1527,6 @@ scripts/prepare_partner_shared_identity.ps1 text eol=lf
 scripts/fixtures/partner_npc_shared_validation.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersNpc/** text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersNpc.meta text eol=lf
-unity/Assets/Game/Resources/Partners/OfficialPartnerNpcRuntimeCatalog.asset* text eol=lf
 unity/Assets/Official/Partners/NpcRuntime/** -text
 unity/Assets/Official/Partners/NpcRuntime.meta text eol=lf
 unity/Assets/Official/Partners/NpcRuntime/**/*.meta text eol=lf
@@ -1786,10 +1559,7 @@ unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.GridMotion.cs* text eo
 
 # Preserve selected native NPC/profession icons and their explicit bindings.
 scripts/prepare_partner_npc_icons.py text eol=lf
-scripts/prepare_partner_npc_icon_validation.py text eol=lf
-scripts/fixtures/partner_npc_icon_validation.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerNpcIconBindings.cs* text eol=lf
-unity/Assets/Game/Resources/Partners/OfficialPartnerNpcIconImages.asset* text eol=lf
 unity/Assets/Official/Partners/NpcIcons/** -text -diff
 unity/Assets/Official/Partners/NpcIcons.meta text eol=lf
 unity/Assets/Official/Partners/NpcIcons/**/*.meta text eol=lf diff
@@ -1813,7 +1583,6 @@ assets/reference/official-map/mainline-region-time-source-manifest.json text eol
 unity/Assets/Game/Runtime/Offline/World/MapRegionTime/** text eol=lf
 unity/Assets/Game/Runtime/Offline/World/MapRegionTime.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionLimitStatusRefreshForRankUnlockTime.cs* text eol=lf
-unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.RegionTime.cs* text eol=lf
 /scripts/record_battle_movement_facing.py text eol=lf
 /assets/reference/battle-animation/movement-facing-source-manifest.json text eol=lf
 /scripts/prepare_battle_movement_sounds.py text eol=lf
@@ -1834,7 +1603,6 @@ assets/reference/official-map/mainline-minimap-regions-source-manifest.json text
 assets/reference/official-map/map*-current-minimap-regions-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/MainlineMiniMapRegions/** text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/MainlineMiniMapRegions.meta text eol=lf
-unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.MiniMapRegions.cs* text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapCurrent/** -text
 unity/Assets/Official/World/Map/13/NativeMiniMapCurrent.meta -text
 unity/Assets/Official/World/Map/16/NativeMiniMapCurrent/** -text
@@ -1843,11 +1611,9 @@ unity/Assets/Official/World/Map/16/NativeMiniMapCurrent.meta -text
 # Preserve selected original partner player-portrait resources and bindings.
 scripts/prepare_partner_player_portraits.py text eol=lf
 scripts/prepare_partner_player_portrait_validation.py text eol=lf
-scripts/fixtures/partner_player_portrait_validation.cs text eol=lf
 assets/reference/partner-player-portraits-source-manifest.json text eol=lf
 unity/Assets/Official/Partners/PlayerPortraits/** -text
 unity/Assets/Official/Partners/PlayerPortraits.meta -text
-unity/Assets/Game/Resources/Partners/OfficialPartnerPlayerPortraitResources.asset* text eol=lf
 unity/Assets/Game/Runtime/Official/ProfessionUI/HeadCharacterPortraitBuilder.cs* text eol=lf
 unity/Assets/Game/Runtime/Official/ProfessionUI/PreviewTool.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePortraitAppearance.cs* text eol=lf
@@ -1867,9 +1633,6 @@ unity/Assets/Game/Runtime/Official/ProfessionUI/CharacterPortraitTexturePool.cs 
 
 # Selected-map interaction projection.
 scripts/prepare_mainline_map_interactions.py text eol=lf
-assets/reference/official-map/map16-interactions-source-manifest.json text eol=lf
-unity/Assets/Official/World/Map/16/Source/interaction-tables.json* text eol=lf
-unity/Assets/Game/Resources/Map16/interactions.json* text eol=lf
 
 # Original player health and partner avatar HP binding.
 scripts/record_partner_player_health_sources.py text eol=lf
@@ -1899,8 +1662,6 @@ scripts/prepare_partner_player_info*.py text eol=lf
 scripts/prepare_partner_npc_icon_validation.py text eol=lf
 scripts/fixtures/partner_npc_icon_validation.cs text eol=lf
 unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoUI.cs text eol=lf
-unity/Assets/Game/Runtime/Offline/PartnersNpc/OfflinePartnerNpcRuntime.cs text eol=lf
-unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerNpcIconBindings.cs text eol=lf
 unity/Assets/Game/Editor/ProfessionUI/ProfessionPlayerInfoValidation.cs text eol=lf
 assets/reference/partner-player-info-source-manifest.json text eol=lf
 
@@ -1913,7 +1674,6 @@ assets/reference/partner-main-player-source-manifest.json text eol=lf
 
 # Preserve selected original common minimap root source hashes.
 scripts/prepare_mainline_minimap_root.py text eol=lf
-scripts/prepare_mainline_minimap_offline_validation.py text eol=lf
 assets/reference/official-map/mainline-minimap-root-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot/** text eol=lf
 unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot.meta text eol=lf
@@ -1963,7 +1723,6 @@ scripts/prepare_mainline_minimap_native_hud.py text eol=lf
 assets/reference/official-map/mainline-*minimap-hud*-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/World/MainlineMiniMapHud/** text eol=lf
 unity/Assets/Game/Runtime/Official/World/MainlineMiniMapHud.meta text eol=lf
-unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Hud.cs* text eol=lf
 unity/Assets/Official/World/Shared/NativeMiniMapHudCurrent/** text eol=lf
 unity/Assets/Official/World/Shared/NativeMiniMapHudCurrent.meta text eol=lf
 unity/Assets/Official/World/Shared.meta text eol=lf
@@ -1977,7 +1736,6 @@ assets/reference/official-map/mainline-*minimap-panel*-source-manifest.json text
 assets/reference/official-map/mainline-current-minimap-renderer-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/World/MainlineMiniMapPanel/** text eol=lf
 unity/Assets/Game/Runtime/Official/World/MainlineMiniMapPanel.meta text eol=lf
-unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Panel.cs* text eol=lf
 unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/** text eol=lf
 unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent.meta text eol=lf
 unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/**/*.wav -text
@@ -2054,7 +1812,6 @@ scripts/prepare_partner_tipdot_catalog*.py text eol=lf
 scripts/fixtures/partner_tipdot_catalog_validation.cs text eol=lf
 assets/reference/partner-tipdot-catalog-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerTipDotAssetCatalog.cs* text eol=lf
-unity/Assets/Game/Resources/Partners/OfficialPartnerTipDotAssetCatalog.asset* text eol=lf
 
 # Selected original partner talent predicates.
 scripts/prepare_partner_talent*.py text eol=lf
@@ -2066,8 +1823,6 @@ unity/Assets/Game/Runtime/Official/Partners/PartnerTalentRules.cs* text eol=lf
 # Shared native minimap region clocks and original timed label provider.
 unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/MapRegionLimitStatusRefreshHelper.cs text eol=lf
 unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/MapRegionLimitStatusRefreshForRankUnlockTime.cs* text eol=lf
-unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.RegionTime.cs* text eol=lf
-unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.LocalData.cs* text eol=lf
 
 # Current saved partner talent player projection.
 scripts/record_partner_talent_player.py text eol=lf
@@ -2086,7 +1841,6 @@ unity/Assets/Game/Runtime/Official/Partners/PartnerProfileRules.cs* text eol=lf
 unity/Assets/Game/Runtime/Official/PartnersUI/Roster/Profile/** text eol=lf
 unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerProfileService.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/*PartnerProfile*.cs* text eol=lf
-unity/Assets/Game/Resources/Partners/OfficialPartnerProfile*.asset* text eol=lf
 unity/Assets/Official/Partners/UI/Profile/** text eol=lf
 
 # Saved original partner tip player and event payloads.
@@ -2108,7 +1862,6 @@ unity/Assets/Official/Combat/StatusSpineFollowers.meta text eol=lf
 # Original partner condition subscriptions and local event ownership.
 scripts/prepare_partner_condition_handler*.py text eol=lf
 scripts/fixtures/partner_condition_handler_validation.cs text eol=lf
-scripts/templates/partner_conditions/PartnerConditionHandler.cs text eol=lf
 assets/reference/partner-condition-handler-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/Partners/PartnerConditionHandler.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerTipDotConditions.cs* text eol=lf
@@ -2159,7 +1912,6 @@ unity/Assets/Game/Runtime/Official/PartnersUI/Roster/Achievements/** text eol=lf
 unity/Assets/Game/Runtime/Official/PartnersUI/Roster/Achievements.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerAchievementUiServices.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerAchievementAssetCatalog.cs* text eol=lf
-unity/Assets/Game/Resources/Partners/OfficialPartnerAchievement*.asset* text eol=lf
 unity/Assets/Official/Partners/UI/Achievements/** text eol=lf
 unity/Assets/Official/Partners/UI/Achievements/**/*.wav binary
 unity/Assets/Official/Partners/UI/Achievements.meta text eol=lf
@@ -2168,10 +1920,7 @@ unity/Assets/Official/Partners/UI/Achievements.meta text eol=lf
 scripts/prepare_partner_detail_talk*.py text eol=lf
 scripts/fixtures/partner_detail_talk_validation.cs text eol=lf
 assets/reference/partner-detail-talk-source-manifest.json text eol=lf
-unity/Assets/Game/Runtime/Official/PartnersUI/Detail/NpcTalkUI.cs* text eol=lf
-unity/Assets/Game/Runtime/Official/PartnersUI/Detail/NpcCustomSizeController.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerDetailTalkAssetCatalog.cs* text eol=lf
-unity/Assets/Game/Resources/Partners/OfficialPartnerDetailTalkAssetCatalog.asset* text eol=lf
 unity/Assets/Official/Partners/UI/DetailTalk/** text eol=lf
 unity/Assets/Official/Partners/UI/DetailTalk.meta text eol=lf
 
@@ -2184,8 +1933,6 @@ unity/Assets/Game/Runtime/Official/BattleSkillPlayables.meta text eol=lf
 # Preserve the current shared hand-in UI conversion and binding fingerprints.
 unity/Assets/Game/Resources/World/Mainline/HandIn/** -text
 unity/Assets/Game/Resources/World/Mainline/HandIn.meta -text
-unity/Assets/Official/World/Mainline/HandIn/** -text
-unity/Assets/Official/World/Mainline/HandIn.meta -text
 assets/reference/official-map/mainline-handin-ui*-source-manifest.json -text
 
 # Preserve current original minimap resource-board conversion fingerprints.
@@ -2201,17 +1948,14 @@ unity/Assets/Official/Combat/CharacterShadows/** text eol=lf
 unity/Assets/Official/Combat/CharacterShadows.meta text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleShadow*.cs* text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Shadows.cs* text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.Shadows.cs* text eol=lf
 unity/Assets/Official/World/Map/14/SharedRuntime/hero-shared-prefabs.json text eol=lf
 
 # Keep player lifecycle receipts and their recorded code identities stable.
 scripts/record_battle_player_live_physics.py text eol=lf
-assets/reference/battle-animation/player-live-physics-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMonsterAnimationController.cs* text eol=lf
 
 # Keep original Game-player bindings and provenance byte-stable.
 scripts/record_battle_player_scene_bindings.py text eol=lf
-assets/reference/battle-animation/player-scene-bindings-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionScenePlayerBindings.cs* text eol=lf
 
 # Keep current original 3100 player controller bindings byte-stable.
@@ -2239,8 +1983,6 @@ unity/Assets/Game/Resources/Combat/battle-pet-hud*.json* text eol=lf
 unity/Assets/Game/Resources/Combat/pet-battle-rules*.json* text eol=lf
 unity/Assets/Official/Combat/PetHUD.meta text eol=lf
 unity/Assets/Official/Combat/PetHUD/**/*.meta text eol=lf
-unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs text eol=lf
-scripts/prepare_battle_live_monsters.py text eol=lf
 scripts/prepare_battle_monster_animation_controllers.py text eol=lf
 scripts/prepare_battle_monster_attachments.py text eol=lf
 scripts/inspect_battle_pet_quality_versions.py text eol=lf
@@ -2298,7 +2040,6 @@ unity/Assets/Official/Combat/PlayerEffects.meta -text
 unity/Assets/Game/Resources/Combat/PlayerEffects/** -text
 unity/Assets/Game/Resources/Combat/PlayerEffects.meta -text
 unity/Assets/Game/Runtime/Offline/ProfessionUI/SkeletonRendererAttachmentBacker.cs* text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerEffects.cs* text eol=lf
 unity/Assets/Official/World/Map/14/source-manifest.json text eol=lf
 scripts/prepare_unity_map10_entities.py text eol=lf
 unity/Assets/Official/World/Map/14/map14.json text eol=lf
@@ -2307,38 +2048,21 @@ unity/Assets/Official/World/Map/14/map14.json text eol=lf
 scripts/prepare_mainline_minimap_dialog_catalog.py text eol=lf
 assets/reference/official-map/mainline-minimap-mark-dialog-catalog-source-manifest.json text eol=lf
 unity/Assets/Game/Resources/MainlineMiniMap/mark-dialog-assets.asset* text eol=lf
-
-# Keep the native player resource ownership port and input identities stable.
-assets/reference/battle-animation/player-resource-ownership-source-manifest.json text eol=lf
 scripts/prepare_battle_player_resource_ownership.py text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.ResourceRoutes.cs text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.ResourceRoutes.cs.meta text eol=lf
 
 # Keep original shared minimap window masks and their provenance byte-stable.
 scripts/prepare_mainline_minimap_window_masks.py text eol=lf
 assets/reference/official-map/mainline-minimap-window-masks-source-manifest.json text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13MiniMapWindows/WindowMask*.cs* text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13MiniMapWindows/WindowBlurMask.cs* text eol=lf
-unity/Assets/Game/Runtime/Official/World/Map13MiniMapWindows/IBlurManager.cs* text eol=lf
 unity/Assets/Official/World/Shared/NativeMiniMapWindows/** -text
 unity/Assets/Official/World/Shared/NativeMiniMapWindows.meta -text
 
 # Keep the confirmed native player effect ordering adapter byte-stable.
 unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Effects.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Effects.cs.meta text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerEffects.cs text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.EffectOrder.cs text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.EffectOrder.cs.meta text eol=lf
-assets/reference/battle-animation/player-effects-source-manifest.json text eol=lf
-assets/reference/battle-animation/player-effect-assets-source-manifest.json text eol=lf
 assets/reference/battle-animation/character-death-assets-source-manifest.json text eol=lf
 assets/reference/battle-animation/native-animator-pose-source-manifest.json text eol=lf
 assets/reference/battle-animation/native-mix-next-source-manifest.json text eol=lf
 assets/reference/battle-animation/player-effect-assets-source-manifest.json text eol=lf
-assets/reference/battle-animation/player-live-physics-source-manifest.json text eol=lf
-assets/reference/battle-animation/player-mixed-physics-source-manifest.json text eol=lf
-assets/reference/battle-animation/player-model-prefab-source-manifest.json text eol=lf
-assets/reference/battle-animation/player-scene-bindings-source-manifest.json text eol=lf
 assets/reference/battle-animation/renderer-parts-source-manifest.json text eol=lf
 assets/reference/battle-animation/scene-appearance-runtime-source-manifest.json text eol=lf
 assets/reference/battle-animation/scene-bound-mix-next-source-manifest.json text eol=lf
@@ -2351,15 +2075,10 @@ assets/reference/battle-animation/scene-skill-motions-source-manifest.json text 
 assets/reference/battle-animation/scene-weapon-playback-source-manifest.json text eol=lf
 assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json text eol=lf
 assets/reference/battle-animation/spine-clone-runtime-source-manifest.json text eol=lf
-assets/reference/battle-animation/status-frozen-assets-source-manifest.json text eol=lf
-assets/reference/battle-animation/status-material-assets-source-manifest.json text eol=lf
-assets/reference/battle-animation/status-material-runtime-source-manifest.json text eol=lf
 
 # Keep the battle player service and its dependency identities byte-stable.
 unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionBattlePlayerResources.cs text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.ResourceService.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionBattlePlayerResources.cs.meta text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.ResourceService.cs.meta text eol=lf
 scripts/prepare_battle_player_resource_service.py text eol=lf
 assets/reference/battle-animation/player-resource-service-source-manifest.json text eol=lf
 assets/reference/battle-animation/player-effects-source-manifest.json text eol=lf
@@ -2378,12 +2097,8 @@ assets/reference/battle-animation/weapon-prefabs-source-manifest.json text eol=l
 
 # Keep native battle player view source identities byte-stable.
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerNativeModelView.cs text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.NativeViews.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerNativeModelView.cs.meta text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.NativeViews.cs.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerAttachments.cs text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerActor.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerActor.cs text eol=lf
 scripts/prepare_battle_player_native_view.py text eol=lf
 assets/reference/battle-animation/player-native-view-source-manifest.json text eol=lf
@@ -2397,15 +2112,12 @@ unity/Assets/Official/Combat/PetFollowers/**/*.prefab text eol=lf whitespace=-bl
 unity/Assets/Official/Combat/PetFollowers/**/*.mat text eol=lf whitespace=-blank-at-eol
 unity/Assets/Official/Combat/PetFollowers/**/*.asset text eol=lf whitespace=-blank-at-eol
 unity/Assets/Game/Resources/Combat/pet-follower*.json* text eol=lf
-unity/Assets/Game/Runtime/Official/BattleSkillPlayables/GridTransformFollower.cs* text eol=lf
-unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightRolePet.cs* text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePetFollower*.cs* text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Pets.cs* text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/Shaders/PetFollower_* text eol=lf
 unity/Assets/Game/Editor/OfficialBattlePetFollowerAcceptance.cs* text eol=lf
-unity/Assets/Game/Editor/OfficialBattlePetHostAcceptance.cs text eol=lf
 unity/Assets/Official/Combat/PetFollowers.meta text eol=lf whitespace=-blank-at-eol
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveMonsterModelView.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleEntityPositionContainer.cs* text eol=lf
@@ -2416,14 +2128,11 @@ unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePartnerNativeModelVi
 unity/Assets/Game/Runtime/Presentation/Combat/IOfficialBattleAnimatorMovementModel.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerAppearanceSource.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Players.cs text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.SceneViews.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/IOfficialBattleAnimatorMovementModel.cs.meta text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePlayerAppearanceSource.cs.meta text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Players.cs.meta text eol=lf
-unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.SceneViews.cs.meta text eol=lf
 assets/reference/partner-battle-fighters-source-manifest.json text eol=lf
 assets/reference/battle-animation/movement-effects-source-manifest.json text eol=lf
-assets/reference/battle-hud/skill-slot-lifecycle-source-manifest.json text eol=lf
 assets/reference/partner-native-role-views-source-manifest.json text eol=lf
 scripts/prepare_battle_player_scene.py text eol=lf
 assets/reference/battle-animation/player-scene-dispatch-source-manifest.json text eol=lf
@@ -2443,7 +2152,6 @@ scripts/prepare_unity_map14_shared_ec_runtime.py text eol=lf
 scripts/prepare_unity_shared_ec_contracts.ps1 text eol=lf
 scripts/prepare_mainline_minimap_offline_validation.py text eol=lf
 unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset text eol=lf
-unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance*.cs* text eol=lf
 unity/Assets/Official/World/Map/14/SharedRuntime/*-license*.txt -text whitespace=cr-at-eol
 assets/reference/official-map/mainline-shared-*.json text eol=lf
 assets/reference/official-map/map14-shared-*-source-manifest.json text eol=lf
@@ -2466,7 +2174,6 @@ unity/Assets/Game/Runtime/Presentation/Home/ArenaBattleRunner.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Home/FantasyTowerBattleRunner.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestBattleRunner.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/Home/WeeklyChallengeBattleRunner.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Battle.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.BattleScene.cs text eol=lf
 unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.Presentation.cs text eol=lf
@@ -2480,7 +2187,6 @@ unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs text eol=lf
 # Keep recovered original shared injection sources stable.
 scripts/prepare_mainline_shared_injection.py text eol=lf
 scripts/prepare_mainline_shared_injection_contract.ps1 text eol=lf
-assets/reference/official-map/mainline-shared-injection-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/SharedLaunch/IVersionManager.cs* text eol=lf
 assets/reference/official-map/map10-current-minimap-resources-source-manifest.json text eol=lf
 assets/reference/official-map/map11-current-minimap-resources-source-manifest.json text eol=lf
@@ -2493,7 +2199,6 @@ scripts/prepare_battle_pet_transfers.py text eol=lf
 assets/reference/battle-animation/pet-transfers-source-manifest.json text eol=lf
 unity/Assets/Game/Resources/Combat/pet-transfers.json* text eol=lf
 unity/Assets/Game/Resources/Combat/pet-transfer-graphs.json* text eol=lf
-unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ECFightRolePetTransferView.cs* text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePetTransferCatalog.cs* text eol=lf
 unity/Assets/Official/Combat/PetTransfers/** text eol=lf
 unity/Assets/Official/Combat/PetTransfers.meta text eol=lf
@@ -2501,9 +2206,7 @@ unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionAppearanceBindin
 
 # Keep original client injection dependency receipts and payloads stable.
 scripts/prepare_mainline_shared_client_dependencies.py text eol=lf
-assets/reference/official-map/mainline-shared-client-packages.json text eol=lf
-assets/reference/official-map/mainline-shared-client-dependencies-source-manifest.json text eol=lf
-unity/Assets/Official/World/Map/14/SharedRuntime/DryIoc-license.txt -text whitespace=cr-at-eol
+unity/Assets/Official/World/Map/14/SharedRuntime/DryIoc-license.txt -text
 unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblyCatalog.cs text eol=lf
 
 # Keep shared stack threshold rule receipts stable.
@@ -2514,9 +2217,6 @@ assets/reference/battle-rules/stack-count-source-manifest.json text eol=lf
 
 # Keep the recovered original injection source and payload stable.
 scripts/fixtures/mainline_shared_injection.cs text eol=lf
-
-# Preserve original multi-page monster and embedded particle source identities.
-scripts/prepare_battle_live_monster_assets.py text eol=lf
 scripts/prepare_battle_monster_body_effects.py text eol=lf
 assets/reference/battle-animation/live-monsters-source-manifest.json text eol=lf
 assets/reference/battle-animation/monster-body-effects-source-manifest.json text eol=lf
@@ -2569,7 +2269,6 @@ unity/Assets/Game/Editor/MainlineWorldStartup/** text eol=lf
 unity/Assets/Game/Editor/MainlineWorldStartup.meta text eol=lf
 scripts/prepare_mainline_shared_world_configuration.py text eol=lf
 scripts/prepare_mainline_world_startup_validation.py text eol=lf
-assets/reference/official-map/mainline-shared-world-configuration-source-manifest.json text eol=lf
 
 # Activity invitation native bindings retain their provenance hashes.
 unity/Assets/Official/DailyChallenges/UI/Team/** -text
@@ -2609,7 +2308,7 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineShared
 unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedMapConfiguration.cs.meta text eol=lf
 
 # Preserve the Map14 puzzle payload digest consumed by the shared map host.
-unity/Assets/Official/World/Map/14/Resources/Map14/puzzle-rules.json text eol=lf
+unity/Assets/Official/World/Map/14/Resources/Map14/puzzle-rules.json eol=lf
 
 # Preserve original activity monster migration inputs and native payload hashes.
 scripts/prepare_activity_monster_*.py text eol=lf
@@ -2724,8 +2423,8 @@ unity/Assets/Official/World/Map/14/Resources/Map14/puzzle-rules.json -text
 unity/Assets/Official/Combat/DemonResult*/** -text whitespace=cr-at-eol,-blank-at-eol
 unity/Assets/Official/Combat/DemonResult*.meta -text whitespace=cr-at-eol,-blank-at-eol
 unity/Assets/Game/Runtime/Official/BattleResultUI/** -text whitespace=-blank-at-eol
-unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterMaterialOverrides.cs* -text whitespace=cr-at-eol
-unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterMeshCopy.cs* -text whitespace=cr-at-eol
+unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterMaterialOverrides.cs* whitespace=cr-at-eol
+unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterMeshCopy.cs* whitespace=cr-at-eol
 unity/Assets/Game/Runtime/Presentation/Home/OfficialDemonResultAssets.cs* -text whitespace=cr-at-eol
 scripts/prepare_demon_result*.py text eol=lf
 assets/reference/demon-result-native-source-manifest.json text eol=lf
@@ -2737,19 +2436,19 @@ unity/Assets/Official/World/Map/14/NativeRoadblocks/** -text whitespace=cr-at-eo
 unity/Assets/Official/World/Map/14/NativeRoadblocks.meta -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 unity/Assets/Official/World/Map/14/UI/Roadblock/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 unity/Assets/Official/World/Map/14/UI/Roadblock.meta -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
-unity/Assets/Game/Resources/Map14/UI/RoadblockAnimations/** -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
-unity/Assets/Game/Resources/Map14/UI/RoadblockAnimations.meta -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
-unity/Assets/Game/Resources/Map14/UI/RoadblockTeamPropStageDialog*.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
-unity/Assets/Game/Resources/Map14/UI/RuleDialog.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
-unity/Assets/Game/Resources/Map14/UI/TipInfo1.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/RoadblockAnimations/** whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/RoadblockAnimations.meta whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/RoadblockTeamPropStageDialog*.prefab* whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/RuleDialog.prefab* whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/TipInfo1.prefab* whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 unity/Assets/Game/Resources/Map14/UI/roadblock-*.json* text eol=lf whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 unity/Assets/Game/Resources/Map14/Native/roadblock-display-catalog.asset* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 assets/reference/npc-assistance/roadblock-*.json text eol=lf whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
-unity/Assets/Game/Resources/Map14/UI/8625_14_DialogIcon.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
-unity/Assets/Game/Resources/Map14/UI/8626_14_DialogIcon.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
-unity/Assets/Game/Resources/Map14/UI/8633_14_DialogIcon.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
-unity/Assets/Game/Resources/Map14/UI/8634_14_DialogIcon.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
-unity/Assets/Game/Resources/Map14/UI/8637_14_DialogIcon.prefab* -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/8625_14_DialogIcon.prefab* whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/8626_14_DialogIcon.prefab* whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/8633_14_DialogIcon.prefab* whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/8634_14_DialogIcon.prefab* whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
+unity/Assets/Game/Resources/Map14/UI/8637_14_DialogIcon.prefab* whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.RoadblockDisplays.cs.meta whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialRoadblockDisplayCatalog.cs.meta whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof
 unity/Assets/Game/Runtime/Presentation/World/Mainline/RoadblockTipGraphRuntime.cs.meta whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof

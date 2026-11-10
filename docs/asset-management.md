@@ -20,6 +20,8 @@ Unity 缓存、IDE 输出、日志和临时构建不提交或进入素材快照�
 
 暂存文件超过 50 MB 时，提交钩子将其转为 LFS 指针并在同次提交登记精确路径。新克隆运行 `python -B scripts/install_lfs_size_hook.py`；要求 Git LFS 已安装，安装器保留自定义 pre-commit，LFS 推送钩子负责上传对象。
 
+`.gitattributes` 优先复用已有目录或通配规则，仅为例外追加条目；删除重复规则时须按属性分别核对覆盖顺序。`-text` 不会清除先前的 `eol=lf`，LFS、diff、merge 和 whitespace 也须分别保留。简化前后用 `git check-attr --all -z --stdin` 对比全部受版本控制的路径，并补查未跟踪文件及通配规则边界；不为压缩行数扩大文本规范化范围，不执行全库重新规范化。
+
 ## 验证临时产物
 
 PowerShell 点源 `scripts/validation_workspace.ps1`，使用 `New-ZjcsValidationWorkspace`／`Remove-ZjcsValidationWorkspace`；同一调用可用 `Invoke-ZjcsValidation` 在 finally 清理。Python 使用 `scripts/validation_workspace.py` 的 `temporary_validation_directory(prefix)`。
