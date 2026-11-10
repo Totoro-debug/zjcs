@@ -46,7 +46,7 @@
 | [设置、拍照与本地存档](features/settings-and-save.md) | 未完成 |
 | [共用界面、文字与资源运行](features/shared-ui.md) | 未完成 |
 | [主题签到与长期活动入口](features/sign-ins.md) | 未完成 |
-| [技能、方案与培养](features/skills.md) | 未完成 |
+| [技能、方案与培养](features/skills.md) | 未完成；当前目标为初始职业及一阶转职技能 |
 | [主线任务进度](features/tasks.md) | 未完成 |
 | [古遗物扭蛋与女神牌](features/treasure-gacha.md) | 未完成 |
 | [Unity 工程与启动流程](features/unity-project.md) | 未完成 |
