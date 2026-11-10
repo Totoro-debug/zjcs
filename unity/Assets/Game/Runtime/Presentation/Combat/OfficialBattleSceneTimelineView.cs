@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
+using Zjcs.Official.BattleRoundUI;
 using Zjcs.Combat.Official;
 using Zjcs.Official.WorldUI;
 
@@ -21,9 +21,7 @@ namespace Zjcs.Presentation.Combat
         }
         private readonly Dictionary<int, Card> cards = new Dictionary<int, Card>();
         private OfficialBattleTimelineAssets assets;
-        private RectTransform attach;
-        private Canvas canvas;
-        private Camera sceneCamera;
+        private GameObject cardPrefab;
         private Transform slot;
         private float start, end, moveTime;
         private bool moving;
@@ -32,18 +30,23 @@ namespace Zjcs.Presentation.Combat
         {
             var assets = OfficialBattleTimelineAssets.Load();
             RectTransform anchor = hudRoot.transform.Find(assets.Anchor).GetComponent<RectTransform>();
-            GameObject root = Instantiate(assets.ScenePrefab);
+            var prefab = Resources.Load<GameObject>("Combat/RoundUI/GameRoundScene");
+            var cardPrefab = Resources.Load<GameObject>("Combat/RoundUI/GameRoundCharacterItem_Scene");
+            if (prefab == null || prefab.GetComponent<GameRoundScene>() == null)
+                throw new InvalidOperationException("Restore the official native GameRoundScene before entering battle.");
+            if (cardPrefab == null || cardPrefab.GetComponent<GameSceneObjectOrderLayer>() == null)
+                throw new InvalidOperationException("Restore the official timeline card sorting bindings before entering battle.");
+            GameObject root = Instantiate(prefab);
+            GameRoundScene scene = root.GetComponent<GameRoundScene>();
+            scene.SetAttachUI(anchor, sceneCamera);
             var view = root.AddComponent<OfficialBattleSceneTimelineView>();
             view.assets = assets;
-            view.attach = anchor;
-            view.canvas = anchor.GetComponentInParent<Canvas>();
-            view.sceneCamera = sceneCamera;
-            view.slot = root.transform.Find(assets.SceneBindings.slot);
-            SpriteRenderer line = root.transform.Find(assets.SceneBindings.line).GetComponent<SpriteRenderer>();
+            view.cardPrefab = cardPrefab;
+            view.slot = scene.IconRoot;
+            SpriteRenderer line = scene.Line;
             float width = line.size.x * line.transform.localScale.x;
             view.start = width / 2; view.end = -width / 2;
             hudRoot.AddComponent<OfficialBattleTimelineLifetime>().Initialize(root);
-            view.LateUpdate();
             return view;
         }
 
@@ -109,7 +112,7 @@ namespace Zjcs.Presentation.Combat
                 bool created = !cards.TryGetValue(unit.Id, out Card card);
                 if (created)
                 {
-                    GameObject root = Instantiate(assets.CardPrefab, slot, false);
+                    GameObject root = Instantiate(cardPrefab, slot, false);
                     root.name = "GameRoundCharacterItem_" + unit.Id;
                     card = new Card { Root = root, Animator = root.GetComponent<Animator>() };
                     cards.Add(unit.Id, card);
@@ -131,8 +134,11 @@ namespace Zjcs.Presentation.Combat
                     : card.Target - new Vector3(end, 0, 0) + new Vector3(start, 0, 0) - card.From;
                 if (created || !animate) card.Root.transform.localPosition = card.Target;
                 if (created) { card.From = card.Target; card.Move = Vector3.zero; }
-                card.Root.transform.SetSiblingIndex(entries.Length - i - 1);
             }
+            // All cards must exist before assigning the final reverse order.
+            // Unity clamps an index beyond the current child count during insertion.
+            for (int i = 0; i < entries.Length; i++)
+                cards[entries[i].Id].Root.transform.SetSiblingIndex(entries.Length - i - 1);
             moving = animate && entries.Length > 0; moveTime = 0;
         }
 
@@ -199,32 +205,6 @@ namespace Zjcs.Presentation.Combat
                 card.Root.transform.localPosition = percent >= 1 ? card.Target : value;
             }
             if (percent >= 1) moving = false;
-        }
-        // Overlay HUD animation/layout can change the anchor after LateUpdate.
-        // Project again after Canvas layout so the scene and HUD use the same frame.
-        private void OnEnable() => Canvas.willRenderCanvases += LateUpdate;
-        private void OnDisable() => Canvas.willRenderCanvases -= LateUpdate;
-
-        private void LateUpdate()
-        {
-            Camera camera = sceneCamera != null ? sceneCamera : Camera.main;
-            if (attach == null || canvas == null || camera == null) return;
-            // Overlay canvases use a null UI camera on Windows. The official
-            // screen-to-world anchor and camera-size scaling remain unchanged.
-            Camera uiCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
-            Vector2 screen = RectTransformUtility.WorldToScreenPoint(uiCamera, attach.position);
-            Vector3 world = camera.ScreenToWorldPoint(new Vector3(screen.x, screen.y, Mathf.Abs(camera.transform.position.z)));
-            world.z = assets.Z;
-            transform.position = world;
-            var scaler = canvas.GetComponent<CanvasScaler>();
-            RectTransform canvasRect = canvas.transform as RectTransform;
-            float canvasHeight = canvasRect == null ? 0f : canvasRect.rect.height;
-            if (scaler == null || scaler.referenceResolution.y <= 0f || canvasHeight <= Mathf.Epsilon
-                || assets.SceneSize <= Mathf.Epsilon || camera.orthographicSize <= Mathf.Epsilon) return;
-            float canvasScale = scaler.referenceResolution.y / canvasHeight;
-            float scale = camera.orthographicSize / assets.SceneSize * canvasScale;
-            if (float.IsNaN(scale) || float.IsInfinity(scale)) return;
-            transform.localScale = Vector3.one * scale;
         }
     }
 }

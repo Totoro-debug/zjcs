@@ -52,6 +52,8 @@
 
 顶部状态条从同版 `FightMainPanel/Content/Top/FixedContent/StageStatus` 分支恢复，31 个原对象、15 个脚本字段组件与 `mSlot／mStatusUIItem／mStatusBack／mBtn` 引用保持原样；`FightMainPanelStageStatus` 和 `FightStatusUIItem` 负责原模板克隆、去重后的状态顺序、图标／背景、零层数隐藏及原按钮开窗，`HorizontalLayoutGroupJSZX` 与 `ContentSizeFitter` 按原参数排列和定宽，不再手动设置图标位置。状态条挂接前已核对保留的 854 HUD 的 Content、Top、FixedContent 与 884 原父层级的锚点、位置、尺寸、缩放及旋转一致，来源单独记录。原主面板入场图中的状态条滑入和透明度曲线也逐键与 884 原动画核对；迁移宿主把原动画目标重新绑定到原生子树，沿原播放时钟与插值执行。`OfficialBattleStageStatusStripView` 只接本地目录、字体及经原事件引用解码的点击音；本地宿主拥有克隆行对象，状态更新或禁用时释放行，重新启用时按当前检查点重建。
 
+行动进度的场景底板改用所选 884 的完整原生 `GameRoundScene` prefab，保留四个层级节点、12 个对象、原 `mIconRoot／mLine` 引用、线条与箭头的 sprite、材质、shader、尺寸、位置和排序字段。`GameRoundScene` 与 `SpriteRendererCanvas` 迁移到 `Official/BattleRoundUI`，原隐藏时移至远处、世界坐标投影、相机尺寸缩放及透明度传播由原类执行；Windows Overlay 画布允许空 UI 相机，战斗相机由公共宿主显式传入，并在画布布局后重投影、窗口尺寸变化后重新读取画布高度。`OfficialBattleSceneTimelineView` 只接检查点与头像队列，不再重复实现场景位置和缩放。保留的 854 HUD 中 `RoundUI／Linear` 的锚点、位置、尺寸、pivot、缩放和旋转已按原 float32 与 884 原生字段核对一致，原挂接布局继续使用。原生对象、脚本、转换依赖与输入输出哈希见[行动进度场景来源](../../assets/reference/battle-hud/round-scene-native-source-manifest.json)。头像卡片保留现有 854 来源的原配置重建载荷，附加从 884 原卡片根节点恢复的 `SortingGroup` 和 `GameSceneObjectOrderLayer`，只重绑组件所属对象及脚本引用；原排序层、`SortAtRoot` 与 `1000 + siblingIndex` 保持原值，避免原底板线条覆盖头像。该载荷单独记录混合来源与共用依赖，不标记为完整原生卡片。头像卡片其余原组件及 `RoundUI` 的完整迁移仍未完成，现有头像、队列排序和移动实现继续使用各自已记录来源。
+
 ## 完整还原部分
 
 - `OfficialBattleRuntimeController` 连接战斗会话、准备界面、场景宿主与结算回调；`FightBattleCheckpoint` 保存可恢复的本地战斗状态。
@@ -65,7 +67,7 @@
 
 技能命中能力已拆为 `IFightHitPattern.Plan(FightHitPatternContext)`，由原技能／命中配置选择点目标或范围实现；调用方取得包含目标、命中格和延迟的 `FightHitOccurrence`，再逐次进入既有官方公式、护盾、状态和伤害结算。随机父节点已选定的锚点不再重复消耗随机数量，明确的随机目标数量先筛选实体，再对所选实体覆盖的身体格生成伤害；治疗保持原有处理。多格攻击按原 `HitScopCfg` 的顺序与 Delay 逐格处理，同一格的同一身体声明不重复计数；同一怪物占据不同范围格会产生多次伤害。命中格与延迟随伤害回执保存，旧检查点缺少新字段时保持兼容。多段时序、衰减、子技能、状态与地形的能力拆分尚未全部完成，现有官方基础公式及执行顺序继续保留。
 
-行动进度 HUD 由 `OfficialBattleSceneTimelineView` 按官方 `GameRoundUI` 的顺序恢复：先放置检查点 `Timeline.Acting` 的当前行动者，再按 `Next` 排列其余实体；因此一个逻辑步骤已经落盘但技能演出仍在播放时，队列不会提前把下一名角色显示成正在行动。检查点缺少有效当前行动者时才回退到 `Next` 排序。
+行动进度 HUD 由 `OfficialBattleSceneTimelineView` 按官方 `GameRoundUI` 的顺序恢复：先放置检查点 `Timeline.Acting` 的当前行动者，再按 `Next` 排列其余实体；因此一个逻辑步骤已经落盘但技能演出仍在播放时，队列不会提前把下一名角色显示成正在行动。检查点缺少有效当前行动者时才回退到 `Next` 排序。 首次装载全部头像后统一设置逆向兄弟索引，避免逐个实例化时 Unity 截断超出当前子节点数量的索引，保证初次显示与后续重排使用同一遮挡顺序。
 
 - 玩法构造包含官方地图格网、阵容、技能、阶段和胜负条件的 `FightBattleCheckpoint`，提供场景父节点、HUD 父节点及玩法 adapter，一次调用 `Begin`。恢复存档时设置 `RestoreCheckpoint`，不重新生成行动队列或技能 CD。
 - 请求可提供环境 ID、准备／离开／站位参数、人物外观、图标、动画及原生模型 adapter；未覆盖的资源解析由公共官方目录处理。`SpeedModeType` 与 `SpeedConditionMet` 只描述玩法类型及官方条件判断，官方速度表加载、解锁、HUD 刷新和时间倍率在 `Begin` 内统一初始化，不再要求玩法随后调用速度初始化函数。没有条件判断器时，带条件的速度保持锁定。
@@ -183,3 +185,5 @@
 - 离线适配：[`Runtime/Offline/Combat`](../../unity/Assets/Game/Runtime/Offline/Combat/)。
 - 场景与 HUD：[OfficialBattleRuntimeController.cs](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs)、[OfficialBattleHudCatalog.cs](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudCatalog.cs)。
 - 官方配置及转换记录：[battle-rules.json](../../assets/official/battle-rules.json)、[skill-rules.json](../../assets/official/skill-rules.json)、[来源总览](../../assets/reference/SOURCES.md)。
+
+- 原生行动进度场景及原头像排序组件已通过 Unity 导入编译、`Zjcs.Editor.ProjectTools.Validate`、静态元数据检查、内置屏 Play Mode 和实际 Windows Mono Player 验证。永久入口 `Zjcs.Editor.BattleRound.OfficialBattleRoundSceneAcceptance.Run` 在与公共战斗控制器相同的原生渲染管线中检查四个原节点、原 sprite／材质／shader、线条尺寸和排序、三名原 NPC 头像的初次逆向兄弟索引及原排序层、当前行动者优先、检查点恢复、死亡移除、相机尺寸与画布参数变化、原主面板动画中的锚点投影、隐藏／重新显示、空队列和 HUD 销毁释放；保留 `SpriteRendererCanvas` 原空透明度数组，不由宿主补填。模拟指针核对原速度按钮未被场景遮挡。已查看编辑器与 Player 各四张实际画面，确认原箭头、头像前后关系及动画位置；完整资源构建与随后验证代码增量构建通过，验证前后用户存档文件哈希一致。该验证使用受控公共 HUD，未经过完整战斗控制器或正式玩法入口，未验证整套回合文案、完整头像请求处理器、全部卡片组件、战斗场景及声音输出；构建仍有既有缺失脚本／Burst 程序集与 URP shader 诊断，Player 启动仍有既有帧呈现诊断。本模块尚未更新正式发布目录，不能作为完整行动进度 HUD 或整个战斗功能完成结论。
