@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 510f235b8f51ee041bf95cfd9e61b77f, type: 3}
+  m_Name: OfficialHomeTopBarAssetCatalog
+  m_EditorClassIdentifier: ''
+  parentPrefab: {fileID: 1708180620337799, guid: 870e3f49012790adbedaeb9e38ec5ced, type: 3}
+  managerPrefab: {fileID: 1709254077376921, guid: 92eee6c078ac01a1a004c16f53dd24ab, type: 3}
+  topBarPrefab: {fileID: 1709254077376921, guid: 2b5d75a0995e0ddf6cca1a0c8ef672b9, type: 3}
+  currencyPrefab: {fileID: 1709254077376921, guid: 7008d58f8bce45d8f35f9a1ec2247a41, type: 3}
+  currencies:
+  - type: 0
+    itemId: 1
+    icon: {fileID: 21300000, guid: 2a02f9075b01e0df1fd0c89ff3c233e1, type: 2}
+  - type: 5
+    itemId: 2
+    icon: {fileID: 21300000, guid: 0acd9fceb8fb098e1e2e0eba2bd6b89c, type: 2}
+  - type: 2
+    itemId: 57
+    icon: {fileID: 21300000, guid: d455ae9083223ef84695fe1629e95336, type: 2}
+  sounds:
+  - eventId: 3772241779
+    clip: {fileID: 8300000, guid: a349287c39df984af5f51e2338d53e9f, type: 3}

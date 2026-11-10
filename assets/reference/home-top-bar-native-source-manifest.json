@@ -1,0 +1,1506 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    "scripts/prepare_current_partner_native.py": "21eed29e19b3b3fbd370eb0736c10fa663d35c749b7fa1f9686a57774c6d2cea",
+    "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
+    "scripts/official_manifest.py": "1aae5bd86af587511466e17308719c2e6b356be4117942809c7e6ba89e2d7399",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c",
+    ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-textures/source-manifest.json": "095eb422b8a241e6468abd81940e22aff9ad22f89bc78161dbdba8bd1f45b3b0",
+    ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/source-manifest.json": "09b81e5260175a1524a2178d37bea2b78752bdc85f130751e2d95398171fbe0b",
+    ".tools/source-packages/WwiseBnk/wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365",
+    ".tools/source-packages/WwiseBnk/wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile": "a7e72b9478ce455a7ef12974f16e3f78e684ded497b7750f7901dacb66eacfad",
+    "scripts/npc_travel_language.py": "5c03df02e09d6b443520407928478018b0f74f959fc081e6bb00f033b65d1232",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Home/HomeUI.prefab": "fa8b3636341955fa285868e6e58322120712ce81aa96435cc5638940e7195ac7",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Home/HomeUI.prefab.meta": "7d5251eab77b54a302074936a0565b453dd9c43b44c132fcec80d49873cbe90c",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Public/TopBarManager.prefab": "f7f18d8225c2b2ebed5874def03a9e6fc18c2b1fc29cdd40b8c694421470d565",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Public/TopBarManager.prefab.meta": "f38d174b51e63ce9df6a45fe8f847c616d36b702a1b9675ac3132274774d5678",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Public/PublicTopBar.prefab": "a61c8b16abf9f3da0d31174c8fadbb3e109ebaab74c4fc6e7e1a9f6ee4421fb5",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Public/PublicTopBar.prefab.meta": "20e47cfe27a2408b95b4ac37a81adee2125ac1428b7abf6c974408082beed075",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Public/MoneyUI.prefab": "f3fba77dfb35c2f33e91335da9444933507d566b7bd98ec607c78f6c6c1d18eb",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Public/MoneyUI.prefab.meta": "6ce788015f081bebf9377505c29dd5d98b81b729dc8844fa65fd11ee60698e4b",
+    ".tools/source-packages/current/884_156692/native-conversion/component-fields-all/source-manifest.json": "c82db6a6903d36856807688d11573793cdaef98d1da13d0d6108b6f3f04aeec5",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Money/Money_1.asset": "22272d91c129e679808a5ce27e7fbdaf24dcda32d19deb1cb0e1c311b23e4506",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Money/Money_2.asset": "61ce975d9f66f02b69c84f40a6f20add289a096ea58284a4580b6d19b18e5689",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Money/Money_57_Tili.asset": "f1731dfb34d1c44089fa76158bcdf0761c21541f6e89e0a636de865b5ce76872",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Tables.cs": "0e4882f1ad41958e5ec017543447e17f5196c5453f8168c685926ea2c134c9bc",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbQuickBuyInfo.cs": "d28d82590ba856052e958d97a37e303099c38a0e6db2e6abdca2b724d909be25",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/QuickBuyInfo.cs": "031a22d080dcd1fdf0cce48fb4f0abbec5523f8b485a4787ec669403137d7c40",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ICondition.cs": "12a4005edaf53df080240808b91e6e3e55fc08bceb91fd154e6c3993cdc704ff",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelCondition.cs": "f3c1f31e2877f83a97df6f48d7230f50b48b5b0cf3420bb542a363ee37c8000e",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/WorldMapProgressCondition.cs": "d5285a197953c12c27748f12990047d59804c70b83079232c518192238f3a021",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/HasItemCondition.cs": "fca0fa79cc49354068fc32d136863d5a77181fd9ae93596c1671a9f804641dd5",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapUnlockCondition.cs": "4967a1cb05b4d1029b1590501eb1fb6e0957193c9c7827626eed5368dde779f8",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbGameSettings.cs": "95041b47680bfc881a61e96b931025b532a04dd5afe857460cbecd539c06b820",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameSettings.cs": "4f9c9d2d6e8ef856d8f705db4aad133d44237062ff0413ac6f7ee1b953336916",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleRoyaleSetting.cs": "a2e10a06e0843e3919e186a0850c79d3fd2cf60652a50881a38dcd66eaf682a5",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleSettings.cs": "a580f47d38633596e945fea04fadc77e63d54f31f7bf4c7a75fd5e4bcfc81d00",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GamePlayModeBattleSpeed.cs": "ccc2f68700bed5f2e3b70392fff9f2bee4ab9100e823a60458c63fee29bac9c0",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GamePlayModeSpeed.cs": "9644cda7bb23569ac4060b3628f064f05facb854a997201454cd2e411257d109",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleAISetting.cs": "7bbbd83863678f46292c40442a9b99d974bb5f5d01559572a191281781a3ec22",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillEntityAIPriorityOverride.cs": "7144e1b2fb3fc224d0bb935f41e498fd8a3562173731a015283157e3831902a9",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/StatusMutexGroup.cs": "1c2a4ddb6ee8e1d9d77d83753bc921d9720fc25d3a4c803ce755ae5804418f7a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameSettingsFightRound.cs": "1c359e6f4252f15b953abc3c4dba2384b819f403937adf81dc2eefee21758ae7",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameSettingsFightVoteLeave.cs": "680ae2ac27ae77c4971d9a06bf372fc2aee51548cc2c96e47da7eeeda6649c13",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameSettingsFightRecord.cs": "2909d59c92d09afc36b9d6859ea433fbd7b80cee3cbb442421ba989bf62cf1e7",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/DamageTestSetting.cs": "106c2e0c89c3713af7f9ec6c3e94328af81f88a98883ddf64a644e6dc29cc834",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LegionPlunderSetting.cs": "94e255f6854b8767ce71686291fdb5a7aad34312349da72dd03e1610c1ce1d72",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FreeBattleSetting.cs": "28962ab3925fbeb2873204f0d440829cae27ff2e94daa3971288ecb1a0170e93",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LostImportantPlayerSetting.cs": "422702df1371ed684e61fb6554448421b0c0cfd41d23941243d5c6748cf0a744",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerChatDataSetting.cs": "1abd9eb6f71a12afb6424700ce8a63908e8a2f20950d0c0908401816a65a59e6",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillPieceChestSetting.cs": "c5df20d27afc828e4ee679171ba3602136d955d90d2d73805b8b8d4a83717e0a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/UniverseAccountSetting.cs": "aeefb4d12c4b9b72d448d9d766f231160cc264dd12343fe5d3a78b006d5e917e",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivitySetting.cs": "8f3769714f483f286d456a1e14bc82685777ce226bb8e24d44fd55f6f7367e7c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelSubRankData.cs": "2e3cadec183460a5ffb5534438be4db17d2df61090f294009d8ec73ab3838777",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivityGachaSetting.cs": "1a3e9d40a7cca72097305f4e0390021fd47549b4d094659e22de214b6372c8df",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivityGrowthFundSetting.cs": "6b28811c44155405b52e9ebb557c1ab9179776097795328ab0a777ae077428a9",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivityJumpGameSetting.cs": "ea216032de01271dfd5528635042abd37a597696b71c3a2c60068ec058f0ff68",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivityMatch3GameSetting.cs": "498f3f788b9cb13097c4b3f753239d6959ee94982622c84fbd05bbc1d9e9d4b6",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Match3SkillScoreConfig.cs": "bf39806c621faefad0b17670d1a8b65e939402717c68b7f2724d82d2b02ccbdc",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AppearanceGiftSetting.cs": "572f7fc920d38a729c5deed392f58a3814e817fb3dee7f80790b1b494963b480",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/BagSetting.cs": "5b12db04681b9a9819c9b8ff8f51f7216cdecde9befd8921cf63af1b4a47cacb",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/BBQSetting.cs": "2f5a8a4d656bfcbe6b583b96c299b83d9337da85d2c5fdd41d033466ecaa74ff",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/BlessLevelSettings.cs": "9a4aacb1b8349aefc695c42c6c19c1f5f8241083b65ed00e7d648809623c81f0",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AstrologicalSeasonSetting.cs": "a5ecc083e83cd3d364a968492b75f901a638fd393c3174b169814247cd47c442",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesMergeStepConfig.cs": "959a0b420dd95d3ebb680a3bc6fab2fa2e5e24c641631edf671aafdc52aa030f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesMergeNoticeConfig.cs": "f15511d44104b34f2edfdd583ef82eb45f629e1e82c72aaa7805e8e930e28ce9",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AstrologicalContractChargeRateStage.cs": "5f960c2958331e785a3eb0aee5c11e73608a88198dd864e4139aacfbff3abdcf",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ChangeProfessionSetting.cs": "842b865f55217adfe3f6e2684af2c32875a272805dc4c77dba57ea5d1491820f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/CommonRetrySetting.cs": "0e359b767a53eafd5bbbbcd284f1f9f44c62fd0d410c499f9162f08433213e83",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ThirdPartyPayPopupSetting.cs": "f981d9b97834c1d60687b70106b2928f7cde6054d4ae2914ba028632f9fe889c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/DebugLoginSetting.cs": "95747bedd134d22af7ea8ce978335116b0efc26dbc48fbd95d6e5f8d4af78f92",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/EnterGameSetting.cs": "81e6ef2f520625e4b03aee5291cce6cdeb899ca3137609c4c030b064910eb6b2",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GlobalIdData.cs": "7fdcc348043781ed154892c77cb32ca9179273f6d7232be49b86685e5fd431a8",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ImportantDelegateTaskRefreshConfig.cs": "dcab2830c934bf94717bb74ad94e4f06a15fcc3e955b800a561d45a6304f8428",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemSwapSettings.cs": "7899e7919b2d42bbb9a681b1688c957d3e0904ea5e1d022f0dbe26153341ade2",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LegionMapSetting.cs": "b0499e0ab50294a8bcdfdafb5eabe73655e39c8d91d49a172e549f7e1d71d929",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LegionFightSettings.cs": "2cee825fa6783307acc0070018a26bb975a3d591427a790ee66e181dcbf6afbc",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LegionActivityTopSetting.cs": "50e73910310e43abc862413eb476cc4ee84ffd9bedf8e90b573f543704420edf",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/VegetableDogActivitySetting.cs": "338c7c677690f1a8ddf490c9550e222fcfb2e14140a5def90c50c27b557ebbb5",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MusicFestivalActivitySetting.cs": "db63cb586f507f0f9f3d8899ecb108ff9360684eaba7084a5d6aea3e926d656a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapChannelStatusLimitConfig.cs": "06210c9eb9be7f59aade5aca4941690376d210ffa1506b31fc7a4d6ece927891",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapRegionUnhandleEntityConfig.cs": "072b5fde9db233d08ee54ccc91090aa76066dd1bd4707e52287bd28e27969a35",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapHideAndSeekConfig.cs": "c64cef83a3a8412d7b1cfea5e9b2d540e90434043d0b99496c4449d40c43f030",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MessagePushTimeSetting.cs": "8e5337367b5ef3bd0601562dda3e270dfe448f13052c2c7441e47c976a4f7ae2",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcAdventureSettings.cs": "2b71e1cb3156820390a9846fa15188f0835433ea5d91b5e44d743dc26986a864",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcFriendshipTagSettings.cs": "3b0d4af1ed4879451c5be93b5aa161efe5f2b8c352724a5fc8195a44671bb294",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcTalentTreeSetting.cs": "cbe4713e571a9348df278b5ca342873e1b711cd07a1c0a6e672f450ca555cebc",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesIconConfigSetting.cs": "4bbbc73a6829e95275dd4b195c57a7761b04bfc2d749cf833092cc418acf3efe",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesMergeConfig.cs": "448e97987106773f19a2e9d2b320ee1921e0eb5b3e77dfb8753c8ae6b5f7501a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesMergeTimeConfig.cs": "0cb2918f55c3c86738706c712858a353e08c30457ed32f93726b5c0ce77d6eeb",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerCreateTemplateInfo.cs": "9d63c14c6dc8e70f71e0ca470eccb109fb554998ce5b3d6d95350992e0708de0",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PurifySetting.cs": "5b12da9f9ddc4a19cb2941a3aea3a3f92e1037392b50aa21adfb1d8093c6847a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/InheritSetting.cs": "fd283d37373de23a14ddbf077816b49421dd5f30ec807f17021f2ddd0329e052",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ResetSkillSetting.cs": "019b8d0fd8cbf34134388e61e8d975493fbff86535d5cdf571a137f3fb5efecd",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RoleTradeSetting.cs": "539847d37b8e5d5683db84dbd7e2a91ac6efee555611b11262897b9c2b9b8b24",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ServerManageConfig.cs": "96fb07314972b08fabab530a4522d50c3b9402d84f582713c635d31108f91909",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillGachaSettings.cs": "36dbf94fb67c661e23584d056aace4ef808ecbf9c4f5bd0bbddc0d3493e58d48",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillGachaCustomSelectionSettings.cs": "9f2e13d250ed13bb541393bb89b96bab5082d8ccd4c93fdf518b907f77a2deb8",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/SplitSettings.cs": "22f3a42a522684e11dc6243c4c3dc08ac3d85559c36c33c12cf072830c3516e1",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/StoreReviewURL.cs": "82a9a9debf0df52fb1ce2dbde054a4482b4fd8f9d34b53d2a2776540b07ef143",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TaskSettings.cs": "4539747a5ab8447409606b55193544bf4b156caf0d9f09cf45cfbc75d2f2a80a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Season5Settings.cs": "5ce90e06373ba2a0972d2bb433402d177b250525f55d4579922c1bf624debe44",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TeamChallengeSetting.cs": "10141a9323acfd60a916e2f9f9da2c353d5c625facfbff9cdc0e4532907b7f6a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ChallengeStorySetting.cs": "22a6f70833e4299fc282ca1464686d9d9c2e1f27348b91b257b65794ca238f40",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ChallengeStorySettingNPCInfo.cs": "1c18d2c4ff52983bed2bc6f1ae6f6a0a3218fc5cf796fc45b1ee036696657bd5",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/DomainTeamChallengeSetting.cs": "e4eec449510a154e3a9b5c0e8af1b09a7d9d7e5e7ae2530d492e04c998a5a464",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/DomainTeamChallengeArrangeDivisionSetting.cs": "571e59492e7206767b18b936e13316e13967298e13906b162bc09106907a1767",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/DomainTeamChallengeSettingPlayData.cs": "1f1f6213adafb5f550bf9fe6f785d2fc8c4d3b8d6d6d89ebe19196daf5d43122",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ThumbsUpSettings.cs": "7ef2cd4cf904af3fa3cd97c90f91fcfe9afe93afbb5493c70e88c558682cab43",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TreasureSettings.cs": "f5d32468cc1b705af6e4788863ac4fd10a915bc92ac9461f439ea6e5e222447c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TreasureCommonMaterailSetting.cs": "4707b55f4f6ac9f9e9e503be9337acbfc7faeeadedbc7e0586e435377c79d1d5",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TreasurePieceSplitSetting.cs": "7ad8ba16745e02e6df930557d678ac36623a046e6969167dfe7eaaec6790f4c2",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MaxRegisterInfo.cs": "74db7757e32fc7900d884bdef9295c80cb8c955a572589c716eb5af424036355",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/BindEmailSettings.cs": "7872b51bb1a66bfc9a751ec614cce23d3a061349979b9829df1ad255942b3ff1",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcFightProps.cs": "d95400881a3ca16a0af56626f662c2ddbb823d1587e0a1a73b8cc6b4dd7d093f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NewPlayerCompensationSettings.cs": "dacded63d3108776c862f833685a4ff7f93516d06f729347b26b2e4f82c4f40c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapLostGoddessPropInfos.cs": "ba00431568b5395941cea69c6aa8ec722ab5fe51c4698203b3caf79c01c812c2",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapLostGoddessPropInfo.cs": "860b6b8c95efa17a0e5426e875fb2cd43c16e65d63109a64ffb2378d1d3d13f7",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapSelectUISetting.cs": "8f6f529304ce99dbfefbc7f1d54ab6e07efa6875b645d060bef217195d0faa70",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TeamMatchSetting.cs": "c356260cdcc829f8cbb5afb7f1facf978ea0caf3df08bc0d8eb6e83985499693",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/DailyDungeonSetting.cs": "ebec345f71c8586146e6bb4f6bf9be4c702a7930d20b7414f907986d5fecb3ea",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MultiplayerBattleSetting.cs": "41900af1a4abb38c00b94d31aef4cc012933ba7456a05a4550a485234303f4ba",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/DemonInvadeConfig.cs": "47c55e9fc8775633fd71a62652feb84a72307ff6a17a0390470b37f20cade70e",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RecordFightNpcSetting.cs": "bd9d2abe2e002cd93b693ede13b5c16b5c8e0e9aa8420e7cc165ef66bd70c5a0",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillSetting.cs": "1de38f15c32c0ae1eaf048373265a005c08f822eaf27732bc2dc597763e9b813",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillExtPassiveSkill.cs": "eb3c3959e9a94f3a2d15d5f7e789e526e9e2a942d56c76f15364b2781fe0ed8c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/DemonKingBattleSetting.cs": "f00763744bfd02b620f20b2c810bc1010b5ce930ae5e3033b0229e1945a59173",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Pay.cs": "293ebb0bda9faea2dfd5e0f15f3e4e0492e7f64bb52ec4eec8f3ec2a3fb655b7",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RefundBanSettings.cs": "812729ea2026cafef022b9e9908cc182aed4c965b643b702c21ffcd7b9136935",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RefundBanRule.cs": "e227b789ecd83b453c1ac42087a34996c6b445e77006523838c0dcb4969cdc38",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RefundBanRegionConfig.cs": "4abf0c2b5879502fa466b858bc14b338134079602f38a922826a84268a305ef3",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MopUp.cs": "200ede81f35b69b69968e4f5bcc37abd8a65ed6a85d9dce46b35b8383c019bf2",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/DailySignInfo.cs": "3b07198ba3d29b80d4e9035d7b5f55f7484741bff9a8988898ce7da6255b594b",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ArenaSetting.cs": "85f95fa85f3d8450531dfd673f6d710e8f21d2500cc3be120f4d1b3e8c41583d",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FirstPaySetting.cs": "89ca8bfeaeb614d633438d689b474bce25ef88a934ef56da2a302909101e6119",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PetSetting.cs": "3227064bc821034092e7e70633958aa5506e3a6c154beb065e9aecf396d99a8b",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivePaySetting.cs": "ce162fba3797df7875488dddf71a42189930d61eaec2c3d1ca4edfaebc6f3f0a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PeriodicPayGiftSetting.cs": "04a5d066503d155f7f1654a149732c8f4ceb5ed98ccef6bf2c65f1dcfbab823f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TopUpRebateSetting.cs": "602c07d5dfd92d73c4cf221e2fd039f2e9ad37df279f62434116fe71b6a42d7a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/DemonBattlefieldGameSettings.cs": "e9b9efda54a5ad99a83ad39947090374ee7c7c202eeb0050462a7c26ec37af3f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TDAReportSetting.cs": "8e0c366f41f575757c5bccf7bc7f4f5aefcd036ed190db02bb66c9d6685220d3",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameMatchInfo.cs": "fe4dfe020f5756b598a4ea17f162f96095152817858cdf5544615186126bf851",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RecentBuddySetting.cs": "ecd12804ea79ff314b0b0f132df49b80565062616a5c1845c8f88744e87a82a5",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapExploreSetting.cs": "6a396f16911d1c6210a70358e1aeb8e70bab6e573062d1a14c699197b8c719d7",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GemMergeStorySetting.cs": "869fc2ad3043d24e3c0026899f6d46ca77f915b1b4ccd8310a0ae34310b598f0",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/DialogSetting.cs": "d03364194c03c0ec13e8564e599bdcfadb160072ca24cee6dfc65ef47e3bbfed",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TradingPostSetting.cs": "0fc8630b99f30b95bc7f33dc5177bd4f35ffd0c258f1f1a426b73187cfd8f443",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AuctionSetting.cs": "fd4f4685176848cc49dfa3e930046ce36b338688ecd955ea7696f01b3fa3226f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/StoreReviewSetting.cs": "9ffdbf6e0f8c1d8bb0c8b061a8d9276e26187059a73f52ad27255319786ea9f9",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MiniGameSettings.cs": "b4c60183a9b547483c964370eba0a6107e5b8b470b2b30fe688d8b72075feaa4",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GachaByproductsItems.cs": "765eefacc6d3045d1700db8b9d8af7168edd06839964f90e4a8d63dda649ed1b",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ScratchCardActivitySetting.cs": "2fde08b4c13c7f7a8ba7e13ac262c9d7d42360efae5ea56bd22b8d25259ee108",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RoomMatchInfo.cs": "4ab31d55200a904088e1390663fe6b114f748ab4a7eb13e45ef35cb9fdfd3a3e",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/BindPhoneSettings.cs": "2faa3570a067b5812d3244847fc4d0496238454f5bee7ffe06b03112c0c4db7f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/CloudDouDownloadClientSetting.cs": "ec27d3d534ebf917dfd55b7a2b8f42680e898138ee1e3851296b686791eb8666",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameSettingsJointStrike.cs": "49f314fa9c42c1508fedec8a8d5fd08d8049d5bee6cf8547cc4d0e9aeee45bc9",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MultiGroupRivalryGameSettings.cs": "02c5ea13cccc3c51a40d059d881898899b776ad450579338593fb3d725225121",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/SecretAreaSettings.cs": "7a11183097530b6a2a890b3b3de2ebe733d1ffe792aa5e574dc2ede42e5e940c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivityComebackSetting.cs": "a8c9d7780faf61554dcf1517f4174fc6c70691efe599ecca046c88a7923ea12f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivityPayRebateSetting.cs": "51c88948a346e156bc7397e3eecab8d0859064fc758403132b1f29c8f106ceec",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AwardRetrieveSetting.cs": "71b826d485fefd2ce86cdabca45cf456536c7fdf79d624aa130c58841425d574",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AwardRetrieveNpcActionCondition.cs": "7525bac31846c8216a58eedc00fe877d386b5ff5a6414121de0a9fd14ccab5a9",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AwardRetrieveNpcDialogCondition.cs": "2d5605e52733e2f2e5e00ba182fd3d83ff5b8ebc8362f1633ab6b5b1b233f233",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/BulletScreenSetting.cs": "f8a1fc7ee597cfec9655121a2dffb7d626284295fc78f619b728533dedf94ab5",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/HomeVisitSetting.cs": "f72ad05a6a96df0a5ff78c583d5155a168d28f3f5339cfc91b5b18df59ac0639",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/OutputAdditionSetting.cs": "53ac244846299e5706d61e5d384b13910c18bab3012ba18c6e55f47f9629e384",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PayTestSetting.cs": "d00a76746f5100c9c65aa2204869169c6e14a1b86fbf3415846ee75f9dfcf095",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/KnowledgeQuizSetting.cs": "ab682c497a804cf03b4901e787e478aa6f83bea0e5a64101fbe77a5fc9eb572e",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActivityGrowthAccelerationSetting.cs": "43af5f3d64eaaa21f5e46d0552647e981286f1711916e25a93d316b94c089c8b",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesSearchSetting.cs": "6b5db68ee2ac922916b0180bc194c27f20315b15d4ed07e4f46a2e557288973f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesSearchRegionConfig.cs": "77b4b1fe4d1e94d78733b80867dad9f71aa81ade8804c318d7589de04b26cc27",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/CompanionSetting.cs": "6622fb86558a5be29db16d46f21c3d435de5935282a0b37ae9eb3d612f97ee77",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapKitchenConfig.cs": "925f249f498c8e19498d69ae5c094bf14c5be62c74ca09a01b04401809938ae5",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Pos2d.cs": "8129206cd36eefdedf3d3d6a2a011d0c52325e35a7690a42b350ad96669fa8ea",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GoogleLevelUpSettings.cs": "6b6c0f40e86625fe3d963950846fe71a386089cce513035245f453c0ed5f2781",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/JigsawFastCompleteSetting.cs": "c7f03b8118fff5735a3a555465185e7cd92b49b7419dceb3e581f0f273c91dab",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ClientVersionUpdateActivitySetting.cs": "078432f90fe6069fcd1c3bad425e2a7e11a501108829b3c7f93a44808a06d34c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ShopBatchBuySetting.cs": "58c24ebc8627a7c92aec42b55ae59702df9b1752685112acca42f9be2f2f0ed2",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RandomProbabilityDisplaySetting.cs": "cc300f18f090c89a9539eedbee3d67d6ef42ff5b5fedd48ccfdc171b2f34be44",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbItemInfo.cs": "b93d21bb8d57aea59fbfee28c3f7bb789835be6ca8f7d0ec6b6e8f25cfcf90d5",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemInfo.cs": "33a0ac813b6e402c07999fdfc2b889d0b3f3d039df7ee0d0be493e2c16da20a6",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemEffect.cs": "bad642dadc92e47e31a231691b3739dfe066f9cda973432decf492b637c19ea6",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemEffectWrapItem.cs": "b411505be181c04a3c47d309866e28621588fc9f8aaff1a761ff4181f4fe8fc5",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemEffectAutoIncrease.cs": "a13e64a337dac83fd309fc312f58adba1a0f955fc043e97f13b611c661557a8c",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBg_CountText_0.asset": "1233f7ce0167fdd7f8da08dc801cbee3475f0dd0c4e7c47b169c5aa2e3e436c8",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset": "af030280ed9c2bee89b5e4cf22ab10e5851d8999c3bfd14d0551124db69a0368",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/Common/Btn_Base_Click_0.controller": "666a6ba96b65ba6911766e9675dcfe542d4e4cfcf15eacd0e81c84672f6238ca",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/Common/Btn_Base_Click_0.controller.meta": "174a5a37d380247976ca1e2ed58d0b79ff1492c42577a11c29aa855e4546ce8e",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset": "c775159727acc550a82b0ecc2ad98ff788ac29d2643147df18222189b88e8e70",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat": "f465cf50b955ba2a9f593f4594bcc53e831682c68fce2eec2bfca9e873f8b69a",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBg_CountTextadd.asset": "dd7fe2dc812f097ed5c4fc95d631e47d91c31f79da02f8fb96e34499ecd91fe3",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/Common/Normal_0.anim": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/Common/Highlighted_0.anim": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/Common/Pressed_0.anim": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/Common/Selected_0.anim": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/Common/Disabled_0.anim": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51",
+    "scripts/prepare_partner_card_native.py": "5ad35ae36dafa53961576f3c5b2a2c76eddfb98a398c74fba96a4697ef464093",
+    "unity/Assets/Official/World/Map/13/Source/native-text-gradient.json": "084ccb449e6f0bde213c07b5990821afa4eaec04aa400a3917a72b2c7e1d6909",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TopBarHandler.cs": "f59d9099d83cb90ee5466fc20d784a64d359232fbfb4d87482a0a12dcfc8a5ac",
+    ".tools/source-packages/official-code/client-source/TopBarHandler.cs": "f59d9099d83cb90ee5466fc20d784a64d359232fbfb4d87482a0a12dcfc8a5ac",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TopBarItem.cs": "bf2b745576bd9ad910c02c0274f9e670aaf612e1550a5f481e667147846749b4",
+    ".tools/source-packages/official-code/client-source/TopBarItem.cs": "bf2b745576bd9ad910c02c0274f9e670aaf612e1550a5f481e667147846749b4",
+    ".tools/source-packages/current/884_156692/official-code/client-source/MePlayerItemUI.cs": "479a3d0cc28e84479e7d7c9fd05e75222548b528b15e836f48f61e09d0ae9af9",
+    ".tools/source-packages/official-code/client-source/MePlayerItemUI.cs": "479a3d0cc28e84479e7d7c9fd05e75222548b528b15e836f48f61e09d0ae9af9",
+    ".tools/source-packages/current/884_156692/official-code/client-source/CurrencyItemData.cs": "e988439c92fe7345eba3373937890070a0c2b0277ebc5f8315bf8386197cecfc",
+    ".tools/source-packages/official-code/client-source/CurrencyItemData.cs": "e988439c92fe7345eba3373937890070a0c2b0277ebc5f8315bf8386197cecfc",
+    ".tools/source-packages/current/884_156692/official-code/client-source/PlayerItemUIItemIdProvider.cs": "098a1ca404457d329ee6237d1bbb226225c7e351a4bf4f1a2997921adae5c1df",
+    ".tools/source-packages/official-code/client-source/PlayerItemUIItemIdProvider.cs": "098a1ca404457d329ee6237d1bbb226225c7e351a4bf4f1a2997921adae5c1df",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TopBarManager.cs": "8a388166982b99f7033c0f77aa31833b6f07be8b372e01d3898c6532fbc9f904",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TopBarManagerConfig.cs": "85d617c3f1c5ccedf0c69dafea2d8fd7ff6ff8258e2f42620c4b100016799380",
+    ".tools/source-packages/current/884_156692/official-code/client-source/IPlayerItemUIHandler.cs": "be2be7384b29f1a1da30e46283ace0162ba475b5de8c1c45a873918bca6707d3",
+    ".tools/source-packages/current/884_156692/official-code/client-source/PlayerItemUIGetItemIdFactory.cs": "9d42f7468b915c4b7025ce3c40e1efe792e0fb2ca0c7c58a2411c8d5ff3ed98c",
+    ".tools/source-packages/current/884_156692/official-code/client-source/PlayerItemUIHandlerFactory.cs": "953ca2f29ac225766f9a20e53fa7280af729d06b829920bfb123abb4f66b75d7",
+    ".tools/source-packages/current/884_156692/official-code/client-source/PlayerDefaultItemUIHandler.cs": "609f71fc1110d4a3fe60ce8c2b50bcb48b5184fa0088a05c38ba53b84f3dc859",
+    ".tools/source-packages/current/884_156692/official-code/client-source/PlayerDiamondItemUIHandler.cs": "8cc55ce2a1a594c91f204a5f7d2765567fb1bd7a39f67b88c4cf293f353b6e3f",
+    ".tools/source-packages/current/884_156692/official-code/client-source/PlayerItemQuickyShopHandler.cs": "241e95808ce7a50924a849ab155106a864e2b64e0e4414fcff722e3ff1ece9ad",
+    ".tools/source-packages/current/884_156692/official-code/client-source/PlayerItemUICountProviderFactory.cs": "d2de6cd253d8b8f2bbf39c9e5dec2485d47959f8e96b4de6b5eb1e07cf7c8449",
+    ".tools/source-packages/current/884_156692/official-code/client-source/PlayerItemUIPlayerItemCountProvider.cs": "244108946badd519c602c22b10236f6c6cd5f59efb56884a703f12c1a56c96a1",
+    ".tools/source-packages/current/884_156692/official-code/client-source/PlayerItemUIMainPlayerCountProviderBase.cs": "d4d428ada596f5c51ca4a6577d56594a84c7e6f9a036be5e3964c76f508a1737",
+    "scripts/prepare_home_repair_native.py": "1acaeb5106a8793d7f642854dd99ec017162625d4154dd564889aa107af37095",
+    "scripts/prepare_home_bottom_bar_native.py": "7493cb58fa87b2df692580467bd2912c2e77906acf7a17977f53f2b261b62fdb",
+    "scripts/prepare_partner_gift_native.py": "84d18ed2d4a3e90bf9f99f4f1596621756123e4a12799fc1f6a23952d0197cdb",
+    "scripts/prepare_home_top_bar_validation.py": "0a5def11edbe37010173aea1a76554a4cfa5ca4132c8dfba135bd391f40dabba",
+    "scripts/fixtures/home_top_bar_native_validation.cs": "6c78ca60ce5c914f71f1bc81a0e6f60e507872ab8bd4ed8680a44badad31a637"
+  },
+  "objects": {
+    "cab-b5a2329109d335362da2fa10810f72cc:5761828038581910475": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "path_id": "5761828038581910475",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/348a851cea75e759e4eca75d7d5e065c.bundle",
+        "raw_size": 1039317,
+        "raw_sha256": "47a14d322e76812a3155d06df7cb619dcec80011343768ef75787d7699e224c0"
+      },
+      "type": "Sprite",
+      "original_sha256": "3c92b32c3a066e11d39c90cce33918eac4ea8b2c3cf9974f02ebd6ca66dc1eab",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Money/Money_1.asset",
+      "output": "Image/ItemIcon/Money/Money_1.asset",
+      "guid": "2a02f9075b01e0df1fd0c89ff3c233e1",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-b5a2329109d335362da2fa10810f72cc:-3862688298953974756": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "path_id": "-3862688298953974756",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/348a851cea75e759e4eca75d7d5e065c.bundle",
+        "raw_size": 1039317,
+        "raw_sha256": "47a14d322e76812a3155d06df7cb619dcec80011343768ef75787d7699e224c0"
+      },
+      "type": "Sprite",
+      "original_sha256": "10ec9769e6de8639515671035ad84e9ba949477ac8c0ec33ed9bd1ec9da8f313",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Money/Money_2.asset",
+      "output": "Image/ItemIcon/Money/Money_2.asset",
+      "guid": "0acd9fceb8fb098e1e2e0eba2bd6b89c",
+      "geometry": {
+        "vertices": 8,
+        "index_bytes": 36,
+        "index_sha256": "56cb1d23abd65681f2d523219b8f9e3c8cd422a107f2066f5943b447e42316fd"
+      }
+    },
+    "cab-b5a2329109d335362da2fa10810f72cc:876156764568262703": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "path_id": "876156764568262703",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/348a851cea75e759e4eca75d7d5e065c.bundle",
+        "raw_size": 1039317,
+        "raw_sha256": "47a14d322e76812a3155d06df7cb619dcec80011343768ef75787d7699e224c0"
+      },
+      "type": "Sprite",
+      "original_sha256": "b376b610644ae17d8b43ca312e5d81f1b4bd7ac4d84ec22085f8cb2727959d42",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Money/Money_57_Tili.asset",
+      "output": "Image/ItemIcon/Money/Money_57_Tili.asset",
+      "guid": "d455ae9083223ef84695fe1629e95336",
+      "geometry": {
+        "vertices": 10,
+        "index_bytes": 48,
+        "index_sha256": "98f575877e441cff087640f1f9ab13e66c87bd8e97641a42784370ad1b25430c"
+      }
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:7027170908951735255": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "7027170908951735255",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "SpriteAtlas",
+      "original_sha256": "9d36c5be785859e80ca6304999830c104562d08a109dcd23ec500706c5c3fbd2",
+      "usage": "Packed sprite render data"
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:-4098904705157139906": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-4098904705157139906",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "1ebbb0a948aa924ea7ef9e7f07b606962a84cc6985e0526b83cadc79d143a148",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBg_CountText_0.asset",
+      "output": "Image/UI/Common/Common_Atlas/ImgBg_CountText_0.asset",
+      "guid": "c0f6169db3ba484abb6199e9d93ff80e",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-8ede2c00df79c3aff9bab2859b047085:5924382417553736613": {
+      "source": {
+        "bundle": "defaultpackage_assets_wwise_scriptableobjects_event.bundle",
+        "bundle_hash": "d0ea86beaa052471f6138a9bddaa19f0",
+        "path_id": "5924382417553736613",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/d0ea86beaa052471f6138a9bddaa19f0.bundle",
+        "raw_size": 440942,
+        "raw_sha256": "c4009d466fcf8199fd5c4b7ba92f9915f0509ced7ea74c28ddec8b4867a6970a"
+      },
+      "type": "MonoBehaviour",
+      "original_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset",
+      "output": "Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset",
+      "guid": "a74c390372a1e5b98818a18ac1f760f9",
+      "geometry": null
+    },
+    "cab-c7fb6f6fa5e12c6915469bf220c6cfff:-6001556034672029577": {
+      "source": {
+        "bundle": "defaultpackage_assets_animation_ui_common.bundle",
+        "bundle_hash": "7c31564a61be1cb16bf2df7a7344bd2b",
+        "path_id": "-6001556034672029577",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7c31564a61be1cb16bf2df7a7344bd2b.bundle",
+        "raw_size": 4061,
+        "raw_sha256": "8ea02cdf6a840568357a00744070e16d1d05014caa9549b448a4169bf503bcf5"
+      },
+      "original_sha256": "11147b9d40965317d03fb30843d21eac828243a75e56f24f618349dd7d5be6e0",
+      "output": "NativeControllers/186ea4e8dc0d2d56.controller",
+      "guid": "92b29bb99535f702abc7f5b65106d18a",
+      "verified_runtime_subassets": {
+        "9100000": "controller",
+        "1107709254077376921": "state-machine",
+        "1102703437598541787": "state:Normal",
+        "1102884547391421755": "state:Highlighted",
+        "1101243736805655561": "transition:Pressed -> Normal",
+        "1102099118695303065": "state:Pressed",
+        "1102061268324235159": "state:Selected",
+        "1102587765826080250": "state:Disabled",
+        "1101730242686860875": "transition:AnyState -> Disabled",
+        "1101724804207875695": "transition:AnyState -> Pressed",
+        "1101618682377417806": "transition:AnyState -> Normal"
+      }
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:-1054575886599457342": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "-1054575886599457342",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "MonoBehaviour",
+      "original_sha256": "993fe9f48bba80bc3f729c6cfabf269fdf7b91ac69fb2d013625ee8ac8a68031",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset",
+      "output": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset",
+      "guid": "b088a249154abaf4e9a07cad25d5aef4",
+      "geometry": null
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:8668477128756491714": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "8668477128756491714",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "Material",
+      "original_sha256": "57b7f2adeb457a8f4f3b3842127ac1bdf497f87992d883bbfee812a4525383be",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat",
+      "output": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat",
+      "guid": "08ba59cf78205b78fb2c9a69237994ea",
+      "geometry": null
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:-2189166704941123886": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-2189166704941123886",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "c083b4b44df0ffd81f48cc8388c8f08e159012adb2cc7dc8f4eef521c4b635ee",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBg_CountTextadd.asset",
+      "output": "Image/UI/Common/Common_Atlas/ImgBg_CountTextadd.asset",
+      "guid": "adc3c29b3e629ac64fa77d3a2b50c344",
+      "geometry": {
+        "vertices": 9,
+        "index_bytes": 42,
+        "index_sha256": "4d52c83751a398b592869536ca07b10dafa01ea8ea773ad1e2096b33ba10f919"
+      }
+    },
+    "cab-b5a2329109d335362da2fa10810f72cc:9043218567503510475": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "path_id": "9043218567503510475",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/348a851cea75e759e4eca75d7d5e065c.bundle",
+        "raw_size": 1039317,
+        "raw_sha256": "47a14d322e76812a3155d06df7cb619dcec80011343768ef75787d7699e224c0"
+      },
+      "type": "Texture2D",
+      "original_sha256": "46a26bb6c26539926fb445889a78e973ad0a64f64fb12d35a361ab5d320d1ee0",
+      "native_path": null,
+      "output": "Converted/7d459a01380ba650.asset",
+      "guid": "fc1a17969a7fa1380103e5de8cfc8863",
+      "geometry": null
+    },
+    "cab-b5a2329109d335362da2fa10810f72cc:1281160577105812508": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "path_id": "1281160577105812508",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/348a851cea75e759e4eca75d7d5e065c.bundle",
+        "raw_size": 1039317,
+        "raw_sha256": "47a14d322e76812a3155d06df7cb619dcec80011343768ef75787d7699e224c0"
+      },
+      "type": "Texture2D",
+      "original_sha256": "4d75367e3e185ca55dbf3afff085e6be48f7362ac3909fcd00fdecc083e0fae3",
+      "native_path": null,
+      "output": "Converted/e595fdd18d5f4005.asset",
+      "guid": "dcde4914386ad35d5e3b3437e3d6972f",
+      "geometry": null
+    },
+    "cab-b5a2329109d335362da2fa10810f72cc:6022320090235181103": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "path_id": "6022320090235181103",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/348a851cea75e759e4eca75d7d5e065c.bundle",
+        "raw_size": 1039317,
+        "raw_sha256": "47a14d322e76812a3155d06df7cb619dcec80011343768ef75787d7699e224c0"
+      },
+      "type": "Texture2D",
+      "original_sha256": "16be5d299b3131208e73f70b84158314dccaa3e262688af6aa75db440a3f3387",
+      "native_path": null,
+      "output": "Converted/d71cfc8eca0c0e22.asset",
+      "guid": "2069e26bd72fe8d803bfa83ef3421bc6",
+      "geometry": null
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:8373551068376853463": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "8373551068376853463",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Texture2D",
+      "original_sha256": "53995e743aa5f4d717ce30a69b8100e7c73f21cfcc0c8f351a9f3a808f319cd0",
+      "native_path": null,
+      "output": "Converted/65b73523b080e5e7.asset",
+      "guid": "b40761794afa424fcfa0a6d493b5c729",
+      "geometry": null
+    },
+    "cab-c7fb6f6fa5e12c6915469bf220c6cfff:4450864898414448759": {
+      "source": {
+        "bundle": "defaultpackage_assets_animation_ui_common.bundle",
+        "bundle_hash": "7c31564a61be1cb16bf2df7a7344bd2b",
+        "path_id": "4450864898414448759",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7c31564a61be1cb16bf2df7a7344bd2b.bundle",
+        "raw_size": 4061,
+        "raw_sha256": "8ea02cdf6a840568357a00744070e16d1d05014caa9549b448a4169bf503bcf5"
+      },
+      "type": "AnimationClip",
+      "original_sha256": "ba857058e3722d722cf1daa0074dd40992385f6dd09926ca7f78e88a00cb48ff",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/Common/Normal_0.anim",
+      "output": "Animation/UI/Common/Normal_0.anim",
+      "guid": "cfdb98e39a55b514089470bd7b029d6c",
+      "geometry": null
+    },
+    "cab-c7fb6f6fa5e12c6915469bf220c6cfff:-7480438013181063049": {
+      "source": {
+        "bundle": "defaultpackage_assets_animation_ui_common.bundle",
+        "bundle_hash": "7c31564a61be1cb16bf2df7a7344bd2b",
+        "path_id": "-7480438013181063049",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7c31564a61be1cb16bf2df7a7344bd2b.bundle",
+        "raw_size": 4061,
+        "raw_sha256": "8ea02cdf6a840568357a00744070e16d1d05014caa9549b448a4169bf503bcf5"
+      },
+      "type": "AnimationClip",
+      "original_sha256": "bd2cfada6cc3b52aae6074059fb93f3d07bbb2484fca5a7abe5863247d61597c",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/Common/Highlighted_0.anim",
+      "output": "Animation/UI/Common/Highlighted_0.anim",
+      "guid": "351633d52aaad5523ee9586aaae10da6",
+      "geometry": null
+    },
+    "cab-c7fb6f6fa5e12c6915469bf220c6cfff:-4299415247689576329": {
+      "source": {
+        "bundle": "defaultpackage_assets_animation_ui_common.bundle",
+        "bundle_hash": "7c31564a61be1cb16bf2df7a7344bd2b",
+        "path_id": "-4299415247689576329",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7c31564a61be1cb16bf2df7a7344bd2b.bundle",
+        "raw_size": 4061,
+        "raw_sha256": "8ea02cdf6a840568357a00744070e16d1d05014caa9549b448a4169bf503bcf5"
+      },
+      "type": "AnimationClip",
+      "original_sha256": "b06163d231d9946d298f04fa95014bd722ea8967fb752d4a611f2b6fea9f5da4",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/Common/Pressed_0.anim",
+      "output": "Animation/UI/Common/Pressed_0.anim",
+      "guid": "dc0a78dc7d6d543a3450d8e529257f24",
+      "geometry": null
+    },
+    "cab-c7fb6f6fa5e12c6915469bf220c6cfff:-510987642694758281": {
+      "source": {
+        "bundle": "defaultpackage_assets_animation_ui_common.bundle",
+        "bundle_hash": "7c31564a61be1cb16bf2df7a7344bd2b",
+        "path_id": "-510987642694758281",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7c31564a61be1cb16bf2df7a7344bd2b.bundle",
+        "raw_size": 4061,
+        "raw_sha256": "8ea02cdf6a840568357a00744070e16d1d05014caa9549b448a4169bf503bcf5"
+      },
+      "type": "AnimationClip",
+      "original_sha256": "29a913ba2061a3fbcafbf0de7f7ecd48dc0f055b7b83688b78188d0f1d42eaae",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/Common/Selected_0.anim",
+      "output": "Animation/UI/Common/Selected_0.anim",
+      "guid": "df71652ab5895ecc316d0af04beba380",
+      "geometry": null
+    },
+    "cab-c7fb6f6fa5e12c6915469bf220c6cfff:-3058570119357427593": {
+      "source": {
+        "bundle": "defaultpackage_assets_animation_ui_common.bundle",
+        "bundle_hash": "7c31564a61be1cb16bf2df7a7344bd2b",
+        "path_id": "-3058570119357427593",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7c31564a61be1cb16bf2df7a7344bd2b.bundle",
+        "raw_size": 4061,
+        "raw_sha256": "8ea02cdf6a840568357a00744070e16d1d05014caa9549b448a4169bf503bcf5"
+      },
+      "type": "AnimationClip",
+      "original_sha256": "e1b41eacc86057fde63ae1b32f4e70ee1ad91217452325727afa6466edd2a64f",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/Common/Disabled_0.anim",
+      "output": "Animation/UI/Common/Disabled_0.anim",
+      "guid": "a2adde355625747760bb8f84acb8a219",
+      "geometry": null
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:3935595767026349506": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "3935595767026349506",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "Texture2D",
+      "original_sha256": "5100748872e5a73c20864292b0f19fb862964e3c2c50785768804056276fd4d8",
+      "native_path": null,
+      "output": "Converted/ac573a40fda4c096.asset",
+      "guid": "595049c2e6a1f516bcabc0f0a8cab09f",
+      "geometry": null
+    },
+    "cab-014000ed2538cb87d1aa4612be612002:-4286560471751938018": {
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "465300f28c23d7564868393936041212",
+        "path_id": "-4286560471751938018",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/465300f28c23d7564868393936041212.bundle",
+        "raw_size": 2909118,
+        "raw_sha256": "991da192cbcd00a1b3a2714b7ca649b7f416881f87b656dac17f5f1123da2e46"
+      },
+      "type": "Shader",
+      "original_sha256": "82cc97a220222d38ceeb7b173dd31fccede81cc11f4eca3a2c052177f11acd81",
+      "native_path": null,
+      "output": "Converted/f2e1ff40e17239bc.shader",
+      "guid": "0b5a526f51d54805e059fe74dc7aade8",
+      "geometry": null
+    }
+  },
+  "outputs": {
+    "Image/ItemIcon/Money/Money_1.asset": "9e89ce37c79f49de0a94eacae784caac83e048b39ab3d4915ec63e5cb51e24dc",
+    "Image/ItemIcon/Money/Money_1.asset.meta": "aa2db925ee004d8e742704ece369b68fb1240c1ff43070bff5cb526db9109a39",
+    "Image/ItemIcon/Money/Money_2.asset": "bc150f57bac4f6b671e5df5cd30ebe5a8d4d74465fefe17da27974b001403c18",
+    "Image/ItemIcon/Money/Money_2.asset.meta": "6dab8a469d447226a3fe8a0ec61351d16216363b84b2ccd6a7ca936f61cbda48",
+    "Image/ItemIcon/Money/Money_57_Tili.asset": "01948e8d9691aae1b5132ac29b1af34a709124eceedfa2fa14d1a716b8f2112f",
+    "Image/ItemIcon/Money/Money_57_Tili.asset.meta": "874ef924a18805f76cd3bb553903b8395ffb5c2708b58fb087fac97cca6f723a",
+    "Image/UI/Common/Common_Atlas/ImgBg_CountText_0.asset": "1452771065a27def393fa6b2be2326205264ed9927641abe4d93bec94ee5f972",
+    "Image/UI/Common/Common_Atlas/ImgBg_CountText_0.asset.meta": "848ac456cc7ea6fac1860aa6a8ac8807caa9f2444e37cdfd998280345e3bf52b",
+    "Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset": "9bc2d98bf82b9d1a47c9217efb7d03c4a23390a0b4966dca553bbf9708c12069",
+    "Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset.meta": "fc2de4c689a9e1a402f70b4a054aa6700650c2cd7c182f32d3b2a0d17db58a2d",
+    "NativeControllers/186ea4e8dc0d2d56.controller": "ec7bcf832586ccd32aaf32bfe82cb23bd1d8321017da59985626454a555ef5c3",
+    "NativeControllers/186ea4e8dc0d2d56.controller.meta": "11b5eab612139a351764ddd01ff4c2cb98e34725302f79cfc744eb89aeeba22f",
+    "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset": "8371c8c321efb85060bcc96875419a2125babcbeb7c15f34a4dfd2526c3caab2",
+    "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset.meta": "c73398661817650a11012e6405f6a3dba0c3c02368a9546cca757b1d01b975da",
+    "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat": "361207bd73188c9fa55778c632ae3ed8459a8eb4f1b81ac88346bcac134464e2",
+    "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat.meta": "78fe4f95be8d6cb2787099d08448dcc043f602506718c85d879e7377d29b3ce9",
+    "Image/UI/Common/Common_Atlas/ImgBg_CountTextadd.asset": "c044757790ade541c279a781426511bd42798dc827fa99029bc85c3ac41bf15a",
+    "Image/UI/Common/Common_Atlas/ImgBg_CountTextadd.asset.meta": "1c8af64590690d647abf811204d29bf497343274c8ccbbea86bb9b2c7182a181",
+    "Converted/7d459a01380ba650.asset": "12e3272990f2778bf47ca78fedbe58040a7d111fc53970ea7bef4abb97ead802",
+    "Converted/7d459a01380ba650.asset.meta": "09234d830a93b0643d49799e6de667f3efcf1b8fee74818f03907032f9d41246",
+    "Converted/e595fdd18d5f4005.asset": "6ef818cc60fd264c09afb7a06c402040b7bb714c067e31c4f6d143dabd3b08ca",
+    "Converted/e595fdd18d5f4005.asset.meta": "5e3eb090a18612565ebdfdc4969d8dcf6640c2c2d8204a2d8a2767d6d4e29f00",
+    "Converted/d71cfc8eca0c0e22.asset": "9660917af2ca55f881a39f0ba95951135599af0bd82cc9de8efc5e935deaa76d",
+    "Converted/d71cfc8eca0c0e22.asset.meta": "5a4d034bd9cae0c344f606e26b6dadc6307bc17439f16fc20c369f32df6b1fb8",
+    "Converted/65b73523b080e5e7.asset": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446",
+    "Converted/65b73523b080e5e7.asset.meta": "72b156950e249ca94ae8df0294acf646dfd1ccf163fc31211826fe6343664471",
+    "Animation/UI/Common/Normal_0.anim": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952",
+    "Animation/UI/Common/Normal_0.anim.meta": "88ce7a3c069df33e422ac991895f8c61199d13c18e8192effb8086eeebcb3f39",
+    "Animation/UI/Common/Highlighted_0.anim": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07",
+    "Animation/UI/Common/Highlighted_0.anim.meta": "caa2a83e422e793b6e1353d2f95251517b98479e84bef908b2d72ac809102966",
+    "Animation/UI/Common/Pressed_0.anim": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49",
+    "Animation/UI/Common/Pressed_0.anim.meta": "730d200ad6d48e4af4e25bdc4ab81850ad0cc46c9945393024ebc40e97381247",
+    "Animation/UI/Common/Selected_0.anim": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3",
+    "Animation/UI/Common/Selected_0.anim.meta": "8f26e82ef30c95728793f96fe11904a05f90a4211c136cf5000156cf3f9597ef",
+    "Animation/UI/Common/Disabled_0.anim": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51",
+    "Animation/UI/Common/Disabled_0.anim.meta": "c19908e04cc09e368c3ec8cccbd1e120d6015a3156292a7677faf8fec8f7b404",
+    "Converted/ac573a40fda4c096.asset": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
+    "Converted/ac573a40fda4c096.asset.meta": "b71cc69e4e7b0aa71c456069f3af2c24e9fa2e5e8063bc518898d587e21aa8aa",
+    "Converted/f2e1ff40e17239bc.shader": "6175d73864092e26c113b2a49d5379d8b72dd5f0e5e413765530ff0b1f1268dd",
+    "Converted/f2e1ff40e17239bc.shader.meta": "27703de905d15cfcf3d083497232d903db7f44f0129e77c859e0847e12c5516a",
+    "HomeTopBarParent.prefab": "0a9d25acf81d8b9d4e05a93a34cf30cd2d0acf07ee889529b8be7f85bc33c9d1",
+    "HomeTopBarParent.prefab.meta": "c8d4c00593618e66b4a04a3eb830d0fcec958b18e8eb36322218d903726f68db",
+    "TopBarManager.prefab": "e1f22849dec91610b175f4681b3620ce995033444007152f91df38c59b2947e9",
+    "TopBarManager.prefab.meta": "1f873100f77787012207b10070f8ce41ac9f4e105bc1e1bdde0b14738cf2ba0b",
+    "PublicTopBar.prefab": "e3429d379ab8a97e1cd09d29fe8edd707af888a8337116eb33f43dc616f4d72b",
+    "PublicTopBar.prefab.meta": "dbbc91e4222dc795b484b7e14ffe27acb4de812cb8f405fc55ecf48603591255",
+    "MoneyUI.prefab": "e15d1af06f5870dc2e7543e6fbe3dcc2761b57b207ed3ab3df2872a52eb5e268",
+    "MoneyUI.prefab.meta": "288039facfd0a0e78b26e07d822fc580b20be8a41fd1a7610e8a433a124a9708",
+    "partner-gift-texts.json": "d4a1a18f038a169208a6618cfe2ceab1c28045188347cef3acccb58423646dba",
+    "partner-gift-texts.json.meta": "8dfefcf0dafea5a155bbff78609f32edd437428b0fa265888b71bc33f7245102",
+    "Audio/Main_Cursor_Normal.wav": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+    "Audio/Main_Cursor_Normal.wav.meta": "8f9ab35bdabe4e299e08971087abe7052acd77da183cb640c1e58a84a1893ba7"
+  },
+  "native_recovery": {
+    "manifest": "884_156692",
+    "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+    "stage": "Recovered original hierarchy/fields only; runtime script and resource binding pending",
+    "generator_sha256": "21eed29e19b3b3fbd370eb0736c10fa663d35c749b7fa1f9686a57774c6d2cea",
+    "component_cache": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/component-fields-all/source-manifest.json",
+      "sha256": "c82db6a6903d36856807688d11573793cdaef98d1da13d0d6108b6f3f04aeec5"
+    },
+    "prefabs": [
+      {
+        "name": "HomeTopBarParent",
+        "originalRoot": "cab-e2710c604a5d8b137c2b341a91f71b65:-1240881275733487845",
+        "originalSource": {
+          "bundle": "defaultpackage_assets_prefabs_ui_home.bundle",
+          "bundle_hash": "66767d90c4dd409e17ade6a2e0b8e224",
+          "path_id": "-1240881275733487845",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/66767d90c4dd409e17ade6a2e0b8e224.bundle",
+          "raw_size": 353152,
+          "raw_sha256": "78b8a1151fcd575ce7dd6d98511b788853ba71730dbd620bf8e5917eabebd9c2"
+        },
+        "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Home/HomeUI.prefab",
+        "native_sha256": "fa8b3636341955fa285868e6e58322120712ce81aa96435cc5638940e7195ac7",
+        "mapped_objects": 7,
+        "recovered_components": 3,
+        "unresolved": 0,
+        "pendingBindings": {},
+        "output": "HomeTopBarParent.json",
+        "subtree": {
+          "original_parent": {
+            "fileID": 224220697728379336
+          },
+          "detached_parent": {
+            "fileID": 0
+          }
+        },
+        "nativeMeta_sha256": "7d5251eab77b54a302074936a0565b453dd9c43b44c132fcec80d49873cbe90c",
+        "output_sha256": "de7f939d9991b118ad78507dee4e09f0a33b5d5fcad48e4423db840ac15c91ad"
+      },
+      {
+        "name": "TopBarManager",
+        "originalRoot": "cab-3933a72fa08e2dea1e8823ab00d24242:6004469660896591937",
+        "originalSource": {
+          "bundle": "defaultpackage_assets_prefabs_ui_public.bundle",
+          "bundle_hash": "b6332ef9f8ac6e4ff7867e670d643740",
+          "path_id": "6004469660896591937",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/b6332ef9f8ac6e4ff7867e670d643740.bundle",
+          "raw_size": 179634,
+          "raw_sha256": "47c2097da45d6923ffdab73c7d51946976031257bd1f4e11d907a0e1fdf3e5d8"
+        },
+        "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Public/TopBarManager.prefab",
+        "native_sha256": "f7f18d8225c2b2ebed5874def03a9e6fc18c2b1fc29cdd40b8c694421470d565",
+        "mapped_objects": 2,
+        "recovered_components": 0,
+        "unresolved": 0,
+        "pendingBindings": {},
+        "output": "TopBarManager.json",
+        "nativeMeta_sha256": "f38d174b51e63ce9df6a45fe8f847c616d36b702a1b9675ac3132274774d5678",
+        "output_sha256": "e2069004662b891aa1aa9e69fdcd8bbaf4ebc26f01b399fea4b61d6875b9d85d"
+      },
+      {
+        "name": "PublicTopBar",
+        "originalRoot": "cab-3933a72fa08e2dea1e8823ab00d24242:-8955117352938210115",
+        "originalSource": {
+          "bundle": "defaultpackage_assets_prefabs_ui_public.bundle",
+          "bundle_hash": "b6332ef9f8ac6e4ff7867e670d643740",
+          "path_id": "-8955117352938210115",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/b6332ef9f8ac6e4ff7867e670d643740.bundle",
+          "raw_size": 179634,
+          "raw_sha256": "47c2097da45d6923ffdab73c7d51946976031257bd1f4e11d907a0e1fdf3e5d8"
+        },
+        "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Public/PublicTopBar.prefab",
+        "native_sha256": "a61c8b16abf9f3da0d31174c8fadbb3e109ebaab74c4fc6e7e1a9f6ee4421fb5",
+        "mapped_objects": 10,
+        "recovered_components": 4,
+        "unresolved": 0,
+        "pendingBindings": {},
+        "output": "PublicTopBar.json",
+        "nativeMeta_sha256": "20e47cfe27a2408b95b4ac37a81adee2125ac1428b7abf6c974408082beed075",
+        "output_sha256": "31e4751b9ce87c7960252baa34e779783d874f00462c966db9d4a5a6094bb8aa"
+      },
+      {
+        "name": "MoneyUI",
+        "originalRoot": "cab-3933a72fa08e2dea1e8823ab00d24242:-8145708160856884442",
+        "originalSource": {
+          "bundle": "defaultpackage_assets_prefabs_ui_public.bundle",
+          "bundle_hash": "b6332ef9f8ac6e4ff7867e670d643740",
+          "path_id": "-8145708160856884442",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/b6332ef9f8ac6e4ff7867e670d643740.bundle",
+          "raw_size": 179634,
+          "raw_sha256": "47c2097da45d6923ffdab73c7d51946976031257bd1f4e11d907a0e1fdf3e5d8"
+        },
+        "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Public/MoneyUI.prefab",
+        "native_sha256": "f3fba77dfb35c2f33e91335da9444933507d566b7bd98ec607c78f6c6c1d18eb",
+        "mapped_objects": 37,
+        "recovered_components": 17,
+        "unresolved": 0,
+        "pendingBindings": {},
+        "output": "MoneyUI.json",
+        "nativeMeta_sha256": "6ce788015f081bebf9377505c29dd5d98b81b729dc8844fa65fd11ee60698e4b",
+        "output_sha256": "444c84a93fd75a1fecee413a87514c97f587fcdf41a2043d97f788602dfc855f"
+      }
+    ],
+    "additional_bundles": [
+      "defaultpackage_assets_prefabs_ui_home.bundle",
+      "defaultpackage_assets_prefabs_ui_public.bundle"
+    ]
+  },
+  "template_selection": {
+    "scope": "Original HomeUI top-bar subtree, original pooled manager/bar/currency prefabs.",
+    "source": "cab-e2710c604a5d8b137c2b341a91f71b65:-1240881275733487845",
+    "original_parent_detached": true
+  },
+  "roots": {
+    "HomeTopBarParent": {
+      "fileID": 1708180620337799,
+      "guid": "870e3f49012790adbedaeb9e38ec5ced",
+      "type": 3
+    },
+    "TopBarManager": {
+      "fileID": 1709254077376921,
+      "guid": "92eee6c078ac01a1a004c16f53dd24ab",
+      "type": 3
+    },
+    "PublicTopBar": {
+      "fileID": 1709254077376921,
+      "guid": "2b5d75a0995e0ddf6cca1a0c8ef672b9",
+      "type": 3
+    },
+    "MoneyUI": {
+      "fileID": 1709254077376921,
+      "guid": "7008d58f8bce45d8f35f9a1ec2247a41",
+      "type": 3
+    }
+  },
+  "script_bindings": {
+    "MultiLanguageText": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldMultiLanguageText.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "231cab3c6fd951b7a2d14633a5465cbf",
+        "type": 3
+      },
+      "sha256": "99a73c950330a27ca9a3ccce31905c4c8aef70deba9e76c8fd377535aded9cef",
+      "meta_sha256": "b3800ddfd9284bb2c13282b37175e83c6b21673564bc1683db546fc6cd6e2d38"
+    },
+    "TMPro.TextMeshProUGUI": {
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshProUGUI.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "f4688fdb7df04437aeb418b961361dc5",
+        "type": 3
+      },
+      "sha256": "f25b03386b3b6eaef0f6f164ae0230b74f09ea53145fdf8bcb6d4a01786af425",
+      "meta_sha256": "dabd328cbb3096519a4356686931a62663f4c934771d9525260ca4d6972620fd"
+    },
+    "TMPro.TMP_FontAsset": {
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TMP_FontAsset.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "71c1514a6bd24e1e882cebbe1904ce04",
+        "type": 3
+      },
+      "sha256": "4944761e316e6c3e6053507283f4c1b310dd47312830346ef7efc4715ac403af",
+      "meta_sha256": "788d1b900702d38deac8b40940ddb3f065752ee2a1bbb9714dc2a63c6b669e12"
+    },
+    "UnityEngine.UI.Button": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Button.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "4e29b1a8efbd4b44bb3f3716e73f07ff",
+        "type": 3
+      },
+      "sha256": "e8f00d2c3b759c08408c97c75084e065a2a539662783b7f5835fae5d937e9e26",
+      "meta_sha256": "4430ccd81a742991bc19d4d0d230d7cc8e3c928673e3d98ba1d944f27a673415"
+    },
+    "UnityEngine.UI.Image": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Image.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+        "type": 3
+      },
+      "sha256": "351dd72516d240f5722c55f72f8e95a0a92cf71e83358bbc922eee47bdb78502",
+      "meta_sha256": "5d5268c445723f854020175a8fdfe91d4ca7fbc62f360438d4224a3ecca32066"
+    },
+    "UnityEngine.UI.ContentSizeFitter": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/ContentSizeFitter.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "3245ec927659c4140ac4f8d17403cc18",
+        "type": 3
+      },
+      "sha256": "a6b30a3b6e697524ce16f07e1807e870faf8d0c3e8c43004474eb5b8bb3c887b",
+      "meta_sha256": "0fedd1ac89e603605d4632d8b992eeb450e1b0a82dcf16dc3fd9d4bb5acee9f7"
+    },
+    "UnityEngine.UI.HorizontalLayoutGroup": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/HorizontalLayoutGroup.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "30649d3a9faa99c48a7b1166b86bf2a0",
+        "type": 3
+      },
+      "sha256": "60c993b71761a9b431b8321f58ef397a100cd0f7febcf4d82c3e82e30b58459b",
+      "meta_sha256": "6056786a4f956f0ecf2c9a50b877b43200f97b28e1f2d97aceef2e38c453a3a9"
+    },
+    "UnityEngine.UI.LayoutElement": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/LayoutElement.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "306cc8c2b49d7114eaa3623786fc2126",
+        "type": 3
+      },
+      "sha256": "c6e88f6d086a6dfc4111a03024ea1279d6d2c6b755e0a5df50f64dfa06edd732",
+      "meta_sha256": "10054a60194f0eb3ad44e4448e6a985b477e5d3421055976067aaefaafdf7653"
+    },
+    "WwiseEventReference": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "eda62e0b27051dfd578214e537c3c072",
+        "type": 3
+      },
+      "sha256": "7c7b698a69a8d3eb424dc94a32ab91b7364ca923979f89be53d405ee5f6d9942",
+      "meta_sha256": "f393e1af77160cb98a16b745897e728620a26cafe5e3033cf0c2d23196a428e3"
+    },
+    "UIClickSound": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/UIClickSound.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "26fc32eae8ae20e4c3ce956f63542480",
+        "type": 3
+      },
+      "sha256": "5e460e8158f9f9a033cbbf48cbd78c806f03ddce8edf3a5e16c5bcedd659af60",
+      "meta_sha256": "25f235fd858a0ed2bee3d28973598c5465164602084a358aa45ef45837e15ebf"
+    },
+    "LayoutElementClamper": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldLayoutElementClamper.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "af15cc145e0c5ce081a320cbc5d9d74d",
+        "type": 3
+      },
+      "sha256": "250d04905b53b80c55f8c384c4eb29c9dc0feea11e64d9354dcf6f5e0ff6940c",
+      "meta_sha256": "47bd284bfc1638c77d1032b87587a00b7a6cd3b9bfe5cf62c05599a185950d87"
+    },
+    "PreviewTool": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldPreviewTool.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "69e8a521aaaf9b3a4fbbec7048401a00",
+        "type": 3
+      },
+      "sha256": "f05f6f9d6856814596e572e56f5dbe56ee31ab76d6b18a6965dd68b0b0b7f1cb",
+      "meta_sha256": "8aad5ead563199de195eacfec6308f5e55c9e7555472d234a6755ca44ef1e6fe"
+    },
+    "SafeArea": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldSafeArea.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "c2d0088124f9085b5533afccb0f57c20",
+        "type": 3
+      },
+      "sha256": "c1830ecf97ec03faa73750c501ffc29f461fc9dd465387053e67e2104d0040e9",
+      "meta_sha256": "9932fda5602ab090b04d88b8ab7881a3f4fdb998a5dbc738888d5c373a18bf8b"
+    },
+    "TopBarHandler": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/TopBarHandler.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "25add5052e1922ac3f2a0ad2fb1abe07",
+        "type": 3
+      },
+      "sha256": "d82aaa0bd524d80ce954bbb317266c70d95f34850b2dc8122db636b9d2efe5c8",
+      "meta_sha256": "71792468469e070f16811582475eb2c8bef868b51858f9d2b5438460e295b8b0"
+    },
+    "TopBarItem": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/TopBarItem.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "5f9bed74b3eeed82988002bdf2e8b876",
+        "type": 3
+      },
+      "sha256": "3c578df8cccfab27e0738596f06536ab9ef65dc0b74d3af4798c48edd4c0b222",
+      "meta_sha256": "cd1be928a372a4aced02c5dd00c8c43cdd906486f052726dc27ed4ae7e776f03"
+    },
+    "MePlayerItemUI": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/MePlayerItemUI.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "d66cbff2762c50dbb1c34d1e3b936446",
+        "type": 3
+      },
+      "sha256": "9b8c58bcd5a743284c42d1523da9dc1dc3a82dae87939d1c68f4b856e14adc4e",
+      "meta_sha256": "76e3755c71190b9512588796e0792c58514c6838e09c9b369ffb2914d4bfbbca"
+    },
+    "UGUIJszx.HorizontalLayoutGroupJSZX": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/HorizontalLayoutGroupJSZX.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "a1e36a45317d3cd4a3bc7a1aa6759eb9",
+        "type": 3
+      },
+      "sha256": "3488e11e99414146709ace8186607876e55e1a5b63b0d64c52365ddbe0a07c78",
+      "meta_sha256": "8f0da7df905d159a3598fbc63dee8f5ad2bfd60a38fe733a71aa4f05ba53f6ab"
+    }
+  },
+  "gradient_aot_methods": [],
+  "gradient_observations": "Selected AOT: all eight methods inspected. Preserve inclusive line character bounds, all four vertices, rotated X/unrotated line extents, alpha-one keys, renderMode=255 and ForceMeshUpdate(false,false).",
+  "generator_sha256": "911c0384ad5e78e958e21a4d92d203975b9188d506f7bd207f54aa7cd733a2b7",
+  "audio": {
+    "cab-8ede2c00df79c3aff9bab2859b047085:5924382417553736613": {
+      "event": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -1230300647802800322
+        },
+        "m_Name": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3",
+        "objectName": "Main_Cursor_Normal",
+        "id": 3772241779,
+        "guid": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3"
+      },
+      "original_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
+      "source": {
+        "bundle": "defaultpackage_assets_wwise_scriptableobjects_event.bundle",
+        "bundle_hash": "d0ea86beaa052471f6138a9bddaa19f0",
+        "path_id": "5924382417553736613",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/d0ea86beaa052471f6138a9bddaa19f0.bundle",
+        "raw_size": 440942,
+        "raw_sha256": "c4009d466fcf8199fd5c4b7ba92f9915f0509ced7ea74c28ddec8b4867a6970a"
+      },
+      "bank": {
+        "id": 3844515483,
+        "language": 0,
+        "path": "Audio/Banks/wwisebnk_assets_wwisedata_android_minimum_pck.rawfile/3844515483-0.bnk",
+        "sha256": "caebe0a00e8b21f1fcdacd3a1a9c24beca84d9b1c04e71f60318217e30c3381c"
+      },
+      "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+      "txtp": "../banks/3844515483.bnk #s2 #i  #v -6.0dB  ##80286812.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0020-event.txtp\n# - banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[20] 3772241779\n#\n#     CAkActionPlay[19] 1026573382\n#\n#       CAkSound[1] 983794440\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 80286812\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n",
+      "gain_db": -6.0,
+      "media_id": 80286812,
+      "media_source": null,
+      "pcm": {
+        "channels": 2,
+        "rate": 48000,
+        "frames": 7200,
+        "sample_width": 2
+      },
+      "output": "Audio/Main_Cursor_Normal.wav",
+      "output_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+      "pointer": {
+        "fileID": 8300000,
+        "guid": "a349287c39df984af5f51e2338d53e9f",
+        "type": 3
+      },
+      "tools": {
+        ".tools\\wwiser\\wwiser.py": "6a12fb9ba8ae3dc0724bfdcbf1ab1657e39e9c60e6bea091275cf044e3267323",
+        ".tools\\vgmstream\\vgmstream-cli.exe": "10fb0691538d3133f0115a071f89775fc99f32210b7e5991cfc3c2869247e4b2"
+      }
+    }
+  },
+  "manager_config": {
+    "source": {
+      "bundle": "defaultpackage_assets_scriptableconfig_modules_topbar.bundle",
+      "bundle_hash": "0cfab0b69a66164315b486153af82f50",
+      "path_id": "3268382325779653026",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/0cfab0b69a66164315b486153af82f50.bundle",
+      "raw_size": 606,
+      "raw_sha256": "31f5c2e00dcef0a070662d202c8fdd05685b261faf749ffbe34c30f9bd077d7e"
+    },
+    "identity": "cab-26139f7d9a413201bb5acf179d7578ce:3268382325779653026",
+    "sha256": "88f43a331153ef50fcc3927ee4d044098dcc68aee4da5048857054c57f289269",
+    "fields": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "m_Enabled": 1,
+      "m_Script": {
+        "m_FileID": 1,
+        "m_PathID": -2572075901305679981
+      },
+      "m_Name": "TopBarManagerConfig",
+      "ManagerPrefab": {
+        "m_FileID": 2,
+        "m_PathID": 6004469660896591937
+      },
+      "TopBarPrefab": {
+        "m_FileID": 2,
+        "m_PathID": -8955117352938210115
+      },
+      "CurrencyPrefab": {
+        "m_FileID": 2,
+        "m_PathID": -8145708160856884442
+      }
+    }
+  },
+  "currencies": [
+    {
+      "type": 0,
+      "itemId": 1,
+      "setting": "MoneyId",
+      "item": {
+        "ClassId": 1,
+        "Name": "罗拉",
+        "RawIcon": "ItemIcon/Money/Money_1",
+        "ShowPieceIcon": false,
+        "IconEffect": "",
+        "ItemType": 1,
+        "Rank": -1,
+        "Quality": 1,
+        "ElementType": 0,
+        "Price": {},
+        "CanRepeat": true,
+        "AgioItemId": 0,
+        "AgioAmount": 0,
+        "AgioRuleIdList": null,
+        "CanDrop": false,
+        "CanDropWhenExist": true,
+        "ShowInBag": false,
+        "CanOverlap": true,
+        "CanUse": false,
+        "CanUseInBatches": false,
+        "ItemUseEffectType": 0,
+        "Effects": null,
+        "ShowUseDetail": false,
+        "ShowPlayerItemCount": true,
+        "LimitRank": 1,
+        "RedDotType": 0,
+        "RecycleReward": null,
+        "IsShowGained": false,
+        "RecycleGroupCount": 1
+      },
+      "icon": {
+        "fileID": 21300000,
+        "guid": "2a02f9075b01e0df1fd0c89ff3c233e1",
+        "type": 2
+      },
+      "quickBuy": [
+        {
+          "ItemId": 1,
+          "CurrencyId": 2,
+          "RefreshType": 1,
+          "PriceList": [
+            30,
+            50,
+            100
+          ],
+          "PriceBuyCount": [
+            5,
+            5,
+            -1
+          ],
+          "BaseCount": 1500,
+          "SubRankScaleId": 6,
+          "LevelScaleId": 0,
+          "Condition": {
+            "Jumpable": null,
+            "Level": 10,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          }
+        }
+      ]
+    },
+    {
+      "type": 5,
+      "itemId": 2,
+      "setting": "DiamonId",
+      "item": {
+        "ClassId": 2,
+        "Name": "晨星",
+        "RawIcon": "ItemIcon/Money/Money_2",
+        "ShowPieceIcon": false,
+        "IconEffect": "",
+        "ItemType": 1,
+        "Rank": -1,
+        "Quality": 3,
+        "ElementType": 0,
+        "Price": {
+          "1": 50.0
+        },
+        "CanRepeat": true,
+        "AgioItemId": 0,
+        "AgioAmount": 0,
+        "AgioRuleIdList": null,
+        "CanDrop": false,
+        "CanDropWhenExist": true,
+        "ShowInBag": false,
+        "CanOverlap": true,
+        "CanUse": false,
+        "CanUseInBatches": false,
+        "ItemUseEffectType": 0,
+        "Effects": null,
+        "ShowUseDetail": false,
+        "ShowPlayerItemCount": true,
+        "LimitRank": 1,
+        "RedDotType": 0,
+        "RecycleReward": null,
+        "IsShowGained": false,
+        "RecycleGroupCount": 1
+      },
+      "icon": {
+        "fileID": 21300000,
+        "guid": "0acd9fceb8fb098e1e2e0eba2bd6b89c",
+        "type": 2
+      },
+      "quickBuy": []
+    },
+    {
+      "type": 2,
+      "itemId": 57,
+      "setting": "TiliId",
+      "item": {
+        "ClassId": 57,
+        "Name": "体力",
+        "RawIcon": "ItemIcon/Money/Money_57_Tili",
+        "ShowPieceIcon": false,
+        "IconEffect": "",
+        "ItemType": 50,
+        "Rank": -1,
+        "Quality": 2,
+        "ElementType": 0,
+        "Price": {
+          "2": 4.8
+        },
+        "CanRepeat": true,
+        "AgioItemId": 0,
+        "AgioAmount": 0,
+        "AgioRuleIdList": null,
+        "CanDrop": false,
+        "CanDropWhenExist": true,
+        "ShowInBag": false,
+        "CanOverlap": true,
+        "CanUse": false,
+        "CanUseInBatches": false,
+        "ItemUseEffectType": 0,
+        "Effects": [
+          {
+            "IncreaseSpeed": 5.0,
+            "MaxCount": 300,
+            "CalcOverflow": true,
+            "IncreaseSpeedPercentProp": 1016,
+            "_type": "ItemEffectAutoIncrease"
+          }
+        ],
+        "ShowUseDetail": false,
+        "ShowPlayerItemCount": true,
+        "LimitRank": 1,
+        "RedDotType": 0,
+        "RecycleReward": null,
+        "IsShowGained": false,
+        "RecycleGroupCount": 1
+      },
+      "icon": {
+        "fileID": 21300000,
+        "guid": "d455ae9083223ef84695fe1629e95336",
+        "type": 2
+      },
+      "quickBuy": []
+    }
+  ],
+  "currency_sources": {
+    "quick_buy": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "-7898873451773041390",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      },
+      "sha256": "ff181d541883a5a0d111e208d54630506869e30556e0223f248f7029903a0a65",
+      "constructor": "TbQuickBuyInfo"
+    },
+    "game_settings": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "-3869022733471997335",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      },
+      "sha256": "fca2ae301cb5d5fc345377fedb2a97634682e286f6bede6a738c1be96d1a890e",
+      "constructor": "TbGameSettings"
+    },
+    "item": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "3644532119292667704",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      },
+      "sha256": "da276129e605494f2392572880d2cbc0354da14c4151bea6d7dcc90a69be7888",
+      "constructor": "TbItemInfo"
+    }
+  },
+  "original_empty_value_restorations": [],
+  "scope": "Selected original top-bar native resources. Production home binding and Play Mode validation remain required.",
+  "runtime_code": {
+    "unity/Assets/Game/Runtime/Official/HomeHudUI/HomeTopBarManager.cs": "f7fd7587ad0e0df663fd4989c3129dfef9cda6b9058bb102b9aa4cf33468acf8",
+    "unity/Assets/Game/Runtime/Official/HomeHudUI/HomeTopBarManager.cs.meta": "d38a208d0fe13d40e6db534ac7fd13411f5fcb02669f950723ef7ff9f64b90cb",
+    "unity/Assets/Game/Runtime/Official/HomeHudUI/OfficialHomeTopBarAssetCatalog.cs": "fc3a27c33f83cf0302b2aa6c851b31344e27406bc2793586f2a6accb44baa316",
+    "unity/Assets/Game/Runtime/Official/HomeHudUI/OfficialHomeTopBarAssetCatalog.cs.meta": "2d421d88a96769e6058e2d2cb99846a989a6732811da59a2371266e5dae5fdbc",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeTopBar.cs": "d4cd5554c0da6506f0c8240581218afd59f37bd5970bdad5fea0d694fcb4746a",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeTopBar.cs.meta": "2eb06767c550b136b6d3c11178b44fd35f76d6ca4b4aa9e13dfd706798ca53d1"
+  },
+  "installed_output_sha256": {
+    "unity/Assets/Official/Home/UI/TopBar/Image/ItemIcon/Money/Money_1.asset": "9e89ce37c79f49de0a94eacae784caac83e048b39ab3d4915ec63e5cb51e24dc",
+    "unity/Assets/Official/Home/UI/TopBar/Image/ItemIcon/Money/Money_1.asset.meta": "aa2db925ee004d8e742704ece369b68fb1240c1ff43070bff5cb526db9109a39",
+    "unity/Assets/Official/Home/UI/TopBar/Image/ItemIcon/Money/Money_2.asset": "bc150f57bac4f6b671e5df5cd30ebe5a8d4d74465fefe17da27974b001403c18",
+    "unity/Assets/Official/Home/UI/TopBar/Image/ItemIcon/Money/Money_2.asset.meta": "6dab8a469d447226a3fe8a0ec61351d16216363b84b2ccd6a7ca936f61cbda48",
+    "unity/Assets/Official/Home/UI/TopBar/Image/ItemIcon/Money/Money_57_Tili.asset": "01948e8d9691aae1b5132ac29b1af34a709124eceedfa2fa14d1a716b8f2112f",
+    "unity/Assets/Official/Home/UI/TopBar/Image/ItemIcon/Money/Money_57_Tili.asset.meta": "874ef924a18805f76cd3bb553903b8395ffb5c2708b58fb087fac97cca6f723a",
+    "unity/Assets/Official/Home/UI/TopBar/Image/UI/Common/Common_Atlas/ImgBg_CountTextadd.asset": "c044757790ade541c279a781426511bd42798dc827fa99029bc85c3ac41bf15a",
+    "unity/Assets/Official/Home/UI/TopBar/Image/UI/Common/Common_Atlas/ImgBg_CountTextadd.asset.meta": "1c8af64590690d647abf811204d29bf497343274c8ccbbea86bb9b2c7182a181",
+    "unity/Assets/Official/Home/UI/TopBar/Converted/7d459a01380ba650.asset": "12e3272990f2778bf47ca78fedbe58040a7d111fc53970ea7bef4abb97ead802",
+    "unity/Assets/Official/Home/UI/TopBar/Converted/7d459a01380ba650.asset.meta": "09234d830a93b0643d49799e6de667f3efcf1b8fee74818f03907032f9d41246",
+    "unity/Assets/Official/Home/UI/TopBar/Converted/e595fdd18d5f4005.asset": "6ef818cc60fd264c09afb7a06c402040b7bb714c067e31c4f6d143dabd3b08ca",
+    "unity/Assets/Official/Home/UI/TopBar/Converted/e595fdd18d5f4005.asset.meta": "5e3eb090a18612565ebdfdc4969d8dcf6640c2c2d8204a2d8a2767d6d4e29f00",
+    "unity/Assets/Official/Home/UI/TopBar/Converted/d71cfc8eca0c0e22.asset": "9660917af2ca55f881a39f0ba95951135599af0bd82cc9de8efc5e935deaa76d",
+    "unity/Assets/Official/Home/UI/TopBar/Converted/d71cfc8eca0c0e22.asset.meta": "5a4d034bd9cae0c344f606e26b6dadc6307bc17439f16fc20c369f32df6b1fb8",
+    "unity/Assets/Official/Home/UI/TopBar/HomeTopBarParent.prefab": "0a9d25acf81d8b9d4e05a93a34cf30cd2d0acf07ee889529b8be7f85bc33c9d1",
+    "unity/Assets/Official/Home/UI/TopBar/HomeTopBarParent.prefab.meta": "c8d4c00593618e66b4a04a3eb830d0fcec958b18e8eb36322218d903726f68db",
+    "unity/Assets/Official/Home/UI/TopBar/TopBarManager.prefab": "e1f22849dec91610b175f4681b3620ce995033444007152f91df38c59b2947e9",
+    "unity/Assets/Official/Home/UI/TopBar/TopBarManager.prefab.meta": "1f873100f77787012207b10070f8ce41ac9f4e105bc1e1bdde0b14738cf2ba0b",
+    "unity/Assets/Official/Home/UI/TopBar/PublicTopBar.prefab": "e3429d379ab8a97e1cd09d29fe8edd707af888a8337116eb33f43dc616f4d72b",
+    "unity/Assets/Official/Home/UI/TopBar/PublicTopBar.prefab.meta": "dbbc91e4222dc795b484b7e14ffe27acb4de812cb8f405fc55ecf48603591255",
+    "unity/Assets/Official/Home/UI/TopBar/MoneyUI.prefab": "e15d1af06f5870dc2e7543e6fbe3dcc2761b57b207ed3ab3df2872a52eb5e268",
+    "unity/Assets/Official/Home/UI/TopBar/MoneyUI.prefab.meta": "288039facfd0a0e78b26e07d822fc580b20be8a41fd1a7610e8a433a124a9708",
+    "unity/Assets/Official/Home/UI/TopBar.meta": "c042802f23dfb3897e0ff5c91f249fc61dcf7dd4f9d877be5f5f2b681d93aa18",
+    "unity/Assets/Official/Home/UI/TopBar/Converted.meta": "f97a13b8ac1228e904b69862b309d2959dd34292499590e72e6b9659acc56de0",
+    "unity/Assets/Official/Home/UI/TopBar/Image.meta": "b17e99037e3eb38f496538108f2c624417381d60a44ee4748cfe6f9aa8a47cc7",
+    "unity/Assets/Official/Home/UI/TopBar/Image/ItemIcon.meta": "81d375e0f781c29f4ce348a46a8c49e1a0addf7cb2c1ef785299cdfc1de507c1",
+    "unity/Assets/Official/Home/UI/TopBar/Image/UI.meta": "b583d68be54b7e37b41b455a6ca08f91e0af816f196f8b1265f4901f25ef4299",
+    "unity/Assets/Official/Home/UI/TopBar/Image/ItemIcon/Money.meta": "73b04d27eb25f8238d6d950f97458e87c55e444b89311585cdfda1ff98022b1c",
+    "unity/Assets/Official/Home/UI/TopBar/Image/UI/Common.meta": "871452cf81de0b0d7eb125c6fcea9cbd64cf77cc592cd9e2b7e6e1c4abe0cb1f",
+    "unity/Assets/Official/Home/UI/TopBar/Image/UI/Common/Common_Atlas.meta": "c26545d69247c72abaf84d5342874e5719cea602ab9a660db01e48a22cead329",
+    "unity/Assets/Game/Resources/Home/OfficialHomeTopBarAssetCatalog.asset": "92fcda7661341b079e698cac6d37c3cd9e267159273774d7a23973ddf01742e4",
+    "unity/Assets/Game/Resources/Home/OfficialHomeTopBarAssetCatalog.asset.meta": "a6267083bb846b6e398ea19a7084d8684d698e353735849d21fdc69fa5706220"
+  },
+  "reused": [
+    {
+      "path": "unity/Assets/Official/Partners/UI/Gifts/Image/UI/Common/Common_Atlas/ImgBg_CountText_0.asset",
+      "guid": "c0f6169db3ba484abb6199e9d93ff80e",
+      "sha256": "1452771065a27def393fa6b2be2326205264ed9927641abe4d93bec94ee5f972",
+      "staged_sha256": "1452771065a27def393fa6b2be2326205264ed9927641abe4d93bec94ee5f972"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/Gifts/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset",
+      "guid": "a74c390372a1e5b98818a18ac1f760f9",
+      "sha256": "9bc2d98bf82b9d1a47c9217efb7d03c4a23390a0b4966dca553bbf9708c12069",
+      "staged_sha256": "9bc2d98bf82b9d1a47c9217efb7d03c4a23390a0b4966dca553bbf9708c12069"
+    },
+    {
+      "path": "unity/Assets/Official/Home/UI/Repair/NativeControllers/186ea4e8dc0d2d56.controller",
+      "guid": "92b29bb99535f702abc7f5b65106d18a",
+      "sha256": "ec7bcf832586ccd32aaf32bfe82cb23bd1d8321017da59985626454a555ef5c3",
+      "staged_sha256": "ec7bcf832586ccd32aaf32bfe82cb23bd1d8321017da59985626454a555ef5c3"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset",
+      "guid": "b088a249154abaf4e9a07cad25d5aef4",
+      "sha256": "8371c8c321efb85060bcc96875419a2125babcbeb7c15f34a4dfd2526c3caab2",
+      "staged_sha256": "8371c8c321efb85060bcc96875419a2125babcbeb7c15f34a4dfd2526c3caab2"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat",
+      "guid": "08ba59cf78205b78fb2c9a69237994ea",
+      "sha256": "361207bd73188c9fa55778c632ae3ed8459a8eb4f1b81ac88346bcac134464e2",
+      "staged_sha256": "361207bd73188c9fa55778c632ae3ed8459a8eb4f1b81ac88346bcac134464e2"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/Card/Converted/65b73523b080e5e7.asset",
+      "guid": "b40761794afa424fcfa0a6d493b5c729",
+      "sha256": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446",
+      "staged_sha256": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/GiftController/Animation/UI/Common/Normal_0.anim",
+      "guid": "cfdb98e39a55b514089470bd7b029d6c",
+      "sha256": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952",
+      "staged_sha256": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/GiftController/Animation/UI/Common/Highlighted_0.anim",
+      "guid": "351633d52aaad5523ee9586aaae10da6",
+      "sha256": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07",
+      "staged_sha256": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/GiftController/Animation/UI/Common/Pressed_0.anim",
+      "guid": "dc0a78dc7d6d543a3450d8e529257f24",
+      "sha256": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49",
+      "staged_sha256": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/GiftController/Animation/UI/Common/Selected_0.anim",
+      "guid": "df71652ab5895ecc316d0af04beba380",
+      "sha256": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3",
+      "staged_sha256": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/GiftController/Animation/UI/Common/Disabled_0.anim",
+      "guid": "a2adde355625747760bb8f84acb8a219",
+      "sha256": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51",
+      "staged_sha256": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/Card/Converted/ac573a40fda4c096.asset",
+      "guid": "595049c2e6a1f516bcabc0f0a8cab09f",
+      "sha256": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
+      "staged_sha256": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/Card/Converted/f2e1ff40e17239bc.shader",
+      "guid": "0b5a526f51d54805e059fe74dc7aade8",
+      "sha256": "6175d73864092e26c113b2a49d5379d8b72dd5f0e5e413765530ff0b1f1268dd",
+      "staged_sha256": "6175d73864092e26c113b2a49d5379d8b72dd5f0e5e413765530ff0b1f1268dd"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/Friendship/partner-gift-texts.json",
+      "guid": "4fd27206f819ff5a9baef9f56c86f8da",
+      "sha256": "d4a1a18f038a169208a6618cfe2ceab1c28045188347cef3acccb58423646dba",
+      "staged_sha256": "d4a1a18f038a169208a6618cfe2ceab1c28045188347cef3acccb58423646dba"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/Card/Audio/Main_Cursor_Normal.wav",
+      "guid": "a349287c39df984af5f51e2338d53e9f",
+      "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+      "staged_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e"
+    }
+  ],
+  "installed_root": "unity/Assets/Official/Home/UI/TopBar"
+}
