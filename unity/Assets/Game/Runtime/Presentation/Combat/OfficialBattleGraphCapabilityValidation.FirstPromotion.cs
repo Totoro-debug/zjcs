@@ -9,6 +9,7 @@ namespace Zjcs.Presentation.Combat
     public sealed partial class OfficialBattleGraphCapabilityValidation
     {
         private int firstPromotionItemId;
+        private int firstPromotionDispelAllyId;
 
         public static (int Profession, int InitialWeaponType, int InitialSkillItemId) FirstPromotionSource()
         {
@@ -89,18 +90,42 @@ namespace Zjcs.Presentation.Combat
             }
             // Give the original healing AI a valid wounded target in this fixture.
             if (skill.SkillType == 3) player.Hp = player.Turn.Hp = player.MaxHp / 2;
+            if (itemId == 10066)
+            {
+                var ally = JsonUtility.FromJson<FightBattleUnitState>(JsonUtility.ToJson(enemy));
+                ally.Id = checkpoint.Units.Max(unit => unit.Id) + 1;
+                ally.Turn.Id = ally.Id; ally.Side = player.Side;
+                ally.X = player.X + dy; ally.Y = player.Y - dx;
+                checkpoint.Units.Add(ally); probe.firstPromotionDispelAllyId = ally.Id;
+                foreach (int statusId in new[] { 24040, 24041 })
+                    foreach (var unit in new[] { player, ally })
+                        unit.Statuses.Add(catalog.CreateStatus(statusId, unit.Id, enemy.Id, 990000 + statusId * 10 + unit.Id));
+            }
             skill.LimitedTimes = 1;
             player.Skills.Add(skill); player.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
             checkpoint.MaxRound = 12;
             return probe;
         }
 
-        private void ObserveFirstPromotionStep(FightBattleUnitState player, FightBattleStepEvent step)
+        private void ObserveFirstPromotionStep(FightBattleCheckpoint checkpoint, FightBattleStepEvent step)
         {
+            var player = checkpoint.Units.Single(unit => unit.Id == 1);
             var cast = step.SkillCasts.Single(value => value.ActorId == player.Id && value.Slot == 0);
             Require(cast.SkillItemId == firstPromotionItemId && cast.SkillEntityId == skillId
                 && cast.Presentation != null && player.SkillState.Slots[0].ReleasedTimes == 1,
                 "Original equipped source, directional entity or release count differs.");
+            if (firstPromotionItemId == 10066)
+                foreach (var unit in new[] { player,
+                    checkpoint.Units.SingleOrDefault(value => value.Id == firstPromotionDispelAllyId) })
+                    Require(unit != null
+                        && unit.Statuses.Count(status => status.ClassId == 24040 || status.ClassId == 24041) == 1
+                        && unit.Statuses.Any(status => status.ClassId == 24237)
+                        && step.DispersedUnitIds.Contains(unit.Id)
+                        && step.DamageEvents.Count(hit => hit.TargetId == unit.Id) == 1,
+                        "Original area dispel and independent buff differ: unit=" + unit?.Id
+                        + "; statuses=" + (unit == null ? "null" : string.Join(",", unit.Statuses.Select(status => status.ClassId)))
+                        + "; notified=" + string.Join(",", step.DispersedUnitIds)
+                        + "; hits=" + string.Join(",", step.DamageEvents.Select(hit => hit.TargetId)));
             // This shared probe checks actual routing/presentation. Exact damage, status,
             // summon and passive expectations remain in their original-data rule suites.
             Debug.Log("[First promotion graph] item=" + firstPromotionItemId + " entity=" + skillId

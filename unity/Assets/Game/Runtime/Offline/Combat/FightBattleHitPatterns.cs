@@ -73,11 +73,11 @@ namespace Zjcs.Combat.Official
                 var hit = context.Hit;
                 bool perCell = hit.ActionType == 4 && context.Skill.SkillType != 3
                     && !hit.IsSummon && hit.Scope.Count > 1;
-                // Fixed multi-cell attacks have no implicit one-entity limit.
-                // Explicit random-target counts remain entity selection constraints.
+                // Scope enumerates affected cells for damage, healing and status hits alike.
+                // Explicit random-target counts are applied to the candidates below.
                 var selector = new FightBattleHitDefinition { Anchor = hit.Anchor,
                     Scope = hit.Scope, ScopeTransform = hit.ScopeTransform,
-                    TargetMode = perCell || context.SelectedByRandomParent ? 1 : hit.TargetMode };
+                    TargetMode = 1 };
                 var candidates = FightBattleTargeting.SelectScopeTargets(context.Source,
                     context.Units, context.Skill, context.Primary, selector, context.Random, context.Cast,
                     hit.ActionType == 62 ? context.Targets : null);

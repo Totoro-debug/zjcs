@@ -2309,6 +2309,8 @@ namespace Zjcs.Combat.Official
         {
             if (source == null || target == null || hit == null || hit.DisperseStatusTypes == null
                 || hit.DisperseStatusTypes.Count == 0 || target.Statuses.Count == 0) return;
+            if (statusCatalog != null
+                && statusCatalog.DisperseExcludesCharacter(hit.DamageId, target.CharacterType)) return;
             double chance = hit.DisperseChance;
             if (hit.DisperseAffectedByProp)
             {

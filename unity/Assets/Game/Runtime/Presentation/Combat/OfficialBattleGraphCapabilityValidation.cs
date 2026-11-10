@@ -229,7 +229,7 @@ namespace Zjcs.Presentation.Combat
             if (!step.SkillCasts.Any(value => value.ActorId == 1 && value.SkillEntityId == skillId)) return;
             var player = checkpoint.Units.Single(value => value.Id == 1);
             if (firstPromotionItemId != 0)
-                ObserveFirstPromotionStep(player, step);
+                ObserveFirstPromotionStep(checkpoint, step);
             else if (ValidateRevival)
             {
                 Require(player.Hp > 1 && player.Statuses.Single(value => value.ClassId == 25014)

@@ -355,9 +355,10 @@ public static class BattleConditionalHitHarness
         {
             var step=runner.Step(0,runner.State.Counter+1).Event;
             if(!step.SkillCasts.Exists(c=>c.SkillEntityId==10660)) continue;
-            Check(step.DamageEvents.FindAll(d=>d.SourceId==1 && d.TargetId==2).Count==4
-                && status.Components.HitDmgAddPer.InvokeCount==4,
-                "Real 10660 did not settle its four original hits and four conditional triggers exactly once per body.");
+            // Each of the four original eight-cell hit scopes overlaps three occupied body cells.
+            Check(step.DamageEvents.FindAll(d=>d.SourceId==1 && d.TargetId==2).Count==12
+                && status.Components.HitDmgAddPer.InvokeCount==12,
+                "Real 10660 did not settle its twelve original cell hits and conditional triggers.");
             return;
         }
         throw new Exception("Original 10660 never cast at the nearby boss body.");
