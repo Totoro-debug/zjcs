@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -33,6 +33,7 @@ namespace Zjcs.Presentation.Combat
         private int forcedFrames;
         private int previousCaptureFramerate;
         private bool ValidateForcedMovement => skillId == 13550;
+        private bool ValidateDirectional => skillId == 11640 || skillId == 11650 || skillId == 11660;
         private bool ValidateMovement => skillId == 11510
             && Environment.GetEnvironmentVariable("ZJCS_NATIVE_MOVEMENT_ACCEPTANCE") == "1";
         private bool ValidateApproach => ValidateMovement
@@ -51,21 +52,30 @@ namespace Zjcs.Presentation.Combat
         {
             string mode = Environment.GetEnvironmentVariable("ZJCS_GRAPH_CAPABILITY_ACCEPTANCE");
             Require(int.TryParse(mode, out int id) && (id == 13640 || id == 13870 || id == 13970
-                || id == 11510 || id == 12260 || id == 13550), "Unknown original graph.");
+                || id == 11510 || id == 12260 || id == 13550
+                || id == 11640 || id == 11650 || id == 11660), "Unknown original graph.");
             var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
             var player = checkpoint.Units.Single(value => value.Id == 1);
             var enemy = checkpoint.Units.First(value => value.Side != player.Side);
             var probe = new OfficialBattleGraphCapabilityValidation(catalog,
                 player.Skills.First(value => value.Slot == 0), id,
                 id == 13640 ? "200/skill_07" : id == 13870 ? "100/skill_72"
+                    : (id == 11640 || id == 11650 || id == 11660) ? "100/skill_03"
                     : id == 11510 ? "100/skill_55" : id == 12260 ? "100/skill_56" : "100/skill_02");
-            int monster = id == 11510 || id == 13550 ? 3331 : 3665;
+            int monster = id == 11510 || id == 13550 || probe.ValidateDirectional ? 3331 : 3665;
             enemy.MonsterId = monster; enemy.MonsterGroupNo = 0;
             enemy.CharacterType = catalog.MonsterCharacterType(monster);
             enemy.MonsterType = catalog.MonsterType(monster); enemy.AiType = catalog.MonsterAiType(monster);
             enemy.MaxHpPlies = catalog.MonsterHpPliesFor(monster, 0, enemy.Level);
             OfficialBattleUnitAssembler.ApplyMonsterIdentity(catalog, enemy);
             player.X = enemy.X; player.Y = enemy.Y - 2;
+            if (probe.ValidateDirectional)
+            {
+                enemy.BodyOffsets = new System.Collections.Generic.List<FightGridPoint> { new FightGridPoint(0, 0) };
+                string facing = Environment.GetEnvironmentVariable("ZJCS_DIRECTIONAL_SKILL_FACING");
+                player.X = enemy.X + (id == 11650 ? facing == "left" ? 1 : -1 : 0);
+                player.Y = enemy.Y + (id == 11640 ? -1 : id == 11660 ? 1 : 0);
+            }
             if (probe.ValidateForcedMovement)
             {
                 // A cold resource-load frame can span the entire original 0.25s track.
@@ -124,8 +134,10 @@ namespace Zjcs.Presentation.Combat
             if (id == 13970) player.Statuses.Add(catalog.CreateStatus(24721, player.Id, player.Id, 9913970));
             int item = id == 13640 ? 10204 : id == 13870 ? 10201
                 : id == 11510 ? 10067 : id == 12260 ? 10110 : id == 13550 ? 10679 : 10209;
-            var skill = catalog.CreateSkill(id, 0, item, 5, 20, player.SubRank,
-                catalog.CalculateSkillProps(id, 5, 20, player.SubRank)
+            if (probe.ValidateDirectional) item = 10026;
+            int rootEntity = probe.ValidateDirectional ? 10780 : id;
+            var skill = catalog.CreateSkill(rootEntity, 0, item, 5, 20, player.SubRank,
+                catalog.CalculateSkillProps(rootEntity, 5, 20, player.SubRank)
                     .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
             skill.LimitedTimes = 1;
             player.Skills.Add(skill); player.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
@@ -165,7 +177,8 @@ namespace Zjcs.Presentation.Combat
                 var renderer = source ? source.GetComponentInChildren<ProfessionNativeSceneRenderer>(true) : null;
                 Require(renderer, "Original player renderer is absent.");
                 renderer.OnClipApplied += (clip, name, layer, weight, time, previous, backward) => {
-                    if (name == clipName && time > .04f && weight > 0) animated = true;
+                    if (name == clipName
+                        && time > .04f && weight > 0) animated = true;
                     if (ValidateMovement && weight > 0f)
                     {
                         if (name == "100/skill_55_2" && time > .01f) loopObserved = true;

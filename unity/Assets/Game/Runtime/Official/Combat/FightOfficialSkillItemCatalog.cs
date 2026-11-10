@@ -13,6 +13,8 @@ namespace Zjcs.Combat.Official
     {
         public int ItemId;
         public int EntityId;
+        // Keys retain Common.Direction (Up, Down, Left, Right), not the local AI index.
+        public Dictionary<int, int> DirectionEntityIds = new Dictionary<int, int>();
         public int UserType;
         public int AiPriorityId = -1;
         public int LastAiPriorityId = -1;
@@ -86,6 +88,7 @@ namespace Zjcs.Combat.Official
                 {
                     ItemId = itemId,
                     EntityId = entityId,
+                    DirectionEntityIds = ReadDirectionEntities(skill),
                     UserType = FightOfficialCombatCatalog.ReadInt(skill, "UserType"),
                     AiPriorityId = FightOfficialCombatCatalog.ReadInt(skill, "AiPriorityId", -1),
                     LastAiPriorityId = FightOfficialCombatCatalog.ReadInt(skill, "LastAiPriorityId", -1),
@@ -226,6 +229,23 @@ namespace Zjcs.Combat.Official
         {
             int[] values = FightOfficialCombatCatalog.ReadIntArray(settings, key);
             return values.Length == 0 ? 0 : values[0];
+        }
+
+        private static Dictionary<int, int> ReadDirectionEntities(Dictionary<string, object> skill)
+        {
+            var result = new Dictionary<int, int>();
+            if (!skill.TryGetValue("DirectionEcEntityId", out object value) || value == null)
+                return result;
+            var directions = FightOfficialCombatCatalog.ParseObject(value, "skill.DirectionEcEntityId");
+            foreach (var pair in directions)
+            {
+                if (!int.TryParse(pair.Key, out int direction) || direction < 0 || direction > 3)
+                    throw new FormatException("Invalid official skill direction: " + pair.Key);
+                int entity = Convert.ToInt32(pair.Value, CultureInfo.InvariantCulture);
+                if (entity <= 0) throw new FormatException("Invalid directional skill entity: " + entity);
+                result.Add(direction, entity);
+            }
+            return result;
         }
 
         private static bool Contains(int[] values, int value)

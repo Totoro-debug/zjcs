@@ -355,13 +355,9 @@ namespace Zjcs.Combat.Official
                         TryComboTargetPosition(actor, skill, targets[0], out comboTargetPosition);
                     ApplyComboFacing(actor, skill);
                 }
-                var presentation = FightBattleSkillCastPresentation.Capture(actor, skill, targets, comboTargetPosition);
-                var cast = new FightBattleSkillCastEvent
-                {
-                    ActorId = actor.Id, Presentation = presentation, Slot = skill.Slot,
-                    SkillEntityId = skill.EntityId, SkillItemId = skill.ItemId
-                };
-                foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
+                var preparedCast = SkillCasts.Prepare(actor, skill, targets, comboTargetPosition);
+                skill = preparedCast.Skill;
+                var cast = preparedCast.Cast;
                 int skillCastStart = casts.Count, skillDamageStart = damageEvents.Count;
                 int skillMovementStart = movements.Count;
                 skillState.RunSkill(skill.Slot);

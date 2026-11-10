@@ -1,4 +1,4 @@
-# 技能、方案与培养
+﻿# 技能、方案与培养
 
 [总索引](../README.md)
 
@@ -28,6 +28,8 @@
 官方技能页按职业、前置链、品质、元素、标签、范围、安装槽、附加属性和升级／突破配置刷新；详情与模型预览使用原控件、数值计算及显示规则。
 
 ### 官方代码与资源依据
+
+`scripts/prepare_battle_directional_skill_sources.py` 从所选 APK 优先解码六职业及 104 项直接技能／物品，规范化 JSON 数字字典键后逐字段比较运行表，并核对 10026 默认 10780、方向实体 11640／11650／11660 及直接命中组件，未修改历史运行载荷或其预期哈希。原 `FightSkillData.RefreshSkillEntityData`、`SkillEntityData` 与 `Pos2d.LookDirection` 的输入身份见[方向技能来源](../../assets/reference/battle-rules/directional-skill-source-manifest.json)。原 `MyFightSkill` 的四向播放图与 `DirectionEcEntityId` 的方向实体字典是两层配置：技能可使用同一个实体并按方向选择原播放图，空方向图继续沿用原默认图回退；不要求为每个技能制造四个实体。
 
 技能图资源由 `prepare_battle_skill_graph_assets.py` 按官方实体根对象和纹理身份生成，导出目录仅作分组，不作为实体 ID；纹理候选先匹配原名，再处理同前缀别名。资源依赖、输入与输出哈希见技能图来源清单。
 
@@ -80,6 +82,21 @@
 依据：`assets/reference/skill-ui/unity-icon-source-manifest.json`、`assets/reference/skill-quality-text/source-manifest.json`。
 
 ## 完整还原部分
+
+### 通用四向施法模块
+
+普通装备技能统一经 `FightSkillCastModule.Prepare(actor, equipped, targets, targetPosition)` 产生配对的 `Skill` 和 `Cast`。模块从 `FightOfficialSkillItemCatalog.DirectionEntityIds` 读取官方映射，选择实体并装配该实体自己的命中图、时长和培养属性，继承根技能来源、槽位、外观、祝福、AI 与自定义伤害／治疗输入，然后快照目标、朝向及状态。无方向映射的普通技能也走此入口并保留原定义。模块不消费次数、不改写装备定义；执行器随后只对原槽执行一次释放。其他技能接入官方配置即可复用，模块没有 10026 专用分支。
+
+通用链路复用已有职责，不为各技能复制选敌、伤害或渲染实现：
+
+| 职责 | 共用入口与配置 |
+| --- | --- |
+| 对象选择、范围、AI、身体格与确定性随机 | `FightBattleTargeting`；原技能与命中配置，接近移动后重新选敌 |
+| 方向实体、养成与来源、结算／表现一致的施法快照 | `FightSkillCastModule` 与 `FightBattleSkillCastPresentation` |
+| 命中时序、伤害／治疗、状态、子技能及触发 | `FightBattleExecutor.ExecuteSkill`、已有伤害公式与能力实现；消费模块返回的技能定义 |
+| 四向特效、原默认图回退、人物动作与骨骼 | `OfficialBattleSkillEntityPlayback` → 原 `MyFightSkill` 与 Playable → 既有原生 Spine 4.2 渲染；消费同次施法的快照 |
+
+`scripts/test_battle_directional_skills.ps1` 通过公开模块入口及实际执行器验证四向伤害、方向实体独立培养、单次槽位消费、回执去重和冷恢复；同时验证普通技能保持原定义、无目标／同格／无映射回退，以及仅在测试内给第二技能绑定方向字典后无需新增专用代码。后者仅证明复用，不将诊断映射写入官方配置。普通位移及连段回归通过。通用化后的上／下／左／右四向已全部通过原开始按钮模拟输入、实际 11640／11660／11650 实体、严格的官方 `100/skill_03` 动作推进、伤害、一次槽位消费、检查点、结算及返回的 Play Mode，并查看四向技能与返回画面；Unity 全工程导入／编译、`ProjectTools.Validate` 与静态元数据检查通过（145,655 个 GUID）。Windows 脚本增量构建成功，实际 Player 四向专项全部通过同一流程，已查看四向技能、原结算及返回画面；验证使用独立临时档案，未覆盖用户存档。返回家园仍有既有空头像、白块和黑色几何缺项；完整技能功能及正式发布尚未完成。
 
 ### 战斗技能与状态运行时覆盖
 
@@ -187,6 +204,8 @@ Editor 程序集显式引用 `Zjcs.Presentation.Character`，以供技能 Play M
 普通移动实体现在通过独立能力接入：`IFightMovementSkillTiming`／`FightOrdinaryMovementTiming` 仅接受上述 22 个原配置，并检查无命中、无额外技能和无技能逻辑图的配置边界；普通 `CreateSkill` 仍拒绝未解析命中图，专用工厂只允许已核实的普通移动实体。角色原 MoveSkillId／BackMoveSkillId 生成移动事件时快照起点、方向、镜像和状态，合法路径结算后保存终点及两个独立计时，检查点保留这些数据；旧记录没有快照时沿用既有显示。接近后的主动技能按普通移动的原 ActionDuration 调度，实体移除按独立 Duration 调度，路径及动作 End 仍使用原公式与销毁延迟。`IBattleMovementSkillView` 负责原 `MyFightSkill` 创建／OnRemove，`IBattleMovementActionView` 继续负责原移动动作；原技能图自然结束，原动作延迟保留，不重复播放既有普通移动效果。规则测试覆盖 22 份原配置、竞争／零／禁用计时、完整 RealDistance／速度／DelayDestroyTime、创建快照和存档；真实调度器测试覆盖先建技能再开动作、非装备槽及同单位连续路径。原动作开始、击退和连段回归通过。Unity 导入／编译、ProjectTools.Validate、静态检查（145,652 个 GUID）和公共 weekly 4800 Play Mode 已通过：15300 非装备槽、先于 15301 创建、独立回收，随后 11510 的原移动／循环／结束动作、残影、一次装备释放、检查点、结算和模拟离开均通过，9 张实际截图已查看。规则结算、场景位置、原生动作和效果共用连续路径的开始边界，保留每次原前置延迟，最终 Play Mode 复验通过。Windows 脚本增量构建及内置屏 Player 同一流程已通过，9 张最终实际运行截图已查看；13100 的 Player 六段演出、一次装备释放和检查点回归通过，23 张截图已查看；13550 受击移动 Player 回归通过并查看 6 张截图。当前仅接通既有普通接近／退后入口；固定速度／特殊移动入口、普通移动技能的共享规则开始／结束通知与相关状态反应、22 个原角色各自完整演出仍待接入或逐项实测，不以本项声明完整普通移动技能已还原。
 
 ## 自定义实现
+
+用户确认斗士 10026 每次施放以施法者指向本次选中目标的四向方向选择原 `DirectionEcEntityId`；无目标、同格或无映射使用默认 10780。四向判定沿用原 `Pos2d.LookDirection`，对角等距优先横向。原 `FightSkillData` 只保留方向实体的构造与属性更新，服务器选取实现未提供；此项选择规则属于单机决定。用户进一步要求此能力通用化：按官方显式方向字典统一接入装备施法入口，空字典继续使用原实体；本次范围内 10026 有此字典，其他技能继续使用各自原四向播放配置。此决定不代表未核查高阶技能已验证。
 
 用户要求技能采用能力组合：按多段时序、范围命中、衰减、子技能、状态、地形及动作等职责设计行为接口，由具体能力读取各技能的官方配置；特殊规则由独立实现扩展。基础伤害公式继续复用官方计算。现已拆分的能力及验证范围见上文，其他职责的接口迁移仍待完成。
 
