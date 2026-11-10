@@ -1,4 +1,4 @@
-﻿. (Join-Path $PSScriptRoot 'combat_sources.ps1')
+. (Join-Path $PSScriptRoot 'combat_sources.ps1')
 $ErrorActionPreference='Stop'
 Add-Type -Path (Get-FightCombatSources)
 function Assert-HitSelection($ok,$message){if(-not $ok){throw $message}}
@@ -76,7 +76,7 @@ Write-Output 'Random scope: 12 deterministic seeds preserve distinct-target quot
 $hit.Scope.Clear();$hit.ScopeEntries.Clear();$hit.RandomTargetScope.Clear();$hit.RandomTargetScope.Add([Zjcs.Combat.Official.FightGridPoint]::new(8,0));$hit.RandomTargetScope.Add([Zjcs.Combat.Official.FightGridPoint]::new(9,0))
 $hit.RandomTargetGroupId=4;$hit.RandomTargetAllowEmptyScope=$true;$hit.RandomTargetNotAllowHitEmpty=$false;$hit.RandomTargetNotSameEmptyScope=$true;$hit.RandomTargetNotSameGrid=$true
 $seed0=$context.Random.Seed;$empty1=$randomSelector.Select($context);$seed1=$context.Random.Seed;$empty2=$randomSelector.Select($context);$seed2=$context.Random.Seed;$empty3=$randomSelector.Select($context)
-Assert-HitSelection ($null -eq $empty1 -and $null -eq $empty2 -and $null -eq $empty3 -and $seed0 -ne $seed1 -and $seed1 -ne $seed2 -and $context.Random.Seed -eq $seed2) 'Empty-grid exclusions or random draw order changed.'
+Assert-HitSelection ($null -ne $empty1 -and $empty1.Targets.Count -eq 0 -and $empty1.SelectedGridPositions.Count -eq 1 -and $null -ne $empty2 -and $empty2.Targets.Count -eq 0 -and $empty2.SelectedGridPositions.Count -eq 1 -and $null -eq $empty3 -and $seed0 -ne $seed1 -and $seed1 -ne $seed2 -and $context.Random.Seed -eq $seed2) 'Empty-grid exclusions or random draw order changed.'
 
 # Faction reference and actual caster anchor remain separate inputs.
 $reference=New-SelectionUnit 8 2 9 0;$units.Add($reference);$boss.Side=1
@@ -130,12 +130,17 @@ $original=$catalog.CreateSkill(13660,0,10188,5,20,1,$properties);$source.Skills.
 $runner=[Zjcs.Combat.Official.FightBattleExecutor]::Begin($checkpoint,$formula,[Zjcs.Combat.Official.FightDamageSettlement]::new(),$catalog,$items)
 $step=$runner.Step(0,$checkpoint.Counter+1).Event
 $hits=@($step.DamageEvents|Where-Object SkillEntityId -eq 13660)
-Assert-HitSelection ($hits.Count -eq 45) 'Original 13660 lost one of its three anchors per node or five covered body cells.'
-foreach($id in 13662,13663,13664){Assert-HitSelection (@($hits|Where-Object HitEntityId -eq $id).Count -eq 15) 'An original random node lost its independent body occurrences.'}
+Assert-HitSelection ($hits.Count -eq 35) 'Original 13660 no longer matches its selected body grids and cross-shaped Scope.'
+foreach($pair in @(@(13662,11),@(13663,11),@(13664,13))){Assert-HitSelection (@($hits|Where-Object HitEntityId -eq $pair[0]).Count -eq $pair[1]) 'An original random node differs from its selected grid intersections.'}
+$expectedDraws=@('5,4;6,3;7,3','5,4;6,3;7,5','6,4;5,4;7,4')
+for($i=0;$i -lt 3;$i++){
+ $draw=($step.SkillCasts[0].HitSelections[$i].SelectedGridPositions|ForEach-Object {'{0},{1}' -f $_.X,$_.Y}) -join ';'
+ Assert-HitSelection ($draw -eq $expectedDraws[$i]) 'Original seeded body-grid draws changed.'
+}
 Assert-HitSelection (@($hits|Where-Object {-not $_.HasHitGridPosition -or $_.Damage -ge 0 -or $_.AfterHp -ge $_.BeforeHp}).Count -eq 0 -and $source.SkillState.Slots[0].ReleasedTimes -eq 1) 'Original random hits lost actual damage, cells or single release.'
 $saved=[Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($checkpoint))
-Assert-HitSelection ($saved.RandomSeed -eq $checkpoint.RandomSeed -and @($saved.Receipts[0].Event.DamageEvents|Where-Object SkillEntityId -eq 13660).Count -eq 45) 'Original random hit checkpoint changed its stream or damage occurrences.'
-Write-Output 'Original 13660 executor: three nodes, three anchors each, five body cells per anchor, 45 actual damage events, one release and checkpoint passed.'
+Assert-HitSelection ($saved.RandomSeed -eq $checkpoint.RandomSeed -and @($saved.Receipts[0].Event.DamageEvents|Where-Object SkillEntityId -eq 13660).Count -eq 35) 'Original random hit checkpoint changed its stream or damage occurrences.'
+Write-Output 'Original 13660 executor: three nodes, three actual body-grid anchors each, 35 cross-scope damage events, one release and checkpoint passed.'
 
 # Settle the unmodified support skill as well as selecting its original parent.
 $supportCheckpoint=[Zjcs.Combat.Official.FightBattleCheckpoint]::new();$supportCheckpoint.StageId=1;$supportCheckpoint.MaxRound=8;$supportCheckpoint.RandomSeed=1

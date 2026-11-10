@@ -737,7 +737,7 @@ namespace Zjcs.Combat.Official
             {
                 ExecuteSkillCore(actor, skill, targets, casts, damageEvents, movements,
                     out lastDelay, out statusTriggerDuration, out statusTriggerActionDuration,
-                    targetPosition, allowDeadSource, externalDamageFactor, targetingSource);
+                    targetPosition, allowDeadSource, externalDamageFactor, targetingSource, presentationCast);
                 conditionalHitProperties.EndCast();
                 statusTriggerDuration = Math.Max(statusTriggerDuration, movementStartContext.Duration);
                 statusTriggerActionDuration = Math.Max(statusTriggerActionDuration,
@@ -758,7 +758,8 @@ namespace Zjcs.Combat.Official
             List<FightBattleDamageEvent> damageEvents, List<FightBattleMovementEvent> movements,
             out float lastDelay, out float statusTriggerDuration,
             out float statusTriggerActionDuration, FightBattleUnitState targetPosition,
-            bool allowDeadSource, double externalDamageFactor, FightBattleUnitState targetingSource)
+            bool allowDeadSource, double externalDamageFactor, FightBattleUnitState targetingSource,
+            FightBattleSkillCastEvent presentationCast)
         {
             lastDelay = 0f;
             statusTriggerDuration = 0f;
@@ -864,6 +865,13 @@ namespace Zjcs.Combat.Official
                     if (selection == null) continue;
                     plannedHits = selection.Occurrences;
                     hitTargets = selection.Targets;
+                    if (presentationCast != null)
+                    {
+                        if (presentationCast.HitSelections == null)
+                            presentationCast.HitSelections = new List<FightBattleHitSelectionSnapshot>();
+                        presentationCast.HitSelections.Add(FightBattleHitSelectionSnapshot.Capture(
+                            presentationCast.HitSelections.Count + 1, hit, selection, hitCast));
+                    }
                 }
                 ExecuteLogicChildSkills(actor, skill, skillLogic, hit,
                     targetPosition ?? (targets.Count > 0 ? targets[0] : null), hitCast,

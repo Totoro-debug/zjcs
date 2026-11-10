@@ -1825,6 +1825,8 @@ namespace Zjcs.Combat.Official
         public int ActorId;
         // Captured before settling this cast: later hits/moves must not retarget its view.
         public FightBattleSkillCastPresentation Presentation;
+        // Per-cast selection receipts; never re-run target selection when projecting native hit views.
+        public List<FightBattleHitSelectionSnapshot> HitSelections = new List<FightBattleHitSelectionSnapshot>();
         // Start time relative to this step; Playable cue times are relative to this cast.
         public float Delay;
         public int Slot;
