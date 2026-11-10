@@ -755,6 +755,8 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 行动进度动态图集代码来源：`scripts/prepare_battle_round_atlas.py` 从所选 `884_156692` 的客户端反编译结果迁移 `DynamicTexture2DAtlas` 十类实现，记录相关头像调用方代码、原 `GamePlayManagerConfig` 导出及导出清单摘要，核验所选路径字段。仅适配命名空间、Unity C# 反编译语法及本地日志后端；原始代码和所有迁移输出 SHA-256 见[动态图集代码来源清单](battle-hud/round-atlas-source-manifest.json)。本项不新增美术载荷；当前实现及验证范围由[战斗执行](../../docs/features/battle-execution.md)维护。
 
+行动进度头像请求代码来源：`scripts/prepare_battle_round_portraits.py` 从所选 `884_156692` 客户端反编译结果迁入八个头像请求与处理器类，复用已有官方取景请求／缓存实现；命名空间、依赖绑定、离线取景参数与日志适配及输入输出 SHA-256 见[头像请求来源清单](battle-hud/round-portrait-source-manifest.json)。本项不修改原 UI 资产；当前接入和验证范围见[战斗执行](../../docs/features/battle-execution.md)。
+
 移动动作来源：所选 884 的全部 222 个 FightActionSkillMoveComponent 与已核验的原 EC 配置规范化摘要逐一比对，原 MyFightActionSkillMove、MyActionBase、MyAction 及共享计时／距离／转向代码由 scripts/prepare_battle_skill_move_runtime.py 固定输入身份。原动作实体、移动图、碰撞图与导出对象指针由 scripts/inspect_battle_action_graph_bindings.py 核验，再经 scripts/prepare_battle_skill_graph_assets.py 转为 Windows 原生资产并写入 moves 显式绑定；输入输出及本地适配哈希见[移动动作代码来源](battle-animation/skill-move-runtime-source-manifest.json)和[技能原生图来源](battle-animation/skill-native-graph-assets-source-manifest.json)。新增素材尚未进入完整素材快照；当前行为、确认的单机规则及验证范围由[技能页](../../docs/features/skills.md)维护。
 
 普通移动技能实体来源：`scripts/inspect_battle_skill_graph_bindings.py` 补充所选 `884_156692` 官方原生导出的 `FightSkill/Move` 子树，逐项核对导出凭据与文件摘要，解析 22 个完整实体和其 10 个技能图引用；原有技能实体与原空图保留。配置身份另与[当前实体配置凭据](battle-rules/active-entity-configuration-source-manifest.json)核对。Windows 转换及对象显式绑定仍由 `scripts/prepare_battle_skill_graph_assets.py` 生成，原始对象、转换输入输出哈希见[技能原生图来源](battle-animation/skill-native-graph-assets-source-manifest.json)。新增素材尚未进入完整素材快照；当前行为和验证范围由[技能页](../../docs/features/skills.md)维护。

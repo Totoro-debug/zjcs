@@ -158,6 +158,7 @@ namespace Zjcs.Editor.BattleRound
     Require(maleHead.width==100 && maleHead.height==120 && femaleHead.width==100 && femaleHead.height==120
      && maleHead.GetPixels32().Count(c=>c.a>128)>1000 && femaleHead.GetPixels32().Count(c=>c.a>128)>1000,
      "Original male/female head capture is empty or incorrectly sized.");
+    yield return OfficialBattlePortraitRequestAcceptance.Verify(maleHead,femaleHead);
     portraitAtlas=DynamicTexture2DAtlasUtils.CreateGridDynamicAtlas(1024,1024,new Vector2Int(100,120),null,true);
     Require((portraitAtlas is ETC2GridDynamicAtlas)==(DynamicTexture2DAtlasUtils.CanGraphicTextureCopy && DynamicTexture2DAtlasUtils.SupportETC2Fmt),"Original platform atlas selection changed.");
     Require(portraitAtlas is FallBackGridDynamicAtlas,"This Windows verification requires the actual unsupported-ETC2 fallback.");
