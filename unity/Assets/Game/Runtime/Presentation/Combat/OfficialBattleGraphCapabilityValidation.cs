@@ -9,7 +9,7 @@ using Zjcs.Official.BattleSkillPlayables;
 namespace Zjcs.Presentation.Combat
 {
     // Isolated original-graph inputs for the public weekly host, never user unlocks.
-    public sealed class OfficialBattleGraphCapabilityValidation
+    public sealed partial class OfficialBattleGraphCapabilityValidation
     {
         private readonly FightOfficialCombatCatalog catalog;
         private readonly FightBattleSkillDefinition finisher;
@@ -32,7 +32,7 @@ namespace Zjcs.Presentation.Combat
         private Quaternion forcedTargetRotation;
         private int forcedFrames;
         private int previousCaptureFramerate;
-        private bool ValidateSkillEnd => skillId == 10500;
+        private bool ValidateSkillEnd => firstPromotionItemId == 0 && skillId == 10500;
         private bool ValidateRevival => skillId == 11490;
         private int ExpectedCasts => ValidateSkillEnd ? 4 : 1;
         private bool ValidateForcedMovement => skillId == 13550;
@@ -53,6 +53,8 @@ namespace Zjcs.Presentation.Combat
 
         public static OfficialBattleGraphCapabilityValidation Configure(FightBattleCheckpoint checkpoint)
         {
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_FIRST_PROMOTION_SKILL")))
+                return ConfigureFirstPromotion(checkpoint);
             string mode = Environment.GetEnvironmentVariable("ZJCS_GRAPH_CAPABILITY_ACCEPTANCE");
             Require(int.TryParse(mode, out int id) && (id == 13640 || id == 13870 || id == 13970
                 || id == 11510 || id == 12260 || id == 13550
@@ -226,7 +228,9 @@ namespace Zjcs.Presentation.Combat
             var checkpoint = controller.Checkpoint; var step = checkpoint.Receipts.Last().Event;
             if (!step.SkillCasts.Any(value => value.ActorId == 1 && value.SkillEntityId == skillId)) return;
             var player = checkpoint.Units.Single(value => value.Id == 1);
-            if (ValidateRevival)
+            if (firstPromotionItemId != 0)
+                ObserveFirstPromotionStep(player, step);
+            else if (ValidateRevival)
             {
                 Require(player.Hp > 1 && player.Statuses.Single(value => value.ClassId == 25014)
                     .RoleDieTriggeredCount == 1 && player.Statuses.Any(value => value.ClassId == 24233)
