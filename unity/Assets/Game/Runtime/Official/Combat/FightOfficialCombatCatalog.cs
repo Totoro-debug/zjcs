@@ -3483,9 +3483,13 @@ namespace Zjcs.Combat.Official
                 }
             }
             foreach (FightBattleHitDefinition hit in skill.Hits ?? new List<FightBattleHitDefinition>())
-                if (hit != null && hit.ScopeTransform == null
-                    && entities.TryGetValue(hit.EntityId, out var components))
-                    hit.ScopeTransform = ReadHitScopeTransform(components);
+            {
+                if (hit == null || !entities.TryGetValue(hit.EntityId, out var components)) continue;
+                if (hit.ScopeTransform == null) hit.ScopeTransform = ReadHitScopeTransform(components);
+                if (hit.Trajectory == null)
+                    hit.Trajectory = CreateHitEntity(hit.EntityId, components,
+                        new Queue<int>(), new Dictionary<int, FightBattleHitReference>()).Trajectory;
+            }
         }
 
         private static void AddSummonConfig(Dictionary<string, object> component,

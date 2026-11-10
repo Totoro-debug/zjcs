@@ -61,9 +61,18 @@ namespace Zjcs.Combat.Official
                 if (context.Hit.Scope != null && context.Hit.Scope.Count > 0)
                     centers.Add(FightHitAnchorExtensions.ResolveCenter(context.Hit.Anchor,
                         context.Source, context.Primary, context.Cast));
-                else foreach (var occurrence in planned)
-                    centers.Add(FightHitAnchorExtensions.ResolveCenter(context.Hit.Anchor,
-                        context.Source, occurrence.Target, context.Cast));
+                else
+                {
+                    var anchored = new List<FightHitOccurrence>();
+                    foreach (var occurrence in planned)
+                    {
+                        anchored.Add(new FightHitOccurrence(occurrence.Target, occurrence.HasGridPosition,
+                            occurrence.GridPosition, occurrence.Delay, centers.Count));
+                        centers.Add(FightHitAnchorExtensions.ResolveCenter(context.Hit.Anchor,
+                            context.Source, occurrence.Target, context.Cast));
+                    }
+                    planned = anchored;
+                }
                 return new FightHitTargetSelection(planned.Select(value => value.Target).ToList(), planned,
                     new List<FightGridPoint>(), centers);
             }
@@ -100,6 +109,7 @@ namespace Zjcs.Combat.Official
 
                 var selectedTargets = new List<FightBattleUnitState>();
                 var selectedPositions = new List<FightGridPoint>();
+                var targetsByCenter = new List<List<FightBattleUnitState>>();
                 if (hit.RandomTargetScope != null && hit.RandomTargetScope.Count > 0)
                 {
                     var scopeCenter = FightHitAnchorExtensions.ResolveCenter(hit.RandomTargetAnchor,
@@ -117,6 +127,7 @@ namespace Zjcs.Combat.Official
                     foreach (FightBattleRandomScopeSelection selection in selections)
                     {
                         selectedPositions.Add(selection.Position);
+                        targetsByCenter.Add(selection.Targets);
                         groupState.GridPositions.Add(selection.Position);
                         if (selection.IsEmpty)
                             groupState.EmptyPositions.Add(selection.Position);
@@ -147,6 +158,7 @@ namespace Zjcs.Combat.Official
                     foreach (FightBattleUnitState selectedTarget in selectedTargets)
                     {
                         selectedPositions.Add(new FightGridPoint(selectedTarget.X, selectedTarget.Y));
+                        targetsByCenter.Add(new List<FightBattleUnitState> { selectedTarget });
                         groupState.TargetIds.Add(selectedTarget.Id);
                         groupState.GridPositions.Add(new FightGridPoint(
                             selectedTarget.X, selectedTarget.Y));
@@ -169,14 +181,34 @@ namespace Zjcs.Combat.Official
                     // The original client transforms Scope from the hit entity's grid.
                     // A selected body cell is that grid; replacing it with the entity centre
                     // shifts both the rendered area and the damage to different cells.
-                    foreach (FightGridPoint selectedPosition in selectedPositions)
-                        randomOccurrences.AddRange(Plan(context, randomTargetEffect,
+                    for (int centerIndex = 0; centerIndex < selectedPositions.Count; centerIndex++)
+                    {
+                        FightGridPoint selectedPosition = selectedPositions[centerIndex];
+                        foreach (var occurrence in Plan(context, randomTargetEffect,
                             selectedTargets, new FightBattleUnitState {
-                                X = selectedPosition.X, Y = selectedPosition.Y }, true));
+                                X = selectedPosition.X, Y = selectedPosition.Y }, true))
+                            randomOccurrences.Add(new FightHitOccurrence(occurrence.Target,
+                                occurrence.HasGridPosition, occurrence.GridPosition, occurrence.Delay, centerIndex));
+                    }
                     plannedHits = randomOccurrences;
                     foreach (var occurrence in randomOccurrences) hitTargets.Add(occurrence.Target);
                 }
-                else hitTargets.AddRange(selectedTargets);
+                else
+                {
+                    var directOccurrences = new List<FightHitOccurrence>();
+                    for (int centerIndex = 0; centerIndex < selectedPositions.Count; centerIndex++)
+                    {
+                        var targetsAtCenter = new HashSet<int>();
+                        foreach (var selectedTarget in targetsByCenter[centerIndex])
+                            if (targetsAtCenter.Add(selectedTarget.Id))
+                            {
+                                hitTargets.Add(selectedTarget);
+                                directOccurrences.Add(new FightHitOccurrence(selectedTarget, true,
+                                    selectedPositions[centerIndex], 0f, centerIndex));
+                            }
+                    }
+                    plannedHits = directOccurrences;
+                }
                 var effectCenters = new List<FightGridPoint>(selectedPositions);
                 return new FightHitTargetSelection(hitTargets, plannedHits, selectedPositions, effectCenters);
             }

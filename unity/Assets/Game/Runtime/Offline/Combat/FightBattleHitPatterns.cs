@@ -30,12 +30,14 @@ namespace Zjcs.Combat.Official
         public readonly bool HasGridPosition;
         public readonly FightGridPoint GridPosition;
         public readonly float Delay;
+        public readonly int EffectCenterIndex;
 
         internal FightHitOccurrence(FightBattleUnitState target,
-            bool hasGridPosition = false, FightGridPoint gridPosition = default, float delay = 0f)
+            bool hasGridPosition = false, FightGridPoint gridPosition = default, float delay = 0f,
+            int effectCenterIndex = 0)
         {
             Target = target; HasGridPosition = hasGridPosition;
-            GridPosition = gridPosition; Delay = delay;
+            GridPosition = gridPosition; Delay = delay; EffectCenterIndex = effectCenterIndex;
         }
     }
 

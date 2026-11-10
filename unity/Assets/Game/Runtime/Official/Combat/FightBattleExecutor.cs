@@ -846,6 +846,7 @@ namespace Zjcs.Combat.Official
                 if (hit.Delay > lastDelay) lastDelay = hit.Delay;
                 List<FightBattleUnitState> hitTargets;
                 IReadOnlyList<FightHitOccurrence> plannedHits = null;
+                FightHitTargetSelection hitSelection = null;
                 bool hasRandomTargetContext = hit.RandomTargetGroupId > 0;
                 if (chaosInvasionWipe)
                     hitTargets = targets.Where(target => target != null
@@ -860,6 +861,7 @@ namespace Zjcs.Combat.Official
                         Cast = hitCast, Grid = checkpoint.Grid, Random = random
                     });
                     if (selection == null) continue;
+                    hitSelection = selection;
                     plannedHits = selection.Occurrences;
                     hitTargets = selection.Targets;
                     if (presentationCast != null)
@@ -895,7 +897,8 @@ namespace Zjcs.Combat.Official
                     if (!allowDeadSource && actor.Hp <= 0) break;
                     if (target.Hp <= 0 && hit.ActionType != 62 || target.Ended) continue;
                     if (target.IsVoodooDoll && (hit.ActionType == 5 || skill.SkillType == 3)) continue;
-                    float hitDelay = HitDelay(actor, target, hit) + (occurrence == null ? 0f : occurrence.Delay);
+                    float hitDelay = hitSelection == null ? HitDelay(actor, target, hit)
+                        : FightBattleHitTiming.DamageDelay(hit, hitCast, hitSelection, targetIndex);
                     if (hitDelay > lastDelay) lastDelay = hitDelay;
                     hitFinishDelay = Math.Max(hitFinishDelay, hitDelay);
                     movementStartContext.StatusStartTime = Math.Max(0f, hitDelay);

@@ -163,6 +163,15 @@ $scopeNoFlipHit = $officialCatalog.CreateSkill(13300, 0, 0, 1, 1, 0, $null).HitG
 Assert-Combat ($null -ne $scopeNoFlipHit -and $scopeNoFlipHit.ScopeEntries[0].DamageRotationW -eq 0 -and -not $scopeNoFlipHit.ScopeEntries[0].FlipBySourceX -and -not $scopeNoFlipHit.ScopeEntries[0].FlipByTargetY) 'Explicit original zero rotation or disabled scope flips were replaced with defaults'
 $trajectoryHit = $officialCatalog.CreateSkill(13050, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 13051 } | Select-Object -First 1
 Assert-Combat ($trajectoryHit.HitComponentType -eq 'FightHitSummonComponent' -and [Math]::Abs($trajectoryHit.Trajectory.OffsetX + 0.1) -lt 0.0001 -and [Math]::Abs($trajectoryHit.Trajectory.OffsetY - 0.3) -lt 0.0001 -and -not $trajectoryHit.Trajectory.IsUseCenterRotation -and $trajectoryHit.DestroyDelay -eq 0.5) 'Original hit trajectory or destruction timing was dropped'
+$legacyDirectSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$legacyDirectHit = [Zjcs.Combat.Official.FightBattleHitDefinition]@{EntityId=13051;Delay=0.37}
+$legacyDirectSkill.Hits.Add($legacyDirectHit)
+$restoreHitMetadata = $officialCatalog.GetType().GetMethod('RestoreHitScopeTransforms', [Reflection.BindingFlags]'Instance,NonPublic')
+$restoreHitMetadata.Invoke($officialCatalog, @($legacyDirectSkill))
+Assert-Combat ($null -ne $legacyDirectHit.Trajectory -and [Math]::Abs($legacyDirectHit.Trajectory.OffsetX + 0.1) -lt 0.0001 -and $legacyDirectHit.Delay -eq [single]0.37) 'Legacy direct hit lost original trajectory or changed occurrence delay'
+$preservedTrajectory = $legacyDirectHit.Trajectory
+$restoreHitMetadata.Invoke($officialCatalog, @($legacyDirectSkill))
+Assert-Combat ([object]::ReferenceEquals($preservedTrajectory, $legacyDirectHit.Trajectory)) 'Restoring metadata replaced an explicitly supplied trajectory'
 $summonScopeHit = $officialCatalog.CreateSkill(11540, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 11541 } | Select-Object -First 1
 Assert-Combat ($summonScopeHit.ScopeEntries.Count -eq 9 -and $summonScopeHit.Scope.Count -eq 0 -and $summonScopeHit.ScopeEntries[0].Position.X -eq 0 -and $summonScopeHit.ScopeEntries[0].Position.Y -eq 0 -and $summonScopeHit.ScopeEntries[0].Delay -eq 0.5) 'Summon BaseScopes were not reconstructed in original Init order'
 $fixedOrderHit = $officialCatalog.CreateSkill(10780, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 10781 } | Select-Object -First 1

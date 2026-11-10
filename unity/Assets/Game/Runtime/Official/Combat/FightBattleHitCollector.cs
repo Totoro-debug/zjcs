@@ -144,6 +144,7 @@ namespace Zjcs.Combat.Official
                     ActionType = entity.ActionType,
                     Delay = occurrenceDelay,
                     DelayDistFactor = entity.DelayDistFactor,
+                    Trajectory = entity.Trajectory,
                     Anchor = incoming == null ? entity.Anchor : incoming.Anchor,
                     IgnoreAICount = incoming == null ? entity.IgnoreAICount : incoming.IgnoreAICount,
                     TrueDamage = entity.TrueDamage,

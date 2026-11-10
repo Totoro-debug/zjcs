@@ -10,7 +10,7 @@ namespace Zjcs.Combat.Official
         [Serializable]
         public sealed class TargetOccurrence
         {
-            public int TargetId, TargetX, TargetY;
+            public int TargetId, TargetX, TargetY, EffectCenterIndex;
             public bool HasGridPosition;
             public int GridX, GridY;
             public float ScopeDelay;
@@ -26,6 +26,7 @@ namespace Zjcs.Combat.Official
         // never infer either from the settled targets later.
         public List<FightGridPoint> SelectedGridPositions = new List<FightGridPoint>();
         public List<FightGridPoint> EffectCenters = new List<FightGridPoint>();
+        public List<float> EffectDelays = new List<float>();
         public List<TargetOccurrence> Targets = new List<TargetOccurrence>();
 
         public static FightBattleHitSelectionSnapshot Capture(int sequence, FightBattleHitDefinition hit,
@@ -43,12 +44,15 @@ namespace Zjcs.Combat.Official
                 SelectedGridPositions = new List<FightGridPoint>(selection.SelectedGridPositions),
                 EffectCenters = new List<FightGridPoint>(selection.EffectCenters)
             };
+            foreach (var center in selection.EffectCenters)
+                result.EffectDelays.Add(FightBattleHitTiming.EffectDelay(hit, cast, center));
             for (int index = 0; index < selection.Targets.Count; index++)
             {
                 var target = selection.Targets[index];
                 var occurrence = selection.Occurrences == null ? null : selection.Occurrences[index];
                 result.Targets.Add(new TargetOccurrence {
                     TargetId = target.Id, TargetX = target.X, TargetY = target.Y,
+                    EffectCenterIndex = occurrence == null ? 0 : occurrence.EffectCenterIndex,
                     HasGridPosition = occurrence != null && occurrence.HasGridPosition,
                     GridX = occurrence == null ? 0 : occurrence.GridPosition.X,
                     GridY = occurrence == null ? 0 : occurrence.GridPosition.Y,

@@ -1460,6 +1460,9 @@ namespace Zjcs.Combat.Official
         public float DelayDistFactor;
         public int Anchor;
         public bool IgnoreAICount;
+        // Original flight offsets are evaluated against the selected hit entity grid,
+        // independently of the bodies later damaged by its scope.
+        public FightBattleHitTrajectory Trajectory;
         public bool TrueDamage;
         // FightHitBaseComponentInfo: accepts an external damage factor only when enabled.
         public bool UseDamageFactor;
