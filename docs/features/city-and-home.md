@@ -183,6 +183,10 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 ### 家园运行层接入
 
+所选 `884_156692` 的 `PublicBottomBar` 完整原生 prefab（661 个对象、264 个脚本组件）及十类原入口组件已恢复到 `Runtime/Official/HomeHudUI/` 和 `Assets/Official/Home/UI/BottomBar/`，由 `OfflineHomeBottomBar` 在激活前注入服务、字体、语言、声音和资源加载边界。原 `TabType` 数值保持人物 0、家园 1、游记 2、公会 3、大陆 4；原 TabGroup、条件监听、等级／公会／场景事件、显隐引用集合、升级标记、男女图标资源代理和 Animator 覆盖控制器均保留。资源入口为 `Resources/Home/OfficialHomeBottomBarAssetCatalog`；界面红点选择器保留原图名称与节点 ID，完整 1438 个原提示图对象另存为带来源的原始数据。地址资产只供原选择器建立键值，不执行条件；全提示图求值及真实角色主城接线仍未完成，不把这些地址当作已实现的提示图。
+
+`HomeBottomBarNativeValidation.Run` 已在隔离 Unity 2022.3.57f1c2、原 URP 2D 管线中通过模拟指针验证五个原入口、游记／公会锁定提示与条件刷新、Tab 单选及原选中动画片段、男女图标切换、升级标记、两个独立隐藏引用及销毁退订；五个原点击事件均取得播放 ID，验证音量为 0。原底栏控制器保留 Default 状态的退出时间门槛及混合时长，等待实际过渡结束后核对 Hide 状态、Y=-100、透明度 0.7、Group 关闭和完整恢复；五张实际运行截图已查看；完整工程另行通过 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate`，静态元数据检查通过。此验证使用受控状态服务，不证明真实角色条件、全提示图、主城接线或 Windows Player 流程完成。主城当前仍使用旧底栏，后续须整体替换并验证现有页面往返。
+
 所选 `884_156692` 的维修与修复通知窗口已迁移原 `FurnitureRepairDialog`、`FurnitureRepairedNotifyDialog` 和 `FurnitureIconWidget` 方法体，恢复两个完整原生 prefab、原属性行模板及 13 个配置家具图标。入口为 [`HomeHudView.Repair`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Repair.cs)，真实窗口脚本位于 `Runtime/Official/HomeUI/`，本地窗口及服务边界位于 `Runtime/Offline/HomeUI/`；`Resources/Home/OfficialHomeRepairAssetCatalog` 显式绑定资源。家具名称、说明、家具／资源／来访者分类及维修／建造文案来自同版语言与 `HomeSettings`。原 `NeedRecordData` 筛选和表顺序决定通知候选收益，再按本地真实已解锁项过滤；通知沿原 `GetHangUpReward(id, 1.0)` 路径显示截断后的每小时产量。
 
 维修先检查材料，不足时保留窗口并显示原提示；本地维修成功回执先打开原修复通知，再关闭原维修窗口。两窗沿原 `mMaskType=3` 使用同版原生模糊遮罩、材质、排序和点击保护，保留原显示／隐藏／循环动画及按钮／窗口声音事件；教学的 `FurnitureRepairDialog.RepaireBtn` 直接定位原 `RepairBtn` 字段。场景维修特效、全部解锁／剧情分支及教学完整表现仍在本页待实现范围。
