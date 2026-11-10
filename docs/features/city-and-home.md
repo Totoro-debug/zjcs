@@ -183,7 +183,11 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 ### 家园运行层接入
 
-所选 `884_156692` 的 24 张家园／入口相关原始配置已按原 Luban 构造器解码，保留 13 项家具、12 项挂机、11 项产出、3024 项升级材料、595 项等级规则、4496 项条件及原单条装潢配置。载荷为 `Assets/Official/Home/home-rules-current.json`，由 `Resources/Home/OfficialCurrentHomeRuleAssetCatalog` 显式引用；此目录独立于旧 `StreamingAssets/Home` 载荷，旧主城运行层尚未整体切换。
+当前主城在打开家园时，将所选版本 13 项 `FurnitureInfo` 的条件、费用、原始附加维修 ID、剧情名和可升级标志绑定到场景／维修窗口共用规则实例；当前组合条件只在同版 4496 项条件中解析，不借用历史同号记录。`OfflineHomeConditionPlayer` 每次查询最新角色存档：基础等级沿当前小阶的非赐福等级上限读取，职业阶数遍历实际已解锁职业并查询当前 31 项 `profession_base`，伙伴条件复用原始已结识／可结识判断，剧情、地图可达和女神激活读取实际状态。家园独立拥有记录及果树维修状态仅在条件查询中投影为原家具物品数量，避免向真实背包重复写入家具。挂机表和其他功能表尚未随设施切换；场景原生脚本、维修特效和完整教学仍待恢复。
+
+设施接线验证已在隔离完整工程完成当前 13 项记录、床铺锁定／预告／可维修／已拥有四态、物品拥有优先、背包变化、实际职业记录、可结识伙伴、地图可达、女神与基础等级上限检查，以及维修去重和磁盘重开。Play Mode 使用官方维修／通知 prefab、实际本地维修服务及模拟指针，确认按钮提交后打开通知、关闭顺序、弹窗动画、遮罩与重开后的拥有状态；实际运行截图已查看。此验证属于隔离窗口和规则范围，完整家园入口、场景点击／特效、全部家具教学与 Windows Player 尚未完成。
+
+所选 `884_156692` 的 25 张家园／入口相关原始配置已按原 Luban 构造器解码，保留 13 项家具、12 项挂机、11 项产出、3024 项升级材料、595 项等级规则、4496 项条件及原单条装潢配置。载荷为 `Assets/Official/Home/home-rules-current.json`，由 `Resources/Home/OfficialCurrentHomeRuleAssetCatalog` 显式引用；此目录独立于旧 `StreamingAssets/Home` 载荷，旧主城运行层尚未整体切换。
 
 `Runtime/Official/HomeConditions/HomeConditionRules` 迁入原条件方法、枚举、组合遍历和比较／阶位转换，复用同版 `PartnerConditionRules` 的物品、基础等级、地图与伙伴条件。原物品类型条件累加该类型全部数量，数量 0 可以满足；伙伴资格包括已结识及当前可结识的非自动伙伴，并排除探索首领；个人阶位由原 `SubRank.ToRank` 计算。保留原 `AlwaysCondition=false`、组合短路／缺失引用行为，以及原比较器单个 `=` 表示相等、未知运算符（含 `==`）默认 `>=` 的分支。单机开放策略通过独立端口注入，规则求值仍需实际角色端点；未将旧存档布尔值或近似地图进度包装为已迁移的官方条件。
 
@@ -202,7 +206,7 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 当前家园通用 Play Mode 验证仍有三项未通过：功能菜单的好友入口回调、类型 7 的背包入口，以及教学固定奖励 7 的规则安装检查。成长工厂装配和伙伴／副本专项的通过范围不能替代这些家园缺项。
 
 - 配置装载：[`prepare_unity_home_runtime.py`](../../scripts/prepare_unity_home_runtime.py) 把官方场景、UI、规则、奖励、角色图谱与昼夜配置整理为 `unity/Assets/StreamingAssets/Home/` 下的运行载荷，其中 `player-runtime.json` 从固定版 `home-player/player.json` 与 `home-npc/npc.json` 生成主角变换、待机及排序参数；共复制 2228 张被引用贴图。输出 [`source-manifest.json`](../../unity/Assets/StreamingAssets/Home/source-manifest.json) 记录输出哈希及主角变换／排序源文件哈希。`OfficialHomeRules.LoadDefault()` 读取同一载荷，保留家具13行、挂机12行、`furniture_level_rule` 595行、`hang_up_reward` 11行、升级材料、皮肤、功能开放与奖励规则。
-- 旧规则适配：[`OfflineHomeProgression`](../../unity/Assets/Game/Runtime/Offline/Home/OfflineHomeProgression.cs) 已接费用、挂机解锁／升级和收益目录，但仍需按当前原码替换。旧实现把 `AdditionalRepairList` 错当家具类型前置要求，旧 `OfficialHomeRules` 对部分地图条件直接通过、按持有与否判断物品类型数量，并使用保存的伙伴布尔值；这些均不属于当前官方实现。当前条件模块已独立迁入，真实角色接线和旧适配替换仍未完成。幻兽树维修不得顺带维修生产树或绕过其条件，已确认方案见[果树](fruit-tree.md)。
+- 规则适配：[`OfflineHomeProgression`](../../unity/Assets/Game/Runtime/Offline/Home/OfflineHomeProgression.cs) 已接费用、挂机解锁／升级和收益目录；设施记录和条件已通过 `OfflineCurrentHomeFurniture` 绑定所选当前表，`AdditionalRepairList` 保留原物品 ID，已移除错误的家具类型前置检查，也不据此自动维修其他设施。旧 `OfficialHomeRules` 对部分地图条件直接通过、按持有与否判断物品类型数量和保存的伙伴布尔值仍用于尚未切换的旧挂机／功能条件，不能作为这些范围已还原的依据。幻兽树维修不得顺带维修生产树或绕过其条件，已确认方案见[果树](fruit-tree.md)。
 - 存档与事务：[`OfflineHomeIncomeSession`](../../unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs) 新增家具拥有、挂机等级／解锁、装潢选择与发奖序号字段，`Mutate` 以候选存档方式提交并带回执去重；`AcknowledgeInventory` 在奖励真正进入角色背包后清理暂存，`Reconfigure` 在家具维修、挂机升级后重建收益目录。
 - 场景与交互：[`HomeSceneView`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeSceneView.cs) 用官方 384 个 sprite 四边形、sorting 顺序与点击四边形重建家园；家具按 `/X/Repaired` 与 `/X/Unrepair` 切换四态表现；相机使用官方 `orthographic_size`、`border_center/extents` 与 `drag_sensitivity` 计算夹取，`HomeInputController` 采用 `kDraggingSqrOffsetThread = 1` 的 1 像素拖动阈值，指针在 UI 上或模态窗口打开时不触发设施。
 - HUD 与窗口：[`HomeHudView`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs) 由官方 `home`、`top_bar`、`money`、`player_icon`、`bottom_bar`、`functions`、家具、邮件、任务、宠物／宝箱扭蛋与果树面板树生成 UGUI；顶栏绑定角色与货币（1/2/15），人物页可返回，底栏可进入初始岛，功能菜单可折叠；设置入口加载官方 `SettingsDialog` 四页并按角色槽保存帧率、音量和数字显示。主线任务追踪、进度与奖励领取已接本地存档，任务跳转只开放已接入的 Map10 目标，其他目标按实际支持状态关闭或提示。床铺／小推车、邮箱、背包、祈愿、宝箱扭蛋、幻兽扭蛋、果树、料理、星命契约与杂货／宝库／馈赠家园商店已有代码入口；书桌／古遗物收藏和餐桌／伙伴交流仍未接，飞艇交易按离线策略拦截。

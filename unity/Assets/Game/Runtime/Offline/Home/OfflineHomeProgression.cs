@@ -44,7 +44,7 @@ namespace Zjcs.Offline.Home
             HomeConditionContext context)
         {
             if (session == null) throw new ArgumentNullException(nameof(session));
-            if (session.OwnsFurniture(type)) return HomeFurnitureState.Functional;
+            if (rules.HasFurniture(type, session.OwnsFurniture(type))) return HomeFurnitureState.Functional;
             HomeFurnitureRecord record = rules.FurnitureOf(type);
             if (record == null) return HomeFurnitureState.Locked;
             if (rules.IsMet(record.unlock, context)) return HomeFurnitureState.CanRepair;
@@ -75,13 +75,6 @@ namespace Zjcs.Offline.Home
                         save.Furniture.Add(entry);
                     }
                     entry.Owned = true;
-                    if (record.additionalRepair != null)
-                        foreach (int dependency in record.additionalRepair)
-                        {
-                            OfflineHomeFurnitureEntry required = save.Furniture.FirstOrDefault(value => value.Type == dependency);
-                            if (required == null || !required.Owned)
-                                throw new InvalidOperationException("A prerequisite furniture is not repaired.");
-                        }
                 }))
             {
                 if (costs.Length > 0) refund?.Invoke(costs);

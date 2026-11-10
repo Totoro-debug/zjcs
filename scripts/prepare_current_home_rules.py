@@ -17,7 +17,7 @@ TABLES = (
     'furniture_level_rule', 'reward_rule', 'item', 'furniture_skin',
     'home_theme_skin', 'home_environment_skin', 'home_random_reward_type',
     'home_random_reward_group', 'home_random_reward_slot', 'home_decoration',
-    'home_skin_weather_override_prefab',
+    'home_skin_weather_override_prefab', 'profession_base',
 )
 
 

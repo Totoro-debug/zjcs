@@ -12,6 +12,7 @@ using UnityEngine.UI;
 using Zjcs.Offline.CharacterCreation;
 using Zjcs.Offline.Equipment;
 using Zjcs.Offline.Home;
+using Zjcs.Offline.HomeUI;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.ProfessionUI;
 using Zjcs.Offline.State;
@@ -672,6 +673,11 @@ namespace Zjcs.Presentation.Home
                 Debug.LogWarning("Home pet gacha unavailable: " + error.Message);
             }
             rules = OfficialHomeRules.LoadDefault();
+            partnerCatalog = OfficialPartnerAssetCatalog.LoadDefault();
+            var selectedHomeRules = OfficialCurrentHomeRuleAssetCatalog.LoadDefault();
+            var furniturePlayer = new OfflineHomeConditionPlayer(selectedHomeRules,
+                () => profile.Save, type => session != null && session.OwnsFurniture(type));
+            new OfflineCurrentHomeFurniture(selectedHomeRules, partnerCatalog.Conditions, () => furniturePlayer).Bind(rules);
             tutorials = HomeTutorialCatalog.LoadDefault();
             homeProgression = new OfflineHomeProgression(rules);
             BlessingLevel = 1;
@@ -704,7 +710,6 @@ namespace Zjcs.Presentation.Home
                 new OfflineProfessionImageResourceLoader(partnerRosterAssets.Images), hud);
             partnerDetailAssets = OfficialPartnerDetailPropertyAssetCatalog.LoadDefault();
             var friendshipAssets = OfficialPartnerFriendshipAssetCatalog.LoadDefault();
-            partnerCatalog = OfficialPartnerAssetCatalog.LoadDefault();
             partnerConversationOpenRefresher = new OfflinePartnerConversationOpenRefresher(profile,
                 progression.Catalog, partnerCatalog, () => DateTime.UtcNow,
                 () => rules.IsFunctionLimited(57), 8);
@@ -920,6 +925,7 @@ namespace Zjcs.Presentation.Home
             session = OfflineHomeIncomeSession.Open(slots, slotId, new[] { PlaceholderDefinition() },
                 properties, FloatPropertyIds(), Array.Empty<OfflineHomeRandomRewardDefinition>(), Now(), restored =>
                 {
+                    session = restored;
                     OfflineHomeIncomeDefinition[] definitions = homeProgression.BuildIncomeDefinitions(
                         restored, context, BlessingLevel);
                     OfflineHomeRandomRewardDefinition[] rewards = homeProgression.BuildRandomRewardDefinitions(restored, context);
@@ -1003,10 +1009,8 @@ namespace Zjcs.Presentation.Home
 
         private HomeFurnitureState FurnitureState(int type)
         {
-            if (type == OfflineFruitTreeService.ProductionFurnitureType
-                && profile.Save.Player.FruitTree.ProductionRepaired) return HomeFurnitureState.Functional;
-            if (type == OfflineFruitTreeService.PetFurnitureType
-                && profile.Save.Player.FruitTree.PetFacilityRepaired) return HomeFurnitureState.Functional;
+            if (rules.HasFurniture(type, session != null && session.OwnsFurniture(type)))
+                return HomeFurnitureState.Functional;
             if (type != OfflineFruitTreeService.ProductionFurnitureType
                 && type != OfflineFruitTreeService.PetFurnitureType)
                 return homeProgression.FurnitureState(session, type, context);
@@ -1032,8 +1036,8 @@ namespace Zjcs.Presentation.Home
         public bool CanRepairFurnitureForTutorial(int type)
         {
             HomeFurnitureRecord record = rules?.FurnitureOf(type);
-            return record != null && session != null && !session.OwnsFurniture(type)
-                && rules.IsMet(record.unlock, context)
+            return record != null && session != null
+                && homeProgression.FurnitureState(session, type, context) == HomeFurnitureState.CanRepair
                 && (record.repairCost ?? Array.Empty<HomeCostEntry>())
                     .Where(cost => cost != null && cost.itemId > 0 && cost.count > 0)
                     .All(cost => profile.InventoryCount(cost.itemId) >= cost.count);
@@ -1414,6 +1418,8 @@ namespace Zjcs.Presentation.Home
 
         public bool TryRepair(int type)
         {
+            profile.Reload();
+            ReloadContext();
             string receipt = "home:repair:" + slotId + ":" + type;
             bool repaired;
             if (type == OfflineFruitTreeService.ProductionFurnitureType

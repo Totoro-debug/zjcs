@@ -1,0 +1,55 @@
+{
+  "manifest": "884_156692",
+  "source_sha256": {
+    ".tools/source-packages/current/884_156692/official-code/client-source/FurnitureBase.cs": "28b94fc87181e1110953b8960ee52f06a693227e6af24212f85f01768381e85a",
+    ".tools/source-packages/current/884_156692/official-code/client-source/HomeMyPlayerData.cs": "c4c4254423c4c3f0ed008a06ecc3cf5489b5bb045b67f809c25dc7fe98343794",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerHangUpFurnitureExt.cs": "b9e05246f6934093f32b3cb433bf564a4364353d392893493fde4d17113190b3",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerProfessionDataEx.cs": "24a5eb7ac4ef3872ad1acc4528cb220375691e6fa91f48597d405d8a9baf3547",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/SystemLevelLimitInfoParser.cs": "cf54b913ea1b37a9de4496c191be1cd080c1bb7dfa88b02b05e6de8172d89f1c"
+  },
+  "methods": {
+    ".tools/source-packages/current/884_156692/official-code/client-source/FurnitureBase.cs": {
+      "public virtual EFurnitureState GetState()": "a5782e9168b000e372736df565f675e02929513beec15d49352b453abfdc7731"
+    },
+    ".tools/source-packages/current/884_156692/official-code/client-source/HomeMyPlayerData.cs": {
+      "public bool HasFurniture(EFurniture furniture)": "94b6829e12b9c6f84a27c6e44f08001a9199a4819416f531ceafe212a3a0f5db",
+      "public bool IsMetFurnitureRepairCondition(FurnitureInfo furnitureInfo)": "1576ac9ef8c042e13ea4db6759b0759800f6e638a1baa28f4aaedd2f69981c4f",
+      "public bool IsMetFurnitureNoticeCondition(FurnitureInfo furnitureInfo)": "066250df6d39be346feaf669094395ce848607f3f428e7d469915d3862824a06"
+    },
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerHangUpFurnitureExt.cs": {
+      "public static bool HasFurniture(this Player player, EFurniture furniture)": "37e768c71bc4daf66b710c5a838666f08dcdfb3e0bc6cb2ef8bb6c6aa89055d0"
+    },
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerProfessionDataEx.cs": {
+      "public static int GetHighestUnlockedProfessionRank(this Player player)": "fe4cc7fc07a40b23ef9bbfb23101aea2e3a6bca47efb92e083b4aada01cdc9ff"
+    },
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/SystemLevelLimitInfoParser.cs": {
+      "private void SetPlayerMaxLevelLimit(SystemLevelLimitInfo info)": "3ae14e8078f1224bf82b77731dedf5dedef98b6b1fde306a8fd6c084a5342290",
+      "public int GetPlayerBaseLevelLimit(SubRank subRank)": "ae9955890e5ca490b1510e9ada5614d8ea7e1dea440114cc5c8857d1e4c7026b"
+    }
+  },
+  "configuration": "home-rules-current-source-manifest.json",
+  "conditions": "home-condition-source-manifest.json",
+  "installed_outputs": {
+    "unity/Assets/Game/Runtime/Offline/Home/OfficialHomeRules.cs": "22e6fc0f08c11046be33d809e2b414f5aaee38e67dd56c155d708e428bac19cd",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeProgression.cs": "65a5fbfcb1da7cfe3b4502593afba0f62fabc443e4d8afbb91b1959ce254a0e8",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineCurrentHomeFurniture.cs": "36c447bd85c0c0f0d288d27c329fd63a98736fe47be4c3efed1f96b87476ee36",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineCurrentHomeFurniture.cs.meta": "1e42b1c9d0a06456118f78fff69d78006fd0bf15aa2ea440fddd6d8e9d47ad3c",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef": "2339525e73c533a703824512578c53039e981a67f46ed902551a74c617c44ea7",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "3cd3921bc70aef0dcad1443e6f853e77e10020834a6ac5d1d3d8f57f6c372543",
+    "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef": "36c7d718725544f934227e83a2db36a2a777c97b9f3065e8a88338273f6bd2a0"
+  },
+  "validation_sha256": {
+    "scripts/prepare_home_furniture_validation.py": "153c9dab53ae162ad5cc4d8e26cd67856dd236a677f13b0c5f304ee145a8015e",
+    "scripts/fixtures/home_furniture_validation.cs": "a0cb2df00e93ff8e4119c44066adec88e70a348e6b45a5d5bacb719ccb5585f5",
+    "scripts/fixtures/home_furniture_native_state.cs": "311a9c61d82020a871f2c213f2f76f3cf938fec0483e13cd1f43ad1174173308",
+    "scripts/fixtures/home_repair_native_validation.cs": "e8352ee943e331efd07451c87244c2c55f56e24513db7664ca0e61cf1dedced2"
+  },
+  "adaptations": [
+    "Selected FurnitureInfo fields project to the existing scene/window records; condition object identity routes only these roots through the selected original parser. Historical hang-up and feature tables retain their separate version.",
+    "Original ownership-first FurnitureBase.GetState and HomeMyPlayerData repair/notice condition semantics retained. Current furniture item ownership projects the separate local home and fruit-tree ledgers without duplicate inventory writes.",
+    "Original highest-unlocked-profession traversal reads current profession_base ranks for actual saved unlocked profession entries, ignoring the cached rank summary.",
+    "Local BaseLevel projection excludes blessing levels using the current system_level_limit non-blessing maximum at the saved subrank; unranked creation profiles retain their saved level.",
+    "AdditionalRepairList retains original item IDs and adds neither a prerequisite nor an automatic repair; confirmed fruit-tree decisions remain in the owning feature page."
+  ],
+  "scope": "Current facility condition/ownership binding and local repair transaction only. Native scene lifecycle, furniture repair effects, complete HUD/tutorials and selected-version hang-up migration remain unfinished."
+}

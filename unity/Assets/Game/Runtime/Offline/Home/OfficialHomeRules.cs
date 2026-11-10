@@ -299,6 +299,39 @@ namespace Zjcs.Offline.Home
         private readonly Dictionary<int, List<HomeRewardRuleRecord>> rewardRules = new Dictionary<int, List<HomeRewardRuleRecord>>();
         private readonly Dictionary<int, List<HomeHangUpUpgradeRecord>> upgrades = new Dictionary<int, List<HomeHangUpUpgradeRecord>>();
         private readonly List<HomeFunctionLimitRecord> functionLimits = new List<HomeFunctionLimitRecord>();
+        private HashSet<HomeConditionNode> selectedFurnitureConditions;
+        private Func<HomeConditionNode, bool> evaluateFurnitureCondition;
+        private Func<int, bool> hasSelectedFurniture;
+
+        public string FurnitureVersion { get; private set; }
+
+        // A migration boundary for the selected furniture table. Its composite
+        // IDs must be evaluated by that version's condition parser, never by the
+        // historical condition table retained for the other home systems.
+        public void BindFurniture(string version, HomeFurnitureRecord[] records,
+            Func<HomeConditionNode, bool> evaluate, Func<int, bool> hasFurniture)
+        {
+            if (string.IsNullOrEmpty(version)) throw new ArgumentException("A furniture version is required.", nameof(version));
+            if (records == null || records.Length == 0) throw new ArgumentException("Furniture records are required.", nameof(records));
+            if (evaluate == null) throw new ArgumentNullException(nameof(evaluate));
+            if (hasFurniture == null) throw new ArgumentNullException(nameof(hasFurniture));
+            var classes = records.ToDictionary(value => value.classId);
+            var types = records.ToDictionary(value => value.type);
+            var nodes = new HashSet<HomeConditionNode>(records.SelectMany(value =>
+                new[] { value.unlock, value.repairNotice, value.autoRepair }).Where(value => value != null));
+            byClassId.Clear();
+            byType.Clear();
+            foreach (var entry in classes) byClassId.Add(entry.Key, entry.Value);
+            foreach (var entry in types) byType.Add(entry.Key, entry.Value);
+            Data.furniture = records;
+            FurnitureVersion = version;
+            selectedFurnitureConditions = nodes;
+            evaluateFurnitureCondition = evaluate;
+            hasSelectedFurniture = hasFurniture;
+        }
+
+        public bool HasFurniture(int type, bool savedOwnership) => hasSelectedFurniture != null
+            ? hasSelectedFurniture(type) : savedOwnership;
 
         public HomeRulesData Data { get; }
         public HomeRewardTypesData Rewards { get; }
@@ -494,6 +527,8 @@ namespace Zjcs.Offline.Home
         public bool IsMet(HomeConditionNode node, HomeConditionContext context)
         {
             if (node == null) return true;
+            if (selectedFurnitureConditions != null && selectedFurnitureConditions.Contains(node))
+                return evaluateFurnitureCondition(node);
             context = context ?? new HomeConditionContext();
             switch (node._type)
             {

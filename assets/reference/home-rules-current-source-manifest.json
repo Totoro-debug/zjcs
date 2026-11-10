@@ -480,6 +480,26 @@
       "constructor": "TbHomeSkinWeatherOverridePrefabInfo",
       "kind": "list",
       "rows": 48
+    },
+    "profession_base": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "-5402877092816210485",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      },
+      "object_sha256": "cfc3d6c48867d9e6b69e22516a7df3e74cba6d2b3416863156f1f906bf9b4c1f",
+      "payload_sha256": "92eba63835e3300821811c21bb9fc5cbdeb36699e12bbeb9f0c0e1dab79170a5",
+      "bytes": 8545,
+      "constructor": "TbProfessionBaseInfo",
+      "kind": "list",
+      "rows": 31
     }
   },
   "source_sha256": {
@@ -636,16 +656,19 @@
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/HomeDecorationInfo.cs": "15a45af5c0eb13e24fbbf06fbd7dfd6df4304181698a52d972e29b0e08c74965",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbHomeSkinWeatherOverridePrefabInfo.cs": "fde748aaf21ee66eab13d22789a5c9dcc99493168d390c1cf121ba68a6663fdd",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/HomeSkinWeatherOverridePrefabInfo.cs": "d5c28f001a05e74751035469f497a493ece39103bac3f7194e29b94c6e7032ba",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbProfessionBaseInfo.cs": "38276d28eb58824e4a00eaaddd1ac4a42c7d7a263ea13adce9882b6c7b24c5b6",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ProfessionBaseInfo.cs": "8e157ce33784b5e550847106566581ab83d3d5b6b4635efa6bd7938f541490f2",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ProfessionPromotePrerequisitesCondition.cs": "7b4e5c2a3572d1c0d97d2132dd5c780ef251e7785dadb0252ec36bbc2a0e30bb",
     ".tools/source-packages/current/884_156692/official-code/global-metadata.dat": "c0fe5e062fb3ed1814781e54fd1b4859757970632655138adc091820ded88e0e",
     "scripts/official_tables.py": "77762a9b2aba2d92a6ad3ebd8ce5f7d0bb42a6b4cfc872ae7094c1d10b1e0473",
     "scripts/official_metadata.py": "4e8066a7300d2512ca6807d7bbbe7798c48fb4178aeaeb33fc8478140f722657",
     "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb"
   },
-  "generator_sha256": "d62c71ce4cde7a992ba11dd6be1a1a1076296be88881a6dff55f8e81f0fb82d9",
+  "generator_sha256": "f20a290d39cf147b8c19efaab8d47bc6f3c66bc6918f0f3e3af93b51549ee4d1",
   "output": {
     "path": "unity/Assets/Official/Home/home-rules-current.json",
-    "sha256": "1d4ccbea525ef6b2b37e0cf4e4874f70410dc399899780da0a0332a909282d27",
-    "bytes": 19333469
+    "sha256": "c16b24c4c5324ae9e98158f9b55b66985296c81cfbc471333827d2bd50830821",
+    "bytes": 19361969
   },
   "validation": {
     "conditions": 4496,
@@ -653,14 +676,14 @@
   },
   "scope": "Selected raw configuration only; runtime migration and validation remain required.",
   "installed_outputs": {
-    "unity/Assets/Official/Home/home-rules-current.json": "1d4ccbea525ef6b2b37e0cf4e4874f70410dc399899780da0a0332a909282d27",
+    "unity/Assets/Official/Home/home-rules-current.json": "c16b24c4c5324ae9e98158f9b55b66985296c81cfbc471333827d2bd50830821",
     "unity/Assets/Official/Home/home-rules-current.json.meta": "c3271345d0156aecf93edbf9a525f2653ad4e3e5ff4a3954729f0d767f21dfd9",
     "unity/Assets/Game/Resources/Home/OfficialCurrentHomeRuleAssetCatalog.asset": "a664f27b499231149e2acf40a92434d104954f2939ef52d4aaf210265b64918e",
     "unity/Assets/Game/Resources/Home/OfficialCurrentHomeRuleAssetCatalog.asset.meta": "1991d6e165b8d6c163f13199739e2b81302417343a81b6a9ee2145722dd26962"
   },
   "bindings_sha256": {
     "unity/Assets/Game/Runtime/Offline/HomeUI/OfficialCurrentHomeRuleAssetCatalog.cs": "a60ae16c8926c48c9a7e97c0c783b1f01cc9ed70e4b6451fbd903ca3147fc096",
-    "unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef": "af3094a8d0114407c9a9e959b4542794a62fdfc4e189842470bc1ba808bcbabb"
+    "unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef": "2339525e73c533a703824512578c53039e981a67f46ed902551a74c617c44ea7"
   },
   "validation_sha256": {
     "scripts/fixtures/home_condition_validation.cs": "e83a92fa0055265be6620013132da58312465d2abacc1ddbc730e0d45a372894",
