@@ -13,6 +13,7 @@ using Zjcs.Combat.Official;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.ProfessionUI;
 using Zjcs.Official.BattleSkillPlayables;
+using Zjcs.Official.StoryPlayables;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Presentation.Combat;
 using Zjcs.Presentation.Character;
@@ -321,6 +322,15 @@ namespace Zjcs.Editor
                 yield return null;
                 controller.SetPaused(false);
                 var nativeSkills = new HashSet<int>();
+                var castIdentities = new HashSet<EcEntityIdentifier>();
+                var nativeHitIdentities = new HashSet<EcEntityIdentifier>();
+                var castReceipt = movementResult.Event.SkillCasts.Single(c => c.ActorId == actor.Id
+                    && c.SkillEntityId == skillEntityId);
+                var fixedClasses = new HashSet<int>(skill.HitGraphEntities.Where(h =>
+                    h.HitComponentType == "FightHitFixedComponent").Select(h => h.EntityId));
+                var fixedReceipts = castReceipt.HitSelections.Where(h => fixedClasses.Contains(h.HitEntityId)).ToArray();
+                int expectedNativeHits = fixedReceipts.Sum(h => h.EffectCenters.Count);
+                Require(expectedNativeHits > 0, "The original controlled skill has no fixed hit receipts.");
                 int nativeFrames = 0;
                 var slotBinding = OfficialBattleSkillSlotBindings.Load().slots[0];
                 for (int i = 0; i < 600 && controller.IsPresentingStep; i++)
@@ -331,6 +341,7 @@ namespace Zjcs.Editor
                             Require((entity.position - mapper.GridToWorld(new FightGridPoint(actor.X, actor.Y))).sqrMagnitude < 1e-7f,
                                 "The native skill started before the actor reached the settled grid.");
                             nativeSkills.Add(native.GetInstanceID());
+                            castIdentities.Add(native.myEntity.Id);
                             string[] selected = slotBinding.states.First(s => s.state == (monsterActs ? 0 : 2)).objects;
                             foreach (string path in slotBinding.states.SelectMany(s => s.objects).Distinct())
                             {
@@ -340,11 +351,26 @@ namespace Zjcs.Editor
                             }
                             if (++nativeFrames == 4) capture(prefix + "-skill");
                         }
+                    foreach (var hit in world.GetComponentsInChildren<MyFightHitFixed>())
+                    {
+                        if (!fixedClasses.Contains(hit.myEntity.Entity.ClassId)) continue;
+                        Require(castIdentities.Contains(hit.Component.SkillId),
+                            "A fixed hit is not associated with its actual native cast identity.");
+                        var cell = hit.Component.GridTransform.Pos;
+                        Require(fixedReceipts.Any(h => h.HitEntityId == hit.myEntity.Entity.ClassId
+                            && h.EffectCenters.Any(p => p.X == cell.X && p.Y == cell.Y)),
+                            "A native fixed hit moved away from its settled effect centre.");
+                        if (nativeHitIdentities.Add(hit.myEntity.Id) && nativeHitIdentities.Count == 1)
+                            capture(prefix + "-hit");
+                    }
                     yield return null;
                 }
                 Require(!controller.IsPresentingStep, "Movement step presentation did not complete.");
                 Require(nativeSkills.Count == 1 && nativeFrames >= 4,
                     "The approach step did not play exactly one original skill entity with its HUD state.");
+                Require(nativeHitIdentities.Count == expectedNativeHits,
+                    "The public battle did not create every settled fixed hit exactly once: "
+                    + nativeHitIdentities.Count + "/" + expectedNativeHits);
                 var settledSlot = actor.SkillState.Slots.Single(s => s.Slot == 0);
                 Require(settledSlot.Cooldown == cooldown && settledSlot.ReleasedTimes == 1,
                     "The settled original cooldown or release count differs.");
@@ -364,7 +390,8 @@ namespace Zjcs.Editor
                 yield return null;
                 Debug.Log("Public " + (monsterActs ? "monster" : "movement")
                     + " battle passed: original HUD pointer start, executor approach, native model, pause, final grid, one original skill entity, "
-                    + damages.Length + " settled hits, cooldown " + cooldown + " and main-player skill slot state.");
+                    + damages.Length + " settled hits, " + nativeHitIdentities.Count
+                    + " original fixed hit entities, cooldown " + cooldown + " and main-player skill slot state.");
             }
             finally
             {

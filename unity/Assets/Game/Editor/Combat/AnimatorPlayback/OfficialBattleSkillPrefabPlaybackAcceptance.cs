@@ -214,6 +214,57 @@ namespace Zjcs.Editor.Combat
                 }
             }
 
+            // Exercise the production receipt path, including creation exactly
+            // when the owning skill expires. The hit keeps the captured cell.
+            var receiptSkill = catalog.CreateSkill(12030, -1, 0, 1, 1, 1, null);
+            var receiptHit = FightBattleHitCollector.CollectAll(receiptSkill).Single();
+            receiptHit.Delay = .125f;
+            actor.Statuses.Add(new FightBattleStatusState { InstanceId = 200, ClassId = 24166,
+                StackCount = 2, SharedStackId = 24029, SharedStackLimit = 10 });
+            FightBattleSkillCastEvent ReceiptCast(bool legacy, params FightGridPoint[] centers)
+            {
+                var presentation = FightBattleSkillCastPresentation.Capture(actor, receiptSkill,
+                    new List<FightBattleUnitState> { victim });
+                presentation.Duration = .125f;
+                var selection = new FightBattleHitSelectionSnapshot { Sequence = 1,
+                    HitEntityId = receiptHit.EntityId, Delay = receiptHit.Delay,
+                    SourceX = actor.X, SourceY = actor.Y, FacingIndex = presentation.FacingIndex,
+                    FlipX = presentation.FlipX, EffectCenters = centers.ToList() };
+                if (!legacy)
+                {
+                    var flight = FightBattleHitTiming.ResolveOverride(catalog, receiptSkill, actor, presentation, receiptHit);
+                    selection.HasDelayOverride = flight != null;
+                    selection.DelayOverrideIndex = flight == null ? 0 : flight.OverrideIndex;
+                    foreach (var center in centers)
+                        selection.EffectDelays.Add(FightBattleHitTiming.EffectDelay(receiptHit, presentation, center, flight));
+                }
+                return new FightBattleSkillCastEvent { ActorId = actor.Id, Slot = -1, SkillEntityId = receiptSkill.EntityId,
+                    Presentation = presentation, HitSelections = new List<FightBattleHitSelectionSnapshot> { selection } };
+            }
+            int ActiveFixedHits() => root.GetComponentsInChildren<MyFightHitFixed>().Count();
+            var receiptCast = ReceiptCast(false, new FightGridPoint(6, 5));
+            var receiptIdentity = views.Start(receiptCast, source, target);
+            Require(ActiveFixedHits() == 0, "Receipt hit appeared before its configured creation delay.");
+            actor.Statuses.Clear(); victim.X = 11; victim.Y = 9;
+            views.Tick(.0625f);
+            Require(ActiveFixedHits() == 0, "Receipt hit appeared before the final creation boundary.");
+            views.Tick(.0625f);
+            var receiptView = root.GetComponentsInChildren<MyFightHitFixed>().Single();
+            Require(views.GetEntity(receiptIdentity) == null && receiptView.DelayOverrideInfoIndex == 1
+                && receiptView.GetComponent<MyGridTransform>().Pos.Equals(new Pos2d(6, 5)),
+                "Receipt hit lost its actual cast, frozen stack or captured body cell at the removal boundary.");
+            yield return new WaitForSeconds(.06f);
+            Capture("skill-hit-production-receipt.png");
+            yield return new WaitForSeconds(.4f);
+            Require(ActiveFixedHits() == 0, "Receipt hit did not remove after flight, scopes and original DestroyDelay.");
+            victim.X = 6; victim.Y = 5;
+            var legacyCast = ReceiptCast(true, new FightGridPoint(6, 5), new FightGridPoint(7, 5));
+            views.Start(legacyCast, source, target);
+            views.Tick(.125f);
+            Require(ActiveFixedHits() == 2, "Legacy receipt did not create independent hit identities for its two centres.");
+            yield return new WaitForSeconds(.6f);
+            Require(ActiveFixedHits() == 0, "Legacy receipt flight fallback retained an original hit entity.");
+
             int before = played.Count;
             var special = StartCast(54383, 1.5f);
             var driver = special.GetComponentInChildren<ECViewDriver>();
