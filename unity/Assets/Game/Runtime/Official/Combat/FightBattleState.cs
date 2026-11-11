@@ -250,6 +250,8 @@ namespace Zjcs.Combat.Official
         public bool UseTargetPositionWithSelection;
         // Capture at trigger time; later stacking must not change an already collected cast.
         public double DamageFactor = 1.0;
+        public bool HasCustomCure;
+        public long CustomCure;
         // Runtime-only hit creation snapshot; ordinary status invocations use
         // their existing live unit position references.
         internal FightGridPoint? HitOrigin;
@@ -310,6 +312,8 @@ namespace Zjcs.Combat.Official
         public long LifeReductionIdentity;
         public FightBattleStatusLifeReductionState LifeReduction;
         public FightBattleStatusHitScopeState HitScope;
+        public FightBattleStatusDarkHitState DarkHit;
+        public FightBattleStatusHitCustomCureState HitCustomCure;
         public FightBattleStatusCureReduceState CureReduce;
         public FightBattleStatusHitSkillComponentState HitSkill;
         public FightBattleStatusDamageSkillComponentState DamageSkill;
@@ -331,6 +335,8 @@ namespace Zjcs.Combat.Official
                 LifeReductionIdentity = LifeReductionIdentity,
                 LifeReduction = LifeReduction?.Copy(),
                 HitScope = HitScope?.Copy(),
+                DarkHit = DarkHit?.Copy(),
+                HitCustomCure = HitCustomCure?.Copy(),
                 CureReduce = CureReduce?.Copy(),
                 HitSkill = HitSkill?.Copy(),
                 DamageSkill = DamageSkill?.Copy(),

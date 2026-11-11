@@ -88,6 +88,8 @@ namespace Zjcs.Combat.Official
                             statusCatalog.RestoreCureReduceDefinition(status);
                             statusCatalog.RestoreLifeReductionDefinition(unit, status, initialize);
                             statusCatalog.RestoreHitScopeStatusDefinition(status);
+                            statusCatalog.RestoreDarkHitDefinition(status);
+                            statusCatalog.RestoreHitCustomCureDefinition(status);
                             statusCatalog.RestoreSkillEndDefinition(status);
                             RestoreRevivalDefinition(status);
                             RestoreHitSummonDefinition(status);
@@ -2008,6 +2010,8 @@ namespace Zjcs.Combat.Official
                     continue;
                 }
                 skill.StatusOrigin = invocation.Trigger.Origin?.Copy();
+                skill.HasCustomCure = invocation.HasCustomCure;
+                skill.CustomCure = invocation.CustomCure;
                 if (invocation.HitOrigin.HasValue)
                     targetPosition = targetPosition.ProbeAt(invocation.HitOrigin.Value);
                 if (invocation.SourceRootSkillId > 0) skill.RootEntityId = invocation.SourceRootSkillId;

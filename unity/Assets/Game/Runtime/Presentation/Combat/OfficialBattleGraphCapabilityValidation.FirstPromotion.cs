@@ -247,6 +247,29 @@ namespace Zjcs.Presentation.Combat
                     foreach (var unit in new[] { player, ally })
                         unit.Statuses.Add(catalog.CreateStatus(statusId, unit.Id, enemy.Id, 990000 + statusId * 10 + unit.Id));
             }
+            string absorptionProbe = Environment.GetEnvironmentVariable("ZJCS_STATUS_HIT_CUSTOM_CURE_ACCEPTANCE");
+            if (!string.IsNullOrEmpty(absorptionProbe))
+            {
+                Require(itemId == 10029 && entityId == 10810, "The absorption diagnostic uses original 10029/10810.");
+                Require(new[] { "normal", "blocked", "shield" }.Contains(absorptionProbe), "Unknown absorption diagnostic combination.");
+                player.Hp = player.Turn.Hp = player.MaxHp / 2;
+                player.Statuses.Add(catalog.CreateStatus(25023, player.Id, player.Id, 900004,
+                    0, 10544, 2, 20, player.SubRank));
+                if (absorptionProbe != "normal")
+                    player.Statuses.Add(catalog.CreateStatus(absorptionProbe == "blocked" ? 24223 : 25136,
+                        player.Id, player.Id, 900005, 0, 0, 2, 20, player.SubRank));
+            }
+            if (Environment.GetEnvironmentVariable("ZJCS_STATUS_DARK_HIT_ACCEPTANCE") == "1")
+            {
+                Require(itemId == 10029 && entityId == 10810, "The dark-hit diagnostic uses original 10029/10810.");
+                var passive = catalog.CreateStatus(25031, player.Id, player.Id, 900003,
+                    0, 10565, 2, 20, player.SubRank);
+                // Isolate event routing; the original affected 40% probability is
+                // independently checked against the original formula and random stream.
+                passive.Components.DarkHit.Statuses[0].BasePercent = 1f;
+                passive.Components.DarkHit.Statuses[0].AffectedByProp = false;
+                player.Statuses.Add(passive);
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_STATUS_HIT_SCOPE_ACCEPTANCE") == "1")
             {
                 Require(itemId == 10072, "The fire-scope diagnostic uses original 10072/11690.");
@@ -320,6 +343,39 @@ namespace Zjcs.Presentation.Combat
                     .Components.HitScope.TriggeredCount == hits,
                     "Fire-scope trigger count was lost in the Unity checkpoint.");
                 Debug.Log("[Fire-hit scope] Original 11690 -> 25045 -> 11580 -> 3320/11582, per-hit routing and checkpoint passed; isolated rate=1.");
+            }
+            string absorptionProbe = Environment.GetEnvironmentVariable("ZJCS_STATUS_HIT_CUSTOM_CURE_ACCEPTANCE");
+            if (!string.IsNullOrEmpty(absorptionProbe))
+            {
+                int hits = step.DamageEvents.Count(hit => hit.SourceId == player.Id && hit.SkillEntityId == 10810
+                    && !hit.Dodge && !hit.Immunity && !hit.Blinding);
+                var cures = step.DamageEvents.Where(hit => hit.SourceId == player.Id && hit.SkillEntityId == 10520 && hit.IsCure).ToArray();
+                var component = player.Statuses.Single(status => status.ClassId == 25023).Components.HitCustomCure;
+                Require(hits > 0 && component.Filter.InvokeCount == hits && cures.Length == hits
+                    && cures.All(hit => hit.TargetId == player.Id), "Original per-hit absorption did not dispatch self-cure.");
+                Require(absorptionProbe == "normal" ? cures.Sum(hit => hit.AfterHp - hit.BeforeHp) > 0
+                    : cures.All(hit => hit.AfterHp == hit.BeforeHp), "Absorption healing or interception differs.");
+                if (absorptionProbe == "shield")
+                    Require(player.Statuses.Any(status => status.ClassId == 24435 && status.ShieldRemainValue > 0),
+                        "Original absorption healing was not converted to its configured shield.");
+                var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+                Require(saved.Units.Single(unit => unit.Id == player.Id).Statuses.Single(status => status.ClassId == 25023)
+                    .Components.HitCustomCure.Filter.InvokeCount == hits, "Absorption counter was lost in the Unity checkpoint.");
+                Debug.Log("[Hit custom cure] Original 10810 -> 25023 -> 10520, " + absorptionProbe + ", checkpoint and self-cure passed.");
+            }
+            if (Environment.GetEnvironmentVariable("ZJCS_STATUS_DARK_HIT_ACCEPTANCE") == "1")
+            {
+                int hits = step.DamageEvents.Count(hit => hit.SourceId == player.Id && hit.SkillEntityId == 10810
+                    && !hit.Dodge && !hit.Immunity && !hit.Blinding);
+                var component = player.Statuses.Single(status => status.ClassId == 25031).Components.DarkHit;
+                Require(hits > 0 && component.TriggerCount == hits
+                    && checkpoint.Units.Any(unit => unit.Side != player.Side && unit.Statuses.Any(status => status.ClassId == 24222
+                        && status.ApplyingSkillItemId == 10565 && status.CreatorId == player.Id)),
+                    "Original dark hit did not apply the original passive status with its source.");
+                var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+                Require(saved.Units.Single(unit => unit.Id == player.Id).Statuses.Single(status => status.ClassId == 25031)
+                    .Components.DarkHit.TriggerCount == hits, "Dark-hit counter was lost in the Unity checkpoint.");
+                Debug.Log("[Dark hit] Original 10810 -> 25031 -> 24222, passive source and checkpoint passed; isolated chance=1.");
             }
             if (Environment.GetEnvironmentVariable("ZJCS_STATUS_LIFE_REDUCTION_ACCEPTANCE") == "1")
             {

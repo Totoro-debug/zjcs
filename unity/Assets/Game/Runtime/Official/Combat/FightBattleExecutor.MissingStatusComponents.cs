@@ -47,6 +47,9 @@ namespace Zjcs.Combat.Official
                 return;
             FightStatusHitScope.Collect(actor, target, skill, resolved,
                 movementStartContext?.StatusStartTime ?? 0f, invocations, random);
+            ApplyDarkHitStatuses(actor, target, skill, resolved);
+            CollectHitCustomCures(actor, target, skill, hit, resolved,
+                movementStartContext?.StatusStartTime ?? 0f, invocations);
             var owners = new List<FightBattleUnitState> { actor };
             if (!ReferenceEquals(actor, target)) owners.Add(target);
             foreach (FightBattleUnitState owner in owners)
