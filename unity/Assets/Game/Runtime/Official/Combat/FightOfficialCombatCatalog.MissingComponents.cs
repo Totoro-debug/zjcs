@@ -10,6 +10,7 @@ namespace Zjcs.Combat.Official
         {
             var result = new FightBattleStatusComponentState();
             result.GameplayTags = ReadGameplayTags(components);
+            result.HitScope = ParseHitScope(Component(components, "FightStatusHitScopeComponent"));
             result.LifeReduction = ParseLifeReduction(Component(components, "FightStatusReduceStatusLifeComponent"));
             result.CureReduce = ParseCureReduce(Component(components, "FightStatusCureReduceComponent"));
             Dictionary<string, object> hitSkill = Component(components, "FightStatusHitSkillComponent");

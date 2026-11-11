@@ -45,6 +45,8 @@ namespace Zjcs.Combat.Official
         {
             if (statusCatalog == null || actor == null || target == null || invocations == null)
                 return;
+            FightStatusHitScope.Collect(actor, target, skill, resolved,
+                movementStartContext?.StatusStartTime ?? 0f, invocations, random);
             var owners = new List<FightBattleUnitState> { actor };
             if (!ReferenceEquals(actor, target)) owners.Add(target);
             foreach (FightBattleUnitState owner in owners)

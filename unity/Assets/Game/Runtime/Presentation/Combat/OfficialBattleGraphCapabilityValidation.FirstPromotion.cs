@@ -247,6 +247,16 @@ namespace Zjcs.Presentation.Combat
                     foreach (var unit in new[] { player, ally })
                         unit.Statuses.Add(catalog.CreateStatus(statusId, unit.Id, enemy.Id, 990000 + statusId * 10 + unit.Id));
             }
+            if (Environment.GetEnvironmentVariable("ZJCS_STATUS_HIT_SCOPE_ACCEPTANCE") == "1")
+            {
+                Require(itemId == 10072, "The fire-scope diagnostic uses original 10072/11690.");
+                var passive = catalog.CreateStatus(25045, player.Id, player.Id, 900002,
+                    0, 10576, 2, 20, player.SubRank);
+                // Deterministic isolated routing/graphics probe; original 20% is
+                // separately checked against the saved random stream in rule tests.
+                passive.Components.HitScope.Rate = 1f;
+                player.Statuses.Add(passive);
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_STATUS_LIFE_REDUCTION_ACCEPTANCE") == "1")
             {
                 Require(itemId == 10019, "The lifespan diagnostic uses original 10019/3181.");
@@ -269,7 +279,10 @@ namespace Zjcs.Presentation.Combat
             Require(cast.SkillItemId == firstPromotionItemId && cast.SkillEntityId == skillId
                 && cast.Presentation != null && cast.Presentation.FacingIndex == firstPromotionFacingIndex
                 && player.SkillState.Slots[0].ReleasedTimes == 1,
-                "Original equipped source, directional entity or release count differs.");
+                "Original equipped source, directional entity or release count differs: item="
+                + cast.SkillItemId + "/" + firstPromotionItemId + "; entity=" + cast.SkillEntityId + "/" + skillId
+                + "; facing=" + cast.Presentation?.FacingIndex + "/" + firstPromotionFacingIndex
+                + "; releases=" + player.SkillState.Slots[0].ReleasedTimes);
             if (firstPromotionSummonMonsterIds.Length > 0)
             {
                 firstPromotionSpawnedUnitIds = step.SpawnedUnitIds.ToArray();
@@ -293,6 +306,21 @@ namespace Zjcs.Presentation.Combat
                         + "; statuses=" + (unit == null ? "null" : string.Join(",", unit.Statuses.Select(status => status.ClassId)))
                         + "; notified=" + string.Join(",", step.DispersedUnitIds)
                         + "; hits=" + string.Join(",", step.DamageEvents.Select(hit => hit.TargetId)));
+            if (Environment.GetEnvironmentVariable("ZJCS_STATUS_HIT_SCOPE_ACCEPTANCE") == "1")
+            {
+                var component = player.Statuses.Single(status => status.ClassId == 25045).Components.HitScope;
+                int hits = step.DamageEvents.Count(hit => hit.SourceId == player.Id && hit.SkillEntityId == 11690
+                    && !hit.Dodge && !hit.Immunity && !hit.Blinding);
+                int triggered = step.SkillCasts.Count(value => value.SkillEntityId == 11580);
+                Require(hits >= 3 && triggered == hits && component.TriggeredCount == hits
+                    && checkpoint.GridItems.Any(item => item.GridItemClassId == 3320),
+                    "Original multi-hit fire scope did not create burning ground for each successful occurrence.");
+                var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+                Require(saved.Units.Single(unit => unit.Id == player.Id).Statuses.Single(status => status.ClassId == 25045)
+                    .Components.HitScope.TriggeredCount == hits,
+                    "Fire-scope trigger count was lost in the Unity checkpoint.");
+                Debug.Log("[Fire-hit scope] Original 11690 -> 25045 -> 11580 -> 3320/11582, per-hit routing and checkpoint passed; isolated rate=1.");
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_STATUS_LIFE_REDUCTION_ACCEPTANCE") == "1")
             {
                 var summon = checkpoint.Units.Single(unit => firstPromotionSpawnedUnitIds.Contains(unit.Id));

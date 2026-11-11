@@ -309,6 +309,7 @@ namespace Zjcs.Combat.Official
         public long[] GameplayTags;
         public long LifeReductionIdentity;
         public FightBattleStatusLifeReductionState LifeReduction;
+        public FightBattleStatusHitScopeState HitScope;
         public FightBattleStatusCureReduceState CureReduce;
         public FightBattleStatusHitSkillComponentState HitSkill;
         public FightBattleStatusDamageSkillComponentState DamageSkill;
@@ -329,6 +330,7 @@ namespace Zjcs.Combat.Official
                 GameplayTags = GameplayTags == null ? null : (long[])GameplayTags.Clone(),
                 LifeReductionIdentity = LifeReductionIdentity,
                 LifeReduction = LifeReduction?.Copy(),
+                HitScope = HitScope?.Copy(),
                 CureReduce = CureReduce?.Copy(),
                 HitSkill = HitSkill?.Copy(),
                 DamageSkill = DamageSkill?.Copy(),

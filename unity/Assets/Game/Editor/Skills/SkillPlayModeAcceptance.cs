@@ -272,6 +272,7 @@ namespace Zjcs.Editor.Skills
             {
                 string resultPath = Path.Combine(ValidationDirectory, "result.json");
                 Zjcs.Presentation.Home.SkillSummonPlayerValidation.StartDiagnostic(ValidationDirectory, false);
+                if (File.Exists(resultPath)) File.Delete(resultPath);
                 float deadline = Time.realtimeSinceStartup + 2760f;
                 while (!File.Exists(resultPath))
                 {
