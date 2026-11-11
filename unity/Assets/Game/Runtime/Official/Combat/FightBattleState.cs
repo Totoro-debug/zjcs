@@ -1847,6 +1847,9 @@ namespace Zjcs.Combat.Official
         public FightBattleSkillCastPresentation Presentation;
         // Per-cast selection receipts; never re-run target selection when projecting native hit views.
         public List<FightBattleHitSelectionSnapshot> HitSelections = new List<FightBattleHitSelectionSnapshot>();
+        // Runtime damage serials created directly by this actual cast. Nested
+        // casts own their own list, even when caster and skill class are equal.
+        public List<int> DamageEventIds = new List<int>();
         // Start time relative to this step; Playable cue times are relative to this cast.
         public float Delay;
         public int Slot;

@@ -1004,6 +1004,12 @@ namespace Zjcs.Combat.Official
                         MaxHp = target.MaxHp
                     };
                     damageEvents.Add(damage);
+                    if (presentationCast != null)
+                    {
+                        if (presentationCast.DamageEventIds == null)
+                            presentationCast.DamageEventIds = new List<int>();
+                        presentationCast.DamageEventIds.Add(damage.DamageId);
+                    }
                     checkpoint.Statistics.RecordHit(damage, damageHitTargets);
                     FightStatusAccumulatedDamageRuntime.RecordHit(target, damage, skill);
                     TransmitVoodooDamage(target, damage, damageEvents, casts);
