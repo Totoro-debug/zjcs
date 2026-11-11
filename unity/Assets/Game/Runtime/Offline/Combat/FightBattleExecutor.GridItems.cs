@@ -75,7 +75,7 @@ namespace Zjcs.Combat.Official
 
         private float SpawnGridItems(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             FightBattleHitDefinition hit, List<FightBattleUnitState> targets,
-            FightBattleUnitState targetPosition)
+            FightBattleUnitState targetPosition, FightGridPoint? fixedCenter = null)
         {
             if (statusCatalog == null)
                 throw new InvalidOperationException("Official combat catalog is required to spawn grid items.");
@@ -85,7 +85,7 @@ namespace Zjcs.Combat.Official
             var reference = ResolveSummonReference(actor, hit.SummonReferenceType, targets);
             if (reference == null || checkpoint.Grid == null) return 0f;
             var primary = targetPosition ?? (targets.Count > 0 ? targets[0] : null);
-            var center = FightHitAnchorExtensions.ResolveCenter(hit.Anchor, actor, primary, gridViewCast?.Presentation);
+            var center = fixedCenter ?? FightHitAnchorExtensions.ResolveCenter(hit.Anchor, actor, primary, gridViewCast?.Presentation);
             float lastCreation = 0f;
             foreach (var cell in hit.GridSummonCells)
             {

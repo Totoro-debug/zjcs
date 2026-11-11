@@ -828,3 +828,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 25031 来源：`scripts/prepare_battle_dark_hit_sources.py` 按 APK 优先核对所选 884 的 25031／24222 原实体组件，校验原共享组件、命中源与状态目标配置及空客户端处理器。输入版本、bundle／对象凭据与五个原码 SHA256 见[暗命中来源清单](battle-rules/dark-hit-source-manifest.json)；规则和验证范围仅在[技能页](../../docs/features/skills.md)维护。
 
 25023 来源：`scripts/prepare_battle_hit_custom_cure_sources.py` 按 APK 优先解码并核对所选 884 的 25023／10520／10521／10028 实体组件及五个原码输入。原包、bundle／对象凭据、完整字段及 SHA256 见[吸血事件与自身治疗链来源](battle-rules/hit-custom-cure-source-manifest.json)；10028 在所选版本新增的空 `DisperseStatus.ExcludeCharacterTypes` 与运行时历史 854 输入的字段差异显式记录，未修改历史载荷或预期哈希。原公式身份仍见[吸血公式来源](battle-rules/suck-hp-source-manifest.json)，规则与验证范围仅在[技能页](../../docs/features/skills.md)维护。
+
+25027 来源：`scripts/prepare_battle_move_scope_sources.py` 按 APK 优先核对所选 884 的 25027／11630／11631／11632／3320 完整实体组件，并核验原共享组件、空客户端处理器与角色小跳绑定。输入版本、实际 bundle／对象、五格原概率及四个原码 SHA256 见[移动灼烧来源清单](battle-rules/move-scope-source-manifest.json)；规则及验证范围仅在[技能页](../../docs/features/skills.md)维护。

@@ -314,6 +314,7 @@ namespace Zjcs.Combat.Official
         public FightBattleStatusHitScopeState HitScope;
         public FightBattleStatusDarkHitState DarkHit;
         public FightBattleStatusHitCustomCureState HitCustomCure;
+        public FightBattleStatusMoveScopeState MoveScope;
         public FightBattleStatusCureReduceState CureReduce;
         public FightBattleStatusHitSkillComponentState HitSkill;
         public FightBattleStatusDamageSkillComponentState DamageSkill;
@@ -337,6 +338,7 @@ namespace Zjcs.Combat.Official
                 HitScope = HitScope?.Copy(),
                 DarkHit = DarkHit?.Copy(),
                 HitCustomCure = HitCustomCure?.Copy(),
+                MoveScope = MoveScope?.Copy(),
                 CureReduce = CureReduce?.Copy(),
                 HitSkill = HitSkill?.Copy(),
                 DamageSkill = DamageSkill?.Copy(),

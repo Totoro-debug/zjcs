@@ -134,6 +134,7 @@ namespace Zjcs.Combat.Official
             FightStatusLifeReduction.OnApplied(owner, status);
             if (!owner.Statuses.Contains(status) || owner.Ended) return;
             ApplyMissingStatusStart(owner, status);
+            StartMoveScope(owner, status);
             StartHpStatus(owner, status);
             StartRoundStatus(owner, status);
             OnStatusStackChanged(status);

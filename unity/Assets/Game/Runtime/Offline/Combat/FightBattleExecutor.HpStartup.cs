@@ -60,6 +60,7 @@ namespace Zjcs.Combat.Official
             foreach (var owner in units)
                 foreach (var status in owner.Statuses)
                     if (IsPendingHpStart(owner, status) || IsPendingRoundStart(owner, status)
+                        || IsPendingMoveScopeStart(owner, status)
                         || IsPendingLogicStart(status)
                         || IsPendingStackCountStart(owner, status)) return true;
             return false;
@@ -178,12 +179,14 @@ namespace Zjcs.Combat.Official
                         for (int index = statuses.Count - 1; index >= 0; index--)
                             if (owner.Statuses.Contains(statuses[index])
                                 && (IsPendingHpStart(owner, statuses[index]) || IsPendingRoundStart(owner, statuses[index])
+                                    || IsPendingMoveScopeStart(owner, statuses[index])
                                     || IsPendingLogicStart(statuses[index])
                                     || IsPendingStackCountStart(owner, statuses[index])))
                             {
                                 if (firstOwner == null) firstOwner = owner;
                                 changed += StartHpStatus(owner, statuses[index]);
                                 changed += StartRoundStatus(owner, statuses[index]);
+                                changed += StartMoveScope(owner, statuses[index]);
                                 ApplyLogicStart(owner, statuses[index]);
                                 if (IsPendingStackCountStart(owner, statuses[index]))
                                     OnStatusStackChanged(statuses[index]);
@@ -214,6 +217,7 @@ namespace Zjcs.Combat.Official
                 var step = CreateEvent(firstOwner ?? units[0], null, targets, before,
                     Math.Max(1, turns.GlobalRound()), context.Movements, context.Casts, context.DamageEvents,
                     currentStepSpawnedUnitIds, currentStepStatusCustomActions, context.Duration, context.ActionDuration);
+                CompleteGridViewEvents(step);
                 checkpoint.Counter = counter;
                 checkpoint.RandomSeed = random.Seed;
                 checkpoint.Receipts.Add(new FightBattleStepReceipt { Sequence = sequence, Counter = counter, Event = step });

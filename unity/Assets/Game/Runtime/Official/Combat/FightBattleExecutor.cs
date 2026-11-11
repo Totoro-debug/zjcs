@@ -90,6 +90,7 @@ namespace Zjcs.Combat.Official
                             statusCatalog.RestoreHitScopeStatusDefinition(status);
                             statusCatalog.RestoreDarkHitDefinition(status);
                             statusCatalog.RestoreHitCustomCureDefinition(status);
+                            statusCatalog.RestoreMoveScopeDefinition(status, initialize);
                             statusCatalog.RestoreSkillEndDefinition(status);
                             RestoreRevivalDefinition(status);
                             RestoreHitSummonDefinition(status);
@@ -1592,12 +1593,12 @@ namespace Zjcs.Combat.Official
                         else TryMoveActor(actor, landing, 64, movements);
                     }
                     else MoveNextToTarget(actor, target, move, movements);
-                    ApplyMovementAction(movements, movementIndex, move, skill);
+                    ApplyMovementAction(movements, movementIndex, move, skill, true);
                     continue;
                 }
                 if (move.Direction == 2)
                 {
-                    ApplyPathSideMove(actor, actor, target, move, movements, skill);
+                    ApplyPathSideMove(actor, actor, target, move, movements, skill, true);
                     continue;
                 }
                 if (move.Direction != 1) continue; // RelativeToSource is not modelled
@@ -1615,7 +1616,7 @@ namespace Zjcs.Combat.Official
                         actor.Y + stepY * distance + move.OffsetY);
                     int movementIndex = movements.Count;
                     if (!TryMoveActor(actor, desired, distance, movements)) continue;
-                    ApplyMovementAction(movements, movementIndex, move, skill);
+                    ApplyMovementAction(movements, movementIndex, move, skill, true);
                     break;
                 }
             }
@@ -2282,7 +2283,7 @@ namespace Zjcs.Combat.Official
 
         private bool ApplyPathSideMove(FightBattleUnitState mover, FightBattleUnitState source,
             FightBattleUnitState target, FightBattleSkillMove move,
-            List<FightBattleMovementEvent> movements, FightBattleSkillDefinition skill)
+            List<FightBattleMovementEvent> movements, FightBattleSkillDefinition skill, bool activeMove = false)
         {
             if (mover == null || source == null || target == null || move == null
                 || move.Distance <= 0 || movements == null) return false;
@@ -2305,7 +2306,7 @@ namespace Zjcs.Combat.Official
                         mover.Y + sideY * distance + move.OffsetY);
                     int movementIndex = movements.Count;
                     if (!TryMoveUnit(mover, desired, distance, movements)) continue;
-                    ApplyMovementAction(movements, movementIndex, move, skill);
+                    ApplyMovementAction(movements, movementIndex, move, skill, activeMove);
                     return true;
                 }
             }
@@ -2313,7 +2314,7 @@ namespace Zjcs.Combat.Official
         }
 
         private void ApplyMovementAction(List<FightBattleMovementEvent> movements,
-            int startIndex, FightBattleSkillMove move, FightBattleSkillDefinition skill)
+            int startIndex, FightBattleSkillMove move, FightBattleSkillDefinition skill, bool activeMove = false)
         {
             if (movements == null || move == null) return;
             // A start listener can append another movement. Do not overwrite its own action timing
@@ -2328,18 +2329,20 @@ namespace Zjcs.Combat.Official
                 movement.MoveDuration = move.MoveDuration;
                 movement.MoveSpeed = move.MoveSpeed;
                 NotifyMovementStart(movement, statusCatalog?.EntityActionType(move.MoveBehaviourId) ?? 0,
-                    movements, skill);
+                    movements, skill, activeMove);
             }
         }
 
         private void NotifyMovementStart(FightBattleMovementEvent movement, int actionType,
-            List<FightBattleMovementEvent> movements, FightBattleSkillDefinition sourceSkill = null)
+            List<FightBattleMovementEvent> movements, FightBattleSkillDefinition sourceSkill = null,
+            bool activeMove = false)
         {
             if (statusCatalog == null || movement == null
                 || !unitById.TryGetValue(movement.UnitId, out FightBattleUnitState mover)) return;
             statusCatalog.ApplyMovementFacing(mover, movement);
             statusCatalog.CompleteRoleMovement(movement);
             if (movementStartContext == null) return;
+            if (activeMove) ApplyMoveScopesForMovement(mover, movement);
             // ActionAgentComponentImplement.StartAction fires StartEvent after AddEntity;
             // FightActionSkillMoveComponent.StartImpl has already committed the path at that point.
             List<FightBattleStatusSkillInvocation> invocations =
@@ -2654,7 +2657,7 @@ namespace Zjcs.Combat.Official
             actor.X = landing.X;
             actor.Y = landing.Y;
             movements.Add(movement);
-            NotifyMovementStart(movement, FightOfficialCombatCatalog.MoveActionType, movements);
+            NotifyMovementStart(movement, FightOfficialCombatCatalog.MoveActionType, movements, activeMove: true);
             return true;
         }
 

@@ -13,6 +13,7 @@ namespace Zjcs.Combat.Official
             result.HitScope = ParseHitScope(Component(components, "FightStatusHitScopeComponent"));
             result.DarkHit = ParseDarkHit(Component(components, "FightStatusDoDamageHandleComponent"));
             result.HitCustomCure = ParseHitCustomCure(Component(components, "FightStatusHitCustomCureComponent"));
+            result.MoveScope = ParseMoveScope(Component(components, "FightStatusMoveScopeComponent"));
             result.LifeReduction = ParseLifeReduction(Component(components, "FightStatusReduceStatusLifeComponent"));
             result.CureReduce = ParseCureReduce(Component(components, "FightStatusCureReduceComponent"));
             Dictionary<string, object> hitSkill = Component(components, "FightStatusHitSkillComponent");

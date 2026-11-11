@@ -13,6 +13,7 @@ namespace Zjcs.Combat.Official
             RecordGridStatus(owner, status, FightBattleGridViewEventKind.StatusUpdate);
             if (statusCatalog != null)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
+            if (wasForbidden && status.ForbiddenType == 0) StartMoveScope(owner, status);
             var listener = roundStartNotForbiddenListener;
             if (!wasForbidden || status.ForbiddenType != 0 || !status.RoundStartTryAtNotForbidden
                 || listener == null || movementStartContext == null || statusCatalog == null
