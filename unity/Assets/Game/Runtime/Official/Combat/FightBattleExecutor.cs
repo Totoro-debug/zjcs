@@ -905,6 +905,8 @@ namespace Zjcs.Combat.Official
                     if (hitDelay > lastDelay) lastDelay = hitDelay;
                     hitFinishDelay = Math.Max(hitFinishDelay, hitDelay);
                     movementStartContext.StatusStartTime = Math.Max(0f, hitDelay);
+                    FightGridPoint damagePosition = occurrence != null && occurrence.HasGridPosition
+                        ? occurrence.GridPosition : new FightGridPoint(target.X, target.Y);
                     long beforeHp = target.Hp;
                     int damageId = NextDamageId();
                     bool originalHasCustomDamage = hit.HasCustomDamage;
@@ -982,6 +984,9 @@ namespace Zjcs.Combat.Official
                         HasHitGridPosition = occurrence != null && occurrence.HasGridPosition,
                         HitGridX = occurrence == null ? 0 : occurrence.GridPosition.X,
                         HitGridY = occurrence == null ? 0 : occurrence.GridPosition.Y,
+                        HasDamagePosition = true,
+                        DamageX = damagePosition.X,
+                        DamageY = damagePosition.Y,
                         IsCure = resolved.IsCure,
                         Critical = resolved.Type.Critical,
                         Block = resolved.Type.Block,
@@ -997,8 +1002,9 @@ namespace Zjcs.Combat.Official
                         DamageValue = chaosInvasionWipe ? beforeHp
                             : resolved.Settlement == null ? 0 : resolved.Settlement.DamageValue,
                         ShieldDamage = resolved.ShieldDamage,
-                        HasAbsoluteDamage = chaosInvasionWipe || resolved.Formula != null,
-                        AbsoluteDamage = resolved.Formula == null ? 0 : resolved.Formula.AbsoluteDamage,
+                        HasAbsoluteDamage = chaosInvasionWipe || resolved.Formula != null || resolved.Cure != null,
+                        AbsoluteDamage = resolved.Cure != null ? resolved.Cure.AbsoluteCure
+                            : resolved.Formula == null ? 0 : resolved.Formula.AbsoluteDamage,
                         BeforeHp = beforeHp,
                         AfterHp = target.Hp,
                         MaxHp = target.MaxHp

@@ -22,6 +22,7 @@ namespace Zjcs.Presentation.Combat
             public FightBattleSkillCastEvent Cast;
             public Func<int, Transform> UnitTransform;
             public Func<int, Transform> PetTransform;
+            public IReadOnlyDictionary<int, FightBattleDamageEvent> DamageReceipts;
             public float Remaining;
         }
 
@@ -98,6 +99,9 @@ namespace Zjcs.Presentation.Combat
             gridViews?.DispatchDue();
             Func<int, Transform> resolveTransform = id => gridViews?.TryGetTransform(id) ?? unitTransform(id);
             ScheduleMovements(stepEvent, resolveTransform);
+            var damageReceipts = new Dictionary<int, FightBattleDamageEvent>();
+            if (stepEvent.DamageEvents != null) foreach (var damage in stepEvent.DamageEvents)
+                if (damage != null && damage.DamageId > 0) damageReceipts.Add(damage.DamageId, damage);
             foreach (FightBattleSkillCastEvent cast in stepEvent.SkillCasts)
             {
                 if (cast == null || cast.ActorId <= 0 || cast.SkillEntityId <= 0) continue;
@@ -111,6 +115,7 @@ namespace Zjcs.Presentation.Combat
                     Cast = cast,
                     UnitTransform = resolveTransform,
                     PetTransform = petTransform,
+                    DamageReceipts = damageReceipts,
                     Remaining = Mathf.Max(0f, cast.Delay)
                 };
                 if (scheduled.Remaining <= 0f && source != null) Start(scheduled, source, resolveTransform(targetId));
@@ -223,7 +228,14 @@ namespace Zjcs.Presentation.Combat
 
         private void Start(ScheduledCast scheduled, Transform source, Transform target)
         {
-            entityViews.Start(scheduled.Cast, source, target);
+            if (scheduled.DamageReceipts != null && scheduled.Cast.DamageEventIds != null)
+                foreach (int id in scheduled.Cast.DamageEventIds)
+                    if (scheduled.DamageReceipts.TryGetValue(id, out var damage))
+                    {
+                        var transform = scheduled.UnitTransform(damage.TargetId);
+                        if (transform) entityViews.EnsureUnit(damage.TargetId, transform);
+                    }
+            entityViews.Start(scheduled.Cast, source, target, scheduled.DamageReceipts);
         }
 
         private static int TargetId(FightBattleSkillCastEvent cast) => cast.Presentation != null

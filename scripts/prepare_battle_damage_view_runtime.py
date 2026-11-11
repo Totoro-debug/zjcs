@@ -107,8 +107,15 @@ def main():
     local_bindings = [identity(ROOT / path) for path in (
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageEntityData.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageEntityPlayback.cs',
+        'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageReceiptPlayback.cs',
+        'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleActorMaterialBinding.cs',
+        'assets/reference/battle-animation/actor-material-bindings-source-manifest.json',
+        'unity/Assets/Game/Resources/Combat/actor-material-bindings.json',
+        'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs',
+        'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs',
         'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleDamagePlaybackAcceptance.cs',
+        'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleDamageReceiptAcceptance.cs',
         'scripts/inspect_battle_damage_graph_bindings.py',
         'scripts/prepare_battle_damage_playback_validation.py')]
     write_changed(RECEIPT, json.dumps(dict(manifest='884_156692', inputs=inputs, outputs=outputs,

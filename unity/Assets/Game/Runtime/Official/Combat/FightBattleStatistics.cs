@@ -30,6 +30,10 @@ namespace Zjcs.Combat.Official
         // Actual scope cell; absent in legacy checkpoints and point-target hits.
         public bool HasHitGridPosition;
         public int HitGridX, HitGridY;
+        // Frozen before this occurrence's settlement and any resulting displacement.
+        // Scope hits retain the struck body cell; point hits retain the target position.
+        public bool HasDamagePosition;
+        public int DamageX, DamageY;
         public bool IsCure;
         // Confirmed offline presentation result: only this damage's StatusList
         // applications count. Legacy receipts leave the result explicitly unknown.

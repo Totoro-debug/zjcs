@@ -142,7 +142,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_damage_view_runtime.py",
-    "sha256": "a08b66e20e9a8f0b53c1415294981ffca276fced5c186e225657f89a9615ebb4"
+    "sha256": "4f67ef9bed9ab50b34bf621e7f55effbe91623c4f8422e1d5829c72ddadc2f7f"
   },
   "local_bindings": [
     {
@@ -154,12 +154,40 @@
       "sha256": "cf20e6cc4ed54ceefcdc790f26a8168daf0e3cd8805a60e814763cf9eb0cc3cc"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageReceiptPlayback.cs",
+      "sha256": "e071fb50592473fc2e4a18b634e11284b63bf152bc57afe112eb2fc2bd7f34c3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleActorMaterialBinding.cs",
+      "sha256": "b0ae1820195653a2ecdeb6bff688b63917212f8cbdb41726cfe8702fe4caa8f6"
+    },
+    {
+      "path": "assets/reference/battle-animation/actor-material-bindings-source-manifest.json",
+      "sha256": "ca3ad71117e3806cb00d0048620ff69d613c47966c567446c14af8a597e7b1dc"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/actor-material-bindings.json",
+      "sha256": "2c285085cbdd2942761a6d2b8e8d83b6a36ab5055a11dcbd4101cdb042174959"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs",
+      "sha256": "447294ee3a4da6f240fd8f04a4fab25314e0f0f2491797ff42181b47ec208175"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs",
+      "sha256": "8f415855be03b8f95d5d467200c7c6733fc12781cd0ba7c6601c8544f9a670a8"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs",
       "sha256": "b54d1f3eb0ac8d453dd30d207c627671d03506a40a8efffeb39b25bcefec52b4"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleDamagePlaybackAcceptance.cs",
-      "sha256": "4c7a1213d7cbb5be6481824c8c3621718fd79eab2ef9699b3a728f9d36807b30"
+      "sha256": "dc2d96ed24df71931121fe090808dd6dcc0c4ca2a268588bc12ae8cfdb1426f0"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleDamageReceiptAcceptance.cs",
+      "sha256": "00a424c1744984a79333450f44648929cd3c5a319e525f7dac0144bacbc65baf"
     },
     {
       "path": "scripts/inspect_battle_damage_graph_bindings.py",
@@ -167,7 +195,7 @@
     },
     {
       "path": "scripts/prepare_battle_damage_playback_validation.py",
-      "sha256": "bc9bc4a2b0f4240d9d5d3d99b1b547dfc9e92410c0728ec7e36b9162f9f80acb"
+      "sha256": "f676a300ac42fbffa573881e9c774d669ce681c920148af513c01519cb17956e"
     }
   ],
   "adaptations": [

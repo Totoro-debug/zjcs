@@ -42,13 +42,15 @@ namespace Zjcs.Presentation.Combat
             public EcEntityIdentifier Identifier;
             public Grid Grid;
             public SkillState Skill;
+            public BattleRoleFightViewData RoleFight;
             public OfficialBattleSkillPrefabData Additional;
             public override int ClassId => TypeId;
             public override EcEntityIdentifier Id => Identifier;
             public override T GetComponent<T>()
             {
                 object value = typeof(T) == typeof(ECGridTransformData) ? Grid
-                    : typeof(T) == typeof(FightSkillComponent) ? Skill : null;
+                    : typeof(T) == typeof(FightSkillComponent) ? Skill
+                    : typeof(T) == typeof(BattleRoleFightViewData) ? RoleFight : null;
                 return value == null ? Additional == null ? default : Additional.GetComponent<T>() : (T)value;
             }
         }
@@ -103,6 +105,7 @@ namespace Zjcs.Presentation.Combat
         private readonly OfflineBattleNativePlayableScope scope;
         private readonly Func<int, FightBattleUnitState> unitState;
         private readonly OfficialBattleHitReceiptPlayback receiptHits;
+        private readonly OfficialBattleDamageReceiptPlayback receiptDamages;
         private readonly Dictionary<int, UnitLease> units = new Dictionary<int, UnitLease>();
         private readonly Dictionary<int, UnitLease> pets = new Dictionary<int, UnitLease>();
         private OfficialBattlePetFollowerCatalog petCatalog;
@@ -138,13 +141,16 @@ namespace Zjcs.Presentation.Combat
                 PrepareSkillInstance, PrepareBoundSkill);
             moveViews = new OfficialBattleMoveActionPlayback(root, positionContainer, scope, GetEntity);
             receiptHits = new OfficialBattleHitReceiptPlayback(this, combatCatalog);
+            receiptDamages = new OfficialBattleDamageReceiptPlayback(root, positionContainer, this, scope, combatCatalog);
         }
 
         public MyEntity GetEntity(EcEntityIdentifier id) =>
             entities.TryGetValue(id, out var entity) ? entity
-                : skillViews.GetEntity(id) ?? hitViews?.GetEntity(id) ?? moveViews?.GetEntity(id);
+                : skillViews.GetEntity(id) ?? hitViews?.GetEntity(id) ?? moveViews?.GetEntity(id)
+                    ?? receiptDamages.GetEntity(id);
 
-        public MyEntity EnsureUnit(int id, Transform transform) => BindUnit(id, transform).Entity;
+        public MyEntity EnsureUnit(int id, Transform transform) => nativeGridIds.Contains(id)
+            ? entities[UnitId(id)] : BindUnit(id, transform).Entity;
 
         public void RegisterGrid(int id, MyEntity entity)
         {
@@ -152,6 +158,8 @@ namespace Zjcs.Presentation.Combat
                 throw new InvalidOperationException("Native battle grid identity is already registered: " + id);
             nativeGridIds.Add(id);
             entities.Add(UnitId(id), entity);
+            if (!entity.GetComponent<MyFightRoleFight>())
+                entity.gameObject.AddComponent<MyFightRoleFight>().Component = new BattleRoleFightViewData();
         }
 
         public void RemoveGrid(int id)
@@ -175,13 +183,14 @@ namespace Zjcs.Presentation.Combat
 
         public void RemoveHit(EcEntityIdentifier id) => hitViews?.Remove(id);
 
-        private Pos2d PositionToGrid(Vector3 position)
+        internal Pos2d PositionToGrid(Vector3 position)
         {
             FightGridPoint point = gridMapper.WorldToGrid(root.TransformPoint(position));
             return new Pos2d(point.X, point.Y);
         }
 
-        public EcEntityIdentifier Start(FightBattleSkillCastEvent cast, Transform source, Transform target)
+        public EcEntityIdentifier Start(FightBattleSkillCastEvent cast, Transform source, Transform target,
+            IReadOnlyDictionary<int, FightBattleDamageEvent> damageReceipts = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillEntityPlayback));
             if (cast.Presentation == null)
@@ -211,6 +220,7 @@ namespace Zjcs.Presentation.Combat
                 ? float.PositiveInfinity : cast.Presentation.Duration });
             scope.Dispatch(entity.MyStart);
             receiptHits.Enqueue(cast, state.Data.Identifier);
+            receiptDamages.Enqueue(cast, state.Data.Identifier, damageReceipts, sourceFacing, cast.Presentation.FlipX);
             CastStarted?.Invoke(cast);
             // Return the assigned identity, not the pooled object whose Id can
             // change on reuse. Dependent views belong to this exact cast.
@@ -263,15 +273,18 @@ namespace Zjcs.Presentation.Combat
                 foreach (var cast in casts) if (!cast.Removed) next = Mathf.Min(next, cast.Remaining);
                 next = Mathf.Min(next, moveViews.NextDelay);
                 next = Mathf.Min(next, receiptHits.NextDelay);
+                next = Mathf.Min(next, receiptDamages.NextDelay);
                 float elapsed = Mathf.Min(next, remaining);
                 if (elapsed > 0f) scope.Tick(elapsed);
                 moveViews.Advance(elapsed);
                 receiptHits.Advance(elapsed);
+                receiptDamages.Advance(elapsed);
                 foreach (var cast in casts) if (!cast.Removed) cast.Remaining -= elapsed;
                 remaining -= elapsed;
                 // Hits due at a cast's final boundary still resolve that exact
                 // skill identity before the original skill returns to its pool.
                 receiptHits.DispatchDue();
+                receiptDamages.DispatchDue();
                 foreach (var cast in casts)
                     if (!cast.Removed && cast.Remaining <= 0f) Remove(cast);
                 if (remaining <= 0f) break;
@@ -307,6 +320,7 @@ namespace Zjcs.Presentation.Combat
             // so End.ResetRotation cannot rotate the character towards its skill aim.
             lease.Projection.Facing = lease.PreviousGrid?.Direction ?? Direction.Up;
             lease.SkillAgent = Bind<MyFightSkillAgent>();
+            var fightRole = Bind<MyFightRoleFight>();
             if (!pet)
             {
                 lease.SkillApplied = skill => SkillStarted?.Invoke(id, skill.Component.SkillSlot);
@@ -321,9 +335,12 @@ namespace Zjcs.Presentation.Combat
                 typeId = petCatalog.Find(state.PetEnergy.PetClassId)?.entityId
                     ?? throw new InvalidOperationException("Original native pet source is unavailable.");
             }
+            var materialProperty = OfficialBattleActorMaterialBinding.Bind(transform, typeId);
+            if (materialProperty) lease.Added.Add(materialProperty);
             if (lease.Added.Contains(lease.Entity))
                 lease.Entity.Bind(positionContainer, new EntityData { TypeId = typeId,
-                    Identifier = identifier, Grid = lease.Projection }, true);
+                    Identifier = identifier, Grid = lease.Projection, RoleFight = new BattleRoleFightViewData() }, true);
+            else if (lease.Added.Contains(fightRole)) fightRole.Component = new BattleRoleFightViewData();
             lease.GridView.Component = lease.Projection;
             // Only configure a grid view owned by this adapter. Existing official
             // entity views retain their own serialized flip-transform binding.
@@ -345,6 +362,7 @@ namespace Zjcs.Presentation.Combat
             disposed = true;
             moveViews.Dispose();
             receiptHits.Dispose();
+            receiptDamages.Dispose();
             hitViews?.Dispose();
             hitViews = null;
             foreach (var cast in casts) if (!cast.Removed) Remove(cast);

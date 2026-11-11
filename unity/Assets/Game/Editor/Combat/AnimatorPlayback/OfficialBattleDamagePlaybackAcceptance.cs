@@ -30,7 +30,11 @@ namespace Zjcs.Editor.Combat
             {
                 if (!SessionState.GetBool(Key, false)) return;
                 if (state == PlayModeStateChange.EnteredPlayMode)
-                    new GameObject("Original damage validation").AddComponent<NativeDamageAcceptanceRunner>();
+                {
+                    var host = new GameObject("Original damage validation");
+                    if (SessionState.GetBool(Key + ".receipts", false)) OfficialBattleDamageReceiptAcceptance.Begin(host);
+                    else host.AddComponent<NativeDamageAcceptanceRunner>();
+                }
                 if (state == PlayModeStateChange.EnteredEditMode)
                 {
                     SessionState.SetBool(Key, false);
@@ -39,6 +43,10 @@ namespace Zjcs.Editor.Combat
             };
         }
         public static void Run()
+        { SessionState.SetBool(Key + ".receipts", false); StartValidation(); }
+        public static void RunReceipts()
+        { SessionState.SetBool(Key + ".receipts", true); StartValidation(); }
+        private static void StartValidation()
         {
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
@@ -185,8 +193,11 @@ namespace Zjcs.Editor.Combat
             skillEntity.GetComponent<MyFightSkill>().ViewServices = services;
             var targetEntity = target.GetComponent<MyEntity>();
             var sourceEntity = source.GetComponent<MyEntity>();
-            var targetRole = target.gameObject.AddComponent<MyFightRoleFight>();
-            var sourceRole = source.gameObject.AddComponent<MyFightRoleFight>();
+            var targetRole = target.GetComponent<MyFightRoleFight>();
+            var sourceRole = source.GetComponent<MyFightRoleFight>();
+            Require(targetRole && sourceRole && targetRole.Component != null && sourceRole.Component != null
+                && target.GetComponents<MyFightRoleFight>().Length == 1 && source.GetComponents<MyFightRoleFight>().Length == 1,
+                "Formal unit binding supplies one original role notification view per actor.");
             Action<MyFightRoleFight, MyFightDamage> onDamage = (role, damage) =>
             {
                 Require(role == targetRole && role.myEntity == targetEntity

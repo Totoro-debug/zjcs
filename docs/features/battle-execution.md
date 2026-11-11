@@ -58,7 +58,7 @@
 
 行动进度头像请求层另迁入所选 884 的 `HeadCharacterPortrait`、场景／UGUI ETC2 子类、`IFightDynamicTextureETC2`、`IGameRoundPortraitHandler` 及三种原处理器，复用既有官方 `CharacterPortraitBase／Requestor／Cache` 和请求键实现。保留玩家 ID 的 0 类键、临时外观的 1 类键、持久化标志、先取消旧订阅再申请新取景、禁用后恢复及销毁移除事件的顺序；客户端注入改为显式 `BindAtlas`，职业与外观参数沿用现有离线取景接口的整数和不透明对象。另迁入 `GameRoundPlayerPortrait`、`GamePlayManagerConfig`、`GameEffectData` 与 `FightDynamicTextureETC2`，保留普通／UGUI／场景处理器选择、完整配置字段、默认／自身／观战／阵营列表的底图加载顺序、按路径哈希复用、图集缓存与清空销毁分支；回放黑名单按原枚举整数存储。原序列化字段不变。配置依赖改为激活前显式 `BindConfiguration`，图集由所属场景调用 `Initialize／Dispose`，纹理加载由本地提供者负责原资源的生命期。来源与适配见[头像请求代码来源](../../assets/reference/battle-hud/round-portrait-source-manifest.json)。完整原生卡片现已引用这些原类；同版原 `GamePlayManagerConfig` 的全部字段、三种阵营 ETC2 纹理／Sprite 和六个血条特效 prefab 的引用闭包已恢复，显式绑定于 `BattleRoundPortraitAssets`。公共 HUD 的本地 adapter 消费既有取景／图标及阵营图片，调用方仍拥有原取景纹理；不会经服务器查询或在此生成外观。守卫临时外观和拟态的正式实体投影仍未接通，不把这些分支列为完成。
 
-`MyFightDamage.OnStart` 先向目标发出受伤通知，再查实际所属技能及来源，向来源发出命中通知；之后以目标为播放源、技能来源为播放目标，传入实际伤害实体的 `Damage` 参数。普通图独立播放，结果图按格挡、暴击、普通伤害的原分支选择，状态触发图另行判断。该完整客户端方法、五字段状态覆盖器及原空幻兽能量过滤器已迁移；`OfficialBattleDamageEntityPlayback` 负责激活前注入、实际身份和原 FIFO 对象池生命周期。所选 884 的 1,368 个伤害实体包含 `Global` 下 33 个公共实体，五类图引用、原隐藏／零伤害标志与启用状态均按原 prefab 保留；13202 的原覆盖驱动为禁用，加载时不主动开启。代码来源见[伤害视图迁移](../../assets/reference/battle-animation/damage-view-runtime-source-manifest.json)，原生资产及五字段绑定见[技能图资产来源](../../assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json)。这部分是客户端视图与资源接入，正式战斗的伤害事件接线仍见下方缺项。
+`MyFightDamage.OnStart` 先向目标发出受伤通知，再查实际所属技能及来源，向来源发出命中通知；之后以目标为播放源、技能来源为播放目标，传入实际伤害实体的 `Damage` 参数。普通图独立播放，结果图按格挡、暴击、普通伤害的原分支选择，状态触发图另行判断。该完整客户端方法、五字段状态覆盖器及原空幻兽能量过滤器已迁移；`OfficialBattleDamageEntityPlayback` 负责激活前注入、实际身份和原 FIFO 对象池生命周期。所选 884 的 1,368 个伤害实体包含 `Global` 下 33 个公共实体，五类图引用、原隐藏／零伤害标志与启用状态均按原 prefab 保留；13202 的原覆盖驱动为禁用，加载时不主动开启。代码来源见[伤害视图迁移](../../assets/reference/battle-animation/damage-view-runtime-source-manifest.json)，原生资产及五字段绑定见[技能图资产来源](../../assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json)。正式步骤中已有归属、状态结果及冻结位置的直接伤害回执已按下述宿主接入；完整人物与 HUD 监听仍见下方缺项。
 
 `MyFightRoleFight` 的原 `OnDamage／OnHit` 事件、碰撞器字段、订阅调用顺序及两个异常捕获边界已迁入。`MyFightDamage` 现在直接调用原角色通知，实体查询复用 `IFightSkillViewServices`，移除额外通知端口；监听器抛异常时，保留原多播委托中断本次后续监听器、捕获后继续伤害视图的行为，日志后端改用 Unity 异常日志。该客户端角色类不读取共享角色字段，`BattleRoleFightViewData` 只承接此空消费面，不替代共享阵营、HP 或服务器战斗回调。角色类入口为 [MyFightRoleFight.cs](../../unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightRoleFight.cs)，凭据沿伤害视图来源记录；正式人物／HUD 的全部事件监听仍未接通。
 
@@ -119,11 +119,17 @@
 
 无伤害随机根包装节点现由 `FightBattleHitCollector.CollectAll(includeRootViews: true)` 按每条根引用记录，默认参数继续只返回原玩法命中列表，既有 AI 范围／命中计数不包含这些节点。执行器的 `IsViewOnly` 分支只复制父节点的锚点、创建延迟、冻结中心及飞行时序，不抽取目标、不产生受击条目，也不调用伤害或逻辑子技能；子节点仍持有原独立随机组与排除记录。所选配置扫描到 76 个此类根节点，全部有范围且基础飞行系数为零，未引用层数延迟覆盖；嵌套随机包装及自定义包装未在本项扩展。父节点回执随原检查点保存，旧回执缺少父节点时不从子结果推断或重抽。原父视图的销毁时机仍有服务端缺口，已提出具体问题，正式播放暂未消费这些父节点回执。
 
-伤害归属回执按共享 `FightDamageComponent.SkillId` 的实例语义保留本次施法归属：`FightBattleSkillCastEvent.DamageEventIds` 记录该次执行直接创建的实际伤害序号，记录点位于正式伤害加入步骤之后、嵌套响应之前。同来源同技能的重放各持独立列表，子技能记录自身的伤害，父技能不使用连续序号区间猜测归属；零伤害条目也保留。该记录不增加随机抽取，不重跑伤害或选敌，不修改伤害标志、延迟及结算。仅有表现的 HP 消耗／派生同步条目不据此伪装成直接命中；缺少此字段的回执保持空列表。这是为原实体接线增加的离线执行回执，尚未消费为正式伤害图播放。
+伤害归属回执按共享 `FightDamageComponent.SkillId` 的实例语义保留本次施法归属：`FightBattleSkillCastEvent.DamageEventIds` 记录该次执行直接创建的实际伤害序号，记录点位于正式伤害加入步骤之后、嵌套响应之前。同来源同技能的重放各持独立列表，子技能记录自身的伤害，父技能不使用连续序号区间猜测归属；零伤害条目也保留。该记录不增加随机抽取，不重跑伤害或选敌，不修改伤害标志、延迟及结算。仅有表现的 HP 消耗／派生同步条目不据此伪装成直接命中；缺少此字段的回执保持空列表。这是为原实体接线增加的离线执行回执，现由正式伤害播放宿主消费。
+
+`OfficialBattleDamageReceiptPlayback` 沿正式 `OfficialBattleSkillGraphPlayback.Play` 接收步骤回执，在每次原技能实例创建后只取该实例的 `DamageEventIds`；伤害时间减去所属施法 Delay 一次，再按原 `FightDamageComponent.Duration` 创建／移除原 prefab。命中与伤害在技能结束边界先派发，再移除技能，保持实际技能身份可查询。完整数值、伤害标志、元素、结果分类和状态结果直接投影到原 `DamageResultParameter`，不重算公式、状态、选敌或随机；治疗的 `AbsoluteDamage` 字段保存已经算出的原 `AbsoluteCure`，有效治疗及统计仍沿原结算。范围受击保存实际身体格，点命中在本次结算及其位移前保存目标位置；位置、状态结果或施法归属缺失的旧回执不从当前场景推断。角色装载复用已有原 `MyFightRoleFight`，缺少时添加原通知组件；原格网实体保持自身绑定，不被单位投影覆盖。状态覆盖器消费该次施法的状态快照，原通知与五类图仍由未改写的 `MyFightDamage.OnStart` 执行。
+
+原伤害图使用的角色材质接口已为 32 个已安装配置恢复：`OfficialBattleActorMaterialBinding` 仅按同版原 prefab 的根节点、启用状态和完整引用路径添加原 `MeshMaterialProperty`；已有组件保持原绑定，所属单位租约在图停止后释放新增组件。现存原 `AppearanceRenderer／Lite` 继续负责原独立材质集合；尚未装载该外观组件的原生骨骼后端使用其现有每角色材质实例和原 `MeshRenderer` 引用，不生成新 shader 或材质。配置输入及绑定见[角色材质来源](../../assets/reference/battle-animation/actor-material-bindings-source-manifest.json)。另外 36 个原配置的 `MeshRenderer` 引用为空，必须接入完整外观材质集合，未按附近 renderer 猜测或补值；这些配置仍属缺项。
 
 ## 自定义实现
 
-- 用户确认伤害状态特效的单机规则：本次伤害的 `StatusList` 至少成功施加一个状态时，`IsDamageTriggerStatus=true`，包括给来源自身施加；概率失败、免疫或拒绝添加均为 false，其他被动连带状态不计入。此为 APK 缺少服务器赋值时采用的单机裁决；原客户端仍按该布尔值独立播放 `myTriggerStatusPlayable`，执行器在原施加顺序中记录 `HasDamageTriggerStatus／IsDamageTriggerStatus`，成功续期同样计入；列表前项成功不会跳过后续项，也不重新抽取随机数。旧检查点缺少结果时保持未知，不从现存状态反推；正式伤害实体接线仍待完成。
+- 用户确认伤害状态特效的单机规则：本次伤害的 `StatusList` 至少成功施加一个状态时，`IsDamageTriggerStatus=true`，包括给来源自身施加；概率失败、免疫或拒绝添加均为 false，其他被动连带状态不计入。此为 APK 缺少服务器赋值时采用的单机裁决；原客户端仍按该布尔值独立播放 `myTriggerStatusPlayable`，执行器在原施加顺序中记录 `HasDamageTriggerStatus／IsDamageTriggerStatus`，成功续期同样计入；列表前项成功不会跳过后续项，也不重新抽取随机数。旧检查点缺少结果时保持未知，不从现存状态反推；正式伤害实体只消费已知的实际结果。
+- 用户确认伤害实体的单机姿态规则：范围受击使用本次实际命中身体格，点命中使用该次受击时的目标位置，方向与 X 翻转沿用本次施法快照。APK 未包含服务器创建时的赋值代码；本地回执在结算及由此产生的位移前冻结位置，原 `MyTransform／MyGridTransform` 消费该位置、原方向旋转和翻转，不追随后来变化的单位坐标。
+- 用户确认 `DamageResultParameter.ResultType` 的单机分类：治疗结算为 `Cure`，伤害结算为 `Damage`（包括零伤害和免疫），两者均未执行为 `None`。APK 缺少服务端赋值，正式投影消费已有治疗标志及公式结果证据，不通过 HP 变化的正负猜测分类。目前执行器在 `ActionType=None` 且没有公式／结算时提前跳过，纯状态命中的正式回执尚未生成；`None` 的消费使用明确的受控回执验证，不计为该规则路径已实现。
 
 - 用户确认行动者时间采用上述显示投影：本地执行器在演出前已推进其下次 `Next`，当前行动动画期间只向行动条传入本次 `Current`，切换后再显示下次时间；原管理器、UI、动画与战斗时钟保持原职责。
 
@@ -154,7 +160,7 @@
 
 ## 尚未实现
 
-- 原伤害实体尚未接到正式伤害事件的实际施法身份、生成／结束时刻、受伤角色通知和状态触发结果；已有飘字与扣血不代表五类原伤害图已经在正式流程播放。专项夹具的显式状态只验证客户端视图；`IsDamageTriggerStatus` 的用户确认单机规则见上方，正式执行回执已记录实际施加结果，伤害实体的正式创建与生命周期仍未接通。
+- 原伤害实体已接到具有完整归属、位置及状态结果的直接伤害回执；派生同步／吸血等不在该施法直接归属列表中的表现、旧回执未知字段及全部特殊组件仍未完整覆盖。 `FightBattleExecutor.ExecuteSkillCore` 当前跳过无公式／结算的 `ActionType=None` 命中，其状态施加与正式回执仍待迁移。原人物受伤动作、全部外观后端的材质变色及正式人物／HUD 的全部通知监听尚未完整接通；已有飘字与代表图验证不代表这些部分完成。
 - 官方服务器缺失的 AI、随机、结果裁决及复杂触发条件尚未完整恢复；未确认的行为不作推测。
 - 完整技能／命中／状态覆盖、同来源与叠层边界、特殊组件时序和实体生命周期仍有缺项。身体格选敌／接近和命中局部坐标变换已有指定原技能的 Play Mode 回归，尚未完成全部技能与 Windows Player 验证。
 - 原人物、NPC、幻兽、召唤物的完整模型、动作、骨骼、挂点、粒子、音频和材质表现尚未全部接通。
@@ -235,11 +241,19 @@
 
 - 随机父命中回执通过 `test_battle_random_parent_receipts.ps1`：10910／10920／13520 各含普通及重复根引用共六组，对照加入父回执前的执行，检查根引用独立身份、锚点和延迟、零额外随机抽取／伤害／AI 计数、检查点往返；仅移除新增父回执并重排序号后，完整检查点逐字节一致。既有命中选择专项、460 条公式／战斗核心回归、主工程 Unity 编译、`ProjectTools.Validate`、静态元数据检查（146,068 GUID）及内置屏静音 Play Mode 通过，编辑器正常以 0 退出。十一张实际运行画面已查看，覆盖既有六类受控原图与正式触发技能／召唤回执；父包装的正式实体生命周期仍未接线，截图中的随机父图来自既有受控夹具，不代表该新增回执的正式播放验证。本批未构建或发布 Windows Player。
 
-- 原伤害实体视图通过主工程 Unity 导入／编译、`ProjectTools.Validate`、静态元数据检查（149,956 GUID）及内置屏静音 Play Mode，编辑器正常以 0 退出。`OfficialBattleDamagePlaybackAcceptance.Run` 逐一加载 1,368 个原 prefab，核对启用状态、隐藏／零伤害标志及 4,213 个原图指针；10004、13012、11432、10152 分别覆盖完整结果图、仅状态触发图、仅公共图及空图，共 16 组格挡／暴击组合，检查格挡先于暴击、原目标／来源及 Damage 参数、目标通知先于技能查询、缺少目标／技能／来源、重复身份拒绝、同类实例回池复用，以及 13202 原覆盖驱动保持禁用。完整结果专项覆盖全部 128 组伤害标志、超过双精度整数精确范围的有符号 64 位结果、负护盾值、治疗／无结果分类和未知取值枚举；原目标与来源通知收到同一完整结果。角色通知由原 `MyFightRoleFight` 发出，核对实际发送者、伤害参数及无监听器分支；两种受控监听器异常均由原捕获边界隔离，跳过同次后续监听器并继续播放伤害图，仅消费这两条预期异常日志。同一入口在仅包含 65 个运行时程序集与 6,322 个原生输入的隔离工程以 D3D11、D3D12 通过全部断言，但原生退出停滞，限制工作线程数亦未解决，已停止本次进程，隔离运行不列为完整通过。四张主工程及四张隔离 13012 实际粒子画面已查看；既有命中回归的十一张画面、原六类图及正式固定／触发技能／召唤回执回归结论沿用。角色为无可见网格的受控对象，材质接口提供空集合；未验证真实人物受伤动作、材质变色或正式人物／HUD 的全部监听器。保留既有 API Updater 程序集解析诊断。本项未接通正式伤害事件，未构建或发布本批 Windows Player，公共战斗仍未完成。
+- 原伤害实体视图通过主工程 Unity 导入／编译、`ProjectTools.Validate`、静态元数据检查（149,956 GUID）及内置屏静音 Play Mode，编辑器正常以 0 退出。`OfficialBattleDamagePlaybackAcceptance.Run` 逐一加载 1,368 个原 prefab，核对启用状态、隐藏／零伤害标志及 4,213 个原图指针；10004、13012、11432、10152 分别覆盖完整结果图、仅状态触发图、仅公共图及空图，共 16 组格挡／暴击组合，检查格挡先于暴击、原目标／来源及 Damage 参数、目标通知先于技能查询、缺少目标／技能／来源、重复身份拒绝、同类实例回池复用，以及 13202 原覆盖驱动保持禁用。完整结果专项覆盖全部 128 组伤害标志、超过双精度整数精确范围的有符号 64 位结果、负护盾值、治疗／无结果分类和未知取值枚举；原目标与来源通知收到同一完整结果。角色通知由原 `MyFightRoleFight` 发出，核对实际发送者、伤害参数及无监听器分支；两种受控监听器异常均由原捕获边界隔离，跳过同次后续监听器并继续播放伤害图，仅消费这两条预期异常日志。同一入口在仅包含 65 个运行时程序集与 6,322 个原生输入的隔离工程以 D3D11、D3D12 通过全部断言，但原生退出停滞，限制工作线程数亦未解决，已停止本次进程，隔离运行不列为完整通过。四张主工程及四张隔离 13012 实际粒子画面已查看；既有命中回归的十一张画面、原六类图及正式固定／触发技能／召唤回执回归结论沿用。角色为无可见网格的受控对象，材质接口提供空集合；未验证真实人物受伤动作、材质变色或正式人物／HUD 的全部监听器。保留既有 API Updater 程序集解析诊断。此专项验证原视图与资产目录，正式步骤回执验证见下项；未构建或发布本批 Windows Player，公共战斗仍未完成。
 
-- 施法伤害归属通过 `test_battle_damage_cast_receipts.ps1`：10910／10920／13520 原随机命中、同来源同技能三次连续重放、父子伤害序号交错及零伤害共六组；检查伤害只属于一次实际施法、子列表独立、序号不要求连续、检查点往返及缺字段不推断归属。分别编译修改前的真实执行器／状态与当前代码，仅去掉新增列表后，六份完整检查点逐字节一致。460 条公式／战斗核心、技能重放、子技能、检查点及随机父回执回归通过；主工程 Unity 编译、`ProjectTools.Validate`、静态元数据检查（149,910 GUID）及内置屏静音命中 Play Mode 通过，两个编辑器进程均以 0 退出。十一张受控原图与正式固定／触发技能／召唤回执画面已查看，保留既有 API Updater 程序集解析诊断。本项只增加归属数据，尚未将原伤害实体接到正式流程，未构建或发布本批 Windows Player。
+- 施法伤害归属通过 `test_battle_damage_cast_receipts.ps1`：10910／10920／13520 原随机命中、同来源同技能三次连续重放、父子伤害序号交错及零伤害共六组；检查伤害只属于一次实际施法、子列表独立、序号不要求连续、检查点往返及缺字段不推断归属。分别编译修改前的真实执行器／状态与当前代码，仅去掉新增列表后，六份完整检查点逐字节一致。460 条公式／战斗核心、技能重放、子技能、检查点及随机父回执回归通过；主工程 Unity 编译、`ProjectTools.Validate`、静态元数据检查（149,910 GUID）及内置屏静音命中 Play Mode 通过，两个编辑器进程均以 0 退出。十一张受控原图与正式固定／触发技能／召唤回执画面已查看，保留既有 API Updater 程序集解析诊断。归属列表现由下述正式播放宿主消费；该规则专项不代表全部原伤害演出覆盖，未构建或发布本批 Windows Player。
+
+- 状态特效结果回执通过 `test_battle_damage_status_result.ps1`：目标／自身施加、概率与 HP 条件失败、生命周期拒绝、前后项成功／失败、不同拥有者、随机择一、成功续期及仅有旧状态共 13 组。分别编译修改前真实执行器／伤害回执与当前代码，仅去掉新增两字段后，13 份完整检查点逐字节一致；新回执往返保留结果，旧回执不猜测成功。460 条公式／战斗核心、状态施加、命中延迟及状态层数延迟回归通过。主工程 Unity 编译、`ProjectTools.Validate`、静态元数据检查（149,956 GUID）及内置屏静音 Play Mode 通过，编辑器均以 0 退出。专项使用受控技能配置生成真实执行回执，再驱动未修改的原 13012 状态图，覆盖空列表、目标成功、自身成功和概率失败；六张实际画面已查看，其中两张为回执驱动状态特效，完整结果和原角色通知专项继续通过。该受控配置不代表 13012 原技能拥有同一 StatusList；正式接线另由步骤回执专项验证。未构建或发布本批 Windows Player。
+
+- 正式伤害回执专项 `OfficialBattleDamagePlaybackAcceptance.RunReceipts` 通过主工程编译及内置屏静音 Play Mode，编辑器以 0 退出。检查步骤级非零起始偏移、配置创建时刻前后、原持续时间回池、同类技能三次真实重放的独立技能身份、目标后来位移时仍保持原点位置、10910 的实际身体格与连带点命中、原角色双向通知及完整结果、实际满血治疗仍为 `Cure`、受控无公式回执为 `None`、旧回执缺位置时跳过、最终释放。`test_battle_damage_pose_receipts.ps1` 覆盖点命中、受击位移、10910／10920、零伤害与满血／有效治疗七组；分别编译修改前真实执行器／回执与当前代码，只剔除新增位置证据和已有治疗原始值的补充记录后，完整检查点逐字节一致，往返及旧字段未知检查通过。460 条公式／战斗核心、状态结果、施法归属、受击位移、身体格命中及治疗战报回归通过。原目录专项继续通过 1,368 个原 prefab、4,213 个图指针、128 组标志及原通知／回池断言；十张实际粒子画面已查看，其中三张由正式 Play 消费真实步骤回执，一张由同一入口消费受控 `None` 回执。伤害回执专项的角色使用无可见网格的受控对象，真实模型另外由下述公共入口回归检查；完整受伤动作、飘字和全部 HUD 监听尚未验证。原生输入与绑定不变，只刷新本地播放代码凭据；未构建或发布本批 Windows Player。
+
+- 材质绑定接入后，主工程公共控制器的玩家 10630 与怪物 16020 两场内置屏静音 Play Mode 回归以 0 退出：模拟原开始按钮、15300／19810 一段小跳、暂停恢复、施法、3／1 次实际受击、CD／次数、技能槽与最终站位断言通过；十张受控黑底战场画面已查看，原伤害图调用材质节点不再空引用。正式回执专项、原目录专项及主工程 `ProjectTools.Validate` 均正常以 0 退出，静态元数据检查通过（150,056 GUID）。保留既有地面效果／缺失脚本警告及 API Updater 解析诊断，不据此宣称完整场景或全部角色材质后端已恢复；未构建或发布本批 Windows Player。
 
 ## 代码与来源入口
+
+- 正式伤害回执播放：[OfficialBattleDamageReceiptPlayback.cs](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageReceiptPlayback.cs)；专项：[OfficialBattleDamageReceiptAcceptance.cs](../../unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleDamageReceiptAcceptance.cs)。
 
 - 原伤害视图与生命周期：[MyFightDamage.cs](../../unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightDamage.cs)、[OfficialBattleDamageEntityPlayback.cs](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageEntityPlayback.cs)；专项入口：[OfficialBattleDamagePlaybackAcceptance.cs](../../unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleDamagePlaybackAcceptance.cs)。
 
@@ -248,4 +262,3 @@
 - 场景与 HUD：[OfficialBattleRuntimeController.cs](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs)、[OfficialBattleHudCatalog.cs](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudCatalog.cs)。
 - 官方配置及转换记录：[battle-rules.json](../../assets/official/battle-rules.json)、[skill-rules.json](../../assets/official/skill-rules.json)、[来源总览](../../assets/reference/SOURCES.md)。
 
-- 状态特效结果回执通过 `test_battle_damage_status_result.ps1`：目标／自身施加、概率与 HP 条件失败、生命周期拒绝、前后项成功／失败、不同拥有者、随机择一、成功续期及仅有旧状态共 13 组。分别编译修改前真实执行器／伤害回执与当前代码，仅去掉新增两字段后，13 份完整检查点逐字节一致；新回执往返保留结果，旧回执不猜测成功。460 条公式／战斗核心、状态施加、命中延迟及状态层数延迟回归通过。主工程 Unity 编译、`ProjectTools.Validate`、静态元数据检查（149,956 GUID）及内置屏静音 Play Mode 通过，编辑器均以 0 退出。专项使用受控技能配置生成真实执行回执，再驱动未修改的原 13012 状态图，覆盖空列表、目标成功、自身成功和概率失败；六张实际画面已查看，其中两张为回执驱动状态特效，完整结果和原角色通知专项继续通过。该受控配置不代表 13012 原技能拥有同一 StatusList，亦不代表已接通正式战斗伤害实体。未构建或发布本批 Windows Player。

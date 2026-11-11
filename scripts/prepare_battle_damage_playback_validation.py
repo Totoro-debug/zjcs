@@ -42,8 +42,9 @@ def main():
         shutil.rmtree(old_editor)
     editor = project / 'Assets/Editor'
     editor.mkdir(exist_ok=True)
-    fixture = ROOT / 'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleDamagePlaybackAcceptance.cs'
-    shutil.copy2(fixture, editor / fixture.name)
+    for name in ('OfficialBattleDamagePlaybackAcceptance', 'OfficialBattleDamageReceiptAcceptance'):
+        fixture = ROOT / 'unity/Assets/Game/Editor/Combat/AnimatorPlayback' / (name + '.cs')
+        shutil.copy2(fixture, editor / fixture.name)
     (editor / 'DamageValidation.asmdef').write_bytes((json.dumps(dict(
         name='DamageEntityValidation', includePlatforms=['Editor'],
         references=sorted(selected)), indent=2) + '\n').encode())
