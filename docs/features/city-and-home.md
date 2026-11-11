@@ -195,6 +195,10 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `HomeExperienceRewardsValidation.Run` 已在隔离完整工程 Play Mode 使用原生经验环子树，验证原处理器的并行播放顺序、监听去重、升级门槛等待、连续获奖取消与重播、无窗口时保留未演示经验、窗口重开补播、玩家更新取消、默认通知端点的上一级参数／2.2 秒等待和销毁退订。两张实际经验环运行截图已查看，保持原图与尺寸；该验证不包含头像摄影棚、领取按钮或升级通知窗口。静态元数据检查通过，完整工程隔离副本通过导入、C# 编译和 `Zjcs.Editor.ProjectTools.Validate`，按进程禁用无关 Burst 编译。玩家、经验表、通知与战力阻塞使用受控端点；正式本地成长事件、原升级通知 prefab、床铺领取及 Windows Player 仍未接入验证。
 
+所选 `884_156692` 的 `MainCanvas/PublicPlayerInfo` 中，`NameText`、`LevelTxt`、`CRText` 三个完整原生子树（21 个对象、12 个脚本组件）及姓名、等级、战力观察器已迁入 `HomePlayerInfoUI`。保留原坐标、锚点、字号、描边、渐变、语言键与字段绑定，根节点只分离父引用；原父级 RectTransform 链另随资源保留，尚未用来替代完整 MainCanvas。`PlayerNameText` 原样响应姓名变化；`PlayerLevelText` 响应等级、位阶与赛季记录更新，保留字号分支提前返回、经验盈满状态及可选说明按钮分支；`PlayerCombatRatingText` 保留 `NumberWithSizeArg` 的数值／单位分离，原生战力字号为 42。原 `FontAssetFontService` 通过原字体配置和所选 APK 的 FZY4K TTF 补入原动态字体的源字体，保留原字体图集、材质及参数，不以系统字体或新生成字体资产替换。资源与源字体由 `OfficialHomePlayerInfoAssetCatalog` 显式引用。
+
+`HomePlayerInfoNativeValidation.Run` 已在隔离工程的 Play Mode 验证实际文字网格与像素、姓名／等级刷新、战力“万／亿”单位切换、位阶／赛季变化、字号分支提前返回、隐藏后不再收事件，以及重开、重新初始化和销毁时五个观察订阅的数量与释放。已查看 608×1080 的初始和更新画面，中文、等级及数值单位已正确显示。静态元数据检查通过（149951 个 GUID）；整工程隔离副本已通过 Unity 2022.3.57f1c2 导入、C# 编译及 `Zjcs.Editor.ProjectTools.Validate`。测试保持静音，导入过程禁用无关 Burst 编译。画面仅覆盖独立玩家信息文字组，外围 MainCanvas、完整头像／血量／赐福／状态图标、原说明弹窗、真实角色成长事件与正式 HUD 接线尚未由此验证；Windows Player 尚未验证。
+
 当前主城在打开家园时，将所选版本 13 项 `FurnitureInfo` 的条件、费用、原始附加维修 ID、剧情名和可升级标志绑定到场景／维修窗口共用规则实例；当前组合条件只在同版 4496 项条件中解析，不借用历史同号记录。`OfflineHomeConditionPlayer` 每次查询最新角色存档：基础等级沿当前小阶的非赐福等级上限读取，职业阶数遍历实际已解锁职业并查询当前 31 项 `profession_base`，伙伴条件复用原始已结识／可结识判断，剧情、地图可达和女神激活读取实际状态。家园独立拥有记录及果树维修状态仅在条件查询中投影为原家具物品数量，避免向真实背包重复写入家具。挂机表和其他功能表尚未随设施切换；场景原生脚本、维修特效和完整教学仍待恢复。
 
 设施接线验证已在隔离完整工程完成当前 13 项记录、床铺锁定／预告／可维修／已拥有四态、物品拥有优先、背包变化、实际职业记录、可结识伙伴、地图可达、女神与基础等级上限检查，以及维修去重和磁盘重开。隔离窗口 Play Mode 使用官方维修／通知 prefab、实际本地维修服务及模拟指针，确认按钮提交后打开通知、关闭顺序、弹窗动画、遮罩与重开后的拥有状态。
@@ -237,6 +241,8 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 人物页底栏经 `CharacterFeatureRuntime.OpenProfile(slotId, savesRoot)` 打开本地人物档案。
 
 ## 自定义实现
+
+本次迁移按全新游戏制作，不增加旧单机存档的升级兼容逻辑。体力等新建状态遵循官方初始化与更新顺序；原存档缺字段时如何补值不再作为本次迁移前置决策。
 
 离线与运行期间按本地时间累计产出，负时间差按零，时间检查点只前进。所有领取、升级、费用、随机结果和教学进度使用同一本地事务，失败回滚。
 
