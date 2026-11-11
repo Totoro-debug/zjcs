@@ -219,6 +219,15 @@ def remap_guid_references(raw: bytes, guid_remapping: dict[str, str]) -> bytes:
     return GUID.sub(lambda match: "guid: " + guid_remapping.get(match.group(1), match.group(1)), value).encode("utf-8")
 
 
+def official_dependency_path(relative: Path) -> Path:
+    # Unity checks plugin filenames against asmdef names even when every
+    # PluginImporter platform is disabled. Keep the APK bytes and GUID, while
+    # giving these source assemblies a filename distinct from migrated code.
+    if relative.suffix.lower() == ".dll":
+        return relative.with_name("ApkSource." + relative.name)
+    return relative
+
+
 def disable_apk_plugin_import(meta_content: bytes) -> bytes:
     lines = meta_content.splitlines(keepends=True)
     plugin_index = next((index for index, line in enumerate(lines)
@@ -830,7 +839,7 @@ def build(npc_adventure_only: bool = False) -> dict:
         existing = external.get(source_guid)
         relative = source.relative_to(EXPORT)
         source_digest = digest(source)
-        canonical_target = OFFICIAL / relative
+        canonical_target = OFFICIAL / official_dependency_path(relative)
         canonical_meta = canonical_target.with_name(canonical_target.name + ".meta")
         canonical_prior = prior_native_outputs.get(canonical_target.relative_to(ROOT).as_posix())
         canonical_conversion_is_verified = bool(
@@ -851,7 +860,7 @@ def build(npc_adventure_only: bool = False) -> dict:
             and not canonical_conversion_is_verified)
         external_guid_conflicts = existing and digest(existing) != source_digest
         if external_guid_conflicts or canonical_target_conflicts or canonical_meta_conflicts:
-            prior_target = OFFICIAL / "GuidConflicts" / relative
+            prior_target = OFFICIAL / "GuidConflicts" / official_dependency_path(relative)
             prior_meta = prior_target.with_name(prior_target.name + ".meta")
             prior = prior_native_outputs.get(prior_target.relative_to(ROOT).as_posix())
             preserved_guid = None
@@ -917,7 +926,8 @@ def build(npc_adventure_only: bool = False) -> dict:
             official_target = existing
         else:
             remapped = asset_guid in guid_remapping
-            official_target = (OFFICIAL / "GuidConflicts" / relative) if remapped else OFFICIAL / relative
+            output_relative = official_dependency_path(relative)
+            official_target = (OFFICIAL / "GuidConflicts" / output_relative) if remapped else OFFICIAL / output_relative
             official_target.parent.mkdir(parents=True, exist_ok=True)
             folder = OFFICIAL
             target_relative = official_target.relative_to(OFFICIAL)

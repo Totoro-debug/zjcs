@@ -22,6 +22,7 @@ namespace Zjcs.Editor
             ["Assets/Game/Runtime/Official/Dungeons/Spine/SpineSkeletonGraphic_884_156692.shader"] = 6,
             ["Assets/Game/Resources/Dungeons/UI/884_156692/Native/Playables/Converted/59de19d261370c02.shader"] = 260,
             ["Assets/Game/Runtime/Official/World/NativeWater/Shaders/EnvironmentNoise.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Home/Shaders/FruitTree_59de19d261370c02.shader"] = 260,
             ["Assets/Game/Runtime/Official/Combat/Shaders/OfficialSummonSkeletonEffect2D.shader"] = 768,
             ["Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpineSkeletonGraphicCustom_05649282.shader"] = 16,
             ["Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipelineSpineSkeletonEffect2D_19e49995.shader"] = 768,
@@ -99,7 +100,7 @@ namespace Zjcs.Editor
                 selections.Add(original.Key, selection);
                 stages += selection.PassCount * selection.Programs.Count * 2;
             }
-            if (stages != 51908) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            if (stages != 52948) throw new BuildFailedException("Original shader stage domain changed: " + stages);
             Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
@@ -139,7 +140,7 @@ namespace Zjcs.Editor
                 }
             }
             finally { ShaderUtil.allowAsyncCompilation = previousAsync; }
-            if (stages != 51908) throw new BuildFailedException("Original shader stage count changed: " + stages);
+            if (stages != 52948) throw new BuildFailedException("Original shader stage count changed: " + stages);
             Debug.Log("Original sparse shaders: all " + stages + " Windows GPU stages across "
                 + originalPrograms.Count + " original shader assets compiled.");
             ProjectTools.Validate();

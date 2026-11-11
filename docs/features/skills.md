@@ -364,6 +364,8 @@ Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 U
 
 - 10544／25023 的原 `HitCustomCure` 与 10565／25031 的原 `DoDamageHandle` 尚未接入。所选官方共享配置及空的客户端处理器已核对：前者保留 `BattleFormulaHandler.SuckHp` 公式、吸血属性与自身子技能 10520，缺少伤害参数及治疗调度；后者要求暗属性命中、排除友方及 11360、按原受属性影响的 40% 概率向命中目标施加 24222，缺少服务器事件调度。吸血的伤害参数与治疗调度已按下述用户确认方案确定，暗命中的单机事件方案也已确认；既有单段吸血模块不代表 25023 已完成。`FightDamageFormula.SuckHp` 已独立迁入原 `SuckHp`／`SuckHpByOnceHit` 公式：分别传入秘法和造成伤害的技能属性，固定项按来源／主人角色类型应用两次原减伤除数，按原自身治疗增益软上限、浮点计算顺序和向零取整计算，不额外应用 `FinalCureScale`。`test_battle_suck_hp.ps1` 在内存编译所选官方四个原方法，238 次对照通过，包含各人物／主人类型、正负伤害、固定／比例项、负减伤下限、增益软上限、取整及零基数行为；共享工程静态元数据检查通过（146,020 个 GUID）。公式代码亦已随上述独立工程导入／编译并通过 ProjectTools.Validate；这不代表尚未接入的 25023 事件绑定、子技能治疗、Play Mode 或 Windows Player 已完成。输入身份见[吸血公式来源](../../assets/reference/battle-rules/suck-hp-source-manifest.json)。
 
+- 本批 Windows 全资源构建仍未通过：已修复原家园果树 shader 的完整稀疏程序域登记，以及仅留作来源、全平台禁用的 APK DLL 本地文件名与迁移 asmdef 重名问题；原 shader、DLL 内容和 GUID 保持不变。本次共享工程构建在生成 GlobalGameManagers 时报告 `success && actual == size` 读写断言，同次日志报告磁盘可用空间低于 1 GB，未产出有效 Player。仍需取得足够临时空间后重新完成严格构建和实际 Player 验证；不得以关闭错误检查或仅脚本构建规避。
+
 - 日常副本机神山当前完整 Windows Player 在末关房间 2115／战场 30115 的公共演出中失败：原 `ApplyByBone.OnPlayableStop` 空引用；最近行动为怪物 3451 的原技能 18730。所选官方 `playable18730` 从施法来源读取 `MonsterModel_3451` 与 `rotate_01`，当前公共完整骨骼目录未包含 3451，不能用吞掉异常或关闭原特效替代原始模型附着绑定。需恢复并核对相关模型／附着入口、修复后重跑末关及完整路线；目前仅确认失败与原资源依赖，未将推测的根因作为修复结论。
 
 

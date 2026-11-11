@@ -351,7 +351,7 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 日常副本 Type 57 排行榜馈赠使用当前所选 `884_156692` 的 APK 优先 `config_luban/achievement.g.bytes`，按该版本原 Luban 构造函数解码，保留原分组、参数、奖励与成就标识计算；中文文本沿原 `AchievementContentDailyDungeonGradeTop`／`LanguageUtils` 的键读取。原始载荷、程序集反编译来源、缺失的未开放标题键及输出哈希见[排行榜馈赠来源](dungeon-ui/daily-dungeon-top-achievements-source-manifest.json)，生成器为 `scripts/prepare_daily_dungeon_top_achievements.py`。
 
-所选 884 的副本入口、详情、路线和私有难度 prefab 由 `prepare_dungeon_ui_assets.py` 转换，脚本、材质及 Windows shader 绑定见[当前原生依赖来源](dungeon-ui/884_156692/source-manifest.json)。`prepare_dungeon_ui_bindings.py` 同时读取原 `DailyDungeonSettings` 的 38 组封面／背景／建筑 Sprite GUID，以及 prefab 的 `NoDrawingRayCast` 字段；原对象、APK／云端输入、图像与字段输出哈希见[当前界面绑定来源](dungeon-ui/884_156692/prefab-binding-source-manifest.json)。历史 871 资源与回执保持其原版本身份。
+所选 884 的副本入口、详情、路线和私有难度 prefab 由 `prepare_dungeon_ui_assets.py` 转换，脚本、材质及 Windows shader 绑定见[当前原生依赖来源](dungeon-ui/884_156692/source-manifest.json)。同版依赖中 11 个 APK DLL 的本地文件名加 `ApkSource.` 前缀，保留原字节、GUID、程序集身份与原输入路径，并禁用全部导入平台；当前副本和伙伴冒险凭据记录实际输出路径，不改写原始输入哈希。`prepare_dungeon_ui_bindings.py` 同时读取原 `DailyDungeonSettings` 的 38 组封面／背景／建筑 Sprite GUID，以及 prefab 的 `NoDrawingRayCast` 字段；原对象、APK／云端输入、图像与字段输出哈希见[当前界面绑定来源](dungeon-ui/884_156692/prefab-binding-source-manifest.json)。历史 871 资源与回执保持其原版本身份。
 
 日常副本奖励图标由 `scripts/prepare_daily_dungeon_reward_icons.py` 根据运行奖励、随机装备池及两类馈赠配置收集道具标识，再以当前所选 `884_156692` 的原 `ItemInfo.RawIcon` 解析 Sprite、图集与纹理，保留原打包旋转、紧密网格遮罩、逻辑矩形留白、pivot、border 与 PPU，生成显式资源目录；目录中的详情窗口类型按同版 `ItemDetailDialogFactory` 分支顺序，由原 `ItemInfo`、`GameSettings` 与 `ItemUseEffectType` 计算。历史规则配置的版本身份保持原样；图像输入版本、官方道具构造函数、详情分流源码及各输入输出哈希见[公共奖励图标来源](dungeon-ui/daily-dungeon-reward-icons-source-manifest.json)。未生成完整素材快照。
 

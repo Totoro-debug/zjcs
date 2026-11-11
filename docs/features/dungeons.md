@@ -44,7 +44,7 @@
 
 Type 22 按累计成功领奖次数生成原成就行，不增加每日次数。Type 57 从当前官方 409 条奖励门槛按 Group／Index 生成固定标识；`FinishAndPersist` 在公开完整通关事务中累计指定副本、难度、准确评级的次数，退出、私有路线和重复完成不累计。领奖回执进入主档奖励事务后保存已领取状态。原表 137 组中，44／Hell 无上榜配置且缺标题，保留原行与来源记录，不开放入口。馈赠页恢复原点击区域、状态切换顺序、进度条和经输入哈希核实的同源 Windows `UI/Gray`，保留可领取／已领取共用宝箱。见[排行榜馈赠来源](../../assets/reference/dungeon-ui/daily-dungeon-top-achievements-source-manifest.json)。
 
-当前 884 UI 转换保留 `UIImgAdd`、默认／染色 Spine 材质参数与官方 shader 程序身份，Windows 绑定写入[原生 UI 来源](../../assets/reference/dungeon-ui/884_156692/source-manifest.json)。原显示／隐藏／循环动画的曲线与事件保留，脚本引用适配 Windows UGUI／TMP；默认 Spine UI 的原六组程序由 `OfficialSparseShaderVariants` 限定构建。依赖内 11 个原 DLL 保留字节、GUID 和来源哈希，但禁用所有 PluginImporter 平台入口，运行本地迁移代码。历史 871 Map12 界面继续保留历史版本身份，不修改预期哈希。
+当前 884 UI 转换保留 `UIImgAdd`、默认／染色 Spine 材质参数与官方 shader 程序身份，Windows 绑定写入[原生 UI 来源](../../assets/reference/dungeon-ui/884_156692/source-manifest.json)。原显示／隐藏／循环动画的曲线与事件保留，脚本引用适配 Windows UGUI／TMP；默认 Spine UI 的原六组程序由 `OfficialSparseShaderVariants` 限定构建。依赖内 11 个原 DLL 保留字节、GUID 和来源哈希，但禁用所有 PluginImporter 平台入口，运行本地迁移代码。它们的本地文件名统一加 `ApkSource.` 前缀，避免 Unity 在所有平台均禁用时仍检查到与本地 asmdef 重名；原程序集内部身份、原文件名与输入哈希保留在来源记录中，prefab 的 GUID 引用不变。生成器和副本／伙伴冒险依赖凭据同步使用新输出路径；21 项依赖记录的 DLL／meta 字节及原哈希已逐一对照，通过当前 Unity 导入／编译与 ProjectTools.Validate。完整 Windows 构建仍受[技能页记录的构建阻塞](skills.md#尚未实现)影响，尚未取得有效 Player。历史 871 Map12 界面继续保留历史版本身份，不修改预期哈希。
 
 开箱与品质 Playable 的原 `Noise_Mask_Pro` 另登记到同一 Windows 构建筛选器：保留两个 Pass 各自的 260 组原始关键词程序，仅编译原文件实际存在的组合，新增 1,040 个 GPU 阶段。载荷与原始来源哈希沿用上述结果特效凭据；登记后已通过清理构建缓存的完整内容 Windows 构建，日志无着色器错误，全部 55 项稀疏程序登记合计 50,868 个 GPU 阶段。该构建检查不作为开箱 Player 流程完成的依据。
 
