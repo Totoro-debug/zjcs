@@ -1030,8 +1030,9 @@ namespace Zjcs.Combat.Official
                     CollectUnflinchingActions(target, actualHpLoss, skill);
                     FightStatusTriggerRuntime.ApplyAccumulatedDamage(target,
                         actualHpLoss, statusCatalog, random, configuredTriggerSkills, skill);
-                    ApplyHitStatuses(actor, target, skill, hit, random, skillCostHp,
+                    damage.IsDamageTriggerStatus = ApplyHitStatuses(actor, target, skill, hit, random, skillCostHp,
                         actualHpLoss);
+                    damage.HasDamageTriggerStatus = true;
                     CollectHitTriggerSkill(actor, target, skill, hit, configuredComponentInvocations);
                     ApplyMissingStatusComponentsOnHit(actor, target, skill, hit, resolved,
                         actualHpLoss, configuredComponentInvocations);
@@ -2365,22 +2366,23 @@ namespace Zjcs.Combat.Official
         /// target, checks the remaining-HP condition and probability, then adds the status through
         /// the shared lifecycle (duration starts at the owner's next round update).
         /// </summary>
-        private void ApplyHitStatuses(FightBattleUnitState actor, FightBattleUnitState target,
+        private bool ApplyHitStatuses(FightBattleUnitState actor, FightBattleUnitState target,
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit, FightRandomStream random,
             long skillCostHp, long actualHpLoss)
         {
-            if (statusCatalog == null || hit.AppliedStatuses == null) return;
+            if (statusCatalog == null || hit.AppliedStatuses == null) return false;
             if (hit.StatusListRandomOne && hit.AppliedStatuses.Count > 1)
             {
                 int index = Math.Min((int)(random.Next() * hit.AppliedStatuses.Count),
                     hit.AppliedStatuses.Count - 1);
-                ApplyHitStatus(actor, target, skill, hit.AppliedStatuses[index], random,
+                return ApplyHitStatus(actor, target, skill, hit.AppliedStatuses[index], random,
                     skillCostHp, actualHpLoss);
-                return;
             }
+            bool applied = false;
             foreach (FightBattleStatusApplication application in hit.AppliedStatuses)
-                ApplyHitStatus(actor, target, skill, application, random, skillCostHp,
+                applied |= ApplyHitStatus(actor, target, skill, application, random, skillCostHp,
                     actualHpLoss);
+            return applied;
         }
 
         private void RebuildBattleProperties()
@@ -2405,16 +2407,16 @@ namespace Zjcs.Combat.Official
             checkpoint.Statistics.RecordPendingStatusApplications(units);
         }
 
-        private void ApplyHitStatus(FightBattleUnitState actor, FightBattleUnitState target,
+        private bool ApplyHitStatus(FightBattleUnitState actor, FightBattleUnitState target,
             FightBattleSkillDefinition skill, FightBattleStatusApplication application,
             FightRandomStream random, long skillCostHp, long actualHpLoss)
         {
-            if (application == null || application.StatusId <= 0) return;
+            if (application == null || application.StatusId <= 0) return false;
             FightBattleUnitState owner = application.TargetType == 1 ? actor : target;
             if (owner == null || (owner.Hp <= 0
-                && !statusCatalog.HasBackToLifeComponent(application.StatusId))) return;
+                && !statusCatalog.HasBackToLifeComponent(application.StatusId))) return false;
             if (application.LessThanHpPer >= 0f
-                && owner.Hp / (double)Math.Max(1L, owner.MaxHp) >= application.LessThanHpPer) return;
+                && owner.Hp / (double)Math.Max(1L, owner.MaxHp) >= application.LessThanHpPer) return false;
             double chance = application.Chance;
             bool affectedByProp = application.AffectedByProp;
             if (application.CharacterTypeRateOverrides != null)
@@ -2427,7 +2429,7 @@ namespace Zjcs.Combat.Official
                     }
             chance = statusCatalog.CalculateStatusApplicationRate(actor, owner,
                 application.StatusId, chance, affectedByProp, formula);
-            if (!(random.Next() <= chance)) return;
+            if (!(random.Next() <= chance)) return false;
             int instanceId = 1;
             foreach (FightBattleStatusState existing in owner.Statuses)
                 if (existing != null && existing.InstanceId >= instanceId)
@@ -2441,7 +2443,7 @@ namespace Zjcs.Combat.Official
                 skill == null ? 1 : skill.Level, skill == null ? actor.SubRank : skill.SubRank,
                 actor.Properties, customStatusValue, null, skill?.BlessPropertyScales);
             template.Origin = FightBattleStatusOrigin.Resolve(skill, actor.Id).Copy();
-            FightStatusLifecycle.Apply(owner, template, -1, instanceId, random);
+            return FightStatusLifecycle.Apply(owner, template, -1, instanceId, random) != null;
         }
 
         private static void InheritBlessingScales(FightBattleSkillDefinition skill,

@@ -31,6 +31,10 @@ namespace Zjcs.Combat.Official
         public bool HasHitGridPosition;
         public int HitGridX, HitGridY;
         public bool IsCure;
+        // Confirmed offline presentation result: only this damage's StatusList
+        // applications count. Legacy receipts leave the result explicitly unknown.
+        public bool HasDamageTriggerStatus;
+        public bool IsDamageTriggerStatus;
         public bool Critical;
         public bool Block;
         public bool Dodge;

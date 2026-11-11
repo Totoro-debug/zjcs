@@ -123,7 +123,7 @@
 
 ## 自定义实现
 
-- 用户确认伤害状态特效的单机规则：本次伤害的 `StatusList` 至少成功施加一个状态时，`IsDamageTriggerStatus=true`，包括给来源自身施加；概率失败、免疫或拒绝添加均为 false，其他被动连带状态不计入。此为 APK 缺少服务器赋值时采用的单机裁决；原客户端仍按该布尔值独立播放 `myTriggerStatusPlayable`，正式执行回执接线尚未完成。
+- 用户确认伤害状态特效的单机规则：本次伤害的 `StatusList` 至少成功施加一个状态时，`IsDamageTriggerStatus=true`，包括给来源自身施加；概率失败、免疫或拒绝添加均为 false，其他被动连带状态不计入。此为 APK 缺少服务器赋值时采用的单机裁决；原客户端仍按该布尔值独立播放 `myTriggerStatusPlayable`，执行器在原施加顺序中记录 `HasDamageTriggerStatus／IsDamageTriggerStatus`，成功续期同样计入；列表前项成功不会跳过后续项，也不重新抽取随机数。旧检查点缺少结果时保持未知，不从现存状态反推；正式伤害实体接线仍待完成。
 
 - 用户确认行动者时间采用上述显示投影：本地执行器在演出前已推进其下次 `Next`，当前行动动画期间只向行动条传入本次 `Current`，切换后再显示下次时间；原管理器、UI、动画与战斗时钟保持原职责。
 
@@ -154,7 +154,7 @@
 
 ## 尚未实现
 
-- 原伤害实体尚未接到正式伤害事件的实际施法身份、生成／结束时刻、受伤角色通知和状态触发结果；已有飘字与扣血不代表五类原伤害图已经在正式流程播放。专项夹具的显式状态只验证客户端视图；`IsDamageTriggerStatus` 的用户确认单机规则见上方，尚未写入正式执行回执。
+- 原伤害实体尚未接到正式伤害事件的实际施法身份、生成／结束时刻、受伤角色通知和状态触发结果；已有飘字与扣血不代表五类原伤害图已经在正式流程播放。专项夹具的显式状态只验证客户端视图；`IsDamageTriggerStatus` 的用户确认单机规则见上方，正式执行回执已记录实际施加结果，伤害实体的正式创建与生命周期仍未接通。
 - 官方服务器缺失的 AI、随机、结果裁决及复杂触发条件尚未完整恢复；未确认的行为不作推测。
 - 完整技能／命中／状态覆盖、同来源与叠层边界、特殊组件时序和实体生命周期仍有缺项。身体格选敌／接近和命中局部坐标变换已有指定原技能的 Play Mode 回归，尚未完成全部技能与 Windows Player 验证。
 - 原人物、NPC、幻兽、召唤物的完整模型、动作、骨骼、挂点、粒子、音频和材质表现尚未全部接通。
@@ -247,3 +247,5 @@
 - 离线适配：[`Runtime/Offline/Combat`](../../unity/Assets/Game/Runtime/Offline/Combat/)。
 - 场景与 HUD：[OfficialBattleRuntimeController.cs](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs)、[OfficialBattleHudCatalog.cs](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudCatalog.cs)。
 - 官方配置及转换记录：[battle-rules.json](../../assets/official/battle-rules.json)、[skill-rules.json](../../assets/official/skill-rules.json)、[来源总览](../../assets/reference/SOURCES.md)。
+
+- 状态特效结果回执通过 `test_battle_damage_status_result.ps1`：目标／自身施加、概率与 HP 条件失败、生命周期拒绝、前后项成功／失败、不同拥有者、随机择一、成功续期及仅有旧状态共 13 组。分别编译修改前真实执行器／伤害回执与当前代码，仅去掉新增两字段后，13 份完整检查点逐字节一致；新回执往返保留结果，旧回执不猜测成功。460 条公式／战斗核心、状态施加、命中延迟及状态层数延迟回归通过。主工程 Unity 编译、`ProjectTools.Validate`、静态元数据检查（149,956 GUID）及内置屏静音 Play Mode 通过，编辑器均以 0 退出。专项使用受控技能配置生成真实执行回执，再驱动未修改的原 13012 状态图，覆盖空列表、目标成功、自身成功和概率失败；六张实际画面已查看，其中两张为回执驱动状态特效，完整结果和原角色通知专项继续通过。该受控配置不代表 13012 原技能拥有同一 StatusList，亦不代表已接通正式战斗伤害实体。未构建或发布本批 Windows Player。

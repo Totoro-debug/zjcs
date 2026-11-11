@@ -275,6 +275,24 @@ namespace Zjcs.Editor.Combat
                     for (int frame = 0; frame < 45; frame++) { scope.Tick(1f / 60f); yield return null; }
                 }
             expectedResult = null;
+            for (int index = 0; index < 4; index++)
+            {
+                var receipt = RecordStatusResult(index);
+                Require(receipt.HasDamageTriggerStatus && receipt.IsDamageTriggerStatus == (index == 1 || index == 2),
+                    "Settled direct status success supplies the original independent trigger flag.");
+                played.Clear(); services.Notifications.Clear();
+                var state = new OfficialBattleDamageEntityData(new EcEntityIdentifier(7, ++serial), 13012,
+                    skillEntity.Id, targetEntity.Id, receipt.Block, receipt.Critical, receipt.IsDamageTriggerStatus,
+                    target.localPosition, Quaternion.identity, Vector3.one, new Grid());
+                damages.Create(state);
+                Require(played.Count == (receipt.IsDamageTriggerStatus ? 1 : 0)
+                    && services.Notifications.SequenceEqual(new[] { "target", "source" }),
+                    "Original status graph follows the recorded application result, including self application.");
+                for (int frame = 0; frame < 15; frame++) { scope.Tick(1f / 60f); yield return null; }
+                if (receipt.IsDamageTriggerStatus) Capture("damage-status-" + index + ".png");
+                damages.Remove(state.Id);
+                for (int frame = 0; frame < 45; frame++) { scope.Tick(1f / 60f); yield return null; }
+            }
             foreach (var missing in new[] { targetEntity.Id, skillEntity.Id, sourceEntity.Id })
             {
                 services.Missing = missing;
@@ -318,7 +336,40 @@ namespace Zjcs.Editor.Combat
                 && originalEntity.GetComponent<MyFightDamage>().myCommonPlayable == overridePrefab.GetComponent<MyFightDamage>().myCommonPlayable,
                 "Disabled original status override is not enabled by local loading.");
             damages.Remove(overrideState.Id);
-            Debug.Log("Original damage entities passed: complete result projection, 128 flag combinations, original numeric helpers, all 1368 native prefabs and graph fields, original role event senders/arguments, empty subscribers, multicast exception isolation, ordered notifications, common/block/crit/status branches, actual Damage parameters, missing entities, duplicate identities, pool removal and disabled original override.");
+            Debug.Log("Original damage entities passed: recorded status success/failure drives the original graph, complete result projection, 128 flag combinations, original numeric helpers, all 1368 native prefabs and graph fields, original role event senders/arguments, empty subscribers, multicast exception isolation, ordered notifications, common/block/crit/status branches, actual Damage parameters, missing entities, duplicate identities, pool removal and disabled original override.");
+        }
+
+        private static FightBattleDamageEvent RecordStatusResult(int index)
+        {
+            var checkpoint = new FightBattleCheckpoint { StageId = 1, RandomSeed = 11,
+                Grid = new FightBattleGrid { Width = 16, Height = 16 } };
+            for (int id = 1; id <= 2; id++)
+            {
+                var unit = new FightBattleUnitState { Id = id, Side = id, CharacterType = id,
+                    X = 4 + id, Y = 5, Hp = 1000000, MaxHp = 1000000, Level = 150, SubRank = 1,
+                    MoveMask = 5, Direction = 3, HasFlipX = true,
+                    Turn = new FightTurnUnit { Id = id, Hp = 1000000, Speed = 100 - id } };
+                foreach (var pair in new[] { new[] { 1, 10001 }, new[] { 2, 10003 },
+                    new[] { 3, 1000000 }, new[] { 4, 100 - id } })
+                    unit.Properties.Add(new FightPropertyValue { Id = pair[0], Value = pair[1] });
+                checkpoint.Units.Add(unit);
+            }
+            // Controlled configuration isolates the confirmed offline result;
+            // the native graph and its prefab are the unmodified original 13012.
+            var skill = new FightBattleSkillDefinition { EntityId = 10100, Slot = 0, TargetType = 1,
+                Duration = 1f, ActionDuration = 1f };
+            skill.Range.Add(new FightGridPoint(1, 0));
+            var hit = new FightBattleHitDefinition { EntityId = 10101, DamageId = 13012,
+                DamageType = 8, HasCustomDamage = true, CustomDamage = 5, TargetMode = 0 };
+            skill.Hits.Add(hit);
+            if (index != 0) hit.AppliedStatuses.Add(new FightBattleStatusApplication { StatusId = 24031,
+                TargetType = index == 2 ? 1 : 0, Chance = index == 3 ? 0f : 1f,
+                AffectedByProp = false, LessThanHpPer = -1f });
+            checkpoint.Units[0].Skills.Add(skill);
+            checkpoint.Units[0].SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = -1 });
+            var wave = new FightBattleWaveState(); wave.UnitIds.Add(2); checkpoint.Waves.Add(wave);
+            return OfficialCombatAssetCatalog.LoadDefault().BeginBattle(checkpoint).Step(0, 1)
+                .Event.DamageEvents.Single(damage => !damage.IsSkillCost);
         }
 
         private static DamageResultParameter ResultPayload(int mask) => new DamageResultParameter {
