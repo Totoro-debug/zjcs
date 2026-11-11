@@ -183,6 +183,10 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 ### 家园运行层接入
 
+`Runtime/Official/HomeMainPanelUI/` 已迁入原 `HomeUI`、`MainUIPanelBase`、`MainUIPanelWithAnimator`、`ESceneUIGraphicType` 和完整 `AnimatorUtils`；使用原程序集及完整依赖重新反编译异步方法，仅适配命名空间并复用已核对原码的公共 `UIBase`。Show 先激活、设置 `IsShow=true`，等待原 Show 状态且 normalizedTime≥1；Hide 先设置 false，未激活或非 Show 状态立即隐藏，否则等待原 Hide 状态完成后隐藏，保留原取消行为。实际 `MainCanvas.HomeUI.mAnimator` 引用的控制器、八个原控制器子资产和两段完整原生动画已恢复，资源键为 `Home/MainPanel/HomeUI`；Show 为 23/60 秒，Hide 为 7/60 秒，保留原曲线、路径、状态、过渡及末帧 `m_IsActive`，没有按时长重写动画。
+
+`HomeMainPanelNativeValidation.Run` 已在完整隔离工程静音 Play Mode 以原生货币栏作为测试用动画宿主，验证原 Show／Hide 等待、取消、未激活／非 Show 立即返回、反复显示后的订阅数量及隐藏时释放；已查看实际显示和 Hide 半程淡出画面，根 CanvasGroup 的透明度、交互阻断与原曲线一致。测试的运行组件与 Editor 启动器分属程序集；取消结果直接按 UniTask 检查，不依赖 `AsTask()` 的状态转换。根工作区静态元数据检查通过（150087 个 GUID），完整隔离工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。此验证只覆盖原动画控制器和根曲线，不证明完整 HomeUI 子树的全部曲线目标、主城创建、底栏切页／场景切换及正式 HUD 接线完成，也未作为 Windows Player 发布验收。
+
 所选 `MainCanvas` 的屏幕框架已按原节点及组件引用提取为 `HomeScreenFrame`：保留根 Canvas／1080×1920 Expand 缩放器、Content 裁剪层、Main／Public 安全区祖先和 CanvasBorder 左右边框，共 29 个原始对象；功能面板及其处理器明确不在这份部分提取中，未替代完整 `MainUIRoot`。边框 Sprite 沿 APK 实际引用绑定原加载背景及 Windows 纹理，由 `Resources/Home/OfficialHomeScreenAssetCatalog` 显式加载。`Runtime/Official/HomeScreenUI/` 迁入完整原 `CanvasWidthAdjuster`、`SafeArea`、转换工具及屏幕适配服务：宽高比超过 121/160 时居中裁宽，低于 0.45 时居中裁高，与系统安全区交集并为正裁量补原 2 个 UI 单位；上下边框依原流程克隆左边框。保留安全区内边距、禁用分支、尺寸脏标记及边框暂停／恢复顺序。仅替换日志、依赖注入与服务所有权；Windows 沿原非 Android 分支使用 `Screen.safeArea`，默认屏幕指标直接读取 Unity，隔离渲染可通过作用域端口提供同一目标尺寸。此框架尚未接入正式家园 HUD。
 
 `HomeScreenNativeValidation.Run` 已在完整隔离工程静音 Play Mode 验证原生框架、实际资源绑定、宽／高裁剪、不对称安全区、原 2 单位补量、内边距与禁用分支、实际 RectTransform、动态边框复用及注册／暂停／恢复／销毁释放。已查看 800×600、400×1200 和 608×1080 的实际渲染目标画面，原版边框与裁量一致；原 Image 的内部指针射线命中通过。测试未改变系统／编辑器 Screen 尺寸，只验证屏幕框架，不证明完整 HUD 布局、点击流程或 Windows Player 完成。根工作区静态元数据检查通过（150072 个 GUID），完整隔离工程的导入／C# 编译及 `Zjcs.Editor.ProjectTools.Validate` 通过；既有 Burst 扫描的程序集解析诊断未作为 Windows 构建通过依据。
