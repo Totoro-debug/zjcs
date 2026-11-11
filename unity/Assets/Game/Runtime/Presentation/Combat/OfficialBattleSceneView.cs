@@ -499,6 +499,17 @@ namespace Zjcs.Presentation.Combat
             return current;
         }
 
+        public void RefreshStatusSnapshot(FightBattleCheckpoint checkpoint)
+        {
+            if (checkpoint == null) return;
+            foreach (var state in checkpoint.Units)
+            {
+                if (attachedUnitHuds.TryGetValue(state.Id, out var attachedHud))
+                    attachedHud?.Refresh(state, checkpoint.Units);
+                if (units.TryGetValue(state.Id, out var view)) view.Hud?.Refresh(state, checkpoint.Units);
+            }
+        }
+
         public void Refresh(FightBattleCheckpoint checkpoint, FightBattleStepEvent stepEvent = null)
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));

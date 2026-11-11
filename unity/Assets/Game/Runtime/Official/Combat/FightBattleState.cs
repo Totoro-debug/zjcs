@@ -315,6 +315,7 @@ namespace Zjcs.Combat.Official
         public FightBattleStatusDarkHitState DarkHit;
         public FightBattleStatusHitCustomCureState HitCustomCure;
         public FightBattleStatusMoveScopeState MoveScope;
+        public FightBattleStatusSecondsState Seconds;
         public FightBattleStatusCureReduceState CureReduce;
         public FightBattleStatusHitSkillComponentState HitSkill;
         public FightBattleStatusDamageSkillComponentState DamageSkill;
@@ -339,6 +340,7 @@ namespace Zjcs.Combat.Official
                 DarkHit = DarkHit?.Copy(),
                 HitCustomCure = HitCustomCure?.Copy(),
                 MoveScope = MoveScope?.Copy(),
+                Seconds = Seconds?.Copy(),
                 CureReduce = CureReduce?.Copy(),
                 HitSkill = HitSkill?.Copy(),
                 DamageSkill = DamageSkill?.Copy(),
@@ -1456,6 +1458,7 @@ namespace Zjcs.Combat.Official
     [Serializable]
     public sealed class FightBattleHitDefinition
     {
+        public FightBattleStatusApplication AirCombo;
         // A root wrapper owns a real client entity without applying a damage action.
         public bool IsViewOnly;
         public int EntityId;
@@ -1543,6 +1546,7 @@ namespace Zjcs.Combat.Official
     [Serializable]
     public sealed class FightBattleHitEntity
     {
+        public FightBattleStatusApplication AirCombo;
         public int EntityId;
         public string HitComponentType;
         public FightBattleHitTrajectory Trajectory;
@@ -1788,6 +1792,7 @@ namespace Zjcs.Combat.Official
         // Local session persistence; absent fields in older saves retain legacy resume behavior.
         // User-confirmed offline partial settlement; never denotes a victory or a killed enemy.
         public bool PartEnded;
+        public FightBattleStatusSecondsClock StatusSeconds;
         public bool PreparationPending;
         public double PreparationSecondsRemaining;
         public FightBattleStatistics Statistics = new FightBattleStatistics();

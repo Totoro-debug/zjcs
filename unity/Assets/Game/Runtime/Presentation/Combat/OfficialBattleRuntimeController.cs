@@ -76,6 +76,7 @@ namespace Zjcs.Presentation.Combat
         public bool CanCompleteBattle => executor != null && executor.State.Finished && !IsPresentingStep;
         public bool CanAdvance => executor != null && !executor.State.Finished
             && !paused && !IsPresentingStep
+            && (executor.State.StatusSeconds?.PendingHits.Count ?? 0) == 0
             && (Phase == FightBattlePhase.Play || Phase == FightBattlePhase.PlayStart);
 
         public void SetHudVisible(bool visible)
@@ -548,6 +549,14 @@ namespace Zjcs.Presentation.Combat
             if (executor != null) cameraView?.Refresh(Checkpoint, Phase);
             if (!paused)
             {
+                if (executor != null && (Phase == FightBattlePhase.Play || Phase == FightBattlePhase.PlayStart)
+                    && executor.AdvanceStatusSeconds(Time.deltaTime))
+                {
+                    // Timer state changes at the hit's playback time rather than
+                    // at the eager whole-cast settlement boundary.
+                    sceneView?.RefreshStatusSnapshot(Checkpoint);
+                    hudView?.Refresh(Checkpoint);
+                }
                 skillGraphPlayback?.Tick(Time.deltaTime);
                 stepPlayback?.Tick(Time.deltaTime);
                 // A disk checkpoint can contain the final settled hit before its

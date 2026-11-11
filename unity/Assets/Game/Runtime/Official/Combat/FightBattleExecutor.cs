@@ -1083,7 +1083,13 @@ namespace Zjcs.Combat.Official
                     ApplyResilienceHit(actor, target, skill, hit, resolved, casts,
                         damageEvents, movements, ref lastDelay);
                     ApplyHitDisperse(actor, target, hit, random);
+                    int hitMovementStart = movements.Count;
                     ApplyHitMove(actor, target, skill, hit, movements);
+                    bool hitDisplacedTarget = false;
+                    for (int movementIndex = hitMovementStart; movementIndex < movements.Count; movementIndex++)
+                        hitDisplacedTarget |= movements[movementIndex].UnitId == target.Id
+                            && movements[movementIndex].Path.Count > 1;
+                    RecordStatusSecondsHit(actor, target, skill, hit, resolved, damage, hitDisplacedTarget);
                     long recoveredHp = ApplyHemophagia(actor, hit, damage, hitDelay, skill, damageEvents);
                     if (recoveredHp > 0 && actor != target)
                     {

@@ -3333,6 +3333,13 @@ namespace Zjcs.Combat.Official
                     || Int(damage, "DamageType") != 0;
                 result.DelayDistFactor = Float(damage, "DelayDistFactor", 0f);
                 result.ActionType = Int(damage, "DamageActionType", 4);
+                var airCombo = Component(damage, "AirCombo");
+                if (airCombo != null && Int(airCombo, "AirComboStatusId") > 0)
+                    result.AirCombo = new FightBattleStatusApplication {
+                        StatusId = Int(airCombo, "AirComboStatusId"),
+                        Chance = Float(airCombo, "BasePercent", 0f),
+                        AffectedByProp = Bool(airCombo, "AffectedByProp")
+                    };
                 result.DamageId = Int(damage, "DamageId");
                 AddStatusApplications(result.DamageId, result);
                 AddDisperseStatus(result.DamageId, result);

@@ -100,6 +100,7 @@ namespace Zjcs.Combat.Official
                     EntityId = entity.EntityId,
                     DamageId = entity.DamageId,
                     HasFixedDamage = entity.HasFixedDamage,
+                    AirCombo = entity.AirCombo,
                     DamageType = entity.DamageType,
                     BasicProperty = entity.BasicProperty,
                     DamageProperty = entity.DamageProperty,

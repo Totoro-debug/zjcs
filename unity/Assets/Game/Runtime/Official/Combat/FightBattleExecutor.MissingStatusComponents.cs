@@ -89,7 +89,7 @@ namespace Zjcs.Combat.Official
                     }
 
                     FightBattleStatusDamageSkillComponentState damageSkill = status.Components?.DamageSkill;
-                    if (damageSkill != null && resolved != null
+                    if (damageSkill != null && status.Components.Seconds == null && resolved != null
                         && (resolved.Formula != null || resolved.Cure != null || resolved.Settlement != null)
                         && HitSourceMatches(status,
                             damageSkill.IsAttackerTarget ? 0 : 2, actor)

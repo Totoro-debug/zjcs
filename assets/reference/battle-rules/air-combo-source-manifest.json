@@ -1330,7 +1330,1051 @@
   ],
   "verifier": {
     "path": "scripts/prepare_battle_air_combo_sources.py",
-    "sha256": "181035e9b90610d627b388f8ba4aeae7e4b48b79f1769b6c04405ea68ef3c480"
+    "sha256": "b02bfe15ba57640268aeafeb9475331f3fd1fc9319e2ab1ad37611eb7cf1bd40"
+  },
+  "original_visuals": {
+    "prefabs": [
+      {
+        "id": 24269,
+        "objects": [
+          {
+            "type": "MonoBehaviour",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24269.bundle",
+              "bundle_hash": "5d8be11c59d17f7ce3427c0f117d126e",
+              "path_id": "-7257007858686589146",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/5d8be11c59d17f7ce3427c0f117d126e.bundle",
+              "raw_size": 1659,
+              "raw_sha256": "fe64bbb1e0950935548f095e4183167f1141e445fa8a41efe8865a7fde8c06ad"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -3787859805646190810
+              },
+              "m_Enabled": 1,
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": -7535909326371827012
+              },
+              "m_Name": "",
+              "Prefab": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "mySource": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "myTarget": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "myApplyComponent": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "myEndDestroy": 1,
+              "DestroyOnRemove": 1,
+              "mySpeed": 1.0,
+              "myFadeInDuration": 0.0,
+              "myFadeOutDuration": 0.0,
+              "myTriggerList": [],
+              "myFadeoutTrigerList": [],
+              "myEndTrigerList": [],
+              "myBoolParam": "",
+              "myBoolValue": 0,
+              "myFloatParam": "",
+              "myFloatValue": 0.0,
+              "IntParam": "",
+              "IntValue": 0,
+              "myTriggerParam": "floating",
+              "PreStateNameAllowList": [],
+              "myDuration": 1.5,
+              "LayerName": "",
+              "LayerWeight": 0.0,
+              "myEndResumeParam": 0
+            },
+            "payload_sha256": "4dbbe1230541278be3810ea077ebc6be69705ce5417840cb298b86d3738f67df",
+            "script": {
+              "name": "MyPlayableAnimator",
+              "namespace": "",
+              "assembly": "Assembly-CSharp"
+            },
+            "original_code": {
+              "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableAnimator.cs",
+              "sha256": "833f0b99dc83f3db92dc90400d8cea36596dde43a024f1ceb3f326e84d0e17b2"
+            }
+          },
+          {
+            "type": "Transform",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24269.bundle",
+              "bundle_hash": "5d8be11c59d17f7ce3427c0f117d126e",
+              "path_id": "-6113708315086911706",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/5d8be11c59d17f7ce3427c0f117d126e.bundle",
+              "raw_size": 1659,
+              "raw_sha256": "fe64bbb1e0950935548f095e4183167f1141e445fa8a41efe8865a7fde8c06ad"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -3787859805646190810
+              },
+              "m_LocalRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+              },
+              "m_LocalPosition": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "m_LocalScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "m_Children": [],
+              "m_Father": {
+                "m_FileID": 0,
+                "m_PathID": 1689174843875231526
+              }
+            },
+            "payload_sha256": "4a14b53c4c368a93b8103583e5b219ad7257c3b098df9881b9eccca535c32bde"
+          },
+          {
+            "type": "MonoBehaviour",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24269.bundle",
+              "bundle_hash": "5d8be11c59d17f7ce3427c0f117d126e",
+              "path_id": "-5172982652571813535",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/5d8be11c59d17f7ce3427c0f117d126e.bundle",
+              "raw_size": 1659,
+              "raw_sha256": "fe64bbb1e0950935548f095e4183167f1141e445fa8a41efe8865a7fde8c06ad"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 6140875474890783073
+              },
+              "m_Enabled": 1,
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 7646124506615962003
+              },
+              "m_Name": "",
+              "myEffect": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "myEffectStopOnDestroy": 0,
+              "myEndEffect": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "myEndEffectStopOnDestroy": 0,
+              "PlayOnStart": 1,
+              "Duration": -1.0,
+              "LoopEffectPlayable": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "LoopEffectPlayableIsMutext": 0
+            },
+            "payload_sha256": "181796f22f4529dce6806337c6cafd168b5282596862dccc5f2c0994a01b289a",
+            "script": {
+              "name": "MyAction",
+              "namespace": "",
+              "assembly": "Assembly-CSharp"
+            },
+            "original_code": {
+              "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyAction.cs",
+              "sha256": "6adf75aa0f477aab0ada42d10bd0b3ea7e8b3a77b111e02206faa7aa15e9a140"
+            }
+          },
+          {
+            "type": "MonoBehaviour",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24269.bundle",
+              "bundle_hash": "5d8be11c59d17f7ce3427c0f117d126e",
+              "path_id": "-4311646240161924767",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/5d8be11c59d17f7ce3427c0f117d126e.bundle",
+              "raw_size": 1659,
+              "raw_sha256": "fe64bbb1e0950935548f095e4183167f1141e445fa8a41efe8865a7fde8c06ad"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 6140875474890783073
+              },
+              "m_Enabled": 1,
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 3811995182425883885
+              },
+              "m_Name": ""
+            },
+            "payload_sha256": "091626bf3e20ff50e5b1e048d947a7c1ba20f8a42991252879742b3f559da9b0",
+            "script": {
+              "name": "MyFightStatusDamageRemove",
+              "namespace": "",
+              "assembly": "Assembly-CSharp"
+            },
+            "original_code": {
+              "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusDamageRemove.cs",
+              "sha256": "3e3daaaa97456a80d3caee3377c845dabf05542b7f2e9476c699a0d386b3fa16"
+            }
+          },
+          {
+            "type": "GameObject",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24269.bundle",
+              "bundle_hash": "5d8be11c59d17f7ce3427c0f117d126e",
+              "path_id": "-4155001826993076442",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/5d8be11c59d17f7ce3427c0f117d126e.bundle",
+              "raw_size": 1659,
+              "raw_sha256": "fe64bbb1e0950935548f095e4183167f1141e445fa8a41efe8865a7fde8c06ad"
+            },
+            "fields": {
+              "m_Component": [
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": 1689174843875231526
+                  }
+                },
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": -2451469206626203866
+                  }
+                }
+              ],
+              "m_Layer": 0,
+              "m_Name": "playable_AirCombo",
+              "m_Tag": 0,
+              "m_IsActive": true
+            },
+            "payload_sha256": "0d8c6dc98a268dd8f38dec69c35e1da0a24940206d030b520c2402586664fd38"
+          },
+          {
+            "type": "GameObject",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24269.bundle",
+              "bundle_hash": "5d8be11c59d17f7ce3427c0f117d126e",
+              "path_id": "-3787859805646190810",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/5d8be11c59d17f7ce3427c0f117d126e.bundle",
+              "raw_size": 1659,
+              "raw_sha256": "fe64bbb1e0950935548f095e4183167f1141e445fa8a41efe8865a7fde8c06ad"
+            },
+            "fields": {
+              "m_Component": [
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": -6113708315086911706
+                  }
+                },
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": -7257007858686589146
+                  }
+                },
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": 4703338159270233894
+                  }
+                }
+              ],
+              "m_Layer": 0,
+              "m_Name": "ani",
+              "m_Tag": 0,
+              "m_IsActive": true
+            },
+            "payload_sha256": "5adaecebc579ada88f1e6bf68be103f6e42faa2f3387215fd296127aab8ff14f"
+          },
+          {
+            "type": "MonoBehaviour",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24269.bundle",
+              "bundle_hash": "5d8be11c59d17f7ce3427c0f117d126e",
+              "path_id": "-2451469206626203866",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/5d8be11c59d17f7ce3427c0f117d126e.bundle",
+              "raw_size": 1659,
+              "raw_sha256": "fe64bbb1e0950935548f095e4183167f1141e445fa8a41efe8865a7fde8c06ad"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -4155001826993076442
+              },
+              "m_Enabled": 1,
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": -8433484863279068627
+              },
+              "m_Name": "",
+              "Prefab": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "mySource": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "myTarget": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "myApplyComponent": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "myEndDestroy": 1,
+              "DestroyOnRemove": 1,
+              "mySpeed": 1.0,
+              "myFadeInDuration": 0.0,
+              "myFadeOutDuration": 0.0,
+              "myTriggerList": [],
+              "myFadeoutTrigerList": [],
+              "myEndTrigerList": [],
+              "myPlayables": [
+                {
+                  "myTime": 0.0,
+                  "myPlayable": {
+                    "m_FileID": 0,
+                    "m_PathID": -7257007858686589146
+                  }
+                }
+              ]
+            },
+            "payload_sha256": "17c367f0662dfb5985f62900fade469e685d46e983b5d5797639a412bf886aa0",
+            "script": {
+              "name": "MyPlayableSequence",
+              "namespace": "GameFramework",
+              "assembly": "GameFramework.Runtime"
+            },
+            "original_code": {
+              "path": ".tools/source-packages/current/884_156692/official-code/game-framework-source/GameFramework/MyPlayableSequence.cs",
+              "sha256": "169b013367c39521a6bd1a8161c59aa93201ed1e7190803f5ffcb76fd4ad7e22"
+            }
+          },
+          {
+            "type": "Transform",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24269.bundle",
+              "bundle_hash": "5d8be11c59d17f7ce3427c0f117d126e",
+              "path_id": "1689174843875231526",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/5d8be11c59d17f7ce3427c0f117d126e.bundle",
+              "raw_size": 1659,
+              "raw_sha256": "fe64bbb1e0950935548f095e4183167f1141e445fa8a41efe8865a7fde8c06ad"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -4155001826993076442
+              },
+              "m_LocalRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+              },
+              "m_LocalPosition": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "m_LocalScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "m_Children": [
+                {
+                  "m_FileID": 0,
+                  "m_PathID": -6113708315086911706
+                }
+              ],
+              "m_Father": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              }
+            },
+            "payload_sha256": "9e4477204bae1f2652dcc18ae84b0fe567ca603584a6e569e4f430a3f7762ecb"
+          },
+          {
+            "type": "MonoBehaviour",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24269.bundle",
+              "bundle_hash": "5d8be11c59d17f7ce3427c0f117d126e",
+              "path_id": "3601914122074454369",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/5d8be11c59d17f7ce3427c0f117d126e.bundle",
+              "raw_size": 1659,
+              "raw_sha256": "fe64bbb1e0950935548f095e4183167f1141e445fa8a41efe8865a7fde8c06ad"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 6140875474890783073
+              },
+              "m_Enabled": 1,
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 7447247474051633116
+              },
+              "m_Name": "",
+              "myPlayablePrefab": {
+                "m_FileID": 0,
+                "m_PathID": -4155001826993076442
+              },
+              "StackedPlayablePrefab": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "StackPlayableMap": [],
+              "ShowSpriteAbovePlayer": 0,
+              "InvokePlayable": {
+                "m_FileID": 0,
+                "m_PathID": -4155001826993076442
+              },
+              "StackPlayable": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "MasterCastPlayable": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "IsIconShowStatusRoundReplaceStack": 0,
+              "IsIconShowCustomCount": 0
+            },
+            "payload_sha256": "948f099c6c9d33255cb0b9df8a2484ec0a1bb64f2a20df5008fff8bdebc20ed6",
+            "script": {
+              "name": "MyFightStatus",
+              "namespace": "",
+              "assembly": "Assembly-CSharp"
+            },
+            "original_code": {
+              "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatus.cs",
+              "sha256": "6703467530851893a67bd76e3d6a2d15253cf336d3c6abe23b6a1a104ddace1d"
+            }
+          },
+          {
+            "type": "MonoBehaviour",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24269.bundle",
+              "bundle_hash": "5d8be11c59d17f7ce3427c0f117d126e",
+              "path_id": "4703338159270233894",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/5d8be11c59d17f7ce3427c0f117d126e.bundle",
+              "raw_size": 1659,
+              "raw_sha256": "fe64bbb1e0950935548f095e4183167f1141e445fa8a41efe8865a7fde8c06ad"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -3787859805646190810
+              },
+              "m_Enabled": 1,
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 6991185375826225423
+              },
+              "m_Name": "",
+              "ApplyTargetOfNullAttr": 0
+            },
+            "payload_sha256": "6c585524a44a9222f1464053937ae6edbbda32a114c82cd30346605c2e3eb735",
+            "script": {
+              "name": "ApplyBySource",
+              "namespace": "GameFramework",
+              "assembly": "GameFramework.Runtime"
+            },
+            "original_code": {
+              "path": ".tools/source-packages/current/884_156692/official-code/game-framework-source/GameFramework/ApplyBySource.cs",
+              "sha256": "5295d122baf98dfc982320cb68a73050ce594b1898699029bf95e6f376350a4f"
+            }
+          },
+          {
+            "type": "MonoBehaviour",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24269.bundle",
+              "bundle_hash": "5d8be11c59d17f7ce3427c0f117d126e",
+              "path_id": "4724932147718388065",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/5d8be11c59d17f7ce3427c0f117d126e.bundle",
+              "raw_size": 1659,
+              "raw_sha256": "fe64bbb1e0950935548f095e4183167f1141e445fa8a41efe8865a7fde8c06ad"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 6140875474890783073
+              },
+              "m_Enabled": 1,
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 6091562175442622485
+              },
+              "m_Name": "",
+              "myContainer": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              }
+            },
+            "payload_sha256": "4ad916bdd02f87d641a37c4237f2ee65c41e9334befd1003e862ced72f5fb4ed",
+            "script": {
+              "name": "MyEntity",
+              "namespace": "",
+              "assembly": "Assembly-CSharp"
+            },
+            "original_code": {
+              "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntity.cs",
+              "sha256": "1d3cb29ee8e21bb2e8717aa95c8922434f1a20bf90fafb941b5ffcbf26bd2ae1"
+            }
+          },
+          {
+            "type": "MonoBehaviour",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24269.bundle",
+              "bundle_hash": "5d8be11c59d17f7ce3427c0f117d126e",
+              "path_id": "6022480453616662881",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/5d8be11c59d17f7ce3427c0f117d126e.bundle",
+              "raw_size": 1659,
+              "raw_sha256": "fe64bbb1e0950935548f095e4183167f1141e445fa8a41efe8865a7fde8c06ad"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 6140875474890783073
+              },
+              "m_Enabled": 1,
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": -6046094050352916795
+              },
+              "m_Name": ""
+            },
+            "payload_sha256": "166d04292deefc508265ffe17e8c391ac16ce1962d82390cb5011c240e8e262d",
+            "script": {
+              "name": "MyFightStatusDamageSkill",
+              "namespace": "",
+              "assembly": "Assembly-CSharp"
+            },
+            "original_code": {
+              "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusDamageSkill.cs",
+              "sha256": "39c230c4c1eeeb2c7bf4ef29f0d43d2e4be10b1d1c382ca4d02203f92b9a1924"
+            }
+          },
+          {
+            "type": "GameObject",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24269.bundle",
+              "bundle_hash": "5d8be11c59d17f7ce3427c0f117d126e",
+              "path_id": "6140875474890783073",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/5d8be11c59d17f7ce3427c0f117d126e.bundle",
+              "raw_size": 1659,
+              "raw_sha256": "fe64bbb1e0950935548f095e4183167f1141e445fa8a41efe8865a7fde8c06ad"
+            },
+            "fields": {
+              "m_Component": [
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": 8851807280563419489
+                  }
+                },
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": 4724932147718388065
+                  }
+                },
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": -5172982652571813535
+                  }
+                },
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": 3601914122074454369
+                  }
+                },
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": -4311646240161924767
+                  }
+                },
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": 6022480453616662881
+                  }
+                }
+              ],
+              "m_Layer": 0,
+              "m_Name": "24269",
+              "m_Tag": 0,
+              "m_IsActive": true
+            },
+            "payload_sha256": "af8ef953c41bdeefed1806baad7b5bfcb37654e9fea80a5fa610ae6a5419507f"
+          },
+          {
+            "type": "Transform",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24269.bundle",
+              "bundle_hash": "5d8be11c59d17f7ce3427c0f117d126e",
+              "path_id": "8851807280563419489",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/5d8be11c59d17f7ce3427c0f117d126e.bundle",
+              "raw_size": 1659,
+              "raw_sha256": "fe64bbb1e0950935548f095e4183167f1141e445fa8a41efe8865a7fde8c06ad"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 6140875474890783073
+              },
+              "m_LocalRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+              },
+              "m_LocalPosition": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "m_LocalScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "m_Children": [],
+              "m_Father": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              }
+            },
+            "payload_sha256": "4e6eee7fe26f1b3aefa03fe4c40bcb6f542c7436c73a506b1945b7f4e97cc6aa"
+          }
+        ]
+      },
+      {
+        "id": 24270,
+        "objects": [
+          {
+            "type": "MonoBehaviour",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24270.bundle",
+              "bundle_hash": "7090cf09a4e1d802201c96955a405497",
+              "path_id": "-7096542448351881579",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/7090cf09a4e1d802201c96955a405497.bundle",
+              "raw_size": 1107,
+              "raw_sha256": "e0ab39a59b100ada05f7ce95468348fe1f7cd135c86c5141985e33c98392f558"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 8122347827441194645
+              },
+              "m_Enabled": 1,
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 7646124506615962003
+              },
+              "m_Name": "",
+              "myEffect": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "myEffectStopOnDestroy": 0,
+              "myEndEffect": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "myEndEffectStopOnDestroy": 0,
+              "PlayOnStart": 1,
+              "Duration": -1.0,
+              "LoopEffectPlayable": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "LoopEffectPlayableIsMutext": 0
+            },
+            "payload_sha256": "6034075bffbbdc07cc8f72654321badaa77000bab5a6decd7e57c6b71fffd184",
+            "script": {
+              "name": "MyAction",
+              "namespace": "",
+              "assembly": "Assembly-CSharp"
+            },
+            "original_code": {
+              "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyAction.cs",
+              "sha256": "6adf75aa0f477aab0ada42d10bd0b3ea7e8b3a77b111e02206faa7aa15e9a140"
+            }
+          },
+          {
+            "type": "MonoBehaviour",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24270.bundle",
+              "bundle_hash": "7090cf09a4e1d802201c96955a405497",
+              "path_id": "-7010635540992731499",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/7090cf09a4e1d802201c96955a405497.bundle",
+              "raw_size": 1107,
+              "raw_sha256": "e0ab39a59b100ada05f7ce95468348fe1f7cd135c86c5141985e33c98392f558"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 8122347827441194645
+              },
+              "m_Enabled": 1,
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": -6046094050352916795
+              },
+              "m_Name": ""
+            },
+            "payload_sha256": "cfb82097663f8bd5ce83ba7d3b6b676326c26bae78b62f1ab44d2de1ad31e819",
+            "script": {
+              "name": "MyFightStatusDamageSkill",
+              "namespace": "",
+              "assembly": "Assembly-CSharp"
+            },
+            "original_code": {
+              "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusDamageSkill.cs",
+              "sha256": "39c230c4c1eeeb2c7bf4ef29f0d43d2e4be10b1d1c382ca4d02203f92b9a1924"
+            }
+          },
+          {
+            "type": "MonoBehaviour",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24270.bundle",
+              "bundle_hash": "7090cf09a4e1d802201c96955a405497",
+              "path_id": "-3562378437003290987",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/7090cf09a4e1d802201c96955a405497.bundle",
+              "raw_size": 1107,
+              "raw_sha256": "e0ab39a59b100ada05f7ce95468348fe1f7cd135c86c5141985e33c98392f558"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 8122347827441194645
+              },
+              "m_Enabled": 1,
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 6091562175442622485
+              },
+              "m_Name": "",
+              "myContainer": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              }
+            },
+            "payload_sha256": "f0004e0506c6b03662218c95843b3569f8a7df2888092d10ab366d0a44acf95a",
+            "script": {
+              "name": "MyEntity",
+              "namespace": "",
+              "assembly": "Assembly-CSharp"
+            },
+            "original_code": {
+              "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntity.cs",
+              "sha256": "1d3cb29ee8e21bb2e8717aa95c8922434f1a20bf90fafb941b5ffcbf26bd2ae1"
+            }
+          },
+          {
+            "type": "MonoBehaviour",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24270.bundle",
+              "bundle_hash": "7090cf09a4e1d802201c96955a405497",
+              "path_id": "-3166767033328904555",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/7090cf09a4e1d802201c96955a405497.bundle",
+              "raw_size": 1107,
+              "raw_sha256": "e0ab39a59b100ada05f7ce95468348fe1f7cd135c86c5141985e33c98392f558"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 8122347827441194645
+              },
+              "m_Enabled": 1,
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": -1999476116070922505
+              },
+              "m_Name": ""
+            },
+            "payload_sha256": "d7161ae1f6b6bc6de01003af6d1154f059a97603f02f7fe817ab77f86c21c279",
+            "script": {
+              "name": "MyStatusAutoRemove",
+              "namespace": "",
+              "assembly": "Assembly-CSharp"
+            },
+            "original_code": {
+              "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStatusAutoRemove.cs",
+              "sha256": "8ed02cd689b37dc0ad311ea54fec6d8f98a96b978403a459307c71b18e637a24"
+            }
+          },
+          {
+            "type": "MonoBehaviour",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24270.bundle",
+              "bundle_hash": "7090cf09a4e1d802201c96955a405497",
+              "path_id": "-555756573733726571",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/7090cf09a4e1d802201c96955a405497.bundle",
+              "raw_size": 1107,
+              "raw_sha256": "e0ab39a59b100ada05f7ce95468348fe1f7cd135c86c5141985e33c98392f558"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 8122347827441194645
+              },
+              "m_Enabled": 1,
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 7447247474051633116
+              },
+              "m_Name": "",
+              "myPlayablePrefab": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "StackedPlayablePrefab": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "StackPlayableMap": [],
+              "ShowSpriteAbovePlayer": 0,
+              "InvokePlayable": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "StackPlayable": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "MasterCastPlayable": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "IsIconShowStatusRoundReplaceStack": 0,
+              "IsIconShowCustomCount": 0
+            },
+            "payload_sha256": "2f87c88e04e007c7dd0b6cee0162aab898c8690fbd7378094665253ba3ba7b71",
+            "script": {
+              "name": "MyFightStatus",
+              "namespace": "",
+              "assembly": "Assembly-CSharp"
+            },
+            "original_code": {
+              "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatus.cs",
+              "sha256": "6703467530851893a67bd76e3d6a2d15253cf336d3c6abe23b6a1a104ddace1d"
+            }
+          },
+          {
+            "type": "Transform",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24270.bundle",
+              "bundle_hash": "7090cf09a4e1d802201c96955a405497",
+              "path_id": "1865782019582219925",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/7090cf09a4e1d802201c96955a405497.bundle",
+              "raw_size": 1107,
+              "raw_sha256": "e0ab39a59b100ada05f7ce95468348fe1f7cd135c86c5141985e33c98392f558"
+            },
+            "fields": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 8122347827441194645
+              },
+              "m_LocalRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+              },
+              "m_LocalPosition": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "m_LocalScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "m_Children": [],
+              "m_Father": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              }
+            },
+            "payload_sha256": "bc30075d16b1342a933ccfd3b9ba90230733616ee240f8ecd8b34c8721430724"
+          },
+          {
+            "type": "GameObject",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24270.bundle",
+              "bundle_hash": "7090cf09a4e1d802201c96955a405497",
+              "path_id": "8122347827441194645",
+              "origin": "apk_zip",
+              "manifest": "884_156692",
+              "apk_manifest": "881_156673",
+              "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+              "apk_entry": "assets/yoo/DefaultPackage/7090cf09a4e1d802201c96955a405497.bundle",
+              "raw_size": 1107,
+              "raw_sha256": "e0ab39a59b100ada05f7ce95468348fe1f7cd135c86c5141985e33c98392f558"
+            },
+            "fields": {
+              "m_Component": [
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": 1865782019582219925
+                  }
+                },
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": -3562378437003290987
+                  }
+                },
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": -7096542448351881579
+                  }
+                },
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": -555756573733726571
+                  }
+                },
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": -3166767033328904555
+                  }
+                },
+                {
+                  "component": {
+                    "m_FileID": 0,
+                    "m_PathID": -7010635540992731499
+                  }
+                }
+              ],
+              "m_Layer": 0,
+              "m_Name": "24270",
+              "m_Tag": 0,
+              "m_IsActive": true
+            },
+            "payload_sha256": "e09d013aa9a399b8bebfa33e9e6b5257175269870ea17ce084d714f5306fc629"
+          }
+        ]
+      }
+    ],
+    "assemblies": [
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+        "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/GameFramework.Runtime.dll",
+        "sha256": "737c1e6b4313b330530aa84b6d9b59dd01a470c69937d95a6cf69cd13c61e253"
+      }
+    ],
+    "decoder": {
+      "path": "scripts/official_unity_schema.py",
+      "sha256": "934af3c56159da97a5c6d97a1412547b3ca847f71303bd961bbd37bee8b3aceb"
+    }
   },
   "operation": "APK-first exact verification of three launch hits, action types, block-damage conjunction, non-displacement reset and original second-based successor timers. User-confirmed offline scheduling is maintained in docs/features/skills.md."
 }

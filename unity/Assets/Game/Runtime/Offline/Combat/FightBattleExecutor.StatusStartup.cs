@@ -34,12 +34,16 @@ namespace Zjcs.Combat.Official
             try
             {
                 BeginGridViewEvents();
+                BeginStatusSecondsHits();
                 CleanupGridItems();
-                return StepCore(sequence, counter);
+                var result = StepCore(sequence, counter);
+                if (!result.Replayed) CompleteStatusSecondsHits();
+                return result;
             }
             finally
             {
                 ClearGridViewEvents();
+                ClearStatusSecondsHits();
                 // Include units summoned during this step. No delegate or executor is retained
                 // by the checkpoint, including when a configuration fails during a nested cast.
                 foreach (var unit in StatusOwners(true))
