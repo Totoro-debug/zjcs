@@ -1,6 +1,7 @@
 """Restore ordered original summon role views and exact lifecycle graph closures."""
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -28,7 +29,7 @@ def main():
     schemas = ScriptSchemas(code_root=code)
     rows, sources, roots, originals = [], [], {}, {}
     try:
-        for entity_id in (3182, 3183):
+        for entity_id in (3181, 3182, 3183):
             bundle = f'defaultpackage_assets_prefabs_ecentity_fight_fightmonster_{entity_id}.bundle'
             found = []
             for obj in apk.objects(bundle):
@@ -78,11 +79,32 @@ def main():
                 205640859: ('StoryAnimation', 'MyPlayableAnimator'),
                 1574993081: ('BattleMaterialPlayables', 'MyPlayableMaterialProperty')},
         runtime_receipts=('scene-player-animator-source-manifest.json',), generator=Path(__file__),
-        limits=['Exact 3182/3183 ordered ECFightRoleCharacterView bindings and graph assets. '
+        limits=['Exact 3181/3182/3183 ordered ECFightRoleCharacterView bindings and graph assets. '
                 'Other EC views, action invisibility status 24008 and other summon models are outside this extraction.'])
     write_changed(DATA, json.dumps(dict(manifest=apk.version, roles=rows), ensure_ascii=False, indent=2) + '\n')
     meta(DATA)
     proof = json.loads(RECEIPT.read_bytes())
+    registry = ROOT / 'unity/Assets/Game/Editor/OfficialSparseShaderVariants.cs'
+    registrations = dict(re.findall(r'\["([^"]+\.shader)"\]\s*=\s*(\d+)', registry.read_text('utf-8-sig')))
+    shader_outputs = [row for row in proof['outputs'] if row['path'].endswith('.shader')]
+    if len(shader_outputs) != len(proof['shaders']):
+        raise ValueError('Bind each original summon shader to its program receipt')
+    proof['shader_program_domains'] = []
+    for output, shader in zip(shader_outputs, proof['shaders']):
+        conversion = ROOT / shader['conversion']['path']
+        if identity(conversion) != shader['conversion']:
+            raise ValueError('Original summon shader program receipt differs')
+        programs = json.loads(conversion.read_bytes())['programs']
+        domains = {}
+        for program in programs:
+            key = (program['subshader'], program['pass_index'])
+            domains.setdefault(key, set()).add(tuple(sorted(program['keywords'])))
+        counts = {len(value) for value in domains.values()}
+        path = output['path'].removeprefix('unity/')
+        if len(counts) != 1 or registrations.get(path) != str(next(iter(counts))):
+            raise ValueError('Register the exact original summon shader program domain before building: ' + path)
+        proof['shader_program_domains'].append(dict(path=path, programs_per_pass=next(iter(counts)),
+            original_passes=len(domains), original_conversion=shader['conversion']))
     proof.update(original_role_views=sources, decoder=identity(ROOT / 'scripts/official_unity_schema.py'),
         schema=identity(ROOT / 'scripts/unity_schema_types.cs'),
         official_role_view=identity(code / 'client-source/ECFightRoleCharacterView.cs'))
@@ -101,6 +123,7 @@ def main():
     proof['runtime_scope'] = 'Generation-only original method port, driven by the existing original playable manager and Animator. '
     proof['runtime_scope'] += 'Original death graph assets are extracted but not enabled until their MeshMaterialProperty and AppearanceRendererLite bindings are restored.'
     proof['validation_inputs'] = [identity(ROOT / path) for path in (
+        'unity/Assets/Game/Editor/OfficialSparseShaderVariants.cs',
         'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSummonGenerationValidation.cs',
         'unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.FirstPromotion.cs',

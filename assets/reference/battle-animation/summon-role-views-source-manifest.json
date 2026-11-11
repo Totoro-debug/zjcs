@@ -24,6 +24,26 @@
       }
     },
     {
+      "id": "playable_3181_generate",
+      "shared_dependency_bundle": "defaultpackage_share_a58e9ff46cc1ead97cee1d5a0fa9cfdf.bundle",
+      "native_export_meta": {
+        "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Playables/EC/Battle/Monster/playable_3181_generate.prefab.meta",
+        "sha256": "ccb51bf4f8ab01e629d9b38dcf13ebfd7fdbf7dc1d24c87ee4bf292a2b4248b3"
+      },
+      "original_game_object_name": "playable_3181_generate",
+      "original_game_object_sha256": "a471904a3f71ba1cfaabf733c6d9995cc5d83b4f6174244bccb7b6cb01da305c",
+      "source": {
+        "bundle": "defaultpackage_share_a58e9ff46cc1ead97cee1d5a0fa9cfdf.bundle",
+        "bundle_hash": "67848af91e404d265dece90aadd74ed2",
+        "path_id": "-8406336913279800363",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/67848af91e404d265dece90aadd74ed2.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 861,
+        "bundle_sha256": "3e133f0f6aa5f5c84e501c997df66f9581c1d22b70adc3172cbff58ecb13e806"
+      }
+    },
+    {
       "id": "playable_3182_generate",
       "shared_dependency_bundle": "defaultpackage_share_4ce0d757ee7d834665733e35f4684117.bundle",
       "native_export_meta": {
@@ -212,6 +232,14 @@
     {
       "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Effect/textures/Fx_Yan_167.png.meta",
       "sha256": "25fb4aabeb8f78f7700811be267ba865d5f252ab1a6c246f4c758f6f1b1c8c20"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Playables/EC/Battle/Monster/playable_3181_generate.prefab",
+      "sha256": "359f9307377c61e0fb5c62f8f2423e373594979adba64e8495914497d5763ac1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Playables/EC/Battle/Monster/playable_3181_generate.prefab.meta",
+      "sha256": "ccb51bf4f8ab01e629d9b38dcf13ebfd7fdbf7dc1d24c87ee4bf292a2b4248b3"
     },
     {
       "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Playables/EC/Battle/Monster/playable_3182_generate.prefab",
@@ -1929,7 +1957,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_summon_role_views.py",
-    "sha256": "5bba85c48fa6a5f95bbe4523639a519d24b39cdf516a9dbb715b1366b3858802"
+    "sha256": "1fa0dcf0aec9792809563b8bd142993a56ac99408582598789329178d3417451"
   },
   "graph_asset_adapter": {
     "path": "scripts/prepare_battle_status_orbit_assets.py",
@@ -2105,6 +2133,14 @@
       "sha256": "23c986da398c501f898a8d337d811803247949ed3c546a8a9cb1820e685bd829"
     },
     {
+      "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/Graphs/Prefabs/Playables/EC/Battle/Monster/playable_3181_generate.prefab",
+      "sha256": "b0ff510949f04dd6e656f01db32b0ad404fc8203644a43985242a6000961d599"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/Graphs/Prefabs/Playables/EC/Battle/Monster/playable_3181_generate.prefab.meta",
+      "sha256": "acf1996fafd852b2f8e2f7951c240344eefdf52e7bfbf3b3ae6f05a729ddb746"
+    },
+    {
       "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/Graphs/Prefabs/Playables/EC/Battle/Monster/playable_3182_generate.prefab",
       "sha256": "15933f33a411deb517436e96f982425b65e96c5c09d2eb1d781625e6cb2fb9fc"
     },
@@ -2150,7 +2186,7 @@
     },
     {
       "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/graphs.json",
-      "sha256": "0359ef2ecf8e9c913b8cbb9cbda580542814b69302a672778d177db28cdd8de0"
+      "sha256": "587f89fec9c815c716fe37a38039023dc472ce4393a5d88bac12da91fac8c55e"
     },
     {
       "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/graphs.json.meta",
@@ -2174,7 +2210,7 @@
     },
     {
       "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/role-views.json",
-      "sha256": "c196243348d5cc5b8d8a4ddfafe8bbd7a684ef56a8738ef2b1e60526e426deb1"
+      "sha256": "5291ed3e76492a8c636379a5796c3ec8a138852c6b25cca003d53430e70575e6"
     },
     {
       "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/role-views.json.meta",
@@ -2183,9 +2219,254 @@
   ],
   "operation": "Full original graphs: no components, sequence leaves or local objects removed. Preserve native local fileIDs, transforms, particles, orbit configuration and dependencies. Remap migrated application scripts/GUIDs, decode all original texture mips through hash-matched conversion cache and use verified full Windows shaders.",
   "limits": [
-    "Exact 3182/3183 ordered ECFightRoleCharacterView bindings and graph assets. Other EC views, action invisibility status 24008 and other summon models are outside this extraction."
+    "Exact 3181/3182/3183 ordered ECFightRoleCharacterView bindings and graph assets. Other EC views, action invisibility status 24008 and other summon models are outside this extraction."
+  ],
+  "shader_program_domains": [
+    {
+      "path": "Assets/Game/Runtime/Presentation/Combat/Shaders/SummonRoleViews_Noise_Mask_Pro_0.shader",
+      "programs_per_pass": 260,
+      "original_passes": 2,
+      "original_conversion": {
+        "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/Records/59de19d261370c02044c882aeda72c54bf496caf9dc73bed0a9d6e9339fd6b95.json",
+        "sha256": "2b97282192d00bd88903a9a182fcbeee9b9caaf8f39a867cc8c816446c38fed2"
+      }
+    }
   ],
   "original_role_views": [
+    {
+      "entityId": 3181,
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3181.bundle",
+        "bundle_hash": "8e07f42c95e9430614d2d0ae52107e38",
+        "path_id": "-5822200786768990138",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/8e07f42c95e9430614d2d0ae52107e38.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 11525,
+        "bundle_sha256": "ea368d7adc44914f54806506a8860e4e3aaa1205904c0ec640af3ad1dae39db3"
+      },
+      "object_sha256": "e53dbdb6326acb076fbc5c041a789f71ec52b55c011d5f1d38eee295b3c936bb",
+      "driver_fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 2608650241600221254
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 2491674463829926342
+        },
+        "m_Name": "",
+        "mECViews": [
+          {
+            "rid": 3986547892861534292
+          },
+          {
+            "rid": 3986547898241515539
+          },
+          {
+            "rid": 3986547898241515765
+          },
+          {
+            "rid": 3986547898241515766
+          },
+          {
+            "rid": 3986547898241515838
+          },
+          {
+            "rid": 3986547898241516203
+          },
+          {
+            "rid": 3986547898241516204
+          }
+        ],
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": 3986547892861534292,
+              "type": {
+                "class": "ECFightRoleCharacterView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mSpriteList": {
+                  "m_FileID": 0,
+                  "m_PathID": -1122506412091936698
+                },
+                "mPlayerHUD": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mPlayerAppearance": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mDieOnStartPlayable": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mDiePlayable": {
+                  "m_FileID": 4,
+                  "m_PathID": -7962210796830536476
+                },
+                "mTryDiePlayableOnStart": 1,
+                "mGeneratePlayable": {
+                  "m_FileID": 5,
+                  "m_PathID": -8406336913279800363
+                },
+                "mGenerateDelayTime": 0.0,
+                "mGeneratePlayableNeedDelay": 0,
+                "mDelayVisibilityParts": []
+              }
+            },
+            {
+              "rid": 3986547898241515539,
+              "type": {
+                "class": "ECFightRoleHpView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mHpSlider": {
+                  "m_FileID": 0,
+                  "m_PathID": 7904694457270235206
+                }
+              }
+            },
+            {
+              "rid": 3986547898241515765,
+              "type": {
+                "class": "ECFightRoleResilienceView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mResilienceObject": {
+                  "m_FileID": 0,
+                  "m_PathID": 4762396785737429062
+                },
+                "mResilienceRender": {
+                  "m_FileID": 0,
+                  "m_PathID": -1210261639407701946
+                }
+              }
+            },
+            {
+              "rid": 3986547898241515766,
+              "type": {
+                "class": "ECFightRoleStatusDisplayView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mStatusItem": {
+                  "m_FileID": 6,
+                  "m_PathID": 5426047660340627646
+                },
+                "mStatusItemSlot": {
+                  "m_FileID": 0,
+                  "m_PathID": -5015301614034194362
+                },
+                "mMaxCountOfRow": 5,
+                "mMaxRowCount": 1
+              }
+            },
+            {
+              "rid": 3986547898241515838,
+              "type": {
+                "class": "ECActionAgentPlayableView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mActionTypePlayables": [
+                  {
+                    "ActionType": 57,
+                    "Playable": {
+                      "m_FileID": 7,
+                      "m_PathID": 985586064989836473
+                    },
+                    "StopOnActionEnd": 1,
+                    "EndPlayable": {
+                      "m_FileID": 0,
+                      "m_PathID": 0
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "rid": 3986547898241516203,
+              "type": {
+                "class": "ECFightRoundGMDisplayView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mGMRoundSlot": {
+                  "m_FileID": 0,
+                  "m_PathID": 4490371519155826758
+                }
+              }
+            },
+            {
+              "rid": 3986547898241516204,
+              "type": {
+                "class": "ECFightDebugClickView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mClickObj": {
+                  "m_FileID": 0,
+                  "m_PathID": 4684069318135279686
+                }
+              }
+            }
+          ]
+        }
+      },
+      "ordered_character_view": {
+        "rid": 3986547892861534292,
+        "type": {
+          "class": "ECFightRoleCharacterView",
+          "ns": "",
+          "asm": "Assembly-CSharp"
+        },
+        "data": {
+          "mSpriteList": {
+            "m_FileID": 0,
+            "m_PathID": -1122506412091936698
+          },
+          "mPlayerHUD": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mPlayerAppearance": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mDieOnStartPlayable": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mDiePlayable": {
+            "m_FileID": 4,
+            "m_PathID": -7962210796830536476
+          },
+          "mTryDiePlayableOnStart": 1,
+          "mGeneratePlayable": {
+            "m_FileID": 5,
+            "m_PathID": -8406336913279800363
+          },
+          "mGenerateDelayTime": 0.0,
+          "mGeneratePlayableNeedDelay": 0,
+          "mDelayVisibilityParts": []
+        }
+      }
+    },
     {
       "entityId": 3182,
       "source": {
@@ -2682,18 +2963,22 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveMonsterModelView.cs",
-      "sha256": "399bddf497607478b66c09e135edb22512e6761c823d8096cb1a4e76b0808f12"
+      "sha256": "d7036cc2f7ab74fae3ea203251cf45ed193975d8f215aa31138a9b3b698978e4"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
-      "sha256": "55549ef765844a9bf48bb5b485ffa6eec04b436669d458a65b6391b72d8b36a2"
+      "sha256": "d95bf9838239eafdc9385cef906e246b5293aa2777dd945c12076c0070c8dae9"
     }
   ],
   "runtime_scope": "Generation-only original method port, driven by the existing original playable manager and Animator. Original death graph assets are extracted but not enabled until their MeshMaterialProperty and AppearanceRendererLite bindings are restored.",
   "validation_inputs": [
     {
+      "path": "unity/Assets/Game/Editor/OfficialSparseShaderVariants.cs",
+      "sha256": "c19a9deeea95d4d918b1ec9c60774bb91b6846f38812011149291cf392b28cfb"
+    },
+    {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSummonGenerationValidation.cs",
-      "sha256": "4db43fb9c5f5d0627925d161dd03622c140b581c74f05cb9ec91251188966138"
+      "sha256": "1472687d957c60e6674eda36b66c2995dba0ba4bca70c6a09f3e78e86058807d"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef",
@@ -2705,7 +2990,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.cs",
-      "sha256": "3b316c3a2eaa054ba6d53100a86458aaa5cfb8004e3422259550924cd268b447"
+      "sha256": "df13f1d33ffc65ecf29080d7770461442174409043686aecdf26f1cd970bcf36"
     }
   ]
 }

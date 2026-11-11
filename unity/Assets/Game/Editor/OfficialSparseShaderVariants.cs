@@ -47,6 +47,7 @@ namespace Zjcs.Editor
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/StatusMaterial_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/StatusOrbit_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/StatusSpineFollower_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/SummonRoleViews_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/Track_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/WeaponPrefab_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Official/Combat/NativeMonsters/OriginalSkeletonEffect.shader"] = 768,
@@ -98,7 +99,7 @@ namespace Zjcs.Editor
                 selections.Add(original.Key, selection);
                 stages += selection.PassCount * selection.Programs.Count * 2;
             }
-            if (stages != 50868) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            if (stages != 51908) throw new BuildFailedException("Original shader stage domain changed: " + stages);
             Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
@@ -138,7 +139,7 @@ namespace Zjcs.Editor
                 }
             }
             finally { ShaderUtil.allowAsyncCompilation = previousAsync; }
-            if (stages != 50868) throw new BuildFailedException("Original shader stage count changed: " + stages);
+            if (stages != 51908) throw new BuildFailedException("Original shader stage count changed: " + stages);
             Debug.Log("Original sparse shaders: all " + stages + " Windows GPU stages across "
                 + originalPrograms.Count + " original shader assets compiled.");
             ProjectTools.Validate();

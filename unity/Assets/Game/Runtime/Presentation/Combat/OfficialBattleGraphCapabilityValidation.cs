@@ -445,7 +445,7 @@ namespace Zjcs.Presentation.Combat
             foreach (int unitId in firstPromotionSpawnedUnitIds)
             {
                 var state = controller.Checkpoint.Units.Single(value => value.Id == unitId);
-                if (state.MonsterId == 3182 || state.MonsterId == 3183)
+                if (state.MonsterId == 3181 || state.MonsterId == 3182 || state.MonsterId == 3183)
                     Require(firstPromotionGeneratedUnitIds.Contains(unitId),
                         "Original summon generation animation was not observed: unit=" + unitId);
                 var summon = controller.TryGetUnitTransform(unitId);

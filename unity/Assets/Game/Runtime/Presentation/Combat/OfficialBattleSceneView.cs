@@ -1385,7 +1385,7 @@ namespace Zjcs.Presentation.Combat
             var player = TryCreatePlayer(state);
             if (player != null) return player;
             var summonData = Resources.Load<OfficialSummonSkeletonData>("Combat/Summons/" + state.MonsterId + "-data");
-            if (summonData != null)
+            if (summonData != null && !OfficialBattleLiveMonsterModelView.HasBinding(state))
             {
                 var model = new OfficialSummonNativeModelView(summonData, root, "BattleUnit_" + state.Id);
                 var summonView = new UnitView { State = state, NativeModel = model };

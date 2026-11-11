@@ -50,6 +50,14 @@ namespace Zjcs.Presentation.Combat
             && (renderer.Animator.GetCurrentAnimatorStateInfo(0).fullPathHash != requestedState
                 || renderer.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
 
+        internal static bool HasBinding(FightBattleUnitState state)
+        {
+            if (state == null || state.CharacterType == 1) return false;
+            int entityId = state.MonsterTemplateId > 0 ? state.MonsterTemplateId : state.MonsterId;
+            var assets = Resources.Load<BattleNativeMonsterAssets>(BattleNativeMonsterAssets.ResourcePath);
+            return assets && assets.Find(entityId) != null;
+        }
+
         public static OfficialBattleLiveMonsterModelView TryCreate(FightBattleUnitState state, Transform parent,
             bool nativeSkillGraphs = false, OfflineBattleNativePlayableScope scope = null, bool restoring = false)
         {

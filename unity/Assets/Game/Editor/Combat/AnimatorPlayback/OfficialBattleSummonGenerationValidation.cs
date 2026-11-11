@@ -47,7 +47,7 @@ namespace Zjcs.Editor.Combat
             private IEnumerator Start()
             {
             var result = new Result();
-            foreach (int entity in new[] { 3182, 3183 })
+            foreach (int entity in new[] { 3181, 3182, 3183 })
                 foreach (bool restoring in new[] { false, true })
                 {
                     var routine = CheckScene(entity, restoring);
@@ -64,7 +64,7 @@ namespace Zjcs.Editor.Combat
                     result.scenes++;
                 }
             result.passed = true;
-            Debug.Log("[Summon generation] Shared scene: original generation, settled idle, restored suppression, and later new summon passed for both models.");
+            Debug.Log("[Summon generation] Shared scene: original generation, settled idle, restored suppression, and later new summon passed for all models.");
             Complete(result);
             }
         }
@@ -106,8 +106,14 @@ namespace Zjcs.Editor.Combat
                 for (int i = 0; i < 120; i++) { Pump(); yield return null; }
                 Require(Animation(1) == "idle_01" && Animation(2) == "idle_01", "Original post-generation idle differs.");
 
-                string Animation(int unitId) => scene.TryGetUnitTransform(unitId)
-                    .GetComponentInChildren<BattleNativeMonsterRenderer>().Animation;
+                string Animation(int unitId)
+                {
+                    var unit = scene.TryGetUnitTransform(unitId);
+                    Require(unit, "The original summon unit was not created: " + unitId);
+                    var renderer = unit.GetComponentInChildren<BattleNativeMonsterRenderer>();
+                    Require(renderer, "The scene did not select the full original summon renderer: " + entityId);
+                    return renderer.Animation;
+                }
                 void Pump() { scope.Tick(1f / 60); scope.LateTick(); scene.Tick(1f / 60); }
             }
             finally { scene.Dispose(); scope.Dispose(); UnityEngine.Object.DestroyImmediate(root); }
