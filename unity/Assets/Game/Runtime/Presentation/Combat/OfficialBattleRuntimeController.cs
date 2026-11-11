@@ -73,7 +73,8 @@ namespace Zjcs.Presentation.Combat
         public System.Collections.Generic.IReadOnlyList<int> UnlockedSpeedIndices => unlockedSpeeds;
         public bool IsPaused => paused;
         public bool IsPresentingStep => stepPlayback != null && !stepPlayback.Complete;
-        public bool CanCompleteBattle => executor != null && executor.State.Finished && !IsPresentingStep;
+        public bool CanCompleteBattle => executor != null && executor.State.Finished && !IsPresentingStep
+            && (executor.State.StatusSeconds?.PendingHits.Count ?? 0) == 0;
         public bool CanAdvance => executor != null && !executor.State.Finished
             && !paused && !IsPresentingStep
             && (executor.State.StatusSeconds?.PendingHits.Count ?? 0) == 0
@@ -251,6 +252,7 @@ namespace Zjcs.Presentation.Combat
                 nextSkillGraphPlayback?.BindSourceDeathView(nextScene);
                 nextSkillGraphPlayback?.BindGridEntities(worldRoot, gridMapper, checkpoint,
                     nextScene.Body, id => resolvedHudCatalog.TryGetStatusSprites(id, out var icon, out _, out _) && icon != null);
+                nextSkillGraphPlayback?.BindAirCombo(nextExecutor, worldRoot, nextScene.Body);
                 nativeModelLibrary = nextNativeModels;
                 skillGraphPlayback = nextSkillGraphPlayback;
                 environmentView = nextEnvironment;
@@ -375,6 +377,14 @@ namespace Zjcs.Presentation.Combat
                         sceneView.Body, sceneView.TryGetPetTransform);
                     if (!result.Replayed)
                         sceneView.ShowDamageFloats(result.Event, result.Checkpoint, hudCatalog.Font, damageColors);
+                }
+                // Play dispatches authored zero-delay hits immediately. Match that
+                // boundary before publishing the step/checkpoint to its observers.
+                if (executor.AdvanceStatusSecondsWithPresentation(0d,
+                    elapsed => skillGraphPlayback?.Tick((float)elapsed)) && hudVisible)
+                {
+                    sceneView.RefreshStatusSnapshot(result.Checkpoint);
+                    hudView.Refresh(result.Checkpoint);
                 }
                 LastStepSeconds = result.Event != null && result.Event.Duration > 0f
                     ? result.Event.Duration : 0.35f;
@@ -550,21 +560,24 @@ namespace Zjcs.Presentation.Combat
             if (!paused)
             {
                 if (executor != null && (Phase == FightBattlePhase.Play || Phase == FightBattlePhase.PlayStart)
-                    && executor.AdvanceStatusSeconds(Time.deltaTime))
+                    && executor.AdvanceStatusSecondsWithPresentation(Time.deltaTime,
+                        elapsed => skillGraphPlayback?.Tick((float)elapsed)))
                 {
                     // Timer state changes at the hit's playback time rather than
                     // at the eager whole-cast settlement boundary.
                     sceneView?.RefreshStatusSnapshot(Checkpoint);
                     hudView?.Refresh(Checkpoint);
                 }
-                skillGraphPlayback?.Tick(Time.deltaTime);
+                if (executor == null || Phase != FightBattlePhase.Play && Phase != FightBattlePhase.PlayStart)
+                    skillGraphPlayback?.Tick(Time.deltaTime);
                 stepPlayback?.Tick(Time.deltaTime);
                 // A disk checkpoint can contain the final settled hit before its
                 // presentation callback was delivered. No Step can run in that state.
                 // Defer handoff until Update so the caller can finish attaching hosts
                 // after Begin, and use the normal report/completion ordering once.
                 if (executor != null && executor.State.Finished
-                    && !IsPresentingStep && !battleCompletedRaised)
+                    && !IsPresentingStep && !battleCompletedRaised
+                    && (executor.State.StatusSeconds?.PendingHits.Count ?? 0) == 0)
                     CompleteStepPresentation();
             }
         }

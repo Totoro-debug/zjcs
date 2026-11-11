@@ -92,6 +92,29 @@ public static class BattleStatusSecondsHarness
         }
         bool rejected=false;try {clock.Advance(double.NaN);}catch(ArgumentOutOfRangeException){rejected=true;}
         Check(rejected,"Nonfinite clock input accepted");
+        // A coarse frame must still advance native graphs up to each transition,
+        // rather than publishing start/end together before rendering the full frame.
+        cp=NewBattle(c,f,items);clock=Clock(cp,c);
+        clock.Enqueue(.2,2,true,false,false,Launch(c));
+        var frameExecutor=FightBattleExecutor.Restore(cp,f,new FightDamageSettlement(),c,items);
+        double presented=0;var notifications=new List<string>();
+        frameExecutor.StatusSecondsChanged+=(owner,status,start)=>
+            notifications.Add(status.ClassId+":"+start+":"+presented.ToString("F1",System.Globalization.CultureInfo.InvariantCulture));
+        Check(frameExecutor.AdvanceStatusSecondsWithPresentation(2,delta=>presented+=delta),
+            "Presentation tick did not report phase changes");
+        Check(string.Join(",",notifications)=="24269:True:0.2,24269:False:0.9,24270:True:0.9,24270:False:1.7",
+            "Native graphs were not advanced chronologically: "+string.Join(",",notifications));
+        Near(presented,2,"Native graph time lost residual frame duration");
+        Check(cp.Units[1].Statuses.Count==0,"Coarse frame did not finish both phases");
+        presented=0;frameExecutor.AdvanceStatusSecondsWithPresentation(3,delta=>presented+=delta,true);
+        Near(presented,0,"Paused host advanced native graph time");
+        cp=NewBattle(c,f,items);clock=Clock(cp,c);
+        clock.Enqueue(0,2,true,false,false,Launch(c));clock.Enqueue(.3,2,true,false,false);
+        clock.Enqueue(.4,2,true,false,true);clock.Enqueue(.5,2,false,false,false);
+        frameExecutor=FightBattleExecutor.Restore(cp,f,new FightDamageSettlement(),c,items);
+        int invoked=0;frameExecutor.StatusSecondsInvoked+=(owner,status)=>invoked++;
+        frameExecutor.AdvanceStatusSecondsWithPresentation(.6,delta=>{});
+        Check(invoked==1,"Original InvokePlayable signal repeated the first hit, displacement or miss");
         // The real executor must carry the original hit setting through the
         // catalog/collector and queue its final presentation delay, once only.
         foreach(int itemId in new[]{10006,10009,10052}) {

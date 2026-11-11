@@ -832,3 +832,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 25027 来源：`scripts/prepare_battle_move_scope_sources.py` 按 APK 优先核对所选 884 的 25027／11630／11631／11632／3320 完整实体组件，并核验原共享组件、空客户端处理器与角色小跳绑定。输入版本、实际 bundle／对象、五格原概率及四个原码 SHA256 见[移动灼烧来源清单](battle-rules/move-scope-source-manifest.json)；规则及验证范围仅在[技能页](../../docs/features/skills.md)维护。
 
 浮空来源：`scripts/prepare_battle_air_combo_sources.py` 按 APK 优先核对所选 884 的 10581／10611／11121 原浮空命中和 24269／24270 完整状态，核验九份共享配置、原条件方法及客户端空处理器，并解码两份完整原状态 prefab 的全部对象／组件、playable_AirCombo 原序列与 floating 动画参数，按原清单校验解码程序集哈希。原包、实际 bundle／对象、完整字段和原码 SHA256 见[浮空来源清单](battle-rules/air-combo-source-manifest.json)；用户确认的单机时机及当前实现范围仅在[技能页](../../docs/features/skills.md)维护。
+
+浮空 Windows 原生输入与输出：`scripts/prepare_battle_air_combo_runtime.py` 从所选 884 已核验程序集迁移两个原空包装器，记录原码、父类、适配脚本与输出哈希；`scripts/prepare_battle_air_combo_assets.py` 复用完整图转换器，恢复两份原状态 prefab 及 playable_AirCombo 的全部原生对象，按原 APK 对象及已核验 Windows 导出缓存重映射九项脚本 GUID 和显式资源路径。凭据见[空包装器来源](battle-animation/air-combo-runtime-source-manifest.json)与[完整原生资源来源](battle-animation/air-combo-assets-source-manifest.json)。未生成完整素材备份快照；单机行为及实现／验证范围仅在[技能页](../../docs/features/skills.md)维护。

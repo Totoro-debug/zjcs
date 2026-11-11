@@ -1,0 +1,44 @@
+{
+  "manifest": "884_156692",
+  "original_assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "original_code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusDamageRemove.cs",
+      "sha256": "3e3daaaa97456a80d3caee3377c845dabf05542b7f2e9476c699a0d386b3fa16"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusDamageSkill.cs",
+      "sha256": "39c230c4c1eeeb2c7bf4ef29f0d43d2e4be10b1d1c382ca4d02203f92b9a1924"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusDamageRemove.cs",
+      "sha256": "8c32aa4b3134630a85b4cdd2f723c07e9c8f277e03e3511ca990b1bbc2811b63"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusDamageRemove.cs.meta",
+      "sha256": "370143c91baaefc23ce7acc79237ee1853ab83cb6ca582f8b147a4d914686a59"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusDamageSkill.cs",
+      "sha256": "757b590ed27f7524b00d2a20a8a058180bd375d7b117ee3086baf79f3dd446f8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusDamageSkill.cs.meta",
+      "sha256": "be234668279938b1708107bbf3d3e586e8aafe01725300231a79c704aef61ffd"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_air_combo_runtime.py",
+    "sha256": "c15bae75c310393756047c3d7a6c72720ba067395296f316ee76becea13d3627"
+  },
+  "existing_base": {
+    "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusBase.cs",
+    "sha256": "4df6e14a01c24112e16a4c47d17eb7fdf3fa68fe56a2f58d983da0293acf1efe"
+  },
+  "operation": "Preserve both literally empty original client classes and their MyFightStatusBase inheritance; replace unavailable server component generic arguments with the existing host-owned view-data boundary. Gameplay seconds live in the confirmed offline executor."
+}

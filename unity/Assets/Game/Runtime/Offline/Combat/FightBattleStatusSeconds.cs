@@ -88,6 +88,20 @@ namespace Zjcs.Combat.Official
         private readonly FightOfficialCombatCatalog catalog;
         private readonly FightRandomStream random;
         public event Action<FightBattleUnitState, FightBattleStatusState, bool> StatusChanged;
+        public event Action<FightBattleUnitState, FightBattleStatusState> StatusInvoked;
+
+        public static double NextDelay(FightBattleCheckpoint checkpoint)
+        {
+            var clock = checkpoint?.StatusSeconds;
+            if (clock == null) return double.PositiveInfinity;
+            double delay = clock.PendingHits.Count == 0 ? double.PositiveInfinity
+                : Math.Max(0d, clock.PendingHits[0].DueSeconds - clock.ElapsedSeconds);
+            foreach (var owner in checkpoint.Units)
+                foreach (var status in owner.Statuses)
+                    if (status.Components?.Seconds is FightBattleStatusSecondsState state && state.Started)
+                        delay = Math.Min(delay, Math.Max(0d, state.RemainingSeconds));
+            return delay;
+        }
 
         public FightBattleStatusSeconds(FightBattleCheckpoint checkpoint, FightOfficialCombatCatalog catalog,
             FightRandomStream random)
@@ -179,7 +193,10 @@ namespace Zjcs.Combat.Official
                 if (state == null || !state.Started || status.ForbiddenType != 0 || status.StackCount <= 0) continue;
                 if (hit.Block && state.EndOnBlockDamage) End(owner, status);
                 else if (status != created && !hit.Displacement && state.ResetOnNonMoveDamage)
+                {
                     state.RemainingSeconds = state.DurationSeconds;
+                    StatusInvoked?.Invoke(owner, status);
+                }
             }
         }
 

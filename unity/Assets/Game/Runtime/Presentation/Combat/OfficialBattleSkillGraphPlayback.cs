@@ -32,6 +32,7 @@ namespace Zjcs.Presentation.Combat
         private readonly List<ScheduledCast> pending = new List<ScheduledCast>();
         private readonly List<ScheduledMove> pendingMoves = new List<ScheduledMove>();
         private OfficialBattleGridEntityPlayback gridViews;
+        private OfficialBattleAirComboPlayback airComboViews;
         private Action<GameObject> bindPlayerClones;
         private readonly Zjcs.Offline.ProfessionUI.EmbeddedMonsterMecanimResources embeddedMecanim;
         private bool disposed;
@@ -78,6 +79,13 @@ namespace Zjcs.Presentation.Combat
         public void BindSourceDeathView(Zjcs.Official.StoryPlayables.IBattleSourceDeathView view)
             => scope.BindSourceDeathView(view);
 
+        public void BindAirCombo(FightBattleExecutor executor, Transform root, Func<int, Transform> body)
+        {
+            if (airComboViews != null) throw new InvalidOperationException("Original airborne status views are already bound.");
+            airComboViews = new OfficialBattleAirComboPlayback(executor, root, scope, body);
+            airComboViews.Synchronize();
+        }
+
         public void BindPlayerClonePrefabs(Action<GameObject> bind)
         {
             if (bindPlayerClones != null) throw new InvalidOperationException("Player clone prefabs are already bound.");
@@ -95,6 +103,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillGraphPlayback));
             if (stepEvent?.SkillCasts == null || checkpoint?.Units == null || unitTransform == null) return;
+            airComboViews?.Synchronize();
             gridViews?.Enqueue(stepEvent, checkpoint);
             gridViews?.DispatchDue();
             Func<int, Transform> resolveTransform = id => gridViews?.TryGetTransform(id) ?? unitTransform(id);
@@ -188,6 +197,7 @@ namespace Zjcs.Presentation.Combat
             if (float.IsNaN(deltaTime) || float.IsInfinity(deltaTime) || deltaTime < 0f)
                 throw new ArgumentOutOfRangeException(nameof(deltaTime));
             embeddedMecanim.Update();
+            airComboViews?.Synchronize();
             float remaining = deltaTime;
             while (true)
             {
@@ -248,6 +258,8 @@ namespace Zjcs.Presentation.Combat
             disposed = true;
             pending.Clear();
             pendingMoves.Clear();
+            airComboViews?.Dispose();
+            airComboViews = null;
             gridViews?.Dispose();
             gridViews = null;
             try { entityViews.Dispose(); }

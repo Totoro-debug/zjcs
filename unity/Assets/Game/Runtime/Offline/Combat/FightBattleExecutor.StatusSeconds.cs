@@ -5,6 +5,10 @@ namespace Zjcs.Combat.Official
 {
     public sealed partial class FightBattleExecutor
     {
+        public event Action<FightBattleUnitState, FightBattleStatusState, bool> StatusSecondsChanged;
+        public event Action<FightBattleUnitState, FightBattleStatusState> StatusSecondsInvoked;
+        public double NextStatusSecondsDelay => statusCatalog == null ? double.PositiveInfinity
+            : FightBattleStatusSeconds.NextDelay(checkpoint);
         private sealed class PendingStatusSecondsHit
         {
             public FightBattleDamageEvent Damage;
@@ -59,6 +63,27 @@ namespace Zjcs.Combat.Official
                     hit.Damage.Block, hit.Displacement, hit.LaunchStatus);
         }
 
+        /// <summary>Keep native graph time and status notifications in chronological order,
+        /// including when one rendering frame crosses several hits or both phase deadlines.</summary>
+        public bool AdvanceStatusSecondsWithPresentation(double seconds, Action<double> advancePresentation,
+            bool paused = false)
+        {
+            if (double.IsNaN(seconds) || double.IsInfinity(seconds) || seconds < 0d)
+                throw new ArgumentOutOfRangeException(nameof(seconds));
+            if (advancePresentation == null) throw new ArgumentNullException(nameof(advancePresentation));
+            if (paused) return false;
+            bool changed = false;
+            double remaining = seconds;
+            do
+            {
+                double slice = Math.Min(remaining, NextStatusSecondsDelay);
+                advancePresentation(slice);
+                changed |= AdvanceStatusSeconds(slice);
+                remaining = Math.Max(0d, remaining - slice);
+            } while (remaining > 0d);
+            return changed;
+        }
+
         /// <summary>Advance only active gameplay seconds; pause and speed are supplied by the host.</summary>
         public bool AdvanceStatusSeconds(double seconds, bool paused = false)
         {
@@ -76,8 +101,10 @@ namespace Zjcs.Combat.Official
                     status.StackChanged = null;
                 }
                 else OnStatusEnded(owner, status);
+                StatusSecondsChanged?.Invoke(owner, status, started);
                 changed = true;
             };
+            clock.StatusInvoked += (owner, status) => StatusSecondsInvoked?.Invoke(owner, status);
             clock.Advance(seconds, paused);
             if (changed) RebuildBattleProperties();
             checkpoint.RandomSeed = random.Seed;

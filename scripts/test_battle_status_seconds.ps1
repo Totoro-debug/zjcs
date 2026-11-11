@@ -11,4 +11,4 @@ $formula = $catalog.CreateDamageFormula((Read-SecondsInput 'rules'),$rp.output_s
 $items = [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load((Read-SecondsInput 'rules'),$rp.output_sha256,$rp.manifest)
 try { [BattleStatusSecondsHarness]::Run($catalog,$formula,$items) }
 catch { Write-Output $_.Exception.ToString(); throw }
-Write-Output 'Status seconds passed: original airborne/recovery configuration, hit offsets, reset/block/miss/displacement, pause, saved pending hits and remaining time, provenance and 128 frame partitions.'
+Write-Output 'Status seconds passed: original airborne/recovery configuration, hit offsets, reset/block/miss/displacement, pause, saved pending hits and remaining time, provenance, 128 frame partitions, native graph boundaries and InvokePlayable signals.'
