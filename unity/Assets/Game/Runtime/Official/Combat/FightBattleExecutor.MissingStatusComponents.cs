@@ -5,9 +5,12 @@ namespace Zjcs.Combat.Official
 {
     public sealed partial class FightBattleExecutor
     {
+        // Confirmed offline SelfTargetPosResolver uses the hit entity's creation
+        // pose; the APK contains the resolver type but no server assignment.
         private void CollectHitTriggerSkill(FightBattleUnitState actor,
             FightBattleUnitState target, FightBattleSkillDefinition skill,
-            FightBattleHitDefinition hit, List<FightBattleStatusSkillInvocation> output)
+            FightBattleHitDefinition hit, List<FightBattleStatusSkillInvocation> output,
+            FightGridPoint hitOrigin, FightBattleSkillCastPresentation hitCast, float hitDelay)
         {
             FightBattleHitTriggerSkillState trigger = hit?.TriggerSkill;
             if (trigger == null || output == null || actor == null || target == null) return;
@@ -26,7 +29,11 @@ namespace Zjcs.Combat.Official
                     },
                     SourceUnitId = actor.Id,
                     TargetUnitId = target.Id,
-                    TargetPositionUnitId = trigger.UseTargetPosition ? target.Id : actor.Id
+                    TargetPositionUnitId = target.Id,
+                    Delay = hitDelay,
+                    HitOrigin = trigger.UseTargetPosition ? (FightGridPoint?)null : hitOrigin,
+                    HitFacing = hitCast.FacingIndex,
+                    HitFlipX = hitCast.FlipX
                 });
             }
         }

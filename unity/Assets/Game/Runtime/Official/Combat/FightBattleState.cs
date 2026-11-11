@@ -249,6 +249,11 @@ namespace Zjcs.Combat.Official
         public bool UseTargetPositionWithSelection;
         // Capture at trigger time; later stacking must not change an already collected cast.
         public double DamageFactor = 1.0;
+        // Runtime-only hit creation snapshot; ordinary status invocations use
+        // their existing live unit position references.
+        internal FightGridPoint? HitOrigin;
+        internal int HitFacing;
+        internal bool HitFlipX;
     }
 
     [Serializable]

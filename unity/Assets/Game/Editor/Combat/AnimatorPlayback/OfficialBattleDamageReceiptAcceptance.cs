@@ -59,11 +59,15 @@ namespace Zjcs.Editor.Combat
             var camera = new GameObject("Receipt damage camera").AddComponent<Camera>();
             camera.orthographic = true; camera.orthographicSize = 4;
             camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = new Color(.06f, .09f, .15f);
-            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure" })
+            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure", "trigger" })
             {
                 var checkpoint = Build(name, out var step);
-                var expected = step.DamageEvents.Where(d => !d.IsSkillCost).OrderBy(d => d.Delay).ThenBy(d => d.DamageId).ToArray();
+                var expected = step.DamageEvents.Where(d => !d.IsSkillCost && d.DamageEntityId != 0)
+                    .OrderBy(d => d.Delay).ThenBy(d => d.DamageId).ToArray();
                 Require(expected.Length > 0 && expected.All(d => d.HasDamagePosition && d.HasDamageTriggerStatus), "Actual settled occurrence metadata.");
+                if (name == "trigger") Require(step.DamageEvents.Any(d => d.HitEntityId == 13522 && d.DamageEntityId == 0)
+                    && step.SkillCasts.Any(c => c.SkillEntityId == 13523)
+                    && expected.Any(d => d.DamageEntityId == 13526), "Actual original trigger hit and downstream damage fixtures.");
                 if (name == "replay") Require(step.SkillCasts.Count == 3, "Actual same-class replay fixture.");
                 if (name == "body") Require(expected.Any(d => d.HasHitGridPosition)
                     && expected.All(d => !d.HasHitGridPosition || d.DamageX == d.HitGridX && d.DamageY == d.HitGridY),
@@ -89,6 +93,19 @@ namespace Zjcs.Editor.Combat
                 scope = new OfflineBattleNativePlayableScope(root, null);
                 var views = new OfficialBattleSkillEntityPlayback(root, mapper, scope, id => checkpoint.Units.FirstOrDefault(u => u.Id == id));
                 playback = new OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog.TryLoadDefault(), scope, views);
+                int triggerChildrenStarted = 0;
+                views.CastStarted += cast => {
+                    if (cast.SkillEntityId != 13523) return;
+                    triggerChildrenStarted++;
+                    var pose = cast.Presentation;
+                    var childPosition = mapper.GridToWorld(new FightGridPoint(pose.EntityX, pose.EntityY));
+                    Require(pose.HasEntityPosition && root.GetComponentsInChildren<MyFightSkill>()
+                        .Any(s => s.myEntity.ClassId == 13523 && Vector3.Distance(s.transform.position, childPosition) < .001f),
+                        "Original child skill entity is created at the frozen hit position.");
+                    var sourceGrid = views.GetEntity(new EcEntityIdentifier(1, cast.ActorId)).GetComponent<MyGridTransform>();
+                    Require(sourceGrid.Component.Pos.X == pose.SourceX && sourceGrid.Component.Pos.Y == pose.SourceY,
+                        "Creating a child at its hit origin must preserve the actual source role projection.");
+                };
                 var observed = new List<Observed>(); int hitNotifications = 0;
                 foreach (var unit in checkpoint.Units)
                 {
@@ -158,6 +175,8 @@ namespace Zjcs.Editor.Combat
                 }
                 if (name == "replay") Require(observed.Select(value => value.SkillId).Distinct().Count() == 3,
                     "Three actual same-class casts retain three independent damage skill identities.");
+                if (name == "trigger") Require(triggerChildrenStarted == step.SkillCasts.Count(c => c.SkillEntityId == 13523),
+                    "Trigger-only hits must not abort their downstream original skill playback.");
                 Require(root.GetComponentsInChildren<MyFightDamage>().Length == 0, "No damage entity survived its final removal boundary.");
                 playback.Dispose(); playback = null; scope = null;
                 Destroy(root.gameObject); yield return null;
@@ -182,10 +201,11 @@ namespace Zjcs.Editor.Combat
                 checkpoint.Units.Add(unit);
             }
             FightBattleSkillDefinition skill;
-            if (name == "body")
+            if (name == "body" || name == "trigger")
             {
-                skill = assets.Load().CreateSkill(10910, 0, 0, 5, 20, 1, null);
+                skill = assets.Load().CreateSkill(name == "body" ? 10910 : 13520, 0, 0, 5, 20, 1, null);
                 checkpoint.Units[1].BodyOffsets.AddRange(new[] { new FightGridPoint(1, 0), new FightGridPoint(0, 1), new FightGridPoint(1, 1) });
+                if (name == "trigger") checkpoint.Units[2].X = 10;
             }
             else
             {

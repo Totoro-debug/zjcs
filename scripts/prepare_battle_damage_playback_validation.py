@@ -95,10 +95,10 @@ def prepare_native_assets(project, work, selected):
     for source in resources.iterdir():
         if source.is_file() and source.suffix in ('.json', '.txt', '.bytes'):
             pending.append(source)
-    # Original 10910 also produces the actual 11050 child cast in this fixture.
-    skills = [row for row in catalog['skills'] if row['skill_entity_id'] in (10100, 10910, 11050)]
-    hits = [row for row in catalog['hits'] if row['hit_entity_id'] in (10101, 10911, 10912, 11051)]
-    if len(skills) != 3 or len(hits) != 4:
+    # Include actual child casts and trigger/chain hit entities from the rules.
+    skills = [row for row in catalog['skills'] if row['skill_entity_id'] in (10100, 10910, 11050, 13520, 13523)]
+    hits = [row for row in catalog['hits'] if row['hit_entity_id'] in (10101, 10911, 10912, 11051, 13521, 13522, 13524, 13525)]
+    if len(skills) != 5 or len(hits) != 8:
         raise ValueError('Formal receipt fixture original skill/hit entities are not installed.')
     for row in [*skills, *hits, *catalog['damages']]:
         prefix = row['entity_resource'].removeprefix('Combat/SkillGraphs/')

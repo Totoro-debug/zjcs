@@ -20,6 +20,10 @@ namespace Zjcs.Combat.Official
         }
 
         public int SourceX, SourceY, TargetX, TargetY, TargetId;
+        // A hit-triggered skill can be created away from its source role.
+        // Older receipts retain the source-position default.
+        public bool HasEntityPosition;
+        public int EntityX, EntityY;
         // The executor indexes Pos2d.FourDirs (Down, Left, Up, Right), not Common.Direction.
         public int FacingIndex;
         public bool FlipX, FlipSource;

@@ -86,6 +86,9 @@ namespace Zjcs.Presentation.Combat
                 // Legacy receipts keep missing results/positions unknown. Do not
                 // infer either from the scene, current HP or surviving statuses.
                 if (!receipt.HasDamageTriggerStatus || !receipt.HasDamagePosition) continue;
+                // Original trigger-only hits (for example 13522) have no
+                // damage entity. Their hit graph and child skill own playback.
+                if (receipt.DamageEntityId == 0) continue;
                 if (!catalog.TryGetComponent(receipt.DamageEntityId, "FightDamageComponent", out var config))
                     throw new InvalidOperationException("Original damage configuration is missing: " + receipt.DamageEntityId);
                 float lifetime = config.TryGetValue("Duration", out var duration)

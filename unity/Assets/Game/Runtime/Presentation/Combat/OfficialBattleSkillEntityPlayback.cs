@@ -212,7 +212,8 @@ namespace Zjcs.Presentation.Combat
             state.Data = new EntityData { TypeId = cast.SkillEntityId,
                 Identifier = new EcEntityIdentifier(2, ++serial), Skill = state,
                 Additional = new OfficialBattleSkillPrefabData(combatCatalog, cast.SkillEntityId),
-                Grid = new Grid { Position = sourcePosition,
+                Grid = new Grid { Position = cast.Presentation.HasEntityPosition
+                        ? new Pos2d(cast.Presentation.EntityX, cast.Presentation.EntityY) : sourcePosition,
                     Facing = sourceFacing, Mirrored = cast.Presentation.FlipX,
                     ToPosition = GridToPos, ToGrid = PositionToGrid } };
             var entity = skillViews.Create(state.Data);

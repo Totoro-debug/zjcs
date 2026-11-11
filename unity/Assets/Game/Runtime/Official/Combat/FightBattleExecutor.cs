@@ -765,6 +765,14 @@ namespace Zjcs.Combat.Official
             // filters (notably TargetType.Master) belong to the pet source.
             targetingSource = targetingSource ?? actor;
             var hitCast = FightBattleSkillCastPresentation.Capture(actor, skill, targets, targetPosition);
+            if (presentationCast?.Presentation != null && presentationCast.Presentation.HasEntityPosition)
+            {
+                hitCast.HasEntityPosition = true;
+                hitCast.EntityX = presentationCast.Presentation.EntityX;
+                hitCast.EntityY = presentationCast.Presentation.EntityY;
+                hitCast.FacingIndex = presentationCast.Presentation.FacingIndex;
+                hitCast.FlipX = presentationCast.Presentation.FlipX;
+            }
             // User-confirmed solo rule: a successful 18130 directly kills opposing player units;
             // the original 18131 single-cell hit is self-targeted in the client data.
             bool chaosInvasionWipe = IsChaosInvasionPhaseSkill(actor, skill);
@@ -907,6 +915,10 @@ namespace Zjcs.Combat.Official
                     movementStartContext.StatusStartTime = Math.Max(0f, hitDelay);
                     FightGridPoint damagePosition = occurrence != null && occurrence.HasGridPosition
                         ? occurrence.GridPosition : new FightGridPoint(target.X, target.Y);
+                    int centerIndex = occurrence?.EffectCenterIndex ?? 0;
+                    FightGridPoint hitOrigin = hitSelection != null && centerIndex < hitSelection.EffectCenters.Count
+                        ? hitSelection.EffectCenters[centerIndex]
+                        : FightHitAnchorExtensions.ResolveCenter(hit.Anchor, actor, targetPosition ?? target, hitCast);
                     long beforeHp = target.Hp;
                     int damageId = NextDamageId();
                     bool originalHasCustomDamage = hit.HasCustomDamage;
@@ -1020,7 +1032,7 @@ namespace Zjcs.Combat.Official
                     {
                         ExecuteStatusOnlyHit(actor, target, skill, hit, resolved, damage,
                             skillCostHp, casts, damageEvents, movements, ref lastDelay,
-                            ref statusTriggerDuration, ref statusTriggerActionDuration);
+                            ref statusTriggerDuration, ref statusTriggerActionDuration, hitOrigin, hitCast);
                         continue;
                     }
                     checkpoint.Statistics.RecordHit(damage, damageHitTargets);
@@ -1046,7 +1058,8 @@ namespace Zjcs.Combat.Official
                     damage.IsDamageTriggerStatus = ApplyHitStatuses(actor, target, skill, hit, random, skillCostHp,
                         actualHpLoss);
                     damage.HasDamageTriggerStatus = true;
-                    CollectHitTriggerSkill(actor, target, skill, hit, configuredComponentInvocations);
+                    CollectHitTriggerSkill(actor, target, skill, hit, configuredComponentInvocations,
+                        hitOrigin, hitCast, hitDelay);
                     ApplyMissingStatusComponentsOnHit(actor, target, skill, hit, resolved,
                         actualHpLoss, configuredComponentInvocations);
                     foreach (FightBattleUnitState logicOwner in new[] { actor, target })
@@ -1992,6 +2005,8 @@ namespace Zjcs.Combat.Official
                     continue;
                 }
                 skill.StatusOrigin = invocation.Trigger.Origin?.Copy();
+                if (invocation.HitOrigin.HasValue)
+                    targetPosition = targetPosition.ProbeAt(invocation.HitOrigin.Value);
                 if (invocation.SourceRootSkillId > 0) skill.RootEntityId = invocation.SourceRootSkillId;
                 InheritBlessingScales(skill, invocation.Trigger.BlessPropertyScales);
                 // SkillTargetType.Pos/PosCanStand/PosSkillDirectionCanStand use
@@ -2021,6 +2036,14 @@ namespace Zjcs.Combat.Official
                     SkillEntityId = skill.EntityId,
                     SkillItemId = skill.ItemId
                 };
+                if (invocation.HitOrigin.HasValue)
+                {
+                    cast.Presentation.HasEntityPosition = true;
+                    cast.Presentation.EntityX = invocation.HitOrigin.Value.X;
+                    cast.Presentation.EntityY = invocation.HitOrigin.Value.Y;
+                    cast.Presentation.FacingIndex = invocation.HitFacing;
+                    cast.Presentation.FlipX = invocation.HitFlipX;
+                }
                 foreach (var selected in targets) cast.TargetIds.Add(selected.Id);
                 casts.Add(cast);
                 ExecuteSkill(source, skill, targets, casts, damageEvents, movements,

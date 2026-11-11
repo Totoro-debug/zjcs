@@ -153,6 +153,7 @@
 - 用户确认命中实体继承本次技能的方向与翻转，使用原 `RealCenter` 变换局部范围。`FightOfficialCombatCatalog` 读取各命中实体的中心，命中图将普通与随机父范围的变换配置分别传递到叶节点；执行器在技能开始时捕获方向／翻转，普通命中、随机选格和 AI 覆盖统计使用同一官方坐标变换。旧检查点从原配置补回缺少的变换元数据，保留 HP、CD 和释放计数；显式编写的世界偏移夹具不作二次变换。
 - 用户确认连锁命中按逐跳起点处理：首跳从本次技能的施法位置开始，后续每跳从上一跳实际命中落点开始。官方 `MyFightHitChained.myHitToNextHitPlayable` 的字段注释也明确说明“第一次 hit 的起点是技能位置”；共享 `StartGridPos` 的赋值实现未随客户端提供。下一跳按用户确认限制处理：`Repeat=false` 排除本链已命中过的目标，`Back=false` 排除上一跳目标，`PreferUnvisited=true` 优先未命中过的目标，其余按距离、实体 ID 排序，无候选则停止。原 `Scope` 是伤害范围（10821 仅有当前格），下一跳搜索范围的服务端实现未提供，用户确认以上一跳实际落点为中心，平移原技能 `Range` 搜索；伤害范围仍使用各命中节点的原 `Scope`。这些规则尚待接入真实命中创建事件，不能据此视为连锁执行已经完整还原。
 - 用户确认子命中相对父命中触发时刻等待各自延迟。当前 `HitCfg` 展开累计沿途已保存的固定 Delay；例如 10910 的父引用 0.37 秒与 10911 七条 10912 子引用的 0～0.6 秒，投影为 0.37～0.97 秒。此累计是单机调度规则，客户端只有 `FightHitBaseComponent.HitDelayTime` 状态，未提供服务端子实体调度。动态父命中的距离延迟、实际命中后的选敌／位置变化及逐跳创建仍须由后续命中生命周期处理，不能视为已恢复；伤害叶节点的既有距离延迟仍由执行器计算。
+- 用户确认 `FightHitTriggerSkillComponent` 的 `SelfTargetPosResolver` 使用命中实体的实际格子作为子技能原点，包括随机抽中的非中心身体格，方向／翻转继承该命中。所选配置中该类型对应 13522→13523；APK 仅保留 resolver 类型及客户端命中格播放，缺少服务端赋值。执行器从本次选择的 `EffectCenters` 冻结原点，在实际命中触发时刻创建子技能，子技能自身延迟继续累加；施法者身份、属性和真实位置独立保留。新回执显式保存技能实体位置，规则范围与原实体 prefab 使用同一原点和方向；旧回执缺字段时保持原来源位置默认值。13522 原 `DamageId=0` 不创建伤害视图，保留原命中图、触发和后续真实伤害；正数伤害配置缺失仍报错。
 - 地图专属等级、选向、奖励和失败回滚只在所属地图／功能页维护，避免在本页重复定义。
 
 - 用户确认共享状态首次施加按剩余额度分配；不足时部分分配，剩余额度为 0 则不创建新状态。已有状态加层使用同一总上限，状态结束释放占用。首次创建前的分配裁决是单机规则，APK 已有后续增减与结束回收公式。
@@ -254,9 +255,13 @@
 
 - 纯状态与混合效果专项 `test_battle_status_only.ps1` 通过 16 组真实执行器检查：自身／目标增益、普通／异常减益、概率失败、续期、驱散、位移、配置子技能、通用命中监听与伤害／治疗专用监听隔离，以及原 11160／12890／11460。单个技能同时产生伤害、实际护盾、增益和减益时，四项分别记录；成功增益与减益均纳入“施加状态”，人物显示仍沿原分类权重与破韧分，原 12890 的纯护盾只计入实际护盾量。检查点完整往返、恢复后不重复统计，以及实际战报构建后的原权重评分通过。460 条公式／战斗核心与原状态结果、施法归属、命中位置、治疗统计、位移回归通过。主工程 Unity 导入／编译、`ProjectTools.Validate` 和内置屏静音 `RunReceipts` 均正常以 0 退出；位置、同类重放、旧回执、身体格、真实纯状态与满血治疗六个场景通过，四张实际粒子截图已查看。此处纯状态回执来自实际执行，不再手动移除公式字段；角色仍为无可见网格的受控对象，不覆盖完整人物／HUD 演出。静态元数据检查通过（150,054 GUID）；原资源输入／输出不变，仅刷新本地绑定哈希。隔离准备入口补入实际物品自动增长规则依赖、原嵌入模型目录及动态绑定，并按真实施法补齐三种技能、四种命中 prefab；隔离工程六个场景全部断言通过，另四张实际粒子截图已查看，但编辑器停在原生退出阶段，本会话停止其进程，不计为隔离运行正常完成。运行正常退出的结论以主工程为准；未构建或发布本批 Windows Player。
 
+- 触发技能原点专项 `test_battle_hit_trigger_origin.ps1` 通过八组真实 13520→13522→13523 执行：四方向、伤害／纯状态两类触发、非中心身体格、方向和翻转、实际父触发时刻、原 13526 伤害、施法者位置及检查点新旧字段兼容。460 条公式／战斗核心、六组施法归属、七组命中位置及十六组状态统计回归通过。主工程编译与 `ProjectTools.Validate`、内置屏静音 `RunReceipts` 均以 0 退出；七个播放场景通过，含真实 13520 的无伤害实体触发、后续原技能／雷击、实际子实体位置、源角色投影及原双向伤害通知，五张实际粒子截图已查看。静态检查通过（150,079 GUID）。原模型仍为无可见网格的受控对象，不覆盖完整人物／HUD；未运行本项隔离 Play Mode，未构建或发布本批 Windows Player。
+
 ## 代码与来源入口
 
 - 正式伤害回执播放：[OfficialBattleDamageReceiptPlayback.cs](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageReceiptPlayback.cs)；专项：[OfficialBattleDamageReceiptAcceptance.cs](../../unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleDamageReceiptAcceptance.cs)。
+
+- 命中触发子技能原点回归：[test_battle_hit_trigger_origin.ps1](../../scripts/test_battle_hit_trigger_origin.ps1)；实体位置投影：[OfficialBattleSkillEntityPlayback.cs](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs)。
 
 - 纯状态命中执行：[FightBattleExecutor.StatusOnly.cs](../../unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.StatusOnly.cs)；规则回归：[test_battle_status_only.ps1](../../scripts/test_battle_status_only.ps1)。
 
