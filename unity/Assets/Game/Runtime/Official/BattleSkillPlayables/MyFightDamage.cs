@@ -32,7 +32,7 @@ public class MyFightDamage : MyComponent<FightDamageComponent, FightDamageCompon
 	public bool myHideDamage;
 
 	public IMyPlayableManager mMyPlayableManager { get; set; }
-	public IFightDamageViewServices ViewServices { get; set; }
+	public IFightSkillViewServices ViewServices { get; set; }
 
 	public override void OnStart(bool newEntity)
 	{
@@ -41,7 +41,7 @@ public class MyFightDamage : MyComponent<FightDamageComponent, FightDamageCompon
 		{
 			return;
 		}
-		ViewServices.FireDamageEvent(entity, this);
+		((Component)entity).GetComponent<MyFightRoleFight>().FireDamageEvent(this);
 		MyEntity entity2 = ViewServices.GetEntity(Component.SkillId);
 		if ((Object)(object)entity2 == (Object)null)
 		{
@@ -50,7 +50,7 @@ public class MyFightDamage : MyComponent<FightDamageComponent, FightDamageCompon
 		MyFightSkill component = ((Component)entity2).GetComponent<MyFightSkill>();
 		if (!((Object)(object)component.Source == (Object)null))
 		{
-			ViewServices.FireHitEvent(component.Source, this);
+			((Component)component.Source).GetComponent<MyFightRoleFight>().FireHitEvent(this);
 			Dictionary<string, object> param = new Dictionary<string, object> {
 			{
 				"Damage",

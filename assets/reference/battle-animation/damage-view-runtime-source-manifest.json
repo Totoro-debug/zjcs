@@ -22,6 +22,10 @@
       "sha256": "5c4228b042d783e5e9cf356e7cab0bdd892cf9a0584898da4abf111cd50ce131"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightRoleFightComponent.cs",
+      "sha256": "4844dfa361e882daac113d2ad6f795f88cc64e610d7d206ef34cf59361b7083b"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightDamage.cs",
       "sha256": "6ce2cb93b6e7df9c11d366ddf5398e8ad90baed282f04318269c521df139ed98"
     },
@@ -32,12 +36,16 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightDamagePetTransferEnergyFilter.cs",
       "sha256": "f4e429bc1f1034c57dcf92354d0c7f63abeba0ca2cfd92d45fbbe0815d3808f1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightRoleFight.cs",
+      "sha256": "bb59ffc81a05dc24c03566095f2c72cb28e8e0be1e11a790f2201344e2cb792b"
     }
   ],
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightDamage.cs",
-      "sha256": "ad708895e5052ecdc4b05e80f6190299cde1ed34baa7bed38e2c84b8af869368"
+      "sha256": "155e8402b0349fb2c315484196fbf9a49f2a575dc4fddc96c3cfbdf7e5b3b461"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightDamage.cs.meta",
@@ -60,8 +68,16 @@
       "sha256": "3e6f1c33d704913451b797a110f2e5dcdd6177f20387a60aef71da80e667a7db"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightRoleFight.cs",
+      "sha256": "47d50f5553c77bd4821b9464c00704ea6d4ce08d8f46eb1a60c1613718036fff"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightRoleFight.cs.meta",
+      "sha256": "933250af010cda594ce72af15e105ac7810437b13e4a647a7472aa8ed7a6ed85"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightDamageViewBindings.cs",
-      "sha256": "dcb6f65abfbd838b1a9ca8411e54a7f4a9807667ac05367bca162c07be06002e"
+      "sha256": "ba2811a08be69553e90bda4feaa04b4addedb8cc9e3ff0a36332a62aadba247d"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightDamageViewBindings.cs.meta",
@@ -70,7 +86,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_damage_view_runtime.py",
-    "sha256": "713f461d964f81b84a96baa2a0df6d445eae6f5cc3b6126acfb747f2512ebf42"
+    "sha256": "d5d8097ceea1eec3554b2137b9dfda9a84d136cbc70c93b6403321078c33e712"
   },
   "local_bindings": [
     {
@@ -79,7 +95,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageEntityPlayback.cs",
-      "sha256": "9ff4c2dd6145a679e97fe5935050f6b6b4191adea30d18729c1ae5f7d371a527"
+      "sha256": "cf20e6cc4ed54ceefcdc790f26a8168daf0e3cd8805a60e814763cf9eb0cc3cc"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs",
@@ -87,7 +103,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleDamagePlaybackAcceptance.cs",
-      "sha256": "aaa6fe526d733fbd5112a80735d84ed0f10cd974e61491efab413b301f9b065f"
+      "sha256": "58f1289d5be0e4278bbf5441b70d1a28dbc4ffd77ffa9fa91c1aed97085f44d8"
     },
     {
       "path": "scripts/inspect_battle_damage_graph_bindings.py",
@@ -100,9 +116,10 @@
   ],
   "adaptations": [
     "Consumed shared damage state only; no server damage or status-trigger result is inferred.",
-    "Explicit original entity lookups and target/source role notification boundary.",
+    "Shared skill-view entity lookup; original target/source role notifications called directly.",
     "Original common, block-before-crit, fallback and independent status-trigger graph order retained.",
     "Original status-stack override cache, lifecycle and five graph fields retained.",
+    "Original role damage/hit events, subscriber order and exception isolation retained; Unity logging port.",
     "Original pet-energy-filter client class has no view behavior."
   ]
 }

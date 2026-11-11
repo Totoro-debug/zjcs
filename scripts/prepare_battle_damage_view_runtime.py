@@ -33,7 +33,7 @@ def main():
         raise ValueError('Review original damage presentation assembly/version.')
     inputs, outputs = [identity(manifest), identity(assembly)], []
     inputs.extend(identity(CODE / 'common-source/Common' / (name + '.cs')) for name in (
-        'FightDamageComponent', 'DamageResultParameter', 'DamageTypeData'))
+        'FightDamageComponent', 'DamageResultParameter', 'DamageTypeData', 'FightRoleFightComponent'))
 
     def read(name):
         path = CODE / 'client-source' / (name + '.cs')
@@ -51,14 +51,10 @@ def main():
     text = replace_once(text,
         '[Inject]\n\tprivate IMyPlayableManager mMyPlayableManager { get; set; }',
         'public IMyPlayableManager mMyPlayableManager { get; set; }\n'
-        '\tpublic IFightDamageViewServices ViewServices { get; set; }')
+        '\tpublic IFightSkillViewServices ViewServices { get; set; }')
     text = text.replace('myContainer.GetEntity(', 'ViewServices.GetEntity(')
     text = replace_once(text, 'Object.op_Implicit((Object)(object)myTriggerStatusPlayable)',
                         'myTriggerStatusPlayable')
-    text = replace_once(text, '((Component)entity).GetComponent<MyFightRoleFight>().FireDamageEvent(this);',
-        'ViewServices.FireDamageEvent(entity, this);')
-    text = replace_once(text, '((Component)component.Source).GetComponent<MyFightRoleFight>().FireHitEvent(this);',
-        'ViewServices.FireHitEvent(component.Source, this);')
     emit('MyFightDamage', text)
 
     text = read('FightDamagePlayableOverrideByStatusStack')
@@ -73,6 +69,17 @@ def main():
         raise ValueError('Review original damage pet-energy filter view behavior.')
     emit('MyFightDamagePetTransferEnergyFilter', text.replace(
         'FightDamagePetTransferEnergyFilterComponent', 'IFightHitPassiveViewData'))
+
+    text = read('MyFightRoleFight')
+    text = replace_once(text, 'MyComponent<FightRoleFightComponent>', 'MyComponent<BattleRoleFightViewData>')
+    # This client view reads no shared role fields. Retain its actual events,
+    # multicast invocation and catch boundaries; replace only structured logging.
+    text = text.replace('Action<', 'System.Action<').replace('Exception ex', 'System.Exception ex')
+    text, count = re.subn(r'catch \(System.Exception ex\)\s*\{.*?\n\t\t\}',
+        'catch (System.Exception ex)\n\t\t{\n\t\t\tDebug.LogException(ex);\n\t\t}', text, flags=re.S)
+    if count != 2:
+        raise ValueError('Review original role damage/hit exception boundaries.')
+    emit('MyFightRoleFight', text)
     bindings = DEST / 'FightDamageViewBindings.cs'
     meta(bindings)
     outputs.extend((identity(bindings), identity(Path(str(bindings) + '.meta'))))
@@ -86,12 +93,36 @@ def main():
     write_changed(RECEIPT, json.dumps(dict(manifest='884_156692', inputs=inputs, outputs=outputs,
         generator=identity(Path(__file__)), local_bindings=local_bindings, adaptations=[
             'Consumed shared damage state only; no server damage or status-trigger result is inferred.',
-            'Explicit original entity lookups and target/source role notification boundary.',
+            'Shared skill-view entity lookup; original target/source role notifications called directly.',
             'Original common, block-before-crit, fallback and independent status-trigger graph order retained.',
             'Original status-stack override cache, lifecycle and five graph fields retained.',
+            'Original role damage/hit events, subscriber order and exception isolation retained; Unity logging port.',
             'Original pet-energy-filter client class has no view behavior.']),
         ensure_ascii=False, indent=2) + '\n')
-    print('Migrated original damage entity presentation and status-stack override.')
+    # Native prefabs and their script GUIDs are unchanged. Refresh the migrated
+    # code identities and this linked proof, retaining all original/asset evidence.
+    graph_receipt = ROOT / 'assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json'
+    if graph_receipt.is_file():
+        graph = json.loads(graph_receipt.read_bytes())
+        if graph['manifest'] != '884_156692':
+            raise ValueError('Review damage code binding in the native graph receipt.')
+        emitted = {row['path'] for row in outputs if row['path'].endswith('.cs')}
+        originals = {row['path']: row['sha256'] for row in inputs}
+        for row in graph['application']:
+            if row.get('migrated', {}).get('path') not in emitted:
+                continue
+            original = row['original']
+            if originals.get(original['path']) != original['sha256']:
+                raise ValueError('Original damage script identity differs from its native binding.')
+            sidecar = row['migrated_meta']
+            if identity(ROOT / sidecar['path'])['sha256'] != sidecar['sha256']:
+                raise ValueError('Damage script GUID binding changed; regenerate native assets explicitly.')
+            row['migrated'] = identity(ROOT / row['migrated']['path'])
+        for row in graph['runtime_receipts']:
+            if row['path'] == RECEIPT.relative_to(ROOT).as_posix():
+                row.update(identity(RECEIPT))
+        write_changed(graph_receipt, json.dumps(graph, ensure_ascii=False, indent=2) + '\n')
+    print('Migrated original damage views, status override and role notifications.')
 
 
 if __name__ == '__main__':

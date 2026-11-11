@@ -14,6 +14,9 @@ namespace Zjcs.Official.BattleSkillPlayables
     }
 
     public sealed class FightDamageComponentInfo { }
+    // MyFightRoleFight forwards client events without reading shared role state.
+    // Shared combat callbacks remain owned by the rule executor.
+    public sealed class BattleRoleFightViewData { }
     public struct DamageResultParameter
     {
         public DamageTypeData DamageTypeData;
@@ -23,11 +26,4 @@ namespace Zjcs.Official.BattleSkillPlayables
         public bool IsBlock, IsCrit;
     }
 
-    public interface IFightDamageViewServices : IFightSkillViewServices
-    {
-        // Preserve the original target notification before skill/source lookup,
-        // and the source notification before any damage graph starts.
-        void FireDamageEvent(MyEntity target, MyFightDamage damage);
-        void FireHitEvent(MyEntity source, MyFightDamage damage);
-    }
 }

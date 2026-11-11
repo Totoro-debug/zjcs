@@ -84,15 +84,13 @@ namespace Zjcs.Editor.Combat
             public override void AddPosUpdatedReceiver(IGridTransformPosUpdatedEventReceiver receiver) { }
             public override void RemovePosUpdatedReceiver(IGridTransformPosUpdatedEventReceiver receiver) { }
         }
-        private sealed class Services : IFightDamageViewServices
+        private sealed class Services : IFightSkillViewServices
         {
             public OfficialBattleSkillEntityPlayback Skills;
             public EcEntityIdentifier Missing;
             public readonly List<string> Notifications = new List<string>();
             public MyEntity GetEntity(EcEntityIdentifier id) => id.Equals(Missing) ? null : Skills.GetEntity(id);
             public Vector3 GridToPos(Pos2d position) => Skills.GridToPos(position);
-            public void FireDamageEvent(MyEntity target, MyFightDamage damage) => Notifications.Add("target");
-            public void FireHitEvent(MyEntity source, MyFightDamage damage) => Notifications.Add("source");
         }
         private Camera cameraView;
         private OfflineBattleNativePlayableScope scope;
@@ -100,6 +98,8 @@ namespace Zjcs.Editor.Combat
         private OfficialBattleDamageEntityPlayback damages;
         private IDisposable pipeline;
         private string failure;
+        private string throwingRole, expectedRoleException;
+        private int observedRoleExceptions;
         private int serial;
         private readonly List<Played> played = new List<Played>();
         private void LateUpdate() { if (scope != null) scope.LateTick(); }
@@ -183,6 +183,25 @@ namespace Zjcs.Editor.Combat
             skillEntity.GetComponent<MyFightSkill>().ViewServices = services;
             var targetEntity = target.GetComponent<MyEntity>();
             var sourceEntity = source.GetComponent<MyEntity>();
+            var targetRole = target.gameObject.AddComponent<MyFightRoleFight>();
+            var sourceRole = source.gameObject.AddComponent<MyFightRoleFight>();
+            Action<MyFightRoleFight, MyFightDamage> onDamage = (role, damage) =>
+            {
+                Require(role == targetRole && role.myEntity == targetEntity
+                    && damage.Component.TargetId.Equals(targetEntity.Id), "Original damage event sender and argument.");
+                services.Notifications.Add("target");
+                if (throwingRole == "target") throw new InvalidOperationException(expectedRoleException);
+            };
+            Action<MyFightRoleFight, MyFightDamage> onHit = (role, damage) =>
+            {
+                Require(role == sourceRole && role.myEntity == sourceEntity
+                    && damage.Component.SkillId.Equals(skillEntity.Id), "Original hit event sender and argument.");
+                services.Notifications.Add("source");
+                if (throwingRole == "source") throw new InvalidOperationException(expectedRoleException);
+            };
+            // Original empty-subscriber branches do not dereference the damage.
+            targetRole.FireDamageEvent(null); sourceRole.FireHitEvent(null);
+            targetRole.OnDamage += onDamage; sourceRole.OnHit += onHit;
             damages = new OfficialBattleDamageEntityPlayback(root, root.GetComponentInChildren<MyContainer>(), services, scope);
             var catalog = JsonUtility.FromJson<Catalog>(Resources.Load<TextAsset>("Combat/skill-native-graphs").text);
             Require(catalog.damages.Length == 1368, "Complete selected original damage entity catalog, including Global.");
@@ -261,6 +280,25 @@ namespace Zjcs.Editor.Combat
                 damages.Remove(state.Id);
             }
             services.Missing = default;
+            foreach (string role in new[] { "target", "source" })
+            {
+                int laterCalls = 0;
+                Action<MyFightRoleFight, MyFightDamage> later = (_, __) => laterCalls++;
+                if (role == "target") targetRole.OnDamage += later; else sourceRole.OnHit += later;
+                throwingRole = role;
+                expectedRoleException = "Controlled original " + role + " listener failure";
+                played.Clear(); services.Notifications.Clear();
+                var state = new OfficialBattleDamageEntityData(new EcEntityIdentifier(7, ++serial), ordinary.damage_entity_id,
+                    skillEntity.Id, targetEntity.Id, false, false, false, target.localPosition, Quaternion.identity, Vector3.one, new Grid());
+                damages.Create(state);
+                Require(expectedRoleException == null && laterCalls == 0 && played.Count == 2
+                    && services.Notifications.SequenceEqual(new[] { "target", "source" }),
+                    "Original multicast stops at a throwing subscriber; catch preserves later damage/hit graph dispatch.");
+                throwingRole = null;
+                if (role == "target") targetRole.OnDamage -= later; else sourceRole.OnHit -= later;
+                damages.Remove(state.Id);
+            }
+            Require(observedRoleExceptions == 2, "Both original role catch branches logged the controlled failure once.");
             var originalOverride = catalog.damages.Single(binding => binding.damage_entity_id == 13202);
             var overridePrefab = Resources.Load<GameObject>(originalOverride.entity_resource);
             Require(!overridePrefab.GetComponent<MyPlayableOverrider>().enabled, "Retain originally disabled 13202 override driver.");
@@ -273,10 +311,17 @@ namespace Zjcs.Editor.Combat
                 && originalEntity.GetComponent<MyFightDamage>().myCommonPlayable == overridePrefab.GetComponent<MyFightDamage>().myCommonPlayable,
                 "Disabled original status override is not enabled by local loading.");
             damages.Remove(overrideState.Id);
-            Debug.Log("Original damage entities passed: all 1368 native prefabs and graph fields, ordered notifications, common/block/crit/status branches, actual Damage parameters, missing entities, duplicate identities, pool removal and disabled original override.");
+            Debug.Log("Original damage entities passed: all 1368 native prefabs and graph fields, original role event senders/arguments, empty subscribers, multicast exception isolation, ordered notifications, common/block/crit/status branches, actual Damage parameters, missing entities, duplicate identities, pool removal and disabled original override.");
         }
         private void Observe(string text, string stack, LogType type)
         {
+            if (type == LogType.Exception && expectedRoleException != null
+                && text.StartsWith("InvalidOperationException: " + expectedRoleException, StringComparison.Ordinal))
+            {
+                observedRoleExceptions++;
+                expectedRoleException = null;
+                return;
+            }
             if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
                 failure = failure ?? text + "\n" + stack;
         }

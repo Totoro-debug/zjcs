@@ -18,7 +18,7 @@ namespace Zjcs.Presentation.Combat
             new Dictionary<EcEntityIdentifier, IFightPlayableOverrideStatusServices>();
 
         public OfficialBattleDamageEntityPlayback(Transform parent, MyContainer container,
-            IFightDamageViewServices services, OfflineBattleNativePlayableScope scope)
+            IFightSkillViewServices services, OfflineBattleNativePlayableScope scope)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
             this.scope = scope ?? throw new ArgumentNullException(nameof(scope));
