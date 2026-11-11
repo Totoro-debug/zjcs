@@ -35,7 +35,9 @@ namespace Zjcs.Editor.ProfessionUI
                 if (string.IsNullOrEmpty(work) || !Path.IsPathRooted(work)) throw new InvalidDataException("Owned monster validation workspace required.");
                 string root = Path.Combine(work, "live-monsters");
                 var catalog = JsonUtility.FromJson<Catalog>(File.ReadAllText(Path.Combine(root, "catalog.json")));
-                if (catalog?.manifest != "884_156692" || catalog.models?.Length != 64)
+                var installedIds = BattleNativeMonsterAssets.Load().EntityIds.OrderBy(value => value).ToArray();
+                if (catalog?.manifest != "884_156692" || catalog.models == null || catalog.models.Length == 0
+                    || !catalog.models.Select(value => value.entityId).OrderBy(value => value).SequenceEqual(installedIds))
                     throw new InvalidDataException("Configured original monster shadow inventory differs.");
                 var results = new Results { models = catalog.models.Length };
                 var motions = new List<Motion>();

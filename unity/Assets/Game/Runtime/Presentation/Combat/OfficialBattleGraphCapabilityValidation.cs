@@ -440,7 +440,15 @@ namespace Zjcs.Presentation.Combat
                 || (ValidateMovement ? !movementObserved || !movementAdvanced || !movementRemoved
                     || !loopObserved || !escapeObserved || afterimages != null && !afterimageObserved
                     : afterimages != null ? !afterimageVisible : firstPromotionItemId != 0
-                        ? Time.time - firstPromotionCastClock < .85f : Time.realtimeSinceStartup - castTime < .85f)) return;
+                        ? Time.time - firstPromotionCastClock < firstPromotionCaptureAfter : Time.realtimeSinceStartup - castTime < .85f)) return;
+            foreach (int unitId in firstPromotionSpawnedUnitIds)
+            {
+                var summon = controller.TryGetUnitTransform(unitId);
+                Require(summon && summon.GetComponentsInChildren<MeshRenderer>().Any(value => value.enabled
+                    && value.isVisible && !value.forceRenderingOff
+                    && value.GetComponent<MeshFilter>()?.sharedMesh?.vertexCount > 0),
+                    "Original summoned model is not visible: unit=" + unitId);
+            }
             var source = controller.TryGetUnitTransform(1);
             if (!source || !source.GetComponentsInChildren<MeshRenderer>().Any(value => value.enabled
                 && value.isVisible && !value.forceRenderingOff

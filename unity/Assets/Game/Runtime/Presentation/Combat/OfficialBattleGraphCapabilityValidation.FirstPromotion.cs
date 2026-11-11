@@ -13,6 +13,10 @@ namespace Zjcs.Presentation.Combat
         private int firstPromotionFacingIndex;
         private float firstPromotionCastClock;
         private int firstPromotionFrameCount;
+        private float firstPromotionCaptureAfter = .85f;
+        private int[] firstPromotionSummonMonsterIds = Array.Empty<int>();
+        private int firstPromotionExpectedSummonCount;
+        private int[] firstPromotionSpawnedUnitIds = Array.Empty<int>();
         private static readonly float[] FirstPromotionFrameTimes = { .1f, .25f, .45f, .7f };
 
         private bool CaptureFirstPromotionFrame()
@@ -87,6 +91,20 @@ namespace Zjcs.Presentation.Combat
             int distance = skill.Range.Where(point => point.X * dy == 0 && point.Y * dx == 0
                 && point.X * dx + point.Y * dy > 0).Select(point => Math.Abs(point.X) + Math.Abs(point.Y))
                 .DefaultIfEmpty(1).Min();
+            var summonHits = skill.HitGraphEntities.Where(hit => hit.IsSummon && hit.SummonReferenceType == 1
+                && hit.SummonGridItemClassId == 0).ToArray();
+            probe.firstPromotionSummonMonsterIds = summonHits.SelectMany(hit => hit.SummonPools)
+                .Select(pool => pool.MonsterId).Distinct().ToArray();
+            probe.firstPromotionExpectedSummonCount = summonHits.Where(hit => !hit.SummonIsRandom
+                && hit.SummonPools.Count == 1).Sum(hit => hit.SummonPositions.Count);
+            if (probe.firstPromotionSummonMonsterIds.Length > 0)
+            {
+                // Leave the source's authored summon footprint free in every facing.
+                // Fixture placement must not duplicate or modify the runtime scope transform.
+                distance = Math.Max(distance, summonHits.SelectMany(hit => hit.SummonPositions)
+                    .Select(offset => Math.Abs(offset.X) + Math.Abs(offset.Y)).DefaultIfEmpty(0).Max() + 1);
+                probe.firstPromotionCaptureAfter = 3f;
+            }
             player.X = enemy.X - dx * distance; player.Y = enemy.Y - dy * distance;
             player.Direction = new[] { 2, 0, 1, 3 }[direction];
             foreach (var unit in checkpoint.Units)
@@ -132,6 +150,17 @@ namespace Zjcs.Presentation.Combat
                 && cast.Presentation != null && cast.Presentation.FacingIndex == firstPromotionFacingIndex
                 && player.SkillState.Slots[0].ReleasedTimes == 1,
                 "Original equipped source, directional entity or release count differs.");
+            if (firstPromotionSummonMonsterIds.Length > 0)
+            {
+                firstPromotionSpawnedUnitIds = step.SpawnedUnitIds.ToArray();
+                Require(firstPromotionSpawnedUnitIds.Length >= firstPromotionExpectedSummonCount,
+                    "Original summon count differs: expected=" + firstPromotionExpectedSummonCount
+                    + "; actual=" + firstPromotionSpawnedUnitIds.Length);
+                foreach (int monsterId in firstPromotionSummonMonsterIds)
+                    Require(checkpoint.Units.Any(unit => firstPromotionSpawnedUnitIds.Contains(unit.Id)
+                        && unit.MonsterId == monsterId && unit.MasterId == player.Id),
+                        "Original summon was not created in the fixture: monster=" + monsterId);
+            }
             if (firstPromotionItemId == 10066)
                 foreach (var unit in new[] { player,
                     checkpoint.Units.SingleOrDefault(value => value.Id == firstPromotionDispelAllyId) })
