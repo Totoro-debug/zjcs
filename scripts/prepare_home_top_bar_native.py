@@ -17,6 +17,14 @@ from validation_workspace import validation_directory
 class HomeTopBarBinding(HomeBottomBarBinding):
     def register_scripts(self):
         super().register_scripts()
+        path = ROOT/'unity/Assets/Game/Runtime/Official/HomeScreenUI/SafeArea.cs'
+        meta = Path(str(path)+'.meta')
+        ref = dict(fileID=11500000, guid=guid(meta), type=3)
+        self.scripts['SafeArea'] = ref
+        self.script_sources['SafeArea'] = dict(path=path.relative_to(ROOT).as_posix(), pointer=ref,
+            sha256=sha(path.read_bytes()), meta_sha256=sha(meta.read_bytes()))
+        self.class_ids[script_id('', 'SafeArea')] = ref
+        self.script_guids.add(ref['guid'])
         for name in ('TopBarHandler', 'TopBarItem', 'MePlayerItemUI'):
             path = ROOT / 'unity/Assets/Game/Runtime/Official/ProfessionUI' / (name + '.cs')
             meta = Path(str(path) + '.meta')
@@ -168,7 +176,8 @@ class HomeTopBarBinding(HomeBottomBarBinding):
             source = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code/client-source' / (name+'.cs')
             receipt['inputs'][source.relative_to(ROOT).as_posix()] = sha(source.read_bytes())
         for name in ('prepare_home_repair_native.py', 'prepare_home_bottom_bar_native.py', 'prepare_partner_gift_native.py',
-                     'prepare_home_top_bar_validation.py', 'fixtures/home_top_bar_native_validation.cs'):
+                     'prepare_home_top_bar_validation.py', 'fixtures/home_top_bar_native_validation.cs',
+                     'prepare_home_currency_portrait_validation.py','fixtures/home_currency_profile_validation.cs'):
             source = ROOT / 'scripts' / name
             receipt['inputs'][source.relative_to(ROOT).as_posix()] = sha(source.read_bytes())
         receipt['runtime_code'] = {}

@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import re
 import shutil
+import subprocess
 import yaml
 
 from official_apk import ROOT
@@ -13,6 +14,25 @@ from prepare_home_bottom_bar_validation import equivalent
 from prepare_partner_input_dialog import metadata
 from validation_workspace import validation_directory
 from validation_assemblies import stage_runtime_modules
+from prepare_current_partner_native import documents
+
+
+def refresh_original_safe_area(source,target,project):
+    """Permit only the owned prefab's old SafeArea script pointer to advance."""
+    if source.name!='HomeTopBarParent.prefab':return False
+    previous=json.loads((ROOT/'assets/reference/home-top-bar-native-source-manifest.json').read_bytes())
+    relative='unity/'+target.relative_to(project).as_posix()
+    if previous.get('installed_output_sha256',{}).get(relative)!=sha(target.read_bytes()):return False
+    old=previous['script_bindings']['SafeArea']['pointer']
+    script=ROOT/'unity/Assets/Game/Runtime/Official/HomeScreenUI/SafeArea.cs'
+    new=dict(fileID=11500000,guid=guid(Path(str(script)+'.meta')),type=3)
+    before=documents(target.read_text('utf8'));after=documents(source.read_text('utf8'))
+    changes=0
+    for doc in before.values():
+        fields=doc.get('MonoBehaviour',{})
+        if fields.get('m_Script')==old and old!=new:
+            fields['m_Script']=new;changes+=1
+    return changes==1 and before==after
 
 
 def catalog_bytes(receipt):
@@ -43,7 +63,13 @@ def transfer(work, project, *, install=False):
             raise ValueError('Original top-bar script changed: '+row['path'])
     destination = project/'Assets/Official/Home/UI/TopBar'
     existing = {}
-    for meta in (project/'Assets').rglob('*.meta'):
+    keys={guid(work/'gift-assets'/relative) for relative in receipt['outputs'] if relative.endswith('.meta')}
+    found=subprocess.run(['rg','--files-with-matches','--null','--no-ignore','--glob','*.meta',
+        '-e','^guid: ('+'|'.join(sorted(keys))+')\r?$',str(project/'Assets')],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    if found.returncode not in (0,1):raise RuntimeError(found.stderr.decode('utf8','replace'))
+    for item in found.stdout.decode('utf8').split('\0'):
+        if not item:continue
+        meta=Path(item)
         source = Path(str(meta)[:-5])
         if not source.is_file(): continue
         key = guid(meta)
@@ -56,9 +82,12 @@ def transfer(work, project, *, install=False):
         if source.suffix == '.meta': continue
         key = guid(Path(str(source)+'.meta'))
         target = existing.get(key, destination/relative)
+        refreshed=False
         if target.exists():
             if not equivalent(source.read_bytes(), target.read_bytes()):
-                raise ValueError('Preserve different native resource: '+str(target))
+                if not refresh_original_safe_area(source,target,project):
+                    raise ValueError('Preserve different native resource: '+str(target))
+                plan.append((source.read_bytes(),target));refreshed=True
             if not target.is_relative_to(destination):
                 reused.append(dict(path=target.relative_to(ROOT).as_posix() if install else target.relative_to(project).as_posix(),
                     guid=key, sha256=sha(target.read_bytes()), staged_sha256=expected))
@@ -69,7 +98,7 @@ def transfer(work, project, *, install=False):
             for item in (target, Path(str(target)+'.meta')):
                 rel = item.relative_to(ROOT).as_posix() if install else item.relative_to(project).as_posix()
                 staged = source if item == target else Path(str(source)+'.meta')
-                outputs[rel] = sha(item.read_bytes()) if item.exists() else sha(staged.read_bytes())
+                outputs[rel] = sha(staged.read_bytes()) if refreshed and item==target else sha(item.read_bytes()) if item.exists() else sha(staged.read_bytes())
     catalog = project/'Assets/Game/Resources/Home/OfficialHomeTopBarAssetCatalog.asset'
     raw = catalog_bytes(receipt)
     if catalog.exists() and catalog.read_bytes() != raw: raise ValueError('Preserve different native top-bar catalog')

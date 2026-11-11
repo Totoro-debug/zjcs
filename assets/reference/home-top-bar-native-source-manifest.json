@@ -219,8 +219,10 @@
     "scripts/prepare_home_repair_native.py": "1acaeb5106a8793d7f642854dd99ec017162625d4154dd564889aa107af37095",
     "scripts/prepare_home_bottom_bar_native.py": "7493cb58fa87b2df692580467bd2912c2e77906acf7a17977f53f2b261b62fdb",
     "scripts/prepare_partner_gift_native.py": "84d18ed2d4a3e90bf9f99f4f1596621756123e4a12799fc1f6a23952d0197cdb",
-    "scripts/prepare_home_top_bar_validation.py": "0a5def11edbe37010173aea1a76554a4cfa5ca4132c8dfba135bd391f40dabba",
-    "scripts/fixtures/home_top_bar_native_validation.cs": "6c78ca60ce5c914f71f1bc81a0e6f60e507872ab8bd4ed8680a44badad31a637"
+    "scripts/prepare_home_top_bar_validation.py": "77bb0925f72c1b3defcae21af5796fb8812771891ec71a17177cce0b3b7c5f1a",
+    "scripts/fixtures/home_top_bar_native_validation.cs": "6c78ca60ce5c914f71f1bc81a0e6f60e507872ab8bd4ed8680a44badad31a637",
+    "scripts/prepare_home_currency_portrait_validation.py": "3715efed854c94e1c07af20b5738fde3a6a03a28fb3f8fa4fde996ecc1e10949",
+    "scripts/fixtures/home_currency_profile_validation.cs": "c925b98acaaeb6ad859f1ed4f3587bba04cb52ad89de4b19a92b951ddf234370"
   },
   "objects": {
     "cab-b5a2329109d335362da2fa10810f72cc:5761828038581910475": {
@@ -712,7 +714,7 @@
     "Converted/ac573a40fda4c096.asset.meta": "b71cc69e4e7b0aa71c456069f3af2c24e9fa2e5e8063bc518898d587e21aa8aa",
     "Converted/f2e1ff40e17239bc.shader": "6175d73864092e26c113b2a49d5379d8b72dd5f0e5e413765530ff0b1f1268dd",
     "Converted/f2e1ff40e17239bc.shader.meta": "27703de905d15cfcf3d083497232d903db7f44f0129e77c859e0847e12c5516a",
-    "HomeTopBarParent.prefab": "0a9d25acf81d8b9d4e05a93a34cf30cd2d0acf07ee889529b8be7f85bc33c9d1",
+    "HomeTopBarParent.prefab": "cdced2d5d1d829209a74ee5f81398510d8a2d6b756f45def0cf137e27e11d4c0",
     "HomeTopBarParent.prefab.meta": "c8d4c00593618e66b4a04a3eb830d0fcec958b18e8eb36322218d903726f68db",
     "TopBarManager.prefab": "e1f22849dec91610b175f4681b3620ce995033444007152f91df38c59b2947e9",
     "TopBarManager.prefab.meta": "1f873100f77787012207b10070f8ce41ac9f4e105bc1e1bdde0b14738cf2ba0b",
@@ -998,14 +1000,14 @@
       "meta_sha256": "8aad5ead563199de195eacfec6308f5e55c9e7555472d234a6755ca44ef1e6fe"
     },
     "SafeArea": {
-      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldSafeArea.cs",
+      "path": "unity/Assets/Game/Runtime/Official/HomeScreenUI/SafeArea.cs",
       "pointer": {
         "fileID": 11500000,
-        "guid": "c2d0088124f9085b5533afccb0f57c20",
+        "guid": "f44357fbd59ff79b52eae87ba02038c8",
         "type": 3
       },
-      "sha256": "c1830ecf97ec03faa73750c501ffc29f461fc9dd465387053e67e2104d0040e9",
-      "meta_sha256": "9932fda5602ab090b04d88b8ab7881a3f4fdb998a5dbc738888d5c373a18bf8b"
+      "sha256": "49150d82f5564bbcc6345544021cccbacf3b8f2211dbdb06d165bf48b81cb29a",
+      "meta_sha256": "0c0b73fc12e336b0a65dc0bb654617d98dbf425f8e7a006f02f25304b50703e6"
     },
     "TopBarHandler": {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/TopBarHandler.cs",
@@ -1050,7 +1052,7 @@
   },
   "gradient_aot_methods": [],
   "gradient_observations": "Selected AOT: all eight methods inspected. Preserve inclusive line character bounds, all four vertices, rotated X/unrotated line extents, alpha-one keys, renderMode=255 and ForceMeshUpdate(false,false).",
-  "generator_sha256": "911c0384ad5e78e958e21a4d92d203975b9188d506f7bd207f54aa7cd733a2b7",
+  "generator_sha256": "26f0ef9a50a955231d813b898f1992874da275f84d381034005a692179e88436",
   "audio": {
     "cab-8ede2c00df79c3aff9bab2859b047085:5924382417553736613": {
       "event": {
@@ -1391,7 +1393,7 @@
     "unity/Assets/Official/Home/UI/TopBar/Converted/e595fdd18d5f4005.asset.meta": "5e3eb090a18612565ebdfdc4969d8dcf6640c2c2d8204a2d8a2767d6d4e29f00",
     "unity/Assets/Official/Home/UI/TopBar/Converted/d71cfc8eca0c0e22.asset": "9660917af2ca55f881a39f0ba95951135599af0bd82cc9de8efc5e935deaa76d",
     "unity/Assets/Official/Home/UI/TopBar/Converted/d71cfc8eca0c0e22.asset.meta": "5a4d034bd9cae0c344f606e26b6dadc6307bc17439f16fc20c369f32df6b1fb8",
-    "unity/Assets/Official/Home/UI/TopBar/HomeTopBarParent.prefab": "0a9d25acf81d8b9d4e05a93a34cf30cd2d0acf07ee889529b8be7f85bc33c9d1",
+    "unity/Assets/Official/Home/UI/TopBar/HomeTopBarParent.prefab": "cdced2d5d1d829209a74ee5f81398510d8a2d6b756f45def0cf137e27e11d4c0",
     "unity/Assets/Official/Home/UI/TopBar/HomeTopBarParent.prefab.meta": "c8d4c00593618e66b4a04a3eb830d0fcec958b18e8eb36322218d903726f68db",
     "unity/Assets/Official/Home/UI/TopBar/TopBarManager.prefab": "e1f22849dec91610b175f4681b3620ce995033444007152f91df38c59b2947e9",
     "unity/Assets/Official/Home/UI/TopBar/TopBarManager.prefab.meta": "1f873100f77787012207b10070f8ce41ac9f4e105bc1e1bdde0b14738cf2ba0b",

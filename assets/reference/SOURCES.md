@@ -790,6 +790,8 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 家园顶部栏原生资源来源：`scripts/prepare_home_top_bar_native.py` 按所选 `884_156692` 的 APK 优先顺序，从 `HomeUI` 按原 CAB／PathID 提取完整 `NewPublicTopBarParent` 子树，并恢复 `TopBarManagerConfig` 引用的管理器、顶栏和货币原生 prefab；`GameSettings`、`item`、`quick_buy` 按原 Luban 构造器读取，货币图标与原清单 GUID、Sprite 渲染键及 Windows 转换载荷核验。原代码复用前核对同版实现，共享资产按 GUID 和内容复用；输入版本、APK／bundle／对象凭据、原码、转换器、脚本绑定及输入输出 SHA-256 见[家园顶部栏来源清单](home-top-bar-native-source-manifest.json)。新增素材尚未进入完整素材快照；实现及验证范围只在[家园页](../../docs/features/city-and-home.md)维护。
 
+家园顶部栏安全区绑定使用已登记的 `HomeScreenUI.SafeArea`；原 prefab 的此次更新仅替换原 SafeArea 脚本指针，全部序列化字段与其他组件保持原值。转换清单继续记录原始对象、实际绑定脚本、工具和输出 SHA256；已有资产必须内容一致，仅对清单已登记的旧顶栏 prefab 允许这项精确脚本指针更新。
+
 家园头像原生资源来源：`scripts/prepare_home_avatar_native.py` 按所选 `884_156692` 的 APK 优先输入，恢复 `PublicPlayerIconHome` 的完整层级、脚本字段、原贴图、裁剪与经验环资源；`PlayerIcon`、`PlayerIconMe`、`PlayerIconOther`、`PlayerInfoUI`、`HeadCharacterPortrait` 原码与既有迁移输入逐字节比对，`scripts/prepare_home_experience_runtime.py` 迁入同版 `PlayerUIBase`、`PlayerExpSlider` 和原长整数插值。Windows 文本序列化沿已核验原生导出保留 Rect 的版本标记及 APK 原 UV 坐标；输入版本、APK／bundle／对象、原码、转换方法、显式资源目录与输入输出 SHA-256 见[家园头像来源清单](home-avatar-native-source-manifest.json)。新增素材尚未进入完整素材快照；当前实现和验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
 
 家园经验奖励代码来源：`scripts/prepare_home_experience_rewards.py` 使用所选 `884_156692` 已解密的 `Assembly-CSharp.dll`，补齐同版 APK 提取的 UniTask／Unity／Framework 等程序集引用，按原类型重新反编译 `PlayerExpRewardHandler` 并缓存依赖凭据；保留完整异步方法，适配本地玩家、控制台数据、通知与战力阻塞端口，复用工程已有 UniTask 包。双参数监听容器取自同版 `Framework.SafeAction`；程序集、引用、原码、工具、包版本、适配器和输出 SHA-256 见[家园经验奖励代码清单](home-experience-rewards-source-manifest.json)。当前接入与验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
