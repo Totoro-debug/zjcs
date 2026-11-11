@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Name: Original native monster appearance bindings
+  m_EditorClassIdentifier: ''
+  m_Script: {fileID: 11500000, guid: f4058afcb37d38e4ca68ea5bc329a10f, type: 3}
+  bindings:
+  - EntityId: 3181
+    SkeletonName: summons_3181
+    RendererPath: 0template1x1_view/body/MonsterModel_3181
+    MaterialPropertyPath: ''
+    AppearanceEnabled: 1
+    MaterialPropertyEnabled: 1
+    Textures: {fileID: 11400000, guid: 2600ef622882527587bf1d76c380c3f1, type: 2}
+    Materials:
+    - {fileID: 2100000, guid: d562f1b79871545abc268d99a86b7afa, type: 2}
+  - EntityId: 3182
+    SkeletonName: summons_3182
+    RendererPath: 0template1x1_view/body/MonsterModel_3182
+    MaterialPropertyPath: ''
+    AppearanceEnabled: 1
+    MaterialPropertyEnabled: 1
+    Textures: {fileID: 11400000, guid: 677320caf1a75932aaa128d8b1502626, type: 2}
+    Materials:
+    - {fileID: 2100000, guid: 4bb6732bd8125089a3392914f92d3e74, type: 2}
+  - EntityId: 3183
+    SkeletonName: summons_3183
+    RendererPath: 0template1x1_view/body/MonsterModel_3183
+    MaterialPropertyPath: ''
+    AppearanceEnabled: 1
+    MaterialPropertyEnabled: 1
+    Textures: {fileID: 11400000, guid: b62cdc72b34b5408b04c4ac3e66567b7, type: 2}
+    Materials:
+    - {fileID: 2100000, guid: e51d099f9c97545597d3fafbaed3b0d4, type: 2}

@@ -19,6 +19,7 @@ namespace Zjcs.Presentation.Combat
         private readonly BattleNativeMonsterAssets assets;
         private readonly OfficialBattleMonsterAnimatorBindings.State[] states;
         private readonly OfficialBattleMonsterAnimationController application;
+        private readonly OfficialBattleMonsterAppearance appearance;
         private OfficialBattleAnimatorPlayback skillPlaybacks;
         private OfficialBattleCharacterGenerationPlayback generation;
         private bool initialIdlePending;
@@ -78,10 +79,12 @@ namespace Zjcs.Presentation.Combat
             {
                 this.assets = assets;
                 states = OfficialBattleMonsterAnimatorBindings.Find(entityId);
-                renderer = BattleNativeMonsterRenderer.Create(assets, entityId, parent, name);
+                var appearanceBinding = BattleNativeMonsterAppearanceCatalog.Find(entityId);
+                renderer = BattleNativeMonsterRenderer.Create(assets, entityId, parent, name, appearanceBinding?.Materials);
                 renderer.BindOriginalAnimator(assets, entityId);
                 renderer.BindOriginalAttachments(entityId);
                 renderer.BindOriginalPhaseAnimator(entityId);
+                if (appearanceBinding != null) appearance = new OfficialBattleMonsterAppearance(renderer, appearanceBinding);
                 application = new OfficialBattleMonsterAnimationController(renderer.EntityRoot, renderer.Animator, entityId);
                 UsesNativeSkillGraphs = nativeSkillGraphs;
                 Transform body = renderer.transform.parent;
@@ -180,6 +183,7 @@ namespace Zjcs.Presentation.Combat
         public void Tick(float deltaTime)
         {
             if (disposed) return;
+            appearance?.Tick();
             generation?.Tick(deltaTime);
             skillPlaybacks?.Tick(deltaTime);
             if (!renderer.gameObject.activeInHierarchy) return;
@@ -195,6 +199,7 @@ namespace Zjcs.Presentation.Combat
             application?.Dispose();
             shadow?.Dispose();
             sorting?.Dispose();
+            appearance?.Dispose();
             if (renderer) renderer.Release();
         }
     }

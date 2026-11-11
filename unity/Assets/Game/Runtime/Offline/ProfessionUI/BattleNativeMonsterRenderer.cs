@@ -39,7 +39,7 @@ namespace Zjcs.Offline.ProfessionUI
         public event Action<IProfessionFollowerAnimation> OnAnimationRebuild;
 
         public static BattleNativeMonsterRenderer Create(BattleNativeMonsterAssets assets, int entityId,
-            Transform parent, string objectName)
+            Transform parent, string objectName, Material[] originalMaterials = null)
         {
             if (!assets) throw new ArgumentNullException(nameof(assets));
             var row = assets.Find(entityId) ?? throw new InvalidDataException("Original monster is unbound: " + entityId);
@@ -59,7 +59,10 @@ namespace Zjcs.Offline.ProfessionUI
                     child.gameObject.layer = Int(source, "layer"); child.gameObject.SetActive(Flag(source, "active")); node = child;
                 }
                 var result = node.gameObject.AddComponent<BattleNativeMonsterRenderer>();
-                result.EntityRoot = root; result.Initialize(assets, entityId); return result;
+                result.EntityRoot = root;
+                result.prefabMaterials = originalMaterials;
+                result.SkeletonDataName = (string)row["skeletonName"];
+                result.Initialize(assets, entityId); return result;
             }
             catch { DestroyOwned(root.gameObject); throw; }
         }
@@ -85,7 +88,11 @@ namespace Zjcs.Offline.ProfessionUI
             if (sourceMaterials.Length != sources.Count)
                 throw new InvalidDataException("Original prefab atlas material count differs.");
             for (int i = 0; i < sources.Count; i++)
+            {
                 if (prefabMaterials == null) sourceMaterials[i] = CreateMaterial(assets, Obj(sources[i]), Obj(row["textures"]));
+                else if (!sourceMaterials[i] || sourceMaterials[i].name != (string)Obj(Obj(sources[i])["fields"])["m_Name"])
+                    throw new InvalidDataException("Original prefab atlas material identity differs.");
+            }
             material = sourceMaterials[0];
             if (row.TryGetValue("atlasPages", out object pagesValue))
             {
