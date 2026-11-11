@@ -1,0 +1,307 @@
+{
+  "manifest": "884_156692",
+  "configuration": {
+    "manifest": "884_156692",
+    "fragments": [
+      {
+        "path": "Assets/Config/EC/FightSkill_part701.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "-6316976400923883370",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "d74279ef7b8ab0ea825ea4fe63578b2bdd7d6c13c8d01d7b77907d427ae87660",
+        "payload_sha256": "bb723bfae5c611af9ded817e664e4abf6d3da1002d3fe513855bd99b597d1a51",
+        "legacy_prefix": false,
+        "entities": {
+          "24008": {
+            "parent": 0,
+            "components": {
+              "ActionComponent": {
+                "ActionType": 50
+              },
+              "FightStatusComponent": {
+                "_unused_0": null,
+                "RoundTarget": 2,
+                "DurationRound": -1,
+                "RoundUpdateTiming": 1,
+                "RemoveAtRoundTargetDestroy": false,
+                "ElementType": 0,
+                "ActionBehOfSameStatus": 1,
+                "StatusType": 0,
+                "CanDispersed": false,
+                "IsOpenStack": false,
+                "InitStackCount": 1,
+                "AddStackedCount": 1,
+                "MaxStackedCount": 0,
+                "IsAddDurationRound": false,
+                "MaxAddDurationRound": 100,
+                "ScalePropWhenChangeStacked": false,
+                "StatusSourceType": 1,
+                "ApplyIgnoreResilience": false,
+                "CheckTriggerLimitActions": false,
+                "AI": {
+                  "MoreHit": false
+                },
+                "ForbiddenOnApplicatorDie": false,
+                "StackRoundCondition": 0,
+                "StackCountCondition": 0,
+                "IsResetDurationWhenStack": false,
+                "AddStackedRandomMinCount": 1,
+                "AddStackedRandomMaxCount": 1,
+                "IsFixedProp": false,
+                "MutexChecker": null,
+                "FollowRoundUpdateTimingOnGlobalRound": false
+              },
+              "FightStatusActionInvisibleComponent": {}
+            }
+          }
+        }
+      }
+    ],
+    "skill_item_bindings": null,
+    "selected_entity_path_overrides": {},
+    "runtime_source_manifests": [
+      {
+        "path": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+        "sha256": "9b447a15838602a598b7530eb0398a3b0c9e1a6d93d7eb8d0e194932cd24d8bf"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/battle-rules-source-manifest.json",
+        "sha256": "cef8b0b5a12460f2bdb2b4d8031f95fb8d560a391a9170641e401b67ef08968b"
+      }
+    ],
+    "formatters": [
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActionComponent.cs",
+        "sha256": "574e476645f5e9f86b9f5015ed794a2aac103df4be65f9beef9fd762107cc1c7"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusComponent.cs",
+        "sha256": "4f9b0133c6404da6ddcea3ed192fc760fc927f914a1276b987ee894872ecf68c"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ActionBehaviourFormatter.cs",
+        "sha256": "29ee6c3e26000f043690ea14983a8b1f1a93927e9f43bdc45976cb823f15b9ca"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ActionComponentInfoFormatter.cs",
+        "sha256": "411f5e5de63ab3d144412a003d547b89fc387104aa19e665236786fe805a3d7b"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ActionTypeFormatter.cs",
+        "sha256": "186c98deb85a7221c8dd1c3474f9ded798c356cdf8cab3130dd4adf990980c7d"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ElementTypeFormatter.cs",
+        "sha256": "78b8ed62cb6acc289a886758b602f8b271d1bbae983ae547ad36ec5437a43df0"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/EStatusSourceTypeFormatter.cs",
+        "sha256": "9d242dc34328fd05d1cfa83930f6c9d879a32eb9d6fab5a0df9a292bc415f999"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightStatusAiCfgFormatter.cs",
+        "sha256": "9c8be1891e61f412fe4f09156321ed87eb59a76cb7074b5c86be20790caebd04"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightStatusComponentInfoFormatter.cs",
+        "sha256": "921aa99e7c3f221071c6c1b237e7ee9d2ff7f4258743060ad2c0958ab7fd9b85"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/StatusTargetTypeFormatter.cs",
+        "sha256": "83e4146589973f5ce9eca37926a399185b861603c2722ca89ef0bf966b6c56f0"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/StatusTypeFormatter.cs",
+        "sha256": "f3f6a835bbe4d8fceeed282c9ae3a1e6c846cc962af77b680c60ca55e08d8c86"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Resolvers/GeneratedStaticGSerializableFormatterResolver.cs",
+        "sha256": "9e0eb448ce32ffcdd2f082db548d27df8211dfdf9ec98be78c9fa85adeb3af08"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Properties/AssemblyInfo.cs",
+        "sha256": "d85ed3684e7117155ebd5d8de5d415c29e4c83f090715776d9f74bf4f4a20785"
+      }
+    ],
+    "verifier": {
+      "path": "scripts/verify_battle_skill_graph_rules.py",
+      "sha256": "be15b59559e75fea48de0334b5ed63bde7d08fe124bd0e664abcb408733ccec7"
+    },
+    "operation": "Decode the selected APK-first EC fragments with their own generated formatters. Compare every migrated component field for the requested entities; retain historical runtime source manifests separately. No configuration or expected hash is replaced."
+  },
+  "original_prefab": [
+    {
+      "component": "MyAction",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1043538222823821351
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 7646124506615962003
+        },
+        "m_Name": "",
+        "myEffect": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEffectStopOnDestroy": 0,
+        "myEndEffect": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndEffectStopOnDestroy": 0,
+        "PlayOnStart": 1,
+        "Duration": -1.0,
+        "LoopEffectPlayable": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "LoopEffectPlayableIsMutext": 0
+      },
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24008.bundle",
+        "bundle_hash": "65808b48221d72cc6a643ad58705ba27",
+        "path_id": "-859356809876066343",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/65808b48221d72cc6a643ad58705ba27.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 998,
+        "bundle_sha256": "ce9745fe57a3cd30784a68719542d02743a1e8ccc362ff7a8c7d023de75756a6"
+      }
+    },
+    {
+      "component": "MyEntity",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1043538222823821351
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6091562175442622485
+        },
+        "m_Name": "",
+        "myContainer": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      },
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24008.bundle",
+        "bundle_hash": "65808b48221d72cc6a643ad58705ba27",
+        "path_id": "3034776478351044569",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/65808b48221d72cc6a643ad58705ba27.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 998,
+        "bundle_sha256": "ce9745fe57a3cd30784a68719542d02743a1e8ccc362ff7a8c7d023de75756a6"
+      }
+    },
+    {
+      "component": "MyFightStatus",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1043538222823821351
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 7447247474051633116
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "StackedPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "StackPlayableMap": [],
+        "ShowSpriteAbovePlayer": 1,
+        "InvokePlayable": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "StackPlayable": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "MasterCastPlayable": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsIconShowStatusRoundReplaceStack": 0,
+        "IsIconShowCustomCount": 0
+      },
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24008.bundle",
+        "bundle_hash": "65808b48221d72cc6a643ad58705ba27",
+        "path_id": "4595699007928676313",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/65808b48221d72cc6a643ad58705ba27.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 998,
+        "bundle_sha256": "ce9745fe57a3cd30784a68719542d02743a1e8ccc362ff7a8c7d023de75756a6"
+      }
+    },
+    {
+      "component": "MyFightStatusActionInvisible",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1043538222823821351
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -5033888835856698309
+        },
+        "m_Name": ""
+      },
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24008.bundle",
+        "bundle_hash": "65808b48221d72cc6a643ad58705ba27",
+        "path_id": "6130537878347001817",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/65808b48221d72cc6a643ad58705ba27.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 998,
+        "bundle_sha256": "ce9745fe57a3cd30784a68719542d02743a1e8ccc362ff7a8c7d023de75756a6"
+      }
+    }
+  ],
+  "original_code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusActionInvisibleComponent.cs",
+      "sha256": "a76d92274e99a8f1f7fd15fb5049281bd77baaf7b515d85976a599788081ee6c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityHasInvisibleStatusFilter.cs",
+      "sha256": "e484da0c5be186fee188ed2cceb32c2f9d94b5e975137baa0185f9216667d81d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusActionInvisible.cs",
+      "sha256": "94c0ed99a11bac2cb714669322a6477428625cc78a4005f8234d74d67c781e9c"
+    }
+  ],
+  "operation": "APK-first exact component verification and decoded original prefab visual-reference inspection; no replacement visual asset generated. Offline behavior is documented in skills.md.",
+  "verifier": {
+    "path": "scripts/prepare_battle_action_invisible_sources.py",
+    "sha256": "4934d1e14b74940a1fabf4e03f5f5f4510ef00f90f862ceee57c59581de59eb9"
+  }
+}

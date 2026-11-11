@@ -162,7 +162,8 @@ namespace Zjcs.Combat.Official
                     var randomCandidates = new List<FightBattleUnitState>();
                     foreach (FightBattleUnitState candidate in targets ??
                         new List<FightBattleUnitState>())
-                        if ((!hit.RandomTargetNotSameGrid
+                        if (!FightBattleTargeting.IsHiddenFromEnemySelection(actor, candidate)
+                            && (!hit.RandomTargetNotSameGrid
                                 || !groupState.GridPositions.Contains(
                                     new FightGridPoint(candidate.X, candidate.Y)))
                             && (!hit.RandomTargetNotSameTarget

@@ -57,8 +57,10 @@ namespace Zjcs.Combat.Official
             public IReadOnlyList<FightHitOccurrence> Plan(FightHitPatternContext context)
             {
                 Require(context);
-                var targets = context.SelectedByRandomParent ? context.Targets
-                    : FightBattleTargeting.SelectHitTargets(context.Targets,
+                var candidates = context.Targets == null ? null : context.Targets.FindAll(target =>
+                    !FightBattleTargeting.IsHiddenFromEnemySelection(context.Source, target));
+                var targets = context.SelectedByRandomParent ? candidates
+                    : FightBattleTargeting.SelectHitTargets(candidates,
                         context.Hit.TargetMode, context.Hit.RandomCount, context.Random);
                 var result = new List<FightHitOccurrence>();
                 if (targets != null) foreach (var target in targets)

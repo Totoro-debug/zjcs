@@ -54,7 +54,7 @@ namespace Zjcs.Combat.Official
                 ridiculeTargetId = RidiculeSourceId(actor);
             foreach (FightBattleUnitState unit in units)
             {
-                if (!IsSelectable(unit) || HasIgnoredStatus(unit, skill)
+                if (!IsSelectable(unit) || IsHiddenFromEnemySelection(actor, unit) || HasIgnoredStatus(unit, skill)
                     || IsActionBlockedByStatus(unit, skill == null ? null
                         : skill.BlockingTargetActionTypes)) continue;
                 bool isRidiculeSource = targetType == 1 && ridiculeTargetId > 0
@@ -388,7 +388,8 @@ namespace Zjcs.Combat.Official
             {
                 bool explicitDead = unit != null && !unit.Ended && unit.Targetable && unit.Hp <= 0
                     && explicitDeadTargets != null && explicitDeadTargets.Contains(unit);
-                if (!IsSelectable(unit) && !explicitDead || HasIgnoredStatus(unit, skill)
+                if (!IsSelectable(unit) && !explicitDead || IsHiddenFromEnemySelection(actor, unit)
+                    || HasIgnoredStatus(unit, skill)
                     || IsActionBlockedByStatus(unit, skill == null ? null
                         : skill.BlockingTargetActionTypes)) continue;
                 bool isRidiculeSource = targetType == 1 && skill != null
@@ -406,6 +407,7 @@ namespace Zjcs.Combat.Official
             FightBattleSkillDefinition skill)
         {
             return actor != null && skill != null && IsSelectable(target)
+                && !IsHiddenFromEnemySelection(actor, target)
                 && !HasIgnoredStatus(target, skill)
                 && !IsActionBlockedByStatus(target, skill.BlockingTargetActionTypes)
                 && (skill.TargetType == 5 || MatchesTargetType(actor, target, skill.TargetType, false));

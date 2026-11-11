@@ -907,6 +907,7 @@ namespace Zjcs.Combat.Official
                     FightHitOccurrence occurrence = plannedHits == null ? null : plannedHits[targetIndex];
                     if (!allowDeadSource && actor.Hp <= 0) break;
                     if (target.Hp <= 0 && hit.ActionType != 62 || target.Ended) continue;
+                    if (FightBattleTargeting.IsHiddenFromEnemySelection(actor, target)) continue;
                     if (target.IsVoodooDoll && (hit.ActionType == 5 || skill.SkillType == 3)) continue;
                     float hitDelay = hitSelection == null ? HitDelay(actor, target, hit)
                         : FightBattleHitTiming.DamageDelay(hit, hitCast, hitSelection, targetIndex, hitFlight);
