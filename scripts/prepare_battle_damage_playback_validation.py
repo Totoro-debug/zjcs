@@ -1,0 +1,137 @@
+"""Stage the actual damage/skill entity views without unrelated game UI assemblies."""
+import argparse
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import subprocess
+
+from prepare_battle_movement_effect_validation import prepare, ROOT
+from validation_assemblies import stage_runtime_modules
+
+GUID = re.compile(rb'(?m)^guid: ([a-f0-9]{32})\r?$')
+
+
+def main():
+    parser = argparse.ArgumentParser(__doc__)
+    parser.add_argument('--code-only', action='store_true')
+    args = parser.parse_args()
+    work = Path(os.environ['ZJCS_VALIDATION_DIR']).resolve()
+    project = prepare(work)
+    runtime = ROOT / 'unity/Assets/Game/Runtime'
+    selected = stage_runtime_modules(project, runtime,
+        ['Zjcs.Presentation.Combat', 'Zjcs.Offline.BattleNativePlayables',
+         'Zjcs.Official.BattleMaterialPlayables', 'Zjcs.Official.BattleAnimationPlayables'])
+    if any('Home' in name for name in selected):
+        raise ValueError('Damage fixture unexpectedly depends on unrelated home UI.')
+    shutil.copytree(ROOT / 'unity/Assets/Spine', project / 'Assets/Spine', dirs_exist_ok=True)
+    for folder in (runtime / 'Official/Combat', runtime / 'Presentation/Combat'):
+        for source in folder.rglob('*'):
+            if source.is_file() and source.suffix in ('.shader', '.hlsl', '.cginc'):
+                for path in (source, Path(str(source) + '.meta')):
+                    if not path.is_file():
+                        continue
+                    target = project / path.relative_to(ROOT / 'unity')
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(path, target)
+    # The base helper installs only this session's small movement fixture.
+    old_editor = project / 'Assets/Game/Editor/BattleMovementEffects'
+    if old_editor.is_dir():
+        assert old_editor.resolve().is_relative_to(work) and not old_editor.is_symlink()
+        shutil.rmtree(old_editor)
+    editor = project / 'Assets/Editor'
+    editor.mkdir(exist_ok=True)
+    fixture = ROOT / 'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleDamagePlaybackAcceptance.cs'
+    shutil.copy2(fixture, editor / fixture.name)
+    (editor / 'DamageValidation.asmdef').write_bytes((json.dumps(dict(
+        name='DamageEntityValidation', includePlatforms=['Editor'],
+        references=sorted(selected)), indent=2) + '\n').encode())
+    if args.code_only:
+        print('Prepared actual damage code:', len(selected), 'runtime assemblies;', project)
+        return
+
+    receipt = json.loads((ROOT / 'assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json').read_bytes())
+    catalog_path = ROOT / 'unity/Assets/Game/Resources/Combat/skill-native-graphs.json'
+    catalog = json.loads(catalog_path.read_bytes())
+    if len(catalog.get('damages', ())) != 1368:
+        raise ValueError('Complete selected original damage conversion required.')
+    # Build the new native-resource GUID index from the conversion receipt;
+    # source scripts and the remaining rule assets are resolved separately.
+    index = {}
+    for row in receipt['outputs']:
+        meta = ROOT / row['path']
+        if meta.suffix != '.meta' or not meta.is_file():
+            continue
+        source = Path(str(meta)[:-5])
+        if not source.is_file():
+            continue
+        match = GUID.search(meta.read_bytes())
+        if match:
+            index[match[1]] = source
+    for meta in (project / 'Assets').rglob('*.meta'):
+        if not Path(str(meta)[:-5]).is_file():
+            continue
+        match = GUID.search(meta.read_bytes())
+        if match:
+            index.setdefault(match[1], ROOT / 'unity' / Path(str(meta)[:-5]).relative_to(project))
+
+    pending = [ROOT / 'unity/Assets/Game/Resources/Combat' / name for name in (
+        'OfficialBattleRenderPipelineAssets.asset', 'OfficialCombatAssetCatalog.asset')]
+    resources = ROOT / 'unity/Assets/Game/Resources/Combat'
+    for source in resources.iterdir():
+        if source.is_file() and source.suffix in ('.json', '.txt', '.bytes'):
+            pending.append(source)
+    skill = next(row for row in catalog['skills'] if row['skill_entity_id'] == 10100)
+    for row in [skill, *catalog['damages']]:
+        prefix = row['entity_resource'].removeprefix('Combat/SkillGraphs/')
+        pending.append(ROOT / 'unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs' / (prefix + '.prefab'))
+    copied, unresolved = set(), set()
+    while pending:
+        references = set()
+        while pending:
+            source = pending.pop()
+            if source in copied:
+                continue
+            copied.add(source)
+            if source.suffix in ('.cs', '.asmdef', '.asmref'):
+                continue  # Already copied with its complete runtime assembly.
+            for path in (source, Path(str(source) + '.meta')):
+                target = project / path.relative_to(ROOT / 'unity')
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(path, target)
+            raw = source.read_bytes()
+            if raw.startswith(b'%YAML'):
+                references.update(re.findall(rb'guid: ([a-f0-9]{32})', raw))
+        missing = references - index.keys() - unresolved
+        if missing:
+            patterns = work / 'damage-dependency-guids.txt'
+            patterns.write_bytes(b'\n'.join(b'guid: ' + key for key in sorted(missing)) + b'\n')
+            result = subprocess.run(['git', 'grep', '--cached', '-l', '-F', '-f', str(patterns),
+                '--', 'unity/**/*.meta'], cwd=ROOT, capture_output=True)
+            if result.returncode not in (0, 1):
+                raise RuntimeError(result.stderr.decode())
+            for value in result.stdout.decode().splitlines():
+                meta = ROOT / value
+                match = GUID.search(meta.read_bytes())
+                if not match:
+                    raise ValueError('Native input has no primary GUID: ' + value)
+                if match[1] not in missing:
+                    # A package importer can itself reference the requested
+                    # GUID. Only its primary sidecar GUID names this asset.
+                    cached = subprocess.check_output(['git', 'show', ':' + value], cwd=ROOT)
+                    cached_guid = GUID.search(cached)
+                    if cached_guid and cached_guid[1] in missing:
+                        raise ValueError('Tracked native GUID differs from its live input: ' + value)
+                    continue
+                index[match[1]] = Path(str(meta)[:-5])
+            unresolved.update(missing - index.keys())
+        pending.extend(index[key] for key in references if key in index)
+    unresolved = {key for key in unresolved if not key.startswith(b'0000000000000000')}
+    if unresolved:
+        raise ValueError('Unresolved damage fixture asset GUIDs: ' + repr(sorted(unresolved)))
+    print('Prepared actual damage fixture:', len(selected), 'runtime assemblies;', len(copied), 'native inputs;', project)
+
+
+if __name__ == '__main__':
+    main()

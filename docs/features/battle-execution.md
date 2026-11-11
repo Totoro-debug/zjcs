@@ -22,7 +22,7 @@
 
 `MyFightHitBase.PlayScopePlayable` 通过命中实体的 `GridTransform.LocalToWorldPos(scope.Pos)` 放置各命中格。原 `GridTransformComponent.CalcLocalToWorldDir` 保留 `RealCenter`，先做 X 翻转，再调用 `MyMath.Rotate`，最后用 `Math.Round` 转回整数格；`Common.Direction` 为 Up=0、Down=1、Left=2、Right=3，与本地 AI 的四向索引不同。`FightGridTransformMath` 已移植这段计算，来源及哈希见[格网变换清单](../../assets/reference/battle-rules/grid-transform-source-manifest.json)。命中实体创建时的方向／翻转赋值是服务端缺口，单机处理见下方用户确认规则。
 
-`MyFightHitBase`、六类命中视图、三个命中图初始化器及 `CalcSkillHitDelay`／`CalcSkillStartPos` 已按所选 884 客户端和共享实现迁移到 `Official/BattleSkillPlayables`。原范围条目的顺序与相对等待、命中位置订阅、连锁起点的世界坐标偏移顺序均保留。`OfficialBattleNativeEntityLoader` 为技能和命中提供本地资源、共享身份及激活前注入，复用现有完整 `MyEntityLoadHandler`；其六个官方加载／对象池实现与当前所选版本的源文件哈希一致。所选原 `game_settings.g.bytes` 已与官方 bundle 核对并完整解析，`ECIsUseGameObjectPool=true`；命中移除沿原 End、Remove、回池顺序，连锁起点同级对象随池实体复用。同版 2,260 份完整命中实体 prefab 及其播放图依赖已转换并写入本地 Resources，完整资源目录同时保留 1,884 份原技能实体 prefab 与播放图绑定。来源见[命中视图迁移](../../assets/reference/battle-animation/hit-view-runtime-source-manifest.json)。命中专项验证入口显式设置现有 `ZJCS_BATTLE_INPUT_AUTOMATION` 启动开关，使用独立验证场景，避免进入默认游戏启动流程。命中 prefab 与六类代表图已通过下方隔离运行验证，正式回执播放的接入范围见下文。
+`MyFightHitBase`、六类命中视图、三个命中图初始化器及 `CalcSkillHitDelay`／`CalcSkillStartPos` 已按所选 884 客户端和共享实现迁移到 `Official/BattleSkillPlayables`。原范围条目的顺序与相对等待、命中位置订阅、连锁起点的世界坐标偏移顺序均保留。`OfficialBattleNativeEntityLoader` 为技能和命中提供本地资源、共享身份及激活前注入，复用现有完整 `MyEntityLoadHandler`；其六个官方加载／对象池实现与当前所选版本的源文件哈希一致。所选原 `game_settings.g.bytes` 已与官方 bundle 核对并完整解析，`ECIsUseGameObjectPool=true`；命中移除沿原 End、Remove、回池顺序，连锁起点同级对象随池实体复用。同版 2,260 份完整命中实体 prefab 及其播放图依赖已转换并写入本地 Resources，完整资源目录同时保留 1,906 份原技能实体 prefab 与播放图绑定（含 22 个普通移动技能）。来源见[命中视图迁移](../../assets/reference/battle-animation/hit-view-runtime-source-manifest.json)。命中专项验证入口显式设置现有 `ZJCS_BATTLE_INPUT_AUTOMATION` 启动开关，使用独立验证场景，避免进入默认游戏启动流程。命中 prefab 与六类代表图已通过下方隔离运行验证，正式回执播放的接入范围见下文。
 
 `FightOfficialCombatCatalog` 为每条 `HitCfg` 保留独立的 `FightBattleHitLink`，包含原顺序、重复 ID、Delay、ActOnSouce 和 IgnoreAICount；旧 ID 列表仍供现有执行器与检查点兼容使用。`ScopeEntries` 保存原 `HitScopCfg` 的位置、逐格延迟、伤害偏移、旋转及翻转开关，显式零旋转和 false 不用默认值覆盖；固定命中及连锁按原 Init 排序，随机目标保留配置顺序，召唤范围按原 `FightHitSummonComponentInfo.Init` 排序后提取 Base。命中类型、轨迹起终点偏移、旋转中心、DestroyDelay 和连锁的 Repeat、Back、PreferUnvisited 分别读取；旧检查点只补全这些不可变配置，保留生命、CD、命中回执及统计。配置 payload 的固定版本仍以[技能规则来源](../../unity/Assets/Official/Combat/skill-rules-source-manifest.json)为准。子命中展开已优先消费每条 `HitCfg` 的独立 Delay、ActOnSouce 和 IgnoreAICount，保留原顺序及重复引用，不改写共享实体定义；根引用只绑定根节点自身，不再覆盖包装节点的首个伤害后代。随机包装节点的范围选择使用该次父引用的锚点；仅含旧 ID 列表的图保留原展开时序。命中实体创建／移除的当前接入范围见下文，连锁逐跳生命周期仍未接通。
 
@@ -57,6 +57,8 @@
 行动进度的玩家头像取景接入所选 884 客户端 `DynamicTexture2DAtlas` 原实现，包含原工厂、ETC2／回退图集、格位分配与扩容、Sprite／UV、纹理所有权及 `GridSpriteImage／GridSpriteRawImage` 消费类。所选 `GamePlayManagerConfig` 的两项头像 ETC2 标志均为真，输入与原生导出摘要相互核验；工厂仍按设备格式支持和 `CopyTexture` 能力选择实现，Windows 不支持 ETC2 时执行官方 `FallBackGridDynamicAtlas`，复制可读头像纹理并创建原 100 PPU Sprite。公共场景适配将调用方已完成的原模型 100×120 取景交给原头像请求／缓存层，再使用原请求键送入场景图集；本场实体身份仅用于本地已完成取景寻址，不查询网络资料或再次生成外观。NPC／怪物图标复用既有已解析原 Sprite 目录。队列清空或头像死亡不提前释放图集，HUD 所属场景销毁时释放图集的 Sprite 与纹理，不销毁取景提供者持有的原纹理。没有修改原 UI 资产、几何、颜色或素材。代码入口为 `Official/BattleRoundUI/DynamicTexture2DAtlas` 与 `OfficialBattleSceneTimelineView`，输入输出及 C#／日志适配见[动态图集代码来源](../../assets/reference/battle-hud/round-atlas-source-manifest.json)。守卫与拟态的正式实体数据接线仍有缺项。
 
 行动进度头像请求层另迁入所选 884 的 `HeadCharacterPortrait`、场景／UGUI ETC2 子类、`IFightDynamicTextureETC2`、`IGameRoundPortraitHandler` 及三种原处理器，复用既有官方 `CharacterPortraitBase／Requestor／Cache` 和请求键实现。保留玩家 ID 的 0 类键、临时外观的 1 类键、持久化标志、先取消旧订阅再申请新取景、禁用后恢复及销毁移除事件的顺序；客户端注入改为显式 `BindAtlas`，职业与外观参数沿用现有离线取景接口的整数和不透明对象。另迁入 `GameRoundPlayerPortrait`、`GamePlayManagerConfig`、`GameEffectData` 与 `FightDynamicTextureETC2`，保留普通／UGUI／场景处理器选择、完整配置字段、默认／自身／观战／阵营列表的底图加载顺序、按路径哈希复用、图集缓存与清空销毁分支；回放黑名单按原枚举整数存储。原序列化字段不变。配置依赖改为激活前显式 `BindConfiguration`，图集由所属场景调用 `Initialize／Dispose`，纹理加载由本地提供者负责原资源的生命期。来源与适配见[头像请求代码来源](../../assets/reference/battle-hud/round-portrait-source-manifest.json)。完整原生卡片现已引用这些原类；同版原 `GamePlayManagerConfig` 的全部字段、三种阵营 ETC2 纹理／Sprite 和六个血条特效 prefab 的引用闭包已恢复，显式绑定于 `BattleRoundPortraitAssets`。公共 HUD 的本地 adapter 消费既有取景／图标及阵营图片，调用方仍拥有原取景纹理；不会经服务器查询或在此生成外观。守卫临时外观和拟态的正式实体投影仍未接通，不把这些分支列为完成。
+
+`MyFightDamage.OnStart` 先向目标发出受伤通知，再查实际所属技能及来源，向来源发出命中通知；之后以目标为播放源、技能来源为播放目标，传入实际伤害实体的 `Damage` 参数。普通图独立播放，结果图按格挡、暴击、普通伤害的原分支选择，状态触发图另行判断。该完整客户端方法、五字段状态覆盖器及原空幻兽能量过滤器已迁移；`OfficialBattleDamageEntityPlayback` 负责激活前注入、实际身份和原 FIFO 对象池生命周期。所选 884 的 1,368 个伤害实体包含 `Global` 下 33 个公共实体，五类图引用、原隐藏／零伤害标志与启用状态均按原 prefab 保留；13202 的原覆盖驱动为禁用，加载时不主动开启。代码来源见[伤害视图迁移](../../assets/reference/battle-animation/damage-view-runtime-source-manifest.json)，原生资产及五字段绑定见[技能图资产来源](../../assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json)。这部分是客户端视图与资源接入，正式战斗的伤害事件接线仍见下方缺项。
 
 ## 完整还原部分
 
@@ -144,6 +146,7 @@
 
 ## 尚未实现
 
+- 原伤害实体尚未接到正式伤害事件的实际施法身份、生成／结束时刻、受伤角色通知和状态触发结果；已有飘字与扣血不代表五类原伤害图已经在正式流程播放。专项夹具的显式状态只验证客户端视图，不推测服务端 `IsDamageTriggerStatus` 的赋值规则。
 - 官方服务器缺失的 AI、随机、结果裁决及复杂触发条件尚未完整恢复；未确认的行为不作推测。
 - 完整技能／命中／状态覆盖、同来源与叠层边界、特殊组件时序和实体生命周期仍有缺项。身体格选敌／接近和命中局部坐标变换已有指定原技能的 Play Mode 回归，尚未完成全部技能与 Windows Player 验证。
 - 原人物、NPC、幻兽、召唤物的完整模型、动作、骨骼、挂点、粒子、音频和材质表现尚未全部接通。
@@ -222,11 +225,15 @@
 
 - 召唤命中的回执生命周期及怪物／幻兽／替身落点通过 `test_battle_summon_placement.ps1`、既有 HitSummon／继承／替身及 HP 触发恢复专项、460 条公式／战斗核心回归；四向位置错误先在专项中复现，再修复。替身的伤害传递夹具改为瞄准实际召唤格，不再固定使用旧的上方两格。主工程 Unity 编译、`ProjectTools.Validate`、静态元数据检查（146,031 GUID）和内置屏静音 Play Mode 通过，验证与最终运行均以 0 退出。原 `12140／12200／57780` 的实际召唤位置及顺序逐项对照已创建的原 `MyFightHitSummon` 的 `GridTransform.LocalToWorldPos`，包括旧回执、实际技能身份与半格中心；三份原命中 prefab 的播放字段均为空，保留原绑定，画面中的其他效果来自所属技能。`11540／11541` 检查九格 BaseScopes、实际生成地块均在原范围内、原陨石图播放事件、范围延迟后销毁及播放不重复创建／改写检查点。十一张受控效果夹具运行画面已查看，包含陨石落地阶段，仍有既有编辑器 API Updater 程序集解析诊断；未加载召唤角色模型、HUD 或完整地图，不代表全部召唤入场、地块落点及额外偏移完成。本批未构建或发布 Windows Player。
 
+- 随机父命中回执通过 `test_battle_random_parent_receipts.ps1`：10910／10920／13520 各含普通及重复根引用共六组，对照加入父回执前的执行，检查根引用独立身份、锚点和延迟、零额外随机抽取／伤害／AI 计数、检查点往返；仅移除新增父回执并重排序号后，完整检查点逐字节一致。既有命中选择专项、460 条公式／战斗核心回归、主工程 Unity 编译、`ProjectTools.Validate`、静态元数据检查（146,068 GUID）及内置屏静音 Play Mode 通过，编辑器正常以 0 退出。十一张实际运行画面已查看，覆盖既有六类受控原图与正式触发技能／召唤回执；父包装的正式实体生命周期仍未接线，截图中的随机父图来自既有受控夹具，不代表该新增回执的正式播放验证。本批未构建或发布 Windows Player。
+
+- 原伤害实体视图通过主工程 Unity 导入／编译、`ProjectTools.Validate`、静态元数据检查（149,826 GUID）及内置屏静音 Play Mode，编辑器正常以 0 退出。`OfficialBattleDamagePlaybackAcceptance.Run` 逐一加载 1,368 个原 prefab，核对启用状态、隐藏／零伤害标志及 4,213 个原图指针；10004、13012、11432、10152 分别覆盖完整结果图、仅状态触发图、仅公共图及空图，共 16 组格挡／暴击组合，检查格挡先于暴击、原目标／来源及 Damage 参数、目标通知先于技能查询、缺少目标／技能／来源、重复身份拒绝、同类实例回池复用，以及 13202 原覆盖驱动保持禁用。同一入口另在仅包含 65 个运行时程序集与 6,322 个原生输入的隔离工程通过全部断言，四张隔离粒子画面已查看；隔离编辑器退出停滞，关闭 Burst 编译或等待延迟销毁均未解决，已停止本次进程，隔离运行不列为完整通过。四张主工程 13012 实际粒子画面及既有命中回归的十一张画面已查看；原六类图、正式固定／触发技能／召唤回执回归仍通过。角色为无可见网格的受控对象，材质接口提供空集合；未验证真实人物受伤动作、材质变色或正式角色事件监听，通知由夹具端口记录。保留既有 API Updater 程序集解析诊断。本项未接通正式伤害事件，未构建或发布本批 Windows Player，公共战斗仍未完成。
+
 ## 代码与来源入口
+
+- 原伤害视图与生命周期：[MyFightDamage.cs](../../unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightDamage.cs)、[OfficialBattleDamageEntityPlayback.cs](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageEntityPlayback.cs)；专项入口：[OfficialBattleDamagePlaybackAcceptance.cs](../../unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleDamagePlaybackAcceptance.cs)。
 
 - 官方规则与执行：[`Runtime/Official/Combat`](../../unity/Assets/Game/Runtime/Official/Combat/)。
 - 离线适配：[`Runtime/Offline/Combat`](../../unity/Assets/Game/Runtime/Offline/Combat/)。
 - 场景与 HUD：[OfficialBattleRuntimeController.cs](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs)、[OfficialBattleHudCatalog.cs](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudCatalog.cs)。
 - 官方配置及转换记录：[battle-rules.json](../../assets/official/battle-rules.json)、[skill-rules.json](../../assets/official/skill-rules.json)、[来源总览](../../assets/reference/SOURCES.md)。
-
-- 随机父命中回执通过 `test_battle_random_parent_receipts.ps1`：10910／10920／13520 各含普通及重复根引用共六组，对照加入父回执前的执行，检查根引用独立身份、锚点和延迟、零额外随机抽取／伤害／AI 计数、检查点往返；仅移除新增父回执并重排序号后，完整检查点逐字节一致。既有命中选择专项、460 条公式／战斗核心回归、主工程 Unity 编译、`ProjectTools.Validate`、静态元数据检查（146,068 GUID）及内置屏静音 Play Mode 通过，编辑器正常以 0 退出。十一张实际运行画面已查看，覆盖既有六类受控原图与正式触发技能／召唤回执；父包装的正式实体生命周期仍未接线，截图中的随机父图来自既有受控夹具，不代表该新增回执的正式播放验证。本批未构建或发布 Windows Player。

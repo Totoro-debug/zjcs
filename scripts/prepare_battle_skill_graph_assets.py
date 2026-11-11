@@ -87,10 +87,47 @@ def main():
         moves.append(dict(action_entity_id=action_id, entity_key=entity_key, playables=bindings))
     print(f'SkillGraphs: audited {len(moves)} original movement action bindings', flush=True)
 
+    from inspect_battle_damage_graph_bindings import inspect as inspect_damages
+    damage_source = inspect_damages()
+    referenced_damage_ids = set()
+    damage_configuration = []
+    for name in ('battle-rules', 'skill-rules'):
+        path = ROOT / ('unity/Assets/Official/Combat/' + name + '.json')
+        damage_configuration.append(identity(path))
+        for components in json.loads(path.read_bytes())['entities'].values():
+            for kind, config in components.items():
+                if kind.startswith('FightHit') and isinstance(config, dict) and config.get('DamageId', 0) > 0:
+                    referenced_damage_ids.add(config['DamageId'])
+    missing = referenced_damage_ids - {row['damage_entity_id'] for row in damage_source['damages']}
+    if missing:
+        raise ValueError('Resolve referenced original damage entity prefabs: ' + str(sorted(missing)))
+    damage_source['referenced_configuration'] = damage_configuration
+    damage_source['referenced_damage_ids'] = sorted(referenced_damage_ids)
+    (work / 'damage-graph-binding-audit.json').write_bytes(
+        (json.dumps(damage_source, ensure_ascii=False, indent=2) + '\n').encode('utf-8'))
+    damages = []
+    damage_graph_originals = {}
+    for row in damage_source['damages']:
+        entity_key = f"damage:{row['damage_entity_id']}:entity"
+        roots[entity_key] = (EXPORT_PREFIX / row['entity_prefab']).as_posix()
+        bindings = {}
+        for field, ref in row['playables'].items():
+            key = f"damage:{row['damage_entity_id']}:{row['component_file_id']}:{field}"
+            roots[key] = ref['path']
+            if ref['path'] in damage_source['graph_originals']:
+                damage_graph_originals[key] = damage_source['graph_originals'][ref['path']]
+            bindings[field] = key
+        damages.append(dict(row, entity_key=entity_key, playables=bindings))
+    print(f'SkillGraphs: audited {len(damages)} original damage view bindings', flush=True)
+
     from battle_skill_entity_prefabs import SkillEntityManagedViews, skill_entity_scripts
     managed_views = SkillEntityManagedViews(skill_entities)
 
     mapped = dict(SCRIPTS)
+    # Original damage graphs also use these already migrated client leaves.
+    mapped.update({498949265: ('BattleAnimationPlayables', 'MyPlayableAnimationControllerPause'),
+                   1574993081: ('BattleMaterialPlayables', 'MyPlayableMaterialProperty'),
+                   1389507314: ('StoryFollowBone', 'MyEffectFadeOut')})
     mapped.update({-822603460: ('StoryPlayables', 'ApplyBySource'),
         -94696243: ('StoryAnimation', 'MyPlayableOverrideAnimator'),
         205640859: ('StoryAnimation', 'MyPlayableAnimator'),
@@ -125,11 +162,15 @@ def main():
         116049708: ('BattleTrackPlayables', 'ParabolicTrack')})
     build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS={}, graph_roots=roots,
         MAPPED=mapped, family='SkillGraphs', shader_prefix='SkillGraph_',
-        native_preprocess=managed_views.preprocess,
+        native_preprocess=managed_views.preprocess, graph_originals=damage_graph_originals,
         runtime_receipts=('track-runtime-source-manifest.json',
             'spine-clone-runtime-source-manifest.json',
             'hit-view-runtime-source-manifest.json',
             'skill-prefab-runtime-source-manifest.json',
+            'damage-view-runtime-source-manifest.json',
+            'status-material-runtime-source-manifest.json',
+            'status-pause-runtime-source-manifest.json',
+            '../official-map/map14-story-follow-bone-runtime-source-manifest.json',
             'skill-move-runtime-source-manifest.json'), generator=Path(__file__),
         reference_scripts={-210918009: dict(name='WwiseEventReference',
             native_asset=EVENT_ASSET,
@@ -175,6 +216,7 @@ def main():
             source='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SkeletonRendererHighTexturePreview.cs',
             verify_file_id_hash=True)},
         source_scripts={**hit_entity_scripts(), **skill_entity_scripts(), **action_entity_scripts(),
+            **damage_entity_scripts(),
             1126251125: dict(name='MyPtSubPlayable', namespace='GameFramework',
                 source_root='game-framework-source/GameFramework', source='MyPtSubPlayable.cs',
                 target_namespace='Zjcs.Official.StoryPlayableManager',
@@ -228,7 +270,7 @@ def main():
             1371266483: dict(name='MyPlayableGrapplingLine', namespace='', source='MyPlayableGrapplingLine.cs',
             runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableGrapplingLine.cs')},
         limits=['Converted roots are taken from active-version FightSkill entity prefab fields. '
-                'Production battle entity binding and runtime Playable lifecycle are tracked separately.'])
+        'Production battle entity binding and runtime Playable lifecycle are tracked separately.'])
     if managed_views.restore_count != {54383: 2}:
         raise ValueError('Original skill managed views must be restored for dependency scanning and conversion.')
 
@@ -257,6 +299,13 @@ def main():
             entity_resource=resources[row['entity_key']],
             playables=[dict(field=field, resource=resources[key])
                        for field, key in row['playables'].items()]))
+    catalog['damages'] = []
+    for row in damages:
+        entry = dict(row)
+        entry['entity_resource'] = resources[entry.pop('entity_key')]
+        entry['playables'] = [dict(field=field, resource=resources[key])
+            for field, key in row['playables'].items()]
+        catalog['damages'].append(entry)
     write_changed(DATA, json.dumps(catalog, ensure_ascii=False, indent=2) + '\n')
     meta(DATA)
 
@@ -264,6 +313,7 @@ def main():
     proof['official_entity_binding_source'] = source
     proof['official_hit_entity_binding_source'] = hit_source
     proof['official_move_entity_binding_source'] = action_source
+    proof['official_damage_entity_binding_source'] = damage_source
     proof['original_skill_managed_views'] = dict(
         registrations=managed_views.registrations, pointers=managed_views.pointer_bindings,
         schemas=managed_views.schemas.records,
@@ -306,6 +356,17 @@ def action_entity_scripts():
              runtime='unity/Assets/Game/Runtime/Official/' + folder + '/' + name + '.cs')
         for name, folder in (('MyAction', 'EntityActions'),
                              ('MyFightActionSkillMove', 'BattleSkillPlayables'))}
+
+
+def damage_entity_scripts():
+    from inspect_battle_hit_graph_bindings import MD4
+    import struct
+    return {struct.unpack('<i', MD4.new(('s\0\0\0' + name).encode()).digest()[:4])[0]:
+        dict(name=name, namespace='', target_namespace='Zjcs.Official.BattleSkillPlayables',
+             source=name + '.cs',
+             runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/' + name + '.cs')
+        for name in ('MyFightDamage', 'MyFightDamagePetTransferEnergyFilter',
+                     'FightDamagePlayableOverrideByStatusStack')}
 
 
 if __name__ == '__main__':

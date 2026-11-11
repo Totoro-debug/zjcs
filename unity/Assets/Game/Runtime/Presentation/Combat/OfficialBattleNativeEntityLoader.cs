@@ -13,12 +13,12 @@ using Zjcs.Official.StoryPlayableManager;
 namespace Zjcs.Presentation.Combat
 {
     /// <summary>Local resources and shared identities for the original entity loader.</summary>
-    internal enum OfficialBattleNativeEntityKind { Skill, Hit, MoveAction }
+    internal enum OfficialBattleNativeEntityKind { Skill, Hit, MoveAction, Damage }
 
     internal sealed class OfficialBattleNativeEntityLoader : IDisposable
     {
-        [Serializable] private sealed class Catalog { public string manifest; public Binding[] hits; public Binding[] skills; public Binding[] moves; }
-        [Serializable] private sealed class Binding { public int hit_entity_id; public int skill_entity_id; public int action_entity_id; public string entity_resource; }
+        [Serializable] private sealed class Catalog { public string manifest; public Binding[] hits; public Binding[] skills; public Binding[] moves; public Binding[] damages; }
+        [Serializable] private sealed class Binding { public int hit_entity_id; public int skill_entity_id; public int action_entity_id; public int damage_entity_id; public string entity_resource; }
         [Serializable] private sealed class Settings { public string manifest; public bool ECIsUseGameObjectPool; }
         private sealed class Lease : IDisposable
         {
@@ -147,13 +147,15 @@ namespace Zjcs.Presentation.Combat
                 || settings == null || settings.manifest != "884_156692")
                 throw new InvalidOperationException("Original native entity catalog/settings are unavailable.");
             var rows = kind == OfficialBattleNativeEntityKind.Skill ? catalog.skills
-                : kind == OfficialBattleNativeEntityKind.Hit ? catalog.hits : catalog.moves;
+                : kind == OfficialBattleNativeEntityKind.Hit ? catalog.hits
+                : kind == OfficialBattleNativeEntityKind.Damage ? catalog.damages : catalog.moves;
             if (rows == null) throw new InvalidOperationException("Original native entity catalog is unavailable.");
             foreach (var binding in rows)
             {
                 int classId = binding == null ? 0 : kind == OfficialBattleNativeEntityKind.Skill
                     ? binding.skill_entity_id : kind == OfficialBattleNativeEntityKind.Hit
-                    ? binding.hit_entity_id : binding.action_entity_id;
+                    ? binding.hit_entity_id : kind == OfficialBattleNativeEntityKind.Damage
+                    ? binding.damage_entity_id : binding.action_entity_id;
                 if (classId <= 0
                     || string.IsNullOrEmpty(binding.entity_resource) || resources.ContainsKey(classId))
                     throw new InvalidOperationException("Original native entity catalog contains an invalid binding.");
@@ -161,7 +163,8 @@ namespace Zjcs.Presentation.Combat
             }
             usePool = settings.ECIsUseGameObjectPool;
             entityRoot = new GameObject(kind == OfficialBattleNativeEntityKind.Skill ? "Battle native skill entities"
-                : kind == OfficialBattleNativeEntityKind.Hit ? "Battle native hit entities" : "Battle native move actions");
+                : kind == OfficialBattleNativeEntityKind.Hit ? "Battle native hit entities"
+                : kind == OfficialBattleNativeEntityKind.Damage ? "Battle native damage entities" : "Battle native move actions");
             entityRoot.transform.SetParent(parent, false);
             staging = new GameObject("Inactive original entity injection");
             staging.SetActive(false); staging.transform.SetParent(entityRoot.transform, false);
