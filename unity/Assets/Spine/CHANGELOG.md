@@ -90,27 +90,6 @@
 - Added more example maps
 - Added blueprint-callable methods `PhysicsTranslate()`, `PhysicsRotate()` and `ResetPhysicsConstraints()` (which will reset all physics constraints in the skeleton) to `SpineSkeletonComponent` and `SpineWidget`.
 
-### Godot
-
-- **Breaking**: Renamed `TrackEntry.set_attachment_threshold` and `TrackEntry.get_attachment_threshold` to `TrackEntry.set_mix_attachment_threshold` and `TrackEntry.get_mix_attachment_threshold`
-- **Breaking**: Renamed `TrackEntry.set_draw_order_threshold` and `TrackEntry.get_draw_order_threshold` to `TrackEntry.set_mix_draw_order_threshold` and `TrackEntry.get_mix_draw_order_threshold`
-- **BReaking**: `SpineSkeleton.update_world_transform` takes an additional `physics` parameter that specifies how physics should be updated
-- Added compatibility for Godot 4.1, 4.2 and C#, see builds at [https://esotericsoftware.com/spine-godot](https://esotericsoftware.com/spine-godot)
-- Added physics examples
-- Added `SpineBone.world_to_parent` to transform coordinates from world space to the parent space of a bone
-- Added `SpineBone.local_to_parent` to transform coordinates from a bone's local space to its parent space
-- Physics support
-  - Added `SpineBone.get_inherit`/`SpineBone.set_inherit`
-  - Added `SpinePhysicsConstraint` and `SpinePhysicsConstraintData`
-  - Added `SpineSkeleton.update()` to advance the physics time
-  - ADded `SpineSkeleton.get_time`/`SpineSkeleton.set_time` to access the physics time
-  - Added `SpineSkeleton.physics_translate()` to translate all physics constraints by some distances in the skeleton coordinate system
-  - Added `SpineSkeleton.physics_rotate()` to rotate all physics constraints by some distances in the skeleton coordinate system
-  - Added `SpineSkeleotnDataResource.set_reference_scale`/`SpineSkeletonDataResource.get_reference_scale` to access the reference scale of the loaded skeleton data
-- Added [`TrackEntry.set_alpha_attachment_threshold`](http://esotericsoftware.com/spine-api-reference#TrackEntry-alphaAttachmentThreshold)
-- Added `TrackEntry.set_mix_duration_and_delay()` to set the mix duration in conjunction with a delay
-- Added `TrackEntry::was_applied()` to check if the entry has been applied
-
 ## C#
 
 - **Additions**

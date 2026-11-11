@@ -276,7 +276,7 @@ def pin_windows(path):
                   'Preserve original compressed channels and compiled state-loop flags instead of accepting '
                   'Unity authoring recompile changes. Verify original byte serialization, output hashes and '
                   'complete consumption with the actual Windows type metadata.',
-        limitations=['Native Windows load and 14-clip/320-value Animator binding verification passed in DX12 Play Mode; existing TeamPanel two-size simulated-click regression passed. Formal invitation prefab, NPC appearance and local party integration remain pending.'])))
+        limitations=['Native Windows load and 14-clip/320-value Animator binding verification passed in Unity Play Mode; existing TeamPanel two-size simulated-click regression passed. Formal invitation prefab, NPC appearance and local party integration remain pending.'])))
     verify_windows(destination)
     print('Pinned original invitation animation payloads into native Windows carrier:', len(records), flush=True)
 

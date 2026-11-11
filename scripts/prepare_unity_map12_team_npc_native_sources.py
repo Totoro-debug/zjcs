@@ -280,10 +280,15 @@ def build(stage, write=False):
     meta_path = OUTPUT.with_name(OUTPUT.name + '.meta')
     guid = hashlib.md5(('zjcs-official:' + source_path(OUTPUT).removeprefix('unity/')).encode()).hexdigest()
     metadata = ('fileFormatVersion: 2\nguid: ' + guid + '\nTextScriptImporter:\n  externalObjects: {}\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n').encode()
+    native_export = dict(export_proof)
+    for key in ('input_receipt', 'tool'):
+        record = dict(native_export[key])
+        record['path'] = ConversionPath(ROOT / record['path']).relative_to(stage).as_posix()
+        native_export[key] = record
     receipt = encode(dict(format=1, manifest=apk.version, mapClassId=12,
         original=dict(path=source_path(ORIGINAL), sha256=sha(original_raw)),
         nativePreparation=dict(path='assets/reference/official-map/map12-team-npc-native-input-source-manifest.json', sha256=sha((stage / 'inputs/source-manifest.json').read_bytes())),
-        nativeExport=export_proof, tools=guarded, counts=dict(counts),
+        nativeExport=native_export, tools=guarded, counts=dict(counts),
         textureDecodingInputs=decoding_inputs,
         textureDecodingOverrides=[{k: v for k, v in value.items() if k != 'pngBase64'} for _, value in sorted(texture_overrides.items())],
         outputs=[dict(path=source_path(OUTPUT), sha256=sha(payload), bytes=len(payload)),

@@ -70,7 +70,7 @@ def build(write=False):
         'Project manager/RPC/data/icon services explicitly; preserve the exact Main(-1,-1) ActiveSkill '
         'selection and slot-level operations in the host projection. Reuse official UIBase/pools/state/text '
         'components and portrait request pipeline. Chat/nearby operations reach approved offline policy.',
-        limitations=['Full native TeamPanel/member/button prefabs and isolated DX12 input fixtures are supplied '
+        limitations=['Full native TeamPanel/member/button prefabs and isolated input fixtures are supplied '
                      'separately. Formal map host, real player/NPC services, equipped skills, roster/formation '
                      'persistence and battle integration remain pending.',
                      'Only consumed team action/confirmation methods are ported; unrelated client helpers '

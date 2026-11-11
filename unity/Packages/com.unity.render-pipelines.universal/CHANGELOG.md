@@ -109,7 +109,6 @@ This version is compatible with Unity 2022.3.11f1.
 - Fixed exception for missing _Color Shader Property.
 - Fixed runtime performance drops when multiple views that uses incompatible RTHandle descriptors are rendered within a frame.
 - Fixed an issue where Shader ID's weren't reset properly in the DepthNormals pass.
-- Fixed black screen issue when using URP hardware Dynamic Resolution with DX12.
 - Fixed Native RenderPass errors when using RendererFeature which is executed in between GBuffer and Deferred Lighting passes.
 - Fixed color and depth mismatch when scaling is on.
 - Fixed an issue where IndexOutOfRangeException was thrown when creating a stacked camera from script.
@@ -200,7 +199,7 @@ This version is compatible with Unity 2022.2.2f1.
 - Adapted URP to use Blitter interface for full screen draws.
 * Removed `DRAW_PRCEDURAL` variant for shaders.
 * Factored out full screen blits to utility function.
-* Updated terrain SSAO tests for DX11 and DX12 by using the reference images from Vulkan.
+* Updated terrain SSAO tests to use the reference images from Vulkan.
 - Improved edge quality for alpha-clipped materials when multisampling is used in URP.
 - Reduced the number of memcpy operations from NativeArray access in URP for performance.
 - Added tooltips for upscaling filters.

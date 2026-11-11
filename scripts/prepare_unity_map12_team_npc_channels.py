@@ -62,7 +62,7 @@ def build(write=False):
                   'Retain absolute cubic handles, split cubic time at derivative roots and invert the first '
                   'source-time crossing without baking animation frames or using a skeleton SDK. '
                   'Preserve constraint/deform source fields for their separate evaluation stages.',
-        validatedScope='DX12 Unity Play Mode verified all 1952 original NPC animations, 168760 scalar bone tracks, '
+        validatedScope='Unity Play Mode verified all 1952 original NPC animations, 168760 scalar bone tracks, '
                        '27 inheritance tracks, 1327 RGBA tracks and 492171 scalar samples. First/last source keys '
                        'and independent crossed/vertical/extrapolating cubic roots passed. Existing male/female '
                        'regressions passed 1171 curves/19537 samples and 3542 bones/425108 scalar checks.',

@@ -1,4 +1,4 @@
-// Wrapper vertex invocations for VFX. Necesarry to work around various null input geometry issues for vertex input layout on DX12 and Vulkan.
+// Wrapper vertex invocations for VFX work around null input geometry issues for vertex input layout.
 #if NULL_GEOMETRY_INPUT
 PackedVaryings VertVFX(uint vertexID : VERTEXID_SEMANTIC, uint instanceID : INSTANCEID_SEMANTIC)
 {

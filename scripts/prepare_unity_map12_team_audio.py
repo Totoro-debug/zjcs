@@ -57,6 +57,7 @@ def build(write=False):
     if len(found) != 1:
         raise ValueError('Resolve exact target-confirm event graph')
     path, text = found[0]
+    text = re.sub(r'(?m)^# - output/validation/[^\r\n]*\r?\n', '', text)
     leaves = [line.strip() for line in text.splitlines() if line.strip() and not line.lstrip().startswith('#')]
     if len(leaves) != 1 or 'master volume: auto' in text:
         raise ValueError('Preserve original target-confirm event playback graph')

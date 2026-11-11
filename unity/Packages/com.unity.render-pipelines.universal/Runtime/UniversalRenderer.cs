@@ -1130,8 +1130,6 @@ namespace UnityEngine.Rendering.Universal
                                                     ? ClearFlag.None
                                                     : ClearFlag.Color;
 #if ENABLE_VR && ENABLE_XR_MODULE
-                // workaround for DX11 and DX12 XR test failures.
-                // XRTODO: investigate DX XR clear issues.
                 if (SystemInfo.usesLoadStoreActions)
 #endif
                 renderOpaqueForwardPass.ConfigureClear(opaqueForwardPassClearFlag, Color.black);

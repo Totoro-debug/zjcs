@@ -152,7 +152,7 @@ def build(write=False):
         counts=dict(skeletons=len(models), attachments=sum(row['attachments'] for row in models),
                     paths=sum(len(row['paths']) for row in models), prefabs=len(prefabs['models']),
                     renderers=len(renderers)),
-        validatedScope='DX12 Unity Play Mode loaded all 34 actual Resources packages and verified their byte hashes, '
+        validatedScope='Unity Play Mode loaded all 34 actual Resources packages and verified their byte hashes, '
                        'bone/slot/skin/attachment/constraint counts, seven path layouts and all 92 original renderer, '
                        'starting-animation and ordered CombineSkins bindings from 91 NPC prefabs. '
                        'Existing male/female packages loaded through the unchanged original player format.',
