@@ -17,7 +17,20 @@ namespace Zjcs.Presentation.Combat
         private int[] firstPromotionSummonMonsterIds = Array.Empty<int>();
         private int firstPromotionExpectedSummonCount;
         private int[] firstPromotionSpawnedUnitIds = Array.Empty<int>();
+        private readonly System.Collections.Generic.HashSet<int> firstPromotionGeneratedUnitIds
+            = new System.Collections.Generic.HashSet<int>();
         private static readonly float[] FirstPromotionFrameTimes = { .1f, .25f, .45f, .7f };
+
+        private void ObserveFirstPromotionGeneration(OfficialBattleRuntimeController controller)
+        {
+            foreach (int unitId in firstPromotionSpawnedUnitIds)
+            {
+                var root = controller.TryGetUnitTransform(unitId);
+                var renderer = root ? root.GetComponentInChildren<Zjcs.Offline.ProfessionUI.BattleNativeMonsterRenderer>() : null;
+                if (renderer && renderer.Animation == "generate_01" && firstPromotionGeneratedUnitIds.Add(unitId))
+                    Debug.Log("[Graph capability] Original summon generation observed: unit=" + unitId);
+            }
+        }
 
         private bool CaptureFirstPromotionFrame()
         {

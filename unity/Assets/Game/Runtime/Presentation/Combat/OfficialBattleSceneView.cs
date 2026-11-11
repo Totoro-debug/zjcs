@@ -22,6 +22,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Func<FightBattleUnitState, IOfficialBattleNativeModel> nativeNpcFactory;
         private readonly Zjcs.Offline.BattleNativePlayables.OfflineBattleNativePlayableScope nativePlayableScope;
         private readonly bool restoringNativeUnits;
+        private HashSet<int> restoredNativeUnitIds;
         private readonly Action<Transform, FightBattleUnitState> orientUnit;
         private readonly OfficialBattleHudCatalog hudCatalog;
         private readonly OfficialBattleSkillPlayableCatalog skillPlayableCatalog;
@@ -502,6 +503,13 @@ namespace Zjcs.Presentation.Combat
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
             latestCheckpoint = checkpoint;
+            if (restoredNativeUnitIds == null)
+            {
+                restoredNativeUnitIds = new HashSet<int>();
+                if (restoringNativeUnits)
+                    foreach (var unit in checkpoint.Units)
+                        if (unit != null && IsWaveSpawned(checkpoint, unit.Id)) restoredNativeUnitIds.Add(unit.Id);
+            }
             var present = new HashSet<int>();
             foreach (FightBattleUnitState state in checkpoint.Units)
             {
@@ -1409,7 +1417,8 @@ namespace Zjcs.Presentation.Combat
                 units.Add(state.Id, partnerView);
                 return partnerView;
             }
-            var liveMonster = OfficialBattleLiveMonsterModelView.TryCreate(state, root, nativePlayableScope != null);
+            var liveMonster = OfficialBattleLiveMonsterModelView.TryCreate(state, root, nativePlayableScope != null,
+                nativePlayableScope, restoredNativeUnitIds != null && restoredNativeUnitIds.Contains(state.Id));
             if (liveMonster != null)
             {
                 var liveView = new UnitView { State = state, NativeModel = liveMonster };

@@ -336,6 +336,7 @@ namespace Zjcs.Presentation.Combat
         public void ObserveFrame(OfficialBattleRuntimeController controller)
         {
             CaptureName = null;
+            ObserveFirstPromotionGeneration(controller);
             if (CaptureFirstPromotionFrame()) return;
             if (CaptureFatalRevivalFrame()) return;
             bool afterimageVisible = afterimages?.Observe() ?? false;
@@ -443,6 +444,10 @@ namespace Zjcs.Presentation.Combat
                         ? Time.time - firstPromotionCastClock < firstPromotionCaptureAfter : Time.realtimeSinceStartup - castTime < .85f)) return;
             foreach (int unitId in firstPromotionSpawnedUnitIds)
             {
+                var state = controller.Checkpoint.Units.Single(value => value.Id == unitId);
+                if (state.MonsterId == 3182 || state.MonsterId == 3183)
+                    Require(firstPromotionGeneratedUnitIds.Contains(unitId),
+                        "Original summon generation animation was not observed: unit=" + unitId);
                 var summon = controller.TryGetUnitTransform(unitId);
                 Require(summon && summon.GetComponentsInChildren<MeshRenderer>().Any(value => value.enabled
                     && value.isVisible && !value.forceRenderingOff

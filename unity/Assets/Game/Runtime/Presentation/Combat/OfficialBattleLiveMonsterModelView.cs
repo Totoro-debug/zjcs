@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zjcs.Combat.Official;
+using Zjcs.Offline.BattleNativePlayables;
 using Zjcs.Offline.ProfessionUI;
 
 namespace Zjcs.Presentation.Combat
@@ -19,6 +20,8 @@ namespace Zjcs.Presentation.Combat
         private readonly OfficialBattleMonsterAnimatorBindings.State[] states;
         private readonly OfficialBattleMonsterAnimationController application;
         private OfficialBattleAnimatorPlayback skillPlaybacks;
+        private OfficialBattleCharacterGenerationPlayback generation;
+        private bool initialIdlePending;
         private float playbackSpeed = 1f;
         private int requestedState;
         private bool loop = true;
@@ -48,7 +51,7 @@ namespace Zjcs.Presentation.Combat
                 || renderer.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
 
         public static OfficialBattleLiveMonsterModelView TryCreate(FightBattleUnitState state, Transform parent,
-            bool nativeSkillGraphs = false)
+            bool nativeSkillGraphs = false, OfflineBattleNativePlayableScope scope = null, bool restoring = false)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
             // Role-player arena guards may carry a monster stat row.
@@ -56,11 +59,12 @@ namespace Zjcs.Presentation.Combat
             int entityId = state.MonsterTemplateId > 0 ? state.MonsterTemplateId : state.MonsterId;
             var assets = BattleNativeMonsterAssets.Load();
             return assets.Find(entityId) == null ? null
-                : new OfficialBattleLiveMonsterModelView(assets, entityId, parent, "BattleUnit_" + state.Id, nativeSkillGraphs);
+                : new OfficialBattleLiveMonsterModelView(assets, entityId, parent, "BattleUnit_" + state.Id,
+                    nativeSkillGraphs, scope, restoring);
         }
 
         private OfficialBattleLiveMonsterModelView(BattleNativeMonsterAssets assets, int entityId,
-            Transform parent, string name, bool nativeSkillGraphs)
+            Transform parent, string name, bool nativeSkillGraphs, OfflineBattleNativePlayableScope scope, bool restoring)
         {
             try
             {
@@ -85,6 +89,21 @@ namespace Zjcs.Presentation.Combat
                 renderer.Attachments.RebindOriginalShadow(shadow.Root);
                 follower = shadow.Root.GetComponent<OfficialBattleShadowBoneFollower>();
                 if (!follower) throw new InvalidOperationException("Original monster bone follower is unbound: " + entityId);
+                if (scope != null)
+                {
+                    var binding = OfficialBattleSummonRoleViewCatalog.FindGeneration(entityId);
+                    if (binding != null)
+                    {
+                        generation = new OfficialBattleCharacterGenerationPlayback(renderer.EntityRoot.gameObject,
+                            scope, binding, !restoring);
+                        // GetOrCreate records an initial idle request. Do not
+                        // replace the original generation trigger with Play(idle).
+                        initialIdlePending = true;
+                        renderer.Animator.Update(0);
+                        renderer.ApplyAnimatorPose(0);
+                        follower.ForceUpdate();
+                    }
+                }
             }
             catch { Dispose(); throw; }
         }
@@ -95,6 +114,11 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleLiveMonsterModelView));
             if (!HasAnimation(name)) return false;
+            if (initialIdlePending)
+            {
+                initialIdlePending = false;
+                if (name == "idle_01") return true;
+            }
             var state = OfficialBattleMonsterAnimatorBindings.UniqueState(states, name);
             int hash = Animator.StringToHash(state.state);
             if (!renderer.Animator.HasState(0, hash)) throw new InvalidOperationException("Original monster state is missing: " + state.state);
@@ -148,6 +172,7 @@ namespace Zjcs.Presentation.Combat
         public void Tick(float deltaTime)
         {
             if (disposed) return;
+            generation?.Tick(deltaTime);
             skillPlaybacks?.Tick(deltaTime);
             if (!renderer.gameObject.activeInHierarchy) return;
             renderer.Advance(deltaTime * playbackSpeed);
@@ -157,6 +182,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) return;
             disposed = true;
+            generation?.Dispose();
             skillPlaybacks?.Dispose();
             application?.Dispose();
             shadow?.Dispose();
