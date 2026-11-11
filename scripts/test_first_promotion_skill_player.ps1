@@ -3,7 +3,8 @@ param(
     [Parameter(Mandatory)][string]$Workspace,
     [int[]]$ItemIds = @(),
     [ValidateSet('up','down','left','right')][string[]]$Directions = @('up','down','left','right'),
-    [switch]$AirCombo
+    [switch]$AirCombo,
+    [switch]$ActionInvisible
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -22,10 +23,14 @@ $scope = @($rules.profession_base | Where-Object Profession -in @(1,2,6,10,11,15
 $active = @($rules.item | Where-Object { $_.ClassId -in $scope -and $_.ItemType -eq 100 } |
     Select-Object -ExpandProperty ClassId | Sort-Object)
 if ($scope.Count -ne 104 -or $active.Count -ne 57) { throw 'Review the original six-profession skill scope.' }
-if ($ItemIds.Count -eq 0) { $ItemIds = if ($AirCombo) { @(10006,10009,10052) } else { $active } }
+if ($AirCombo -and $ActionInvisible) { throw 'Select one isolated status diagnostic.' }
+if ($ItemIds.Count -eq 0) { $ItemIds = if ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } else { $active } }
 foreach ($item in $ItemIds) { if ($item -notin $active) { throw "Not an original active skill in scope: $item" } }
 if ($AirCombo -and @($ItemIds | Where-Object { $_ -notin @(10006,10009,10052) }).Count -gt 0) {
     throw 'The airborne diagnostic requires original 10006/10009/10052.'
+}
+if ($ActionInvisible -and @($ItemIds | Where-Object { $_ -notin @(10025,10058) }).Count -gt 0) {
+    throw 'The protected summon diagnostic requires original 10025/10058.'
 }
 $settings = @{
     ZJCS_REPOSITORY_ROOT = $repository
@@ -36,6 +41,8 @@ $settings = @{
     ZJCS_DIRECTIONAL_SKILL_FACING = ''
     ZJCS_VALIDATION_DIR = ''
     ZJCS_AIR_COMBO_ACCEPTANCE = $(if ($AirCombo) { '1' } else { $null })
+    ZJCS_ACTION_INVISIBLE_ACCEPTANCE = $(if ($ActionInvisible) { '1' } else { $null })
+    ZJCS_SUMMON_DEATH_ACCEPTANCE = $(if ($ActionInvisible) { $null } else { [Environment]::GetEnvironmentVariable('ZJCS_SUMMON_DEATH_ACCEPTANCE', 'Process') })
 }
 $previous = @{}
 try {
@@ -69,6 +76,18 @@ try {
             }
             if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Air combo] Original floating_01 mesh')) {
                 throw "Original airborne lifecycle assertions did not complete: $run"
+            }
+        }
+        if ($ActionInvisible) {
+            foreach ($phase in @('protected','disabled','reenabled','removed')) {
+                foreach ($extension in @('png','json')) {
+                    if (-not (Test-Path -LiteralPath (Join-Path $run "action-invisible-$item-$phase.$extension"))) {
+                        throw "Original protection phase $phase was not captured/persisted: $run"
+                    }
+                }
+            }
+            if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Action invisible] Actual original enemy AI/59460 graph')) {
+                throw "Original protection battle assertions did not complete: $run"
             }
         }
         Write-Output "Passed $item $direction : $run"

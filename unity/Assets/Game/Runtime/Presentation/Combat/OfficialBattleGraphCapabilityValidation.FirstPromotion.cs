@@ -202,6 +202,12 @@ namespace Zjcs.Presentation.Combat
             int distance = skill.Range.Where(point => point.X * dy == 0 && point.Y * dx == 0
                 && point.X * dx + point.Y * dy > 0).Select(point => Math.Abs(point.X) + Math.Abs(point.Y))
                 .DefaultIfEmpty(1).Min();
+            // Keep this horizontal facing probe on its requested side while the
+            // original AI chooses its ordinary landing; adjacent placement can
+            // let it jump across the target before the actual cast.
+            if (itemId == 10029 && dx != 0)
+                distance = skill.Range.Where(point => point.Y == 0 && point.X * dx > 0)
+                    .Select(point => Math.Abs(point.X)).DefaultIfEmpty(distance).Max();
             var summonHits = skill.HitGraphEntities.Where(hit => hit.IsSummon && hit.SummonReferenceType == 1
                 && hit.SummonGridItemClassId == 0).ToArray();
             probe.firstPromotionSummonMonsterIds = summonHits.SelectMany(hit => hit.SummonPools)
@@ -299,6 +305,7 @@ namespace Zjcs.Presentation.Combat
                 player.Statuses.Add(catalog.CreateStatus(25112, player.Id, player.Id, 900001,
                     0, 10603, 2, 20, player.SubRank));
             }
+            probe.ConfigureActionInvisibleDiagnostic(checkpoint);
             probe.ConfigureAirComboDiagnostic(itemId, checkpoint);
             skill.LimitedTimes = 1;
             player.Skills.Add(skill); player.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));

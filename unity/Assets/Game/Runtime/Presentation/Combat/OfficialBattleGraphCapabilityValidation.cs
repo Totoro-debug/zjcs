@@ -216,6 +216,7 @@ namespace Zjcs.Presentation.Combat
         public void ObserveStep(OfficialBattleRuntimeController controller)
         {
             ObserveFirstPromotionDeathStep(controller.Checkpoint.Receipts.Last().Event);
+            ObserveActionInvisibleStep(controller);
             if (ValidateApproach && approachClass == 0)
             {
                 var approach = controller.Checkpoint.Receipts.Last().Event.Movements
@@ -430,6 +431,7 @@ namespace Zjcs.Presentation.Combat
                 { loopCaptured = true; CaptureName = "native-movement-loop-11510"; return; }
             }
             if (ObserveFirstPromotionDeathFrame(controller)) return;
+            if (ObserveActionInvisibleFrame(controller)) return;
             if (captured && !finisherScheduled)
             {
                 var player = controller.Checkpoint.Units.Single(value => value.Id == 1);
@@ -471,6 +473,7 @@ namespace Zjcs.Presentation.Combat
             VerifyFatalRevival();
             VerifyFirstPromotionDeath(checkpoint);
             VerifyAirComboDiagnostic();
+            VerifyActionInvisibleDiagnostic();
             if (firstPromotionItemId != 0) Require(firstPromotionFrameCount == FirstPromotionFrameTimes.Length,
                 "The original skill's early presentation frames were not captured.");
             if (ValidateApproach) Require(ordinaryStarted && ordinaryRemoved && ordinaryCaptured,
