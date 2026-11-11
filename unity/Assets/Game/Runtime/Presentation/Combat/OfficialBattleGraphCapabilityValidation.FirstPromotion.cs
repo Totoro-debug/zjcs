@@ -247,6 +247,12 @@ namespace Zjcs.Presentation.Combat
                     foreach (var unit in new[] { player, ally })
                         unit.Statuses.Add(catalog.CreateStatus(statusId, unit.Id, enemy.Id, 990000 + statusId * 10 + unit.Id));
             }
+            if (Environment.GetEnvironmentVariable("ZJCS_STATUS_LIFE_REDUCTION_ACCEPTANCE") == "1")
+            {
+                Require(itemId == 10019, "The lifespan diagnostic uses original 10019/3181.");
+                player.Statuses.Add(catalog.CreateStatus(25112, player.Id, player.Id, 900001,
+                    0, 10603, 2, 20, player.SubRank));
+            }
             skill.LimitedTimes = 1;
             player.Skills.Add(skill); player.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
             checkpoint.MaxRound = 12;
@@ -287,6 +293,22 @@ namespace Zjcs.Presentation.Combat
                         + "; statuses=" + (unit == null ? "null" : string.Join(",", unit.Statuses.Select(status => status.ClassId)))
                         + "; notified=" + string.Join(",", step.DispersedUnitIds)
                         + "; hits=" + string.Join(",", step.DamageEvents.Select(hit => hit.TargetId)));
+            if (Environment.GetEnvironmentVariable("ZJCS_STATUS_LIFE_REDUCTION_ACCEPTANCE") == "1")
+            {
+                var summon = checkpoint.Units.Single(unit => firstPromotionSpawnedUnitIds.Contains(unit.Id));
+                var life = summon.Statuses.Single(status => status.ClassId == 10712);
+                var reduction = summon.Statuses.Single(status => status.ClassId == 24072).Components.LifeReduction;
+                Require(life.DurationRound == 5 && life.CurDurationRound == 3
+                    && reduction.ReduceRoundCount == 2 && reduction.ReducedStatusKeys.Count == 1,
+                    "Original 25112/24072 did not shorten the new rock spirit lifespan once.");
+                var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+                var restored = saved.Units.Single(unit => unit.Id == summon.Id);
+                Require(restored.Statuses.Single(status => status.ClassId == 10712).CurDurationRound == 3
+                    && restored.Statuses.Single(status => status.ClassId == 24072)
+                        .Components.LifeReduction.ReducedStatusKeys.SequenceEqual(reduction.ReducedStatusKeys),
+                    "Lifespan reduction or its receipt was lost in the Unity checkpoint.");
+                Debug.Log("[Lifespan reduction] Original 25112 -> 24072 shortened 10712 from five to three; checkpoint retained receipt.");
+            }
             // This shared probe checks actual routing/presentation. Exact damage, status,
             // summon and passive expectations remain in their original-data rule suites.
             Debug.Log("[First promotion graph] item=" + firstPromotionItemId + " entity=" + skillId

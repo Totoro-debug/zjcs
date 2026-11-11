@@ -131,6 +131,8 @@ namespace Zjcs.Combat.Official
                 context.ActionDuration = Math.Max(context.ActionDuration, logicActionDuration);
             }
             status.LogicStartInitialized = true;
+            FightStatusLifeReduction.OnApplied(owner, status);
+            if (!owner.Statuses.Contains(status) || owner.Ended) return;
             ApplyMissingStatusStart(owner, status);
             StartHpStatus(owner, status);
             StartRoundStatus(owner, status);

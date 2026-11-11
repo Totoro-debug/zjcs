@@ -1,0 +1,673 @@
+{
+  "manifest": "884_156692",
+  "configuration": {
+    "manifest": "884_156692",
+    "fragments": [
+      {
+        "path": "Assets/Config/EC/FightSkill_part34.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "8480428600878144708",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "82f04105ff269e8e53aa13c3dd7eee8fee158f395b3eccea87b1c92ceccf573f",
+        "payload_sha256": "ede71f02c24c8222e06a3f41a4ac8229d911dd31a66e118c4ccfa1c9d5d6a673",
+        "legacy_prefix": false,
+        "entities": {
+          "10712": {
+            "parent": 0,
+            "components": {
+              "ActionComponent": {
+                "ActionType": 0
+              },
+              "FightStatusComponent": {
+                "_unused_0": null,
+                "RoundTarget": 2,
+                "DurationRound": 5,
+                "RoundUpdateTiming": 1,
+                "RemoveAtRoundTargetDestroy": false,
+                "ElementType": 0,
+                "ActionBehOfSameStatus": 0,
+                "StatusType": 0,
+                "CanDispersed": false,
+                "IsOpenStack": false,
+                "InitStackCount": 1,
+                "AddStackedCount": 1,
+                "MaxStackedCount": -1,
+                "IsAddDurationRound": false,
+                "MaxAddDurationRound": 100,
+                "ScalePropWhenChangeStacked": false,
+                "StatusSourceType": 1,
+                "ApplyIgnoreResilience": false,
+                "CheckTriggerLimitActions": true,
+                "AI": {
+                  "MoreHit": false
+                },
+                "ForbiddenOnApplicatorDie": false,
+                "StackRoundCondition": 0,
+                "StackCountCondition": 0,
+                "IsResetDurationWhenStack": false,
+                "AddStackedRandomMinCount": 1,
+                "AddStackedRandomMaxCount": 1,
+                "IsFixedProp": false,
+                "MutexChecker": null,
+                "FollowRoundUpdateTimingOnGlobalRound": false
+              },
+              "StatusEndComponent": {
+                "StatusReplacePropertyValues": [],
+                "NotStatusMutex": false,
+                "StatusTriggerSkillCfgs": [],
+                "StatusTriggerStatusCfgs": [],
+                "RemoveApplyEntity": true,
+                "AutoRemove": {
+                  "ResetTimerWhenInvoke": false,
+                  "Duration": -1.0,
+                  "MaxCount": -1,
+                  "RemoveStatusCfgs": [],
+                  "RemoveTarget": 0
+                },
+                "ForbiddenStatus": {
+                  "Target": 0,
+                  "StatusEntityClassId": 0,
+                  "Forbidden": false
+                },
+                "CheckApplyAlive": false
+              },
+              "FightStatusPropComponent": {
+                "StatusReplacePropertyValues": [],
+                "TransitionPropCfgs": [],
+                "MutexByBetter": false
+              },
+              "FightGameplayTagComponent": {
+                "GameplayTag": {
+                  "V0": 33947648,
+                  "V1": 0,
+                  "V2": 0,
+                  "V3": 0
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "path": "Assets/Config/EC/FightSkill_part55.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "-9080576122990167248",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "f8ca362e603d496f22e0bb017a1ceb39186aa92d048a58183a9a17d9aebe0808",
+        "payload_sha256": "c11dda3f2e3cf85311be71b0871b0b82e366aae80180a474c77d5fb715f56a9e",
+        "legacy_prefix": false,
+        "entities": {
+          "11142": {
+            "parent": 0,
+            "components": {
+              "ActionComponent": {
+                "ActionType": 0
+              },
+              "FightStatusComponent": {
+                "_unused_0": null,
+                "RoundTarget": 2,
+                "DurationRound": 2,
+                "RoundUpdateTiming": 1,
+                "RemoveAtRoundTargetDestroy": false,
+                "ElementType": 0,
+                "ActionBehOfSameStatus": 0,
+                "StatusType": 0,
+                "CanDispersed": false,
+                "IsOpenStack": false,
+                "InitStackCount": 1,
+                "AddStackedCount": 1,
+                "MaxStackedCount": -1,
+                "IsAddDurationRound": false,
+                "MaxAddDurationRound": 100,
+                "ScalePropWhenChangeStacked": false,
+                "StatusSourceType": 1,
+                "ApplyIgnoreResilience": false,
+                "CheckTriggerLimitActions": true,
+                "AI": {
+                  "MoreHit": false
+                },
+                "ForbiddenOnApplicatorDie": false,
+                "StackRoundCondition": 0,
+                "StackCountCondition": 0,
+                "IsResetDurationWhenStack": false,
+                "AddStackedRandomMinCount": 1,
+                "AddStackedRandomMaxCount": 1,
+                "IsFixedProp": false,
+                "MutexChecker": null,
+                "FollowRoundUpdateTimingOnGlobalRound": false
+              },
+              "StatusEndComponent": {
+                "StatusReplacePropertyValues": [],
+                "NotStatusMutex": false,
+                "StatusTriggerSkillCfgs": [],
+                "StatusTriggerStatusCfgs": [],
+                "RemoveApplyEntity": true,
+                "AutoRemove": {
+                  "ResetTimerWhenInvoke": false,
+                  "Duration": -1.0,
+                  "MaxCount": -1,
+                  "RemoveStatusCfgs": [],
+                  "RemoveTarget": 0
+                },
+                "ForbiddenStatus": {
+                  "Target": 0,
+                  "StatusEntityClassId": 0,
+                  "Forbidden": false
+                },
+                "CheckApplyAlive": false
+              },
+              "FightStatusPropComponent": {
+                "StatusReplacePropertyValues": [],
+                "TransitionPropCfgs": [],
+                "MutexByBetter": false
+              },
+              "FightGameplayTagComponent": {
+                "GameplayTag": {
+                  "V0": 33947648,
+                  "V1": 0,
+                  "V2": 0,
+                  "V3": 0
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "path": "Assets/Config/EC/FightSkill_part704.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "8461350446438528732",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "57f3d3ec5e809f4570bf8c9dc0590e48e9cf27023f82a86477bcfb8d4de417da",
+        "payload_sha256": "f7663bbe4f51983c2670d32878b3c992584639f9dce183b9dde3b93222c8a4b3",
+        "legacy_prefix": false,
+        "entities": {
+          "24072": {
+            "parent": 0,
+            "components": {
+              "ActionComponent": {
+                "ActionType": 50
+              },
+              "FightStatusComponent": {
+                "_unused_0": null,
+                "RoundTarget": 2,
+                "DurationRound": -1,
+                "RoundUpdateTiming": 1,
+                "RemoveAtRoundTargetDestroy": false,
+                "ElementType": 0,
+                "ActionBehOfSameStatus": 1,
+                "StatusType": 0,
+                "CanDispersed": false,
+                "IsOpenStack": false,
+                "InitStackCount": 1,
+                "AddStackedCount": 1,
+                "MaxStackedCount": 0,
+                "IsAddDurationRound": false,
+                "MaxAddDurationRound": 100,
+                "ScalePropWhenChangeStacked": false,
+                "StatusSourceType": 1,
+                "ApplyIgnoreResilience": false,
+                "CheckTriggerLimitActions": true,
+                "AI": {
+                  "MoreHit": false
+                },
+                "ForbiddenOnApplicatorDie": false,
+                "StackRoundCondition": 0,
+                "StackCountCondition": 0,
+                "IsResetDurationWhenStack": false,
+                "AddStackedRandomMinCount": 1,
+                "AddStackedRandomMaxCount": 1,
+                "IsFixedProp": false,
+                "MutexChecker": null,
+                "FollowRoundUpdateTimingOnGlobalRound": false
+              },
+              "FightStatusPropComponent": {
+                "StatusReplacePropertyValues": [],
+                "TransitionPropCfgs": [],
+                "MutexByBetter": false
+              },
+              "FightStatusReduceStatusLifeComponent": {
+                "StatusReplacePropertyValues": [],
+                "ReduceRoundCount": 2,
+                "FilterCondition": {
+                  "Query": {
+                    "Desc": {
+                      "V0": {
+                        "Tags": {
+                          "V0": 33554432,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      },
+                      "V1": {
+                        "Tags": {
+                          "V0": 0,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      },
+                      "V2": {
+                        "Tags": {
+                          "V0": 0,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      },
+                      "V3": {
+                        "Tags": {
+                          "V0": 0,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      },
+                      "V4": {
+                        "Tags": {
+                          "V0": 0,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      },
+                      "V5": {
+                        "Tags": {
+                          "V0": 0,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      },
+                      "V6": {
+                        "Tags": {
+                          "V0": 0,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      },
+                      "V7": {
+                        "Tags": {
+                          "V0": 0,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      }
+                    },
+                    "Length": 1
+                  },
+                  "_type": "SourceEntityGameplayTagFilter"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "path": "Assets/Config/EC/FightSkill_part756.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "206126000672071481",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "40794a403f34d724f9eac4caf63e546d513421db7c6bcd8f41761456ac3d2e9e",
+        "payload_sha256": "08854a710715bf97d6b55b632c4ba02807732524afc1e7f761b7b10e6e6190c2",
+        "legacy_prefix": false,
+        "entities": {
+          "25112": {
+            "parent": 0,
+            "components": {
+              "FightStatusComponent": {
+                "_unused_0": null,
+                "RoundTarget": 2,
+                "DurationRound": -1,
+                "RoundUpdateTiming": 1,
+                "RemoveAtRoundTargetDestroy": false,
+                "ElementType": 0,
+                "ActionBehOfSameStatus": 0,
+                "StatusType": 0,
+                "CanDispersed": false,
+                "IsOpenStack": false,
+                "InitStackCount": 1,
+                "AddStackedCount": 1,
+                "MaxStackedCount": 0,
+                "IsAddDurationRound": false,
+                "MaxAddDurationRound": 100,
+                "ScalePropWhenChangeStacked": false,
+                "StatusSourceType": 1,
+                "ApplyIgnoreResilience": false,
+                "CheckTriggerLimitActions": false,
+                "AI": {
+                  "MoreHit": false
+                },
+                "ForbiddenOnApplicatorDie": false,
+                "StackRoundCondition": 0,
+                "StackCountCondition": 0,
+                "IsResetDurationWhenStack": false,
+                "AddStackedRandomMinCount": 1,
+                "AddStackedRandomMaxCount": 1,
+                "IsFixedProp": false,
+                "MutexChecker": null,
+                "FollowRoundUpdateTimingOnGlobalRound": false
+              },
+              "ActionComponent": {
+                "ActionType": 75
+              },
+              "FightStatusHitSummonComponent": {
+                "StatusReplacePropertyValues": [],
+                "Rate": 1.0,
+                "SummonStatusId": 24072,
+                "SkillId": 0,
+                "Create": true,
+                "Remove": false,
+                "MaxCount": -1,
+                "CheckSummonLifeDuration": false,
+                "FilterSubstitute": true,
+                "FilterCondition": {
+                  "Query": {
+                    "Desc": {
+                      "V0": {
+                        "Tags": {
+                          "V0": 32768,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      },
+                      "V1": {
+                        "Tags": {
+                          "V0": 0,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      },
+                      "V2": {
+                        "Tags": {
+                          "V0": 0,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      },
+                      "V3": {
+                        "Tags": {
+                          "V0": 0,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      },
+                      "V4": {
+                        "Tags": {
+                          "V0": 0,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      },
+                      "V5": {
+                        "Tags": {
+                          "V0": 0,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      },
+                      "V6": {
+                        "Tags": {
+                          "V0": 0,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      },
+                      "V7": {
+                        "Tags": {
+                          "V0": 0,
+                          "V1": 0,
+                          "V2": 0,
+                          "V3": 0
+                        },
+                        "Type": 0
+                      }
+                    },
+                    "Length": 1
+                  },
+                  "_type": "SourceEntityGameplayTagFilter"
+                }
+              },
+              "FightStatusPropComponent": {
+                "StatusReplacePropertyValues": [],
+                "TransitionPropCfgs": [],
+                "MutexByBetter": false
+              }
+            }
+          }
+        }
+      }
+    ],
+    "skill_item_bindings": null,
+    "selected_entity_path_overrides": {},
+    "runtime_source_manifests": [
+      {
+        "path": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+        "sha256": "9b447a15838602a598b7530eb0398a3b0c9e1a6d93d7eb8d0e194932cd24d8bf"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/battle-rules-source-manifest.json",
+        "sha256": "cef8b0b5a12460f2bdb2b4d8031f95fb8d560a391a9170641e401b67ef08968b"
+      }
+    ],
+    "formatters": [
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActionComponent.cs",
+        "sha256": "574e476645f5e9f86b9f5015ed794a2aac103df4be65f9beef9fd762107cc1c7"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightGameplayTagComponent.cs",
+        "sha256": "04b366c564d4ae7a5db9d4a3909bb9366260e7a05cca5d3f3105560de1507e4e"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusComponent.cs",
+        "sha256": "4f9b0133c6404da6ddcea3ed192fc760fc927f914a1276b987ee894872ecf68c"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusHitSummonComponent.cs",
+        "sha256": "916ec59fb2c739166f2f0f7ee0e7af1a04c8eed4dcee6b3f535302fb85eea919"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusPropComponent.cs",
+        "sha256": "f07d2e86fa0d736d53bc7c6b2a931a9cc47b2ad3086786a199016a87b004783d"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusReduceStatusLifeComponent.cs",
+        "sha256": "baf02bec474b8094b29fa942a400156486ba816a04dfc7ae5ed18e8f847ca256"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/StatusEndComponent.cs",
+        "sha256": "3bedd406fde594a76718f0dd59bdca3dd609e374f8833c937816bf52b8aed854"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ActionBehaviourFormatter.cs",
+        "sha256": "29ee6c3e26000f043690ea14983a8b1f1a93927e9f43bdc45976cb823f15b9ca"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ActionComponentInfoFormatter.cs",
+        "sha256": "411f5e5de63ab3d144412a003d547b89fc387104aa19e665236786fe805a3d7b"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ActionTypeFormatter.cs",
+        "sha256": "186c98deb85a7221c8dd1c3474f9ded798c356cdf8cab3130dd4adf990980c7d"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ElementTypeFormatter.cs",
+        "sha256": "78b8ed62cb6acc289a886758b602f8b271d1bbae983ae547ad36ec5437a43df0"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/EStatusSourceTypeFormatter.cs",
+        "sha256": "9d242dc34328fd05d1cfa83930f6c9d879a32eb9d6fab5a0df9a292bc415f999"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightGameplayTagComponentInfoFormatter.cs",
+        "sha256": "4f8ece00ffd3d26aee1ad32f3631cf63443b40fbcef9f3ece1417daca550327a"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightStatusAiCfgFormatter.cs",
+        "sha256": "9c8be1891e61f412fe4f09156321ed87eb59a76cb7074b5c86be20790caebd04"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightStatusAutoRemoveCfgFormatter.cs",
+        "sha256": "e6152a64983db9cf29d986bf9719a5175ef18066d3517d72e1e5a2aa1e4e974b"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightStatusComponentInfoFormatter.cs",
+        "sha256": "921aa99e7c3f221071c6c1b237e7ee9d2ff7f4258743060ad2c0958ab7fd9b85"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightStatusForbiddenStatusCfgFormatter.cs",
+        "sha256": "c160dd6fb753e6f4f4855e9aa75864401651ecbd2a77d57d60af1a87218166ea"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightStatusHitSummonComponentInfoFormatter.cs",
+        "sha256": "fbad6dba8abb011bd747967ca3a9e9d578727f35279c9fcfb6fa4fca67ea3736"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightStatusPropComponentInfoFormatter.cs",
+        "sha256": "59c3bf195efc8124f58e7076081833230eea1fbccc251fe4c0aad7baa24959de"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightStatusReduceStatusLifeComponentInfoFormatter.cs",
+        "sha256": "8d5ee68ed749152ca3568ec4c11c2a9fdd9ab5f6cbc63a1e271ec8d209c6ea5a"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GameplayTagFormatter.cs",
+        "sha256": "c671044fc198651d70cdd531e2ec6a904fc54d8d0d3bf86286e6a128ba14400c"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GameplayTagQueryDescFormatter.cs",
+        "sha256": "4f053d94482e82e65dd357a863c352a37799c45984be8a7dc29f9060a68e7da6"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GameplayTagQueryFormatter.cs",
+        "sha256": "cd3adabe459e8ae52162dec1651cb80a8184a99ccad8bd9176d5ee2efc3c8a83"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GameplayTagQueryValueFormatter.cs",
+        "sha256": "e456e4194154636c5e7c02ca8a7084b89c015cb5b79104d01f670b2a03df89d9"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/QueryTypeFormatter.cs",
+        "sha256": "313d052b027554e92c66ae146e6f80257ca259621379118958e0db8f79766c51"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SourceEntityGameplayTagFilterFormatter.cs",
+        "sha256": "4c994dbe12cf2a89a4584a390c63be34f9df9a41a75d0673d415d536e99c0bda"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/StatusEndComponentInfoFormatter.cs",
+        "sha256": "7c3c498a54b879c454a07b0d9f9a26f04e714a8d04f5c229a9605f081e55c50a"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/StatusTargetTypeFormatter.cs",
+        "sha256": "83e4146589973f5ce9eca37926a399185b861603c2722ca89ef0bf966b6c56f0"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/StatusTriggerTargetFormatter.cs",
+        "sha256": "6a95c1bf25fb3ab84270b40a6360216ebcde328bb03ba736f57bf00ad1c29e59"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/StatusTypeFormatter.cs",
+        "sha256": "f3f6a835bbe4d8fceeed282c9ae3a1e6c846cc962af77b680c60ca55e08d8c86"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Resolvers/GeneratedStaticGSerializableFormatterResolver.cs",
+        "sha256": "9e0eb448ce32ffcdd2f082db548d27df8211dfdf9ec98be78c9fa85adeb3af08"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Properties/AssemblyInfo.cs",
+        "sha256": "d85ed3684e7117155ebd5d8de5d415c29e4c83f090715776d9f74bf4f4a20785"
+      }
+    ],
+    "verifier": {
+      "path": "scripts/verify_battle_skill_graph_rules.py",
+      "sha256": "be15b59559e75fea48de0334b5ed63bde7d08fe124bd0e664abcb408733ccec7"
+    },
+    "operation": "Decode the selected APK-first EC fragments with their own generated formatters. Compare every migrated component field for the requested entities; retain historical runtime source manifests separately. No configuration or expected hash is replaced."
+  },
+  "original_code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusReduceStatusLifeComponent.cs",
+      "sha256": "baf02bec474b8094b29fa942a400156486ba816a04dfc7ae5ed18e8f847ca256"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusReduceStatusLifeComponentInfo.cs",
+      "sha256": "7cf59e376b3a86499253bf76dfa632c3f3df8dfc8b5de41a05e6a117a16661e3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SourceEntityGameplayTagFilter.cs",
+      "sha256": "a9004e4ed6aed1b2de90071b9b5846c1c69a47fadc16afcda2c27e6bffa2b9ed"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusReduceStatusLife.cs",
+      "sha256": "df2fd794156e8c50dc48dc1c099f2efa2d6436806051e9cf02ecc6f40fbfb009"
+    }
+  ],
+  "verifier": {
+    "path": "scripts/prepare_battle_status_life_reduction_sources.py",
+    "sha256": "a96e3913c7108d99f9cc6a2b8a6f71e46d6f065bf93c3a239f523cf16741496a"
+  },
+  "operation": "APK-first exact verification of original reduction count, tag filter, summon trigger and lifetime/end components. Server scheduling is absent; the confirmed offline timing and persistence rules are maintained in docs/features/skills.md."
+}

@@ -66,6 +66,7 @@ namespace Zjcs.Combat.Official
         // summon's removal skill for a second time.
         public bool HitSummonRemoveProcessed;
         public bool HitSummonHasLifeDuration;
+        public long LifeReductionStatusSerial;
         public FightVoodooDollLink VoodooDoll;
         // JsonUtility materializes null inline classes as empty objects. A real
         // substitute always has a positive linked target identity.
@@ -305,6 +306,9 @@ namespace Zjcs.Combat.Official
     [Serializable]
     public sealed class FightBattleStatusComponentState
     {
+        public long[] GameplayTags;
+        public long LifeReductionIdentity;
+        public FightBattleStatusLifeReductionState LifeReduction;
         public FightBattleStatusCureReduceState CureReduce;
         public FightBattleStatusHitSkillComponentState HitSkill;
         public FightBattleStatusDamageSkillComponentState DamageSkill;
@@ -322,6 +326,9 @@ namespace Zjcs.Combat.Official
         {
             return new FightBattleStatusComponentState
             {
+                GameplayTags = GameplayTags == null ? null : (long[])GameplayTags.Clone(),
+                LifeReductionIdentity = LifeReductionIdentity,
+                LifeReduction = LifeReduction?.Copy(),
                 CureReduce = CureReduce?.Copy(),
                 HitSkill = HitSkill?.Copy(),
                 DamageSkill = DamageSkill?.Copy(),

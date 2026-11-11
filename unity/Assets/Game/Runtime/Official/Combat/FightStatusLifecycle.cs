@@ -36,6 +36,7 @@ namespace Zjcs.Combat.Official
             if (before == (status.ForbiddenType != 0)) return false;
             // The original event carries the previous overall forbidden value.
             unit.StatusForbiddenChanged?.Invoke(unit, status, before);
+            if (status.ForbiddenType == 0) FightStatusLifeReduction.OnApplied(unit, status);
             return true;
         }
 
@@ -573,6 +574,7 @@ namespace Zjcs.Combat.Official
                 Scope = template.Scope
             };
             if (!FightStatusSharedStacks.Allocate(unit, applied)) return null;
+            applied.Components.LifeReductionIdentity = 0;
             unit.Statuses.Add(applied);
             if (round >= 0) InitializeRoundStartDelay(unit, applied);
             if (applied.HasBackToLifeComponent)
@@ -586,6 +588,7 @@ namespace Zjcs.Combat.Official
             RecordApplication(unit, template);
             FightHealingStackReduction.Apply(unit, applied);
             unit.StatusStarted?.Invoke(unit, applied);
+            FightStatusLifeReduction.OnApplied(unit, applied);
             return applied;
         }
 
