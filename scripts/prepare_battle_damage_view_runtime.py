@@ -26,12 +26,15 @@ namespace Zjcs.Official.BattleSkillPlayables
 def main():
     manifest = CODE.parent / 'code-manifest.json'
     proof = json.loads(manifest.read_bytes())
-    assembly = CODE / 'managed/decoded/Assembly-CSharp.dll'
     if (proof['manifest'] != '884_156692'
-            or json.loads((ROOT / 'official-source.json').read_bytes())['active'] != '884_156692'
-            or sha256(assembly.read_bytes()).hexdigest() != proof['assemblies'][assembly.name]['decoded_sha256']):
+            or json.loads((ROOT / 'official-source.json').read_bytes())['active'] != '884_156692'):
         raise ValueError('Review original damage presentation assembly/version.')
-    inputs, outputs = [identity(manifest), identity(assembly)], []
+    inputs, outputs = [identity(manifest)], []
+    for name in ('Assembly-CSharp.dll', 'Console.dll'):
+        assembly = CODE / 'managed/decoded' / name
+        if sha256(assembly.read_bytes()).hexdigest() != proof['assemblies'][name]['decoded_sha256']:
+            raise ValueError('Review original damage presentation assembly: ' + name)
+        inputs.append(identity(assembly))
     inputs.extend(identity(CODE / 'common-source/Common' / (name + '.cs')) for name in (
         'FightDamageComponent', 'DamageResultParameter', 'DamageTypeData', 'FightRoleFightComponent'))
 
@@ -46,6 +49,24 @@ def main():
         write_changed(path, HEADER + clean(text) + '\n}\n')
         meta(path)
         outputs.extend((identity(path), identity(Path(str(path) + '.meta'))))
+
+    # Keep the complete original result value, enum values and helper formula.
+    # Wire serialization is not used by the local view projection.
+    for name, declaration in (
+            ('DamageResultParameter', 'public struct '), ('DamageTypeData', 'public struct '),
+            ('DamageResultType', 'public enum '), ('DamageResultValueType', 'public enum '),
+            ('ElementType', 'public enum ')):
+        path = CODE / 'common-source/Common' / (name + '.cs')
+        if not any(row['path'] == path.relative_to(ROOT).as_posix() for row in inputs):
+            inputs.append(identity(path))
+        text = path.read_text(encoding='utf-8-sig')
+        text = text[text.index(declaration):]
+        text = re.sub(r'^\s*\[(?:Key\(\d+\)|IgnoreMember|JsonIgnore)\]\s*\n', '', text, flags=re.M)
+        if name == 'DamageResultParameter':
+            text = replace_once(text, 'public Pos2d Pos;',
+                'public Zjcs.Official.World.NativeTerrain.Common.Pos2d Pos;')
+        text = '\n'.join(line.rstrip() for line in text.splitlines()) + '\n'
+        emit(name, text)
 
     text = read('MyFightDamage')
     text = replace_once(text,
@@ -97,6 +118,7 @@ def main():
             'Original common, block-before-crit, fallback and independent status-trigger graph order retained.',
             'Original status-stack override cache, lifecycle and five graph fields retained.',
             'Original role damage/hit events, subscriber order and exception isolation retained; Unity logging port.',
+            'Complete original damage result, flags, enum values and GetDamageByType; wire annotations omitted.',
             'Original pet-energy-filter client class has no view behavior.']),
         ensure_ascii=False, indent=2) + '\n')
     # Native prefabs and their script GUIDs are unchanged. Refresh the migrated

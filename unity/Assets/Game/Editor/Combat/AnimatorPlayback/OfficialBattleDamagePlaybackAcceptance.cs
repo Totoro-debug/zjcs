@@ -101,6 +101,7 @@ namespace Zjcs.Editor.Combat
         private string throwingRole, expectedRoleException;
         private int observedRoleExceptions;
         private int serial;
+        private DamageResultParameter? expectedResult;
         private readonly List<Played> played = new List<Played>();
         private void LateUpdate() { if (scope != null) scope.LateTick(); }
 
@@ -126,6 +127,7 @@ namespace Zjcs.Editor.Combat
 
         private IEnumerator Check()
         {
+            CheckResultProjection();
             AudioListener.volume = 0f;
             Application.runInBackground = true;
             Time.maximumDeltaTime = 1f / 60f;
@@ -189,6 +191,8 @@ namespace Zjcs.Editor.Combat
             {
                 Require(role == targetRole && role.myEntity == targetEntity
                     && damage.Component.TargetId.Equals(targetEntity.Id), "Original damage event sender and argument.");
+                if (expectedResult.HasValue) Require(damage.Component.DamageResult.Equals(expectedResult.Value),
+                    "Original target notification carries the complete damage result without narrowing or recomputation.");
                 services.Notifications.Add("target");
                 if (throwingRole == "target") throw new InvalidOperationException(expectedRoleException);
             };
@@ -196,6 +200,8 @@ namespace Zjcs.Editor.Combat
             {
                 Require(role == sourceRole && role.myEntity == sourceEntity
                     && damage.Component.SkillId.Equals(skillEntity.Id), "Original hit event sender and argument.");
+                if (expectedResult.HasValue) Require(damage.Component.DamageResult.Equals(expectedResult.Value),
+                    "Original source notification carries the same complete damage result.");
                 services.Notifications.Add("source");
                 if (throwingRole == "source") throw new InvalidOperationException(expectedRoleException);
             };
@@ -236,9 +242,9 @@ namespace Zjcs.Editor.Combat
                 for (int mask = 0; mask < 4; mask++)
                 {
                     played.Clear(); services.Notifications.Clear();
-                    bool block = (mask & 1) != 0, critical = (mask & 2) != 0;
+                    expectedResult = ResultPayload(mask);
                     var state = new OfficialBattleDamageEntityData(new EcEntityIdentifier(7, ++serial), binding.damage_entity_id,
-                        skillEntity.Id, targetEntity.Id, block, critical, binding == trigger,
+                        skillEntity.Id, targetEntity.Id, expectedResult.Value, binding == trigger,
                         target.localPosition, Quaternion.identity, Vector3.one, new Grid());
                     var entity = damages.Create(state);
                     Require(services.Notifications.SequenceEqual(new[] { "target", "source" }),
@@ -268,6 +274,7 @@ namespace Zjcs.Editor.Combat
                     Require(damages.Count == 0 && !entity.gameObject.activeSelf, "Original damage entity removed to its pool.");
                     for (int frame = 0; frame < 45; frame++) { scope.Tick(1f / 60f); yield return null; }
                 }
+            expectedResult = null;
             foreach (var missing in new[] { targetEntity.Id, skillEntity.Id, sourceEntity.Id })
             {
                 services.Missing = missing;
@@ -311,7 +318,40 @@ namespace Zjcs.Editor.Combat
                 && originalEntity.GetComponent<MyFightDamage>().myCommonPlayable == overridePrefab.GetComponent<MyFightDamage>().myCommonPlayable,
                 "Disabled original status override is not enabled by local loading.");
             damages.Remove(overrideState.Id);
-            Debug.Log("Original damage entities passed: all 1368 native prefabs and graph fields, original role event senders/arguments, empty subscribers, multicast exception isolation, ordered notifications, common/block/crit/status branches, actual Damage parameters, missing entities, duplicate identities, pool removal and disabled original override.");
+            Debug.Log("Original damage entities passed: complete result projection, 128 flag combinations, original numeric helpers, all 1368 native prefabs and graph fields, original role event senders/arguments, empty subscribers, multicast exception isolation, ordered notifications, common/block/crit/status branches, actual Damage parameters, missing entities, duplicate identities, pool removal and disabled original override.");
+        }
+
+        private static DamageResultParameter ResultPayload(int mask) => new DamageResultParameter {
+            DamageValue = -9007199254740993L, ShieldValue = -1234567890123L,
+            AbsoluteDamage = 9007199254740995L, Pos = new Pos2d(-7, 13),
+            IsElementAffect = true, ElementConfrontation = .3125f,
+            ResultType = DamageResultType.Damage, SkillElementType = ElementType.Abyss,
+            DamageTypeData = new DamageTypeData { IsBlock = (mask & 1) != 0, IsCrit = (mask & 2) != 0,
+                IsDodge = (mask & 4) != 0, IsBlinding = (mask & 8) != 0, IsImmunity = (mask & 16) != 0,
+                IsBreakResilience = (mask & 32) != 0, IsTrueDamage = (mask & 64) != 0 } };
+
+        private static void CheckResultProjection()
+        {
+            for (int mask = 0; mask < 128; mask++)
+            {
+                var result = ResultPayload(mask);
+                var state = new OfficialBattleDamageEntityData(new EcEntityIdentifier(7, mask + 1), 10004,
+                    new EcEntityIdentifier(2, 3), new EcEntityIdentifier(1, 2), result, true,
+                    Vector3.one, Quaternion.identity, Vector3.one, new Grid());
+                var component = state.GetComponent<FightDamageComponent>();
+                Require(component.DamageResult.Equals(result) && component.IsDamageTriggerStatus,
+                    "All original result fields and independent trigger flag survive projection.");
+                Require(result.IsDamage && !result.IsCure
+                    && result.GetDamageByType(DamageResultValueType.FinalDamageValue) == -9007199254740993L
+                    && result.GetDamageByType(DamageResultValueType.ShieldAddFinalDamageValue) == -9005964686850870L
+                    && result.GetDamageByType(DamageResultValueType.AbsoluteDamage) == 9007199254740995L
+                    && result.GetDamageByType((DamageResultValueType)999) == 0L,
+                    "Original signed 64-bit damage/shield helper and unknown value branch.");
+                result.ResultType = DamageResultType.Cure;
+                Require(result.IsCure && !result.IsDamage, "Original cure classification.");
+                result.ResultType = DamageResultType.None;
+                Require(!result.IsCure && !result.IsDamage, "Original empty result classification.");
+            }
         }
         private void Observe(string text, string stack, LogType type)
         {

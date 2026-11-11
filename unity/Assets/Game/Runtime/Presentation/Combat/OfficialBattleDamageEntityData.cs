@@ -38,6 +38,16 @@ namespace Zjcs.Presentation.Combat
             EcEntityIdentifier skill, EcEntityIdentifier target, bool block, bool critical,
             bool triggeredStatus, Vector3 position, Quaternion rotation, Vector3 scale,
             ECGridTransformData grid)
+            : this(identity, classId, skill, target,
+                new DamageResultParameter { DamageTypeData = new DamageTypeData {
+                    IsBlock = block, IsCrit = critical } },
+                triggeredStatus, position, rotation, scale, grid)
+        { }
+
+        public OfficialBattleDamageEntityData(EcEntityIdentifier identity, int classId,
+            EcEntityIdentifier skill, EcEntityIdentifier target, DamageResultParameter result,
+            bool triggeredStatus, Vector3 position, Quaternion rotation, Vector3 scale,
+            ECGridTransformData grid)
         {
             if (classId <= 0) throw new ArgumentOutOfRangeException(nameof(classId));
             this.identity = identity;
@@ -45,8 +55,7 @@ namespace Zjcs.Presentation.Combat
             this.grid = grid;
             transform = new TransformState { Point = position, Orientation = rotation, Size = scale };
             damage = new DamageState { Target = target, Skill = skill, TriggerStatus = triggeredStatus,
-                Result = new DamageResultParameter { DamageTypeData = new DamageTypeData {
-                    IsBlock = block, IsCrit = critical } } };
+                Result = result };
         }
         public override EcEntityIdentifier Id => identity;
         public override int ClassId => classId;

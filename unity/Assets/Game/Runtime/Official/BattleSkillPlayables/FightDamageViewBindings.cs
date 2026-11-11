@@ -17,13 +17,4 @@ namespace Zjcs.Official.BattleSkillPlayables
     // MyFightRoleFight forwards client events without reading shared role state.
     // Shared combat callbacks remain owned by the rule executor.
     public sealed class BattleRoleFightViewData { }
-    public struct DamageResultParameter
-    {
-        public DamageTypeData DamageTypeData;
-    }
-    public struct DamageTypeData
-    {
-        public bool IsBlock, IsCrit;
-    }
-
 }

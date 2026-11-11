@@ -10,6 +10,10 @@
       "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll",
+      "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightDamageComponent.cs",
       "sha256": "6a3fa4e82221392c11cd0c67529906fb8df9db41a82073ffdf74de02b30061a1"
     },
@@ -24,6 +28,18 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightRoleFightComponent.cs",
       "sha256": "4844dfa361e882daac113d2ad6f795f88cc64e610d7d206ef34cf59361b7083b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DamageResultType.cs",
+      "sha256": "916ee63a1c4d71e365a4638d774764ed7f3903acbb480f627899e925f5fa72d4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DamageResultValueType.cs",
+      "sha256": "7a2b9b06d7a21cabbd483348e9d9e475b2da73a8f14081053356052aa56689a8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ElementType.cs",
+      "sha256": "ab024210d5614725aaff5fb5fc36dce43788ff6bf3d9ec1cf67bedb830b8925e"
     },
     {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightDamage.cs",
@@ -43,6 +59,46 @@
     }
   ],
   "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/DamageResultParameter.cs",
+      "sha256": "121ddd7e220067eebdfaf5ea22265aaab6b14cc515a1824e0622054533275a43"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/DamageResultParameter.cs.meta",
+      "sha256": "1900054413710236a25f77fa8fef89832a1c57ead28055e95cc4177b6caf81c1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/DamageTypeData.cs",
+      "sha256": "8e976ec48d033ef4400dbf10c32cab4e7032dc40d8374cb54fa55ed8112c9226"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/DamageTypeData.cs.meta",
+      "sha256": "16107be5122590ffda276b75cb234b50d724b10951be6910b600c7167162a663"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/DamageResultType.cs",
+      "sha256": "b0ef6bfbba61901d2ff635b34ecaa6c90411824b7e622f3b29ee7d2601092561"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/DamageResultType.cs.meta",
+      "sha256": "68bbe629b0dcfc20ea627636ff17e909386c4c76c0dff8f6004df3f336beb9e2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/DamageResultValueType.cs",
+      "sha256": "3e89ec1a082e40dd5b0d9d39aa05c4b4b07760c4ece72a34d76bc4a29a07d0b0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/DamageResultValueType.cs.meta",
+      "sha256": "bca317154520c7741c8aa19982702a9a7189990ac5433d9e9eae5601a58c1ef9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ElementType.cs",
+      "sha256": "21f992a5bb48ec17efb295a84d6ac45d8221d4f49d3ddc4c1ce0489928357950"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ElementType.cs.meta",
+      "sha256": "8c9c341989d8d6fb392b02accf7005a4134201afaf531637755934c78e6c6c6c"
+    },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightDamage.cs",
       "sha256": "155e8402b0349fb2c315484196fbf9a49f2a575dc4fddc96c3cfbdf7e5b3b461"
@@ -77,7 +133,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightDamageViewBindings.cs",
-      "sha256": "ba2811a08be69553e90bda4feaa04b4addedb8cc9e3ff0a36332a62aadba247d"
+      "sha256": "470584dd6b256791a9e1a10500c90bdf734262ef121af1df6ab4db3490d1c92d"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightDamageViewBindings.cs.meta",
@@ -86,12 +142,12 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_damage_view_runtime.py",
-    "sha256": "d5d8097ceea1eec3554b2137b9dfda9a84d136cbc70c93b6403321078c33e712"
+    "sha256": "a08b66e20e9a8f0b53c1415294981ffca276fced5c186e225657f89a9615ebb4"
   },
   "local_bindings": [
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageEntityData.cs",
-      "sha256": "2894ee1e71e75dd26b27d338abe6413e1822de866b2f3892244b4c56fd0ce82a"
+      "sha256": "a444b5c115db8f90ce7379ca73fc222e65cc2499c68f5a817d19073d54932441"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageEntityPlayback.cs",
@@ -103,7 +159,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleDamagePlaybackAcceptance.cs",
-      "sha256": "58f1289d5be0e4278bbf5441b70d1a28dbc4ffd77ffa9fa91c1aed97085f44d8"
+      "sha256": "fcab2dcefdd3cc1b541e3728647c999d288f19caee4bfac444492532467fedf0"
     },
     {
       "path": "scripts/inspect_battle_damage_graph_bindings.py",
@@ -120,6 +176,7 @@
     "Original common, block-before-crit, fallback and independent status-trigger graph order retained.",
     "Original status-stack override cache, lifecycle and five graph fields retained.",
     "Original role damage/hit events, subscriber order and exception isolation retained; Unity logging port.",
+    "Complete original damage result, flags, enum values and GetDamageByType; wire annotations omitted.",
     "Original pet-energy-filter client class has no view behavior."
   ]
 }
