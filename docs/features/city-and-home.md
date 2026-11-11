@@ -199,7 +199,11 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 设施接线验证已在隔离完整工程完成当前 13 项记录、床铺锁定／预告／可维修／已拥有四态、物品拥有优先、背包变化、实际职业记录、可结识伙伴、地图可达、女神与基础等级上限检查，以及维修去重和磁盘重开。隔离窗口 Play Mode 使用官方维修／通知 prefab、实际本地维修服务及模拟指针，确认按钮提交后打开通知、关闭顺序、弹窗动画、遮罩与重开后的拥有状态。
 
-`HomeFurnitureHostValidation.Run` 另在隔离角色槽通过正式 `HomeFeatureRuntime.Begin` 入口：使用真实三级角色，模拟场景指针打开床铺原生维修窗口，模拟维修按钮提交本地事务、显示原修复通知，再关闭／重进家园核对已拥有与正常态。四张完整运行画面已查看；采集仅在测试中将叠加 Canvas 映射到最高排序层的相机画布，不改写正式布局或存档。当前旧 HUD 仍有控件重叠、头像缺图，旧场景存在黑色异常图层，因此只判定床铺维修接线通过，整体家园画面未通过。完整原生场景、全部家具点击／特效／教学及 Windows Player 尚未完成。
+`HomeFurnitureHostValidation.Run` 另在隔离角色槽通过正式 `HomeFeatureRuntime.Begin` 入口：使用真实三级角色，模拟场景指针打开床铺原生维修窗口，模拟维修按钮提交本地事务、显示原修复通知，再关闭／重进家园核对已拥有与正常态。四张完整运行画面已查看；采集仅在测试中将叠加 Canvas 映射到最高排序层的相机画布，不改写正式布局或存档。当前旧 HUD 仍有控件重叠、头像缺图，因此只判定床铺维修接线通过，整体家园画面未通过。完整原生场景、全部家具点击／特效／教学及 Windows Player 尚未完成。
+
+果树特效改用所选 `884_156692` 的完整粒子子树：36 个 GameObject、23 个 ParticleSystem、24 个 ParticleSystemRenderer，保留原模块、曲线、顶点流、祖先变换与一个原始空材质槽。`prepare_home_fruit_tree_particles.py` 按原 CAB／PathID 解析材质、网格、Sprite 与贴图，复用已核验的 Windows 完整 shader／纹理转换缓存；原 Noise_Mask_Pro 的全部 pass 和 520 份 GLES 程序由现有转换器保留，未使用导出工具的 DummyShaderTextExporter 占位实现。网格维持原生文本及空字段表示，避免重新序列化为 `null` 造成原生网格加载断言。`HomeSceneView` 显式加载 `Resources/Home/FruitTree/Particles`，沿既有设施状态路径控制播放；其他果树场景模型、皮肤、教学与状态脚本尚未整体迁入。
+
+`prepare_home_fruit_tree_particles_validation.py` 在隔离完整工程复用真实家园入口与模拟指针维修流程，核对原粒子／渲染器数量、23 个已绑定材质与一个原空槽、完整 Windows shader 支持，以及原异常区域不再被黑色不透明四边形覆盖。已查看 608×1080 的场景、维修窗口、修复通知与重开截图：家园初始状态的黑色遮挡消失；床铺维修、通知及存档恢复继续通过。静态元数据检查通过（149909 个 GUID）；Unity 2022.3.57f1c2 导入、C# 编译和 `Zjcs.Editor.ProjectTools.Validate` 通过，按进程禁用无关 Burst 编译；测试保持静音。此结果不包含全部果树状态／维修特效、正式 HUD、技能试伤场景或 Windows Player 验证。
 
 所选 `884_156692` 的 25 张家园／入口相关原始配置已按原 Luban 构造器解码，保留 13 项家具、12 项挂机、11 项产出、3024 项升级材料、595 项等级规则、4496 项条件及原单条装潢配置。载荷为 `Assets/Official/Home/home-rules-current.json`，由 `Resources/Home/OfficialCurrentHomeRuleAssetCatalog` 显式引用；此目录独立于旧 `StreamingAssets/Home` 载荷，旧主城运行层尚未整体切换。
 
@@ -255,7 +259,7 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 `prepare_weekly_merchant.py` 从固定 APK／匹配原版本 CDN 提取 `HomeNpcManagerConfig`、`npc_home_position`、主场景第0号生成点、`HomeNpcModel_8416`、`NpcModel_UI_8416` 和 `Npc_Portrait_8416`。保留原 ModelSlot 0.4 倍缩放、碰撞框、红点全局缩放、原骨骼／图集／body_8416 皮肤和 `npc_8416/idle_01` 动画，输出至 `assets/official/weekly-merchant/`。复用原 `DemonInavdeNpc` 四句剧情、8402／8416 立绘表情及 `activity_2_18`～`activity_2_21` 已转换语音。输入对象、资源及输出哈希登记于 `weekly-merchant/source-manifest.json`；商店从结算开始开放24小时为用户确认的单机调度，出场位置、首次对话和窗口内容来自原客户端。同一来源清单另登记原 `ItemIconAttachmentConfig` 类型7的 `ProbabilityTip` 预览标签，保留原 prefab 与 `ImgProbability` 贴图。
 
 ## 尚未实现
-- 主城技能试伤场景当前存在主角缺失及左下黑白多边形异常，原因尚未定位；相关页面功能接线不代表主城画面完整。
+- 家园入口的黑色粒子遮挡已修复；技能试伤场景的主角缺失及其他渲染异常仍需单独复测，相关页面接线不代表主城画面完整。
 
 
 上方两张表中的未接通项均属于待实现范围。跨模块玩法只维护主城入口与衔接要求，内部规则和进度以所属页为准；关闭项须完成对应入口处理，但不实现原联网业务。已落实部分按上文记录；下列只列仍未实现或未验收的缺项。

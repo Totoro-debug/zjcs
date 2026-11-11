@@ -339,7 +339,7 @@ namespace Zjcs.Presentation.Home
 
         private void BuildFruitTreeParticles()
         {
-            GameObject prefab = Resources.Load<GameObject>("FruitTree/FruitTreeParticles");
+            GameObject prefab = Resources.Load<GameObject>("Home/FruitTree/Particles");
             if (prefab == null)
                 throw new InvalidOperationException("Official fruit tree particle prefab is unavailable.");
             fruitTreeParticleRoot = UnityEngine.Object.Instantiate(prefab, Root.transform, false);
