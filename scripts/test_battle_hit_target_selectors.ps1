@@ -133,8 +133,12 @@ $hits=@($step.DamageEvents|Where-Object SkillEntityId -eq 13660)
 Assert-HitSelection ($hits.Count -eq 35) 'Original 13660 no longer matches its selected body grids and cross-shaped Scope.'
 foreach($pair in @(@(13662,11),@(13663,11),@(13664,13))){Assert-HitSelection (@($hits|Where-Object HitEntityId -eq $pair[0]).Count -eq $pair[1]) 'An original random node differs from its selected grid intersections.'}
 $expectedDraws=@('5,4;6,3;7,3','5,4;6,3;7,5','6,4;5,4;7,4')
+$rootSelections=@($step.SkillCasts[0].HitSelections|Where-Object HitEntityId -eq 13661)
+Assert-HitSelection ($rootSelections.Count -eq 1 -and $rootSelections[0].Targets.Count -eq 0 -and $rootSelections[0].SelectedGridPositions.Count -eq 0 -and $rootSelections[0].EffectCenters.Count -eq 1) 'Original root view drew targets or lost its authored effect center.'
+$randomSelections=@($step.SkillCasts[0].HitSelections|Where-Object RandomTargetGroupId -gt 0)
+Assert-HitSelection ($randomSelections.Count -eq 3 -and ($randomSelections.HitEntityId -join ',') -eq '13662,13663,13664') 'Original random selection nodes changed or mixed with the root view.'
 for($i=0;$i -lt 3;$i++){
- $draw=($step.SkillCasts[0].HitSelections[$i].SelectedGridPositions|ForEach-Object {'{0},{1}' -f $_.X,$_.Y}) -join ';'
+ $draw=($randomSelections[$i].SelectedGridPositions|ForEach-Object {'{0},{1}' -f $_.X,$_.Y}) -join ';'
  Assert-HitSelection ($draw -eq $expectedDraws[$i]) 'Original seeded body-grid draws changed.'
 }
 Assert-HitSelection (@($hits|Where-Object {-not $_.HasHitGridPosition -or $_.Damage -ge 0 -or $_.AfterHp -ge $_.BeforeHp}).Count -eq 0 -and $source.SkillState.Slots[0].ReleasedTimes -eq 1) 'Original random hits lost actual damage, cells or single release.'
