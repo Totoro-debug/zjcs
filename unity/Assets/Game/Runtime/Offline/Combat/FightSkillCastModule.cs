@@ -27,6 +27,15 @@ namespace Zjcs.Combat.Official
             if (actor == null) throw new ArgumentNullException(nameof(actor));
             if (equipped == null) throw new ArgumentNullException(nameof(equipped));
             var selected = Resolve(actor, equipped, targets);
+            // MyFightSkill.DoSourceTurn restores the role's configured FlipX.
+            // Refresh that input for every turning skill, including skills without
+            // directional entity variants, after any approach movement has ended.
+            var aim = targetPosition ?? (targets != null && targets.Count > 0 ? targets[0] : null);
+            if (selected.FlipSource && aim != null && aim.X != actor.X)
+            {
+                actor.FlipX = aim.X < actor.X;
+                actor.HasFlipX = true;
+            }
             var presentationTargets = targets as IList<FightBattleUnitState>
                 ?? (targets == null ? null : new List<FightBattleUnitState>(targets));
             var cast = new FightBattleSkillCastEvent {

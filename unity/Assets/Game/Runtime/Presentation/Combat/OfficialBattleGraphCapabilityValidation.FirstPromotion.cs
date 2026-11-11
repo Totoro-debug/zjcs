@@ -299,7 +299,7 @@ namespace Zjcs.Presentation.Combat
                 player.Statuses.Add(catalog.CreateStatus(25112, player.Id, player.Id, 900001,
                     0, 10603, 2, 20, player.SubRank));
             }
-            probe.ConfigureAirComboDiagnostic(itemId);
+            probe.ConfigureAirComboDiagnostic(itemId, checkpoint);
             skill.LimitedTimes = 1;
             player.Skills.Add(skill); player.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
             checkpoint.MaxRound = 12;

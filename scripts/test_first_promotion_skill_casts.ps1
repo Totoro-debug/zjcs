@@ -31,6 +31,9 @@ foreach($row in $active) {
         $cp.Grid=[Zjcs.Combat.Official.FightBattleGrid]@{Width=12;Height=12;DefaultGroundType=2}
         $actor=Unit 1 1 100; $enemy=Unit 2 2 1; $ally=Unit 3 1 1
         $actor.Direction=@(2,0,1,3)[$direction[2]]
+        # Reproduce a previous movement facing away from the next horizontal cast.
+        $actor.HasFlipX=$true; $actor.FlipX=$direction[0] -ge 0
+        $previousFlip=$actor.FlipX
         $skillProps=[Collections.Generic.List[Zjcs.Combat.Official.FightPropertyValue]]::new()
         foreach($prop in $catalog.CalculateSkillProps($row.EcEntityId,2,20,1).GetEnumerator()) {
             $skillProps.Add([Zjcs.Combat.Official.FightPropertyValue]@{Id=$prop.Key;Value=$prop.Value})
@@ -56,6 +59,11 @@ foreach($row in $active) {
         $binding=$items.Required($row.ClassId)
         $expected=if($binding.DirectionEntityIds.ContainsKey($direction[2])){$binding.DirectionEntityIds[$direction[2]]}else{$row.EcEntityId}
         Check ($cast.SkillEntityId -eq $expected -and $cast.Presentation -ne $null) "Original entity or presentation snapshot differs: $label"
+        if($cast.Presentation.FlipSource -and $cast.Presentation.TargetX -ne $cast.Presentation.SourceX) {
+            Check ($cast.Presentation.FlipX -eq ($cast.Presentation.TargetX -lt $cast.Presentation.SourceX)) "Stale movement mirror opposes the actual cast target: $label"
+        } elseif(@($result.Event.Movements | Where-Object UnitId -eq 1).Count -eq 0) {
+            Check ($cast.Presentation.FlipX -eq $previousFlip) "Vertical or non-turning cast lost its previous mirror: $label"
+        }
         Check ($runner.Step(0,1).Replayed -and $actor.SkillState.Slots[0].ReleasedTimes -eq 1) "Receipt consumed the release twice: $label"
         $restored=[Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load($before)
         $cold=[Zjcs.Combat.Official.FightBattleExecutor]::Restore($restored,$formula,[Zjcs.Combat.Official.FightDamageSettlement]::new(),$catalog,$items)

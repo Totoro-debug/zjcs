@@ -690,6 +690,11 @@ namespace Zjcs.Presentation.Combat
 
             TickPetFollowers(deltaTime);
 
+            // Apply due hit requests before advancing the original Animator.
+            // A status trigger issued at the same hit boundary must not be
+            // consumed first and then overwritten by Animator.Play(hit).
+            AdvancePendingUnitAnimations(deltaTime);
+
             var completedDeaths = new List<int>();
             foreach (KeyValuePair<int, UnitView> entry in units)
             {
@@ -748,7 +753,6 @@ namespace Zjcs.Presentation.Combat
                     PlayAttachedAnimation(view, "idle_01", true);
             }
             AdvanceAttachedPlayableLifetimes(deltaTime);
-            AdvancePendingUnitAnimations(deltaTime);
 
             foreach (int id in completedAttachedDeaths)
             {

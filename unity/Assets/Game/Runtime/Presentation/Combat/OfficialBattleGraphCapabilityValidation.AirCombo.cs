@@ -22,8 +22,10 @@ namespace Zjcs.Presentation.Combat
         private double airComboPauseClock;
         private float airComboPauseTime, airComboPauseAnimation;
         private Vector3[] airComboPose;
+        private string airComboLastAnimation;
+        private bool airComboFacingChecked;
 
-        private void ConfigureAirComboDiagnostic(int itemId)
+        private void ConfigureAirComboDiagnostic(int itemId, FightBattleCheckpoint checkpoint)
         {
             if (!ValidateAirCombo) return;
             Require(new[] { 10006, 10009, 10052 }.Contains(itemId),
@@ -31,6 +33,19 @@ namespace Zjcs.Presentation.Combat
             // Allow both original status phases to finish before the fixture's
             // separate finishing attack. Original gameplay durations are unchanged.
             firstPromotionCaptureAfter = 5f;
+            if (itemId != 10006)
+            {
+                // Keep the short-range probes on their requested axis. The real
+                // ordinary AI may otherwise choose another equally valid side.
+                // 10006 retains ordinary approach movement as a separate regression.
+                var source = checkpoint.Units.Single(unit => unit.Id == 1);
+                foreach (var prop in source.Properties.Concat(source.BaseProperties ?? source.Properties))
+                    if (prop.Id == catalog.PropertyType("MoveDist") || prop.Id == catalog.PropertyType("FixedMoveDist"))
+                        prop.Value = 0;
+                source.MoveDist = 0;
+                source.HasFlipX = true;
+                source.FlipX = Environment.GetEnvironmentVariable("ZJCS_DIRECTIONAL_SKILL_FACING") != "left";
+            }
         }
 
         private void BindAirComboDiagnostic(OfficialBattleRuntimeController controller)
@@ -92,6 +107,23 @@ namespace Zjcs.Presentation.Combat
                 "Airborne observation did not finish: transitions=" + string.Join(",", airComboTransitions)
                     + ", animated=" + airComboAnimated + ", advanced=" + airComboAdvanced
                     + ", paused=" + airComboPaused + ", resumed=" + airComboResumed);
+            if (!airComboFacingChecked && nativeCasts > 0 && Time.time - firstPromotionCastClock >= .1f)
+            {
+                var cast = controller.Checkpoint.Receipts.SelectMany(receipt => receipt.Event.SkillCasts)
+                    .Single(value => value.ActorId == 1 && value.SkillItemId == firstPromotionItemId);
+                var pose = cast.Presentation;
+                var source = controller.TryGetUnitTransform(1);
+                var grid = source ? source.GetComponent<MyGridTransform>() : null;
+                Require(grid && grid.GetVisualFlipX() == pose.FlipX,
+                    "The rendered caster mirror differs from its real cast snapshot.");
+                Require(!pose.FlipSource || pose.SourceX == pose.TargetX
+                    || pose.FlipX == (pose.TargetX < pose.SourceX),
+                    "The rendered caster faces away from its real horizontal cast target.");
+                airComboFacingChecked = true;
+                Debug.Log("[Cast facing] Actual native mirror=" + grid.GetVisualFlipX()
+                    + "; source=" + pose.SourceX + "," + pose.SourceY
+                    + "; target=" + pose.TargetX + "," + pose.TargetY);
+            }
             if (airComboTarget == 0) return true;
             var target = controller.Checkpoint.Units.Single(unit => unit.Id == airComboTarget);
             var body = controller.TryGetUnitTransform(target.Id);
@@ -106,6 +138,13 @@ namespace Zjcs.Presentation.Combat
             Require(vertices.All(value => FiniteAirCombo(value.x) && FiniteAirCombo(value.y) && FiniteAirCombo(value.z)),
                 "Original airborne geometry contains a non-finite vertex.");
             var airborne = target.Statuses.FirstOrDefault(status => status.ClassId == 24269);
+            if (airborne != null && airComboLastAnimation != renderer.Animation)
+            {
+                airComboLastAnimation = renderer.Animation;
+                Debug.Log("[Air combo] Active original animation=" + renderer.Animation
+                    + "; remaining=" + airborne.Components.Seconds.RemainingSeconds
+                    + "; transition=" + renderer.Animator.IsInTransition(0));
+            }
             if (!airComboAnimated && airborne != null && renderer.Animation == "floating_01")
             {
                 airComboAnimated = true; airComboPose = vertices;
@@ -145,7 +184,9 @@ namespace Zjcs.Presentation.Combat
             if (!airComboRecoveryCaptured && target.Statuses.Any(status => status.ClassId == 24270))
             {
                 Require(airComboAnimated && airComboAdvanced && airComboResumed,
-                    "The original airborne action or pause/resume was not observed before recovery.");
+                    "The original airborne action or pause/resume was not observed before recovery: animation="
+                    + airComboLastAnimation + ", animated=" + airComboAnimated + ", advanced=" + airComboAdvanced
+                    + ", resumed=" + airComboResumed);
                 airComboRecoveryCaptured = true;
                 CaptureName = "air-combo-" + firstPromotionItemId + "-recovery";
                 return true;
@@ -172,7 +213,7 @@ namespace Zjcs.Presentation.Combat
             if (!ValidateAirCombo) return;
             if (airComboExecutor != null) airComboExecutor.StatusSecondsChanged -= ObserveAirComboTransition;
             Require(airComboAnimated && airComboAdvanced && airComboPaused && airComboResumed
-                && airComboSaved && airComboRecoveryCaptured && airComboEndCaptured,
+                && airComboSaved && airComboRecoveryCaptured && airComboEndCaptured && airComboFacingChecked,
                 "Original airborne action, pause, checkpoint or native lifecycle was not fully observed.");
         }
     }

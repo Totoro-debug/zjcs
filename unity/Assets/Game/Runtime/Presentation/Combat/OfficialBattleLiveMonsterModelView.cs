@@ -54,8 +54,10 @@ namespace Zjcs.Presentation.Combat
         public bool IsAnimationFinished => !disposed && (death != null && dead
             ? destroyOnDeath && deathElapsed >= destroyDelayTime
             : !loop && !skillControlled && !renderer.Animator.IsInTransition(0)
-            && (renderer.Animator.GetCurrentAnimatorStateInfo(0).fullPathHash != requestedState
-                || renderer.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f));
+            // A status playable can transfer the original graph to another state.
+            // That state owns its exit; it is not completion of our requested clip.
+            && renderer.Animator.GetCurrentAnimatorStateInfo(0).fullPathHash == requestedState
+            && renderer.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
 
         internal static bool HasBinding(FightBattleUnitState state)
         {
