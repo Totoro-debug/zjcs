@@ -958,7 +958,7 @@ namespace Zjcs.Combat.Official
                             hit.CustomDamage = originalCustomDamage;
                         }
                     }
-                    if (resolved.Formula == null && resolved.Settlement == null) continue;
+                    bool statusOnly = resolved.Formula == null && resolved.Settlement == null;
                     // Capture only this occurrence's HP change before any HP sharing,
                     // status response or child skill can change a participant's state.
                     if (!resolved.IsCure)
@@ -1015,6 +1015,13 @@ namespace Zjcs.Combat.Official
                         if (presentationCast.DamageEventIds == null)
                             presentationCast.DamageEventIds = new List<int>();
                         presentationCast.DamageEventIds.Add(damage.DamageId);
+                    }
+                    if (statusOnly)
+                    {
+                        ExecuteStatusOnlyHit(actor, target, skill, hit, resolved, damage,
+                            skillCostHp, casts, damageEvents, movements, ref lastDelay,
+                            ref statusTriggerDuration, ref statusTriggerActionDuration);
+                        continue;
                     }
                     checkpoint.Statistics.RecordHit(damage, damageHitTargets);
                     FightStatusAccumulatedDamageRuntime.RecordHit(target, damage, skill);

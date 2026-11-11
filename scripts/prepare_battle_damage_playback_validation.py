@@ -23,7 +23,9 @@ def main():
     selected = stage_runtime_modules(project, runtime,
         ['Zjcs.Presentation.Combat', 'Zjcs.Offline.BattleNativePlayables',
          'Zjcs.Official.BattleMaterialPlayables', 'Zjcs.Official.BattleAnimationPlayables'])
-    if any('Home' in name for name in selected):
+    # Progression also consumes the standalone item-regeneration rule module.
+    # It contains no home UI and is part of the actual combat dependency closure.
+    if any('Home' in name and name != 'Zjcs.Official.HomeAutoIncrease' for name in selected):
         raise ValueError('Damage fixture unexpectedly depends on unrelated home UI.')
     shutil.copytree(ROOT / 'unity/Assets/Spine', project / 'Assets/Spine', dirs_exist_ok=True)
     for folder in (runtime / 'Official/Combat', runtime / 'Presentation/Combat'):
@@ -52,6 +54,10 @@ def main():
         print('Prepared actual damage code:', len(selected), 'runtime assemblies;', project)
         return
 
+    prepare_native_assets(project, work, selected)
+
+
+def prepare_native_assets(project, work, selected):
     receipt = json.loads((ROOT / 'assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json').read_bytes())
     catalog_path = ROOT / 'unity/Assets/Game/Resources/Combat/skill-native-graphs.json'
     catalog = json.loads(catalog_path.read_bytes())
@@ -79,12 +85,22 @@ def main():
 
     pending = [ROOT / 'unity/Assets/Game/Resources/Combat' / name for name in (
         'OfficialBattleRenderPipelineAssets.asset', 'OfficialCombatAssetCatalog.asset')]
+    # The actual skill host initializes this original embedded renderer adapter
+    # even when a receipt fixture has no visible character meshes.
+    pending.append(ROOT / 'unity/Assets/Official/Combat/EmbeddedMonsterMecanim/Resources/Combat/EmbeddedMonsterMecanim/catalog.asset')
+    pending.extend(ROOT / 'unity/Assets/Official/Combat' / name for name in (
+        'NativePartnerAssets/Resources/Combat/NativePartnerAssets/skill-skeleton-bindings.json',
+        'EmbeddedMonsterSkeletons/Resources/Combat/EmbeddedMonsterSkeletons/bindings.json'))
     resources = ROOT / 'unity/Assets/Game/Resources/Combat'
     for source in resources.iterdir():
         if source.is_file() and source.suffix in ('.json', '.txt', '.bytes'):
             pending.append(source)
-    skill = next(row for row in catalog['skills'] if row['skill_entity_id'] == 10100)
-    for row in [skill, *catalog['damages']]:
+    # Original 10910 also produces the actual 11050 child cast in this fixture.
+    skills = [row for row in catalog['skills'] if row['skill_entity_id'] in (10100, 10910, 11050)]
+    hits = [row for row in catalog['hits'] if row['hit_entity_id'] in (10101, 10911, 10912, 11051)]
+    if len(skills) != 3 or len(hits) != 4:
+        raise ValueError('Formal receipt fixture original skill/hit entities are not installed.')
+    for row in [*skills, *hits, *catalog['damages']]:
         prefix = row['entity_resource'].removeprefix('Combat/SkillGraphs/')
         pending.append(ROOT / 'unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs' / (prefix + '.prefab'))
     copied, unresolved = set(), set()

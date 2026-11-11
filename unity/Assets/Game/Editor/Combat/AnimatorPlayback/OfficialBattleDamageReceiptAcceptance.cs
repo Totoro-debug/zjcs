@@ -59,7 +59,7 @@ namespace Zjcs.Editor.Combat
             var camera = new GameObject("Receipt damage camera").AddComponent<Camera>();
             camera.orthographic = true; camera.orthographicSize = 4;
             camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = new Color(.06f, .09f, .15f);
-            foreach (string name in new[] { "position", "replay", "legacy", "body", "none-projection", "cure" })
+            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure" })
             {
                 var checkpoint = Build(name, out var step);
                 var expected = step.DamageEvents.Where(d => !d.IsSkillCost).OrderBy(d => d.Delay).ThenBy(d => d.DamageId).ToArray();
@@ -137,11 +137,11 @@ namespace Zjcs.Editor.Combat
                             continue;
                         }
                         var result = value.Damage.Component.DamageResult;
-                        var expectedType = name == "none-projection" ? DamageResultType.None
+                        var expectedType = name == "none" ? DamageResultType.None
                             : name == "cure" ? DamageResultType.Cure : DamageResultType.Damage;
                         Require(result.ResultType == expectedType && result.IsCure == (name == "cure")
-                            && result.IsDamage == (name != "none-projection" && name != "cure"),
-                            "Actual damage/full-health cure and controlled status-only result projection.");
+                            && result.IsDamage == (name != "none" && name != "cure"),
+                            "Actual damage/full-health cure and status-only result projection.");
                         Require(result.Pos.X == receipt.DamageX && result.Pos.Y == receipt.DamageY
                             && result.DamageValue == receipt.DamageValue && result.ShieldValue == receipt.ShieldDamage
                             && result.AbsoluteDamage == receipt.AbsoluteDamage,
@@ -193,7 +193,7 @@ namespace Zjcs.Editor.Combat
                 skill.Range.Add(new FightGridPoint(3, 0));
                 var hit = new FightBattleHitDefinition { EntityId = 10101, DamageId = 13012, Delay = .25f,
                     DamageType = 8, HasCustomDamage = true, CustomDamage = 5, TargetMode = 0 };
-                if (name == "none-projection") hit.CustomDamage = 0;
+                if (name == "none") hit.ActionType = 0;
                 if (name == "cure")
                 {
                     hit.ActionType = 5; skill.HasCustomCure = true; skill.CustomCure = 10;
@@ -215,12 +215,17 @@ namespace Zjcs.Editor.Combat
             checkpoint.Units[0].SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = -1 });
             var wave = new FightBattleWaveState(); wave.UnitIds.AddRange(new[] { 2, 3 }); checkpoint.Waves.Add(wave);
             step = assets.BeginBattle(checkpoint).Step(0, 1).Event;
-            // The existing executor skips ActionType.None before creating its
-            // receipt. Test that separate presentation boundary explicitly with
-            // a controlled no-formula result; do not claim its rule path passed.
-            if (name == "none-projection")
-                foreach (var receipt in step.DamageEvents)
-                { receipt.HasAbsoluteDamage = false; receipt.AbsoluteDamage = 0; }
+            if (name == "none")
+            {
+                var receipt = step.DamageEvents.Single(d => !d.IsSkillCost);
+                Require(!receipt.HasAbsoluteDamage && !receipt.HasDamageValue && !receipt.IsCure
+                    && receipt.IsDamageTriggerStatus && receipt.BeforeHp == receipt.AfterHp,
+                    "Real status-only occurrence has no damage/cure settlement.");
+                Require(checkpoint.Statistics.Unit(1).BuffApplications == 1
+                    && checkpoint.Statistics.Skill(1, skill.EntityId, 0).DamageHits == 0
+                    && checkpoint.Statistics.Skill(1, skill.EntityId, 0).CureHits == 0,
+                    "Accepted status application is counted once, without a damage/cure hit.");
+            }
             foreach (var cast in step.SkillCasts) cast.Delay += .125f;
             if (name == "position")
             { step.SkillCasts[0].Presentation.FacingIndex = 0; step.SkillCasts[0].Presentation.FlipX = true; }

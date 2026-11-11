@@ -69,7 +69,11 @@ namespace Zjcs.Combat.Official
             var result = new FightBattleHitResult { Type = new FightDamageTypeData() };
             // DamageActionType is the action-mutex category. Cure skills such as original 11490
             // still settle healing when that category is None.
-            if (hit.ActionType == 0 && (skill == null || skill.SkillType != 3)) return result;
+            if (hit.ActionType == 0 && (skill == null || skill.SkillType != 3))
+            {
+                onTransient?.Invoke(result.Type);
+                return result;
+            }
             long? custom = CustomDamage(actor, target, skill, hit, sourceProps, targetProps);
 
             if (hit.ActionType == 5 || (skill != null && skill.SkillType == 3))

@@ -77,7 +77,9 @@ namespace Zjcs.Combat.Official
                     }
 
                     FightBattleStatusDamageSkillComponentState damageSkill = status.Components?.DamageSkill;
-                    if (damageSkill != null && HitSourceMatches(status,
+                    if (damageSkill != null && resolved != null
+                        && (resolved.Formula != null || resolved.Cure != null || resolved.Settlement != null)
+                        && HitSourceMatches(status,
                             damageSkill.IsAttackerTarget ? 0 : 2, actor)
                         && HitRuleMatches(damageSkill.Rate, damageSkill.Block, damageSkill.Crit,
                             damageSkill.Damage, damageSkill.Cure, false, null,
@@ -121,6 +123,9 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState target)
         {
             bool isCure = result != null && result.IsCure || hit != null && hit.ActionType == 5;
+            bool hasResult = result != null
+                && (result.Formula != null || result.Cure != null || result.Settlement != null);
+            if ((damage || cure) && !hasResult) return false;
             if (damage && isCure || cure && !isCure) return false;
             if (block && (result == null || !result.Type.Block)
                 || crit && (result == null || !result.Type.Critical)
