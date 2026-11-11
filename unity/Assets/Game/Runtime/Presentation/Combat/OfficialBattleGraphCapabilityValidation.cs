@@ -172,6 +172,7 @@ namespace Zjcs.Presentation.Combat
             var entities = (OfficialBattleSkillEntityPlayback)typeof(OfficialBattleSkillGraphPlayback)
                 .GetField("entityViews", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(graph);
             entityViews = entities;
+            BindAirComboDiagnostic(controller);
             if (ValidateForcedMovement)
                 forcedTargetRotation = controller.TryGetUnitTransform(forcedTargetId).localRotation;
             entities.CastStarted += cast => {
@@ -339,6 +340,7 @@ namespace Zjcs.Presentation.Combat
             CaptureName = null;
             ObserveFirstPromotionGeneration(controller);
             if (CaptureFirstPromotionFrame()) return;
+            if (ObserveAirComboDiagnostic(controller)) return;
             if (CaptureFatalRevivalFrame()) return;
             bool afterimageVisible = afterimages?.Observe() ?? false;
             afterimageObserved |= afterimageVisible;
@@ -468,6 +470,7 @@ namespace Zjcs.Presentation.Combat
             if (ValidateForcedMovement || ValidateFatalRevival || firstPromotionItemId != 0) Time.captureFramerate = previousCaptureFramerate;
             VerifyFatalRevival();
             VerifyFirstPromotionDeath(checkpoint);
+            VerifyAirComboDiagnostic();
             if (firstPromotionItemId != 0) Require(firstPromotionFrameCount == FirstPromotionFrameTimes.Length,
                 "The original skill's early presentation frames were not captured.");
             if (ValidateApproach) Require(ordinaryStarted && ordinaryRemoved && ordinaryCaptured,
