@@ -23,7 +23,7 @@
 | 范围 | 原始官方功能与关键调用关系 | 当前实现与剩余工作 |
 | --- | --- | --- |
 | 主城进入与生命周期 | `MainUIRoot` 管理主面板；`PublicBottomBar.OnTabTypeChanged → MainViewController.SwitchMainView` 切换 UI 和场景；`HomeRoot` 初始化家园作用域服务、激活场景、同步时间与控制音乐 | 已从创角完成页进入 `HomeFeatureRuntime`，打开角色槽和家园存档，退出可返回角色入口；底栏大陆暂转入当前可玩的初始岛地图。主菜单复原、正式主城生命周期与场景音乐仍未完成 |
-| 顶部栏与头像 | `HomeUI` 的 `NewPublicTopBarParent/Slot`、`TopBarHandler`、`TopBarManager`／`TopBarItem` 和 `PublicPlayerIconHome` 展示角色及配置指定货币，随窗口借还顶部栏、响应数量变化并提供点击入口 | 正式入口仍使用历史转换的货币 1/2/15、角色名及等级／公会文本；头像打开人物页。所选 884 原生顶栏已独立恢复货币 1/2/57、原借还与数量更新流程；正式接线、头像美术／经验环及入退场动画尚未完成 |
+| 顶部栏与头像 | `HomeUI` 的 `NewPublicTopBarParent/Slot`、`TopBarHandler`、`TopBarManager`／`TopBarItem` 和 `PublicPlayerIconHome` 展示角色及配置指定货币，随窗口借还顶部栏、响应数量变化并提供点击入口 | 正式入口仍使用历史转换的货币 1/2/15、角色名及等级／公会文本；头像打开人物页。所选 884 原生顶栏已独立恢复货币 1/2/57、原借还与数量更新；原生头像、真实角色头部渲染及受控经验环已独立验证。正式 HUD 接线、真实经验奖励流程及入退场动画尚未完成 |
 | 底栏五入口 | `PublicBottomBar.TabType` 包含 `Character`、`TravelNote`、`Home`、`Legion`、`Mainland`；原 `TabGroup`、条件、显隐引用、升级标记和场景代理共同控制切页 | 人物页打开／返回、家园选中和大陆到初始岛已接线；游记、公会入口目前提示对应页面未提供，条件／红点／遮挡未完整恢复。玩法范围分别见[人物](character.md)、[单人公会](guild.md)、[世界地图](world-map.md) |
 | 主城任务与战斗提示 | `PinnedTaskPanel`、`MainTaskFunctionLimit`、`GameEndNotifyUI`、`GameEndUIHandlerInHome`、`FightDemonBattlefieldAutoPushEndNotifyUI` 负责任务追踪、战斗完成通知和返回战斗入口；床铺／推车有 `HomeHangUpDirectionGuider` | 已接主线任务追踪、本地进度、奖励领取及 Map10 目标跳转；Map11 提示未开放，职业／宝箱任务不展示不可用跳转；非主线页签显示离线未开放。战斗结算提示和床铺／推车指引未完成，魔物战争按单机范围关闭。任务规则见[主线任务](tasks.md) |
 | 功能菜单 | `FunctionEntrysPanel` 管理折叠／展开；原 `FunctionEntryDialog` 有任务、商城大按钮，以及图鉴、成就、装潢、设置、拍照、录像等入口 | 原资源树已折叠／展开；装潢已接菜单并进入官方分类页；设置已接固定版官方四页和本地选项；网络商店、好友、公告、合服与预下载等显示离线关闭提示。图鉴、成就和拍照尚未接对应页面，内部范围见[商城](commerce.md)、[图鉴](codex.md)、[成就](achievements.md)、[设置／拍照／存档](settings-and-save.md) |
@@ -185,7 +185,11 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 所选 `884_156692` 原生顶部栏使用从 `HomeUI` 精确提取的 `NewPublicTopBarParent/Slot` 子树，保留原 `SafeArea`、`TopBarHandler` 和序列化字段；`TopBarManagerConfig` 指向的 `TopBarManager`、`PublicTopBar`、`MoneyUI` prefab 及三项原图标已恢复为 Windows 原生资产，由 `OfficialHomeTopBarAssetCatalog` 显式引用。原 `mShowTypeList=[0,5,2]` 是货币类型，沿原工厂与当前 `GameSettings` 映射为金币 1、钻石 2、体力 57；不能将枚举值当物品 ID，也不能沿用旧入口的星辉 15。`TopBarHandler`、`TopBarItem`、`MePlayerItemUI` 等原码与当前版本逐字节比对一致，直接复用已有公共迁移；`HomeTopBarManager` 保留原借还、更新顺序和原对象池，`OfflineHomeTopBar` 仅在原组件激活前绑定本地服务、字体和声音资源。
 
-`HomeTopBarNativeValidation.Run` 已在隔离 Play Mode 验证原生三项图标／数量、上限配色、内部指针的真实射线命中、数量事件、暂停／恢复、动态换序、清空、关闭／重开对象复用及订阅释放，运行期间保持静音。两张实际运行截图已查看：按编辑器实际 640×480 渲染尺寸采集，完整顶栏位于右上方且无裁切；该结果不证明竖屏 Windows 窗口适配。工程静态元数据检查已通过（146088 个 GUID）；完整工程的隔离副本已通过本次资产导入、C# 编译和 `Zjcs.Editor.ProjectTools.Validate`；导入中另有既有程序集的 Burst 扫描依赖诊断，不作为 Windows 构建通过的依据。此分支仍使用测试玩家服务，正式家园保持旧 `HomeUiRenderer` 顶栏；真实背包／自动增长参数、物品详情／快速购买、头像／经验环和竖屏 Player 验证仍须接通。
+`HomeTopBarNativeValidation.Run` 已在隔离 Play Mode 验证原生三项图标／数量、上限配色、内部指针的真实射线命中、数量事件、暂停／恢复、动态换序、清空、关闭／重开对象复用及订阅释放，运行期间保持静音。两张实际运行截图已查看：按编辑器实际 640×480 渲染尺寸采集，完整顶栏位于右上方且无裁切；该结果不证明竖屏 Windows 窗口适配。工程静态元数据检查已通过（146088 个 GUID）；完整工程的隔离副本已通过本次资产导入、C# 编译和 `Zjcs.Editor.ProjectTools.Validate`；导入中另有既有程序集的 Burst 扫描依赖诊断，不作为 Windows 构建通过的依据。此分支仍使用测试玩家服务，正式家园保持旧 `HomeUiRenderer` 顶栏；真实背包／自动增长参数、物品详情／快速购买和竖屏 Player 验证仍须接通。
+
+所选版本 `PublicPlayerIconHome` 的完整 36 个原对象、16 个脚本组件及外部依赖已恢复，由 `OfficialHomeAvatarAssetCatalog` 显式绑定。`PlayerIcon`、`PlayerIconMe`、`PlayerIconOther`、`PlayerInfoUI`、`HeadCharacterPortrait` 与当前原码逐字节核对后复用；原 `PlayerUIBase`／`PlayerExpSlider` 分别迁入独立的 `HomeExperiencePlayerUIBase`／`HomePlayerExpSlider`，保留普通经验、储存上限、赐福经验、长整数插值及一秒动画分支，不改动既有底栏共用基类。`OfflineHomeAvatar` 在原组件激活前绑定角色、摄影棚和经验服务；头像读取真实存档外观，由现有原生骨骼摄影棚播放 `home/idle_01` 后生成头部纹理，沿原 `SetNativeSize` 和胶囊网格裁剪显示。原生 RawImage 的 UV 坐标保持 APK 原值，Windows YAML 恢复已核验导出的 `Rect.serializedVersion=2`，避免零 UV 造成尺寸塌缩。
+
+`HomeAvatarNativeValidation.Run` 已在隔离完整工程 Play Mode 通过真实角色槽／外观、头部透明像素、实际 100×120 尺寸、原 UV 与有限裁剪网格、内部指针射线及头像点击回调；另用受控经验表和奖励端点验证普通经验动画、储存上限、赐福分支以及关闭／重开后的五类订阅和奖励回调释放。三张实际运行图已查看，原生头像和经验环在实际 640×480 渲染尺寸中正确显示；测试保持静音。静态元数据检查通过（146111 个 GUID），完整工程隔离副本通过导入、C# 编译和 `Zjcs.Editor.ProjectTools.Validate`；此次按进程禁用无关 Burst 编译，不代表 Windows 构建通过。经验端点尚未绑定真实成长账本与原奖励队列，此结果不证明领取经验升级演出、正式家园 HUD、竖屏 Windows Player 或全场景画面完成。
 
 当前主城在打开家园时，将所选版本 13 项 `FurnitureInfo` 的条件、费用、原始附加维修 ID、剧情名和可升级标志绑定到场景／维修窗口共用规则实例；当前组合条件只在同版 4496 项条件中解析，不借用历史同号记录。`OfflineHomeConditionPlayer` 每次查询最新角色存档：基础等级沿当前小阶的非赐福等级上限读取，职业阶数遍历实际已解锁职业并查询当前 31 项 `profession_base`，伙伴条件复用原始已结识／可结识判断，剧情、地图可达和女神激活读取实际状态。家园独立拥有记录及果树维修状态仅在条件查询中投影为原家具物品数量，避免向真实背包重复写入家具。挂机表和其他功能表尚未随设施切换；场景原生脚本、维修特效和完整教学仍待恢复。
 
@@ -252,7 +256,7 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 上方两张表中的未接通项均属于待实现范围。跨模块玩法只维护主城入口与衔接要求，内部规则和进度以所属页为准；关闭项须完成对应入口处理，但不实现原联网业务。已落实部分按上文记录；下列只列仍未实现或未验收的缺项。
 
-- 主流程与 HUD：已接角色进入／退出家园、人物页、顶栏货币、人物页与大陆到初始岛、功能菜单、任务追踪和部分设施入口。仍缺游记／公会页面、头像完整美术／经验环、战斗结果提示、活动入口、全量红蓝点、窗口动画／音频及真实鼠标输入验收。
+- 主流程与 HUD：已接角色进入／退出家园、人物页、顶栏货币、人物页与大陆到初始岛、功能菜单、任务追踪和部分设施入口。原生顶栏、头像／经验环及底栏已有独立验证，仍缺正式 HUD 整体替换、真实经验奖励流程、游记／公会页面、战斗结果提示、活动入口、全量红蓝点、窗口动画／音频及完整模拟输入验收。
 - 设施与场景输入：14 类设施状态和官方点击区已装配；床铺、小推车、邮件、宝箱扭蛋、果树、祈愿、储物箱、星命契约、料理和杂货／宝库／馈赠商店已有本地页面入口。书桌／古遗物收藏、餐桌／伙伴交流及料理其他页签未完成；部分设施维修剧情、家具专属对话、维修特效、通知／红点和真实模态遮挡仍缺。星命赛季历史与商店货架由[所属页](astrological.md)说明；飞艇交易点击按离线策略拦截。当前家具表费用均为空，原附加维修物品 ID 保留但不作为前置条件；自动维修范围见[果树](fruit-tree.md)。
 - 收益与存档：`OfflineHomeIncomeSession` 已接角色槽、运行期间累计、完整角色属性、家具等级／容量／费用、升级前结算和真实背包（经验走 `AwardExperience`）；时间结晶滑杆／数量选择已接。仍缺赐福等级真实来源（女神／探索／古遗物／月卡／星命）和小推车随机装备独立实例。
 - 邮箱、随机奖励及回收：邮箱已接官方列表/正文控件及阅读、领取、批量已读/领取/删除；随机奖励已接29槽、刷新与权重、静态动物首帧/落叶点击领取。剩余动物动画、天气/主题槽位覆盖、领奖回收 `HomeAwardRetrieve` 窗口未接。
