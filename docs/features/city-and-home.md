@@ -185,7 +185,13 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 所选 `884_156692` 原生顶部栏使用从 `HomeUI` 精确提取的 `NewPublicTopBarParent/Slot` 子树，保留原 `SafeArea`、`TopBarHandler` 和序列化字段；`TopBarManagerConfig` 指向的 `TopBarManager`、`PublicTopBar`、`MoneyUI` prefab 及三项原图标已恢复为 Windows 原生资产，由 `OfficialHomeTopBarAssetCatalog` 显式引用。原 `mShowTypeList=[0,5,2]` 是货币类型，沿原工厂与当前 `GameSettings` 映射为金币 1、钻石 2、体力 57；不能将枚举值当物品 ID，也不能沿用旧入口的星辉 15。`TopBarHandler`、`TopBarItem`、`MePlayerItemUI` 等原码与当前版本逐字节比对一致，直接复用已有公共迁移；`HomeTopBarManager` 保留原借还、更新顺序和原对象池，`OfflineHomeTopBar` 仅在原组件激活前绑定本地服务、字体和声音资源。
 
-`HomeTopBarNativeValidation.Run` 已在隔离 Play Mode 验证原生三项图标／数量、上限配色、内部指针的真实射线命中、数量事件、暂停／恢复、动态换序、清空、关闭／重开对象复用及订阅释放，运行期间保持静音。两张实际运行截图已查看：按编辑器实际 640×480 渲染尺寸采集，完整顶栏位于右上方且无裁切；该结果不证明竖屏 Windows 窗口适配。工程静态元数据检查已通过（146088 个 GUID）；完整工程的隔离副本已通过本次资产导入、C# 编译和 `Zjcs.Editor.ProjectTools.Validate`；导入中另有既有程序集的 Burst 扫描依赖诊断，不作为 Windows 构建通过的依据。此分支仍使用测试玩家服务，正式家园保持旧 `HomeUiRenderer` 顶栏；真实背包／自动增长参数、物品详情／快速购买和竖屏 Player 验证仍须接通。
+当前版 `PlayerItemDataWrap` 的自增数量读取／设置、速度／上限变化、`AutoIncreaseItemUtils` 分段计算与原时间换算迁入 `Runtime/Official/HomeAutoIncrease/`，配置由 `prepare_home_auto_increase_runtime.py` 从所选实际 bundle 解码为 `Home/item-auto-increase.json`。体力 57 的初始恢复速度为每小时 5 点、自然上限 300；`ItemCountLimitInfo` 的持有上限另为 1200，已超过自然上限的数量不会因挂机被降为 300。设置数量时沿原顺序计算并保留小数余量、更新时间、清零额外秒数；达到自然上限时不积攒小数余量。存档用 `OfflineItemAutoIncreaseProgress` 的 ticks 保存原 `DateTime`，可选参数使用空／单元素列表避免 `JsonUtility` 把空引用写成默认参数；`OfflineInventoryOperations` 的发放／消耗读取实际自增数量并回写同一事务，耗尽后保留零数量自增记录。`InventoryCount` 只读计算，不因界面读取写存档。新建角色在创建事务内初始化，已有角色不补发、不升级。
+
+`PlayerItemUIMainPlayerCountProviderBase` 与重新解析原依赖得到的 `PlayerItemUIPlayerItemCountProvider` 迁入 `Runtime/Official/HomeCurrencyUI/`，保留玩家借还、按物品 ID 过滤、每秒异步刷新及取消顺序。`OfflineHomeCurrencyPlayer` 将实际角色背包和自增参数投影为原数量事件；家园宿主需在提交／重读后调用 `SynchronizeCommittedPlayer`。当前 `OutputAdditionSetting.ItemOutputGroupTypeDict` 包含 56／57，因此体力保留原额外参数更新订阅。真实角色存档与原生顶栏的隔离验证入口为 `HomeCurrencyProfileValidation.Run`；正式家园 HUD 的整体替换、物品详情／购买原窗口、属性及产出加成变化时的体力速度／上限应用链仍未接通，不能以初始恢复规则代替这些流程。
+
+`HomeCurrencyProfileValidation.Run` 已在完整隔离工程的静音 Play Mode 使用真实新角色、背包事务与磁盘存档，验证初始 300 点不重复发放、耗尽后保留参数、离线恢复、小数余量、自然／持有上限、普通物品可选参数往返和扣费失败不写档；原 double／向下取整边界保持不变。原生数量显示、实际第一射线命中的内部模拟点击、提交刷新、暂停／恢复、每秒自然恢复、关闭取消、对象池重借及销毁释放全部通过。已查看 640×480 原生 Screen 尺寸的初始及溢出画面，并逐控件检查视口边界，顶栏完整位于右上方。批处理编辑器的竖屏纹理与原安全区尺寸不一致，未将该尝试记作竖屏通过。完整隔离工程的静态元数据检查、导入／C# 编译及 `Zjcs.Editor.ProjectTools.Validate` 已通过；根工作区静态复查另受其他会话未提交的 9 项祈愿音频 `.ogg.import` 删除／遗留元数据影响，该失败未记为通过。正式 HUD、物品说明窗口及竖屏 Windows Player 尚未完成。
+
+`HomeTopBarNativeValidation.Run` 已在隔离 Play Mode 验证原生三项图标／数量、上限配色、内部指针的真实射线命中、数量事件、暂停／恢复、动态换序、清空、关闭／重开对象复用及订阅释放，运行期间保持静音。两张实际运行截图已查看：按编辑器实际 640×480 渲染尺寸采集，完整顶栏位于右上方且无裁切；该结果不证明竖屏 Windows 窗口适配。工程静态元数据检查已通过（146088 个 GUID）；完整工程的隔离副本已通过本次资产导入、C# 编译和 `Zjcs.Editor.ProjectTools.Validate`；导入中另有既有程序集的 Burst 扫描依赖诊断，不作为 Windows 构建通过的依据。该独立夹具使用测试玩家服务；真实背包／自增参数由上文的角色存档适配验证。正式家园仍保持旧 `HomeUiRenderer` 顶栏，物品详情／快速购买和竖屏 Windows Player 验证尚未接通。
 
 所选版本 `PublicPlayerIconHome` 的完整 36 个原对象、16 个脚本组件及外部依赖已恢复，由 `OfficialHomeAvatarAssetCatalog` 显式绑定。`PlayerIcon`、`PlayerIconMe`、`PlayerIconOther`、`PlayerInfoUI`、`HeadCharacterPortrait` 与当前原码逐字节核对后复用；原 `PlayerUIBase`／`PlayerExpSlider` 分别迁入独立的 `HomeExperiencePlayerUIBase`／`HomePlayerExpSlider`，保留普通经验、储存上限、赐福经验、长整数插值及一秒动画分支，不改动既有底栏共用基类。`OfflineHomeAvatar` 在原组件激活前绑定角色、摄影棚和经验服务；头像读取真实存档外观，由现有原生骨骼摄影棚播放 `home/idle_01` 后生成头部纹理，沿原 `SetNativeSize` 和胶囊网格裁剪显示。原生 RawImage 的 UV 坐标保持 APK 原值，Windows YAML 恢复已核验导出的 `Rect.serializedVersion=2`，避免零 UV 造成尺寸塌缩。
 
@@ -247,6 +253,8 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 ## 自定义实现
 
 本次迁移按全新游戏制作，不增加旧单机存档的升级兼容逻辑。体力等新建状态遵循官方初始化与更新顺序；原存档缺字段时如何补值不再作为本次迁移前置决策。
+
+新角色初始体力确定为 300 点。初始发放数量在现有客户端及共享配置中未取得，由用户明确选择自然恢复上限作为单机初始值；该数量不标为官方服务器规则。恢复速度、自然上限、持有上限及数量更新顺序仍来自官方实现。
 
 离线与运行期间按本地时间累计产出，负时间差按零，时间检查点只前进。所有领取、升级、费用、随机结果和教学进度使用同一本地事务，失败回滚。
 

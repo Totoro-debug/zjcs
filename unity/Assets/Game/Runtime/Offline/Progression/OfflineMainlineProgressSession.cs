@@ -185,6 +185,15 @@ namespace Zjcs.Offline.Progression
     {
         public int ItemId;
         public long Count;
+        // Unity inline class fields do not preserve null through JsonUtility.
+        // An empty/singleton list encodes the optional original item parameter.
+        public List<OfflineItemAutoIncreaseProgress> AutoIncreaseParameters = new List<OfflineItemAutoIncreaseProgress>();
+        public OfflineItemAutoIncreaseProgress AutoIncrease
+        {
+            get => AutoIncreaseParameters == null || AutoIncreaseParameters.Count == 0 ? null : AutoIncreaseParameters[0];
+            set => AutoIncreaseParameters = value == null ? new List<OfflineItemAutoIncreaseProgress>()
+                : new List<OfflineItemAutoIncreaseProgress> { value };
+        }
         public List<OfflineItemUnitRecord> UnitRecords = new List<OfflineItemUnitRecord>();
     }
 
@@ -1071,7 +1080,7 @@ namespace Zjcs.Offline.Progression
         public long InventoryCount(int itemId)
         {
             OfflineItemStack stack = Save.Player.Inventory.FirstOrDefault(value => value.ItemId == itemId);
-            return stack == null ? 0 : stack.Count;
+            return OfflineItemAutoIncrease.Count(stack, DateTime.UtcNow);
         }
 
         public ProgressionResult SetNpcFollowerClassIds(IEnumerable<int> classIds)
@@ -1348,6 +1357,8 @@ namespace Zjcs.Offline.Progression
             var items = new HashSet<int>();
             foreach (OfflineItemStack item in save.Player.Inventory)
                 if (item == null || item.ItemId <= 0 || item.Count < 0 || !items.Add(item.ItemId)
+                    || item.AutoIncreaseParameters == null || item.AutoIncreaseParameters.Count > 1
+                    || item.AutoIncreaseParameters.Any(value => value == null || !OfflineItemAutoIncreaseProgress.IsValid(value))
                     || item.UnitRecords == null || item.UnitRecords.Count > item.Count
                     || item.UnitRecords.Any(record => record == null || record.AcquiredAtUnixSeconds < 0
                         || record.ExpiresAtUnixSeconds < 0)) { reason = "inventory"; return false; }

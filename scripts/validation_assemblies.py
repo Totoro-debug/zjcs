@@ -66,6 +66,7 @@ def copy_modules(project, runtime, modules, selected):
     if 'Zjcs.Official.SharedSerialization' in selected:
         inputs.append('Assets/Official/World/Map/14/SharedSerialization/MessagePack.dll')
     if 'Zjcs.Offline.Progression' in selected:
+        inputs.append('Assets/Game/Resources/Home/item-auto-increase.json')
         inputs.append('Assets/Game/Resources/Map14/world-alone-preparation.json')
         inputs.append('Assets/Game/Resources/Map16/world-alone-configuration.json')
     for relative in inputs:

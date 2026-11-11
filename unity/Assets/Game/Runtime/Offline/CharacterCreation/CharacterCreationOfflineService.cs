@@ -332,6 +332,7 @@ namespace Zjcs.Offline.CharacterCreation
                 player.CharacterName = draft.name;
                 player.CharacterCreated = true;
                 player.InitialWeaponType = 0;
+                OfflineItemAutoIncrease.InitializeNewCharacter(player, DateTime.UtcNow);
                 player.Wardrobe.Sex = sex;
                 player.Wardrobe.Profession = DefaultProfession;
                 player.Wardrobe.BaseSkins = defaults.OrderBy(pair => pair.Key)

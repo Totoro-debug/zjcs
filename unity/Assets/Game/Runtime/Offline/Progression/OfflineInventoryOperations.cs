@@ -39,7 +39,9 @@ namespace Zjcs.Offline.Progression
 
             OfflineItemStack stack = player.Inventory == null ? null
                 : player.Inventory.FirstOrDefault(value => value != null && value.ItemId == itemId);
-            long currentCount = stack == null ? 0 : stack.Count;
+            DateTime now = stack?.AutoIncrease == null ? default
+                : DateTimeOffset.FromUnixTimeSeconds(acquiredAtUnixSeconds).UtcDateTime;
+            long currentCount = OfflineItemAutoIncrease.Count(stack, now);
             int currentRecords = stack == null || stack.UnitRecords == null ? 0 : stack.UnitRecords.Count;
             if (long.MaxValue - currentCount < count) return new InventoryOperationResult(InventoryOperationStatus.InvalidArgument);
             if (trackAcquisition || expiresAtUnixSeconds > 0)
@@ -58,7 +60,7 @@ namespace Zjcs.Offline.Progression
                         ExpiresAtUnixSeconds = expiresAtUnixSeconds
                     });
             }
-            stack.Count += count;
+            OfflineItemAutoIncrease.SetCount(stack, currentCount + count, now);
             return new InventoryOperationResult(InventoryOperationStatus.Applied, count);
         }
 
@@ -70,8 +72,11 @@ namespace Zjcs.Offline.Progression
 
             OfflineItemStack stack = player.Inventory.FirstOrDefault(value => value != null && value.ItemId == itemId);
             if (stack == null) return new InventoryOperationResult(InventoryOperationStatus.MissingItem);
-            if (stack.Count < count) return new InventoryOperationResult(InventoryOperationStatus.InsufficientItems);
-            if (requireUnexpired && count > stack.Count - ExpiredCount(stack, nowUnixSeconds))
+            DateTime now = stack.AutoIncrease == null ? default
+                : DateTimeOffset.FromUnixTimeSeconds(nowUnixSeconds).UtcDateTime;
+            long currentCount = OfflineItemAutoIncrease.Count(stack, now);
+            if (currentCount < count) return new InventoryOperationResult(InventoryOperationStatus.InsufficientItems);
+            if (requireUnexpired && count > currentCount - ExpiredCount(stack, nowUnixSeconds))
                 return new InventoryOperationResult(InventoryOperationStatus.InsufficientItems);
 
             if (oldestExpiryFirst && stack.UnitRecords.Count > 0)
@@ -92,8 +97,8 @@ namespace Zjcs.Offline.Progression
                 stack.UnitRecords.RemoveRange(stack.UnitRecords.Count - remove, remove);
             }
 
-            stack.Count -= count;
-            if (stack.Count == 0) player.Inventory.Remove(stack);
+            OfflineItemAutoIncrease.SetCount(stack, currentCount - count, now);
+            if (stack.Count == 0 && stack.AutoIncrease == null) player.Inventory.Remove(stack);
             return new InventoryOperationResult(InventoryOperationStatus.Applied, count);
         }
 
