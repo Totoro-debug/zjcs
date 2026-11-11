@@ -15,6 +15,7 @@ from official_unity_schema import ScriptSchemas
 from prepare_battle_scene_appearance_runtime import identity, meta, write_changed
 from prepare_battle_status_orbit_assets import build
 from prepare_battle_movement_effects import SCRIPTS
+from verify_battle_skill_graph_rules import verify_selected_components
 
 BASE = ROOT / 'unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews'
 DATA = BASE / 'role-views.json'
@@ -27,6 +28,10 @@ def main():
         raise ValueError('Review summon role views for the selected version')
     code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
     schemas = ScriptSchemas(code_root=code)
+    entities = json.loads((ROOT / 'unity/Assets/Official/Combat/battle-rules.json').read_bytes())['entities']
+    character_components = {str(entity): {'FightRoleCharacterComponent': entities[str(entity)]['FightRoleCharacterComponent']}
+                            for entity in (3181, 3182, 3183)}
+    selected_character_components = verify_selected_components(character_components)
     rows, sources, roots, originals = [], [], {}, {}
     try:
         for entity_id in (3181, 3182, 3183):
@@ -45,6 +50,8 @@ def main():
                     if data['mDelayVisibilityParts'] or data['mGenerateDelayTime'] != 0 or data['mGeneratePlayableNeedDelay']:
                         raise ValueError('Bind original delayed visibility before opening this role')
                     row = dict(entityId=entity_id, tryOnStart=bool(data['mTryDiePlayableOnStart']))
+                    character = character_components[str(entity_id)]['FightRoleCharacterComponent']
+                    row.update(DestroyOnDie=character['DestroyOnDie'], DestroyDelayTime=character['DestroyDelayTime'])
                     for field in ('mDiePlayable', 'mDieOnStartPlayable', 'mGeneratePlayable'):
                         value = data[field]
                         row[field] = ''
@@ -81,7 +88,7 @@ def main():
         runtime_receipts=('scene-player-animator-source-manifest.json',), generator=Path(__file__),
         limits=['Exact 3181/3182/3183 ordered ECFightRoleCharacterView bindings and graph assets. '
                 'Other EC views, action invisibility status 24008 and other summon models are outside this extraction.'])
-    write_changed(DATA, json.dumps(dict(manifest=apk.version, roles=rows), ensure_ascii=False, indent=2) + '\n')
+    write_changed(DATA, json.dumps(dict(schema=2, manifest=apk.version, roles=rows), ensure_ascii=False, indent=2) + '\n')
     meta(DATA)
     proof = json.loads(RECEIPT.read_bytes())
     registry = ROOT / 'unity/Assets/Game/Editor/OfficialSparseShaderVariants.cs'
@@ -120,8 +127,11 @@ def main():
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSummonRoleViewCatalog.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveMonsterModelView.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs')]
-    proof['runtime_scope'] = 'Generation-only original method port, driven by the existing original playable manager and Animator. '
-    proof['runtime_scope'] += 'Original death graph assets are extracted but not enabled until their MeshMaterialProperty and AppearanceRendererLite bindings are restored.'
+    proof['selected_character_components'] = selected_character_components
+    proof['runtime_bindings'].append(identity(ROOT / 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleCharacterDeathPlayback.cs'))
+    proof['runtime_scope'] = ('Original generation and existing shared ECFightRoleCharacterView death methods use the original '
+        'playable manager, Animator, MeshMaterialProperty and AppearanceRendererLite bindings. Visual retirement reads '
+        'the selected original FightRoleCharacterComponent DestroyOnDie/DestroyDelayTime; no server entity removal is inferred.')
     proof['validation_inputs'] = [identity(ROOT / path) for path in (
         'unity/Assets/Game/Editor/OfficialSparseShaderVariants.cs',
         'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSummonGenerationValidation.cs',

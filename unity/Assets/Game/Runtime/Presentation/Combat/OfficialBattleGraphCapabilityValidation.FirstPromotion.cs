@@ -20,6 +20,104 @@ namespace Zjcs.Presentation.Combat
         private readonly System.Collections.Generic.HashSet<int> firstPromotionGeneratedUnitIds
             = new System.Collections.Generic.HashSet<int>();
         private static readonly float[] FirstPromotionFrameTimes = { .1f, .25f, .45f, .7f };
+        private bool ValidateSummonDeath => firstPromotionItemId != 0
+            && Environment.GetEnvironmentVariable("ZJCS_SUMMON_DEATH_ACCEPTANCE") == "1";
+        private bool summonDeathArmed, summonDeathComplete;
+        private int summonDeathEnemyId;
+        private readonly HashSet<int> summonLethalHits = new HashSet<int>();
+        private readonly HashSet<int> summonDeathFrames = new HashSet<int>();
+        private readonly HashSet<int> summonRetiredFrames = new HashSet<int>();
+
+        private bool ObserveFirstPromotionDeathFrame(OfficialBattleRuntimeController controller)
+        {
+            if (!ValidateSummonDeath || !captured || summonDeathComplete) return false;
+            var checkpoint = controller.Checkpoint;
+            if (!summonDeathArmed)
+            {
+                Require(firstPromotionSpawnedUnitIds.Length > 0, "The death diagnostic requires original summoned units.");
+                var player = checkpoint.Units.Single(value => value.Id == 1);
+                var enemy = checkpoint.Units.First(value => value.Side != player.Side && value.Hp > 0);
+                Require(enemy.MonsterId == 3331 && catalog.MonsterActiveSkillItems(3331, 0).Contains(14678),
+                    "The death diagnostic's original enemy attack binding changed.");
+                // Adjust only the isolated roster, then let the original AI and
+                // 3331 attack 14678 -> 59460 -> 59461 settle actual lethal hits.
+                const long playerHp = 1000000000000;
+                foreach (var prop in player.Properties.Concat(player.BaseProperties ?? player.Properties))
+                    if (prop.Id == catalog.PropertyType("MaxHp")) prop.Value = playerHp;
+                player.Hp = player.Turn.Hp = player.MaxHp = player.LastMaxHp = playerHp;
+                player.Targetable = false;
+                int enemySpeed = firstPromotionItemId == 10058 ? 20000 : 1000;
+                foreach (var prop in enemy.Properties.Concat(enemy.BaseProperties ?? enemy.Properties))
+                {
+                    if (prop.Id == catalog.PropertyType("Attack")) prop.Value = 1000000000;
+                    if (prop.Id == catalog.PropertyType("Speed")) prop.Value = enemySpeed;
+                }
+                enemy.Turn.Speed = enemySpeed;
+                var attack = catalog.CreateSkill(59460, 0, 14678, 2, 20, player.SubRank,
+                    catalog.CalculateSkillProps(59460, 2, 20, player.SubRank)
+                        .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
+                attack.LimitedTimes = firstPromotionSpawnedUnitIds.Length * 3;
+                enemy.Skills.Clear(); enemy.SkillState.Slots.Clear();
+                enemy.Skills.Add(attack); enemy.SkillState.Slots.Add(catalog.CreateSkillSlot(attack, 0));
+                checkpoint.MaxRound = 24;
+                summonDeathEnemyId = enemy.Id; summonDeathArmed = true;
+            }
+            var graph = Resources.Load<GameObject>("Combat/SummonRoleViews/Graphs/Prefabs/Playables/playable_die_1");
+            var property = graph.GetComponentsInChildren<Zjcs.Official.BattleMaterialPlayables.MyPlayableMaterialProperty>(true).Single();
+            foreach (int unitId in firstPromotionSpawnedUnitIds)
+            {
+                if (!summonLethalHits.Contains(unitId)) continue;
+                var root = controller.TryGetUnitTransform(unitId);
+                var renderer = root ? root.GetComponentInChildren<Zjcs.Offline.ProfessionUI.BattleNativeMonsterRenderer>() : null;
+                var material = renderer ? renderer.GetComponent<MeshRenderer>().sharedMaterial : null;
+                if (renderer && renderer.Animator.GetBool("die") && material
+                    && material.IsKeywordEnabled(property.Keyword) == property.KeywordBoolValue
+                    && material.GetFloat(property.FloatPropertyName) > .1f
+                    && material.GetFloat(property.FloatPropertyName) < .8f && summonDeathFrames.Add(unitId))
+                {
+                    CaptureName = "first-promotion-" + firstPromotionItemId + "-summon-death-" + unitId;
+                    return true;
+                }
+                if (!root && summonDeathFrames.Contains(unitId) && summonRetiredFrames.Add(unitId))
+                {
+                    CaptureName = "first-promotion-" + firstPromotionItemId + "-summon-retired-" + unitId;
+                    return true;
+                }
+            }
+            summonDeathComplete = firstPromotionSpawnedUnitIds.All(id => summonLethalHits.Contains(id)
+                && summonDeathFrames.Contains(id) && summonRetiredFrames.Contains(id));
+            if (summonDeathComplete)
+            {
+                checkpoint.Units.Single(value => value.Id == 1).Targetable = true;
+                Debug.Log("[Summon death battle] Original enemy attack, lethal settlement, death curve and visual retirement passed: "
+                    + firstPromotionItemId + " / " + string.Join(",", firstPromotionSpawnedUnitIds));
+            }
+            return !summonDeathComplete;
+        }
+
+        private void ObserveFirstPromotionDeathStep(FightBattleStepEvent step)
+        {
+            if (!ValidateSummonDeath || !summonDeathArmed) return;
+            foreach (var cast in step.SkillCasts.Where(value => value.ActorId == summonDeathEnemyId))
+                Debug.Log("[Summon death battle] Enemy cast " + cast.SkillEntityId);
+            foreach (var hit in step.DamageEvents)
+            {
+                if (hit.SourceId == summonDeathEnemyId)
+                    Debug.Log("[Summon death battle] Hit " + hit.TargetId + ": " + hit.BeforeHp + " -> " + hit.AfterHp);
+                if (hit.SourceId == summonDeathEnemyId && hit.SkillEntityId == 59460 && !hit.IsCure
+                    && hit.BeforeHp > 0 && hit.AfterHp == 0 && firstPromotionSpawnedUnitIds.Contains(hit.TargetId))
+                    summonLethalHits.Add(hit.TargetId);
+            }
+        }
+
+        private void VerifyFirstPromotionDeath(FightBattleCheckpoint checkpoint)
+        {
+            if (!ValidateSummonDeath) return;
+            Require(summonDeathComplete, "Original summon death was not settled, rendered and retired.");
+            var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+            Require(firstPromotionSpawnedUnitIds.All(id => saved.Units.Any(unit => unit.Id == id && unit.Hp == 0)),
+                "Visual retirement changed the retained original summon checkpoint.");
+        }
 
         private void ObserveFirstPromotionGeneration(OfficialBattleRuntimeController controller)
         {
@@ -116,7 +214,9 @@ namespace Zjcs.Presentation.Combat
                 // Fixture placement must not duplicate or modify the runtime scope transform.
                 distance = Math.Max(distance, summonHits.SelectMany(hit => hit.SummonPositions)
                     .Select(offset => Math.Abs(offset.X) + Math.Abs(offset.Y)).DefaultIfEmpty(0).Max() + 1);
-                probe.firstPromotionCaptureAfter = 3f;
+                // The fire beasts have an authored two-round life. Observe their
+                // death before expiry without changing their original status.
+                probe.firstPromotionCaptureAfter = probe.ValidateSummonDeath && itemId == 10058 ? 1f : 3f;
             }
             player.X = enemy.X - dx * distance; player.Y = enemy.Y - dy * distance;
             player.Direction = new[] { 2, 0, 1, 3 }[direction];
@@ -124,14 +224,15 @@ namespace Zjcs.Presentation.Combat
             {
                 unit.Statuses.Clear(); unit.Skills.Clear(); unit.SkillState.Slots.Clear();
                 long hp = unit.Side == player.Side ? 5000000 : 1000000000;
+                int speed = unit == player ? 1000 : probe.ValidateSummonDeath ? (itemId == 10058 ? 20000 : 1000) : 1;
                 foreach (var prop in unit.Properties.Concat(unit.BaseProperties ?? unit.Properties))
                 {
                     if (prop.Id == catalog.PropertyType("MaxHp")) prop.Value = hp;
                     if (prop.Id == catalog.PropertyType("Attack")) prop.Value = 100;
-                    if (prop.Id == catalog.PropertyType("Speed")) prop.Value = unit == player ? 1000 : 1;
+                    if (prop.Id == catalog.PropertyType("Speed")) prop.Value = speed;
                 }
                 unit.Hp = unit.Turn.Hp = unit.MaxHp = unit.LastMaxHp = hp;
-                unit.Turn.Speed = unit == player ? 1000 : 1;
+                unit.Turn.Speed = speed;
             }
             // Give the original healing AI a valid wounded target in this fixture.
             if (skill.SkillType == 3) player.Hp = player.Turn.Hp = player.MaxHp / 2;

@@ -22,6 +22,11 @@ namespace Zjcs.Presentation.Combat
         private readonly OfficialBattleMonsterAppearance appearance;
         private OfficialBattleAnimatorPlayback skillPlaybacks;
         private OfficialBattleCharacterGenerationPlayback generation;
+        private readonly OfficialBattleCharacterDeathPlayback death;
+        private readonly bool destroyOnDeath;
+        private readonly float destroyDelayTime;
+        private bool dead;
+        private double deathElapsed;
         private bool initialIdlePending;
         private float playbackSpeed = 1f;
         private int requestedState;
@@ -46,10 +51,11 @@ namespace Zjcs.Presentation.Combat
             return Transform.Find(path);
         }
         internal bool UsesNativeSkillGraphs { get; }
-        public bool IsAnimationFinished => !disposed && !loop && !skillControlled
-            && !renderer.Animator.IsInTransition(0)
+        public bool IsAnimationFinished => !disposed && (death != null && dead
+            ? destroyOnDeath && deathElapsed >= destroyDelayTime
+            : !loop && !skillControlled && !renderer.Animator.IsInTransition(0)
             && (renderer.Animator.GetCurrentAnimatorStateInfo(0).fullPathHash != requestedState
-                || renderer.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
+                || renderer.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f));
 
         internal static bool HasBinding(FightBattleUnitState state)
         {
@@ -69,11 +75,11 @@ namespace Zjcs.Presentation.Combat
             var assets = BattleNativeMonsterAssets.Load();
             return assets.Find(entityId) == null ? null
                 : new OfficialBattleLiveMonsterModelView(assets, entityId, parent, "BattleUnit_" + state.Id,
-                    nativeSkillGraphs, scope, restoring);
+                    nativeSkillGraphs, scope, restoring, state.Hp <= 0);
         }
 
         private OfficialBattleLiveMonsterModelView(BattleNativeMonsterAssets assets, int entityId,
-            Transform parent, string name, bool nativeSkillGraphs, OfflineBattleNativePlayableScope scope, bool restoring)
+            Transform parent, string name, bool nativeSkillGraphs, OfflineBattleNativePlayableScope scope, bool restoring, bool initialDead)
         {
             try
             {
@@ -102,6 +108,18 @@ namespace Zjcs.Presentation.Combat
                 if (!follower) throw new InvalidOperationException("Original monster bone follower is unbound: " + entityId);
                 if (scope != null)
                 {
+                    var role = OfficialBattleSummonRoleViewCatalog.FindRole(entityId);
+                    if (role != null)
+                    {
+                        if (!float.IsFinite(role.DestroyDelayTime) || role.DestroyDelayTime < 0)
+                            throw new InvalidOperationException("Original summon death delay is invalid: " + entityId);
+                        dead = initialDead;
+                        destroyOnDeath = role.DestroyOnDie;
+                        destroyDelayTime = role.DestroyDelayTime;
+                        death = new OfficialBattleCharacterDeathPlayback(renderer.EntityRoot.gameObject, () => dead,
+                            scope, OfficialBattleSummonRoleViewCatalog.FindDeath(entityId));
+                        death.OnAnimatorInited();
+                    }
                     var binding = OfficialBattleSummonRoleViewCatalog.FindGeneration(entityId);
                     if (binding != null)
                     {
@@ -125,6 +143,20 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleLiveMonsterModelView));
             if (!HasAnimation(name)) return false;
+            if (death != null && name == "die_01")
+            {
+                initialIdlePending = false;
+                skillPlaybacks?.Stop();
+                if (dead) { if (restart) death.ForcePlayDiePlayable(); }
+                else { dead = true; deathElapsed = 0; death.OnDie(true); }
+                loop = false; skillControlled = false; playbackSpeed = 1f;
+                renderer.Animator.Update(0);
+                renderer.ApplyAnimatorPose(0);
+                follower.ForceUpdate();
+                return true;
+            }
+            if (death != null && dead && name == "idle_01")
+            { dead = false; deathElapsed = 0; death.OnDie(false); }
             if (initialIdlePending)
             {
                 initialIdlePending = false;
@@ -184,6 +216,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) return;
             appearance?.Tick();
+            if (death != null && dead) deathElapsed += Math.Max(0, deltaTime);
             generation?.Tick(deltaTime);
             skillPlaybacks?.Tick(deltaTime);
             if (!renderer.gameObject.activeInHierarchy) return;
@@ -194,6 +227,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) return;
             disposed = true;
+            death?.Dispose();
             generation?.Dispose();
             skillPlaybacks?.Dispose();
             application?.Dispose();

@@ -1957,7 +1957,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_summon_role_views.py",
-    "sha256": "1fa0dcf0aec9792809563b8bd142993a56ac99408582598789329178d3417451"
+    "sha256": "49fa3b7fbaaffd2c5b6e6de5725a214409f9f0e9a172d5d3c897914bae71edbf"
   },
   "graph_asset_adapter": {
     "path": "scripts/prepare_battle_status_orbit_assets.py",
@@ -2210,7 +2210,7 @@
     },
     {
       "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/role-views.json",
-      "sha256": "5291ed3e76492a8c636379a5796c3ec8a138852c6b25cca003d53430e70575e6"
+      "sha256": "a9d8455fcf286013d3a327d50ea49207223aa748c96b73e2d6774f0fe41ffd02"
     },
     {
       "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/role-views.json.meta",
@@ -2959,18 +2959,131 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSummonRoleViewCatalog.cs",
-      "sha256": "6848527a944c5b518368c679d0428ff9a676ae303046bd76fe0480dc4d0177e7"
+      "sha256": "71b5842a8f2b520e0fcabb9b2aeda8bf97c42960be9511e76bfcacd4f5dcc0b4"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveMonsterModelView.cs",
-      "sha256": "7d9b10df14db0146f7f0b3bc4c53a2c193a71334bee2f1ba3bd2887cda364e76"
+      "sha256": "a0222eb68f35ac0ba40aaea7cd720cb6771ef2370f62b6dd3b6e08518b44f0d9"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
       "sha256": "d95bf9838239eafdc9385cef906e246b5293aa2777dd945c12076c0070c8dae9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleCharacterDeathPlayback.cs",
+      "sha256": "97fbe482f9d8b6e7fc30bb4c5670dab92bbdb78bb44298c1fe93f2695d27759c"
     }
   ],
-  "runtime_scope": "Generation-only original method port, driven by the existing original playable manager and Animator. Original death graph assets are extracted but not enabled until their MeshMaterialProperty and AppearanceRendererLite bindings are restored.",
+  "selected_character_components": {
+    "manifest": "884_156692",
+    "fragments": [
+      {
+        "path": "Assets/Config/EC/FightMonster_part1.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "-3174570841076720581",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "321d6b09c09404ba43da66e484528cb1eddf00b85f74e45a68a748128bee5f42",
+        "payload_sha256": "c2eb820cc52cba5be86cf98f6f91fe4628ad62e805003afecff7749502b019c1",
+        "legacy_prefix": false,
+        "entities": {
+          "3181": {
+            "parent": 0,
+            "components": {
+              "FightRoleCharacterComponent": {
+                "DestroyOnDie": true,
+                "DestroyDelayTime": 1.0,
+                "CharacterType": 0,
+                "MoveSkillId": 19810,
+                "FixSpeedMoveSkillId": 19810,
+                "BackMoveSkillId": 0,
+                "CanAirCombo": true,
+                "CanStand": false
+              }
+            }
+          },
+          "3182": {
+            "parent": 0,
+            "components": {
+              "FightRoleCharacterComponent": {
+                "DestroyOnDie": true,
+                "DestroyDelayTime": 1.0,
+                "CharacterType": 0,
+                "MoveSkillId": 19810,
+                "FixSpeedMoveSkillId": 19810,
+                "BackMoveSkillId": 0,
+                "CanAirCombo": true,
+                "CanStand": false
+              }
+            }
+          },
+          "3183": {
+            "parent": 0,
+            "components": {
+              "FightRoleCharacterComponent": {
+                "DestroyOnDie": true,
+                "DestroyDelayTime": 1.0,
+                "CharacterType": 0,
+                "MoveSkillId": 0,
+                "FixSpeedMoveSkillId": 0,
+                "BackMoveSkillId": 0,
+                "CanAirCombo": true,
+                "CanStand": false
+              }
+            }
+          }
+        }
+      }
+    ],
+    "skill_item_bindings": null,
+    "selected_entity_path_overrides": {},
+    "runtime_source_manifests": [
+      {
+        "path": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+        "sha256": "9b447a15838602a598b7530eb0398a3b0c9e1a6d93d7eb8d0e194932cd24d8bf"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/battle-rules-source-manifest.json",
+        "sha256": "cef8b0b5a12460f2bdb2b4d8031f95fb8d560a391a9170641e401b67ef08968b"
+      }
+    ],
+    "formatters": [
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightRoleCharacterComponent.cs",
+        "sha256": "6e4e17d6993ea3b18a9350ab79ec4d1252c5cb26dbf8e50222ebde6b7e39b473"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightRoleCharacterComponentInfoFormatter.cs",
+        "sha256": "1d52c68f7f9bcde85e1f7d75f4582859dfa63a215c9bd9d4ea240fa65f908731"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GameCharacterTypeFormatter.cs",
+        "sha256": "4f0cfe2340b1331caf498f7fcc95eb58b783abfcce2905815d2a04d2fd12e722"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Resolvers/GeneratedStaticGSerializableFormatterResolver.cs",
+        "sha256": "9e0eb448ce32ffcdd2f082db548d27df8211dfdf9ec98be78c9fa85adeb3af08"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Properties/AssemblyInfo.cs",
+        "sha256": "d85ed3684e7117155ebd5d8de5d415c29e4c83f090715776d9f74bf4f4a20785"
+      }
+    ],
+    "verifier": {
+      "path": "scripts/verify_battle_skill_graph_rules.py",
+      "sha256": "be15b59559e75fea48de0334b5ed63bde7d08fe124bd0e664abcb408733ccec7"
+    },
+    "operation": "Decode the selected APK-first EC fragments with their own generated formatters. Compare every migrated component field for the requested entities; retain historical runtime source manifests separately. No configuration or expected hash is replaced."
+  },
+  "runtime_scope": "Original generation and existing shared ECFightRoleCharacterView death methods use the original playable manager, Animator, MeshMaterialProperty and AppearanceRendererLite bindings. Visual retirement reads the selected original FightRoleCharacterComponent DestroyOnDie/DestroyDelayTime; no server entity removal is inferred.",
   "validation_inputs": [
     {
       "path": "unity/Assets/Game/Editor/OfficialSparseShaderVariants.cs",
@@ -2978,19 +3091,19 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSummonGenerationValidation.cs",
-      "sha256": "81b0a2a0bf3cf205bcf3325ac1d7d5be006efd10b96ed3ecff096fd35cc4b0b9"
+      "sha256": "4b1c91115c894b480a3452498fea2437773ee7b86ea7e9246379c9a4d8905ad0"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef",
-      "sha256": "c7069e4afae1c2d3d76ce773472ab39b52596dc25574405e26b4f1080e4a39e0"
+      "sha256": "be692c4f49c350feac21b44cb60f812957c5c41ed138b78bec571547149bc868"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.FirstPromotion.cs",
-      "sha256": "bc0e9e5821dfdf4ef1d8b6e1bc429e666da814a8195632bf70c61b9d2485943e"
+      "sha256": "8338d9e159767545662b7ed697cbf258fa5ace794d356b4b5dc287beda7922d3"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.cs",
-      "sha256": "df13f1d33ffc65ecf29080d7770461442174409043686aecdf26f1cd970bcf36"
+      "sha256": "47d7c35dcfd9cf52494e0207ea171a0b3a87cecda9afe5f41a4aed9995ae8e9b"
     }
   ]
 }

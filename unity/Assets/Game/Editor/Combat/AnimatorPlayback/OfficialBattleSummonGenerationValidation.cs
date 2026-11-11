@@ -10,12 +10,15 @@ using Zjcs.Offline.ProfessionUI;
 using Zjcs.Presentation.Combat;
 using Zjcs.Official.BattleMaterialPlayables;
 using Zjcs.Official.ProfessionUI;
+using Zjcs.Official.StoryPlayables;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 namespace Zjcs.Editor.Combat
 {
     public static class OfficialBattleSummonGenerationValidation
     {
-        [Serializable] private sealed class Result { public bool passed, appearance; public int scenes; public string error; }
+        [Serializable] private sealed class Result { public bool passed, appearance, death; public int scenes; public string error; }
         private const string ActiveKey = "Zjcs.SummonGeneration.Active";
         private const string ExitKey = "Zjcs.SummonGeneration.Exit";
         private const string PassedKey = "Zjcs.SummonGeneration.Passed";
@@ -49,7 +52,8 @@ namespace Zjcs.Editor.Combat
         {
             private IEnumerator Start()
             {
-            var result = new Result { appearance = Environment.GetEnvironmentVariable("ZJCS_SUMMON_APPEARANCE") == "1" };
+            var result = new Result { appearance = Environment.GetEnvironmentVariable("ZJCS_SUMMON_APPEARANCE") == "1",
+                death = Environment.GetEnvironmentVariable("ZJCS_SUMMON_DEATH") == "1" };
             foreach (int entity in new[] { 3181, 3182, 3183 })
                 foreach (bool restoring in new[] { false, true })
                 {
@@ -112,6 +116,11 @@ namespace Zjcs.Editor.Combat
                 {
                     var materialCheck = CheckAppearance(scene, scope, state, entityId);
                     while (materialCheck.MoveNext()) yield return materialCheck.Current;
+                }
+                if (Environment.GetEnvironmentVariable("ZJCS_SUMMON_DEATH") == "1")
+                {
+                    var deathCheck = CheckDeath(scene, scope, state, entityId, restoring);
+                    while (deathCheck.MoveNext()) yield return deathCheck.Current;
                 }
 
                 string Animation(int unitId)
@@ -185,6 +194,125 @@ namespace Zjcs.Editor.Combat
         }
         private static FightBattleUnitState Unit(int id, int entity) => new FightBattleUnitState
             { Id = id, MonsterId = entity, CharacterType = 3, Hp = 100, MaxHp = 100, X = id * 2, Y = 2 };
+        private static IEnumerator CheckDeath(OfficialBattleSceneView scene, OfflineBattleNativePlayableScope scope,
+            FightBattleCheckpoint state, int entityId, bool restoring)
+        {
+            var unit = state.Units.First();
+            var other = state.Units.Last();
+            var first = scene.TryGetUnitTransform(unit.Id);
+            var renderer = first.GetComponentInChildren<BattleNativeMonsterRenderer>();
+            var otherRenderer = scene.TryGetUnitTransform(other.Id).GetComponentInChildren<BattleNativeMonsterRenderer>();
+            var source = BattleNativeMonsterAppearanceCatalog.Find(entityId).Materials.Single();
+            var graph = Resources.Load<GameObject>("Combat/SummonRoleViews/Graphs/Prefabs/Playables/playable_die_1");
+            var original = graph.GetComponentsInChildren<MyPlayableMaterialProperty>(true).Single();
+            string parameter = original.FloatPropertyName, keyword = original.Keyword;
+            float baseline = source.GetFloat(parameter);
+            bool baselineKeyword = source.IsKeywordEnabled(keyword);
+            using var capture = new DeathCapture(first.parent, renderer.GetComponent<MeshRenderer>(), otherRenderer.GetComponent<MeshRenderer>(),
+                entityId + (restoring ? "-restore-" : "-new-"));
+            capture.Save("alive");
+            unit.Hp = 0;
+            scene.Refresh(state);
+            for (int i = 0; i < 20; i++) { Pump(); yield return null; }
+            Require(scene.TryGetUnitTransform(unit.Id) == first && renderer.Animator.GetBool("die")
+                && renderer.Animation == "die_01", "Actual summon death did not retain its source/Animator.");
+            var material = renderer.GetComponent<MeshRenderer>().sharedMaterial;
+            Require(material != source && material.IsKeywordEnabled(keyword) == original.KeywordBoolValue
+                && Mathf.Abs(material.GetFloat(parameter) - original.FloatCurve.Evaluate((20f / 60) / original.Duration)) < .05f,
+                "Actual summon death did not consume the original material curve.");
+            Require(OtherUnchanged(), "Actual summon death changed a living instance or packaged material.");
+            capture.Save("dying");
+            unit.Hp = 100;
+            scene.Refresh(state);
+            for (int i = 0; i < 2; i++) { Pump(); yield return null; }
+            Require(scene.TryGetUnitTransform(unit.Id) == first && !renderer.Animator.GetBool("die")
+                && renderer.Animation == "idle_01" && Mathf.Approximately(material.GetFloat(parameter), baseline)
+                && material.IsKeywordEnabled(keyword) == baselineKeyword, "Revival did not stop/restore the original summon death graph.");
+            capture.Save("revived");
+            unit.Hp = 0;
+            scene.Refresh(state);
+            for (int i = 0; i < 12; i++) { Pump(); yield return null; }
+            ((IBattleSourceDeathView)scene).ForcePlayDiePlayable(first.gameObject);
+            for (int i = 0; i < 6; i++) { Pump(); yield return null; }
+            material = renderer.GetComponent<MeshRenderer>().sharedMaterial;
+            Require(Mathf.Abs(material.GetFloat(parameter) - original.FloatCurve.Evaluate((6f / 60) / original.Duration)) < .05f,
+                "ForcePlayDiePlayable did not restart the original summon material curve.");
+            capture.Save("forced");
+            for (int i = 0; i < 36; i++) { Pump(); yield return null; }
+            Require(scene.TryGetUnitTransform(unit.Id) == first,
+                "Summon visual retired before the selected original one-second delay.");
+            for (int i = 0; i < 8; i++) { Pump(); yield return null; }
+            Require(!first && !scene.TryGetUnitTransform(unit.Id) && otherRenderer && OtherUnchanged(),
+                "Summon death did not retire at the selected delay, or disposed another instance.");
+            capture.Save("retired");
+            scene.Refresh(state);
+            for (int i = 0; i < 2; i++) { Pump(); yield return null; }
+            Require(!scene.TryGetUnitTransform(unit.Id), "Refreshing a retained dead checkpoint respawned a retired summon.");
+            unit.Hp = 100;
+            scene.Refresh(state);
+            for (int i = 0; i < 6; i++) { Pump(); yield return null; }
+            Require(scene.TryGetUnitTransform(unit.Id)?.GetComponentInChildren<BattleNativeMonsterRenderer>(),
+                "A subsequent alive checkpoint could not reacquire the original summon model.");
+            capture.Save("recreated");
+            Debug.Log("[Summon death] Actual death/curve, revival restoration, forced replay without delaying retirement, "
+                + "dead checkpoint suppression and subsequent alive reacquisition passed: " + entityId + ", restoring=" + restoring);
+            bool OtherUnchanged()
+            {
+                var otherMaterial = otherRenderer.GetComponent<MeshRenderer>().sharedMaterial;
+                return otherMaterial.IsKeywordEnabled(keyword) == baselineKeyword
+                    && Mathf.Approximately(otherMaterial.GetFloat(parameter), baseline)
+                    && source.IsKeywordEnabled(keyword) == baselineKeyword && Mathf.Approximately(source.GetFloat(parameter), baseline);
+            }
+            void Pump() { scope.Tick(1f / 60); scope.LateTick(); scene.Tick(1f / 60); }
+        }
+        private sealed class DeathCapture : IDisposable
+        {
+            private readonly RenderPipelineAsset previousDefault = GraphicsSettings.defaultRenderPipeline;
+            private readonly RenderPipelineAsset previousQuality = QualitySettings.renderPipeline;
+            private readonly UniversalRenderPipelineAsset pipeline;
+            private readonly Renderer2DData rendererData;
+            private readonly GameObject root;
+            private readonly RenderTexture target;
+            private readonly Camera camera;
+            private readonly string prefix;
+            internal DeathCapture(Transform parent, Renderer first, Renderer other, string prefix)
+            {
+                this.prefix = prefix;
+                rendererData = ScriptableObject.CreateInstance<Renderer2DData>();
+                pipeline = UniversalRenderPipelineAsset.Create(rendererData);
+                GraphicsSettings.defaultRenderPipeline = pipeline; QualitySettings.renderPipeline = pipeline;
+                root = new GameObject("Original summon death render validation"); root.transform.SetParent(parent, false);
+                var light = root.AddComponent<Light2D>(); light.lightType = Light2D.LightType.Global; light.intensity = 1;
+                camera = new GameObject("Original summon death camera").AddComponent<Camera>();
+                camera.transform.SetParent(root.transform, false);
+                target = new RenderTexture(450, 600, 24); target.Create(); camera.targetTexture = target;
+                camera.orthographic = true; camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = new Color(.65f, .7f, .75f);
+                var bounds = first.bounds; bounds.Encapsulate(other.bounds);
+                camera.transform.position = bounds.center + new Vector3(0, 0, -10);
+                camera.orthographicSize = Mathf.Max(bounds.extents.y, bounds.extents.x / camera.aspect) * 1.2f;
+            }
+            internal void Save(string stage)
+            {
+                camera.Render();
+                var previous = RenderTexture.active; RenderTexture.active = target;
+                var pixels = new Texture2D(target.width, target.height, TextureFormat.RGBA32, false);
+                try
+                {
+                    pixels.ReadPixels(new Rect(0, 0, target.width, target.height), 0, 0); pixels.Apply();
+                    File.WriteAllBytes(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"),
+                        "death-" + prefix + stage + ".png"), pixels.EncodeToPNG());
+                }
+                finally { RenderTexture.active = previous; UnityEngine.Object.Destroy(pixels); }
+            }
+            public void Dispose()
+            {
+                GraphicsSettings.defaultRenderPipeline = previousDefault; QualitySettings.renderPipeline = previousQuality;
+                camera.targetTexture = null; target.Release();
+                UnityEngine.Object.Destroy(root); UnityEngine.Object.Destroy(target);
+                UnityEngine.Object.Destroy(pipeline); UnityEngine.Object.Destroy(rendererData);
+            }
+        }
         private static void Require(bool value, string error)
         { if (!value) throw new InvalidOperationException(error); }
     }
