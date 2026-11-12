@@ -1064,7 +1064,7 @@ namespace Zjcs.Combat.Official
                         triggerSkills.AddRange(resolved.TriggeredStatusSkills);
                     long actualHpLoss = Math.Max(0L, beforeHp - target.Hp);
                     FightBattlePetEnergyRuntime.RecordOwnerDamage(units, target.Id, actualHpLoss);
-                    CollectUnflinchingActions(target, actualHpLoss, skill);
+                    CollectUnflinchingActions(target, actualHpLoss, skill, damage.DamageId);
                     FightStatusTriggerRuntime.ApplyAccumulatedDamage(target,
                         actualHpLoss, statusCatalog, random, configuredTriggerSkills, skill);
                     damage.IsDamageTriggerStatus = ApplyHitStatuses(actor, target, skill, hit, random, skillCostHp,
@@ -2159,7 +2159,7 @@ namespace Zjcs.Combat.Official
         }
 
         private void CollectUnflinchingActions(FightBattleUnitState target, long actualHpLoss,
-            FightBattleSkillDefinition sourceSkill = null)
+            FightBattleSkillDefinition sourceSkill = null, int sourceDamageId = 0)
         {
             if (target == null || actualHpLoss <= 0 || target.Statuses == null
                 || currentStepStatusCustomActions == null) return;
@@ -2172,7 +2172,8 @@ namespace Zjcs.Combat.Official
                 currentStepStatusCustomActions.Add(new FightBattleStatusCustomActionEvent
                 {
                     UnitId = target.Id,
-                    Action = 2
+                    Action = 2,
+                    SourceDamageId = sourceDamageId
                 });
             }
         }

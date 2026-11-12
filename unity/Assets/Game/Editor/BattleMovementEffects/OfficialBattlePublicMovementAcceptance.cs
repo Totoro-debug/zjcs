@@ -319,18 +319,24 @@ namespace Zjcs.Editor
                 Require(damages.Length == (monsterActs ? 1 : 3) && damages.All(d => d.Damage < 0)
                     && target.Hp == initialTargetHp + damages.Sum(d => d.Damage),
                     "The original hits must settle exactly once against the controlled target.");
+                int actionNotifications = 0;
                 if (statusActions)
                 {
                     Require(movementResult.Event.StatusCustomActions.Count == 3
-                        && movementResult.Event.StatusCustomActions.All(a => a.UnitId == target.Id && a.Action == 2),
+                        && movementResult.Event.StatusCustomActions.All(a => a.UnitId == target.Id && a.Action == 2
+                            && damages.Any(d => d.DamageId == a.SourceDamageId && d.TargetId == a.UnitId)),
                         "Three actual hit settlements must produce three recorded unflinching actions.");
-                    var nativeActions = world.GetComponentsInChildren<DamageCustomActionUI>();
-                    Require(nativeActions.Length == 3 && nativeActions.All(ui =>
-                        ui.GetComponentInParent<CharacterDamageUI>().EntityId == new EcEntityIdentifier(1, target.Id)),
-                        "The original manager must deliver each recorded action to its actual role once.");
-                    yield return null;
-                    capture(prefix + "-native-action-ui");
-                    yield return null;
+                    Require(world.GetComponentsInChildren<DamageCustomActionUI>().Length == 0,
+                        "Hit-associated custom actions must wait through the approach and actual hit delay.");
+                    var manager = world.GetComponentInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUIManager>();
+                    var context = (CharacterDamageUIContext)typeof(Zjcs.Official.BattleDamageUI.CharacterDamageUIManager).GetProperty("Context")
+                        .GetGetMethod(true).Invoke(manager, null);
+                    var actionRole = context.Characters.Single(role => role.Id == new EcEntityIdentifier(1, target.Id));
+                    actionRole.OnStatusTriggerCustomAction += (id, action) => {
+                        Require(id == new EcEntityIdentifier(1, target.Id) && (int)action == 2,
+                            "The custom-action notification lost its actual target or action type.");
+                        actionNotifications++;
+                    };
                 }
                 var entity = controller.TryGetUnitTransform(actor.Id);
                 var nativeMonster = entity?.GetComponentInChildren<BattleNativeMonsterRenderer>();
@@ -382,10 +388,19 @@ namespace Zjcs.Editor
                 bool nativeFloatSeen = false;
                 bool costFloatSeen = false;
                 bool derivedFloatSeen = false;
+                bool statusFloatSeen = false;
                 var slotBinding = OfficialBattleSkillSlotBindings.Load().slots[0];
                 for (int i = 0; i < 600 && controller.IsPresentingStep; i++)
                 {
                     bool captureNativeFloat = false;
+                    if (statusActions) foreach (var ui in world.GetComponentsInChildren<DamageCustomActionUI>())
+                    {
+                        Require(ui.GetComponentInParent<CharacterDamageUI>().EntityId == new EcEntityIdentifier(1, target.Id),
+                            "An actual custom action was sent to a different role.");
+                    }
+                    bool captureStatusFloat = statusActions && !statusFloatSeen
+                        && world.GetComponentsInChildren<DamageCustomActionUI>().Length > 0;
+                    statusFloatSeen |= captureStatusFloat;
                     bool captureCostFloat = skillCost && !costFloatSeen
                         && world.GetComponentsInChildren<CharacterDamageUI>().Any(ui => ui.EntityId == new EcEntityIdentifier(1, actor.Id)
                             && ui.GetComponentsInChildren<TextMesh>(true).Any(text => text.text == "7"));
@@ -438,6 +453,7 @@ namespace Zjcs.Editor
                     }
                     if (captureCostFloat) { capture(prefix + "-native-cost-ui"); yield return null; }
                     if (captureDerivedFloat) { capture(prefix + "-derived-cure-ui"); yield return null; }
+                    if (captureStatusFloat) { capture(prefix + "-native-action-ui"); yield return null; }
                 }
                 Require(!controller.IsPresentingStep, "Movement step presentation did not complete.");
                 Require(nativeSkills.Count == 1 && nativeFrames >= 4,
@@ -448,6 +464,8 @@ namespace Zjcs.Editor
                 Require(nativeFloatSeen, "The common battle controller did not display the original role damage UI.");
                 if (skillCost) Require(costFloatSeen, "The common battle controller did not display the original skill cost UI.");
                 if (hemophagia) Require(derivedFloatSeen, "The originating native damage suppressed its derived compatible cure UI.");
+                if (statusActions) Require(statusFloatSeen && actionNotifications == 3,
+                    "Three actual hits must each produce one later original custom-action UI.");
                 var settledSlot = actor.SkillState.Slots.Single(s => s.Slot == 0);
                 Require(settledSlot.Cooldown == cooldown && settledSlot.ReleasedTimes == 1,
                     "The settled original cooldown or release count differs.");

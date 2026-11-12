@@ -141,12 +141,18 @@ namespace Zjcs.Presentation.Combat
         }
         public bool StatusCustomAction(FightBattleStatusCustomActionEvent action)
         {
-            if (action == null || action.Action < (int)EStatusCustomAction.Immunity
-                || action.Action > (int)EStatusCustomAction.CDModify
-                || !roles.TryGetValue(new EcEntityIdentifier(1, action.UnitId), out var role)
-                || !role.Fight) return false;
+            if (!TryGetStatusActionRole(action, out var role)) return false;
             role.StatusTriggerCustomAction((EStatusCustomAction)action.Action);
             return true;
+        }
+        public bool CanPlayStatusCustomAction(FightBattleStatusCustomActionEvent action)
+            => TryGetStatusActionRole(action, out _);
+        private bool TryGetStatusActionRole(FightBattleStatusCustomActionEvent action, out CharacterDamageUIRole role)
+        {
+            role = null;
+            return action != null && action.Action >= (int)EStatusCustomAction.Immunity
+                && action.Action <= (int)EStatusCustomAction.CDModify
+                && roles.TryGetValue(new EcEntityIdentifier(1, action.UnitId), out role) && role.Fight;
         }
         public void SetVisible(bool value)
         {

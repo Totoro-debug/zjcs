@@ -32,6 +32,12 @@ namespace Zjcs.Presentation.Combat
             scope.Dispatch(() => played = damageUI.StatusCustomAction(action));
             return played;
         }
+        internal bool CanPlayStatusCustomAction(FightBattleStatusCustomActionEvent action)
+        {
+            if (damageUI == null || action == null) return false;
+            PrepareDamageUITarget(action.UnitId);
+            return damageUI.CanPlayStatusCustomAction(action);
+        }
         internal void SetDamageUIVisible(bool visible) => damageUI?.SetVisible(visible);
         internal void UpdateDamageUIVisibility() => damageUI?.UpdateVisibility();
     }

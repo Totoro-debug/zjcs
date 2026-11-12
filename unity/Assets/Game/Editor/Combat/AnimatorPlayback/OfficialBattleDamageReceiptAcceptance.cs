@@ -60,8 +60,9 @@ namespace Zjcs.Editor.Combat
             var camera = new GameObject("Receipt damage camera").AddComponent<Camera>();
             camera.orthographic = true; camera.orthographicSize = 4;
             camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = new Color(.06f, .09f, .15f);
-            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure", "trigger", "cost", "cost-legacy", "hemophagia", "actions" })
+            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure", "trigger", "cost", "cost-legacy", "hemophagia", "actions", "actions-legacy" })
             {
+                bool actionCase = name.StartsWith("actions", StringComparison.Ordinal);
                 var checkpoint = Build(name, out var step);
                 var expected = step.DamageEvents.Where(d => !d.IsSkillCost && d.DamageEntityId != 0)
                     .OrderBy(d => d.Delay).ThenBy(d => d.DamageId).ToArray();
@@ -162,6 +163,9 @@ namespace Zjcs.Editor.Combat
                         Entity = damage.myEntity, Damage = damage, SkillId = damage.Component.SkillId,
                         Identity = damage.myEntity.Id,
                         Skill = views.GetEntity(damage.Component.SkillId) });
+                        if (name == "actions") Require(!floatRoot.GetComponentsInChildren<DamageCustomActionUI>()
+                            .Any(ui => ui.GetComponent<CharacterDamageUI>().EntityId == role.myEntity.Id),
+                            "The actual damage notification must precede its associated custom action.");
                         long number = damage.Component.DamageResult.DamageValue - damage.Component.DamageResult.ShieldValue;
                         if (!damage.myHideDamage && (number != 0 || damage.myShowZeroDamage || damage.Component.DamageResult.IsElementAffect))
                             Require(floatRoot.GetComponentsInChildren<CharacterDamageUI>().Any(ui => ui.EntityId == role.myEntity.Id),
@@ -170,7 +174,7 @@ namespace Zjcs.Editor.Combat
                     entity.GetComponent<MyFightRoleFight>().OnHit += (role, damage) => hitNotifications++;
                 }
                 playback.Play(step, checkpoint, id => transforms.TryGetValue(id, out var value) ? value : null);
-                if (name == "actions")
+                if (actionCase)
                 {
                     Vector3 center = (transforms[1].position + transforms[2].position) * .5f;
                     camera.transform.position = new Vector3(center.x, center.y, camera.transform.position.z);
@@ -179,9 +183,11 @@ namespace Zjcs.Editor.Combat
                         && step.StatusCustomActions.Any(a => a.UnitId == 2 && a.Action == 2)
                         && step.StatusCustomActions.All(playback.OwnsStatusCustomActionUI),
                         "The actual executor's cooldown/unflinching actions reach the original manager once.");
-                    Require(floatRoot.GetComponentsInChildren<DamageCustomActionUI>().Length == 2
+                    Require(step.StatusCustomActions.Single(a => a.Action == 2).SourceDamageId
+                            == (name == "actions" ? expected.Single().DamageId : 0)
+                        && floatRoot.GetComponentsInChildren<DamageCustomActionUI>().Length == (name == "actions" ? 1 : 2)
                         && !playback.OwnsStatusCustomActionUI(new FightBattleStatusCustomActionEvent { UnitId = 1, Action = 3 }),
-                        "Only the exact delivered receipts replace compatible custom-action tips.");
+                        "Known damage associations wait; legacy actions retain their boundary and exact receipt ownership.");
                     foreach (var ui in floatRoot.GetComponentsInChildren<DamageCustomActionUI>())
                     {
                         var icon = (GameObject)typeof(DamageCustomActionUI).GetField("mIcon",
@@ -190,7 +196,7 @@ namespace Zjcs.Editor.Combat
                             "The original custom-action behaviour shows its icon only for cooldown changes.");
                     }
                     for (int frame = 0; frame < 4; frame++) yield return null;
-                    Capture(camera, "damage-receipt-actions-start.png");
+                    Capture(camera, "damage-receipt-" + name + "-start.png");
                 }
                 var boundaries = new SortedSet<float> { 0f };
                 foreach (var cast in step.SkillCasts) { boundaries.Add(cast.Delay); boundaries.Add(cast.Delay + cast.Presentation.Duration); }
@@ -216,6 +222,10 @@ namespace Zjcs.Editor.Combat
                     var due = name == "legacy" ? new FightBattleDamageEvent[0] : expected.Where(d => d.Delay <= boundary + .00001f).ToArray();
                     Require(observed.Count == due.Length && hitNotifications == due.Length,
                         $"{name} at {boundary:R}: target={observed.Count}, source={hitNotifications}, expected={due.Length}; one original notification per actual damage.");
+                    if (actionCase && boundary <= expected[0].Delay + .125f)
+                        Require(floatRoot.GetComponentsInChildren<DamageCustomActionUI>().Length
+                            == (name == "actions-legacy" || due.Length > 0 ? 2 : 1),
+                            "An actual custom action must appear at its causing damage boundary, including the step/cast offset.");
                     int active = root.GetComponentsInChildren<MyFightDamage>().Count();
                     Require(active == due.Count(d => d.Delay + Lifetime(d) > boundary + .00001f), "Original configured damage lifetime and pool removal.");
                     for (int index = 0; index < due.Length; index++)
@@ -326,7 +336,7 @@ namespace Zjcs.Editor.Combat
                     checkpoint.Units[0].Hp -= 100;
                     hit.HemophagiaProperty = property;
                 }
-                if (name == "actions")
+                if (name.StartsWith("actions", StringComparison.Ordinal))
                 {
                     var unflinching = assets.Load().CreateStatus(25275, 1, 1);
                     unflinching.UnflinchingOnDamageRate = 1f;
@@ -348,8 +358,9 @@ namespace Zjcs.Editor.Combat
             checkpoint.Units[0].SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = -1 });
             var wave = new FightBattleWaveState(); wave.UnitIds.AddRange(new[] { 2, 3 }); checkpoint.Waves.Add(wave);
             step = assets.BeginBattle(checkpoint).Step(0, 1).Event;
-            if (name.StartsWith("cost", StringComparison.Ordinal))
+            if (name.StartsWith("cost", StringComparison.Ordinal) || name.StartsWith("actions", StringComparison.Ordinal))
                 step = JsonUtility.FromJson<FightBattleStepEvent>(JsonUtility.ToJson(step));
+            if (name == "actions-legacy") foreach (var action in step.StatusCustomActions) action.SourceDamageId = 0;
             if (name == "none")
             {
                 var receipt = step.DamageEvents.Single(d => !d.IsSkillCost);

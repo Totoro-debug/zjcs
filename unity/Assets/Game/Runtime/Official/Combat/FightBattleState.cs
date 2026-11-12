@@ -1841,6 +1841,9 @@ namespace Zjcs.Combat.Official
     {
         public int UnitId;
         public int Action;
+        // Actual damaging occurrence that produced this action. Its final receipt
+        // owns all nested/approach offsets; zero keeps legacy timing unknown.
+        public int SourceDamageId;
     }
 
     [Serializable]

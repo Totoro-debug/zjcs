@@ -46,8 +46,8 @@ namespace Zjcs.Combat.Official
         public List<FightBattleSkillMove> SourceMoves = new List<FightBattleSkillMove>();
         public List<int> HitGraphEntities = new List<int>(), Hits = new List<int>(), ExtraSkills = new List<int>();
     }
-    public class FightBattleDamageEvent { public int DamageId, TargetId, SourceId, SkillEntityId, DamageEntityId; public bool IsSkillCost; public float Delay; public long BeforeHp, AfterHp; }
-    public class FightBattleStatusCustomActionEvent { public int UnitId, Action; }
+    public class FightBattleDamageEvent { public int DamageId, TargetId, SourceId, SkillEntityId, DamageEntityId; public bool IsSkillCost, IsCure; public float Delay; public long BeforeHp, AfterHp; }
+    public class FightBattleStatusCustomActionEvent { public int UnitId, Action, SourceDamageId; }
     public class FightBattleStepEvent { public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>(); public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>(); public List<FightBattleStatusCustomActionEvent> StatusCustomActions = new List<FightBattleStatusCustomActionEvent>(); }
 }
 namespace Zjcs.Official.StoryPlayableManager
@@ -97,12 +97,18 @@ namespace Zjcs.Presentation.Combat
     // playback is verified in Unity with the actual original MyFightSkill.
     public class OfficialBattleSkillEntityPlayback : IDisposable
     {
-        public bool HasDamageUI => false;
+        public bool StatusUIAvailable;
+        public bool HasDamageUI => StatusUIAvailable;
         public void BindDamageUI(Transform parent, int stageType) { }
         public void SetDamageUIVisible(bool visible) { }
         public void UpdateDamageUIVisibility() { }
         public void BindDamageUITargets(Func<int, Transform> resolve) { }
-        public bool PlayStatusCustomAction(FightBattleStatusCustomActionEvent action) => false;
+        public bool CanPlayStatusCustomAction(FightBattleStatusCustomActionEvent action) => StatusUIAvailable && action != null;
+        public bool PlayStatusCustomAction(FightBattleStatusCustomActionEvent action)
+        {
+            if (!CanPlayStatusCustomAction(action)) return false;
+            scope.StatusActionTimes.Add(scope.Clock); return true;
+        }
         private readonly OfflineBattleNativePlayableScope scope;
         public Zjcs.Official.StoryGroundEffects.IPlayableGroundEffectHost GroundEffects { get; } = new Zjcs.Official.StoryGroundEffects.GroundHost();
         public OfficialBattleSkillEntityPlayback(OfflineBattleNativePlayableScope scope) { this.scope = scope; scope.GroundEffectsHost = GroundEffects; }
@@ -138,6 +144,7 @@ namespace Zjcs.Offline.BattleNativePlayables
         public readonly List<float> CastTimes = new List<float>();
         public readonly List<int> Moves = new List<int>();
         public readonly List<float> MoveTimes = new List<float>();
+        public readonly List<float> StatusActionTimes = new List<float>();
         public Zjcs.Official.StoryGroundEffects.IPlayableGroundEffectHost GroundEffectsHost;
         private Action<GameObject, GameObject> nativeAdapter;
         public void BindNativePrefabAdapter(Action<GameObject, GameObject> adapter) { nativeAdapter = adapter; }
@@ -344,6 +351,31 @@ public static class BattleSkillGraphDispatchHarness
                 && Math.Abs(ordinaryScope.MoveTimes[1] - 1.05f) < .0001f,
                 "Ordinary parent/action clocks lost their original delay, non-equipped slot or repeated path ordering");
         }
+        var statusScope = new OfflineBattleNativePlayableScope();
+        var statusViews = new OfficialBattleSkillEntityPlayback(statusScope) { StatusUIAvailable = true };
+        using (var playback = new OfficialBattleSkillGraphPlayback(catalog, statusScope, statusViews))
+        {
+            var delayed = new FightBattleStatusCustomActionEvent { UnitId = 2, Action = 2, SourceDamageId = 7 };
+            var legacy = new FightBattleStatusCustomActionEvent { UnitId = 1, Action = 3 };
+            var missing = new FightBattleStatusCustomActionEvent { UnitId = 2, Action = 2, SourceDamageId = 99 };
+            var actionStep = new FightBattleStepEvent {
+                SkillCasts = new List<FightBattleSkillCastEvent> { Cast(20, .1f) },
+                DamageEvents = new List<FightBattleDamageEvent> {
+                    new FightBattleDamageEvent { DamageId = 7, TargetId = 2, Delay = .5f },
+                    new FightBattleDamageEvent { DamageId = 7, TargetId = 1, Delay = .2f, IsCure = true },
+                    new FightBattleDamageEvent { DamageId = 7, TargetId = 2, Delay = .25f, IsCure = true } },
+                StatusCustomActions = new List<FightBattleStatusCustomActionEvent> { delayed, legacy, missing } };
+            playback.Play(actionStep, checkpoint, resolve);
+            Require(statusScope.StatusActionTimes.SequenceEqual(new[] { 0f })
+                && playback.OwnsStatusCustomActionUI(delayed) && playback.OwnsStatusCustomActionUI(legacy)
+                && !playback.OwnsStatusCustomActionUI(missing), "Status action ownership lost its actual/legacy association.");
+            playback.Tick(.49f);
+            Require(statusScope.StatusActionTimes.Count == 1, "An action preceded its actual damage or used a derived cure's shared serial.");
+            playback.Tick(.51f);
+            Require(statusScope.StatusActionTimes.Count == 2 && Math.Abs(statusScope.StatusActionTimes[1] - .5f) < .0001f,
+                "Long frames must deliver the associated action at its damage boundary.");
+        }
+        Console.WriteLine("Status action timing passed: actual damage, shared-serial derived cures, legacy/missing evidence and long frames.");
         Console.WriteLine("Skill graph dispatch passed: official fields/fallback, delayed ordering, equal-time stability, native/fallback movement ordering, ordinary parent creation and negative slots, independent unit clocks, long-frame splitting, settled-dead cast and disposal.");
     }
 }

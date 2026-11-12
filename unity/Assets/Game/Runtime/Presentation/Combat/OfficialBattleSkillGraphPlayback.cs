@@ -17,6 +17,12 @@ namespace Zjcs.Presentation.Combat
             public float Remaining;
         }
 
+        private sealed class ScheduledStatusAction
+        {
+            public FightBattleStatusCustomActionEvent Action;
+            public float Remaining;
+        }
+
         private sealed class ScheduledCast
         {
             public FightBattleSkillCastEvent Cast;
@@ -31,6 +37,7 @@ namespace Zjcs.Presentation.Combat
         private readonly OfficialBattleSkillEntityPlayback entityViews;
         private readonly List<ScheduledCast> pending = new List<ScheduledCast>();
         private readonly List<ScheduledMove> pendingMoves = new List<ScheduledMove>();
+        private readonly List<ScheduledStatusAction> pendingStatusActions = new List<ScheduledStatusAction>();
         private readonly HashSet<FightBattleStatusCustomActionEvent> nativeStatusActions =
             new HashSet<FightBattleStatusCustomActionEvent>();
         private OfficialBattleGridEntityPlayback gridViews;
@@ -126,8 +133,8 @@ namespace Zjcs.Presentation.Combat
             Func<int, Transform> unitTransform, Func<int, Transform> petTransform = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillGraphPlayback));
-            if (stepEvent?.SkillCasts == null || checkpoint?.Units == null || unitTransform == null) return;
             nativeStatusActions.Clear();
+            if (stepEvent?.SkillCasts == null || checkpoint?.Units == null || unitTransform == null) return;
             airComboViews?.Synchronize();
             gridViews?.Enqueue(stepEvent, checkpoint);
             gridViews?.DispatchDue();
@@ -172,11 +179,54 @@ namespace Zjcs.Presentation.Combat
                 }
             }
             DispatchMoves();
-            // Preserve the existing step-boundary delivery. This does not infer
-            // missing per-action server timestamps from settled HP or statuses.
-            if (stepEvent.StatusCustomActions != null)
-                foreach (var action in stepEvent.StatusCustomActions)
+            ScheduleStatusActions(stepEvent);
+            DispatchStatusActions();
+        }
+
+        private void ScheduleStatusActions(FightBattleStepEvent step)
+        {
+            if (step.StatusCustomActions == null) return;
+            foreach (var action in step.StatusCustomActions)
+            {
+                if (action == null) continue;
+                if (action.SourceDamageId == 0)
+                {
+                    // Legacy/unassociated actions retain their existing boundary.
                     if (entityViews.PlayStatusCustomAction(action)) nativeStatusActions.Add(action);
+                    continue;
+                }
+                if (!TryGetStatusActionDelay(step, action, out float delay)
+                    || !entityViews.CanPlayStatusCustomAction(action)) continue;
+                var scheduled = new ScheduledStatusAction { Action = action, Remaining = Mathf.Max(0f, delay) };
+                int index = pendingStatusActions.FindIndex(value => value.Remaining > scheduled.Remaining);
+                if (index < 0) pendingStatusActions.Add(scheduled); else pendingStatusActions.Insert(index, scheduled);
+                nativeStatusActions.Add(action);
+            }
+        }
+
+        private static bool TryGetStatusActionDelay(FightBattleStepEvent step,
+            FightBattleStatusCustomActionEvent action, out float delay)
+        {
+            delay = 0f;
+            bool found = false;
+            if (step.DamageEvents != null) foreach (var damage in step.DamageEvents)
+            {
+                if (damage == null || damage.IsCure || damage.IsSkillCost
+                    || damage.DamageId != action.SourceDamageId || damage.TargetId != action.UnitId) continue;
+                if (found) return false; // An incomplete/ambiguous association retains the compatible path.
+                found = true;
+                delay = damage.Delay;
+            }
+            return found;
+        }
+
+        private void DispatchStatusActions()
+        {
+            while (pendingStatusActions.Count > 0 && pendingStatusActions[0].Remaining <= 0f)
+            {
+                var value = pendingStatusActions[0]; pendingStatusActions.RemoveAt(0);
+                entityViews.PlayStatusCustomAction(value.Action);
+            }
         }
 
         private void ScheduleMovements(FightBattleStepEvent stepEvent, Func<int, Transform> resolveTransform)
@@ -245,12 +295,14 @@ namespace Zjcs.Presentation.Combat
                 float nextCast = pending.Count == 0 ? float.PositiveInfinity : pending[0].Remaining;
                 float nextGrid = gridViews?.NextDelay ?? float.PositiveInfinity;
                 float nextMove = pendingMoves.Count == 0 ? float.PositiveInfinity : pendingMoves[0].Remaining;
-                float elapsed = Mathf.Min(nextCast, nextGrid, nextMove);
+                float nextStatusAction = pendingStatusActions.Count == 0 ? float.PositiveInfinity : pendingStatusActions[0].Remaining;
+                float elapsed = Mathf.Min(nextCast, nextGrid, nextMove, nextStatusAction);
                 if (elapsed > remaining) break;
                 if (elapsed > 0f) entityViews.Tick(elapsed);
                 remaining -= elapsed;
                 foreach (ScheduledCast value in pending) value.Remaining -= elapsed;
                 foreach (var value in pendingMoves) value.Remaining -= elapsed;
+                foreach (var value in pendingStatusActions) value.Remaining -= elapsed;
                 gridViews?.AdvanceTimers(elapsed);
                 gridViews?.DispatchDue();
                 while (pending.Count > 0 && pending[0].Remaining <= 0f)
@@ -264,9 +316,11 @@ namespace Zjcs.Presentation.Combat
                     Start(scheduled, source, target);
                 }
                 DispatchMoves();
+                DispatchStatusActions();
             }
             foreach (ScheduledCast value in pending) value.Remaining -= remaining;
             foreach (var value in pendingMoves) value.Remaining -= remaining;
+            foreach (var value in pendingStatusActions) value.Remaining -= remaining;
             gridViews?.AdvanceTimers(remaining);
             entityViews.Tick(remaining);
         }
@@ -300,6 +354,7 @@ namespace Zjcs.Presentation.Combat
             disposed = true;
             pending.Clear();
             pendingMoves.Clear();
+            pendingStatusActions.Clear();
             nativeStatusActions.Clear();
             airComboViews?.Dispose();
             airComboViews = null;

@@ -56,7 +56,8 @@ namespace Zjcs.Combat.Official
             checkpoint.Statistics.RecordCast(doll.Id, damage.SkillEntityId, 0);
             checkpoint.Statistics.RecordHit(damage, new HashSet<int>());
             FightStatusAccumulatedDamageRuntime.RecordHit(target, damage, syncTriggerContext);
-            CollectUnflinchingActions(target, Math.Max(0, damage.BeforeHp - damage.AfterHp), syncTriggerContext);
+            CollectUnflinchingActions(target, Math.Max(0, damage.BeforeHp - damage.AfterHp),
+                syncTriggerContext, damage.DamageId);
             FightStatusTriggerRuntime.ApplyAccumulatedDamage(target,
                 Math.Max(0, damage.BeforeHp - damage.AfterHp), statusCatalog, random,
                 sourceSkill: syncTriggerContext);
