@@ -129,7 +129,7 @@ namespace Zjcs.Presentation.Combat
             if (airComboViews != null) throw new InvalidOperationException("Original airborne status views are already bound.");
             airComboViews = new OfficialBattleAirComboPlayback(executor, root, scope, body);
             airComboViews.Synchronize();
-            statusViews = new OfficialBattleStatusPlayback(executor, root, scope, body, hasStatusIcon, "Combat/dark-status");
+            statusViews = new OfficialBattleStatusPlayback(executor, root, scope, body, hasStatusIcon, "Combat/first-promotion-statuses");
             statusViews.Restore();
         }
 

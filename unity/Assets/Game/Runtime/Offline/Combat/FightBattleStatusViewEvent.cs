@@ -21,6 +21,8 @@ namespace Zjcs.Combat.Official
         public int InstanceId, ClassId, CreatorId, StackCount, RoundStartRemainingCount;
         public bool CanStack, Forbidden, HasRoundStart;
         public int ShareId;
+        public long ShieldMaximum, ShieldRemaining;
+        public int AbsoluteMaximumCount, AbsoluteTriggerCount;
 
         public static FightBattleStatusViewState Capture(FightBattleStatusState status)
             => new FightBattleStatusViewState {
@@ -28,12 +30,18 @@ namespace Zjcs.Combat.Official
                 StackCount = status.StackCount, CanStack = status.IsOpenStack,
                 Forbidden = status.ForbiddenType != 0, ShareId = status.SharedStackId,
                 HasRoundStart = status.HasRoundStartTrigger,
-                RoundStartRemainingCount = FightStatusLifecycle.RoundStartRemainingCount(status)
+                RoundStartRemainingCount = FightStatusLifecycle.RoundStartRemainingCount(status),
+                ShieldMaximum = status.ShieldValue,
+                ShieldRemaining = status.ShieldInitialized ? status.ShieldRemainValue : status.ShieldValue,
+                AbsoluteMaximumCount = status.Components?.DamageReduceAbsolute?.MaxCount ?? -1,
+                AbsoluteTriggerCount = status.Components?.DamageReduceAbsolute?.TriggeredCount ?? 0
             };
 
         internal bool SameView(FightBattleStatusViewState other) => other != null
             && ClassId == other.ClassId && CreatorId == other.CreatorId && StackCount == other.StackCount
             && CanStack == other.CanStack && Forbidden == other.Forbidden && ShareId == other.ShareId
-            && HasRoundStart == other.HasRoundStart && RoundStartRemainingCount == other.RoundStartRemainingCount;
+            && HasRoundStart == other.HasRoundStart && RoundStartRemainingCount == other.RoundStartRemainingCount
+            && ShieldMaximum == other.ShieldMaximum && ShieldRemaining == other.ShieldRemaining
+            && AbsoluteMaximumCount == other.AbsoluteMaximumCount && AbsoluteTriggerCount == other.AbsoluteTriggerCount;
     }
 }

@@ -33,6 +33,8 @@ namespace Zjcs.Editor
             ["Assets/Official/Partners/UI/Card/Converted/59de19d261370c02.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/Cast_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/DarkStatus_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/FirstPromotionStatus_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/FirstPromotionStatus_SpriteSequence.shader"] = 4,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/GroundEffectNoiseMaskPro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/GridEntity_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/MonsterBodyEffect_Noise_Mask_Pro_0.shader"] = 260,
@@ -101,7 +103,7 @@ namespace Zjcs.Editor
                 selections.Add(original.Key, selection);
                 stages += selection.PassCount * selection.Programs.Count * 2;
             }
-            if (stages != 53988) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            if (stages != 55036) throw new BuildFailedException("Original shader stage domain changed: " + stages);
             Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
@@ -141,7 +143,7 @@ namespace Zjcs.Editor
                 }
             }
             finally { ShaderUtil.allowAsyncCompilation = previousAsync; }
-            if (stages != 53988) throw new BuildFailedException("Original shader stage count changed: " + stages);
+            if (stages != 55036) throw new BuildFailedException("Original shader stage count changed: " + stages);
             Debug.Log("Original sparse shaders: all " + stages + " Windows GPU stages across "
                 + originalPrograms.Count + " original shader assets compiled.");
             ProjectTools.Validate();

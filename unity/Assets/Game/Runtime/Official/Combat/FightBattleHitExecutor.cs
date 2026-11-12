@@ -400,6 +400,7 @@ namespace Zjcs.Combat.Official
                 if (value > 0) total = value > long.MaxValue - total ? long.MaxValue : total + value;
                 status.ShieldRemainValue = 0;
                 status.ShieldInitialized = true;
+                unit.StatusRefreshed?.Invoke(unit, status);
             }
             return total;
         }
@@ -483,6 +484,7 @@ namespace Zjcs.Combat.Official
                     destroyed = status.ShieldRemainCount == 0;
                 }
 
+                target.StatusRefreshed?.Invoke(target, status);
                 if (destroyed)
                 {
                     if (status.ShieldDestroyedSkillId > 0
@@ -496,6 +498,9 @@ namespace Zjcs.Combat.Official
                         destroyedSkills?.Add(status.ShieldDestroyedSkillId);
                     }
                     target.Statuses.RemoveAt(i);
+                    // The existing shield settlement removes directly. Notify the
+                    // presentation after removal without re-running gameplay End.
+                    target.StatusRefreshed?.Invoke(target, status);
                 }
                 else i++;
             }

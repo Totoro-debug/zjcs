@@ -31,7 +31,8 @@ namespace Zjcs.Combat.Official
         { statusViewEvents = null; statusViewSnapshots.Clear(); }
 
         private void OnStatusViewRefreshed(FightBattleUnitState owner, FightBattleStatusState status)
-            => RecordStatusView(owner, status, FightBattleStatusViewEventKind.Update);
+            => RecordStatusView(owner, status, owner.Statuses.Contains(status)
+                ? FightBattleStatusViewEventKind.Update : FightBattleStatusViewEventKind.End);
 
         private void RecordStatusView(FightBattleUnitState owner, FightBattleStatusState status,
             FightBattleStatusViewEventKind kind)

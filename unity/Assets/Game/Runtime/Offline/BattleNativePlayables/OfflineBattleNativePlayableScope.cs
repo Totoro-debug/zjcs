@@ -138,6 +138,7 @@ namespace Zjcs.Offline.BattleNativePlayables
         }
 
         public Transform PlayableSlot { get { RequireLive(); return manager.PlayableSlot; } }
+        public IMyPlayableCenter PlayableCenter { get { RequireLive(); return center; } }
 
         // Shared entity notifications can stop original leaves synchronously.
         // Keep their original callbacks inside the same explicit sound boundary.

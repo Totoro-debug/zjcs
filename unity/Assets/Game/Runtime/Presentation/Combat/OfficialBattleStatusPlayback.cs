@@ -13,7 +13,7 @@ using Zjcs.Official.StoryPlayables;
 namespace Zjcs.Presentation.Combat
 {
     /// <summary>Plays complete original character-status entities at their captured transition times.</summary>
-    public sealed class OfficialBattleStatusPlayback : IDisposable
+    public sealed class OfficialBattleStatusPlayback : IMyActionEntityLookup, IDisposable
     {
         [Serializable] private sealed class Catalog { public Entry[] graphs; }
         [Serializable] private sealed class Entry { public int id; public string resource; }
@@ -21,6 +21,8 @@ namespace Zjcs.Presentation.Combat
         private sealed class State : BattleStatusRoundStartViewData, IFightStatusPlayableState
         {
             public FightBattleStatusViewState Value;
+            public ShieldData Shield;
+            public AbsoluteData Absolute;
             public int StackedCount => Value.StackCount;
             public bool CanStackCount => Value.CanStack;
             public bool Forbidden => Value.Forbidden;
@@ -35,6 +37,10 @@ namespace Zjcs.Presentation.Combat
                     OnStatusStackUpdate?.Invoke(this, previous.StackCount, value.StackCount);
                 if (previous.Forbidden != value.Forbidden) OnForbiddenChanged?.Invoke(this, previous.Forbidden);
                 if (previous.RoundStartRemainingCount != value.RoundStartRemainingCount) NotifyRemainCountUpdate();
+                if (previous.ShieldMaximum != value.ShieldMaximum || previous.ShieldRemaining != value.ShieldRemaining)
+                    Shield?.NotifyRemainData(new EcEntityIdentifier(4, value.InstanceId), value.ShieldMaximum, value.ShieldRemaining);
+                if (previous.AbsoluteTriggerCount != value.AbsoluteTriggerCount)
+                    Absolute?.NotifyTriggerCount(value.AbsoluteTriggerCount);
             }
             public void Invoke() => OnInvoked?.Invoke(this);
         }
@@ -55,6 +61,18 @@ namespace Zjcs.Presentation.Combat
             public override EcEntityIdentifier ApplyId => new EcEntityIdentifier(1, Owner);
             public override object ComponentInfo => null;
         }
+        private sealed class ShieldData : BattleStatusShieldViewData
+        {
+            public GameObject Owner;
+            public override GameObject ApplyObject => Owner;
+        }
+        private sealed class AbsoluteData : BattleStatusDamageReduceAbsoluteViewData
+        {
+            public GameObject Owner;
+            public State Status;
+            public override GameObject ApplyObject => Owner;
+            public override int MaximumCount => Status.Value.AbsoluteMaximumCount;
+        }
         private sealed class EntityData : ECViewEntityData, IBattleGridComponentViewData
         {
             public State Status;
@@ -65,6 +83,8 @@ namespace Zjcs.Presentation.Combat
             {
                 object result = typeof(T) == typeof(IBattleGridComponentViewData) ? this
                     : typeof(T) == typeof(ActionComponentData) ? Action
+                    : typeof(T) == typeof(BattleStatusShieldViewData) ? Status.Shield
+                    : typeof(T) == typeof(BattleStatusDamageReduceAbsoluteViewData) ? Status.Absolute
                     : typeof(T) == typeof(BattleStatusRoundStartViewData) && Status.Value.HasRoundStart ? Status : null;
                 return result == null ? default : (T)result;
             }
@@ -131,7 +151,8 @@ namespace Zjcs.Presentation.Combat
             foreach (long key in new List<long>(leases.Keys)) End(key);
             foreach (var owner in checkpoint.Units)
                 foreach (var status in owner.Statuses)
-                    if (status.Components?.Seconds?.DefinitionResolved != true && prefabs.ContainsKey(status.ClassId))
+                    if (owner.CharacterType != 6 && status.Components?.Seconds?.DefinitionResolved != true
+                        && prefabs.ContainsKey(status.ClassId))
                         Start(owner.Id, FightBattleStatusViewState.Capture(status), false);
         }
 
@@ -178,6 +199,11 @@ namespace Zjcs.Presentation.Combat
         }
 
         private GameObject Body(int id) { var target = body(id); return target ? target.gameObject : null; }
+        MyEntity IMyActionEntityLookup.GetEntity(EcEntityIdentifier id)
+        {
+            var target = Body(id.EntityId);
+            return target ? target.GetComponent<MyEntity>() : null;
+        }
         private int MasterId(int owner)
         { foreach (var unit in checkpoint.Units) if (unit.Id == owner) return unit.MasterId; return 0; }
 
@@ -193,9 +219,22 @@ namespace Zjcs.Presentation.Combat
             var go = UnityEngine.Object.Instantiate(prefabs[snapshot.ClassId], staging.transform, false);
             var entity = go.GetComponent<MyEntity>(); var view = go.GetComponent<MyFightStatus>();
             var state = new State { Value = snapshot };
+            state.Shield = new ShieldData { Owner = target };
+            state.Absolute = new AbsoluteData { Owner = target, Status = state };
             var context = new Context { Status = state, Owner = target, Creator = Body(snapshot.CreatorId),
                 Master = Body(MasterId(owner)), Agent = agent, HasIcon = hasIcon(snapshot.ClassId) };
             view.Bind(context, scope);
+            foreach (var action in go.GetComponents<MyAction>())
+            {
+                if ((action.myEffect || action.myEndEffect || action.LoopEffectPlayable)
+                    && !((IMyActionEntityLookup)this).GetEntity(new EcEntityIdentifier(1, owner)))
+                    throw new InvalidOperationException("Original status action owner entity is unbound: " + snapshot.ClassId);
+                action.EntityLookup = this;
+                action.mMyPlayableManager = scope;
+                action.mMyPlayableCenter = scope.PlayableCenter;
+            }
+            foreach (var shield in go.GetComponents<MyFightStatusShieldPersistent>()) shield.mMyPlayableManager = scope;
+            foreach (var absolute in go.GetComponents<MyFightStatusDamageReduceAbsolute>()) absolute.mMyPlayableManager = scope;
             entity.Bind(container, new EntityData { Status = state, Action = new ActionData { Owner = owner } }, fresh);
             leases.Add(key, new Lease { Entity = entity, View = view, State = state, Context = context });
             go.transform.SetParent(root, false);

@@ -51,6 +51,7 @@ namespace Zjcs.Combat.Official
                 absoluteDamage = 0;
                 amount = 0;
                 triggered = true;
+                target.StatusRefreshed?.Invoke(target, status);
                 if (component.AutoRemove && component.MaxCount >= 0
                     && component.TriggeredCount >= component.MaxCount) remove.Add(status);
             }

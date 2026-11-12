@@ -6,7 +6,8 @@ param(
     [switch]$AirCombo,
     [switch]$ActionInvisible,
     [switch]$SummonLife,
-    [switch]$DarkStatus
+    [switch]$DarkStatus,
+    [switch]$AllStatusViews
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -26,6 +27,7 @@ $active = @($rules.item | Where-Object { $_.ClassId -in $scope -and $_.ItemType 
     Select-Object -ExpandProperty ClassId | Sort-Object)
 if ($scope.Count -ne 104 -or $active.Count -ne 57) { throw 'Review the original six-profession skill scope.' }
 if (@($AirCombo,$ActionInvisible,$SummonLife,$DarkStatus | Where-Object { $_ }).Count -gt 1) { throw 'Select one isolated status diagnostic.' }
+if ($AllStatusViews -and -not $DarkStatus) { throw 'All original status views require the isolated dark-status host.' }
 if ($ItemIds.Count -eq 0) { $ItemIds = if ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } elseif ($SummonLife) { @(10019,10025,10058) } elseif ($DarkStatus) { @(10029) } else { $active } }
 foreach ($item in $ItemIds) { if ($item -notin $active) { throw "Not an original active skill in scope: $item" } }
 if ($AirCombo -and @($ItemIds | Where-Object { $_ -notin @(10006,10009,10052) }).Count -gt 0) {
@@ -53,6 +55,7 @@ $settings = @{
     ZJCS_SUMMON_LIFE_ACCEPTANCE = $(if ($SummonLife) { '1' } else { $null })
     ZJCS_STATUS_DARK_HIT_ACCEPTANCE = $(if ($DarkStatus) { '1' } else { [Environment]::GetEnvironmentVariable('ZJCS_STATUS_DARK_HIT_ACCEPTANCE', 'Process') })
     ZJCS_DARK_STATUS_LIFECYCLE_ACCEPTANCE = $(if ($DarkStatus) { '1' } else { $null })
+    ZJCS_FIRST_PROMOTION_STATUS_VIEWS = $(if ($AllStatusViews) { '1' } else { $null })
     ZJCS_SUMMON_DEATH_ACCEPTANCE = $(if ($ActionInvisible -or $SummonLife) { $null } else { [Environment]::GetEnvironmentVariable('ZJCS_SUMMON_DEATH_ACCEPTANCE', 'Process') })
 }
 $previous = @{}
@@ -124,6 +127,19 @@ try {
             if (-not (Test-Path -LiteralPath (Join-Path $run 'dark-status-native-restore.json')) -or
                 -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Dark status] Original 24222 body particles')) {
                 throw "Original dark-status lifecycle/disk assertions did not complete: $run"
+            }
+        }
+        if ($AllStatusViews) {
+            $catalog = Get-Content -LiteralPath (Join-Path $repository 'unity/Assets/Game/Resources/Combat/first-promotion-statuses.json') -Raw | ConvertFrom-Json
+            $characterStatuses = @($catalog.graphs | Where-Object id -notin @(11582,11632,24269,24270))
+            if ($catalog.graphs.Count -ne 83 -or $characterStatuses.Count -ne 79) { throw 'Review the original status host scope.' }
+            foreach ($status in $characterStatuses) { foreach ($phase in @('start','update')) {
+                if (-not (Test-Path -LiteralPath (Join-Path $run "original-status-$($status.id)-$phase.png"))) {
+                    throw "Original character-status view was not captured: $($status.id) $phase ($run)"
+                }
+            } }
+            if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Status views] All 83 original prefab hierarchies bound; 79 character statuses passed native Start/Update/End.')) {
+                throw "Original status view assertions did not finish: $run"
             }
         }
         Write-Output "Passed $item $direction : $run"

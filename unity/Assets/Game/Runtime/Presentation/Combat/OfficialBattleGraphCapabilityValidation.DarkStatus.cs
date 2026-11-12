@@ -31,7 +31,7 @@ namespace Zjcs.Presentation.Combat
                     if (prop.Id == catalog.PropertyType("Speed")) prop.Value = 1000;
                 unit.Turn.Speed = 1000;
             }
-            checkpoint.MaxRound = 24;
+            checkpoint.MaxRound = ValidateFirstPromotionStatusViews ? 2048 : 24;
         }
 
         private void ObserveDarkStatusStep(FightBattleCheckpoint checkpoint)
@@ -58,6 +58,7 @@ namespace Zjcs.Presentation.Combat
 
         private bool ObserveDarkStatusFrame(OfficialBattleRuntimeController controller)
         {
+            if (darkStatusComplete && ObserveFirstPromotionStatusViews(controller)) return true;
             if (!ValidateDarkStatus || darkStatusComplete || darkStatusOwner == 0) return false;
             var view = DarkStatusView();
             var body = controller.TryGetUnitTransform(darkStatusOwner);
@@ -117,6 +118,9 @@ namespace Zjcs.Presentation.Combat
         }
 
         private void VerifyDarkStatusDiagnostic()
-        { if (ValidateDarkStatus) Require(darkStatusComplete, "The original dark-status native lifecycle did not finish."); }
+        {
+            if (ValidateDarkStatus) Require(darkStatusComplete, "The original dark-status native lifecycle did not finish.");
+            if (ValidateFirstPromotionStatusViews) Require(statusViewProbeComplete, "Original character-status view probe did not finish.");
+        }
     }
 }
