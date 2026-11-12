@@ -16,6 +16,8 @@ using Object=UnityEngine.Object;
 
 public sealed partial class HomeCurrencyWindowsNativeRunner
 {
+    Func<OfflineHomeMainlineTaskData,IOfflineHomeTaskNavigation> taskRowNavigationFactory;
+    Func<TaskUI.TaskListItem,IEnumerator> taskRowNavigationVerifier;
     IEnumerator ExerciseTaskRowsWithProfile()
     {
         string root=System.IO.Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"),"task-row-profile-"+Guid.NewGuid().ToString("N"));
@@ -35,7 +37,7 @@ public sealed partial class HomeCurrencyWindowsNativeRunner
                 Zjcs.Offline.HomeUI.OfficialCurrentHomeRuleAssetCatalog.LoadDefault(),()=>profile.Save,_=>false),failures.Add);
             var results=new List<ProgressionResult>();
             player=new OfflineHomeTaskPlayer(profile,data,reader,conditions,new OfflineHomeTaskRewardPresenter(data,settings),
-                new TaskPlayerNavigationProbe(),()=>0,()=>TaskUI.SubRank.Norank,results.Add,failures.Add);
+                taskRowNavigationFactory?.Invoke(data)??new TaskPlayerNavigationProbe(),()=>0,()=>TaskUI.SubRank.Norank,results.Add,failures.Add);
             icons=new OfflineHomeTaskRewardIcons(canvas.transform,this,fonts,Post,data,assets);
             host=new TaskRowProfileHost(this,player,conditions,icons,data);
             slot=new GameObject("DetachedTaskProfileFixtureHost",typeof(RectTransform));slot.SetActive(false);slot.transform.SetParent(canvas.transform,false);
@@ -74,6 +76,7 @@ public sealed partial class HomeCurrencyWindowsNativeRunner
             Require(world.TaskGoal.ProgressText.Text.Contains("25"),"original native world task formats the actual integer percentage");
             RequireTaskTextOnScreen(world);
             Capture("home-task-profile-world-progress-native.png");
+            if(taskRowNavigationVerifier!=null)yield return taskRowNavigationVerifier(world);
             Require(profile.SetMapRegionProgress(10,0,10000).IsApplied,"commit completed region progress");
             player.RefreshTasks(false);conditions.NotifyWorldMapProgressUpdate();yield return null;
             Require(Field<WorldStateSwitcher<TaskUI.TaskListItem.TaskStatus>>(world,"mStateSwitcher").State==TaskUI.TaskListItem.TaskStatus.Completed,"actual world completion updates the original row state");

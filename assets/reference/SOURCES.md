@@ -865,6 +865,8 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 `scripts/prepare_home_task_map_data.py` 从所选884的原 `config_luban`／`config_luban_map` 和原 `CombatRatingConfig.asset` 恢复任务地图元数据、阶级映射、战力公式与颜色；来源、原代码／处理器输入、对象及输出哈希见[任务地图数据来源](home-task-map-data-source-manifest.json)。显式本地加载入口和单机开放差异仅在[任务页](../../docs/features/tasks.md)维护，未生成完整素材快照。
 
+`scripts/prepare_home_task_navigation.py` 从所选884的 `ClientConditionRedirector`、六类客户端条件、`NavigateUtils` 及共享跳转字段迁移任务导航调用；原代码、方法提取工具、官方语言载荷与适配输出 SHA256 见[任务导航来源](home-task-navigation-source-manifest.json)。复用现有原生确认窗口，无新增图像；接口边界、实现范围和实际验证仅在[任务页](../../docs/features/tasks.md)维护。
+
 家园完整 HUD 层级及公共父级来源：`prepare_home_hud_native.py` 复用已核验的所选 `884_156692` 模块代码和 APK 优先原生恢复流程，记录原 MainCanvas、外部 TaskListItem、四项已确认离线裁剪、动画、语言、字体、图数据、声音与 Windows 依赖；原始对象、脚本引用和输入输出 SHA256 见[完整 HUD 原生来源](home-hud-native-source-manifest.json)。`prepare_home_hud_frame_native.py` 恢复原共享父级与玩家 stencil；`prepare_home_hud_frame_runtime.py` 直接迁移原 StencilMask，代码及原生输入输出分别见[公共框架代码来源](home-hud-frame-runtime-source-manifest.json)和[公共框架原生来源](home-hud-frame-native-source-manifest.json)。两个绑定工具按 GUID 与实际内容复用既有资产，新增载荷位于 `unity/Assets/Official/Home/UI/Hud/` 和 `HudFrame/`，prefab 显式序列化绑定；尚未生成完整素材快照。实现、离线裁剪与验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
 
 完整家园 HUD 的本地绑定目录由 `scripts/prepare_home_hud_bindings.py` 生成，来源输入、原 HomeUI／共享父层的资源引用、原字体配置与声音地址、类型化依赖宿主及输出哈希记录于 `assets/reference/home-hud-binding-source-manifest.json`。载荷入口为 `Resources/Home/OfflineHomeHudAssets.asset`，绑定代码位于 `Runtime/Offline/HomeHudUI/`；该清单同时登记真实角色条件与桌面指针输入适配、所依赖的原通知／输入模块输出、同版函数条件解析器和剧情状态枚举输入，不新增美术替代。

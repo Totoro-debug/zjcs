@@ -1,0 +1,61 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "777a1175f75a708a181bd47d496151210bc0b56076bced41b99d311a0e4490e3",
+  "inputs": {
+    ".tools/source-packages/current/884_156692/official-code/client-source/ClientMapGameTotalCountCondition.cs": "7e4bfd510d95554840655b59a97702a418cf7d8ee141d77aee34e634e20262b2",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapGameTotalCountCondition.cs": "aa75d94669f72735cc1af73d56b4116d06356c104a28a8b10eaa30b48c9affec",
+    ".tools/source-packages/current/884_156692/official-code/client-source/ClientWorldMapProgressCondition.cs": "eacd72d964c9d46567ed76ec7ab0b49d2e9bd362e93ab386471e5ff40d64b195",
+    ".tools/source-packages/current/884_156692/official-code/client-source/ClientMapLogicEntityEndByTagCondition.cs": "299c75d5ff48cca5024a12848c41ce96055a5407767a5a1dc18f4eafa09a00d3",
+    ".tools/source-packages/current/884_156692/official-code/client-source/ClientMapRegionGoddessCondition.cs": "299dad7d9d4c6b7f2f9d06bf543599dbeee287d3076538ec17cf8f6335be69eb",
+    ".tools/source-packages/current/884_156692/official-code/client-source/ClientTotalOpenChestCondition.cs": "0967095e30e25c433d89fb3b36a6c1df48116fc3a214c3a7938cea1574f0a19b",
+    ".tools/source-packages/current/884_156692/official-code/client-source/ClientDemonBattleLayerPassCondition.cs": "369f1dffc94e96b0af59f788f310678b11bd86b0769075b203edd696e1822b51",
+    ".tools/source-packages/current/884_156692/official-code/client-source/NavigateUtils.cs": "3b7cfa0d6449e7f224522e2884f371bc9e6df632bab9c2542d553c8244868a14",
+    ".tools/source-packages/current/884_156692/official-code/client-source/ClientConditionRedirector.cs": "6c806951d838519a56bf83bd29d777e4cacc7a628c0e831200ac1c9ec8dc0eeb",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MaxProfessionRankCondition.cs": "a2dbe26e8ac46e01db42d038fc4a86b6bae4ad4e460d20c307a417ab3becc7bf",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ICondition.cs": "12a4005edaf53df080240808b91e6e3e55fc08bceb91fd154e6c3993cdc704ff",
+    "scripts/prepare_home_mainline_task_data.py": "483fc2bb51e9f3d15510ba2199e1b6335be380ac1020cdf510bf65c85e38173d",
+    "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
+    "scripts/official_bundle_reader.py": "29e0015bcef7317e220159e0be13aeed990f94d09397b1ac7814131dc343e477",
+    "scripts/fixtures/home_task_row_profile_validation.cs": "368e3f6101561649d603b24b52e5c324cf323be03826cad392fd6644ff6505c4",
+    "scripts/fixtures/home_task_navigation_validation.cs": "7c4882f7455f44a86afa254c5a24a86cff4682b454988bcbbeb992fbdd8e8125",
+    "unity/Assets/Game/Resources/Home/home-mainline-task-data.json": "cda85dec3150258e4470a2578afc025e4055a3b579b5d22c3c087aa1573ccb7f",
+    "scripts/prepare_home_task_map_data.py": "89ffa51d2f74399c13a295b38b3e3f4005ddbefbb5b2bbeddb764a7d764da39a"
+  },
+  "language": {
+    "wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile": {
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/WwiseBnk/495eff606d09ccff377d3b54ba4c1bc4.rawfile",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "raw_size": 5556,
+        "raw_sha256": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365"
+      },
+      "payload_sha256": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365"
+    },
+    "wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile": {
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/WwiseBnk/7457975a4ff474fa84c666b9b720bb3d.rawfile",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "raw_size": 5300206,
+        "raw_sha256": "a7e72b9478ce455a7ef12974f16e3f78e684ded497b7750f7901dacb66eacfad"
+      },
+      "payload_sha256": "a7e72b9478ce455a7ef12974f16e3f78e684ded497b7750f7901dacb66eacfad"
+    }
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/HomeTaskUI/HomeTaskJumpConditions.cs": "69e6c593b9c2f80bdb3e2c623726e6ff655c2a8bc683545e6002e10f5adfcac9",
+    "unity/Assets/Game/Runtime/Official/HomeTaskUI/HomeTaskJumpServices.cs": "02ea7bc96615e63d309f0c1f4f65cc350c773fa23ea04a76ea9f9b241f068185",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskNavigation.cs": "d2aa20243e38458cf61534836ab0f3b6f58e46ebed233599388a9c6562bfe1de",
+    "unity/Assets/Game/Resources/Home/home-task-navigation-texts.json": "4ccff17d6e844673cdb601c085dd584fd4285800a32222371f035f0668584fab",
+    "unity/Assets/Game/Runtime/Official/HomeTaskUI/HomeTaskJumpConditions.cs.meta": "cb9f9929b198b2c1554eb689c70657ea7762d5c9dc1c67d3a06b5ca126bd4de9",
+    "unity/Assets/Game/Runtime/Official/HomeTaskUI/HomeTaskJumpServices.cs.meta": "5c70d9563446679aa1d0f4e49a685f085ab56c770ec291084691dfba5233b30b",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskNavigation.cs.meta": "ef2bff189cbd5bf6a56b45c6571a0e42a305025951c98082499aea8a648ab76b",
+    "unity/Assets/Game/Resources/Home/home-task-navigation-texts.json.meta": "46b2048340133041b8db12f355749a2fe309a7682ca03113d1d3e3e75244cdb3"
+  },
+  "scope": "Selected original CanJump/Jump/CanTrace condition branches; map access, confirmations and trace entity services remain explicit host boundaries. No production route completion claim."
+}
