@@ -76,7 +76,7 @@ public abstract class HomeTaskJumpCondition
 '''
  DEST.write_text(header+'\n'.join(pieces)+'}\n','utf8',newline='\n')
  texts={};language={}
- keys={'confirmation','confirm','cancel','jump_to_map_tip0','jump_to_map_tip1','jump_to_map_tip2','jump_to_home_tip0','MapUnLockTip','MainlandPanel.MapUnLockLimit','task_start_trace_target_tip','task_stop_trace_target_tip'}
+ keys={'confirmation','confirm','cancel','jump_to_map_tip0','jump_to_map_tip1','jump_to_map_tip2','jump_to_home_tip0','MapUnLockTip','MainlandPanel.MapUnLockLimit','task_start_trace_target_tip','task_stop_trace_target_tip','PLAYER_MAP_GROUP_GOTO_TARGET_MAP_IS_SAME'}
  with Apk.current() as apk:
   assert apk.version=='884_156692'
   for name in ('wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile','wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile'):

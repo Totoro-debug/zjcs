@@ -1,0 +1,133 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "d7bbfdf07c86ae927f9a30bcd370f73e7eaca6ef3d324b94981bf012efd9b82d",
+  "inputs": {
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityHandler.cs": "fe35786dcc2c2f369b162cfe35b15375e77ae33383e1ac743ac824b545af45d7",
+    ".tools/source-packages/current/884_156692/official-code/client-source/MapGoToUtil.cs": "b2e8864186c0c86b6730ed636ea0300c31d8392fc586b7ccfb0073e2d8cb09d1",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapPeriodicityInteractionInfoParser.cs": "2a881190c695688d6a8caf772833ad99ebab8e559a93351c89a67383d545c4f3",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityUtils.cs": "2b2d26dafea17d28732ce76d03cc7f89e47f5d74c56f9753f7ecf2a6d14563cb",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapInfoManager.cs": "f7e33841283364e82981f84c88bce7b9ca240f1c3494a167f794361b27fd7528",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapEntryInfoPackParser.cs": "4e5276972d9e02706e622cf13b06501a1f8b819aac9a95bac9bdd40677c34a76",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapEntryInfoPack.cs": "8deb90e6c4a9bd86e70cf6d5d1b9bfffab308517d5f1e2253b6bc0b8e475cb2c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapSingleEntryInfo.cs": "13fd6e4c121f17d7dba1057ffada4c3ef27c26f2037cf933ebba46d3608e6dee",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapEntryType.cs": "64755f33a91e0e8aa890359028df7b72dd4161f8ecadaab1a8c2511c596641c2",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapRegionStatus.cs": "807d90a76bb87aaf9c9f3c0b4e6b9aa0a6e816c266af237836b6956ff810f3d4",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapEntityPeriodicityInteractionInfoPackParser.cs": "56d5c6ed7f0d564e035e0c819c466a88ecbda34b9af7bece9388fa2efc42c386",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapEntityPeriodicityInteractionInfoPack.cs": "5f8b57b595cb611bb05fd851f38c9ab139d975be4f57f42be14ce887f90c4028",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapPartInfoBase.cs": "88f4d8137d4f45c6b09f78a9d630f0f60806fb9e87388c1356f03e11c57925aa",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Tables.cs": "0e4882f1ad41958e5ec017543447e17f5196c5453f8168c685926ea2c134c9bc",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbMapRegionInfo.cs": "258715211bf3d24f619622a6fecad7382f23541751266910be8a1e2b35402d71",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapRegionInfo.cs": "c98644f4854ff2f4c4e03b4e517d8d6799d323f6eabb7bbc6f64d281c2537a36",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbMapWorldInfo.cs": "c36d30a01c3b4dd5391668f2f8f0c606396a435dc9af7f2d969e872f51f0ff86",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapWorldInfo.cs": "bbb818e98ec2f7a1798476ac4308aaaa9a2b5e81d882fac4ba10315ccf912118",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ICondition.cs": "12a4005edaf53df080240808b91e6e3e55fc08bceb91fd154e6c3993cdc704ff",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapWorldActivedCondition.cs": "44b6780760161608245e96fe0b0e304d21f243c9ce4221ee4055df1c6154c24c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbMapPeriodicityInteractionInfo.cs": "c5f64ea95c31073146b8f754ea895e45615da77cf28f482a87fa6b50843e814e",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapPeriodicityInteractionInfo.cs": "d3046a736f75c9c101c86d6d6b3f6b4807c11c3aba625a0f761617ed8665806b",
+    "unity/Assets/Game/Resources/Home/home-mainline-task-data.json": "cda85dec3150258e4470a2578afc025e4055a3b579b5d22c3c087aa1573ccb7f",
+    "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
+    "scripts/official_bundle_reader.py": "29e0015bcef7317e220159e0be13aeed990f94d09397b1ac7814131dc343e477",
+    "scripts/official_tables.py": "77762a9b2aba2d92a6ad3ebd8ce5f7d0bb42a6b4cfc872ae7094c1d10b1e0473",
+    "scripts/official_map_codec.py": "8d9cf134c73783bd78643361bc4133b747ec77bfabe8278ff78b244f37a684d2",
+    "scripts/prepare_home_task_map_data.py": "89ffa51d2f74399c13a295b38b3e3f4005ddbefbb5b2bbeddb764a7d764da39a",
+    "scripts/prepare_home_task_navigation.py": "8ab6ce36567af002d916f8b476f2793b4db028c81fa27decb996d5c31eb2a16c",
+    "scripts/fixtures/home_task_map_entry_validation.cs": "7086cf2c25b61a0e7269ad7f263b37e9bd3df1943b774c2501e2c4ace62eadca",
+    "scripts/fixtures/home_task_map_entry_native_validation.cs": "6c11aaa11c0ffefb4e3d7c00e0ca3bf4360a37ff7a5de5dc90da965377f42fb9",
+    "scripts/fixtures/home_task_navigation_validation.cs": "9259a777e4be6c096d6603322e3122e55da81cbf7f1e38c26eab46db60a2a3dc"
+  },
+  "tables": {
+    "map_region": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban_map.bundle",
+        "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+        "path_id": "-475710695530452369",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+        "raw_size": 197305,
+        "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7"
+      },
+      "payload_sha256": "04525b1a307baeed8ed49e4004a855b2e0239176718ac08c912f34f2e0467bfa",
+      "object_sha256": "c62b345792b69067902a1eff4a5b7f4abdae89de465c24f5d63b7366c924fcb2"
+    },
+    "map_world": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban_map.bundle",
+        "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+        "path_id": "-6051789679960494712",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+        "raw_size": 197305,
+        "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7"
+      },
+      "payload_sha256": "beeae896bd37221692243faae8b0c353941b0a42dac66eedb28a6314df276df4",
+      "object_sha256": "8bad50ab4aa195df71f84382a88ec638a2515759cf437d530861e24bcdf04a61"
+    },
+    "map_periodicity_interaction": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban_map.bundle",
+        "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+        "path_id": "-2223259512828746689",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+        "raw_size": 197305,
+        "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7"
+      },
+      "payload_sha256": "ef466940cce059ed9b08f51fdf3f2aa3b8064802bf1fe7923666784680ec74a7",
+      "object_sha256": "4c14c8070a45931113d1a69861707803f2fc5a6f3fbe01bab094a5c5c3db69a4"
+    },
+    "MapEntryInfoPack": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_map.bundle",
+        "bundle_hash": "3b7013d0abd1cb05d4c3d189caf8749b",
+        "path_id": "4425507987871730360",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/3b7013d0abd1cb05d4c3d189caf8749b.bundle",
+        "raw_size": 12679,
+        "raw_sha256": "589ee387b02e42d971f37f8e6e068c29923dc225c896da4dd1700404eb7f29df"
+      },
+      "payload_sha256": "f1ddb95e036992b5abe11d6ecd87c0489eee48f4f0a3939d621c820a9a8f8342",
+      "object_sha256": "0ee2f8fec5bb1492c3eb9b0efcb6d3bfea36d22d04fc2dfc483b844891b01680"
+    },
+    "MapEntityPeriodicityInteractionInfoPack": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_map.bundle",
+        "bundle_hash": "3b7013d0abd1cb05d4c3d189caf8749b",
+        "path_id": "5658301105126026897",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/3b7013d0abd1cb05d4c3d189caf8749b.bundle",
+        "raw_size": 12679,
+        "raw_sha256": "589ee387b02e42d971f37f8e6e068c29923dc225c896da4dd1700404eb7f29df"
+      },
+      "payload_sha256": "2f3caeb856628c1f35bf54b4366135390a9cfb96462961a84e06a6b8a4f96d67",
+      "object_sha256": "9399b28071c84d807940c05353e917a5d73e0a6fa5f2d32a52c15739a060e780"
+    }
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/HomeTaskUI/HomeTaskMapEntryNavigation.cs": "56510daf91acdccf52bd3116bda5a2570fef643649f902519516f895caeec617",
+    "unity/Assets/Game/Runtime/Official/HomeTaskUI/HomeTaskMapEntryServices.cs": "84a6142bf8f5125fc6d72502a7333cd4c0c1ca1fdda668b6cb7aecd6870f03e0",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskMapEntryData.cs": "3036cb8b51db6d646095d5e626c0c7933732afbcb527d9e7dce85e7d0dea84c0",
+    "unity/Assets/Game/Resources/Home/home-task-map-entry.json": "5e7262c815f883931e71437e65bb0355740408e1ef97a71782c51145508e32ad",
+    "unity/Assets/Game/Resources/Home/home-task-map-entry-hash.json": "b75cade31a92be21d76b90cd1901b7aff97df14b233c547f0bec6783dcae03ff",
+    "unity/Assets/Game/Runtime/Official/HomeTaskUI/HomeTaskMapEntryNavigation.cs.meta": "c178ab7241f6531b8d1e894e5341a7bebae03570a9b0ddb298840f0cd6ae7aec",
+    "unity/Assets/Game/Runtime/Official/HomeTaskUI/HomeTaskMapEntryServices.cs.meta": "9ff7e6a3cbd1838442afd53d6cd37a77362f8067b7efbbd46e1bd141e5d5fb26",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskMapEntryData.cs.meta": "31f2a252449e2e210888f51fd4e759f07bd0d5d7a18c37363072807f8b6c9c59",
+    "unity/Assets/Game/Resources/Home/home-task-map-entry.json.meta": "44a5193b1b0abea7d98676f0ccbf31de7529c70c38c1eb8a13f8ddd238e0ded3",
+    "unity/Assets/Game/Resources/Home/home-task-map-entry-hash.json.meta": "b6f8e8cda5c8879931e89e506d5349e8da50c858c7d9fd204d3618b4bb31960b"
+  },
+  "scope": "Original regional entry breadth-first search, entry usability, periodic interaction result and group-aware task route. Live activation/period counts and actual map/window owner remain required ports."
+}

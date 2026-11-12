@@ -104,7 +104,8 @@ public sealed partial class HomeCurrencyWindowsNativeRunner
                 initialize(new Dialog(this,dialog));
             });
         }
-        public void GotoMapRegion(int map,int region)=>Calls.Add("goto:"+map+":"+region);
+        public Action<int,int> EntryRoute;
+        public void GotoMapRegion(int map,int region){Calls.Add("goto:"+map+":"+region);EntryRoute?.Invoke(map,region);}
         public void NavigateRegion(int map,int region,Action<object> completed){Calls.Add("navigate:"+map+":"+region);completed?.Invoke(this);}
         public void NavigateFantasyLadder(Action<object> completed){Calls.Add("ladder");completed?.Invoke(this);}
         public void TraceTaskWhenEnterMap(long id)=>Calls.Add("trace:"+id);

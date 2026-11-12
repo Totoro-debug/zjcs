@@ -70,6 +70,12 @@
 
 上述地图、实体标签位置、快速清理／星系、日历和追踪实体查询仍由显式受控验证宿主提供；进入、离开、幻想阶梯及默认导航结果处理只证明原请求顺序，尚未接到正式地图／页面，不代表真实地图已经进入或追踪标记已经出现。正式地图宿主、实际追踪实体生命周期、任务详情窗口与正式 HUD 装配仍未完成。
 
+原任务跳转的区域落点选择已进一步迁入 [`HomeTaskMapEntryNavigation`](../../unity/Assets/Game/Runtime/Official/HomeTaskUI/HomeTaskMapEntryNavigation.cs)：直接提取所选客户端 `MapGoToUtil.GotoMapRegion`、共享 `EntityHandler.FindRegionNearEntry/IsEntryUsable` 和 `MapPeriodicityInteractionInfoParser.CheckCanInteraction`，保留地图组改向、同组当前地图提示、最后入口区域／区域0回退、按邻接列表及入口列表顺序的广度搜索和地图默认入口回退。普通入口须在实际激活列表中；已激活入口／传送点须处于公共区域；周期交互传送点还须沿原返回码2155判断。周期计数低于上限不会被擅自解释为入口可用。
+
+[`OfflineHomeTaskMapEntryData`](../../unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskMapEntryData.cs) 从同版原 `MapEntryInfoPack`、周期实体映射、`map_world`、`map_region` 和周期配置提供所选55项主线涉及的地图10／11／12、181个区域及原入口顺序；返回值隔离可变存储，输入按版本及SHA256核对。原地图组提示文字也已加入既有任务导航原文目录。配置、原始方法、枚举数值核对及适配凭据见[任务地图入口来源](../../assets/reference/home-task-map-entry-source-manifest.json)，显式配置入口为 `Resources/Home/home-task-map-entry*.json`。
+
+隔离工程规则校验已验证这181个区域的无可用入口回退、全部实际入口的类型判定及已激活入口选择、循环图的搜索终止和邻接／入口顺序、周期门槛及否定分支的原错误码、空玩家／缺失地图、地图组改向和最后区域选择、返回副本隔离及篡改拒绝。完整隔离工程静音 Play Mode 已通过实际新角色原任务条目和原确认框的取消／确认模拟指针，取消无入口请求、确认后沿原搜索只请求一次地图10的默认入口101；原领奖、存档重开、货币窗口及导航回归通过，并已查看实际运行截图。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 与静态元数据检查通过。此处激活列表、公共／私有状态、地图组与周期计数由显式验证宿主提供；最终进入地图仍是请求边界，尚未证明实际场景进入、任务追踪标记或正式HUD装配。
+
 固定版任务配置与本地奖励、条件、跨地图魔女累计规则已接入；主城 HUD 输入、完整任务路线、画面和存档连续流程仍待完成。资源来源与工程检查范围见[工程页](unity-project.md)。
 
 ## 自定义实现
