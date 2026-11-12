@@ -785,6 +785,12 @@ namespace Zjcs.Combat.Official
                 actor.AiPreviousTargetId = targets[0].Id;
             FightBattleDamageEvent skillCost = ApplySkillCost(actor, skill);
             if (skillCost != null) damageEvents.Add(skillCost);
+            if (skillCost != null && presentationCast != null)
+            {
+                presentationCast.HasSkillCostHp = true;
+                presentationCast.SkillCostBeforeHp = skillCost.BeforeHp;
+                presentationCast.SkillCostAfterHp = skillCost.AfterHp;
+            }
             long skillCostHp = skillCost == null
                 ? 0L : Math.Max(0L, skillCost.BeforeHp - skillCost.AfterHp);
             FightBattlePetEnergyRuntime.RecordOwnerDamage(units, actor.Id, skillCostHp);

@@ -62,6 +62,14 @@ function Fixture($mode = 'status', $restore = $false, $canTrigger = $true, $whit
     $step = $runner.Step(0,1)
     $payments = @($step.Event.DamageEvents | Where-Object IsSkillCost)
     Assert-Cost ($step.Event.ActorId -eq 1 -and $actor.Hp -eq 60000-$cost -and $payments.Count -eq $(if ($cost -gt 0) {1} else {0})) 'Skill did not pay its actual HP cost once'
+    $parentCast = @($step.Event.SkillCasts | Where-Object SkillEntityId -eq 990201)
+    Assert-Cost ($parentCast.Count -eq 1 -and $parentCast[0].HasSkillCostHp -eq ($cost -gt 0)) 'Actual cast lost its known cost notification or invented a zero-payment event'
+    if ($cost -gt 0) {
+        Assert-Cost ($parentCast[0].SkillCostBeforeHp -eq 60000 -and $parentCast[0].SkillCostAfterHp -eq 60000-$cost) 'Cast cost snapshot was replaced by subsequent HP listener results'
+        $roundtrip = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($cp))
+        $savedCast = @($roundtrip.Receipts[0].Event.SkillCasts | Where-Object SkillEntityId -eq 990201)[0]
+        Assert-Cost ($savedCast.HasSkillCostHp -and $savedCast.SkillCostBeforeHp -eq 60000 -and $savedCast.SkillCostAfterHp -eq 60000-$cost) 'Checkpoint roundtrip lost the actual cast cost notification'
+    }
     if ($mode -eq 'status') {
         $expected = $cost -gt 0 -and ($canTrigger -or $whitelist)
         Assert-Cost (($actor.Statuses.ClassId -contains 24315) -eq $expected) 'HP cost with no hit did not notify original 25067, or ignored its trigger policy'

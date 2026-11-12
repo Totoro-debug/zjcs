@@ -132,6 +132,8 @@ def main():
         inputs.append(identity(assembly_path))
     inputs.extend(identity(CODE / 'client-source' / (name + '.cs'))
                   for name in ('FightWarmupSetting', 'FightDamageEffectUIWarmupSetting'))
+    inputs.extend(identity(CODE / 'common-source/Common' / (name + '.cs'))
+                  for name in ('FightSkillComponentImplement', 'FightRoleFightComponent'))
     for name in NAMES + ('EStatusCustomAction',):
         path = CODE / ('common-source/Common' if name == 'EStatusCustomAction' else 'client-source') / (name + '.cs')
         inputs.append(identity(path))

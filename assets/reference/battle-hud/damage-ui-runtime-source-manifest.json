@@ -22,6 +22,14 @@
       "sha256": "2719306f32f945c13c99b5c273caa9ec59dd3ce8eb81e40474eb9291dcdcb0d1"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillComponentImplement.cs",
+      "sha256": "4e4b33efb54d32ada48f3ac6e46bb11f50e5b1c33499a063cdc06c91b463368d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightRoleFightComponent.cs",
+      "sha256": "4844dfa361e882daac113d2ad6f795f88cc64e610d7d206ef34cf59361b7083b"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/CharacterDamageUI.cs",
       "sha256": "d328a4a655e12de7b030bd69fff92008d8221699424cb4af4f68348232e7850c"
     },
@@ -222,7 +230,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_damage_ui_runtime.py",
-    "sha256": "1330bd906bebdc11d10022b0700f52864be346ea0f75e26cbb7b4596fb6858c2"
+    "sha256": "05ebb155b3e4ae208ba04c966aa6f7284524a1ac151024e97f4d82e2ff2e3b76"
   },
   "adaptations": [
     "Namespace and existing original entity/pool/language types; remove IL comments and repair explicit Unity bool operators.",

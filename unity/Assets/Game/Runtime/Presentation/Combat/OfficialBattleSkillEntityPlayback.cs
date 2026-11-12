@@ -224,6 +224,7 @@ namespace Zjcs.Presentation.Combat
             var entity = skillViews.Create(state.Data);
             casts.Add(new ActiveCast { Entity = entity, Remaining = cast.Presentation.Duration < 0f
                 ? float.PositiveInfinity : cast.Presentation.Duration });
+            if (damageUI != null) scope.Dispatch(() => damageUI.SkillCostHp(cast, state.Data.Identifier));
             scope.Dispatch(entity.MyStart);
             if (damageUI != null) scope.Dispatch(() => damageUI.Replay(cast, state.Data.Identifier));
             receiptHits.Enqueue(cast, state.Data.Identifier);

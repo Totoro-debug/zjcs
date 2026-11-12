@@ -69,6 +69,12 @@ namespace Zjcs.Presentation.Combat
             && cast?.Presentation != null && catalog.ContainsSkill(cast.SkillEntityId);
         public bool OwnsDamageUI(FightBattleStepEvent step, FightBattleDamageEvent damage)
         {
+            if (entityViews.HasDamageUI && damage?.IsSkillCost == true && step?.SkillCasts != null)
+                foreach (var cast in step.SkillCasts)
+                    if (OwnsReplayUI(cast) && cast.HasSkillCostHp && cast.ActorId == damage.SourceId
+                        && cast.ActorId == damage.TargetId && cast.SkillEntityId == damage.SkillEntityId
+                        && cast.Delay == damage.Delay && cast.SkillCostBeforeHp == damage.BeforeHp
+                        && cast.SkillCostAfterHp == damage.AfterHp) return true;
             if (!entityViews.HasDamageUI || !OfficialBattleDamageReceiptPlayback.CanCreate(damage)
                 || step?.SkillCasts == null) return false;
             foreach (var cast in step.SkillCasts)

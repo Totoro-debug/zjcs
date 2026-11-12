@@ -1877,6 +1877,11 @@ namespace Zjcs.Combat.Official
         // Runtime damage serials created directly by this actual cast. Nested
         // casts own their own list, even when caster and skill class are equal.
         public List<int> DamageEventIds = new List<int>();
+        // Original DoSkillCost precedes skill-start notification. These values
+        // belong to this actual cast, independently of later same-class replays.
+        public bool HasSkillCostHp;
+        public long SkillCostBeforeHp;
+        public long SkillCostAfterHp;
         // Start time relative to this step; Playable cue times are relative to this cast.
         public float Delay;
         public int Slot;

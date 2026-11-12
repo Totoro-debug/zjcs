@@ -33,7 +33,7 @@ namespace Zjcs.Combat.Official
     public class GridItem { public int Id; public bool HasRuntime; public FightBattleUnitState Runtime; }
     public class FightBattleCheckpoint { public List<FightBattleUnitState> Units = new List<FightBattleUnitState>(); public List<GridItem> GridItems = new List<GridItem>(); }
     public class FightBattleSkillCastPresentation { public int FacingIndex, TargetId; }
-    public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId, Slot; public bool IsPetSupport; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(), DamageEventIds = new List<int>(); }
+    public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId, Slot; public bool IsPetSupport, HasSkillCostHp; public long SkillCostBeforeHp, SkillCostAfterHp; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(), DamageEventIds = new List<int>(); }
     public class FightGridPoint { public int X,Y; }
     public class FightBattleMovementEvent { public int UnitId,MoveBehaviourId,MoveSkillEntityId; public FightBattleSkillCastPresentation OrdinarySkillPresentation; public float OrdinaryMoveDelay; public bool HasDirection,HasFacing; public float Delay,MoveDuration,MoveSpeed,NativeDuration; public List<FightGridPoint> Path = new List<FightGridPoint>(); }
     public sealed class FightBattleSkillMove { public float MoveDuration, MoveSpeed, Delay; }
@@ -46,7 +46,7 @@ namespace Zjcs.Combat.Official
         public List<FightBattleSkillMove> SourceMoves = new List<FightBattleSkillMove>();
         public List<int> HitGraphEntities = new List<int>(), Hits = new List<int>(), ExtraSkills = new List<int>();
     }
-    public class FightBattleDamageEvent { public int DamageId, TargetId, SourceId, SkillEntityId; }
+    public class FightBattleDamageEvent { public int DamageId, TargetId, SourceId, SkillEntityId; public bool IsSkillCost; public float Delay; public long BeforeHp, AfterHp; }
     public class FightBattleStepEvent { public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>(); public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>(); }
 }
 namespace Zjcs.Official.StoryPlayableManager

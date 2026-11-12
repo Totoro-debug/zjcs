@@ -134,6 +134,11 @@ namespace Zjcs.Presentation.Combat
             SkillReplayed(new CharacterDamageUISkillReplay(new EcEntityIdentifier(1, cast.ActorId),
                 skillId, cast.ReplayType == 1));
         }
+        public void SkillCostHp(FightBattleSkillCastEvent cast, EcEntityIdentifier skillId)
+        {
+            if (cast.HasSkillCostHp && roles.TryGetValue(new EcEntityIdentifier(1, cast.ActorId), out var role))
+                role.SkillCostHp(skillId, cast.SkillCostBeforeHp, cast.SkillCostAfterHp);
+        }
         public void SetVisible(bool value)
         {
             visible = value;

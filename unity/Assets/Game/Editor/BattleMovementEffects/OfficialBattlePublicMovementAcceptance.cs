@@ -162,11 +162,12 @@ namespace Zjcs.Editor
         {
             yield return Approach(capture, false);
             yield return Approach(capture, true);
+            yield return Approach(capture, false, true);
         }
 
-        private static IEnumerator Approach(Action<string> capture, bool monsterActs)
+        private static IEnumerator Approach(Action<string> capture, bool monsterActs, bool skillCost = false)
         {
-            string prefix = monsterActs ? "public-monster" : "public-movement";
+            string prefix = skillCost ? "public-cost" : monsterActs ? "public-monster" : "public-movement";
             var root = new GameObject("Public movement battle verification");
             var world = new GameObject("Battle world");
             world.transform.SetParent(root.transform, false);
@@ -227,6 +228,7 @@ namespace Zjcs.Editor
                 var skillProperties = rules.CalculateSkillProps(skillEntityId, 1, 1, 1)
                     .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList();
                 var skill = rules.CreateSkill(skillEntityId, 0, itemId, 1, 1, 1, skillProperties);
+                if (skillCost) { skill.CostType = 1; skill.SkillCost = 7; }
                 actor.Skills.Add(skill);
                 long cooldown = rules.CalculateSkillCooldown(skillEntityId, 1, 1, 1, actor.Properties.ToDictionary(p => p.Id, p => p.Value));
                 actor.SkillState.Slots.Add(rules.CreateSkillSlot(skill, cooldown));
@@ -270,6 +272,7 @@ namespace Zjcs.Editor
                 Require(controller.Phase == FightBattlePhase.Play, "Simulated pointer did not start battle.");
                 FightBattleExecutionResult movementResult = null;
                 long initialTargetHp = target.Hp;
+                long initialActorHp = actor.Hp;
                 controller.StepCompleted += result =>
                 {
                     if (result.Event.Movements.Any(m => m.UnitId == actor.Id && m.Path.Count > 1)) movementResult = result;
@@ -327,6 +330,9 @@ namespace Zjcs.Editor
                 var nativeHitIdentities = new HashSet<EcEntityIdentifier>();
                 var castReceipt = movementResult.Event.SkillCasts.Single(c => c.ActorId == actor.Id
                     && c.SkillEntityId == skillEntityId);
+                if (skillCost) Require(castReceipt.HasSkillCostHp && castReceipt.SkillCostBeforeHp == initialActorHp
+                    && castReceipt.SkillCostAfterHp == initialActorHp - 7 && actor.Hp == initialActorHp - 7,
+                    "Formal controller lost the actual cast cost or settled it twice.");
                 var fixedClasses = new HashSet<int>(skill.HitGraphEntities.Where(h =>
                     h.HitComponentType == "FightHitFixedComponent").Select(h => h.EntityId));
                 var fixedReceipts = castReceipt.HitSelections.Where(h => fixedClasses.Contains(h.HitEntityId)).ToArray();
@@ -334,10 +340,15 @@ namespace Zjcs.Editor
                 Require(expectedNativeHits > 0, "The original controlled skill has no fixed hit receipts.");
                 int nativeFrames = 0;
                 bool nativeFloatSeen = false;
+                bool costFloatSeen = false;
                 var slotBinding = OfficialBattleSkillSlotBindings.Load().slots[0];
                 for (int i = 0; i < 600 && controller.IsPresentingStep; i++)
                 {
                     bool captureNativeFloat = false;
+                    bool captureCostFloat = skillCost && !costFloatSeen
+                        && world.GetComponentsInChildren<CharacterDamageUI>().Any(ui => ui.EntityId == new EcEntityIdentifier(1, actor.Id)
+                            && ui.GetComponentsInChildren<TextMesh>(true).Any(text => text.text == "7"));
+                    costFloatSeen |= captureCostFloat;
                     Require(canvasObject.GetComponentsInChildren<OfficialBattleDamageFloat>().Length == 0,
                         "The old step damage float duplicated an original native damage notification.");
                     if (world.GetComponentsInChildren<CharacterDamageUI>().Any(ui => ui.EntityId == new EcEntityIdentifier(1, target.Id)))
@@ -379,6 +390,7 @@ namespace Zjcs.Editor
                         capture(prefix + "-native-damage-ui");
                         yield return null; // Unity accepts one ScreenCapture request per rendered frame.
                     }
+                    if (captureCostFloat) { capture(prefix + "-native-cost-ui"); yield return null; }
                 }
                 Require(!controller.IsPresentingStep, "Movement step presentation did not complete.");
                 Require(nativeSkills.Count == 1 && nativeFrames >= 4,
@@ -387,6 +399,7 @@ namespace Zjcs.Editor
                     "The public battle did not create every settled fixed hit exactly once: "
                     + nativeHitIdentities.Count + "/" + expectedNativeHits);
                 Require(nativeFloatSeen, "The common battle controller did not display the original role damage UI.");
+                if (skillCost) Require(costFloatSeen, "The common battle controller did not display the original skill cost UI.");
                 var settledSlot = actor.SkillState.Slots.Single(s => s.Slot == 0);
                 Require(settledSlot.Cooldown == cooldown && settledSlot.ReleasedTimes == 1,
                     "The settled original cooldown or release count differs.");

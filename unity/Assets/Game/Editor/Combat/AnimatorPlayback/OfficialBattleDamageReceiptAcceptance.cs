@@ -60,7 +60,7 @@ namespace Zjcs.Editor.Combat
             var camera = new GameObject("Receipt damage camera").AddComponent<Camera>();
             camera.orthographic = true; camera.orthographicSize = 4;
             camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = new Color(.06f, .09f, .15f);
-            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure", "trigger" })
+            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure", "trigger", "cost", "cost-legacy" })
             {
                 var checkpoint = Build(name, out var step);
                 var expected = step.DamageEvents.Where(d => !d.IsSkillCost && d.DamageEntityId != 0)
@@ -74,6 +74,19 @@ namespace Zjcs.Editor.Combat
                     && expected.All(d => !d.HasHitGridPosition || d.DamageX == d.HitGridX && d.DamageY == d.HitGridY),
                     "Original random hit body cells survive the settled damage receipt.");
                 if (name == "legacy") foreach (var damage in expected) damage.HasDamagePosition = false;
+                bool costCase = name.StartsWith("cost", StringComparison.Ordinal);
+                if (costCase)
+                {
+                    Require(step.SkillCasts.Count == 3 && step.SkillCasts.All(c => c.HasSkillCostHp)
+                        && step.DamageEvents.Count(d => d.IsSkillCost) == 3,
+                        "Each actual same-class replay retains its own settled HP cost.");
+                    foreach (var cast in step.SkillCasts)
+                        Require(cast.SkillCostBeforeHp - cast.SkillCostAfterHp == 7
+                            && step.DamageEvents.Any(d => d.IsSkillCost && d.Delay == cast.Delay
+                                && d.BeforeHp == cast.SkillCostBeforeHp && d.AfterHp == cast.SkillCostAfterHp),
+                            "Cost snapshot belongs to the exact cast and its start time.");
+                    if (name == "cost-legacy") foreach (var cast in step.SkillCasts) cast.HasSkillCostHp = false;
+                }
                 var root = new GameObject("Receipt flow " + name).transform;
                 var mapper = new OfficialBattleGridMapper(root, checkpoint.Grid);
                 var transforms = new Dictionary<int, Transform>();
@@ -89,6 +102,7 @@ namespace Zjcs.Editor.Combat
                 }
                 var point = mapper.GridToWorld(new FightGridPoint(expected[0].DamageX, expected[0].DamageY));
                 camera.transform.position = point + new Vector3(0, 0, -20);
+                if (costCase) camera.transform.position = (transforms[1].position + transforms[2].position) * .5f + new Vector3(0, 0, -20);
                 // Later state must not replace the original point-hit position.
                 if (name == "position") { checkpoint.Units[1].X += 4; checkpoint.Units[1].Y += 3; }
                 scope = new OfflineBattleNativePlayableScope(root, null);
@@ -102,7 +116,19 @@ namespace Zjcs.Editor.Combat
                     Require(playback.OwnsDamageUI(step, receipt) == (name != "legacy"),
                         "Only complete, actually cast-owned native damage receipts replace the old step float.");
                 Require(!playback.OwnsDamageUI(step, new FightBattleDamageEvent { IsSkillCost = true }),
-                    "HP cost must remain a separate original notification.");
+                    "Unknown HP cost must retain the compatible step path.");
+                if (costCase) foreach (var cost in step.DamageEvents.Where(d => d.IsSkillCost))
+                    Require(playback.OwnsDamageUI(step, cost) == (name == "cost"),
+                        "Only a known actual-cast cost notification replaces its old float.");
+                int costStarts = 0;
+                if (costCase) views.SkillStarted += (id, slot) => {
+                    costStarts++;
+                    int count = floatRoot.GetComponentsInChildren<CharacterDamageUI>()
+                        .Count(ui => ui.EntityId == new EcEntityIdentifier(1, 1)
+                            && ui.GetComponentsInChildren<TextMesh>(true).Any(text => text.text == "7"));
+                    Require(count == (name == "cost" ? costStarts : 0),
+                        "Original cost float precedes skill-start notification, once per actual cast; legacy evidence stays unknown.");
+                };
                 int triggerChildrenStarted = 0;
                 views.CastStarted += cast => {
                     if (cast.SkillEntityId != 13523) return;
@@ -190,6 +216,7 @@ namespace Zjcs.Editor.Combat
                 }
                 if (name == "replay") Require(observed.Select(value => value.SkillId).Distinct().Count() == 3,
                     "Three actual same-class casts retain three independent damage skill identities.");
+                if (costCase) Require(costStarts == 3, "All three actual cost/replay skill-start notifications were exercised.");
                 if (name == "trigger") Require(triggerChildrenStarted == step.SkillCasts.Count(c => c.SkillEntityId == 13523),
                     "Trigger-only hits must not abort their downstream original skill playback.");
                 Require(root.GetComponentsInChildren<MyFightDamage>().Length == 0, "No damage entity survived its final removal boundary.");
@@ -257,18 +284,21 @@ namespace Zjcs.Editor.Combat
                 }
                 hit.AppliedStatuses.Add(new FightBattleStatusApplication { StatusId = 24031, TargetType = 0,
                     Chance = 1, AffectedByProp = false, LessThanHpPer = -1f }); skill.Hits.Add(hit);
-                if (name == "replay")
+                if (name == "replay" || name.StartsWith("cost", StringComparison.Ordinal))
                 {
                     skill.HasReplay = true; skill.ReplayStatusId = 24031; skill.ReplayStackCount = 10;
                     skill.ReplayRelation = 1; skill.ReplayConsumeStack = true; skill.ReplayConsumeCount = 10;
                     var status = assets.Load().CreateStatus(24031, 1, 1); status.StackCount = 20;
                     checkpoint.Units[0].Statuses.Add(status);
                 }
+                if (name.StartsWith("cost", StringComparison.Ordinal)) { skill.CostType = 1; skill.SkillCost = 7; }
             }
             checkpoint.Units[0].Skills.Add(skill);
             checkpoint.Units[0].SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = -1 });
             var wave = new FightBattleWaveState(); wave.UnitIds.AddRange(new[] { 2, 3 }); checkpoint.Waves.Add(wave);
             step = assets.BeginBattle(checkpoint).Step(0, 1).Event;
+            if (name.StartsWith("cost", StringComparison.Ordinal))
+                step = JsonUtility.FromJson<FightBattleStepEvent>(JsonUtility.ToJson(step));
             if (name == "none")
             {
                 var receipt = step.DamageEvents.Single(d => !d.IsSkillCost);
