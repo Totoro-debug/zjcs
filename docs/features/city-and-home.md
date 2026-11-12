@@ -183,9 +183,13 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 ### 家园运行层接入
 
-所选 `MainCanvas` 的完整 `HomeUI` 子树已恢复为 `Assets/Official/Home/UI/Hud/HomeHud.prefab`。原 923 个对象中，按已确认的[离线范围](offline-access.md)及[设置范围](settings-and-save.md)移除队伍小面板、申请确认、聊天小窗和快捷聊天四棵子树，保留 651 个对象；裁剪只移除对应子树及其引用，其他原坐标、锚点、组件字段、动画和加载引用保持原值。任务条目继续引用原外部 `TaskListItem`，顶栏挂点、功能入口、任务区、匹配状态、战斗通知与三类场景指引均保留。该 prefab 已通过 Unity 导入及全部脚本引用检查，验证时保持未激活，尚未接入正式 HUD 的本地业务服务。
+所选 `MainCanvas` 的完整 `HomeUI` 子树已恢复为 `Assets/Official/Home/UI/Hud/HomeHud.prefab`。原 923 个对象中，按已确认的[离线范围](offline-access.md)及[设置范围](settings-and-save.md)移除队伍小面板、申请确认、聊天小窗和快捷聊天四棵子树，保留 651 个对象；裁剪只移除对应子树及其引用，其他原坐标、锚点、组件字段、动画和加载引用保持原值。任务条目继续引用原外部 `TaskListItem`，顶栏挂点、功能入口、任务区、匹配状态、战斗通知与三类场景指引均保留。该 prefab 已通过 Unity 导入、全部脚本引用检查及统一宿主的受控启用／交互验证，尚未接入正式 HUD 的本地业务服务。
 
-`Assets/Official/Home/UI/HudFrame/HomeHudFrame.prefab` 恢复 HomeUI 及公共头像／底栏的原父级，包括两层 `Anim`、CanvasGroup、公共安全区与 `PlayerInfoMask`，共 39 个对象；不以测试位置代替原公共父级。`HomeScreenUI.StencilMask` 直接迁入原复制、材质、排序、显隐及颜色逻辑，只将场景容器实例化映射为本地 Unity 实例化；原 prefab 的 stencil 值为 6、初始隐藏。`HomeHudFrameNativeValidation.Run` 已在隔离完整工程实际 Play Mode 验证激活后的一次复制、`UI/Default` 的 `_StencilComp=8`／`_Stencil=6`／`_StencilOp=2`／`_ColorMask=0`、排序 -1、原父级、重复初始化和显隐恢复，已查看实际运行截图。测试静音、无真实系统输入；隔离完整工程通过 Unity 导入／C# 编译及 `Zjcs.Editor.ProjectTools.Validate`，静态检查通过（150568 个 GUID）。这仅证明公共框架和遮罩，完整 HomeUI 启用／交互、正式业务接线及 Windows Player 尚未验证。
+`Assets/Official/Home/UI/HudFrame/HomeHudFrame.prefab` 恢复 HomeUI 及公共头像／底栏的原父级，包括两层 `Anim`、CanvasGroup、公共安全区与 `PlayerInfoMask`，共 39 个对象；不以测试位置代替原公共父级。`HomeScreenUI.StencilMask` 直接迁入原复制、材质、排序、显隐及颜色逻辑，只将场景容器实例化映射为本地 Unity 实例化；原 prefab 的 stencil 值为 6、初始隐藏。`HomeHudFrameNativeValidation.Run` 已在隔离完整工程实际 Play Mode 验证激活后的一次复制、`UI/Default` 的 `_StencilComp=8`／`_Stencil=6`／`_StencilOp=2`／`_ColorMask=0`、排序 -1、原父级、重复初始化和显隐恢复，已查看实际运行截图。测试静音、无真实系统输入；隔离完整工程通过 Unity 导入／C# 编译及 `Zjcs.Editor.ProjectTools.Validate`，静态检查通过（150568 个 GUID）。这项测试仅证明公共框架和遮罩；完整 HomeUI 的受控宿主验证见下文，正式业务接线及 Windows Player 尚未完成。
+
+`Runtime/Offline/HomeHudUI/OfflineHomeHud` 负责完整原生层级的实例化及释放，在所有组件启用前显式绑定条件、顶栏、任务、功能窗口、活动、下载、场景指引、匹配、战斗通知、红点、语言和声音服务；动态任务实例沿同一绑定入口创建。`Resources/Home/OfflineHomeHudAssets` 显式引用原 HomeUI、共享框架、语言、声音及字体，沿原 `FontAssetFontService` 初始化 FZY4K 和任务使用的 MPLUS 字体，原五行字体配置保留；其余三种源字体不在本宿主使用范围内。公共头像／底栏宿主可挂到原 `Content/Main/Public/Anim`，当前尚未在正式入口完成装配。
+
+`HomeHudBindingsNativeValidation.Run` 已在隔离完整工程静音 Play Mode 通过：完整保留 HomeUI 在原父层启用，原 Show／Hide 等待动画完成，原顶栏类型 1/2/57 的借还，原功能按钮和动态任务跳转按钮的首个射线命中与模拟指针，隐藏时解除条件、输入、任务、下载、匹配、结果及红点监听；已查看实际运行截图。测试使用受控任务、条件、窗口、场景位置、空活动记录和无货币子项的顶栏池，不能代表正式业务、真实货币／头像／底栏装配或 Windows Player 已完成。Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过；静态元数据检查通过。
 
 `Runtime/Official/HomeTaskUI/` 迁入所选 884 的 `PinnedTaskPanel`、`TaskListItem`、`TaskGoal`、条件文本、原追踪监听组件、地图限制刷新器与等级监听。固定任务保留原剩余时间升序、自动追踪降序、完成状态降序和配置顺序升序；面板保留固定／显示条件过滤、增改删与每日刷新协程。条目保留领取、跳转、追踪／取消、地图限制、倒计时、条件观察和奖励图标的原调用顺序，规则、事务、导航及资源句柄由显式本地宿主提供；UI 不生成任务、进度或奖励。
 

@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 097441dcdd9210943a24e1d62b1efb25, type: 3}
+  m_Name: OfflineHomeHudAssets
+  m_EditorClassIdentifier: ''
+  framePrefab: {fileID: 1709254077376921, guid: 27c1db103110bd273cf581bbb497a71f, type: 3}
+  homePrefab: {fileID: 1703437598541787, guid: d502dca34c8d8c75dcc17fae2a309069, type: 3}
+  texts: {fileID: 4900000, guid: f7a5b8827c2103158462f6a9816f0192, type: 3}
+  originalFontConfig: {fileID: 4900000, guid: d4fa0d0e1741f9351c9183983b39de01, type: 3}
+  defaultFontAsset: FZY4K SDF - dynamic
+  defaultFont: {fileID: 11400000, guid: b088a249154abaf4e9a07cad25d5aef4, type: 2}
+  fonts:
+  - Name: FZY4K SDF - dynamic
+    FontPath: Assets/TextMesh Pro/Fonts/FZY4K.TTF
+    RawFontPath: Assets/TextMesh Pro/RawFonts/FZY4K.bytes
+    Hash: 11a2dd2b22891535ec398a00c33ab4e1
+    Length: 10017464
+    source: {fileID: 12800000, guid: 361d52fe7fad65d6413db534072fdf5c, type: 3}
+  - Name: GenJyuuGothic-P-Medium SDF
+    FontPath: Assets/TextMesh Pro/Fonts/GenJyuuGothic-P-Medium.ttf
+    RawFontPath: Assets/TextMesh Pro/RawFonts/GenJyuuGothic-P-Medium.bytes
+    Hash: 9cac595335e2d219b184235f1d4a2c85
+    Length: 11203124
+    source: {fileID: 0}
+  - Name: MPLUSRounded1c-Medium SDF
+    FontPath: Assets/TextMesh Pro/Fonts/MPLUSRounded1c-Medium.ttf
+    RawFontPath: Assets/TextMesh Pro/RawFonts/MPLUSRounded1c-Medium.bytes
+    Hash: 949eb4d301a6454796511cb72fdef20e
+    Length: 470764
+    source: {fileID: 12800000, guid: 15a5e8a44cfbf249d370cbc4834fcfe2, type: 3}
+  - Name: SpoqaHanSansNeo-Bold SDF
+    FontPath: Assets/TextMesh Pro/Fonts/SpoqaHanSansNeo-Bold.otf
+    RawFontPath: Assets/TextMesh Pro/RawFonts/SpoqaHanSansNeo-Bold.bytes
+    Hash: 8ea1d9004a8f295b800c3c9b89a9c07a
+    Length: 12865536
+    source: {fileID: 0}
+  - Name: AsapCondensed-Medium SDF
+    FontPath: Assets/TextMesh Pro/Fonts/AsapCondensed-Medium.ttf
+    RawFontPath: Assets/TextMesh Pro/RawFonts/AsapCondensed-Medium.bytes
+    Hash: c3da1e7363e9f3e97679872b4c9ccb02
+    Length: 109216
+    source: {fileID: 0}
+  sounds:
+  - eventId: 3772241779
+    clip: {fileID: 8300000, guid: a349287c39df984af5f51e2338d53e9f, type: 3}
