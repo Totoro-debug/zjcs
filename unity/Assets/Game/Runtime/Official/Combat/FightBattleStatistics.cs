@@ -39,6 +39,10 @@ namespace Zjcs.Combat.Official
         // applications count. Legacy receipts leave the result explicitly unknown.
         public bool HasDamageTriggerStatus;
         public bool IsDamageTriggerStatus;
+        // Successful operation's exact slot in the compatible DispersedUnitIds list.
+        // False in legacy receipts; repeated operations on one target remain distinct.
+        public bool HasDisperseNotification;
+        public int DisperseNotificationIndex;
         public bool Critical;
         public bool Block;
         public bool Dodge;

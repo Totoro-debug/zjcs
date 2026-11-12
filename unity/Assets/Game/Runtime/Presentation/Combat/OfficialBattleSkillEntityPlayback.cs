@@ -373,6 +373,7 @@ namespace Zjcs.Presentation.Combat
             moveViews.Dispose();
             receiptHits.Dispose();
             receiptDamages.Dispose();
+            disperseReceipts.Clear();
             hitViews?.Dispose();
             hitViews = null;
             foreach (var cast in casts) if (!cast.Removed) Remove(cast);

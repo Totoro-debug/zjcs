@@ -154,6 +154,14 @@ namespace Zjcs.Presentation.Combat
                 && action.Action <= (int)EStatusCustomAction.CDModify
                 && roles.TryGetValue(new EcEntityIdentifier(1, action.UnitId), out role) && role.Fight;
         }
+        public bool CanPlayDisperse(int unitId)
+            => roles.TryGetValue(new EcEntityIdentifier(1, unitId), out var role) && role.Fight;
+        public bool Disperse(int unitId)
+        {
+            if (!roles.TryGetValue(new EcEntityIdentifier(1, unitId), out var role) || !role.Fight) return false;
+            role.DisperseStatus();
+            return true;
+        }
         public void SetVisible(bool value)
         {
             visible = value;

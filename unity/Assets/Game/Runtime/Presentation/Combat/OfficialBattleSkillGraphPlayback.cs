@@ -17,6 +17,7 @@ namespace Zjcs.Presentation.Combat
             public float Remaining;
         }
 
+
         private sealed class ScheduledStatusAction
         {
             public FightBattleStatusCustomActionEvent Action;
@@ -40,6 +41,7 @@ namespace Zjcs.Presentation.Combat
         private readonly List<ScheduledStatusAction> pendingStatusActions = new List<ScheduledStatusAction>();
         private readonly HashSet<FightBattleStatusCustomActionEvent> nativeStatusActions =
             new HashSet<FightBattleStatusCustomActionEvent>();
+        private readonly HashSet<int> nativeDisperseIndices = new HashSet<int>();
         private OfficialBattleGridEntityPlayback gridViews;
         private OfficialBattleAirComboPlayback airComboViews;
         private Action<GameObject> bindPlayerClones;
@@ -78,6 +80,7 @@ namespace Zjcs.Presentation.Combat
             && cast?.Presentation != null && catalog.ContainsSkill(cast.SkillEntityId);
         public bool OwnsStatusCustomActionUI(FightBattleStatusCustomActionEvent action)
             => action != null && nativeStatusActions.Contains(action);
+        public bool OwnsDisperseUI(int operationIndex) => nativeDisperseIndices.Contains(operationIndex);
         public bool OwnsDamageUI(FightBattleStepEvent step, FightBattleDamageEvent damage)
         {
             if (entityViews.HasDamageUI && damage?.IsSkillCost == true && step?.SkillCasts != null)
@@ -134,6 +137,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillGraphPlayback));
             nativeStatusActions.Clear();
+            nativeDisperseIndices.Clear();
             if (stepEvent?.SkillCasts == null || checkpoint?.Units == null || unitTransform == null) return;
             airComboViews?.Synchronize();
             gridViews?.Enqueue(stepEvent, checkpoint);
@@ -154,6 +158,7 @@ namespace Zjcs.Presentation.Combat
                 else if (damage.DamageEntityId != 0)
                     throw new InvalidOperationException("Duplicate original damage entity receipt: " + damage.DamageId);
             }
+            ScheduleDisperses(stepEvent);
             foreach (FightBattleSkillCastEvent cast in stepEvent.SkillCasts)
             {
                 if (cast == null || cast.ActorId <= 0 || cast.SkillEntityId <= 0) continue;
@@ -228,6 +233,20 @@ namespace Zjcs.Presentation.Combat
             {
                 var value = pendingStatusActions[0]; pendingStatusActions.RemoveAt(0);
                 entityViews.PlayStatusCustomAction(value.Action);
+            }
+        }
+
+        private void ScheduleDisperses(FightBattleStepEvent step)
+        {
+            if (step.DamageEvents == null || step.DispersedUnitIds == null) return;
+            foreach (var damage in step.DamageEvents)
+            {
+                if (damage == null || !damage.HasDisperseNotification || !OwnsDamageUI(step, damage)) continue;
+                int index = damage.DisperseNotificationIndex;
+                if (index < 0 || index >= step.DispersedUnitIds.Count
+                    || step.DispersedUnitIds[index] != damage.TargetId || nativeDisperseIndices.Contains(index)
+                    || !entityViews.PrepareDisperse(damage)) continue;
+                nativeDisperseIndices.Add(index);
             }
         }
 
@@ -358,6 +377,7 @@ namespace Zjcs.Presentation.Combat
             pendingMoves.Clear();
             pendingStatusActions.Clear();
             nativeStatusActions.Clear();
+            nativeDisperseIndices.Clear();
             airComboViews?.Dispose();
             airComboViews = null;
             gridViews?.Dispose();

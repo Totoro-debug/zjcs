@@ -382,7 +382,8 @@ namespace Zjcs.Presentation.Combat
                         sceneView.ShowDamageFloats(result.Event, result.Checkpoint, hudCatalog.Font, damageColors,
                             skillGraphPlayback == null ? null : damage => skillGraphPlayback.OwnsDamageUI(result.Event, damage),
                             skillGraphPlayback == null ? null : cast => skillGraphPlayback.OwnsReplayUI(cast),
-                            skillGraphPlayback == null ? null : action => skillGraphPlayback.OwnsStatusCustomActionUI(action));
+                            skillGraphPlayback == null ? null : action => skillGraphPlayback.OwnsStatusCustomActionUI(action),
+                            skillGraphPlayback == null ? null : index => skillGraphPlayback.OwnsDisperseUI(index));
                 }
                 // Play dispatches authored zero-delay hits immediately. Match that
                 // boundary before publishing the step/checkpoint to its observers.

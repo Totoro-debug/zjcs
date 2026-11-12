@@ -1088,7 +1088,7 @@ namespace Zjcs.Combat.Official
                     }
                     ApplyResilienceHit(actor, target, skill, hit, resolved, casts,
                         damageEvents, movements, ref lastDelay);
-                    ApplyHitDisperse(actor, target, hit, random);
+                    ApplyHitDisperse(actor, target, hit, random, damage);
                     int hitMovementStart = movements.Count;
                     ApplyHitMove(actor, target, skill, hit, movements);
                     bool hitDisplacedTarget = false;
@@ -2385,7 +2385,7 @@ namespace Zjcs.Combat.Official
         /// the damaged target, either the first ones or a random subset.
         /// </summary>
         private void ApplyHitDisperse(FightBattleUnitState source, FightBattleUnitState target,
-            FightBattleHitDefinition hit, FightRandomStream random)
+            FightBattleHitDefinition hit, FightRandomStream random, FightBattleDamageEvent damage)
         {
             if (source == null || target == null || hit == null || hit.DisperseStatusTypes == null
                 || hit.DisperseStatusTypes.Count == 0 || target.Statuses.Count == 0) return;
@@ -2417,7 +2417,12 @@ namespace Zjcs.Combat.Official
             }
             for (int i = 0; i < count; i++) FightStatusLifecycle.End(target, candidates[i]);
             // Confirmed local notification rule: successful removal only, once for this operation.
-            if (count > 0) currentStepDispersedUnitIds?.Add(target.Id);
+            if (count > 0 && currentStepDispersedUnitIds != null)
+            {
+                damage.HasDisperseNotification = true;
+                damage.DisperseNotificationIndex = currentStepDispersedUnitIds.Count;
+                currentStepDispersedUnitIds.Add(target.Id);
+            }
         }
 
         /// <summary>

@@ -35,6 +35,7 @@ namespace Zjcs.Presentation.Combat
         private sealed class Pending
         {
             public float Remaining, Lifetime;
+            public FightBattleDamageEvent Receipt;
             public OfficialBattleDamageEntityData Data;
             public IFightPlayableOverrideStatusServices Status;
         }
@@ -110,7 +111,7 @@ namespace Zjcs.Presentation.Combat
                     DamageTypeData = new DamageTypeData { IsBlock = receipt.Block, IsCrit = receipt.Critical,
                         IsDodge = receipt.Dodge, IsBlinding = receipt.Blinding, IsImmunity = receipt.Immunity,
                         IsBreakResilience = receipt.BreakResilience, IsTrueDamage = receipt.TrueDamage } };
-                pending.Add(new Pending { Remaining = Mathf.Max(0f, receipt.Delay - cast.Delay), Lifetime = lifetime,
+                pending.Add(new Pending { Receipt = receipt, Remaining = Mathf.Max(0f, receipt.Delay - cast.Delay), Lifetime = lifetime,
                     Status = status, Data = new OfficialBattleDamageEntityData(new EcEntityIdentifier(6, ++serial),
                         receipt.DamageEntityId, skillId, new EcEntityIdentifier(1, receipt.TargetId), result,
                         receipt.IsDamageTriggerStatus, views.GridToPos(position), direction.DirToRotation(),
@@ -139,6 +140,7 @@ namespace Zjcs.Presentation.Combat
                 playback ??= new OfficialBattleDamageEntityPlayback(root, container, views, scope);
                 playback.Create(value.Data, value.Status);
                 active.Add(new Active { Id = value.Data.Id, Remaining = value.Lifetime });
+                views.DamageStarted(value.Receipt);
             }
         }
 

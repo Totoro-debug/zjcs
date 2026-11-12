@@ -111,6 +111,19 @@ namespace Zjcs.Validation.Combat
                     var status = rules.CreateStatus(25275, 1, 1);
                     status.UnflinchingOnDamageRate = 1f;
                     target.Statuses.Add(status);
+                    var dispersed = rules.CreateStatus(24436, 2, 1);
+                    dispersed.CanDispersed = true;
+                    target.Statuses.Add(dispersed);
+                    foreach (var hit in skill.Hits)
+                    {
+                        hit.DisperseStatusTypes.Add(dispersed.StatusType);
+                        hit.DisperseChance = 1; hit.DisperseCount = 1;
+                    }
+                    foreach (var hit in skill.HitGraphEntities)
+                    {
+                        hit.DisperseStatusTypes.Add(dispersed.StatusType);
+                        hit.DisperseChance = 1; hit.DisperseCount = 1;
+                    }
                     foreach (var hit in skill.Hits)
                         hit.AppliedStatuses.Add(new FightBattleStatusApplication { StatusId = 60481,
                             TargetType = 1, Chance = 1, AffectedByProp = false, LessThanHpPer = -1f });
@@ -191,7 +204,7 @@ namespace Zjcs.Validation.Combat
                 Require(damages.Length == (monsterActs ? 1 : 3) && damages.All(d => d.Damage < 0)
                     && target.Hp == initialTargetHp + damages.Sum(d => d.Damage),
                     "The original hits must settle exactly once against the controlled target.");
-                int actionNotifications = 0;
+                int actionNotifications = 0, disperseNotifications = 0;
                 if (statusActions)
                 {
                     Require(movementResult.Event.StatusCustomActions.Count == 4
@@ -205,6 +218,16 @@ namespace Zjcs.Validation.Combat
                     var manager = world.GetComponentInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUIManager>();
                     var context = (CharacterDamageUIContext)typeof(Zjcs.Official.BattleDamageUI.CharacterDamageUIManager).GetProperty("Context")
                         .GetGetMethod(true).Invoke(manager, null);
+                    Require(movementResult.Event.DispersedUnitIds.SequenceEqual(new[] { target.Id })
+                        && damages.Count(d => d.HasDisperseNotification) == 1
+                        && damages[0].HasDisperseNotification && damages[0].DisperseNotificationIndex == 0
+                        && !world.GetComponentsInChildren<CharacterDamageUI>().Any(ui => ui.Type == EffectUIType.DisperseDamageUI),
+                        "The first actual hit owns the only successful disperse; its original UI waits through approach.");
+                    foreach (var actionRole in context.Characters)
+                        actionRole.OnDisperseStatus += role => {
+                            Require(role.Id == new EcEntityIdentifier(1, target.Id), "Disperse notification target.");
+                            disperseNotifications++;
+                        };
                     foreach (var actionRole in context.Characters)
                         actionRole.OnStatusTriggerCustomAction += (id, action) => {
                             Require(id == new EcEntityIdentifier(1, target.Id) && (int)action == 2
@@ -263,7 +286,7 @@ namespace Zjcs.Validation.Combat
                 bool nativeFloatSeen = false;
                 bool costFloatSeen = false;
                 bool derivedFloatSeen = false;
-                bool statusFloatSeen = false;
+                bool statusFloatSeen = false, disperseFloatSeen = false;
                 var slotBinding = OfficialBattleSkillSlotBindings.Load().slots[0];
                 for (int i = 0; i < 600 && controller.IsPresentingStep; i++)
                 {
@@ -274,6 +297,8 @@ namespace Zjcs.Validation.Combat
                             || ui.GetComponentInParent<CharacterDamageUI>().EntityId == new EcEntityIdentifier(1, actor.Id),
                             "An actual custom action was sent to a different role.");
                     }
+                    disperseFloatSeen |= statusActions && world.GetComponentsInChildren<CharacterDamageUI>()
+                        .Any(ui => ui.Type == EffectUIType.DisperseDamageUI && ui.EntityId == new EcEntityIdentifier(1, target.Id));
                     bool captureStatusFloat = statusActions && !statusFloatSeen
                         && world.GetComponentsInChildren<DamageCustomActionUI>().Length > 0;
                     statusFloatSeen |= captureStatusFloat;
@@ -340,7 +365,7 @@ namespace Zjcs.Validation.Combat
                 Require(nativeFloatSeen, "The common battle controller did not display the original role damage UI.");
                 if (skillCost) Require(costFloatSeen, "The common battle controller did not display the original skill cost UI.");
                 if (hemophagia) Require(derivedFloatSeen, "The originating native damage suppressed its derived compatible cure UI.");
-                if (statusActions) Require(statusFloatSeen && actionNotifications == 4,
+                if (statusActions) Require(statusFloatSeen && actionNotifications == 4 && disperseNotifications == 1 && disperseFloatSeen,
                     "Three damage actions and one self-applied cooldown action must each produce one later original UI notification.");
                 var settledSlot = actor.SkillState.Slots.Single(s => s.Slot == 0);
                 Require(settledSlot.Cooldown == cooldown && settledSlot.ReleasedTimes == 1,

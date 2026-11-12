@@ -102,7 +102,11 @@ public static class BattleStatusOnlyHarness
             if (name == "original-12890") Check(stats.ShieldGranted > 0
                 && cp.Statistics.Unit(1).ShieldGranted == stats.ShieldGranted,
                 "Original pure shield must grant and count its real shield, without a buff/debuff count.");
-            if (name == "disperse") Check(!target.Statuses.Any(s => s.ClassId == 24436), "Configured dispel did not execute.");
+            if (name == "disperse") Check(!target.Statuses.Any(s => s.ClassId == 24436)
+                && step.DispersedUnitIds.Count == 1 && step.DispersedUnitIds[0] == target.Id
+                && receipts.Single().HasDisperseNotification && receipts.Single().DisperseNotificationIndex == 0,
+                "The successful pure-status disperse retains its exact causing hit and compatible operation slot.");
+            else Check(receipts.All(d => !d.HasDisperseNotification), "An unrelated hit must not acquire a disperse notification.");
             if (name == "move") Check(target.X != 6 || target.Y != 5, "Configured displacement did not execute.");
             if (name == "child") Check(step.SkillCasts.Any(c => c.SkillEntityId == 10100), "Configured child skill did not execute.");
             if (hitListener != null) Check(hitListener.InvokeCount == (name == "hit-listener" ? 1 : 0)

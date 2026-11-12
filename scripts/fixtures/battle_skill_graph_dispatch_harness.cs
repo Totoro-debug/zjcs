@@ -46,9 +46,9 @@ namespace Zjcs.Combat.Official
         public List<FightBattleSkillMove> SourceMoves = new List<FightBattleSkillMove>();
         public List<int> HitGraphEntities = new List<int>(), Hits = new List<int>(), ExtraSkills = new List<int>();
     }
-    public class FightBattleDamageEvent { public int DamageId, TargetId, SourceId, SkillEntityId, DamageEntityId; public bool IsSkillCost, IsCure; public float Delay; public long BeforeHp, AfterHp; }
+    public class FightBattleDamageEvent { public int DamageId, TargetId, SourceId, SkillEntityId, DamageEntityId; public bool IsSkillCost, IsCure, HasDisperseNotification; public int DisperseNotificationIndex; public float Delay; public long BeforeHp, AfterHp; }
     public class FightBattleStatusCustomActionEvent { public int UnitId, Action, SourceDamageId, SourceDamageTargetId; }
-    public class FightBattleStepEvent { public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>(); public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>(); public List<FightBattleStatusCustomActionEvent> StatusCustomActions = new List<FightBattleStatusCustomActionEvent>(); }
+    public class FightBattleStepEvent { public List<int> DispersedUnitIds = new List<int>(); public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>(); public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>(); public List<FightBattleStatusCustomActionEvent> StatusCustomActions = new List<FightBattleStatusCustomActionEvent>(); }
 }
 namespace Zjcs.Official.StoryPlayableManager
 {
@@ -101,6 +101,7 @@ namespace Zjcs.Presentation.Combat
         public bool HasDamageUI => StatusUIAvailable;
         public void BindDamageUI(Transform parent, int stageType) { }
         public void SetDamageUIVisible(bool visible) { }
+        public bool PrepareDisperse(FightBattleDamageEvent receipt) => StatusUIAvailable;
         public void UpdateDamageUIVisibility() { }
         public void BindDamageUITargets(Func<int, Transform> resolve) { }
         public bool CanPlayStatusCustomAction(FightBattleStatusCustomActionEvent action) => StatusUIAvailable && action != null;

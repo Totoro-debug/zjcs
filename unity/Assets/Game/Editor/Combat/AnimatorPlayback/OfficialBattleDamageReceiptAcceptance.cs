@@ -60,10 +60,11 @@ namespace Zjcs.Editor.Combat
             var camera = new GameObject("Receipt damage camera").AddComponent<Camera>();
             camera.orthographic = true; camera.orthographicSize = 4;
             camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = new Color(.06f, .09f, .15f);
-            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure", "trigger", "cost", "cost-legacy", "hemophagia", "actions", "actions-legacy", "cooldown-target", "cooldown-self", "cooldown-none", "cooldown-cure" })
+            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure", "trigger", "cost", "cost-legacy", "hemophagia", "actions", "actions-legacy", "cooldown-target", "cooldown-self", "cooldown-none", "cooldown-cure", "disperse", "disperse-none", "disperse-failed", "disperse-empty", "disperse-multiple", "disperse-legacy" })
             {
                 bool actionCase = name.StartsWith("actions", StringComparison.Ordinal);
                 bool cooldownCase = name.StartsWith("cooldown", StringComparison.Ordinal);
+                bool disperseCase = name.StartsWith("disperse", StringComparison.Ordinal);
                 var checkpoint = Build(name, out var step);
                 var expected = step.DamageEvents.Where(d => !d.IsSkillCost && d.DamageEntityId != 0)
                     .OrderBy(d => d.Delay).ThenBy(d => d.DamageId).ToArray();
@@ -134,6 +135,8 @@ namespace Zjcs.Editor.Combat
                 if (costCase) foreach (var cost in step.DamageEvents.Where(d => d.IsSkillCost))
                     Require(playback.OwnsDamageUI(step, cost) == (name == "cost"),
                         "Only a known actual-cast cost notification replaces its old float.");
+                Func<int> disperseCount = () => floatRoot.GetComponentsInChildren<CharacterDamageUI>()
+                    .Count(ui => ui.Type == EffectUIType.DisperseDamageUI);
                 if (cooldownCase)
                 {
                     var action = step.StatusCustomActions.Single();
@@ -171,6 +174,9 @@ namespace Zjcs.Editor.Combat
                         Entity = damage.myEntity, Damage = damage, SkillId = damage.Component.SkillId,
                         Identity = damage.myEntity.Id,
                         Skill = views.GetEntity(damage.Component.SkillId) });
+                        if (disperseCase) Require(disperseCount() == (name == "disperse-legacy" ? 0 : expected
+                            .Take(observed.Count - 1).Count(d => d.HasDisperseNotification)),
+                            "Each original damage notification precedes its successful operation's disperse UI.");
                         if (name == "actions" || cooldownCase) Require(!floatRoot.GetComponentsInChildren<DamageCustomActionUI>()
                             .Any(ui => ui.GetComponent<CharacterDamageUI>().EntityId == role.myEntity.Id),
                             "The actual damage notification must precede its associated custom action.");
@@ -182,6 +188,19 @@ namespace Zjcs.Editor.Combat
                     entity.GetComponent<MyFightRoleFight>().OnHit += (role, damage) => hitNotifications++;
                 }
                 playback.Play(step, checkpoint, id => transforms.TryGetValue(id, out var value) ? value : null);
+                if (disperseCase)
+                {
+                    var successful = expected.Where(d => d.HasDisperseNotification).ToArray();
+                    Require(step.DispersedUnitIds.Count == (name == "disperse-failed" || name == "disperse-empty" ? 0
+                        : name == "disperse-multiple" ? 2 : 1), "Only actual successful removal creates a notification.");
+                    Require(successful.Length == (name == "disperse-legacy" ? 0 : step.DispersedUnitIds.Count)
+                        && successful.Select(d => d.DisperseNotificationIndex).Distinct().Count() == successful.Length,
+                        "Save/restore retains distinct successful operations on one target.");
+                    for (int index = 0; index < step.DispersedUnitIds.Count; index++)
+                        Require(playback.OwnsDisperseUI(index) == (name != "disperse-legacy"),
+                            "Only the exact known operation is owned; legacy notifications retain the compatible path.");
+                    Require(disperseCount() == 0, "No disperse UI before the actual hit boundary.");
+                }
                 if (cooldownCase)
                 {
                     camera.transform.position = (transforms[1].position + transforms[2].position) * .5f + new Vector3(0, 0, -20);
@@ -244,6 +263,9 @@ namespace Zjcs.Editor.Combat
                     if (cooldownCase && boundary <= expected[0].Delay + .125f)
                         Require(floatRoot.GetComponentsInChildren<DamageCustomActionUI>().Length == (due.Length > 0 ? 1 : 0),
                             "The original cooldown UI must appear at the actual damage/cure/None hit's boundary.");
+                    if (disperseCase && boundary <= expected.Last().Delay + .125f)
+                        Require(disperseCount() == due.Count(d => d.HasDisperseNotification),
+                            "Each successful operation creates exactly one original disperse UI at its causing hit boundary.");
                     int active = root.GetComponentsInChildren<MyFightDamage>().Count();
                     Require(active == due.Count(d => d.Delay + Lifetime(d) > boundary + .00001f), "Original configured damage lifetime and pool removal.");
                     for (int index = 0; index < due.Length; index++)
@@ -257,7 +279,7 @@ namespace Zjcs.Editor.Combat
                             continue;
                         }
                         var result = value.Damage.Component.DamageResult;
-                        bool noneResult = name == "none" || name == "cooldown-none";
+                        bool noneResult = name == "none" || name == "cooldown-none" || name == "disperse-none";
                         bool cureResult = name == "cure" || name == "cooldown-cure";
                         var expectedType = noneResult ? DamageResultType.None
                             : cureResult ? DamageResultType.Cure : DamageResultType.Damage;
@@ -338,7 +360,7 @@ namespace Zjcs.Editor.Combat
                 skill.Range.Add(new FightGridPoint(3, 0));
                 var hit = new FightBattleHitDefinition { EntityId = 10101, DamageId = 13012, Delay = .25f,
                     DamageType = 8, HasCustomDamage = true, CustomDamage = 5, TargetMode = 0 };
-                if (name == "none" || name == "cooldown-none") hit.ActionType = 0;
+                if (name == "none" || name == "cooldown-none" || name == "disperse-none") hit.ActionType = 0;
                 if (name == "cure" || name == "cooldown-cure")
                 {
                     hit.ActionType = 5; skill.HasCustomCure = true; skill.CustomCure = 10;
@@ -352,6 +374,26 @@ namespace Zjcs.Editor.Combat
                     hit.AppliedStatuses.Add(new FightBattleStatusApplication { StatusId = 60481,
                         TargetType = name == "cooldown-self" ? 1 : 0, Chance = 1,
                         AffectedByProp = false, LessThanHpPer = -1f });
+                if (name.StartsWith("disperse", StringComparison.Ordinal))
+                {
+                    hit.DisperseChance = name == "disperse-failed" ? 0 : 1;
+                    hit.DisperseCount = 1;
+                    hit.DisperseStatusTypes.AddRange(new[] { 2, 3 });
+                    if (name != "disperse-empty")
+                    {
+                        var status = assets.Load().CreateStatus(24436, 2, 1);
+                        status.CanDispersed = true; checkpoint.Units[1].Statuses.Add(status);
+                    }
+                    if (name == "disperse-multiple")
+                    {
+                        var status = assets.Load().CreateStatus(24010, 2, 1);
+                        status.CanDispersed = true; checkpoint.Units[1].Statuses.Add(status);
+                        var second = new FightBattleHitDefinition { EntityId = 10101, DamageId = 13012, Delay = .5f,
+                            DamageType = 8, HasCustomDamage = true, CustomDamage = 5, TargetMode = 0,
+                            DisperseChance = 1, DisperseCount = 1 };
+                        second.DisperseStatusTypes.AddRange(new[] { 2, 3 }); skill.Hits.Add(second);
+                    }
+                }
                 if (name == "hemophagia")
                 {
                     int property = assets.Load().PropertyType("OnceHitHemophagiaPer");
@@ -382,8 +424,9 @@ namespace Zjcs.Editor.Combat
             checkpoint.Units[0].SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = -1 });
             var wave = new FightBattleWaveState(); wave.UnitIds.AddRange(new[] { 2, 3 }); checkpoint.Waves.Add(wave);
             step = assets.BeginBattle(checkpoint).Step(0, 1).Event;
-            if (name.StartsWith("cost", StringComparison.Ordinal) || name.StartsWith("actions", StringComparison.Ordinal) || name.StartsWith("cooldown", StringComparison.Ordinal))
+            if (name.StartsWith("cost", StringComparison.Ordinal) || name.StartsWith("actions", StringComparison.Ordinal) || name.StartsWith("cooldown", StringComparison.Ordinal) || name.StartsWith("disperse", StringComparison.Ordinal))
                 step = JsonUtility.FromJson<FightBattleStepEvent>(JsonUtility.ToJson(step));
+            if (name == "disperse-legacy") foreach (var damage in step.DamageEvents) damage.HasDisperseNotification = false;
             if (name == "actions-legacy") foreach (var action in step.StatusCustomActions) action.SourceDamageId = 0;
             if (name == "none")
             {

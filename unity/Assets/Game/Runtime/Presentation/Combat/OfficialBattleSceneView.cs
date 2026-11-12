@@ -178,7 +178,8 @@ namespace Zjcs.Presentation.Combat
             TMP_FontAsset font, OfficialBattleDamageColors colors,
             Predicate<FightBattleDamageEvent> nativeDamage = null,
             Predicate<FightBattleSkillCastEvent> nativeReplay = null,
-            Predicate<FightBattleStatusCustomActionEvent> nativeStatusAction = null)
+            Predicate<FightBattleStatusCustomActionEvent> nativeStatusAction = null,
+            Predicate<int> nativeDisperse = null)
         {
             if (stepEvent == null || checkpoint == null || colors == null) return;
             damageUiSpacing = colors.Spacing;
@@ -217,9 +218,10 @@ namespace Zjcs.Presentation.Combat
                 foreach (FightBattleStatusCustomActionEvent action in stepEvent.StatusCustomActions)
                     if (nativeStatusAction?.Invoke(action) != true) SpawnCustomActionFloat(action, checkpoint);
             if (stepEvent.DispersedUnitIds!=null)
-                foreach (int targetId in stepEvent.DispersedUnitIds)
+                for (int index = 0; index < stepEvent.DispersedUnitIds.Count; index++)
                 {
-                    var target=FindUnit(checkpoint,targetId);
+                    if (nativeDisperse?.Invoke(index) == true) continue;
+                    var target=FindUnit(checkpoint,stepEvent.DispersedUnitIds[index]);
                     if (target!=null) SpawnOfficialDamageFloat(new PendingDamageFloat
                         {Target=target,PrefabKey="damage_FightDisperseDamageFloatEffect"});
                 }

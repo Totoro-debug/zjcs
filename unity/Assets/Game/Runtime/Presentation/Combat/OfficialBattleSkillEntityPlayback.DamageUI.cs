@@ -38,6 +38,19 @@ namespace Zjcs.Presentation.Combat
             PrepareDamageUITarget(action.UnitId);
             return damageUI.CanPlayStatusCustomAction(action);
         }
+        private readonly System.Collections.Generic.HashSet<FightBattleDamageEvent> disperseReceipts =
+            new System.Collections.Generic.HashSet<FightBattleDamageEvent>();
+        internal bool PrepareDisperse(FightBattleDamageEvent receipt)
+        {
+            if (damageUI == null || receipt == null) return false;
+            PrepareDamageUITarget(receipt.TargetId);
+            return damageUI.CanPlayDisperse(receipt.TargetId) && disperseReceipts.Add(receipt);
+        }
+        internal void DamageStarted(FightBattleDamageEvent receipt)
+        {
+            // Called after the original MyFightDamage.OnStart (damage, hit and authored graphs).
+            if (disperseReceipts.Remove(receipt)) scope.Dispatch(() => damageUI.Disperse(receipt.TargetId));
+        }
         internal void SetDamageUIVisible(bool visible) => damageUI?.SetVisible(visible);
         internal void UpdateDamageUIVisibility() => damageUI?.UpdateVisibility();
     }
