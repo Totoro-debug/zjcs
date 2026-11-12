@@ -90,7 +90,9 @@ def transfer(work,project,install=False):
         fixture=ROOT/'scripts/fixtures/home_currency_windows_native_validation.cs'
         factory=ROOT/'.tools/source-packages/current/884_156692/official-code/client-source/PlayerItemUIGetItemIdFactory.cs'
         assert 'case PlayerItemType.FlareStar:\n\t\t\treturn Parsers.GameSettings.FlareStarId;' in factory.read_text('utf-8-sig')
-        receipt['binding_inputs']={p.relative_to(ROOT).as_posix():sha(p.read_bytes()) for p in (fixture,factory)}
+        icon_manager=factory.with_name('ItemIconManager.cs')
+        ui_utils=factory.with_name('UIUtils.cs')
+        receipt['binding_inputs']={p.relative_to(ROOT).as_posix():sha(p.read_bytes()) for p in (fixture,factory,icon_manager,ui_utils)}
         (ROOT/'assets/reference/home-currency-windows-native-source-manifest.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
     print('Original currency-window transfer:',len(outputs),'outputs;',len(reused),'existing',flush=True)
     return prefab_path

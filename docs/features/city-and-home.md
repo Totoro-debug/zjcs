@@ -243,7 +243,9 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `Assets/Official/Home/UI/CurrencyWindows/` 恢复 APK 中两个完整父窗口及默认物品图标，HintTip 附件沿原配置 GUID 查到实际 prefab 后一并恢复；保留全部原层级、RectTransform、布局、字体、图标、材质、入退场动画和声音，不用截图替代窗口。图标、附件对象池及顶部栏均在启用前注入本地资源与生命周期绑定。
 
-`HomeCurrencyWindowsNativeValidation.Run` 已在完整隔离工程的静音 Play Mode 通过两个完整原窗口的第一射线命中与内部模拟点击、所需数量取整、跨阶梯价格、最大值、余额／禁止扣费／条件分支、周期刷新、取消回调、固定数量／零余额兑换、支付奖励拦截、原入退场动画和图标／事件／奖励监听释放。兑换按钮接入真实新角色背包，验证耀星扣除与晨星发放、原数量监听更新、重开存档恢复、重复请求不重复结算、无效／不足请求不写档，以及文件占用导致写盘失败时主存档及余额不变、窗口保持可操作。已查看 608×1080 实际速购及兑换画面，包含原顶部货币栏。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。速购、奖励和二级窗口端口仍为受控数据；速购次数存档、物品详情／确认／直购窗口的实际往返、正式 HUD 和 Windows Player 尚未接通或验证。
+`OfflineHomeCurrencyWindows` 提供正式家园可调用的速购／兑换窗口创建、显示和关闭入口，窗口直接挂回原 Canvas，沿原 popup 排序、模糊遮罩准备及入退场动画运行。每个窗口和图标池分别注册资源作用域，字体、屏幕适配、语言、声音、顶部栏与业务端口在启用前绑定；图标和 HintTip 附件沿原对象池借还，默认图标按所选 `ItemIconManager.ResetIconGo`／`UIUtils.CopyRectTransform` 恢复变换。当前默认图标绑定限定物品 1／2／15，26 条配置不代表其余速购物品的专用图标资源全部接通。
+
+`HomeCurrencyWindowsNativeValidation.Run` 已在完整隔离工程的静音 Play Mode 通过两个完整原窗口的第一射线命中与内部模拟点击、所需数量取整、跨阶梯价格、最大值、余额／禁止扣费／条件分支、周期刷新、取消回调、固定数量／零余额兑换、支付奖励拦截、原入退场动画和图标／事件／奖励监听释放。验证直接调用上述窗口宿主，补测原图标池复用、遮罩准备期间重复关闭、已打开窗口销毁和重复 Dispose 后的监听回收。兑换按钮接入真实新角色背包，验证耀星扣除与晨星发放、原数量监听更新、重开存档恢复、重复请求不重复结算、无效／不足请求不写档，以及文件占用导致写盘失败时主存档及余额不变、窗口保持可操作。已查看 608×1080 实际速购及兑换画面，包含原顶部货币栏。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。速购、奖励和二级窗口端口仍为受控数据；速购次数存档、物品详情／确认／直购窗口的实际往返、正式 HUD 和 Windows Player 尚未接通或验证。
 
 `PlayerItemUIMainPlayerCountProviderBase` 与重新解析原依赖得到的 `PlayerItemUIPlayerItemCountProvider` 迁入 `Runtime/Official/HomeCurrencyUI/`，保留玩家借还、按物品 ID 过滤、每秒异步刷新及取消顺序。`OfflineHomeCurrencyPlayer` 将实际角色背包和自增参数投影为原数量事件；家园宿主需在提交／重读后调用 `SynchronizeCommittedPlayer`。当前 `OutputAdditionSetting.ItemOutputGroupTypeDict` 包含 56／57，因此体力保留原额外参数更新订阅。真实角色存档与原生顶栏的隔离验证入口为 `HomeCurrencyProfileValidation.Run`；正式家园 HUD 的整体替换、物品详情／购买原窗口、属性及产出加成变化时的体力速度／上限应用链仍未接通，不能以初始恢复规则代替这些流程。
 

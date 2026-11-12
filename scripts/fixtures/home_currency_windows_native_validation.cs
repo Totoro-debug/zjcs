@@ -59,12 +59,12 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     IProfessionItemIconContext,IProfessionItemColors,IProfessionItemPlayer,IHomeCountColors,IWorldWindowBlurManager,IPlayerItemUIHost
 {
     Camera cameraUi;RenderTexture target;Canvas canvas;EventSystem events;Vector2 pointer;int errors,sounds,borrowedIcons,subscribers,details;
-    OfflineHomeCurrencyAssets assets;OfflineProfessionImageResourceLoader loader;ItemIconAttachmentManager attachments;
+    OfflineHomeCurrencyAssets assets;OfflineHomeCurrencyWindows windows;
     Zjcs.Official.HomeHudUI.OfficialHomeTopBarAssetCatalog topBarAssets;
     OfflineMainlineProgressSession profile;ProfileSlotCatalog slots;string profileSlot,lastExchangeRequest;
     OfflineHomeCurrencyPlayer profilePlayer;OfflineHomeCurrencyExchange exchange;
-    FontAssetFontService fonts;ScreenAdaptService screen;OfflineHomeTopBar topBar;OfflinePartnerUiSoundScope soundScope;IDisposable metrics,uiScope;
-    GameObject active,maskObject;WorldPopupWindow popup;WorldWindowBlurMask mask;Material blur;
+    FontAssetFontService fonts;ScreenAdaptService screen;OfflineHomeTopBar topBar;OfflinePartnerUiSoundScope soundScope;IDisposable metrics;
+    GameObject active;WorldPopupWindow popup;Material blur;
     readonly Dictionary<int,long> counts=new Dictionary<int,long>{{1,100},{2,500},{15,5}};
     readonly List<string> calls=new List<string>();Action<IProfessionItemData,long,object> changed;
     Action<HomeCurrencyEnterNewDay> day;Action<HomeCurrencyAutoIncreaseEvent> increase;readonly List<Func<HomeCurrencyAwardMessage,bool>> awardHandlers=new List<Func<HomeCurrencyAwardMessage,bool>>();
@@ -87,8 +87,6 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
             Path="Assets/Image/"+(string)row.Value["item"]["RawIcon"],AssetGuid=(string)row.Value["manifest_asset"]["guid"],Asset=Load<Sprite>(row.Value["pointer"])}).Concat(new[]{new OfflineProfessionImageCatalog.Entry{
                 Path=(string)proof["hint_attachment"]["asset"]["path"],AssetGuid=(string)proof["hint_attachment"]["asset"]["guid"],
                 Asset=Load<GameObject>(proof["roots"]["HomeCurrency"+(string)proof["hint_attachment"]["name"]])}}).ToArray();
-        loader=new OfflineProfessionImageResourceLoader(assets.images);ProfessionImageResourceBridge.Provider=image=>loader;
-        attachments=new ItemIconAttachmentManager(loader,()=>assets.attachmentConfig,new GAction());
         soundScope=new OfflinePartnerUiSoundScope(id=>((JObject)proof["audio"]).Properties().Select(p=>p.Value).Where(row=>(uint)row["event"]["id"]==id).Select(row=>Load<AudioClip>(row["pointer"])).SingleOrDefault());
         var dictionary=((JArray)JObject.Parse(assets.texts.text)["texts"]).ToDictionary(row=>(string)row["key"],row=>(string)row["text"]);
         LanguageManager.Initialize(new Language(dictionary));fonts=OfflineHomeHudAssets.LoadDefault().CreateFontService();fonts.Initialize();
@@ -96,18 +94,23 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         cameraUi=new GameObject("MutedCurrencyWindowCamera",typeof(Camera),typeof(AudioListener)).GetComponent<Camera>();cameraUi.orthographic=true;cameraUi.clearFlags=CameraClearFlags.SolidColor;cameraUi.backgroundColor=new Color(.12f,.2f,.28f);
         target=new RenderTexture(608,1080,24);target.Create();cameraUi.targetTexture=target;
         canvas=new GameObject("NativeWindowCanvas",typeof(RectTransform),typeof(Canvas),typeof(CanvasScaler),typeof(GraphicRaycaster)).GetComponent<Canvas>();canvas.renderMode=RenderMode.ScreenSpaceCamera;canvas.worldCamera=cameraUi;canvas.planeDistance=1;
-        uiScope=OfflineUiBindingModule.Register(canvas.transform,new OfflineUiBindings{Localize=assets.Text,Font=()=>OfflineHomeHudAssets.LoadDefault().defaultFont,Images=_=>loader,Pool=(scope,prefab,parent,keepWorld)=>InstantiateBound(prefab,parent,keepWorld)});
         var scaler=canvas.GetComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;scaler.referenceResolution=new Vector2(1080,1920);scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.Expand;
         events=new GameObject("InternalWindowPointer",typeof(EventSystem)).GetComponent<EventSystem>();
         var maskAssets=OfficialPartnerFriendshipWindowAssetCatalog.LoadDefault();blur=new Material(maskAssets.BlurMaterial);
         topBarAssets=assets.CreateTopBarCatalog();topBar=new OfflineHomeTopBar(canvas.transform,this,OfflineHomeHudAssets.LoadDefault().defaultFont,assets.Text,topBarAssets);topBar.Root.SetActive(false);
+        windows=new OfflineHomeCurrencyWindows(new OfflineHomeCurrencyWindowBindings{
+            Canvas=canvas,CoroutineHost=this,TopBar=topBar.Manager,BlurMaskPrefab=maskAssets.BlurMaskPrefab,
+            BlurManager=this,Fonts=fonts,Screen=screen,Icons=this,PostSound=Post},this,assets);
+        windows.WindowOpened+=root=>{foreach(var touch in root.GetComponentsInChildren<LongTouch>(true))touch.PointerPositionOverride=()=>pointer;};
+        windows.WindowClosed+=root=>{if(root==active)active=null;};
         var info=assets.QuickBuy(1);Require(info.PriceList.SequenceEqual(new long[]{30,50,100})&&info.PriceBuyCount.SequenceEqual(new long[]{5,5,-1}),"selected official price tiers");
         Require(info.GetPrice(4,3,out var price)&&price==130,"price crosses original tiers");Require(info.GetMaxBuyCount(0,500)==11,"original multi-tier affordable count");
         long award=info.GetAwardItemCount(Level,SubRank);Require(award>0,"original award coefficient");
-        yield return Open(assets.quickBuyPrefab,root=>root.GetComponent<QuickBuyDialog>().Init(1,award+1,true,null,true));
+        yield return Open(windows.ShowQuickBuy(1,award+1,true,null,true).gameObject);
         var quick=active.GetComponent<QuickBuyDialog>();var cost=Field<PlayerCostMoneyContent>(quick,"mCostMoneyContent");var group=Field<SetCountButtonGroup>(quick,"mSetCountButtonGroup");
         Require(Field<long>(quick,"mCurrentValue")==2&&cost.CostItemCount==60,"original ceiling of required count and cost");
         Require(Field<ItemIcon>(quick,"mIcon").IconSprite==Load<Sprite>(proof["currency_images"]["1"]["pointer"]),"actual original money icon");
+        var firstIcon=Field<ItemIcon>(quick,"mIcon");int firstIconId=firstIcon.GetInstanceID();
         Capture("home-quick-buy-native.png");Click(Field<Button>(group,"mAddBtn"));Require(cost.CostItemCount==90,"native add updates original tier price");
         Click(Field<Button>(group,"mMaxBtn"));Require(cost.CostItemCount==500&&Field<long>(quick,"mCurrentValue")==11,"native max includes all affordable tiers");
         counts[2]=0;Notify(2);Require(Field<long>(quick,"mCurrentValue")==1&&cost.CostItemCount==500,"original balance change clamps quantity while preserving displayed cost until next refresh");
@@ -117,10 +120,10 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         cost.SetConditionChecker(()=>false);int before=calls.Count;Click(cost.Btn);Require(calls.Count==before,"original cost condition checker prevents action");cost.SetConditionChecker(null);
         allowLimit=false;Click(cost.Btn);yield return null;Require(active&&calls.Last()=="limit:1:"+award,"original limit check receives one award rather than total purchase");
         allowLimit=true;Click(cost.Btn);yield return WaitClosed();Require(calls.IndexOf("buy:1:1")<calls.LastIndexOf("close"),"request precedes immediate close");Require(borrowedIcons==0&&subscribers==0&&day==null&&increase==null,"quick-buy releases icon and all subscriptions");
-        int cancellations=0;yield return Open(assets.quickBuyPrefab,root=>root.GetComponent<QuickBuyDialog>().Init(1,0,true,()=>cancellations++));
-        quick=active.GetComponent<QuickBuyDialog>();Click(Field<Button>(quick,"mCancelBtn"));yield return WaitClosed();Require(cancellations==1,"native cancel callback once");
+        int cancellations=0;yield return Open(windows.ShowQuickBuy(1,0,true,()=>cancellations++).gameObject);
+        quick=active.GetComponent<QuickBuyDialog>();Require(Field<ItemIcon>(quick,"mIcon").GetInstanceID()==firstIconId,"original icon pool reuses the returned icon");Click(Field<Button>(quick,"mCancelBtn"));yield return WaitClosed();Require(cancellations==1,"native cancel callback once");
         InitializeExchangeProfile();
-        yield return Open(assets.payChangePrefab,root=>root.GetComponent<PayMoneyChangeDialog>().Init());
+        yield return Open(windows.ShowExchange().gameObject);
         var pay=active.GetComponent<PayMoneyChangeDialog>();Require(pay.SetCountSlider.CurrentCount==1&&pay.CountSliderGo.activeSelf,"original pay default selection");
         Click(pay.SetCountSlider.AddBtn);Require(Field<long>(pay,"mCurrentCount")==2,"native exchange add");Click(pay.SetCountSlider.MaxBtn);Require(Field<long>(pay,"mCurrentCount")==5,"native exchange maximum");Capture("home-pay-change-native.png");
         Click(pay.ConfirmBtn);Require(GetItemAmount(15)==0&&GetItemAmount(2)==505,"actual exchange balances before original success close");Require(canvas.GetComponentsInChildren<MePlayerItemUI>(true).Any(item=>item.GetComponentsInChildren<TMP_Text>(true).Any(text=>text.text=="505")),"original count observer updates before the top bar hides at exit-animation start");yield return WaitClosed();Require(exchanges==1&&calls.Contains("exchange:5"),"original exchange request and success close");Require(awardHandlers.Count==0&&subscribers==0,"pay releases award and item handlers");
@@ -128,19 +131,21 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         var restored=OfflineMainlineProgressSession.OpenCharacter(slots,profileSlot);Require(restored.InventoryCount(15)==0&&restored.InventoryCount(2)==505,"exchange survives reopening the real profile");
         string committed=File.ReadAllText(slots.GetProgressPath(profileSlot));Require(exchange.Exchange(lastExchangeRequest,5).Status==ProgressionResultStatus.Unchanged&&committed==File.ReadAllText(slots.GetProgressPath(profileSlot)),"replayed exchange request never spends or awards twice");
         Require(!exchange.Exchange("overdraw",1).IsApplied&&!exchange.Exchange("zero",0).IsApplied&&committed==File.ReadAllText(slots.GetProgressPath(profileSlot)),"invalid and insufficient exchanges leave the saved profile unchanged");
-        SetBalance(15,2);yield return Open(assets.payChangePrefab,root=>root.GetComponent<PayMoneyChangeDialog>().Init(3));
+        SetBalance(15,2);yield return Open(windows.ShowExchange(3).gameObject);
         pay=active.GetComponent<PayMoneyChangeDialog>();Require(!pay.CountSliderGo.activeSelf&&pay.ExchangeFixedTxt.gameObject.activeSelf&&Field<long>(pay,"mCurrentCount")==3,"original explicit quantity keeps fixed mode");
         Click(pay.ConfirmBtn);Require(confirm==1&&exchanges==1,"insufficient fixed amount asks before direct pay");
         payAward=false;Require(!awardHandlers.Single()(new HomeCurrencyAwardMessage()),"non-pay award continues propagation");payAward=true;Require(awardHandlers.Single()(new HomeCurrencyAwardMessage())&&awards==1,"pay award original interception");
         confirmAction();yield return WaitClosed();Require(directPay==1,"confirmed shortage initializes direct-pay port then closes");
-        SetBalance(15,0);yield return Open(assets.payChangePrefab,root=>root.GetComponent<PayMoneyChangeDialog>().Init());pay=active.GetComponent<PayMoneyChangeDialog>();Require(pay.SetCountSlider.CurrentCount==0&&Field<long>(pay,"mCurrentCount")==0,"zero balance original disabled range");Click(pay.CancelBtn);yield return WaitClosed();
-        SetBalance(15,2);yield return Open(assets.payChangePrefab,root=>root.GetComponent<PayMoneyChangeDialog>().Init());pay=active.GetComponent<PayMoneyChangeDialog>();
+        SetBalance(15,0);yield return Open(windows.ShowExchange().gameObject);pay=active.GetComponent<PayMoneyChangeDialog>();Require(pay.SetCountSlider.CurrentCount==0&&Field<long>(pay,"mCurrentCount")==0,"zero balance original disabled range");Click(pay.CancelBtn);yield return WaitClosed();
+        SetBalance(15,2);yield return Open(windows.ShowExchange().gameObject);pay=active.GetComponent<PayMoneyChangeDialog>();
         string primary=slots.GetProgressPath(profileSlot);string beforeFailure=File.ReadAllText(primary);
         using(var locked=new FileStream(primary,FileMode.Open,FileAccess.Read,FileShare.Read)){Click(pay.ConfirmBtn);Require(active&&calls.Last()=="exchange-rejected","failed disk commit keeps original exchange window open");}
         Require(File.ReadAllText(primary)==beforeFailure&&GetItemAmount(15)==2&&GetItemAmount(2)==505,"failed commit leaves both actual inventory amounts and primary save unchanged");
         Click(pay.CancelBtn);yield return WaitClosed();
+        active=windows.ShowExchange().gameObject;windows.CloseExchange();windows.CloseExchange();Require(!active&&windows.WindowCount==0,"closing a preparing window cancels its mask coroutine once");
+        yield return Open(windows.ShowExchange().gameObject);windows.Dispose();windows.Dispose();Require(!active&&windows.WindowCount==0&&subscribers==0&&awardHandlers.Count==0,"disposing active native windows releases all window observers");
         Require(Field<Delegate>(profilePlayer,"OnItemCountUpdate").GetInvocationList().Length==1&&Field<Delegate>(profilePlayer,"OnAutoIncreaseItemDataUpdate")==null,"actual profile observers release before adapter disposal");profilePlayer.Dispose();profilePlayer=null;
-        topBar.Dispose();Object.Destroy(topBarAssets);attachments.Dispose();yield return null;uiScope.Dispose();fonts.Dispose();soundScope.Dispose();screen.Dispose();metrics.Dispose();Require(errors==0&&sounds>0&&subscribers==0,"runtime, audio and disposal checks");
+        windows.Dispose();windows.Dispose();topBar.Dispose();Object.Destroy(topBarAssets);yield return null;fonts.Dispose();soundScope.Dispose();screen.Dispose();metrics.Dispose();Require(errors==0&&sounds>0&&subscribers==0,"runtime, audio and disposal checks");
     }
     void InitializeExchangeProfile()
     {
@@ -159,35 +164,17 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
             else if(count<held)Require(OfflineInventoryOperations.Consume(save.Player,id,held-count,now).IsApplied,"set real exchange balance");
         }).IsApplied,"commit isolated exchange balance");profilePlayer?.SynchronizeCommittedPlayer();
     }
-    IEnumerator Open(GameObject prefab,Action<GameObject> initialize)
+    IEnumerator Open(GameObject root)
     {
-        var staging=new GameObject("InactiveWindowBindings",typeof(RectTransform));staging.transform.SetParent(canvas.transform,false);staging.SetActive(false);
-        active=Object.Instantiate(prefab,staging.transform,false);Require(active.GetComponentsInChildren<MonoBehaviour>(true).All(x=>x),"all original window scripts resolve");Bind(active);
-        active.SetActive(false);initialize(active);active.transform.SetParent(canvas.transform,false);popup=active.GetComponent<WorldPopupWindow>();popup.SetCanvasSortingOrder(20);
-        maskObject=Object.Instantiate(OfficialPartnerFriendshipWindowAssetCatalog.LoadDefault().BlurMaskPrefab,staging.transform,false);maskObject.SetActive(false);maskObject.transform.SetParent(canvas.transform,false);mask=maskObject.GetComponent<WorldWindowBlurMask>();mask.BlurManager=this;
-        yield return mask.Prepare(popup,false);active.SetActive(true);popup.Show();mask.AttachToWindow(popup);Object.Destroy(staging);
-        yield return new WaitForSeconds(popup.mShowClip.length+.2f);Require(popup.State==WorldPopupWindow.EState.Show,"original popup show clip finishes");
-    }
-    void Bind(GameObject root)
-    {
-        foreach(var text in root.GetComponentsInChildren<TMP_Text>(true))if(text.font)fonts.SetupFont(text.font);
-        foreach(var text in root.GetComponentsInChildren<WorldMultiLanguageText>(true))text.Localizer=assets.Text;
-        foreach(var safe in root.GetComponentsInChildren<Zjcs.Official.HomeScreenUI.SafeArea>(true))safe.ScreenAdaptService=screen;
-        foreach(var sound in root.GetComponentsInChildren<WorldButtonSound>(true))sound.Post=Post;
-        foreach(var sound in root.GetComponentsInChildren<WorldPopupWindowSound>(true))sound.Post=Post;
-        foreach(var icon in root.GetComponentsInChildren<ItemIcon>(true))icon.Bind(this);
-        foreach(var cell in root.GetComponentsInChildren<ItemIconAttachment>(true))cell.Bind(attachments);
-        foreach(var progress in root.GetComponentsInChildren<WorldItemProgress>(true))progress.Compact=value=>CultureNumberArg.Compact(value).ToString();
-        foreach(var control in root.GetComponentsInChildren<SetCountSlider>(true))control.GlobalColors=this;
-        foreach(var touch in root.GetComponentsInChildren<LongTouch>(true))touch.PointerPositionOverride=()=>pointer;
-        foreach(var bar in root.GetComponentsInChildren<TopBarHandler>(true))bar.Bind(topBar.Manager);
-        foreach(var cost in root.GetComponentsInChildren<PlayerCostMoneyContent>(true))cost.Services=this;
-        foreach(var quick in root.GetComponentsInChildren<QuickBuyDialog>(true))quick.Services=this;
-        foreach(var pay in root.GetComponentsInChildren<PayMoneyChangeDialog>(true))pay.Services=this;
+        active=root;popup=root.GetComponent<WorldPopupWindow>();
+        Require(active.GetComponentsInChildren<MonoBehaviour>(true).All(x=>x),"all original window scripts resolve");
+        float deadline=Time.time+5;
+        while(!root.activeInHierarchy){Require(Time.time<deadline,"original mask preparation completes");yield return null;}
+        yield return new WaitForSeconds(popup.mShowClip.length+.2f);
+        Require(popup.State==WorldPopupWindow.EState.Show,"original popup show clip finishes");
     }
     void Post(AudioClip clip,GameObject owner){Require(clip&&owner,"original window PCM binding");sounds++;var source=owner.GetComponent<AudioSource>();if(!source)source=owner.AddComponent<AudioSource>();source.volume=0;source.PlayOneShot(clip);}
-    GameObject InstantiateBound(GameObject prefab,Transform parent,bool keepWorld){var staging=new GameObject("InactivePoolBindings");staging.SetActive(false);staging.transform.SetParent(canvas.transform,false);var value=Object.Instantiate(prefab,staging.transform,false);Bind(value);value.transform.SetParent(parent,keepWorld);Object.Destroy(staging);return value;}
-    public void Close(GameObject window){Require(window==active,"close current original window");calls.Add("close");popup.Hide(()=>{mask.UnattachToWindow();Object.Destroy(maskObject);active.SetActive(false);Object.Destroy(active);active=null;});}
+    public void Close(GameObject window){Require(window==active,"close current original window");calls.Add("close");windows.Close(window);}
     IEnumerator WaitClosed(){var deadline=Time.time+5;while(active){Require(Time.time<deadline,"original hide completes");yield return null;}yield return null;}
     void Notify(int id)=>changed?.Invoke(new ItemData(id,new IconInfo(assets.ItemRow(id))),0,null);
     void Click(Button button)
@@ -207,10 +194,10 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     public HomeCurrencyWindowItemInfo GetItemInfo(int id)=>assets.Item(id);public QuickBuyInfo GetQuickBuyInfo(int id)=>assets.QuickBuy(id);
     public long GetItemCountLimit(int id)=>assets.CountLimit(id);public string GetItemNameKey(int id)=>"item_"+id+"_name";
     public string QuickBuyLimitedCountTextKey(EQuickBuyRefreshType type)=>"ui_quick_buy_"+type+"_limited";
-    public IProfessionAssetOperation<Sprite> LoadSprite(string path)=>loader.LoadAsset<Sprite>("Assets/Image/"+path);
+    public IProfessionAssetOperation<Sprite> LoadSprite(string path)=>windows.LoadSprite(path);
     public bool IconServiceAvailable=>true;
-    public ItemIcon GetIcon(HomeCurrencyWindowItemInfo item,Transform slot){var staging=new GameObject("InactiveItemBinding");staging.SetActive(false);var go=Object.Instantiate(assets.itemIconPrefab,staging.transform,false);Bind(go);go.SetActive(false);go.transform.SetParent(slot,false);var icon=go.GetComponent<ItemIcon>();icon.Init(item.Id);go.SetActive(true);Object.Destroy(staging);borrowedIcons++;return icon;}
-    public void RecycleIcon(ItemIcon icon){icon.Clear();icon.gameObject.SetActive(false);Object.Destroy(icon.gameObject);borrowedIcons--;}
+    public ItemIcon GetIcon(HomeCurrencyWindowItemInfo item,Transform slot){var icon=windows.GetIcon(item,slot);borrowedIcons++;return icon;}
+    public void RecycleIcon(ItemIcon icon){windows.RecycleIcon(icon);borrowedIcons--;}
     public IDisposable SubscribeEnterNewDay(Action<HomeCurrencyEnterNewDay> callback){day+=callback;return new Release(()=>day-=callback);}
     public IDisposable SubscribeAutoIncrease(Action<HomeCurrencyAutoIncreaseEvent> callback){increase+=callback;return new Release(()=>increase-=callback);}
     public UniTask<bool> CheckBuyLimitCountItem(int id,long count){calls.Add("limit:"+id+":"+count);return UniTask.FromResult(allowLimit);}
@@ -224,7 +211,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     public void ClosePayMoneyChangeDialog()=>Close(active);public bool AwardServiceAvailable=>true;
     public void RegisterAwardHandler(Func<HomeCurrencyAwardMessage,bool> handler)=>awardHandlers.Add(handler);public void RemoveAwardHandler(Func<HomeCurrencyAwardMessage,bool> handler)=>Require(awardHandlers.Remove(handler),"original award handler removed");
     public bool IsPayAward(HomeCurrencyAwardMessage message)=>payAward;public void PopupAward(HomeCurrencyAwardMessage message)=>awards++;
-    public ItemIconConfig Config=>assets.iconConfig;public Object GrayConfig=>throw new InvalidOperationException("Unexpected gray branch");public IProfessionItemColors Colors=>this;
+    public ItemIconConfig Config=>assets.iconConfig;public Object GrayConfig=>null;public IProfessionItemColors Colors=>this;
     IProfessionItemInfo IProfessionItemIconContext.GetItemInfo(int id)=>new IconInfo(assets.ItemRow(id));public object Compact(long count)=>CultureNumberArg.Compact(count);
     public object CultureText(string key)=>assets.Text(key);public bool TryGetSourceData(int id,out IReadOnlyList<IProfessionItemSource> sources){sources=null;return false;}
     public bool CanMerge(int id,bool recursion)=>false;public object GetLocationInfos(int id)=>null;public void SetUIGray(Object config,GameObject target,bool gray)=>throw new InvalidOperationException("Unexpected gray branch");
