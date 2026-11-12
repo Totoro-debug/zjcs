@@ -251,6 +251,8 @@ Editor 程序集显式引用 `Zjcs.Presentation.Character`，以供技能 Play M
 
 该专项发现并修复了共用读档问题：`JsonUtility` 将空 `SkillReplay` 写成默认对象，导致岩灵恢复后无限重放。`FightOfficialCombatCatalog.RestoreStatusReplayDefinition` 按原状态是否具有 `FightStatusSkillReplayComponent` 清除虚假组件，保留真实组件的概率累计、回合及次数。原失败存档已能推进到自然到期；原重放、检查点、召唤继承／生成／站位／移除／复活及寿命扣减回归通过，六职业 228 次四向施法／检查点回归通过。完整 Unity 导入／编译、ProjectTools.Validate、静态检查（150,406 个 GUID）及严格 Windows 资源构建通过。
 
+召唤物结束回执与退场时钟已独立接入规则模块：`FightBattleExecutor.UnitEndEvents.cs` 在原寿命状态 End 链中记录移除实体及来源状态，待实际施法、接近与触发时延完成后保存 `UnitEndEvents`；规则层既有回合数、结束标记和结算顺序不变。回执随重放、深复制及文件检查点保存，旧档缺项保持兼容。`OfficialBattleUnitEndPlayback` 仅保留已存在的模型，按记录时间稳定派发移除，不因重复通知重置计时，也不在冷恢复时凭空重建已结束模型。`test_battle_unit_ends.ps1` 覆盖三类原召唤物、24072 寿命扣减、原最后施法边界、128 种帧划分和同刻顺序；最新共享战斗依赖上的技能图调度、耗血通知、228 次四向施法及检查点恢复回归通过。规则核心不代表完整退场演出已交付。
+
 ## 自定义实现
 
 用户确认 24008 单机规则：敌方既不能主动选中持有者，也不能通过范围或其他攻击命中它；友方效果、持有者自身行动及占格保留。先检查原版视觉绑定，若有变色或透明度等表现则沿用；没有则正常可见。原状态 prefab 的四个原组件已从所选 APK 解码，开始／结束／循环及各状态播放引用均为空，原处理器没有可执行行为，当前不添加自定透明效果。该敌方保护行为属于单机决定。

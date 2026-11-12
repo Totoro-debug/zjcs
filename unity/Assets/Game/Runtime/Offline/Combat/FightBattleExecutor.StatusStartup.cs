@@ -34,15 +34,21 @@ namespace Zjcs.Combat.Official
             try
             {
                 BeginGridViewEvents();
+                BeginUnitEndEvents();
                 BeginStatusSecondsHits();
                 CleanupGridItems();
                 var result = StepCore(sequence, counter);
-                if (!result.Replayed) CompleteStatusSecondsHits();
+                if (!result.Replayed)
+                {
+                    CompleteUnitEndEvents(result.Event);
+                    CompleteStatusSecondsHits();
+                }
                 return result;
             }
             finally
             {
                 ClearGridViewEvents();
+                unitEndEvents = null;
                 ClearStatusSecondsHits();
                 // Include units summoned during this step. No delegate or executor is retained
                 // by the checkpoint, including when a configuration fails during a nested cast.
@@ -64,6 +70,7 @@ namespace Zjcs.Combat.Official
 
         private void OnStatusEnded(FightBattleUnitState owner, FightBattleStatusState ended)
         {
+            RecordUnitEnd(owner, ended);
             RecordGridStatus(owner, ended, FightBattleGridViewEventKind.StatusEnd);
             if (ended != null) ended.StackChanged = null;
             statusMutex.Remove(owner, ended);

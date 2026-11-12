@@ -1827,6 +1827,8 @@ namespace Zjcs.Combat.Official
         public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>();
         public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>();
         public List<FightBattleGridViewEvent> GridViewEvents = new List<FightBattleGridViewEvent>();
+        // Actual StatusEnd/RemoveApplyEntity time, independent of lingering skill effects.
+        public List<FightBattleUnitEndEvent> UnitEndEvents = new List<FightBattleUnitEndEvent>();
         public List<FightBattleBodyAnimatorTriggerEvent> BodyAnimatorTriggers =
             new List<FightBattleBodyAnimatorTriggerEvent>();
         public List<FightBattleStatusCustomActionEvent> StatusCustomActions =
@@ -1834,6 +1836,14 @@ namespace Zjcs.Combat.Official
         public List<int> SpawnedUnitIds = new List<int>();
         // One notification per successful disperse operation; ordinary expiration is not a disperse.
         public List<int> DispersedUnitIds = new List<int>();
+    }
+
+    [Serializable]
+    public sealed class FightBattleUnitEndEvent
+    {
+        public int UnitId;
+        public int StatusId;
+        public float Delay;
     }
 
     [Serializable]
