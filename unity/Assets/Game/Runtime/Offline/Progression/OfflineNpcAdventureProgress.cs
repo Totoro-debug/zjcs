@@ -65,7 +65,7 @@ namespace Zjcs.Offline.Progression
         private readonly OfflineMainlineProgressSession profile;
         private readonly OfficialNpcTravelCatalog catalog;
         public int DailyBattleLimit => catalog.Data.daily_battle_limit;
-        private int ResetHour => catalog.Data.daily_reset_hour;
+        private int ResetHour => OfflineRefreshClock.Hour;
         private int ResetMinute => catalog.Data.daily_reset_minute;
 
         public OfflineNpcAdventureSession(OfflineMainlineProgressSession profile,

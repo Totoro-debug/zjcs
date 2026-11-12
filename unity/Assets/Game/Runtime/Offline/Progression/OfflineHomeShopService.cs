@@ -915,11 +915,13 @@ namespace Zjcs.Offline.Progression
         private long WeekCycleKey(long nowUnixSeconds)
         {
             DateTime now = DateTimeOffset.FromUnixTimeSeconds(nowUnixSeconds).LocalDateTime;
-            TimeSpan reset = new TimeSpan(catalog.Data.registered_days_reset_hour,
-                catalog.Data.registered_days_reset_minute, catalog.Data.registered_days_reset_second);
+            TimeSpan reset = OfflineRefreshClock.TimeOfDay;
             if (now.TimeOfDay < reset) now = now.AddDays(-1);
             int daysFromWeekStart = ((int)now.DayOfWeek - catalog.Data.weekly_start_day_of_week + 7) % 7;
-            DateTime weekStart = now.Date.Add(reset).AddDays(-daysFromWeekStart);
+            // Keep the stored stock identifier stable; the active-week boundary above is 06:00.
+            DateTime weekStart = now.Date.AddHours(catalog.Data.registered_days_reset_hour)
+                .AddMinutes(catalog.Data.registered_days_reset_minute).AddSeconds(catalog.Data.registered_days_reset_second)
+                .AddDays(-daysFromWeekStart);
             return new DateTimeOffset(weekStart).ToUnixTimeSeconds();
         }
 
@@ -961,8 +963,7 @@ namespace Zjcs.Offline.Progression
             if (createdAt <= 0) return 0;
             DateTime start = DateTimeOffset.FromUnixTimeSeconds(createdAt).LocalDateTime;
             DateTime end = DateTimeOffset.FromUnixTimeSeconds(now).LocalDateTime;
-            TimeSpan resetTime = new TimeSpan(catalog.Data.registered_days_reset_hour,
-                catalog.Data.registered_days_reset_minute, catalog.Data.registered_days_reset_second);
+            TimeSpan resetTime = OfflineRefreshClock.TimeOfDay;
             int days = (int)(end.Date.Add(resetTime) - start.Date.Add(resetTime)).TotalDays;
             if (start.TimeOfDay < resetTime) days++;
             if (end.TimeOfDay < resetTime) days--;

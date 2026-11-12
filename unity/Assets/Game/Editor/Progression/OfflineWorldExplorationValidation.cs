@@ -12,7 +12,7 @@ namespace Zjcs.Editor.Progression
     {
         public static void Run()
         {
-            string root = Path.Combine(Path.GetTempPath(), "zjcs-explore-" + Guid.NewGuid().ToString("N"));
+            string root = Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR") ?? throw new InvalidOperationException("Validation workspace required."), "zjcs-explore-" + Guid.NewGuid().ToString("N"));
             try
             {
                 var slots = new ProfileSlotCatalog(root);
@@ -122,7 +122,7 @@ namespace Zjcs.Editor.Progression
                 session = OfflineMainlineProgressSession.Open(slots, slot, OfficialMainlineTaskCatalog.LoadDefault());
                 Require(session.Save.World.Exploration.TotalCount == 0 && session.Save.Player.AppliedInventoryEventIds.Contains("fixed_award:5")
                     && session.InventoryCount(56) == 1, "Legacy story award migrates to the global receipt without granting again");
-                Debug.Log("World exploration validation passed: native gates, guide, atomic batch rollback, saved levels, expiry, competing guarantees, lifetime cap, legacy receipt, lost goddess level/skill/property transactions, cap filtering, replay/cold read and 08:00 daily boundary.");
+                Debug.Log("World exploration validation passed: native gates, guide, atomic batch rollback, saved levels, expiry, competing guarantees, lifetime cap, legacy receipt, lost goddess level/skill/property transactions, cap filtering, replay/cold read and 06:00 daily boundary.");
             }
             finally { if (Directory.Exists(root)) Directory.Delete(root, true); }
         }
@@ -186,14 +186,14 @@ namespace Zjcs.Editor.Progression
                 }).IsApplied, "Lost goddess capped fixture");
                 Require(service.AwardLostGoddess(capped, 11, now, character, skills, out var fallback).IsApplied && fallback.Type == 4,
                     "Capped level and skill categories are removed before weighted selection");
-                var reset = DateTime.Now.Date.AddHours(8);
+                var reset = DateTime.Now.Date.AddHours(6);
                 long boundary = new DateTimeOffset(reset).ToUnixTimeSeconds();
                 Require(session.ApplyInventoryTransaction("explore-daily-boundary", save =>
                 {
                     save.World.Exploration.Day = reset.AddDays(-1).ToString("yyyyMMdd");
                     save.World.Exploration.DailyCount = 1;
                 }).IsApplied && service.DailyCount(boundary - 1) == 1 && service.DailyCount(boundary) == 0,
-                    "Native local 08:00 daily reset preserves the previous day until its exact boundary");
+                    "Native local 06:00 daily reset preserves the previous day until its exact boundary");
             }
             finally { foreach (var value in originalWeights) weights[value.Key] = value.Value; }
         }

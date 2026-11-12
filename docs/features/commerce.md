@@ -69,6 +69,9 @@
 
 ## 自定义实现
 
+本模块原 08:00 刷新按用户指定统一提前至 06:00；共享时钟、时区及旧存档兼容规则见[全模块刷新时刻](city-and-home.md#全模块刷新时刻)。
+
+
 - HUD 不复制原 `FunctionEntryDialog` 中间层，直接把官方 `FunctionEntryPhoto` 点击绑定到商城；这是已实现的本地入口简化，官方 `commerce_functions/commerce_shop_entry` prefab 已进入目录但当前未作为必须中间页。
 - Map10 HUD 首购入口仍由 `AccumulatedPayEntryGo` 组合；Map11 已恢复原 `FirstPayBtn` 外观，但原支付功能门槛及完整提示图状态绑定、真实鼠标打开和 Windows Player 尚未验收。
 - 活动页四个入口按官方 `ActivityCommonEntry` prefab 生成，但每日／每周／首购／兑换的图标、标题和位置是本地组合，未接入原活动入口表、活动开放条件或动态活动目录。

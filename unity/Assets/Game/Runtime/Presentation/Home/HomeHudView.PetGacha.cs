@@ -1134,7 +1134,7 @@ namespace Zjcs.Presentation.Home
         private void UpdatePetShopCountdown(DateTime now)
         {
             int daysFromMonday = ((int)now.DayOfWeek + 6) % 7;
-            DateTime next = now.Date.AddDays(-daysFromMonday).AddHours(8);
+            DateTime next = now.Date.AddDays(-daysFromMonday).AddHours(Zjcs.Offline.Progression.OfflineRefreshClock.Hour);
             if (now >= next) next = next.AddDays(7);
             TimeSpan left = next - now;
             petGachaRenderer?.SetText(PetShellPrefix + "ShopContent/TopGo/RefreshGo/CountDownText",

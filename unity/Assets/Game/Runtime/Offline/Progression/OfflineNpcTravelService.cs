@@ -337,7 +337,7 @@ namespace Zjcs.Offline.Progression
 
         public static int LocalTravelDayKey(DateTime localNow)
         {
-            DateTime todayRefresh = localNow.Date.AddHours(8);
+            DateTime todayRefresh = localNow.Date.AddHours(Zjcs.Offline.Progression.OfflineRefreshClock.Hour);
             DateTime travelDay = localNow < todayRefresh ? todayRefresh.AddDays(-1) : todayRefresh;
             return travelDay.Year * 10000 + travelDay.Month * 100 + travelDay.Day;
         }

@@ -67,7 +67,7 @@ namespace Zjcs.Editor
             var saved = new DailyChallengeSave { firstEnteredLocalTicks = start.Ticks, highestObservedLocalTicks = start.Ticks };
             saved.activities.Add(new DailyChallengeActivitySave
             {
-                activityId = 209, logicDay = start.Date.AddHours(8).Ticks.ToString(), participated = true,
+                activityId = 209, logicDay = start.Date.AddHours(6).Ticks.ToString(), participated = true,
                 highestDifficulty = 1, dailyChallengeAwardCount = 1,
                 claimedBossDifficulties = new List<int> { 0 }
             });
@@ -76,12 +76,12 @@ namespace Zjcs.Editor
             var first = service.ReadDomainBossPage(209, catalog, start);
             Require(first.ChallengeCount == 1 && first.DailyAwardCount == 1 && !first.CanChallenge
                 && first.Difficulty == 1 && first.AwardedDifficulties.SequenceEqual(new[] { 0 }), "Legacy participation or claim data was lost.");
-            var settlement = service.ReadDomainBossPage(209, catalog, start.Date.AddDays(1).AddHours(7));
+            var settlement = service.ReadDomainBossPage(209, catalog, start.Date.AddDays(1).AddHours(5));
             Require(!settlement.CanChallenge && settlement.ChallengeUnavailableReason == "活动结算中"
-                && settlement.ChallengeCount == 1, "07:00 settlement changed daily participation.");
-            var reset = service.ReadDomainBossPage(209, catalog, start.Date.AddDays(1).AddHours(8));
+                && settlement.ChallengeCount == 1, "05:00 settlement changed daily participation.");
+            var reset = service.ReadDomainBossPage(209, catalog, start.Date.AddDays(1).AddHours(6));
             Require(reset.CanChallenge && reset.ChallengeCount == 0 && reset.DailyAwardCount == 0
-                && reset.Difficulty == 1 && reset.AwardedDifficulties.Count == 1, "08:00 reset lost period progress.");
+                && reset.Difficulty == 1 && reset.AwardedDifficulties.Count == 1, "06:00 reset lost period progress.");
             DateTime nextPeriod = start.AddHours(catalog.DurationHours(209));
             var fresh = service.ReadDomainBossPage(209, catalog, nextPeriod);
             Require(fresh.PeriodStart == nextPeriod && fresh.Difficulty == 0 && fresh.AwardedDifficulties.Count == 0,

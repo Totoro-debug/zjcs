@@ -396,7 +396,7 @@ namespace Zjcs.Presentation.Commerce
         private void RefreshPeriodicTimers()
         {
             if (periodicPage == null || runtime?.Catalog?.Data.periodicCards == null) return;
-            DateTime resetEpoch = new DateTime(2025, 12, 1, 8, 0, 0, DateTimeKind.Local);
+            DateTime resetEpoch = new DateTime(2025, 12, 1, Zjcs.Offline.Progression.OfflineRefreshClock.Hour, 0, 0, DateTimeKind.Local);
             foreach (CommercePeriodicCard card in runtime.Catalog.Data.periodicCards)
             {
                 Transform item = Find(periodicPage, "Content/PayPeriodicCardItem" + card.id);
@@ -1090,7 +1090,7 @@ namespace Zjcs.Presentation.Commerce
         internal string TimeUntil(int period, bool weekly)
         {
             DateTime now = DateTime.Now;
-            DateTime zero = new DateTime(2025, 12, 1, 8, 0, 0, DateTimeKind.Local);
+            DateTime zero = new DateTime(2025, 12, 1, Zjcs.Offline.Progression.OfflineRefreshClock.Hour, 0, 0, DateTimeKind.Local);
             DateTime end = weekly ? zero.AddDays((period + 1) * 7) : zero.AddDays(period + 1);
             TimeSpan left = end - now;
             if (left.TotalSeconds <= 0) return "00:00:00";

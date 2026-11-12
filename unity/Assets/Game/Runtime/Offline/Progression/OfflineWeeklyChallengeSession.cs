@@ -70,9 +70,10 @@ namespace Zjcs.Offline.Progression
             }
             DateTime observed = new DateTime(Math.Max(localNow.Ticks, save.highestObservedLocalTicks), DateTimeKind.Local);
             int daysSinceSunday = (int)observed.DayOfWeek;
-            DateTime start = observed.Date.AddDays(-daysSinceSunday).AddHours(8);
+            DateTime start = observed.Date.AddDays(-daysSinceSunday).AddHours(Zjcs.Offline.Progression.OfflineRefreshClock.Hour);
             if (observed < start) start = start.AddDays(-7);
-            return start.Ticks;
+            // An existing period keeps its ID so battle checkpoints and reward receipts remain valid.
+            return save.periods.FirstOrDefault(value => OfflineRefreshClock.NormalizeBoundary(value.startLocalTicks) == start.Ticks)?.startLocalTicks ?? start.Ticks;
         }
 
         public bool TryResumeBattle(int stageId, out string checkpoint, out long periodStartLocalTicks)

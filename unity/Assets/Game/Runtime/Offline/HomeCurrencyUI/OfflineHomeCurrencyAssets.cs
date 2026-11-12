@@ -35,8 +35,7 @@ namespace Zjcs.Offline.HomeCurrencyUI
         public int DiamonId => (int)Settings["DiamonId"];
         public int FlareStarId => (int)Settings["FlareStarId"];
         public HomeQuickBuyCalendar CreateQuickBuyCalendar(int timeZone)
-            => new HomeQuickBuyCalendar(DateTime.ParseExact((string)Settings["DailyResetTime"],
-                "(HH:mm:ss)", CultureInfo.InvariantCulture, DateTimeStyles.None),
+            => new HomeQuickBuyCalendar(DateTime.MinValue.Add(Zjcs.Offline.Progression.OfflineRefreshClock.TimeOfDay),
                 timeZone, (DayOfWeek)(int)Settings["WeeklyStartDayOfWeek"]);
         JObject Settings { get { Load(); return (JObject)data["tables"]["game_settings"]; } }
         public HomeCurrencyPaySettings Pay => new HomeCurrencyPaySettings {

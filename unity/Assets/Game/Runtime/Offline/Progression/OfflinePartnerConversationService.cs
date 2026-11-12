@@ -106,7 +106,7 @@ namespace Zjcs.Offline.Progression
             timeZone = serverTimeZoneHours;
             var settings = character.PartnerRows("game_settings").Single();
             dayLimit = Convert.ToInt32(settings["NpcDialogueDayLimit"], CultureInfo.InvariantCulture);
-            resetTime = DateTime.ParseExact((string)settings["DailyResetTime"], "(HH:mm:ss)", CultureInfo.InvariantCulture);
+            resetTime = DateTime.MinValue.Add(OfflineRefreshClock.TimeOfDay);
             foreach (var row in character.PartnerRows("npc_friendship_level"))
             {
                 int id = Convert.ToInt32(row["Id"], CultureInfo.InvariantCulture);

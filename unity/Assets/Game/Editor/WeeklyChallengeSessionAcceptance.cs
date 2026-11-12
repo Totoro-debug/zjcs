@@ -24,13 +24,13 @@ namespace Zjcs.Editor
                 Require(item == 41021 && count == 300, "The challenge award must match original rule 43000.");
                 if (receipts.Add(receipt)) awarded += count;
             };
-            DateTime beforeOpen = new DateTime(2026, 11, 8, 7, 59, 0, DateTimeKind.Local);
+            DateTime beforeOpen = new DateTime(2026, 11, 8, 5, 59, 0, DateTimeKind.Local);
             DateTime open = beforeOpen.AddMinutes(1);
             long previousPeriod = session.CurrentPeriodStartLocalTicks(beforeOpen);
-            Require(new DateTime(previousPeriod, DateTimeKind.Local) == new DateTime(2026, 11, 1, 8, 0, 0, DateTimeKind.Local),
-                "Sunday before 08:00 belongs to the previous weekly period.");
+            Require(new DateTime(previousPeriod, DateTimeKind.Local) == new DateTime(2026, 11, 1, 6, 0, 0, DateTimeKind.Local),
+                "Sunday before 06:00 belongs to the previous weekly period.");
             long currentPeriod = session.CurrentPeriodStartLocalTicks(open);
-            Require(currentPeriod == open.Ticks, "Sunday 08:00 begins the weekly period.");
+            Require(currentPeriod == open.Ticks, "Sunday 06:00 begins the weekly period.");
 
             const string checkpoint = "weekly-checkpoint";
             session.StartBattle(4800, currentPeriod, checkpoint);

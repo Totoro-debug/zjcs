@@ -36,11 +36,14 @@
 
 原触碰奖励实体按配置读取奖励规则、条件、等级与阶位倍率，以及随机奖励包。探寻来源免体力；奖励只在领取时入包，宝箱开启计数与领取记录同时保存。协力宝箱的本地单人奖励结算保留原完成状态及 `DestroyOnEnd=false`，开启后直至原有效期届满才移除。该结算层已经接通，原交互动画和实际鼠标开启流程仍待验证。
 
-已恢复原 `WorldExploreBtn`、`ExploreConfirmDialog`、`ExploreSelectTokenDialog`、`ExploreDetailDialog`、`ExploreRewardPreviewItemDetailDialog` 与奖励列表的 prefab 层级、绑定、布局、文本及页签动画。令牌按原品质顺序使用原拖动／回收算法；概率使用原候选、权重归一化、分组排序和保底显示分支。历史按原实体组变体编号保存；每日次数按原 `DailyResetTime=(08:00:00)` 重置。概率／历史页签绑定原 `ToggleOn／ToggleOff` 动画曲线、时序、层级和布局。来源见 [主线模块来源清单](../../assets/reference/official-map/mainline-modules-source-manifest.json)。
+已恢复原 `WorldExploreBtn`、`ExploreConfirmDialog`、`ExploreSelectTokenDialog`、`ExploreDetailDialog`、`ExploreRewardPreviewItemDetailDialog` 与奖励列表的 prefab 层级、绑定、布局、文本及页签动画。令牌按原品质顺序使用原拖动／回收算法；概率使用原候选、权重归一化、分组排序和保底显示分支。历史按原实体组变体编号保存；每日次数按用户指定的本地 06:00 重置（原始 `DailyResetTime=(08:00:00)` 保留作来源）。概率／历史页签绑定原 `ToggleOn／ToggleOff` 动画曲线、时序、层级和布局。来源见 [主线模块来源清单](../../assets/reference/official-map/mainline-modules-source-manifest.json)。
 
 探寻和采集共用原 `AwardListPanel`。森之国奖励候选按本图各地区 `DropItems` 绑定，并由原 `ItemIconManagerConfig` 选择物品模板；品质框、光效、名称和数量使用官方数据。弹窗模糊、七档权重、TMP 渐变及叠层顺序沿用官方参数。
 
 ## 自定义实现
+
+本模块原 08:00 刷新按用户指定统一提前至 06:00；共享时钟、时区及旧存档兼容规则见[全模块刷新时刻](city-and-home.md#全模块刷新时刻)。
+
 
 未取得 `OperPlayerWorldExplore` 服务端体，用户允许本地结算：候选取当前Map／Area的原地区 `DropItems` 与原宝物选择器交集；多保底同时命中按 `ExplorePriorities` 及原配置次序选择。
 

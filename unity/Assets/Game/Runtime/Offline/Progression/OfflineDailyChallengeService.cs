@@ -36,7 +36,7 @@ namespace Zjcs.Offline.Progression
         public int highestDifficulty;
         public long highestDamage;
         public int highestProgress;
-        // Period rank is independent of the FunnyBoss fields cleared at the 08:00 daily reset.
+        // Period rank is independent of the FunnyBoss fields cleared at the 06:00 daily reset.
         public bool hasDomainBossResult;
         public long domainBossMaxDamage;
         public List<int> claimedStepScores = new List<int>();
@@ -86,7 +86,7 @@ namespace Zjcs.Offline.Progression
         public DateTime GetLogicDayStartLocal(DateTime localNow)
         {
             localNow = AdvanceLocalClock(localNow, 0);
-            DateTime today = localNow.Date.AddHours(8);
+            DateTime today = localNow.Date.AddHours(Zjcs.Offline.Progression.OfflineRefreshClock.Hour);
             DateTime start = localNow < today ? today.AddDays(-1) : today;
             long highest = Math.Max(save.highestLogicDayTicks,
                 save.activities.Select(activity => long.TryParse(activity.logicDay, NumberStyles.Integer,
@@ -497,6 +497,10 @@ namespace Zjcs.Offline.Progression
             save = JsonUtility.FromJson<DailyChallengeSave>(File.ReadAllText(path));
             if (save == null || save.schema != 1 || save.activities == null)
                 throw new InvalidDataException("The daily challenge save is corrupt.");
+            save.highestLogicDayTicks = OfflineRefreshClock.NormalizeBoundary(save.highestLogicDayTicks);
+            foreach (var activity in save.activities)
+                if (long.TryParse(activity.logicDay, NumberStyles.Integer, CultureInfo.InvariantCulture, out long ticks))
+                    activity.logicDay = OfflineRefreshClock.NormalizeBoundary(ticks).ToString(CultureInfo.InvariantCulture);
         }
 
         private void Persist()

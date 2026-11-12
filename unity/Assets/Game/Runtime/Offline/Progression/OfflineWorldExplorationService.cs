@@ -366,7 +366,7 @@ namespace Zjcs.Offline.Progression
                 throw new InvalidOperationException("1153");
         }
         private string Day(long now) => DateTimeOffset.FromUnixTimeSeconds(now).LocalDateTime
-            .Subtract(DateTime.ParseExact(Data.settings.DailyResetTime, "(HH:mm:ss)", CultureInfo.InvariantCulture).TimeOfDay)
+            .Subtract(OfflineRefreshClock.TimeOfDay)
             .ToString("yyyyMMdd", CultureInfo.InvariantCulture);
         private static ProgressionResult Failure(string message, ProgressionResultStatus status = ProgressionResultStatus.NotReady) =>
             new ProgressionResult { Status = status, Message = message };

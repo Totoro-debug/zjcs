@@ -53,7 +53,7 @@ namespace Zjcs.Editor
                 "Cold reload/replayed settlement lost the original highest damage.");
             progress.ParticipationCount(209, now.AddDays(1));
             Require(progress.DomainBossMaxDamage(209, now.AddDays(1), duration) == 1234,
-                "The 08:00 reset incorrectly cleared a period ranking.");
+                "The 06:00 reset incorrectly cleared a period ranking.");
             Require(progress.DomainBossMaxDamage(212, now.AddDays(1), duration) == null,
                 "A different activity inherited another boss's score.");
             Require(progress.DomainBossMaxDamage(209, now.AddHours(duration), duration) == null,

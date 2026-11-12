@@ -40,9 +40,12 @@ Unity 离线旅行 UI 载荷由 `scripts/prepare_unity_npc_travel_ui.py` 从固�
 
 ## 自定义实现
 
+本模块原 08:00 刷新按用户指定统一提前至 06:00；共享时钟、时区及旧存档兼容规则见[全模块刷新时刻](city-and-home.md#全模块刷新时刻)。
+
+
 候选按当前位置、地域和品质过滤，使用官方配置权重在本地抽样；用户已确认这作为服务端生成的离线近似。抽样种子与保底、委托结果放在同一档案事务内提交。首轮自动／手动刷新使用官方固定列表；多品质保底同时触发时低品质先行。稀有5、史诗30、传说100 的保底计数跨每日刷新保留，仅生成对应品质时重置。
 
-每日以当前 `884_156692` `GameSettings.DailyResetTime`（08:00）对应的本地时间切日并刷新四位置，未领取旅行保留。同日主线推进到新地图区域时，空闲位置按新位置重抽，进行中的委托及其快照保留，当日派遣／伙伴计数不重置。每天最多启动4次，每名伙伴每日1次；旅行时长和伙伴人数读取品质配置。奇景品质概率为稀有70%、史诗26%、传说3.5%、奇迹0.5%；手动刷新品质保底为史诗5次、传说30次、奇迹100次。羁绊关卡通关后，委派基础数量、基础百分比和额外成功概率按官方 `PlayerNpcAdventureDataExt.GetNpcAdventureTravelNodeProps`，依 `MapGroupId → RegionId → NodeId` 累加已完成节点；派遣预览与派遣时读取同一累计值。基础奖励、额外奖励种类和额外物品在派遣事务中按本地配置抽样并保存快照，进行中属性变化不重算。额外物品按官方 `RewardRule` Percent/Weight/Count 本地抽样；单条规则内重复物品 ID 按官方 `RewardRuleInfoParser.GetRewardDropInfosByRuleList` 合并（权重相加、数量取最大值），跨规则则累加。此抽样和客户端概率／倍率公式作为用户确认的离线近似，不声称复现不可见的服务端随机源。派遣、伙伴计数和奖励快照通过 `OfflineMainlineProgressSession.ApplyInventoryTransaction` 原子提交；时钟回拨不会提前完成旅行。
+每日按用户指定的本地 06:00 切日并刷新四位置（原始 `884_156692` `GameSettings.DailyResetTime` 为 08:00），未领取旅行保留。同日主线推进到新地图区域时，空闲位置按新位置重抽，进行中的委托及其快照保留，当日派遣／伙伴计数不重置。每天最多启动4次，每名伙伴每日1次；旅行时长和伙伴人数读取品质配置。奇景品质概率为稀有70%、史诗26%、传说3.5%、奇迹0.5%；手动刷新品质保底为史诗5次、传说30次、奇迹100次。羁绊关卡通关后，委派基础数量、基础百分比和额外成功概率按官方 `PlayerNpcAdventureDataExt.GetNpcAdventureTravelNodeProps`，依 `MapGroupId → RegionId → NodeId` 累加已完成节点；派遣预览与派遣时读取同一累计值。基础奖励、额外奖励种类和额外物品在派遣事务中按本地配置抽样并保存快照，进行中属性变化不重算。额外物品按官方 `RewardRule` Percent/Weight/Count 本地抽样；单条规则内重复物品 ID 按官方 `RewardRuleInfoParser.GetRewardDropInfosByRuleList` 合并（权重相加、数量取最大值），跨规则则累加。此抽样和客户端概率／倍率公式作为用户确认的离线近似，不声称复现不可见的服务端随机源。派遣、伙伴计数和奖励快照通过 `OfflineMainlineProgressSession.ApplyInventoryTransaction` 原子提交；时钟回拨不会提前完成旅行。
 
 召回不发奖励并恢复原委托。派遣日未切换时退还每日派遣次数和所选伙伴的当日次数；跨日后只移除旧旅行，不扣新一天的计数。该差异由用户确认。
 

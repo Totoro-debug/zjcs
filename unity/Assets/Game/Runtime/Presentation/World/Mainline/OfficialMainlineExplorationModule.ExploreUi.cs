@@ -76,7 +76,7 @@ namespace Zjcs.Presentation.World
             private string ExploreRuleText(string key)
             {
                 string value = host.NativeUi.Text(key);
-                var reset = DateTime.ParseExact(ExploreService.Catalog.Data.settings.DailyResetTime, "(HH:mm:ss)", CultureInfo.InvariantCulture);
+                var reset = DateTime.MinValue.Add(OfflineRefreshClock.TimeOfDay);
                 return value.Replace("{MaxMapExploreCountOneDay}", OfficialPropFormat.Compact(ExploreService.Catalog.Data.dailyLimit))
                     .Replace("{DailyResetTime}", string.Format(CultureInfo.CurrentCulture, host.NativeUi.Text("time_format"), reset.Hour, reset.Minute.ToString("D2")))
                     .Replace("{TimeZone}", string.Empty); // Native region zero suppresses the time zone label.

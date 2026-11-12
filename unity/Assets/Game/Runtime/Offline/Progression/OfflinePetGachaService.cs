@@ -571,14 +571,14 @@ namespace Zjcs.Offline.Progression
 
         private int DayKey(DateTime localNow)
         {
-            DateTime day = localNow.Date.AddHours(-catalog.Settings.DailyResetHour)
+            DateTime day = localNow.AddHours(-OfflineRefreshClock.Hour)
                 .AddMinutes(-catalog.Settings.DailyResetMinute);
             return int.Parse(day.ToString("yyyyMMdd", CultureInfo.InvariantCulture), CultureInfo.InvariantCulture);
         }
 
         private int WeekKey(DateTime localNow)
         {
-            DateTime resetAdjusted = localNow.AddHours(-catalog.Settings.DailyResetHour)
+            DateTime resetAdjusted = localNow.AddHours(-OfflineRefreshClock.Hour)
                 .AddMinutes(-catalog.Settings.DailyResetMinute);
             int offset = ((int)resetAdjusted.DayOfWeek - catalog.Settings.WeeklyStartDayOfWeek + 7) % 7;
             DateTime start = resetAdjusted.Date.AddDays(-offset);

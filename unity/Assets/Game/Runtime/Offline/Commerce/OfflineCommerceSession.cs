@@ -23,7 +23,7 @@ namespace Zjcs.Offline.Commerce
     /// </summary>
     public sealed class OfflineCommerceSession
     {
-        private static readonly DateTime DayZero = new DateTime(2025, 12, 1, 8, 0, 0, DateTimeKind.Local);
+        private static readonly DateTime DayZero = new DateTime(2025, 12, 1, Zjcs.Offline.Progression.OfflineRefreshClock.Hour, 0, 0, DateTimeKind.Local);
         private readonly ProfileSlotCatalog slots;
         private readonly string slotId;
         private readonly OfflineMainlineProgressSession profile;
