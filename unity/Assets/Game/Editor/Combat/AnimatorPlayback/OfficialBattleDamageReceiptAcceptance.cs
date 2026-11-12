@@ -60,11 +60,21 @@ namespace Zjcs.Editor.Combat
             var camera = new GameObject("Receipt damage camera").AddComponent<Camera>();
             camera.orthographic = true; camera.orthographicSize = 4;
             camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = new Color(.06f, .09f, .15f);
-            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure", "trigger", "cost", "cost-legacy" })
+            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure", "trigger", "cost", "cost-legacy", "hemophagia" })
             {
                 var checkpoint = Build(name, out var step);
                 var expected = step.DamageEvents.Where(d => !d.IsSkillCost && d.DamageEntityId != 0)
                     .OrderBy(d => d.Delay).ThenBy(d => d.DamageId).ToArray();
+                if (name == "hemophagia")
+                {
+                    var heal = step.DamageEvents.Single(d => d.IsCure);
+                    Require(heal.DamageId == expected.Single().DamageId && heal.DamageEntityId == 0
+                        && heal.Damage == 5 && checkpoint.Units[0].Hp == 999905,
+                        "Actual lifesteal preserves its originating serial and settles healing once.");
+                    // Indexing must retain the direct entity even if a consumer
+                    // presents a derived record before its originating record.
+                    step.DamageEvents.Reverse();
+                }
                 Require(expected.Length > 0 && expected.All(d => d.HasDamagePosition && d.HasDamageTriggerStatus), "Actual settled occurrence metadata.");
                 if (name == "trigger") Require(step.DamageEvents.Any(d => d.HitEntityId == 13522 && d.DamageEntityId == 0)
                     && step.SkillCasts.Any(c => c.SkillEntityId == 13523)
@@ -117,6 +127,8 @@ namespace Zjcs.Editor.Combat
                         "Only complete, actually cast-owned native damage receipts replace the old step float.");
                 Require(!playback.OwnsDamageUI(step, new FightBattleDamageEvent { IsSkillCost = true }),
                     "Unknown HP cost must retain the compatible step path.");
+                if (name == "hemophagia") Require(!playback.OwnsDamageUI(step, step.DamageEvents.Single(d => d.IsCure)),
+                    "Derived healing keeps its existing compatible float; it must not duplicate a native damage entity.");
                 if (costCase) foreach (var cost in step.DamageEvents.Where(d => d.IsSkillCost))
                     Require(playback.OwnsDamageUI(step, cost) == (name == "cost"),
                         "Only a known actual-cast cost notification replaces its old float.");
@@ -284,6 +296,14 @@ namespace Zjcs.Editor.Combat
                 }
                 hit.AppliedStatuses.Add(new FightBattleStatusApplication { StatusId = 24031, TargetType = 0,
                     Chance = 1, AffectedByProp = false, LessThanHpPer = -1f }); skill.Hits.Add(hit);
+                if (name == "hemophagia")
+                {
+                    int property = assets.Load().PropertyType("OnceHitHemophagiaPer");
+                    Require(property > 0, "Original lifesteal property.");
+                    checkpoint.Units[0].Properties.Add(new FightPropertyValue { Id = property, Value = 10000 });
+                    checkpoint.Units[0].Hp -= 100;
+                    hit.HemophagiaProperty = property;
+                }
                 if (name == "replay" || name.StartsWith("cost", StringComparison.Ordinal))
                 {
                     skill.HasReplay = true; skill.ReplayStatusId = 24031; skill.ReplayStackCount = 10;

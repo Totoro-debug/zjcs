@@ -163,11 +163,12 @@ namespace Zjcs.Editor
             yield return Approach(capture, false);
             yield return Approach(capture, true);
             yield return Approach(capture, false, true);
+            yield return Approach(capture, false, false, true);
         }
 
-        private static IEnumerator Approach(Action<string> capture, bool monsterActs, bool skillCost = false)
+        private static IEnumerator Approach(Action<string> capture, bool monsterActs, bool skillCost = false, bool hemophagia = false)
         {
-            string prefix = skillCost ? "public-cost" : monsterActs ? "public-monster" : "public-movement";
+            string prefix = hemophagia ? "public-lifesteal" : skillCost ? "public-cost" : monsterActs ? "public-monster" : "public-movement";
             var root = new GameObject("Public movement battle verification");
             var world = new GameObject("Battle world");
             world.transform.SetParent(root.transform, false);
@@ -229,6 +230,15 @@ namespace Zjcs.Editor
                     .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList();
                 var skill = rules.CreateSkill(skillEntityId, 0, itemId, 1, 1, 1, skillProperties);
                 if (skillCost) { skill.CostType = 1; skill.SkillCost = 7; }
+                if (hemophagia)
+                {
+                    int property = rules.PropertyType("OnceHitHemophagiaPer");
+                    Require(property > 0, "Original lifesteal property is missing.");
+                    actor.Properties.Add(new FightPropertyValue { Id = property, Value = 10000 });
+                    foreach (var hit in skill.Hits) hit.HemophagiaProperty = property;
+                    foreach (var hit in skill.HitGraphEntities) hit.HemophagiaProperty = property;
+                    actor.Hp /= 2; actor.Turn.Hp = actor.Hp;
+                }
                 actor.Skills.Add(skill);
                 long cooldown = rules.CalculateSkillCooldown(skillEntityId, 1, 1, 1, actor.Properties.ToDictionary(p => p.Id, p => p.Value));
                 actor.SkillState.Slots.Add(rules.CreateSkillSlot(skill, cooldown));
@@ -333,6 +343,16 @@ namespace Zjcs.Editor
                 if (skillCost) Require(castReceipt.HasSkillCostHp && castReceipt.SkillCostBeforeHp == initialActorHp
                     && castReceipt.SkillCostAfterHp == initialActorHp - 7 && actor.Hp == initialActorHp - 7,
                     "Formal controller lost the actual cast cost or settled it twice.");
+                if (hemophagia)
+                {
+                    var heals = movementResult.Event.DamageEvents.Where(d => d.IsCure).ToArray();
+                    Require(heals.Length == 3 && heals.All(h => h.DamageEntityId == 0
+                        && damages.Any(d => d.DamageId == h.DamageId))
+                        && actor.Hp == initialActorHp + heals.Sum(h => h.Damage),
+                        "Three actual derived heals must retain their source serials and settle exactly once: "
+                        + heals.Length + " heals, HP " + initialActorHp + " -> " + actor.Hp
+                        + ", recovered " + heals.Sum(h => h.Damage) + ".");
+                }
                 var fixedClasses = new HashSet<int>(skill.HitGraphEntities.Where(h =>
                     h.HitComponentType == "FightHitFixedComponent").Select(h => h.EntityId));
                 var fixedReceipts = castReceipt.HitSelections.Where(h => fixedClasses.Contains(h.HitEntityId)).ToArray();
@@ -341,6 +361,7 @@ namespace Zjcs.Editor
                 int nativeFrames = 0;
                 bool nativeFloatSeen = false;
                 bool costFloatSeen = false;
+                bool derivedFloatSeen = false;
                 var slotBinding = OfficialBattleSkillSlotBindings.Load().slots[0];
                 for (int i = 0; i < 600 && controller.IsPresentingStep; i++)
                 {
@@ -349,8 +370,13 @@ namespace Zjcs.Editor
                         && world.GetComponentsInChildren<CharacterDamageUI>().Any(ui => ui.EntityId == new EcEntityIdentifier(1, actor.Id)
                             && ui.GetComponentsInChildren<TextMesh>(true).Any(text => text.text == "7"));
                     costFloatSeen |= captureCostFloat;
-                    Require(canvasObject.GetComponentsInChildren<OfficialBattleDamageFloat>().Length == 0,
+                    var compatibleFloats = root.GetComponentsInChildren<OfficialBattleDamageFloat>();
+                    if (!hemophagia) Require(compatibleFloats.Length == 0,
                         "The old step damage float duplicated an original native damage notification.");
+                    if (hemophagia) Require(compatibleFloats.All(view => view.TargetId == actor.Id),
+                        "A direct target damage float duplicated the native notification.");
+                    bool captureDerivedFloat = hemophagia && !derivedFloatSeen && compatibleFloats.Length > 0;
+                    derivedFloatSeen |= captureDerivedFloat;
                     if (world.GetComponentsInChildren<CharacterDamageUI>().Any(ui => ui.EntityId == new EcEntityIdentifier(1, target.Id)))
                     {
                         captureNativeFloat = !nativeFloatSeen;
@@ -391,6 +417,7 @@ namespace Zjcs.Editor
                         yield return null; // Unity accepts one ScreenCapture request per rendered frame.
                     }
                     if (captureCostFloat) { capture(prefix + "-native-cost-ui"); yield return null; }
+                    if (captureDerivedFloat) { capture(prefix + "-derived-cure-ui"); yield return null; }
                 }
                 Require(!controller.IsPresentingStep, "Movement step presentation did not complete.");
                 Require(nativeSkills.Count == 1 && nativeFrames >= 4,
@@ -400,6 +427,7 @@ namespace Zjcs.Editor
                     + nativeHitIdentities.Count + "/" + expectedNativeHits);
                 Require(nativeFloatSeen, "The common battle controller did not display the original role damage UI.");
                 if (skillCost) Require(costFloatSeen, "The common battle controller did not display the original skill cost UI.");
+                if (hemophagia) Require(derivedFloatSeen, "The originating native damage suppressed its derived compatible cure UI.");
                 var settledSlot = actor.SkillState.Slots.Single(s => s.Slot == 0);
                 Require(settledSlot.Cooldown == cooldown && settledSlot.ReleasedTimes == 1,
                     "The settled original cooldown or release count differs.");

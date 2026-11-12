@@ -131,7 +131,17 @@ namespace Zjcs.Presentation.Combat
             ScheduleMovements(stepEvent, resolveTransform);
             var damageReceipts = new Dictionary<int, FightBattleDamageEvent>();
             if (stepEvent.DamageEvents != null) foreach (var damage in stepEvent.DamageEvents)
-                if (damage != null && damage.DamageId > 0) damageReceipts.Add(damage.DamageId, damage);
+            {
+                if (damage == null || damage.DamageId <= 0) continue;
+                // Derived settlements (for example lifesteal) retain their
+                // originating hit serial but create no original damage entity.
+                // Preserve them in the step for statistics/compatible UI; only
+                // the configured direct occurrence owns native entity playback.
+                if (!damageReceipts.TryGetValue(damage.DamageId, out var previous)
+                    || previous.DamageEntityId == 0) damageReceipts[damage.DamageId] = damage;
+                else if (damage.DamageEntityId != 0)
+                    throw new InvalidOperationException("Duplicate original damage entity receipt: " + damage.DamageId);
+            }
             foreach (FightBattleSkillCastEvent cast in stepEvent.SkillCasts)
             {
                 if (cast == null || cast.ActorId <= 0 || cast.SkillEntityId <= 0) continue;

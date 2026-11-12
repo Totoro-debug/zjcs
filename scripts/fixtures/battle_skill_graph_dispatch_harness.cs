@@ -46,7 +46,7 @@ namespace Zjcs.Combat.Official
         public List<FightBattleSkillMove> SourceMoves = new List<FightBattleSkillMove>();
         public List<int> HitGraphEntities = new List<int>(), Hits = new List<int>(), ExtraSkills = new List<int>();
     }
-    public class FightBattleDamageEvent { public int DamageId, TargetId, SourceId, SkillEntityId; public bool IsSkillCost; public float Delay; public long BeforeHp, AfterHp; }
+    public class FightBattleDamageEvent { public int DamageId, TargetId, SourceId, SkillEntityId, DamageEntityId; public bool IsSkillCost; public float Delay; public long BeforeHp, AfterHp; }
     public class FightBattleStepEvent { public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>(); public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>(); }
 }
 namespace Zjcs.Official.StoryPlayableManager
