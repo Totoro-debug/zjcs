@@ -129,7 +129,16 @@ namespace Zjcs.Presentation.Combat
             if (airComboViews != null) throw new InvalidOperationException("Original airborne status views are already bound.");
             airComboViews = new OfficialBattleAirComboPlayback(executor, root, scope, body);
             airComboViews.Synchronize();
-            statusViews = new OfficialBattleStatusPlayback(executor, root, scope, body, hasStatusIcon, "Combat/first-promotion-statuses");
+            // A newly summoned model can receive its initial statuses before its
+            // first cast binds the native role entity. Bind that same entity here
+            // before original MyAction resolves its owner and effect attachments.
+            Transform StatusBody(int id)
+            {
+                var target = body(id);
+                if (target) entityViews.EnsureUnit(id, target);
+                return target;
+            }
+            statusViews = new OfficialBattleStatusPlayback(executor, root, scope, StatusBody, hasStatusIcon, "Combat/first-promotion-statuses");
             statusViews.Restore();
         }
 
