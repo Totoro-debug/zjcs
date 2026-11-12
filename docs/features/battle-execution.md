@@ -64,7 +64,11 @@
 
 原共享 `DamageResultParameter`、`DamageTypeData`、三个结果／取值／元素枚举已完整迁入，保留全部字段、七个标志、治疗分类及 `GetDamageByType` 的有符号 64 位计算。`OfficialBattleDamageEntityData` 可显式接收完整结果，原角色受伤／命中通知传递同一值；仅移除联机序列化注解并适配原格坐标类型，不从 HP 差值补算原始结果或状态触发标志。来源与上述伤害视图凭据共用。
 
+原 `CharacterDamageUI` 直接持有数字、提示、元素克制、破韧、真实伤害、图标和背景的序列化引用；以 `WaitForSeconds(mShowTime)` 完成展示，禁用时停止旧协程，复用时重新初始化。深渊数字使用白色，文字转换到线性色，图标、附加图和背景分别使用 `DamageColor` 的四种颜色；破韧、元素克制、真实伤害按原分支顺序显隐。`DamageFloatSize` 随主相机正交尺寸缩放，`DamageAutoSizeTextBack` 监听原文字／字体刷新后调整背景。原数字格式使用 `NumberFormatHelper.FormatBattleByFourWidth`，不是通用的三位有效数字缩写。
+
 ## 完整还原部分
+
+所选 884 的 13 种完整世界飘字 prefab 已恢复原层级、组件字段、Animator、曲线、原 bitmap Font、字形尺寸、贴图、材质和 Windows shader，载荷位于 `Official/Combat/DamageUI`。完整 `CharacterDamageUI`、`DamageNumberUI`、`DamageFloatSize`、`ElementConfrontationUI`、`DamageAutoSizeTextBack`、`DamageCustomActionUI` 与原枚举、四字段颜色结构迁入 `Official/BattleDamageUI`；复用现有原实体、池接口、语言与中文战斗数字格式实现，保留原执行顺序。来源见[脚本清单](../../assets/reference/battle-hud/damage-ui-runtime-source-manifest.json)及[原生资源清单](../../assets/reference/battle-hud/damage-ui-native-source-manifest.json)。该原生目录尚未替换正式回合驱动的旧飘字路径，管理器与角色通知的接入仍见下方缺项。
 
 - `OfficialBattleRuntimeController` 连接战斗会话、准备界面、场景宿主与结算回调；`FightBattleCheckpoint` 保存可恢复的本地战斗状态。
 - 回合步骤、格网与单位、受控站位、技能装配、目标选择、命中及部分伤害／HP／护盾／状态规则已有共享实现。各模块仍按官方配置和已迁移的客户端代码执行，不代表所有技能及组件覆盖完整。
@@ -162,6 +166,8 @@
 
 ## 尚未实现
 
+- 新的完整原生飘字目录尚未由正式 `CharacterDamageUIManager` 接管；角色受击、状态、耗血、驱散和重放通知、原预热配置及生命周期仍须统一接线，替换旧步骤驱动路径并验证没有重复播放。
+
 - 原伤害实体已接到具有完整归属、位置及状态结果的直接伤害／治疗／纯状态回执；派生同步／吸血等不在该施法直接归属列表中的表现、旧回执未知字段及全部特殊组件仍未完整覆盖。原人物受伤动作、全部外观后端的材质变色及正式人物／HUD 的全部通知监听尚未完整接通；已有飘字与代表图验证不代表这些部分完成。
 - 官方服务器缺失的 AI、随机、结果裁决及复杂触发条件尚未完整恢复；未确认的行为不作推测。
 - 完整技能／命中／状态覆盖、同来源与叠层边界、特殊组件时序和实体生命周期仍有缺项。身体格选敌／接近和命中局部坐标变换已有指定原技能的 Play Mode 回归，尚未完成全部技能与 Windows Player 验证。
@@ -175,6 +181,8 @@
 - 活动挑战、私有副本和裂隙的退出事务尚未完整接通；已接线玩法仍须分别完成奖励页面及整体验证，公共按钮可用不代表所有玩法完成。
 
 ## 当前验证范围
+
+- 完整原生飘字目录已在 Unity 2022.3.57f1c2 隔离工程编译并执行内置屏静音 Play Mode：13 个原 prefab 全部加载，七种数字效果使用原 bitmap Font，六种中文提示产生实际字形网格；原中文格式 `1234567 → 123万`、暂停时不结束展示、归还时清除实体、FIFO 复用及每次仅一个完成回调通过。已查看数字／暴击动画、免疫／回避／未命中／重置冷却／减少冷却／驱散的实际画面。另三组元素免疫隐藏数字、真实伤害提示及破韧优先分支断言与截图检查通过；复用后低优先级提示的保留行为也沿用原代码，不额外清空。基础目录运行正常退出，追加分支检查完成后曾停在编辑器原生退出阶段，停止本会话进程，不记为追加运行正常退出。静态元数据检查通过（150,406 GUID）；主工程已完成 Unity 编译和 `ProjectTools.Validate`，编辑器以 0 正常退出。正式管理器／角色事件接线与 Windows Player 尚未完成，不能按目录夹具推断正式战斗飘字完成。
 
 - 完整原图声音的来源检查通过：1,735 个原 Event 资产引用、1,734 个不同事件及其 1,766 项有序动作，传递核对 2,913 个对象、2,977 条引用、2,942 份原 HIRC 载荷、4 个原全局设置块、1,562 份完整媒体及 2 份匹配的流式预取片段；7 个引用 RTPC 均在 8 项原全局默认值中解析。原 HIRC 的长度、类型、身份与 SHA256，媒体完整／预取身份及全部包的输入哈希已检查；原插件编号与 HIRC 编号分别处理，Actor-Mixer 的兄弟列表不启动无关声音，各包重复原载荷仍分别保留。静态元数据检查通过（144,784 个 GUID）。来源工具不改 Unity 场景或生产声音播放，未据此运行声音专项或发布 Player；运行库兼容性与实际输出仍是缺项。来源见[声音事件](../../assets/reference/battle-animation/native-sound-sources-source-manifest.json)及[传递依赖](../../assets/reference/battle-animation/native-sound-dependencies-source-manifest.json)。
 

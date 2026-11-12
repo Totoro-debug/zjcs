@@ -1,4 +1,11 @@
 # The asset lock hashes this layout's original LF bytes.
+scripts/prepare_battle_damage_ui_*.py text eol=lf
+scripts/fixtures/battle_damage_ui_native_validation.cs text eol=lf
+assets/reference/battle-hud/damage-ui-*-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/BattleDamageUI/** text eol=lf
+unity/Assets/Game/Runtime/Official/BattleDamageUI.meta text eol=lf
+unity/Assets/Official/Combat/DamageUI/** -text
+unity/Assets/Official/Combat/DamageUI.meta -text
 asset-pack/layout.json text eol=lf
 # Keep the automatic large-file LFS hook and its installer on LF line endings.
 .githooks/pre-commit text eol=lf
