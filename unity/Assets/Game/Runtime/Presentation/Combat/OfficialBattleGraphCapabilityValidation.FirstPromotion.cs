@@ -310,6 +310,7 @@ namespace Zjcs.Presentation.Combat
             skill.LimitedTimes = 1;
             player.Skills.Add(skill); player.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
             checkpoint.MaxRound = 12;
+            probe.ConfigureSummonLifeDiagnostic(checkpoint);
             // Preserve short authored particle/action phases across cold-loading frames.
             probe.previousCaptureFramerate = Time.captureFramerate;
             Time.captureFramerate = 60;
@@ -435,6 +436,7 @@ namespace Zjcs.Presentation.Combat
                     "Lifespan reduction or its receipt was lost in the Unity checkpoint.");
                 Debug.Log("[Lifespan reduction] Original 25112 -> 24072 shortened 10712 from five to three; checkpoint retained receipt.");
             }
+            ObserveSummonLifeStep(checkpoint);
             // This shared probe checks actual routing/presentation. Exact damage, status,
             // summon and passive expectations remain in their original-data rule suites.
             Debug.Log("[First promotion graph] item=" + firstPromotionItemId + " entity=" + skillId

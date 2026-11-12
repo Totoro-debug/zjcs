@@ -78,7 +78,7 @@ namespace Zjcs.Combat.Official
                     foreach (FightBattleStatusState status in unit.Statuses)
                         if (status != null && statusCatalog.ContainsEntity(status.ClassId))
                         {
-                            if (status.SkillReplay == null) status.SkillReplay = statusCatalog.StatusReplayDefinition(status.ClassId);
+                            statusCatalog.RestoreStatusReplayDefinition(status);
                             statusCatalog.RestoreSharedStackDefinition(status);
                             status.AiMoreHit = statusCatalog.StatusMoreHit(status.ClassId);
                             status.HasCreatorDamageBoost = statusCatalog.StatusHasCreatorDamageBoost(status.ClassId);

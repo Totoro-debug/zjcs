@@ -22,6 +22,23 @@ foreach ($id in @(60150, 24053, 24589, 24596, 25329)) {
 }
 $original = $catalog.CreateStatus(25329, 1, 1).SkillReplay
 Assert-Replay ([math]::Abs($original.Rate - 0.4) -lt 0.00001 -and [math]::Abs($original.AddRateWhenNotHit - 0.2) -lt 0.00001) 'Original failure-rate increment was lost.'
+
+# Unity's inline serialization creates a default replay object even for absent components.
+$lifetime = $catalog.CreateStatus(10712, 1, 1)
+$lifetime.SkillReplay = [Zjcs.Combat.Official.FightBattleStatusReplayState]::new()
+$catalog.RestoreStatusReplayDefinition($lifetime)
+Assert-Replay ($null -eq $lifetime.SkillReplay) 'A lifespan status gained a nonexistent replay component after restore.'
+$lifetime.SkillReplay = [Zjcs.Combat.Official.FightBattleStatusReplayState]::new()
+$boundedSkill = New-StatusReplaySkill
+$boundedSkill.ReplayMaxCountEachRound = 1
+$restoredLifetimeBattle = Invoke-ReplayBattle $boundedSkill 0 @() @($lifetime)
+Assert-Replay ((Replay-Casts $restoredLifetimeBattle).Count -eq 0 -and $null -eq $lifetime.SkillReplay) 'Executor initialization accepted a phantom lifespan replay component.'
+$savedReplay = $catalog.CreateStatus(25329, 1, 1)
+$savedReplay.SkillReplay.CountRound = 7
+$savedReplay.SkillReplay.CountEachRound = 2
+$savedReplay.SkillReplay.ExtraRate = 0.2
+$catalog.RestoreStatusReplayDefinition($savedReplay)
+Assert-Replay ($savedReplay.SkillReplay.CountRound -eq 7 -and $savedReplay.SkillReplay.CountEachRound -eq 2 -and [math]::Abs($savedReplay.SkillReplay.ExtraRate - 0.2) -lt 0.00001) 'Restoring a real replay component reset its saved progress.'
 $replacement = [System.Collections.Generic.List[Zjcs.Combat.Official.FightStatusReplacementValue]]::new()
 $replacement.Add([Zjcs.Combat.Official.FightStatusReplacementValue]@{PropertyId=5001; RawValue=6000; IsFloat=$true})
 $replacement.Add([Zjcs.Combat.Official.FightStatusReplacementValue]@{PropertyId=5002; RawValue=2; IsFloat=$false})

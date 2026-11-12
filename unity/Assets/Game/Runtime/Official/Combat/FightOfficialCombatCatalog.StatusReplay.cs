@@ -8,6 +8,15 @@ namespace Zjcs.Combat.Official
         public FightBattleStatusReplayState StatusReplayDefinition(int classId)
             => ReadStatusReplay(RequiredEntity(classId));
 
+        public void RestoreStatusReplayDefinition(FightBattleStatusState status)
+        {
+            var definition = StatusReplayDefinition(status.ClassId);
+            // JsonUtility materializes null inline classes as default objects.
+            // Only the original component grants replay; retain counters for real components.
+            if (definition == null) status.SkillReplay = null;
+            else if (status.SkillReplay == null) status.SkillReplay = definition;
+        }
+
         public long[] SkillGameplayTags(int entityId)
         {
             return ReadGameplayTags(RequiredEntity(entityId));

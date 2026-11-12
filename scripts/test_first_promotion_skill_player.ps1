@@ -4,7 +4,8 @@ param(
     [int[]]$ItemIds = @(),
     [ValidateSet('up','down','left','right')][string[]]$Directions = @('up','down','left','right'),
     [switch]$AirCombo,
-    [switch]$ActionInvisible
+    [switch]$ActionInvisible,
+    [switch]$SummonLife
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -23,14 +24,17 @@ $scope = @($rules.profession_base | Where-Object Profession -in @(1,2,6,10,11,15
 $active = @($rules.item | Where-Object { $_.ClassId -in $scope -and $_.ItemType -eq 100 } |
     Select-Object -ExpandProperty ClassId | Sort-Object)
 if ($scope.Count -ne 104 -or $active.Count -ne 57) { throw 'Review the original six-profession skill scope.' }
-if ($AirCombo -and $ActionInvisible) { throw 'Select one isolated status diagnostic.' }
-if ($ItemIds.Count -eq 0) { $ItemIds = if ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } else { $active } }
+if (@($AirCombo,$ActionInvisible,$SummonLife | Where-Object { $_ }).Count -gt 1) { throw 'Select one isolated status diagnostic.' }
+if ($ItemIds.Count -eq 0) { $ItemIds = if ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } elseif ($SummonLife) { @(10019,10025,10058) } else { $active } }
 foreach ($item in $ItemIds) { if ($item -notin $active) { throw "Not an original active skill in scope: $item" } }
 if ($AirCombo -and @($ItemIds | Where-Object { $_ -notin @(10006,10009,10052) }).Count -gt 0) {
     throw 'The airborne diagnostic requires original 10006/10009/10052.'
 }
 if ($ActionInvisible -and @($ItemIds | Where-Object { $_ -notin @(10025,10058) }).Count -gt 0) {
     throw 'The protected summon diagnostic requires original 10025/10058.'
+}
+if ($SummonLife -and @($ItemIds | Where-Object { $_ -notin @(10019,10025,10058) }).Count -gt 0) {
+    throw 'The natural lifespan diagnostic requires original 10019/10025/10058.'
 }
 $settings = @{
     ZJCS_REPOSITORY_ROOT = $repository
@@ -42,7 +46,8 @@ $settings = @{
     ZJCS_VALIDATION_DIR = ''
     ZJCS_AIR_COMBO_ACCEPTANCE = $(if ($AirCombo) { '1' } else { $null })
     ZJCS_ACTION_INVISIBLE_ACCEPTANCE = $(if ($ActionInvisible) { '1' } else { $null })
-    ZJCS_SUMMON_DEATH_ACCEPTANCE = $(if ($ActionInvisible) { $null } else { [Environment]::GetEnvironmentVariable('ZJCS_SUMMON_DEATH_ACCEPTANCE', 'Process') })
+    ZJCS_SUMMON_LIFE_ACCEPTANCE = $(if ($SummonLife) { '1' } else { $null })
+    ZJCS_SUMMON_DEATH_ACCEPTANCE = $(if ($ActionInvisible -or $SummonLife) { $null } else { [Environment]::GetEnvironmentVariable('ZJCS_SUMMON_DEATH_ACCEPTANCE', 'Process') })
 }
 $previous = @{}
 try {
@@ -88,6 +93,19 @@ try {
             }
             if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Action invisible] Actual original enemy AI/59460 graph')) {
                 throw "Original protection battle assertions did not complete: $run"
+            }
+        }
+        if ($SummonLife) {
+            $expectedUnits = if ($item -eq 10058) { 2 } else { 1 }
+            foreach ($phase in @('born','last-round','retired')) {
+                foreach ($extension in @('png','json')) {
+                    if (@(Get-ChildItem -LiteralPath $run -Filter "summon-life-$item-$phase-*.$extension").Count -ne $expectedUnits) {
+                        throw "Original lifespan phase $phase was not captured/persisted for every summon: $run"
+                    }
+                }
+            }
+            if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Summon lifespan] Original applicator turns')) {
+                throw "Original summon lifespan battle assertions did not complete: $run"
             }
         }
         Write-Output "Passed $item $direction : $run"
