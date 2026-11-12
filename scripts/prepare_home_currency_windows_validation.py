@@ -105,12 +105,16 @@ def transfer(work,project,install=False):
         assert sha((ROOT/confirm_runtime['path']).read_bytes())==confirm_runtime['sha256']
         confirm_catalog=ROOT/'unity/Assets/Game/Resources/Partners/OfficialPartnerConfirmAssetCatalog.asset'
         assert 'guid: '+confirmed['roots']['ConfirmDialog']['guid'] in confirm_catalog.read_text('utf8')
+        action_proof=ROOT/'assets/reference/home-currency-actions-runtime-source-manifest.json'
+        actions=json.loads(action_proof.read_bytes());assert actions['manifest']=='884_156692'
+        for relative,expected in actions['outputs'].items():assert sha((ROOT/relative).read_bytes())==expected,relative
         receipt['binding_inputs']={p.relative_to(ROOT).as_posix():sha(p.read_bytes()) for p in
-            (fixture,factory,icon_manager,ui_utils,confirm_proof,confirm_prefab,confirm_catalog,ROOT/confirm_runtime['path'],
+            (fixture,factory,icon_manager,ui_utils,confirm_proof,confirm_prefab,confirm_catalog,ROOT/confirm_runtime['path'],action_proof,
              factory.parents[1]/'common-source/Common/GameSettingsParser.cs',factory.with_name('QuickBuyUtils.cs'),
              factory.parents[1]/'common-source/Common/PlayerQuickBuyRequest.cs',
              factory.parents[1]/'common-source/Common/PlayerQuickBuyResponse.cs',
-             factory.parents[1]/'common-source/Common/PlayerItemManagerExt.cs')}
+             factory.parents[1]/'common-source/Common/PlayerItemManagerExt.cs',
+             factory.parents[1]/'framework-firstpass-source/Framework.UI/WindowContainer.cs')}
         (ROOT/'assets/reference/home-currency-windows-native-source-manifest.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
     print('Original currency-window transfer:',len(outputs),'outputs;',len(reused),'existing',flush=True)
     return prefab_path
@@ -146,7 +150,7 @@ def stage_fixture(work,project,prefab='Assets/Official/Home/UI/CurrencyWindows/S
         'Unity.ugui','Unity.TextMeshPro','Zjcs.Official.HomeCurrencyWindowsUI','Zjcs.Official.WorldUI',
         'Zjcs.Official.World.NativeLabelUI','Zjcs.Official.ProfessionUI','Zjcs.Offline.HomeHudUI','Zjcs.Offline.PartnersUI','Zjcs.Offline.ProfessionUI','Zjcs.Official.HomeCountControlsUI','Unity.Newtonsoft.Json','UniTask',
         'Zjcs.Offline.HomeCurrencyUI','Zjcs.Offline.HomeUI','Zjcs.Official.HomeScreenUI','Zjcs.Official.HomeHudUI','Zjcs.Presentation.World',
-        'Zjcs.Offline.CharacterCreation','Zjcs.Offline.Progression','Zjcs.Offline.State','Zjcs.Official.HomeCurrencyUI','Zjcs.Official.Partners','Zjcs.Official.HomeConditions'])
+        'Zjcs.Offline.CharacterCreation','Zjcs.Offline.Progression','Zjcs.Offline.State','Zjcs.Official.HomeCurrencyUI','Zjcs.Official.Partners','Zjcs.Official.HomeConditions','Zjcs.Official.HomeCurrencyActionsUI'])
     (folder/'HomeCurrencyWindowsNativeValidation.asmdef').write_text(json.dumps(asmdef,indent=2)+'\n','utf8',newline='\n')
 
 

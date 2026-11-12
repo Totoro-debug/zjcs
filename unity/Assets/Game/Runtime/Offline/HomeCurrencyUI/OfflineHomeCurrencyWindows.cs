@@ -179,11 +179,6 @@ namespace Zjcs.Offline.HomeCurrencyUI
                 initialize(window.Root);
                 var popup = window.Root.GetComponent<WorldPopupWindow>();
                 popup.SetMaskClickAction(() => Close(window.Root));
-                int order = bindings.Canvas.sortingOrder;
-                foreach (var current in bindings.Canvas.GetComponentsInChildren<Canvas>())
-                    if (current.overrideSorting && !current.transform.IsChildOf(window.Root.transform))
-                        order = Math.Max(order, current.sortingOrder);
-                popup.SetCanvasSortingOrder(order + 10);
                 window.Mask = InstantiateBound(bindings.BlurMaskPrefab, bindings.Canvas.transform, false);
                 var mask = window.Mask.GetComponent<WorldWindowBlurMask>();
                 if (!mask || mask.MaskType != 3)
@@ -200,8 +195,21 @@ namespace Zjcs.Offline.HomeCurrencyUI
             if (!windows.Contains(window)) yield break;
             window.Root.SetActive(true);
             foreach (var button in window.Root.GetComponentsInChildren<CloseWindowBtn>(true)) button.Init(this);
+            // Selected WindowContainer.OnWindowShowing assigns sorting only after
+            // activation. First activation otherwise restores the prefab Canvas values.
+            Action<WorldPopupWindow> showing = null;
+            showing = shown =>
+            {
+                shown.OnShowing -= showing;
+                int order = bindings.Canvas.sortingOrder;
+                foreach (var current in bindings.Canvas.GetComponentsInChildren<Canvas>())
+                    if (current.overrideSorting && !current.transform.IsChildOf(window.Root.transform))
+                        order = Math.Max(order, current.sortingOrder);
+                shown.SetCanvasSortingOrder(order + 10);
+                mask.AttachToWindow(shown);
+            };
+            popup.OnShowing += showing;
             popup.Show();
-            mask.AttachToWindow(popup);
             window.Preparation = null;
             WindowOpened?.Invoke(window.Root);
         }

@@ -68,6 +68,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     OfflineHomeQuickBuyCounters profileQuickCounters;DateTime quickCounterTime;
     OfflineHomeMoneyQuickBuy moneyQuickBuy;string lastMoneyBuyRequest;int moneyBuys;
     OfflineHomeCurrencyWindowPlayer windowPlayer;
+    OfflineHomeCurrencyActions currencyActions;
     FontAssetFontService fonts;ScreenAdaptService screen;OfflineHomeTopBar topBar;OfflinePartnerUiSoundScope soundScope;IDisposable metrics;
     GameObject active;WorldPopupWindow popup;WorldConfirmDialog confirmation;Material blur;
     readonly Dictionary<int,long> counts=new Dictionary<int,long>{{1,100},{2,500},{15,5}};
@@ -304,13 +305,32 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         service.AttachWindows(windows);Require(service.IconServiceAvailable,"composed service resolves original icon ownership after attachment");
         bool duplicate=false;try{service.AttachWindows(windows);}catch(InvalidOperationException){duplicate=true;}Require(duplicate,"window attachment cannot replace a live owner");
         Require(service.MoneyId==1&&service.DiamonId==2&&service.FlareStarId==15&&service.Pay.DiamonChangeScale==1&&service.GetItemCountLimit(109)==30,"composed service projects selected original configuration");
-        yield return Open(windows.ShowExchange().gameObject);
+        var configuration=OfficialCurrentHomeRuleAssetCatalog.LoadDefault();var partnerConditions=OfficialPartnerAssetCatalog.LoadDefault().Conditions;
+        var conditionPlayer=new OfflineHomeConditionPlayer(configuration,()=>profile.Save,_=>false);var homeConditions=configuration.CreateConditions(partnerConditions);
+        currencyActions=new OfflineHomeCurrencyActions(profile,profilePlayer,assets,windows,
+            node=>partnerConditions.IsMet(node.ToObject<Dictionary<string,object>>(),conditionPlayer),
+            ()=>configuration.Rows("function_limit").Where(row=>Convert.ToInt32(row["Type"])==49&&Convert.ToInt32(row["Key0"])==0&&Convert.ToInt32(row["Key1"])==0).Any(row=>!homeConditions.IsMet((Dictionary<string,object>)row["Condition"],conditionPlayer)),
+            (id,count)=>{Require(count==0,"original home description requests zero required count");details++;calls.Add("home-detail:"+id);});
+        topBar.Root.SetActive(true);yield return null;var homeItems=topBar.Root.GetComponentsInChildren<MePlayerItemUI>();
+        Require(homeItems.Length==3&&Field<Button>(homeItems[0],"mAddBtn").gameObject.activeSelf&&!Field<Button>(homeItems[1],"mAddBtn").gameObject.activeSelf&&!Field<Button>(homeItems[2],"mAddBtn").gameObject.activeSelf,"actual level-ten money condition and locked-map payment condition control original home plus buttons");
+        Require(currencyActions.GetAutoIncreaseMaxCount(57)==300&&System.Text.RegularExpressions.Regex.Replace(Field<Component>(homeItems[2],"mCountText").GetComponent<TMP_Text>().text,"<[^>]*>",string.Empty).Contains("300/"),"original stamina handler reads actual parameter maximum");
+        foreach(var item in homeItems){Click(Field<Button>(item,"mBtn"));Require(calls.Last()=="home-detail:"+Field<PlayerItemUIItemIdProvider>(item,"mPlayerItemUIItemIdProvider").ItemId,"original home description pointer reaches explicit presentation port");}
+        topBar.Root.SetActive(false);Require(profile.ApplyInventoryTransaction("home-actions-level-one:"+Guid.NewGuid().ToString("N"),save=>save.Player.Level=1).IsApplied,"seed actual lower level for original money visibility");profilePlayer.SynchronizeCommittedPlayer();topBar.Root.SetActive(true);yield return null;
+        homeItems=topBar.Root.GetComponentsInChildren<MePlayerItemUI>();Require(!Field<Button>(homeItems[0],"mAddBtn").gameObject.activeSelf,"actual new-game level hides original money plus button");topBar.Root.SetActive(false);
+        Require(profile.ApplyInventoryTransaction("home-actions-unlock:"+Guid.NewGuid().ToString("N"),save=>{save.Player.Level=10;save.Player.UnlockedMapClassIds.Add(11);}).IsApplied,"seed actual level/map state for original payment condition");profilePlayer.SynchronizeCommittedPlayer();topBar.Root.SetActive(true);yield return null;homeItems=topBar.Root.GetComponentsInChildren<MePlayerItemUI>();
+        Require(Field<Button>(homeItems[0],"mAddBtn").gameObject.activeSelf&&Field<Button>(homeItems[1],"mAddBtn").gameObject.activeSelf,"actual original level and map conditions unlock both currency plus buttons");
+        Click(Field<Button>(homeItems[0],"mAddBtn"));yield return Open(canvas.GetComponentsInChildren<QuickBuyDialog>(true).Single().gameObject);var originalQuick=active.GetComponent<QuickBuyDialog>();Click(Field<Button>(originalQuick,"mCancelBtn"));yield return WaitClosed();
+        Click(Field<Button>(homeItems[1],"mAddBtn"));yield return Open(canvas.GetComponentsInChildren<PayMoneyChangeDialog>(true).Single().gameObject);
         var pay=active.GetComponent<PayMoneyChangeDialog>();Click(pay.SetCountSlider.MaxBtn);Click(pay.ConfirmBtn);
         Require(profilePlayer.GetItemAmount(15)==0&&profilePlayer.GetItemAmount(2)==503,"composed exchange commits and notifies before original success close");yield return WaitClosed();
         long purchased=profileQuickCounters.GetBuyCount(profile.Save.Player,1,EQuickBuyRefreshType.Daily,quickCounterTime);
-        yield return Open(windows.ShowQuickBuy(1).gameObject);var quick=active.GetComponent<QuickBuyDialog>();var cost=Field<PlayerCostMoneyContent>(quick,"mCostMoneyContent");long price=cost.CostItemCount;
+        Click(Field<Button>(homeItems[0],"mAddBtn"));yield return Open(canvas.GetComponentsInChildren<QuickBuyDialog>(true).Single().gameObject);var quick=active.GetComponent<QuickBuyDialog>();var cost=Field<PlayerCostMoneyContent>(quick,"mCostMoneyContent");long price=cost.CostItemCount;
         Click(cost.Btn);Require(profilePlayer.GetItemAmount(1)==1600&&profilePlayer.GetItemAmount(2)==503-price&&profileQuickCounters.GetBuyCount(profile.Save.Player,1,EQuickBuyRefreshType.Daily,quickCounterTime)==purchased+1,"composed native purchase uses actual atomic award/cost/counter and shared notifications");yield return WaitClosed();
-        yield return Open(windows.ShowQuickBuy(1).gameObject);Capture("home-currency-composed-native.png");quick=active.GetComponent<QuickBuyDialog>();Click(Field<Button>(quick,"mCancelBtn"));yield return WaitClosed();
+        Capture("home-currency-composed-home.png");yield return Open(windows.ShowQuickBuy(1).gameObject);
+        var currentMask=canvas.GetComponentsInChildren<WorldWindowBlurMask>().Single();
+        Require(popup.Canvas.overrideSorting&&popup.Canvas.sortingOrder>canvas.sortingOrder&&currentMask.Canvas.sortingOrder==popup.Canvas.sortingOrder-1&&currentMask.Canvas.sortingOrder>canvas.sortingOrder,"original OnWindowShowing assigns popup and mask above underlying native home bar after first activation");
+        var visibleCurrencies=canvas.GetComponentsInChildren<MePlayerItemUI>();Require(visibleCurrencies.Length==4&&visibleCurrencies.Count(item=>item.transform.IsChildOf(topBar.Root.transform))==3&&visibleCurrencies.Single(item=>!item.transform.IsChildOf(topBar.Root.transform)).GetComponentInParent<Canvas>()==popup.Canvas,"native popup has one foreground currency and keeps original home pool intact behind blur mask");
+        Capture("home-currency-composed-native.png");quick=active.GetComponent<QuickBuyDialog>();Click(Field<Button>(quick,"mCancelBtn"));yield return WaitClosed();
         SetBalance(109,31);var limit=service.CheckBuyLimitCountItem(109,1);confirmation=canvas.GetComponentsInChildren<WorldConfirmDialog>(true).Single();Require(limit.Status==UniTaskStatus.Pending,"composed original limit check opens original confirmation for actual held count");yield return WaitConfirmation();Click(confirmation.CancelBtn);yield return WaitAllClosed();Require(!limit.GetAwaiter().GetResult(),"composed limit cancellation resumes original awaiting branch");
         limit=service.CheckBuyLimitCountItem(109,1);confirmation=canvas.GetComponentsInChildren<WorldConfirmDialog>(true).Single();yield return WaitConfirmation();Click(confirmation.ConfirmBtn);yield return WaitAllClosed();Require(limit.GetAwaiter().GetResult(),"composed limit confirmation resumes original awaiting branch");
         SetBalance(15,2);yield return Open(windows.ShowExchange().gameObject);pay=active.GetComponent<PayMoneyChangeDialog>();string path=slots.GetProgressPath(profileSlot),saved=File.ReadAllText(path);
@@ -319,7 +339,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         int days=0,parameters=0;var dayToken=service.SubscribeEnterNewDay(_=>days++);var parameterToken=service.SubscribeAutoIncrease(_=>parameters++);day(default);Require(days==1,"composed calendar subscription forwards original day message");
         double speed=profile.Save.Player.Inventory.Single(row=>row.ItemId==57).AutoIncrease.IncreaseSpeed;
         Require(profile.ApplyInventoryTransaction("composed-parameter:"+Guid.NewGuid().ToString("N"),save=>save.Player.Inventory.Single(row=>row.ItemId==57).AutoIncrease.IncreaseSpeed=speed+1).IsApplied,"commit composed actual parameter change");profilePlayer.SynchronizeCommittedPlayer();Require(parameters==1,"composed service forwards actual stamina parameter notification");
-        windows.Dispose();service.Dispose();service.Dispose();dayToken.Dispose();parameterToken.Dispose();Require(day==null&&Field<Delegate>(windowPlayer,"OnAutoIncrease")==null,"composed service releases outstanding calendar and parameter tokens idempotently");
+        topBar.Root.SetActive(false);currencyActions=null;windows.Dispose();service.Dispose();service.Dispose();dayToken.Dispose();parameterToken.Dispose();Require(day==null&&Field<Delegate>(windowPlayer,"OnAutoIncrease")==null,"composed service releases outstanding calendar and parameter tokens idempotently");
         bool disposed=false;try{service.PlayerDiamonChange(1,null);}catch(ObjectDisposedException){disposed=true;}Require(disposed&&profilePlayer.GetItemAmount(15)==2,"disposed composed service rejects transactions and leaves externally owned profile source alive");
         Debug.Log("HOME_CURRENCY_WINDOW_SERVICES_PASSED: selected configuration, actual profile transaction composition, native exchange/quick-buy/limit confirmations, shared notifications, failed persistence and scope disposal. Enclosing secondary-window/navigation/calendar services remain explicit dependencies.");
     }
@@ -331,6 +351,8 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         while(!root.activeInHierarchy){Require(Time.time<deadline,"original mask preparation completes");yield return null;}
         yield return new WaitForSeconds(popup.mShowClip.length+.2f);
         Require(popup.State==WorldPopupWindow.EState.Show,"original popup show clip finishes");
+        var mask=canvas.GetComponentsInChildren<WorldWindowBlurMask>().Single(value=>value.AttachWindow==popup);
+        Require(popup.Canvas.overrideSorting&&popup.Canvas.sortingOrder>canvas.sortingOrder&&mask.Canvas.overrideSorting&&mask.Canvas.sortingOrder==popup.Canvas.sortingOrder-1,"original popup and blur mask retain showing-time canvas order");
     }
     void Post(AudioClip clip,GameObject owner){Require(clip&&owner,"original window PCM binding");sounds++;var source=owner.GetComponent<AudioSource>();if(!source)source=owner.AddComponent<AudioSource>();source.volume=0;source.PlayOneShot(clip);}
     public void Close(GameObject window){Require(window==active,"close current original window");calls.Add("close");windows.Close(window);}
@@ -388,7 +410,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     public bool CanGetItemFromMapLocation(object location)=>false;public string WrapColor(string text,Color color)=>"<color=#"+ColorUtility.ToHtmlStringRGBA(color)+">"+text+"</color>";
     public RenderTexture GetRenderTexture()=>RenderTexture.GetTemporary(target.width/13,target.height/13);public void ReleaseRenderTexture(RenderTexture texture)=>RenderTexture.ReleaseTemporary(texture);
     public void TakeAShot(RenderTexture texture){Canvas.ForceUpdateCanvases();cameraUi.Render();Zjcs.Presentation.World.OfficialDungeonPopupMask.Blur(target,texture,blur);}
-    public IPlayerItemUIHandler CreateHandler(PlayerItemType type,PlayerItemUIItemIdProvider provider)=>new CurrencyHandler();
+    public IPlayerItemUIHandler CreateHandler(PlayerItemType type,PlayerItemUIItemIdProvider provider)=>currencyActions!=null&&(type==PlayerItemType.Money||type==PlayerItemType.Diamon||type==PlayerItemType.TiliId)?currencyActions.CreateHandler(type,provider):new CurrencyHandler();
     public IPlayerItemUICountProvider CreateCountProvider(PlayerItemType type,PlayerItemUIItemIdProvider provider)=>profilePlayer!=null?profilePlayer.CreateCountProvider(type,provider):new Counter(this,provider.ItemId);
     public IDisposable LoadIcon(int id,Action<Sprite> callback){var row=proof["currency_images"][id.ToString()];callback(row!=null?Load<Sprite>(row["pointer"]):Zjcs.Official.HomeHudUI.OfficialHomeTopBarAssetCatalog.LoadDefault().Icon(id));return new Release(()=>{});}
     public Vector2 InputPosition=>pointer;public string ColorFormat(string value,Color color)=>WrapColor(value,color);
