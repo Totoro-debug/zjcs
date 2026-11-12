@@ -75,6 +75,15 @@ namespace Zjcs.Presentation.CharacterCreation
             // Battle acceptance creates its own scene and isolated profile.
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION") == "1") return;
 #endif
+#if ZJCS_BATTLE_PUBLIC_VALIDATION
+            // The explicit public-battle Player diagnostic owns its isolated scene.
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "--zjcs-validate-public-battle") >= 0)
+            {
+                Type.GetType("Zjcs.Validation.Combat.OfficialBattlePublicPlayerValidation, Zjcs.Validation.BattlePublic", true)
+                    .GetMethod("StartDiagnostic").Invoke(null, null);
+                return;
+            }
+#endif
             // Home acceptance creates the runtime with its own isolated profile.
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-homeAcceptance") >= 0) return;
             // The embedded animation component diagnostic owns its camera and never opens a user profile.
