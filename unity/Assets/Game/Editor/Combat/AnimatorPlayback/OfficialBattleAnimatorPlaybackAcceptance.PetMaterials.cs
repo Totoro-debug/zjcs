@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.BattleNativePlayables;
 using Zjcs.Offline.ProfessionUI;
@@ -29,7 +31,7 @@ namespace Zjcs.Editor.Combat
         private static IEnumerator PetMaterialSteps()
         {
             AudioListener.volume = 0;
-            int[] entities = { 3181, 3182, 3183, 3198, 3206, 3207, 3331, 3481, 3620, 3709,
+            int[] entities = { 3803, 3181, 3182, 3183, 3198, 3206, 3207, 3331, 3481, 3620, 3709,
                 3903, 3904, 3905, 3909, 3910, 3911, 3912, 3913, 3914, 3915, 3917, 3920,
                 3923, 3925, 3948, 3949, 9201, 9202, 9203, 9215, 9204, 9205, 9206, 9207, 9208, 9209,
                 9210, 9211, 9212, 9213, 9214, 9216, 9217, 9218, 9219, 9220, 9222,
@@ -75,6 +77,12 @@ namespace Zjcs.Editor.Combat
                         "per-instance original material collection " + entity);
                     Require(materials.SequenceEqual(Private<System.Collections.Generic.IEnumerable<Material>>(property, "mMaterials")),
                         "original appearance material order " + entity);
+                    if (entity == 3803)
+                    {
+                        var special = SpecialMeshMaterialSteps(world, scope, actor, peer, configuration);
+                        while (special.MoveNext()) yield return special.Current;
+                        continue;
+                    }
                     Require(property.HasFloat(configuration.FloatPropertyName) && property.HasColor(configuration.ColorPropertyName)
                         && !property.HasFloat("_DitherAlpha"), "original shader supported properties " + entity);
                     foreach (var animator in world.GetComponentsInChildren<Animator>(true)) animator.speed = 0;
@@ -122,6 +130,126 @@ namespace Zjcs.Editor.Combat
                     UnityEngine.Object.DestroyImmediate(world);
                 }
                 yield return null;
+            }
+        }
+
+        private static IEnumerator SpecialMeshMaterialSteps(GameObject world, OfflineBattleNativePlayableScope scope,
+            OfficialBattleLiveMonsterModelView actor, OfficialBattleLiveMonsterModelView peer,
+            MyPlayableMaterialProperty configuration)
+        {
+            var renderer = actor.Transform.GetComponentInChildren<BattleNativeMonsterRenderer>();
+            var appearance = renderer.GetComponent<AppearanceRendererLite>();
+            var property = actor.Transform.GetComponent<MeshMaterialProperty>();
+            var materials = appearance.GetIndependentMaterials();
+            var original = BattleNativeMonsterAppearanceCatalog.Find(3803).Materials;
+            Require(appearance.LevelOfResolution == LevelOfResolution.None && appearance.TextureLoader == null,
+                "3803 original None and absent loader branch");
+            Require(original.Length == 8 && materials.Length == 3 && renderer.CustomMaterialOverride.Count == 3,
+                "3803 clones the three skin pages, excluding five replacement materials");
+            Require(materials.All(material => original.Any(source => source.mainTexture == material.mainTexture
+                    && source.shader == material.shader)), "3803 keeps original textures and shaders");
+            Require(!property.HasFloat(configuration.FloatPropertyName) && !property.HasColor(configuration.ColorPropertyName),
+                "3803 mixed original shaders reject unsupported shared damage fields");
+            foreach (var animator in world.GetComponentsInChildren<Animator>(true)) animator.speed = 0;
+            foreach (var particles in world.GetComponentsInChildren<ParticleSystem>(true)) particles.Pause(true);
+            var copies = appearance.RenderExistingMeshes.Cast<BattleNativeMonsterMeshCopy>().ToArray();
+            Require(copies.Length == 4 && copies.Count(copy => copy.enabled) == 3,
+                "3803 four original copy references and disabled copy");
+            void VerifyCopies()
+            {
+                var reference = renderer.GetComponent<MeshRenderer>();
+                foreach (var copy in copies.Where(copy => copy.isActiveAndEnabled))
+                {
+                    Require(copy.ReferenceRenderer == reference && copy.GetComponent<MeshFilter>().sharedMesh
+                        == reference.GetComponent<MeshFilter>().sharedMesh, "3803 exact shared copy mesh");
+                    var expected = reference.sharedMaterials.Select(material => {
+                        var source = renderer.CustomMaterialOverride.Single(pair => pair.Value == material).Key;
+                        return copy.ReplacementMaterialDict[source];
+                    }).ToArray();
+                    Require(copy.GetComponent<MeshRenderer>().sharedMaterials.SequenceEqual(expected),
+                        "3803 original-to-runtime copy replacement forwarding");
+                }
+            }
+            actor.Tick(0); VerifyCopies();
+            var bounds = renderer.GetComponent<MeshRenderer>().bounds;
+            CaptureSceneRendererCamera(bounds, "actor-material-3803-visibility");
+            CaptureSceneRendererCamera(bounds, "actor-material-3803-before");
+            var baseline = CaptureSpecialMaterialRaster(renderer, bounds, "before");
+            var keywords = materials.Select(material => material.IsKeywordEnabled(configuration.Keyword)).ToArray();
+            var peerMaterials = peer.Transform.GetComponentInChildren<AppearanceRendererLite>().GetIndependentMaterials();
+            var peerKeywords = peerMaterials.Select(material => material.IsKeywordEnabled(configuration.Keyword)).ToArray();
+            var first = scope.Play(configuration.gameObject, actor.Transform.gameObject, actor.Transform.gameObject);
+            for (int i = 0; i < 4; i++) { yield return null; scope.Tick(.01f); scope.LateTick(); }
+            actor.Tick(0); VerifyCopies();
+            var leaf = first.GetComponentInChildren<MyPlayableMaterialProperty>(true);
+            var counters = Private<System.Collections.Generic.Dictionary<string, int>>(property, "mCounterDic");
+            bool OriginalKeywordSupport() => materials.All(material => material.IsKeywordEnabled(leaf.Keyword)
+                == (material.shader.name == "Universal Render Pipeline/Spine/SkeletonEffect-2D"));
+            Require(leaf.myApplyComponent == property && counters.TryGetValue(leaf.Keyword, out int count) && count == 1
+                && OriginalKeywordSupport(), "3803 original keyword lease and mixed shader keyword support");
+            Require(!Private<bool>(leaf, "mHasFloat") && !Private<bool>(leaf, "mHasColor"),
+                "3803 original damage node keeps unsupported float/color disabled");
+            Require(peerMaterials.Select(material => material.IsKeywordEnabled(leaf.Keyword)).SequenceEqual(peerKeywords),
+                "3803 peer material isolation");
+            CaptureSceneRendererCamera(bounds, "actor-material-3803-active");
+            var second = scope.Play(configuration.gameObject, actor.Transform.gameObject, actor.Transform.gameObject);
+            for (int i = 0; i < 4; i++) { yield return null; scope.Tick(.01f); scope.LateTick(); }
+            first.Stop(true);
+            for (int i = 0; i < 4; i++) { yield return null; scope.Tick(.01f); scope.LateTick(); }
+            Require(counters.TryGetValue(leaf.Keyword, out count) && count == 1 && OriginalKeywordSupport(),
+                "3803 overlapping original keyword leases retain remaining owner");
+            second.Stop(true);
+            for (int i = 0; i < 4; i++) { yield return null; scope.Tick(.01f); scope.LateTick(); }
+            actor.Tick(0); VerifyCopies();
+            Require(materials.Select(material => material.IsKeywordEnabled(leaf.Keyword)).SequenceEqual(keywords),
+                "3803 original keyword restoration");
+            Require(!counters.ContainsKey(leaf.Keyword), "3803 returns the final original keyword lease");
+            CaptureSceneRendererCamera(bounds, "actor-material-3803-restored");
+            Require(baseline.SequenceEqual(CaptureSpecialMaterialRaster(renderer, bounds, "restored")),
+                "3803 original full raster restoration");
+            Debug.Log("Original actor material passed: 3803; None, direct textures, three independent skin pages, four exact mesh-copy references, mixed shader capabilities and GPU restoration.");
+        }
+
+        private static byte[] CaptureSpecialMaterialRaster(BattleNativeMonsterRenderer source, Bounds bounds, string name)
+        {
+            // Draw the production meshes/materials with a deterministic shader
+            // clock. The camera captures above retain the original moving noise.
+            var renderers = source.EntityRoot.GetComponentsInChildren<MeshRenderer>(true)
+                .Where(value => value.enabled && value.gameObject.activeInHierarchy && value.GetComponent<MeshFilter>()?.sharedMesh)
+                .OrderBy(value => SortingLayer.GetLayerValueFromID(value.sortingLayerID)).ThenBy(value => value.sortingOrder);
+            float extent = Mathf.Max(bounds.extents.x, bounds.extents.y) * 1.15f;
+            var view = Matrix4x4.Scale(new Vector3(1 / extent, 1 / extent, 1)) * Matrix4x4.Translate(-bounds.center);
+            var target = RenderTexture.GetTemporary(640, 640, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
+            var previous = RenderTexture.active;
+            var image = new Texture2D(640, 640, TextureFormat.RGBA32, false, true);
+            try
+            {
+                using (var commands = new CommandBuffer())
+                {
+                    commands.SetRenderTarget(target); commands.ClearRenderTarget(true, true, Color.clear);
+                    commands.SetViewProjectionMatrices(view, Matrix4x4.identity);
+                    string[] clocks = { "_Time", "_SinTime", "_CosTime", "_TimeParameters" };
+                    var saved = clocks.Select(Shader.GetGlobalVector).ToArray();
+                    for (int i = 0; i < clocks.Length; i++)
+                        commands.SetGlobalVector(clocks[i], i == 2 ? Vector4.one : i == 3 ? new Vector4(0, 0, 1, 0) : Vector4.zero);
+                    foreach (var renderer in renderers)
+                    {
+                        var materials = renderer.sharedMaterials;
+                        for (int i = 0; i < materials.Length; i++) commands.DrawRenderer(renderer, materials[i], i, 0);
+                    }
+                    for (int i = 0; i < clocks.Length; i++) commands.SetGlobalVector(clocks[i], saved[i]);
+                    Graphics.ExecuteCommandBuffer(commands);
+                }
+                RenderTexture.active = target; image.ReadPixels(new Rect(0, 0, 640, 640), 0, 0); image.Apply();
+                Require(image.GetPixels32().Count(pixel => pixel.a > 8) > 100, "3803 deterministic GPU draw is visible");
+                File.WriteAllBytes(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"),
+                    "scene-renderer-actor-material-3803-" + name + ".png"), image.EncodeToPNG());
+                return image.GetRawTextureData<byte>().ToArray();
+            }
+            finally
+            {
+                RenderTexture.active = previous; RenderTexture.ReleaseTemporary(target);
+                UnityEngine.Object.Destroy(image);
             }
         }
     }

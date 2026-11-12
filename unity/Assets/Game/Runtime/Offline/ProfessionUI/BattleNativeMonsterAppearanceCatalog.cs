@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using Zjcs.Official.ProfessionUI;
 
 namespace Zjcs.Offline.ProfessionUI
 {
@@ -14,6 +15,8 @@ namespace Zjcs.Offline.ProfessionUI
             public string SkeletonName, RendererPath, MaterialPropertyPath;
             public bool AppearanceEnabled, MaterialPropertyEnabled;
             public bool MaterialPropertyHasMeshRenderer = true;
+            public LevelOfResolution LevelOfResolution = LevelOfResolution.Low;
+            public string[] RenderExistingMeshPaths = Array.Empty<string>();
             public ProfessionNativeWeaponTextureResources Textures;
             public Material[] Materials;
         }

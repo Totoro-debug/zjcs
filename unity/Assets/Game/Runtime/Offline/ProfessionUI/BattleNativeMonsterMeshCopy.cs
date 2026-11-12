@@ -8,7 +8,7 @@ namespace Zjcs.Offline.ProfessionUI
     // Original Spine.Extension.CustomRenderExistingMesh's SkeletonMecanim branch.
     // Its serialized references and LateUpdate material/mesh order are retained.
     [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
-    public sealed class BattleNativeMonsterMeshCopy : MonoBehaviour
+    public sealed class BattleNativeMonsterMeshCopy : MonoBehaviour, IProfessionAppearanceMaterialReplacement
     {
         public MeshRenderer ReferenceRenderer;
         public MonoDictionary<Material, Material> ReplacementMaterialDict;
@@ -40,7 +40,8 @@ namespace Zjcs.Offline.ProfessionUI
             referenceFilter = ReferenceRenderer.GetComponent<MeshFilter>();
             renderer = GetComponent<MeshRenderer>(); filter = GetComponent<MeshFilter>();
         }
-        private void LateUpdate()
+        private void LateUpdate() => Refresh();
+        internal void Refresh()
         {
             EnsureInitialized();
             filter.sharedMesh = referenceFilter.sharedMesh;

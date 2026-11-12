@@ -3,19 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using Zjcs.Official.ProfessionUI;
 
 namespace Zjcs.Offline.ProfessionUI
 {
     public sealed partial class BattleNativeMonsterRenderer
     {
-        private sealed class OriginalMeshCopy
-        {
-            internal MeshFilter Filter;
-            internal MeshRenderer Renderer;
-            internal bool Enabled;
-            internal readonly Dictionary<Material, Material> Replacements = new Dictionary<Material, Material>();
-        }
-        private readonly List<OriginalMeshCopy> meshCopies = new List<OriginalMeshCopy>();
+        private readonly List<BattleNativeMonsterMeshCopy> meshCopies = new List<BattleNativeMonsterMeshCopy>();
 
         private void BindOriginalMeshCopies(Dictionary<string, object> row, Dictionary<string, Transform> transforms)
         {
@@ -24,17 +18,23 @@ namespace Zjcs.Offline.ProfessionUI
             {
                 if (!transforms.TryGetValue((string)source["transform"], out Transform node))
                     throw new InvalidDataException("Original monster mesh-copy transform is unbound.");
-                var copy = new OriginalMeshCopy
+                bool active = node.gameObject.activeSelf;
+                node.gameObject.SetActive(false);
+                try
                 {
-                    Filter = node.gameObject.AddComponent<MeshFilter>(),
-                    Renderer = node.gameObject.AddComponent<MeshRenderer>(),
-                    Enabled = Flag(Obj(source["fields"]), "m_Enabled")
-                };
-                ApplyRenderer(copy.Renderer, Obj(source["renderer"]));
-                foreach (var replacement in Arr(source["replacements"]).Select(Obj))
-                    copy.Replacements.Add(sourceMaterials[Int(replacement, "original")],
-                        sourceMaterials[Int(replacement, "replacement")]);
-                meshCopies.Add(copy);
+                    node.gameObject.AddComponent<MeshFilter>();
+                    var target = node.gameObject.AddComponent<MeshRenderer>();
+                    ApplyRenderer(target, Obj(source["renderer"]));
+                    var copy = node.gameObject.AddComponent<BattleNativeMonsterMeshCopy>();
+                    copy.ReferenceRenderer = GetComponent<MeshRenderer>();
+                    copy.ReplacementMaterialDict = new MonoDictionary<Material, Material>();
+                    copy.enabled = Flag(Obj(source["fields"]), "m_Enabled");
+                    foreach (var replacement in Arr(source["replacements"]).Select(Obj))
+                        copy.ReplacementMaterialDict.Add(sourceMaterials[Int(replacement, "original")],
+                            sourceMaterials[Int(replacement, "replacement")]);
+                    meshCopies.Add(copy);
+                }
+                finally { node.gameObject.SetActive(active); }
             }
             RefreshOriginalMeshCopies();
         }
@@ -45,14 +45,7 @@ namespace Zjcs.Offline.ProfessionUI
             // reference mesh and replaces materials in the same submesh order.
             foreach (var copy in meshCopies)
             {
-                if (!copy.Enabled || !copy.Renderer.gameObject.activeInHierarchy) continue;
-                copy.Filter.sharedMesh = GetComponent<MeshFilter>().sharedMesh;
-                copy.Renderer.sharedMaterials = batches.Batches.Select(batch =>
-                {
-                    var original = MaterialForBatch(batch);
-                    return copy.Replacements.TryGetValue(original, out var replacement) ? replacement
-                        : throw new InvalidDataException("Original mesh-copy page replacement is unbound.");
-                }).ToArray();
+                if (copy.isActiveAndEnabled) copy.Refresh();
             }
         }
     }

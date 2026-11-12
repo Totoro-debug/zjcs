@@ -100,6 +100,9 @@ def build(entity_ids):
     implementation = [runtime / name for name in (
         'Offline/ProfessionUI/BattleNativeMonsterAppearanceCatalog.cs',
         'Offline/ProfessionUI/BattleNativeMonsterRenderer.cs',
+        'Offline/ProfessionUI/BattleNativeMonsterRenderer.Prefab.cs',
+        'Offline/ProfessionUI/BattleNativeMonsterRenderer.MeshCopies.cs',
+        'Offline/ProfessionUI/BattleNativeMonsterMeshCopy.cs',
         'Presentation/Combat/OfficialBattleMonsterAppearance.cs',
         'Presentation/Combat/OfficialBattleLiveMonsterModelView.cs',
         'Presentation/Combat/Zjcs.Presentation.Combat.asmdef')]
@@ -117,6 +120,11 @@ def build(entity_ids):
     input_file(validation)
     for name in ('OfficialBattleAnimatorPlaybackAcceptance.cs', 'OfficialBattleAnimatorPlaybackAcceptance.PetMaterials.cs'):
         input_file(ROOT / 'unity/Assets/Game/Editor/Combat/AnimatorPlayback' / name)
+    original_client = ROOT / '.tools/source-packages/current/884_156692/official-code/client-source'
+    for name in ('AppearanceSystem/AppearanceRendererLite.cs', 'AppearanceSystem.Runtime/LevelOfResolution.cs',
+                 'MeshMaterialProperty.cs', 'Spine.Extension/CustomRenderExistingMesh.cs'):
+        path = original_client / name
+        inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
     try:
         locations = read_asset_manifest(apk.source.manifest_bytes('DefaultPackage', apk.archive))
         by_path = {row['path']: row for row in locations}
@@ -139,7 +147,8 @@ def build(entity_ids):
             property_obj, = components['MeshMaterialProperty']
             appearance = schemas.read(record(appearance_obj))
             prop = schemas.read(record(property_obj))
-            assert appearance['LevelOfResolution'] == 1 and not appearance['RenderExistingMeshes']
+            direct = appearance['LevelOfResolution'] == 0
+            assert direct or (appearance['LevelOfResolution'] == 1 and not appearance['RenderExistingMeshes'])
             assert not prop['mAppearanceRenderer']['m_PathID']
             assert pointer(property_obj, prop['mAppearanceRendererLite']).path_id == appearance_obj.path_id
             mesh_obj = pointer(property_obj, prop['MeshRenderer'])
@@ -157,6 +166,74 @@ def build(entity_ids):
             assert skeleton_name == model['skeletonName']
             atlas_obj = pointer(data_obj, data['atlasAssets'][0])
             atlas = schemas.read(atlas_obj)
+            if direct:
+                assert skeleton_name not in paths
+                assert not any('3803' in row['path'] and 'textureloader' in row['path'].lower() for row in locations)
+                assert entity_id == 3803 and len(appearance['RenderExistingMeshes']) == len(model['meshCopies']) == 4
+                material_objects = {}
+                for value in atlas['materials']:
+                    obj = pointer(atlas_obj, value)
+                    material_objects[obj.read_typetree()['m_Name']] = obj
+                mesh_paths, copies = [], []
+                for value in appearance['RenderExistingMeshes']:
+                    obj = pointer(appearance_obj, value)
+                    fields_copy = schemas.read(obj)
+                    assert sum(fields_copy == expected['fields'] for expected in model['meshCopies']) == 1
+                    assert source_key(pointer(obj, fields_copy['ReferenceRenderer'])) == source_key(mesh_obj)
+                    mesh_paths.append(transform_path(obj.read(check_read=False).m_GameObject).split('/', 1)[1])
+                    copies.append(fields_copy)
+                    for pair in fields_copy['ReplacementMaterialDict']['mSerializeBuffer']:
+                        for name in ('Key', 'Value'):
+                            mat = pointer(obj, pair[name])
+                            material_objects[mat.read_typetree()['m_Name']] = mat
+                materials, original_materials = [], []
+                shader_paths = {}
+                for path in [shader_path, *sorted((native_root / 'shaders').glob('*.shader'))]:
+                    shader_name = path.read_text('utf-8').split('"', 2)[1]
+                    shader_paths[shader_name] = path
+                for expected in model['materials']:
+                    original = expected['fields']
+                    obj = material_objects[original['m_Name']]
+                    actual = obj.read_typetree()
+                    assert json.loads(json.dumps({key: actual[key] for key in original})) == original, (original['m_Name'],
+                        [key for key in original if actual.get(key) != original[key]])
+                    original = actual
+                    material = copy.deepcopy(original)
+                    shader_obj = pointer(obj, original['m_Shader'])
+                    assert source_key(shader_obj) == expected['shaderSource']
+                    assert sha(shader_obj.get_raw_data()) == installed['source_extraction']['sources'][source_key(shader_obj)]['payload_sha256']
+                    path = shader_paths[expected['shader']]
+                    assert sha(path.read_bytes()) == installed['outputs'][path.relative_to(ROOT).as_posix()]
+                    input_file(path)
+                    material['m_Shader'] = ref(path, 4800000, 3)
+                    for _, environment in material['m_SavedProperties']['m_TexEnvs']:
+                        texture = pointer(obj, environment['m_Texture'])
+                        if texture is None:
+                            environment['m_Texture'] = dict(fileID=0)
+                            continue
+                        key = source_key(texture)
+                        assert sha(texture.get_raw_data()) == installed['source_extraction']['sources'][key]['payload_sha256']
+                        path = native_root / model['textures'][key]['file']
+                        assert sha(path.read_bytes()) == installed['outputs'][path.relative_to(ROOT).as_posix()]
+                        input_file(path)
+                        environment['m_Texture'] = ref(path, 2800000)
+                    material = dict(source_header(), **fields(material), serializedVersion=8)
+                    material['m_SavedProperties'] = dict(serializedVersion=3,
+                        **{name: [{k: v} for k, v in entries] for name, entries in material['m_SavedProperties'].items()})
+                    path = native('Materials/' + original['m_Name'] + '.mat', 21, 2100000, 'Material', material)
+                    materials.append(ref(path, 2100000))
+                    original_materials.append(dict(fields=original, source_key=source_key(obj)))
+                binding = dict(EntityId=entity_id, SkeletonName=skeleton_name, RendererPath=renderer_path.split('/', 1)[1],
+                    MaterialPropertyPath='', AppearanceEnabled=appearance['m_Enabled'], MaterialPropertyEnabled=prop['m_Enabled'],
+                    MaterialPropertyHasMeshRenderer=int(mesh_obj is not None), LevelOfResolution=0,
+                    RenderExistingMeshPaths=mesh_paths, Textures=dict(fileID=0), Materials=materials)
+                bindings.append(binding)
+                rows.append(dict(entityId=entity_id, appearance=appearance, material_property=prop, renderer_path=renderer_path,
+                    loader=None, loader_lookup=dict(path='/' + skeleton_name + '_TextureLoader_None.asset',
+                        configured_skeleton_path=None, packaged_loaders=[]), atlas=atlas, materials=original_materials,
+                    mesh_copies=copies, binding=binding))
+                print(f'{entity_id}: original None appearance, direct textures and four mesh-copy bindings restored', flush=True)
+                continue
             atlas_path = paths[skeleton_name] + '/' + skeleton_name + '_Atlas.asset'
             assert apk.asset(by_path[atlas_path]['bundle'], atlas_path).get_raw_data() == atlas_obj.get_raw_data()
             loader_path = paths[skeleton_name] + '/' + skeleton_name + '_TextureLoader_Low.asset'

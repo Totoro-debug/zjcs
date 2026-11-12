@@ -94,7 +94,9 @@ namespace Zjcs.Offline.ProfessionUI
         public IEnumerable<Material> SkinMaterials(IProfessionAppearanceSkin skin)
         {
             if (!ReferenceEquals(skin, state.Skin)) throw new ArgumentException("Bind this original native prefab skin.");
-            return sourceMaterials;
+            foreach (var entry in ((ProfessionNativeSkin)skin).Entries)
+                if (entry.Attachment is ProfessionNativeRenderAttachment render)
+                    yield return pageMaterials == null ? material : pageMaterials[render.Page];
         }
         public void UpdateAnimationAndMesh() => DrawCompletedPose();
     }
