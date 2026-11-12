@@ -183,6 +183,10 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 ### 家园运行层接入
 
+`Runtime/Official/HomeTaskUI/` 迁入所选 884 的 `PinnedTaskPanel`、`TaskListItem`、`TaskGoal`、条件文本、原追踪监听组件、地图限制刷新器与等级监听。固定任务保留原剩余时间升序、自动追踪降序、完成状态降序和配置顺序升序；面板保留固定／显示条件过滤、增改删与每日刷新协程。条目保留领取、跳转、追踪／取消、地图限制、倒计时、条件观察和奖励图标的原调用顺序，规则、事务、导航及资源句柄由显式本地宿主提供；UI 不生成任务、进度或奖励。
+
+完整原生追踪槽（10 个对象）及其实际外部引用的 `TaskListItem`（250 个对象）、两段任务动画、原字体／语言／按钮／声音已恢复至 `Assets/Official/Home/UI/PinnedTasks/`；原父级 `LeftBotGo` 布局和 PreferredSize 适配作为绑定依据，MPLUS 源字体按所选官方配置核验长度及 MD5。`HomeTaskUiNativeValidation.Run` 已在隔离 Unity 2022.3.57f1c2 静音 Play Mode 通过实际首个射线命中与模拟指针、固定／显示条件过滤、限时任务排序、领取一次后移除、目标导航、追踪／取消及状态切换、条件驱动进度更新、取消固定后的销毁、每日刷新／时间偏移调用顺序、启停监听释放和原 PCM 静音播放；已查看可领取和追踪中实际画面。静态元数据检查（150558 个 GUID）、Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 均通过。任务、条件和导航为受控验证数据；真实本地任务／奖励图标／详情窗、限时地域解锁提供方、完整 HomeUI 父层及 Windows Player 尚未接通。
+
 `Runtime/Official/HomeResultUI/` 已迁入所选 884 的战斗结果通知及 `GameUIBase`／`GameCurrentStageText`。保留原战斗初始化和首次解析 Fight 缓存，普通结果按真实记录迭代顺序筛选后台结果、排除原黑名单类型 3，点击按 ShowEndPanel 分支直接请求领取或初始化原类型结果窗口并等完成后请求领取；请求仍核对记录存在且 `invokeByPlayer=false`。魔物后台结果优先，下一层按 EndLayer+1 夹取到 1～原最大层，成功回执后开结果窗，关闭后再刷新剩余结果或恢复普通提示；单机魔物战争仍按离线范围关闭。结果、关卡、窗口与领取由明确服务边界提供，不在 UI 中生成战斗或奖励。
 
 完整原生结果提示子树（134 个对象）、原按钮／语言／红点／样式和声音已恢复至 `Assets/Official/Home/UI/ResultNotify/`。`HomeResultUiNativeValidation.Run` 在隔离 Unity 2022.3.57f1c2 静音 Play Mode 已通过实际首个射线命中与模拟指针、后台／黑名单过滤及迭代顺序、窗口初始化／完成／领奖顺序、无结果隐藏、魔物结果优先及层数上下限、回执后切回普通结果、普通／魔物／裂隙标题分支及启停监听释放；已查看实际普通结果和魔物结果画面。补测已通过等待战斗初始化、原 UIBase 初始化、首次解析 Fight 缓存及销毁退订。静态元数据检查（150505 个 GUID）、Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 均通过。验证结果和窗口为受控宿主，原 HomeUI 父层、正式战斗记录／领奖事务和 Windows Player 尚未接通。
