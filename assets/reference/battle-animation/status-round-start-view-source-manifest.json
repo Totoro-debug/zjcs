@@ -38,7 +38,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_dark_status_assets.py",
-    "sha256": "69885d8d24d9a0ec63dec765dbc939cd9725c251d6e2dd6ea3340d6e7182a398"
+    "sha256": "b593322e18083febf44036eaf2d638639d53a3e21404889efc3809764ef6bfa9"
   },
   "operation": "Preserve original OnStart/base, subscribe, initial count update, custom-icon flag, count assignment and unsubscribe/base OnEnd order. Adapt R3 subscription disposal to the existing C# event view boundary; the host supplies original GetRemainCount values."
 }

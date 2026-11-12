@@ -5,7 +5,8 @@ param(
     [ValidateSet('up','down','left','right')][string[]]$Directions = @('up','down','left','right'),
     [switch]$AirCombo,
     [switch]$ActionInvisible,
-    [switch]$SummonLife
+    [switch]$SummonLife,
+    [switch]$DarkStatus
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -24,8 +25,8 @@ $scope = @($rules.profession_base | Where-Object Profession -in @(1,2,6,10,11,15
 $active = @($rules.item | Where-Object { $_.ClassId -in $scope -and $_.ItemType -eq 100 } |
     Select-Object -ExpandProperty ClassId | Sort-Object)
 if ($scope.Count -ne 104 -or $active.Count -ne 57) { throw 'Review the original six-profession skill scope.' }
-if (@($AirCombo,$ActionInvisible,$SummonLife | Where-Object { $_ }).Count -gt 1) { throw 'Select one isolated status diagnostic.' }
-if ($ItemIds.Count -eq 0) { $ItemIds = if ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } elseif ($SummonLife) { @(10019,10025,10058) } else { $active } }
+if (@($AirCombo,$ActionInvisible,$SummonLife,$DarkStatus | Where-Object { $_ }).Count -gt 1) { throw 'Select one isolated status diagnostic.' }
+if ($ItemIds.Count -eq 0) { $ItemIds = if ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } elseif ($SummonLife) { @(10019,10025,10058) } elseif ($DarkStatus) { @(10029) } else { $active } }
 foreach ($item in $ItemIds) { if ($item -notin $active) { throw "Not an original active skill in scope: $item" } }
 if ($AirCombo -and @($ItemIds | Where-Object { $_ -notin @(10006,10009,10052) }).Count -gt 0) {
     throw 'The airborne diagnostic requires original 10006/10009/10052.'
@@ -35,6 +36,9 @@ if ($ActionInvisible -and @($ItemIds | Where-Object { $_ -notin @(10025,10058) }
 }
 if ($SummonLife -and @($ItemIds | Where-Object { $_ -notin @(10019,10025,10058) }).Count -gt 0) {
     throw 'The natural lifespan diagnostic requires original 10019/10025/10058.'
+}
+if ($DarkStatus -and @($ItemIds | Where-Object { $_ -ne 10029 }).Count -gt 0) {
+    throw 'The dark-status diagnostic requires original 10029/10810.'
 }
 $settings = @{
     ZJCS_REPOSITORY_ROOT = $repository
@@ -47,6 +51,8 @@ $settings = @{
     ZJCS_AIR_COMBO_ACCEPTANCE = $(if ($AirCombo) { '1' } else { $null })
     ZJCS_ACTION_INVISIBLE_ACCEPTANCE = $(if ($ActionInvisible) { '1' } else { $null })
     ZJCS_SUMMON_LIFE_ACCEPTANCE = $(if ($SummonLife) { '1' } else { $null })
+    ZJCS_STATUS_DARK_HIT_ACCEPTANCE = $(if ($DarkStatus) { '1' } else { [Environment]::GetEnvironmentVariable('ZJCS_STATUS_DARK_HIT_ACCEPTANCE', 'Process') })
+    ZJCS_DARK_STATUS_LIFECYCLE_ACCEPTANCE = $(if ($DarkStatus) { '1' } else { $null })
     ZJCS_SUMMON_DEATH_ACCEPTANCE = $(if ($ActionInvisible -or $SummonLife) { $null } else { [Environment]::GetEnvironmentVariable('ZJCS_SUMMON_DEATH_ACCEPTANCE', 'Process') })
 }
 $previous = @{}
@@ -65,6 +71,7 @@ try {
         $process = Start-UnityOnInternalDisplay -Editor $executable -ArgumentList @(
             '-screen-fullscreen','0','-screen-width','675','-screen-height','1463',
             '-logFile', ('"' + (Join-Path $run 'player.log') + '"'), '--zjcs-validate-skills', ('"' + $run + '"'))
+        $process.PriorityClass = 'BelowNormal'
         while (-not $process.WaitForExit(30000)) { Write-Output "Running $item $direction : $run" }
         $result = Get-Content -LiteralPath (Join-Path $run 'result.json') -Raw | ConvertFrom-Json
         if ($process.ExitCode -ne 0 -or -not $result.passed) { throw "Player failed for $item $direction : $($result.error) ($run)" }
@@ -106,6 +113,17 @@ try {
             }
             if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Summon lifespan] Original applicator turns')) {
                 throw "Original summon lifespan battle assertions did not complete: $run"
+            }
+        }
+        if ($DarkStatus) {
+            foreach ($phase in @('count-3','count-2','count-1','restored','ended')) {
+                if (-not (Test-Path -LiteralPath (Join-Path $run "dark-status-$phase.png"))) {
+                    throw "Original dark-status phase was not captured: $phase ($run)"
+                }
+            }
+            if (-not (Test-Path -LiteralPath (Join-Path $run 'dark-status-native-restore.json')) -or
+                -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Dark status] Original 24222 body particles')) {
+                throw "Original dark-status lifecycle/disk assertions did not complete: $run"
             }
         }
         Write-Output "Passed $item $direction : $run"

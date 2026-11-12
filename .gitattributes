@@ -2733,3 +2733,15 @@ unity/Assets/Game/Runtime/Official/HomeCountControlsUI/** text eol=lf
 unity/Assets/Game/Runtime/Official/HomeCountControlsUI.meta text eol=lf
 unity/Assets/Official/Home/UI/CountControls/** text eol=lf
 unity/Assets/Official/Home/UI/CountControls.meta text eol=lf
+
+# Preserve original dark-status native outputs and their source receipt hashes.
+scripts/prepare_battle_dark_status_assets.py text eol=lf
+assets/reference/battle-animation/dark-status-assets-source-manifest.json text eol=lf
+assets/reference/battle-animation/status-round-start-view-source-manifest.json text eol=lf
+unity/Assets/Official/Combat/DarkStatus/** -text
+unity/Assets/Official/Combat/DarkStatus.meta -text
+unity/Assets/Game/Resources/Combat/dark-status.json text eol=lf
+unity/Assets/Game/Resources/Combat/dark-status.json.meta text eol=lf
+unity/Assets/Game/Runtime/Official/BattleGridItemEntities/BattleStatusRoundStartViewData.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusRoundStart.cs* text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/Shaders/DarkStatus_*.shader* text eol=lf
