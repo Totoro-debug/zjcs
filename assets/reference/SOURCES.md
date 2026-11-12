@@ -10,6 +10,8 @@
 
 完整原图声音的 HIRC 目标、随机播放列表、继承／总线路由、ducking、效果器、输出设备、全局设置块及媒体源由 `scripts/prepare_battle_native_sound_dependencies.py` 按所选映射包和 Minimum 逐引用核验；原 HIRC／全局块字节、包内偏移、完整媒体与预取身份及 SHA256 见[声音传递依赖来源](battle-animation/native-sound-dependencies-source-manifest.json)。本项不转换或新增媒体载荷；Windows 兼容性及实现范围见[战斗执行](../../docs/features/battle-execution.md)。
 
+原音频库匹配的 Wwise Unity Integration `2022.1.18.8567.3199` 从 Audiokinetic 官方分发接口取得；初始化下载入口取 Steinberg 官方示例包内附且数字签名有效的 Audiokinetic Launcher，再按官方游客认证取得当前启动器与指定集成包。响应签名、包 SHA-1／SHA-256、原文件及 Windows x64 引擎／DSP 身份见[Windows 运行库来源](battle-animation/wwise-windows-integration-source-manifest.json)。原包与解包工具保存在 `.tools/wwise/UnityIntegration-2022.1.18.8567.3199/`；功能接入与验证范围由[战斗执行](../../docs/features/battle-execution.md)维护。
+
 图集占位页命名取所选版本 `AppearanceSystem.Runtime/AppearanceOnDemandTextureLoader.GetPlaceholderTextureName`；原应用代码、既有图集加载器输入、适配输出及技能图引用凭据的哈希见[图集占位页绑定来源](battle-animation/atlas-placeholder-binding-source-manifest.json)，处理入口为 `scripts/prepare_battle_atlas_placeholder_binding.py`。不新增或修改美术载荷；实现与验证边界见[战斗执行](../../docs/features/battle-execution.md)。
 
 63110 技能图的原 `Eff_Monster_3511_Skill02_3` 片段及三个 `Animation` 引用来自同版官方缓存包与已校验原生导出；原对象、包／输出哈希、Legacy 副本及引用转换见[原动画双用途绑定来源](battle-animation/legacy-animation-bindings-source-manifest.json)，入口为 `scripts/prepare_battle_legacy_animation_bindings.py`，亦由技能图转换器调用。不重绘或重采样动画；功能及验证边界见[战斗执行](../../docs/features/battle-execution.md)。

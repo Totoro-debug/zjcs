@@ -1,0 +1,2009 @@
+{
+  "product": "Audiokinetic Wwise Unity Integration",
+  "sdk_version": "2022.1.18.8567",
+  "integration_build": 3199,
+  "official_bundle_id": "unityintegration.2022_1_18_3199",
+  "package_manifest_endpoint": "https://blob-api.gowwise.com/v4/products/versions/unityintegration.2022_1_18_3199",
+  "acquisition": {
+    "bootstrap_source": "https://download.steinberg.net/automated_updates/sda_downloads/8a6d1c47-b9e4-4a91-a5df-35d0f4538833/Nuendo_14_Demo_Project_-_A_Day_At_The_Office_win64.zip",
+    "bootstrap_entry": "Audiokinetic Wwise Installer/AudiokineticLauncher-2024.1.0.4408.exe",
+    "bootstrap_installer_sha256": "0fef6da3f3b379205fa24ed97df8bd11289f1588601982d5296254f626917dca",
+    "current_official_launcher_bundle": "launcher.2026_2_0_6755",
+    "current_installer_sha256": "b81975594218e9f6628107172bd0a008043b626adaaeed3f418e5b43bf3c2280",
+    "installer_publisher": "Audiokinetic Inc.",
+    "method": "Read official launcher requestGuestJwt and current client request headers; obtain guest token through the vendor login endpoint; query official package manifests and file links. Do not persist guest tokens or signed download URLs.",
+    "manifest_authenticity": "Verify vendor RSA-SHA1 response signatures with the public key embedded in the Authenticode-verified Audiokinetic launcher.",
+    "package_validation": "Match official manifest byte length and SHA-1 before extraction; retain local SHA-256 identities."
+  },
+  "packages": [
+    {
+      "name": "Unity.Windows.tar.xz",
+      "size": 74963344,
+      "sha1": "c05d371b4b3e2f8176d02ec6ffdcc340b68e2005",
+      "sha256": "2e113f247d3a57a7201219eaef30b5060c3d3873b6012eb4d4f3fde16a1f4556"
+    },
+    {
+      "name": "Unity.Extensions.tar.xz",
+      "size": 1272,
+      "sha1": "31943d5b71c70bbd6516c95632947b9135e5e889",
+      "sha256": "b8c7e8e08cbc75a935da5e96eeeb30b5be6715ba97543fa3bc0b951d9a36a5e3"
+    },
+    {
+      "name": "UnityDocumentation.Windows.tar.xz",
+      "size": 18991856,
+      "sha1": "4b9d5ac71b0cdd05ee2f47a2a886aa310d3b0a60",
+      "sha256": "a5017f76dc75c7a0336631f582d46c5c73fac6e5d6212a46816e8655a2ca9e91"
+    }
+  ],
+  "official_manifest": {
+    "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/source-manifest.json",
+    "size": 62328,
+    "sha256": "8f23d4ef3c15a6594a4cde9bddfa3d42682c563de88be006d86595bdc8a179be"
+  },
+  "windows_x64": [
+    {
+      "configuration": "Debug",
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/Debug/AkSoundEngine.dll",
+      "size": 10656568,
+      "sha256": "5db1c364d1eb53edb6f275e84f9ebae547f7177f100a141febf275607f351e86",
+      "reported_version": "2022.1.18.8567",
+      "major_minor": 132513793,
+      "subminor_build": 1188215
+    },
+    {
+      "configuration": "Profile",
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/Profile/AkSoundEngine.dll",
+      "size": 3820856,
+      "sha256": "d6152b75960a3b8afcd3bf7519692e55116452f8fa04f903a5f0e53aae2b67d2",
+      "reported_version": "2022.1.18.8567",
+      "major_minor": 132513793,
+      "subminor_build": 1188215
+    },
+    {
+      "configuration": "Release",
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/Release/AkSoundEngine.dll",
+      "size": 2945848,
+      "sha256": "c977aeccd6294022aea802f472ea4c3b0fb2fb43f654c54fe26fcf24e2c40abb",
+      "reported_version": "2022.1.18.8567",
+      "major_minor": 132513793,
+      "subminor_build": 1188215
+    }
+  ],
+  "dsp": [
+    {
+      "name": "AkConvolutionReverb.dll",
+      "sha256": "59f9f980736bcbee1c3d1ae84c0dd59fefed95f61e07a94c841c65179f0ed15e",
+      "size": 253752,
+      "signatureStatus": "Valid",
+      "publisher": "CN=Audiokinetic Inc., OU=Audiokinetic Inc., O=Audiokinetic Inc., L=Montreal, S=Quebec, C=CA"
+    },
+    {
+      "name": "AkMotion.dll",
+      "sha256": "6909e516d8367322fe89eda0276e368f759640026557b4811be8ccab721a9ed8",
+      "size": 222520,
+      "signatureStatus": "Valid",
+      "publisher": "CN=Audiokinetic Inc., OU=Audiokinetic Inc., O=Audiokinetic Inc., L=Montreal, S=Quebec, C=CA"
+    },
+    {
+      "name": "AkSoundSeedAir.dll",
+      "sha256": "e6158d3d4367987cfb5198304c4b6fd3d0cdd9231f2b4ccbdd943f6d89da2dfe",
+      "size": 201016,
+      "signatureStatus": "Valid",
+      "publisher": "CN=Audiokinetic Inc., OU=Audiokinetic Inc., O=Audiokinetic Inc., L=Montreal, S=Quebec, C=CA"
+    },
+    {
+      "name": "AkSoundSeedGrain.dll",
+      "sha256": "37f8cdd6e30f2ae70cf871f95bdc2943623a8280bbad75c16f9b19a7a3e84f6b",
+      "size": 193848,
+      "signatureStatus": "Valid",
+      "publisher": "CN=Audiokinetic Inc., OU=Audiokinetic Inc., O=Audiokinetic Inc., L=Montreal, S=Quebec, C=CA"
+    },
+    {
+      "name": "Auro.dll",
+      "sha256": "cbabd55cbd5cf1a648118dd5f58d62f2189921d9762052b87f8343ee51c60337",
+      "size": 2560824,
+      "signatureStatus": "Valid",
+      "publisher": "CN=Audiokinetic Inc., OU=Audiokinetic Inc., O=Audiokinetic Inc., L=Montreal, S=Quebec, C=CA"
+    },
+    {
+      "name": "iZotope.dll",
+      "sha256": "85d26da5dd7d0bfb802dd79e4f11802edaf8ebe49762926b9472cc4c9ef209fe",
+      "size": 571192,
+      "signatureStatus": "Valid",
+      "publisher": "CN=Audiokinetic Inc., OU=Audiokinetic Inc., O=Audiokinetic Inc., L=Montreal, S=Quebec, C=CA"
+    },
+    {
+      "name": "McDSP.dll",
+      "sha256": "d1031dc32fe7490872874e7e53169c961c0e74dd1f90d4187ff421b39fbcfa3f",
+      "size": 312632,
+      "signatureStatus": "Valid",
+      "publisher": "CN=Audiokinetic Inc., OU=Audiokinetic Inc., O=Audiokinetic Inc., L=Montreal, S=Quebec, C=CA"
+    },
+    {
+      "name": "MSSpatial.dll",
+      "sha256": "618ad1eb0f1b38f976e7e48d54f81f3c76321451b41393e16d5f54b94317a7ef",
+      "size": 153912,
+      "signatureStatus": "Valid",
+      "publisher": "CN=Audiokinetic Inc., OU=Audiokinetic Inc., O=Audiokinetic Inc., L=Montreal, S=Quebec, C=CA"
+    }
+  ],
+  "files": [
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/CHANGELOG.md",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/AK.Wwise.Unity.API.Editor.asmdef",
+      "size": 536,
+      "sha256": "892443e0b29600ecf08eb1baa4bbb3a508935b8c4a578a0f6ac4c95d38564b2c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/PluginActivator/Common/AkPlatformPluginActivator.cs",
+      "size": 2532,
+      "sha256": "a1354dc996e8bc23e12b1bd34d722c7b37d1c0c56125feda32145ec58c043197"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/PluginActivator/Common/AkPlatformPluginList.cs",
+      "size": 8871,
+      "sha256": "47496a1dceae23d15c1330528527b880b9e75a65a136375378c1228e153846ca"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/PluginActivator/Common/AkPluginActivator.cs",
+      "size": 10649,
+      "sha256": "bb581757ecbbfb2a33604e0f0c09eae48014bf4540f6d6cd3375224c3d1adc77"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/PluginActivator/Common/AkPluginActivatorConstants.cs",
+      "size": 7493,
+      "sha256": "dc48a53856c7846d55eb1b10a3c1c33ffe9b64abc0451aeceef5094ab6d009a0"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/PluginActivator/Common/AkPluginActivatorMenus.cs",
+      "size": 2418,
+      "sha256": "01f2fa3a09128f055dc8124a41de9094ba602f9e088053922d6e3fbd2afb0b41"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/PluginActivator/Common/AkPluginInfo.cs",
+      "size": 1209,
+      "sha256": "e77f70a89d2e5a13e5e956b7abf589f6925c3804c1a780ff77c0f342ffded928"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/PluginActivator/Common/StaticPluginRegistration.cs",
+      "size": 8072,
+      "sha256": "edf08c5496b548f9ed2409c615a69c6336110ac7808c8352a4b98d7936c64aae"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/PluginActivator/Windows/AkWindowsPluginActivator.cs",
+      "size": 2899,
+      "sha256": "4e6190e2ee86af4f71495414f8f414b188c6dfc4866fd06c5667b770fa976a14"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseMenu/Common/AkUnityBuilderBase.cs",
+      "size": 5255,
+      "sha256": "cc12d87047aae45f8cb45da2ae43cd44f41ef738b45b66fc6b7e08868be0d9b8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseMenu/Common/AkUnityPluginInstallerBase.cs",
+      "size": 12949,
+      "sha256": "51ff527ab3d80bc2da9cd5983a7a0631ce54626cc5996f16cf5ec7a92fdd2a0f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseMenu/Common/AkWwiseIdConverter.cs",
+      "size": 3202,
+      "sha256": "cec8726ee11d9461d13e5d7055d277eabc1b8d1af077198237cb5ee92fd02b2a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseMenu/Windows/AkWwiseMenu_Windows.cs",
+      "size": 1258,
+      "sha256": "31bbd040482037b244330b7c2e3edcbd85dff1221e210bfc8938544f527a53c5"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseTypes/AcousticTextureDrawer.cs",
+      "size": 1425,
+      "sha256": "d4b73e4147fa230a38b6b73c759aa36525c2f985617aa3553a0709547380af84"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseTypes/AuxBusDrawer.cs",
+      "size": 1142,
+      "sha256": "127683a884b2a7e7b1723e7cd093231ee88b60f377b439e387aca5b13a48933e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseTypes/BankDrawer.cs",
+      "size": 1141,
+      "sha256": "ac012d58856f717266bc7ccef600a54447204e2b4f2c5624e83c289239b8c4f5"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseTypes/BaseTypeDrawer.cs",
+      "size": 5397,
+      "sha256": "2d7544da6ef6cb415d5562f2c65af0bdb90d3088cdd6455e87764baf278d8dce"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseTypes/EventDrawer.cs",
+      "size": 1137,
+      "sha256": "8945edef6409e761fca051e88c4798663ae9f3f9f08e12f4002b6fb0a63bf70c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseTypes/RTPCDrawer.cs",
+      "size": 1148,
+      "sha256": "d019669c08da0d5a64a8c921e9d4bd5ebde76cfb51a48081cf1e11a869dba0bf"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseTypes/StateDrawer.cs",
+      "size": 1142,
+      "sha256": "63d811aa54200acb96fda5e29588a2423b96538a4a9fb15a5883ce2f5d5724db"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseTypes/SwitchDrawer.cs",
+      "size": 1145,
+      "sha256": "828fca81b418e528ead5640791ad2c8600e30fec97c8d8ba3d73c92e4a299898"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseTypes/TriggerDrawer.cs",
+      "size": 1148,
+      "sha256": "91307c0f6ff4526c221637a68f4e5f6ac0c92933745bf58bdca17563b92acf13"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/AkWwiseComponentPicker.cs",
+      "size": 7347,
+      "sha256": "3fd4e8feb5b565219bc284b295251f89a918aafe69c58291ac7024626807cdfc"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/AkWwisePicker.cs",
+      "size": 8790,
+      "sha256": "42c00a4063c631c2ffd2258502e35473496641bf180ca15ba816b4ffb5b1740f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/AkWwiseProjectData.cs",
+      "size": 12438,
+      "sha256": "83679ab692ca9937b4c521839fae584405321fb0383a590d426fdb5790941fb8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/AkWwiseProjectInfo.cs",
+      "size": 4806,
+      "sha256": "cb6cc0614cff8d8625c320ba4b222514c7ce3e22c0db85122f775039431a1791"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/AkWwiseTreeDataSource.cs",
+      "size": 7631,
+      "sha256": "31b90ee5d77133f7489209626af200ab3524151e8a611db226276b05da1eac1f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/AkWwiseTreeProjectDataSource.cs",
+      "size": 9381,
+      "sha256": "9b84f764d31755ab87bf06ca9ab555f950719d3bccbd44d9495123526bdd1252"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/AkWwiseTreeView.cs",
+      "size": 28504,
+      "sha256": "95b7ffc930d2f12cd4f3764dbe333bf61f0810a7b06cb12c490670383e6e42dd"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/AkWwiseTreeViewItem.cs",
+      "size": 5060,
+      "sha256": "27de6a09dbcc84899cec64b7c486f2359f7830a10e4e061a64135388476dda5d"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/AkWwiseTreeWAAPIDataSource.cs",
+      "size": 20996,
+      "sha256": "87ad738d737273b177f589fb571dba45f42d1c66a369383773c1adeeb23457ec"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/AkWwiseWWUBuilder.cs",
+      "size": 35780,
+      "sha256": "bf311bdb55a277794d385d5043f26385955bed97ec7ff6612d53a37cd5711d43"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/AkWwiseXMLBuilder.cs",
+      "size": 6548,
+      "sha256": "a890eb802bb6304424b6931c838ba176be3cf05651f5e77af3a7db4998d29b4c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/acoustictexture_nor.png",
+      "size": 645,
+      "sha256": "7c3cbc7330f9827805927abba8728be29fc73768a93463b5e3a5a8f10c5c4e81"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/auxbus_nor.png",
+      "size": 731,
+      "sha256": "994fa13ea9f3bcf1a38bb089ab75c1c37b324f545e19611410f826986a41e27d"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/blank.png",
+      "size": 182,
+      "sha256": "cb6d90909ff41e90fd51511981ab38a85c7a7c93efbce2cb3ab6dc82b97b9947"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/bus_nor.png",
+      "size": 646,
+      "sha256": "ed88a670c3abde938282afb6afe29c24b7c308d0cb095b2e7d53c7de388ea4aa"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/event_nor.png",
+      "size": 657,
+      "sha256": "f10982a2f2e9bb194d895f41f7f41bae953763990e15960763f5793b793500b7"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/folder_nor.png",
+      "size": 592,
+      "sha256": "bec0438a0b3ab9aec78740a5f3e28c739eb890f30769a8879bcb5a9bdb7c34a6"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/gameparameter_nor.png",
+      "size": 833,
+      "sha256": "cdfe2135f4a9af4757d6f6959b763997bbc9158b576e8730318e2823f10678ac"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/physical_folder_nor.png",
+      "size": 543,
+      "sha256": "baadea78edd501e726c82b3e552b62217f4991740bbfa1d0f0606d67d020bcaa"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/soundbank_nor.png",
+      "size": 921,
+      "sha256": "7232a9dee72d396cd7f4d432a2391e214d071b240689de2263ac47d577e9e7fd"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/state_nor.png",
+      "size": 936,
+      "sha256": "5efbdb1bd836bad1b79af337fde634ef61179782b4f713ab8f1b5e9beb3f16db"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/stategroup_nor.png",
+      "size": 834,
+      "sha256": "ee1e798966fb3a52d41098f705f628c0444c5fcd58107304bc2c34744c399d2a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/switch_nor.png",
+      "size": 609,
+      "sha256": "757b872e14f17426587ead103ba310d635a7f43732b54cb447454e3151dfebae"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/switchgroup_nor.png",
+      "size": 636,
+      "sha256": "9397fcd3123373f23964c6f0c6bff4db5691420fcd57c076ef24b4ae3e21f3f8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/trigger_nor.png",
+      "size": 700,
+      "sha256": "1cb84ee2b00c15a939741254cb1613750023d9f03eba876486829427f8799bdb"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/workunit_nor.png",
+      "size": 912,
+      "sha256": "5daaf332f4df4f1944dbd9504823598321dc6aec9fc7dd2d5b51f2b62b8f2e46"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Editor/WwiseWindows/TreeViewIcons/wproj.png",
+      "size": 742,
+      "sha256": "dac4d5bd1e575f2f5e8eab7fb9b84a46311ad067379f0125344b734bd5a2e097"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/LICENSE.md",
+      "size": 911,
+      "sha256": "6bb46f37f36ed0d33c5b72baf43c9068eeee219df0a3cc858f3b1c7aa37b54e1"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/package.json",
+      "size": 540,
+      "sha256": "626a4efcac75486ea9c97163cbea9c9293706d793e1abfca78e539d269ab4c35"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/README.md",
+      "size": 1010,
+      "sha256": "ca90ae78784fd370202eb78eb803491705d30bc75923fac1c1b6e454931dbba0"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/AK.Wwise.Unity.API.asmdef",
+      "size": 683,
+      "sha256": "5319d3aae20d2ef65919d1f372907daf07e28c93009f067c7589568595edf9bf"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/AkSoundEngine.extensions.cs",
+      "size": 3255,
+      "sha256": "c6339a9fca23c788d9d55fa1e7215600c5b556f4ac93290615ee6932094ed510"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/Ak3DAudioSinkCapabilities.cs",
+      "size": 3468,
+      "sha256": "aa78770d8eda63bb3bae8187a83d21b841325e617369b8a1da307b62468345d6"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/Ak3dData.cs",
+      "size": 2822,
+      "sha256": "e20327a7429d53b7c59df582ec74d1dc14d515c235ec23afbfbdf43c133e1b46"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/Ak3DPositionType.cs",
+      "size": 923,
+      "sha256": "c38670ef6966e4413b421efaa55681e53792c848015e679c4ec5047bc56ddde0"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/Ak3DSpatializationMode.cs",
+      "size": 929,
+      "sha256": "1b9d64e7a7c4b85f82a1198153cd0b4262b2e0e73f4c6b6e1cb2b1196ccb90a3"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAcousticSurface.cs",
+      "size": 3067,
+      "sha256": "20177a9a4f4d259ae9af05222885562d3bb5d855c5aaa6ec548b440516178c65"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkActionOnEventType.cs",
+      "size": 968,
+      "sha256": "b7d718b106e2a46e7bae66a980fbad49d70121248c9d1ff8aa774b46554e1094"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAttenuationCurveType.cs",
+      "size": 1610,
+      "sha256": "afc38d22d39fe90c0dbe7dd2afc461a42ac36caf54aa3eff5c9f34a88844c5c2"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAudioDeviceState.cs",
+      "size": 1079,
+      "sha256": "c29bd23706757a5376feb19846b8be1d2bb93d8ab79e2e81abb78b779dc06df7"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAudioFormat.cs",
+      "size": 4270,
+      "sha256": "1630fc9bd6274c259ee998828c647c50cbbff356a7412335d604462fe15647b4"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAudioInterruptionCallbackInfo.cs",
+      "size": 2190,
+      "sha256": "d6527c42abafdcc32f1ff686b5035298689d5de6de203b553cf026eeeab45389"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAudioObjectDestination.cs",
+      "size": 875,
+      "sha256": "a001d97465e78b0a3f51c29d2843e2eb5e43aa4e507e16da4bff5730ff2fae2e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAudioSettings.cs",
+      "size": 2396,
+      "sha256": "df8e2f71218a471544474205b639a3e311aa88fa592d4668a30af69121309ece"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAudioSourceChangeCallbackInfo.cs",
+      "size": 2190,
+      "sha256": "baec6051b542b23de7858453265785b5c4b41528faa1442b2b0c29699a0dac6e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAuxSendValue.cs",
+      "size": 3315,
+      "sha256": "da5f4ddc33ec5aa576c3ce218b463bbd6fc315cdf3e8df06f38b599ac7dd10b6"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkBankCallbackInfo.cs",
+      "size": 2350,
+      "sha256": "14d7de6c11d5ab179f78dbb271ca728c5f010dc388e42eedfe9e9d8d32842235"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkBankContent.cs",
+      "size": 836,
+      "sha256": "2f659132d0f245423c4ce9cb7e300bc394e23dd8d8a4f78a6ea6c8a0d311c507"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkBankTypeEnum.cs",
+      "size": 863,
+      "sha256": "2ff789c3fa3e6bde8c19f810fe5b9b8d52c095d659aaf7db7df0284208cf0284"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkBehavioralPositioningData.cs",
+      "size": 3904,
+      "sha256": "f684a16c45dc6c65c855b9f854217fa6d6abd8a1baf3a9a0c5b7b8dcac5ab0f4"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkBusHierarchyFlags.cs",
+      "size": 906,
+      "sha256": "2e30e96fe9daa8924766e5167e16dc60a2dbc3a8e76837d5b3a25a068f62bece"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkCallbackInfo.cs",
+      "size": 2167,
+      "sha256": "d74990dd4a8c2d54cc30c1054910696d0c0acf2d164ceb446290f45914683e1a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkCallbackSerializer.cs",
+      "size": 3055,
+      "sha256": "8d50e9b2b0e2d19dca9e65988feb07f60d8bc374006ed814e6ce13eb5098f785"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkCallbackType.cs",
+      "size": 1603,
+      "sha256": "6ead6734e5d6111a7a24dd9efac6c271f94f63ebf173db1386609d90da7c67d7"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkChannelConfig.cs",
+      "size": 5339,
+      "sha256": "a9604a482f139569b432d720e827f7280db1a0bb5a43e9d380a7a022ddac0efc"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkChannelConfigType.cs",
+      "size": 1046,
+      "sha256": "7201a89602434f2f32ab8b51366590338a28cf949778f4744683358f44167eca"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkChannelEmitter.cs",
+      "size": 2700,
+      "sha256": "d3b5c175c0a172696298ac5d99b9b45632fbd1826c29ffb8e8e42510ca34c816"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkChannelOrdering.cs",
+      "size": 843,
+      "sha256": "c1cc536a8b7a3eb4d47a3957e3fbd89753847c965793951c3776d6796ecb28fd"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkConnectionType.cs",
+      "size": 932,
+      "sha256": "4f648bdbfd133893d124500df0c32c0fda333c6d6a2d6dbbada71c5dd803ae9e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkCurveInterpolation.cs",
+      "size": 1190,
+      "sha256": "dc915ddf89fc3daa7d3533d7ec2b33cea3c59acfd71bec0ebf47a0fbf43fd79f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkDeviceDescription.cs",
+      "size": 3274,
+      "sha256": "8a9b7442181d144c1e26ed1a6fe5689ba044572c6b2095f1750dc65c72c9e4e1"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkDeviceSettings.cs",
+      "size": 4567,
+      "sha256": "0cee1170a0ccf37cdb4e18ffb1404500176e3911aa277b46c25e287d8f926747"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkDiffractionPathInfo.cs",
+      "size": 4568,
+      "sha256": "f74c4331442ad10de8bb3d23e602a5bc371222b777d5300de9d89044b785af75"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkDurationCallbackInfo.cs",
+      "size": 2591,
+      "sha256": "8c52dbbcf3086242270c9581059c31e9e53c86becad34ac3c6a8c7f0b121cc06"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkDynamicSequenceItemCallbackInfo.cs",
+      "size": 2457,
+      "sha256": "65536cf5d93f123fdc21214a5f1c7bf3101aafa2e3e7faa4a9d8c883c23f0757"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkDynamicSequenceType.cs",
+      "size": 870,
+      "sha256": "883b0f4636fe8c45122078510974cef2b39c801c24dbf5194a35a96d2219236d"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkEventCallbackInfo.cs",
+      "size": 2152,
+      "sha256": "ef9e58074b79b904e960ae0b43290d3ee879284ce4b23046cd7f5640882abd8f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkExtent.cs",
+      "size": 2655,
+      "sha256": "8a6208b99c3ec895920463894cee0e9c8736d2c876630c53fe6780f6608c34dd"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkExternalSourceInfo.cs",
+      "size": 4423,
+      "sha256": "d102aff794696f9aed9aa3f955fd290f6852238bcc15f26bf342840eb8c7fffe"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkFloorPlane.cs",
+      "size": 888,
+      "sha256": "07ab14adfe211c2ada95081a05ca2ade4a8ca95c54da85a0f09170450efab038"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkGeometryInstanceParams.cs",
+      "size": 2681,
+      "sha256": "2850dcbaf03629b34249993cb05a8528ea5147549ff05896d1cd151456f20b94"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkGlobalCallbackLocation.cs",
+      "size": 1506,
+      "sha256": "e0cfca5ca35c17a1d447319d513273345d399c3643a684d108d3833b11636782"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkGroupType.cs",
+      "size": 833,
+      "sha256": "d25c77ed4d93e2dc59c04599acc561fef33610cc4cc9c687044f1101f2dc3f19"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkImageSourceParams.cs",
+      "size": 3633,
+      "sha256": "fbafbef0c4abd3353a2f2871f9563283aae8c77ef3dd8c99a02f033ee84ea4fb"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkImageSourceSettings.cs",
+      "size": 2797,
+      "sha256": "1f7e40dc1aef12ab86963033a8918c697a9d8a9955aee37d3a36c17eb4252735"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkInitializationSettings.cs",
+      "size": 5753,
+      "sha256": "a8554503c1b5840cda2f3a1e0053c09d20cad1f292ca2885c3960f043e3a0bd5"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkInitSettings.cs",
+      "size": 6080,
+      "sha256": "2de0faac79559a06f8bde12fb4149f5eec0cea0c856297dbba2a49df2942861c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkIterator.cs",
+      "size": 3069,
+      "sha256": "81aee175993f2bc33d5a83334b4d8c49bb53bb83b4139afaa8a2bdc004cba81f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMarkerCallbackInfo.cs",
+      "size": 2337,
+      "sha256": "537c4310a1d505c18053ca456152f0928f4fff136ea1fc9fad7039422ab4f5bf"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMeteringFlags.cs",
+      "size": 1001,
+      "sha256": "0b43741ca56f313873f23807d932f7ab3a40d7ef0ce02268f5e2ead7a2d68fd9"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMIDICcTypes.cs",
+      "size": 3123,
+      "sha256": "abe4065afe14a061b005f7d460b2df1d235d94ae706ca906ff47af12c4ac32f0"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMIDIEvent.cs",
+      "size": 21252,
+      "sha256": "63b1a335b25bad26572dcef08485cee43bf1737d825b22f9fdd2e59994d83737"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMIDIEventCallbackInfo.cs",
+      "size": 3831,
+      "sha256": "20e19072350e7d63b4e5855db071bcc99d27991c09e31a9eea1809ae7232444b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMIDIEventTypes.cs",
+      "size": 1002,
+      "sha256": "5d2607f60917924935387e7ddcd1f12a78b836ae9254f4b0330c70f48a8378ae"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMIDIPost.cs",
+      "size": 6511,
+      "sha256": "92714acc0f75a64c3c7e5e2ecdb22b56ee099991a7f410e37479ad4dfd96939c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMonitorErrorCode.cs",
+      "size": 8584,
+      "sha256": "c4db504cd02c827fecffaa03073537ea573610eba0413962bd34d5bf53c7c1d7"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMonitorErrorLevel.cs",
+      "size": 911,
+      "sha256": "584e0e0197f114174c26de36d14bb55f459863fc8937fa9b57755901bfeeb81e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMonitoringCallbackInfo.cs",
+      "size": 2739,
+      "sha256": "83d57ea3bef7424c9a65fb33a0b1501daa42a6087dc988588378cf4c4a9e5b89"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMultiPositionType.cs",
+      "size": 903,
+      "sha256": "89b313120387bc2c53ac8562c5c4c199e7084196385845a8d79c6dd1e09186d3"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMusicPlaylistCallbackInfo.cs",
+      "size": 2555,
+      "sha256": "8e6caae8d3814ebfec4568d172344611791450961a482aa26a3738dc2a2a31ce"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMusicSettings.cs",
+      "size": 2074,
+      "sha256": "0b57f7836fb60240b264df27e435d8303ff29b91c10d100e3cf9814ddb3e4797"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMusicSyncCallbackInfo.cs",
+      "size": 3871,
+      "sha256": "fa15884f4a03eab6150ee80ca5c665f924064c6bf5e06faee2751b8108bd0ccd"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkObjectInfo.cs",
+      "size": 2794,
+      "sha256": "8b561b0db67b506a3531c25322f67921bbf8bae9df90240523e536d08d34a876"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkObstructionOcclusionValues.cs",
+      "size": 2885,
+      "sha256": "f7bdae848632252cb5ea0a41fd72bbed162c0eeeb480ca558ed8a26421d7b8da"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkOutputSettings.cs",
+      "size": 3960,
+      "sha256": "93ab37fc0a4f1c341b4aaded9644e4db417b096a8bb89a282789a90eea774de8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPanningRule.cs",
+      "size": 853,
+      "sha256": "7ef51ad1e440024fdd8f7be4d896add883f0f3726114faf9987fc8bc62886b00"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPlaylist.cs",
+      "size": 3028,
+      "sha256": "3e4c376a51767b6da26de9ff6811ebf95f7291759fdd5e8f2ad4568142632411"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPlaylistArray.cs",
+      "size": 7055,
+      "sha256": "ee909adaec126e58fc6be4dff2f223295b38aa805bb0b0c7fb820983b8256fc0"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPlaylistItem.cs",
+      "size": 3352,
+      "sha256": "68bf2ea342237b4456aae06df7f2b761ea7f2ae4f1a3f0f8ed92904b031e536f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPluginType.cs",
+      "size": 1036,
+      "sha256": "7a7e2fd890c40429ba2530064ce1e483a51796188f350888eddf56e0ea25190b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPositioningData.cs",
+      "size": 2775,
+      "sha256": "cce6e7850b7c3c8f2c066ee2197d63f4166c44abae6d4027c0d4a9f48320eea0"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPositioningInfo.cs",
+      "size": 6183,
+      "sha256": "10448fbc7cc020b506d2c7b277d4797bbf9f56ee2b09af1807ba1d4df8270569"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPreparationType.cs",
+      "size": 860,
+      "sha256": "404e05f672e8e6cfb96af4abc132497689734905171d33dcbb70bbea8199e39c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkQueryRTPCValue.cs",
+      "size": 903,
+      "sha256": "c23eebdba9e6d6599ed68614aec632d107fdc346d3fbe7f9f6c55b577c32d17b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkRamp.cs",
+      "size": 2359,
+      "sha256": "cc3a49f54956b4b77eee63150a55984fc018a57dd702725809c0a8ec6679569d"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkReflectionPathInfo.cs",
+      "size": 3831,
+      "sha256": "4f50446865884fddb081e5d0e43c73db0b49669e8b0510eb67748a9b567a43e8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkResourceMonitorDataSummary.cs",
+      "size": 3443,
+      "sha256": "278de755fb1875e567265ea4e39dfd25c58e56601364e186a69ea8b536d96ed2"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AKRESULT.cs",
+      "size": 2826,
+      "sha256": "747c5aae6ab767de8666bf1dfa02547c339cdf1b0bcd489e4b0a00fca60f3412"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkRoomParams.cs",
+      "size": 3440,
+      "sha256": "f7b9391e9503996efc61a30adee8ca2b9d052964df934f262c9837c94e17c5e6"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkSegmentInfo.cs",
+      "size": 3878,
+      "sha256": "20480a7f70881c4675bd33fe4869313d445217c8dd04dffaa5ac0eb2d1bbbb04"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkSerializedCallbackHeader.cs",
+      "size": 2730,
+      "sha256": "fa5b767a1360c048dbefc09e0d3b3d9617250fa751060181bc45f7bd1afd1f8c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkSetPositionFlags.cs",
+      "size": 965,
+      "sha256": "9eea995c9a387728976aa0b069969cba68058ba3eaf33afabdbb135a1048300f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkSourceChannelOrdering.cs",
+      "size": 893,
+      "sha256": "9eeaa2d945afd2a437dba6e2b9d796806b9c79b4bcc15c38c5e30e36d77d368f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkSourceSettings.cs",
+      "size": 2916,
+      "sha256": "70742dd3514d53450b363b6f4b6ce6c55966f810918b038c39d7739b5c04b996"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkSpatialAudioInitSettings.cs",
+      "size": 4956,
+      "sha256": "4342b0555a62fc37ab9ce878be6e398b8e33e193c4825086f8e27f9a95798301"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkSpeakerPanningType.cs",
+      "size": 886,
+      "sha256": "564ba08fddbaaf2908a08278536735808df85b332c75f16d01d30b5b1b78fb43"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkStdMovePolicy.cs",
+      "size": 2029,
+      "sha256": "f8f8abb4d4f784bce0c68fd0833937edc161f1c556160525cf7902a83c9d2336"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkStreamMgrSettings.cs",
+      "size": 1844,
+      "sha256": "67a9f4435e561ad9c137b64ac9dd7c33e8e449bbce42396935180b85037f2119"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkTransform.cs",
+      "size": 3815,
+      "sha256": "35473076db7ba092a4fa861fb96e4c59d57c9dcd7581de397927466dad6f755c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkTriangle.cs",
+      "size": 3163,
+      "sha256": "22a8785978e4b58421bb955f184af050fa8860a0eb6f32a087acd02162d3f9de"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkTrivialStdMovePolicy.cs",
+      "size": 2085,
+      "sha256": "57c511a7c17a7fae50edd3c4efa6947bf48febbc48ebf88dece18f95456313f2"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkWorldTransform.cs",
+      "size": 3874,
+      "sha256": "d4fef05a3a18a0ad97039e25dba764815de7b37157aeda1fbc37c857d8a041b4"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/MonitorErrorInfo.cs",
+      "size": 2722,
+      "sha256": "b233ede8ac4b781f788b4c987f4f019ba66a502c36965c588c922788df71756a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/MsgContext.cs",
+      "size": 3251,
+      "sha256": "e3899bbc03a6056f303189bb894365af26ce0baa40baa8ffd279a99e441f6612"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Windows/AkCommunicationSettings_Windows.cs",
+      "size": 3392,
+      "sha256": "3baa124e19e21a4bff51d8fe2b779f38f499b11a53ac0fc5dfdf01fea2f6b4de"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Windows/AkPlatformInitSettings_Windows.cs",
+      "size": 4423,
+      "sha256": "0a9b96157bcc5948df1b85997484db88bdd5c887eb769f8460dca489f45c8bf9"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Windows/AkSoundEngine_Windows.cs",
+      "size": 136098,
+      "sha256": "527a92d6925809596988d1a91217671c1497a503e0d17c9a6b8afc0411d75c75"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Windows/AkSoundEnginePINVOKE_Windows.cs",
+      "size": 308874,
+      "sha256": "0842af68e147181ad1d9b77393a9607a10056c9a06ca68df0afd285b3fe098c6"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Windows/AkThreadProperties_Windows.cs",
+      "size": 2389,
+      "sha256": "7ff76e93b453dc52981a181efbd5068e5c7568bd846a343d5b5487fb40056fe5"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Windows/AkUnityPlatformSpecificSettings_Windows.cs",
+      "size": 1700,
+      "sha256": "a1cef5513f3426260d74a4c05f72539296a0b1a7ca7efd44d68ecd8dc79d90c5"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkAudioInputManager.cs",
+      "size": 8043,
+      "sha256": "ced198ddd3459e51e828bf07a3cac6bf6329ed8c12abf01062f949868d2ec0ff"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkBankManager.cs",
+      "size": 9448,
+      "sha256": "de782e34e3b74f8c26cc9eded06decd8335c4d4c3c0deb513c78740a4e900a47"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkBasePathGetter.cs",
+      "size": 10690,
+      "sha256": "9e65ee861dad2604796166e7ca992bc85f0b2b7a3265eea6f34563f98c2f3cb7"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkCallbackManager.cs",
+      "size": 17590,
+      "sha256": "693f9f0e8ead3a961fdbba91863e9856814c65fa1d5adb6aba49ae9dea4a9552"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkCommonPlatformSettings.cs",
+      "size": 34946,
+      "sha256": "dc8404499d0e2ad7e3ec4301b5f96353f5b5689e454899aebe0fc9fac8ae7e9f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkEnumFlagAttribute.cs",
+      "size": 1852,
+      "sha256": "681a729d63be725af5969d2c99cc9937d5edc2803077a17a837f0a5ea015c978"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkLogger.cs",
+      "size": 2868,
+      "sha256": "364873863393a7c631e28baf14a0281a8b3ad7c7a5f18cb0f02a2690e8be14bf"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkShowOnlyAttribute.cs",
+      "size": 1700,
+      "sha256": "bd37cf603269aee6412f366f9bf5d2b9c1b2714b71c226e2dbb49668afdc2951"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkSoundEngine.cs",
+      "size": 62094,
+      "sha256": "d91880eb07fe444bc54ceee4d559876535b39de2ce054a30dfdc21797ef3d4a3"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkUtilities.cs",
+      "size": 29605,
+      "sha256": "d01f8d8cbc5ad05ba9692b1aa767336de7e93ae45e30d70d70ed79270da0f255"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkVector.cs",
+      "size": 1424,
+      "sha256": "3e28b4df70041a62cb04fd584b9d8bf340e3895eff94ab8bf78f8511a8c657e8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkVector64.cs",
+      "size": 1701,
+      "sha256": "f36d5fa75c46ba0822fae5ba56d0f0d7b6b94e4911d997ae8a7db5cced9814ca"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkVertex.cs",
+      "size": 2232,
+      "sha256": "46b76046379208cbf9d049d534080566da021ea26c50e94d9bfd61ed55e08692"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkWwiseEditorSettings.cs",
+      "size": 24064,
+      "sha256": "e5d2ff16b2a42e8f940132c354dc56d0e493d2ba6e19025540c1c51bc570d58e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkWwiseInitializationSettings.cs",
+      "size": 44768,
+      "sha256": "9e95f494bbd67c941214ecff1625e86d9520a716b2ccf404575ec2ada6f1eb21"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkWwiseSoundbanksInfoXMLFileWatcher.cs",
+      "size": 2928,
+      "sha256": "6e766f0e53d76a3486a211a3d1e27181f09ed137f4f1f65c4d608ee27641d4ab"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkAcousticSurfaceArray.cs",
+      "size": 2026,
+      "sha256": "ff3b0e6109312797b4070a74f6508a23513c2a905e629c226f6c1d64973658e3"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkAuxSendArray.cs",
+      "size": 4359,
+      "sha256": "cdeb5688726fa87cc9604f3b0183300874f53871008b4ec18377ab4a73872cc5"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkBaseArray.cs",
+      "size": 3553,
+      "sha256": "0b0faf4963c97e4d11408037d02382982ce3ca9e4bfcc5fb9a7aac39aa4405fa"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkChannelEmitterArray.cs",
+      "size": 4499,
+      "sha256": "19a5e29baab8ffcacab4eecf2f184278a2183d991a6ee8a6ad395f4fd819c481"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkDeviceDescriptionArray.cs",
+      "size": 1876,
+      "sha256": "e665a5f2b3144a3cfcbb3a57697662a1f1faf26fe9a0db9c87b8a6c518da4bee"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkDiffractionPathInfoArray.cs",
+      "size": 1913,
+      "sha256": "24a7bb7522d32a0311b4571157406ae2237785b9a4f2bfbee36f070a037c8f23"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkExternalSourceInfoArray.cs",
+      "size": 2238,
+      "sha256": "a31bcd235d30ed698a0b42166e2d87cfc3e1992fca032c1e7d7fdd41f4cb1ebc"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkMIDIPostArray.cs",
+      "size": 3231,
+      "sha256": "1cea934487b35f5a13cc5f96df2a43263c5300ce98ffffd61cf7b42125587496"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkObjectInfoArray.cs",
+      "size": 1976,
+      "sha256": "561eb09af7bb9db0374b77f7f9d187856736659ec8059bc597610113e66334a8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkObstructionOcclusionValuesArray.cs",
+      "size": 2135,
+      "sha256": "b6c0551fe117ed63ad305780600c08b9614ba3d83065cf43fa7a0c59811c3a41"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkPositionArray.cs",
+      "size": 4231,
+      "sha256": "d1a29e4894a8f5104742132086d818a67a7fa01fd17c1c648dfd61e077f01b17"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkReflectionPathInfoArray.cs",
+      "size": 1904,
+      "sha256": "8f4a8569478341fffa7dbec741968b3b21de0fde1f255b28342b8e5bac61286b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkSourceSettingsArray.cs",
+      "size": 2016,
+      "sha256": "16f3f4d86a5f72a262ee6d7e415e07ee06408b1c5e02512b62e689df134eb88e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkTriangleArray.cs",
+      "size": 1956,
+      "sha256": "b30dd1418bfe7d200956fab30f8b94d6208e62950ec954b75c63d8abe6de5c63"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/WAAPI/Ak.Wwise.Api.WAAPI.asmdef",
+      "size": 433,
+      "sha256": "886c551eff28b202571fe1a72c68ceec31d4af28a45678c13d8f816e6aa96bc5"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/WAAPI/AkWaapiClient.cs",
+      "size": 5352,
+      "sha256": "75c89e2a497535a975826e54c8a1262a7bb239743ccec46325b8d3011b5e4a48"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/WAAPI/AkWaapiHelper.cs",
+      "size": 15780,
+      "sha256": "4841fe041e1980cce1dfe41fd8967bbdfd856a1c49525f67532f91219df7414d"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/WAAPI/AkWaapiUtilities.cs",
+      "size": 39133,
+      "sha256": "4e2257f1ed896d5796ced9f354faf61421d04603f3966c46662283c7375ad8d6"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/WAAPI/Uri.cs",
+      "size": 25880,
+      "sha256": "c71193d64e766f27eaf04877bedc4def8245e7fadf52040db3f0afe5c06c2f92"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/WAAPI/Wamp.cs",
+      "size": 20268,
+      "sha256": "1207cf2c2c4c8132ac96654efaf18664bc46ae49393ffc4a4d549d1a3ec5a62c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Windows/AkSoundEngine.cs",
+      "size": 1370,
+      "sha256": "2898fda2954f62e9ea33fb9265c4b2c86a4d019a24d6199c11229b1dc03a3799"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Windows/AkWindowsBasePathGetter.cs",
+      "size": 1087,
+      "sha256": "a0f2191b2fb22ea9ac4041c5816eee31e9f4958ea72cbdf494cce7798852087a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Windows/AkWindowsSettings.cs",
+      "size": 2559,
+      "sha256": "d3480b44d5c9d4e14042c7ccbee0acfa3c082565fc6d31a43c3291403c724334"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/Debug/AkSoundEngine.dll",
+      "size": 7894840,
+      "sha256": "55190f20d52f18824d3298b5d251e562e5ffedb89b4bb9a5195c735810f500ff"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/Debug/AkSoundEngine.pdb",
+      "size": 48910336,
+      "sha256": "66b6dfb1d066f6fe2347ff522b394225114f1519d241ea656a8d3c36cfe8c702"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/AkConvolutionReverb.dll",
+      "size": 197432,
+      "sha256": "1d2cfabd2f0b09600662332c20037ec373f3a0fa2252e4a7591386cb45442ce0"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/AkConvolutionReverb.pdb",
+      "size": 3993600,
+      "sha256": "e06e46b585accf340a97a8ca4d509dd50df5445756d829d765a23299f3635bc1"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/AkMotion.dll",
+      "size": 197432,
+      "sha256": "deb40cb056a4aa33dc0b5a65273ebd1bec4e625308ce0c404850564d43af7c8a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/AkMotion.pdb",
+      "size": 4403200,
+      "sha256": "455cb2792d013cccd6bfe060afce1896e53d8e335654706a976c2f2f9028b935"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/AkSoundEngineDLL.pdb",
+      "size": 19746816,
+      "sha256": "012d8faae463cb0895ab9e723746c9227d9aca2a5d9c60c96818f5304a06a6de"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/AkSoundSeedAir.dll",
+      "size": 147768,
+      "sha256": "8f0a534b375397c6f13d8d16b1e88c544fe3fd6b0b6b7bea9a02a196255d8455"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/AkSoundSeedAir.pdb",
+      "size": 3878912,
+      "sha256": "e12406926dcc90d6e34f2d59fac4c086bb24dc7ec7a6b9608ef50daea39feac9"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/AkSoundSeedGrain.dll",
+      "size": 149816,
+      "sha256": "e36700d8b7d0f21cabc9825ed60baf91a6dd2e2f04eabafa6558a5b304e91576"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/AkSoundSeedGrain.pdb",
+      "size": 4812800,
+      "sha256": "9d50fa1a3c41fab0009b5b9275fc6ead11e2c3251724987eb06f94e6520fbb1f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/Auro.dll",
+      "size": 2478392,
+      "sha256": "fbca9d29d8508440d24edaf3663fe303cfaf7b6204179fb183db75318b6991b0"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/Auro.pdb",
+      "size": 8892416,
+      "sha256": "1b38a528759bd8a454350490cc66fd65afbb30e7c1ab6e95a683376448d2e7af"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/IntegrationDemo/IntegrationDemo.exe",
+      "size": 2724152,
+      "sha256": "9b9899dbfdcffa051444e176c07c4a01c631c1b1ee6d12f694c48641c6556123"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/IntegrationDemoMotion/IntegrationDemoMotion.exe",
+      "size": 2020152,
+      "sha256": "6b95543efb52ea5ef9aa3bb3d4ebcfec771d120155f37ce99606eb4931fdc2eb"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/iZotope.dll",
+      "size": 340792,
+      "sha256": "c7dab07fe55452aaa490fe6c0a6b8bf8f257c4e8bf1845474601774a72c5a3b9"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/iZotope.pdb",
+      "size": 5165056,
+      "sha256": "cbbea249b8966d9fada21869a7348944a13a2360eb35fd6cf768580786ade4a8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/McDSP.dll",
+      "size": 226616,
+      "sha256": "640a739d740e823942bd3532026efab914e561927a5e4fbc1e0cc215f0e2a4c6"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/McDSP.pdb",
+      "size": 4165632,
+      "sha256": "9c26672a5317b54df91829a5f9240092186714aa7e952e5dd10264d50a9332bf"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/MSSpatial.dll",
+      "size": 128312,
+      "sha256": "608e34987eaf65a9d5b82046b619d21292cfc701293017581055824eb2efadc2"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/DSP/MSSpatial.pdb",
+      "size": 3911680,
+      "sha256": "d7c8d895d70627fd35b9b2c675ce22b8182b5b7333b59d604ca65820037ae95e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/Profile/AkSoundEngine.dll",
+      "size": 2903352,
+      "sha256": "5be5d37fc4357921499095c8742e677ece508994fe04c3e333199949e9e1322a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/Profile/AkSoundEngine.pdb",
+      "size": 29618176,
+      "sha256": "634950f974f6bbab764d7c4305790aebce5ee24db469889df774e4588ec166c6"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/Release/AkSoundEngine.dll",
+      "size": 2186552,
+      "sha256": "a5be5cf4d6a13800ebf06cf9abdaafe2980bc68a4d367cec1f5f4a0c6daaffc7"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86/Release/AkSoundEngine.pdb",
+      "size": 22638592,
+      "sha256": "1efbd61db390cb4f3b13e3d42a42820c79d08e7a7dfe8968df646249eb2766b7"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/Debug/AkSoundEngine.dll",
+      "size": 10656568,
+      "sha256": "5db1c364d1eb53edb6f275e84f9ebae547f7177f100a141febf275607f351e86"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/Debug/AkSoundEngine.pdb",
+      "size": 48533504,
+      "sha256": "b63c9604d344abacb9eb2ce05ccb1ee834ee2cb6a4deeeb82124a70a3ccae2f5"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/AkConvolutionReverb.dll",
+      "size": 253752,
+      "sha256": "59f9f980736bcbee1c3d1ae84c0dd59fefed95f61e07a94c841c65179f0ed15e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/AkConvolutionReverb.pdb",
+      "size": 3854336,
+      "sha256": "6bd14e38114bef5836093fd9a320bfbb1b2c82ad3a8038b1ad5cf6dfb6deb1f6"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/AkMotion.dll",
+      "size": 222520,
+      "sha256": "6909e516d8367322fe89eda0276e368f759640026557b4811be8ccab721a9ed8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/AkMotion.pdb",
+      "size": 4149248,
+      "sha256": "abc410d83dfdff18893b8035b7a7818791668d7dafa329dbcf98b60863e3a5f1"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/AkSoundEngineDLL.pdb",
+      "size": 19320832,
+      "sha256": "621f31c01963635de8ff3b8c5162c6a430e6f077b4932e90ed89b72508d2079f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/AkSoundSeedAir.dll",
+      "size": 201016,
+      "sha256": "e6158d3d4367987cfb5198304c4b6fd3d0cdd9231f2b4ccbdd943f6d89da2dfe"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/AkSoundSeedAir.pdb",
+      "size": 3764224,
+      "sha256": "9892ef16a2c502ecd3a99808fcbe3a31b043124d1fc2827a7450cf05e4e6796b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/AkSoundSeedGrain.dll",
+      "size": 193848,
+      "sha256": "37f8cdd6e30f2ae70cf871f95bdc2943623a8280bbad75c16f9b19a7a3e84f6b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/AkSoundSeedGrain.pdb",
+      "size": 4706304,
+      "sha256": "4d65926d10a4580e9144d241f1fbde017fa43934996cd8aa38221b457b69a1f1"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/Auro.dll",
+      "size": 2560824,
+      "sha256": "cbabd55cbd5cf1a648118dd5f58d62f2189921d9762052b87f8343ee51c60337"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/Auro.pdb",
+      "size": 8835072,
+      "sha256": "d66849eb2d418cd7568799e28971164a4f27e550264f88a788d224d3289023c6"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/IntegrationDemo/IntegrationDemo.exe",
+      "size": 3547960,
+      "sha256": "18939879c41e66f98eb8924ab70c8803960874ca001e2b416f453424cfe39b8e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/IntegrationDemoMotion/IntegrationDemoMotion.exe",
+      "size": 2679096,
+      "sha256": "0c79d10d75b7219138e48b956744ab4f52e0b58e6e2c30121608126f7d6ed618"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/iZotope.dll",
+      "size": 571192,
+      "sha256": "85d26da5dd7d0bfb802dd79e4f11802edaf8ebe49762926b9472cc4c9ef209fe"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/iZotope.pdb",
+      "size": 5279744,
+      "sha256": "d06ae896b63ac070ee0272ee7491fe0f78ae0969ca36c63b0e303b6528e88cc5"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/McDSP.dll",
+      "size": 312632,
+      "sha256": "d1031dc32fe7490872874e7e53169c961c0e74dd1f90d4187ff421b39fbcfa3f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/McDSP.pdb",
+      "size": 4050944,
+      "sha256": "27b437c8bdd93f8b8716f326265938183c6b7aa39ca91bcf45ba6c6e6df5bb67"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/MSSpatial.dll",
+      "size": 153912,
+      "sha256": "618ad1eb0f1b38f976e7e48d54f81f3c76321451b41393e16d5f54b94317a7ef"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/MSSpatial.pdb",
+      "size": 3682304,
+      "sha256": "5c64b175a6b8b68cd92c0d6cd663b2e0d74c014537053bb8a6a1ae0608ff299c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/Profile/AkSoundEngine.dll",
+      "size": 3820856,
+      "sha256": "d6152b75960a3b8afcd3bf7519692e55116452f8fa04f903a5f0e53aae2b67d2"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/Profile/AkSoundEngine.pdb",
+      "size": 28921856,
+      "sha256": "c5f84a40cd4b07fe093a52866d510d0e587fcb5d2016a0706d489df4d67aa83e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/Release/AkSoundEngine.dll",
+      "size": 2945848,
+      "sha256": "c977aeccd6294022aea802f472ea4c3b0fb2fb43f654c54fe26fcf24e2c40abb"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/Release/AkSoundEngine.pdb",
+      "size": 22048768,
+      "sha256": "186187a25d58f3d56ce3c2915f7d825f77502c5822386dddb6c2abbd2fe83d10"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/AK.Wwise.Unity.API.WwiseTypes.asmdef",
+      "size": 792,
+      "sha256": "8ff678c47dd11175a6b03178608c891b79e52a727d87280fa3579c96a3ef6d99"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseObjects/WwiseAcousticTextureReference.cs",
+      "size": 1133,
+      "sha256": "371c771daa70f804578ab1f38fe699f8d40342ef31fa3059d60a49ef012ed356"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseObjects/WwiseAuxBusReference.cs",
+      "size": 1119,
+      "sha256": "1f1e6c10ac9280ea0861e1d1690f79337031d3407909970b8cfeeb79595e3c80"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseObjects/WwiseBankReference.cs",
+      "size": 2679,
+      "sha256": "94799167f3bcfe91f6f93d41935b169605d5438ea720f3af85b7b387e0d5bb40"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseObjects/WwiseEventReference.cs",
+      "size": 1114,
+      "sha256": "0ab4c16ee6af0001d8a822d5b9df1ea9083f6dd237f1cf53bb216e2238da6172"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseObjects/WwiseObjectReference.cs",
+      "size": 14106,
+      "sha256": "b90622a02e2474ade9bd2bc31d7824b2420dd69e0b20669f76ab0156fb5601eb"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseObjects/WwiseObjectType.cs",
+      "size": 1241,
+      "sha256": "ff309b38a7a1305e0c36f7f3f6cffd86be433952400b9f48aa6328579bdcef0c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseObjects/WwiseRtpcReference.cs",
+      "size": 1120,
+      "sha256": "c53caeb45a22adfaa42d13668208718753f730ab7751cce1212c9947ea081042"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseObjects/WwiseStateGroupReference.cs",
+      "size": 1130,
+      "sha256": "a905ce7f81e8f9d698683c21400a8614fff5d27f4f44aa8b35e6fdf38138f7e1"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseObjects/WwiseStateReference.cs",
+      "size": 1524,
+      "sha256": "8f95f32dd2c66fd39a385d93c9796e964d56b869ec08eebbabd538cf606ee959"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseObjects/WwiseSwitchGroupReference.cs",
+      "size": 1133,
+      "sha256": "dd73f7f28f44edc39e611945d6a5fac1e45eaa38342298edda6f2fdde8851229"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseObjects/WwiseSwitchReference.cs",
+      "size": 1532,
+      "sha256": "7e529a2fe5b635082e9da2b368f4fcf186f9124c616e3d2250d63583991a4621"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseObjects/WwiseTriggerReference.cs",
+      "size": 1120,
+      "sha256": "414c924572837b7b5db08be176b185c420ed24eadc938e13c396ffd4b49f03bd"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseTypes/AkWwiseAcousticTexture.cs",
+      "size": 1755,
+      "sha256": "2d4e28eef168bd25d36b891cadd4c708908983386d7684343637761bbb820dd0"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseTypes/AkWwiseAuxBus.cs",
+      "size": 1747,
+      "sha256": "e2bc89215468d05142bebcc66ec1b8387e51575317b46d136f559ff8f50569cb"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseTypes/AkWwiseBank.cs",
+      "size": 3552,
+      "sha256": "719dd58422fdbc5bded31c71c9349b468a8cb7fa8f5865cda49fb27584ae9b77"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseTypes/AkWwiseBaseGroupType.cs",
+      "size": 2899,
+      "sha256": "9021ffa1afe2bbb35b813ae998bfbd3a94d67dad811466ae0b1153b8a36ef4af"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseTypes/AkWwiseBaseType.cs",
+      "size": 4366,
+      "sha256": "79a5b34f68b28add437887fe94ff1b0b04f9b6acfee6648f9ab6f75d7a94aadd"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseTypes/AkWwiseCallbackFlags.cs",
+      "size": 5468,
+      "sha256": "3733b07394b12575f589f1b4b845a3d6d35866c5ba0b76e96a02e69762f9afb8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseTypes/AkWwiseEvent.cs",
+      "size": 9031,
+      "sha256": "a4baae4102b6a2de9556a8af6d180962fb2e8873ca7539e56211e1727f4a3790"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseTypes/AkWwiseRtpc.cs",
+      "size": 2635,
+      "sha256": "297c7a6088fe22f2d06304ce7999f738db50c2b25521bd631f5e96fda127de48"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseTypes/AkWwiseState.cs",
+      "size": 1969,
+      "sha256": "a45b16071568ec812c903d639bc55ac94689972b9071835195dccff9636bf2cc"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseTypes/AkWwiseSwitch.cs",
+      "size": 2036,
+      "sha256": "c17f4101868f5aa7ca24a153369ad813ae82c36668bf64aff9f8fbea16690a77"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseTypes/AkWwiseTrigger.cs",
+      "size": 1921,
+      "sha256": "f9c75a026af9af0efbfb5809ecf36eb3eb57f32f60f9650185536693986799da"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/WwiseTypes/WwiseTypes/AkWwiseTypeMigration.cs",
+      "size": 9272,
+      "sha256": "a78352a7b83ce8ffbdb3973f7c44c60503073463aca601f53325e992794258af"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Documentation/Windows/en/WwiseUnityIntegrationHelp_en.chm",
+      "size": 4863603,
+      "sha256": "9776197da90d9f1ec8a669a37c62fbae1f0245adefd62922c7fbcb1ebdb29f5b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Documentation/Windows/ja/WwiseUnityIntegrationHelp_ja.chm",
+      "size": 5013757,
+      "sha256": "3ba19fb1a39f0b5e7bc99473ee3733ba645912c50d9a3e87d30005dfb018ad9b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Documentation/Windows/ko/WwiseUnityIntegrationHelp_ko.chm",
+      "size": 4355443,
+      "sha256": "10b2f62fe92be7cb5e81fb5ba35fab38758aacb01084bc42f33085b5ad7dd02b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Documentation/Windows/zh/WwiseUnityIntegrationHelp_zh.chm",
+      "size": 4920105,
+      "sha256": "32dd5f8b40b0e4e193fda599eae371c968eca5813cfdbe1700a0a426cd52708a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Gizmos/wwise_white_on_gray.png",
+      "size": 6685,
+      "sha256": "237f8bfd1725913cf33e2d221ac70e9aa54392eb877722b753237ba1375b1f73"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Gizmos/WwiseAudioSpeaker.png",
+      "size": 1693,
+      "sha256": "ac11cdb3ea627d9d8522ac39480102e3a9b22c7f87071e7575bdf34038dfef74"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/InstallConfig.json",
+      "size": 16630,
+      "sha256": "862a67e8cf61632b1db24981087bf8b49952ae29d8ecbe0ccc4a013383abd0d3"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/CHANGELOG.md",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AK.Wwise.Unity.MonoBehaviour.Editor.asmdef",
+      "size": 1095,
+      "sha256": "53e461a04aebdce640e499fd7afd8c03aa2b75b1f6a25ef3a85895035981943f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkAmbientInspector.cs",
+      "size": 16742,
+      "sha256": "5c85c83108f9a768f046d08ce73b957bfa8f2a05296149eca5e5b3d583f71576"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkAudioListenerInspector.cs",
+      "size": 1603,
+      "sha256": "256e7fb7447562f710de1acecacea0192133840d28a04c7e4d89c8685caed2fb"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkBankInspector.cs",
+      "size": 3166,
+      "sha256": "fa628c3a25e5bed02823e75d4719d1fbc60d04bbf875f6c67933701f38aa2710"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkBaseInspector.cs",
+      "size": 1665,
+      "sha256": "c2eeb89f638527f36b6074ec1f4abc7fd8b42f7751bfeac89ff869f1ff3537a4"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkEnvironmentInspector.cs",
+      "size": 3036,
+      "sha256": "d759dadfd7c5233e2917db78d5551228d55bc47cd8b30448e97b1afbc964ea04"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkEnvironmentPortalInspector.cs",
+      "size": 7092,
+      "sha256": "7a0b808c40761716e31fdb7dc734c87d39e7d1e8d68b25cec533422542b2551f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkEventInspector.cs",
+      "size": 9743,
+      "sha256": "2825779775e0db8b5b6451a87e14d29d641de3eff1796778343b9a20207a355a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkGameObjectInspector.cs",
+      "size": 7668,
+      "sha256": "f7a0be1462567336e69b81fc6574ecf68055385d563923e9f809a44ae3be9e00"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkGameObjListenerListDrawer.cs",
+      "size": 4787,
+      "sha256": "77f286cc6bf24722478dd319dd70aa91f924325a9249ed25083e86b2a4843bb9"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkPortalManager.cs",
+      "size": 7759,
+      "sha256": "bd47dce3d4604c4e079d58b9506d86e87444752d9552bdea88093ed51c122d5e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkRadialEmitterInspector.cs",
+      "size": 2827,
+      "sha256": "af6ea9d92ab8cee793d3db87b0ebbda886ddacdbb97fcd7dd5f88bc7cca432d1"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkRoomAwareObjectInspector.cs",
+      "size": 2866,
+      "sha256": "d287d4a7738ee42915a91bcd8c2390242e873a6c34fe720c8b3fccd07a65697c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkRoomInspector.cs",
+      "size": 5325,
+      "sha256": "f3e85a6e55888d995a521213d5e65224923e15254b19b5cfaa1b3f7c915a3d51"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkRoomPortalInspector.cs",
+      "size": 3752,
+      "sha256": "d3455f6ac377130b54434ad07ae03551567237ec8a3d2636bb0a2e4d062ed922"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkSpatialAudioListenerInspector.cs",
+      "size": 1332,
+      "sha256": "50bc347ff512de411dc951442823884d5f3bf0539b1623fd1523424f8e980d1d"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkStateInspector.cs",
+      "size": 1379,
+      "sha256": "1e967a09ec6f13a4a70ba0c7a56ac832f0a1bf60d42b4ab0ca5c25a01bffab04"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkSurfaceReflectorInspector.cs",
+      "size": 3525,
+      "sha256": "7e536d0f2929af83645d7589b8c293df19e4bb47b91b81a9855e91f627ef6059"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkSwitchInspector.cs",
+      "size": 1381,
+      "sha256": "58579de6ce0d62f2bc047eeefa9d3f44764c121d247c22bfb5c947a4b2e5fe12"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkUnityEventHandlerInspector.cs",
+      "size": 5075,
+      "sha256": "b178c7250eb4ad9fd95aac84017b2109635b6b9fa04e055e67281eebb27c0d80"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/AkWwiseTriggerInspector.cs",
+      "size": 1424,
+      "sha256": "d052a68f1c3b9207324cb729f74f36714496bd8e7399e61854621aa3ddf4dedc"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/EditorPlatformHelpers/Windows/AkWindowsBuildPreprocessor.cs",
+      "size": 1459,
+      "sha256": "4bd0f77fac49e31c74cd6ad9416422b247a6b27fd13ffb0b5e4ece2d114e7e68"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/WwiseSetupWizard/AkBuildPreprocessor.cs",
+      "size": 6291,
+      "sha256": "1eec379b305860f7006ebd6b4ff12aed89a4592ad22539c782136f1c4c97b56f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/WwiseSetupWizard/AkUnitySettingsParser.cs",
+      "size": 4942,
+      "sha256": "698bb539fc1b2e43af215cd2c2a6e07fcf952c47a235c526ed706f9d28025bc8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/WwiseSetupWizard/AkWSAUtils.cs",
+      "size": 1220,
+      "sha256": "e7fd15c19e1fcbe6248602dd36c10510cafec830b7c72025f8de81caa1ebb61d"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/WwiseSetupWizard/AkWwisePostImportCallbackSetup.cs",
+      "size": 12833,
+      "sha256": "a8b36ab4a6fbbcb75ca44e6cd26a4507c788131b1f32d9f549a2cae6ff49a886"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/WwiseSetupWizard/AkWwiseSetupWizard.cs",
+      "size": 24370,
+      "sha256": "2dc2eb052c35e6316f303eb13490822531bb070a082acff4706e92527c11b989"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Editor/WwiseSetupWizard/AkXboxOneUtils.cs",
+      "size": 2051,
+      "sha256": "f83f741f43557bbf53a5722d0574a89aeb8b1ef853464673fc0ec6061db08407"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/LICENSE.md",
+      "size": 911,
+      "sha256": "6bb46f37f36ed0d33c5b72baf43c9068eeee219df0a3cc858f3b1c7aa37b54e1"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/package.json",
+      "size": 670,
+      "sha256": "9d1457e6adb98f1253279830cd118abc3e29569ce953bf7ccf65e20d35863f49"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/README.md",
+      "size": 1282,
+      "sha256": "309dc5ab699dd4b50dff0ebfc33f0a0e21d27828f2edbecc82e2b807e5c5b8e3"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AK.Wwise.Unity.MonoBehaviour.asmdef",
+      "size": 867,
+      "sha256": "8ecc881a95eec3ff5a702fb4098108c312e2916a68124e58a775b2f7df29b7e8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkAmbient.cs",
+      "size": 10572,
+      "sha256": "536fee6a198b91964bcf662d2110b3ce2bdfd9ed751b7c880bf9150a7d0e099b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkAmbientLargeModePositioner.cs",
+      "size": 1996,
+      "sha256": "ee586a95241db8e2ee6a32505e1e0b49c7ae1199761521be4fbb9022d01bf3aa"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkAudioListener.cs",
+      "size": 6872,
+      "sha256": "9b90e7eb4a43a230487f62e53c7befc30276d40b618996b0c065a8804ae452b2"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkBank.cs",
+      "size": 4984,
+      "sha256": "43758cf70decbf4ca9877ed1c2e74399b8b752458843cd3aa088f9ad0f38c63a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkEarlyReflections.cs",
+      "size": 3781,
+      "sha256": "566434266e00e87096bc121ad26434929d0315890c3a1eab8deaacfb3cba28e5"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkEmitterObstructionOcclusion.cs",
+      "size": 2696,
+      "sha256": "473b2a6638660c7218d03e00972237d90af3e62165de57c6522e6914b8e5b87f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkEnvironment.cs",
+      "size": 6674,
+      "sha256": "38ee074761195641158d87ce5bf831388bcfee30eb979602be40a3b5f1aa9dab"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkEnvironmentPortal.cs",
+      "size": 4400,
+      "sha256": "9f7559a504a2cfac6f9a6657fdc9861da151d4451e62ed5bb446b5553aca35e6"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkEvent.cs",
+      "size": 9394,
+      "sha256": "e6c5f39f8e038f9c9588c6173d305f4231e08e24cfba03fa3cc554bd7fad5bc9"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkEventCallbackData.cs",
+      "size": 2026,
+      "sha256": "ae9e65def5cc4f912163d1c011c0af0bdb977f37e8fdab9d10cd6ca68418d698"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkGameObj.cs",
+      "size": 14434,
+      "sha256": "83ce5a85aeea7442f8ee8e93cc831a13f235426e2624548c1d34d8c17d12bd69"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkGameObjEnvironmentData.cs",
+      "size": 6994,
+      "sha256": "561c835d33c0e35bd288773da3667068bd1e36d0845bc4ad277840e127ec4e07"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkGameObjListenerList.cs",
+      "size": 3264,
+      "sha256": "7f004d075ad815810ae1dd1c0fc22b8c9ff5081acf2fada60aa203e5b9cdaceb"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkGameObjPositionData.cs",
+      "size": 1402,
+      "sha256": "d8df45ff9e46a13fb7fed091f3e3412169e0d75eeb96089e71f25c66e33ed192"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkGameObjPositionOffsetData.cs",
+      "size": 1652,
+      "sha256": "4e3aa94594190ecfb2209e679fad1b8c93c68ca785b9c8da5fc08b355dbcefa8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkGameObjPosOffsetData.cs",
+      "size": 1470,
+      "sha256": "9e83682d41a8d009dbd744b89d95a5b7e84e245e182ec0959d6754759492101f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkInitializer.cs",
+      "size": 9137,
+      "sha256": "4e3466fdd8cc305026f7987f6e6b57c230dc0758f95bb2bc1fad34da5967e8ba"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkListenerDistanceProbe.cs",
+      "size": 2820,
+      "sha256": "2997dbde3a72cbfbe3de3f3a5f17e97269a60d87ec16dded9d2c2f1ae198a60f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkMemBankLoader.cs",
+      "size": 6254,
+      "sha256": "fdd150a9ff2e58790af87d469783d2bf8e2712ecd0b37466f083a662db258a47"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkObstructionOcclusion.cs",
+      "size": 5257,
+      "sha256": "da8da6d3063f819edfc818a599693ed933e478193b5f74b380eacc9c04503d9d"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkRadialEmitter.cs",
+      "size": 7250,
+      "sha256": "b826171bad632ca455458f38ce561decce2886d6fa6096b6fbbf5879fad8e532"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkRoom.cs",
+      "size": 15559,
+      "sha256": "ffef63dc79d5106a5842e5b9ae18f4219e2ab396ff003ea3405f37318490c908"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkRoomAwareManager.cs",
+      "size": 3745,
+      "sha256": "c337e48eccdae7fd38187172b5ce0496ff2af9a2232dbcd4ebe60bb05ce3c69f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkRoomAwareObject.cs",
+      "size": 3710,
+      "sha256": "51b9c5a2cadf17d4c1bf6f24fc7e8129273d7966af69341022bb5e251e807c3a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkRoomManager.cs",
+      "size": 4564,
+      "sha256": "a273d22cf7730b34a49529803594400c9da1ba7d70021e2b8a00aecddaa1d111"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkRoomPortal.cs",
+      "size": 11783,
+      "sha256": "8371ad75d1db39bb7578448bc3e9aeeca8d22c4028565ab1b942f9442720b14f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkRoomPortalObstruction.cs",
+      "size": 2285,
+      "sha256": "7923c2cd73017575cbbfff7ebc4981cd6d40d05b3fc99e07898226ffa28bbbda"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkSoundEngineController.cs",
+      "size": 10724,
+      "sha256": "b7c1fc802c44d20eb9fb938a31e2108a10521d5d2743243d05276fd1b103b518"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkSpatialAudioDebugDraw.cs",
+      "size": 7940,
+      "sha256": "ea3c74e0cf7cba513a46cfd9b679abd68dabb1e1f5d9fc2b94f7714178fe5901"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkSpatialAudioEmitter.cs",
+      "size": 14249,
+      "sha256": "c02baaf235b4944a447a49a94844bf4cb6880925631464bc8ef7adf62a327c2d"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkSpatialAudioListener.cs",
+      "size": 5466,
+      "sha256": "44dbdf857be804253086133d8da1a60030403d960d4f7186ff7390349607bfa1"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkState.cs",
+      "size": 4281,
+      "sha256": "64be689e7f357a6ac129e5c1ce5743a297e6434a403068d03695a314333e7303"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkSurfaceReflector.cs",
+      "size": 23186,
+      "sha256": "3f7bd8f6d1cdbed5a113c9de7916371d64f9c83de0ba389d91325c23a44761a8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkSwitch.cs",
+      "size": 4597,
+      "sha256": "eea2a0c3fe3cdf361d1712cadc22dbf36be99b00a4c76109248dd65da86cce32"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkTerminator.cs",
+      "size": 1350,
+      "sha256": "76bf17df2df46f4d206b8e5c9566b35531da68194462414e6528e507cab0ad45"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkTriggerBase.cs",
+      "size": 3435,
+      "sha256": "59fcc244ce9ecf12ddf4add75e84bce39d2895a7c6f84cbb5105d98088eabf5a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkTriggerCollisionEnter.cs",
+      "size": 1789,
+      "sha256": "57cd3ac9f83e0d0bbe12d68b747a2f99d97eefc892c9a24b50ea9661a365315e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkTriggerCollisionExit.cs",
+      "size": 1575,
+      "sha256": "622515ca468d03b4767cf26e19372540249b8826012059e14acc310ee63fa81b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkTriggerDisable.cs",
+      "size": 1397,
+      "sha256": "5485f2ff9be1bf594e51b9a34e99ad0f36b59673d0ae04b81913699a84dfc78d"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkTriggerEnable.cs",
+      "size": 1357,
+      "sha256": "19eafd31e3ee6e632f335987a2edb729670ca3b45929c29b9ab9f33c9d004a26"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkTriggerEnter.cs",
+      "size": 1565,
+      "sha256": "12f2d7fb4c573b96295a5b4dc5a874c010f0423e8307bdb8424bca4248840c83"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkTriggerExit.cs",
+      "size": 1563,
+      "sha256": "8d7e098bc1321307b3bd4bb92f4e4d0df7ff30286ecac0b496c5d01be93cedb4"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkTriggerHandler.cs",
+      "size": 6026,
+      "sha256": "9dab591b529e0607843118e13f7af46835ec3f621cd79a641cf65089c68d36f1"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkTriggerMouseDown.cs",
+      "size": 1401,
+      "sha256": "80c4e2c0a6036fd69ac291e630a3abb60ecdb1624b85cf473abbcad5a9cdf0b7"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkTriggerMouseEnter.cs",
+      "size": 1403,
+      "sha256": "e7efa3547659c7f2c2a9047d7be58630ff0be4472264cef0639a1dca29a56c86"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkTriggerMouseExit.cs",
+      "size": 1401,
+      "sha256": "6f8d78c8a0c4e8f1ddfbe1f50baf13741ec8d628970c316e807bc2001e259ded"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkTriggerMouseUp.cs",
+      "size": 1397,
+      "sha256": "374f43908a8065af21d5fa5df5b91ba14818ad96f495f80f2ff8d5e4bb9da5ed"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/MonoBehaviour/Runtime/AkWwiseTrigger.cs",
+      "size": 2619,
+      "sha256": "adccc6736e1d812d23a24312e7d2a3318abbdda2d9b3345e50869e4b0bb3b8bb"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/NewVersion.txt",
+      "size": 160,
+      "sha256": "08b68771cb80dd18944ced13d03c868755d8d43819608bb8412156f186f0580c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/CHANGELOG.md",
+      "size": 59,
+      "sha256": "ad017b64faa6d30ca4d585e4e833c53735682387494567287d6a5a39b56115e0"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/Editor/AK.Wwise.Unity.Timeline.Editor.asmdef",
+      "size": 721,
+      "sha256": "e5919d98f624631ee13b3f12888e8d87620bf5ab05f4562e52200aec8e230fcd"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/Editor/AkEventPlayableInspector.cs",
+      "size": 8026,
+      "sha256": "a00c6b654ceb81fe644c7a85e007d5862c0009c77b989c766b20af8c6a22d4fe"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/Editor/AkRTPCPlayableInspector.cs",
+      "size": 3237,
+      "sha256": "ef8b5bccf9dbc5d73d31e84124b152935ceab7234cefdb497c3b69823aa7bc51"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/Editor/AkRTPCTrackInspector.cs",
+      "size": 1732,
+      "sha256": "3849a503dd335a278f9c5afed021ff8dd3a89c6ddcd4c51f3b29dae59063dc9a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/LICENSE.md",
+      "size": 911,
+      "sha256": "6bb46f37f36ed0d33c5b72baf43c9068eeee219df0a3cc858f3b1c7aa37b54e1"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/package.json",
+      "size": 625,
+      "sha256": "9d45530df571e24f79cbe05ef14e2ebbb46f064d7423a39aeb52987ed5611433"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/README.md",
+      "size": 1267,
+      "sha256": "3267dbdcfaee5fbf99356c58efced4a4813f584656fac80978a8cf39769f4226"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/Runtime/AK.Wwise.Unity.Timeline.asmdef",
+      "size": 656,
+      "sha256": "8ea33e91b5e677022b9b4b41d9b3865a61d3d5f496db32b0864749d9fd20c0cc"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/Runtime/AkEventPlayable.cs",
+      "size": 4202,
+      "sha256": "5a00411f13b8f03942cef2a342d09252bb34af499f8c879b398a879ef714130f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/Runtime/AkEventPlayableBehavior.cs",
+      "size": 12936,
+      "sha256": "d2712b2ef39c0c9ad581149658dae806a64e80a2edc8260ba2d2e87a9cafc5e9"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/Runtime/AkEventTrack.cs",
+      "size": 2625,
+      "sha256": "71686e533a1366efb9c7558cc13ee93d7caab31e597e95267f5cd92d7cef1157"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/Runtime/AkRTPCPlayable.cs",
+      "size": 4468,
+      "sha256": "102dcaba8dceaf5d119c5287cb7bbd8f6ff595698f385aaef41959d096306176"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/Runtime/AkRTPCTrack.cs",
+      "size": 2733,
+      "sha256": "22baa99f35a266a5910fc7c8a8dab6df9da54689f6719ce70c98540b39fdd0d1"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/Runtime/AkTimelineEventPlayable.cs",
+      "size": 24838,
+      "sha256": "891f21af2fed82a1ff8c799a459bf4a8dd35fdaf603fe8e775685555cb1374da"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/Runtime/AkTimelineEventTrack.cs",
+      "size": 2521,
+      "sha256": "de7b8154d4fe79234265a9372e81857ccb358713354f883bb82e53f2fd04ca8e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/Runtime/AkTimelineRtpcPlayable.cs",
+      "size": 4657,
+      "sha256": "2a85864fe1ee1ced9bb78719ec1c7625649efe71b0092011a8ce216259375136"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Timeline/Runtime/AkTimelineRtpcTrack.cs",
+      "size": 2441,
+      "sha256": "a2afee5384860d9de0cd8abfd0588f5b6bebb9a4d7cbad0bc952ea21b8d867c8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/Tools/WwiseIDConverter.py",
+      "size": 3414,
+      "sha256": "96c9367d2ee23e94c08b94afa8a081681eb2470a2b5c4730f26d5b20c8708cbe"
+    }
+  ],
+  "extraction": "Extract original files without content changes; reject absolute paths, parent traversal, links, and differing existing files.",
+  "original_game_version_evidence": "assets/reference/battle-animation/native-sound-sources-source-manifest.json"
+}
