@@ -24,7 +24,7 @@ namespace Zjcs.Validation.Combat
     // Shared interaction steps for the Editor and the Windows Player.
     public static class OfficialBattlePublicFlowValidation
     {
-        private enum Scenario { Player, Monster, SkillCost, Lifesteal, StatusActions, Critical, Block }
+        private enum Scenario { Player, Monster, SkillCost, Lifesteal, StatusActions, Critical, Block, SpecialAppearance }
         public static IEnumerator Steps(Action<string> capture)
         {
             foreach (Scenario scenario in Enum.GetValues(typeof(Scenario)))
@@ -36,7 +36,8 @@ namespace Zjcs.Validation.Combat
             bool block = scenario == Scenario.Block, critical = scenario == Scenario.Critical;
             bool monsterActs = scenario == Scenario.Monster || block, skillCost = scenario == Scenario.SkillCost;
             bool hemophagia = scenario == Scenario.Lifesteal, statusActions = scenario == Scenario.StatusActions;
-            string prefix = block ? "public-block" : critical ? "public-critical" : statusActions ? "public-status-actions" : hemophagia ? "public-lifesteal" : skillCost ? "public-cost" : monsterActs ? "public-monster" : "public-movement";
+            bool specialAppearance = scenario == Scenario.SpecialAppearance;
+            string prefix = specialAppearance ? "public-special-appearance" : block ? "public-block" : critical ? "public-critical" : statusActions ? "public-status-actions" : hemophagia ? "public-lifesteal" : skillCost ? "public-cost" : monsterActs ? "public-monster" : "public-movement";
             var root = new GameObject("Public movement battle verification");
             var world = new GameObject("Battle world");
             world.transform.SetParent(root.transform, false);
@@ -83,8 +84,8 @@ namespace Zjcs.Validation.Combat
                 var player = Unit(1, 1, 1, 2, 2, monsterActs ? 1 : 100);
                 player.RoleEntityId = 3100;
                 var monster = Unit(2, 2, 2, 6, 4, monsterActs ? 100 : 1);
-                monster.MonsterId = monster.MonsterTemplateId = 3206;
-                monster.RoleEntityId = 3206;
+                monster.MonsterId = monster.MonsterTemplateId = specialAppearance ? 3803 : 3206;
+                monster.RoleEntityId = monster.MonsterId;
                 var actor = monsterActs ? monster : player;
                 var target = monsterActs ? player : monster;
                 if (block || critical)
@@ -266,6 +267,22 @@ namespace Zjcs.Validation.Combat
                 var targetEntity = controller.TryGetUnitTransform(target.Id);
                 var hurtPlayer = targetEntity.GetComponentInChildren<ProfessionNativeSceneRenderer>();
                 var hurtMonster = targetEntity.GetComponentInChildren<BattleNativeMonsterRenderer>();
+                if (specialAppearance)
+                {
+                    var originalAppearance = hurtMonster.GetComponent<AppearanceRendererLite>();
+                    Require(originalAppearance && originalAppearance.LevelOfResolution == LevelOfResolution.None
+                        && originalAppearance.TextureLoader == null && originalAppearance.GetIndependentMaterials().Length == 3
+                        && hurtMonster.CustomMaterialOverride.Count == 3 && originalAppearance.RenderExistingMeshes.Count == 4
+                        && originalAppearance.RenderExistingMeshes.Count(copy => copy is BattleNativeMonsterMeshCopy meshCopy
+                            && meshCopy.enabled) == 3,
+                        "3803 public model lost its original None branch, independent skin pages or mesh-copy references."
+                        + (originalAppearance ? " Resolution=" + originalAppearance.LevelOfResolution
+                            + "; loader=" + originalAppearance.TextureLoader
+                            + "; materials=" + originalAppearance.GetIndependentMaterials().Length
+                            + "; overrides=" + hurtMonster.CustomMaterialOverride.Count
+                            + "; copies=" + string.Join(",", originalAppearance.RenderExistingMeshes.Select(copy =>
+                                copy.name + "/" + ((Behaviour)copy).enabled + "/" + copy.gameObject.activeInHierarchy)) : " Missing appearance."));
+                }
                 var hurtAnimator = hurtPlayer ? hurtPlayer.GetComponent<Animator>() : hurtMonster ? hurtMonster.Animator : null;
                 // Player drawing is owned by the original separator's visible
                 // parts; its disabled main renderer retains an earlier mesh.
