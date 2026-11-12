@@ -202,12 +202,12 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     {
         // UTC+8/UTC/UTC-5/UTC+9 are test inputs, not a production timezone choice.
         var calendar=assets.CreateQuickBuyCalendar(8);var counters=new OfflineHomeQuickBuyCounters(calendar);
-        var sunday=new DateTime(2026,11,8,23,59,59,DateTimeKind.Utc).AddTicks(9999999);
+        var sunday=new DateTime(2026,11,8,21,59,59,DateTimeKind.Utc).AddTicks(9999999);
         var monday=sunday.AddTicks(1);var tuesday=monday.AddDays(1);
-        Require(calendar.GetDailyResetTimeOfDay()==(0,0,0)&&calendar.WeeklyStartDayOfWeek==DayOfWeek.Monday,"decoded original reset settings with explicit UTC+8 test input");
+        Require(calendar.GetDailyResetTimeOfDay()==(22,0,0)&&calendar.WeeklyStartDayOfWeek==DayOfWeek.Monday,"shared offline 06:00 reset with explicit UTC+8 test input");
         foreach(int zone in new[]{0,-5,9}){
             var c=assets.CreateQuickBuyCalendar(zone);
-            var boundary=new DateTime(2026,11,9,8,0,0,DateTimeKind.Utc).AddHours(-zone);
+            var boundary=new DateTime(2026,11,9,6,0,0,DateTimeKind.Utc).AddHours(-zone);
             Require(!c.IsSameDay(boundary.AddTicks(-1),boundary)&&c.IsSameDay(boundary,boundary.AddHours(23)),"exact daily reset boundary at test timezone "+zone);
             Require(!c.IsSameWeek(boundary.AddTicks(-1),boundary)&&c.IsSameWeek(boundary,boundary.AddDays(6)),"exact weekly reset boundary at test timezone "+zone);
         }
@@ -301,7 +301,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     }
     void CheckPeriodicManager()
     {
-        var state=new PeriodicProbe{Calendar=assets.CreateQuickBuyCalendar(8),Now=new DateTime(2026,11,8,23,59,59,DateTimeKind.Utc)};var manager=new HomePeriodicManager(state);
+        var state=new PeriodicProbe{Calendar=assets.CreateQuickBuyCalendar(8),Now=new DateTime(2026,11,8,21,59,59,DateTimeKind.Utc)};var manager=new HomePeriodicManager(state);
         manager.Update(0);Require(state.Reads==0&&state.Days==0,"original periodic manager waits for a player and a synchronized clock");
         state.Available=true;manager.Update(1);Require(state.Reads==0,"original periodic manager waits for time synchronization");state.Synced=true;manager.Update(1.5f);Require(state.Reads==0,"original one-second throttle also covers unavailable ticks");manager.Update(2);Require(state.Reads==2&&state.Days==0,"original first available tick captures date twice and never publishes an initial day");
         state.Now=state.Now.AddSeconds(1);manager.Update(2.99f);Require(state.Days==0,"original throttle delays reset polling until the next one-second check");manager.Update(3);Require(state.Days==1,"original exact Monday reset publishes one day after weekly handling");manager.Update(4);Require(state.Days==1,"equal clock never repeats the same reset");

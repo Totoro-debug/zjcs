@@ -1,0 +1,866 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "40919028418fc10a72097b9213499876847e4f68a6916bf55120a5c3ee201ed3",
+  "inputs": {
+    "scripts/prepare_current_partner_native.py": "21eed29e19b3b3fbd370eb0736c10fa663d35c749b7fa1f9686a57774c6d2cea",
+    "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
+    "scripts/official_manifest.py": "1aae5bd86af587511466e17308719c2e6b356be4117942809c7e6ba89e2d7399",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c",
+    ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-textures/source-manifest.json": "095eb422b8a241e6468abd81940e22aff9ad22f89bc78161dbdba8bd1f45b3b0",
+    ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/source-manifest.json": "09b81e5260175a1524a2178d37bea2b78752bdc85f130751e2d95398171fbe0b",
+    "assets/reference/home-mainline-task-data-source-manifest.json": "e0005b8e56c7da7daf6a8f81dc362d76132ee0c96695a1f77ce758a1ab81febd",
+    "unity/Assets/Game/Resources/Home/home-mainline-task-data.json": "cda85dec3150258e4470a2578afc025e4055a3b579b5d22c3c087aa1573ccb7f",
+    "unity/Assets/Game/Resources/Home/home-mainline-task-data.json.meta": "d87797d2cd531dde746c735339f600b9c710a2757a2673a80771b83eb2428cc8",
+    "unity/Assets/Game/Resources/Home/home-mainline-task-data-hash.json": "b4be9f48ccc879ac32d6cfcee5c3f706ec3ae15a5916fb4b865424af8b338f3c",
+    "unity/Assets/Game/Resources/Home/home-mainline-task-data-hash.json.meta": "821918035dae8bbde857e58dcef00d72341e22d3f51c362f71154f28cdb60e2a",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Money/Money_1.asset": "22272d91c129e679808a5ce27e7fbdaf24dcda32d19deb1cb0e1c311b23e4506",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Money/Money_2.asset": "61ce975d9f66f02b69c84f40a6f20add289a096ea58284a4580b6d19b18e5689",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Money/Money_50_Exp.asset": "59545475b18598f1d9a904ebac4707542850e15649f95cb80e2d187cfb8540dc",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Other/Common_NoAtlas/item_110.asset": "6cfa4bdad28e706386983d0089b37ed85518f0e2de5f6d1ba380aa73a26f870e",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Other/Common_NoAtlas/item_120.asset": "11b3b0879802a37ccf1f436fabf96fcdeac6d45375420a6493f952cac8fd5810",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Materials/Public_NoAtlas/item_41300.asset": "4683b79d2bf03d33ff65a28267337c165b9e1404712ea2f01d32aeb32c659426",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Materials/Public_NoAtlas/item_42200.asset": "7e496e46f95f86f72aad600835b5ea8eb04a5c53356aa857e2f83f2bb620b2d4",
+    "scripts/prepare_home_bottom_bar_native.py": "7493cb58fa87b2df692580467bd2912c2e77906acf7a17977f53f2b261b62fdb",
+    "scripts/prepare_partner_card_native.py": "5ad35ae36dafa53961576f3c5b2a2c76eddfb98a398c74fba96a4697ef464093"
+  },
+  "items": {
+    "1": {
+      "item": {
+        "ClassId": 1,
+        "Name": "罗拉",
+        "RawIcon": "ItemIcon/Money/Money_1",
+        "ShowPieceIcon": false,
+        "IconEffect": "",
+        "ItemType": 1,
+        "Rank": -1,
+        "Quality": 1,
+        "ElementType": 0,
+        "Price": {},
+        "CanRepeat": true,
+        "AgioItemId": 0,
+        "AgioAmount": 0,
+        "AgioRuleIdList": null,
+        "CanDrop": false,
+        "CanDropWhenExist": true,
+        "ShowInBag": false,
+        "CanOverlap": true,
+        "CanUse": false,
+        "CanUseInBatches": false,
+        "ItemUseEffectType": 0,
+        "Effects": null,
+        "ShowUseDetail": false,
+        "ShowPlayerItemCount": true,
+        "LimitRank": 1,
+        "RedDotType": 0,
+        "RecycleReward": null,
+        "IsShowGained": false,
+        "RecycleGroupCount": 1
+      },
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "2a02f9075b01e0df1fd0c89ff3c233e1",
+        "type": 2
+      },
+      "manifest_asset": {
+        "address": "",
+        "path": "Assets/Image/ItemIcon/Money/Money_1.png",
+        "guid": "0f85c412030daf2458cdcd6be8ccee9d",
+        "tags": [
+          "Payd_Base"
+        ],
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle"
+      },
+      "original": "cab-b5a2329109d335362da2fa10810f72cc:5761828038581910475",
+      "original_sha256": "3c92b32c3a066e11d39c90cce33918eac4ea8b2c3cf9974f02ebd6ca66dc1eab",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "path_id": "5761828038581910475",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/348a851cea75e759e4eca75d7d5e065c.bundle",
+        "raw_size": 1039317,
+        "raw_sha256": "47a14d322e76812a3155d06df7cb619dcec80011343768ef75787d7699e224c0"
+      }
+    },
+    "2": {
+      "item": {
+        "ClassId": 2,
+        "Name": "晨星",
+        "RawIcon": "ItemIcon/Money/Money_2",
+        "ShowPieceIcon": false,
+        "IconEffect": "",
+        "ItemType": 1,
+        "Rank": -1,
+        "Quality": 3,
+        "ElementType": 0,
+        "Price": {
+          "1": 50.0
+        },
+        "CanRepeat": true,
+        "AgioItemId": 0,
+        "AgioAmount": 0,
+        "AgioRuleIdList": null,
+        "CanDrop": false,
+        "CanDropWhenExist": true,
+        "ShowInBag": false,
+        "CanOverlap": true,
+        "CanUse": false,
+        "CanUseInBatches": false,
+        "ItemUseEffectType": 0,
+        "Effects": null,
+        "ShowUseDetail": false,
+        "ShowPlayerItemCount": true,
+        "LimitRank": 1,
+        "RedDotType": 0,
+        "RecycleReward": null,
+        "IsShowGained": false,
+        "RecycleGroupCount": 1
+      },
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "0acd9fceb8fb098e1e2e0eba2bd6b89c",
+        "type": 2
+      },
+      "manifest_asset": {
+        "address": "",
+        "path": "Assets/Image/ItemIcon/Money/Money_2.png",
+        "guid": "fab287af3e78b3a409d13ee35f7d140d",
+        "tags": [
+          "Payd_Base"
+        ],
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle"
+      },
+      "original": "cab-b5a2329109d335362da2fa10810f72cc:-3862688298953974756",
+      "original_sha256": "10ec9769e6de8639515671035ad84e9ba949477ac8c0ec33ed9bd1ec9da8f313",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "path_id": "-3862688298953974756",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/348a851cea75e759e4eca75d7d5e065c.bundle",
+        "raw_size": 1039317,
+        "raw_sha256": "47a14d322e76812a3155d06df7cb619dcec80011343768ef75787d7699e224c0"
+      }
+    },
+    "50": {
+      "item": {
+        "ClassId": 50,
+        "Name": "经验",
+        "RawIcon": "ItemIcon/Money/Money_50_Exp",
+        "ShowPieceIcon": false,
+        "IconEffect": "",
+        "ItemType": 50,
+        "Rank": -1,
+        "Quality": 2,
+        "ElementType": 0,
+        "Price": {},
+        "CanRepeat": true,
+        "AgioItemId": 0,
+        "AgioAmount": 0,
+        "AgioRuleIdList": null,
+        "CanDrop": false,
+        "CanDropWhenExist": true,
+        "ShowInBag": false,
+        "CanOverlap": true,
+        "CanUse": false,
+        "CanUseInBatches": false,
+        "ItemUseEffectType": 0,
+        "Effects": null,
+        "ShowUseDetail": false,
+        "ShowPlayerItemCount": true,
+        "LimitRank": 1,
+        "RedDotType": 0,
+        "RecycleReward": null,
+        "IsShowGained": false,
+        "RecycleGroupCount": 1
+      },
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "c7066cb3e5e9b5940ca774663a91ec51",
+        "type": 2
+      },
+      "manifest_asset": {
+        "address": "",
+        "path": "Assets/Image/ItemIcon/Money/Money_50_Exp.png",
+        "guid": "5957a7a9dc56776459e1fe29d77339cc",
+        "tags": [
+          "Payd_Base"
+        ],
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle"
+      },
+      "original": "cab-b5a2329109d335362da2fa10810f72cc:-7781160536752233315",
+      "original_sha256": "e9defdaf90c8e0e3be58bc1b8491cc94e411138409cc04a88d6233babae62ca8",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "path_id": "-7781160536752233315",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/348a851cea75e759e4eca75d7d5e065c.bundle",
+        "raw_size": 1039317,
+        "raw_sha256": "47a14d322e76812a3155d06df7cb619dcec80011343768ef75787d7699e224c0"
+      }
+    },
+    "110": {
+      "item": {
+        "ClassId": 110,
+        "Name": "星之愿",
+        "RawIcon": "ItemIcon/Other/item_110",
+        "ShowPieceIcon": false,
+        "IconEffect": "",
+        "ItemType": 412,
+        "Rank": -1,
+        "Quality": 4,
+        "ElementType": 0,
+        "Price": {
+          "2": 100.0
+        },
+        "CanRepeat": true,
+        "AgioItemId": 0,
+        "AgioAmount": 0,
+        "AgioRuleIdList": null,
+        "CanDrop": false,
+        "CanDropWhenExist": true,
+        "ShowInBag": true,
+        "CanOverlap": true,
+        "CanUse": false,
+        "CanUseInBatches": false,
+        "ItemUseEffectType": 0,
+        "Effects": null,
+        "ShowUseDetail": false,
+        "ShowPlayerItemCount": true,
+        "LimitRank": 1,
+        "RedDotType": 0,
+        "RecycleReward": null,
+        "IsShowGained": false,
+        "RecycleGroupCount": 1
+      },
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "37a4c21caed48476489e2370f7da637a",
+        "type": 2
+      },
+      "manifest_asset": {
+        "address": "Assets/Image/ItemIcon/Other/item_110",
+        "path": "Assets/Image/ItemIcon/Other/Common_NoAtlas/item_110.png",
+        "guid": "df87eecbb4def3a4cb1e12e9abcb5e89",
+        "tags": [
+          "Payd_Priority"
+        ],
+        "bundle": "defaultpackage_assets_image_itemicon_other_common_noatlas.bundle"
+      },
+      "original": "cab-48f3ad435856023375957789a17305e0:3302109337942599336",
+      "original_sha256": "94a06baa3a48427f7c94196dea5a25728eb589d30abc0ece1e6110de4bf32031",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_other_common_noatlas.bundle",
+        "bundle_hash": "1bfdffbf8561b029ace6e16b986176fe",
+        "path_id": "3302109337942599336",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/1bfdffbf8561b029ace6e16b986176fe.bundle",
+        "raw_size": 916538,
+        "raw_sha256": "2cb8469d52f67bc7fd8341e025191735ff8ee16253a6f4f53b4fbfebe7fb0bd0"
+      }
+    },
+    "120": {
+      "item": {
+        "ClassId": 120,
+        "Name": "时间结晶",
+        "RawIcon": "ItemIcon/Other/item_120",
+        "ShowPieceIcon": false,
+        "IconEffect": "",
+        "ItemType": 315,
+        "Rank": -1,
+        "Quality": 4,
+        "ElementType": 0,
+        "Price": {
+          "2": 400.0
+        },
+        "CanRepeat": true,
+        "AgioItemId": 0,
+        "AgioAmount": 0,
+        "AgioRuleIdList": null,
+        "CanDrop": true,
+        "CanDropWhenExist": true,
+        "ShowInBag": true,
+        "CanOverlap": true,
+        "CanUse": true,
+        "CanUseInBatches": false,
+        "ItemUseEffectType": 2,
+        "Effects": null,
+        "ShowUseDetail": false,
+        "ShowPlayerItemCount": true,
+        "LimitRank": 1,
+        "RedDotType": 0,
+        "RecycleReward": null,
+        "IsShowGained": false,
+        "RecycleGroupCount": 1
+      },
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "6f5b2a7a29b46bbec86be076d988727e",
+        "type": 2
+      },
+      "manifest_asset": {
+        "address": "Assets/Image/ItemIcon/Other/item_120",
+        "path": "Assets/Image/ItemIcon/Other/Common_NoAtlas/item_120.png",
+        "guid": "da43b79a80eb5bf49a758684622e6334",
+        "tags": [],
+        "bundle": "defaultpackage_assets_image_itemicon_other_common_noatlas.bundle"
+      },
+      "original": "cab-48f3ad435856023375957789a17305e0:-4179341034927624748",
+      "original_sha256": "f17ead5c67ab56b4d568cee310b6387bc5ffc1c1e195f5141abe1c884ffb6d93",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_other_common_noatlas.bundle",
+        "bundle_hash": "1bfdffbf8561b029ace6e16b986176fe",
+        "path_id": "-4179341034927624748",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/1bfdffbf8561b029ace6e16b986176fe.bundle",
+        "raw_size": 916538,
+        "raw_sha256": "2cb8469d52f67bc7fd8341e025191735ff8ee16253a6f4f53b4fbfebe7fb0bd0"
+      }
+    },
+    "41300": {
+      "item": {
+        "ClassId": 41300,
+        "Name": "粗炼石",
+        "RawIcon": "ItemIcon/Materials/item_41300",
+        "ShowPieceIcon": false,
+        "IconEffect": "",
+        "ItemType": 300,
+        "Rank": -1,
+        "Quality": 1,
+        "ElementType": 0,
+        "Price": {
+          "1": 10.0
+        },
+        "CanRepeat": true,
+        "AgioItemId": 0,
+        "AgioAmount": 0,
+        "AgioRuleIdList": null,
+        "CanDrop": true,
+        "CanDropWhenExist": true,
+        "ShowInBag": true,
+        "CanOverlap": true,
+        "CanUse": false,
+        "CanUseInBatches": false,
+        "ItemUseEffectType": 0,
+        "Effects": null,
+        "ShowUseDetail": false,
+        "ShowPlayerItemCount": true,
+        "LimitRank": 1,
+        "RedDotType": 0,
+        "RecycleReward": null,
+        "IsShowGained": false,
+        "RecycleGroupCount": 1
+      },
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "45c103a0b1dc573da382549db5a3e6e3",
+        "type": 2
+      },
+      "manifest_asset": {
+        "address": "Assets/Image/ItemIcon/Materials/item_41300",
+        "path": "Assets/Image/ItemIcon/Materials/Public_NoAtlas/item_41300.png",
+        "guid": "ad924d61a96a2554e8b8cc1b10c52581",
+        "tags": [
+          "Payd_Base"
+        ],
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle"
+      },
+      "original": "cab-c2f7fdf449f109a79532348b6fe94235:9045594290410485634",
+      "original_sha256": "bc379e3692462b50cb2d5ec6c402c6876a1e3df2c119e1f7e839862c9324dd59",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+        "bundle_hash": "e9d920b114d4b6e29119b6fda545133a",
+        "path_id": "9045594290410485634",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/e9d920b114d4b6e29119b6fda545133a.bundle",
+        "raw_size": 518666,
+        "raw_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822"
+      }
+    },
+    "42200": {
+      "item": {
+        "ClassId": 42200,
+        "Name": "历战精华",
+        "RawIcon": "ItemIcon/Materials/item_42200",
+        "ShowPieceIcon": false,
+        "IconEffect": "",
+        "ItemType": 321,
+        "Rank": 1,
+        "Quality": 1,
+        "ElementType": 0,
+        "Price": {
+          "1": 8.0
+        },
+        "CanRepeat": true,
+        "AgioItemId": 0,
+        "AgioAmount": 0,
+        "AgioRuleIdList": null,
+        "CanDrop": true,
+        "CanDropWhenExist": true,
+        "ShowInBag": true,
+        "CanOverlap": true,
+        "CanUse": false,
+        "CanUseInBatches": false,
+        "ItemUseEffectType": 0,
+        "Effects": null,
+        "ShowUseDetail": false,
+        "ShowPlayerItemCount": true,
+        "LimitRank": 1,
+        "RedDotType": 0,
+        "RecycleReward": null,
+        "IsShowGained": false,
+        "RecycleGroupCount": 1
+      },
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "99f451a53d69b56cfffca647e0c338af",
+        "type": 2
+      },
+      "manifest_asset": {
+        "address": "Assets/Image/ItemIcon/Materials/item_42200",
+        "path": "Assets/Image/ItemIcon/Materials/Public_NoAtlas/item_42200.png",
+        "guid": "0f4e37b3c9b77224aa1eac2c8964328e",
+        "tags": [
+          "Payd_Base"
+        ],
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle"
+      },
+      "original": "cab-c2f7fdf449f109a79532348b6fe94235:-2671910157182790457",
+      "original_sha256": "bb6a2dd35593b834b47245d173e8e1b5f54b1629b081058a8501a5abe55275b7",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+        "bundle_hash": "e9d920b114d4b6e29119b6fda545133a",
+        "path_id": "-2671910157182790457",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/e9d920b114d4b6e29119b6fda545133a.bundle",
+        "raw_size": 518666,
+        "raw_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822"
+      }
+    }
+  },
+  "objects": {
+    "cab-b5a2329109d335362da2fa10810f72cc:5761828038581910475": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "path_id": "5761828038581910475",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/348a851cea75e759e4eca75d7d5e065c.bundle",
+        "raw_size": 1039317,
+        "raw_sha256": "47a14d322e76812a3155d06df7cb619dcec80011343768ef75787d7699e224c0"
+      },
+      "type": "Sprite",
+      "original_sha256": "3c92b32c3a066e11d39c90cce33918eac4ea8b2c3cf9974f02ebd6ca66dc1eab",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Money/Money_1.asset",
+      "output": "Image/ItemIcon/Money/Money_1.asset",
+      "guid": "2a02f9075b01e0df1fd0c89ff3c233e1",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-b5a2329109d335362da2fa10810f72cc:-3862688298953974756": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "path_id": "-3862688298953974756",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/348a851cea75e759e4eca75d7d5e065c.bundle",
+        "raw_size": 1039317,
+        "raw_sha256": "47a14d322e76812a3155d06df7cb619dcec80011343768ef75787d7699e224c0"
+      },
+      "type": "Sprite",
+      "original_sha256": "10ec9769e6de8639515671035ad84e9ba949477ac8c0ec33ed9bd1ec9da8f313",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Money/Money_2.asset",
+      "output": "Image/ItemIcon/Money/Money_2.asset",
+      "guid": "0acd9fceb8fb098e1e2e0eba2bd6b89c",
+      "geometry": {
+        "vertices": 8,
+        "index_bytes": 36,
+        "index_sha256": "56cb1d23abd65681f2d523219b8f9e3c8cd422a107f2066f5943b447e42316fd"
+      }
+    },
+    "cab-b5a2329109d335362da2fa10810f72cc:-7781160536752233315": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "path_id": "-7781160536752233315",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/348a851cea75e759e4eca75d7d5e065c.bundle",
+        "raw_size": 1039317,
+        "raw_sha256": "47a14d322e76812a3155d06df7cb619dcec80011343768ef75787d7699e224c0"
+      },
+      "type": "Sprite",
+      "original_sha256": "e9defdaf90c8e0e3be58bc1b8491cc94e411138409cc04a88d6233babae62ca8",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Money/Money_50_Exp.asset",
+      "output": "Image/ItemIcon/Money/Money_50_Exp.asset",
+      "guid": "c7066cb3e5e9b5940ca774663a91ec51",
+      "geometry": {
+        "vertices": 9,
+        "index_bytes": 42,
+        "index_sha256": "89fbc44c3dc1dd4bcd0d162dd496fe101d6099d515f9c0340ba09366ada5d2c1"
+      }
+    },
+    "cab-48f3ad435856023375957789a17305e0:3302109337942599336": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_other_common_noatlas.bundle",
+        "bundle_hash": "1bfdffbf8561b029ace6e16b986176fe",
+        "path_id": "3302109337942599336",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/1bfdffbf8561b029ace6e16b986176fe.bundle",
+        "raw_size": 916538,
+        "raw_sha256": "2cb8469d52f67bc7fd8341e025191735ff8ee16253a6f4f53b4fbfebe7fb0bd0"
+      },
+      "type": "Sprite",
+      "original_sha256": "94a06baa3a48427f7c94196dea5a25728eb589d30abc0ece1e6110de4bf32031",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Other/Common_NoAtlas/item_110.asset",
+      "output": "Image/ItemIcon/Other/Common_NoAtlas/item_110.asset",
+      "guid": "37a4c21caed48476489e2370f7da637a",
+      "geometry": {
+        "vertices": 10,
+        "index_bytes": 48,
+        "index_sha256": "83682ca3d7e0bae273be2ecd40851df7c826515c69eeea64a8dfa54ffc87da98"
+      }
+    },
+    "cab-48f3ad435856023375957789a17305e0:-4179341034927624748": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_other_common_noatlas.bundle",
+        "bundle_hash": "1bfdffbf8561b029ace6e16b986176fe",
+        "path_id": "-4179341034927624748",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/1bfdffbf8561b029ace6e16b986176fe.bundle",
+        "raw_size": 916538,
+        "raw_sha256": "2cb8469d52f67bc7fd8341e025191735ff8ee16253a6f4f53b4fbfebe7fb0bd0"
+      },
+      "type": "Sprite",
+      "original_sha256": "f17ead5c67ab56b4d568cee310b6387bc5ffc1c1e195f5141abe1c884ffb6d93",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Other/Common_NoAtlas/item_120.asset",
+      "output": "Image/ItemIcon/Other/Common_NoAtlas/item_120.asset",
+      "guid": "6f5b2a7a29b46bbec86be076d988727e",
+      "geometry": {
+        "vertices": 12,
+        "index_bytes": 60,
+        "index_sha256": "9ddc708fa4c3830fbb9a54b5737f7589650beaad0205c55f9000a3a7f19adc14"
+      }
+    },
+    "cab-c2f7fdf449f109a79532348b6fe94235:9045594290410485634": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+        "bundle_hash": "e9d920b114d4b6e29119b6fda545133a",
+        "path_id": "9045594290410485634",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/e9d920b114d4b6e29119b6fda545133a.bundle",
+        "raw_size": 518666,
+        "raw_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822"
+      },
+      "type": "Sprite",
+      "original_sha256": "bc379e3692462b50cb2d5ec6c402c6876a1e3df2c119e1f7e839862c9324dd59",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Materials/Public_NoAtlas/item_41300.asset",
+      "output": "Image/ItemIcon/Materials/Public_NoAtlas/item_41300.asset",
+      "guid": "45c103a0b1dc573da382549db5a3e6e3",
+      "geometry": {
+        "vertices": 10,
+        "index_bytes": 48,
+        "index_sha256": "1d8282739f104bfabb1b04fd4cb4ec9c3e38b9497f637565a8490c7b90124fa2"
+      }
+    },
+    "cab-c2f7fdf449f109a79532348b6fe94235:-2671910157182790457": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+        "bundle_hash": "e9d920b114d4b6e29119b6fda545133a",
+        "path_id": "-2671910157182790457",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/e9d920b114d4b6e29119b6fda545133a.bundle",
+        "raw_size": 518666,
+        "raw_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822"
+      },
+      "type": "Sprite",
+      "original_sha256": "bb6a2dd35593b834b47245d173e8e1b5f54b1629b081058a8501a5abe55275b7",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Materials/Public_NoAtlas/item_42200.asset",
+      "output": "Image/ItemIcon/Materials/Public_NoAtlas/item_42200.asset",
+      "guid": "99f451a53d69b56cfffca647e0c338af",
+      "geometry": {
+        "vertices": 11,
+        "index_bytes": 54,
+        "index_sha256": "b7a6ac851fcbb603d90f791070298a32d8bd776e5a19f8f7d62982348ea0edc0"
+      }
+    },
+    "cab-b5a2329109d335362da2fa10810f72cc:9043218567503510475": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "path_id": "9043218567503510475",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/348a851cea75e759e4eca75d7d5e065c.bundle",
+        "raw_size": 1039317,
+        "raw_sha256": "47a14d322e76812a3155d06df7cb619dcec80011343768ef75787d7699e224c0"
+      },
+      "type": "Texture2D",
+      "original_sha256": "46a26bb6c26539926fb445889a78e973ad0a64f64fb12d35a361ab5d320d1ee0",
+      "native_path": null,
+      "output": "Converted/7d459a01380ba650.asset",
+      "guid": "fc1a17969a7fa1380103e5de8cfc8863",
+      "geometry": null
+    },
+    "cab-b5a2329109d335362da2fa10810f72cc:1281160577105812508": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "path_id": "1281160577105812508",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/348a851cea75e759e4eca75d7d5e065c.bundle",
+        "raw_size": 1039317,
+        "raw_sha256": "47a14d322e76812a3155d06df7cb619dcec80011343768ef75787d7699e224c0"
+      },
+      "type": "Texture2D",
+      "original_sha256": "4d75367e3e185ca55dbf3afff085e6be48f7362ac3909fcd00fdecc083e0fae3",
+      "native_path": null,
+      "output": "Converted/e595fdd18d5f4005.asset",
+      "guid": "dcde4914386ad35d5e3b3437e3d6972f",
+      "geometry": null
+    },
+    "cab-b5a2329109d335362da2fa10810f72cc:-3885605718402177891": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "path_id": "-3885605718402177891",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/348a851cea75e759e4eca75d7d5e065c.bundle",
+        "raw_size": 1039317,
+        "raw_sha256": "47a14d322e76812a3155d06df7cb619dcec80011343768ef75787d7699e224c0"
+      },
+      "type": "Texture2D",
+      "original_sha256": "26310df51f255b63553be5b37548d4ff7d8dbed6d32ba98eb9c027b35f5f6a84",
+      "native_path": null,
+      "output": "Converted/05b44e8d8dfdc913.asset",
+      "guid": "b1ba12afa2baa211f5fef42f2799fab7",
+      "geometry": null
+    },
+    "cab-48f3ad435856023375957789a17305e0:-1063394269714798936": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_other_common_noatlas.bundle",
+        "bundle_hash": "1bfdffbf8561b029ace6e16b986176fe",
+        "path_id": "-1063394269714798936",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/1bfdffbf8561b029ace6e16b986176fe.bundle",
+        "raw_size": 916538,
+        "raw_sha256": "2cb8469d52f67bc7fd8341e025191735ff8ee16253a6f4f53b4fbfebe7fb0bd0"
+      },
+      "type": "Texture2D",
+      "original_sha256": "b1e07be6fa798f9305edcee15a74da3e81969b5911bfdabbe6f0c66d17d20edd",
+      "native_path": null,
+      "output": "Converted/030a15fa83fd2b7a.asset",
+      "guid": "aea733e1bb126d8cce2f9be2acd21125",
+      "geometry": null
+    },
+    "cab-48f3ad435856023375957789a17305e0:3317586040577519060": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_other_common_noatlas.bundle",
+        "bundle_hash": "1bfdffbf8561b029ace6e16b986176fe",
+        "path_id": "3317586040577519060",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/1bfdffbf8561b029ace6e16b986176fe.bundle",
+        "raw_size": 916538,
+        "raw_sha256": "2cb8469d52f67bc7fd8341e025191735ff8ee16253a6f4f53b4fbfebe7fb0bd0"
+      },
+      "type": "Texture2D",
+      "original_sha256": "6980509b5793c0ddbfad97a60b240804a14ba076e961e6d8c59f28761951ee83",
+      "native_path": null,
+      "output": "Converted/eb8267727bd3e222.asset",
+      "guid": "e97ce35276072be4cee9af03dc144ab6",
+      "geometry": null
+    },
+    "cab-c2f7fdf449f109a79532348b6fe94235:-5147879143067158654": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+        "bundle_hash": "e9d920b114d4b6e29119b6fda545133a",
+        "path_id": "-5147879143067158654",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/e9d920b114d4b6e29119b6fda545133a.bundle",
+        "raw_size": 518666,
+        "raw_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822"
+      },
+      "type": "Texture2D",
+      "original_sha256": "3570988c26fdac218a898ad30dc9a8a5fb5992386dae717a28c4291d84525774",
+      "native_path": null,
+      "output": "Converted/d9976617d97c0c08.asset",
+      "guid": "e5b51d7cead8cbfa3f4444ec710dd94e",
+      "geometry": null
+    },
+    "cab-c2f7fdf449f109a79532348b6fe94235:5742954697607058631": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+        "bundle_hash": "e9d920b114d4b6e29119b6fda545133a",
+        "path_id": "5742954697607058631",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/e9d920b114d4b6e29119b6fda545133a.bundle",
+        "raw_size": 518666,
+        "raw_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822"
+      },
+      "type": "Texture2D",
+      "original_sha256": "fb76c842de072b5fc064acaaa05f0a69d447e0f15a6bd3f175c96498349526f5",
+      "native_path": null,
+      "output": "Converted/c27f9bb1aef06126.asset",
+      "guid": "e7a721ac8ad764e2697eb77285934e25",
+      "geometry": null
+    }
+  },
+  "outputs": {
+    "Image/ItemIcon/Money/Money_1.asset": "9e89ce37c79f49de0a94eacae784caac83e048b39ab3d4915ec63e5cb51e24dc",
+    "Image/ItemIcon/Money/Money_1.asset.meta": "aa2db925ee004d8e742704ece369b68fb1240c1ff43070bff5cb526db9109a39",
+    "Image/ItemIcon/Money/Money_2.asset": "bc150f57bac4f6b671e5df5cd30ebe5a8d4d74465fefe17da27974b001403c18",
+    "Image/ItemIcon/Money/Money_2.asset.meta": "6dab8a469d447226a3fe8a0ec61351d16216363b84b2ccd6a7ca936f61cbda48",
+    "Image/ItemIcon/Money/Money_50_Exp.asset": "61535e4eeaeeaa2bac5a685f60546795b7f6f4592665622097e5a27714334c6e",
+    "Image/ItemIcon/Money/Money_50_Exp.asset.meta": "4aac106005f00b8e2e17a0ba845e027cb28bd43190c0b8e8cb54b28963d13d7d",
+    "Image/ItemIcon/Other/Common_NoAtlas/item_110.asset": "8c14974c36c4a549295be720e306cfa30369d5386d71602136ca783cd5568407",
+    "Image/ItemIcon/Other/Common_NoAtlas/item_110.asset.meta": "6bd1fd364eb4e62c0f409dfacdeb2077c5ae3ca869fe016f2223c6514e61ab1c",
+    "Image/ItemIcon/Other/Common_NoAtlas/item_120.asset": "8b0366e8de1a8b71bb456c7eb5d803d528f1e254f195fff55d1c12d6edb0dc7e",
+    "Image/ItemIcon/Other/Common_NoAtlas/item_120.asset.meta": "50ba988ab2d9e91e4d82631c559b5ae5eb83b23bc8dc506370d3922ddcb258ff",
+    "Image/ItemIcon/Materials/Public_NoAtlas/item_41300.asset": "1e23923ef3529a374c6b92d3b566fd8b710df3d089b5250d235db1fe0077a0d3",
+    "Image/ItemIcon/Materials/Public_NoAtlas/item_41300.asset.meta": "501674619c2ce6d77ad814122d7677f73ef45d53031d795f0db5e3d0d95a11ca",
+    "Image/ItemIcon/Materials/Public_NoAtlas/item_42200.asset": "1da407f50efb9346e64615f2964f391d684a2350e9b9dab29e1a576bf8741dc5",
+    "Image/ItemIcon/Materials/Public_NoAtlas/item_42200.asset.meta": "c75fba103aa6bb8313d6c2c61c3627a3eb0093dd920427132ae5306b9013ebe1",
+    "Converted/7d459a01380ba650.asset": "12e3272990f2778bf47ca78fedbe58040a7d111fc53970ea7bef4abb97ead802",
+    "Converted/7d459a01380ba650.asset.meta": "09234d830a93b0643d49799e6de667f3efcf1b8fee74818f03907032f9d41246",
+    "Converted/e595fdd18d5f4005.asset": "6ef818cc60fd264c09afb7a06c402040b7bb714c067e31c4f6d143dabd3b08ca",
+    "Converted/e595fdd18d5f4005.asset.meta": "5e3eb090a18612565ebdfdc4969d8dcf6640c2c2d8204a2d8a2767d6d4e29f00",
+    "Converted/05b44e8d8dfdc913.asset": "efd1aad531a7f7090da08ae382c1141d6c0bb45b691475060767f5a13ba20258",
+    "Converted/05b44e8d8dfdc913.asset.meta": "405a8947cdee85b710a4aac862d043094b0950089c52c8086f9864e140c8cfdd",
+    "Converted/030a15fa83fd2b7a.asset": "bd8ad57fe88482a98465edb6e9ce9c7e6a9bac57380756fc705d4fb709e0ba96",
+    "Converted/030a15fa83fd2b7a.asset.meta": "5e0712ac0a22589855d1f368e2168c554c44f2323d122effaad0440ae8b7e6c3",
+    "Converted/eb8267727bd3e222.asset": "2332650c513dc0e44be0ec6838ac4064ea9b88283d5eaf7253405c76de1dd551",
+    "Converted/eb8267727bd3e222.asset.meta": "a56482b88a6f35608a13e4b047dcb610e5d0df69133396fb792043e8ced285d0",
+    "Converted/d9976617d97c0c08.asset": "d55a2876b793b09216c757c3ee8104fa730c60831e25b66bdc7905027d417e49",
+    "Converted/d9976617d97c0c08.asset.meta": "eeea7204dbaff2a028a96fc4fc2ffa372b14287fdabd0954454c03e36de76bea",
+    "Converted/c27f9bb1aef06126.asset": "2fd4f45e70ce32a3335e7776ba7a431d077bc23cb869a0ce2f8b1696f70c8ee2",
+    "Converted/c27f9bb1aef06126.asset.meta": "b8333e491de1a35d068d1264099483ed1a787a8766c493220e8c13bc9ec0c2ee"
+  },
+  "scope": "Seven selected native reward sprites and Windows texture dependencies, explicitly bound by Resources catalog. All seven original item types select the default ItemIcon prefab; runtime pool forwards original icon behavior. Live task-row transactions and production detail-window integration remain required.",
+  "installed_output_sha256": {
+    "unity/Assets/Official/Home/UI/TaskRewards/Image/ItemIcon/Other/Common_NoAtlas/item_110.asset": "8c14974c36c4a549295be720e306cfa30369d5386d71602136ca783cd5568407",
+    "unity/Assets/Official/Home/UI/TaskRewards/Image/ItemIcon/Other/Common_NoAtlas/item_110.asset.meta": "6bd1fd364eb4e62c0f409dfacdeb2077c5ae3ca869fe016f2223c6514e61ab1c",
+    "unity/Assets/Official/Home/UI/TaskRewards/Image/ItemIcon/Other/Common_NoAtlas/item_120.asset": "8b0366e8de1a8b71bb456c7eb5d803d528f1e254f195fff55d1c12d6edb0dc7e",
+    "unity/Assets/Official/Home/UI/TaskRewards/Image/ItemIcon/Other/Common_NoAtlas/item_120.asset.meta": "50ba988ab2d9e91e4d82631c559b5ae5eb83b23bc8dc506370d3922ddcb258ff",
+    "unity/Assets/Official/Home/UI/TaskRewards/Image/ItemIcon/Materials/Public_NoAtlas/item_41300.asset": "1e23923ef3529a374c6b92d3b566fd8b710df3d089b5250d235db1fe0077a0d3",
+    "unity/Assets/Official/Home/UI/TaskRewards/Image/ItemIcon/Materials/Public_NoAtlas/item_41300.asset.meta": "501674619c2ce6d77ad814122d7677f73ef45d53031d795f0db5e3d0d95a11ca",
+    "unity/Assets/Official/Home/UI/TaskRewards/Image/ItemIcon/Materials/Public_NoAtlas/item_42200.asset": "1da407f50efb9346e64615f2964f391d684a2350e9b9dab29e1a576bf8741dc5",
+    "unity/Assets/Official/Home/UI/TaskRewards/Image/ItemIcon/Materials/Public_NoAtlas/item_42200.asset.meta": "c75fba103aa6bb8313d6c2c61c3627a3eb0093dd920427132ae5306b9013ebe1",
+    "unity/Assets/Official/Home/UI/TaskRewards/Converted/030a15fa83fd2b7a.asset": "bd8ad57fe88482a98465edb6e9ce9c7e6a9bac57380756fc705d4fb709e0ba96",
+    "unity/Assets/Official/Home/UI/TaskRewards/Converted/030a15fa83fd2b7a.asset.meta": "5e0712ac0a22589855d1f368e2168c554c44f2323d122effaad0440ae8b7e6c3",
+    "unity/Assets/Official/Home/UI/TaskRewards/Converted/eb8267727bd3e222.asset": "2332650c513dc0e44be0ec6838ac4064ea9b88283d5eaf7253405c76de1dd551",
+    "unity/Assets/Official/Home/UI/TaskRewards/Converted/eb8267727bd3e222.asset.meta": "a56482b88a6f35608a13e4b047dcb610e5d0df69133396fb792043e8ced285d0",
+    "unity/Assets/Official/Home/UI/TaskRewards/Converted/d9976617d97c0c08.asset": "d55a2876b793b09216c757c3ee8104fa730c60831e25b66bdc7905027d417e49",
+    "unity/Assets/Official/Home/UI/TaskRewards/Converted/d9976617d97c0c08.asset.meta": "eeea7204dbaff2a028a96fc4fc2ffa372b14287fdabd0954454c03e36de76bea",
+    "unity/Assets/Official/Home/UI/TaskRewards/Converted/c27f9bb1aef06126.asset": "2fd4f45e70ce32a3335e7776ba7a431d077bc23cb869a0ce2f8b1696f70c8ee2",
+    "unity/Assets/Official/Home/UI/TaskRewards/Converted/c27f9bb1aef06126.asset.meta": "b8333e491de1a35d068d1264099483ed1a787a8766c493220e8c13bc9ec0c2ee",
+    "unity/Assets/Official/Home/UI/TaskRewards.meta": "f9b60d8157208e7445af0f7c9dd8d74b00acab9eabd748fdbfb74d0fad5d27f7",
+    "unity/Assets/Official/Home/UI/TaskRewards/Converted.meta": "ff5fe3f931c9db4fdca38c096446f37cd349bb5caf0ef5436022c28643c8025c",
+    "unity/Assets/Official/Home/UI/TaskRewards/Image.meta": "2f64c038a200248cdc61acc4468501ef75a6b864cc6a0aa4c2bf56b9b5bc8fdf",
+    "unity/Assets/Official/Home/UI/TaskRewards/Image/ItemIcon.meta": "908a0f72c6ac92d02d42305851c3fc1f3052fe5503dffc9488ea781d612a7cad",
+    "unity/Assets/Official/Home/UI/TaskRewards/Image/ItemIcon/Materials.meta": "23626032ec9d2f0af25217b9c3bdaf10c3582a207072e83815faaf38a4b79482",
+    "unity/Assets/Official/Home/UI/TaskRewards/Image/ItemIcon/Materials/Public_NoAtlas.meta": "e8cda49183e3cc2f863be3157d3a11ae1c67ac262531af40afcbfcc6e31d2e61",
+    "unity/Assets/Official/Home/UI/TaskRewards/Image/ItemIcon/Other.meta": "c939879ac4fe16090be31ee4d843e932b014cf90b29f9cae69a6a6b0489a58eb",
+    "unity/Assets/Official/Home/UI/TaskRewards/Image/ItemIcon/Other/Common_NoAtlas.meta": "28ded0378d066cbbbc46e00041c52bc0bf09c4cb8f8ea0c8adeb3d5bdbab3a51",
+    "unity/Assets/Game/Resources/Home/OfflineHomeTaskRewardImages.asset": "759fa424461b958a5ae77c9030b8eaa83b8a3cb4c6f3baaf4c9eda2e88861b6e",
+    "unity/Assets/Game/Resources/Home/OfflineHomeTaskRewardImages.asset.meta": "14fe694aee38f1b9fd4769a9ac563ee4822c0d718e5686707a12eaf9bc353dc5"
+  },
+  "reused_output_sha256": {
+    "unity/Assets/Official/Home/UI/TopBar/Image/ItemIcon/Money/Money_1.asset": "9e89ce37c79f49de0a94eacae784caac83e048b39ab3d4915ec63e5cb51e24dc",
+    "unity/Assets/Official/Home/UI/TopBar/Image/ItemIcon/Money/Money_1.asset.meta": "aa2db925ee004d8e742704ece369b68fb1240c1ff43070bff5cb526db9109a39",
+    "unity/Assets/Official/Home/UI/TopBar/Image/ItemIcon/Money/Money_2.asset": "bc150f57bac4f6b671e5df5cd30ebe5a8d4d74465fefe17da27974b001403c18",
+    "unity/Assets/Official/Home/UI/TopBar/Image/ItemIcon/Money/Money_2.asset.meta": "6dab8a469d447226a3fe8a0ec61351d16216363b84b2ccd6a7ca936f61cbda48",
+    "unity/Assets/Official/Home/UI/SceneGuider/Image/ItemIcon/Money/Money_50_Exp.asset": "61535e4eeaeeaa2bac5a685f60546795b7f6f4592665622097e5a27714334c6e",
+    "unity/Assets/Official/Home/UI/SceneGuider/Image/ItemIcon/Money/Money_50_Exp.asset.meta": "4aac106005f00b8e2e17a0ba845e027cb28bd43190c0b8e8cb54b28963d13d7d",
+    "unity/Assets/Official/Home/UI/TopBar/Converted/7d459a01380ba650.asset": "12e3272990f2778bf47ca78fedbe58040a7d111fc53970ea7bef4abb97ead802",
+    "unity/Assets/Official/Home/UI/TopBar/Converted/7d459a01380ba650.asset.meta": "09234d830a93b0643d49799e6de667f3efcf1b8fee74818f03907032f9d41246",
+    "unity/Assets/Official/Home/UI/TopBar/Converted/e595fdd18d5f4005.asset": "6ef818cc60fd264c09afb7a06c402040b7bb714c067e31c4f6d143dabd3b08ca",
+    "unity/Assets/Official/Home/UI/TopBar/Converted/e595fdd18d5f4005.asset.meta": "5e3eb090a18612565ebdfdc4969d8dcf6640c2c2d8204a2d8a2767d6d4e29f00",
+    "unity/Assets/Official/Home/UI/SceneGuider/Converted/05b44e8d8dfdc913.asset": "efd1aad531a7f7090da08ae382c1141d6c0bb45b691475060767f5a13ba20258",
+    "unity/Assets/Official/Home/UI/SceneGuider/Converted/05b44e8d8dfdc913.asset.meta": "405a8947cdee85b710a4aac862d043094b0950089c52c8086f9864e140c8cfdd"
+  },
+  "binding_generator_sha256": "430a9b7522ef9fb452783d8263ed6ba2c217f684eb51adcc93ef418315e1a64a",
+  "binding_inputs": {
+    "assets/reference/home-currency-windows-native-source-manifest.json": "5bc8952d32ea17a2817f191b9870410b6e7a8c33e0feb15945227e1d49cbe79b",
+    "scripts/prepare_home_task_reward_validation.py": "0dd58b55d7ba4209c04feed8236ee2956a9fca22f96aca664c84714910ea2b4d",
+    "scripts/prepare_home_currency_windows_validation.py": "031a6a30d674a6256703848f835239dd95d737310de49cbf2962b5f319e07a65",
+    "scripts/fixtures/home_task_reward_icons_native_validation.cs": "7e0ec3bbc6975144b56113bbec8c8dfc6efa415ec2c959011565d24337941243",
+    "scripts/fixtures/home_currency_windows_native_validation.cs": "26f73e97421cf57371cfe9dad322eae22e8958ec09a8baf172730f9d18605129",
+    ".tools/source-packages/current/884_156692/official-code/client-source/ItemIconManager.cs": "24894a89c84c26923a1285f363133709fa7ee9f659d5e3dd0b1346ddc9109ebc",
+    ".tools/source-packages/current/884_156692/official-code/client-source/UIUtils.cs": "b6a88b20df5a8222afafd086f2ae949a5dc661380901bfed6f92449802f57fcf",
+    ".tools/source-packages/current/884_156692/official-code/client-source/ItemIcon.cs": "b2bd1ddd43a412dce54808821e5895953a0b693708ad82d6ee4a3a74020901f2"
+  },
+  "runtime_output_sha256": {
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI.meta": "2aec34eab45d162acdae4fe95f37934664569bfadfe77f2fd64f5acfceb2a078",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskRewardIcon.cs": "a89bab197db4f53a71af335251ecdcaecf0112846493023066b2a00dbb862a4a",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskRewardIcon.cs.meta": "3296d532b0ea6f76619414ef593e9b42fb8dbed6a5c170557887338a07c2031a",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskRewardIcons.cs": "2f57a93247fce2eac97ac60a384db4845cfad6b0c9040e5332a48597c6de86e6",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskRewardIcons.cs.meta": "e61b37d052614ccdfc2db93ca821a8a9b75939a0c9eaff5010296dffd3b1ebf1",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/Zjcs.Offline.HomeTaskUI.asmdef": "2aa93ee42bb3b58fe3337b584a1f8060c3f96fb7bf9c3cbb4557e580a4431e6f",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/Zjcs.Offline.HomeTaskUI.asmdef.meta": "147c40297596cfd628b1add813470a4a2306577e134d67ea46e82d4f90be2bfe"
+  }
+}
