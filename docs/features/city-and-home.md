@@ -183,6 +183,10 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 ### 家园运行层接入
 
+所选 `MainCanvas` 的完整 `HomeUI` 子树已恢复为 `Assets/Official/Home/UI/Hud/HomeHud.prefab`。原 923 个对象中，按已确认的[离线范围](offline-access.md)及[设置范围](settings-and-save.md)移除队伍小面板、申请确认、聊天小窗和快捷聊天四棵子树，保留 651 个对象；裁剪只移除对应子树及其引用，其他原坐标、锚点、组件字段、动画和加载引用保持原值。任务条目继续引用原外部 `TaskListItem`，顶栏挂点、功能入口、任务区、匹配状态、战斗通知与三类场景指引均保留。该 prefab 已通过 Unity 导入及全部脚本引用检查，验证时保持未激活，尚未接入正式 HUD 的本地业务服务。
+
+`Assets/Official/Home/UI/HudFrame/HomeHudFrame.prefab` 恢复 HomeUI 及公共头像／底栏的原父级，包括两层 `Anim`、CanvasGroup、公共安全区与 `PlayerInfoMask`，共 39 个对象；不以测试位置代替原公共父级。`HomeScreenUI.StencilMask` 直接迁入原复制、材质、排序、显隐及颜色逻辑，只将场景容器实例化映射为本地 Unity 实例化；原 prefab 的 stencil 值为 6、初始隐藏。`HomeHudFrameNativeValidation.Run` 已在隔离完整工程实际 Play Mode 验证激活后的一次复制、`UI/Default` 的 `_StencilComp=8`／`_Stencil=6`／`_StencilOp=2`／`_ColorMask=0`、排序 -1、原父级、重复初始化和显隐恢复，已查看实际运行截图。测试静音、无真实系统输入；隔离完整工程通过 Unity 导入／C# 编译及 `Zjcs.Editor.ProjectTools.Validate`，静态检查通过（150568 个 GUID）。这仅证明公共框架和遮罩，完整 HomeUI 启用／交互、正式业务接线及 Windows Player 尚未验证。
+
 `Runtime/Official/HomeTaskUI/` 迁入所选 884 的 `PinnedTaskPanel`、`TaskListItem`、`TaskGoal`、条件文本、原追踪监听组件、地图限制刷新器与等级监听。固定任务保留原剩余时间升序、自动追踪降序、完成状态降序和配置顺序升序；面板保留固定／显示条件过滤、增改删与每日刷新协程。条目保留领取、跳转、追踪／取消、地图限制、倒计时、条件观察和奖励图标的原调用顺序，规则、事务、导航及资源句柄由显式本地宿主提供；UI 不生成任务、进度或奖励。
 
 完整原生追踪槽（10 个对象）及其实际外部引用的 `TaskListItem`（250 个对象）、两段任务动画、原字体／语言／按钮／声音已恢复至 `Assets/Official/Home/UI/PinnedTasks/`；原父级 `LeftBotGo` 布局和 PreferredSize 适配作为绑定依据，MPLUS 源字体按所选官方配置核验长度及 MD5。`HomeTaskUiNativeValidation.Run` 已在隔离 Unity 2022.3.57f1c2 静音 Play Mode 通过实际首个射线命中与模拟指针、固定／显示条件过滤、限时任务排序、领取一次后移除、目标导航、追踪／取消及状态切换、条件驱动进度更新、取消固定后的销毁、每日刷新／时间偏移调用顺序、启停监听释放和原 PCM 静音播放；已查看可领取和追踪中实际画面。静态元数据检查（150558 个 GUID）、Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 均通过。任务、条件和导航为受控验证数据；真实本地任务／奖励图标／详情窗、限时地域解锁提供方、完整 HomeUI 父层及 Windows Player 尚未接通。
