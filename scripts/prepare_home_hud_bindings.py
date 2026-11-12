@@ -69,13 +69,29 @@ def build():
     for name in ('unity/Assets/Game/Runtime/Official/ProfessionUI/FontAssetFontService.cs',
                  'unity/Assets/Game/Runtime/Official/HomePlayerInfoUI/OfficialHomePlayerInfoAssetCatalog.cs'):
         read(name)
+    for relative in ('assets/reference/home-condition-notifications-source-manifest.json',
+                     'assets/reference/home-condition-source-manifest.json',
+                     'assets/reference/home-rules-current-source-manifest.json',
+                     '.tools/source-packages/current/884_156692/official-code/common-source/Common/FunctionLimitInfoParser.cs',
+                     '.tools/source-packages/current/884_156692/official-code/common-source/Common/StoryStatus.cs',
+                     'unity/Assets/Game/Resources/Home/OfflineHomeCurrencyAssets.asset'):
+        read(relative)
+    notifications = json.loads(read('assets/reference/home-condition-notifications-source-manifest.json'))
+    assert notifications['manifest'] == '884_156692'
+    for relative, expected in notifications['outputs'].items():
+        assert sha(read(relative)) == expected, relative
+    currency = json.loads(read('assets/reference/home-currency-windows-native-source-manifest.json'))
+    settings_path = 'unity/Assets/Official/Home/UI/CurrencyWindows/home-currency-windows-rules.json'
+    settings_raw = read(settings_path)
+    assert sha(settings_raw) == currency['installed_output_sha256'][settings_path]
+    assert json.loads(settings_raw)['manifest'] == '884_156692'
     for fixture in ('home_hud_bindings', 'home_hud_infrastructure', 'home_task_ui', 'home_social_ui', 'home_result_ui'):
         read('scripts/fixtures/'+fixture+'_native_validation.cs')
         if fixture != 'home_hud_bindings':
             read('scripts/prepare_'+fixture+'_validation.py')
             read('assets/reference/'+fixture.replace('_','-')+'-native-source-manifest.json')
     receipt = dict(manifest='884_156692', generator_sha256=sha(Path(__file__).read_bytes()),
-        inputs=inputs, outputs=outputs,
+        inputs=inputs, outputs=outputs, dependency_outputs=notifications['outputs'],
         scope='Packaged full HomeUI resource catalog and typed dependency/lifetime binding. Production profile service implementations and full runtime flow validation remain required.')
     (ROOT/'assets/reference/home-hud-binding-source-manifest.json').write_text(
         json.dumps(receipt, ensure_ascii=False, indent=2)+'\n', 'utf8', newline='\n')
@@ -84,7 +100,7 @@ def build():
 
 def stage(project, receipt):
     assert project.resolve().is_relative_to(validation_directory().resolve())
-    for relative, expected in receipt['outputs'].items():
+    for relative, expected in {**receipt['outputs'], **receipt['dependency_outputs']}.items():
         source = ROOT / relative
         assert sha(source.read_bytes()) == expected, relative
         target = project / source.relative_to(ROOT/'unity')
@@ -100,7 +116,7 @@ def stage(project, receipt):
     folder.mkdir(exist_ok=True)
     shutil.copy2(ROOT/'scripts/fixtures/home_hud_bindings_native_validation.cs', folder/'HomeHudBindingsNativeValidation.cs')
     references = json.loads((ROOT/'unity/Assets/Game/Runtime/Offline/HomeHudUI/Zjcs.Offline.HomeHudUI.asmdef').read_text('utf8'))['references']
-    references += ['Zjcs.Offline.HomeHudUI', 'Zjcs.Official.HomeFunctionMenuUI', 'Zjcs.Official.HomeUI', 'Zjcs.Official.World.NativeCamera', 'Zjcs.Official.World.NativeLabelUI']
+    references += ['Zjcs.Offline.HomeHudUI', 'Zjcs.Official.HomeFunctionMenuUI', 'Zjcs.Official.HomeUI', 'Zjcs.Official.World.NativeCamera', 'Zjcs.Official.World.NativeLabelUI', 'Zjcs.Offline.CharacterCreation', 'Zjcs.Offline.State', 'Zjcs.Offline.HomeCurrencyUI', 'Unity.Newtonsoft.Json']
     (folder/'HomeHudBindingsNativeValidation.asmdef').write_text(json.dumps(dict(name='Zjcs.HomeHudBindingsNativeValidation', includePlatforms=['Editor'], references=references), indent=2)+'\n', 'utf8', newline='\n')
 
 

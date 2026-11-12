@@ -189,7 +189,11 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `Runtime/Offline/HomeHudUI/OfflineHomeHud` 负责完整原生层级的实例化及释放，在所有组件启用前显式绑定条件、顶栏、任务、功能窗口、活动、下载、场景指引、匹配、战斗通知、红点、语言和声音服务；动态任务实例沿同一绑定入口创建。`Resources/Home/OfflineHomeHudAssets` 显式引用原 HomeUI、共享框架、语言、声音及字体，沿原 `FontAssetFontService` 初始化 FZY4K 和任务使用的 MPLUS 字体，原五行字体配置保留；其余三种源字体不在本宿主使用范围内。公共头像／底栏宿主可挂到原 `Content/Main/Public/Anim`，当前尚未在正式入口完成装配。
 
-`HomeHudBindingsNativeValidation.Run` 已在隔离完整工程静音 Play Mode 通过：完整保留 HomeUI 在原父层启用，原 Show／Hide 等待动画完成，原顶栏类型 1/2/57 的借还，原功能按钮和动态任务跳转按钮的首个射线命中与模拟指针，隐藏时解除条件、输入、任务、下载、匹配、结果及红点监听；已查看实际运行截图。测试使用受控任务、条件、窗口、场景位置、空活动记录和无货币子项的顶栏池，不能代表正式业务、真实货币／头像／底栏装配或 Windows Player 已完成。Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过；静态元数据检查通过。
+`HomeHudBindingsNativeValidation.Run` 已在隔离完整工程静音 Play Mode 通过完整保留 HomeUI 在原父层启用、原 Show／Hide 动画等待、顶栏类型 1/2/57 借还、原功能按钮和动态任务跳转按钮的首个射线命中与模拟指针，以及隐藏时解除输入、任务、下载、匹配、结果和红点监听。外层条件已接 `OfflineHomeHudConditions`；任务数据及其内部条件、窗口、场景位置、空活动记录和无货币子项的顶栏池仍为受控端点，不能代表正式业务、真实货币／头像／底栏装配或 Windows Player 已完成。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 及静态元数据检查通过。
+
+`HomeConditionNotifications` 迁入所选 `ConditionHandler` 与 `ConditionInfoParser` 的组合展开、按条件类型有序去重、注册引用计数、排除类型、调用快照、调用期间延后添加／删除及逐回调异常隔离；十二组角色通知保留原条件类型的调用顺序，静态玩家与服务器时钟挂接交由明确外层端口。`OfflineHomeHudConditions` 将原 HUD 条件句柄、所选零参数功能条件与当前角色存档连接，叶节点类型直接核对原条件类，求值复用现有同版条件实现。家园拥有、地图存在与地图聊天状态由外层显式提供，当前条件闭包外的类型仍明确拒绝。正式角色事件转发与完整 HUD 尚未装配。
+
+所选 `TaskSettings.TaskFirstTraceConditionId=5` 为完成 `FirstBattle` 的次数至少 1，或基础等级至少 2。原 `PinnedTaskPanel` 在 prefab 中默认启用；`MainTaskFunctionLimit` 只在满足条件且面板已经停用时激活面板，不会在条件不满足时主动隐藏。本轮保留该默认值；测试中另显式停用面板以覆盖原分支，再分别提交真实剧情次数与等级，经对应原条件通知重新激活，核对下降至不满足条件时仍保留已激活状态。静音 Play Mode 同时验证组合条件监听去重、重复注册引用计数、回调中的增删顺序与异常隔离，原功能／任务按钮模拟指针、Hide 后全部条件监听释放，以及服务重复销毁；已查看新角色默认状态、剧情分支和等级分支的 608×1080 实际画面。上述验证不证明真实任务列表／奖励／导航业务已经接通。
 
 `Runtime/Official/HomeTaskUI/` 迁入所选 884 的 `PinnedTaskPanel`、`TaskListItem`、`TaskGoal`、条件文本、原追踪监听组件、地图限制刷新器与等级监听。固定任务保留原剩余时间升序、自动追踪降序、完成状态降序和配置顺序升序；面板保留固定／显示条件过滤、增改删与每日刷新协程。条目保留领取、跳转、追踪／取消、地图限制、倒计时、条件观察和奖励图标的原调用顺序，规则、事务、导航及资源句柄由显式本地宿主提供；UI 不生成任务、进度或奖励。
 

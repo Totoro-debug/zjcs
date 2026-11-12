@@ -1,0 +1,66 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "5979e0005a27b85d61f9557203942390ae8044638d0209467afbd3c469b16642",
+  "inputs": {
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ConditionType.cs": "99f4a625e61898abddfef171a4a762e41adc103badf44f9e2bddfcc1ca6ff783",
+    "assets/reference/home-condition-source-manifest.json": "8b5be76976db8ead1da8ffad736f30cb98424a2963085d67068e54b39801e7c8",
+    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionRules.cs": "a887084a577eef48c6fea5a3e911b90a68c8d597231aff279d5df9d6df86e643",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ConditionHandler.cs": "b572aebc41f832d87438c6e824266fde24314ed8f41d7d03c357c285e34f4ebd",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ConditionInfoParser.cs": "ba10895470c4d9d3b330852b968504dd955009179bb75b3685ea67eed998981f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NoneCondition.cs": "f52b9e5e8f51ffec64b2781a9a0395ca38f6032ed367960a6198fdd803ad586f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AlwaysCondition.cs": "d5525bc8d9c519a74f2ed9d36c4a7ed550a5ccc041c348f1701fc8273b954860",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelCondition.cs": "f3c1f31e2877f83a97df6f48d7230f50b48b5b0cf3420bb542a363ee37c8000e",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/HasItemCondition.cs": "fca0fa79cc49354068fc32d136863d5a77181fd9ae93596c1671a9f804641dd5",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapUnlockCondition.cs": "4967a1cb05b4d1029b1590501eb1fb6e0957193c9c7827626eed5368dde779f8",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapRegionActivedCondition.cs": "1152e0d30105cfe5e9962e4bc4b9b64ac428780ec63fd3afa4db0f71c3ac8056",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/HasManualMeetNpcCondition.cs": "c3465c86bfe691d5808187ee940dc7bbebac2417750254bedafc5970e1fd2ec1",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/CompositeAndCondition.cs": "1a7d5ccf8f1dcf8401e1a46aeb4596bd464f5c8774edc50adcdb4d55b111571c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/CompositeOrCondition.cs": "b4d4f14990bcc59bb196a4bfcc360df4d38f1142e040ec9015c14211b6530aca",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/HasItemTypeCondition.cs": "6da637782893312e7684ec945db2a108b4271c442f37741852b67e107c5f827f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RankCondition.cs": "0164b794e73b71125d18dea7633f1dd1f3ceef0a6bbd11039c6bbe2c15951cdb",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/SubRankCondition.cs": "5754156223f0fba2094056f64be9f558868de2d2bd036201a67cdd9cfef5ce29",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MaxProfessionRankCondition.cs": "a2dbe26e8ac46e01db42d038fc4a86b6bae4ad4e460d20c307a417ab3becc7bf",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/StoryCountCondition.cs": "a3d4ce9ab5ac81304ab0ef1b25991b55eabd7609684e9351ed846453007849fc",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AnyMapGoddessActivedCondition.cs": "dc2c945985a87f2e651349acfe8016ac59fe5698e0629477d2c05fc472846a8b",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/StagePassCondition.cs": "f116338ed5c03a4f0ac22183861eb5a3eb2f5c63d09885356002217f5d4bf47a"
+  },
+  "methods": {
+    "ConditionHandler": {
+      "private bool IsExcluded(ConditionType conditionType)": "e0f326e74d3be5bfa3f47523a9beb62bdc25ca4a6d28968ecd96e2d9ac8745e9",
+      "public void Register(ICondition condition, Action action)": "478daaf427b91dac620800c3a5738d5f2bc3b75d1b1d3355b6ba13daea4bcdb9",
+      "private void Register(ConditionType conditionType, Action action)": "e2e862009fb4d404e1979415c616d660936b3066770e8ed17c30fc85bfcebbff",
+      "public void Deregister(ICondition condition, Action action)": "7fc9e56680658f23fb47805908a8f90114ed2c7e47510d25c9cc58883a4ecdbd",
+      "private void Deregister(ConditionType conditionType, Action action)": "2ecd5d3db6102c4fa1e3c9cb06fa2dc411d63bbf97b04636e2627469bc26fc81",
+      "private void AddToPendingMap(ConditionType conditionType, Action action, Dictionary<ConditionType, Dictionary<Action, int>> map)": "f2d674289d7085b1656123ba6dc308dbe7f03d6667d1e717f9fe96d6c6155c3a",
+      "public void DeregisterConditionType(ConditionType conditionType)": "9b87cf03dfc5e76d4a171719140f437285e3a0c59d610378847c21f11db948e5",
+      "private void InvokeConditionAction(ConditionType conditionType)": "e50e2fceb7f72316408098a6d4c89dcc22d1c439f4d4c61010e217e23c09ce8e",
+      "private void PostInvoke()": "4cba8bd31cda8e8a6e1f173ab4752954a97def3b06cce64f656bcc4ab12e1f5c",
+      "private void MPlayer_OnLevelUpdate(int obj)": "955e5411fcc1e6239acdcbfd3ccc9ffb8f8149c5366fa82e5240b927dde50216",
+      "private void MPlayer_OnSubRankUpdate(SubRank obj)": "b04c3503e4d924879d93180da6048fff709ae623aaa69e7020e7cc046a488b18",
+      "private void MPlayer_OnWorldMapProgressUpdate(int mapClassId, List<int> arg2)": "f0bb068fcd63fd6f9d91bb41db6f5fd9e1b4c455093cfdfe94b522aff7389888",
+      "private void MPlayer_OnItemCountUpdate(PlayerItemDataWrap itemData, long preCount, AwardSourceData sourceData)": "53c79f870222a6b64790b3aef882f4f1f7c203d96eb0663b678032bf04b71470",
+      "private void MPlayer_OnMapDataAdd(PlayerMapData obj)": "bf3229d221798bd4084ae9fb159ed307a7fabe622057288cb588d695a1b4ee03",
+      "private void MPlayer_OnMapStatusUpdate(int mapClassId, int regionId, MapRegionStatus preStatus, MapRegionStatus newStatus)": "b4d816dbf3ceabf506d3d1a65095d814f93dd15fdeeb367b7f92fcc74c99abae",
+      "private void MPlayer_OnStoryCountUpdate(string storyKey, int count)": "4866a0188d7feeab3078c8a6c672c48ddcf030bec65c22921fcd5560554356ee",
+      "private void MPlayer_OnStoryStatusUpdate(string storyName, StoryStatus pre, StoryStatus now)": "c3692e59dc357609c64e4317f0e305d2438b24b81447b9f4908be4a765ea12fd",
+      "private void MPlayer_OnProfessionPromote(Profession obj)": "9a712ce00740191abd087657f00065bc90282e38e14764af21c942a5fc33eb2c",
+      "private void MPlayer_OnHangUpLevelUp(int hangUpId, int level)": "085f8696a63804eeef4b04f49580f7da362209842818f62a9d922068f33efbc8",
+      "private void MPlayer_OnHangUpUnlock(int hangUpId)": "e3b18bed4986cb6614f3e50657099363f266d2cf2679149c800084bb3a673427",
+      "private void MPlayer_OnAddNewNpc(int npcId, NpcMeetType type)": "776100b6dbb6e9f72587ca31c3a8d200ea11b6218ee805f04088abb1ad2667e8"
+    },
+    "ConditionInfoParser": {
+      "public void Expand(ICondition condition, List<ICondition> result)": "8453c897bd369027cdbc884bd9b4882814923cc62bea8651dadfa8a6dc6d9901",
+      "public void Distinct(List<ICondition> list)": "124434bc30e9af5bbfefbb8459d5a2d4b0805adc754d44ed44e5919b2b033ba5"
+    }
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionNotifications.cs": "d72988ed9a9c413204d3e39b89b4b78adfd728bb21b9d42123dfba0a82f29a8a",
+    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionNotifications.cs.meta": "ba35666248606ac8c1115f72e78bde9328d30c28baff5ad9a923db72f636c35e"
+  },
+  "adaptations": [
+    "Original reference counts, excluded types, composite expansion/distinct order, callback snapshots and pending add/remove order.",
+    "Payload-independent selected player callbacks retain their original ordered condition types.",
+    "The local owner supplies player events, exception reporting and optional condition-map-change notification; online/static player service hooks are not installed.",
+    "Leaf type identities are read from the selected original condition classes; evaluation remains in HomeConditionRules."
+  ]
+}

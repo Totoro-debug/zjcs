@@ -14,6 +14,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using Zjcs.Offline.HomeHudUI;
+using Zjcs.Offline.HomeUI;
+using Zjcs.Offline.CharacterCreation;
+using Zjcs.Offline.Progression;
+using Zjcs.Offline.State;
+using Zjcs.Offline.PartnersUI;
+using Zjcs.Official.HomeConditions;
 using Zjcs.Official.HomeHudUI;
 using Zjcs.Official.HomeHudInfrastructureUI;
 using Zjcs.Official.HomeMainUiControls;
@@ -50,7 +56,7 @@ public static class HomeHudBindingsNativeValidation
     public static void Finish(Exception error)
     {
         SessionState.SetBool(Key,false);if(error!=null)Debug.LogException(error);
-        else Debug.Log("HOME_HUD_BINDINGS_NATIVE_PASSED: complete retained HomeUI active under its original ancestors, original Show/Hide, injected services, native task/function pointer dispatch and subscription disposal. Profile/window/activity/scene data and top-bar pool are controlled fixtures; public avatar/bottom bar and production business integration remain separate.");
+        else Debug.Log("HOME_HUD_BINDINGS_NATIVE_PASSED: complete retained HomeUI active under its original ancestors, original Show/Hide, injected services, native task/function pointer dispatch and subscription disposal. Selected conditions and level gating use an actual new-character save and original notifications; task/window/activity/scene data and top-bar pool are controlled fixtures; public avatar/bottom bar and production business integration remain separate.");
         EditorApplication.Exit(error==null?0:1);
     }
 }
@@ -84,9 +90,14 @@ public sealed class HomeHudBindingsNativeRunner:MonoBehaviour
         var match=NewNested("HomeSocialUiNativeRunner","MatchServices",dictionary);
         var result=NewNested("HomeResultUiNativeRunner","Results",dictionary);Set(result,"ActiveFight",false);
         var entries=NewNested("HomeHudInfrastructureNativeRunner","EntryServices",(object)Array.Empty<HomeRightEntryUIActivityInfo>());
+        string saveRoot=Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"),"hud-conditions-profile-"+Guid.NewGuid().ToString("N"));var creation=CharacterCreationOfflineService.OpenDefault(saveRoot);string slot=creation.CreateSlot();var draft=creation.OpenDraft(slot);draft.name="条件验证";Require(creation.TryCreateCharacter(slot,draft,out string creationError),creationError);
+        var profile=OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(saveRoot),slot);int initialLevel=profile.Save.Player.Level;var configuration=OfficialCurrentHomeRuleAssetCatalog.LoadDefault();
+        var currencyRules=Newtonsoft.Json.Linq.JObject.Parse(Zjcs.Offline.HomeCurrencyUI.OfflineHomeCurrencyAssets.LoadDefault().configuration.text);int firstTraceId=(int)currencyRules["tables"]["game_settings"]["TaskSettings"]["TaskFirstTraceConditionId"];
+        var conditions=new OfflineHomeHudConditions(profile,configuration,OfficialPartnerAssetCatalog.LoadDefault().Conditions,firstTraceId,_=>false,()=>false,()=>false);
+        CheckConditionNotifications(new OfflineHomeConditionPlayer(configuration,()=>profile.Save,_=>false));Require(firstTraceId==5&&!conditions.IsMet(conditions.GetCondition(firstTraceId)),"actual new character has not met selected first trace condition");
         var main=new MainServices();var tips=new Tips();var scene=new SceneServices(world);var top=new TopBarPool();
         var dragObject=new GameObject("ControlledDrag");dragObject.SetActive(false);var drag=dragObject.AddComponent<DragProbe>();drag.DragControllerManager=scene.DragControllerManager;dragObject.SetActive(true);
-        var bindings=new HomeHudBindings {Camera=camera,TopBar=top,Conditions=main,Input=main,Windows=main,
+        var bindings=new HomeHudBindings {Camera=camera,TopBar=top,Conditions=conditions,Input=main,Windows=main,
             RightEntries=(IHomeHudRightEntryServices)entries,Download=(IHomeHudDownloadServices)download,Scene=scene,Match=(IHomeMatchServices)match,
             Results=(IHomeResultServices)result,FightRoot=(IHomeResultFightRoot)result,Tasks=boundTasks,TipDots=tips,TipController=tips,
             Localize=key=>dictionary.TryGetValue(key,out var value)?value:key,PostSound=(audio,emitter)=>{Require(audio==clip,"original button PCM");var source=emitter.GetComponent<AudioSource>();if(!source)source=emitter.AddComponent<AudioSource>();source.volume=0;source.PlayOneShot(audio);}};
@@ -96,18 +107,43 @@ public sealed class HomeHudBindingsNativeRunner:MonoBehaviour
         while(!show.IsCompleted){Require(Time.realtimeSinceStartup<deadline,"original Show completes");yield return null;}show.GetAwaiter().GetResult();yield return null;yield return null;
         Require(view.Home.gameObject.activeInHierarchy&&view.Home.GetComponent<CanvasGroup>().alpha==1,"original HomeUI visible after animator completion");
         Require(top.Borrows==1&&top.Requested.SequenceEqual(new[]{PlayerItemType.Money,PlayerItemType.Diamon,PlayerItemType.TiliId}),"original serialized top-bar types and borrow lifecycle");
-        Require(main.Listeners==2&&main.PointerCount==1,"main conditions and pointer handlers receive bound services");
+        var registry=Field<HomeConditionNotifications>(conditions,"notifications");var map=Field<Dictionary<HomeConditionRules.ConditionType,Dictionary<Action,int>>>(registry,"mConditionActionMap");Require(map.Values.Sum(value=>value.Count)==3&&main.PointerCount==1,"original composite task types and chat condition subscribe to actual selected conditions");
+        var taskGate=view.Home.GetComponentInChildren<MainTaskFunctionLimit>(true);var taskSlot=Field<GameObject>(taskGate,"myTaskSlot");Require(taskSlot.activeSelf&&!conditions.IsMet(conditions.GetCondition(firstTraceId)),"original PinnedTaskPanel prefab keeps its active default even before first-trace condition");Capture("home-hud-conditions-new-character.png");
+        // Arrange the original already-hidden branch; this is a fixture action,
+        // not the native prefab default or a production initial-visibility policy.
+        taskSlot.SetActive(false);conditions.NotifyLevelUpdate();Require(!taskSlot.activeSelf,"original condition callback leaves an already-hidden slot hidden without qualifying progress");
+        Require(profile.SetStoryProgress("FirstBattle",1,2,"hud-first-battle:"+Guid.NewGuid().ToString("N")).IsApplied,"commit actual completed story count");conditions.NotifyStoryCountUpdate();yield return null;yield return null;Require(taskSlot.activeInHierarchy&&profile.Save.Player.Level==initialLevel&&conditions.IsMet(conditions.GetCondition(firstTraceId)),"actual story count event activates the hidden original slot through the alternative branch");Capture("home-hud-conditions-story.png");
+        taskSlot.SetActive(false);Require(profile.SetStoryProgress("FirstBattle",0,0,"hud-clear-story:"+Guid.NewGuid().ToString("N")).IsApplied,"reset isolated story count to exercise independent level branch");conditions.NotifyStoryCountUpdate();Require(!taskSlot.activeSelf,"reset fixture story count alone does not reactivate hidden slot");
+        Require(profile.ApplyInventoryTransaction("hud-level-two:"+Guid.NewGuid().ToString("N"),save=>save.Player.Level=2).IsApplied,"commit actual level satisfying original first trace condition");conditions.NotifyLevelUpdate();yield return null;yield return null;Require(taskSlot.activeInHierarchy&&conditions.IsMet(conditions.GetCondition(firstTraceId)),"actual committed level event activates original task slot");
         var task=view.Home.GetComponentInChildren<TaskListItem>(true);Require(task&&task.MyData?.TaskId==1,"native pinned task instantiated using shared dependency binding");
         var function=view.Home.GetComponentInChildren<FunctionEntrysPanel>(true);events=new GameObject("InternalPointer",typeof(EventSystem)).GetComponent<EventSystem>();
         Capture("home-hud-bound-visible.png");Click(function.EntryBtns[0]);Require(main.Opened==1&&main.Initialized==1,"original function pointer dispatch initializes its window port");
         var jump=task.GetComponentsInChildren<Button>(true).First(x=>x.gameObject.activeInHierarchy&&x.name.Contains("Jump"));Click(jump);
         Require(Field<int>(tasks,"Navigations")==1,"original task pointer dispatch reaches navigation port");
+        Require(profile.ApplyInventoryTransaction("hud-level-one:"+Guid.NewGuid().ToString("N"),save=>save.Player.Level=1).IsApplied,"commit lower actual level to check original one-way task visibility");conditions.NotifyLevelUpdate();Require(!conditions.IsMet(conditions.GetCondition(firstTraceId))&&taskSlot.activeSelf,"original MainTaskFunctionLimit does not hide a previously activated slot");
         var hide=view.Hide(CancellationToken.None).AsTask();deadline=Time.realtimeSinceStartup+5;
         while(!hide.IsCompleted){Require(Time.realtimeSinceStartup<deadline,"original Hide completes");yield return null;}hide.GetAwaiter().GetResult();
-        Require(!view.Home.gameObject.activeSelf&&top.Returns==1&&main.Listeners==0&&main.PointerCount==0,"Hide returns original bar and subscriptions");
+        Require(!view.Home.gameObject.activeSelf&&top.Returns==1&&map.Values.All(value=>value.Count==0)&&main.PointerCount==0,"Hide returns original bar and subscriptions");
         Require(Field<int>(tasks,"PinObservers")==0&&Field<int>(download,"AllCounts")==0&&Field<int>(match,"Observers")==0&&Field<int>(result,"Observers")==0&&tips.LinkCount==0,"all injected source observers released");
-        view.Dispose();view=null;yield return null;((IDisposable)entries).Dispose();((IDisposable)taskSound).Dispose();scene.Dispose();top.Dispose();fonts.Dispose();metrics.Dispose();Object.Destroy(holder);Object.Destroy(world.gameObject);Object.Destroy(drag.gameObject);
+        view.Dispose();view=null;conditions.Dispose();conditions.Dispose();bool disposed=false;try{conditions.GetCondition(firstTraceId);}catch(ObjectDisposedException){disposed=true;}Require(disposed,"disposed actual HUD conditions reject reuse");yield return null;((IDisposable)entries).Dispose();((IDisposable)taskSound).Dispose();scene.Dispose();top.Dispose();fonts.Dispose();metrics.Dispose();Object.Destroy(holder);Object.Destroy(world.gameObject);Object.Destroy(drag.gameObject);
         Require(errors==0,"no Unity errors throughout full HomeUI binding lifecycle");
+    }
+    sealed class Notification:IHomeConditionNotification
+    {
+        public HomeConditionRules.ConditionType Type{get;set;}public bool IsComposite{get;set;}public List<IHomeConditionNotification> Children=new List<IHomeConditionNotification>();public List<IHomeConditionNotification> GetConditions()=>Children;
+    }
+    static Notification Leaf(HomeConditionRules.ConditionType type)=>new Notification{Type=type};
+    static void CheckConditionNotifications(IHomeConditionPlayer player)
+    {
+        var exceptions=new List<Exception>();var registry=new HomeConditionNotifications(player,exceptions.Add);var level=Leaf(HomeConditionRules.ConditionType.Level);var story=Leaf(HomeConditionRules.ConditionType.StoryCount);
+        var nested=new Notification{Type=HomeConditionRules.ConditionType.CompositeAnd,IsComposite=true,Children=new List<IHomeConditionNotification>{level,story}};
+        var composite=new Notification{Type=HomeConditionRules.ConditionType.CompositeOr,IsComposite=true,Children=new List<IHomeConditionNotification>{level,nested,Leaf(HomeConditionRules.ConditionType.Level)}};
+        int calls=0;Action callback=()=>calls++;registry.Register(composite,callback);registry.Register(composite,callback);registry.NotifyLevelUpdate();registry.NotifyStoryCountUpdate();Require(calls==2,"original nested expansion deduplicates types and duplicate registrations preserve one callback per event");
+        registry.Deregister(composite,callback);registry.NotifyLevelUpdate();Require(calls==3,"original registration reference count survives one deregistration");registry.Deregister(composite,callback);registry.NotifyLevelUpdate();registry.NotifyStoryCountUpdate();Require(calls==3,"last deregistration releases all expanded condition types");
+        registry.Register(Leaf(HomeConditionRules.ConditionType.None),callback);registry.NotifyItemCountUpdate();Require(calls==3,"original excluded None condition never adds a callback");
+        var order=new List<string>();Action late=()=>order.Add("late"),second=()=>order.Add("second");Action first=null;first=()=>{order.Add("first");registry.Register(level,late);registry.Deregister(level,first);registry.Deregister(level,second);};registry.Register(level,first);registry.Register(level,second);registry.NotifyLevelUpdate();Require(order.SequenceEqual(new[]{"first","second"}),"original callback snapshot completes while add/remove operations wait");order.Clear();registry.NotifyLevelUpdate();Require(order.SequenceEqual(new[]{"late"}),"original pending additions then removals govern the next notification");registry.Deregister(level,late);
+        order.Clear();Action failing=()=>throw new InvalidOperationException("expected condition callback failure");registry.Register(level,failing);registry.Register(level,()=>order.Add("level"));registry.Register(Leaf(HomeConditionRules.ConditionType.LevelBetween),()=>order.Add("between"));registry.Register(Leaf(HomeConditionRules.ConditionType.MapRegionIsNotLimit),()=>order.Add("region"));registry.NotifyLevelUpdate();Require(exceptions.Count==1&&order.SequenceEqual(new[]{"level","between","region"}),"original exception isolation continues through ordered level condition fan-out");registry.Destroy();order.Clear();registry.NotifyLevelUpdate();registry.Deregister(null,null);Require(order.Count==0,"destroyed original registry releases callbacks and accepts empty late deregistration");
+        Debug.Log("HOME_CONDITION_NOTIFICATIONS_PASSED: selected nested expansion/type deduplication, reference counts, callback snapshot, deferred add/remove order, exception isolation, original level fan-out and destruction.");
     }
     void Click(Button button)
     {
@@ -134,13 +170,9 @@ public sealed class HomeHudBindingsNativeRunner:MonoBehaviour
         public void ReturnTopBar(TopBarItem value){Returns++;value.gameObject.SetActive(false);Object.Destroy(value.gameObject);}
         public void UpdateTopBar(TopBarItem value,List<CurrencyItemData> data)=>throw new NotSupportedException();public void Dispose()=>Object.Destroy(owner);
     }
-    sealed class MainServices:IHomeMainUiConditions,IHomeHudConditionHandler,IHomeMainUiInput,IHomeMainUiWindows,IHomeMainFunctionEntryDialog
+    sealed class MainServices:IHomeMainUiInput,IHomeMainUiWindows,IHomeMainFunctionEntryDialog
     {
-        sealed class Condition:IHomeHudCondition{public bool Met;}
-        readonly Condition task=new Condition{Met=true},chat=new Condition();readonly HashSet<Action> listeners=new HashSet<Action>();Action<HomeUiGlobalPointerDownResult> pointer;
-        public int TaskFirstTraceConditionId=>20501;public IHomeHudCondition GetCondition(int id){Require(id==20501,"original first-trace lookup");return task;}public IHomeHudCondition GetFunctionCondition(FunctionType type)=>chat;public IHomeHudConditionHandler ConditionHandler=>this;
-        public bool IsMet(IHomeHudCondition value)=>((Condition)value).Met;public bool HasMainMap=>false;public bool OpenMapChannel=>false;public int Listeners=>listeners.Count;
-        public void Register(IHomeHudCondition condition,Action callback){Require(listeners.Add(callback),"one condition registration");}public void Deregister(IHomeHudCondition condition,Action callback){Require(listeners.Remove(callback),"condition released");}
+        Action<HomeUiGlobalPointerDownResult> pointer;
         public void HookGlobalPointerDown(Action<HomeUiGlobalPointerDownResult> value){pointer+=value;}public void UnhookGlobalPointerDown(Action<HomeUiGlobalPointerDownResult> value){pointer-=value;}public int PointerCount=>pointer?.GetInvocationList().Length??0;
         public bool HasPanel=>false;public bool HasDialog=>false;public int Opened,Initialized;public void ReportFunctionEntryClick(){}public void PopupFunctionEntryDialog(Action<IHomeMainFunctionEntryDialog> initialize){Opened++;initialize(this);}public void Init(){Initialized++;}
     }
