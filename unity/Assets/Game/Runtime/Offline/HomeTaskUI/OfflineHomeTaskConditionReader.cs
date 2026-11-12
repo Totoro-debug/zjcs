@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
@@ -7,6 +8,7 @@ using Zjcs.Official.World.NativeLabelUI.Framework;
 using Zjcs.Offline.HomeHudUI;
 using Zjcs.Offline.Progression;
 using TaskUI = Zjcs.Official.HomeTaskUI;
+using Zjcs.Official.HomeConditions;
 
 namespace Zjcs.Offline.HomeTaskUI
 {
@@ -41,6 +43,13 @@ namespace Zjcs.Offline.HomeTaskUI
         public TaskUI.ICondition Display(int classId)
             => Create(data.Task(classId).CopyOriginalRow()["DisplayCondition"] as JObject, null);
 
+        internal IHomeConditionNotification RequireNotification(TaskUI.ICondition condition)
+        {
+            if (condition is Condition leaf && ReferenceEquals(leaf.value.Owner, this)) return leaf;
+            if (condition is World world && ReferenceEquals(world.value.Owner, this)) return world;
+            throw new ArgumentException("A condition from this task reader is required.", nameof(condition));
+        }
+
         TaskUI.ICondition Create(JObject row, string key)
         {
             if (row == null) return null;
@@ -53,6 +62,7 @@ namespace Zjcs.Offline.HomeTaskUI
             readonly OfflineHomeTaskConditionReader owner;
             readonly JObject row;
             readonly string key;
+            public OfflineHomeTaskConditionReader Owner => owner;
             public Value(OfflineHomeTaskConditionReader owner, JObject row, string key)
             { this.owner = owner; this.row = row; this.key = key; }
             public string Type => (string)row["_type"];
@@ -161,24 +171,30 @@ namespace Zjcs.Offline.HomeTaskUI
             }
         }
 
-        sealed class Condition : TaskUI.ICondition
+        sealed class Condition : TaskUI.ICondition, IHomeConditionNotification
         {
-            readonly Value value;
+            internal readonly Value value;
             public Condition(Value value) { this.value = value; }
             public override TaskUI.ConditionType Type => TaskUI.ConditionType.Other;
+            HomeConditionRules.ConditionType IHomeConditionNotification.Type => HomeConditionNotifications.TypeForName(value.Type);
+            public bool IsComposite => false;
+            public List<IHomeConditionNotification> GetConditions() => new List<IHomeConditionNotification>();
             public override bool IsMet(DataHub data) => value.Met();
             public override bool IsMet(TaskUI.IHomeTaskPlayer player) => value.Met();
             public override (long, long) GetProgress(DataHub data) => value.Progress();
             public override TaskUI.ConditionDescComponent GetDescComponent(DataHub data, object context, string metColor, string notMetColor)
                 => value.Description(metColor, notMetColor);
         }
-        sealed class World : TaskUI.WorldMapProgressCondition
+        sealed class World : TaskUI.WorldMapProgressCondition, IHomeConditionNotification
         {
-            readonly Value value;
+            internal readonly Value value;
             public World(Value value) { this.value = value; }
             public override int MapClassId => value.Map;
             public override int Region => value.Region;
             public override TaskUI.ConditionType Type => TaskUI.ConditionType.WorldMapProgress;
+            HomeConditionRules.ConditionType IHomeConditionNotification.Type => HomeConditionNotifications.TypeForName(value.Type);
+            public bool IsComposite => false;
+            public List<IHomeConditionNotification> GetConditions() => new List<IHomeConditionNotification>();
             public override bool IsMet(DataHub data) => value.Met();
             public override bool IsMet(TaskUI.IHomeTaskPlayer player) => value.Met();
             public override (long, long) GetProgress(DataHub data) => value.Progress();

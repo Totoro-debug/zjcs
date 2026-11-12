@@ -63,7 +63,8 @@ def build():
     reward['runtime_output_sha256'][assembly.relative_to(ROOT).as_posix()] = sha(assembly)
     reward_path.write_text(json.dumps(reward, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
     for relative in ('scripts/fixtures/home_task_condition_reader_validation.cs',
-            'scripts/prepare_home_task_reward_validation.py', 'assets/reference/home-task-reward-images-source-manifest.json'):
+            'scripts/prepare_home_task_reward_validation.py', 'assets/reference/home-task-reward-images-source-manifest.json',
+            'assets/reference/home-condition-notifications-source-manifest.json'):
         inputs[relative] = sha(ROOT / relative)
     outputs = {path.relative_to(ROOT).as_posix(): sha(path) for path in (reader, meta, assembly,
         ROOT / 'unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs',

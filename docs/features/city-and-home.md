@@ -191,7 +191,7 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `HomeHudBindingsNativeValidation.Run` 已在隔离完整工程静音 Play Mode 通过完整保留 HomeUI 在原父层启用、原 Show／Hide 动画等待、顶栏类型 1/2/57 借还、原功能按钮和动态任务跳转按钮的首个射线命中与模拟指针，以及隐藏时解除输入、任务、下载、匹配、结果和红点监听。外层条件已接 `OfflineHomeHudConditions`；任务数据及其内部条件、窗口、场景位置、空活动记录和无货币子项的顶栏池仍为受控端点，不能代表正式业务、真实货币／头像／底栏装配或 Windows Player 已完成。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 及静态元数据检查通过。新角色进入地图前的真实主线计数读取与领奖保护规则见[主线任务](tasks.md)；这项底层检查不代表原任务条目已接真实数据。
 
-`HomeConditionNotifications` 迁入所选 `ConditionHandler` 与 `ConditionInfoParser` 的组合展开、按条件类型有序去重、注册引用计数、排除类型、调用快照、调用期间延后添加／删除及逐回调异常隔离；十二组角色通知保留原条件类型的调用顺序，静态玩家与服务器时钟挂接交由明确外层端口。`OfflineHomeHudConditions` 将原 HUD 条件句柄、所选零参数功能条件与当前角色存档连接，叶节点类型直接核对原条件类，求值复用现有同版条件实现。家园拥有、地图存在与地图聊天状态由外层显式提供，当前条件闭包外的类型仍明确拒绝。正式角色事件转发与完整 HUD 尚未装配。
+`HomeConditionNotifications` 迁入所选 `ConditionHandler` 与 `ConditionInfoParser` 的组合展开、按条件类型有序去重、注册引用计数、排除类型、调用快照、调用期间延后添加／删除及逐回调异常隔离；二十组角色通知保留原条件类型的调用顺序；任务条件订阅及其验证范围见[主线任务](tasks.md)，静态玩家与服务器时钟挂接交由明确外层端口。`OfflineHomeHudConditions` 将原 HUD 条件句柄、所选零参数功能条件与当前角色存档连接，叶节点类型直接核对原条件类，求值复用现有同版条件实现。家园拥有、地图存在与地图聊天状态由外层显式提供，当前条件闭包外的类型仍明确拒绝。正式角色事件转发与完整 HUD 尚未装配。
 
 `OfflineHomeHudInput` 使用所选原 `InputOperationModule`、`GlobalPointerDownOperation` 和通用输入基类，保留回调／操作逆序执行、重复注册诊断、签名种子、延迟清除失效签名、回调异常隔离及层级／结果类型屏蔽令牌。只显式装配 HUD 所需的全局按下操作，其他操作不伪装为已迁入。Windows 采样读取左键按下沿、指针坐标及当前窗口尺寸，保留原屏幕边界包含与夹取；进程内样本可经同一端口验证。完整 HUD 资源宿主在原父层挂载 `OfflineHomeHudInputLoop`，随其启用逐帧轮询，停用父层后停止轮询；隐藏 HomeUI 本体依原 OnDisable 注销监听。适配服务重复释放安全，关闭后的晚到注销不再访问已释放输入。正式家园入口的整体 HUD 替换仍未完成。 静音 Play Mode 使用进程内输入覆盖逆序派发、重复身份、四侧越界／包含边角、叠加屏蔽、调用中注销／注册、异常隔离、逐帧轮询和释放；完整原 HomeUI 内实际展开／折叠动画、窗口遮挡门槛、首个射线命中的按钮点击及任务跳转通过，运行截图已查看。该验证不代表其他业务端口或 Windows Player 已完成。 Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 与静态元数据检查通过。
 

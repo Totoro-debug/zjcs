@@ -89,7 +89,10 @@ namespace Zjcs.Official.HomeConditions
         'MPlayer_OnLevelUpdate', 'MPlayer_OnSubRankUpdate', 'MPlayer_OnWorldMapProgressUpdate',
         'MPlayer_OnItemCountUpdate', 'MPlayer_OnMapDataAdd', 'MPlayer_OnMapStatusUpdate',
         'MPlayer_OnStoryCountUpdate', 'MPlayer_OnStoryStatusUpdate', 'MPlayer_OnProfessionPromote',
-        'MPlayer_OnHangUpLevelUp', 'MPlayer_OnHangUpUnlock', 'MPlayer_OnAddNewNpc')
+        'MPlayer_OnHangUpLevelUp', 'MPlayer_OnHangUpUnlock', 'MPlayer_OnAddNewNpc',
+        'MPlayer_OnOpenChest', 'MPlayer_OnTaskAdd', 'MPlayer_OnTaskUpdate',
+        'MPlayer_OnTaskRemove', 'MPlayer_OnAddFinishedTask',
+        'MPlayer_OnDemonBattlefieldLayerUpdate', 'MPlayer_OnUpdateBlackboardData')
     for name in events:
         signature = re.search(r'private void '+name+r'\([^\n]*\)', raw).group()
         value = selected('ConditionHandler', signature)
@@ -97,6 +100,12 @@ namespace Zjcs.Official.HomeConditions
         assert not re.sub(r'InvokeConditionAction\(ConditionType\.\w+\);|\s+', '', body), name
         value = value.replace(signature, 'public void Notify'+name[len('MPlayer_On'):]+'()')
         text += value+'\n'
+    signature = 'private void MPlayer_OnActiveableEntUpdate(MapActiveableEntityInfo obj)'
+    value = selected('ConditionHandler', signature)
+    guard = 'obj.ActiveEntType == MapWorldActiveableEntityType.Goddess'
+    assert value.count(guard) == 1
+    value = value.replace(signature, 'public void NotifyActiveableEntUpdate(bool isGoddess)')
+    text += value.replace(guard, 'isGoddess')+'\n'
     text += 'private sealed class ConditionInfoParser\n{\n'
     for signature in ('public void Expand(ICondition condition, List<ICondition> result)',
         'public void Distinct(List<ICondition> list)'):
@@ -107,7 +116,10 @@ namespace Zjcs.Official.HomeConditions
     leaves = ('NoneCondition','AlwaysCondition','LevelCondition','HasItemCondition','MapUnlockCondition',
         'MapRegionActivedCondition','HasManualMeetNpcCondition','CompositeAndCondition','CompositeOrCondition',
         'HasItemTypeCondition','RankCondition','SubRankCondition','MaxProfessionRankCondition',
-        'StoryCountCondition','AnyMapGoddessActivedCondition','StagePassCondition')
+        'StoryCountCondition','AnyMapGoddessActivedCondition','StagePassCondition',
+        'WorldMapProgressCondition','MapGameTotalCountCondition','MapLogicEntityEndByTagCondition',
+        'MapRegionGoddessCondition','TotalOpenChestCondition','DemonBattleLayerPassCondition',
+        'TaskSubmitCondition','TaskCompleteCondition')
     for name in leaves:
         value = re.search(r'public override ConditionType Type => ConditionType\.(\w+);', source(name)).group(1)
         text += 'case "'+name+'": return ConditionType.'+value+';\n'
@@ -122,6 +134,7 @@ namespace Zjcs.Official.HomeConditions
         methods=methods, outputs=outputs, adaptations=[
             'Original reference counts, excluded types, composite expansion/distinct order, callback snapshots and pending add/remove order.',
             'Payload-independent selected player callbacks retain their original ordered condition types.',
+            'Activeable-entity notification preserves the Goddess branch via an explicit boolean payload port, followed by the original unconditional world-progress notification.',
             'The local owner supplies player events, exception reporting and optional condition-map-change notification; online/static player service hooks are not installed.',
             'Leaf type identities are read from the selected original condition classes; evaluation remains in HomeConditionRules.'])
     (ROOT/'assets/reference/home-condition-notifications-source-manifest.json').write_text(

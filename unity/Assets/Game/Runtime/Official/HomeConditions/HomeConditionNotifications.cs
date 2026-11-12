@@ -309,6 +309,60 @@ namespace Zjcs.Official.HomeConditions
         InvokeConditionAction(ConditionType.NpcMeet);
     }
 
+    public void NotifyOpenChest()
+    {
+        InvokeConditionAction(ConditionType.OpenChest);
+        InvokeConditionAction(ConditionType.TotalOpenChest);
+        InvokeConditionAction(ConditionType.TreasureGachaCount);
+        InvokeConditionAction(ConditionType.PetGachaCount);
+    }
+
+    public void NotifyTaskAdd()
+    {
+        InvokeConditionAction(ConditionType.HasTask);
+        InvokeConditionAction(ConditionType.HasNotTask);
+    }
+
+    public void NotifyTaskUpdate()
+    {
+        InvokeConditionAction(ConditionType.TaskComplete);
+    }
+
+    public void NotifyTaskRemove()
+    {
+        InvokeConditionAction(ConditionType.HasTask);
+        InvokeConditionAction(ConditionType.HasNotTask);
+        InvokeConditionAction(ConditionType.TaskSubmit);
+    }
+
+    public void NotifyAddFinishedTask()
+    {
+        InvokeConditionAction(ConditionType.NpcDelegateTaskFinishCount);
+    }
+
+    public void NotifyDemonBattlefieldLayerUpdate()
+    {
+        InvokeConditionAction(ConditionType.DemonBattleLayerPass);
+    }
+
+    public void NotifyUpdateBlackboardData()
+    {
+        InvokeConditionAction(ConditionType.MapEntityEnd);
+        InvokeConditionAction(ConditionType.MapLogicEntityEnd);
+        InvokeConditionAction(ConditionType.MapGameTotalCount);
+        InvokeConditionAction(ConditionType.MapLogicEntityEndByTag);
+    }
+
+    public void NotifyActiveableEntUpdate(bool isGoddess)
+    {
+        if (isGoddess)
+        {
+            InvokeConditionAction(ConditionType.MapRegionGoddess);
+            InvokeConditionAction(ConditionType.AnyMapGoddessActived);
+        }
+        InvokeConditionAction(ConditionType.WorldMapProgress);
+    }
+
 private sealed class ConditionInfoParser
 {
     public void Expand(IHomeConditionNotification condition, List<IHomeConditionNotification> result)
@@ -376,6 +430,14 @@ case "MaxProfessionRankCondition": return ConditionType.MaxProfessionRank;
 case "StoryCountCondition": return ConditionType.StoryCount;
 case "AnyMapGoddessActivedCondition": return ConditionType.AnyMapGoddessActived;
 case "StagePassCondition": return ConditionType.StagePass;
+case "WorldMapProgressCondition": return ConditionType.WorldMapProgress;
+case "MapGameTotalCountCondition": return ConditionType.MapGameTotalCount;
+case "MapLogicEntityEndByTagCondition": return ConditionType.MapLogicEntityEndByTag;
+case "MapRegionGoddessCondition": return ConditionType.MapRegionGoddess;
+case "TotalOpenChestCondition": return ConditionType.TotalOpenChest;
+case "DemonBattleLayerPassCondition": return ConditionType.DemonBattleLayerPass;
+case "TaskSubmitCondition": return ConditionType.TaskSubmit;
+case "TaskCompleteCondition": return ConditionType.TaskComplete;
 default: throw new NotSupportedException("Condition outside migrated notification closure: "+name);
 }
 }

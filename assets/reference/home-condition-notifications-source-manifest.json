@@ -1,6 +1,6 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "5979e0005a27b85d61f9557203942390ae8044638d0209467afbd3c469b16642",
+  "generator_sha256": "549d076906627e934c1bfe9d4ee8c737a622ea0d4a40040a1a16cc97296464a5",
   "inputs": {
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ConditionType.cs": "99f4a625e61898abddfef171a4a762e41adc103badf44f9e2bddfcc1ca6ff783",
     "assets/reference/home-condition-source-manifest.json": "8b5be76976db8ead1da8ffad736f30cb98424a2963085d67068e54b39801e7c8",
@@ -22,7 +22,15 @@
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/MaxProfessionRankCondition.cs": "a2dbe26e8ac46e01db42d038fc4a86b6bae4ad4e460d20c307a417ab3becc7bf",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/StoryCountCondition.cs": "a3d4ce9ab5ac81304ab0ef1b25991b55eabd7609684e9351ed846453007849fc",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/AnyMapGoddessActivedCondition.cs": "dc2c945985a87f2e651349acfe8016ac59fe5698e0629477d2c05fc472846a8b",
-    ".tools/source-packages/current/884_156692/official-code/common-source/Common/StagePassCondition.cs": "f116338ed5c03a4f0ac22183861eb5a3eb2f5c63d09885356002217f5d4bf47a"
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/StagePassCondition.cs": "f116338ed5c03a4f0ac22183861eb5a3eb2f5c63d09885356002217f5d4bf47a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/WorldMapProgressCondition.cs": "d5285a197953c12c27748f12990047d59804c70b83079232c518192238f3a021",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapGameTotalCountCondition.cs": "aa75d94669f72735cc1af73d56b4116d06356c104a28a8b10eaa30b48c9affec",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapLogicEntityEndByTagCondition.cs": "51be63de02c93729761e25201991595a49b03bdd9d49412234217e4441be6a5e",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapRegionGoddessCondition.cs": "28cc2f2d4c4e910b728532a893ed8b88148f9b234b88d6012619d2c9d18cef22",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TotalOpenChestCondition.cs": "8203555b64f53b243e2c62867169d164c18b8bbf85f5be95c2f8ebcd8f44ea55",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/DemonBattleLayerPassCondition.cs": "f9036f38526802373d8edf31d4828c6f771d82afba3c81ac2595f98f5180525a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TaskSubmitCondition.cs": "4496a73b13d8647b36d3d43c5082256ef12664146e776787d23399aa246ed116",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TaskCompleteCondition.cs": "912550c79035a77c2be6f38c6b9327fdda9be24c8199ff337215602d116c8940"
   },
   "methods": {
     "ConditionHandler": {
@@ -46,7 +54,15 @@
       "private void MPlayer_OnProfessionPromote(Profession obj)": "9a712ce00740191abd087657f00065bc90282e38e14764af21c942a5fc33eb2c",
       "private void MPlayer_OnHangUpLevelUp(int hangUpId, int level)": "085f8696a63804eeef4b04f49580f7da362209842818f62a9d922068f33efbc8",
       "private void MPlayer_OnHangUpUnlock(int hangUpId)": "e3b18bed4986cb6614f3e50657099363f266d2cf2679149c800084bb3a673427",
-      "private void MPlayer_OnAddNewNpc(int npcId, NpcMeetType type)": "776100b6dbb6e9f72587ca31c3a8d200ea11b6218ee805f04088abb1ad2667e8"
+      "private void MPlayer_OnAddNewNpc(int npcId, NpcMeetType type)": "776100b6dbb6e9f72587ca31c3a8d200ea11b6218ee805f04088abb1ad2667e8",
+      "private void MPlayer_OnOpenChest(int arg1, long arg2)": "6b5af434bdcd3c74dd14b9c2e421372e479536ba5f6fc5ae3e34b835dcd6329d",
+      "private void MPlayer_OnTaskAdd(PlayerTaskDataWrap obj)": "875918d61dcd4269c2d09cddc59b79f3e6d05d55d52838139c7eead40546403c",
+      "private void MPlayer_OnTaskUpdate(PlayerTaskDataWrap obj)": "89fb664b77b9207525c160db5b44798efddf06d2fac0a107da65964df4ccc446",
+      "private void MPlayer_OnTaskRemove(long taskId)": "89caa188a2fd6d2568dc0deddc42538ae1e01b615297aa2afbcdaf603f0d83c7",
+      "private void MPlayer_OnAddFinishedTask(int taskId)": "ca1355c19d9ad693d9a88db0a83d03d043db46b94a986d938036109e8ab18b3c",
+      "private void MPlayer_OnDemonBattlefieldLayerUpdate(int entryIndex, int layer)": "03a6954121dfc03491f81779ad9f9e8586510008be595f4427e6966894dc48cf",
+      "private void MPlayer_OnUpdateBlackboardData(BlackboardDataKey key, BlackboardDataWrap data)": "1efe54a3198590e7aebd2391f912b808af8c61de48c737fbe733a30e36ed74a5",
+      "private void MPlayer_OnActiveableEntUpdate(MapActiveableEntityInfo obj)": "20ac658dce55030e8912bf32173ce2de7c2b92965b3689339ee9090eac496d48"
     },
     "ConditionInfoParser": {
       "public void Expand(ICondition condition, List<ICondition> result)": "8453c897bd369027cdbc884bd9b4882814923cc62bea8651dadfa8a6dc6d9901",
@@ -54,12 +70,13 @@
     }
   },
   "outputs": {
-    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionNotifications.cs": "d72988ed9a9c413204d3e39b89b4b78adfd728bb21b9d42123dfba0a82f29a8a",
+    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionNotifications.cs": "3e363af3f4b9b06d5b38929b6ab521764afa06914af0466da9fac8e752821d07",
     "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionNotifications.cs.meta": "ba35666248606ac8c1115f72e78bde9328d30c28baff5ad9a923db72f636c35e"
   },
   "adaptations": [
     "Original reference counts, excluded types, composite expansion/distinct order, callback snapshots and pending add/remove order.",
     "Payload-independent selected player callbacks retain their original ordered condition types.",
+    "Activeable-entity notification preserves the Goddess branch via an explicit boolean payload port, followed by the original unconditional world-progress notification.",
     "The local owner supplies player events, exception reporting and optional condition-map-change notification; online/static player service hooks are not installed.",
     "Leaf type identities are read from the selected original condition classes; evaluation remains in HomeConditionRules."
   ]

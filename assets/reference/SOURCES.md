@@ -851,6 +851,8 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 所选主线条件读取依据为 `884_156692` 的七类完成条件、提交展示条件、客户端世界／实体／塔条件、原条件描述与文本处理、Player 区域读取及 Formula／FormulaHandler；`scripts/prepare_home_task_condition_reader.py` 核对原方法片段，登记原文件及本地适配输出 SHA256。原码、同版任务目录、验证工具和依赖凭据见[主线条件读取来源](home-task-condition-reader-source-manifest.json)，运行时入口为 `Runtime/Offline/HomeTaskUI/OfflineHomeTaskConditionReader.cs`；实际状态及单机差异仅在[任务页](../../docs/features/tasks.md)维护。
 
+所选任务条件通知沿同版 `ConditionHandler` 的任务、宝箱、塔层、黑板与实体更新方法迁移，类型身份仍从原条件类读取；`scripts/prepare_home_task_condition_notifications.py` 核对共用通知凭据、任务条件读取凭据及运行适配输出，登记[任务条件通知来源](home-task-condition-notifications-source-manifest.json)。本地订阅入口为 `Runtime/Offline/HomeTaskUI/OfflineHomeTaskConditions.cs`；实际接线和验证范围仅在[任务页](../../docs/features/tasks.md)维护。
+
 家园完整 HUD 层级及公共父级来源：`prepare_home_hud_native.py` 复用已核验的所选 `884_156692` 模块代码和 APK 优先原生恢复流程，记录原 MainCanvas、外部 TaskListItem、四项已确认离线裁剪、动画、语言、字体、图数据、声音与 Windows 依赖；原始对象、脚本引用和输入输出 SHA256 见[完整 HUD 原生来源](home-hud-native-source-manifest.json)。`prepare_home_hud_frame_native.py` 恢复原共享父级与玩家 stencil；`prepare_home_hud_frame_runtime.py` 直接迁移原 StencilMask，代码及原生输入输出分别见[公共框架代码来源](home-hud-frame-runtime-source-manifest.json)和[公共框架原生来源](home-hud-frame-native-source-manifest.json)。两个绑定工具按 GUID 与实际内容复用既有资产，新增载荷位于 `unity/Assets/Official/Home/UI/Hud/` 和 `HudFrame/`，prefab 显式序列化绑定；尚未生成完整素材快照。实现、离线裁剪与验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
 
 完整家园 HUD 的本地绑定目录由 `scripts/prepare_home_hud_bindings.py` 生成，来源输入、原 HomeUI／共享父层的资源引用、原字体配置与声音地址、类型化依赖宿主及输出哈希记录于 `assets/reference/home-hud-binding-source-manifest.json`。载荷入口为 `Resources/Home/OfflineHomeHudAssets.asset`，绑定代码位于 `Runtime/Offline/HomeHudUI/`；该清单同时登记真实角色条件与桌面指针输入适配、所依赖的原通知／输入模块输出、同版函数条件解析器和剧情状态枚举输入，不新增美术替代。

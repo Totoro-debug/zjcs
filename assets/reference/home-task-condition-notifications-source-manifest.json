@@ -1,0 +1,15 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "b28fdb3f76043c5b1e785a1e5d040296018f9dcaac2dad62c94309e90950a2b1",
+  "inputs": {
+    "assets/reference/home-condition-notifications-source-manifest.json": "71efaa6c0960da5412acd8f75f84458479b74b0a88db8594286f60bcc4a76c86",
+    "assets/reference/home-task-condition-reader-source-manifest.json": "4b8a9aa9e5d86dc2d9ebc2554aed5ab376fa6caad6daacb0d3a03786fcb67f19",
+    "scripts/fixtures/home_task_condition_notifications_validation.cs": "d6b762a09f4aee35bd9d846eca60f48e8d25c2d8f88f7fb15063f5b28ea0e66d",
+    "scripts/prepare_home_task_condition_reader.py": "8000be1e9517a12bfd58018b1027d9c8f8e370594f78d207af0b60d8ce5255f1"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskConditions.cs": "001ff621d5093b274bd22dd5bf1b5b9796c0cb7c390300e36279669c38327006",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskConditions.cs.meta": "e71fd4816ad005920506b1555f99ee29670ac3e1ed753aba52d05f339d1aef57"
+  },
+  "scope": "Original task condition-type identities and selected ConditionHandler event ordering. Local task UI subscriptions read the live profile through their owning reader. The player owner must forward matching committed events; automatic forwarding and native task-row composition remain separate."
+}
