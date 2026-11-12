@@ -16,6 +16,8 @@ Windows 战斗声音运行素材取自上述同版官方集成包及所选 884 �
 
 原生战斗声音宿主取同版 `WwiseManager`、`WwiseGlobalVolumnService`、`GameSoundSpeedController`、原四项音量 RTPC 资产及原 SDK 初始化／声音对象／空环境实现；原 SDK 文件身份、APK 客户端源码、配置导出哈希、GUID 指向、Windows 引擎身份及本地绑定输出见[原生宿主来源](battle-animation/native-sound-host-source-manifest.json)，入口为 `prepare_battle_native_sound_host_sources.py`。向量封送按上述原引擎的返回约定适配，SDK 逐文件原输入与输出哈希仍记于运行素材来源；接入与验证范围由所属页维护。
 
+Windows 声音包的显式 Player 加载位置由 `OfflineBattleWwisePackages` 与 `OfficialBattleWwisePackageBuild` 绑定为 `StreamingAssets/Combat/Wwise`；构建回调按[Windows 声音运行素材清单](battle-animation/windows-sound-runtime-source-manifest.json)核对选定的 26 个转换输出，只复制 `.pck` 原载荷，输入版本、包内媒体及清单中的输出哈希均不变。
+
 图集占位页命名取所选版本 `AppearanceSystem.Runtime/AppearanceOnDemandTextureLoader.GetPlaceholderTextureName`；原应用代码、既有图集加载器输入、适配输出及技能图引用凭据的哈希见[图集占位页绑定来源](battle-animation/atlas-placeholder-binding-source-manifest.json)，处理入口为 `scripts/prepare_battle_atlas_placeholder_binding.py`。不新增或修改美术载荷；实现与验证边界见[战斗执行](../../docs/features/battle-execution.md)。
 
 63110 技能图的原 `Eff_Monster_3511_Skill02_3` 片段及三个 `Animation` 引用来自同版官方缓存包与已校验原生导出；原对象、包／输出哈希、Legacy 副本及引用转换见[原动画双用途绑定来源](battle-animation/legacy-animation-bindings-source-manifest.json)，入口为 `scripts/prepare_battle_legacy_animation_bindings.py`，亦由技能图转换器调用。不重绘或重采样动画；功能及验证边界见[战斗执行](../../docs/features/battle-execution.md)。
