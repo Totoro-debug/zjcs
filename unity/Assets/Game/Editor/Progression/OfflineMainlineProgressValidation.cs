@@ -23,6 +23,7 @@ namespace Zjcs.Editor.Progression
             try
             {
                 var slots = new ProfileSlotCatalog(root);
+                ValidateTaskStates(slots, catalog);
                 string slot = slots.CreateSlot();
                 string fantasyTowerSavePath = Path.Combine(slots.GetSlotDirectory(slot), "fantasy-tower-save.json");
                 Func<int, int> readDemonBattleLayer = entryIndex =>
@@ -371,6 +372,54 @@ namespace Zjcs.Editor.Progression
             {
                 if (Directory.Exists(root)) Directory.Delete(root, true);
             }
+        }
+
+        private static void ValidateTaskStates(ProfileSlotCatalog slots, OfficialMainlineTaskCatalog catalog)
+        {
+            string slot = slots.CreateSlot();
+            var session = OfflineMainlineProgressSession.Open(slots, slot, catalog);
+            foreach (var task in catalog.OrderedTasks)
+                Require(session.GetMainlineTaskState(task.classId, out var state).Status == ProgressionResultStatus.Ready
+                    && state == (task.classId == 1000 ? OfflineMainlineTaskState.Processing : OfflineMainlineTaskState.Unavailable),
+                    "Resolve the full 55-task acquisition chain before its first completion");
+            Require(session.InitializeMap(10, new[] { 0, 1, 2, 3, 4 }).IsApplied
+                && session.RecordMapBattle(10, 0, 1, "task-state-battle-1").IsApplied
+                && session.RecordMapBattle(10, 0, 1, "task-state-battle-2").IsApplied
+                && session.SetMapRegionProgress(10, 0, 10000).IsApplied,
+                "Commit real source progress before resolving Completed tasks");
+            string before = File.ReadAllText(slots.GetProgressPath(slot));
+            var complete = new OfficialTaskCondition { type = "TaskCompleteCondition", taskClassIds = new[] { 1000, 1005 } };
+            var submitted = new OfficialTaskCondition { type = "TaskSubmitCondition", taskClassIds = new[] { 1000, 1005 } };
+            Require(session.GetTaskProgress(complete, out long completeCurrent, out long completeTarget).Status
+                    == ProgressionResultStatus.Ready && completeCurrent == 2 && completeTarget == 2
+                && session.GetTaskProgress(submitted, out long submitCurrent, out long submitTarget).Status
+                    == ProgressionResultStatus.Ready && submitCurrent == 0 && submitTarget == 2
+                && session.GetMainlineTaskState(1005, out var hidden).Status == ProgressionResultStatus.Ready
+                    && hidden == OfflineMainlineTaskState.Completed
+                && session.GetMainlineTaskState(1010, out var acquired).Status == ProgressionResultStatus.Ready
+                    && acquired == OfflineMainlineTaskState.Processing,
+                "Acquisition counts unclaimed Completed tasks while Display alone waits for submission");
+            Require(session.InventoryCount(2) == 0 && File.ReadAllText(slots.GetProgressPath(slot)) == before,
+                "Task-state queries never award items or write the profile");
+            session = OfflineMainlineProgressSession.Open(slots, slot, catalog);
+            Require(session.GetMainlineTaskState(1005, out hidden).Status == ProgressionResultStatus.Ready
+                && hidden == OfflineMainlineTaskState.Completed && File.ReadAllText(slots.GetProgressPath(slot)) == before,
+                "Restore Completed from saved source progress before any reward submission");
+            Require(session.ClaimTask(1005).IsApplied && session.InventoryCount(2) == 30
+                && session.GetTaskProgress(complete, out completeCurrent, out completeTarget).Status == ProgressionResultStatus.Ready
+                    && completeCurrent == 2
+                && session.GetTaskProgress(submitted, out submitCurrent, out submitTarget).Status == ProgressionResultStatus.Ready
+                    && submitCurrent == 1
+                && session.GetMainlineTaskState(1005, out var received).Status == ProgressionResultStatus.Ready
+                    && received == OfflineMainlineTaskState.Received,
+                "Display is not a submission gate; a received task is counted once and awards once");
+            Require(session.ClaimTask(1000).IsApplied && session.InventoryCount(2) == 60
+                && session.ClaimTask(1005).Status == ProgressionResultStatus.Unchanged,
+                "Keep independent completed-task submissions atomic and replay-safe");
+            session = OfflineMainlineProgressSession.Open(slots, slot, catalog);
+            Require(session.GetTaskProgress(submitted, out submitCurrent, out submitTarget).Status == ProgressionResultStatus.Ready
+                && submitCurrent == 2 && session.InventoryCount(2) == 60,
+                "Restore submitted IDs, their counts and fixed rewards together");
         }
 
         private static void Require(bool condition, string step)

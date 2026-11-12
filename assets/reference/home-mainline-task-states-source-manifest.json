@@ -1,0 +1,52 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "7b3f350fa1d82200c7615739ff995a905cfbc14f28aa48b9f11a39d9d15595b3",
+  "inputs": {
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TaskState.cs": "49ffb456f873fa2b7e43dda86ce5a7a5070a0380f3c3ce4b78477d1f4ab3d9c4",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerTaskDataUtils.cs": "710c2a4e97317a18ba0fdd8ee0e56585961defaadf80ad8d81b35656d26a0891",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TaskCompleteCondition.cs": "912550c79035a77c2be6f38c6b9327fdda9be24c8199ff337215602d116c8940",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TaskSubmitCondition.cs": "4496a73b13d8647b36d3d43c5082256ef12664146e776787d23399aa246ed116",
+    ".tools/source-packages/current/884_156692/official-code/client-source/PinnedTaskPanel.cs": "3d87e78c6a1c6fbf8473669213659a534d37038697290519244cbea7d8ad62ae",
+    "assets/reference/home-mainline-task-data-source-manifest.json": "e0005b8e56c7da7daf6a8f81dc362d76132ee0c96695a1f77ce758a1ab81febd",
+    "assets/reference/home-task-condition-reader-source-manifest.json": "db4d8de03be1904ce1cec7227ac198cd1a8ccdcc5d4d0a44847e42b63b9f0b97",
+    "assets/reference/home-task-condition-notifications-source-manifest.json": "61e59f2374d8e787ae89aac502d34e9c8af53907ca22dfc22945f4b9688a89c2",
+    "scripts/fixtures/home_task_condition_reader_validation.cs": "ce0ef7c7c522552d50106d685833305692778be32c2cbb9bde5cd5162ee0c792",
+    "scripts/prepare_home_task_condition_notifications.py": "b28fdb3f76043c5b1e785a1e5d040296018f9dcaac2dad62c94309e90950a2b1"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineTaskStates.cs": "0f5705cd52450bf77d82dbee3acb13de16c282f587196a4c4761442a3225905e",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineTaskStates.cs.meta": "6d4a0cb2fba58ed9b95e4af351ed83cb9fe4c4568fe58b74ffd0c35bda78a932",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs": "0f20b6b8109fc5b50659cc7a07337e174b66f7b311ffbe26f98bee735b790e9f",
+    "unity/Assets/Game/Editor/Progression/OfflineMainlineProgressValidation.cs": "d97e1a26f8166b6c61175cebbee608ac14873d8b3bb1e74fb89268ca6cbce12a"
+  },
+  "original_fragments": {
+    "common-source/Common/TaskState.cs": [
+      "Processing,",
+      "Completed,",
+      "Received,"
+    ],
+    "common-source/Common/PlayerTaskDataUtils.cs": [
+      "return self.TaskState == TaskState.Completed;",
+      "public static bool CanFinish(this PlayerTask self, Player player)",
+      "if (!self.IsCompletedState())"
+    ],
+    "common-source/Common/TaskCompleteCondition.cs": [
+      "player.FinishedTaskManager.Exist(taskClassId)",
+      "taskByClassId != null && taskByClassId.IsCompletedState()"
+    ],
+    "common-source/Common/TaskSubmitCondition.cs": [
+      "TaskClassIds.Count((int id) => player.FinishedTaskManager.Exist(id))"
+    ],
+    "client-source/PinnedTaskPanel.cs": [
+      "DisplayCondition",
+      "IsMet("
+    ]
+  },
+  "confirmed_offline_policy": "Acquisition met and finish met generate local Completed; DisplayCondition controls presentation only. Successful reward submission records Received in the existing submitted-ID ledger.",
+  "adaptations": [
+    "Processing/Completed/Received retain original enum values; local Unavailable represents absence before acquisition.",
+    "State is a read-only projection of existing saved cumulative mainline progress, with per-query memoization and task-cycle rejection.",
+    "TaskComplete counts submitted IDs and unsubmitted Completed states; TaskSubmit counts submitted IDs only.",
+    "Existing fixed reward and receipt persistence stay atomic. Native task-player event forwarding and row composition remain separate."
+  ]
+}

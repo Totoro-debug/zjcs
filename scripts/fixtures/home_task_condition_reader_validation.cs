@@ -33,6 +33,10 @@ public sealed partial class HomeCurrencyWindowsNativeRunner
             Require(profile.SetMapRegionProgress(10,0,10000).IsApplied&&world.GetProgress(hub)==(100L,100L)&&world.IsMet(hub),"original complete percentage from actual saved exploration");
             for(int index=0;index<3;index++)Require(profile.RecordMapBattle(10,0,1,"condition-battle-"+index).IsApplied,"actual battle-count receipt");
             Require(battle.GetProgress(hub)==(3L,2L)&&battle.IsMet(hub),"raw battle count remains above the goal");
+            Require(reader.Acquisition(1005).IsMet(hub)&&!reader.Display(1005).IsMet(hub)
+                &&profile.GetMainlineTaskState(1005,out var hiddenState).Status==Zjcs.Offline.Progression.ProgressionResultStatus.Ready
+                &&hiddenState==Zjcs.Offline.Progression.OfflineMainlineTaskState.Completed,
+                "confirmed local Completed state and original acquisition remain distinct from submitted-only display");
             desc=battle.GetDescComponent(hub,null,"#00FF00","#FF0000");
             Require((long)desc.Args[0]==2&&(long)desc.Args[1]==2&&desc.TextProcessor.Process("{c}")=="#00FF00","original description alone clamps and selects met color");
             Require(profile.ClaimTask(1000).IsApplied&&reader.Display(1005).IsMet(hub),"display condition observes the actual committed task receipt");

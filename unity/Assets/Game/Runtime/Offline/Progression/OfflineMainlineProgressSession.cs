@@ -909,6 +909,12 @@ namespace Zjcs.Offline.Progression
                     current = target = 1;
                     break;
                 case "TaskCompleteCondition":
+                    target = condition.taskClassIds?.Length ?? 0;
+                    var completed = CompletedTaskProgress(condition, Save, null, out current);
+                    if (completed.Status == ProgressionResultStatus.Unsupported)
+                        return Result(ProgressionResultStatus.Unsupported,
+                            unsupportedCondition: completed.UnsupportedCondition);
+                    break;
                 case "TaskSubmitCondition":
                     int[] taskIds = condition.taskClassIds ?? Array.Empty<int>();
                     target = taskIds.Length;
@@ -989,22 +995,10 @@ namespace Zjcs.Offline.Progression
             if (Save.Tasks.ClaimedMainlineTaskIds.Contains(classId))
                 return Result(ProgressionResultStatus.Unchanged, classId, message: "Task reward was already claimed.");
 
-            ConditionEvaluation accepted = Evaluate(task.acquestCondition, Save, 0);
-            if (accepted.Status == ProgressionResultStatus.Unsupported)
-                return Result(ProgressionResultStatus.Unsupported, classId, accepted.UnsupportedCondition);
-            if (!accepted.IsMet) return Result(ProgressionResultStatus.NotReady, classId);
-            if (task.displayCondition != null)
-            {
-                ConditionEvaluation displayed = Evaluate(task.displayCondition, Save, 0);
-                if (displayed.Status == ProgressionResultStatus.Unsupported)
-                    return Result(ProgressionResultStatus.Unsupported, classId, displayed.UnsupportedCondition);
-                if (!displayed.IsMet) return Result(ProgressionResultStatus.NotReady, classId);
-            }
-
-            ConditionEvaluation finish = Evaluate(task.finishCondition, Save, 0);
-            if (finish.Status == ProgressionResultStatus.Unsupported)
-                return Result(ProgressionResultStatus.Unsupported, classId, finish.UnsupportedCondition);
-            if (!finish.IsMet) return Result(ProgressionResultStatus.NotReady, classId);
+            ProgressionResult stateResult = GetMainlineTaskState(classId, out var state);
+            if (stateResult.Status == ProgressionResultStatus.Unsupported) return stateResult;
+            if (state != OfflineMainlineTaskState.Completed)
+                return Result(ProgressionResultStatus.NotReady, classId);
             if (task.rewardRuleIds.Length != 0 || task.rewardRuleIdsWithProbability.Length != 0)
                 return Result(ProgressionResultStatus.Unsupported, classId, "RewardRuleId");
 
@@ -1195,7 +1189,8 @@ namespace Zjcs.Offline.Progression
             return result;
         }
 
-        private ConditionEvaluation Evaluate(OfficialTaskCondition condition, OfflineMainlineSave save, int depth)
+        private ConditionEvaluation Evaluate(OfficialTaskCondition condition, OfflineMainlineSave save, int depth,
+            TaskStateProjection projection = null)
         {
             if (condition == null) return ConditionEvaluation.Met(true);
             if (depth > 20) return ConditionEvaluation.Unsupported("ConditionDepth");
@@ -1205,6 +1200,7 @@ namespace Zjcs.Offline.Progression
                 case "AlwaysCondition":
                     return ConditionEvaluation.Met(true);
                 case "TaskCompleteCondition":
+                    return CompletedTaskProgress(condition, save, projection, out _);
                 case "TaskSubmitCondition":
                     return ConditionEvaluation.Met(condition.taskClassIds != null
                         && condition.taskClassIds.All(save.Tasks.ClaimedMainlineTaskIds.Contains));

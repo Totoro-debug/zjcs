@@ -42,6 +42,8 @@ namespace Zjcs.Offline.HomeTaskUI
             => Create((JObject)data.Task(classId).CopyOriginalRow()["FinishCondition"], data.Task(classId).ProgressKey);
         public TaskUI.ICondition Display(int classId)
             => Create(data.Task(classId).CopyOriginalRow()["DisplayCondition"] as JObject, null);
+        public TaskUI.ICondition Acquisition(int classId)
+            => Create(data.Task(classId).CopyOriginalRow()["AcquestCondition"] as JObject, null);
 
         internal IHomeConditionNotification RequireNotification(TaskUI.ICondition condition)
         {
@@ -74,6 +76,14 @@ namespace Zjcs.Offline.HomeTaskUI
                 var save = owner.profile.Save;
                 switch (Type) {
                     case "NoneCondition": return (1, 1);
+                    case "TaskCompleteCondition": {
+                        var condition = new OfficialTaskCondition { type = Type,
+                            taskClassIds = row["TaskClassIds"].Values<int>().ToArray() };
+                        var result = owner.profile.GetTaskProgress(condition, out long current, out long target);
+                        if (result.Status != ProgressionResultStatus.Ready)
+                            throw new NotSupportedException(result.UnsupportedCondition);
+                        return (current, target);
+                    }
                     case "TaskSubmitCondition": {
                         var ids = row["TaskClassIds"].Values<int>().ToArray();
                         return (ids.Count(save.Tasks.ClaimedMainlineTaskIds.Contains), ids.Length);

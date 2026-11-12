@@ -12,6 +12,8 @@
 
 官方主线／委托任务读取目标目录、阶段、条件、奖励与地图背景，原任务条目和追踪窗口按对应进度刷新。
 
+所选 `PlayerTaskDataUtils.IsCompletedState` 只读取 `TaskState.Completed`；`TaskCompleteCondition.GetValue` 分别统计已提交记录与仍在角色任务表中的 Completed 实例，`TaskSubmitCondition.GetValue` 仅统计已提交记录。`PinnedTaskPanel` 按 `DisplayCondition` 决定是否展示已固定任务。客户端／共享代码中未取得服务器生成 Completed 状态的方法，单机状态生成采用下述已确认方案。
+
 ### 官方代码与资源依据
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
@@ -38,7 +40,7 @@
 
 [`OfflineHomeTaskConditions`](../../unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskConditions.cs) 将原任务 UI 条件接口连接到同版 `HomeConditionNotifications`：任务读取得到的条件保留原条件类型身份，并校验所属玩家作用域。原 `ConditionHandler` 补充宝箱、任务新增／更新／移除、完成记录、塔层、黑板及可激活实体通知，保留各组原条件顺序；女神分支先通知女神条件，再通知区域进度，其他实体仅通知区域进度。重复回调按原引用计数管理、执行一次；异常由明确宿主报告，继续后续通知。所有通知须由角色宿主在对应事务成功提交后转发，释放时清空原注册表。来源与适配入口见[任务条件通知来源](../../assets/reference/home-task-condition-notifications-source-manifest.json)。隔离完整工程静音 Play Mode 已验证七类真实任务条件的事件范围和调用顺序、女神分支、提交后读取替换的角色状态、重复订阅引用计数、退订、异常隔离、跨作用域拒绝及重复释放；原生奖励图标和全部既有货币窗口回归通过。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 及静态元数据检查通过。原生任务条目及自动角色事件转发仍未装配。
 
-`OfflineMainlineProgressSession` 在本地角色槽中维护玩家成长、物品、地图与区域进度、战斗次数、实体标签、女神区域、宝箱、事件去重和已领取主线任务，并提供条件检查与领奖事务。成功祈愿抽取会将实际开启数量与奖励、消耗写入同一存档事务；重复回执不会重复增加宝箱计数；`TaskSubmitCondition` 依据已领取 ID 判定；`TaskCompleteCondition` 当前同样按已领取 ID 计完成，原版完成但尚未提交的状态区别仍待迁移；不支持的条件会继续返回 `Unsupported`。保存由 `ProfileSlotCatalog` 和 `LocalJsonSaveFile` 提供。
+`OfflineMainlineProgressSession` 在本地角色槽中维护玩家成长、物品、地图与区域进度、战斗次数、实体标签、女神区域、宝箱、事件去重和已领取主线任务，并提供条件检查与领奖事务。成功祈愿抽取会将实际开启数量与奖励、消耗写入同一存档事务；重复回执不会重复增加宝箱计数；`TaskSubmitCondition` 依据已领取 ID 判定；`TaskCompleteCondition` 分别统计已提交 ID 和尚未领奖的 Completed 状态，Received 不再作为活跃完成实例重复计数；不支持的条件会继续返回 `Unsupported`。保存由 `ProfileSlotCatalog` 和 `LocalJsonSaveFile` 提供。
 
 所选 `884_156692` 的 `MapGameTotalCountCondition.GetValue/GetProgress` 从玩家黑板读取计数，`Player.GetBlackboardDataValue<long>` 在缺少记录时返回 0，不要求地图或区域已经初始化。本地首项任务 1000 因而在新角色进入地图前显示目标进度 0/2，状态为未完成；提前领奖不产生奖励或修改存档。条件进度保留实际次数，超过目标时不截断；原条件的描述格式化另行将显示参数夹到目标值。其余地图条件的既有支持边界保持独立。`OfflineMainlineProgressValidation.Run` 已验证新档零计数、超过目标的 3/2 原始进度、既有领奖及存档恢复；完整隔离工程静音 Play Mode 使用实际创建角色复核未进入地图的读取及提前领奖无状态变化，并通过原生 HUD 模拟指针回归。已查看运行截图；其中原任务条目仍用受控数据，不能作为真实任务栏装配的画面证明。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。
 
@@ -48,11 +50,15 @@
 
 森之国主线目标使用现有地图进度、女神激活、实体标签和塔进度存档；任务 1070 的 `DemonBattleLayerPassCondition` 按官方共享条件检查第 1 入口已通关层数，UI 按官方客户端将当前层及目标层各加 1 显示，并跳转到幻想阶梯入口。其他地图目标的跳转仍受对应地图正式入口接线限制。
 
+[`OfflineMainlineTaskStates`](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineTaskStates.cs) 生成主线的 Unavailable／Processing／Completed／Received 只读状态投影，后三项保留原枚举值；按接取链读取真实已保存进度，单次求值复用任务结果并拒绝循环引用，不写第二份状态账本或发奖。任务接取条件现在可读取未提交的 Completed 前置；同版 `OfflineHomeTaskConditionReader.Acquisition` 转发该原条件进度，任务展示仍按提交条件单独判断。领奖仅要求可提交的 Completed 状态，保持原固定奖励与已提交记录的原子存储；显示条件不再作为领奖事务门槛。原码、确认的本地生产规则、验证入口和输出哈希见[任务状态来源](../../assets/reference/home-mainline-task-states-source-manifest.json)。主线规则校验已覆盖新档55项接取链、未领奖的两个 Completed、后继 Processing、TaskComplete／TaskSubmit 不同计数、查询无写盘／无发奖、展示前的独立提交、Received 单次计数、重复领奖和重开存档；既有地图、女神、奖励与提交物品回归通过。完整隔离工程静音 Play Mode 使用实际新角色验证未提交的 Completed、原接取／展示差异，并通过条件通知、原生奖励图标及货币窗口回归。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。原生任务玩家事件与条目组合仍未完成。
+
 固定版任务配置与本地奖励、条件、跨地图魔女累计规则已接入；主城 HUD 输入、完整任务路线、画面和存档连续流程仍待完成。资源来源与工程检查范围见[工程页](unity-project.md)。
 
 ## 自定义实现
 
 任务数据和领奖在本地提交，无运行时服务器依赖。
+
+用户确认：主线满足接取条件且完成条件达成时生成本地 Completed；DisplayCondition 仅控制展示；成功领奖后写入已提交记录。所选主线使用已有存档的累计进度恢复状态，不补造服务器任务数据。
 
 职业主线 `MaxProfessionRankCondition` 的服务器附加参数使用角色本地最高已解锁职业阶级；解锁后读取实际存档中的最新阶级。该差异已由用户确认，保留原条件比较与布尔进度。目录中的官方任务条件只有在本地会话明确支持时才可完成；不支持的条件不会被猜测为满足。
 
