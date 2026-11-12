@@ -14,6 +14,14 @@
       "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightWarmupSetting.cs",
+      "sha256": "7ab6177887b6dd32c26af5fe81c826bb53325f9daed8f2df98225b147dbdaa45"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightDamageEffectUIWarmupSetting.cs",
+      "sha256": "2719306f32f945c13c99b5c273caa9ec59dd3ce8eb81e40474eb9291dcdcb0d1"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/CharacterDamageUI.cs",
       "sha256": "d328a4a655e12de7b030bd69fff92008d8221699424cb4af4f68348232e7850c"
     },
@@ -44,6 +52,30 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/DamageAutoSizeTextBack.cs",
       "sha256": "a71cac4a36030390d181e16a84ac1d834e061d04e935f4bba184e4118e12a00f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightDamageSettings.cs",
+      "sha256": "391d44898351776cbc4412031368397fe579b0002886f814929b9dab0293032d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ElementDamageColor.cs",
+      "sha256": "b67a53f19639826204afe760d72f66c428d4fe0ce1287bcf8cfab1b119d0fa94"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/CharacterDamageUIPoolPresent.cs",
+      "sha256": "f1d5736fdb016a1f30573afa405fc721a4424636d41bba1ea119b34ba8c3e82c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ICustomDamageUIFilter.cs",
+      "sha256": "1da9193c39f1dfb68ab78e1d5da7eb98ff952d3f861edc38fcba505c5a69c429"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/CustomDamageUITypeFilter.cs",
+      "sha256": "eee6c2bbadfb0cf533cd292a842d12cbc3412ecc18564f3d5d569bab194cefa6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/CharacterDamageUIManager.cs",
+      "sha256": "f7a12d43771a2436519444a053964fb2b2879c572e0555a08f2e7db545f59910"
     },
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EStatusCustomAction.cs",
@@ -116,6 +148,54 @@
       "sha256": "9c787fd0714e9260769c1b3c94b3872e2581f990af4fcef65e6d45d148d07218"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/FightDamageSettings.cs",
+      "sha256": "ad73894f94fff29bca55a1eec15f1f0c7e8a3be92f5f3d6284dcc94339639f11"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/FightDamageSettings.cs.meta",
+      "sha256": "898ddb7b31c1cfcf57c537b3fc18b12bc1dcc592dfa1fa16067ad5681cb3dfd3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/ElementDamageColor.cs",
+      "sha256": "6c391a191cc70ad1727c823c688f4ba32cf5a77eeab1ba4c735537647ba6e558"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/ElementDamageColor.cs.meta",
+      "sha256": "1c786bb9f93c51ce4d24fccc0199a67b33409b25c2e374c0fec0b428abf2bde2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/CharacterDamageUIPoolPresent.cs",
+      "sha256": "45d21d17e91139e8ee2283deeae553a8af9949deeedb32f84fb97e9dc2fbbf9d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/CharacterDamageUIPoolPresent.cs.meta",
+      "sha256": "53a40841eb2256b0ee1d28934966baf7ba14dcb760604ae3c8b7520ce0830618"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/ICustomDamageUIFilter.cs",
+      "sha256": "00bfae8ed94fc359912c237afa8f9619c844ba34a45e8f33aeedf8a5b71174cb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/ICustomDamageUIFilter.cs.meta",
+      "sha256": "29b47d3a8ec51205c37b07d7142dc67520517845e9516f3860b275bfc0acd3d8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/CustomDamageUITypeFilter.cs",
+      "sha256": "aa0cbd6cb3717220923bba3cb5d40ca3f52ae8b35e0589d501d65c2cff120962"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/CustomDamageUITypeFilter.cs.meta",
+      "sha256": "33837c4f2efd8216d8ff9dfe499449d35899611c4ca91e5b70d9b01183ebedf2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/CharacterDamageUIManager.cs",
+      "sha256": "e5ddf2f340a8b5e345c529d757c3135588de909d0474f89d9feff67677c7faac"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/CharacterDamageUIManager.cs.meta",
+      "sha256": "b3115990e42a932dedeff659deb5b419b9b57aae864a452dc31b6b0183ccbd92"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/EStatusCustomAction.cs",
       "sha256": "16afad72dafe77e24e2701ee2a0cb5769b30aea00b26986be55ca5c4e0eef34d"
     },
@@ -124,8 +204,16 @@
       "sha256": "5ac6fefca6cd1e80697a7995883d9cd0a041f0c02bf216902890a54d89dff3b8"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/CharacterDamageUIContext.cs",
+      "sha256": "37b0d42d765f00fb93e06aff608f6a5df0076be3447fc98f5b6368580eac2fe3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/CharacterDamageUIContext.cs.meta",
+      "sha256": "3926a3dca719a043adb70a8338a852124b43665195627a2ed6db22190e73de72"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/Zjcs.Official.BattleDamageUI.asmdef",
-      "sha256": "a4470dc388ea0a41a4d97be279632b01844b7bc159f48c6d73cb0b3f9584a6fa"
+      "sha256": "f758c4aea23b6af2d525489d9fe5e7d9d6d2fa4aa892e740c3192d7b273a6b9a"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/Zjcs.Official.BattleDamageUI.asmdef.meta",
@@ -134,12 +222,14 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_damage_ui_runtime.py",
-    "sha256": "e998b7bcd1549ee3d0e837dd2c2388766013f285d9b57976b1f406680248924c"
+    "sha256": "be3ac69052850e4d7e6686d181da974bd8e139c006ee285ed5b7eb2679e92a0e"
   },
   "adaptations": [
     "Namespace and existing original entity/pool/language types; remove IL comments and repair explicit Unity bool operators.",
     "Reuse original Chinese battle-number formatter; original LRU cache omitted.",
-    "Inject element threshold as a local property; original branches and order retained."
+    "Inject element threshold as a local property; original branches and order retained.",
+    "Original manager presentation, stacking, type/color priority and pool lifecycle retained; local fight/resource/notification context replaces absent framework root and R3 subscriptions.",
+    "Original stage-specific warmup lookup retained over consumed native fields; context supplies stage identity, consumed skill element and asynchronous prefab replay check; no server result is inferred."
   ],
-  "scope": "Complete original serialized UI behaviours; manager/event host migrated separately."
+  "scope": "Complete original serialized UI behaviours and manager; formal battle context migrated separately."
 }

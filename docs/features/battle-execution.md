@@ -66,9 +66,11 @@
 
 原 `CharacterDamageUI` 直接持有数字、提示、元素克制、破韧、真实伤害、图标和背景的序列化引用；以 `WaitForSeconds(mShowTime)` 完成展示，禁用时停止旧协程，复用时重新初始化。深渊数字使用白色，文字转换到线性色，图标、附加图和背景分别使用 `DamageColor` 的四种颜色；破韧、元素克制、真实伤害按原分支顺序显隐。`DamageFloatSize` 随主相机正交尺寸缩放，`DamageAutoSizeTextBack` 监听原文字／字体刷新后调整背景。原数字格式使用 `NumberFormatHelper.FormatBattleByFourWidth`，不是通用的三位有效数字缩写。
 
+原 `CharacterDamageUIManager` 消费角色受伤、状态结算、自损耗血、驱散和技能重放通知。显示值为 `DamageValue - ShieldValue`；隐藏标志优先，其次元素克制、非零值、零伤害过滤器及显示零标志。样式按正值治疗、免疫、回避、未命中、暴击、格挡选择，深渊另选三种样式；颜色按治疗、对应元素的格挡／暴击／普通、默认色选择，样式和颜色的格挡／暴击优先级不同。无伤害实体的状态治疗沿用普通样式和状态治疗色。旧飘字按后一个飘字的原高度及配置间隔向上堆叠；对象池数量按原阶段预热覆盖，完成时从角色列表移除并归池。
+
 ## 完整还原部分
 
-所选 884 的 13 种完整世界飘字 prefab 已恢复原层级、组件字段、Animator、曲线、原 bitmap Font、字形尺寸、贴图、材质和 Windows shader，载荷位于 `Official/Combat/DamageUI`。完整 `CharacterDamageUI`、`DamageNumberUI`、`DamageFloatSize`、`ElementConfrontationUI`、`DamageAutoSizeTextBack`、`DamageCustomActionUI` 与原枚举、四字段颜色结构迁入 `Official/BattleDamageUI`；复用现有原实体、池接口、语言与中文战斗数字格式实现，保留原执行顺序。来源见[脚本清单](../../assets/reference/battle-hud/damage-ui-runtime-source-manifest.json)及[原生资源清单](../../assets/reference/battle-hud/damage-ui-native-source-manifest.json)。该原生目录尚未替换正式回合驱动的旧飘字路径，管理器与角色通知的接入仍见下方缺项。
+所选 884 的 13 种完整世界飘字 prefab 已恢复原层级、组件字段、Animator、曲线、原 bitmap Font、字形尺寸、贴图、材质和 Windows shader，载荷位于 `Official/Combat/DamageUI`。完整 `CharacterDamageUI`、`DamageNumberUI`、`DamageFloatSize`、`ElementConfrontationUI`、`DamageAutoSizeTextBack`、`DamageCustomActionUI` 与原枚举、四字段颜色结构迁入 `Official/BattleDamageUI`；复用现有原实体、池接口、语言与中文战斗数字格式实现，保留原执行顺序。原 `CharacterDamageUIManager` 的显示、堆叠、样式／颜色优先级、预热查找、借还、七标志零伤害过滤器与原 `UIBase` 启禁用已迁入同目录，完整 `FightDamageSettings` 原生资产保留四字段颜色、13 项 GUID 与数量、间距；原 `FightSettings` 的预热记录和元素阈值单独投影。`CharacterDamageUIContext` 只桥接本地资源租约、实体查询和实际规则通知，保留技能实体缺席时的异步 prefab 重放检查；不在显示层重新结算规则。来源见[脚本清单](../../assets/reference/battle-hud/damage-ui-runtime-source-manifest.json)及[原生资源清单](../../assets/reference/battle-hud/damage-ui-native-source-manifest.json)。该原生目录及管理器尚未替换正式回合驱动的旧飘字路径，正式角色通知接入仍见下方缺项。
 
 - `OfficialBattleRuntimeController` 连接战斗会话、准备界面、场景宿主与结算回调；`FightBattleCheckpoint` 保存可恢复的本地战斗状态。
 - 回合步骤、格网与单位、受控站位、技能装配、目标选择、命中及部分伤害／HP／护盾／状态规则已有共享实现。各模块仍按官方配置和已迁移的客户端代码执行，不代表所有技能及组件覆盖完整。
@@ -166,7 +168,7 @@
 
 ## 尚未实现
 
-- 新的完整原生飘字目录尚未由正式 `CharacterDamageUIManager` 接管；角色受击、状态、耗血、驱散和重放通知、原预热配置及生命周期仍须统一接线，替换旧步骤驱动路径并验证没有重复播放。
+- 原 `CharacterDamageUIManager`、完整原生飘字及预热配置已迁移，正式宿主仍须将角色受击、状态、耗血、驱散和重放通知统一投影至 `CharacterDamageUIContext`，替换旧步骤驱动路径并验证没有重复播放；原生目录与管理器夹具不代表正式战斗接线完成。
 
 - 原伤害实体已接到具有完整归属、位置及状态结果的直接伤害／治疗／纯状态回执；派生同步／吸血等不在该施法直接归属列表中的表现、旧回执未知字段及全部特殊组件仍未完整覆盖。原人物受伤动作、全部外观后端的材质变色及正式人物／HUD 的全部通知监听尚未完整接通；已有飘字与代表图验证不代表这些部分完成。
 - 官方服务器缺失的 AI、随机、结果裁决及复杂触发条件尚未完整恢复；未确认的行为不作推测。
@@ -182,7 +184,7 @@
 
 ## 当前验证范围
 
-- 完整原生飘字目录已在 Unity 2022.3.57f1c2 隔离工程编译并执行内置屏静音 Play Mode：13 个原 prefab 全部加载，七种数字效果使用原 bitmap Font，六种中文提示产生实际字形网格；原中文格式 `1234567 → 123万`、暂停时不结束展示、归还时清除实体、FIFO 复用及每次仅一个完成回调通过。已查看数字／暴击动画、免疫／回避／未命中／重置冷却／减少冷却／驱散的实际画面。另三组元素免疫隐藏数字、真实伤害提示及破韧优先分支断言与截图检查通过；复用后低优先级提示的保留行为也沿用原代码，不额外清空。基础目录运行正常退出，追加分支检查完成后曾停在编辑器原生退出阶段，停止本会话进程，不记为追加运行正常退出。静态元数据检查通过（150,406 GUID）；主工程已完成 Unity 编译和 `ProjectTools.Validate`，编辑器以 0 正常退出。正式管理器／角色事件接线与 Windows Player 尚未完成，不能按目录夹具推断正式战斗飘字完成。
+- 完整原生飘字及管理器已在 Unity 2022.3.57f1c2 隔离工程执行内置屏静音 Play Mode：13 个原 prefab 全部加载，原 bitmap 数字和六种中文提示生成实际网格，`1234567 → 123万`、元素免疫、破灭伤害、破韧优先、暂停、FIFO 复用和单次完成通过；原阶段 101 预热 198 个、无战斗／未配置阶段预热 112 个通过。通过实际角色受伤事件及共享通知投影，核对九种样式的互斥优先级、格挡与暴击同时存在时的样式／颜色差异、线性色与 TextMesh 的 Color32 存储、64 位数值、护盾合并、原零值过滤、状态治疗和自损颜色、驱散／状态动作、普通／Extra／隐藏／异步重放、堆叠、角色移除与重新加入、管理器启禁用、回池和非池销毁；原数字格式 `5000000000 → 500000万` 保留，不自行改成常用单位。已查看完整 13 种效果及管理器九种样式的实际截图。完整夹具断言和截图检查通过，但编辑器仍停在原生退出阶段，已停止本会话验证进程，不记为 Play Mode 进程正常退出。主工程编译和 `ProjectTools.Validate` 以 0 正常退出；静态元数据检查通过（150,419 GUID）。验证通过角色通知输入管理器，尚未覆盖正式步骤到通知投影的宿主接线及 Windows Player，不能据此宣称正式战斗飘字已完成。
 
 - 完整原图声音的来源检查通过：1,735 个原 Event 资产引用、1,734 个不同事件及其 1,766 项有序动作，传递核对 2,913 个对象、2,977 条引用、2,942 份原 HIRC 载荷、4 个原全局设置块、1,562 份完整媒体及 2 份匹配的流式预取片段；7 个引用 RTPC 均在 8 项原全局默认值中解析。原 HIRC 的长度、类型、身份与 SHA256，媒体完整／预取身份及全部包的输入哈希已检查；原插件编号与 HIRC 编号分别处理，Actor-Mixer 的兄弟列表不启动无关声音，各包重复原载荷仍分别保留。静态元数据检查通过（144,784 个 GUID）。来源工具不改 Unity 场景或生产声音播放，未据此运行声音专项或发布 Player；运行库兼容性与实际输出仍是缺项。来源见[声音事件](../../assets/reference/battle-animation/native-sound-sources-source-manifest.json)及[传递依赖](../../assets/reference/battle-animation/native-sound-dependencies-source-manifest.json)。
 

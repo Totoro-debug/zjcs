@@ -23,6 +23,7 @@ def main():
     editor = project / 'Assets/Editor'
     editor.mkdir(exist_ok=True)
     shutil.copy2(ROOT / 'scripts/fixtures/battle_damage_ui_native_validation.cs', editor / 'DamageUiNativeValidation.cs')
+    shutil.copy2(ROOT / 'scripts/fixtures/battle_damage_ui_manager_checks.cs', editor / 'DamageUiManagerChecks.cs')
     (editor / 'DamageUiValidation.asmdef').write_text(json.dumps(dict(
         name='DamageUiValidation', includePlatforms=['Editor'], references=sorted(selected | {'Unity.TextMeshPro', 'Unity.ugui'})), indent=2), encoding='utf-8')
     print('Prepared native damage UI:', len(selected), 'assemblies;', project, flush=True)

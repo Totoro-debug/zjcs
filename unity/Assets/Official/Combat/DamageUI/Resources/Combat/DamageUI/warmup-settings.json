@@ -1,0 +1,45 @@
+{
+  "ElementConfrontThreshold": 0.5,
+  "FightWarmupSettings": [
+    {
+      "StageType": 101,
+      "PlayablePresetCount": 10,
+      "WarmupPlatformSettings": [
+        {
+          "Platform": 11,
+          "PresetCount": 100,
+          "MemorySizeLevelPresets": [
+            {
+              "MemorySizeLevel": 0,
+              "PresetCount": 20
+            },
+            {
+              "MemorySizeLevel": 1,
+              "PresetCount": 20
+            }
+          ]
+        }
+      ],
+      "PlayableWarmupSpecialSettings": [
+        {
+          "PlayableName": "playable16600",
+          "PresetCount": 200
+        },
+        {
+          "PlayableName": "playable_damage_fire",
+          "PresetCount": 200
+        }
+      ],
+      "DamageEffectUIs": [
+        {
+          "EffectUIType": 0,
+          "PresetCount": 100
+        },
+        {
+          "EffectUIType": 1,
+          "PresetCount": 50
+        }
+      ]
+    }
+  ]
+}

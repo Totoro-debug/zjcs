@@ -19,7 +19,7 @@ class DamageBinding(RoundSceneBinding):
     def register_scripts(self):
         super().register_scripts()
         for name in ('CharacterDamageUI', 'DamageNumberUI', 'DamageFloatSize',
-                     'DamageCustomActionUI', 'ElementConfrontationUI', 'DamageAutoSizeTextBack'):
+                     'DamageCustomActionUI', 'ElementConfrontationUI', 'DamageAutoSizeTextBack', 'FightDamageSettings'):
             path = ROOT / 'unity/Assets/Game/Runtime/Official/BattleDamageUI' / (name + '.cs')
             pointer = dict(fileID=11500000, guid=guid(Path(str(path) + '.meta')), type=3)
             self.scripts[name] = self.class_ids[script_id('', name)] = pointer
@@ -94,6 +94,7 @@ class DamageBinding(RoundSceneBinding):
         self.inputs.update(sources)
         from official_manifest import read_asset_manifest
         records = read_asset_manifest(self.recovery.apk.source.manifest_bytes('DefaultPackage', self.recovery.apk.archive))
+        self.configuration(records, prefabs)
         self.language_font = self.chinese_font(records)
         pointer = self.language_font['font_asset']
         for index, (relative, value, data) in enumerate(self.queue):
@@ -110,6 +111,45 @@ class DamageBinding(RoundSceneBinding):
             (json.dumps(dict(texts=[dict(key=key, text=value) for key, value in sorted(texts.items())]),
                         ensure_ascii=False, indent=2) + '\n').encode()))
         return prefabs
+
+    def configuration(self, records, prefabs):
+        from prepare_current_partner_native import identity
+        configurations = {}
+        for name in ('FightDamageSettings', 'FightSettings'):
+            relative = 'ScriptableConfig/Modules/Fight/' + name + '.asset'
+            row, = [r for r in records if r['path'] == 'Assets/' + relative]
+            obj, = [ptr.deref() for address, ptr in self.recovery.apk.container(row['bundle'])
+                if address.casefold() == row['path'].casefold() and ptr.deref().type.name == 'MonoBehaviour']
+            path = self.native / relative
+            for item in (path, Path(str(path) + '.meta')):
+                expected = self.checked[item.relative_to(self.cache / 'native-export-all').as_posix()]
+                if sha(item.read_bytes()) != expected: raise ValueError('Changed original damage UI configuration: ' + name)
+                self.inputs[item.relative_to(ROOT).as_posix()] = expected
+            docs = documents(path.read_text(encoding='utf-8-sig'))
+            original = self.recovery.fields(obj)
+            configurations[name] = (docs, original, obj)
+            self.proof[identity(obj)] = dict(source=self.recovery.apk.provenance(obj),
+                original_sha256=sha(obj.get_raw_data()), original_fields=original,
+                operation='Original native damage configuration or selected unmodified warmup/element fields.')
+        docs, original, obj = configurations['FightDamageSettings']
+        fields = docs[11400000]['MonoBehaviour']
+        self.learn(original, fields, obj)
+        fields['m_Script'] = self.scripts['FightDamageSettings']
+        value = hashlib.md5(b'zjcs:damage-ui:FightDamageSettings').hexdigest()
+        self.script_guids.add(value)
+        self.queue.append((Path('Resources/Combat/DamageUI/FightDamageSettings.asset'), value, docs))
+        resources = []
+        for ui_type, present in enumerate(original['EffectUIPoolPresents']):
+            source_guid = present['EffectUIPrefabProxy']['mAssetGuid']
+            record, = [r for r in records if r['guid'] == source_guid]
+            prefab, = [p for p in prefabs if p['type'] == ui_type and record['path'].endswith('/' + p['name'] + '.prefab')]
+            resources.append(dict(guid=source_guid, resource='Combat/DamageUI/' + prefab['name']))
+        settings = configurations['FightSettings'][1]
+        for name, data in [('prefab-bindings', dict(prefabs=resources)), ('warmup-settings',
+                {key: settings[key] for key in ('ElementConfrontThreshold', 'FightWarmupSettings')})]:
+            value = hashlib.md5(('zjcs:damage-ui:' + name).encode()).hexdigest()
+            self.queue.append((Path('Resources/Combat/DamageUI/' + name + '.json'), value,
+                (json.dumps(data, ensure_ascii=False, indent=2) + '\n').encode()))
 
 
 def main():
@@ -146,7 +186,15 @@ def main():
             raise ValueError('Refusing changed obsolete damage UI resource: ' + relative)
         path.unlink()
     installed = {}
+    referenced_guids = set()
+    def collect_references(value):
+        if isinstance(value, dict):
+            if value.get('guid'): referenced_guids.add(value['guid'])
+            for child in value.values(): collect_references(child)
+        elif isinstance(value, list):
+            for child in value: collect_references(child)
     for path, value, raw, data in planned:
+        collect_references(data)
         path.parent.mkdir(parents=True, exist_ok=True)
         if not path.exists() or path.read_bytes() != raw: path.write_bytes(raw)
         meta = Path(str(path) + '.meta')
@@ -164,7 +212,9 @@ def main():
                 meta.write_text('fileFormatVersion: 2\nguid: ' + value + '\nfolderAsset: yes\nDefaultImporter:\n  externalObjects: {}\n', encoding='utf-8', newline='\n')
             installed[meta.relative_to(ROOT).as_posix()] = sha(meta.read_bytes()); parent = parent.parent
     RECEIPT.write_text(json.dumps(dict(manifest=binding.recovery.apk.version, inputs=binding.inputs,
-        prefabs=prefabs, resources=binding.proof, scripts=binding.script_sources, installed=installed,
+        prefabs=prefabs, resources=binding.proof,
+        scripts={name: source for name, source in binding.script_sources.items()
+                 if source['pointer']['guid'] in referenced_guids}, installed=installed,
         language_font=binding.language_font,
         closure_guids=aliases, generator_sha256=sha(Path(__file__).read_bytes()),
         scope='Complete original world-space damage prefab hierarchy, animation, bitmap fonts and materials.'),

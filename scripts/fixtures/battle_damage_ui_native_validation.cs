@@ -160,9 +160,12 @@ public sealed class DamageUiRunner : MonoBehaviour, IStoryPlayableInstanceFactor
             "Original break-resilience branch has priority over elemental/true damage refresh.");
         Capture(camera, "damage-ui-break.png");
         foreach (var ui in borrowed) Object.Destroy(ui.gameObject);
+        yield return null;
+        IEnumerator manager = DamageUiManagerChecks.Check(camera);
+        while (manager.MoveNext()) yield return manager.Current;
         Debug.Log("Native damage UI passed: 13 complete prefabs, original bitmap numbers, scaled lifetime, clear and FIFO reuse.");
     }
-    static void Capture(Camera camera, string name)
+    internal static void Capture(Camera camera, string name)
     {
         var target = new RenderTexture(1200, 1000, 24); var pixels = new Texture2D(1200, 1000, TextureFormat.RGBA32, false);
         var previous = RenderTexture.active; camera.targetTexture = target; camera.Render(); RenderTexture.active = target;

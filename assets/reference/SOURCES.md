@@ -1,6 +1,6 @@
 # 官方来源与提取入口
 
-公共战斗的 13 种世界飘字取所选 `884_156692` 的 `Prefabs/UI/Fight/DamageScene` 原 prefab 及其 CAB 依赖，按 APK 优先、已下载同版云资源补齐的路径核对原对象与原生转换缓存。`prepare_battle_damage_ui_native.py` 恢复完整层级和序列化字段，绑定原 bitmap Font、字形、材质、Windows shader、Animator、中文语言表与原语言字体；输入对象、原始及转换哈希、脚本指针和独立闭包 GUID 见[原生飘字资源清单](battle-hud/damage-ui-native-source-manifest.json)。`prepare_battle_damage_ui_runtime.py` 从同版已核验程序集的反编译结果迁移完整 UI 行为，原码及输出 SHA256 见[飘字脚本清单](battle-hud/damage-ui-runtime-source-manifest.json)。新增载荷尚未进入完整素材快照；实现、接入和验证范围在[战斗执行](../../docs/features/battle-execution.md)维护。
+公共战斗的 13 种世界飘字取所选 `884_156692` 的 `Prefabs/UI/Fight/DamageScene` 原 prefab 及其 CAB 依赖，按 APK 优先、已下载同版云资源补齐的路径核对原对象与原生转换缓存。`prepare_battle_damage_ui_native.py` 恢复完整层级和序列化字段，绑定原 bitmap Font、字形、材质、Windows shader、Animator、中文语言表与原语言字体；输入对象、原始及转换哈希、脚本指针和独立闭包 GUID 见[原生飘字资源清单](battle-hud/damage-ui-native-source-manifest.json)。`prepare_battle_damage_ui_runtime.py` 从同版已核验程序集的反编译结果迁移完整 UI 行为，原码及输出 SHA256 见[飘字脚本清单](battle-hud/damage-ui-runtime-source-manifest.json)。 管理器与颜色／池配置类型沿用同版客户端反编译结果；原 `FightDamageSettings`、`FightSettings` 从所选 APK／已缓存 bundle 按清单地址核对原对象、原生导出及哈希，保留配置 GUID、完整颜色、预热记录和元素阈值，按原 GUID 生成本地 prefab 加载绑定。新增载荷尚未进入完整素材快照；实现、接入和验证范围在[战斗执行](../../docs/features/battle-execution.md)维护。
 
 [文档索引](../../docs/README.md) · [素材管理](../../docs/asset-management.md)
 
