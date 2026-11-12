@@ -33,6 +33,17 @@ namespace Zjcs.Presentation.Home
             adopt(home, runner);
             probe.BindDarkColdScene(runner.Controller, saved);
             runner.Controller.StepCompleted += _ => probe.ObserveStep(runner.Controller);
+            yield return WaitForPresentation(home, runner, probe, saved.Checkpoint);
+            File.WriteAllText(Path.Combine(output, "dark-status-cold-scene-after.json"),
+                FightBattleCheckpointSerializer.Save(runner.Controller.Checkpoint));
+            yield return capture("dark-status-after-cold-scene");
+            runner.enabled = true;
+            Debug.Log("[Dark status cold scene] Original weekly disk checkpoint, destroyed home/battle hosts, new original status/body/HUD, unchanged identity/count and no receipt replay passed.");
+        }
+
+        public static IEnumerator WaitForPresentation(HomeFeatureRuntime home, WeeklyChallengeBattleRunner runner,
+            OfficialBattleGraphCapabilityValidation probe, string checkpoint)
+        {
             float deadline = Time.realtimeSinceStartup + 45f;
             while (true)
             {
@@ -46,13 +57,8 @@ namespace Zjcs.Presentation.Home
             yield return new WaitForSecondsRealtime(.2f);
             Require(HudFullyVisible(home.Hud.CanvasTransform.Find("FightMainPanel")),
                 "Restored original bottom controls did not remain fully on screen.");
-            Require(FightBattleCheckpointSerializer.Save(runner.Controller.Checkpoint) == saved.Checkpoint,
+            Require(FightBattleCheckpointSerializer.Save(runner.Controller.Checkpoint) == checkpoint,
                 "Restored battle advanced while its runner was held for visual inspection.");
-            File.WriteAllText(Path.Combine(output, "dark-status-cold-scene-after.json"),
-                FightBattleCheckpointSerializer.Save(runner.Controller.Checkpoint));
-            yield return capture("dark-status-after-cold-scene");
-            runner.enabled = true;
-            Debug.Log("[Dark status cold scene] Original weekly disk checkpoint, destroyed home/battle hosts, new original status/body/HUD, unchanged identity/count and no receipt replay passed.");
         }
 
         private static void Require(bool value, string message)

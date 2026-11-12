@@ -80,6 +80,11 @@ namespace Zjcs.Presentation.Home
         private IEnumerator Run()
         {
             while(waitForStartup && GameObject.Find("OfficialSaveSelectionPanel")==null) yield return null;
+            if (SkillDarkStatusProcessValidation.ResumeRequested)
+            {
+                yield return SkillDarkStatusProcessValidation.Resume(output, CaptureGridFrame, ClickGridControl);
+                yield break;
+            }
             string saveRoot=Path.Combine(output,"save-"+Guid.NewGuid().ToString("N"));
             var slots=new ProfileSlotCatalog(saveRoot);
             string slot=slots.CreateSlot();
@@ -214,7 +219,8 @@ namespace Zjcs.Presentation.Home
             Require(clicked,"The native summon start button did not receive the simulated pointer click.");
             bool captured=false;
             bool resultCaptured=false;
-            bool coldSceneRequested = Environment.GetEnvironmentVariable("ZJCS_STATUS_COLD_SCENE_ACCEPTANCE") == "1";
+            bool coldSceneRequested = Environment.GetEnvironmentVariable("ZJCS_STATUS_COLD_SCENE_ACCEPTANCE") == "1"
+                || SkillDarkStatusProcessValidation.PrepareRequested;
             bool coldSceneCompleted = false;
             Require(!coldSceneRequested || graphCapabilityProbe != null,
                 "Dark cold-scene validation requires the graph capability diagnostic.");
@@ -245,6 +251,12 @@ namespace Zjcs.Presentation.Home
                     runner.enabled = false;
                     yield return CaptureGridFrame("dark-status-restored");
                     captured = true;
+                    if (SkillDarkStatusProcessValidation.PrepareRequested)
+                    {
+                        yield return SkillDarkStatusProcessValidation.Prepare(runner, saveRoot, slot, output,
+                            graphCapabilityProbe, CaptureGridFrame);
+                        yield break;
+                    }
                     yield return SkillDarkStatusColdSceneValidation.Rebuild(home, runner, slot, saveRoot, output,
                         graphCapabilityProbe, value => settled = value, (nextHome, nextRunner) => {
                             home = nextHome; runner = nextRunner; controller = nextRunner.Controller;

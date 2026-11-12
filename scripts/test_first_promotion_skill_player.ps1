@@ -59,6 +59,8 @@ $settings = @{
     ZJCS_DARK_STATUS_LIFECYCLE_ACCEPTANCE = $(if ($DarkStatus) { '1' } else { $null })
     ZJCS_FIRST_PROMOTION_STATUS_VIEWS = $(if ($AllStatusViews) { '1' } else { $null })
     ZJCS_STATUS_COLD_SCENE_ACCEPTANCE = $(if ($ColdStatusScene) { '1' } else { $null })
+    ZJCS_STATUS_PROCESS_PHASE = $null
+    ZJCS_STATUS_PROCESS_HANDOFF = $null
     ZJCS_SUMMON_DEATH_ACCEPTANCE = $(if ($ActionInvisible -or $SummonLife) { $null } else { [Environment]::GetEnvironmentVariable('ZJCS_SUMMON_DEATH_ACCEPTANCE', 'Process') })
 }
 $previous = @{}
