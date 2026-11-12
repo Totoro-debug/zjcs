@@ -1885,7 +1885,7 @@
     "Audio/Main_Cursor_Normal.wav.meta": "8f9ab35bdabe4e299e08971087abe7052acd77da183cb640c1e58a84a1893ba7",
     "Audio/Main_Cursor_Back.wav": "2ad53c943b98c5d0d6d8d0e83a96667b8f13835a6869f321d6ee8e001b522194",
     "Audio/Main_Cursor_Back.wav.meta": "bfba9a13f14a913378c0e6b0676b79b4412528eb37daf16c12c51351c9522ec5",
-    "home-currency-windows-texts.json": "26cd7e9a496a09db4b39ed689454a01ef692a96f69bf0a3185e62f391f744492",
+    "home-currency-windows-texts.json": "306088d622448796b42c187db3c76fe811f436a3be0810a161d20ff281ac205c",
     "home-currency-windows-texts.json.meta": "31224a9d1d6b6747ac32e6ad845923d0c0d56c8478db84d04796fbfdd24f1c3a",
     "home-currency-windows-rules.json": "2ba49cbf3eefe5ebd2320fd823c6cad5ad6609dec5c28d2bf10a3aa9804ce036",
     "home-currency-windows-rules.json.meta": "10d350b2a69afcad8911508b3685f6354f218d06bc6a3cabe3eb9d57d9e46cc4"
@@ -1923,7 +1923,7 @@
         "pendingBindings": {},
         "output": "ShopQuickBuyDialog.json",
         "nativeMeta_sha256": "857ef3ac6cc7c0e0818251a2cb4766c65235b3c11a0ba4806a9126a0d4da1a4c",
-        "output_sha256": "e48cbf43293d64b7ec4f76fddbf2945473fed22b665302c8a12288759c20f1dd"
+        "output_sha256": "6222bf2c4ecb1d51b12cec707879f099abfcd0a21a7cb155bb842ad05af6f446"
       },
       {
         "name": "PayMoneyChangeDialog",
@@ -1948,7 +1948,7 @@
         "pendingBindings": {},
         "output": "PayMoneyChangeDialog.json",
         "nativeMeta_sha256": "c2a5871ef1c170dd12e4940fde78e81d31f5d3b70ae269fd79e88083f5f514f8",
-        "output_sha256": "fcdd3319d05b117253d966f47921ad05531c96cac853eac06531da1079cf62f7"
+        "output_sha256": "5b4739ee27c06f2caf3a7f8e63a1fe11934942efa5faf1eebbf583eca396b872"
       },
       {
         "name": "ItemIconDefault",
@@ -1973,7 +1973,7 @@
         "pendingBindings": {},
         "output": "ItemIconDefault.json",
         "nativeMeta_sha256": "d9209dbe1cba9da379dc7491b66c3de67bbca8d9df60f9ca92c4a2d74a9165d4",
-        "output_sha256": "4cd8ab2ea9244e95279829574a6bb3d711d1d9907dcd5027243be4f44ecf5f04"
+        "output_sha256": "7b8aa8ec2e095794dcc1f3b5d6ecb443c0f25aca194a9423c7df951180c15b86"
       },
       {
         "name": "CenterHintContent",
@@ -1998,7 +1998,7 @@
         "pendingBindings": {},
         "output": "CenterHintContent.json",
         "nativeMeta_sha256": "b2f3ab516215e95028496f1c7a661ed20e49e27aab1e4060b3fa9f285b983eaa",
-        "output_sha256": "b1ca14f2100f55ce727d5c696b09f7c308d872b5dedaeea7f8751b5023bb9a90"
+        "output_sha256": "30f4516a68412d5e29898820503c21ae72c3ba193735a722e2427d2cdfba6dcb"
       }
     ],
     "additional_bundles": [
@@ -2485,7 +2485,7 @@
   },
   "gradient_aot_methods": [],
   "gradient_observations": "Selected AOT: all eight methods inspected. Preserve inclusive line character bounds, all four vertices, rotated X/unrotated line extents, alpha-one keys, renderMode=255 and ForceMeshUpdate(false,false).",
-  "generator_sha256": "979cfb18172b1cf37338ee61463c70a5038d60f2d10b3a36b540bccf68ab4334",
+  "generator_sha256": "7a4483b6ef73255b2918c033e65cc6f846924509ca7df2191bd106bd2e6ba23c",
   "audio": {
     "cab-8ede2c00df79c3aff9bab2859b047085:5924382417553736613": {
       "event": {
@@ -2606,6 +2606,8 @@
   },
   "texts": {
     "cancel": "取消",
+    "confirm": "确定",
+    "confirmation": "确认",
     "ui_common_contrast_1": "{0}/{1}",
     "ui_common_free": "免费",
     "ui_common_max": "最大",
@@ -2631,6 +2633,7 @@
     "ui_ItemIcon_count_key": "{0}",
     "ui_cancel_text": "取消",
     "common_format_args1": "{0}",
+    "ui_item_max_count_buy_confirm_text": "<color=#e37d38>{0}</color>持有数量已达上限，是否继续购买？",
     "item_1_name": "罗拉",
     "item_2_name": "晨星",
     "item_15_name": "耀星",
@@ -7180,14 +7183,15 @@
   },
   "offline_output_sha256": {
     "unity/Assets/Game/Runtime/Offline/HomeCurrencyUI.meta": "0fe7b326cae5ef67395a5cbc7f6aa5c1ac38100eefb046b007bcbfd8702dafd8",
-    "unity/Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyAssets.cs": "2520c63998b28e8ff7ccd3961016045b05845368f710600e8ab8693456458e53",
+    "unity/Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyAssets.cs": "36c99576210d54c201bcd231a535284a44d8f9eda3d64e59828c841735aacd80",
     "unity/Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyAssets.cs.meta": "682a5d1bc6519bdb27d9b2abd0eeffeae677c69296bf04a82734993683b00fc6",
     "unity/Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyExchange.cs": "fec4c6fa02bef26a1d8ea63c21a7710fd0176a10ed5aac781ff1fef51543106f",
     "unity/Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyExchange.cs.meta": "d0926020041012e3483a2dff0502434481b8fb97d9c14ff0c6f6d2792ebda1d8",
-    "unity/Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyWindows.cs": "269aad11457e6783f85b66a964f5a92fc9d3a8ad48b6a70c1bc3a45ba4c9f08e",
+    "unity/Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyWindows.cs": "b53d5f3e1d8c58c7c0b12da434c08f4e04c8dd88141a008a770663be4239c3bd",
     "unity/Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyWindows.cs.meta": "bf176013f61844f43e445bcd0ca33df62ed4e56554b7dac16034fa891f4d49f4",
     "unity/Assets/Game/Runtime/Offline/HomeCurrencyUI/Zjcs.Offline.HomeCurrencyUI.asmdef": "6f55a76c444187f315319723ea52d5815287b53f79989e81ec0a6bce36ae316b",
-    "unity/Assets/Game/Runtime/Offline/HomeCurrencyUI/Zjcs.Offline.HomeCurrencyUI.asmdef.meta": "7329529709f6e0b5380afee13d510c8cb35180d3c0d7548c52fd4d59b4ddd95b"
+    "unity/Assets/Game/Runtime/Offline/HomeCurrencyUI/Zjcs.Offline.HomeCurrencyUI.asmdef.meta": "7329529709f6e0b5380afee13d510c8cb35180d3c0d7548c52fd4d59b4ddd95b",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeCurrencyPlayer.cs": "5a984f089997d52f909787201455a45a0981d24411897cad500684ac07d40fe7"
   },
   "installed_output_sha256": {
     "unity/Assets/Official/Home/UI/CurrencyWindows/Image/ItemIcon/Money/Money_15.asset": "5222d222400df5339a14bf12db64096bb76d94dd0ed828cdeb2c651a01077e0c",
@@ -7212,7 +7216,7 @@
     "unity/Assets/Official/Home/UI/CurrencyWindows/HomeCurrencyItemIconDefault.prefab.meta": "dfa63d8aea98f753149ebb04c197864d3c270738a7c6efbd8af636068f3d14ca",
     "unity/Assets/Official/Home/UI/CurrencyWindows/HomeCurrencyCenterHintContent.prefab": "7648d6174997a56f60b10dc73ee08decf5d83b7aa9c17f48d080af72c37251a2",
     "unity/Assets/Official/Home/UI/CurrencyWindows/HomeCurrencyCenterHintContent.prefab.meta": "053a2485946a144bfa851381a76df6eed9eea7821c9d4574849ed2db9915db07",
-    "unity/Assets/Official/Home/UI/CurrencyWindows/home-currency-windows-texts.json": "26cd7e9a496a09db4b39ed689454a01ef692a96f69bf0a3185e62f391f744492",
+    "unity/Assets/Official/Home/UI/CurrencyWindows/home-currency-windows-texts.json": "306088d622448796b42c187db3c76fe811f436a3be0810a161d20ff281ac205c",
     "unity/Assets/Official/Home/UI/CurrencyWindows/home-currency-windows-texts.json.meta": "31224a9d1d6b6747ac32e6ad845923d0c0d56c8478db84d04796fbfdd24f1c3a",
     "unity/Assets/Official/Home/UI/CurrencyWindows/home-currency-windows-rules.json": "2ba49cbf3eefe5ebd2320fd823c6cad5ad6609dec5c28d2bf10a3aa9804ce036",
     "unity/Assets/Official/Home/UI/CurrencyWindows/home-currency-windows-rules.json.meta": "10d350b2a69afcad8911508b3685f6354f218d06bc6a3cabe3eb9d57d9e46cc4",
@@ -7289,11 +7293,15 @@
     "unity/Assets/Official/Partners/UI/Card/Audio/Main_Cursor_Normal.wav": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
     "unity/Assets/Official/Partners/UI/Input/Audio/Main_Cursor_Back.wav": "2ad53c943b98c5d0d6d8d0e83a96667b8f13835a6869f321d6ee8e001b522194"
   },
-  "binding_generator_sha256": "62bda508b668204214e2f7339849a62941d03481659e19add0b9a225d4d31690",
+  "binding_generator_sha256": "2ba371d0b04525afcf7030cfa05a87be5108d305b7a64a3aa72ac55425a28a9b",
   "binding_inputs": {
-    "scripts/fixtures/home_currency_windows_native_validation.cs": "c8d0e64e56ca4f7c6e11d36b7f653e4d6faf9d3a0a6b8a588015cbeb7f4ff755",
+    "scripts/fixtures/home_currency_windows_native_validation.cs": "5f31e433d8bd3281b50a1718dea15e0f008d61fc3ee84543f91dfe1b7989c643",
     ".tools/source-packages/current/884_156692/official-code/client-source/PlayerItemUIGetItemIdFactory.cs": "9d42f7468b915c4b7025ce3c40e1efe792e0fb2ca0c7c58a2411c8d5ff3ed98c",
     ".tools/source-packages/current/884_156692/official-code/client-source/ItemIconManager.cs": "24894a89c84c26923a1285f363133709fa7ee9f659d5e3dd0b1346ddc9109ebc",
-    ".tools/source-packages/current/884_156692/official-code/client-source/UIUtils.cs": "b6a88b20df5a8222afafd086f2ae949a5dc661380901bfed6f92449802f57fcf"
+    ".tools/source-packages/current/884_156692/official-code/client-source/UIUtils.cs": "b6a88b20df5a8222afafd086f2ae949a5dc661380901bfed6f92449802f57fcf",
+    "assets/reference/partner-confirm-dialog-source-manifest.json": "84e7d749039d87da5b0207e4c6a47619920fd67d88e1b6954d7a4bcff04dbd0c",
+    "unity/Assets/Official/Partners/UI/Confirm/ConfirmDialog.prefab": "a62ab40aa101b42347e65613e10e848f6663c15d25290ffd7c202582548a0a1e",
+    "unity/Assets/Game/Resources/Partners/OfficialPartnerConfirmAssetCatalog.asset": "7b2f9a6cf6ce5fdc2ef00559550896eeb35a6241d22fe21779636673a727f7fb",
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldConfirmDialog.cs": "d062323b99a2f731ee838a1c94921565e616018dd5fae6b1013537e5ef2e23f0"
   }
 }

@@ -66,9 +66,12 @@ namespace Zjcs.Offline.HomeCurrencyUI
         }
         public HomeCurrencyWindowItemInfo Item(int id)
         {
-            var row=ItemRow(id);
+            Load();
+            if(!itemRows.TryGetValue(id,out var row)) return null;
+            var limit=((JArray)data["tables"]["item_count_limit"]).FirstOrDefault(value=>(int)value["ClassId"]==id);
             return new HomeCurrencyWindowItemInfo {
                 Id=id, Icon=(string)row["RawIcon"], Name=Text("item_"+id+"_name"),
+                ItemCountLimitInfo=limit==null?null:new HomeCurrencyWindowItemCountLimitInfo{MaxCount=(long)limit["MaxCount"]},
                 HasAutoIncrease=row["Effects"] is JArray effects && effects.Any(effect=>(string)effect["_type"]=="ItemEffectAutoIncrease") };
         }
         public long CountLimit(int id)

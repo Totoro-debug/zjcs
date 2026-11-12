@@ -25,7 +25,10 @@ public sealed class HomeCurrencyWindowItemInfo
     public int Id;
     public string Icon, Name;
     public bool HasAutoIncrease;
+    public HomeCurrencyWindowItemCountLimitInfo ItemCountLimitInfo;
+    public bool IsCountLimit => ItemCountLimitInfo != null;
 }
+public sealed class HomeCurrencyWindowItemCountLimitInfo { public long MaxCount; }
 public sealed class HomeCurrencyAutoIncreaseEvent { public int ItemId; }
 public sealed class HomeCurrencyEnterNewDay { }
 public sealed class HomeCurrencyAwardMessage { public object Value; }

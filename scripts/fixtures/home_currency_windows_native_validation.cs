@@ -42,10 +42,12 @@ public static class HomeCurrencyWindowsNativeValidation
     }
     public static void Run()
     {
+        if(Application.isBatchMode)throw new InvalidOperationException("Original confirmation text waits for end of frame; run this fixture without -batchmode through the internal-display launcher.");
         var work=Path.GetFullPath(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"));
         if(!Path.GetFullPath(Application.dataPath).StartsWith(work+Path.DirectorySeparatorChar))throw new InvalidOperationException("Owned isolated project required.");
         Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION","1");
         EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);
+        if(!Application.isBatchMode)EditorWindow.GetWindow(typeof(Editor).Assembly.GetType("UnityEditor.GameView"),false,"Game",false).Repaint();
         SessionState.SetBool(Key,true);SessionState.SetFloat(Key+".Deadline",(float)EditorApplication.timeSinceStartup+180);EditorApplication.EnterPlaymode();
     }
     public static void Finish(Exception error)
@@ -64,15 +66,16 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     OfflineMainlineProgressSession profile;ProfileSlotCatalog slots;string profileSlot,lastExchangeRequest;
     OfflineHomeCurrencyPlayer profilePlayer;OfflineHomeCurrencyExchange exchange;
     FontAssetFontService fonts;ScreenAdaptService screen;OfflineHomeTopBar topBar;OfflinePartnerUiSoundScope soundScope;IDisposable metrics;
-    GameObject active;WorldPopupWindow popup;Material blur;
+    GameObject active;WorldPopupWindow popup;WorldConfirmDialog confirmation;Material blur;
     readonly Dictionary<int,long> counts=new Dictionary<int,long>{{1,100},{2,500},{15,5}};
     readonly List<string> calls=new List<string>();Action<IProfessionItemData,long,object> changed;
     Action<HomeCurrencyEnterNewDay> day;Action<HomeCurrencyAutoIncreaseEvent> increase;readonly List<Func<HomeCurrencyAwardMessage,bool>> awardHandlers=new List<Func<HomeCurrencyAwardMessage,bool>>();
-    bool banCost,allowLimit=true,payAward;long alreadyBought;int lack,confirm,directPay,exchanges,awards;Action confirmAction;JObject proof;
+    bool banCost,allowLimit=true,payAward;long alreadyBought;int lack,confirm,directPay,exchanges,awards;JObject proof;
     IEnumerator Start()
     {
-        AudioListener.volume=0;Application.logMessageReceived+=(text,stack,type)=>{if(type==LogType.Error||type==LogType.Exception||type==LogType.Assert)errors++;};
-        var steps=Exercise();for(;;){bool next;object current=null;try{next=steps.MoveNext();if(next)current=steps.Current;}catch(Exception e){HomeCurrencyWindowsNativeValidation.Finish(e);yield break;}if(!next)break;yield return current;}
+        Application.runInBackground=true;AudioListener.volume=0;Application.logMessageReceived+=(text,stack,type)=>{if(type==LogType.Error||type==LogType.Exception||type==LogType.Assert)errors++;};
+        var steps=new Stack<IEnumerator>();steps.Push(Exercise());
+        while(steps.Count>0){bool next;object current=null;try{next=steps.Peek().MoveNext();if(next)current=steps.Peek().Current;}catch(Exception e){HomeCurrencyWindowsNativeValidation.Finish(e);yield break;}if(!next){steps.Pop();continue;}if(current is IEnumerator nested){steps.Push(nested);continue;}yield return current;}
         HomeCurrencyWindowsNativeValidation.Finish(null);
     }
     IEnumerator Exercise()
@@ -122,6 +125,13 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         allowLimit=true;Click(cost.Btn);yield return WaitClosed();Require(calls.IndexOf("buy:1:1")<calls.LastIndexOf("close"),"request precedes immediate close");Require(borrowedIcons==0&&subscribers==0&&day==null&&increase==null,"quick-buy releases icon and all subscriptions");
         int cancellations=0;yield return Open(windows.ShowQuickBuy(1,0,true,()=>cancellations++).gameObject);
         quick=active.GetComponent<QuickBuyDialog>();Require(Field<ItemIcon>(quick,"mIcon").GetInstanceID()==firstIconId,"original icon pool reuses the returned icon");Click(Field<Button>(quick,"mCancelBtn"));yield return WaitClosed();Require(cancellations==1,"native cancel callback once");
+        Require(!HomeCurrencyBuyLimit.CheckBuyLimitCountItem(-1,1,this,assets.Text,PopupLimitConfirm).GetAwaiter().GetResult(),"original missing item rejects buy-limit check");
+        Require(HomeCurrencyBuyLimit.CheckBuyLimitCountItem(1,long.MaxValue,this,assets.Text,PopupLimitConfirm).GetAwaiter().GetResult(),"unlimited item skips held-count addition");
+        counts[109]=29;Require(HomeCurrencyBuyLimit.CheckBuyLimitCountItem(109,1,this,assets.Text,PopupLimitConfirm).GetAwaiter().GetResult(),"original exact ownership limit needs no confirmation");
+        counts[109]=30;var limited=HomeCurrencyBuyLimit.CheckBuyLimitCountItem(109,1,this,assets.Text,PopupLimitConfirm);Require(limited.Status==UniTaskStatus.Pending,"original excess ownership waits for confirmation");
+        yield return WaitConfirmation();Capture("home-currency-limit-confirm-native.png");Require(confirmation.ContentText.GetComponent<TMP_Text>().text.Contains(assets.Item(109).Name),"original item name inserted into limit confirmation");Click(confirmation.CancelBtn);yield return WaitAllClosed();Require(!limited.GetAwaiter().GetResult(),"native cancel rejects excess ownership purchase");
+        limited=HomeCurrencyBuyLimit.CheckBuyLimitCountItem(109,1,this,assets.Text,PopupLimitConfirm);yield return WaitConfirmation();Click(confirmation.ConfirmBtn);yield return WaitAllClosed();Require(limited.GetAwaiter().GetResult(),"native confirm allows original excess ownership branch");
+        limited=HomeCurrencyBuyLimit.CheckBuyLimitCountItem(109,1,this,assets.Text,PopupLimitConfirm);yield return WaitConfirmation();var confirmMask=canvas.GetComponentsInChildren<WorldWindowBlurMask>().Single(mask=>mask.AttachWindow==confirmation.PopupWindow);Click(confirmMask.Button,new Vector2(5,5));Require(windows.WindowCount==1&&limited.Status==UniTaskStatus.Pending,"original mask guard ignores clicks during the first half second");yield return new WaitForSeconds(.55f);Click(confirmMask.Button,new Vector2(5,5));yield return WaitAllClosed();Require(!limited.GetAwaiter().GetResult(),"original mask-close automatically runs the cancel callback");
         InitializeExchangeProfile();
         yield return Open(windows.ShowExchange().gameObject);
         var pay=active.GetComponent<PayMoneyChangeDialog>();Require(pay.SetCountSlider.CurrentCount==1&&pay.CountSliderGo.activeSelf,"original pay default selection");
@@ -133,9 +143,12 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         Require(!exchange.Exchange("overdraw",1).IsApplied&&!exchange.Exchange("zero",0).IsApplied&&committed==File.ReadAllText(slots.GetProgressPath(profileSlot)),"invalid and insufficient exchanges leave the saved profile unchanged");
         SetBalance(15,2);yield return Open(windows.ShowExchange(3).gameObject);
         pay=active.GetComponent<PayMoneyChangeDialog>();Require(!pay.CountSliderGo.activeSelf&&pay.ExchangeFixedTxt.gameObject.activeSelf&&Field<long>(pay,"mCurrentCount")==3,"original explicit quantity keeps fixed mode");
-        Click(pay.ConfirmBtn);Require(confirm==1&&exchanges==1,"insufficient fixed amount asks before direct pay");
+        Click(pay.ConfirmBtn);Require(confirm==1&&exchanges==1,"insufficient fixed amount asks before direct pay");yield return WaitConfirmation();Capture("home-currency-shortage-confirm-native.png");
+        Require(windows.WindowCount==2&&pay.gameObject.activeInHierarchy,"original shortage confirmation stacks above the exchange window");
+        Click(confirmation.CancelBtn);yield return WaitConfirmationClosed();Require(active&&directPay==0&&windows.WindowCount==1,"native shortage cancellation keeps the exchange window open");
+        Click(pay.ConfirmBtn);yield return WaitConfirmation();
         payAward=false;Require(!awardHandlers.Single()(new HomeCurrencyAwardMessage()),"non-pay award continues propagation");payAward=true;Require(awardHandlers.Single()(new HomeCurrencyAwardMessage())&&awards==1,"pay award original interception");
-        confirmAction();yield return WaitClosed();Require(directPay==1,"confirmed shortage initializes direct-pay port then closes");
+        Click(confirmation.ConfirmBtn);yield return WaitAllClosed();Require(directPay==1,"confirmed shortage initializes direct-pay port then closes");
         SetBalance(15,0);yield return Open(windows.ShowExchange().gameObject);pay=active.GetComponent<PayMoneyChangeDialog>();Require(pay.SetCountSlider.CurrentCount==0&&Field<long>(pay,"mCurrentCount")==0,"zero balance original disabled range");Click(pay.CancelBtn);yield return WaitClosed();
         SetBalance(15,2);yield return Open(windows.ShowExchange().gameObject);pay=active.GetComponent<PayMoneyChangeDialog>();
         string primary=slots.GetProgressPath(profileSlot);string beforeFailure=File.ReadAllText(primary);
@@ -177,9 +190,9 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     public void Close(GameObject window){Require(window==active,"close current original window");calls.Add("close");windows.Close(window);}
     IEnumerator WaitClosed(){var deadline=Time.time+5;while(active){Require(Time.time<deadline,"original hide completes");yield return null;}yield return null;}
     void Notify(int id)=>changed?.Invoke(new ItemData(id,new IconInfo(assets.ItemRow(id))),0,null);
-    void Click(Button button)
+    void Click(Button button,Vector2? position=null)
     {
-        Canvas.ForceUpdateCanvases();Require(button&&button.isActiveAndEnabled&&button.interactable,"native enabled button");var rect=(RectTransform)button.transform;pointer=RectTransformUtility.WorldToScreenPoint(cameraUi,rect.TransformPoint(rect.rect.center));var data=new PointerEventData(events){position=pointer,button=PointerEventData.InputButton.Left};var hits=new List<RaycastResult>();events.RaycastAll(data,hits);Require(hits.Count>0&&ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject)==button.gameObject,"native unobscured first pointer: "+button.name);ExecuteEvents.Execute(button.gameObject,data,ExecuteEvents.pointerDownHandler);ExecuteEvents.Execute(button.gameObject,data,ExecuteEvents.pointerUpHandler);ExecuteEvents.Execute(button.gameObject,data,ExecuteEvents.pointerClickHandler);
+        Canvas.ForceUpdateCanvases();Require(button&&button.isActiveAndEnabled&&button.interactable,"native enabled button");var rect=(RectTransform)button.transform;pointer=position??RectTransformUtility.WorldToScreenPoint(cameraUi,rect.TransformPoint(rect.rect.center));var data=new PointerEventData(events){position=pointer,button=PointerEventData.InputButton.Left};var hits=new List<RaycastResult>();events.RaycastAll(data,hits);Require(hits.Count>0&&ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject)==button.gameObject,"native unobscured first pointer: "+button.name);ExecuteEvents.Execute(button.gameObject,data,ExecuteEvents.pointerDownHandler);ExecuteEvents.Execute(button.gameObject,data,ExecuteEvents.pointerUpHandler);ExecuteEvents.Execute(button.gameObject,data,ExecuteEvents.pointerClickHandler);
     }
     void Capture(string name){Canvas.ForceUpdateCanvases();cameraUi.Render();var previous=RenderTexture.active;RenderTexture.active=target;var image=new Texture2D(target.width,target.height,TextureFormat.RGB24,false);image.ReadPixels(new Rect(0,0,target.width,target.height),0,0);image.Apply();File.WriteAllBytes(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"),name),image.EncodeToPNG());RenderTexture.active=previous;Object.Destroy(image);}
     static T Field<T>(object value,string name)=>(T)value.GetType().GetField(name,BindingFlags.Instance|BindingFlags.NonPublic).GetValue(value);
@@ -206,7 +219,11 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     public void ShowLackOfItem(int id,long count,IWindowOperator owner){lack++;calls.Add("lack:"+id+":"+count);}
     public void ShowError(int code,string name)=>calls.Add("error:"+code);public void SystemMessage(string text)=>calls.Add("message:"+text);
     public void PopupItemDetail(IWindowOperator owner,int id,long count){details++;Require(count==0,"original details initial count");}
-    public void PopupConfirm(IWindowOperator owner,string key,Action accept){Require(key=="UI_Pay_Change_Item_Not_Enough_Confirm","original confirmation key");confirm++;confirmAction=accept;}
+    public void PopupConfirm(IWindowOperator owner,string key,Action accept){Require(key=="UI_Pay_Change_Item_Not_Enough_Confirm","original confirmation key");confirm++;confirmation=windows.ShowConfirm(key,null,accept);}
+    void PopupLimitConfirm(Action<WorldConfirmDialog> initialize)=>windows.PopupConfirm(dialog=>{confirmation=dialog;initialize(dialog);});
+    IEnumerator WaitConfirmation(){Require(confirmation,"original native confirmation created");float deadline=Time.time+5;while(!confirmation.gameObject.activeInHierarchy||confirmation.PopupWindow.State!=WorldPopupWindow.EState.Show){Require(Time.time<deadline,"original confirmation show completes");yield return null;}}
+    IEnumerator WaitConfirmationClosed(){float deadline=Time.time+5;while(confirmation){Require(Time.time<deadline,"original confirmation hide completes");yield return null;}yield return null;}
+    IEnumerator WaitAllClosed(){float deadline=Time.time+5;while(windows.WindowCount>0){Require(Time.time<deadline,"all original popups close");yield return null;}yield return null;}
     public void PopupDirectPay(IWindowOperator owner,Action initialized){directPay++;initialized();}
     public void ClosePayMoneyChangeDialog()=>Close(active);public bool AwardServiceAvailable=>true;
     public void RegisterAwardHandler(Func<HomeCurrencyAwardMessage,bool> handler)=>awardHandlers.Add(handler);public void RemoveAwardHandler(Func<HomeCurrencyAwardMessage,bool> handler)=>Require(awardHandlers.Remove(handler),"original award handler removed");
@@ -225,17 +242,10 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     public RenderTexture GetRenderTexture()=>RenderTexture.GetTemporary(target.width/13,target.height/13);public void ReleaseRenderTexture(RenderTexture texture)=>RenderTexture.ReleaseTemporary(texture);
     public void TakeAShot(RenderTexture texture){Canvas.ForceUpdateCanvases();cameraUi.Render();Zjcs.Presentation.World.OfficialDungeonPopupMask.Blur(target,texture,blur);}
     public IPlayerItemUIHandler CreateHandler(PlayerItemType type,PlayerItemUIItemIdProvider provider)=>new CurrencyHandler();
-    public IPlayerItemUICountProvider CreateCountProvider(PlayerItemType type,PlayerItemUIItemIdProvider provider)=>profilePlayer!=null?new PlayerItemUIPlayerItemCountProvider(provider.ItemId,new ExchangeBindings(this)):new Counter(this,provider.ItemId);
+    public IPlayerItemUICountProvider CreateCountProvider(PlayerItemType type,PlayerItemUIItemIdProvider provider)=>profilePlayer!=null?profilePlayer.CreateCountProvider(type,provider):new Counter(this,provider.ItemId);
     public IDisposable LoadIcon(int id,Action<Sprite> callback){var row=proof["currency_images"][id.ToString()];callback(row!=null?Load<Sprite>(row["pointer"]):Zjcs.Official.HomeHudUI.OfficialHomeTopBarAssetCatalog.LoadDefault().Icon(id));return new Release(()=>{});}
     public Vector2 InputPosition=>pointer;public string ColorFormat(string value,Color color)=>WrapColor(value,color);
     sealed class CurrencyHandler:IPlayerItemUIHandler{public int ItemId{get;set;}public bool ShowAddBtn=>false;public void HandleAddBtn(){}public void HandleClick(Vector2 point){}}
-    sealed class ExchangeBindings:IHomeCurrencyBindings
-    {
-        readonly HomeCurrencyWindowsNativeRunner owner;public ExchangeBindings(HomeCurrencyWindowsNativeRunner owner){this.owner=owner;}
-        public IHomeCurrencyPlayer MainPlayer=>owner.profilePlayer;public bool ManagerAvailable=>owner.profilePlayer.ManagerAvailable;public SafeAction OnPlayerUpdate=>owner.profilePlayer.OnPlayerUpdate;
-        public HomeCurrencyItemInfo GetItemInfo(int id)=>new HomeCurrencyItemInfo{HasAutoIncrease=owner.assets.Item(id).HasAutoIncrease};
-        public bool IsOutputAdditionItem(int id)=>OfficialHomeAutoIncreaseConfiguration.LoadDefault().outputAdditionItems.Contains(id);
-    }
     sealed class Counter:IPlayerItemUICountProvider {readonly HomeCurrencyWindowsNativeRunner owner;readonly int id;public Counter(HomeCurrencyWindowsNativeRunner owner,int id){this.owner=owner;this.id=id;}public long Count=>owner.GetItemAmount(id);public event Action<long,bool> OnItemCountUpdate;public void Init(){}public void Release(){}}
     sealed class Release:IDisposable{Action action;public Release(Action value){action=value;}public void Dispose(){var value=action;action=null;value?.Invoke();}}
     sealed class IconInfo:IProfessionItemInfo {readonly JObject row;public IconInfo(JObject value){row=value;}public int ClassId=>(int)row["ClassId"];public string Icon=>(string)row["RawIcon"];public string IconEffect=>(string)row["IconEffect"];public Quality Quality=>(Quality)(int)row["Quality"];public bool CanOverlap=>(bool)row["CanOverlap"];public object GetFakeIcon()=>null;}

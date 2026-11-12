@@ -35,18 +35,18 @@ namespace Zjcs.Offline.HomeUI
 
         public HomeCurrencyItemInfo GetItemInfo(int itemId)
         {
-            RequireHomeCurrency(itemId);
+            RequireCurrency(itemId);
             return new HomeCurrencyItemInfo { HasAutoIncrease = itemId == 57 };
         }
 
-        public bool IsOutputAdditionItem(int itemId) { RequireHomeCurrency(itemId); return outputAdditionItems.Contains(itemId); }
+        public bool IsOutputAdditionItem(int itemId) { RequireCurrency(itemId); return outputAdditionItems.Contains(itemId); }
 
         public IPlayerItemUICountProvider CreateCountProvider(PlayerItemType type, PlayerItemUIItemIdProvider id)
         {
             int expected = type == PlayerItemType.Money ? 1 : type == PlayerItemType.Diamon ? 2
-                : type == PlayerItemType.TiliId ? 57 : 0;
+                : type == PlayerItemType.TiliId ? 57 : type == PlayerItemType.FlareStar ? 15 : 0;
             if (expected == 0 || expected != id.ItemId)
-                throw new InvalidOperationException("Only the selected original home currencies are bound here.");
+                throw new InvalidOperationException("Only the selected original home and exchange currencies are bound here.");
             return new PlayerItemUIPlayerItemCountProvider(id.ItemId, this);
         }
 
@@ -78,10 +78,10 @@ namespace Zjcs.Offline.HomeUI
             && left.LastUpdateTimeTicks == right.LastUpdateTimeTicks && left.IncreaseSpeed == right.IncreaseSpeed
             && left.BonusSeconds == right.BonusSeconds && left.MaxCount == right.MaxCount;
 
-        private static void RequireHomeCurrency(int itemId)
+        private static void RequireCurrency(int itemId)
         {
-            if (itemId != 1 && itemId != 2 && itemId != 57)
-                throw new InvalidOperationException("The selected home top bar has currencies 1/2/57.");
+            if (itemId != 1 && itemId != 2 && itemId != 15 && itemId != 57)
+                throw new InvalidOperationException("The selected home and exchange bars have currencies 1/2/15/57.");
         }
 
         public void Dispose() { disposed = true; observed = null; OnItemCountUpdate = null; OnAutoIncreaseItemDataUpdate = null; }

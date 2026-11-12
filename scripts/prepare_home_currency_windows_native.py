@@ -155,6 +155,7 @@ class HomeCurrencyWindowsBinding(HomeCountControlsBinding):
             'ui_quick_buy_limit_BuyCountLimit_None','ui_quick_buy_limit_BuyCountLimit_Daily','ui_quick_buy_limit_BuyCountLimit_Weekly'))
         keys.update('item_'+str(row['ClassId'])+'_name' for row in self.tables['item'])
         keys.add('ui_ItemIcon_count_key')
+        keys.update(('confirmation','confirm','cancel','ui_item_max_count_buy_confirm_text'))
         keys.update('ui_quick_buy_'+kind+'_limited' for kind in ('None','Daily','Weekly'))
         texts,sources=language(keys);missing=keys-texts.keys()
         if missing-{'{0}'}:raise ValueError('Original currency-window language missing: '+repr(missing))

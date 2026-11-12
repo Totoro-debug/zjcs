@@ -195,6 +195,30 @@ def build():
     bag = bag.replace('items[count++] = item;', 'items[count++] = item;\n        return item;')
     emit('HomeCurrencyDisposableBag', bag)
 
+    source=read('ShopUIUtils','client-source-resolved')
+    proof=CODE/'client-source-resolved/ShopUIUtils.decompilation.json'
+    inputs[proof.relative_to(ROOT).as_posix()]=sha(proof)
+    decompiled=json.loads(proof.read_bytes())
+    assert decompiled['sha256']==sha(CODE/'client-source-resolved/ShopUIUtils.cs')
+    for path,digest in decompiled['inputs'].items():
+        assert sha(ROOT/path)==digest,path
+        inputs[path]=digest
+    body=method(source,'public static async UniTask<bool> CheckBuyLimitCountItem(int itemId, long count)')
+    body=replace(body,'int itemId, long count)',
+        'int itemId, long count, IHomeCurrencyWindowServices services, Func<string,string> localize, Action<Action<Zjcs.Official.WorldUI.WorldConfirmDialog>> popup)')
+    body=replace(body,'ItemInfo itemInfo = Parsers.Instance.ItemInfoParser.Get(itemId);',
+        'HomeCurrencyWindowItemInfo itemInfo = services.GetItemInfo(itemId);')
+    body=replace(body,'MeManager.MainPlayer','services.Player')
+    body=replace(body,'LanguageManager.Instance.GetText(LanguageUtils.GetItemNameKey(itemId))',
+        'localize(services.GetItemNameKey(itemId))')
+    body=replace(body,'LanguageUtils.TextKeyArgWrap confirmText = new LanguageUtils.TextKeyArgWrap("ui_item_max_count_buy_confirm_text", text);',
+        'object[] confirmText = new object[] { text };')
+    body=replace(body,'WindowManager.Instance.Popup((ConfirmDialog go) =>','popup(go =>')
+    body=replace(body,'go.Init(confirmText, confirmAction, cancelAction);',
+        'go.Init("ui_item_max_count_buy_confirm_text", confirmText, confirmAction, cancelAction);')
+    body=replace(body,'}, instant: false, WindowLifeType.Local, null, autoAdjustByWindowContext: true);','});')
+    emit('HomeCurrencyBuyLimit','public static class HomeCurrencyBuyLimit\n{\n'+body+'\n}')
+
     emit('IHomeCurrencyWindowServices', '''public sealed class HomeCurrencyPaySettings
 {
     public long DiamonChangeScale, DiamonChangeMin, DiamonChangeMax;
@@ -204,7 +228,10 @@ public sealed class HomeCurrencyWindowItemInfo
     public int Id;
     public string Icon, Name;
     public bool HasAutoIncrease;
+    public HomeCurrencyWindowItemCountLimitInfo ItemCountLimitInfo;
+    public bool IsCountLimit => ItemCountLimitInfo != null;
 }
+public sealed class HomeCurrencyWindowItemCountLimitInfo { public long MaxCount; }
 public sealed class HomeCurrencyAutoIncreaseEvent { public int ItemId; }
 public sealed class HomeCurrencyEnterNewDay { }
 public sealed class HomeCurrencyAwardMessage { public object Value; }

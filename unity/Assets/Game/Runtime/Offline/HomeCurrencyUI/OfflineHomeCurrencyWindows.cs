@@ -103,6 +103,28 @@ namespace Zjcs.Offline.HomeCurrencyUI
             return dialog;
         }
 
+        public WorldConfirmDialog ShowConfirm(string key, object[] args, Action confirm, Action cancel = null)
+        {
+            WorldConfirmDialog dialog = null;
+            Create(OfficialPartnerConfirmAssetCatalog.LoadDefault().Prefab, root =>
+            {
+                dialog = root.GetComponent<WorldConfirmDialog>();
+                dialog.CloseWindow = () => Close(root);
+                dialog.Init(key, args, confirm, cancel);
+            });
+            return dialog;
+        }
+
+        public void PopupConfirm(Action<WorldConfirmDialog> initialize)
+        {
+            Create(OfficialPartnerConfirmAssetCatalog.LoadDefault().Prefab, root =>
+            {
+                var dialog = root.GetComponent<WorldConfirmDialog>();
+                dialog.CloseWindow = () => Close(root);
+                initialize(dialog);
+            });
+        }
+
         private IDisposable Register(GameObject root) => OfflineUiBindingModule.Register(root.transform,
             new OfflineUiBindings {
                 Localize = assets.Text, Font = () => OfflineHomeHudAssets.LoadDefault().defaultFont,

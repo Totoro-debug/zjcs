@@ -83,7 +83,7 @@ def transfer(work,project,install=False):
         receipt['catalog_outputs']=catalog(project,receipt)
         offline=ROOT/'unity/Assets/Game/Runtime/Offline/HomeCurrencyUI'
         receipt['offline_output_sha256']={p.relative_to(ROOT).as_posix():sha(p.read_bytes()) for p in
-            (Path(str(offline)+'.meta'),*[p for p in offline.rglob('*') if p.is_file()])}
+            (Path(str(offline)+'.meta'),*[p for p in offline.rglob('*') if p.is_file()],ROOT/'unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeCurrencyPlayer.cs')}
         receipt['installed_output_sha256']={'unity/'+path:value for path,value in outputs.items()}
         receipt['reused_output_sha256']={'unity/'+path:value for path,value in reused.items() if path not in outputs}
         receipt['binding_generator_sha256']=sha(Path(__file__).read_bytes())
@@ -92,7 +92,16 @@ def transfer(work,project,install=False):
         assert 'case PlayerItemType.FlareStar:\n\t\t\treturn Parsers.GameSettings.FlareStarId;' in factory.read_text('utf-8-sig')
         icon_manager=factory.with_name('ItemIconManager.cs')
         ui_utils=factory.with_name('UIUtils.cs')
-        receipt['binding_inputs']={p.relative_to(ROOT).as_posix():sha(p.read_bytes()) for p in (fixture,factory,icon_manager,ui_utils)}
+        confirm_proof=ROOT/'assets/reference/partner-confirm-dialog-source-manifest.json'
+        confirmed=json.loads(confirm_proof.read_bytes());assert confirmed['manifest']=='884_156692'
+        confirm_prefab=ROOT/'unity/Assets/Official/Partners/UI/Confirm/ConfirmDialog.prefab'
+        assert sha(confirm_prefab.read_bytes())==confirmed['installed_output_sha256'][confirm_prefab.relative_to(ROOT).as_posix()]
+        confirm_runtime=confirmed['script_bindings']['ConfirmDialog']
+        assert sha((ROOT/confirm_runtime['path']).read_bytes())==confirm_runtime['sha256']
+        confirm_catalog=ROOT/'unity/Assets/Game/Resources/Partners/OfficialPartnerConfirmAssetCatalog.asset'
+        assert 'guid: '+confirmed['roots']['ConfirmDialog']['guid'] in confirm_catalog.read_text('utf8')
+        receipt['binding_inputs']={p.relative_to(ROOT).as_posix():sha(p.read_bytes()) for p in
+            (fixture,factory,icon_manager,ui_utils,confirm_proof,confirm_prefab,confirm_catalog,ROOT/confirm_runtime['path'])}
         (ROOT/'assets/reference/home-currency-windows-native-source-manifest.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
     print('Original currency-window transfer:',len(outputs),'outputs;',len(reused),'existing',flush=True)
     return prefab_path
@@ -107,6 +116,7 @@ def stage(work,project):
     offline=ROOT/'unity/Assets/Game/Runtime/Offline/HomeCurrencyUI'
     for source in (Path(str(offline)+'.meta'),*[p for p in offline.rglob('*') if p.is_file()]):
         target=project/source.relative_to(ROOT/'unity');target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(source,target)
+    shutil.copy2(ROOT/'unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeCurrencyPlayer.cs',project/'Assets/Game/Runtime/Offline/HomeUI/OfflineHomeCurrencyPlayer.cs')
     prefab=transfer(work,project)
     catalog(project,json.loads((work/'home-currency-windows-native-source-manifest.json').read_bytes()))
     stage_fixture(work,project,prefab)
