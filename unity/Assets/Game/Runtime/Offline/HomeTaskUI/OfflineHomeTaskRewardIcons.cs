@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using TMPro;
 using UnityEngine;
 using Zjcs.Official.ProfessionUI;
@@ -24,6 +25,7 @@ namespace Zjcs.Offline.HomeTaskUI
         readonly IDisposable registration;
         readonly OfflineHomeMainlineTaskData tasks;
         readonly List<IDisposable> instanceBindings = new List<IDisposable>();
+        readonly AttachmentLanguage language;
         RectTransform defaultTransform;
         bool disposed;
 
@@ -38,8 +40,12 @@ namespace Zjcs.Offline.HomeTaskUI
             var rewards = Resources.Load<OfflineProfessionImageCatalog>("Home/OfflineHomeTaskRewardImages");
             if (!rewards || rewards.Entries?.Length != 7)
                 throw new InvalidOperationException("Original mainline reward images are unbound.");
+            var rewardAttachments = Resources.Load<OfflineProfessionImageCatalog>("Home/OfflineHomeTaskRewardAttachments");
+            if (!rewardAttachments || rewardAttachments.Entries?.Length != 2)
+                throw new InvalidOperationException("Original mainline reward attachments are unbound.");
+            language = new AttachmentLanguage(Resources.Load<TextAsset>("Home/home-task-attachment-language"));
             var merged = ScriptableObject.CreateInstance<OfflineProfessionImageCatalog>();
-            merged.Entries = rewards.Entries.Concat(assets.images.Entries)
+            merged.Entries = rewards.Entries.Concat(rewardAttachments.Entries).Concat(assets.images.Entries)
                 .GroupBy(entry => entry.AssetGuid).Select(group => group.First()).ToArray();
             OfflineProfessionImageResourceLoader images;
             try { images = new OfflineProfessionImageResourceLoader(merged); }
@@ -49,7 +55,7 @@ namespace Zjcs.Offline.HomeTaskUI
             root.transform.SetParent(parent, false);
             OfflineUiBindings binding = null;
             binding = new OfflineUiBindings {
-                Localize = key => this.tasks.Texts.ContainsKey(key) ? this.tasks.Text(key) : assets.Text(key),
+                Localize = key => this.tasks.Texts.ContainsKey(key) ? this.tasks.Text(key) : language.Text(key, assets.Text),
                 Font = () => OfflineHomeHudAssets.LoadDefault().defaultFont,
                 Images = _ => images,
                 Pool = (scope, prefab, slot, keepWorld) => Create(prefab, slot, keepWorld)
@@ -73,13 +79,17 @@ namespace Zjcs.Offline.HomeTaskUI
                     foreach (var text in instance.GetComponentsInChildren<TMP_Text>(true))
                         if (text.font) fonts.SetupFont(text.font);
                     foreach (var text in instance.GetComponentsInChildren<WorldMultiLanguageText>(true))
-                        text.Localizer = key => this.tasks.Texts.ContainsKey(key) ? this.tasks.Text(key) : assets.Text(key);
+                        text.Localizer = key => this.tasks.Texts.ContainsKey(key) ? this.tasks.Text(key) : language.Text(key, assets.Text);
                     foreach (var icon in instance.GetComponentsInChildren<ItemIcon>(true)) {
                         icon.Bind(context);
                         var bridge = icon.gameObject.AddComponent<OfflineHomeTaskRewardIcon>();
                         bridge.Bind(icon);
                     }
                     foreach (var attachment in instance.GetComponentsInChildren<ItemIconAttachment>(true)) attachment.Bind(attachments);
+                    foreach (var controller in instance.GetComponentsInChildren<TaskUI.MultiLanguageTransformControler>(true)) {
+                        controller.LanguageTypeService = language;
+                        controller.GetLanguageGroup = language.Group;
+                    }
                     foreach (var sound in instance.GetComponentsInChildren<WorldButtonSound>(true)) sound.Post = postSound;
                     foreach (var progress in instance.GetComponentsInChildren<WorldItemProgress>(true))
                         progress.Compact = value => CultureNumberArg.Compact(value).ToString();
@@ -93,6 +103,7 @@ namespace Zjcs.Offline.HomeTaskUI
         public TaskUI.ItemIcon GetIcon(int classId, Transform parent)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfflineHomeTaskRewardIcons));
+            RefreshLanguage();
             tasks.CopyItemRow(classId); // Refuse items outside the verified default-pool scope.
             var icon = pool.Borrow(parent);
             icon.SetUIGray(false);
@@ -120,6 +131,36 @@ namespace Zjcs.Offline.HomeTaskUI
             if (disposed) throw new ObjectDisposedException(nameof(OfflineHomeTaskRewardIcons));
             if (!(icon is OfflineHomeTaskRewardIcon bridge)) throw new ArgumentException("Foreign task icon.", nameof(icon));
             pool.Return(bridge.Native);
+        }
+        // The enclosing language owner also calls this after a language change.
+        public void RefreshLanguage()
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfflineHomeTaskRewardIcons));
+            language.CurrentLanguage = LanguageManager.Instance.CurrentLanguage;
+        }
+        sealed class AttachmentLanguage : ILanguageTypeService
+        {
+            readonly Dictionary<LanguageType, int> groups = new Dictionary<LanguageType, int>();
+            readonly JObject texts;
+            LanguageType current;
+            public AttachmentLanguage(TextAsset configuration)
+            {
+                if (!configuration) throw new InvalidOperationException("Original attachment language groups are unbound.");
+                var data = JObject.Parse(configuration.text); texts = (JObject)data["texts"];
+                foreach (var row in data["configuration"]["LanguageGroupMappingDict"]["mSerializeBuffer"])
+                    foreach (int type in row["Value"].Values<int>()) groups.Add((LanguageType)type, (int)row["Key"]);
+                current = LanguageManager.Instance.CurrentLanguage;
+            }
+            // Original LanguageGroupConfig.GetLanguageGroupByType fallback: Zh=0.
+            public int Group(LanguageType type) => groups.TryGetValue(type, out int value) ? value : 0;
+            public string Text(string key, Func<string, string> fallback) => (string)texts[key] ?? fallback(key);
+            public LanguageType CurrentLanguage {
+                get => current;
+                set { if (current == value) return; current = value; OnLanguageChanged?.Invoke(value); }
+            }
+            public bool IsShowLanguageKey { get; set; }
+            public bool IsShowMissingKeyText { get; set; }
+            public event Action<LanguageType> OnLanguageChanged;
         }
         public void Dispose()
         {

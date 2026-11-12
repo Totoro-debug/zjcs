@@ -1,0 +1,130 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "5bd2245c30c4c0ce16c59b87dd8272ec798691496af34cbe460374562724da4f",
+  "inputs": {
+    ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework/SafeAction.cs": "7482bd2bdbad1b2d24ba22fd99645e6282fe458f87a8de1686b5f30321005517",
+    ".tools/source-packages/current/884_156692/official-code/common-source/MsgPlayerTaskUpdate.cs": "3bea5ac937efa2861ceb0285ee08b332d50d88280db306c45d982bd150c17fc8",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TaskSettings.cs": "4539747a5ab8447409606b55193544bf4b156caf0d9f09cf45cfbc75d2f2a80a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerTaskDataUtils.cs": "710c2a4e97317a18ba0fdd8ee0e56585961defaadf80ad8d81b35656d26a0891",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerTaskRecordDataWrap.cs": "8052dd1bda5f3554e94f069239336b3c66d83cba5e2baf15cfa3bc50673827de",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TaskInfo.cs": "ae6c6262af8edb9ce9d7e8f2699256cbc42e11fef54ffaabf2f116d03337b1bb",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TaskDataUtils.cs": "2fab9ddcece5154a50af8e8d9a1610af174a73a58235fa6dbb0b9c86356b1785",
+    ".tools/source-packages/current/884_156692/official-code/client-source/AwardUtils.cs": "caf09dc647c3abe0054fcc1886d5979272bd6b3027b884ad5c102f76ef414eac",
+    ".tools/source-packages/current/884_156692/official-code/common-source/RewardPreviewItemComparer.cs": "47fdd0ebc80fa85b25fde4b448c807b3db7d2d62ea4b9e04515456b0c37b8e12",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemType.cs": "8a1a33483ed28de00b9bc37dd60899ae0cb2fa7d7bd821b42f6e43cdcb3dbcaf",
+    "assets/reference/home-mainline-task-states-source-manifest.json": "4aba0330f2c0fb071decf0741320f794fbfa993fbe33dc6920039a9accbc5b96",
+    "assets/reference/home-task-condition-notifications-source-manifest.json": "3975819f30e9da060793e1a80d94245c432339664a5b70e8bfe9abe5df70fd82",
+    "assets/reference/home-task-reward-images-source-manifest.json": "eb9f77bea884ed574b7da95b966ff2e07ff61b344cbee00353fe653b59a13d61",
+    "assets/reference/home-currency-windows-native-source-manifest.json": "5bc8952d32ea17a2817f191b9870410b6e7a8c33e0feb15945227e1d49cbe79b",
+    "assets/reference/home-task-reward-attachments-source-manifest.json": "e11a9f90e9af75bd5072e010f976b0828eedc2ee87f3ef87074b1f45632e4395",
+    "unity/Assets/Official/Home/UI/CurrencyWindows/home-currency-windows-rules.json": "2ba49cbf3eefe5ebd2320fd823c6cad5ad6609dec5c28d2bf10a3aa9804ce036",
+    "scripts/prepare_home_mainline_task_states.py": "7b3f350fa1d82200c7615739ff995a905cfbc14f28aa48b9f11a39d9d15595b3",
+    "scripts/fixtures/home_task_player_validation.cs": "fa79ff339867101e47829fb4a91612b78ec51ecaa0a8ce5de6685c6cffd29936"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/HomeTaskUI/HomeTaskPlayerEvents.cs": "17588362331361fe7549f5fb40953dee34f2d88b9f5fc0bc50113b44fc8afd13",
+    "unity/Assets/Game/Runtime/Official/HomeTaskUI/HomeTaskPlayerEvents.cs.meta": "22c834518c1abfc9f66c6adafe3ff8e2b8a87c312e69987e72adce67412c01bf",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskPlayer.cs": "29bf8ca9c5afc11c172fbc176a3cbd6a22871708cb4d7a25a7ae1ad38556e074",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskPlayer.cs.meta": "ff01d3b84f6a6edf6375f5ba3bf0ef8625a7776f73806c929918f2699fea8150",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskRewardPresenter.cs": "fe10a107b0fbfb90f02f3aafea64d7714357c3b9f7655cc3ea38aef1ff6aa682",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskRewardPresenter.cs.meta": "048fd1cba7d9c8dc32dee2c93ac51742511e29cdd1ce8d64b83b8d07f67e31e3",
+    "unity/Assets/Game/Runtime/Official/HomeTaskUI/MultiLanguageTransformControler.cs": "b65ddef9d46b4001a92f6351e631b1ba82e6850fed462344bfe10a50cb7afe25",
+    "unity/Assets/Game/Runtime/Official/HomeTaskUI/MultiLanguageTransformControler.cs.meta": "6f4ab730adb158ff2fe0dd9bb544a06331c7c95d788f153991af7f1df7b658dd",
+    "unity/Assets/Official/Home/UI/TaskRewardAttachments/Image/UI/Common/Common_Atlas/ImgProbability.asset": "d6e4b43594811b46e83c0c8591fec39e3d3056aff9772f569a02c489dd564d39",
+    "unity/Assets/Official/Home/UI/TaskRewardAttachments/Image/UI/Common/Common_Atlas/ImgProbability.asset.meta": "ce39e2308905677880555f0b870a4b4d2bd4fc01cd0616b3ba81ddb6a55676ed",
+    "unity/Assets/Official/Home/UI/TaskRewardAttachments/GotObj.prefab": "da78f379cc46be10e4779a3449deed5d269d019f0533bf261af100250a13f481",
+    "unity/Assets/Official/Home/UI/TaskRewardAttachments/GotObj.prefab.meta": "17356d0bc262fb0a7dd12752f9275dce29ac6a361e45fe48407dfa38e03f665a",
+    "unity/Assets/Official/Home/UI/TaskRewardAttachments/ProbabilityGo.prefab": "0d94b45696c808451ee9299f6e00818a5ab8a2a46bc7f44e20090f46303045c1",
+    "unity/Assets/Official/Home/UI/TaskRewardAttachments/ProbabilityGo.prefab.meta": "4aa5581d819e78939ba098c0b7f58ac94e42bace9120e660ca03fed1a6a74f37",
+    "unity/Assets/Official/Home/UI/TaskRewardAttachments.meta": "e9ace752c5646b6a8369b0c87725b64cbda9ef1940d1e1039fa3203ed4107654",
+    "unity/Assets/Official/Home/UI/TaskRewardAttachments/Image.meta": "42246b2685740cb656685053514f53cbf063138283a46b29311a8527dd51135d",
+    "unity/Assets/Official/Home/UI/TaskRewardAttachments/Image/UI.meta": "d0cd30dd79db0b146746f5498f805509f369a6ee39a24fd03cf9c4aa551e5c07",
+    "unity/Assets/Official/Home/UI/TaskRewardAttachments/Image/UI/Common.meta": "e90841c00a59d6cf15d32ce7c09aba73277fb4a11725baf62cec49fa96a1282e",
+    "unity/Assets/Official/Home/UI/TaskRewardAttachments/Image/UI/Common/Common_Atlas.meta": "ee4348dddc7dbd58355979513fbf5142d2a5c9654c8d0c3f6efab3550625b764",
+    "unity/Assets/Game/Resources/Home/OfflineHomeTaskRewardAttachments.asset": "f0d6aeb38398da0d68cc19024b5dfd133ceb87d9298f00ec20335ad4fcb74e18",
+    "unity/Assets/Game/Resources/Home/OfflineHomeTaskRewardAttachments.asset.meta": "773969251c84cc28438a429c6af0e35106634900b6791e9887401c5c469468b3",
+    "unity/Assets/Game/Resources/Home/home-task-attachment-language.json": "f40eddb6fc9957f0cfe8ca3478311a8710a19a285baf4a4cbe425a61db2782b3",
+    "unity/Assets/Game/Resources/Home/home-task-attachment-language.json.meta": "cfa376f851b8bcd0391a02946c3edc1238d598ea340f4aa55909b0342d35397d",
+    "unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskRewardIcons.cs": "bbdb7ecf9391247b937a4b20644edf225ab61c3737d104f4ac327314f05a33e5"
+  },
+  "safe_event_methods": {
+    "1:private List<Action<T1>> PopList()": "a05df38a85f2011a06f60662f33a7edd17cb693f20e605ae7f3b271ec2dbd8ee",
+    "1:private void PushList(List<Action<T1>> list)": "7cbfe1f8bf3b82a9380abacd1364a3a43e7903192f8cc34101bb5ac9555f10a5",
+    "1:public void AddListener(Action<T1> action)": "72b53e0ca41d1db95d4c8d8abbd6315234277d91db3fd445878bd0628dffdb8c",
+    "1:public void RemoveListener(Action<T1> action)": "51d39ed19f36a07f2fcb9b3a3790dbbd3dfcf7020dc9c99c4f4f477c24416200",
+    "1:public void ClearListener()": "b047c09e3887a9d637005cb14a9a1d99b2b48e21aca9dc10eb0cb3fe99abd4e5",
+    "1:public void Invoke(T1 param1)": "ac41200e8e80c54398c163e328f191c2f1ae8e89f9888299e619a7780227c0b0",
+    "2:private List<Action<T1, T2>> PopList()": "128adbcfe7938a208eae44d92623bfe22e73b0d7258b0cc002919afac6dcafe4",
+    "2:private void PushList(List<Action<T1, T2>> list)": "63b932a0f471fbef50176b044529e7352f10c76456cc246569dcd9aab9af918d",
+    "2:public void AddListener(Action<T1, T2> action)": "e6749f0a708e99dadf380dd34058724ba2c686cf6bdff2c8c922b8ae32bc1bff",
+    "2:public void RemoveListener(Action<T1, T2> action)": "b682d5aa0fe7bb2a1b1432de2ab9f0dd127fa84584e3a65f2e103b340c53f3f0",
+    "2:public void ClearListener()": "b047c09e3887a9d637005cb14a9a1d99b2b48e21aca9dc10eb0cb3fe99abd4e5",
+    "2:public void Invoke(T1 param1, T2 param2)": "372dc0c82b345c4044d4214198758af44d9ffc14782635cc6c6923c69b4e403e",
+    "3:private List<Action<T1, T2, T3>> PopList()": "0fa04036e97cb3fdaa4ff405b5a2865026d198ecc173e381b7855b193a95b9fb",
+    "3:private void PushList(List<Action<T1, T2, T3>> list)": "6841494e626f2f337a2aec351e5998c3bba7f31a964ec6b29fa152689904c49a",
+    "3:public void AddListener(Action<T1, T2, T3> action)": "fc21e493e061261d4fc2121c193bf319c9b737fcf6678377aaabb66cf9662c7f",
+    "3:public void RemoveListener(Action<T1, T2, T3> action)": "2a497fb55c02224e5c043ee77ca5a5936f39ed50fc7f9215685f98f1cd734118",
+    "3:public void ClearListener()": "b047c09e3887a9d637005cb14a9a1d99b2b48e21aca9dc10eb0cb3fe99abd4e5",
+    "3:public void Invoke(T1 param1, T2 param2, T3 param3)": "aac7d7b8339a6ba48a6e4a94acace2b13a348be647c9683b9bd1bfb55303a7d5",
+    "4:private List<Action<T1, T2, T3, T4>> PopList()": "f5d4abcbecabcf7cb4e2508e4196e42101206960dfe08864f73bae9210b78200",
+    "4:private void PushList(List<Action<T1, T2, T3, T4>> list)": "3f64268058a2937e272a1b70c97a5f910a7e27fe95876e7eeca10be387d0589d",
+    "4:public void AddListener(Action<T1, T2, T3, T4> action)": "f4961cfdf9a5bdb8a168b6b8016dfd0e03fc08492a1c7b066ed7a08489826d87",
+    "4:public void RemoveListener(Action<T1, T2, T3, T4> action)": "ecdd631fa7ce5b20e72c93103d88ac430c98315ed70e13dcd8b8cbe193ec302c",
+    "4:public void ClearListener()": "b047c09e3887a9d637005cb14a9a1d99b2b48e21aca9dc10eb0cb3fe99abd4e5",
+    "4:public void Invoke(T1 param1, T2 param2, T3 param3, T4 param4)": "723f425785e8940ae5df07568389a4c99c5357faf76567f1035614b89c714320"
+  },
+  "original_fragments": {
+    "common-source/MsgPlayerTaskUpdate.cs": [
+      "foreach (int finishedTask in playerTaskUpdateMsg.FinishedTaskList)",
+      "foreach (long removeTask in playerTaskUpdateMsg.RemoveTaskList)",
+      "mainPlayer.FireTaskUpdate(task);"
+    ],
+    "common-source/Common/TaskSettings.cs": [
+      "public readonly HashSet<TaskType> AutoPinTaskTypes;",
+      "public readonly HashSet<TaskType> CanBePinnedTaskTypes;"
+    ],
+    "common-source/Common/PlayerTaskDataUtils.cs": [
+      "public static bool CanGetReward(this PlayerTask self, Player player)",
+      "public static bool CanFinish(this PlayerTask self, Player player)",
+      "return self.TaskState == TaskState.Completed;",
+      "return task.Info().FinishCondition.Type == ConditionType.HandInItem;"
+    ],
+    "common-source/Common/PlayerTaskRecordDataWrap.cs": [
+      "return int.MaxValue;",
+      "public bool CanFinishMoreTask(Player player, TaskType taskType)"
+    ],
+    "common-source/Common/TaskInfo.cs": [
+      "public bool IsAllowTrace => !BanTrace;"
+    ],
+    "client-source/TaskDataUtils.cs": [
+      "public static void InitRewardIconWithProbability(",
+      ".SetClickPopupInfoDialog().SetCountTextScale(ItemIcon.sTextScale)",
+      "itemIcon2.SetCount(item2.FixedCount);"
+    ],
+    "client-source/AwardUtils.cs": [
+      "Parsers.GameSettings.IgnoreShowAwardId.Contains(itemId)",
+      "case ItemType.SeasonBadge:"
+    ],
+    "common-source/RewardPreviewItemComparer.cs": [
+      "(ItemComparerType.Designated, ComparerOrderType.Desc)",
+      "(ItemComparerType.Quality, ComparerOrderType.Desc)",
+      "(ItemComparerType.ClassId, ComparerOrderType.Asc)",
+      "Parsers.GameSettings.PlayerExpItemId == itemInfo.ClassId",
+      "itemInfo.ItemType == ItemType.Money"
+    ],
+    "common-source/Common/ItemType.cs": [
+      "TreasureSuit = 307,",
+      "Score = 312,",
+      "NpcFriendship = 329,",
+      "SeasonBadge = 426,"
+    ]
+  },
+  "adaptations": [
+    "Selected 55 single-instance mainline models read actual local Processing/Completed/Received state, original flags and conditions.",
+    "Local task class IDs identify these non-repeating instances; original task settings supply automatic pin eligibility.",
+    "Original SafeAction generic arities 1..4 retain deduplication, snapshot/list pooling and exception isolation, with an explicit exception reporter.",
+    "Fixed reward preview uses original ignore IDs, designated/quality/class-ID sorting and original native pooled icons. Special filters outside the selected seven definitions are explicitly rejected.",
+    "Submission reloads the actual shared profile, commits existing reward/receipt logic, then publishes coherent task and item changes. Navigation, trace and character combat/rank sources are explicit host ports.",
+    "Full native task-row services and production HUD composition remain separate."
+  ]
+}
