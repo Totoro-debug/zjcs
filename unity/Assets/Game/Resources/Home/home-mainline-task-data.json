@@ -1,0 +1,4074 @@
+{
+  "manifest": "884_156692",
+  "transactionCatalogSha256": "9b24edf1d45b8b65cb819b4e63f3f6a14a71036036be34101cf29fba00d34d8e",
+  "tasks": [
+    {
+      "ClassId": 1000,
+      "NextIds": [
+        1005
+      ],
+      "GroupId": 0,
+      "Order": 5,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": false,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": null,
+        "_type": "NoneCondition"
+      },
+      "DisplayCondition": null,
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 10,
+        "Region": 0,
+        "Count": 2,
+        "Result": 1,
+        "_type": "MapGameTotalCountCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1005,
+      "NextIds": [
+        1010
+      ],
+      "GroupId": 0,
+      "Order": 10,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1000
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1000
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 10,
+        "Region": 0,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1010,
+      "NextIds": [
+        1015
+      ],
+      "GroupId": 0,
+      "Order": 15,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1005
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1005
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 10,
+        "Region": 1,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1015,
+      "NextIds": [
+        1020
+      ],
+      "GroupId": 0,
+      "Order": 20,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1010
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1010
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 10,
+        "Region": 2,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "41300": 100,
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1020,
+      "NextIds": [
+        1025
+      ],
+      "GroupId": 0,
+      "Order": 25,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1015
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1015
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 10,
+        "Region": 3,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "50": 100,
+        "41300": 100,
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1025,
+      "NextIds": [
+        1030
+      ],
+      "GroupId": 0,
+      "Order": 30,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": false,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1020
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1020
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "Tag": "守护者_初始五",
+        "_type": "MapLogicEntityEndByTagCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "1": 1500
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1030,
+      "NextIds": [
+        1035
+      ],
+      "GroupId": 0,
+      "Order": 35,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": false,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1025
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1025
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "Rank": 1,
+        "Op": ">=",
+        "_type": "MaxProfessionRankCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "42200": 400
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1035,
+      "NextIds": [
+        1040
+      ],
+      "GroupId": 0,
+      "Order": 40,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1030
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1030
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 10,
+        "Region": 4,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1040,
+      "NextIds": [
+        1045
+      ],
+      "GroupId": 0,
+      "Order": 45,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": false,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1035
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1035
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "ChestId": 6000,
+        "Count": 10,
+        "_type": "TotalOpenChestCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1045,
+      "NextIds": [
+        1050
+      ],
+      "GroupId": 0,
+      "Order": 50,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1040
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1040
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 0,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1050,
+      "NextIds": [
+        1055
+      ],
+      "GroupId": 0,
+      "Order": 55,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": false,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1045
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1045
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 0,
+        "_type": "MapRegionGoddessCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30,
+        "110": 2
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1055,
+      "NextIds": [
+        1060
+      ],
+      "GroupId": 0,
+      "Order": 60,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1050
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1050
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 2,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1060,
+      "NextIds": [
+        1065
+      ],
+      "GroupId": 0,
+      "Order": 65,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": false,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1055
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1055
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 2,
+        "_type": "MapRegionGoddessCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "120": 1,
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1065,
+      "NextIds": [
+        1070,
+        1075
+      ],
+      "GroupId": 0,
+      "Order": 70,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": false,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1060
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1060
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "Tag": "月影之森",
+        "_type": "MapLogicEntityEndByTagCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1070,
+      "NextIds": [
+        2120
+      ],
+      "GroupId": 0,
+      "Order": 75,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": false,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1065
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1065
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "EntryIndex": 1,
+        "TargetLayer": 2,
+        "_type": "DemonBattleLayerPassCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "50": 50,
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1075,
+      "NextIds": [
+        1080
+      ],
+      "GroupId": 0,
+      "Order": 80,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1065
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1065
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 6,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1080,
+      "NextIds": [
+        1085
+      ],
+      "GroupId": 0,
+      "Order": 85,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": false,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1075
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1075
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 6,
+        "_type": "MapRegionGoddessCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1085,
+      "NextIds": [
+        1090
+      ],
+      "GroupId": 0,
+      "Order": 90,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1080
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1080
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 8,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1090,
+      "NextIds": [
+        1095
+      ],
+      "GroupId": 0,
+      "Order": 95,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1085
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1085
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 12,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1095,
+      "NextIds": [
+        1100
+      ],
+      "GroupId": 0,
+      "Order": 100,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1090
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1090
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 16,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1100,
+      "NextIds": [
+        1105
+      ],
+      "GroupId": 0,
+      "Order": 105,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1095
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1095
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 15,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1105,
+      "NextIds": [
+        1110
+      ],
+      "GroupId": 0,
+      "Order": 110,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1100
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1100
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 20,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1110,
+      "NextIds": [
+        1115
+      ],
+      "GroupId": 0,
+      "Order": 115,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1105
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1105
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 25,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1115,
+      "NextIds": [
+        1120
+      ],
+      "GroupId": 0,
+      "Order": 120,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1110
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1110
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 27,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1120,
+      "NextIds": [
+        1125
+      ],
+      "GroupId": 0,
+      "Order": 125,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1115
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1115
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 29,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1125,
+      "NextIds": [
+        1130
+      ],
+      "GroupId": 0,
+      "Order": 130,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1120
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1120
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 32,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1130,
+      "NextIds": [
+        1135
+      ],
+      "GroupId": 0,
+      "Order": 135,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1125
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1125
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 38,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1135,
+      "NextIds": [
+        1140
+      ],
+      "GroupId": 0,
+      "Order": 140,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1130
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1130
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 42,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1140,
+      "NextIds": [
+        1145
+      ],
+      "GroupId": 0,
+      "Order": 145,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1135
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1135
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 40,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1145,
+      "NextIds": [
+        1150
+      ],
+      "GroupId": 0,
+      "Order": 150,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1140
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1140
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 44,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1150,
+      "NextIds": [
+        1155
+      ],
+      "GroupId": 0,
+      "Order": 155,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1145
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1145
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 50,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1155,
+      "NextIds": [
+        1160
+      ],
+      "GroupId": 0,
+      "Order": 160,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1150
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1150
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 52,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1160,
+      "NextIds": [
+        1165
+      ],
+      "GroupId": 0,
+      "Order": 165,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1155
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1155
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 11,
+        "Region": 54,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1165,
+      "NextIds": [
+        1170
+      ],
+      "GroupId": 0,
+      "Order": 170,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1160
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1160
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 0,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1170,
+      "NextIds": [
+        1175
+      ],
+      "GroupId": 0,
+      "Order": 175,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1165
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1165
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 1,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1175,
+      "NextIds": [
+        1180
+      ],
+      "GroupId": 0,
+      "Order": 180,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1170
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1170
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 3,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1180,
+      "NextIds": [
+        1185
+      ],
+      "GroupId": 0,
+      "Order": 185,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1175
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1175
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 4,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1185,
+      "NextIds": [
+        1190
+      ],
+      "GroupId": 0,
+      "Order": 190,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1180
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1180
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 5,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1190,
+      "NextIds": [
+        1195
+      ],
+      "GroupId": 0,
+      "Order": 195,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1185
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1185
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 9,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1195,
+      "NextIds": [
+        1200
+      ],
+      "GroupId": 0,
+      "Order": 200,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1190
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1190
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 12,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1200,
+      "NextIds": [
+        1205
+      ],
+      "GroupId": 0,
+      "Order": 205,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1195
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1195
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 18,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1205,
+      "NextIds": [
+        1210
+      ],
+      "GroupId": 0,
+      "Order": 210,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1200
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1200
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 27,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1210,
+      "NextIds": [
+        1215
+      ],
+      "GroupId": 0,
+      "Order": 215,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1205
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1205
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 29,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1215,
+      "NextIds": [
+        1220
+      ],
+      "GroupId": 0,
+      "Order": 220,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": false,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1210
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1210
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "Tag": "山壁电梯",
+        "_type": "MapLogicEntityEndByTagCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1220,
+      "NextIds": [
+        1225
+      ],
+      "GroupId": 0,
+      "Order": 225,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1215
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1215
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 33,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1225,
+      "NextIds": [
+        1230
+      ],
+      "GroupId": 0,
+      "Order": 230,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1220
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1220
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 37,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1230,
+      "NextIds": [
+        1235
+      ],
+      "GroupId": 0,
+      "Order": 235,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1225
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1225
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 39,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1235,
+      "NextIds": [
+        1240
+      ],
+      "GroupId": 0,
+      "Order": 240,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1230
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1230
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 42,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1240,
+      "NextIds": [
+        1245
+      ],
+      "GroupId": 0,
+      "Order": 245,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1235
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1235
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 55,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1245,
+      "NextIds": [
+        1250
+      ],
+      "GroupId": 0,
+      "Order": 250,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1240
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1240
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 57,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1250,
+      "NextIds": [
+        1255
+      ],
+      "GroupId": 0,
+      "Order": 255,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1245
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1245
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 59,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1255,
+      "NextIds": [
+        1260
+      ],
+      "GroupId": 0,
+      "Order": 260,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1250
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1250
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 69,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1260,
+      "NextIds": [
+        1265
+      ],
+      "GroupId": 0,
+      "Order": 265,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1255
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1255
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 61,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1265,
+      "NextIds": [
+        1270
+      ],
+      "GroupId": 0,
+      "Order": 270,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1260
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1260
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 72,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    },
+    {
+      "ClassId": 1270,
+      "NextIds": [
+        1275
+      ],
+      "GroupId": 0,
+      "Order": 275,
+      "BanTrace": false,
+      "AutoTracing": false,
+      "IsSeries": false,
+      "ShowProgressBar": true,
+      "AcceptMultiple": false,
+      "RepeatAccept": false,
+      "TaskType": 10,
+      "RefreshType": 0,
+      "AcquestCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1265
+        ],
+        "_type": "TaskCompleteCondition"
+      },
+      "DisplayCondition": {
+        "Jumpable": false,
+        "TaskClassIds": [
+          1265
+        ],
+        "_type": "TaskSubmitCondition"
+      },
+      "FinishCondition": {
+        "Jumpable": true,
+        "MapClassId": 12,
+        "Region": 74,
+        "Progress": 10000,
+        "_type": "WorldMapProgressCondition"
+      },
+      "IsUnlimit": false,
+      "CompletedTimes": 1,
+      "Reward": {
+        "2": 30
+      },
+      "NpcFriendshipReward": null,
+      "RewardRuleId": null,
+      "RewardRuleIdWithProbability": null,
+      "ClaimType": 2,
+      "TriggerType": 1,
+      "Duration": 0,
+      "CompletedMailId": 0,
+      "FailedMailId": 0,
+      "AcceptNpc": 0,
+      "SubmitNpc": 0,
+      "PreviewConditionId": -1,
+      "UseConditionLimit": false,
+      "NavigateKey": null
+    }
+  ],
+  "items": [
+    {
+      "ClassId": 1,
+      "Name": "罗拉",
+      "RawIcon": "ItemIcon/Money/Money_1",
+      "ShowPieceIcon": false,
+      "IconEffect": "",
+      "ItemType": 1,
+      "Rank": -1,
+      "Quality": 1,
+      "ElementType": 0,
+      "Price": {},
+      "CanRepeat": true,
+      "AgioItemId": 0,
+      "AgioAmount": 0,
+      "AgioRuleIdList": null,
+      "CanDrop": false,
+      "CanDropWhenExist": true,
+      "ShowInBag": false,
+      "CanOverlap": true,
+      "CanUse": false,
+      "CanUseInBatches": false,
+      "ItemUseEffectType": 0,
+      "Effects": null,
+      "ShowUseDetail": false,
+      "ShowPlayerItemCount": true,
+      "LimitRank": 1,
+      "RedDotType": 0,
+      "RecycleReward": null,
+      "IsShowGained": false,
+      "RecycleGroupCount": 1
+    },
+    {
+      "ClassId": 2,
+      "Name": "晨星",
+      "RawIcon": "ItemIcon/Money/Money_2",
+      "ShowPieceIcon": false,
+      "IconEffect": "",
+      "ItemType": 1,
+      "Rank": -1,
+      "Quality": 3,
+      "ElementType": 0,
+      "Price": {
+        "1": 50.0
+      },
+      "CanRepeat": true,
+      "AgioItemId": 0,
+      "AgioAmount": 0,
+      "AgioRuleIdList": null,
+      "CanDrop": false,
+      "CanDropWhenExist": true,
+      "ShowInBag": false,
+      "CanOverlap": true,
+      "CanUse": false,
+      "CanUseInBatches": false,
+      "ItemUseEffectType": 0,
+      "Effects": null,
+      "ShowUseDetail": false,
+      "ShowPlayerItemCount": true,
+      "LimitRank": 1,
+      "RedDotType": 0,
+      "RecycleReward": null,
+      "IsShowGained": false,
+      "RecycleGroupCount": 1
+    },
+    {
+      "ClassId": 50,
+      "Name": "经验",
+      "RawIcon": "ItemIcon/Money/Money_50_Exp",
+      "ShowPieceIcon": false,
+      "IconEffect": "",
+      "ItemType": 50,
+      "Rank": -1,
+      "Quality": 2,
+      "ElementType": 0,
+      "Price": {},
+      "CanRepeat": true,
+      "AgioItemId": 0,
+      "AgioAmount": 0,
+      "AgioRuleIdList": null,
+      "CanDrop": false,
+      "CanDropWhenExist": true,
+      "ShowInBag": false,
+      "CanOverlap": true,
+      "CanUse": false,
+      "CanUseInBatches": false,
+      "ItemUseEffectType": 0,
+      "Effects": null,
+      "ShowUseDetail": false,
+      "ShowPlayerItemCount": true,
+      "LimitRank": 1,
+      "RedDotType": 0,
+      "RecycleReward": null,
+      "IsShowGained": false,
+      "RecycleGroupCount": 1
+    },
+    {
+      "ClassId": 110,
+      "Name": "星之愿",
+      "RawIcon": "ItemIcon/Other/item_110",
+      "ShowPieceIcon": false,
+      "IconEffect": "",
+      "ItemType": 412,
+      "Rank": -1,
+      "Quality": 4,
+      "ElementType": 0,
+      "Price": {
+        "2": 100.0
+      },
+      "CanRepeat": true,
+      "AgioItemId": 0,
+      "AgioAmount": 0,
+      "AgioRuleIdList": null,
+      "CanDrop": false,
+      "CanDropWhenExist": true,
+      "ShowInBag": true,
+      "CanOverlap": true,
+      "CanUse": false,
+      "CanUseInBatches": false,
+      "ItemUseEffectType": 0,
+      "Effects": null,
+      "ShowUseDetail": false,
+      "ShowPlayerItemCount": true,
+      "LimitRank": 1,
+      "RedDotType": 0,
+      "RecycleReward": null,
+      "IsShowGained": false,
+      "RecycleGroupCount": 1
+    },
+    {
+      "ClassId": 120,
+      "Name": "时间结晶",
+      "RawIcon": "ItemIcon/Other/item_120",
+      "ShowPieceIcon": false,
+      "IconEffect": "",
+      "ItemType": 315,
+      "Rank": -1,
+      "Quality": 4,
+      "ElementType": 0,
+      "Price": {
+        "2": 400.0
+      },
+      "CanRepeat": true,
+      "AgioItemId": 0,
+      "AgioAmount": 0,
+      "AgioRuleIdList": null,
+      "CanDrop": true,
+      "CanDropWhenExist": true,
+      "ShowInBag": true,
+      "CanOverlap": true,
+      "CanUse": true,
+      "CanUseInBatches": false,
+      "ItemUseEffectType": 2,
+      "Effects": null,
+      "ShowUseDetail": false,
+      "ShowPlayerItemCount": true,
+      "LimitRank": 1,
+      "RedDotType": 0,
+      "RecycleReward": null,
+      "IsShowGained": false,
+      "RecycleGroupCount": 1
+    },
+    {
+      "ClassId": 41300,
+      "Name": "粗炼石",
+      "RawIcon": "ItemIcon/Materials/item_41300",
+      "ShowPieceIcon": false,
+      "IconEffect": "",
+      "ItemType": 300,
+      "Rank": -1,
+      "Quality": 1,
+      "ElementType": 0,
+      "Price": {
+        "1": 10.0
+      },
+      "CanRepeat": true,
+      "AgioItemId": 0,
+      "AgioAmount": 0,
+      "AgioRuleIdList": null,
+      "CanDrop": true,
+      "CanDropWhenExist": true,
+      "ShowInBag": true,
+      "CanOverlap": true,
+      "CanUse": false,
+      "CanUseInBatches": false,
+      "ItemUseEffectType": 0,
+      "Effects": null,
+      "ShowUseDetail": false,
+      "ShowPlayerItemCount": true,
+      "LimitRank": 1,
+      "RedDotType": 0,
+      "RecycleReward": null,
+      "IsShowGained": false,
+      "RecycleGroupCount": 1
+    },
+    {
+      "ClassId": 42200,
+      "Name": "历战精华",
+      "RawIcon": "ItemIcon/Materials/item_42200",
+      "ShowPieceIcon": false,
+      "IconEffect": "",
+      "ItemType": 321,
+      "Rank": 1,
+      "Quality": 1,
+      "ElementType": 0,
+      "Price": {
+        "1": 8.0
+      },
+      "CanRepeat": true,
+      "AgioItemId": 0,
+      "AgioAmount": 0,
+      "AgioRuleIdList": null,
+      "CanDrop": true,
+      "CanDropWhenExist": true,
+      "ShowInBag": true,
+      "CanOverlap": true,
+      "CanUse": false,
+      "CanUseInBatches": false,
+      "ItemUseEffectType": 0,
+      "Effects": null,
+      "ShowUseDetail": false,
+      "ShowPlayerItemCount": true,
+      "LimitRank": 1,
+      "RedDotType": 0,
+      "RecycleReward": null,
+      "IsShowGained": false,
+      "RecycleGroupCount": 1
+    }
+  ],
+  "taskSettings": {
+    "TaskFirstTraceConditionId": 5,
+    "AutoPinTaskTypes": [
+      4,
+      0,
+      5,
+      10
+    ],
+    "CanBePinnedTaskTypes": [
+      0,
+      4,
+      5,
+      10
+    ],
+    "TimeLimitTaskCount": 99,
+    "DelegateTaskAddCountItemId": 117,
+    "DelegateTaskInitCompleteCount": 4,
+    "DelegateTaskRefreshCount": 10,
+    "DelegateTaskMaxCount": 100,
+    "DelegateTaskHighValueGroupIds": [
+      5300,
+      5301,
+      5302,
+      5303,
+      5304,
+      5305,
+      5306,
+      5307,
+      5400,
+      5401,
+      5402,
+      5403,
+      5404,
+      5405,
+      5406,
+      5407,
+      5600,
+      5601,
+      5602,
+      5603,
+      5604,
+      5605,
+      5606,
+      5607,
+      5700,
+      5701,
+      5702,
+      5703,
+      5704,
+      5705,
+      5706,
+      5707,
+      5800,
+      5801,
+      5802,
+      5803,
+      5804,
+      5805,
+      5806,
+      5807,
+      5900,
+      5901,
+      5902,
+      5903,
+      5904,
+      5905,
+      5906,
+      5907
+    ],
+    "DelegateTaskRefreshWeights": {
+      "5100": 6000,
+      "5101": 6000,
+      "5102": 6000,
+      "5103": 6000,
+      "5104": 8000,
+      "5105": 10667,
+      "5106": 14223,
+      "5107": 18964,
+      "5200": 3000,
+      "5201": 3000,
+      "5202": 3000,
+      "5203": 3000,
+      "5204": 4000,
+      "5205": 5334,
+      "5206": 7112,
+      "5207": 9483,
+      "5300": 160,
+      "5301": 160,
+      "5302": 160,
+      "5303": 160,
+      "5304": 214,
+      "5305": 285,
+      "5306": 380,
+      "5307": 507,
+      "5400": 140,
+      "5401": 140,
+      "5402": 140,
+      "5403": 140,
+      "5404": 187,
+      "5405": 249,
+      "5406": 332,
+      "5407": 443,
+      "5600": 150,
+      "5601": 150,
+      "5602": 150,
+      "5603": 150,
+      "5604": 200,
+      "5605": 267,
+      "5606": 356,
+      "5607": 475,
+      "5700": 400,
+      "5701": 400,
+      "5702": 400,
+      "5703": 400,
+      "5704": 534,
+      "5705": 712,
+      "5706": 949,
+      "5707": 1265,
+      "5800": 150,
+      "5801": 150,
+      "5802": 150,
+      "5803": 150,
+      "5804": 200,
+      "5805": 267,
+      "5806": 356,
+      "5807": 475,
+      "5900": 150,
+      "5901": 150,
+      "5902": 150,
+      "5903": 150,
+      "5904": 200,
+      "5905": 267,
+      "5906": 356,
+      "5907": 475
+    },
+    "ReserveWhenCollectReward": [
+      1,
+      2,
+      7,
+      8,
+      9,
+      13,
+      14,
+      12,
+      30,
+      15,
+      17,
+      16,
+      18,
+      31,
+      21,
+      19,
+      20,
+      25,
+      23,
+      26,
+      27,
+      28,
+      29,
+      32,
+      22,
+      34,
+      35,
+      36,
+      37
+    ],
+    "RetroactiveTaskTypes": [
+      1,
+      2,
+      6
+    ],
+    "Season5Settings": {
+      "AloneMapEntryId": 22,
+      "IceMapTagId": 1,
+      "FireMapTagId": 2
+    }
+  },
+  "texts": [
+    {
+      "key": "item_110_name",
+      "text": "星之愿"
+    },
+    {
+      "key": "item_120_name",
+      "text": "时间结晶"
+    },
+    {
+      "key": "item_1_name",
+      "text": "罗拉"
+    },
+    {
+      "key": "item_2_name",
+      "text": "晨星"
+    },
+    {
+      "key": "item_41300_name",
+      "text": "粗炼石"
+    },
+    {
+      "key": "item_42200_name",
+      "text": "历战精华"
+    },
+    {
+      "key": "item_50_name",
+      "text": "经验"
+    },
+    {
+      "key": "region_10_0",
+      "text": "初始岛一"
+    },
+    {
+      "key": "region_10_1",
+      "text": "初始岛二"
+    },
+    {
+      "key": "region_10_2",
+      "text": "初始岛三"
+    },
+    {
+      "key": "region_10_3",
+      "text": "初始岛四"
+    },
+    {
+      "key": "region_10_4",
+      "text": "初始岛五"
+    },
+    {
+      "key": "region_11_0",
+      "text": "森之国一"
+    },
+    {
+      "key": "region_11_12",
+      "text": "森之国五"
+    },
+    {
+      "key": "region_11_15",
+      "text": "森之国六"
+    },
+    {
+      "key": "region_11_16",
+      "text": "世界树"
+    },
+    {
+      "key": "region_11_2",
+      "text": "森之国二"
+    },
+    {
+      "key": "region_11_20",
+      "text": "森之国七"
+    },
+    {
+      "key": "region_11_25",
+      "text": "森之国八"
+    },
+    {
+      "key": "region_11_27",
+      "text": "森之国九"
+    },
+    {
+      "key": "region_11_29",
+      "text": "森之国十"
+    },
+    {
+      "key": "region_11_32",
+      "text": "森之国十一"
+    },
+    {
+      "key": "region_11_38",
+      "text": "森之国十二"
+    },
+    {
+      "key": "region_11_40",
+      "text": "飓风高崖"
+    },
+    {
+      "key": "region_11_42",
+      "text": "森之国十三"
+    },
+    {
+      "key": "region_11_44",
+      "text": "森之国十四"
+    },
+    {
+      "key": "region_11_50",
+      "text": "森之国十五"
+    },
+    {
+      "key": "region_11_52",
+      "text": "森之国十六"
+    },
+    {
+      "key": "region_11_54",
+      "text": "森之国十七"
+    },
+    {
+      "key": "region_11_6",
+      "text": "森之国三"
+    },
+    {
+      "key": "region_11_8",
+      "text": "森之国四"
+    },
+    {
+      "key": "region_12_0",
+      "text": "山之国一"
+    },
+    {
+      "key": "region_12_1",
+      "text": "大竞技场"
+    },
+    {
+      "key": "region_12_12",
+      "text": "山之国五"
+    },
+    {
+      "key": "region_12_18",
+      "text": "山之国六"
+    },
+    {
+      "key": "region_12_27",
+      "text": "山之国七"
+    },
+    {
+      "key": "region_12_29",
+      "text": "山之国八"
+    },
+    {
+      "key": "region_12_3",
+      "text": "山之国二"
+    },
+    {
+      "key": "region_12_33",
+      "text": "山之国九"
+    },
+    {
+      "key": "region_12_37",
+      "text": "山之国十"
+    },
+    {
+      "key": "region_12_39",
+      "text": "山之国十一"
+    },
+    {
+      "key": "region_12_4",
+      "text": "机神山"
+    },
+    {
+      "key": "region_12_42",
+      "text": "山之国十二"
+    },
+    {
+      "key": "region_12_5",
+      "text": "山之国三"
+    },
+    {
+      "key": "region_12_55",
+      "text": "山之国十三"
+    },
+    {
+      "key": "region_12_57",
+      "text": "山之国十四"
+    },
+    {
+      "key": "region_12_59",
+      "text": "山之国十五"
+    },
+    {
+      "key": "region_12_61",
+      "text": "熔融山脉"
+    },
+    {
+      "key": "region_12_69",
+      "text": "山之国十六"
+    },
+    {
+      "key": "region_12_72",
+      "text": "山之国十七"
+    },
+    {
+      "key": "region_12_74",
+      "text": "山之国十八"
+    },
+    {
+      "key": "region_12_9",
+      "text": "山之国四"
+    },
+    {
+      "key": "task_1000_progress",
+      "text": "初始岛一战斗胜利：{0}/{1}"
+    },
+    {
+      "key": "task_1000_title",
+      "text": "最初的战斗"
+    },
+    {
+      "key": "task_1005_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1005_title",
+      "text": "荒岛的旅途（一）"
+    },
+    {
+      "key": "task_1010_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1010_title",
+      "text": "荒岛的旅途（二）"
+    },
+    {
+      "key": "task_1015_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1015_title",
+      "text": "荒岛的旅途（三）"
+    },
+    {
+      "key": "task_1020_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1020_title",
+      "text": "荒岛的旅途（四）"
+    },
+    {
+      "key": "task_1025_progress",
+      "text": "打倒守护巨像：{0}/{1}"
+    },
+    {
+      "key": "task_1025_title",
+      "text": "决斗吧 守护巨像"
+    },
+    {
+      "key": "task_1030_progress",
+      "text": "和神秘老者对话"
+    },
+    {
+      "key": "task_1030_title",
+      "text": "职业的十字路口"
+    },
+    {
+      "key": "task_1035_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1035_title",
+      "text": "荒岛的旅途（五）"
+    },
+    {
+      "key": "task_1040_progress",
+      "text": "女神像祈愿10次：{0}/{1}"
+    },
+    {
+      "key": "task_1040_title",
+      "text": "最真挚的愿望"
+    },
+    {
+      "key": "task_1045_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1045_title",
+      "text": "森国万象（一）"
+    },
+    {
+      "key": "task_1050_progress",
+      "text": "激活森之国一女神像"
+    },
+    {
+      "key": "task_1050_title",
+      "text": "女神的赐福（一）"
+    },
+    {
+      "key": "task_1055_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1055_title",
+      "text": "森国万象（二）"
+    },
+    {
+      "key": "task_1060_progress",
+      "text": "激活森之国二女神像"
+    },
+    {
+      "key": "task_1060_title",
+      "text": "女神的赐福（二）"
+    },
+    {
+      "key": "task_1065_progress",
+      "text": "解锁月影之森"
+    },
+    {
+      "key": "task_1065_title",
+      "text": "月影之森（一）"
+    },
+    {
+      "key": "task_1070_progress",
+      "text": "抵达月影之森3层：{0}/{1}"
+    },
+    {
+      "key": "task_1070_title",
+      "text": "深入月影（一）"
+    },
+    {
+      "key": "task_1075_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1075_title",
+      "text": "森国万象（三）"
+    },
+    {
+      "key": "task_1080_progress",
+      "text": "激活森之国三女神像"
+    },
+    {
+      "key": "task_1080_title",
+      "text": "女神的赐福（三）"
+    },
+    {
+      "key": "task_1085_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1085_title",
+      "text": "森国万象（四）"
+    },
+    {
+      "key": "task_1090_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1090_title",
+      "text": "森国万象（五）"
+    },
+    {
+      "key": "task_1095_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1095_title",
+      "text": "世界树探索"
+    },
+    {
+      "key": "task_1100_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1100_title",
+      "text": "森国万象（六）"
+    },
+    {
+      "key": "task_1105_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1105_title",
+      "text": "森国万象（七）"
+    },
+    {
+      "key": "task_1110_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1110_title",
+      "text": "森国万象（八）"
+    },
+    {
+      "key": "task_1115_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1115_title",
+      "text": "森国万象（九）"
+    },
+    {
+      "key": "task_1120_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1120_title",
+      "text": "森国万象（十）"
+    },
+    {
+      "key": "task_1125_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1125_title",
+      "text": "森国万象（十一）"
+    },
+    {
+      "key": "task_1130_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1130_title",
+      "text": "森国万象（十二）"
+    },
+    {
+      "key": "task_1135_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1135_title",
+      "text": "森国万象（十三）"
+    },
+    {
+      "key": "task_1140_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1140_title",
+      "text": "飓风高崖"
+    },
+    {
+      "key": "task_1145_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1145_title",
+      "text": "森国万象（十四）"
+    },
+    {
+      "key": "task_1150_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1150_title",
+      "text": "森国万象（十五）"
+    },
+    {
+      "key": "task_1155_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1155_title",
+      "text": "森国万象（十六）"
+    },
+    {
+      "key": "task_1160_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1160_title",
+      "text": "森国万象（十七）"
+    },
+    {
+      "key": "task_1165_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1165_title",
+      "text": "以山之名（一）"
+    },
+    {
+      "key": "task_1170_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1170_title",
+      "text": "大竞技场"
+    },
+    {
+      "key": "task_1175_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1175_title",
+      "text": "以山之名（二）"
+    },
+    {
+      "key": "task_1180_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1180_title",
+      "text": "机神山"
+    },
+    {
+      "key": "task_1185_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1185_title",
+      "text": "以山之名（三）"
+    },
+    {
+      "key": "task_1190_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1190_title",
+      "text": "以山之名（四）"
+    },
+    {
+      "key": "task_1195_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1195_title",
+      "text": "以山之名（五）"
+    },
+    {
+      "key": "task_1200_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1200_title",
+      "text": "以山之名（六）"
+    },
+    {
+      "key": "task_1205_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1205_title",
+      "text": "以山之名（七）"
+    },
+    {
+      "key": "task_1210_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1210_title",
+      "text": "以山之名（八）"
+    },
+    {
+      "key": "task_1215_progress",
+      "text": "解锁魔能邃渊"
+    },
+    {
+      "key": "task_1215_title",
+      "text": "魔能邃渊"
+    },
+    {
+      "key": "task_1220_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1220_title",
+      "text": "以山之名（九）"
+    },
+    {
+      "key": "task_1225_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1225_title",
+      "text": "以山之名（十）"
+    },
+    {
+      "key": "task_1230_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1230_title",
+      "text": "以山之名（十一）"
+    },
+    {
+      "key": "task_1235_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1235_title",
+      "text": "以山之名（十二）"
+    },
+    {
+      "key": "task_1240_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1240_title",
+      "text": "以山之名（十三）"
+    },
+    {
+      "key": "task_1245_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1245_title",
+      "text": "以山之名（十四）"
+    },
+    {
+      "key": "task_1250_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1250_title",
+      "text": "以山之名（十五）"
+    },
+    {
+      "key": "task_1255_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1255_title",
+      "text": "以山之名（十六）"
+    },
+    {
+      "key": "task_1260_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1260_title",
+      "text": "熔融山脉"
+    },
+    {
+      "key": "task_1265_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1265_title",
+      "text": "以山之名（十七）"
+    },
+    {
+      "key": "task_1270_progress",
+      "text": "探索{0}"
+    },
+    {
+      "key": "task_1270_title",
+      "text": "以山之名（十八）"
+    }
+  ]
+}

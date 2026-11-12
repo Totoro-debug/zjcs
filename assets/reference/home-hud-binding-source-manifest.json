@@ -1,6 +1,6 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "c1c2eca881b19f8269b8e2127c9dc10de4e52699ca2b06fba53cc9a960e90ee0",
+  "generator_sha256": "f1751b41fdb505ce6a554c197d043b7fc45922c971294447665471dc0ea46f87",
   "inputs": {
     "assets/reference/home-hud-native-source-manifest.json": "db1dfa4d913c010b83169640c5f968336186fe8578f0108062b5705a03db7293",
     "assets/reference/home-hud-frame-native-source-manifest.json": "786a1bcd2dea7fbc9d22a9c49889a8430eb2262ef34ccc6e9fd4921c7994a6a9",
@@ -132,9 +132,14 @@
     "assets/reference/home-pointer-input-source-manifest.json": "dd062731e01110480a58441b25c1cfab8b36fcb162ffe9fe7217bf879dfb25bc",
     "unity/Assets/Game/Runtime/Official/HomeMainUiControls/HomePointerInput.cs": "64502452a0cdc7b6d21cd954fc8760580fa27f9747c5d9e5e6072da994691961",
     "unity/Assets/Game/Runtime/Official/HomeMainUiControls/HomePointerInput.cs.meta": "30e199d7b85130a310cadccd8b01d248470bc446d25bf7cd3cfa17455d6de660",
+    "assets/reference/home-mainline-task-data-source-manifest.json": "e0005b8e56c7da7daf6a8f81dc362d76132ee0c96695a1f77ce758a1ab81febd",
+    "unity/Assets/Game/Resources/Home/home-mainline-task-data.json": "cda85dec3150258e4470a2578afc025e4055a3b579b5d22c3c087aa1573ccb7f",
+    "unity/Assets/Game/Resources/Home/home-mainline-task-data.json.meta": "d87797d2cd531dde746c735339f600b9c710a2757a2673a80771b83eb2428cc8",
+    "unity/Assets/Game/Resources/Home/home-mainline-task-data-hash.json": "b4be9f48ccc879ac32d6cfcee5c3f706ec3ae15a5916fb4b865424af8b338f3c",
+    "unity/Assets/Game/Resources/Home/home-mainline-task-data-hash.json.meta": "821918035dae8bbde857e58dcef00d72341e22d3f51c362f71154f28cdb60e2a",
     "assets/reference/home-currency-windows-native-source-manifest.json": "b6acba348188d75b0821487d3b26d70ef39a30de728065f754d036222edb2cfd",
     "unity/Assets/Official/Home/UI/CurrencyWindows/home-currency-windows-rules.json": "2ba49cbf3eefe5ebd2320fd823c6cad5ad6609dec5c28d2bf10a3aa9804ce036",
-    "scripts/fixtures/home_hud_bindings_native_validation.cs": "b12fa0e6e9e1ba8a66b15cc5856ec908b4eada341a35b822a3226a348a4fd271",
+    "scripts/fixtures/home_hud_bindings_native_validation.cs": "0927a7cc628e7c78003b1eddb0cdb78fe621afa715651dfe06b0af09f8a0efd0",
     "scripts/fixtures/home_hud_infrastructure_native_validation.cs": "b6e4e8612c89f96a21bf58061fcf7c1162d2d6076b33533370d8e06a5fa698f5",
     "scripts/prepare_home_hud_infrastructure_validation.py": "e0391e8da5b64b927dd545af16748b120d39e46248585e2329ae10f71e7cda56",
     "assets/reference/home-hud-infrastructure-native-source-manifest.json": "38e903c0062853dc381ea3c3882f2150b45b7378b37b3fee191db2ae703ed380",
@@ -160,7 +165,9 @@
     "unity/Assets/Game/Runtime/Offline/HomeHudUI/OfflineHomeHudInput.cs.meta": "68ad31ddca3c2ac597cb543f3d1437d5342411a0e211d6713dc64183acfddd36",
     "unity/Assets/Game/Runtime/Offline/HomeHudUI/OfflineHomeHudInputLoop.cs": "b2594eeefac2c2268c6b8166c19b91d73fe44607b91a254e8b15cefa22e96ff7",
     "unity/Assets/Game/Runtime/Offline/HomeHudUI/OfflineHomeHudInputLoop.cs.meta": "0c426e8199d3e5e0e3c9f2e879bd23a701f27a541b8dfccb3fd9c64b00527c61",
-    "unity/Assets/Game/Runtime/Offline/HomeHudUI/Zjcs.Offline.HomeHudUI.asmdef": "6281361df3ead7d47d0496c74535611170bd3da34b02b69116240dcf21caaa4f",
+    "unity/Assets/Game/Runtime/Offline/HomeHudUI/OfflineHomeMainlineTaskData.cs": "17b44f11824735d6a018646a7f188aa8ab1733cab1096d2e5b2a1e45adfe066b",
+    "unity/Assets/Game/Runtime/Offline/HomeHudUI/OfflineHomeMainlineTaskData.cs.meta": "108337f033511378e68ca99618ae0665094bede30a77c29a1c67f732753e76af",
+    "unity/Assets/Game/Runtime/Offline/HomeHudUI/Zjcs.Offline.HomeHudUI.asmdef": "4891fe5e3ddd8fa39705fb5cc407b251b8d23aa3af841171356d8a2268df4450",
     "unity/Assets/Game/Runtime/Offline/HomeHudUI/Zjcs.Offline.HomeHudUI.asmdef.meta": "ad37d12906aae0e7ae4227ada5a77a39885cfc4cd6bfaef0e4b9a644cb7be43a",
     "unity/Assets/Game/Resources/Home/OfflineHomeHudAssets.asset": "01fdd6a11f432bff6accab09ca17a7a67f503de5eb6f373b122e650ea30e58f7",
     "unity/Assets/Game/Resources/Home/OfflineHomeHudAssets.asset.meta": "ae17d0a2ffd7753a9f5c4cacc3ac82896d840d652e926bd3ab03d0121daf9b6f"
@@ -169,7 +176,11 @@
     "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionNotifications.cs": "d72988ed9a9c413204d3e39b89b4b78adfd728bb21b9d42123dfba0a82f29a8a",
     "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionNotifications.cs.meta": "ba35666248606ac8c1115f72e78bde9328d30c28baff5ad9a923db72f636c35e",
     "unity/Assets/Game/Runtime/Official/HomeMainUiControls/HomePointerInput.cs": "64502452a0cdc7b6d21cd954fc8760580fa27f9747c5d9e5e6072da994691961",
-    "unity/Assets/Game/Runtime/Official/HomeMainUiControls/HomePointerInput.cs.meta": "30e199d7b85130a310cadccd8b01d248470bc446d25bf7cd3cfa17455d6de660"
+    "unity/Assets/Game/Runtime/Official/HomeMainUiControls/HomePointerInput.cs.meta": "30e199d7b85130a310cadccd8b01d248470bc446d25bf7cd3cfa17455d6de660",
+    "unity/Assets/Game/Resources/Home/home-mainline-task-data.json": "cda85dec3150258e4470a2578afc025e4055a3b579b5d22c3c087aa1573ccb7f",
+    "unity/Assets/Game/Resources/Home/home-mainline-task-data.json.meta": "d87797d2cd531dde746c735339f600b9c710a2757a2673a80771b83eb2428cc8",
+    "unity/Assets/Game/Resources/Home/home-mainline-task-data-hash.json": "b4be9f48ccc879ac32d6cfcee5c3f706ec3ae15a5916fb4b865424af8b338f3c",
+    "unity/Assets/Game/Resources/Home/home-mainline-task-data-hash.json.meta": "821918035dae8bbde857e58dcef00d72341e22d3f51c362f71154f28cdb60e2a"
   },
   "scope": "Packaged full HomeUI resource catalog and typed dependency/lifetime binding. Production profile service implementations and full runtime flow validation remain required."
 }

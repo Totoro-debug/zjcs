@@ -88,6 +88,10 @@ def build():
     assert pointer['manifest'] == '884_156692'
     for relative, expected in pointer['outputs'].items():
         assert sha(read(relative)) == expected, relative
+    task_data = json.loads(read('assets/reference/home-mainline-task-data-source-manifest.json'))
+    assert task_data['manifest'] == '884_156692'
+    for relative, expected in task_data['outputs'].items():
+        assert sha(read(relative)) == expected, relative
     currency = json.loads(read('assets/reference/home-currency-windows-native-source-manifest.json'))
     settings_path = 'unity/Assets/Official/Home/UI/CurrencyWindows/home-currency-windows-rules.json'
     settings_raw = read(settings_path)
@@ -99,7 +103,7 @@ def build():
             read('scripts/prepare_'+fixture+'_validation.py')
             read('assets/reference/'+fixture.replace('_','-')+'-native-source-manifest.json')
     receipt = dict(manifest='884_156692', generator_sha256=sha(Path(__file__).read_bytes()),
-        inputs=inputs, outputs=outputs, dependency_outputs={**notifications['outputs'], **pointer['outputs']},
+        inputs=inputs, outputs=outputs, dependency_outputs={**notifications['outputs'], **pointer['outputs'], **task_data['outputs']},
         scope='Packaged full HomeUI resource catalog and typed dependency/lifetime binding. Production profile service implementations and full runtime flow validation remain required.')
     (ROOT/'assets/reference/home-hud-binding-source-manifest.json').write_text(
         json.dumps(receipt, ensure_ascii=False, indent=2)+'\n', 'utf8', newline='\n')
@@ -125,6 +129,7 @@ def stage(project, receipt):
     shutil.copy2(ROOT/'scripts/fixtures/home_hud_bindings_native_validation.cs', folder/'HomeHudBindingsNativeValidation.cs')
     references = json.loads((ROOT/'unity/Assets/Game/Runtime/Offline/HomeHudUI/Zjcs.Offline.HomeHudUI.asmdef').read_text('utf8'))['references']
     references += ['Zjcs.Offline.HomeHudUI', 'Zjcs.Official.HomeFunctionMenuUI', 'Zjcs.Official.HomeUI', 'Zjcs.Official.World.NativeCamera', 'Zjcs.Official.World.NativeLabelUI', 'Zjcs.Offline.CharacterCreation', 'Zjcs.Offline.State', 'Zjcs.Offline.HomeCurrencyUI', 'Unity.Newtonsoft.Json']
+    references = list(dict.fromkeys(references))
     (folder/'HomeHudBindingsNativeValidation.asmdef').write_text(json.dumps(dict(name='Zjcs.HomeHudBindingsNativeValidation', includePlatforms=['Editor'], references=references), indent=2)+'\n', 'utf8', newline='\n')
 
 

@@ -78,6 +78,13 @@ public sealed class HomeHudBindingsNativeRunner:MonoBehaviour
     {
         var assets=OfflineHomeHudAssets.LoadDefault();Require(assets&&assets.framePrefab&&assets.homePrefab&&assets.defaultFont,"explicit resource catalog resolves");
         var dictionary=JsonUtility.FromJson<LanguageData>(assets.texts.text).texts.ToDictionary(x=>x.key,x=>x.text);
+        var taskData=OfflineHomeMainlineTaskData.LoadDefault();
+        Require(taskData.OrderedTasks.Count==55&&taskData.OrderedTasks.Count(value=>value.ShowProgressBar)==45,"current complete TaskInfo preserves all 55 rows and the original 45 progress-bar flags");
+        Require(taskData.Task(1000).IsAllowTrace&&!taskData.Task(1000).AutoTracing&&!taskData.Task(1000).ShowProgressBar&&taskData.Task(1000).FinishJumpable==true&&taskData.Task(1005).ShowProgressBar,"original trace, nullable jump and per-task progress settings");
+        var copiedTask=taskData.Task(1000).CopyOriginalRow();Require((int)copiedTask["NextIds"][0]==1005&&copiedTask["AcquestCondition"]["Jumpable"].Type==Newtonsoft.Json.Linq.JTokenType.Null,"complete original row retains linked tasks and null jump setting");copiedTask["ClassId"]=-1;Require(taskData.Task(1000).ClassId==1000,"caller cannot mutate the packaged task catalog through a copied row");
+        Require(taskData.Text(taskData.Task(1000).TitleKey)=="最初的战斗"&&string.Format(taskData.Text(taskData.Task(1000).ProgressKey),0,2)=="初始岛一战斗胜利：0/2"&&string.Format(taskData.Text(taskData.Task(1005).ProgressKey),taskData.Text("region_10_0"))=="探索初始岛一","selected official post-parse task keys resolve their dynamic original CN text");
+        foreach(var pair in taskData.Texts)dictionary[pair.Key]=pair.Value;
+        Debug.Log("HOME_SELECTED_TASK_DATA_PASSED: 55 exact transaction comparisons, complete current TaskInfo, 45 original progress bars, linked/null fields, immutable caller copies and 162 original dynamic text entries.");
         dictionary["Fixture.Title.1"]="完成家园绑定验证";dictionary["Fixture.Condition"]="验证进度";
         camera=new GameObject("MutedUiCamera",typeof(Camera),typeof(AudioListener)).GetComponent<Camera>();camera.orthographic=true;camera.clearFlags=CameraClearFlags.SolidColor;camera.backgroundColor=new Color(.12f,.2f,.28f);
         target=new RenderTexture(608,1080,24);target.Create();camera.targetTexture=target;
@@ -102,7 +109,7 @@ public sealed class HomeHudBindingsNativeRunner:MonoBehaviour
         Require(mainline.GetTaskProgress(initialTask.finishCondition,out long initialCurrent,out long initialTarget).Status==ProgressionResultStatus.Ready&&initialCurrent==0&&initialTarget==2&&mainline.Save.World.Maps.Count==0,"selected original battle blackboard default is zero without map initialization");
         Require(mainline.ClaimTask(1000).Status==ProgressionResultStatus.NotReady&&JsonUtility.ToJson(mainline.Save)==untouchedMainline,"initial incomplete task cannot grant rewards or mutate the real isolated character");
         Debug.Log("HOME_NEW_CHARACTER_TASK_PASSED: actual character, no initialized map, original 0/2 battle count, premature claim rejected without mutation. Native task row remains a controlled fixture.");
-        var currencyRules=Newtonsoft.Json.Linq.JObject.Parse(Zjcs.Offline.HomeCurrencyUI.OfflineHomeCurrencyAssets.LoadDefault().configuration.text);int firstTraceId=(int)currencyRules["tables"]["game_settings"]["TaskSettings"]["TaskFirstTraceConditionId"];
+        int firstTraceId=(int)taskData.CopyTaskSettings()["TaskFirstTraceConditionId"];
         var conditions=new OfflineHomeHudConditions(profile,configuration,OfficialPartnerAssetCatalog.LoadDefault().Conditions,firstTraceId,_=>false,()=>false,()=>false);
         CheckConditionNotifications(new OfflineHomeConditionPlayer(configuration,()=>profile.Save,_=>false));Require(firstTraceId==5&&!conditions.IsMet(conditions.GetCondition(firstTraceId)),"actual new character has not met selected first trace condition");
         CheckPointerDispatcher();pointer=new PointerSample();input=new OfflineHomeHudInput(pointer);
