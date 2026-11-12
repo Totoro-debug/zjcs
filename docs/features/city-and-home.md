@@ -235,7 +235,15 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `Runtime/Official/HomeCountControlsUI/` 迁入所选 884 的 `SetCountSlider`、`SetCountButtonGroup`、`LongTouch` 和原整数 Clamp。滑条保留整数选择、单值／无效区间、交易倍率显示及原 float 转 long；按钮组保留初值不主动钳制、超上限回调和最大值通知规则。长按保留 0.5 秒初始间隔、0.05 秒间隔变化、0.1 秒最小间隔、10 次加速阈值、1.5 次幂、拖动取消与 AutoReset；仅增加可选的测试指针坐标入口，未设置时沿原触摸／鼠标读取。
 
-`Assets/Official/Home/UI/CountControls/` 使用 APK 内 `ShopQuickBuyDialog` 的两个完整控件子树，保留原 RectTransform、滑条填充、按钮、文本、动画和点击音频绑定。独立测试槽位的宽 798、高 162 分别取原父级宽度和 LayoutElement 首选高度；完整父窗口布局尚未接入。`HomeCountControlsNativeValidation.Run` 已在静音 Play Mode 通过真实首个射线命中、模拟点击／拖动／长按、加速、拖动取消、上下限、倍率文字、单值与无效区间、最大值及超限回调，音效检查保持静音并校验原音频事件。已查看原生 640×480 实际截图；Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。全局颜色通过受控端口提供；完整速购／兑换窗口、存档事务、正式 HUD 和竖屏 Windows Player 尚未验证。
+`Assets/Official/Home/UI/CountControls/` 使用 APK 内 `ShopQuickBuyDialog` 的两个完整控件子树，保留原 RectTransform、滑条填充、按钮、文本、动画和点击音频绑定。独立测试槽位的宽 798、高 162 分别取原父级宽度和 LayoutElement 首选高度；完整父窗口另按下文恢复。`HomeCountControlsNativeValidation.Run` 已在静音 Play Mode 通过真实首个射线命中、模拟点击／拖动／长按、加速、拖动取消、上下限、倍率文字、单值与无效区间、最大值及超限回调，音效检查保持静音并校验原音频事件。已查看原生 640×480 实际截图；Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。本项独立控件的全局颜色通过受控端口提供；完整窗口及实际颜色另见下文，存档事务、正式 HUD 和竖屏 Windows Player 尚未验证。
+
+`Runtime/Official/HomeCurrencyWindowsUI/` 迁入所选 884 的完整 `QuickBuyDialog`、`PayMoneyChangeDialog`、`PlayerCostMoneyContent` 和 `QuickBuyInfo` 三项共享计算。速购保持原所需数量向上取整、阶梯价格、已购买次数、持有／次数限制、最低购买量、余额变化及日／自增事件的不同刷新顺序；金币记录使用原 30／50／100 价格与 5／5／无限档位。余额不足仍强制选择至少 1 次；多档控件收到货币变化时只重算数量，价格等待原后续刷新事件，保留该原行为。确认时仍只用单次奖励数量检查持有上限，发出购买请求后立即关闭。扣费按钮保留原不足、禁止扣费错误 1659、条件检查、免费、数量颜色和每秒自增刷新分支。
+
+兑换保留原零参数滑条／正参数固定数量、最小 1／最大 10000000／倍率 1、零余额选择 0、物品数量变化切换固定模式、余额不足确认后进入直购及原支付奖励拦截。请求、奖励、物品说明、确认和直购窗口均由明确类型端口提供，不能把端口回调作为真实存档事务完成。`OfflineHomeCurrencyAssets` 显式绑定所选 26 条速购配置、持有上限、等级系数、物品、语言、原 GlobalColors 配色和图标；兑换所需额外顶栏货币按原 `PlayerItemUIGetItemIdFactory` 的 `FlareStar → GameSettings.FlareStarId` 补入运行时目录副本，保持家园三项货币目录的原定义。
+
+`Assets/Official/Home/UI/CurrencyWindows/` 恢复 APK 中两个完整父窗口及默认物品图标，HintTip 附件沿原配置 GUID 查到实际 prefab 后一并恢复；保留全部原层级、RectTransform、布局、字体、图标、材质、入退场动画和声音，不用截图替代窗口。图标、附件对象池及顶部栏均在启用前注入本地资源与生命周期绑定。
+
+`HomeCurrencyWindowsNativeValidation.Run` 已在完整隔离工程的静音 Play Mode 通过两个完整原窗口的第一射线命中与内部模拟点击、所需数量取整、跨阶梯价格、最大值、余额／禁止扣费／条件分支、周期刷新、取消回调、固定数量／零余额兑换、支付奖励拦截、原入退场动画和图标／事件／奖励监听释放。已查看 608×1080 实际速购及兑换画面，包含原顶部货币栏。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。该测试使用受控角色、请求、奖励和二级窗口端口；真实背包扣费与发奖、次数存档、物品详情／确认／直购窗口的实际往返、正式 HUD 和 Windows Player 尚未接通或验证。
 
 `PlayerItemUIMainPlayerCountProviderBase` 与重新解析原依赖得到的 `PlayerItemUIPlayerItemCountProvider` 迁入 `Runtime/Official/HomeCurrencyUI/`，保留玩家借还、按物品 ID 过滤、每秒异步刷新及取消顺序。`OfflineHomeCurrencyPlayer` 将实际角色背包和自增参数投影为原数量事件；家园宿主需在提交／重读后调用 `SynchronizeCommittedPlayer`。当前 `OutputAdditionSetting.ItemOutputGroupTypeDict` 包含 56／57，因此体力保留原额外参数更新订阅。真实角色存档与原生顶栏的隔离验证入口为 `HomeCurrencyProfileValidation.Run`；正式家园 HUD 的整体替换、物品详情／购买原窗口、属性及产出加成变化时的体力速度／上限应用链仍未接通，不能以初始恢复规则代替这些流程。
 
