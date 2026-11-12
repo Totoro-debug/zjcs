@@ -241,6 +241,8 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `HomeQuickBuyCalendar` 与 `HomeQuickBuyData` 从所选官方 `TimeUtils`、`PlayerQuickBuyDataExt` 和三类计数 Wrap 迁入，保留日／周／不刷新类型、配置重置时刻、周起始日和服务器时区换算。读取跨周期计数只返回零，不清空或写档；该周期首次新增才清空同类型全部物品，再更新时间和计数。时区为必传参数，正式单机取值仍待用户决定，不使用电脑时区或 UTC+8 作为隐含默认。
 
+`HomePeriodicManager` 迁入所选 `PeriodicManager` 的一秒轮询、角色／时钟可用检查、首次日期初始化、只接受向前时间、先周后日判断及原空跨日消息；已确认移除好友服务，因此不迁入原方法唯一的周／角色变化副作用——联网同步友情币。`OfflineHomePeriodicEvents` 提供本地 UTC 时钟、明确的角色可用回调与可释放跨日订阅，重置日历仍须传入时区。隔离静音 Play Mode 验证首次加载不补发、不可用后重新初始化、一秒节流、精确周一边界、相同／回拨时间和跨多日只通知一次；真实速购存档达到第二档后，打开原窗口并推进本地时钟，原订阅将价格从 50 刷新为 30，期间不改写计数或主存档。模拟取消、服务销毁和重复退订均已验证，已查看实际跨日后 608×1080 画面。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。本地事件已与上述窗口服务组合验证；正式家园更新循环、其他跨日功能及 Windows Player 尚未接通，本轮 UTC+8 仅为显式测试参数。
+
 兑换保留原零参数滑条／正参数固定数量、最小 1／最大 10000000／倍率 1、零余额选择 0、物品数量变化切换固定模式、余额不足确认后进入直购及原支付奖励拦截。请求、奖励、物品说明、确认和直购窗口均由明确类型端口提供；兑换请求已另接下述真实存档事务，其他端口仍需接通实际流程。`OfflineHomeCurrencyAssets` 显式绑定所选 26 条速购配置、持有上限、等级系数、物品、语言、原 GlobalColors 配色和图标；兑换所需额外顶栏货币按原 `PlayerItemUIGetItemIdFactory` 的 `FlareStar → GameSettings.FlareStarId` 补入运行时目录副本，保持家园三项货币目录的原定义。
 
 `Assets/Official/Home/UI/CurrencyWindows/` 恢复 APK 中两个完整父窗口及默认物品图标，HintTip 附件沿原配置 GUID 查到实际 prefab 后一并恢复；保留全部原层级、RectTransform、布局、字体、图标、材质、入退场动画和声音，不用截图替代窗口。图标、附件对象池及顶部栏均在启用前注入本地资源与生命周期绑定。

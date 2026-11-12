@@ -69,6 +69,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     OfflineHomeMoneyQuickBuy moneyQuickBuy;string lastMoneyBuyRequest;int moneyBuys;
     OfflineHomeCurrencyWindowPlayer windowPlayer;
     OfflineHomeCurrencyActions currencyActions;
+    OfflineHomePeriodicEvents periodic;
     FontAssetFontService fonts;ScreenAdaptService screen;OfflineHomeTopBar topBar;OfflinePartnerUiSoundScope soundScope;IDisposable metrics;
     GameObject active;WorldPopupWindow popup;WorldConfirmDialog confirmation;Material blur;
     readonly Dictionary<int,long> counts=new Dictionary<int,long>{{1,100},{2,500},{15,5}};
@@ -137,7 +138,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         limited=HomeCurrencyBuyLimit.CheckBuyLimitCountItem(109,1,this,assets.Text,PopupLimitConfirm);yield return WaitConfirmation();Click(confirmation.ConfirmBtn);yield return WaitAllClosed();Require(limited.GetAwaiter().GetResult(),"native confirm allows original excess ownership branch");
         limited=HomeCurrencyBuyLimit.CheckBuyLimitCountItem(109,1,this,assets.Text,PopupLimitConfirm);yield return WaitConfirmation();var confirmMask=canvas.GetComponentsInChildren<WorldWindowBlurMask>().Single(mask=>mask.AttachWindow==confirmation.PopupWindow);Click(confirmMask.Button,new Vector2(5,5));Require(windows.WindowCount==1&&limited.Status==UniTaskStatus.Pending,"original mask guard ignores clicks during the first half second");yield return new WaitForSeconds(.55f);Click(confirmMask.Button,new Vector2(5,5));yield return WaitAllClosed();Require(!limited.GetAwaiter().GetResult(),"original mask-close automatically runs the cancel callback");
         InitializeExchangeProfile();
-        CheckQuickBuyCounters();
+        CheckQuickBuyCounters();CheckPeriodicManager();
         profileQuickCounters=new OfflineHomeQuickBuyCounters(assets.CreateQuickBuyCalendar(8));
         quickCounterTime=new DateTime(2026,11,9,0,0,0,DateTimeKind.Utc);
         windowPlayer=new OfflineHomeCurrencyWindowPlayer(profile,profilePlayer,profileQuickCounters,
@@ -290,9 +291,39 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         SetBalance(1,heldMoney);SetBalance(1,money);SetBalance(2,diamonds);
         Debug.Log("HOME_MONEY_QUICK_BUY_PASSED: original base-level condition, native buy pointer, actual award/cost/count, tier crossing, new-day reset, profile reopening, receipt replay and debit/award/disk-failure rollback. Production timezone, error/award presentation and HUD remain pending.");
     }
+    sealed class PeriodicProbe:IHomePeriodicServices
+    {
+        public bool Available,Synced;public DateTime Now;public int Reads,Days;
+        public bool HasPlayer=>Available;public bool TimeSynced=>Synced;
+        public HomeQuickBuyCalendar Calendar{get;set;}
+        public DateTime GetDateTime(){Reads++;return Now;}
+        public void PublishEnterNewDay(HomeCurrencyEnterNewDay message){Require(message==null,"original periodic day payload remains null");Days++;}
+    }
+    void CheckPeriodicManager()
+    {
+        var state=new PeriodicProbe{Calendar=assets.CreateQuickBuyCalendar(8),Now=new DateTime(2026,11,8,23,59,59,DateTimeKind.Utc)};var manager=new HomePeriodicManager(state);
+        manager.Update(0);Require(state.Reads==0&&state.Days==0,"original periodic manager waits for a player and a synchronized clock");
+        state.Available=true;manager.Update(1);Require(state.Reads==0,"original periodic manager waits for time synchronization");state.Synced=true;manager.Update(1.5f);Require(state.Reads==0,"original one-second throttle also covers unavailable ticks");manager.Update(2);Require(state.Reads==2&&state.Days==0,"original first available tick captures date twice and never publishes an initial day");
+        state.Now=state.Now.AddSeconds(1);manager.Update(2.99f);Require(state.Days==0,"original throttle delays reset polling until the next one-second check");manager.Update(3);Require(state.Days==1,"original exact Monday reset publishes one day after weekly handling");manager.Update(4);Require(state.Days==1,"equal clock never repeats the same reset");
+        state.Now=state.Now.AddSeconds(-1);manager.Update(5);Require(state.Days==1,"backward wall clock never publishes or lowers original last-date watermark");state.Now=state.Now.AddSeconds(2);manager.Update(6);Require(state.Days==1,"returning forward within the current day does not repeat reset");
+        state.Now=state.Now.AddDays(4);manager.Update(7);Require(state.Days==2,"skipping multiple days publishes one original day notification");state.Available=false;manager.Update(8);state.Now=state.Now.AddDays(2);state.Available=true;manager.Update(9);Require(state.Days==2,"player absence resets initialization without replaying missed day notifications");
+        state.Synced=false;manager.Update(10);state.Now=state.Now.AddDays(2);state.Synced=true;manager.Update(11);Require(state.Days==2,"clock unavailability resets initialization without replay");state.Now=state.Now.AddDays(1);manager.Update(12);Require(state.Days==3,"subsequent available day advances retain original publication");
+        Debug.Log("HOME_PERIODIC_MANAGER_PASSED: original availability checks, one-second throttle, initial date capture, exact day/week boundary, null payload, forward watermark and missed-day/reinitialization behavior. Online friend-coin synchronization is removed by confirmed offline scope.");
+    }
+    IEnumerator ExercisePeriodicWindow()
+    {
+        long bought=profileQuickCounters.GetBuyCount(profile.Save.Player,1,EQuickBuyRefreshType.Daily,quickCounterTime);Require(bought<=5,"periodic fixture seeds current price tier from actual saved purchases");
+        Require(profile.ApplyInventoryTransaction("periodic-tier:"+Guid.NewGuid().ToString("N"),save=>profileQuickCounters.AddBuyCount(save.Player,EQuickBuyRefreshType.Daily,1,5-bought,quickCounterTime)).IsApplied,"persist actual second tier for local clock boundary");
+        yield return Open(windows.ShowQuickBuy(1).gameObject);var quick=active.GetComponent<QuickBuyDialog>();var cost=Field<PlayerCostMoneyContent>(quick,"mCostMoneyContent");Require(cost.CostItemCount==50,"original native window reads actual tier before local daily reset");
+        string disk=File.ReadAllText(slots.GetProgressPath(profileSlot));quickCounterTime=periodic.Calendar.GetDailyResetTimeFromDate(quickCounterTime).AddDays(1).AddTicks(-1);periodic.Update(1);Require(cost.CostItemCount==50,"one tick before actual reset retains original native price");
+        quickCounterTime=quickCounterTime.AddTicks(1);periodic.Update(1.5f);Require(cost.CostItemCount==50,"local clock boundary waits for original periodic throttle");periodic.Update(2);Require(cost.CostItemCount==30&&profileQuickCounters.GetBuyCount(profile.Save.Player,1,EQuickBuyRefreshType.Daily,quickCounterTime)==0&&File.ReadAllText(slots.GetProgressPath(profileSlot))==disk,"actual local periodic event refreshes native price without mutating saved counters");
+        Capture("home-currency-periodic-reset-native.png");Click(Field<Button>(quick,"mCancelBtn"));yield return WaitClosed();
+        Debug.Log("HOME_PERIODIC_WINDOW_PASSED: actual local clock publisher, real saved purchase tier and original native day listener change the price from 50 to 30 at reset without writing the profile; simulated native cancellation releases subscriptions. Timezone 8 is an explicit fixture input; production decision remains pending.");
+    }
     IEnumerator ExerciseComposedServices()
     {
         SetBalance(1,100);SetBalance(2,500);SetBalance(15,3);
+        periodic=new OfflineHomePeriodicEvents(assets.CreateQuickBuyCalendar(8),()=>profile?.Save?.Player!=null,()=>quickCounterTime);periodic.Update(0);
         var service=new OfflineHomeCurrencyWindowServices(assets,windowPlayer,profilePlayer,moneyQuickBuy,exchange,this,
             kind=>"composed-"+kind+":"+Guid.NewGuid().ToString("N"));
         Require(!service.IconServiceAvailable&&ReferenceEquals(service.Player,windowPlayer),"composed service uses the actual shared player before attaching windows");
@@ -331,15 +362,16 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         Require(popup.Canvas.overrideSorting&&popup.Canvas.sortingOrder>canvas.sortingOrder&&currentMask.Canvas.sortingOrder==popup.Canvas.sortingOrder-1&&currentMask.Canvas.sortingOrder>canvas.sortingOrder,"original OnWindowShowing assigns popup and mask above underlying native home bar after first activation");
         var visibleCurrencies=canvas.GetComponentsInChildren<MePlayerItemUI>();Require(visibleCurrencies.Length==4&&visibleCurrencies.Count(item=>item.transform.IsChildOf(topBar.Root.transform))==3&&visibleCurrencies.Single(item=>!item.transform.IsChildOf(topBar.Root.transform)).GetComponentInParent<Canvas>()==popup.Canvas,"native popup has one foreground currency and keeps original home pool intact behind blur mask");
         Capture("home-currency-composed-native.png");quick=active.GetComponent<QuickBuyDialog>();Click(Field<Button>(quick,"mCancelBtn"));yield return WaitClosed();
+        yield return ExercisePeriodicWindow();
         SetBalance(109,31);var limit=service.CheckBuyLimitCountItem(109,1);confirmation=canvas.GetComponentsInChildren<WorldConfirmDialog>(true).Single();Require(limit.Status==UniTaskStatus.Pending,"composed original limit check opens original confirmation for actual held count");yield return WaitConfirmation();Click(confirmation.CancelBtn);yield return WaitAllClosed();Require(!limit.GetAwaiter().GetResult(),"composed limit cancellation resumes original awaiting branch");
         limit=service.CheckBuyLimitCountItem(109,1);confirmation=canvas.GetComponentsInChildren<WorldConfirmDialog>(true).Single();yield return WaitConfirmation();Click(confirmation.ConfirmBtn);yield return WaitAllClosed();Require(limit.GetAwaiter().GetResult(),"composed limit confirmation resumes original awaiting branch");
         SetBalance(15,2);yield return Open(windows.ShowExchange().gameObject);pay=active.GetComponent<PayMoneyChangeDialog>();string path=slots.GetProgressPath(profileSlot),saved=File.ReadAllText(path);
         using(var locked=new FileStream(path,FileMode.Open,FileAccess.Read,FileShare.Read)){Click(pay.ConfirmBtn);Require(active&&calls.Last()=="composed-failure:2","composed exchange reports failed persistence without closing");}
         Require(File.ReadAllText(path)==saved&&profilePlayer.GetItemAmount(15)==2,"composed failed exchange leaves actual save and held balance unchanged");Click(pay.CancelBtn);yield return WaitClosed();
-        int days=0,parameters=0;var dayToken=service.SubscribeEnterNewDay(_=>days++);var parameterToken=service.SubscribeAutoIncrease(_=>parameters++);day(default);Require(days==1,"composed calendar subscription forwards original day message");
+        int days=0,parameters=0;var dayToken=service.SubscribeEnterNewDay(_=>days++);var parameterToken=service.SubscribeAutoIncrease(_=>parameters++);quickCounterTime=quickCounterTime.AddDays(1);periodic.Update(3);Require(days==1,"composed calendar subscription forwards the actual local periodic day message");
         double speed=profile.Save.Player.Inventory.Single(row=>row.ItemId==57).AutoIncrease.IncreaseSpeed;
         Require(profile.ApplyInventoryTransaction("composed-parameter:"+Guid.NewGuid().ToString("N"),save=>save.Player.Inventory.Single(row=>row.ItemId==57).AutoIncrease.IncreaseSpeed=speed+1).IsApplied,"commit composed actual parameter change");profilePlayer.SynchronizeCommittedPlayer();Require(parameters==1,"composed service forwards actual stamina parameter notification");
-        topBar.Root.SetActive(false);currencyActions=null;windows.Dispose();service.Dispose();service.Dispose();dayToken.Dispose();parameterToken.Dispose();Require(day==null&&Field<Delegate>(windowPlayer,"OnAutoIncrease")==null,"composed service releases outstanding calendar and parameter tokens idempotently");
+        topBar.Root.SetActive(false);currencyActions=null;windows.Dispose();service.Dispose();service.Dispose();dayToken.Dispose();parameterToken.Dispose();Require(day==null&&Field<Delegate>(periodic,"enterNewDay")==null&&Field<Delegate>(windowPlayer,"OnAutoIncrease")==null,"composed service releases outstanding calendar and parameter tokens idempotently");periodic.Dispose();periodic.Dispose();bool clockDisposed=false;try{periodic.Update(4);}catch(ObjectDisposedException){clockDisposed=true;}Require(clockDisposed,"disposed local periodic owner rejects further updates");periodic=null;
         bool disposed=false;try{service.PlayerDiamonChange(1,null);}catch(ObjectDisposedException){disposed=true;}Require(disposed&&profilePlayer.GetItemAmount(15)==2,"disposed composed service rejects transactions and leaves externally owned profile source alive");
         Debug.Log("HOME_CURRENCY_WINDOW_SERVICES_PASSED: selected configuration, actual profile transaction composition, native exchange/quick-buy/limit confirmations, shared notifications, failed persistence and scope disposal. Enclosing secondary-window/navigation/calendar services remain explicit dependencies.");
     }
@@ -379,7 +411,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     public bool IconServiceAvailable=>true;
     public ItemIcon GetIcon(HomeCurrencyWindowItemInfo item,Transform slot){var icon=windows.GetIcon(item,slot);borrowedIcons++;return icon;}
     public void RecycleIcon(ItemIcon icon){windows.RecycleIcon(icon);borrowedIcons--;}
-    public IDisposable SubscribeEnterNewDay(Action<HomeCurrencyEnterNewDay> callback){day+=callback;return new Release(()=>day-=callback);}
+    public IDisposable SubscribeEnterNewDay(Action<HomeCurrencyEnterNewDay> callback){if(periodic!=null)return periodic.SubscribeEnterNewDay(callback);day+=callback;return new Release(()=>day-=callback);}
     public IDisposable SubscribeAutoIncrease(Action<HomeCurrencyAutoIncreaseEvent> callback){var player=windowPlayer;if(player!=null){player.OnAutoIncrease+=callback;return new Release(()=>player.OnAutoIncrease-=callback);}increase+=callback;return new Release(()=>increase-=callback);}
     public UniTask<bool> CheckBuyLimitCountItem(int id,long count){calls.Add("limit:"+id+":"+count);return UniTask.FromResult(allowLimit);}
     public void PlayerQuickBuy(int id,long count){calls.Add("buy:"+id+":"+count);if(moneyQuickBuy==null)return;Require(id==assets.MoneyId,"bound home money purchase");lastMoneyBuyRequest="native-money-"+(++moneyBuys);var result=moneyQuickBuy.Buy(lastMoneyBuyRequest,count);if(result.IsApplied)profilePlayer.SynchronizeCommittedPlayer();else calls.Add("money-buy-rejected");}

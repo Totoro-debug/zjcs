@@ -84,6 +84,49 @@ def build():
     emit('QuickBuyInfo', rules+'}\n')
     emit('EQuickBuyRefreshType', read('EQuickBuyRefreshType', 'common-source/Common').replace('namespace Common;\n',''))
 
+    # PeriodicManager's local date checks keep the original one-second throttle,
+    # initialization, forward-time guard, week/day order and null day message.
+    # Its sole weekly/player-change side effect is the removed online friend coin sync.
+    source=read('PeriodicManager')
+    periodic='''public interface IHomePeriodicServices
+{
+    bool HasPlayer { get; }
+    bool TimeSynced { get; }
+    DateTime GetDateTime();
+    HomeQuickBuyCalendar Calendar { get; }
+    void PublishEnterNewDay(HomeCurrencyEnterNewDay message);
+}
+public sealed class HomePeriodicManager
+{
+    private const float kDateCheckInterval=1f;
+    private DateTime mLastDate;
+    private bool mInited;
+    private float mDateCheckTick;
+    private readonly IHomePeriodicServices Services;
+    public HomePeriodicManager(IHomePeriodicServices services)
+    { Services=services??throw new ArgumentNullException(nameof(services)); }
+'''
+    update=method(source,'void IUpdatable.Update()').replace('void IUpdatable.Update()', 'public void Update(float time)')
+    update=update.replace('\t\tfloat time = Time.time;\n','')
+    update=update.replace('MeManager.MainPlayer == null', '!Services.HasPlayer').replace('TimeManager.Instance.TimeSynced', 'Services.TimeSynced').replace('TimeManager.Instance.GetDateTime()', 'Services.GetDateTime()')
+    periodic+=update+'\n'
+    for signature in ('private bool IsNewWeek(DateTime from, DateTime to)','private bool IsNewDay(DateTime from, DateTime to)'):
+        periodic+=method(source,signature).replace('TimeUtils.', 'Services.Calendar.')+'\n'
+    assert 'EnterNewDayPublisher.Publish((IEnterNewDay)null);' in source
+    assert method(source,'private void RefreshFriendCoinData()').count('OperPlayerSyncFriendCoinData(invokeByPlayer: false)')==1
+    periodic+='''    private void EnterNewWeek()
+    {
+        // The original friend-coin server synchronization is outside offline scope.
+    }
+    private void EnterNewDay(bool isNewWeek)
+    {
+        Services.PublishEnterNewDay(null);
+        // Original logging and friend-coin synchronization are omitted.
+    }
+}
+'''
+    emit('HomePeriodicManager',periodic)
+
     # Preserve the client's reset calendar and counter operations. The server
     # timezone is an explicit caller dependency; no offline timezone is assumed.
     source=read('TimeUtils','common-source/Common')
@@ -370,7 +413,7 @@ public interface IHomeCurrencyWindowServices
         text=(DEST/(name+'.cs')).read_text('utf8')
         assert not any(t in text for t in ('Parsers.', 'MeManager.', 'WindowManager.', 'MoneyUtils.', 'ServiceProxyBase', '[Inject]', 'BroadcastManager.')),name
     receipt=dict(manifest='884_156692', generator_sha256=sha(Path(__file__)), inputs=inputs, outputs=outputs,
-        scope='Original native quick-buy/pay-change controllers, cost button, pricing/award computations, periodic purchase counters and reset calendar. Timezone is an explicit dependency awaiting the offline decision; native windows and production services must be bound before use.')
+        scope='Original native quick-buy/pay-change controllers, cost button, pricing/award computations, periodic purchase counters, reset calendar and original periodic day notifications (online friend-coin synchronization removed). Timezone is an explicit dependency awaiting the offline decision; native windows and production services must be bound before use.')
     (ROOT/'assets/reference/home-currency-windows-runtime-source-manifest.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
     print('Original currency windows:',len(outputs),'outputs',flush=True)
 

@@ -1,9 +1,10 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "79dbff84a648f9c79845d83163bc75df294b1ae71255eeaa979498c80be7fc0b",
+  "generator_sha256": "f0b941eeb627405711137bd0cbb4fa596cbe13a5ddc546e55b5095c65baa0b00",
   "inputs": {
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/QuickBuyInfo.cs": "031a22d080dcd1fdf0cce48fb4f0abbec5523f8b485a4787ec669403137d7c40",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/EQuickBuyRefreshType.cs": "bdf5335b5d5a88f1571b5cc8103fe60be46c72e3ad8c5eaa8b7de5931c3491d0",
+    ".tools/source-packages/current/884_156692/official-code/client-source/PeriodicManager.cs": "df48b431e8560c3dd1cf9cbc72ac2dbdf1afcc345c9f817c662bb360ce48a718",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/TimeUtils.cs": "f00bb313e48acf2af929cb579bff803dae3e857c496ab9f34c950734d2c44bbc",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerQuickBuyCounterPeriodicWrap.cs": "71ac3e4f875c457c513504d31332dba022df67064062aea57dc44077254b1def",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerQuickBuyCounterNonRefreshWrap.cs": "58d493fb9f6ec1dff9eaa88881140c58fd9cf649edd24d27a5cc9575e147b5a0",
@@ -496,6 +497,8 @@
     "unity/Assets/Game/Runtime/Official/HomeCurrencyWindowsUI/QuickBuyInfo.cs.meta": "1c2756a0ac66a547bf78bc3fa0756ca5a2ad94eef69bf3befb41b9cc37fc4f21",
     "unity/Assets/Game/Runtime/Official/HomeCurrencyWindowsUI/EQuickBuyRefreshType.cs": "a3c6515a2d43b03672c0fcabd2437ec7bfff91c19efccc5cbf1752e39d474eab",
     "unity/Assets/Game/Runtime/Official/HomeCurrencyWindowsUI/EQuickBuyRefreshType.cs.meta": "8c081569be94554d258fa2e9e88a9a9e36edbe99cc548fa5eed8e5b5a05ed00e",
+    "unity/Assets/Game/Runtime/Official/HomeCurrencyWindowsUI/HomePeriodicManager.cs": "fc100a421978479b30d4ca8b9fa2b1199339618661a080286862fcde1cc356eb",
+    "unity/Assets/Game/Runtime/Official/HomeCurrencyWindowsUI/HomePeriodicManager.cs.meta": "2330fddc72a03732cb55bc3b2ea769c6d637509079e912eb0cd4d5d5ee179596",
     "unity/Assets/Game/Runtime/Official/HomeCurrencyWindowsUI/HomeQuickBuyCalendar.cs": "0b0774052529ef3db0f7ac4d2b8b96e473a51d9bdc313d210d233dc26abfe130",
     "unity/Assets/Game/Runtime/Official/HomeCurrencyWindowsUI/HomeQuickBuyCalendar.cs.meta": "4c47951a8f16d831f3cdfa9ed0361a31de20ada7fe979a9c9cb0fb7edd0bbe1d",
     "unity/Assets/Game/Runtime/Official/HomeCurrencyWindowsUI/HomeQuickBuyCounter.cs": "7aab4e355022c35dfeab7bd5c0b214d30d8ca5af23f5869dadd90012e89f556d",
@@ -520,5 +523,5 @@
     "unity/Assets/Game/Runtime/Official/HomeCurrencyWindowsUI/Zjcs.Official.HomeCurrencyWindowsUI.asmdef.meta": "bf6de251de329c0c8a5dfac0af6e08446a363bb37436f9b0268847cb6c4add71",
     "unity/Assets/Game/Runtime/Official/HomeCurrencyWindowsUI.meta": "f5450f6da2e84b7ca0b610410abe384fec484bb352274495d368ba9bd5df4ea0"
   },
-  "scope": "Original native quick-buy/pay-change controllers, cost button, pricing/award computations, periodic purchase counters and reset calendar. Timezone is an explicit dependency awaiting the offline decision; native windows and production services must be bound before use."
+  "scope": "Original native quick-buy/pay-change controllers, cost button, pricing/award computations, periodic purchase counters, reset calendar and original periodic day notifications (online friend-coin synchronization removed). Timezone is an explicit dependency awaiting the offline decision; native windows and production services must be bound before use."
 }
