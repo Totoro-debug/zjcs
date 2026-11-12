@@ -28,15 +28,23 @@ namespace Zjcs.Editor.Combat
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 900);
         }
 
+        public static void RunTrainingMonsterMaterials()
+        {
+            RunActorMaterials();
+            SessionState.SetBool(Key + ".trainingMonsterMaterials", true);
+        }
+
         private static IEnumerator PetMaterialSteps()
         {
             AudioListener.volume = 0;
-            int[] entities = { 3803, 3181, 3182, 3183, 3198, 3206, 3207, 3331, 3481, 3620, 3709,
+            int[] entities = { 3803, 3181, 3182, 3183, 3198, 3204, 3206, 3207, 3331, 3481, 3620, 3709,
                 3903, 3904, 3905, 3909, 3910, 3911, 3912, 3913, 3914, 3915, 3917, 3920,
                 3923, 3925, 3948, 3949, 9201, 9202, 9203, 9215, 9204, 9205, 9206, 9207, 9208, 9209,
                 9210, 9211, 9212, 9213, 9214, 9216, 9217, 9218, 9219, 9220, 9222,
                 9301, 9302, 9303, 9304, 9305, 9306, 9307, 9308, 9309, 9310, 9311,
                 9312, 9314, 9315, 9316, 9317, 9318, 9320, 9322 };
+            if (SessionState.GetBool(Key + ".trainingMonsterMaterials", false)) entities = new[] { 3204 };
+            SessionState.EraseBool(Key + ".trainingMonsterMaterials");
             var damage = Resources.Load<GameObject>("Combat/SkillGraphs/GameObject/playable_damage_wuli_bigger");
             Require(damage, "original damage material graph");
             var configuration = damage.GetComponentInChildren<MyPlayableMaterialProperty>(true);

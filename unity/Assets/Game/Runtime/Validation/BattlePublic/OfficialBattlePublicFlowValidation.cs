@@ -24,7 +24,7 @@ namespace Zjcs.Validation.Combat
     // Shared interaction steps for the Editor and the Windows Player.
     public static class OfficialBattlePublicFlowValidation
     {
-        private enum Scenario { Player, Monster, SkillCost, Lifesteal, StatusActions, Critical, Block, SpecialAppearance }
+        private enum Scenario { Player, Monster, SkillCost, Lifesteal, StatusActions, Critical, Block, SpecialAppearance, TrainingMonster }
         public static IEnumerator Steps(Action<string> capture)
         {
             foreach (Scenario scenario in Enum.GetValues(typeof(Scenario)))
@@ -37,7 +37,8 @@ namespace Zjcs.Validation.Combat
             bool monsterActs = scenario == Scenario.Monster || block, skillCost = scenario == Scenario.SkillCost;
             bool hemophagia = scenario == Scenario.Lifesteal, statusActions = scenario == Scenario.StatusActions;
             bool specialAppearance = scenario == Scenario.SpecialAppearance;
-            string prefix = specialAppearance ? "public-special-appearance" : block ? "public-block" : critical ? "public-critical" : statusActions ? "public-status-actions" : hemophagia ? "public-lifesteal" : skillCost ? "public-cost" : monsterActs ? "public-monster" : "public-movement";
+            bool trainingMonster = scenario == Scenario.TrainingMonster;
+            string prefix = trainingMonster ? "public-training-monster" : specialAppearance ? "public-special-appearance" : block ? "public-block" : critical ? "public-critical" : statusActions ? "public-status-actions" : hemophagia ? "public-lifesteal" : skillCost ? "public-cost" : monsterActs ? "public-monster" : "public-movement";
             var root = new GameObject("Public movement battle verification");
             var world = new GameObject("Battle world");
             world.transform.SetParent(root.transform, false);
@@ -84,7 +85,7 @@ namespace Zjcs.Validation.Combat
                 var player = Unit(1, 1, 1, 2, 2, monsterActs ? 1 : 100);
                 player.RoleEntityId = 3100;
                 var monster = Unit(2, 2, 2, 6, 4, monsterActs ? 100 : 1);
-                monster.MonsterId = monster.MonsterTemplateId = specialAppearance ? 3803 : 3206;
+                monster.MonsterId = monster.MonsterTemplateId = trainingMonster ? 3204 : specialAppearance ? 3803 : 3206;
                 monster.RoleEntityId = monster.MonsterId;
                 var actor = monsterActs ? monster : player;
                 var target = monsterActs ? player : monster;

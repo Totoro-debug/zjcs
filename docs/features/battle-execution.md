@@ -141,9 +141,9 @@
 
 `OfficialBattleDamageReceiptPlayback` 沿正式 `OfficialBattleSkillGraphPlayback.Play` 接收步骤回执，在每次原技能实例创建后只取该实例的 `DamageEventIds`；伤害时间减去所属施法 Delay 一次，再按原 `FightDamageComponent.Duration` 创建／移除原 prefab。命中与伤害在技能结束边界先派发，再移除技能，保持实际技能身份可查询。完整数值、伤害标志、元素、结果分类和状态结果直接投影到原 `DamageResultParameter`，不重算公式、状态、选敌或随机；治疗的 `AbsoluteDamage` 字段保存已经算出的原 `AbsoluteCure`，有效治疗及统计仍沿原结算。范围受击保存实际身体格，点命中在本次结算及其位移前保存目标位置；位置、状态结果或施法归属缺失的旧回执不从当前场景推断。角色装载复用已有原 `MyFightRoleFight`，缺少时添加原通知组件；原格网实体保持自身绑定，不被单位投影覆盖。状态覆盖器消费该次施法的状态快照，原通知与五类图仍由未改写的 `MyFightDamage.OnStart` 执行。
 
-原伤害图使用的角色材质接口已为 32 个已安装配置恢复：`OfficialBattleActorMaterialBinding` 仅按同版原 prefab 的根节点、启用状态和完整引用路径添加原 `MeshMaterialProperty`；已有组件保持原绑定，所属单位租约在图停止后释放新增组件。现存原 `AppearanceRenderer／Lite` 继续负责原独立材质集合；尚未装载该外观组件的原生骨骼后端使用其现有每角色材质实例和原 `MeshRenderer` 引用，不生成新 shader 或材质。配置输入及绑定见[角色材质来源](../../assets/reference/battle-animation/actor-material-bindings-source-manifest.json)。另外 36 个已安装幻兽配置已接入下述完整外观材质集合，保留原 `MeshRenderer` 空引用。
+原伤害图使用的角色材质接口已为 33 个已安装配置恢复：`OfficialBattleActorMaterialBinding` 仅按同版原 prefab 的根节点、启用状态和完整引用路径添加原 `MeshMaterialProperty`；已有组件保持原绑定，所属单位租约在图停止后释放新增组件。现存原 `AppearanceRenderer／Lite` 继续负责原独立材质集合；尚未装载该外观组件的原生骨骼后端使用其现有每角色材质实例和原 `MeshRenderer` 引用，不生成新 shader 或材质。配置输入及绑定见[角色材质来源](../../assets/reference/battle-animation/actor-material-bindings-source-manifest.json)。另外 36 个已安装幻兽配置已接入下述完整外观材质集合，保留原 `MeshRenderer` 空引用。
 
-`OfficialBattleMonsterAppearance` 统一装配 67 个已安装怪物、幻兽及召唤物的原 `AppearanceRendererLite`、根 `MeshMaterialProperty` 和材质引用；`BattleNativeMonsterAppearanceCatalog` 保存原 renderer 路径、引用是否为空、精度及网格副本引用顺序。66 个原 Low 配置保留图集／占位材质及原贴图加载器；3803 保留原 `LevelOfResolution.None`：原 AppearanceConfig 无其路径、所选完整资源清单无对应加载器，沿原客户端空加载器分支保留八份材质的原纹理与三类 shader，仅为三张骨骼图集页创建独立材质。四个原 `CustomRenderExistingMesh` 复用正式 prefab 的迁移代码和原启用字段，将原材质到独立材质的映射转接到各自描边／隐藏替换材质，不克隆五份替换材质。`OfficialBattleLiveMonsterModelView` 与既有幻兽跟随视图共用该入口，退出时先释放材质属性及外观，再释放加载器路由。保留幻兽原空 renderer；未修改原 shader 能力：普通骨骼 shader 支持受伤变色、不含 `_DitherAlpha`，3803 的混合 shader 由原属性收集器拒绝不共同支持的变色字段。输入、对象指针、ASTC mip 转换、显式 `Combat/NativeMonsterAppearance/catalog` 绑定及输出哈希见[原生角色外观来源](../../assets/reference/battle-animation/native-monster-appearance-source-manifest.json)。该接线不代表全部角色状态表现或 Windows Player 验证完成。
+`OfficialBattleMonsterAppearance` 统一装配 68 个已安装怪物、幻兽及召唤物的原 `AppearanceRendererLite`、根 `MeshMaterialProperty` 和材质引用；`BattleNativeMonsterAppearanceCatalog` 保存原 renderer 路径、引用是否为空、精度及网格副本引用顺序。67 个原 Low 配置保留图集／占位材质及原贴图加载器；3803 保留原 `LevelOfResolution.None`：原 AppearanceConfig 无其路径、所选完整资源清单无对应加载器，沿原客户端空加载器分支保留八份材质的原纹理与三类 shader，仅为三张骨骼图集页创建独立材质。四个原 `CustomRenderExistingMesh` 复用正式 prefab 的迁移代码和原启用字段，将原材质到独立材质的映射转接到各自描边／隐藏替换材质，不克隆五份替换材质。`OfficialBattleLiveMonsterModelView` 与既有幻兽跟随视图共用该入口，退出时先释放材质属性及外观，再释放加载器路由。保留幻兽原空 renderer；未修改原 shader 能力：普通骨骼 shader 支持受伤变色、不含 `_DitherAlpha`，3803 的混合 shader 由原属性收集器拒绝不共同支持的变色字段。输入、对象指针、ASTC mip 转换、显式 `Combat/NativeMonsterAppearance/catalog` 绑定及输出哈希见[原生角色外观来源](../../assets/reference/battle-animation/native-monster-appearance-source-manifest.json)。该接线不代表全部角色状态表现或 Windows Player 验证完成。
 
 ## 自定义实现
 
@@ -308,7 +308,7 @@
 
 - 触发技能原点专项 `test_battle_hit_trigger_origin.ps1` 通过八组真实 13520→13522→13523 执行：四方向、伤害／纯状态两类触发、非中心身体格、方向和翻转、实际父触发时刻、原 13526 伤害、施法者位置及检查点新旧字段兼容。460 条公式／战斗核心、六组施法归属、七组命中位置及十六组状态统计回归通过。主工程编译与 `ProjectTools.Validate`、内置屏静音 `RunReceipts` 均以 0 退出；七个播放场景通过，含真实 13520 的无伤害实体触发、后续原技能／雷击、实际子实体位置、源角色投影及原双向伤害通知，五张实际粒子截图已查看。静态检查通过（150,079 GUID）。原模型仍为无可见网格的受控对象，不覆盖完整人物／HUD；未运行本项隔离 Play Mode，未构建或发布本批 Windows Player。
 
-- 不带公共专项开关的 Windows 构建已完成，但正式技能伤害测试在真实目标 3204 的原 `MyPlayableMaterialProperty.ProcessFrameImpl` 暴露缺失材质收集组件。已安装的 67 个原生外观配置及 32 项根材质绑定均不含 3204；此前八组专项使用 3206／3803，不能覆盖该目标。该正式入口验证尚未通过，本次构建尚未发布；继续恢复 3204 的原始角色绑定后重跑，不通过修改官方节点跳过受伤效果。
+- 正式技能伤害测试使用真实目标 3204，现已沿现有提取链恢复其完整原生角色：38 根骨骼、32 个插槽、31 个网格附件、十段动画、两个 IK、原 Animator／AnimationController、附件／阴影与 Low 外观加载器。原生角色目录扩至 68 个，根材质绑定扩至 33 项；既有 1,777 项完整模型输出和 792 项外观输出字节保持不变，仅更新对应目录。`RunTrainingMonsterMaterials` 在内置屏静音 Play Mode 通过，编辑器以 0 正常退出；四张实际画面已查看，原伤害材质节点、双实例重叠、同类角色隔离和最终 GPU 像素恢复均通过。`ProjectTools.Validate` 和静态检查通过（151,903 GUID），2,889 对来源／输出哈希一致。公共 Windows 夹具已加入第九组真实 3204；九组 Player 与不带专项开关的正式技能入口仍待重跑，尚未发布此修复。
 
 ## 代码与来源入口
 
