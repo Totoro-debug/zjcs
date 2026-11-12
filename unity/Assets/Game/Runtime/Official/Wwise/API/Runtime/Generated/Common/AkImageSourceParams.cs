@@ -56,7 +56,7 @@ public class AkImageSourceParams : global::System.IDisposable {
   public AkImageSourceParams(AkVector64 in_sourcePosition, float in_fDistanceScalingFactor, float in_fLevel) : this(AkSoundEnginePINVOKE.CSharp_new_AkImageSourceParams__SWIG_1(in_sourcePosition, in_fDistanceScalingFactor, in_fLevel), true) {
   }
 
-  public AkVector64 sourcePosition { set { AkSoundEnginePINVOKE.CSharp_AkImageSourceParams_sourcePosition_set(swigCPtr, value); }  get { return AkSoundEnginePINVOKE.CSharp_AkImageSourceParams_sourcePosition_get(swigCPtr); } 
+  public AkVector64 sourcePosition { set { AkSoundEnginePINVOKE.CSharp_AkImageSourceParams_sourcePosition_set(swigCPtr, value); }  get { return global::System.Runtime.InteropServices.Marshal.PtrToStructure<AkVector64>(AkSoundEnginePINVOKE.CSharp_AkImageSourceParams_sourcePosition_get(swigCPtr)); } 
   }
 
   public float fDistanceScalingFactor { set { AkSoundEnginePINVOKE.CSharp_AkImageSourceParams_fDistanceScalingFactor_set(swigCPtr, value); }  get { return AkSoundEnginePINVOKE.CSharp_AkImageSourceParams_fDistanceScalingFactor_get(swigCPtr); } 

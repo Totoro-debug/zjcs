@@ -12,7 +12,9 @@
 
 原音频库匹配的 Wwise Unity Integration `2022.1.18.8567.3199` 从 Audiokinetic 官方分发接口取得；初始化下载入口取 Steinberg 官方示例包内附且数字签名有效的 Audiokinetic Launcher，再按官方游客认证取得当前启动器与指定集成包。响应签名、包 SHA-1／SHA-256、原文件及 Windows x64 引擎／DSP 身份见[Windows 运行库来源](battle-animation/wwise-windows-integration-source-manifest.json)。原包与解包工具保存在 `.tools/wwise/UnityIntegration-2022.1.18.8567.3199/`；功能接入与验证范围由[战斗执行](../../docs/features/battle-execution.md)维护。
 
-Windows 战斗声音运行素材取自上述同版官方集成包及所选 884 已核验的 26 个原声音包；官方 C#、Profile／Release 引擎、DSP、原全局／Windows 设置、APK 优先包身份、原输出及 Windows 封装输出哈希见[运行素材来源](battle-animation/windows-sound-runtime-source-manifest.json)。`prepare_battle_windows_sound_runtime.py` 复用既有包读取器和初始化设置导出，SDK 核心代码仅适配 Editor DSP 目录；`convert_wwise_android_package.py` 依据同版本 SDK 的 CAkFilePackageLUT、Windows／POSIX AkTypes，将语言表从窄字符转换为 UTF-16LE，并保持全部 bank／媒体字节。匹配 SDK 格式源码与官方包身份保存在 `.tools/wwise/SDK-2022.1.18.8567/`，资源目录与显式目录清单见所属页。
+Windows 战斗声音运行素材取自上述同版官方集成包及所选 884 已核验的 26 个原声音包；官方 C#、Profile／Release 引擎、DSP、原全局／Windows 设置、APK 优先包身份、原输出及 Windows 封装输出哈希见[运行素材来源](battle-animation/windows-sound-runtime-source-manifest.json)。`prepare_battle_windows_sound_runtime.py` 复用既有包读取器和初始化设置导出，SDK 核心代码适配 Editor DSP 目录及 Windows 向量返回的借用指针／值类型封送；`convert_wwise_android_package.py` 依据同版本 SDK 的 CAkFilePackageLUT、Windows／POSIX AkTypes，将语言表从窄字符转换为 UTF-16LE，并保持全部 bank／媒体字节。匹配 SDK 格式源码与官方包身份保存在 `.tools/wwise/SDK-2022.1.18.8567/`，资源目录与显式目录清单见所属页。
+
+原生战斗声音宿主取同版 `WwiseManager`、`WwiseGlobalVolumnService`、`GameSoundSpeedController`、原四项音量 RTPC 资产及原 SDK 初始化／声音对象／空环境实现；原 SDK 文件身份、APK 客户端源码、配置导出哈希、GUID 指向、Windows 引擎身份及本地绑定输出见[原生宿主来源](battle-animation/native-sound-host-source-manifest.json)，入口为 `prepare_battle_native_sound_host_sources.py`。向量封送按上述原引擎的返回约定适配，SDK 逐文件原输入与输出哈希仍记于运行素材来源；接入与验证范围由所属页维护。
 
 图集占位页命名取所选版本 `AppearanceSystem.Runtime/AppearanceOnDemandTextureLoader.GetPlaceholderTextureName`；原应用代码、既有图集加载器输入、适配输出及技能图引用凭据的哈希见[图集占位页绑定来源](battle-animation/atlas-placeholder-binding-source-manifest.json)，处理入口为 `scripts/prepare_battle_atlas_placeholder_binding.py`。不新增或修改美术载荷；实现与验证边界见[战斗执行](../../docs/features/battle-execution.md)。
 

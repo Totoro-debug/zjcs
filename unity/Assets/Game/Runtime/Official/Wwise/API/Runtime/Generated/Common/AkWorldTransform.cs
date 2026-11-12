@@ -50,7 +50,7 @@ public class AkWorldTransform : global::System.IDisposable {
     }
   }
 
-  public AkVector64 Position() { return AkSoundEnginePINVOKE.CSharp_AkWorldTransform_Position(swigCPtr); }
+  public AkVector64 Position() { return global::System.Runtime.InteropServices.Marshal.PtrToStructure<AkVector64>(AkSoundEnginePINVOKE.CSharp_AkWorldTransform_Position(swigCPtr)); }
 
   public UnityEngine.Vector3 OrientationFront() { return AkSoundEnginePINVOKE.CSharp_AkWorldTransform_OrientationFront(swigCPtr); }
 

@@ -95,6 +95,51 @@ def main():
             if raw.count(old) != 1:
                 raise ValueError('Inspect changed official Editor DSP lookup')
             raw = raw.replace(old, new)
+        # These SDK getters return borrowed pointers to AkVector64 fields, not
+        # newly allocated return objects. Mono's class-return marshaller frees
+        # those interior addresses. Copy their values without taking ownership.
+        borrowed = {
+            'Generated/Common/AkWorldTransform.cs': 'CSharp_AkWorldTransform_Position',
+            'Generated/Common/AkImageSourceParams.cs': 'CSharp_AkImageSourceParams_sourcePosition_get',
+            'Generated/Common/AkReflectionPathInfo.cs': 'CSharp_AkReflectionPathInfo_imageSource_get',
+            'Generated/Common/AkDiffractionPathInfo.cs': 'CSharp_AkDiffractionPathInfo_emitterPos_get',
+        }
+        name = relative.as_posix()
+        if name in borrowed:
+            call = b'AkSoundEnginePINVOKE.' + borrowed[name].encode() + b'(swigCPtr)'
+            old = b'return ' + call + b';'
+            new = b'return global::System.Runtime.InteropServices.Marshal.PtrToStructure<AkVector64>(' + call + b');'
+            if raw.count(old) != 1:
+                raise ValueError('Inspect changed original borrowed-vector getter: ' + name)
+            raw = raw.replace(old, new)
+        if name == 'Generated/Windows/AkSoundEnginePINVOKE_Windows.cs':
+            for function in borrowed.values():
+                old = b'public static extern AkVector64 ' + function.encode() + b'('
+                new = b'public static extern global::System.IntPtr ' + function.encode() + b'('
+                if raw.count(old) != 1:
+                    raise ValueError('Inspect changed original borrowed-vector import: ' + function)
+                raw = raw.replace(old, new)
+            old = b'public static extern AkVector64 CSharp_ConvertAkVectorToAkVector64('
+            new = b'public static extern AkVector64.NativeValue CSharp_ConvertAkVectorToAkVector64('
+            if raw.count(old) != 1:
+                raise ValueError('Inspect changed original vector value import')
+            raw = raw.replace(old, new)
+        if name == 'Handwritten/Common/AkVector64.cs':
+            old = b'public class AkVector64\r\n{\r\n'
+            new = old + b'''\t// Windows x64 returns the conversion's three doubles by value.\r
+\t// Keep the public reference type used by the original pointer parameters.\r
+\t[StructLayout(LayoutKind.Sequential)]\r
+\tpublic struct NativeValue\r
+\t{\r
+\t\tpublic double X, Y, Z;\r
+\t\tpublic static implicit operator AkVector64(NativeValue value)\r
+\t\t\t=> new AkVector64 { X = value.X, Y = value.Y, Z = value.Z };\r
+\t}\r
+\r
+'''
+            if raw.count(old) != 1:
+                raise ValueError('Inspect changed original vector reference layout')
+            raw = raw.replace(old, new)
         target = CODE / relative
         write(target, raw)
         meta(target)
@@ -225,6 +270,7 @@ def main():
         tools=[identity(Path(__file__)), identity(ROOT / 'scripts/convert_wwise_android_package.py')],
         outputs=list(outputs.values()), adaptations=[
             'SDK Editor DSP lookup points at the explicitly bound official native payload directory.',
+            'Four original AkVector64 getters copy borrowed native fields without freeing their addresses; the vector conversion uses a three-double value return to match the Windows x64 ABI. Public sound values and behavior are unchanged.',
             'Original global and Windows settings retain all serialized values; only script references and the Windows-only platform list are rebound.',
             'AKPK language strings use Windows UTF-16LE; package IDs, file IDs, language IDs, alignment and every bank/media payload byte are preserved.'])
     OUTPUT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

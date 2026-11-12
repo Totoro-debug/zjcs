@@ -50,7 +50,7 @@ public class AkDiffractionPathInfo : global::System.IDisposable {
     }
   }
 
-  public AkVector64 emitterPos { set { AkSoundEnginePINVOKE.CSharp_AkDiffractionPathInfo_emitterPos_set(swigCPtr, value); }  get { return AkSoundEnginePINVOKE.CSharp_AkDiffractionPathInfo_emitterPos_get(swigCPtr); } 
+  public AkVector64 emitterPos { set { AkSoundEnginePINVOKE.CSharp_AkDiffractionPathInfo_emitterPos_set(swigCPtr, value); }  get { return global::System.Runtime.InteropServices.Marshal.PtrToStructure<AkVector64>(AkSoundEnginePINVOKE.CSharp_AkDiffractionPathInfo_emitterPos_get(swigCPtr)); } 
   }
 
   public AkWorldTransform virtualPos { set { AkSoundEnginePINVOKE.CSharp_AkDiffractionPathInfo_virtualPos_set(swigCPtr, AkWorldTransform.getCPtr(value)); } 

@@ -1730,8 +1730,8 @@
   "tools": [
     {
       "path": "scripts/prepare_battle_windows_sound_runtime.py",
-      "bytes": 11383,
-      "sha256": "6a08fcb0018fb64aecb7ac0a2dcf7c7a394a9dffa0b5ec3f1e775c153f336770"
+      "bytes": 14307,
+      "sha256": "bcb709095355c2fb71f5d2b14191ea609302355a54483d29542589d598e5770f"
     },
     {
       "path": "scripts/convert_wwise_android_package.py",
@@ -2062,8 +2062,8 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkDiffractionPathInfo.cs",
-      "bytes": 4568,
-      "sha256": "f74c4331442ad10de8bb3d23e602a5bc371222b777d5300de9d89044b785af75"
+      "bytes": 4643,
+      "sha256": "27c8e6d2bfc91d18e061470d8a4ca03cc81c3a846745aea5929d0aa5b55936e2"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkDiffractionPathInfo.cs.meta",
@@ -2172,8 +2172,8 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkImageSourceParams.cs",
-      "bytes": 3633,
-      "sha256": "fbafbef0c4abd3353a2f2871f9563283aae8c77ef3dd8c99a02f033ee84ea4fb"
+      "bytes": 3708,
+      "sha256": "fc2c872bfca53d20c9cb20b6bbed4fa440bc164ebcbe59a368c432195d352c1a"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkImageSourceParams.cs.meta",
@@ -2492,8 +2492,8 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkReflectionPathInfo.cs",
-      "bytes": 3831,
-      "sha256": "4f50446865884fddb081e5d0e43c73db0b49669e8b0510eb67748a9b567a43e8"
+      "bytes": 3906,
+      "sha256": "ae7ad123c551f59bb9474d65e6824407f585effe57f51197ec9f3c10cb1fda2f"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkReflectionPathInfo.cs.meta",
@@ -2652,8 +2652,8 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkWorldTransform.cs",
-      "bytes": 3874,
-      "sha256": "d4fef05a3a18a0ad97039e25dba764815de7b37157aeda1fbc37c857d8a041b4"
+      "bytes": 3949,
+      "sha256": "0ae22e52195c9cd3a223cf14895c5d762852e5783c1e629872ed5d1657081059"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkWorldTransform.cs.meta",
@@ -2712,8 +2712,8 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Windows/AkSoundEnginePINVOKE_Windows.cs",
-      "bytes": 308874,
-      "sha256": "0842af68e147181ad1d9b77393a9607a10056c9a06ca68df0afd285b3fe098c6"
+      "bytes": 308930,
+      "sha256": "03da62f5085712ff7d2ebca67a042361867c33f05664db4fadb99b8413db73fd"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Windows/AkSoundEnginePINVOKE_Windows.cs.meta",
@@ -2852,8 +2852,8 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkVector64.cs",
-      "bytes": 1701,
-      "sha256": "f36d5fa75c46ba0822fae5ba56d0f0d7b6b94e4911d997ae8a7db5cced9814ca"
+      "bytes": 2078,
+      "sha256": "0197efd774dcec7e09f4badea8ff97957b9a2179a998a8699efcecf8254a19a9"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkVector64.cs.meta",
@@ -3568,6 +3568,7 @@
   ],
   "adaptations": [
     "SDK Editor DSP lookup points at the explicitly bound official native payload directory.",
+    "Four original AkVector64 getters copy borrowed native fields without freeing their addresses; the vector conversion uses a three-double value return to match the Windows x64 ABI. Public sound values and behavior are unchanged.",
     "Original global and Windows settings retain all serialized values; only script references and the Windows-only platform list are rebound.",
     "AKPK language strings use Windows UTF-16LE; package IDs, file IDs, language IDs, alignment and every bank/media payload byte are preserved."
   ]

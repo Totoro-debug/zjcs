@@ -21,6 +21,16 @@ using System.Runtime.InteropServices;
 [StructLayout(LayoutKind.Sequential)]
 public class AkVector64
 {
+	// Windows x64 returns the conversion's three doubles by value.
+	// Keep the public reference type used by the original pointer parameters.
+	[StructLayout(LayoutKind.Sequential)]
+	public struct NativeValue
+	{
+		public double X, Y, Z;
+		public static implicit operator AkVector64(NativeValue value)
+			=> new AkVector64 { X = value.X, Y = value.Y, Z = value.Z };
+	}
+
 	public void Zero() { 
 		X = 0.0;
 		Y = 0.0;
