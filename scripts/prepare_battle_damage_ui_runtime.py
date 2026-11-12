@@ -104,6 +104,7 @@ def manager(text):
     text = text.replace('component.SkillElemntType', 'Context.GetSkillElementType(dmg)')
     text = text.replace('UIUtils.Instantiate(value, damageFloatsRoot)',
                         'StoryPlayableInstantiation.Instantiate(damageFloatsRoot, value, damageFloatsRoot, false)')
+    text = text.replace('return characterDamageUI;', 'Context.PrepareUI(characterDamageUI);\n\t\treturn characterDamageUI;')
     # Only replace generated structured logging blocks; preserve the error branch.
     text = re.sub(r'\t\t\tILogger skill = FightLog.Skill;.*?GZLoggerExtensions.Error\([^\n]+;',
         '\t\t\tDebug.LogError("CreateEffectUIPool;effectUIPrefab != null, i= " + i);', text, count=1, flags=re.S)
@@ -183,7 +184,8 @@ def main():
             'Reuse original Chinese battle-number formatter; original LRU cache omitted.',
             'Inject element threshold as a local property; original branches and order retained.',
             'Original manager presentation, stacking, type/color priority and pool lifecycle retained; local fight/resource/notification context replaces absent framework root and R3 subscriptions.',
-            'Original stage-specific warmup lookup retained over consumed native fields; context supplies stage identity, consumed skill element and asynchronous prefab replay check; no server result is inferred.'],
+            'Original stage-specific warmup lookup retained over consumed native fields; context supplies stage identity, consumed skill element and asynchronous prefab replay check; no server result is inferred.',
+            'Prepare borrowed UI through its context before original Init, restoring per-instance language/font and element-threshold injection without changing global UI services.'],
         scope='Complete original serialized UI behaviours and manager; formal battle context migrated separately.'),
         ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
 

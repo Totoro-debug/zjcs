@@ -18,6 +18,7 @@ using Zjcs.Official.ProfessionUI;
 using Zjcs.Presentation.Combat;
 using Zjcs.Presentation.Character;
 using Zjcs.Presentation.CharacterCreation;
+using Zjcs.Official.BattleDamageUI;
 
 
 namespace Zjcs.Editor
@@ -332,9 +333,18 @@ namespace Zjcs.Editor
                 int expectedNativeHits = fixedReceipts.Sum(h => h.EffectCenters.Count);
                 Require(expectedNativeHits > 0, "The original controlled skill has no fixed hit receipts.");
                 int nativeFrames = 0;
+                bool nativeFloatSeen = false;
                 var slotBinding = OfficialBattleSkillSlotBindings.Load().slots[0];
                 for (int i = 0; i < 600 && controller.IsPresentingStep; i++)
                 {
+                    bool captureNativeFloat = false;
+                    Require(canvasObject.GetComponentsInChildren<OfficialBattleDamageFloat>().Length == 0,
+                        "The old step damage float duplicated an original native damage notification.");
+                    if (world.GetComponentsInChildren<CharacterDamageUI>().Any(ui => ui.EntityId == new EcEntityIdentifier(1, target.Id)))
+                    {
+                        captureNativeFloat = !nativeFloatSeen;
+                        nativeFloatSeen = true;
+                    }
                     foreach (var native in world.GetComponentsInChildren<MyFightSkill>())
                         if (native.myEntity.Entity.ClassId == skillEntityId)
                         {
@@ -364,6 +374,11 @@ namespace Zjcs.Editor
                             capture(prefix + "-hit");
                     }
                     yield return null;
+                    if (captureNativeFloat)
+                    {
+                        capture(prefix + "-native-damage-ui");
+                        yield return null; // Unity accepts one ScreenCapture request per rendered frame.
+                    }
                 }
                 Require(!controller.IsPresentingStep, "Movement step presentation did not complete.");
                 Require(nativeSkills.Count == 1 && nativeFrames >= 4,
@@ -371,6 +386,7 @@ namespace Zjcs.Editor
                 Require(nativeHitIdentities.Count == expectedNativeHits,
                     "The public battle did not create every settled fixed hit exactly once: "
                     + nativeHitIdentities.Count + "/" + expectedNativeHits);
+                Require(nativeFloatSeen, "The common battle controller did not display the original role damage UI.");
                 var settledSlot = actor.SkillState.Slots.Single(s => s.Slot == 0);
                 Require(settledSlot.Cooldown == cooldown && settledSlot.ReleasedTimes == 1,
                     "The settled original cooldown or release count differs.");

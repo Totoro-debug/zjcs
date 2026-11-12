@@ -70,7 +70,7 @@
 
 ## 完整还原部分
 
-所选 884 的 13 种完整世界飘字 prefab 已恢复原层级、组件字段、Animator、曲线、原 bitmap Font、字形尺寸、贴图、材质和 Windows shader，载荷位于 `Official/Combat/DamageUI`。完整 `CharacterDamageUI`、`DamageNumberUI`、`DamageFloatSize`、`ElementConfrontationUI`、`DamageAutoSizeTextBack`、`DamageCustomActionUI` 与原枚举、四字段颜色结构迁入 `Official/BattleDamageUI`；复用现有原实体、池接口、语言与中文战斗数字格式实现，保留原执行顺序。原 `CharacterDamageUIManager` 的显示、堆叠、样式／颜色优先级、预热查找、借还、七标志零伤害过滤器与原 `UIBase` 启禁用已迁入同目录，完整 `FightDamageSettings` 原生资产保留四字段颜色、13 项 GUID 与数量、间距；原 `FightSettings` 的预热记录和元素阈值单独投影。`CharacterDamageUIContext` 只桥接本地资源租约、实体查询和实际规则通知，保留技能实体缺席时的异步 prefab 重放检查；不在显示层重新结算规则。来源见[脚本清单](../../assets/reference/battle-hud/damage-ui-runtime-source-manifest.json)及[原生资源清单](../../assets/reference/battle-hud/damage-ui-native-source-manifest.json)。该原生目录及管理器尚未替换正式回合驱动的旧飘字路径，正式角色通知接入仍见下方缺项。
+所选 884 的 13 种完整世界飘字 prefab 已恢复原层级、组件字段、Animator、曲线、原 bitmap Font、字形尺寸、贴图、材质和 Windows shader，载荷位于 `Official/Combat/DamageUI`。完整 `CharacterDamageUI`、`DamageNumberUI`、`DamageFloatSize`、`ElementConfrontationUI`、`DamageAutoSizeTextBack`、`DamageCustomActionUI` 与原枚举、四字段颜色结构迁入 `Official/BattleDamageUI`；复用现有原实体、池接口、语言与中文战斗数字格式实现，保留原执行顺序。原 `CharacterDamageUIManager` 的显示、堆叠、样式／颜色优先级、预热查找、借还、七标志零伤害过滤器与原 `UIBase` 启禁用已迁入同目录，完整 `FightDamageSettings` 原生资产保留四字段颜色、13 项 GUID 与数量、间距；原 `FightSettings` 的预热记录和元素阈值单独投影。`CharacterDamageUIContext` 只桥接本地资源租约、实体查询和实际规则通知，保留技能实体缺席时的异步 prefab 重放检查；不在显示层重新结算规则。来源见[脚本清单](../../assets/reference/battle-hud/damage-ui-runtime-source-manifest.json)及[原生资源清单](../../assets/reference/battle-hud/damage-ui-native-source-manifest.json)。正式公共宿主已将具有完整回执的直接伤害／治疗／纯状态命中交给原角色 `OnDamage` 通知与该管理器，并按实际技能实体的创建时刻播放重放提示；对应旧步骤飘字只在原生路径未接管时保留，避免双播。`OfficialBattleDamageUIPlayback` 绑定原资源、每个实际角色及其移除、原语言字体／文字和元素阈值，预热与通知均经过已有原生实例注入作用域。范围命中的各目标和延迟创建的地块在通知前注册。中文动态字体、材质与 atlas 使用战斗独立副本；原 prefab 在未激活的本地模板上先绑定字体，再交给原池预热，避免 TMP 的 Awake 写回原生资源。原 `game_1000` 的 `DamageFloats` 空子树单独提取为 `DamageUIRoot.prefab`，保留场景坐标、本地 Z=−14 和单位缩放，不挂到 Overlay HUD 画布。暂停和倍速沿原 `WaitForSeconds` 与公共 `Time.timeScale`；隐藏窗口只隐藏 renderer，保留借出对象的身份和归还计时，重新显示时恢复原可见性。耗血、状态、驱散及派生结果的统一通知仍见下方缺项。
 
 - `OfficialBattleRuntimeController` 连接战斗会话、准备界面、场景宿主与结算回调；`FightBattleCheckpoint` 保存可恢复的本地战斗状态。
 - 回合步骤、格网与单位、受控站位、技能装配、目标选择、命中及部分伤害／HP／护盾／状态规则已有共享实现。各模块仍按官方配置和已迁移的客户端代码执行，不代表所有技能及组件覆盖完整。
@@ -133,6 +133,8 @@
 
 ## 自定义实现
 
+- 用户确认独立 `FightDamageComponent.SkillElemntType` 与 `DamageResult.SkillElementType` 的单机赋值均取本次实际技能元素，消费执行器已有的 `ElementType`，包括技能元素被状态改写的结果；APK 不含前者的服务端赋值。原管理器仍分别用它们判断深渊样式与颜色。
+
 - 用户确认伤害状态特效的单机规则：本次伤害的 `StatusList` 至少成功施加一个状态时，`IsDamageTriggerStatus=true`，包括给来源自身施加；概率失败、免疫或拒绝添加均为 false，其他被动连带状态不计入。此为 APK 缺少服务器赋值时采用的单机裁决；原客户端仍按该布尔值独立播放 `myTriggerStatusPlayable`，执行器在原施加顺序中记录 `HasDamageTriggerStatus／IsDamageTriggerStatus`，成功续期同样计入；列表前项成功不会跳过后续项，也不重新抽取随机数。旧检查点缺少结果时保持未知，不从现存状态反推；正式伤害实体只消费已知的实际结果。
 - 用户确认伤害实体的单机姿态规则：范围受击使用本次实际命中身体格，点命中使用该次受击时的目标位置，方向与 X 翻转沿用本次施法快照。APK 未包含服务器创建时的赋值代码；本地回执在结算及由此产生的位移前冻结位置，原 `MyTransform／MyGridTransform` 消费该位置、原方向旋转和翻转，不追随后来变化的单位坐标。
 - 用户确认 `DamageResultParameter.ResultType` 的单机分类：治疗结算为 `Cure`，伤害结算为 `Damage`（包括零伤害和免疫），两者均未执行为 `None`。APK 缺少服务端赋值，正式投影消费已有治疗标志及公式结果证据，不通过 HP 变化的正负猜测分类。无公式／结算的 `ActionType=None` 命中保留实际状态、驱散、位移及配置子技能并生成正式 `None` 回执；不进入伤害／治疗结算、次数和专用被动，仅继续符合条件的命中监听。原治疗技能即使互斥类型为 None，仍沿原治疗分支结算为 `Cure`。尚不支持的状态逻辑过滤器不据此宣称已实现。
@@ -168,7 +170,7 @@
 
 ## 尚未实现
 
-- 原 `CharacterDamageUIManager`、完整原生飘字及预热配置已迁移，正式宿主仍须将角色受击、状态、耗血、驱散和重放通知统一投影至 `CharacterDamageUIContext`，替换旧步骤驱动路径并验证没有重复播放；原生目录与管理器夹具不代表正式战斗接线完成。
+- 原管理器已接管完整直接伤害回执及实际技能重放通知；状态结算、耗血和驱散仍沿旧步骤驱动，须补齐明确的共享通知与时序后统一到 `CharacterDamageUIContext`。未接管或旧检查点缺证据的结果仍保留原有兼容路径；全部飘字与特殊派生结果尚未迁移完成。
 
 - 原伤害实体已接到具有完整归属、位置及状态结果的直接伤害／治疗／纯状态回执；派生同步／吸血等不在该施法直接归属列表中的表现、旧回执未知字段及全部特殊组件仍未完整覆盖。原人物受伤动作、全部外观后端的材质变色及正式人物／HUD 的全部通知监听尚未完整接通；已有飘字与代表图验证不代表这些部分完成。
 - 官方服务器缺失的 AI、随机、结果裁决及复杂触发条件尚未完整恢复；未确认的行为不作推测。
@@ -184,7 +186,9 @@
 
 ## 当前验证范围
 
-- 完整原生飘字及管理器已在 Unity 2022.3.57f1c2 隔离工程执行内置屏静音 Play Mode：13 个原 prefab 全部加载，原 bitmap 数字和六种中文提示生成实际网格，`1234567 → 123万`、元素免疫、破灭伤害、破韧优先、暂停、FIFO 复用和单次完成通过；原阶段 101 预热 198 个、无战斗／未配置阶段预热 112 个通过。通过实际角色受伤事件及共享通知投影，核对九种样式的互斥优先级、格挡与暴击同时存在时的样式／颜色差异、线性色与 TextMesh 的 Color32 存储、64 位数值、护盾合并、原零值过滤、状态治疗和自损颜色、驱散／状态动作、普通／Extra／隐藏／异步重放、堆叠、角色移除与重新加入、管理器启禁用、回池和非池销毁；原数字格式 `5000000000 → 500000万` 保留，不自行改成常用单位。已查看完整 13 种效果及管理器九种样式的实际截图。完整夹具断言和截图检查通过，但编辑器仍停在原生退出阶段，已停止本会话验证进程，不记为 Play Mode 进程正常退出。主工程编译和 `ProjectTools.Validate` 以 0 正常退出；静态元数据检查通过（150,419 GUID）。验证通过角色通知输入管理器，尚未覆盖正式步骤到通知投影的宿主接线及 Windows Player，不能据此宣称正式战斗飘字已完成。
+- 正式公共宿主的原生伤害飘字与实际技能重放接线已在主工程执行内置屏静音 Play Mode：七组真实执行器回执通过创建时刻、原持续时间、角色双向通知、纯状态／满血治疗分类、真实重放身份、旧回执兼容及释放检查；隐藏后借出对象身份与计时保留，暂停不归还，恢复四倍速后按原时长归池。主角与怪物两组正式控制器流程通过模拟点击开始、四格跳跃、暂停、技能／命中及结算检查，完整原管理器生成实际角色飘字，旧飘字数量始终为零；已查看两组共十二张实际运行画面及五张伤害回执画面。两项最终 Play Mode 均正常退出，正式控制器末尾再次通过 `ProjectTools.Validate`；静态元数据检查通过（150,422 GUID），图调度检查在共享工作区及本次独立待提交源码上均通过。中文字体在激活前绑定战斗独立副本，运行结束后 162 项原生资源与清单 SHA-256 全部一致。本批未构建或发布 Windows Player，状态结算、耗血、驱散和全部派生伤害通知仍未接管。
+
+- 完整原生飘字及管理器已在 Unity 2022.3.57f1c2 隔离工程执行内置屏静音 Play Mode：13 个原 prefab 全部加载，原 bitmap 数字和六种中文提示生成实际网格，`1234567 → 123万`、元素免疫、破灭伤害、破韧优先、暂停、FIFO 复用和单次完成通过；原阶段 101 预热 198 个、无战斗／未配置阶段预热 112 个通过。通过实际角色受伤事件及共享通知投影，核对九种样式的互斥优先级、格挡与暴击同时存在时的样式／颜色差异、线性色与 TextMesh 的 Color32 存储、64 位数值、护盾合并、原零值过滤、状态治疗和自损颜色、驱散／状态动作、普通／Extra／隐藏／异步重放、堆叠、角色移除与重新加入、管理器启禁用、回池和非池销毁；原数字格式 `5000000000 → 500000万` 保留，不自行改成常用单位。已查看完整 13 种效果及管理器九种样式的实际截图。完整夹具断言和截图检查通过，但编辑器仍停在原生退出阶段，已停止本会话验证进程，不记为 Play Mode 进程正常退出。主工程编译和 `ProjectTools.Validate` 以 0 正常退出；静态元数据检查通过（150,419 GUID）。该夹具通过角色通知输入管理器；正式步骤投影的验证范围见上项，Windows Player 仍未覆盖。
 
 - 完整原图声音的来源检查通过：1,735 个原 Event 资产引用、1,734 个不同事件及其 1,766 项有序动作，传递核对 2,913 个对象、2,977 条引用、2,942 份原 HIRC 载荷、4 个原全局设置块、1,562 份完整媒体及 2 份匹配的流式预取片段；7 个引用 RTPC 均在 8 项原全局默认值中解析。原 HIRC 的长度、类型、身份与 SHA256，媒体完整／预取身份及全部包的输入哈希已检查；原插件编号与 HIRC 编号分别处理，Actor-Mixer 的兄弟列表不启动无关声音，各包重复原载荷仍分别保留。静态元数据检查通过（144,784 个 GUID）。来源工具不改 Unity 场景或生产声音播放，未据此运行声音专项或发布 Player；运行库兼容性与实际输出仍是缺项。来源见[声音事件](../../assets/reference/battle-animation/native-sound-sources-source-manifest.json)及[传递依赖](../../assets/reference/battle-animation/native-sound-dependencies-source-manifest.json)。
 

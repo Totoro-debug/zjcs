@@ -16,6 +16,28 @@ RECEIPT = ROOT / 'assets/reference/battle-hud/damage-ui-native-source-manifest.j
 
 
 class DamageBinding(RoundSceneBinding):
+    def damage_root(self):
+        # Original FightRoot.DamageFloatsRoot is a world-space subtree, not a
+        # HUD canvas. Isolate that exact empty GameObject/Transform pair.
+        path = self.native / 'Prefabs/EcEntity/Fight/FightStage/1000/game_1000.prefab'
+        key = path.relative_to(self.cache / 'native-export-all').as_posix()
+        if sha(path.read_bytes()) != self.checked[key]: raise ValueError('Changed original FightRoot prefab')
+        self.inputs[path.relative_to(ROOT).as_posix()] = self.checked[key]
+        docs = documents(path.read_text(encoding='utf-8-sig'))
+        root, = [d['MonoBehaviour']['DamageFloatsRoot']['fileID'] for d in docs.values()
+            if 'MonoBehaviour' in d and 'DamageFloatsRoot' in d['MonoBehaviour']]
+        transform = copy.deepcopy(docs[root])
+        obj = transform['Transform']['m_GameObject']['fileID']
+        game_object = copy.deepcopy(docs[obj])
+        if transform['Transform']['m_Children'] or len(game_object['GameObject']['m_Component']) != 1:
+            raise ValueError('Review original damage root subtree closure')
+        transform['Transform']['m_Father'] = dict(fileID=0)
+        self.queue.append((Path('Resources/Combat/DamageUIRoot.prefab'),
+            hashlib.md5(b'zjcs:damage-ui:original-world-root').hexdigest(), {obj: game_object, root: transform}))
+        self.damage_root_source = dict(path=path.relative_to(ROOT).as_posix(),
+            transform_file_id=root, original_transform=docs[root],
+            operation='Isolate original FightRoot.DamageFloatsRoot subtree; detach only its external parent.')
+
     def register_scripts(self):
         super().register_scripts()
         for name in ('CharacterDamageUI', 'DamageNumberUI', 'DamageFloatSize',
@@ -155,6 +177,7 @@ class DamageBinding(RoundSceneBinding):
 def main():
     binding = DamageBinding(validation_directory())
     prefabs = binding.extract()
+    binding.damage_root()
     binding.script_guids.update(p['guid'] for p in binding.redirects.values() if p.get('guid'))
     for _, _, data in binding.queue:
         if isinstance(data, dict):
@@ -216,6 +239,7 @@ def main():
         scripts={name: source for name, source in binding.script_sources.items()
                  if source['pointer']['guid'] in referenced_guids}, installed=installed,
         language_font=binding.language_font,
+        damage_floats_root=binding.damage_root_source,
         closure_guids=aliases, generator_sha256=sha(Path(__file__).read_bytes()),
         scope='Complete original world-space damage prefab hierarchy, animation, bitmap fonts and materials.'),
         ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')

@@ -63,6 +63,20 @@ namespace Zjcs.Presentation.Combat
             && catalog.ContainsSkill(movement.MoveSkillEntityId);
 
         public int CatalogCount => catalog.Count;
+        public void BindDamageUI(Transform parent, int stageType) => entityViews.BindDamageUI(parent, stageType);
+        public void SetDamageUIVisible(bool visible) => entityViews.SetDamageUIVisible(visible);
+        public bool OwnsReplayUI(FightBattleSkillCastEvent cast) => entityViews.HasDamageUI
+            && cast?.Presentation != null && catalog.ContainsSkill(cast.SkillEntityId);
+        public bool OwnsDamageUI(FightBattleStepEvent step, FightBattleDamageEvent damage)
+        {
+            if (!entityViews.HasDamageUI || !OfficialBattleDamageReceiptPlayback.CanCreate(damage)
+                || step?.SkillCasts == null) return false;
+            foreach (var cast in step.SkillCasts)
+                if (OwnsReplayUI(cast) && cast.ActorId == damage.SourceId
+                    && cast.SkillEntityId == damage.SkillEntityId
+                    && cast.DamageEventIds != null && cast.DamageEventIds.Contains(damage.DamageId)) return true;
+            return false;
+        }
         public OfflineBattleNativePlayableScope Scope => scope;
         public Transform TryGetGridTransform(int id) => gridViews?.TryGetTransform(id);
         public void RefreshGridSnapshot(FightBattleCheckpoint checkpoint) => gridViews?.RefreshSnapshot(checkpoint);
@@ -107,6 +121,7 @@ namespace Zjcs.Presentation.Combat
             gridViews?.Enqueue(stepEvent, checkpoint);
             gridViews?.DispatchDue();
             Func<int, Transform> resolveTransform = id => gridViews?.TryGetTransform(id) ?? unitTransform(id);
+            entityViews.BindDamageUITargets(resolveTransform);
             ScheduleMovements(stepEvent, resolveTransform);
             var damageReceipts = new Dictionary<int, FightBattleDamageEvent>();
             if (stepEvent.DamageEvents != null) foreach (var damage in stepEvent.DamageEvents)
@@ -234,6 +249,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillGraphPlayback));
             scope.LateTick();
+            entityViews.UpdateDamageUIVisibility();
         }
 
         private void Start(ScheduledCast scheduled, Transform source, Transform target)

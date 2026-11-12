@@ -89,6 +89,7 @@ namespace Zjcs.Presentation.Combat
             hostPresentation?.SetVisible(visible);
             if (visible) cameraView?.SetVisible(true);
             if (hudRoot != null) hudRoot.SetActive(visible);
+            skillGraphPlayback?.SetDamageUIVisible(visible);
             if (returning && Checkpoint != null)
             {
                 sceneView?.Refresh(Checkpoint, null);
@@ -221,6 +222,7 @@ namespace Zjcs.Presentation.Combat
                         entityViews.SkillEnded += nextHud.OnSkillEnded;
                         entityViews.CastStarted += nextHud.OnPetSkillStarted;
                         nextSkillGraphPlayback = new OfficialBattleSkillGraphPlayback(graphCatalog, nativeScope, entityViews);
+                        nextSkillGraphPlayback.BindDamageUI(worldRoot, checkpoint.StageType);
                     }
                     catch { nativeScope.Dispose(); throw; }
                 }
@@ -295,6 +297,7 @@ namespace Zjcs.Presentation.Combat
                 }
                 skillGraphPlayback?.BindSceneHosts(cameraView, visibilityHost: sceneView, masterResolver: sceneView);
                 if (hudRoot != null) hudRoot.SetActive(hudVisible);
+                skillGraphPlayback?.SetDamageUIVisible(hudVisible);
                 ConfigureSpeeds(combatCatalog.SpeedSettings, request.SpeedModeType, request.SpeedConditionMet);
             }
             catch
@@ -376,7 +379,9 @@ namespace Zjcs.Presentation.Combat
                     skillGraphPlayback?.Play(result.Event, result.Checkpoint,
                         sceneView.Body, sceneView.TryGetPetTransform);
                     if (!result.Replayed)
-                        sceneView.ShowDamageFloats(result.Event, result.Checkpoint, hudCatalog.Font, damageColors);
+                        sceneView.ShowDamageFloats(result.Event, result.Checkpoint, hudCatalog.Font, damageColors,
+                            skillGraphPlayback == null ? null : damage => skillGraphPlayback.OwnsDamageUI(result.Event, damage),
+                            skillGraphPlayback == null ? null : cast => skillGraphPlayback.OwnsReplayUI(cast));
                 }
                 // Play dispatches authored zero-delay hits immediately. Match that
                 // boundary before publishing the step/checkpoint to its observers.

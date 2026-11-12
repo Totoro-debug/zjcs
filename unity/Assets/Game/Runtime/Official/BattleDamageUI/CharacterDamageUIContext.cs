@@ -23,6 +23,8 @@ namespace Zjcs.Official.BattleDamageUI
         public abstract CharacterDamageUIWarmupSettings WarmupSettings { get; }
         public abstract void GetSkillPrefabAsync(EcEntityIdentifier id, Action<MyFightSkill> ready);
         public abstract ElementType GetSkillElementType(MyFightDamage damage);
+        // Replaces original framework injection for locally instantiated UI.
+        public virtual void PrepareUI(CharacterDamageUI ui) { }
         public event Action<CharacterDamageUIRole> OnCharacterAdd;
         public event Action<CharacterDamageUIRole> OnCharacterRemove;
         public event Action<CharacterDamageUISkillReplay> OnSkillReplay;

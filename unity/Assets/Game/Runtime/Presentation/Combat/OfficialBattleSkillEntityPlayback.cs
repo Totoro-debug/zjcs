@@ -160,11 +160,16 @@ namespace Zjcs.Presentation.Combat
             entities.Add(UnitId(id), entity);
             if (!entity.GetComponent<MyFightRoleFight>())
                 entity.gameObject.AddComponent<MyFightRoleFight>().Component = new BattleRoleFightViewData();
+            damageUI?.Register(entity);
         }
 
         public void RemoveGrid(int id)
         {
-            if (nativeGridIds.Remove(id)) entities.Remove(UnitId(id));
+            if (nativeGridIds.Remove(id))
+            {
+                damageUI?.Remove(entities[UnitId(id)]);
+                entities.Remove(UnitId(id));
+            }
         }
 
         public Vector3 GridToPos(Pos2d position) => root.InverseTransformPoint(
@@ -220,6 +225,7 @@ namespace Zjcs.Presentation.Combat
             casts.Add(new ActiveCast { Entity = entity, Remaining = cast.Presentation.Duration < 0f
                 ? float.PositiveInfinity : cast.Presentation.Duration });
             scope.Dispatch(entity.MyStart);
+            if (damageUI != null) scope.Dispatch(() => damageUI.Replay(cast, state.Data.Identifier));
             receiptHits.Enqueue(cast, state.Data.Identifier);
             receiptDamages.Enqueue(cast, state.Data.Identifier, damageReceipts, sourceFacing, cast.Presentation.FlipX);
             CastStarted?.Invoke(cast);
@@ -348,6 +354,7 @@ namespace Zjcs.Presentation.Combat
             if (lease.Added.Contains(lease.GridView)) lease.GridView.BindFlipTransform(transform);
             leases[id] = lease;
             entities[identifier] = lease.Entity;
+            damageUI?.Register(lease.Entity);
             return lease;
         }
 
@@ -361,6 +368,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) return;
             disposed = true;
+            damageUI?.Dispose(); damageUI = null; damageUITarget = null;
             moveViews.Dispose();
             receiptHits.Dispose();
             receiptDamages.Dispose();
@@ -377,8 +385,9 @@ namespace Zjcs.Presentation.Combat
             if (positionContainer) Destroy(positionContainer.gameObject);
         }
 
-        private static void ReleaseUnit(UnitLease lease)
+        private void ReleaseUnit(UnitLease lease)
         {
+            damageUI?.Remove(lease.Entity);
             if (lease.SkillAgent != null)
             {
                 lease.SkillAgent.OnSkillApplied -= lease.SkillApplied;

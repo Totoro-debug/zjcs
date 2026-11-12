@@ -361,6 +361,7 @@ public class CharacterDamageUIManager : UIBase
 			val2.SetActive(true);
 		}
 		((Component)characterDamageUI).transform.SetAsLastSibling();
+		Context.PrepareUI(characterDamageUI);
 		return characterDamageUI;
 	}
 

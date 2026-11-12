@@ -175,6 +175,8 @@ namespace Zjcs.Presentation.Combat
         public Transform EntitySlot => entityRoot.transform;
 
         public bool ContainsClass(int classId) => resources.ContainsKey(classId);
+        internal GameObject GetPrefab(int classId) => resources.TryGetValue(classId, out var path)
+            ? Resources.Load<GameObject>(path) : null;
         public MyEntity GetEntity(EcEntityIdentifier id) => live.TryGetValue(id, out var entity) ? entity : null;
 
         public MyEntity Create(ECViewEntityData entityData)

@@ -189,7 +189,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/CharacterDamageUIManager.cs",
-      "sha256": "e5ddf2f340a8b5e345c529d757c3135588de909d0474f89d9feff67677c7faac"
+      "sha256": "1ffa91b82a69459c2d30af223fd45e8aa1d8ec04e2b50ee1e26342a22666e253"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/CharacterDamageUIManager.cs.meta",
@@ -205,7 +205,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/CharacterDamageUIContext.cs",
-      "sha256": "37b0d42d765f00fb93e06aff608f6a5df0076be3447fc98f5b6368580eac2fe3"
+      "sha256": "6615ff9e69a2c36b07a9b404c03d271cdc4e2553a86085c6057b9d78c97fb2cc"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleDamageUI/CharacterDamageUIContext.cs.meta",
@@ -222,14 +222,15 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_damage_ui_runtime.py",
-    "sha256": "be3ac69052850e4d7e6686d181da974bd8e139c006ee285ed5b7eb2679e92a0e"
+    "sha256": "1330bd906bebdc11d10022b0700f52864be346ea0f75e26cbb7b4596fb6858c2"
   },
   "adaptations": [
     "Namespace and existing original entity/pool/language types; remove IL comments and repair explicit Unity bool operators.",
     "Reuse original Chinese battle-number formatter; original LRU cache omitted.",
     "Inject element threshold as a local property; original branches and order retained.",
     "Original manager presentation, stacking, type/color priority and pool lifecycle retained; local fight/resource/notification context replaces absent framework root and R3 subscriptions.",
-    "Original stage-specific warmup lookup retained over consumed native fields; context supplies stage identity, consumed skill element and asynchronous prefab replay check; no server result is inferred."
+    "Original stage-specific warmup lookup retained over consumed native fields; context supplies stage identity, consumed skill element and asynchronous prefab replay check; no server result is inferred.",
+    "Prepare borrowed UI through its context before original Init, restoring per-instance language/font and element-threshold injection without changing global UI services."
   ],
   "scope": "Complete original serialized UI behaviours and manager; formal battle context migrated separately."
 }

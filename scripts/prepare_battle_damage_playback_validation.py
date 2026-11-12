@@ -28,6 +28,9 @@ def main():
     if any('Home' in name and name != 'Zjcs.Official.HomeAutoIncrease' for name in selected):
         raise ValueError('Damage fixture unexpectedly depends on unrelated home UI.')
     shutil.copytree(ROOT / 'unity/Assets/Spine', project / 'Assets/Spine', dirs_exist_ok=True)
+    shutil.copytree(ROOT / 'unity/Assets/TextMesh Pro', project / 'Assets/TextMesh Pro', dirs_exist_ok=True)
+    shutil.copytree(ROOT / 'unity/Assets/Official/Combat/DamageUI',
+        project / 'Assets/Official/Combat/DamageUI', dirs_exist_ok=True)
     for folder in (runtime / 'Official/Combat', runtime / 'Presentation/Combat'):
         for source in folder.rglob('*'):
             if source.is_file() and source.suffix in ('.shader', '.hlsl', '.cginc'):

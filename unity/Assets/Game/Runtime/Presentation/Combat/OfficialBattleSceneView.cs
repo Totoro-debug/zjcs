@@ -175,14 +175,16 @@ namespace Zjcs.Presentation.Combat
         /// Uses official damage prefabs and their localized status text when the HUD catalog is bound.
         /// </summary>
         public void ShowDamageFloats(FightBattleStepEvent stepEvent, FightBattleCheckpoint checkpoint,
-            TMP_FontAsset font, OfficialBattleDamageColors colors)
+            TMP_FontAsset font, OfficialBattleDamageColors colors,
+            Predicate<FightBattleDamageEvent> nativeDamage = null,
+            Predicate<FightBattleSkillCastEvent> nativeReplay = null)
         {
             if (stepEvent == null || checkpoint == null || colors == null) return;
             damageUiSpacing = colors.Spacing;
             if (stepEvent.DamageEvents != null)
                 foreach (FightBattleDamageEvent damage in stepEvent.DamageEvents)
                 {
-                    if (damage == null) continue;
+                    if (damage == null || nativeDamage?.Invoke(damage) == true) continue;
                     FightBattleUnitState target = FindUnit(checkpoint, damage.TargetId);
                     if (target == null) continue;
                     if (!damageVisibility.CanShow(damage, target)) continue;
@@ -223,7 +225,7 @@ namespace Zjcs.Presentation.Combat
             if (stepEvent.SkillCasts == null) return;
             foreach (FightBattleSkillCastEvent cast in stepEvent.SkillCasts)
             {
-                if (cast == null || !cast.IsReplay || cast.ReplayType==1
+                if (cast == null || nativeReplay?.Invoke(cast) == true || !cast.IsReplay || cast.ReplayType==1
                     || !OfficialBattleWorldTips.CanShowReplay(cast.SkillEntityId)) continue;
                 FightBattleUnitState actor = FindUnit(checkpoint, cast.ActorId);
                 if (actor == null) continue;

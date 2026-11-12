@@ -60,6 +60,9 @@ namespace Zjcs.Presentation.Combat
         { this.root = root; this.container = container; this.views = views; this.scope = scope; this.catalog = catalog; }
 
         public MyEntity GetEntity(EcEntityIdentifier id) => playback?.GetEntity(id);
+        internal static bool CanCreate(FightBattleDamageEvent receipt) => receipt != null
+            && !receipt.IsSkillCost && receipt.HasDamageTriggerStatus
+            && receipt.HasDamagePosition && receipt.DamageEntityId != 0;
         public float NextDelay
         {
             get
@@ -85,10 +88,9 @@ namespace Zjcs.Presentation.Combat
                     throw new InvalidOperationException("Damage receipt does not belong to this actual cast: " + id);
                 // Legacy receipts keep missing results/positions unknown. Do not
                 // infer either from the scene, current HP or surviving statuses.
-                if (!receipt.HasDamageTriggerStatus || !receipt.HasDamagePosition) continue;
                 // Original trigger-only hits (for example 13522) have no
                 // damage entity. Their hit graph and child skill own playback.
-                if (receipt.DamageEntityId == 0) continue;
+                if (!CanCreate(receipt)) continue;
                 if (!catalog.TryGetComponent(receipt.DamageEntityId, "FightDamageComponent", out var config))
                     throw new InvalidOperationException("Original damage configuration is missing: " + receipt.DamageEntityId);
                 float lifetime = config.TryGetValue("Duration", out var duration)
@@ -133,6 +135,7 @@ namespace Zjcs.Presentation.Combat
                 var value = pending[index];
                 if (value.Remaining > 0f) { index++; continue; }
                 pending.RemoveAt(index);
+                views.PrepareDamageUITarget((int)value.Data.GetComponent<FightDamageComponent>().TargetId.EntityId);
                 playback ??= new OfficialBattleDamageEntityPlayback(root, container, views, scope);
                 playback.Create(value.Data, value.Status);
                 active.Add(new Active { Id = value.Data.Id, Remaining = value.Lifetime });

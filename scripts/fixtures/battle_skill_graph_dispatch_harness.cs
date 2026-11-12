@@ -16,7 +16,7 @@ namespace UnityEngine
         public GameObject(string value) { name = value; }
         public T[] GetComponentsInChildren<T>(bool includeInactive) => new object[] { GroundApply }.OfType<T>().ToArray();
     }
-    public class Transform { public GameObject gameObject; public Transform(string name) { gameObject = new GameObject(name); } }
+    public class Transform { public GameObject gameObject; public Transform(string name) { gameObject = new GameObject(name); } public static implicit operator bool(Transform value) => value != null; }
     public class TextAsset { public string text = "catalog"; }
     public static class Resources
     {
@@ -28,11 +28,12 @@ namespace UnityEngine
 }
 namespace Zjcs.Combat.Official
 {
+    public class FightBattleExecutor {}
     public class FightBattleUnitState { public int Id, Direction, CharacterType; public long Hp; }
     public class GridItem { public int Id; public bool HasRuntime; public FightBattleUnitState Runtime; }
     public class FightBattleCheckpoint { public List<FightBattleUnitState> Units = new List<FightBattleUnitState>(); public List<GridItem> GridItems = new List<GridItem>(); }
     public class FightBattleSkillCastPresentation { public int FacingIndex, TargetId; }
-    public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId, Slot; public bool IsPetSupport; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(); }
+    public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId, Slot; public bool IsPetSupport; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(), DamageEventIds = new List<int>(); }
     public class FightGridPoint { public int X,Y; }
     public class FightBattleMovementEvent { public int UnitId,MoveBehaviourId,MoveSkillEntityId; public FightBattleSkillCastPresentation OrdinarySkillPresentation; public float OrdinaryMoveDelay; public bool HasDirection,HasFacing; public float Delay,MoveDuration,MoveSpeed,NativeDuration; public List<FightGridPoint> Path = new List<FightGridPoint>(); }
     public sealed class FightBattleSkillMove { public float MoveDuration, MoveSpeed, Delay; }
@@ -45,7 +46,8 @@ namespace Zjcs.Combat.Official
         public List<FightBattleSkillMove> SourceMoves = new List<FightBattleSkillMove>();
         public List<int> HitGraphEntities = new List<int>(), Hits = new List<int>(), ExtraSkills = new List<int>();
     }
-    public class FightBattleStepEvent { public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>(); }
+    public class FightBattleDamageEvent { public int DamageId, TargetId, SourceId, SkillEntityId; }
+    public class FightBattleStepEvent { public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>(); public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>(); }
 }
 namespace Zjcs.Official.StoryPlayableManager
 {
@@ -66,6 +68,14 @@ namespace Zjcs.Official.StoryGroundEffects
 }
 namespace Zjcs.Presentation.Combat
 {
+    // Airborne native status playback is verified by its own rules and Unity suites.
+    public sealed class OfficialBattleAirComboPlayback : IDisposable
+    {
+        public OfficialBattleAirComboPlayback(FightBattleExecutor executor, Transform root,
+            OfflineBattleNativePlayableScope scope, Func<int, Transform> body) {}
+        public void Synchronize() {}
+        public void Dispose() {}
+    }
     // This fixture leaves the separately tested grid lifecycle seam unbound.
     public class OfficialBattleGridMapper {}
     public class OfficialBattleGridEntityPlayback : IDisposable
@@ -86,10 +96,17 @@ namespace Zjcs.Presentation.Combat
     // playback is verified in Unity with the actual original MyFightSkill.
     public class OfficialBattleSkillEntityPlayback : IDisposable
     {
+        public bool HasDamageUI => false;
+        public void BindDamageUI(Transform parent, int stageType) { }
+        public void SetDamageUIVisible(bool visible) { }
+        public void UpdateDamageUIVisibility() { }
+        public void BindDamageUITargets(Func<int, Transform> resolve) { }
         private readonly OfflineBattleNativePlayableScope scope;
         public Zjcs.Official.StoryGroundEffects.IPlayableGroundEffectHost GroundEffects { get; } = new Zjcs.Official.StoryGroundEffects.GroundHost();
         public OfficialBattleSkillEntityPlayback(OfflineBattleNativePlayableScope scope) { this.scope = scope; scope.GroundEffectsHost = GroundEffects; }
-        public void Start(FightBattleSkillCastEvent cast, Transform source, Transform target)
+        public void EnsureUnit(int id, Transform source) {}
+        public void Start(FightBattleSkillCastEvent cast, Transform source, Transform target,
+            IReadOnlyDictionary<int, FightBattleDamageEvent> damageReceipts = null)
             { scope.EntitiesStarted.Add(cast.SkillEntityId); scope.CastSlots.Add(cast.Slot); scope.CastTimes.Add(scope.Clock);
               // Native entity playback owns directional prefab selection now.
               // This seam supplies a prefab; the actual entity is checked in Unity.
@@ -106,6 +123,8 @@ namespace Zjcs.Presentation.Combat
         { scope.Moves.Add(movement.UnitId); scope.MoveTimes.Add(scope.Clock); }
         public void Dispose() => scope.Dispose();
     }
+    public static class OfficialBattleDamageReceiptPlayback
+    { public static bool CanCreate(FightBattleDamageEvent receipt) => false; }
 }
 namespace Zjcs.Offline.BattleNativePlayables
 {

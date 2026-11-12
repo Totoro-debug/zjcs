@@ -13,6 +13,7 @@ using Zjcs.Official.EntityTransformViews;
 using Zjcs.Official.StoryPlayables;
 using Zjcs.Official.World.NativeTerrain.Common;
 using Zjcs.Presentation.Combat;
+using Zjcs.Official.BattleDamageUI;
 
 namespace Zjcs.Editor.Combat
 {
@@ -93,6 +94,15 @@ namespace Zjcs.Editor.Combat
                 scope = new OfflineBattleNativePlayableScope(root, null);
                 var views = new OfficialBattleSkillEntityPlayback(root, mapper, scope, id => checkpoint.Units.FirstOrDefault(u => u.Id == id));
                 playback = new OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog.TryLoadDefault(), scope, views);
+                playback.BindDamageUI(root, checkpoint.StageType);
+                var floatRoot = root.GetComponentInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUIManager>().transform;
+                Require(floatRoot && floatRoot.localPosition == new Vector3(0, 0, -14)
+                    && floatRoot.localScale == Vector3.one, "Original FightRoot world-space damage-float subtree.");
+                foreach (var receipt in expected)
+                    Require(playback.OwnsDamageUI(step, receipt) == (name != "legacy"),
+                        "Only complete, actually cast-owned native damage receipts replace the old step float.");
+                Require(!playback.OwnsDamageUI(step, new FightBattleDamageEvent { IsSkillCost = true }),
+                    "HP cost must remain a separate original notification.");
                 int triggerChildrenStarted = 0;
                 views.CastStarted += cast => {
                     if (cast.SkillEntityId != 13523) return;
@@ -110,10 +120,15 @@ namespace Zjcs.Editor.Combat
                 foreach (var unit in checkpoint.Units)
                 {
                     var entity = views.EnsureUnit(unit.Id, transforms[unit.Id]);
-                    entity.GetComponent<MyFightRoleFight>().OnDamage += (role, damage) => observed.Add(new Observed {
+                    entity.GetComponent<MyFightRoleFight>().OnDamage += (role, damage) => { observed.Add(new Observed {
                         Entity = damage.myEntity, Damage = damage, SkillId = damage.Component.SkillId,
                         Identity = damage.myEntity.Id,
                         Skill = views.GetEntity(damage.Component.SkillId) });
+                        long number = damage.Component.DamageResult.DamageValue - damage.Component.DamageResult.ShieldValue;
+                        if (!damage.myHideDamage && (number != 0 || damage.myShowZeroDamage || damage.Component.DamageResult.IsElementAffect))
+                            Require(floatRoot.GetComponentsInChildren<CharacterDamageUI>().Any(ui => ui.EntityId == role.myEntity.Id),
+                                "The original role notification must create its native UI before subsequent listeners.");
+                    };
                     entity.GetComponent<MyFightRoleFight>().OnHit += (role, damage) => hitNotifications++;
                 }
                 playback.Play(step, checkpoint, id => transforms.TryGetValue(id, out var value) ? value : null);
@@ -178,6 +193,25 @@ namespace Zjcs.Editor.Combat
                 if (name == "trigger") Require(triggerChildrenStarted == step.SkillCasts.Count(c => c.SkillEntityId == 13523),
                     "Trigger-only hits must not abort their downstream original skill playback.");
                 Require(root.GetComponentsInChildren<MyFightDamage>().Length == 0, "No damage entity survived its final removal boundary.");
+                var activeFloats = floatRoot.GetComponentsInChildren<CharacterDamageUI>();
+                if (activeFloats.Length > 0)
+                {
+                    var identities = activeFloats.Select(ui => ui.EntityId).ToArray();
+                    Time.timeScale = 0f;
+                    playback.SetDamageUIVisible(false);
+                    Require(activeFloats.All(ui => ui.gameObject.activeInHierarchy)
+                        && activeFloats.Select(ui => ui.EntityId).SequenceEqual(identities)
+                        && floatRoot.GetComponentsInChildren<Renderer>().All(r => r.forceRenderingOff),
+                        "Window hiding preserves borrowed UI identity, animation and return timer.");
+                    yield return new WaitForSecondsRealtime(.1f);
+                    Require(activeFloats.Select(ui => ui.EntityId).SequenceEqual(identities), "Battle pause preserves UI lifetime.");
+                    playback.SetDamageUIVisible(true);
+                    Require(floatRoot.GetComponentsInChildren<Renderer>().All(r => !r.forceRenderingOff), "World renderer visibility restores.");
+                    Time.timeScale = 4f;
+                    yield return new WaitForSeconds(3f);
+                    Require(floatRoot.GetComponentsInChildren<CharacterDamageUI>().Length == 0, "Original scaled lifetime returns all floats at battle speed.");
+                    Time.timeScale = 1f;
+                }
                 playback.Dispose(); playback = null; scope = null;
                 Destroy(root.gameObject); yield return null;
                 Require(!root, "Complete original graph/pool release.");
