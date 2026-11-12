@@ -14,6 +14,7 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly List<PartnerNativeBattleMesh> parts = new List<PartnerNativeBattleMesh>();
         private readonly Dictionary<string, Transform> transforms = new Dictionary<string, Transform>(StringComparer.Ordinal);
         private readonly ProfessionNativeAnimatorPose pose;
+        private PartnerNativeBattleAppearance appearance;
         private bool disposed;
         public Transform Root { get; }
         public Animator Animator { get; }
@@ -31,8 +32,19 @@ namespace Zjcs.Offline.ProfessionUI
             Root = new GameObject(name).transform; Root.SetParent(parent, false);
             try
             {
-                foreach (var row in new[] { OriginalRow }.Concat(Arr(OriginalRow["parts"]).Select(Obj)))
-                    parts.Add(CreatePart(catalog, row, Root, transforms));
+                var appearanceBinding = PartnerNativeBattleAppearanceCatalog.Find(npcId)
+                    ?? throw new InvalidDataException("Original partner appearance is unbound: " + npcId);
+                var rows = new[] { OriginalRow }.Concat(Arr(OriginalRow["parts"]).Select(Obj)).ToArray();
+                if (appearanceBinding.EntityId != Int(OriginalRow, "entityId") || appearanceBinding.Renderers.Length != rows.Length)
+                    throw new InvalidDataException("Original partner appearance identity differs.");
+                for (int index = 0; index < rows.Length; index++)
+                {
+                    var binding = appearanceBinding.Renderers[index];
+                    string path = string.Join("/", Arr(rows[index]["transforms"]).Select(Obj).Skip(1).Select(row => (string)row["name"]));
+                    if (binding.Path != path || binding.Materials.Length != 1 || !binding.Materials[0])
+                        throw new InvalidDataException("Original partner appearance material path differs.");
+                    parts.Add(CreatePart(catalog, rows[index], Root, transforms, binding.Materials[0]));
+                }
                 var translator = Obj(parts[0].Settings["translator"]);
                 if (!Flag(translator, "autoReset") || !Flag(translator, "useCustomMixMode")
                     || Arr(translator["layerMixModes"]).Count != 1 || Convert.ToInt32(Arr(translator["layerMixModes"])[0]) != 1
@@ -50,6 +62,10 @@ namespace Zjcs.Offline.ProfessionUI
                 Attachments = new PartnerNativeBattleAttachments(this, transforms, parts.Select(part =>
                     new PartnerNativeBattleAttachments.RendererBinding(part.Mesh.transform, part.Skeleton,
                         part.Settings, part.Material)).ToArray());
+                foreach (var part in parts)
+                    part.BindAppearanceRenderer((PartnerNativeBattleRendererPort)Attachments.OriginalRenderers.Values.Single(value => value.transform == part.Mesh.transform));
+                appearance = new PartnerNativeBattleAppearance(this, appearanceBinding);
+                ApplyPose();
             }
             catch { Dispose(); throw; }
         }
@@ -58,6 +74,7 @@ namespace Zjcs.Offline.ProfessionUI
         {
             if (disposed) throw new ObjectDisposedException(nameof(PartnerNativeBattleActor));
             if (!float.IsFinite(deltaTime) || deltaTime < 0) throw new ArgumentOutOfRangeException(nameof(deltaTime));
+            appearance?.Tick();
             Animator.Update(deltaTime);
             foreach (PartnerNativeBattleMesh part in parts.Skip(1)) part.Elapsed += deltaTime * Number(part.Settings, "timeScale");
             ApplyPose();
@@ -78,7 +95,7 @@ namespace Zjcs.Offline.ProfessionUI
         }
 
         private static PartnerNativeBattleMesh CreatePart(PartnerNativeBattleAssetCatalog catalog, Dictionary<string, object> row,
-            Transform parent, Dictionary<string, Transform> transforms)
+            Transform parent, Dictionary<string, Transform> transforms, Material originalMaterial)
         {
             foreach (var source in Arr(row["transforms"]).Select(Obj))
             {
@@ -93,12 +110,13 @@ namespace Zjcs.Offline.ProfessionUI
                 }
                 parent = node;
             }
-            return new PartnerNativeBattleMesh(catalog, row, parent);
+            return new PartnerNativeBattleMesh(catalog, row, parent, originalMaterial);
         }
 
         public void Dispose()
         {
             if (disposed) return; disposed = true;
+            appearance?.Dispose(); appearance = null;
             foreach (PartnerNativeBattleMesh part in parts) part.Dispose(); parts.Clear();
             if (Root) Destroy(Root.gameObject);
         }

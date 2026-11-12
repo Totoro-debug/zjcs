@@ -211,6 +211,44 @@ def build():
     runtime = ROOT / "unity/Assets/Game/Runtime/Offline/ProfessionUI/PartnerNativeBattleAnimatorCatalog.cs"
     meta(runtime)
     catalog = destination / "catalog.asset"
+    retained = []
+    if catalog.exists():
+        existing = next(iter(documents(catalog.read_bytes()).values()))["entries"]
+        generated = {row["NpcId"]: row for row in entries}
+        for row in existing:
+            if row["NpcId"] in generated:
+                continue
+            pointer = row["Controller"]
+            candidates = [path for path in native_paths if path.suffix == ".controller" and
+                sha(("zjcs:partner-battle-animator:" + path.relative_to(
+                    export / "ExportedProject/Assets/AppearanceAssets/Npc").as_posix()).encode())[:32] == pointer["guid"]]
+            if len(candidates) != 1 or pointer["fileID"] != 9100000 or pointer["type"] != 2:
+                raise ValueError("Review the existing additional partner Animator binding")
+            queue, closure = [candidates[0]], set()
+            while queue:
+                path = queue.pop()
+                if path in closure:
+                    continue
+                closure.add(path)
+                if sha(path.read_bytes()) != checked[path.relative_to(export).as_posix()]:
+                    raise ValueError("Additional original Animator conversion changed")
+                queue.extend(by_guid[key] for key in GUID.findall(path.read_text("utf-8")))
+            remap = {key: sha(("zjcs:partner-battle-animator:" + path.relative_to(
+                export / "ExportedProject/Assets/AppearanceAssets/Npc").as_posix()).encode())[:32]
+                for key, path in by_guid.items() if path in closure}
+            preserved = []
+            for path in sorted(closure):
+                target = destination / path.relative_to(export / "ExportedProject/Assets/AppearanceAssets/Npc")
+                for original, installed in ((path, target), (Path(str(path) + ".meta"), Path(str(target) + ".meta"))):
+                    raw = GUID.sub(lambda match: "guid: " + remap[match[1]], original.read_text("utf-8")).encode()
+                    if not installed.exists() or installed.read_bytes() != raw:
+                        raise ValueError("Preserve changed additional partner Animator asset: " + str(installed))
+                    preserved.append(dict(native=identity(original), installed=identity(installed)))
+            retained.append(dict(binding=row, assets=preserved))
+            generated[row["NpcId"]] = row
+        # Keep the installed order and every independently verified extra binding.
+        entries = [generated.pop(row["NpcId"]) for row in existing]
+        entries += list(generated.values())
     asset(catalog, "Current original partner battle Animators", runtime, dict(entries=entries))
     outputs = [runtime, Path(str(runtime) + ".meta"), catalog, Path(str(catalog) + ".meta")]
     validation = ROOT / "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattleAnimatorAcceptance.cs"
@@ -223,7 +261,7 @@ def build():
         ROOT / "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimatorPose.cs"]
     proof = dict(manifest=apk.version, native_receipt=identity(receipt_path), payload_catalog=identity(payload_catalog),
         generator=identity(Path(__file__).resolve()), verifier=identity(ROOT / "scripts/prepare_battle_game_animators.py"),
-        graphs=graphs, original_duration_differences=duration_differences,
+        graphs=graphs, original_duration_differences=duration_differences, retained_controller_bindings=retained,
         assets=[records[key] for key in sorted(records)], folder_metadata=[identity(path) for path in sorted(folders)],
         outputs=[identity(path) for path in outputs], inputs=[identity(path) for path in inputs],
         operation="Copy exact converted original controllers and clip closure. Remap external asset GUIDs and metadata GUIDs only. Verify original parameter order/types/defaults, layers, default states, state speed/offset/mirror/write-defaults/IK, state motions, ordered transition conditions/targets/timings/interruption flags and clip durations against the compiled official assets.",
@@ -232,7 +270,8 @@ def build():
             "Original 11033 200/die_02 carrier clip has zero duration while its skeleton keys end at 0.3333333432674408 seconds. Every channel is constant; preserve both source assets and the zero carrier clock. Formal battle playback remains unvalidated."])
     path = ROOT / "assets/reference/partner-native-battle-animators-source-manifest.json"
     path.write_text(json.dumps(proof, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
-    print("Recovered", len(entries), "partner controllers and", len(records) - len(entries), "original clips.")
+    print("Recovered", len(fighters), "partner controllers and", len(records) - len(fighters),
+          "original clips; retained", len(retained), "verified additional controller bindings.")
 
 
 if __name__ == "__main__":

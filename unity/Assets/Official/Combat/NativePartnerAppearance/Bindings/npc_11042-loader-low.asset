@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Name: npc_11042_TextureLoader_Low
+  m_EditorClassIdentifier: ''
+  m_Script: {fileID: 11500000, guid: 1a0e110595a58e7c69027ccc4e0d3dd0, type: 3}
+  maxPlaceholderSize: 4
+  unloadAfterSecondsUnused: 60.0
+  LevelOfResolution: 1
+  PlaceholderPath: ''
+  TargetTexturePath: ''
+  DyeTexturePath: ''
+  atlasAsset: {fileID: 11400000, guid: 4e3a9599ad0c59ed977fb732c3d315f3, type: 2}
+  skeletonDataAsset: {fileID: 0}
+  placeholderMap:
+  - placeholderTexture: {fileID: 2800000, guid: d5cdf56ace6551d99731970cc5f3061c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f1be195eec62ec94e99660ccf38b1cd4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}

@@ -10,7 +10,7 @@
   },
   "generator": {
     "path": "scripts/prepare_partner_native_battle_animators.py",
-    "sha256": "6c92d5bc076d18250f8a342aed702487c6069efde9dd0bd48f14cacf7b54b170"
+    "sha256": "d10790e5998c8f278b24632ce1b3e7686a4fa4310cab1aaa58e78760172813d0"
   },
   "verifier": {
     "path": "scripts/prepare_battle_game_animators.py",
@@ -3009,6 +3009,380 @@
       "original_skeleton_duration": 0.3333333432674408,
       "constant_pose": true,
       "runtime_clock": "Original zero-length carrier samples the unchanged skeleton pose at zero."
+    }
+  ],
+  "retained_controller_bindings": [
+    {
+      "binding": {
+        "NpcId": 10607,
+        "Controller": {
+          "fileID": 9100000,
+          "guid": "24a1c3fe3439aeee935e8369e74355f1",
+          "type": 2
+        }
+      },
+      "assets": [
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_block_01.anim",
+            "sha256": "14760d82e5320022b863f8a6b2788377ceac17e00c0b2b61f8a6fbbfd1a0fb93"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_block_01.anim",
+            "sha256": "14760d82e5320022b863f8a6b2788377ceac17e00c0b2b61f8a6fbbfd1a0fb93"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_block_01.anim.meta",
+            "sha256": "7c841d00eb2be73c63e0e38d93d7019c373d80704991144db0e75f404f190579"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_block_01.anim.meta",
+            "sha256": "55c5d03f91f5dd4e8c6006f6d6c17e543ec03bd5d8ba59bc99a5b5bcb1c657f2"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_die_01.anim",
+            "sha256": "907ccf6302afba231c39ae9440f731a942879e45515384d4f8790ef346b9e74b"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_die_01.anim",
+            "sha256": "907ccf6302afba231c39ae9440f731a942879e45515384d4f8790ef346b9e74b"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_die_01.anim.meta",
+            "sha256": "e54323a3f6d660877d16eaa3b2e557a3c2c05b566ae73fbf1e070a26219a817a"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_die_01.anim.meta",
+            "sha256": "7a162b16c01a5ac17ca418af28f3eafa3ab44609036cf9bf4d473d29326cb054"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_die_02.anim",
+            "sha256": "ddbc2ea5b87f43bc6fd524d7a477278b837c3d8cebfa9dc9e845ef7bf21df53b"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_die_02.anim",
+            "sha256": "ddbc2ea5b87f43bc6fd524d7a477278b837c3d8cebfa9dc9e845ef7bf21df53b"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_die_02.anim.meta",
+            "sha256": "5b5cfa173ad587d41d8d922a39e43f98abdeaff612c99c05c2822ccb41ef467b"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_die_02.anim.meta",
+            "sha256": "191ff0fdc4df1df13d2f6a5fc5a9124262e253a5a95b96c86f6e5670ed9a2b60"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_down_01.anim",
+            "sha256": "f6864261fe077db5b8e5d95559a6ca97261c2b5bddd5853ba39539e3a8baa89a"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_down_01.anim",
+            "sha256": "f6864261fe077db5b8e5d95559a6ca97261c2b5bddd5853ba39539e3a8baa89a"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_down_01.anim.meta",
+            "sha256": "d766b7c3b2bb0e24b7bd81c9d9aff775190a8aa1a9ed3dcfdab5f37d0cf7b840"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_down_01.anim.meta",
+            "sha256": "4c0e2d38a6dcbc9df6e11d34d65e25a410b95307e3df8be1c8bfd4da7448fe6b"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_floating_01.anim",
+            "sha256": "d5189bbabf63453c84d55187019a9bd2b72111d9972e9288eb1cfedba1dc9480"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_floating_01.anim",
+            "sha256": "d5189bbabf63453c84d55187019a9bd2b72111d9972e9288eb1cfedba1dc9480"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_floating_01.anim.meta",
+            "sha256": "0730035c746b389d0fa0fb89644d788d920cc774e5e40e586645d732851bb34b"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_floating_01.anim.meta",
+            "sha256": "583f2612635b7c0043daa96ab1f4513e4adab68cb875df94136fc4978c87ea93"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_hit_01.anim",
+            "sha256": "76b1bad0728006cf21575316b0c51a10e0363681c0527ac310b02b3a6c05f498"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_hit_01.anim",
+            "sha256": "76b1bad0728006cf21575316b0c51a10e0363681c0527ac310b02b3a6c05f498"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_hit_01.anim.meta",
+            "sha256": "aa9eab5dbb5ef3385baa32d22bca214725f3c016d7bb336f219128518174a91a"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_hit_01.anim.meta",
+            "sha256": "30c9d00ef8cb1d4776fc4ef4840d7a00c26294eb363118b31bc1bd0b4ee6e77f"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_hit_02.anim",
+            "sha256": "170881819ed3b344cda6dc9fe840f8a0b3ec37b8ce827232c6bb80d0deff5c48"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_hit_02.anim",
+            "sha256": "170881819ed3b344cda6dc9fe840f8a0b3ec37b8ce827232c6bb80d0deff5c48"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_hit_02.anim.meta",
+            "sha256": "82fb74e4f1a1e5ff9fa19784dde7750cf18b2407fd91eedafbbeba31a3787f5e"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_hit_02.anim.meta",
+            "sha256": "68172ac08058f96aecff67c192bdc2caec4aa78658b9a0794f1b3a998bea2c11"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_idle_01.anim",
+            "sha256": "07bf4a9c6479e35707c922296fb8b68c4feba26aafb5c12864b56f7226f0984a"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_idle_01.anim",
+            "sha256": "07bf4a9c6479e35707c922296fb8b68c4feba26aafb5c12864b56f7226f0984a"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_idle_01.anim.meta",
+            "sha256": "8b7350c713cc50d8170e9c2a77d5fd9fbf0b3732dee5066a3454f7d163d45fe8"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_idle_01.anim.meta",
+            "sha256": "f4e019611d736dd8575ef9ccb91696798a64528c4481aa7a5122f659b2039a4b"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_raise_01.anim",
+            "sha256": "9255f41ddc95b31b47ba3041c377108087877cec6b1984b29193f9464043a976"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_raise_01.anim",
+            "sha256": "9255f41ddc95b31b47ba3041c377108087877cec6b1984b29193f9464043a976"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_raise_01.anim.meta",
+            "sha256": "8cd9bf9b45bfe4ebcd6b225acc14b106a6a5195fe3a7746bfd3b6ab02e20e5cc"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_raise_01.anim.meta",
+            "sha256": "9f3ecd5c2fc1f8319f31356163ad959c4f7ef2da1dbd0e89d6194dd22f537998"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_run_01.anim",
+            "sha256": "e5ad694cd53bd9550e93d50f3262ed4b5afabdfff826bae3cd6052efc74e9e2f"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_run_01.anim",
+            "sha256": "e5ad694cd53bd9550e93d50f3262ed4b5afabdfff826bae3cd6052efc74e9e2f"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_run_01.anim.meta",
+            "sha256": "876e3bad4a13c934b6ba31acf58d25143c4428bdeb2d957ffff023097bd46c71"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_run_01.anim.meta",
+            "sha256": "7f4d3d51e2646aabd7a3bbd8382daf1aa15275cb10831274d30d6c8f6106f4ee"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_run_02.anim",
+            "sha256": "5ce7c860d06a940fc376cb8d02b295fa95524c97b6b95cfcf3147acfc4e6137f"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_run_02.anim",
+            "sha256": "5ce7c860d06a940fc376cb8d02b295fa95524c97b6b95cfcf3147acfc4e6137f"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_run_02.anim.meta",
+            "sha256": "4bc2c3dc6011b4e4683709d3ea0f90d49ccdc065f7ce3447c6742acc30e3f920"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_run_02.anim.meta",
+            "sha256": "3b1b81f0dd6e0e6ec4b867f9a2dfc320d3df37bc3faafc1ec6e2e2e0ea19d91f"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_run_03.anim",
+            "sha256": "0eb23d85de778bf03f64967a61812e2413d65129aee5835df0fc7327a82c10f9"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_run_03.anim",
+            "sha256": "0eb23d85de778bf03f64967a61812e2413d65129aee5835df0fc7327a82c10f9"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/100_run_03.anim.meta",
+            "sha256": "ff626e59f8b0f57dd2b062cc3fb975d3ab5299939848a80508b2e6c1dbe15e83"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/100_run_03.anim.meta",
+            "sha256": "dbfac3ec48fb598c759b42713f925105283c899a8ba3373255b2b5e7f2f73052"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/EntrySkill.anim",
+            "sha256": "ccb70e0b38ff27931238f68f42438db16b8b228b6dd1913c77c432e65c0bbdec"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/EntrySkill.anim",
+            "sha256": "ccb70e0b38ff27931238f68f42438db16b8b228b6dd1913c77c432e65c0bbdec"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/EntrySkill.anim.meta",
+            "sha256": "f31b0a9f6a7823ab4c06d997e5d4d0560b68c2ecab67c0f1ab11747693355b5b"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/EntrySkill.anim.meta",
+            "sha256": "9df9684058427a91a1d37ff10e4abb9fd407a83e70ba2584ae7ab2e1fadb9dba"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/EscapeSkill.anim",
+            "sha256": "f5e60bfa0685d92a3ac849d02e974f23ab16e52ea529c36942b382686eccda40"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/EscapeSkill.anim",
+            "sha256": "f5e60bfa0685d92a3ac849d02e974f23ab16e52ea529c36942b382686eccda40"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/EscapeSkill.anim.meta",
+            "sha256": "a05f6809b7be1829f9c2d3a55bc63a26a390c7d7db5029abacdc7a836716e5af"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/EscapeSkill.anim.meta",
+            "sha256": "37698d2a5b34812fd6bf1357b7744b3ae49ad84c5da72a29019a1b497a946119"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/LoopSkill.anim",
+            "sha256": "b49528ac9811a415aa073f43054305bd2e4fb8940d55973541d72ff0de52790f"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/LoopSkill.anim",
+            "sha256": "b49528ac9811a415aa073f43054305bd2e4fb8940d55973541d72ff0de52790f"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/LoopSkill.anim.meta",
+            "sha256": "97f437e10f569efbe7406e610125d1c7691346fa7b6fc0f5894fe528256e266a"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/LoopSkill.anim.meta",
+            "sha256": "d8c6d4235dfd250a9eb2fe056212a3b40d10f2dcafba709336dab54499f219f9"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/Male_midNPC_Zhanshi_Controller.controller",
+            "sha256": "5ebf90e9f35295d09cf7273f4d14321797c72d24cc14260ad30de1a3c771959b"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/Male_midNPC_Zhanshi_Controller.controller",
+            "sha256": "b96ce060a61438c94ea3291c87ceac22eb0ee0f438c0c9305572310c050ebca2"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/Male_midNPC_Zhanshi_Controller.controller.meta",
+            "sha256": "3c662a012624366ad43d4fc77cd770314bad83ab980d5300d3f2652c26a2ee81"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/Male_midNPC_Zhanshi_Controller.controller.meta",
+            "sha256": "3709fbf7e06c48830cfc449aeb373cccf11e0b207cca368964ef074e5648c3cf"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/map_openTheChest_03.anim",
+            "sha256": "3c935801ae2403f2837c423d88a47fa00a26465ac74ca20df028db69c8f00dae"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/map_openTheChest_03.anim",
+            "sha256": "3c935801ae2403f2837c423d88a47fa00a26465ac74ca20df028db69c8f00dae"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/map_openTheChest_03.anim.meta",
+            "sha256": "bdfdffe282e8fcbed412d0053160d031b385720198e3b15e105ed5ec3856e675"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/map_openTheChest_03.anim.meta",
+            "sha256": "1cf7db7d8c0978a5e2987aab3875a538e294d85078c19fa2faf85811e4b09a23"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/Skill.anim",
+            "sha256": "9712d3427f2612110cf455e2ec01c62e4b497ad5b30189230c726327ed534048"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/Skill.anim",
+            "sha256": "9712d3427f2612110cf455e2ec01c62e4b497ad5b30189230c726327ed534048"
+          }
+        },
+        {
+          "native": {
+            "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/Skill.anim.meta",
+            "sha256": "56877542439482f7695d2dc50e74924e80e95874f84f8d4738957583cd1fbf12"
+          },
+          "installed": {
+            "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/npc_middle_model/Anim/Skill.anim.meta",
+            "sha256": "f23c49a189782eef4ee5075edc3442836d501ae209cb1735e03d281eacd8d860"
+          }
+        }
+      ]
     }
   ],
   "assets": [
@@ -19628,7 +20002,7 @@
     },
     {
       "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/catalog.asset",
-      "sha256": "e8877a042f64c12ce20ea57c76e4d8c392d8d93ab9cd3290a5dfe0cb2acf545c"
+      "sha256": "1e74cd51cf7bd442259a163061408c1d336a736807e931d196b9df183a0563e7"
     },
     {
       "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/catalog.asset.meta",
@@ -19646,7 +20020,7 @@
     },
     {
       "path": "scripts/prepare_partner_native_battle_validation.py",
-      "sha256": "3d09a19b66e343ac1383514c2f63142de2c6ea2348421f99eefdc8a96d09ad46"
+      "sha256": "ee2c1420dc9da233c1857e71004ff40e5da966cabaa469b0f16b2916939cadca"
     },
     {
       "path": "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattleDataValidation.cs",
@@ -19658,7 +20032,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimatorPose.cs",
-      "sha256": "63156fee5ba194ce0df00185d8ceddd2e45edd9e238155189c984d761bcbcc51"
+      "sha256": "c46cbbbc9899ffeb0e16fe439e8e3c456eadadb2379a67ec55afdb3ccde1d988"
     }
   ],
   "operation": "Copy exact converted original controllers and clip closure. Remap external asset GUIDs and metadata GUIDs only. Verify original parameter order/types/defaults, layers, default states, state speed/offset/mirror/write-defaults/IK, state motions, ordered transition conditions/targets/timings/interruption flags and clip durations against the compiled official assets.",

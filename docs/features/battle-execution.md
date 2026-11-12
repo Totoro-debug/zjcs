@@ -89,7 +89,7 @@
 
 成功驱散沿原 `CharacterDamageUIRole.DisperseStatus → CharacterDamageUIManager` 播放。执行器保留兼容 `DispersedUnitIds`，同时在实际伤害／纯状态回执保存 `HasDisperseNotification／DisperseNotificationIndex`，同目标多次操作用各自位置区分；失败或自然到期不产生关联。原伤害实体完成 `MyFightDamage.OnStart` 的目标受伤、来源命中和配置图播放后，才按该实际回执交付驱散，不再另设浮点计时器。只有明确关联且可创建原伤害实体的操作接管旧提示，旧检查点和未接管对象继续保留兼容路径；暂停、隐藏、倍速、堆叠及归池仍由原显示实现执行。
 
-公共交互验证的五组场景共用 `OfficialBattlePublicFlowValidation.Steps`，Editor 入口仍为 `OfficialBattlePublicMovementAcceptance`；专用 Windows 构建入口为 `OfficialBattlePublicPlayerBuild.Build`，启动器为 `scripts/test_battle_public_player.ps1 -Workspace <本会话目录>`。验证程序集仅在 Editor 或显式 `ZJCS_BATTLE_PUBLIC_VALIDATION` 构建中启用，通过独立参数跳过正常存档启动，使用带标记的隔离目录与内存档案；原开始按钮沿实际射线命中的模拟指针执行，保留原模型、HUD、技能、命中与伤害管理器，不操作系统鼠标／键盘。该入口本身不改变游戏规则或资源。
+公共交互验证的十组场景共用 `OfficialBattlePublicFlowValidation.Steps`，Editor 入口仍为 `OfficialBattlePublicMovementAcceptance`；专用 Windows 构建入口为 `OfficialBattlePublicPlayerBuild.Build`，启动器为 `scripts/test_battle_public_player.ps1 -Workspace <本会话目录>`。验证程序集仅在 Editor 或显式 `ZJCS_BATTLE_PUBLIC_VALIDATION` 构建中启用，通过独立参数跳过正常存档启动，使用带标记的隔离目录与内存档案；原开始按钮沿实际射线命中的模拟指针执行，保留原模型、HUD、技能、命中与伤害管理器，不操作系统鼠标／键盘。该入口本身不改变游戏规则或资源。
 
 `OfficialBattleRuntimeController` 是各玩法共用的 module。外部 seam 位于 `Begin(OfficialBattleRequest)` 和 `IOfficialBattleModeAdapter`，规则与表现的实现集中在公共战斗目录内。
 
@@ -144,6 +144,8 @@
 原伤害图使用的角色材质接口已为 33 个已安装配置恢复：`OfficialBattleActorMaterialBinding` 仅按同版原 prefab 的根节点、启用状态和完整引用路径添加原 `MeshMaterialProperty`；已有组件保持原绑定，所属单位租约在图停止后释放新增组件。现存原 `AppearanceRenderer／Lite` 继续负责原独立材质集合；尚未装载该外观组件的原生骨骼后端使用其现有每角色材质实例和原 `MeshRenderer` 引用，不生成新 shader 或材质。配置输入及绑定见[角色材质来源](../../assets/reference/battle-animation/actor-material-bindings-source-manifest.json)。另外 36 个已安装幻兽配置已接入下述完整外观材质集合，保留原 `MeshRenderer` 空引用。
 
 `OfficialBattleMonsterAppearance` 统一装配 68 个已安装怪物、幻兽及召唤物的原 `AppearanceRendererLite`、根 `MeshMaterialProperty` 和材质引用；`BattleNativeMonsterAppearanceCatalog` 保存原 renderer 路径、引用是否为空、精度及网格副本引用顺序。67 个原 Low 配置保留图集／占位材质及原贴图加载器；3803 保留原 `LevelOfResolution.None`：原 AppearanceConfig 无其路径、所选完整资源清单无对应加载器，沿原客户端空加载器分支保留八份材质的原纹理与三类 shader，仅为三张骨骼图集页创建独立材质。四个原 `CustomRenderExistingMesh` 复用正式 prefab 的迁移代码和原启用字段，将原材质到独立材质的映射转接到各自描边／隐藏替换材质，不克隆五份替换材质。`OfficialBattleLiveMonsterModelView` 与既有幻兽跟随视图共用该入口，退出时先释放材质属性及外观，再释放加载器路由。保留幻兽原空 renderer；未修改原 shader 能力：普通骨骼 shader 支持受伤变色、不含 `_DitherAlpha`，3803 的混合 shader 由原属性收集器拒绝不共同支持的变色字段。输入、对象指针、ASTC mip 转换、显式 `Combat/NativeMonsterAppearance/catalog` 绑定及输出哈希见[原生角色外观来源](../../assets/reference/battle-animation/native-monster-appearance-source-manifest.json)。该接线不代表全部角色状态表现或 Windows Player 验证完成。
+
+`PartnerNativeBattleActor` 沿既有模型、Animator、附件和阴影入口接入原同伴外观：34 份原实体配置中的 35 个 `AppearanceRendererLite` 及 34 个根 `MeshMaterialProperty` 保留完整引用、Low 精度、启用字段、空 MeshRenderer 和空网格副本列表。11005 的根收集器仅引用主身体，第二身体保留独立外观。`PartnerNativeBattleAppearance` 在模块内部管理同一角色的原 `AppearanceAssetManager`、按需贴图路由和销毁顺序，调用方仍使用现有 actor 接口；网格绘制通知驱动原加载器，原 atlas／占位材质切换到已核验的 Low 页。地址计算使用原 `AppearanceAddressUtils` 所读取的骨骼数据名称，完整 SkeletonDataAsset 名称仍供原附件绑定使用。既有直接使用骨骼网格的技能后端保留自身材质生命周期。原对象、原代码、ASTC mip 转换、359 项资源输出和显式 `Combat/NativePartnerAppearance/catalog` 绑定见[同伴原生外观来源](../../assets/reference/battle-animation/native-partner-appearance-source-manifest.json)。11015～11022 仍保持既有正式战斗排除，其原 Low 目标只有 24×24，不能据此声称这八名同伴已完整恢复。原 Animator 生成器另核验并保留目录中既有的 10607 额外控制器及其原片段闭包，避免重建 34 名战斗同伴时删除该绑定。
 
 ## 自定义实现
 
@@ -309,6 +311,8 @@
 - 触发技能原点专项 `test_battle_hit_trigger_origin.ps1` 通过八组真实 13520→13522→13523 执行：四方向、伤害／纯状态两类触发、非中心身体格、方向和翻转、实际父触发时刻、原 13526 伤害、施法者位置及检查点新旧字段兼容。460 条公式／战斗核心、六组施法归属、七组命中位置及十六组状态统计回归通过。主工程编译与 `ProjectTools.Validate`、内置屏静音 `RunReceipts` 均以 0 退出；七个播放场景通过，含真实 13520 的无伤害实体触发、后续原技能／雷击、实际子实体位置、源角色投影及原双向伤害通知，五张实际粒子截图已查看。静态检查通过（150,079 GUID）。原模型仍为无可见网格的受控对象，不覆盖完整人物／HUD；未运行本项隔离 Play Mode，未构建或发布本批 Windows Player。
 
 - 正式技能伤害测试使用真实目标 3204，现已沿现有提取链恢复其完整原生角色：38 根骨骼、32 个插槽、31 个网格附件、十段动画、两个 IK、原 Animator／AnimationController、附件／阴影与 Low 外观加载器。原生角色目录扩至 68 个，根材质绑定扩至 33 项；既有 1,777 项完整模型输出和 792 项外观输出字节保持不变，仅更新对应目录。`RunTrainingMonsterMaterials` 在内置屏静音 Play Mode 通过，编辑器以 0 正常退出；四张实际画面已查看，原伤害材质节点、双实例重叠、同类角色隔离和最终 GPU 像素恢复均通过。`ProjectTools.Validate` 和静态检查通过（151,903 GUID），2,889 对来源／输出哈希一致。公共 Windows 夹具已加入第九组真实 3204；九组 Player 均以 0 退出，65 张实际画面全部查看。正式发布采用已提交源码 `1cddbd164c`，严格全资源构建与随后不带专项开关的正常构建均成功。实际运行正常构建及发布后的 `D:/Desktop/杖剑传说/杖剑传说.exe`，通过原生技能页、模拟按钮、十回合伤害测试、受伤姿态、动态结算、技能／人物两类战报、技能详情与返回设置；两次均以 0 退出，20 张实际画面全部查看。发布前核对 7,018 个资源／运行时文件的逐文件 SHA-256，桌面快捷方式保持正式入口，用户默认存档目录的两个既有文件哈希不变。以上仍不覆盖全部技能／场景与所有材质组合。
+
+- 同伴原外观材质接入在隔离完整工程中通过 Unity 导入／编译、`ProjectTools.Validate`、静态检查（152,106 GUID）与内置屏静音 Play Mode。`RunPartnerMaterials` 使用既有正式 actor 创建入口逐一检查 26 名已开放同伴的原 Low 加载、独立材质、根属性收集器、受伤闪白、重叠归还及另一实例隔离；11005 同时核对第二身体保持原材质，26 组共 104 张实际画面全部查看，GPU 像素最终恢复一致。十组公共控制器交互也以 0 退出，新增 11005 的八张实际画面已查看，原 10630 三次受击沿原伤害图初始化收集器、只改变主身体并在结束后恢复；前九组既有断言继续通过。4,122 项来源／输出哈希核对一致，359 项新增资源保留原字段与绑定；原模型、控制器、附件和已有技能骨骼载荷未被替换。本批 Windows 构建与正式发布尚未完成，不代表全部角色状态／技能材质或完整公共战斗已恢复。
 
 ## 代码与来源入口
 

@@ -37,6 +37,8 @@ namespace Zjcs.Editor
         }
         public static void RunIsolated()
         {
+            Application.runInBackground = true;
+            EditorApplication.isPaused = false;
             Environment.SetEnvironmentVariable("ZJCS_CREATION_AUTOMATION", "1");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             ConfigureBackgroundGameView();

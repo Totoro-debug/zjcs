@@ -20,13 +20,16 @@ namespace Zjcs.Offline.ProfessionUI
         internal Material Material { get; }
         internal ProfessionNativeAnimationChannels IndependentAnimation { get; }
         internal float Elapsed;
+        private readonly bool ownsMaterial;
+        private PartnerNativeBattleRendererPort appearanceRenderer;
 
         internal PartnerNativeBattleMesh(PartnerNativeBattleAssetCatalog catalog,
-            Dictionary<string, object> row, Transform node)
+            Dictionary<string, object> row, Transform node, Material originalMaterial = null)
             : this(ProfessionNativeSkeletonData.LoadPartnerBattle(catalog.Resolve<TextAsset>((string)row["package"]).bytes,
                 Int(row, "npcId")), Obj(row["renderer"]), Arr(row["skins"]).Select(value => (string)value).ToArray(),
-                node, OriginalMaterial(catalog, row), Equals(row["rendererKind"], "SkeletonAnimation"))
+                node, originalMaterial ? originalMaterial : OriginalMaterial(catalog, row), Equals(row["rendererKind"], "SkeletonAnimation"))
         {
+            ownsMaterial = !originalMaterial;
             try { ApplyRenderer(Mesh.MeshRenderer, Obj(row["meshRenderer"])); }
             catch { Dispose(); throw; }
         }
@@ -34,7 +37,7 @@ namespace Zjcs.Offline.ProfessionUI
         internal PartnerNativeBattleMesh(ProfessionNativeSkeletonData data, Dictionary<string, object> settings,
             string[] skins, Transform node, Material material, bool independentAnimation)
         {
-            Settings = settings; Material = material;
+            Settings = settings; Material = material; ownsMaterial = true;
             try
             {
                 if (Arr(Settings["separatorSlotNames"]).Count != 0 || Flag(Settings, "initialFlipX")
@@ -62,10 +65,18 @@ namespace Zjcs.Offline.ProfessionUI
         {
             Batches.Build(Skeleton.Pose, Skeleton.CreateDrawSlots(), Flag(Settings, "useClipping"),
                 Flag(Settings, "pmaVertexColors"), Number(Settings, "zSpacing"), allowConcaveClipping: true);
-            Mesh.Assign(Batches.Batches, batch => batch.Blend == 0 ? Material
+            Mesh.Assign(Batches.Batches, batch => batch.Blend == 0
+                ? appearanceRenderer && appearanceRenderer.CustomMaterialOverride.TryGetValue(Material, out var replacement) ? replacement : Material
                 : throw new NotSupportedException("Original partner non-normal material is unbound."));
+            if (appearanceRenderer) appearanceRenderer.NotifyMeshDrawn();
         }
-        public void Dispose() { Batches?.Dispose(); Destroy(Material); }
+        internal void BindAppearanceRenderer(PartnerNativeBattleRendererPort renderer)
+        {
+            if (!renderer || renderer.transform != Mesh.transform || appearanceRenderer)
+                throw new InvalidOperationException("Bind this original partner renderer once.");
+            appearanceRenderer = renderer;
+        }
+        public void Dispose() { Batches?.Dispose(); if (ownsMaterial) Destroy(Material); }
         internal static Material CreateMaterial(PartnerNativeBattleAssetCatalog catalog, Dictionary<string, object> source)
         {
             var fields = Obj(source["fields"]); var saved = Obj(fields["m_SavedProperties"]);

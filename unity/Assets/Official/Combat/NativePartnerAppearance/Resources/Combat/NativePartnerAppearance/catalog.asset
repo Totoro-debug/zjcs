@@ -1,0 +1,463 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Name: Original native partner appearance bindings
+  m_EditorClassIdentifier: ''
+  m_Script: {fileID: 11500000, guid: 776bf924cfb45286b67d303a7a0307b8, type: 3}
+  bindings:
+  - NpcId: 11001
+    EntityId: 4270
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_11001_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 060ff04cdc735d5ea2ab40bcfaded025, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 4e290071fe075c11b0f3b8cd7e8dca30, type: 2}
+  - NpcId: 11002
+    EntityId: 4271
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_11002_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 001cddeaf45051b79be70a9c900627a6, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: da54118d4e27527f9ba785c1cc12ef1d, type: 2}
+  - NpcId: 11003
+    EntityId: 4272
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_11003_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 6d8d7a840dd35380a36a5b85ee42f447, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: a8fe03c9b02d5718a02948e7740b146a, type: 2}
+  - NpcId: 11004
+    EntityId: 4273
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_11004_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: d538bf9ad2925fea97805e5689260d52, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 9741150e5857531b99ce7eaade1f6625, type: 2}
+  - NpcId: 10608
+    EntityId: 4288
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_10608_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: c30a904fe9e15cb3881d043e752cc9a6, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 6cb864bd197e50ddb22de5a0112f7f5b, type: 2}
+  - NpcId: 10708
+    EntityId: 4298
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_10708
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_10708
+      SkeletonDataName: npc_10708_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: de4a297a66505ae9a2ffa515c258b48e, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: a6fc6aa363a658f59cf8fb8128138067, type: 2}
+  - NpcId: 11005
+    EntityId: 32005
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_11005_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 78c69569bbc155d9ad89f4eecb97114d, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 825b9f0f0135556c9b8f6e30d9e1c367, type: 2}
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game/NpcModel_11005_BackDecoration
+      SkeletonDataName: npc_11005_backDecoration_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 4c1d0c17666d548fb884c9562bdbe731, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 174343da176753329fca2f13619f023b, type: 2}
+  - NpcId: 11006
+    EntityId: 32006
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_11006_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: d16b38d20d8254b680241a628582027f, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 80235cca0bdd50249437cae9adeff031, type: 2}
+  - NpcId: 11007
+    EntityId: 32007
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_11007_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 1a6d6d8892235397b5651f733bfee76c, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 788864f9d1a85994a3ffadbabb37cc86, type: 2}
+  - NpcId: 11008
+    EntityId: 32008
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_11008_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 593d7c5c17445f6ababb74ebf6f3262a, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: ad3c7ff55b8c5c2981a3491a6af88f70, type: 2}
+  - NpcId: 11009
+    EntityId: 32009
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_11009_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: b4b16f345f195821a215e35f6ad68368, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: eb89c0b7f4755c10b6d7b00b61e61a55, type: 2}
+  - NpcId: 11010
+    EntityId: 32010
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_11010_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: eaddbdd86ea0575181e2f87a8dc1679a, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: d759c0bdd2f65705aa7d0d8a5c020f94, type: 2}
+  - NpcId: 11011
+    EntityId: 32011
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_11011_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 7e117f56e82f51918e7c138f8069f866, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: a6f88df127d2565aa768579d16963823, type: 2}
+  - NpcId: 11012
+    EntityId: 32012
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_11012_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 741a51f35efa5e8881f3f4df0ab303f5, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 8809de2f03125fc6bcf8f24aadf8f14c, type: 2}
+  - NpcId: 11013
+    EntityId: 32013
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_11013_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 37a9a7d2d81853a8afefa4361ba65c5e, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 8a967af67e735b61a97219efd127408e, type: 2}
+  - NpcId: 11014
+    EntityId: 32014
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_11014_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 795b5b96f23b58969b7c30b85cf9a19d, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 120edea5854157349367b1ec42bfbeee, type: 2}
+  - NpcId: 11015
+    EntityId: 32015
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11015
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11015
+      SkeletonDataName: npc_11015_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: f97848a01b125b1ca986b235db63b735, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 2fcbf56c127a502590383d70a5076511, type: 2}
+  - NpcId: 11016
+    EntityId: 32016
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11016
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11016
+      SkeletonDataName: npc_11016_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 7e704775c2145330ace72d054b13c7df, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 5a0afbd5e3345d12ba2560f231983287, type: 2}
+  - NpcId: 11017
+    EntityId: 32017
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11017
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11017
+      SkeletonDataName: npc_11017_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 7616ac1824ec5afba34affdcd00dc305, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: b504e9ebbc4156609b8088dbafa79902, type: 2}
+  - NpcId: 11018
+    EntityId: 32018
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/PlayerModel_Game
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/PlayerModel_Game
+      SkeletonDataName: npc_11018_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: ab16c1f154e65cdf8cb2a215e15d5d8f, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: fed2df9a648e52629f3301f91d10b29c, type: 2}
+  - NpcId: 11019
+    EntityId: 32019
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11019
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11019
+      SkeletonDataName: npc_11019_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: add11e40bd8d56fea24966b0d8e3a6ae, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 1c84d2aeb0d252d988b9ea2aa8fb7799, type: 2}
+  - NpcId: 11020
+    EntityId: 32020
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11020
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11020
+      SkeletonDataName: npc_11020_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 351d4f9272105552a392f2d0d82ffde7, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: a4cbee3d31085251a279bb4102939c4f, type: 2}
+  - NpcId: 11021
+    EntityId: 32021
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11021
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11021
+      SkeletonDataName: npc_11021_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 1e084208b8a95602bd38eb44bd110b3f, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 0cc56a35c8f55277b335be50a6872667, type: 2}
+  - NpcId: 11022
+    EntityId: 32022
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11022
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11022
+      SkeletonDataName: npc_11022_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 352a926a01375357832ac4aab5f57ed9, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 0c9b1f10ff3e5a1191859395ffd07b7f, type: 2}
+  - NpcId: 11024
+    EntityId: 32024
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11024
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11024
+      SkeletonDataName: npc_11024_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 2b845d0a2a0859ec9c221adf23e82cd6, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: ded321599ec252aea70dd37a2e40454f, type: 2}
+  - NpcId: 11025
+    EntityId: 32025
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11025
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11025
+      SkeletonDataName: npc_11025_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: c0187944a1ac510f926ebae3cd714463, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: e1ab1b55b9f95ee79a7f6ae8e391919d, type: 2}
+  - NpcId: 11026
+    EntityId: 32026
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11026
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11026
+      SkeletonDataName: npc_11026_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: d402d47dc7415d839616c5fc773272a2, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 2acfd881212b5bfc9a47dfcacdcf37a8, type: 2}
+  - NpcId: 11027
+    EntityId: 32027
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11027
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11027
+      SkeletonDataName: npc_11027_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 73416fab1f2b5547948d32336353cd64, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 475190b1bd8d50fc876fac7bf0efd741, type: 2}
+  - NpcId: 11033
+    EntityId: 32033
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11033
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11033
+      SkeletonDataName: npc_11033_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: e08e8f8bffeb5d62ac64203c07350d19, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: f3c125a326dd5444a939d91b25bda4b7, type: 2}
+  - NpcId: 11038
+    EntityId: 32038
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11038
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11038
+      SkeletonDataName: npc_11038_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 361c8159301b595c9e4fa3036bff7537, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 76e80b46e3ae5b4a946b9eacc7a9aae4, type: 2}
+  - NpcId: 11039
+    EntityId: 32039
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11039
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11039
+      SkeletonDataName: npc_11039_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: c554fa32ec1f5cc092b1f186cc680040, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 209ba0a221d6506bbcb5ca9260733660, type: 2}
+  - NpcId: 11040
+    EntityId: 32040
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11040
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11040
+      SkeletonDataName: npc_11040_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 8166095345e25f91b0bd9dca9a02212a, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 3acb84d113285bfe8b4735455d8d8935, type: 2}
+  - NpcId: 11041
+    EntityId: 32041
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11041
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11041
+      SkeletonDataName: npc_11041_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: fadb49737d3e52eab7c43231143ed0bb, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: 4673077cb18c52099bfe5cf980352dcb, type: 2}
+  - NpcId: 11042
+    EntityId: 32042
+    PropertyPath: ''
+    AppearanceTargetPath: 0templateFightNpc_view/body/NpcModel_11042
+    PropertyEnabled: true
+    Renderers:
+    - Path: 0templateFightNpc_view/body/NpcModel_11042
+      SkeletonDataName: npc_11042_SkeletonData
+      Enabled: true
+      LevelOfResolution: 1
+      Textures: {fileID: 11400000, guid: 0a71d6fb3f38558e941f35d34f9a088c, type: 2}
+      Materials:
+      - {fileID: 2100000, guid: cc1345b69c4e52409d35c83070ba362e, type: 2}

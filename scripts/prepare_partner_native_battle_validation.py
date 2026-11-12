@@ -44,6 +44,16 @@ def main():
     native_assets = ROOT / "unity/Assets/Official/Combat/NativePartnerAssets"
     if native_assets.is_dir():
         shutil.copytree(native_assets, project / "Assets/Official/Combat/NativePartnerAssets")
+    shutil.copytree(ROOT / "unity/Assets/Official/Combat/NativePartnerAppearance",
+                    project / "Assets/Official/Combat/NativePartnerAppearance")
+    for relative in (
+        "Assets/Official/Combat/SceneCharacterAppearance/Resources/Combat/SceneAppearance/AppearanceConfig.asset",
+        "Assets/Official/ProfessionUI/WeaponTextureLoader/appearance-asset-manager-config.asset",
+    ):
+        target = project / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        for suffix in ("", ".meta"):
+            shutil.copy2(ROOT / "unity" / (relative + suffix), Path(str(target) + suffix))
     shader_cache = ROOT / ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders"
     shader_receipt = json.loads((shader_cache / "source-manifest.json").read_bytes())
     shader, = [row for row in shader_receipt["shaders"] if row["source"]["object_sha256"] ==

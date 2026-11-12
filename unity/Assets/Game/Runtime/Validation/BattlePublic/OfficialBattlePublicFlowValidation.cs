@@ -17,6 +17,7 @@ using Zjcs.Presentation.Combat;
 using Zjcs.Presentation.Character;
 using Zjcs.Presentation.CharacterCreation;
 using Zjcs.Official.BattleDamageUI;
+using Zjcs.Official.BattleMaterialPlayables;
 
 
 namespace Zjcs.Validation.Combat
@@ -24,7 +25,7 @@ namespace Zjcs.Validation.Combat
     // Shared interaction steps for the Editor and the Windows Player.
     public static class OfficialBattlePublicFlowValidation
     {
-        private enum Scenario { Player, Monster, SkillCost, Lifesteal, StatusActions, Critical, Block, SpecialAppearance, TrainingMonster }
+        private enum Scenario { Player, Monster, SkillCost, Lifesteal, StatusActions, Critical, Block, SpecialAppearance, TrainingMonster, PartnerAppearance }
         public static IEnumerator Steps(Action<string> capture)
         {
             foreach (Scenario scenario in Enum.GetValues(typeof(Scenario)))
@@ -38,7 +39,8 @@ namespace Zjcs.Validation.Combat
             bool hemophagia = scenario == Scenario.Lifesteal, statusActions = scenario == Scenario.StatusActions;
             bool specialAppearance = scenario == Scenario.SpecialAppearance;
             bool trainingMonster = scenario == Scenario.TrainingMonster;
-            string prefix = trainingMonster ? "public-training-monster" : specialAppearance ? "public-special-appearance" : block ? "public-block" : critical ? "public-critical" : statusActions ? "public-status-actions" : hemophagia ? "public-lifesteal" : skillCost ? "public-cost" : monsterActs ? "public-monster" : "public-movement";
+            bool partnerAppearance = scenario == Scenario.PartnerAppearance;
+            string prefix = partnerAppearance ? "public-partner-appearance" : trainingMonster ? "public-training-monster" : specialAppearance ? "public-special-appearance" : block ? "public-block" : critical ? "public-critical" : statusActions ? "public-status-actions" : hemophagia ? "public-lifesteal" : skillCost ? "public-cost" : monsterActs ? "public-monster" : "public-movement";
             var root = new GameObject("Public movement battle verification");
             var world = new GameObject("Battle world");
             world.transform.SetParent(root.transform, false);
@@ -87,6 +89,12 @@ namespace Zjcs.Validation.Combat
                 var monster = Unit(2, 2, 2, 6, 4, monsterActs ? 100 : 1);
                 monster.MonsterId = monster.MonsterTemplateId = trainingMonster ? 3204 : specialAppearance ? 3803 : 3206;
                 monster.RoleEntityId = monster.MonsterId;
+                if (partnerAppearance)
+                {
+                    monster.MonsterId = monster.MonsterTemplateId = 0;
+                    monster.NpcClassId = 11005;
+                    rules.BindNpcRoleEntity(monster, Convert.ToInt32(PartnerNativeBattleAssetCatalog.Load().Find(11005)["entityId"]));
+                }
                 var actor = monsterActs ? monster : player;
                 var target = monsterActs ? player : monster;
                 if (block || critical)
@@ -284,7 +292,19 @@ namespace Zjcs.Validation.Combat
                             + "; copies=" + string.Join(",", originalAppearance.RenderExistingMeshes.Select(copy =>
                                 copy.name + "/" + ((Behaviour)copy).enabled + "/" + copy.gameObject.activeInHierarchy)) : " Missing appearance."));
                 }
-                var hurtAnimator = hurtPlayer ? hurtPlayer.GetComponent<Animator>() : hurtMonster ? hurtMonster.Animator : null;
+                var hurtPartner = partnerAppearance ? targetEntity.GetComponentsInChildren<PartnerNativeBattleRendererPort>(true)
+                    .Single(port => port.GetComponent<Animator>()) : null;
+                var partnerMaterials = hurtPartner ? hurtPartner.GetComponent<AppearanceRendererLite>().GetIndependentMaterials() : Array.Empty<Material>();
+                var partnerSecondary = hurtPartner ? targetEntity.GetComponentsInChildren<AppearanceRendererLite>(true)
+                    .Where(appearance => appearance.transform != hurtPartner.transform)
+                    .SelectMany(appearance => appearance.GetIndependentMaterials()).ToArray() : Array.Empty<Material>();
+                var partnerDefaults = partnerMaterials.Select(material => material.GetFloat("_HitEffectBlend")).ToArray();
+                var secondaryDefaults = partnerSecondary.Select(material => material.GetFloat("_HitEffectBlend")).ToArray();
+                if (partnerAppearance) Require(partnerMaterials.Length == 1 && partnerSecondary.Length == 1
+                    && hurtPartner.GetComponentInParent<MeshMaterialProperty>(),
+                    "Original two-renderer NPC and root material collector were not created by the public controller.");
+                var hurtAnimator = hurtPlayer ? hurtPlayer.GetComponent<Animator>() : hurtMonster ? hurtMonster.Animator
+                    : hurtPartner ? hurtPartner.GetComponent<Animator>() : null;
                 // Player drawing is owned by the original separator's visible
                 // parts; its disabled main renderer retains an earlier mesh.
                 var hurtMeshes = hurtPlayer
@@ -347,7 +367,7 @@ namespace Zjcs.Validation.Combat
                 bool nativeFloatSeen = false;
                 bool costFloatSeen = false;
                 bool derivedFloatSeen = false;
-                bool nativeHurtSeen = false, nativeHurtPoseSeen = false;
+                bool nativeHurtSeen = false, nativeHurtPoseSeen = false, partnerMaterialSeen = false;
                 var hurtStates = new HashSet<string>();
                 bool statusFloatSeen = false, disperseFloatSeen = false, immunityFloatSeen = false;
                 var slotBinding = OfficialBattleSkillSlotBindings.Load().slots[0];
@@ -366,6 +386,13 @@ namespace Zjcs.Validation.Combat
                         captureNativeHurt = !nativeHurtSeen && nativeHurtPoseSeen;
                         nativeHurtSeen |= captureNativeHurt;
                     }
+                    bool capturePartnerMaterial = partnerAppearance && !partnerMaterialSeen && partnerMaterials
+                        .Any(material => material.IsKeywordEnabled("_HITEFFECT") && material.GetFloat("_HitEffectBlend") > 0);
+                    partnerMaterialSeen |= capturePartnerMaterial;
+                    if (capturePartnerMaterial) Require(hurtPartner.GetComponentInParent<MeshMaterialProperty>().Valid,
+                        "The original damage graph did not initialize the NPC material collector.");
+                    if (partnerAppearance) Require(partnerSecondary.Select(material => material.GetFloat("_HitEffectBlend")).SequenceEqual(secondaryDefaults),
+                        "The original root collector must leave the NPC secondary renderer independent.");
                     bool captureNativeFloat = false;
                     if (statusActions) foreach (var ui in world.GetComponentsInChildren<DamageCustomActionUI>())
                     {
@@ -449,6 +476,7 @@ namespace Zjcs.Validation.Combat
                         yield return null; // Unity accepts one ScreenCapture request per rendered frame.
                     }
                     if (captureNativeHurt) { capture(prefix + "-native-hurt"); yield return null; }
+                    if (capturePartnerMaterial) { capture(prefix + "-native-material"); yield return null; }
                     if (captureCostFloat) { capture(prefix + "-native-cost-ui"); yield return null; }
                     if (captureDerivedFloat) { capture(prefix + "-derived-cure-ui"); yield return null; }
                     if (captureStatusFloat) { capture(prefix + "-native-action-ui"); yield return null; }
@@ -463,6 +491,8 @@ namespace Zjcs.Validation.Combat
                 if (!statusActions) Require(nativeHurtSeen && nativeHurtPoseSeen,
                     "The original damage graph did not drive the receiving hurt/block state and native skeleton pose: "
                         + hurtAnimator.runtimeAnimatorController.name + " [" + string.Join("; ", hurtStates) + "].");
+                if (partnerAppearance) Require(partnerMaterialSeen && partnerMaterials.Select(material => material.GetFloat("_HitEffectBlend")).SequenceEqual(partnerDefaults),
+                    "The actual NPC damage graph must flash its primary original material and restore it after the hit.");
                 if (skillCost) Require(costFloatSeen, "The common battle controller did not display the original skill cost UI.");
                 if (hemophagia) Require(derivedFloatSeen && cureCastIdentities.Count == 3
                     && cureHitIdentities.Count == 3 && cureDamageIdentities.Count == 3,

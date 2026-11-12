@@ -16,10 +16,16 @@ namespace Zjcs.Offline.ProfessionUI
         private float spacing;
         private string dataName;
         private MeshRenderer visibleRenderer;
+        private int drawVersion;
         public Component Component => this;
         public IProfessionAppearanceSkeleton Skeleton => skeleton;
         IProfessionFollowerSkeleton IProfessionFollowerAnimation.Skeleton => skeleton;
         public string SkeletonDataName => dataName;
+        // Original attachment records name the asset; AppearanceAddressUtils
+        // addresses the skeleton data's name, without the asset suffix.
+        string IProfessionAppearanceRendererLite.SkeletonDataName => dataName != null
+            && dataName.EndsWith("_SkeletonData", StringComparison.Ordinal)
+                ? dataName.Substring(0, dataName.Length - "_SkeletonData".Length) : dataName;
         public Dictionary<Material, Material> CustomMaterialOverride { get; } = new Dictionary<Material, Material>();
         public int SeparatorSlotCount => 0;
         public bool UseCustomZSpacing => false;
@@ -51,6 +57,16 @@ namespace Zjcs.Offline.ProfessionUI
             if (!ReferenceEquals(skin, skeleton.Skin)) throw new NotSupportedException("Bind original partner skin materials before switching skins.");
             yield return material;
         }
-        public void UpdateAnimationAndMesh() { update(); OnCustomDemandLoading?.Invoke(this); }
+        public void UpdateAnimationAndMesh()
+        {
+            int previous = drawVersion;
+            update();
+            if (drawVersion == previous) OnCustomDemandLoading?.Invoke(this);
+        }
+        internal void NotifyMeshDrawn()
+        {
+            unchecked { drawVersion++; }
+            OnCustomDemandLoading?.Invoke(this);
+        }
     }
 }

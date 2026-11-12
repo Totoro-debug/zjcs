@@ -37,6 +37,13 @@ namespace Zjcs.Editor.Combat
         private static IEnumerator PetMaterialSteps()
         {
             AudioListener.volume = 0;
+            if (SessionState.GetBool(Key + ".partnerMaterials", false))
+            {
+                SessionState.EraseBool(Key + ".partnerMaterials");
+                var partners = PartnerMaterialSteps();
+                while (partners.MoveNext()) yield return partners.Current;
+                yield break;
+            }
             int[] entities = { 3803, 3181, 3182, 3183, 3198, 3204, 3206, 3207, 3331, 3481, 3620, 3709,
                 3903, 3904, 3905, 3909, 3910, 3911, 3912, 3913, 3914, 3915, 3917, 3920,
                 3923, 3925, 3948, 3949, 9201, 9202, 9203, 9215, 9204, 9205, 9206, 9207, 9208, 9209,
