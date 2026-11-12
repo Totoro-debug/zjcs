@@ -67,6 +67,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     OfflineHomeCurrencyPlayer profilePlayer;OfflineHomeCurrencyExchange exchange;
     OfflineHomeQuickBuyCounters profileQuickCounters;DateTime quickCounterTime;
     OfflineHomeMoneyQuickBuy moneyQuickBuy;string lastMoneyBuyRequest;int moneyBuys;
+    OfflineHomeCurrencyWindowPlayer windowPlayer;
     FontAssetFontService fonts;ScreenAdaptService screen;OfflineHomeTopBar topBar;OfflinePartnerUiSoundScope soundScope;IDisposable metrics;
     GameObject active;WorldPopupWindow popup;WorldConfirmDialog confirmation;Material blur;
     readonly Dictionary<int,long> counts=new Dictionary<int,long>{{1,100},{2,500},{15,5}};
@@ -138,6 +139,9 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         CheckQuickBuyCounters();
         profileQuickCounters=new OfflineHomeQuickBuyCounters(assets.CreateQuickBuyCalendar(8));
         quickCounterTime=new DateTime(2026,11,9,0,0,0,DateTimeKind.Utc);
+        windowPlayer=new OfflineHomeCurrencyWindowPlayer(profile,profilePlayer,profileQuickCounters,
+            (id,count)=>new ItemData(id,new OfflinePartnerItemInfo(OfficialPartnerAssetCatalog.LoadDefault(),id),count),IsBanCostItem,()=>quickCounterTime);
+        CheckWindowPlayer();
         Require(profile.ApplyInventoryTransaction("quick-counter-tier:"+Guid.NewGuid().ToString("N"),save=>profileQuickCounters.AddBuyCount(save.Player,EQuickBuyRefreshType.Daily,1,4,quickCounterTime)).IsApplied,"persist original second price tier");
         yield return Open(windows.ShowQuickBuy(1).gameObject);
         quick=active.GetComponent<QuickBuyDialog>();cost=Field<PlayerCostMoneyContent>(quick,"mCostMoneyContent");
@@ -169,6 +173,8 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         Click(pay.CancelBtn);yield return WaitClosed();
         active=windows.ShowExchange().gameObject;windows.CloseExchange();windows.CloseExchange();Require(!active&&windows.WindowCount==0,"closing a preparing window cancels its mask coroutine once");
         yield return Open(windows.ShowExchange().gameObject);windows.Dispose();windows.Dispose();Require(!active&&windows.WindowCount==0&&subscribers==0&&awardHandlers.Count==0,"disposing active native windows releases all window observers");
+        Require(Field<Delegate>(windowPlayer,"OnItemCountUpdate")==null&&Field<Delegate>(windowPlayer,"OnAutoIncrease")==null,"native windows release shared player event projections");windowPlayer.Dispose();windowPlayer.Dispose();
+        bool disposedRead=false;try{windowPlayer.GetItemAmount(1);}catch(ObjectDisposedException){disposedRead=true;}Require(disposedRead&&profilePlayer.GetItemAmount(1)==GetItemAmount(1),"disposed window-player adapter leaves external shared quantities alive");
         Require(Field<Delegate>(profilePlayer,"OnItemCountUpdate").GetInvocationList().Length==1&&Field<Delegate>(profilePlayer,"OnAutoIncreaseItemDataUpdate")==null,"actual profile observers release before adapter disposal");profilePlayer.Dispose();profilePlayer=null;
         windows.Dispose();windows.Dispose();topBar.Dispose();Object.Destroy(topBarAssets);yield return null;fonts.Dispose();soundScope.Dispose();screen.Dispose();metrics.Dispose();Require(errors==0&&sounds>0&&subscribers==0,"runtime, audio and disposal checks");
     }
@@ -178,7 +184,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         var creation=CharacterCreationOfflineService.OpenDefault(root);profileSlot=creation.CreateSlot();var draft=creation.OpenDraft(profileSlot);draft.name="兑换验证";
         Require(creation.TryCreateCharacter(profileSlot,draft,out string error),error);slots=new ProfileSlotCatalog(root);profile=OfflineMainlineProgressSession.OpenCharacter(slots,profileSlot);
         SetBalance(1,100);SetBalance(2,500);SetBalance(15,5);
-        profilePlayer=new OfflineHomeCurrencyPlayer(profile);profilePlayer.OnItemCountUpdate+=(item,previous,source)=>changed?.Invoke(new ItemData(item.Id,new IconInfo(assets.ItemRow(item.Id))),previous,source);
+        profilePlayer=new OfflineHomeCurrencyPlayer(profile);profilePlayer.OnItemCountUpdate+=(item,previous,source)=>changed?.Invoke(new ItemData(item.Id,new IconInfo(assets.ItemRow(item.Id)),item.Count),previous,source);
         exchange=new OfflineHomeCurrencyExchange(profile,assets);
     }
     void SetBalance(int id,long count)
@@ -234,6 +240,19 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         SetBalance(1,money);SetBalance(2,diamonds);
         Debug.Log("HOME_QUICK_BUY_COUNTERS_PASSED: original periods, exact reset boundaries, nonmutating reads, whole-bucket clearing, real-profile restoration, atomic receipt and disk-failure rollback. Production timezone and purchase endpoint remain pending.");
     }
+    void CheckWindowPlayer()
+    {
+        Require(windowPlayer.Level==profile.Save.Player.Level&&windowPlayer.SubRank==profile.Save.Player.SubRank&&windowPlayer.GetItemAmount(57)==profilePlayer.GetItemAmount(57),"window player reads actual progression and shared natural recovery");
+        Require(windowPlayer.HasItem(1,100)&&!windowPlayer.HasItem(1,101)&&windowPlayer.HasItem(-1,0),"selected original HasItem comparison");
+        banCost=true;Require(windowPlayer.IsBanCostItem(2),"window-player ban-cost dependency");banCost=false;
+        int updates=0;Action<IProfessionItemData,long,object> changed=(item,previous,source)=>{Require(item.Id==1&&item.Count==101&&item.Info.ClassId==1&&previous==100&&source==null,"committed quantity event projection");updates++;};
+        windowPlayer.OnItemCountUpdate+=changed;SetBalance(1,101);Require(updates==1,"one real inventory notification");windowPlayer.OnItemCountUpdate-=changed;SetBalance(1,100);
+        int parameters=0;Action<HomeCurrencyAutoIncreaseEvent> increase=item=>{Require(item.ItemId==57,"actual auto-increase parameter event identity");parameters++;};
+        windowPlayer.OnAutoIncrease+=increase;double speed=profile.Save.Player.Inventory.Single(row=>row.ItemId==57).AutoIncrease.IncreaseSpeed;
+        Require(profile.ApplyInventoryTransaction("window-player-parameter:"+Guid.NewGuid().ToString("N"),save=>save.Player.Inventory.Single(row=>row.ItemId==57).AutoIncrease.IncreaseSpeed=speed+1).IsApplied,"change isolated actual stamina parameter");profilePlayer.SynchronizeCommittedPlayer();Require(parameters==1,"one actual parameter notification");windowPlayer.OnAutoIncrease-=increase;
+        Require(profile.ApplyInventoryTransaction("window-player-parameter-restore:"+Guid.NewGuid().ToString("N"),save=>save.Player.Inventory.Single(row=>row.ItemId==57).AutoIncrease.IncreaseSpeed=speed).IsApplied,"restore isolated stamina parameter");profilePlayer.SynchronizeCommittedPlayer();
+        Debug.Log("HOME_CURRENCY_WINDOW_PLAYER_PASSED: real progression, shared quantity/natural recovery, original ownership comparison, committed item/parameter notifications and explicit ban-cost dependency.");
+    }
     IEnumerator ExerciseMoneyQuickBuy()
     {
         var configuration=OfficialCurrentHomeRuleAssetCatalog.LoadDefault();
@@ -281,7 +300,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     void Post(AudioClip clip,GameObject owner){Require(clip&&owner,"original window PCM binding");sounds++;var source=owner.GetComponent<AudioSource>();if(!source)source=owner.AddComponent<AudioSource>();source.volume=0;source.PlayOneShot(clip);}
     public void Close(GameObject window){Require(window==active,"close current original window");calls.Add("close");windows.Close(window);}
     IEnumerator WaitClosed(){var deadline=Time.time+5;while(active){Require(Time.time<deadline,"original hide completes");yield return null;}yield return null;}
-    void Notify(int id)=>changed?.Invoke(new ItemData(id,new IconInfo(assets.ItemRow(id))),0,null);
+    void Notify(int id)=>changed?.Invoke(new ItemData(id,new IconInfo(assets.ItemRow(id)),counts[id]),0,null);
     void Click(Button button,Vector2? position=null)
     {
         Canvas.ForceUpdateCanvases();Require(button&&button.isActiveAndEnabled&&button.interactable,"native enabled button");var rect=(RectTransform)button.transform;pointer=position??RectTransformUtility.WorldToScreenPoint(cameraUi,rect.TransformPoint(rect.rect.center));var data=new PointerEventData(events){position=pointer,button=PointerEventData.InputButton.Left};var hits=new List<RaycastResult>();events.RaycastAll(data,hits);Require(hits.Count>0&&ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject)==button.gameObject,"native unobscured first pointer: "+button.name);ExecuteEvents.Execute(button.gameObject,data,ExecuteEvents.pointerDownHandler);ExecuteEvents.Execute(button.gameObject,data,ExecuteEvents.pointerUpHandler);ExecuteEvents.Execute(button.gameObject,data,ExecuteEvents.pointerClickHandler);
@@ -294,7 +313,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     public bool HasItem(int id,long count)=>GetItemAmount(id)>=count;public bool IsBanCostItem(int id)=>banCost;
     public long QuickBuyGetItemBuyCount(int id,EQuickBuyRefreshType type)=>profileQuickCounters==null?alreadyBought:profileQuickCounters.GetBuyCount(profile.Save.Player,id,type,quickCounterTime);
     public event Action<IProfessionItemData,long,object> OnItemCountUpdate {add{changed+=value;subscribers++;}remove{changed-=value;subscribers--;}}
-    IHomeCurrencyWindowPlayer IHomeCurrencyWindowServices.Player=>this;IProfessionItemPlayer IProfessionItemIconContext.Player=>this;
+    IHomeCurrencyWindowPlayer IHomeCurrencyWindowServices.Player=>(IHomeCurrencyWindowPlayer)windowPlayer??this;IProfessionItemPlayer IProfessionItemIconContext.Player=>this;
     public int MoneyId=>assets.MoneyId;public int DiamonId=>assets.DiamonId;public int FlareStarId=>assets.FlareStarId;public HomeCurrencyPaySettings Pay=>assets.Pay;
     public HomeCurrencyWindowItemInfo GetItemInfo(int id)=>assets.Item(id);public QuickBuyInfo GetQuickBuyInfo(int id)=>assets.QuickBuy(id);
     public long GetItemCountLimit(int id)=>assets.CountLimit(id);public string GetItemNameKey(int id)=>"item_"+id+"_name";
@@ -304,7 +323,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     public ItemIcon GetIcon(HomeCurrencyWindowItemInfo item,Transform slot){var icon=windows.GetIcon(item,slot);borrowedIcons++;return icon;}
     public void RecycleIcon(ItemIcon icon){windows.RecycleIcon(icon);borrowedIcons--;}
     public IDisposable SubscribeEnterNewDay(Action<HomeCurrencyEnterNewDay> callback){day+=callback;return new Release(()=>day-=callback);}
-    public IDisposable SubscribeAutoIncrease(Action<HomeCurrencyAutoIncreaseEvent> callback){increase+=callback;return new Release(()=>increase-=callback);}
+    public IDisposable SubscribeAutoIncrease(Action<HomeCurrencyAutoIncreaseEvent> callback){var player=windowPlayer;if(player!=null){player.OnAutoIncrease+=callback;return new Release(()=>player.OnAutoIncrease-=callback);}increase+=callback;return new Release(()=>increase-=callback);}
     public UniTask<bool> CheckBuyLimitCountItem(int id,long count){calls.Add("limit:"+id+":"+count);return UniTask.FromResult(allowLimit);}
     public void PlayerQuickBuy(int id,long count){calls.Add("buy:"+id+":"+count);if(moneyQuickBuy==null)return;Require(id==assets.MoneyId,"bound home money purchase");lastMoneyBuyRequest="native-money-"+(++moneyBuys);var result=moneyQuickBuy.Buy(lastMoneyBuyRequest,count);if(result.IsApplied)profilePlayer.SynchronizeCommittedPlayer();else calls.Add("money-buy-rejected");}
     public void PlayerDiamonChange(long count,Action success){exchanges++;calls.Add("exchange:"+count);lastExchangeRequest="native-confirm-"+exchanges;var result=exchange.Exchange(lastExchangeRequest,count);if(result.IsApplied){profilePlayer.SynchronizeCommittedPlayer();success();}else calls.Add("exchange-rejected");}
@@ -341,7 +360,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     sealed class Counter:IPlayerItemUICountProvider {readonly HomeCurrencyWindowsNativeRunner owner;readonly int id;public Counter(HomeCurrencyWindowsNativeRunner owner,int id){this.owner=owner;this.id=id;}public long Count=>owner.GetItemAmount(id);public event Action<long,bool> OnItemCountUpdate;public void Init(){}public void Release(){}}
     sealed class Release:IDisposable{Action action;public Release(Action value){action=value;}public void Dispose(){var value=action;action=null;value?.Invoke();}}
     sealed class IconInfo:IProfessionItemInfo {readonly JObject row;public IconInfo(JObject value){row=value;}public int ClassId=>(int)row["ClassId"];public string Icon=>(string)row["RawIcon"];public string IconEffect=>(string)row["IconEffect"];public Quality Quality=>(Quality)(int)row["Quality"];public bool CanOverlap=>(bool)row["CanOverlap"];public object GetFakeIcon()=>null;}
-    sealed class ItemData:IProfessionItemData{public ItemData(int id,IProfessionItemInfo info){Id=id;Info=info;}public int Id{get;}public long Count=>0;public IProfessionItemInfo Info{get;}public Quality GetQuality()=>Info.Quality;public bool CanExpire()=>false;}
+    sealed class ItemData:IProfessionItemData{public ItemData(int id,IProfessionItemInfo info,long count){Id=id;Info=info;Count=count;}public int Id{get;}public long Count{get;}public IProfessionItemInfo Info{get;}public Quality GetQuality()=>Info.Quality;public bool CanExpire()=>false;}
     sealed class Metrics:IScreenMetrics{public int Width=>608;public int Height=>1080;public ScreenOrientation Orientation=>ScreenOrientation.Portrait;public Rect SafeArea=>new Rect(0,0,608,1080);}
     sealed class Language:ILocalizationTextService
     {

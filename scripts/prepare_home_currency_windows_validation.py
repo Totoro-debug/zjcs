@@ -109,7 +109,8 @@ def transfer(work,project,install=False):
             (fixture,factory,icon_manager,ui_utils,confirm_proof,confirm_prefab,confirm_catalog,ROOT/confirm_runtime['path'],
              factory.parents[1]/'common-source/Common/GameSettingsParser.cs',factory.with_name('QuickBuyUtils.cs'),
              factory.parents[1]/'common-source/Common/PlayerQuickBuyRequest.cs',
-             factory.parents[1]/'common-source/Common/PlayerQuickBuyResponse.cs')}
+             factory.parents[1]/'common-source/Common/PlayerQuickBuyResponse.cs',
+             factory.parents[1]/'common-source/Common/PlayerItemManagerExt.cs')}
         (ROOT/'assets/reference/home-currency-windows-native-source-manifest.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
     print('Original currency-window transfer:',len(outputs),'outputs;',len(reused),'existing',flush=True)
     return prefab_path
