@@ -13,6 +13,7 @@ namespace Zjcs.Offline.ProfessionUI
             public int EntityId;
             public string SkeletonName, RendererPath, MaterialPropertyPath;
             public bool AppearanceEnabled, MaterialPropertyEnabled;
+            public bool MaterialPropertyHasMeshRenderer = true;
             public ProfessionNativeWeaponTextureResources Textures;
             public Material[] Materials;
         }

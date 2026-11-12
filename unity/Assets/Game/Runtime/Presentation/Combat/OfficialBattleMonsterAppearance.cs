@@ -48,7 +48,7 @@ namespace Zjcs.Presentation.Combat
                 appearance.Configure(adapter);
                 appearance.enabled = binding.AppearanceEnabled;
                 property = propertyNode.gameObject.AddComponent<MeshMaterialProperty>();
-                property.MeshRenderer = renderer.GetComponent<MeshRenderer>();
+                property.MeshRenderer = binding.MaterialPropertyHasMeshRenderer ? renderer.GetComponent<MeshRenderer>() : null;
                 property.SetAppearanceTarget(appearance.gameObject);
                 property.enabled = binding.MaterialPropertyEnabled;
             }

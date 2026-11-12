@@ -69,6 +69,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".scenePlayerAppearance", false);
             SessionState.SetBool(Key + ".scenePlayerAnimator", false);
             SessionState.SetBool(Key + ".statusMaterials", false);
+            SessionState.SetBool(Key + ".petMaterials", false);
             SessionState.SetBool(Key + ".statusPause", false);
             SessionState.SetBool(Key + ".statusFrozen", false);
             SessionState.SetBool(Key + ".spineFollowers", false);
@@ -137,7 +138,8 @@ namespace Zjcs.Editor.Combat
 
         private static IEnumerator Verify()
         {
-            var steps = SessionState.GetBool(Key + ".statusMaterials", false) ? SceneStatusMaterialSteps()
+            var steps = SessionState.GetBool(Key + ".petMaterials", false) ? PetMaterialSteps()
+                : SessionState.GetBool(Key + ".statusMaterials", false) ? SceneStatusMaterialSteps()
                 : SessionState.GetBool(Key + ".scenePlayerAnimator", false) ? ScenePlayerAnimatorSteps()
                 : SessionState.GetBool(Key + ".scenePlayerAppearance", false) ? ScenePlayerAppearanceSteps()
                 : SessionState.GetBool(Key + ".sceneCharacterAppearance", false) ? SceneCharacterAppearanceSteps()
@@ -166,7 +168,9 @@ namespace Zjcs.Editor.Combat
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log(SessionState.GetBool(Key + ".sceneSkillMotions", false)
+                Debug.Log(SessionState.GetBool(Key + ".petMaterials", false)
+                    ? "Original actor appearance material Play Mode passed: 39 actual native models, original nullable references, independent materials, original damage node, overlap, peer isolation and exact GPU restoration."
+                    : SessionState.GetBool(Key + ".sceneSkillMotions", false)
                     ? "Native complete current motion catalog and real original skill playable/pose rendering passed; explicit pre-physics diagnostics only, full physics, skill prefabs and production battle/Player integration remain required."
                     : SessionState.GetBool(Key + ".sceneBoundMixNext", false)
                     ? "Native bound MixNext passed actual LateUpdate and animation-and-mesh drawing with original part notifications; pre-physics fixture only, full physics and production battle/Player integration remain required."

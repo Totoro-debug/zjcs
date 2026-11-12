@@ -115,6 +115,8 @@ def build(entity_ids):
         input_file(path)
     validation = ROOT / 'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSummonGenerationValidation.cs'
     input_file(validation)
+    for name in ('OfficialBattleAnimatorPlaybackAcceptance.cs', 'OfficialBattleAnimatorPlaybackAcceptance.PetMaterials.cs'):
+        input_file(ROOT / 'unity/Assets/Game/Editor/Combat/AnimatorPlayback' / name)
     try:
         locations = read_asset_manifest(apk.source.manifest_bytes('DefaultPackage', apk.archive))
         by_path = {row['path']: row for row in locations}
@@ -126,7 +128,10 @@ def build(entity_ids):
         for entity_id in sorted(set(entity_ids)):
             model = models[entity_id]
             components = {}
-            for obj in apk.objects(f'prefabs_ecentity_fight_fightmonster_{entity_id}'):
+            families = [family for family in ('fightmonster', 'fightpet')
+                if f'defaultpackage_assets_prefabs_ecentity_fight_{family}_{entity_id}.bundle' in apk.index]
+            assert len(families) == 1, ('Review original actor prefab family.', entity_id)
+            for obj in apk.objects(f'prefabs_ecentity_fight_{families[0]}_{entity_id}'):
                 if obj.type.name == 'MonoBehaviour':
                     name = obj.read(check_read=False).m_Script.read().m_ClassName
                     components.setdefault(name, []).append(obj)
@@ -138,7 +143,8 @@ def build(entity_ids):
             assert not prop['mAppearanceRenderer']['m_PathID']
             assert pointer(property_obj, prop['mAppearanceRendererLite']).path_id == appearance_obj.path_id
             mesh_obj = pointer(property_obj, prop['MeshRenderer'])
-            assert mesh_obj.read_typetree() == model['meshRenderer']
+            if mesh_obj is not None:
+                assert mesh_obj.read_typetree() == model['meshRenderer']
             property_path = transform_path(property_obj.read(check_read=False).m_GameObject)
             renderer_path = transform_path(appearance_obj.read(check_read=False).m_GameObject)
             assert property_path == str(entity_id) and renderer_path.startswith(str(entity_id) + '/')
@@ -224,7 +230,8 @@ def build(entity_ids):
                 runtime / 'Offline/ProfessionUI/ProfessionNativeWeaponTextureResources.cs', dict(loaderPath=loader_path,
                     loaderGuid=guid(loader_asset), loader=ref(loader_asset), atlas=ref(atlas_asset), managerConfig=ref(manager), textures=targets, additionalLoaders=[]))
             binding = dict(EntityId=entity_id, SkeletonName=skeleton_name, RendererPath=renderer_path.split('/', 1)[1],
-                MaterialPropertyPath='', AppearanceEnabled=appearance['m_Enabled'], MaterialPropertyEnabled=prop['m_Enabled'], Textures=ref(resources), Materials=materials)
+                MaterialPropertyPath='', AppearanceEnabled=appearance['m_Enabled'], MaterialPropertyEnabled=prop['m_Enabled'],
+                MaterialPropertyHasMeshRenderer=int(mesh_obj is not None), Textures=ref(resources), Materials=materials)
             bindings.append(binding)
             rows.append(dict(entityId=entity_id, appearance=appearance, material_property=prop, renderer_path=renderer_path,
                 loader=loader, atlas=atlas, materials=original_materials, binding=binding))
@@ -244,7 +251,11 @@ def build(entity_ids):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--entities', nargs='+', type=int, default=[3181, 3182, 3183])
+    existing = [row['entityId'] for row in json.loads((ROOT /
+        'assets/reference/battle-animation/native-monster-appearance-source-manifest.json').read_bytes())['source_extraction']['models']]
+    omitted = json.loads((ROOT / 'assets/reference/battle-animation/actor-material-bindings-source-manifest.json').read_bytes())['omitted']
+    pets = [row['entityId'] for row in omitted if row['reason'].startswith('Original MeshRenderer is null;')]
+    parser.add_argument('--entities', nargs='+', type=int, default=sorted(set(existing + pets)))
     args = parser.parse_args()
     receipt = build(args.entities)
     path = ROOT / 'assets/reference/battle-animation/native-monster-appearance-source-manifest.json'

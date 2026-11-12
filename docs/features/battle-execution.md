@@ -141,7 +141,9 @@
 
 `OfficialBattleDamageReceiptPlayback` 沿正式 `OfficialBattleSkillGraphPlayback.Play` 接收步骤回执，在每次原技能实例创建后只取该实例的 `DamageEventIds`；伤害时间减去所属施法 Delay 一次，再按原 `FightDamageComponent.Duration` 创建／移除原 prefab。命中与伤害在技能结束边界先派发，再移除技能，保持实际技能身份可查询。完整数值、伤害标志、元素、结果分类和状态结果直接投影到原 `DamageResultParameter`，不重算公式、状态、选敌或随机；治疗的 `AbsoluteDamage` 字段保存已经算出的原 `AbsoluteCure`，有效治疗及统计仍沿原结算。范围受击保存实际身体格，点命中在本次结算及其位移前保存目标位置；位置、状态结果或施法归属缺失的旧回执不从当前场景推断。角色装载复用已有原 `MyFightRoleFight`，缺少时添加原通知组件；原格网实体保持自身绑定，不被单位投影覆盖。状态覆盖器消费该次施法的状态快照，原通知与五类图仍由未改写的 `MyFightDamage.OnStart` 执行。
 
-原伤害图使用的角色材质接口已为 32 个已安装配置恢复：`OfficialBattleActorMaterialBinding` 仅按同版原 prefab 的根节点、启用状态和完整引用路径添加原 `MeshMaterialProperty`；已有组件保持原绑定，所属单位租约在图停止后释放新增组件。现存原 `AppearanceRenderer／Lite` 继续负责原独立材质集合；尚未装载该外观组件的原生骨骼后端使用其现有每角色材质实例和原 `MeshRenderer` 引用，不生成新 shader 或材质。配置输入及绑定见[角色材质来源](../../assets/reference/battle-animation/actor-material-bindings-source-manifest.json)。另外 36 个原配置的 `MeshRenderer` 引用为空，必须接入完整外观材质集合，未按附近 renderer 猜测或补值；这些配置仍属缺项。
+原伤害图使用的角色材质接口已为 32 个已安装配置恢复：`OfficialBattleActorMaterialBinding` 仅按同版原 prefab 的根节点、启用状态和完整引用路径添加原 `MeshMaterialProperty`；已有组件保持原绑定，所属单位租约在图停止后释放新增组件。现存原 `AppearanceRenderer／Lite` 继续负责原独立材质集合；尚未装载该外观组件的原生骨骼后端使用其现有每角色材质实例和原 `MeshRenderer` 引用，不生成新 shader 或材质。配置输入及绑定见[角色材质来源](../../assets/reference/battle-animation/actor-material-bindings-source-manifest.json)。另外 36 个已安装幻兽配置已接入下述完整外观材质集合，保留原 `MeshRenderer` 空引用。
+
+`OfficialBattleMonsterAppearance` 统一装配 3181／3182／3183 及 36 个幻兽的原 `AppearanceRendererLite`、根 `MeshMaterialProperty`、原图集／占位材质及 Low 贴图加载器；`BattleNativeMonsterAppearanceCatalog` 保存原 renderer 路径和引用是否为空。`OfficialBattleLiveMonsterModelView` 与既有幻兽跟随视图共用该入口，原外观代码按图集材质顺序创建每角色独立材质，加载原 Low 正式贴图，向原生骨骼绘制器提供材质覆盖；退出时先释放材质属性及外观，再释放加载器路由。未为空引用猜填附近 renderer，也未修改原 shader：这些角色的原 `SkeletonEffect-2D` 支持受伤变色、不含 `_DitherAlpha`，保留原材质能力。输入、对象指针、ASTC mip 转换、显式 `Combat/NativeMonsterAppearance/catalog` 绑定及输出哈希见[原生角色外观来源](../../assets/reference/battle-animation/native-monster-appearance-source-manifest.json)；该接线不代表全部角色状态表现或 Windows Player 验证完成。
 
 ## 自定义实现
 
@@ -202,6 +204,8 @@
 - 活动挑战、私有副本和裂隙的退出事务尚未完整接通；已接线玩法仍须分别完成奖励页面及整体验证，公共按钮可用不代表所有玩法完成。
 
 ## 当前验证范围
+
+- `OfficialBattleAnimatorPlaybackAcceptance.RunPetMaterials` 已在内置屏静音 Play Mode 通过全部 39 个实际原生角色，编辑器以 0 正常退出。逐一检查原外观组件、36 个空 renderer 引用与 3 个非空引用、原材质收集顺序、每角色独立材质、原 Low 贴图、原受伤变色节点、双实例重叠与最后归还、同类角色隔离，以及停止后的逐像素恢复；156 张实际运行画面已查看。主工程 Unity 导入／编译及 `ProjectTools.Validate` 以 0 正常退出，静态元数据检查通过（150,868 GUID），108 项输入与 477 项输出哈希一致。检查使用生产角色创建／原生绘制和原伤害图的完整材质叶节点；冻结姿态以隔离材质效果，未改原节点参数或原 shader，不代表完整伤害图、全部幻兽动作／支援流程或 Windows Player 已验证。本批尚未重建或发布 Windows Player。
 
 - 公共入口共享验证扩展为七个流程：人物／怪物移动、技能耗血、原技能吸血、状态通知，以及真实公式产生的暴击、格挡。模拟原开始按钮后，检查原 `Damage`／`block_01` 状态和实际可见骨骼网格；人物按原 separator 分层取网格，保留单次攻击结束后原 .4 秒受伤图的观察窗口。主工程导入／编译、`ProjectTools.Validate` 与内置屏静音 Play Mode 全部通过，编辑器以 0 退出，51 张运行画面已查看；原 10630 三段攻击与 16020 单段攻击仍各只结算一次，原飘字、暂停、落点、技能槽、次数／冷却及原生吸血实体断言继续通过。静态检查通过（150,573 GUID）。本项仅扩展验证及绑定凭据，没有修改原动画、战斗数值或素材；未运行本批 Windows Player，也不代表全部角色和技能受伤表现已覆盖。
 
