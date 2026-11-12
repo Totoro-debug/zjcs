@@ -58,7 +58,7 @@ public static class HomeCurrencyWindowsNativeValidation
     }
 }
 public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyWindowServices,IHomeCurrencyWindowPlayer,
-    IProfessionItemIconContext,IProfessionItemColors,IProfessionItemPlayer,IHomeCountColors,IWorldWindowBlurManager,IPlayerItemUIHost
+    IProfessionItemIconContext,IProfessionItemColors,IProfessionItemPlayer,IHomeCountColors,IWorldWindowBlurManager,IPlayerItemUIHost,IOfflineHomeCurrencyWindowPresentation
 {
     Camera cameraUi;RenderTexture target;Canvas canvas;EventSystem events;Vector2 pointer;int errors,sounds,borrowedIcons,subscribers,details;
     OfflineHomeCurrencyAssets assets;OfflineHomeCurrencyWindows windows;
@@ -173,6 +173,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         Click(pay.CancelBtn);yield return WaitClosed();
         active=windows.ShowExchange().gameObject;windows.CloseExchange();windows.CloseExchange();Require(!active&&windows.WindowCount==0,"closing a preparing window cancels its mask coroutine once");
         yield return Open(windows.ShowExchange().gameObject);windows.Dispose();windows.Dispose();Require(!active&&windows.WindowCount==0&&subscribers==0&&awardHandlers.Count==0,"disposing active native windows releases all window observers");
+        yield return ExerciseComposedServices();
         Require(Field<Delegate>(windowPlayer,"OnItemCountUpdate")==null&&Field<Delegate>(windowPlayer,"OnAutoIncrease")==null,"native windows release shared player event projections");windowPlayer.Dispose();windowPlayer.Dispose();
         bool disposedRead=false;try{windowPlayer.GetItemAmount(1);}catch(ObjectDisposedException){disposedRead=true;}Require(disposedRead&&profilePlayer.GetItemAmount(1)==GetItemAmount(1),"disposed window-player adapter leaves external shared quantities alive");
         Require(Field<Delegate>(profilePlayer,"OnItemCountUpdate").GetInvocationList().Length==1&&Field<Delegate>(profilePlayer,"OnAutoIncreaseItemDataUpdate")==null,"actual profile observers release before adapter disposal");profilePlayer.Dispose();profilePlayer=null;
@@ -288,6 +289,40 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         SetBalance(1,heldMoney);SetBalance(1,money);SetBalance(2,diamonds);
         Debug.Log("HOME_MONEY_QUICK_BUY_PASSED: original base-level condition, native buy pointer, actual award/cost/count, tier crossing, new-day reset, profile reopening, receipt replay and debit/award/disk-failure rollback. Production timezone, error/award presentation and HUD remain pending.");
     }
+    IEnumerator ExerciseComposedServices()
+    {
+        SetBalance(1,100);SetBalance(2,500);SetBalance(15,3);
+        var service=new OfflineHomeCurrencyWindowServices(assets,windowPlayer,profilePlayer,moneyQuickBuy,exchange,this,
+            kind=>"composed-"+kind+":"+Guid.NewGuid().ToString("N"));
+        Require(!service.IconServiceAvailable&&ReferenceEquals(service.Player,windowPlayer),"composed service uses the actual shared player before attaching windows");
+        var maskAssets=OfficialPartnerFriendshipWindowAssetCatalog.LoadDefault();
+        windows=new OfflineHomeCurrencyWindows(new OfflineHomeCurrencyWindowBindings{
+            Canvas=canvas,CoroutineHost=this,TopBar=topBar.Manager,BlurMaskPrefab=maskAssets.BlurMaskPrefab,
+            BlurManager=this,Fonts=fonts,Screen=screen,Icons=this,PostSound=Post},service,assets);
+        windows.WindowOpened+=root=>{foreach(var touch in root.GetComponentsInChildren<LongTouch>(true))touch.PointerPositionOverride=()=>pointer;var dialog=root.GetComponent<WorldConfirmDialog>();if(dialog)confirmation=dialog;};
+        windows.WindowClosed+=root=>{if(root==active)active=null;};
+        service.AttachWindows(windows);Require(service.IconServiceAvailable,"composed service resolves original icon ownership after attachment");
+        bool duplicate=false;try{service.AttachWindows(windows);}catch(InvalidOperationException){duplicate=true;}Require(duplicate,"window attachment cannot replace a live owner");
+        Require(service.MoneyId==1&&service.DiamonId==2&&service.FlareStarId==15&&service.Pay.DiamonChangeScale==1&&service.GetItemCountLimit(109)==30,"composed service projects selected original configuration");
+        yield return Open(windows.ShowExchange().gameObject);
+        var pay=active.GetComponent<PayMoneyChangeDialog>();Click(pay.SetCountSlider.MaxBtn);Click(pay.ConfirmBtn);
+        Require(profilePlayer.GetItemAmount(15)==0&&profilePlayer.GetItemAmount(2)==503,"composed exchange commits and notifies before original success close");yield return WaitClosed();
+        long purchased=profileQuickCounters.GetBuyCount(profile.Save.Player,1,EQuickBuyRefreshType.Daily,quickCounterTime);
+        yield return Open(windows.ShowQuickBuy(1).gameObject);var quick=active.GetComponent<QuickBuyDialog>();var cost=Field<PlayerCostMoneyContent>(quick,"mCostMoneyContent");long price=cost.CostItemCount;
+        Click(cost.Btn);Require(profilePlayer.GetItemAmount(1)==1600&&profilePlayer.GetItemAmount(2)==503-price&&profileQuickCounters.GetBuyCount(profile.Save.Player,1,EQuickBuyRefreshType.Daily,quickCounterTime)==purchased+1,"composed native purchase uses actual atomic award/cost/counter and shared notifications");yield return WaitClosed();
+        yield return Open(windows.ShowQuickBuy(1).gameObject);Capture("home-currency-composed-native.png");quick=active.GetComponent<QuickBuyDialog>();Click(Field<Button>(quick,"mCancelBtn"));yield return WaitClosed();
+        SetBalance(109,31);var limit=service.CheckBuyLimitCountItem(109,1);confirmation=canvas.GetComponentsInChildren<WorldConfirmDialog>(true).Single();Require(limit.Status==UniTaskStatus.Pending,"composed original limit check opens original confirmation for actual held count");yield return WaitConfirmation();Click(confirmation.CancelBtn);yield return WaitAllClosed();Require(!limit.GetAwaiter().GetResult(),"composed limit cancellation resumes original awaiting branch");
+        limit=service.CheckBuyLimitCountItem(109,1);confirmation=canvas.GetComponentsInChildren<WorldConfirmDialog>(true).Single();yield return WaitConfirmation();Click(confirmation.ConfirmBtn);yield return WaitAllClosed();Require(limit.GetAwaiter().GetResult(),"composed limit confirmation resumes original awaiting branch");
+        SetBalance(15,2);yield return Open(windows.ShowExchange().gameObject);pay=active.GetComponent<PayMoneyChangeDialog>();string path=slots.GetProgressPath(profileSlot),saved=File.ReadAllText(path);
+        using(var locked=new FileStream(path,FileMode.Open,FileAccess.Read,FileShare.Read)){Click(pay.ConfirmBtn);Require(active&&calls.Last()=="composed-failure:2","composed exchange reports failed persistence without closing");}
+        Require(File.ReadAllText(path)==saved&&profilePlayer.GetItemAmount(15)==2,"composed failed exchange leaves actual save and held balance unchanged");Click(pay.CancelBtn);yield return WaitClosed();
+        int days=0,parameters=0;var dayToken=service.SubscribeEnterNewDay(_=>days++);var parameterToken=service.SubscribeAutoIncrease(_=>parameters++);day(default);Require(days==1,"composed calendar subscription forwards original day message");
+        double speed=profile.Save.Player.Inventory.Single(row=>row.ItemId==57).AutoIncrease.IncreaseSpeed;
+        Require(profile.ApplyInventoryTransaction("composed-parameter:"+Guid.NewGuid().ToString("N"),save=>save.Player.Inventory.Single(row=>row.ItemId==57).AutoIncrease.IncreaseSpeed=speed+1).IsApplied,"commit composed actual parameter change");profilePlayer.SynchronizeCommittedPlayer();Require(parameters==1,"composed service forwards actual stamina parameter notification");
+        windows.Dispose();service.Dispose();service.Dispose();dayToken.Dispose();parameterToken.Dispose();Require(day==null&&Field<Delegate>(windowPlayer,"OnAutoIncrease")==null,"composed service releases outstanding calendar and parameter tokens idempotently");
+        bool disposed=false;try{service.PlayerDiamonChange(1,null);}catch(ObjectDisposedException){disposed=true;}Require(disposed&&profilePlayer.GetItemAmount(15)==2,"disposed composed service rejects transactions and leaves externally owned profile source alive");
+        Debug.Log("HOME_CURRENCY_WINDOW_SERVICES_PASSED: selected configuration, actual profile transaction composition, native exchange/quick-buy/limit confirmations, shared notifications, failed persistence and scope disposal. Enclosing secondary-window/navigation/calendar services remain explicit dependencies.");
+    }
     IEnumerator Open(GameObject root)
     {
         active=root;popup=root.GetComponent<WorldPopupWindow>();
@@ -328,6 +363,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     public void PlayerQuickBuy(int id,long count){calls.Add("buy:"+id+":"+count);if(moneyQuickBuy==null)return;Require(id==assets.MoneyId,"bound home money purchase");lastMoneyBuyRequest="native-money-"+(++moneyBuys);var result=moneyQuickBuy.Buy(lastMoneyBuyRequest,count);if(result.IsApplied)profilePlayer.SynchronizeCommittedPlayer();else calls.Add("money-buy-rejected");}
     public void PlayerDiamonChange(long count,Action success){exchanges++;calls.Add("exchange:"+count);lastExchangeRequest="native-confirm-"+exchanges;var result=exchange.Exchange(lastExchangeRequest,count);if(result.IsApplied){profilePlayer.SynchronizeCommittedPlayer();success();}else calls.Add("exchange-rejected");}
     public void ShowLackOfItem(int id,long count,IWindowOperator owner){lack++;calls.Add("lack:"+id+":"+count);}
+    public void TransactionFailed(int itemId,ProgressionResult result)=>calls.Add("composed-failure:"+itemId);
     public void ShowError(int code,string name)=>calls.Add("error:"+code);public void SystemMessage(string text)=>calls.Add("message:"+text);
     public void PopupItemDetail(IWindowOperator owner,int id,long count){details++;Require(count==0,"original details initial count");}
     public void PopupConfirm(IWindowOperator owner,string key,Action accept){Require(key=="UI_Pay_Change_Item_Not_Enough_Confirm","original confirmation key");confirm++;confirmation=windows.ShowConfirm(key,null,accept);}
