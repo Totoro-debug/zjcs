@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Name: monster_3270_TextureLoader_Low
+  m_EditorClassIdentifier: ''
+  m_Script: {fileID: 11500000, guid: 1a0e110595a58e7c69027ccc4e0d3dd0, type: 3}
+  maxPlaceholderSize: 128
+  unloadAfterSecondsUnused: 60.0
+  LevelOfResolution: 1
+  PlaceholderPath: ''
+  TargetTexturePath: ''
+  DyeTexturePath: ''
+  atlasAsset: {fileID: 11400000, guid: 7b0005808b5c592fb38cd50620eb1c23, type: 2}
+  skeletonDataAsset: {fileID: 0}
+  placeholderMap:
+  - placeholderTexture: {fileID: 2800000, guid: b8aafac3475851a79cc1fbd1e3b9aa95, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1387b2c475dbd6f499194f0e17ac253e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}

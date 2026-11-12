@@ -169,7 +169,7 @@ namespace Zjcs.Editor.Combat
             {
                 SessionState.SetInt(Key + ".result", 0);
                 Debug.Log(SessionState.GetBool(Key + ".petMaterials", false)
-                    ? "Original actor appearance material Play Mode passed: 39 actual native models, original nullable references, independent materials, original damage node, overlap, peer isolation and exact GPU restoration."
+                    ? "Original actor appearance material Play Mode passed: 66 actual native models, original nullable references, independent materials, original damage node, overlap, peer isolation and exact GPU restoration."
                     : SessionState.GetBool(Key + ".sceneSkillMotions", false)
                     ? "Native complete current motion catalog and real original skill playable/pose rendering passed; explicit pre-physics diagnostics only, full physics, skill prefabs and production battle/Player integration remain required."
                     : SessionState.GetBool(Key + ".sceneBoundMixNext", false)
