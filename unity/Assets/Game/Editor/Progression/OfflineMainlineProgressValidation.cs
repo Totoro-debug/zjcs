@@ -33,6 +33,13 @@ namespace Zjcs.Editor.Progression
                     slots, slot, catalog, readDemonBattleLayer);
                 Require(session.Save.CreatedAtUnixSeconds == slotCreatedAt,
                     "Copy the profile creation time into its progress save");
+                Require(session.GetCurrentTask(out var initialTask, out bool initialReady).Status
+                        == ProgressionResultStatus.NotReady && initialTask.classId == 1000 && !initialReady
+                    && session.GetTaskProgress(initialTask.finishCondition, out long initialCurrent,
+                        out long initialTarget).Status == ProgressionResultStatus.Ready
+                    && initialCurrent == 0 && initialTarget == 2 && session.Save.World.Maps.Count == 0
+                    && session.ClaimTask(1000).Status == ProgressionResultStatus.NotReady,
+                    "Show the original zero battle count before entering a map, without granting a reward");
                 OfficialMainlineMapProfile dragonProfile = OfficialMainlineMapProfile.Get(14);
                 Require(dragonProfile.RegionCount == 111 && dragonProfile.DefaultEntryPlacementId == 101
                     && dragonProfile.RequiredAccessConditions.Count == 16 && dragonProfile.IsRuntimeEntryReady
@@ -199,6 +206,11 @@ namespace Zjcs.Editor.Progression
                     + firstTaskResult.Status + ", task=" + (task == null ? 0 : task.classId)
                     + ", candidate=" + firstTaskResult.TaskClassId + ", ready=" + ready
                     + ", unsupported=" + firstTaskResult.UnsupportedCondition + ")");
+                Require(session.RecordMapBattle(10, 0, 1, "map10-battle-3").IsApplied
+                    && session.GetTaskProgress(task.finishCondition, out long battleCurrent,
+                        out long battleTarget).Status == ProgressionResultStatus.Ready
+                    && battleCurrent == 3 && battleTarget == 2,
+                    "Preserve the original raw condition progress above its target; description formatting owns clamping");
                 Require(session.ClaimTask(1000).IsApplied && session.InventoryCount(2) == 30,
                     "Claim task 1000 and persist its original 30 item 2 reward");
 

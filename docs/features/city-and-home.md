@@ -189,7 +189,7 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `Runtime/Offline/HomeHudUI/OfflineHomeHud` 负责完整原生层级的实例化及释放，在所有组件启用前显式绑定条件、顶栏、任务、功能窗口、活动、下载、场景指引、匹配、战斗通知、红点、语言和声音服务；动态任务实例沿同一绑定入口创建。`Resources/Home/OfflineHomeHudAssets` 显式引用原 HomeUI、共享框架、语言、声音及字体，沿原 `FontAssetFontService` 初始化 FZY4K 和任务使用的 MPLUS 字体，原五行字体配置保留；其余三种源字体不在本宿主使用范围内。公共头像／底栏宿主可挂到原 `Content/Main/Public/Anim`，当前尚未在正式入口完成装配。
 
-`HomeHudBindingsNativeValidation.Run` 已在隔离完整工程静音 Play Mode 通过完整保留 HomeUI 在原父层启用、原 Show／Hide 动画等待、顶栏类型 1/2/57 借还、原功能按钮和动态任务跳转按钮的首个射线命中与模拟指针，以及隐藏时解除输入、任务、下载、匹配、结果和红点监听。外层条件已接 `OfflineHomeHudConditions`；任务数据及其内部条件、窗口、场景位置、空活动记录和无货币子项的顶栏池仍为受控端点，不能代表正式业务、真实货币／头像／底栏装配或 Windows Player 已完成。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 及静态元数据检查通过。
+`HomeHudBindingsNativeValidation.Run` 已在隔离完整工程静音 Play Mode 通过完整保留 HomeUI 在原父层启用、原 Show／Hide 动画等待、顶栏类型 1/2/57 借还、原功能按钮和动态任务跳转按钮的首个射线命中与模拟指针，以及隐藏时解除输入、任务、下载、匹配、结果和红点监听。外层条件已接 `OfflineHomeHudConditions`；任务数据及其内部条件、窗口、场景位置、空活动记录和无货币子项的顶栏池仍为受控端点，不能代表正式业务、真实货币／头像／底栏装配或 Windows Player 已完成。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 及静态元数据检查通过。新角色进入地图前的真实主线计数读取与领奖保护规则见[主线任务](tasks.md)；这项底层检查不代表原任务条目已接真实数据。
 
 `HomeConditionNotifications` 迁入所选 `ConditionHandler` 与 `ConditionInfoParser` 的组合展开、按条件类型有序去重、注册引用计数、排除类型、调用快照、调用期间延后添加／删除及逐回调异常隔离；十二组角色通知保留原条件类型的调用顺序，静态玩家与服务器时钟挂接交由明确外层端口。`OfflineHomeHudConditions` 将原 HUD 条件句柄、所选零参数功能条件与当前角色存档连接，叶节点类型直接核对原条件类，求值复用现有同版条件实现。家园拥有、地图存在与地图聊天状态由外层显式提供，当前条件闭包外的类型仍明确拒绝。正式角色事件转发与完整 HUD 尚未装配。
 

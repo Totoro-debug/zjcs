@@ -32,6 +32,8 @@
 
 `OfflineMainlineProgressSession` 在本地角色槽中维护玩家成长、物品、地图与区域进度、战斗次数、实体标签、女神区域、宝箱、事件去重和已领取主线任务，并提供条件检查与领奖事务。成功祈愿抽取会将实际开启数量与奖励、消耗写入同一存档事务；重复回执不会重复增加宝箱计数；`TaskSubmitCondition` 依据已领取 ID 判定；`TaskCompleteCondition` 对已领取 ID 计完成，未领取任务仅在接取、展示（若有）和完成条件均由本地状态满足时计完成；不支持的条件会继续返回 `Unsupported`。保存由 `ProfileSlotCatalog` 和 `LocalJsonSaveFile` 提供。
 
+所选 `884_156692` 的 `MapGameTotalCountCondition.GetValue/GetProgress` 从玩家黑板读取计数，`Player.GetBlackboardDataValue<long>` 在缺少记录时返回 0，不要求地图或区域已经初始化。本地首项任务 1000 因而在新角色进入地图前显示目标进度 0/2，状态为未完成；提前领奖不产生奖励或修改存档。条件进度保留实际次数，超过目标时不截断；原条件的描述格式化另行将显示参数夹到目标值。其余地图条件的既有支持边界保持独立。`OfflineMainlineProgressValidation.Run` 已验证新档零计数、超过目标的 3/2 原始进度、既有领奖及存档恢复；完整隔离工程静音 Play Mode 使用实际创建角色复核未进入地图的读取及提前领奖无状态变化，并通过原生 HUD 模拟指针回归。已查看运行截图；其中原任务条目仍用受控数据，不能作为真实任务栏装配的画面证明。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。
+
 任务目录还携带固定版 `npc_friendship_level` 的 10,000 条等级门槛。领取带 `NpcFriendshipReward` 的主线任务时，在领奖存档副本内累加 NPC 好感经验，并按当前 `SubRankLimit` 更新等级；门槛目录、奖励扣发和任务领取同由本地事务提交，失败不会留下部分奖励。
 
 主城 UI 恢复固定版官方 `TaskPanel` 和 `TaskPanelListItemProgress` 的层级与 sprites：`StreamingAssets/Home/Tasks/task-panels.json` 及其 `sprites/`。来源、prefab path ID、转换和哈希记录见 `assets/reference/task/source-manifest.json`；资源转换脚本为 [`prepare_unity_home_tasks.py`](../../scripts/prepare_unity_home_tasks.py)。[`HomeHudView.Tasks.cs`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Tasks.cs) 提供 `OpenTaskPanel(progress, navigate)`、`BuildPinnedTask(progress, navigate)` 与 `RefreshTasks()`；导航回调接收完整任务定义，仅对地图目标显示跳转，地图 10 目标进入已接入大陆，地图 11 在领取 Map10 主线任务 1040 前明确提示未开放；职业与宝箱条件不显示离线端无法执行的跳转。主线目标按 session 当前可用状态追踪，领奖回写现有本地事务。没有服务端刷新／实例状态的委托、日常、周常和成就页仅显示未开放提示，不生成任务目标。

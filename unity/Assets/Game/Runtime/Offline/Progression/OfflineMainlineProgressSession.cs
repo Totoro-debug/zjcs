@@ -916,13 +916,13 @@ namespace Zjcs.Offline.Progression
                     break;
                 case "MapGameTotalCountCondition":
                     target = Math.Max(0, condition.count);
-                    if (!HasMapRegion(Save, condition.mapClassId, condition.region))
-                        return Result(ProgressionResultStatus.Unsupported,
-                            unsupportedCondition: "MapGameTotalCountCondition:MapNotInitialized");
+                    // Selected MapGameTotalCountCondition.GetValue reads the
+                    // blackboard independently of world-map initialization.
+                    // Player.GetBlackboardDataValue<long> defaults to zero.
                     OfflineMapBattleCount battle = Save.World.BattleCounts.FirstOrDefault(value =>
                         value.MapClassId == condition.mapClassId && value.Region == condition.region
                         && value.Result == condition.result);
-                    current = Math.Min(target, battle == null ? 0 : battle.Count);
+                    current = battle == null ? 0 : battle.Count;
                     break;
                 case "WorldMapProgressCondition":
                     target = Math.Max(0, condition.progress);
@@ -1210,8 +1210,6 @@ namespace Zjcs.Offline.Progression
                     return ConditionEvaluation.Met(condition.taskClassIds != null
                         && condition.taskClassIds.All(save.Tasks.ClaimedMainlineTaskIds.Contains));
                 case "MapGameTotalCountCondition":
-                    if (!HasMapRegion(save, condition.mapClassId, condition.region))
-                        return ConditionEvaluation.Unsupported("MapGameTotalCountCondition:MapNotInitialized");
                     OfflineMapBattleCount battle = save.World.BattleCounts.FirstOrDefault(value =>
                         value.MapClassId == condition.mapClassId && value.Region == condition.region
                         && value.Result == condition.result);

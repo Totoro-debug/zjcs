@@ -74,6 +74,10 @@ def build():
                      'assets/reference/home-rules-current-source-manifest.json',
                      '.tools/source-packages/current/884_156692/official-code/common-source/Common/FunctionLimitInfoParser.cs',
                      '.tools/source-packages/current/884_156692/official-code/common-source/Common/StoryStatus.cs',
+                     '.tools/source-packages/current/884_156692/official-code/common-source/Common/MapGameTotalCountCondition.cs',
+                     '.tools/source-packages/current/884_156692/official-code/common-source/Common/Player.cs',
+                     'unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs',
+                     'unity/Assets/Game/Editor/Progression/OfflineMainlineProgressValidation.cs',
                      'unity/Assets/Game/Resources/Home/OfflineHomeCurrencyAssets.asset'):
         read(relative)
     notifications = json.loads(read('assets/reference/home-condition-notifications-source-manifest.json'))
