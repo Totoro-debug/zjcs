@@ -202,12 +202,13 @@ namespace Zjcs.Presentation.Combat
             int distance = skill.Range.Where(point => point.X * dy == 0 && point.Y * dx == 0
                 && point.X * dx + point.Y * dy > 0).Select(point => Math.Abs(point.X) + Math.Abs(point.Y))
                 .DefaultIfEmpty(1).Min();
-            // Keep this horizontal facing probe on its requested side while the
-            // original AI chooses its ordinary landing; adjacent placement can
-            // let it jump across the target before the actual cast.
-            if (itemId == 10029 && dx != 0)
-                distance = skill.Range.Where(point => point.Y == 0 && point.X * dx > 0)
-                    .Select(point => Math.Abs(point.X)).DefaultIfEmpty(distance).Max();
+            // Keep every cardinal probe on its requested axis while the ordinary
+            // AI chooses its landing. Adjacent placement can attract an equally
+            // valid landing on another side before the actual cast.
+            if (itemId == 10029)
+                distance = skill.Range.Where(point => point.X * dy == 0 && point.Y * dx == 0
+                    && point.X * dx + point.Y * dy > 0)
+                    .Select(point => Math.Abs(point.X) + Math.Abs(point.Y)).DefaultIfEmpty(distance).Max();
             var summonHits = skill.HitGraphEntities.Where(hit => hit.IsSummon && hit.SummonReferenceType == 1
                 && hit.SummonGridItemClassId == 0).ToArray();
             probe.firstPromotionSummonMonsterIds = summonHits.SelectMany(hit => hit.SummonPools)
