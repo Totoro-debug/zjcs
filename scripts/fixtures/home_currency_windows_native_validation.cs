@@ -53,7 +53,7 @@ public static class HomeCurrencyWindowsNativeValidation
     public static void Finish(Exception error)
     {
         SessionState.SetBool(Key,false);if(error!=null)Debug.LogException(error);
-        else Debug.Log("HOME_CURRENCY_WINDOWS_NATIVE_PASSED: complete original windows and pointer input; real-profile exchange, original count observers, disk restoration, replay/overdraw rejection and disk-failure rollback; popup clips and subscription disposal. Quick-buy/award/secondary-window ports remain controlled; production HUD and Player remain pending.");
+        else Debug.Log("HOME_CURRENCY_WINDOWS_NATIVE_PASSED: complete original windows and pointer input; real-profile money quick-buy/exchange, original count observers, disk restoration, replay/overdraw rejection and disk-failure rollback; popup clips and subscription disposal. Other quick-buy entries, award/secondary-window presentation ports remain controlled; production HUD and Player remain pending.");
         EditorApplication.Exit(error==null?0:1);
     }
 }
@@ -66,6 +66,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     OfflineMainlineProgressSession profile;ProfileSlotCatalog slots;string profileSlot,lastExchangeRequest;
     OfflineHomeCurrencyPlayer profilePlayer;OfflineHomeCurrencyExchange exchange;
     OfflineHomeQuickBuyCounters profileQuickCounters;DateTime quickCounterTime;
+    OfflineHomeMoneyQuickBuy moneyQuickBuy;string lastMoneyBuyRequest;int moneyBuys;
     FontAssetFontService fonts;ScreenAdaptService screen;OfflineHomeTopBar topBar;OfflinePartnerUiSoundScope soundScope;IDisposable metrics;
     GameObject active;WorldPopupWindow popup;WorldConfirmDialog confirmation;Material blur;
     readonly Dictionary<int,long> counts=new Dictionary<int,long>{{1,100},{2,500},{15,5}};
@@ -143,6 +144,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         Require(cost.CostItemCount==50,"native quick-buy reads real saved daily purchases for second price tier");Capture("home-quick-buy-saved-counter-native.png");
         quickCounterTime=quickCounterTime.AddDays(1);day(default);Require(cost.CostItemCount==30,"native new-day handler reads expired saved count and restores original first price tier");
         Click(Field<Button>(quick,"mCancelBtn"));yield return WaitClosed();
+        yield return ExerciseMoneyQuickBuy();
         yield return Open(windows.ShowExchange().gameObject);
         var pay=active.GetComponent<PayMoneyChangeDialog>();Require(pay.SetCountSlider.CurrentCount==1&&pay.CountSliderGo.activeSelf,"original pay default selection");
         Click(pay.SetCountSlider.AddBtn);Require(Field<long>(pay,"mCurrentCount")==2,"native exchange add");Click(pay.SetCountSlider.MaxBtn);Require(Field<long>(pay,"mCurrentCount")==5,"native exchange maximum");Capture("home-pay-change-native.png");
@@ -232,6 +234,41 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         SetBalance(1,money);SetBalance(2,diamonds);
         Debug.Log("HOME_QUICK_BUY_COUNTERS_PASSED: original periods, exact reset boundaries, nonmutating reads, whole-bucket clearing, real-profile restoration, atomic receipt and disk-failure rollback. Production timezone and purchase endpoint remain pending.");
     }
+    IEnumerator ExerciseMoneyQuickBuy()
+    {
+        var configuration=OfficialCurrentHomeRuleAssetCatalog.LoadDefault();
+        var conditions=OfficialPartnerAssetCatalog.LoadDefault().Conditions;
+        moneyQuickBuy=new OfflineHomeMoneyQuickBuy(profile,assets,assets.CreateQuickBuyCalendar(8),
+            (node,save)=>conditions.IsMet(node.ToObject<Dictionary<string,object>>(),new OfflineHomeConditionPlayer(configuration,()=>save,_=>false)),
+            (_,id)=>IsBanCostItem(id),()=>quickCounterTime);
+        string path=slots.GetProgressPath(profileSlot),before=File.ReadAllText(path);
+        Require(!moneyQuickBuy.Buy("level-not-met",1).IsApplied&&File.ReadAllText(path)==before,"actual original base-level condition rejects new character without writing");
+        Require(profile.ApplyInventoryTransaction("quick-buy-fixture-level:"+Guid.NewGuid().ToString("N"),save=>save.Player.Level=10).IsApplied,"prepare level-ten purchase fixture");
+        quickCounterTime=new DateTime(2026,11,9,0,0,0,DateTimeKind.Utc);
+        long money=profile.InventoryCount(1),diamonds=profile.InventoryCount(2);
+        long award=assets.QuickBuy(1).GetAwardItemCount(Level,SubRank);Require(award==1500,"selected original money reward");
+        before=File.ReadAllText(path);banCost=true;Require(!moneyQuickBuy.Buy("cost-banned",1).IsApplied&&File.ReadAllText(path)==before,"original ban-cost port rejects without spending");banCost=false;
+        yield return Open(windows.ShowQuickBuy(1).gameObject);
+        var quick=active.GetComponent<QuickBuyDialog>();var cost=Field<PlayerCostMoneyContent>(quick,"mCostMoneyContent");Require(cost.CostItemCount==50,"real native purchase begins in saved second tier");
+        Click(cost.Btn);Require(profile.InventoryCount(1)==money+award&&profile.InventoryCount(2)==diamonds-50&&QuickBuyGetItemBuyCount(1,EQuickBuyRefreshType.Daily)==6,"native buy commits original award, cost and count together");yield return WaitClosed();
+        string request=lastMoneyBuyRequest,committed=File.ReadAllText(path);
+        var restored=OfflineMainlineProgressSession.OpenCharacter(slots,profileSlot);
+        Require(restored.InventoryCount(1)==money+award&&restored.InventoryCount(2)==diamonds-50&&profileQuickCounters.GetBuyCount(restored.Save.Player,1,EQuickBuyRefreshType.Daily,quickCounterTime)==6,"real native money purchase survives profile reopening");
+        yield return Open(windows.ShowQuickBuy(1).gameObject);Capture("home-money-quick-buy-committed-native.png");quick=active.GetComponent<QuickBuyDialog>();Click(Field<Button>(quick,"mCancelBtn"));yield return WaitClosed();
+        Require(moneyQuickBuy.Buy(request,1).Status==ProgressionResultStatus.Unchanged&&File.ReadAllText(path)==committed,"real money purchase receipt prevents double award and count");
+        Require(moneyQuickBuy.Buy("cross-tier",5).IsApplied&&profile.InventoryCount(2)==diamonds-350&&profile.InventoryCount(1)==money+award*6&&QuickBuyGetItemBuyCount(1,EQuickBuyRefreshType.Daily)==11,"real batch purchase crosses original fifty/hundred price tiers");
+        quickCounterTime=quickCounterTime.AddDays(1);
+        Require(moneyQuickBuy.Buy("next-day",1).IsApplied&&profile.InventoryCount(2)==diamonds-380&&QuickBuyGetItemBuyCount(1,EQuickBuyRefreshType.Daily)==1,"new-period purchase spends first-tier cost and commits reset count");
+        committed=File.ReadAllText(path);
+        Require(!moneyQuickBuy.Buy("overdraw",long.MaxValue).IsApplied&&!moneyQuickBuy.Buy("zero",0).IsApplied&&File.ReadAllText(path)==committed,"invalid or unaffordable actual money purchase writes nothing");
+        yield return Open(windows.ShowQuickBuy(1).gameObject);quick=active.GetComponent<QuickBuyDialog>();cost=Field<PlayerCostMoneyContent>(quick,"mCostMoneyContent");
+        using(var locked=new FileStream(path,FileMode.Open,FileAccess.Read,FileShare.Read)){Click(cost.Btn);Require(calls.Contains("money-buy-rejected"),"actual money purchase reports failed disk commit");}
+        yield return WaitClosed();Require(File.ReadAllText(path)==committed&&profile.InventoryCount(2)==diamonds-380&&QuickBuyGetItemBuyCount(1,EQuickBuyRefreshType.Daily)==1,"original immediate close is retained while failed purchase leaves inventory and count unchanged");
+        long heldMoney=profile.InventoryCount(1);SetBalance(1,long.MaxValue);committed=File.ReadAllText(path);
+        Require(!moneyQuickBuy.Buy("award-overflow",1).IsApplied&&File.ReadAllText(path)==committed&&profile.InventoryCount(1)==long.MaxValue&&profile.InventoryCount(2)==diamonds-380,"award overflow rolls back the staged currency debit and counter update");
+        SetBalance(1,heldMoney);SetBalance(1,money);SetBalance(2,diamonds);
+        Debug.Log("HOME_MONEY_QUICK_BUY_PASSED: original base-level condition, native buy pointer, actual award/cost/count, tier crossing, new-day reset, profile reopening, receipt replay and debit/award/disk-failure rollback. Production timezone, error/award presentation and HUD remain pending.");
+    }
     IEnumerator Open(GameObject root)
     {
         active=root;popup=root.GetComponent<WorldPopupWindow>();
@@ -253,7 +290,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     static T Field<T>(object value,string name)=>(T)value.GetType().GetField(name,BindingFlags.Instance|BindingFlags.NonPublic).GetValue(value);
     static T Load<T>(JToken reference) where T:Object{var value=AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath((string)reference["guid"]));Require(value,"original reference "+reference);return value;}
     static void Require(bool value,string message){if(!value)throw new InvalidOperationException(message);}
-    public int Level=>10;public int SubRank=>0;public long GetItemAmount(int id)=>profilePlayer!=null?profilePlayer.GetItemAmount(id):counts.TryGetValue(id,out var count)?count:0;
+    public int Level=>profile?.Save.Player.Level??10;public int SubRank=>profile?.Save.Player.SubRank??0;public long GetItemAmount(int id)=>profilePlayer!=null?profilePlayer.GetItemAmount(id):counts.TryGetValue(id,out var count)?count:0;
     public bool HasItem(int id,long count)=>GetItemAmount(id)>=count;public bool IsBanCostItem(int id)=>banCost;
     public long QuickBuyGetItemBuyCount(int id,EQuickBuyRefreshType type)=>profileQuickCounters==null?alreadyBought:profileQuickCounters.GetBuyCount(profile.Save.Player,id,type,quickCounterTime);
     public event Action<IProfessionItemData,long,object> OnItemCountUpdate {add{changed+=value;subscribers++;}remove{changed-=value;subscribers--;}}
@@ -269,7 +306,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     public IDisposable SubscribeEnterNewDay(Action<HomeCurrencyEnterNewDay> callback){day+=callback;return new Release(()=>day-=callback);}
     public IDisposable SubscribeAutoIncrease(Action<HomeCurrencyAutoIncreaseEvent> callback){increase+=callback;return new Release(()=>increase-=callback);}
     public UniTask<bool> CheckBuyLimitCountItem(int id,long count){calls.Add("limit:"+id+":"+count);return UniTask.FromResult(allowLimit);}
-    public void PlayerQuickBuy(int id,long count)=>calls.Add("buy:"+id+":"+count);
+    public void PlayerQuickBuy(int id,long count){calls.Add("buy:"+id+":"+count);if(moneyQuickBuy==null)return;Require(id==assets.MoneyId,"bound home money purchase");lastMoneyBuyRequest="native-money-"+(++moneyBuys);var result=moneyQuickBuy.Buy(lastMoneyBuyRequest,count);if(result.IsApplied)profilePlayer.SynchronizeCommittedPlayer();else calls.Add("money-buy-rejected");}
     public void PlayerDiamonChange(long count,Action success){exchanges++;calls.Add("exchange:"+count);lastExchangeRequest="native-confirm-"+exchanges;var result=exchange.Exchange(lastExchangeRequest,count);if(result.IsApplied){profilePlayer.SynchronizeCommittedPlayer();success();}else calls.Add("exchange-rejected");}
     public void ShowLackOfItem(int id,long count,IWindowOperator owner){lack++;calls.Add("lack:"+id+":"+count);}
     public void ShowError(int code,string name)=>calls.Add("error:"+code);public void SystemMessage(string text)=>calls.Add("message:"+text);
