@@ -1,0 +1,3574 @@
+{
+  "manifest": "884_156692",
+  "sdk_source": {
+    "path": "assets/reference/battle-animation/wwise-windows-integration-source-manifest.json",
+    "bytes": 97969,
+    "sha256": "0f19ae27272db27a3e589756156a2c23f1d43f3133f032d7a1dfa37399832f7c"
+  },
+  "package_format_source": {
+    "sdk_version": "2022.1.18.8567",
+    "official_bundle_id": "wwise.2022_1_18_8567",
+    "package": {
+      "name": "SDK.tar.xz",
+      "bytes": 112512532,
+      "sha1": "26c3ebabd96d2df5d5e0b067b089f75d310701e3",
+      "sha256": "bab001724de29b9ea23d90866f74c88ed7c8cd27ae0a91a70df83fb3128039ce"
+    },
+    "files": [
+      {
+        "path": ".tools/wwise/SDK-2022.1.18.8567/packages/SDK.tar.xz",
+        "bytes": 112512532,
+        "sha256": "bab001724de29b9ea23d90866f74c88ed7c8cd27ae0a91a70df83fb3128039ce"
+      },
+      {
+        "path": ".tools/wwise/SDK-2022.1.18.8567/official-manifest.json",
+        "bytes": 43617,
+        "sha256": "87a3bae9c64725e30ab39087dff2e3803eb5275402f2787423eec532dc2a07d6"
+      },
+      {
+        "path": ".tools/wwise/SDK-2022.1.18.8567/SDK/samples/SoundEngine/Common/AkFilePackageLUT.h",
+        "bytes": 7448,
+        "sha256": "690ecaf20db1995526100e1a56b6961bd5e5e469c2ac0ab7ed6ce505f88cf3a3"
+      },
+      {
+        "path": ".tools/wwise/SDK-2022.1.18.8567/SDK/samples/SoundEngine/Common/AkFilePackageLUT.cpp",
+        "bytes": 8870,
+        "sha256": "2a909c802d33cb86564245f5edd9c1e11a502f8e885d080abd9f82501e3ade43"
+      },
+      {
+        "path": ".tools/wwise/SDK-2022.1.18.8567/SDK/include/AK/SoundEngine/Platforms/Windows/AkTypes.h",
+        "bytes": 5887,
+        "sha256": "8ccf22be8fb8ceb3e619a16bc4b75804b81221307b58e3d30f97ae22d9c99440"
+      },
+      {
+        "path": ".tools/wwise/SDK-2022.1.18.8567/SDK/include/AK/SoundEngine/Platforms/POSIX/AkTypes.h",
+        "bytes": 3777,
+        "sha256": "8b83d0c71915a1c57a8bf9dbe9d5bb3c634c5ec686f84bdfb0fa8024db6ce5d7"
+      }
+    ]
+  },
+  "event_source": {
+    "path": "assets/reference/battle-animation/native-sound-sources-source-manifest.json",
+    "bytes": 3471202,
+    "sha256": "9c095c5e2b16414129e96fea3f2392f65247e395a885d2a22f567d92f265e50b"
+  },
+  "dependency_source": {
+    "path": "assets/reference/battle-animation/native-sound-dependencies-source-manifest.json",
+    "bytes": 15511954,
+    "sha256": "9231d96f2c61a69acc9735e514134d3e84a797c3314ae50c0fca25331eb6b3fd"
+  },
+  "settings_export": {
+    "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json",
+    "bytes": 114378086,
+    "sha256": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c"
+  },
+  "inputs": [
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/AK.Wwise.Unity.API.asmdef",
+      "bytes": 683,
+      "sha256": "5319d3aae20d2ef65919d1f372907daf07e28c93009f067c7589568595edf9bf"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/AkSoundEngine.extensions.cs",
+      "bytes": 3255,
+      "sha256": "c6339a9fca23c788d9d55fa1e7215600c5b556f4ac93290615ee6932094ed510"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/Ak3DAudioSinkCapabilities.cs",
+      "bytes": 3468,
+      "sha256": "aa78770d8eda63bb3bae8187a83d21b841325e617369b8a1da307b62468345d6"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/Ak3dData.cs",
+      "bytes": 2822,
+      "sha256": "e20327a7429d53b7c59df582ec74d1dc14d515c235ec23afbfbdf43c133e1b46"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/Ak3DPositionType.cs",
+      "bytes": 923,
+      "sha256": "c38670ef6966e4413b421efaa55681e53792c848015e679c4ec5047bc56ddde0"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/Ak3DSpatializationMode.cs",
+      "bytes": 929,
+      "sha256": "1b9d64e7a7c4b85f82a1198153cd0b4262b2e0e73f4c6b6e1cb2b1196ccb90a3"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAcousticSurface.cs",
+      "bytes": 3067,
+      "sha256": "20177a9a4f4d259ae9af05222885562d3bb5d855c5aaa6ec548b440516178c65"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkActionOnEventType.cs",
+      "bytes": 968,
+      "sha256": "b7d718b106e2a46e7bae66a980fbad49d70121248c9d1ff8aa774b46554e1094"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAttenuationCurveType.cs",
+      "bytes": 1610,
+      "sha256": "afc38d22d39fe90c0dbe7dd2afc461a42ac36caf54aa3eff5c9f34a88844c5c2"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAudioDeviceState.cs",
+      "bytes": 1079,
+      "sha256": "c29bd23706757a5376feb19846b8be1d2bb93d8ab79e2e81abb78b779dc06df7"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAudioFormat.cs",
+      "bytes": 4270,
+      "sha256": "1630fc9bd6274c259ee998828c647c50cbbff356a7412335d604462fe15647b4"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAudioInterruptionCallbackInfo.cs",
+      "bytes": 2190,
+      "sha256": "d6527c42abafdcc32f1ff686b5035298689d5de6de203b553cf026eeeab45389"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAudioObjectDestination.cs",
+      "bytes": 875,
+      "sha256": "a001d97465e78b0a3f51c29d2843e2eb5e43aa4e507e16da4bff5730ff2fae2e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAudioSettings.cs",
+      "bytes": 2396,
+      "sha256": "df8e2f71218a471544474205b639a3e311aa88fa592d4668a30af69121309ece"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAudioSourceChangeCallbackInfo.cs",
+      "bytes": 2190,
+      "sha256": "baec6051b542b23de7858453265785b5c4b41528faa1442b2b0c29699a0dac6e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkAuxSendValue.cs",
+      "bytes": 3315,
+      "sha256": "da5f4ddc33ec5aa576c3ce218b463bbd6fc315cdf3e8df06f38b599ac7dd10b6"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkBankCallbackInfo.cs",
+      "bytes": 2350,
+      "sha256": "14d7de6c11d5ab179f78dbb271ca728c5f010dc388e42eedfe9e9d8d32842235"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkBankContent.cs",
+      "bytes": 836,
+      "sha256": "2f659132d0f245423c4ce9cb7e300bc394e23dd8d8a4f78a6ea6c8a0d311c507"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkBankTypeEnum.cs",
+      "bytes": 863,
+      "sha256": "2ff789c3fa3e6bde8c19f810fe5b9b8d52c095d659aaf7db7df0284208cf0284"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkBehavioralPositioningData.cs",
+      "bytes": 3904,
+      "sha256": "f684a16c45dc6c65c855b9f854217fa6d6abd8a1baf3a9a0c5b7b8dcac5ab0f4"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkBusHierarchyFlags.cs",
+      "bytes": 906,
+      "sha256": "2e30e96fe9daa8924766e5167e16dc60a2dbc3a8e76837d5b3a25a068f62bece"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkCallbackInfo.cs",
+      "bytes": 2167,
+      "sha256": "d74990dd4a8c2d54cc30c1054910696d0c0acf2d164ceb446290f45914683e1a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkCallbackSerializer.cs",
+      "bytes": 3055,
+      "sha256": "8d50e9b2b0e2d19dca9e65988feb07f60d8bc374006ed814e6ce13eb5098f785"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkCallbackType.cs",
+      "bytes": 1603,
+      "sha256": "6ead6734e5d6111a7a24dd9efac6c271f94f63ebf173db1386609d90da7c67d7"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkChannelConfig.cs",
+      "bytes": 5339,
+      "sha256": "a9604a482f139569b432d720e827f7280db1a0bb5a43e9d380a7a022ddac0efc"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkChannelConfigType.cs",
+      "bytes": 1046,
+      "sha256": "7201a89602434f2f32ab8b51366590338a28cf949778f4744683358f44167eca"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkChannelEmitter.cs",
+      "bytes": 2700,
+      "sha256": "d3b5c175c0a172696298ac5d99b9b45632fbd1826c29ffb8e8e42510ca34c816"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkChannelOrdering.cs",
+      "bytes": 843,
+      "sha256": "c1cc536a8b7a3eb4d47a3957e3fbd89753847c965793951c3776d6796ecb28fd"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkConnectionType.cs",
+      "bytes": 932,
+      "sha256": "4f648bdbfd133893d124500df0c32c0fda333c6d6a2d6dbbada71c5dd803ae9e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkCurveInterpolation.cs",
+      "bytes": 1190,
+      "sha256": "dc915ddf89fc3daa7d3533d7ec2b33cea3c59acfd71bec0ebf47a0fbf43fd79f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkDeviceDescription.cs",
+      "bytes": 3274,
+      "sha256": "8a9b7442181d144c1e26ed1a6fe5689ba044572c6b2095f1750dc65c72c9e4e1"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkDeviceSettings.cs",
+      "bytes": 4567,
+      "sha256": "0cee1170a0ccf37cdb4e18ffb1404500176e3911aa277b46c25e287d8f926747"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkDiffractionPathInfo.cs",
+      "bytes": 4568,
+      "sha256": "f74c4331442ad10de8bb3d23e602a5bc371222b777d5300de9d89044b785af75"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkDurationCallbackInfo.cs",
+      "bytes": 2591,
+      "sha256": "8c52dbbcf3086242270c9581059c31e9e53c86becad34ac3c6a8c7f0b121cc06"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkDynamicSequenceItemCallbackInfo.cs",
+      "bytes": 2457,
+      "sha256": "65536cf5d93f123fdc21214a5f1c7bf3101aafa2e3e7faa4a9d8c883c23f0757"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkDynamicSequenceType.cs",
+      "bytes": 870,
+      "sha256": "883b0f4636fe8c45122078510974cef2b39c801c24dbf5194a35a96d2219236d"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkEventCallbackInfo.cs",
+      "bytes": 2152,
+      "sha256": "ef9e58074b79b904e960ae0b43290d3ee879284ce4b23046cd7f5640882abd8f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkExtent.cs",
+      "bytes": 2655,
+      "sha256": "8a6208b99c3ec895920463894cee0e9c8736d2c876630c53fe6780f6608c34dd"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkExternalSourceInfo.cs",
+      "bytes": 4423,
+      "sha256": "d102aff794696f9aed9aa3f955fd290f6852238bcc15f26bf342840eb8c7fffe"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkFloorPlane.cs",
+      "bytes": 888,
+      "sha256": "07ab14adfe211c2ada95081a05ca2ade4a8ca95c54da85a0f09170450efab038"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkGeometryInstanceParams.cs",
+      "bytes": 2681,
+      "sha256": "2850dcbaf03629b34249993cb05a8528ea5147549ff05896d1cd151456f20b94"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkGlobalCallbackLocation.cs",
+      "bytes": 1506,
+      "sha256": "e0cfca5ca35c17a1d447319d513273345d399c3643a684d108d3833b11636782"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkGroupType.cs",
+      "bytes": 833,
+      "sha256": "d25c77ed4d93e2dc59c04599acc561fef33610cc4cc9c687044f1101f2dc3f19"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkImageSourceParams.cs",
+      "bytes": 3633,
+      "sha256": "fbafbef0c4abd3353a2f2871f9563283aae8c77ef3dd8c99a02f033ee84ea4fb"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkImageSourceSettings.cs",
+      "bytes": 2797,
+      "sha256": "1f7e40dc1aef12ab86963033a8918c697a9d8a9955aee37d3a36c17eb4252735"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkInitializationSettings.cs",
+      "bytes": 5753,
+      "sha256": "a8554503c1b5840cda2f3a1e0053c09d20cad1f292ca2885c3960f043e3a0bd5"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkInitSettings.cs",
+      "bytes": 6080,
+      "sha256": "2de0faac79559a06f8bde12fb4149f5eec0cea0c856297dbba2a49df2942861c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkIterator.cs",
+      "bytes": 3069,
+      "sha256": "81aee175993f2bc33d5a83334b4d8c49bb53bb83b4139afaa8a2bdc004cba81f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMarkerCallbackInfo.cs",
+      "bytes": 2337,
+      "sha256": "537c4310a1d505c18053ca456152f0928f4fff136ea1fc9fad7039422ab4f5bf"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMeteringFlags.cs",
+      "bytes": 1001,
+      "sha256": "0b43741ca56f313873f23807d932f7ab3a40d7ef0ce02268f5e2ead7a2d68fd9"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMIDICcTypes.cs",
+      "bytes": 3123,
+      "sha256": "abe4065afe14a061b005f7d460b2df1d235d94ae706ca906ff47af12c4ac32f0"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMIDIEvent.cs",
+      "bytes": 21252,
+      "sha256": "63b1a335b25bad26572dcef08485cee43bf1737d825b22f9fdd2e59994d83737"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMIDIEventCallbackInfo.cs",
+      "bytes": 3831,
+      "sha256": "20e19072350e7d63b4e5855db071bcc99d27991c09e31a9eea1809ae7232444b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMIDIEventTypes.cs",
+      "bytes": 1002,
+      "sha256": "5d2607f60917924935387e7ddcd1f12a78b836ae9254f4b0330c70f48a8378ae"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMIDIPost.cs",
+      "bytes": 6511,
+      "sha256": "92714acc0f75a64c3c7e5e2ecdb22b56ee099991a7f410e37479ad4dfd96939c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMonitorErrorCode.cs",
+      "bytes": 8584,
+      "sha256": "c4db504cd02c827fecffaa03073537ea573610eba0413962bd34d5bf53c7c1d7"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMonitorErrorLevel.cs",
+      "bytes": 911,
+      "sha256": "584e0e0197f114174c26de36d14bb55f459863fc8937fa9b57755901bfeeb81e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMonitoringCallbackInfo.cs",
+      "bytes": 2739,
+      "sha256": "83d57ea3bef7424c9a65fb33a0b1501daa42a6087dc988588378cf4c4a9e5b89"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMultiPositionType.cs",
+      "bytes": 903,
+      "sha256": "89b313120387bc2c53ac8562c5c4c199e7084196385845a8d79c6dd1e09186d3"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMusicPlaylistCallbackInfo.cs",
+      "bytes": 2555,
+      "sha256": "8e6caae8d3814ebfec4568d172344611791450961a482aa26a3738dc2a2a31ce"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMusicSettings.cs",
+      "bytes": 2074,
+      "sha256": "0b57f7836fb60240b264df27e435d8303ff29b91c10d100e3cf9814ddb3e4797"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkMusicSyncCallbackInfo.cs",
+      "bytes": 3871,
+      "sha256": "fa15884f4a03eab6150ee80ca5c665f924064c6bf5e06faee2751b8108bd0ccd"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkObjectInfo.cs",
+      "bytes": 2794,
+      "sha256": "8b561b0db67b506a3531c25322f67921bbf8bae9df90240523e536d08d34a876"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkObstructionOcclusionValues.cs",
+      "bytes": 2885,
+      "sha256": "f7bdae848632252cb5ea0a41fd72bbed162c0eeeb480ca558ed8a26421d7b8da"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkOutputSettings.cs",
+      "bytes": 3960,
+      "sha256": "93ab37fc0a4f1c341b4aaded9644e4db417b096a8bb89a282789a90eea774de8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPanningRule.cs",
+      "bytes": 853,
+      "sha256": "7ef51ad1e440024fdd8f7be4d896add883f0f3726114faf9987fc8bc62886b00"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPlaylist.cs",
+      "bytes": 3028,
+      "sha256": "3e4c376a51767b6da26de9ff6811ebf95f7291759fdd5e8f2ad4568142632411"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPlaylistArray.cs",
+      "bytes": 7055,
+      "sha256": "ee909adaec126e58fc6be4dff2f223295b38aa805bb0b0c7fb820983b8256fc0"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPlaylistItem.cs",
+      "bytes": 3352,
+      "sha256": "68bf2ea342237b4456aae06df7f2b761ea7f2ae4f1a3f0f8ed92904b031e536f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPluginType.cs",
+      "bytes": 1036,
+      "sha256": "7a7e2fd890c40429ba2530064ce1e483a51796188f350888eddf56e0ea25190b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPositioningData.cs",
+      "bytes": 2775,
+      "sha256": "cce6e7850b7c3c8f2c066ee2197d63f4166c44abae6d4027c0d4a9f48320eea0"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPositioningInfo.cs",
+      "bytes": 6183,
+      "sha256": "10448fbc7cc020b506d2c7b277d4797bbf9f56ee2b09af1807ba1d4df8270569"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkPreparationType.cs",
+      "bytes": 860,
+      "sha256": "404e05f672e8e6cfb96af4abc132497689734905171d33dcbb70bbea8199e39c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkQueryRTPCValue.cs",
+      "bytes": 903,
+      "sha256": "c23eebdba9e6d6599ed68614aec632d107fdc346d3fbe7f9f6c55b577c32d17b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkRamp.cs",
+      "bytes": 2359,
+      "sha256": "cc3a49f54956b4b77eee63150a55984fc018a57dd702725809c0a8ec6679569d"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkReflectionPathInfo.cs",
+      "bytes": 3831,
+      "sha256": "4f50446865884fddb081e5d0e43c73db0b49669e8b0510eb67748a9b567a43e8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkResourceMonitorDataSummary.cs",
+      "bytes": 3443,
+      "sha256": "278de755fb1875e567265ea4e39dfd25c58e56601364e186a69ea8b536d96ed2"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AKRESULT.cs",
+      "bytes": 2826,
+      "sha256": "747c5aae6ab767de8666bf1dfa02547c339cdf1b0bcd489e4b0a00fca60f3412"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkRoomParams.cs",
+      "bytes": 3440,
+      "sha256": "f7b9391e9503996efc61a30adee8ca2b9d052964df934f262c9837c94e17c5e6"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkSegmentInfo.cs",
+      "bytes": 3878,
+      "sha256": "20480a7f70881c4675bd33fe4869313d445217c8dd04dffaa5ac0eb2d1bbbb04"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkSerializedCallbackHeader.cs",
+      "bytes": 2730,
+      "sha256": "fa5b767a1360c048dbefc09e0d3b3d9617250fa751060181bc45f7bd1afd1f8c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkSetPositionFlags.cs",
+      "bytes": 965,
+      "sha256": "9eea995c9a387728976aa0b069969cba68058ba3eaf33afabdbb135a1048300f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkSourceChannelOrdering.cs",
+      "bytes": 893,
+      "sha256": "9eeaa2d945afd2a437dba6e2b9d796806b9c79b4bcc15c38c5e30e36d77d368f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkSourceSettings.cs",
+      "bytes": 2916,
+      "sha256": "70742dd3514d53450b363b6f4b6ce6c55966f810918b038c39d7739b5c04b996"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkSpatialAudioInitSettings.cs",
+      "bytes": 4956,
+      "sha256": "4342b0555a62fc37ab9ce878be6e398b8e33e193c4825086f8e27f9a95798301"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkSpeakerPanningType.cs",
+      "bytes": 886,
+      "sha256": "564ba08fddbaaf2908a08278536735808df85b332c75f16d01d30b5b1b78fb43"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkStdMovePolicy.cs",
+      "bytes": 2029,
+      "sha256": "f8f8abb4d4f784bce0c68fd0833937edc161f1c556160525cf7902a83c9d2336"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkStreamMgrSettings.cs",
+      "bytes": 1844,
+      "sha256": "67a9f4435e561ad9c137b64ac9dd7c33e8e449bbce42396935180b85037f2119"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkTransform.cs",
+      "bytes": 3815,
+      "sha256": "35473076db7ba092a4fa861fb96e4c59d57c9dcd7581de397927466dad6f755c"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkTriangle.cs",
+      "bytes": 3163,
+      "sha256": "22a8785978e4b58421bb955f184af050fa8860a0eb6f32a087acd02162d3f9de"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkTrivialStdMovePolicy.cs",
+      "bytes": 2085,
+      "sha256": "57c511a7c17a7fae50edd3c4efa6947bf48febbc48ebf88dece18f95456313f2"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/AkWorldTransform.cs",
+      "bytes": 3874,
+      "sha256": "d4fef05a3a18a0ad97039e25dba764815de7b37157aeda1fbc37c857d8a041b4"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/MonitorErrorInfo.cs",
+      "bytes": 2722,
+      "sha256": "b233ede8ac4b781f788b4c987f4f019ba66a502c36965c588c922788df71756a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Common/MsgContext.cs",
+      "bytes": 3251,
+      "sha256": "e3899bbc03a6056f303189bb894365af26ce0baa40baa8ffd279a99e441f6612"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Windows/AkCommunicationSettings_Windows.cs",
+      "bytes": 3392,
+      "sha256": "3baa124e19e21a4bff51d8fe2b779f38f499b11a53ac0fc5dfdf01fea2f6b4de"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Windows/AkPlatformInitSettings_Windows.cs",
+      "bytes": 4423,
+      "sha256": "0a9b96157bcc5948df1b85997484db88bdd5c887eb769f8460dca489f45c8bf9"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Windows/AkSoundEngine_Windows.cs",
+      "bytes": 136098,
+      "sha256": "527a92d6925809596988d1a91217671c1497a503e0d17c9a6b8afc0411d75c75"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Windows/AkSoundEnginePINVOKE_Windows.cs",
+      "bytes": 308874,
+      "sha256": "0842af68e147181ad1d9b77393a9607a10056c9a06ca68df0afd285b3fe098c6"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Windows/AkThreadProperties_Windows.cs",
+      "bytes": 2389,
+      "sha256": "7ff76e93b453dc52981a181efbd5068e5c7568bd846a343d5b5487fb40056fe5"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Generated/Windows/AkUnityPlatformSpecificSettings_Windows.cs",
+      "bytes": 1700,
+      "sha256": "a1cef5513f3426260d74a4c05f72539296a0b1a7ca7efd44d68ecd8dc79d90c5"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkAudioInputManager.cs",
+      "bytes": 8043,
+      "sha256": "ced198ddd3459e51e828bf07a3cac6bf6329ed8c12abf01062f949868d2ec0ff"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkBankManager.cs",
+      "bytes": 9448,
+      "sha256": "de782e34e3b74f8c26cc9eded06decd8335c4d4c3c0deb513c78740a4e900a47"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkBasePathGetter.cs",
+      "bytes": 10690,
+      "sha256": "9e65ee861dad2604796166e7ca992bc85f0b2b7a3265eea6f34563f98c2f3cb7"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkCallbackManager.cs",
+      "bytes": 17590,
+      "sha256": "693f9f0e8ead3a961fdbba91863e9856814c65fa1d5adb6aba49ae9dea4a9552"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkCommonPlatformSettings.cs",
+      "bytes": 34946,
+      "sha256": "dc8404499d0e2ad7e3ec4301b5f96353f5b5689e454899aebe0fc9fac8ae7e9f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkEnumFlagAttribute.cs",
+      "bytes": 1852,
+      "sha256": "681a729d63be725af5969d2c99cc9937d5edc2803077a17a837f0a5ea015c978"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkLogger.cs",
+      "bytes": 2868,
+      "sha256": "364873863393a7c631e28baf14a0281a8b3ad7c7a5f18cb0f02a2690e8be14bf"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkShowOnlyAttribute.cs",
+      "bytes": 1700,
+      "sha256": "bd37cf603269aee6412f366f9bf5d2b9c1b2714b71c226e2dbb49668afdc2951"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkSoundEngine.cs",
+      "bytes": 62094,
+      "sha256": "d91880eb07fe444bc54ceee4d559876535b39de2ce054a30dfdc21797ef3d4a3"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkUtilities.cs",
+      "bytes": 29605,
+      "sha256": "d01f8d8cbc5ad05ba9692b1aa767336de7e93ae45e30d70d70ed79270da0f255"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkVector.cs",
+      "bytes": 1424,
+      "sha256": "3e28b4df70041a62cb04fd584b9d8bf340e3895eff94ab8bf78f8511a8c657e8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkVector64.cs",
+      "bytes": 1701,
+      "sha256": "f36d5fa75c46ba0822fae5ba56d0f0d7b6b94e4911d997ae8a7db5cced9814ca"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkVertex.cs",
+      "bytes": 2232,
+      "sha256": "46b76046379208cbf9d049d534080566da021ea26c50e94d9bfd61ed55e08692"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkWwiseEditorSettings.cs",
+      "bytes": 24064,
+      "sha256": "e5d2ff16b2a42e8f940132c354dc56d0e493d2ba6e19025540c1c51bc570d58e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkWwiseInitializationSettings.cs",
+      "bytes": 44768,
+      "sha256": "9e95f494bbd67c941214ecff1625e86d9520a716b2ccf404575ec2ada6f1eb21"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/AkWwiseSoundbanksInfoXMLFileWatcher.cs",
+      "bytes": 2928,
+      "sha256": "6e766f0e53d76a3486a211a3d1e27181f09ed137f4f1f65c4d608ee27641d4ab"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkAcousticSurfaceArray.cs",
+      "bytes": 2026,
+      "sha256": "ff3b0e6109312797b4070a74f6508a23513c2a905e629c226f6c1d64973658e3"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkAuxSendArray.cs",
+      "bytes": 4359,
+      "sha256": "cdeb5688726fa87cc9604f3b0183300874f53871008b4ec18377ab4a73872cc5"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkBaseArray.cs",
+      "bytes": 3553,
+      "sha256": "0b0faf4963c97e4d11408037d02382982ce3ca9e4bfcc5fb9a7aac39aa4405fa"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkChannelEmitterArray.cs",
+      "bytes": 4499,
+      "sha256": "19a5e29baab8ffcacab4eecf2f184278a2183d991a6ee8a6ad395f4fd819c481"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkDeviceDescriptionArray.cs",
+      "bytes": 1876,
+      "sha256": "e665a5f2b3144a3cfcbb3a57697662a1f1faf26fe9a0db9c87b8a6c518da4bee"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkDiffractionPathInfoArray.cs",
+      "bytes": 1913,
+      "sha256": "24a7bb7522d32a0311b4571157406ae2237785b9a4f2bfbee36f070a037c8f23"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkExternalSourceInfoArray.cs",
+      "bytes": 2238,
+      "sha256": "a31bcd235d30ed698a0b42166e2d87cfc3e1992fca032c1e7d7fdd41f4cb1ebc"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkMIDIPostArray.cs",
+      "bytes": 3231,
+      "sha256": "1cea934487b35f5a13cc5f96df2a43263c5300ce98ffffd61cf7b42125587496"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkObjectInfoArray.cs",
+      "bytes": 1976,
+      "sha256": "561eb09af7bb9db0374b77f7f9d187856736659ec8059bc597610113e66334a8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkObstructionOcclusionValuesArray.cs",
+      "bytes": 2135,
+      "sha256": "b6c0551fe117ed63ad305780600c08b9614ba3d83065cf43fa7a0c59811c3a41"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkPositionArray.cs",
+      "bytes": 4231,
+      "sha256": "d1a29e4894a8f5104742132086d818a67a7fa01fd17c1c648dfd61e077f01b17"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkReflectionPathInfoArray.cs",
+      "bytes": 1904,
+      "sha256": "8f4a8569478341fffa7dbec741968b3b21de0fde1f255b28342b8e5bac61286b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkSourceSettingsArray.cs",
+      "bytes": 2016,
+      "sha256": "16f3f4d86a5f72a262ee6d7e415e07ee06408b1c5e02512b62e689df134eb88e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Common/Arrays/AkTriangleArray.cs",
+      "bytes": 1956,
+      "sha256": "b30dd1418bfe7d200956fab30f8b94d6208e62950ec954b75c63d8abe6de5c63"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Windows/AkSoundEngine.cs",
+      "bytes": 1370,
+      "sha256": "2898fda2954f62e9ea33fb9265c4b2c86a4d019a24d6199c11229b1dc03a3799"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Windows/AkWindowsBasePathGetter.cs",
+      "bytes": 1087,
+      "sha256": "a0f2191b2fb22ea9ac4041c5816eee31e9f4958ea72cbdf494cce7798852087a"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Handwritten/Windows/AkWindowsSettings.cs",
+      "bytes": 2559,
+      "sha256": "d3480b44d5c9d4e14042c7ccbee0acfa3c082565fc6d31a43c3291403c724334"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/Profile/AkSoundEngine.dll",
+      "bytes": 3820856,
+      "sha256": "d6152b75960a3b8afcd3bf7519692e55116452f8fa04f903a5f0e53aae2b67d2"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/Release/AkSoundEngine.dll",
+      "bytes": 2945848,
+      "sha256": "c977aeccd6294022aea802f472ea4c3b0fb2fb43f654c54fe26fcf24e2c40abb"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/AkConvolutionReverb.dll",
+      "bytes": 253752,
+      "sha256": "59f9f980736bcbee1c3d1ae84c0dd59fefed95f61e07a94c841c65179f0ed15e"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/AkMotion.dll",
+      "bytes": 222520,
+      "sha256": "6909e516d8367322fe89eda0276e368f759640026557b4811be8ccab721a9ed8"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/AkSoundSeedAir.dll",
+      "bytes": 201016,
+      "sha256": "e6158d3d4367987cfb5198304c4b6fd3d0cdd9231f2b4ccbdd943f6d89da2dfe"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/AkSoundSeedGrain.dll",
+      "bytes": 193848,
+      "sha256": "37f8cdd6e30f2ae70cf871f95bdc2943623a8280bbad75c16f9b19a7a3e84f6b"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/Auro.dll",
+      "bytes": 2560824,
+      "sha256": "cbabd55cbd5cf1a648118dd5f58d62f2189921d9762052b87f8343ee51c60337"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/iZotope.dll",
+      "bytes": 571192,
+      "sha256": "85d26da5dd7d0bfb802dd79e4f11802edaf8ebe49762926b9472cc4c9ef209fe"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/McDSP.dll",
+      "bytes": 312632,
+      "sha256": "d1031dc32fe7490872874e7e53169c961c0e74dd1f90d4187ff421b39fbcfa3f"
+    },
+    {
+      "path": ".tools/wwise/UnityIntegration-2022.1.18.8567.3199/Wwise/API/Runtime/Plugins/Windows/x86_64/DSP/MSSpatial.dll",
+      "bytes": 153912,
+      "sha256": "618ad1eb0f1b38f976e7e48d54f81f3c76321451b41393e16d5f54b94317a7ef"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/MonoBehaviour/AkWwiseInitializationSettings.asset",
+      "bytes": 2691,
+      "sha256": "7c583575d0c1b8a058eabe601eef2502024214f799326cc2d1398b8ae1ea43f9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/MonoBehaviour/Windows.asset",
+      "bytes": 4762,
+      "sha256": "05927bba3c3dd92874abde0cbba3a45707d266242cdcdc4cfc2894234461969c"
+    }
+  ],
+  "packages": [
+    {
+      "original": "wwisebnk_assets_wwisedata_android_activity_003_luoxiaohei_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_activity_003_luoxiaohei_pck.rawfile",
+          "hash": "f6060d24a79bbadcdf1e9bfa25e48b87",
+          "size": 11093524,
+          "record_offset": 5886,
+          "unity_crc": 0,
+          "file_crc": 3191044111,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "f6060d24a79bbadcdf1e9bfa25e48b87.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/f6060d24a79bbadcdf1e9bfa25e48b87.rawfile",
+          "manifest": "884_156692",
+          "size": 11093524,
+          "sha256": "757237f2b79fd388552fc45ed8c9f0ff585a2be90c8186bc707e671933060f28"
+        },
+        "sha256": "757237f2b79fd388552fc45ed8c9f0ff585a2be90c8186bc707e671933060f28",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/f6060d24a79bbadcdf1e9bfa25e48b87.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_003_LuoXiaoHei.pck",
+        "bytes": 11093528,
+        "sha256": "2902542eb27428fb0e9279222cb04d7d42aa889d33c8dc8e40313fd463d30cef"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_activity_007_christmas_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_activity_007_christmas_pck.rawfile",
+          "hash": "1b1a3b44f029007f2eb5d204a7783516",
+          "size": 8290095,
+          "record_offset": 6396,
+          "unity_crc": 0,
+          "file_crc": 2558773337,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "1b1a3b44f029007f2eb5d204a7783516.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/1b1a3b44f029007f2eb5d204a7783516.rawfile",
+          "manifest": "884_156692",
+          "size": 8290095,
+          "sha256": "7f81a229c102f045e5d1b5088ecbc830d26d6a0c63c533390fd24e116cb696ac"
+        },
+        "sha256": "7f81a229c102f045e5d1b5088ecbc830d26d6a0c63c533390fd24e116cb696ac",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/1b1a3b44f029007f2eb5d204a7783516.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_007_Christmas.pck",
+        "bytes": 8290099,
+        "sha256": "e9a89102ba634531efd7a52d01cf520a3495006373be50cdf23a7d8cbce54677"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_activity_011_newyear_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_activity_011_newyear_pck.rawfile",
+          "hash": "78242ec709664d762084ab629d3b5450",
+          "size": 4980138,
+          "record_offset": 6894,
+          "unity_crc": 0,
+          "file_crc": 1558225146,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "78242ec709664d762084ab629d3b5450.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/78242ec709664d762084ab629d3b5450.rawfile",
+          "manifest": "884_156692",
+          "size": 4980138,
+          "sha256": "82582fbafe9a039d85fb194190fc94638f4fc0f5cd4e79202c8282bc5fb6260b"
+        },
+        "sha256": "82582fbafe9a039d85fb194190fc94638f4fc0f5cd4e79202c8282bc5fb6260b",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/78242ec709664d762084ab629d3b5450.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_011_NewYear.pck",
+        "bytes": 4980142,
+        "sha256": "01bc18c3263e5253ad02d5dd0a588bc92a278251073f1fc8b10de15f65cf94f1"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_activity_012_wuliuqi_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_activity_012_wuliuqi_pck.rawfile",
+          "hash": "d63738127bc80ec647b6b23b295a35ce",
+          "size": 17530541,
+          "record_offset": 7017,
+          "unity_crc": 0,
+          "file_crc": 788072179,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "d63738127bc80ec647b6b23b295a35ce.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/d63738127bc80ec647b6b23b295a35ce.rawfile",
+          "manifest": "884_156692",
+          "size": 17530541,
+          "sha256": "80d319a758fe2321569f90047dc46cdd73ac1c57af09575554c6eb579a1409f8"
+        },
+        "sha256": "80d319a758fe2321569f90047dc46cdd73ac1c57af09575554c6eb579a1409f8",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/d63738127bc80ec647b6b23b295a35ce.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_012_WuLiuQi.pck",
+        "bytes": 17530545,
+        "sha256": "d61d0c624a6358a2910e1e85e77d457f906e12e2a9d8928bb48428bebbdc8c06"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_activity_017_mayday2026_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_activity_017_mayday2026_pck.rawfile",
+          "hash": "b5ffa5406708a3ae8a022bb4f7507c83",
+          "size": 1695837,
+          "record_offset": 7646,
+          "unity_crc": 0,
+          "file_crc": 3919019321,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "b5ffa5406708a3ae8a022bb4f7507c83.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/b5ffa5406708a3ae8a022bb4f7507c83.rawfile",
+          "manifest": "884_156692",
+          "size": 1695837,
+          "sha256": "1864d5916fd22bf036984eb8ca92ceffd49e49d402b4622d8c17f7b9bb2aa9d9"
+        },
+        "sha256": "1864d5916fd22bf036984eb8ca92ceffd49e49d402b4622d8c17f7b9bb2aa9d9",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/b5ffa5406708a3ae8a022bb4f7507c83.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_017_MayDay2026.pck",
+        "bytes": 1695841,
+        "sha256": "813961b0072b7d98e7f82e7c0927a735c424b468c4690f0ca72721719c1b1ce0"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_activity_020_1stanniversary_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_activity_020_1stanniversary_pck.rawfile",
+          "hash": "3b9927492a5f1ea385de58e00de5a5bd",
+          "size": 35719525,
+          "record_offset": 8026,
+          "unity_crc": 0,
+          "file_crc": 299612619,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "3b9927492a5f1ea385de58e00de5a5bd.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/3b9927492a5f1ea385de58e00de5a5bd.rawfile",
+          "manifest": "884_156692",
+          "size": 35719525,
+          "sha256": "74afbed3897c1e5e95bc543768823436f7d6cf99fa9264cbba8b006178194ab1"
+        },
+        "sha256": "74afbed3897c1e5e95bc543768823436f7d6cf99fa9264cbba8b006178194ab1",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/3b9927492a5f1ea385de58e00de5a5bd.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_020_1stAnniversary.pck",
+        "bytes": 35719529,
+        "sha256": "7557d06586288166017d6fcd5525087ae7cfa876b18213cc1e516797b1c827d7"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_activity_021_worldcup_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_activity_021_worldcup_pck.rawfile",
+          "hash": "38dd9a2fa734596fd9ab0734a8efdaf9",
+          "size": 4172864,
+          "record_offset": 8284,
+          "unity_crc": 0,
+          "file_crc": 3545682568,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "38dd9a2fa734596fd9ab0734a8efdaf9.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/38dd9a2fa734596fd9ab0734a8efdaf9.rawfile",
+          "manifest": "884_156692",
+          "size": 4172864,
+          "sha256": "3b4d6c3e1888111e2ccbda5084c7e89e39f0eb65399e185153e4ec7e2cb3f16a"
+        },
+        "sha256": "3b4d6c3e1888111e2ccbda5084c7e89e39f0eb65399e185153e4ec7e2cb3f16a",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/38dd9a2fa734596fd9ab0734a8efdaf9.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_021_WorldCup.pck",
+        "bytes": 4172868,
+        "sha256": "1390116b7ba6821295782423a77ac479fb81644cb855bae72f3904fe87e69993"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_activity_023_slime_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_activity_023_slime_pck.rawfile",
+          "hash": "6ce8f0327a639ec4dd130943749a490b",
+          "size": 4111468,
+          "record_offset": 8534,
+          "unity_crc": 0,
+          "file_crc": 2841780468,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "6ce8f0327a639ec4dd130943749a490b.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/6ce8f0327a639ec4dd130943749a490b.rawfile",
+          "manifest": "884_156692",
+          "size": 4111468,
+          "sha256": "f3a2c30df0cca72c9efdc0d1e3a77731f12011b2462c7e2d966a35f51260a16f"
+        },
+        "sha256": "f3a2c30df0cca72c9efdc0d1e3a77731f12011b2462c7e2d966a35f51260a16f",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/6ce8f0327a639ec4dd130943749a490b.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_023_Slime.pck",
+        "bytes": 4111472,
+        "sha256": "a8c5583d416d801bc430549ba2077a10a0585ba429a543c1ff81a08d7bd4bdeb"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_activity_025_luotianyi_2_cn_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_activity_025_luotianyi_2_cn_pck.rawfile",
+          "hash": "e1abee53b6d27b2cf90ea8bc43d08365",
+          "size": 7591354,
+          "record_offset": 8783,
+          "unity_crc": 0,
+          "file_crc": 880209718,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "e1abee53b6d27b2cf90ea8bc43d08365.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/e1abee53b6d27b2cf90ea8bc43d08365.rawfile",
+          "manifest": "884_156692",
+          "size": 7591354,
+          "sha256": "316a58b3f40b9c0ed19bab05e44568e7be4d31f055d4cf7a187859437e81a307"
+        },
+        "sha256": "316a58b3f40b9c0ed19bab05e44568e7be4d31f055d4cf7a187859437e81a307",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/e1abee53b6d27b2cf90ea8bc43d08365.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_025_LuoTianYi_2_cn.pck",
+        "bytes": 7591358,
+        "sha256": "9b1d159cbb49261ad8345830ebc7354a58f3084508351aeaf11640d684963b00"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_activity_027_chineseodyssey_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_activity_027_chineseodyssey_pck.rawfile",
+          "hash": "31eb3444d0576eae91f0da245cfb1460",
+          "size": 3858530,
+          "record_offset": 9046,
+          "unity_crc": 0,
+          "file_crc": 1342719713,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "31eb3444d0576eae91f0da245cfb1460.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/31eb3444d0576eae91f0da245cfb1460.rawfile",
+          "manifest": "884_156692",
+          "size": 3858530,
+          "sha256": "d4fb974b8f8b087ca1d7abf62a9d2b66b50c33dc7d6ddcc408f64d14fe340fec"
+        },
+        "sha256": "d4fb974b8f8b087ca1d7abf62a9d2b66b50c33dc7d6ddcc408f64d14fe340fec",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/31eb3444d0576eae91f0da245cfb1460.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_027_ChineseOdyssey.pck",
+        "bytes": 3858534,
+        "sha256": "bee2f367cda7e2be429e096d1275b62d105c5c1eb1daeafd65c4eb9924cb882f"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_activity_028_bocchi_jp_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_activity_028_bocchi_jp_pck.rawfile",
+          "hash": "b7ee770353be3e35075ab01b8cfd75c9",
+          "size": 5126637,
+          "record_offset": 9176,
+          "unity_crc": 0,
+          "file_crc": 3411779265,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "b7ee770353be3e35075ab01b8cfd75c9.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/b7ee770353be3e35075ab01b8cfd75c9.rawfile",
+          "manifest": "884_156692",
+          "size": 5126637,
+          "sha256": "93a488550051902b35c6961838da0faa15251fa7951097cde51d405f391a86d3"
+        },
+        "sha256": "93a488550051902b35c6961838da0faa15251fa7951097cde51d405f391a86d3",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/b7ee770353be3e35075ab01b8cfd75c9.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_028_Bocchi_jp.pck",
+        "bytes": 5126641,
+        "sha256": "986c0c51ce8ebd751d1fe11457f3cd4d062f93f34d543f5fc9a31ec5da1b7994"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_activity_029_godsatwars_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_activity_029_godsatwars_pck.rawfile",
+          "hash": "13066c7a35bef637154a2685fed2420a",
+          "size": 1186420,
+          "record_offset": 9301,
+          "unity_crc": 0,
+          "file_crc": 1629311247,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "13066c7a35bef637154a2685fed2420a.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/13066c7a35bef637154a2685fed2420a.rawfile",
+          "manifest": "884_156692",
+          "size": 1186420,
+          "sha256": "c6b9858e4b9faf504ea97865a9ed37251d0c50eb91dcf8b3ea6c7eac655b6fbb"
+        },
+        "sha256": "c6b9858e4b9faf504ea97865a9ed37251d0c50eb91dcf8b3ea6c7eac655b6fbb",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/13066c7a35bef637154a2685fed2420a.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_029_GodsAtWars.pck",
+        "bytes": 1186424,
+        "sha256": "fb5fd3aa4951f921cd0bb548a9f5e19c5a8de10e8e25a9a258b2643f141987ba"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_battle_sfx_00_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_battle_sfx_00_pck.rawfile",
+          "hash": "3d1a2bdd23b093abc834292d38ea34ae",
+          "size": 210176,
+          "record_offset": 384,
+          "unity_crc": 0,
+          "file_crc": 296290982,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [
+            "Payd_Base"
+          ],
+          "file": "3d1a2bdd23b093abc834292d38ea34ae.rawfile"
+        },
+        "source": {
+          "origin": "apk_zip",
+          "entry": "assets/yoo/WwiseBnk/3d1a2bdd23b093abc834292d38ea34ae.rawfile",
+          "apkSha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+        },
+        "sha256": "c417b2cb9c5a69104727b1c6340475a0a7a1ebed835b1e8b05289bd5bfceab2b",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/3d1a2bdd23b093abc834292d38ea34ae.rawfile",
+          "packaged": true
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_SFX_00.pck",
+        "bytes": 210180,
+        "sha256": "ec319a587073645c3d731be56b1e844926694435c150c83cdcbbaebe5f6e30f2"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_battle_sfx_01_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_battle_sfx_01_pck.rawfile",
+          "hash": "6f27a34c6343361683b15e4612683ba0",
+          "size": 4858688,
+          "record_offset": 511,
+          "unity_crc": 0,
+          "file_crc": 234266702,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [
+            "Payd_Base"
+          ],
+          "file": "6f27a34c6343361683b15e4612683ba0.rawfile"
+        },
+        "source": {
+          "origin": "apk_zip",
+          "entry": "assets/yoo/WwiseBnk/6f27a34c6343361683b15e4612683ba0.rawfile",
+          "apkSha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+        },
+        "sha256": "8f299ed0d5b48aac4c701773c271c4bf0b244eb6c120bda30ab18609cc3503d0",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/6f27a34c6343361683b15e4612683ba0.rawfile",
+          "packaged": true
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_SFX_01.pck",
+        "bytes": 4858692,
+        "sha256": "da6ae58d01716ee24c649195508543b7be3ca0107fb1e70814fd9e6efb25cc21"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_battle_sfx_02_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_battle_sfx_02_pck.rawfile",
+          "hash": "5b894906ff2c34fa43f410813f41fce5",
+          "size": 16766306,
+          "record_offset": 638,
+          "unity_crc": 0,
+          "file_crc": 3824732090,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [
+            "Payd_Base"
+          ],
+          "file": "5b894906ff2c34fa43f410813f41fce5.rawfile"
+        },
+        "source": {
+          "origin": "apk_zip",
+          "entry": "assets/yoo/WwiseBnk/5b894906ff2c34fa43f410813f41fce5.rawfile",
+          "apkSha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+        },
+        "sha256": "1aa3192ebc6c0e6fd439f63a0eddfd20f77b3acb5a46d8052d278ae157c08461",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/5b894906ff2c34fa43f410813f41fce5.rawfile",
+          "packaged": true
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_SFX_02.pck",
+        "bytes": 16766310,
+        "sha256": "52f278acef5dc9aad5530e9961ab4780cc70ecc0df0fd59478f09ba111485274"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+          "hash": "273dd41a6aa90c198997fbaa7030e010",
+          "size": 41485,
+          "record_offset": 4861,
+          "unity_crc": 0,
+          "file_crc": 467591049,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [
+            "Payd_Base"
+          ],
+          "file": "273dd41a6aa90c198997fbaa7030e010.rawfile"
+        },
+        "source": {
+          "origin": "apk_zip",
+          "entry": "assets/yoo/WwiseBnk/273dd41a6aa90c198997fbaa7030e010.rawfile",
+          "apkSha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+        },
+        "sha256": "86d9cefc05acd4d96851f140809757f8eb69fd9abb469d84a8aa16f8abd5dc78",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/273dd41a6aa90c198997fbaa7030e010.rawfile",
+          "packaged": true
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Minimum.pck",
+        "bytes": 41489,
+        "sha256": "2056cb78b2c7aff8148a9aef15d832c192f0b78e1135cf12f8507b25f7fcb828"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_player_skill_colorful_part_2_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_player_skill_colorful_part_2_pck.rawfile",
+          "hash": "8439853306940ee6b197d595470261da",
+          "size": 225523,
+          "record_offset": 11690,
+          "unity_crc": 0,
+          "file_crc": 4187150701,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "8439853306940ee6b197d595470261da.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/8439853306940ee6b197d595470261da.rawfile",
+          "manifest": "884_156692",
+          "size": 225523,
+          "sha256": "2d0b5913de647b93fff28e72fd7955708df14aa3f2f700439ecb2a944e4d0a7a"
+        },
+        "sha256": "2d0b5913de647b93fff28e72fd7955708df14aa3f2f700439ecb2a944e4d0a7a",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/8439853306940ee6b197d595470261da.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Player_skill_colorful_part_2.pck",
+        "bytes": 225527,
+        "sha256": "5fa167403d59e3eded983394ddbbb67a17b0ba43cd881f71caa0933f5d7f3ac3"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_player_skill_colorful_part_3_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_player_skill_colorful_part_3_pck.rawfile",
+          "hash": "65c151f508573a2b15a1bad02040d718",
+          "size": 274807,
+          "record_offset": 11821,
+          "unity_crc": 0,
+          "file_crc": 3071418251,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "65c151f508573a2b15a1bad02040d718.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/65c151f508573a2b15a1bad02040d718.rawfile",
+          "manifest": "884_156692",
+          "size": 274807,
+          "sha256": "daee1b535c31a03d62fcf172f813c49c07b90e1c9cefeecc921db91e2c57514f"
+        },
+        "sha256": "daee1b535c31a03d62fcf172f813c49c07b90e1c9cefeecc921db91e2c57514f",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/65c151f508573a2b15a1bad02040d718.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Player_skill_colorful_part_3.pck",
+        "bytes": 274811,
+        "sha256": "6c70562ac7202bda72259d6c514babb4f24eb0bc79c5030a28db776719927c53"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_skill_common_01_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_skill_common_01_pck.rawfile",
+          "hash": "e040006bf8158fb4428b7ba34116884f",
+          "size": 267815,
+          "record_offset": 12078,
+          "unity_crc": 0,
+          "file_crc": 1726917380,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "e040006bf8158fb4428b7ba34116884f.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/e040006bf8158fb4428b7ba34116884f.rawfile",
+          "manifest": "884_156692",
+          "size": 267815,
+          "sha256": "0fa54cc4fbf72b6077de17f82bbdeae524394ea03e216e3487046d1ebeba6193"
+        },
+        "sha256": "0fa54cc4fbf72b6077de17f82bbdeae524394ea03e216e3487046d1ebeba6193",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/e040006bf8158fb4428b7ba34116884f.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Skill_common_01.pck",
+        "bytes": 267819,
+        "sha256": "bed7a7635e599acf72901b75c378b876a6109b9d37b20bda7b4c5198054bd183"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_skill_npc_030_nonhuman_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_skill_npc_030_nonhuman_pck.rawfile",
+          "hash": "87280da64099004f7aed87e9a077723e",
+          "size": 476403,
+          "record_offset": 12196,
+          "unity_crc": 0,
+          "file_crc": 2837496086,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "87280da64099004f7aed87e9a077723e.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/87280da64099004f7aed87e9a077723e.rawfile",
+          "manifest": "884_156692",
+          "size": 476403,
+          "sha256": "c8b22136ab3d88b82111207326dc052294662389a209a53de70c4eb1be450850"
+        },
+        "sha256": "c8b22136ab3d88b82111207326dc052294662389a209a53de70c4eb1be450850",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/87280da64099004f7aed87e9a077723e.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/skill_npc_030_nonhuman.pck",
+        "bytes": 476407,
+        "sha256": "8d2d951f1210825a8df954b3aa640c66ac5726b4b0092e0252cf68f58353bf48"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_skill_pet_1620_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_skill_pet_1620_pck.rawfile",
+          "hash": "efd9d9d725c6042d9be4fc3f0bed6671",
+          "size": 156899,
+          "record_offset": 12321,
+          "unity_crc": 0,
+          "file_crc": 4091998129,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "efd9d9d725c6042d9be4fc3f0bed6671.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/efd9d9d725c6042d9be4fc3f0bed6671.rawfile",
+          "manifest": "884_156692",
+          "size": 156899,
+          "sha256": "a3ecb582fca80f7a4915082971133ef4ed1b7ae87196a7e75cb6eed8b25ca0f2"
+        },
+        "sha256": "a3ecb582fca80f7a4915082971133ef4ed1b7ae87196a7e75cb6eed8b25ca0f2",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/efd9d9d725c6042d9be4fc3f0bed6671.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Skill_Pet_1620.pck",
+        "bytes": 156903,
+        "sha256": "fb081e60918abfd2fb92c4bd326d21c73287241cb19aed21cda8eccf71f324c4"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_skill_pet_1622_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_skill_pet_1622_pck.rawfile",
+          "hash": "e62fda8d6297ce09b18f7d62f39840d5",
+          "size": 70938,
+          "record_offset": 12438,
+          "unity_crc": 0,
+          "file_crc": 570886605,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "e62fda8d6297ce09b18f7d62f39840d5.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/e62fda8d6297ce09b18f7d62f39840d5.rawfile",
+          "manifest": "884_156692",
+          "size": 70938,
+          "sha256": "548b92c3d0e965d48842cfdbfed5b0704761b3c2a74fa781d94516dda23235df"
+        },
+        "sha256": "548b92c3d0e965d48842cfdbfed5b0704761b3c2a74fa781d94516dda23235df",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/e62fda8d6297ce09b18f7d62f39840d5.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Skill_Pet_1622.pck",
+        "bytes": 70942,
+        "sha256": "b42f1018feeaf354a8cec14bf8b4b62fb3c858b353e1c265d1f461b6af0ab5af"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_version_004_season_04_sfx_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_version_004_season_04_sfx_pck.rawfile",
+          "hash": "7deebeeb40253a5ff5b4c29bea3b9472",
+          "size": 9572624,
+          "record_offset": 13782,
+          "unity_crc": 0,
+          "file_crc": 2640902301,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "7deebeeb40253a5ff5b4c29bea3b9472.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/7deebeeb40253a5ff5b4c29bea3b9472.rawfile",
+          "manifest": "884_156692",
+          "size": 9572624,
+          "sha256": "2989941469eaadda66ba337b957a9fda760d54bd0a063bccf4b619f3c67096aa"
+        },
+        "sha256": "2989941469eaadda66ba337b957a9fda760d54bd0a063bccf4b619f3c67096aa",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/7deebeeb40253a5ff5b4c29bea3b9472.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_004_Season_04_SFX.pck",
+        "bytes": 9572628,
+        "sha256": "e1a885a6f23a633f6a96cfc2c0f456b36be48a1a3f9522e0d428173e0c9a445a"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_version_005_season_05_sfx_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_version_005_season_05_sfx_pck.rawfile",
+          "hash": "78c9b7ca0f284b40cdeb2d4ed8e40419",
+          "size": 8696724,
+          "record_offset": 14168,
+          "unity_crc": 0,
+          "file_crc": 1905094832,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "78c9b7ca0f284b40cdeb2d4ed8e40419.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/78c9b7ca0f284b40cdeb2d4ed8e40419.rawfile",
+          "manifest": "884_156692",
+          "size": 8696724,
+          "sha256": "dd34d792aa6561f85af72aa8664c65014c8745030b823e76360d4a7f6ae89527"
+        },
+        "sha256": "dd34d792aa6561f85af72aa8664c65014c8745030b823e76360d4a7f6ae89527",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/78c9b7ca0f284b40cdeb2d4ed8e40419.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_005_Season_05_SFX.pck",
+        "bytes": 8696728,
+        "sha256": "dd13f1c90659abdc5cc6c51023ce716c7f55ad7ec7419d853f39fcdb0c2bc32e"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_version_006_season_06_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_version_006_season_06_pck.rawfile",
+          "hash": "086b00dad91d76b2c47212ae63f8726a",
+          "size": 28969659,
+          "record_offset": 14426,
+          "unity_crc": 0,
+          "file_crc": 738544002,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "086b00dad91d76b2c47212ae63f8726a.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/086b00dad91d76b2c47212ae63f8726a.rawfile",
+          "manifest": "884_156692",
+          "size": 28969659,
+          "sha256": "fe6af979536c5f94b5f98a7c59448e68e628845f44c48b6212d4cd3d3a7ca864"
+        },
+        "sha256": "fe6af979536c5f94b5f98a7c59448e68e628845f44c48b6212d4cd3d3a7ca864",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/086b00dad91d76b2c47212ae63f8726a.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_006_Season_06.pck",
+        "bytes": 28969663,
+        "sha256": "e18ca7674c45cb37eb31ad2066cbd99ad56369224ceecb00844ce279edacfdf5"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_zh_cn_voice_battle_01_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_zh_cn_voice_battle_01_pck.rawfile",
+          "hash": "a269b541970a98fbde3d78eb82f2e9bb",
+          "size": 578470,
+          "record_offset": 15060,
+          "unity_crc": 0,
+          "file_crc": 1998629120,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "a269b541970a98fbde3d78eb82f2e9bb.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/a269b541970a98fbde3d78eb82f2e9bb.rawfile",
+          "manifest": "884_156692",
+          "size": 578470,
+          "sha256": "449518ed82670c07afc3056a8e86d4d62fb5fa2a54cbd34ccec58ba5b64dbfab"
+        },
+        "sha256": "449518ed82670c07afc3056a8e86d4d62fb5fa2a54cbd34ccec58ba5b64dbfab",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/a269b541970a98fbde3d78eb82f2e9bb.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Voice_Battle_01.pck",
+        "bytes": 578478,
+        "sha256": "56027e5320237c92cbf57e7dec5639f9e195043aca9d39e0eb5a85cec511203a"
+      },
+      "header_growth": 8
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_battle_windows_sound_runtime.py",
+      "bytes": 11383,
+      "sha256": "6a08fcb0018fb64aecb7ac0a2dcf7c7a394a9dffa0b5ec3f1e775c153f336770"
+    },
+    {
+      "path": "scripts/convert_wwise_android_package.py",
+      "bytes": 4781,
+      "sha256": "6cf16e035b1bb010ec62ec974f36bd7e4994615e064b29562bc6f79b1b0d65f7"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/AK.Wwise.Unity.API.asmdef",
+      "bytes": 683,
+      "sha256": "5319d3aae20d2ef65919d1f372907daf07e28c93009f067c7589568595edf9bf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/AK.Wwise.Unity.API.asmdef.meta",
+      "bytes": 60,
+      "sha256": "66c6677cf21583dfc7c686d1d26cf1e9b9ae4971bd3d2e3fa39d552a52cc634e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/AkSoundEngine.extensions.cs",
+      "bytes": 3255,
+      "sha256": "c6339a9fca23c788d9d55fa1e7215600c5b556f4ac93290615ee6932094ed510"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/AkSoundEngine.extensions.cs.meta",
+      "bytes": 60,
+      "sha256": "94bc886993dd3254491a12ae1829f95afd3dbfb9ce97d99e2ed9d5597f404e8d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/Ak3DAudioSinkCapabilities.cs",
+      "bytes": 3468,
+      "sha256": "aa78770d8eda63bb3bae8187a83d21b841325e617369b8a1da307b62468345d6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/Ak3DAudioSinkCapabilities.cs.meta",
+      "bytes": 60,
+      "sha256": "278af64c8ff5e9561195cea43b2d030743a291189f5f29cdcf587aceb02150ae"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/Ak3dData.cs",
+      "bytes": 2822,
+      "sha256": "e20327a7429d53b7c59df582ec74d1dc14d515c235ec23afbfbdf43c133e1b46"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/Ak3dData.cs.meta",
+      "bytes": 60,
+      "sha256": "ff00a3c0cd46ce137c9ed1825ccb1dddc92ee94aa70ea1e512f8fe3647b37801"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/Ak3DPositionType.cs",
+      "bytes": 923,
+      "sha256": "c38670ef6966e4413b421efaa55681e53792c848015e679c4ec5047bc56ddde0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/Ak3DPositionType.cs.meta",
+      "bytes": 60,
+      "sha256": "943555957edec4245ce9825c3def0edf8492a18d9fbfb4521d43850ab76092d9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/Ak3DSpatializationMode.cs",
+      "bytes": 929,
+      "sha256": "1b9d64e7a7c4b85f82a1198153cd0b4262b2e0e73f4c6b6e1cb2b1196ccb90a3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/Ak3DSpatializationMode.cs.meta",
+      "bytes": 60,
+      "sha256": "b2e9a6225524ec85046df5cd22f8d435b7bb07ca016030de904de32c2709bb3f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAcousticSurface.cs",
+      "bytes": 3067,
+      "sha256": "20177a9a4f4d259ae9af05222885562d3bb5d855c5aaa6ec548b440516178c65"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAcousticSurface.cs.meta",
+      "bytes": 60,
+      "sha256": "f76b419ce91390ad3666f7b289e2b9ca4d80cf0fd4e6be0b3891c5cb0f765335"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkActionOnEventType.cs",
+      "bytes": 968,
+      "sha256": "b7d718b106e2a46e7bae66a980fbad49d70121248c9d1ff8aa774b46554e1094"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkActionOnEventType.cs.meta",
+      "bytes": 60,
+      "sha256": "14e2983482d10417f8f50dad026f2121ecf6d4436f66077ff051a4632fd17e62"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAttenuationCurveType.cs",
+      "bytes": 1610,
+      "sha256": "afc38d22d39fe90c0dbe7dd2afc461a42ac36caf54aa3eff5c9f34a88844c5c2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAttenuationCurveType.cs.meta",
+      "bytes": 60,
+      "sha256": "60e2d0600b14224e867d9f4aa50b7f23d62a31b156c7ea0f234cd0317f39d1cf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAudioDeviceState.cs",
+      "bytes": 1079,
+      "sha256": "c29bd23706757a5376feb19846b8be1d2bb93d8ab79e2e81abb78b779dc06df7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAudioDeviceState.cs.meta",
+      "bytes": 60,
+      "sha256": "454eeb79a7f9a451f26f72901433cc48b616e1a8bc13372fa7e0ba3b129e9156"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAudioFormat.cs",
+      "bytes": 4270,
+      "sha256": "1630fc9bd6274c259ee998828c647c50cbbff356a7412335d604462fe15647b4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAudioFormat.cs.meta",
+      "bytes": 60,
+      "sha256": "be4cf579959e23fe911ea65f692f4f676b8ee856e2f95e4deae48a8343c5c6cb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAudioInterruptionCallbackInfo.cs",
+      "bytes": 2190,
+      "sha256": "d6527c42abafdcc32f1ff686b5035298689d5de6de203b553cf026eeeab45389"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAudioInterruptionCallbackInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "1e73b5cf82175d8700e93466428b80eb0ed45d4a8953dd1bcf24aad7882eb07f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAudioObjectDestination.cs",
+      "bytes": 875,
+      "sha256": "a001d97465e78b0a3f51c29d2843e2eb5e43aa4e507e16da4bff5730ff2fae2e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAudioObjectDestination.cs.meta",
+      "bytes": 60,
+      "sha256": "0490524732579b9522dc9fbe788824d34cba7535666334858ade0bc4c827a9b9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAudioSettings.cs",
+      "bytes": 2396,
+      "sha256": "df8e2f71218a471544474205b639a3e311aa88fa592d4668a30af69121309ece"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAudioSettings.cs.meta",
+      "bytes": 60,
+      "sha256": "7af906caecf932afcc15c7bda80000ab76471f287153e076968fd865f1b1ed6b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAudioSourceChangeCallbackInfo.cs",
+      "bytes": 2190,
+      "sha256": "baec6051b542b23de7858453265785b5c4b41528faa1442b2b0c29699a0dac6e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAudioSourceChangeCallbackInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "3a494cbf1c54912201d7d8e6676529ce9bb77ee549d8e4fe823b060f1e3a4c1a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAuxSendValue.cs",
+      "bytes": 3315,
+      "sha256": "da5f4ddc33ec5aa576c3ce218b463bbd6fc315cdf3e8df06f38b599ac7dd10b6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkAuxSendValue.cs.meta",
+      "bytes": 60,
+      "sha256": "844b897e0801f426e00111b6f068d1ae336c205440bffdfacacc42d6252f6bb5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkBankCallbackInfo.cs",
+      "bytes": 2350,
+      "sha256": "14d7de6c11d5ab179f78dbb271ca728c5f010dc388e42eedfe9e9d8d32842235"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkBankCallbackInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "6231624d851df70d50e2527bc3456bc273c525cde0469d6e53a002fb80202817"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkBankContent.cs",
+      "bytes": 836,
+      "sha256": "2f659132d0f245423c4ce9cb7e300bc394e23dd8d8a4f78a6ea6c8a0d311c507"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkBankContent.cs.meta",
+      "bytes": 60,
+      "sha256": "2a42fc2deb1e2bca192638836b162ef025e6b4be55d6c9598e93124c3f8e7867"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkBankTypeEnum.cs",
+      "bytes": 863,
+      "sha256": "2ff789c3fa3e6bde8c19f810fe5b9b8d52c095d659aaf7db7df0284208cf0284"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkBankTypeEnum.cs.meta",
+      "bytes": 60,
+      "sha256": "ef684b20c1d678a16d2809fd1d55fc4f3ed7e8689c3f05fdc0034889cfcf02f5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkBehavioralPositioningData.cs",
+      "bytes": 3904,
+      "sha256": "f684a16c45dc6c65c855b9f854217fa6d6abd8a1baf3a9a0c5b7b8dcac5ab0f4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkBehavioralPositioningData.cs.meta",
+      "bytes": 60,
+      "sha256": "272f54bf20062094c97f35195f89e231f919bc482054f5b50f1add4acf42c4b9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkBusHierarchyFlags.cs",
+      "bytes": 906,
+      "sha256": "2e30e96fe9daa8924766e5167e16dc60a2dbc3a8e76837d5b3a25a068f62bece"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkBusHierarchyFlags.cs.meta",
+      "bytes": 60,
+      "sha256": "1714c542aa74e2c2bd47e6e74084bad3d82bf8b085d5f496d8e837d5fa0c48d6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkCallbackInfo.cs",
+      "bytes": 2167,
+      "sha256": "d74990dd4a8c2d54cc30c1054910696d0c0acf2d164ceb446290f45914683e1a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkCallbackInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "e6aed6c8315f94fba4c94d9f60332adddd7c2eb86b79f26532f182b644ec244a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkCallbackSerializer.cs",
+      "bytes": 3055,
+      "sha256": "8d50e9b2b0e2d19dca9e65988feb07f60d8bc374006ed814e6ce13eb5098f785"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkCallbackSerializer.cs.meta",
+      "bytes": 60,
+      "sha256": "b1526e06d23644e69f807b8a391996b260513d5895f46e2c13c4c4b6902746e3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkCallbackType.cs",
+      "bytes": 1603,
+      "sha256": "6ead6734e5d6111a7a24dd9efac6c271f94f63ebf173db1386609d90da7c67d7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkCallbackType.cs.meta",
+      "bytes": 60,
+      "sha256": "2782a62b0ab2d9bfc5de16222911203902274e6de31bb1d74b2187bb9ae52271"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkChannelConfig.cs",
+      "bytes": 5339,
+      "sha256": "a9604a482f139569b432d720e827f7280db1a0bb5a43e9d380a7a022ddac0efc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkChannelConfig.cs.meta",
+      "bytes": 60,
+      "sha256": "253be6273ebb2cc31e1a6df6109384b39d6260dbf15941145c19024572c4a27f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkChannelConfigType.cs",
+      "bytes": 1046,
+      "sha256": "7201a89602434f2f32ab8b51366590338a28cf949778f4744683358f44167eca"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkChannelConfigType.cs.meta",
+      "bytes": 60,
+      "sha256": "8c6b6308d7b8ee0500f1cc0c931b87c7eee29af58325eb0dba8b0cde8a07765d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkChannelEmitter.cs",
+      "bytes": 2700,
+      "sha256": "d3b5c175c0a172696298ac5d99b9b45632fbd1826c29ffb8e8e42510ca34c816"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkChannelEmitter.cs.meta",
+      "bytes": 60,
+      "sha256": "dedd200e97d4bbcf6f860547d66fe01f065fd4d71fe3519b2fd9554d050be5f7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkChannelOrdering.cs",
+      "bytes": 843,
+      "sha256": "c1cc536a8b7a3eb4d47a3957e3fbd89753847c965793951c3776d6796ecb28fd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkChannelOrdering.cs.meta",
+      "bytes": 60,
+      "sha256": "10fcbbdec4c7abc6eeec270857b685d149492851bae2a41996e142764e53f768"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkConnectionType.cs",
+      "bytes": 932,
+      "sha256": "4f648bdbfd133893d124500df0c32c0fda333c6d6a2d6dbbada71c5dd803ae9e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkConnectionType.cs.meta",
+      "bytes": 60,
+      "sha256": "92b56b78c626b755d482981108b1778ab651417a84c85a5d50d9e7b091c580a9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkCurveInterpolation.cs",
+      "bytes": 1190,
+      "sha256": "dc915ddf89fc3daa7d3533d7ec2b33cea3c59acfd71bec0ebf47a0fbf43fd79f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkCurveInterpolation.cs.meta",
+      "bytes": 60,
+      "sha256": "874a920e9eb49859d76bdd526a29962bad37e59f76c7ab9620481b4f7531595a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkDeviceDescription.cs",
+      "bytes": 3274,
+      "sha256": "8a9b7442181d144c1e26ed1a6fe5689ba044572c6b2095f1750dc65c72c9e4e1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkDeviceDescription.cs.meta",
+      "bytes": 60,
+      "sha256": "f9191c6a863b4260e9201b9bd30a9e9748a5f153529a7fe8bc0f5857feafee49"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkDeviceSettings.cs",
+      "bytes": 4567,
+      "sha256": "0cee1170a0ccf37cdb4e18ffb1404500176e3911aa277b46c25e287d8f926747"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkDeviceSettings.cs.meta",
+      "bytes": 60,
+      "sha256": "c7482ef72461880d0b9328909a603890c835856cba68ed966d8041893889be22"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkDiffractionPathInfo.cs",
+      "bytes": 4568,
+      "sha256": "f74c4331442ad10de8bb3d23e602a5bc371222b777d5300de9d89044b785af75"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkDiffractionPathInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "bec012236b2530c3dfb6e13ed37c83d65f001d73911482ab3b0effd640d1d487"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkDurationCallbackInfo.cs",
+      "bytes": 2591,
+      "sha256": "8c52dbbcf3086242270c9581059c31e9e53c86becad34ac3c6a8c7f0b121cc06"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkDurationCallbackInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "889f67450e74ee84137dcb52ddf2ca95a23ae7c9549baea90a22987810ada3c1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkDynamicSequenceItemCallbackInfo.cs",
+      "bytes": 2457,
+      "sha256": "65536cf5d93f123fdc21214a5f1c7bf3101aafa2e3e7faa4a9d8c883c23f0757"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkDynamicSequenceItemCallbackInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "85ce24fc807e605d245042e6922e67215e516b929fd44f96a82e862c1990b660"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkDynamicSequenceType.cs",
+      "bytes": 870,
+      "sha256": "883b0f4636fe8c45122078510974cef2b39c801c24dbf5194a35a96d2219236d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkDynamicSequenceType.cs.meta",
+      "bytes": 60,
+      "sha256": "d996f3a66b6694a182c3981ad07e7db3c87a4ac4d58a98fb312e52ee0941bb93"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkEventCallbackInfo.cs",
+      "bytes": 2152,
+      "sha256": "ef9e58074b79b904e960ae0b43290d3ee879284ce4b23046cd7f5640882abd8f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkEventCallbackInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "29df7477d43474ecc85c4e5d54b94866e1a698798d6600b168272faa554863ac"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkExtent.cs",
+      "bytes": 2655,
+      "sha256": "8a6208b99c3ec895920463894cee0e9c8736d2c876630c53fe6780f6608c34dd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkExtent.cs.meta",
+      "bytes": 60,
+      "sha256": "98d829db15461f9e91f893096ab9e44cb46ea8c1f589b271573677de8c17ca33"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkExternalSourceInfo.cs",
+      "bytes": 4423,
+      "sha256": "d102aff794696f9aed9aa3f955fd290f6852238bcc15f26bf342840eb8c7fffe"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkExternalSourceInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "084fb74aa30908f6794844b1a15e7374a66bd8c90249bb21afbce674944e7d44"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkFloorPlane.cs",
+      "bytes": 888,
+      "sha256": "07ab14adfe211c2ada95081a05ca2ade4a8ca95c54da85a0f09170450efab038"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkFloorPlane.cs.meta",
+      "bytes": 60,
+      "sha256": "137d6ff20cd5d54b340691aa187221b7e3fcae398603fc0bbfd5decddef7754b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkGeometryInstanceParams.cs",
+      "bytes": 2681,
+      "sha256": "2850dcbaf03629b34249993cb05a8528ea5147549ff05896d1cd151456f20b94"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkGeometryInstanceParams.cs.meta",
+      "bytes": 60,
+      "sha256": "4d4bf79e8495226ed41d9bda72d1f46d770ec131728557c1f396ee16910631b4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkGlobalCallbackLocation.cs",
+      "bytes": 1506,
+      "sha256": "e0cfca5ca35c17a1d447319d513273345d399c3643a684d108d3833b11636782"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkGlobalCallbackLocation.cs.meta",
+      "bytes": 60,
+      "sha256": "8ac3ea86c84e3bc6c03c7839e9b5b85fa6514335777a95db080ed7cec2a7fb98"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkGroupType.cs",
+      "bytes": 833,
+      "sha256": "d25c77ed4d93e2dc59c04599acc561fef33610cc4cc9c687044f1101f2dc3f19"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkGroupType.cs.meta",
+      "bytes": 60,
+      "sha256": "b3fb2b7a654e4d9e567c13242888957e007057c5e057c9ca0d9a12f48dfb27f8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkImageSourceParams.cs",
+      "bytes": 3633,
+      "sha256": "fbafbef0c4abd3353a2f2871f9563283aae8c77ef3dd8c99a02f033ee84ea4fb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkImageSourceParams.cs.meta",
+      "bytes": 60,
+      "sha256": "ebca04934b6eae736115103df79d1b80d40b2b967873b784fe510c0b4b389eee"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkImageSourceSettings.cs",
+      "bytes": 2797,
+      "sha256": "1f7e40dc1aef12ab86963033a8918c697a9d8a9955aee37d3a36c17eb4252735"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkImageSourceSettings.cs.meta",
+      "bytes": 60,
+      "sha256": "f25df721333d9415b679ab5c2b559fc8e3b2e3b6b7387315c322d2a8d4dcec7f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkInitializationSettings.cs",
+      "bytes": 5753,
+      "sha256": "a8554503c1b5840cda2f3a1e0053c09d20cad1f292ca2885c3960f043e3a0bd5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkInitializationSettings.cs.meta",
+      "bytes": 60,
+      "sha256": "8213c7d73c55955c2169ddc081a4d21b515bc0b07486bdaaee7ffd9861639f99"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkInitSettings.cs",
+      "bytes": 6080,
+      "sha256": "2de0faac79559a06f8bde12fb4149f5eec0cea0c856297dbba2a49df2942861c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkInitSettings.cs.meta",
+      "bytes": 60,
+      "sha256": "8cb2777c5da25c1b49ac19f3fc72b7402f0c5b4ff77d9a60a7e081fdb404988d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkIterator.cs",
+      "bytes": 3069,
+      "sha256": "81aee175993f2bc33d5a83334b4d8c49bb53bb83b4139afaa8a2bdc004cba81f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkIterator.cs.meta",
+      "bytes": 60,
+      "sha256": "95b603ad36a744af2383626643e29da0d14a3b342bc2b8da3257d17a70269cfa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMarkerCallbackInfo.cs",
+      "bytes": 2337,
+      "sha256": "537c4310a1d505c18053ca456152f0928f4fff136ea1fc9fad7039422ab4f5bf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMarkerCallbackInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "291c8d3f5f289d2445e77b9a35f587c90014e95f5604c67ebf0d4ba9fabfb8e8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMeteringFlags.cs",
+      "bytes": 1001,
+      "sha256": "0b43741ca56f313873f23807d932f7ab3a40d7ef0ce02268f5e2ead7a2d68fd9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMeteringFlags.cs.meta",
+      "bytes": 60,
+      "sha256": "8caa4eb8776c70508c0359c673752718f1e3cafbeb3d31507a4236e933ea5027"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMIDICcTypes.cs",
+      "bytes": 3123,
+      "sha256": "abe4065afe14a061b005f7d460b2df1d235d94ae706ca906ff47af12c4ac32f0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMIDICcTypes.cs.meta",
+      "bytes": 60,
+      "sha256": "5205fcf23c13cb33bf3abf699a1fdca594dee24e3ffa33435253425a81fd00bc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMIDIEvent.cs",
+      "bytes": 21252,
+      "sha256": "63b1a335b25bad26572dcef08485cee43bf1737d825b22f9fdd2e59994d83737"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMIDIEvent.cs.meta",
+      "bytes": 60,
+      "sha256": "7370a3af7bdef45c00e6d8f78305339ad66530462b3b2f15e9a02dbb908fe836"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMIDIEventCallbackInfo.cs",
+      "bytes": 3831,
+      "sha256": "20e19072350e7d63b4e5855db071bcc99d27991c09e31a9eea1809ae7232444b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMIDIEventCallbackInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "61ed07f8f9e30f622d440e66b6e43d7716ac9cce5ebcca6141cbaec0b291d637"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMIDIEventTypes.cs",
+      "bytes": 1002,
+      "sha256": "5d2607f60917924935387e7ddcd1f12a78b836ae9254f4b0330c70f48a8378ae"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMIDIEventTypes.cs.meta",
+      "bytes": 60,
+      "sha256": "191970b548dc145a3389aa95684cc164220ef1e5465b8ff0d5209ca509de1dad"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMIDIPost.cs",
+      "bytes": 6511,
+      "sha256": "92714acc0f75a64c3c7e5e2ecdb22b56ee099991a7f410e37479ad4dfd96939c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMIDIPost.cs.meta",
+      "bytes": 60,
+      "sha256": "b19ecb7cff61c77c60cc4ee27551e30d19fd3da851d739f4b6b2d392fba0808c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMonitorErrorCode.cs",
+      "bytes": 8584,
+      "sha256": "c4db504cd02c827fecffaa03073537ea573610eba0413962bd34d5bf53c7c1d7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMonitorErrorCode.cs.meta",
+      "bytes": 60,
+      "sha256": "49dabcdcbf340356899169c59e0cb8947f65b46c4d65cdf42bc67f3c7c26c536"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMonitorErrorLevel.cs",
+      "bytes": 911,
+      "sha256": "584e0e0197f114174c26de36d14bb55f459863fc8937fa9b57755901bfeeb81e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMonitorErrorLevel.cs.meta",
+      "bytes": 60,
+      "sha256": "a4914b53279801aa5e9da57c2c3e157a27b1d9a2d5b2badb8dc254f1f2e609b4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMonitoringCallbackInfo.cs",
+      "bytes": 2739,
+      "sha256": "83d57ea3bef7424c9a65fb33a0b1501daa42a6087dc988588378cf4c4a9e5b89"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMonitoringCallbackInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "f4ca41394683644937e445311e5207c6312365eaca24503c98d1629dc9066f3b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMultiPositionType.cs",
+      "bytes": 903,
+      "sha256": "89b313120387bc2c53ac8562c5c4c199e7084196385845a8d79c6dd1e09186d3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMultiPositionType.cs.meta",
+      "bytes": 60,
+      "sha256": "53d55c20d5852b21e5eb05a16c50ea4fa1b3cc16ea031c8fb628cc53b0d80ca6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMusicPlaylistCallbackInfo.cs",
+      "bytes": 2555,
+      "sha256": "8e6caae8d3814ebfec4568d172344611791450961a482aa26a3738dc2a2a31ce"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMusicPlaylistCallbackInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "98a5e5f79b2621ab19c2d136df8b720c4806d3d18c3462c6aef6d941996f3c03"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMusicSettings.cs",
+      "bytes": 2074,
+      "sha256": "0b57f7836fb60240b264df27e435d8303ff29b91c10d100e3cf9814ddb3e4797"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMusicSettings.cs.meta",
+      "bytes": 60,
+      "sha256": "fb50b0e14cd20bd5dbf13bf3f11a1e86ff1dde1a61688d51f729263e30145ad8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMusicSyncCallbackInfo.cs",
+      "bytes": 3871,
+      "sha256": "fa15884f4a03eab6150ee80ca5c665f924064c6bf5e06faee2751b8108bd0ccd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkMusicSyncCallbackInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "76320be1ec5ae7c34d34960280f38ffb340c8848c74c38bcf6ea1b6d950edc12"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkObjectInfo.cs",
+      "bytes": 2794,
+      "sha256": "8b561b0db67b506a3531c25322f67921bbf8bae9df90240523e536d08d34a876"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkObjectInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "c09963ce57d61ce7089038c581f0905707b5ac0fa97dec7e0170039e665aba4e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkObstructionOcclusionValues.cs",
+      "bytes": 2885,
+      "sha256": "f7bdae848632252cb5ea0a41fd72bbed162c0eeeb480ca558ed8a26421d7b8da"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkObstructionOcclusionValues.cs.meta",
+      "bytes": 60,
+      "sha256": "37f801ede3feb4c577209ec3d890ef2dc40b9e04c0536b9f4f70e8418995feb7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkOutputSettings.cs",
+      "bytes": 3960,
+      "sha256": "93ab37fc0a4f1c341b4aaded9644e4db417b096a8bb89a282789a90eea774de8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkOutputSettings.cs.meta",
+      "bytes": 60,
+      "sha256": "6a8f1feffbc6fc16ef2d8a0a03b46c9db5e96ad7e3320d0f709770c6bf0cd9e3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPanningRule.cs",
+      "bytes": 853,
+      "sha256": "7ef51ad1e440024fdd8f7be4d896add883f0f3726114faf9987fc8bc62886b00"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPanningRule.cs.meta",
+      "bytes": 60,
+      "sha256": "34e4b09cba157f597c4851382eb62194e51626a0a7ecbdb09d54fcc9bbfef977"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPlaylist.cs",
+      "bytes": 3028,
+      "sha256": "3e4c376a51767b6da26de9ff6811ebf95f7291759fdd5e8f2ad4568142632411"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPlaylist.cs.meta",
+      "bytes": 60,
+      "sha256": "a0e8c6373d4f89cfe7473379f239c0101524d7b77261df71a9736e21f3b21288"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPlaylistArray.cs",
+      "bytes": 7055,
+      "sha256": "ee909adaec126e58fc6be4dff2f223295b38aa805bb0b0c7fb820983b8256fc0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPlaylistArray.cs.meta",
+      "bytes": 60,
+      "sha256": "481b0020a82fbc523ff7dc397d1561623012936ca26de5e68a140fac361a9c74"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPlaylistItem.cs",
+      "bytes": 3352,
+      "sha256": "68bf2ea342237b4456aae06df7f2b761ea7f2ae4f1a3f0f8ed92904b031e536f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPlaylistItem.cs.meta",
+      "bytes": 60,
+      "sha256": "c30b4a52538111f2f0f49b6e2938676fc383fe6fcc2b52a2d22fe00f57f05607"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPluginType.cs",
+      "bytes": 1036,
+      "sha256": "7a7e2fd890c40429ba2530064ce1e483a51796188f350888eddf56e0ea25190b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPluginType.cs.meta",
+      "bytes": 60,
+      "sha256": "60350705493a77042bb7e9cc64c00f04213a4ff4dca90891b2692f7e87a2c727"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPositioningData.cs",
+      "bytes": 2775,
+      "sha256": "cce6e7850b7c3c8f2c066ee2197d63f4166c44abae6d4027c0d4a9f48320eea0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPositioningData.cs.meta",
+      "bytes": 60,
+      "sha256": "54e579e1fd92d21e897aca15857336fcedd4bd547741e47ae0d9fdb89fab2051"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPositioningInfo.cs",
+      "bytes": 6183,
+      "sha256": "10448fbc7cc020b506d2c7b277d4797bbf9f56ee2b09af1807ba1d4df8270569"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPositioningInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "c93e9cd4c8005dec69669a441a37c872269a7e9fd4827457a4a74c193f97aec4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPreparationType.cs",
+      "bytes": 860,
+      "sha256": "404e05f672e8e6cfb96af4abc132497689734905171d33dcbb70bbea8199e39c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkPreparationType.cs.meta",
+      "bytes": 60,
+      "sha256": "49563decb34e0a4e53c794e9a9489f9abfb44764e5f2b7f17033ca8761c7317a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkQueryRTPCValue.cs",
+      "bytes": 903,
+      "sha256": "c23eebdba9e6d6599ed68614aec632d107fdc346d3fbe7f9f6c55b577c32d17b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkQueryRTPCValue.cs.meta",
+      "bytes": 60,
+      "sha256": "ec7abe7744bb520f596f75c9e0dbf3eb0276bae0474abda4060898e44bf567d5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkRamp.cs",
+      "bytes": 2359,
+      "sha256": "cc3a49f54956b4b77eee63150a55984fc018a57dd702725809c0a8ec6679569d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkRamp.cs.meta",
+      "bytes": 60,
+      "sha256": "a35a9e0b8a695bb50dfa5ff3cb517b90b9c5e5f705bd2628132c3672351de882"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkReflectionPathInfo.cs",
+      "bytes": 3831,
+      "sha256": "4f50446865884fddb081e5d0e43c73db0b49669e8b0510eb67748a9b567a43e8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkReflectionPathInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "9872c06b373465b57404d0279620354930598d85a3055aea1cd00a21aeeffb90"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkResourceMonitorDataSummary.cs",
+      "bytes": 3443,
+      "sha256": "278de755fb1875e567265ea4e39dfd25c58e56601364e186a69ea8b536d96ed2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkResourceMonitorDataSummary.cs.meta",
+      "bytes": 60,
+      "sha256": "900fc2abbd2aa5fac6fe8906edbbec7f0d7da682ecf61d606bd2e87c88e34f89"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AKRESULT.cs",
+      "bytes": 2826,
+      "sha256": "747c5aae6ab767de8666bf1dfa02547c339cdf1b0bcd489e4b0a00fca60f3412"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AKRESULT.cs.meta",
+      "bytes": 60,
+      "sha256": "dfc9bae665db2a834f598fd9b06a567aa49a87faa6cfbe751e759391be046a7a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkRoomParams.cs",
+      "bytes": 3440,
+      "sha256": "f7b9391e9503996efc61a30adee8ca2b9d052964df934f262c9837c94e17c5e6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkRoomParams.cs.meta",
+      "bytes": 60,
+      "sha256": "3b35edfb55ca5b446b4f1dfb9d89f961ad4754ed470c9cb56bc5e84820e93afb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkSegmentInfo.cs",
+      "bytes": 3878,
+      "sha256": "20480a7f70881c4675bd33fe4869313d445217c8dd04dffaa5ac0eb2d1bbbb04"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkSegmentInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "4ca5cd26cc688a69db75b3debd83152d531f004c624879ff965947a5769d466a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkSerializedCallbackHeader.cs",
+      "bytes": 2730,
+      "sha256": "fa5b767a1360c048dbefc09e0d3b3d9617250fa751060181bc45f7bd1afd1f8c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkSerializedCallbackHeader.cs.meta",
+      "bytes": 60,
+      "sha256": "adb33f1d7270b61331d86973edc5e1ee29817f1a0fd08c0a75a5b317ca35a89e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkSetPositionFlags.cs",
+      "bytes": 965,
+      "sha256": "9eea995c9a387728976aa0b069969cba68058ba3eaf33afabdbb135a1048300f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkSetPositionFlags.cs.meta",
+      "bytes": 60,
+      "sha256": "1b5052d03d920c08c4745d13c0a572bcc0387478407630c58e6a2f349d7d1400"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkSourceChannelOrdering.cs",
+      "bytes": 893,
+      "sha256": "9eeaa2d945afd2a437dba6e2b9d796806b9c79b4bcc15c38c5e30e36d77d368f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkSourceChannelOrdering.cs.meta",
+      "bytes": 60,
+      "sha256": "efaf3c157882f1b6878f5ab260bbb61cb553c35f93e617d483b277ac8d2e0abe"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkSourceSettings.cs",
+      "bytes": 2916,
+      "sha256": "70742dd3514d53450b363b6f4b6ce6c55966f810918b038c39d7739b5c04b996"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkSourceSettings.cs.meta",
+      "bytes": 60,
+      "sha256": "fab07e403ced2c71b31f5f94ff1b05524c35715b801e1f47bfb5a4ad3fb88eba"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkSpatialAudioInitSettings.cs",
+      "bytes": 4956,
+      "sha256": "4342b0555a62fc37ab9ce878be6e398b8e33e193c4825086f8e27f9a95798301"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkSpatialAudioInitSettings.cs.meta",
+      "bytes": 60,
+      "sha256": "9b091876ad988193466e59c65afb884db5cfa8e7d688540a84f0cddd157f44ff"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkSpeakerPanningType.cs",
+      "bytes": 886,
+      "sha256": "564ba08fddbaaf2908a08278536735808df85b332c75f16d01d30b5b1b78fb43"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkSpeakerPanningType.cs.meta",
+      "bytes": 60,
+      "sha256": "ff42eb0228c1682ffb1e2adad6a8048758993edbd25d30a62962088eb05c4117"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkStdMovePolicy.cs",
+      "bytes": 2029,
+      "sha256": "f8f8abb4d4f784bce0c68fd0833937edc161f1c556160525cf7902a83c9d2336"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkStdMovePolicy.cs.meta",
+      "bytes": 60,
+      "sha256": "59979a75dcaf96d4c168e0d06a6b065197e4d984eb83e8619370ed20412227b6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkStreamMgrSettings.cs",
+      "bytes": 1844,
+      "sha256": "67a9f4435e561ad9c137b64ac9dd7c33e8e449bbce42396935180b85037f2119"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkStreamMgrSettings.cs.meta",
+      "bytes": 60,
+      "sha256": "0d699368c2888b0aed45c2261efae4fa0cfb8655f2f78d40a8a8ba7a84b4a1ab"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkTransform.cs",
+      "bytes": 3815,
+      "sha256": "35473076db7ba092a4fa861fb96e4c59d57c9dcd7581de397927466dad6f755c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkTransform.cs.meta",
+      "bytes": 60,
+      "sha256": "1dbf6dddeb3236e42a6de8703d0a41a821fbf1d9984e9a4400f17bba0829a5a4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkTriangle.cs",
+      "bytes": 3163,
+      "sha256": "22a8785978e4b58421bb955f184af050fa8860a0eb6f32a087acd02162d3f9de"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkTriangle.cs.meta",
+      "bytes": 60,
+      "sha256": "68c018c174f3fbe005c7576f004f4b7305bbe24c9eb6e06112ef027412ffe9fb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkTrivialStdMovePolicy.cs",
+      "bytes": 2085,
+      "sha256": "57c511a7c17a7fae50edd3c4efa6947bf48febbc48ebf88dece18f95456313f2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkTrivialStdMovePolicy.cs.meta",
+      "bytes": 60,
+      "sha256": "41d181f22e1c13356208e47b1a6aea4cf4a2f362ad745beed5adb16ec60b99a9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkWorldTransform.cs",
+      "bytes": 3874,
+      "sha256": "d4fef05a3a18a0ad97039e25dba764815de7b37157aeda1fbc37c857d8a041b4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/AkWorldTransform.cs.meta",
+      "bytes": 60,
+      "sha256": "bdc9d8dcd32e6f8c46f6fc7e8979a12661d7a6b205b99d8d3ab15d76f74105e7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/MonitorErrorInfo.cs",
+      "bytes": 2722,
+      "sha256": "b233ede8ac4b781f788b4c987f4f019ba66a502c36965c588c922788df71756a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/MonitorErrorInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "2d29a944d6881bc2b67a73bb02bbee2d58c830b6edeb587b8394647aa6f4c857"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/MsgContext.cs",
+      "bytes": 3251,
+      "sha256": "e3899bbc03a6056f303189bb894365af26ce0baa40baa8ffd279a99e441f6612"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common/MsgContext.cs.meta",
+      "bytes": 60,
+      "sha256": "6f0a1849466fee772e51e6a887c01ba1b0a7e7b641855b3dd9baa7537282396f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Windows/AkCommunicationSettings_Windows.cs",
+      "bytes": 3392,
+      "sha256": "3baa124e19e21a4bff51d8fe2b779f38f499b11a53ac0fc5dfdf01fea2f6b4de"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Windows/AkCommunicationSettings_Windows.cs.meta",
+      "bytes": 60,
+      "sha256": "cc0fb6659d83b12073c454dacd0c61e06b0dca10f631995ff609c4b33a79be7a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Windows/AkPlatformInitSettings_Windows.cs",
+      "bytes": 4423,
+      "sha256": "0a9b96157bcc5948df1b85997484db88bdd5c887eb769f8460dca489f45c8bf9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Windows/AkPlatformInitSettings_Windows.cs.meta",
+      "bytes": 60,
+      "sha256": "9a531dfdb1df52f04d2f6d4efb89905bad2dc5d25f8e35a7241d9299cf6a1f29"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Windows/AkSoundEngine_Windows.cs",
+      "bytes": 136098,
+      "sha256": "527a92d6925809596988d1a91217671c1497a503e0d17c9a6b8afc0411d75c75"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Windows/AkSoundEngine_Windows.cs.meta",
+      "bytes": 60,
+      "sha256": "9c42a7083414ebd1904a73206e3ddcb412b5b03f8ed845aa36ac788a05298a0d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Windows/AkSoundEnginePINVOKE_Windows.cs",
+      "bytes": 308874,
+      "sha256": "0842af68e147181ad1d9b77393a9607a10056c9a06ca68df0afd285b3fe098c6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Windows/AkSoundEnginePINVOKE_Windows.cs.meta",
+      "bytes": 60,
+      "sha256": "bf9ee1d80c1840179b64ac86a3e232d7dc4084db473a6a813d053417f2eb01b5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Windows/AkThreadProperties_Windows.cs",
+      "bytes": 2389,
+      "sha256": "7ff76e93b453dc52981a181efbd5068e5c7568bd846a343d5b5487fb40056fe5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Windows/AkThreadProperties_Windows.cs.meta",
+      "bytes": 60,
+      "sha256": "4b35112815dde2ea2c7834893849a793de1be9380dfc564fc0a7e09ef27a7602"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Windows/AkUnityPlatformSpecificSettings_Windows.cs",
+      "bytes": 1700,
+      "sha256": "a1cef5513f3426260d74a4c05f72539296a0b1a7ca7efd44d68ecd8dc79d90c5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Windows/AkUnityPlatformSpecificSettings_Windows.cs.meta",
+      "bytes": 60,
+      "sha256": "cbbfb8c0d6cf25ac0a0566515afc1973266867a0268bda65e292039370f5c227"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkAudioInputManager.cs",
+      "bytes": 8043,
+      "sha256": "ced198ddd3459e51e828bf07a3cac6bf6329ed8c12abf01062f949868d2ec0ff"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkAudioInputManager.cs.meta",
+      "bytes": 60,
+      "sha256": "a93525c390a5318badd8ae60283b1a7c851f391b6ba872ee9c85ac9692ea8dba"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkBankManager.cs",
+      "bytes": 9448,
+      "sha256": "de782e34e3b74f8c26cc9eded06decd8335c4d4c3c0deb513c78740a4e900a47"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkBankManager.cs.meta",
+      "bytes": 60,
+      "sha256": "b5b83c64b5259532827ec8a4974d25ac9913dd7b281b9d07046626821ddbb678"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkBasePathGetter.cs",
+      "bytes": 10690,
+      "sha256": "9e65ee861dad2604796166e7ca992bc85f0b2b7a3265eea6f34563f98c2f3cb7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkBasePathGetter.cs.meta",
+      "bytes": 60,
+      "sha256": "2fd06aa9620089545e35b719a74632df7cb0e594c33a7dd9b69ed602c43e7f98"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkCallbackManager.cs",
+      "bytes": 17590,
+      "sha256": "693f9f0e8ead3a961fdbba91863e9856814c65fa1d5adb6aba49ae9dea4a9552"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkCallbackManager.cs.meta",
+      "bytes": 60,
+      "sha256": "f7ed1bdcf5f4e5ca63399b046d938fd00252808e93028d4f61887ade39e91652"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkCommonPlatformSettings.cs",
+      "bytes": 34942,
+      "sha256": "c00a6a3aab0bced3eca16efa750f0ed4153e93c741dce6f32a6670034597e43e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkCommonPlatformSettings.cs.meta",
+      "bytes": 60,
+      "sha256": "fd866425e1baa0122f7bd8adae08c3fb42dbbe995834ab8caa6b331bcaeecd88"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkEnumFlagAttribute.cs",
+      "bytes": 1852,
+      "sha256": "681a729d63be725af5969d2c99cc9937d5edc2803077a17a837f0a5ea015c978"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkEnumFlagAttribute.cs.meta",
+      "bytes": 60,
+      "sha256": "5a27161ded340d3b224432633b27a89abc99645ec15008b39e1031d93ec085a1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkLogger.cs",
+      "bytes": 2868,
+      "sha256": "364873863393a7c631e28baf14a0281a8b3ad7c7a5f18cb0f02a2690e8be14bf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkLogger.cs.meta",
+      "bytes": 60,
+      "sha256": "380b9bc7ce1261a5873066b2636de0d3ebe95bda47e2f3d5a513e5634ff259b1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkShowOnlyAttribute.cs",
+      "bytes": 1700,
+      "sha256": "bd37cf603269aee6412f366f9bf5d2b9c1b2714b71c226e2dbb49668afdc2951"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkShowOnlyAttribute.cs.meta",
+      "bytes": 60,
+      "sha256": "262368ff9bf374fac16efc53dc5eb932a0ce69163e7c5f2cf0a622c790d78651"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkSoundEngine.cs",
+      "bytes": 62094,
+      "sha256": "d91880eb07fe444bc54ceee4d559876535b39de2ce054a30dfdc21797ef3d4a3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkSoundEngine.cs.meta",
+      "bytes": 60,
+      "sha256": "34b14e58225605e5e8e3f53eac9fd05cd48a6bb0fdcb034a4550ace985cfc63c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkUtilities.cs",
+      "bytes": 29605,
+      "sha256": "d01f8d8cbc5ad05ba9692b1aa767336de7e93ae45e30d70d70ed79270da0f255"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkUtilities.cs.meta",
+      "bytes": 60,
+      "sha256": "316da3610bda85ccee66a0d5623a4d06e13d1bbd03f440a39a2236565836fbd5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkVector.cs",
+      "bytes": 1424,
+      "sha256": "3e28b4df70041a62cb04fd584b9d8bf340e3895eff94ab8bf78f8511a8c657e8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkVector.cs.meta",
+      "bytes": 60,
+      "sha256": "ce66c832868243022d3176e025c60ef52a1c20f6aaa2a5eec033d0035fe23108"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkVector64.cs",
+      "bytes": 1701,
+      "sha256": "f36d5fa75c46ba0822fae5ba56d0f0d7b6b94e4911d997ae8a7db5cced9814ca"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkVector64.cs.meta",
+      "bytes": 60,
+      "sha256": "9bdf9b4f478896072e2313b3a403d4d46ae6d0705e5b554dd6b9f8ac11b8d506"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkVertex.cs",
+      "bytes": 2232,
+      "sha256": "46b76046379208cbf9d049d534080566da021ea26c50e94d9bfd61ed55e08692"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkVertex.cs.meta",
+      "bytes": 60,
+      "sha256": "708b62b39ac5b6997c938873409ef1d34dea202a04db28d060dedd8d02760bd2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkWwiseEditorSettings.cs",
+      "bytes": 24064,
+      "sha256": "e5d2ff16b2a42e8f940132c354dc56d0e493d2ba6e19025540c1c51bc570d58e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkWwiseEditorSettings.cs.meta",
+      "bytes": 60,
+      "sha256": "61b09497ea4c360acda9bb79f2ab41697270ea5d63094fc20e6db1c041ceab9c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkWwiseInitializationSettings.cs",
+      "bytes": 44768,
+      "sha256": "9e95f494bbd67c941214ecff1625e86d9520a716b2ccf404575ec2ada6f1eb21"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkWwiseInitializationSettings.cs.meta",
+      "bytes": 60,
+      "sha256": "9801042edc42dbfbf5553c37e34187223143ca56387dad64fca9ce7fac3b2ea0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkWwiseSoundbanksInfoXMLFileWatcher.cs",
+      "bytes": 2928,
+      "sha256": "6e766f0e53d76a3486a211a3d1e27181f09ed137f4f1f65c4d608ee27641d4ab"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/AkWwiseSoundbanksInfoXMLFileWatcher.cs.meta",
+      "bytes": 60,
+      "sha256": "f9063f4f803f71f4d91fb83421ca9c619c9e6d143f16fb3d9367d058bb87af56"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkAcousticSurfaceArray.cs",
+      "bytes": 2026,
+      "sha256": "ff3b0e6109312797b4070a74f6508a23513c2a905e629c226f6c1d64973658e3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkAcousticSurfaceArray.cs.meta",
+      "bytes": 60,
+      "sha256": "afbe12e3c887790a80f74dd839e37e2733d2176b75d76d53face1eaa523b0449"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkAuxSendArray.cs",
+      "bytes": 4359,
+      "sha256": "cdeb5688726fa87cc9604f3b0183300874f53871008b4ec18377ab4a73872cc5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkAuxSendArray.cs.meta",
+      "bytes": 60,
+      "sha256": "efc932951619de9e88825090993688447f56ad25b4d65f0d8dc765163323cbf3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkBaseArray.cs",
+      "bytes": 3553,
+      "sha256": "0b0faf4963c97e4d11408037d02382982ce3ca9e4bfcc5fb9a7aac39aa4405fa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkBaseArray.cs.meta",
+      "bytes": 60,
+      "sha256": "abd6e2c84643df2a4b4a9246ac313d1d6fe5a5ce66b21c214d7d54e6084c3172"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkChannelEmitterArray.cs",
+      "bytes": 4499,
+      "sha256": "19a5e29baab8ffcacab4eecf2f184278a2183d991a6ee8a6ad395f4fd819c481"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkChannelEmitterArray.cs.meta",
+      "bytes": 60,
+      "sha256": "5005193132b4a137d116b9c9f946a62f9185e11a0c3a8d76bdce926ad9b3662e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkDeviceDescriptionArray.cs",
+      "bytes": 1876,
+      "sha256": "e665a5f2b3144a3cfcbb3a57697662a1f1faf26fe9a0db9c87b8a6c518da4bee"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkDeviceDescriptionArray.cs.meta",
+      "bytes": 60,
+      "sha256": "fe878c10cd18a13df98bfb8859766e9eb47f03ed16e06fbf0b81c6ac4444555e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkDiffractionPathInfoArray.cs",
+      "bytes": 1913,
+      "sha256": "24a7bb7522d32a0311b4571157406ae2237785b9a4f2bfbee36f070a037c8f23"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkDiffractionPathInfoArray.cs.meta",
+      "bytes": 60,
+      "sha256": "d9902dc12a5bfb0baeba177e5c6f71b3ee19c8a9bddf65a45bd1c02943bc64d9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkExternalSourceInfoArray.cs",
+      "bytes": 2238,
+      "sha256": "a31bcd235d30ed698a0b42166e2d87cfc3e1992fca032c1e7d7fdd41f4cb1ebc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkExternalSourceInfoArray.cs.meta",
+      "bytes": 60,
+      "sha256": "59c8f66fe44a1641f9f61ec9e35b6f9bb90f26fd1d8cf254c3bff1c8ae8ce4d7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkMIDIPostArray.cs",
+      "bytes": 3231,
+      "sha256": "1cea934487b35f5a13cc5f96df2a43263c5300ce98ffffd61cf7b42125587496"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkMIDIPostArray.cs.meta",
+      "bytes": 60,
+      "sha256": "ddcab4a5e39f180ad267d320d26ac4d06ca75ef9c5b1c23f9fa92485e17dd8f2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkObjectInfoArray.cs",
+      "bytes": 1976,
+      "sha256": "561eb09af7bb9db0374b77f7f9d187856736659ec8059bc597610113e66334a8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkObjectInfoArray.cs.meta",
+      "bytes": 60,
+      "sha256": "6f134e052ca0019571c0e0a07763467e96067043a8ddad27d483342cd522582e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkObstructionOcclusionValuesArray.cs",
+      "bytes": 2135,
+      "sha256": "b6c0551fe117ed63ad305780600c08b9614ba3d83065cf43fa7a0c59811c3a41"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkObstructionOcclusionValuesArray.cs.meta",
+      "bytes": 60,
+      "sha256": "cbe458a95498f38db5902593e37c9af65c97b5c994ed46c7860acfebf21bb8cf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkPositionArray.cs",
+      "bytes": 4231,
+      "sha256": "d1a29e4894a8f5104742132086d818a67a7fa01fd17c1c648dfd61e077f01b17"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkPositionArray.cs.meta",
+      "bytes": 60,
+      "sha256": "d86e7ccdc951e1eec27b5d2217561b10d29c5ac21a013cb006394dd3f044680e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkReflectionPathInfoArray.cs",
+      "bytes": 1904,
+      "sha256": "8f4a8569478341fffa7dbec741968b3b21de0fde1f255b28342b8e5bac61286b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkReflectionPathInfoArray.cs.meta",
+      "bytes": 60,
+      "sha256": "535eef811695b42e031dbff1b6a5e179e5b8e209aaa7ff1b90a98a322c6be9bb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkSourceSettingsArray.cs",
+      "bytes": 2016,
+      "sha256": "16f3f4d86a5f72a262ee6d7e415e07ee06408b1c5e02512b62e689df134eb88e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkSourceSettingsArray.cs.meta",
+      "bytes": 60,
+      "sha256": "06db5ead0debbf1fcddd43881faacbcb8c3dc6f6cecc9513d58324c1741a0526"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkTriangleArray.cs",
+      "bytes": 1956,
+      "sha256": "b30dd1418bfe7d200956fab30f8b94d6208e62950ec954b75c63d8abe6de5c63"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays/AkTriangleArray.cs.meta",
+      "bytes": 60,
+      "sha256": "f775f1733a39e2832e98d4f3b25260f111a72717c332a30aef3b679139ac8897"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Windows/AkSoundEngine.cs",
+      "bytes": 1370,
+      "sha256": "2898fda2954f62e9ea33fb9265c4b2c86a4d019a24d6199c11229b1dc03a3799"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Windows/AkSoundEngine.cs.meta",
+      "bytes": 60,
+      "sha256": "7b0ddcad254ead07dcf3d7ca257e22db4a380c71fafdb8a54f7c91b9a396ee77"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Windows/AkWindowsBasePathGetter.cs",
+      "bytes": 1087,
+      "sha256": "a0f2191b2fb22ea9ac4041c5816eee31e9f4958ea72cbdf494cce7798852087a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Windows/AkWindowsBasePathGetter.cs.meta",
+      "bytes": 60,
+      "sha256": "b339a1f314e3864ef1397a61f14e074aa6be603a837c7a125d6937fb321a7585"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Windows/AkWindowsSettings.cs",
+      "bytes": 2559,
+      "sha256": "d3480b44d5c9d4e14042c7ccbee0acfa3c082565fc6d31a43c3291403c724334"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Windows/AkWindowsSettings.cs.meta",
+      "bytes": 60,
+      "sha256": "885eba29ce0efd5038cad1abaa42d962fee254a36ba642d2e48649c9c34f3a0c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/Profile/AkSoundEngine.dll",
+      "bytes": 3820856,
+      "sha256": "d6152b75960a3b8afcd3bf7519692e55116452f8fa04f903a5f0e53aae2b67d2"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/Profile/AkSoundEngine.dll.meta",
+      "bytes": 662,
+      "sha256": "f43bf5df31441a3704b0743213a5e6a689c092d28fb71e4a52893d21b01766c3"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/Release/AkSoundEngine.dll",
+      "bytes": 2945848,
+      "sha256": "c977aeccd6294022aea802f472ea4c3b0fb2fb43f654c54fe26fcf24e2c40abb"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/Release/AkSoundEngine.dll.meta",
+      "bytes": 662,
+      "sha256": "518262dd3bf992519939d65e538930236c7a179bf1a019cc752391f2c757dba7"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/AkConvolutionReverb.dll",
+      "bytes": 253752,
+      "sha256": "59f9f980736bcbee1c3d1ae84c0dd59fefed95f61e07a94c841c65179f0ed15e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/AkConvolutionReverb.dll.meta",
+      "bytes": 662,
+      "sha256": "09717b8fb5d52605d65203547590e73388e23fd24294968cb58870c57595022a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/AkMotion.dll",
+      "bytes": 222520,
+      "sha256": "6909e516d8367322fe89eda0276e368f759640026557b4811be8ccab721a9ed8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/AkMotion.dll.meta",
+      "bytes": 662,
+      "sha256": "5439227fccbe751f7f42ef1336c6249466b01ed89594eb3ec2a4f8b3b7ba3308"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/AkSoundSeedAir.dll",
+      "bytes": 201016,
+      "sha256": "e6158d3d4367987cfb5198304c4b6fd3d0cdd9231f2b4ccbdd943f6d89da2dfe"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/AkSoundSeedAir.dll.meta",
+      "bytes": 662,
+      "sha256": "77c509f075b32016938f74c0a3ce3665b94c366cdc727e690d5f718391a6f469"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/AkSoundSeedGrain.dll",
+      "bytes": 193848,
+      "sha256": "37f8cdd6e30f2ae70cf871f95bdc2943623a8280bbad75c16f9b19a7a3e84f6b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/AkSoundSeedGrain.dll.meta",
+      "bytes": 662,
+      "sha256": "1297ee130b1d8230859a1a685f7d1b3e7bd834a36cba9f03bfca80245426dce9"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/Auro.dll",
+      "bytes": 2560824,
+      "sha256": "cbabd55cbd5cf1a648118dd5f58d62f2189921d9762052b87f8343ee51c60337"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/Auro.dll.meta",
+      "bytes": 662,
+      "sha256": "66e91d4377838516c0c2a221bfc62f675ad36240ebdcb4fde3bb78f2adaf4ca9"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/iZotope.dll",
+      "bytes": 571192,
+      "sha256": "85d26da5dd7d0bfb802dd79e4f11802edaf8ebe49762926b9472cc4c9ef209fe"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/iZotope.dll.meta",
+      "bytes": 662,
+      "sha256": "6d9f15e6eb3470974c0232f86ccb040ddcd2c8a930a732f64806eb7bc5339dd3"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/McDSP.dll",
+      "bytes": 312632,
+      "sha256": "d1031dc32fe7490872874e7e53169c961c0e74dd1f90d4187ff421b39fbcfa3f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/McDSP.dll.meta",
+      "bytes": 662,
+      "sha256": "843b1536e2ed7d2c4c1381dd461019af8bfc225162282929dbf288b66c618358"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/MSSpatial.dll",
+      "bytes": 153912,
+      "sha256": "618ad1eb0f1b38f976e7e48d54f81f3c76321451b41393e16d5f54b94317a7ef"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP/MSSpatial.dll.meta",
+      "bytes": 662,
+      "sha256": "c510745a051c151e4081e2410efca51f53691bbb5a1228703a706b03f5e8ae4b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/AkWwiseInitializationSettings.asset",
+      "bytes": 2357,
+      "sha256": "d071c07db809d571f93465137c5740261afa71b31ed347b1036e7e38b25193a6"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/AkWwiseInitializationSettings.asset.meta",
+      "bytes": 60,
+      "sha256": "6bef0386dfe9da9e8d2aaaa06f97a36a218737a376a25595cd2512aaed84d495"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/Windows.asset",
+      "bytes": 4760,
+      "sha256": "50132d208ae56da15217ec757eda711ec709f0f6a0efaaf8960925a2cbd350c7"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/Windows.asset.meta",
+      "bytes": 60,
+      "sha256": "9a6905362bd2709bcae1085f5467b4a2f79ae83b3b21080970deb9868a4bafec"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_003_LuoXiaoHei.pck",
+      "bytes": 11093528,
+      "sha256": "2902542eb27428fb0e9279222cb04d7d42aa889d33c8dc8e40313fd463d30cef"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_003_LuoXiaoHei.pck.meta",
+      "bytes": 60,
+      "sha256": "a7839b9323a89e5ed62677a3785f24f76bb98bc66cdfef49525473d2354425e7"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_007_Christmas.pck",
+      "bytes": 8290099,
+      "sha256": "e9a89102ba634531efd7a52d01cf520a3495006373be50cdf23a7d8cbce54677"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_007_Christmas.pck.meta",
+      "bytes": 60,
+      "sha256": "2cac1294302b7666e64a990adbf0f33df7b30e49c6dbfd576372fe8ab6ab2d7a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_011_NewYear.pck",
+      "bytes": 4980142,
+      "sha256": "01bc18c3263e5253ad02d5dd0a588bc92a278251073f1fc8b10de15f65cf94f1"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_011_NewYear.pck.meta",
+      "bytes": 60,
+      "sha256": "eec4ed8364535c6e9ac7e87bb459866a8da90f5b889473be049e13ec81ec5590"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_012_WuLiuQi.pck",
+      "bytes": 17530545,
+      "sha256": "d61d0c624a6358a2910e1e85e77d457f906e12e2a9d8928bb48428bebbdc8c06"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_012_WuLiuQi.pck.meta",
+      "bytes": 60,
+      "sha256": "8d084cd532df1f658a6023025605ca01a9ebb6d7f5021934d4350cc3dfef6303"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_017_MayDay2026.pck",
+      "bytes": 1695841,
+      "sha256": "813961b0072b7d98e7f82e7c0927a735c424b468c4690f0ca72721719c1b1ce0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_017_MayDay2026.pck.meta",
+      "bytes": 60,
+      "sha256": "b34d600ffaec7ae5b31d2f405b273b450614036fcbea614fb263b1b9a20efa19"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_020_1stAnniversary.pck",
+      "bytes": 35719529,
+      "sha256": "7557d06586288166017d6fcd5525087ae7cfa876b18213cc1e516797b1c827d7"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_020_1stAnniversary.pck.meta",
+      "bytes": 60,
+      "sha256": "6160dd5c346e6fce0ed8a5849f7f9dc698764edc60f680220024078a0b0c74e2"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_021_WorldCup.pck",
+      "bytes": 4172868,
+      "sha256": "1390116b7ba6821295782423a77ac479fb81644cb855bae72f3904fe87e69993"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_021_WorldCup.pck.meta",
+      "bytes": 60,
+      "sha256": "5ea173e908b0d340dccfc515cd7cc5963653d5e07547a4c3fc3c3b723f168689"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_023_Slime.pck",
+      "bytes": 4111472,
+      "sha256": "a8c5583d416d801bc430549ba2077a10a0585ba429a543c1ff81a08d7bd4bdeb"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_023_Slime.pck.meta",
+      "bytes": 60,
+      "sha256": "6c8a6429fb74b2c5806d6765e7be8f7190117b6a1198f819aaf2907e31d72f3e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_025_LuoTianYi_2_cn.pck",
+      "bytes": 7591358,
+      "sha256": "9b1d159cbb49261ad8345830ebc7354a58f3084508351aeaf11640d684963b00"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_025_LuoTianYi_2_cn.pck.meta",
+      "bytes": 60,
+      "sha256": "338e7c443a843ba006cdee19f6c7cfc0336abbda1ae59fce5d6268c36688b692"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_027_ChineseOdyssey.pck",
+      "bytes": 3858534,
+      "sha256": "bee2f367cda7e2be429e096d1275b62d105c5c1eb1daeafd65c4eb9924cb882f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_027_ChineseOdyssey.pck.meta",
+      "bytes": 60,
+      "sha256": "49b8f43d2b973f74fb3b17d9561b84c1d293f820545406feddc5e0f2500594af"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_028_Bocchi_jp.pck",
+      "bytes": 5126641,
+      "sha256": "986c0c51ce8ebd751d1fe11457f3cd4d062f93f34d543f5fc9a31ec5da1b7994"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_028_Bocchi_jp.pck.meta",
+      "bytes": 60,
+      "sha256": "b42449d00708a765843741c3027c73c7c9604bcd13ef4728b64563b5c073c266"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_029_GodsAtWars.pck",
+      "bytes": 1186424,
+      "sha256": "fb5fd3aa4951f921cd0bb548a9f5e19c5a8de10e8e25a9a258b2643f141987ba"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_029_GodsAtWars.pck.meta",
+      "bytes": 60,
+      "sha256": "2ea630868a569759e4d1d75c1500b7c0395c38af2553b63af6e307368c361621"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_SFX_00.pck",
+      "bytes": 210180,
+      "sha256": "ec319a587073645c3d731be56b1e844926694435c150c83cdcbbaebe5f6e30f2"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_SFX_00.pck.meta",
+      "bytes": 60,
+      "sha256": "889d4376049e7ac0b4fcd349d49b8fe678c89864c22106a8d9e437ea7d35534f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_SFX_01.pck",
+      "bytes": 4858692,
+      "sha256": "da6ae58d01716ee24c649195508543b7be3ca0107fb1e70814fd9e6efb25cc21"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_SFX_01.pck.meta",
+      "bytes": 60,
+      "sha256": "7e56d3c94e22729348178029f0ea453b81ea2841a5161e96d8cc0a30c4965d5b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_SFX_02.pck",
+      "bytes": 16766310,
+      "sha256": "52f278acef5dc9aad5530e9961ab4780cc70ecc0df0fd59478f09ba111485274"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_SFX_02.pck.meta",
+      "bytes": 60,
+      "sha256": "1b388c6c2125d0033de64f5241a9f1d84faaf868277ddf8df6355caa8046fc45"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Minimum.pck",
+      "bytes": 41489,
+      "sha256": "2056cb78b2c7aff8148a9aef15d832c192f0b78e1135cf12f8507b25f7fcb828"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Minimum.pck.meta",
+      "bytes": 60,
+      "sha256": "33e58258c75da32f2e02915800efaca883100d7787faf87f8636bb4d8374726f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Player_skill_colorful_part_2.pck",
+      "bytes": 225527,
+      "sha256": "5fa167403d59e3eded983394ddbbb67a17b0ba43cd881f71caa0933f5d7f3ac3"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Player_skill_colorful_part_2.pck.meta",
+      "bytes": 60,
+      "sha256": "8a27b6037f2c25a371724d53be2e92422c25095a8cb9f60ab7b05c5194c5cca0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Player_skill_colorful_part_3.pck",
+      "bytes": 274811,
+      "sha256": "6c70562ac7202bda72259d6c514babb4f24eb0bc79c5030a28db776719927c53"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Player_skill_colorful_part_3.pck.meta",
+      "bytes": 60,
+      "sha256": "496fc182e4c57d8687977c3728838679355f39abc013137d4ea90567d4b167ce"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Skill_common_01.pck",
+      "bytes": 267819,
+      "sha256": "bed7a7635e599acf72901b75c378b876a6109b9d37b20bda7b4c5198054bd183"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Skill_common_01.pck.meta",
+      "bytes": 60,
+      "sha256": "5e43c3d48736a5a1f672d79815046490ba9229400aa6ed43ac914a6255f3e954"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/skill_npc_030_nonhuman.pck",
+      "bytes": 476407,
+      "sha256": "8d2d951f1210825a8df954b3aa640c66ac5726b4b0092e0252cf68f58353bf48"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/skill_npc_030_nonhuman.pck.meta",
+      "bytes": 60,
+      "sha256": "b9aac88e71c27fe06fb5790bebedb16c431427bd3016844e30686a71a5b8a4e5"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Skill_Pet_1620.pck",
+      "bytes": 156903,
+      "sha256": "fb081e60918abfd2fb92c4bd326d21c73287241cb19aed21cda8eccf71f324c4"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Skill_Pet_1620.pck.meta",
+      "bytes": 60,
+      "sha256": "cabed858a94c1c19cef62d4bfe9980834df27ca07dc83448c72118d022ec5f29"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Skill_Pet_1622.pck",
+      "bytes": 70942,
+      "sha256": "b42f1018feeaf354a8cec14bf8b4b62fb3c858b353e1c265d1f461b6af0ab5af"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Skill_Pet_1622.pck.meta",
+      "bytes": 60,
+      "sha256": "05809008959ad0361a7525b3ab4cfd1d32bce0958ac5a58ef252ff48476247a6"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_004_Season_04_SFX.pck",
+      "bytes": 9572628,
+      "sha256": "e1a885a6f23a633f6a96cfc2c0f456b36be48a1a3f9522e0d428173e0c9a445a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_004_Season_04_SFX.pck.meta",
+      "bytes": 60,
+      "sha256": "a75f494077e5690e56f77d35b58cd7c273656e64628b891f854a73a40c93a8ea"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_005_Season_05_SFX.pck",
+      "bytes": 8696728,
+      "sha256": "dd13f1c90659abdc5cc6c51023ce716c7f55ad7ec7419d853f39fcdb0c2bc32e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_005_Season_05_SFX.pck.meta",
+      "bytes": 60,
+      "sha256": "0355129a3a0bd46d92f792f5626b9d107c4ecce8994c7eced00546def193d2e4"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_006_Season_06.pck",
+      "bytes": 28969663,
+      "sha256": "e18ca7674c45cb37eb31ad2066cbd99ad56369224ceecb00844ce279edacfdf5"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_006_Season_06.pck.meta",
+      "bytes": 60,
+      "sha256": "9d782b0eeafd4be0d2e3120d02210c12ff81b7aad121324c9a453bac2de3aa97"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Voice_Battle_01.pck",
+      "bytes": 578478,
+      "sha256": "56027e5320237c92cbf57e7dec5639f9e195043aca9d39e0eb5a85cec511203a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Voice_Battle_01.pck.meta",
+      "bytes": 60,
+      "sha256": "f697ab9fe0905877222a0ae56c2901fe1802a4fc5373476c0e3972e0bc59ad50"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/catalog.json",
+      "bytes": 121778,
+      "sha256": "4e13d667d5ea7ccbe0c4627940c8f70749b13cc3ec548dbe61322671af96552c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/catalog.json.meta",
+      "bytes": 60,
+      "sha256": "b3c13d5c30ce57f56ddb17d14b1923a18a3fe7dd352c3018cf424ea38484e389"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime.meta",
+      "bytes": 169,
+      "sha256": "01a922ba3a73587662fb60618d0c56871bece096449d870d1d8a128a56dffe43"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API.meta",
+      "bytes": 169,
+      "sha256": "46d3e6446afd655523554bf6f194a9169574d5aa8db0a6ac90d2b0903cc0977c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise.meta",
+      "bytes": 169,
+      "sha256": "157184b686bc43bc6f5c8c7a0dc0efab37a46f5dc32ad3a953e979be64e69920"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Common.meta",
+      "bytes": 169,
+      "sha256": "8e846316027cb72cc6e6db3bc5c07536e2b04763f58efe0b9846148965916292"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated.meta",
+      "bytes": 169,
+      "sha256": "67b42035a3736275cf33520aa1d1046d2f7ee007fc8867ea71ad8d7de809b9b1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Generated/Windows.meta",
+      "bytes": 169,
+      "sha256": "0d3c7fefdc63f5f7d18ffddea6384d133ad67fb0d6f93e9f78f3e56eca6a9b0f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common.meta",
+      "bytes": 169,
+      "sha256": "5946e37cc8e854b9cd39823e6e151c33c57edcd38ec4afdce72cf02f499f24b4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten.meta",
+      "bytes": 169,
+      "sha256": "45e75d4214419b089609deb4c6e51c8eb147ccded76d4e62a1d8f1c354ded7ce"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Common/Arrays.meta",
+      "bytes": 169,
+      "sha256": "143b0ebb026bfd61711043bf1a571743e54809586169782e531b0f1da6a73efc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Wwise/API/Runtime/Handwritten/Windows.meta",
+      "bytes": 169,
+      "sha256": "f9301743e1c45422924502ae69ff61d5c82dd851f3880dcec80f89dc704233d6"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/Profile.meta",
+      "bytes": 169,
+      "sha256": "c7414ca1d48430fd7bcd6f230f88e17a2d95937d7ec303b7326ce566be95c324"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64.meta",
+      "bytes": 169,
+      "sha256": "3e4c2c9c7e3019f3ba57d8790b9ad16e3b57727d8853a1aac42f8613836265f0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows.meta",
+      "bytes": 169,
+      "sha256": "7da9c47c05e784aba79d2460197de5eaa1f5a8f98d80f1a31d6f9174d74fa834"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins.meta",
+      "bytes": 169,
+      "sha256": "a1e87d6805fae09ed73fa12e3f100fbdea126db5a00c9f3e2d2eafb548e975ab"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound.meta",
+      "bytes": 169,
+      "sha256": "4962592f0c7feed5ca3c838d418a31968a0d4fc6069929020b4330ad3fc2c177"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/Release.meta",
+      "bytes": 169,
+      "sha256": "ead231dd7af38db63f914c417965cd05c73c197d08da1732f98d16d6ed3dc083"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Plugins/Windows/x86_64/DSP.meta",
+      "bytes": 169,
+      "sha256": "4ea9af9123c4aee734177d196efd62f1792e7d0865e3837644fd6c9c46bb5632"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise.meta",
+      "bytes": 169,
+      "sha256": "4f60940fd831b24839d7b14dac8c7eeb9accff7697d2123f7bb6d65556e3a599"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat.meta",
+      "bytes": 169,
+      "sha256": "5d15830e41c37f366f0d5f4ff9187292a62656585516050f9a9b29d6be61f714"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Resources.meta",
+      "bytes": 169,
+      "sha256": "db4400284fd40d6c536f4c5b18fd5c6fb11f247cb5e94611c2a0924720c14a33"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages.meta",
+      "bytes": 169,
+      "sha256": "b2db6f4bfc7e9c9388df75634150aa7b9018f80f5fdcb55bf7cfc1f233af7494"
+    }
+  ],
+  "adaptations": [
+    "SDK Editor DSP lookup points at the explicitly bound official native payload directory.",
+    "Original global and Windows settings retain all serialized values; only script references and the Windows-only platform list are rebound.",
+    "AKPK language strings use Windows UTF-16LE; package IDs, file IDs, language IDs, alignment and every bank/media payload byte are preserved."
+  ]
+}

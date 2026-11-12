@@ -2804,3 +2804,11 @@ unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusShieldBas
 unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusShieldPersistent.cs* text eol=lf
 unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusDamageReduceAbsolute.cs* text eol=lf
 unity/Assets/Game/Runtime/Official/BattleGridItemEntities/BattleStatusShieldViewData.cs* text eol=lf
+# Preserve the official Windows Wwise binding, native DLL and converted package identities.
+scripts/convert_wwise_android_package.py text eol=lf
+scripts/prepare_battle_windows_sound_runtime.py text eol=lf
+assets/reference/battle-animation/windows-sound-runtime-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/Wwise/** -text
+unity/Assets/Game/Runtime/Official/Wwise.meta -text
+unity/Assets/Official/Combat/NativeSound/** -text
+unity/Assets/Official/Combat/NativeSound.meta -text
