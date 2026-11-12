@@ -22,7 +22,7 @@ namespace Zjcs.Presentation.Inventory
 
         public void OpenProfile(string selectedSlotId)
         {
-            OpenProfile(selectedSlotId, Application.persistentDataPath);
+            OpenProfile(selectedSlotId, Zjcs.Offline.State.UserDataStorage.Root);
         }
 
         public void OpenProfile(string selectedSlotId, string savesRoot)
@@ -31,7 +31,7 @@ namespace Zjcs.Presentation.Inventory
                 throw new ArgumentException("A selected profile slot is required.", nameof(selectedSlotId));
 
             var slots = new ProfileSlotCatalog(string.IsNullOrEmpty(savesRoot)
-                ? Application.persistentDataPath : savesRoot);
+                ? Zjcs.Offline.State.UserDataStorage.Root : savesRoot);
             if (!slots.Contains(selectedSlotId))
                 throw new InvalidOperationException("The selected profile slot no longer exists.");
 

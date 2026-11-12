@@ -88,7 +88,7 @@ namespace Zjcs.Editor.Startup
             }
             private IEnumerator Probe()
             {
-                SessionState.SetString(Key + "Storage", Application.persistentDataPath);
+                SessionState.SetString(Key + "Storage", SaveSelectionProbe.ProfileRoot);
                 int pass = SessionState.GetInt(Key + "Pass", 0);
                 OfflineStartupFlow flow = null;
                 while (flow == null) { flow = FindObjectOfType<OfflineStartupFlow>(); yield return null; }
@@ -140,7 +140,7 @@ namespace Zjcs.Editor.Startup
                     Button create = selector.Panel.CreateButton;
                     Click(create.gameObject);
                     yield return new WaitForSecondsRealtime(2f);
-                    string saves = Path.Combine(Application.persistentDataPath, "saves");
+                    string saves = Path.Combine(SaveSelectionProbe.ProfileRoot, "saves");
                     Require(Directory.Exists(saves) && Directory.GetFiles(saves, "character-draft.json", SearchOption.AllDirectories).Length == 1,
                         "Startup handoff did not create one isolated draft through the actual button.");
                     yield return new WaitForEndOfFrame(); Capture("new-save-opening");

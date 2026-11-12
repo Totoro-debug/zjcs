@@ -283,7 +283,7 @@ namespace Zjcs.Presentation.Character
             previewAppearance = appearanceOverride;
             characterSlotId = selectedSlotId;
             savesRoot = string.IsNullOrWhiteSpace(profileSavesRoot)
-                ? Application.persistentDataPath : profileSavesRoot;
+                ? Zjcs.Offline.State.UserDataStorage.Root : profileSavesRoot;
             modelRect = transform as RectTransform;
             if (modelRect == null) throw new InvalidOperationException("The character preview must be mounted to a RectTransform.");
             if (sharedPackage == null) sharedPackage = CharacterModelPackage.OpenDefault();

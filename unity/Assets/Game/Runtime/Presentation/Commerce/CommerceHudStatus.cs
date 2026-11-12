@@ -18,7 +18,7 @@ namespace Zjcs.Presentation.Commerce
             try
             {
                 if (!ProfileSlotCatalog.TryParseSlotId(slotId)) return false;
-                var slots = new ProfileSlotCatalog(Application.persistentDataPath);
+                var slots = new ProfileSlotCatalog(Zjcs.Offline.State.UserDataStorage.Root);
                 if (!slots.Contains(slotId)) return false;
                 OfflineMainlineProgressSession profile = OfflineMainlineProgressSession.OpenForCommerce(slots, slotId);
                 string json = profile.Save.Player.CommerceStateJson;
@@ -48,7 +48,7 @@ namespace Zjcs.Presentation.Commerce
             try
             {
                 if (!ProfileSlotCatalog.TryParseSlotId(slotId)) return false;
-                var slots = new ProfileSlotCatalog(Application.persistentDataPath);
+                var slots = new ProfileSlotCatalog(Zjcs.Offline.State.UserDataStorage.Root);
                 if (!slots.Contains(slotId)) return false;
                 OfflineMainlineProgressSession profile = OfflineMainlineProgressSession.OpenForCommerce(slots, slotId);
                 return !string.IsNullOrEmpty(profile.Save.Player.CommerceStateJson)

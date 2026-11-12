@@ -272,7 +272,7 @@ namespace Zjcs.Presentation.Character
                 : throw new ArgumentNullException(nameof(characterProgression));
             characterSlotId = selectedSlotId;
             characterSavesRoot = string.IsNullOrWhiteSpace(profileSavesRoot)
-                ? Application.persistentDataPath : profileSavesRoot;
+                ? Zjcs.Offline.State.UserDataStorage.Root : profileSavesRoot;
             assets.ValidateBindings();
             CharacterPanelNodeFactory.SetUiFont(assets.UiFont);
             factory = new CharacterPanelNodeFactory(assets);

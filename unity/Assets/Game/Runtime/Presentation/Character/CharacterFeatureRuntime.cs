@@ -27,7 +27,7 @@ namespace Zjcs.Presentation.Character
 
         public void OpenProfile(string selectedSlotId)
         {
-            OpenProfile(selectedSlotId, Application.persistentDataPath);
+            OpenProfile(selectedSlotId, Zjcs.Offline.State.UserDataStorage.Root);
         }
 
         public void OpenProfile(string selectedSlotId, string savesRoot)
@@ -37,12 +37,12 @@ namespace Zjcs.Presentation.Character
 
             OfficialCharacterAssetCatalog assetCatalog = OfficialCharacterAssetCatalog.LoadDefault();
             var slots = new ProfileSlotCatalog(string.IsNullOrEmpty(savesRoot)
-                ? Application.persistentDataPath : savesRoot);
+                ? Zjcs.Offline.State.UserDataStorage.Root : savesRoot);
             if (!slots.Contains(selectedSlotId))
                 throw new InvalidOperationException("The selected profile slot no longer exists.");
 
             activeSlotId = selectedSlotId;
-            activeSavesRoot = string.IsNullOrEmpty(savesRoot) ? Application.persistentDataPath : savesRoot;
+            activeSavesRoot = string.IsNullOrEmpty(savesRoot) ? Zjcs.Offline.State.UserDataStorage.Root : savesRoot;
             session = OfflineMainlineProgressSession.OpenCharacter(slots, selectedSlotId);
             OfficialSkillRecommendationSet recommendations = assetCatalog.LoadSkillRecommendations();
             progression = OfflineCharacterProgressionService.Create(session, new CharacterProgressionInputs(

@@ -602,7 +602,7 @@ namespace Zjcs.Presentation.Home
             try {
                 runtime.homeRenderPipeline = Resources.Load<OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets")
                     .Enter();
-                runtime.Open(selectedSlotId, string.IsNullOrEmpty(savesRoot) ? Application.persistentDataPath : savesRoot,
+                runtime.Open(selectedSlotId, string.IsNullOrEmpty(savesRoot) ? Zjcs.Offline.State.UserDataStorage.Root : savesRoot,
                     uiParent, onClose, onOpenMainland);
             } catch { Destroy(go); throw; }
             return runtime;

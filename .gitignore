@@ -90,3 +90,6 @@ _asset-pack-manifest.json
 
 # 不对 docs/、assets/、unity/Assets/、Packages/ 或 ProjectSettings/ 设目录黑名单。
 # 代码、素材（含 .meta）、插件、配置、来源清单和文档均可正常纳入 Git。
+
+# 编辑器本地用户数据（Windows Player 使用 exe 同级目录）。
+/unity/UserData/

@@ -23,7 +23,7 @@ namespace Zjcs.Presentation.CharacterCreation
         public static bool Finished { get; private set; }
         public static bool Passed { get; private set; }
         public static Action<int, int> ResizeView;
-        public static string ProfileRoot => output == null ? Application.persistentDataPath : Path.Combine(output, "profiles");
+        public static string ProfileRoot => output == null ? Zjcs.Offline.State.UserDataStorage.Root : Path.Combine(output, "profiles");
         private float deadline;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]

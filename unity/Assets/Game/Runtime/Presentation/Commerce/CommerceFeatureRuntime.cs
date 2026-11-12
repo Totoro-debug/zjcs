@@ -31,7 +31,7 @@ namespace Zjcs.Presentation.Commerce
 
         public IReadOnlyList<string> ExistingCharacterSlots()
         {
-            if (slots == null) slots = new ProfileSlotCatalog(string.IsNullOrEmpty(PersistentRoot) ? Application.persistentDataPath : PersistentRoot);
+            if (slots == null) slots = new ProfileSlotCatalog(string.IsNullOrEmpty(PersistentRoot) ? Zjcs.Offline.State.UserDataStorage.Root : PersistentRoot);
             var result = new List<string>();
             foreach (string slotId in slots.GetSlotIds())
             {
@@ -200,7 +200,7 @@ namespace Zjcs.Presentation.Commerce
 
         private void EnsureCatalog()
         {
-            if (slots == null) slots = new ProfileSlotCatalog(string.IsNullOrEmpty(PersistentRoot) ? Application.persistentDataPath : PersistentRoot);
+            if (slots == null) slots = new ProfileSlotCatalog(string.IsNullOrEmpty(PersistentRoot) ? Zjcs.Offline.State.UserDataStorage.Root : PersistentRoot);
             if (assetCatalog == null) assetCatalog = OfficialCommerceAssetCatalog.LoadDefault();
             if (Catalog == null) Catalog = new OfficialCommerceCatalogView(assetCatalog.Load());
         }

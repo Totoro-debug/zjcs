@@ -86,7 +86,7 @@ namespace Zjcs.Presentation.Character
             model = characterModel;
             characterSlotId = selectedSlotId;
             characterSavesRoot = string.IsNullOrWhiteSpace(profileSavesRoot)
-                ? Application.persistentDataPath : profileSavesRoot;
+                ? Zjcs.Offline.State.UserDataStorage.Root : profileSavesRoot;
             close = closeCallback;
             requestModule = moduleCallback;
             assets.ValidateBindings();

@@ -28,7 +28,7 @@ namespace Zjcs.Editor.Commerce
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 throw new InvalidOperationException("Exit Play Mode before running commerce HUD acceptance.");
             ConfigurePortraitGameView();
-            var slots = new ProfileSlotCatalog(Application.persistentDataPath);
+            var slots = new ProfileSlotCatalog(Zjcs.Offline.State.UserDataStorage.Root);
             string slot = slots.CreateSlot();
             OfflineMainlineSave save = new OfflineMainlineSave();
             save.CreatedAtUnixSeconds = DateTimeOffset.Now.ToUnixTimeSeconds();
@@ -76,7 +76,7 @@ namespace Zjcs.Editor.Commerce
                 {
                     try
                     {
-                        var slots = new ProfileSlotCatalog(Application.persistentDataPath);
+                        var slots = new ProfileSlotCatalog(Zjcs.Offline.State.UserDataStorage.Root);
                         string directory = slots.GetSlotDirectory(slot);
                         if (Directory.Exists(directory)) Directory.Delete(directory, true);
                     }
