@@ -239,11 +239,11 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `Runtime/Official/HomeCurrencyWindowsUI/` 迁入所选 884 的完整 `QuickBuyDialog`、`PayMoneyChangeDialog`、`PlayerCostMoneyContent` 和 `QuickBuyInfo` 三项共享计算。速购保持原所需数量向上取整、阶梯价格、已购买次数、持有／次数限制、最低购买量、余额变化及日／自增事件的不同刷新顺序；金币记录使用原 30／50／100 价格与 5／5／无限档位。余额不足仍强制选择至少 1 次；多档控件收到货币变化时只重算数量，价格等待原后续刷新事件，保留该原行为。确认时仍只用单次奖励数量检查持有上限，发出购买请求后立即关闭。扣费按钮保留原不足、禁止扣费错误 1659、条件检查、免费、数量颜色和每秒自增刷新分支。
 
-兑换保留原零参数滑条／正参数固定数量、最小 1／最大 10000000／倍率 1、零余额选择 0、物品数量变化切换固定模式、余额不足确认后进入直购及原支付奖励拦截。请求、奖励、物品说明、确认和直购窗口均由明确类型端口提供，不能把端口回调作为真实存档事务完成。`OfflineHomeCurrencyAssets` 显式绑定所选 26 条速购配置、持有上限、等级系数、物品、语言、原 GlobalColors 配色和图标；兑换所需额外顶栏货币按原 `PlayerItemUIGetItemIdFactory` 的 `FlareStar → GameSettings.FlareStarId` 补入运行时目录副本，保持家园三项货币目录的原定义。
+兑换保留原零参数滑条／正参数固定数量、最小 1／最大 10000000／倍率 1、零余额选择 0、物品数量变化切换固定模式、余额不足确认后进入直购及原支付奖励拦截。请求、奖励、物品说明、确认和直购窗口均由明确类型端口提供；兑换请求已另接下述真实存档事务，其他端口仍需接通实际流程。`OfflineHomeCurrencyAssets` 显式绑定所选 26 条速购配置、持有上限、等级系数、物品、语言、原 GlobalColors 配色和图标；兑换所需额外顶栏货币按原 `PlayerItemUIGetItemIdFactory` 的 `FlareStar → GameSettings.FlareStarId` 补入运行时目录副本，保持家园三项货币目录的原定义。
 
 `Assets/Official/Home/UI/CurrencyWindows/` 恢复 APK 中两个完整父窗口及默认物品图标，HintTip 附件沿原配置 GUID 查到实际 prefab 后一并恢复；保留全部原层级、RectTransform、布局、字体、图标、材质、入退场动画和声音，不用截图替代窗口。图标、附件对象池及顶部栏均在启用前注入本地资源与生命周期绑定。
 
-`HomeCurrencyWindowsNativeValidation.Run` 已在完整隔离工程的静音 Play Mode 通过两个完整原窗口的第一射线命中与内部模拟点击、所需数量取整、跨阶梯价格、最大值、余额／禁止扣费／条件分支、周期刷新、取消回调、固定数量／零余额兑换、支付奖励拦截、原入退场动画和图标／事件／奖励监听释放。已查看 608×1080 实际速购及兑换画面，包含原顶部货币栏。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。该测试使用受控角色、请求、奖励和二级窗口端口；真实背包扣费与发奖、次数存档、物品详情／确认／直购窗口的实际往返、正式 HUD 和 Windows Player 尚未接通或验证。
+`HomeCurrencyWindowsNativeValidation.Run` 已在完整隔离工程的静音 Play Mode 通过两个完整原窗口的第一射线命中与内部模拟点击、所需数量取整、跨阶梯价格、最大值、余额／禁止扣费／条件分支、周期刷新、取消回调、固定数量／零余额兑换、支付奖励拦截、原入退场动画和图标／事件／奖励监听释放。兑换按钮接入真实新角色背包，验证耀星扣除与晨星发放、原数量监听更新、重开存档恢复、重复请求不重复结算、无效／不足请求不写档，以及文件占用导致写盘失败时主存档及余额不变、窗口保持可操作。已查看 608×1080 实际速购及兑换画面，包含原顶部货币栏。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。速购、奖励和二级窗口端口仍为受控数据；速购次数存档、物品详情／确认／直购窗口的实际往返、正式 HUD 和 Windows Player 尚未接通或验证。
 
 `PlayerItemUIMainPlayerCountProviderBase` 与重新解析原依赖得到的 `PlayerItemUIPlayerItemCountProvider` 迁入 `Runtime/Official/HomeCurrencyUI/`，保留玩家借还、按物品 ID 过滤、每秒异步刷新及取消顺序。`OfflineHomeCurrencyPlayer` 将实际角色背包和自增参数投影为原数量事件；家园宿主需在提交／重读后调用 `SynchronizeCommittedPlayer`。当前 `OutputAdditionSetting.ItemOutputGroupTypeDict` 包含 56／57，因此体力保留原额外参数更新订阅。真实角色存档与原生顶栏的隔离验证入口为 `HomeCurrencyProfileValidation.Run`；正式家园 HUD 的整体替换、物品详情／购买原窗口、属性及产出加成变化时的体力速度／上限应用链仍未接通，不能以初始恢复规则代替这些流程。
 
@@ -308,7 +308,11 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 人物页底栏经 `CharacterFeatureRuntime.OpenProfile(slotId, savesRoot)` 打开本地人物档案。
 
+`Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyExchange` 在每次请求前重读共享角色档案，按所选配置检查数量，以 `OfflineInventoryOperations` 在同一存档克隆中扣除耀星、发放晨星并写入请求回执，成功提交后才通知原窗口关闭；重复回执返回未变化，扣费、发奖或写盘失败均不提交新背包。该实现不维护第二份货币余额，顶部栏通过原数量观察器读取提交后的角色状态。
+
 ## 自定义实现
+
+耀星兑换沿用[商城](commerce.md)已确定的本地兑换方式，将原 RPC 改为共享角色背包事务；本项使用所选 884 的数量范围、兑换倍率及窗口顺序，防重回执与原子存档为离线适配，不标作已取得的服务器源码。
 
 本次迁移按全新游戏制作，不增加旧单机存档的升级兼容逻辑。体力等新建状态遵循官方初始化与更新顺序；原存档缺字段时如何补值不再作为本次迁移前置决策。
 

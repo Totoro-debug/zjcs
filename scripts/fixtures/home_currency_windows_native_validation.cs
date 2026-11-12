@@ -14,6 +14,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Official.HomeCountControlsUI;
 using Zjcs.Official.HomeCurrencyWindowsUI;
+using Zjcs.Official.HomeCurrencyUI;
 using Zjcs.Official.HomeScreenUI;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.WorldUI;
@@ -23,6 +24,9 @@ using Zjcs.Offline.HomeHudUI;
 using Zjcs.Offline.HomeCurrencyUI;
 using Zjcs.Offline.PartnersUI;
 using Zjcs.Offline.ProfessionUI;
+using Zjcs.Offline.CharacterCreation;
+using Zjcs.Offline.Progression;
+using Zjcs.Offline.State;
 using Object=UnityEngine.Object;
 
 [InitializeOnLoad]
@@ -47,7 +51,7 @@ public static class HomeCurrencyWindowsNativeValidation
     public static void Finish(Exception error)
     {
         SessionState.SetBool(Key,false);if(error!=null)Debug.LogException(error);
-        else Debug.Log("HOME_CURRENCY_WINDOWS_NATIVE_PASSED: complete original quick-buy/pay-change prefabs, original configuration, simulated button input, price/quantity/balance branches, popup clips and subscription disposal. Transaction/award/secondary-window ports are controlled; production save and Player remain pending.");
+        else Debug.Log("HOME_CURRENCY_WINDOWS_NATIVE_PASSED: complete original windows and pointer input; real-profile exchange, original count observers, disk restoration, replay/overdraw rejection and disk-failure rollback; popup clips and subscription disposal. Quick-buy/award/secondary-window ports remain controlled; production HUD and Player remain pending.");
         EditorApplication.Exit(error==null?0:1);
     }
 }
@@ -57,6 +61,8 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     Camera cameraUi;RenderTexture target;Canvas canvas;EventSystem events;Vector2 pointer;int errors,sounds,borrowedIcons,subscribers,details;
     OfflineHomeCurrencyAssets assets;OfflineProfessionImageResourceLoader loader;ItemIconAttachmentManager attachments;
     Zjcs.Official.HomeHudUI.OfficialHomeTopBarAssetCatalog topBarAssets;
+    OfflineMainlineProgressSession profile;ProfileSlotCatalog slots;string profileSlot,lastExchangeRequest;
+    OfflineHomeCurrencyPlayer profilePlayer;OfflineHomeCurrencyExchange exchange;
     FontAssetFontService fonts;ScreenAdaptService screen;OfflineHomeTopBar topBar;OfflinePartnerUiSoundScope soundScope;IDisposable metrics,uiScope;
     GameObject active,maskObject;WorldPopupWindow popup;WorldWindowBlurMask mask;Material blur;
     readonly Dictionary<int,long> counts=new Dictionary<int,long>{{1,100},{2,500},{15,5}};
@@ -113,17 +119,45 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         allowLimit=true;Click(cost.Btn);yield return WaitClosed();Require(calls.IndexOf("buy:1:1")<calls.LastIndexOf("close"),"request precedes immediate close");Require(borrowedIcons==0&&subscribers==0&&day==null&&increase==null,"quick-buy releases icon and all subscriptions");
         int cancellations=0;yield return Open(assets.quickBuyPrefab,root=>root.GetComponent<QuickBuyDialog>().Init(1,0,true,()=>cancellations++));
         quick=active.GetComponent<QuickBuyDialog>();Click(Field<Button>(quick,"mCancelBtn"));yield return WaitClosed();Require(cancellations==1,"native cancel callback once");
+        InitializeExchangeProfile();
         yield return Open(assets.payChangePrefab,root=>root.GetComponent<PayMoneyChangeDialog>().Init());
         var pay=active.GetComponent<PayMoneyChangeDialog>();Require(pay.SetCountSlider.CurrentCount==1&&pay.CountSliderGo.activeSelf,"original pay default selection");
         Click(pay.SetCountSlider.AddBtn);Require(Field<long>(pay,"mCurrentCount")==2,"native exchange add");Click(pay.SetCountSlider.MaxBtn);Require(Field<long>(pay,"mCurrentCount")==5,"native exchange maximum");Capture("home-pay-change-native.png");
-        Click(pay.ConfirmBtn);yield return WaitClosed();Require(exchanges==1&&calls.Contains("exchange:5"),"original exchange request and success close");Require(awardHandlers.Count==0&&subscribers==0,"pay releases award and item handlers");
-        counts[15]=2;yield return Open(assets.payChangePrefab,root=>root.GetComponent<PayMoneyChangeDialog>().Init(3));
+        Click(pay.ConfirmBtn);Require(GetItemAmount(15)==0&&GetItemAmount(2)==505,"actual exchange balances before original success close");Require(canvas.GetComponentsInChildren<MePlayerItemUI>(true).Any(item=>item.GetComponentsInChildren<TMP_Text>(true).Any(text=>text.text=="505")),"original count observer updates before the top bar hides at exit-animation start");yield return WaitClosed();Require(exchanges==1&&calls.Contains("exchange:5"),"original exchange request and success close");Require(awardHandlers.Count==0&&subscribers==0,"pay releases award and item handlers");
+        Require(GetItemAmount(15)==0&&GetItemAmount(2)==505,"native confirm commits both actual inventory changes");
+        var restored=OfflineMainlineProgressSession.OpenCharacter(slots,profileSlot);Require(restored.InventoryCount(15)==0&&restored.InventoryCount(2)==505,"exchange survives reopening the real profile");
+        string committed=File.ReadAllText(slots.GetProgressPath(profileSlot));Require(exchange.Exchange(lastExchangeRequest,5).Status==ProgressionResultStatus.Unchanged&&committed==File.ReadAllText(slots.GetProgressPath(profileSlot)),"replayed exchange request never spends or awards twice");
+        Require(!exchange.Exchange("overdraw",1).IsApplied&&!exchange.Exchange("zero",0).IsApplied&&committed==File.ReadAllText(slots.GetProgressPath(profileSlot)),"invalid and insufficient exchanges leave the saved profile unchanged");
+        SetBalance(15,2);yield return Open(assets.payChangePrefab,root=>root.GetComponent<PayMoneyChangeDialog>().Init(3));
         pay=active.GetComponent<PayMoneyChangeDialog>();Require(!pay.CountSliderGo.activeSelf&&pay.ExchangeFixedTxt.gameObject.activeSelf&&Field<long>(pay,"mCurrentCount")==3,"original explicit quantity keeps fixed mode");
         Click(pay.ConfirmBtn);Require(confirm==1&&exchanges==1,"insufficient fixed amount asks before direct pay");
         payAward=false;Require(!awardHandlers.Single()(new HomeCurrencyAwardMessage()),"non-pay award continues propagation");payAward=true;Require(awardHandlers.Single()(new HomeCurrencyAwardMessage())&&awards==1,"pay award original interception");
         confirmAction();yield return WaitClosed();Require(directPay==1,"confirmed shortage initializes direct-pay port then closes");
-        counts[15]=0;yield return Open(assets.payChangePrefab,root=>root.GetComponent<PayMoneyChangeDialog>().Init());pay=active.GetComponent<PayMoneyChangeDialog>();Require(pay.SetCountSlider.CurrentCount==0&&Field<long>(pay,"mCurrentCount")==0,"zero balance original disabled range");Click(pay.CancelBtn);yield return WaitClosed();
+        SetBalance(15,0);yield return Open(assets.payChangePrefab,root=>root.GetComponent<PayMoneyChangeDialog>().Init());pay=active.GetComponent<PayMoneyChangeDialog>();Require(pay.SetCountSlider.CurrentCount==0&&Field<long>(pay,"mCurrentCount")==0,"zero balance original disabled range");Click(pay.CancelBtn);yield return WaitClosed();
+        SetBalance(15,2);yield return Open(assets.payChangePrefab,root=>root.GetComponent<PayMoneyChangeDialog>().Init());pay=active.GetComponent<PayMoneyChangeDialog>();
+        string primary=slots.GetProgressPath(profileSlot);string beforeFailure=File.ReadAllText(primary);
+        using(var locked=new FileStream(primary,FileMode.Open,FileAccess.Read,FileShare.Read)){Click(pay.ConfirmBtn);Require(active&&calls.Last()=="exchange-rejected","failed disk commit keeps original exchange window open");}
+        Require(File.ReadAllText(primary)==beforeFailure&&GetItemAmount(15)==2&&GetItemAmount(2)==505,"failed commit leaves both actual inventory amounts and primary save unchanged");
+        Click(pay.CancelBtn);yield return WaitClosed();
+        Require(Field<Delegate>(profilePlayer,"OnItemCountUpdate").GetInvocationList().Length==1&&Field<Delegate>(profilePlayer,"OnAutoIncreaseItemDataUpdate")==null,"actual profile observers release before adapter disposal");profilePlayer.Dispose();profilePlayer=null;
         topBar.Dispose();Object.Destroy(topBarAssets);attachments.Dispose();yield return null;uiScope.Dispose();fonts.Dispose();soundScope.Dispose();screen.Dispose();metrics.Dispose();Require(errors==0&&sounds>0&&subscribers==0,"runtime, audio and disposal checks");
+    }
+    void InitializeExchangeProfile()
+    {
+        string root=Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"),"currency-exchange-profile-"+Guid.NewGuid().ToString("N"));
+        var creation=CharacterCreationOfflineService.OpenDefault(root);profileSlot=creation.CreateSlot();var draft=creation.OpenDraft(profileSlot);draft.name="兑换验证";
+        Require(creation.TryCreateCharacter(profileSlot,draft,out string error),error);slots=new ProfileSlotCatalog(root);profile=OfflineMainlineProgressSession.OpenCharacter(slots,profileSlot);
+        SetBalance(1,100);SetBalance(2,500);SetBalance(15,5);
+        profilePlayer=new OfflineHomeCurrencyPlayer(profile);profilePlayer.OnItemCountUpdate+=(item,previous,source)=>changed?.Invoke(new ItemData(item.Id,new IconInfo(assets.ItemRow(item.Id))),previous,source);
+        exchange=new OfflineHomeCurrencyExchange(profile,assets);
+    }
+    void SetBalance(int id,long count)
+    {
+        profile.Reload();Require(profile.ApplyInventoryTransaction("exchange-fixture-balance:"+Guid.NewGuid().ToString("N"),save=>{
+            long held=OfflineItemAutoIncrease.Count(save.Player.Inventory.FirstOrDefault(row=>row.ItemId==id),DateTime.UtcNow);long now=DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            if(count>held)Require(OfflineInventoryOperations.Grant(save.Player,id,count-held,now).IsApplied,"seed real exchange balance");
+            else if(count<held)Require(OfflineInventoryOperations.Consume(save.Player,id,held-count,now).IsApplied,"set real exchange balance");
+        }).IsApplied,"commit isolated exchange balance");profilePlayer?.SynchronizeCommittedPlayer();
     }
     IEnumerator Open(GameObject prefab,Action<GameObject> initialize)
     {
@@ -164,7 +198,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     static T Field<T>(object value,string name)=>(T)value.GetType().GetField(name,BindingFlags.Instance|BindingFlags.NonPublic).GetValue(value);
     static T Load<T>(JToken reference) where T:Object{var value=AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath((string)reference["guid"]));Require(value,"original reference "+reference);return value;}
     static void Require(bool value,string message){if(!value)throw new InvalidOperationException(message);}
-    public int Level=>10;public int SubRank=>0;public long GetItemAmount(int id)=>counts.TryGetValue(id,out var count)?count:0;
+    public int Level=>10;public int SubRank=>0;public long GetItemAmount(int id)=>profilePlayer!=null?profilePlayer.GetItemAmount(id):counts.TryGetValue(id,out var count)?count:0;
     public bool HasItem(int id,long count)=>GetItemAmount(id)>=count;public bool IsBanCostItem(int id)=>banCost;
     public long QuickBuyGetItemBuyCount(int id,EQuickBuyRefreshType type)=>alreadyBought;
     public event Action<IProfessionItemData,long,object> OnItemCountUpdate {add{changed+=value;subscribers++;}remove{changed-=value;subscribers--;}}
@@ -181,7 +215,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     public IDisposable SubscribeAutoIncrease(Action<HomeCurrencyAutoIncreaseEvent> callback){increase+=callback;return new Release(()=>increase-=callback);}
     public UniTask<bool> CheckBuyLimitCountItem(int id,long count){calls.Add("limit:"+id+":"+count);return UniTask.FromResult(allowLimit);}
     public void PlayerQuickBuy(int id,long count)=>calls.Add("buy:"+id+":"+count);
-    public void PlayerDiamonChange(long count,Action success){exchanges++;calls.Add("exchange:"+count);success();}
+    public void PlayerDiamonChange(long count,Action success){exchanges++;calls.Add("exchange:"+count);lastExchangeRequest="native-confirm-"+exchanges;var result=exchange.Exchange(lastExchangeRequest,count);if(result.IsApplied){profilePlayer.SynchronizeCommittedPlayer();success();}else calls.Add("exchange-rejected");}
     public void ShowLackOfItem(int id,long count,IWindowOperator owner){lack++;calls.Add("lack:"+id+":"+count);}
     public void ShowError(int code,string name)=>calls.Add("error:"+code);public void SystemMessage(string text)=>calls.Add("message:"+text);
     public void PopupItemDetail(IWindowOperator owner,int id,long count){details++;Require(count==0,"original details initial count");}
@@ -204,10 +238,17 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     public RenderTexture GetRenderTexture()=>RenderTexture.GetTemporary(target.width/13,target.height/13);public void ReleaseRenderTexture(RenderTexture texture)=>RenderTexture.ReleaseTemporary(texture);
     public void TakeAShot(RenderTexture texture){Canvas.ForceUpdateCanvases();cameraUi.Render();Zjcs.Presentation.World.OfficialDungeonPopupMask.Blur(target,texture,blur);}
     public IPlayerItemUIHandler CreateHandler(PlayerItemType type,PlayerItemUIItemIdProvider provider)=>new CurrencyHandler();
-    public IPlayerItemUICountProvider CreateCountProvider(PlayerItemType type,PlayerItemUIItemIdProvider provider)=>new Counter(this,provider.ItemId);
+    public IPlayerItemUICountProvider CreateCountProvider(PlayerItemType type,PlayerItemUIItemIdProvider provider)=>profilePlayer!=null?new PlayerItemUIPlayerItemCountProvider(provider.ItemId,new ExchangeBindings(this)):new Counter(this,provider.ItemId);
     public IDisposable LoadIcon(int id,Action<Sprite> callback){var row=proof["currency_images"][id.ToString()];callback(row!=null?Load<Sprite>(row["pointer"]):Zjcs.Official.HomeHudUI.OfficialHomeTopBarAssetCatalog.LoadDefault().Icon(id));return new Release(()=>{});}
     public Vector2 InputPosition=>pointer;public string ColorFormat(string value,Color color)=>WrapColor(value,color);
     sealed class CurrencyHandler:IPlayerItemUIHandler{public int ItemId{get;set;}public bool ShowAddBtn=>false;public void HandleAddBtn(){}public void HandleClick(Vector2 point){}}
+    sealed class ExchangeBindings:IHomeCurrencyBindings
+    {
+        readonly HomeCurrencyWindowsNativeRunner owner;public ExchangeBindings(HomeCurrencyWindowsNativeRunner owner){this.owner=owner;}
+        public IHomeCurrencyPlayer MainPlayer=>owner.profilePlayer;public bool ManagerAvailable=>owner.profilePlayer.ManagerAvailable;public SafeAction OnPlayerUpdate=>owner.profilePlayer.OnPlayerUpdate;
+        public HomeCurrencyItemInfo GetItemInfo(int id)=>new HomeCurrencyItemInfo{HasAutoIncrease=owner.assets.Item(id).HasAutoIncrease};
+        public bool IsOutputAdditionItem(int id)=>OfficialHomeAutoIncreaseConfiguration.LoadDefault().outputAdditionItems.Contains(id);
+    }
     sealed class Counter:IPlayerItemUICountProvider {readonly HomeCurrencyWindowsNativeRunner owner;readonly int id;public Counter(HomeCurrencyWindowsNativeRunner owner,int id){this.owner=owner;this.id=id;}public long Count=>owner.GetItemAmount(id);public event Action<long,bool> OnItemCountUpdate;public void Init(){}public void Release(){}}
     sealed class Release:IDisposable{Action action;public Release(Action value){action=value;}public void Dispose(){var value=action;action=null;value?.Invoke();}}
     sealed class IconInfo:IProfessionItemInfo {readonly JObject row;public IconInfo(JObject value){row=value;}public int ClassId=>(int)row["ClassId"];public string Icon=>(string)row["RawIcon"];public string IconEffect=>(string)row["IconEffect"];public Quality Quality=>(Quality)(int)row["Quality"];public bool CanOverlap=>(bool)row["CanOverlap"];public object GetFakeIcon()=>null;}

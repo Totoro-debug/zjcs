@@ -122,7 +122,8 @@ def stage_fixture(work,project,prefab='Assets/Official/Home/UI/CurrencyWindows/S
     asmdef=dict(name='Zjcs.HomeCurrencyWindowsNativeValidation',includePlatforms=['Editor'],references=[
         'Unity.ugui','Unity.TextMeshPro','Zjcs.Official.HomeCurrencyWindowsUI','Zjcs.Official.WorldUI',
         'Zjcs.Official.World.NativeLabelUI','Zjcs.Official.ProfessionUI','Zjcs.Offline.HomeHudUI','Zjcs.Offline.PartnersUI','Zjcs.Offline.ProfessionUI','Zjcs.Official.HomeCountControlsUI','Unity.Newtonsoft.Json','UniTask',
-        'Zjcs.Offline.HomeCurrencyUI','Zjcs.Offline.HomeUI','Zjcs.Official.HomeScreenUI','Zjcs.Official.HomeHudUI','Zjcs.Presentation.World'])
+        'Zjcs.Offline.HomeCurrencyUI','Zjcs.Offline.HomeUI','Zjcs.Official.HomeScreenUI','Zjcs.Official.HomeHudUI','Zjcs.Presentation.World',
+        'Zjcs.Offline.CharacterCreation','Zjcs.Offline.Progression','Zjcs.Offline.State','Zjcs.Official.HomeCurrencyUI'])
     (folder/'HomeCurrencyWindowsNativeValidation.asmdef').write_text(json.dumps(asmdef,indent=2)+'\n','utf8',newline='\n')
 
 
