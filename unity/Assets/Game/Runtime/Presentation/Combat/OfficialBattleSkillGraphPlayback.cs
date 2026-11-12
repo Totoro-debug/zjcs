@@ -211,8 +211,10 @@ namespace Zjcs.Presentation.Combat
             bool found = false;
             if (step.DamageEvents != null) foreach (var damage in step.DamageEvents)
             {
-                if (damage == null || damage.IsCure || damage.IsSkillCost
-                    || damage.DamageId != action.SourceDamageId || damage.TargetId != action.UnitId) continue;
+                int targetId = action.SourceDamageTargetId > 0 ? action.SourceDamageTargetId : action.UnitId;
+                if (damage == null || damage.IsSkillCost || action.Action == 2 && damage.IsCure
+                    || damage.DamageId != action.SourceDamageId || damage.TargetId != targetId
+                    || action.SourceDamageTargetId > 0 && damage.DamageEntityId <= 0) continue;
                 if (found) return false; // An incomplete/ambiguous association retains the compatible path.
                 found = true;
                 delay = damage.Delay;

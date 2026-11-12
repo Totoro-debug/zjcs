@@ -60,9 +60,10 @@ namespace Zjcs.Editor.Combat
             var camera = new GameObject("Receipt damage camera").AddComponent<Camera>();
             camera.orthographic = true; camera.orthographicSize = 4;
             camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = new Color(.06f, .09f, .15f);
-            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure", "trigger", "cost", "cost-legacy", "hemophagia", "actions", "actions-legacy" })
+            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure", "trigger", "cost", "cost-legacy", "hemophagia", "actions", "actions-legacy", "cooldown-target", "cooldown-self", "cooldown-none", "cooldown-cure" })
             {
                 bool actionCase = name.StartsWith("actions", StringComparison.Ordinal);
+                bool cooldownCase = name.StartsWith("cooldown", StringComparison.Ordinal);
                 var checkpoint = Build(name, out var step);
                 var expected = step.DamageEvents.Where(d => !d.IsSkillCost && d.DamageEntityId != 0)
                     .OrderBy(d => d.Delay).ThenBy(d => d.DamageId).ToArray();
@@ -133,6 +134,13 @@ namespace Zjcs.Editor.Combat
                 if (costCase) foreach (var cost in step.DamageEvents.Where(d => d.IsSkillCost))
                     Require(playback.OwnsDamageUI(step, cost) == (name == "cost"),
                         "Only a known actual-cast cost notification replaces its old float.");
+                if (cooldownCase)
+                {
+                    var action = step.StatusCustomActions.Single();
+                    Require(action.Action == 3 && action.UnitId == (name == "cooldown-self" ? 1 : 2)
+                        && action.SourceDamageId == expected.Single().DamageId && action.SourceDamageTargetId == 2,
+                        "The exact hit's cooldown invocation retains both the affected role and the causing hit target after save/restore.");
+                }
                 int costStarts = 0;
                 if (costCase) views.SkillStarted += (id, slot) => {
                     costStarts++;
@@ -163,7 +171,7 @@ namespace Zjcs.Editor.Combat
                         Entity = damage.myEntity, Damage = damage, SkillId = damage.Component.SkillId,
                         Identity = damage.myEntity.Id,
                         Skill = views.GetEntity(damage.Component.SkillId) });
-                        if (name == "actions") Require(!floatRoot.GetComponentsInChildren<DamageCustomActionUI>()
+                        if (name == "actions" || cooldownCase) Require(!floatRoot.GetComponentsInChildren<DamageCustomActionUI>()
                             .Any(ui => ui.GetComponent<CharacterDamageUI>().EntityId == role.myEntity.Id),
                             "The actual damage notification must precede its associated custom action.");
                         long number = damage.Component.DamageResult.DamageValue - damage.Component.DamageResult.ShieldValue;
@@ -174,6 +182,13 @@ namespace Zjcs.Editor.Combat
                     entity.GetComponent<MyFightRoleFight>().OnHit += (role, damage) => hitNotifications++;
                 }
                 playback.Play(step, checkpoint, id => transforms.TryGetValue(id, out var value) ? value : null);
+                if (cooldownCase)
+                {
+                    camera.transform.position = (transforms[1].position + transforms[2].position) * .5f + new Vector3(0, 0, -20);
+                    Require(step.StatusCustomActions.All(playback.OwnsStatusCustomActionUI)
+                        && floatRoot.GetComponentsInChildren<DamageCustomActionUI>().Length == 0,
+                        "A hit-created cooldown action must wait, including a self-applied status, pure status or cure hit.");
+                }
                 if (actionCase)
                 {
                     Vector3 center = (transforms[1].position + transforms[2].position) * .5f;
@@ -226,6 +241,9 @@ namespace Zjcs.Editor.Combat
                         Require(floatRoot.GetComponentsInChildren<DamageCustomActionUI>().Length
                             == (name == "actions-legacy" || due.Length > 0 ? 2 : 1),
                             "An actual custom action must appear at its causing damage boundary, including the step/cast offset.");
+                    if (cooldownCase && boundary <= expected[0].Delay + .125f)
+                        Require(floatRoot.GetComponentsInChildren<DamageCustomActionUI>().Length == (due.Length > 0 ? 1 : 0),
+                            "The original cooldown UI must appear at the actual damage/cure/None hit's boundary.");
                     int active = root.GetComponentsInChildren<MyFightDamage>().Count();
                     Require(active == due.Count(d => d.Delay + Lifetime(d) > boundary + .00001f), "Original configured damage lifetime and pool removal.");
                     for (int index = 0; index < due.Length; index++)
@@ -239,10 +257,12 @@ namespace Zjcs.Editor.Combat
                             continue;
                         }
                         var result = value.Damage.Component.DamageResult;
-                        var expectedType = name == "none" ? DamageResultType.None
-                            : name == "cure" ? DamageResultType.Cure : DamageResultType.Damage;
-                        Require(result.ResultType == expectedType && result.IsCure == (name == "cure")
-                            && result.IsDamage == (name != "none" && name != "cure"),
+                        bool noneResult = name == "none" || name == "cooldown-none";
+                        bool cureResult = name == "cure" || name == "cooldown-cure";
+                        var expectedType = noneResult ? DamageResultType.None
+                            : cureResult ? DamageResultType.Cure : DamageResultType.Damage;
+                        Require(result.ResultType == expectedType && result.IsCure == cureResult
+                            && result.IsDamage == (!noneResult && !cureResult),
                             "Actual damage/full-health cure and status-only result projection.");
                         Require(result.Pos.X == receipt.DamageX && result.Pos.Y == receipt.DamageY
                             && result.DamageValue == receipt.DamageValue && result.ShieldValue == receipt.ShieldDamage
@@ -318,8 +338,8 @@ namespace Zjcs.Editor.Combat
                 skill.Range.Add(new FightGridPoint(3, 0));
                 var hit = new FightBattleHitDefinition { EntityId = 10101, DamageId = 13012, Delay = .25f,
                     DamageType = 8, HasCustomDamage = true, CustomDamage = 5, TargetMode = 0 };
-                if (name == "none") hit.ActionType = 0;
-                if (name == "cure")
+                if (name == "none" || name == "cooldown-none") hit.ActionType = 0;
+                if (name == "cure" || name == "cooldown-cure")
                 {
                     hit.ActionType = 5; skill.HasCustomCure = true; skill.CustomCure = 10;
                     foreach (var unit in checkpoint.Units)
@@ -328,6 +348,10 @@ namespace Zjcs.Editor.Combat
                 }
                 hit.AppliedStatuses.Add(new FightBattleStatusApplication { StatusId = 24031, TargetType = 0,
                     Chance = 1, AffectedByProp = false, LessThanHpPer = -1f }); skill.Hits.Add(hit);
+                if (name.StartsWith("cooldown", StringComparison.Ordinal))
+                    hit.AppliedStatuses.Add(new FightBattleStatusApplication { StatusId = 60481,
+                        TargetType = name == "cooldown-self" ? 1 : 0, Chance = 1,
+                        AffectedByProp = false, LessThanHpPer = -1f });
                 if (name == "hemophagia")
                 {
                     int property = assets.Load().PropertyType("OnceHitHemophagiaPer");
@@ -358,7 +382,7 @@ namespace Zjcs.Editor.Combat
             checkpoint.Units[0].SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = -1 });
             var wave = new FightBattleWaveState(); wave.UnitIds.AddRange(new[] { 2, 3 }); checkpoint.Waves.Add(wave);
             step = assets.BeginBattle(checkpoint).Step(0, 1).Event;
-            if (name.StartsWith("cost", StringComparison.Ordinal) || name.StartsWith("actions", StringComparison.Ordinal))
+            if (name.StartsWith("cost", StringComparison.Ordinal) || name.StartsWith("actions", StringComparison.Ordinal) || name.StartsWith("cooldown", StringComparison.Ordinal))
                 step = JsonUtility.FromJson<FightBattleStepEvent>(JsonUtility.ToJson(step));
             if (name == "actions-legacy") foreach (var action in step.StatusCustomActions) action.SourceDamageId = 0;
             if (name == "none")

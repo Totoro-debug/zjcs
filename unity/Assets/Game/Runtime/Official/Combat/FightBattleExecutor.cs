@@ -1068,7 +1068,7 @@ namespace Zjcs.Combat.Official
                     FightStatusTriggerRuntime.ApplyAccumulatedDamage(target,
                         actualHpLoss, statusCatalog, random, configuredTriggerSkills, skill);
                     damage.IsDamageTriggerStatus = ApplyHitStatuses(actor, target, skill, hit, random, skillCostHp,
-                        actualHpLoss);
+                        actualHpLoss, damage);
                     damage.HasDamageTriggerStatus = true;
                     CollectHitTriggerSkill(actor, target, skill, hit, configuredComponentInvocations,
                         hitOrigin, hitCast, hitDelay);
@@ -2427,7 +2427,7 @@ namespace Zjcs.Combat.Official
         /// </summary>
         private bool ApplyHitStatuses(FightBattleUnitState actor, FightBattleUnitState target,
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit, FightRandomStream random,
-            long skillCostHp, long actualHpLoss)
+            long skillCostHp, long actualHpLoss, FightBattleDamageEvent sourceDamage)
         {
             if (statusCatalog == null || hit.AppliedStatuses == null) return false;
             if (hit.StatusListRandomOne && hit.AppliedStatuses.Count > 1)
@@ -2435,12 +2435,12 @@ namespace Zjcs.Combat.Official
                 int index = Math.Min((int)(random.Next() * hit.AppliedStatuses.Count),
                     hit.AppliedStatuses.Count - 1);
                 return ApplyHitStatus(actor, target, skill, hit.AppliedStatuses[index], random,
-                    skillCostHp, actualHpLoss);
+                    skillCostHp, actualHpLoss, sourceDamage);
             }
             bool applied = false;
             foreach (FightBattleStatusApplication application in hit.AppliedStatuses)
                 applied |= ApplyHitStatus(actor, target, skill, application, random, skillCostHp,
-                    actualHpLoss);
+                    actualHpLoss, sourceDamage);
             return applied;
         }
 
@@ -2468,7 +2468,7 @@ namespace Zjcs.Combat.Official
 
         private bool ApplyHitStatus(FightBattleUnitState actor, FightBattleUnitState target,
             FightBattleSkillDefinition skill, FightBattleStatusApplication application,
-            FightRandomStream random, long skillCostHp, long actualHpLoss)
+            FightRandomStream random, long skillCostHp, long actualHpLoss, FightBattleDamageEvent sourceDamage)
         {
             if (application == null || application.StatusId <= 0) return false;
             FightBattleUnitState owner = application.TargetType == 1 ? actor : target;
@@ -2502,7 +2502,24 @@ namespace Zjcs.Combat.Official
                 skill == null ? 1 : skill.Level, skill == null ? actor.SubRank : skill.SubRank,
                 actor.Properties, customStatusValue, null, skill?.BlessPropertyScales);
             template.Origin = FightBattleStatusOrigin.Resolve(skill, actor.Id).Copy();
-            return FightStatusLifecycle.Apply(owner, template, -1, instanceId, random) != null;
+            // Preserve old pending notifications; only the invocation caused by
+            // this exact StatusList application may acquire this hit's timing.
+            var pendingBefore = new Dictionary<FightBattleStatusState, int>();
+            foreach (var status in owner.Statuses)
+                if (status != null) pendingBefore[status] = status.SkillCooldownActionPendingCount;
+            var applied = FightStatusLifecycle.Apply(owner, template, -1, instanceId, random);
+            if (applied == null) return false;
+            pendingBefore.TryGetValue(applied, out int previousPending);
+            int added = Math.Max(0, applied.SkillCooldownActionPendingCount - previousPending);
+            if (sourceDamage != null && currentStepStatusCustomActions != null)
+            {
+                for (int index = 0; index < added; index++)
+                    currentStepStatusCustomActions.Add(new FightBattleStatusCustomActionEvent {
+                        UnitId = owner.Id, Action = 3, SourceDamageId = sourceDamage.DamageId,
+                        SourceDamageTargetId = sourceDamage.TargetId });
+                applied.SkillCooldownActionPendingCount -= added;
+            }
+            return true;
         }
 
         private static void InheritBlessingScales(FightBattleSkillDefinition skill,

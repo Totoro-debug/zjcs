@@ -1854,6 +1854,9 @@ namespace Zjcs.Combat.Official
         // Actual damaging occurrence that produced this action. Its final receipt
         // owns all nested/approach offsets; zero keeps legacy timing unknown.
         public int SourceDamageId;
+        // A hit can apply the action to its source instead of its damaged target.
+        // Zero retains the original same-target association for legacy receipts.
+        public int SourceDamageTargetId;
     }
 
     [Serializable]

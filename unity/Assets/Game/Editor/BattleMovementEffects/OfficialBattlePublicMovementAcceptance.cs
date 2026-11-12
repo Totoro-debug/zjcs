@@ -245,6 +245,12 @@ namespace Zjcs.Editor
                     var status = rules.CreateStatus(25275, 1, 1);
                     status.UnflinchingOnDamageRate = 1f;
                     target.Statuses.Add(status);
+                    foreach (var hit in skill.Hits)
+                        hit.AppliedStatuses.Add(new FightBattleStatusApplication { StatusId = 60481,
+                            TargetType = 1, Chance = 1, AffectedByProp = false, LessThanHpPer = -1f });
+                    foreach (var hit in skill.HitGraphEntities)
+                        hit.AppliedStatuses.Add(new FightBattleStatusApplication { StatusId = 60481,
+                            TargetType = 1, Chance = 1, AffectedByProp = false, LessThanHpPer = -1f });
                 }
                 actor.Skills.Add(skill);
                 long cooldown = rules.CalculateSkillCooldown(skillEntityId, 1, 1, 1, actor.Properties.ToDictionary(p => p.Id, p => p.Value));
@@ -322,21 +328,24 @@ namespace Zjcs.Editor
                 int actionNotifications = 0;
                 if (statusActions)
                 {
-                    Require(movementResult.Event.StatusCustomActions.Count == 3
-                        && movementResult.Event.StatusCustomActions.All(a => a.UnitId == target.Id && a.Action == 2
-                            && damages.Any(d => d.DamageId == a.SourceDamageId && d.TargetId == a.UnitId)),
-                        "Three actual hit settlements must produce three recorded unflinching actions.");
+                    Require(movementResult.Event.StatusCustomActions.Count == 4
+                        && movementResult.Event.StatusCustomActions.Count(a => a.UnitId == target.Id && a.Action == 2
+                            && damages.Any(d => d.DamageId == a.SourceDamageId && d.TargetId == a.UnitId)) == 3
+                        && movementResult.Event.StatusCustomActions.Count(a => a.UnitId == actor.Id && a.Action == 3
+                            && a.SourceDamageId == damages[0].DamageId && a.SourceDamageTargetId == target.Id) == 1,
+                        "Three actual hits must produce three unflinching actions and the first self-applied cooldown action.");
                     Require(world.GetComponentsInChildren<DamageCustomActionUI>().Length == 0,
                         "Hit-associated custom actions must wait through the approach and actual hit delay.");
                     var manager = world.GetComponentInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUIManager>();
                     var context = (CharacterDamageUIContext)typeof(Zjcs.Official.BattleDamageUI.CharacterDamageUIManager).GetProperty("Context")
                         .GetGetMethod(true).Invoke(manager, null);
-                    var actionRole = context.Characters.Single(role => role.Id == new EcEntityIdentifier(1, target.Id));
-                    actionRole.OnStatusTriggerCustomAction += (id, action) => {
-                        Require(id == new EcEntityIdentifier(1, target.Id) && (int)action == 2,
-                            "The custom-action notification lost its actual target or action type.");
-                        actionNotifications++;
-                    };
+                    foreach (var actionRole in context.Characters)
+                        actionRole.OnStatusTriggerCustomAction += (id, action) => {
+                            Require(id == new EcEntityIdentifier(1, target.Id) && (int)action == 2
+                                || id == new EcEntityIdentifier(1, actor.Id) && (int)action == 3,
+                                "The custom-action notification lost its actual target or action type.");
+                            actionNotifications++;
+                        };
                 }
                 var entity = controller.TryGetUnitTransform(actor.Id);
                 var nativeMonster = entity?.GetComponentInChildren<BattleNativeMonsterRenderer>();
@@ -395,7 +404,8 @@ namespace Zjcs.Editor
                     bool captureNativeFloat = false;
                     if (statusActions) foreach (var ui in world.GetComponentsInChildren<DamageCustomActionUI>())
                     {
-                        Require(ui.GetComponentInParent<CharacterDamageUI>().EntityId == new EcEntityIdentifier(1, target.Id),
+                        Require(ui.GetComponentInParent<CharacterDamageUI>().EntityId == new EcEntityIdentifier(1, target.Id)
+                            || ui.GetComponentInParent<CharacterDamageUI>().EntityId == new EcEntityIdentifier(1, actor.Id),
                             "An actual custom action was sent to a different role.");
                     }
                     bool captureStatusFloat = statusActions && !statusFloatSeen
@@ -464,8 +474,8 @@ namespace Zjcs.Editor
                 Require(nativeFloatSeen, "The common battle controller did not display the original role damage UI.");
                 if (skillCost) Require(costFloatSeen, "The common battle controller did not display the original skill cost UI.");
                 if (hemophagia) Require(derivedFloatSeen, "The originating native damage suppressed its derived compatible cure UI.");
-                if (statusActions) Require(statusFloatSeen && actionNotifications == 3,
-                    "Three actual hits must each produce one later original custom-action UI.");
+                if (statusActions) Require(statusFloatSeen && actionNotifications == 4,
+                    "Three damage actions and one self-applied cooldown action must each produce one later original UI notification.");
                 var settledSlot = actor.SkillState.Slots.Single(s => s.Slot == 0);
                 Require(settledSlot.Cooldown == cooldown && settledSlot.ReleasedTimes == 1,
                     "The settled original cooldown or release count differs.");

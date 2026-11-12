@@ -47,7 +47,7 @@ namespace Zjcs.Combat.Official
         public List<int> HitGraphEntities = new List<int>(), Hits = new List<int>(), ExtraSkills = new List<int>();
     }
     public class FightBattleDamageEvent { public int DamageId, TargetId, SourceId, SkillEntityId, DamageEntityId; public bool IsSkillCost, IsCure; public float Delay; public long BeforeHp, AfterHp; }
-    public class FightBattleStatusCustomActionEvent { public int UnitId, Action, SourceDamageId; }
+    public class FightBattleStatusCustomActionEvent { public int UnitId, Action, SourceDamageId, SourceDamageTargetId; }
     public class FightBattleStepEvent { public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>(); public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>(); public List<FightBattleStatusCustomActionEvent> StatusCustomActions = new List<FightBattleStatusCustomActionEvent>(); }
 }
 namespace Zjcs.Official.StoryPlayableManager
@@ -376,6 +376,26 @@ public static class BattleSkillGraphDispatchHarness
                 "Long frames must deliver the associated action at its damage boundary.");
         }
         Console.WriteLine("Status action timing passed: actual damage, shared-serial derived cures, legacy/missing evidence and long frames.");
+        var cooldownScope = new OfflineBattleNativePlayableScope();
+        using (var playback = new OfficialBattleSkillGraphPlayback(catalog, cooldownScope,
+            new OfficialBattleSkillEntityPlayback(cooldownScope) { StatusUIAvailable = true }))
+        {
+            var action = new FightBattleStatusCustomActionEvent { UnitId = 1, Action = 3,
+                SourceDamageId = 8, SourceDamageTargetId = 2 };
+            playback.Play(new FightBattleStepEvent {
+                DamageEvents = new List<FightBattleDamageEvent> {
+                    new FightBattleDamageEvent { DamageId = 8, TargetId = 2, Delay = .1f, IsCure = true },
+                    new FightBattleDamageEvent { DamageId = 8, TargetId = 2, Delay = .6f, IsCure = true, DamageEntityId = 13012 } },
+                StatusCustomActions = new List<FightBattleStatusCustomActionEvent> { action } }, checkpoint, resolve);
+            Require(playback.OwnsStatusCustomActionUI(action) && cooldownScope.StatusActionTimes.Count == 0,
+                "A self-applied cooldown action lost its causing cure target or was confused with a derived shared-serial cure.");
+            playback.Tick(.5f);
+            Require(cooldownScope.StatusActionTimes.Count == 0, "A cooldown action preceded its actual invoking hit.");
+            playback.Tick(.5f);
+            Require(cooldownScope.StatusActionTimes.Count == 1 && Math.Abs(cooldownScope.StatusActionTimes[0] - .6f) < .0001f,
+                "A self-applied cooldown action must use its direct cure occurrence's timing.");
+        }
+
         Console.WriteLine("Skill graph dispatch passed: official fields/fallback, delayed ordering, equal-time stability, native/fallback movement ordering, ordinary parent creation and negative slots, independent unit clocks, long-frame splitting, settled-dead cast and disposal.");
     }
 }

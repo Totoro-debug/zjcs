@@ -82,14 +82,17 @@ $permanentOwner.Id = 11
 $permanentOwner.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{
     Slot = 0; Cooldown = 3; LastRound = 1; HasInitializedLastRound = $true
 })
+# Same-source renewal needs both the actual source unit and a known source
+# skill; zero root-skill identity deliberately cannot prove a matching origin.
+$permanentTemplate = $catalog.CreateStatus(24852, $permanentOwner.Id, $permanentOwner.Id, 2, 10630)
 $permanentApplied = [Zjcs.Combat.Official.FightStatusLifecycle]::Apply(
-    $permanentOwner, $permanent, 0, 2, $applyRandom)
+    $permanentOwner, $permanentTemplate, 0, 2, $applyRandom)
 Assert-Cooldown ($permanentOwner.SkillState.Slots[0].Cooldown -eq 2) `
     'The permanent cooldown status did not reduce the configured skill cooldown.'
 [void][Zjcs.Combat.Official.FightStatusLifecycle]::Apply(
-    $permanentOwner, $permanent, 0, 3, $applyRandom)
+    $permanentOwner, $permanentTemplate, 0, 3, $applyRandom)
 Assert-Cooldown ($permanentOwner.SkillState.Slots[0].Cooldown -eq 2) `
-    'A discarded duplicate permanent cooldown status applied the reduction twice.'
+    'Renewing the same-source permanent cooldown status applied its reduction twice.'
 
 $player = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $player.Id = 1; $player.Side = 1; $player.CharacterType = 1
@@ -121,18 +124,22 @@ $formula = [Zjcs.Combat.Official.FightDamageFormula]::new(
     $schema, [Zjcs.Combat.Official.FightDamageFormulaConfig]::new())
 $executor = [Zjcs.Combat.Official.FightBattleExecutor]::Begin($checkpoint, $formula,
     [Zjcs.Combat.Official.FightDamageSettlement]::new(), $catalog)
-$stepResult = $executor.Step(0, 1)
+$steps = @()
+for ($counter = 1; $counter -le 8 -and $player.SkillState.Round -lt 1; $counter++) {
+    $steps += $executor.Step(0, $counter)
+}
+Assert-Cooldown ($steps.Count -gt 0) 'No initial status/turn steps were executed.'
 
 Assert-Cooldown ($player.SkillState.Round -eq 1) 'The test unit did not take its first personal turn.'
 Assert-Cooldown ($player.SkillState.Slots[0].LastRound -eq 3) `
     'The active stop-CD status did not advance each skill LastRound at personal-round start.'
 Assert-Cooldown ($player.SkillState.Slots[0].Cooldown -eq 2) `
     'Battle-start initialization did not apply the permanent cooldown reduction.'
-Assert-Cooldown (@($stepResult.Event.SkillCasts | Where-Object {
+Assert-Cooldown (@($steps.Event.SkillCasts | Where-Object {
     $_.ActorId -eq $enemy.Id -and $_.SkillEntityId -eq 10170
 }).Count -eq 1) `
     'The configured ModifyCD status-trigger skill was not executed in the battle step.'
-Assert-Cooldown (@($stepResult.Event.StatusCustomActions | Where-Object {
+Assert-Cooldown (@($steps.Event.StatusCustomActions | Where-Object {
     $_.UnitId -eq $enemy.Id -and $_.Action -eq 3
 }).Count -eq 1) `
     'The official CDModify custom action was not included in the battle step event.'

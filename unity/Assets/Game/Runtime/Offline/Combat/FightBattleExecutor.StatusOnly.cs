@@ -17,7 +17,7 @@ namespace Zjcs.Combat.Official
             FightGridPoint hitOrigin, FightBattleSkillCastPresentation hitCast)
         {
             damage.IsDamageTriggerStatus = ApplyHitStatuses(actor, target, skill, hit, random,
-                skillCostHp, 0);
+                skillCostHp, 0, damage);
             damage.HasDamageTriggerStatus = true;
             var invocations = new List<FightBattleStatusSkillInvocation>();
             CollectHitTriggerSkill(actor, target, skill, hit, invocations, hitOrigin, hitCast, damage.Delay);
