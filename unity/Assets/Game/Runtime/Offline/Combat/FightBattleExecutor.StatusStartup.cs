@@ -7,7 +7,7 @@ namespace Zjcs.Combat.Official
         public FightBattleExecutionResult Step(int sequence, int counter)
         {
             foreach (var unit in StatusOwners())
-                if (unit.StatusStarted != null || unit.StatusEnded != null || unit.StatusForbiddenChanged != null
+                if (unit.StatusStarted != null || unit.StatusEnded != null || unit.StatusRefreshed != null || unit.StatusForbiddenChanged != null
                     || unit.HpUpdated != null || unit.HpIncreased != null || unit.StatusRoundResolver != null
                     || unit.RoundStartClockResolver != null || unit.StatusApplicationRejected != null)
                     throw new InvalidOperationException("A battle unit is already executing a step.");
@@ -25,6 +25,7 @@ namespace Zjcs.Combat.Official
                 unit.StatusStarted = OnStatusStarted;
                 unit.StatusApplicationRejected = template => RejectStatusApplication(unit, template);
                 unit.StatusEnded = OnStatusEnded;
+                unit.StatusRefreshed = OnStatusViewRefreshed;
                 unit.HpUpdated = OnHpUpdated;
                 unit.HpIncreased = OnHpIncreased;
                 unit.StatusForbiddenChanged = OnStatusForbiddenChanged;
@@ -35,12 +36,14 @@ namespace Zjcs.Combat.Official
             try
             {
                 BeginGridViewEvents();
+                BeginStatusViewEvents();
                 BeginUnitEndEvents();
                 BeginStatusSecondsHits();
                 CleanupGridItems();
                 var result = StepCore(sequence, counter);
                 if (!result.Replayed)
                 {
+                    CompleteStatusViewEvents(result.Event);
                     CompleteUnitEndEvents(result.Event);
                     CompleteStatusSecondsHits();
                 }
@@ -49,6 +52,7 @@ namespace Zjcs.Combat.Official
             finally
             {
                 ClearGridViewEvents();
+                ClearStatusViewEvents();
                 unitEndEvents = null;
                 ClearStatusSecondsHits();
                 // Include units summoned during this step. No delegate or executor is retained
@@ -58,6 +62,7 @@ namespace Zjcs.Combat.Official
                     unit.StatusStarted = null;
                     unit.StatusApplicationRejected = null;
                     unit.StatusEnded = null;
+                    unit.StatusRefreshed = null;
                     unit.HpUpdated = null;
                     unit.HpIncreased = null;
                     unit.StatusForbiddenChanged = null;
@@ -74,6 +79,7 @@ namespace Zjcs.Combat.Official
         {
             RecordUnitEnd(owner, ended);
             RecordGridStatus(owner, ended, FightBattleGridViewEventKind.StatusEnd);
+            RecordStatusView(owner, ended, FightBattleStatusViewEventKind.End);
             if (ended != null) ended.StackChanged = null;
             statusMutex.Remove(owner, ended);
             if (statusCatalog != null && ended != null && ended.HasPropertyComponent)
@@ -114,6 +120,7 @@ namespace Zjcs.Combat.Official
             if (statusCatalog != null && status != null && status.HasPropertyComponent)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             RecordGridStatus(owner, status, FightBattleGridViewEventKind.StatusStart);
+            RecordStatusView(owner, status, FightBattleStatusViewEventKind.Start);
             var context = movementStartContext;
             if (context == null || statusCatalog == null || status == null
                 || owner == null || owner.Ended) return;
@@ -169,7 +176,10 @@ namespace Zjcs.Combat.Official
         private void OnStatusStackChanged(FightBattleStatusState status)
         {
             if (status != null && unitById.TryGetValue(status.OwnerId, out var statusOwner))
+            {
                 RecordGridStatus(statusOwner, status, FightBattleGridViewEventKind.StatusUpdate);
+                RecordStatusView(statusOwner, status, FightBattleStatusViewEventKind.Update);
+            }
             if (status == null || !status.HasStackCountTrigger
                 || !unitById.TryGetValue(status.OwnerId, out var owner)) return;
             status.StackCountStartChecked = true;

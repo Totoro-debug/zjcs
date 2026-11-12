@@ -86,11 +86,64 @@ public static class BattleDarkHitHarness
         owner.Skills.Add(skill);owner.SkillState.Slots.Add(c.CreateSkillSlot(skill,0));
         cp=new FightBattleCheckpoint {StageId=1001,RandomSeed=73,MaxRound=10,Grid=new FightBattleGrid{Width=20,Height=20,DefaultGroundType=0}};
         cp.Units.Add(owner);cp.Units.Add(target);cp.Units.Add(other);
-        var step=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),c,items).Step(0,1).Event;
+        exec=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),c,items);
+        var step=exec.Step(0,1).Event;
         int hits=step.DamageEvents.Count(h=>h.SourceId==1&&h.SkillEntityId==entityId&&!h.Dodge&&!h.Immunity&&!h.Blinding);
         Check(hits>=(entityId==10810?2:3)&&status.Components.DarkHit.TriggerCount==hits
             &&(entityId==10810?new[]{target,other}:new[]{target}).All(u=>u.Statuses.Any(s=>s.ClassId==24222&&s.ApplyingSkillItemId==10565)),
             "Actual original multi-target/segment dark attack did not dispatch each successful hit: "+entityId+"/"+hits);
+        var views=step.StatusViewEvents.Where(v=>v.Status.ClassId==24222).ToArray();
+        var starts=views.Where(v=>v.Kind==FightBattleStatusViewEventKind.Start).ToArray();
+        Check(starts.Length==(entityId==10810?2:1),"Dark status views lost distinct target/instance starts");
+        foreach(var start in starts) {
+            Check(start.Status.HasRoundStart&&start.Status.RoundStartRemainingCount==3
+                &&step.DamageEvents.Any(d=>d.SourceId==1&&d.TargetId==start.OwnerId
+                    &&d.SkillEntityId==entityId&&Math.Abs(d.Delay-start.Delay)<1e-5),
+                "Dark status visual must begin at its actual original hit, after approach/nested cast offsets");
         }
+        if(entityId==12120) Check(views.Any(v=>v.Kind==FightBattleStatusViewEventKind.Update
+            &&v.Status.RoundStartRemainingCount>=6),"A nonstacking duration merge lost original custom-count updates");
+        int receipts=views.Length;
+        Check(exec.Step(0,1).Event.StatusViewEvents.Count(v=>v.Status.ClassId==24222)==receipts,
+            "Replaying a step duplicated native status transitions");
+        var restoredCheckpoint=FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(cp));
+        var replay=FightBattleExecutor.Restore(restoredCheckpoint,formula,new FightDamageSettlement(),c,items).Step(0,1).Event;
+        Check(replay.StatusViewEvents.Where(v=>v.Status.ClassId==24222).Select(v=>
+                v.Kind+":"+v.OwnerId+":"+v.Delay+":"+v.Status.RoundStartRemainingCount)
+            .SequenceEqual(views.Select(v=>v.Kind+":"+v.OwnerId+":"+v.Delay+":"+v.Status.RoundStartRemainingCount)),
+            "Cold checkpoints lost original status transition times/counters");
+        // A receipt must keep the original start count after the live component changes.
+        var firstTarget=cp.Units.Single(u=>u.Id==starts[0].OwnerId);
+        firstTarget.Statuses.Single(s=>s.InstanceId==starts[0].Status.InstanceId).RoundStartTriggeredCount++;
+        Check(starts[0].Status.RoundStartRemainingCount==3,"A start receipt retained mutable live component state");
+        }
+
+        // Start with the actual authored three-invocation status, then run the
+        // ordinary turn executor through count exhaustion and its final child skill.
+        owner=Unit(c,1,1,5,5);target=Unit(c,2,2,6,5);
+        target.Turn.Speed=1000;target.Properties.Single(p=>p.Id==4).Value=1000;
+        target.Statuses.Add(c.CreateStatus(24222,2,1,1,10810,10565,2,20,1,owner.Properties));
+        cp=new FightBattleCheckpoint {StageId=1001,RandomSeed=73,MaxRound=10,
+            Grid=new FightBattleGrid{Width=20,Height=20,DefaultGroundType=0}};
+        cp.Units.Add(owner);cp.Units.Add(target);
+        exec=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),c,items);
+        var counters=new System.Collections.Generic.List<int>();int ended=0,children=0;
+        for(int counter=1;counter<=16&&target.Statuses.Any(s=>s.ClassId==24222);counter++) {
+            var step=exec.Step(0,counter).Event;
+            counters.AddRange(step.StatusViewEvents.Where(v=>v.Status.ClassId==24222
+                &&v.Kind==FightBattleStatusViewEventKind.Update).Select(v=>v.Status.RoundStartRemainingCount));
+            ended+=step.StatusViewEvents.Count(v=>v.Status.ClassId==24222&&v.Kind==FightBattleStatusViewEventKind.End);
+            children+=step.SkillCasts.Count(v=>v.SkillEntityId==11360);
+            cp=FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(cp));
+            // Unity JsonUtility materializes null inline component objects. A default,
+            // unresolved seconds payload must not hide an authored round-based view.
+            foreach(var restoredStatus in cp.Units.SelectMany(u=>u.Statuses).Where(s=>s.ClassId==24222))
+                restoredStatus.Components.Seconds=new FightBattleStatusSecondsState();
+            exec=FightBattleExecutor.Restore(cp,formula,new FightDamageSettlement(),c,items);
+            target=cp.Units.Single(u=>u.Id==2);
+        }
+        Check(counters.SequenceEqual(new[]{2,1,0})&&ended==1&&children==3&&!target.Statuses.Any(s=>s.ClassId==24222),
+            "Original status counter/lifetime events diverged across actual turns and cold restores: "
+            +string.Join(",",counters)+" ends="+ended+" children="+children);
     }
 }

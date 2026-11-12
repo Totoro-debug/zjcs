@@ -81,6 +81,7 @@ namespace Zjcs.Combat.Official
         // Runtime-only subscription, scoped to an executor step. Checkpoints contain public fields.
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusStarted;
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusEnded;
+        internal Action<FightBattleUnitState, FightBattleStatusState> StatusRefreshed;
         [NonSerialized] internal Action<FightBattleUnitState> HpUpdated;
         [NonSerialized] internal Action<FightBattleUnitState, long> HpIncreased;
         internal Action<FightBattleUnitState, FightBattleStatusState, bool> StatusForbiddenChanged;
@@ -1831,6 +1832,7 @@ namespace Zjcs.Combat.Official
         public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>();
         public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>();
         public List<FightBattleGridViewEvent> GridViewEvents = new List<FightBattleGridViewEvent>();
+        public List<FightBattleStatusViewEvent> StatusViewEvents = new List<FightBattleStatusViewEvent>();
         // Actual StatusEnd/RemoveApplyEntity time, independent of lingering skill effects.
         public List<FightBattleUnitEndEvent> UnitEndEvents = new List<FightBattleUnitEndEvent>();
         public List<FightBattleBodyAnimatorTriggerEvent> BodyAnimatorTriggers =

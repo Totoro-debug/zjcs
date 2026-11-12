@@ -1249,6 +1249,7 @@ namespace Zjcs.Combat.Official
                 summon.StatusStarted = OnStatusStarted;
                 summon.StatusApplicationRejected = template => RejectStatusApplication(summon, template);
                 summon.StatusEnded = OnStatusEnded;
+                summon.StatusRefreshed = OnStatusViewRefreshed;
                 summon.HpUpdated = OnHpUpdated;
                 summon.HpIncreased = OnHpIncreased;
                 summon.StatusForbiddenChanged = OnStatusForbiddenChanged;

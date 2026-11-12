@@ -637,6 +637,7 @@ namespace Zjcs.Combat.Official
             existing.DurationPreparedBeforeStart = refreshRound < 0;
             existing.RoundStartDelayStartRound = -1;
             if (refreshRound >= 0) InitializeRoundStartDelay(unit, existing);
+            unit.StatusRefreshed?.Invoke(unit, existing);
         }
 
         internal static void InitializeRoundStartDelay(FightBattleUnitState owner, FightBattleStatusState status)

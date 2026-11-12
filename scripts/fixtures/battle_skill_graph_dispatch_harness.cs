@@ -70,6 +70,19 @@ namespace Zjcs.Official.StoryGroundEffects
 }
 namespace Zjcs.Presentation.Combat
 {
+    // Complete character-status entities have separate native lifecycle coverage.
+    public sealed class OfficialBattleStatusPlayback : IDisposable
+    {
+        public OfficialBattleStatusPlayback(FightBattleExecutor executor, Transform root,
+            OfflineBattleNativePlayableScope scope, Func<int, Transform> body, Func<int, bool> icons,
+            params string[] catalogs) {}
+        public float NextDelay => float.PositiveInfinity;
+        public void Restore(FightBattleCheckpoint state = null) {}
+        public void Enqueue(FightBattleStepEvent step) {}
+        public void AdvanceTimers(float elapsed) {}
+        public void DispatchDue() {}
+        public void Dispose() {}
+    }
     // Airborne native status playback is verified by its own rules and Unity suites.
     public sealed class OfficialBattleAirComboPlayback : IDisposable
     {

@@ -1,0 +1,44 @@
+{
+  "manifest": "884_156692",
+  "original_assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "original_code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusRoundStart.cs",
+      "sha256": "6e3793b3c5affea7908502892e9624d69589ed3fcc4f6d6770442094b29ff6dd"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusBase.cs",
+      "sha256": "a9f09e63f27b288122261418314a11fb471893e51e2bbaa29347d1f6c77c938c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusRoundStartComponent.cs",
+      "sha256": "8ae5b3ceba853982ca7a2c30735d201836967b1f6164bd973992978217ec99d0"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusRoundStart.cs",
+      "sha256": "97d1bc212e9eca88e3af9c589b32ebf35a0d29aafacf09e930e3457b007d8ea7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusRoundStart.cs.meta",
+      "sha256": "844dea4dbaca28b42c72ffdf45ac2efa579d6623858fab3281a0af607181161c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/BattleStatusRoundStartViewData.cs",
+      "sha256": "d8ed40c35e8fc973c6f959e6cccb670582a0f460af066872fc0d31eee90ecbf8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/BattleStatusRoundStartViewData.cs.meta",
+      "sha256": "b4de2d2edb515156d5bae7f41e7c30f935dd76e694ea65c2ab8c3667c4b9cdca"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_dark_status_assets.py",
+    "sha256": "69885d8d24d9a0ec63dec765dbc939cd9725c251d6e2dd6ea3340d6e7182a398"
+  },
+  "operation": "Preserve original OnStart/base, subscribe, initial count update, custom-icon flag, count assignment and unsubscribe/base OnEnd order. Adapt R3 subscription disposal to the existing C# event view boundary; the host supplies original GetRemainCount values."
+}

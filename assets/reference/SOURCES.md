@@ -850,3 +850,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 完整家园 HUD 的本地绑定目录由 `scripts/prepare_home_hud_bindings.py` 生成，来源输入、原 HomeUI／共享父层的资源引用、原字体配置与声音地址、类型化依赖宿主及输出哈希记录于 `assets/reference/home-hud-binding-source-manifest.json`。载荷入口为 `Resources/Home/OfflineHomeHudAssets.asset`，绑定代码位于 `Runtime/Offline/HomeHudUI/`；不新增美术替代。
 
 家园顶部栏所选三种货币的原点击、加号与上限处理器由 `scripts/prepare_home_currency_actions_runtime.py` 从 884 官方客户端迁入；`assets/reference/home-currency-actions-runtime-source-manifest.json` 保存原类、工厂、接口及迁移输出哈希，代码位于 `Runtime/Official/HomeCurrencyActionsUI/`。原顶栏资源继续复用现有显式目录，不新增美术载荷。
+
+暗击状态 24222 的原生资源由 `scripts/prepare_battle_dark_status_assets.py` 按 APK 优先流程恢复：原 `defaultpackage_assets_prefabs_ecentity_fight_fightskill_24222.bundle` 的完整状态 prefab、playable24222、七组粒子分支及依赖共 24 项载荷（含 11 张贴图、1 个 Windows shader），显式绑定于 `Resources/Combat/dark-status.json`。原对象字段、所选版本、依赖和输入输出 SHA256 见[暗击原生来源](battle-animation/dark-status-assets-source-manifest.json)；`MyFightStatusRoundStart` 的官方程序集、客户端／共享代码及事件适配输出见[回合开始次数视图来源](battle-animation/status-round-start-view-source-manifest.json)。尚未生成完整素材快照；实现和验证范围仅在[技能页](../../docs/features/skills.md)维护。

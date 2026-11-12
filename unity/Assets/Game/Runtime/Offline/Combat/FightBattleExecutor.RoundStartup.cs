@@ -11,6 +11,7 @@ namespace Zjcs.Combat.Official
             FightBattleStatusState status, bool wasForbidden)
         {
             RecordGridStatus(owner, status, FightBattleGridViewEventKind.StatusUpdate);
+            RecordStatusView(owner, status, FightBattleStatusViewEventKind.Update);
             if (statusCatalog != null)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             if (wasForbidden && status.ForbiddenType == 0) StartMoveScope(owner, status);
@@ -174,6 +175,11 @@ namespace Zjcs.Combat.Official
             int before = status.RoundStartTriggeredCount;
             var invocations = FightStatusTriggerRuntime.CollectRoundStartInvocations(owner, listener,
                 units, random, statusCatalog, status, atStatusStart, phase);
+            if (status.RoundStartTriggeredCount != before)
+            {
+                RecordStatusView(owner, status, FightBattleStatusViewEventKind.Update);
+                RecordStatusView(owner, status, FightBattleStatusViewEventKind.Invoke);
+            }
             ExecuteHpStartupSkills(invocations);
             // User-confirmed offline boundary: finish the final invocation before removing
             // its source. Unlimited triggers never exhaust this counter.

@@ -44,6 +44,8 @@ namespace Zjcs.Presentation.Combat
         private readonly HashSet<int> nativeDisperseIndices = new HashSet<int>();
         private OfficialBattleGridEntityPlayback gridViews;
         private OfficialBattleAirComboPlayback airComboViews;
+        private OfficialBattleStatusPlayback statusViews;
+        private Func<int, bool> hasStatusIcon;
         private OfficialBattleUnitEndPlayback unitEnds;
         private Action<GameObject> bindPlayerClones;
         private readonly Zjcs.Offline.ProfessionUI.EmbeddedMonsterMecanimResources embeddedMecanim;
@@ -100,12 +102,14 @@ namespace Zjcs.Presentation.Combat
         }
         public OfflineBattleNativePlayableScope Scope => scope;
         public Transform TryGetGridTransform(int id) => gridViews?.TryGetTransform(id);
-        public void RefreshGridSnapshot(FightBattleCheckpoint checkpoint) => gridViews?.RefreshSnapshot(checkpoint);
+        public void RefreshGridSnapshot(FightBattleCheckpoint checkpoint)
+        { gridViews?.RefreshSnapshot(checkpoint); statusViews?.Restore(checkpoint); }
 
         public void BindGridEntities(Transform root, OfficialBattleGridMapper mapper,
             FightBattleCheckpoint checkpoint, Func<int, Transform> unitTransform, Func<int, bool> hasStatusIcon)
         {
             if (gridViews != null) throw new InvalidOperationException("Native grid entities are already bound.");
+            this.hasStatusIcon = hasStatusIcon ?? throw new ArgumentNullException(nameof(hasStatusIcon));
             gridViews = new OfficialBattleGridEntityPlayback(root, mapper, scope, entityViews,
                 checkpoint, unitTransform, hasStatusIcon);
             gridViews.Restore();
@@ -125,6 +129,8 @@ namespace Zjcs.Presentation.Combat
             if (airComboViews != null) throw new InvalidOperationException("Original airborne status views are already bound.");
             airComboViews = new OfficialBattleAirComboPlayback(executor, root, scope, body);
             airComboViews.Synchronize();
+            statusViews = new OfficialBattleStatusPlayback(executor, root, scope, body, hasStatusIcon, "Combat/dark-status");
+            statusViews.Restore();
         }
 
         public void BindPlayerClonePrefabs(Action<GameObject> bind)
@@ -147,6 +153,8 @@ namespace Zjcs.Presentation.Combat
             nativeDisperseIndices.Clear();
             if (stepEvent?.SkillCasts == null || checkpoint?.Units == null || unitTransform == null) return;
             airComboViews?.Synchronize();
+            statusViews?.Enqueue(stepEvent);
+            statusViews?.DispatchDue();
             gridViews?.Enqueue(stepEvent, checkpoint);
             gridViews?.DispatchDue();
             Func<int, Transform> resolveTransform = id => gridViews?.TryGetTransform(id) ?? unitTransform(id);
@@ -317,6 +325,7 @@ namespace Zjcs.Presentation.Combat
                 throw new ArgumentOutOfRangeException(nameof(deltaTime));
             embeddedMecanim.Update();
             airComboViews?.Synchronize();
+            statusViews?.DispatchDue();
             float remaining = deltaTime;
             while (true)
             {
@@ -324,7 +333,7 @@ namespace Zjcs.Presentation.Combat
                 float nextGrid = gridViews?.NextDelay ?? float.PositiveInfinity;
                 float nextMove = pendingMoves.Count == 0 ? float.PositiveInfinity : pendingMoves[0].Remaining;
                 float nextStatusAction = pendingStatusActions.Count == 0 ? float.PositiveInfinity : pendingStatusActions[0].Remaining;
-                float elapsed = Mathf.Min(nextCast, nextGrid, nextMove, nextStatusAction, unitEnds?.NextDelay ?? float.PositiveInfinity);
+                float elapsed = Mathf.Min(nextCast, nextGrid, nextMove, nextStatusAction, unitEnds?.NextDelay ?? float.PositiveInfinity, statusViews?.NextDelay ?? float.PositiveInfinity);
                 if (elapsed > remaining) break;
                 if (elapsed > 0f) entityViews.Tick(elapsed);
                 remaining -= elapsed;
@@ -332,10 +341,12 @@ namespace Zjcs.Presentation.Combat
                 foreach (var value in pendingMoves) value.Remaining -= elapsed;
                 foreach (var value in pendingStatusActions) value.Remaining -= elapsed;
                 gridViews?.AdvanceTimers(elapsed);
+                statusViews?.AdvanceTimers(elapsed);
                 unitEnds?.AdvanceTimers(elapsed);
                 // Native action-end notifications above precede StatusEnd entity removal.
                 unitEnds?.DispatchDue();
                 gridViews?.DispatchDue();
+                statusViews?.DispatchDue();
                 while (pending.Count > 0 && pending[0].Remaining <= 0f)
                 {
                     ScheduledCast scheduled = pending[0];
@@ -353,6 +364,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var value in pendingMoves) value.Remaining -= remaining;
             foreach (var value in pendingStatusActions) value.Remaining -= remaining;
             gridViews?.AdvanceTimers(remaining);
+            statusViews?.AdvanceTimers(remaining);
             unitEnds?.AdvanceTimers(remaining);
             entityViews.Tick(remaining);
         }
@@ -391,6 +403,8 @@ namespace Zjcs.Presentation.Combat
             unitEnds = null;
             nativeStatusActions.Clear();
             nativeDisperseIndices.Clear();
+            statusViews?.Dispose();
+            statusViews = null;
             airComboViews?.Dispose();
             airComboViews = null;
             gridViews?.Dispose();

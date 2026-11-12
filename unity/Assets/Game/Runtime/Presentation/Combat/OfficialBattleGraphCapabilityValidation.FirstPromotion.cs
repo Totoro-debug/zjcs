@@ -312,6 +312,7 @@ namespace Zjcs.Presentation.Combat
             player.Skills.Add(skill); player.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
             checkpoint.MaxRound = 12;
             probe.ConfigureSummonLifeDiagnostic(checkpoint);
+            probe.ConfigureDarkStatusDiagnostic(checkpoint);
             // Preserve short authored particle/action phases across cold-loading frames.
             probe.previousCaptureFramerate = Time.captureFramerate;
             Time.captureFramerate = 60;
