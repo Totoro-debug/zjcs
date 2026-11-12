@@ -519,6 +519,8 @@ namespace Zjcs.Presentation.Combat
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
             latestCheckpoint = checkpoint;
+            UnitEndPlayback.Enqueue(stepEvent?.UnitEndEvents);
+            UnitEndPlayback.DispatchDue();
             if (restoredNativeUnitIds == null)
             {
                 restoredNativeUnitIds = new HashSet<int>();
@@ -529,7 +531,8 @@ namespace Zjcs.Presentation.Combat
             var present = new HashSet<int>();
             foreach (FightBattleUnitState state in checkpoint.Units)
             {
-                if (state == null || state.Ended && state.Hp > 0 || !IsWaveSpawned(checkpoint, state.Id)) continue;
+                if (state == null || state.Ended && state.Hp > 0 && !UnitEndPlayback.Retains(state.Id)
+                    || !IsWaveSpawned(checkpoint, state.Id)) continue;
                 if (units.TryGetValue(state.Id, out UnitView healthView)) healthView.PartnerHp?.Refresh(state);
                 if (state.Hp <= 0)
                 {
@@ -790,6 +793,11 @@ namespace Zjcs.Presentation.Combat
             }
             foreach (UnitView view in units.Values) view.Hud?.Tick(deltaTime);
             foreach (OfficialBattleUnitWorldHudView hud in attachedUnitHuds.Values) hud?.Tick(deltaTime);
+            if (!unitEndGraphClock && unitEndPlayback != null)
+            {
+                unitEndPlayback.AdvanceTimers(deltaTime);
+                unitEndPlayback.DispatchDue();
+            }
         }
 
         private void AdvanceMotions(double deltaTime)
@@ -1351,6 +1359,7 @@ namespace Zjcs.Presentation.Combat
 
         public void Dispose()
         {
+            unitEndPlayback?.Clear();
             sourceDeathListeners.Clear();
             notifiedSourceDeaths.Clear();
             ReleasePetFollowers();

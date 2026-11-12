@@ -6,6 +6,7 @@ Add-Type -Path @(
     (Join-Path $runtime 'OfficialBattleSkillGraphCatalog.cs'),
     (Join-Path $runtime 'IBattleMovementActionView.cs'),
     (Join-Path $runtime 'OfficialBattleSkillGraphPlayback.cs'),
+    (Join-Path $runtime 'OfficialBattleUnitEndPlayback.cs'),
     (Join-Path $repository 'unity/Assets/Game/Runtime/Official/Combat/FightOrdinaryMovementTiming.cs')
 )
 [BattleSkillGraphDispatchHarness]::Run()

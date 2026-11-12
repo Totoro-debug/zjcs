@@ -47,6 +47,7 @@ namespace Zjcs.Combat.Official
         public List<int> HitGraphEntities = new List<int>(), Hits = new List<int>(), ExtraSkills = new List<int>();
     }
     public class FightBattleDamageEvent { public int DamageId, TargetId, SourceId, SkillEntityId, DamageEntityId; public bool IsSkillCost, IsCure, HasDisperseNotification; public int DisperseNotificationIndex; public float Delay; public long BeforeHp, AfterHp; }
+    public class FightBattleUnitEndEvent { public int UnitId, StatusId; public float Delay; }
     public class FightBattleStatusCustomActionEvent { public int UnitId, Action, SourceDamageId, SourceDamageTargetId; }
     public class FightBattleStepEvent { public List<int> DispersedUnitIds = new List<int>(); public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>(); public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>(); public List<FightBattleStatusCustomActionEvent> StatusCustomActions = new List<FightBattleStatusCustomActionEvent>(); }
 }
@@ -352,6 +353,19 @@ public static class BattleSkillGraphDispatchHarness
                 && Math.Abs(ordinaryScope.MoveTimes[1] - 1.05f) < .0001f,
                 "Ordinary parent/action clocks lost their original delay, non-equipped slot or repeated path ordering");
         }
+        var removalScope = new OfflineBattleNativePlayableScope();
+        using (var playback = new OfficialBattleSkillGraphPlayback(catalog, removalScope, new OfficialBattleSkillEntityPlayback(removalScope)))
+        {
+            bool visible = true; float removedAt = -1f;
+            var removals = new OfficialBattleUnitEndPlayback(id => { removedAt = removalScope.Clock; visible = false; }, id => visible);
+            playback.BindUnitEnds(removals);
+            removals.Enqueue(new[] { new FightBattleUnitEndEvent { UnitId = 1, Delay = .5f } });
+            playback.Play(new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> { Cast(20, .25f), Cast(20, .75f) } },
+                checkpoint, id => id == 1 && !visible ? null : resolve(id));
+            playback.Tick(1f);
+            Require(removedAt == .5f && removalScope.Clock == 1f && removalScope.CastTimes.SequenceEqual(new[] { .25f }),
+                "Final action clock did not reach its boundary before removal, or a removed entity cast afterwards.");
+        }
         var statusScope = new OfflineBattleNativePlayableScope();
         var statusViews = new OfficialBattleSkillEntityPlayback(statusScope) { StatusUIAvailable = true };
         using (var playback = new OfficialBattleSkillGraphPlayback(catalog, statusScope, statusViews))
@@ -397,6 +411,6 @@ public static class BattleSkillGraphDispatchHarness
                 "A self-applied cooldown action must use its direct cure occurrence's timing.");
         }
 
-        Console.WriteLine("Skill graph dispatch passed: official fields/fallback, delayed ordering, equal-time stability, native/fallback movement ordering, ordinary parent creation and negative slots, independent unit clocks, long-frame splitting, settled-dead cast and disposal.");
+        Console.WriteLine("Skill graph dispatch passed: official fields/fallback, delayed ordering, equal-time stability, native/fallback movement ordering, ordinary parent creation and negative slots, independent unit clocks, long-frame splitting, settled-dead cast, action-end removal and disposal.");
     }
 }

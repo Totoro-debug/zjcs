@@ -44,6 +44,7 @@ namespace Zjcs.Presentation.Combat
         private readonly HashSet<int> nativeDisperseIndices = new HashSet<int>();
         private OfficialBattleGridEntityPlayback gridViews;
         private OfficialBattleAirComboPlayback airComboViews;
+        private OfficialBattleUnitEndPlayback unitEnds;
         private Action<GameObject> bindPlayerClones;
         private readonly Zjcs.Offline.ProfessionUI.EmbeddedMonsterMecanimResources embeddedMecanim;
         private bool disposed;
@@ -112,6 +113,12 @@ namespace Zjcs.Presentation.Combat
 
         public void BindSourceDeathView(Zjcs.Official.StoryPlayables.IBattleSourceDeathView view)
             => scope.BindSourceDeathView(view);
+
+        internal void BindUnitEnds(OfficialBattleUnitEndPlayback value)
+        {
+            if (unitEnds != null) throw new InvalidOperationException("Unit removal playback is already bound.");
+            unitEnds = value ?? throw new ArgumentNullException(nameof(value));
+        }
 
         public void BindAirCombo(FightBattleExecutor executor, Transform root, Func<int, Transform> body)
         {
@@ -317,7 +324,7 @@ namespace Zjcs.Presentation.Combat
                 float nextGrid = gridViews?.NextDelay ?? float.PositiveInfinity;
                 float nextMove = pendingMoves.Count == 0 ? float.PositiveInfinity : pendingMoves[0].Remaining;
                 float nextStatusAction = pendingStatusActions.Count == 0 ? float.PositiveInfinity : pendingStatusActions[0].Remaining;
-                float elapsed = Mathf.Min(nextCast, nextGrid, nextMove, nextStatusAction);
+                float elapsed = Mathf.Min(nextCast, nextGrid, nextMove, nextStatusAction, unitEnds?.NextDelay ?? float.PositiveInfinity);
                 if (elapsed > remaining) break;
                 if (elapsed > 0f) entityViews.Tick(elapsed);
                 remaining -= elapsed;
@@ -325,6 +332,9 @@ namespace Zjcs.Presentation.Combat
                 foreach (var value in pendingMoves) value.Remaining -= elapsed;
                 foreach (var value in pendingStatusActions) value.Remaining -= elapsed;
                 gridViews?.AdvanceTimers(elapsed);
+                unitEnds?.AdvanceTimers(elapsed);
+                // Native action-end notifications above precede StatusEnd entity removal.
+                unitEnds?.DispatchDue();
                 gridViews?.DispatchDue();
                 while (pending.Count > 0 && pending[0].Remaining <= 0f)
                 {
@@ -343,6 +353,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var value in pendingMoves) value.Remaining -= remaining;
             foreach (var value in pendingStatusActions) value.Remaining -= remaining;
             gridViews?.AdvanceTimers(remaining);
+            unitEnds?.AdvanceTimers(remaining);
             entityViews.Tick(remaining);
         }
 
@@ -376,6 +387,8 @@ namespace Zjcs.Presentation.Combat
             pending.Clear();
             pendingMoves.Clear();
             pendingStatusActions.Clear();
+            unitEnds?.Clear();
+            unitEnds = null;
             nativeStatusActions.Clear();
             nativeDisperseIndices.Clear();
             airComboViews?.Dispose();

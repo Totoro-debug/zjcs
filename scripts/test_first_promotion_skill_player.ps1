@@ -97,7 +97,7 @@ try {
         }
         if ($SummonLife) {
             $expectedUnits = if ($item -eq 10058) { 2 } else { 1 }
-            foreach ($phase in @('born','last-round','retired')) {
+            foreach ($phase in @('born','last-round','final-cast','final-frame','retired','post-retirement')) {
                 foreach ($extension in @('png','json')) {
                     if (@(Get-ChildItem -LiteralPath $run -Filter "summon-life-$item-$phase-*.$extension").Count -ne $expectedUnits) {
                         throw "Original lifespan phase $phase was not captured/persisted for every summon: $run"

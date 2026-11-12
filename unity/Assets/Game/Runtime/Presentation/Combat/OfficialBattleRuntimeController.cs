@@ -246,6 +246,7 @@ namespace Zjcs.Presentation.Combat
                     nextHud.RefreshStageStatus(checkpoint);
                 }
                 nextScene.BindMovementActions(nextSkillGraphPlayback);
+                nextScene.BindUnitEndClock(nextSkillGraphPlayback);
                 nextScene.Refresh(checkpoint);
                 nextSkillGraphPlayback?.BindPlayerClonePrefabs(nextScene.BindPlayerClonePrefab);
                 executor = nextExecutor;
