@@ -139,6 +139,15 @@ namespace Zjcs.Presentation.Combat
             if (cast.HasSkillCostHp && roles.TryGetValue(new EcEntityIdentifier(1, cast.ActorId), out var role))
                 role.SkillCostHp(skillId, cast.SkillCostBeforeHp, cast.SkillCostAfterHp);
         }
+        public bool StatusCustomAction(FightBattleStatusCustomActionEvent action)
+        {
+            if (action == null || action.Action < (int)EStatusCustomAction.Immunity
+                || action.Action > (int)EStatusCustomAction.CDModify
+                || !roles.TryGetValue(new EcEntityIdentifier(1, action.UnitId), out var role)
+                || !role.Fight) return false;
+            role.StatusTriggerCustomAction((EStatusCustomAction)action.Action);
+            return true;
+        }
         public void SetVisible(bool value)
         {
             visible = value;

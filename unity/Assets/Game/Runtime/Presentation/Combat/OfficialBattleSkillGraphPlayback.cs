@@ -31,6 +31,8 @@ namespace Zjcs.Presentation.Combat
         private readonly OfficialBattleSkillEntityPlayback entityViews;
         private readonly List<ScheduledCast> pending = new List<ScheduledCast>();
         private readonly List<ScheduledMove> pendingMoves = new List<ScheduledMove>();
+        private readonly HashSet<FightBattleStatusCustomActionEvent> nativeStatusActions =
+            new HashSet<FightBattleStatusCustomActionEvent>();
         private OfficialBattleGridEntityPlayback gridViews;
         private OfficialBattleAirComboPlayback airComboViews;
         private Action<GameObject> bindPlayerClones;
@@ -67,6 +69,8 @@ namespace Zjcs.Presentation.Combat
         public void SetDamageUIVisible(bool visible) => entityViews.SetDamageUIVisible(visible);
         public bool OwnsReplayUI(FightBattleSkillCastEvent cast) => entityViews.HasDamageUI
             && cast?.Presentation != null && catalog.ContainsSkill(cast.SkillEntityId);
+        public bool OwnsStatusCustomActionUI(FightBattleStatusCustomActionEvent action)
+            => action != null && nativeStatusActions.Contains(action);
         public bool OwnsDamageUI(FightBattleStepEvent step, FightBattleDamageEvent damage)
         {
             if (entityViews.HasDamageUI && damage?.IsSkillCost == true && step?.SkillCasts != null)
@@ -123,6 +127,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillGraphPlayback));
             if (stepEvent?.SkillCasts == null || checkpoint?.Units == null || unitTransform == null) return;
+            nativeStatusActions.Clear();
             airComboViews?.Synchronize();
             gridViews?.Enqueue(stepEvent, checkpoint);
             gridViews?.DispatchDue();
@@ -167,6 +172,11 @@ namespace Zjcs.Presentation.Combat
                 }
             }
             DispatchMoves();
+            // Preserve the existing step-boundary delivery. This does not infer
+            // missing per-action server timestamps from settled HP or statuses.
+            if (stepEvent.StatusCustomActions != null)
+                foreach (var action in stepEvent.StatusCustomActions)
+                    if (entityViews.PlayStatusCustomAction(action)) nativeStatusActions.Add(action);
         }
 
         private void ScheduleMovements(FightBattleStepEvent stepEvent, Func<int, Transform> resolveTransform)
@@ -290,6 +300,7 @@ namespace Zjcs.Presentation.Combat
             disposed = true;
             pending.Clear();
             pendingMoves.Clear();
+            nativeStatusActions.Clear();
             airComboViews?.Dispose();
             airComboViews = null;
             gridViews?.Dispose();

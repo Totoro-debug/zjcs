@@ -158,17 +158,18 @@ namespace Zjcs.Editor
                 EditorApplication.isPlaying = false;
             }
         }
+        private enum Scenario { Player, Monster, SkillCost, Lifesteal, StatusActions }
         public static IEnumerator Steps(Action<string> capture)
         {
-            yield return Approach(capture, false);
-            yield return Approach(capture, true);
-            yield return Approach(capture, false, true);
-            yield return Approach(capture, false, false, true);
+            foreach (Scenario scenario in Enum.GetValues(typeof(Scenario)))
+                yield return Approach(capture, scenario);
         }
 
-        private static IEnumerator Approach(Action<string> capture, bool monsterActs, bool skillCost = false, bool hemophagia = false)
+        private static IEnumerator Approach(Action<string> capture, Scenario scenario)
         {
-            string prefix = hemophagia ? "public-lifesteal" : skillCost ? "public-cost" : monsterActs ? "public-monster" : "public-movement";
+            bool monsterActs = scenario == Scenario.Monster, skillCost = scenario == Scenario.SkillCost;
+            bool hemophagia = scenario == Scenario.Lifesteal, statusActions = scenario == Scenario.StatusActions;
+            string prefix = statusActions ? "public-status-actions" : hemophagia ? "public-lifesteal" : skillCost ? "public-cost" : monsterActs ? "public-monster" : "public-movement";
             var root = new GameObject("Public movement battle verification");
             var world = new GameObject("Battle world");
             world.transform.SetParent(root.transform, false);
@@ -238,6 +239,12 @@ namespace Zjcs.Editor
                     foreach (var hit in skill.Hits) hit.HemophagiaProperty = property;
                     foreach (var hit in skill.HitGraphEntities) hit.HemophagiaProperty = property;
                     actor.Hp /= 2; actor.Turn.Hp = actor.Hp;
+                }
+                if (statusActions)
+                {
+                    var status = rules.CreateStatus(25275, 1, 1);
+                    status.UnflinchingOnDamageRate = 1f;
+                    target.Statuses.Add(status);
                 }
                 actor.Skills.Add(skill);
                 long cooldown = rules.CalculateSkillCooldown(skillEntityId, 1, 1, 1, actor.Properties.ToDictionary(p => p.Id, p => p.Value));
@@ -312,6 +319,19 @@ namespace Zjcs.Editor
                 Require(damages.Length == (monsterActs ? 1 : 3) && damages.All(d => d.Damage < 0)
                     && target.Hp == initialTargetHp + damages.Sum(d => d.Damage),
                     "The original hits must settle exactly once against the controlled target.");
+                if (statusActions)
+                {
+                    Require(movementResult.Event.StatusCustomActions.Count == 3
+                        && movementResult.Event.StatusCustomActions.All(a => a.UnitId == target.Id && a.Action == 2),
+                        "Three actual hit settlements must produce three recorded unflinching actions.");
+                    var nativeActions = world.GetComponentsInChildren<DamageCustomActionUI>();
+                    Require(nativeActions.Length == 3 && nativeActions.All(ui =>
+                        ui.GetComponentInParent<CharacterDamageUI>().EntityId == new EcEntityIdentifier(1, target.Id)),
+                        "The original manager must deliver each recorded action to its actual role once.");
+                    yield return null;
+                    capture(prefix + "-native-action-ui");
+                    yield return null;
+                }
                 var entity = controller.TryGetUnitTransform(actor.Id);
                 var nativeMonster = entity?.GetComponentInChildren<BattleNativeMonsterRenderer>();
                 Require(entity != null && (monsterActs

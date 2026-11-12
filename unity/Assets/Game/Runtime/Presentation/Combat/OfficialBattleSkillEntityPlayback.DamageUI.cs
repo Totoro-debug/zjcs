@@ -24,6 +24,14 @@ namespace Zjcs.Presentation.Combat
             if (target) EnsureUnit(id, target);
         }
         internal MyFightSkill GetSkillPrefab(int classId) => skillViews.GetPrefab(classId)?.GetComponent<MyFightSkill>();
+        internal bool PlayStatusCustomAction(FightBattleStatusCustomActionEvent action)
+        {
+            if (damageUI == null || action == null) return false;
+            PrepareDamageUITarget(action.UnitId);
+            bool played = false;
+            scope.Dispatch(() => played = damageUI.StatusCustomAction(action));
+            return played;
+        }
         internal void SetDamageUIVisible(bool visible) => damageUI?.SetVisible(visible);
         internal void UpdateDamageUIVisibility() => damageUI?.UpdateVisibility();
     }

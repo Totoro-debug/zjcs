@@ -177,7 +177,8 @@ namespace Zjcs.Presentation.Combat
         public void ShowDamageFloats(FightBattleStepEvent stepEvent, FightBattleCheckpoint checkpoint,
             TMP_FontAsset font, OfficialBattleDamageColors colors,
             Predicate<FightBattleDamageEvent> nativeDamage = null,
-            Predicate<FightBattleSkillCastEvent> nativeReplay = null)
+            Predicate<FightBattleSkillCastEvent> nativeReplay = null,
+            Predicate<FightBattleStatusCustomActionEvent> nativeStatusAction = null)
         {
             if (stepEvent == null || checkpoint == null || colors == null) return;
             damageUiSpacing = colors.Spacing;
@@ -214,7 +215,7 @@ namespace Zjcs.Presentation.Combat
             if (hudCatalog == null) return;
             if (stepEvent.StatusCustomActions != null)
                 foreach (FightBattleStatusCustomActionEvent action in stepEvent.StatusCustomActions)
-                    SpawnCustomActionFloat(action, checkpoint);
+                    if (nativeStatusAction?.Invoke(action) != true) SpawnCustomActionFloat(action, checkpoint);
             if (stepEvent.DispersedUnitIds!=null)
                 foreach (int targetId in stepEvent.DispersedUnitIds)
                 {

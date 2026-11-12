@@ -60,7 +60,7 @@ namespace Zjcs.Editor.Combat
             var camera = new GameObject("Receipt damage camera").AddComponent<Camera>();
             camera.orthographic = true; camera.orthographicSize = 4;
             camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = new Color(.06f, .09f, .15f);
-            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure", "trigger", "cost", "cost-legacy", "hemophagia" })
+            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure", "trigger", "cost", "cost-legacy", "hemophagia", "actions" })
             {
                 var checkpoint = Build(name, out var step);
                 var expected = step.DamageEvents.Where(d => !d.IsSkillCost && d.DamageEntityId != 0)
@@ -170,6 +170,28 @@ namespace Zjcs.Editor.Combat
                     entity.GetComponent<MyFightRoleFight>().OnHit += (role, damage) => hitNotifications++;
                 }
                 playback.Play(step, checkpoint, id => transforms.TryGetValue(id, out var value) ? value : null);
+                if (name == "actions")
+                {
+                    Vector3 center = (transforms[1].position + transforms[2].position) * .5f;
+                    camera.transform.position = new Vector3(center.x, center.y, camera.transform.position.z);
+                    Require(step.StatusCustomActions.Count == 2
+                        && step.StatusCustomActions.Any(a => a.UnitId == 1 && a.Action == 3)
+                        && step.StatusCustomActions.Any(a => a.UnitId == 2 && a.Action == 2)
+                        && step.StatusCustomActions.All(playback.OwnsStatusCustomActionUI),
+                        "The actual executor's cooldown/unflinching actions reach the original manager once.");
+                    Require(floatRoot.GetComponentsInChildren<DamageCustomActionUI>().Length == 2
+                        && !playback.OwnsStatusCustomActionUI(new FightBattleStatusCustomActionEvent { UnitId = 1, Action = 3 }),
+                        "Only the exact delivered receipts replace compatible custom-action tips.");
+                    foreach (var ui in floatRoot.GetComponentsInChildren<DamageCustomActionUI>())
+                    {
+                        var icon = (GameObject)typeof(DamageCustomActionUI).GetField("mIcon",
+                            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(ui);
+                        Require(icon.activeSelf == (ui.GetComponent<CharacterDamageUI>().EntityId.EntityId == 1),
+                            "The original custom-action behaviour shows its icon only for cooldown changes.");
+                    }
+                    for (int frame = 0; frame < 4; frame++) yield return null;
+                    Capture(camera, "damage-receipt-actions-start.png");
+                }
                 var boundaries = new SortedSet<float> { 0f };
                 foreach (var cast in step.SkillCasts) { boundaries.Add(cast.Delay); boundaries.Add(cast.Delay + cast.Presentation.Duration); }
                 foreach (var receipt in expected)
@@ -303,6 +325,15 @@ namespace Zjcs.Editor.Combat
                     checkpoint.Units[0].Properties.Add(new FightPropertyValue { Id = property, Value = 10000 });
                     checkpoint.Units[0].Hp -= 100;
                     hit.HemophagiaProperty = property;
+                }
+                if (name == "actions")
+                {
+                    var unflinching = assets.Load().CreateStatus(25275, 1, 1);
+                    unflinching.UnflinchingOnDamageRate = 1f;
+                    checkpoint.Units[1].Statuses.Add(unflinching);
+                    var cooldown = assets.Load().CreateStatus(24031, 1, 1);
+                    cooldown.SkillCooldownActionPendingCount = 1;
+                    checkpoint.Units[0].Statuses.Add(cooldown);
                 }
                 if (name == "replay" || name.StartsWith("cost", StringComparison.Ordinal))
                 {
