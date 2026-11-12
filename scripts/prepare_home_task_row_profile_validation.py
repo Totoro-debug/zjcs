@@ -6,6 +6,7 @@ import shutil
 
 from prepare_home_task_player import ROOT, sha, build as build_player, stage as stage_player
 from validation_workspace import validation_directory
+from prepare_home_task_map_data import build as build_maps, stage as stage_maps
 
 
 def build():
@@ -15,13 +16,14 @@ def build():
     inputs = {relative: sha(ROOT / relative) for relative in (
         'assets/reference/home-task-player-source-manifest.json',
         'assets/reference/home-task-ui-native-source-manifest.json',
-        'scripts/fixtures/home_task_row_profile_validation.cs')}
+        'scripts/fixtures/home_task_row_profile_validation.cs',
+        'assets/reference/home-task-map-data-source-manifest.json')}
     for group in ('installed_output_sha256', 'reused_output_sha256'):
         for relative, expected in native[group].items():
             assert sha(ROOT / relative) == expected, relative
     receipt = dict(manifest='884_156692', generator_sha256=sha(Path(__file__)), inputs=inputs,
         scope='Original native task rows with an actual character profile, condition/event projection and reward transactions. '
-            'Explicit fixture boundaries: map limits, combat/rank, calendar, navigation/trace and tip visibility. '
+            'Actual selected map metadata and formulas; explicit fixture boundaries: combat/rank, calendar, navigation/trace and tip visibility. '
             'Production HUD composition and full task route remain separate.')
     (ROOT / 'assets/reference/home-task-row-profile-source-manifest.json').write_text(
         json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
@@ -31,6 +33,7 @@ def build():
 def stage(project, player, native):
     assert project.resolve().is_relative_to(validation_directory().resolve())
     stage_player(project, *player)
+    stage_maps(project, json.loads((ROOT / "assets/reference/home-task-map-data-source-manifest.json").read_bytes()))
     for group in ('installed_output_sha256', 'reused_output_sha256'):
         for relative, expected in native[group].items():
             assert sha(ROOT / relative) == expected
@@ -56,5 +59,6 @@ if __name__ == '__main__':
     parser.add_argument('--project', type=Path)
     args = parser.parse_args()
     player = build_player()
+    build_maps()
     native = build()
     if args.project: stage(args.project, player, native)

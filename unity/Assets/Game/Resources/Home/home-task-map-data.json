@@ -1,0 +1,2255 @@
+{
+  "manifest": "884_156692",
+  "combatColors": {
+    "m_GameObject": {
+      "m_FileID": 0,
+      "m_PathID": 0
+    },
+    "m_Enabled": 1,
+    "m_Script": {
+      "m_FileID": 1,
+      "m_PathID": -6750397574935377555
+    },
+    "m_Name": "CombatRatingConfig",
+    "mTypeToThemes": {
+      "mSerializeBuffer": [
+        {
+          "Key": 3,
+          "Value": 0
+        },
+        {
+          "Key": 4,
+          "Value": 1
+        },
+        {
+          "Key": 5,
+          "Value": 2
+        },
+        {
+          "Key": 0,
+          "Value": 3
+        },
+        {
+          "Key": 1,
+          "Value": 4
+        },
+        {
+          "Key": 2,
+          "Value": 5
+        },
+        {
+          "Key": 6,
+          "Value": 6
+        },
+        {
+          "Key": 7,
+          "Value": 7
+        }
+      ]
+    },
+    "mColorTemplates": [
+      {
+        "Memo": "Normal",
+        "LevelColors": {
+          "mSerializeBuffer": [
+            {
+              "Key": 0,
+              "Value": {
+                "r": 0.4901960790157318,
+                "g": 0.4901960790157318,
+                "b": 0.4901960790157318,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 1,
+              "Value": {
+                "r": 0.6196078658103943,
+                "g": 0.6392157077789307,
+                "b": 0.13725490868091583,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 2,
+              "Value": {
+                "r": 0.8784313797950745,
+                "g": 0.7450980544090271,
+                "b": 0.0,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 3,
+              "Value": {
+                "r": 0.9098039269447327,
+                "g": 0.5764706134796143,
+                "b": 0.3176470696926117,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 4,
+              "Value": {
+                "r": 0.8901960849761963,
+                "g": 0.32549020648002625,
+                "b": 0.32549020648002625,
+                "a": 1.0
+              }
+            }
+          ]
+        }
+      },
+      {
+        "Memo": "HyperLink",
+        "LevelColors": {
+          "mSerializeBuffer": [
+            {
+              "Key": 0,
+              "Value": {
+                "r": 0.6549019813537598,
+                "g": 0.6549019813537598,
+                "b": 0.6549019813537598,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 1,
+              "Value": {
+                "r": 0.7960784435272217,
+                "g": 0.8156862854957581,
+                "b": 0.4000000059604645,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 2,
+              "Value": {
+                "r": 0.9098039269447327,
+                "g": 0.7568627595901489,
+                "b": 0.3176470696926117,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 3,
+              "Value": {
+                "r": 0.9098039269447327,
+                "g": 0.5764706134796143,
+                "b": 0.3176470696926117,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 4,
+              "Value": {
+                "r": 0.8901960849761963,
+                "g": 0.32549020648002625,
+                "b": 0.32549020648002625,
+                "a": 1.0
+              }
+            }
+          ]
+        }
+      },
+      {
+        "Memo": "TaskWindow",
+        "LevelColors": {
+          "mSerializeBuffer": [
+            {
+              "Key": 0,
+              "Value": {
+                "r": 0.7333333492279053,
+                "g": 0.7333333492279053,
+                "b": 0.7333333492279053,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 1,
+              "Value": {
+                "r": 0.7058823704719543,
+                "g": 0.8823529481887817,
+                "b": 0.3803921639919281,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 2,
+              "Value": {
+                "r": 0.9333333373069763,
+                "g": 0.7764706015586853,
+                "b": 0.1764705926179886,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 3,
+              "Value": {
+                "r": 0.8980392217636108,
+                "g": 0.49803921580314636,
+                "b": 0.16862745583057404,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 4,
+              "Value": {
+                "r": 0.8039215803146362,
+                "g": 0.33725491166114807,
+                "b": 0.3294117748737335,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": -1,
+              "Value": {
+                "r": 0.7058823704719543,
+                "g": 0.886274516582489,
+                "b": 0.38823530077934265,
+                "a": 1.0
+              }
+            }
+          ]
+        }
+      },
+      {
+        "Memo": "StageDemonBattlefield",
+        "LevelColors": {
+          "mSerializeBuffer": [
+            {
+              "Key": 0,
+              "Value": {
+                "r": 0.886274516582489,
+                "g": 0.886274516582489,
+                "b": 0.886274516582489,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 1,
+              "Value": {
+                "r": 0.7960784435272217,
+                "g": 0.8980392217636108,
+                "b": 0.3294117748737335,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 2,
+              "Value": {
+                "r": 0.8784313797950745,
+                "g": 0.8156862854957581,
+                "b": 0.2980392277240753,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 3,
+              "Value": {
+                "r": 0.8980392217636108,
+                "g": 0.5333333611488342,
+                "b": 0.21568627655506134,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 4,
+              "Value": {
+                "r": 0.8941176533699036,
+                "g": 0.32156863808631897,
+                "b": 0.32156863808631897,
+                "a": 1.0
+              }
+            }
+          ]
+        }
+      },
+      {
+        "Memo": "Map",
+        "LevelColors": {
+          "mSerializeBuffer": [
+            {
+              "Key": 0,
+              "Value": {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.5882353186607361
+              }
+            },
+            {
+              "Key": 1,
+              "Value": {
+                "r": 0.3843137323856354,
+                "g": 0.6431372761726379,
+                "b": 0.29411765933036804,
+                "a": 0.5882353186607361
+              }
+            },
+            {
+              "Key": 2,
+              "Value": {
+                "r": 0.6627451181411743,
+                "g": 0.5960784554481506,
+                "b": 0.21960784494876862,
+                "a": 0.5882353186607361
+              }
+            },
+            {
+              "Key": 3,
+              "Value": {
+                "r": 0.6470588445663452,
+                "g": 0.42352941632270813,
+                "b": 0.2235294133424759,
+                "a": 0.5882353186607361
+              }
+            },
+            {
+              "Key": 4,
+              "Value": {
+                "r": 0.6470588445663452,
+                "g": 0.27450981736183167,
+                "b": 0.2235294133424759,
+                "a": 0.5882353186607361
+              }
+            }
+          ]
+        }
+      },
+      {
+        "Memo": "MiniMap",
+        "LevelColors": {
+          "mSerializeBuffer": [
+            {
+              "Key": 0,
+              "Value": {
+                "r": 0.7647058963775635,
+                "g": 0.7647058963775635,
+                "b": 0.7647058963775635,
+                "a": 0.9019607901573181
+              }
+            },
+            {
+              "Key": 1,
+              "Value": {
+                "r": 0.7647058963775635,
+                "g": 0.9803921580314636,
+                "b": 0.33725491166114807,
+                "a": 0.9019607901573181
+              }
+            },
+            {
+              "Key": 2,
+              "Value": {
+                "r": 1.0,
+                "g": 0.8039215803146362,
+                "b": 0.08627451211214066,
+                "a": 0.9019607901573181
+              }
+            },
+            {
+              "Key": 3,
+              "Value": {
+                "r": 1.0,
+                "g": 0.48627451062202454,
+                "b": 0.01568627543747425,
+                "a": 0.9019607901573181
+              }
+            },
+            {
+              "Key": 4,
+              "Value": {
+                "r": 0.8941176533699036,
+                "g": 0.32156863808631897,
+                "b": 0.32156863808631897,
+                "a": 0.9019607901573181
+              }
+            }
+          ]
+        }
+      },
+      {
+        "Memo": "LegionFight",
+        "LevelColors": {
+          "mSerializeBuffer": [
+            {
+              "Key": 0,
+              "Value": {
+                "r": 0.886274516582489,
+                "g": 0.886274516582489,
+                "b": 0.886274516582489,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 1,
+              "Value": {
+                "r": 0.7960784435272217,
+                "g": 0.8980392217636108,
+                "b": 0.3294117748737335,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 2,
+              "Value": {
+                "r": 0.8784313797950745,
+                "g": 0.8156862854957581,
+                "b": 0.2980392277240753,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 3,
+              "Value": {
+                "r": 0.8980392217636108,
+                "g": 0.5333333611488342,
+                "b": 0.21568627655506134,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 4,
+              "Value": {
+                "r": 0.8941176533699036,
+                "g": 0.32156863808631897,
+                "b": 0.32156863808631897,
+                "a": 1.0
+              }
+            }
+          ]
+        }
+      },
+      {
+        "Memo": "NpcAdventure",
+        "LevelColors": {
+          "mSerializeBuffer": [
+            {
+              "Key": 0,
+              "Value": {
+                "r": 0.886274516582489,
+                "g": 0.886274516582489,
+                "b": 0.886274516582489,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 1,
+              "Value": {
+                "r": 0.7960784435272217,
+                "g": 0.8980392217636108,
+                "b": 0.3294117748737335,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 2,
+              "Value": {
+                "r": 0.8784313797950745,
+                "g": 0.8156862854957581,
+                "b": 0.2980392277240753,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 3,
+              "Value": {
+                "r": 0.8980392217636108,
+                "g": 0.5333333611488342,
+                "b": 0.21568627655506134,
+                "a": 1.0
+              }
+            },
+            {
+              "Key": 4,
+              "Value": {
+                "r": 0.8941176533699036,
+                "g": 0.32156863808631897,
+                "b": 0.32156863808631897,
+                "a": 1.0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "regions": [
+    {
+      "ClassId": 10,
+      "Region": 0,
+      "Order": 0,
+      "RegionTag": 1,
+      "SubRank": 1,
+      "Level": 1,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        0
+      ],
+      "DropItems": [],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        1
+      ],
+      "GameFastType": 0,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 10,
+      "Region": 1,
+      "Order": 1,
+      "RegionTag": 1,
+      "SubRank": 1,
+      "Level": 3,
+      "AccessibleConditionId": 1201,
+      "NotAccessibleMapTalkId": "GeneralStop",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        1
+      ],
+      "DropItems": [],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        0,
+        2
+      ],
+      "GameFastType": 0,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 10,
+      "Region": 2,
+      "Order": 2,
+      "RegionTag": 1,
+      "SubRank": 1,
+      "Level": 5,
+      "AccessibleConditionId": 1202,
+      "NotAccessibleMapTalkId": "GeneralStop",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        2
+      ],
+      "DropItems": [],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        1,
+        3
+      ],
+      "GameFastType": 0,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 10,
+      "Region": 3,
+      "Order": 3,
+      "RegionTag": 1,
+      "SubRank": 1,
+      "Level": 7,
+      "AccessibleConditionId": 1203,
+      "NotAccessibleMapTalkId": "GeneralStop",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        3
+      ],
+      "DropItems": [],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        4,
+        2
+      ],
+      "GameFastType": 0,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 10,
+      "Region": 4,
+      "Order": 4,
+      "RegionTag": 1,
+      "SubRank": 1,
+      "Level": 10,
+      "AccessibleConditionId": 1204,
+      "NotAccessibleMapTalkId": "GeneralStop",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        4,
+        5
+      ],
+      "DropItems": [],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        3
+      ],
+      "GameFastType": 0,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 0,
+      "Order": 0,
+      "RegionTag": 1,
+      "SubRank": 2,
+      "Level": 10,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        0
+      ],
+      "DropItems": [
+        61715,
+        62113,
+        62514
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        2
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 2,
+      "Order": 2,
+      "RegionTag": 1,
+      "SubRank": 2,
+      "Level": 12,
+      "AccessibleConditionId": 1205,
+      "NotAccessibleMapTalkId": "GeneralStop",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        2
+      ],
+      "DropItems": [
+        61514,
+        62115,
+        62902
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 10000,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        7000,
+        7700,
+        8500,
+        10000
+      ],
+      "AdjacentRegions": [
+        4,
+        6,
+        5,
+        3,
+        1,
+        0
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 6,
+      "Order": 6,
+      "RegionTag": 1,
+      "SubRank": 2,
+      "Level": 14,
+      "AccessibleConditionId": 4003,
+      "NotAccessibleMapTalkId": "116Stop",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        6
+      ],
+      "DropItems": [
+        61801,
+        62408,
+        62515
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 14000,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        10000,
+        10900,
+        12000,
+        14000
+      ],
+      "AdjacentRegions": [
+        7,
+        8,
+        2
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 8,
+      "Order": 8,
+      "RegionTag": 1,
+      "SubRank": 2,
+      "Level": 16,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        8
+      ],
+      "DropItems": [
+        61714,
+        62114,
+        62809
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 15500,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        11000,
+        12400,
+        13600,
+        15500
+      ],
+      "AdjacentRegions": [
+        6,
+        11,
+        10,
+        12,
+        9
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 12,
+      "Order": 12,
+      "RegionTag": 1,
+      "SubRank": 2,
+      "Level": 18,
+      "AccessibleConditionId": 4065,
+      "NotAccessibleMapTalkId": "1112Stop",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        12,
+        13
+      ],
+      "DropItems": [
+        61515,
+        62203,
+        62904
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 17000,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        12000,
+        13500,
+        14800,
+        17000
+      ],
+      "AdjacentRegions": [
+        8,
+        16,
+        13,
+        15,
+        14,
+        71
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 15,
+      "Order": 15,
+      "RegionTag": 1,
+      "SubRank": 3,
+      "Level": 20,
+      "AccessibleConditionId": 4066,
+      "NotAccessibleMapTalkId": "1115Stop",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        16
+      ],
+      "DropItems": [
+        61804,
+        62312,
+        62606
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        68,
+        20,
+        12,
+        17,
+        19
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 16,
+      "Order": 16,
+      "RegionTag": 2,
+      "SubRank": 3,
+      "Level": 21,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        17
+      ],
+      "DropItems": [],
+      "GoddessActivePropAwardDict": {
+        "1001": 100,
+        "1011": 100
+      },
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        12
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 20,
+      "Order": 20,
+      "RegionTag": 1,
+      "SubRank": 3,
+      "Level": 22,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 20,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        21
+      ],
+      "DropItems": [
+        61907,
+        62005,
+        62708
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 27000,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        19500,
+        21500,
+        23600,
+        27000
+      ],
+      "AdjacentRegions": [
+        22,
+        21,
+        25,
+        15
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 25,
+      "Order": 25,
+      "RegionTag": 1,
+      "SubRank": 3,
+      "Level": 24,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 20,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        26
+      ],
+      "DropItems": [
+        61713,
+        62310,
+        62607
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 31000,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        22500,
+        25000,
+        27000,
+        31000
+      ],
+      "AdjacentRegions": [
+        27,
+        26,
+        20
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 27,
+      "Order": 27,
+      "RegionTag": 1,
+      "SubRank": 3,
+      "Level": 26,
+      "AccessibleConditionId": 1206,
+      "NotAccessibleMapTalkId": "GeneralStop",
+      "LimitLevel": 22,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        28
+      ],
+      "DropItems": [
+        61803,
+        62202,
+        62706
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 34500,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        25000,
+        27500,
+        30000,
+        34500
+      ],
+      "AdjacentRegions": [
+        66,
+        29,
+        30,
+        31,
+        28,
+        25
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 29,
+      "Order": 29,
+      "RegionTag": 1,
+      "SubRank": 3,
+      "Level": 28,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 24,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        30
+      ],
+      "DropItems": [
+        61601,
+        62405,
+        62516
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 39000,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        28000,
+        31000,
+        34000,
+        39000
+      ],
+      "AdjacentRegions": [
+        32,
+        27
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 32,
+      "Order": 32,
+      "RegionTag": 1,
+      "SubRank": 3,
+      "Level": 30,
+      "AccessibleConditionId": 1207,
+      "NotAccessibleMapTalkId": "GeneralStop",
+      "LimitLevel": 26,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        33,
+        34
+      ],
+      "DropItems": [
+        61516,
+        62116,
+        62811
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 42500,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        30500,
+        34000,
+        37000,
+        42500
+      ],
+      "AdjacentRegions": [
+        34,
+        29,
+        38,
+        35,
+        33
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 38,
+      "Order": 38,
+      "RegionTag": 1,
+      "SubRank": 4,
+      "Level": 30,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        40
+      ],
+      "DropItems": [
+        61716,
+        62311,
+        62705
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        41,
+        40,
+        32,
+        39,
+        42
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 40,
+      "Order": 40,
+      "RegionTag": 2,
+      "SubRank": 4,
+      "Level": 30,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        42
+      ],
+      "DropItems": [],
+      "GoddessActivePropAwardDict": {
+        "1001": 100,
+        "1007": 100
+      },
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        38
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 42,
+      "Order": 42,
+      "RegionTag": 1,
+      "SubRank": 4,
+      "Level": 32,
+      "AccessibleConditionId": 4445,
+      "NotAccessibleMapTalkId": "1142Stop",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        44
+      ],
+      "DropItems": [
+        61802,
+        62006,
+        62903
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 49500,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        36000,
+        39500,
+        43000,
+        49500
+      ],
+      "AdjacentRegions": [
+        38,
+        43,
+        46,
+        44
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 44,
+      "Order": 44,
+      "RegionTag": 1,
+      "SubRank": 4,
+      "Level": 34,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 30,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        46,
+        78
+      ],
+      "DropItems": [
+        61906,
+        62204,
+        62810
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 53500,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        38500,
+        42500,
+        46500,
+        53500
+      ],
+      "AdjacentRegions": [
+        42,
+        45,
+        50
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 50,
+      "Order": 50,
+      "RegionTag": 1,
+      "SubRank": 4,
+      "Level": 36,
+      "AccessibleConditionId": 1208,
+      "NotAccessibleMapTalkId": "GeneralStop",
+      "LimitLevel": 32,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        52,
+        53
+      ],
+      "DropItems": [
+        61905,
+        62008,
+        62608
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 60000,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        43000,
+        47500,
+        52000,
+        60000
+      ],
+      "AdjacentRegions": [
+        44,
+        69,
+        51,
+        52
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 52,
+      "Order": 52,
+      "RegionTag": 1,
+      "SubRank": 4,
+      "Level": 38,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 34,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        55
+      ],
+      "DropItems": [
+        61602,
+        62007,
+        62901
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 62500,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        45500,
+        50000,
+        54500,
+        62500
+      ],
+      "AdjacentRegions": [
+        50,
+        58,
+        53,
+        54
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 11,
+      "Region": 54,
+      "Order": 54,
+      "RegionTag": 1,
+      "SubRank": 4,
+      "Level": 40,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 36,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        57
+      ],
+      "DropItems": [
+        61604,
+        62406,
+        62605
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 67500,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        48500,
+        53500,
+        58500,
+        67500
+      ],
+      "AdjacentRegions": [
+        52,
+        63,
+        60,
+        55,
+        56
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 0,
+      "Order": 0,
+      "RegionTag": 1,
+      "SubRank": 5,
+      "Level": 40,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 36,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        0
+      ],
+      "DropItems": [
+        61806,
+        62401,
+        62803
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        3,
+        1,
+        2
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 1,
+      "Order": 1,
+      "RegionTag": 2,
+      "SubRank": 5,
+      "Level": 40,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        1
+      ],
+      "DropItems": [],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        0
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 3,
+      "Order": 3,
+      "RegionTag": 1,
+      "SubRank": 5,
+      "Level": 42,
+      "AccessibleConditionId": 1211,
+      "NotAccessibleMapTalkId": "1203Stop",
+      "LimitLevel": 38,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        3
+      ],
+      "DropItems": [
+        61504,
+        62212,
+        62610
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 75500,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        55000,
+        60000,
+        65500,
+        75500
+      ],
+      "AdjacentRegions": [
+        4,
+        0,
+        87,
+        5
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 4,
+      "Order": 4,
+      "RegionTag": 2,
+      "SubRank": 5,
+      "Level": 43,
+      "AccessibleConditionId": 1212,
+      "NotAccessibleMapTalkId": "GeneralStop",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        4
+      ],
+      "DropItems": [],
+      "GoddessActivePropAwardDict": {
+        "1001": 100,
+        "1011": 100
+      },
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        3
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 5,
+      "Order": 5,
+      "RegionTag": 1,
+      "SubRank": 5,
+      "Level": 44,
+      "AccessibleConditionId": 1213,
+      "NotAccessibleMapTalkId": "1209Stop",
+      "LimitLevel": 40,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        5
+      ],
+      "DropItems": [
+        61913,
+        62209,
+        62907
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 107500,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        79000,
+        86000,
+        93500,
+        107500
+      ],
+      "AdjacentRegions": [
+        3,
+        6,
+        9
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 9,
+      "Order": 9,
+      "RegionTag": 1,
+      "SubRank": 5,
+      "Level": 46,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 42,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        9
+      ],
+      "DropItems": [
+        61807,
+        62307,
+        62906
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 118000,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        86500,
+        94000,
+        102500,
+        118000
+      ],
+      "AdjacentRegions": [
+        5,
+        12,
+        11,
+        10,
+        21
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 12,
+      "Order": 12,
+      "RegionTag": 1,
+      "SubRank": 5,
+      "Level": 48,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 44,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        12
+      ],
+      "DropItems": [
+        61501,
+        62404,
+        62611
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 123000,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        89000,
+        98000,
+        107000,
+        123000
+      ],
+      "AdjacentRegions": [
+        13,
+        15,
+        18,
+        14,
+        9,
+        17
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 18,
+      "Order": 18,
+      "RegionTag": 1,
+      "SubRank": 5,
+      "Level": 50,
+      "AccessibleConditionId": 4108,
+      "NotAccessibleMapTalkId": "1218Stop",
+      "LimitLevel": 46,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        18,
+        19
+      ],
+      "DropItems": [
+        61605,
+        62013,
+        62804
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 150000,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        110000,
+        119500,
+        130500,
+        150000
+      ],
+      "AdjacentRegions": [
+        20,
+        19,
+        23,
+        12,
+        27
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 27,
+      "Order": 27,
+      "RegionTag": 1,
+      "SubRank": 6,
+      "Level": 50,
+      "AccessibleConditionId": 1218,
+      "NotAccessibleMapTalkId": "GeneralStop",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        28
+      ],
+      "DropItems": [
+        61915,
+        62103,
+        62506
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        18,
+        28,
+        29
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 29,
+      "Order": 29,
+      "RegionTag": 1,
+      "SubRank": 6,
+      "Level": 52,
+      "AccessibleConditionId": 1219,
+      "NotAccessibleMapTalkId": "GeneralStop",
+      "LimitLevel": 48,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        30,
+        31
+      ],
+      "DropItems": [
+        61503,
+        62308,
+        62701
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 179500,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        131500,
+        143000,
+        156000,
+        179500
+      ],
+      "AdjacentRegions": [
+        27,
+        33,
+        30,
+        31,
+        32
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 33,
+      "Order": 33,
+      "RegionTag": 1,
+      "SubRank": 6,
+      "Level": 54,
+      "AccessibleConditionId": 4110,
+      "NotAccessibleMapTalkId": "1232Stop",
+      "LimitLevel": 50,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        35,
+        102
+      ],
+      "DropItems": [
+        61914,
+        62210,
+        62801
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 196000,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        144000,
+        156500,
+        170500,
+        196000
+      ],
+      "AdjacentRegions": [
+        35,
+        34,
+        29,
+        37
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 37,
+      "Order": 37,
+      "RegionTag": 1,
+      "SubRank": 6,
+      "Level": 56,
+      "AccessibleConditionId": 1221,
+      "NotAccessibleMapTalkId": "GeneralStop",
+      "LimitLevel": 52,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        39,
+        103
+      ],
+      "DropItems": [
+        61708,
+        62102,
+        62508
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 215000,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        158000,
+        171500,
+        187000,
+        215000
+      ],
+      "AdjacentRegions": [
+        39,
+        33,
+        38,
+        47
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 39,
+      "Order": 39,
+      "RegionTag": 1,
+      "SubRank": 6,
+      "Level": 58,
+      "AccessibleConditionId": 1222,
+      "NotAccessibleMapTalkId": "GeneralStop",
+      "LimitLevel": 54,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        41
+      ],
+      "DropItems": [
+        61808,
+        62015,
+        62505
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 224000,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        164500,
+        179000,
+        195000,
+        224000
+      ],
+      "AdjacentRegions": [
+        42,
+        37,
+        40
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 42,
+      "Order": 42,
+      "RegionTag": 1,
+      "SubRank": 6,
+      "Level": 60,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 56,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        44
+      ],
+      "DropItems": [
+        61608,
+        62305,
+        62612
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 251500,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        184500,
+        200500,
+        218500,
+        251500
+      ],
+      "AdjacentRegions": [
+        51,
+        44,
+        43,
+        39,
+        55
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 55,
+      "Order": 55,
+      "RegionTag": 1,
+      "SubRank": 7,
+      "Level": 60,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        57
+      ],
+      "DropItems": [
+        61502,
+        62104,
+        62703
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        63,
+        56,
+        57,
+        42
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 57,
+      "Order": 57,
+      "RegionTag": 1,
+      "SubRank": 7,
+      "Level": 62,
+      "AccessibleConditionId": 1223,
+      "NotAccessibleMapTalkId": "GeneralStop",
+      "LimitLevel": 58,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        59
+      ],
+      "DropItems": [
+        61705,
+        62016,
+        62905
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 278500,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        204000,
+        222000,
+        242000,
+        278500
+      ],
+      "AdjacentRegions": [
+        65,
+        55,
+        58,
+        59
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 59,
+      "Order": 59,
+      "RegionTag": 1,
+      "SubRank": 7,
+      "Level": 64,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 60,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        61
+      ],
+      "DropItems": [
+        61805,
+        62403,
+        62507
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 292000,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        214500,
+        233000,
+        254000,
+        292000
+      ],
+      "AdjacentRegions": [
+        57,
+        62,
+        60,
+        61,
+        96,
+        69
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 61,
+      "Order": 61,
+      "RegionTag": 2,
+      "SubRank": 7,
+      "Level": 60,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 0,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        63
+      ],
+      "DropItems": [],
+      "GoddessActivePropAwardDict": {
+        "1001": 100,
+        "1032": 100
+      },
+      "FastStageCombatRating": 0,
+      "StrengthDisplayType": 0,
+      "CombatRatingLevelValues": null,
+      "AdjacentRegions": [
+        59
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 69,
+      "Order": 69,
+      "RegionTag": 1,
+      "SubRank": 7,
+      "Level": 66,
+      "AccessibleConditionId": 4113,
+      "NotAccessibleMapTalkId": "1272Stop",
+      "LimitLevel": 62,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        71,
+        72
+      ],
+      "DropItems": [
+        61606,
+        62211,
+        62702
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 310500,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        230000,
+        250000,
+        270000,
+        310500
+      ],
+      "AdjacentRegions": [
+        59,
+        71,
+        78,
+        72,
+        70
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 72,
+      "Order": 72,
+      "RegionTag": 1,
+      "SubRank": 7,
+      "Level": 68,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 64,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        75,
+        104
+      ],
+      "DropItems": [
+        61706,
+        62306,
+        62908
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 321500,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        236000,
+        256500,
+        279500,
+        321500
+      ],
+      "AdjacentRegions": [
+        69,
+        74,
+        73,
+        79
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    },
+    {
+      "ClassId": 12,
+      "Region": 74,
+      "Order": 74,
+      "RegionTag": 1,
+      "SubRank": 7,
+      "Level": 70,
+      "AccessibleConditionId": 0,
+      "NotAccessibleMapTalkId": "",
+      "LimitLevel": 66,
+      "LimitServerRank": 0,
+      "LimitServerRankUnlockDayOffset": 0,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "Areas": [
+        77
+      ],
+      "DropItems": [
+        61916,
+        62101,
+        62802
+      ],
+      "GoddessActivePropAwardDict": null,
+      "FastStageCombatRating": 336500,
+      "StrengthDisplayType": 2,
+      "CombatRatingLevelValues": [
+        247000,
+        268500,
+        292500,
+        336500
+      ],
+      "AdjacentRegions": [
+        72,
+        76,
+        81,
+        75,
+        77
+      ],
+      "GameFastType": 2,
+      "ForbidExplore": false
+    }
+  ],
+  "recommendCombatRatingIndex": 2,
+  "suppressUnlockRank": 11,
+  "subRankToRank": {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 2,
+    "4": 2,
+    "5": 3,
+    "6": 3,
+    "7": 3,
+    "8": 4,
+    "9": 4,
+    "10": 4,
+    "11": 5,
+    "12": 5,
+    "13": 5,
+    "14": 6,
+    "15": 6,
+    "16": 6,
+    "17": 7,
+    "18": 7,
+    "19": 7,
+    "20": 8,
+    "21": 8,
+    "22": 8,
+    "23": 9,
+    "24": 9,
+    "25": 9,
+    "26": 10,
+    "27": 10,
+    "28": 10,
+    "29": 11,
+    "30": 11,
+    "31": 11,
+    "32": 12,
+    "33": 12,
+    "34": 12,
+    "35": 13,
+    "36": 13,
+    "37": 13,
+    "38": 14,
+    "39": 14,
+    "40": 14,
+    "41": 15,
+    "42": 15,
+    "43": 15,
+    "44": 16,
+    "45": 16,
+    "46": 16,
+    "47": 17,
+    "48": 17,
+    "49": 17,
+    "50": 18,
+    "51": 18,
+    "52": 18,
+    "53": 19,
+    "54": 19,
+    "55": 19,
+    "56": 20,
+    "57": 20,
+    "58": 20,
+    "59": 21,
+    "60": 21,
+    "61": 21,
+    "62": 22,
+    "63": 22,
+    "64": 22,
+    "65": 23,
+    "66": 23,
+    "67": 23,
+    "77": 27,
+    "78": 27,
+    "79": 27,
+    "80": 28,
+    "81": 28,
+    "82": 28,
+    "83": 29,
+    "84": 29,
+    "85": 29,
+    "68": 24,
+    "69": 24,
+    "70": 24,
+    "71": 25,
+    "72": 25,
+    "73": 25,
+    "74": 26,
+    "75": 26,
+    "76": 26
+  }
+}

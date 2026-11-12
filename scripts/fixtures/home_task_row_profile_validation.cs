@@ -89,7 +89,7 @@ public sealed partial class HomeCurrencyWindowsNativeRunner
             Require(rows.Count==1&&rows.ContainsKey(1010)&&host.RefreshCalls==2,"original panel reenable restores the actual current task with one immediate refresh");
             slot.SetActive(false);Object.Destroy(slot);slot=null;yield return null;
             Require(subscribers==beforeSubscribers&&host.TipObservers==0&&host.PositionObservers==0&&failures.Count==0,"original row destruction releases subscriptions without isolated task errors");
-            Debug.Log("HOME_TASK_PROFILE_ROWS_PASSED: actual new-character profile, original PinnedTaskPanel/TaskListItem/TaskGoal, live battle and world percentages, original state switchers, two unobstructed claim pointers with original PCM, real reward/receipt restoration, hidden successor activation and native disable/reenable/destruction. Test host controls map limits, combat/rank, navigation/trace, calendar and tip visibility; production HUD and full route remain separate.");
+            Debug.Log("HOME_TASK_PROFILE_ROWS_PASSED: actual new-character profile, original PinnedTaskPanel/TaskListItem/TaskGoal, live battle and world percentages, original state switchers, two unobstructed claim pointers with original PCM, real reward/receipt restoration, hidden successor activation and native disable/reenable/destruction. Actual selected map limits/recommendation metadata is bound. Test host controls combat/rank, navigation/trace, calendar and tip visibility; production HUD and full route remain separate.");
         }
         finally {
             if(slot){slot.SetActive(false);Object.Destroy(slot);}
@@ -116,6 +116,7 @@ public sealed partial class HomeCurrencyWindowsNativeRunner
         readonly HomeCurrencyWindowsNativeRunner owner;readonly OfflineHomeTaskPlayer player;readonly OfflineHomeTaskConditions conditions;
         readonly OfflineHomeTaskRewardIcons icons;readonly OfflineHomeMainlineTaskData data;
         readonly Dictionary<string,string> texts;
+        readonly OfflineHomeTaskMapData maps=OfflineHomeTaskMapData.LoadDefault();
         public int RefreshCalls;
         public TaskRowProfileHost(HomeCurrencyWindowsNativeRunner owner,OfflineHomeTaskPlayer player,OfflineHomeTaskConditions conditions,OfflineHomeTaskRewardIcons icons,OfflineHomeMainlineTaskData data)
         {
@@ -128,15 +129,15 @@ public sealed partial class HomeCurrencyWindowsNativeRunner
         public TaskUI.IHomeTaskPlayer Player=>player;public TaskUI.IHomeTaskConditions Conditions=>conditions;
         public TaskUI.IMapInputSupportHandlerProxy mMapInput=>null;public TaskUI.INavigateManager NavigateManager=>null;
         public TaskUI.ITaskHandler TaskHandler=>this;public TaskUI.IItemIconManager ItemIconManager=>icons;public TaskUI.IMyMapPositionHandlerProxy MyMapPositionHandler=>this;
-        public TaskUI.IHomeTaskGlobalColors GlobalColors=>this;public TaskUI.IHomeTaskCombatColors CombatRatingConfig=>throw new NotSupportedException("Controlled map recommendation boundary");
+        public TaskUI.IHomeTaskGlobalColors GlobalColors=>this;public TaskUI.IHomeTaskCombatColors CombatRatingConfig=>maps;
         public object PlanesRank=>null;
         public TaskUI.GlobalColors Value=>new TaskUI.GlobalColors{EnoughColor=new Color(.4627451f,.4745098f,.09411765f,1),LackColor=new Color(.9254902f,.3372549f,.3372549f,1)};
         public DateTime GetDateTime()=>new DateTime(2026,1,1,12,0,0,DateTimeKind.Utc);
         public double CalcRemainSecond(DateTime endTime)=>(endTime-GetDateTime()).TotalSeconds;
         public DateTime GetDailyResetTimeFromDate(DateTime dateTime)=>dateTime.Date.AddHours(6);
-        public TaskUI.MapRegionInfo GetMapRegion(int map,int region)=>new UnlimitedRegionFixture();
-        public int CalcRankSuppression(TaskUI.SubRank playerRank,TaskUI.SubRank regionRank)=>0;
-        public int GetCombatRatingLevel(long rating,IReadOnlyList<long> levels)=>throw new NotSupportedException("Controlled recommendation boundary");
+        public TaskUI.MapRegionInfo GetMapRegion(int map,int region)=>maps.Get(map,region);
+        public int CalcRankSuppression(TaskUI.SubRank playerRank,TaskUI.SubRank regionRank)=>maps.CalcRankSuppression(playerRank,regionRank);
+        public int GetCombatRatingLevel(long rating,IReadOnlyList<long> levels)=>TaskUI.HomeTaskMapFormula.GetCombatRatingLevel(rating,levels);
         public bool TryCheckTaskLimit(int id,TaskUI.IHomeTaskPlayer player,out TaskUI.TaskLimitResult result){result=null;return false;}
         public string GetTaskTitleKey(int id)=>"task_"+id+"_title";public string GetFullName(GameObject go)=>go.name;
         public TaskUI.TaskListItem InstantiateTaskItem(GameObject template,Transform parent)
@@ -173,12 +174,6 @@ public sealed partial class HomeCurrencyWindowsNativeRunner
         public int TipObservers=>OnTipDotShowChanged?.GetInvocationList().Length??0;
         public SafeAction OnTipDotSystemInited{get;set;}=new SafeAction();public SafeAction OnTipDotSystemPreClear{get;set;}=new SafeAction();
         public TipDotGraphType? GetGraphType(string name)=>TipDotGraphType.Static;
-        sealed class UnlimitedRegionFixture:TaskUI.MapRegionInfo
-        {
-            public override int LimitLevel=>0;public override long CombatRating=>0;public override IReadOnlyList<long> CombatRatingLevelValues=>Array.Empty<long>();
-            public override TaskUI.SubRank SubRank=>TaskUI.SubRank.Norank;
-            public override bool IsLimited(int level,object rank)=>false;public override bool ExistLimit()=>false;
-            public override TaskUI.MapRegionLimitType IsLimitedByType(int level,object rank)=>TaskUI.MapRegionLimitType.None;
-        }
+
     }
 }

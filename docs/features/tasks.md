@@ -58,7 +58,11 @@
 
 隔离完整工程静音 Play Mode 已使用实际新角色验证接取／置顶和原字段、隐藏后继在领奖后显现、完成／领奖事件顺序、原事件去重与异常隔离、共享角色槽重读、原子奖励和提交记录、重放不重复发事件及重开存档。原生奖励预览已验证经验／货币／其他物品排序与数量、三个无遮挡模拟指针点击到详情宿主、概率／已获得附件显隐和全部组件解析、中文文字及语言切换时原1.0／1.3缩放；已查看实际运行截图。既有条件通知、七种奖励图标和全部货币窗口事务回归通过；Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 与静态元数据检查通过。此处领奖测试直接调用任务模型；原任务条目真实领奖按钮的验证见下文。完整地图导航／追踪、正式详情弹窗和正式 HUD 装配仍未完成。
 
-隔离完整工程进一步将实际新角色、`OfflineHomeTaskPlayer`、条件通知和奖励图标池装配到原 `HomePinnedTasks.prefab`、`PinnedTaskPanel`、`TaskListItem` 与 `TaskGoal`。静音 Play Mode 已验证原条目按真实战斗回执从0/2刷新为1/2、2/2并切换领奖状态，模拟指针实际点击原领奖按钮后获得30货币并展示任务1005；真实区域进度随后按原文字显示25/100，完成后第二次原按钮点击再获得30货币并展示1010。重开角色槽保留60货币及两项提交记录，原任务栏关闭／重开／销毁后订阅正确释放。测试检查原声音事件、按钮无遮挡和文字位于画面内，并已查看三种状态的实际截图；未调整原 prefab／条目布局，独立测试挂载容器不作为游戏布局。该宿主仍明确控制地图限制、战力／阶级、导航／追踪、日历和提示点显示，不代表正式 HUD 或完整任务路线完成。验证入口及输入凭据见[原生任务条目组合](../../assets/reference/home-task-row-profile-source-manifest.json)。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 与静态元数据检查通过。
+隔离完整工程进一步将实际新角色、`OfflineHomeTaskPlayer`、条件通知和奖励图标池装配到原 `HomePinnedTasks.prefab`、`PinnedTaskPanel`、`TaskListItem` 与 `TaskGoal`。静音 Play Mode 已验证原条目按真实战斗回执从0/2刷新为1/2、2/2并切换领奖状态，模拟指针实际点击原领奖按钮后获得30货币并展示任务1005；真实区域进度随后按原文字显示25/100，完成后第二次原按钮点击再获得30货币并展示1010。重开角色槽保留60货币及两项提交记录，原任务栏关闭／重开／销毁后订阅正确释放。测试检查原声音事件、按钮无遮挡和文字位于画面内，并已查看三种状态的实际截图；未调整原 prefab／条目布局，独立测试挂载容器不作为游戏布局。该宿主已绑定下述真实地图限制／推荐数据，仍明确控制战力／阶级、导航／追踪、日历和提示点显示，不代表正式 HUD 或完整任务路线完成。验证入口及输入凭据见[原生任务条目组合](../../assets/reference/home-task-row-profile-source-manifest.json)。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 与静态元数据检查通过。
+
+[`OfflineHomeTaskMapData`](../../unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskMapData.cs) 读取所选884的45个主线探索目标区域完整 `MapRegionInfo`、原推荐战力索引、抑制解锁阶级、86项原 `SubRank→Rank` 映射和原 `CombatRatingConfig` 主题／档位颜色；原战力分档与阶级抑制方法迁入 `HomeTaskMapFormula`，保留阈值相等分支与低阶不抑制分支。区域载荷保留空战力列表、个人等级、服务器阶位和日期原字段；按已确认的[离线开放政策](offline-access.md)取消后两类门槛，个人等级继续按原 `< LimitLevel` 判断。图标色值直接读取原配置，不重绘。显式入口为 `Resources/Home/home-task-map-data*.json`，输入版本、CAB／PathID、逐文件哈希和迁移方法见[任务地图数据来源](../../assets/reference/home-task-map-data-source-manifest.json)。原生任务条目组合宿主已使用该数据，正式 HUD 接线仍未完成。
+
+隔离工程规则校验已验证全部45个区域的等级边界、原推荐索引／空值、战力阈值相等、7396组原阶级映射组合和每个原主题／档位 RGBA，修改载荷会被哈希校验拒绝。原生条目真实领奖与存档回归、Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 及静态元数据检查通过；画面仍仅证明已列明的真实初始岛任务组合，不证明后续地图完整路线、导航与追踪。
 
 固定版任务配置与本地奖励、条件、跨地图魔女累计规则已接入；主城 HUD 输入、完整任务路线、画面和存档连续流程仍待完成。资源来源与工程检查范围见[工程页](unity-project.md)。
 
