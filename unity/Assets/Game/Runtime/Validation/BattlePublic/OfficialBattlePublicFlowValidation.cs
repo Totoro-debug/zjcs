@@ -114,6 +114,11 @@ namespace Zjcs.Validation.Combat
                     var dispersed = rules.CreateStatus(24436, 2, 1);
                     dispersed.CanDispersed = true;
                     target.Statuses.Add(dispersed);
+                    target.Statuses.Add(rules.CreateStatus(60640, target.Id, target.Id));
+                    foreach (var hit in skill.Hits) hit.AppliedStatuses.Add(new FightBattleStatusApplication {
+                        StatusId = 24436, Chance = 1, AffectedByProp = false, LessThanHpPer = -1f });
+                    foreach (var hit in skill.HitGraphEntities) hit.AppliedStatuses.Add(new FightBattleStatusApplication {
+                        StatusId = 24436, Chance = 1, AffectedByProp = false, LessThanHpPer = -1f });
                     foreach (var hit in skill.Hits)
                     {
                         hit.DisperseStatusTypes.Add(dispersed.StatusType);
@@ -207,12 +212,14 @@ namespace Zjcs.Validation.Combat
                 int actionNotifications = 0, disperseNotifications = 0;
                 if (statusActions)
                 {
-                    Require(movementResult.Event.StatusCustomActions.Count == 4
+                    Require(movementResult.Event.StatusCustomActions.Count == 7
+                        && movementResult.Event.StatusCustomActions.Count(a => a.UnitId == target.Id && a.Action == 1
+                            && damages.Any(d => d.DamageId == a.SourceDamageId && d.TargetId == a.SourceDamageTargetId)) == 3
                         && movementResult.Event.StatusCustomActions.Count(a => a.UnitId == target.Id && a.Action == 2
                             && damages.Any(d => d.DamageId == a.SourceDamageId && d.TargetId == a.UnitId)) == 3
                         && movementResult.Event.StatusCustomActions.Count(a => a.UnitId == actor.Id && a.Action == 3
                             && a.SourceDamageId == damages[0].DamageId && a.SourceDamageTargetId == target.Id) == 1,
-                        "Three actual hits must produce three unflinching actions and the first self-applied cooldown action.");
+                        "Three actual hits must produce three immunities, three unflinching actions and the first self-applied cooldown action.");
                     Require(world.GetComponentsInChildren<DamageCustomActionUI>().Length == 0,
                         "Hit-associated custom actions must wait through the approach and actual hit delay.");
                     var manager = world.GetComponentInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUIManager>();
@@ -230,7 +237,7 @@ namespace Zjcs.Validation.Combat
                         };
                     foreach (var actionRole in context.Characters)
                         actionRole.OnStatusTriggerCustomAction += (id, action) => {
-                            Require(id == new EcEntityIdentifier(1, target.Id) && (int)action == 2
+                            Require(id == new EcEntityIdentifier(1, target.Id) && ((int)action == 2 || (int)action == 1)
                                 || id == new EcEntityIdentifier(1, actor.Id) && (int)action == 3,
                                 "The custom-action notification lost its actual target or action type.");
                             actionNotifications++;
@@ -286,7 +293,7 @@ namespace Zjcs.Validation.Combat
                 bool nativeFloatSeen = false;
                 bool costFloatSeen = false;
                 bool derivedFloatSeen = false;
-                bool statusFloatSeen = false, disperseFloatSeen = false;
+                bool statusFloatSeen = false, disperseFloatSeen = false, immunityFloatSeen = false;
                 var slotBinding = OfficialBattleSkillSlotBindings.Load().slots[0];
                 for (int i = 0; i < 600 && controller.IsPresentingStep; i++)
                 {
@@ -299,6 +306,9 @@ namespace Zjcs.Validation.Combat
                     }
                     disperseFloatSeen |= statusActions && world.GetComponentsInChildren<CharacterDamageUI>()
                         .Any(ui => ui.Type == EffectUIType.DisperseDamageUI && ui.EntityId == new EcEntityIdentifier(1, target.Id));
+                    immunityFloatSeen |= statusActions && world.GetComponentsInChildren<DamageCustomActionUI>()
+                        .Any(ui => ui.GetComponentInParent<CharacterDamageUI>().GetComponentsInChildren<TMPro.TMP_Text>()
+                            .Any(text => text.text.Contains("免疫") && text.textInfo.characterCount > 0));
                     bool captureStatusFloat = statusActions && !statusFloatSeen
                         && world.GetComponentsInChildren<DamageCustomActionUI>().Length > 0;
                     statusFloatSeen |= captureStatusFloat;
@@ -365,8 +375,9 @@ namespace Zjcs.Validation.Combat
                 Require(nativeFloatSeen, "The common battle controller did not display the original role damage UI.");
                 if (skillCost) Require(costFloatSeen, "The common battle controller did not display the original skill cost UI.");
                 if (hemophagia) Require(derivedFloatSeen, "The originating native damage suppressed its derived compatible cure UI.");
-                if (statusActions) Require(statusFloatSeen && actionNotifications == 4 && disperseNotifications == 1 && disperseFloatSeen,
-                    "Three damage actions and one self-applied cooldown action must each produce one later original UI notification.");
+                if (statusActions) Require(statusFloatSeen && immunityFloatSeen && actionNotifications == 7 && disperseNotifications == 1 && disperseFloatSeen,
+                    "Three immunities, three damage actions and one self-applied cooldown action must each produce one later original UI notification: actions=" + actionNotifications
+                        + ", immunity=" + immunityFloatSeen + ", disperse=" + disperseNotifications + "/" + disperseFloatSeen + ".");
                 var settledSlot = actor.SkillState.Slots.Single(s => s.Slot == 0);
                 Require(settledSlot.Cooldown == cooldown && settledSlot.ReleasedTimes == 1,
                     "The settled original cooldown or release count differs.");

@@ -42,7 +42,7 @@ namespace Zjcs.Editor
             ConfigureBackgroundGameView();
             SessionState.SetBool(Key, true);
             SessionState.SetInt(Key + ".result", 1);
-            SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 300);
+            SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 900);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Hook();
             EditorApplication.isPlaying = true;

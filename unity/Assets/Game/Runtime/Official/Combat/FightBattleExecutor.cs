@@ -91,6 +91,7 @@ namespace Zjcs.Combat.Official
                             statusCatalog.RestoreDarkHitDefinition(status);
                             statusCatalog.RestoreHitCustomCureDefinition(status);
                             statusCatalog.RestoreMoveScopeDefinition(status, initialize);
+                            statusCatalog.RestoreApplyConditionDefinition(status);
                             statusCatalog.RestoreSkillEndDefinition(status);
                             RestoreRevivalDefinition(status);
                             RestoreHitSummonDefinition(status);
@@ -115,7 +116,7 @@ namespace Zjcs.Combat.Official
             lastGlobalRound = turns.GlobalRound();
             random = new FightRandomStream(checkpoint.RandomSeed);
             foreach (var unit in units) statusMutex.Synchronize(unit);
-            if (initialize) Initialize();
+            if (initialize) InitializeWithStatusApplicationFilter();
             else if (statusCatalog != null)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             foreach (var unit in units) SynchronizeDeathForbidden(unit);
@@ -1258,6 +1259,7 @@ namespace Zjcs.Combat.Official
                 units.Add(summon);
                 unitById.Add(summon.Id, summon);
                 summon.StatusStarted = OnStatusStarted;
+                summon.StatusApplicationRejected = template => RejectStatusApplication(summon, template);
                 summon.StatusEnded = OnStatusEnded;
                 summon.HpUpdated = OnHpUpdated;
                 summon.HpIncreased = OnHpIncreased;
@@ -2143,7 +2145,11 @@ namespace Zjcs.Combat.Official
             if (customActions == null) return;
             foreach (FightBattleUnitState unit in units)
             {
-                if (unit == null || unit.Statuses == null) continue;
+                if (unit == null) continue;
+                for (int pending = 0; pending < unit.StatusImmunityActionPendingCount; pending++)
+                    customActions.Add(new FightBattleStatusCustomActionEvent { UnitId = unit.Id, Action = 1 });
+                unit.StatusImmunityActionPendingCount = 0;
+                if (unit.Statuses == null) continue;
                 foreach (FightBattleStatusState status in unit.Statuses)
                 {
                     if (status == null || status.SkillCooldownActionPendingCount <= 0) continue;
@@ -2512,7 +2518,11 @@ namespace Zjcs.Combat.Official
             var pendingBefore = new Dictionary<FightBattleStatusState, int>();
             foreach (var status in owner.Statuses)
                 if (status != null) pendingBefore[status] = status.SkillCooldownActionPendingCount;
-            var applied = FightStatusLifecycle.Apply(owner, template, -1, instanceId, random);
+            FightBattleStatusState applied;
+            var previousDamage = statusApplicationDamage;
+            statusApplicationDamage = sourceDamage;
+            try { applied = FightStatusLifecycle.Apply(owner, template, -1, instanceId, random); }
+            finally { statusApplicationDamage = previousDamage; }
             if (applied == null) return false;
             pendingBefore.TryGetValue(applied, out int previousPending);
             int added = Math.Max(0, applied.SkillCooldownActionPendingCount - previousPending);

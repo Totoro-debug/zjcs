@@ -84,11 +84,13 @@ namespace Zjcs.Combat.Official
         [NonSerialized] internal Action<FightBattleUnitState> HpUpdated;
         [NonSerialized] internal Action<FightBattleUnitState, long> HpIncreased;
         internal Action<FightBattleUnitState, FightBattleStatusState, bool> StatusForbiddenChanged;
+        internal Func<FightBattleStatusState, bool> StatusApplicationRejected;
         internal Func<FightBattleStatusState, int> StatusRoundResolver;
         internal Func<FightBattleStatusState, int> RoundStartClockResolver;
         // Official FightRolePetTransferEntity state. A player unit owns the transfer state while
         // the configured pet skill is released at the owner's action end.
         public FightBattlePetEnergyState PetEnergy = new FightBattlePetEnergyState();
+        public int StatusImmunityActionPendingCount;
         public List<FightBattleStatusApplicationEvent> PendingStatusApplications = new List<FightBattleStatusApplicationEvent>();
         public List<FightBattleStatusState> EndedAccumulatedDamageStatuses = new List<FightBattleStatusState>();
         public List<FightBattleFalloffCounter> FalloffCounts = new List<FightBattleFalloffCounter>();
@@ -315,6 +317,7 @@ namespace Zjcs.Combat.Official
         public FightBattleStatusDarkHitState DarkHit;
         public FightBattleStatusHitCustomCureState HitCustomCure;
         public FightBattleStatusMoveScopeState MoveScope;
+        public FightBattleStatusApplyConditionState ApplyCondition;
         public FightBattleStatusSecondsState Seconds;
         public FightBattleStatusCureReduceState CureReduce;
         public FightBattleStatusHitSkillComponentState HitSkill;
@@ -340,6 +343,7 @@ namespace Zjcs.Combat.Official
                 DarkHit = DarkHit?.Copy(),
                 HitCustomCure = HitCustomCure?.Copy(),
                 MoveScope = MoveScope?.Copy(),
+                ApplyCondition = ApplyCondition?.Copy(),
                 Seconds = Seconds?.Copy(),
                 CureReduce = CureReduce?.Copy(),
                 HitSkill = HitSkill?.Copy(),

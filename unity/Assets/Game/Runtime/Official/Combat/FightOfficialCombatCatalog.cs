@@ -602,6 +602,7 @@ namespace Zjcs.Combat.Official
             Dictionary<string, object> battleSettings = Object(Required(gameSettings, "Battle"), "Battle settings");
             SpeedSettings = ReadSpeedSettings(battleSettings);
             ReadStatusMutexGroups(battleSettings);
+            hiddenImmunityStatusIds = new HashSet<int>(IntArray(battleSettings, "StatusMutexNotShowImmunityFloat"));
             ReadSharedStackLimits(battleSettings);
             var config = new FightDamageFormulaConfig
             {

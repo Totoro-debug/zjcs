@@ -14,6 +14,7 @@ namespace Zjcs.Combat.Official
             result.DarkHit = ParseDarkHit(Component(components, "FightStatusDoDamageHandleComponent"));
             result.HitCustomCure = ParseHitCustomCure(Component(components, "FightStatusHitCustomCureComponent"));
             result.MoveScope = ParseMoveScope(Component(components, "FightStatusMoveScopeComponent"));
+            result.ApplyCondition = ParseApplyCondition(Component(components, "StatusStatusApplyConditionComponent"));
             result.Seconds = ParseStatusSeconds(components);
             result.LifeReduction = ParseLifeReduction(Component(components, "FightStatusReduceStatusLifeComponent"));
             result.CureReduce = ParseCureReduce(Component(components, "FightStatusCureReduceComponent"));

@@ -189,6 +189,7 @@ namespace Zjcs.Combat.Official
             if (unit == null) throw new ArgumentNullException(nameof(unit));
             if (template == null) throw new ArgumentNullException(nameof(template));
             if (unit.IsVoodooDoll && template.StatusType == 1) return null;
+            if (unit.StatusApplicationRejected?.Invoke(template) == true) return null;
             if (unit.Statuses == null) unit.Statuses = new List<FightBattleStatusState>();
             var origin = FightBattleStatusOrigin.Resolve(template);
             FightBattleStatusState existing = FindMatchingStatus(unit, template, origin);

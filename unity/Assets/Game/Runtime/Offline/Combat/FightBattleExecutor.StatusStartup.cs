@@ -9,7 +9,7 @@ namespace Zjcs.Combat.Official
             foreach (var unit in StatusOwners())
                 if (unit.StatusStarted != null || unit.StatusEnded != null || unit.StatusForbiddenChanged != null
                     || unit.HpUpdated != null || unit.HpIncreased != null || unit.StatusRoundResolver != null
-                    || unit.RoundStartClockResolver != null)
+                    || unit.RoundStartClockResolver != null || unit.StatusApplicationRejected != null)
                     throw new InvalidOperationException("A battle unit is already executing a step.");
             bool mutexChanged = false;
             foreach (var unit in StatusOwners())
@@ -23,6 +23,7 @@ namespace Zjcs.Combat.Official
             foreach (var unit in StatusOwners())
             {
                 unit.StatusStarted = OnStatusStarted;
+                unit.StatusApplicationRejected = template => RejectStatusApplication(unit, template);
                 unit.StatusEnded = OnStatusEnded;
                 unit.HpUpdated = OnHpUpdated;
                 unit.HpIncreased = OnHpIncreased;
@@ -55,6 +56,7 @@ namespace Zjcs.Combat.Official
                 foreach (var unit in StatusOwners(true))
                 {
                     unit.StatusStarted = null;
+                    unit.StatusApplicationRejected = null;
                     unit.StatusEnded = null;
                     unit.HpUpdated = null;
                     unit.HpIncreased = null;
