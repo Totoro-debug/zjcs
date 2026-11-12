@@ -24,7 +24,7 @@ namespace Zjcs.Validation.Combat
     // Shared interaction steps for the Editor and the Windows Player.
     public static class OfficialBattlePublicFlowValidation
     {
-        private enum Scenario { Player, Monster, SkillCost, Lifesteal, StatusActions }
+        private enum Scenario { Player, Monster, SkillCost, Lifesteal, StatusActions, Critical, Block }
         public static IEnumerator Steps(Action<string> capture)
         {
             foreach (Scenario scenario in Enum.GetValues(typeof(Scenario)))
@@ -33,9 +33,10 @@ namespace Zjcs.Validation.Combat
 
         private static IEnumerator Approach(Action<string> capture, Scenario scenario)
         {
-            bool monsterActs = scenario == Scenario.Monster, skillCost = scenario == Scenario.SkillCost;
+            bool block = scenario == Scenario.Block, critical = scenario == Scenario.Critical;
+            bool monsterActs = scenario == Scenario.Monster || block, skillCost = scenario == Scenario.SkillCost;
             bool hemophagia = scenario == Scenario.Lifesteal, statusActions = scenario == Scenario.StatusActions;
-            string prefix = statusActions ? "public-status-actions" : hemophagia ? "public-lifesteal" : skillCost ? "public-cost" : monsterActs ? "public-monster" : "public-movement";
+            string prefix = block ? "public-block" : critical ? "public-critical" : statusActions ? "public-status-actions" : hemophagia ? "public-lifesteal" : skillCost ? "public-cost" : monsterActs ? "public-monster" : "public-movement";
             var root = new GameObject("Public movement battle verification");
             var world = new GameObject("Battle world");
             world.transform.SetParent(root.transform, false);
@@ -86,6 +87,15 @@ namespace Zjcs.Validation.Combat
                 monster.RoleEntityId = 3206;
                 var actor = monsterActs ? monster : player;
                 var target = monsterActs ? player : monster;
+                if (block || critical)
+                {
+                    foreach (var unit in new[] { actor, target })
+                        foreach (string name in new[] { "BaseBlockPercentValue", "BaseBlockAvoidPercentValue",
+                            "BaseCritRatePercentValue", "BaseCritAvoidPercentValue" })
+                            unit.Properties.Add(new FightPropertyValue { Id = rules.PropertyType(name), Value = 10000 });
+                    (block ? target : actor).Properties.Add(new FightPropertyValue {
+                        Id = rules.PropertyType(block ? "BlockPercent" : "CritRatePercent"), Value = 20000 });
+                }
                 actor.Properties.Add(new FightPropertyValue { Id = rules.PropertyType("MoveDist"), Value = 4 });
                 Require(state.Grid.CanStand(new FightGridPoint(3, 2), actor.MoveMask, null),
                     "The controlled grid must permit the acting unit movement mask.");
@@ -211,6 +221,8 @@ namespace Zjcs.Validation.Combat
                 Require(damages.Length == (monsterActs ? 1 : 3) && damages.All(d => d.Damage < 0)
                     && target.Hp == initialTargetHp + damages.Sum(d => d.Damage),
                     "The original hits must settle exactly once against the controlled target.");
+                if (block || critical) Require(damages.All(d => d.Block == block && d.Critical == critical),
+                    "Original formulas did not produce the controlled block/critical result.");
                 int actionNotifications = 0, disperseNotifications = 0;
                 if (statusActions)
                 {
@@ -251,6 +263,21 @@ namespace Zjcs.Validation.Combat
                     ? nativeMonster != null && nativeMonster.GetComponent<MeshFilter>().sharedMesh.vertexCount > 0
                     : entity.GetComponentInChildren<ProfessionNativeSceneRenderer>() != null),
                     "Public battle did not create its acting native model.");
+                var targetEntity = controller.TryGetUnitTransform(target.Id);
+                var hurtPlayer = targetEntity.GetComponentInChildren<ProfessionNativeSceneRenderer>();
+                var hurtMonster = targetEntity.GetComponentInChildren<BattleNativeMonsterRenderer>();
+                var hurtAnimator = hurtPlayer ? hurtPlayer.GetComponent<Animator>() : hurtMonster ? hurtMonster.Animator : null;
+                // Player drawing is owned by the original separator's visible
+                // parts; its disabled main renderer retains an earlier mesh.
+                var hurtMeshes = hurtPlayer
+                    ? targetEntity.GetComponentsInChildren<ProfessionNativeSceneMeshPart>()
+                        .Where(part => part.MeshRenderer.enabled && part.Mesh.vertexCount > 0)
+                        .Select(part => part.GetComponent<MeshFilter>()).ToArray()
+                    : new[] { hurtAnimator ? hurtAnimator.GetComponent<MeshFilter>() : null };
+                Require(hurtAnimator && hurtMeshes.Length > 0 && hurtMeshes.All(mesh =>
+                        mesh && mesh.sharedMesh && mesh.sharedMesh.vertexCount > 0),
+                    "Public battle did not bind the receiving original Animator and native skeleton mesh.");
+                var idleVertices = hurtMeshes.ToDictionary(mesh => mesh, mesh => mesh.sharedMesh.vertices);
                 int counter = state.Counter;
                 for (int i = 0; i < 6; i++) yield return null;
                 Require(controller.IsPresentingStep, "Movement step ended before the movement could play.");
@@ -302,10 +329,25 @@ namespace Zjcs.Validation.Combat
                 bool nativeFloatSeen = false;
                 bool costFloatSeen = false;
                 bool derivedFloatSeen = false;
+                bool nativeHurtSeen = false, nativeHurtPoseSeen = false;
+                var hurtStates = new HashSet<string>();
                 bool statusFloatSeen = false, disperseFloatSeen = false, immunityFloatSeen = false;
                 var slotBinding = OfficialBattleSkillSlotBindings.Load().slots[0];
-                for (int i = 0; i < 600 && controller.IsPresentingStep; i++)
+                // A single hit can end the step before Unity's following Animator/
+                // renderer pass. Observe the original .4-second hurt graph's tail.
+                int hurtTailFrames = 24;
+                for (int i = 0; i < 600 && (controller.IsPresentingStep || hurtTailFrames-- > 0); i++)
                 {
+                    bool captureNativeHurt = false;
+                    hurtStates.Add(hurtAnimator.GetCurrentAnimatorStateInfo(0).shortNameHash + ":"
+                        + string.Join(",", hurtAnimator.GetCurrentAnimatorClipInfo(0).Select(c => c.clip.name)));
+                    if (!statusActions && hurtAnimator.GetCurrentAnimatorStateInfo(0).IsName(block ? "block_01" : "Damage"))
+                    {
+                        nativeHurtPoseSeen |= hurtMeshes.Any(mesh =>
+                            !mesh.sharedMesh.vertices.SequenceEqual(idleVertices[mesh]));
+                        captureNativeHurt = !nativeHurtSeen && nativeHurtPoseSeen;
+                        nativeHurtSeen |= captureNativeHurt;
+                    }
                     bool captureNativeFloat = false;
                     if (statusActions) foreach (var ui in world.GetComponentsInChildren<DamageCustomActionUI>())
                     {
@@ -388,6 +430,7 @@ namespace Zjcs.Validation.Combat
                         capture(prefix + "-native-damage-ui");
                         yield return null; // Unity accepts one ScreenCapture request per rendered frame.
                     }
+                    if (captureNativeHurt) { capture(prefix + "-native-hurt"); yield return null; }
                     if (captureCostFloat) { capture(prefix + "-native-cost-ui"); yield return null; }
                     if (captureDerivedFloat) { capture(prefix + "-derived-cure-ui"); yield return null; }
                     if (captureStatusFloat) { capture(prefix + "-native-action-ui"); yield return null; }
@@ -399,6 +442,9 @@ namespace Zjcs.Validation.Combat
                     "The public battle did not create every settled fixed hit exactly once: "
                     + nativeHitIdentities.Count + "/" + expectedNativeHits);
                 Require(nativeFloatSeen, "The common battle controller did not display the original role damage UI.");
+                if (!statusActions) Require(nativeHurtSeen && nativeHurtPoseSeen,
+                    "The original damage graph did not drive the receiving hurt/block state and native skeleton pose: "
+                        + hurtAnimator.runtimeAnimatorController.name + " [" + string.Join("; ", hurtStates) + "].");
                 if (skillCost) Require(costFloatSeen, "The common battle controller did not display the original skill cost UI.");
                 if (hemophagia) Require(derivedFloatSeen && cureCastIdentities.Count == 3
                     && cureHitIdentities.Count == 3 && cureDamageIdentities.Count == 3,
