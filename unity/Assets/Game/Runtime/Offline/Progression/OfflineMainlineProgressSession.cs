@@ -926,10 +926,12 @@ namespace Zjcs.Offline.Progression
                     break;
                 case "WorldMapProgressCondition":
                     target = Math.Max(0, condition.progress);
-                    if (condition.region < 0 || !HasMapRegion(Save, condition.mapClassId, condition.region))
+                    if (condition.region < 0)
                         return Result(ProgressionResultStatus.Unsupported,
                             unsupportedCondition: "WorldMapProgressCondition:MapOrRegionNotInitialized");
-                    current = Math.Min(target, FindRegion(Save, condition.mapClassId, condition.region).Progress);
+                    // Selected Player.GetWorldMapRegionProgress defaults to zero
+                    // when the player has no record for this map or region.
+                    current = Math.Min(target, FindRegion(Save, condition.mapClassId, condition.region)?.Progress ?? 0);
                     break;
                 case "MapLogicEntityEndByTagCondition":
                     if (string.IsNullOrEmpty(condition.tag))
@@ -949,9 +951,6 @@ namespace Zjcs.Offline.Progression
                         value.MapClassId == condition.mapClassId && value.Status == 1) ? 1 : 0;
                     break;
                 case "MaxProfessionRankCondition":
-                    if (Save.Player.MaxProfessionRank <= 0)
-                        return Result(ProgressionResultStatus.Unsupported,
-                            unsupportedCondition: "MaxProfessionRankCondition:ProfessionProgressNotInitialized");
                     target = Math.Max(0, condition.rank);
                     current = Math.Min(target, Save.Player.MaxProfessionRank);
                     break;
@@ -1215,9 +1214,9 @@ namespace Zjcs.Offline.Progression
                         && value.Result == condition.result);
                     return ConditionEvaluation.Met((battle == null ? 0 : battle.Count) >= condition.count);
                 case "WorldMapProgressCondition":
-                    if (condition.region < 0 || !HasMapRegion(save, condition.mapClassId, condition.region))
+                    if (condition.region < 0)
                         return ConditionEvaluation.Unsupported("WorldMapProgressCondition:MapOrRegionNotInitialized");
-                    return ConditionEvaluation.Met(FindRegion(save, condition.mapClassId, condition.region).Progress
+                    return ConditionEvaluation.Met((FindRegion(save, condition.mapClassId, condition.region)?.Progress ?? 0)
                         >= condition.progress);
                 case "MapLogicEntityEndByTagCondition":
                     return string.IsNullOrEmpty(condition.tag)
@@ -1230,8 +1229,6 @@ namespace Zjcs.Offline.Progression
                     return ConditionEvaluation.Met(save.World.AloneWorldStatuses.Any(value =>
                         value.MapClassId == condition.mapClassId && value.Status == 1));
                 case "MaxProfessionRankCondition":
-                    if (save.Player.MaxProfessionRank <= 0)
-                        return ConditionEvaluation.Unsupported("MaxProfessionRankCondition:ProfessionProgressNotInitialized");
                     return ConditionEvaluation.Met(save.Player.MaxProfessionRank >= condition.rank);
                 case "TotalOpenChestCondition":
                     OfflineChestCount chest = save.World.OpenChestCounts.FirstOrDefault(value => value.ChestId == condition.chestId);

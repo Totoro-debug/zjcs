@@ -34,7 +34,9 @@
 
 主线奖励图标已补齐七种物品（1／2／50／110／120／41300／42200）的同版原生 Sprite 与 Windows 纹理依赖，显式目录为 `Resources/Home/OfflineHomeTaskRewardImages.asset`，来源见[奖励图标清单](../../assets/reference/home-task-reward-images-source-manifest.json)。所选 `ItemIconManagerConfig` 的专用 ID 列表不含这些物品，类型列表也不含其对应物品类型，均沿原默认 prefab；[`OfflineHomeTaskRewardIcons`](../../unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskRewardIcons.cs) 复用原 `ItemIcon`、品质框、数量文字、附件管理器和对象池，并将任务 UI 的窄接口转发到原组件。创建时在激活前绑定字体、资源、声音和详情宿主，归还时沿原组件取消物品通知；默认 RectTransform 的记录与复用恢复保持原 `ResetIconGo`／`CopyRectTransform` 次序。隔离完整工程静音 Play Mode 已验证七种原 Sprite 网格与品质／数量显示、七个无遮挡模拟指针点击到详情宿主回调、原对象池复用及订阅释放，并通过既有货币窗口、实际购买／兑换事务、存档恢复、失败回滚与新周期通知回归；已查看实际运行截图。测试宿主仅排列原图标，不作为游戏布局，详情弹窗仍为显式回调边界。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 及静态元数据检查通过。主线原任务条目、真实领奖事务和正式物品详情窗口仍未接入该图标池。
 
-`OfflineMainlineProgressSession` 在本地角色槽中维护玩家成长、物品、地图与区域进度、战斗次数、实体标签、女神区域、宝箱、事件去重和已领取主线任务，并提供条件检查与领奖事务。成功祈愿抽取会将实际开启数量与奖励、消耗写入同一存档事务；重复回执不会重复增加宝箱计数；`TaskSubmitCondition` 依据已领取 ID 判定；`TaskCompleteCondition` 对已领取 ID 计完成，未领取任务仅在接取、展示（若有）和完成条件均由本地状态满足时计完成；不支持的条件会继续返回 `Unsupported`。保存由 `ProfileSlotCatalog` 和 `LocalJsonSaveFile` 提供。
+[`OfflineHomeTaskConditionReader`](../../unity/Assets/Game/Runtime/Offline/HomeTaskUI/OfflineHomeTaskConditionReader.cs) 将这55项原完成条件和展示条件接到真实角色槽的只读投影，保留所选原 `GetProgress`／`GetDescComponent` 分支：区域已存为万分比，按 `Formula.Int2Float` 的 float 除法、乘100和整数截断转换成原任务条目的百分比；未访问区域读取0且不建立地图记录。战斗／宝箱次数和客户端加1后的塔层进度保留原始值，描述参数另行夹到目标；实体标签与女神区域读取既有真实进度，职业目标按原布尔0/1显示。原任务描述键、区域 `CultureTextArg`、`{c}` 条件颜色替换及空颜色原文处理保持原顺序；代码和方法凭据见[条件读取来源](../../assets/reference/home-task-condition-reader-source-manifest.json)。本地事务同时支持未访问区域的0进度，以及最高职业阶级0时的未完成状态。塔进度和默认祈愿 ID 通过显式宿主读取。隔离完整工程静音 Play Mode 已验证55项完成条件的投影、真实新角色的未访问区域／战斗／宝箱／职业条件、百分比截断、描述夹值、展示条件、只读查询和重开存档；塔层测试使用显式受控宿主，未证明实际塔入口接线。原生奖励图标及既有货币窗口回归通过。主线规则校验、Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。原生任务条目、通知驱动刷新与跳转仍未组合。
+
+`OfflineMainlineProgressSession` 在本地角色槽中维护玩家成长、物品、地图与区域进度、战斗次数、实体标签、女神区域、宝箱、事件去重和已领取主线任务，并提供条件检查与领奖事务。成功祈愿抽取会将实际开启数量与奖励、消耗写入同一存档事务；重复回执不会重复增加宝箱计数；`TaskSubmitCondition` 依据已领取 ID 判定；`TaskCompleteCondition` 当前同样按已领取 ID 计完成，原版完成但尚未提交的状态区别仍待迁移；不支持的条件会继续返回 `Unsupported`。保存由 `ProfileSlotCatalog` 和 `LocalJsonSaveFile` 提供。
 
 所选 `884_156692` 的 `MapGameTotalCountCondition.GetValue/GetProgress` 从玩家黑板读取计数，`Player.GetBlackboardDataValue<long>` 在缺少记录时返回 0，不要求地图或区域已经初始化。本地首项任务 1000 因而在新角色进入地图前显示目标进度 0/2，状态为未完成；提前领奖不产生奖励或修改存档。条件进度保留实际次数，超过目标时不截断；原条件的描述格式化另行将显示参数夹到目标值。其余地图条件的既有支持边界保持独立。`OfflineMainlineProgressValidation.Run` 已验证新档零计数、超过目标的 3/2 原始进度、既有领奖及存档恢复；完整隔离工程静音 Play Mode 使用实际创建角色复核未进入地图的读取及提前领奖无状态变化，并通过原生 HUD 模拟指针回归。已查看运行截图；其中原任务条目仍用受控数据，不能作为真实任务栏装配的画面证明。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。
 
@@ -48,7 +50,9 @@
 
 ## 自定义实现
 
-任务数据和领奖在本地提交，无运行时服务器依赖。目录中的官方任务条件只有在本地会话明确支持时才可完成；不支持的条件不会被猜测为满足。
+任务数据和领奖在本地提交，无运行时服务器依赖。
+
+职业主线 `MaxProfessionRankCondition` 的服务器附加参数使用角色本地最高已解锁职业阶级；解锁后读取实际存档中的最新阶级。该差异已由用户确认，保留原条件比较与布尔进度。目录中的官方任务条件只有在本地会话明确支持时才可完成；不支持的条件不会被猜测为满足。
 
 以下为已确认的离线任务要求；当前 Unity 主线目录和进度事务不代表委托、日常／每周任务及活动事件已迁移。
 

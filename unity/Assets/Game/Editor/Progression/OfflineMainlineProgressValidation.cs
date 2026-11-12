@@ -40,6 +40,16 @@ namespace Zjcs.Editor.Progression
                     && initialCurrent == 0 && initialTarget == 2 && session.Save.World.Maps.Count == 0
                     && session.ClaimTask(1000).Status == ProgressionResultStatus.NotReady,
                     "Show the original zero battle count before entering a map, without granting a reward");
+                Require(catalog.TryGetTask(1005, out var unvisitedTask)
+                    && session.GetTaskProgress(unvisitedTask.finishCondition, out long unvisitedCurrent,
+                        out long unvisitedTarget).Status == ProgressionResultStatus.Ready
+                    && unvisitedCurrent == 0 && unvisitedTarget == 10000 && session.Save.World.Maps.Count == 0,
+                    "Read original zero exploration progress without creating a map record");
+                Require(catalog.TryGetTask(1030, out var professionTask)
+                    && session.GetTaskProgress(professionTask.finishCondition, out long professionCurrent,
+                        out long professionTarget).Status == ProgressionResultStatus.Ready
+                    && professionCurrent == 0 && professionTarget == 1,
+                    "The confirmed local profession-rank source supports the locked initial rank");
                 OfficialMainlineMapProfile dragonProfile = OfficialMainlineMapProfile.Get(14);
                 Require(dragonProfile.RegionCount == 111 && dragonProfile.DefaultEntryPlacementId == 101
                     && dragonProfile.RequiredAccessConditions.Count == 16 && dragonProfile.IsRuntimeEntryReady
