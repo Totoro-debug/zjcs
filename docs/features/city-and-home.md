@@ -233,6 +233,10 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `HomeCurrencyActionsNativeValidation.Run` 已在隔离完整工程静音 Play Mode 通过原三项货币图标与数量、金币／钻石加号及物品按钮的首个射线命中和模拟指针、速购条件不满足／记录缺失、缓存记录与变更 ItemId 的差异、自增上限实时读取／普通物品返回零、数量更新、对象池重借与释放；已查看编辑器原生 640×480 实际截图，完整顶栏位于右上方。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 及静态元数据检查通过。条件、数量和窗口回调为受控数据；真实物品详情、速购／兑换窗口与存档事务、正式 HUD 和竖屏 Windows Player 仍未接通。
 
+`Runtime/Official/HomeCountControlsUI/` 迁入所选 884 的 `SetCountSlider`、`SetCountButtonGroup`、`LongTouch` 和原整数 Clamp。滑条保留整数选择、单值／无效区间、交易倍率显示及原 float 转 long；按钮组保留初值不主动钳制、超上限回调和最大值通知规则。长按保留 0.5 秒初始间隔、0.05 秒间隔变化、0.1 秒最小间隔、10 次加速阈值、1.5 次幂、拖动取消与 AutoReset；仅增加可选的测试指针坐标入口，未设置时沿原触摸／鼠标读取。
+
+`Assets/Official/Home/UI/CountControls/` 使用 APK 内 `ShopQuickBuyDialog` 的两个完整控件子树，保留原 RectTransform、滑条填充、按钮、文本、动画和点击音频绑定。独立测试槽位的宽 798、高 162 分别取原父级宽度和 LayoutElement 首选高度；完整父窗口布局尚未接入。`HomeCountControlsNativeValidation.Run` 已在静音 Play Mode 通过真实首个射线命中、模拟点击／拖动／长按、加速、拖动取消、上下限、倍率文字、单值与无效区间、最大值及超限回调，音效检查保持静音并校验原音频事件。已查看原生 640×480 实际截图；Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。全局颜色通过受控端口提供；完整速购／兑换窗口、存档事务、正式 HUD 和竖屏 Windows Player 尚未验证。
+
 `PlayerItemUIMainPlayerCountProviderBase` 与重新解析原依赖得到的 `PlayerItemUIPlayerItemCountProvider` 迁入 `Runtime/Official/HomeCurrencyUI/`，保留玩家借还、按物品 ID 过滤、每秒异步刷新及取消顺序。`OfflineHomeCurrencyPlayer` 将实际角色背包和自增参数投影为原数量事件；家园宿主需在提交／重读后调用 `SynchronizeCommittedPlayer`。当前 `OutputAdditionSetting.ItemOutputGroupTypeDict` 包含 56／57，因此体力保留原额外参数更新订阅。真实角色存档与原生顶栏的隔离验证入口为 `HomeCurrencyProfileValidation.Run`；正式家园 HUD 的整体替换、物品详情／购买原窗口、属性及产出加成变化时的体力速度／上限应用链仍未接通，不能以初始恢复规则代替这些流程。
 
 `HomeCurrencyProfileValidation.Run` 已在完整隔离工程的静音 Play Mode 使用真实新角色、背包事务与磁盘存档，验证初始 300 点不重复发放、耗尽后保留参数、离线恢复、小数余量、自然／持有上限、普通物品可选参数往返和扣费失败不写档；原 double／向下取整边界保持不变。原生数量显示、实际第一射线命中的内部模拟点击、提交刷新、暂停／恢复、每秒自然恢复、关闭取消、对象池重借及销毁释放全部通过。已查看 640×480 原生 Screen 尺寸的初始及溢出画面，并逐控件检查视口边界，顶栏完整位于右上方。批处理编辑器的竖屏纹理与原安全区尺寸不一致，未将该尝试记作竖屏通过。完整隔离工程的静态元数据检查、导入／C# 编译及 `Zjcs.Editor.ProjectTools.Validate` 已通过。正式 HUD、物品说明窗口及竖屏 Windows Player 尚未完成。
