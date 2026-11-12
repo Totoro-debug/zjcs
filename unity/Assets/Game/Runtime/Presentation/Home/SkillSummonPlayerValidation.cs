@@ -214,6 +214,10 @@ namespace Zjcs.Presentation.Home
             Require(clicked,"The native summon start button did not receive the simulated pointer click.");
             bool captured=false;
             bool resultCaptured=false;
+            bool coldSceneRequested = Environment.GetEnvironmentVariable("ZJCS_STATUS_COLD_SCENE_ACCEPTANCE") == "1";
+            bool coldSceneCompleted = false;
+            Require(!coldSceneRequested || graphCapabilityProbe != null,
+                "Dark cold-scene validation requires the graph capability diagnostic.");
             while(runner!=null)
             {
                 var nativeResult=FindObjectOfType<DemonResultWindow>();
@@ -236,6 +240,18 @@ namespace Zjcs.Presentation.Home
                 hitFinishProbe?.ObserveFrame(controller);
                 graphCapabilityProbe?.ObserveFrame(controller);
                 explicitGraphProbe?.ObserveFrame(controller);
+                if (coldSceneRequested && !coldSceneCompleted && graphCapabilityProbe.ReadyForDarkColdScene)
+                {
+                    runner.enabled = false;
+                    yield return CaptureGridFrame("dark-status-restored");
+                    captured = true;
+                    yield return SkillDarkStatusColdSceneValidation.Rebuild(home, runner, slot, saveRoot, output,
+                        graphCapabilityProbe, value => settled = value, (nextHome, nextRunner) => {
+                            home = nextHome; runner = nextRunner; controller = nextRunner.Controller;
+                        }, CaptureGridFrame);
+                    coldSceneCompleted = true;
+                    continue;
+                }
                 if (explicitGraphProbe?.CaptureName != null)
                 { yield return new WaitForEndOfFrame(); Capture(explicitGraphProbe.CaptureName); captured = true; }
                 if (graphCapabilityProbe?.CaptureName != null)
@@ -263,6 +279,7 @@ namespace Zjcs.Presentation.Home
             if (settled != null) File.WriteAllText(Path.Combine(output,"summon-final.json"),FightBattleCheckpointSerializer.Save(settled));
             Require(captured && resultCaptured && settled!=null && settled.Finished,
                 "Summon battle did not finish, leave its native result, or show its diagnostic graph.");
+            Require(!coldSceneRequested || coldSceneCompleted, "Active dark status never completed its full host rebuild.");
             probe?.Verify("Windows Player",settled);
             cloneProbe?.Verify(settled);
             deathProbe?.Verify(settled);
