@@ -65,6 +65,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     Zjcs.Official.HomeHudUI.OfficialHomeTopBarAssetCatalog topBarAssets;
     OfflineMainlineProgressSession profile;ProfileSlotCatalog slots;string profileSlot,lastExchangeRequest;
     OfflineHomeCurrencyPlayer profilePlayer;OfflineHomeCurrencyExchange exchange;
+    OfflineHomeQuickBuyCounters profileQuickCounters;DateTime quickCounterTime;
     FontAssetFontService fonts;ScreenAdaptService screen;OfflineHomeTopBar topBar;OfflinePartnerUiSoundScope soundScope;IDisposable metrics;
     GameObject active;WorldPopupWindow popup;WorldConfirmDialog confirmation;Material blur;
     readonly Dictionary<int,long> counts=new Dictionary<int,long>{{1,100},{2,500},{15,5}};
@@ -133,6 +134,15 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         limited=HomeCurrencyBuyLimit.CheckBuyLimitCountItem(109,1,this,assets.Text,PopupLimitConfirm);yield return WaitConfirmation();Click(confirmation.ConfirmBtn);yield return WaitAllClosed();Require(limited.GetAwaiter().GetResult(),"native confirm allows original excess ownership branch");
         limited=HomeCurrencyBuyLimit.CheckBuyLimitCountItem(109,1,this,assets.Text,PopupLimitConfirm);yield return WaitConfirmation();var confirmMask=canvas.GetComponentsInChildren<WorldWindowBlurMask>().Single(mask=>mask.AttachWindow==confirmation.PopupWindow);Click(confirmMask.Button,new Vector2(5,5));Require(windows.WindowCount==1&&limited.Status==UniTaskStatus.Pending,"original mask guard ignores clicks during the first half second");yield return new WaitForSeconds(.55f);Click(confirmMask.Button,new Vector2(5,5));yield return WaitAllClosed();Require(!limited.GetAwaiter().GetResult(),"original mask-close automatically runs the cancel callback");
         InitializeExchangeProfile();
+        CheckQuickBuyCounters();
+        profileQuickCounters=new OfflineHomeQuickBuyCounters(assets.CreateQuickBuyCalendar(8));
+        quickCounterTime=new DateTime(2026,11,9,0,0,0,DateTimeKind.Utc);
+        Require(profile.ApplyInventoryTransaction("quick-counter-tier:"+Guid.NewGuid().ToString("N"),save=>profileQuickCounters.AddBuyCount(save.Player,EQuickBuyRefreshType.Daily,1,4,quickCounterTime)).IsApplied,"persist original second price tier");
+        yield return Open(windows.ShowQuickBuy(1).gameObject);
+        quick=active.GetComponent<QuickBuyDialog>();cost=Field<PlayerCostMoneyContent>(quick,"mCostMoneyContent");
+        Require(cost.CostItemCount==50,"native quick-buy reads real saved daily purchases for second price tier");Capture("home-quick-buy-saved-counter-native.png");
+        quickCounterTime=quickCounterTime.AddDays(1);day(default);Require(cost.CostItemCount==30,"native new-day handler reads expired saved count and restores original first price tier");
+        Click(Field<Button>(quick,"mCancelBtn"));yield return WaitClosed();
         yield return Open(windows.ShowExchange().gameObject);
         var pay=active.GetComponent<PayMoneyChangeDialog>();Require(pay.SetCountSlider.CurrentCount==1&&pay.CountSliderGo.activeSelf,"original pay default selection");
         Click(pay.SetCountSlider.AddBtn);Require(Field<long>(pay,"mCurrentCount")==2,"native exchange add");Click(pay.SetCountSlider.MaxBtn);Require(Field<long>(pay,"mCurrentCount")==5,"native exchange maximum");Capture("home-pay-change-native.png");
@@ -177,6 +187,51 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
             else if(count<held)Require(OfflineInventoryOperations.Consume(save.Player,id,held-count,now).IsApplied,"set real exchange balance");
         }).IsApplied,"commit isolated exchange balance");profilePlayer?.SynchronizeCommittedPlayer();
     }
+    void CheckQuickBuyCounters()
+    {
+        // UTC+8/UTC/UTC-5/UTC+9 are test inputs, not a production timezone choice.
+        var calendar=assets.CreateQuickBuyCalendar(8);var counters=new OfflineHomeQuickBuyCounters(calendar);
+        var sunday=new DateTime(2026,11,8,23,59,59,DateTimeKind.Utc).AddTicks(9999999);
+        var monday=sunday.AddTicks(1);var tuesday=monday.AddDays(1);
+        Require(calendar.GetDailyResetTimeOfDay()==(0,0,0)&&calendar.WeeklyStartDayOfWeek==DayOfWeek.Monday,"decoded original reset settings with explicit UTC+8 test input");
+        foreach(int zone in new[]{0,-5,9}){
+            var c=assets.CreateQuickBuyCalendar(zone);
+            var boundary=new DateTime(2026,11,9,8,0,0,DateTimeKind.Utc).AddHours(-zone);
+            Require(!c.IsSameDay(boundary.AddTicks(-1),boundary)&&c.IsSameDay(boundary,boundary.AddHours(23)),"exact daily reset boundary at test timezone "+zone);
+            Require(!c.IsSameWeek(boundary.AddTicks(-1),boundary)&&c.IsSameWeek(boundary,boundary.AddDays(6)),"exact weekly reset boundary at test timezone "+zone);
+        }
+        Require(counters.GetBuyCount(profile.Save.Player,1,EQuickBuyRefreshType.Daily,sunday)==0,"new character has no purchases");
+        long money=profile.InventoryCount(1),diamonds=profile.InventoryCount(2);
+        string receipt="quick-buy-counter-fixture:"+Guid.NewGuid().ToString("N");
+        Action<OfflineMainlineSave> purchase=save=>{
+            Require(OfflineInventoryOperations.Consume(save.Player,2,30,0).IsApplied,"atomic counter test cost");
+            Require(OfflineInventoryOperations.Grant(save.Player,1,1500,0).IsApplied,"atomic counter test award");
+            counters.AddBuyCount(save.Player,EQuickBuyRefreshType.Daily,1,4,sunday);
+            counters.AddBuyCount(save.Player,EQuickBuyRefreshType.Daily,109,2,sunday);
+            counters.AddBuyCount(save.Player,EQuickBuyRefreshType.Weekly,108,3,sunday);
+            counters.AddBuyCount(save.Player,EQuickBuyRefreshType.None,2,7,sunday);
+        };
+        Require(profile.ApplyInventoryTransaction(receipt,purchase).IsApplied,"commit inventory and counters together");
+        string path=slots.GetProgressPath(profileSlot),committed=File.ReadAllText(path);
+        Require(profile.ApplyInventoryTransaction(receipt,purchase).Status==ProgressionResultStatus.Unchanged&&File.ReadAllText(path)==committed,"replayed counter transaction does not spend or increment again");
+        var restored=OfflineMainlineProgressSession.OpenCharacter(slots,profileSlot);
+        Require(restored.InventoryCount(1)==money+1500&&restored.InventoryCount(2)==diamonds-30&&counters.GetBuyCount(restored.Save.Player,1,EQuickBuyRefreshType.Daily,sunday)==4,"inventory and original counts survive actual profile reopening");
+        Require(counters.GetBuyCount(restored.Save.Player,1,EQuickBuyRefreshType.Daily,monday)==0&&counters.GetBuyCount(restored.Save.Player,108,EQuickBuyRefreshType.Weekly,monday)==0&&counters.GetBuyCount(restored.Save.Player,2,EQuickBuyRefreshType.None,monday)==7,"daily and weekly expire independently of permanent counts");
+        Require(File.ReadAllText(path)==committed&&counters.GetBuyCount(restored.Save.Player,109,EQuickBuyRefreshType.Daily,sunday)==2,"reading an expired period does not clear or write old data");
+        Require(profile.ApplyInventoryTransaction("quick-counter-next:"+Guid.NewGuid().ToString("N"),save=>counters.AddBuyCount(save.Player,EQuickBuyRefreshType.Daily,1,1,monday)).IsApplied,"first purchase in new period commits original reset");
+        Require(counters.GetBuyCount(profile.Save.Player,1,EQuickBuyRefreshType.Daily,monday)==1&&counters.GetBuyCount(profile.Save.Player,109,EQuickBuyRefreshType.Daily,monday)==0&&counters.GetBuyCount(profile.Save.Player,2,EQuickBuyRefreshType.None,monday)==7,"first new-period addition clears all items in that refresh bucket only");
+        committed=File.ReadAllText(path);bool failed=false;
+        using(var locked=new FileStream(path,FileMode.Open,FileAccess.Read,FileShare.Read)){
+            try{profile.ApplyInventoryTransaction("quick-counter-locked:"+Guid.NewGuid().ToString("N"),save=>{
+                Require(OfflineInventoryOperations.Consume(save.Player,2,30,0).IsApplied,"locked transaction cost");
+                counters.AddBuyCount(save.Player,EQuickBuyRefreshType.Daily,1,1,tuesday);
+            });}catch(IOException){failed=true;}
+        }
+        Require(failed&&File.ReadAllText(path)==committed&&profile.InventoryCount(2)==diamonds-30&&counters.GetBuyCount(profile.Save.Player,1,EQuickBuyRefreshType.Daily,monday)==1,"failed disk commit retains inventory and previous counter period");
+        var invalid=new OfflineQuickBuyProgress();invalid.Counters.Add(new OfflineQuickBuyCounterProgress{RefreshType=3});Require(!OfflineQuickBuyProgress.IsValid(invalid),"unknown persisted counter type rejects");
+        SetBalance(1,money);SetBalance(2,diamonds);
+        Debug.Log("HOME_QUICK_BUY_COUNTERS_PASSED: original periods, exact reset boundaries, nonmutating reads, whole-bucket clearing, real-profile restoration, atomic receipt and disk-failure rollback. Production timezone and purchase endpoint remain pending.");
+    }
     IEnumerator Open(GameObject root)
     {
         active=root;popup=root.GetComponent<WorldPopupWindow>();
@@ -200,7 +255,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     static void Require(bool value,string message){if(!value)throw new InvalidOperationException(message);}
     public int Level=>10;public int SubRank=>0;public long GetItemAmount(int id)=>profilePlayer!=null?profilePlayer.GetItemAmount(id):counts.TryGetValue(id,out var count)?count:0;
     public bool HasItem(int id,long count)=>GetItemAmount(id)>=count;public bool IsBanCostItem(int id)=>banCost;
-    public long QuickBuyGetItemBuyCount(int id,EQuickBuyRefreshType type)=>alreadyBought;
+    public long QuickBuyGetItemBuyCount(int id,EQuickBuyRefreshType type)=>profileQuickCounters==null?alreadyBought:profileQuickCounters.GetBuyCount(profile.Save.Player,id,type,quickCounterTime);
     public event Action<IProfessionItemData,long,object> OnItemCountUpdate {add{changed+=value;subscribers++;}remove{changed-=value;subscribers--;}}
     IHomeCurrencyWindowPlayer IHomeCurrencyWindowServices.Player=>this;IProfessionItemPlayer IProfessionItemIconContext.Player=>this;
     public int MoneyId=>assets.MoneyId;public int DiamonId=>assets.DiamonId;public int FlareStarId=>assets.FlareStarId;public HomeCurrencyPaySettings Pay=>assets.Pay;

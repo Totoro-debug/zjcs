@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -33,6 +34,10 @@ namespace Zjcs.Offline.HomeCurrencyUI
         public int MoneyId => (int)Settings["MoneyId"];
         public int DiamonId => (int)Settings["DiamonId"];
         public int FlareStarId => (int)Settings["FlareStarId"];
+        public HomeQuickBuyCalendar CreateQuickBuyCalendar(int timeZone)
+            => new HomeQuickBuyCalendar(DateTime.ParseExact((string)Settings["DailyResetTime"],
+                "(HH:mm:ss)", CultureInfo.InvariantCulture, DateTimeStyles.None),
+                timeZone, (DayOfWeek)(int)Settings["WeeklyStartDayOfWeek"]);
         JObject Settings { get { Load(); return (JObject)data["tables"]["game_settings"]; } }
         public HomeCurrencyPaySettings Pay => new HomeCurrencyPaySettings {
             DiamonChangeScale=(long)Settings["Pay"]["DiamonChangeScale"],

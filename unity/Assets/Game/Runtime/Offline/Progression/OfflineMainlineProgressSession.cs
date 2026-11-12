@@ -63,6 +63,7 @@ namespace Zjcs.Offline.Progression
         public List<OfflineItemStack> Inventory = new List<OfflineItemStack>();
         public List<int> NpcFollowerClassIds = new List<int>();
         public string CommerceStateJson = string.Empty;
+        public OfflineQuickBuyProgress QuickBuy = new OfflineQuickBuyProgress();
         public OfflineWishProgress Wishes = new OfflineWishProgress();
         public OfflineTreasureGachaProgress TreasureGacha = new OfflineTreasureGachaProgress();
         public OfflinePetGachaProgress PetGacha = new OfflinePetGachaProgress();
@@ -1325,6 +1326,7 @@ namespace Zjcs.Offline.Progression
                 || save.Player.PendingStatueBattleEffects == null
                 || save.Player.PendingStatueBattleEffects.Count > 10000
                 || save.Player.CommerceStateJson == null || save.Player.CommerceStateJson.Length > 2_000_000
+                || !OfflineQuickBuyProgress.IsValid(save.Player.QuickBuy)
                 || save.Player.Inventory.Count > 20000 || save.Player.UnlockedMapClassIds.Count > 1000
                 || save.Player.NpcFollowerClassIds == null || save.Player.NpcFollowerClassIds.Count > 1000
                 || save.Player.NpcFollowerClassIds.Any(value => value <= 0)
@@ -1431,6 +1433,7 @@ namespace Zjcs.Offline.Progression
             if (save.Player.AppliedInventoryEventIds == null) save.Player.AppliedInventoryEventIds = new List<string>();
             if (save.Player.DailyDungeonSettlements == null) save.Player.DailyDungeonSettlements = new List<DailyDungeonSettlementRecord>();
             if (save.Player.CommerceStateJson == null) save.Player.CommerceStateJson = string.Empty;
+            if (save.Player.QuickBuy == null) save.Player.QuickBuy = new OfflineQuickBuyProgress();
             if (save.Player.Wishes == null) save.Player.Wishes = new OfflineWishProgress();
             OfflineWishProgress.Normalize(save.Player.Wishes);
             if (save.Player.TreasureGacha == null) save.Player.TreasureGacha = new OfflineTreasureGachaProgress();

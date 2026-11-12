@@ -239,13 +239,15 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `Runtime/Official/HomeCurrencyWindowsUI/` 迁入所选 884 的完整 `QuickBuyDialog`、`PayMoneyChangeDialog`、`PlayerCostMoneyContent` 和 `QuickBuyInfo` 三项共享计算。速购保持原所需数量向上取整、阶梯价格、已购买次数、持有／次数限制、最低购买量、余额变化及日／自增事件的不同刷新顺序；金币记录使用原 30／50／100 价格与 5／5／无限档位。余额不足仍强制选择至少 1 次；多档控件收到货币变化时只重算数量，价格等待原后续刷新事件，保留该原行为。确认时仍只用单次奖励数量检查持有上限，发出购买请求后立即关闭。扣费按钮保留原不足、禁止扣费错误 1659、条件检查、免费、数量颜色和每秒自增刷新分支。`HomeCurrencyBuyLimit` 迁入完整异步 `ShopUIUtils.CheckBuyLimitCountItem`：缺记录拒绝、无限量直接通过、持有量加本次数量不超上限直接通过，超出时等待原确认／取消回执；关闭遮罩自动走取消，仍保留原位或等待条件和计算顺序。
 
+`HomeQuickBuyCalendar` 与 `HomeQuickBuyData` 从所选官方 `TimeUtils`、`PlayerQuickBuyDataExt` 和三类计数 Wrap 迁入，保留日／周／不刷新类型、配置重置时刻、周起始日和服务器时区换算。读取跨周期计数只返回零，不清空或写档；该周期首次新增才清空同类型全部物品，再更新时间和计数。时区为必传参数，正式单机取值仍待用户决定，不使用电脑时区或 UTC+8 作为隐含默认。
+
 兑换保留原零参数滑条／正参数固定数量、最小 1／最大 10000000／倍率 1、零余额选择 0、物品数量变化切换固定模式、余额不足确认后进入直购及原支付奖励拦截。请求、奖励、物品说明、确认和直购窗口均由明确类型端口提供；兑换请求已另接下述真实存档事务，其他端口仍需接通实际流程。`OfflineHomeCurrencyAssets` 显式绑定所选 26 条速购配置、持有上限、等级系数、物品、语言、原 GlobalColors 配色和图标；兑换所需额外顶栏货币按原 `PlayerItemUIGetItemIdFactory` 的 `FlareStar → GameSettings.FlareStarId` 补入运行时目录副本，保持家园三项货币目录的原定义。
 
 `Assets/Official/Home/UI/CurrencyWindows/` 恢复 APK 中两个完整父窗口及默认物品图标，HintTip 附件沿原配置 GUID 查到实际 prefab 后一并恢复；保留全部原层级、RectTransform、布局、字体、图标、材质、入退场动画和声音，不用截图替代窗口。图标、附件对象池及顶部栏均在启用前注入本地资源与生命周期绑定。
 
 `OfflineHomeCurrencyWindows` 提供正式家园可调用的速购／兑换窗口创建、显示和关闭入口，窗口直接挂回原 Canvas，沿原 popup 排序、模糊遮罩准备及入退场动画运行。每个窗口和图标池分别注册资源作用域，字体、屏幕适配、语言、声音、顶部栏与业务端口在启用前绑定；图标和 HintTip 附件沿原对象池借还，默认图标按所选 `ItemIconManager.ResetIconGo`／`UIUtils.CopyRectTransform` 恢复变换。当前默认图标绑定限定物品 1／2／15，26 条配置不代表其余速购物品的专用图标资源全部接通。购买上限与兑换不足确认复用所选 884 已恢复的完整 `ConfirmDialog`，同一宿主绑定原文本对齐协程、排序、模糊遮罩、原声音及动画；不改动原帧末文本刷新时序。
 
-`HomeCurrencyWindowsNativeValidation.Run` 已在完整隔离工程的静音 Play Mode 通过两个完整原窗口的第一射线命中与内部模拟点击、所需数量取整、跨阶梯价格、最大值、余额／禁止扣费／条件分支、周期刷新、取消回调、固定数量／零余额兑换、支付奖励拦截、原入退场动画和图标／事件／奖励监听释放。验证直接调用上述窗口宿主，补测原图标池复用、遮罩准备期间重复关闭、已打开窗口销毁和重复 Dispose 后的监听回收。兑换按钮接入真实新角色背包，验证耀星扣除与晨星发放、原数量监听更新、重开存档恢复、重复请求不重复结算、无效／不足请求不写档，以及文件占用导致写盘失败时主存档及余额不变、窗口保持可操作。已查看 608×1080 实际速购及兑换画面，包含原顶部货币栏。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。确认弹窗在非批处理、内置屏不激活启动的静音 Play Mode 已通过首个射线命中与模拟指针，验证物品 109 原上限 30 的边界、超限确认／取消、遮罩前 0.5 秒防误触及等待后关闭；兑换不足确认的叠加、取消返回、确认后请求顺序和两层关闭也通过，已查看两张实际确认画面。速购事务、奖励、物品详情和直购端口仍为受控数据；速购次数存档、正式 HUD 与这些业务端口的完整往返和 Windows Player 尚未接通或验证。
+`HomeCurrencyWindowsNativeValidation.Run` 已在完整隔离工程的静音 Play Mode 通过两个完整原窗口的第一射线命中与内部模拟点击、所需数量取整、跨阶梯价格、最大值、余额／禁止扣费／条件分支、周期刷新、取消回调、固定数量／零余额兑换、支付奖励拦截、原入退场动画和图标／事件／奖励监听释放。验证直接调用上述窗口宿主，补测原图标池复用、遮罩准备期间重复关闭、已打开窗口销毁和重复 Dispose 后的监听回收。兑换按钮接入真实新角色背包，验证耀星扣除与晨星发放、原数量监听更新、重开存档恢复、重复请求不重复结算、无效／不足请求不写档，以及文件占用导致写盘失败时主存档及余额不变、窗口保持可操作。已查看 608×1080 实际速购及兑换画面，包含原顶部货币栏。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和静态元数据检查通过。确认弹窗在非批处理、内置屏不激活启动的静音 Play Mode 已通过首个射线命中与模拟指针，验证物品 109 原上限 30 的边界、超限确认／取消、遮罩前 0.5 秒防误触及等待后关闭；兑换不足确认的叠加、取消返回、确认后请求顺序和两层关闭也通过，已查看两张实际确认画面。速购事务、奖励、物品详情和直购端口仍为受控数据；速购次数另已使用真实新角色存档验证日／周边界（UTC+8、UTC、UTC−5、UTC+9 均为测试参数）、过期读取不写档、首次新增整组清零、不刷新计数保留、重开恢复、同一库存事务的重复回执与写盘失败回滚。原速购窗口读取实际存档次数后显示 50 晨星的第二档价格，原跨日事件恢复 30 晨星，第一射线命中的模拟取消及 608×1080 实际截图已核对。正式速购交易、时区选择、HUD 与这些业务端口的完整往返和 Windows Player 尚未接通或验证。
 
 `PlayerItemUIMainPlayerCountProviderBase` 与重新解析原依赖得到的 `PlayerItemUIPlayerItemCountProvider` 迁入 `Runtime/Official/HomeCurrencyUI/`，保留玩家借还、按物品 ID 过滤、每秒异步刷新及取消顺序。`OfflineHomeCurrencyPlayer` 将实际角色背包和自增参数投影为原数量事件；家园宿主需在提交／重读后调用 `SynchronizeCommittedPlayer`。该共享提供器同时支持家园的 1／2／57 和兑换顶栏的耀星 15；实际兑换验证直接复用此提供器，不另置耀星余额或数量监听。当前 `OutputAdditionSetting.ItemOutputGroupTypeDict` 包含 56／57，因此体力保留原额外参数更新订阅。真实角色存档与原生顶栏的隔离验证入口为 `HomeCurrencyProfileValidation.Run`；正式家园 HUD 的整体替换、物品详情／购买原窗口、属性及产出加成变化时的体力速度／上限应用链仍未接通，不能以初始恢复规则代替这些流程。
 
@@ -310,7 +312,7 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 人物页底栏经 `CharacterFeatureRuntime.OpenProfile(slotId, savesRoot)` 打开本地人物档案。
 
-`Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyExchange` 在每次请求前重读共享角色档案，按所选配置检查数量，以 `OfflineInventoryOperations` 在同一存档克隆中扣除耀星、发放晨星并写入请求回执，成功提交后才通知原窗口关闭；重复回执返回未变化，扣费、发奖或写盘失败均不提交新背包。该实现不维护第二份货币余额，顶部栏通过原数量观察器读取提交后的角色状态。
+`Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyExchange` 在每次请求前重读共享角色档案，按所选配置检查数量，以 `OfflineInventoryOperations` 在同一存档克隆中扣除耀星、发放晨星并写入请求回执，成功提交后才通知原窗口关闭；重复回执返回未变化，扣费、发奖或写盘失败均不提交新背包。该实现不维护第二份货币余额，顶部栏通过原数量观察器读取提交后的角色状态。`OfflineQuickBuyProgress` 仅将官方周期字典与 UTC 时间映射为本地序列化字段；`OfflineHomeQuickBuyCounters` 使用原计数运算，在库存事务的同一存档克隆中更新，读取不提交状态，不提供脱离扣费／奖励事务的单独计数提交入口。正式购买请求尚未接通，不能据此记为速购玩法完成。
 
 ## 自定义实现
 

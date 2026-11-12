@@ -84,6 +84,84 @@ def build():
     emit('QuickBuyInfo', rules+'}\n')
     emit('EQuickBuyRefreshType', read('EQuickBuyRefreshType', 'common-source/Common').replace('namespace Common;\n',''))
 
+    # Preserve the client's reset calendar and counter operations. The server
+    # timezone is an explicit caller dependency; no offline timezone is assumed.
+    source=read('TimeUtils','common-source/Common')
+    calendar='''public sealed class HomeQuickBuyCalendar
+{
+    public readonly DateTime DailyResetTime;
+    public readonly int TimeZone;
+    public readonly DayOfWeek WeeklyStartDayOfWeek;
+    static readonly DateTime sUnixEpoch = new DateTime(1970,1,1,0,0,0,DateTimeKind.Utc);
+    public HomeQuickBuyCalendar(DateTime dailyResetTime,int timeZone,DayOfWeek weeklyStartDayOfWeek)
+    { DailyResetTime=dailyResetTime; TimeZone=timeZone; WeeklyStartDayOfWeek=weeklyStartDayOfWeek; }
+'''
+    for signature in ('public static int CalcDaysByTimeOfDay(DateTime startTime, DateTime endTime, int hourOfDay, int minuteOfDay, int secondOfDay)',
+        'public static int CalcDays(DateTime t1, DateTime t2)',
+        'public static bool IsSameDay(DateTime t1, DateTime t2)',
+        'public static bool IsSameWeek(DateTime t1, DateTime t2)',
+        'public static bool IsSameWeek(DateTime t1, DateTime t2, DayOfWeek dayOfWeek)',
+        'public static DateTime GetBeginningOfWeek(DateTime date, DayOfWeek dayOfWeek)',
+        'public static (int hour, int minute, int second) GetDailyResetTimeOfDay()',
+        'public static DateTime GetDailyResetTimeFromDate(DateTime dateTime)',
+        'public static DateTime GetDateTimeWithTimeZone(DateTime dateTime)'):
+        body=method(source,signature).replace('public static ','public ')
+        body=body.replace('Parsers.GameSettings.WeeklyStartDayOfWeek','WeeklyStartDayOfWeek')
+        body=body.replace('Parsers.Instance.GameSettingsParser.DailyResetTime','DailyResetTime')
+        body=body.replace('ServerInfoManager.Instance.TimeZone','TimeZone')
+        calendar+=body+'\n'
+    emit('HomeQuickBuyCalendar',calendar+'}\n')
+    counter='''public abstract class HomeQuickBuyCounter
+{
+    public readonly Dictionary<int,long> BuyCount = new Dictionary<int,long>();
+    public abstract long GetBuyCount(int itemId,DateTime cmpTime);
+    public abstract void AddBuyCount(int itemId,long count,DateTime buyTime);
+}
+public abstract class HomeQuickBuyCounterPeriodic : HomeQuickBuyCounter
+{
+    public DateTime LastUpdateTime;
+    protected readonly HomeQuickBuyCalendar Calendar;
+    protected HomeQuickBuyCounterPeriodic(HomeQuickBuyCalendar calendar) { Calendar=calendar; }
+    public abstract bool InPeriodic(DateTime cmpTime);
+'''
+    source=read('PlayerQuickBuyCounterPeriodicWrap','common-source/Common')
+    for signature in ('public override void AddBuyCount(int itemId, long count, DateTime buyTime)',
+        'public override long GetBuyCount(int itemId, DateTime cmpTime)'):
+        counter+=method(source,signature)+'\n'
+    counter+='}\npublic sealed class HomeQuickBuyCounterNonRefresh : HomeQuickBuyCounter\n{\n'
+    source=read('PlayerQuickBuyCounterNonRefreshWrap','common-source/Common')
+    for signature in ('public override long GetBuyCount(int itemId, DateTime cmpTime)',
+        'public override void AddBuyCount(int itemId, long count, DateTime buyTime)'):
+        counter+=method(source,signature)+'\n'
+    counter+='}\n'
+    for name in ('Daily','Weekly'):
+        source=read('PlayerQuickBuyCounter'+name+'Wrap','common-source/Common')
+        counter+='public sealed class HomeQuickBuyCounter'+name+' : HomeQuickBuyCounterPeriodic\n{\n'
+        counter+='public HomeQuickBuyCounter'+name+'(HomeQuickBuyCalendar calendar) : base(calendar) {}\n'
+        counter+=method(source,'public override bool InPeriodic(DateTime cmpTime)').replace('TimeUtils.','Calendar.')+'\n}\n'
+    emit('HomeQuickBuyCounter',counter)
+    source=read('PlayerQuickBuyDataExt','common-source/Common')
+    data='''public sealed class HomeQuickBuyData
+{
+    public readonly Dictionary<EQuickBuyRefreshType,HomeQuickBuyCounter> BuyDatas = new Dictionary<EQuickBuyRefreshType,HomeQuickBuyCounter>();
+    readonly HomeQuickBuyCalendar calendar;
+    public event Action<int> OnCountUpdate;
+    public HomeQuickBuyData(HomeQuickBuyCalendar calendar) { this.calendar=calendar; }
+'''
+    for signature in ('public static long QuickBuyGetItemBuyCount(this Player player, int itemId, EQuickBuyRefreshType type)',
+        'public static void QuickBuyAddItemBuyCount(this Player player, EQuickBuyRefreshType type, int itemId, long buyCount, DateTime time)',
+        'private static PlayerQuickBuyCounterBaseWrap CreateCounter(EQuickBuyRefreshType type)'):
+        body=method(source,signature).replace('static ','').replace('this Player player, ','')
+        body=body.replace('EQuickBuyRefreshType type)','EQuickBuyRefreshType type, DateTime now)',1) if 'QuickBuyGetItemBuyCount' in signature else body
+        body=body.replace('player.QuickBuyData.','').replace('TimeManager.Instance.GetDateTime()','now')
+        body=body.replace('player.FireOnQuickBuyCountUpdate(itemId);','OnCountUpdate?.Invoke(itemId);')
+        body=body.replace('PlayerQuickBuyCounterBaseWrap','HomeQuickBuyCounter')
+        body=body.replace('PlayerQuickBuyCounterNonRefreshWrap.CreateNew()','new HomeQuickBuyCounterNonRefresh()')
+        body=body.replace('PlayerQuickBuyCounterDailyWrap.CreateNew()','new HomeQuickBuyCounterDaily(calendar)')
+        body=body.replace('PlayerQuickBuyCounterWeeklyWrap.CreateNew()','new HomeQuickBuyCounterWeekly(calendar)')
+        data+=body+'\n'
+    emit('HomeQuickBuyData','\n'.join(line.rstrip() for line in (data+'}\n').splitlines())+'\n')
+
     text = clean(read('PlayerCostMoneyContent'))
     text = text.replace('public sealed class PlayerCostMoneyContent : UIBase\n{',
         'public sealed class PlayerCostMoneyContent : UIBase\n{\n    public IHomeCurrencyWindowServices Services { private get; set; }')
@@ -292,7 +370,7 @@ public interface IHomeCurrencyWindowServices
         text=(DEST/(name+'.cs')).read_text('utf8')
         assert not any(t in text for t in ('Parsers.', 'MeManager.', 'WindowManager.', 'MoneyUtils.', 'ServiceProxyBase', '[Inject]', 'BroadcastManager.')),name
     receipt=dict(manifest='884_156692', generator_sha256=sha(Path(__file__)), inputs=inputs, outputs=outputs,
-        scope='Original native quick-buy/pay-change controllers, cost button and three shared pricing/award computations. Native windows and explicit production services must be bound before use.')
+        scope='Original native quick-buy/pay-change controllers, cost button, pricing/award computations, periodic purchase counters and reset calendar. Timezone is an explicit dependency awaiting the offline decision; native windows and production services must be bound before use.')
     (ROOT/'assets/reference/home-currency-windows-runtime-source-manifest.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
     print('Original currency windows:',len(outputs),'outputs',flush=True)
 
