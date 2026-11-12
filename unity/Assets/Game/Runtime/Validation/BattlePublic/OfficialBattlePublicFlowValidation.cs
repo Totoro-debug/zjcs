@@ -102,6 +102,8 @@ namespace Zjcs.Validation.Combat
                     int property = rules.PropertyType("OnceHitHemophagiaPer");
                     Require(property > 0, "Original lifesteal property is missing.");
                     actor.Properties.Add(new FightPropertyValue { Id = property, Value = 10000 });
+                    foreach (string name in new[] { "BaseCureAdd", "BaseBeCureAdd" })
+                        actor.Properties.Add(new FightPropertyValue { Id = rules.PropertyType(name), Value = 10000 });
                     foreach (var hit in skill.Hits) hit.HemophagiaProperty = property;
                     foreach (var hit in skill.HitGraphEntities) hit.HemophagiaProperty = property;
                     actor.Hp /= 2; actor.Turn.Hp = actor.Hp;
@@ -269,6 +271,9 @@ namespace Zjcs.Validation.Combat
                 var nativeSkills = new HashSet<int>();
                 var castIdentities = new HashSet<EcEntityIdentifier>();
                 var nativeHitIdentities = new HashSet<EcEntityIdentifier>();
+                var cureCastIdentities = new HashSet<EcEntityIdentifier>();
+                var cureHitIdentities = new HashSet<EcEntityIdentifier>();
+                var cureDamageIdentities = new HashSet<EcEntityIdentifier>();
                 var castReceipt = movementResult.Event.SkillCasts.Single(c => c.ActorId == actor.Id
                     && c.SkillEntityId == skillEntityId);
                 if (skillCost) Require(castReceipt.HasSkillCostHp && castReceipt.SkillCostBeforeHp == initialActorHp
@@ -277,10 +282,14 @@ namespace Zjcs.Validation.Combat
                 if (hemophagia)
                 {
                     var heals = movementResult.Event.DamageEvents.Where(d => d.IsCure).ToArray();
-                    Require(heals.Length == 3 && heals.All(h => h.DamageEntityId == 0
-                        && damages.Any(d => d.DamageId == h.DamageId))
+                    Require(heals.Length == 3 && heals.All(h => h.Damage > 0 && h.SkillEntityId == 10110
+                        && h.HitEntityId == 10111 && h.DamageEntityId == 10028
+                        && h.SourceId == actor.Id && h.TargetId == actor.Id
+                        && !damages.Any(d => d.DamageId == h.DamageId)
+                        && damages.Any(d => Mathf.Abs(d.Delay - h.Delay) < 1e-6f))
+                        && movementResult.Event.SkillCasts.Count(c => c.SkillEntityId == 10110) == 3
                         && actor.Hp == initialActorHp + heals.Sum(h => h.Damage),
-                        "Three actual derived heals must retain their source serials and settle exactly once: "
+                        "Three original self-cures must own independent entities and settle exactly once: "
                         + heals.Length + " heals, HP " + initialActorHp + " -> " + actor.Hp
                         + ", recovered " + heals.Sum(h => h.Damage) + ".");
                 }
@@ -317,11 +326,12 @@ namespace Zjcs.Validation.Combat
                             && ui.GetComponentsInChildren<TextMesh>(true).Any(text => text.text == "7"));
                     costFloatSeen |= captureCostFloat;
                     var compatibleFloats = root.GetComponentsInChildren<OfficialBattleDamageFloat>();
-                    if (!hemophagia) Require(compatibleFloats.Length == 0,
+                    Require(compatibleFloats.Length == 0,
                         "The old step damage float duplicated an original native damage notification.");
-                    if (hemophagia) Require(compatibleFloats.All(view => view.TargetId == actor.Id),
-                        "A direct target damage float duplicated the native notification.");
-                    bool captureDerivedFloat = hemophagia && !derivedFloatSeen && compatibleFloats.Length > 0;
+                    bool captureDerivedFloat = hemophagia && !derivedFloatSeen
+                        && world.GetComponentsInChildren<CharacterDamageUI>().Any(ui =>
+                            ui.EntityId == new EcEntityIdentifier(1, actor.Id)
+                            && ui.GetComponentsInChildren<TextMesh>(true).Any(text => !string.IsNullOrEmpty(text.text)));
                     derivedFloatSeen |= captureDerivedFloat;
                     if (world.GetComponentsInChildren<CharacterDamageUI>().Any(ui => ui.EntityId == new EcEntityIdentifier(1, target.Id)))
                     {
@@ -329,6 +339,9 @@ namespace Zjcs.Validation.Combat
                         nativeFloatSeen = true;
                     }
                     foreach (var native in world.GetComponentsInChildren<MyFightSkill>())
+                    {
+                        if (hemophagia && native.myEntity.Entity.ClassId == 10110)
+                            cureCastIdentities.Add(native.myEntity.Id);
                         if (native.myEntity.Entity.ClassId == skillEntityId)
                         {
                             Require((entity.position - mapper.GridToWorld(new FightGridPoint(actor.X, actor.Y))).sqrMagnitude < 1e-7f,
@@ -344,8 +357,18 @@ namespace Zjcs.Validation.Combat
                             }
                             if (++nativeFrames == 4) capture(prefix + "-skill");
                         }
+                    }
                     foreach (var hit in world.GetComponentsInChildren<MyFightHitFixed>())
                     {
+                        if (hemophagia && hit.myEntity.Entity.ClassId == 10111)
+                        {
+                            Require(cureCastIdentities.Contains(hit.Component.SkillId),
+                                "An original lifesteal hit lost its own actual cast.");
+                            var cureCell = hit.Component.GridTransform.Pos;
+                            Require(cureCell.X == actor.X && cureCell.Y == actor.Y,
+                                "An original lifesteal hit did not play at the caster's actual cell.");
+                            cureHitIdentities.Add(hit.myEntity.Id);
+                        }
                         if (!fixedClasses.Contains(hit.myEntity.Entity.ClassId)) continue;
                         Require(castIdentities.Contains(hit.Component.SkillId),
                             "A fixed hit is not associated with its actual native cast identity.");
@@ -356,6 +379,9 @@ namespace Zjcs.Validation.Combat
                         if (nativeHitIdentities.Add(hit.myEntity.Id) && nativeHitIdentities.Count == 1)
                             capture(prefix + "-hit");
                     }
+                    if (hemophagia) foreach (var damage in world.GetComponentsInChildren<MyFightDamage>())
+                        if (damage.myEntity.Entity.ClassId == 10028)
+                            cureDamageIdentities.Add(damage.myEntity.Id);
                     yield return null;
                     if (captureNativeFloat)
                     {
@@ -374,7 +400,10 @@ namespace Zjcs.Validation.Combat
                     + nativeHitIdentities.Count + "/" + expectedNativeHits);
                 Require(nativeFloatSeen, "The common battle controller did not display the original role damage UI.");
                 if (skillCost) Require(costFloatSeen, "The common battle controller did not display the original skill cost UI.");
-                if (hemophagia) Require(derivedFloatSeen, "The originating native damage suppressed its derived compatible cure UI.");
+                if (hemophagia) Require(derivedFloatSeen && cureCastIdentities.Count == 3
+                    && cureHitIdentities.Count == 3 && cureDamageIdentities.Count == 3,
+                    "The original lifesteal casts, hits, damage effects or original role cure UI were lost: "
+                    + cureCastIdentities.Count + "/" + cureHitIdentities.Count + "/" + cureDamageIdentities.Count + ".");
                 if (statusActions) Require(statusFloatSeen && immunityFloatSeen && actionNotifications == 7 && disperseNotifications == 1 && disperseFloatSeen,
                     "Three immunities, three damage actions and one self-applied cooldown action must each produce one later original UI notification: actions=" + actionNotifications
                         + ", immunity=" + immunityFloatSeen + ", disperse=" + disperseNotifications + "/" + disperseFloatSeen + ".");

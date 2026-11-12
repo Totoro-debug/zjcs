@@ -139,6 +139,8 @@ public static class BattleHpIncreaseHarness
     static void Lifesteal(FightOfficialCombatCatalog catalog,FightOfficialSkillItemCatalog items,FightDamageFormula formula)
     {
         var player=Unit(1,1,1000);var enemy=Unit(2,2);enemy.X=6;enemy.Hp=enemy.Turn.Hp=1000;
+        foreach(string name in new[] {"BaseCureAdd","BaseBeCureAdd"})
+            player.Properties.Add(new FightPropertyValue {Id=catalog.PropertyType(name),Value=10000});
         int property=catalog.PropertyType("OnceHitHemophagiaPer");
         Check(property>0,"Official OnceHitHemophagiaPer property is absent.");
         player.Properties.Add(new FightPropertyValue {Id=property,Value=10000});
@@ -151,8 +153,13 @@ public static class BattleHpIncreaseHarness
         var cp=new FightBattleCheckpoint {StageId=1001,RandomSeed=13,ResultRules=new FightBattleResultRules()};
         cp.Units.Add(player);cp.Units.Add(enemy);
         var runner=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),catalog,items);
-        NextCast(runner,90012);
-        Check(player.Hp==300 && source.Components.HpIncreaseUnit.TriggeredCount==1
-            && source.Components.HpIncreaseUnit.AccumulatedHp==50,"Lifesteal did not deliver its actual HP increase exactly once.");
+        var cast=NextCast(runner,90012);
+        Check(cast.DamageEvents.Exists(d=>d.SkillEntityId==10110 && d.HitEntityId==10111
+            && d.DamageEntityId==10028 && d.IsCure && d.Damage==200),
+            "Basic lifesteal bypassed the original cure skill: " + string.Join(";",cast.DamageEvents.ConvertAll(d=>
+                d.SkillEntityId+"/"+d.HitEntityId+"/"+d.DamageEntityId+"/"+d.IsCure+"/"+d.Damage)));
+        Check(player.Hp==300 && source.Components.HpIncreaseUnit.TriggeredCount==0
+            && source.Components.HpIncreaseUnit.AccumulatedHp==0,
+            "Original 10110 cure must settle once and preserve its status whitelist (25136 only).");
     }
 }

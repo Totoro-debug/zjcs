@@ -1059,7 +1059,6 @@ namespace Zjcs.Combat.Official
                     var configuredKillSkillInvocations =
                         new List<FightBattleStatusSkillInvocation>();
                     var hpTriggerSkills = new List<FightBattleStatusStateTrigger>();
-                    var hemophagiaTriggerSkills = new List<FightBattleStatusStateTrigger>();
                     configuredTriggerSkills.AddRange(resolved.TriggeredStatusSkillInvocations);
                     if (resolved.TriggeredStatusSkillInvocations.Count == 0)
                         triggerSkills.AddRange(resolved.TriggeredStatusSkills);
@@ -1097,20 +1096,13 @@ namespace Zjcs.Combat.Official
                         hitDisplacedTarget |= movements[movementIndex].UnitId == target.Id
                             && movements[movementIndex].Path.Count > 1;
                     RecordStatusSecondsHit(actor, target, skill, hit, resolved, damage, hitDisplacedTarget);
-                    long recoveredHp = ApplyHemophagia(actor, hit, damage, hitDelay, skill, damageEvents);
-                    if (recoveredHp > 0 && actor != target)
-                    {
-                        SynchronizePetEnergyHp(actor);
-                        FightStatusTriggerRuntime.Apply(actor, statusCatalog, false, hemophagiaTriggerSkills,
-                            random, skill, units, configuredHpTriggerSkills,
-                            executeHpSkills: ExecuteHpStartupSkills);
-                    }
+                    ApplyHemophagia(actor, hit, damage, hitDelay, skill, casts, damageEvents, movements,
+                        ref lastDelay, ref statusTriggerDuration, ref statusTriggerActionDuration);
                     SynchronizePetEnergyHp(target);
                     FightStatusTriggerRuntime.Apply(target, statusCatalog, false, hpTriggerSkills,
                         random, skill, units, configuredHpTriggerSkills,
                         executeHpSkills: ExecuteHpStartupSkills);
                     ApplyHpIncreaseTriggers(target, targetHpIncrease, skill);
-                    if (recoveredHp > 0) ApplyHpIncreaseTriggers(actor, recoveredHp, skill);
                     if (target.Statuses != null)
                         foreach (FightBattleStatusState logicStatus in new List<FightBattleStatusState>(target.Statuses))
                             if (logicStatus != null && target.Statuses.Contains(logicStatus))
@@ -1138,12 +1130,8 @@ namespace Zjcs.Combat.Official
                     if (hpTriggerSkills.Count > 0)
                         ExecuteTriggerSkills(target, hpTriggerSkills, casts, damageEvents, movements,
                             ref lastDelay);
-                    if (hemophagiaTriggerSkills.Count > 0)
-                        ExecuteTriggerSkills(actor, hemophagiaTriggerSkills, casts, damageEvents, movements,
-                            ref lastDelay);
                     // Confirm death after this hit's HP effects and immediate revival,
                     // including role-death responses, rather than on the first zero HP.
-                    if (recoveredHp > 0 && actor != target) SynchronizeDeathForbidden(actor);
                     if (target.Hp <= 0)
                     {
                         List<FightBattleStatusSkillInvocation> roleDieInvocations =
@@ -2210,52 +2198,6 @@ namespace Zjcs.Combat.Official
             foreach (KeyValuePair<int, long> entry in values)
                 result.Add(new FightPropertyValue { Id = entry.Key, Value = entry.Value });
             return result;
-        }
-
-        /// <summary>
-        /// Official <c>FightHitExtHemophagiaComponent</c>: heals the skill source by the configured
-        /// lifesteal property. The property is treated as a 10000-based percent (the pinned prop
-        /// table does not mark it, so the scale is an explicit local assumption) and the heal is
-        /// recorded as a cure event so statistics and replay stay consistent.
-        /// </summary>
-        private long ApplyHemophagia(FightBattleUnitState actor, FightBattleHitDefinition hit,
-            FightBattleDamageEvent applied, float delay, FightBattleSkillDefinition skill,
-            List<FightBattleDamageEvent> events)
-        {
-            if (hit.HemophagiaProperty <= 0 || applied == null || applied.IsCure) return 0L;
-            long dealt = Math.Abs(applied.Damage);
-            if (dealt <= 0) return 0L;
-            long property = GetProperty(actor, hit.HemophagiaProperty);
-            if (property <= 0) return 0L;
-            double rate = property / 10000.0;
-            if (rate > 1.0) rate = 1.0;
-            long heal = (long)Math.Round(dealt * rate);
-            if (heal <= 0) return 0L;
-            long before = actor.Hp;
-            actor.Hp = Math.Min(actor.MaxHp, actor.Hp + heal);
-            long actual = actor.Hp - before;
-            if (actual <= 0) return 0L;
-            var cure = new FightBattleDamageEvent
-            {
-                DamageId = applied.DamageId,
-                SourceId = actor.Id,
-                TargetId = actor.Id,
-                SkillEntityId = skill == null ? 0 : skill.EntityId,
-                SkillItemId = skill == null ? 0 : skill.ItemId,
-                HitEntityId = hit.EntityId,
-                DamageType = 1,
-                ElementType = skill == null ? 0 : skill.ElementType,
-                Delay = delay,
-                Anchor = hit.Anchor,
-                IsCure = true,
-                Damage = actual,
-                BeforeHp = before,
-                AfterHp = actor.Hp,
-                MaxHp = actor.MaxHp
-            };
-            events.Add(cure);
-            checkpoint.Statistics.RecordHit(cure);
-            return actual;
         }
 
         /// <summary>

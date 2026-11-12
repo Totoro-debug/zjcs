@@ -359,6 +359,7 @@ namespace Zjcs.Editor
             private readonly int enemyId;
             private readonly FightBattleStatusState otherContribution;
             private bool activated, recovered, rendered;
+            private float cureFirstVisible = -1f;
             public bool ReadyToCapture { get; private set; }
             public HpRecoveryProbe(int enemyId, FightBattleStatusState otherContribution)
             { this.enemyId = enemyId; this.otherContribution = otherContribution; }
@@ -385,22 +386,23 @@ namespace Zjcs.Editor
                 var heal = step.DamageEvents.FirstOrDefault(value => value.SourceId == 1 && value.IsCure);
                 if (heal == null) return;
                 Require(heal.TargetId == 1 && heal.AfterHp > 300000L && Math.Abs(heal.Delay - 0.4f) < 0.0001f
-                    && player.Statuses.Count(value => value.ClassId == 24315) == 1
+                    && player.Statuses.Count(value => value.ClassId == 24315) == 2
                     && player.Statuses.Contains(otherContribution) && otherContribution.StackCount == 7,
-                    "Lifesteal did not clear only its own original 24315 at its parent hit time.");
+                    "Original 10110 must restore HP at the hit time and preserve its status trigger whitelist.");
                 recovered = true;
                 Debug.Log("[HP recovery hosts] original 25067 -> 24315: enemy hit activated; lifesteal="
-                    + heal.Damage + ", afterHp=" + heal.AfterHp + "; other equipment contribution retained.");
+                    + heal.Damage + ", afterHp=" + heal.AfterHp + "; original cure whitelist retained both equipment contributions.");
             }
             public void ObservePresentation()
             {
                 if (!recovered) return;
-                var floats = UnityEngine.Object.FindObjectsOfType<OfficialBattleDamageFloat>()
-                    .Where(value => value.TargetId == 1 && value.EffectType == 3
+                var floats = UnityEngine.Object.FindObjectsOfType<Zjcs.Official.BattleDamageUI.CharacterDamageUI>()
+                    .Where(value => value.EntityId == new Zjcs.Official.StoryPlayables.EcEntityIdentifier(1, 1)
+                        && value.Type == Zjcs.Official.BattleDamageUI.EffectUIType.CureUI
                         && value.GetComponentsInChildren<Renderer>().Any(renderer => renderer.isVisible)).ToArray();
                 rendered |= floats.Length > 0;
-                ReadyToCapture = floats.Any(value => (float)typeof(OfficialBattleDamageFloat)
-                    .GetField("elapsed", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(value) >= 0.15f);
+                if (floats.Length > 0 && cureFirstVisible < 0f) cureFirstVisible = Time.time;
+                ReadyToCapture = floats.Length > 0 && Time.time - cureFirstVisible >= 0.15f;
             }
             public void Verify(string host, FightBattleCheckpoint checkpoint)
             {

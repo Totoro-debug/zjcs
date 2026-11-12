@@ -601,6 +601,7 @@ namespace Zjcs.Combat.Official
             Dictionary<string, object> gameSettings = Object(Required(rules, "game_settings"), "game_settings");
             Dictionary<string, object> battleSettings = Object(Required(gameSettings, "Battle"), "Battle settings");
             SpeedSettings = ReadSpeedSettings(battleSettings);
+            HemophagiaSkillEntityId = Int(battleSettings, "HemophagiaEntityId");
             ReadStatusMutexGroups(battleSettings);
             hiddenImmunityStatusIds = new HashSet<int>(IntArray(battleSettings, "StatusMutexNotShowImmunityFloat"));
             ReadSharedStackLimits(battleSettings);

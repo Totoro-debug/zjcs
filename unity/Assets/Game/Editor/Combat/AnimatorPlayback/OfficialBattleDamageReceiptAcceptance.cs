@@ -73,7 +73,7 @@ namespace Zjcs.Editor.Combat
                     var heal = step.DamageEvents.Single(d => d.IsCure);
                     Require(heal.DamageId == expected.Single().DamageId && heal.DamageEntityId == 0
                         && heal.Damage == 5 && checkpoint.Units[0].Hp == 999905,
-                        "Actual lifesteal preserves its originating serial and settles healing once.");
+                        "Legacy derived healing retains its originating serial and saved HP.");
                     // Indexing must retain the direct entity even if a consumer
                     // presents a derived record before its originating record.
                     step.DamageEvents.Reverse();
@@ -396,11 +396,7 @@ namespace Zjcs.Editor.Combat
                 }
                 if (name == "hemophagia")
                 {
-                    int property = assets.Load().PropertyType("OnceHitHemophagiaPer");
-                    Require(property > 0, "Original lifesteal property.");
-                    checkpoint.Units[0].Properties.Add(new FightPropertyValue { Id = property, Value = 10000 });
                     checkpoint.Units[0].Hp -= 100;
-                    hit.HemophagiaProperty = property;
                 }
                 if (name.StartsWith("actions", StringComparison.Ordinal))
                 {
@@ -424,6 +420,18 @@ namespace Zjcs.Editor.Combat
             checkpoint.Units[0].SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = -1 });
             var wave = new FightBattleWaveState(); wave.UnitIds.AddRange(new[] { 2, 3 }); checkpoint.Waves.Add(wave);
             step = assets.BeginBattle(checkpoint).Step(0, 1).Event;
+            if (name == "hemophagia")
+            {
+                // Controlled old-checkpoint compatibility only. Current basic lifesteal
+                // creates original 10110/10111/10028 with independent identities instead.
+                var causingHit = step.DamageEvents.Single();
+                var owner = checkpoint.Units[0];
+                step.DamageEvents.Add(new FightBattleDamageEvent { DamageId = causingHit.DamageId,
+                    SourceId = owner.Id, TargetId = owner.Id, SkillEntityId = causingHit.SkillEntityId,
+                    IsCure = true, Delay = causingHit.Delay, Damage = 5, BeforeHp = owner.Hp,
+                    AfterHp = owner.Hp + 5, MaxHp = owner.MaxHp });
+                owner.Hp += 5;
+            }
             if (name.StartsWith("cost", StringComparison.Ordinal) || name.StartsWith("actions", StringComparison.Ordinal) || name.StartsWith("cooldown", StringComparison.Ordinal) || name.StartsWith("disperse", StringComparison.Ordinal))
                 step = JsonUtility.FromJson<FightBattleStepEvent>(JsonUtility.ToJson(step));
             if (name == "disperse-legacy") foreach (var damage in step.DamageEvents) damage.HasDisperseNotification = false;
