@@ -80,6 +80,10 @@ def build():
     assert notifications['manifest'] == '884_156692'
     for relative, expected in notifications['outputs'].items():
         assert sha(read(relative)) == expected, relative
+    pointer = json.loads(read('assets/reference/home-pointer-input-source-manifest.json'))
+    assert pointer['manifest'] == '884_156692'
+    for relative, expected in pointer['outputs'].items():
+        assert sha(read(relative)) == expected, relative
     currency = json.loads(read('assets/reference/home-currency-windows-native-source-manifest.json'))
     settings_path = 'unity/Assets/Official/Home/UI/CurrencyWindows/home-currency-windows-rules.json'
     settings_raw = read(settings_path)
@@ -91,7 +95,7 @@ def build():
             read('scripts/prepare_'+fixture+'_validation.py')
             read('assets/reference/'+fixture.replace('_','-')+'-native-source-manifest.json')
     receipt = dict(manifest='884_156692', generator_sha256=sha(Path(__file__).read_bytes()),
-        inputs=inputs, outputs=outputs, dependency_outputs=notifications['outputs'],
+        inputs=inputs, outputs=outputs, dependency_outputs={**notifications['outputs'], **pointer['outputs']},
         scope='Packaged full HomeUI resource catalog and typed dependency/lifetime binding. Production profile service implementations and full runtime flow validation remain required.')
     (ROOT/'assets/reference/home-hud-binding-source-manifest.json').write_text(
         json.dumps(receipt, ensure_ascii=False, indent=2)+'\n', 'utf8', newline='\n')

@@ -97,6 +97,8 @@ namespace Zjcs.Offline.HomeHudUI
                     Localize = bindings.Localize, Font = () => this.assets.defaultFont
                 });
                 BindDependencies(Root);
+                if (bindings.Input is OfflineHomeHudInput desktopInput)
+                    Root.AddComponent<OfflineHomeHudInputLoop>().Input = desktopInput;
                 Root.transform.SetParent(parent, false);
             }
             catch { Dispose(); throw; }

@@ -1,0 +1,28 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "cd4e5503d6cae31109048e1c49844b642e0c4a402b55a11fb742a4ee75057143",
+  "inputs": {
+    "scripts/prepare_home_auto_increase_runtime.py": "f2b04eee400cc6bf7c96ff716a88273206dee729df4bc2176d68b27e21d5b21d",
+    "scripts/prepare_partner_gift_configuration.py": "bc641fe3171c5c4d3f5bd816a9448181cfb494223a8bbc1a6389577488de0131",
+    ".tools/source-packages/current/884_156692/official-code/client-source/IInputOperationResult.cs": "f13f64a1fed1277a304f99220ba4cc81580cb51ba292754e3e684210765fd14c",
+    ".tools/source-packages/current/884_156692/official-code/client-source/IInputOperation.cs": "7a5e922a2191c88c57801a0d5bbf63ea29348ee8a17ecd86404ca3979cbe7ffb",
+    ".tools/source-packages/current/884_156692/official-code/client-source/IInputOperationModule.cs": "66da6f040383fd1a270020b1c276c257f9e2e158ef74c72afdf207b028bab426",
+    ".tools/source-packages/current/884_156692/official-code/client-source/InputOperationLayer.cs": "347e2326e8d763abcb4de248097fdbaf9d2524296987d0f648425583ce974968",
+    ".tools/source-packages/current/884_156692/official-code/client-source/InputOperationCallbackInfo.cs": "f7e1b65bb2ce298156a4ab94437c53542db3dd7d4d6c650e0e63f7c20fbaa7df",
+    ".tools/source-packages/current/884_156692/official-code/client-source/InputOperationBase.cs": "108032e3d700083cf0a191d3293e3a6f13e3cc714b2d33026d2228d5a4ad35d3",
+    ".tools/source-packages/current/884_156692/official-code/client-source/GlobalPointerDownOperation.cs": "de827113e46df3dabd05f3e60233cab36f803cf28710d9bcb11da1626a5dfd17",
+    ".tools/source-packages/current/884_156692/official-code/client-source/OnGlobalPointerDownResult.cs": "31962c8a3f795dbb280416f7f4e5bc8f2580fc9f25ac7e16946d60021792d2da",
+    ".tools/source-packages/current/884_156692/official-code/client-source/InputOperationModule.cs": "54c36e489abef3c3d454b7781f8bee6fe4e4607f7eaf9b6623f72d8f8dfef0b5"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/HomeMainUiControls/HomePointerInput.cs": "64502452a0cdc7b6d21cd954fc8760580fa27f9747c5d9e5e6072da994691961",
+    "unity/Assets/Game/Runtime/Official/HomeMainUiControls/HomePointerInput.cs.meta": "30e199d7b85130a310cadccd8b01d248470bc446d25bf7cd3cfa17455d6de660"
+  },
+  "adaptations": [
+    "Original callback signatures, reverse dispatch, lazy unhook removal, callback exception isolation and layer/type block tokens.",
+    "Reflection/DI operation discovery replaced by explicit selected operation instances, preserving their supplied order.",
+    "Pointer and screen reads supplied by the desktop owner; original inclusive screen test and clamping retained.",
+    "Original diagnostics delivered through mandatory exception/duplicate-hook reporters; informational logs omitted.",
+    "Decompiler backing-field, vector conversion and Dictionary.Remove syntax repaired for the project C# runtime."
+  ]
+}

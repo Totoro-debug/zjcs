@@ -33,6 +33,10 @@ using Zjcs.Official.WorldUI;
 using Zjcs.Official.World.NativeCamera;
 using Zjcs.Official.World.NativeLabelUI.Framework;
 using Object=UnityEngine.Object;
+using PointerResult=Zjcs.Official.HomeMainUiControls.OnGlobalPointerDownResult;
+using PointerModule=Zjcs.Official.HomeMainUiControls.InputOperationModule;
+using PointerOperations=Zjcs.Official.HomeMainUiControls.IInputOperationModule;
+using PointerOperation=Zjcs.Official.HomeMainUiControls.IInputOperation;
 
 [InitializeOnLoad]
 public static class HomeHudBindingsNativeValidation
@@ -56,13 +60,13 @@ public static class HomeHudBindingsNativeValidation
     public static void Finish(Exception error)
     {
         SessionState.SetBool(Key,false);if(error!=null)Debug.LogException(error);
-        else Debug.Log("HOME_HUD_BINDINGS_NATIVE_PASSED: complete retained HomeUI active under its original ancestors, original Show/Hide, injected services, native task/function pointer dispatch and subscription disposal. Selected conditions and level gating use an actual new-character save and original notifications; task/window/activity/scene data and top-bar pool are controlled fixtures; public avatar/bottom bar and production business integration remain separate.");
+        else Debug.Log("HOME_HUD_BINDINGS_NATIVE_PASSED: complete retained HomeUI active under its original ancestors, original Show/Hide, original input dispatcher with internal pointer samples and owned frame polling, native task/function pointer dispatch and subscription disposal. Selected conditions and level gating use an actual new-character save and original notifications; task/window/activity/scene data and top-bar pool are controlled fixtures; public avatar/bottom bar and production business integration remain separate.");
         EditorApplication.Exit(error==null?0:1);
     }
 }
 public sealed class HomeHudBindingsNativeRunner:MonoBehaviour
 {
-    Camera camera;RenderTexture target;EventSystem events;int errors;OfflineHomeHud view;
+    Camera camera;RenderTexture target;EventSystem events;int errors;OfflineHomeHud view;OfflineHomeHudInput input;PointerSample pointer;
     IEnumerator Start()
     {
         AudioListener.volume=0;Application.logMessageReceived+=OnLog;
@@ -95,9 +99,10 @@ public sealed class HomeHudBindingsNativeRunner:MonoBehaviour
         var currencyRules=Newtonsoft.Json.Linq.JObject.Parse(Zjcs.Offline.HomeCurrencyUI.OfflineHomeCurrencyAssets.LoadDefault().configuration.text);int firstTraceId=(int)currencyRules["tables"]["game_settings"]["TaskSettings"]["TaskFirstTraceConditionId"];
         var conditions=new OfflineHomeHudConditions(profile,configuration,OfficialPartnerAssetCatalog.LoadDefault().Conditions,firstTraceId,_=>false,()=>false,()=>false);
         CheckConditionNotifications(new OfflineHomeConditionPlayer(configuration,()=>profile.Save,_=>false));Require(firstTraceId==5&&!conditions.IsMet(conditions.GetCondition(firstTraceId)),"actual new character has not met selected first trace condition");
+        CheckPointerDispatcher();pointer=new PointerSample();input=new OfflineHomeHudInput(pointer);
         var main=new MainServices();var tips=new Tips();var scene=new SceneServices(world);var top=new TopBarPool();
         var dragObject=new GameObject("ControlledDrag");dragObject.SetActive(false);var drag=dragObject.AddComponent<DragProbe>();drag.DragControllerManager=scene.DragControllerManager;dragObject.SetActive(true);
-        var bindings=new HomeHudBindings {Camera=camera,TopBar=top,Conditions=conditions,Input=main,Windows=main,
+        var bindings=new HomeHudBindings {Camera=camera,TopBar=top,Conditions=conditions,Input=input,Windows=main,
             RightEntries=(IHomeHudRightEntryServices)entries,Download=(IHomeHudDownloadServices)download,Scene=scene,Match=(IHomeMatchServices)match,
             Results=(IHomeResultServices)result,FightRoot=(IHomeResultFightRoot)result,Tasks=boundTasks,TipDots=tips,TipController=tips,
             Localize=key=>dictionary.TryGetValue(key,out var value)?value:key,PostSound=(audio,emitter)=>{Require(audio==clip,"original button PCM");var source=emitter.GetComponent<AudioSource>();if(!source)source=emitter.AddComponent<AudioSource>();source.volume=0;source.PlayOneShot(audio);}};
@@ -106,8 +111,9 @@ public sealed class HomeHudBindingsNativeRunner:MonoBehaviour
         var show=view.Show(CancellationToken.None).AsTask();float deadline=Time.realtimeSinceStartup+5;
         while(!show.IsCompleted){Require(Time.realtimeSinceStartup<deadline,"original Show completes");yield return null;}show.GetAwaiter().GetResult();yield return null;yield return null;
         Require(view.Home.gameObject.activeInHierarchy&&view.Home.GetComponent<CanvasGroup>().alpha==1,"original HomeUI visible after animator completion");
+        Require(view.Root.GetComponent<OfflineHomeHudInputLoop>().isActiveAndEnabled,"native HUD owner activates desktop input loop");int loopClicks=0;Action<HomeUiGlobalPointerDownResult> loopListener=_=>loopClicks++;input.HookGlobalPointerDown(loopListener);pointer.Position=new Vector2(100,100);pointer.LeftDown=true;yield return null;pointer.LeftDown=false;Require(loopClicks==1,"owned Update polls the original dispatcher once per active HUD frame");input.UnhookGlobalPointerDown(loopListener);
         Require(top.Borrows==1&&top.Requested.SequenceEqual(new[]{PlayerItemType.Money,PlayerItemType.Diamon,PlayerItemType.TiliId}),"original serialized top-bar types and borrow lifecycle");
-        var registry=Field<HomeConditionNotifications>(conditions,"notifications");var map=Field<Dictionary<HomeConditionRules.ConditionType,Dictionary<Action,int>>>(registry,"mConditionActionMap");Require(map.Values.Sum(value=>value.Count)==3&&main.PointerCount==1,"original composite task types and chat condition subscribe to actual selected conditions");
+        var registry=Field<HomeConditionNotifications>(conditions,"notifications");var map=Field<Dictionary<HomeConditionRules.ConditionType,Dictionary<Action,int>>>(registry,"mConditionActionMap");Require(map.Values.Sum(value=>value.Count)==3&&Field<IDictionary>(input,"callbacks").Count==1,"original composite task types and chat condition subscribe to actual selected conditions and input dispatcher");
         var taskGate=view.Home.GetComponentInChildren<MainTaskFunctionLimit>(true);var taskSlot=Field<GameObject>(taskGate,"myTaskSlot");Require(taskSlot.activeSelf&&!conditions.IsMet(conditions.GetCondition(firstTraceId)),"original PinnedTaskPanel prefab keeps its active default even before first-trace condition");Capture("home-hud-conditions-new-character.png");
         // Arrange the original already-hidden branch; this is a fixture action,
         // not the native prefab default or a production initial-visibility policy.
@@ -118,14 +124,19 @@ public sealed class HomeHudBindingsNativeRunner:MonoBehaviour
         var task=view.Home.GetComponentInChildren<TaskListItem>(true);Require(task&&task.MyData?.TaskId==1,"native pinned task instantiated using shared dependency binding");
         var function=view.Home.GetComponentInChildren<FunctionEntrysPanel>(true);events=new GameObject("InternalPointer",typeof(EventSystem)).GetComponent<EventSystem>();
         Capture("home-hud-bound-visible.png");Click(function.EntryBtns[0]);Require(main.Opened==1&&main.Initialized==1,"original function pointer dispatch initializes its window port");
+        var expandedField=typeof(FunctionEntrysPanelBase).GetField("mExpanded",BindingFlags.Instance|BindingFlags.NonPublic);int folds=0;var foldSubscription=function.OnFoldEndPanel.Subscribe(()=>folds++);function.RequestExpandPanel();deadline=Time.realtimeSinceStartup+3;while(!(bool)expandedField.GetValue(function)){Require(Time.realtimeSinceStartup<deadline,"original function Expand animation delivers its completion event");yield return null;}
+        var entryRect=(RectTransform)function.EntryBtns[0].transform;Dispatch(RectTransformUtility.WorldToScreenPoint(camera,entryRect.TransformPoint(entryRect.rect.center)));Require((bool)expandedField.GetValue(function),"original input dispatcher preserves expanded native panel on inside click");main.Panel=true;Dispatch(Vector2.zero);Require((bool)expandedField.GetValue(function),"existing panel suppresses native outside folding");main.Panel=false;main.Dialog=true;Dispatch(Vector2.zero);Require((bool)expandedField.GetValue(function),"existing dialog suppresses native outside folding");main.Dialog=false;Capture("home-hud-input-expanded.png");Dispatch(Vector2.zero);Require(!(bool)expandedField.GetValue(function),"unblocked in-screen outside sample folds original native panel through dispatcher");deadline=Time.realtimeSinceStartup+3;while(folds==0){Require(Time.realtimeSinceStartup<deadline,"original Fold animation delivers completion event");yield return null;}Require(folds==1,"original fold event fires exactly once");foldSubscription.Dispose();
         var jump=task.GetComponentsInChildren<Button>(true).First(x=>x.gameObject.activeInHierarchy&&x.name.Contains("Jump"));Click(jump);
         Require(Field<int>(tasks,"Navigations")==1,"original task pointer dispatch reaches navigation port");
         Require(profile.ApplyInventoryTransaction("hud-level-one:"+Guid.NewGuid().ToString("N"),save=>save.Player.Level=1).IsApplied,"commit lower actual level to check original one-way task visibility");conditions.NotifyLevelUpdate();Require(!conditions.IsMet(conditions.GetCondition(firstTraceId))&&taskSlot.activeSelf,"original MainTaskFunctionLimit does not hide a previously activated slot");
         var hide=view.Hide(CancellationToken.None).AsTask();deadline=Time.realtimeSinceStartup+5;
         while(!hide.IsCompleted){Require(Time.realtimeSinceStartup<deadline,"original Hide completes");yield return null;}hide.GetAwaiter().GetResult();
-        Require(!view.Home.gameObject.activeSelf&&top.Returns==1&&map.Values.All(value=>value.Count==0)&&main.PointerCount==0,"Hide returns original bar and subscriptions");
+        Require(!view.Home.gameObject.activeSelf&&top.Returns==1&&map.Values.All(value=>value.Count==0)&&Field<IDictionary>(input,"callbacks").Count==0,"Hide returns original bar and subscriptions");
+        // Home.Hide disables the panel; the enclosing frame stays active until
+        // its owner hides it. Verify root lifetime independently of panel hooks.
+        view.Root.SetActive(false);input.HookGlobalPointerDown(loopListener);pointer.LeftDown=true;yield return null;pointer.LeftDown=false;Require(loopClicks==1,"hidden original HUD root stops polling desktop input");input.UnhookGlobalPointerDown(loopListener);
         Require(Field<int>(tasks,"PinObservers")==0&&Field<int>(download,"AllCounts")==0&&Field<int>(match,"Observers")==0&&Field<int>(result,"Observers")==0&&tips.LinkCount==0,"all injected source observers released");
-        view.Dispose();view=null;conditions.Dispose();conditions.Dispose();bool disposed=false;try{conditions.GetCondition(firstTraceId);}catch(ObjectDisposedException){disposed=true;}Require(disposed,"disposed actual HUD conditions reject reuse");yield return null;((IDisposable)entries).Dispose();((IDisposable)taskSound).Dispose();scene.Dispose();top.Dispose();fonts.Dispose();metrics.Dispose();Object.Destroy(holder);Object.Destroy(world.gameObject);Object.Destroy(drag.gameObject);
+        view.Dispose();view=null;input.Dispose();input.Dispose();conditions.Dispose();conditions.Dispose();bool disposed=false;try{conditions.GetCondition(firstTraceId);}catch(ObjectDisposedException){disposed=true;}Require(disposed,"disposed actual HUD conditions reject reuse");yield return null;((IDisposable)entries).Dispose();((IDisposable)taskSound).Dispose();scene.Dispose();top.Dispose();fonts.Dispose();metrics.Dispose();Object.Destroy(holder);Object.Destroy(world.gameObject);Object.Destroy(drag.gameObject);
         Require(errors==0,"no Unity errors throughout full HomeUI binding lifecycle");
     }
     sealed class Notification:IHomeConditionNotification
@@ -133,6 +144,36 @@ public sealed class HomeHudBindingsNativeRunner:MonoBehaviour
         public HomeConditionRules.ConditionType Type{get;set;}public bool IsComposite{get;set;}public List<IHomeConditionNotification> Children=new List<IHomeConditionNotification>();public List<IHomeConditionNotification> GetConditions()=>Children;
     }
     static Notification Leaf(HomeConditionRules.ConditionType type)=>new Notification{Type=type};
+    sealed class PointerSample:IHomePointerSnapshot
+    {
+        public bool LeftDown{get;set;}
+        public Vector2 Position{get;set;}
+        public int Width=>608;
+        public int Height=>1080;
+    }
+    static void CheckPointerDispatcher()
+    {
+        var sample=new PointerSample{LeftDown=true,Position=new Vector2(100,100)};
+        var failures=new List<Exception>();var diagnostics=new List<string>();var order=new List<string>();
+        var module=new PointerModule(new PointerOperation[]{new GlobalPointerDownOperation(sample,failures.Add)},diagnostics.Add);
+        PointerOperations operations=module;
+        Action<PointerResult> first=_=>order.Add("first"),second=_=>order.Add("second");
+        operations.HookOnInput(first);operations.HookOnInput(second);module.Update();Require(order.Count==0,"original dispatcher starts disabled");
+        module.Enable=true;module.Update();Require(order.SequenceEqual(new[]{"second","first"}),"original global callbacks dispatch in reverse registration order");
+        order.Clear();operations.HookOnInput(second);module.Update();Require(diagnostics.Count==1&&order.SequenceEqual(new[]{"second","first"}),"duplicate hook reports without adding a second callback");
+        order.Clear();sample.LeftDown=false;module.Update();Require(order.Count==0,"a held or released pointer without down edge emits no event");sample.LeftDown=true;
+        foreach(var position in new[]{new Vector2(-1,0),new Vector2(0,-1),new Vector2(609,0),new Vector2(0,1081)}){sample.Position=position;module.Update();}Require(order.Count==0,"original screen test rejects each exterior edge");
+        foreach(var position in new[]{Vector2.zero,new Vector2(608,1080)}){sample.Position=position;module.Update();}Require(order.Count==4,"original screen test includes both corner boundaries");sample.Position=new Vector2(100,100);order.Clear();
+        long typeA=operations.Block<PointerResult>(),typeB=operations.Block<PointerResult>(),layer=operations.Block(InputOperationLayer.GlobalInput);Require(typeA!=typeB,"original block signatures are unique");module.Update();operations.Unblock(typeA);operations.Unblock(layer);module.Update();Require(order.Count==0,"one outstanding type block still suppresses dispatch after layer release");operations.Unblock(typeB);module.Update();Require(order.SequenceEqual(new[]{"second","first"}),"dispatch resumes after every overlapping block is released");
+        order.Clear();operations.UnhookOnInput(second);operations.UnhookOnInput(second);module.Update();Require(order.SequenceEqual(new[]{"first"}),"original lazy removal ignores repeated unhook and removes stale signature on dispatch");
+        operations.UnhookOnInput(first);order.Clear();Action<PointerResult> late=_=>order.Add("late");Action<PointerResult> mutating=null;mutating=_=>{order.Add("mutating");operations.UnhookOnInput(first);operations.UnhookOnInput(mutating);operations.HookOnInput(late);};operations.HookOnInput(first);operations.HookOnInput(mutating);module.Update();Require(order.SequenceEqual(new[]{"mutating"}),"original dispatch sees removal immediately and defers newly appended callback until next frame");order.Clear();module.Update();Require(order.SequenceEqual(new[]{"late"}),"only appended live callback runs on following frame");operations.UnhookOnInput(late);
+        order.Clear();operations.HookOnInput(first);operations.HookOnInput<PointerResult>(_=>throw new InvalidOperationException("expected input callback failure"));module.Update();Require(failures.Count==1&&order.SequenceEqual(new[]{"first"}),"original operation catches each callback exception and continues reverse dispatch");module.Enable=false;
+        using(var adapter=new OfflineHomeHudInput(sample,failures.Add,diagnostics.Add))
+        {
+            int calls=0;Action<HomeUiGlobalPointerDownResult> callback=value=>{Require(value.ScreenPos==sample.Position,"adapter preserves original screen coordinate");calls++;};adapter.HookGlobalPointerDown(callback);adapter.HookGlobalPointerDown(callback);adapter.Update();Require(calls==1&&diagnostics.Count==2,"HUD callback identity maps to one original input signature");long blocked=adapter.BlockGlobalPointerDown();adapter.Update();Require(calls==1,"HUD original type block suppresses callback");adapter.Unblock(blocked);adapter.Update();Require(calls==2,"HUD input resumes after original block release");adapter.UnhookGlobalPointerDown(callback);adapter.Update();Require(calls==2,"HUD callback unsubscribe releases mapped original signature");adapter.HookGlobalPointerDown(callback);adapter.Dispose();adapter.UnhookGlobalPointerDown(callback);bool disposed=false;try{adapter.Update();}catch(ObjectDisposedException){disposed=true;}Require(disposed,"disposed HUD input rejects updates and accepts late unsubscription");
+        }
+        Debug.Log("HOME_POINTER_DISPATCHER_PASSED: original reverse dispatch, duplicate identity, inclusive bounds, overlapping layer/type blocks, lazy removal, live callback mutation, exception isolation and owned HUD input lifetime.");
+    }
     static void CheckConditionNotifications(IHomeConditionPlayer player)
     {
         var exceptions=new List<Exception>();var registry=new HomeConditionNotifications(player,exceptions.Add);var level=Leaf(HomeConditionRules.ConditionType.Level);var story=Leaf(HomeConditionRules.ConditionType.StoryCount);
@@ -150,8 +191,10 @@ public sealed class HomeHudBindingsNativeRunner:MonoBehaviour
         Require(button&&button.isActiveAndEnabled&&button.interactable,"native button receives pointer");Canvas.ForceUpdateCanvases();var rect=(RectTransform)button.transform;
         var point=RectTransformUtility.WorldToScreenPoint(camera,rect.TransformPoint(rect.rect.center));var data=new PointerEventData(events){position=point,button=PointerEventData.InputButton.Left};var hits=new List<RaycastResult>();events.RaycastAll(data,hits);
         Require(hits.Count>0&&hits[0].gameObject.transform.IsChildOf(button.transform),"native button is first pointer hit: "+button.name+" first="+(hits.Count>0?hits[0].gameObject.name:"none"));
+        Dispatch(point);
         ExecuteEvents.Execute(button.gameObject,data,ExecuteEvents.pointerDownHandler);ExecuteEvents.Execute(button.gameObject,data,ExecuteEvents.pointerUpHandler);ExecuteEvents.Execute(button.gameObject,data,ExecuteEvents.pointerClickHandler);
     }
+    void Dispatch(Vector2 point){pointer.Position=point;pointer.LeftDown=true;input.Update();pointer.LeftDown=false;}
     void Capture(string name){Canvas.ForceUpdateCanvases();camera.Render();var previous=RenderTexture.active;RenderTexture.active=target;var image=new Texture2D(608,1080,TextureFormat.RGB24,false);image.ReadPixels(new Rect(0,0,608,1080),0,0);image.Apply();File.WriteAllBytes(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"),name),image.EncodeToPNG());RenderTexture.active=previous;Object.Destroy(image);}
     static Type FindType(string name)=>AppDomain.CurrentDomain.GetAssemblies().Select(x=>x.GetType(name)).First(x=>x!=null);
     // Reuse the already compiled module fixtures as controlled backends. Their
@@ -170,11 +213,9 @@ public sealed class HomeHudBindingsNativeRunner:MonoBehaviour
         public void ReturnTopBar(TopBarItem value){Returns++;value.gameObject.SetActive(false);Object.Destroy(value.gameObject);}
         public void UpdateTopBar(TopBarItem value,List<CurrencyItemData> data)=>throw new NotSupportedException();public void Dispose()=>Object.Destroy(owner);
     }
-    sealed class MainServices:IHomeMainUiInput,IHomeMainUiWindows,IHomeMainFunctionEntryDialog
+    sealed class MainServices:IHomeMainUiWindows,IHomeMainFunctionEntryDialog
     {
-        Action<HomeUiGlobalPointerDownResult> pointer;
-        public void HookGlobalPointerDown(Action<HomeUiGlobalPointerDownResult> value){pointer+=value;}public void UnhookGlobalPointerDown(Action<HomeUiGlobalPointerDownResult> value){pointer-=value;}public int PointerCount=>pointer?.GetInvocationList().Length??0;
-        public bool HasPanel=>false;public bool HasDialog=>false;public int Opened,Initialized;public void ReportFunctionEntryClick(){}public void PopupFunctionEntryDialog(Action<IHomeMainFunctionEntryDialog> initialize){Opened++;initialize(this);}public void Init(){Initialized++;}
+        public bool Panel,Dialog;public bool HasPanel=>Panel;public bool HasDialog=>Dialog;public int Opened,Initialized;public void ReportFunctionEntryClick(){}public void PopupFunctionEntryDialog(Action<IHomeMainFunctionEntryDialog> initialize){Opened++;initialize(this);}public void Init(){Initialized++;}
     }
     sealed class Tips:IProfessionTipDotSystem,IProfessionTipDotSystemController
     {
