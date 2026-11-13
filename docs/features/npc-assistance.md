@@ -44,7 +44,7 @@ Map14 道路窗口使用选定 `884_156692` 的 `RoadblockTeamPropStageDialog`�
 
 已接入圣兽试炼、双影幻境、普通日常副本、主线地图常规战斗、山之国私图／战斗碑、Map14 道路门，以及羁绊冒险伙伴选择、助战快照与战斗结算。羁绊冒险的节点目录和战斗目录来自 `884_156692`，通用助战目录仍为 `871_156598`，统一伙伴数值、技能与资格配置版本以及完整发布验证仍待完成。探索首领、节庆首领、联合行动按用户决定保留未完成。
 
-Map14 道路助战子模块已完成，Windows 可执行版本发布至 `D:/Desktop/杖剑传说/杖剑传说.exe`。道路资源来源校验、规则持久化测试、静态检查、Unity 导入／编译、`ProjectTools.Validate` 与 Play Mode 主流程通过。独立 Windows Player 在内置屏以 540×960 实际运行，使用隔离角色存档和模拟鼠标，覆盖五种属性门的原窗口预览与取消；风属性门进一步覆盖规则弹窗、伙伴邀请／移除／取消、属性不足／达标、一次性开门、实际穿越、冷读恢复及再次通行，确认不产生战斗或奖励、不重复扣次。原窗口、元素图标、伙伴列表、关闭／开启门体与冷读后的地形画面均已实际查看。 发布目录中的 Player 已再次通过风属性门流程，全部 6,331 个交付文件与验收构建逐文件 SHA-256 一致；测试存档始终保存在独立验证目录。
+Map14 道路助战子模块已完成，Windows 可执行版本发布至 `D:/Desktop/ZjcsGame/Zjcs.exe`。道路资源来源校验、规则持久化测试、静态检查、Unity 导入／编译、`ProjectTools.Validate` 与 Play Mode 主流程通过。独立 Windows Player 在内置屏以 540×960 实际运行，使用隔离角色存档和模拟鼠标，覆盖五种属性门的原窗口预览与取消；风属性门进一步覆盖规则弹窗、伙伴邀请／移除／取消、属性不足／达标、一次性开门、实际穿越、冷读恢复及再次通行，确认不产生战斗或奖励、不重复扣次。原窗口、元素图标、伙伴列表、关闭／开启门体与冷读后的地形画面均已实际查看。 发布目录中的 Player 已再次通过风属性门流程，全部 6,331 个交付文件与验收构建逐文件 SHA-256 一致；测试存档始终保存在独立验证目录。
 
 - `assets/official/rules.json` 与规则来源清单提供 `npc`、`npc_level_detail`、`npc_profession_detail`、`player_robot_invite`、`skill` 数据。`FightOfficialNpcAssistanceCatalog.Load` 校验规则哈希，按 `NpcType=4`、`CanDevelop`、战斗实体 `FightEntityId` 和等级详情筛伙伴候选，并读取遇见限制、助战条件和玩法次数规则。
 - `FightOfficialNpcAssistanceCatalog.CreateUnit` 按官方等级详情与职业配置计算 NPC 属性、主动技能、被动技能、冷却和状态。被动属性按官方 `NpcFightData.CalcPropsWithSkill` 的基础属性计算与 `BattleFormula.CalcFinalProps` 顺序合成。

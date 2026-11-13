@@ -58,7 +58,7 @@
 
 - 每完成一个功能或一张地图，都必须构建并发布包含该成果的 Windows 可执行版本，供用户验证；发布是该功能／地图的完成条件之一，不等待整个游戏全部迁移完成。
 - 发布前完成该功能／地图的相关验证，并真实启动构建出的 Windows Player，检查入口、受影响流程、模拟输入、画面和存档。构建或运行失败须定位、修复并重新验证，不能以空框架构建代替。
-- 可执行版本统一发布到 `D:/Desktop/杖剑传说/`，入口为 `杖剑传说.exe`，桌面快捷方式指向该文件。复用现有构建缓存和增量资源，交付时明确可执行文件路径、本次可验证内容及尚未完成范围。
+- 可执行版本统一发布到 `D:/Desktop/ZjcsGame/`，入口为 `Zjcs.exe`，桌面快捷方式指向该文件。构建及交付目录、可执行文件和子目录／文件名统一使用 ASCII，不出现中文；游戏内中文显示不受影响。复用现有构建缓存和增量资源，交付时明确可执行文件路径、本次可验证内容及尚未完成范围。
 - 每次发布须与已提交的代码、资源和所属文档一致；保护已有用户存档，不用测试存档覆盖用户数据。构建产物和 Unity 缓存不提交到 Git。
 - 本节规定功能／地图逐项完成后的发布要求；其他文档中的构建与发布条件若与本节冲突，以本节为准。
 
@@ -67,7 +67,7 @@
 - `unity/Assets/Game/` 保存受 Git 管理的场景、C#、shader、配置及 `.meta`；`Runtime/Official/` 保存迁移的官方代码，`Runtime/Offline/` 保存单机适配。`unity/Assets/Official/` 保存独立素材载荷及 `.meta`，不得放手写代码。
 - `.tools/` 保存原始包、工具与缓存，不提交、不进入游戏导出。运行时只使用随游戏打包交付的本地资源；素材目录、ZIP 快照与恢复规则见[素材管理](docs/asset-management.md)。
 - 测试／验证的临时 Unity 工程、`Library`、Windows Player、编译输出、日志、截图和隔离存档统一放在仓库 `output/validation/<模块>-<GUID>/`，不得新增到 `.tools/`。点源 `scripts/validation_workspace.ps1` 后使用 `New-ZjcsValidationWorkspace`／`Remove-ZjcsValidationWorkspace`，或用 `Invoke-ZjcsValidation` 在 `finally` 自动清理；Python 使用 `scripts/validation_workspace.py`。仅删除本会话明确创建且已停止使用的目录，结论写回所属文档、实际查看截图后清理；不得清空整个 `output/` 或其他会话目录。目录迁移不能保证跨会话审批策略放行，若仍被拒绝须如实报告，不绕过审批。
-- 新验证会话先设置 `ZJCS_VALIDATION_DIR` 为上述会话目录，`ZJCS_REPOSITORY_ROOT` 为仓库绝对路径；验证入口使用对应输出参数和仓库绝对路径。`output/` 内的 Unity 工程也必须通过仓库的 `Start-UnityOnInternalDisplay` 启动并等待退出。正式发布目录仍为 `D:/Desktop/杖剑传说/`。
+- 新验证会话先设置 `ZJCS_VALIDATION_DIR` 为上述会话目录，`ZJCS_REPOSITORY_ROOT` 为仓库绝对路径；验证入口使用对应输出参数和仓库绝对路径。`output/` 内的 Unity 工程也必须通过仓库的 `Start-UnityOnInternalDisplay` 启动并等待退出。正式发布目录仍为 `D:/Desktop/ZjcsGame/`。
 - 文档只维护当前目录约定与使用方式，不保留旧文件、旧目录的盘点、占用统计或清理记录；历史通过 Git 追溯。
 - 素材变动同步 `assets/reference/SOURCES.md`、所属来源清单、输入输出哈希、处理方式及显式加载绑定。只有迁移、素材交付或备份需要时集中生成完整快照并更新 `asset-pack/lock.json`；未入快照的素材不能声称已备份。
 - 优先使用现有导入缓存，只导入受影响素材。清理前核对静态／动态引用、生成脚本和旧存档兼容，删除时同步引用与文档；不执行 `git add --renormalize assets`。

@@ -131,7 +131,8 @@ namespace Zjcs.Editor
 
             // Keep this empty framework separate from the existing released game.
             string repository = Path.GetFullPath(Path.Combine(Application.dataPath, "..", ".."));
-            string destination = Path.Combine(repository, "output", "unity-framework", "杖剑传说.exe");
+            string destination = Path.Combine(repository, "output", "unity-framework", "Zjcs.exe");
+            RequireAsciiBuildPath(destination);
             Directory.CreateDirectory(Path.GetDirectoryName(destination));
             BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
@@ -142,6 +143,7 @@ namespace Zjcs.Editor
             });
             if (report == null || report.summary.result != BuildResult.Succeeded)
                 throw new BuildFailedException("Unity Windows framework build failed; inspect the Editor log.");
+            ValidateWindowsBuildPaths(destination);
             Debug.Log("Empty framework built to " + destination + ". This is not a game release.");
         }
 
@@ -165,7 +167,8 @@ namespace Zjcs.Editor
             PlayerSettings.resizableWindow = true;
             PlayerSettings.allowFullscreenSwitch = false;
 
-            const string destination = "D:/Desktop/杖剑传说/杖剑传说.exe";
+            const string destination = "D:/Desktop/ZjcsGame/Zjcs.exe";
+            RequireAsciiBuildPath(destination);
             Directory.CreateDirectory(Path.GetDirectoryName(destination));
             BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
@@ -176,7 +179,21 @@ namespace Zjcs.Editor
             });
             if (report == null || report.summary.result != BuildResult.Succeeded)
                 throw new BuildFailedException("Unity Windows game build failed; inspect the Editor log.");
+            ValidateWindowsBuildPaths(destination);
             Debug.Log("Windows game built to " + destination + " (" + report.summary.totalSize + " bytes).");
+        }
+
+        private static void RequireAsciiBuildPath(string path)
+        {
+            if (Path.GetFullPath(path).Any(character => character > 127))
+                throw new BuildFailedException("Windows build paths must use ASCII: " + path);
+        }
+
+        private static void ValidateWindowsBuildPaths(string destination)
+        {
+            foreach (string path in Directory.EnumerateFileSystemEntries(
+                Path.GetDirectoryName(destination), "*", SearchOption.AllDirectories))
+                RequireAsciiBuildPath(path);
         }
 
         private static void RequireEditorVersion()
