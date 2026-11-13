@@ -328,6 +328,7 @@ namespace Zjcs.Presentation.Combat
             probe.ConfigureSummonLifeDiagnostic(checkpoint);
             probe.ConfigureDarkStatusDiagnostic(checkpoint);
             probe.ConfigureChainedHitDiagnostic(checkpoint, enemy, dx, dy);
+            probe.ConfigureArcShieldDiagnostic(checkpoint);
             // Preserve short authored particle/action phases across cold-loading frames.
             probe.previousCaptureFramerate = Time.captureFramerate;
             Time.captureFramerate = 60;

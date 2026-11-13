@@ -133,5 +133,62 @@ public static class BattleArcShieldHarness
         }
         Check(ends == 1 && foreignRounds >= 2 && owner.SkillState.Round >= 5,
             "Did not cover intervening enemy turns, expiry and settled continuation");
+        RunRepeatedCasts(catalog, formula, items);
+    }
+
+    static void RunRepeatedCasts(FightOfficialCombatCatalog catalog, FightDamageFormula formula,
+        FightOfficialSkillItemCatalog items)
+    {
+        var checkpoint = new FightBattleCheckpoint {
+            StageId = 1001, MaxRound = 20, RandomSeed = 73,
+            Grid = new FightBattleGrid { Width = 20, Height = 20, DefaultGroundType = 0 }
+        };
+        var owner = Unit(1, 1, 1000);
+        checkpoint.Units.Add(owner); checkpoint.Units.Add(Unit(2, 2, 900));
+        var properties = catalog.CalculateSkillProps(10760, 2, 20, 1)
+            .Select(p => new FightPropertyValue { Id = p.Key, Value = p.Value }).ToList();
+        var skill = catalog.CreateSkill(10760, 0, 10024, 2, 20, 1, properties);
+        owner.Skills.Add(skill);
+        long cooldown = properties.Single(value => value.Id == formula.PropertyId("CD")).Value;
+        owner.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, cooldown));
+        Check(skill.LimitedTimes == -1 && owner.SkillState.Slots[0].Cooldown == 5,
+            "Original arc-shield cooldown or unlimited casts changed: limit=" + skill.LimitedTimes
+                + "; cooldown=" + owner.SkillState.Slots[0].Cooldown
+                + "; CD=" + properties.FirstOrDefault(value => value.Id == formula.PropertyId("CD"))?.Value);
+        var executor = FightBattleExecutor.Begin(checkpoint, formula,
+            new FightDamageSettlement(), catalog, items);
+        var castRounds = new List<int>(); var endRounds = new List<int>();
+        for (int i = 0; i < 80 && owner.SkillState.Round < 14; i++)
+        {
+            var step = executor.Step(checkpoint.Sequence, checkpoint.Counter + 1).Event;
+            foreach (var cast in step.SkillCasts.Where(value => value.ActorId == 1 && value.SkillEntityId == 10760))
+            {
+                castRounds.Add(step.ActorRound);
+                var active = owner.Statuses.Single(value => value.ClassId == 24030);
+                Check(active.StartRound == step.ActorRound && active.CurDurationRound == 3
+                    && active.SourceSkillRank == 2
+                    && active.SourceSkillLevel == 20 && active.ApplyingSkillItemId == 10024,
+                    "Natural recast retained an expired lifetime or lost its original cultivation: round="
+                        + step.ActorRound + "; instance=" + active.InstanceId + "; rank=" + active.SourceSkillRank
+                        + "; level=" + active.SourceSkillLevel + "; item=" + active.ApplyingSkillItemId);
+            }
+            endRounds.AddRange(step.StatusViewEvents.Where(value => value.Status.ClassId == 24030
+                && value.Kind == FightBattleStatusViewEventKind.End).Select(value => step.ActorRound));
+            bool alive = owner.Statuses.Any(value => value.ClassId == 24030);
+            Check(Prop(owner, 62) == (alive ? 1970 : 170)
+                && Prop(owner, 110) == (alive ? 25 : 7)
+                && Prop(owner, formula.PropertyId("BlockValue")) == (alive ? 25 : 7),
+                "Natural casts duplicated contributions or lost the original fixed-block projection");
+            string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+            checkpoint = FightBattleCheckpointSerializer.Load(saved);
+            executor = FightBattleExecutor.Restore(checkpoint, formula,
+                new FightDamageSettlement(), catalog, items);
+            owner = checkpoint.Units.Single(value => value.Id == 1);
+            Check(FightBattleCheckpointSerializer.Save(checkpoint) == saved,
+                "Restoring a natural arc-shield cooldown cycle changed the checkpoint");
+        }
+        Check(castRounds.SequenceEqual(new[] { 1, 7, 13 }) && endRounds.SequenceEqual(new[] { 4, 10 })
+            && owner.SkillState.Slots[0].ReleasedTimes == 3,
+            "Original cooldown did not allow three casts with two natural expiries");
     }
 }

@@ -224,6 +224,7 @@ namespace Zjcs.Presentation.Combat
             ObserveSummonLifeStep(controller.Checkpoint);
             ObserveDarkStatusStep(controller.Checkpoint);
             ObserveChainedHitStep(controller.Checkpoint);
+            ObserveArcShieldStep(controller.Checkpoint);
             if (ValidateApproach && approachClass == 0)
             {
                 var approach = controller.Checkpoint.Receipts.Last().Event.Movements
@@ -447,6 +448,7 @@ namespace Zjcs.Presentation.Combat
             if (ObserveHitCustomCureTargetsFrame()) return;
             if (ObserveShieldExpiryFrame(controller)) return;
             if (ObserveChainedHitFrame()) return;
+            if (ObserveArcShieldFrame(controller)) return;
             if (captured && !finisherScheduled)
             {
                 var player = controller.Checkpoint.Units.Single(value => value.Id == 1);
@@ -495,6 +497,7 @@ namespace Zjcs.Presentation.Combat
             VerifyDarkStatusDiagnostic();
             VerifyTerrainScopeLifecycle();
             VerifyChainedHitDiagnostic();
+            VerifyArcShieldDiagnostic();
             if (firstPromotionItemId != 0) Require(firstPromotionFrameCount == FirstPromotionFrameTimes.Length,
                 "The original skill's early presentation frames were not captured.");
             if (ValidateApproach) Require(ordinaryStarted && ordinaryRemoved && ordinaryCaptured,

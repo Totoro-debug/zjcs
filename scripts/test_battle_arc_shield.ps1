@@ -25,5 +25,5 @@ Invoke-ZjcsValidation -Name 'arc-shield-rules' -ScriptBlock {
         [int[]]@($rules.prop_cfg.PropType),
         [int[]]@($rules.prop_cfg | Where-Object Float | ForEach-Object PropType))
     [BattleArcShieldHarness]::Run($catalog, $formula, $items)
-    Write-Output 'Arc shield passed: original 10760/10761/24030, original-source property comparison, owner-round expiry, view timing, receipt replay and checkpoint continuation at every boundary.'
+    Write-Output 'Arc shield passed: original 10760/10761/24030, original-source property comparison, owner-round expiry, view timing, receipt replay, checkpoint continuation and three natural cooldown cycles without duplicate block projection.'
 }
