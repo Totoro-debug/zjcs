@@ -32,6 +32,8 @@ def prepare():
     (folder/'fixture.json').write_text(json.dumps(native, ensure_ascii=False, indent=2)+'\n', 'utf8', newline='\n')
     native['validation_inputs'] = {name: sha((ROOT/name).read_bytes()) for name in (
         'scripts/prepare_home_fast_hangup_progress_validation.py','scripts/fixtures/home_fast_hangup_progress_validation.cs')}
+    baseline = project.parent/'committed-asset-baseline.json'
+    if baseline.exists(): native['validation_base_commit'] = json.loads(baseline.read_bytes())['commit']
     native_path.write_text(json.dumps(native, ensure_ascii=False, indent=2)+'\n', 'utf8', newline='\n')
     print('Staged original acceleration presentation fixture:', len(files), 'files', flush=True)
 

@@ -57,19 +57,22 @@ public static class HomeFastHangUpProgressValidation
         File.WriteAllText(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), "progress-result.json"),
             JsonUtility.ToJson(new Result { success=error==null, error=error?.ToString() }, true));
         if (error != null) Debug.LogException(error);
-        else Debug.Log("HOME_FAST_HANGUP_PROGRESS_PASSED: complete original hierarchy/legacy animation events, actual male/female saved player, native sleep/bubble animation, sex-specific appearance override, reward sprite leases, UI visibility and close callback/disposal. Reward item selection and UI owner are controlled ports; production transactions and Player remain pending.");
+        else Debug.Log("HOME_FAST_HANGUP_PROGRESS_PASSED: original ordered reward filtering, locked/null/extra/duplicate reward branches, actual dialog icon selection, complete original hierarchy/legacy animation events, actual male/female saved player, native sleep/bubble animation, sex-specific appearance override, reward sprite leases, UI visibility and close callback/disposal. Unlocked state, reward item lookup and UI owner are controlled ports; production transactions and Player remain pending.");
         EditorApplication.Exit(error==null?0:1);
     }
     [Serializable] sealed class Result { public bool success; public string error; }
 }
 
-public sealed class HomeFastHangUpProgressRunner : MonoBehaviour, IHomeFastHangUpProgressServices, IHomeFastHangUpServices
+public sealed class HomeFastHangUpProgressRunner : MonoBehaviour, IHomeFastHangUpProgressServices, IHomeFastHangUpServices, IHomeFastHangUpPlayer
 {
     string work; OfficialHomeFastHangUpProgressAssetCatalog assets; OfficialHomeFastHangUpAssetCatalog selection;
     HomeFastHangUpInfo fast; FontAssetFontService fonts; IDisposable metrics; IProfessionImageResourceLoader images;
     AppearanceConfig config; ProfessionAppearanceTables tables; ProfessionAppearanceResolver resolver;
     long playerId; Camera cameraUi; RenderTexture render; Canvas canvas; GameObject current;
     int errors, beds, closes, finished; bool visible = true; readonly List<string> calls = new List<string>();
+    readonly HashSet<int> unlocked = new HashSet<int>();
+    readonly Dictionary<int,IProfessionItemInfo> rewardItems = new Dictionary<int,IProfessionItemInfo>();
+    readonly List<int> rewardRequests = new List<int>(), unlockQueries = new List<int>();
     LeaseLoader leases;
     IEnumerator Start()
     {
@@ -81,10 +84,11 @@ public sealed class HomeFastHangUpProgressRunner : MonoBehaviour, IHomeFastHangU
     }
     IEnumerator Check()
     {
-        work = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"); string repo = Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT");
+        work = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
         assets = OfficialHomeFastHangUpProgressAssetCatalog.LoadDefault(); selection=OfficialHomeFastHangUpAssetCatalog.LoadDefault();
         fast = JObject.Parse(selection.rules.text)["tables"]["fast_hang_up"].First().ToObject<HomeFastHangUpInfo>();
         Require(fast.BindFurniture==EFurniture.Bed && assets.progressPrefab, "Actual selected bed configuration and original prefab");
+        VerifyRewardSelection();
         LanguageManager.Initialize(new OfflinePartnerLocalizationService(assets.texts));
         fonts=OfflineHomeHudAssets.LoadDefault().CreateFontService(); fonts.Initialize(); metrics=ScreenMetrics.Bind(new Metrics());
         var imageCatalog = ScriptableObject.CreateInstance<OfflineProfessionImageCatalog>();
@@ -95,7 +99,7 @@ public sealed class HomeFastHangUpProgressRunner : MonoBehaviour, IHomeFastHangU
         tables=ProfessionAppearanceTables.Load(UnityEngine.Resources.Load<TextAsset>("Combat/SceneAppearance/appearance-tables").text); resolver=new ProfessionAppearanceResolver(tables);
         var defaults=new ProfessionAppearanceSkinDefaults(tables,UnityEngine.Resources.Load<TextAsset>("Combat/SceneAppearance/skin-defaults").text,message=>{throw new Exception(message);});
         var animationRules=UnityEngine.Resources.Load<AppearanceAnimNameCombineRule>("Combat/SceneAppearance/AppearanceAnimNameCombineRule");
-        Func<string,string> read=path=>File.ReadAllText(Path.Combine(repo,"unity/Assets/Official",path));
+        Func<string,string> read=path=>File.ReadAllText(Path.Combine(Application.dataPath,"Official",path));
         var catalog=OfficialCharacterCatalog.Parse(read("Character/character-progression.json"),read("Character/item-time-limits.json"),
             read("CharacterCreation/wardrobe.json"),read("CharacterCreation/wardrobe-rules.json"),read("Character/character-overview.json"));
         var slots=new ProfileSlotCatalog(Path.Combine(work,"progress-profiles")); var slot=slots.CreateSlot();
@@ -132,7 +136,7 @@ public sealed class HomeFastHangUpProgressRunner : MonoBehaviour, IHomeFastHangU
                 var animation=current.GetComponent<Animation>();
                 Require(current.GetComponentsInChildren<MonoBehaviour>(true).All(x=>x),"Every original script bound");
                 Require(animation && animation.clip && animation.clip.events.Length==2 && animation.clip.events[0].functionName=="PlayEndAnim" && animation.clip.events[1].functionName=="CloseWindow","Original legacy animation callbacks");
-                int oldFinished=finished,oldBeds=beds,oldCloses=closes;calls.Clear();
+                int oldFinished=finished,oldBeds=beds,oldCloses=closes;calls.Clear();rewardRequests.Clear();unlockQueries.Clear();
                 current.SetActive(true);
                 Require(graphic.startingAnimation=="home/idle_M_01" && graphic.State!=null
                     && !graphic.State.Source.AnimationNames.Contains(graphic.startingAnimation)
@@ -145,6 +149,7 @@ public sealed class HomeFastHangUpProgressRunner : MonoBehaviour, IHomeFastHangU
                 Require(!visible && beds==oldBeds+1 && finished==oldFinished,"Bed signal and underlying UI hidden before awards");
                 Require(dialog.AppearanceUI.GetComponent<RectTransform>().localPosition==new Vector3(-5,63,0),"Original sleep position");
                 Require(dialog.RewardImageList.Count==8 && dialog.RewardImageList.All(x=>x.sprite),"Every original reward sprite bound");
+                Require(unlockQueries.SequenceEqual(fast.HangUpIdList) && rewardRequests.SequenceEqual(new[]{1,2,100,101,102}),"Actual original dialog uses the migrated official reward selector");
                 Require(current.GetComponentsInChildren<WorldMultiLanguageText>(true).All(x=>x.Text==LanguageManager.Instance.GetText(x.myKey)),"Every original presentation label resolves its official text");
                 var bubble=current.GetComponentsInChildren<PartnerNativeUiActor>(true).Single(x=>x.gameObject.name=="Sleep_Bubble");Require(bubble.Graphic.State!=null && bubble.TryGetAnimation("loop"),"Actual original sleeping bubble animation initialized");
                 var overrideConfig=config.GetOverrideConfig(AppearanceOverrideType.Sleep);
@@ -173,6 +178,25 @@ public sealed class HomeFastHangUpProgressRunner : MonoBehaviour, IHomeFastHangU
         player.Wardrobe.BaseSkins=data.SkinMap.Select(p=>new OfflineAppearanceSkin{Type=(int)p.Key,Id=p.Value.SkinId}).ToList();
         player.Wardrobe.Dyes=data.DyeMap.Select(p=>new OfflineAppearanceDye{Type=(int)p.Key,ColorId=p.Value.ColorId,Hue=p.Value.Hsv.H,Saturation=p.Value.Hsv.S,Value=p.Value.Hsv.V}).ToList();
     }
+    void VerifyRewardSelection()
+    {
+        var table=JObject.Parse(selection.rules.text)["tables"]["item"];
+        IProfessionItemInfo Item(int id)=>new Info { ClassId=id,Icon=(string)table.Single(x=>(int)x["ClassId"]==id)["RawIcon"] };
+        var experience=Item(50);var money=Item(1);var seed=Item(120);
+        unlocked.UnionWith(new[]{1,2});rewardItems.Add(1,experience);rewardItems.Add(100,money);rewardItems.Add(102,experience);
+        var items=new List<IProfessionItemInfo>{seed};var original=items;
+        Zjcs.Official.HomeFastHangUpProgressUI.HangUpUtils.GetFastHangUpRewardItems(this,fast.FastHangUpId,ref items);
+        Require(ReferenceEquals(items,original) && items.SequenceEqual(new[]{seed,experience,money,experience}),"Original selector appends in table order and preserves duplicate item references");
+        Require(unlockQueries.SequenceEqual(fast.HangUpIdList) && rewardRequests.SequenceEqual(new[]{1,2,100,101,102}),"Locked rewards are not resolved; null rewards are skipped; every extra reward is resolved after regular entries");
+        unlocked.Clear();rewardRequests.Clear();unlockQueries.Clear();items.Clear();
+        Zjcs.Official.HomeFastHangUpProgressUI.HangUpUtils.GetFastHangUpRewardItems(this,fast.FastHangUpId,ref items);
+        Require(items.SequenceEqual(new[]{money,experience}) && rewardRequests.SequenceEqual(fast.ExtraHangUpRewardList),"Extra rewards do not require a recorded unlocked entry");
+        var originalRewards=rewardItems.ToArray();rewardItems.Clear();items.Clear();
+        Zjcs.Official.HomeFastHangUpProgressUI.HangUpUtils.GetFastHangUpRewardItems(this,fast.FastHangUpId,ref items);
+        Require(items.Count==0,"Original selector retains the empty result without inventing a fallback item");
+        foreach(var pair in originalRewards)rewardItems.Add(pair.Key,pair.Value);
+        unlocked.UnionWith(new[]{1,2});rewardRequests.Clear();unlockQueries.Clear();
+    }
     void Capture(string name)
     {
         Canvas.ForceUpdateCanvases();RenderPipeline.SubmitRenderRequest(cameraUi,new UniversalRenderPipeline.SingleCameraRequest{destination=render});
@@ -184,7 +208,7 @@ public sealed class HomeFastHangUpProgressRunner : MonoBehaviour, IHomeFastHangU
     static void Require(bool value,string message){if(!value)throw new InvalidOperationException(message);}
     static Exception Outside()=>new InvalidOperationException("Outside the original progress presentation fixture");
     sealed class Metrics:IScreenMetrics{public int Width=>608;public int Height=>1080;public ScreenOrientation Orientation=>ScreenOrientation.Portrait;public Rect SafeArea=>new Rect(0,0,608,1080);}
-    sealed class Info:IProfessionItemInfo{public int ClassId=>1;public string Icon{get;set;}public string IconEffect=>null;public Quality Quality=>0;public bool CanOverlap=>true;public object GetFakeIcon()=>null;}
+    sealed class Info:IProfessionItemInfo{public int ClassId{get;set;}public string Icon{get;set;}public string IconEffect=>null;public Quality Quality=>0;public bool CanOverlap=>true;public object GetFakeIcon()=>null;}
     sealed class LeaseLoader:IProfessionImageResourceLoader
     {
         readonly IProfessionImageResourceLoader inner;public int Active;
@@ -204,12 +228,17 @@ public sealed class HomeFastHangUpProgressRunner : MonoBehaviour, IHomeFastHangU
     }
     public IHomeFastHangUpServices FastHangUp=>this;public IProfessionImageResourceLoader Resources=>images;
     public AppearanceConfig AppearanceConfig=>config;public ProfessionAppearanceTables AppearanceTables=>tables;public ProfessionAppearanceResolver AppearanceResolver=>resolver;public long MainPlayerId=>playerId;
-    public void GetFastHangUpRewardItems(int id,ref List<IProfessionItemInfo> items){items.Add(new Info{Icon=selection.images.First().path});}
-    public int RandomRange(int min,int max)=>UnityEngine.Random.Range(min,max);public void PublishBedFastHangUp(){beds++;}
+    public int RandomRange(int min,int max){Require(min==0 && max==3,"Original random icon selection uses all three ordered results, including duplicate reward items");return UnityEngine.Random.Range(min,max);}public void PublishBedFastHangUp(){beds++;}
     public void SetActiveUIVisible(UIBase owner,bool value){visible=value;calls.Add(value?"show":"hide");}
     public void Close(GameObject root){closes++;calls.Add("close");root.SetActive(false);}
-    public IHomeHangUpWindowServices Window=>throw Outside();public IHomeFastHangUpPlayer Player=>throw Outside();public int DefaultFastItemUseCount=>throw Outside();public double FastItemMaxCountMessageColdDown=>throw Outside();
-    public HomeFastHangUpInfo GetFastHangUpInfo(int id)=>fast;public bool TryGetFastHangUpItemHours(int id,out int hours){throw Outside();}public IProfessionItemInfo GetHangUpRewardItem(int id)=>throw Outside();
+    public IHomeHangUpWindowServices Window=>throw Outside();public IHomeFastHangUpPlayer Player=>this;public int DefaultFastItemUseCount=>throw Outside();public double FastItemMaxCountMessageColdDown=>throw Outside();
+    public HomeFastHangUpInfo GetFastHangUpInfo(int id)=>fast;public bool TryGetFastHangUpItemHours(int id,out int hours){throw Outside();}public IProfessionItemInfo GetHangUpRewardItem(int id){rewardRequests.Add(id);return rewardItems.TryGetValue(id,out var item)?item:null;}
+    public bool HasUnlockedHangUp(int id){unlockQueries.Add(id);return unlocked.Contains(id);}public long GetItemAmount(int id)=>throw Outside();public bool HasFurniture(EFurniture furniture)=>throw Outside();
+    public int Level=>throw Outside();public int SubRank=>throw Outside();public IReadOnlyDictionary<ProfessionPropertyType,long> NonBattleProps=>throw Outside();public IHomeWindowPropertyCenter PlayerPropCenter=>throw Outside();
+    public int GetHangUpLevel(int id)=>throw Outside();public int GetBlessingLevel()=>throw Outside();public int GetLostGoddessActiveCount()=>throw Outside();public bool CanFreeFastHangUp(int id)=>throw Outside();public bool CanGetExp()=>throw Outside();public bool IsFunctionLimit(int id)=>throw Outside();
+    public bool GetHangUpQuickReceiveState(EFurniture furniture)=>throw Outside();public int GetOutputAdditionPropValue(int type)=>throw Outside();public bool IsMapRegionPublic(int classId,int region)=>throw Outside();
+    public bool TryGetFastHangUpTip(int id,long hours,out int itemId,out HomeWindowText title,out HomeWindowText content){throw Outside();}public void Award(IList data,object source)=>throw Outside();
+    public event Action<int> OnFastHangUp;public event Action<object> OnAddOutputAdditionData;
     public ItemIcon GetIcon(int id,Transform parent)=>throw Outside();public ItemIcon GetIcon(IProfessionItemInfo item,Transform parent)=>throw Outside();public void RecycleIcon(ItemIcon icon)=>throw Outside();
     public double GetHangUpUnsettledRewardCount(int id,out double seconds){throw Outside();}public void RequestFastHangUp(HomeFastHangUpRequest request,Action<HomeFastHangUpResponse,int> callback)=>throw Outside();
     public void OpenProgress(int id,Action callback)=>throw Outside();public void OpenAward(IHomeWindowAwardMessage message)=>throw Outside();

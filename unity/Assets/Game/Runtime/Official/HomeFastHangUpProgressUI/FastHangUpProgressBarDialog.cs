@@ -79,7 +79,7 @@ public class FastHangUpProgressBarDialog : UIBase
 	private void Refresh()
 	{
 		List<ItemInfo> items = new List<ItemInfo>();
-		Services.GetFastHangUpRewardItems(mFastHangUpId, ref items);
+		HangUpUtils.GetFastHangUpRewardItems(Services.FastHangUp, mFastHangUpId, ref items);
 		int count = items.Count;
 		foreach (Image rewardImage in RewardImageList)
 		{

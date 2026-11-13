@@ -61,7 +61,8 @@ namespace Zjcs.Official.HomeFastHangUpProgressUI
     text = text.replace('mDisposableBag = default;', 'mDisposableBag = new HomeWindowResourceBag();')
     text = text.replace('mDisposableBag.Dispose();', 'mDisposableBag?.Dispose();')
     text = text.replace('Parsers.Instance.FastHangUpInfoParser.Get(', 'Services.FastHangUp.GetFastHangUpInfo(')
-    text = text.replace('HangUpUtils.GetFastHangUpRewardItems(', 'Services.GetFastHangUpRewardItems(')
+    text = text.replace('HangUpUtils.GetFastHangUpRewardItems(mFastHangUpId, ref items);',
+        'HangUpUtils.GetFastHangUpRewardItems(Services.FastHangUp, mFastHangUpId, ref items);')
     old = 'ResourceLoaderExtensions.LoadSprite(spriteName: items[RandomUtils.Range(0, count)].Icon, resourceLoader: ResourceLoader).AddTo(ref mDisposableBag).Result'
     assert old in text
     helper = CODE/'framework-firstpass-source/ResourceLoaderExtensions.cs'
@@ -72,6 +73,28 @@ namespace Zjcs.Official.HomeFastHangUpProgressUI
     text = text.replace('UIRootManager.SetActiveUIVisible(', 'Services.SetActiveUIVisible(')
     text = text.replace('WindowManager.Instance.Close(', 'Services.Close(')
     emit('FastHangUpProgressBarDialog', text)
+
+    common = CODE/'common-source/Common/HangUpUtils.cs'
+    common_receipt = ROOT/'assets/reference/official-client-code/source-manifest.json'
+    common_proof = next(row for row in json.loads(common_receipt.read_bytes())['projects']
+        if row['assembly'] == 'Console.dll' and row['folder'] == 'common-source')
+    common_assembly = CODE/'managed/decoded/Console.dll'
+    assert sha(common_assembly) == common_proof['source']['decoded_sha256']
+    for path in (common_receipt, common_assembly): inputs[path.relative_to(ROOT).as_posix()] = sha(path)
+    inputs[common.relative_to(ROOT).as_posix()] = sha(common)
+    text = common.read_text('utf-8-sig').replace('\r\n', '\n')
+    start = text.index('\tpublic static void GetFastHangUpRewardItems(')
+    end = text.index('\n\tpublic static long GetHangUpMaxRewardStore(', start)
+    text = text[start:end]
+    text = text.replace('GetFastHangUpRewardItems(int fastHangUpId,',
+        'GetFastHangUpRewardItems(Zjcs.Official.HomeFastHangUpUI.IHomeFastHangUpServices services, int fastHangUpId,')
+    text = text.replace('FastHangUpInfo fastHangUpInfo',
+        'Zjcs.Official.HomeFastHangUpUI.HomeFastHangUpInfo fastHangUpInfo')
+    text = text.replace('Parsers.Instance.FastHangUpInfoParser.Get(', 'services.GetFastHangUpInfo(')
+    text = text.replace('MeManager.MainPlayer.TryGetUnlockSingleHangUpData(hangUpId, out var _)',
+        'services.Player.HasUnlockedHangUp(hangUpId)')
+    text = text.replace('GetHangUpRewardItem(', 'services.GetHangUpRewardItem(')
+    emit('HangUpUtils', 'public static class HangUpUtils\n{\n'+text+'\n}\n')
 
     text = clean(read('AppearanceSystem/AppearanceRuntimeDataOverride'))
     text = text.replace('private List<int> mMaleOverrideList;', 'private List<int> mMaleOverrideList;\n    private readonly IHomeFastHangUpProgressServices services;')
