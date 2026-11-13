@@ -271,7 +271,9 @@ namespace Zjcs.Presentation.Combat
             }
             if (!string.IsNullOrEmpty(absorptionProbe))
             {
-                Require(itemId == 10029 && entityId == 10810, "The absorption diagnostic uses original 10029/10810.");
+                Require(itemId == 10029 && entityId == 10810
+                    || probe.ValidateHitCustomCureTargets && itemId == 10072 && entityId == 11690,
+                    "The absorption diagnostic requires an original supported source graph.");
                 Require(new[] { "normal", "blocked", "shield" }.Contains(absorptionProbe), "Unknown absorption diagnostic combination.");
                 player.Hp = player.Turn.Hp = player.MaxHp / 2;
                 player.Statuses.Add(catalog.CreateStatus(25023, player.Id, player.Id, 900004,
@@ -279,6 +281,7 @@ namespace Zjcs.Presentation.Combat
                 if (absorptionProbe != "normal")
                     player.Statuses.Add(catalog.CreateStatus(absorptionProbe == "blocked" ? 24223 : 25136,
                         player.Id, player.Id, 900005, 0, 0, 2, 20, player.SubRank));
+                probe.ConfigureHitCustomCureTargets(checkpoint, enemy, dx, dy);
             }
             if (Environment.GetEnvironmentVariable("ZJCS_STATUS_DARK_HIT_ACCEPTANCE") == "1")
             {
@@ -435,7 +438,7 @@ namespace Zjcs.Presentation.Combat
             string absorptionProbe = Environment.GetEnvironmentVariable("ZJCS_STATUS_HIT_CUSTOM_CURE_ACCEPTANCE");
             if (!string.IsNullOrEmpty(absorptionProbe))
             {
-                int hits = step.DamageEvents.Count(hit => hit.SourceId == player.Id && hit.SkillEntityId == 10810
+                int hits = step.DamageEvents.Count(hit => hit.SourceId == player.Id && hit.SkillEntityId == skillId
                     && !hit.Dodge && !hit.Immunity && !hit.Blinding);
                 var cures = step.DamageEvents.Where(hit => hit.SourceId == player.Id && hit.SkillEntityId == 10520 && hit.IsCure).ToArray();
                 var component = player.Statuses.Single(status => status.ClassId == 25023).Components.HitCustomCure;
@@ -449,7 +452,8 @@ namespace Zjcs.Presentation.Combat
                 var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
                 Require(saved.Units.Single(unit => unit.Id == player.Id).Statuses.Single(status => status.ClassId == 25023)
                     .Components.HitCustomCure.Filter.InvokeCount == hits, "Absorption counter was lost in the Unity checkpoint.");
-                Debug.Log("[Hit custom cure] Original 10810 -> 25023 -> 10520, " + absorptionProbe + ", checkpoint and self-cure passed.");
+                ObserveHitCustomCureTargets(checkpoint, step);
+                Debug.Log("[Hit custom cure] Original " + skillId + " -> 25023 -> 10520, " + absorptionProbe + ", checkpoint and self-cure passed.");
             }
             if (Environment.GetEnvironmentVariable("ZJCS_STATUS_DARK_HIT_ACCEPTANCE") == "1")
             {

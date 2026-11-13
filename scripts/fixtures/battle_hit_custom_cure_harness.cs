@@ -77,14 +77,14 @@ public static class BattleHitCustomCureHarness
         restored.DefinitionResolved=false;FightBattleExecutor.Restore(cp,formula,settlement,c,items);
         Check(cp.Units[0].Statuses.Single(s=>s.ClassId==25023).Components.HitCustomCure.Filter.InvokeCount==count,"Legacy restore lost counter");
 
-        foreach(var probe in new[]{(10810,0),(10810,24223),(10810,25136),(10810,24435),(12120,0)}) {
+        foreach(var probe in new[]{(10810,0),(10810,24223),(10810,25136),(10810,24435),(12120,0),(11690,0),(11690,24223),(11690,25136)}) {
             int entityId=probe.Item1,combination=probe.Item2;
             owner=Unit(c,1,1,5);target=Unit(c,2,2,6);var other=Unit(c,3,2,7);
             status=c.CreateStatus(25023,1,1,1,0,10544,2,20,1);owner.Statuses.Add(status);
             if(combination!=0&&combination!=24435)owner.Statuses.Add(c.CreateStatus(combination,1,1,2,0,0,2,20,1));
             if(combination==24435)foreach(var enemy in new[]{target,other})
                 enemy.Statuses.Add(c.CreateStatus(24435,enemy.Id,enemy.Id,3,0,0,2,20,1,customShieldValue:1000000000));
-            skill=c.CreateSkill(entityId,0,entityId==10810?10029:0,2,20,1,c.CalculateSkillProps(entityId,2,20,1)
+            skill=c.CreateSkill(entityId,0,entityId==10810?10029:entityId==11690?10072:0,2,20,1,c.CalculateSkillProps(entityId,2,20,1)
                 .Select(p=>new FightPropertyValue{Id=p.Key,Value=p.Value}).ToList());
             owner.Skills.Add(skill);owner.SkillState.Slots.Add(c.CreateSkillSlot(skill,0));
             cp=Checkpoint(owner,target);cp.Units.Add(other);
@@ -94,6 +94,8 @@ public static class BattleHitCustomCureHarness
             Check(hits>=(entityId==10810?2:3)&&status.Components.HitCustomCure.Filter.InvokeCount==hits
                 &&step.SkillCasts.Count(cast=>cast.SkillEntityId==10520)==hits&&cures.Length==hits
                 &&cures.All(h=>h.TargetId==1),"Original multi-target attack did not dispatch self-cure per hit");
+            if(entityId==11690)Check(hits==6&&new[]{target.Id,other.Id}.All(id=>step.DamageEvents.Count(h=>h.SkillEntityId==11690&&h.TargetId==id)==3),
+                "Scoped original fire must dispatch three independent cures for each of two targets");
             if(combination==0)Check(cures.Sum(h=>h.AfterHp-h.BeforeHp)>0,"Original self-cure did not restore HP");
             else if(combination!=24435)Check(cures.All(h=>h.AfterHp==h.BeforeHp),"Healing interception failed: "+combination);
             if(combination==25136)Check(owner.Statuses.Any(s=>s.ClassId==24435&&s.ShieldRemainValue>0),"Original cure-to-shield chain was bypassed");
