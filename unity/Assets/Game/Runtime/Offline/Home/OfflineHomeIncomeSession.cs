@@ -23,6 +23,7 @@ namespace Zjcs.Offline.Home
         public List<OfflineHomeHangUpEntry> HangUps = new List<OfflineHomeHangUpEntry>();
         public List<OfflineHomeSkinSelection> Skins = new List<OfflineHomeSkinSelection>();
         public List<OfflineHomeQuickReceiveState> QuickReceiveStates = new List<OfflineHomeQuickReceiveState>();
+        public string OutputAdditionStateJson;
         public long GrantSerial;
         public List<string> AppliedReceipts = new List<string>();
     }

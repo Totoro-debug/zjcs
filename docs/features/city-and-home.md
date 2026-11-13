@@ -339,6 +339,12 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 正式家园现通过 `OfflineCurrentHomeIncome`／`OfficialHomeRules.BindIncome` 装配同版的全部挂机、产出、加速、等级倍率、家园等级、升级材料，以及产出所引用的 182 条奖励规则；不覆盖其他版本的随机奖励目录。`Runtime/Official/HomeIncomeRules` 直接迁入 `Console.dll` 原 `HangUpRewardInfoParser`、`RewardRuleInfoParser` 的排序索引、查找和条件选择分支，保留默认行、无满足条件、忽略条件和缺失键的原行为。配置中的单精度值先恢复为原 `float`；所选版本缺失等级规则时倍率／容量为 0，不再借用旧目录的首行或 36 小时默认值。原奖励规则 11008 的产出为物品 1500，替换历史目录的 1501；其他奖励分配字段虽已读取，服务端结算缺口仍按本页单机方案处理。
 
+`Runtime/Official/HomeOutputAddition` 迁入所选 `Console.dll` 的全部七个 `OutputAdditionUtils` 查询／筛选／时间／百分比方法，以及原挂机加成类型映射、额外容量和额外数量公式。时钟、功能禁用状态、玩家记录与配置查询均为明确端口。原方法的边界差异保留：显示列表检查子记录时间，属性值查询只检查父记录时间；父记录结束时刻在显示查询中已过期，属性值查询仍可包含该时刻；活动类型列表保留多个记录的重复项。容量公式先将基数转为 `float`，数量公式使用 `double` 乘原单精度倍率，再按原顺序转为整数。
+
+`OfflineHomeOutputAddition` 读取 APK 原 `output_addition` 的 108 条配置和 `OutputAdditionSetting`，显式入口为 `Resources/Home/output-addition-rules`；记录通过 `OfflineHomeSave.OutputAdditionStateJson` 与家园事务保存在同一存档，提供原查询、活动所有者按 ID 更新、持久回执去重及提交后的通知。新档查询返回真实空记录且不写盘，不生成活动或替代倍率。正式床铺窗口所有者、活动调度和原分段收益消费者仍待装配；新增服务不代表目前所有产出已应用活动加成。
+
+`HomeOutputAdditionHostValidation.Run` 已在隔离完整工程的静音、有图形 Play Mode 通过真实空新档不写盘、功能禁用过滤、父／子时间边界差异、多个来源叠加与重复活动类型、记录按 ID 更新、未知配置拒绝、16777217 容量的原单精度转换、事务重复回执和磁盘重开。床铺原生维修按钮与修复通知继续通过，五张实际运行画面已查看；画面仍是现有家园，未以此证明完整床铺收益窗口已接通。静态元数据检查通过（151469 个 GUID），全工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 退出码为 0；工程校验保留既有战斗对象 Edit Mode `Destroy` 诊断。活动调度、原额外产出预览调用、床铺加成详情、全部结算消费者及 Windows Player 未验证。
+
 收益条件使用所选 `HomeConditionRules`，从实际角色读取阶位和职业；新增原 `PlayerProfessionCondition`、`PlayerProfessionFactionCondition` 及 `ProfessionBaseInfoParser.ExistProfession`／`IsPreProfession`，依同版 31 条职业配置递归查询前置职业。`HomeIncomeSelectionHostValidation.Run` 已在隔离完整工程通过原选择器边界、全部 595 项倍率、缺失等级、版本产出差异，以及实时阶位／职业切换的奖励分支；缓存条件继续读取角色当前值。实际家园的模拟指针维修、原生修复通知、遗失女神 1% 加成、经验领取、免费加速、月卡缺表投影、领取余数和磁盘重开继续通过，六张运行画面已查看。领取及加速仍直接调用业务入口；完整 HUD、正式床铺收益按钮、客户端未结算预览及 Windows Player 尚未验证。
 
 `Runtime/Official/HomeConditions/HomeConditionRules` 迁入原条件方法、枚举、组合遍历和比较／阶位转换，复用同版 `PartnerConditionRules` 的物品、基础等级、地图与伙伴条件。原物品类型条件累加该类型全部数量，数量 0 可以满足；伙伴资格包括已结识及当前可结识的非自动伙伴，并排除探索首领；个人阶位由原 `SubRank.ToRank` 计算。保留原 `AlwaysCondition=false`、组合短路／缺失引用行为，以及原比较器单个 `=` 表示相等、未知运算符（含 `==`）默认 `>=` 的分支。单机开放策略通过独立端口注入，规则求值仍需实际角色端点；未将旧存档布尔值或近似地图进度包装为已迁移的官方条件。
@@ -405,7 +411,7 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 用户补证加速收益直接入背包，超出设施存储上限的加速收益也结算入包；服务端普通收益结算方法体未取得，此语义不标作服务端源码还原。旧自创补给、材料兑换已停用，仅保留兼容记录。
 
-限时活动产出加成：用户确认新档初始没有活动加成记录，保留官方界面、记录筛选和计算，后续由已迁移活动生成记录；不预设固定活动或永久活动倍率。女神、月卡等已有明确来源的常驻属性加成继续沿原属性来源计算。官方证据为所选 `OutputAdditionUtils.GetCurrOutputGroupPropList`／`GetOutputAdditionPropValue` 读取 `player.mAllOutputAdditionDict`，以及床铺 `HangUpTimer` 调用额外产量／容量计算；现有客户端与共享实现尚未提供单机初始活动记录或开启调度。活动记录存档、原筛选计算及正式床铺加成界面仍待接线，本决定不代表这些流程已完成。
+限时活动产出加成：用户确认新档初始没有活动加成记录，保留官方界面、记录筛选和计算，后续由已迁移活动生成记录；不预设固定活动或永久活动倍率。女神、月卡等已有明确来源的常驻属性加成继续沿原属性来源计算。官方证据为所选 `OutputAdditionUtils.GetCurrOutputGroupPropList`／`GetOutputAdditionPropValue` 读取 `player.mAllOutputAdditionDict`，以及床铺 `HangUpTimer` 调用额外产量／容量计算；现有客户端与共享实现尚未提供单机初始活动记录或开启调度。活动开启调度、正式床铺加成界面、按活动区间分段结算及全部收益消费者的接线仍未完成。
 
 动物／落叶生成的服务端方法体未取得：检索客户端 `HomeRandomReward`、公共数据 `PlayerHomeRandomRewardDataExt`、奖励通知及 RPC 代理，仅能确认刷新区间、容量、槽位、奖励配置和领取后的同步。用户确认本地方案：两类分别按原8～9小时／16～18小时随机区间，每周期在合法空槽生成1个原表奖励，离线补刷至9／6个上限；满额时不积攒刷新欠账，领取后继续下一周期。奖励、计时、随机状态和领取使用原本地存档事务，失败回滚。
 
