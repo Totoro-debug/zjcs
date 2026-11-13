@@ -180,6 +180,8 @@ namespace Zjcs.Presentation.Home
         private static void InitializeTestVolume()
         {
             if (IsTestSession) AudioListener.volume = 0f;
+            Zjcs.Offline.BattleNativePlayables.OfflineBattleWwiseRuntime.ConfigureVolumes(
+                state.allSound, state.music, state.voice, state.sound);
         }
 
         public static float MusicVolume => ChannelVolume(HomeAudioChannel.Music);
@@ -205,6 +207,8 @@ namespace Zjcs.Presentation.Home
             if (value == null) return;
             state = value;
             AudioListener.volume = IsTestSession ? 0f : Mathf.Clamp01(state.allSound);
+            Zjcs.Offline.BattleNativePlayables.OfflineBattleWwiseRuntime.ConfigureVolumes(
+                state.allSound, state.music, state.voice, state.sound);
             List<AudioSource> dead = null;
             foreach (KeyValuePair<AudioSource, HomeAudioChannel> entry in Sources)
             {

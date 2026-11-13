@@ -14,6 +14,7 @@ namespace Zjcs.Presentation.Combat
         private FightBattleExecutor executor;
         private IDisposable renderPipelineScope;
         private OfficialBattleHostPresentation.Scope hostPresentation;
+        private OfflineBattleWwiseRuntime.Lease soundScene;
         private OfficialBattleCameraView cameraView;
         private OfficialBattleSceneView sceneView;
         private OfficialBattleHudView hudView;
@@ -87,6 +88,7 @@ namespace Zjcs.Presentation.Combat
             if (!visible) leaveDialog.Dispose();
             if (!visible) cameraView?.SetVisible(false);
             hostPresentation?.SetVisible(visible);
+            soundScene?.SetVisible(visible);
             if (visible) cameraView?.SetVisible(true);
             if (hudRoot != null) hudRoot.SetActive(visible);
             skillGraphPlayback?.SetDamageUIVisible(visible);
@@ -211,8 +213,15 @@ namespace Zjcs.Presentation.Combat
                     OfficialBattleSkillGraphCatalog.TryLoadDefault();
                 if (graphCatalog != null && graphCatalog.Count > 0)
                 {
+                    var soundHost = request.SkillPlayableSoundHost;
+                    if (soundHost == null && hostPresentation?.Camera != null && environmentGameId > 0)
+                    {
+                        soundScene = OfflineBattleWwiseRuntime.Acquire(hostPresentation.Camera.transform, environmentGameId);
+                        soundScene.SetVisible(hudVisible);
+                        soundHost = soundScene.SoundHost;
+                    }
                     var nativeScope = new OfflineBattleNativePlayableScope(worldRoot,
-                        request.SkillPlayableSoundHost);
+                        soundHost);
                     try
                     {
                         var entityViews = new OfficialBattleSkillEntityPlayback(worldRoot, gridMapper, nativeScope,
@@ -310,6 +319,8 @@ namespace Zjcs.Presentation.Combat
                 else
                 {
                     nextSkillGraphPlayback?.Dispose();
+                    soundScene?.Dispose();
+                    soundScene = null;
                     nextScene?.Dispose();
                     nextEnvironment?.Dispose();
                     nextNativeModels?.Dispose();
@@ -640,6 +651,8 @@ namespace Zjcs.Presentation.Combat
             // Original graph Stop callbacks still need the live camera and unit hosts.
             skillGraphPlayback?.Dispose();
             skillGraphPlayback = null;
+            soundScene?.Dispose();
+            soundScene = null;
             cameraView?.Dispose();
             cameraView = null;
             hostPresentation?.Dispose();

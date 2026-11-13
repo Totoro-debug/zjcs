@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace Zjcs.Presentation.Combat
 {
+    // Reactivate the native card scene before GameRoundUI.OnEnable creates
+    // pooled cards: their original Awake supplies the cached Transform.
+    [DefaultExecutionOrder(-200)]
     public sealed class OfficialBattleTimelineLifetime : MonoBehaviour
     {
         private GameObject worldRoot;

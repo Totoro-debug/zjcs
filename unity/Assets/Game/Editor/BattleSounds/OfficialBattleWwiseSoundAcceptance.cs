@@ -14,19 +14,25 @@ using NativeSoundObject = global::AkGameObj;
 
 namespace Zjcs.Editor
 {
-    public static class OfficialBattleWwiseSoundAcceptance
+    public static partial class OfficialBattleWwiseSoundAcceptance
     {
         private const string Key = "Zjcs.Battle.NativeWwiseAcceptance";
         private static bool started;
         private static int errors;
-        public static void Run()
+        public static void Run() => RunAcceptance(false);
+        public static void RunFormalController() => RunAcceptance(true);
+        private static void RunAcceptance(bool controllerOnly)
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Exit Play Mode first.");
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")))
                 throw new InvalidOperationException("Use the isolated validation workspace.");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
+            if (controllerOnly)
+                Type.GetType("Zjcs.Editor.Combat.BattleGameViewInput, Zjcs.Editor.Combat", true)
+                    .GetMethod("Focus").Invoke(null, null);
             SessionState.SetBool(Key, true);
+            SessionState.SetBool(Key + ".controllerOnly", controllerOnly);
             SessionState.SetInt(Key + ".result", 1);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
@@ -76,7 +82,7 @@ namespace Zjcs.Editor
                 if (errors == 0)
                 {
                     SessionState.SetInt(Key + ".result", 0);
-                    Debug.Log("NATIVE_WWISE_HOST_PLAYMODE_PASSED: two interface engine lifetimes and one original-prefab listener lifetime, original event dispatch, cached object host, camera child following, scene activation/default-listener membership, empty sends, five global RTPC values, stop/unregister and silent output.");
+                    Debug.Log("NATIVE_WWISE_HOST_PLAYMODE_PASSED controllerOnly=" + SessionState.GetBool(Key + ".controllerOnly", false));
                 }
                 EditorApplication.isPlaying = false;
             }
@@ -84,6 +90,13 @@ namespace Zjcs.Editor
         }
         private static IEnumerator Steps()
         {
+            if (SessionState.GetBool(Key + ".controllerOnly", false))
+            {
+                var controllerSteps = ControllerSteps();
+                try { while (controllerSteps.MoveNext()) yield return controllerSteps.Current; }
+                finally { (controllerSteps as IDisposable)?.Dispose(); }
+                yield break;
+            }
             string directory = Path.Combine(Application.dataPath, "Official/Combat/NativeSound/Packages");
             var previous = OfficialWwiseEvent.Host;
             var unrelated = new OtherHost();
@@ -179,6 +192,9 @@ namespace Zjcs.Editor
                     camera.transform.position = new Vector3(7, 9, -20);
                     yield return null;
                     host.RenderFrame();
+                    // Native audio consumes queued registration/pose commands on
+                    // its own audio thread; the query observes the consumed frame.
+                    yield return new WaitForSecondsRealtime(.05f);
                     Require(listener.transform.position == new Vector3(7, 9, 0), "listener follows original camera child offset");
                     Position(listener);
                     Require(SceneManager.SetActiveScene(originalScene), "deactivate listener scene");
@@ -268,8 +284,9 @@ namespace Zjcs.Editor
         private static void Rtpc(uint id, float expected)
         {
             int type = (int)AkQueryRTPCValue.RTPCValue_Global;
-            Require(AkSoundEngine.GetRTPCValue(id, AkSoundEngine.AK_INVALID_GAME_OBJECT, 0, out float actual, ref type)
-                == AKRESULT.AK_Success && Math.Abs(actual - expected) < .0001f, "native global RTPC " + id);
+            var result = AkSoundEngine.GetRTPCValue(id, AkSoundEngine.AK_INVALID_GAME_OBJECT, 0, out float actual, ref type);
+            Require(result == AKRESULT.AK_Success && Math.Abs(actual - expected) < .0001f,
+                "native global RTPC " + id + ": result=" + result + ", actual=" + actual + ", expected=" + expected);
         }
         private static void VectorReturns()
         {

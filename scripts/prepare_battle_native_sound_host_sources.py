@@ -79,6 +79,8 @@ def main():
         'unity/Assets/Game/Runtime/Offline/BattleNativePlayables/Zjcs.Offline.BattleNativePlayables.asmdef',
         'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.cs',
         'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.cs.meta',
+        'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Controller.cs',
+        'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Controller.cs.meta',
         'unity/Assets/Game/Editor/BattleSounds/Zjcs.Editor.BattleSounds.asmdef',
     ):
         outputs.append(identity(ROOT / relative))

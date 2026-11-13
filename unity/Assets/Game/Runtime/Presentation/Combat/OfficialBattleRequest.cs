@@ -50,9 +50,9 @@ namespace Zjcs.Presentation.Combat
         public OfficialBattleSessionOptions Options;
         public Func<FightBattleUnitState, IOfficialBattleNativeModel> NativeNpcFactory;
         public OfficialBattlePlayerAppearanceSource PlayerAppearance;
-        // Optional Wwise host for sound leaves inside native FightSkill graphs.
-        // Visual graphs remain usable when omitted; their sound leaves use the
-        // scope's silent local fallback until a mode supplies the official bank host.
+        // Optional override for sound leaves inside native FightSkill graphs.
+        // With an official environment and presentation camera, the common module
+        // otherwise acquires the original Wwise scene listener and shared engine.
         public IProfessionSoundHost SkillPlayableSoundHost;
         // Local entry pacing; not an official battle rule.
         public float InitialStepDelay = 0.8f;

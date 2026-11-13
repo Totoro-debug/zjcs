@@ -97,6 +97,8 @@
 
 行动进度 HUD 由原 `GameRoundUI` 管理器计算排序、逆向兄弟索引与移动。`OfficialBattleSceneTimelineView` 将本地检查点转换成原管理器所需的驱动数据：有效 `Timeline.Acting` 的显示 `NextTime` 取本次行动的 `Timeline.Current`，其余实体取各自 `Next`；行动切换后，上一行动者恢复显示其下次 `Next`。此项已获用户确认，只转换显示数据，不修改检查点的时间、队列或战斗数值；缺少有效行动者时按 `Next` 回退。
 
+`OfficialBattleTimelineLifetime` 在原管理器之前恢复独立卡片场景，保证原池预热实例先运行 Awake、取得缓存 Transform；避免隐藏后返回时在尚未激活的场景内取用未初始化卡片。原管理器的池、排序、动作和卡片初始化顺序保持不变。正式公共控制器的连续两场声音专项已同时覆盖界面隐藏／返回及原卡片重新显示。
+
 - 玩法构造包含官方地图格网、阵容、技能、阶段和胜负条件的 `FightBattleCheckpoint`，提供场景父节点、HUD 父节点及玩法 adapter，一次调用 `Begin`。恢复存档时设置 `RestoreCheckpoint`，不重新生成行动队列或技能 CD。
 - 请求可提供环境 ID、准备／离开／站位参数、人物外观、图标、动画及原生模型 adapter；未覆盖的资源解析由公共官方目录处理。`SpeedModeType` 与 `SpeedConditionMet` 只描述玩法类型及官方条件判断，官方速度表加载、解锁、HUD 刷新和时间倍率在 `Begin` 内统一初始化，不再要求玩法随后调用速度初始化函数。没有条件判断器时，带条件的速度保持锁定。
 - 每帧玩法在允许战斗运行时调用 `Tick(Time.deltaTime)`。公共模块统一处理准备、暂停、行动间隔、步骤播放门控和最终命中等待；玩法不计算行动队列、跳跃时长或技能 CD。销毁入口或离开时调用 `DisposeSession`，释放 HUD、场景、技能图、相机与渲染设置，并复原时间倍率。已接管会话后的初始化异常也经同一释放路径处理，技能图只释放一次。
@@ -146,6 +148,24 @@
 `OfficialBattleMonsterAppearance` 统一装配 68 个已安装怪物、幻兽及召唤物的原 `AppearanceRendererLite`、根 `MeshMaterialProperty` 和材质引用；`BattleNativeMonsterAppearanceCatalog` 保存原 renderer 路径、引用是否为空、精度及网格副本引用顺序。67 个原 Low 配置保留图集／占位材质及原贴图加载器；3803 保留原 `LevelOfResolution.None`：原 AppearanceConfig 无其路径、所选完整资源清单无对应加载器，沿原客户端空加载器分支保留八份材质的原纹理与三类 shader，仅为三张骨骼图集页创建独立材质。四个原 `CustomRenderExistingMesh` 复用正式 prefab 的迁移代码和原启用字段，将原材质到独立材质的映射转接到各自描边／隐藏替换材质，不克隆五份替换材质。`OfficialBattleLiveMonsterModelView` 与既有幻兽跟随视图共用该入口，退出时先释放材质属性及外观，再释放加载器路由。保留幻兽原空 renderer；未修改原 shader 能力：普通骨骼 shader 支持受伤变色、不含 `_DitherAlpha`，3803 的混合 shader 由原属性收集器拒绝不共同支持的变色字段。输入、对象指针、ASTC mip 转换、显式 `Combat/NativeMonsterAppearance/catalog` 绑定及输出哈希见[原生角色外观来源](../../assets/reference/battle-animation/native-monster-appearance-source-manifest.json)。该接线不代表全部角色状态表现或 Windows Player 验证完成。
 
 `PartnerNativeBattleActor` 沿既有模型、Animator、附件和阴影入口接入原同伴外观：34 份原实体配置中的 35 个 `AppearanceRendererLite` 及 34 个根 `MeshMaterialProperty` 保留完整引用、Low 精度、启用字段、空 MeshRenderer 和空网格副本列表。11005 的根收集器仅引用主身体，第二身体保留独立外观。`PartnerNativeBattleAppearance` 在模块内部管理同一角色的原 `AppearanceAssetManager`、按需贴图路由和销毁顺序，调用方仍使用现有 actor 接口；网格绘制通知驱动原加载器，原 atlas／占位材质切换到已核验的 Low 页。地址计算使用原 `AppearanceAddressUtils` 所读取的骨骼数据名称，完整 SkeletonDataAsset 名称仍供原附件绑定使用。既有直接使用骨骼网格的技能后端保留自身材质生命周期。原对象、原代码、ASTC mip 转换、359 项资源输出和显式 `Combat/NativePartnerAppearance/catalog` 绑定见[同伴原生外观来源](../../assets/reference/battle-animation/native-partner-appearance-source-manifest.json)。11015～11022 仍保持既有正式战斗排除，其原 Low 目标只有 24×24，不能据此声称这八名同伴已完整恢复。原 Animator 生成器另核验并保留目录中既有的 10607 额外控制器及其原片段闭包，避免重建 34 名战斗同伴时删除该绑定。
+
+### 原生战斗声音
+
+匹配的官方 Wwise Unity Integration `2022.1.18.8567.3199` 已迁入 132 份核心 C#、Windows Editor Profile／Player Release 引擎及八个 DSP，恢复原全局／Windows 初始化设置、26 个声音包及 `Combat/Wwise/catalog`。依据同版 `CAkFilePackageLUT` 将 Android 语言表转换为 Windows UTF-16LE，保持 bank／媒体字节、ID、对齐及原 HIRC／RTPC／DSP 配置。入口、转换和逐文件哈希见 [Windows 声音运行素材](../../assets/reference/battle-animation/windows-sound-runtime-source-manifest.json)。
+
+`OfflineBattleWwiseSoundHost` 通过现有声音接口复用原 AkGameObj，按 Minimum 包→Init→Minimum→关联包／bank 加载，接入 Spatial Audio、通信、回调与原设置的清理顺序；空环境只发送一次零 AuxSend。原四项音量 RTPC 按 `(int)(volume * 100f)` 设置，倍速使用原 `414249091`。原 SDK 的四处 AkVector64 字段 getter 返回借用地址，Windows Mono 的引用类型返回封送会释放内部地址；依据原 Profile／Release DLL 指令适配借用指针取值，另修复三双精度值按 Windows x64 ABI 返回，保持原数值及公共返回类型。官方代码、原 RTPC 资产 GUID 及本地绑定见 [原生宿主来源](../../assets/reference/battle-animation/native-sound-host-source-manifest.json)。
+
+256 个 Game ID 对应的 229 份当前原场景 prefab 已逐一核对：默认 `AudioListener` 位于 `Main Camera` 下，本地位置 `(0,0,20)`、单位旋转／缩放，绑定 AkGameObj、AkAudioListener 和 FollowSceneActiveSelfController。独立 `Combat/Wwise/AudioListener` prefab 保留原节点与字段，仅重绑脚本及根父级；迁入同版 SDK 的 11 份监听／声源／环境／触发依赖及 24 份 Wwise 值／引用代码，复用已有原场景激活脚本。绑定和逐场景证据见 [战斗监听器来源](../../assets/reference/battle-animation/sound-listener-source-manifest.json)。
+
+`OfflineBattleWwiseRuntime` 常驻拥有原引擎与包，战斗租约仅管理自己的原监听器；引擎先于监听器初始化，每帧沿原 LateUpdate 顺序派发回调／RenderAudio，并以实际 `Time.timeScale` 更新速度。`OfficialBattleRuntimeController.Begin` 在已有官方环境和表现相机、未指定自定义声音宿主时取得租约，传入原技能图；隐藏／返回战斗同步监听器，退出先执行原图 Stop，再停用／销毁监听器，应用退出才释放引擎。原 Player 暂停／焦点事件沿已迁 SDK 设置执行；该分支的 Windows 实际切换尚未验证。
+
+`HomeAudioSettings` 将当前角色保存的总／音乐／语音／音效四项音量传给原 RTPC，加载前沿现有单机默认值，设置成功或保存失败回滚仍复用原保存流程；不改变已确认的默认值及存档。测试独立将原生最终输出静音，音量 RTPC 和声音事件照常执行。设置控件与保存规则见 [设置与本地存档](settings-and-save.md)。
+
+`OfflineBattleWwisePackages` 统一 Editor 素材路径与 Player 的 `StreamingAssets/Combat/Wwise` 路径；`OfficialBattleWwisePackageBuild` 在 Windows 构建前核对 26 包的来源，构建后逐个复制并复核大小和 SHA256，不复制 `.meta` 或在源码树中重复载荷。
+
+隔离完整工程已通过编译、`ProjectTools.Validate`、静态元数据与静音 Play Mode：两次显式引擎生命周期、四处借用字段及按值转换、原 Event 播放编号／原生声源坐标／缓存宿主／注销；真实监听器 prefab 的相机跟随、场景进入／退出／再进入、默认监听列表及销毁；两个租约复用引擎、音量与实际 1／2.3／0 倍时间、退出 Play Mode 后引擎终止。正式公共控制器专项连续两场使用原场景与真实技能图，以模拟指针点击原开始按钮，核对实际原生播放编号、伤害、四项存档音量、暂停、隐藏／返回及退出监听器清理，正常以 0 退出；已查看其实际运行截图。
+
+独立 Windows x64 Release 声音验证 Player 已在 GPU 静音运行并以 0 退出，构建目录引擎哈希与同版原 Release DLL 一致，全部 26 包和 1,735 条事件引用、四处借用字段及按值转换均通过。该程序仅验证声音包及运行库；正式游戏 Windows 构建、入口与战斗声音尚未验证，短帧／播放编号检查不代表全部效果器和完整时长混音输出已验证。新增素材尚未进入完整备份快照。
 
 ## 自定义实现
 
@@ -198,7 +218,7 @@
 - 完整技能／命中／状态覆盖、同来源与叠层边界、特殊组件时序和实体生命周期仍有缺项。身体格选敌／接近和命中局部坐标变换已有指定原技能的 Play Mode 回归，尚未完成全部技能与 Windows Player 验证。
 - 原人物、NPC、幻兽、召唤物的完整模型、动作、骨骼、挂点、粒子、音频和材质表现尚未全部接通。
 - `GameRoundUI` 原管理器及两种完整卡片已接入；竞技场守卫临时头像已接线；军团战／多人争霸玩法宿主、拟态目标和怪物／幻兽全部图标类型的正式实体投影仍未全部接通。等待实体装载、连续死亡／复活与阶段门控仍须覆盖真实战斗流程，ETC2 设备后端尚未运行验证。
-- 正式战斗未提供 `SkillPlayableSoundHost`，原图声音节点仍由静音宿主处理。匹配的官方 Wwise Unity Integration `2022.1.18.8567.3199` 已迁入 132 份核心 C#、Windows Editor Profile／Player Release 引擎及八个 DSP，恢复原全局／Windows 初始化设置、26 个声音包及 `Combat/Wwise/catalog`。入口为 `Official/Wwise/API/Runtime` 与 `Official/Combat/NativeSound`，来源及转换工具见[Windows 声音运行素材](../../assets/reference/battle-animation/windows-sound-runtime-source-manifest.json)。依据同版 `CAkFilePackageLUT` 将 Android 语言表转换为 Windows UTF-16LE，保持 bank／媒体字节、ID、对齐及原 HIRC／RTPC／DSP 配置；全部包和 1,735 条事件引用已通过独立 Unity 静音原生帧检查。`OfflineBattleWwiseSoundHost` 通过现有声音接口复用原 AkGameObj，按 Minimum 包→Init→Minimum→关联包／bank 加载，接入 Spatial Audio、通信、回调与原设置的清理顺序；空环境只发送一次零 AuxSend，保留原默认监听器及位置更新。原四项音量 RTPC 仍按 `(int)(volume * 100f)` 设置，倍速使用原 `414249091`，不替换为 AudioSource.pitch。原 SDK 的四处 AkVector64 字段 getter 返回借用地址，Windows Mono 的引用类型返回封送会释放内部地址；依据原 Profile DLL 指令修复为借用指针取值，另使三双精度值的转换返回符合 Windows x64 ABI，保持原数值及公共返回类型。隔离完整工程的内置屏静音 Play Mode 已正常以 0 退出，核对两次初始化／释放、四个借用字段及按值转换、原 Event 播放编号、移动声源／默认监听器的原生坐标、五项 RTPC、缓存宿主、销毁注销与声音宿主恢复；来源、原四项音量资产 GUID 绑定和入口见[原生宿主来源](../../assets/reference/battle-animation/native-sound-host-source-manifest.json)。主工程静态 GUID 检查通过；修复后的完整隔离工程通过 Unity 编译及 `Zjcs.Editor.ProjectTools.Validate`，随后完成上述 Play Mode 检查，进程正常以 0 退出。`OfflineBattleWwisePackages` 统一 Editor 素材路径与 Player 的 `StreamingAssets/Combat/Wwise` 路径，`OfficialBattleWwisePackageBuild` 在 Windows 构建前对照来源清单核对完整 26 包，构建后逐个复制并复核大小和 SHA256，不复制 `.meta` 或在源码树中重复载荷。隔离声音验证程序已实际构建并启动 Windows x64 Release Player，构建目录的引擎 SHA256 与同版原 Release DLL 一致；通过全部 26 包、1,735 条事件引用、四处借用字段和按值向量转换的静音原生检查，使用 GPU 运行并正常以 0 退出。此验证程序只核对声音包／原生运行库，不代表正式游戏入口或战斗画面已验证。已核对 256 个 Game ID 对应的 229 份当前原场景 prefab：默认 `AudioListener` 均挂在 `Main Camera` 下，本地位置 `(0,0,20)`、单位旋转／缩放，绑定 AkGameObj、AkAudioListener 和 FollowSceneActiveSelfController；保留无环境、非静态、默认监听列表与零位置偏移。已提取原节点为 `Combat/Wwise/AudioListener` prefab，仅重新绑定脚本与独立根父级；迁入同版 SDK 的 11 份监听／声源／环境／触发依赖及 24 份 Wwise 值／引用代码，复用已有原场景激活脚本，未用导出空脚本代替。完整隔离工程通过编译及 `ProjectTools.Validate`，随后静音 Play Mode 实际核对第三次引擎生命周期、真实 prefab 三个脚本、相机父节点移动后的原生位置、场景进入／退出／重新进入时的激活和默认监听列表、销毁注销，正常以 0 退出；来源与绑定见[战斗监听器来源](../../assets/reference/battle-animation/sound-listener-source-manifest.json)。`OfflineBattleWwiseRuntime` 已提供应用常驻引擎及独立战斗监听器租约，初始化先于原监听器脚本，原包与 RTPC 跨战斗保留；每帧沿原 LateUpdate 顺序派发回调／RenderAudio，以实际 `Time.timeScale` 更新速度，单场关闭只停用并销毁自己的监听器，应用退出才释放引擎。完整隔离工程编译及 `ProjectTools.Validate`、静音 Play Mode 已核对两个租约复用同一引擎、预先／运行中音量、实际 1／2.3／0 倍时间、隐藏／显示、原事件编号及退出 Play Mode 后引擎终止，进程正常以 0 退出。正式注入、战斗监听器挂载及生命周期接线、存档音量、语言切换、暂停／应用状态接线、完整时长声音／混音、正式 Windows Player 构建与战斗验证仍待完成；短帧事件检查不代表全部效果器输出已验证，新增素材尚未进入完整素材快照，未据此发布正式版本。
+- 原技能图声音已接到正式公共控制器；场景背景音乐及覆盖配置入口、语言切换、Windows 暂停／焦点实际切换、完整时长声音／混音及正式 Windows Player 战斗验证仍待完成。短帧及播放编号检查不代表全部效果器输出已验证。
 - 命中实体视图及本地加载绑定已迁移，2,260 个原 prefab 的加载和六类代表命中图已通过隔离 Play Mode；正式固定命中、召唤和已有触发技能命中已按执行回执创建／移除原命中实体。随机／自定义目标包装和连锁的完整实体调度、召唤角色模型及入场时序仍未接通；全部原图、施法起点连线、逐范围格时序／清理及特殊状态替换尚未完整覆盖，不能按代表图验证推断全部演出完成。
 - 正式技能宿主已改为加载完整原技能实体 prefab，保留原默认／四向图、角色组件和序列化引用，复用原加载、End／Remove／FIFO 池与选图流程；代表图、状态快照及对象池复用已通过隔离 Play Mode 与 Windows Player，全部原技能和完整人物演出尚未覆盖。
 - 57784 命中图的原骨骼适配、受控实体创建及复用已有专项验证，但所选配置中的 57780 只引用 57781 召唤命中；全部已安装战斗实体中未找到指向 57784 的父引用。保留该未引用内容及其原休眠层级，不自行接入技能；此项验证不表示 57780 整套战斗演出已经还原。
