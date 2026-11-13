@@ -186,31 +186,52 @@ public sealed partial class HomeIncomeFormulaHostRunner
 
     private IEnumerator CheckExperienceLedgerRecovery()
     {
-        const long recoveredSerial = 1000001, failedSerial = 1000002;
+        const long recoveredSerial = 1000001, failedSerial = 1000003;
         long experience = home.Profile.Save.Player.Experience;
         string recoveredReceipt = "home:grant:" + slot + ":" + recoveredSerial;
-        Require(home.Profile.ApplyCharacterMutation(player => {
-            player.Experience += 11;
-        }, recoveredReceipt).IsApplied, "persist award before interrupted ledger acknowledgement");
         Require(home.Session.Mutate("seed-unacknowledged", save => {
             save.GrantSerial = recoveredSerial;
             save.Inventory.Add(new OfflineHomeItemStack { ItemId = 50, Count = 11, Serial = recoveredSerial });
         }), "persist isolated unacknowledged experience");
+        var prepared = home.Session.PrepareInventoryTransfer(recoveredSerial);
+        Require(prepared != null && prepared.TransferStarted && prepared.Count == 11,
+            "persist transfer amount before awarding the character");
+        prepared.Count = 99;
+        Require(home.Session.PrepareInventoryTransfer(recoveredSerial).Count == 11,
+            "transfer snapshots cannot mutate the durable receipt amount");
+        Require(home.Profile.ApplyCharacterMutation(player => {
+            player.Experience += 11;
+        }, recoveredReceipt).IsApplied, "persist award before interrupted ledger acknowledgement");
+        Require(home.Session.Mutate("seed-next-claim", save => {
+            var income = save.Income.Single(value => value.HangUpId == 1);
+            income.StoredSeconds = 3600; income.SettledCount = 0;
+        }), "persist income earned while the earlier grant awaits acknowledgement");
+        var nextClaim = home.Session.CollectReward(1, "claim-before-ack");
+        Require(nextClaim != null && nextClaim.Count > 0 && nextClaim.LedgerSerial != recoveredSerial
+            && home.Session.Save.Inventory.Single(row => row.Serial == recoveredSerial).Count == 11
+            && home.Session.Save.Inventory.Single(row => row.Serial == nextClaim.LedgerSerial).Count == nextClaim.Count,
+            "new claim cannot merge into an already transferred receipt");
+        home.Close(); CloseCapture(); yield return null;
+        Open(); yield return new WaitForSeconds(1);
+        long recoveredExperience = experience + 11 + nextClaim.Count;
+        Require(home.Profile.Save.Player.Experience == recoveredExperience && home.Session.Save.Inventory.Count == 0,
+            "disk reopen acknowledges the old receipt and grants the newer claim exactly once");
         home.DrainHomeInventory();
-        Require(home.Profile.Save.Player.Experience == experience + 11 && home.Session.Save.Inventory.Count == 0,
-            "replayed character receipt acknowledges the ledger without adding experience again");
+        Require(home.Profile.Save.Player.Experience == recoveredExperience,
+            "repeating recovery grants neither receipt again");
         Require(home.Session.Mutate("seed-rejected-award", save => {
             save.GrantSerial = failedSerial;
             save.Inventory.Add(new OfflineHomeItemStack { ItemId = 50, Count = long.MaxValue, Serial = failedSerial });
         }), "seed isolated experience overflow rejection");
         home.DrainHomeInventory();
         Require(home.Session.Save.Inventory.Single(row => row.Serial == failedSerial).Count == long.MaxValue
-            && home.Profile.Save.Player.Experience == experience + 11,
+            && home.Session.Save.Inventory.Single(row => row.Serial == failedSerial).TransferStarted
+            && home.Profile.Save.Player.Experience == recoveredExperience,
             "rejected character mutation retains the durable owed experience");
         home.Close(); CloseCapture(); yield return null;
         Open(); yield return new WaitForSeconds(1);
         Require(home.Session.Save.Inventory.Single(row => row.Serial == failedSerial).Count == long.MaxValue
-            && home.Profile.Save.Player.Experience == experience + 11,
+            && home.Profile.Save.Player.Experience == recoveredExperience,
             "disk reopen preserves failed experience for retry and completed receipt stays idempotent");
     }
 

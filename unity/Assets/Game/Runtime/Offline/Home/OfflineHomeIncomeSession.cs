@@ -72,6 +72,7 @@ namespace Zjcs.Offline.Home
         public int ItemId;
         public long Count;
         public long Serial;
+        public bool TransferStarted;
     }
 
     // A projection of the committed local ledger, never a second reward grant.
@@ -517,6 +518,23 @@ namespace Zjcs.Offline.Home
             return Save.Skins.FirstOrDefault(value => value.Category == category && value.Type == type);
         }
 
+        /// <summary>Persists the immutable amount associated with the player's grant receipt.</summary>
+        public OfflineHomeItemStack PrepareInventoryTransfer(long serial)
+        {
+            OfflineHomeItemStack current = Save.Inventory.FirstOrDefault(value => value.Serial == serial);
+            if (current == null) return null;
+            if (!current.TransferStarted)
+            {
+                OfflineHomeSave next = Clone(Save);
+                next.Inventory.First(value => value.Serial == serial).TransferStarted = true;
+                if (!Commit(next)) return null;
+                current = Save.Inventory.First(value => value.Serial == serial);
+            }
+            return new OfflineHomeItemStack {
+                ItemId = current.ItemId, Count = current.Count, Serial = current.Serial, TransferStarted = true
+            };
+        }
+
         /// <summary>Removes a drained ledger stack once the player inventory holds it.</summary>
         public bool AcknowledgeInventory(long serial, string receipt)
         {
@@ -560,7 +578,7 @@ namespace Zjcs.Offline.Home
             entry.StoredSeconds = record.StoredSeconds;
             entry.SettledCount = record.SettledCount;
             if (!GrantOutput(next, definition, count, out int itemId)) return null;
-            long serial = next.Inventory.First(value => value.ItemId == itemId).Serial;
+            long serial = next.Inventory.First(value => value.ItemId == itemId && !value.TransferStarted).Serial;
             AddReceipt(next, receipt);
             return Commit(next) ? new OfflineHomeCollectedReward(hangUpId, itemId, count, serial, receipt) : null;
         }
@@ -748,6 +766,8 @@ namespace Zjcs.Offline.Home
             if (save.Skins == null) save.Skins = new List<OfflineHomeSkinSelection>();
             if (save.GrantSerial < 0) save.GrantSerial = 0;
             foreach (OfflineHomeItemStack stack in save.Inventory)
+                if (stack != null && stack.Serial > save.GrantSerial) save.GrantSerial = stack.Serial;
+            foreach (OfflineHomeItemStack stack in save.Inventory)
                 if (stack != null && stack.Serial <= 0) stack.Serial = ++save.GrantSerial;
             if (save.AppliedReceipts == null) save.AppliedReceipts = new List<string>();
         }
@@ -812,9 +832,10 @@ namespace Zjcs.Offline.Home
         private static bool Grant(OfflineHomeSave save, int itemId, long count)
         {
             if (itemId <= 0 || count <= 0) return false;
-            OfflineHomeItemStack entry = save.Inventory.FirstOrDefault(value => value.ItemId == itemId);
+            OfflineHomeItemStack entry = save.Inventory.FirstOrDefault(value => value.ItemId == itemId && !value.TransferStarted);
             if (entry == null)
             {
+                if (save.GrantSerial == long.MaxValue) return false;
                 entry = new OfflineHomeItemStack { ItemId = itemId, Serial = ++save.GrantSerial };
                 save.Inventory.Add(entry);
             }
@@ -825,7 +846,7 @@ namespace Zjcs.Offline.Home
 
         private static bool Consume(OfflineHomeSave save, int itemId, long count)
         {
-            OfflineHomeItemStack entry = save.Inventory.FirstOrDefault(value => value.ItemId == itemId);
+            OfflineHomeItemStack entry = save.Inventory.FirstOrDefault(value => value.ItemId == itemId && !value.TransferStarted);
             if (entry == null || count <= 0 || entry.Count < count) return false;
             entry.Count -= count;
             if (entry.Count == 0) save.Inventory.Remove(entry);
@@ -917,8 +938,9 @@ namespace Zjcs.Offline.Home
             var itemIds = new HashSet<int>();
             var serials = new HashSet<long>();
             foreach (OfflineHomeItemStack entry in save.Inventory)
-                if (entry == null || entry.ItemId <= 0 || entry.Count <= 0 || !itemIds.Add(entry.ItemId)
-                    || entry.Serial <= 0 || !serials.Add(entry.Serial)) return false;
+                if (entry == null || entry.ItemId <= 0 || entry.Count <= 0
+                    || !entry.TransferStarted && !itemIds.Add(entry.ItemId)
+                    || entry.Serial <= 0 || entry.Serial > save.GrantSerial || !serials.Add(entry.Serial)) return false;
             var furnitureTypes = new HashSet<int>();
             foreach (OfflineHomeFurnitureEntry entry in save.Furniture)
                 if (entry == null || entry.Type < 0 || entry.Type > 13 || !furnitureTypes.Add(entry.Type)) return false;

@@ -36,13 +36,13 @@
   },
   "adaptation": "Original arithmetic, float casts and execution order; explicit reward row, property dictionary and property parser boundaries. Full original enums; selected prop_cfg flags. Offline checkpoint and award transactions remain separate.",
   "validation_inputs": {
-    "scripts/prepare_home_income_formula_validation.py": "5a7aea92dde8d2ea40511f766fb1dc6e53f3c5faa583e31a66f26f2f4aba9de5",
-    "scripts/fixtures/home_income_formula_validation.cs": "8a0616ece2e06a023a96af5b9363972e7fad6430a8cc0355ff9719b641f2bd77",
+    "scripts/prepare_home_income_formula_validation.py": "e3d7e6a3b00e7311dde08735bb678ff751c6941486451a7112ca7e988b01713f",
+    "scripts/fixtures/home_income_formula_validation.cs": "1508d25e72c14c79c12168126159599accea6a20c0d103d5309622f72da4c0e3",
     "scripts/fixtures/home_furniture_host_validation.cs": "04b99707086fdb7beb10202dc1fd4be3bcb2b6a4d6ef857239ad9e6368dfc5c1"
   },
-  "validation_base_commit": "41533ed2fea3813facf28b932ed5387c4b1e1023",
+  "validation_base_commit": "0a41731c29f62bcffa0b68bb3b7b5c1556a02ee6",
   "runtime_bindings": {
-    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "3a211805ac789afab29a8608cb49af0a5a044991b2c32608b7bf57fb28d44abf",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "46d95fad7283e686e2f153f9cdd4585aff8b831150f826ba23bfa4828b2d6f35",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs": "4689b513ef18ed360d7e9c0a896b545539c585e3b227602922d4f7a54ac7efc9",
     "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef": "4b78eb8f27c354da2ead5163c243da50e108fd8a78a788e092c6092c548db5ad",
     "unity/Assets/Game/Runtime/Official/ProfessionUI/OfficialWwiseEvent.cs": "e13764940488dd88cb195e0a60b3ceb084afbf013d3254eac08f770635900ee8",
@@ -97,7 +97,8 @@
     "unity/Assets/Game/Runtime/Official/HomeAwardUI/Zjcs.Official.HomeAwardUI.asmdef": "2ab27ead286afe919fcbbac871e7c86fd8bc77bfe60b8ab453c0fc7dc32491b6",
     "unity/Assets/Game/Runtime/Official/HomeAwardUI/Zjcs.Official.HomeAwardUI.asmdef.meta": "1807011b510c040fc1b8ed4524f67c460c0dcd0f99cf6488f8f02230f76ab20e",
     "unity/Assets/Game/Runtime/Official/WorldUI/WorldPopupWindow.cs": "eba6e02e821cab22d7d1150df531a33a99586bff57db89ba6c163ece06f1504f",
-    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Repair.cs": "f7e4b3237f805d3c5583bcfac6f7448c5d7c7c7dd0264d14364e6c23f1f7efc9"
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Repair.cs": "f7e4b3237f805d3c5583bcfac6f7448c5d7c7c7dd0264d14364e6c23f1f7efc9",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "e841f68a6229abf09c15b02c07d1e4458ff574a9aaa1684ae933c9a70a3502e3"
   },
-  "collection_adapter": "CollectReward projects only the committed claim delta, selected output item and durable ledger identity; presentation does not issue a second grant. Failed character experience mutations retain the local ledger; previously committed character receipts acknowledge without another award."
+  "collection_adapter": "CollectReward projects only the committed claim delta, selected output item and durable ledger identity; presentation does not issue a second grant. Failed character experience mutations retain the local ledger; previously committed character receipts acknowledge without another award. The ledger persists a sealed transfer amount before granting; later same-item claims receive a separate serial until acknowledgement."
 }

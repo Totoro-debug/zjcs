@@ -1686,9 +1686,17 @@ namespace Zjcs.Presentation.Home
         /// <summary>Moves claimed home rewards into the real bag or character experience.</summary>
         public void DrainHomeInventory()
         {
-            foreach (OfflineHomeItemStack stack in session.Save.Inventory.ToArray())
+            foreach (OfflineHomeItemStack pending in session.Save.Inventory.ToArray())
             {
-                if (stack == null || stack.ItemId <= 0 || stack.Count <= 0) continue;
+                if (pending == null || pending.ItemId <= 0 || pending.Count <= 0) continue;
+                OfflineHomeItemStack stack;
+                try { stack = session.PrepareInventoryTransfer(pending.Serial); }
+                catch (Exception error)
+                {
+                    Debug.LogWarning("Home reward transfer could not be prepared: " + error.Message);
+                    continue;
+                }
+                if (stack == null) continue;
                 string receipt = "home:grant:" + slotId + ":" + stack.Serial;
                 if (stack.ItemId == 50)
                 {

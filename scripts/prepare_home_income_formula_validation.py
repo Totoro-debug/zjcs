@@ -46,7 +46,8 @@ def prepare():
     receipt['collection_adapter'] = (
         'CollectReward projects only the committed claim delta, selected output item and durable ledger identity; '
         'presentation does not issue a second grant. Failed character experience mutations retain the local ledger; '
-        'previously committed character receipts acknowledge without another award.')
+        'previously committed character receipts acknowledge without another award. The ledger persists a sealed '
+        'transfer amount before granting; later same-item claims receive a separate serial until acknowledgement.')
     receipt['validation_inputs'] = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in (
         'scripts/prepare_home_income_formula_validation.py', 'scripts/fixtures/home_income_formula_validation.cs',
         'scripts/fixtures/home_furniture_host_validation.cs')}
