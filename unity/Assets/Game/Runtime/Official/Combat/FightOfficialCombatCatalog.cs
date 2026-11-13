@@ -1707,6 +1707,7 @@ namespace Zjcs.Combat.Official
             }
             BindSharedStackDefinition(result, components);
             result.Components = ParseStatusComponents(components);
+            result.Components.ShieldExpiry = ParseShieldExpiry(result.ClassId, components);
             return result;
         }
 

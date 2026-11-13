@@ -730,18 +730,25 @@ namespace Zjcs.Combat.Official
                     if (ResolveTargetUnitId(status, units) != actor.Id) continue;
                     if (status.StartRound < 0) Initialize(status, round);
                     if (!IsExpired(status, round)) continue;
-                    End(owner, status);
+                    End(owner, status, naturallyExpired: true);
                     removed++;
                 }
             }
             return removed;
         }
 
-        public static bool End(FightBattleUnitState unit, FightBattleStatusState status)
+        public static bool End(FightBattleUnitState unit, FightBattleStatusState status, bool naturallyExpired = false)
         {
             if (unit == null || status == null || unit.Statuses == null || !unit.Statuses.Remove(status)) return false;
             if (status.AccumulatedDamage != null && status.AccumulatedDamage.RulesSupported)
                 unit.EndedAccumulatedDamageStatuses.Add(status);
+            if (naturallyExpired && status.ClassId == 24435
+                && status.Components?.ShieldExpiry?.Supported == true && status.ShieldRemainValue > 0)
+            {
+                if (unit.EndedShieldExpiryStatuses == null)
+                    unit.EndedShieldExpiryStatuses = new List<FightBattleStatusState>();
+                unit.EndedShieldExpiryStatuses.Add(status);
+            }
             if (status.RemoveApplyEntityOnEnd) unit.Ended = true;
             unit.StatusEnded?.Invoke(unit, status);
             return true;

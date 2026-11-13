@@ -94,6 +94,7 @@ namespace Zjcs.Combat.Official
         public int StatusImmunityActionPendingCount;
         public List<FightBattleStatusApplicationEvent> PendingStatusApplications = new List<FightBattleStatusApplicationEvent>();
         public List<FightBattleStatusState> EndedAccumulatedDamageStatuses = new List<FightBattleStatusState>();
+        public List<FightBattleStatusState> EndedShieldExpiryStatuses = new List<FightBattleStatusState>();
         public List<FightBattleFalloffCounter> FalloffCounts = new List<FightBattleFalloffCounter>();
         public List<FightGridPoint> BodyOffsets = new List<FightGridPoint>
         {
@@ -321,6 +322,7 @@ namespace Zjcs.Combat.Official
         public FightBattleStatusApplyConditionState ApplyCondition;
         public FightBattleStatusSecondsState Seconds;
         public FightBattleStatusCureReduceState CureReduce;
+        public FightBattleStatusShieldExpiryState ShieldExpiry;
         public FightBattleStatusHitSkillComponentState HitSkill;
         public FightBattleStatusDamageSkillComponentState DamageSkill;
         public FightBattleStatusHitApplyDamageComponentState HitApplyDamage;
@@ -347,6 +349,7 @@ namespace Zjcs.Combat.Official
                 ApplyCondition = ApplyCondition?.Copy(),
                 Seconds = Seconds?.Copy(),
                 CureReduce = CureReduce?.Copy(),
+                ShieldExpiry = ShieldExpiry?.Copy(),
                 HitSkill = HitSkill?.Copy(),
                 DamageSkill = DamageSkill?.Copy(),
                 HitApplyDamage = HitApplyDamage?.Copy(),

@@ -177,6 +177,7 @@ namespace Zjcs.Presentation.Combat
                 forcedTargetRotation = controller.TryGetUnitTransform(forcedTargetId).localRotation;
             entities.CastStarted += cast => {
                 ObserveNativeHitCustomCure(cast);
+                ObserveNativeShieldExpiry(cast);
                 ObserveFatalRevivalCast(cast);
                 // The original starting skill can also be the skill under test.
                 // Its later finishing cast belongs to fixture cleanup, not this observation.
@@ -217,6 +218,7 @@ namespace Zjcs.Presentation.Combat
         public void ObserveStep(OfficialBattleRuntimeController controller)
         {
             ObserveTerrainScopeStep(controller);
+            ObserveShieldExpiryStep(controller);
             ObserveFirstPromotionDeathStep(controller.Checkpoint.Receipts.Last().Event);
             ObserveActionInvisibleStep(controller);
             ObserveSummonLifeStep(controller.Checkpoint);
@@ -441,6 +443,7 @@ namespace Zjcs.Presentation.Combat
             if (ObserveDarkStatusFrame(controller)) return;
             if (ObserveTerrainScopeFrame(controller)) return;
             if (ObserveHitCustomCureTargetsFrame()) return;
+            if (ObserveShieldExpiryFrame(controller)) return;
             if (captured && !finisherScheduled)
             {
                 var player = controller.Checkpoint.Units.Single(value => value.Id == 1);
@@ -481,6 +484,7 @@ namespace Zjcs.Presentation.Combat
             if (ValidateForcedMovement || ValidateFatalRevival || firstPromotionItemId != 0) Time.captureFramerate = previousCaptureFramerate;
             VerifyFatalRevival();
             VerifyHitCustomCureTargets();
+            VerifyShieldExpiry();
             VerifyFirstPromotionDeath(checkpoint);
             VerifyAirComboDiagnostic();
             VerifyActionInvisibleDiagnostic();

@@ -86,6 +86,7 @@ namespace Zjcs.Combat.Official
                             RestoreRoundStartDefinition(status);
                             RestoreConditionalHitDefinition(status);
                             statusCatalog.RestoreCureReduceDefinition(status);
+                            statusCatalog.RestoreShieldExpiryDefinition(status);
                             statusCatalog.RestoreLifeReductionDefinition(unit, status, initialize);
                             statusCatalog.RestoreHitScopeStatusDefinition(status);
                             statusCatalog.RestoreDarkHitDefinition(status);
@@ -246,6 +247,8 @@ namespace Zjcs.Combat.Official
                     FightStatusTriggerRuntime.ApplyRoleSummonCount(summonOwner, units,
                         statusCatalog, random);
             float statusEndDelay = 0f;
+            ExecuteShieldExpiryCures(0f, casts, damageEvents, movements,
+                ref statusEndDelay, ref stepDuration, ref stepActionDuration);
             ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
                 ref statusEndDelay, ref stepDuration, ref stepActionDuration);
 
@@ -470,6 +473,8 @@ namespace Zjcs.Combat.Official
             }
             finally { gridViewTimeOverride = previousGridViewTime; }
             RebuildBattleProperties();
+            ExecuteShieldExpiryCures(Math.Max(0f, stepActionDuration), casts, damageEvents, movements,
+                ref statusEndDelay, ref stepDuration, ref stepActionDuration);
             ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
                 ref statusEndDelay, ref stepDuration, ref stepActionDuration);
             RestoreResilienceAfterPersonalRound(actor, actorRound);
