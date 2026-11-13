@@ -52,7 +52,7 @@ namespace Zjcs.Offline.Home
             var formula = new BattleFormulaHandler(type => HomeIncomePropertyCatalog.Get(type) == null ? null
                 : floatPropertyIds != null && floatPropertyIds.Contains((int)type) ? FloatingProperty : IntegerProperty);
             return HangUpUtils.CalcRewardCount(info, new HangUpRewardInfo { HourlyOutput = (float)rule.HourlyOutput },
-                formula, properties, hours, (float)rule.LevelNum);
+                formula, properties, hours, rule.LevelNum);
         }
 
         private static readonly PropCfgInfo FloatingProperty = new PropCfgInfo { Float = true };

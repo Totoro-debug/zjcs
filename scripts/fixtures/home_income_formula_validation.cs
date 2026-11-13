@@ -30,6 +30,10 @@ public sealed partial class HomeIncomeFormulaHostRunner
         Require(new BattleFormulaHandler(HomeIncomePropertyCatalog.Get).GetProp(props, (PropType)int.MaxValue) == 0,
             "missing original property configuration returns zero");
         rule.IsCart = false; props.Clear();
+        rule.LevelNum = 1.1;
+        Require(BitConverter.DoubleToInt64Bits(OfflineHangUpIncome.HourlyRate(rule, props, flags)) == 0x404b800000000001L,
+            "original FurnitureLevelRuleInfo.LevelNum remains double instead of rounding 1.1 through float");
+        rule.LevelNum = 1;
         props[1000] = 16777217;
         props[1001] = 0;
         Require(OfflineHangUpIncome.HourlyRate(rule, props, flags) == 16777266,
@@ -51,6 +55,17 @@ public sealed partial class HomeIncomeFormulaHostRunner
         Require(home.Rules.IsFunctionLimited(164) && !home.Rules.IsFunctionLimited(53, 1)
             && !home.Rules.IsFunctionLimited(163),
             "selected bed function rows keep quick receive locked below level 30 and absent gates open");
+        Require(BitConverter.DoubleToInt64Bits(home.Rules.LevelNumber(1, 2)) == BitConverter.DoubleToInt64Bits(1.1),
+            "selected raw furniture level multiplier reaches the actual income catalog without a float cast");
+        var originalOutput = new Zjcs.Offline.HomeUI.OfflineHomeFurnitureOutput(home.Rules,
+            home.HomeIncomeProperties, _ => 2, home.FormatTopBarCurrency, key => key);
+        originalOutput.Refresh();
+        double expectedBedBase = 50 * home.Rules.LevelNumber(home.Rules.HangUp(1).levelRuleId, 2);
+        Require(BitConverter.DoubleToInt64Bits(originalOutput.GetHangUpReward(1, 1, 2, true))
+                == BitConverter.DoubleToInt64Bits(expectedBedBase)
+            && BitConverter.DoubleToInt64Bits(originalOutput.GetHangUpReward(1, 1, 2))
+                == BitConverter.DoubleToInt64Bits(expectedBedBase),
+            "original bed output projection retains double level precision in base and actual output");
 
         double beforeRate = home.Session.Preview(1).HourlyRate;
         int beforeBlessing = home.BlessingLevel;

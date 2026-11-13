@@ -18,7 +18,8 @@
     ".tools/source-packages/current/884_156692/official-code/client-source/FurnitureBedDialog.cs": "b65f8fcaa988cd55991edc3fca71c8def7e30105f62648ce2c56bae5032a6e84",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerHangUpDataExt.cs": "52c6a123f697422dd7c18d5dbb42349eb11c06553f2d470eb62b3ced32c9edb7",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/Player.cs": "e0b324d6cf965e194cc517c176e8fae80f16dda7019e42d705ed6ae7d44da611",
-    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FunctionType.cs": "a4ba46945936bf793e114d9121a59562727dc321f6b274d84f0d13b9e9562b5c"
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FunctionType.cs": "a4ba46945936bf793e114d9121a59562727dc321f6b274d84f0d13b9e9562b5c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FurnitureLevelRuleInfo.cs": "4b7d347787a2ccb13ce5c876d8fd69a33475962b17d71e4de4fcc286badd8984"
   },
   "outputs": {
     "unity/Assets/Game/Runtime/Official/HomeIncomeRules/PropType.cs": "1813ad74c60ad245324a147c827a9da3b7ed6c751e7397ce56c5b4b40e090ace",
@@ -39,11 +40,11 @@
   },
   "adaptation": "Original arithmetic, float casts and execution order; explicit reward row, property dictionary and property parser boundaries. Full original enums; selected prop_cfg flags. Offline checkpoint and award transactions remain separate.",
   "validation_inputs": {
-    "scripts/prepare_home_income_formula_validation.py": "b711631e2a199c1d4e58221b43c254fce3f9cfd285969ff205cdc28a90285e9f",
-    "scripts/fixtures/home_income_formula_validation.cs": "4bb32823786e3ffc45337ed4b304f8d30cde56ec08c8e083f10ae4e57b459cb3",
+    "scripts/prepare_home_income_formula_validation.py": "ae3d63ff33e867cf8538169aded71a672e196cf00cbaf33e9036ac36b2a2618d",
+    "scripts/fixtures/home_income_formula_validation.cs": "5a80cb725d21a69e59125722b5e8dae085cc758150df895510972e2e2e6b46ac",
     "scripts/fixtures/home_furniture_host_validation.cs": "04b99707086fdb7beb10202dc1fd4be3bcb2b6a4d6ef857239ad9e6368dfc5c1"
   },
-  "validation_base_commit": "f96742e9ae97c03a7f39266be018c2a9cec60c39",
+  "validation_base_commit": "65aabf8dfb0ad1b0b4ff765118a6673ced2f904e",
   "runtime_bindings": {
     "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "46d95fad7283e686e2f153f9cdd4585aff8b831150f826ba23bfa4828b2d6f35",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs": "4689b513ef18ed360d7e9c0a896b545539c585e3b227602922d4f7a54ac7efc9",
@@ -105,8 +106,10 @@
     "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeProgression.cs": "1c16c04a1443bc216cd7b45c55d794c390b3f28ab3518de4acdbf1afde6078b8",
     "unity/Assets/Game/Runtime/Offline/Home/OfficialHomeRules.CurrentIncome.cs": "575a67ee0444d5258da0f17bdfa363e159c6e4b9bd4c21aa461e3ca8a17370eb",
     "unity/Assets/Game/Runtime/Offline/Home/Zjcs.Offline.Home.asmdef": "b0a0c1f86a80aae7cd215ccf11d726e5f9a85c29f51cf2c66f03ace1e1cfc1b5",
-    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineCurrentHomeIncome.cs": "6c0b15ae31cecc85404756a29ac8372f9bf187987868c3ef7e4a6370a77bf985",
-    "unity/Assets/Game/Runtime/Offline/Progression/OfflineRefreshClock.cs": "bfdb55fdbd99cf5e9d460cf256f587706e7d3dd81e6e3457f8049c1e28b704cf"
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineCurrentHomeIncome.cs": "34e0dcab99b941904aae79cb5a5dc69b914b6988ac47e0e516cb32a8302d971d",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineRefreshClock.cs": "bfdb55fdbd99cf5e9d460cf256f587706e7d3dd81e6e3457f8049c1e28b704cf",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncome.cs": "573f8e414fc1331561f302f4d733e2ec24d80868a7a01afb0192bdfdf79db391",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeFurnitureOutput.cs": "7af9eca0e867ae73f19cb0c96785e7f5282a5f28a12c52d790626400321272e2"
   },
   "collection_adapter": "CollectReward projects only the committed claim delta, selected output item and durable ledger identity; presentation does not issue a second grant. Failed character experience mutations retain the local ledger; previously committed character receipts acknowledge without another award. The ledger persists a sealed transfer amount before granting; later same-item claims receive a separate serial until acknowledgement.",
   "free_fast_forward_adapter": "Selected function 53 keyed by fast-hang-up ID, configured free count plus original non-battle property 1101, and read-only expired-count projection. User-confirmed local 06:00 day boundary reuses OfflineRefreshClock; old midnight-era morning counters migrate without granting another use."

@@ -38,12 +38,13 @@ def prepare():
             'Unity.ugui', 'Zjcs.Offline.Home', 'Zjcs.Official.HomeIncomeRules', 'Zjcs.Official.HomeUI',
             'Zjcs.Official.ProfessionUI', 'Zjcs.Offline.Commerce',
             'Zjcs.Offline.CharacterCreation', 'Zjcs.Offline.Progression', 'Zjcs.Offline.State',
-            'Zjcs.Presentation.Home', 'Unity.TextMeshPro', 'Zjcs.Official.HomeAwardUI']), indent=2) + '\n', 'utf8', newline='\n')
+            'Zjcs.Presentation.Home', 'Unity.TextMeshPro', 'Zjcs.Official.HomeAwardUI',
+            'Zjcs.Offline.HomeUI']), indent=2) + '\n', 'utf8', newline='\n')
     receipt_path = ROOT / 'assets/reference/home-income-formula-source-manifest.json'
     receipt = json.loads(receipt_path.read_bytes())
     source = '.tools/source-packages/current/884_156692/official-code/client-source/FurnitureBedDialog.cs'
     receipt['inputs'][source] = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
-    for name in ('PlayerHangUpDataExt', 'Player', 'FunctionType'):
+    for name in ('PlayerHangUpDataExt', 'Player', 'FunctionType', 'FurnitureLevelRuleInfo'):
         source = '.tools/source-packages/current/884_156692/official-code/common-source/Common/' + name + '.cs'
         receipt['inputs'][source] = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
     receipt['free_fast_forward_adapter'] = (

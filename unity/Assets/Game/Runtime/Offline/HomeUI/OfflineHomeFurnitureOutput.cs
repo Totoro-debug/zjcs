@@ -68,10 +68,10 @@ namespace Zjcs.Offline.HomeUI
             var reward = rules.HangUpReward(row.rewardId)
                 ?? throw new InvalidOperationException("Selected home reward configuration is unavailable: " + row.rewardId);
             // Original CalRewardCount's base branch ignores the hour argument.
-            if (isBase) return (double)(float)reward.hourlyOutput * (float)levelNum;
+            if (isBase) return (double)(float)reward.hourlyOutput * levelNum;
             return Zjcs.Official.HomeIncomeRules.HangUpUtils.CalcRewardCount(Info(row),
                 new Zjcs.Official.HomeIncomeRules.HangUpRewardInfo { HourlyOutput = (float)reward.hourlyOutput },
-                formula, snapshot.NonBattleProps, hours, (float)levelNum);
+                formula, snapshot.NonBattleProps, hours, levelNum);
         }
         public long GetHangUpMaxRewardStore(int id, int level = -1)
         {

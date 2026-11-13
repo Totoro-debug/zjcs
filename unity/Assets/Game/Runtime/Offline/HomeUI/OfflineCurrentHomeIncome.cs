@@ -61,7 +61,8 @@ namespace Zjcs.Offline.HomeUI
                 }).ToArray(),
                 furnitureLevelRules = configuration.Rows("furniture_level_rule").Select(row => new HomeFurnitureLevelRuleRecord
                 {
-                    id = Number(row, "Id"), level = Number(row, "Level"), levelNum = Float(row["LevelNum"]),
+                    id = Number(row, "Id"), level = Number(row, "Level"),
+                    levelNum = Convert.ToDouble(row["LevelNum"], CultureInfo.InvariantCulture),
                     maxStoreThread = Number(row, "MaxStoreTimeThread")
                 }).ToArray(),
                 homeLevels = configuration.Rows("home_level").Select(row => new HomeLevelRecord
