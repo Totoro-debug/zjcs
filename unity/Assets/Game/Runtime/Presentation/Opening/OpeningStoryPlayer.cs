@@ -1,4 +1,5 @@
 using System;
+using Zjcs.Offline.Story;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -63,20 +64,34 @@ namespace Zjcs.Presentation.Opening
             return true;
         }
 
+        private StoryModule<OpeningStoryGraph, OpeningStoryNode> storyModule;
+        private IEnumerator pendingStoryNode;
+
         public IEnumerator Play(string storyName)
         {
+            if (storyModule?.IsRunning == true) throw new InvalidOperationException("An opening story is already running.");
             OpeningStoryGraph graph = assets.Story.RequireGraph(storyName);
             skipMode = false;
-            OpeningStoryNode node = graph.Start;
-            while (node != null)
+            storyModule ??= new StoryModule<OpeningStoryGraph, OpeningStoryNode>(
+                value => value.Start?.Id ?? 0,
+                (value, id) => value.Nodes.TryGetValue(id, out OpeningStoryNode node) ? node : null,
+                (value, node, resume) =>
+                {
+                    pendingStoryNode = RunOpeningStoryNode(value, node, resume);
+                    return StoryTransition<OpeningStoryGraph>.Wait;
+                });
+            storyModule.Play(graph, null);
+            try
             {
-                var result = StoryNodeResult.Ok;
-                yield return RunNode(graph, node, value => result = value);
-                if (result == StoryNodeResult.SafeEnd) skipMode = true;
-                if (result == StoryNodeResult.ForceEnd) break;
-                node = node.Exit.Count > 0 && graph.Nodes.TryGetValue(node.Exit[0], out OpeningStoryNode next)
-                    ? next : null;
+                while (storyModule.IsRunning)
+                {
+                    IEnumerator pending = pendingStoryNode
+                        ?? throw new InvalidOperationException("Opening story has no pending node.");
+                    pendingStoryNode = null;
+                    yield return pending;
+                }
             }
+            finally { storyModule.Cancel(); pendingStoryNode = null; }
 
             // StoryPlayEnvManager.Reset() runs when a graph ends: drop masks, windows and
             // restore the main UI.
@@ -87,8 +102,21 @@ namespace Zjcs.Presentation.Opening
             SetUiHidden(false);
         }
 
+        private IEnumerator RunOpeningStoryNode(OpeningStoryGraph graph, OpeningStoryNode node, Action<int> resume)
+        {
+            var result = StoryNodeResult.Ok;
+            yield return RunNode(graph, node, value => result = value);
+            if (result == StoryNodeResult.SafeEnd) skipMode = true;
+            // Original missing Exit targets end the graph rather than creating a new node.
+            int next = result != StoryNodeResult.ForceEnd && node.Exit.Count > 0
+                && graph.Nodes.ContainsKey(node.Exit[0]) ? node.Exit[0] : 0;
+            resume(next);
+        }
+
         public void Abort()
         {
+            storyModule?.Cancel();
+            pendingStoryNode = null;
             CloseDialogs();
             HideBlackMask();
             HideInvisibleMask();

@@ -49,6 +49,7 @@ namespace Zjcs.Presentation.World
 
         private IEnumerator RunMainlineStoryPlayable(Map10RuntimeStory graph, Map10RuntimeStoryNode source)
         {
+            Action<int> resume = storyResume;
             if (!mainlineStoryPlayableScope)
             {
                 mainlineStoryPlayableScope = mapRoot.gameObject.AddComponent<MainlineStoryPlayableScope>();
@@ -109,7 +110,7 @@ namespace Zjcs.Presentation.World
                 }
                 yield break;
             }
-            if (storyRunning && ReferenceEquals(activeStory, graph)) RunStoryGraph(StoryNext(source, "Exit"));
+            if (storyRunning && ReferenceEquals(activeStory, graph)) resume(StoryNext(source, "Exit"));
         }
 
         private StoryPlayableEntityBinding ResolveMainlinePlayableEntity(Map10RuntimeStory graph, int id)

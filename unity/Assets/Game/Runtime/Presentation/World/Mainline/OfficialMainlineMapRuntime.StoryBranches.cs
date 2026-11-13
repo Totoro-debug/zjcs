@@ -13,23 +13,6 @@ namespace Zjcs.Presentation.World
             public StorySerializableValue[] OutputList;
         }
 
-        private bool FinishStoryFrame(out int nextNodeId)
-        {
-            nextNodeId = 0;
-            if (storyFrames.Count > 0)
-            {
-                Map10RuntimeStoryFrame frame = storyFrames.Pop();
-                activeStory = frame.Parent;
-                nextNodeId = frame.NextNodeId;
-                return false;
-            }
-            CompleteStory(activeStory.key);
-            IncrementStoryPlayCount(activeStory.key);
-            SaveLocalProgress();
-            FinishStoryGraph();
-            return true;
-        }
-
         // The client consumes SelectedIndex supplied by the server. The confirmed
         // offline rule selects the first match in the original serialized order.
         private int SelectStoryBranch(Map10RuntimeStory story, Map10RuntimeStoryNode node)

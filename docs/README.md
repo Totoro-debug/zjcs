@@ -48,6 +48,7 @@
 | [主题签到与长期活动入口](features/sign-ins.md) | 未完成 |
 | [技能、方案与培养](features/skills.md) | 未完成；当前目标为初始职业及一阶转职技能 |
 | [主线任务进度](features/tasks.md) | 未完成 |
+| [主线剧情公共模块](features/story.md) | 未完成 |
 | [古遗物扭蛋与女神牌](features/treasure-gacha.md) | 未完成 |
 | [Unity 工程与启动流程](features/unity-project.md) | 未完成 |
 | [虚空裂隙与混沌侵袭](features/weekly-challenges.md) | 未完成 |

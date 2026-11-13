@@ -14,6 +14,8 @@
 
 [CharacterCreationFlowController.CreateSlot / OpenSlot](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs) 在新建槽位或打开未创角槽位时调用 [CharacterOpeningFlow.Begin](../../unity/Assets/Game/Runtime/Presentation/Opening/CharacterOpeningFlow.cs)；`Begin` 先按 `ShouldSkipNewbieCutscene` 判定跳过，未跳过时依次执行 `BeforeFight` → 官方录像回放 → `AfterFight` → 战斗到主场景等待 → 打开创角面板。提交角色后 [SubmitCharacter](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs) 调用 `PlayFirstStory`，`FirstStory` 结束后再进入本地初始武器选择。开场剧情的跳过节流、回放时钟、快进与失败回退见下文“自定义实现”。
 
+序章故事图的公共执行接口和适配器见[主线剧情公共模块](story.md)；本页继续维护序章与创角的具体表现和未完成项。
+
 ## 原始官方实现
 
 官方创角由开场、体型、外观／染色、命名及初始职业／武器流程组成；模型、色板、部件、肖像与动画均来自官方 prefab、骨骼、配置及客户端调用。

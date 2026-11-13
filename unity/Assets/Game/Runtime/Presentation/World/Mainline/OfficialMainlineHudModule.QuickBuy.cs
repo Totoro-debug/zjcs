@@ -40,12 +40,13 @@ namespace Zjcs.Presentation.World
 
             public void RunStoryQuickBuy(Map10RuntimeStoryNode node)
             {
+                Action<int> resume = host.storyResume;
                 StoryValueFields fields = StoryFields(node);
                 Map11RuntimeQuickBuy row = quickBuys.SingleOrDefault(value => value.ItemId == fields.ItemId);
                 if (row == null || fields.RequireCount <= 0 || !QuickBuyConditionMet(row))
                 {
                     ShowOfficialNotice(host.NativeUi.Text("ItemInfoDialog.Limit.QuickBuyConditionNotMet"));
-                    host.RunStoryGraph(StoryNext(node, "Failure"));
+                    resume(StoryNext(node, "Failure"));
                     return;
                 }
                 // Pinned Map11 has only this constant, unlimited quote. Guard the
@@ -92,7 +93,7 @@ namespace Zjcs.Presentation.World
                                 return;
                             }
                             OpenQuickBuyCurrencyExchange(price - host.StoryItemCount(row.CurrencyId),
-                                () => host.RunStoryGraph(StoryNext(node, "Failure")));
+                                () => resume(StoryNext(node, "Failure")));
                             return;
                         }
                         if (!QuickBuyConditionMet(row))
@@ -115,7 +116,7 @@ namespace Zjcs.Presentation.World
                         Destroy(quickBuyCanvas);
                         quickBuyDialog = null;
                         quickBuyCanvas = null;
-                        if (next > 0) host.RunStoryGraph(next);
+                        if (next > 0) resume(next);
                     });
                 WorldItemIcon icon = Instantiate(Resources.Load<GameObject>(host.NativeUiResource("ItemIconDefault")), quickBuyDialog.Slot, false)
                     .GetComponent<WorldItemIcon>();

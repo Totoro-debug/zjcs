@@ -1,4 +1,5 @@
 using System;
+using Zjcs.Offline.Story;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -174,7 +175,6 @@ namespace Zjcs.Presentation.World
             if (storyRunning) throw new InvalidOperationException("A Map10 story is already running.");
             if (!stories.TryGetValue(key, out activeStory))
                 throw new InvalidDataException("Official Map10 story is missing: " + key);
-            storyFrames.Clear();
             storyBlackboards.Clear();
             storyProperties.Clear();
             activeStoryRootKey = key;
@@ -190,7 +190,20 @@ namespace Zjcs.Presentation.World
                 storyHiddenContextEntity = mapEntityObject(context.PlacementId);
                 if (storyHiddenContextEntity != null) storyHiddenContextEntity.SetActive(false);
             }
-            RunStoryGraph(activeStory.entryNodeId);
+            storyModule ??= new StoryModule<Map10RuntimeStory, Map10RuntimeStoryNode>(
+                graph => graph.entryNodeId, FindStoryNode, ExecuteStoryNode);
+            Map10RuntimeStory root = activeStory;
+            try
+            {
+                storyModule.Play(root, () =>
+                {
+                    CompleteStory(root.key);
+                    IncrementStoryPlayCount(root.key);
+                    SaveLocalProgress();
+                    FinishStoryGraph();
+                });
+            }
+            catch (Exception error) { HandleStoryError(error); }
         }
 
         private void RegisterStoryProperties(Map10RuntimeStory story)
@@ -207,452 +220,33 @@ namespace Zjcs.Presentation.World
             storyProperties[story.key] = values;
         }
 
-        private void RunStoryGraph(int nodeId)
+        private StoryModule<Map10RuntimeStory, Map10RuntimeStoryNode> storyModule;
+        private Action<int> storyResume;
+
+        private void StartStoryWait(IEnumerator wait) => StartCoroutine(GuardStoryWait(wait, storyResume, false));
+        private void StartNativeDialogWait(IEnumerator wait) => StartCoroutine(GuardStoryWait(wait, nativeDialogResume, true));
+
+        private IEnumerator GuardStoryWait(IEnumerator wait, Action<int> continuation, bool native)
         {
             try
             {
-                for (int count = 0; count < 256 && storyRunning; count++)
-                {
-                    // StoryGraph.AsyncRun ends normally when MoveNext returns
-                    // null, including an unconnected selector Exit.
-                    if (nodeId == 0)
-                    {
-                        if (FinishStoryFrame(out nodeId)) return;
-                        continue;
-                    }
-                    Map10RuntimeStoryNode node = FindStoryNode(activeStory, nodeId);
-                    if (node == null) throw new InvalidDataException("Official Map10 story node is missing: " + nodeId);
-                    switch (node.type)
-                    {
-                        case "StartStoryNode":
-                        case "WaitStartStoryNode":
-                        case "WaitAllNoTipWindowClosedNode":
-                        case "FinishStoryConditionNode":
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "WaitMapInitedNode":
-                            // Begin finishes map/view binding before story input is
-                            // enabled, so the original Initialized wait is satisfied.
-                            if (session == null || entityView == null || avatar == null)
-                                throw new InvalidOperationException("Official story started before map initialization.");
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "PlayerConditionNode":
-                        case "PlayerOnMapConditionNode":
-                        case "PlayerOnSceneConditionNode":
-                        case "WaitMapEntityInStateConditionNode":
-                        case "AllNoTipWinClosedConditionNode":
-                            StartCoroutine(ContinueStoryWhenBooleanCondition(activeStory, node,
-                                StoryNext(node, "Output") != 0 ? StoryNext(node, "Output") : StoryNext(node, "Exit")));
-                            return;
-                        case "WorldStopMoveNode":
-                            navigation.StopMovement();
-                            if (mapClassId == 13) navigation.LockPlayerMovementForStory();
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "FinishStoryNode":
-                            if (FinishStoryFrame(out nodeId)) return;
-                            continue;
-                        case "SetStoryStateNode":
-                            SetStoryStatus(node.storyName, node.storyStatus);
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "SetTriggerNode":
-                            StoryTriggerFields setTrigger = JsonUtility.FromJson<StoryTriggerFields>(node.sourceJson);
-                            if (mapClassId != 13 || setTrigger == null || string.IsNullOrWhiteSpace(setTrigger.Key)
-                                || node.ports?.Any(port => port.name == "Key" && port.connections?.Length > 0) == true)
-                                throw new InvalidDataException("Unsupported official story trigger input in Map" + mapClassId + ".");
-                            if (!storyBlackboards.TryGetValue(activeStory.key, out HashSet<string> triggerKeys))
-                                storyBlackboards.Add(activeStory.key, triggerKeys = new HashSet<string>(StringComparer.Ordinal));
-                            OfficialStoryTriggerSet(triggerKeys, setTrigger.Key);
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "GetFixAwardNode":
-                            if (TryGrantFixedStoryReward(node.awardId, out string rewardNotice))
-                            {
-                                hud.ShowOfficialNotice(rewardNotice);
-                                nodeId = StoryNext(node, "Exit");
-                            }
-                            else
-                            {
-                                nodeId = StoryNext(node, "FailExit");
-                            }
-                            continue;
-                        case "DialogNode":
-                            PlayStory(activeStory.key, node.dialogId, () => RunStoryGraph(StoryNext(node, "Exit")), node);
-                            return;
-                        case "OptionDialogNode":
-                            PlayStory(activeStory.key, node.dialogId, () =>
-                                ShowStoryOptions(activeStory.key, node, index =>
-                                    RunStoryGraph(StoryNext(node, "Options " + index)
-                                        is int target && target > 0 ? target : StoryNext(node, "Exit"))), node);
-                            return;
-                        case "IfNode":
-                            nodeId = StoryNext(node, EvaluateStoryIf(activeStory, node) ? "True" : "False");
-                            continue;
-                        case "SelectorNode":
-                            nodeId = SelectStoryBranch(activeStory, node);
-                            continue;
-                        case "SwitchNode":
-                            nodeId = SelectStorySwitch(node, StorySwitchValue(activeStory, node));
-                            continue;
-                        case "GetMapWitchExploreInfoNode":
-                            // The confirmed local query reads the durable activation ledger
-                            // used by EvaluateStoryValue for this node's ActiveCount output.
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "ClickMapPosInLogicNode":
-                            MapGridPoint clickTarget = ResolveStoryMapPosition(activeStory, node, "mTargetPos");
-                            if (CanStoryClickGrid(clickTarget)) navigation.ClickLogicalGrid(clickTarget);
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "WaitPlayerArriveMapPosAroundNode":
-                            MapGridPoint waitTarget = ResolveStoryMapPosition(activeStory, node, "mTargetPos");
-                            int waitDistance = OfficialStoryArrivalDistance(
-                                JsonUtility.FromJson<StoryMapPositionFields>(node.sourceJson).mDistance);
-                            StartCoroutine(ContinueStoryWhenPlayerArrives(waitTarget, waitDistance, StoryNext(node, "Exit")));
-                            return;
-                        case "EnterMapRegionConditionNode":
-                            StoryEnterRegionFields enterRegion = JsonUtility.FromJson<StoryEnterRegionFields>(node.sourceJson);
-                            if (enterRegion == null || enterRegion.MapClassId != mapClassId
-                                || enterRegion.RegionStatus != 0 || enterRegion.RegionId < -1)
-                                throw new InvalidDataException("Unsupported official story region-entry condition in Map" + mapClassId + ".");
-                            StartCoroutine(ContinueStoryWhenEnteringRegion(enterRegion,
-                                StoryNext(node, "Exit")));
-                            return;
-                        case "MapRegionLeaveConditionNode":
-                            StoryLeaveRegionFields leaveRegion = JsonUtility.FromJson<StoryLeaveRegionFields>(node.sourceJson);
-                            if (leaveRegion == null || leaveRegion.MapClassId != mapClassId
-                                || leaveRegion.RegionId < -1)
-                                throw new InvalidDataException("Unsupported official story region-leave condition in Map" + mapClassId + ".");
-                            StartCoroutine(ContinueStoryWhenLeavingRegion(leaveRegion,
-                                StoryNext(node, "Output")));
-                            return;
-                        case "WaitNearEntConditionNode":
-                            StoryNearEntityFields nearEntity = JsonUtility.FromJson<StoryNearEntityFields>(node.sourceJson);
-                            if (nearEntity == null || nearEntity.MapClassId != mapClassId
-                                || nearEntity.IsUseClassId != 1 || nearEntity.EntClassId <= 0)
-                                throw new InvalidDataException("Unsupported official story entity proximity condition in Map" + mapClassId + ".");
-                            StartCoroutine(ContinueStoryWhenNearEntity(nearEntity,
-                                StoryNext(node, "Output")));
-                            return;
-                        case "ClickMapEntityNode":
-                            Map10RuntimeEntity clickedEntity = ResolveStoryEntityPort(activeStory, node, "Entity");
-                            navigation.StartMovement(clickedEntity.Grid, clickedEntity);
-                            StartCoroutine(ContinueStoryAfterNavigation(StoryNext(node, "Exit")));
-                            return;
-                        case "ClickMapEntityInLogicNode":
-                            Map10RuntimeEntity logicEntity = ResolveStoryEntityPort(activeStory, node, "mMyEntity");
-                            navigation.StartMovement(logicEntity.Grid, logicEntity);
-                            StoryValueFields clickFields = StoryFields(node);
-                            if (clickFields.mNeedWaitLogicComplete != 0)
-                            {
-                                StartCoroutine(ContinueStoryAfterNavigation(StoryNext(node, "Exit")));
-                                return;
-                            }
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "MapEntityMoveInteractionNode":
-                            Map10RuntimeEntity operateEntity = ResolveStoryEntityPort(activeStory, node, "OperateEntity");
-                            Map10RuntimeEntity interactEntity = ResolveStoryEntityPort(activeStory, node, "InteractEntity");
-                            if (operateEntity.PlacementId == StoryPlayerPlacementId)
-                            {
-                                string parentStory = activeStoryRootKey;
-                                navigation.StartStoryInteraction(interactEntity, () =>
-                                {
-                                    // An interaction can open a nested official story. In that
-                                    // case the nested graph owns continuation; otherwise the
-                                    // current graph advances after the local interaction.
-                                    if (storyRunning && string.Equals(activeStoryRootKey, parentStory,
-                                        StringComparison.Ordinal))
-                                        RunStoryGraph(StoryNext(node, "Exit"));
-                                });
-                                return;
-                            }
-                            StartCoroutine(MoveStoryMapEntity(operateEntity, interactEntity, node.moveSpeed,
-                                StoryNext(node, "Exit")));
-                            return;
-                        case "HandInItemNode":
-                            RunHandInItemNode(node);
-                            return;
-                        case "StoryStartStageNode":
-                            StartMap14StoryStage(node);
-                            return;
-                        case "OpenMapNationShopPanelNode":
-                            if (mapClassId != 13 || storyContextEntity == null || storyContextEntity.EntityClassId != 8438)
-                                throw new InvalidDataException("Unsupported official nation-shop panel in Map" + mapClassId + ".");
-                            OpenMap13NationShop(() => RunStoryGraph(StoryNext(node, "Exit")));
-                            return;
-                        case "PlayerActiveMapNode":
-                            int activeMapClassId = JsonUtility.FromJson<StoryMapActivationFields>(node.sourceJson)?.MapClassId ?? 0;
-                            if (activeMapClassId <= 0)
-                                throw new InvalidDataException("Official story map activation target is invalid: " + activeStory.key);
-                            ProgressionResult activation = progressionSave.ApplyMapActivationResult(activeMapClassId, true,
-                                "story:" + activeStoryRootKey + ":node:" + node.id + ":active-map:" + activeMapClassId);
-                            if (activation.Status == ProgressionResultStatus.InvalidState)
-                                throw new InvalidOperationException(activation.Message);
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "PlayerWorldAloneAppearNode":
-                            int aloneWorldClassId = JsonUtility.FromJson<StoryAloneWorldFields>(node.sourceJson)?.MapAloneWorldClassId ?? 0;
-                            if (aloneWorldClassId <= 0)
-                                throw new InvalidDataException("Official story alone-world target is invalid: " + activeStory.key);
-                            ProgressionResult aloneWorld = progressionSave.MarkWorldAloneAppeared(aloneWorldClassId,
-                                DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                                "story:" + activeStoryRootKey + ":node:" + node.id + ":alone-world:" + aloneWorldClassId);
-                            if (aloneWorld.Status == ProgressionResultStatus.InvalidState)
-                                throw new InvalidOperationException(aloneWorld.Message);
-                            if (!localSave.aloneWorldClassIds.Contains(aloneWorldClassId))
-                            {
-                                localSave.aloneWorldClassIds = localSave.aloneWorldClassIds.Concat(new[] { aloneWorldClassId })
-                                    .Distinct().OrderBy(value => value).ToArray();
-                                SaveLocalProgress();
-                            }
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "SetMapLogicEntityInteractionRangeOverrideByCharacterNode":
-                            ApplyStoryInteractionRangeOverride(node);
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "AddNpcFollowerNode":
-                            StoryFollowerFields followerAdd = JsonUtility.FromJson<StoryFollowerFields>(node.sourceJson);
-                            SetNpcFollowers(localSaveFollowerClassIds.Concat(followerAdd?.NpcClassIds ?? Array.Empty<int>()));
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "RemovePlayerNpcFollowerAllNode":
-                            SetNpcFollowers(Array.Empty<int>());
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "WaitWindowOpenedNode":
-                            if (activeStory.key == "WitchStory2" && storyContextEntity != null
-                                && storyContextEntity.EntityClassId == 6620)
-                            {
-                                statues.WaitForWitchPreviewOpen(() => RunStoryGraph(StoryNext(node, "Exit")));
-                                return;
-                            }
-                            // Other official windows are represented by native panels in the
-                            // offline build. Their registration is synchronous, so the wait is
-                            // already satisfied when the graph reaches this node.
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "WaitWindowClosedNode":
-                            if (activeStory.key == "WitchStory2" && storyContextEntity != null
-                                && storyContextEntity.EntityClassId == 6620)
-                            {
-                                statues.WaitForWitchPreviewClose(() => RunStoryGraph(StoryNext(node, "Exit")));
-                                return;
-                            }
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "ActivityPuzzleCompleteNode":
-                            // This node queries the separate timed puzzle activity,
-                            // not a mainline map lock. No such activity is active here.
-                            nodeId = StoryNext(node, "NotComplete");
-                            continue;
-                        case "GoToNode":
-                            StoryValueFields jump = StoryFields(node);
-                            nodeId = jump.GoByNodeId != 0 ? jump.GoByNodeId : jump.GotoId != 0
-                                ? jump.GotoId : int.TryParse(jump.GoTo, out int targetNode) ? targetNode : StoryNext(node, "Exit");
-                            continue;
-                        case "InitiatorActionNode":
-                            bool success = ProcessPuzzleTerminalAction(StoryFields(node).ActionType);
-                            nodeId = StoryNext(node, success ? "Success" : "Failure");
-                            if (nodeId == 0) nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "ItemQuikBuyNode":
-                            hud.RunStoryQuickBuy(node);
-                            return;
-                        case "ClickBtnNode":
-                        case "ClickLoopListItemNode":
-                            StoryButtonFields buttonFields = JsonUtility.FromJson<StoryButtonFields>(node.sourceJson);
-                            if (node.type == "ClickBtnNode" && buttonFields != null
-                                && string.Equals(buttonFields.StoryUIKey, "DailyDungeonDialogPrivateMap.BattleBtn",
-                                    StringComparison.Ordinal)
-                                && storyContextEntity != null && storyContextEntity.StageIds != null
-                                && storyContextEntity.StageIds.Any(value => value > 0))
-                            {
-                                StartEntityStage(storyContextEntity,
-                                    () => { if (storyRunning) RunStoryGraph(StoryNext(node, "Exit")); });
-                                return;
-                            }
-                            // The official node waits for a registered UI Button. Native
-                            // offline panels register their controls before this graph tick;
-                            // dispatching the click is therefore equivalent to advancing the
-                            // graph once here.
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "WaitStoryUIActiveNode":
-                        case "WaitPublicBottomBarActiveNode":
-                        case "WaitTabItemStateNode":
-                            // These waits only guard server-created UI. All corresponding
-                            // offline panels are created synchronously by the map HUD.
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "ShowFullMaskNode":
-                        case "HideFullMaskNode":
-                        case "PlayMaskNode":
-                        case "CameraDragNode":
-                        case "SetFreeCameraForcePosXNode":
-                        case "EntityPlayableSupporterViewNode":
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "CameraMoveNode":
-                            StoryCameraMoveFields cameraMove = JsonUtility.FromJson<StoryCameraMoveFields>(node.sourceJson);
-                            Vector2 cameraMoveTarget = cameraMove == null
-                                ? new Vector2(node.moveTargetX, node.moveTargetY) : cameraMove.TargetPosition;
-                            storyCameraTarget = StoryWorldPoint(cameraMoveTarget.x, cameraMoveTarget.y);
-                            storyCameraSizeTarget = DefaultWorldCameraSize();
-                            storyCameraActive = true;
-                            StartCoroutine(ContinueStoryAfterDelay(cameraMove == null ? node.duration : cameraMove.Duration,
-                                StoryNext(node, "Exit")));
-                            return;
-                        case "PlayStoryTimelineNode":
-                            // Timeline assets are optional in the APK. The map-specific
-                            // PlayableNode path above supplies the native equivalent; this
-                            // node still preserves its wait duration and graph ordering.
-                            StartCoroutine(ContinueStoryAfterDelay(node.playableDuration,
-                                StoryNext(node, "Exit")));
-                            return;
-                        case "StoryInvokeNode":
-                        case "RegisterStoryPropertyNode":
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "WaitGameResultNode":
-                            StartStoryGameResult(node);
-                            return;
-                        case "TalkOptionNode":
-                        case "ProfessionRoutineOption":
-                        case "ShowProfessionPromotionOption":
-                            nodeId = StoryNext(node, "StaticSelect 0");
-                            if (nodeId == 0) nodeId = StoryNext(node, "DynamicExit");
-                            if (nodeId == 0) nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "OpenProfessionChangeWinNode":
-                        case "OpenProfessionPromotionWinNode":
-                        case "OpenFreeProfessionChangeNode":
-                            // Profession windows are owned by the shared native ProfessionUI
-                            // service. The offline story has no server callback, so continue
-                            // through the corresponding local success/exit branch.
-                            nodeId = StoryNext(node, "Success");
-                            if (nodeId == 0) nodeId = StoryNext(node, "Exit");
-                            if (nodeId == 0) nodeId = StoryNext(node, "DynamicExit");
-                            continue;
-                        case "WaitForSecondsNode":
-                            StartCoroutine(ContinueStoryAfterDelay(node.seconds, StoryNext(node, "Exit")));
-                            return;
-                        case "AddMapExclusiveNpcAtPosNode":
-                            AddStoryEntity(node, ResolveStorySpawnPosition(activeStory, node));
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "AddMapExclusiveNpcAroundPlayerNode":
-                            MapGridPoint nearPlayer = FindAdjacentStoryGrid();
-                            AddStoryEntity(node, new Vector2(nearPlayer.X, nearPlayer.Y));
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "RemoveMapExclusiveNpcNode":
-                            var removals = JsonUtility.FromJson<StoryNpcRemovalFields>(node.sourceJson);
-                            if (removals.RemoveEntities.Any(v => v.StoryPlayableSelect.Type != 0))
-                                throw new InvalidDataException("Original NPC removal playable must be bound before this story can run.");
-                            RemoveStoryEntities(node.removeEntityClassIds);
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "MapEntityMoveNode":
-                            int entityNodeId = StoryNext(node, "OperateEntity");
-                            if (!storyEntities.TryGetValue(entityNodeId, out GameObject movingEntity))
-                                throw new InvalidDataException("Official Map10 story move has no spawned entity: " + entityNodeId);
-                            StartCoroutine(MoveStoryEntity(movingEntity, node.destinationX, node.destinationY,
-                                Mathf.Max(0.1f, node.moveSpeed), StoryNext(node, "Exit")));
-                            return;
-                        case "MapMeCharacterTransferNode":
-                            StoryTransferFields transfer = JsonUtility.FromJson<StoryTransferFields>(node.sourceJson);
-                            Map10RuntimeEntity transferTarget = null;
-                            if (transfer.MapClassId == mapClassId)
-                            {
-                                int logicId = string.IsNullOrEmpty(transfer.LoEntityTag) ? transfer.LoEntityId
-                                    : mapLogicTags.Values.FirstOrDefault(value => value.MapClass == mapClassId
-                                        && value.Tag == transfer.LoEntityTag)?.LogicId ?? 0;
-                                if (logicId != 0) mapEntities.TryGetValue(logicId, out transferTarget);
-                            }
-                            navigation.StartStoryTransfer(transferTarget, transfer.Direction,
-                                () => RunStoryGraph(StoryNext(node, "Exit")));
-                            return;
-                        case "EnterStoryWorldCameraNode":
-                            if (node.needHideUi) SetStoryWorldUiHidden(true);
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "ExitStoryWorldCameraNode":
-                            storyCameraActive = false;
-                            if (node.needShowUi) SetStoryWorldUiHidden(false);
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "HideAllUINode":
-                            SetStoryWorldUiHidden(true);
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "ShowAllUINode":
-                            SetStoryWorldUiHidden(false);
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "WorldCameraNode":
-                        case "CameraMoveAndUnlockAreaNode":
-                            Vector2 cameraPoint = ResolveStoryCameraPoint(activeStory, node);
-                            storyCameraTarget = StoryWorldPoint(cameraPoint.x, cameraPoint.y) + new Vector3(0f, 0f, -20f);
-                            storyCameraSizeTarget = Mathf.Clamp(DefaultWorldCameraSize() + node.viewSizeOffset, 4f, 30f);
-                            storyCameraActive = true;
-                            StartCoroutine(ContinueStoryAfterDelay(node.duration, StoryNext(node, "Exit")));
-                            return;
-                        case "SetMapLogicEntitySetStateNode":
-                            ApplyStoryMapLogicStates(node.mapLogicStates);
-                            if (node.endAsStoryFinish) SetStoryStatus(activeStory.key, 2);
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "SubgraphRunNode":
-                            if (!storySubgraphs.TryGetValue(node.subgraphName, out Map10RuntimeStory subgraph))
-                                throw new InvalidDataException("Official Map" + mapClassId
-                                    + " story subgraph is not loaded: " + node.subgraphName);
-                            storyFrames.Push(new Map10RuntimeStoryFrame
-                            {
-                                Parent = activeStory,
-                                NextNodeId = StoryNext(node, "Exit")
-                            });
-                            activeStory = subgraph;
-                            nodeId = subgraph.entryNodeId;
-                            continue;
-                        case "PlayPlayableNode":
-                            if (mapClassId == 13 || mapClassId == 16)
-                            {
-                                StartCoroutine(RunMainlineStoryPlayable(activeStory, node));
-                                return;
-                            }
-                            if (string.IsNullOrWhiteSpace(node.playableAssetGuid)
-                                || !officialPlayables.ContainsKey(node.playableAssetGuid))
-                                throw new InvalidDataException("Official Map10 story playable is not loaded: " + node.playableAssetGuid);
-                            if (node.playableAssetGuid == "9b248cde91299ee4287533b25b7dd468")
-                            {
-                                GameObject npc = storyEntities.OrderBy(value => value.Key).Select(value => value.Value)
-                                    .LastOrDefault(value => value != null);
-                                if (npc != null) entityView.PlayStoryEntityAnimation(npc, "disappear_01");
-                            }
-                            if (node.waitPlayableStop)
-                            {
-                                StartCoroutine(ContinueStoryAfterDelay(node.playableDuration,
-                                    StoryNext(node, "Exit")));
-                                return;
-                            }
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        default:
-                            throw new InvalidDataException("Unsupported official Map10 story node: " + node.type);
-                    }
-                }
-                if (storyRunning) throw new InvalidDataException("Official Map10 story exceeded its node limit: " + activeStory.key);
+                while (ReferenceEquals(continuation, native ? nativeDialogResume : storyResume) && wait.MoveNext())
+                    yield return wait.Current;
             }
-            catch (Exception error)
-            {
-                Debug.LogException(error, this);
-                AbortStoryGraph();
-                hud.ShowOfficialNotice("剧情暂时无法继续");
-            }
+            finally { (wait as IDisposable)?.Dispose(); }
+        }
+
+        private void RunStoryGraph(int nodeId)
+        {
+            try { storyResume?.Invoke(nodeId); }
+            catch (Exception error) { HandleStoryError(error); }
+        }
+
+        private void HandleStoryError(Exception error)
+        {
+            Debug.LogException(error, this);
+            AbortStoryGraph();
+            hud.ShowOfficialNotice("剧情暂时无法继续");
         }
 
         private bool HasStoryInteractionRangeOverride(Map10RuntimeEntity entity, MapGridPoint point)
@@ -692,23 +286,26 @@ namespace Zjcs.Presentation.World
 
         private IEnumerator ContinueStoryAfterDelay(float seconds, int nextNodeId)
         {
+            Action<int> resume = storyResume;
             if (seconds > 0f) yield return new WaitForSecondsRealtime(seconds);
-            if (storyRunning) RunStoryGraph(nextNodeId);
+            if (storyRunning) resume(nextNodeId);
         }
 
         private IEnumerator ContinueStoryAfterNavigation(int nextNodeId)
         {
+            Action<int> resume = storyResume;
             while (navigation.IsMoving && storyRunning) yield return null;
-            if (storyRunning) RunStoryGraph(nextNodeId);
+            if (storyRunning) resume(nextNodeId);
         }
 
         private void StartStoryGameResult(Map10RuntimeStoryNode node)
         {
+            Action<int> resume = storyResume;
             StoryGameResultFields fields = JsonUtility.FromJson<StoryGameResultFields>(node.sourceJson);
             int stageId = fields == null ? 0 : fields.StageId;
             if (stageId <= 0)
             {
-                RunStoryGraph(StoryNext(node, "Leave") != 0 ? StoryNext(node, "Leave") : StoryNext(node, "Exit"));
+                resume(StoryNext(node, "Leave") != 0 ? StoryNext(node, "Leave") : StoryNext(node, "Exit"));
                 return;
             }
 
@@ -718,7 +315,7 @@ namespace Zjcs.Presentation.World
             if (stageEntity == null)
             {
                 hud.ShowOfficialNotice("剧情战斗配置缺失：" + stageId);
-                RunStoryGraph(StoryNext(node, "Leave") != 0 ? StoryNext(node, "Leave") : StoryNext(node, "Exit"));
+                resume(StoryNext(node, "Leave") != 0 ? StoryNext(node, "Leave") : StoryNext(node, "Exit"));
                 return;
             }
 
@@ -731,7 +328,7 @@ namespace Zjcs.Presentation.World
                 string port = result == null ? "Leave" : result.won ? "Win" : "Lost";
                 int next = StoryNext(node, port);
                 if (next == 0) next = StoryNext(node, "Exit");
-                if (storyRunning) RunStoryGraph(next);
+                if (storyRunning) resume(next);
             };
             StartEntityStage(stageEntity, completed);
         }
@@ -739,25 +336,28 @@ namespace Zjcs.Presentation.World
         private IEnumerator ContinueStoryWhenBooleanCondition(Map10RuntimeStory story,
             Map10RuntimeStoryNode node, int nextNodeId)
         {
+            Action<int> resume = storyResume;
             while (storyRunning && !EvaluateStoryBoolean(story, node)) yield return null;
-            if (storyRunning) RunStoryGraph(nextNodeId);
+            if (storyRunning) resume(nextNodeId);
         }
 
         private IEnumerator ContinueStoryWhenPlayerArrives(MapGridPoint target, int distance, int nextNodeId)
         {
+            Action<int> resume = storyResume;
             storyWaitingForArrival = true;
             try
             {
                 while (storyRunning && OfficialStoryManhattanDistance(navigation.currentGrid, target) > distance)
                     yield return null;
                 storyWaitingForArrival = false;
-                if (storyRunning) RunStoryGraph(nextNodeId);
+                if (storyRunning) resume(nextNodeId);
             }
             finally { storyWaitingForArrival = false; }
         }
 
         private IEnumerator ContinueStoryWhenEnteringRegion(StoryEnterRegionFields condition, int nextNodeId)
         {
+            Action<int> resume = storyResume;
             storyWaitingForArrival = true;
             try
             {
@@ -765,7 +365,7 @@ namespace Zjcs.Presentation.World
                 int previousRegion = QueryMap13StoryRegion(previous);
                 if (condition.OnlyCheckMove == 0 && (condition.RegionId == -1 || previousRegion == condition.RegionId))
                 {
-                    if (storyRunning) RunStoryGraph(nextNodeId);
+                    if (storyRunning) resume(nextNodeId);
                     yield break;
                 }
 
@@ -783,13 +383,14 @@ namespace Zjcs.Presentation.World
                     yield return null;
                 }
                 storyWaitingForArrival = false;
-                if (storyRunning) RunStoryGraph(nextNodeId);
+                if (storyRunning) resume(nextNodeId);
             }
             finally { storyWaitingForArrival = false; }
         }
 
         private IEnumerator ContinueStoryWhenLeavingRegion(StoryLeaveRegionFields condition, int nextNodeId)
         {
+            Action<int> resume = storyResume;
             storyWaitingForArrival = true;
             try
             {
@@ -808,13 +409,14 @@ namespace Zjcs.Presentation.World
                     yield return null;
                 }
                 storyWaitingForArrival = false;
-                if (storyRunning) RunStoryGraph(nextNodeId);
+                if (storyRunning) resume(nextNodeId);
             }
             finally { storyWaitingForArrival = false; }
         }
 
         private IEnumerator ContinueStoryWhenNearEntity(StoryNearEntityFields condition, int nextNodeId)
         {
+            Action<int> resume = storyResume;
             storyWaitingForArrival = true;
             try
             {
@@ -826,7 +428,7 @@ namespace Zjcs.Presentation.World
                         entity.Grid.X, entity.Grid.Y, condition.Dist)))
                     yield return null;
                 storyWaitingForArrival = false;
-                if (storyRunning) RunStoryGraph(nextNodeId);
+                if (storyRunning) resume(nextNodeId);
             }
             finally { storyWaitingForArrival = false; }
         }
@@ -843,6 +445,7 @@ namespace Zjcs.Presentation.World
         private IEnumerator MoveStoryEntity(GameObject entity, int destinationX, int destinationY,
             float speed, int nextNodeId)
         {
+            Action<int> resume = storyResume;
             if (entity == null || session == null)
             {
                 AbortStoryGraph();
@@ -875,12 +478,13 @@ namespace Zjcs.Presentation.World
                     yield return null;
                 }
             }
-            if (storyRunning) RunStoryGraph(nextNodeId);
+            if (storyRunning) resume(nextNodeId);
         }
 
         private IEnumerator MoveStoryMapEntity(Map10RuntimeEntity operate, Map10RuntimeEntity interact,
             float speed, int nextNodeId)
         {
+            Action<int> resume = storyResume;
             GameObject actor = entityView.FindEntityObject(operate.PlacementId);
             if (actor == null || session == null)
                 throw new InvalidDataException("Official story map entity move target is not loaded.");
@@ -894,7 +498,7 @@ namespace Zjcs.Presentation.World
             });
             if (path == null || path.Count == 0)
             {
-                if (storyRunning) RunStoryGraph(nextNodeId);
+                if (storyRunning) resume(nextNodeId);
                 yield break;
             }
             float movementSpeed = Mathf.Max(0.1f, speed);
@@ -911,7 +515,7 @@ namespace Zjcs.Presentation.World
             }
             operate.Grid = interact.Grid;
             Interact(interact);
-            if (storyRunning) RunStoryGraph(nextNodeId);
+            if (storyRunning) resume(nextNodeId);
         }
 
         private void AddStoryEntity(Map10RuntimeStoryNode node, Vector2 grid)
@@ -1255,6 +859,8 @@ namespace Zjcs.Presentation.World
 
         private void FinishStoryGraph(bool invokeCompletion)
         {
+            storyModule?.Cancel();
+            storyResume = null;
             navigation.UnlockPlayerMovementForStory();
             if (mapClassId == 13 || mapClassId == 16) CleanMainlineStoryPlayables();
             mapVoice?.StopVoice();
@@ -1282,7 +888,6 @@ namespace Zjcs.Presentation.World
             storyRunning = false;
             storyOptionsWaiting = false;
             storyOptionSelected = null;
-            storyFrames.Clear();
             activeStoryRootKey = string.Empty;
             completed?.Invoke();
         }

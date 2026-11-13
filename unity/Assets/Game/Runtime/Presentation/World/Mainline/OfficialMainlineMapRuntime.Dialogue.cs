@@ -1,4 +1,5 @@
 using System;
+using Zjcs.Offline.Story;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -27,6 +28,7 @@ namespace Zjcs.Presentation.World
         private void PlayMapTalkDialog(Map10RuntimeMapTalkEntry talk, Map10RuntimeEntity entity,
             Action completed = null, bool offerStage = true)
         {
+            if (nativeDialogActive) throw new InvalidOperationException("A native dialog is already running.");
             if (talk == null || !nativeDialogs.TryGetValue(talk.DialogId, out activeNativeDialog))
                 throw new InvalidDataException("Official Map10 native dialog is missing: " + (talk == null ? 0 : talk.DialogId));
             nativeDialogContext = entity;
@@ -36,91 +38,91 @@ namespace Zjcs.Presentation.World
             nativeDialogActive = true;
             dialogueWaiting = true;
             dialogueAdvanceRequested = false;
-            RunNativeDialog(activeNativeDialog.EntryNodeId);
+            nativeDialogModule ??= new StoryModule<Map10RuntimeNativeDialog, Map10RuntimeNativeDialogNode>(
+                graph => graph.EntryNodeId,
+                (graph, id) => graph.Nodes.FirstOrDefault(value => value != null && value.NodeId == id),
+                ExecuteNativeDialogNode, 64);
+            nativeDialogModule.Play(activeNativeDialog, FinishNativeDialog);
         }
 
-        private void RunNativeDialog(int nodeId)
+        private StoryModule<Map10RuntimeNativeDialog, Map10RuntimeNativeDialogNode> nativeDialogModule;
+        private Action<int> nativeDialogResume;
+
+        private void RunNativeDialog(int nodeId) => nativeDialogResume?.Invoke(nodeId);
+
+        private StoryTransition<Map10RuntimeNativeDialog> ExecuteNativeDialogNode(Map10RuntimeNativeDialog graph,
+            Map10RuntimeNativeDialogNode node, Action<int> resume)
         {
-            if (!nativeDialogActive || activeNativeDialog == null) return;
-            for (int count = 0; count < 64 && nativeDialogActive; count++)
+            activeNativeDialog = graph;
+            nativeDialogResume = resume;
+            nativeDialogNodeId = node.NodeId;
+
+            if (node.NodeType == 0)
             {
-                Map10RuntimeNativeDialogNode node = activeNativeDialog.Nodes.FirstOrDefault(value =>
-                    value != null && value.NodeId == nodeId);
-                if (node == null) throw new InvalidDataException("Official Map10 dialog node is missing: " + nodeId);
-                nativeDialogNodeId = node.NodeId;
-
-                if (node.NodeType == 0)
-                {
-                    ShowNativeDialogText(node);
-                    return;
-                }
-                if (node.NodeType == 1)
-                {
-                    ShowNativeDialogOptions(new[] { node.NodeId });
-                    return;
-                }
-                if (node.NodeType != 2)
-                    throw new InvalidDataException("Unsupported official Map10 dialog node type: " + node.NodeType);
-
-                int next = node.NextNodes.FirstOrDefault();
-                switch (node.ActionType)
-                {
-                    case 0:
-                        if (node.NextNodes.Length == 0) FinishNativeDialog();
-                        else if (node.NextNodes.Length == 1) { nodeId = next; continue; }
-                        else { ShowNativeDialogOptions(node.NextNodes); return; }
-                        return;
-                    case 1:
-                        ChangeNativeDialogProfession(node);
-                        nodeId = next;
-                        continue;
-                    case 4:
-                        string receipt = MapReceiptPrefix + slotId + ":dialog:" + activeNativeDialog.Id + ":node:" + node.NodeId;
-                        if (localSave.nativeDialogAwardReceipts.Contains(receipt))
-                        {
-                            if (node.AwardLimitedNodeId > 0
-                                && activeNativeDialog.Nodes.Any(value => value.NodeId == node.AwardLimitedNodeId))
-                            {
-                                nodeId = node.AwardLimitedNodeId;
-                                continue;
-                            }
-                        }
-                        HideNativeDialogPanel();
-                        nativeDialogPlayableWaiting = true;
-                        GrantNativeDialogAwards(node, receipt);
-                        StartCoroutine(ContinueNativeDialogAfterAward(next));
-                        return;
-                    case 6:
-                        if (string.IsNullOrWhiteSpace(node.Story) || !stories.ContainsKey(node.Story))
-                            throw new InvalidDataException("Official Map10 dialog references a missing story: " + node.Story);
-                        HideNativeDialogPanel();
-                        dialogueWaiting = false;
-                        StartStoryGraph(node.Story, nativeDialogContext, () =>
-                        {
-                            if (!nativeDialogActive) return;
-                            dialogueWaiting = true;
-                            RunNativeDialog(next);
-                        });
-                        return;
-                    case 10:
-                        SpawnNativeDialogNpc(node);
-                        HideNativeDialogPanel();
-                        nativeDialogPlayableWaiting = true;
-                        StartCoroutine(ContinueNativeDialogAfterPlayable(
-                            OfficialPlayableDuration(node.PlayableKey), next));
-                        return;
-                    case 11:
-                        HideNativeDialogPanel();
-                        dialogueWaiting = true;
-                        nativeDialogPlayableWaiting = true;
-                        StartCoroutine(FinishNativeDialogAfterDelay(OfficialPlayableDuration(node.PlayableKey)));
-                        return;
-                    default:
-                        throw new InvalidDataException("Unsupported official Map10 dialog action: " + node.ActionType);
-                }
+                ShowNativeDialogText(node);
+                return StoryTransition<Map10RuntimeNativeDialog>.Wait;
             }
-            if (nativeDialogActive)
-                throw new InvalidDataException("Official Map10 dialog exceeded its node limit: " + activeNativeDialog.Id);
+            if (node.NodeType == 1)
+            {
+                ShowNativeDialogOptions(new[] { node.NodeId });
+                return StoryTransition<Map10RuntimeNativeDialog>.Wait;
+            }
+            if (node.NodeType != 2)
+                throw new InvalidDataException("Unsupported official Map10 dialog node type: " + node.NodeType);
+
+            int next = node.NextNodes.FirstOrDefault();
+            switch (node.ActionType)
+            {
+                case 0:
+                    if (node.NextNodes.Length == 0) return StoryTransition<Map10RuntimeNativeDialog>.Finish;
+                    else if (node.NextNodes.Length == 1) { return StoryTransition<Map10RuntimeNativeDialog>.Next(next); }
+                    else { ShowNativeDialogOptions(node.NextNodes); return StoryTransition<Map10RuntimeNativeDialog>.Wait; }
+                case 1:
+                    ChangeNativeDialogProfession(node);
+                    return StoryTransition<Map10RuntimeNativeDialog>.Next(next);
+                case 4:
+                    string receipt = MapReceiptPrefix + slotId + ":dialog:" + activeNativeDialog.Id + ":node:" + node.NodeId;
+                    if (localSave.nativeDialogAwardReceipts.Contains(receipt))
+                    {
+                        if (node.AwardLimitedNodeId > 0
+                            && activeNativeDialog.Nodes.Any(value => value.NodeId == node.AwardLimitedNodeId))
+                        {
+                            return StoryTransition<Map10RuntimeNativeDialog>.Next(node.AwardLimitedNodeId);
+                        }
+                    }
+                    HideNativeDialogPanel();
+                    nativeDialogPlayableWaiting = true;
+                    GrantNativeDialogAwards(node, receipt);
+                    StartNativeDialogWait(ContinueNativeDialogAfterAward(next));
+                    return StoryTransition<Map10RuntimeNativeDialog>.Wait;
+                case 6:
+                    if (string.IsNullOrWhiteSpace(node.Story) || !stories.ContainsKey(node.Story))
+                        throw new InvalidDataException("Official Map10 dialog references a missing story: " + node.Story);
+                    HideNativeDialogPanel();
+                    dialogueWaiting = false;
+                    StartStoryGraph(node.Story, nativeDialogContext, () =>
+                    {
+                        if (!nativeDialogActive || !ReferenceEquals(nativeDialogResume, resume)) return;
+                        dialogueWaiting = true;
+                        resume(next);
+                    });
+                    return StoryTransition<Map10RuntimeNativeDialog>.Wait;
+                case 10:
+                    SpawnNativeDialogNpc(node);
+                    HideNativeDialogPanel();
+                    nativeDialogPlayableWaiting = true;
+                    StartNativeDialogWait(ContinueNativeDialogAfterPlayable(
+                        OfficialPlayableDuration(node.PlayableKey), next));
+                    return StoryTransition<Map10RuntimeNativeDialog>.Wait;
+                case 11:
+                    HideNativeDialogPanel();
+                    dialogueWaiting = true;
+                    nativeDialogPlayableWaiting = true;
+                    StartNativeDialogWait(FinishNativeDialogAfterDelay(OfficialPlayableDuration(node.PlayableKey)));
+                    return StoryTransition<Map10RuntimeNativeDialog>.Wait;
+                default:
+                    throw new InvalidDataException("Unsupported official Map10 dialog action: " + node.ActionType);
+            }
         }
 
         private void ShowNativeDialogText(Map10RuntimeNativeDialogNode node)
@@ -199,7 +201,7 @@ namespace Zjcs.Presentation.World
             Map10RuntimeNativeDialogNode current = activeNativeDialog?.Nodes?.FirstOrDefault(value =>
                 value != null && value.NodeId == nativeDialogNodeId);
             if (current == null) throw new InvalidDataException("Official Map10 native dialog lost its current node.");
-            if (current.NextNodes == null || current.NextNodes.Length == 0) FinishNativeDialog();
+            if (current.NextNodes == null || current.NextNodes.Length == 0) RunNativeDialog(0);
             else if (current.NextNodes.Length == 1) RunNativeDialog(current.NextNodes[0]);
             else ShowNativeDialogOptions(current.NextNodes);
         }
@@ -224,21 +226,23 @@ namespace Zjcs.Presentation.World
 
         private IEnumerator ContinueNativeDialogAfterPlayable(float seconds, int nextNodeId)
         {
+            Action<int> resume = nativeDialogResume;
             yield return new WaitForSecondsRealtime(seconds);
             if (!nativeDialogActive) yield break;
             nativeDialogPlayableWaiting = false;
             dialogueWaiting = true;
-            RunNativeDialog(nextNodeId);
+            resume(nextNodeId);
         }
 
         private IEnumerator ContinueNativeDialogAfterAward(int nextNodeId)
         {
+            Action<int> resume = nativeDialogResume;
             yield return new WaitForSecondsRealtime(2f);
             hud.HideOfficialNotice();
             if (!nativeDialogActive) yield break;
             nativeDialogPlayableWaiting = false;
             dialogueWaiting = true;
-            RunNativeDialog(nextNodeId);
+            resume(nextNodeId);
         }
 
         private void ChangeNativeDialogProfession(Map10RuntimeNativeDialogNode node)
@@ -279,12 +283,13 @@ namespace Zjcs.Presentation.World
 
         private IEnumerator FinishNativeDialogAfterDelay(float seconds)
         {
+            Action<int> resume = nativeDialogResume;
             if (nativeDialogNpc != null) entityView.PlayStoryEntityAnimation(nativeDialogNpc, "disappear_01");
             yield return new WaitForSecondsRealtime(seconds);
             if (nativeDialogNpc != null) entityView.RemoveStoryEntity(nativeDialogNpc);
             nativeDialogNpc = null;
             nativeDialogPlayableWaiting = false;
-            FinishNativeDialog();
+            resume(0);
         }
 
         private void HideNativeDialogPanel()
@@ -296,6 +301,8 @@ namespace Zjcs.Presentation.World
 
         private void FinishNativeDialog()
         {
+            nativeDialogModule?.Cancel();
+            nativeDialogResume = null;
             HideNativeDialogPanel();
             if (nativeDialogNpc != null) entityView.RemoveStoryEntity(nativeDialogNpc);
             nativeDialogNpc = null;

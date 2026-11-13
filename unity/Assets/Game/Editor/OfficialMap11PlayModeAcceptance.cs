@@ -524,6 +524,12 @@ namespace Zjcs.Editor
 
         private static void ConfigureGameView()
         {
+            if (SessionState.GetBool(Key + ".background", false))
+            {
+                AudioListener.volume = 0f;
+                Zjcs.Editor.Combat.BattleGameViewInput.Focus();
+                return;
+            }
             typeof(Home.HomeAcceptanceLauncher).GetMethod("ConfigurePortraitGameView", BindingFlags.Static | BindingFlags.NonPublic)
                 .Invoke(null, new object[] { 540, 960 });
             gameView = EditorWindow.GetWindow(typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView"));

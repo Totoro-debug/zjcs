@@ -105,7 +105,7 @@ Unity 已建立地图数据模型与 `IWorldMapAssets.Load(int)` 资源接口。
 - `MainlineSharedWorld` 管理官方程序集、地图配置、实体数据和容器作用域；`MainlineSharedWorldStateModule` 持有投影玩家并集中执行激活、原始地区点数、实体／地区状态和角色位置的发布顺序；`OfficialMainlineMapRuntime` 按地图 profile 装配导航、地图状态、HUD、区域、交互及退出清理。
 - 本地地图进度、地区私有／公开状态、探索记录、神像状态和已发现实体由地图存档读取。跨图读取复用同一实体状态解析，不创建场景对象。
 - `OfflineMapGridVisibility` 和 `OfficialMainlineGridFog` 提供地图揭格及白雾状态；公共迷你地图、地图标记和资源点使用地图 profile 及本地图目录。
-- 公共剧情运行时复用原节点、状态机、动画和声音入口；各图通过独立目录绑定原资源。通用剧情与实体表现不代替所属地图的正式入口和完整流程。
+- 公共剧情运行时复用原节点、状态机、动画和声音入口；各图通过独立目录绑定原资源。剧情执行模块的接口、适配器、验证与缺项统一见[主线剧情公共模块](story.md)。
 - 公共路线、战斗、物品提交及探索记录分别维护在[日常副本](dungeons.md)、[战斗执行](battle-execution.md)、[背包](inventory.md)和[世界探索](world-exploration.md)。
 
 地图保存成功后，宿主只提供当前实体展示状态和角色坐标；公共世界状态模块先发布神像／巫师激活与原始地区点数，再调用官方实体状态及地区 `prepare → remove → add → status` 顺序，最后同步角色位置。首次加载沿同一发布顺序恢复保存状态，然后启动原始 Client。

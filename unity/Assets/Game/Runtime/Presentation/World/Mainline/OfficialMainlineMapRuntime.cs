@@ -28,12 +28,6 @@ namespace Zjcs.Presentation.World
     public sealed partial class OfficialMainlineMapRuntime : MonoBehaviour, IOfficialBattleModeAdapter, IMainlineMapModule
     {
 
-        private sealed class Map10RuntimeStoryFrame
-        {
-            public Map10RuntimeStory Parent;
-            public int NextNodeId;
-        }
-
         private readonly Dictionary<int, Map10RuntimeRoster> rosters = new Dictionary<int, Map10RuntimeRoster>();
         private readonly Dictionary<int, Map10RuntimeStage> stages = new Dictionary<int, Map10RuntimeStage>();
         private readonly Dictionary<int, Map10RuntimeBattleScene> battleScenes = new Dictionary<int, Map10RuntimeBattleScene>();
@@ -54,7 +48,6 @@ namespace Zjcs.Presentation.World
         private Map10RuntimeMapTalkEntry[] mapTalkEntries = Array.Empty<Map10RuntimeMapTalkEntry>();
         private readonly Dictionary<int, Map10RuntimeBattleEntityStageBinding> battleEntityStageBindings =
             new Dictionary<int, Map10RuntimeBattleEntityStageBinding>();
-        private readonly Stack<Map10RuntimeStoryFrame> storyFrames = new Stack<Map10RuntimeStoryFrame>();
         private readonly Dictionary<int, Map10RuntimeFixedReward> fixedRewards = new Dictionary<int, Map10RuntimeFixedReward>();
         private readonly Dictionary<int, Map13RuntimeHandInItem> handInItems = new Dictionary<int, Map13RuntimeHandInItem>();
         private readonly Dictionary<int, Map10RuntimeEntityTemplate> entityTemplates =
@@ -649,6 +642,11 @@ namespace Zjcs.Presentation.World
 
         private void DisposeRuntime()
         {
+            nativeDialogModule?.Cancel();
+            nativeDialogResume = null;
+            storyModule?.Cancel();
+            storyResume = null;
+            storyRunning = false;
             DisposeMainlineBattleAssistPicker();
             CancelMainlineBattleAssist(battleController?.Checkpoint?.StageId ?? 0);
             CloseMap12PrivateDungeonAssistPicker();

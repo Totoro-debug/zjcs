@@ -18,6 +18,7 @@ namespace Zjcs.Presentation.World
 
         private void StartMap14StoryStage(Map10RuntimeStoryNode node)
         {
+            Action<int> resume = storyResume;
             if (mapClassId != 14)
                 throw new InvalidDataException("Official story stage entry is not migrated for Map" + mapClassId + ".");
             StoryStartStageFields fields = JsonUtility.FromJson<StoryStartStageFields>(node.sourceJson);
@@ -39,7 +40,7 @@ namespace Zjcs.Presentation.World
                     bool won = map14StoryStageWon;
                     map14StoryStageBattle = false;
                     map14StoryStageWon = false;
-                    RunStoryGraph(won ? StoryNext(node, "SuccessExit") : node.id);
+                    resume(won ? StoryNext(node, "SuccessExit") : node.id);
                 });
             }
             catch
