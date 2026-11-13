@@ -47,6 +47,10 @@
 | [共用界面、文字与资源运行](features/shared-ui.md) | 未完成 |
 | [主题签到与长期活动入口](features/sign-ins.md) | 未完成 |
 | [技能、方案与培养](features/skills.md) | 未完成；当前目标为初始职业及一阶转职技能 |
+| [骑士路线职业技能详情](features/skills-knight.md) | 未完成 |
+| [斗士路线职业技能详情](features/skills-fighter.md) | 未完成 |
+| [术士路线职业技能详情](features/skills-warlock.md) | 未完成 |
+| [贤者路线职业技能详情](features/skills-sage.md) | 未完成 |
 | [主线任务进度](features/tasks.md) | 未完成 |
 | [主线剧情公共模块](features/story.md) | 未完成 |
 | [古遗物扭蛋与女神牌](features/treasure-gacha.md) | 未完成 |
