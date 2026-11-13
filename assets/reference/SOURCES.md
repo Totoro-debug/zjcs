@@ -931,6 +931,8 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 原生共用纹理的原输出路径／GUID、载荷与元数据 SHA256、保留目标及引用转换哈希链见[共用纹理来源清单](shared-textures-source-manifest.json)。原始 APK／云端版本、CAB／PathID 和转换输入身份仍由各模块来源清单记录；共用工具为 `scripts/deduplicate_unity_textures.py`。本次未生成完整素材快照；共用边界和验证范围见[共用界面](../../docs/features/shared-ui.md#原生纹理共用)。
 
+家园奖励队列使用所选 `884_156692` APK 优先取得的完整 `AwardListPanel`、两种奖励条目、原配置选择的默认奖励／物品图标及附件；原客户端／共享代码、完整依赖反编译凭据、适配与输出 SHA256 见[队列代码来源](home-award-queue-runtime-source-manifest.json)。CAB／PathID、原配置、品质 Sprite、字体、动画、Wwise PCM、原只读纹理共用核对、Windows 原生输出及显式目录哈希见[队列原生来源](home-award-queue-native-source-manifest.json)，生成器为 `prepare_home_award_queue_runtime.py`／`prepare_home_award_queue_native.py`，入口为 `Resources/Home/OfficialHomeAwardQueueAssetCatalog`。同版经验物品／中文文本和受控图形夹具的输入、绑定及脚本哈希见[队列验证来源](home-award-queue-validation-source-manifest.json)。未生成完整素材快照；当前实现和验证边界仅在[家园页](../../docs/features/city-and-home.md)维护。
+
 主线公共引导遮罩使用所选 `884_156692` APK 内 `defaultpackage_assets_prefabs_ui_story.bundle` 的完整 `StoryMask`／`Mask` prefab。原 `StoryMaskManager`、镂空网格、提示排版、局部跟随与窗口类型代码的输入／输出 SHA256 见[遮罩代码来源](official-map/story-mask-runtime-source-manifest.json)；原对象 CAB／PathID、APK 优先凭据、完整层级、依赖转换、字体、脚本绑定、显式 Resources 入口与宿主哈希见[原生来源](official-map/story-mask-native-source-manifest.json)。生成器为 `prepare_story_mask_runtime.py`／`prepare_story_mask_native.py`，原窗口类型随既有[注册来源](official-map/story-ui-registration-source-manifest.json)恢复。未生成完整素材快照；实现和验证范围仅在[剧情页](../../docs/features/story.md)维护。
 
 
