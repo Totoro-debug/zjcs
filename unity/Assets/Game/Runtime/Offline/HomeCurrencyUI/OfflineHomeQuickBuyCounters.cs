@@ -10,9 +10,9 @@ namespace Zjcs.Offline.HomeCurrencyUI
     // Mutations belong inside the same profile transaction as cost and awards.
     public sealed class OfflineHomeQuickBuyCounters
     {
-        readonly HomeQuickBuyCalendar calendar;
+        readonly IHomeQuickBuyCalendar calendar;
 
-        public OfflineHomeQuickBuyCounters(HomeQuickBuyCalendar calendar)
+        public OfflineHomeQuickBuyCounters(IHomeQuickBuyCalendar calendar)
         { this.calendar = calendar ?? throw new ArgumentNullException(nameof(calendar)); }
 
         public long GetBuyCount(OfflinePlayerProgress player, int itemId, EQuickBuyRefreshType type, DateTime now)

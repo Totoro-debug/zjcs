@@ -25,8 +25,8 @@ public abstract class HomeQuickBuyCounter
 public abstract class HomeQuickBuyCounterPeriodic : HomeQuickBuyCounter
 {
     public DateTime LastUpdateTime;
-    protected readonly HomeQuickBuyCalendar Calendar;
-    protected HomeQuickBuyCounterPeriodic(HomeQuickBuyCalendar calendar) { Calendar=calendar; }
+    protected readonly IHomeQuickBuyCalendar Calendar;
+    protected HomeQuickBuyCounterPeriodic(IHomeQuickBuyCalendar calendar) { Calendar=calendar; }
     public abstract bool InPeriodic(DateTime cmpTime);
 	public override void AddBuyCount(int itemId, long count, DateTime buyTime)
 	{
@@ -73,7 +73,7 @@ public sealed class HomeQuickBuyCounterNonRefresh : HomeQuickBuyCounter
 }
 public sealed class HomeQuickBuyCounterDaily : HomeQuickBuyCounterPeriodic
 {
-public HomeQuickBuyCounterDaily(HomeQuickBuyCalendar calendar) : base(calendar) {}
+public HomeQuickBuyCounterDaily(IHomeQuickBuyCalendar calendar) : base(calendar) {}
 	public override bool InPeriodic(DateTime cmpTime)
 	{
 		return Calendar.IsSameDay(LastUpdateTime, cmpTime);
@@ -82,7 +82,7 @@ public HomeQuickBuyCounterDaily(HomeQuickBuyCalendar calendar) : base(calendar) 
 }
 public sealed class HomeQuickBuyCounterWeekly : HomeQuickBuyCounterPeriodic
 {
-public HomeQuickBuyCounterWeekly(HomeQuickBuyCalendar calendar) : base(calendar) {}
+public HomeQuickBuyCounterWeekly(IHomeQuickBuyCalendar calendar) : base(calendar) {}
 	public override bool InPeriodic(DateTime cmpTime)
 	{
 		return Calendar.IsSameWeek(LastUpdateTime, cmpTime);

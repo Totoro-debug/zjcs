@@ -19,7 +19,7 @@ namespace Zjcs.Offline.HomeCurrencyUI
         readonly Func<DateTime> clock;
 
         public OfflineHomeMoneyQuickBuy(OfflineMainlineProgressSession profile,
-            OfflineHomeCurrencyAssets assets, HomeQuickBuyCalendar calendar,
+            OfflineHomeCurrencyAssets assets, IHomeQuickBuyCalendar calendar,
             Func<JObject, OfflineMainlineSave, bool> isMet,
             Func<OfflinePlayerProgress, int, bool> isBanCostItem, Func<DateTime> clock = null)
         {

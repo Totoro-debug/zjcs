@@ -37,6 +37,11 @@ namespace Zjcs.Offline.HomeCurrencyUI
         public HomeQuickBuyCalendar CreateQuickBuyCalendar(int timeZone)
             => new HomeQuickBuyCalendar(DateTime.MinValue.Add(Zjcs.Offline.Progression.OfflineRefreshClock.TimeOfDay),
                 timeZone, (DayOfWeek)(int)Settings["WeeklyStartDayOfWeek"]);
+        public OfflineHomeLocalQuickBuyCalendar CreateLocalQuickBuyCalendar()
+        {
+            TimeZoneInfo.ClearCachedData();
+            return new OfflineHomeLocalQuickBuyCalendar((DayOfWeek)(int)Settings["WeeklyStartDayOfWeek"]);
+        }
         JObject Settings { get { Load(); return (JObject)data["tables"]["game_settings"]; } }
         public HomeCurrencyPaySettings Pay => new HomeCurrencyPaySettings {
             DiamonChangeScale=(long)Settings["Pay"]["DiamonChangeScale"],

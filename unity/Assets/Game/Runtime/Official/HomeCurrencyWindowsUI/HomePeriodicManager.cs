@@ -21,7 +21,7 @@ public interface IHomePeriodicServices
     bool HasPlayer { get; }
     bool TimeSynced { get; }
     DateTime GetDateTime();
-    HomeQuickBuyCalendar Calendar { get; }
+    IHomeQuickBuyCalendar Calendar { get; }
     void PublishEnterNewDay(HomeCurrencyEnterNewDay message);
 }
 public sealed class HomePeriodicManager

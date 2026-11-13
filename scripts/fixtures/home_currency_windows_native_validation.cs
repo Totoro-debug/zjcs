@@ -138,8 +138,8 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         limited=HomeCurrencyBuyLimit.CheckBuyLimitCountItem(109,1,this,assets.Text,PopupLimitConfirm);yield return WaitConfirmation();Click(confirmation.ConfirmBtn);yield return WaitAllClosed();Require(limited.GetAwaiter().GetResult(),"native confirm allows original excess ownership branch");
         limited=HomeCurrencyBuyLimit.CheckBuyLimitCountItem(109,1,this,assets.Text,PopupLimitConfirm);yield return WaitConfirmation();var confirmMask=canvas.GetComponentsInChildren<WorldWindowBlurMask>().Single(mask=>mask.AttachWindow==confirmation.PopupWindow);Click(confirmMask.Button,new Vector2(5,5));Require(windows.WindowCount==1&&limited.Status==UniTaskStatus.Pending,"original mask guard ignores clicks during the first half second");yield return new WaitForSeconds(.55f);Click(confirmMask.Button,new Vector2(5,5));yield return WaitAllClosed();Require(!limited.GetAwaiter().GetResult(),"original mask-close automatically runs the cancel callback");
         InitializeExchangeProfile();
-        CheckQuickBuyCounters();CheckPeriodicManager();
-        profileQuickCounters=new OfflineHomeQuickBuyCounters(assets.CreateQuickBuyCalendar(8));
+        CheckQuickBuyCounters();CheckPeriodicManager();CheckLocalQuickBuyCalendar();
+        profileQuickCounters=new OfflineHomeQuickBuyCounters(assets.CreateLocalQuickBuyCalendar());
         quickCounterTime=new DateTime(2026,11,9,0,0,0,DateTimeKind.Utc);
         windowPlayer=new OfflineHomeCurrencyWindowPlayer(profile,profilePlayer,profileQuickCounters,
             (id,count)=>new ItemData(id,new OfflinePartnerItemInfo(OfficialPartnerAssetCatalog.LoadDefault(),id),count),IsBanCostItem,()=>quickCounterTime);
@@ -241,7 +241,53 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         Require(failed&&File.ReadAllText(path)==committed&&profile.InventoryCount(2)==diamonds-30&&counters.GetBuyCount(profile.Save.Player,1,EQuickBuyRefreshType.Daily,monday)==1,"failed disk commit retains inventory and previous counter period");
         var invalid=new OfflineQuickBuyProgress();invalid.Counters.Add(new OfflineQuickBuyCounterProgress{RefreshType=3});Require(!OfflineQuickBuyProgress.IsValid(invalid),"unknown persisted counter type rejects");
         SetBalance(1,money);SetBalance(2,diamonds);
-        Debug.Log("HOME_QUICK_BUY_COUNTERS_PASSED: original periods, exact reset boundaries, nonmutating reads, whole-bucket clearing, real-profile restoration, atomic receipt and disk-failure rollback. Production timezone and purchase endpoint remain pending.");
+        Debug.Log("HOME_QUICK_BUY_COUNTERS_PASSED: original periods, exact reset boundaries, nonmutating reads, whole-bucket clearing, real-profile restoration, atomic receipt and disk-failure rollback; fixed offsets here are explicit comparison inputs.");
+    }
+    void CheckLocalQuickBuyCalendar()
+    {
+        DateTime U(int month,int day,int hour,int minute=0)=>new DateTime(2026,month,day,hour,minute,0,DateTimeKind.Utc);
+        foreach(int minutes in new[]{345,-210,840,-720}){
+            var zone=TimeZoneInfo.CreateCustomTimeZone("Fixture/"+minutes,TimeSpan.FromMinutes(minutes),"Fixture","Fixture");
+            var local=new OfflineHomeLocalQuickBuyCalendar(DayOfWeek.Monday,()=>zone);
+            var boundary=U(11,9,6).AddMinutes(-minutes);
+            Require(!local.IsSameDay(boundary.AddTicks(-1),boundary)&&!local.IsSameWeek(boundary.AddTicks(-1),boundary),"local Monday 06:00 exact daily/weekly boundary including fractional offsets");
+            Require(local.GetDailyResetTimeFromDate(boundary)==boundary&&local.GetDailyResetTimeFromDate(boundary.AddTicks(-1))==boundary.AddDays(-1),"reset UTC instant retains original local civil 06:00");
+        }
+        var start=TimeZoneInfo.TransitionTime.CreateFloatingDateRule(new DateTime(1,1,1,2,0,0),3,2,DayOfWeek.Sunday);
+        var end=TimeZoneInfo.TransitionTime.CreateFloatingDateRule(new DateTime(1,1,1,2,0,0),11,1,DayOfWeek.Sunday);
+        var rule=TimeZoneInfo.AdjustmentRule.CreateAdjustmentRule(new DateTime(2026,1,1),new DateTime(2026,12,31),TimeSpan.FromHours(1),start,end);
+        var daylight=TimeZoneInfo.CreateCustomTimeZone("Fixture/DST",TimeSpan.FromHours(-5),"Fixture","Standard","Daylight",new[]{rule});
+        TimeZoneInfo selected=daylight;
+        var calendar=new OfflineHomeLocalQuickBuyCalendar(DayOfWeek.Monday,()=>selected);
+        Require(calendar.IsSameDay(U(3,8,6,59),U(3,8,7))&&calendar.IsSameWeek(U(3,8,6,59),U(3,8,7)),"spring skipped hour never creates a 06:00 reset");
+        Require(calendar.IsSameDay(U(11,1,5,59),U(11,1,6))&&calendar.IsSameWeek(U(11,1,5,59),U(11,1,6)),"autumn repeated hour never creates a second day or week");
+        foreach(var boundary in new[]{U(3,8,10),U(3,9,10),U(11,1,11),U(11,2,11)}){
+            Require(!calendar.IsSameDay(boundary.AddTicks(-1),boundary)&&calendar.GetDailyResetTimeFromDate(boundary)==boundary,"06:00 UTC instant follows daylight offset at that date");
+            Require(calendar.IsSameWeek(boundary.AddTicks(-1),boundary)==(boundary.DayOfWeek!=DayOfWeek.Monday),"only configured local Monday 06:00 expires weekly purchases");
+        }
+        Require(calendar.GetDailyResetTimeFromDate(U(3,8,9,59))==U(3,7,11),"previous reset across spring is 23 hours before next reset");
+        Require(calendar.GetDailyResetTimeFromDate(U(11,1,10,59))==U(10,31,10),"previous reset across autumn is 25 hours before next reset");
+        selected=TimeZoneInfo.Utc;var instant=U(11,9,1);Require(calendar.GetDailyResetTimeFromDate(instant)==U(11,8,6),"injected zone provider uses UTC civil date");
+        selected=TimeZoneInfo.CreateCustomTimeZone("Fixture/PlusEight",TimeSpan.FromHours(8),"Fixture","Fixture");
+        Require(calendar.GetDailyResetTimeFromDate(instant)==U(11,8,22),"changing the injected zone recomputes civil reset without changing OS timezone");
+        selected=daylight;
+        string root=Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"),"local-quick-buy-profile-"+Guid.NewGuid().ToString("N"));
+        var creation=CharacterCreationOfflineService.OpenDefault(root);string slot=creation.CreateSlot();var draft=creation.OpenDraft(slot);draft.name="本地刷新验证";
+        Require(creation.TryCreateCharacter(slot,draft,out string error),error);var catalog=new ProfileSlotCatalog(root);var session=OfflineMainlineProgressSession.OpenCharacter(catalog,slot);
+        var counters=new OfflineHomeQuickBuyCounters(calendar);var before=U(3,8,10).AddTicks(-1);var after=before.AddTicks(1);
+        var seeded=session.ApplyInventoryTransaction("local-period-seed",save=>{
+            counters.AddBuyCount(save.Player,EQuickBuyRefreshType.Daily,1,5,before);
+            counters.AddBuyCount(save.Player,EQuickBuyRefreshType.Daily,109,2,before);
+            counters.AddBuyCount(save.Player,EQuickBuyRefreshType.Weekly,108,3,before);
+        });Require(seeded.IsApplied,"persist actual pre-DST-reset daily and weekly counts: "+seeded.Message);
+        string path=catalog.GetProgressPath(slot),saved=File.ReadAllText(path);var reopened=OfflineMainlineProgressSession.OpenCharacter(catalog,slot);
+        Require(reopened.Save.Player.QuickBuy.Counters.All(row=>row.LastUpdateTimeUtcTicks==before.Ticks),"persist UTC purchase ticks without local reinterpretation");
+        Require(counters.GetBuyCount(reopened.Save.Player,1,EQuickBuyRefreshType.Daily,after)==0&&counters.GetBuyCount(reopened.Save.Player,108,EQuickBuyRefreshType.Weekly,after)==3&&File.ReadAllText(path)==saved,"Sunday local reset expires only daily data and reading never writes");
+        Require(session.ApplyInventoryTransaction("local-period-next",save=>counters.AddBuyCount(save.Player,EQuickBuyRefreshType.Daily,1,1,after)).IsApplied,"first local-day purchase commits original whole-bucket reset");
+        Require(counters.GetBuyCount(session.Save.Player,109,EQuickBuyRefreshType.Daily,after)==0&&counters.GetBuyCount(session.Save.Player,1,EQuickBuyRefreshType.Daily,after)==1&&counters.GetBuyCount(session.Save.Player,108,EQuickBuyRefreshType.Weekly,U(3,9,10))==0,"daily bucket clears other items while weekly lasts until Monday 06:00");
+        var actual=assets.CreateLocalQuickBuyCalendar();var now=DateTime.UtcNow;var reset=actual.GetDailyResetTimeFromDate(now);
+        Require(TimeZoneInfo.ConvertTimeFromUtc(reset,TimeZoneInfo.Local).TimeOfDay==TimeSpan.FromHours(6)&&reset<=now,"production factory uses current machine timezone and common 06:00 reset");
+        Debug.Log("HOME_LOCAL_QUICK_BUY_CALENDAR_PASSED: fractional offsets, DST 23/25-hour days, exact 06:00 day/week boundaries, injected zone switching without OS changes, UTC persistence and real profile reopen/nonmutating expiry/bucket reset.");
     }
     void CheckWindowPlayer()
     {
@@ -260,7 +306,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
     {
         var configuration=OfficialCurrentHomeRuleAssetCatalog.LoadDefault();
         var conditions=OfficialPartnerAssetCatalog.LoadDefault().Conditions;
-        moneyQuickBuy=new OfflineHomeMoneyQuickBuy(profile,assets,assets.CreateQuickBuyCalendar(8),
+        moneyQuickBuy=new OfflineHomeMoneyQuickBuy(profile,assets,assets.CreateLocalQuickBuyCalendar(),
             (node,save)=>conditions.IsMet(node.ToObject<Dictionary<string,object>>(),new OfflineHomeConditionPlayer(configuration,()=>save,_=>false)),
             (_,id)=>IsBanCostItem(id),()=>quickCounterTime);
         string path=slots.GetProgressPath(profileSlot),before=File.ReadAllText(path);
@@ -289,13 +335,13 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         long heldMoney=profile.InventoryCount(1);SetBalance(1,long.MaxValue);committed=File.ReadAllText(path);
         Require(!moneyQuickBuy.Buy("award-overflow",1).IsApplied&&File.ReadAllText(path)==committed&&profile.InventoryCount(1)==long.MaxValue&&profile.InventoryCount(2)==diamonds-380,"award overflow rolls back the staged currency debit and counter update");
         SetBalance(1,heldMoney);SetBalance(1,money);SetBalance(2,diamonds);
-        Debug.Log("HOME_MONEY_QUICK_BUY_PASSED: original base-level condition, native buy pointer, actual award/cost/count, tier crossing, new-day reset, profile reopening, receipt replay and debit/award/disk-failure rollback. Production timezone, error/award presentation and HUD remain pending.");
+        Debug.Log("HOME_MONEY_QUICK_BUY_PASSED: original base-level condition, native buy pointer, actual award/cost/count, tier crossing, new-day reset, profile reopening, receipt replay and debit/award/disk-failure rollback. Machine-local timezone selected; error/award presentation and formal HUD remain pending.");
     }
     sealed class PeriodicProbe:IHomePeriodicServices
     {
         public bool Available,Synced;public DateTime Now;public int Reads,Days;
         public bool HasPlayer=>Available;public bool TimeSynced=>Synced;
-        public HomeQuickBuyCalendar Calendar{get;set;}
+        public IHomeQuickBuyCalendar Calendar{get;set;}
         public DateTime GetDateTime(){Reads++;return Now;}
         public void PublishEnterNewDay(HomeCurrencyEnterNewDay message){Require(message==null,"original periodic day payload remains null");Days++;}
     }
@@ -318,12 +364,12 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         string disk=File.ReadAllText(slots.GetProgressPath(profileSlot));quickCounterTime=periodic.Calendar.GetDailyResetTimeFromDate(quickCounterTime).AddDays(1).AddTicks(-1);periodic.Update(1);Require(cost.CostItemCount==50,"one tick before actual reset retains original native price");
         quickCounterTime=quickCounterTime.AddTicks(1);periodic.Update(1.5f);Require(cost.CostItemCount==50,"local clock boundary waits for original periodic throttle");periodic.Update(2);Require(cost.CostItemCount==30&&profileQuickCounters.GetBuyCount(profile.Save.Player,1,EQuickBuyRefreshType.Daily,quickCounterTime)==0&&File.ReadAllText(slots.GetProgressPath(profileSlot))==disk,"actual local periodic event refreshes native price without mutating saved counters");
         Capture("home-currency-periodic-reset-native.png");Click(Field<Button>(quick,"mCancelBtn"));yield return WaitClosed();
-        Debug.Log("HOME_PERIODIC_WINDOW_PASSED: actual local clock publisher, real saved purchase tier and original native day listener change the price from 50 to 30 at reset without writing the profile; simulated native cancellation releases subscriptions. Timezone 8 is an explicit fixture input; production decision remains pending.");
+        Debug.Log("HOME_PERIODIC_WINDOW_PASSED: machine-local 06:00 clock publisher, real saved purchase tier and original native day listener change the price from 50 to 30 at reset without writing the profile; simulated native cancellation releases subscriptions.");
     }
     IEnumerator ExerciseComposedServices()
     {
         SetBalance(1,100);SetBalance(2,500);SetBalance(15,3);
-        periodic=new OfflineHomePeriodicEvents(assets.CreateQuickBuyCalendar(8),()=>profile?.Save?.Player!=null,()=>quickCounterTime);periodic.Update(0);
+        periodic=new OfflineHomePeriodicEvents(assets.CreateLocalQuickBuyCalendar(),()=>profile?.Save?.Player!=null,()=>quickCounterTime);periodic.Update(0);
         var service=new OfflineHomeCurrencyWindowServices(assets,windowPlayer,profilePlayer,moneyQuickBuy,exchange,this,
             kind=>"composed-"+kind+":"+Guid.NewGuid().ToString("N"));
         Require(!service.IconServiceAvailable&&ReferenceEquals(service.Player,windowPlayer),"composed service uses the actual shared player before attaching windows");

@@ -16,7 +16,7 @@ using Zjcs.Official.HomeCountControlsUI;
 using Zjcs.Official.World.NativeLabelUI.Framework;
 namespace Zjcs.Official.HomeCurrencyWindowsUI
 {
-public sealed class HomeQuickBuyCalendar
+public sealed class HomeQuickBuyCalendar : IHomeQuickBuyCalendar
 {
     public readonly DateTime DailyResetTime;
     public readonly int TimeZone;

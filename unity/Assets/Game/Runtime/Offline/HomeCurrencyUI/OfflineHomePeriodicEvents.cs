@@ -20,7 +20,7 @@ namespace Zjcs.Offline.HomeCurrencyUI
         private Action<HomeCurrencyEnterNewDay> enterNewDay;
         private bool disposed;
 
-        public OfflineHomePeriodicEvents(HomeQuickBuyCalendar calendar, Func<bool> hasPlayer,
+        public OfflineHomePeriodicEvents(IHomeQuickBuyCalendar calendar, Func<bool> hasPlayer,
             Func<DateTime> utcNow = null)
         {
             Calendar = calendar ?? throw new ArgumentNullException(nameof(calendar));
@@ -29,7 +29,7 @@ namespace Zjcs.Offline.HomeCurrencyUI
             manager = new HomePeriodicManager(this);
         }
 
-        public HomeQuickBuyCalendar Calendar { get; }
+        public IHomeQuickBuyCalendar Calendar { get; }
         bool IHomePeriodicServices.HasPlayer => hasPlayer();
         // The local UTC clock is available immediately; no server synchronization is required.
         bool IHomePeriodicServices.TimeSynced => true;

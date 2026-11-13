@@ -93,7 +93,7 @@ def build():
     bool HasPlayer { get; }
     bool TimeSynced { get; }
     DateTime GetDateTime();
-    HomeQuickBuyCalendar Calendar { get; }
+    IHomeQuickBuyCalendar Calendar { get; }
     void PublishEnterNewDay(HomeCurrencyEnterNewDay message);
 }
 public sealed class HomePeriodicManager
@@ -130,7 +130,15 @@ public sealed class HomePeriodicManager
     # Preserve the client's reset calendar and counter operations. The server
     # timezone is an explicit caller dependency; no offline timezone is assumed.
     source=read('TimeUtils','common-source/Common')
-    calendar='''public sealed class HomeQuickBuyCalendar
+    emit('IHomeQuickBuyCalendar', '''public interface IHomeQuickBuyCalendar
+{
+    int CalcDays(DateTime from, DateTime to);
+    bool IsSameDay(DateTime from, DateTime to);
+    bool IsSameWeek(DateTime from, DateTime to);
+    DateTime GetDailyResetTimeFromDate(DateTime time);
+}
+''')
+    calendar='''public sealed class HomeQuickBuyCalendar : IHomeQuickBuyCalendar
 {
     public readonly DateTime DailyResetTime;
     public readonly int TimeZone;
@@ -163,8 +171,8 @@ public sealed class HomePeriodicManager
 public abstract class HomeQuickBuyCounterPeriodic : HomeQuickBuyCounter
 {
     public DateTime LastUpdateTime;
-    protected readonly HomeQuickBuyCalendar Calendar;
-    protected HomeQuickBuyCounterPeriodic(HomeQuickBuyCalendar calendar) { Calendar=calendar; }
+    protected readonly IHomeQuickBuyCalendar Calendar;
+    protected HomeQuickBuyCounterPeriodic(IHomeQuickBuyCalendar calendar) { Calendar=calendar; }
     public abstract bool InPeriodic(DateTime cmpTime);
 '''
     source=read('PlayerQuickBuyCounterPeriodicWrap','common-source/Common')
@@ -180,16 +188,16 @@ public abstract class HomeQuickBuyCounterPeriodic : HomeQuickBuyCounter
     for name in ('Daily','Weekly'):
         source=read('PlayerQuickBuyCounter'+name+'Wrap','common-source/Common')
         counter+='public sealed class HomeQuickBuyCounter'+name+' : HomeQuickBuyCounterPeriodic\n{\n'
-        counter+='public HomeQuickBuyCounter'+name+'(HomeQuickBuyCalendar calendar) : base(calendar) {}\n'
+        counter+='public HomeQuickBuyCounter'+name+'(IHomeQuickBuyCalendar calendar) : base(calendar) {}\n'
         counter+=method(source,'public override bool InPeriodic(DateTime cmpTime)').replace('TimeUtils.','Calendar.')+'\n}\n'
     emit('HomeQuickBuyCounter',counter)
     source=read('PlayerQuickBuyDataExt','common-source/Common')
     data='''public sealed class HomeQuickBuyData
 {
     public readonly Dictionary<EQuickBuyRefreshType,HomeQuickBuyCounter> BuyDatas = new Dictionary<EQuickBuyRefreshType,HomeQuickBuyCounter>();
-    readonly HomeQuickBuyCalendar calendar;
+    readonly IHomeQuickBuyCalendar calendar;
     public event Action<int> OnCountUpdate;
-    public HomeQuickBuyData(HomeQuickBuyCalendar calendar) { this.calendar=calendar; }
+    public HomeQuickBuyData(IHomeQuickBuyCalendar calendar) { this.calendar=calendar; }
 '''
     for signature in ('public static long QuickBuyGetItemBuyCount(this Player player, int itemId, EQuickBuyRefreshType type)',
         'public static void QuickBuyAddItemBuyCount(this Player player, EQuickBuyRefreshType type, int itemId, long buyCount, DateTime time)',
@@ -413,7 +421,7 @@ public interface IHomeCurrencyWindowServices
         text=(DEST/(name+'.cs')).read_text('utf8')
         assert not any(t in text for t in ('Parsers.', 'MeManager.', 'WindowManager.', 'MoneyUtils.', 'ServiceProxyBase', '[Inject]', 'BroadcastManager.')),name
     receipt=dict(manifest='884_156692', generator_sha256=sha(Path(__file__)), inputs=inputs, outputs=outputs,
-        scope='Original native quick-buy/pay-change controllers, cost button, pricing/award computations, periodic purchase counters, reset calendar and original periodic day notifications (online friend-coin synchronization removed). Timezone is an explicit dependency awaiting the offline decision; native windows and production services must be bound before use.')
+        scope='Original native quick-buy/pay-change controllers, cost button, pricing/award computations, periodic purchase counters, reset calendar and original periodic day notifications (online friend-coin synchronization removed). The calendar is an explicit boundary; offline local-time adaptation is recorded separately. Native windows and production services must be bound before use.')
     (ROOT/'assets/reference/home-currency-windows-runtime-source-manifest.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
     print('Original currency windows:',len(outputs),'outputs',flush=True)
 

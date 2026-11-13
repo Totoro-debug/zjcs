@@ -19,9 +19,9 @@ namespace Zjcs.Official.HomeCurrencyWindowsUI
 public sealed class HomeQuickBuyData
 {
     public readonly Dictionary<EQuickBuyRefreshType,HomeQuickBuyCounter> BuyDatas = new Dictionary<EQuickBuyRefreshType,HomeQuickBuyCounter>();
-    readonly HomeQuickBuyCalendar calendar;
+    readonly IHomeQuickBuyCalendar calendar;
     public event Action<int> OnCountUpdate;
-    public HomeQuickBuyData(HomeQuickBuyCalendar calendar) { this.calendar=calendar; }
+    public HomeQuickBuyData(IHomeQuickBuyCalendar calendar) { this.calendar=calendar; }
 	public long QuickBuyGetItemBuyCount(int itemId, EQuickBuyRefreshType type, DateTime now)
 	{
 		if (!BuyDatas.TryGetValue(type, out var value))
