@@ -8,7 +8,7 @@
 
 本功能包含职业总览、职业树、职业详情、属性、升级、晋升、导师寻路及自由转职。UI、规则和存档事务均须接入原职业配置及当前角色状态。
 
-各职业技能的直接清单、继承关系和实现情况按转职阶级维护于[骑士路线](skills-knight.md)、[斗士路线](skills-fighter.md)、[术士路线](skills-warlock.md)、[贤者路线](skills-sage.md)；职业晋升、自由转职及其窗口仍由本页维护。
+初始一阶职业的技能清单与实现情况见[战士](skills-warrior.md)、[法师](skills-mage.md)；后续二至八阶职业的直接技能、继承关系与实现情况按路线维护于[骑士路线](skills-knight.md)、[斗士路线](skills-fighter.md)、[术士路线](skills-warlock.md)、[贤者路线](skills-sage.md)；职业晋升、自由转职及其窗口仍由本页维护。
 
 ## 原始官方实现
 

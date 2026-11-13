@@ -46,7 +46,9 @@
 | [设置、拍照与本地存档](features/settings-and-save.md) | 未完成 |
 | [共用界面、文字与资源运行](features/shared-ui.md) | 未完成 |
 | [主题签到与长期活动入口](features/sign-ins.md) | 未完成 |
-| [技能、方案与培养](features/skills.md) | 未完成；当前目标为初始职业及一阶转职技能 |
+| [技能、方案与培养](features/skills.md) | 未完成；当前目标为初始职业及首次转职技能 |
+| [战士职业技能详情（一阶）](features/skills-warrior.md) | 未完成 |
+| [法师职业技能详情（一阶）](features/skills-mage.md) | 未完成 |
 | [骑士路线职业技能详情](features/skills-knight.md) | 未完成 |
 | [斗士路线职业技能详情](features/skills-fighter.md) | 未完成 |
 | [术士路线职业技能详情](features/skills-warlock.md) | 未完成 |
