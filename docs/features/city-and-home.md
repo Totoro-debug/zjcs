@@ -8,7 +8,7 @@
 
 家园属性初始化与人物页、主线地图共用完整成长装配入口，必需配置及属性对照范围见[人物属性的共享计算边界](character.md#属性来源与共享计算边界)。
 
-主城 Canvas 按原 `UIUtils.GetCanvasScaleFactor` 的宽、高比例最小值使用 `Expand`，避免窄长窗口将横向控件放大裁切。主城玩家改用已有 `CharacterCreationNativeModelFactory.CreateWorldModel`，保留存档穿戴／染色及原家园坐标、缩放、排序，原生 Animator 播放 `home/idle_01`；该模型可直接交由公共战斗模块挂载，避免将带预览画布偏移的网格帧再次套入战斗模型父链。
+正式家园入口改用所选 884 的原始 `MainCanvas` 共享框架，沿原 `CanvasWidthAdjuster`、`SafeArea` 与 1080×1920 Expand 缩放处理桌面窗口；框架内部的 Main／Public 及两层 Anim 均来自原 prefab。主城玩家改用已有 `CharacterCreationNativeModelFactory.CreateWorldModel`，保留存档穿戴／染色及原家园坐标、缩放、排序，原生 Animator 播放 `home/idle_01`；该模型可直接交由公共战斗模块挂载，避免将带预览画布偏移的网格帧再次套入战斗模型父链。
 
 正式角色进入家园，拖动查看设施，通过底栏切换人物、游记、家园、公会和大陆。本页涵盖家园场景、环境表现、设施教学、提示、邮箱、动物／落叶奖励及床铺／小推车离线收益；果树生产、各设施的养成玩法和商店分别见总索引所列页面。
 
@@ -186,6 +186,10 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 所选 `MainCanvas` 的完整 `HomeUI` 子树已恢复为 `Assets/Official/Home/UI/Hud/HomeHud.prefab`。原 923 个对象中，按已确认的[离线范围](offline-access.md)及[设置范围](settings-and-save.md)移除队伍小面板、申请确认、聊天小窗和快捷聊天四棵子树，保留 651 个对象；裁剪只移除对应子树及其引用，其他原坐标、锚点、组件字段、动画和加载引用保持原值。任务条目继续引用原外部 `TaskListItem`，顶栏挂点、功能入口、任务区、匹配状态、战斗通知与三类场景指引均保留。该 prefab 已通过 Unity 导入、全部脚本引用检查及统一宿主的受控启用／交互验证，尚未接入正式 HUD 的本地业务服务。
 
 `Assets/Official/Home/UI/HudFrame/HomeHudFrame.prefab` 恢复 HomeUI 及公共头像／底栏的原父级，包括两层 `Anim`、CanvasGroup、公共安全区与 `PlayerInfoMask`，共 39 个对象；不以测试位置代替原公共父级。`HomeScreenUI.StencilMask` 直接迁入原复制、材质、排序、显隐及颜色逻辑，只将场景容器实例化映射为本地 Unity 实例化；原 prefab 的 stencil 值为 6、初始隐藏。`HomeHudFrameNativeValidation.Run` 已在隔离完整工程实际 Play Mode 验证激活后的一次复制、`UI/Default` 的 `_StencilComp=8`／`_Stencil=6`／`_StencilOp=2`／`_ColorMask=0`、排序 -1、原父级、重复初始化和显隐恢复，已查看实际运行截图。测试静音、无真实系统输入；隔离完整工程通过 Unity 导入／C# 编译及 `Zjcs.Editor.ProjectTools.Validate`，静态检查通过（150568 个 GUID）。这项测试仅证明公共框架和遮罩；完整 HomeUI 的受控宿主验证见下文，正式业务接线及 Windows Player 尚未完成。
+
+`HomeHudView.NativeFrame` 已把该 `HomeHudFrame` 接入正式 `HomeFeatureRuntime`，替换原手工 Canvas。原家园内容挂回 `Content/Main/Anim`，底栏挂回 `Content/Main/Public/Anim`，保留原玩家 stencil 节点；家园 `Content` 和 `NewPublicTopBarParent` 按原 HomeUI 路径绑定 `SafeArea` 代码及 prefab 的四项适配参数，替换同节点的旧桌面适配脚本，由原实现求得安全区尺寸与坐标。屏幕服务在启用前绑定，关闭时先停用整个画布再释放服务。当前家园内容、头像、货币和底栏内部仍沿历史转换；原生方向指引及完整 HUD 控制器尚未装配，不将共享框架接入记为整项 HUD 完成。
+
+`HomeNativeFrameHostValidation.Run` 已在完整隔离工程静音 Play Mode 通过真实创角存档进入、原 Main／Public 及安全区／缩放器绑定、场景内部模拟指针命中、原生床铺维修按钮和通知、退出重开及已维修状态恢复；已查看 608×1080 的进入、维修弹窗、通知和重开实际画面。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和根工作区静态检查通过。屏幕尺寸通过进程内端口提供，未更改系统显示设置；本项未构建或发布新的 Windows Player。
 
 `Runtime/Offline/HomeHudUI/OfflineHomeHud` 负责完整原生层级的实例化及释放，在所有组件启用前显式绑定条件、顶栏、任务、功能窗口、活动、下载、场景指引、匹配、战斗通知、红点、语言和声音服务；动态任务实例沿同一绑定入口创建。`Resources/Home/OfflineHomeHudAssets` 显式引用原 HomeUI、共享框架、语言、声音及字体，沿原 `FontAssetFontService` 初始化 FZY4K 和任务使用的 MPLUS 字体，原五行字体配置保留；其余三种源字体不在本宿主使用范围内。公共头像／底栏宿主可挂到原 `Content/Main/Public/Anim`，当前尚未在正式入口完成装配。
 

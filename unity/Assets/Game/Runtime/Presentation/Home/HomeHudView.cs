@@ -115,17 +115,7 @@ namespace Zjcs.Presentation.Home
 
         private void CreateCanvas()
         {
-            var go = new GameObject("Home Canvas", typeof(RectTransform), typeof(Canvas),
-                typeof(CanvasScaler), typeof(GraphicRaycaster));
-            go.transform.SetParent(null, false);
-            canvas = go.GetComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 60;
-            CanvasScaler scaler = go.GetComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1080, 1920);
-            // UIUtils.GetCanvasScaleFactor uses the smaller width/height ratio.
-            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
+            CreateNativeFrame();
         }
 
         private static void EnsureEventSystem()
@@ -145,13 +135,14 @@ namespace Zjcs.Presentation.Home
         private void BuildHomePanel()
         {
             homeRenderer = Renderer();
-            homePanel = homeRenderer.Create("home", canvas.transform,
+            homePanel = homeRenderer.Create("home", nativeHomeSlot,
                 (path, node) => BindHudButton(path, node, OnHomeButton));
             RectTransform rect = (RectTransform)homePanel.transform;
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
+            BindNativeHomeSafeArea(homePanel);
             BuildAvatar();
             // Official fade/screenshot guider nodes start hidden; their white mask must not cover the scene.
             homeRenderer.SetActiveByName("Guider", false);
@@ -261,7 +252,7 @@ namespace Zjcs.Presentation.Home
         private void BuildBottomBar()
         {
             bottomRenderer = Renderer();
-            GameObject bar = bottomRenderer.Create("bottom_bar", canvas.transform,
+            GameObject bar = bottomRenderer.Create("bottom_bar", nativePublicSlot,
                 (path, node) => BindHudButton(path, node, OnBottomButton));
             RectTransform rect = (RectTransform)bar.transform;
             rect.anchorMin = new Vector2(0.5f, 0);
@@ -1402,8 +1393,13 @@ namespace Zjcs.Presentation.Home
                 UnityEngine.Object.Destroy(partnerUiAudioSource);
                 partnerUiAudioSource = null;
             }
-            if (canvas != null) UnityEngine.Object.Destroy(canvas.gameObject);
+            if (canvas != null)
+            {
+                canvas.gameObject.SetActive(false);
+                UnityEngine.Object.Destroy(canvas.gameObject);
+            }
             canvas = null;
+            ReleaseNativeFrame();
         }
     }
 

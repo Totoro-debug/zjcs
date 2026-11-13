@@ -1,0 +1,26 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "189376c791ac90177a55eaa6186479e4687d21632662413e06c820143e9e8424",
+  "inputs": {
+    "assets/reference/home-hud-frame-native-source-manifest.json": "786a1bcd2dea7fbc9d22a9c49889a8430eb2262ef34ccc6e9fd4921c7994a6a9",
+    "assets/reference/home-hud-native-source-manifest.json": "db1dfa4d913c010b83169640c5f968336186fe8578f0108062b5705a03db7293",
+    "unity/Assets/Game/Runtime/Official/HomeScreenUI/ScreenAdaptService.cs": "7462e9099e504f9b84fbfab336281a7a8c6d063d0bd6db1d9a44c3ca044fd1db",
+    "unity/Assets/Game/Runtime/Official/HomeScreenUI/ScreenMetrics.cs": "b1139f773863682d41386482b627e57b20903fb8e3334468622f1fe6c7f1d420",
+    "unity/Assets/Game/Runtime/Official/HomeScreenUI/CanvasWidthAdjuster.cs": "c7db4821b74de53f30f2a87a0dd770bba2bd762fc0b3df48b3843835c3abdee9",
+    "unity/Assets/Game/Runtime/Official/HomeScreenUI/SafeArea.cs": "49150d82f5564bbcc6345544021cccbacf3b8f2211dbdb06d165bf48b81cb29a",
+    "scripts/fixtures/home_furniture_host_validation.cs": "04b99707086fdb7beb10202dc1fd4be3bcb2b6a4d6ef857239ad9e6368dfc5c1",
+    "unity/Assets/Game/Runtime/Offline/HomeHudUI/OfflineHomeHudAssets.cs": "95f9864840b166478494b906febd880e60222d27d4a4861718f5876aed600e48",
+    "unity/Assets/Game/Resources/Home/OfflineHomeHudAssets.asset": "01fdd6a11f432bff6accab09ca17a7a67f503de5eb6f373b122e650ea30e58f7",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "1955417e08fa42a393e8063387d161a6ec57b3ed6883030cc00d5b73b130d54c",
+    "scripts/fixtures/home_native_frame_validation.cs": "6a518f23176cb7745cbd3f124a0f5b63352109d0bdf0536839e7e5bfdf589b18"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.NativeFrame.cs": "c9084bf758caa398e840833a6c94ab238f5661721e3d2d819392104b5e50ac9f",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.NativeFrame.cs.meta": "8461d9e64908ddd1f2f8f8c309cbf2fe64425a7df247f8bacdce5cb2402943bf",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs": "f16d7b2e3d36a3f73b6ab24dcb5da86640bf161629b82e320e6eb21b3b5f07a1",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs.meta": "cfede3b465b84277cce0d23ee90f5c109d3e99254d2f762edf1de273d8aab1c0",
+    "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef": "5094129476cddb6c4d1d24f0a82fb77d84dcc3dea6e65241e72a3838f0a841f4",
+    "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef.meta": "71ec7cb0d4d5f69c837ad61318ac81ff19e626b0ba7bccb544b904df288261a1"
+  },
+  "scope": "The formal HomeFeatureRuntime uses the packaged original MainCanvas and screen/safe-area controllers. Existing home content and bottom bar mount under original Main/Public slots. Other HUD controllers, avatar, currencies and furniture presentation are still being migrated; no complete HomeUI or Player claim."
+}
