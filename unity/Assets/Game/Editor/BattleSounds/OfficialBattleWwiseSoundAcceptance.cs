@@ -4,9 +4,13 @@ using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Offline.BattleNativePlayables;
 using SoundObject = Zjcs.Official.ProfessionUI.AkGameObj;
+using WwiseEventReference = Zjcs.Official.ProfessionUI.WwiseEventReference;
+using NativeListener = global::AkAudioListener;
+using NativeSoundObject = global::AkGameObj;
 
 namespace Zjcs.Editor
 {
@@ -67,7 +71,7 @@ namespace Zjcs.Editor
                 if (errors == 0)
                 {
                     SessionState.SetInt(Key + ".result", 0);
-                    Debug.Log("NATIVE_WWISE_HOST_PLAYMODE_PASSED: two engine lifetimes, original event/interface dispatch, cached object host, moving emitters/default listener, empty sends, five global RTPC values, stop/unregister and silent output.");
+                    Debug.Log("NATIVE_WWISE_HOST_PLAYMODE_PASSED: two interface engine lifetimes and one original-prefab listener lifetime, original event dispatch, cached object host, camera child following, scene activation/default-listener membership, empty sends, five global RTPC values, stop/unregister and silent output.");
                 }
                 EditorApplication.isPlaying = false;
             }
@@ -128,8 +132,71 @@ namespace Zjcs.Editor
                     }
                     yield return null;
                 }
+                var listenerSteps = ListenerSteps();
+                try { while (listenerSteps.MoveNext()) yield return listenerSteps.Current; }
+                finally { (listenerSteps as IDisposable)?.Dispose(); }
             }
             finally { OfficialWwiseEvent.Host = previous; }
+        }
+        private static IEnumerator ListenerSteps()
+        {
+            Scene originalScene = SceneManager.GetActiveScene();
+            Scene scene = SceneManager.CreateScene("Original listener verification " + Guid.NewGuid().ToString("N"));
+            var camera = new GameObject("Main Camera");
+            camera.SetActive(false);
+            SceneManager.MoveGameObjectToScene(camera, scene);
+            var prefab = Resources.Load<GameObject>("Combat/Wwise/AudioListener");
+            Require(prefab != null, "original listener prefab is explicitly bound");
+            GameObject listener = UnityEngine.Object.Instantiate(prefab, camera.transform, false);
+            var previous = OfficialWwiseEvent.Host;
+            try
+            {
+                Require(listener.GetComponent<NativeListener>() != null && listener.GetComponent<NativeSoundObject>() != null,
+                    "prefab binds both original SDK scripts");
+                Require(listener.transform.localPosition == new Vector3(0, 0, 20)
+                    && listener.transform.localRotation == Quaternion.identity && listener.transform.localScale == Vector3.one,
+                    "original listener local camera pose");
+                Require(NativeListener.DefaultListeners.ListenerList.Count == 0, "default listener list starts empty");
+                using (var host = new OfflineBattleWwiseSoundHost(OfflineBattleWwisePackages.DirectoryPath, listener, true))
+                {
+                    OfficialWwiseEvent.Host = host;
+                    camera.SetActive(true);
+                    yield return null;
+                    Require(!listener.activeSelf && NativeListener.DefaultListeners.ListenerList.Count == 0,
+                        "original scene controller disables an inactive-scene listener");
+                    Require(SceneManager.SetActiveScene(scene), "activate listener scene");
+                    yield return null;
+                    Require(listener.activeSelf && NativeListener.DefaultListeners.ListenerList.Count == 1,
+                        "original scene activation enables its default listener");
+                    camera.transform.position = new Vector3(7, 9, -20);
+                    yield return null;
+                    host.RenderFrame();
+                    Require(listener.transform.position == new Vector3(7, 9, 0), "listener follows original camera child offset");
+                    Position(listener);
+                    Require(SceneManager.SetActiveScene(originalScene), "deactivate listener scene");
+                    yield return null;
+                    Require(!listener.activeSelf && NativeListener.DefaultListeners.ListenerList.Count == 0,
+                        "scene exit removes original default listener");
+                    Require(SceneManager.SetActiveScene(scene), "reactivate listener scene");
+                    yield return null;
+                    Require(listener.activeSelf && NativeListener.DefaultListeners.ListenerList.Count == 1,
+                        "scene reentry restores original default listener");
+                    UnityEngine.Object.Destroy(camera);
+                    yield return null;
+                    Require(NativeListener.DefaultListeners.ListenerList.Count == 0, "destroy unregisters original listener");
+                    host.RenderFrame();
+                }
+                Require(!AkSoundEngine.IsInitialized(), "prefab lifetime releases native engine");
+                Debug.Log("NATIVE_WWISE_ORIGINAL_LISTENER_PASSED original prefab, z=20 camera child, real scene enter/exit/reentry and destruction");
+            }
+            finally
+            {
+                OfficialWwiseEvent.Host = previous;
+                SceneManager.SetActiveScene(originalScene);
+                UnityEngine.Object.Destroy(camera);
+                SceneManager.UnloadSceneAsync(scene);
+            }
+            yield return null;
         }
         private static void Rtpc(uint id, float expected)
         {

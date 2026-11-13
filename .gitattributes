@@ -2823,3 +2823,7 @@ unity/Assets/Game/Editor/BattleSounds/Zjcs.Editor.BattleSounds.asmdef text eol=l
 # Keep explicit Windows sound package bindings in LF.
 unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwisePackages.cs* text eol=lf
 unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwisePackageBuild.cs* text eol=lf
+
+# Preserve original listener source and conversion receipts.
+scripts/prepare_battle_sound_listener_sources.py text eol=lf
+assets/reference/battle-animation/sound-listener-source-manifest.json text eol=lf
