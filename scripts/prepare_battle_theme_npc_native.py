@@ -249,10 +249,30 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--work', type=Path, required=True)
     parser.add_argument('--install', action='store_true')
+    parser.add_argument('--refresh-runtime-bindings', action='store_true',
+                        help='Verify the installed payload and refresh only local UI binding identities.')
     args = parser.parse_args()
     work = args.work.resolve()
     if not work.is_relative_to(r / 'output/validation') or not (work / '.zjcs-validation.json').is_file():
         raise ValueError('Use a marked repository validation workspace.')
+    if args.refresh_runtime_bindings:
+        if args.install:
+            raise ValueError('Refresh existing runtime bindings separately from asset installation.')
+        output = r / 'assets/reference/battle-animation/theme-npc-native-source-manifest.json'
+        receipt = json.loads(output.read_bytes())
+        for group in ('installed_output_sha256', 'reused_installed_output_sha256'):
+            for relative, expected in receipt[group].items():
+                if sha((r / relative).read_bytes()) != expected:
+                    raise ValueError('Installed original theme payload changed: ' + relative)
+        receipt['ui_pose_backend_sha256'] = {
+            relative: sha((r / relative).read_bytes())
+            for relative in receipt['ui_pose_backend_sha256']
+        }
+        receipt['generator_sha256'] = sha(Path(__file__).read_bytes())
+        output.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n',
+                          encoding='utf-8', newline='\n')
+        print('Verified the original theme payload and refreshed local UI binding identities.', flush=True)
+        return
     binding = ThemeBinding(work)
     try:
         PartnerGiftBinding.build(binding)
