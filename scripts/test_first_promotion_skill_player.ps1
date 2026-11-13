@@ -8,7 +8,8 @@ param(
     [switch]$SummonLife,
     [switch]$DarkStatus,
     [switch]$AllStatusViews,
-    [switch]$ColdStatusScene
+    [switch]$ColdStatusScene,
+    [switch]$ColdSummonScene
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -30,6 +31,7 @@ if ($scope.Count -ne 104 -or $active.Count -ne 57) { throw 'Review the original 
 if (@($AirCombo,$ActionInvisible,$SummonLife,$DarkStatus | Where-Object { $_ }).Count -gt 1) { throw 'Select one isolated status diagnostic.' }
 if ($AllStatusViews -and -not $DarkStatus) { throw 'All original status views require the isolated dark-status host.' }
 if ($ColdStatusScene -and (-not $DarkStatus -or $AllStatusViews)) { throw 'Cold status scene requires the isolated dark-status lifecycle without the all-view probe.' }
+if ($ColdSummonScene -and (-not $SummonLife -or $ColdStatusScene)) { throw 'Cold summon scene requires the original summon lifespan diagnostic.' }
 if ($ItemIds.Count -eq 0) { $ItemIds = if ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } elseif ($SummonLife) { @(10019,10025,10058) } elseif ($DarkStatus) { @(10029) } else { $active } }
 foreach ($item in $ItemIds) { if ($item -notin $active) { throw "Not an original active skill in scope: $item" } }
 if ($AirCombo -and @($ItemIds | Where-Object { $_ -notin @(10006,10009,10052) }).Count -gt 0) {
@@ -59,6 +61,7 @@ $settings = @{
     ZJCS_DARK_STATUS_LIFECYCLE_ACCEPTANCE = $(if ($DarkStatus) { '1' } else { $null })
     ZJCS_FIRST_PROMOTION_STATUS_VIEWS = $(if ($AllStatusViews) { '1' } else { $null })
     ZJCS_STATUS_COLD_SCENE_ACCEPTANCE = $(if ($ColdStatusScene) { '1' } else { $null })
+    ZJCS_SUMMON_COLD_SCENE_ACCEPTANCE = $(if ($ColdSummonScene) { '1' } else { $null })
     ZJCS_STATUS_PROCESS_PHASE = $null
     ZJCS_STATUS_PROCESS_HANDOFF = $null
     ZJCS_SUMMON_DEATH_ACCEPTANCE = $(if ($ActionInvisible -or $SummonLife) { $null } else { [Environment]::GetEnvironmentVariable('ZJCS_SUMMON_DEATH_ACCEPTANCE', 'Process') })
@@ -121,6 +124,19 @@ try {
             }
             if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Summon lifespan] Original applicator turns')) {
                 throw "Original summon lifespan battle assertions did not complete: $run"
+            }
+        }
+        if ($ColdSummonScene) {
+            foreach ($name in @('summon-before-cold-scene.png','summon-after-cold-scene.png',
+                'summon-cold-scene-before.json','summon-cold-scene-after.json')) {
+                if (-not (Test-Path -LiteralPath (Join-Path $run $name))) { throw "Cold summon scene proof missing: $name ($run)" }
+            }
+            if ((Get-FileHash -LiteralPath (Join-Path $run 'summon-cold-scene-before.json')).Hash -ne
+                (Get-FileHash -LiteralPath (Join-Path $run 'summon-cold-scene-after.json')).Hash) {
+                throw "Restored summon checkpoint changed: $run"
+            }
+            if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Summon cold scene] Original weekly disk checkpoint')) {
+                throw "Original summon scene restoration did not finish: $run"
             }
         }
         if ($DarkStatus) {

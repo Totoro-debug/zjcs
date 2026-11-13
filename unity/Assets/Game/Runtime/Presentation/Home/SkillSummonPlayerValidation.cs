@@ -222,8 +222,12 @@ namespace Zjcs.Presentation.Home
             bool coldSceneRequested = Environment.GetEnvironmentVariable("ZJCS_STATUS_COLD_SCENE_ACCEPTANCE") == "1"
                 || SkillDarkStatusProcessValidation.PrepareRequested;
             bool coldSceneCompleted = false;
+            bool summonColdSceneRequested = SkillSummonColdSceneValidation.Requested;
+            bool summonColdSceneCompleted = false;
             Require(!coldSceneRequested || graphCapabilityProbe != null,
                 "Dark cold-scene validation requires the graph capability diagnostic.");
+            Require(!summonColdSceneRequested || graphCapabilityProbe != null && !coldSceneRequested,
+                "Select one graph capability scene-rebuild diagnostic.");
             while(runner!=null)
             {
                 var nativeResult=FindObjectOfType<DemonResultWindow>();
@@ -246,6 +250,15 @@ namespace Zjcs.Presentation.Home
                 hitFinishProbe?.ObserveFrame(controller);
                 graphCapabilityProbe?.ObserveFrame(controller);
                 explicitGraphProbe?.ObserveFrame(controller);
+                if (summonColdSceneRequested && !summonColdSceneCompleted && graphCapabilityProbe.ReadyForSummonColdScene(controller))
+                {
+                    yield return SkillSummonColdSceneValidation.Rebuild(home, runner, slot, saveRoot, output,
+                        graphCapabilityProbe, value => settled = value, (nextHome, nextRunner) => {
+                            home = nextHome; runner = nextRunner; controller = nextRunner.Controller;
+                        }, CaptureGridFrame);
+                    summonColdSceneCompleted = true;
+                    continue;
+                }
                 if (coldSceneRequested && !coldSceneCompleted && graphCapabilityProbe.ReadyForDarkColdScene)
                 {
                     runner.enabled = false;
@@ -292,6 +305,7 @@ namespace Zjcs.Presentation.Home
             Require(captured && resultCaptured && settled!=null && settled.Finished,
                 "Summon battle did not finish, leave its native result, or show its diagnostic graph.");
             Require(!coldSceneRequested || coldSceneCompleted, "Active dark status never completed its full host rebuild.");
+            Require(!summonColdSceneRequested || summonColdSceneCompleted, "Live summons never completed their full host rebuild.");
             probe?.Verify("Windows Player",settled);
             cloneProbe?.Verify(settled);
             deathProbe?.Verify(settled);

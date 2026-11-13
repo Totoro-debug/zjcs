@@ -64,7 +64,7 @@ namespace Zjcs.Presentation.Home
         private static void Require(bool value, string message)
         { if (!value) throw new InvalidOperationException("Dark status cold scene: " + message); }
 
-        private static bool HudFullyVisible(Transform hud)
+        internal static bool HudFullyVisible(Transform hud)
         {
             if (!hud || !hud.gameObject.activeInHierarchy) return false;
             var close = hud.Find("Content/Bottom/Anim/CloseBtn/CloseBtn_normal") as RectTransform;
