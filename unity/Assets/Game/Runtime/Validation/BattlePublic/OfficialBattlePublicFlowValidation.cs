@@ -23,9 +23,9 @@ using Zjcs.Official.BattleMaterialPlayables;
 namespace Zjcs.Validation.Combat
 {
     // Shared interaction steps for the Editor and the Windows Player.
-    public static class OfficialBattlePublicFlowValidation
+    public static partial class OfficialBattlePublicFlowValidation
     {
-        private enum Scenario { Player, Monster, SkillCost, Lifesteal, StatusActions, Critical, Block, SpecialAppearance, TrainingMonster, PartnerAppearance }
+        private enum Scenario { Player, Monster, SkillCost, Lifesteal, StatusActions, Critical, Block, SpecialAppearance, TrainingMonster, PartnerAppearance, NativeSound }
         public static IEnumerator Steps(Action<string> capture)
         {
             foreach (Scenario scenario in Enum.GetValues(typeof(Scenario)))
@@ -40,7 +40,8 @@ namespace Zjcs.Validation.Combat
             bool specialAppearance = scenario == Scenario.SpecialAppearance;
             bool trainingMonster = scenario == Scenario.TrainingMonster;
             bool partnerAppearance = scenario == Scenario.PartnerAppearance;
-            string prefix = partnerAppearance ? "public-partner-appearance" : trainingMonster ? "public-training-monster" : specialAppearance ? "public-special-appearance" : block ? "public-block" : critical ? "public-critical" : statusActions ? "public-status-actions" : hemophagia ? "public-lifesteal" : skillCost ? "public-cost" : monsterActs ? "public-monster" : "public-movement";
+            bool nativeSound = scenario == Scenario.NativeSound;
+            string prefix = nativeSound ? "public-native-sound" : partnerAppearance ? "public-partner-appearance" : trainingMonster ? "public-training-monster" : specialAppearance ? "public-special-appearance" : block ? "public-block" : critical ? "public-critical" : statusActions ? "public-status-actions" : hemophagia ? "public-lifesteal" : skillCost ? "public-cost" : monsterActs ? "public-monster" : "public-movement";
             var root = new GameObject("Public movement battle verification");
             var world = new GameObject("Battle world");
             world.transform.SetParent(root.transform, false);
@@ -185,12 +186,22 @@ namespace Zjcs.Validation.Combat
                     TimelinePortrait = unit => unit.Id == player.Id ? portrait : null,
                     PlayerAppearance = new OfficialBattlePlayerAppearanceSource(1, 17, () => profile,
                         _ => profile.InitialWeaponType),
+                    EnvironmentGameId = nativeSound ? 1000 : 0,
+                    HostPresentation = nativeSound ? new OfficialBattleHostPresentation(camera, world.transform, null) : null,
                     Options = new OfficialBattleSessionOptions { SkipPrepareStatus = false }
                 });
                 Require(actor.MoveDist == 4, "Original startup did not derive the controlled movement distance.");
                 var mapper = new OfficialBattleGridMapper(world.transform, state.Grid);
                 camera.transform.position = mapper.GridToWorld(new FightGridPoint(4, 3)) + new Vector3(0, 0, -20);
                 for (int i = 0; i < 120; i++) yield return null;
+                if (nativeSound)
+                {
+                    CheckNativeMusic();
+                    controller.SetHudVisible(false); yield return null;
+                    CheckNativeMusic();
+                    controller.SetHudVisible(true); yield return null;
+                    CheckNativeMusic();
+                }
                 Require(controller.Phase == FightBattlePhase.Preparing, "Preparation was skipped.");
                 var start = canvasObject.transform.Find(OfficialBattleHudView.StartButtonPath.TrimStart('/'))
                     ?.GetComponent<Button>();
@@ -365,6 +376,7 @@ namespace Zjcs.Validation.Combat
                 Require(expectedNativeHits > 0, "The original controlled skill has no fixed hit receipts.");
                 int nativeFrames = 0;
                 bool nativeFloatSeen = false;
+                bool nativeSkillSoundSeen = false;
                 bool costFloatSeen = false;
                 bool derivedFloatSeen = false;
                 bool nativeHurtSeen = false, nativeHurtPoseSeen = false, partnerMaterialSeen = false;
@@ -376,6 +388,9 @@ namespace Zjcs.Validation.Combat
                 int hurtTailFrames = 24;
                 for (int i = 0; i < 600 && (controller.IsPresentingStep || hurtTailFrames-- > 0); i++)
                 {
+                    if (nativeSound && !nativeSkillSoundSeen)
+                        nativeSkillSoundSeen = world.GetComponentsInChildren<Zjcs.Official.ProfessionUI.AkGameObj>(true)
+                            .Any(emitter => HasNativeSound(emitter.gameObject));
                     bool captureNativeHurt = false;
                     hurtStates.Add(hurtAnimator.GetCurrentAnimatorStateInfo(0).shortNameHash + ":"
                         + string.Join(",", hurtAnimator.GetCurrentAnimatorClipInfo(0).Select(c => c.clip.name)));
@@ -488,6 +503,11 @@ namespace Zjcs.Validation.Combat
                     "The public battle did not create every settled fixed hit exactly once: "
                     + nativeHitIdentities.Count + "/" + expectedNativeHits);
                 Require(nativeFloatSeen, "The common battle controller did not display the original role damage UI.");
+                if (nativeSound)
+                {
+                    Require(nativeSkillSoundSeen, "The actual original skill graph did not post a native sound event.");
+                    CheckNativeMusic();
+                }
                 if (!statusActions) Require(nativeHurtSeen && nativeHurtPoseSeen,
                     "The original damage graph did not drive the receiving hurt/block state and native skeleton pose: "
                         + hurtAnimator.runtimeAnimatorController.name + " [" + string.Join("; ", hurtStates) + "].");
@@ -532,6 +552,13 @@ namespace Zjcs.Validation.Combat
                 UnityEngine.Object.Destroy(root);
             }
             yield return null;
+            if (nativeSound)
+            {
+                Require(AkSoundEngine.IsInitialized()
+                    && UnityEngine.Object.FindObjectsOfType<Zjcs.Official.BattleBgm.GameBgm>().Length == 0,
+                    "Disposing the public battle must release scene music and retain the shared engine.");
+                Debug.Log("PUBLIC_BATTLE_NATIVE_SOUND_PASSED original music and skill playing IDs, hidden return, pause, pointer input, damage and disposal");
+            }
         }
 
         private static FightBattleUnitState Unit(int id, int side, int type, int x, int y, int speed)

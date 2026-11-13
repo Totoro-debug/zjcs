@@ -2876,3 +2876,9 @@ scripts/prepare_battle_bgm_scene_assets.py text eol=lf
 unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseRuntime.Bgm.cs* text eol=lf
 unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.BgmScenes.cs* text eol=lf
 unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Controller.cs* text eol=lf
+
+# Keep the shared Windows native sound validation receipts reproducible.
+unity/Assets/Game/Runtime/Validation/BattlePublic/OfficialBattlePublicFlowValidation*.cs* text eol=lf
+unity/Assets/Game/Runtime/Validation/BattlePublic/Zjcs.Validation.BattlePublic.asmdef text eol=lf
+unity/Assets/Game/Editor/BattleMovementEffects/OfficialBattlePublicPlayerBuild.cs text eol=lf
+scripts/test_battle_public_player.ps1 text eol=lf

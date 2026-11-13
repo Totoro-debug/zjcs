@@ -31,14 +31,14 @@ try {
     if (-not (Test-Path -LiteralPath $resultPath)) { throw 'The Player did not write its result.' }
     $result = Get-Content -LiteralPath $resultPath -Raw | ConvertFrom-Json
     if ($process.ExitCode -ne 0 -or -not $result.passed) { throw "Public battle Player failed: $($result.error)" }
-    foreach ($scenario in @('movement', 'monster', 'cost', 'lifesteal', 'status-actions', 'critical', 'block', 'special-appearance', 'training-monster', 'partner-appearance')) {
+    foreach ($scenario in @('movement', 'monster', 'cost', 'lifesteal', 'status-actions', 'critical', 'block', 'special-appearance', 'training-monster', 'partner-appearance', 'native-sound')) {
         foreach ($phase in @('preparing', 'paused', 'skill', 'hit', 'native-damage-ui', 'settled')) {
             if (-not (Test-Path -LiteralPath (Join-Path $workspacePath "public-$scenario-$phase.png"))) {
                 throw "Missing actual Player capture: public-$scenario-$phase.png"
             }
         }
     }
-    foreach ($scenario in @('movement', 'monster', 'cost', 'lifesteal', 'critical', 'block', 'special-appearance', 'training-monster', 'partner-appearance')) {
+    foreach ($scenario in @('movement', 'monster', 'cost', 'lifesteal', 'critical', 'block', 'special-appearance', 'training-monster', 'partner-appearance', 'native-sound')) {
         if (-not (Test-Path -LiteralPath (Join-Path $workspacePath "public-$scenario-native-hurt.png"))) {
             throw "Missing actual Player hurt capture: public-$scenario-native-hurt.png"
         }
@@ -46,7 +46,10 @@ try {
     foreach ($capture in @('public-cost-native-cost-ui', 'public-lifesteal-derived-cure-ui', 'public-status-actions-native-action-ui', 'public-partner-appearance-native-material')) {
         if (-not (Test-Path -LiteralPath (Join-Path $workspacePath ($capture + '.png')))) { throw "Missing actual Player capture: $capture" }
     }
-    Write-Output "Public battle Windows Player passed all ten shared interaction scenarios: $workspacePath"
+    if (-not (Select-String -LiteralPath (Join-Path $workspacePath 'windows-player.log') -SimpleMatch 'PUBLIC_BATTLE_NATIVE_SOUND_PASSED')) {
+        throw 'The actual original native sound scenario did not pass.'
+    }
+    Write-Output "Public battle Windows Player passed all eleven shared interaction scenarios: $workspacePath"
 }
 finally {
     if ($process -and -not $process.HasExited) { $process.Kill(); $process.WaitForExit() }

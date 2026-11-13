@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
+using UnityEngine;
 
 namespace Zjcs.Editor
 {
@@ -34,19 +35,40 @@ namespace Zjcs.Editor
                 options = BuildOptions.BuildScriptsOnly;
             }
             var backend = PlayerSettings.GetScriptingBackend(standalone);
+            // This must run before BuildPlayer gathers dependencies, just as in
+            // the normal Windows builder. Runtime Home/battle URP scopes are not
+            // visible to Unity's startup-scene pipeline scan.
+            var shaders = Type.GetType("Zjcs.Editor.Skills.OfficialSkillRuntimeShaderBuild, Zjcs.Editor", true);
+            int errors = 0;
+            string firstError = null;
+            Application.LogCallback observe = (message, stack, type) => {
+                if (type != LogType.Error && type != LogType.Exception && type != LogType.Assert) return;
+                errors++;
+                if (firstError == null) firstError = message;
+            };
+            Application.logMessageReceived += observe;
             BuildReport report;
             try
             {
                 PlayerSettings.SetScriptingBackend(standalone, ScriptingImplementation.Mono2x);
+                Type.GetType("Zjcs.Editor.OfficialSparseShaderVariants, Zjcs.Editor", true)
+                    .GetMethod("ValidateProgramDomains").Invoke(null, null);
+                shaders.GetMethod("Prepare").Invoke(null, null);
                 report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
                     scenes = scenes, target = BuildTarget.StandaloneWindows64, options = options,
                     locationPathName = destination,
                     extraScriptingDefines = new[] { "ZJCS_BATTLE_PUBLIC_VALIDATION" }
                 });
             }
-            finally { PlayerSettings.SetScriptingBackend(standalone, backend); }
-            if (report == null || report.summary.result != BuildResult.Succeeded)
-                throw new BuildFailedException("The public battle Windows Player build failed.");
+            finally
+            {
+                Application.logMessageReceived -= observe;
+                shaders.GetMethod("Restore").Invoke(null, null);
+                PlayerSettings.SetScriptingBackend(standalone, backend);
+            }
+            if (report == null || report.summary.result != BuildResult.Succeeded
+                || report.summary.totalErrors != 0 || errors != 0)
+                throw new BuildFailedException("The public battle Windows Player build failed. " + firstError);
         }
     }
 }

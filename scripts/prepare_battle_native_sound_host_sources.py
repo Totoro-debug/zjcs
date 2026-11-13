@@ -88,6 +88,10 @@ def main():
         'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.BgmScenes.cs',
         'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.BgmScenes.cs.meta',
         'unity/Assets/Game/Editor/BattleSounds/Zjcs.Editor.BattleSounds.asmdef',
+        'unity/Assets/Game/Runtime/Validation/BattlePublic/OfficialBattlePublicFlowValidation.cs',
+        'unity/Assets/Game/Runtime/Validation/BattlePublic/OfficialBattlePublicFlowValidation.Sound.cs',
+        'unity/Assets/Game/Runtime/Validation/BattlePublic/OfficialBattlePublicFlowValidation.Sound.cs.meta',
+        'unity/Assets/Game/Runtime/Validation/BattlePublic/Zjcs.Validation.BattlePublic.asmdef',
     ):
         outputs.append(identity(ROOT / relative))
     receipt = dict(manifest='884_156692', sdk_version='2022.1.18.8567',
@@ -99,7 +103,9 @@ def main():
             'CSharp_AkReflectionPathInfo_imageSource_get', 'CSharp_AkDiffractionPathInfo_emitterPos_get'],
         vector_value_export='CSharp_ConvertAkVectorToAkVector64',
         listener_source=identity(ROOT / 'assets/reference/battle-animation/sound-listener-source-manifest.json'),
-        outputs=outputs, tool=identity(Path(__file__)))
+        outputs=outputs, tool=identity(Path(__file__)), validation_tools=[
+            identity(ROOT / 'unity/Assets/Game/Editor/BattleMovementEffects/OfficialBattlePublicPlayerBuild.cs'),
+            identity(ROOT / 'scripts/test_battle_public_player.ps1')])
     OUTPUT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(json.dumps(dict(inputs=len(inputs), outputs=len(outputs), original_volume_controls=len(controls))))
 

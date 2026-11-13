@@ -261,11 +261,43 @@
       "path": "unity/Assets/Game/Editor/BattleSounds/Zjcs.Editor.BattleSounds.asmdef",
       "bytes": 462,
       "sha256": "a08eb20014c9e7b9c8009c42e282a346f92f09ec2945527fb92f442e3f9f4ebb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Validation/BattlePublic/OfficialBattlePublicFlowValidation.cs",
+      "bytes": 44853,
+      "sha256": "9cdd85b8892029274243bc2caba63619c90f4b06146dcb4b8e584ed93eeb6fc4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Validation/BattlePublic/OfficialBattlePublicFlowValidation.Sound.cs",
+      "bytes": 1553,
+      "sha256": "7cf423c3a2bb575956f3c2c573783590df57ec61b840dfeb206952fb1df8634d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Validation/BattlePublic/OfficialBattlePublicFlowValidation.Sound.cs.meta",
+      "bytes": 60,
+      "sha256": "77a55d81cd230a89716f0bb513463ab97298d5d82ba9bd4094a86f16786ed92a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Validation/BattlePublic/Zjcs.Validation.BattlePublic.asmdef",
+      "bytes": 1106,
+      "sha256": "46c94a0a978e4328456fbdb1923ae1065af0398a2bf19bd36be49b57145cf84f"
     }
   ],
   "tool": {
     "path": "scripts/prepare_battle_native_sound_host_sources.py",
-    "bytes": 6749,
-    "sha256": "cd1c525d6899137cfa7910ec2267e72d3e75eed2d9d781be806559c03dc35cc0"
-  }
+    "bytes": 7364,
+    "sha256": "8ef5992453785e6bdc83a0790ca16b1788db82f57067d36ea839b7a6c7634b97"
+  },
+  "validation_tools": [
+    {
+      "path": "unity/Assets/Game/Editor/BattleMovementEffects/OfficialBattlePublicPlayerBuild.cs",
+      "bytes": 4222,
+      "sha256": "5861cf2eb2ac0696ef230bda8f6740abeb7db1254fb50718b298fb522e56d9f8"
+    },
+    {
+      "path": "scripts/test_battle_public_player.ps1",
+      "bytes": 3785,
+      "sha256": "af127be88284d9fef7f133cf2f9d3e84aaadfbc2434706ac25de650d59a98730"
+    }
+  ]
 }
