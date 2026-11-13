@@ -84,6 +84,8 @@ namespace Zjcs.Presentation.CharacterCreation
                 return;
             }
 #endif
+            // The explicit theme diagnostic owns its isolated battle scene.
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "--zjcs-validate-battle-theme") >= 0) return;
             // Home acceptance creates the runtime with its own isolated profile.
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-homeAcceptance") >= 0) return;
             // The embedded animation component diagnostic owns its camera and never opens a user profile.

@@ -34,8 +34,8 @@ namespace Zjcs.Presentation.Home
                 throw new ArgumentException("Use a marked battle theme validation workspace.");
             string destination = Path.GetFullPath(args[at + 1]);
             if (!destination.StartsWith(Path.GetFullPath(workspace) + Path.DirectorySeparatorChar,
-                StringComparison.OrdinalIgnoreCase) || !args.Contains("-homeAcceptance"))
-                throw new ArgumentException("Use a workspace child and the isolated startup switch.");
+                StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("Use a child of the marked validation workspace.");
             AudioListener.volume = 0;
             Application.runInBackground = true;
             var host = new GameObject("Battle theme Windows verification");
