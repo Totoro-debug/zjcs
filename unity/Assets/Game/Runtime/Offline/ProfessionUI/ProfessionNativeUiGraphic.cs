@@ -112,7 +112,8 @@ namespace Zjcs.Offline.ProfessionUI
             if (State == null) throw new InvalidOperationException("Original UI pose source returned no skeleton.");
             State.Pose.SetSkeletonFlip(initialFlipX, initialFlipY);
             batches = new ProfessionNativeMeshBatches(State.SlotCount);
-            if (!string.IsNullOrEmpty(startingAnimation)) source.Play(State, startingAnimation, startingLoop);
+            if (!string.IsNullOrEmpty(startingAnimation) && State.Source.AnimationNames.Contains(startingAnimation))
+                source.Play(State, startingAnimation, startingLoop);
             source.Apply(State, 0); Build(); OnAnimationRebuild?.Invoke(this);
         }
         private void ValidateSettings()
