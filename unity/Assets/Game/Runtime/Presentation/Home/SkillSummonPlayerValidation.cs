@@ -229,7 +229,7 @@ namespace Zjcs.Presentation.Home
             bool coldSceneCompleted = false;
             bool summonColdSceneRequested = SkillSummonColdSceneValidation.Requested;
             bool summonColdSceneCompleted = false;
-            bool moveScopeColdSceneCompleted = false;
+            bool terrainScopeColdSceneCompleted = false;
             Require(!coldSceneRequested || graphCapabilityProbe != null,
                 "Dark cold-scene validation requires the graph capability diagnostic.");
             Require(!summonColdSceneRequested || graphCapabilityProbe != null && !coldSceneRequested,
@@ -255,14 +255,14 @@ namespace Zjcs.Presentation.Home
                 masterChildProbe?.ObserveFrame(controller);
                 hitFinishProbe?.ObserveFrame(controller);
                 graphCapabilityProbe?.ObserveFrame(controller);
-                if (SkillMoveScopeColdSceneValidation.Requested && !moveScopeColdSceneCompleted
-                    && graphCapabilityProbe.ReadyForMoveScopeColdScene(controller))
+                if (SkillTerrainScopeColdSceneValidation.Requested && !terrainScopeColdSceneCompleted
+                    && graphCapabilityProbe.ReadyForTerrainScopeColdScene(controller))
                 {
-                    yield return SkillMoveScopeColdSceneValidation.Rebuild(home, runner, slot, saveRoot, output,
+                    yield return SkillTerrainScopeColdSceneValidation.Rebuild(home, runner, slot, saveRoot, output,
                         graphCapabilityProbe, value => settled = value, (nextHome, nextRunner) => {
                             home = nextHome; runner = nextRunner; controller = nextRunner.Controller;
                         }, CaptureGridFrame);
-                    moveScopeColdSceneCompleted = true;
+                    terrainScopeColdSceneCompleted = true;
                     continue;
                 }
                 explicitGraphProbe?.ObserveFrame(controller);

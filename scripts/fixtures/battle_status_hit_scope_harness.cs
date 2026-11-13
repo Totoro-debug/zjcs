@@ -90,7 +90,9 @@ public static class BattleStatusHitScopeHarness
             "Real multi-target/multi-hit fire routing differs: hits="+hits+" casts="+casts);
         foreach(var enemy in new[]{target,other})
             Check(cp.GridItems.Any(x=>x.GridItemClassId==3320&&x.X==enemy.X&&x.Y==enemy.Y
-                &&x.Runtime.Statuses.Any(status=>status.ClassId==11582&&status.ApplyingSkillItemId==10576)),
+                &&x.Runtime.Statuses.Any(status=>status.ClassId==11582&&status.RootSkillId==11580
+                    &&status.ApplyingSkillItemId==10576&&status.CreatorId==owner.Id
+                    &&status.SourceSkillRank==2&&status.SourceSkillLevel==20)),
                 "Burning ground position, original status or passive source differs");
         var creates=step.GridViewEvents.Where(x=>x.Kind==FightBattleGridViewEventKind.Create).ToArray();
         var childCasts=step.SkillCasts.Where(x=>x.SkillEntityId==11580).ToArray();

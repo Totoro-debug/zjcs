@@ -10,6 +10,7 @@ namespace Zjcs.Presentation.Combat
     {
         private int firstPromotionItemId;
         private int firstPromotionDispelAllyId;
+        private int[] firstPromotionHitScopeTargetIds = Array.Empty<int>();
         private int firstPromotionFacingIndex;
         private float firstPromotionCastClock;
         private int firstPromotionFrameCount;
@@ -299,6 +300,16 @@ namespace Zjcs.Presentation.Combat
                 // separately checked against the saved random stream in rule tests.
                 passive.Components.HitScope.Rate = 1f;
                 player.Statuses.Add(passive);
+                if (probe.ValidateHitScopeLifecycle)
+                {
+                    // Two separate original targets occupy two cells of 11690's
+                    // authored area; the ordinary AI still chooses and casts.
+                    var other = JsonUtility.FromJson<FightBattleUnitState>(JsonUtility.ToJson(enemy));
+                    other.Id = checkpoint.Units.Max(unit => unit.Id) + 1; other.Turn.Id = other.Id;
+                    other.X += dx; other.Y += dy;
+                    checkpoint.Units.Add(other);
+                    probe.firstPromotionHitScopeTargetIds = new[] { enemy.Id, other.Id };
+                }
             }
             if (Environment.GetEnvironmentVariable("ZJCS_STATUS_LIFE_REDUCTION_ACCEPTANCE") == "1")
             {
@@ -354,7 +365,7 @@ namespace Zjcs.Presentation.Combat
                         && Math.Abs(value.Delay - arrival) < .0001f) == 5,
                         "Walked cell/jump landing terrain did not retain its original arrival delay.");
                 }
-                if (walking) moveScopeWalkingPath = movement;
+                if (walking) terrainScopeWalkingPath = movement;
                 var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
                 var savedComponent = saved.Units.Single(unit => unit.Id == player.Id).Statuses
                     .Single(status => status.ClassId == 25027).Components.MoveScope;
@@ -395,6 +406,26 @@ namespace Zjcs.Presentation.Combat
                 Require(hits >= 3 && triggered == hits && component.TriggeredCount == hits
                     && checkpoint.GridItems.Any(item => item.GridItemClassId == 3320),
                     "Original multi-hit fire scope did not create burning ground for each successful occurrence.");
+                if (ValidateHitScopeLifecycle)
+                {
+                    Require(firstPromotionHitScopeTargetIds.Length == 2 && hits == 6,
+                        "Original three-stage fire must hit both independent targets: " + hits);
+                    foreach (int targetId in firstPromotionHitScopeTargetIds)
+                    {
+                        var target = checkpoint.Units.Single(value => value.Id == targetId);
+                        Require(step.DamageEvents.Count(hit => hit.SourceId == player.Id && hit.SkillEntityId == 11690
+                            && hit.TargetId == targetId && !hit.Dodge && !hit.Immunity && !hit.Blinding) == 3
+                            && checkpoint.GridItems.Any(item => !item.Ended && item.GridItemClassId == 3320
+                                && item.X == target.X && item.Y == target.Y && item.Runtime.Statuses.Any(status =>
+                                    status.ClassId == 11582 && status.ApplyingSkillItemId == 10576
+                                    && status.SourceSkillRank == 2 && status.SourceSkillLevel == 20)),
+                            "Original per-target terrain or cultivation source differs: " + targetId);
+                    }
+                    var creates = step.GridViewEvents.Where(value => value.Kind == FightBattleGridViewEventKind.Create).ToArray();
+                    Require(creates.Length == 6 && creates.Select(value => value.Delay).SequenceEqual(
+                        step.SkillCasts.Where(value => value.SkillEntityId == 11580).Select(value => value.Delay)),
+                        "Original fire terrain did not retain each target occurrence's hit delay.");
+                }
                 var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
                 Require(saved.Units.Single(unit => unit.Id == player.Id).Statuses.Single(status => status.ClassId == 25045)
                     .Components.HitScope.TriggeredCount == hits,

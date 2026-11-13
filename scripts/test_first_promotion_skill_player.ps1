@@ -10,7 +10,8 @@ param(
     [switch]$AllStatusViews,
     [switch]$ColdStatusScene,
     [switch]$ColdSummonScene,
-    [switch]$MoveScopeColdScene
+    [switch]$MoveScopeColdScene,
+    [switch]$HitScopeColdScene
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -29,11 +30,11 @@ $scope = @($rules.profession_base | Where-Object Profession -in @(1,2,6,10,11,15
 $active = @($rules.item | Where-Object { $_.ClassId -in $scope -and $_.ItemType -eq 100 } |
     Select-Object -ExpandProperty ClassId | Sort-Object)
 if ($scope.Count -ne 104 -or $active.Count -ne 57) { throw 'Review the original six-profession skill scope.' }
-if (@($AirCombo,$ActionInvisible,$SummonLife,$DarkStatus,$MoveScopeColdScene | Where-Object { $_ }).Count -gt 1) { throw 'Select one isolated status diagnostic.' }
+if (@($AirCombo,$ActionInvisible,$SummonLife,$DarkStatus,$MoveScopeColdScene,$HitScopeColdScene | Where-Object { $_ }).Count -gt 1) { throw 'Select one isolated status diagnostic.' }
 if ($AllStatusViews -and -not $DarkStatus) { throw 'All original status views require the isolated dark-status host.' }
 if ($ColdStatusScene -and (-not $DarkStatus -or $AllStatusViews)) { throw 'Cold status scene requires the isolated dark-status lifecycle without the all-view probe.' }
 if ($ColdSummonScene -and (-not $SummonLife -or $ColdStatusScene)) { throw 'Cold summon scene requires the original summon lifespan diagnostic.' }
-if ($ItemIds.Count -eq 0) { $ItemIds = if ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } elseif ($SummonLife) { @(10019,10025,10058) } elseif ($MoveScopeColdScene) { @(10029,10055) } elseif ($DarkStatus) { @(10029) } else { $active } }
+if ($ItemIds.Count -eq 0) { $ItemIds = if ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } elseif ($SummonLife) { @(10019,10025,10058) } elseif ($MoveScopeColdScene) { @(10029,10055) } elseif ($HitScopeColdScene) { @(10072) } elseif ($DarkStatus) { @(10029) } else { $active } }
 foreach ($item in $ItemIds) { if ($item -notin $active) { throw "Not an original active skill in scope: $item" } }
 if ($AirCombo -and @($ItemIds | Where-Object { $_ -notin @(10006,10009,10052) }).Count -gt 0) {
     throw 'The airborne diagnostic requires original 10006/10009/10052.'
@@ -50,6 +51,9 @@ if ($DarkStatus -and @($ItemIds | Where-Object { $_ -ne 10029 }).Count -gt 0) {
 if ($MoveScopeColdScene -and (@($ItemIds | Where-Object { $_ -notin @(10029,10055) }).Count -gt 0 -or
     @($Directions | Where-Object { $_ -ne 'up' }).Count -gt 0)) {
     throw 'The movement-burning scene diagnostic currently requires original 10029/10055 facing up.'
+}
+if ($HitScopeColdScene -and @($ItemIds | Where-Object { $_ -ne 10072 }).Count -gt 0) {
+    throw 'The fire-hit terrain scene diagnostic requires original 10072/11690.'
 }
 $settings = @{
     ZJCS_REPOSITORY_ROOT = $repository
@@ -69,6 +73,8 @@ $settings = @{
     ZJCS_SUMMON_COLD_SCENE_ACCEPTANCE = $(if ($ColdSummonScene) { '1' } else { $null })
     ZJCS_STATUS_MOVE_SCOPE_ACCEPTANCE = $(if ($MoveScopeColdScene) { '1' } else { [Environment]::GetEnvironmentVariable('ZJCS_STATUS_MOVE_SCOPE_ACCEPTANCE', 'Process') })
     ZJCS_MOVE_SCOPE_COLD_SCENE = $(if ($MoveScopeColdScene) { '1' } else { $null })
+    ZJCS_STATUS_HIT_SCOPE_ACCEPTANCE = $(if ($HitScopeColdScene) { '1' } else { [Environment]::GetEnvironmentVariable('ZJCS_STATUS_HIT_SCOPE_ACCEPTANCE', 'Process') })
+    ZJCS_HIT_SCOPE_COLD_SCENE = $(if ($HitScopeColdScene) { '1' } else { $null })
     ZJCS_STATUS_PROCESS_PHASE = $null
     ZJCS_STATUS_PROCESS_HANDOFF = $null
     ZJCS_SUMMON_DEATH_ACCEPTANCE = $(if ($ActionInvisible -or $SummonLife) { $null } else { [Environment]::GetEnvironmentVariable('ZJCS_SUMMON_DEATH_ACCEPTANCE', 'Process') })
@@ -108,17 +114,19 @@ try {
                 throw "Original airborne lifecycle assertions did not complete: $run"
             }
         }
-        if ($MoveScopeColdScene) {
+        if ($MoveScopeColdScene -or $HitScopeColdScene) {
+            $terrainPrefix = if ($HitScopeColdScene) { 'hit-scope' } else { 'move-scope' }
+            $terrainStatusId = if ($HitScopeColdScene) { 11582 } else { 11632 }
             if ($item -eq 10055 -and -not (Test-Path -LiteralPath (Join-Path $run 'move-scope-native-walking.png'))) {
                 throw "Original walking action was not captured: $run"
             }
-            foreach ($name in @('move-scope-before-cold-scene.png','move-scope-after-cold-scene.png',
-                'move-scope-restored-expired.png','move-scope-cold-before.json','move-scope-cold-after.json')) {
+            foreach ($name in @("$terrainPrefix-before-cold-scene.png","$terrainPrefix-after-cold-scene.png",
+                "$terrainPrefix-restored-expired.png","$terrainPrefix-cold-before.json","$terrainPrefix-cold-after.json")) {
                 if (-not (Test-Path -LiteralPath (Join-Path $run $name))) { throw "Ground restoration proof missing: $name ($run)" }
             }
-            if ((Get-FileHash -LiteralPath (Join-Path $run 'move-scope-cold-before.json')).Hash -ne
-                (Get-FileHash -LiteralPath (Join-Path $run 'move-scope-cold-after.json')).Hash -or
-                -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Move scope cold scene] Original 3320/11632')) {
+            if ((Get-FileHash -LiteralPath (Join-Path $run "$terrainPrefix-cold-before.json")).Hash -ne
+                (Get-FileHash -LiteralPath (Join-Path $run "$terrainPrefix-cold-after.json")).Hash -or
+                -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch "[$terrainPrefix cold scene] Original 3320/$terrainStatusId")) {
                 throw "Original ground scene restoration or native lifetime assertions did not finish: $run"
             }
         }
