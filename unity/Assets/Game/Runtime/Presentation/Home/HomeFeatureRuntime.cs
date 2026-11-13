@@ -1506,7 +1506,8 @@ namespace Zjcs.Presentation.Home
         {
             string receipt = tutorialHost?.CollectionReceiptFor(hangUpId)
                 ?? ("home:collect:" + slotId + ":" + hangUpId + ":" + Guid.NewGuid().ToString("N"));
-            long count = session.Collect(hangUpId, receipt);
+            OfflineHomeCollectedReward reward = session.CollectReward(hangUpId, receipt);
+            long count = reward?.Count ?? 0;
             if (count > 0)
             {
                 HangUpCollectedForTutorial?.Invoke(hangUpId, count, receipt);
@@ -1693,7 +1694,12 @@ namespace Zjcs.Presentation.Home
                     try
                     {
                         EnsureProgression();
-                        progression.AwardExperience(stack.Count, receipt);
+                        ProgressionResult result = progression.AwardExperience(stack.Count, receipt);
+                        if (result.Status != ProgressionResultStatus.Applied && result.Status != ProgressionResultStatus.Unchanged)
+                        {
+                            Debug.LogWarning("Home experience could not be granted: " + result.Message);
+                            continue;
+                        }
                     }
                     catch (Exception error)
                     {

@@ -39,6 +39,12 @@ def prepare():
             'Zjcs.Presentation.Home']), indent=2) + '\n', 'utf8', newline='\n')
     receipt_path = ROOT / 'assets/reference/home-income-formula-source-manifest.json'
     receipt = json.loads(receipt_path.read_bytes())
+    source = '.tools/source-packages/current/884_156692/official-code/client-source/FurnitureBedDialog.cs'
+    receipt['inputs'][source] = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
+    receipt['collection_adapter'] = (
+        'CollectReward projects only the committed claim delta, selected output item and durable ledger identity; '
+        'presentation does not issue a second grant. Failed character experience mutations retain the local ledger; '
+        'previously committed character receipts acknowledge without another award.')
     receipt['validation_inputs'] = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in (
         'scripts/prepare_home_income_formula_validation.py', 'scripts/fixtures/home_income_formula_validation.cs',
         'scripts/fixtures/home_furniture_host_validation.cs')}

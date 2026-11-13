@@ -14,7 +14,8 @@
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/Formula.cs": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/HangUpUtils.cs": "b5d834657d4410887c370b905b7844cb2e38964a86ad3954ef8ae58a48fb247a",
     "unity/Assets/Official/Partners/partner-property-ui.json": "248cb46ddf9f333645ad0142150d5c0ea5995ab25204e659a177fd21b356d7c3",
-    "assets/reference/partner-property-ui-source-manifest.json": "aed3a4d9a05bf9d6325ab29ab2e30d10fbd28dea9d16c492843d4c1edac3769e"
+    "assets/reference/partner-property-ui-source-manifest.json": "aed3a4d9a05bf9d6325ab29ab2e30d10fbd28dea9d16c492843d4c1edac3769e",
+    ".tools/source-packages/current/884_156692/official-code/client-source/FurnitureBedDialog.cs": "b65f8fcaa988cd55991edc3fca71c8def7e30105f62648ce2c56bae5032a6e84"
   },
   "outputs": {
     "unity/Assets/Game/Runtime/Official/HomeIncomeRules/PropType.cs": "1813ad74c60ad245324a147c827a9da3b7ed6c751e7397ce56c5b4b40e090ace",
@@ -35,16 +36,17 @@
   },
   "adaptation": "Original arithmetic, float casts and execution order; explicit reward row, property dictionary and property parser boundaries. Full original enums; selected prop_cfg flags. Offline checkpoint and award transactions remain separate.",
   "validation_inputs": {
-    "scripts/prepare_home_income_formula_validation.py": "d00bcd1a92a142e98178780dac78d071eed2a9adaf6fd32c2b713cc96655130b",
-    "scripts/fixtures/home_income_formula_validation.cs": "5e29415711532fb45ea5f8f303f87ff90666520baf0c85789b01bfb065cd3835",
+    "scripts/prepare_home_income_formula_validation.py": "32f970f42be7d12cee07b1bb13998f3f160c147e33e1bfdfdc86cef76ea09469",
+    "scripts/fixtures/home_income_formula_validation.cs": "593c826c1279349d480cf9052e3498e753587cc715eebe7a61a7686cf8aa9f13",
     "scripts/fixtures/home_furniture_host_validation.cs": "04b99707086fdb7beb10202dc1fd4be3bcb2b6a4d6ef857239ad9e6368dfc5c1"
   },
-  "validation_base_commit": "08cdc08e1330ccbbe070eee81aabe18dea9ecaa2",
+  "validation_base_commit": "da07207f2054468bec9cce26f8377e64132e627a",
   "runtime_bindings": {
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "094c00bdbbdb7a708684f7975b0861055b38cb5df584981781e5683deeb79040",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "ef7649af556e7ea9328e688f3e0fe30169e6b3c55800d4c7180afbf546c31b71",
+    "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef": "9b174723d77b11963eb5d7f8473bc02783f396e59c0ee7caabed5b97a7fd6dc5",
     "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncome.cs": "7f410925c39e9c1212a0b6bd2832b435d057d105ed77b925c6e248c6dca9628d",
-    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "6b995e8bb8c9c24a52625aee50fcc6b71a9d518750024d2f3a69b9247b228ff3",
-    "unity/Assets/Game/Runtime/Offline/Home/Zjcs.Offline.Home.asmdef": "c5393a9dbf26ce8e36aed72fedcefba76c77e769e9ebff640f3bd925a6f17672",
-    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "a4afcce3baf575f5aee02509b5b2c923155cd6929d28fd37d301c2ca70a2c839",
-    "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef": "5d5dde59adce34f82e0b075bc1fb9b6e5c03ede0f8e34bf9f809f578b87393d0"
-  }
+    "unity/Assets/Game/Runtime/Offline/Home/Zjcs.Offline.Home.asmdef": "c5393a9dbf26ce8e36aed72fedcefba76c77e769e9ebff640f3bd925a6f17672"
+  },
+  "collection_adapter": "CollectReward projects only the committed claim delta, selected output item and durable ledger identity; presentation does not issue a second grant. Failed character experience mutations retain the local ledger; previously committed character receipts acknowledge without another award."
 }

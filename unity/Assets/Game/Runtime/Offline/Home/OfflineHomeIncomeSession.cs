@@ -74,6 +74,23 @@ namespace Zjcs.Offline.Home
         public long Serial;
     }
 
+    // A projection of the committed local ledger, never a second reward grant.
+    public sealed class OfflineHomeCollectedReward
+    {
+        public int HangUpId { get; }
+        public int ItemId { get; }
+        public long Count { get; }
+        public long LedgerSerial { get; }
+        public string Receipt { get; }
+
+        internal OfflineHomeCollectedReward(int hangUpId, int itemId, long count,
+            long ledgerSerial, string receipt)
+        {
+            HangUpId = hangUpId; ItemId = itemId; Count = count;
+            LedgerSerial = ledgerSerial; Receipt = receipt;
+        }
+    }
+
     [Serializable]
     public sealed class OfflineHomeRandomRewardSlot
     {
@@ -528,20 +545,24 @@ namespace Zjcs.Offline.Home
         }
 
         public long Collect(int hangUpId, string receipt)
+            => CollectReward(hangUpId, receipt)?.Count ?? 0;
+
+        public OfflineHomeCollectedReward CollectReward(int hangUpId, string receipt)
         {
-            if (string.IsNullOrWhiteSpace(receipt) || Save.AppliedReceipts.Contains(receipt)) return 0;
+            if (string.IsNullOrWhiteSpace(receipt) || Save.AppliedReceipts.Contains(receipt)) return null;
             OfflineHomeIncomeDefinition definition = FindDefinition(hangUpId);
-            if (!definition.Unlocked) return 0;
+            if (!definition.Unlocked) return null;
             OfflineHomeSave next = Clone(Save);
             OfflineHomeIncomeEntry entry = FindOrCreate(next, hangUpId);
             HangUpIncomeRecord record = ToRecord(entry);
             long count = OfflineHangUpIncome.Collect(record, definition.Rule, properties, floatPropertyIds);
-            if (count <= 0) return 0;
+            if (count <= 0) return null;
             entry.StoredSeconds = record.StoredSeconds;
             entry.SettledCount = record.SettledCount;
-            if (!GrantOutput(next, definition, count)) return 0;
+            if (!GrantOutput(next, definition, count, out int itemId)) return null;
+            long serial = next.Inventory.First(value => value.ItemId == itemId).Serial;
             AddReceipt(next, receipt);
-            return Commit(next) ? count : 0;
+            return Commit(next) ? new OfflineHomeCollectedReward(hangUpId, itemId, count, serial, receipt) : null;
         }
 
         public long ApplyFastForward(int hangUpId, double hours, string receipt)
@@ -759,8 +780,11 @@ namespace Zjcs.Offline.Home
         }
 
         private static bool GrantOutput(OfflineHomeSave save, OfflineHomeIncomeDefinition definition, long count)
+            => GrantOutput(save, definition, count, out _);
+
+        private static bool GrantOutput(OfflineHomeSave save, OfflineHomeIncomeDefinition definition, long count, out int itemId)
         {
-            int itemId = definition.OutputItemId;
+            itemId = definition.OutputItemId;
             if (definition.OutputItemIds != null && definition.OutputItemIds.Length > 1)
             {
                 int total = 0;

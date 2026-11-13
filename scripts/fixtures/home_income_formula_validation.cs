@@ -46,6 +46,7 @@ public sealed partial class HomeIncomeFormulaHostRunner
         rule.LevelNum = 0;
         Require(OfflineHangUpIncome.HourlyRate(rule, props, flags) == 0, "original nonpositive level branch");
         CheckAccelerationTransactions(flags);
+        CheckCollectionReceipts(flags);
 
         double beforeRate = home.Session.Preview(1).HourlyRate;
         int beforeBlessing = home.BlessingLevel;
@@ -119,7 +120,77 @@ public sealed partial class HomeIncomeFormulaHostRunner
             Require(home.PlayerProperties()[prop.propId] == prior + prop.value,
                 "periodic card non-battle property is included once, without a second commerce merge");
         }
-        Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original single precision and arithmetic boundary, actual native repair pointer, real lost goddess profile, production collection/experience/free acceleration, remainder, idempotency and disk reopen. Collection and acceleration business calls are direct; original bed buttons and complete HUD remain pending.");
+        yield return CheckExperienceLedgerRecovery();
+        Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original single precision and arithmetic boundary, actual native repair pointer, real lost goddess profile, production collection/experience/free acceleration, committed reward receipts, rejected experience grants retained, acknowledgement recovery, remainder, idempotency and disk reopen. Collection and acceleration business calls are direct; original bed buttons and complete HUD remain pending.");
+    }
+
+    private void CheckCollectionReceipts(ISet<int> flags)
+    {
+        string path = System.IO.Path.Combine(root, "collection-receipts.json");
+        var definition = new OfflineHomeIncomeDefinition {
+            HangUpId = 1, OutputItemId = 51, OutputItemIds = new[] { 51, 52 },
+            OutputWeights = new[] { 1000, 1000 }, Unlocked = true,
+            Rule = new HangUpIncomeRule { HourlyOutput = 5, LevelNum = 1, MaxStoreHours = 36 }
+        };
+        var entries = new[] { definition };
+        var properties = new Dictionary<int, long>();
+        var session = OfflineHomeIncomeSession.Open(path, entries, properties, flags, 1700000000);
+        Require(session.Mutate("seed", save => {
+            save.Income.Add(new OfflineHomeIncomeEntry { HangUpId = 1, StoredSeconds = 3600 });
+            save.GrantSerial = 2;
+            save.Inventory.Add(new OfflineHomeItemStack { ItemId = 51, Count = 99, Serial = 1 });
+            save.Inventory.Add(new OfflineHomeItemStack { ItemId = 52, Count = 99, Serial = 2 });
+        }), "persist prior unrelated rewards in both possible output stacks");
+        var reward = session.CollectReward(1, "collect");
+        Require(reward != null && reward.HangUpId == 1 && reward.Count == 5 && reward.Receipt == "collect"
+            && session.Save.Inventory.Single(row => row.ItemId == reward.ItemId).Count == 104
+            && session.Save.Inventory.Single(row => row.Serial == reward.LedgerSerial).ItemId == reward.ItemId,
+            "receipt uses the actual randomly selected output and only this claim's delta");
+        string committed = JsonUtility.ToJson(session.Save);
+        Require(session.CollectReward(1, "collect") == null && session.CollectReward(1, "empty") == null
+            && JsonUtility.ToJson(session.Save) == committed, "duplicate and empty claims produce no presentation receipt or ledger mutation");
+        session = OfflineHomeIncomeSession.Open(path, entries, properties, flags, 1700000000);
+        Require(session.CollectReward(1, "collect") == null && JsonUtility.ToJson(session.Save) == committed,
+            "disk reopen does not grant the committed receipt again");
+        Require(session.Mutate("overflow", save => {
+            save.Income.Single().StoredSeconds = 3600;
+            foreach (var item in save.Inventory) item.Count = long.MaxValue;
+        }), "seed isolated full ledger");
+        string before = JsonUtility.ToJson(session.Save);
+        Require(session.CollectReward(1, "retry") == null && JsonUtility.ToJson(session.Save) == before,
+            "failed output grant preserves income, random state, serials and receipt");
+        Require(session.Mutate("space", save => { foreach (var item in save.Inventory) item.Count = 1; }), "restore isolated ledger space");
+        Require(session.CollectReward(1, "retry")?.Count == 5, "failed receipt remains retryable after storage succeeds");
+    }
+
+    private IEnumerator CheckExperienceLedgerRecovery()
+    {
+        const long recoveredSerial = 1000001, failedSerial = 1000002;
+        long experience = home.Profile.Save.Player.Experience;
+        string recoveredReceipt = "home:grant:" + slot + ":" + recoveredSerial;
+        Require(home.Profile.ApplyCharacterMutation(player => {
+            player.Experience += 11;
+        }, recoveredReceipt).IsApplied, "persist award before interrupted ledger acknowledgement");
+        Require(home.Session.Mutate("seed-unacknowledged", save => {
+            save.GrantSerial = recoveredSerial;
+            save.Inventory.Add(new OfflineHomeItemStack { ItemId = 50, Count = 11, Serial = recoveredSerial });
+        }), "persist isolated unacknowledged experience");
+        home.DrainHomeInventory();
+        Require(home.Profile.Save.Player.Experience == experience + 11 && home.Session.Save.Inventory.Count == 0,
+            "replayed character receipt acknowledges the ledger without adding experience again");
+        Require(home.Session.Mutate("seed-rejected-award", save => {
+            save.GrantSerial = failedSerial;
+            save.Inventory.Add(new OfflineHomeItemStack { ItemId = 50, Count = long.MaxValue, Serial = failedSerial });
+        }), "seed isolated experience overflow rejection");
+        home.DrainHomeInventory();
+        Require(home.Session.Save.Inventory.Single(row => row.Serial == failedSerial).Count == long.MaxValue
+            && home.Profile.Save.Player.Experience == experience + 11,
+            "rejected character mutation retains the durable owed experience");
+        home.Close(); CloseCapture(); yield return null;
+        Open(); yield return new WaitForSeconds(1);
+        Require(home.Session.Save.Inventory.Single(row => row.Serial == failedSerial).Count == long.MaxValue
+            && home.Profile.Save.Player.Experience == experience + 11,
+            "disk reopen preserves failed experience for retry and completed receipt stays idempotent");
     }
 
     private void CheckAccelerationTransactions(ISet<int> flags)
