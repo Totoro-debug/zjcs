@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Zjcs.Offline.State;
+using Zjcs.Offline.Progression;
 using UnityEngine;
 
 namespace Zjcs.Offline.Home
@@ -17,6 +18,7 @@ namespace Zjcs.Offline.Home
         public List<OfflineHomeItemStack> Inventory = new List<OfflineHomeItemStack>();
         public List<OfflineHomeRandomRewardSlot> RandomRewards = new List<OfflineHomeRandomRewardSlot>();
         public List<OfflineHomeFastForwardUsage> FastForwardUsage = new List<OfflineHomeFastForwardUsage>();
+        public int FastForwardCalendarVersion;
         public List<OfflineHomeMail> Mail = new List<OfflineHomeMail>();
         public OfflineHomeTutorialProgress Tutorial = new OfflineHomeTutorialProgress();
         public List<OfflineHomeFurnitureEntry> Furniture = new List<OfflineHomeFurnitureEntry>();
@@ -158,6 +160,7 @@ namespace Zjcs.Offline.Home
         public int[] OutputWeights;
         public int FastHangUpId;
         public int FreeFastForwardLimit;
+        public bool FreeFastForwardLimited;
         public double FreeFastForwardHours;
         public HangUpIncomeRule Rule = new HangUpIncomeRule();
         public bool Unlocked;
@@ -599,13 +602,12 @@ namespace Zjcs.Offline.Home
             OfflineHomeIncomeDefinition[] group = hangUpIds.Distinct()
                 .Select(id => definitions.FirstOrDefault(value => value.HangUpId == id))
                 .Where(value => value != null && value.FastHangUpId == fastHangUpId
-                    && value.FreeFastForwardLimit > 0 && value.FreeFastForwardHours == hours)
+                    && !value.FreeFastForwardLimited && value.FreeFastForwardHours == hours)
                 .ToArray();
             if (group.Length == 0) return 0;
-            int freeLimit = group.Max(value => value.FreeFastForwardLimit);
+            long freeLimit = group.Max(value => value.FreeFastForwardLimit) + ExtraFreeFastForwardCount();
             string localDate = LocalDate(Save.LastLocalUnixSeconds);
-            OfflineHomeFastForwardUsage usage = Save.FastForwardUsage.FirstOrDefault(value => value.FastHangUpId == fastHangUpId);
-            int used = usage != null && usage.LocalDate == localDate ? usage.FreeUses : 0;
+            int used = GetTodayFreeFastForwardCount(fastHangUpId);
             if (used >= freeLimit) return 0;
             OfflineHomeSave next = Clone(Save);
             long total = 0;
@@ -628,6 +630,24 @@ namespace Zjcs.Offline.Home
             AddReceipt(next, receipt);
             return Commit(next) ? total : 0;
         }
+
+        public int GetTodayFreeFastForwardCount(int fastHangUpId)
+        {
+            var usage = Save.FastForwardUsage.FirstOrDefault(value => value.FastHangUpId == fastHangUpId);
+            return usage != null && usage.LocalDate == LocalDate(Save.LastLocalUnixSeconds) ? usage.FreeUses : 0;
+        }
+
+        public bool CanFreeFastForward(int fastHangUpId)
+        {
+            if (fastHangUpId <= 0) return false;
+            var group = definitions.Where(value => value.FastHangUpId == fastHangUpId).ToArray();
+            return group.Length > 0 && !group.Any(value => value.FreeFastForwardLimited)
+                && GetTodayFreeFastForwardCount(fastHangUpId)
+                    < group.Max(value => value.FreeFastForwardLimit) + ExtraFreeFastForwardCount();
+        }
+
+        private long ExtraFreeFastForwardCount()
+            => properties.TryGetValue(1101, out long value) ? value : 0;
 
         public long ApplyFastForwardItems(int hangUpId, int timeCrystalItemId, int itemCount,
             int configuredMaximumItemCount, double hoursPerItem, string receipt)
@@ -756,6 +776,18 @@ namespace Zjcs.Offline.Home
             }
             if (save.RandomRewards == null) save.RandomRewards = new List<OfflineHomeRandomRewardSlot>();
             if (save.FastForwardUsage == null) save.FastForwardUsage = new List<OfflineHomeFastForwardUsage>();
+            if (save.FastForwardCalendarVersion == 0)
+            {
+                // A midnight-era use recorded on this morning belongs to the
+                // preceding logical day. Later checkpoints retain their count.
+                DateTime local = DateTimeOffset.FromUnixTimeSeconds(Math.Max(0, save.LastLocalUnixSeconds)).LocalDateTime;
+                string calendarDay = local.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                string logicalDay = LocalDate(save.LastLocalUnixSeconds);
+                if (calendarDay != logicalDay)
+                    foreach (var usage in save.FastForwardUsage)
+                        if (usage != null && usage.LocalDate == calendarDay) usage.LocalDate = logicalDay;
+                save.FastForwardCalendarVersion = 1;
+            }
             if (save.Mail == null) save.Mail = new List<OfflineHomeMail>();
             if (save.Tutorial == null) save.Tutorial = new OfflineHomeTutorialProgress();
             if (save.Tutorial.PendingGuideIds == null) save.Tutorial.PendingGuideIds = new List<string>();
@@ -881,7 +913,8 @@ namespace Zjcs.Offline.Home
 
         private static string LocalDate(long unixSeconds)
         {
-            return DateTimeOffset.FromUnixTimeSeconds(Math.Max(0, unixSeconds)).LocalDateTime.ToString("yyyyMMdd");
+            DateTime local = DateTimeOffset.FromUnixTimeSeconds(Math.Max(0, unixSeconds)).LocalDateTime;
+            return OfflineRefreshClock.DayStart(local).ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
         }
 
         private static void ValidateCatalog(OfflineHomeIncomeDefinition[] catalog)
@@ -929,7 +962,7 @@ namespace Zjcs.Offline.Home
                 || save.FastForwardUsage == null || save.Mail == null || save.Tutorial == null || save.Tutorial.Step < 0
                 || save.Tutorial.PendingGuideIds == null || save.AppliedReceipts == null
                 || save.Furniture == null || save.HangUps == null || save.Skins == null
-                || save.GrantSerial < 0
+                || save.GrantSerial < 0 || save.FastForwardCalendarVersion != 1
                 || save.AppliedReceipts.Count > ReceiptLimit) return false;
             var hangUpIds = new HashSet<int>();
             foreach (OfflineHomeIncomeEntry entry in save.Income)

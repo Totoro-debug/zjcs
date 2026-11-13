@@ -47,6 +47,10 @@ public sealed partial class HomeIncomeFormulaHostRunner
         Require(OfflineHangUpIncome.HourlyRate(rule, props, flags) == 0, "original nonpositive level branch");
         CheckAccelerationTransactions(flags);
         CheckCollectionReceipts(flags);
+        CheckFreeFastForwardCalendar(flags);
+        Require(home.Rules.IsFunctionLimited(164) && !home.Rules.IsFunctionLimited(53, 1)
+            && !home.Rules.IsFunctionLimited(163),
+            "selected bed function rows keep quick receive locked below level 30 and absent gates open");
 
         double beforeRate = home.Session.Preview(1).HourlyRate;
         int beforeBlessing = home.BlessingLevel;
@@ -269,5 +273,67 @@ public sealed partial class HomeIncomeFormulaHostRunner
             && !session.Save.Inventory.Any(value => value.ItemId == 120)
             && session.Save.FastForwardUsage.Single().FreeUses == 1,
             "all three acceleration paths persist exact rewards and the consumed cost");
+    }
+
+    private void CheckFreeFastForwardCalendar(ISet<int> flags)
+    {
+        long LocalTime(int day, int hour, int minute = 0, int second = 0)
+            => new DateTimeOffset(new DateTime(2026, 11, day, hour, minute, second, DateTimeKind.Unspecified)).ToUnixTimeSeconds();
+        var definition = new OfflineHomeIncomeDefinition {
+            HangUpId = 1, OutputItemId = 50, FastHangUpId = 1, Unlocked = true,
+            FreeFastForwardLimit = 1, FreeFastForwardHours = 2,
+            Rule = new HangUpIncomeRule { HourlyOutput = 5, LevelNum = 1, MaxStoreHours = 36 }
+        };
+        var entries = new[] { definition };
+        var properties = new Dictionary<int, long>();
+        string path = System.IO.Path.Combine(root, "free-fast-calendar.json");
+        var session = OfflineHomeIncomeSession.Open(path, entries, properties, flags, LocalTime(13, 23, 59, 59));
+        Require(session.CanFreeFastForward(1) && !session.CanFreeFastForward(0)
+            && session.ApplyFreeFastForwardGroup(1, new[] { 1 }, 2, "before-midnight") == 10,
+            "free availability and actual award share the original configured count");
+        session.AdvanceTo(LocalTime(14, 0));
+        Require(!session.CanFreeFastForward(1) && session.GetTodayFreeFastForwardCount(1) == 1
+            && session.ApplyFreeFastForwardGroup(1, new[] { 1 }, 2, "midnight") == 0,
+            "midnight does not reset the confirmed local 06:00 logical day");
+        session.AdvanceTo(LocalTime(14, 5, 59, 59));
+        Require(!session.CanFreeFastForward(1), "05:59:59 retains the prior day's usage");
+        session.AdvanceTo(LocalTime(14, 6));
+        string beforeRead = JsonUtility.ToJson(session.Save);
+        Require(session.CanFreeFastForward(1) && session.GetTodayFreeFastForwardCount(1) == 0
+            && beforeRead == JsonUtility.ToJson(session.Save), "06:00 reads expired usage without clearing or writing it");
+        Require(session.ApplyFreeFastForwardGroup(1, new[] { 1 }, 2, "at-six") == 10
+            && session.GetTodayFreeFastForwardCount(1) == 1, "first post-reset use replaces the logical-day counter");
+        properties[1101] = 1;
+        session.Reconfigure(entries, properties, flags, Array.Empty<OfflineHomeRandomRewardDefinition>());
+        Require(session.CanFreeFastForward(1)
+            && session.ApplyFreeFastForwardGroup(1, new[] { 1 }, 2, "property-extra") == 10
+            && session.GetTodayFreeFastForwardCount(1) == 2 && !session.CanFreeFastForward(1),
+            "original non-battle FreeFastHangUpAmount adds to the configured daily count exactly once");
+        definition.FreeFastForwardLimited = true;
+        session.AdvanceTo(LocalTime(15, 6));
+        beforeRead = JsonUtility.ToJson(session.Save);
+        Require(!session.CanFreeFastForward(1)
+            && session.ApplyFreeFastForwardGroup(1, new[] { 1 }, 2, "limited") == 0
+            && beforeRead == JsonUtility.ToJson(session.Save), "function limit rejects free acceleration without consuming usage");
+        definition.FreeFastForwardLimited = false; properties.Clear();
+        Require(session.ApplyFreeFastForwardGroup(1, new[] { 1 }, 2, "next-day") == 10,
+            "removing the actual limit allows the new day's first use");
+        session = OfflineHomeIncomeSession.Open(path, entries, properties, flags, LocalTime(15, 8));
+        Require(!session.CanFreeFastForward(1) && session.GetTodayFreeFastForwardCount(1) == 1
+            && session.ApplyFreeFastForwardGroup(1, new[] { 1 }, 2, "reopened") == 0,
+            "08:00 and disk reopen do not refresh the 06:00 use a second time");
+        string legacyPath = System.IO.Path.Combine(root, "free-fast-calendar-legacy.json");
+        System.IO.File.WriteAllText(legacyPath, JsonUtility.ToJson(new OfflineHomeSave {
+            LastLocalUnixSeconds = LocalTime(14, 5, 59, 59),
+            FastForwardUsage = new List<OfflineHomeFastForwardUsage> {
+                new OfflineHomeFastForwardUsage { FastHangUpId = 1, LocalDate = "20261114", FreeUses = 1 }
+            }
+        }));
+        session = OfflineHomeIncomeSession.Open(legacyPath, entries, properties, flags, LocalTime(14, 5, 59, 59));
+        Require(!session.CanFreeFastForward(1) && session.Save.FastForwardUsage.Single().LocalDate == "20261113",
+            "old midnight-based morning usage is retained in the preceding logical day");
+        session.AdvanceTo(LocalTime(14, 6));
+        Require(session.CanFreeFastForward(1) && session.ApplyFreeFastForwardGroup(1, new[] { 1 }, 2, "legacy-six") == 10,
+            "migrated morning usage refreshes once at the confirmed 06:00 boundary");
     }
 }

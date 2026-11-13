@@ -192,6 +192,7 @@ namespace Zjcs.Offline.Home
                     OutputWeights = rule.weights,
                     FastHangUpId = record.fastHangUpId,
                     FreeFastForwardLimit = fast?.freeTimes ?? 0,
+                    FreeFastForwardLimited = rules.IsFunctionLimited(53, record.fastHangUpId),
                     FreeFastForwardHours = fast?.freeHours ?? 0,
                     Unlocked = unlocked,
                     Rule = new HangUpIncomeRule

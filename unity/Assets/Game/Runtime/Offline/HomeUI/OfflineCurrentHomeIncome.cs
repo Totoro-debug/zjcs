@@ -68,6 +68,12 @@ namespace Zjcs.Offline.HomeUI
                 {
                     level = Number(row, "Level"), furnitureLevelUpLimit = Number(row, "FurnitureLevelUpLimit")
                 }).ToArray(),
+                functionLimits = configuration.Rows("function_limit")
+                    .Where(row => OfficialHomeRules.IsIncomeFunction(Number(row, "Type")))
+                    .Select(row => new HomeFunctionLimitRecord {
+                        type = Number(row, "Type"), key0 = Number(row, "Key0"), key1 = Number(row, "Key1"),
+                        condition = Condition(row["Condition"])
+                    }).ToArray(),
                 hangUpUpgradeMaterials = configuration.Rows("hang_up_upgrade_material").Select(row => new HomeHangUpUpgradeRecord
                 {
                     level = Number(row, "Level"), hangUpId = Number(row, "HangUpId"),

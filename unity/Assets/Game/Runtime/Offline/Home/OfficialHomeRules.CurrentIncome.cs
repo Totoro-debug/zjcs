@@ -13,6 +13,7 @@ namespace Zjcs.Offline.Home
         private HashSet<HomeConditionNode> selectedIncomeConditions;
         private Func<HomeConditionNode, bool> evaluateIncomeCondition;
         public string IncomeVersion { get; private set; }
+        public static bool IsIncomeFunction(int type) => type == 53 || type == 163 || type == 164;
 
         // Explicit opt-in: historical random rewards and other home systems keep
         // their catalogs. These rows and every nested condition belong to 884.
@@ -40,7 +41,9 @@ namespace Zjcs.Offline.Home
                 row => evaluate(row.condition), row => row.condition != null);
             var nodes = new HashSet<HomeConditionNode>(selected.hangUps.SelectMany(row => new[] { row.unlock, row.notice })
                 .Concat(selected.hangUpRewards.Select(row => row.condition))
-                .Concat(selected.rewardRules.Select(row => row.condition)).Where(node => node != null));
+                .Concat(selected.rewardRules.Select(row => row.condition))
+                .Concat((selected.functionLimits ?? Array.Empty<HomeFunctionLimitRecord>()).Select(row => row.condition))
+                .Where(node => node != null));
 
             hangUps.Clear();
             foreach (var row in hangUpMap) hangUps.Add(row.Key, row.Value);
@@ -58,6 +61,9 @@ namespace Zjcs.Offline.Home
             Data.furnitureLevelRules = selected.furnitureLevelRules;
             Data.homeLevels = selected.homeLevels;
             Data.hangUpUpgradeMaterials = selected.hangUpUpgradeMaterials;
+            functionLimits.RemoveAll(row => row != null && IsIncomeFunction(row.type));
+            functionLimits.AddRange(selected.functionLimits ?? Array.Empty<HomeFunctionLimitRecord>());
+            Data.functionLimits = functionLimits.ToArray();
             Data.rewardRules = Data.rewardRules.Where(row => !ruleIds.Contains(row.id)).Concat(selected.rewardRules).ToArray();
             incomeRewardRows = rewardParser;
             incomeRewardRules = ruleParser;

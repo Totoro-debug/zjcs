@@ -43,6 +43,13 @@ def prepare():
     receipt = json.loads(receipt_path.read_bytes())
     source = '.tools/source-packages/current/884_156692/official-code/client-source/FurnitureBedDialog.cs'
     receipt['inputs'][source] = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
+    for name in ('PlayerHangUpDataExt', 'Player', 'FunctionType'):
+        source = '.tools/source-packages/current/884_156692/official-code/common-source/Common/' + name + '.cs'
+        receipt['inputs'][source] = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
+    receipt['free_fast_forward_adapter'] = (
+        'Selected function 53 keyed by fast-hang-up ID, configured free count plus original non-battle '
+        'property 1101, and read-only expired-count projection. User-confirmed local 06:00 day boundary '
+        'reuses OfflineRefreshClock; old midnight-era morning counters migrate without granting another use.')
     receipt['collection_adapter'] = (
         'CollectReward projects only the committed claim delta, selected output item and durable ledger identity; '
         'presentation does not issue a second grant. Failed character experience mutations retain the local ledger; '
