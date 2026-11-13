@@ -176,16 +176,31 @@
     "CSharp_AkDiffractionPathInfo_emitterPos_get"
   ],
   "vector_value_export": "CSharp_ConvertAkVectorToAkVector64",
+  "listener_source": {
+    "path": "assets/reference/battle-animation/sound-listener-source-manifest.json",
+    "bytes": 171859,
+    "sha256": "a42c4a412c98717dda353caa6f19b1bb42677b35dab8c3cd3524d988a3aed689"
+  },
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseSoundHost.cs",
-      "bytes": 12266,
-      "sha256": "ca3339526372be6f2a0db7cd44bdebc45e4e60e22d57aa57beddd9c0c648b5f2"
+      "bytes": 12271,
+      "sha256": "51fa25859bafcb7617365b84b80617616aef800a70a76e20f2c68ee2a01a1eab"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseSoundHost.cs.meta",
       "bytes": 60,
       "sha256": "8c6703e7069cc4bef83f39734ef105f705ea53f8aaeb810125b5601a87cb6257"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseRuntime.cs",
+      "bytes": 5737,
+      "sha256": "dcd7eef8ba2a2ae8252b297058bd81cb4dc6e05475c19e8c2a81d9824ed367f0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseRuntime.cs.meta",
+      "bytes": 60,
+      "sha256": "2c9fd146f5d977ec606714cb42dfc485cef59b075dc5b92068f65596e61705f6"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/Zjcs.Offline.BattleNativePlayables.asmdef",
@@ -194,8 +209,8 @@
     },
     {
       "path": "unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.cs",
-      "bytes": 14637,
-      "sha256": "f083ce07696dcfb7c930060459fd29e2e3e33d4cfe4ab80795467481894a305b"
+      "bytes": 18509,
+      "sha256": "633a6e7ffaa6d1b011e3567ce40a67f7128f59340949670fbafbbdf8c9d88cec"
     },
     {
       "path": "unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.cs.meta",
@@ -210,7 +225,7 @@
   ],
   "tool": {
     "path": "scripts/prepare_battle_native_sound_host_sources.py",
-    "bytes": 5646,
-    "sha256": "4b8a0de31619ed60981360e251fcc8fef6d50624395436dbc390b31353a0c542"
+    "bytes": 5957,
+    "sha256": "a22ef658e2ec11dd5c52589194151141ada763144ea7658f80a53109b88bdc74"
   }
 }

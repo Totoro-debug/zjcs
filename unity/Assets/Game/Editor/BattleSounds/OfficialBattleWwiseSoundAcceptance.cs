@@ -41,6 +41,11 @@ namespace Zjcs.Editor
         private static void Mode(PlayModeStateChange mode)
         {
             if (mode != PlayModeStateChange.EnteredEditMode || !SessionState.GetBool(Key, false)) return;
+            if (AkSoundEngine.IsInitialized())
+            {
+                SessionState.SetInt(Key + ".result", 1);
+                Debug.LogError("Application sound runtime did not terminate when Play Mode ended.");
+            }
             Application.logMessageReceived -= Observe;
             SessionState.SetBool(Key, false);
             EditorApplication.update -= Tick; EditorApplication.playModeStateChanged -= Mode;
@@ -135,6 +140,9 @@ namespace Zjcs.Editor
                 var listenerSteps = ListenerSteps();
                 try { while (listenerSteps.MoveNext()) yield return listenerSteps.Current; }
                 finally { (listenerSteps as IDisposable)?.Dispose(); }
+                var runtimeSteps = RuntimeSteps();
+                try { while (runtimeSteps.MoveNext()) yield return runtimeSteps.Current; }
+                finally { (runtimeSteps as IDisposable)?.Dispose(); }
             }
             finally { OfficialWwiseEvent.Host = previous; }
         }
@@ -197,6 +205,65 @@ namespace Zjcs.Editor
                 SceneManager.UnloadSceneAsync(scene);
             }
             yield return null;
+        }
+        private static IEnumerator RuntimeSteps()
+        {
+            var camera = new GameObject("Main Camera runtime ownership verification");
+            var emitter = new GameObject("Runtime original event emitter");
+            var previous = OfficialWwiseEvent.Host;
+            try
+            {
+                OfflineBattleWwiseRuntime.ConfigureVolumes(.427f, .316f, .638f, .749f);
+                IProfessionSoundHost first;
+                using (var lease = OfflineBattleWwiseRuntime.Acquire(camera.transform, 1000))
+                {
+                    first = lease.SoundHost;
+                    Require(AkSoundEngine.IsInitialized(), "application runtime initializes the native engine");
+                    yield return null;
+                    Require(NativeListener.DefaultListeners.ListenerList.Count == 1, "lease mounts original default listener");
+                    foreach (float scale in new[] { 1f, 2.3f, 0f })
+                    {
+                        Time.timeScale = scale;
+                        yield return null;
+                        yield return null;
+                        Rtpc(414249091u, scale);
+                    }
+                    Rtpc(3240620755u, 42); Rtpc(3659619896u, 31);
+                    Rtpc(3676256460u, 63); Rtpc(3673881719u, 74);
+                    lease.SetVisible(false);
+                    Require(NativeListener.DefaultListeners.ListenerList.Count == 0, "hidden lease removes original listener");
+                    lease.SetVisible(true);
+                    Require(NativeListener.DefaultListeners.ListenerList.Count == 1, "visible lease restores original listener");
+                    OfflineBattleWwiseRuntime.ConfigureVolumes(.517f, .246f, .345f, .456f);
+                    Time.timeScale = 1;
+                    yield return null;
+                    yield return null;
+                    Rtpc(3240620755u, 51); Rtpc(3659619896u, 24);
+                    Rtpc(3676256460u, 34); Rtpc(3673881719u, 45);
+                    Require(first.PostEvent(1557230835u, emitter) != 0, "application-owned event dispatch remains native");
+                    UnityEngine.Object.Destroy(emitter);
+                    yield return null;
+                }
+                yield return null;
+                Require(AkSoundEngine.IsInitialized() && NativeListener.DefaultListeners.ListenerList.Count == 0,
+                    "closing a battle releases its listener and retains the application engine");
+                using (var lease = OfflineBattleWwiseRuntime.Acquire(camera.transform, 1000))
+                {
+                    Require(ReferenceEquals(first, lease.SoundHost), "next battle reuses the same initialized native host");
+                    yield return null;
+                    yield return null;
+                    Rtpc(3240620755u, 51);
+                }
+                yield return null;
+                Require(AkSoundEngine.IsInitialized(), "idle application retains native package and RTPC state");
+                Debug.Log("NATIVE_WWISE_APPLICATION_RUNTIME_PASSED two original listener leases, retained engine/volumes, actual 1/2.3/0 time scales and native event dispatch");
+            }
+            finally
+            {
+                Time.timeScale = 1;
+                OfficialWwiseEvent.Host = previous;
+                UnityEngine.Object.Destroy(emitter); UnityEngine.Object.Destroy(camera);
+            }
         }
         private static void Rtpc(uint id, float expected)
         {

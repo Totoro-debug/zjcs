@@ -28,9 +28,8 @@ namespace Zjcs.Offline.BattleNativePlayables
         public bool IsInitialized => initialized && !disposed;
         public float DefaultScalingFactor => platform.DefaultScalingFactor;
 
-        public OfflineBattleWwiseSoundHost(string packageDirectory, GameObject defaultListener, bool muteOutput = false)
+        public OfflineBattleWwiseSoundHost(string packageDirectory, GameObject defaultListener = null, bool muteOutput = false)
         {
-            if (defaultListener == null) throw new ArgumentNullException(nameof(defaultListener));
             if (!Directory.Exists(packageDirectory)) throw new DirectoryNotFoundException(packageDirectory);
             if (AkSoundEngine.IsInitialized()) throw new InvalidOperationException("The native Wwise engine already has an owner.");
             settings = Resources.Load<AkWwiseInitializationSettings>("Combat/Wwise/AkWwiseInitializationSettings");
@@ -71,10 +70,13 @@ namespace Zjcs.Offline.BattleNativePlayables
                     LoadBank(package.bank);
                 }
                 initialized = true;
-                Check((AKRESULT)RegisterGameObject(defaultListener, defaultListener.name), "Register original default listener");
-                listener = defaultListener;
-                Check(AkSoundEngine.SetDefaultListeners(new[] { Id(listener) }, 1), "Bind original default listener");
-                SetObjectPosition(listener, listener.transform.position, listener.transform.forward, listener.transform.up);
+                if (defaultListener != null)
+                {
+                    Check((AKRESULT)RegisterGameObject(defaultListener, defaultListener.name), "Register original default listener");
+                    listener = defaultListener;
+                    Check(AkSoundEngine.SetDefaultListeners(new[] { Id(listener) }, 1), "Bind original default listener");
+                    SetObjectPosition(listener, listener.transform.position, listener.transform.forward, listener.transform.up);
+                }
             }
             catch { Dispose(); throw; }
         }

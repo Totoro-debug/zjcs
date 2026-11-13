@@ -14,7 +14,7 @@
 
 Windows 战斗声音运行素材取自上述同版官方集成包及所选 884 已核验的 26 个原声音包；官方 C#、Profile／Release 引擎、DSP、原全局／Windows 设置、APK 优先包身份、原输出及 Windows 封装输出哈希见[运行素材来源](battle-animation/windows-sound-runtime-source-manifest.json)。`prepare_battle_windows_sound_runtime.py` 复用既有包读取器和初始化设置导出，SDK 核心代码适配 Editor DSP 目录及 Windows 向量返回的借用指针／值类型封送；`convert_wwise_android_package.py` 依据同版本 SDK 的 CAkFilePackageLUT、Windows／POSIX AkTypes，将语言表从窄字符转换为 UTF-16LE，并保持全部 bank／媒体字节。匹配 SDK 格式源码与官方包身份保存在 `.tools/wwise/SDK-2022.1.18.8567/`，资源目录与显式目录清单见所属页。
 
-原生战斗声音宿主取同版 `WwiseManager`、`WwiseGlobalVolumnService`、`GameSoundSpeedController`、原四项音量 RTPC 资产及原 SDK 初始化／声音对象／空环境实现；原 SDK 文件身份、APK 客户端源码、配置导出哈希、GUID 指向、Windows 引擎身份及本地绑定输出见[原生宿主来源](battle-animation/native-sound-host-source-manifest.json)，入口为 `prepare_battle_native_sound_host_sources.py`。向量封送按上述原引擎的返回约定适配，SDK 逐文件原输入与输出哈希仍记于运行素材来源；接入与验证范围由所属页维护。
+原生战斗声音宿主取同版 `WwiseManager`、`WwiseGlobalVolumnService`、`GameSoundSpeedController`、原四项音量 RTPC 资产及原 SDK 初始化／声音对象／空环境实现；原 SDK 文件身份、APK 客户端源码、配置导出哈希、GUID 指向、Windows 引擎身份及本地绑定输出见[原生宿主来源](battle-animation/native-sound-host-source-manifest.json)，入口为 `prepare_battle_native_sound_host_sources.py`。向量封送按上述原引擎的返回约定适配，SDK 逐文件原输入与输出哈希仍记于运行素材来源；接入与验证范围由所属页维护。`OfflineBattleWwiseRuntime` 的绑定输出也记于该清单；其应用引擎／场景监听器分工来自原 WwiseManager 与 AkInitializer／AkAudioListener，监听器资源身份引用上述监听器来源清单。
 
 Windows 声音包的显式 Player 加载位置由 `OfflineBattleWwisePackages` 与 `OfficialBattleWwisePackageBuild` 绑定为 `StreamingAssets/Combat/Wwise`；构建回调按[Windows 声音运行素材清单](battle-animation/windows-sound-runtime-source-manifest.json)核对选定的 26 个转换输出，只复制 `.pck` 原载荷，输入版本、包内媒体及清单中的输出哈希均不变。
 

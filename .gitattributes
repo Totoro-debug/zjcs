@@ -2827,3 +2827,6 @@ unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwisePackageBuild.cs* text e
 # Preserve original listener source and conversion receipts.
 scripts/prepare_battle_sound_listener_sources.py text eol=lf
 assets/reference/battle-animation/sound-listener-source-manifest.json text eol=lf
+
+# Keep the persistent native sound runtime identity stable.
+unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseRuntime.cs* text eol=lf
