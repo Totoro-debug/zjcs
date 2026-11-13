@@ -10,7 +10,7 @@ namespace Zjcs.Offline.HomeCurrencyUI
 {
     // Original HomeUI handlers consume selected configuration and the actual
     // profile. Secondary item-detail presentation remains an explicit host port.
-    public sealed class OfflineHomeCurrencyActions : IHomeCurrencyActionServices
+    public sealed class OfflineHomeCurrencyActions : IHomeFlareStarActionServices
     {
         private sealed class Condition : IHomeCurrencyPurchaseCondition
         {
@@ -24,10 +24,11 @@ namespace Zjcs.Offline.HomeCurrencyUI
         private readonly Func<JObject, bool> isMet;
         private readonly Func<bool> isPayFunctionLimited;
         private readonly Action<int, long> popupItemDetail;
+        private readonly Action popupDirectPay;
 
         public OfflineHomeCurrencyActions(OfflineMainlineProgressSession profile,
             OfflineHomeCurrencyPlayer quantities, OfflineHomeCurrencyAssets assets, OfflineHomeCurrencyWindows windows,
-            Func<JObject, bool> isMet, Func<bool> isPayFunctionLimited, Action<int, long> popupItemDetail)
+            Func<JObject, bool> isMet, Func<bool> isPayFunctionLimited, Action<int, long> popupItemDetail, Action popupDirectPay)
         {
             this.profile = profile ?? throw new ArgumentNullException(nameof(profile));
             this.quantities = quantities ?? throw new ArgumentNullException(nameof(quantities));
@@ -36,6 +37,7 @@ namespace Zjcs.Offline.HomeCurrencyUI
             this.isMet = isMet ?? throw new ArgumentNullException(nameof(isMet));
             this.isPayFunctionLimited = isPayFunctionLimited ?? throw new ArgumentNullException(nameof(isPayFunctionLimited));
             this.popupItemDetail = popupItemDetail ?? throw new ArgumentNullException(nameof(popupItemDetail));
+            this.popupDirectPay = popupDirectPay ?? throw new ArgumentNullException(nameof(popupDirectPay));
         }
 
         public IPlayerItemUIHandler CreateHandler(PlayerItemType type, PlayerItemUIItemIdProvider id)
@@ -64,5 +66,7 @@ namespace Zjcs.Offline.HomeCurrencyUI
         public void PopupItemDetail(int itemId, long count) => popupItemDetail(itemId, count);
         public void PopupQuickBuy(int itemId, long count) => windows.ShowQuickBuy(itemId, count);
         public void PopupPayMoneyChange(long count) => windows.ShowExchange(count);
+        public void PopupPayConfirm(string key, Action confirm) => windows.ShowConfirm(key, null, confirm);
+        public void PopupDirectPay() => popupDirectPay();
     }
 }

@@ -156,6 +156,9 @@ class HomeCurrencyWindowsBinding(HomeCountControlsBinding):
         keys.update('item_'+str(row['ClassId'])+'_name' for row in self.tables['item'])
         keys.add('ui_ItemIcon_count_key')
         keys.update(('confirmation','confirm','cancel','ui_item_max_count_buy_confirm_text'))
+        handler=ROOT/'.tools/source-packages/current'/self.recovery.apk.version/'official-code/client-source/PlayerFlareStarItemUIHandler.cs'
+        pay_key,=re.findall(r'go.Init\("([^"]+)", \(\) =>',handler.read_text('utf-8-sig'))
+        keys.add(pay_key);receipt['inputs'][handler.relative_to(ROOT).as_posix()]=sha(handler.read_bytes())
         keys.update('ui_quick_buy_'+kind+'_limited' for kind in ('None','Daily','Weekly'))
         texts,sources=language(keys);missing=keys-texts.keys()
         if missing-{'{0}'}:raise ValueError('Original currency-window language missing: '+repr(missing))

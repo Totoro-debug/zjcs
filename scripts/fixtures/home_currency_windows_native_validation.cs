@@ -341,7 +341,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         currencyActions=new OfflineHomeCurrencyActions(profile,profilePlayer,assets,windows,
             node=>partnerConditions.IsMet(node.ToObject<Dictionary<string,object>>(),conditionPlayer),
             ()=>configuration.Rows("function_limit").Where(row=>Convert.ToInt32(row["Type"])==49&&Convert.ToInt32(row["Key0"])==0&&Convert.ToInt32(row["Key1"])==0).Any(row=>!homeConditions.IsMet((Dictionary<string,object>)row["Condition"],conditionPlayer)),
-            (id,count)=>{Require(count==0,"original home description requests zero required count");details++;calls.Add("home-detail:"+id);});
+            (id,count)=>{Require(count==0,"original home description requests zero required count");details++;calls.Add("home-detail:"+id);},()=>directPay++);
         topBar.Root.SetActive(true);yield return null;var homeItems=topBar.Root.GetComponentsInChildren<MePlayerItemUI>();
         Require(homeItems.Length==3&&Field<Button>(homeItems[0],"mAddBtn").gameObject.activeSelf&&!Field<Button>(homeItems[1],"mAddBtn").gameObject.activeSelf&&!Field<Button>(homeItems[2],"mAddBtn").gameObject.activeSelf,"actual level-ten money condition and locked-map payment condition control original home plus buttons");
         Require(currencyActions.GetAutoIncreaseMaxCount(57)==300&&System.Text.RegularExpressions.Regex.Replace(Field<Component>(homeItems[2],"mCountText").GetComponent<TMP_Text>().text,"<[^>]*>",string.Empty).Contains("300/"),"original stamina handler reads actual parameter maximum");
@@ -384,7 +384,7 @@ public sealed class HomeCurrencyWindowsNativeRunner:MonoBehaviour,IHomeCurrencyW
         yield return new WaitForSeconds(popup.mShowClip.length+.2f);
         Require(popup.State==WorldPopupWindow.EState.Show,"original popup show clip finishes");
         var mask=canvas.GetComponentsInChildren<WorldWindowBlurMask>().Single(value=>value.AttachWindow==popup);
-        Require(popup.Canvas.overrideSorting&&popup.Canvas.sortingOrder>canvas.sortingOrder&&mask.Canvas.overrideSorting&&mask.Canvas.sortingOrder==popup.Canvas.sortingOrder-1,"original popup and blur mask retain showing-time canvas order");
+        Require(popup.Canvas.overrideSorting&&popup.Canvas.sortingOrder>canvas.sortingOrder&&mask.Canvas.overrideSorting&&mask.Canvas.sortingOrder==popup.Canvas.sortingOrder-1,$"original popup and blur mask retain showing-time canvas order: root={canvas.sortingOrder}, popup={popup.Canvas.overrideSorting}/{popup.Canvas.sortingOrder}, mask={mask.Canvas.overrideSorting}/{mask.Canvas.sortingOrder}");
     }
     void Post(AudioClip clip,GameObject owner){Require(clip&&owner,"original window PCM binding");sounds++;var source=owner.GetComponent<AudioSource>();if(!source)source=owner.AddComponent<AudioSource>();source.volume=0;source.PlayOneShot(clip);}
     public void Close(GameObject window){Require(window==active,"close current original window");calls.Add("close");windows.Close(window);}

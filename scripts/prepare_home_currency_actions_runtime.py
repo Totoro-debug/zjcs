@@ -19,7 +19,7 @@ def build():
         for item in (path, metadata(path)): outputs[item.relative_to(ROOT).as_posix()] = sha(item)
     interface = read('IPlayerItemUIHandler')
     assert 'dialog.Init(ItemId, 0L);' in interface
-    for name in ('PlayerDefaultItemUIHandler','PlayerItemQuickyShopHandler','PlayerDiamondItemUIHandler'):
+    for name in ('PlayerDefaultItemUIHandler','PlayerItemQuickyShopHandler','PlayerDiamondItemUIHandler','PlayerFlareStarItemUIHandler'):
         text = read(name).replace('using Common;\n','').replace('using System;\n','')
         text = text.replace('public '+name+'(int itemId)', 'public '+name+'(int itemId, IHomeCurrencyActionServices services)')
         pos = text.index('{')+1
@@ -40,9 +40,17 @@ def build():
             old='WindowManager.Instance.Popup((QuickBuyDialog go) =>\n\t\t\t{\n\t\t\t\tgo.Init(mInfo.ItemId, 0L);\n\t\t\t});'
             assert old in text
             text = text.replace(old,'services.PopupQuickBuy(mInfo.ItemId, 0L);')
-        else:
+        elif name == 'PlayerDiamondItemUIHandler':
             text = text.replace('MeManager.MainPlayer.IsFunctionLimit(FunctionType.Pay)','services.IsPayFunctionLimited')
             text = text.replace('MoneyUtils.PopupPayMoneyChangeDialog(0L)','services.PopupPayMoneyChange(0L)')
+        else:
+            text = text.replace('IHomeCurrencyActionServices services','IHomeFlareStarActionServices services')
+            text = text.replace('MeManager.MainPlayer.IsFunctionLimit(FunctionType.Pay)','services.IsPayFunctionLimited')
+            start = text.index('\t\tWindowManager.Instance.Popup')
+            end = text.index('\n\t}',start)
+            original = text[start:end]
+            assert 'go.Init("UI_Pay_Confirm_Goto_Pay_Panel", () =>' in original and 'dialog.InitPayPanel(PayType.DirectPay);' in original
+            text = text[:start]+'\t\tservices.PopupPayConfirm("UI_Pay_Confirm_Goto_Pay_Panel", () => services.PopupDirectPay());'+text[end:]
         assert all(token not in text for token in ('Parsers.', 'MeManager.', 'WindowManager.', 'MoneyUtils.'))
         emit(name,text)
     factory = read('PlayerItemUIHandlerFactory')
@@ -50,8 +58,7 @@ def build():
     assert 'case PlayerItemType.Money:' in factory and 'return new PlayerItemQuickyShopHandler(playerItemUIItemIdProvider.ItemId);' in factory
     emit('HomeCurrencyActionFactory', '''public static class HomeCurrencyActionFactory
 {
-    // HomeUI serializes exactly these three types. Other windows retain their
-    // own factories and are deliberately rejected by this scoped entry point.
+    // HomeUI and its original exchange popup share these selected branches.
     public static IPlayerItemUIHandler Create(PlayerItemType type, PlayerItemUIItemIdProvider id, IHomeCurrencyActionServices services)
     {
         switch(type)
@@ -59,9 +66,16 @@ def build():
             case PlayerItemType.Money: return new PlayerItemQuickyShopHandler(id.ItemId, services);
             case PlayerItemType.Diamon: return new PlayerDiamondItemUIHandler(id.ItemId, services);
             case PlayerItemType.TiliId: return new PlayerDefaultItemUIHandler(id.ItemId, services);
+            case PlayerItemType.FlareStar: return new PlayerFlareStarItemUIHandler(id.ItemId,
+                services as IHomeFlareStarActionServices ?? throw new ArgumentException("Original direct-pay confirmation services are required.", nameof(services)));
             default: throw new ArgumentOutOfRangeException(nameof(type));
         }
     }
+}
+public interface IHomeFlareStarActionServices : IHomeCurrencyActionServices
+{
+    void PopupPayConfirm(string key, Action confirm);
+    void PopupDirectPay();
 }''')
     emit('IHomeCurrencyActionServices', '''public interface IHomeCurrencyPurchaseCondition { }
 public sealed class HomeCurrencyQuickBuyInfo { public int ItemId; public IHomeCurrencyPurchaseCondition Condition; }
@@ -81,7 +95,7 @@ public interface IHomeCurrencyActionServices
     path.write_text(json.dumps(dict(name='Zjcs.Official.HomeCurrencyActionsUI', references=['Zjcs.Official.ProfessionUI']),indent=2)+'\n','utf8',newline='\n')
     for item in (path, metadata(path), metadata(DEST,True)): outputs[item.relative_to(ROOT).as_posix()]=sha(item)
     receipt=dict(manifest='884_156692',generator_sha256=sha(Path(__file__)),inputs=inputs,outputs=outputs,
-        scope='Only HomeUI selected Money/Diamon/TiliId factory branches, original click/add/limit handlers. Local data and original popup windows must be supplied by the production host.')
+        scope='HomeUI selected Money/Diamon/TiliId and its exchange popup FlareStar factory branch, original click/add/limit/confirmation order. Local data, original popup windows and the direct-pay page must be supplied by the production host.')
     (ROOT/'assets/reference/home-currency-actions-runtime-source-manifest.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
     print('Original selected home currency actions:',len(outputs),'outputs',flush=True)
     return receipt

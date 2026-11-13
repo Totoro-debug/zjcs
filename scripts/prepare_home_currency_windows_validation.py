@@ -70,6 +70,15 @@ def transfer(work,project,install=False):
         if source.suffix=='.meta':continue
         key=guid(Path(str(source)+'.meta'));target=existing.get(key,destination/relative)
         if target.exists():
+            if install and source.name=='home-currency-windows-texts.json' and source.read_bytes()!=target.read_bytes():
+                installed=json.loads((ROOT/'assets/reference/home-currency-windows-native-source-manifest.json').read_bytes())
+                known={**installed['installed_output_sha256'],**installed['reused_output_sha256']}
+                assert sha(target.read_bytes())==known[target.relative_to(ROOT).as_posix()],target
+                before=json.loads(target.read_bytes());after=json.loads(source.read_bytes())
+                assert before['manifest']==after['manifest']==receipt['manifest']
+                old_texts={row['key']:row['text'] for row in before['texts']};new_texts={row['key']:row['text'] for row in after['texts']}
+                assert old_texts.items()<=new_texts.items(),'Existing official language values must be preserved.'
+                target.write_bytes(source.read_bytes())
             assert equivalent(source.read_bytes(),target.read_bytes()),target
             reused[target.relative_to(project).as_posix()]=sha(target.read_bytes())
         else:plan.extend(((source,target),(Path(str(source)+'.meta'),Path(str(target)+'.meta'))))

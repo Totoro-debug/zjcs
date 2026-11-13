@@ -50,6 +50,8 @@ namespace Zjcs.Offline.HomeCurrencyUI
         private readonly GameObject poolRoot;
         private readonly IDisposable poolBinding;
         private readonly List<Window> windows = new List<Window>();
+        private readonly int initialSortingOrder;
+        private int currentSortingOrder;
         private RectTransform defaultIconTransform;
         private bool disposed;
 
@@ -67,6 +69,7 @@ namespace Zjcs.Offline.HomeCurrencyUI
                 bindings.TopBar == null || bindings.BlurManager == null || bindings.Fonts == null ||
                 bindings.Screen == null || bindings.Icons == null || bindings.PostSound == null)
                 throw new ArgumentException("Original currency-window services must be bound before activation.");
+            initialSortingOrder = currentSortingOrder = bindings.Canvas.sortingOrder;
             images = new OfflineProfessionImageResourceLoader(this.assets.images);
             attachments = new ItemIconAttachmentManager(images, () => this.assets.attachmentConfig, new GAction());
             poolRoot = new GameObject("HomeCurrencyWindowPools", typeof(RectTransform));
@@ -201,11 +204,8 @@ namespace Zjcs.Offline.HomeCurrencyUI
             showing = shown =>
             {
                 shown.OnShowing -= showing;
-                int order = bindings.Canvas.sortingOrder;
-                foreach (var current in bindings.Canvas.GetComponentsInChildren<Canvas>())
-                    if (current.overrideSorting && !current.transform.IsChildOf(window.Root.transform))
-                        order = Math.Max(order, current.sortingOrder);
-                shown.SetCanvasSortingOrder(order + 10);
+                currentSortingOrder += 10;
+                shown.SetCanvasSortingOrder(currentSortingOrder);
                 mask.AttachToWindow(shown);
             };
             popup.OnShowing += showing;
@@ -219,6 +219,7 @@ namespace Zjcs.Offline.HomeCurrencyUI
             var window = windows.Find(value => value.Root == root);
             if (window == null || window.Closing) return;
             window.Closing = true;
+            RestoreSortingOrder();
             if (window.Preparation != null) { Destroy(window); return; }
             root.GetComponent<WorldPopupWindow>().Hide(() => Destroy(window));
         }
@@ -233,6 +234,7 @@ namespace Zjcs.Offline.HomeCurrencyUI
         private void Destroy(Window window)
         {
             if (!windows.Remove(window)) return;
+            RestoreSortingOrder();
             if (window.Preparation != null) bindings.CoroutineHost.StopCoroutine(window.Preparation);
             window.Preparation = null;
             if (window.Mask)
@@ -244,6 +246,17 @@ namespace Zjcs.Offline.HomeCurrencyUI
             if (root) { root.SetActive(false); Object.Destroy(root); }
             window.Binding?.Dispose();
             WindowClosed?.Invoke(root);
+        }
+
+        // Selected WindowContainer.Close resets to the last remaining window,
+        // or its initial Canvas order. Unrelated frame/border canvases do not
+        // participate in the window sequence.
+        private void RestoreSortingOrder()
+        {
+            currentSortingOrder = initialSortingOrder;
+            foreach (var window in windows)
+                if (!window.Closing && window.Root)
+                    currentSortingOrder = window.Root.GetComponent<WorldPopupWindow>().Canvas.sortingOrder;
         }
 
         public ItemIcon GetIcon(HomeCurrencyWindowItemInfo item, Transform slot)

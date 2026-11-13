@@ -233,9 +233,15 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 顶部栏原 `SafeArea` 已绑定上述完整屏幕适配代码。`HomeCurrencyPortraitValidation.Run` 在完整隔离工程静音 Play Mode 将原屏幕框架与真实角色存档货币栏组合，608×1080 渲染目标使用原 Expand 缩放（0.5625），验证实际 RectTransform、内部模拟指针点击、原每秒刷新、停止／恢复数量更新、借还时取消订阅、对象池重借及存档重读；已查看实际 200/300 与 402/300 体力画面。测试仅在隔离工程重置 TMP 动态字形缓存，原字体与图集按已登记的官方输入恢复，其他不同资源仍拒绝覆盖。导入、编译与 `Zjcs.Editor.ProjectTools.Validate` 通过；本项尚未替换正式入口 HUD，也未作为完整家园的 Windows Player 或发布验收。
 
+`OfflineHomeTopBarPools` 将原管理器与对象池的生命周期独立出来；完整 `OfflineHomeHud` 使用 HomeUI 已序列化的唯一 `TopBarHandler/Slot`，独立顶栏调用方继续由 `OfflineHomeTopBar` 组合原父 prefab。`OfflineHomeCurrencyTopBarHost` 共用真实角色的数量、自增参数与交易处理器，沿原 `CultureNumberArg.Compact` 和 `LanguageUtils` RGB 规则格式化，图标由同版显式目录加载；先完成窗口／动作绑定，再激活原控件。原速购仅请求其扣费货币，兑换请求耀星与晨星，均与家园三项货币共用原对象池。重借可能使用弹窗归还的实例，按原流程重新绑定物品与数量。
+
+窗口排序沿所选 `WindowContainer.Awake/OnWindowShowing/Close`：从容器 Canvas 初值起，每次显示加 10，关闭回到最后剩余窗口或初值；不把原 `CanvasBorder` 的 32767 层级纳入计算，避免接入完整框架后溢出。耀星加号保留原 Pay 限制，打开原 `ConfirmDialog`，取消不跳转，确认后调用明确的直购页面端口；确认文案从官方语言表提取，已保留既有文字并补入对应键。直购页面在本项组合验证中受控，尚未接入完整商城。
+
+`HomeCurrencyWindowsNativeValidation.Run` 已在内置屏不激活、静音 Play Mode 将完整原 HomeUI／框架与真实新角色组合（夹具显式设置等级 10、解锁地图 11 和测试余额以验证加号）：验证唯一顶栏父级、物品 1／2／57 的实际 100／500／300/300 显示及原顶部坐标、金币／晨星加号首个射线与内部模拟点击、速购／兑换的原动画与遮罩阻挡、耀星原确认文案及取消／确认顺序、嵌套与关闭后排序恢复、真实扣费／奖励／两个余额同步及存档重读。显示、隐藏、重显不新建货币控件，重借保持原物品顺序，隐藏与销毁归还实际数量订阅；已查看 608×1080 顶栏、速购与耀星确认框实际画面。静态元数据检查（152410 GUID）、隔离工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。其他 HomeUI 服务及直购页仍由受控宿主提供，任务表为空；头像、底栏、真实任务、场景与正式 `HomeFeatureRuntime` 的统一装配、Windows Player 及发布尚未完成。
+
 当前版 `PlayerItemDataWrap` 的自增数量读取／设置、速度／上限变化、`AutoIncreaseItemUtils` 分段计算与原时间换算迁入 `Runtime/Official/HomeAutoIncrease/`，配置由 `prepare_home_auto_increase_runtime.py` 从所选实际 bundle 解码为 `Home/item-auto-increase.json`。体力 57 的初始恢复速度为每小时 5 点、自然上限 300；`ItemCountLimitInfo` 的持有上限另为 1200，已超过自然上限的数量不会因挂机被降为 300。设置数量时沿原顺序计算并保留小数余量、更新时间、清零额外秒数；达到自然上限时不积攒小数余量。存档用 `OfflineItemAutoIncreaseProgress` 的 ticks 保存原 `DateTime`，可选参数使用空／单元素列表避免 `JsonUtility` 把空引用写成默认参数；`OfflineInventoryOperations` 的发放／消耗读取实际自增数量并回写同一事务，耗尽后保留零数量自增记录。`InventoryCount` 只读计算，不因界面读取写存档。新建角色在创建事务内初始化，已有角色不补发、不升级。
 
-`Runtime/Official/HomeCurrencyActionsUI/` 直接迁入所选版本 `PlayerItemQuickyShopHandler`、`PlayerDiamondItemUIHandler`、`PlayerDefaultItemUIHandler` 及 HomeUI 使用的原工厂三个分支。金币检查速购记录和原条件；速购记录在构造时缓存，修改 `ItemId` 不重新查表。钻石加号由原 Pay 功能限制决定；体力使用默认处理器，无加号，只有自增物品才按物品 ClassId 读取角色自增参数上限。原物品点击、速购和钻石兑换窗口的初始数量均为 0，默认加号调用仍抛出原未实现异常。播放器、配置、条件和原窗口均通过明确端口提供，没有为离线直接抹掉加号规则。
+`Runtime/Official/HomeCurrencyActionsUI/` 直接迁入所选版本 `PlayerItemQuickyShopHandler`、`PlayerDiamondItemUIHandler`、`PlayerDefaultItemUIHandler` 和兑换窗口的 `PlayerFlareStarItemUIHandler`，保留原工厂对应四个分支。金币检查速购记录和原条件；速购记录在构造时缓存，修改 `ItemId` 不重新查表。钻石加号由原 Pay 功能限制决定；体力使用默认处理器，无加号，只有自增物品才按物品 ClassId 读取角色自增参数上限。原物品点击、速购和钻石兑换窗口的初始数量均为 0，默认加号调用仍抛出原未实现异常。播放器、配置、条件和原窗口均通过明确端口提供，没有为离线直接抹掉加号规则。
 
 `HomeCurrencyActionsNativeValidation.Run` 已在隔离完整工程静音 Play Mode 通过原三项货币图标与数量、金币／钻石加号及物品按钮的首个射线命中和模拟指针、速购条件不满足／记录缺失、缓存记录与变更 ItemId 的差异、自增上限实时读取／普通物品返回零、数量更新、对象池重借与释放；已查看编辑器原生 640×480 实际截图，完整顶栏位于右上方。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 及静态元数据检查通过。条件、数量和窗口回调为受控数据；真实物品详情、速购／兑换窗口与存档事务、正式 HUD 和竖屏 Windows Player 仍未接通。
 

@@ -1,0 +1,35 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "857f91f071b6a618a16f553a915ad051b5292c50dfe720fda70a5ad664d4e55e",
+  "inputs": {
+    "assets/reference/home-top-bar-native-source-manifest.json": "857739331a57487b9c9452b11faecc2ec9565bff47c3833fd59b4c331665bf61",
+    "assets/reference/home-hud-native-source-manifest.json": "db1dfa4d913c010b83169640c5f968336186fe8578f0108062b5705a03db7293",
+    "assets/reference/home-hud-frame-native-source-manifest.json": "786a1bcd2dea7fbc9d22a9c49889a8430eb2262ef34ccc6e9fd4921c7994a6a9",
+    "assets/reference/home-currency-windows-native-source-manifest.json": "5ae72e143cf3f8df56a14f6832a8c40e06e2f6f3d16582700d1b7745a741a729",
+    "assets/reference/home-currency-windows-runtime-source-manifest.json": "15d37ba241e3c700b24aab67dfbc289deec4440804ca91cd5bbe9309c8048d70",
+    "assets/reference/home-currency-actions-runtime-source-manifest.json": "3f30f529ac50ae46e530df7d7dfaf9f684cd64f8d2c5d218636e4f4f268f9a70",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TopBarManager.cs": "8a388166982b99f7033c0f77aa31833b6f07be8b372e01d3898c6532fbc9f904",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TopBarHandler.cs": "f59d9099d83cb90ee5466fc20d784a64d359232fbfb4d87482a0a12dcfc8a5ac",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TopBarItem.cs": "bf2b745576bd9ad910c02c0274f9e670aaf612e1550a5f481e667147846749b4",
+    ".tools/source-packages/current/884_156692/official-code/client-source/MePlayerItemUI.cs": "479a3d0cc28e84479e7d7c9fd05e75222548b528b15e836f48f61e09d0ae9af9",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LanguageUtils.cs": "ddc94bb5dd46f8c71b6d58ab0f03e2048cde72911de11e343304ce73e4b9a61c",
+    ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework.UI/WindowContainer.cs": "634a97487990ed27844d6b6f61287938f642c35a17106f2e433f9b123c4eb5a1",
+    "unity/Assets/Game/Runtime/Official/HomeHudUI/HomeTopBarManager.cs": "f7fd7587ad0e0df663fd4989c3129dfef9cda6b9058bb102b9aa4cf33468acf8",
+    "unity/Assets/Game/Runtime/Offline/HomeHudUI/OfflineHomeHud.cs": "2b744da07ce71411993aab35bae597011de5954276e512ce552d49451d73d678",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeCurrencyPlayer.cs": "5a984f089997d52f909787201455a45a0981d24411897cad500684ac07d40fe7",
+    "unity/Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyActions.cs": "64df0fd17f06f61a4f033fae6109cefcb6ad7c404846de023e07b4979781715c",
+    "scripts/fixtures/home_hud_currency_validation.cs": "0ad520cfc39a195b3b9d7adada649247f75e9e81c870cc8c38ec01d647b311e1",
+    "scripts/fixtures/home_hud_bindings_native_validation.cs": "0927a7cc628e7c78003b1eddb0cdb78fe621afa715651dfe06b0af09f8a0efd0",
+    "scripts/prepare_home_hud_bindings.py": "f1751b41fdb505ce6a554c197d043b7fc45922c971294447665471dc0ea46f87",
+    "scripts/prepare_home_task_trace_runtime.py": "97bc4a2015c7b941eae49fb0d7df24fc7c29a9073bb78341ed54e59202bae939"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeTopBar.cs": "8dd7e3e40ed13770a564d851d6d93195d83acf1536f4769ab04bd404a1abd185",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeTopBar.cs.meta": "2eb06767c550b136b6d3c11178b44fd35f76d6ca4b4aa9e13dfd706798ca53d1",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeTopBarPools.cs": "1d3d1a40b81b62dfd5411c6db6f820dca2bfe4dbeb63136897ef47692dedf56b",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeTopBarPools.cs.meta": "49d2a0c04489c439871631492a77b51b38f411ea72d2f3d00fccb89de22c36e6",
+    "unity/Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyTopBarHost.cs": "fea9cbe0925c5ea769772409a08c28306583ccc4e6552654f6b1f81ebed9633a",
+    "unity/Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyTopBarHost.cs.meta": "362adf8ccd34a4e003d0e40399d5affc7fa8dd8805d58e45a97c323560aefede"
+  },
+  "scope": "Original top-bar manager/pools can bind the existing handler in complete HomeUI without instantiating another parent. Actual profile, selected native currency actions/windows, original HomeUI show/hide and shared pool composition are verified separately from the still pending formal HomeFeatureRuntime."
+}

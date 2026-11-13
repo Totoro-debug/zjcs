@@ -881,7 +881,9 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 完整家园 HUD 的本地绑定目录由 `scripts/prepare_home_hud_bindings.py` 生成，来源输入、原 HomeUI／共享父层的资源引用、原字体配置与声音地址、类型化依赖宿主及输出哈希记录于 `assets/reference/home-hud-binding-source-manifest.json`。载荷入口为 `Resources/Home/OfflineHomeHudAssets.asset`，绑定代码位于 `Runtime/Offline/HomeHudUI/`；该清单同时登记真实角色条件与桌面指针输入适配、所依赖的原通知／输入模块输出、同版函数条件解析器和剧情状态枚举输入，不新增美术替代。
 
-家园顶部栏所选三种货币的原点击、加号与上限处理器由 `scripts/prepare_home_currency_actions_runtime.py` 从 884 官方客户端迁入；`assets/reference/home-currency-actions-runtime-source-manifest.json` 保存原类、工厂、接口及迁移输出哈希，代码位于 `Runtime/Official/HomeCurrencyActionsUI/`。原顶栏资源继续复用现有显式目录，不新增美术载荷。
+完整 HomeUI 的货币对象池与真实角色宿主由 `scripts/prepare_home_hud_currency_composition.py` 组合；原 `TopBarManager/TopBarHandler/TopBarItem/MePlayerItemUI`、共享 `LanguageUtils` 与 `WindowContainer` 输入、同版资源凭据、适配及验证夹具哈希见[组合来源清单](home-hud-currency-composition-source-manifest.json)。原耀星处理器及工厂分支另记于[货币动作来源](home-currency-actions-runtime-source-manifest.json)；确认语言键沿该官方处理器提取，由现有原生窗口工具从官方语言表生成，资产及绑定凭据仍记录于[窗口原生来源](home-currency-windows-native-source-manifest.json)。未新增替代美术，尚未生成完整素材快照；实现和验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
+
+家园顶部栏三项货币及兑换窗口耀星的原点击、加号与上限处理器由 `scripts/prepare_home_currency_actions_runtime.py` 从 884 官方客户端迁入；`assets/reference/home-currency-actions-runtime-source-manifest.json` 保存原类、工厂、接口及迁移输出哈希，代码位于 `Runtime/Official/HomeCurrencyActionsUI/`。原顶栏资源继续复用现有显式目录，不新增美术载荷。
 
 暗击状态 24222 的原生资源由 `scripts/prepare_battle_dark_status_assets.py` 按 APK 优先流程恢复：原 `defaultpackage_assets_prefabs_ecentity_fight_fightskill_24222.bundle` 的完整状态 prefab、playable24222、七组粒子分支及依赖共 24 项载荷（含 11 张贴图、1 个 Windows shader），显式绑定于 `Resources/Combat/dark-status.json`。原对象字段、所选版本、依赖和输入输出 SHA256 见[暗击原生来源](battle-animation/dark-status-assets-source-manifest.json)；`MyFightStatusRoundStart` 的官方程序集、客户端／共享代码及事件适配输出见[回合开始次数视图来源](battle-animation/status-round-start-view-source-manifest.json)。尚未生成完整素材快照；实现和验证范围仅在[技能页](../../docs/features/skills.md)维护。
 
