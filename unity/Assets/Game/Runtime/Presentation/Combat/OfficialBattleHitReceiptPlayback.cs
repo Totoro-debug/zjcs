@@ -92,6 +92,8 @@ namespace Zjcs.Presentation.Combat
                         + cast.SkillEntityId + "/" + selection.HitEntityId);
                 if (definition.HitComponentType != "FightHitFixedComponent"
                     && definition.HitComponentType != "FightHitSummonComponent"
+                    && definition.HitComponentType != "FightHitRandomTargetComponent"
+                    && definition.HitComponentType != "FightHitCustomTargetComponent"
                     && definition.HitComponentType != "FightHitTriggerSkillComponent") continue;
                 float scopeEnd = 0f;
                 foreach (var entry in definition.ScopeEntries) scopeEnd = Mathf.Max(scopeEnd, entry.Delay);
@@ -139,11 +141,7 @@ namespace Zjcs.Presentation.Combat
                 float flight = value.Flight;
                 if (!value.HasFlight)
                     flight = FightHitViewFormula.CalcSkillHitDelay(
-                        value.Data.Hit is FightHitFixedComponent
-                            ? entity.GetComponent<MyFightHitFixed>().DelayInfoProvider
-                            : value.Data.Hit is FightHitSummonComponent
-                                ? entity.GetComponent<MyFightHitSummon>().DelayInfoProvider
-                            : entity.GetComponent<MyFightHitTriggerSkill>().DelayInfoProvider,
+                        entity.GetComponent<IFightHitViewBinding>().DelayInfoProvider,
                         value.Source, value.Data.Hit.GridTransform.Pos, views, value.FlipX);
                 active.Add(new Active { Id = value.Data.Id, Remaining = Mathf.Max(0f, value.Lifetime + flight) });
             }

@@ -176,6 +176,10 @@ def main():
         '\tpublic IFightHitViewServices ViewServices { get; set; }')
     text = text.replace('IBattleFormulaHandler.SkillHitBaseDelayInfoProvider',
                         'FightHitViewFormula.SkillHitBaseDelayInfoProvider')
+    text = replace_once(text,
+        '\tpublic FightHitViewFormula.SkillHitBaseDelayInfoProvider DelayInfoProvider;',
+        '\tpublic FightHitViewFormula.SkillHitBaseDelayInfoProvider DelayInfoProvider;\n'
+        '\tFightHitViewFormula.SkillHitBaseDelayInfoProvider IFightHitViewBinding.DelayInfoProvider => DelayInfoProvider;')
     text = text.replace('MySerializable userData', 'object userData')
     text = text.replace('GridGroundComponent gridGround = myGridTransform.GridGround;',
                         'IFightSkillViewServices gridGround = ViewServices;')
@@ -280,6 +284,7 @@ def main():
     outputs.extend((identity(asmdef), identity(Path(str(asmdef) + '.meta'))))
     local_bindings = [identity(ROOT / path) for path in (
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHitEntityPlayback.cs',
+        'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHitReceiptPlayback.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHitEntityData.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs',

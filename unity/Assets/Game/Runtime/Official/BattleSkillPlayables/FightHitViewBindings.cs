@@ -16,6 +16,7 @@ namespace Zjcs.Official.BattleSkillPlayables
     {
         IFightHitViewServices ViewServices { get; set; }
         IMyPlayableManager mMyPlayableManager { get; set; }
+        FightHitViewFormula.SkillHitBaseDelayInfoProvider DelayInfoProvider { get; }
     }
     // Consumed original state only. The host supplies actual shared hit entities,
     // their original ordered scopes and their notifications at each transition.

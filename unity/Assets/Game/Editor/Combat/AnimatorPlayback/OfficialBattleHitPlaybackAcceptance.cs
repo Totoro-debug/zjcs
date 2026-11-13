@@ -486,6 +486,7 @@ namespace Zjcs.Editor.Combat
                     && FightBattleCheckpointSerializer.Save(summonBattle) == beforePlayback,
                     "Summon receipt playback leaked its view or repeated summon creation.");
             }
+            yield return ValidateRandomReceipts(root, source, target);
             Require(failure == null, failure ?? "Original native hit flow.");
             views.Dispose();
             views = null;
@@ -495,6 +496,51 @@ namespace Zjcs.Editor.Combat
                 x.name.StartsWith("ChainedHit_") || x.name == "tmp_scope_obj"
                     || x.name == "Battle native hit entities"),
                 "Battle disposal releases the original hit pool and its sibling anchors.");
+        }
+
+        private IEnumerator ValidateRandomReceipts(Transform root, Transform source, Transform target)
+        {
+            // The previous summon skill owns a longer graph than its hit entity.
+            // Let that original graph end before recording the next skill's pixels.
+            yield return new WaitForSeconds(3f);
+            foreach (int skillId in new[] { 10920, 68480 })
+            {
+                var battle = SummonBattle(skillId, out var cast);
+                var definition = combatCatalog.CreateSkill(skillId, 0, 0, 5, 20, 1, null)
+                    .HitGraphEntities.Single(hit => hit.HitComponentType == "FightHitRandomTargetComponent");
+                var receipt = cast.HitSelections.Single(hit => hit.HitEntityId == definition.EntityId);
+                Require(receipt.EffectCenters.Count == 1 && receipt.Targets.Count == 0,
+                    "Random parent view must retain its anchor without drawing another target.");
+                foreach (bool legacy in new[] { false, true })
+                {
+                    var replay = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(battle));
+                    var replayCast = replay.Receipts[0].Event.SkillCasts.Single(hit => hit.SkillEntityId == skillId);
+                    if (legacy) foreach (var hit in replayCast.HitSelections) hit.EffectDelays.Clear();
+                    string saved = FightBattleCheckpointSerializer.Save(replay);
+                    int before = played.Count;
+                    Time.timeScale = 0f;
+                    var skill = views.Start(replayCast, source, target);
+                    views.Tick(receipt.Delay + .001f);
+                    var native = root.GetComponentsInChildren<MyFightHitRandomTarget>().Single();
+                    var center = receipt.EffectCenters.Single();
+                    Require(native.Component.SkillId.Equals(skill)
+                        && native.Component.GridTransform.Pos.Equals(new Pos2d(center.X, center.Y))
+                        && native.myPlayable && native.Component.GetScopes().Count == definition.ScopeEntries.Count,
+                        "Random parent lost its original graph, scope, identity or settled anchor.");
+                    Time.timeScale = 1f;
+                    yield return new WaitForSeconds(.025f);
+                    Require(played.Skip(before).Any(value => value.Name == native.myPlayable.name
+                        && value.Source == native.gameObject && value.Target == native.gameObject),
+                        "Random parent receipt did not play its original graph.");
+                    Capture("hit-random-production-" + skillId + (legacy ? "-legacy" : "") + ".png");
+                    yield return new WaitForSeconds(.375f);
+                    Capture("hit-random-production-" + skillId + (legacy ? "-legacy" : "") + "-sustain.png");
+                    yield return new WaitForSeconds(3f);
+                    Require(root.GetComponentsInChildren<MyFightHitRandomTarget>().Length == 0
+                        && FightBattleCheckpointSerializer.Save(replay) == saved,
+                        "Random parent playback leaked its entity or repeated combat settlement.");
+                }
+            }
         }
 
         private FightBattleCheckpoint SummonBattle(int skillId, out FightBattleSkillCastEvent cast)

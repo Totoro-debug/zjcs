@@ -51,6 +51,7 @@ public class MyFightHitBase<T, TInfo> : MyComponent<T, TInfo>, IFightGetUsePlaya
 	public int DelayOverrideInfoIndex;
 
 	public FightHitViewFormula.SkillHitBaseDelayInfoProvider DelayInfoProvider;
+	FightHitViewFormula.SkillHitBaseDelayInfoProvider IFightHitViewBinding.DelayInfoProvider => DelayInfoProvider;
 
 	private Dictionary<string, object> mMyPlayableParams;
 
