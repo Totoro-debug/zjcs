@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Zjcs.Official.BattleBgm;
 using Zjcs.Official.ProfessionUI;
 using SoundObject = Zjcs.Official.ProfessionUI.AkGameObj;
 
@@ -12,7 +13,7 @@ namespace Zjcs.Offline.BattleNativePlayables
     /// keeps this alive until all registered scene objects and graph pools are released.
     /// Listener hierarchy, camera following and saved volume ownership remain with the caller.
     /// </summary>
-    public sealed class OfflineBattleWwiseSoundHost : IProfessionSoundHost, IProfessionSoundObjectHost, IDisposable
+    public sealed class OfflineBattleWwiseSoundHost : IProfessionSoundHost, IProfessionSoundObjectHost, IBgmPlayback, IDisposable
     {
         [Serializable] private sealed class Package { public string file, bank, language; }
         [Serializable] private sealed class Catalog { public string manifest, sdk_version; public Package[] packages; }
@@ -96,6 +97,25 @@ namespace Zjcs.Offline.BattleNativePlayables
         public uint PostEvent(uint eventId, GameObject emitter)
         {
             RequireLive();
+            RegisterEmitter(emitter);
+            return AkSoundEngine.PostEvent(eventId, Id(emitter));
+        }
+
+        uint IBgmPlayback.PostEvent(string eventName, GameObject emitter)
+            => string.IsNullOrEmpty(eventName) ? 0 : PostEvent(AkSoundEngine.GetIDFromString(eventName), emitter);
+
+        void IBgmPlayback.SetSwitch(string group, string value, GameObject emitter)
+        {
+            RequireLive();
+            if (string.IsNullOrEmpty(group)) return;
+            RegisterEmitter(emitter);
+            // Use the registered object's native ID, as for skill events. Initial
+            // auto-registration is owned by RegisterEmitter above.
+            Check(AkSoundEngine.SetSwitch(group, value, Id(emitter)), "Set original BGM switch");
+        }
+
+        private void RegisterEmitter(GameObject emitter)
+        {
             if (emitter != null)
             {
                 if (!objects.ContainsKey(emitter.GetInstanceID()))
@@ -115,7 +135,6 @@ namespace Zjcs.Offline.BattleNativePlayables
                     finally { OfficialWwiseEvent.Host = previous; }
                 }
             }
-            return AkSoundEngine.PostEvent(eventId, Id(emitter));
         }
 
         public int RegisterGameObject(GameObject emitter, string objectName)

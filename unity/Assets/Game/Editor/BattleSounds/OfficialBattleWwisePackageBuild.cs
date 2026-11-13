@@ -34,7 +34,8 @@ namespace Zjcs.Editor
                 Path.GetFileNameWithoutExtension(player) + "_Data", "StreamingAssets",
                 OfflineBattleWwisePackages.StreamingDirectory);
             Directory.CreateDirectory(destination);
-            foreach (Output output in ValidatePackages())
+            var packages = ValidatePackages();
+            foreach (Output output in packages)
             {
                 string name = output.path.Substring(Prefix.Length);
                 string target = Path.Combine(destination, name);
@@ -48,7 +49,7 @@ namespace Zjcs.Editor
                 }
                 finally { if (File.Exists(temporary)) File.Delete(temporary); }
             }
-            Debug.Log("[Battle] Bound all 26 original Windows Wwise packages to " + destination);
+            Debug.Log("[Battle] Bound all " + packages.Count + " original Windows Wwise packages to " + destination);
         }
 
         private static List<Output> ValidatePackages()
@@ -61,7 +62,7 @@ namespace Zjcs.Editor
             var catalog = JsonUtility.FromJson<Catalog>(asset.text);
             if (receipt.manifest != "884_156692" || receipt.outputs == null
                 || catalog.manifest != receipt.manifest || catalog.sdk_version != "2022.1.18.8567"
-                || catalog.packages == null || catalog.packages.Length != 26)
+                || catalog.packages == null || catalog.packages.Length == 0)
                 throw new BuildFailedException("Inspect changed original sound package source/version.");
             var expected = new Dictionary<string, Output>(StringComparer.OrdinalIgnoreCase);
             foreach (Output output in receipt.outputs)

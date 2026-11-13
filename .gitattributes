@@ -2836,3 +2836,11 @@ assets/reference/battle-animation/sound-listener-source-manifest.json text eol=l
 
 # Keep the persistent native sound runtime identity stable.
 unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseRuntime.cs* text eol=lf
+
+# Preserve original battle BGM ports and package-source identities.
+scripts/prepare_battle_bgm_sources.py text eol=lf
+scripts/prepare_battle_bgm_sound_sources.py text eol=lf
+assets/reference/battle-animation/bgm-*-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/BattleBgm/** text eol=lf
+unity/Assets/Game/Runtime/Official/BattleBgm.meta text eol=lf
+unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Bgm.cs* text eol=lf

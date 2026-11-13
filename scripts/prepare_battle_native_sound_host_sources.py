@@ -81,6 +81,8 @@ def main():
         'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.cs.meta',
         'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Controller.cs',
         'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Controller.cs.meta',
+        'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Bgm.cs',
+        'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Bgm.cs.meta',
         'unity/Assets/Game/Editor/BattleSounds/Zjcs.Editor.BattleSounds.asmdef',
     ):
         outputs.append(identity(ROOT / relative))

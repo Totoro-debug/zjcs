@@ -57,6 +57,11 @@
     "bytes": 15511954,
     "sha256": "9231d96f2c61a69acc9735e514134d3e84a797c3314ae50c0fca25331eb6b3fd"
   },
+  "bgm_source": {
+    "path": "assets/reference/battle-animation/bgm-sound-dependencies-source-manifest.json",
+    "bytes": 99681,
+    "sha256": "18ca9b1a296de250a17511af20fb572e0ee6746e3d0bc1e16d186a8d24b53487"
+  },
   "settings_export": {
     "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json",
     "bytes": 114378086,
@@ -935,6 +940,42 @@
       "header_growth": 4
     },
     {
+      "original": "wwisebnk_assets_wwisedata_android_activity_016_westerncowboy_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_activity_016_westerncowboy_pck.rawfile",
+          "hash": "27653f9cc0ce074561c94457eabb9f59",
+          "size": 1398888,
+          "record_offset": 7517,
+          "unity_crc": 0,
+          "file_crc": 1183530865,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "27653f9cc0ce074561c94457eabb9f59.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/27653f9cc0ce074561c94457eabb9f59.rawfile",
+          "manifest": "884_156692",
+          "size": 1398888,
+          "sha256": "1f93f3e87aa47ae6b8115244691edd8f1f5e37fc896a55a8cb4950ed0ac01a1e"
+        },
+        "sha256": "1f93f3e87aa47ae6b8115244691edd8f1f5e37fc896a55a8cb4950ed0ac01a1e",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/27653f9cc0ce074561c94457eabb9f59.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_016_WesternCowboy.pck",
+        "bytes": 1398892,
+        "sha256": "df6b17464bda6ec4773207347e7fe57530a42f8c152ea76caf5577de4bb356d6"
+      },
+      "header_growth": 4
+    },
+    {
       "original": "wwisebnk_assets_wwisedata_android_activity_017_mayday2026_pck.rawfile",
       "source": {
         "bundle": {
@@ -1219,6 +1260,330 @@
         "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_029_GodsAtWars.pck",
         "bytes": 1186424,
         "sha256": "fb5fd3aa4951f921cd0bb548a9f5e19c5a8de10e8e25a9a258b2643f141987ba"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_battle_bgm_00_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_battle_bgm_00_pck.rawfile",
+          "hash": "f189f188c4faf9a49e8205f7b11fe2cf",
+          "size": 5626404,
+          "record_offset": 0,
+          "unity_crc": 0,
+          "file_crc": 3623147216,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [
+            "Payd_Base"
+          ],
+          "file": "f189f188c4faf9a49e8205f7b11fe2cf.rawfile"
+        },
+        "source": {
+          "origin": "apk_zip",
+          "entry": "assets/yoo/WwiseBnk/f189f188c4faf9a49e8205f7b11fe2cf.rawfile",
+          "apkSha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+        },
+        "sha256": "442da24708f46e606ef3abb8d2eb75a183061e56fe0ace3ef2a6a1fdccaa8562",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/f189f188c4faf9a49e8205f7b11fe2cf.rawfile",
+          "packaged": true
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_00.pck",
+        "bytes": 5626408,
+        "sha256": "8e6597cc2a9e1c22564b3ca0bcc094e25538c5e5d6d16c8cdd9a3f16e93da846"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_battle_bgm_01_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_battle_bgm_01_pck.rawfile",
+          "hash": "c487f479e0ee21817ce080874e6ed6e6",
+          "size": 10249715,
+          "record_offset": 9809,
+          "unity_crc": 0,
+          "file_crc": 809010870,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "c487f479e0ee21817ce080874e6ed6e6.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/c487f479e0ee21817ce080874e6ed6e6.rawfile",
+          "manifest": "884_156692",
+          "size": 10249715,
+          "sha256": "fdde25571221768de987c6082f9d06d8db2aaa9886b55f075a881b4172190759"
+        },
+        "sha256": "fdde25571221768de987c6082f9d06d8db2aaa9886b55f075a881b4172190759",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/c487f479e0ee21817ce080874e6ed6e6.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_01.pck",
+        "bytes": 10249719,
+        "sha256": "c964d239b4484c12a65ed8901be8452783840584a6c1c6c8845d37a2ce108573"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_battle_bgm_02_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_battle_bgm_02_pck.rawfile",
+          "hash": "98afae351b84edbb168e6599ed661112",
+          "size": 11021898,
+          "record_offset": 9925,
+          "unity_crc": 0,
+          "file_crc": 1790525867,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "98afae351b84edbb168e6599ed661112.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/98afae351b84edbb168e6599ed661112.rawfile",
+          "manifest": "884_156692",
+          "size": 11021898,
+          "sha256": "ff1dc9289ea00676ff3242dbaff99fa1e2fc70ac53346c337bce734966d95632"
+        },
+        "sha256": "ff1dc9289ea00676ff3242dbaff99fa1e2fc70ac53346c337bce734966d95632",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/98afae351b84edbb168e6599ed661112.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_02.pck",
+        "bytes": 11021902,
+        "sha256": "f923c0c3288d66bb59b5b3c0a8d8daa8fdf3377234b5680fc403826fec2258ab"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_battle_bgm_03_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_battle_bgm_03_pck.rawfile",
+          "hash": "80673867fef79cc27cd903c27f312228",
+          "size": 16168412,
+          "record_offset": 10041,
+          "unity_crc": 0,
+          "file_crc": 1208294373,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "80673867fef79cc27cd903c27f312228.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/80673867fef79cc27cd903c27f312228.rawfile",
+          "manifest": "884_156692",
+          "size": 16168412,
+          "sha256": "5748392cdbbb654193b780e2036912488e46aff4e5eafb59583efc767266290f"
+        },
+        "sha256": "5748392cdbbb654193b780e2036912488e46aff4e5eafb59583efc767266290f",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/80673867fef79cc27cd903c27f312228.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_03.pck",
+        "bytes": 16168416,
+        "sha256": "b585231dee6dbcd6415dcb8259c19d5f768c521651087fd51ca26bc20e237eb3"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_battle_bgm_04_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_battle_bgm_04_pck.rawfile",
+          "hash": "9c6b5cc6c94f55e2a2e485f6618e13fa",
+          "size": 7746185,
+          "record_offset": 10157,
+          "unity_crc": 0,
+          "file_crc": 203276190,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "9c6b5cc6c94f55e2a2e485f6618e13fa.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/9c6b5cc6c94f55e2a2e485f6618e13fa.rawfile",
+          "manifest": "884_156692",
+          "size": 7746185,
+          "sha256": "562077e6b0e0102dc4ae2d0e7c67510a5a6a6dc7d17cf984717364f649cc9396"
+        },
+        "sha256": "562077e6b0e0102dc4ae2d0e7c67510a5a6a6dc7d17cf984717364f649cc9396",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/9c6b5cc6c94f55e2a2e485f6618e13fa.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_04.pck",
+        "bytes": 7746189,
+        "sha256": "2611a5e3cd9ebb13048365e900b0bd2b5e8694281138a3aa837ac6ae9737ca5e"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_battle_bgm_05_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_battle_bgm_05_pck.rawfile",
+          "hash": "ab9bab840d260fd57bb96aed7afb4116",
+          "size": 8292412,
+          "record_offset": 10273,
+          "unity_crc": 0,
+          "file_crc": 1323036259,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "ab9bab840d260fd57bb96aed7afb4116.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/ab9bab840d260fd57bb96aed7afb4116.rawfile",
+          "manifest": "884_156692",
+          "size": 8292412,
+          "sha256": "462485c99bbed241a3c6f25979f00f838a48cf5c6fd8dd168760e4b829eed24b"
+        },
+        "sha256": "462485c99bbed241a3c6f25979f00f838a48cf5c6fd8dd168760e4b829eed24b",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/ab9bab840d260fd57bb96aed7afb4116.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_05.pck",
+        "bytes": 8292416,
+        "sha256": "789210c54b6d956fd26f0ccb1ad0a23eb344d61e64a9b3de5aea0f6fb1e18033"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_battle_bgm_06_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_battle_bgm_06_pck.rawfile",
+          "hash": "5427e8b5c576df46e48c7a8d9c90869e",
+          "size": 4440793,
+          "record_offset": 10389,
+          "unity_crc": 0,
+          "file_crc": 1000103048,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "5427e8b5c576df46e48c7a8d9c90869e.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/5427e8b5c576df46e48c7a8d9c90869e.rawfile",
+          "manifest": "884_156692",
+          "size": 4440793,
+          "sha256": "6de4a1cc5c6289232cf25e1af8c05b5a941f7fd4b547d5e810254ee7291804e0"
+        },
+        "sha256": "6de4a1cc5c6289232cf25e1af8c05b5a941f7fd4b547d5e810254ee7291804e0",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/5427e8b5c576df46e48c7a8d9c90869e.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_06.pck",
+        "bytes": 4440797,
+        "sha256": "23d94b5997fb796e91a2f10136bbb770ff0821a6aa637b8cc1298cdbf404b5db"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_battle_bgm_public_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_battle_bgm_public_pck.rawfile",
+          "hash": "8a33d26b019f78938c5a0b995d4095ba",
+          "size": 7480708,
+          "record_offset": 10505,
+          "unity_crc": 0,
+          "file_crc": 3773484984,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "8a33d26b019f78938c5a0b995d4095ba.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/8a33d26b019f78938c5a0b995d4095ba.rawfile",
+          "manifest": "884_156692",
+          "size": 7480708,
+          "sha256": "0ac126f5bb141e4f9181a81ce2ca7e23e104031069469b4edf618254f81289ae"
+        },
+        "sha256": "0ac126f5bb141e4f9181a81ce2ca7e23e104031069469b4edf618254f81289ae",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/8a33d26b019f78938c5a0b995d4095ba.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_Public.pck",
+        "bytes": 7480712,
+        "sha256": "97cd2ca5f7462ca7dfdf45289e94a82b41d0cf50f033715597c8303e8faeee0c"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_battle_bgm_switch_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_battle_bgm_switch_pck.rawfile",
+          "hash": "bc9978a890f106d4ff5fd1aa77d1e909",
+          "size": 6711,
+          "record_offset": 127,
+          "unity_crc": 0,
+          "file_crc": 100115912,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [
+            "Payd_Base"
+          ],
+          "file": "bc9978a890f106d4ff5fd1aa77d1e909.rawfile"
+        },
+        "source": {
+          "origin": "apk_zip",
+          "entry": "assets/yoo/WwiseBnk/bc9978a890f106d4ff5fd1aa77d1e909.rawfile",
+          "apkSha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+        },
+        "sha256": "ac41e813eb94b607d4bbc89e432cd9f612730f21e08d542292d447dc6cd45ed9",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/bc9978a890f106d4ff5fd1aa77d1e909.rawfile",
+          "packaged": true
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_Switch.pck",
+        "bytes": 6715,
+        "sha256": "93248d1f3f1d9d1643337e9a8cb1d14b2edd4373f93f5274a2577e228a2a6834"
       },
       "header_growth": 4
     },
@@ -1583,6 +1948,42 @@
       "header_growth": 4
     },
     {
+      "original": "wwisebnk_assets_wwisedata_android_version_004_season_04_bgm_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_version_004_season_04_bgm_pck.rawfile",
+          "hash": "4563e8e7aa7d56c2362e56121dbb755f",
+          "size": 12098685,
+          "record_offset": 13527,
+          "unity_crc": 0,
+          "file_crc": 2914530659,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "4563e8e7aa7d56c2362e56121dbb755f.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/4563e8e7aa7d56c2362e56121dbb755f.rawfile",
+          "manifest": "884_156692",
+          "size": 12098685,
+          "sha256": "dd97610460afb70321b5c050bdd1ce6f99f525475ad6ec3c9d5aef137c33333d"
+        },
+        "sha256": "dd97610460afb70321b5c050bdd1ce6f99f525475ad6ec3c9d5aef137c33333d",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/4563e8e7aa7d56c2362e56121dbb755f.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_004_Season_04_BGM.pck",
+        "bytes": 12098689,
+        "sha256": "6b89eadde4115f35e1e683581f02f69b48a1f1cf84f12d57ac4185f8de7ec65c"
+      },
+      "header_growth": 4
+    },
+    {
       "original": "wwisebnk_assets_wwisedata_android_version_004_season_04_sfx_pck.rawfile",
       "source": {
         "bundle": {
@@ -1615,6 +2016,42 @@
         "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_004_Season_04_SFX.pck",
         "bytes": 9572628,
         "sha256": "e1a885a6f23a633f6a96cfc2c0f456b36be48a1a3f9522e0d428173e0c9a445a"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_version_005_season_05_bgm_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_version_005_season_05_bgm_pck.rawfile",
+          "hash": "449451f5df61322b181a60a250e01399",
+          "size": 14006230,
+          "record_offset": 14040,
+          "unity_crc": 0,
+          "file_crc": 1528020171,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "449451f5df61322b181a60a250e01399.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/449451f5df61322b181a60a250e01399.rawfile",
+          "manifest": "884_156692",
+          "size": 14006230,
+          "sha256": "6a8e2bf4e091fef59f2c41f7af98dd3b430e46f72b60abd95a01063d67dc3c6d"
+        },
+        "sha256": "6a8e2bf4e091fef59f2c41f7af98dd3b430e46f72b60abd95a01063d67dc3c6d",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/449451f5df61322b181a60a250e01399.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_005_Season_05_BGM.pck",
+        "bytes": 14006234,
+        "sha256": "564d067c41bce3432fc85fac4fc0b3c39388dbf0dadfcc5835c820824b986696"
       },
       "header_growth": 4
     },
@@ -1730,8 +2167,8 @@
   "tools": [
     {
       "path": "scripts/prepare_battle_windows_sound_runtime.py",
-      "bytes": 14307,
-      "sha256": "bcb709095355c2fb71f5d2b14191ea609302355a54483d29542589d598e5770f"
+      "bytes": 14985,
+      "sha256": "e098418171761dec6936b9f93c42971b2b14e897ae0a10411da16c550b0f8e03"
     },
     {
       "path": "scripts/convert_wwise_android_package.py",
@@ -3231,6 +3668,16 @@
       "sha256": "8d084cd532df1f658a6023025605ca01a9ebb6d7f5021934d4350cc3dfef6303"
     },
     {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_016_WesternCowboy.pck",
+      "bytes": 1398892,
+      "sha256": "df6b17464bda6ec4773207347e7fe57530a42f8c152ea76caf5577de4bb356d6"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_016_WesternCowboy.pck.meta",
+      "bytes": 60,
+      "sha256": "27634c38e30f2acdba06142eb47894aaa7bc1e78a5ab6859b2d96f1a959b1f81"
+    },
+    {
       "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_017_MayDay2026.pck",
       "bytes": 1695841,
       "sha256": "813961b0072b7d98e7f82e7c0927a735c424b468c4690f0ca72721719c1b1ce0"
@@ -3309,6 +3756,96 @@
       "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_029_GodsAtWars.pck.meta",
       "bytes": 60,
       "sha256": "2ea630868a569759e4d1d75c1500b7c0395c38af2553b63af6e307368c361621"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_00.pck",
+      "bytes": 5626408,
+      "sha256": "8e6597cc2a9e1c22564b3ca0bcc094e25538c5e5d6d16c8cdd9a3f16e93da846"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_00.pck.meta",
+      "bytes": 60,
+      "sha256": "b822655df8af87852635ab830d6704e426dd860abf7896dc9c244f121bfaa951"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_01.pck",
+      "bytes": 10249719,
+      "sha256": "c964d239b4484c12a65ed8901be8452783840584a6c1c6c8845d37a2ce108573"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_01.pck.meta",
+      "bytes": 60,
+      "sha256": "861ac036067294dc53cbc4aaed70e437a1a6ce302b6566b92a75a89d0bc07c28"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_02.pck",
+      "bytes": 11021902,
+      "sha256": "f923c0c3288d66bb59b5b3c0a8d8daa8fdf3377234b5680fc403826fec2258ab"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_02.pck.meta",
+      "bytes": 60,
+      "sha256": "32a550bed7301a2122eba4164d56d0d8b977fc43e41523b0afb14e515217b492"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_03.pck",
+      "bytes": 16168416,
+      "sha256": "b585231dee6dbcd6415dcb8259c19d5f768c521651087fd51ca26bc20e237eb3"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_03.pck.meta",
+      "bytes": 60,
+      "sha256": "7bc6c4ebb1d1b8a32a3612a8f0982a0f0e270177113b5788e3b668c58a4bb059"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_04.pck",
+      "bytes": 7746189,
+      "sha256": "2611a5e3cd9ebb13048365e900b0bd2b5e8694281138a3aa837ac6ae9737ca5e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_04.pck.meta",
+      "bytes": 60,
+      "sha256": "f4e2049eca64402d58d4b9b84d66737066e2d28048b66e19ebb77d898ef877c5"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_05.pck",
+      "bytes": 8292416,
+      "sha256": "789210c54b6d956fd26f0ccb1ad0a23eb344d61e64a9b3de5aea0f6fb1e18033"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_05.pck.meta",
+      "bytes": 60,
+      "sha256": "c89d066270a9b821bff6699208212c7e717e287b09617210ef1be2a3f41feeb1"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_06.pck",
+      "bytes": 4440797,
+      "sha256": "23d94b5997fb796e91a2f10136bbb770ff0821a6aa637b8cc1298cdbf404b5db"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_06.pck.meta",
+      "bytes": 60,
+      "sha256": "8746dcda908aa35c83fc3ea93131c9ea8fa2538446ca0d4cc9b7a8f4b42889b0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_Public.pck",
+      "bytes": 7480712,
+      "sha256": "97cd2ca5f7462ca7dfdf45289e94a82b41d0cf50f033715597c8303e8faeee0c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_Public.pck.meta",
+      "bytes": 60,
+      "sha256": "24a65e7e8364968bd3bca08bd7a0340a1e1ffd054154bbce38ba8a1e84008187"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_Switch.pck",
+      "bytes": 6715,
+      "sha256": "93248d1f3f1d9d1643337e9a8cb1d14b2edd4373f93f5274a2577e228a2a6834"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_Switch.pck.meta",
+      "bytes": 60,
+      "sha256": "5a61287d973e210d24722c6ebb8a18486b12ee0463057810102869ec637b3be2"
     },
     {
       "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_SFX_00.pck",
@@ -3411,6 +3948,16 @@
       "sha256": "05809008959ad0361a7525b3ab4cfd1d32bce0958ac5a58ef252ff48476247a6"
     },
     {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_004_Season_04_BGM.pck",
+      "bytes": 12098689,
+      "sha256": "6b89eadde4115f35e1e683581f02f69b48a1f1cf84f12d57ac4185f8de7ec65c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_004_Season_04_BGM.pck.meta",
+      "bytes": 60,
+      "sha256": "43b89b6f2896fd56f43c99f1ab40dd2faa2ac5f5bbe9072c1faaee5da8ae010f"
+    },
+    {
       "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_004_Season_04_SFX.pck",
       "bytes": 9572628,
       "sha256": "e1a885a6f23a633f6a96cfc2c0f456b36be48a1a3f9522e0d428173e0c9a445a"
@@ -3419,6 +3966,16 @@
       "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_004_Season_04_SFX.pck.meta",
       "bytes": 60,
       "sha256": "a75f494077e5690e56f77d35b58cd7c273656e64628b891f854a73a40c93a8ea"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_005_Season_05_BGM.pck",
+      "bytes": 14006234,
+      "sha256": "564d067c41bce3432fc85fac4fc0b3c39388dbf0dadfcc5835c820824b986696"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_005_Season_05_BGM.pck.meta",
+      "bytes": 60,
+      "sha256": "c9a20a94588ff68e971ed71632333f442a132f53155f6fef50a0d7c3e5b33ac8"
     },
     {
       "path": "unity/Assets/Official/Combat/NativeSound/Packages/Version_005_Season_05_SFX.pck",
@@ -3452,8 +4009,8 @@
     },
     {
       "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/catalog.json",
-      "bytes": 121778,
-      "sha256": "4e13d667d5ea7ccbe0c4627940c8f70749b13cc3ec548dbe61322671af96552c"
+      "bytes": 123342,
+      "sha256": "e446290471cc93d5c73a5e925b8cbf7f102666ae7087eb55bcb510fdb6f2dd00"
     },
     {
       "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/catalog.json.meta",

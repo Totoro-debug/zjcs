@@ -151,7 +151,7 @@
 
 ### 原生战斗声音
 
-匹配的官方 Wwise Unity Integration `2022.1.18.8567.3199` 已迁入 132 份核心 C#、Windows Editor Profile／Player Release 引擎及八个 DSP，恢复原全局／Windows 初始化设置、26 个声音包及 `Combat/Wwise/catalog`。依据同版 `CAkFilePackageLUT` 将 Android 语言表转换为 Windows UTF-16LE，保持 bank／媒体字节、ID、对齐及原 HIRC／RTPC／DSP 配置。入口、转换和逐文件哈希见 [Windows 声音运行素材](../../assets/reference/battle-animation/windows-sound-runtime-source-manifest.json)。
+匹配的官方 Wwise Unity Integration `2022.1.18.8567.3199` 已迁入 132 份核心 C#、Windows Editor Profile／Player Release 引擎及八个 DSP，恢复原全局／Windows 初始化设置、38 个声音包及 `Combat/Wwise/catalog`。依据同版 `CAkFilePackageLUT` 将 Android 语言表转换为 Windows UTF-16LE，保持 bank／媒体字节、ID、对齐及原 HIRC／RTPC／DSP 配置。入口、转换和逐文件哈希见 [Windows 声音运行素材](../../assets/reference/battle-animation/windows-sound-runtime-source-manifest.json)。
 
 `OfflineBattleWwiseSoundHost` 通过现有声音接口复用原 AkGameObj，按 Minimum 包→Init→Minimum→关联包／bank 加载，接入 Spatial Audio、通信、回调与原设置的清理顺序；空环境只发送一次零 AuxSend。原四项音量 RTPC 按 `(int)(volume * 100f)` 设置，倍速使用原 `414249091`。原 SDK 的四处 AkVector64 字段 getter 返回借用地址，Windows Mono 的引用类型返回封送会释放内部地址；依据原 Profile／Release DLL 指令适配借用指针取值，另修复三双精度值按 Windows x64 ABI 返回，保持原数值及公共返回类型。官方代码、原 RTPC 资产 GUID 及本地绑定见 [原生宿主来源](../../assets/reference/battle-animation/native-sound-host-source-manifest.json)。
 
@@ -161,7 +161,11 @@
 
 `HomeAudioSettings` 将当前角色保存的总／音乐／语音／音效四项音量传给原 RTPC，加载前沿现有单机默认值，设置成功或保存失败回滚仍复用原保存流程；不改变已确认的默认值及存档。测试独立将原生最终输出静音，音量 RTPC 和声音事件照常执行。设置控件与保存规则见 [设置与本地存档](settings-and-save.md)。
 
-`OfflineBattleWwisePackages` 统一 Editor 素材路径与 Player 的 `StreamingAssets/Combat/Wwise` 路径；`OfficialBattleWwisePackageBuild` 在 Windows 构建前核对 26 包的来源，构建后逐个复制并复核大小和 SHA256，不复制 `.meta` 或在源码树中重复载荷。
+`OfflineBattleWwisePackages` 统一 Editor 素材路径与 Player 的 `StreamingAssets/Combat/Wwise` 路径；`OfficialBattleWwisePackageBuild` 在 Windows 构建前核对 38 包的来源，构建后逐个复制并复核大小和 SHA256，不复制 `.meta` 或在源码树中重复载荷。
+
+`Official/BattleBgm` 直接迁入原 `BgmManager`、事件键配置、接口、播放句柄及声源 provider，保留场景堆栈、同键引用计数、旧场景暂停／恢复、非栈顶移除与 FIFO 延迟队列。仅隔离命名空间、移除追踪日志、修复反编译的 `TryDequeue(ref)`，将原宽 Wwise 代理缩为实际使用的两项操作；原算法与执行顺序不变。[代码来源](../../assets/reference/battle-animation/bgm-runtime-source-manifest.json)记录原输入和输出。原生宿主复用同一 AkGameObj 注册路径，事件名按原哈希发送，Switch 在首次播放前也能注册声源，避免另加一份 SDK 声源。
+
+新增原 `Battle_BGM_Switch`、00～06、Public 及共享音乐包。按 APK 优先核对实际包、82 个原音乐对象与 47 份完整媒体（含流式预读片段与其他包内共享媒体）；音频包与原 RTPC、切换容器、播放列表和转场不改写。[音乐依赖来源](../../assets/reference/battle-animation/bgm-sound-dependencies-source-manifest.json)与 Windows 转换来源分别保留原包及输出哈希。原生 Play Mode 已检查真实 Switch 值、原音乐播放编号、嵌套场景操作和延迟停止；记录适配器另外核对重复键、非栈顶移除、未知停止、句柄幂等、延迟队列及即时 Switch。战斗场景／关卡／主题配置的正式音乐接入仍未完成，当前正式控制器仍只派发原技能图声音。
 
 隔离完整工程已通过编译、`ProjectTools.Validate`、静态元数据与静音 Play Mode：两次显式引擎生命周期、四处借用字段及按值转换、原 Event 播放编号／原生声源坐标／缓存宿主／注销；真实监听器 prefab 的相机跟随、场景进入／退出／再进入、默认监听列表及销毁；两个租约复用引擎、音量与实际 1／2.3／0 倍时间、退出 Play Mode 后引擎终止。正式公共控制器专项连续两场使用原场景与真实技能图，以模拟指针点击原开始按钮，核对实际原生播放编号、伤害、四项存档音量、暂停、隐藏／返回及退出监听器清理，正常以 0 退出；已查看其实际运行截图。
 

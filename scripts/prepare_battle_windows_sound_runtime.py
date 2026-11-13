@@ -16,6 +16,7 @@ SDK_ROOT = ROOT / '.tools/wwise/UnityIntegration-2022.1.18.8567.3199'
 SDK_PROOF = ROOT / 'assets/reference/battle-animation/wwise-windows-integration-source-manifest.json'
 INPUT = ROOT / 'assets/reference/battle-animation/native-sound-dependencies-source-manifest.json'
 EVENTS = ROOT / 'assets/reference/battle-animation/native-sound-sources-source-manifest.json'
+BGM = ROOT / 'assets/reference/battle-animation/bgm-sound-dependencies-source-manifest.json'
 CODE = ROOT / 'unity/Assets/Game/Runtime/Official/Wwise/API/Runtime'
 ART = ROOT / 'unity/Assets/Official/Combat/NativeSound'
 EXPORT = ROOT / '.tools/source-packages/current/884_156692/native-conversion/native-export-all'
@@ -222,11 +223,20 @@ def main():
 
     dependency = json.loads(INPUT.read_bytes())
     source = json.loads(EVENTS.read_bytes())
+    bgm = json.loads(BGM.read_bytes())
+    if bgm['manifest'] != '884_156692':
+        raise ValueError('Inspect changed original battle BGM version')
     bank_names = {bank.lower(): bank for event in source['events'] for bank in event['banks']}
+    bank_names.update(bgm['bank_names'])
     bank_names['minimum'] = 'Minimum'
     package_records, catalog = [], []
     with AudioSource(expected_version='884_156692', work_directory=work) as audio:
-        for name, receipt in sorted(dependency['packages'].items()):
+        required_packages = dict(dependency['packages'])
+        for name, receipt in bgm['packages'].items():
+            if name in required_packages and required_packages[name]['sha256'] != receipt['sha256']:
+                raise ValueError('Conflicting original skill/BGM package: ' + name)
+            required_packages[name] = receipt
+        for name, receipt in sorted(required_packages.items()):
             if not name.endswith('_pck.rawfile'):
                 continue
             raw = audio.package(name)
@@ -244,7 +254,7 @@ def main():
                 windows=identity(target), header_growth=len(converted) - len(raw)))
             catalog.append(dict(file=filename, bank=bank, language=language))
     runtime_catalog = dict(manifest='884_156692', sdk_version='2022.1.18.8567',
-        packages=catalog, events=[dict(id=e['id'], name=e['name']) for e in source['events']])
+        packages=catalog, events=[dict(id=e['id'], name=e['name']) for e in source['events'] + bgm['events']])
     target = settings / 'catalog.json'
     write(target, json.dumps(runtime_catalog, ensure_ascii=False, indent=2) + '\n')
     meta(target)
@@ -265,7 +275,7 @@ def main():
             elif 'guid: ' + guid(directory) in folder_meta.read_text(encoding='utf-8'):
                 outputs[folder_meta.relative_to(ROOT).as_posix()] = identity(folder_meta)
     receipt = dict(manifest='884_156692', sdk_source=identity(SDK_PROOF), package_format_source=format_source,
-        event_source=identity(EVENTS), dependency_source=identity(INPUT), settings_export=identity(export_proof),
+        event_source=identity(EVENTS), dependency_source=identity(INPUT), bgm_source=identity(BGM), settings_export=identity(export_proof),
         inputs=list(inputs.values()), packages=package_records,
         tools=[identity(Path(__file__)), identity(ROOT / 'scripts/convert_wwise_android_package.py')],
         outputs=list(outputs.values()), adaptations=[
@@ -273,7 +283,7 @@ def main():
             'Four original AkVector64 getters copy borrowed native fields without freeing their addresses; the vector conversion uses a three-double value return to match the Windows x64 ABI. Public sound values and behavior are unchanged.',
             'Original global and Windows settings retain all serialized values; only script references and the Windows-only platform list are rebound.',
             'AKPK language strings use Windows UTF-16LE; package IDs, file IDs, language IDs, alignment and every bank/media payload byte are preserved.'])
-    OUTPUT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    OUTPUT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(json.dumps(dict(packages=len(catalog), outputs=len(outputs), sdk_inputs=len(inputs))))
 
 

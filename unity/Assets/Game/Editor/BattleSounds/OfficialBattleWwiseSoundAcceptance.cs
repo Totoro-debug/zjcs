@@ -150,6 +150,9 @@ namespace Zjcs.Editor
                     }
                     yield return null;
                 }
+                var bgmSteps = BgmSteps();
+                try { while (bgmSteps.MoveNext()) yield return bgmSteps.Current; }
+                finally { (bgmSteps as IDisposable)?.Dispose(); }
                 var listenerSteps = ListenerSteps();
                 try { while (listenerSteps.MoveNext()) yield return listenerSteps.Current; }
                 finally { (listenerSteps as IDisposable)?.Dispose(); }
