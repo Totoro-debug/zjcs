@@ -2854,3 +2854,9 @@ assets/reference/battle-animation/bgm-*-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/BattleBgm/** text eol=lf
 unity/Assets/Game/Runtime/Official/BattleBgm.meta text eol=lf
 unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Bgm.cs* text eol=lf
+
+# Preserve original scene music assets and local lifecycle identities.
+scripts/prepare_battle_bgm_scene_assets.py text eol=lf
+unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseRuntime.Bgm.cs* text eol=lf
+unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.BgmScenes.cs* text eol=lf
+unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Controller.cs* text eol=lf

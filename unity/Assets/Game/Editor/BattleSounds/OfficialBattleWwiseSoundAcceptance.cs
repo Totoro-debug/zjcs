@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Offline.BattleNativePlayables;
 using SoundObject = Zjcs.Official.ProfessionUI.AkGameObj;
-using WwiseEventReference = Zjcs.Official.ProfessionUI.WwiseEventReference;
+using PortedEventReference = Zjcs.Official.ProfessionUI.WwiseEventReference;
 using NativeListener = global::AkAudioListener;
 using NativeSoundObject = global::AkGameObj;
 
@@ -106,7 +106,7 @@ namespace Zjcs.Editor
                 {
                     var listener = new GameObject("Wwise listener interface verification");
                     var emitter = new GameObject("Wwise emitter interface verification");
-                    var reference = ScriptableObject.CreateInstance<WwiseEventReference>();
+                    var reference = ScriptableObject.CreateInstance<PortedEventReference>();
                     reference.id = 1557230835u; // Original Skill_10010_1.
                     var sound = new OfficialWwiseEvent { WwiseObjectReference = reference };
                     try
@@ -159,6 +159,9 @@ namespace Zjcs.Editor
                 var runtimeSteps = RuntimeSteps();
                 try { while (runtimeSteps.MoveNext()) yield return runtimeSteps.Current; }
                 finally { (runtimeSteps as IDisposable)?.Dispose(); }
+                var musicScenes = BgmSceneSteps();
+                try { while (musicScenes.MoveNext()) yield return musicScenes.Current; }
+                finally { (musicScenes as IDisposable)?.Dispose(); }
             }
             finally { OfficialWwiseEvent.Host = previous; }
         }

@@ -120,6 +120,10 @@ namespace Zjcs.Offline.BattleNativePlayables
             {
                 if (!objects.ContainsKey(emitter.GetInstanceID()))
                 {
+                    // The engine has one owner. Original SDK prefab objects
+                    // (including the dedicated BGM emitter/listener) register
+                    // themselves and retain their SDK destruction lifecycle.
+                    if (AkSoundEngine.IsGameObjectRegistered(emitter)) return;
                     // Original GameObject PostEvent auto-registers through AkGameObj.
                     // The existing APK port owns Awake, offsets, epsilon and destruction.
                     var previous = OfficialWwiseEvent.Host;

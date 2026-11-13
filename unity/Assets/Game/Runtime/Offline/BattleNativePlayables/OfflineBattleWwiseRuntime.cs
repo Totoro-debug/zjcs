@@ -8,7 +8,7 @@ namespace Zjcs.Offline.BattleNativePlayables
     // WwiseManager owns one engine across scene changes. Battle scene leases own
     // only their original listener prefab; graph pools are released before leases.
     [DefaultExecutionOrder(-100)]
-    public sealed class OfflineBattleWwiseRuntime : MonoBehaviour
+    public sealed partial class OfflineBattleWwiseRuntime : MonoBehaviour
     {
         [Serializable] private sealed class Bindings { public string manifest, prefab_resource; public int[] game_ids; }
         private static OfflineBattleWwiseRuntime instance;
@@ -30,12 +30,14 @@ namespace Zjcs.Offline.BattleNativePlayables
             if (prefab == null) throw new InvalidOperationException("Original battle listener prefab is missing.");
             var owner = GetOrCreate();
             var root = new GameObject("Original battle sound scene " + gameId);
+            // Independent local scene instances own independent original BGM keys.
+            root.name += " " + root.GetInstanceID();
             root.SetActive(false);
             root.transform.SetParent(outputCamera, false);
             try
             {
                 UnityEngine.Object.Instantiate(prefab, root.transform, false);
-                var lease = new Lease(owner, root);
+                var lease = new Lease(owner, root, gameId);
                 owner.leases.Add(lease);
                 root.SetActive(true);
                 return lease;
@@ -89,27 +91,32 @@ namespace Zjcs.Offline.BattleNativePlayables
         private void Release()
         {
             foreach (Lease lease in new List<Lease>(leases)) lease.Dispose();
+            ReleaseMusic();
             host?.Dispose(); host = null;
             if (instance == this) instance = null;
         }
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetPlaySession() { instance = null; volumes = null; }
 
-        public sealed class Lease : IDisposable
+        public sealed partial class Lease : IDisposable
         {
             private OfflineBattleWwiseRuntime owner;
             private readonly GameObject root;
-            internal Lease(OfflineBattleWwiseRuntime owner, GameObject root) { this.owner = owner; this.root = root; }
+            private readonly int gameId;
+            internal Lease(OfflineBattleWwiseRuntime owner, GameObject root, int gameId)
+            { this.owner = owner; this.root = root; this.gameId = gameId; }
             public IProfessionSoundHost SoundHost => owner != null ? owner.host
                 : throw new ObjectDisposedException(nameof(Lease));
             public void SetVisible(bool visible)
             {
                 if (owner == null) throw new ObjectDisposedException(nameof(Lease));
+                if (visible && root != null && !root.activeSelf) RestoreMusicSwitch();
                 if (root != null) root.SetActive(visible);
             }
             public void Dispose()
             {
                 if (owner == null) return;
+                StopMusic();
                 owner.leases.Remove(this); owner = null;
                 if (root != null) { root.SetActive(false); UnityEngine.Object.Destroy(root); }
             }

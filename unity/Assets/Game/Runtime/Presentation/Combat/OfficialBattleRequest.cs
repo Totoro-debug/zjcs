@@ -44,6 +44,8 @@ namespace Zjcs.Presentation.Combat
         public bool RestoreCheckpoint;
         public Func<FightBattleUnitState, Sprite> TimelineFactionIcon;
         public int EnvironmentGameId;
+        // A theme already selected by the mode. Zero uses original stage/scene music.
+        public int FightThemeId;
         public bool? EnvironmentIsDay;
         public Func<FightBattleUnitState, string> AnimationGroupResolver;
         public OfflineMainlineProgressSession StatueProgress;

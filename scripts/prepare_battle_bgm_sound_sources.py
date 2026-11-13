@@ -1,6 +1,7 @@
 """Resolve original battle music banks and their complete packaged media."""
 import json
 import os
+import re
 from pathlib import Path
 
 from map14_audio_source import AudioSource
@@ -19,11 +20,26 @@ def main():
         assert packages
         for name in sorted(packages):
             audio.objects(name)
+        scene_source = ROOT / 'assets/reference/battle-animation/bgm-scene-source-manifest.json'
+        scene = json.loads(scene_source.read_bytes())
+        event_references = []
+        for row in scene['outputs']:
+            if '/References/WwiseEventReference/' not in row['path'] or not row['path'].endswith('.asset'):
+                continue
+            source = ROOT / row['path']
+            assert identity(source)['sha256'] == row['sha256'], row['path']
+            text = source.read_text(encoding='utf-8')
+            event_references.append(dict(name=re.search(r'^  objectName: (.+)$', text, re.M)[1],
+                id=int(re.search(r'^  id: (\d+)$', text, re.M)[1]), source=identity(source)))
+        assert len(event_references) == 12
         events = []
-        for name in ('BattleBgm_Play', 'BattleBgm_Stop', 'BattleBgm_Pause', 'BattleBgm_Resume'):
+        for reference in event_references:
+            name = reference['name']
             identifier, banks = audio.load_event(name)
+            assert identifier == reference['id'], reference
             assert values(audio.by_id[identifier][1], 'eHircType') == [4]
             events.append(dict(name=name, id=identifier, banks=banks))
+        packages.update(audio.bank_sources)
         media_ids = {value for _, fields in audio.by_id.values() for value in values(fields, 'sourceID') if value}
         assert media_ids
         # Streaming tracks can share their complete WEM with another package.
@@ -36,7 +52,8 @@ def main():
         selected = {name: receipts[name] for name in sorted(packages)}
         mapping = 'wwisebnk_assets_wwisedata_android_eventbankmapping_bytes.rawfile'
         selected[mapping] = receipts[mapping]
-        proof = dict(manifest=audio.selected.version, packages=selected, events=events, media=media,
+        proof = dict(manifest=audio.selected.version, scene_source=identity(scene_source),
+            event_references=event_references, packages=selected, events=events, media=media,
             bank_names={bank['name'].lower(): bank['name'] for bank in audio.mapping['banks']},
             objects=[dict(id=key, type=values(fields, 'eHircType')[0],
                           sources=[{k:v for k,v in source.items() if k != 'base64'}

@@ -309,6 +309,7 @@ namespace Zjcs.Presentation.Combat
                 if (hudRoot != null) hudRoot.SetActive(hudVisible);
                 skillGraphPlayback?.SetDamageUIVisible(hudVisible);
                 ConfigureSpeeds(combatCatalog.SpeedSettings, request.SpeedModeType, request.SpeedConditionMet);
+                soundScene?.PlayMusic(checkpoint.StageId, request.FightThemeId);
             }
             catch
             {

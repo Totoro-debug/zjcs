@@ -41,11 +41,21 @@ def main():
 
     for relative in ('client-source/BgmManager.cs', 'client-source/BgmEventKeyConfig.cs',
                      'client-source/Sound.Bgm/IBgmManager.cs', 'client-source/Sound.Bgm/PlayBgmHandle.cs',
-                     'launch-source/IBgmGameObjectProvider.cs', 'launch-source/BgmGameObjectProvider.cs'):
+                     'launch-source/IBgmGameObjectProvider.cs', 'launch-source/BgmGameObjectProvider.cs',
+                     'launch-source/BgmGameObject.cs', 'client-source/BgmEventConfig.cs',
+                     'client-source/GameBgm.cs', 'client-source/GameBgmConfig.cs',
+                     'client-source/IBgmManagerExtensions.cs'):
         source = SOURCE / relative
         inputs.append(identity(source))
         text = source.read_text(encoding='utf-8-sig')
         text = re.sub(r'^namespace Sound\.Bgm;\n', '', text, flags=re.M)
+        text = text.replace('using Framework.DependencyInjection;\n', '').replace('using Framework;\n', '')
+        text = text.replace('using Sound.Bgm;\n', '')
+        text = text.replace('\t[Inject]\n', '').replace('[ScriptableObjectConfig]\n', '')
+        if source.name == 'GameBgm.cs':
+            # The local prefab loader injects this before the original OnEnable.
+            text = text.replace('private IBgmGameObjectProvider mBgmGameObjectProvider',
+                                'public IBgmGameObjectProvider mBgmGameObjectProvider')
         if source.name == 'BgmManager.cs':
             for using in ('Common', 'GFrameCore.Extensions.ZLogger', 'Launch',
                           'Microsoft.Extensions.Logging', 'Sound.Bgm', 'ZLogger'):
@@ -82,10 +92,10 @@ namespace Zjcs.Official.BattleBgm
 '''); meta(seam)
     assembly = CODE / 'Zjcs.Official.BattleBgm.asmdef'
     write(assembly, json.dumps(dict(name='Zjcs.Official.BattleBgm',
-          rootNamespace='Zjcs.Official.BattleBgm', references=[], autoReferenced=True), indent=2) + '\n')
+          rootNamespace='Zjcs.Official.BattleBgm', references=['AK.Wwise.Unity.API.WwiseTypes'], autoReferenced=True), indent=2) + '\n')
     meta(assembly)
     inputs += [identity(SOURCE / p) for p in ('client-source/FightBgmOverrideHandler.cs',
-        'client-source/FightSceneRoot.cs', 'client-source/GameBgm.cs', 'client-source/IBgmManagerExtensions.cs')]
+        'client-source/FightSceneRoot.cs')]
     export = ROOT / '.tools/source-packages/current/884_156692/native-conversion/native-export-all'
     export_receipt = export.with_name(export.name + '-source-manifest.json')
     exported = {r['path']: r for r in json.loads(export_receipt.read_bytes())['outputs']}
@@ -105,6 +115,8 @@ namespace Zjcs.Official.BattleBgm
         inputs.append(record)
     receipt = dict(manifest='884_156692', inputs=inputs, outputs=outputs,
         adaptations=['Namespace isolation and block namespaces for Unity 2022.',
+            'Replace DI attributes with pre-activation provider injection; expose the original GameBgm provider setter.',
+            'Remove only the framework ScriptableObjectConfig registration attribute; original asset fields remain.',
             'Remove only the two trace logging blocks and logger dependency.',
             'Replace the broad Wwise proxy with the two consumed playback operations.',
             'Repair decompiled Queue.TryDequeue ref to out.'], tool=identity(Path(__file__)))

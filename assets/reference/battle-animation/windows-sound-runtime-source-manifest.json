@@ -59,8 +59,8 @@
   },
   "bgm_source": {
     "path": "assets/reference/battle-animation/bgm-sound-dependencies-source-manifest.json",
-    "bytes": 99681,
-    "sha256": "18ca9b1a296de250a17511af20fb572e0ee6746e3d0bc1e16d186a8d24b53487"
+    "bytes": 890603,
+    "sha256": "700fc2327e53783b84ec01ee713a654ef14267717341986ad959df7934fb335f"
   },
   "settings_export": {
     "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json",
@@ -1264,6 +1264,42 @@
       "header_growth": 4
     },
     {
+      "original": "wwisebnk_assets_wwisedata_android_activity_032_halloween2026_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_activity_032_halloween2026_pck.rawfile",
+          "hash": "9b10fa614941b594e9ee461542d890ca",
+          "size": 18281102,
+          "record_offset": 9680,
+          "unity_crc": 0,
+          "file_crc": 2520302403,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [],
+          "file": "9b10fa614941b594e9ee461542d890ca.rawfile"
+        },
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/9b10fa614941b594e9ee461542d890ca.rawfile",
+          "manifest": "884_156692",
+          "size": 18281102,
+          "sha256": "8f8451a4ffda3e70b5d944528b2d6717160228a6cf783b33565f467d396d7141"
+        },
+        "sha256": "8f8451a4ffda3e70b5d944528b2d6717160228a6cf783b33565f467d396d7141",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/9b10fa614941b594e9ee461542d890ca.rawfile",
+          "packaged": false
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_032_Halloween2026.pck",
+        "bytes": 18281106,
+        "sha256": "276a589f06156f8b35dc9842666d3cf780afcc734b075581779712144d99e3c3"
+      },
+      "header_growth": 4
+    },
+    {
       "original": "wwisebnk_assets_wwisedata_android_battle_bgm_00_pck.rawfile",
       "source": {
         "bundle": {
@@ -1692,6 +1728,42 @@
         "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_SFX_02.pck",
         "bytes": 16766310,
         "sha256": "52f278acef5dc9aad5530e9961ab4780cc70ecc0df0fd59478f09ba111485274"
+      },
+      "header_growth": 4
+    },
+    {
+      "original": "wwisebnk_assets_wwisedata_android_launch_25_halloween2026_pck.rawfile",
+      "source": {
+        "bundle": {
+          "name": "wwisebnk_assets_wwisedata_android_launch_25_halloween2026_pck.rawfile",
+          "hash": "729a4e15840e50adc7c676c2ab73d9ea",
+          "size": 1628451,
+          "record_offset": 4352,
+          "unity_crc": 0,
+          "file_crc": 3843771088,
+          "encrypted": false,
+          "dependencies": [],
+          "tags": [
+            "Payd_Base"
+          ],
+          "file": "729a4e15840e50adc7c676c2ab73d9ea.rawfile"
+        },
+        "source": {
+          "origin": "apk_zip",
+          "entry": "assets/yoo/WwiseBnk/729a4e15840e50adc7c676c2ab73d9ea.rawfile",
+          "apkSha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+        },
+        "sha256": "8ae76330da126a70c18aa3ea4a13b572597180bf458ee187ab296dcc33da6ebf",
+        "apkCheckedFirst": {
+          "entry": "assets/yoo/WwiseBnk/729a4e15840e50adc7c676c2ab73d9ea.rawfile",
+          "packaged": true
+        },
+        "banks": []
+      },
+      "windows": {
+        "path": "unity/Assets/Official/Combat/NativeSound/Packages/Launch_25_Halloween2026.pck",
+        "bytes": 1628455,
+        "sha256": "76af9446e3734ae954d37073275d82c3a3904baceb764d6c318a8a3ae3934a71"
       },
       "header_growth": 4
     },
@@ -3758,6 +3830,16 @@
       "sha256": "2ea630868a569759e4d1d75c1500b7c0395c38af2553b63af6e307368c361621"
     },
     {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_032_Halloween2026.pck",
+      "bytes": 18281106,
+      "sha256": "276a589f06156f8b35dc9842666d3cf780afcc734b075581779712144d99e3c3"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Activity_032_Halloween2026.pck.meta",
+      "bytes": 60,
+      "sha256": "b34117eab19e2dd684a6cfbe66d92cfb0eb702e148ee78ccfa4614a185dca0ec"
+    },
+    {
       "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_BGM_00.pck",
       "bytes": 5626408,
       "sha256": "8e6597cc2a9e1c22564b3ca0bcc094e25538c5e5d6d16c8cdd9a3f16e93da846"
@@ -3876,6 +3958,16 @@
       "path": "unity/Assets/Official/Combat/NativeSound/Packages/Battle_SFX_02.pck.meta",
       "bytes": 60,
       "sha256": "1b388c6c2125d0033de64f5241a9f1d84faaf868277ddf8df6355caa8046fc45"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Launch_25_Halloween2026.pck",
+      "bytes": 1628455,
+      "sha256": "76af9446e3734ae954d37073275d82c3a3904baceb764d6c318a8a3ae3934a71"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Packages/Launch_25_Halloween2026.pck.meta",
+      "bytes": 60,
+      "sha256": "7a93bcb894d9a6e39fbe86d7b4d03fdadfe38f4d874850d51b6a4eec48009390"
     },
     {
       "path": "unity/Assets/Official/Combat/NativeSound/Packages/Minimum.pck",
@@ -4009,8 +4101,8 @@
     },
     {
       "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/catalog.json",
-      "bytes": 123342,
-      "sha256": "e446290471cc93d5c73a5e925b8cbf7f102666ae7087eb55bcb510fdb6f2dd00"
+      "bytes": 124224,
+      "sha256": "93bba01ba4a313f7e61ce198d0a33f121570bde3633fc8d0eea40806de15e4c5"
     },
     {
       "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/catalog.json.meta",

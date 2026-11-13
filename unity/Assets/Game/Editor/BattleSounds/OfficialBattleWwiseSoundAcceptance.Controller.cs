@@ -92,6 +92,12 @@ namespace Zjcs.Editor
                         Options = new OfficialBattleSessionOptions { SkipPrepareStatus = false } });
                     for (int i = 0; i < 30; i++) yield return null;
                     Require(AkAudioListener.DefaultListeners.ListenerList.Count == 1, "formal Begin mounts original listener");
+                    var musicProvider = UnityEngine.Object.FindObjectOfType<Zjcs.Official.BattleBgm.BgmGameObject>();
+                    Require(musicProvider != null, "formal Begin mounts original shared BGM object");
+                    var musicConfig = Resources.Load<Zjcs.Official.BattleBgm.GameBgmConfig>(
+                        "Combat/Wwise/Bgm/Configs/GameBgmConfig");
+                    NativeMusicSwitch(musicProvider.gameObject, "BattleMusic", "Map_11_1_Map");
+                    NativeMusicPlaying(musicProvider.gameObject, musicConfig.BgmEventConfig.PlayEvent.Id);
                     Rtpc(3240620755u, battle == 0 ? 50 : 62);
                     Rtpc(3659619896u, battle == 0 ? 25 : 37);
                     Rtpc(3676256460u, battle == 0 ? 75 : 87);
@@ -101,6 +107,7 @@ namespace Zjcs.Editor
                     Require(AkAudioListener.DefaultListeners.ListenerList.Count == 0, "background battle removes default listener");
                     controller.SetHudVisible(true); yield return null;
                     Require(AkAudioListener.DefaultListeners.ListenerList.Count == 1, "returning battle restores default listener");
+                    NativeMusicPlaying(musicProvider.gameObject, musicConfig.BgmEventConfig.PlayEvent.Id);
                     var start = canvas.transform.Find(OfficialBattleHudView.StartButtonPath.TrimStart('/'))?.GetComponent<Button>();
                     Require(start != null && start.IsInteractable(), "formal original start button is available");
                     var click = SoundClick(events, start);
@@ -142,6 +149,8 @@ namespace Zjcs.Editor
                     controller.DisposeSession(); yield return null;
                     Require(AkSoundEngine.IsInitialized() && AkAudioListener.DefaultListeners.ListenerList.Count == 0,
                         "formal disposal preserves application engine and removes battle listener");
+                    Require(UnityEngine.Object.FindObjectOfType<Zjcs.Official.BattleBgm.GameBgm>() == null,
+                        "formal disposal releases original scene BGM switch");
                     settings.Load();
                 }
                 Debug.Log("NATIVE_WWISE_FORMAL_CONTROLLER_PASSED two real graph battles, original start-button pointer, native playing IDs, damage, saved four-volume controls, pause and listener visibility/disposal");

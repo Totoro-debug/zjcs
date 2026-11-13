@@ -32,6 +32,31 @@
       "sha256": "f5a4c0386a9cbd90afff6d0995ba7ce280fbe59d78f1ca79ef5396aec98e7b8a"
     },
     {
+      "path": ".tools/source-packages/official-code/launch-source/BgmGameObject.cs",
+      "bytes": 266,
+      "sha256": "925fdea95c64de95c2dc4a133cb4d56623c1c8cc5cead4512ca792a839542a4e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/BgmEventConfig.cs",
+      "bytes": 198,
+      "sha256": "d504f3963b6e10fe7df992ee7905e162184a44025059a17a386f21ba7ae3411f"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/GameBgm.cs",
+      "bytes": 800,
+      "sha256": "16a2e9fb31253e3b919e233ff070a87e24664cbcddebf66ae2b8ca9a8f83ebb6"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/GameBgmConfig.cs",
+      "bytes": 159,
+      "sha256": "c9c362e73ebe05cf92385f8e96551961eaf1115f7771b46697d15a95440e249c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/IBgmManagerExtensions.cs",
+      "bytes": 619,
+      "sha256": "268711b13d77add284e7c3a875c3a802886db8a0ce776d62ae8770909da3f1cb"
+    },
+    {
       "path": ".tools/source-packages/official-code/client-source/FightBgmOverrideHandler.cs",
       "bytes": 3640,
       "sha256": "68411fee14a82dafc6b6a7cd7d401ca4f8ce67e303d9247d20be5e12835c2fd7"
@@ -40,16 +65,6 @@
       "path": ".tools/source-packages/official-code/client-source/FightSceneRoot.cs",
       "bytes": 23267,
       "sha256": "c2c7262fdcefa0442f9090a295925d426d3e69382901f7849905446cfffeea6e"
-    },
-    {
-      "path": ".tools/source-packages/official-code/client-source/GameBgm.cs",
-      "bytes": 800,
-      "sha256": "16a2e9fb31253e3b919e233ff070a87e24664cbcddebf66ae2b8ca9a8f83ebb6"
-    },
-    {
-      "path": ".tools/source-packages/official-code/client-source/IBgmManagerExtensions.cs",
-      "bytes": 619,
-      "sha256": "268711b13d77add284e7c3a875c3a802886db8a0ce776d62ae8770909da3f1cb"
     },
     {
       "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/ScriptableConfig/Modules/Audio/GameBgmConfig/GameBgmConfig.asset",
@@ -159,6 +174,56 @@
       "sha256": "d273cec4a5987d1dfd5b80205564140854618f7500a4b0b701672e0c011d4d91"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/BgmGameObject.cs",
+      "bytes": 244,
+      "sha256": "f53b39c579e9fcda04964fb0c9decd1f96e035fa4f3389eb4173f59115f9b60f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/BgmGameObject.cs.meta",
+      "bytes": 60,
+      "sha256": "785279fa232acfff7d17e51f996affa74fd8b9d4cfa0b457667622d692b96997"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/BgmEventConfig.cs",
+      "bytes": 222,
+      "sha256": "097fa8eb37c5f603ee8ee9c07136ec559b159985cca65bc0d033c4e2703a8144"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/BgmEventConfig.cs.meta",
+      "bytes": 60,
+      "sha256": "77a1e91303409e82fa166041e53dcacde1bcd2ff57a972a9a35bc3a43c974cf8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/GameBgm.cs",
+      "bytes": 757,
+      "sha256": "3f6ddda723ffcdfecc6811e101580b39fdc25426ac3a9772dd43bbf1a87a6d62"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/GameBgm.cs.meta",
+      "bytes": 60,
+      "sha256": "12279af7fd6c0620bb3aa6b0de5ab58fbd658166b088e364835ce175d6fa02a4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/GameBgmConfig.cs",
+      "bytes": 147,
+      "sha256": "435b5ffa4e7083eb60851f6d1c0ee02921cc546687dced7e61d4a34bd57d2d8a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/GameBgmConfig.cs.meta",
+      "bytes": 60,
+      "sha256": "a2d909bfe836ae410b13f24f49742e6199c6e80861c2aafe4d29d25f14e26b76"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/IBgmManagerExtensions.cs",
+      "bytes": 619,
+      "sha256": "613f01652eb48c4c4d91d53600a50d0aa0350895d5f0ba0b785d36c9864caaba"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/IBgmManagerExtensions.cs.meta",
+      "bytes": 60,
+      "sha256": "deda06deedc970e247b51182ffacde94d37810bb7173666b4b5f13ad7c78e99d"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Official/BattleBgm/IBgmPlayback.cs",
       "bytes": 388,
       "sha256": "3dd9185efdac3bd62c9fc35c4150aeef5e14e57fc834a40a361b0b82111918a6"
@@ -170,8 +235,8 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleBgm/Zjcs.Official.BattleBgm.asmdef",
-      "bytes": 132,
-      "sha256": "0ff105d100fd5974e9b6f5c4149617fc9e375832b936a447d5a0166ffb919a1f"
+      "bytes": 171,
+      "sha256": "5559dc2a0f92b907698f15d6d2c01061586a56be31080fe4188fc01cb8d90a42"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleBgm/Zjcs.Official.BattleBgm.asmdef.meta",
@@ -181,13 +246,15 @@
   ],
   "adaptations": [
     "Namespace isolation and block namespaces for Unity 2022.",
+    "Replace DI attributes with pre-activation provider injection; expose the original GameBgm provider setter.",
+    "Remove only the framework ScriptableObjectConfig registration attribute; original asset fields remain.",
     "Remove only the two trace logging blocks and logger dependency.",
     "Replace the broad Wwise proxy with the two consumed playback operations.",
     "Repair decompiled Queue.TryDequeue ref to out."
   ],
   "tool": {
     "path": "scripts/prepare_battle_bgm_sources.py",
-    "bytes": 6287,
-    "sha256": "a704849c70725d1f5e30ef9dc4d4f9a513f8b9b938c842d8893273e78f062b6c"
+    "bytes": 7274,
+    "sha256": "9cc6daac24953c05ff1d819cd5c94a54b4f1521aa9890d67504bbbf8e4abc173"
   }
 }

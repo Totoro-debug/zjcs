@@ -76,6 +76,8 @@ def main():
         'unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseSoundHost.cs.meta',
         'unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseRuntime.cs',
         'unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseRuntime.cs.meta',
+        'unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseRuntime.Bgm.cs',
+        'unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseRuntime.Bgm.cs.meta',
         'unity/Assets/Game/Runtime/Offline/BattleNativePlayables/Zjcs.Offline.BattleNativePlayables.asmdef',
         'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.cs',
         'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.cs.meta',
@@ -83,6 +85,8 @@ def main():
         'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Controller.cs.meta',
         'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Bgm.cs',
         'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Bgm.cs.meta',
+        'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.BgmScenes.cs',
+        'unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.BgmScenes.cs.meta',
         'unity/Assets/Game/Editor/BattleSounds/Zjcs.Editor.BattleSounds.asmdef',
     ):
         outputs.append(identity(ROOT / relative))
