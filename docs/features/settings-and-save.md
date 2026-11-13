@@ -66,7 +66,7 @@ Windows Player 的用户数据根目录改为可执行程序所在目录，与�
 
 编辑器默认使用 `unity/UserData/`（不入 Git）；设置 `ZJCS_VALIDATION_DIR` 时默认使用会话目录下 `profiles/`，不迁移真实用户存档。存档页显式诊断参数仍使用该诊断自己的 `profiles/`。
 
-目录修改已通过 `python -B scripts/check_unity_project.py`、Unity `2022.3.57f1c2` 编译和 `ProjectTools.Validate`；存档页 Play Mode 模拟点击／滚动、新建草稿、已有角色选择、损坏原字节保留及退出重开恢复草稿均通过，已查看实际画面。单独构建的 Windows 存储验证 Player 连续两次启动均确认根目录等于真实 exe 所在目录，槽位进度及最近选择可恢复；此项不代表完整游戏 Windows 发布。现有正式发布的游戏 exe 尚未包含本次目录修改。
+目录修改已通过 `python -B scripts/check_unity_project.py`、Unity `2022.3.57f1c2` 编译和 `ProjectTools.Validate`；存档页 Play Mode 模拟点击／滚动、新建草稿、已有角色选择、损坏原字节保留及退出重开恢复草稿均通过，已查看实际画面。单独构建的 Windows 存储验证 Player 连续两次启动均确认根目录等于真实 exe 所在目录，槽位进度及最近选择可恢复；此项不代表完整游戏 Windows 发布。正式发布的 `D:/Desktop/杖剑传说/杖剑传说.exe` 已包含本次目录修改；发布载荷已与受测 Windows 构建逐项核对，保留已有用户存档。
 
 原“选择位面／角色列表／可创角色”转换为“选择存档／已有存档／新建存档”；原服务器名称位置显示本地槽号，状态图例改为“可读取／无法读取”。最近选择的槽位在独立 `profile-selection.txt` 中原子保存，重开列表时置顶并选中。新增 `InspectCharacter` 只读路径，列表及头像预览不写回旧存档的创建时间，也不结算离线收益。Windows 鼠标滚轮灵敏度设为50，保留原滚动布局与拖动。列表使用原1080×1920参考尺寸并等比缩放，宽窗保持竖屏面板。新建和选择后接续已有开场／创角／初始武器及角色完成页，不改变这些后续页面的表现。
 
