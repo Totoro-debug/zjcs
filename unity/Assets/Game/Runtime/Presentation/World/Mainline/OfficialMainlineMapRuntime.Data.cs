@@ -117,6 +117,7 @@ namespace Zjcs.Presentation.World
                 if (value == null || string.IsNullOrWhiteSpace(value.key) || value.nodes == null
                     || value.nodes.Length == 0 || value.entryNodeId <= 0 || value.dialogueGroups == null)
                     throw new InvalidDataException("Official Map" + mapClassId + " story graph is malformed.");
+                RestoreStoryNodeParameters(value);
                 stories.Add(value.key, value);
             }
             Map10RuntimeStory[] subgraphs = storyDataValue.subgraphs ?? Array.Empty<Map10RuntimeStory>();
@@ -129,6 +130,7 @@ namespace Zjcs.Presentation.World
                     || value.nodes.Length == 0 || value.entryNodeId <= 0 || value.dialogueGroups == null
                     || storySubgraphs.ContainsKey(value.key))
                     throw new InvalidDataException("Official Map" + mapClassId + " story subgraph is malformed.");
+                RestoreStoryNodeParameters(value);
                 storySubgraphs.Add(value.key, value);
             }
             // Some original Map13 graphs are both subgraph targets and direct MapTalk entries.

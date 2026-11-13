@@ -194,6 +194,13 @@ def convert_runtime_prefab(source: Path, guid_remapping: dict[str, str] | None =
 
 
 def convert_runtime_prefab_text(value: str, guid_remapping: dict[str, str] | None = None) -> bytes:
+    # The active export also uses DLL/fileID script references. Replacing only
+    # standalone script GUIDs leaves native Images and Buttons disabled.
+    from prepare_daily_dungeon_result_ui import PACKAGE_SCRIPT_GUIDS
+    pattern = re.compile(r"m_Script: \{fileID: (-?\d+), guid: ([0-9a-f]{32}), type: 3\}")
+    value = pattern.sub(lambda match: "m_Script: {fileID: 11500000, guid: "
+        + PACKAGE_SCRIPT_GUIDS[(match[2], int(match[1]))] + ", type: 3}"
+        if (match[2], int(match[1])) in PACKAGE_SCRIPT_GUIDS else match[0], value)
     for source_guid, runtime_guid in SCRIPT_GUID_MAPPINGS.items():
         value = value.replace("guid: " + source_guid + ", type: 3",
                               "guid: " + runtime_guid + ", type: 3")

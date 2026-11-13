@@ -17,7 +17,7 @@ namespace Zjcs.Presentation.World
         { public string name; public PopupBinding popup; public TransformBinding[] transforms; public SafeAreaBinding[] safeAreas; public LayoutBinding[] layouts; public ScrollBinding[] scrolls; public ButtonBinding[] buttons;
           public RoomViewBinding roomView; public RouteWindowBinding routeWindow; public GradeItemBinding gradeItem; public PrivateDetailBinding privateDetail; public PrivateDialogBinding privateDialog; public PrivateUnlockBinding privateUnlock;
           public LocalizationBinding[] localizations; public ObjectStateBinding[] initialStates, detailLockStates, previewStates, catalogueButtonStates;
-          public TravelEntryBinding[] travelEntries;
+          public TravelEntryBinding[] travelEntries; public RaycastGraphicBinding[] raycastGraphics;
           public GradeGridBinding[] gradeGrids; public string roomButton; public ImageBinding[] images; public TextBinding[] texts; }
         [Serializable] private sealed class PopupBinding
         { public string path; public string[] objects; public bool enabled, closeByClickMask; public int maskType; public PopupClipBinding[] clips; public PopupMaskBinding mask; public PopupSoundBinding sound; public MatchingBinding matching; }
@@ -116,6 +116,8 @@ namespace Zjcs.Presentation.World
             public string path, target; public string[] objects, triggers;
             public bool enabled, interactable, wrapAround; public int navigation, transition; public float[] colors;
         }
+        [Serializable] private sealed class RaycastGraphicBinding
+        { public string path; public string[] objects; public bool enabled, raycastTarget; public float[] color, raycastPadding; }
         [Serializable] private sealed class ScrollBinding
         {
             public string path, type, content, viewport, prefab; public string[] objects;
@@ -254,7 +256,7 @@ namespace Zjcs.Presentation.World
                     || source.color == null || source.color.Length != 4 || source.raycastPadding == null || source.raycastPadding.Length != 4)
                     throw new InvalidDataException("Original private matching mesh, renderer or material is missing or mismatched.");
                 renderer.sharedMaterial = material; renderer.enabled = source.renderer.enabled;
-                var graphic = node.GetComponent<WorldUiMesh>() ?? node.AddComponent<WorldUiMesh>();
+                var graphic = node.GetComponent<UIMesh>() ?? node.AddComponent<WorldUiMesh>();
                 graphic.Configure(mesh, renderer); graphic.material = material;
                 graphic.color = new Color(source.color[0], source.color[1], source.color[2], source.color[3]);
                 graphic.raycastTarget = source.raycastTarget; graphic.maskable = source.maskable;
@@ -379,6 +381,15 @@ namespace Zjcs.Presentation.World
                 image.raycastTarget = item.raycastTarget;
                 image.maskable = item.maskable;
                 image.sprite = item.sprite == null ? null : LoadSprite(item.sprite);
+            }
+            foreach (RaycastGraphicBinding item in binding.raycastGraphics ?? Array.Empty<RaycastGraphicBinding>())
+            {
+                GameObject node = Find(root.transform, item.path, item.objects).gameObject;
+                var graphic = node.GetComponent<NoDrawingRayCast>() ?? node.AddComponent<NoDrawingRayCast>();
+                graphic.color = ReadColor(item.color, graphic.color);
+                graphic.raycastTarget = item.raycastTarget;
+                graphic.raycastPadding = ReadVector4(item.raycastPadding, graphic.raycastPadding);
+                graphic.enabled = item.enabled;
             }
             RestoreButtons(root, binding);
             foreach (TextBinding item in binding.texts)

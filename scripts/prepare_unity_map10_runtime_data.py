@@ -177,6 +177,7 @@ def build():
             nodes.append({
                 "id": int(node_id),
                 "type": source.get("_type", ""),
+                "sourceJson": json.dumps(source, ensure_ascii=False, separators=(",", ":")),
                 "dialogId": source.get("DialogId", -1),
                 "storyName": source.get("StoryName", source.get("Name", "")),
                 "count": source.get("Count", 0),

@@ -6,6 +6,8 @@
 
 本页只记录官方输入与来源凭据。各模块的原始实现、转换／绑定细节、当前实现和验证边界见所属功能／地图页；逐文件记录以模块来源清单为准。
 
+主线剧情 UI 注册取所选 `884_156692` 的 `DailyDungeonDialogPrivateMap`、`TeamPanelPrivateMap`、`TeamInvitePanelPrivateMap` 原 prefab，依次核对 APK 与同版已下载云端 bundle。`prepare_story_ui_registrations.py` 按同版已解码程序集及 APK 元数据恢复原键名、引用顺序、空引用、启用状态、精确层级地址和射线检测字段；原对象、输入输出哈希、UGUI 脚本映射及本地绑定代码记录见[剧情 UI 注册来源](official-map/story-ui-registration-source-manifest.json)。载荷未生成新的完整素材快照；实现及验证范围见[剧情公共模块](../../docs/features/story.md)。
+
 完整技能／命中图的原 Wwise Event 资产、所选 EventBankMapping、对应 PCK／BNK 与 APK ARM64 音频库的版本函数按 APK 优先次序读取；原 GUID、名称、事件 ID、有序动作、HIRC 字节位置及 SHA256 见[原声音来源清单](battle-animation/native-sound-sources-source-manifest.json)，提取核验入口为 `scripts/prepare_battle_native_sound_sources.py`。本项不新增或转换音频载荷；实现及验证范围见[战斗执行](../../docs/features/battle-execution.md)。
 
 完整原图声音的 HIRC 目标、随机播放列表、继承／总线路由、ducking、效果器、输出设备、全局设置块及媒体源由 `scripts/prepare_battle_native_sound_dependencies.py` 按所选映射包和 Minimum 逐引用核验；原 HIRC／全局块字节、包内偏移、完整媒体与预取身份及 SHA256 见[声音传递依赖来源](battle-animation/native-sound-dependencies-source-manifest.json)。本项不转换或新增媒体载荷；Windows 兼容性及实现范围见[战斗执行](../../docs/features/battle-execution.md)。

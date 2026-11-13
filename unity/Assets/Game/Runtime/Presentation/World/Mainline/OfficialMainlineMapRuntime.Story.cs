@@ -71,9 +71,6 @@ namespace Zjcs.Presentation.World
             public float Duration;
         }
 
-        [Serializable]
-        private sealed class StoryButtonFields { public string StoryUIKey; }
-
         private readonly Dictionary<string, HashSet<string>> storyBlackboards =
             new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
         private readonly Dictionary<string, Dictionary<string, string>> storyProperties =
@@ -230,8 +227,14 @@ namespace Zjcs.Presentation.World
         {
             try
             {
-                while (ReferenceEquals(continuation, native ? nativeDialogResume : storyResume) && wait.MoveNext())
+                while (ReferenceEquals(continuation, native ? nativeDialogResume : storyResume))
+                {
+                    bool pending;
+                    try { pending = wait.MoveNext(); }
+                    catch (Exception error) { HandleStoryError(error); yield break; }
+                    if (!pending) yield break;
                     yield return wait.Current;
+                }
             }
             finally { (wait as IDisposable)?.Dispose(); }
         }

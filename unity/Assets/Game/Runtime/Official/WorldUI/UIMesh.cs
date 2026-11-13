@@ -12,6 +12,10 @@ public class UIMesh : MaskableGraphic
 
     private MaterialPropertyBlock mMPB;
 
+    // Local binding of the original serialized references before activation.
+    public void Configure(Mesh mesh, MeshRenderer renderer)
+    { Mesh = mesh; mMeshRenderer = renderer; }
+
     public override Material materialForRendering
     {
         get => Application.isPlaying ? mMeshRenderer.material : mMeshRenderer.sharedMaterial;

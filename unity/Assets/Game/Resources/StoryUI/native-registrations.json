@@ -1,0 +1,269 @@
+{
+  "manifest": "884_156692",
+  "prefabs": [
+    {
+      "name": "DailyDungeonDialogPrivateMap",
+      "raycasters": [
+        {
+          "blockingMask": 4294967295,
+          "blockingObjects": 0,
+          "enabled": true,
+          "ignoreReversedGraphics": true,
+          "objects": [
+            "DailyDungeonDialogPrivateMap"
+          ],
+          "path": ""
+        }
+      ],
+      "registrations": [
+        {
+          "enabled": true,
+          "keys": [
+            "DailyDungeonDialogPrivateMap.TeamBtn",
+            "DailyDungeonDialogPrivateMap.BattleBtn"
+          ],
+          "nodes": [
+            {
+              "objects": [
+                "DailyDungeonDialogPrivateMap",
+                "BgDialog3",
+                "Content",
+                "DailyDungeonDetailContent",
+                "Content",
+                "NormalGo",
+                "UnlockGo",
+                "BtnContent",
+                "TeamBtn"
+              ],
+              "path": "0/0/4/0/4/5/3/0"
+            },
+            {
+              "objects": [
+                "DailyDungeonDialogPrivateMap",
+                "BgDialog3",
+                "Content",
+                "DailyDungeonDetailContent",
+                "Content",
+                "NormalGo",
+                "UnlockGo",
+                "BtnContent",
+                "BattleBtn"
+              ],
+              "path": "0/0/4/0/4/5/3/2"
+            }
+          ],
+          "objects": [
+            "DailyDungeonDialogPrivateMap"
+          ],
+          "path": ""
+        }
+      ]
+    },
+    {
+      "name": "TeamPanelPrivateMap",
+      "raycasters": [
+        {
+          "blockingMask": 4294967295,
+          "blockingObjects": 0,
+          "enabled": true,
+          "ignoreReversedGraphics": true,
+          "objects": [
+            "TeamPanelPrivateMap"
+          ],
+          "path": ""
+        },
+        {
+          "blockingMask": 4294967295,
+          "blockingObjects": 0,
+          "enabled": true,
+          "ignoreReversedGraphics": true,
+          "objects": [
+            "TeamPanelPrivateMap",
+            "BgDialog1",
+            "Content",
+            "TeamPanelTarget",
+            "TargetPanel",
+            "CloseBtn"
+          ],
+          "path": "0/1/7/0/0"
+        }
+      ],
+      "registrations": [
+        {
+          "enabled": true,
+          "keys": [
+            "TeamPanelPrivateMap.InviteBtn"
+          ],
+          "nodes": [
+            {
+              "objects": [
+                "TeamPanelPrivateMap",
+                "BgDialog1",
+                "Content",
+                "TeamPanelDialogButtonGroup",
+                "BtnGrid",
+                "CommonBtn_Invite"
+              ],
+              "path": "0/1/6/1/1"
+            }
+          ],
+          "objects": [
+            "TeamPanelPrivateMap"
+          ],
+          "path": ""
+        }
+      ]
+    },
+    {
+      "name": "TeamInvitePanelPrivateMap",
+      "raycasters": [
+        {
+          "blockingMask": 4294967295,
+          "blockingObjects": 0,
+          "enabled": true,
+          "ignoreReversedGraphics": true,
+          "objects": [
+            "TeamInvitePanelPrivateMap"
+          ],
+          "path": ""
+        },
+        {
+          "blockingMask": 4294967295,
+          "blockingObjects": 0,
+          "enabled": true,
+          "ignoreReversedGraphics": true,
+          "objects": [
+            "TeamInvitePanelPrivateMap",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "NpcContent",
+            "Scroll"
+          ],
+          "path": "0/1/0/0/0"
+        },
+        {
+          "blockingMask": 4294967295,
+          "blockingObjects": 0,
+          "enabled": true,
+          "ignoreReversedGraphics": true,
+          "objects": [
+            "TeamInvitePanelPrivateMap",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "NpcContent",
+            "TopGo",
+            "Dropdown3",
+            "ScrollRect",
+            "LoopScrollRect"
+          ],
+          "path": "0/1/0/0/2/0/0/0"
+        },
+        {
+          "blockingMask": 4294967295,
+          "blockingObjects": 0,
+          "enabled": true,
+          "ignoreReversedGraphics": true,
+          "objects": [
+            "TeamInvitePanelPrivateMap",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "CompanionGo",
+            "Scroll"
+          ],
+          "path": "0/1/0/1/0"
+        },
+        {
+          "blockingMask": 4294967295,
+          "blockingObjects": 0,
+          "enabled": true,
+          "ignoreReversedGraphics": true,
+          "objects": [
+            "TeamInvitePanelPrivateMap",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "CompanionGo",
+            "TopGo",
+            "Dropdown3",
+            "ScrollRect",
+            "LoopScrollRect"
+          ],
+          "path": "0/1/0/1/2/0/0/0"
+        },
+        {
+          "blockingMask": 4294967295,
+          "blockingObjects": 0,
+          "enabled": true,
+          "ignoreReversedGraphics": true,
+          "objects": [
+            "TeamInvitePanelPrivateMap",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "RoomOnlineGo",
+            "Scroll"
+          ],
+          "path": "0/1/0/2/0"
+        },
+        {
+          "blockingMask": 4294967295,
+          "blockingObjects": 0,
+          "enabled": true,
+          "ignoreReversedGraphics": true,
+          "objects": [
+            "TeamInvitePanelPrivateMap",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "RoomOnlineGo",
+            "TopGo",
+            "Dropdown3",
+            "ScrollRect",
+            "LoopScrollRect"
+          ],
+          "path": "0/1/0/2/2/0/0/0"
+        }
+      ],
+      "registrations": [
+        {
+          "enabled": true,
+          "keys": [
+            "TeamInvitePanelPrivateMap.NPCBtn",
+            "TeamInvitePanelPrivateMap.ReturnBtn"
+          ],
+          "nodes": [
+            {
+              "objects": [
+                "TeamInvitePanelPrivateMap",
+                "BgPanel1",
+                "Content",
+                "BottomGo",
+                "TabGroup_11",
+                "TabGroup",
+                "TeamInvitePanelTabBottomBtn (2)"
+              ],
+              "path": "0/1/2/1/1/0"
+            },
+            {
+              "objects": [
+                "TeamInvitePanelPrivateMap",
+                "BgPanel1",
+                "Content",
+                "BottomGo",
+                "CloseBtn_dark"
+              ],
+              "path": "0/1/2/2"
+            }
+          ],
+          "objects": [
+            "TeamInvitePanelPrivateMap"
+          ],
+          "path": ""
+        }
+      ]
+    }
+  ]
+}

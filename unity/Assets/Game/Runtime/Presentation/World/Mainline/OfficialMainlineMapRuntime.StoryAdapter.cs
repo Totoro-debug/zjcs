@@ -245,11 +245,8 @@ namespace Zjcs.Presentation.World
                         statues.WaitForWitchPreviewOpen(() => resume(StoryNext(node, "Exit")));
                         return StoryTransition<Map10RuntimeStory>.Wait;
                     }
-                    // Other official windows are represented by native panels in the
-                    // offline build. Their registration is synchronous, so the wait is
-                    // already satisfied when the graph reaches this node.
-                    nodeId = StoryNext(node, "Exit");
-                    return StoryTransition<Map10RuntimeStory>.Next(nodeId);
+                    StartStoryWindowWait(node, true);
+                    return StoryTransition<Map10RuntimeStory>.Wait;
                 case "WaitWindowClosedNode":
                     if (activeStory.key == "WitchStory2" && storyContextEntity != null
                         && storyContextEntity.EntityClassId == 6620)
@@ -257,8 +254,8 @@ namespace Zjcs.Presentation.World
                         statues.WaitForWitchPreviewClose(() => resume(StoryNext(node, "Exit")));
                         return StoryTransition<Map10RuntimeStory>.Wait;
                     }
-                    nodeId = StoryNext(node, "Exit");
-                    return StoryTransition<Map10RuntimeStory>.Next(nodeId);
+                    StartStoryWindowWait(node, false);
+                    return StoryTransition<Map10RuntimeStory>.Wait;
                 case "ActivityPuzzleCompleteNode":
                     // This node queries the separate timed puzzle activity,
                     // not a mainline map lock. No such activity is active here.
@@ -279,30 +276,19 @@ namespace Zjcs.Presentation.World
                     return StoryTransition<Map10RuntimeStory>.Wait;
                 case "ClickBtnNode":
                 case "ClickLoopListItemNode":
-                    StoryButtonFields buttonFields = JsonUtility.FromJson<StoryButtonFields>(node.sourceJson);
-                    if (node.type == "ClickBtnNode" && buttonFields != null
-                        && string.Equals(buttonFields.StoryUIKey, "DailyDungeonDialogPrivateMap.BattleBtn",
-                            StringComparison.Ordinal)
-                        && storyContextEntity != null && storyContextEntity.StageIds != null
-                        && storyContextEntity.StageIds.Any(value => value > 0))
-                    {
-                        StartEntityStage(storyContextEntity,
-                            () => { if (storyRunning) resume(StoryNext(node, "Exit")); });
-                        return StoryTransition<Map10RuntimeStory>.Wait;
-                    }
-                    // The official node waits for a registered UI Button. Native
-                    // offline panels register their controls before this graph tick;
-                    // dispatching the click is therefore equivalent to advancing the
-                    // graph once here.
-                    nodeId = StoryNext(node, "Exit");
-                    return StoryTransition<Map10RuntimeStory>.Next(nodeId);
+                    StartStoryButtonWait(node);
+                    return StoryTransition<Map10RuntimeStory>.Wait;
                 case "WaitStoryUIActiveNode":
+                    var uiFields = JsonUtility.FromJson<StoryUiFields>(node.sourceJson);
+                    StartStoryWait(ContinueStoryAfterUi(StoryUi.WaitActive(uiFields.StoryUIKey, uiFields.Active != 0), node));
+                    return StoryTransition<Map10RuntimeStory>.Wait;
                 case "WaitPublicBottomBarActiveNode":
+                    StartStoryBottomBarWait(node);
+                    return StoryTransition<Map10RuntimeStory>.Wait;
                 case "WaitTabItemStateNode":
-                    // These waits only guard server-created UI. All corresponding
-                    // offline panels are created synchronously by the map HUD.
-                    nodeId = StoryNext(node, "Exit");
-                    return StoryTransition<Map10RuntimeStory>.Next(nodeId);
+                    var tabFields = JsonUtility.FromJson<StoryUiFields>(node.sourceJson);
+                    StartStoryWait(ContinueStoryAfterUi(StoryUi.WaitTab(tabFields.StoryUIKey, tabFields.IsOn != 0), node));
+                    return StoryTransition<Map10RuntimeStory>.Wait;
                 case "ShowFullMaskNode":
                 case "HideFullMaskNode":
                 case "PlayMaskNode":
