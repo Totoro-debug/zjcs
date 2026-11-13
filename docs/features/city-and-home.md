@@ -366,6 +366,10 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `OfflineHomeMoneyQuickBuy` 只处理家园顶栏的金币记录，复用原 `QuickBuyInfo` 与 `QuickBuyUtils` 的阶梯价格、等级／位阶奖励及购买次数；原条件和禁止扣费判断由明确端口传入，真实角色存档在请求前重读。扣除货币、授予金币、更新周期计数和请求回执在同一库存事务提交，重复回执不结算，数量无效、原条件不满足、禁止扣费、余额不足、奖励溢出或写盘失败均不提交。本地事务取代官方网络请求及库存／奖励／次数回执；不扩展到其他 25 条速购物品。条件验证复用所选原 `PartnerConditionRules.LevelCondition` 和实际角色基础等级；禁止扣费端口及正式家园宿主仍需完成绑定，不能记为整项速购玩法完成。
 
+所选 `884_156692` 的 `FurnitureFastHangUpDialog`、`FurnitureUseItemSliderGroup`、`SetUseCountSlider` 和 `HangUpUIUtils.OperFastHangUp` 已按官方反编译来源迁入 `Runtime/Official/HomeFastHangUpUI/`。完整加速道具选择窗口及原滑条模板、默认图标、HintTip 附件、语言、配置、动画和音频恢复至 `Assets/Official/Home/UI/FastHangUp/`，由 `Resources/Home/OfficialHomeFastHangUpAssetCatalog` 显式引用。保留未结算时长加入预览、单种道具单次最多 100 个、超限提示冷却、空道具拒绝、容量确认和请求错误时保持窗口；成功后先关闭床铺窗口，再等待加速演出完成，最后合并、消费并展示奖励。窗口关闭时归还选择项与图标。真实库存、请求、确认、加速角色演出和奖励所有者仍须组合接入，不将选择窗口的恢复视为完整挂机流程完成。
+
+`HomeFastHangUpNativeValidation.Run` 已在完整隔离工程的静音、有图形 Play Mode 通过原生加减按钮与滑条手柄的首个射线命中、进程内模拟点击／拖动、含未结算余数的预览、单次 100 个上限与提示冷却、零选量提示、空库存禁用按钮、容量确认、失败后保持窗口、成功后等待演出完成再合并／消费／展示奖励，以及关闭／销毁后的图标与库存监听释放。原按钮和弹窗 PCM 实际播放，监听器音量为 0；已查看选择、拖动后的数量与奖励预览、关闭后的三张 608×1080 运行截图。所选原模板没有最大值按钮，数量上限通过原滑条验证；关闭后新建窗口用于空库存分支，不为复用窗口改写原字典生命周期。静态检查（152986 个 GUID）、Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate`（退出码 0）通过；数量、速率、库存、确认、请求、角色演出和奖励窗口均为受控端口，真实存档、正式家园入口与 Windows Player 尚未接通或验证。
+
 ## 自定义实现
 
 ### 全模块刷新时刻
