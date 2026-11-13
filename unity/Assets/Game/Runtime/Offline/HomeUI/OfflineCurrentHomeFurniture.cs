@@ -60,7 +60,7 @@ namespace Zjcs.Offline.HomeUI
     // Reads the current save on every query: profile transactions replace Save.
     // Furniture ownership has a separate local ledger, so expose its original
     // item identity to conditions without adding a second copy to inventory.
-    public sealed class OfflineHomeConditionPlayer : IHomeConditionPlayer
+    public sealed class OfflineHomeConditionPlayer : IHomeProfessionConditionPlayer
     {
         private readonly Func<OfflineMainlineSave> save;
         private readonly Func<int, bool> ownsFurniture;
@@ -82,6 +82,7 @@ namespace Zjcs.Offline.HomeUI
 
         private OfflinePlayerProgress Player => save().Player;
         public int SubRank => Player.SubRank;
+        public int Profession => Player.Wardrobe.Profession;
         public int BaseLevel => baseLevelLimits.TryGetValue(Player.SubRank, out int limit) && limit > 0
             ? Math.Min(Player.Level, limit) : Player.Level;
 

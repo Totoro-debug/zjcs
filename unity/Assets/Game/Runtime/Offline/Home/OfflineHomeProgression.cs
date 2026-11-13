@@ -105,7 +105,8 @@ namespace Zjcs.Offline.Home
         public int HangUpLevel(OfflineHomeIncomeSession session, HomeHangUpRecord record, int blessingLevel)
         {
             if (record == null) return 1;
-            return record.useBlessingLevel ? Math.Max(1, blessingLevel) : session.HangUpLevel(record.id);
+            return record.useBlessingLevel ? rules.IncomeVersion != null ? blessingLevel : Math.Max(1, blessingLevel)
+                : session.HangUpLevel(record.id);
         }
 
         public HomeLevelUpResult LevelUp(OfflineHomeIncomeSession session, int hangUpId,
@@ -175,7 +176,7 @@ namespace Zjcs.Offline.Home
                 if (reward == null) continue;
                 int level = HangUpLevel(session, record, blessingLevel);
                 double levelNumber = rules.LevelNumber(record.levelRuleId, level);
-                if (levelNumber <= 0) levelNumber = 1;
+                if (levelNumber <= 0 && rules.IncomeVersion == null) levelNumber = 1;
                 HomeRewardRuleRecord rule = rules.SelectRewardRule(reward.rewardRuleId, context);
                 if (rule == null || rule.ids == null || rule.ids.Length == 0) continue;
                 bool autoUnlocked = record.initAutoUnlock || record.unlock == null
@@ -201,10 +202,7 @@ namespace Zjcs.Offline.Home
                         IsCart = record.bindFurniture == 10,
                         HourlyOutput = reward.hourlyOutput,
                         LevelNum = levelNumber,
-                        MaxStoreHours = Math.Max(1, rules.Data.furnitureLevelRules
-                            .FirstOrDefault(value => value.id == record.levelRuleId && value.level == level)?.maxStoreThread
-                            ?? rules.Data.furnitureLevelRules
-                                .FirstOrDefault(value => value.id == record.levelRuleId)?.maxStoreThread ?? 36)
+                        MaxStoreHours = rules.IncomeMaxStoreHours(record.levelRuleId, level)
                     }
                 });
             }

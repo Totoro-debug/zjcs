@@ -39,7 +39,7 @@ def build(work):
                         .replace('Log.Warn(','Log.Error('),1).replace('public class DataHub','private class DataHub')
     text=text.replace('/*DATA_HUB*/',hub)
     for name,marker in [('ConditionDataType','CONDITION_DATA_TYPE'),('ConditionType','CONDITION_TYPE'),
-                        ('SubRank','SUB_RANK'),('Rank','RANK'),('ItemType','ITEM_TYPE')]:
+                        ('SubRank','SUB_RANK'),('Rank','RANK'),('ItemType','ITEM_TYPE'),('Profession','PROFESSION')]:
         value=source(name).split('namespace Common;\n',1)[1].strip()
         text=text.replace('/*'+marker+'*/',value)
     members={
@@ -48,6 +48,7 @@ def build(work):
         'StoryCountCondition':['StoryKey','Count','Op'], 'AnyMapGoddessActivedCondition':[],
         'StagePassCondition':['StageId','Op'], 'CompositeCondition':['Ids'],
         'CompositeAndCondition':[], 'CompositeOrCondition':[],
+        'PlayerProfessionCondition':['Profession'], 'PlayerProfessionFactionCondition':['Profession'],
     }
     extra={
         'HasItemTypeCondition':[('public override (long current, long target) GetProgress(DataHub dataHub)',0),('protected long GetValue(DataHub dataHub)',1)],
@@ -57,13 +58,15 @@ def build(work):
         'AnyMapGoddessActivedCondition':[('private bool IsAnyActived(DataHub dataHub)',1)],
         'StagePassCondition':[('private int GetCount(DataHub dataHub)',0)],
         'CompositeCondition':[('public List<ICondition> GetConditions()',1)],
+        'PlayerProfessionCondition':[('private Profession GetValue(DataHub dataHub)',0)],
+        'PlayerProfessionFactionCondition':[('private Profession GetValue(DataHub dataHub)',0)],
     }
     classes=[]
     for name,expected in members.items():
         raw=source(name)
-        fields=re.findall(r'^\tpublic (?:int|string|List<int>|ItemType|Rank|SubRank) (\w+)(?: = [^;]+)?;',raw,re.M)
+        fields=re.findall(r'^\tpublic (?:int|string|List<int>|ItemType|Rank|SubRank|Profession) (\w+)(?: = [^;]+)?;',raw,re.M)
         if fields!=expected:raise ValueError('Original condition fields changed: '+name)
-        parts=re.findall(r'^\tpublic (?:int|string|List<int>|ItemType|Rank|SubRank) \w+(?: = [^;]+)?;',raw,re.M)
+        parts=re.findall(r'^\tpublic (?:int|string|List<int>|ItemType|Rank|SubRank|Profession) \w+(?: = [^;]+)?;',raw,re.M)
         parts.append('public '+name+'(HomeConditionRules configuration) : base(configuration) { }')
         parts+=re.findall(r'\tpublic override (?:ConditionType Type|bool IsComposite) => [^;]+;',raw)
         if name!='CompositeCondition':
@@ -72,8 +75,23 @@ def build(work):
         parent='CompositeCondition' if name in ('CompositeAndCondition','CompositeOrCondition') else 'ICondition'
         declaration='private '+('abstract ' if name=='CompositeCondition' else '')+'class '+name+' : '+parent
         body='\n\n'.join(parts).replace('Parsers.Instance.ConditionInfoParser.GetCondition','configuration.GetCondition')
+        body=body.replace('Parsers.Instance.ProfessionBaseInfoParser',
+            'configuration.professionBaseInfoParser ?? throw new InvalidOperationException("Selected profession configuration is required.")')
         classes.append(declaration+'\n{\n'+body+'\n}')
     text=text.replace('/*CONDITIONS*/','\n\n'.join(classes))
+    profession_parser='''private sealed class ProfessionBaseInfo { public Profession PrePro; }
+private sealed class ProfessionBaseInfoParser
+{
+    private readonly Dictionary<Profession,ProfessionBaseInfo> configs;
+    public ProfessionBaseInfoParser(IEnumerable<Dictionary<string,object>> rows)
+    {
+        configs=rows.ToDictionary(row=>(Profession)Number(row,"Profession"),
+            row=>new ProfessionBaseInfo { PrePro=(Profession)Number(row,"PrePro") });
+    }
+    private ProfessionBaseInfo Get(Profession type)=>configs.TryGetValue(type,out var row) ? row : null;
+'''+selected('ProfessionBaseInfoParser','public bool ExistProfession(Profession pro)')+'\n'+selected(
+        'ProfessionBaseInfoParser','public bool IsPreProfession(Profession pro, Profession pre, bool recursive = true)')+'\n}'
+    text=text.replace('/*PROFESSION_PARSER*/',profession_parser)
     text=text.replace('/*COMPARE*/',selected('Formula','public static bool Compare<T>(T lhs, string op, T rhs) where T : IComparable<T>, IEquatable<T>'))
     text=text.replace('/*TO_RANK*/',selected('EnumExt','public static Rank ToRank(this SubRank subRank)',1))
     unbound=[line.strip() for line in text.splitlines()
@@ -101,9 +119,12 @@ def build(work):
             for child in value.values():visit(child,visiting)
     for name in ('furniture','hang_up','hang_up_reward','hang_up_upgrade_material','home_level','fast_hang_up'):
         visit(data['tables'][name])
+    income_reward_ids={row['RewardRuleId'] for row in data['tables']['hang_up_reward']}
+    visit([row for row in data['tables']['reward_rule'] if row['Id'] in income_reward_ids])
     expected={'LevelCondition','NoneCondition','CompositeOrCondition','HasItemTypeCondition','CompositeAndCondition',
               'MapUnlockCondition','MaxProfessionRankCondition','HasManualMeetNpcCondition','StoryCountCondition',
-              'AnyMapGoddessActivedCondition','RankCondition'}
+              'AnyMapGoddessActivedCondition','RankCondition','SubRankCondition',
+              'PlayerProfessionCondition','PlayerProfessionFactionCondition'}
     if types!=expected:raise ValueError('Selected home condition closure changed: '+repr(types))
     stage=work/'home-conditions';stage.mkdir(exist_ok=True)
     output=normalize('// Original predicates and explicit player/configuration ports; see home-condition-source-manifest.json.\n'+text).encode()

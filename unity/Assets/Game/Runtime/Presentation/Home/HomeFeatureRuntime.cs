@@ -678,6 +678,7 @@ namespace Zjcs.Presentation.Home
             var furniturePlayer = new OfflineHomeConditionPlayer(selectedHomeRules,
                 () => profile.Save, type => session != null && session.OwnsFurniture(type));
             new OfflineCurrentHomeFurniture(selectedHomeRules, partnerCatalog.Conditions, () => furniturePlayer).Bind(rules);
+            new OfflineCurrentHomeIncome(selectedHomeRules, partnerCatalog.Conditions, () => furniturePlayer).Bind(rules);
             tutorials = HomeTutorialCatalog.LoadDefault();
             homeProgression = new OfflineHomeProgression(rules);
             BlessingLevel = 1;

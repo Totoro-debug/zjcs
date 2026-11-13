@@ -5,6 +5,7 @@ using System.Linq;
 using Zjcs.Official.Partners;
 using SubRank = Zjcs.Official.HomeConditions.HomeConditionRules.SubRank;
 using Rank = Zjcs.Official.HomeConditions.HomeConditionRules.Rank;
+using Profession = Zjcs.Official.HomeConditions.HomeConditionRules.Profession;
 
 namespace Zjcs.Official.HomeConditions
 {
@@ -25,18 +26,26 @@ namespace Zjcs.Official.HomeConditions
         int GetStageCount(int stageId);
     }
 
+    public interface IHomeProfessionConditionPlayer : IHomeConditionPlayer
+    {
+        int Profession { get; }
+    }
+
     public sealed class HomeConditionRules
     {
         private readonly PartnerConditionRules partnerRules;
         private readonly Dictionary<int, Dictionary<string, object>> conditionRows;
         private readonly Dictionary<int, ICondition> cached = new Dictionary<int, ICondition>();
         private readonly Func<IReadOnlyDictionary<string, object>, bool?> policy;
+        private readonly ProfessionBaseInfoParser professionBaseInfoParser;
 
         public HomeConditionRules(IEnumerable<Dictionary<string, object>> conditions,
-            PartnerConditionRules partnerRules, Func<IReadOnlyDictionary<string, object>, bool?> policy = null)
+            PartnerConditionRules partnerRules, Func<IReadOnlyDictionary<string, object>, bool?> policy = null,
+            IEnumerable<Dictionary<string, object>> professions = null)
         {
             this.partnerRules=partnerRules ?? throw new ArgumentNullException(nameof(partnerRules));
             this.policy=policy;
+            professionBaseInfoParser=professions==null ? null : new ProfessionBaseInfoParser(professions);
             conditionRows=conditions.ToDictionary(row=>Number(row,"ClassId"), row=>(Dictionary<string,object>)row["Condition"]);
         }
 
@@ -80,6 +89,8 @@ namespace Zjcs.Official.HomeConditions
                 case "StoryCountCondition": return new StoryCountCondition(this) { StoryKey=(string)node["StoryKey"],Count=Number(node,"Count"),Op=(string)node["Op"] };
                 case "AnyMapGoddessActivedCondition": return new AnyMapGoddessActivedCondition(this);
                 case "StagePassCondition": return new StagePassCondition(this) { StageId=Number(node,"StageId"),Op=(string)node["Op"] };
+                case "PlayerProfessionCondition": return new PlayerProfessionCondition(this) { Profession=(Profession)Number(node,"Profession") };
+                case "PlayerProfessionFactionCondition": return new PlayerProfessionFactionCondition(this) { Profession=(Profession)Number(node,"Profession") };
                 default: throw new NotSupportedException("Condition outside migrated home closure: "+node["_type"]);
             }
         }
@@ -124,6 +135,8 @@ namespace Zjcs.Official.HomeConditions
             private ItemManager itemManager;
             public ItemManager ItemManager=>itemManager ?? (itemManager=new ItemManager(Source));
             public SubRank SubRank=>(SubRank)Source.SubRank;
+            public Profession Profession=>(Profession)((Source as IHomeProfessionConditionPlayer)?.Profession
+                ?? throw new InvalidOperationException("The current profession owner is required by this home condition."));
             public int GetHighestUnlockedProfessionRank()=>Source.GetHighestUnlockedProfessionRank();
             public int GetStoryCount(string key)=>Source.GetStoryCount(key);
             public bool IsAnyGoddessActived()=>Source.IsAnyGoddessActived();
@@ -778,6 +791,87 @@ namespace Zjcs.Official.HomeConditions
     ChatActionBook = 437,
     Other = 500
 }
+        public enum Profession
+{
+    None,
+    Zhanshi,
+    Huwei,
+    Dunjiashi,
+    Shouhuzhe,
+    LegendShouhuzhe,
+    Doushi,
+    Kuangzhanshi,
+    Zhengfuzhe,
+    LegendZhengfuzhe,
+    Fashi,
+    Shushi,
+    Modaoshi,
+    Huimiezhe,
+    LegendHuimiezhe,
+    Xianzhe,
+    Mishushi,
+    Zhangkongzhe,
+    LegendZhangkongzhe,
+    Shouhuzhe6,
+    Zhengfuzhe6,
+    Huimiezhe6,
+    Zhangkongzhe6,
+    Shouhuzhe7,
+    Zhengfuzhe7,
+    Huimiezhe7,
+    Zhangkongzhe7,
+    Shouhuzhe8,
+    Zhengfuzhe8,
+    Huimiezhe8,
+    Zhangkongzhe8,
+    Shouhuzhe9,
+    Zhengfuzhe9,
+    Huimiezhe9,
+    Zhangkongzhe9,
+    Shouhuzhe10,
+    Zhengfuzhe10,
+    Huimiezhe10,
+    Zhangkongzhe10
+}
+        private sealed class ProfessionBaseInfo { public Profession PrePro; }
+private sealed class ProfessionBaseInfoParser
+{
+    private readonly Dictionary<Profession,ProfessionBaseInfo> configs;
+    public ProfessionBaseInfoParser(IEnumerable<Dictionary<string,object>> rows)
+    {
+        configs=rows.ToDictionary(row=>(Profession)Number(row,"Profession"),
+            row=>new ProfessionBaseInfo { PrePro=(Profession)Number(row,"PrePro") });
+    }
+    private ProfessionBaseInfo Get(Profession type)=>configs.TryGetValue(type,out var row) ? row : null;
+    public bool ExistProfession(Profession pro)
+    {
+        return configs.ContainsKey(pro);
+    }
+    public bool IsPreProfession(Profession pro, Profession pre, bool recursive = true)
+    {
+        if (!ExistProfession(pro) || !ExistProfession(pre))
+        {
+            return false;
+        }
+        ProfessionBaseInfo professionBaseInfo = Get(pro);
+        if (professionBaseInfo.PrePro == pre)
+        {
+            return true;
+        }
+        if (recursive)
+        {
+            while (professionBaseInfo.PrePro != Profession.None)
+            {
+                professionBaseInfo = Get(professionBaseInfo.PrePro);
+                if (professionBaseInfo.PrePro == pre)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
         private class HasItemTypeCondition : ICondition
 {
     public ItemType ItemType;
@@ -1040,6 +1134,62 @@ public CompositeOrCondition(HomeConditionRules configuration) : base(configurati
             }
         }
         return false;
+    }
+}
+
+private class PlayerProfessionCondition : ICondition
+{
+    public Profession Profession;
+
+public PlayerProfessionCondition(HomeConditionRules configuration) : base(configuration) { }
+
+    public override ConditionType Type => ConditionType.PlayerProfession;
+
+    public override bool IsMet(DataHub dataHub)
+    {
+        return GetValue(dataHub) == Profession;
+    }
+
+    private Profession GetValue(DataHub dataHub)
+    {
+        if (dataHub.TryGetPlayer(out var player))
+        {
+            return player.Profession;
+        }
+        if (dataHub.TryGetData(ConditionDataType.PlayerProfession, out long value))
+        {
+            return (Profession)value;
+        }
+        return Profession.None;
+    }
+}
+
+private class PlayerProfessionFactionCondition : ICondition
+{
+    public Profession Profession;
+
+public PlayerProfessionFactionCondition(HomeConditionRules configuration) : base(configuration) { }
+
+    public override ConditionType Type => ConditionType.PlayerProfessionFaction;
+
+    public override bool IsMet(DataHub dataHub)
+    {
+        ProfessionBaseInfoParser professionBaseInfoParser = configuration.professionBaseInfoParser ?? throw new InvalidOperationException("Selected profession configuration is required.");
+        Profession value = GetValue(dataHub);
+        if (value == Profession)
+        {
+            return true;
+        }
+        return professionBaseInfoParser.IsPreProfession(value, Profession);
+    }
+
+    private Profession GetValue(DataHub dataHub)
+    {
+        if (dataHub.TryGetPlayer(out var player))
+        {
+            return player.Profession;
+        }
+        return Profession.None;
     }
 }
 

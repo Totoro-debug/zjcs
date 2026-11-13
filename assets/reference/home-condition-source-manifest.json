@@ -1,13 +1,14 @@
 {
   "manifest": "884_156692",
   "source_sha256": {
-    "scripts/templates/home_conditions/HomeConditionRules.cs": "9ac5f63b85ada79b14e9192db3a99cfe3a735800997a221258c0c78452611160",
+    "scripts/templates/home_conditions/HomeConditionRules.cs": "fe68b6f3e6d5f7b27046d199cda2a061f8ca758b69c175aca7eb34065e0598cd",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ICondition.cs": "12a4005edaf53df080240808b91e6e3e55fc08bceb91fd154e6c3993cdc704ff",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ConditionDataType.cs": "e067894427667bfe5da439df11bef5338c45fa6e3376cdfb307775ecc7ca7921",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ConditionType.cs": "99f4a625e61898abddfef171a4a762e41adc103badf44f9e2bddfcc1ca6ff783",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/SubRank.cs": "a4ed6930d7473456d13f7f102a708aa88510e52cda6521a034dc625cda40406e",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/Rank.cs": "1a91cda306404d54e85e4c2731748da101aca3cf14e9ade5871dffb5e83ce3b6",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemType.cs": "8a1a33483ed28de00b9bc37dd60899ae0cb2fa7d7bd821b42f6e43cdcb3dbcaf",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Profession.cs": "01c1fedcaeb1cbb24c8c64ef8e1a3dba4159050e41e29ba3d7ba0b3aad550017",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/HasItemTypeCondition.cs": "6da637782893312e7684ec945db2a108b4271c442f37741852b67e107c5f827f",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/RankCondition.cs": "0164b794e73b71125d18dea7633f1dd1f3ceef0a6bbd11039c6bbe2c15951cdb",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/SubRankCondition.cs": "5754156223f0fba2094056f64be9f558868de2d2bd036201a67cdd9cfef5ce29",
@@ -18,6 +19,9 @@
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/CompositeCondition.cs": "9e45aefb344d4e75fffe52fa8f0fcea3e4886d3e396b2c3fa10128ebe35cf54d",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/CompositeAndCondition.cs": "1a7d5ccf8f1dcf8401e1a46aeb4596bd464f5c8774edc50adcdb4d55b111571c",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/CompositeOrCondition.cs": "b4d4f14990bcc59bb196a4bfcc360df4d38f1142e040ec9015c14211b6530aca",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerProfessionCondition.cs": "aab00582befdfa0170aaaadc7b94fff520a3e7a297778ed094f1d6a207c41655",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerProfessionFactionCondition.cs": "bbdc25a4f79632e1cdc03418324198387dc20994772e5ea79dcc94c158ff3eeb",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ProfessionBaseInfoParser.cs": "801c076f2df4bce5ad6db9e9647066af7dc111438bdbc80ec556465381225e10",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/Formula.cs": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/EnumExt.cs": "245e7b2e1352e2e86a3e85227bf8dc0e36b6b3d080c6070d67a403443b805d52",
     "unity/Assets/Game/Runtime/Official/Partners/PartnerConditionRules.cs": "b60dbfbfac661fd48cf92a8fc07ad72f7d5fccb6520a1b9151c4efeccc0aaedb",
@@ -65,6 +69,18 @@
     "CompositeOrCondition": {
       "public override bool IsMet(DataHub dataHub)": "21c4b5546f905b49a99c347c2d4d3581f60a9be44389552e8f86685f36b50cca"
     },
+    "PlayerProfessionCondition": {
+      "public override bool IsMet(DataHub dataHub)": "33fe378ca47ba53f67d5898812babf09df3155849d903ecd490ef7a97ce655b6",
+      "private Profession GetValue(DataHub dataHub)": "5f514ee0fb68cfd29b26a8aae3e90e5ad958df7f16b0186b25dfc48a521873c3"
+    },
+    "PlayerProfessionFactionCondition": {
+      "public override bool IsMet(DataHub dataHub)": "3363979ad519b6bacc6856542fceadbba651064a2d0602fa443d5c1d8ea84683",
+      "private Profession GetValue(DataHub dataHub)": "deb09c258a0205cf6a8a62ada95fbb9462a30cc37445a5d2e6fcc2bc98348be5"
+    },
+    "ProfessionBaseInfoParser": {
+      "public bool ExistProfession(Profession pro)": "d02bd5bb90adfe0047d8c1fbc320d777922d1858a6779d4b91f30f577a075357",
+      "public bool IsPreProfession(Profession pro, Profession pre, bool recursive = true)": "eeb9046a2901c0dce4307213a0483fab1c1d4637476efa56fd52219a7a6724f5"
+    },
     "Formula": {
       "public static bool Compare<T>(T lhs, string op, T rhs) where T : IComparable<T>, IEquatable<T>": "08bee63598aba5a4622459f23793aa107656bc0e8310570bc8385d48094ca239"
     },
@@ -72,7 +88,7 @@
       "public static Rank ToRank(this SubRank subRank)": "6ce5dc2ecbc912b1d8eefcc30f09a77558a2e7237ca8f5cf985e8bc76f5d9beb"
     }
   },
-  "generator_sha256": "429a3a3d7d9575fd5b4b6d515a89ddc10339509fc4b84bcb33aae5cbfe9e9008",
+  "generator_sha256": "f89effce64ae912beb909174e63130206668913d1f2050fb7a6bd2cab9fbdd8e",
   "configuration_sha256": "c16b24c4c5324ae9e98158f9b55b66985296c81cfbc471333827d2bd50830821",
   "closure": {
     "types": [
@@ -85,13 +101,47 @@
       "MapUnlockCondition",
       "MaxProfessionRankCondition",
       "NoneCondition",
+      "PlayerProfessionCondition",
+      "PlayerProfessionFactionCondition",
       "RankCondition",
-      "StoryCountCondition"
+      "StoryCountCondition",
+      "SubRankCondition"
     ],
     "condition_ids": [
       14,
       40,
       111,
+      200,
+      201,
+      202,
+      203,
+      204,
+      205,
+      206,
+      207,
+      208,
+      209,
+      210,
+      211,
+      212,
+      213,
+      214,
+      215,
+      216,
+      217,
+      218,
+      230,
+      231,
+      232,
+      233,
+      234,
+      235,
+      250,
+      251,
+      252,
+      253,
+      300,
+      301,
       3011,
       3018,
       3030,
@@ -104,7 +154,7 @@
     ]
   },
   "outputs": {
-    "HomeConditionRules.cs": "a887084a577eef48c6fea5a3e911b90a68c8d597231aff279d5df9d6df86e643"
+    "HomeConditionRules.cs": "14cfa3fd7cd7a24ccc99d4857103f0dac8449a182dd0734514b42bcbe5a18d4f"
   },
   "adaptations": [
     "Original IsMet/helper/compare methods and enum identities, with diagnostic logging omitted.",
@@ -115,16 +165,16 @@
   ],
   "installed_outputs": {
     "unity/Assets/Game/Runtime/Official/HomeConditions.meta": "dadfa5424eb9159b5367ebffb71b1644078c236e1f39b57f2e5ae3511ef28e88",
-    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionRules.cs": "a887084a577eef48c6fea5a3e911b90a68c8d597231aff279d5df9d6df86e643",
+    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionRules.cs": "14cfa3fd7cd7a24ccc99d4857103f0dac8449a182dd0734514b42bcbe5a18d4f",
     "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionRules.cs.meta": "353c3ce2021a27fb86a16a74ef45e627ad2eecc8836870f973a1ee59bbab0776",
     "unity/Assets/Game/Runtime/Official/HomeConditions/Zjcs.Official.HomeConditions.asmdef": "dbd35eaf68cab6303e5b0fa05d4a86a3493d66592ff10989b0570f09c771df31",
     "unity/Assets/Game/Runtime/Official/HomeConditions/Zjcs.Official.HomeConditions.asmdef.meta": "d5aa6a12212b0f7aba960a1c92b6ba27186056a474c57bd83b4c282b9924addf",
-    "unity/Assets/Game/Runtime/Offline/HomeUI/OfficialCurrentHomeRuleAssetCatalog.cs": "a60ae16c8926c48c9a7e97c0c783b1f01cc9ed70e4b6451fbd903ca3147fc096",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfficialCurrentHomeRuleAssetCatalog.cs": "98f9c117d05be322cf1e82a7f5bded42e696f48502a86a489da9970c64d46ae1",
     "unity/Assets/Game/Runtime/Offline/HomeUI/OfficialCurrentHomeRuleAssetCatalog.cs.meta": "09ec8321ae5d415915393613939721cca3eb4d8ea7c60823101dda6f05e9530e"
   },
   "bindings_sha256": {
-    "unity/Assets/Game/Runtime/Offline/HomeUI/OfficialCurrentHomeRuleAssetCatalog.cs": "a60ae16c8926c48c9a7e97c0c783b1f01cc9ed70e4b6451fbd903ca3147fc096",
-    "unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef": "2339525e73c533a703824512578c53039e981a67f46ed902551a74c617c44ea7"
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfficialCurrentHomeRuleAssetCatalog.cs": "98f9c117d05be322cf1e82a7f5bded42e696f48502a86a489da9970c64d46ae1",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef": "823fb2eb7a67d1f39ec7bb725ed8742ad3f342756ece21078f982fd429664dd5"
   },
   "validation_sha256": {
     "scripts/fixtures/home_condition_validation.cs": "e83a92fa0055265be6620013132da58312465d2abacc1ddbc730e0d45a372894",

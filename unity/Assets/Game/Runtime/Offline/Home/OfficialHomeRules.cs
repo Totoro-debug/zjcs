@@ -69,6 +69,7 @@ namespace Zjcs.Offline.Home
         public HomeConditionNode notice;
         public bool canLevelUp;
         public bool useBlessingLevel;
+        public bool needRecordData;
         public int rewardType;
         public int rewardId;
         public int fastHangUpId;
@@ -283,7 +284,7 @@ namespace Zjcs.Offline.Home
     /// The staged official home tables plus the lookups the runtime needs.
     /// All values come from the fixed ``854_156383`` client.
     /// </summary>
-    public sealed class OfficialHomeRules
+    public sealed partial class OfficialHomeRules
     {
         public const string FolderName = "Home";
 
@@ -431,7 +432,8 @@ namespace Zjcs.Offline.Home
             fastHangUps.TryGetValue(id, out HomeFastHangUpRecord record) ? record : null;
 
         public HomeHangUpRewardRecord HangUpReward(int id) =>
-            hangUpRewards.TryGetValue(id, out HomeHangUpRewardRecord record) ? record : null;
+            incomeRewardRows != null ? incomeRewardRows.Get(id)
+                : hangUpRewards.TryGetValue(id, out HomeHangUpRewardRecord record) ? record : null;
 
         public HomeItemRecord Item(int id) => items.TryGetValue(id, out HomeItemRecord item) ? item : null;
 
@@ -448,6 +450,7 @@ namespace Zjcs.Offline.Home
         public double LevelNumber(int levelRuleId, int level)
         {
             if (levelNumbers.TryGetValue(Key(levelRuleId, level), out double value)) return value;
+            if (IncomeVersion != null) return 0;
             // The official table is dense; fall back to the highest level not above the request.
             double result = 0;
             foreach (KeyValuePair<long, double> pair in levelNumbers)
@@ -479,6 +482,8 @@ namespace Zjcs.Offline.Home
         /// <summary>First satisfaction-ordered reward rule row for a hang-up.</summary>
         public HomeRewardRuleRecord SelectRewardRule(int rewardRuleId, HomeConditionContext context)
         {
+            if (incomeRewardRuleIds != null && incomeRewardRuleIds.Contains(rewardRuleId))
+                return incomeRewardRules.Get(rewardRuleId);
             if (!rewardRules.TryGetValue(rewardRuleId, out List<HomeRewardRuleRecord> rows)) return null;
             foreach (HomeRewardRuleRecord row in rows)
                 if (IsMet(row.condition, context)) return row;
@@ -527,6 +532,8 @@ namespace Zjcs.Offline.Home
         public bool IsMet(HomeConditionNode node, HomeConditionContext context)
         {
             if (node == null) return true;
+            if (selectedIncomeConditions != null && selectedIncomeConditions.Contains(node))
+                return evaluateIncomeCondition(node);
             if (selectedFurnitureConditions != null && selectedFurnitureConditions.Contains(node))
                 return evaluateFurnitureCondition(node);
             context = context ?? new HomeConditionContext();

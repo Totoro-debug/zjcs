@@ -4,6 +4,7 @@ using System.Linq;
 using Zjcs.Official.Partners;
 using SubRank = Zjcs.Official.HomeConditions.HomeConditionRules.SubRank;
 using Rank = Zjcs.Official.HomeConditions.HomeConditionRules.Rank;
+using Profession = Zjcs.Official.HomeConditions.HomeConditionRules.Profession;
 
 namespace Zjcs.Official.HomeConditions
 {
@@ -24,18 +25,26 @@ namespace Zjcs.Official.HomeConditions
         int GetStageCount(int stageId);
     }
 
+    public interface IHomeProfessionConditionPlayer : IHomeConditionPlayer
+    {
+        int Profession { get; }
+    }
+
     public sealed class HomeConditionRules
     {
         private readonly PartnerConditionRules partnerRules;
         private readonly Dictionary<int, Dictionary<string, object>> conditionRows;
         private readonly Dictionary<int, ICondition> cached = new Dictionary<int, ICondition>();
         private readonly Func<IReadOnlyDictionary<string, object>, bool?> policy;
+        private readonly ProfessionBaseInfoParser professionBaseInfoParser;
 
         public HomeConditionRules(IEnumerable<Dictionary<string, object>> conditions,
-            PartnerConditionRules partnerRules, Func<IReadOnlyDictionary<string, object>, bool?> policy = null)
+            PartnerConditionRules partnerRules, Func<IReadOnlyDictionary<string, object>, bool?> policy = null,
+            IEnumerable<Dictionary<string, object>> professions = null)
         {
             this.partnerRules=partnerRules ?? throw new ArgumentNullException(nameof(partnerRules));
             this.policy=policy;
+            professionBaseInfoParser=professions==null ? null : new ProfessionBaseInfoParser(professions);
             conditionRows=conditions.ToDictionary(row=>Number(row,"ClassId"), row=>(Dictionary<string,object>)row["Condition"]);
         }
 
@@ -79,6 +88,8 @@ namespace Zjcs.Official.HomeConditions
                 case "StoryCountCondition": return new StoryCountCondition(this) { StoryKey=(string)node["StoryKey"],Count=Number(node,"Count"),Op=(string)node["Op"] };
                 case "AnyMapGoddessActivedCondition": return new AnyMapGoddessActivedCondition(this);
                 case "StagePassCondition": return new StagePassCondition(this) { StageId=Number(node,"StageId"),Op=(string)node["Op"] };
+                case "PlayerProfessionCondition": return new PlayerProfessionCondition(this) { Profession=(Profession)Number(node,"Profession") };
+                case "PlayerProfessionFactionCondition": return new PlayerProfessionFactionCondition(this) { Profession=(Profession)Number(node,"Profession") };
                 default: throw new NotSupportedException("Condition outside migrated home closure: "+node["_type"]);
             }
         }
@@ -123,6 +134,8 @@ namespace Zjcs.Official.HomeConditions
             private ItemManager itemManager;
             public ItemManager ItemManager=>itemManager ?? (itemManager=new ItemManager(Source));
             public SubRank SubRank=>(SubRank)Source.SubRank;
+            public Profession Profession=>(Profession)((Source as IHomeProfessionConditionPlayer)?.Profession
+                ?? throw new InvalidOperationException("The current profession owner is required by this home condition."));
             public int GetHighestUnlockedProfessionRank()=>Source.GetHighestUnlockedProfessionRank();
             public int GetStoryCount(string key)=>Source.GetStoryCount(key);
             public bool IsAnyGoddessActived()=>Source.IsAnyGoddessActived();
@@ -150,6 +163,8 @@ namespace Zjcs.Official.HomeConditions
         /*SUB_RANK*/
         /*RANK*/
         /*ITEM_TYPE*/
+        /*PROFESSION*/
+        /*PROFESSION_PARSER*/
         /*CONDITIONS*/
 
         private static class Formula

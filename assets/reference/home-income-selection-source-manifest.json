@@ -1,0 +1,42 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "18a424b57949736c5cc97e26b635c0e41d75743eec4b6d730ad7c8b38761738a",
+  "inputs": {
+    "assets/reference/official-client-code/source-manifest.json": "801da9e6427f41987b269e816579f0c2228bc4cbeb4a49e11a8e707f235d0d68",
+    ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6",
+    "scripts/prepare_home_auto_increase_runtime.py": "f2b04eee400cc6bf7c96ff716a88273206dee729df4bc2176d68b27e21d5b21d",
+    "assets/reference/home-rules-current-source-manifest.json": "c1c3bef60360d70ed3d024991959f5105d5522cc607670fe4ec79a94da249f4b",
+    "assets/reference/home-condition-source-manifest.json": "133020ba84ee89afc1429ea63d14a8c13daa3500d1565bf706f4ff34bed05d06",
+    "unity/Assets/Official/Home/home-rules-current.json": "c16b24c4c5324ae9e98158f9b55b66985296c81cfbc471333827d2bd50830821",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/HangUpUtils.cs": "b5d834657d4410887c370b905b7844cb2e38964a86ad3954ef8ae58a48fb247a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerHangUpDataExt.cs": "52c6a123f697422dd7c18d5dbb42349eb11c06553f2d470eb62b3ced32c9edb7",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FurnitureLevelRuleInfo.cs": "4b7d347787a2ccb13ce5c876d8fd69a33475962b17d71e4de4fcc286badd8984",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LubanDoubleKeyCsvParser.cs": "98e7752edb82587639f7cb0f35893cf294abdf56169d5f6d073ba950af98d0df",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/HangUpRewardInfoParser.cs": "cab4ead472c5dc41946434cda113fd15c7bf2a05af55221dbec6d163c7ac1af8",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RewardRuleInfoParser.cs": "826e9a131dcd64a0a56cf0fa872d44f2ff45f76dd7f912cd9518cd1c49849239"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HangUpRewardInfoParser.cs": "2cb71f4919d58bb94e1d2498c40aa4321f376cafb28609e908136a309090e523",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HangUpRewardInfoParser.cs.meta": "ba6ed788f4a0b4460cb66379ba74412a78a953c61844b196ef023019ad994b23",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/RewardRuleInfoParser.cs": "4172b25f6edb4a236c138b9b09ba57b0b31753558d60669d4a803ea238f89fe4",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/RewardRuleInfoParser.cs.meta": "a77bbf43fa55a577894c597382ba00bf0b6419cd442d90eee14f97f82779480a"
+  },
+  "adaptation": "Original sorted indexes and selection branches. Generic row carrier and explicit condition callbacks replace parser inheritance and DataHub; original missing-key default lookup retained. No reward, condition or order values changed.",
+  "validation_inputs": {
+    "scripts/prepare_home_income_selection_validation.py": "913ca2bf38b8b176da85879999819865aea18543dc5f7491bab2a9f577838568",
+    "scripts/fixtures/home_income_selection_validation.cs": "5c56fc881bbfe55ffa69fdbec57311ecbfed112ba353dcd774b33597f928452d",
+    "scripts/fixtures/home_income_formula_validation.cs": "5e29415711532fb45ea5f8f303f87ff90666520baf0c85789b01bfb065cd3835",
+    "scripts/fixtures/home_furniture_host_validation.cs": "04b99707086fdb7beb10202dc1fd4be3bcb2b6a4d6ef857239ad9e6368dfc5c1"
+  },
+  "validation_base_commit": "2acaf186b306dd9d595bebf63e19e455c3aefc97",
+  "runtime_bindings": {
+    "unity/Assets/Game/Runtime/Offline/Home/OfficialHomeRules.cs": "509eac3b6fa8988069cefa70b1d83a231977047dc60f79acae1f6c52d7509bfd",
+    "unity/Assets/Game/Runtime/Offline/Home/OfficialHomeRules.CurrentIncome.cs": "42117561b7e9d150188b90ddd27598b5d96ecb115c72771e23936702a904f696",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeProgression.cs": "c9419285601da416a7147e05261f1ace7e542f63233fd687a23d508929c9e961",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineCurrentHomeIncome.cs": "e95174baf705865a61a268b867f872b1e147ddbef4116b8d36c56fc608d364b5",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfficialCurrentHomeRuleAssetCatalog.cs": "98f9c117d05be322cf1e82a7f5bded42e696f48502a86a489da9970c64d46ae1",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineCurrentHomeFurniture.cs": "b27a75ca6696f5a2d83634407187c3faeb093956177391dab930fd0ded7e56d9",
+    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionRules.cs": "14cfa3fd7cd7a24ccc99d4857103f0dac8449a182dd0734514b42bcbe5a18d4f",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "7c2f057963f207b46140fb41e7bb72520f096dc2862ab2552b40aac14fd20cea"
+  }
+}

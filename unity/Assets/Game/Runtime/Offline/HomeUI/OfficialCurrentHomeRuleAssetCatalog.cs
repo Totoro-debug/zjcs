@@ -35,7 +35,7 @@ namespace Zjcs.Offline.HomeUI
 
         public HomeConditionRules CreateConditions(PartnerConditionRules partners,
             Func<IReadOnlyDictionary<string,object>,bool?> offlinePolicy=null)
-            => new HomeConditionRules(Rows("conditions"),partners,offlinePolicy);
+            => new HomeConditionRules(Rows("conditions"),partners,offlinePolicy,Rows("profession_base"));
 
         private void EnsureLoaded()
         {
