@@ -10,7 +10,7 @@ namespace Zjcs.Offline.HomeTaskUI
         readonly Dictionary<int,HomeTaskJumpCondition> conditions=new Dictionary<int,HomeTaskJumpCondition>();
         readonly Dictionary<int,ITaskTraceTarget> traces=new Dictionary<int,ITaskTraceTarget>();
         readonly Action<object> completed;
-        public OfflineHomeTaskNavigation(OfflineHomeMainlineTaskData data,IHomeTaskJumpHost host,Action<object> completed)
+        public OfflineHomeTaskNavigation(OfflineHomeMainlineTaskData data,IHomeTaskJumpHost host,Action<object> completed,IHomeTaskTraceFactory traceFactory=null)
         {
             if(data==null)throw new ArgumentNullException(nameof(data));
             if(host==null)throw new ArgumentNullException(nameof(host));
@@ -36,7 +36,7 @@ namespace Zjcs.Offline.HomeTaskUI
                 condition.MapClassId=(int?)finish["MapClassId"]??0;condition.Region=(int?)finish["Region"]??0;
                 condition.Tag=(string)finish["Tag"];conditions.Add(task.ClassId,condition);
                 if(condition is ClientWorldMapProgressCondition||condition is ClientMapLogicEntityEndByTagCondition)
-                    traces.Add(task.ClassId,new Trace(condition));
+                    traces.Add(task.ClassId,new Trace(condition,traceFactory));
             }
         }
         public bool CanNavigate(int classId)=>conditions[classId]?.CanJump()??false;
@@ -52,8 +52,18 @@ namespace Zjcs.Offline.HomeTaskUI
         sealed class Trace:ITaskTraceTarget
         {
             readonly HomeTaskJumpCondition condition;
-            public Trace(HomeTaskJumpCondition condition){this.condition=condition;}
+            readonly IHomeTaskTraceFactory factory;
+            public Trace(HomeTaskJumpCondition condition,IHomeTaskTraceFactory factory){this.condition=condition;this.factory=factory;}
             public bool CanTrace()=>condition.CanTrace();
+            public ITaskTraceMapEntity StartTrace(long taskId)
+            {
+                if(factory==null)throw new InvalidOperationException("The actual map-scoped task trace factory is required.");
+                if(condition is ClientWorldMapProgressCondition){
+                    var trace=factory.CreateRegionTrace();trace.Init(taskId,condition.MapClassId,condition.Region);return trace;
+                }
+                var tag=condition.Host.GetTag(condition.Tag);
+                var entity=factory.CreateEntityTrace();entity.Init(taskId,tag.MapClass,tag.LogicId);return entity;
+            }
         }
     }
 }

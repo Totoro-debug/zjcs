@@ -157,6 +157,7 @@ public sealed class HomeTaskUiNativeRunner:MonoBehaviour
         readonly TaskRow row;public Info(TaskRow row){this.row=row;}public override Zjcs.Official.HomeTaskUI.ICondition DisplayCondition=>new Condition{Display=row.Visible};
         public override Zjcs.Official.HomeTaskUI.ICondition FinishCondition=>row.Condition;public override bool IsAllowTrace=>row.Trace;public override bool ShowProgressBar=>true;public override int Order=>(int)row.TaskId;public override bool AutoTracing=>false;
         public override ITaskTraceTarget GetTaskTraceTarget()=>row.Trace?this:null;public bool CanTrace()=>true;
+        public ITaskTraceMapEntity StartTrace(long id)=>new FixtureTrace(id);
     }
     sealed class TaskRow:PlayerTaskDataWrap
     {
@@ -200,11 +201,17 @@ public sealed class HomeTaskUiNativeRunner:MonoBehaviour
         readonly Dictionary<Zjcs.Official.HomeTaskUI.ICondition,List<Action>> conditions=new Dictionary<Zjcs.Official.HomeTaskUI.ICondition,List<Action>>();
         public void Register(Zjcs.Official.HomeTaskUI.ICondition condition,Action refresh){if(!conditions.TryGetValue(condition,out var list))conditions[condition]=list=new List<Action>();list.Add(refresh);}
         public void Deregister(Zjcs.Official.HomeTaskUI.ICondition condition,Action refresh){if(conditions.TryGetValue(condition,out var list))list.Remove(refresh);}public int ConditionObservers=>conditions.Values.Sum(x=>x.Count);public void EmitConditions(){foreach(var callback in conditions.Values.SelectMany(x=>x).ToArray())callback();}
-        public UnityEvent OnTeamUpdate{get;}=new UnityEvent();public UnityEvent OnTraceStart{get;}=new UnityEvent();public UnityEvent OnTraceEnd{get;}=new UnityEvent();public UnityEvent<long> OnTraceCancel{get;}=new UnityEvent<long>();public PlayerTask CurrentTraceData{get;private set;}
-        public void StartTrace(long id,bool showTip){StartCalls++;CurrentTraceData=GetTaskData(id);OnTraceStart.Invoke();}public void CancelTrace(bool showTip){CancelCalls++;var id=CurrentTraceData?.TaskId??0;CurrentTraceData=null;OnTraceCancel.Invoke(id);}public void StopTrace(long id){if(CurrentTraceData?.TaskId==id)CurrentTraceData=null;}
+        public UnityEvent OnTeamUpdate{get;}=new UnityEvent();public HomeTaskTraceEvent OnTraceStart{get;}=new HomeTaskTraceEvent(Debug.LogException);public HomeTaskTraceEvent OnTraceEnd{get;}=new HomeTaskTraceEvent(Debug.LogException);public HomeTaskPlayerEvent<long> OnTraceCancel{get;}=new HomeTaskPlayerEvent<long>(Debug.LogException);public ITaskTraceMapEntity CurrentTraceData{get;private set;}
+        public void StartTrace(long id,bool showTip){StartCalls++;CurrentTraceData=new FixtureTrace(id);OnTraceStart.Invoke();}public void CancelTrace(bool showTip){CancelCalls++;var id=CurrentTraceData?.TaskId??0;CurrentTraceData=null;OnTraceCancel.Invoke(id);}public void StopTrace(long id){if(CurrentTraceData?.TaskId==id)CurrentTraceData=null;}
+        public long? WaitTraceTaskId{get;private set;}public void TraceWhenEnterMap(long id){WaitTraceTaskId=id;}public void CleanWaitTraceTask(){WaitTraceTaskId=null;}
         public bool IsShowTipDot=>true;public bool TempLimitShowTip=>false;public Action OnTipDotShowChanged{get;set;}public int TipObservers=>OnTipDotShowChanged?.GetInvocationList().Length??0;
         public SafeAction OnTipDotSystemInited{get;set;}=new SafeAction();public SafeAction OnTipDotSystemPreClear{get;set;}=new SafeAction();
         public TipDotGraphType? GetGraphType(string name)=>TipDotGraphType.Static;
+    }
+    sealed class FixtureTrace:ITaskTraceMapEntity
+    {
+        public long TaskId{get;}public FixtureTrace(long id){TaskId=id;}
+        public void Fini(){}public void SetTraceEndCallback(Action callback){}
     }
     sealed class FontLoader:IProfessionImageResourceLoader
     {

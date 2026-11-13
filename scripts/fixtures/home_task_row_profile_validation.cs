@@ -18,6 +18,9 @@ public sealed partial class HomeCurrencyWindowsNativeRunner
 {
     Func<OfflineHomeMainlineTaskData,IOfflineHomeTaskNavigation> taskRowNavigationFactory;
     Func<TaskUI.TaskListItem,IEnumerator> taskRowNavigationVerifier;
+    Action<TaskUI.IHomeTaskPlayer,TaskRowProfileHost> taskRowTraceSetup;
+    Func<TaskUI.TaskListItem,IEnumerator> taskRowTraceVerifier;
+    Action taskRowTraceFinalCheck;
     IEnumerator ExerciseTaskRowsWithProfile()
     {
         string root=System.IO.Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"),"task-row-profile-"+Guid.NewGuid().ToString("N"));
@@ -40,6 +43,7 @@ public sealed partial class HomeCurrencyWindowsNativeRunner
                 taskRowNavigationFactory?.Invoke(data)??new TaskPlayerNavigationProbe(),()=>0,()=>TaskUI.SubRank.Norank,results.Add,failures.Add);
             icons=new OfflineHomeTaskRewardIcons(canvas.transform,this,fonts,Post,data,assets);
             host=new TaskRowProfileHost(this,player,conditions,icons,data);
+            taskRowTraceSetup?.Invoke(player,host);
             slot=new GameObject("DetachedTaskProfileFixtureHost",typeof(RectTransform));slot.SetActive(false);slot.transform.SetParent(canvas.transform,false);
             var rect=(RectTransform)slot.transform;rect.anchorMin=rect.anchorMax=new Vector2(.5f,.5f);rect.anchoredPosition=Vector2.zero;rect.sizeDelta=Vector2.zero;
             var layout=slot.AddComponent<VerticalLayoutGroup>();layout.childAlignment=TextAnchor.LowerLeft;layout.spacing=30;
@@ -77,12 +81,14 @@ public sealed partial class HomeCurrencyWindowsNativeRunner
             RequireTaskTextOnScreen(world);
             Capture("home-task-profile-world-progress-native.png");
             if(taskRowNavigationVerifier!=null)yield return taskRowNavigationVerifier(world);
+            if(taskRowTraceVerifier!=null)yield return taskRowTraceVerifier(world);
             Require(profile.SetMapRegionProgress(10,0,10000).IsApplied,"commit completed region progress");
             player.RefreshTasks(false);conditions.NotifyWorldMapProgressUpdate();yield return null;
             Require(Field<WorldStateSwitcher<TaskUI.TaskListItem.TaskStatus>>(world,"mStateSwitcher").State==TaskUI.TaskListItem.TaskStatus.Completed,"actual world completion updates the original row state");
             Capture("home-task-profile-world-claim-native.png");Click(Field<Button>(world,"mClaimBtn"));yield return null;yield return null;
             Require(results.Count==2&&results.All(result=>result.IsApplied)&&profile.InventoryCount(2)==beforeMoney+60
                 &&rows.Count==1&&rows.ContainsKey(1010),"second original claim pointer advances to the next original region task and awards once");
+            if(host.TraceHandlerOverride!=null)Require(host.TraceHandlerOverride.CurrentTraceData==null,"original claimed-row destruction stops its live trace");
             var restored=OfflineMainlineProgressSession.Open(slots,id,catalog);
             Require(restored.InventoryCount(2)==beforeMoney+60&&restored.Save.Tasks.ClaimedMainlineTaskIds.Contains(1000)
                 &&restored.Save.Tasks.ClaimedMainlineTaskIds.Contains(1005),"two native claim transactions survive reopening the actual profile");
@@ -92,6 +98,7 @@ public sealed partial class HomeCurrencyWindowsNativeRunner
             Require(rows.Count==1&&rows.ContainsKey(1010)&&host.RefreshCalls==2,"original panel reenable restores the actual current task with one immediate refresh");
             slot.SetActive(false);Object.Destroy(slot);slot=null;yield return null;
             Require(subscribers==beforeSubscribers&&host.TipObservers==0&&host.PositionObservers==0&&failures.Count==0,"original row destruction releases subscriptions without isolated task errors");
+            taskRowTraceFinalCheck?.Invoke();
             Debug.Log("HOME_TASK_PROFILE_ROWS_PASSED: actual new-character profile, original PinnedTaskPanel/TaskListItem/TaskGoal, live battle and world percentages, original state switchers, two unobstructed claim pointers with original PCM, real reward/receipt restoration, hidden successor activation and native disable/reenable/destruction. Actual selected map limits/recommendation metadata is bound. Test host controls combat/rank, navigation/trace, calendar and tip visibility; production HUD and full route remain separate.");
         }
         finally {
@@ -131,7 +138,8 @@ public sealed partial class HomeCurrencyWindowsNativeRunner
         }
         public TaskUI.IHomeTaskPlayer Player=>player;public TaskUI.IHomeTaskConditions Conditions=>conditions;
         public TaskUI.IMapInputSupportHandlerProxy mMapInput=>null;public TaskUI.INavigateManager NavigateManager=>null;
-        public TaskUI.ITaskHandler TaskHandler=>this;public TaskUI.IItemIconManager ItemIconManager=>icons;public TaskUI.IMyMapPositionHandlerProxy MyMapPositionHandler=>this;
+        public TaskUI.ITaskHandler TraceHandlerOverride;
+        public TaskUI.ITaskHandler TaskHandler=>TraceHandlerOverride??this;public TaskUI.IItemIconManager ItemIconManager=>icons;public TaskUI.IMyMapPositionHandlerProxy MyMapPositionHandler=>this;
         public TaskUI.IHomeTaskGlobalColors GlobalColors=>this;public TaskUI.IHomeTaskCombatColors CombatRatingConfig=>maps;
         public object PlanesRank=>null;
         public TaskUI.GlobalColors Value=>new TaskUI.GlobalColors{EnoughColor=new Color(.4627451f,.4745098f,.09411765f,1),LackColor=new Color(.9254902f,.3372549f,.3372549f,1)};
@@ -168,10 +176,13 @@ public sealed partial class HomeCurrencyWindowsNativeRunner
         public void RefreshAllTasks(bool invokeByPlayer){RefreshCalls++;player.RefreshTasks();}
         public void RefreshLimitTimeTask(long id,bool invokeByPlayer)=>throw new NotSupportedException();
         public TaskUI.MapRegionLimitStatusRefreshForRankUnlockTime CreateTimedRegionLimitProvider()=>throw new NotSupportedException();
-        public UnityEvent OnTeamUpdate{get;}=new UnityEvent();public UnityEvent OnTraceStart{get;}=new UnityEvent();public UnityEvent OnTraceEnd{get;}=new UnityEvent();public UnityEvent<long> OnTraceCancel{get;}=new UnityEvent<long>();
-        public TaskUI.PlayerTask CurrentTraceData=>null;
+        public UnityEvent OnTeamUpdate{get;}=new UnityEvent();public TaskUI.HomeTaskTraceEvent OnTraceStart{get;}=new TaskUI.HomeTaskTraceEvent(Debug.LogException);public TaskUI.HomeTaskTraceEvent OnTraceEnd{get;}=new TaskUI.HomeTaskTraceEvent(Debug.LogException);public TaskUI.HomeTaskPlayerEvent<long> OnTraceCancel{get;}=new TaskUI.HomeTaskPlayerEvent<long>(Debug.LogException);
+        public TaskUI.ITaskTraceMapEntity CurrentTraceData=>null;
+        public long? WaitTraceTaskId=>null;
+        public void TraceWhenEnterMap(long id)=>throw new NotSupportedException();public void CleanWaitTraceTask()=>throw new NotSupportedException();
         public void StartTrace(long id,bool showTip)=>throw new NotSupportedException("Actual navigation/trace boundary");public void CancelTrace(bool showTip)=>throw new NotSupportedException();public void StopTrace(long id){}
         Action<int,int> position;public event Action<int,int> OnMeRegionUpdate{add=>position+=value;remove=>position-=value;}
+        public void NotifyPosition(int map,int region)=>position?.Invoke(map,region);
         public int PositionObservers=>position?.GetInvocationList().Length??0;
         public bool IsShowTipDot=>true;public bool TempLimitShowTip=>false;public Action OnTipDotShowChanged{get;set;}
         public int TipObservers=>OnTipDotShowChanged?.GetInvocationList().Length??0;

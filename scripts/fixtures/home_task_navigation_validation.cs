@@ -13,11 +13,12 @@ using TaskUI=Zjcs.Official.HomeTaskUI;
 public sealed partial class HomeCurrencyWindowsNativeRunner
 {
     TaskJumpHost rowNavigationHost;
+    TaskUI.IHomeTaskTraceFactory taskRowTraceFactory;
     void ConfigureTaskRowNavigation()
     {
         taskRowNavigationFactory=data=>{
             rowNavigationHost=new TaskJumpHost(this,data);
-            return new OfflineHomeTaskNavigation(data,rowNavigationHost,_=>{});
+            return new OfflineHomeTaskNavigation(data,rowNavigationHost,_=>{},taskRowTraceFactory);
         };
         taskRowNavigationVerifier=VerifyNativeTaskJumpPointer;
     }

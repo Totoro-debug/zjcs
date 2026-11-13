@@ -90,7 +90,7 @@ namespace Zjcs.Official.HomeTaskUI
         public abstract bool AutoTracing { get; }
         public abstract ITaskTraceTarget GetTaskTraceTarget();
     }
-    public interface ITaskTraceTarget { bool CanTrace(); }
+    public interface ITaskTraceTarget { bool CanTrace(); ITaskTraceMapEntity StartTrace(long taskId); }
     public abstract class ICondition
     {
         public sealed class DataHub
@@ -155,13 +155,16 @@ namespace Zjcs.Official.HomeTaskUI
     public interface IMyMapPositionHandlerProxy { event Action<int,int> OnMeRegionUpdate; }
     public interface ITaskHandler
     {
-        UnityEvent OnTraceStart { get; }
-        UnityEvent OnTraceEnd { get; }
-        UnityEvent<long> OnTraceCancel { get; }
-        PlayerTask CurrentTraceData { get; }
-        void StartTrace(long taskId, bool showTip);
-        void CancelTrace(bool showTip);
+        HomeTaskTraceEvent OnTraceStart { get; }
+        HomeTaskTraceEvent OnTraceEnd { get; }
+        HomeTaskPlayerEvent<long> OnTraceCancel { get; }
+        ITaskTraceMapEntity CurrentTraceData { get; }
+        long? WaitTraceTaskId {get;}
+        void StartTrace(long taskId, bool showTip=true);
+        void CancelTrace(bool showTip=true);
         void StopTrace(long taskId);
+        void TraceWhenEnterMap(long taskId);
+        void CleanWaitTraceTask();
     }
     public abstract class PlayerItemDataWrap { public abstract ItemInfo Info { get; } }
     public sealed class ItemInfo { public int ClassId; }

@@ -138,6 +138,11 @@ internal static class PlayerTaskPinComparer
     read(CODE/'client-source/EUIInstantiateFlag.cs')
     contracts = ROOT/'scripts/fixtures/home_task_ui_services.cs'
     write('HomeTaskServices.cs', read(contracts))
+    from prepare_home_task_trace_runtime import build_runtime
+    trace = build_runtime()
+    inputs.update(trace['inputs'])
+    inputs['scripts/prepare_home_task_trace_runtime.py'] = trace['generator_sha256']
+    outputs.update(trace['outputs'])
     write('Zjcs.Official.HomeTaskUI.asmdef', json.dumps(dict(name='Zjcs.Official.HomeTaskUI', references=[
         'Unity.ugui', 'Zjcs.Official.ProfessionUI', 'Zjcs.Official.WorldUI',
         'Zjcs.Official.World.NativeLabelUI', 'Zjcs.Official.ActivityBattleUI']), indent=2)+'\n')
