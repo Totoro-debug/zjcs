@@ -25,7 +25,7 @@
 | 主城进入与生命周期 | `MainUIRoot` 管理主面板；`PublicBottomBar.OnTabTypeChanged → MainViewController.SwitchMainView` 切换 UI 和场景；`HomeRoot` 初始化家园作用域服务、激活场景、同步时间与控制音乐 | 已从创角完成页进入 `HomeFeatureRuntime`，打开角色槽和家园存档，退出可返回角色入口；底栏大陆暂转入当前可玩的初始岛地图。主菜单复原、正式主城生命周期与场景音乐仍未完成 |
 | 顶部栏与头像 | `HomeUI` 的 `NewPublicTopBarParent/Slot`、`TopBarHandler`、`TopBarManager`／`TopBarItem` 和 `PublicPlayerIconHome` 展示角色及配置指定货币，随窗口借还顶部栏、响应数量变化并提供点击入口 | 正式入口仍使用历史转换的货币 1/2/15、角色名及等级／公会文本；头像打开人物页。所选 884 原生顶栏已独立恢复货币 1/2/57、原借还与数量更新；原生头像、真实角色头部渲染、真实存档驱动的经验环，以及公共玩家面板的血量、恢复料理提示判定和名字已分别验证。正式 HUD 接线、床铺领取到原生奖励队列的完整流程及入退场动画尚未完成 |
 | 底栏五入口 | `PublicBottomBar.TabType` 包含 `Character`、`TravelNote`、`Home`、`Legion`、`Mainland`；原 `TabGroup`、条件、显隐引用、升级标记和场景代理共同控制切页 | 人物页打开／返回、家园选中和大陆到初始岛已接线；游记、公会入口目前提示对应页面未提供，条件／红点／遮挡未完整恢复。玩法范围分别见[人物](character.md)、[单人公会](guild.md)、[世界地图](world-map.md) |
-| 主城任务与战斗提示 | `PinnedTaskPanel`、`MainTaskFunctionLimit`、`GameEndNotifyUI`、`GameEndUIHandlerInHome`、`FightDemonBattlefieldAutoPushEndNotifyUI` 负责任务追踪、战斗完成通知和返回战斗入口；床铺／推车有 `HomeHangUpDirectionGuider` | 已接主线任务追踪、本地进度、奖励领取及 Map10 目标跳转；Map11 提示未开放，职业／宝箱任务不展示不可用跳转；非主线页签显示离线未开放。战斗结算提示和床铺／推车指引未完成，魔物战争按单机范围关闭。任务规则见[主线任务](tasks.md) |
+| 主城任务与战斗提示 | `PinnedTaskPanel`、`MainTaskFunctionLimit`、`GameEndNotifyUI`、`GameEndUIHandlerInHome`、`FightDemonBattlefieldAutoPushEndNotifyUI` 负责任务追踪、战斗完成通知和返回战斗入口；床铺／推车有 `HomeHangUpDirectionGuider` | 已接主线任务追踪、本地进度、奖励领取及 Map10 目标跳转；Map11 提示未开放，职业／宝箱任务不展示不可用跳转；非主线页签显示离线未开放。床铺／推车原生方向指引已接正式收益与场景镜头，家具奖励状态图形仍缺；战斗结算提示未正式接通，魔物战争按单机范围关闭。任务规则见[主线任务](tasks.md) |
 | 功能菜单 | 所选 884 的 `FunctionEntrysPanel.OnEntryBtnClick` 打开并初始化 `FunctionEntryDialog`，基类保留折叠／展开动画与外部点击处理；原菜单有任务、商城大按钮，以及图鉴、成就、装潢、设置、拍照、录像等入口 | 正式入口仍沿历史资源树折叠／展开；所选原生功能入口子树、完整原菜单及原动画／音频已在受控宿主独立验证，正式 HUD 与真实玩法页面接线尚未完成。装潢与设置已接既有页面；网络商店、好友、公告、合服与预下载等显示离线关闭提示。图鉴、成就和拍照尚未接对应页面，内部范围见[商城](commerce.md)、[图鉴](codex.md)、[成就](achievements.md)、[设置／拍照／存档](settings-and-save.md) |
 | 活动及推荐入口 | `HomeUIActivityEntryController` 和 `FunctionEntryDialog.GetOpenActivityRecommendEntries` 按真实活动记录生成、排序和展示入口／推荐；`EventEntry` 是主城挂载点 | 未接活动记录与推荐入口；不凭资源生成活动实例或奖励。[签到](sign-ins.md)、[活动小游戏](activity-minigames.md)和[离线开放范围](offline-access.md)维护具体范围 |
 | 社交及联网服务入口 | 原 prefab 包含队伍小面板、匹配、申请确认、聊天小窗／快捷消息、好友、排行榜、公告、用户、社交、百科、合服和边玩边下载／预下载等控件；功能菜单对应 `FriendBtn`、`TopListBtn`、`AnnounceBtn`、`UserBtn`、`SocialBtn`、`WikiEntry`、`PlanesMergeFunctionEntryBtn`、`PredownloadEntry` | 已对组队、聊天、好友／社交／用户／排行榜、商城、公告、合服和预下载入口给出离线关闭提示，飞艇交易所也拦截；仍缺部分 prefab 控件的统一关闭显隐和实机逐项点击验收，不生成虚构玩家 |
@@ -43,7 +43,7 @@
 
 | 类型 ID／家具物品 ID | 原装置及官方行为 | 当前实现与待实现范围／所属页 |
 | --- | --- | --- |
-| 0／4000 | 床铺 `BedFurniture → FurnitureBedDialog`；经验挂机、产量／容量、领取及加速 | 已接收益、床铺窗口、领取、免费／时间结晶加速及经验入角色成长；赐福等级来源、完整奖励演出和真实输入／遮挡验证仍缺。规则见本页及[人物成长](character.md) |
+| 0／4000 | 床铺 `BedFurniture → FurnitureBedDialog`；经验挂机、产量／容量、领取及加速 | 已接收益、历史转换窗口、领取事务、免费／时间结晶加速及经验入角色成长；实际模拟点击已发现旧窗口的 FillImg 遮挡领取按钮，原生床铺窗口迁移仍待完成。赐福等级来源、完整奖励演出和完整输入验证仍缺。规则见本页及[人物成长](character.md) |
 | 1／4001 | 书桌 `DeskFurniture → TreasurePanel`，进入古遗物收藏 | 四态及点击区已装配，点击仍落在占位提示；收藏入口、原页面和维修剧情未接。内部收藏、任务及培养见[古遗物](relics.md) |
 | 2／4009 | 餐桌及 `DiningTableNpcPopClick → NpcPanelUtils.Open(Dialogue)`，伙伴交流；维修剧情 `UnlockCommunication` | 四态及点击区已装配，伙伴对话／页面与餐桌维修剧情、NPC角色表现未接；好感、档案等见[伙伴](partners.md) |
 | 3／4015 | 炼金炉 `BagualuFurniture → BagualuPanel`，料理、合成、分解、宝石、馈赠 | 炉体点击接入料理窗口；配方、材料检查、学习与制作事务已实现。合成、分解、宝石、馈赠其余页签及炉体完整特效未接；见[料理](cooking.md)、[宝石](gem-forge.md) |
@@ -187,7 +187,7 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `Assets/Official/Home/UI/HudFrame/HomeHudFrame.prefab` 恢复 HomeUI 及公共头像／底栏的原父级，包括两层 `Anim`、CanvasGroup、公共安全区与 `PlayerInfoMask`，共 39 个对象；不以测试位置代替原公共父级。`HomeScreenUI.StencilMask` 直接迁入原复制、材质、排序、显隐及颜色逻辑，只将场景容器实例化映射为本地 Unity 实例化；原 prefab 的 stencil 值为 6、初始隐藏。`HomeHudFrameNativeValidation.Run` 已在隔离完整工程实际 Play Mode 验证激活后的一次复制、`UI/Default` 的 `_StencilComp=8`／`_Stencil=6`／`_StencilOp=2`／`_ColorMask=0`、排序 -1、原父级、重复初始化和显隐恢复，已查看实际运行截图。测试静音、无真实系统输入；隔离完整工程通过 Unity 导入／C# 编译及 `Zjcs.Editor.ProjectTools.Validate`，静态检查通过（150568 个 GUID）。这项测试仅证明公共框架和遮罩；完整 HomeUI 的受控宿主验证见下文，正式业务接线及 Windows Player 尚未完成。
 
-`HomeHudView.NativeFrame` 已把该 `HomeHudFrame` 接入正式 `HomeFeatureRuntime`，替换原手工 Canvas。原家园内容挂回 `Content/Main/Anim`，底栏挂回 `Content/Main/Public/Anim`，保留原玩家 stencil 节点；家园 `Content` 和 `NewPublicTopBarParent` 按原 HomeUI 路径绑定 `SafeArea` 代码及 prefab 的四项适配参数，替换同节点的旧桌面适配脚本，由原实现求得安全区尺寸与坐标。屏幕服务在启用前绑定，关闭时先停用整个画布再释放服务。当前家园内容、头像、货币和底栏内部仍沿历史转换；原生方向指引及完整 HUD 控制器尚未装配，不将共享框架接入记为整项 HUD 完成。
+`HomeHudView.NativeFrame` 已把该 `HomeHudFrame` 接入正式 `HomeFeatureRuntime`，替换原手工 Canvas。原家园内容挂回 `Content/Main/Anim`，底栏挂回 `Content/Main/Public/Anim`，保留原玩家 stencil 节点；家园 `Content` 和 `NewPublicTopBarParent` 按原 HomeUI 路径绑定 `SafeArea` 代码及 prefab 的四项适配参数，替换同节点的旧桌面适配脚本，由原实现求得安全区尺寸与坐标。屏幕服务在启用前绑定，关闭时先停用整个画布再释放服务。当前家园内容、头像、货币和底栏内部仍沿历史转换；床铺／推车的原生方向指引接线见下文，完整 HUD 控制器尚未装配，不将共享框架接入记为整项 HUD 完成。
 
 `HomeNativeFrameHostValidation.Run` 已在完整隔离工程静音 Play Mode 通过真实创角存档进入、原 Main／Public 及安全区／缩放器绑定、场景内部模拟指针命中、原生床铺维修按钮和通知、退出重开及已维修状态恢复；已查看 608×1080 的进入、维修弹窗、通知和重开实际画面。Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和根工作区静态检查通过。屏幕尺寸通过进程内端口提供，未更改系统显示设置；本项未构建或发布新的 Windows Player。
 
@@ -222,6 +222,10 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 `Official/HomeHangUpTips` 保留这段官方提示实现；`Offline/HomeHangUpUI/OfflineHomeHangUpTipSource` 从真实 `OfflineHomeIncomeSession` 读取设施、已解锁产出、数量、容量及速率，在读取前按传入本地时钟推进收益；交易所有者在持久化成功后转发解锁、维修和数据变化事件。当前级别、升级所需经验、可继续获得经验、自家状态、快捷领取偏好、原场景状态切换器与提示消息均为明确所有者端口，不给这些值补隐含服务器默认。此层的快捷领取仅保留资格判断，未接实际领取窗口或场景奖励状态切换器的图形。
 
 `HomeHangUpTipNativeValidation.Run` 已在隔离完整工程静音、有图形 Play Mode 将真实本地收益存档接到上述原生 105 对象方向指引，验证床／推车阈值、床铺补充经验门槛与升级事件分支、多产出按占比选择及解锁刷新、先发布后切换的顺序、快捷领取偏好、一次性领取回执与 XP 输出账本、领取后只隐藏床铺提示、磁盘重开恢复，以及实际计时跨阈值后自动显示推车指引。真实等待经 timeScale=0 暂停、恢复和停用取消验证；继续通过原方向按钮第一射线命中与进程内模拟指针、镜头聚焦及启停释放，原点击 PCM 在静音状态播放。已查看收益提示、领取后、计时到档三张及床铺聚焦后的 608×1080 实际画面。静态元数据检查、Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。收益速率、镜头／家具位置、升级经验和快捷领取偏好是受控输入；同版完整产出公式、真实场景奖励图形、领取／加速窗口、正式 HomeUI／HomeFeatureRuntime 与 Windows Player 仍未由此次接线完成。
+
+[`HomeHangUpHudRuntime`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHangUpHudRuntime.cs) 将原床铺／推车提示控制器和完整原 `Content/Guider` 绑定到正式家园的原安全区父层，保留原按钮、粒子、边缘夹取、聚焦协程和输入遮罩。设施位置读取当前已打包 871 场景的真实槽位，镜头使用同一场景相机及边界；现有场景输入移动镜头后转发原视野更新事件，尚未整体替换为 884 原拖动控制器。未迁移的奖励取回 NPC 子树保持停用，拍照所有者尚未接入。收益解锁读取 `Session.Definitions` 的实际状态，包含配置默认解锁项，不只读取存档中的显式解锁覆盖；维修、解锁、领取及升级结算在真实事务后通知原控制器。角色等级、原同版经验表和真实非战斗等级上限属性驱动床铺补充提示；仅使用原经验查询的基础等级，不补造赐福或赛季记录。快捷领取按原功能 164 限制返回开启，否则读取本地偏好、缺省开启，偏好保存在家园槽位；本次未增加快捷领取开关界面或自动领取事务。关闭家园先取消提示等待、退订并销毁原生子树，再释放场景／画布。
+
+`HomeHangUpHostValidation.Run` 已在完整隔离工程静音、有图形 Play Mode 通过真实创角、原生维修按钮／通知、默认解锁收益的实际容量与阈值、原方向按钮首个射线命中及模拟点击、原遮罩与聚焦协程、真实场景相机到位隐藏、内部模拟拖动、快捷领取偏好落盘及关闭／重开恢复。领取后的提示更新通过直接调用正式 `TryCollect` 事务核验，不作为领取按钮交互通过；旧床铺窗口的实际首个命中是遮挡按钮的 `FillImg`，需迁移原生窗口后重测。已查看进入、维修、通知、离屏提示、聚焦及领取后重开的 608×1080 运行图。有效解锁投影修正后，`HomeHangUpTipNativeValidation` 的完整阈值、多产出／新解锁、真实计时、暂停／取消、领取／磁盘恢复及原指引模拟点击回归通过，实际截图已查看；Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate`（退出码 0）和根工作区静态检查（152905 个 GUID）通过。完整 HUD、家具奖励状态图形、原生床铺／推车领取与加速窗口及 Windows Player 发布仍未完成。
 
 `Runtime/Official/HomeFunctionMenuUI/` 已迁入所选 884 的完整 `FunctionEntryDialog`、18 类菜单按钮／样式组件、百科／预下载／时间组件，以及推荐栏、单元格、点击转发、上下文和对象池。按钮保留官方条件注册、任一条件可用分支、显隐、事件订阅和窗口初始化顺序；图鉴保留 None 默认页与可传入数据，设置保留 Normal 样式，社交先清除新功能标记，界域保留禁用分支及错误 53883。推荐栏仍读取实际活动记录和原配置，保留地图筛选、Order 排序、随机起始项、3000ms 自动切换、原 Scroller 缓动和对象池回收顺序；活动记录、配置、资源句柄与窗口由显式服务端口提供，不在 UI 中生成活动或奖励。百科保留原限制、空 URL 和点击分支，原 SDK／下载器由服务端口隔离，正式离线宿主仍须按本页已确认范围接线。
 

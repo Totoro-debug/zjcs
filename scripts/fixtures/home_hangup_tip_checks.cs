@@ -10,7 +10,7 @@
         var definitions=new[]{
             new OfflineHomeIncomeDefinition{HangUpId=1,OutputItemId=50,Unlocked=true,Rule=new HangUpIncomeRule{HourlyOutput=1000,LevelNum=1,MaxStoreHours=36}},
             new OfflineHomeIncomeDefinition{HangUpId=2,OutputItemId=1,Unlocked=true,Rule=new HangUpIncomeRule{HourlyOutput=1000,LevelNum=1,MaxStoreHours=36,IsCart=true}},
-            new OfflineHomeIncomeDefinition{HangUpId=3,OutputItemId=2,Unlocked=true,Rule=new HangUpIncomeRule{HourlyOutput=100,LevelNum=1,MaxStoreHours=36,IsCart=true}}};
+            new OfflineHomeIncomeDefinition{HangUpId=3,OutputItemId=2,Unlocked=false,Rule=new HangUpIncomeRule{HourlyOutput=100,LevelNum=1,MaxStoreHours=36,IsCart=true}}};
         var tipProperties=new Dictionary<int,long>();var tipFloatIds=new HashSet<int>();
         var income=OfflineHomeIncomeSession.Open(tipPath,definitions,tipProperties,tipFloatIds,tipNow);
         var tipOrder=new List<string>();var switched=new Dictionary<EFurniture,int>();
@@ -62,6 +62,8 @@
         SetIncome(2,2000);SetIncome(3,1080);
         Require(cartTips.TipLevel==1,"unrecorded income is not included by data-change notification alone");
         Require(income.Mutate("tip-unlock-cart3",save=>save.HangUps.Add(new OfflineHomeHangUpEntry{HangUpId=3,Unlocked=true})),"durable new cart unlock");
+        definitions[2].Unlocked=true;
+        income.Reconfigure(definitions,tipProperties,tipFloatIds,Array.Empty<OfflineHomeRandomRewardDefinition>());
         incomeSource.NotifyUnlocked(3);Require(cartTips.TipLevel==2,"newly unlocked income with fewer rewards but greater fill ratio controls cart tip");
         yield return null;
         Require(incomeBedButton.gameObject.activeInHierarchy&&incomeCartButton.gameObject.activeInHierarchy,"actual stored income enables both original native direction buttons");

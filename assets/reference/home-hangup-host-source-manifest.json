@@ -1,0 +1,34 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "1610078d59f353455bda98162d399a86fdaa3d48b49bb0e9cf2adfb587de7179",
+  "inputs": {
+    "assets/reference/home-hud-native-source-manifest.json": "db1dfa4d913c010b83169640c5f968336186fe8578f0108062b5705a03db7293",
+    "assets/reference/home-hangup-tips-source-manifest.json": "0744dd1614f6569cddebfbc3aea62837806506fab2927b00bddeb2c8d80a8fcb",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerExpUtils.cs": "dad4bf796fdb55be6fce36729f3795d875b6d9655d3f19a0c5f06c2a2b9b531a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerHangUpDataExt.cs": "52c6a123f697422dd7c18d5dbb42349eb11c06553f2d470eb62b3ced32c9edb7",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FunctionType.cs": "a4ba46945936bf793e114d9121a59562727dc321f6b274d84f0d13b9e9562b5c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Player.cs": "e0b324d6cf965e194cc517c176e8fae80f16dda7019e42d705ed6ae7d44da611",
+    ".tools/source-packages/current/884_156692/official-code/client-source/HomeCameraController.cs": "a36e27a8492c1afb08b16ef91f88087d32cbb95b42f5dc0e741f5acec17c7aac",
+    "scripts/fixtures/home_furniture_host_validation.cs": "04b99707086fdb7beb10202dc1fd4be3bcb2b6a4d6ef857239ad9e6368dfc5c1",
+    "scripts/fixtures/home_hangup_host_validation.cs": "920ef8bb895040520c30c0d4f3fd763aaf492dbc1e9c79019041bb6f8582934d",
+    "unity/Assets/Game/Runtime/Offline/State/UserDataStorage.cs": "c5dddf1f92e025fd83c5a263bdfa27d3e201abb1eb555b498a8e834c17d40fb6",
+    "unity/Assets/Game/Runtime/Offline/State/UserDataStorage.cs.meta": "375087fa617bdc70d1063a22595723103e7517a4ac1998ab33d8103a1e02c6f6",
+    "unity/Assets/Game/Runtime/Offline/State/Zjcs.Offline.State.asmdef": "dd3287ba818b50f8e9dca7a4e3a5b19d2a79fdf53b319675f8dd607f6051ad21",
+    "unity/Assets/Game/Runtime/Offline/State/Zjcs.Offline.State.asmdef.meta": "22e9bdc54ab39d975dbccd9826458f765f4d4af890f75a607eb249659fef48c5",
+    "unity/Assets/StreamingAssets/Home/scene.json": "f964c2db72eaee9a2496d399f3678fae3e57ca9ef730856c23ffe4ab168e5fed",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeSceneView.cs": "64ac0e997bbafe46f6ce4953fa2e8fa7d320423b99a0eb4cd4eb3051f7897ac2"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHangUpHudRuntime.cs": "19448ded600d0edcac571e6926341881084198d62ed85ab793d1416652e716f8",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHangUpHudRuntime.cs.meta": "bb2e2618ea6c68228722bed6db4725951708d56d092afaf2cdc44255ae1eb260",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "2dd676af0a7d511323892295756abd016c6f461db20b129cf3db2a40b78240a5",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs.meta": "8385bf708a9b671b7c144a1500b67601c9c0f5a8c61ce752281dcab08cf622af",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs": "300c1c8b169aeed162686bd38b492fe703d60e7357809549d3c24d646f4e6f23",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs.meta": "cfede3b465b84277cce0d23ee90f5c109d3e99254d2f762edf1de273d8aab1c0",
+    "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef": "53f8b5d752736064d31e2465ff6933fa9dcd070db4804416cfab34633380c957",
+    "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef.meta": "71ec7cb0d4d5f69c837ad61318ac81ff19e626b0ba7bccb544b904df288261a1",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "9650967e721f2b9d17979eec36e5e013389d51ade530fcc9523d2afb8b8eb3d6",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs.meta": "14627c64476f5d25882a6f65cd7e7d12bb2f2cb7f034a765ac172108c08d4228"
+  },
+  "scope": "Actual home income drives the original bed/cart tip controllers and native direction guides under the original safe area. Anchors and camera clamp use the current packaged 871 scene conversion. The retained reward-retrieval NPC subtree stays inactive until its owner is migrated; complete HomeUI, original home scene and Player publication remain pending."
+}

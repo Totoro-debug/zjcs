@@ -95,6 +95,7 @@ namespace Zjcs.Presentation.Home
         }
 
         public Transform CanvasTransform => canvas == null ? null : canvas.transform;
+        internal Transform HomeSceneUiParent => homePanel.transform.Find("Content");
 
         public bool AnyModalOpen => CharacterPageOpen || activeDialog != null || inventoryRoot != null || host.FeatureModalOpen || skillDamageTest != null
             || DungeonModalOpen

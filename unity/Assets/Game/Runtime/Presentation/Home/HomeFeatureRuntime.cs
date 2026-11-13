@@ -775,6 +775,7 @@ namespace Zjcs.Presentation.Home
             DrainHomeInventory();
             hud.RefreshAll();
             tutorialHost = new HomeTutorialHost(this, hud);
+            hangUpHud = new HomeHangUpHudRuntime(this, hud.HomeSceneUiParent);
             tutorialRunner = new HomeTutorialRunner(tutorials, tutorialHost,
                 Path.Combine(slots.GetSlotDirectory(slotId), "home-tutorials.json"));
             tutorialHost.RecordOptionSelection = tutorialRunner.RecordOptionSelection;
@@ -1455,6 +1456,7 @@ namespace Zjcs.Presentation.Home
                 DrainHomeInventory();
                 hud.RefreshAll();
                 FurnitureRepairedForTutorial?.Invoke(type);
+                hangUpHud?.Source.NotifyRepaired((Zjcs.Official.HomeUI.EFurniture)type);
             }
             return repaired;
         }
@@ -1491,6 +1493,7 @@ namespace Zjcs.Presentation.Home
             {
                 HangUpCollectedForTutorial?.Invoke(hangUpId, count, receipt);
                 DrainHomeInventory();
+                hangUpHud?.Source.NotifyDataChanged(hangUpId);
                 hud.RefreshAll();
             }
             return count;
@@ -1547,6 +1550,7 @@ namespace Zjcs.Presentation.Home
             if (unlocked)
             {
                 RefreshIncomeCatalog();
+                hangUpHud?.Source.NotifyUnlocked(hangUpId);
                 hud.RefreshAll();
             }
             return unlocked;
@@ -1567,7 +1571,11 @@ namespace Zjcs.Presentation.Home
             session.AdvanceTo(now);
             long settled = session.Collect(hangUpId, "home:levelup-settle:" + slotId + ":" + hangUpId
                 + ":" + session.Save.LastLocalUnixSeconds);
-            if (settled > 0) DrainHomeInventory();
+            if (settled > 0)
+            {
+                DrainHomeInventory();
+                hangUpHud?.Source.NotifyDataChanged(hangUpId);
+            }
             string costReceipt = "home:levelup:" + slotId + ":" + hangUpId + ":cost:"
                 + System.Guid.NewGuid().ToString("N");
             HomeLevelUpResult result = homeProgression.LevelUp(session, hangUpId, context, BlessingLevel,
@@ -1578,6 +1586,7 @@ namespace Zjcs.Presentation.Home
             {
                 RefreshIncomeCatalog();
                 DrainHomeInventory();
+                hangUpHud?.Source.NotifyDataChanged(hangUpId);
                 hud.RefreshAll();
             }
             return result;
@@ -1773,6 +1782,7 @@ namespace Zjcs.Presentation.Home
 
         private void Close(bool invokeCallback)
         {
+            DisposeHangUpHud();
             tutorialRunner?.Suspend();
             tutorialRunner = null;
             tutorialHost?.Dispose();
@@ -1818,6 +1828,7 @@ namespace Zjcs.Presentation.Home
             TickAstrologicalCharge();
             environment?.Tick(Time.unscaledDeltaTime);
             scene?.Tick(Time.unscaledDeltaTime);
+            hangUpHud?.Tick();
             hud?.Tick();
             wishes?.Tick();
             if (tutorialAutoStartEnabled && tutorialRunner != null)
@@ -1852,6 +1863,7 @@ namespace Zjcs.Presentation.Home
 
         private void OnDestroy()
         {
+            DisposeHangUpHud();
             partnerUiBinding?.Dispose(); partnerUiBinding = null;
             EndAstrologicalCharge();
             tutorialRunner?.Suspend();

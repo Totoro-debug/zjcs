@@ -22,8 +22,16 @@ namespace Zjcs.Offline.Home
         public List<OfflineHomeFurnitureEntry> Furniture = new List<OfflineHomeFurnitureEntry>();
         public List<OfflineHomeHangUpEntry> HangUps = new List<OfflineHomeHangUpEntry>();
         public List<OfflineHomeSkinSelection> Skins = new List<OfflineHomeSkinSelection>();
+        public List<OfflineHomeQuickReceiveState> QuickReceiveStates = new List<OfflineHomeQuickReceiveState>();
         public long GrantSerial;
         public List<string> AppliedReceipts = new List<string>();
+    }
+
+    [Serializable]
+    public sealed class OfflineHomeQuickReceiveState
+    {
+        public int Type;
+        public bool Enabled;
     }
 
     [Serializable]
@@ -893,6 +901,10 @@ namespace Zjcs.Offline.Home
             foreach (OfflineHomeHangUpEntry entry in save.HangUps)
                 if (entry == null || entry.HangUpId <= 0 || !ownedHangUps.Add(entry.HangUpId)
                     || entry.Level < 1 || entry.Level > 100000) return false;
+            if (save.QuickReceiveStates == null) return false;
+            var quickReceiveTypes = new HashSet<int>();
+            foreach (var entry in save.QuickReceiveStates)
+                if (entry == null || entry.Type != 0 && entry.Type != 10 || !quickReceiveTypes.Add(entry.Type)) return false;
             var skinTypes = new HashSet<string>(StringComparer.Ordinal);
             foreach (OfflineHomeSkinSelection entry in save.Skins)
                 if (entry == null || entry.Category < 0 || entry.Category > 2

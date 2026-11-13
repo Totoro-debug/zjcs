@@ -2889,3 +2889,14 @@ unity/Assets/Game/Editor/BattleMovementEffects/OfficialBattlePublicPlayerBuild.c
 scripts/test_battle_public_player.ps1 text eol=lf
 unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseRuntime.Theme.cs* text eol=lf
 unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Theme.cs* text eol=lf
+
+# Keep actual home hang-up host source receipts reproducible.
+scripts/prepare_home_hangup_host.py text eol=lf
+scripts/fixtures/home_hangup_host_validation.cs text eol=lf
+assets/reference/home-hangup-host-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/HomeHangUpHudRuntime.cs* text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/State/UserDataStorage.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/State/Zjcs.Offline.State.asmdef* text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/HomeSceneView.cs text eol=lf

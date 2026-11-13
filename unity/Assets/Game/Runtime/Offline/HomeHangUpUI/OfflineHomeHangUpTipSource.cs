@@ -56,7 +56,7 @@ namespace Zjcs.Offline.HomeHangUpUI
             get
             {
                 var result = new Dictionary<int, HomeHangUpTipRecord>();
-                foreach (var entry in session.HangUps)
+                foreach (var entry in session.Definitions)
                     result.Add(entry.HangUpId, new HomeHangUpTipRecord { IsUnlock = entry.Unlocked });
                 return result;
             }
