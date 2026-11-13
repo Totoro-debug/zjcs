@@ -1,7 +1,8 @@
 param(
     [Parameter(Mandatory)][string]$Player,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet('up','down','left','right')][string[]]$Directions = @('up','down','left','right')
+    [ValidateSet('up','down','left','right')][string[]]$Directions = @('up','down','left','right'),
+    [switch]$ColdScene
 )
 $ErrorActionPreference = 'Stop'
 $previous = @{}
@@ -10,6 +11,7 @@ try {
     foreach ($direction in $Directions) {
         Get-ChildItem Env:ZJCS_* | ForEach-Object { Remove-Item ('Env:' + $_.Name) }
         $env:ZJCS_ARC_SHIELD_LIFECYCLE = '1'
+        if ($ColdScene) { $env:ZJCS_ARC_SHIELD_COLD_SCENE = '1' }
         $before = @{}
         Get-ChildItem -LiteralPath $Workspace -Directory -Filter "native-10024-$direction-*" |
             ForEach-Object { $before[$_.FullName] = $true }
@@ -21,6 +23,17 @@ try {
         foreach ($name in @('arc-shield-round-1.png','arc-shield-round-2.png','arc-shield-round-3.png',
             'arc-shield-restored.png','arc-shield-ended.png','arc-shield-checkpoint.json')) {
             if (-not (Test-Path -LiteralPath (Join-Path $run $name))) { throw "Arc-shield lifecycle evidence missing: $name ($run)" }
+        }
+        if ($ColdScene) {
+            foreach ($name in @('arc-shield-cold-before.json','arc-shield-cold-after.json',
+                'arc-shield-before-cold-scene.png','arc-shield-after-cold-scene.png')) {
+                if (-not (Test-Path -LiteralPath (Join-Path $run $name))) { throw "Full arc-shield scene evidence missing: $name ($run)" }
+            }
+            if ((Get-FileHash -LiteralPath (Join-Path $run 'arc-shield-cold-before.json')).Hash -ne
+                (Get-FileHash -LiteralPath (Join-Path $run 'arc-shield-cold-after.json')).Hash -or
+                -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Arc shield cold scene] Original weekly checkpoint')) {
+                throw "Original arc-shield scene checkpoint or native restoration failed: $run"
+            }
         }
         $saved = Get-Content -LiteralPath (Join-Path $run 'arc-shield-checkpoint.json') -Raw | ConvertFrom-Json
         $playerUnit = @($saved.checkpoint.Units | Where-Object Id -eq 1)

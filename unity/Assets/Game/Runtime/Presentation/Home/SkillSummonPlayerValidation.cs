@@ -271,6 +271,17 @@ namespace Zjcs.Presentation.Home
                 masterChildProbe?.ObserveFrame(controller);
                 hitFinishProbe?.ObserveFrame(controller);
                 graphCapabilityProbe?.ObserveFrame(controller);
+                if (graphCapabilityProbe != null && graphCapabilityProbe.ReadyForArcColdScene(controller))
+                {
+                    runner.enabled = false;
+                    yield return CaptureGridFrame("arc-shield-restored");
+                    captured = true;
+                    yield return SkillArcShieldColdSceneValidation.Rebuild(home, runner, slot, saveRoot, output,
+                        graphCapabilityProbe, value => settled = value, (nextHome, nextRunner) => {
+                            home = nextHome; runner = nextRunner; controller = nextRunner.Controller;
+                        }, CaptureGridFrame);
+                    continue;
+                }
                 if (!shieldColdSceneCompleted && graphCapabilityProbe != null
                     && graphCapabilityProbe.ReadyForShieldColdScene(controller))
                 {

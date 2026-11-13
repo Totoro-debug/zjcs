@@ -145,7 +145,8 @@ namespace Zjcs.Presentation.Combat
 
         private void VerifyArcShieldDiagnostic()
         {
-            if (ValidateArcShield) Require(arcComplete, "Original arc-shield native lifecycle did not finish.");
+            if (ValidateArcShield) Require(arcComplete && (!ArcColdSceneRequested || arcColdSceneComplete),
+                "Original arc-shield native lifecycle or requested full scene rebuild did not finish.");
         }
     }
 }
