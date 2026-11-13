@@ -95,6 +95,11 @@ namespace Zjcs.Presentation.Home
                 yield return SkillDarkStatusProcessValidation.Resume(output, CaptureGridFrame, ClickGridControl);
                 yield break;
             }
+            if (SkillArcShieldProcessValidation.ResumeRequested)
+            {
+                yield return SkillArcShieldProcessValidation.Resume(output, CaptureGridFrame, ClickGridControl);
+                yield break;
+            }
             string saveRoot=Path.Combine(output,"save-"+Guid.NewGuid().ToString("N"));
             var slots=new ProfileSlotCatalog(saveRoot);
             string slot=slots.CreateSlot();
@@ -276,6 +281,12 @@ namespace Zjcs.Presentation.Home
                     runner.enabled = false;
                     yield return CaptureGridFrame("arc-shield-restored");
                     captured = true;
+                    if (SkillArcShieldProcessValidation.PrepareRequested)
+                    {
+                        yield return SkillArcShieldProcessValidation.Prepare(runner, saveRoot, slot, output,
+                            graphCapabilityProbe, CaptureGridFrame);
+                        yield break;
+                    }
                     yield return SkillArcShieldColdSceneValidation.Rebuild(home, runner, slot, saveRoot, output,
                         graphCapabilityProbe, value => settled = value, (nextHome, nextRunner) => {
                             home = nextHome; runner = nextRunner; controller = nextRunner.Controller;

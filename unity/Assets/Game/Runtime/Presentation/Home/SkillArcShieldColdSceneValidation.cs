@@ -31,6 +31,17 @@ namespace Zjcs.Presentation.Home
             adopt(home, runner);
             probe.BindArcColdScene(runner.Controller, saved);
             runner.Controller.StepCompleted += _ => probe.ObserveStep(runner.Controller);
+            yield return WaitForPresentation(home, runner, probe, saved.Checkpoint);
+            File.WriteAllText(Path.Combine(output, "arc-shield-cold-after.json"),
+                FightBattleCheckpointSerializer.Save(runner.Controller.Checkpoint));
+            yield return capture("arc-shield-after-cold-scene");
+            runner.enabled = true;
+            Debug.Log("[Arc shield cold scene] Original weekly checkpoint, destroyed home/battle hosts, new original body/status/HUD, unchanged properties and no receipt replay passed.");
+        }
+
+        public static IEnumerator WaitForPresentation(HomeFeatureRuntime home, WeeklyChallengeBattleRunner runner,
+            OfficialBattleGraphCapabilityValidation probe, string checkpoint)
+        {
             float deadline = Time.realtimeSinceStartup + 180f;
             while (!SkillDarkStatusColdSceneValidation.HudFullyVisible(home.Hud.CanvasTransform.Find("FightMainPanel"))
                 || !probe.ArcColdSceneVisible(runner.Controller))
@@ -41,12 +52,8 @@ namespace Zjcs.Presentation.Home
             yield return new WaitForSecondsRealtime(.2f);
             Require(SkillDarkStatusColdSceneValidation.HudFullyVisible(home.Hud.CanvasTransform.Find("FightMainPanel"))
                 && probe.ArcColdSceneVisible(runner.Controller), "Restored original HUD or arc shield became invisible.");
-            string restored = FightBattleCheckpointSerializer.Save(runner.Controller.Checkpoint);
-            Require(restored == saved.Checkpoint, "The resumed arc-shield battle advanced during inspection.");
-            File.WriteAllText(Path.Combine(output, "arc-shield-cold-after.json"), restored);
-            yield return capture("arc-shield-after-cold-scene");
-            runner.enabled = true;
-            Debug.Log("[Arc shield cold scene] Original weekly checkpoint, destroyed home/battle hosts, new original body/status/HUD, unchanged properties and no receipt replay passed.");
+            Require(FightBattleCheckpointSerializer.Save(runner.Controller.Checkpoint) == checkpoint,
+                "The resumed arc-shield battle advanced during inspection.");
         }
 
         private static void Require(bool value, string message)

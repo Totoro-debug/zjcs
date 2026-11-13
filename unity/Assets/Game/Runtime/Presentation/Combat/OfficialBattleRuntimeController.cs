@@ -718,6 +718,10 @@ namespace Zjcs.Presentation.Combat
             modeAdapter = null;
         }
 
+        // Unity may destroy status/body objects before the mode runner's OnDestroy.
+        // Release the live original graphs while all native hosts still exist.
+        private void OnApplicationQuit() => DisposeSession();
+
         private void OnDestroy()
         {
             DisposeSession();
