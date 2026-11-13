@@ -173,6 +173,7 @@ def main():
 
     constructors = Constructors()
     tables, table_sources = {}, []
+    theme_selection, theme_conditions = [], []
     with Apk.current() as apk:
         for table, schema in (('stage_override_bgm', 'TbStageOverrideBgmInfo'), ('fight_theme', 'TbFightThemeInfo')):
             path = 'Assets/Config/Luban/' + table + '.g.bytes'
@@ -181,10 +182,27 @@ def main():
             rows = constructors.table(data, schema)
             key = 'StageId' if table == 'stage_override_bgm' else 'FightThemeId'
             tables[table] = [dict(id=row[key], group=row['RtpcName'], value=row['RtpcValue'], config=row['BgmConfigPath']) for row in rows]
+            if table == 'fight_theme':
+                theme_selection = [{key:row[key] for key in ('FightThemeId', 'ConditionId', 'StageTypes', 'TriggerPercent')}
+                                   for row in rows]
             table_sources.append(dict(apk.provenance(obj), asset=path, bytes=len(data), sha256=hashlib.sha256(data).hexdigest()))
+        path = 'Assets/Config/Luban/conditions.g.bytes'
+        obj = apk.asset('config_luban', path)
+        data = obj.read().m_Script.encode('utf-8', 'surrogateescape')
+        required = {row['ConditionId'] for row in theme_selection}
+        for row in constructors.table(data, 'TbConditionInfo'):
+            if row['ClassId'] not in required: continue
+            condition = row['Condition']
+            assert condition['_type'] == 'DomainTypeCondition', condition
+            theme_conditions.append(dict(ClassId=row['ClassId'],
+                Condition={key:condition[key] for key in ('DomainType', 'Not')}))
+        assert {row['ClassId'] for row in theme_conditions} == required
+        table_sources.append(dict(apk.provenance(obj), asset=path, bytes=len(data), sha256=hashlib.sha256(data).hexdigest(),
+                                  selected_condition_ids=sorted(required)))
     catalog = dict(manifest='884_156692', provider_resource='Combat/Wwise/Bgm/BgmGameObject',
         default_config_resource='Combat/Wwise/Bgm/Configs/GameBgmConfig', configs=configs,
-        scenes=[{k:v for k,v in row.items() if k in ('game_ids','resource')} for row in scenes], **tables)
+        scenes=[{k:v for k,v in row.items() if k in ('game_ids','resource')} for row in scenes],
+        theme_selection=theme_selection, theme_conditions=theme_conditions, **tables)
     target = DEST / 'catalog.json'
     write(target, json.dumps(catalog, ensure_ascii=False, indent=2) + '\n'); meta(target)
     for item in list(outputs):
@@ -202,7 +220,8 @@ def main():
         outputs=list(outputs.values()), tool=identity(Path(__file__)), adaptations=[
             'Preserve original music node IDs, serialized values and reference assets; rebind script and asset GUIDs.',
             'Extract only the original global BGM child; the original initializer is already owned by the application sound module.',
-            'Expose selected music fields from the exact original configuration constructors.'])
+            'Expose selected music fields and theme selection fields from the exact original configuration constructors.',
+            'Decode only the conditions referenced by the pinned theme table; retain their original domain type and Not flag.'])
     RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(json.dumps(dict(scenes=len(scenes), references=len(references), outputs=len(outputs),
         stage_overrides=len(tables['stage_override_bgm']), themes=len(tables['fight_theme']))))

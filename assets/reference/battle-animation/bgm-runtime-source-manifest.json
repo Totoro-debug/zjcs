@@ -57,6 +57,61 @@
       "sha256": "268711b13d77add284e7c3a875c3a802886db8a0ce776d62ae8770909da3f1cb"
     },
     {
+      "path": ".tools/source-packages/official-code/common-source/Common/FightThemeInfoParser.cs",
+      "bytes": 951,
+      "sha256": "79f5dd471c27078e562602175b39953284ac341891804af6e00deaaac1a31f59"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/FightThemeInfo.cs",
+      "bytes": 1706,
+      "sha256": "3530f4c0e5538b0c0bda69444a443cae5d55d27e867e80b25599a260ca7cf29d"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/FightThemeGenerator.cs",
+      "bytes": 492,
+      "sha256": "24fb086021bc1b7fb9a7381ae32f76ad88aba47cda8f766a91d05e52a513b87d"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DomainTypeCondition.cs",
+      "bytes": 1419,
+      "sha256": "a08171d99aa1298878019fe9184139a65fdb38d3a489ba8b39ae96ff8e55c813"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DomainType.cs",
+      "bytes": 84,
+      "sha256": "a446d7978360832052dad16dd954bdb19d23e5a336f3658e03a3901b5fd34b16"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/StageType.cs",
+      "bytes": 1168,
+      "sha256": "5f9513e58049bf5311882bc2d4f0c67c8832ad2f52307510e095be0d05d87107"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/RandomUtils.cs",
+      "bytes": 8211,
+      "sha256": "89bd7823bac0f1ae28367adab9a4ffc1f737707dbc134737a7c8ab8cd6bfb0f5"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/Framework/GRandom.cs",
+      "bytes": 1378,
+      "sha256": "8bb24962b6753a181ed27ea4159f06c0b8410cfa908dbff23609b31f14633741"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/Framework/RandomFactory.cs",
+      "bytes": 902,
+      "sha256": "927c0a4f44fdbf1c2465693dce3d670346022637d2ba39e158eafcf3a7144d97"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/Framework/SystemRandom.cs",
+      "bytes": 1630,
+      "sha256": "8c471ce4bcf9bc99f3839e6a728c24496a06124cdd830d69372a84c5056bbb60"
+    },
+    {
+      "path": ".tools/source-packages/official-code/launch-source/LaunchContainerInstaller.cs",
+      "bytes": 7456,
+      "sha256": "029650fb6be757a487edb36c663380f25ee9ecc49ce2d1d81e159a7f84e77e96"
+    },
+    {
       "path": ".tools/source-packages/official-code/client-source/FightBgmOverrideHandler.cs",
       "bytes": 3640,
       "sha256": "68411fee14a82dafc6b6a7cd7d401ca4f8ce67e303d9247d20be5e12835c2fd7"
@@ -242,6 +297,36 @@
       "path": "unity/Assets/Game/Runtime/Official/BattleBgm/Zjcs.Official.BattleBgm.asmdef.meta",
       "bytes": 60,
       "sha256": "878e79a66a89e857cc7f4ed89e0ec7d72f5819a7dd6f08006dd19792b9905892"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/FightThemeInfoParser.cs",
+      "bytes": 1156,
+      "sha256": "c347778877cddabf1d90a9c9e75d47a6ef243133cb949a0e5194eeae31d8b818"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/FightThemeInfoParser.cs.meta",
+      "bytes": 60,
+      "sha256": "89cd2e8f61c7249200f4cdc8973f964392b70c683afd811dd7368ff36b315393"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/FightThemeInfo.cs",
+      "bytes": 406,
+      "sha256": "03543bdd23de3a7d8077e2808aba764e8223fc37a6fd24abb21d9e4e99a0ec40"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/FightThemeInfo.cs.meta",
+      "bytes": 60,
+      "sha256": "9316405e506ca35824c2551a98df153e69dde52885ece019011b95a642673c79"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/DomainTypeCondition.cs",
+      "bytes": 331,
+      "sha256": "7d3a8a6ed81acbf261c71426eb57e19a64330a3e37c25798ec534270e56c6a25"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleBgm/DomainTypeCondition.cs.meta",
+      "bytes": 60,
+      "sha256": "fe5628f8df20328481709788f7e35b5bf2e6510708a6322f43ab2ca97f01ba5c"
     }
   ],
   "adaptations": [
@@ -250,11 +335,14 @@
     "Remove only the framework ScriptableObjectConfig registration attribute; original asset fields remain.",
     "Remove only the two trace logging blocks and logger dependency.",
     "Replace the broad Wwise proxy with the two consumed playback operations.",
+    "Retain the original theme selector iteration, stage filter, condition/null short-circuit and strict Next(10000) threshold; inject only its consumed condition and random operations.",
+    "Project the four original theme fields consumed by the selector; keep original audio asset bindings separately.",
+    "Retain DomainTypeCondition.IsMet with the same equality/Not branches; supply the current local domain instead of the online PlanesInfo singleton.",
     "Repair decompiled Queue.TryDequeue ref to out."
   ],
   "tool": {
     "path": "scripts/prepare_battle_bgm_sources.py",
-    "bytes": 7274,
-    "sha256": "9cc6daac24953c05ff1d819cd5c94a54b4f1521aa9890d67504bbbf8e4abc173"
+    "bytes": 11710,
+    "sha256": "82bd8b7f49c2a1a0657848ac02ffa698dc9335d60fd9e076f36f074c74eaa8e4"
   }
 }

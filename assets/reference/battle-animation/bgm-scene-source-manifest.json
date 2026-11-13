@@ -5095,18 +5095,496 @@
       "asset": "Assets/Config/Luban/fight_theme.g.bytes",
       "bytes": 101,
       "sha256": "3689105076fb099a915db833697957f97f1807a5302d73df30ae4c69e8469fa4"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "2135504609496173008",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "asset": "Assets/Config/Luban/conditions.g.bytes",
+      "bytes": 68061,
+      "sha256": "87610428d6195c06ff55291ae24423cc949df7ac25bfb8953cc3798a1aaa31e5",
+      "selected_condition_ids": [
+        30110
+      ]
     }
   ],
   "constructor_sources": [
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AccountLostDaysCondition.cs",
+      "bytes": 1719,
+      "sha256": "29ff7820054fee727bb4a3933ff7eb5fda8cf91132f6490454a03614371b7592"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AccumulatedPayCondition.cs",
+      "bytes": 2671,
+      "sha256": "0eaf3a283d03e06e71ed2a3b65ec58f87c4933aa90a26bda44efc489b0bc12b3"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AccumulatedPayStarValueCondition.cs",
+      "bytes": 2461,
+      "sha256": "6fbbdf34b3fe033f78ed7c5e60628d8305dc771599db9e9b0651272d35b334a6"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ActivityLiveSignUpCondition.cs",
+      "bytes": 2350,
+      "sha256": "3e523d44b6988fd0caa267834fdb5c0ea88f1ce14c1c972d913f7cdb63d9b377"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AlwaysCondition.cs",
+      "bytes": 1035,
+      "sha256": "d5525bc8d9c519a74f2ed9d36c4a7ed550a5ccc041c348f1701fc8273b954860"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AnyDailyDungeonUnlockCondition.cs",
+      "bytes": 1931,
+      "sha256": "242a4cc479da09ae1f9ca60bb3f4d0ea35b5b50f28bbfde40b8f9a83c0c1a135"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AnyMapGoddessActivedCondition.cs",
+      "bytes": 1736,
+      "sha256": "dc2c945985a87f2e651349acfe8016ac59fe5698e0629477d2c05fc472846a8b"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AwardRetrieveItemCountCondition.cs",
+      "bytes": 4678,
+      "sha256": "31cf62fd19330de9555086d10a111cbf6572ddd385ab69cece7c875c91f8093c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AwardRetrieveItemMaxDaysCondition.cs",
+      "bytes": 1776,
+      "sha256": "e9822ec21c48416cddd8489aa40f7b2e20ef705913fc336c8b276e0fd2fbf309"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CanFightMonsterCondition.cs",
+      "bytes": 2642,
+      "sha256": "61783cb568e6609fce6913ab659d8443224960f7cb736ea7cfa2d2492d2cdab8"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CanGetItemsCondition.cs",
+      "bytes": 2514,
+      "sha256": "e226c16d5fac1dbd45d4e1b101a686df8c3b84034bc8063ef297add419ece306"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CelebrationPhotoAlbumPersonalNpcInRangeCondition.cs",
+      "bytes": 4017,
+      "sha256": "9369ee1899acc159885e0ac49601374c0b78621ce7d51e5975b1bd22f3aafaf7"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CombatRatingOrRankSuppressCondition.cs",
+      "bytes": 2388,
+      "sha256": "64c3c2b2df0b978faff5a6d4d99b54652074cce0fee3e438afae72d9248b4460"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CompositeAndCondition.cs",
+      "bytes": 2142,
+      "sha256": "1a7d5ccf8f1dcf8401e1a46aeb4596bd464f5c8774edc50adcdb4d55b111571c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CompositeCondition.cs",
+      "bytes": 2159,
+      "sha256": "9e45aefb344d4e75fffe52fa8f0fcea3e4886d3e396b2c3fa10128ebe35cf54d"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CompositeOrCondition.cs",
+      "bytes": 2141,
+      "sha256": "b4d4f14990bcc59bb196a4bfcc360df4d38f1142e040ec9015c14211b6530aca"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ConditionInfo.cs",
+      "bytes": 795,
+      "sha256": "7621ca17ebe2cfa68b441ae7e6c8e370447ae89fab9a0222aaecc2e32161ceb3"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DailyDungeonPersonalGradeCondition.cs",
+      "bytes": 3742,
+      "sha256": "657c607949b4045cf4e0509e5ee27c8fe081e0e16566648a6a66863c18a2240b"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DailyDungeonUnlockCondition.cs",
+      "bytes": 3099,
+      "sha256": "2b7d17c8d2b6736f6fbe6c18a83b61fded2289b08bb02ec63137eb07a219858e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DailyDungeonUnlockDifficultyCondition.cs",
+      "bytes": 2483,
+      "sha256": "f4d1608a57b4b7d0301e1fa5a57a31fbc83e9f830e1c2cd99c379a148caebb07"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DemonBattleLayerPassCondition.cs",
+      "bytes": 3612,
+      "sha256": "f9036f38526802373d8edf31d4828c6f771d82afba3c81ac2595f98f5180525a"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DemonBattlePassCondition.cs",
+      "bytes": 2884,
+      "sha256": "77b90a8743fc2f76e199159aa99e3f7aad06a235ef08988e1145e15409235431"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DemonKingChallengeableCondition.cs",
+      "bytes": 2418,
+      "sha256": "e07a5bd22dd6372c387412d8d642bd94c673c7608e218fe2d51ed2a158f28e21"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DomainTypeCondition.cs",
+      "bytes": 1419,
+      "sha256": "a08171d99aa1298878019fe9184139a65fdb38d3a489ba8b39ae96ff8e55c813"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/EnterpriseWXLinkedCondition.cs",
+      "bytes": 1418,
+      "sha256": "bf98e348dc8ae786526592f3337d85bfbfebe39ceaa23d77099415f085fd1d34"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/EquipLevelCondition.cs",
+      "bytes": 3036,
+      "sha256": "abf3f6b0e677afd7f7d07016f4a88a53051485b943342980e91c6f53425748d2"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/EquipSeasonLevelCondition.cs",
+      "bytes": 3161,
+      "sha256": "82f2a6e627b0f2876e576fe65ba79f01bc454137580162afde30e1dfced6aba2"
+    },
     {
       "path": ".tools/source-packages/official-code/common-source/Common/FightThemeInfo.cs",
       "bytes": 1706,
       "sha256": "3530f4c0e5538b0c0bda69444a443cae5d55d27e867e80b25599a260ca7cf29d"
     },
     {
+      "path": ".tools/source-packages/official-code/common-source/Common/GemRankCondition.cs",
+      "bytes": 1254,
+      "sha256": "fdb16e50cb6a1ce3148049a62aeef58fe7d54f4badaa596da9d802004d84cb0e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/GeneralRankUnlockCondition.cs",
+      "bytes": 4402,
+      "sha256": "754ef5f458abfabade54425c15d31dabdaead80dbdd17ef03fa2223af2d8ae89"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HandInItemTimesCondition.cs",
+      "bytes": 2415,
+      "sha256": "78beb394ecdfd397c19f855f1960f887350a3a620e3e4b9eb567ec10f8f74981"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasAnyNpcExclusiveGiftCondition.cs",
+      "bytes": 2724,
+      "sha256": "ab6733eb0c899ab98b8f9cb76c8a2273e9d0b798469f2c4c98956db4a2db349e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasItemCondition.cs",
+      "bytes": 3287,
+      "sha256": "fca0fa79cc49354068fc32d136863d5a77181fd9ae93596c1671a9f804641dd5"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasItemTypeCondition.cs",
+      "bytes": 2413,
+      "sha256": "6da637782893312e7684ec945db2a108b4271c442f37741852b67e107c5f827f"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasItemTypeWithQualityCondition.cs",
+      "bytes": 3925,
+      "sha256": "a4ed9c9983a1aa20cc0f9c466e1e8a6d55dad477f4d64e699caf510a162e07f2"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasManualMeetNpcCondition.cs",
+      "bytes": 2032,
+      "sha256": "c3465c86bfe691d5808187ee940dc7bbebac2417750254bedafc5970e1fd2ec1"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasNpcCountCondition.cs",
+      "bytes": 3324,
+      "sha256": "e2f566a5c7446673ef93e763a6c61a5fb688f29c8601db217a23aeae6ee1a845"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasOrUsedItemCondition.cs",
+      "bytes": 1429,
+      "sha256": "d37a5c11aa2efd3f9fab1650642cf0d0484fd5849fb77ade10978ded720e06eb"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasStatusCondition.cs",
+      "bytes": 2044,
+      "sha256": "3f2f1dabc98e3d9194411fa343dc530022fe1c46c67cb31d592d482caa7ab86f"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ICondition.cs",
+      "bytes": 20075,
+      "sha256": "12a4005edaf53df080240808b91e6e3e55fc08bceb91fd154e6c3993cdc704ff"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/InLegionCondition.cs",
+      "bytes": 1793,
+      "sha256": "a409ddb2ce5f18dc143db1d3a6bcf22fc5f29646c6ef99cd1e7db7d328cd7caa"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/InitialWeaponCondition.cs",
+      "bytes": 1433,
+      "sha256": "aa873282f13ea2c0aa2b8cdb31c09416e840c6d6dc2299ef86cc1bb2c2c4f726"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/IsActivityOpenCondition.cs",
+      "bytes": 3626,
+      "sha256": "e76e1f4a0eb38aeb4ecdaa0b433c17d45f2cb7509cf673ab8bd385217a3f693e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/JointStrikeActiveOpenCondition.cs",
+      "bytes": 1918,
+      "sha256": "256cebac7e24fb0ac131eba72bbc18f9e092af814ff4318adf859bb143076c55"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/LegionMapBuildingLevelCondition.cs",
+      "bytes": 3044,
+      "sha256": "6b5d2788aa0433c2dfb17b4c0943f382fa6189a49f6d6dfb924b6203be52a546"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/LevelCondition.cs",
+      "bytes": 3416,
+      "sha256": "f3c1f31e2877f83a97df6f48d7230f50b48b5b0cf3420bb542a363ee37c8000e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/LogicDomainServerDaysCondition.cs",
+      "bytes": 2219,
+      "sha256": "d27dcd00991a062fb266a6c671ea0144c9a133099d9073f7fed7453598bac387"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/LogicalNotCondition.cs",
+      "bytes": 2009,
+      "sha256": "1d2d73d8b550dd85e3c73e4b522a56ac4645dafefd9cd1fc7f851214580ff45f"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapCurrentRegionActivedCondition.cs",
+      "bytes": 1189,
+      "sha256": "341d945d3e1c7cc85cef6bc77a008691e73d518175e157c42dc481d146415c4b"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapGalaxyIsClearedCondition.cs",
+      "bytes": 1999,
+      "sha256": "0d3a2d933018d1cd7686f74ee8004621f821218ac1e7d91aaf14bf99e72cdcfd"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapGoddessCondition.cs",
+      "bytes": 2235,
+      "sha256": "7c705f054a8bd091faa55279b1fef5173dd1a1597c738bb9d05cab9717c12f77"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapLocationCondition.cs",
+      "bytes": 1418,
+      "sha256": "def782b1f2b231ae5557c7e4328d353deb8a4906fabcc3f1db56cadd3c2d27a5"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapLogicEntityEndByTagCondition.cs",
+      "bytes": 2486,
+      "sha256": "51be63de02c93729761e25201991595a49b03bdd9d49412234217e4441be6a5e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapRegionActivedCondition.cs",
+      "bytes": 2186,
+      "sha256": "1152e0d30105cfe5e9962e4bc4b9b64ac428780ec63fd3afa4db0f71c3ac8056"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapRegionGoddessCondition.cs",
+      "bytes": 1987,
+      "sha256": "28cc2f2d4c4e910b728532a893ed8b88148f9b234b88d6012619d2c9d18cef22"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapUnlockCondition.cs",
+      "bytes": 1296,
+      "sha256": "4967a1cb05b4d1029b1590501eb1fb6e0957193c9c7827626eed5368dde779f8"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapWorldActivedCondition.cs",
+      "bytes": 1388,
+      "sha256": "44b6780760161608245e96fe0b0e304d21f243c9ce4221ee4055df1c6154c24c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapWorldAloneStatusCondition.cs",
+      "bytes": 1986,
+      "sha256": "801ded9fd70165486c170ce34650012ae3cb13ea0920ffea1e8bbea4433dcbfb"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MaxProfessionRankCondition.cs",
+      "bytes": 1974,
+      "sha256": "a2dbe26e8ac46e01db42d038fc4a86b6bae4ad4e460d20c307a417ab3becc7bf"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/NoBlessCombatRatingCondition.cs",
+      "bytes": 2552,
+      "sha256": "9a6469fd27ea919855b6a11ddbec5a8258d1ef8300637997c4df70b766bb445f"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/NoneCondition.cs",
+      "bytes": 1022,
+      "sha256": "f52b9e5e8f51ffec64b2781a9a0395ca38f6032ed367960a6198fdd803ad586f"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/NpcAdventureFinishedNodeCondition.cs",
+      "bytes": 2502,
+      "sha256": "bb1c35710f10b1af43a2ed0083c54bd7dabd9550e0cc29226a9247a3b91ec4a4"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/NpcAdventureUnlockCondition.cs",
+      "bytes": 1883,
+      "sha256": "88fad13924ffee04429707b0737061bb9e04ae666772d581c2e4ffb9f2d698ec"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/NpcFriendshipLevelCondition.cs",
+      "bytes": 2866,
+      "sha256": "e642aad9b169d7a9cd54b1995aaed4f61c602e553726fd684e93963696e6759d"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/NpcFriendshipMaxLevelCondition.cs",
+      "bytes": 2630,
+      "sha256": "065bba17b71ec77ba1dae670af19f29096c0a948b08cad9e989573b351c3d0f1"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/NpcTalentTreeNodePreNodeActiveCountCondition.cs",
+      "bytes": 4365,
+      "sha256": "53006a3f6500eebe8eb69882ebc3c264ea6349073219593c26724e98a2b9e839"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlanesIdCondition.cs",
+      "bytes": 1813,
+      "sha256": "90357805e080cfb0a53bf92997239129b319c015c782393da38a5e58108cd061"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlanesMergeActivityEnableCondition.cs",
+      "bytes": 1438,
+      "sha256": "3be4a2b0ff9cfaf377bd571521cee5c0c7613ca6e4204cac618402a905a01171"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayAsYouDownloadCondition.cs",
+      "bytes": 1394,
+      "sha256": "7a1007446987d58a5346a7878e4058a5d810629430509e938f2ad1047ae6b714"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayDialogCountCondition.cs",
+      "bytes": 2205,
+      "sha256": "891e82bceaf7ddc86a0694e4e2c550f59f877e7cf935dae73271cf9b788af7cd"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayerChannelCondition.cs",
+      "bytes": 1888,
+      "sha256": "f8eb485a4ad60bddac86d61a99ce70b633ee08d95975c7b8accd2be3262637b6"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayerLoginCondition.cs",
+      "bytes": 1019,
+      "sha256": "fd30349068dddffe259c42d4a533be57650beb11d01e27ea809ac3dc61392279"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayerMediaCondition.cs",
+      "bytes": 1856,
+      "sha256": "15ad9b00374fb2f5801fb249fe1bff1e826874f5a706c258db5ab27c8d3009f6"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayerProfessionCondition.cs",
+      "bytes": 2572,
+      "sha256": "aab00582befdfa0170aaaadc7b94fff520a3e7a297778ed094f1d6a207c41655"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayerProfessionFactionCondition.cs",
+      "bytes": 1750,
+      "sha256": "bbdc25a4f79632e1cdc03418324198387dc20994772e5ea79dcc94c158ff3eeb"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayerRankAtServerRankCondition.cs",
+      "bytes": 1178,
+      "sha256": "ea6f06e48c2e453a604c24160030a49f28336b6d15b3f34b1b130c25c4f3e9e4"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ProfessionUnlockCondition.cs",
+      "bytes": 1765,
+      "sha256": "429516e38dba7f7f5aaae990e6df008d083553875fbd63c8c9f8a0286afee545"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/RecentDaysAccumulatedCostCondition.cs",
+      "bytes": 5211,
+      "sha256": "6094c8ac4bab561e2cee4a6105c8b936843336c127a60834fe8f2f3614a4a582"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/RecentDaysAccumulatedPayCondition.cs",
+      "bytes": 5196,
+      "sha256": "d1a3a5cb21d146d02ccc5d875b95d11ba7cd0391011bf414da00fb12dc6d5898"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/RegionCodeCondition.cs",
+      "bytes": 1743,
+      "sha256": "4d1f14fd4fd30a44f59d0b6ac7eebcd704bdb990e054c34bd800820c7c0f0e21"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/RegisteredDaysCondition.cs",
+      "bytes": 1540,
+      "sha256": "26740c526b7af5d2f1d59cfcedefe9f91e2fafde3a3bbb99bcce1afb871280ac"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ReleaseTypeCondition.cs",
+      "bytes": 1770,
+      "sha256": "1de588d2bacd8ff7f5a7de8b72739b256aeb4518f071cd2e9fa68987eb9a533c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/SDKLoginCondition.cs",
+      "bytes": 1099,
+      "sha256": "bc5d7443add08a7a7f7cdb9bbb971921ed3b37337210837962a720808d84f4d6"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/SeasonBlessLevelCondition.cs",
+      "bytes": 3911,
+      "sha256": "01a73760d0acb2580af46b6ff5b5681b1cbf0949d737aa2ae91e953119b2e350"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ServerDaysCondition.cs",
+      "bytes": 1950,
+      "sha256": "13174356ac4c1fc96e2f6de4e842c070a9412150ecb5c92c519d4618a855c49e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ServerRankUnlockDaysCondition.cs",
+      "bytes": 2431,
+      "sha256": "f699a9792e9994ed535a006c7dc097316bb9bdafc61d903ceecab5dc7a95ac46"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ServerSeasonUnlockDaysCondition.cs",
+      "bytes": 3232,
+      "sha256": "036872e56f561817f29929b82ee80cac709fefd9e78320807d6183f7edec3fcd"
+    },
+    {
       "path": ".tools/source-packages/official-code/common-source/Common/StageOverrideBgmInfo.cs",
       "bytes": 1053,
       "sha256": "298f9334665b4adbd7ea639bfc48a0065f8df617e563bd3276f342e91827bc7b"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/StagePassCondition.cs",
+      "bytes": 1426,
+      "sha256": "f116338ed5c03a4f0ac22183861eb5a3eb2f5c63d09885356002217f5d4bf47a"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/StoryCountCondition.cs",
+      "bytes": 2224,
+      "sha256": "a3d4ce9ab5ac81304ab0ef1b25991b55eabd7609684e9351ed846453007849fc"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/StoryStatusCondition.cs",
+      "bytes": 1534,
+      "sha256": "810d9d0d67a3e2637e1edcb458eb9d4acf81ea87888a10bfd0211b6a72ff0c13"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/SubRankBetweenCondition.cs",
+      "bytes": 2538,
+      "sha256": "738e80ce5b1556b22e9fffbfb5e615c971176a2793d936f2bd8b18e23693a602"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/SubRankCondition.cs",
+      "bytes": 3808,
+      "sha256": "5754156223f0fba2094056f64be9f558868de2d2bd036201a67cdd9cfef5ce29"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/TbConditionInfo.cs",
+      "bytes": 1167,
+      "sha256": "c63e330312d43ad3e89e8e654863b8652d395246b33ba9796425c7ff996dae63"
     },
     {
       "path": ".tools/source-packages/official-code/common-source/Common/TbFightThemeInfo.cs",
@@ -5117,6 +5595,11 @@
       "path": ".tools/source-packages/official-code/common-source/Common/TbStageOverrideBgmInfo.cs",
       "bytes": 1300,
       "sha256": "b9d547eefc7062697850f9a9fad1b5b95d8cc10bc84fc4683e7ca10876a2b781"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/WorldMapProgressCondition.cs",
+      "bytes": 3010,
+      "sha256": "d5285a197953c12c27748f12990047d59804c70b83079232c518192238f3a021"
     }
   ],
   "outputs": [
@@ -8332,8 +8815,8 @@
     },
     {
       "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/Bgm/catalog.json",
-      "bytes": 33073,
-      "sha256": "cafd8d358dee6d6178634f363f364a978c92bf2e07a4a161355ef054da0e14f3"
+      "bytes": 33388,
+      "sha256": "310de3789f36a8bf6f865a2297060bb22ba4a7d0bc025d0acb3e63bc417bc4a4"
     },
     {
       "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/Bgm/catalog.json.meta",
@@ -8378,12 +8861,13 @@
   ],
   "tool": {
     "path": "scripts/prepare_battle_bgm_scene_assets.py",
-    "bytes": 12306,
-    "sha256": "1787f6276ce52da86067db8afbe3856a6b89da6174fcb66d0bcb8ed5a37776f3"
+    "bytes": 13694,
+    "sha256": "caf56e4d08fcf4c1a434ff3dd636c9c1977cf243698f9dc98cb6b2d6ec502761"
   },
   "adaptations": [
     "Preserve original music node IDs, serialized values and reference assets; rebind script and asset GUIDs.",
     "Extract only the original global BGM child; the original initializer is already owned by the application sound module.",
-    "Expose selected music fields from the exact original configuration constructors."
+    "Expose selected music fields and theme selection fields from the exact original configuration constructors.",
+    "Decode only the conditions referenced by the pinned theme table; retain their original domain type and Not flag."
   ]
 }

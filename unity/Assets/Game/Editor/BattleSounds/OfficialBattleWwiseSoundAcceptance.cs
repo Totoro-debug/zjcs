@@ -162,6 +162,9 @@ namespace Zjcs.Editor
                 var musicScenes = BgmSceneSteps();
                 try { while (musicScenes.MoveNext()) yield return musicScenes.Current; }
                 finally { (musicScenes as IDisposable)?.Dispose(); }
+                var themes = ThemeSteps();
+                try { while (themes.MoveNext()) yield return themes.Current; }
+                finally { (themes as IDisposable)?.Dispose(); }
             }
             finally { OfficialWwiseEvent.Host = previous; }
         }

@@ -20,7 +20,7 @@ Windows 声音包的显式 Player 加载位置由 `OfflineBattleWwisePackages` �
 
 战斗音乐代码取官方 `BgmManager`、`BgmEventKeyConfig`、`Sound.Bgm` 接口／句柄与原声源 provider；原代码、配置导出及迁移输出哈希见[音乐代码来源](battle-animation/bgm-runtime-source-manifest.json)，工具为 `prepare_battle_bgm_sources.py`。`prepare_battle_bgm_sound_sources.py` 复用 APK 优先声音读取器，按原事件映射核验 Battle_BGM 系列及实际共享媒体所在包；[音乐依赖来源](battle-animation/bgm-sound-dependencies-source-manifest.json)记录各原包身份、1,427 个原对象、458 份媒体哈希及预读关系，Windows 语言表转换仍复用既有运行素材工具。
 
-场景音乐素材由 `prepare_battle_bgm_scene_assets.py` 生成；[场景音乐来源](battle-animation/bgm-scene-source-manifest.json)记录 APK 内 WwiseGlobal 原 bundle／对象、已核验的原导出节点、229 份场景节点、88 份 Wwise 引用、三份配置及两张原 Luban 表的构造器、输入输出哈希与脚本重绑定。完整包媒体依赖仍由上述音乐依赖工具记录；未生成新增素材完整备份快照。
+场景音乐素材由 `prepare_battle_bgm_scene_assets.py` 生成；[场景音乐来源](battle-animation/bgm-scene-source-manifest.json)记录 APK 内 WwiseGlobal 原 bundle／对象、已核验的原导出节点、229 份场景节点、88 份 Wwise 引用、三份配置及关卡覆盖、战斗主题、条件三张原 Luban 表的构造器、输入输出哈希与脚本重绑定。主题关联的 30110 条件取原 `conditions.g.bytes`；原 `FightThemeInfoParser`、`DomainTypeCondition` 及默认随机链输入记录在上述音乐代码来源。完整包媒体依赖仍由上述音乐依赖工具记录；未生成新增素材完整备份快照。
 
 战斗监听器取选定 `884_156692` 原生导出的 229 份场景 prefab（映射 256 个 Game ID），并先经官方 APK／固定缓存解析核对代表场景中的 AkAudioListener；[来源清单](battle-animation/sound-listener-source-manifest.json)记录转换输入、逐场景节点、原 SDK 37 项输入、已有场景激活代码绑定及 83 项输出哈希。SDK 的 35 份 C# 保持原字节，两个 asmdef 只移除未安装的可选 Addressables 引用；监听器 prefab 保留三个真实脚本及原相机子节点姿态，仅将脚本指向迁入代码并将独立提取根的父引用置零。资源入口为 `Official/Combat/NativeSound/Resources/Combat/Wwise/AudioListener.prefab`，生成工具为 `scripts/prepare_battle_sound_listener_sources.py`。
 

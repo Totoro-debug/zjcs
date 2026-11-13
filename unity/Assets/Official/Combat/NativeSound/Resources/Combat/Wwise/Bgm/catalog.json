@@ -1419,6 +1419,26 @@
       "resource": "Combat/Wwise/Bgm/Scenes/game_999"
     }
   ],
+  "theme_selection": [
+    {
+      "FightThemeId": 1,
+      "ConditionId": 30110,
+      "StageTypes": [
+        11,
+        2
+      ],
+      "TriggerPercent": 4000
+    }
+  ],
+  "theme_conditions": [
+    {
+      "ClassId": 30110,
+      "Condition": {
+        "DomainType": 2,
+        "Not": false
+      }
+    }
+  ],
   "stage_override_bgm": [
     {
       "id": 21131,

@@ -94,6 +94,84 @@ namespace Zjcs.Official.BattleBgm
     write(assembly, json.dumps(dict(name='Zjcs.Official.BattleBgm',
           rootNamespace='Zjcs.Official.BattleBgm', references=['AK.Wwise.Unity.API.WwiseTypes'], autoReferenced=True), indent=2) + '\n')
     meta(assembly)
+    # Retain the original ordered selector and short-circuiting. Its condition
+    # and random dependencies are supplied by the local configuration adapter.
+    source = SOURCE / 'common-source/Common/FightThemeInfoParser.cs'
+    inputs.append(identity(source))
+    text = source.read_text(encoding='utf-8-sig')
+    start = text.index('\tpublic FightThemeInfo GetThemeIdByStageInfo(')
+    end = text.index('\n\tprotected override', start)
+    method = text[start:end]
+    method = method.replace('StageInfo stageInfo, ICondition.DataHub dataHub', 'int stageType')
+    method = method.replace('\t\tConditionInfoParser conditionInfoParser = Parsers.Instance.ConditionInfoParser;\n', '')
+    method = method.replace('stageInfo.Type', 'stageType')
+    method = method.replace('ICondition condition = conditionInfoParser.GetCondition(value.ConditionId);',
+                            'bool? condition = conditionIsMet(value.ConditionId);')
+    method = method.replace('condition != null && condition.IsMet(dataHub) && RandomUtils.Next(10000)',
+                            'condition == true && next(10000)')
+    assert 'Parsers.' not in method and 'RandomUtils.' not in method and 'dataHub' not in method
+    target = CODE / 'FightThemeInfoParser.cs'
+    write(target, '''using System;
+using System.Collections.Generic;
+
+namespace Zjcs.Official.BattleBgm
+{
+public sealed class FightThemeInfoParser
+{
+    private readonly IReadOnlyDictionary<int, FightThemeInfo> configs;
+    private readonly Func<int, bool?> conditionIsMet;
+    private readonly Func<int, int> next;
+
+    public FightThemeInfoParser(IReadOnlyDictionary<int, FightThemeInfo> configurations,
+        Func<int, bool?> evaluateCondition, Func<int, int> nextRandom)
+    {
+        configs = configurations ?? throw new ArgumentNullException(nameof(configurations));
+        conditionIsMet = evaluateCondition ?? throw new ArgumentNullException(nameof(evaluateCondition));
+        next = nextRandom ?? throw new ArgumentNullException(nameof(nextRandom));
+    }
+
+''' + method + '\n}\n}\n'); meta(target)
+    source = SOURCE / 'common-source/Common/FightThemeInfo.cs'
+    inputs.append(identity(source))
+    target = CODE / 'FightThemeInfo.cs'
+    write(target, '''using System;
+using System.Collections.Generic;
+
+namespace Zjcs.Official.BattleBgm
+{
+    // The original selector consumes these four fields. Audio overrides and
+    // presentation paths retain their separate, original resource bindings.
+    [Serializable] public sealed class FightThemeInfo
+    {
+        public int FightThemeId, ConditionId, TriggerPercent;
+        public List<int> StageTypes;
+    }
+}
+'''); meta(target)
+    source = SOURCE / 'common-source/Common/DomainTypeCondition.cs'
+    condition_source = source.read_text(encoding='utf-8-sig')
+    start = condition_source.index('\tpublic override bool IsMet(')
+    end = condition_source.index('\n\tpublic DomainTypeCondition(', start)
+    method = condition_source[start:end].replace('public override bool IsMet(DataHub dataHub)',
+                                                'public bool IsMet(int domainType)')
+    method = method.replace('PlanesInfoUtils.DomainType', 'domainType')
+    target = CODE / 'DomainTypeCondition.cs'
+    write(target, '''using System;
+
+namespace Zjcs.Official.BattleBgm
+{
+    [Serializable] public sealed class DomainTypeCondition
+    {
+        public int DomainType;
+        public bool Not;
+
+''' + method + '\n    }\n}\n'); meta(target)
+    inputs += [identity(SOURCE / p) for p in (
+        'client-source/FightThemeGenerator.cs', 'common-source/Common/DomainTypeCondition.cs',
+        'common-source/Common/DomainType.cs', 'common-source/Common/StageType.cs',
+        'common-source/Common/RandomUtils.cs', 'framework-firstpass-source/Framework/GRandom.cs',
+        'framework-firstpass-source/Framework/RandomFactory.cs',
+        'framework-firstpass-source/Framework/SystemRandom.cs', 'launch-source/LaunchContainerInstaller.cs')]
     inputs += [identity(SOURCE / p) for p in ('client-source/FightBgmOverrideHandler.cs',
         'client-source/FightSceneRoot.cs')]
     export = ROOT / '.tools/source-packages/current/884_156692/native-conversion/native-export-all'
@@ -119,6 +197,9 @@ namespace Zjcs.Official.BattleBgm
             'Remove only the framework ScriptableObjectConfig registration attribute; original asset fields remain.',
             'Remove only the two trace logging blocks and logger dependency.',
             'Replace the broad Wwise proxy with the two consumed playback operations.',
+            'Retain the original theme selector iteration, stage filter, condition/null short-circuit and strict Next(10000) threshold; inject only its consumed condition and random operations.',
+            'Project the four original theme fields consumed by the selector; keep original audio asset bindings separately.',
+            'Retain DomainTypeCondition.IsMet with the same equality/Not branches; supply the current local domain instead of the online PlanesInfo singleton.',
             'Repair decompiled Queue.TryDequeue ref to out.'], tool=identity(Path(__file__)))
     RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(json.dumps(dict(inputs=len(inputs), outputs=len(outputs))))
