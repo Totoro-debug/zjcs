@@ -25,6 +25,13 @@ def check():
         if not (PROJECT / relative).exists():
             errors.append('Missing project input: ' + relative)
     guids = {}
+    shared = ROOT / 'assets/reference/shared-textures-source-manifest.json'
+    if shared.is_file():
+        for row in json.loads(shared.read_bytes())['textures']:
+            if (ROOT / row['source']['path']).exists():
+                errors.append('Regenerated duplicate texture; run deduplicate_unity_textures.py apply: ' + row['source']['path'])
+            if not (ROOT / row['canonical']['path']).is_file():
+                errors.append('Missing canonical shared texture: ' + row['canonical']['path'])
     for path in assets.rglob('*'):
         if any(part.startswith('.') for part in path.relative_to(assets).parts):
             continue

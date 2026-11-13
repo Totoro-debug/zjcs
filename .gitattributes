@@ -2927,3 +2927,10 @@ unity/Assets/Game/Runtime/Offline/State/Zjcs.Offline.State.asmdef* text eol=lf
 unity/Assets/Game/Runtime/Presentation/Home/HomeSceneView.cs text eol=lf
 unity/Assets/Official/Combat/ThemeUI/** -text
 unity/Assets/Official/Combat/ThemeUI.meta -text
+
+# Preserve the shared-texture recipe and its verified tool input bytes.
+scripts/deduplicate_unity_textures.py text eol=lf
+scripts/test_deduplicate_unity_textures.py text eol=lf
+scripts/check_unity_project.py text eol=crlf
+assets/reference/shared-textures-source-manifest.json text eol=lf
+unity/Assets/Game/Editor/BattleRoundUI/SharedTextureRoundAcceptance.cs* text eol=lf

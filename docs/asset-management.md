@@ -18,6 +18,8 @@
 
 Unity 缓存、IDE 输出、日志和临时构建不提交或进入素材快照。保留稳定 `.meta`／GUID，清理前核对静态／动态引用、生成器和旧存档兼容。
 
+原生纹理共用的边界和验证范围见[共用界面](features/shared-ui.md#原生纹理共用)，实际路径／GUID／哈希对应关系见[来源清单](../assets/reference/shared-textures-source-manifest.json)。在拥有的验证工作区中运行 `python -B scripts/deduplicate_unity_textures.py plan --plan "$work/texture-plan.json"` 检查新候选，再用 `apply --plan "$work/texture-plan.json" --work "$work"` 归一化；转换器重新生成已登记输出后使用 `apply --work "$work"`。每次事务使用新的工作区，保留回滚副本直至验证完成；通过后运行 `verify`，同步所属文档并清理本会话工作区。工具不会自动修改原 APK／云端输入的预期哈希；重建后载荷或导入设置与登记不符会停止，须先核对来源。
+
 `.gitignore` 按缓存、日志、临时文件和明确的输出目录排除产物，不再对 `docs/`、`assets/`、`assets/reference/` 或 `unity/Assets/Official/` 设置目录黑名单。必要代码、原生素材、插件 DLL、运行资源 ZIP、配置、来源清单及文档均可正常跟踪；`.tools/` 原始包／工具缓存和完整素材快照仍忽略，`asset-pack/` 中的布局与锁定元数据保留。新增或调整规则用 `git check-ignore --no-index` 核对实际路径与边界，避免仅因文件已被跟踪而漏查误排除；修改忽略规则不会自动暂存新出现的文件或移除既有跟踪。
 
 暂存文件超过 50 MB 时，提交钩子将其转为 LFS 指针并在同次提交登记精确路径。新克隆运行 `python -B scripts/install_lfs_size_hook.py`；要求 Git LFS 已安装，安装器保留自定义 pre-commit，LFS 推送钩子负责上传对象。

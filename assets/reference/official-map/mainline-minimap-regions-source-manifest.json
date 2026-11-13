@@ -52,23 +52,23 @@
     },
     {
       "path": "assets/reference/official-map/map11-current-minimap-regions-source-manifest.json",
-      "sha256": "59abfd8313583753fd7337daf13cc8005ab0d8b0965d6626b3181b83a2284887"
+      "sha256": "555c3ee2a9a1c47113418572eb42d0763833abb8ad57feea0c46dab39f61ead3"
     },
     {
       "path": "assets/reference/official-map/map12-current-minimap-regions-source-manifest.json",
-      "sha256": "d072561aa829835e586299039d2e5bd01d36eaa4f64f71d75126aecb94706384"
+      "sha256": "ee4e5b6ec1124b0a9d6d7601c02adc8af4277e15c56c56ce889abf5a8b33bf5c"
     },
     {
       "path": "assets/reference/official-map/map13-current-minimap-regions-source-manifest.json",
-      "sha256": "a600981feb01341f868c1f36fd22582f40ea6a4a1467ccb02b129bd39e5f1e48"
+      "sha256": "4810e783b3ff2a9127d34e6c81d5b3755977d12bdeb579bdd77f6a17b3a62701"
     },
     {
       "path": "assets/reference/official-map/map14-current-minimap-regions-source-manifest.json",
-      "sha256": "46f97f110a154f3d016e5a960f49bf53c337a94d25747816f6d7d4a6c3c75e43"
+      "sha256": "ddd4a61e0f7caf8f560690ea506e15dee545be3c2f451af2c6dbdf95153361fe"
     },
     {
       "path": "assets/reference/official-map/map16-current-minimap-regions-source-manifest.json",
-      "sha256": "7fac82970d2e8d2b8e3e8ce091e18701e08ec284d94e28afe03552cdc3d4969b"
+      "sha256": "24e20a35a371367bdf9312d9f663ce0e6b3b80a1d4dafdc19e40ed0b634b07b2"
     }
   ],
   "operation": "Bind the original Ground subtree, Grid, region slots and all region Tilemaps. Preserve original region manager initialization, status events, public/private Z, reverse visibility traversal, inactive cache reuse and ten-second retirement. Inject local state/controller/view-range and original GUID asset leases before activation. Subscribe directly to the original range handler; replace and release subscriptions with handler and instance lifetime. Periodic refresh cannot reset retirement. Each map supplies its original asset catalog; original root MiniMap and other UI/marker/mask managers are not replaced or claimed complete.",
