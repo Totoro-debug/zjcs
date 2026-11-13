@@ -1,0 +1,1759 @@
+{
+  "manifest": "884_156692",
+  "scope": "Complete original selector graph dependency payload; evaluated by an explicitly bound owner.",
+  "objects": {
+    "cab-a5793799a60a3d47ab715c21c5c50156:-6160162619940586211": {
+      "type": "TipDotNodeGraph",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": -8529226852921705281
+        },
+        "m_Name": "HomeBed",
+        "nodes": [
+          {
+            "m_FileID": 0,
+            "m_PathID": -7791424020758774499
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -6252833669573952227
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 5494499129144065309
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -1441311722877666019
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 2163243085438467357
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -5587034985868935907
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 3641383827151273245
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 9065495815929019677
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 1601906015814368541
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -6276079713070203619
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 6804076999806172445
+          }
+        ],
+        "Type": 0,
+        "Scope": 0
+      },
+      "original_sha256": "c472745e2397ddc88650487092331d7f1fb3cbdadc8966afd26e0df30906f2ac",
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_home.bundle",
+        "bundle_hash": "8ec563436fd98fbba39cb09d9e5e9f3d",
+        "path_id": "-6160162619940586211",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/8ec563436fd98fbba39cb09d9e5e9f3d.bundle",
+        "raw_size": 52861,
+        "raw_sha256": "e647faf89100018bc4886a4381a9ff6fc37dfbf1f2a34d348f00c9536a846869"
+      }
+    },
+    "cab-a5793799a60a3d47ab715c21c5c50156:-7791424020758774499": {
+      "type": "TipDotGraphNode",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 5724687058716032082
+        },
+        "m_Name": "[1][State]家园床是否有提示",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -6160162619940586211
+        },
+        "position": {
+          "x": -184.0,
+          "y": -200.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": -7791424020758774499
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": -7791424020758774499
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Parents",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": -6252833669573952227
+                  },
+                  "reroutePoints": []
+                },
+                {
+                  "fieldName": "Parents",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": -5587034985868935907
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": -1,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "家园床是否有提示",
+        "SelectedType": "",
+        "NodeName": "HomeBedHasTip",
+        "TipDotNodeId": 1,
+        "TipDotNode": {
+          "rid": 4800079898413891584
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 0,
+          "NeedAllShow": 0,
+          "IsRoot": 0,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 4800079898413891584,
+              "type": {
+                "class": "TipDotCommonNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "HomeBed",
+                  "NodeName": "HomeBedHasTip"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0
+              }
+            }
+          ]
+        }
+      },
+      "original_sha256": "af7c1a864a1c8651871b992212456cb54a574d62f2e9604040bc1e15a8d9535f",
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_home.bundle",
+        "bundle_hash": "8ec563436fd98fbba39cb09d9e5e9f3d",
+        "path_id": "-7791424020758774499",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/8ec563436fd98fbba39cb09d9e5e9f3d.bundle",
+        "raw_size": 52861,
+        "raw_sha256": "e647faf89100018bc4886a4381a9ff6fc37dfbf1f2a34d348f00c9536a846869"
+      }
+    },
+    "cab-a5793799a60a3d47ab715c21c5c50156:-6252833669573952227": {
+      "type": "TipDotGraphNode",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 5724687058716032082
+        },
+        "m_Name": "[2][State]床是否可以解锁",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -6160162619940586211
+        },
+        "position": {
+          "x": 376.0,
+          "y": -584.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": -6252833669573952227
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Childs",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": -7791424020758774499
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": -6252833669573952227
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Parents",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 2163243085438467357
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": -1,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "床是否可以解锁",
+        "SelectedType": "",
+        "NodeName": "HomeBedCanUnlock",
+        "TipDotNodeId": 2,
+        "TipDotNode": {
+          "rid": 4800079898413891585
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 4,
+          "NeedAllShow": 0,
+          "IsRoot": 0,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 4800079898413891585,
+              "type": {
+                "class": "TipDotCommonNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "HomeBed",
+                  "NodeName": "HomeBedCanUnlock"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0
+              }
+            }
+          ]
+        }
+      },
+      "original_sha256": "e0d409bfa49ab421ca7a37f41c791d9baa295c84aaa1a4c29e7959331029c029",
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_home.bundle",
+        "bundle_hash": "8ec563436fd98fbba39cb09d9e5e9f3d",
+        "path_id": "-6252833669573952227",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/8ec563436fd98fbba39cb09d9e5e9f3d.bundle",
+        "raw_size": 52861,
+        "raw_sha256": "e647faf89100018bc4886a4381a9ff6fc37dfbf1f2a34d348f00c9536a846869"
+      }
+    },
+    "cab-a5793799a60a3d47ab715c21c5c50156:2163243085438467357": {
+      "type": "TipDotGraphConditionNode",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 1122313616411804370
+        },
+        "m_Name": "[5][Cnd]家具是否可以修复",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -6160162619940586211
+        },
+        "position": {
+          "x": 920.0,
+          "y": -568.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 2163243085438467357
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Childs",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": -6252833669573952227
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 2163243085438467357
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": -1,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "",
+        "SelectedType": "",
+        "NodeName": "",
+        "TipDotNodeId": 5,
+        "TipDotNode": {
+          "rid": 4800079898413891589
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 4,
+          "NeedAllShow": 0,
+          "IsRoot": 0,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 4800079898413891589,
+              "type": {
+                "class": "TipDotFurnitureCanRepairConditionNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "HomeBed",
+                  "NodeName": "0b0e93f2-fedc-4fcb-a396-aa1086e218ac"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0,
+                "mFurniture": 0
+              }
+            }
+          ]
+        }
+      },
+      "original_sha256": "06905dea9adbcf2c2d2b75dce5bb1efca106c10a77d99a7c97dfdb46e4df1780",
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_home.bundle",
+        "bundle_hash": "8ec563436fd98fbba39cb09d9e5e9f3d",
+        "path_id": "2163243085438467357",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/8ec563436fd98fbba39cb09d9e5e9f3d.bundle",
+        "raw_size": 52861,
+        "raw_sha256": "e647faf89100018bc4886a4381a9ff6fc37dfbf1f2a34d348f00c9536a846869"
+      }
+    },
+    "cab-a5793799a60a3d47ab715c21c5c50156:-5587034985868935907": {
+      "type": "TipDotGraphNode",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 5724687058716032082
+        },
+        "m_Name": "[6][State]解锁的床是否有提示",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -6160162619940586211
+        },
+        "position": {
+          "x": 360.0,
+          "y": 168.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": -5587034985868935907
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Childs",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": -7791424020758774499
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": -5587034985868935907
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Parents",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 1601906015814368541
+                  },
+                  "reroutePoints": []
+                },
+                {
+                  "fieldName": "Parents",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 6804076999806172445
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": -1,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "解锁的床是否有提示",
+        "SelectedType": "",
+        "NodeName": "UnlockedBedHasTip",
+        "TipDotNodeId": 6,
+        "TipDotNode": {
+          "rid": 4800079991613948456
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 0,
+          "NeedAllShow": 1,
+          "IsRoot": 0,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 4800079991613948456,
+              "type": {
+                "class": "TipDotCommonNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "HomeBed",
+                  "NodeName": "UnlockedBedHasTip"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0
+              }
+            }
+          ]
+        }
+      },
+      "original_sha256": "33566ca002e86ff4c2ebb66aaa3ec180cb26b6a59af51ee4cf6d099c6aa74309",
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_home.bundle",
+        "bundle_hash": "8ec563436fd98fbba39cb09d9e5e9f3d",
+        "path_id": "-5587034985868935907",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/8ec563436fd98fbba39cb09d9e5e9f3d.bundle",
+        "raw_size": 52861,
+        "raw_sha256": "e647faf89100018bc4886a4381a9ff6fc37dfbf1f2a34d348f00c9536a846869"
+      }
+    },
+    "cab-a5793799a60a3d47ab715c21c5c50156:1601906015814368541": {
+      "type": "TipDotGraphNode",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 5724687058716032082
+        },
+        "m_Name": "[9][State]是否拥有床这个家具",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -6160162619940586211
+        },
+        "position": {
+          "x": 920.0,
+          "y": -184.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 1601906015814368541
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Childs",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": -5587034985868935907
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 1601906015814368541
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Parents",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": -6276079713070203619
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": -1,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "是否拥有床这个家具",
+        "SelectedType": "",
+        "NodeName": "HomeHasBedFurniture",
+        "TipDotNodeId": 9,
+        "TipDotNode": {
+          "rid": 2750172587488445049
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 0,
+          "NeedAllShow": 0,
+          "IsRoot": 0,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 2750172587488445049,
+              "type": {
+                "class": "TipDotCommonNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "HomeBed",
+                  "NodeName": "HomeHasBedFurniture"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0
+              }
+            }
+          ]
+        }
+      },
+      "original_sha256": "cd1c2ee92d2de34934c53dab82c72952f3f3b27faa6091b096bd5c0d94e8f568",
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_home.bundle",
+        "bundle_hash": "8ec563436fd98fbba39cb09d9e5e9f3d",
+        "path_id": "1601906015814368541",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/8ec563436fd98fbba39cb09d9e5e9f3d.bundle",
+        "raw_size": 52861,
+        "raw_sha256": "e647faf89100018bc4886a4381a9ff6fc37dfbf1f2a34d348f00c9536a846869"
+      }
+    },
+    "cab-a5793799a60a3d47ab715c21c5c50156:-6276079713070203619": {
+      "type": "TipDotGraphConditionNode",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 1122313616411804370
+        },
+        "m_Name": "[10][Cnd]检查是否已经拥有家具",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -6160162619940586211
+        },
+        "position": {
+          "x": 1496.0,
+          "y": -168.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": -6276079713070203619
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Childs",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 1601906015814368541
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": -6276079713070203619
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": -1,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "",
+        "SelectedType": "",
+        "NodeName": "",
+        "TipDotNodeId": 10,
+        "TipDotNode": {
+          "rid": 2750172587488445051
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 4,
+          "NeedAllShow": 0,
+          "IsRoot": 0,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 2750172587488445051,
+              "type": {
+                "class": "TipDotHasFurnitureConditionNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "HomeBed",
+                  "NodeName": "f5f5fcc1-8cc6-49a8-93ac-1ad46eb420e0"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0,
+                "mFurniture": 0
+              }
+            }
+          ]
+        }
+      },
+      "original_sha256": "5f09bc4332cf90f780df0905d4e69bc9ed049e7235eac8eec84a71bba4154564",
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_home.bundle",
+        "bundle_hash": "8ec563436fd98fbba39cb09d9e5e9f3d",
+        "path_id": "-6276079713070203619",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/8ec563436fd98fbba39cb09d9e5e9f3d.bundle",
+        "raw_size": 52861,
+        "raw_sha256": "e647faf89100018bc4886a4381a9ff6fc37dfbf1f2a34d348f00c9536a846869"
+      }
+    },
+    "cab-a5793799a60a3d47ab715c21c5c50156:6804076999806172445": {
+      "type": "TipDotGraphNode",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 5724687058716032082
+        },
+        "m_Name": "[11][State]床是否可挂机加速",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -6160162619940586211
+        },
+        "position": {
+          "x": 920.0,
+          "y": 552.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 6804076999806172445
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Childs",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": -5587034985868935907
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 6804076999806172445
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Parents",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 5494499129144065309
+                  },
+                  "reroutePoints": []
+                },
+                {
+                  "fieldName": "Parents",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": -1441311722877666019
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": -1,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "床是否可挂机加速",
+        "SelectedType": "",
+        "NodeName": "HomeBedCanHangUp",
+        "TipDotNodeId": 11,
+        "TipDotNode": {
+          "rid": 2750172587488445053
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 2,
+          "PresetTipLevel": 0,
+          "NeedAllShow": 0,
+          "IsRoot": 0,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 2750172587488445053,
+              "type": {
+                "class": "TipDotCommonNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "HomeBed",
+                  "NodeName": "HomeBedCanHangUp"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0
+              }
+            }
+          ]
+        }
+      },
+      "original_sha256": "e1c7b3df0c5a073ed8955f6325417dd978a00592beaff8153f524899fdbbb7cd",
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_home.bundle",
+        "bundle_hash": "8ec563436fd98fbba39cb09d9e5e9f3d",
+        "path_id": "6804076999806172445",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/8ec563436fd98fbba39cb09d9e5e9f3d.bundle",
+        "raw_size": 52861,
+        "raw_sha256": "e647faf89100018bc4886a4381a9ff6fc37dfbf1f2a34d348f00c9536a846869"
+      }
+    },
+    "cab-a5793799a60a3d47ab715c21c5c50156:5494499129144065309": {
+      "type": "TipDotGraphNode",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 5724687058716032082
+        },
+        "m_Name": "[3][State]家园床是否可以免费挂机加速",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -6160162619940586211
+        },
+        "position": {
+          "x": 1496.0,
+          "y": 232.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 5494499129144065309
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Childs",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 6804076999806172445
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 5494499129144065309
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Parents",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 3641383827151273245
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": -1,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "家园床是否可以免费挂机加速",
+        "SelectedType": "",
+        "NodeName": "HomeBedCanFreeHangUp",
+        "TipDotNodeId": 3,
+        "TipDotNode": {
+          "rid": 4800079898413891586
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 4,
+          "NeedAllShow": 0,
+          "IsRoot": 0,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 4800079898413891586,
+              "type": {
+                "class": "TipDotCommonNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "HomeBed",
+                  "NodeName": "HomeBedCanFreeHangUp"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0
+              }
+            }
+          ]
+        }
+      },
+      "original_sha256": "e386ff2e1f781e49a410143e3d8521fb38c431faf5a117c31bb5e4458b1230ef",
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_home.bundle",
+        "bundle_hash": "8ec563436fd98fbba39cb09d9e5e9f3d",
+        "path_id": "5494499129144065309",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/8ec563436fd98fbba39cb09d9e5e9f3d.bundle",
+        "raw_size": 52861,
+        "raw_sha256": "e647faf89100018bc4886a4381a9ff6fc37dfbf1f2a34d348f00c9536a846869"
+      }
+    },
+    "cab-a5793799a60a3d47ab715c21c5c50156:3641383827151273245": {
+      "type": "TipDotGraphConditionNode",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 1122313616411804370
+        },
+        "m_Name": "[7][Cnd]家具是否有免费快速挂机次数",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -6160162619940586211
+        },
+        "position": {
+          "x": 2056.0,
+          "y": 248.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 3641383827151273245
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Childs",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 5494499129144065309
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 3641383827151273245
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": -1,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "",
+        "SelectedType": "",
+        "NodeName": "",
+        "TipDotNodeId": 7,
+        "TipDotNode": {
+          "rid": 4800079991613948458
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 4,
+          "NeedAllShow": 0,
+          "IsRoot": 0,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 4800079991613948458,
+              "type": {
+                "class": "TipDotHasFreeFastHangUpTimesConditionNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "HomeBed",
+                  "NodeName": "50630961-946f-4a5d-b54a-477926076cec"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0,
+                "Furniture": 0
+              }
+            }
+          ]
+        }
+      },
+      "original_sha256": "4030fac4f2d61d67cb56dc25985817d92b8efae6e2d8fb2a0089bfe3c3eaeb11",
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_home.bundle",
+        "bundle_hash": "8ec563436fd98fbba39cb09d9e5e9f3d",
+        "path_id": "3641383827151273245",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/8ec563436fd98fbba39cb09d9e5e9f3d.bundle",
+        "raw_size": 52861,
+        "raw_sha256": "e647faf89100018bc4886a4381a9ff6fc37dfbf1f2a34d348f00c9536a846869"
+      }
+    },
+    "cab-a5793799a60a3d47ab715c21c5c50156:-1441311722877666019": {
+      "type": "TipDotGraphNode",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 5724687058716032082
+        },
+        "m_Name": "[4][State]家园床是否有道具可以挂机加速",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -6160162619940586211
+        },
+        "position": {
+          "x": 1496.0,
+          "y": 856.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": -1441311722877666019
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Childs",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 6804076999806172445
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": -1441311722877666019
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Parents",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": 9065495815929019677
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": -1,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "家园床是否有道具可以挂机加速",
+        "SelectedType": "",
+        "NodeName": "HomeBedCanUseItemHangUp",
+        "TipDotNodeId": 4,
+        "TipDotNode": {
+          "rid": 4800079898413891587
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 3,
+          "NeedAllShow": 0,
+          "IsRoot": 0,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 4800079898413891587,
+              "type": {
+                "class": "TipDotCommonNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "HomeBed",
+                  "NodeName": "HomeBedCanUseItemHangUp"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0
+              }
+            }
+          ]
+        }
+      },
+      "original_sha256": "56cb86b5f321914d984ec1c6cf4c0a98f67f130744ef0c5f3e5b1cf81996928d",
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_home.bundle",
+        "bundle_hash": "8ec563436fd98fbba39cb09d9e5e9f3d",
+        "path_id": "-1441311722877666019",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/8ec563436fd98fbba39cb09d9e5e9f3d.bundle",
+        "raw_size": 52861,
+        "raw_sha256": "e647faf89100018bc4886a4381a9ff6fc37dfbf1f2a34d348f00c9536a846869"
+      }
+    },
+    "cab-a5793799a60a3d47ab715c21c5c50156:9065495815929019677": {
+      "type": "TipDotGraphConditionNode",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 1122313616411804370
+        },
+        "m_Name": "[8][Cnd]检查家具是否有快速挂机的道具",
+        "graph": {
+          "m_FileID": 0,
+          "m_PathID": -6160162619940586211
+        },
+        "position": {
+          "x": 2040.0,
+          "y": 872.0
+        },
+        "ports": {
+          "keys": [
+            "Parents",
+            "Childs"
+          ],
+          "values": [
+            {
+              "_fieldName": "Parents",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 9065495815929019677
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [
+                {
+                  "fieldName": "Childs",
+                  "node": {
+                    "m_FileID": 0,
+                    "m_PathID": -1441311722877666019
+                  },
+                  "reroutePoints": []
+                }
+              ],
+              "_direction": 0,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            },
+            {
+              "_fieldName": "Childs",
+              "_node": {
+                "m_FileID": 0,
+                "m_PathID": 9065495815929019677
+              },
+              "_typeQualifiedName": "XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+              "connections": [],
+              "_direction": 1,
+              "_connectionType": 0,
+              "_typeConstraint": 0,
+              "_flowConnectionType": 0,
+              "_dynamic": 0
+            }
+          ]
+        },
+        "NodeId": -1,
+        "Mono": "",
+        "IsMonoShow": 0,
+        "Parents": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "Childs": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "IsBan": 0,
+        "NodeDesc": "",
+        "SelectedType": "",
+        "NodeName": "",
+        "TipDotNodeId": 8,
+        "TipDotNode": {
+          "rid": 4800079991613948460
+        },
+        "RuntimeTipDotNode": {
+          "rid": -2
+        },
+        "PresetData": {
+          "Priority": 1,
+          "PresetTipLevel": 4,
+          "NeedAllShow": 0,
+          "IsRoot": 0,
+          "IgnoreLevels": [],
+          "IsReverse": 0
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": -2,
+              "type": {
+                "class": "",
+                "ns": "",
+                "asm": ""
+              }
+            },
+            {
+              "rid": 4800079991613948460,
+              "type": {
+                "class": "TipDotHasItemFastHangUpTimesConditionNode",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "Parents": [],
+                "Childs": [],
+                "NodeKey": {
+                  "GraphName": "HomeBed",
+                  "NodeName": "55b3ace7-1bb5-494d-a623-428bf3ff6842"
+                },
+                "TipDotInfo": {
+                  "TipLevel": 0,
+                  "Data": ""
+                },
+                "IsShowTip": 0,
+                "Furniture": 0
+              }
+            }
+          ]
+        }
+      },
+      "original_sha256": "b61dd700c903facbca384600e7a368b5752c40388ae5efc8e3b764ea9684f862",
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_tipdotgraphassets_home.bundle",
+        "bundle_hash": "8ec563436fd98fbba39cb09d9e5e9f3d",
+        "path_id": "9065495815929019677",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/8ec563436fd98fbba39cb09d9e5e9f3d.bundle",
+        "raw_size": 52861,
+        "raw_sha256": "e647faf89100018bc4886a4381a9ff6fc37dfbf1f2a34d348f00c9536a846869"
+      }
+    }
+  }
+}
