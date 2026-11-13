@@ -1,0 +1,77 @@
+// Inserted into the existing complete native-panel/portrait validation fixture.
+// Ratings, active-world maps and status records are controlled owner inputs;
+// health, inventory, name and XP below use the actual isolated profile.
+            var hp=avatar.Root.GetComponentInChildren<MainPlayerHpImage>(true);
+            var slider=(Slider)Field(hp,"mSlider");
+            var red=avatar.Root.GetComponent<PlayerHpRedPoint>();
+            var nameText=avatar.Root.GetComponentInChildren<HomePlayerNameText>(true).myText.GetComponent<TMP_Text>();
+            Require(nameText.text.Contains(profile.Save.Player.CharacterName),"real saved name reaches the native label");
+            Require(Math.Abs(slider.normalizedValue-1)<.001f && !red.IsShow,"actual new profile starts with full HP and no cure prompt");
+            int food=healthConfig.cooking.First(row=>(int)row.Type==0).Id;
+            int buffFood=healthConfig.cooking.First(row=>(int)row.Type==1).Id;
+            var quantities=new Dictionary<int,long>();
+            var originalQuery=new Zjcs.Official.HomePlayerHealthRules.HomeCureItemQuery(healthConfig.cooking,id=>quantities.TryGetValue(id,out long count)?count:0);
+            foreach(var row in healthConfig.cooking){
+                quantities.Clear();quantities[row.Id]=1;
+                Require(originalQuery.HasCureItem()==((int)row.Type==0),"selected original query considers every recovery cooking item and no other cooking type");
+            }
+            int hpEvents=0,itemEvents=0,nameEvents=0;
+            actualPlayer.OnHpUpdate+=_=>hpEvents++;
+            actualPlayer.OnNameUpdate+=()=>nameEvents++;
+            actualPlayer.OnItemCountUpdate+=(item,previous,source)=>{if(item.Id==food)itemEvents++;};
+            Click(avatar.Icon.GetComponent<Button>());Require(opened==1,"native avatar internal pointer opens actual character owner");
+            Require(AudioListener.volume==0 && Object.FindObjectsOfType<AudioSource>().Any(source=>source.isPlaying && assets.sounds.Any(row=>row.clip==source.clip)),"actual native click sound starts with muted test output");
+            Require(health.SetHpPercent(.2f).IsApplied,"real HP mutation commits");
+            actualPlayer.SynchronizeCommittedPlayer();actualPlayer.SynchronizeCommittedPlayer();yield return null;
+            Require(hpEvents==1 && Math.Abs(slider.normalizedValue-.2f)<.001f && !red.IsShow,"committed damage updates native HP once; no food suppresses prompt");
+            Require(!health.SetHpPercent(float.NaN).IsApplied && hpEvents==1,"rejected HP mutation cannot publish a UI event");
+            Require(profile.ApplyCharacterMutation(saved=>{
+                saved.Inventory.Add(new OfflineItemStack{ItemId=buffFood,Count=1});
+            }).IsApplied,"non-recovery foods commit");
+            actualPlayer.SynchronizeCommittedPlayer();yield return null;
+            Require(!red.IsShow && !actualPlayer.HasCureItem(),"real buff inventory cannot produce a recovery prompt");
+            Require(profile.ApplyCharacterMutation(saved=>saved.Inventory.Add(new OfflineItemStack{ItemId=food,Count=1})).IsApplied,"recovery food commits");
+            actualPlayer.SynchronizeCommittedPlayer();actualPlayer.SynchronizeCommittedPlayer();yield return null;
+            Require(actualPlayer.HasCureItem() && red.IsShow && itemEvents==1,"any selected recovery cooking item triggers native hint once without recipe learning");
+            Capture("home-player-health-low.png");
+            var reopened=OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(saveRoot),slot);
+            var restoredHealth=new OfflinePlayerHealth(reopened,growth,()=>owner.Maps.Count,()=>games,()=>experience.Now);
+            Require(Math.Abs(restoredHealth.HpPercent-.2f)<.001f && reopened.InventoryCount(food)==1,"health and recovery food survive actual disk reopen");
+            Require(profile.ApplyCharacterMutation(saved=>saved.Inventory.RemoveAll(item=>item.ItemId==food)).IsApplied,"last recovery food removal commits");
+            actualPlayer.SynchronizeCommittedPlayer();yield return null;
+            Require(!red.IsShow && !actualPlayer.HasCureItem() && itemEvents==2,"removing actual last recovery food hides prompt");
+            Require(profile.ApplyCharacterMutation(saved=>saved.Inventory.Add(new OfflineItemStack{ItemId=food,Count=2})).IsApplied,"recovery food returns");
+            actualPlayer.SynchronizeCommittedPlayer();
+            Require(health.SetHpPercent(healthConfig.playerHpRedDotThreshold).IsApplied,"exact threshold commits");yield return null;
+            Require(!red.IsShow,"official strict less-than threshold excludes equality");
+            Require(health.SetHpPercent(.2f).IsApplied,"reset recovery scenario");
+            owner.ActiveMaps.Add(10);experience.Now=experience.Now.AddHours(1);yield return null;yield return null;
+            Require(Math.Abs(slider.normalizedValue-.2f)<.001f && Math.Abs(actualPlayer.HpPercent-.2f)<.001f,"active-map owner prevents original health regeneration and widget polling");
+            owner.ActiveMaps.Clear();games.Add(true);yield return null;yield return null;
+            Require(Math.Abs(actualPlayer.HpPercent-.2f)<.001f,"active battle using player HP blocks official regeneration");
+            games.Clear();yield return null;yield return null;
+            Require(actualPlayer.HpPercent>.2f && Math.Abs(slider.normalizedValue-actualPlayer.HpPercent)<.001f,"official no-map polling renders recovery from real saved timestamp and character properties");
+            Require(health.RefreshHpPercent().IsApplied,"recovered HP writes back through actual service");
+            actualPlayer.SynchronizeCommittedPlayer();
+            Require(profile.ApplyCharacterMutation(saved=>{saved.CharacterName="家园新名字";saved.Experience=120;}).IsApplied,"actual name and XP mutation commits");
+            actualPlayer.SynchronizeCommittedPlayer();yield return new WaitForSeconds(1.3f);
+            Require(nameText.text.Contains("家园新名字") && nameEvents==1,"native name observer renders committed name");
+            Require(actualPlayer.Level==2 && avatar.Root.GetComponentInChildren<HomePlayerExpSlider>(true).Level==2 && expServices.Handler.HandledExp==120,"full native player panel uses real selected XP projection and original animation");
+            Capture("home-player-health-recovered.png");
+            var first=new object();var second=new object();avatar.Visibility.Hide(first);avatar.Visibility.Hide(second);
+            Require(!avatar.Root.activeSelf,"native multiple hide references disable complete panel");
+            Require(profile.ApplyCharacterMutation(saved=>{saved.CharacterName="隐藏后重开";saved.Experience=200;}).IsApplied,"hidden real state commits");
+            actualPlayer.SynchronizeCommittedPlayer();
+            avatar.Visibility.TryShow(first);Require(!avatar.Root.activeSelf,"outstanding owner keeps native panel hidden");
+            avatar.Visibility.TryShow(second);yield return new WaitForSeconds(1.3f);
+            Require(nameText.text.Contains("隐藏后重开") && actualPlayer.Level==3 && expServices.Handler.HandledExp==200,"reopen reads actual name and consumes pending real XP");
+            expServices.OnPlayerUpdate.Invoke();yield return null;
+            Capture("home-player-health-reopened.png");
+            avatar.Dispose();avatar=null;yield return null;
+            actualPlayer.Dispose();actualPlayer.Dispose();
+            Require(owner.Subscribers==0,"disposing adapter releases all external owner listeners");
+            int before=hpEvents;health.SetHpPercent(.3f);owner.Publish();
+            Require(hpEvents==before,"disposed adapter cannot publish old health listeners");
+            bool rejected=false;try{_=actualPlayer.HpPercent;}catch(ObjectDisposedException){rejected=true;}
+            Require(rejected,"disposed adapter rejects profile reads");
+            portraitSession.Dispose();portraitSession=null;
