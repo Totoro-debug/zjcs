@@ -183,7 +183,7 @@ def main():
             key = 'StageId' if table == 'stage_override_bgm' else 'FightThemeId'
             tables[table] = [dict(id=row[key], group=row['RtpcName'], value=row['RtpcValue'], config=row['BgmConfigPath']) for row in rows]
             if table == 'fight_theme':
-                theme_selection = [{key:row[key] for key in ('FightThemeId', 'ConditionId', 'StageTypes', 'TriggerPercent')}
+                theme_selection = [{key:row[key] for key in ('FightThemeId', 'ConditionId', 'StageTypes', 'TriggerPercent', 'UIPrefabPath')}
                                    for row in rows]
             table_sources.append(dict(apk.provenance(obj), asset=path, bytes=len(data), sha256=hashlib.sha256(data).hexdigest()))
         path = 'Assets/Config/Luban/conditions.g.bytes'

@@ -38,6 +38,8 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly float[] rotation;
         private readonly bool allowNonuniformNoRotation;
         private readonly bool allowNoScaleOrReflection;
+        private bool skeletonFlipX, skeletonFlipY;
+        private Matrix4x4 skeletonFrame = Matrix4x4.identity;
         public int Count => source.Length;
         public bool IsActive(int bone) => active[bone];
         public Matrix4x4 World(int bone) => EvaluateWorld(bone);
@@ -54,10 +56,26 @@ namespace Zjcs.Offline.ProfessionUI
         internal Matrix4x4 IkFrame(int bone)
         {
             int parent = source[bone].parent;
-            if (parent < 0 || inheritance[bone] == 1 || inheritance[bone] >= 3) return Matrix4x4.identity;
+            if (parent < 0 || inheritance[bone] == 1 || inheritance[bone] >= 3) return skeletonFrame;
             Matrix4x4 matrix = World(parent);
-            return inheritance[bone] == 2 ? WithoutParentRotation(matrix) : matrix;
+            return inheritance[bone] == 2 ? InSkeletonFrame(WithoutParentRotation(InSkeletonFrame(matrix))) : matrix;
         }
+
+        // Skeleton reflection belongs outside the inherited bone frame, so it
+        // also affects bones that suppress their parent's scale/reflection.
+        public void SetSkeletonFlip(bool flipX, bool flipY)
+        {
+            if (skeletonFlipX == flipX && skeletonFlipY == flipY) return;
+            skeletonFlipX = flipX; skeletonFlipY = flipY;
+            skeletonFrame = Matrix4x4.Scale(new Vector3(flipX ? -1 : 1, flipY ? -1 : 1, 1));
+            Array.Clear(ready, 0, ready.Length);
+            Array.Clear(overridden, 0, overridden.Length);
+        }
+
+        // A reflection is its own inverse. The same operation enters and
+        // leaves the skeleton frame without changing unflipped calculations.
+        private Matrix4x4 InSkeletonFrame(Matrix4x4 matrix) =>
+            skeletonFlipX || skeletonFlipY ? skeletonFrame * matrix : matrix;
 
         public ProfessionNativeBonePose(Bone[] bones, bool allowNonuniformNoRotation = false,
             bool allowNoScaleOrReflection = false)
@@ -222,11 +240,11 @@ namespace Zjcs.Offline.ProfessionUI
             if (ready[i]) return world[i];
             if (!active[i]) { ready[i] = true; return world[i] = Matrix4x4.zero; }
             Bone b = source[i];
-            Matrix4x4 parent = b.parent < 0 ? Matrix4x4.identity : EvaluateWorld(b.parent);
+            Matrix4x4 parent = b.parent < 0 ? skeletonFrame : EvaluateWorld(b.parent);
             Vector3 origin = parent.MultiplyPoint3x4(position[i]);
             Matrix4x4 basis;
             if (b.parent < 0 || inheritance[i] == 1)
-                basis = Axes(rotation[i], shear[i].x, shear[i].y, scale[i]);
+                basis = InSkeletonFrame(Axes(rotation[i], shear[i].x, shear[i].y, scale[i]));
             else if (inheritance[i] == 0)
                 basis = parent * Axes(rotation[i], shear[i].x, shear[i].y, scale[i]);
             else if (inheritance[i] == 2)
@@ -235,25 +253,26 @@ namespace Zjcs.Offline.ProfessionUI
                 // axes of equal length. Removing rotation and reflection has an
                 // unambiguous result here: retain only their common magnitude.
                 // Partner portraits also bind the nonuniform planar construction.
-                var x = new Vector2(parent.m00, parent.m10);
-                var y = new Vector2(parent.m01, parent.m11);
+                Matrix4x4 inherited = InSkeletonFrame(parent);
+                var x = new Vector2(inherited.m00, inherited.m10);
+                var y = new Vector2(inherited.m01, inherited.m11);
                 float tolerance = .00002f * Mathf.Max(x.sqrMagnitude, y.sqrMagnitude);
                 if (Mathf.Abs(x.sqrMagnitude - y.sqrMagnitude) > tolerance || Mathf.Abs(Vector2.Dot(x, y)) > tolerance)
                 {
                     if (!allowNonuniformNoRotation)
                         throw new NotSupportedException("Nonuniform original no-rotation inheritance is unbound: " + b.name);
-                    basis = WithoutParentRotation(parent) * Axes(rotation[i], shear[i].x, shear[i].y, scale[i]);
+                    basis = InSkeletonFrame(WithoutParentRotation(inherited)) * Axes(rotation[i], shear[i].x, shear[i].y, scale[i]);
                 }
                 else
                 {
                     float magnitude = x.magnitude;
-                    basis = Matrix4x4.Scale(new Vector3(magnitude, magnitude, 1)) * Axes(rotation[i], shear[i].x, shear[i].y, scale[i]);
+                    basis = InSkeletonFrame(Matrix4x4.Scale(new Vector3(magnitude, magnitude, 1))) * Axes(rotation[i], shear[i].x, shear[i].y, scale[i]);
                 }
             }
             else if (inheritance[i] == 3)
-                basis = WithoutParentScale(parent, rotation[i], shear[i], scale[i]);
+                basis = InSkeletonFrame(WithoutParentScale(InSkeletonFrame(parent), rotation[i], shear[i], scale[i]));
             else if (inheritance[i] == 4 && allowNoScaleOrReflection)
-                basis = WithoutParentScale(parent, rotation[i], shear[i], scale[i], false);
+                basis = InSkeletonFrame(WithoutParentScale(InSkeletonFrame(parent), rotation[i], shear[i], scale[i], false));
             else
                 throw new NotSupportedException("Original selective inheritance is unbound: " + b.name + "/" + inheritance[i]);
             basis.m03 = origin.x; basis.m13 = origin.y; world[i] = basis; ready[i] = true;

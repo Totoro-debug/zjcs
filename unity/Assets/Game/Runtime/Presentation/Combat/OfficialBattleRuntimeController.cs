@@ -197,7 +197,8 @@ namespace Zjcs.Presentation.Combat
             FightBattleExecutor nextExecutor = restoreCheckpoint
                 ? resolvedCombatAssets.RestoreBattle(checkpoint)
                 : resolvedCombatAssets.BeginBattle(checkpoint);
-            var nextHud = new OfficialBattleHudView(resolvedHudCatalog);
+            var fightTheme = OfflineBattleThemeSelection.Resolve(checkpoint.StageType, request.FightThemeId);
+            var nextHud = new OfficialBattleHudView(resolvedHudCatalog, fightTheme?.UIPrefabPath);
             OfficialBattleNativeAnimationLibrary nextNativeModels = null;
             OfficialBattleSkillGraphPlayback nextSkillGraphPlayback = null;
             OfficialBattleEnvironmentView nextEnvironment = null;
@@ -309,7 +310,7 @@ namespace Zjcs.Presentation.Combat
                 if (hudRoot != null) hudRoot.SetActive(hudVisible);
                 skillGraphPlayback?.SetDamageUIVisible(hudVisible);
                 ConfigureSpeeds(combatCatalog.SpeedSettings, request.SpeedModeType, request.SpeedConditionMet);
-                soundScene?.PlayMusic(checkpoint.StageId, request.FightThemeId, checkpoint.StageType);
+                soundScene?.PlayMusic(checkpoint.StageId, fightTheme?.FightThemeId ?? 0);
             }
             catch
             {

@@ -2560,6 +2560,20 @@ scripts/prepare_home_fruit_tree_particles.py text eol=lf
 scripts/prepare_home_fruit_tree_particles_validation.py text eol=lf
 assets/reference/home-fruit-tree-particles-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Presentation/Home/HomeSceneView.cs text eol=lf
+
+# Preserve selected native income-window source receipts.
+scripts/prepare_home_hangup_windows_*.py text eol=lf
+scripts/fixtures/home_hangup_windows_native_validation.cs text eol=lf
+assets/reference/home-hangup-windows-*-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI* text eol=lf
+unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/** text eol=lf
+unity/Assets/Game/Resources/Home/OfficialHomeHangUpWindowAssetCatalog.asset* text eol=lf
+unity/Assets/Official/Home/UI/HangUpWindows.meta text eol=lf
+unity/Assets/Official/Home/UI/HangUpWindows/**/*.meta text eol=lf
+unity/Assets/Official/Home/UI/HangUpWindows/**/*.asset text eol=lf
+unity/Assets/Official/Home/UI/HangUpWindows/**/*.prefab text eol=lf
+unity/Assets/Official/Home/UI/HangUpWindows/**/*.anim text eol=lf
+unity/Assets/Official/Home/UI/HangUpWindows/**/*.json text eol=lf
 unity/Assets/Game/Runtime/Presentation/Home/Shaders/FruitTree_*.shader* -text
 unity/Assets/Official/Home/CurrentFruitTree/** -text
 unity/Assets/Official/Home/CurrentFruitTree.meta -text
@@ -2881,14 +2895,25 @@ scripts/prepare_battle_bgm_scene_assets.py text eol=lf
 unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseRuntime.Bgm.cs* text eol=lf
 unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.BgmScenes.cs* text eol=lf
 unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Controller.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleThemeSelection.cs* text eol=lf
+unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Theme.cs* text eol=lf
+scripts/prepare_battle_theme_ui_sources.py text eol=lf
+assets/reference/battle-animation/theme-ui-runtime-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/BattleThemeUI/** text eol=lf
+unity/Assets/Game/Runtime/Official/BattleThemeUI.meta text eol=lf
+scripts/prepare_battle_theme_npc_native.py text eol=lf
+assets/reference/battle-animation/theme-npc-native-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Offline/BattleThemeUI/** text eol=lf
+unity/Assets/Game/Runtime/Offline/BattleThemeUI.meta text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.Theme.cs* text eol=lf
+unity/Assets/Game/Editor/BattleThemeUI/** text eol=lf
+unity/Assets/Game/Editor/BattleThemeUI.meta text eol=lf
 
 # Keep the shared Windows native sound validation receipts reproducible.
 unity/Assets/Game/Runtime/Validation/BattlePublic/OfficialBattlePublicFlowValidation*.cs* text eol=lf
 unity/Assets/Game/Runtime/Validation/BattlePublic/Zjcs.Validation.BattlePublic.asmdef text eol=lf
 unity/Assets/Game/Editor/BattleMovementEffects/OfficialBattlePublicPlayerBuild.cs text eol=lf
 scripts/test_battle_public_player.ps1 text eol=lf
-unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseRuntime.Theme.cs* text eol=lf
-unity/Assets/Game/Editor/BattleSounds/OfficialBattleWwiseSoundAcceptance.Theme.cs* text eol=lf
 
 # Keep actual home hang-up host source receipts reproducible.
 scripts/prepare_home_hangup_host.py text eol=lf
@@ -2900,3 +2925,5 @@ unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/State/UserDataStorage.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/State/Zjcs.Offline.State.asmdef* text eol=lf
 unity/Assets/Game/Runtime/Presentation/Home/HomeSceneView.cs text eol=lf
+unity/Assets/Official/Combat/ThemeUI/** -text
+unity/Assets/Official/Combat/ThemeUI.meta -text

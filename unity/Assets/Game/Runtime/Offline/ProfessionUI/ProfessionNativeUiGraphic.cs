@@ -110,6 +110,7 @@ namespace Zjcs.Offline.ProfessionUI
             ValidateSettings();
             Release(); State = source.CreateSkeleton(initialSkinName);
             if (State == null) throw new InvalidOperationException("Original UI pose source returned no skeleton.");
+            State.Pose.SetSkeletonFlip(initialFlipX, initialFlipY);
             batches = new ProfessionNativeMeshBatches(State.SlotCount);
             if (!string.IsNullOrEmpty(startingAnimation)) source.Play(State, startingAnimation, startingLoop);
             source.Apply(State, 0); Build(); OnAnimationRebuild?.Invoke(this);
@@ -117,7 +118,7 @@ namespace Zjcs.Offline.ProfessionUI
         private void ValidateSettings()
         {
             var settings = meshGenerator.settings;
-            if (initialFlipX || initialFlipY || layoutScaleMode != 0 ||
+            if (layoutScaleMode != 0 ||
                 settings.tintBlack || (settings.canvasGroupCompatible && settings.pmaVertexColors) || settings.addNormals || settings.calculateTangents ||
                 ((physicsPositionInheritanceFactor != Vector2.zero || physicsRotationInheritanceFactor != 0)
                     && source is not IProfessionNativeUiPhysicsMovement) ||

@@ -1,0 +1,76 @@
+{
+  "manifest": "884_156692",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/official-code/client-source/AnimationSequence.cs",
+      "bytes": 4686,
+      "sha256": "ebdea77aee4835e4694586af5fe95c6d41215f9b87c4c298bf62fcdc29af9f47"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/AnimationClipData.cs",
+      "bytes": 326,
+      "sha256": "2b410b2f1f85217ea1023e0d256024c2073f1d912996fda55ef17519d893b5c9"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/FightMainPanelThemeNpcModule.cs",
+      "bytes": 591,
+      "sha256": "2ef251c0d0bd4db3d39118af1378316b82150812e22dfc7cde5188950099b41c"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleThemeUI.meta",
+      "bytes": 116,
+      "sha256": "355e2f8c223c385152d3eb2bba2d82dc2d6c7b50d3f088e02975f78a3c5618ed"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleThemeUI/AnimationSequence.cs",
+      "bytes": 4537,
+      "sha256": "54f04b08de9bc2823d05c319f88c5b2bb64e69a5d6aedba0c360daa393fb2473"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleThemeUI/AnimationSequence.cs.meta",
+      "bytes": 96,
+      "sha256": "3a1d67639be2d62ff1c1bfcec0ded1a0a1004c3aa838e68c9882eb63a281cbc2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleThemeUI/AnimationClipData.cs",
+      "bytes": 382,
+      "sha256": "3831a9304580fe0523fe027fb3c892375f4113ae0f2ce75f0ab46764b51712e5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleThemeUI/AnimationClipData.cs.meta",
+      "bytes": 96,
+      "sha256": "50a550301a32cda8bb3135406ae6b95f676eee8ac17e5bde364af12a8ea65494"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleThemeUI/FightMainPanelThemeNpcModule.cs",
+      "bytes": 1001,
+      "sha256": "8c739e0a22efffa7ef7d7d25fba986781eafec5410d1ca3b50aec6588f2fb581"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleThemeUI/FightMainPanelThemeNpcModule.cs.meta",
+      "bytes": 96,
+      "sha256": "79ea8f08eed671322d1a376a9ce1fdf8af2d98c55aa5578bface41307b31edd8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleThemeUI/Zjcs.Official.BattleThemeUI.asmdef",
+      "bytes": 140,
+      "sha256": "3a5b0ef5fa5a16a72df4e38092ca3357c5e5a270439a3789e3da2b2f2599f1e4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleThemeUI/Zjcs.Official.BattleThemeUI.asmdef.meta",
+      "bytes": 110,
+      "sha256": "5e99f830e873b7c9a9b3c2440420e7599dacea6367400065c3f2806a0d38438d"
+    }
+  ],
+  "adaptations": [
+    "AnimationSequence and AnimationClipData: namespace isolation and an explicit UnityEngine.Object alias only; original serialized fields, coroutine sequencing, loop counts, callbacks and activation/disable order retained.",
+    "FightMainPanelThemeNpcModule: replace unneeded fight-root/base-module services with the consumed immutable prefab path and two local resource operations. Preserve activation, missing-slot check, destroy-children-before-load order and null-theme branch."
+  ],
+  "tool": {
+    "path": "scripts/prepare_battle_theme_ui_sources.py",
+    "bytes": 4672,
+    "sha256": "1e850da039ad99de4c9474c394bafec44d06aba70260a7b4bff41979269d2ada"
+  }
+}

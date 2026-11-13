@@ -310,8 +310,8 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleBgm/FightThemeInfo.cs",
-      "bytes": 406,
-      "sha256": "03543bdd23de3a7d8077e2808aba764e8223fc37a6fd24abb21d9e4e99a0ec40"
+      "bytes": 366,
+      "sha256": "b6a0ea8a9841eef7a6689477c5e208d74f939039bb296ff765fd8f48bb6a0c0e"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleBgm/FightThemeInfo.cs.meta",
@@ -336,13 +336,13 @@
     "Remove only the two trace logging blocks and logger dependency.",
     "Replace the broad Wwise proxy with the two consumed playback operations.",
     "Retain the original theme selector iteration, stage filter, condition/null short-circuit and strict Next(10000) threshold; inject only its consumed condition and random operations.",
-    "Project the four original theme fields consumed by the selector; keep original audio asset bindings separately.",
+    "Project the four original theme fields consumed by the selector and the original HUD NPC prefab path; keep original audio asset bindings separately.",
     "Retain DomainTypeCondition.IsMet with the same equality/Not branches; supply the current local domain instead of the online PlanesInfo singleton.",
     "Repair decompiled Queue.TryDequeue ref to out."
   ],
   "tool": {
     "path": "scripts/prepare_battle_bgm_sources.py",
-    "bytes": 11710,
-    "sha256": "82bd8b7f49c2a1a0657848ac02ffa698dc9335d60fd9e076f36f074c74eaa8e4"
+    "bytes": 11707,
+    "sha256": "7ca0724dd7a57600d3947e36895b8614b2c5ac98725059af12c995ddde825794"
   }
 }

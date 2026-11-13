@@ -82,8 +82,9 @@ namespace Zjcs.Presentation.Combat
         public event Action<string> ControlClicked;
         public event Action SpeedCycled;
 
-        public OfficialBattleHudView(OfficialBattleHudCatalog catalog)
+        public OfficialBattleHudView(OfficialBattleHudCatalog catalog, string themeNpcPrefabPath = null)
         {
+            this.themeNpcPrefabPath = themeNpcPrefabPath;
             OfficialBattleHudCatalog resolved = catalog ?? OfficialBattleHudCatalog.LoadDefault();
             resolvedCatalog = resolved;
             renderer = new OfficialBattleHudRenderer(resolved);
@@ -102,6 +103,7 @@ namespace Zjcs.Presentation.Combat
                 if (path != StageStatusPath) button.onClick.AddListener(() => ControlClicked?.Invoke(path));
             });
             mainAnimationPlayer = renderer.InitializeAnimations("main", root);
+            MountThemeNpc();
             stageStatusStrip = OfficialBattleStageStatusStripView.Mount(renderer.Find(StageStatusPath),
                 resolvedCatalog, OpenStageStatusDialog);
             mainAnimationPlayer.BindNativeSubtree(StageStatusPath, stageStatusStrip.transform);

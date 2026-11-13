@@ -14,8 +14,6 @@ namespace Zjcs.Offline.BattleNativePlayables
             public string manifest, provider_resource, default_config_resource;
             public BgmScene[] scenes;
             public BgmOverride[] stage_override_bgm, fight_theme;
-            public FightThemeInfo[] theme_selection;
-            public ThemeConditionInfo[] theme_conditions;
             public BgmConfigLocation[] configs;
         }
         private BgmBindings bgmBindings;
@@ -79,7 +77,7 @@ namespace Zjcs.Offline.BattleNativePlayables
 
         private void ReleaseMusic()
         {
-            bgmManager = null; bgmProvider = null; bgmBindings = null; themeSelector = null;
+            bgmManager = null; bgmProvider = null; bgmBindings = null;
             if (bgmRoot != null) { bgmRoot.SetActive(false); UnityEngine.Object.Destroy(bgmRoot); }
             bgmRoot = null;
         }
@@ -92,13 +90,12 @@ namespace Zjcs.Offline.BattleNativePlayables
 
             // FightSceneRoot starts music only after InitFight succeeds. The
             // common controller calls this once its scene and hosts are ready.
-            public void PlayMusic(int stageId = 0, int themeId = 0, int stageType = 0)
+            public void PlayMusic(int stageId = 0, int themeId = 0)
             {
                 if (owner == null) throw new ObjectDisposedException(nameof(Lease));
                 if (music != null) throw new InvalidOperationException("This battle music is already playing.");
                 owner.EnsureMusic();
                 var bindings = owner.bgmBindings;
-                if (themeId == 0) themeId = owner.SelectOrdinaryDomainTheme(stageType);
                 var binding = Array.Find(bindings.scenes, row => Array.IndexOf(row.game_ids, gameId) >= 0);
                 var prefab = binding == null ? null : Resources.Load<GameObject>(binding.resource);
                 if (prefab == null) throw new InvalidOperationException("Original GameBgm scene is missing: " + gameId);

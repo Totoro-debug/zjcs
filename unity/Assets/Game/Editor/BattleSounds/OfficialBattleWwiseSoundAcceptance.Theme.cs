@@ -28,6 +28,7 @@ namespace Zjcs.Editor
             var condition = data.theme_conditions.Single();
             Require(theme.FightThemeId == 1 && theme.ConditionId == 30110 && theme.TriggerPercent == 4000
                 && theme.StageTypes.SequenceEqual(new[] { 11, 2 }) && condition.ClassId == 30110
+                && theme.UIPrefabPath == "UI/Fight/FightMainPanel/ThemeNpc/FightThemeNpcLuoTianYi"
                 && condition.Condition.DomainType == 2 && !condition.Condition.Not,
                 "original theme and condition configuration");
             Require(!condition.Condition.IsMet(0) && !condition.Condition.IsMet(1) && condition.Condition.IsMet(2),
@@ -79,7 +80,9 @@ namespace Zjcs.Editor
                 {
                     using (var lease = OfflineBattleWwiseRuntime.Acquire(camera.transform, 1000))
                     {
-                        lease.PlayMusic(stageType: stage);
+                        var selected = OfflineBattleThemeSelection.Resolve(stage);
+                        Require(selected == null, "approved Normal domain keeps the shared music/UI theme snapshot empty");
+                        lease.PlayMusic(themeId: selected?.FightThemeId ?? 0);
                         yield return new WaitForSecondsRealtime(.2f);
                         var provider = UnityEngine.Object.FindObjectOfType<BgmGameObject>().gameObject;
                         NativeMusicSwitch(provider, "BattleMusic", "Map_11_1_Map");

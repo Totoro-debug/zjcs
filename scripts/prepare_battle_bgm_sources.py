@@ -139,12 +139,12 @@ using System.Collections.Generic;
 
 namespace Zjcs.Official.BattleBgm
 {
-    // The original selector consumes these four fields. Audio overrides and
-    // presentation paths retain their separate, original resource bindings.
+    // Original selection fields and the NPC path consumed by its HUD module.
     [Serializable] public sealed class FightThemeInfo
     {
         public int FightThemeId, ConditionId, TriggerPercent;
         public List<int> StageTypes;
+        public string UIPrefabPath;
     }
 }
 '''); meta(target)
@@ -198,7 +198,7 @@ namespace Zjcs.Official.BattleBgm
             'Remove only the two trace logging blocks and logger dependency.',
             'Replace the broad Wwise proxy with the two consumed playback operations.',
             'Retain the original theme selector iteration, stage filter, condition/null short-circuit and strict Next(10000) threshold; inject only its consumed condition and random operations.',
-            'Project the four original theme fields consumed by the selector; keep original audio asset bindings separately.',
+            'Project the four original theme fields consumed by the selector and the original HUD NPC prefab path; keep original audio asset bindings separately.',
             'Retain DomainTypeCondition.IsMet with the same equality/Not branches; supply the current local domain instead of the online PlanesInfo singleton.',
             'Repair decompiled Queue.TryDequeue ref to out.'], tool=identity(Path(__file__)))
     RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')

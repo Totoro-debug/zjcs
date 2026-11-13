@@ -67,7 +67,7 @@ namespace Zjcs.Editor
                     portrait = Sprite.Create(head, new Rect(0, 0, 100, 120), new Vector2(.5f, .5f), 100);
                 }
                 finally { UnityEngine.Object.Destroy(model); }
-                for (int battle = 0; battle < 2; battle++)
+                for (int battle = 0; battle < 3; battle++)
                 {
                     var assets = OfficialCombatAssetCatalog.LoadDefault();
                     var rules = assets.Load();
@@ -87,16 +87,35 @@ namespace Zjcs.Editor
                     state.Units.Add(actor); state.Units.Add(target);
                     controller.Begin(new OfficialBattleRequest { Checkpoint = state, WorldRoot = world.transform,
                         HudParent = canvas.transform, CombatAssets = assets, InitialStepDelay = 0,
+                        FightThemeId = battle == 2 ? 1 : 0,
                         TimelinePortrait = unit => unit.Id == 1 ? portrait : null,
                         EnvironmentGameId = 1000, HostPresentation = new OfficialBattleHostPresentation(camera, world.transform, null),
-                        Options = new OfficialBattleSessionOptions { SkipPrepareStatus = false } });
-                    for (int i = 0; i < 30; i++) yield return null;
+                        Options = new OfficialBattleSessionOptions { SkipPrepareStatus = false,
+                            ShowMainPanelDelay = battle == 2 ? .05f : 0 } });
+                    const string themeSlotPath = "FightMainPanel/Content/ThemeNpcSlot";
+                    if (battle == 2)
+                        Require(canvas.transform.Find(themeSlotPath) == null, "the themed HUD respects the original delayed mount");
+                    for (int i = 0; i < 120; i++)
+                    {
+                        controller.Tick(Time.deltaTime);
+                        yield return null;
+                        if (i >= 29 && canvas.transform.Find(themeSlotPath) != null) break;
+                    }
+                    Transform themeSlot = canvas.transform.Find(themeSlotPath);
+                    Require(themeSlot != null && themeSlot.childCount == (battle == 2 ? 1 : 0),
+                        "formal HUD mounts the selected original theme NPC exactly once");
+                    if (battle == 2)
+                    {
+                        var text = themeSlot.GetComponentInChildren<Zjcs.Official.WorldUI.WorldMultiLanguageText>();
+                        Require(text != null && text.Text == "加油！", "formal theme NPC uses the original Chinese text");
+                    }
                     Require(AkAudioListener.DefaultListeners.ListenerList.Count == 1, "formal Begin mounts original listener");
                     var musicProvider = UnityEngine.Object.FindObjectOfType<Zjcs.Official.BattleBgm.BgmGameObject>();
                     Require(musicProvider != null, "formal Begin mounts original shared BGM object");
                     var musicConfig = Resources.Load<Zjcs.Official.BattleBgm.GameBgmConfig>(
                         "Combat/Wwise/Bgm/Configs/GameBgmConfig");
-                    NativeMusicSwitch(musicProvider.gameObject, "BattleMusic", "Map_11_1_Map");
+                    NativeMusicSwitch(musicProvider.gameObject, "BattleMusic",
+                        battle == 2 ? "Activity_LuoTianYi_1" : "Map_11_1_Map");
                     NativeMusicPlaying(musicProvider.gameObject, musicConfig.BgmEventConfig.PlayEvent.Id);
                     Rtpc(3240620755u, battle == 0 ? 50 : 62);
                     Rtpc(3659619896u, battle == 0 ? 25 : 37);
@@ -104,8 +123,11 @@ namespace Zjcs.Editor
                     Rtpc(3673881719u, battle == 0 ? 12 : 6);
                     Require(File.ReadAllBytes(settingsPath).SequenceEqual(saved), "loading and test muting preserve saved volume bytes");
                     controller.SetHudVisible(false); yield return null;
+                    Require(!themeSlot.gameObject.activeInHierarchy, "formal visibility hides the original theme slot");
                     Require(AkAudioListener.DefaultListeners.ListenerList.Count == 0, "background battle removes default listener");
                     controller.SetHudVisible(true); yield return null;
+                    Require(themeSlot.gameObject.activeInHierarchy && themeSlot.childCount == (battle == 2 ? 1 : 0),
+                        "formal visibility restores the same original theme NPC");
                     Require(AkAudioListener.DefaultListeners.ListenerList.Count == 1, "returning battle restores default listener");
                     NativeMusicPlaying(musicProvider.gameObject, musicConfig.BgmEventConfig.PlayEvent.Id);
                     var start = canvas.transform.Find(OfficialBattleHudView.StartButtonPath.TrimStart('/'))?.GetComponent<Button>();
@@ -144,16 +166,17 @@ namespace Zjcs.Editor
                     var capturedFrame = ScreenCapture.CaptureScreenshotAsTexture();
                     Require(capturedFrame != null && capturedFrame.width == Screen.width && capturedFrame.height == Screen.height,
                         "capture the actual full battle render surface");
-                    try { File.WriteAllBytes(Path.Combine(output, "wwise-formal-battle-" + battle + ".png"), capturedFrame.EncodeToPNG()); }
+                    try { File.WriteAllBytes(Path.Combine(output, "theme-formal-battle-" + battle + ".png"), capturedFrame.EncodeToPNG()); }
                     finally { UnityEngine.Object.Destroy(capturedFrame); }
                     controller.DisposeSession(); yield return null;
+                    Require(canvas.transform.Find(themeSlotPath) == null, "formal disposal releases the original theme slot");
                     Require(AkSoundEngine.IsInitialized() && AkAudioListener.DefaultListeners.ListenerList.Count == 0,
                         "formal disposal preserves application engine and removes battle listener");
                     Require(UnityEngine.Object.FindObjectOfType<Zjcs.Official.BattleBgm.GameBgm>() == null,
                         "formal disposal releases original scene BGM switch");
                     settings.Load();
                 }
-                Debug.Log("NATIVE_WWISE_FORMAL_CONTROLLER_PASSED two real graph battles, original start-button pointer, native playing IDs, damage, saved four-volume controls, pause and listener visibility/disposal");
+                Debug.Log("NATIVE_WWISE_FORMAL_CONTROLLER_PASSED three real graph battles, original start-button pointer, native playing IDs, damage, saved four-volume controls, pause and listener visibility/disposal; original theme NPC and music share one selection through delayed HUD mount.");
             }
             finally
             {
