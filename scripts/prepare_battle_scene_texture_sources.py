@@ -112,6 +112,7 @@ def main():
         return dict(fileID=4900000, guid=guid(path), type=3)
 
     texture_cache = {}
+    texture_output_owners = {}
 
     def texture(obj, resource=False):
         key = (obj.assets_file.name, str(obj.path_id))
@@ -144,6 +145,12 @@ def main():
             previous = None
         if previous is not None and not resource:
             candidate = checked(previous["output"])
+            # Equal payload bytes do not imply equal Unity object identity.
+            # Distinct original placeholders must remain distinct dictionary keys.
+            if str(candidate) in texture_output_owners and texture_output_owners[str(candidate)] != key:
+                previous = None
+        if previous is not None and not resource:
+            candidate = checked(previous["output"])
             header = candidate.read_text(encoding="utf-8-sig").split("  _typelessdata:", 1)[0]
             native_fields = yaml.safe_load("\n".join(header.splitlines()[3:]))["Texture2D"]
             # Unity ignores legacy sampler carriers without the native version.
@@ -173,6 +180,7 @@ def main():
             row["resource"] = "Combat/SceneTexturePayloads/" + path.stem
         textures.append(row)
         texture_cache[key] = row
+        texture_output_owners[str(path)] = key
         return row
 
     skin_source, loader_source = core["appearance_bindings"]
@@ -202,6 +210,7 @@ def main():
         if (index + 1) % 50 == 0:
             print("Restored", index + 1, "of", len(loader_source["fields"]["placeholderMap"]), "original Low mappings", flush=True)
     official = ROOT / "unity/Assets/Game/Runtime/Official/ProfessionUI"
+    assert len({row["placeholderTexture"]["guid"] for row in mappings}) == len(mappings), "Distinct original placeholders were aliased"
     offline = ROOT / "unity/Assets/Game/Runtime/Offline/ProfessionUI"
     skins = copy.deepcopy(skin_source["fields"])
     configs = []

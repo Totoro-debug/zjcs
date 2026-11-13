@@ -102,6 +102,10 @@ def plan(groups):
             head = stream.read(4096)
         if b'\nTexture2D:' not in head or not re.search(rb'm_IsReadable: 0\s', head):
             continue
+        # Appearance loaders use placeholder object identity as a dictionary key.
+        # Two original objects can have identical names, pixels and importers.
+        if re.search(rb'(?m)^  m_Name: [^\r\n]*_placeholder\s*$', head):
+            continue
         resources = [row for row in group if '/Resources/' in row['path']]
         templates = [row for row in group if row['path'] in protected or row['guid'] in protected_guids]
         canonical = sorted(resources or templates or group, key=lambda r: ('/Shared/' not in r['path'], r['path']))[0]

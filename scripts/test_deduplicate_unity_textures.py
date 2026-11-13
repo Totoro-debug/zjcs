@@ -50,6 +50,16 @@ class SharedTextureTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'changed texture'):
             dedup.validate_rows(receipt)
 
+    def test_preserves_equal_placeholder_objects_used_as_loader_keys(self):
+        data = b'  m_Name: faceDecoration_2_G_025_placeholder\n'
+        a = self.texture('A/Placeholder', 'a' * 32, data=data)
+        b = self.texture('B/Placeholder', 'b' * 32, data=data)
+        self.assertEqual(a['sha256'], b['sha256'])
+        with patch.object(dedup.subprocess, 'check_output', side_effect=lambda args, **kw:
+                          (a['path'] + '\0' + b['path'] + '\0').encode()
+                          if 'ls-files' in args and '--others' not in args else b''):
+            self.assertEqual(dedup.plan([[a, b]])['textures'], [])
+
     def test_keeps_texture_referenced_by_another_sessions_new_asset(self):
         a = self.texture('A/Atlas', 'a' * 32)
         b = self.texture('B/Atlas', 'b' * 32)

@@ -149,6 +149,8 @@
 
 `PartnerNativeBattleActor` 沿既有模型、Animator、附件和阴影入口接入原同伴外观：34 份原实体配置中的 35 个 `AppearanceRendererLite` 及 34 个根 `MeshMaterialProperty` 保留完整引用、Low 精度、启用字段、空 MeshRenderer 和空网格副本列表。11005 的根收集器仅引用主身体，第二身体保留独立外观。`PartnerNativeBattleAppearance` 在模块内部管理同一角色的原 `AppearanceAssetManager`、按需贴图路由和销毁顺序，调用方仍使用现有 actor 接口；网格绘制通知驱动原加载器，原 atlas／占位材质切换到已核验的 Low 页。地址计算使用原 `AppearanceAddressUtils` 所读取的骨骼数据名称，完整 SkeletonDataAsset 名称仍供原附件绑定使用。既有直接使用骨骼网格的技能后端保留自身材质生命周期。原对象、原代码、ASTC mip 转换、359 项资源输出和显式 `Combat/NativePartnerAppearance/catalog` 绑定见[同伴原生外观来源](../../assets/reference/battle-animation/native-partner-appearance-source-manifest.json)。11015～11022 仍保持既有正式战斗排除，其原 Low 目标只有 24×24，不能据此声称这八名同伴已完整恢复。原 Animator 生成器另核验并保留目录中既有的 10607 额外控制器及其原片段闭包，避免重建 34 名战斗同伴时删除该绑定。
 
+角色场景 Low 和角色 UI High 加载器保留原 702 个占位对象身份。原 `faceDecoration_2_G_025_placeholder` 的两个独立 CAB／PathID 对象虽然字节相同，仍分别绑定到各自原生 Texture2D；皮肤与材质引用跟随原指针。场景提取器限制历史载荷复用时的对象合并，High 提取器按原对象身份缓存并匹配场景来源，两个导出入口都检查全部占位 GUID 唯一。共享去重工具保留占位纹理身份，避免原 `AppearanceOnDemandTextureLoader.TryInit` 的字典初始化异常；不改变原加载器、贴图像素或技能规则。八项去重工具测试通过；实际技能流程验证见所属职业页。
+
 ### 原生战斗声音
 
 匹配的官方 Wwise Unity Integration `2022.1.18.8567.3199` 已迁入 132 份核心 C#、Windows Editor Profile／Player Release 引擎及八个 DSP，恢复原全局／Windows 初始化设置、40 个声音包及 `Combat/Wwise/catalog`。依据同版 `CAkFilePackageLUT` 将 Android 语言表转换为 Windows UTF-16LE，保持 bank／媒体字节、ID、对齐及原 HIRC／RTPC／DSP 配置。入口、转换和逐文件哈希见 [Windows 声音运行素材](../../assets/reference/battle-animation/windows-sound-runtime-source-manifest.json)。

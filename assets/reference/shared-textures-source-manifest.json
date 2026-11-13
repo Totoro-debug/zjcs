@@ -2036,22 +2036,6 @@
     },
     {
       "source": {
-        "path": "unity/Assets/Official/Combat/SceneCharacterTextures/Textures/aa20f765cc7b593d8db6fa60fdd09d3f.asset",
-        "sha256": "ad8a4f65b7efbb52ded427f5884d02025a62e0a1ceb169c04808542180b6ae37",
-        "meta_sha256": "1ec4c3c12898927481bfb4fad2e4885effd3ab2ad8364d02f8444c2211d3c611",
-        "guid": "f4e7bae41467525d8fba45fff25d9456",
-        "bytes": 973
-      },
-      "canonical": {
-        "path": "unity/Assets/Official/Combat/SceneCharacterTextures/Textures/525121ca69a75ca7a0ab91735bc924ac.asset",
-        "sha256": "ad8a4f65b7efbb52ded427f5884d02025a62e0a1ceb169c04808542180b6ae37",
-        "meta_sha256": "e563f1868f79d00070b8f1ab3c2428508b7eb3f95a048d3bd17a023a227dcd47",
-        "guid": "3d13699137455cce87da330d808e4f1a",
-        "bytes": 973
-      }
-    },
-    {
-      "source": {
         "path": "unity/Assets/Official/Partners/UI/DetailActors/Converted/5d34b341d088d531.asset",
         "sha256": "cd9425dfee8bdc8cef6c4c0da7db7588268801983b4a92faf60fa7da8d102be6",
         "meta_sha256": "f7a018b7bfdb41fe77293c669f9adc58f73be9c9cabd4e7c84fd5378f8b7a56f",
@@ -27382,15 +27366,15 @@
     },
     "unity/Assets/Official/Combat/SceneCharacterTextures/Bindings/skin-textures.asset": {
       "before": "b2325eb2dad6c2f1aee2dd87724e2bbfa5092e6446feb8747eb1373447c246c6",
-      "after": "90e8591e4ec0aa230fcc59f5d9b48ecfcca42703f3d353889cd998123e82fdac"
+      "after": "b2325eb2dad6c2f1aee2dd87724e2bbfa5092e6446feb8747eb1373447c246c6"
     },
     "unity/Assets/Official/Combat/SceneCharacterTextures/Bindings/texture-loader-low.asset": {
       "before": "50ead64c2d706aeeb484db53766c6a609fc530c5a663d21cb1d8b285f0d1f6a3",
-      "after": "02ec86e4a6e652d9044555540d64880468278c891c747d0cb3dc182b4b35f7b6"
+      "after": "50ead64c2d706aeeb484db53766c6a609fc530c5a663d21cb1d8b285f0d1f6a3"
     },
     "unity/Assets/Official/Combat/SceneCharacterTextures/Materials/16e29a80050a5107820a8a531e1e8300.mat": {
       "before": "117c21dac5f3974a476788940824c279a5b7b3c6b73eb82a6d9aba420ebc6014",
-      "after": "66909f2e991bedce8c1d75df5bc8969ef706baa90ff10c4cf72a2e5d858566cf"
+      "after": "117c21dac5f3974a476788940824c279a5b7b3c6b73eb82a6d9aba420ebc6014"
     },
     "unity/Assets/Official/Home/CurrentFruitTree/Effect/Materials/Fx_glow02.mat": {
       "before": "e95fec3bb89033fcefc890c5631335161f918c6e8d855770ef07dfd7dcca6c0c",
@@ -27506,7 +27490,7 @@
     },
     "unity/Assets/Official/Partners/Appearance/HighTextures/Bindings/texture-loader-high.asset": {
       "before": "ffb3ab57ccf8ba235f418db89afaa5ede326440272ee13b0dc769e6fdd4bcde7",
-      "after": "1c841c5ff22053458bdd956512c00150e3d5018951052ed5c6f67dead11fb4f0"
+      "after": "ffb3ab57ccf8ba235f418db89afaa5ede326440272ee13b0dc769e6fdd4bcde7"
     },
     "unity/Assets/Official/Partners/PlayerPortraits/Image/UI/Portrait/DefaultPortrait.asset": {
       "before": "6987fb31335a4d190d8f38a82344424bda89a0eef5dbe6052c636c92f126278b",
@@ -37826,7 +37810,7 @@
     },
     "assets/reference/partner-ui-high-textures-source-manifest.json": {
       "before": "6523c9f53bc0e1a5c8c0dded6c177ea19cfbd6c4f7aa64e7e661215c78428436",
-      "after": "d5859258cdd0933334520fc5ba154600b4d4a1ae00d76427a60a2eeb78c1409a"
+      "after": "f298e39f9b5db7831c1f145bc32a9f43851be49ed0cc238f1da9b71771cf2bad"
     },
     "assets/reference/partner-ui-player-bindings-source-manifest.json": {
       "before": "33c6fd1ef71afb2e52689de543c787d1f067c1472d2efb7f2e486b99d04e7d41",
@@ -37902,7 +37886,7 @@
     },
     "assets/reference/battle-animation/scene-texture-source-manifest.json": {
       "before": "7cefc5ae3f707d2a1419f92251b357c05cd4b88b96052ac50c8b6de1d2787f52",
-      "after": "442df002ab13bc06333777d4f4bae19c78965e4ee963d6cd444dd84d4768baef"
+      "after": "5917670f40a5ce285436d8ceb6ec9fea59e69ccc2f062588ab5e0085cf285949"
     },
     "assets/reference/battle-animation/scene-weapon-playback-source-manifest.json": {
       "before": "404827b293f7f07dc5e1cb575acf437858748ee4c98d1fbe42c1e1f11d51951c",
@@ -38168,11 +38152,11 @@
   "tools": [
     {
       "path": "scripts/deduplicate_unity_textures.py",
-      "sha256": "12aeef715db8daae3d631d5ba9933c9044ec3a0c5a9a2657f7268a04da128062"
+      "sha256": "1d8d0b7ca3bfe5d3ab3501384e62bd4b8122893a640ed127cc7a297277481256"
     },
     {
       "path": "scripts/test_deduplicate_unity_textures.py",
-      "sha256": "423acfc83e59140fb0a427918b454e2cafd49195b6a7e5552e28f2fa70fd9931"
+      "sha256": "24d906b5b2917ccf1c29495d26489ec1a6317fe24371c384eb4e069a49698473"
     },
     {
       "path": "scripts/check_unity_project.py",

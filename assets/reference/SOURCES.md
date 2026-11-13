@@ -332,6 +332,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 当前场景 Low 人物纹理与材质：按 `884_156692` 索引从实际 `881_156673` APK 优先提取，缺少的包使用已核验同版云缓存；恢复原702组 Low 映射、977个按需 GUID、764条皮肤配置和男女937份原材质。原 ASTC 使用固定 astc_encoder 0.1.12 解码为 Windows 原生 RGBA32，保留原 mip／采样／色彩空间及材质字段，世界 shader 复用字节身份一致的既有当前转换；历史效果载荷缺少采样版本时另生成当前资产。原包／对象、编码与解码字节、工具／运行绑定和全部输出哈希见 [场景纹理来源](battle-animation/scene-texture-source-manifest.json)。素材未生成完整快照。
 
+场景 Low 与角色 UI High 的两个同名字节相同占位纹理按原 CAB／PathID 保持独立对象；撤回共享纹理清单中 `aa20f765cc7b593d8db6fa60fdd09d3f.asset` 到 `525121ca69a75ca7a0ab91735bc924ac.asset` 的错误别名。原占位纹理字节未改变，原生 GUID、两份加载表、皮肤与材质引用分别登记在上述[场景纹理来源](battle-animation/scene-texture-source-manifest.json)、[High 纹理来源](partner-ui-high-textures-source-manifest.json)及[共享纹理来源](shared-textures-source-manifest.json)；提取器按原对象身份缓存，去重工具保留外观占位纹理身份。新增独立载荷尚未进入完整快照。
+
 公共战斗人物头像材质参数：`record_battle_character_portrait_material.py` 按当前 `884_156692` 索引、APK 优先及已校验同版云端依赖，读取男女原骨骼→图集→全部937份材质，核对原 `_WorldClipHeight` 统一为 -1,000,000。原包／对象、指针、参数、工具和运行绑定哈希见 [头像材质来源](battle-hud/character-portrait-material-source-manifest.json)。仅恢复临时摄影模型的原裁剪参数，没有生成或修改美术载荷；摄影参数和旧版来源仍各自保留。
 
 

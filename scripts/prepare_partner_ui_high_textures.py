@@ -43,6 +43,11 @@ def main():
     scene = json.loads(scene_proof.read_bytes())
     assert scene['manifest'] == apk.version and scene['asset_table_sha256'] == sha(table_raw)
     known = {row['payload_sha256']: row for row in scene['textures']}
+    known_objects = {(row['source']['bundle_hash'], row['source']['path_id']): row for row in scene['textures']}
+    previous_path = ROOT / 'assets/reference/partner-ui-high-textures-source-manifest.json'
+    previous = json.loads(previous_path.read_bytes()) if previous_path.is_file() else {}
+    previous_textures = {(row['source']['bundle_hash'], row['source']['path_id']): row
+                         for row in previous.get('textures', [])}
     root = ROOT / 'unity/Assets/Official/Partners/Appearance'
     destination = root / 'HighTextures'
     payloads = destination / 'Resources/Partners/HighTexturePayloads'
@@ -78,15 +83,23 @@ def main():
 
     cache = {}
     def texture(obj, resource):
+        provenance = apk.provenance(obj)
+        object_key = (provenance['bundle_hash'], provenance['path_id'])
         digest = sha(obj.get_raw_data())
-        if digest in cache:
-            row = cache[digest]
+        if object_key in cache:
+            row = cache[object_key]
             assert not resource or row.get('resource')
             return row
-        prior = known.get(digest)
+        prior = known.get(digest) if resource else known_objects.get(object_key)
         data = obj.read()
         encoded = data.get_image_data()
-        if prior is not None and prior['encoded_sha256'] == sha(encoded) and (not resource or prior.get('resource')):
+        existing = previous_textures.get(object_key) if resource else None
+        if existing is not None and existing['payload_sha256'] == digest and existing['encoded_sha256'] == sha(encoded):
+            path = checked_reuse(existing)
+            row = dict(existing)
+            textures.append(row)
+            outputs.extend((path, Path(str(path) + '.meta')))
+        elif prior is not None and prior['payload_sha256'] == digest and prior['encoded_sha256'] == sha(encoded) and (not resource or prior.get('resource')):
             checked_reuse(prior)
             row = dict(prior)
             reused.append(dict(source=apk.provenance(obj), payload_sha256=digest, native=prior['output'],
@@ -125,7 +138,7 @@ def main():
                 pixels_sha256=sha(pixels), binding=binding, output=identity(path),
                 resource='Partners/HighTexturePayloads/' + token)
             textures.append(row)
-        cache[digest] = row
+        cache[object_key] = row
         return row
 
     mappings, addresses = [], {}
@@ -144,6 +157,7 @@ def main():
         mappings.append(value)
         if (index + 1) % 25 == 0:
             print('Restored', index + 1, '/', len(original_fields['placeholderMap']), 'original High mappings', flush=True)
+    assert len({row['placeholderTexture']['guid'] for row in mappings}) == len(mappings), 'Distinct original placeholders were aliased'
     loader_path = destination / 'Bindings/texture-loader-high.asset'
     source_loader = ROOT / 'unity/Assets/Official/Combat/SceneCharacterTextures/Bindings/texture-loader-low.asset'
     loader = yaml.safe_load(source_loader.read_text('utf8').split('MonoBehaviour:', 1)[1])
