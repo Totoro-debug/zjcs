@@ -365,6 +365,7 @@ namespace Zjcs.Presentation.World
             RefreshNativeMap12State();
             RefreshNativeMap13State();
             if (UpdateBattleSceneCamera()) return;
+            if (storyTimelineCameraActive) return;
             RefreshMap11CameraResolution();
             Vector3 target = storyCameraActive
                 ? storyCameraTarget

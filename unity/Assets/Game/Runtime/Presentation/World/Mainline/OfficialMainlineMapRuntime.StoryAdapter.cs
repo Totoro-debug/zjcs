@@ -315,11 +315,7 @@ namespace Zjcs.Presentation.World
                         StoryNext(node, "Exit")));
                     return StoryTransition<Map10RuntimeStory>.Wait;
                 case "PlayStoryTimelineNode":
-                    // Timeline assets are optional in the APK. The map-specific
-                    // PlayableNode path above supplies the native equivalent; this
-                    // node still preserves its wait duration and graph ordering.
-                    StartStoryWait(ContinueStoryAfterDelay(node.playableDuration,
-                        StoryNext(node, "Exit")));
+                    StartStoryWait(RunStoryTimeline(node));
                     return StoryTransition<Map10RuntimeStory>.Wait;
                 case "StoryInvokeNode":
                 case "RegisterStoryPropertyNode":

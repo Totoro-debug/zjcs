@@ -921,3 +921,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 主线公共引导遮罩使用所选 `884_156692` APK 内 `defaultpackage_assets_prefabs_ui_story.bundle` 的完整 `StoryMask`／`Mask` prefab。原 `StoryMaskManager`、镂空网格、提示排版、局部跟随与窗口类型代码的输入／输出 SHA256 见[遮罩代码来源](official-map/story-mask-runtime-source-manifest.json)；原对象 CAB／PathID、APK 优先凭据、完整层级、依赖转换、字体、脚本绑定、显式 Resources 入口与宿主哈希见[原生来源](official-map/story-mask-native-source-manifest.json)。生成器为 `prepare_story_mask_runtime.py`／`prepare_story_mask_native.py`，原窗口类型随既有[注册来源](official-map/story-ui-registration-source-manifest.json)恢复。未生成完整素材快照；实现和验证范围仅在[剧情页](../../docs/features/story.md)维护。
 
+
+主线机神山初遇 Timeline 固定使用当前 `884_156692` 的 `defaultpackage_assets_prefabs_playables_displaypackage_story_timeline_map12_earthquake1.bundle`（`Earthquake1`）及 `ZSettings`；官方对象、相机绑定、Cinemachine 依赖、章节节点 16 字段／端口核对和安装输出记录见[Timeline 来源清单](official-map/story-timeline-source-manifest.json)。生成器为 `scripts/prepare_story_timeline.py`；实现与验证缺项见[剧情页](../../docs/features/story.md)。

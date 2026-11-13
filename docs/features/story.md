@@ -29,6 +29,7 @@
 - `NativeStoryUiBindings` 从所选 884 原副本、队伍与邀请 prefab 恢复 `StoryNodeRegister` 的键、引用顺序、空引用、启用状态及精确层级地址。机神山私有详情在激活前接入注册与原射线检测字段；团队窗口有注册数据，完整队伍剧情接线仍未完成。来源和输入输出哈希见[剧情 UI 注册清单](../../assets/reference/official-map/story-ui-registration-source-manifest.json)。
 - `ShowFullMaskNode`／`HideFullMaskNode`／`PlayMaskNode` 和点击引导共用迁入的原 `StoryMaskManager`、`StoryMask`、`StoryMaskGraphic`。APK 内 `StoryMask.prefab`／`Mask.prefab` 的完整层级、半径 23、扇形 10 段、原按钮 `targetGraphic`、边框与提示排版保留；公共 UI 模块管理等待注册时的透明全屏遮罩、激活后镂空和结束清理。原图的整数布尔字段显式转换，取消／地图停用释放目标克隆与整份遮罩实例。私有副本弹窗层级仅按原窗口列表递增，不再把全局剧情遮罩算成上一层窗口。窗口元数据恢复原 `mWindowType`，宿主按实际窗口层级排除 Tip；尚未接入的窗口不据此认定完成。来源见[遮罩代码](../../assets/reference/official-map/story-mask-runtime-source-manifest.json)和[原生素材](../../assets/reference/official-map/story-mask-native-source-manifest.json)。
 - 旧 Map10 载荷缺少逐节点 `sourceJson` 时，从同一载荷保留的完整 `graphJson` 恢复参数，并核对节点 ID 与类型；不猜测页签状态、窗口或按钮参数。生成器同时保留原节点 JSON，后续转换不再丢失字段。
+- 机神山 `FirstMeetMecna` 的 `PlayStoryTimelineNode` 已接入公共 `Zjcs.Official.StoryTimeline.StoryTimelineModule`：按官方 `PlayableDirector` 停止事件、`duration+5` 超时、`OptionTime`、`NeedMask`、Cinemachine 输出绑定和取消清理执行；`Earthquake1` 原生 prefab、三段镜头、玩家跟随、`ZSettings` 相机 Z 值与噪声配置均从当前 884_156692 包恢复。章节节点 16 的字段、端口和当前演出资源在来源清单中逐项核对；其他章节 Timeline 仍待接入。
 
 规则验证入口为 `scripts/test_story_module.ps1`，直接编译生产模块并从同一调用接口验证动画等待、子图战斗、解锁与引导顺序、空出口返回、同步回调、取消后重开、重复回调、并发拒绝、完成后启动下一段、异常和递归保护。这些是执行契约回归，不是章节实际游玩验收。
 
@@ -48,6 +49,6 @@
 
 - 世界之树／机神山主线专用副本及前后剧情的整条流程，仍须在公共模块上补齐所属章节的原节点、原演出、战斗和存档恢复。各地图已有局部实现不等于完整迁移。
 - 飓风狮鹫／烈焰凤凰等圣兽解锁剧情及对应玩法开放的连续交互、奖励与冷恢复尚未完整验证。
-- `PlayStoryTimelineNode` 等旧演出仍有按时长等待的适配；遮罩的自动帧末调度与原 bloom 合成、完整窗口注册覆盖、列表 `StoryTarget` 绑定、职业窗口及选项节点仍有缺项。窗口／按钮／页签／底栏等待已接入公共实现，仍须随实际章节验证；不能把等待或直接前进作为完整演出／交互验收。
+- 其他章节的 `PlayStoryTimelineNode` 仍有按时长等待的适配；机神山节点已改为公共原生 Timeline 播放。遮罩的自动帧末调度与原 bloom 合成、完整窗口注册覆盖、列表 `StoryTarget` 绑定、职业窗口及选项节点仍有缺项。机神山 Play Mode 已进入原生 prefab 和导演播放检查；当前 Cinemachine 噪声资源在该包版本运行时仍出现脚本解析警告，已如实保留为待修项。窗口／按钮／页签／底栏等待已接入公共实现，仍须随实际章节验证；不能把等待或直接前进作为完整演出／交互验收。
 - 三种图格式的实际章节回归仍需覆盖序章、NPC 对白和地图故事图；统一执行不代替这些章节的画面和输入验证。
 - 受影响章节的实际 Play Mode、模拟输入、渲染、存档中断恢复及 Windows Player 验证和发布尚未完成。
