@@ -207,6 +207,12 @@ namespace Zjcs.Presentation.Combat
                 var sourceLease = BindUnit(cast.ActorId, source, cast.IsPetSupport);
                 sourceLease.Projection.Position = sourcePosition;
                 sourceLease.Projection.Mirrored = cast.Presentation.FlipX;
+                // MyFightSkill.DoSourceTurn resets the source grid scale from the
+                // cast snapshot before the original playable starts. Apply that
+                // same operation here at the dispatch boundary so a source that
+                // turned after the scene refresh cannot render one mirror while
+                // the skill graph uses the other.
+                sourceLease.GridView?.ResetScale();
             }
             // Original grid prefabs already own their bound transform and its event
             // subscriptions. A child cast must not replace that component projection.
