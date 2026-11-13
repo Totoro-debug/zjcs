@@ -1,0 +1,495 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "468718afab2ac9f12c29f101e9305de7e0a07f2efbe7a59c4ebcd884d7790834",
+  "inputs": {
+    "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
+    "scripts/official_bundle_reader.py": "29e0015bcef7317e220159e0be13aeed990f94d09397b1ac7814131dc343e477",
+    "scripts/official_source.py": "e99ac1cb8fbb8122866eb94370c7f3b63f835572130535fbb5ec3a290242f732",
+    "scripts/prepare_home_auto_increase_runtime.py": "f2b04eee400cc6bf7c96ff716a88273206dee729df4bc2176d68b27e21d5b21d",
+    "scripts/prepare_home_experience_rules.py": "9877b388136258b4bf18fa9c27adee7ba08e96748aaf6cdb607546daa9ef6350",
+    "scripts/validation_workspace.py": "5b8e95b7e33d6cfa845707f8f50b502700ee6225782802de1aed998e21ed57fa",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "8d8096d23501828168dfb905e27791a5e3e938babb3153e4e6c4f59a4c6ccb1a",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncome.cs": "818851eaa5457370286cc116f7ceb5d48fed42ea8b23946fe57c141b588407dd",
+    "unity/Assets/Game/Runtime/Official/HomeSceneUiControls/HomeHangUpDirectionGuider.cs": "7c9b29eb4910658bc68cb054e83ec24c05dfc8977045e82892e80795673bf3f3",
+    ".tools/source-packages/current/884_156692/official-code/client-source/BaseHangUpFurniture.cs": "10abcac052767745d00a1554f66bf039963d0a291391f877c450f87ad2f52495",
+    ".tools/source-packages/current/884_156692/official-code/client-source/BedFurniture.cs": "c99791f69431fec864f2c1ccba86d22ec99c0637d67426de44975ed5289d8ca8",
+    ".tools/source-packages/current/884_156692/official-code/common-source/HomeSettings.cs": "a7ca11abbeb3034cc79d9f5b0df2967c1b52a074c085f04be2ea87078b9f5a04",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TimeUtils.cs": "f00bb313e48acf2af929cb579bff803dae3e857c496ab9f34c950734d2c44bbc",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/HangUpInfoParser.cs": "141dc7ebddf137db597dcc40219c446bde592d51b830b42d54111be5caca388c",
+    "assets/reference/home-repair-native-source-manifest.json": "5e04e0f1bb871209c9b161e0da22193dd2b2d0a20950ffdfcbd8ce419c5d593f",
+    "scripts/fixtures/home_hangup_tip_checks.cs": "c3246eb1481f0b26dd759f9660e4ebed36462cacfca52f6d025fe681f7419156",
+    "scripts/fixtures/home_hangup_tip_ports.cs": "34b4537ba0221d28deb8a08501f142e5ead558c0402575abe1062e2c6ed8772d",
+    "scripts/fixtures/home_scene_ui_native_validation.cs": "2caed6d3c5da702c26b366c2d6ae97003b07613d24c561adb818a638d2197125",
+    "assets/reference/home-scene-ui-native-source-manifest.json": "e4a53a97415deb23c3358f63cab89821d4a9eb15240cacc47022529761bb408b"
+  },
+  "outputs": {
+    "unity/Assets/Game/Resources/Home/hangup-tips.json": "70e1e0ed91607731924f3fe5dd92fa5c14c6bd7e181821b9b26f680866e2bf63",
+    "unity/Assets/Game/Resources/Home/hangup-tips.json.meta": "f42eb2b9bf94c2c1385a2ed60ef762e7eac60b2efba41440d075e857ea7fe1dc",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpTips/HomeHangUpTipController.cs": "4e8ebef551a317725221d2b5da4db62716f1e964a9e7179134369291862d4041",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpTips/HomeHangUpTipController.cs.meta": "68c9471d94a5da594a5b83aa6a5e4f27abd8e7cbabe89abd1452fddc3f00e20f",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpTips/HomeHangUpTipSettings.cs": "819063a765abd4f368d41994abd701975533c06f25d6731724ada483bdc5705a",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpTips/HomeHangUpTipSettings.cs.meta": "fbe59ccf10902ef262f09db2290b5e87df7966641d3b00a10368793d8b54e832",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpTips/Zjcs.Official.HomeHangUpTips.asmdef": "b9e535b2df6e829619041b5e6ab7e4954bbc19b7898d5a789703371fa3087073",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpTips/Zjcs.Official.HomeHangUpTips.asmdef.meta": "3c5b1d8a561ffcec197091b3337e12daa811241bee62688cec5c4c2ebf504abd",
+    "unity/Assets/Game/Runtime/Offline/HomeHangUpUI/Zjcs.Offline.HomeHangUpUI.asmdef": "aebd199ba83e8d593e2d3e4cc983b7b09552fb7444505bb40d77dbe99809410d",
+    "unity/Assets/Game/Runtime/Offline/HomeHangUpUI/Zjcs.Offline.HomeHangUpUI.asmdef.meta": "8f2f4ed1ba41b46e38d13e5ed3d5aec670f72fa866f2f4b6a12cfd83c3efa1f7",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpTips.meta": "2dfe4ad82195d801c12502f049aa983e4ac3cf40909d2f8dd8c961efed3239b3",
+    "unity/Assets/Game/Runtime/Offline/HomeHangUpUI.meta": "4fbe32c8e00ac3b8f7e3736a8db7a791d378561827585bb5cfa60f90b5136298",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpTips/HomeHangUpTipServices.cs": "d8ffbc24f7405e6b6581722d6dd9e5224f2dadf6ebc4bdf1b2c996e269021a3e",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpTips/HomeHangUpTipServices.cs.meta": "8e5d53086db72f075d89ba3f155cb4879d5a0613cbc338c17cd90b6d7aba8cea",
+    "unity/Assets/Game/Runtime/Offline/HomeHangUpUI/OfflineHomeHangUpTipSource.cs": "744d802abb8e57bd9f92633687c0a6ff335f8253ff633a8a60d77ce4673cdb4e",
+    "unity/Assets/Game/Runtime/Offline/HomeHangUpUI/OfflineHomeHangUpTipSource.cs.meta": "2819db7eb59575cc4b4b61c5bf009202acb7aa23e79ccea85c430265e09b2533",
+    "unity/Assets/Game/Runtime/Offline/HomeHangUpUI/OfflineHomeHangUpTipConfiguration.cs": "110c34111b114591c3f8abe9405d8d5bf1fe5fa6cbc6ede39782c02d6bd8c08f",
+    "unity/Assets/Game/Runtime/Offline/HomeHangUpUI/OfflineHomeHangUpTipConfiguration.cs.meta": "c48573deea65eacd083f42d06cff0df7e4ff589ac67c029e1bd5a308a47d9007"
+  },
+  "settings": {
+    "source": {
+      "bundle": "defaultpackage_assets_scriptableconfig_modules_home.bundle",
+      "bundle_hash": "1978c6add6c35f9e510d4224db3805e3",
+      "path_id": "6995884856671275369",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/1978c6add6c35f9e510d4224db3805e3.bundle",
+      "raw_size": 8484,
+      "raw_sha256": "1c9e447ce7ae8c612cd232e8db29474237ac18adac31b16aa54f0cdfa391c8b2"
+    },
+    "identity": "cab-472b59dff0621eaffc9150103b73c4d9:6995884856671275369",
+    "sha256": "9788d42d11b84d1d51488dca19eb68f32f3b34a41e11d34f33b1be5657c6d150",
+    "fields": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "m_Enabled": 1,
+      "m_Script": {
+        "m_FileID": 0,
+        "m_PathID": -7549855681452959992
+      },
+      "m_Name": "HomeSettings",
+      "mFurnitureClassifications": [
+        {
+          "TypeNameKey": "ui_furniture_text",
+          "FurnitureList": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            11,
+            12
+          ]
+        },
+        {
+          "TypeNameKey": "ui_resources_text",
+          "FurnitureList": [
+            10
+          ]
+        },
+        {
+          "TypeNameKey": "ui_visitor_text",
+          "FurnitureList": [
+            13
+          ]
+        }
+      ],
+      "mHangUpTipSettings": [
+        {
+          "TipLevelList": [
+            0.004999999888241291,
+            0.05000000074505806
+          ],
+          "FurnitureList": [
+            0
+          ]
+        },
+        {
+          "TipLevelList": [
+            0.004999999888241291,
+            0.05000000074505806,
+            0.30000001192092896
+          ],
+          "FurnitureList": [
+            10
+          ]
+        }
+      ],
+      "mExpForLevelUpPercentTip": 0.10000000149011612,
+      "mHomeNoticeSortList": [
+        11,
+        13,
+        16,
+        28,
+        7
+      ],
+      "mDirectionGuideFocusDuration": 0.10000000149011612,
+      "mDefaultFastItemUseCount": 1,
+      "mFastItemMaxCountMessageColdDown": 3,
+      "mMaxDisplayVisitorCount": 8
+    }
+  },
+  "hang_up": {
+    "source": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "8283290296433365553",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+    },
+    "object_sha256": "d78b702b9ff6ed772f35abfb46ae1095d231727f3b710bc4c363d2eef7b9c00e",
+    "payload_sha256": "47db25bbd2689ebfe604f89f48f85753c23a70d2f02bf767684fad0587fd7cae",
+    "constructor": "TbHangUpInfo",
+    "rows": [
+      {
+        "Id": 1,
+        "BindFurniture": 0,
+        "SortOrder": -1,
+        "LevelRuleId": 2,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "NoticeCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "CanLevelUp": false,
+        "UseBlessingLevel": true,
+        "NeedRecordData": true,
+        "RewardType": 0,
+        "RewardId": 1,
+        "FastHangUpId": 1,
+        "EffectPercentPropType": 1001,
+        "EffectFixedPropType": 1000,
+        "MaxStorePropType": 1018,
+        "FinallyEffectPercentPropType": 6004,
+        "InitAutoUnlock": true,
+        "InitialExtraRewardSeconds": 0,
+        "Icon": "ItemIcon/Money/Money_50_Exp"
+      },
+      {
+        "Id": 2,
+        "BindFurniture": 10,
+        "SortOrder": 6,
+        "LevelRuleId": 1,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Level": 15,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "NoticeCondition": {
+          "Jumpable": null,
+          "Level": 3,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "CanLevelUp": false,
+        "UseBlessingLevel": false,
+        "NeedRecordData": true,
+        "RewardType": 1,
+        "RewardId": 2,
+        "FastHangUpId": -1,
+        "EffectPercentPropType": 1013,
+        "EffectFixedPropType": 1012,
+        "MaxStorePropType": 1023,
+        "FinallyEffectPercentPropType": 0,
+        "InitAutoUnlock": false,
+        "InitialExtraRewardSeconds": 3600,
+        "Icon": "ItemIcon/Box/item_50400"
+      },
+      {
+        "Id": 3,
+        "BindFurniture": 10,
+        "SortOrder": 2,
+        "LevelRuleId": 1,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Level": 1,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "NoticeCondition": {
+          "Jumpable": null,
+          "Level": 1,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "CanLevelUp": true,
+        "UseBlessingLevel": false,
+        "NeedRecordData": true,
+        "RewardType": 0,
+        "RewardId": 3,
+        "FastHangUpId": -1,
+        "EffectPercentPropType": 1009,
+        "EffectFixedPropType": 1008,
+        "MaxStorePropType": 1021,
+        "FinallyEffectPercentPropType": 0,
+        "InitAutoUnlock": false,
+        "InitialExtraRewardSeconds": 3600,
+        "Icon": "ItemIcon/Materials/item_42001"
+      },
+      {
+        "Id": 4,
+        "BindFurniture": 10,
+        "SortOrder": 3,
+        "LevelRuleId": 1,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Level": 1,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "NoticeCondition": {
+          "Jumpable": null,
+          "Level": 1,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "CanLevelUp": true,
+        "UseBlessingLevel": false,
+        "NeedRecordData": true,
+        "RewardType": 0,
+        "RewardId": 4,
+        "FastHangUpId": -1,
+        "EffectPercentPropType": 1011,
+        "EffectFixedPropType": 1010,
+        "MaxStorePropType": 1022,
+        "FinallyEffectPercentPropType": 0,
+        "InitAutoUnlock": false,
+        "InitialExtraRewardSeconds": 3600,
+        "Icon": "ItemIcon/Materials/item_42000"
+      },
+      {
+        "Id": 5,
+        "BindFurniture": 10,
+        "SortOrder": 1,
+        "LevelRuleId": 1,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Level": 1,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "NoticeCondition": {
+          "Jumpable": null,
+          "Level": 1,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "CanLevelUp": true,
+        "UseBlessingLevel": false,
+        "NeedRecordData": true,
+        "RewardType": 0,
+        "RewardId": 5,
+        "FastHangUpId": -1,
+        "EffectPercentPropType": 1005,
+        "EffectFixedPropType": 1004,
+        "MaxStorePropType": 1019,
+        "FinallyEffectPercentPropType": 0,
+        "InitAutoUnlock": false,
+        "InitialExtraRewardSeconds": 3600,
+        "Icon": "ItemIcon/Money/Money_1"
+      },
+      {
+        "Id": 6,
+        "BindFurniture": 10,
+        "SortOrder": 4,
+        "LevelRuleId": 1,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Level": 3,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "NoticeCondition": {
+          "Jumpable": null,
+          "Level": 1,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "CanLevelUp": true,
+        "UseBlessingLevel": false,
+        "NeedRecordData": true,
+        "RewardType": 0,
+        "RewardId": 6,
+        "FastHangUpId": -1,
+        "EffectPercentPropType": 1032,
+        "EffectFixedPropType": 1031,
+        "MaxStorePropType": 1033,
+        "FinallyEffectPercentPropType": 0,
+        "InitAutoUnlock": false,
+        "InitialExtraRewardSeconds": 3600,
+        "Icon": "ItemIcon/Materials/item_41300"
+      },
+      {
+        "Id": 7,
+        "BindFurniture": 10,
+        "SortOrder": 7,
+        "LevelRuleId": 1,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Level": 24,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "NoticeCondition": {
+          "Jumpable": null,
+          "Level": 15,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "CanLevelUp": true,
+        "UseBlessingLevel": false,
+        "NeedRecordData": true,
+        "RewardType": 0,
+        "RewardId": 7,
+        "FastHangUpId": -1,
+        "EffectPercentPropType": 1007,
+        "EffectFixedPropType": 1006,
+        "MaxStorePropType": 1020,
+        "FinallyEffectPercentPropType": 0,
+        "InitAutoUnlock": false,
+        "InitialExtraRewardSeconds": 3600,
+        "Icon": "ItemIcon/Materials/item_41400"
+      },
+      {
+        "Id": 8,
+        "BindFurniture": 10,
+        "SortOrder": 5,
+        "LevelRuleId": 1,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Level": 3,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "NoticeCondition": {
+          "Jumpable": null,
+          "Level": 1,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "CanLevelUp": true,
+        "UseBlessingLevel": false,
+        "NeedRecordData": true,
+        "RewardType": 0,
+        "RewardId": 8,
+        "FastHangUpId": -1,
+        "EffectPercentPropType": 1017,
+        "EffectFixedPropType": 1015,
+        "MaxStorePropType": 1025,
+        "FinallyEffectPercentPropType": 0,
+        "InitAutoUnlock": false,
+        "InitialExtraRewardSeconds": 3600,
+        "Icon": "ItemIcon/Materials/item_42200"
+      },
+      {
+        "Id": 9,
+        "BindFurniture": 10,
+        "SortOrder": 8,
+        "LevelRuleId": 1,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Level": 45,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "NoticeCondition": {
+          "Jumpable": null,
+          "Level": 24,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "CanLevelUp": true,
+        "UseBlessingLevel": false,
+        "NeedRecordData": true,
+        "RewardType": 0,
+        "RewardId": 9,
+        "FastHangUpId": -1,
+        "EffectPercentPropType": 1026,
+        "EffectFixedPropType": 1027,
+        "MaxStorePropType": 1028,
+        "FinallyEffectPercentPropType": 0,
+        "InitAutoUnlock": false,
+        "InitialExtraRewardSeconds": 3600,
+        "Icon": "ItemIcon/Pet/item_1500"
+      },
+      {
+        "Id": 100,
+        "BindFurniture": 4,
+        "SortOrder": -1,
+        "LevelRuleId": -1,
+        "UnlockCondition": null,
+        "NoticeCondition": null,
+        "CanLevelUp": false,
+        "UseBlessingLevel": false,
+        "NeedRecordData": false,
+        "RewardType": 2,
+        "RewardId": 100,
+        "FastHangUpId": -1,
+        "EffectPercentPropType": 1030,
+        "EffectFixedPropType": 1029,
+        "MaxStorePropType": 0,
+        "FinallyEffectPercentPropType": 0,
+        "InitAutoUnlock": false,
+        "InitialExtraRewardSeconds": 144000,
+        "Icon": ""
+      },
+      {
+        "Id": 101,
+        "BindFurniture": 0,
+        "SortOrder": -1,
+        "LevelRuleId": -1,
+        "UnlockCondition": null,
+        "NoticeCondition": null,
+        "CanLevelUp": false,
+        "UseBlessingLevel": false,
+        "NeedRecordData": false,
+        "RewardType": 2,
+        "RewardId": 101,
+        "FastHangUpId": -1,
+        "EffectPercentPropType": 1016,
+        "EffectFixedPropType": 1014,
+        "MaxStorePropType": 0,
+        "FinallyEffectPercentPropType": 0,
+        "InitAutoUnlock": false,
+        "InitialExtraRewardSeconds": 0,
+        "Icon": ""
+      },
+      {
+        "Id": 102,
+        "BindFurniture": 0,
+        "SortOrder": -1,
+        "LevelRuleId": -1,
+        "UnlockCondition": null,
+        "NoticeCondition": null,
+        "CanLevelUp": false,
+        "UseBlessingLevel": false,
+        "NeedRecordData": false,
+        "RewardType": 3,
+        "RewardId": -1,
+        "FastHangUpId": -1,
+        "EffectPercentPropType": 0,
+        "EffectFixedPropType": 0,
+        "MaxStorePropType": 0,
+        "FinallyEffectPercentPropType": 0,
+        "InitAutoUnlock": false,
+        "InitialExtraRewardSeconds": 0,
+        "Icon": ""
+      }
+    ]
+  },
+  "scope": "Original BaseHangUpFurniture and BedFurniture tip selection, float thresholds, wait, event order and quick-receive predicate. Local income/session event ports, selected settings and original native scene guide are bound; facility reward state-switcher graphics, claim dialogs and formal HomeFeatureRuntime are separate."
+}
