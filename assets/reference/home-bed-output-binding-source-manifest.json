@@ -1,0 +1,39 @@
+{
+  "manifest": "884_156692",
+  "runtime_bindings": {
+    "unity/Assets/Game/Resources/Home/home-bed-output-texts.json": "956a9d5a92e184c44a4c0d0c64137fff8264ad12f19ffb7b84b0ba05a4cc0892",
+    "unity/Assets/Game/Resources/Home/home-bed-output-texts.json.meta": "ff675ea9b8619bde73cbbbe2d80bd9e5014f574c49da524fdd7279f0b3f791e6",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/FurnitureOutputInfo.cs": "b21de571742c276d692b2b31a22eb8f2de882f9ed7294199bfa9bab27086c77e",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/IHomeFurnitureOutputServices.cs": "f735f5abb1de6431e184cfef7a0632002b0da3aeebcadaea7d36616f3616ae29",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/IHomeFurnitureOutputServices.cs.meta": "5994ae7a5331a1ac23d8dad0050d3ef4fbad3c80ae753932f7abf13ba1e19ff7",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeFurnitureOutput.cs": "eefa6a5f77117d0d536fd1381a7033d7283be9cdb834d0f918b3931056ae88b6",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeFurnitureOutput.cs.meta": "c04706802fbb207956bf75ebd6c902089a83e9813ff385b736b628dfc8b92c97",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef": "6ab37a97162a6733b8332613e75e44e58565d5614f7626d4f9175ff1f921109e",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs": "f03cdf2ba10ec54971a15d1209691dd2bec4d6ec9ac6a1d082fecb22f7b022db",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "0d476b0a7974bb75a147bad2ca73ad70d80ac59ea0bd1aae030c8a5010f2c19e",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.BedOutput.cs": "25c526e2987fa80157bc6fc15ec97fefe30c4aacf12a26f235c75a1e1f0c582f",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.BedOutput.cs.meta": "e60eef6d3300d6790449f3019d5ffac63dadb8a7da076ad8124045b3e76bf2e6",
+    "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef": "9b174723d77b11963eb5d7f8473bc02783f396e59c0ee7caabed5b97a7fd6dc5"
+  },
+  "validation_inputs": {
+    "scripts/prepare_home_bed_output_validation.py": "c7258b4a3b33db1a301aba3da97368150a0ae4747602952500dbcf334b0bd5c2",
+    "scripts/fixtures/home_bed_output_validation.cs": "2adc291ccdf5488718cda664e3a69669701e5c62190abbe68f8f6e1e5bb30a00",
+    "scripts/fixtures/home_furniture_host_validation.cs": "04b99707086fdb7beb10202dc1fd4be3bcb2b6a4d6ef857239ad9e6368dfc5c1"
+  },
+  "native_assets": "assets/reference/home-hangup-windows-native-source-manifest.json",
+  "original_methods": "assets/reference/home-hangup-windows-runtime-source-manifest.json",
+  "selected_configuration": "assets/reference/home-income-selection-source-manifest.json",
+  "selected_texts": "assets/reference/home-bed-output-texts-source-manifest.json",
+  "validation_base_commit": "62d5197181a605fed844607adece4ab209c2cdc6",
+  "scope": "Production original bed output component and eight native property rows only; whole window/remaining HUD and reward UI remain unfinished.",
+  "native_assets_sha256": "e6070db4ad1436501b0800db95b38b3afaa09ccfe859bf6bf4a7cbcdf7d3bbcf",
+  "original_methods_sha256": "8e7aa350713f66f02d0470589602e5dbbdd645918831d4c1f16e2a69f4a81c6b",
+  "selected_configuration_sha256": "e590103fd1203c0bdb19d7200daf73b7a70d52ac5d5f1bc755a51ca9276f0f8b",
+  "selected_texts_sha256": "2d54503ecbf5a988bcebb371ecf1227736fdf70a48edd662569730ac5407927a",
+  "native_script_rebinding": {
+    "guid": "878a8495b28982296ebf88f320a96073",
+    "converted_sha256": "c0e18698471b3f8ab46d255a53f7854e153b520559ce85d4ac88cca12ec11357",
+    "current_sha256": "b21de571742c276d692b2b31a22eb8f2de882f9ed7294199bfa9bab27086c77e",
+    "adaptation": "Only data-service boundary and read-only row references added; original serialized fields and method bodies retained."
+  }
+}

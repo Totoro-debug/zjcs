@@ -89,6 +89,18 @@ namespace Zjcs.Official.HomeHangUpWindowsUI
     # All consumers keep the original conversion; the user's number display
     # setting is an explicit formatter rather than a fabricated global default.
     text = re.sub(r'GetPropValue\((hangUpReward|value|value2|value3|num|num2)\)', r'GetPropValue(\1, Services.FormatCount)', text)
+    # This original component is also used independently of a furniture window.
+    # Its data port does not require reward/navigation/network operations.
+    text = text.replace('public IHomeHangUpWindowServices Services { protected get; set; }', '''private IHomeFurnitureOutputServices outputServices;
+    public IHomeHangUpWindowServices Services { set => outputServices = new HomeFurnitureOutputServices(value); }
+    public IHomeFurnitureOutputServices OutputServices { get => outputServices; set => outputServices = value; }''')
+    text = text.replace('Services.Player.PlayerPropCenter', 'OutputServices.PropertyCenter')
+    text = text.replace('Services.Player.NonBattleProps', 'OutputServices.NonBattleProps')
+    text = re.sub(r'(?<!Output)Services\.', 'OutputServices.', text)
+    text = text.replace('public List<EPropHandleType> BranchExploreEPropHandleTypes => mBranchExploreEPropHandleTypes;', '''public List<EPropHandleType> BranchExploreEPropHandleTypes => mBranchExploreEPropHandleTypes;
+    public IReadOnlyList<PlayerPropItem> OutputItems => new[] { mBaseOutputPropItem, mAddSumPropItem,
+        mBranchExplorePropItem, mTreasurePropItem, mMouthCardPropItem, mAstrologicalPropItem,
+        mSumOutputPropItem, mSumStorePropItem };''')
     emit('FurnitureOutputInfo', text)
 
     text = clean(read('FurnitureHangUpQuickReceive'))
@@ -187,6 +199,9 @@ namespace Zjcs.Official.HomeHangUpWindowsUI
                      'ProfessionUI/ProfessionPropertyType.cs', 'ProfessionUI/PropUpgradeEffectAgent.cs',
                      'ProfessionUI/ProfessionImageResourceBridge.cs'):
         path = ROOT/'unity/Assets/Game/Runtime/Official'/relative
+        inputs[path.relative_to(ROOT).as_posix()] = sha(path)
+    for name in ('HomeHangUpWindowServices', 'IHomeFurnitureOutputServices'):
+        path = DEST/(name+'.cs')
         inputs[path.relative_to(ROOT).as_posix()] = sha(path)
     proof = dict(manifest='884_156692', generator_sha256=sha(Path(__file__)), inputs=inputs, outputs=outputs,
         scope='Original bed window, output source/upgrade preview and quick-receive controllers. Explicit typed player, property, transaction and presentation owners; native assets, real local binding and Player validation are separate.')

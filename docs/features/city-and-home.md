@@ -233,7 +233,13 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 所选 `884_156692` 的完整 `FurnitureBedDialog` 已恢复到 `Assets/Official/Home/UI/HangUpWindows/`，保留原 1047 个序列化对象、布局、圆环、折叠、属性行、提示选择器、动画和声音引用。`Resources/Home/OfficialHomeHangUpWindowAssetCatalog` 显式绑定原窗口、文本和代码动态加载的经验 Sprite；原依赖按 GUID／内容核对并复用，模块内提示图地址使用独立载荷，保留关联的 12 个原源对象，不代表提示图运行求值已完成。原床铺加速事件 `Furniture_Animation_Normal` 按完整 Wwise 五声部 TXTP 解码，保留 0／0.5／1／1.5 秒时序和原 -6dB 声部，未取单条声音替代。
 
-`Runtime/Official/HomeHangUpWindowsUI/` 从完整依赖反编译结果迁入原床铺、产量来源／升级预览、快捷领取、产量加成说明按钮和赐福说明入口，保留原取整、属性分组、等级／地图确认优先级、免费加速容量确认和领奖顺序。原 R3 资源袋的默认值能力与顺序释放映射为显式句柄所有权，支持窗口未激活时初始化并在关闭后释放。真实玩家、属性分块、配置、领取回执、快捷偏好和二级窗口由明确接口提供；尚未装配到正式 `HomeFeatureRuntime`，当前正式入口仍使用旧床铺窗口。完整推车／加速选择／赐福及产量说明窗口、升级预览演出、真实奖励与存档组合验证仍未完成。
+`Runtime/Official/HomeHangUpWindowsUI/` 从完整依赖反编译结果迁入原床铺、产量来源／升级预览、快捷领取、产量加成说明按钮和赐福说明入口，保留原取整、属性分组、等级／地图确认优先级、免费加速容量确认和领奖顺序。原 R3 资源袋的默认值能力与顺序释放映射为显式句柄所有权，支持窗口未激活时初始化并在关闭后释放。真实玩家、属性分块、配置、领取回执、快捷偏好和二级窗口由明确接口提供；正式入口现接入原 `FurnitureOutputInfo` 和八个原生属性行，床铺外层仍为旧窗口，完整 `FurnitureBedDialog` 控制器尚未装配。完整推车／加速选择／赐福及活动产量说明窗口、升级预览演出、真实奖励与存档组合验证仍未完成。
+
+正式床铺的产出明细由 `HomeHudView.BedOutput`／`OfflineHomeFurnitureOutput` 装配：沿 `Resources/Home/OfficialHomeHangUpWindowAssetCatalog` 中所选 884 原 prefab 的序列化引用取得八个完整属性行，放回两个折叠区的相同路径，保留原字体、素材、组件与布局数据。原 `FurnitureOutputInfo` 位于床铺根节点，读取两个区的行引用；当前保留其未激活的数据所有者，其他床铺控制器不在这个局部绑定中激活。关闭床铺或退出家园时一起释放所有者、原生行、字体和本地 UI 绑定。`IHomeFurnitureOutputServices` 仅提供该原组件需要的读数据操作，原完整窗口服务通过适配器继续兼容。
+
+明细取同一角色的共享 `NonBattleProps` 及原 handle 分块，按原 `LostGoddess + Extra`、古遗物、月卡和星命分类，不再把这些明细行固定写成 0。既有月卡缺表投影同时归入原 `PeriodIcCar(13)` 分块，账本与明细共用一次合并的属性，不重复加成。等级倍率、原产量与容量读取正式家园已绑定的当前配置；原显示公式 `(baseSpeed + addSpeed) * addPercent`、固定属性的单精度转换、定点百分比换算和基础预览忽略小时参数的分支保留，与领取结算公式分别处理。动态基础产量标题按原 `LanguageUtils.GetHangUpBaseOutput(1)` 的键，从所选 APK 优先读取的中文语言包绑定至 `Resources/Home/home-bed-output-texts`。
+
+`HomeBedOutputHostValidation.Run` 在同步最新已提交基线的完整隔离工程，通过静音、有图形 Play Mode 的真实创角、模拟场景点击／原维修按钮、修复落盘及重开，验证八个原生行实际激活、原 pivot／缩放、未加成档的零明细、真实遗失女神分块、原定点换算和基础预览分支、关闭释放及重开恢复；实际月卡记录重开后原分项显示 5%，容量与收益账本一致。已查看未加成、女神、重开、月卡四张 608×1080 运行画面；运行布局受原布局组件驱动，本次未证明完整窗口运行坐标与官方一致。根工作区静态元数据检查（151474 个 GUID）、Unity 2022.3.57f1c2 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 退出码均为 0；工程校验仍报告既有战斗材质在 Edit Mode 调用 `Destroy` 的诊断。该局部接线不代表外层赐福／女神条目、折叠控制、领取奖励队列、免费／道具加速和二级窗口已完整迁为原控制器；本模块未构建或发布 Windows Player。
 
 `HomeHangUpWindowsNativeValidation.Run` 已在隔离完整工程静音、有图形 Play Mode 通过：完整原床铺、领取／两种折叠／快捷领取的首个射线命中与模拟点击；奖励先消费、合并、弹出，再发布领取通知；空收益拒绝、开关失败无递归回滚、功能限制刷新；等级／地图确认优先级、免费加速超容量确认、关闭后请求顺序；已结算量加未结算时长的原圆环更新、原显示／隐藏动画、完整加速音效播放 ID，以及关闭／销毁后的事件与资源句柄释放。测试通过既有进程内自动化标记隔离开场界面，未修改按钮或背景的射线属性；已查看床铺、两种明细展开和关闭后的 608×1080 实际画面。玩家、产量／容量、属性分块、交易回执、二级窗口和提示求值在此夹具中均为受控端口，不证明真实角色、存档、奖励演出或 Windows Player 接通；正式入口的旧窗口遮挡仍在待实现范围。Unity 2022.3.57f1c2 导入／编译、`Zjcs.Editor.ProjectTools.Validate`（退出码 0）及根工作区静态元数据检查（152961 个 GUID）通过；本模块尚未构建或发布 Windows Player。
 

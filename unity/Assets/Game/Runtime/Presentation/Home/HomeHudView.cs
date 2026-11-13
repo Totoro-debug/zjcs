@@ -879,6 +879,7 @@ namespace Zjcs.Presentation.Home
 
         public void CloseDialog()
         {
+            ReleaseNativeBedOutput();
             repairWindows?.Dispose();
             repairWindows = null;
             if (repairCapture != null) UnityEngine.Object.Destroy(repairCapture);
@@ -953,7 +954,7 @@ namespace Zjcs.Presentation.Home
 
         public void ShowBed()
         {
-            OpenDialog("bed", (renderer, panel) => { RefreshBed(renderer); });
+            OpenDialog("bed", (renderer, panel) => { BindNativeBedOutput(panel); RefreshBed(renderer); });
             bedOpen = activeDialog != null;
         }
 
@@ -972,15 +973,7 @@ namespace Zjcs.Presentation.Home
             renderer.SetTextByName("DataText", "每小时 " + Format(hourly));
             renderer.SetTextUnderPath("FurniturePropItemBlessLevel", "Value/Text", host.BlessingLevel.ToString());
             renderer.SetTextUnderPath("FurniturePropItemLossGoddessNums", "Value/Text", "0");
-            renderer.SetTextUnderPath("FurniturePropItemBase", "Value/Text", Format(hourly));
-            renderer.SetTextUnderPath("FurniturePropItem", "Value/Text", Format(hourly));
-            renderer.SetTextUnderPath("FurniturePropItem (1)", "Value/Text", Format(capacity));
-            renderer.SetTextUnderPath("FurniturePropItemLevelAddOfBase", "Value/Text", "0");
-            renderer.SetTextUnderPath("FurniturePropItemGodessAddOfBase", "Value/Text", "0");
-            renderer.SetTextUnderPath("FurniturePropItem1", "Value/Text", "0");
-            renderer.SetTextUnderPath("FurniturePropItemTreasure", "Value/Text", "0");
-            renderer.SetTextUnderPath("FurniturePropItemMonthCard", "Value/Text", "0");
-            renderer.SetTextUnderPath("AstrologicalPropItem", "Value/Text", "0");
+            RefreshNativeBedOutput();
             renderer.ReplaceExactText("{0}", host.BlessingLevel.ToString());
             string expName = host.Rules.ItemName(50);
             if (!string.IsNullOrEmpty(expName)) renderer.SetTextByName("NameTxt", expName);
@@ -1374,6 +1367,7 @@ namespace Zjcs.Presentation.Home
 
         public void Dispose()
         {
+            ReleaseNativeBedOutput();
             dungeonUiBindingModule?.Dispose();
             dungeonUiBindingModule = null;
             if (demonResult) demonResult.Release();

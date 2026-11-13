@@ -947,6 +947,9 @@ namespace Zjcs.Presentation.Home
         }
 
         public IReadOnlyDictionary<int, long> PlayerProperties()
+            => HomeIncomeProperties().NonBattleProps;
+
+        public CharacterPropSnapshot HomeIncomeProperties()
         {
             var merged = new Dictionary<int, long>();
             EnsureProgression();
@@ -964,12 +967,22 @@ namespace Zjcs.Presentation.Home
             {
                 OfflineCommerceSave commerce = JsonUtility.FromJson<OfflineCommerceSave>(
                     profile.Save.Player.CommerceStateJson);
+                var chunks = snapshot.Chunks.ToDictionary(pair => pair.Key, pair => pair.Value);
+                var cardProps = chunks.TryGetValue(CharacterPropHandleType.PeriodIcCar, out var currentCard)
+                    ? new Dictionary<int, long>(currentCard) : new Dictionary<int, long>();
                 foreach (KeyValuePair<int, long> pair in OfflineCommerceSession.ActivePeriodicProperties(
                              OfficialCommerceCatalogView.LoadDefault(), commerce?.State))
+                {
                     merged[pair.Key] = merged.TryGetValue(pair.Key, out long current)
                         ? checked(current + pair.Value) : pair.Value;
+                    cardProps[pair.Key] = cardProps.TryGetValue(pair.Key, out long prior)
+                        ? checked(prior + pair.Value) : pair.Value;
+                }
+                chunks[CharacterPropHandleType.PeriodIcCar] = cardProps;
+                snapshot.Chunks = chunks;
             }
-            return merged;
+            snapshot.NonBattleProps = merged;
+            return snapshot;
         }
 
         private static ISet<int> FloatPropertyIds()

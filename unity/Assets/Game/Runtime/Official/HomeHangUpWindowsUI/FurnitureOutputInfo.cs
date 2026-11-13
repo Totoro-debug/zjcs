@@ -26,7 +26,9 @@ namespace Zjcs.Official.HomeHangUpWindowsUI
 
 public class FurnitureOutputInfo : MonoBehaviour
 {
-    public IHomeHangUpWindowServices Services { protected get; set; }
+    private IHomeFurnitureOutputServices outputServices;
+    public IHomeHangUpWindowServices Services { set => outputServices = new HomeFurnitureOutputServices(value); }
+    public IHomeFurnitureOutputServices OutputServices { get => outputServices; set => outputServices = value; }
 	[SerializeField]
 	private MultiLanguageText mFromLevelTxt;
 
@@ -75,6 +77,9 @@ public class FurnitureOutputInfo : MonoBehaviour
 	private List<PropType> mTitleTotalProps = new List<PropType>();
 
 	public List<EPropHandleType> BranchExploreEPropHandleTypes => mBranchExploreEPropHandleTypes;
+    public IReadOnlyList<PlayerPropItem> OutputItems => new[] { mBaseOutputPropItem, mAddSumPropItem,
+        mBranchExplorePropItem, mTreasurePropItem, mMouthCardPropItem, mAstrologicalPropItem,
+        mSumOutputPropItem, mSumStorePropItem };
 
 	private void Awake()
 	{
@@ -106,30 +111,30 @@ public class FurnitureOutputInfo : MonoBehaviour
 		{
 			mFromLevelTxt.Format(level);
 		}
-		HangUpInfo hangUpInfo = Services.GetHangUpInfo(hangUpId);
-		double hangUpReward = Services.GetHangUpReward(hangUpId, 1.0, level, isBase: true);
+		HangUpInfo hangUpInfo = OutputServices.GetHangUpInfo(hangUpId);
+		double hangUpReward = OutputServices.GetHangUpReward(hangUpId, 1.0, level, isBase: true);
 		if (hangUpInfo.BindFurniture == EFurniture.Cart)
 		{
-			mBaseOutputPropItem.Init(Services.GetHangUpBaseOutput(hangUpId), GetPropValue(hangUpReward, Services.FormatCount));
+			mBaseOutputPropItem.Init(OutputServices.GetHangUpBaseOutput(hangUpId), GetPropValue(hangUpReward, OutputServices.FormatCount));
 		}
 		else
 		{
 			mBranchExplorePropValue.Clear();
-			Services.Player.PlayerPropCenter.GetProps(mBranchExploreEPropHandleTypes, mBranchExplorePropValue);
+			OutputServices.PropertyCenter.GetProps(mBranchExploreEPropHandleTypes, mBranchExplorePropValue);
 			_ = mBranchExplorePropValue;
-			double prop = Services.GetProp(mBranchExplorePropValue, hangUpInfo.EffectPercentPropType);
+			double prop = OutputServices.GetProp(mBranchExplorePropValue, hangUpInfo.EffectPercentPropType);
 			double value = CalcSumSpeed(hangUpReward, 0.0, prop + 1.0);
-			mBaseOutputPropItem.Init(Services.GetHangUpBaseOutput(hangUpId), GetPropValue(value, Services.FormatCount));
+			mBaseOutputPropItem.Init(OutputServices.GetHangUpBaseOutput(hangUpId), GetPropValue(value, OutputServices.FormatCount));
 		}
 		if (mSumOutputPropItem != null)
 		{
-			Services.GetHangUpProp(hangUpInfo, Services.Player.NonBattleProps, out var addPercent, out var addFixed);
+			OutputServices.GetHangUpProp(hangUpInfo, OutputServices.NonBattleProps, out var addPercent, out var addFixed);
 			double value2 = CalcSumSpeed(hangUpReward, addFixed, addPercent);
-			mSumOutputPropItem.Init(PropConfigUtils.GetPropTypeName(hangUpInfo.EffectFixedPropType), GetPropValue(value2, Services.FormatCount));
+			mSumOutputPropItem.Init(PropConfigUtils.GetPropTypeName(hangUpInfo.EffectFixedPropType), GetPropValue(value2, OutputServices.FormatCount));
 		}
 		if (mSumStorePropItem != null)
 		{
-			long hangUpMaxRewardStore = Services.GetHangUpMaxRewardStore(hangUpId);
+			long hangUpMaxRewardStore = OutputServices.GetHangUpMaxRewardStore(hangUpId);
 			mSumStorePropItem.Init(hangUpInfo.MaxStorePropType, hangUpMaxRewardStore, -1L);
 		}
 		SetAddProp(hangUpId);
@@ -137,15 +142,15 @@ public class FurnitureOutputInfo : MonoBehaviour
 
 	protected virtual void OnShowLevelUpInfo(int hangUpId, bool isLevelMax, int fromLevel, int toLevel, bool instant)
 	{
-		HangUpInfo hangUpInfo = Services.GetHangUpInfo(hangUpId);
-		Services.GetHangUpProp(hangUpInfo, Services.Player.NonBattleProps, out var addPercent, out var addFixed);
+		HangUpInfo hangUpInfo = OutputServices.GetHangUpInfo(hangUpId);
+		OutputServices.GetHangUpProp(hangUpInfo, OutputServices.NonBattleProps, out var addPercent, out var addFixed);
 		long value = 0L;
 		double num = 0.0;
 		double value2 = 0.0;
 		if (fromLevel > 0)
 		{
-			num = Services.GetHangUpReward(hangUpId, 1.0, fromLevel, isBase: true);
-			value = Services.GetHangUpMaxRewardStore(hangUpId, fromLevel);
+			num = OutputServices.GetHangUpReward(hangUpId, 1.0, fromLevel, isBase: true);
+			value = OutputServices.GetHangUpMaxRewardStore(hangUpId, fromLevel);
 			value2 = CalcSumSpeed(num, addFixed, addPercent);
 		}
 		long nextValue = -1L;
@@ -153,8 +158,8 @@ public class FurnitureOutputInfo : MonoBehaviour
 		double value3 = -1.0;
 		if (!isLevelMax)
 		{
-			num2 = (long)(Services.GetHangUpReward(hangUpId, 1.0, toLevel, isBase: true) + 9.999999747378752E-06);
-			nextValue = Services.GetHangUpMaxRewardStore(hangUpId, toLevel);
+			num2 = (long)(OutputServices.GetHangUpReward(hangUpId, 1.0, toLevel, isBase: true) + 9.999999747378752E-06);
+			nextValue = OutputServices.GetHangUpMaxRewardStore(hangUpId, toLevel);
 			value3 = CalcSumSpeed(num2, addFixed, addPercent);
 		}
 		mMaxLevelStateSwitcher.SetState(isLevelMax);
@@ -166,8 +171,8 @@ public class FurnitureOutputInfo : MonoBehaviour
 		{
 			mToLevelTxt.Format(toLevel);
 		}
-		mBaseOutputPropItem.Init(Services.GetHangUpBaseOutput(hangUpId), GetPropValue(num, Services.FormatCount), GetPropValue(num2, Services.FormatCount), instant);
-		mSumOutputPropItem.Init(PropConfigUtils.GetPropTypeName(hangUpInfo.EffectFixedPropType), GetPropValue(value2, Services.FormatCount), GetPropValue(value3, Services.FormatCount), instant);
+		mBaseOutputPropItem.Init(OutputServices.GetHangUpBaseOutput(hangUpId), GetPropValue(num, OutputServices.FormatCount), GetPropValue(num2, OutputServices.FormatCount), instant);
+		mSumOutputPropItem.Init(PropConfigUtils.GetPropTypeName(hangUpInfo.EffectFixedPropType), GetPropValue(value2, OutputServices.FormatCount), GetPropValue(value3, OutputServices.FormatCount), instant);
 		mSumStorePropItem.Init(hangUpInfo.MaxStorePropType, value, nextValue, instant);
 		SetAddProp(hangUpId);
 	}
@@ -179,7 +184,7 @@ public class FurnitureOutputInfo : MonoBehaviour
 
 	private void SetAddProp(int hangUpId)
 	{
-		HangUpInfo hangUpInfo = Services.GetHangUpInfo(hangUpId);
+		HangUpInfo hangUpInfo = OutputServices.GetHangUpInfo(hangUpId);
 		PropType effectFixedPropType = hangUpInfo.EffectFixedPropType;
 		PropType effectPercentPropType = hangUpInfo.EffectPercentPropType;
 		mTitleTotalProps.Clear();
@@ -210,19 +215,19 @@ public class FurnitureOutputInfo : MonoBehaviour
 			SetProp(mMouthCardPropItem, "UI_Pay_PeriodicCard", EPropHandleType.PeriodIcCar, effectFixedPropType, PropType.AddFinallyAwardExpPercent);
 			SetProp(mTreasurePropItem, "hangup_output_add_treasure", EPropHandleType.Treasure, effectFixedPropType, PropType.AddFinallyAwardExpPercent);
 		}
-		SetProp(mAddSumPropItem, "hangup_output_add_title", Services.Player.NonBattleProps, effectFixedPropType, mTitleTotalProps.ToArray());
+		SetProp(mAddSumPropItem, "hangup_output_add_title", OutputServices.NonBattleProps, effectFixedPropType, mTitleTotalProps.ToArray());
 	}
 
 	private void SetProp(PlayerPropItem propItem, string propName, EPropHandleType handleType, PropType speedProp, PropType percentProp)
 	{
-		Dictionary<PropType, long> chunckProps = Services.Player.PlayerPropCenter.GetChunckProps(handleType);
+		Dictionary<PropType, long> chunckProps = OutputServices.PropertyCenter.GetChunckProps(handleType);
 		SetProp(propItem, propName, chunckProps, speedProp, percentProp);
 	}
 
 	private void SetProp(PlayerPropItem propItem, string propName, List<EPropHandleType> handleTypes, PropType speedProp, PropType percentProp, ref Dictionary<PropType, long> props)
 	{
 		props.Clear();
-		Services.Player.PlayerPropCenter.GetProps(handleTypes, props);
+		OutputServices.PropertyCenter.GetProps(handleTypes, props);
 		SetProp(propItem, propName, props, speedProp, percentProp);
 	}
 
@@ -262,7 +267,7 @@ public class FurnitureOutputInfo : MonoBehaviour
 		{
 			if (percent != 0L)
 			{
-				return Services.TextFormatted("hang_up_prop_add_sum_speed_and_percent", GetPercentStr(percent), speed);
+				return OutputServices.TextFormatted("hang_up_prop_add_sum_speed_and_percent", GetPercentStr(percent), speed);
 			}
 			return speed.ToString();
 		}
@@ -270,7 +275,7 @@ public class FurnitureOutputInfo : MonoBehaviour
 		{
 			return "0";
 		}
-		return Services.TextFormatted("ui_common_percent", GetPercentStr(percent));
+		return OutputServices.TextFormatted("ui_common_percent", GetPercentStr(percent));
 	}
 
 	private string GetPercentStr(long percent)
