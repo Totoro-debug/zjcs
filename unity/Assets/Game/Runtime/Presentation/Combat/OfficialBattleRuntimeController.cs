@@ -404,7 +404,7 @@ namespace Zjcs.Presentation.Combat
                     elapsed => skillGraphPlayback?.Tick((float)elapsed)) && hudVisible)
                 {
                     sceneView.RefreshStatusSnapshot(result.Checkpoint);
-                    hudView.Refresh(result.Checkpoint);
+                    if (hudRoot != null) hudView.Refresh(result.Checkpoint);
                 }
                 LastStepSeconds = result.Event != null && result.Event.Duration > 0f
                     ? result.Event.Duration : 0.35f;
@@ -586,7 +586,7 @@ namespace Zjcs.Presentation.Combat
                     // Timer state changes at the hit's playback time rather than
                     // at the eager whole-cast settlement boundary.
                     sceneView?.RefreshStatusSnapshot(Checkpoint);
-                    hudView?.Refresh(Checkpoint);
+                    if (hudRoot != null) hudView.Refresh(Checkpoint);
                 }
                 if (executor == null || Phase != FightBattlePhase.Play && Phase != FightBattlePhase.PlayStart)
                     skillGraphPlayback?.Tick(Time.deltaTime);
@@ -648,6 +648,8 @@ namespace Zjcs.Presentation.Combat
 
         public void DisposeSession()
         {
+            if (executor != null && modeAdapter is IOfficialBattleCheckpointPersistence persistence)
+                persistence.SaveCheckpointBeforeSessionRelease(executor.State);
             leaveDialog.Dispose();
             // Original graph Stop callbacks still need the live camera and unit hosts.
             skillGraphPlayback?.Dispose();

@@ -11,7 +11,8 @@ using Zjcs.Presentation.World;
 namespace Zjcs.Presentation.Home
 {
     /// <summary>Weekly activity adapter over the common official battle runtime.</summary>
-    public sealed class WeeklyChallengeBattleRunner : MonoBehaviour, IOfficialBattleModeAdapter
+    public sealed class WeeklyChallengeBattleRunner : MonoBehaviour, IOfficialBattleModeAdapter,
+        IOfficialBattleCheckpointPersistence
     {
         private HomeFeatureRuntime host;
         private OfficialBattleRuntimeController controller;
@@ -158,6 +159,12 @@ namespace Zjcs.Presentation.Home
             if (result?.Checkpoint == null) return;
             session.SaveBattleCheckpoint(stageId, periodStartLocalTicks,
                 FightBattleCheckpointSerializer.Save(result.Checkpoint));
+        }
+        public void SaveCheckpointBeforeSessionRelease(FightBattleCheckpoint checkpoint)
+        {
+            if (complete || session == null || checkpoint == null) return;
+            session.SaveBattleCheckpoint(stageId, periodStartLocalTicks,
+                FightBattleCheckpointSerializer.Save(checkpoint));
         }
         public void OnBattleReportReady(FightBattleReport report) { finalReport = report; }
 

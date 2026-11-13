@@ -80,6 +80,11 @@ namespace Zjcs.Presentation.Home
         private IEnumerator Run()
         {
             while(waitForStartup && GameObject.Find("OfficialSaveSelectionPanel")==null) yield return null;
+            if (SkillAirStatusProcessValidation.ResumeRequested)
+            {
+                yield return SkillAirStatusProcessValidation.Resume(output, CaptureGridFrame, ClickGridControl);
+                yield break;
+            }
             if (SkillDarkStatusProcessValidation.ResumeRequested)
             {
                 yield return SkillDarkStatusProcessValidation.Resume(output, CaptureGridFrame, ClickGridControl);
@@ -250,6 +255,12 @@ namespace Zjcs.Presentation.Home
                 hitFinishProbe?.ObserveFrame(controller);
                 graphCapabilityProbe?.ObserveFrame(controller);
                 explicitGraphProbe?.ObserveFrame(controller);
+                if (SkillAirStatusProcessValidation.PrepareRequested && graphCapabilityProbe.ReadyForAirProcess)
+                {
+                    yield return SkillAirStatusProcessValidation.Prepare(runner, saveRoot, slot, output,
+                        graphCapabilityProbe, CaptureGridFrame);
+                    yield break;
+                }
                 if (summonColdSceneRequested && !summonColdSceneCompleted && graphCapabilityProbe.ReadyForSummonColdScene(controller))
                 {
                     yield return SkillSummonColdSceneValidation.Rebuild(home, runner, slot, saveRoot, output,
