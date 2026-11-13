@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using Zjcs.Offline.Story;
+using Zjcs.Official.StoryMasks;
 
 namespace Zjcs.Presentation.World
 {
@@ -23,13 +24,23 @@ namespace Zjcs.Presentation.World
 
         private StoryUiModule storyUi;
         private NativeStoryUiBindings storyUiBindings;
+        private NativeStoryMaskHost storyMasks;
 
-        [Serializable] private sealed class StoryWindowFields { public StoryWindowPrefab WindowPrefab; public int NeedMask; }
+        [Serializable] private sealed class StoryWindowFields { public StoryWindowPrefab WindowPrefab; public int NeedMask, NeedResetMask; }
         [Serializable] private sealed class StoryWindowPrefab { public string mWindowPath; }
         [Serializable] private sealed class StoryUiFields
         {
             public string StoryUIKey;
             public int WaitRegister = 1, EndOnUnregister, ClickTimes = 1, Index, Active, IsOn;
+            public int NeedMask;
+            public StoryMaskSettingFields ButtonMaskSet, MaskSetting;
+        }
+        [Serializable] private sealed class StoryMaskSettingFields
+        {
+            public Vector3 Offset, Scale = Vector3.one;
+            public int ShowMask = 1, TipUIKeyId;
+            public MaskSetting ToMaskSetting() => new MaskSetting
+            { Offset = Offset, Scale = Scale, ShowMask = ShowMask != 0, TipUIKeyId = TipUIKeyId };
         }
         [Serializable] private sealed class StoryBottomBarFields { public int WaitPublicBottomBarNoNull = 1, IsShow = 1; }
 
@@ -49,7 +60,8 @@ namespace Zjcs.Presentation.World
                 if (storyUi == null)
                 {
                     storyUiBindings = new NativeStoryUiBindings(hud.ui.OverlayRoot);
-                    storyUi = new StoryUiModule(storyUiBindings.FindWindow, storyUiBindings.Nodes);
+                    storyMasks = NativeStoryMaskHost.Create(hud.ui.OverlayRoot);
+                    storyUi = new StoryUiModule(storyUiBindings.FindWindow, storyUiBindings.Nodes, storyMasks.Manager);
                 }
                 return storyUi;
             }
@@ -65,7 +77,8 @@ namespace Zjcs.Presentation.World
         {
             var fields = JsonUtility.FromJson<StoryWindowFields>(node.sourceJson);
             StartStoryWait(ContinueStoryAfterUi(StoryUi.WaitWindow(fields.WindowPrefab.mWindowPath, opened,
-                opened && fields.NeedMask != 0 ? 10 : -1), node));
+                opened && fields.NeedMask != 0 ? 10 : -1,
+                opened && fields.NeedResetMask != 0, opened && fields.NeedMask != 0), node));
         }
 
         private void StartStoryButtonWait(Map10RuntimeStoryNode node)
@@ -73,7 +86,8 @@ namespace Zjcs.Presentation.World
             var fields = JsonUtility.FromJson<StoryUiFields>(node.sourceJson);
             StartStoryWait(ContinueStoryAfterUi(StoryUi.WaitClick(fields.StoryUIKey, fields.WaitRegister != 0,
                 fields.EndOnUnregister != 0, fields.ClickTimes, node.type == "ClickLoopListItemNode"
-                    ? target => NativeStoryUiBindings.ListItemButton(target, fields.Index) : null), node));
+                    ? target => NativeStoryUiBindings.ListItemButton(target, fields.Index) : null,
+                fields.NeedMask != 0, fields.ButtonMaskSet?.ToMaskSetting()), node));
         }
 
         private IEnumerator ContinueStoryAfterUi(IEnumerator wait, Map10RuntimeStoryNode node)

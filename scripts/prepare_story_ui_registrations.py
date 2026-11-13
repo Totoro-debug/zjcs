@@ -46,14 +46,19 @@ def extract(apk, schemas, name, bundle):
             if component.type.name in ("RectTransform", "Transform"):
                 transform = component.read()
             elif component.type.name == "MonoBehaviour":
-                if component.read(check_read=False).m_Script.read().m_ClassName in ("StoryNodeRegister", "GraphicRaycaster"):
+                if component.read(check_read=False).m_Script.read().m_ClassName in ("StoryNodeRegister", "GraphicRaycaster", "PopupWindow"):
                     components.append((component, address))
         for i, child in enumerate(transform.m_Children):
             visit(child.read().m_GameObject.deref(), indices + [i], names)
 
     visit(prefab, [], [])
-    registrations, raycasters, sources = [], [], []
+    registrations, raycasters, windows, sources = [], [], [], []
     for component, address in components:
+        if component.read(check_read=False).m_Script.read().m_ClassName == "PopupWindow":
+            fields = schemas.read(component)
+            windows.append(dict(**address, windowType=fields["mWindowType"]))
+            sources.append(dict(source=apk.provenance(component), raw_sha256=sha(component.get_raw_data()), fields=fields))
+            continue
         if component.read(check_read=False).m_Script.read().m_ClassName == "GraphicRaycaster":
             names = ("m_IgnoreReversedGraphics", "m_BlockingObjects", "m_BlockingMask")
             code = ROOT / ".tools/source-packages/current" / VERSION
@@ -83,7 +88,7 @@ def extract(apk, schemas, name, bundle):
         sources.append(dict(source=apk.provenance(component), raw_sha256=sha(component.get_raw_data()), fields=fields))
     if not registrations:
         raise ValueError("No original StoryNodeRegister found: " + name)
-    return dict(name=name, registrations=registrations, raycasters=raycasters), dict(name=name, prefab=apk.provenance(prefab), components=sources)
+    return dict(name=name, registrations=registrations, raycasters=raycasters, windows=windows), dict(name=name, prefab=apk.provenance(prefab), components=sources)
 
 
 def write(path, data, folder=False):

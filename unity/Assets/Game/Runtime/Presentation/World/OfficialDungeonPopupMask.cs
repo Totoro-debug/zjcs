@@ -85,9 +85,12 @@ namespace Zjcs.Presentation.World
                 Canvas parentCanvas = transform.parent.GetComponentInParent<Canvas>();
                 if (parentCanvas == null) throw new InvalidOperationException("The private popup container canvas is missing.");
                 int order = parentCanvas.sortingOrder;
-                foreach (Canvas existing in parentCanvas.GetComponentsInChildren<Canvas>(true))
-                    if (existing.isActiveAndEnabled && existing.overrideSorting && existing != maskCanvas
-                        && !existing.transform.IsChildOf(transform)) order = Math.Max(order, existing.sortingOrder);
+                // WindowContainer advances its own window list, not every
+                // global canvas. StoryMask's fixed global order must not raise
+                // this local popup above the guide that is waiting for it.
+                foreach (WorldPopupWindow existing in parentCanvas.GetComponentsInChildren<WorldPopupWindow>(true))
+                    if (existing.isActiveAndEnabled && existing.Canvas && existing.Canvas.overrideSorting
+                        && !existing.transform.IsChildOf(transform)) order = Math.Max(order, existing.Canvas.sortingOrder);
                 windowCanvas.overrideSorting = true;
                 windowCanvas.sortingLayerID = parentCanvas.sortingLayerID;
                 windowCanvas.sortingOrder = order + 10; // WindowContainer.OnWindowShowing interval.

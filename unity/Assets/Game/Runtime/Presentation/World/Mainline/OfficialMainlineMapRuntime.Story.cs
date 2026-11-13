@@ -863,6 +863,7 @@ namespace Zjcs.Presentation.World
         private void FinishStoryGraph(bool invokeCompletion)
         {
             storyModule?.Cancel();
+            storyMasks?.Manager.Reset();
             storyResume = null;
             navigation.UnlockPlayerMovementForStory();
             if (mapClassId == 13 || mapClassId == 16) CleanMainlineStoryPlayables();

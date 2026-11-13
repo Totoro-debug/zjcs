@@ -290,8 +290,15 @@ namespace Zjcs.Presentation.World
                     StartStoryWait(ContinueStoryAfterUi(StoryUi.WaitTab(tabFields.StoryUIKey, tabFields.IsOn != 0), node));
                     return StoryTransition<Map10RuntimeStory>.Wait;
                 case "ShowFullMaskNode":
+                    StoryUi.ShowFullMask();
+                    return StoryTransition<Map10RuntimeStory>.Next(StoryNext(node, "Exit"));
                 case "HideFullMaskNode":
+                    StoryUi.HideFullMask();
+                    return StoryTransition<Map10RuntimeStory>.Next(StoryNext(node, "Exit"));
                 case "PlayMaskNode":
+                    var maskFields = JsonUtility.FromJson<StoryUiFields>(node.sourceJson);
+                    StoryUi.PlayMask(maskFields.StoryUIKey, maskFields.MaskSetting?.ToMaskSetting());
+                    return StoryTransition<Map10RuntimeStory>.Next(StoryNext(node, "Exit"));
                 case "CameraDragNode":
                 case "SetFreeCameraForcePosXNode":
                 case "EntityPlayableSupporterViewNode":

@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using Zjcs.Official.StoryNodes;
 using Zjcs.Official.WorldUI;
+using Zjcs.Official.StoryMasks;
 
 namespace Zjcs.Offline.Story
 {
@@ -15,16 +16,21 @@ namespace Zjcs.Offline.Story
     {
         private readonly Func<string, GameObject> findWindow;
         private readonly IStoryNodeRegisterMgr nodes;
+        private readonly IStoryMaskManager masks;
 
-        public StoryUiModule(Func<string, GameObject> findWindow, IStoryNodeRegisterMgr nodes)
+        public StoryUiModule(Func<string, GameObject> findWindow, IStoryNodeRegisterMgr nodes, IStoryMaskManager masks = null)
         {
             this.findWindow = findWindow ?? throw new ArgumentNullException(nameof(findWindow));
             this.nodes = nodes ?? throw new ArgumentNullException(nameof(nodes));
+            this.masks = masks;
         }
 
-        public IEnumerator WaitWindow(string path, bool opened, float timeoutSeconds = -1)
+        public IEnumerator WaitWindow(string path, bool opened, float timeoutSeconds = -1,
+            bool resetMask = false, bool needMask = false)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentException("Original story window path is required.");
+            if (resetMask) masks?.Reset();
+            if (opened && needMask && !IsOpen(findWindow(path))) masks?.SetInvisibleMask(true);
             double deadline = Time.timeAsDouble + timeoutSeconds;
             while (IsOpen(findWindow(path)) != opened)
             {
@@ -78,8 +84,9 @@ namespace Zjcs.Offline.Story
         }
 
         public IEnumerator WaitClick(string key, bool waitRegister, bool endOnUnregister, int clickTimes,
-            Func<GameObject, Button> selectButton = null)
+            Func<GameObject, Button> selectButton = null, bool needMask = false, MaskSetting maskSetting = null)
         {
+            masks?.Reset();
             Button button = null;
             GameObject registered = null;
             int clicks = 0;
@@ -95,19 +102,23 @@ namespace Zjcs.Offline.Story
                     if (registered) break;
                     if (!waitRegister) yield break;
                     if (endOnUnregister && unregistered) yield break;
+                    masks?.SetInvisibleMask(true);
                     yield return null;
                 }
+                masks?.SetInvisibleMask(false);
                 // WaitRegisterBaseNode.CheckSkipNode checks activeSelf, not the
                 // ancestor's state. Keep that distinction from Button activation.
                 if (!waitRegister && !registered.activeSelf) yield break;
                 button = selectButton == null ? registered.GetComponent<Button>() : selectButton(registered);
                 if (!button) throw new InvalidOperationException("Original registered story Button is missing: " + key);
                 button.onClick.AddListener(clicked);
+                if (needMask) masks?.SetInvisibleMask(true);
                 while (!button.isActiveAndEnabled)
                 {
                     if (endOnUnregister && unregistered) yield break;
                     yield return null;
                 }
+                if (needMask) masks?.OpenRectMask(button, maskSetting ?? new MaskSetting());
                 while (clicks < clickTimes)
                 {
                     if (!waitRegister && (!registered || !registered.activeSelf)) yield break;
@@ -119,7 +130,21 @@ namespace Zjcs.Offline.Story
             {
                 if (button) button.onClick.RemoveListener(clicked);
                 nodes.OnUnregisterNode -= removed;
+                masks?.CloseRectMask();
+                masks?.SetInvisibleMask(false);
             }
+        }
+
+        public void ShowFullMask() { masks?.Reset(); masks?.SetInvisibleMask(true); }
+        public void HideFullMask() => masks?.SetInvisibleMask(false);
+        public void PlayMask(string key, MaskSetting setting)
+        {
+            GameObject target = nodes.GetNode(key);
+            if (!target) return; // Original PlayMaskNode skips absent registrations.
+            masks?.Reset();
+            RectTransform rect = target.GetComponent<RectTransform>();
+            if (rect) masks?.OpenRectMask(rect, setting);
+            else masks?.OpenRectMask(target, setting);
         }
 
         private static bool IsOpen(GameObject window) => window && window.activeInHierarchy;

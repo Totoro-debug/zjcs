@@ -31,7 +31,8 @@ namespace Zjcs.Presentation.World
         }
 
         [Serializable] private sealed class Document { public string manifest; public Prefab[] prefabs; }
-        [Serializable] private sealed class Prefab { public string name; public Registration[] registrations; public Raycaster[] raycasters; }
+        [Serializable] private sealed class Prefab { public string name; public Registration[] registrations; public Raycaster[] raycasters; public Window[] windows; }
+        [Serializable] private sealed class Window : Address { public int windowType; }
         [Serializable] private class Address { public string path; public string[] objects; }
         [Serializable] private sealed class Registration : Address
         { public bool enabled; public string[] keys; public Address[] nodes; }
@@ -51,6 +52,12 @@ namespace Zjcs.Presentation.World
             if (document.manifest != "884_156692") throw new InvalidOperationException("Story UI registration version differs.");
             Prefab prefab = Array.Find(document.prefabs, value => value.name == prefabName)
                 ?? throw new InvalidOperationException("Original story UI registrations are not bound: " + prefabName);
+            foreach (Window source in prefab.windows ?? Array.Empty<Window>())
+            {
+                GameObject owner = Resolve(window.transform, source);
+                var metadata = owner.GetComponent<NativeStoryWindowMetadata>() ?? owner.AddComponent<NativeStoryWindowMetadata>();
+                metadata.WindowType = source.windowType;
+            }
             foreach (Raycaster source in prefab.raycasters)
             {
                 GameObject owner = Resolve(window.transform, source);

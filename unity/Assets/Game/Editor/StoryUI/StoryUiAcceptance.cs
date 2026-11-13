@@ -10,6 +10,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Offline.Story;
 using Zjcs.Presentation.World;
+using Zjcs.Official.StoryMasks;
 
 namespace Zjcs.Editor.StoryUI
 {
@@ -22,6 +23,9 @@ namespace Zjcs.Editor.StoryUI
         private static int runtimeErrors;
         public static void Run()
         {
+            // Use the existing isolated-scene startup guard. The normal boot
+            // splash has its own raycasters and must not enter this contract.
+            Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             SessionState.SetBool(Key, true);
             SessionState.SetInt(Key + ".result", 1);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 120);
@@ -175,7 +179,7 @@ namespace Zjcs.Editor.StoryUI
                 barState = true;
                 Require(!bottom.MoveNext(), "bottom wait finishes only in original target state");
                 Require(runtimeErrors == 0, "native fixture has no runtime errors");
-                Debug.Log("Story UI contract passed: native dungeon registrations, real Button/TabItem pointer events, required/optional waits, ClickTimes, window open/close, active/bottom/tab state, cancellation, unregister and camera-rendered native window. Full chapters, guide masks and save recovery remain pending.");
+                Debug.Log("Story UI contract passed: native dungeon registrations, real Button/TabItem pointer events, required/optional waits, ClickTimes, window open/close, active/bottom/tab state, cancellation, unregister and camera-rendered native window. Full chapters, automatic end-of-frame scheduling, bloom composition and save recovery remain pending.");
                 SessionState.SetInt(Key + ".result", 0);
             }
             catch (Exception error) { Debug.LogException(error); }
@@ -227,6 +231,7 @@ namespace Zjcs.Editor.StoryUI
                     "native battle button is the first pointer raycast hit; actual="
                     + string.Join(",", hits.Select(hit => hit.gameObject.name))
                     + "; position=" + camera.WorldToScreenPoint(rect.TransformPoint(rect.rect.center)));
+                CheckNativeMasks(root, window, battle, events, camera, target, pixels);
             }
             finally
             {
@@ -235,6 +240,103 @@ namespace Zjcs.Editor.StoryUI
                 target.Release();
                 UnityEngine.Object.DestroyImmediate(target);
                 UnityEngine.Object.DestroyImmediate(pixels);
+            }
+        }
+
+        private static void CheckNativeMasks(GameObject root, GameObject window, Button battle, EventSystem events,
+            Camera camera, RenderTexture target, Texture2D pixels)
+        {
+            Canvas rootCanvas = root.AddComponent<Canvas>();
+            rootCanvas.renderMode = RenderMode.WorldSpace;
+            rootCanvas.worldCamera = camera;
+            root.GetComponent<RectTransform>().sizeDelta = new Vector2(1080, 1920);
+            var binding = new NativeStoryUiBindings(root.transform);
+            binding.Nodes.RegisterNode("contract.native.battle", battle.gameObject);
+            NativeStoryMaskHost host = NativeStoryMaskHost.Create(root.transform);
+            StoryMaskManager masks = host.Manager;
+            StoryMask view = host.GetComponent<StoryMask>();
+            var ui = new StoryUiModule(binding.FindWindow, binding.Nodes, masks);
+            RectTransform rect = battle.GetComponent<RectTransform>();
+            Vector2 center = camera.WorldToScreenPoint(rect.TransformPoint(rect.rect.center));
+            ui.ShowFullMask();
+            Canvas.ForceUpdateCanvases();
+            camera.Render();
+            var hits = new List<RaycastResult>();
+            events.RaycastAll(new PointerEventData(events) { position = center }, hits);
+            Require(hits.Count > 0 && hits[0].gameObject == view.FullMask,
+                "native full mask blocks the real button; hits=" + string.Join(",", hits.Select(hit => hit.gameObject.name))
+                + "; rect=" + view.FullMask.GetComponent<RectTransform>().rect
+                + "; position=" + view.FullMask.transform.position + "; depth=" + view.FullMask.GetComponent<Graphic>().depth
+                + "; root=" + host.GetComponent<RectTransform>().rect + "; active=" + view.FullMask.activeInHierarchy
+                + "; hit-order=" + string.Join(";", hits.Select(hit => hit.gameObject.name + ":" + hit.sortingOrder
+                    + ":" + hit.sortingLayer + ":" + hit.distance + ":" + hit.module.eventCamera?.name + ":" + hit.gameObject.transform.parent.name)));
+            ui.HideFullMask();
+            Type rawSettings = typeof(OfficialMainlineMapRuntime).GetNestedType("StoryMaskSettingFields",
+                System.Reflection.BindingFlags.NonPublic);
+            object raw = JsonUtility.FromJson("{\"ShowMask\":0,\"Scale\":{\"x\":2,\"y\":3,\"z\":1},\"TipUIKeyId\":7}", rawSettings);
+            var settings = (MaskSetting)rawSettings.GetMethod("ToMaskSetting").Invoke(raw, null);
+            Require(!settings.ShowMask && settings.Scale == new Vector3(2, 3, 1) && settings.TipUIKeyId == 7,
+                "integer graph mask flags retain their original values");
+            IEnumerator missing = ui.WaitClick("contract.later", true, false, 1, null, true, new MaskSetting());
+            Require(missing.MoveNext() && masks.EnableInvisibleMask, "required registration waits under the native full mask");
+            ((IDisposable)missing).Dispose();
+            Require(!masks.EnableInvisibleMask, "canceling required registration releases the native full mask");
+            int actualClicks = 0;
+            UnityEngine.Events.UnityAction clicked = () => actualClicks++;
+            battle.onClick.AddListener(clicked);
+            IEnumerator wait = ui.WaitClick("contract.native.battle", true, false, 2, null, true, new MaskSetting());
+            try
+            {
+                Require(wait.MoveNext() && masks.EnableRectMask && !masks.EnableInvisibleMask,
+                    "button guide opens the native hole after the transparent activation mask");
+                StoryMaskGraphic graphic = host.GetComponentInChildren<StoryMaskGraphic>(true);
+                Require(graphic && graphic.Radius == 23 && graphic.TriangleNum == 10,
+                    "guide uses native serialized rounded geometry");
+                Require(masks.EnableColorMask, "native color bridge covers the first guide frame");
+                // Batch Editor does not execute WaitForEndOfFrame. Verify the
+                // original iterator itself at its two boundaries; the automatic
+                // frame scheduling requires a windowed Editor/Player check.
+                var bridge = (IEnumerator)typeof(StoryMaskGraphic).GetMethod("WaitToCloseFullMask",
+                    System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                    .Invoke(graphic, new object[] { true });
+                Require(bridge.MoveNext() && bridge.Current is WaitForEndOfFrame, "original frame boundary is retained");
+                Require(!bridge.MoveNext() && !masks.EnableColorMask, "color bridge closes after the original frame boundary");
+                Canvas.ForceUpdateCanvases();
+                camera.Render();
+                hits.Clear();
+                events.RaycastAll(new PointerEventData(events) { position = center }, hits);
+                Require(hits.Count > 0 && hits[0].gameObject.GetComponentInParent<Button>() == battle,
+                    "guide hole passes the real native button raycast; hits=" + string.Join(",", hits.Select(hit => hit.gameObject.name)));
+                var pointer = new PointerEventData(events) { position = center, button = PointerEventData.InputButton.Left };
+                ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerClickHandler);
+                Require(wait.MoveNext() && actualClicks == 1, "first native guided pointer keeps ClickTimes wait");
+                hits.Clear();
+                events.RaycastAll(new PointerEventData(events) { position = new Vector2(100, 1200) }, hits);
+                Require(hits.Count > 0 && hits[0].gameObject == graphic.gameObject,
+                    "outside the guide hole the native mask blocks pointer input");
+                camera.Render();
+                pixels.ReadPixels(new Rect(0, 0, 720, 1280), 0, 0);
+                pixels.Apply();
+                File.WriteAllBytes(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"),
+                    "story-native-guide-mask.png"), pixels.EncodeToPNG());
+                ExecuteEvents.ExecuteHierarchy(battle.gameObject, pointer, ExecuteEvents.pointerClickHandler);
+                Require(!wait.MoveNext() && actualClicks == 2 && !graphic.gameObject.activeSelf && !masks.EnableRectMask,
+                    "second guided click closes native hole and detaches node listener");
+                IEnumerator canceled = ui.WaitClick("contract.native.battle", true, false, 1, null, true, new MaskSetting());
+                Require(canceled.MoveNext(), "second guide waits for actual input");
+                ((IDisposable)canceled).Dispose();
+                Require(!masks.EnableRectMask && !masks.EnableInvisibleMask, "canceling a guide clears masks");
+                ui.ShowFullMask();
+                masks.Reset();
+                Require(!view.HasAnyMaskPlaying(), "ending a story clears all story mask kinds");
+                Debug.Log("Native story mask contract passed: original prefabs/rounded geometry, full-mask blocking, real native Button pointer passthrough inside the hole, outside blocking, ClickTimes, guide cancellation and camera render. End-of-frame iterator boundaries verified explicitly; automatic windowed frame scheduling and full bloom composition remain pending.");
+            }
+            finally
+            {
+                (wait as IDisposable)?.Dispose();
+                battle.onClick.RemoveListener(clicked);
+                masks.Reset();
+                UnityEngine.Object.DestroyImmediate(host.gameObject);
             }
         }
 
