@@ -42,12 +42,15 @@ namespace Zjcs.Presentation.Home
                 yield return null;
             }
             yield return new WaitForSecondsRealtime(.2f);
+            Require(probe.SummonColdScenePortraitsVisible(runner.Controller),
+                "Restored summon original timeline portrait did not render.");
             string after = FightBattleCheckpointSerializer.Save(runner.Controller.Checkpoint);
             Require(after == saved.Checkpoint, "Restored summon battle advanced while held for visual inspection.");
             File.WriteAllText(Path.Combine(output, "summon-cold-scene-after.json"), after);
             yield return capture("summon-after-cold-scene");
             runner.enabled = true;
             Debug.Log("[Summon cold scene] Original weekly disk checkpoint, destroyed hosts, non-fresh original status/body, unchanged identities/lifespans and visible native meshes/HUD passed without receipt replay.");
+            Debug.Log("[Summon portraits] Original timeline sprites, tight geometry, packed UVs and hurt-image bindings rendered after complete scene restore.");
         }
 
         private static void Require(bool value, string message)

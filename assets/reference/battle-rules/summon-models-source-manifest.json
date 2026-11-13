@@ -388,7 +388,7 @@
     },
     {
       "path": "unity/Assets/Official/Combat/Summons/G_3181.sprite.asset",
-      "sha256": "cb08bba6fcd092f077be7b7d116232e188a1fb1e446bb22c9cc49f859164ba69",
+      "sha256": "5a1456add759c01573e26590ff6af984347107a04393e782de5d43de775a93f0",
       "meta_sha256": "1e179dac130da6d18193662a6cc428e87a488acf91e76bcef908fbf5011ba5e4"
     },
     {
@@ -423,7 +423,7 @@
     },
     {
       "path": "unity/Assets/Official/Combat/Summons/3181.json",
-      "sha256": "12f90c05064ed9ccc1f1ff98a44935ce476646bdc865b54e7e820eaea1d9400a",
+      "sha256": "8a5ab5e3ec128e3a74cc838312083d3e83215b5c9aee4a6cb2b53fed4930caaa",
       "meta_sha256": "0bc10a2719408c7f64c5c841b89a0a5e7544e5f1135705df442b26d7ef94f983"
     },
     {
@@ -5356,10 +5356,64 @@
     "url": "https://eu.esotericsoftware.com/spine-clipping",
     "use": "End slot equal to the clipping slot means clipping continues to the end of draw order. Documentation only; no runtime implementation copied."
   },
-  "operation": "APK-first verified source recovery, lossless skeleton decoding, signed32 draw-order offsets, original weighted influences/curves/attachments/draw order/IK, full high-resolution texture mips and original prefab transforms. Unity native meshes, source curves, IK, clipping, original material/shader/pipeline and summon portraits are bound and exercised in Unity Play Mode. No Spine runtime loaded or sampled.",
-  "limitations": [
-    "Only original skeletal channels and direct named-pose playback are migrated; original Animator state transitions, mixing and controller behavior remain incomplete.",
-    "Only summon entities 3181 and 4600 are bound. Generation/connection/destruction effects and remaining summon models are not migrated.",
-    "Play Mode validation covers the two models and existing battle HUD flow; Windows Player and complete battle acceptance remain outstanding."
-  ]
+  "operation": "APK-first verified source recovery, lossless skeleton decoding, original geometry, curves, transforms, full high-resolution texture mips and material/shader references. Preserve native Sprite positions/indices and logical fields; bake the original packed UV transform for Windows. No Spine runtime loaded or sampled.",
+  "portrait_uv_recovery": {
+    "source_manifest": "884_156692",
+    "source": {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_summon_noatlas.bundle",
+      "bundle_hash": "3b47ab0ca31ce48886c49cc69223cac9",
+      "path_id": "5707672618260879438",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3b47ab0ca31ce48886c49cc69223cac9.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 353731,
+      "bundle_sha256": "d1fda566a5baeb92d715320efc28e3edcd0413b86c85ee54c8f7a3ce0cf5b82c"
+    },
+    "sprite_object_sha256": "bf33ca7813cf5d1ff350d412e5963a0cab079e5a99713c3827dd27a636d515c9",
+    "original_input_manifest": "871_156598",
+    "identical_original_bundle": true,
+    "position_bytes_sha256": "c377e6ca9285ee038ff48bc4318459bef5c679a3c05ed50264916360f98fa89e",
+    "index_bytes_sha256": "ffdc3208287e547ba9dcfe1c41d79e54b84e345aab6c04a58296aa0c0110d749",
+    "uv": [
+      {
+        "x": 0.755208338300387,
+        "y": 0.744791666045785
+      },
+      {
+        "x": 0.7499999944120646,
+        "y": 0.3072916641831398
+      },
+      {
+        "x": 0.755208338300387,
+        "y": 0.4427083336437742
+      },
+      {
+        "x": 0.7239583370586237,
+        "y": 0.8072916530072689
+      },
+      {
+        "x": 0.5885416675979892,
+        "y": 0.18749998758236566
+      },
+      {
+        "x": 0.3645833383003871,
+        "y": 0.18749998758236566
+      },
+      {
+        "x": 0.29166666356225807,
+        "y": 0.8072916530072689
+      },
+      {
+        "x": 0.2656250062088172,
+        "y": 0.7604166666666666
+      },
+      {
+        "x": 0.2656250062088172,
+        "y": 0.4010416679084301
+      }
+    ],
+    "generator_sha256": "6488830d60e1b313640d2b2d0d3d7a769ed1dc5c743166402f61d54b2e54e02b",
+    "full_generator_sha256": "62c9f95606f376add02e00ef03a7994abc9e550bf1534a1d9076b22c90f167fc",
+    "operation": "Bake the original runtime uvTransform only; preserve original logical Sprite, positions, indices, texture binding, full RGBA texture and existing asset GUID. Restore native serialization versions."
+  }
 }

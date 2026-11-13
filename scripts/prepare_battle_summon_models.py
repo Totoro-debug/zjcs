@@ -5,6 +5,7 @@ from pathlib import Path
 import sys
 import uuid
 import copy
+import struct
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -293,8 +294,24 @@ def build():
                 return value
             native=native_fields(native)
             rd=native['m_RD'];rd['m_IndexBuffer']=bytes(rd['m_IndexBuffer']).hex()
-            vertex=rd['m_VertexData'];raw_vertices=bytes(vertex['m_DataSize'])
-            vertex['m_DataSize']=len(raw_vertices);vertex['_typelessdata']=raw_vertices.hex()
+            vertex=rd['m_VertexData'];raw_vertices=bytearray(vertex['m_DataSize'])
+            active=[(c['stream'],c['offset'],c['format'],c['dimension'])
+                    for c in vertex['m_Channels'] if c['dimension']]
+            uv_offset=(len(mesh.m_Vertices)*12+15)//16*16
+            if active!=[(0,0,0,3),(1,0,0,2)] or len(raw_vertices)!=uv_offset+len(mesh.m_Vertices)*8:
+                raise ValueError('Inspect original summon portrait native position/UV stream layout')
+            uv=sprite.m_RD.uvTransform
+            coordinates=[((v[0]*uv.x+uv.y)/portrait_texture.m_Width,
+                          (v[1]*uv.z+uv.w)/portrait_texture.m_Height) for v in mesh.m_Vertices]
+            # The Android Sprite stores zero UV bytes; the original runtime resolves
+            # uvTransform when packing. Bake that same transform for a native Windows
+            # asset, preserving every position/index byte and logical Sprite field.
+            raw_vertices[uv_offset:]=b''.join(struct.pack('<ff',u,v) for u,v in coordinates)
+            vertex.update(serializedVersion=3,m_DataSize=len(raw_vertices),_typelessdata=raw_vertices.hex())
+            native['m_Rect']['serializedVersion']=2;rd['serializedVersion']=3
+            rd['textureRect']['serializedVersion']=2
+            for submesh in rd['m_SubMeshes']:submesh['serializedVersion']=2
+            definition['portraitData']['uv']=[dict(x=u,y=v) for u,v in coordinates]
             native['m_RenderDataKey']={uuid.uuid5(uuid.NAMESPACE_URL,'zjcs:summon-model:'+str(sprite_path.relative_to(ROOT))).hex:21300000}
             class Dumper(yaml.SafeDumper):pass
             def represent(dumper,value):return dumper.represent_mapping('tag:yaml.org,2002:map',value.items(),
@@ -375,10 +392,7 @@ def build():
             use='Explicitly share the recovered original APK global URP 2D pipeline during battle; restore the previous scene pipeline on release.'),
         public_format_reference=dict(url='https://eu.esotericsoftware.com/spine-clipping',
             use='End slot equal to the clipping slot means clipping continues to the end of draw order. Documentation only; no runtime implementation copied.'),
-        operation='APK-first verified source recovery, lossless skeleton decoding, signed32 draw-order offsets, original weighted influences/curves/attachments/draw order/IK, full high-resolution texture mips and original prefab transforms. Unity native meshes, source curves, IK, clipping, original material/shader/pipeline and summon portraits are bound and exercised in Unity Play Mode. No Spine runtime loaded or sampled.',
-        limitations=['Only original skeletal channels and direct named-pose playback are migrated; original Animator state transitions, mixing and controller behavior remain incomplete.',
-            'Only summon entities 3181 and 4600 are bound. Generation/connection/destruction effects and remaining summon models are not migrated.',
-            'Play Mode validation covers the two models and existing battle HUD flow; Windows Player and complete battle acceptance remain outstanding.'])))
+        operation='APK-first verified source recovery, lossless skeleton decoding, signed32 draw-order offsets, original weighted influences/curves/attachments/draw order/IK, full high-resolution texture mips, original prefab transforms and material/shader references. Native Sprite positions/indices and logical fields are preserved, with original packed UV transforms baked for Windows. No Spine runtime loaded or sampled.')))
 
 
 if __name__=='__main__': build()

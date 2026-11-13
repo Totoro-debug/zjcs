@@ -4,6 +4,7 @@ using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Official.BattleStatusPlayables;
 using Zjcs.Official.EntityLifecycle;
+using Zjcs.Official.BattleRoundUI;
 using Zjcs.Offline.ProfessionUI;
 
 namespace Zjcs.Presentation.Combat
@@ -75,6 +76,30 @@ namespace Zjcs.Presentation.Combat
                     visible |= meshRenderer.enabled && meshRenderer.isVisible && !meshRenderer.forceRenderingOff;
                 }
                 if (!visible) return false;
+            }
+            return true;
+        }
+
+        public bool SummonColdScenePortraitsVisible(OfficialBattleRuntimeController controller)
+        {
+            var cards = UnityEngine.Object.FindObjectsOfType<GameRoundCharacterItemScene>();
+            var catalog = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
+            Require(catalog, "Original summon portrait catalog is absent.");
+            foreach (int id in summonLives.Keys)
+            {
+                var unit = controller.Checkpoint.Units.Single(value => value.Id == id);
+                var card = cards.SingleOrDefault(value => value.RoundRuntimeData is BattleRoundData data && data.EntityId == id);
+                if (!card || !card.MonsterIconSr || !card.MonsterIconSr.isVisible) return false;
+                var sprite = card.MonsterIconSr.sprite;
+                var original = catalog.Find(unit.MonsterId);
+                Require(sprite && original && sprite.name == "G_" + unit.MonsterId
+                    && sprite.vertices.SequenceEqual(original.vertices) && sprite.triangles.SequenceEqual(original.triangles)
+                    && sprite.uv.Length == original.uv.Length
+                    && sprite.uv.Zip(original.uv, (a, b) => (a - b).sqrMagnitude < 1e-10f).All(value => value)
+                    && sprite.uv.Any(value => value.sqrMagnitude > .01f)
+                    && card.MonsterHurtSr.sprite == sprite && card.MonsterIconSr.enabled
+                    && !card.MonsterIconSr.forceRenderingOff,
+                    "Original summon timeline portrait/geometry/packed UV is not bound: " + id);
             }
             return true;
         }
