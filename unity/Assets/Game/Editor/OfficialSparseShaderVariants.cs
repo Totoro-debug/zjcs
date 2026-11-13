@@ -75,6 +75,8 @@ namespace Zjcs.Editor
             ["Assets/Official/DailyChallenges/UI/Rank/Converted/b29a473e62738eea.shader"] = 768,
             ["Assets/Official/Partners/UI/DetailActors/Converted/5dfd400a7875c92f.shader"] = 6,
             ["Assets/Official/Partners/UI/DetailActors/Converted/b29a473e62738eea.shader"] = 768,
+            ["Assets/Official/Combat/ThemeUI/Resources/Combat/Theme/LuoTianYi/Converted/5dfd400a7875c92f.shader"] = 6,
+            ["Assets/Official/Combat/ThemeUI/Resources/Combat/Theme/LuoTianYi/Converted/59de19d261370c02.shader"] = 260,
             ["Assets/Official/World/Shared/NativeMiniMapMarkersCurrent/Converted/59de19d261370c02.shader"] = 260,
             ["Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Converted/59de19d261370c02.shader"] = 260,
             ["Assets/Official/World/Map/16/NativeStoryPlayables/Shaders/Noise_Mask_Pro.shader"] = 260
@@ -103,19 +105,29 @@ namespace Zjcs.Editor
                 selections.Add(original.Key, selection);
                 stages += selection.PassCount * selection.Programs.Count * 2;
             }
-            if (stages != 55036) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            if (stages != 56088) throw new BuildFailedException("Original shader stage domain changed: " + stages);
             Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
         [MenuItem("Zjcs/Assets/Validate Original Sparse Shader Programs")]
-        public static void Validate()
+        public static void Validate() => ValidatePrograms(originalPrograms, 56088);
+
+        public static void ValidateBattleThemeUi()
+        {
+            ValidateProgramDomains();
+            ValidatePrograms(originalPrograms.Where(row => row.Key.StartsWith(
+                "Assets/Official/Combat/ThemeUI/", StringComparison.Ordinal))
+                .ToDictionary(row => row.Key, row => row.Value), 1052);
+        }
+
+        private static void ValidatePrograms(IReadOnlyDictionary<string, int> programsToValidate, int expectedStages)
         {
             bool previousAsync = ShaderUtil.allowAsyncCompilation;
             int stages = 0;
             try
             {
                 ShaderUtil.allowAsyncCompilation = false;
-                foreach (var original in originalPrograms)
+                foreach (var original in programsToValidate)
                 {
                     string path = original.Key;
                     // Clear messages left by a previous build of absent combinations.
@@ -143,9 +155,9 @@ namespace Zjcs.Editor
                 }
             }
             finally { ShaderUtil.allowAsyncCompilation = previousAsync; }
-            if (stages != 55036) throw new BuildFailedException("Original shader stage count changed: " + stages);
+            if (stages != expectedStages) throw new BuildFailedException("Original shader stage count changed: " + stages);
             Debug.Log("Original sparse shaders: all " + stages + " Windows GPU stages across "
-                + originalPrograms.Count + " original shader assets compiled.");
+                + programsToValidate.Count + " original shader assets compiled.");
             ProjectTools.Validate();
         }
 

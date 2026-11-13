@@ -183,6 +183,54 @@ def install(work):
             continue
         write(meta, ('fileFormatVersion: 2\nguid: ' + key + '\nfolderAsset: yes\nDefaultImporter:\n  externalObjects: {}\n').encode())
     receipt['installed_output_sha256'] = installed
+    # Exported shader programs have sparse keyword domains. Register these exact
+    # programs with OfficialSparseShaderVariants rather than compiling absent
+    # combinations or inventing a replacement program.
+    sparse_domains = {}
+    for name, expected, expected_passes in (
+        ('5dfd400a7875c92f.shader', 6, 1),
+        ('59de19d261370c02.shader', 260, 2),
+    ):
+        path = target / 'Converted' / name
+        blocks = re.findall(r'CGPROGRAM\s*\n(.*?)ENDCG', path.read_text(encoding='utf-8'), re.S)
+        if len(blocks) != expected_passes:
+            raise ValueError('Original theme shader pass count changed: ' + name)
+        masks = []
+        keywords = None
+        for block in blocks:
+            names = sorted(re.findall(r'(?m)^#pragma multi_compile(?:_local)? __ (\w+)\s*$', block))
+            if keywords is not None and keywords != names:
+                raise ValueError('Original theme shader pass keyword domains differ: ' + name)
+            keywords = names
+            depth, programs = 0, set()
+            for branch in re.finditer(r'(?m)^\s*#(if|ifdef|ifndef|elif|else|endif)\b([^\r\n]*)', block):
+                directive, condition = branch.groups()
+                selects = directive == 'if' and depth == 0 or directive == 'elif' and depth == 1
+                if directive == 'else' and depth == 1:
+                    raise ValueError('Original theme shader gained an unbounded fallback: ' + name)
+                if directive in ('if', 'ifdef', 'ifndef'):
+                    depth += 1
+                elif directive == 'endif':
+                    depth -= 1
+                if not selects:
+                    continue
+                terms = re.findall(r'(!?)defined\((\w+)\)', condition)
+                if sorted(key for _, key in terms) != names or ' && '.join(
+                    ('!' if negate else '') + 'defined(' + key + ')' for negate, key in terms
+                ) != condition.strip():
+                    raise ValueError('Original theme shader selection is not exact: ' + name)
+                signature = sum(1 << names.index(key) for negate, key in terms if not negate)
+                if signature in programs:
+                    raise ValueError('Original theme shader selection is ambiguous: ' + name)
+                programs.add(signature)
+            if depth != 0 or len(programs) != expected or masks and masks[0] != sorted(programs):
+                raise ValueError('Original theme shader program domain changed: ' + name)
+            masks.append(sorted(programs))
+        sparse_domains[path.relative_to(r).as_posix()] = dict(
+            sha256=installed[path.relative_to(r).as_posix()], keywords=keywords,
+            programs_per_pass=expected, passes=expected_passes, program_masks=masks[0],
+            binding='Zjcs.Editor.OfficialSparseShaderVariants')
+    receipt['windows_sparse_shader_domains'] = sparse_domains
     receipt['isolated_serialization_guids'] = guids
     receipt['generator_sha256'] = sha(Path(__file__).read_bytes())
     receipt['ui_pose_backend_sha256'] = {
