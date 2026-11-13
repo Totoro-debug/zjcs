@@ -80,6 +80,11 @@ namespace Zjcs.Presentation.Home
         private IEnumerator Run()
         {
             while(waitForStartup && GameObject.Find("OfficialSaveSelectionPanel")==null) yield return null;
+            if (SkillTerrainScopeProcessValidation.ResumeRequested)
+            {
+                yield return SkillTerrainScopeProcessValidation.Resume(output, CaptureGridFrame, ClickGridControl);
+                yield break;
+            }
             if (SkillAirStatusProcessValidation.ResumeRequested)
             {
                 yield return SkillAirStatusProcessValidation.Resume(output, CaptureGridFrame, ClickGridControl);
@@ -204,12 +209,22 @@ namespace Zjcs.Presentation.Home
                 if (sourceActor != 0) File.WriteAllText(Path.Combine(output,"source-actor-last-step.json"),FightBattleCheckpointSerializer.Save(controller.Checkpoint));
             };
             Button start=null;
-            float preparationDeadline=Time.realtimeSinceStartup+45f;
+            // Native HUD assets may still be loading on a busy background editor.
+            float preparationDeadline=Time.realtimeSinceStartup+180f;
             while(start==null && Time.realtimeSinceStartup<preparationDeadline)
             {
                 start=FindObjectsOfType<Button>().FirstOrDefault(value=>value.isActiveAndEnabled
                     && value.interactable && value.transform.parent.name=="StartBtn");
                 if(start==null) yield return null;
+            }
+            if (start == null)
+            {
+                yield return CaptureGridFrame("preparation-unavailable");
+                File.WriteAllText(Path.Combine(output,"preparation-controls.txt"),
+                    string.Join("\n",Resources.FindObjectsOfTypeAll<Button>()
+                        .Where(value=>value.gameObject.scene.IsValid())
+                        .Select(value=>value.name+"/parent="+value.transform.parent?.name
+                            +"/active="+value.isActiveAndEnabled+"/interactable="+value.interactable)));
             }
             Require(start!=null && controller.Phase==FightBattlePhase.Preparing,
                 "Original battle start button is unavailable; phase="+controller.Phase);
@@ -258,6 +273,12 @@ namespace Zjcs.Presentation.Home
                 if (SkillTerrainScopeColdSceneValidation.Requested && !terrainScopeColdSceneCompleted
                     && graphCapabilityProbe.ReadyForTerrainScopeColdScene(controller))
                 {
+                    if (SkillTerrainScopeProcessValidation.PrepareRequested)
+                    {
+                        yield return SkillTerrainScopeProcessValidation.Prepare(runner, saveRoot, slot, output,
+                            graphCapabilityProbe, CaptureGridFrame);
+                        yield break;
+                    }
                     yield return SkillTerrainScopeColdSceneValidation.Rebuild(home, runner, slot, saveRoot, output,
                         graphCapabilityProbe, value => settled = value, (nextHome, nextRunner) => {
                             home = nextHome; runner = nextRunner; controller = nextRunner.Controller;
