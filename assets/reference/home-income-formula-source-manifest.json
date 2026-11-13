@@ -1,0 +1,50 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "40b8dd10c2e491bcc1e669900d5f9286752f033a304f1afac82630cd9357174f",
+  "inputs": {
+    "assets/reference/official-client-code/source-manifest.json": "801da9e6427f41987b269e816579f0c2228bc4cbeb4a49e11a8e707f235d0d68",
+    ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6",
+    "scripts/prepare_home_auto_increase_runtime.py": "f2b04eee400cc6bf7c96ff716a88273206dee729df4bc2176d68b27e21d5b21d",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PropType.cs": "265a81dbeab87b90e3a1c1423884610ed43ea9b535e488e20de0e0c41f9831b0",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/EFurniture.cs": "247a13067ec06ff9dc25dfb450866d365815e3c6ac7a99d0325751ab9f54db1f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/HangUpInfo.cs": "fd0269ee95686c102bd4fe593acd5ec4832f598789105f6da19c4843134c5a93",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/HangUpRewardInfo.cs": "38721e4f338dce69a944e34017275ddab5fab91687362448d7f1ce01845951d6",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PropCfgInfo.cs": "a7ee908037a491843e56971235b07dbc42e0e0419afb956644f6e16575a1e7fe",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs": "ce40db54d87030ded0a9f8a6dc95db5a3a4e46ae02bf76a9d273fe092a703d12",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Formula.cs": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/HangUpUtils.cs": "b5d834657d4410887c370b905b7844cb2e38964a86ad3954ef8ae58a48fb247a",
+    "unity/Assets/Official/Partners/partner-property-ui.json": "248cb46ddf9f333645ad0142150d5c0ea5995ab25204e659a177fd21b356d7c3",
+    "assets/reference/partner-property-ui-source-manifest.json": "aed3a4d9a05bf9d6325ab29ab2e30d10fbd28dea9d16c492843d4c1edac3769e"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/PropType.cs": "1813ad74c60ad245324a147c827a9da3b7ed6c751e7397ce56c5b4b40e090ace",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/PropType.cs.meta": "39deb22711a76befadafef9b615782bf443b3265876c523f2d4527a28ac3c97c",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/EFurniture.cs": "2f362440fcd5d944c7c0a41bbf930c9f32f51bc419b24512f83eb924b04e92aa",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/EFurniture.cs.meta": "23e712cea91a0b90d489e13ad567cc80deffc6e1ccf1a9434a0bae2874af832b",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HomeIncomeModels.cs": "a061fe47b5be63cbb2db6098edc4fe8f3e3c79b9087fade9a47f2ea21de9827a",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HomeIncomeModels.cs.meta": "3e9cb572c84bd51ecca92315f3b683d9146e078d537b23f6f172885150ee4efc",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/BattleFormulaHandler.cs": "eea1cb00675b73bf082d220b1b5be7e4ecf46a0b76700ae5293fc11a51c81651",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/BattleFormulaHandler.cs.meta": "070c59ee43582f203dc1e04046aa9048019e5823174c441c63d2301d0672d663",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HangUpUtils.cs": "2b4bc23e95bf2dc739162673b7e317c721ce5e1127983c2e474ab430da3ad372",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HangUpUtils.cs.meta": "b3fa7d3996deb6b1eb29fd7cd00d51b2b4c3bdfdeb2a760ca21f0c0b5dbea557",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HomeIncomePropertyCatalog.cs": "79365247129ddc07bb1d01b9bdc15f1b761069c19d3a4921dd02b7936255ba62",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HomeIncomePropertyCatalog.cs.meta": "7a7479c796c168ec68452a0b0ac7099f31985d3dc89cf173eaea2b4ed3b573cf",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/Zjcs.Official.HomeIncomeRules.asmdef": "37a866c227a98fb363e85bb0572dd85ecba7f13d398730ffe8e2e3262d134c2e",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/Zjcs.Official.HomeIncomeRules.asmdef.meta": "2278206c646b997165c3bd61335b4bc342eea3c0c7ecbb7b9f17c9ee862efee8",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules.meta": "3df3563a193ce4b951ac74a91b2473f00d6e927dc074763b1125791db5923420"
+  },
+  "adaptation": "Original arithmetic, float casts and execution order; explicit reward row, property dictionary and property parser boundaries. Full original enums; selected prop_cfg flags. Offline checkpoint and award transactions remain separate.",
+  "validation_inputs": {
+    "scripts/prepare_home_income_formula_validation.py": "d00bcd1a92a142e98178780dac78d071eed2a9adaf6fd32c2b713cc96655130b",
+    "scripts/fixtures/home_income_formula_validation.cs": "5e29415711532fb45ea5f8f303f87ff90666520baf0c85789b01bfb065cd3835",
+    "scripts/fixtures/home_furniture_host_validation.cs": "04b99707086fdb7beb10202dc1fd4be3bcb2b6a4d6ef857239ad9e6368dfc5c1"
+  },
+  "validation_base_commit": "08cdc08e1330ccbbe070eee81aabe18dea9ecaa2",
+  "runtime_bindings": {
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncome.cs": "7f410925c39e9c1212a0b6bd2832b435d057d105ed77b925c6e248c6dca9628d",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "6b995e8bb8c9c24a52625aee50fcc6b71a9d518750024d2f3a69b9247b228ff3",
+    "unity/Assets/Game/Runtime/Offline/Home/Zjcs.Offline.Home.asmdef": "c5393a9dbf26ce8e36aed72fedcefba76c77e769e9ebff640f3bd925a6f17672",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "a4afcce3baf575f5aee02509b5b2c923155cd6929d28fd37d301c2ca70a2c839",
+    "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef": "5d5dde59adce34f82e0b075bc1fb9b6e5c03ede0f8e34bf9f809f578b87393d0"
+  }
+}

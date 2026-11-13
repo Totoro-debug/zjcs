@@ -572,7 +572,7 @@ namespace Zjcs.Offline.Home
             foreach (OfflineHomeIncomeDefinition definition in group)
             {
                 if (!definition.Unlocked) continue;
-                long count = WholeCount(OfflineHangUpIncome.HourlyRate(definition.Rule, properties, floatPropertyIds) * hours);
+                long count = WholeCount(OfflineHangUpIncome.RewardCount(definition.Rule, properties, floatPropertyIds, hours));
                 if (count <= 0 || !GrantOutput(next, definition, count)) continue;
                 total = AddSaturated(total, count);
             }
@@ -599,7 +599,7 @@ namespace Zjcs.Offline.Home
             OfflineHomeIncomeDefinition definition = FindDefinition(hangUpId);
             if (!definition.Unlocked) return 0;
             double totalHours = itemCount * hoursPerItem;
-            long count = WholeCount(OfflineHangUpIncome.HourlyRate(definition.Rule, properties, floatPropertyIds) * totalHours);
+            long count = WholeCount(OfflineHangUpIncome.RewardCount(definition.Rule, properties, floatPropertyIds, totalHours));
             if (count <= 0) return 0;
             OfflineHomeSave next = Clone(Save);
             if (!Consume(next, timeCrystalItemId, itemCount)
@@ -618,7 +618,7 @@ namespace Zjcs.Offline.Home
             {
                 OfflineHomeIncomeDefinition definition = definitions.FirstOrDefault(value => value.HangUpId == hangUpId);
                 if (definition == null || !definition.Unlocked) continue;
-                long count = WholeCount(OfflineHangUpIncome.HourlyRate(definition.Rule, properties, floatPropertyIds) * hours);
+                long count = WholeCount(OfflineHangUpIncome.RewardCount(definition.Rule, properties, floatPropertyIds, hours));
                 if (count <= 0 || !GrantOutput(next, definition, count)) continue;
                 total = AddSaturated(total, count);
             }

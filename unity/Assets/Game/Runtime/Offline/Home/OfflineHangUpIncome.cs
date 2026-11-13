@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Zjcs.Official.HomeIncomeRules;
 
 namespace Zjcs.Offline.Home
 {
@@ -33,18 +34,29 @@ namespace Zjcs.Offline.Home
         public static double HourlyRate(HangUpIncomeRule rule, IReadOnlyDictionary<int, long> properties,
             ISet<int> floatPropertyIds)
         {
+            return RewardCount(rule, properties, floatPropertyIds, 1.0);
+        }
+
+        public static double RewardCount(HangUpIncomeRule rule, IReadOnlyDictionary<int, long> properties,
+            ISet<int> floatPropertyIds, double hours)
+        {
             if (rule == null) throw new ArgumentNullException(nameof(rule));
             if (rule.LevelNum <= 0) return 0;
-
-            double percent = 1.0 + Property(rule.EffectPercentPropertyId, properties, floatPropertyIds);
-            if (rule.IsCart)
-                percent += Property(1034, properties, floatPropertyIds);
-            if (rule.FinallyEffectPercentPropertyId > 0)
-                percent *= 1.0 + Property(rule.FinallyEffectPercentPropertyId, properties, floatPropertyIds);
-
-            double fixedOutput = Property(rule.EffectFixedPropertyId, properties, floatPropertyIds);
-            return rule.HourlyOutput * rule.LevelNum * percent + fixedOutput;
+            var info = new HangUpInfo
+            {
+                BindFurniture = rule.IsCart ? EFurniture.Cart : EFurniture.None,
+                EffectPercentPropType = (PropType)rule.EffectPercentPropertyId,
+                EffectFixedPropType = (PropType)rule.EffectFixedPropertyId,
+                FinallyEffectPercentPropType = (PropType)rule.FinallyEffectPercentPropertyId
+            };
+            var formula = new BattleFormulaHandler(type => HomeIncomePropertyCatalog.Get(type) == null ? null
+                : floatPropertyIds != null && floatPropertyIds.Contains((int)type) ? FloatingProperty : IntegerProperty);
+            return HangUpUtils.CalcRewardCount(info, new HangUpRewardInfo { HourlyOutput = (float)rule.HourlyOutput },
+                formula, properties, hours, (float)rule.LevelNum);
         }
+
+        private static readonly PropCfgInfo FloatingProperty = new PropCfgInfo { Float = true };
+        private static readonly PropCfgInfo IntegerProperty = new PropCfgInfo { Float = false };
 
         public static long AdvanceCheckpoint(ref long lastSeenUnixSeconds, long nowUnixSeconds)
         {
@@ -73,8 +85,8 @@ namespace Zjcs.Offline.Home
         {
             if (record == null) throw new ArgumentNullException(nameof(record));
             double rate = HourlyRate(rule, properties, floatPropertyIds);
-            long unsettled = WholeCount(Math.Max(0, record.StoredSeconds) / 3600.0 * rate);
-            long capacity = WholeCount(Math.Max(0, rule.MaxStoreHours) * rate);
+            long unsettled = WholeCount(RewardCount(rule, properties, floatPropertyIds, Math.Max(0, record.StoredSeconds) / 3600.0));
+            long capacity = WholeCount(RewardCount(rule, properties, floatPropertyIds, Math.Max(0, rule.MaxStoreHours)));
             long total = AddSaturated(Math.Max(0, record.SettledCount), unsettled);
             return new HangUpIncomePreview
             {
@@ -95,12 +107,6 @@ namespace Zjcs.Offline.Home
                 record.StoredSeconds = Math.Max(0, record.StoredSeconds - preview.UnsettledCount * 3600.0 / preview.HourlyRate);
             record.SettledCount = 0;
             return preview.Count;
-        }
-
-        private static double Property(int id, IReadOnlyDictionary<int, long> properties, ISet<int> floatPropertyIds)
-        {
-            if (id <= 0 || properties == null || !properties.TryGetValue(id, out long value)) return 0;
-            return floatPropertyIds != null && floatPropertyIds.Contains(id) ? value / 10000.0 : value;
         }
 
         private static long WholeCount(double value)

@@ -915,6 +915,8 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 家园挂机加速道具选择使用所选 `884_156692` 的完整 `FurnitureFastHangUpDialog` 与 `FurnitureSpeedUsedItem`，先核对 APK 中家具 UI bundle，依原 GUID 恢复默认物品图标、HintTip、语言、Luban 配置、动画和 PCM。官方类、完整依赖反编译凭据及迁移输出 SHA256 见[加速代码来源](home-fast-hangup-runtime-source-manifest.json)；原对象、APK／云端依赖、Windows 转换、复用资源、显式目录和验证夹具哈希见[加速原生来源](home-fast-hangup-native-source-manifest.json)。生成器为 `prepare_home_fast_hangup_runtime.py`、`prepare_home_fast_hangup_native.py`，入口为 `Resources/Home/OfficialHomeFastHangUpAssetCatalog`。尚未生成完整素材快照；实现与验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
 
+家园收益计算使用所选 `884_156692` 的共享程序集 `Console.dll` 原 `HangUpUtils`、`BattleFormulaHandler` 和 `Formula` 方法；迁入脚本、程序集／原文哈希、完整原枚举、同版 `prop_cfg.Float` 来源和输出 SHA256 见[挂机公式来源](home-income-formula-source-manifest.json)，生成入口为 `scripts/prepare_home_income_formula.py`。实现和验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
+
 家园加速演出使用所选 `884_156692` APK 家具 UI bundle 的完整 `FastHangUpProgressBarDialog`，原脚本、共享程序集 `Console.dll` 中的奖励条目筛选、依赖反编译凭据、外观覆盖适配及输出 SHA256 见[演出代码来源](home-fast-hangup-progress-runtime-source-manifest.json)。`prepare_home_fast_hangup_progress_native.py` 沿原 prefab 引用恢复层级、动画事件、粒子、语言及角色组件；没有独立 Yoo 地址的 `bubble_09` 由内嵌 PPtr 定位并用既有骨骼解码器转换为原生动画载荷，保留原骨骼、槽位、纹理、图集和动画。原对象 CAB／PathID、APK／云端依赖、解码器、原始输入与 Windows 载荷哈希、复用资产和验证入口见[演出原生来源](home-fast-hangup-progress-native-source-manifest.json)；显式入口为 `Resources/Home/OfficialHomeFastHangUpProgressAssetCatalog`。尚未生成完整素材快照；实现与验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
 
 原生共用纹理的原输出路径／GUID、载荷与元数据 SHA256、保留目标及引用转换哈希链见[共用纹理来源清单](shared-textures-source-manifest.json)。原始 APK／云端版本、CAB／PathID 和转换输入身份仍由各模块来源清单记录；共用工具为 `scripts/deduplicate_unity_textures.py`。本次未生成完整素材快照；共用边界和验证范围见[共用界面](../../docs/features/shared-ui.md#原生纹理共用)。

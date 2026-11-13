@@ -953,9 +953,13 @@ namespace Zjcs.Presentation.Home
                 throw new InvalidOperationException("Official equipment properties are required for home stats.");
             CharacterPropSnapshot snapshot = progression.PropertyCalculator.Evaluate(
                 profile.Save.Player, profile.Save.World, Now());
-            foreach (KeyValuePair<int, long> pair in snapshot.OutOfFightBattleProps)
+            foreach (KeyValuePair<int, long> pair in snapshot.NonBattleProps)
                 merged[pair.Key] = pair.Value;
-            if (!string.IsNullOrEmpty(profile.Save.Player.CommerceStateJson))
+            // The current character payload has no periodic_card_pay table.
+            // Use its existing local commerce projection until that table is bound;
+            // a complete shared character source already includes this chunk.
+            if (progression.Catalog.Rows("periodic_card_pay").Count == 0
+                && !string.IsNullOrEmpty(profile.Save.Player.CommerceStateJson))
             {
                 OfflineCommerceSave commerce = JsonUtility.FromJson<OfflineCommerceSave>(
                     profile.Save.Player.CommerceStateJson);
@@ -969,7 +973,7 @@ namespace Zjcs.Presentation.Home
 
         private static ISet<int> FloatPropertyIds()
         {
-            return new HashSet<int> { 6004, 1034 };
+            return Zjcs.Official.HomeIncomeRules.HomeIncomePropertyCatalog.CreateFloatPropertyIds();
         }
 
         private void EnsureProgression()
