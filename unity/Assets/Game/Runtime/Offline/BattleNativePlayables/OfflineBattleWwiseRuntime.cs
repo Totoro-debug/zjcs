@@ -84,8 +84,8 @@ namespace Zjcs.Offline.BattleNativePlayables
             // AkInitializer renders in LateUpdate even while gameplay is paused.
             host.RenderFrame();
         }
-        private void OnApplicationPause(bool paused) { host?.SetApplicationActive(!paused); }
-        private void OnApplicationFocus(bool focused) { host?.SetApplicationActive(focused); }
+        private void OnApplicationPause(bool paused) { host?.SetApplicationPaused(paused); }
+        private void OnApplicationFocus(bool focused) { host?.SetApplicationFocused(focused); }
         private void OnApplicationQuit() { Release(); }
         private void OnDestroy() { Release(); }
         private void Release()

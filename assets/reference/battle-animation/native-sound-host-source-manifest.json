@@ -169,6 +169,22 @@
     "name": "Other_GameSpeed",
     "asset_guid": "63679ccc72e813640bf754bd4a03faa0"
   },
+  "application_lifecycle": {
+    "source": "AkSoundEngineController.OnApplicationPause/OnApplicationFocus/ActivateAudio",
+    "pause_render_anyway": false,
+    "focus_render_anyway": "ActivePlatformSettings.RenderDuringFocusLoss",
+    "enabled": "AkWwiseInitializationSettings.Instance.SuspendAudioDuringFocusLoss",
+    "resume": [
+      "WakeupFromSuspend",
+      "RenderAudio"
+    ],
+    "suspend": [
+      "Suspend",
+      "RenderAudio"
+    ],
+    "editor_callbacks": "no-op",
+    "callback_order": "apply each callback directly"
+  },
   "borrowed_vector_exports": [
     "CSharp_AkWorldTransform_Position",
     "CSharp_AkImageSourceParams_sourcePosition_get",
@@ -184,8 +200,8 @@
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseSoundHost.cs",
-      "bytes": 13407,
-      "sha256": "d39cb79ae4c1c7b6529713ea316103f2dcd0347e60d1c7dfca27a38fb6962d9a"
+      "bytes": 13795,
+      "sha256": "e33bc2239e96d86a2e9799d98524776d47ebd14675fc720bcf54574ba674a0f3"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseSoundHost.cs.meta",
@@ -195,7 +211,7 @@
     {
       "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseRuntime.cs",
       "bytes": 6129,
-      "sha256": "56a69baeed640b3c1562e35d26202b1b06e301edacd57109bdef74fcebd5d25f"
+      "sha256": "2dad21b29e08b8c8d851f76be077a4719ec0731e1c362b595e4781d26f0ddd6f"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseRuntime.cs.meta",
@@ -301,12 +317,32 @@
       "path": "unity/Assets/Game/Runtime/Validation/BattlePublic/Zjcs.Validation.BattlePublic.asmdef",
       "bytes": 1106,
       "sha256": "46c94a0a978e4328456fbdb1923ae1065af0398a2bf19bd36be49b57145cf84f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/BattleThemePlayerValidation.cs",
+      "bytes": 14492,
+      "sha256": "b12765d9e100e33259acc8af8980e5d622eb5333bd409d87bf4917d792870bcf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/BattleThemePlayerValidation.cs.meta",
+      "bytes": 60,
+      "sha256": "0edec225c0c8631e9d33c799bc3130f06578c84311df929bb7cc420b1c782df1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/BattleThemePlayerValidation.Sound.cs",
+      "bytes": 6948,
+      "sha256": "1f061bcd36b34afd179e51c8fec888ba406f4005fe186d9deb086b2ce6470c61"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/BattleThemePlayerValidation.Sound.cs.meta",
+      "bytes": 60,
+      "sha256": "44bb09ec9f48d486fee4c89aa17abba5d31a4d7b73404affa75a4733cd8efdd8"
     }
   ],
   "tool": {
     "path": "scripts/prepare_battle_native_sound_host_sources.py",
-    "bytes": 7756,
-    "sha256": "f27d0c3dc0871127218d6b425bcfcaf69b0e99956b20b4d6fabad92ee353f630"
+    "bytes": 8773,
+    "sha256": "2c6246801df6ee38f6e17885ed84ddcf33babbc29fcd141b5a29e0e6ad86b474"
   },
   "validation_tools": [
     {
@@ -318,6 +354,16 @@
       "path": "scripts/test_battle_public_player.ps1",
       "bytes": 3785,
       "sha256": "af127be88284d9fef7f133cf2f9d3e84aaadfbc2434706ac25de650d59a98730"
+    },
+    {
+      "path": "scripts/test_battle_sound_lifecycle.ps1",
+      "bytes": 6932,
+      "sha256": "57bfba7a980a7077749e9fbead9fff24f5c430692f7efa51712a62c8d2b94fef"
+    },
+    {
+      "path": "scripts/test_battle_sound_suspend.py",
+      "bytes": 4480,
+      "sha256": "f7643dea539a1febbed3a9674758ca46031124947fdce283d6a856ec8b60a4d6"
     }
   ]
 }

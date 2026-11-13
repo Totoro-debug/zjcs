@@ -96,6 +96,10 @@ def main():
         'unity/Assets/Game/Runtime/Validation/BattlePublic/OfficialBattlePublicFlowValidation.Sound.cs',
         'unity/Assets/Game/Runtime/Validation/BattlePublic/OfficialBattlePublicFlowValidation.Sound.cs.meta',
         'unity/Assets/Game/Runtime/Validation/BattlePublic/Zjcs.Validation.BattlePublic.asmdef',
+        'unity/Assets/Game/Runtime/Presentation/Home/BattleThemePlayerValidation.cs',
+        'unity/Assets/Game/Runtime/Presentation/Home/BattleThemePlayerValidation.cs.meta',
+        'unity/Assets/Game/Runtime/Presentation/Home/BattleThemePlayerValidation.Sound.cs',
+        'unity/Assets/Game/Runtime/Presentation/Home/BattleThemePlayerValidation.Sound.cs.meta',
     ):
         outputs.append(identity(ROOT / relative))
     receipt = dict(manifest='884_156692', sdk_version='2022.1.18.8567',
@@ -103,13 +107,21 @@ def main():
         runtime_source=identity(ROOT / 'assets/reference/battle-animation/windows-sound-runtime-source-manifest.json'),
         settings_export=identity(export_receipt), inputs=inputs, volume_rtpcs=controls,
         game_speed_rtpc=dict(id=414249091, name='Other_GameSpeed', asset_guid=speed_guid),
+        application_lifecycle=dict(
+            source='AkSoundEngineController.OnApplicationPause/OnApplicationFocus/ActivateAudio',
+            pause_render_anyway=False, focus_render_anyway='ActivePlatformSettings.RenderDuringFocusLoss',
+            enabled='AkWwiseInitializationSettings.Instance.SuspendAudioDuringFocusLoss',
+            resume=['WakeupFromSuspend', 'RenderAudio'], suspend=['Suspend', 'RenderAudio'],
+            editor_callbacks='no-op', callback_order='apply each callback directly'),
         borrowed_vector_exports=['CSharp_AkWorldTransform_Position', 'CSharp_AkImageSourceParams_sourcePosition_get',
             'CSharp_AkReflectionPathInfo_imageSource_get', 'CSharp_AkDiffractionPathInfo_emitterPos_get'],
         vector_value_export='CSharp_ConvertAkVectorToAkVector64',
         listener_source=identity(ROOT / 'assets/reference/battle-animation/sound-listener-source-manifest.json'),
         outputs=outputs, tool=identity(Path(__file__)), validation_tools=[
             identity(ROOT / 'unity/Assets/Game/Editor/BattleMovementEffects/OfficialBattlePublicPlayerBuild.cs'),
-            identity(ROOT / 'scripts/test_battle_public_player.ps1')])
+            identity(ROOT / 'scripts/test_battle_public_player.ps1'),
+            identity(ROOT / 'scripts/test_battle_sound_lifecycle.ps1'),
+            identity(ROOT / 'scripts/test_battle_sound_suspend.py')])
     OUTPUT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(json.dumps(dict(inputs=len(inputs), outputs=len(outputs), original_volume_controls=len(controls))))
 

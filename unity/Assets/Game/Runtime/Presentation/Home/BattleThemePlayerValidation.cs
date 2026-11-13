@@ -16,7 +16,7 @@ using Zjcs.Presentation.Combat;
 namespace Zjcs.Presentation.Home
 {
     // Explicit, isolated Windows diagnostic; ordinary startup never creates it.
-    public sealed class BattleThemePlayerValidation : MonoBehaviour
+    public sealed partial class BattleThemePlayerValidation : MonoBehaviour
     {
         private string output;
         private Exception failure;
@@ -153,6 +153,8 @@ namespace Zjcs.Presentation.Home
                             && animation.IsPlaying("FightThemeNpcLuoTianYi_Show"), "Restoring the HUD did not restart its original entrance.");
                         yield return Capture("theme-restored");
                     }
+                    if (theme == 0 && Array.IndexOf(Environment.GetCommandLineArgs(), "--zjcs-validate-battle-audio-lifecycle") >= 0)
+                        yield return VerifyAudioLifecycle(controller);
                     bool hit = false;
                     controller.StepCompleted += result => { if (result.Event.DamageEvents.Count > 0) hit = true; };
                     var start = canvas.transform.Find(OfficialBattleHudView.StartButtonPath.TrimStart('/')).GetComponent<Button>();

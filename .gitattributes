@@ -2865,6 +2865,10 @@ unity/Assets/Official/Combat/NativeSound/** -text
 unity/Assets/Official/Combat/NativeSound.meta -text
 # Preserve native sound host source-receipt identities.
 scripts/prepare_battle_native_sound_host_sources.py text eol=lf
+scripts/test_battle_sound_lifecycle.ps1 text eol=lf
+scripts/test_battle_sound_suspend.py text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/BattleThemePlayerValidation.cs* text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/BattleThemePlayerValidation.Sound.cs* text eol=lf
 assets/reference/battle-animation/native-sound-host-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleWwiseSoundHost.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/BattleNativePlayables/Zjcs.Offline.BattleNativePlayables.asmdef text eol=lf

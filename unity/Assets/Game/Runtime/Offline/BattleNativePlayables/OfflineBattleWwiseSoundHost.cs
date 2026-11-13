@@ -208,12 +208,17 @@ namespace Zjcs.Offline.BattleNativePlayables
             AkCallbackManager.PostCallbacks();
             Check(AkSoundEngine.RenderAudio(), "Render original audio frame");
         }
-        public void SetApplicationActive(bool active)
+        public void SetApplicationPaused(bool paused) => ActivateAudio(!paused);
+        public void SetApplicationFocused(bool focused) => ActivateAudio(focused, platform.RenderDuringFocusLoss);
+
+        private void ActivateAudio(bool active, bool renderAnyway = false)
         {
             RequireLive();
 #if !UNITY_EDITOR
-            if (!platform.SuspendAudioDuringFocusLoss) return;
-            Check(active ? AkSoundEngine.WakeupFromSuspend() : AkSoundEngine.Suspend(platform.RenderDuringFocusLoss),
+            if (!AkWwiseInitializationSettings.Instance.SuspendAudioDuringFocusLoss) return;
+            // Original AkSoundEngineController only permits background rendering
+            // for focus loss; an application pause uses the default false.
+            Check(active ? AkSoundEngine.WakeupFromSuspend() : AkSoundEngine.Suspend(renderAnyway),
                 "Update original application suspension");
             Check(AkSoundEngine.RenderAudio(), "Render application suspension");
 #endif
