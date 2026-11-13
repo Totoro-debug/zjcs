@@ -1,0 +1,93 @@
+{
+  "code_manifest": "884_156692",
+  "configuration_manifest": "854_156383",
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll",
+    "bytes": 16813568,
+    "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+  },
+  "code_receipt": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "bytes": 6939,
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "original": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "bytes": 191212,
+      "sha256": "ce40db54d87030ded0a9f8a6dc95db5a3a4e46ae02bf76a9d273fe092a703d12"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Formula.cs",
+      "bytes": 10907,
+      "sha256": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GroupLevelPropCfg.cs",
+      "bytes": 1086,
+      "sha256": "19b79728f56838d7284bce87994742a4121db823f82bc03d4bd4149453588ee9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelPropParser.cs",
+      "bytes": 9206,
+      "sha256": "ff101b07975b5f195a9fb88a4e35a89a9ca84a19e0475c4db3416f841530abd8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PropType.cs",
+      "bytes": 10443,
+      "sha256": "265a81dbeab87b90e3a1c1423884610ed43ea9b535e488e20de0e0c41f9831b0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SubRank.cs",
+      "bytes": 1193,
+      "sha256": "a4ed6930d7473456d13f7f102a708aa88510e52cda6521a034dc625cda40406e"
+    }
+  ],
+  "input": [
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "bytes": 22729433,
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "bytes": 32798681,
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "bytes": 37209479,
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    }
+  ],
+  "defaults": {
+    "asset": "Assets/Config/Luban/level_prop_default_value.g.bytes",
+    "source": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-3955754053971000225",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+    },
+    "historical_source": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "path_id": "-3955754053971000225",
+      "origin": "apk_zip",
+      "manifest": "854_156383",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "raw_size": 2075461,
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b"
+    },
+    "sha256": "e866fc9ed6f08b9c2debb0639c7626817e45efa7451cc5b88514720d5210ef98"
+  },
+  "generated_reference_sha256": "987f88b8281ac43e133f72c8fc893f0926010b7207c52e4595f6d76ed79d7658",
+  "operation": "Execute unchanged original group selection, exact/max-clamped row lookup, absent-key defaults, rank scaling, factor scaling and truncation against explicit local table/cache/logging adapters; compare arc active/status growth and actual executor status lifecycle. No PVP processor in this comparison."
+}
