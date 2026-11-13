@@ -16,6 +16,7 @@ namespace Zjcs.Official.ProfessionUI
         public WwiseEventReference WwiseObjectReference;
         [NonSerialized] private uint playingId;
         public static IProfessionSoundHost Host { get; set; }
+        public IProfessionSoundHost InstanceHost { get; set; }
         public bool IsValid => WwiseObjectReference != null;
         public uint Id => IsValid ? WwiseObjectReference.id : 0;
         public uint PlayingId => playingId;
@@ -25,7 +26,7 @@ namespace Zjcs.Official.ProfessionUI
         public uint Post(GameObject emitter)
         {
             if (!IsValid) return 0;
-            var host = Host ?? throw new InvalidOperationException("Original profession sound-bank host is unbound.");
+            var host = InstanceHost ?? Host ?? throw new InvalidOperationException("Original profession sound-bank host is unbound.");
             playingId = host.PostEvent(Id, emitter);
             return playingId;
         }

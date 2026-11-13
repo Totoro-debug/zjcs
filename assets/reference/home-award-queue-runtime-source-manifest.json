@@ -1,6 +1,6 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "c0cb60000e747114217c322a80b4e8dea3a9bf041eef507038d0ed22dcf40398",
+  "generator_sha256": "39166e70ce851481c9e8f23f3633ade83141c7e5178a965327ca1c065762e259",
   "inputs": {
     ".tools/source-packages/current/884_156692/official-code/client-source/ItemIcon.cs": "b2bd1ddd43a412dce54808821e5895953a0b693708ad82d6ee4a3a74020901f2",
     ".tools/source-packages/official-code/client-source/ItemIcon.cs": "b2bd1ddd43a412dce54808821e5895953a0b693708ad82d6ee4a3a74020901f2",
@@ -526,7 +526,10 @@
     ".tools/source-packages/current/884_156692/official-code/client-source/AwardUtils.cs": "caf09dc647c3abe0054fcc1886d5979272bd6b3027b884ad5c102f76ef414eac",
     "unity/Assets/Game/Runtime/Official/HomeAwardUI/HomeAwardServices.cs": "cdff30b368be13e4d8ad887d430da7f3ae9526425141053c8fefb8daed09bbea",
     "unity/Assets/Game/Runtime/Official/HomeAwardUI/OfficialHomeAwardQueueAssetCatalog.cs": "9f4aff88e0d208762e63ced9bf0d363bdeb795b97425037699a415b454dc24e8",
-    "assets/reference/official-client-code/source-manifest.json": "801da9e6427f41987b269e816579f0c2228bc4cbeb4a49e11a8e707f235d0d68"
+    "assets/reference/official-client-code/source-manifest.json": "801da9e6427f41987b269e816579f0c2228bc4cbeb4a49e11a8e707f235d0d68",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/OfficialWwiseEvent.cs": "e13764940488dd88cb195e0a60b3ceb084afbf013d3254eac08f770635900ee8",
+    ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/PopupWindow.cs": "bffa7ae9f9d3058a44519e2f899497945ce47f6ccac783ab0485b58751aa3f80",
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldPopupWindow.cs": "eba6e02e821cab22d7d1150df531a33a99586bff57db89ba6c163ece06f1504f"
   },
   "outputs": {
     "unity/Assets/Game/Runtime/Official/HomeAwardUI/AwardListPanelBasePath.cs": "2c9e58f0a757668418619c3ddc0683f3cccc060c008abfccb4e6e198c6bcd2ff",
@@ -537,7 +540,7 @@
     "unity/Assets/Game/Runtime/Official/HomeAwardUI/AwardListPanelSinglePath.cs.meta": "a115ba910db9c3d5b09a4b276076606199da6cdaadd4a9fe44e7e1209e3c2faa",
     "unity/Assets/Game/Runtime/Official/HomeAwardUI/AwardListPanelItemType.cs": "59aed93b412aff9374fb71675814798bf4d90ab763d33f6aec3e0985ddd5a2d3",
     "unity/Assets/Game/Runtime/Official/HomeAwardUI/AwardListPanelItemType.cs.meta": "387728770377d1d54b9be0e31815cca0b2a989f271e1099566f883fb2f87bbd5",
-    "unity/Assets/Game/Runtime/Official/HomeAwardUI/AwardListPanel.cs": "4bde23b845facc1bee8cfc084c4721f6ccfd95715c3c62dc1b6d664480e00054",
+    "unity/Assets/Game/Runtime/Official/HomeAwardUI/AwardListPanel.cs": "be1944060985d8958f98b75ac4a8c94d7574deb5b844cb964e1a054a6a6ac733",
     "unity/Assets/Game/Runtime/Official/HomeAwardUI/AwardListPanel.cs.meta": "ba1bcf37d72aa5590ee0f821b98d6a0a7a4a6a1e42caddb1f346f11f6268fe0d",
     "unity/Assets/Game/Runtime/Official/HomeAwardUI/AwardListPanelItem.cs": "3ecfde3106eb324cdc0092ac1b8bb2da2e7b3f8a077104ad953d54644d829bb1",
     "unity/Assets/Game/Runtime/Official/HomeAwardUI/AwardListPanelItem.cs.meta": "60cc8aa42ddcbd0ff48d453c35977cad774cb8a3772162eb1d1f23a19afe6c47",
@@ -677,7 +680,8 @@
     "Keep original queue, icon, split, merge and sort branches/order; replace global DI/resource/window/player access with explicit owner services.",
     "AwardData is a presentation receipt. Remove MessagePack/network base and attributes; retain all 16 original fields. Unconsumed ItemParam/AwardExtraData payloads remain opaque objects owned by the receipt producer.",
     "Recover AnimationAutoNext with all selected managed references, retaining scaled clip-length wait, delay, cancellation and next-animation order.",
+    "Bind award sounds per panel instance without replacing the shared fallback sound host. Restore original serialized popup mFullScreen/mMaskType and FullScreenDisplay predicate.",
     "Create each queue pool through its owner so cloned item controllers receive their non-serialized services before initialization."
   ],
-  "scope": "Selected original award queue, paths, item display, merge/sort data. Native closure and controlled graphical verification are recorded separately; real production collection and general reward catalog remain incomplete."
+  "scope": "Selected original award queue, paths, item display and merge/sort data. Native closure, production XP receipt binding and graphical verification are recorded separately; complete bed window and general reward catalog remain separate."
 }

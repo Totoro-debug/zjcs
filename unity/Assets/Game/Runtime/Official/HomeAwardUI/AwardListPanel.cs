@@ -90,7 +90,13 @@ public class AwardListPanel : UIBase
 
 	public IHomeAwardQueueServices Services { get; set; }
 
-	private void Awake()
+	public void BindSoundHost(IProfessionSoundHost host)
+    {
+        foreach (var config in mAwardListPanelItemConfigDict.Values)
+            if (config.AwardSound != null) config.AwardSound.InstanceHost = host;
+    }
+
+    private void Awake()
 	{
 
 		mPrefabDisposableBag = new HomeAwardResourceBag();

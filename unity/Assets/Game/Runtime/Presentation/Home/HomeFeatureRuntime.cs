@@ -1512,6 +1512,7 @@ namespace Zjcs.Presentation.Home
             {
                 HangUpCollectedForTutorial?.Invoke(hangUpId, count, receipt);
                 DrainHomeInventory();
+                if (hangUpId == 1) hud.ShowBedAward(reward);
                 hangUpHud?.Source.NotifyDataChanged(hangUpId);
                 hud.RefreshAll();
             }

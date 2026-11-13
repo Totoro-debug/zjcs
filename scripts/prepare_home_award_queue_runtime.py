@@ -126,6 +126,13 @@ def build():
         emit(name, clean(read(name)))
     text = diagnostics(clean(read('AwardListPanel')))
     text = text.replace('private IResourceLoader ResourceLoader { get; set; }', 'public IHomeAwardQueueServices Services { get; set; }')
+    text = text.replace('private void Awake()', '''public void BindSoundHost(IProfessionSoundHost host)
+    {
+        foreach (var config in mAwardListPanelItemConfigDict.Values)
+            if (config.AwardSound != null) config.AwardSound.InstanceHost = host;
+    }
+
+    private void Awake()''')
     text = text.replace('WindowManager.Instance.OnWindowOpened', 'Services.OnWindowOpened')
     text = text.replace('window.GetComponent<PopupWindow>().FullScreenDisplay', 'Services.IsFullScreen(window)')
     text = text.replace('Formula.Instance.MergeItemAndSort', 'HomeAwardFormula.MergeItemAndSort')
@@ -232,14 +239,20 @@ def build():
     for path in (assembly, meta, folder_meta): OUTPUTS[path.relative_to(ROOT).as_posix()] = sha(path)
     receipt = ROOT / 'assets/reference/official-client-code/source-manifest.json'
     INPUTS[receipt.relative_to(ROOT).as_posix()] = sha(receipt)
+    sound_port = ROOT / 'unity/Assets/Game/Runtime/Official/ProfessionUI/OfficialWwiseEvent.cs'
+    INPUTS[sound_port.relative_to(ROOT).as_posix()] = sha(sound_port)
+    for path in (CODE / 'framework-firstpass-source/PopupWindow.cs',
+                 ROOT / 'unity/Assets/Game/Runtime/Official/WorldUI/WorldPopupWindow.cs'):
+        INPUTS[path.relative_to(ROOT).as_posix()] = sha(path)
     proof = dict(manifest='884_156692', generator_sha256=sha(Path(__file__)), inputs=INPUTS, outputs=OUTPUTS,
         shared_original_compatibility=shared,
         adaptations=[
             'Keep original queue, icon, split, merge and sort branches/order; replace global DI/resource/window/player access with explicit owner services.',
             'AwardData is a presentation receipt. Remove MessagePack/network base and attributes; retain all 16 original fields. Unconsumed ItemParam/AwardExtraData payloads remain opaque objects owned by the receipt producer.',
             'Recover AnimationAutoNext with all selected managed references, retaining scaled clip-length wait, delay, cancellation and next-animation order.',
+            'Bind award sounds per panel instance without replacing the shared fallback sound host. Restore original serialized popup mFullScreen/mMaskType and FullScreenDisplay predicate.',
             'Create each queue pool through its owner so cloned item controllers receive their non-serialized services before initialization.'],
-        scope='Selected original award queue, paths, item display, merge/sort data. Native closure and controlled graphical verification are recorded separately; real production collection and general reward catalog remain incomplete.')
+        scope='Selected original award queue, paths, item display and merge/sort data. Native closure, production XP receipt binding and graphical verification are recorded separately; complete bed window and general reward catalog remain separate.')
     (ROOT / 'assets/reference/home-award-queue-runtime-source-manifest.json').write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
 
 

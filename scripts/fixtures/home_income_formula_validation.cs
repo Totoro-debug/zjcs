@@ -80,10 +80,29 @@ public sealed partial class HomeIncomeFormulaHostRunner
         }), "persist actual one-hour bed snapshot");
         profile.Reload(); long experience = profile.Save.Player.Experience;
         long expected = (long)home.Session.Preview(1).HourlyRate;
+        var sharedSoundHost = Zjcs.Official.ProfessionUI.OfficialWwiseEvent.Host;
         Require(home.TryCollect(1) == expected && expected > 0, "production collection uses migrated arithmetic");
         profile.Reload();
         Require(profile.Save.Player.Experience == experience + expected && home.Session.Save.Inventory.Count == 0,
             "experience reaches real character and durable ledger is acknowledged");
+        yield return new WaitForSeconds(0.2f);
+        var queue = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeAwardUI.AwardListPanel>();
+        var awardIcon = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeAwardUI.HomeAwardIcon>();
+        Require(queue && awardIcon && awardIcon.ItemIcon && awardIcon.ItemIcon.myInfo.ClassId == 50,
+            "committed production receipt opens the original queue with the selected XP icon");
+        var displayed = (Zjcs.Official.HomeAwardUI.AwardData)typeof(Zjcs.Official.HomeAwardUI.HomeAwardIcon)
+            .GetField("mAwardData", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(awardIcon);
+        Require(displayed.Amount == expected && displayed.AwardId == 50,
+            "original queue consumes only the committed claim delta without granting again");
+        Require(queue.GetComponentsInChildren<TMPro.TMP_Text>().Any(text => text.text.Contains("经验")),
+            "production award label resolves the selected original Chinese text");
+        var sound = (AudioSource)typeof(HomeHudView).GetField("partnerUiAudioSource",
+            BindingFlags.NonPublic | BindingFlags.Instance).GetValue(home.Hud);
+        Require(sound && sound.isPlaying && AudioListener.volume == 0
+            && ReferenceEquals(sharedSoundHost, Zjcs.Official.ProfessionUI.OfficialWwiseEvent.Host),
+            "original award sound is playing silently through its owner without replacing the global host");
+        yield return new WaitForSeconds(0.25f);
+        Capture("home-income-production-award.png");
         double remainder = home.Session.Save.Income.Single(value => value.HangUpId == 1).StoredSeconds;
         Require(remainder > 0 && remainder < 3600 && home.TryCollect(1) == 0, "fractional time remains without a duplicate grant");
         long freeExpected = (long)OfflineHangUpIncome.RewardCount(home.Session.Definitions.Single(value => value.HangUpId == 1).Rule,
@@ -97,6 +116,8 @@ public sealed partial class HomeIncomeFormulaHostRunner
         Capture("home-income-collected.png");
         home.Close(); CloseCapture(); yield return null;
         Open(); yield return new WaitForSeconds(1); profile.Reload();
+        Require(!UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeAwardUI.AwardListPanel>(),
+            "closing and reopening home releases the previous production award queue");
         double elapsed = home.Session.Save.LastLocalUnixSeconds - checkpoint;
         Require(profile.Save.Player.Experience == awardedExperience && home.Session.Save.Inventory.Count == 0
             && Math.Abs(home.Session.Save.Income.Single(value => value.HangUpId == 1).StoredSeconds
@@ -121,7 +142,7 @@ public sealed partial class HomeIncomeFormulaHostRunner
                 "periodic card non-battle property is included once, without a second commerce merge");
         }
         yield return CheckExperienceLedgerRecovery();
-        Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original single precision and arithmetic boundary, actual native repair pointer, real lost goddess profile, production collection/experience/free acceleration, committed reward receipts, rejected experience grants retained, acknowledgement recovery, remainder, idempotency and disk reopen. Collection and acceleration business calls are direct; original bed buttons and complete HUD remain pending.");
+        Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original single precision and arithmetic boundary, actual native repair pointer, real lost goddess profile, production collection/experience/free acceleration, original production XP award queue, committed reward receipts, rejected experience grants retained, acknowledgement recovery, remainder, idempotency and disk reopen. Collection and acceleration business calls are direct; original bed buttons and complete HUD remain pending.");
     }
 
     private void CheckCollectionReceipts(ISet<int> flags)

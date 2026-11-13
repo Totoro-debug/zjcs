@@ -25,6 +25,8 @@ def prepare():
     source = source.replace('            yield return current;',
         '            if (current is IEnumerator nested) { steps.Push(nested); continue; }\n            yield return current;')
     source = source.replace('home?.Close();', 'if (home != null) home.Close();')
+    source = source.replace('home.Scene.Camera.targetTexture = target;',
+        'home.Scene.Camera.targetTexture = target;\n        home.Scene.Camera.gameObject.AddComponent<AudioListener>();')
     # Unity requires one MonoBehaviour partial declaration to match its filename.
     for name in ('HomeIncomeFormulaValidation.cs', 'HomeIncomeFormulaValidation.cs.meta'):
         (folder / name).unlink(missing_ok=True)
@@ -36,7 +38,7 @@ def prepare():
             'Unity.ugui', 'Zjcs.Offline.Home', 'Zjcs.Official.HomeIncomeRules', 'Zjcs.Official.HomeUI',
             'Zjcs.Official.ProfessionUI', 'Zjcs.Offline.Commerce',
             'Zjcs.Offline.CharacterCreation', 'Zjcs.Offline.Progression', 'Zjcs.Offline.State',
-            'Zjcs.Presentation.Home']), indent=2) + '\n', 'utf8', newline='\n')
+            'Zjcs.Presentation.Home', 'Unity.TextMeshPro', 'Zjcs.Official.HomeAwardUI']), indent=2) + '\n', 'utf8', newline='\n')
     receipt_path = ROOT / 'assets/reference/home-income-formula-source-manifest.json'
     receipt = json.loads(receipt_path.read_bytes())
     source = '.tools/source-packages/current/884_156692/official-code/client-source/FurnitureBedDialog.cs'

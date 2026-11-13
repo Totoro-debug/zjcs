@@ -1367,6 +1367,7 @@ namespace Zjcs.Presentation.Home
 
         public void Dispose()
         {
+            bedAwards?.Dispose(); bedAwards = null;
             ReleaseNativeBedOutput();
             dungeonUiBindingModule?.Dispose();
             dungeonUiBindingModule = null;

@@ -28,6 +28,9 @@ namespace Zjcs.Official.WorldUI
         public bool IsPause { get; private set; }
         public event Action<GameObject> OnPauseEvent, OnResumeEvent;
         [SerializeField] private bool mCloseByClickMask;
+        [SerializeField] private int mMaskType;
+        [SerializeField] private bool mFullScreen;
+        public bool FullScreenDisplay => mFullScreen || mMaskType == 3;
         public bool CloseByClickMask { get => mCloseByClickMask; set => mCloseByClickMask = value; }
 
         private void Awake()

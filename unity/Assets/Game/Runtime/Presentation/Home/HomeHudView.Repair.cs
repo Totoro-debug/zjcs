@@ -27,6 +27,7 @@ namespace Zjcs.Presentation.Home
                 activeDialog = root;
                 activeDialogRenderer = null;
                 activePanelKey = key;
+                if (root) bedAwards?.NotifyWindowOpened(root);
             };
             repairWindows.WindowClosed += (furniture, notification) =>
             {
