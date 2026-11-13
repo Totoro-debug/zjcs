@@ -257,8 +257,8 @@ namespace Zjcs.Presentation.Combat
             string absorptionProbe = Environment.GetEnvironmentVariable("ZJCS_STATUS_HIT_CUSTOM_CURE_ACCEPTANCE");
             if (Environment.GetEnvironmentVariable("ZJCS_STATUS_MOVE_SCOPE_ACCEPTANCE") == "1")
             {
-                Require(itemId == 10029 && direction == 0 && checkpoint.Grid.Height >= 9,
-                    "The movement-burning diagnostic uses original 10029/10810 facing up.");
+                Require((itemId == 10029 || itemId == 10055) && direction == 0 && checkpoint.Grid.Height >= 9,
+                    "The movement-burning diagnostic uses original 10029/10810 or 10055/11070 facing up.");
                 enemy.X = player.X = checkpoint.Grid.Width / 2;
                 enemy.Y = Math.Min(checkpoint.Grid.Height - 2, 8); player.Y = enemy.Y - 5;
                 var passive = catalog.CreateStatus(25027, player.Id, player.Id, 900006,
@@ -334,22 +334,34 @@ namespace Zjcs.Presentation.Combat
             {
                 var component = player.Statuses.Single(status => status.ClassId == 25027).Components.MoveScope;
                 var movement = step.Movements.Single(value => value.UnitId == player.Id);
-                Require(component.StartChecked && component.TriggeredCount == 2 && movement.Path.Count == 2
-                    && movement.MoveSkillEntityId == 15300 && step.SkillCasts.Any(value => value.SkillEntityId == 11630),
+                bool walking = firstPromotionItemId == 10055;
+                int expected = walking ? movement.Path.Count : 2;
+                Require(component.StartChecked && component.TriggeredCount == expected
+                    && (walking ? movement.Path.Count >= 3 && movement.MoveBehaviourId == 11073
+                        : movement.Path.Count == 2 && movement.MoveSkillEntityId == 15300)
+                    && step.SkillCasts.Any(value => value.SkillEntityId == 11630),
                     "Original first activation, single jump landing or independent round-start skill differs.");
                 Require(checkpoint.Receipts.Count >= 2 && checkpoint.Receipts[0].Event.GridViewEvents.Count(value =>
                     value.Kind == FightBattleGridViewEventKind.Create) == 5,
                     "Initial movement burning was not emitted as five original terrain creations.");
-                float arrival = movement.Delay + movement.MoveDuration;
-                Require(step.GridViewEvents.Count(value => value.Kind == FightBattleGridViewEventKind.Create
-                    && Math.Abs(value.Delay - arrival) < .0001f) == 5,
-                    "Jump landing terrain did not retain the original arrival delay.");
+                float arrival = movement.Delay;
+                for (int index = 1; index < movement.Path.Count; index++)
+                {
+                    var delta = movement.Path[index] - movement.Path[index - 1];
+                    arrival += movement.MoveDuration >= 0 ? movement.MoveDuration
+                        : (float)Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y) / movement.MoveSpeed;
+                    Require(step.GridViewEvents.Count(value => value.Kind == FightBattleGridViewEventKind.Create
+                        && Math.Abs(value.Delay - arrival) < .0001f) == 5,
+                        "Walked cell/jump landing terrain did not retain its original arrival delay.");
+                }
+                if (walking) moveScopeWalkingPath = movement;
                 var saved = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
                 var savedComponent = saved.Units.Single(unit => unit.Id == player.Id).Statuses
                     .Single(status => status.ClassId == 25027).Components.MoveScope;
-                Require(savedComponent.StartChecked && savedComponent.TriggeredCount == 2,
+                Require(savedComponent.StartChecked && savedComponent.TriggeredCount == expected,
                     "Movement-burning activation or count was lost in the Unity checkpoint.");
-                Debug.Log("[Move scope] Original 25027 first activation and 15300 landing -> 3320/11632; independent 11630 and checkpoint passed; isolated cells=1.");
+                Debug.Log("[Move scope] Original 25027 first activation and " + (walking ? "11073 walked cells" : "15300 landing")
+                    + " -> 3320/11632; independent 11630 and checkpoint passed; isolated cells=1.");
             }
             if (firstPromotionSummonMonsterIds.Length > 0)
             {

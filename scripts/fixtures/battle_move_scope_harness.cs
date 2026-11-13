@@ -109,5 +109,27 @@ public static class BattleMoveScopeHarness
         Check(jump.Path.Count==2&&def.TriggeredCount==count+1,"Original small jump did not check its single landing.");
         Check(step.SkillCasts.Any(cast=>cast.SkillEntityId==11630),"Independent original round-start skill was suppressed.");
         Check(cp.GridItems.Count>beforeRound&&step.GridViewEvents.Count>0,"Original terrain/view creation was not routed.");
+        // Use the in-scope 10055/11070 source movement through the real AI, not
+        // a hand-built movement receipt. Its native 11073 action traverses cells.
+        owner=Unit(1,1,5);enemy=Unit(2,2,10);
+        status=c.CreateStatus(25027,1,1,1,0,10561,2,20,1);owner.Statuses.Add(status);
+        foreach(var cell in status.Components.MoveScope.Cells)cell.Rate=1;
+        skill=c.CreateSkill(11070,0,10055,2,20,1,c.CalculateSkillProps(11070,2,20,1)
+            .Select(p=>new FightPropertyValue{Id=p.Key,Value=p.Value}).ToList());
+        owner.Skills.Add(skill);owner.SkillState.Slots.Add(c.CreateSkillSlot(skill,0));
+        cp=Checkpoint(owner,enemy);exec=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),c,items);
+        exec.Step(0,1);
+        step=null;
+        for(int i=1;i<8;i++){step=exec.Step(0,i+1).Event;if(step.SkillCasts.Any(cast=>cast.SkillEntityId==11070))break;}
+        var walk=step.Movements.Single(m=>m.UnitId==1);
+        Check(walk.MoveBehaviourId==11073&&walk.Path.Count>=3
+            &&status.Components.MoveScope.TriggeredCount==walk.Path.Count,
+            "Original 10055 AI did not trigger burning at every traversed cell.");
+        float arrival=walk.Delay;
+        for(int i=1;i<walk.Path.Count;i++){
+            arrival+=walk.MoveDuration;
+            Check(step.GridViewEvents.Count(v=>v.Kind==FightBattleGridViewEventKind.Create
+                &&Math.Abs(v.Delay-arrival)<1e-5)==5,"Walking terrain lost its per-cell arrival time.");
+        }
     }
 }

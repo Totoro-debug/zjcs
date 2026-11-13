@@ -229,6 +229,7 @@ namespace Zjcs.Presentation.Home
             bool coldSceneCompleted = false;
             bool summonColdSceneRequested = SkillSummonColdSceneValidation.Requested;
             bool summonColdSceneCompleted = false;
+            bool moveScopeColdSceneCompleted = false;
             Require(!coldSceneRequested || graphCapabilityProbe != null,
                 "Dark cold-scene validation requires the graph capability diagnostic.");
             Require(!summonColdSceneRequested || graphCapabilityProbe != null && !coldSceneRequested,
@@ -254,6 +255,16 @@ namespace Zjcs.Presentation.Home
                 masterChildProbe?.ObserveFrame(controller);
                 hitFinishProbe?.ObserveFrame(controller);
                 graphCapabilityProbe?.ObserveFrame(controller);
+                if (SkillMoveScopeColdSceneValidation.Requested && !moveScopeColdSceneCompleted
+                    && graphCapabilityProbe.ReadyForMoveScopeColdScene(controller))
+                {
+                    yield return SkillMoveScopeColdSceneValidation.Rebuild(home, runner, slot, saveRoot, output,
+                        graphCapabilityProbe, value => settled = value, (nextHome, nextRunner) => {
+                            home = nextHome; runner = nextRunner; controller = nextRunner.Controller;
+                        }, CaptureGridFrame);
+                    moveScopeColdSceneCompleted = true;
+                    continue;
+                }
                 explicitGraphProbe?.ObserveFrame(controller);
                 if (SkillAirStatusProcessValidation.PrepareRequested && graphCapabilityProbe.ReadyForAirProcess)
                 {

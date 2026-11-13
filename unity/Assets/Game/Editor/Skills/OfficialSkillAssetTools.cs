@@ -35,7 +35,7 @@ namespace Zjcs.Editor.Skills
             Application.logMessageReceived += observe;
             try {
                 PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
-                string destination = Path.Combine(root, "Player", "杖剑传说.exe");
+                string destination = Path.Combine(root, "Player", "Zjcs.exe");
                 Directory.CreateDirectory(Path.GetDirectoryName(destination));
                 OfficialSkillRuntimeShaderBuild.Prepare();
                 BuildOptions buildOptions = Environment.GetEnvironmentVariable("ZJCS_CLEAN_BUILD_CACHE") == "1"
@@ -43,7 +43,7 @@ namespace Zjcs.Editor.Skills
                 if (Environment.GetEnvironmentVariable("ZJCS_WINDOWS_SCRIPTS_ONLY") == "1")
                 {
                     if (buildOptions != BuildOptions.None || !File.Exists(destination)
-                        || !Directory.Exists(Path.Combine(root, "Player", "杖剑传说_Data")))
+                        || !Directory.Exists(Path.Combine(root, "Player", "Zjcs_Data")))
                         throw new BuildFailedException("Scripts-only validation requires an existing complete Player and retained build cache.");
                     buildOptions = BuildOptions.BuildScriptsOnly;
                 }
@@ -55,6 +55,16 @@ namespace Zjcs.Editor.Skills
                 if (report == null || report.summary.result != BuildResult.Succeeded
                     || report.summary.totalErrors != 0 || loggedErrors != 0)
                     throw new BuildFailedException("Skills Windows Player build failed. " + firstError);
+                // Burst names its auxiliary output after the Chinese product name.
+                // Keep the distribution ASCII without changing the saved-game identity.
+                string debugDirectory = Path.Combine(root, "Player", PlayerSettings.productName + "_BurstDebugInformation_DoNotShip");
+                if (Directory.Exists(debugDirectory))
+                {
+                    string playerRoot = Path.GetFullPath(Path.Combine(root, "Player")) + Path.DirectorySeparatorChar;
+                    if (!Path.GetFullPath(debugDirectory).StartsWith(playerRoot, StringComparison.OrdinalIgnoreCase))
+                        throw new BuildFailedException("Burst auxiliary output is outside the validation Player.");
+                    Directory.Move(debugDirectory, Path.Combine(root, "BurstDebug-" + Guid.NewGuid().ToString("N")));
+                }
                 Debug.Log("[Skills] Windows Player built: " + destination);
             } finally {
                 Application.logMessageReceived -= observe;

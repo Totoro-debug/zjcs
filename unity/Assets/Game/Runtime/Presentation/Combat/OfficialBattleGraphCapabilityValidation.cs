@@ -215,6 +215,7 @@ namespace Zjcs.Presentation.Combat
 
         public void ObserveStep(OfficialBattleRuntimeController controller)
         {
+            ObserveMoveScopeStep(controller);
             ObserveFirstPromotionDeathStep(controller.Checkpoint.Receipts.Last().Event);
             ObserveActionInvisibleStep(controller);
             ObserveSummonLifeStep(controller.Checkpoint);
@@ -342,6 +343,7 @@ namespace Zjcs.Presentation.Combat
         {
             CaptureName = null;
             ObserveFirstPromotionGeneration(controller);
+            if (ObserveMoveScopeWalkingFrame(controller)) return;
             if (CaptureFirstPromotionFrame()) return;
             if (ObserveAirComboDiagnostic(controller)) return;
             if (CaptureFatalRevivalFrame()) return;
@@ -436,6 +438,7 @@ namespace Zjcs.Presentation.Combat
             if (ObserveActionInvisibleFrame(controller)) return;
             if (ObserveSummonLifeFrame(controller)) return;
             if (ObserveDarkStatusFrame(controller)) return;
+            if (ObserveMoveScopeFrame(controller)) return;
             if (captured && !finisherScheduled)
             {
                 var player = controller.Checkpoint.Units.Single(value => value.Id == 1);
@@ -480,6 +483,7 @@ namespace Zjcs.Presentation.Combat
             VerifyActionInvisibleDiagnostic();
             VerifySummonLifeDiagnostic();
             VerifyDarkStatusDiagnostic();
+            VerifyMoveScopeLifecycle();
             if (firstPromotionItemId != 0) Require(firstPromotionFrameCount == FirstPromotionFrameTimes.Length,
                 "The original skill's early presentation frames were not captured.");
             if (ValidateApproach) Require(ordinaryStarted && ordinaryRemoved && ordinaryCaptured,
