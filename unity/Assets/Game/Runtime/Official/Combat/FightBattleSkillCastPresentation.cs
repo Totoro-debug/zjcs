@@ -34,6 +34,14 @@ namespace Zjcs.Combat.Official
         public List<SourceStatus> SourceStatuses = new List<SourceStatus>();
         public List<SourceSharedStack> SourceSharedStacks = new List<SourceSharedStack>();
 
+        internal FightBattleSkillCastPresentation WithHitOrigin(FightGridPoint origin)
+        {
+            var copy = (FightBattleSkillCastPresentation)MemberwiseClone();
+            copy.SourceX = origin.X;
+            copy.SourceY = origin.Y;
+            return copy;
+        }
+
         public static FightBattleSkillCastPresentation Capture(FightBattleUnitState source,
             FightBattleSkillDefinition skill, IList<FightBattleUnitState> targets,
             FightBattleUnitState targetPosition = null)

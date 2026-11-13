@@ -859,12 +859,14 @@ namespace Zjcs.Combat.Official
 
             FightDamageFalloff.BeginCast(skill, ref checkpoint.FalloffSerial);
             IReadOnlyList<FightBattleHitDefinition> hits = FightBattleHitCollector.CollectAll(skill, includeRootViews: true);
-            var hitTargetSelectors = new FightHitTargetSelectors();
+            var hitExecution = new FightHitChainExecution(hits, hitCast, !chaosInvasionWipe);
             var damageHitTargets = new HashSet<int>();
             var completedSourceMoves = new HashSet<FightBattleSkillMove>();
 
-            foreach (FightBattleHitDefinition hit in hits)
+            while (hitExecution.TryTake(out var hitStep))
             {
+                FightBattleHitDefinition hit = hitStep.Hit;
+                var castHit = hitStep.Cast;
                 if (!allowDeadSource && actor.Hp <= 0) break;
                 ApplySourceMoves(actor, skill, targets, movements, ref lastDelay,
                     hit.Delay, completedSourceMoves, targetPosition);
@@ -873,7 +875,7 @@ namespace Zjcs.Combat.Official
                 IReadOnlyList<FightHitOccurrence> plannedHits = null;
                 FightHitTargetSelection hitSelection = null;
                 var hitFlight = FightBattleHitTiming.ResolveOverride(statusCatalog, skill,
-                    targetingSource, hitCast, hit);
+                    targetingSource, castHit, hit);
                 bool hasRandomTargetContext = hit.RandomTargetGroupId > 0;
                 if (chaosInvasionWipe)
                     hitTargets = targets.Where(target => target != null
@@ -881,12 +883,12 @@ namespace Zjcs.Combat.Official
                         && target.Hp > 0 && !target.Ended).ToList();
                 else
                 {
-                    var selection = hitTargetSelectors.For(hit).Select(new FightHitTargetSelectionContext {
+                    var selection = hitExecution.Select(hitStep, new FightHitTargetSelectionContext {
                         Source = actor, TargetingSource = targetingSource, Units = units,
                         Skill = skill, Hit = hit, Targets = targets,
                         Primary = targetPosition ?? (targets.Count > 0 ? targets[0] : null),
-                        Cast = hitCast, Grid = checkpoint.Grid, Random = random
-                    });
+                        Cast = castHit, Grid = checkpoint.Grid, Random = random
+                    }, hitFlight);
                     if (selection == null) continue;
                     hitSelection = selection;
                     plannedHits = selection.Occurrences;
@@ -896,12 +898,12 @@ namespace Zjcs.Combat.Official
                         if (presentationCast.HitSelections == null)
                             presentationCast.HitSelections = new List<FightBattleHitSelectionSnapshot>();
                         presentationCast.HitSelections.Add(FightBattleHitSelectionSnapshot.Capture(
-                            presentationCast.HitSelections.Count + 1, hit, selection, hitCast, hitFlight));
+                            presentationCast.HitSelections.Count + 1, hit, selection, castHit, hitFlight));
                     }
                 }
                 if (hit.IsViewOnly) continue;
                 ExecuteLogicChildSkills(actor, skill, skillLogic, hit,
-                    targetPosition ?? (targets.Count > 0 ? targets[0] : null), hitCast,
+                    targetPosition ?? (targets.Count > 0 ? targets[0] : null), castHit,
                     casts, damageEvents, movements, ref lastDelay,
                     ref statusTriggerDuration, ref statusTriggerActionDuration);
                 if (hit.IsSummon)
@@ -913,7 +915,7 @@ namespace Zjcs.Combat.Official
                         continue;
                     }
                     SpawnSummons(actor, skill, hit,
-                        hasRandomTargetContext ? hitTargets : targets, hitSelection, hitCast);
+                        hasRandomTargetContext ? hitTargets : targets, hitSelection, castHit);
                     continue;
                 }
                 decimal hitRemovedHp = 0m;
@@ -927,7 +929,7 @@ namespace Zjcs.Combat.Official
                     if (FightBattleTargeting.IsHiddenFromEnemySelection(actor, target)) continue;
                     if (target.IsVoodooDoll && (hit.ActionType == 5 || skill.SkillType == 3)) continue;
                     float hitDelay = hitSelection == null ? HitDelay(actor, target, hit)
-                        : FightBattleHitTiming.DamageDelay(hit, hitCast, hitSelection, targetIndex, hitFlight);
+                        : FightBattleHitTiming.DamageDelay(hit, castHit, hitSelection, targetIndex, hitFlight);
                     if (hitDelay > lastDelay) lastDelay = hitDelay;
                     hitFinishDelay = Math.Max(hitFinishDelay, hitDelay);
                     movementStartContext.StatusStartTime = Math.Max(0f, hitDelay);
@@ -936,7 +938,7 @@ namespace Zjcs.Combat.Official
                     int centerIndex = occurrence?.EffectCenterIndex ?? 0;
                     FightGridPoint hitOrigin = hitSelection != null && centerIndex < hitSelection.EffectCenters.Count
                         ? hitSelection.EffectCenters[centerIndex]
-                        : FightHitAnchorExtensions.ResolveCenter(hit.Anchor, actor, targetPosition ?? target, hitCast);
+                        : FightHitAnchorExtensions.ResolveCenter(hit.Anchor, actor, targetPosition ?? target, castHit);
                     long beforeHp = target.Hp;
                     int damageId = NextDamageId();
                     bool originalHasCustomDamage = hit.HasCustomDamage;
@@ -1050,7 +1052,7 @@ namespace Zjcs.Combat.Official
                     {
                         ExecuteStatusOnlyHit(actor, target, skill, hit, resolved, damage,
                             skillCostHp, casts, damageEvents, movements, ref lastDelay,
-                            ref statusTriggerDuration, ref statusTriggerActionDuration, hitOrigin, hitCast);
+                            ref statusTriggerDuration, ref statusTriggerActionDuration, hitOrigin, castHit);
                         continue;
                     }
                     checkpoint.Statistics.RecordHit(damage, damageHitTargets);
@@ -1076,7 +1078,7 @@ namespace Zjcs.Combat.Official
                         actualHpLoss, damage);
                     damage.HasDamageTriggerStatus = true;
                     CollectHitTriggerSkill(actor, target, skill, hit, configuredComponentInvocations,
-                        hitOrigin, hitCast, hitDelay);
+                        hitOrigin, castHit, hitDelay);
                     ApplyMissingStatusComponentsOnHit(actor, target, skill, hit, resolved,
                         actualHpLoss, configuredComponentInvocations);
                     foreach (FightBattleUnitState logicOwner in new[] { actor, target })

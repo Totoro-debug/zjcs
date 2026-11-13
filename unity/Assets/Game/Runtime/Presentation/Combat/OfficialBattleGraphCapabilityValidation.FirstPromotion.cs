@@ -327,6 +327,7 @@ namespace Zjcs.Presentation.Combat
             checkpoint.MaxRound = 12;
             probe.ConfigureSummonLifeDiagnostic(checkpoint);
             probe.ConfigureDarkStatusDiagnostic(checkpoint);
+            probe.ConfigureChainedHitDiagnostic(checkpoint, enemy, dx, dy);
             // Preserve short authored particle/action phases across cold-loading frames.
             probe.previousCaptureFramerate = Time.captureFramerate;
             Time.captureFramerate = 60;

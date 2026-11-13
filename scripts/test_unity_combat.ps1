@@ -456,9 +456,11 @@ $integrationBattle = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
     $integrationCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new())
 $integrationResult = $integrationBattle.Step(0, 1)
 Assert-Combat ($integrationResult.Event.ActorId -eq 1 -and $integrationResult.Event.SkillEntityId -eq 12860) 'Configured battle did not execute official skill 12860'
-Assert-Combat ($integrationEnemy.Hp -eq 0 -and $integrationCheckpoint.Outcome.Won -and $integrationCheckpoint.Finished) 'Official skill and falloff status did not produce the expected battle victory'
-Assert-Combat ($integrationResult.Event.HpChanges.Count -eq 1 -and $integrationResult.Event.HpChanges[0].Before -eq 236 -and $integrationResult.Event.HpChanges[0].After -eq 0) 'Configured battle did not record the complete status-modified HP change'
-Assert-Combat ($integrationResult.Event.DamageEvents.Count -eq 6) 'Battle step did not record every resolved hit as a damage event'
+# Confirmed offline rule: next hops use the previous hit cell plus the original Range.
+# 12860 excludes the centre, so this lone one-cell target cannot be hit again.
+Assert-Combat ($integrationEnemy.Hp -eq 136 -and -not $integrationCheckpoint.Finished) 'Original Range must stop the chain when no next-hop target exists'
+Assert-Combat ($integrationResult.Event.HpChanges.Count -eq 1 -and $integrationResult.Event.HpChanges[0].Before -eq 236 -and $integrationResult.Event.HpChanges[0].After -eq 136) 'Configured battle did not record the complete status-modified HP change'
+Assert-Combat ($integrationResult.Event.DamageEvents.Count -eq 1) 'Battle step did not record every resolved hit as a damage event'
 $integrationActualHpLosses = @($integrationResult.Event.DamageEvents | Where-Object {
     -not $_.IsCure -and $_.AfterHp -lt $_.BeforeHp
 }).Count
@@ -473,15 +475,15 @@ Assert-Combat ([Math]::Abs($firstDamageEvent.Damage) -gt 0 -and $firstDamageEven
 $playerStats = $integrationCheckpoint.Statistics.Unit(1)
 $enemyStats = $integrationCheckpoint.Statistics.Unit(2)
 $integrationSkillStats = $integrationCheckpoint.Statistics.Skill(1, 12860, 12860)
-Assert-Combat ($playerStats.Casts -eq 1 -and $playerStats.Hits -eq 6 -and $playerStats.DamageDealt -eq 236) 'Player battle statistics did not accumulate the official skill'
-Assert-Combat ($enemyStats.HitsTaken -eq 6 -and $enemyStats.DamageTaken -eq 236 -and $enemyStats.HealTaken -eq 0) 'Target battle statistics did not accumulate received damage'
-Assert-Combat ($integrationSkillStats.Casts -eq 1 -and $integrationSkillStats.Hits -eq 6 -and $integrationSkillStats.Damage -eq 236) 'Per-skill statistics did not accumulate cast, hits and damage'
+Assert-Combat ($playerStats.Casts -eq 1 -and $playerStats.Hits -eq 1 -and $playerStats.DamageDealt -eq 100) 'Player battle statistics did not accumulate the official skill'
+Assert-Combat ($enemyStats.HitsTaken -eq 1 -and $enemyStats.DamageTaken -eq 100 -and $enemyStats.HealTaken -eq 0) 'Target battle statistics did not accumulate received damage'
+Assert-Combat ($integrationSkillStats.Casts -eq 1 -and $integrationSkillStats.Hits -eq 1 -and $integrationSkillStats.Damage -eq 100) 'Per-skill statistics did not accumulate cast, hits and damage'
 $healthDamageEvent = $integrationResult.Event.DamageEvents | Where-Object { $_.AfterHp -eq 0 } | Select-Object -First 1
-Assert-Combat ($null -ne $healthDamageEvent) 'The lethal hit was not recorded with its post-hit HP'
+Assert-Combat ($null -eq $healthDamageEvent) 'A stopped chain fabricated a lethal hit'
 $integrationRestored = [Zjcs.Combat.Official.FightBattleExecutor]::Restore(
     $integrationCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new())
 $integrationReplay = $integrationRestored.Step(0, 1)
-Assert-Combat ($integrationReplay.Replayed -and $integrationEnemy.Hp -eq 0 -and $integrationCheckpoint.DamageEventSerial -eq 6) 'Configured battle checkpoint replay applied official hit nodes twice'
+Assert-Combat ($integrationReplay.Replayed -and $integrationEnemy.Hp -eq 136 -and $integrationCheckpoint.DamageEventSerial -eq 1) 'Configured battle checkpoint replay applied official hit nodes twice'
 Assert-Combat (@($integrationReplay.Event.StatusCustomActions | Where-Object { $_.UnitId -eq 2 -and $_.Action -eq 2 }).Count -eq $integrationUnflinchingActions) 'Unflinching custom action was not preserved by receipt replay'
 $legacyHitMetadata = $integrationPlayer.Skills[0].HitGraphEntities | Where-Object { $_.EntityId -eq 12861 } | Select-Object -First 1
 $legacyHitMetadata.ScopeEntries = $null
@@ -498,7 +500,7 @@ $legacyMetadataRestored = [Zjcs.Combat.Official.FightBattleExecutor]::Restore(
     $integrationCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(), $officialCatalog)
 Assert-Combat ($legacyHitMetadata.IsChained -and $legacyHitMetadata.Repeat -and $legacyHitMetadata.Back -and $legacyHitMetadata.PreferUnvisited -and $legacyHitMetadata.ChainedHitLinks.Count -eq 1 -and $legacyHitMetadata.ChainedHitLinks[0].EntityId -eq 12862 -and $legacyHitMetadata.ScopeEntries.Count -eq 1 -and $legacyHitMetadata.ScopeEntries[0].DamageRotationW -eq 0 -and $null -ne $legacyHitMetadata.Trajectory -and $legacyHitMetadata.HitComponentType -eq 'FightHitChainedComponent' -and $legacyHitMetadata.DestroyDelay -eq 0.5) 'Legacy checkpoint did not recover immutable original hit metadata'
 $legacyCdAfter = [Zjcs.Combat.Official.FightSkillState]::new($integrationPlayer.SkillState).LeftCooldown(0)
-Assert-Combat ($integrationPlayer.Hp -eq $legacyHpBefore -and $legacyCdAfter -eq $legacyCdBefore -and $integrationCheckpoint.DamageEventSerial -eq 6 -and $integrationCheckpoint.Statistics.Unit(1).DamageDealt -eq 236) 'Restoring hit metadata changed HP, cooldown, hit receipts or statistics'
+Assert-Combat ($integrationPlayer.Hp -eq $legacyHpBefore -and $legacyCdAfter -eq $legacyCdBefore -and $integrationCheckpoint.DamageEventSerial -eq 1 -and $integrationCheckpoint.Statistics.Unit(1).DamageDealt -eq 100) 'Restoring hit metadata changed HP, cooldown, hit receipts or statistics'
 foreach ($vector in $reference.cases) {
     $request = New-DamageRequest $vector.info $schema
     $flags = [Zjcs.Combat.Official.FightDamageTypeData]::new()

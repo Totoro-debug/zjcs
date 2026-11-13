@@ -20,6 +20,8 @@ namespace Zjcs.Combat.Official
         public int Sequence, HitEntityId, RandomTargetGroupId, Anchor;
         public int SourceX, SourceY, FacingIndex;
         public bool FlipX;
+        // Older flat chain receipts have no evidence of a previous-hop origin.
+        public bool HasChainedOrigin;
         // Relative to the owning cast, so nested-cast step offsets are applied exactly once.
         public float Delay, DelayDistFactor;
         public bool HasDelayOverride;
@@ -43,6 +45,7 @@ namespace Zjcs.Combat.Official
                 Sequence = sequence, HitEntityId = hit.EntityId, RandomTargetGroupId = hit.RandomTargetGroupId,
                 Anchor = hit.Anchor, SourceX = cast.SourceX, SourceY = cast.SourceY,
                 FacingIndex = cast.FacingIndex, FlipX = cast.FlipX,
+                HasChainedOrigin = hit.ChainConfiguration != null,
                 Delay = hit.Delay, DelayDistFactor = flight == null ? hit.DelayDistFactor : flight.DelayDistFactor,
                 HasDelayOverride = flight != null, DelayOverrideIndex = flight == null ? 0 : flight.OverrideIndex,
                 SelectedGridPositions = new List<FightGridPoint>(selection.SelectedGridPositions),

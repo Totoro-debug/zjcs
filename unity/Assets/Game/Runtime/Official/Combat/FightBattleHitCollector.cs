@@ -93,9 +93,12 @@ namespace Zjcs.Combat.Official
             bool viewOnly = includeRootView && entity.HitComponentType == "FightHitRandomTargetComponent"
                 && entity.Scope != null && entity.Scope.Count > 0
                 && !entity.HasFixedDamage && !entity.IsSummon && entity.TriggerSkill == null;
+            FightBattleHitDefinition definition = null;
             if (entity.HasFixedDamage || entity.IsSummon || entity.TriggerSkill != null || viewOnly)
-                result.Add(new FightBattleHitDefinition
+            {
+                definition = new FightBattleHitDefinition
                 {
+                    ChainConfiguration = entity.IsChained ? entity : null,
                     IsViewOnly = viewOnly,
                     EntityId = entity.EntityId,
                     DamageId = entity.DamageId,
@@ -200,10 +203,13 @@ namespace Zjcs.Combat.Official
                         HasConditions = entity.HitMove.HasConditions,
                         Conditions = CopyMoveConditions(entity.HitMove.Conditions)
                     }
-                });
+                };
+                result.Add(definition);
+            }
 
             CollectChildren(entities, entity.ChainedHits, entity.ChainedHitLinks, result, branch, depth + 1, occurrenceDelay,
-                targetMode, randomCount, randomTargetContext, ref nextRandomTargetGroupId);
+                targetMode, randomCount, randomTargetContext, ref nextRandomTargetGroupId,
+                entity.IsChained ? definition : null);
             CollectChildren(entities, entity.CustomTargetHits, entity.CustomTargetHitLinks, result, branch, depth + 1, occurrenceDelay,
                 1, 0, null, ref nextRandomTargetGroupId);
             bool hasRandomChildren = entity.RandomTargetHitLinks != null && entity.RandomTargetHitLinks.Count > 0
@@ -244,7 +250,8 @@ namespace Zjcs.Combat.Official
         private static void CollectChildren(IReadOnlyList<FightBattleHitEntity> entities,
             List<int> children, List<FightBattleHitLink> links, List<FightBattleHitDefinition> result, HashSet<int> ancestors,
             int depth, float parentDelay, int targetMode, int randomCount,
-            RandomTargetContext randomTargetContext, ref int nextRandomTargetGroupId)
+            RandomTargetContext randomTargetContext, ref int nextRandomTargetGroupId,
+            FightBattleHitDefinition previousChainHit = null)
         {
             // HitCfg belongs to an edge, not to its shared entity class. Never mutate
             // the class while expanding repeated references. Parent configured delays accumulate
@@ -254,15 +261,33 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleHitLink link in links)
                 {
                     if (link == null) throw new InvalidOperationException("Null original HitCfg reference.");
+                    int first = result.Count;
                     Collect(entities, link.EntityId, result, ancestors, depth, targetMode, randomCount,
                         randomTargetContext, ref nextRandomTargetGroupId, link, parentDelay);
+                    BindChainParent(result, first, previousChainHit, link.EntityId, link.Delay);
                 }
                 return;
             }
             if (children == null) return;
             for (int i = 0; i < children.Count; i++)
+            {
+                int first = result.Count;
                 Collect(entities, children[i], result, ancestors, depth, targetMode, randomCount,
                     randomTargetContext, ref nextRandomTargetGroupId);
+                BindChainParent(result, first, previousChainHit, children[i],
+                    first < result.Count ? result[first].Delay : 0f);
+            }
+        }
+
+        private static void BindChainParent(List<FightBattleHitDefinition> result, int first,
+            FightBattleHitDefinition parent, int childId, float delay)
+        {
+            if (parent == null || first >= result.Count || result[first].EntityId != childId) return;
+            var child = result[first];
+            if (child.ChainConfiguration == null)
+                throw new InvalidOperationException("A chained edge requires its original chained child configuration.");
+            child.PreviousChainHit = parent;
+            child.ChainLinkDelay = delay;
         }
 
         private static FightBattleHitEntity Find(IReadOnlyList<FightBattleHitEntity> entities, int id)

@@ -94,7 +94,10 @@ namespace Zjcs.Presentation.Combat
                     && definition.HitComponentType != "FightHitSummonComponent"
                     && definition.HitComponentType != "FightHitRandomTargetComponent"
                     && definition.HitComponentType != "FightHitCustomTargetComponent"
+                    && definition.HitComponentType != "FightHitChainedComponent"
                     && definition.HitComponentType != "FightHitTriggerSkillComponent") continue;
+                if (definition.HitComponentType == "FightHitChainedComponent" && !selection.HasChainedOrigin)
+                    continue;
                 float scopeEnd = 0f;
                 foreach (var entry in definition.ScopeEntries) scopeEnd = Mathf.Max(scopeEnd, entry.Delay);
                 for (int index = 0; index < selection.EffectCenters.Count; index++)

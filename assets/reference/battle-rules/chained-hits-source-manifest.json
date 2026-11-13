@@ -1,0 +1,125 @@
+{
+  "code_manifest": "884_156692",
+  "configuration_manifest": "854_156383",
+  "code_receipt": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "bytes": 6939,
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "client_receipt": {
+    "path": ".tools/source-packages/current/884_156692/client-decompilation-manifest.json",
+    "bytes": 7858920,
+    "sha256": "4a203396ca1aa7b924038134239f3e203a26ac5e1c879ad52076167912cb6ebe"
+  },
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll",
+      "bytes": 16813568,
+      "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+      "bytes": 17006592,
+      "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+    }
+  ],
+  "original": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitChainedComponent.cs",
+      "bytes": 485,
+      "sha256": "33634c3e9d141fbf6ab4c4a887d29cdac2ec3a9a932d56014ec83fb16932002e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitChainedComponentInfo.cs",
+      "bytes": 839,
+      "sha256": "c26be6e1d1ee4461131de83322d70638cbcd4b62915451182f2bdbde516dcd88"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitBaseComponentInfo.cs",
+      "bytes": 2308,
+      "sha256": "26c9a3deef4680f8b6934525961bf75798f11058349fc2c38562f5cfcb8877b4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitChained.cs",
+      "bytes": 2538,
+      "sha256": "fd93da51b689b4a9a243b23ad2311ae5fe2637e42b460c2cfc8ffb0b327cb720"
+    }
+  ],
+  "input": [
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "bytes": 22729433,
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+      "bytes": 585264,
+      "sha256": "9b447a15838602a598b7530eb0398a3b0c9e1a6d93d7eb8d0e194932cd24d8bf"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "bytes": 32798681,
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules-source-manifest.json",
+      "bytes": 1231984,
+      "sha256": "cef8b0b5a12460f2bdb2b4d8031f95fb8d560a391a9170641e401b67ef08968b"
+    }
+  ],
+  "migration": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightHitChainExecution.cs",
+      "bytes": 9853,
+      "sha256": "dd5d38544928306050893d9e4fcf5cf684ae6017a92e8c9f10261d732f98b672"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleHitSelectionSnapshot.cs",
+      "bytes": 4035,
+      "sha256": "6026feccd9e0ee65d495e45243421359f0d036699e167b012d9de0c27c5ca8f5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleSkillCastPresentation.cs",
+      "bytes": 4054,
+      "sha256": "b693443d5052d5c561c1806c8ab6b6b763c3b78fdfdd7c5877a2da52fec2a7ad"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHitReceiptPlayback.cs",
+      "bytes": 8213,
+      "sha256": "67808baf8177b6e7d0d7752322903321887df3b1092cff989d42036e47b7d2ff"
+    }
+  ],
+  "validation": [
+    {
+      "path": "scripts/test_battle_chained_hits.ps1",
+      "bytes": 1229,
+      "sha256": "f29ce48a7715b5a1c66a4cf597788d9b6c7495ab36233b0a323ef0e4eda2160c"
+    },
+    {
+      "path": "scripts/fixtures/battle_chained_hits_harness.cs",
+      "bytes": 16930,
+      "sha256": "a932e33cc1cd6cd64fa51846c1ff1b6cd8437dbb06bddd02477edec003913771"
+    },
+    {
+      "path": "scripts/test_chained_hit_player.ps1",
+      "bytes": 2635,
+      "sha256": "b778eabf851ea935b027f51b037d3e1dfe6b5f59001782d5a7cbc2359d74b39f"
+    }
+  ],
+  "native_probe": {
+    "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.ChainedHits.cs",
+    "bytes": 7402,
+    "sha256": "27f62df6dbf1bf60570c1ccf4a77f7681029b5587167f9ea4bc2b855a401aa58"
+  },
+  "generator": {
+    "path": "scripts/record_battle_chained_hit_sources.py",
+    "bytes": 3758,
+    "sha256": "6abf600a710f186acbc2fe710da66afcffd40523af3ad31e6c7b0b445bc21032"
+  },
+  "bindings": {
+    "collector": "FightBattleHitCollector.CollectChildren/BindChainParent",
+    "executor": "FightBattleExecutor.ExecuteSkillCore",
+    "native": "OfficialBattleHitReceiptPlayback.Enqueue -> MyFightHitChained.OnStart"
+  },
+  "operation": "Preserve original graph references, flags, scopes, hit/flight delays and client start-grid presentation. Server next-hop selection is unavailable. The confirmed offline decision uses the previous actual hit cell plus original skill Range, stops without legal candidates, obeys Repeat/Back/PreferUnvisited, then chooses nearest squared grid distance with unit ID and original body-cell order ties. Per-cast shared branch histories and independent root histories feed the existing settlement path; receipts retain each actual hop origin without persisting traversal references. Old receipts without origin evidence do not invent native chain flights."
+}

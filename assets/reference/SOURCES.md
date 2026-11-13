@@ -800,6 +800,8 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 六职业技能与依赖输入来源：`scripts/verify_first_promotion_skill_sources.py --write-source-manifest` 按所选 884 APK 优先解码，逐字段核对 104 项技能运行行及从显式实体引用追踪的 383 个 EC 实体；保留 APK／bundle／对象、原始载荷、formatter、表字段投影及运行输入哈希。空默认字段、11552 的原驱散排除名单、24083 的所选字段差异和 `DamageDisperseStatusCfg`／`GameCharacterType` 原码、适配输出身份见[六职业技能来源](battle-rules/first-promotion-source-manifest.json)；不改写历史配置或哈希，没有新增美术载荷。实现和实际验证范围仅在[技能页](../../docs/features/skills.md)维护。
 
+连锁命中输入来源：所选 `884_156692` 的原 `FightHitChainedComponent`／`Info`、基类配置及 `MyFightHitChained` 反编译代码，与保留历史身份的 `854_156383` 战斗／技能运行载荷分别记录；原程序集、代码、配置、迁移入口和工具哈希见[连锁命中来源](battle-rules/chained-hits-source-manifest.json)。继续使用既有原命中 prefab 与连锁图，没有新增或替换美术载荷；服务器下一跳选敌缺口及用户确认的单机规则见[术士技能](../../docs/features/skills-warlock.md#rank-2)。
+
 家园维修原生界面来源：`scripts/prepare_home_repair_native.py` 按所选 `884_156692` 的 APK 优先顺序及已校验云端载荷，恢复 `FurnitureRepairDialog`、`FurnitureRepairedNotifyDialog`、`PlayerPropItemVariant` 和 13 个官方家具图标的完整原生层级、序列化字段及依赖闭包；原窗口脚本、`HomeSettings`、家具／挂机表和中文语言均核对同版输入。原生空控制器保持原无状态结构，Spine 二进制逐字节与原对象核验；共享资产按 GUID 与原生内容核对后复用，存在转换差异的控制器使用独立 GUID。APK／bundle／对象凭据、当前客户端与共享代码、转换器、原生导出及输入输出 SHA-256 见[家园维修界面来源清单](home-repair-native-source-manifest.json)。背景模糊遮罩与材质复用[同版伙伴窗口来源](partner-friendship-window-source-manifest.json)，保持其独立来源记录。新增素材尚未进入完整素材快照；当前实现和验证范围只在[家园页](../../docs/features/city-and-home.md)维护。
 
 吸血公式输入来源：`scripts/prepare_battle_suck_hp_sources.py` 从所选 `884_156692` 共享反编译代码提取 `BattleFormulaHandler` 的 `SuckHp`、`SuckHpByOnceHit`、`CalcCureAdd` 和 `ApplyCureAddSoftCap`，保留原 `BattleFormula.SuckHpInfo` 及角色／属性枚举；原码、既有运行属性／设置表与生成器 SHA-256 见[吸血公式来源](battle-rules/suck-hp-source-manifest.json)。测试只在内存编译原方法，不写入或替换官方素材；当前实现和验证范围仅在[技能页](../../docs/features/skills.md)维护。

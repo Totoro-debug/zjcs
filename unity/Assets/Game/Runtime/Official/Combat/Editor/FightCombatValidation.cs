@@ -348,14 +348,14 @@ namespace Zjcs.Combat.Official.EditorTools
             FightBattleExecutor executor = assets.BeginBattle(checkpoint);
             FightBattleExecutionResult result = executor.Step(0, 1);
             if (result.Event.ActorId != player.Id || result.Event.SkillEntityId != 12860
-                || enemy.Hp != 0 || !checkpoint.Finished || !checkpoint.Outcome.Won
+                || enemy.Hp != 136 || checkpoint.Finished
                 || result.Event.HpChanges.Count != 1 || result.Event.HpChanges[0].Before != 236
-                || result.Event.HpChanges[0].After != 0 || checkpoint.DamageEventSerial != 6)
-                throw new InvalidOperationException("Official configuration battle did not resolve the expected 12860/24078 victory.");
+                || result.Event.HpChanges[0].After != 136 || checkpoint.DamageEventSerial != 1)
+                throw new InvalidOperationException("Official 12860 chain must stop after one hit when its next-hop Range has no target.");
 
             FightBattleExecutionResult replay = assets.RestoreBattle(checkpoint).Step(0, 1);
-            if (!replay.Replayed || replay.Event.ActorId != player.Id || enemy.Hp != 0
-                || checkpoint.DamageEventSerial != 6)
+            if (!replay.Replayed || replay.Event.ActorId != player.Id || enemy.Hp != 136
+                || checkpoint.DamageEventSerial != 1)
                 throw new InvalidOperationException("Official configuration checkpoint replay changed the resolved battle.");
         }
 

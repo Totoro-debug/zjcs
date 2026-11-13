@@ -1466,6 +1466,17 @@ namespace Zjcs.Combat.Official
     [Serializable]
     public sealed class FightBattleHitDefinition
     {
+        // Cast-local traversal links; never persist references back into the catalog graph.
+        [NonSerialized] internal FightBattleHitEntity ChainConfiguration;
+        [NonSerialized] internal FightBattleHitDefinition PreviousChainHit;
+        [NonSerialized] internal float ChainLinkDelay;
+        internal FightBattleHitDefinition AtDelay(float delay)
+        {
+            var copy = (FightBattleHitDefinition)MemberwiseClone();
+            copy.Delay = delay;
+            return copy;
+        }
+
         public FightBattleStatusApplication AirCombo;
         // A root wrapper owns a real client entity without applying a damage action.
         public bool IsViewOnly;
