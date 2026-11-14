@@ -233,7 +233,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var action in step.StatusCustomActions)
             {
                 if (action == null) continue;
-                if (action.SourceDamageId == 0)
+                if (action.SourceDamageId == 0 && !action.HasDelay)
                 {
                     // Legacy/unassociated actions retain their existing boundary.
                     if (entityViews.PlayStatusCustomAction(action)) nativeStatusActions.Add(action);
@@ -253,7 +253,7 @@ namespace Zjcs.Presentation.Combat
         {
             delay = 0f;
             bool found = false;
-            if (step.DamageEvents != null) foreach (var damage in step.DamageEvents)
+            if (action.SourceDamageId != 0 && step.DamageEvents != null) foreach (var damage in step.DamageEvents)
             {
                 int targetId = action.SourceDamageTargetId > 0 ? action.SourceDamageTargetId : action.UnitId;
                 if (damage == null || damage.IsSkillCost || action.Action == 2 && damage.IsCure
@@ -263,7 +263,10 @@ namespace Zjcs.Presentation.Combat
                 found = true;
                 delay = damage.Delay;
             }
-            return found;
+            if (found) return true;
+            if (!action.HasDelay || !float.IsFinite(action.Delay) || action.Delay < 0f) return false;
+            delay = action.Delay;
+            return true;
         }
 
         private void DispatchStatusActions()

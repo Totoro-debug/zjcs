@@ -102,7 +102,7 @@ namespace Zjcs.Combat.Official
                 if (statusCatalog != null && statusCatalog.ShowStatusImmunity(protection.ClassId))
                 {
                     if (currentStepStatusCustomActions == null) owner.StatusImmunityActionPendingCount++;
-                    else currentStepStatusCustomActions.Add(new FightBattleStatusCustomActionEvent {
+                    else RecordStatusAction(new FightBattleStatusCustomActionEvent {
                         UnitId = owner.Id, Action = 1,
                         SourceDamageId = statusApplicationDamage?.DamageId ?? 0,
                         SourceDamageTargetId = statusApplicationDamage?.TargetId ?? 0

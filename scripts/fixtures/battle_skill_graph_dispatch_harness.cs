@@ -55,7 +55,7 @@ namespace Zjcs.Combat.Official
     public class FightBattleDamageEvent { public int DamageId, TargetId, SourceId, SkillEntityId, DamageEntityId; public bool IsSkillCost, IsCure, HasDisperseNotification; public int DisperseNotificationIndex; public float Delay; public long BeforeHp, AfterHp; }
     public class FightBattleUnitEndEvent { public int UnitId, StatusId; public float Delay; }
     public class FightBattleUnitLifeEvent { public int UnitId; public bool IsDead; public long BeforeHp,BeforeMaxHp,Hp,MaxHp; public float Delay; }
-    public class FightBattleStatusCustomActionEvent { public int UnitId, Action, SourceDamageId, SourceDamageTargetId; }
+    public class FightBattleStatusCustomActionEvent { public int UnitId, Action, SourceDamageId, SourceDamageTargetId; public bool HasDelay; public float Delay; }
     public class FightBattleStepEvent { public bool HasUnitLifeEvents; public List<FightBattleUnitLifeEvent> UnitLifeEvents = new List<FightBattleUnitLifeEvent>(); public List<int> DispersedUnitIds = new List<int>(); public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>(); public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>(); public List<FightBattleStatusCustomActionEvent> StatusCustomActions = new List<FightBattleStatusCustomActionEvent>(); }
 }
 namespace Zjcs.Official.StoryPlayableManager
@@ -418,6 +418,28 @@ public static class BattleSkillGraphDispatchHarness
                 && ordinaryScope.MoveTimes.Count == 2 && Math.Abs(ordinaryScope.MoveTimes[0] - .15f) < .0001f
                 && Math.Abs(ordinaryScope.MoveTimes[1] - 1.05f) < .0001f,
                 "Ordinary parent/action clocks lost their original delay, non-equipped slot or repeated path ordering");
+        }
+        for (int pieces = 1; pieces <= 64; pieces++)
+        {
+            var explicitScope = new OfflineBattleNativePlayableScope();
+            using (var playback = new OfficialBattleSkillGraphPlayback(catalog, explicitScope,
+                new OfficialBattleSkillEntityPlayback(explicitScope) { StatusUIAvailable = true }))
+            {
+                var first = new FightBattleStatusCustomActionEvent { UnitId = 1, Action = 3, HasDelay = true, Delay = .375f };
+                var second = new FightBattleStatusCustomActionEvent { UnitId = 2, Action = 1, HasDelay = true, Delay = .75f };
+                var invalid = new FightBattleStatusCustomActionEvent { UnitId = 2, Action = 3, HasDelay = true, Delay = float.NaN };
+                playback.Play(new FightBattleStepEvent { StatusCustomActions = new List<FightBattleStatusCustomActionEvent> {
+                    first, second, invalid } }, checkpoint, resolve);
+                Require(explicitScope.StatusActionTimes.Count == 0 && playback.OwnsStatusCustomActionUI(first)
+                    && playback.OwnsStatusCustomActionUI(second) && !playback.OwnsStatusCustomActionUI(invalid),
+                    "Explicit unassociated actions must wait for their own valid occurrence time.");
+                for (int i = 0; i < pieces; i++) playback.Tick(1f / pieces);
+                playback.Tick(.001f);
+                Require(explicitScope.StatusActionTimes.Count == 2
+                    && Math.Abs(explicitScope.StatusActionTimes[0] - .375f) < .00001f
+                    && Math.Abs(explicitScope.StatusActionTimes[1] - .75f) < .00001f,
+                    "Frame subdivision changed explicit cooldown/immunity occurrence times.");
+            }
         }
         var removalScope = new OfflineBattleNativePlayableScope();
         using (var playback = new OfficialBattleSkillGraphPlayback(catalog, removalScope, new OfficialBattleSkillEntityPlayback(removalScope)))

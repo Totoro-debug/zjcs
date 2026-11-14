@@ -49,7 +49,8 @@ def main():
         shutil.rmtree(old_editor)
     editor = project / 'Assets/Editor'
     editor.mkdir(exist_ok=True)
-    for name in ('OfficialBattleDamagePlaybackAcceptance', 'OfficialBattleDamageReceiptAcceptance'):
+    for name in ('OfficialBattleDamagePlaybackAcceptance', 'OfficialBattleDamageReceiptAcceptance',
+                 'OfficialBattleStatusActionTimingCases'):
         fixture = ROOT / 'unity/Assets/Game/Editor/Combat/AnimatorPlayback' / (name + '.cs')
         shutil.copy2(fixture, editor / fixture.name)
     (editor / 'DamageValidation.asmdef').write_bytes((json.dumps(dict(
@@ -119,9 +120,10 @@ def prepare_native_assets(project, work, selected, custom_targets=False, summon_
         if source.is_file() and source.suffix in ('.json', '.txt', '.bytes'):
             pending.append(source)
     # Include actual child casts and trigger/chain hit entities from the rules.
-    skills = [row for row in catalog['skills'] if row['skill_entity_id'] in (10100, 10910, 11050, 13520, 13523)]
+    skills = [row for row in catalog['skills'] if row['skill_entity_id'] in (10100, 10910, 11050, 13520, 13523, 15300)]
     hits = [row for row in catalog['hits'] if row['hit_entity_id'] in (10101, 10911, 10912, 11051, 13521, 13522, 13524, 13525)]
-    if len(skills) != 5 or len(hits) != 8:
+    moves = [row for row in catalog['moves'] if row['action_entity_id'] == 15301]
+    if len(skills) != 6 or len(hits) != 8 or len(moves) != 1:
         raise ValueError('Formal receipt fixture original skill/hit entities are not installed.')
     if custom_targets:
         skills.extend(row for row in catalog['skills'] if row['skill_entity_id'] in (12060,13300,13670))
@@ -129,7 +131,7 @@ def prepare_native_assets(project, work, selected, custom_targets=False, summon_
     if summon_spawns:
         skills.extend(row for row in catalog['skills'] if row['skill_entity_id'] == 12140)
         hits.extend(row for row in catalog['hits'] if row['hit_entity_id'] == 12141)
-    for row in [*skills, *hits, *catalog['damages']]:
+    for row in [*skills, *hits, *moves, *catalog['damages']]:
         prefix = row['entity_resource'].removeprefix('Combat/SkillGraphs/')
         pending.append(ROOT / 'unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs' / (prefix + '.prefab'))
     copied, unresolved = set(), set()

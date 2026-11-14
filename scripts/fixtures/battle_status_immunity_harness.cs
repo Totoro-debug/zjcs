@@ -100,9 +100,11 @@ public static class BattleStatusImmunityHarness
                 && applyScore == accepted * (name == "other-id" ? 10 : 5), name + ": refused application entered report score");
             var actions = observedActions.Where(a => a.Action == 1).ToArray();
             Check(actions.Length == (name == "initial" ? 1 : name == "specific-id" ? 0 : refusals), name + ": original immunity float suppression/count");
-            if (name == "initial") Check(actions[0].SourceDamageId == 0 && cp.Units.Single(u => u.Id == 2).StatusImmunityActionPendingCount == 0, "Initial pending immunity replayed or lost");
+            if (name == "initial") Check(actions[0].SourceDamageId == 0 && !actions[0].HasDelay && cp.Units.Single(u => u.Id == 2).StatusImmunityActionPendingCount == 0, "Initial pending immunity replayed or lost");
             for (int i = 0; name != "initial" && i < actions.Length; i++) Check(actions[i].SourceDamageId == receipts[i].DamageId
-                && actions[i].SourceDamageTargetId == receipts[i].TargetId, name + ": causal hit association");
+                && actions[i].SourceDamageTargetId == receipts[i].TargetId
+                && actions[i].HasDelay && Math.Abs(actions[i].Delay - receipts[i].Delay) < .00001f,
+                name + ": causal hit association and actual refusal time");
             if (condition.MaxCount <= 0) Check(condition.RejectedCount == 0, name + ": unlimited protection consumed counter");
             else Check(condition.RejectedCount == (name == "exhausted" || name == "restore" || name == "initial" ? 1 : 0) + refusals,
                 name + ": actual refusal count");

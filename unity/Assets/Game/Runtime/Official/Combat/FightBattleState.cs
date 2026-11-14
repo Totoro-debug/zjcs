@@ -82,6 +82,7 @@ namespace Zjcs.Combat.Official
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusStarted;
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusEnded;
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusRefreshed;
+        [NonSerialized] internal Action<FightBattleUnitState> CooldownActionTriggered;
         [NonSerialized] internal Action<FightBattleUnitState> HpUpdated;
         [NonSerialized] internal Action<FightBattleUnitState, long> HpIncreased;
         internal Action<FightBattleUnitState, FightBattleStatusState, bool> StatusForbiddenChanged;
@@ -1896,8 +1897,11 @@ namespace Zjcs.Combat.Official
     {
         public int UnitId;
         public int Action;
+        // Explicit occurrence time; false in old receipts and deferred counters.
+        public bool HasDelay;
+        public float Delay;
         // Actual damaging occurrence that produced this action. Its final receipt
-        // owns all nested/approach offsets; zero keeps legacy timing unknown.
+        // owns all nested/approach offsets; zero leaves the association unknown.
         public int SourceDamageId;
         // A hit can apply the action to its source instead of its damaged target.
         // Zero retains the original same-target association for legacy receipts.

@@ -60,8 +60,11 @@ namespace Zjcs.Editor.Combat
             var camera = new GameObject("Receipt damage camera").AddComponent<Camera>();
             camera.orthographic = true; camera.orthographicSize = 4;
             camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = new Color(.06f, .09f, .15f);
-            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure", "trigger", "cost", "cost-legacy", "hemophagia", "actions", "actions-legacy", "cooldown-target", "cooldown-self", "cooldown-none", "cooldown-cure", "disperse", "disperse-none", "disperse-failed", "disperse-empty", "disperse-multiple", "disperse-legacy" })
+            foreach (string name in new[] { "position", "replay", "legacy", "body", "none", "cure", "trigger", "cost", "cost-legacy", "hemophagia", "actions", "actions-legacy", "cooldown-target", "cooldown-self", "cooldown-none", "cooldown-cure", "disperse", "disperse-none", "disperse-failed", "disperse-empty", "disperse-multiple", "disperse-legacy",
+                "timed", "timed-replay", "timed-approach", "timed-approach-replay",
+                "timed-initial", "timed-replay-initial", "timed-approach-initial", "timed-approach-replay-initial" })
             {
+                bool timedCase = name.StartsWith("timed", StringComparison.Ordinal);
                 bool actionCase = name.StartsWith("actions", StringComparison.Ordinal);
                 bool cooldownCase = name.StartsWith("cooldown", StringComparison.Ordinal);
                 bool disperseCase = name.StartsWith("disperse", StringComparison.Ordinal);
@@ -188,6 +191,15 @@ namespace Zjcs.Editor.Combat
                     entity.GetComponent<MyFightRoleFight>().OnHit += (role, damage) => hitNotifications++;
                 }
                 playback.Play(step, checkpoint, id => transforms.TryGetValue(id, out var value) ? value : null);
+                if (timedCase)
+                {
+                    Require(step.StatusCustomActions.All(playback.OwnsStatusCustomActionUI)
+                        && floatRoot.GetComponentsInChildren<DamageCustomActionUI>().Length == (name.Contains("initial") ? 1 : 0),
+                        "Explicit cooldown occurrences wait, while unknown pending startup counters keep their legacy boundary.");
+                    for (int frame = 0; frame < 3; frame++) yield return null;
+                    camera.transform.position = (transforms[1].position + transforms[2].position) * .5f + new Vector3(0, 0, -20);
+                    Capture(camera, "damage-receipt-" + name + "-before.png", name.Contains("initial"));
+                }
                 if (disperseCase)
                 {
                     var successful = expected.Where(d => d.HasDisperseNotification).ToArray();
@@ -263,6 +275,10 @@ namespace Zjcs.Editor.Combat
                     if (cooldownCase && boundary <= expected[0].Delay + .125f)
                         Require(floatRoot.GetComponentsInChildren<DamageCustomActionUI>().Length == (due.Length > 0 ? 1 : 0),
                             "The original cooldown UI must appear at the actual damage/cure/None hit's boundary.");
+                    if (timedCase)
+                        Require(floatRoot.GetComponentsInChildren<DamageCustomActionUI>().Length
+                            == step.StatusCustomActions.Count(a => !a.HasDelay || a.Delay <= boundary + .00001f),
+                            "Each independent invocation must create one native cooldown UI at its actual saved occurrence time.");
                     if (disperseCase && boundary <= expected.Last().Delay + .125f)
                         Require(disperseCount() == due.Count(d => d.HasDisperseNotification),
                             "Each successful operation creates exactly one original disperse UI at its causing hit boundary.");
@@ -335,6 +351,17 @@ namespace Zjcs.Editor.Combat
         private static FightBattleCheckpoint Build(string name, out FightBattleStepEvent step)
         {
             var assets = OfficialCombatAssetCatalog.LoadDefault();
+            if (name.StartsWith("timed", StringComparison.Ordinal))
+            {
+                var value = OfficialBattleStatusActionTimingCases.Exercise(assets.Load(), assets.LoadDamageFormula(),
+                    assets.LoadSkillItems(), name.Contains("approach"), name.Contains("replay"), name.Contains("initial"), out step);
+                string json = JsonUtility.ToJson(value);
+                value = JsonUtility.FromJson<FightBattleCheckpoint>(json);
+                step = value.Receipts.Single().Event;
+                Require(step.StatusCustomActions.Count(a => a.HasDelay) == (name.Contains("replay") ? 6 : 2),
+                    "Checkpoint save/restore must preserve each explicit cooldown occurrence.");
+                return value;
+            }
             var checkpoint = new FightBattleCheckpoint { StageId = 1, RandomSeed = 11,
                 Grid = new FightBattleGrid { Width = 16, Height = 16 } };
             for (int id = 1; id <= 3; id++)
@@ -462,7 +489,7 @@ namespace Zjcs.Editor.Combat
         private void Observe(string message, string stack, LogType type)
         { if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) failure = failure ?? message + "\n" + stack; }
         private static void Require(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
-        private static void Capture(Camera camera, string name)
+        private static void Capture(Camera camera, string name, bool requireVisible = true)
         {
             var target = new RenderTexture(540, 960, 24); var previous = RenderTexture.active; var old = camera.targetTexture;
             Texture2D pixels = null;
@@ -471,7 +498,7 @@ namespace Zjcs.Editor.Combat
                 camera.targetTexture = target; camera.Render(); RenderTexture.active = target;
                 pixels = new Texture2D(540, 960, TextureFormat.RGBA32, false);
                 pixels.ReadPixels(new Rect(0, 0, 540, 960), 0, 0); pixels.Apply();
-                Require(pixels.GetPixels32().Select(p => ((int)p.r << 16) | ((int)p.g << 8) | p.b).Distinct().Take(5).Count() >= 5,
+                Require(!requireVisible || pixels.GetPixels32().Select(p => ((int)p.r << 16) | ((int)p.g << 8) | p.b).Distinct().Take(5).Count() >= 5,
                     "Recorded status effect has no visible output.");
                 File.WriteAllBytes(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), name), pixels.EncodeToPNG());
             }

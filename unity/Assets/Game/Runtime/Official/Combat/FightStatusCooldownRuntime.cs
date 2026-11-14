@@ -16,7 +16,7 @@ namespace Zjcs.Combat.Official
             {
                 ApplySkillCooldownModify(new FightSkillState(unit.SkillState), status, random);
                 status.SkillCooldownModifySkillsPending = HasTriggerSkills(status);
-                status.SkillCooldownActionPendingCount++;
+                NotifyAction(unit, status);
             }
             status.SkillCooldownModifyInitialized = true;
         }
@@ -31,7 +31,7 @@ namespace Zjcs.Combat.Official
                 status.SkillCooldownModifyInitialized = true;
                 status.SkillCooldownModifyPending = true;
                 status.SkillCooldownModifySkillsPending = HasTriggerSkills(status);
-                status.SkillCooldownActionPendingCount++;
+                NotifyAction(unit, status);
             }
         }
 
@@ -41,6 +41,12 @@ namespace Zjcs.Combat.Official
             if (unit == null || status == null || !status.SkillCooldownModifyPending) return;
             ApplySkillCooldownModify(new FightSkillState(unit.SkillState), status, random);
             status.SkillCooldownModifyPending = false;
+        }
+
+        private static void NotifyAction(FightBattleUnitState unit, FightBattleStatusState status)
+        {
+            if (unit.CooldownActionTriggered != null) unit.CooldownActionTriggered(unit);
+            else status.SkillCooldownActionPendingCount++;
         }
 
         public static void ChangeCooldown(FightBattleUnitState unit, int delta)

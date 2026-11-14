@@ -116,6 +116,7 @@ namespace Zjcs.Combat.Official
                     unitById.Add(item.Id, item.Runtime);
                     RecordGridViewCreate(item);
                     item.Runtime.StatusStarted = OnStatusStarted;
+                    item.Runtime.CooldownActionTriggered = OnCooldownActionTriggered;
                     item.Runtime.StatusApplicationRejected = template => RejectStatusApplication(item.Runtime, template);
                     item.Runtime.StatusEnded = OnStatusEnded;
                     item.Runtime.StatusForbiddenChanged = OnStatusForbiddenChanged;

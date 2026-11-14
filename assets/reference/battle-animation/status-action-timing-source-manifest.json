@@ -1,0 +1,181 @@
+{
+  "code_manifest": "884_156692",
+  "configuration_manifest": "854_156383",
+  "original": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusSkillModifyCDComponent.cs",
+      "bytes": 955,
+      "sha256": "aac37534aa598527aab42fe95e674a0983f14db1a6265119057fefaafe1cfcb2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusAgentComponent.cs",
+      "bytes": 8939,
+      "sha256": "25ff2bb6d454ca5fb497e74435261f51b6e38d8de36d00e8ced3472377bca572"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/StatusStatusApplyConditionComponent.cs",
+      "bytes": 1557,
+      "sha256": "adeccb48950187a0fdc3d3c90fba51598bf81cf6c749dded8e33266b1831ef2f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EStatusCustomAction.cs",
+      "bytes": 106,
+      "sha256": "09322140b0f419004edd3823fb99e3eedc497171d85c2deb771570489880cb4e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusSkillModifyCD.cs",
+      "bytes": 158,
+      "sha256": "38872bc41cb0894ca343f11e596229cdcfb8dd481f614988f237fb186ed1e869"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/CharacterDamageUIManager.cs",
+      "bytes": 19052,
+      "sha256": "f7a12d43771a2436519444a053964fb2b2879c572e0555a08f2e7db545f59910"
+    }
+  ],
+  "configuration": [
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "bytes": 22729433,
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+      "bytes": 566429,
+      "sha256": "e88d754e06c0b334ba1c2d94ae42dfbf3d2007b8f44ff7b7526dabbc983f4017"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "bytes": 37209479,
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/rules-source-manifest.json",
+      "bytes": 1759,
+      "sha256": "895c97957bb034eed4cc7351ff7477a5d9726a092fa6469f9c57db5d3c1b5250"
+    }
+  ],
+  "migration": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
+      "bytes": 99217,
+      "sha256": "c2481ac0bbc4eedbcaf1654d90ec4674c7a3792394711f0f0c9886e8c8e456d2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusCooldownRuntime.cs",
+      "bytes": 4948,
+      "sha256": "7862976e1eba2f0f4be12beb24891958eaf2fe2b3a5f3c9e762435a3c4ea157b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
+      "bytes": 165971,
+      "sha256": "fc9a086e691c2105c7ffc0ed472026a580131ae33da15e042a1e9adba78738da"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.StatusStartup.cs",
+      "bytes": 11237,
+      "sha256": "06e11dc8623b35f7fec27080177e4c5a1781f601668e26085b83297332b6db6f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.StatusActionEvents.cs",
+      "bytes": 1964,
+      "sha256": "94f38d968dda5c0243fb2d4d4cec7830c21d5317948a1ccec4c37e96cac3c913"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.GridItems.cs",
+      "bytes": 8042,
+      "sha256": "936caf6a3e5a24b99bd72b5b052c69e1affbbeff30f8fe447d92647baad12bba"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightStatusApplyCondition.cs",
+      "bytes": 6108,
+      "sha256": "8d9e8fd34fa8836824c17b9ca30c2cf38f235f352800323f0895289a65eb5c4e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs",
+      "bytes": 25222,
+      "sha256": "a820b2feda338a8f67bbd2872ce48c3c23a340f8e952a5bdcaa91bcdb563993d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.DamageUI.cs",
+      "bytes": 2820,
+      "sha256": "013f5d0ebb1bbf82a9dc6d2fc279cdcd6cfd255ba683d02d4f00c56bdd9dd725"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageUIPlayback.cs",
+      "bytes": 11128,
+      "sha256": "01ff9a68654df49155b117c67bf5e39c709a3963ce10b49ccd17c7fcda0ad2e1"
+    }
+  ],
+  "assets": [
+    {
+      "path": "assets/reference/battle-animation/damage-view-runtime-source-manifest.json",
+      "bytes": 10274,
+      "sha256": "b0e4dad4a06bb7d4bb8f195619c0a602295de5c724c68d4d65d16699c283e9a4"
+    },
+    {
+      "path": "assets/reference/battle-hud/damage-ui-runtime-source-manifest.json",
+      "bytes": 12226,
+      "sha256": "e605a3b1585dfb8e3ce9f45b74f37fb48702d06d68d13e3ae254916ff43f8730"
+    },
+    {
+      "path": "assets/reference/battle-hud/damage-ui-native-source-manifest.json",
+      "bytes": 224268,
+      "sha256": "7c0b0185e6181ccbb86d9e3155a16be62d98ff47d6b20645b994b68b12c31372"
+    }
+  ],
+  "validation": [
+    {
+      "path": "scripts/test_battle_status_action_timing.ps1",
+      "bytes": 1107,
+      "sha256": "db57d8570a6c62cf6e361d1495acdd8420f6f4d844133d221a5925f21a7046ff"
+    },
+    {
+      "path": "scripts/test_battle_cooldown_status.ps1",
+      "bytes": 8620,
+      "sha256": "12527f4ddc80bdce84ba731c48c5619e5534c15e8b1118be11dabf903045b3ef"
+    },
+    {
+      "path": "scripts/test_battle_status_immunity.ps1",
+      "bytes": 1818,
+      "sha256": "d2f19ac143f874b4cddac44c03116fd600edd357641526d6efbbc5222d38dc58"
+    },
+    {
+      "path": "scripts/fixtures/battle_status_immunity_harness.cs",
+      "bytes": 9847,
+      "sha256": "e15812528b0b5b78cdce6ee02090f6b91f5826c54bbb19d0a15cbb660d61ef3c"
+    },
+    {
+      "path": "scripts/test_battle_skill_graph_dispatch.ps1",
+      "bytes": 775,
+      "sha256": "a65939f74bd478cf37c8aa38a6a661e83ee79fb031bbc031f908a1ba97aad87e"
+    },
+    {
+      "path": "scripts/fixtures/battle_skill_graph_dispatch_harness.cs",
+      "bytes": 38188,
+      "sha256": "8fb393d5f129bb1b13d515bca3570e3c0bd5566248d49a5046f4b0460fc26d30"
+    },
+    {
+      "path": "scripts/prepare_battle_damage_playback_validation.py",
+      "bytes": 10831,
+      "sha256": "836ead69a80fca99b468894f71a3a458b9445713d99258dc501a054357e3b1c3"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleStatusActionTimingCases.cs",
+      "bytes": 6706,
+      "sha256": "d5ac4f2ca39edf00df8217798004dd19e64cc6a64b5f3709f506bca212794887"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleDamageReceiptAcceptance.cs",
+      "bytes": 37969,
+      "sha256": "36213b6d62ad96147cf1af19f57ac488b2712c1f0ad40d1c33ab3e87f27927b0"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_battle_status_action_timing_sources.py",
+    "bytes": 4046,
+    "sha256": "06ae89cb1461cb7546e9ffa3d5f9d24afd4fd7fa5d7cfed4a035b047b9ac3172"
+  },
+  "binding": "Original status custom action -> step-scoped occurrence receipt -> existing native graph clock -> CharacterDamageUIManager",
+  "operation": "Record each local cooldown invocation and in-step immunity refusal at its existing presentation clock, retaining the owning cast until approach/replay/trigger offsets are finalized. Prefer an unambiguous direct damage association; otherwise use an explicitly recorded finite occurrence delay. Keep old pending counters and receipts without timing evidence on the existing compatible path. No gameplay cooldown arithmetic, RNG, status acceptance, source prefab, animation, material or texture is changed."
+}

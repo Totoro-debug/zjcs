@@ -9,7 +9,8 @@ namespace Zjcs.Combat.Official
             foreach (var unit in StatusOwners())
                 if (unit.StatusStarted != null || unit.StatusEnded != null || unit.StatusRefreshed != null || unit.StatusForbiddenChanged != null
                     || unit.HpUpdated != null || unit.HpIncreased != null || unit.StatusRoundResolver != null
-                    || unit.RoundStartClockResolver != null || unit.StatusApplicationRejected != null)
+                    || unit.RoundStartClockResolver != null || unit.StatusApplicationRejected != null
+                    || unit.CooldownActionTriggered != null)
                     throw new InvalidOperationException("A battle unit is already executing a step.");
             bool mutexChanged = false;
             foreach (var unit in StatusOwners())
@@ -26,6 +27,7 @@ namespace Zjcs.Combat.Official
                 unit.StatusApplicationRejected = template => RejectStatusApplication(unit, template);
                 unit.StatusEnded = OnStatusEnded;
                 unit.StatusRefreshed = OnStatusViewRefreshed;
+                unit.CooldownActionTriggered = OnCooldownActionTriggered;
                 unit.HpUpdated = OnHpUpdated;
                 unit.HpIncreased = OnHpIncreased;
                 unit.StatusForbiddenChanged = OnStatusForbiddenChanged;
@@ -39,6 +41,7 @@ namespace Zjcs.Combat.Official
                 BeginStatusViewEvents();
                 BeginUnitEndEvents();
                 BeginUnitLifeEvents();
+                BeginStatusActionEvents();
                 BeginStatusSecondsHits();
                 CleanupGridItems();
                 var result = StepCore(sequence, counter);
@@ -47,6 +50,7 @@ namespace Zjcs.Combat.Official
                     CompleteStatusViewEvents(result.Event);
                     CompleteUnitEndEvents(result.Event);
                     CompleteUnitLifeEvents(result.Event);
+                    CompleteStatusActionEvents(result.Event);
                     CompleteStatusSecondsHits();
                 }
                 return result;
@@ -57,6 +61,7 @@ namespace Zjcs.Combat.Official
                 ClearStatusViewEvents();
                 unitEndEvents = null;
                 ClearUnitLifeEvents();
+                statusActionEvents = null;
                 ClearStatusSecondsHits();
                 // Include units summoned during this step. No delegate or executor is retained
                 // by the checkpoint, including when a configuration fails during a nested cast.
@@ -66,6 +71,7 @@ namespace Zjcs.Combat.Official
                     unit.StatusApplicationRejected = null;
                     unit.StatusEnded = null;
                     unit.StatusRefreshed = null;
+                    unit.CooldownActionTriggered = null;
                     unit.HpUpdated = null;
                     unit.HpIncreased = null;
                     unit.StatusForbiddenChanged = null;
