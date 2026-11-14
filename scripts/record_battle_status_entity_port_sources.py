@@ -26,8 +26,9 @@ def main():
                    migrated_output=identity(runtime),
                    adaptation='Preserve MainEntity as a unit binding. MainStatus and DamageEntity retain '
                               'their original distinct types; absent or unbound event/graph ports '
-                              'cannot be reinterpreted as a unit. Unsupported removal conditions '
-                              'stop the flow before mutation.',
+                              'cannot be reinterpreted as a unit. Triggered statuses receive the executor '
+                              'checkpoint status serial, with a max-active-instance fallback for isolated '
+                              'rule harnesses; unsupported removal conditions stop the flow before mutation.',
                    implementation_document='docs/features/skills.md', generator=identity(Path(__file__)))
     target = ROOT / 'assets/reference/battle-rules/status-entity-ports-source-manifest.json'
     target.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
