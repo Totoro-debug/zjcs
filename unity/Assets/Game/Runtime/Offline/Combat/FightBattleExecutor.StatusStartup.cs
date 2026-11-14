@@ -129,6 +129,11 @@ namespace Zjcs.Combat.Official
             statusMutex.Add(owner, status);
             if (statusCatalog != null && status != null && status.HasPropertyComponent)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
+            // FightStatusComponentImplement.Start initializes the status round clock before
+            // publishing its start notification. Capture the same initialized state so the
+            // first native view receives the final round/shield snapshot without a synthetic
+            // follow-up update in the same step.
+            if (status != null) FightStatusLifecycle.Initialize(status, StatusClockRound(status));
             RecordGridStatus(owner, status, FightBattleGridViewEventKind.StatusStart);
             RecordStatusView(owner, status, FightBattleStatusViewEventKind.Start);
             RefreshShieldAttackPresence(owner, status);
@@ -139,7 +144,6 @@ namespace Zjcs.Combat.Official
             // FightStatusComponentImplement.Start initializes props, registers the status,
             // initializes its round clock, then fires status start. Stacking/discarding an
             // existing entity does not enter this callback.
-            FightStatusLifecycle.Initialize(status, StatusClockRound(status));
             InitializeRoundStartDelay(status);
             var logicInvocations = new System.Collections.Generic.List<FightBattleStatusSkillInvocation>();
             if (!status.LogicSelfInitialized)
