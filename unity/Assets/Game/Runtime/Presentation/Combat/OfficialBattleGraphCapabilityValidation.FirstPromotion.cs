@@ -360,6 +360,9 @@ namespace Zjcs.Presentation.Combat
                 var mark = target.Statuses.Single(value => value.ClassId == 24052);
                 Require(hit.BeforeHp > hit.AfterHp && !hit.Dodge && !hit.Blinding && !hit.Immunity
                     && hit.ElementType == 102 && !hit.TrueDamage && step.Movements.Count == 0
+                    && Math.Abs(hit.Delay - cast.Delay - .38f) < .0001f
+                    && step.StatusViewEvents.Any(value => value.Kind == FightBattleStatusViewEventKind.Start
+                        && value.Status.ClassId == 24052 && Math.Abs(value.Delay - hit.Delay) < .0001f)
                     && mark.CreatorId == player.Id && mark.ApplyingSkillItemId == 10042
                     && mark.SourceSkillRank == 2 && mark.SourceSkillLevel == 20,
                     "Original 11010 damage or 24052 application/cultivation differs.");
@@ -371,7 +374,7 @@ namespace Zjcs.Presentation.Combat
                     && savedMark.SourceSkillRank == mark.SourceSkillRank
                     && savedMark.SourceSkillLevel == mark.SourceSkillLevel,
                     "Original 24052 identity or cultivation was lost in the checkpoint.");
-                Debug.Log("[Breaking brand] Original 11010/11011/11012 damage and 24052 application/source/checkpoint passed; isolated ordinary movement=0.");
+                Debug.Log("[Breaking brand] Original 11010/11011/11012 damage and 24052 application/source/checkpoint passed; original hit delay=0.38; isolated ordinary movement=0.");
             }
             if (Environment.GetEnvironmentVariable("ZJCS_STATUS_MOVE_SCOPE_ACCEPTANCE") == "1")
             {

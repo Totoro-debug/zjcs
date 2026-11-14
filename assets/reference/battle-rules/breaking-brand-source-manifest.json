@@ -793,8 +793,16 @@
       "sha256": "63aa9a37cd5895b1da900b5e4b8a0776e12a682bf13844531559088db0b4e983"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/HitScopCfg.cs",
+      "sha256": "86a386d620ab98e0ef53f5fc85a8419fee71edb69f843524cead081a65bc0191"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusPropBySkill.cs",
       "sha256": "9f43171f038ae924358fe7e974c18fafd041513862eacc24004f2d148727bf4c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitBase.cs",
+      "sha256": "815ca26f5525f3023a5deb90a0753a8ee00daad936e596d2fb1bce1ad02c98fc"
     }
   ],
   "original_assemblies": [
@@ -937,7 +945,7 @@
   ],
   "verifier": {
     "path": "scripts/prepare_battle_breaking_brand_sources.py",
-    "sha256": "fcddbdbfe95438d320a2ee4bf511ca9d305e51844438b683523b60f06b8f160d"
+    "sha256": "cbc524258858c98c934e23389d271cf2de33889b39ed7d033f9782d03bef4548"
   },
   "operation": "APK-first exact verification of 10042/11010/11011/11012 damage and 24052 mark with existing native graph/status bindings. Runtime historical input bytes are retained. Behavior and validation limits belong to docs/features/skills-fighter.md."
 }

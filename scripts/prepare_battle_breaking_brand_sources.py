@@ -20,6 +20,7 @@ def main():
     assert hit['DamageId'] == 11012 and hit['DamageBasicProp'] == 1
     assert hit['DamageProp'] == 200 and hit['FixedDamageProp'] == 190 and not hit['IsTrueDamage']
     assert hit['Scope'][0]['Pos'] == dict(X=0, Y=1) and len(hit['Scope']) == 1
+    assert hit['Scope'][0]['Delay'] == .11999999731779099
     application, = definitions['11012']['FightDamageComponent']['StatusList']
     assert application['StatusId'] == 24052 and application['TargetType'] == 2
     assert application['BasePercent'] == 1 and not application['AffectedByProp']
@@ -41,8 +42,9 @@ def main():
         'FightSkillComponentInfo', 'FightHitFixedComponentInfo', 'FightDamageComponentImplement',
         'FightStatusComponentImplement', 'FightStatusPropBySkillComponent',
         'FightStatusPropBySkillComponentInfo', 'FightStatusDamageSkillComponent',
-        'FightStatusDamageSkillComponentInfo')]
+        'FightStatusDamageSkillComponentInfo', 'HitScopCfg')]
     originals.append(identity(code / 'client-source/MyFightStatusPropBySkill.cs'))
+    originals.append(identity(code / 'client-source/MyFightHitBase.cs'))
     native, outputs, sources = [], [], []
     for name, entity, count in (
         ('skill-native-graph-assets-source-manifest.json', 11010, 10),

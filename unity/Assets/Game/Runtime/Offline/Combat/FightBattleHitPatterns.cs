@@ -90,7 +90,10 @@ namespace Zjcs.Combat.Official
                 var result = new List<FightHitOccurrence>();
                 if (!perCell)
                 {
-                    foreach (var target in candidates) result.Add(new FightHitOccurrence(target));
+                    // A single authored cell still delays its damage/status occurrence.
+                    // Keeping entity-level selection here must not drop HitScopCfg.Delay.
+                    float delay = hit.Scope.Count == 1 ? ScopeDelay(hit, 0) : 0f;
+                    foreach (var target in candidates) result.Add(new FightHitOccurrence(target, delay: delay));
                     return result;
                 }
                 var center = FightHitAnchorExtensions.ResolveCenter(hit.Anchor,
