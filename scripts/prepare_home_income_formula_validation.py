@@ -95,6 +95,12 @@ def prepare():
         'Checks cover elapsed/fraction/bonus inputs, natural-cap crossing, overflow and holding limit, activity '
         'offset, zero result and absent parameters; a real character stamina receipt is applied once and '
         'reopened from disk. The acceleration request owner has not yet attached these extra handlers.')
+    receipt['fast_request_journal_adapter'] = (
+        'A local pending operation snapshots selected definitions, numeric properties, duration, costs, '
+        'extra-handler inputs and acceptance time before the character transaction. Free usage is reserved '
+        'with the intent; normal reward completion requires the exact profile receipt. Reopen, detached '
+        'snapshots, duplicate completion, unpaid cancellation and whole-batch overflow rollback are checked. '
+        'This is a persistence component; production free/paid request routing and progress integration remain pending.')
     receipt['validation_inputs'] = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in (
         'scripts/prepare_home_income_formula_validation.py', 'scripts/fixtures/home_income_formula_validation.cs',
         'scripts/fixtures/home_furniture_host_validation.cs')}

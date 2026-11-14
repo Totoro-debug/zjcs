@@ -4,6 +4,7 @@ using Zjcs.Official.HomeIncomeRules;
 
 namespace Zjcs.Offline.Home
 {
+    [Serializable]
     public sealed class HangUpIncomeRule
     {
         public int EffectPercentPropertyId;

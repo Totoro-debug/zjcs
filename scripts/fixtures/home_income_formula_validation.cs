@@ -67,6 +67,7 @@ public sealed partial class HomeIncomeFormulaHostRunner
         Require(OfflineHangUpIncome.HourlyRate(rule, props, flags) == 0, "original nonpositive level branch");
         CheckAccelerationTransactions(flags);
         CheckFastBatchReceipts(flags);
+        CheckFastOperationRecovery(flags);
         CheckCollectionReceipts(flags);
         CheckFreeFastForwardCalendar(flags);
         Require(home.Rules.IsFunctionLimited(164) && !home.Rules.IsFunctionLimited(53, 1)
@@ -422,6 +423,84 @@ public sealed partial class HomeIncomeFormulaHostRunner
         Require(restored.Count == 310 && restored.AutoIncrease.LastUpdateTimeTicks == actualNow.AddSeconds(-360).Ticks
             && restored.AutoIncrease.Decimal == 0 && restored.AutoIncrease.BonusSeconds == 0,
             "actual disk reopen retains the extra reward and consumed timestamp remainder exactly once");
+    }
+
+    private void CheckFastOperationRecovery(ISet<int> flags)
+    {
+        var definition = new OfflineHomeIncomeDefinition {
+            HangUpId = 1, OutputItemId = 50, FastHangUpId = 1, Unlocked = true,
+            FreeFastForwardLimit = 1, FreeFastForwardHours = 2,
+            Rule = new HangUpIncomeRule { HourlyOutput = 5, LevelNum = 1, MaxStoreHours = 0,
+                EffectFixedPropertyId = 1000 }
+        };
+        var props = new Dictionary<int, long> { { 1000, 2 } };
+        string path = System.IO.Path.Combine(root, "fast-operation.json");
+        var session = OfflineHomeIncomeSession.Open(path, new[] { definition }, props, flags, 1700000000);
+        var operation = session.PrepareFastForwardOperation(1, new[] { 1 }, 2, false,
+            new[] { new HomeCostEntry { itemId = 120, count = 1 } },
+            new[] { new OfflineHomeFastForwardAutoIncrease { HangUpId = 101, ItemId = 57 } }, true, "paid-request");
+        Require(operation != null && operation.ProfileReceipt == "paid-request:profile"
+            && operation.AcceptedUnixSeconds == 1700000000 && operation.AcceptedSubsecond == 0
+            && session.Save.Inventory.Count == 0 && !session.CanFreeFastForward(1),
+            "paid intent persists accepted time before any normal reward and blocks concurrent free eligibility");
+        string before = JsonUtility.ToJson(session.Save);
+        Require(session.CompleteFastForwardOperation("paid-request", _ => false) == null
+            && session.ApplyFastForwardBatchRewards(new[] { 1 }, 2, "concurrent") == null
+            && JsonUtility.ToJson(session.Save) == before, "unpaid intent and concurrent requests cannot grant rewards");
+        operation.Costs[0].count = 99;
+        Require(session.PendingFastForwardOperation.Costs[0].count == 1, "returned journal is detached from persisted request");
+        definition.Rule.HourlyOutput = 999;
+        props[1000] = 999;
+        session = OfflineHomeIncomeSession.Open(path, new[] { definition }, props, flags, 1700000000);
+        Require(session.PendingFastForwardOperation.HealToFull
+            && session.PendingFastForwardOperation.AutoIncrease.Single().ItemId == 57,
+            "reopen recovers accepted extra-handler inputs");
+        Require(!session.CancelUnpaidFastForwardOperation("paid-request", _ => true), "charged request cannot be cancelled");
+        var result = session.CompleteFastForwardOperation("paid-request", value => value == "paid-request:profile");
+        Require(result != null && result.TotalCount == 14 && result.Rewards.Single().Count == 14
+            && session.PendingFastForwardOperation == null, "charged request completes using frozen original numeric inputs");
+        before = JsonUtility.ToJson(session.Save);
+        Require(session.CompleteFastForwardOperation("paid-request", _ => true) == null
+            && session.PrepareFastForwardOperation(1, new[] { 1 }, 2, false,
+                new[] { new HomeCostEntry { itemId = 120, count = 1 } }, null, false, "paid-request") == null
+            && JsonUtility.ToJson(session.Save) == before, "completed request cannot be charged or granted twice");
+        Require(session.PrepareFastForwardOperation(1, new[] { 1 }, 2, false,
+            new[] { new HomeCostEntry { itemId = 120, count = 1 } }, null, false, "unpaid-cancel") != null
+            && session.CancelUnpaidFastForwardOperation("unpaid-cancel", _ => false)
+            && session.PendingFastForwardOperation == null, "only unpaid paid intent can be cancelled without a grant");
+        Require(session.PrepareFastForwardOperation(1, new[] { 1 }, 2, true, null, null, false, "free-request") != null
+            && session.GetTodayFreeFastForwardCount(1) == 1, "free use is reserved with its durable intent");
+        session = OfflineHomeIncomeSession.Open(path, new[] { definition }, props, flags, 1700000000);
+        Require(!session.CancelUnpaidFastForwardOperation("free-request", _ => false)
+            && session.GetTodayFreeFastForwardCount(1) == 1
+            && session.CompleteFastForwardOperation("free-request", _ => true) != null
+            && session.GetTodayFreeFastForwardCount(1) == 1, "reopen and completion never reserve a second free use");
+        var cart = new OfflineHomeIncomeDefinition {
+            HangUpId = 2, OutputItemId = 51, Unlocked = true,
+            Rule = new HangUpIncomeRule { HourlyOutput = 3, LevelNum = 1, MaxStoreHours = 0 }
+        };
+        session = OfflineHomeIncomeSession.Open(path, new[] { definition, cart }, props, flags, 1700000000);
+        Require(session.Mutate("full-cart", save => save.Inventory.Add(new OfflineHomeItemStack {
+            ItemId = 51, Count = long.MaxValue, Serial = ++save.GrantSerial })), "seed overflowing cart ledger");
+        before = JsonUtility.ToJson(session.Save);
+        Require(session.ApplyFastForwardBatchRewards(new[] { 1, 2 }, 2, "partial-overflow") == null
+            && JsonUtility.ToJson(session.Save) == before, "one overflowing reward rejects the entire batch including earlier XP");
+        Require(session.PrepareFastForwardOperation(1, new[] { 1, 2 }, 2, false,
+            new[] { new HomeCostEntry { itemId = 120, count = 1 } }, null, false, "charged-overflow") != null,
+            "accepted intent can remain pending when its later ledger transfer is temporarily blocked");
+        before = JsonUtility.ToJson(session.Save);
+        Require(session.CompleteFastForwardOperation("charged-overflow", _ => true) == null
+            && JsonUtility.ToJson(session.Save) == before, "charged overflowing batch retains intent and all prior balances");
+        string zeroPath = System.IO.Path.Combine(root, "fast-extra-only.json");
+        definition.Rule.LevelNum = 0;
+        session = OfflineHomeIncomeSession.Open(zeroPath, new[] { definition }, props, flags, 1700000000);
+        Require(session.PrepareFastForwardOperation(1, new[] { 1 }, 2, false,
+            new[] { new HomeCostEntry { itemId = 120, count = 1 } },
+            new[] { new OfflineHomeFastForwardAutoIncrease { HangUpId = 101, ItemId = 57 } }, false, "extras-only") != null,
+            "extra-handler request can persist even if there is no ordinary output");
+        result = session.CompleteFastForwardOperation("extras-only", _ => true);
+        Require(result != null && result.TotalCount == 0 && result.Rewards.Count == 0
+            && session.PendingFastForwardOperation == null, "completed extras-only profile receipt clears intent without a fabricated normal reward");
     }
 
     private void CheckFastBatchReceipts(ISet<int> flags)

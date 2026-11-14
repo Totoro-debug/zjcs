@@ -27,6 +27,7 @@ namespace Zjcs.Offline.Home
         public List<OfflineHomeSkinSelection> Skins = new List<OfflineHomeSkinSelection>();
         public List<OfflineHomeQuickReceiveState> QuickReceiveStates = new List<OfflineHomeQuickReceiveState>();
         public string OutputAdditionStateJson;
+        public string PendingFastForwardJson;
         public long GrantSerial;
         public List<string> AppliedReceipts = new List<string>();
     }
@@ -181,7 +182,7 @@ namespace Zjcs.Offline.Home
         public bool Unlocked;
     }
 
-    public sealed class OfflineHomeIncomeSession
+    public sealed partial class OfflineHomeIncomeSession
     {
         private const int ReceiptLimit = 1000000;
         private readonly string savePath;
@@ -640,7 +641,8 @@ namespace Zjcs.Offline.Home
         public OfflineHomeFastForwardResult ApplyFreeFastForwardGroupRewards(int fastHangUpId,
             IReadOnlyList<int> hangUpIds, double hours, string receipt)
         {
-            if (fastHangUpId <= 0 || hangUpIds == null || hangUpIds.Count == 0
+            if (!string.IsNullOrEmpty(Save.PendingFastForwardJson)
+                || fastHangUpId <= 0 || hangUpIds == null || hangUpIds.Count == 0
                 || !IsFinite(hours) || hours <= 0 || string.IsNullOrWhiteSpace(receipt)
                 || Save.AppliedReceipts.Contains(receipt)) return null;
             OfflineHomeIncomeDefinition[] group = hangUpIds.Distinct()
@@ -658,7 +660,7 @@ namespace Zjcs.Offline.Home
             int used = GetTodayFreeFastForwardCount(fastHangUpId);
             if (used >= freeLimit) return null;
             OfflineHomeSave next = Clone(Save);
-            var rewards = FastForwardRewards(next, group, hours, receipt, out long total);
+            var rewards = FastForwardRewards(next, group, hours, receipt, properties, floatPropertyIds, out long total);
             if (total <= 0) return null;
             OfflineHomeFastForwardUsage storedUsage = next.FastForwardUsage.FirstOrDefault(value => value.FastHangUpId == fastHangUpId);
             if (storedUsage == null)
@@ -680,7 +682,7 @@ namespace Zjcs.Offline.Home
 
         public bool CanFreeFastForward(int fastHangUpId)
         {
-            if (fastHangUpId <= 0) return false;
+            if (!string.IsNullOrEmpty(Save.PendingFastForwardJson) || fastHangUpId <= 0) return false;
             var group = definitions.Where(value => value.FastHangUpId == fastHangUpId).ToArray();
             return group.Length > 0 && !group.Any(value => value.FreeFastForwardLimited)
                 && GetTodayFreeFastForwardCount(fastHangUpId)
@@ -715,27 +717,34 @@ namespace Zjcs.Offline.Home
         public OfflineHomeFastForwardResult ApplyFastForwardBatchRewards(IReadOnlyList<int> hangUpIds,
             double hours, string receipt)
         {
-            if (hangUpIds == null || hangUpIds.Count == 0 || !IsFinite(hours) || hours <= 0
+            if (!string.IsNullOrEmpty(Save.PendingFastForwardJson)
+                || hangUpIds == null || hangUpIds.Count == 0 || !IsFinite(hours) || hours <= 0
                 || string.IsNullOrWhiteSpace(receipt) || Save.AppliedReceipts.Contains(receipt)) return null;
             OfflineHomeSave next = Clone(Save);
             var group = hangUpIds.Distinct().Select(id => definitions.FirstOrDefault(value => value.HangUpId == id))
                 .Where(value => value != null);
-            var rewards = FastForwardRewards(next, group, hours, receipt, out long total);
+            var rewards = FastForwardRewards(next, group, hours, receipt, properties, floatPropertyIds, out long total);
             if (total <= 0) return null;
             AddReceipt(next, receipt);
             return Commit(next) ? new OfflineHomeFastForwardResult(total, rewards) : null;
         }
 
         List<OfflineHomeCollectedReward> FastForwardRewards(OfflineHomeSave next,
-            IEnumerable<OfflineHomeIncomeDefinition> group, double hours, string receipt, out long total)
+            IEnumerable<OfflineHomeIncomeDefinition> group, double hours, string receipt,
+            IReadOnlyDictionary<int, long> outputProperties, ISet<int> floatFlags, out long total)
         {
             total = 0;
             var rewards = new List<OfflineHomeCollectedReward>();
             foreach (var definition in group)
             {
                 if (!definition.Unlocked) continue;
-                long count = WholeCount(OfflineHangUpIncome.RewardCount(definition.Rule, properties, floatPropertyIds, hours));
-                if (count <= 0 || !GrantOutput(next, definition, count, out int itemId)) continue;
+                long count = WholeCount(OfflineHangUpIncome.RewardCount(definition.Rule, outputProperties, floatFlags, hours));
+                if (count <= 0) continue;
+                if (!GrantOutput(next, definition, count, out int itemId))
+                {
+                    total = 0;
+                    return null;
+                }
                 total = AddSaturated(total, count);
                 long serial = next.Inventory.First(value => value.ItemId == itemId && !value.TransferStarted).Serial;
                 rewards.Add(new OfflineHomeCollectedReward(definition.HangUpId, itemId, count, serial, receipt));
@@ -1020,7 +1029,7 @@ namespace Zjcs.Offline.Home
                 || save.Tutorial.PendingGuideIds == null || save.AppliedReceipts == null
                 || save.Furniture == null || save.HangUps == null || save.Skins == null
                 || save.GrantSerial < 0 || save.FastForwardCalendarVersion != 1
-                || save.AppliedReceipts.Count > ReceiptLimit) return false;
+                || save.AppliedReceipts.Count > ReceiptLimit || !ValidPendingFastForward(save.PendingFastForwardJson)) return false;
             var hangUpIds = new HashSet<int>();
             foreach (OfflineHomeIncomeEntry entry in save.Income)
                 if (entry == null || entry.HangUpId <= 0 || !hangUpIds.Add(entry.HangUpId)

@@ -52,8 +52,8 @@
   "ordinary_settlement_adapter": "User-confirmed ordinary claims follow the original client unsettled preview, independently of hourly/fast output argument order. Original fractional remainder is persisted when finite; pending local time and its subsecond checkpoint commit atomically with the claim. Failed grants retain the previous time, reward selection state and receipt.",
   "native_bed_adapter": "Complete selected FurnitureBedDialog prefab/controller, original output foldouts, quick-receive condition, property chunks and inventory response phases are bound to the actual local home/profile. No remote disable keys are installed, matching original empty-key HasKey=false. The original blessing-rule window uses selected rule_tip rows, actual blessing level, eleven original pooled rows and real home limits; its pointer, scrolling, highlight and mask-close behavior are covered. Secondary acceleration and activity-output details are not covered by this production-bed validation.",
   "validation_inputs": {
-    "scripts/prepare_home_income_formula_validation.py": "4aad663be516753e2840a8d759be566a867b9657f6779b9e2226e42217cb91e8",
-    "scripts/fixtures/home_income_formula_validation.cs": "7ce8267a3c35ec742c88b5d23e9ff990ebc0ca557329f46c1704c9653f2d9d31",
+    "scripts/prepare_home_income_formula_validation.py": "ea4706b933db7fc33ac32f94f13c7cf06df97b3b9e1c0a13bb4e4a128510a290",
+    "scripts/fixtures/home_income_formula_validation.cs": "1d6544ee925b7618a8d68d4ac671f9a13f1f0029f72ca1cd37720912f12a6032",
     "scripts/fixtures/home_furniture_host_validation.cs": "853d4192ccff2c093725967fe086164c5ef55b271b952642ba108c69bb7c9bf7"
   },
   "validation_base_commit": "65aabf8dfb0ad1b0b4ff765118a6673ced2f904e",
@@ -144,8 +144,8 @@
     "unity/Assets/Game/Runtime/Official/ProfessionUI/OfficialWwiseEvent.cs": "e13764940488dd88cb195e0a60b3ceb084afbf013d3254eac08f770635900ee8",
     "unity/Assets/Game/Runtime/Official/WorldUI/WorldPopupWindow.cs": "eba6e02e821cab22d7d1150df531a33a99586bff57db89ba6c163ece06f1504f",
     "unity/Assets/Game/Runtime/Offline/Home/OfficialHomeRules.CurrentIncome.cs": "575a67ee0444d5258da0f17bdfa363e159c6e4b9bd4c21aa461e3ca8a17370eb",
-    "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncome.cs": "954098ae5faff822cb67a2e7d93bd05d2b473c1f19951bcf550308da2dacb07f",
-    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "e37e4e837e18681ddd5574d60d3f9d337e1b557c6498d85068d7e12127a6b103",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncome.cs": "9bf22aa37d6b9fcb4f99ca0a3dbd4c5c44cc7840096138e8dc2c2b4686882792",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "43d4149f253db11bfce8d506b3799f6ccdfff7a47bf7ca1e718e824303021302",
     "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeProgression.cs": "1c16c04a1443bc216cd7b45c55d794c390b3f28ab3518de4acdbf1afde6078b8",
     "unity/Assets/Game/Runtime/Offline/Home/Zjcs.Offline.Home.asmdef": "b0a0c1f86a80aae7cd215ccf11d726e5f9a85c29f51cf2c66f03ace1e1cfc1b5",
     "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineCurrentHomeIncome.cs": "34e0dcab99b941904aae79cb5a5dc69b914b6988ac47e0e516cb32a8302d971d",
@@ -397,9 +397,12 @@
     "unity/Assets/Official/Partners/UI/Input/Audio/Main_Cursor_Back.wav": "2ad53c943b98c5d0d6d8d0e83a96667b8f13835a6869f321d6ee8e001b522194",
     "unity/Assets/Official/Partners/UI/Input/Audio/Main_Cursor_Back.wav.meta": "bfba9a13f14a913378c0e6b0676b79b4412528eb37daf16c12c51351c9522ec5",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Converted/2d18f5c143cd7b36.asset": "165174c8f2c1cfd663f84abbe4c4d18ac04d4e3748424dd98948a04c5ef983af",
-    "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Converted/2d18f5c143cd7b36.asset.meta": "3268007a15fb3039ef5005c3bf762721acd5a46ce0f7628b2de3e99b045a98a1"
+    "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Converted/2d18f5c143cd7b36.asset.meta": "3268007a15fb3039ef5005c3bf762721acd5a46ce0f7628b2de3e99b045a98a1",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeFastForwardOperations.cs": "adb47b7cbd219757f61c4de466f5062f23ac140928180b2697924f3d84c9370b",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeFastForwardOperations.cs.meta": "11f5dc99df7eb60831353e60d2f06aa55decbf35f964ee455d6aefd67966f508"
   },
   "income_reward_adapter": "Selected hang_up_reward and reward_rule rows select all 259 reward/cost item definitions and 15 unique original image addresses; original ItemIconManager priority proves the default template for each. The original ignored-award list is retained. Actual cart repair/unlock/claim/drain and its original queue display use a real saved receipt; presentation never writes either save. General indexed equipment instances, detail popups and the production acceleration sequence remain separate.",
   "fast_reward_adapter": "Free-use settings belong to the configured furniture; all unlocked members of its original HangUpIdList receive acceleration, including cart rows whose own FastHangUpId is -1. Free and paid income batches return immutable projections of the exact committed output deltas and ledger serials. Older pending amounts and sealed transfers are excluded. Checks cover random output, duplicate members, capacity bypass, daily limits, rejected grants, disk reopen and actual bed/cart profile transfers. Extra reward handler request integration, paid cost recovery and production progress/window integration remain pending.",
-  "fast_auto_increase_adapter": "Original auto-increase extra-reward numeric/state branches run against the actual item wrapper. The original update-message timestamp remainder is consumed in the same local profile transaction. Checks cover elapsed/fraction/bonus inputs, natural-cap crossing, overflow and holding limit, activity offset, zero result and absent parameters; a real character stamina receipt is applied once and reopened from disk. The acceleration request owner has not yet attached these extra handlers."
+  "fast_auto_increase_adapter": "Original auto-increase extra-reward numeric/state branches run against the actual item wrapper. The original update-message timestamp remainder is consumed in the same local profile transaction. Checks cover elapsed/fraction/bonus inputs, natural-cap crossing, overflow and holding limit, activity offset, zero result and absent parameters; a real character stamina receipt is applied once and reopened from disk. The acceleration request owner has not yet attached these extra handlers.",
+  "fast_request_journal_adapter": "A local pending operation snapshots selected definitions, numeric properties, duration, costs, extra-handler inputs and acceptance time before the character transaction. Free usage is reserved with the intent; normal reward completion requires the exact profile receipt. Reopen, detached snapshots, duplicate completion, unpaid cancellation and whole-batch overflow rollback are checked. This is a persistence component; production free/paid request routing and progress integration remain pending."
 }
