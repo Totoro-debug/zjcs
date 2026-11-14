@@ -669,6 +669,13 @@ namespace Zjcs.Combat.Official
         /// </summary>
         public static int ApplyActionExistStatuses(IReadOnlyList<FightBattleUnitState> units,
             FightOfficialCombatCatalog catalog, FightRandomStream random)
+            => ApplyActionExistStatuses(units, catalog, random, 0, 0);
+
+        // A lifecycle callback can refresh one recovered definition without running other
+        // producers during an unfinished status transition. Zero retains the full sweep.
+        internal static int ApplyActionExistStatuses(IReadOnlyList<FightBattleUnitState> units,
+            FightOfficialCombatCatalog catalog, FightRandomStream random,
+            int sourceClassId, int generatedClassId)
         {
             if (units == null || catalog == null) return 0;
             int changed = 0;
@@ -678,7 +685,8 @@ namespace Zjcs.Combat.Official
                 var statuses = new List<FightBattleStatusState>(unit.Statuses);
                 foreach (FightBattleStatusState generated in statuses)
                 {
-                    if (generated == null || !generated.IsActionExistGenerated) continue;
+                    if (generated == null || !generated.IsActionExistGenerated
+                        || generatedClassId > 0 && generated.ClassId != generatedClassId) continue;
                     bool sourceExists = unit.Statuses.Exists(source => source != null
                         && source.InstanceId == generated.ActionExistSourceInstanceId
                         && source.HasActionExist);
@@ -688,6 +696,7 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleStatusState source in statuses)
                 {
                     if (source == null || !source.HasActionExist
+                        || sourceClassId > 0 && source.ClassId != sourceClassId
                         || !source.ActionExistRulesSupported
                         || source.ActionExistStatusId <= 0
                         || source.ActionExistConditions == null) continue;

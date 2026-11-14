@@ -93,6 +93,7 @@ namespace Zjcs.Combat.Official
             statusMutex.Remove(owner, ended);
             if (statusCatalog != null && ended != null && ended.HasPropertyComponent)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
+            RefreshShieldAttackPresence(owner, ended);
             if (movementStartContext != null && statusCatalog != null && owner != null && ended != null)
             {
                 var logicInvocations = FightStatusLogicRuntime.Apply(owner, ended,
@@ -130,6 +131,7 @@ namespace Zjcs.Combat.Official
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             RecordGridStatus(owner, status, FightBattleGridViewEventKind.StatusStart);
             RecordStatusView(owner, status, FightBattleStatusViewEventKind.Start);
+            RefreshShieldAttackPresence(owner, status);
             var context = movementStartContext;
             if (context == null || statusCatalog == null || status == null
                 || owner == null || owner.Ended) return;

@@ -1000,6 +1000,9 @@ namespace Zjcs.Combat.Official
                             hit.CustomDamage = originalCustomDamage;
                         }
                     }
+                    // Shield settlement removes broken shields directly. Refresh their
+                    // presence-dependent bonus before received-damage responses can cast.
+                    RefreshShieldAttackPresence(target);
                     bool statusOnly = resolved.Formula == null && resolved.Settlement == null;
                     // Capture only this occurrence's HP change before any HP sharing,
                     // status response or child skill can change a participant's state.

@@ -2,6 +2,8 @@
 
 技能职业判定参照由 `scripts/prepare_skill_profession_reference.py` 在标记的隔离工程提取所选 `884_156692` 原职业枚举、两个职业可用性函数和两个武器回退函数；原 `PlayerProfessionDataEx`、`PlayerSkillDataExt`、`PlayerSnapshotData`、`FightUtilsHandler` 调用依据、`FightSkillBaseInfo`／`FightSkillData` 外观映射依据、`SkillPanelSkillDetailDialog` 按钮代码、程序集、既有人物／技能／战斗载荷与参照模板哈希见[职业判定来源](battle-rules/skill-profession-source-manifest.json)。未修改配置或美术；规则与验证范围在[技能页](../../docs/features/skills.md)维护。
 
+以守为攻 `10540／25020→24212` 及守护之环的关联输入由 `scripts/prepare_battle_shield_attack_sources.py` 按 APK 优先核对所选 `884_156692` 原字段与七份状态存在、属性及客户端代码；APK／bundle／对象、原程序集、反编译输入、既有状态 prefab／加载绑定和独立运行载荷的版本与 SHA-256 见[以守为攻来源](battle-rules/shield-attack-source-manifest.json)。运行载荷和素材未改写；单机决策及验证范围仅在[骑士技能页](../../docs/features/skills-knight.md#rank-2)维护。
+
 招式奉还 `10509／25003→24268` 由 `scripts/prepare_battle_return_strike_sources.py` 按 APK 优先核对所选 `884_156692` 原配置与九份受击、条件增伤、状态组件及属性枚举代码；APK／bundle／对象、完整字段、原程序集、反编译输入与既有战斗／技能／说明载荷的独立版本及 SHA-256 见[招式奉还来源](battle-rules/return-strike-source-manifest.json)。未修改运行配置或美术；单机解释与验证范围仅在[骑士技能页](../../docs/features/skills-knight.md#rank-2)维护。
 
 秘法战斗装配的原 `PlayerSkillDataExt`、`PlayerSnapshotData`、职业解析／武器回退及维护开关调用来源，由 `scripts/prepare_skill_passive_loadout_sources.py` 核对所选 `884_156692` 原代码与既有运行载荷身份，见[秘法装配来源](battle-rules/skill-passive-loadout-source-manifest.json)。未修改配置或美术；规则与验证范围在[技能页](../../docs/features/skills.md)维护。
