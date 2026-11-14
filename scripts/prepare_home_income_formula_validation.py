@@ -44,6 +44,7 @@ def prepare():
     (folder / 'HomeIncomeFormulaHostRunner.cs').write_text('#if UNITY_EDITOR\n' + source + '\n#endif\n', 'utf8', newline='\n')
     checks = (ROOT / 'scripts/fixtures/home_income_formula_validation.cs').read_text('utf8')
     (folder / 'IncomeChecks.cs').write_text('#if UNITY_EDITOR\n' + checks + '\n#endif\n', 'utf8', newline='\n')
+    (folder / 'EnvironmentChecks.cs').write_bytes((ROOT / 'scripts/fixtures/home_fast_environment_validation.cs').read_bytes())
     (folder / 'Zjcs.HomeIncomeFormulaValidation.asmdef').write_text(json.dumps(dict(
         name='Zjcs.HomeIncomeFormulaValidation', references=[
             'Unity.ugui', 'Zjcs.Offline.Home', 'Zjcs.Official.HomeIncomeRules', 'Zjcs.Official.HomeUI',
@@ -51,6 +52,7 @@ def prepare():
             'Zjcs.Offline.CharacterCreation', 'Zjcs.Offline.Progression', 'Zjcs.Offline.State',
             'Zjcs.Presentation.Home', 'Unity.TextMeshPro', 'Zjcs.Official.HomeAwardUI',
             'Zjcs.Offline.HomeUI', 'Zjcs.Official.HomeHangUpWindowsUI',
+            'Zjcs.Official.HomeEnvironmentTime', 'Zjcs.Offline.HomeEnvironmentTime',
             'Zjcs.Official.WorldUI', 'Zjcs.Official.HomeFastHangUpUI',
             'Zjcs.Official.HomeFastHangUpProgressUI', 'Zjcs.Offline.ProfessionUI',
             'Zjcs.Official.HomeCountControlsUI']), indent=2) + '\n', 'utf8', newline='\n')
@@ -157,12 +159,13 @@ def prepare():
         'its durable ledger until the original sleep callback; its disposable hold releases on teardown. '
         'The original progress prefab, saved player appearance, sleep override, bubble, reward images '
         'and legacy animation events run with a sibling canvas while the main HUD follows original '
-        'reference-counted CanvasGroup visibility. The bed environment signal has a production event '
-        'boundary; original rapid day-cycle subscription remains to be migrated. Item-detail popups '
+        'reference-counted CanvasGroup visibility. The bed environment signal subscribes the selected '
+        'original rapid day-cycle handler; natural time and moon phase remain independent. Item-detail popups '
         'and full HUD restoration remain outside this sequence.')
     receipt['validation_inputs'] = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in (
         'scripts/prepare_home_income_formula_validation.py', 'scripts/fixtures/home_income_formula_validation.cs',
-        'scripts/fixtures/home_furniture_host_validation.cs', 'scripts/bind_home_fast_audio.py')}
+        'scripts/fixtures/home_furniture_host_validation.cs', 'scripts/bind_home_fast_audio.py',
+        'scripts/fixtures/home_fast_environment_validation.cs')}
     baseline = json.loads((work / 'base-commit.json').read_bytes())
     receipt['validation_base_commit'] = baseline['commit']
     receipt['runtime_bindings'] = {}

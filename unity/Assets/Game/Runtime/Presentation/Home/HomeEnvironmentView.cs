@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using Zjcs.Official.HomeEnvironmentTime;
+using Zjcs.Offline.HomeEnvironmentTime;
 
 namespace Zjcs.Presentation.Home
 {
@@ -159,14 +161,13 @@ namespace Zjcs.Presentation.Home
         private readonly HomeMoonVariant[] moonVariants;
         private readonly HomeMoonVisualData moonVisuals;
         private readonly HomeSkyTimelineView daySky;
+        private readonly HomeEnvironmentTimeState timeState;
+        private readonly HomeMeteorSchedule meteorSchedule;
         private double daySeconds;
         private int appliedStage = -1;
         private int appliedLightTimeIndex = -1;
         private bool appliedNight;
         private int appliedMoon;
-        private double nextMeteorHomeSeconds;
-        private bool meteorActive;
-        private bool hasMeteorSchedule;
         private long dayIndex;
 
         public int Stage { get; private set; }
@@ -176,8 +177,13 @@ namespace Zjcs.Presentation.Home
         public int MoonPhase { get; private set; }
         public HomeEnvironmentConfig Config => config;
         public HomeMeteorRuntimePayload MeteorRuntime => meteorRuntime;
+        public double NaturalTotalSeconds => timeState.HomeDateTime.TotalSeconds;
+        public double StageDaySeconds => daySeconds;
+        public bool IsFastCycling => timeState.StageHandleProxy.InFasting;
+        public float PlayableDeltaTime => timeState.PlayableDeltaTime;
 
-        public HomeEnvironmentView(HomeSceneView scene, long nowUnixSeconds, long homeStartUnixSeconds = 0)
+        public HomeEnvironmentView(HomeSceneView scene, long nowUnixSeconds, long homeStartUnixSeconds = 0,
+            IHomeNaturalTimeLimit naturalTimeLimit = null)
         {
             this.scene = scene ?? throw new ArgumentNullException(nameof(scene));
             string path = Path.Combine(Application.streamingAssetsPath, HomeAssetCatalog.FolderName, "environment.json");
@@ -193,10 +199,13 @@ namespace Zjcs.Presentation.Home
             moonVariants = data.moonVariants ?? Array.Empty<HomeMoonVariant>();
             long now = Math.Max(0, nowUnixSeconds);
             long start = homeStartUnixSeconds > 0 ? homeStartUnixSeconds : now;
-            double elapsedHomeSeconds = Math.Max(0.0, (double)now - start)
-                * Math.Max(1.0, config.timeScale);
-            dayIndex = (long)Math.Floor(elapsedHomeSeconds / SecondsPerDay);
-            daySeconds = elapsedHomeSeconds - dayIndex * SecondsPerDay;
+            var selectedTime = OfflineHomeEnvironmentConfiguration.Load();
+            double elapsedHomeSeconds = Math.Max(0.0, (double)now - start) * selectedTime.HomeTimeScaleRuntime;
+            timeState = new HomeEnvironmentTimeState(selectedTime, elapsedHomeSeconds, naturalTimeLimit);
+            dayIndex = timeState.HomeDateTime.TotalDays;
+            daySeconds = timeState.StageHomeDayTime.GetSecondsSinceStartOfDay(selectedTime);
+            var random = new System.Random(unchecked((int)DateTime.Now.Ticks));
+            meteorSchedule = new HomeMeteorSchedule(timeState, random.Next, index => MeteorTriggered?.Invoke(index));
             string moonPath = Path.Combine(Application.streamingAssetsPath, HomeAssetCatalog.FolderName,
                 "environment-visuals", "moon-visuals.json");
             if (!File.Exists(moonPath)) throw new FileNotFoundException("Official home moon visual payload is missing.", moonPath);
@@ -205,23 +214,19 @@ namespace Zjcs.Presentation.Home
                 throw new InvalidDataException("The official home moon visual payload is incomplete.");
             daySky = HomeSkyTimelineView.CreateIfSupported(this.scene);
             Apply(true);
-            UpdateMeteor();
         }
 
         public void Tick(float unscaledDeltaSeconds)
         {
             if (unscaledDeltaSeconds <= 0) return;
-            double elapsedHomeSeconds = daySeconds + unscaledDeltaSeconds * Math.Max(1.0, config.timeScale);
-            if (elapsedHomeSeconds >= SecondsPerDay)
-            {
-                long daysPassed = (long)Math.Floor(elapsedHomeSeconds / SecondsPerDay);
-                dayIndex += daysPassed;
-                elapsedHomeSeconds -= daysPassed * SecondsPerDay;
-            }
-            daySeconds = elapsedHomeSeconds;
+            timeState.Update(unscaledDeltaSeconds);
+            dayIndex = timeState.HomeDateTime.TotalDays;
+            daySeconds = timeState.StageHomeDayTime.GetSecondsSinceStartOfDay(timeState.Config.Value);
             Apply(false);
-            UpdateMeteor();
+            meteorSchedule.Update();
         }
+
+        public void BeginFastHangUp() => timeState.FastHangUp();
 
         private double SecondsPerDay => (double)Math.Max(1, config.secondsPerMinute)
             * Math.Max(1, config.minutesPerHour) * Math.Max(1, config.hoursPerDay);
@@ -260,6 +265,7 @@ namespace Zjcs.Presentation.Home
 
         public void Dispose()
         {
+            timeState.Dispose();
             daySky?.Dispose();
         }
 
@@ -334,44 +340,6 @@ namespace Zjcs.Presentation.Home
             int elapsedDays = (int)(((dayIndex % cycle) + cycle) % cycle);
             int index = elapsedDays / duration + 1;
             return moonVariants.Any(variant => variant != null && variant.index == index) ? index : 0;
-        }
-
-        private double AbsoluteHomeSeconds => dayIndex * SecondsPerDay + daySeconds;
-
-        private void UpdateMeteor()
-        {
-            HomeMeteorConfig meteor = config.meteor;
-            if (meteor == null || meteor.interval <= 0) return;
-            double begin = meteor.begin?.Seconds ?? 20 * 3600;
-            double end = meteor.end?.Seconds ?? 6 * 3600;
-            bool window = begin < end ? daySeconds >= begin && daySeconds < end : daySeconds >= begin || daySeconds < end;
-            if (!window)
-            {
-                meteorActive = false;
-                hasMeteorSchedule = false;
-                return;
-            }
-
-            double now = AbsoluteHomeSeconds;
-            if (!meteorActive)
-            {
-                meteorActive = true;
-                hasMeteorSchedule = true;
-                nextMeteorHomeSeconds = now + meteor.interval;
-                return;
-            }
-            if (!hasMeteorSchedule)
-            {
-                hasMeteorSchedule = true;
-                nextMeteorHomeSeconds = now + meteor.interval;
-                return;
-            }
-            if (now < nextMeteorHomeSeconds) return;
-            if (UnityEngine.Random.Range(0, 100) / 100f > meteor.probability) return;
-            int templateCount = meteorRuntime.templates.Length;
-            int templateIndex = UnityEngine.Random.Range(0, templateCount);
-            MeteorTriggered?.Invoke(templateIndex);
-            nextMeteorHomeSeconds = now + meteor.interval;
         }
 
         public event Action<int> MeteorTriggered;

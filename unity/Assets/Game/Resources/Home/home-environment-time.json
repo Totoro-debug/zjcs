@@ -1,0 +1,402 @@
+{
+  "manifest": "884_156692",
+  "configuration": {
+    "m_GameObject": {
+      "m_FileID": 0,
+      "m_PathID": 0
+    },
+    "m_Enabled": 1,
+    "m_Script": {
+      "m_FileID": 1,
+      "m_PathID": -1515831886821430213
+    },
+    "m_Name": "HomeEnvironmentConfig",
+    "HomeTimeScale": 30.0,
+    "SecondsPerMinute": 60,
+    "MinutesPerHour": 60,
+    "HoursPerDay": 24,
+    "DaysPerMonth": 30,
+    "MonthsPerYear": 12,
+    "DayStageList": [
+      {
+        "Stage": 4,
+        "Time": {
+          "Hour": 0,
+          "Minute": 0,
+          "Second": 0
+        }
+      },
+      {
+        "Stage": 1,
+        "Time": {
+          "Hour": 5,
+          "Minute": 0,
+          "Second": 0
+        }
+      },
+      {
+        "Stage": 2,
+        "Time": {
+          "Hour": 7,
+          "Minute": 0,
+          "Second": 0
+        }
+      },
+      {
+        "Stage": 3,
+        "Time": {
+          "Hour": 18,
+          "Minute": 0,
+          "Second": 0
+        }
+      },
+      {
+        "Stage": 4,
+        "Time": {
+          "Hour": 20,
+          "Minute": 0,
+          "Second": 0
+        }
+      }
+    ],
+    "FastCycleDays": 1,
+    "FastCycleDaySeconds": 2.5,
+    "FastCycleCurve": {
+      "m_Curve": [
+        {
+          "time": 0.0,
+          "value": 0.0,
+          "inSlope": 0.3046025037765503,
+          "outSlope": 0.3046025037765503,
+          "weightedMode": 0,
+          "inWeight": 0.0,
+          "outWeight": 0.048076923936605453
+        },
+        {
+          "time": 1.0,
+          "value": 1.0,
+          "inSlope": -0.0,
+          "outSlope": -0.0,
+          "weightedMode": 0,
+          "inWeight": 0.02622377872467041,
+          "outWeight": 0.0
+        }
+      ],
+      "m_PreInfinity": 2,
+      "m_PostInfinity": 2,
+      "m_RotationOrder": 4
+    },
+    "RefreshDayTime": {
+      "Hour": 8,
+      "Minute": 0,
+      "Second": 0
+    },
+    "HomeLightTimeConfigs": [
+      {
+        "BeginTime": {
+          "Hour": 0,
+          "Minute": 0,
+          "Second": 0
+        },
+        "DefaultLights": [
+          {
+            "Name": "DoorLight",
+            "IsOn": 1
+          },
+          {
+            "Name": "LobbyLight",
+            "IsOn": 1
+          },
+          {
+            "Name": "BedRoomLight",
+            "IsOn": 1
+          },
+          {
+            "Name": "StudyLight",
+            "IsOn": 1
+          },
+          {
+            "Name": "DeskLight",
+            "IsOn": 0
+          },
+          {
+            "Name": "DiningTableLight",
+            "IsOn": 0
+          }
+        ],
+        "Overrides": [
+          {
+            "BehaviourType": "Sleep",
+            "LightOverrides": [
+              {
+                "Index": 1,
+                "IsOn": 0
+              },
+              {
+                "Index": 2,
+                "IsOn": 0
+              },
+              {
+                "Index": 3,
+                "IsOn": 0
+              }
+            ]
+          },
+          {
+            "BehaviourType": "Read",
+            "LightOverrides": [
+              {
+                "Index": 4,
+                "IsOn": 1
+              }
+            ]
+          },
+          {
+            "BehaviourType": "Cook",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "Eat",
+            "LightOverrides": [
+              {
+                "Index": 5,
+                "IsOn": 1
+              }
+            ]
+          },
+          {
+            "BehaviourType": "TreeLie",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "TreeSit",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "Idle",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "IdleB",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "BedSit",
+            "LightOverrides": []
+          }
+        ]
+      },
+      {
+        "BeginTime": {
+          "Hour": 6,
+          "Minute": 0,
+          "Second": 0
+        },
+        "DefaultLights": [
+          {
+            "Name": "DoorLight",
+            "IsOn": 0
+          },
+          {
+            "Name": "LobbyLight",
+            "IsOn": 0
+          },
+          {
+            "Name": "DeskLight",
+            "IsOn": 0
+          },
+          {
+            "Name": "BedRoomLight",
+            "IsOn": 0
+          },
+          {
+            "Name": "StudyLight",
+            "IsOn": 0
+          },
+          {
+            "Name": "StudyLight",
+            "IsOn": 0
+          },
+          {
+            "Name": "DiningTableLight",
+            "IsOn": 0
+          }
+        ],
+        "Overrides": []
+      },
+      {
+        "BeginTime": {
+          "Hour": 17,
+          "Minute": 0,
+          "Second": 0
+        },
+        "DefaultLights": [],
+        "Overrides": []
+      },
+      {
+        "BeginTime": {
+          "Hour": 18,
+          "Minute": 0,
+          "Second": 0
+        },
+        "DefaultLights": [
+          {
+            "Name": "DoorLight",
+            "IsOn": 1
+          },
+          {
+            "Name": "LobbyLight",
+            "IsOn": 1
+          },
+          {
+            "Name": "BedRoomLight",
+            "IsOn": 1
+          },
+          {
+            "Name": "StudyLight",
+            "IsOn": 1
+          },
+          {
+            "Name": "DeskLight",
+            "IsOn": 0
+          },
+          {
+            "Name": "DanluLight",
+            "IsOn": 1
+          },
+          {
+            "Name": "DiningTableLight",
+            "IsOn": 0
+          }
+        ],
+        "Overrides": [
+          {
+            "BehaviourType": "Sleep",
+            "LightOverrides": [
+              {
+                "Index": 1,
+                "IsOn": 0
+              },
+              {
+                "Index": 2,
+                "IsOn": 0
+              },
+              {
+                "Index": 3,
+                "IsOn": 0
+              }
+            ]
+          },
+          {
+            "BehaviourType": "Read",
+            "LightOverrides": [
+              {
+                "Index": 4,
+                "IsOn": 1
+              }
+            ]
+          },
+          {
+            "BehaviourType": "Cook",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "Eat",
+            "LightOverrides": [
+              {
+                "Index": 6,
+                "IsOn": 1
+              }
+            ]
+          },
+          {
+            "BehaviourType": "TreeLie",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "TreeSit",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "Idle",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "IdleB",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "BedSit",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "ObserverStar",
+            "LightOverrides": [
+              {
+                "Index": 1,
+                "IsOn": 0
+              },
+              {
+                "Index": 2,
+                "IsOn": 0
+              },
+              {
+                "Index": 3,
+                "IsOn": 0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "EffectLightOnTime": {
+      "Hour": 18,
+      "Minute": 0,
+      "Second": 0
+    },
+    "EffectLightOffTime": {
+      "Hour": 6,
+      "Minute": 0,
+      "Second": 0
+    },
+    "PutOnSleepClothesTime": {
+      "Hour": 22,
+      "Minute": 0,
+      "Second": 0
+    },
+    "PutOffSleepClothesTime": {
+      "Hour": 8,
+      "Minute": 0,
+      "Second": 0
+    },
+    "MeteorConfig": {
+      "BeginTime": {
+        "Hour": 20,
+        "Minute": 0,
+        "Second": 0
+      },
+      "EndTime": {
+        "Hour": 6,
+        "Minute": 0,
+        "Second": 0
+      },
+      "Probability": 1.0,
+      "Interval": 600,
+      "Templates": [
+        {
+          "mProxyRes": {
+            "mAssetGuid": "d997ed1d45b207446aac55e6a6c4a86f"
+          },
+          "mTrans": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          }
+        }
+      ]
+    },
+    "MoonConfig": {
+      "DayDuration": 2,
+      "DayCycle": 30
+    }
+  }
+}

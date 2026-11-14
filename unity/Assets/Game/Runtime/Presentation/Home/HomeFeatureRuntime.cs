@@ -90,6 +90,7 @@ namespace Zjcs.Presentation.Home
         private HomePlayerActorView homePlayer;
         private HomeInputController input;
         private HomeEnvironmentView environment;
+        private Zjcs.Offline.HomeEnvironmentTime.OfflineHomeNaturalTimeLimit naturalTimeLimit;
         private HomeMeteorView meteorView;
         private HomeRewardView rewards;
         private HomeHudView hud;
@@ -695,7 +696,10 @@ namespace Zjcs.Presentation.Home
             lastAdvanceUnix = openedAt;
             scene = new HomeSceneView(catalog, transform);
             BuildHomePlayer();
-            environment = new HomeEnvironmentView(scene, Now(), profile.Save.CreatedAtUnixSeconds);
+            naturalTimeLimit = new Zjcs.Offline.HomeEnvironmentTime.OfflineHomeNaturalTimeLimit(
+                profile, selectedHomeRules, partnerCatalog.Conditions, type => session.OwnsFurniture(type));
+            environment = new HomeEnvironmentView(scene, Now(), profile.Save.CreatedAtUnixSeconds, naturalTimeLimit);
+            BedFastHangUpPresented += environment.BeginFastHangUp;
             meteorView = new HomeMeteorView(scene, environment.MeteorRuntime);
             environment.MeteorTriggered += meteorView.Play;
             rewards = new HomeRewardView(this, catalog, transform);
@@ -1858,8 +1862,10 @@ namespace Zjcs.Presentation.Home
                 environment.MeteorTriggered -= meteorView.Play;
             meteorView?.Dispose();
             meteorView = null;
+            if (environment != null) BedFastHangUpPresented -= environment.BeginFastHangUp;
             environment?.Dispose();
             environment = null;
+            naturalTimeLimit?.Dispose(); naturalTimeLimit = null;
             if (scene != null) scene.Dispose();
             scene = null;
             if (catalog != null) catalog.Release();
@@ -1887,6 +1893,7 @@ namespace Zjcs.Presentation.Home
             if (activeBattlePresentations > 0 || hud != null && hud.SkillDamageTestRunning) return;
             input?.Update();
             TickAstrologicalCharge();
+            naturalTimeLimit?.RefreshCommittedProfile();
             environment?.Tick(Time.unscaledDeltaTime);
             scene?.Tick(Time.unscaledDeltaTime);
             hangUpHud?.Tick();
@@ -1937,8 +1944,10 @@ namespace Zjcs.Presentation.Home
                 environment.MeteorTriggered -= meteorView.Play;
             meteorView?.Dispose();
             meteorView = null;
+            if (environment != null) BedFastHangUpPresented -= environment.BeginFastHangUp;
             environment?.Dispose();
             environment = null;
+            naturalTimeLimit?.Dispose(); naturalTimeLimit = null;
             homePlayer?.Dispose();
             homePlayer = null;
             StopFruitTreeTutorialVoice();

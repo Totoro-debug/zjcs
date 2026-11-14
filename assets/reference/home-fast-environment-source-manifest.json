@@ -1,0 +1,309 @@
+{
+  "manifest": "884_156692",
+  "configuration_source": {
+    "bundle": "defaultpackage_assets_scriptableconfig_modules_home.bundle",
+    "bundle_hash": "1978c6add6c35f9e510d4224db3805e3",
+    "path_id": "-7915154947845700194",
+    "origin": "apk_zip",
+    "manifest": "884_156692",
+    "apk_manifest": "881_156673",
+    "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+    "apk_entry": "assets/yoo/DefaultPackage/1978c6add6c35f9e510d4224db3805e3.bundle",
+    "raw_size": 8484,
+    "raw_sha256": "1c9e447ce7ae8c612cd232e8db29474237ac18adac31b16aa54f0cdfa391c8b2"
+  },
+  "configuration_object_sha256": "33749bb04d70cb0dc3d84268f10238e16a68c2cacbe15bd88c1a09f8f3ccca4c",
+  "inputs": {
+    ".tools/source-packages/current/884_156692/official-code/client-source/HomeDateTime.cs": "790007bd168ad95b349606c155b7b2d55f3ed449e207556ddf023b7ab3be94f5",
+    ".tools/source-packages/current/884_156692/official-code/client-source/HomeDayTime.cs": "bf062c41b628a70077f47db9e57f02dbd70e40ccd33c34644abb1336cdd571d3",
+    ".tools/source-packages/current/884_156692/official-code/client-source/IHomeDayStageHandler.cs": "546481af0e1886d19e826aa076a52516dfa62e7c3851ef077c52dad800581f4a",
+    ".tools/source-packages/current/884_156692/official-code/client-source/NaturalDayStageHandler.cs": "a428d44ced415ae89b332b96d21f38af25cc3729a6768f201e53f979aae51885",
+    ".tools/source-packages/current/884_156692/official-code/client-source/FastCycleDayStageHandler.cs": "3137f4e822912d9c86d92e5c3451e20eb9e10c36689f524738afb54b9a3e59f5",
+    ".tools/source-packages/current/884_156692/official-code/client-source/HomeDayStageHandleProxy.cs": "43be84b225e3e0edcd96b1ae7c3d741b3601494d9d85fbe9690ff387ca9f1953",
+    ".tools/source-packages/current/884_156692/official-code/client-source/IHomeClock.cs": "a44bc7656fafd585b08aaedbe383dfe7b64fa5ddf9c1dff09178a91aa53deb1a",
+    ".tools/source-packages/current/884_156692/official-code/client-source/HomeClock.cs": "17363db87b8093cf997ca07384b773cc60f02d4627cfa386f2c9071add0b9119",
+    ".tools/source-packages/current/884_156692/official-code/client-source/HomeClockEntry.cs": "a9ce46c3dafdfc3fede4796c1124dc25a85c551c9629792bb968f287572f5fe5",
+    "scripts/prepare_home_fast_environment_runtime.py": "d3ac1fb3ccb366655a1a7ce5ba236083c613a8cf8c424ccfaf82d01e1ca362a7",
+    "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
+    "scripts/prepare_current_partner_native.py": "21eed29e19b3b3fbd370eb0736c10fa663d35c749b7fa1f9686a57774c6d2cea",
+    ".tools/source-packages/current/884_156692/official-code/client-source/HomeEnvironmentManage.cs": "a81cb54adf00071fef4157ac3b7b3d14ee57a9adca7c2d3a40cbed5db51388db",
+    ".tools/source-packages/current/884_156692/official-code/client-source/HomeEnvFastHangUp.cs": "495be8b2b8688a959e5937cee885895efb32f7c72c555028b8277783c99199c5",
+    ".tools/source-packages/current/884_156692/official-code/client-source/HomeMeteor.cs": "abcddbee4434bf5db5f202fef03d90276cbfe270d8e6fd39e21df987fe152b96",
+    ".tools/source-packages/current/884_156692/official-code/client-source/HomeEnvironmentConfig.cs": "19bb922b3f6d642ac40bcd6d071301e4fadb8edb159653b6e21f5051443855c0",
+    ".tools/source-packages/current/884_156692/official-code/client-source/HomeMeteorConfig.cs": "5dd8922826735f0a93a35eb522a6413a7660c06207b7fb4e1333a12d25542b71",
+    ".tools/source-packages/current/884_156692/official-code/client-source/AllDayStageHandler.cs": "7eb3a4650706dc1860068b8b2145582e28fd875cf38eed0db80e7dc58eeb725b",
+    ".tools/source-packages/current/884_156692/official-code/client-source/HomeEnvironmentUtils.cs": "f69d0ce4e9429ef95a7f165958c98de1887d12328352b23f27d2f29b6cd79fed",
+    ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework/GRandom.cs": "8bb24962b6753a181ed27ea4159f06c0b8410cfa908dbff23609b31f14633741",
+    ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework/SystemRandom.cs": "8c471ce4bcf9bc99f3839e6a728c24496a06124cdd830d69372a84c5056bbb60",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RandomUtils.cs": "89bd7823bac0f1ae28367adab9a4ffc1f737707dbc134737a7c8ab8cd6bfb0f5",
+    "unity/Assets/Official/Home/home-rules-current.json": "493eb0be246a11e26f84069ed999021d867f4706d5b9934a33745ec5dc387d03",
+    "assets/reference/home-rules-current-source-manifest.json": "1447e98299890d76dc78883ccf3ec59b5b6fc093bc9196fa84ad4a3db5f5582c",
+    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionNotifications.cs": "3e363af3f4b9b06d5b38929b6ab521764afa06914af0466da9fac8e752821d07",
+    "unity/Assets/Game/Runtime/Offline/HomeHudUI/OfflineHomeHudConditions.cs": "f863ae5096d35b179f98c20009db2649b405f26053f45ed59b9cfe88f10f779b"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeDateTime.cs": "398da663f5cc16357652f527a73bdaa85879e3ba65bc933ef130b0cd48ca82a9",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeDateTime.cs.meta": "645525dab8c4917e6d4ed085ce2fb8c278ec2b6c817e95fa1de1e09d62608d2f",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeDayTime.cs": "049d310f2d9878ee36bbd947b9e246fbe0db3566b5ef5ac8a54c086f8f02f39a",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeDayTime.cs.meta": "fe233570dcd700d3a4edfff9f9ea20eab0cfb80aafe0328f02bd6758f0c71a75",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/IHomeDayStageHandler.cs": "ee82f8af249ad9941d96b7e65126d44b832a298cc3cbb6bb6b4ee7ab9f4a6174",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/IHomeDayStageHandler.cs.meta": "5ad96e5dcdedef4a6e693438d3f3934f2afbaf58cbd9048be07e7e4cc5c72315",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/NaturalDayStageHandler.cs": "a5750b4f704ecec8aae849fb7dc3a8e2bb353c45ab00a61e1a89a96d5b47da2a",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/NaturalDayStageHandler.cs.meta": "817f0eafa38e68210d4bc2d8fc79f9f27cadc9c35ceea2ab0d052a0316f27574",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/FastCycleDayStageHandler.cs": "b3e59830c993c49eca45eee574a2028359249ea5bddda671ac6683142bd1116f",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/FastCycleDayStageHandler.cs.meta": "7b7f39f671346cae53ffccc3ee39710a03c16b2c1aca507351c7e12df1e7417e",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeDayStageHandleProxy.cs": "1dce9d7bcc3d28454d0c91a1e69cbb2c125f364421fe0e6e3d01af106572ddfa",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeDayStageHandleProxy.cs.meta": "7419c035a339389989bfce2c967d9f4dc21283f1cfcdc6d5d6cef53952b2d179",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/IHomeClock.cs": "f7baefedf7158c8f082ee4a70aa146bd6aa52f508ab76fdcbb0360da22166be8",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/IHomeClock.cs.meta": "8339ba0c2c728299936a14f7e46b527172e370a7cf05a3a8426052c6f99114bd",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeClock.cs": "6c598eaa346e159a263626c630a266d18a9ba0852f6bcf8cdc6992aa00b50502",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeClock.cs.meta": "a502e2805549497ad0932bb49ee8228728c178fc1e4dc1594f7012d1409be6d3",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeClockEntry.cs": "91dcef10a099a847fcead91ec7bbecf63e2a27d6f4d2137d49d70a28f47a90ec",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeClockEntry.cs.meta": "8420c37cf8f8bc0b3adada6740f9aa4c0b85f85c9699cb1aac2c4131583cb2ed",
+    "unity/Assets/Game/Resources/Home/home-environment-time.json": "62e78e343f8436f93434655b932ec194dc8d9bc2cde6eaec2a6f45f634fa1d80",
+    "unity/Assets/Game/Resources/Home/home-environment-time.json.meta": "674fdee8d3b675ec19d84c19bc61ae0f89d23f17e7ee92c4438be344a192d900",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime.meta": "d7cb0668e44c90cf4d5f50c1a8e5fed8b641fa81c626219f22062698c2874ed1",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/AllDayStageHandler.cs": "9a6a46e3b848d9079d636456740f675a61e433e7896151be165803d6a96ada55",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/AllDayStageHandler.cs.meta": "c7efd9991512dd5d3fb6a6ea2153389e341df3057742c24782490f7dd9f84016",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeEnvironmentRuntimePorts.cs": "3596a7a5dfefb5d3dcde4332cffe9fec4eb9ed2f80672bfaeba620ffb3b34776",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeEnvironmentRuntimePorts.cs.meta": "c227166f27a823e3788e3f0cd8bcc5627b7d8c78931ceae31c27ff4785ad979f",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeEnvironmentTimeState.cs": "6147fb77a7a0ac399a36cb669a1b2abc72446a0c242a46b095eb6bd4e636aa26",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeEnvironmentTimeState.cs.meta": "c7eb53b921d418109a9c318f211a0196af73a1c4bb3e6ff848e5a7c170083882",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeMeteorSchedule.cs": "df7a2907bec6b5276ff2a91c3c64e86cb7dd2e2ef3225dba937db37c74980a59",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/HomeMeteorSchedule.cs.meta": "174bb0de2a50eb89065a93883d994ae4f20b7b9cd1058f66c929c52a6e1ec61f",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/Zjcs.Official.HomeEnvironmentTime.asmdef": "5b5f1feca0e0f68ad3eaee15af617022334029a899a7561f88689009e78c6c7b",
+    "unity/Assets/Game/Runtime/Official/HomeEnvironmentTime/Zjcs.Official.HomeEnvironmentTime.asmdef.meta": "301301167d836d8bf5b955e5af63d20a335121a2c3a2cd2ea2578efa94ec0158",
+    "unity/Assets/Game/Runtime/Offline/HomeEnvironmentTime/OfflineHomeEnvironmentConfiguration.cs": "9af7a680fed5167cb8d9217c1f8dc40949204f05a4b8fdd41445406b4d5fbb4c",
+    "unity/Assets/Game/Runtime/Offline/HomeEnvironmentTime/OfflineHomeEnvironmentConfiguration.cs.meta": "6d65458e394f113bee4ed093674308135d37f19d4022721232e92abddd5e87e4",
+    "unity/Assets/Game/Runtime/Offline/HomeEnvironmentTime/OfflineHomeNaturalTimeLimit.cs": "87aa303580b517f59a2a3f9c5aacf2a7fa8618f265df47aed521d9a3db4265e9",
+    "unity/Assets/Game/Runtime/Offline/HomeEnvironmentTime/OfflineHomeNaturalTimeLimit.cs.meta": "68da34567091e0a3c84c79c68e76b51e3c4226f9f5db59250f28a31f67a29d35",
+    "unity/Assets/Game/Runtime/Offline/HomeEnvironmentTime/Zjcs.Offline.HomeEnvironmentTime.asmdef": "d5e6f6792f9319453a7b5fb12526e94fdbd72b34d36761cab76106b9e8d29075",
+    "unity/Assets/Game/Runtime/Offline/HomeEnvironmentTime/Zjcs.Offline.HomeEnvironmentTime.asmdef.meta": "3cd1d74851c22d1bb32011d289553a8154819d980eefc5529cc1f1109fff9a3d",
+    "unity/Assets/Game/Runtime/Offline/HomeEnvironmentTime.meta": "17b8a6a221c8130ca98de97714f06c9b75385a3a71ef38554b932ad058deac21"
+  },
+  "verified_existing_visual_projection": {
+    "path": "unity/Assets/StreamingAssets/Home/environment.json",
+    "version": "854_156383",
+    "sha256": "26b850d54350b43171d968aeeef6485f60953013ddf2ab4bb6c991d8c994f008",
+    "matched_values": {
+      "timeScale": 30.0,
+      "secondsPerMinute": 60,
+      "minutesPerHour": 60,
+      "hoursPerDay": 24,
+      "daysPerMonth": 30,
+      "monthsPerYear": 12,
+      "refreshDay": {
+        "hour": 8,
+        "minute": 0,
+        "second": 0
+      },
+      "stages": [
+        {
+          "stage": 4,
+          "time": {
+            "hour": 0,
+            "minute": 0,
+            "second": 0
+          }
+        },
+        {
+          "stage": 1,
+          "time": {
+            "hour": 5,
+            "minute": 0,
+            "second": 0
+          }
+        },
+        {
+          "stage": 2,
+          "time": {
+            "hour": 7,
+            "minute": 0,
+            "second": 0
+          }
+        },
+        {
+          "stage": 3,
+          "time": {
+            "hour": 18,
+            "minute": 0,
+            "second": 0
+          }
+        },
+        {
+          "stage": 4,
+          "time": {
+            "hour": 20,
+            "minute": 0,
+            "second": 0
+          }
+        }
+      ],
+      "lightTimes": [
+        {
+          "begin": {
+            "hour": 0,
+            "minute": 0,
+            "second": 0
+          },
+          "lights": [
+            {
+              "name": "DoorLight",
+              "on": true
+            },
+            {
+              "name": "LobbyLight",
+              "on": true
+            },
+            {
+              "name": "BedRoomLight",
+              "on": true
+            },
+            {
+              "name": "StudyLight",
+              "on": true
+            },
+            {
+              "name": "DeskLight",
+              "on": false
+            },
+            {
+              "name": "DiningTableLight",
+              "on": false
+            }
+          ]
+        },
+        {
+          "begin": {
+            "hour": 6,
+            "minute": 0,
+            "second": 0
+          },
+          "lights": [
+            {
+              "name": "DoorLight",
+              "on": false
+            },
+            {
+              "name": "LobbyLight",
+              "on": false
+            },
+            {
+              "name": "DeskLight",
+              "on": false
+            },
+            {
+              "name": "BedRoomLight",
+              "on": false
+            },
+            {
+              "name": "StudyLight",
+              "on": false
+            },
+            {
+              "name": "StudyLight",
+              "on": false
+            },
+            {
+              "name": "DiningTableLight",
+              "on": false
+            }
+          ]
+        },
+        {
+          "begin": {
+            "hour": 17,
+            "minute": 0,
+            "second": 0
+          },
+          "lights": []
+        },
+        {
+          "begin": {
+            "hour": 18,
+            "minute": 0,
+            "second": 0
+          },
+          "lights": [
+            {
+              "name": "DoorLight",
+              "on": true
+            },
+            {
+              "name": "LobbyLight",
+              "on": true
+            },
+            {
+              "name": "BedRoomLight",
+              "on": true
+            },
+            {
+              "name": "StudyLight",
+              "on": true
+            },
+            {
+              "name": "DeskLight",
+              "on": false
+            },
+            {
+              "name": "DanluLight",
+              "on": true
+            },
+            {
+              "name": "DiningTableLight",
+              "on": false
+            }
+          ]
+        }
+      ],
+      "effectLightOn": {
+        "hour": 18,
+        "minute": 0,
+        "second": 0
+      },
+      "effectLightOff": {
+        "hour": 6,
+        "minute": 0,
+        "second": 0
+      },
+      "moon": {
+        "DayDuration": 2,
+        "DayCycle": 30
+      },
+      "meteor": {
+        "begin": {
+          "hour": 20,
+          "minute": 0,
+          "second": 0
+        },
+        "end": {
+          "hour": 6,
+          "minute": 0,
+          "second": 0
+        },
+        "probability": 1.0,
+        "interval": 600
+      }
+    }
+  },
+  "adaptations": [
+    "Namespace isolates selected original types.",
+    "Stack.TryPeek ref is repaired to the CLR out signature.",
+    "HomeClock value equality is expressed by the original time-field comparison.",
+    "HomeClockEntry primary constructor becomes a C# version-compatible ordinary constructor.",
+    "HomeEnvironmentTimeState extracts original natural/stage/calendar/clock update order; frame delta and initial elapsed time are explicit inputs. No server-time or actor-command replacement is claimed.",
+    "Original AllDayStageHandler uses selected function-90 condition identity and original registration callbacks. The local profile bridge forwards committed level, rank and FirstBattle count changes before the environment update.",
+    "HomeMeteorSchedule retains original active-window, midnight-wrap, probability and natural-clock rescheduling branches; template play/reuse uses the installed Windows presentation owner.",
+    "The visual random port follows the official GRandom fallback System.Random with an int DateTime.Now.Ticks seed; no reward or profile random state is consumed."
+  ],
+  "runtime_bindings": {
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeEnvironmentView.cs": "437ca63e1711d6350e99a88b448d51783a932dc9f4d3e17c8b2977ee4b8c0f43",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "ee6ea671c44fd54925e5236fee03d8bb4715701567e36ff168fd66977bcb7626",
+    "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef": "da102a708374cf8779f0f92332a980255cbc239ac5235099ac11915625d4218e"
+  },
+  "validation_inputs": {
+    "scripts/fixtures/home_fast_environment_validation.cs": "ea53eee0eada06b52d4fa3009d33ff13922396e9ff63b1840f1fabc08484126b",
+    "scripts/fixtures/home_income_formula_validation.cs": "ea7222877046b0a232b92c4e168728f84222d18be1deab93085309f87a33f8ca",
+    "scripts/prepare_home_income_formula_validation.py": "23c979b4a031ec2ab487f096853a52b63f8d4f5ff7c23a337778e0718f623560"
+  }
+}

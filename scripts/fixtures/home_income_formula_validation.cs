@@ -40,6 +40,7 @@ public sealed partial class HomeIncomeFormulaHostRunner
 {
     private IEnumerator CheckIncomeFormula()
     {
+        yield return CheckNaturalTimeUnlock();
         var flags = (ISet<int>)typeof(HomeFeatureRuntime).GetMethod("FloatPropertyIds",
             BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, null);
         Require(flags.SetEquals(HomeIncomePropertyCatalog.CreateFloatPropertyIds())
@@ -237,7 +238,7 @@ public sealed partial class HomeIncomeFormulaHostRunner
         yield return CheckActualFastRequests();
         yield return CheckNativeFastSequence();
         yield return CheckExperienceLedgerRecovery();
-        Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original float/double arithmetic and unsettled-preview settlement, actual native repair and production bed pointer, bed output foldout, original blessing rule rows/highlight/scroll/mask close, real lost goddess profile, production collection/experience/free acceleration, original XP award queue, all 259 selected income items and 15 images, actual cart repair/unlock/collection and native award queue with disk reopen, committed reward receipts, rejected experience grants retained, acknowledgement recovery, original remainder, idempotency and precise disk reopen. Actual bed acceleration selection uses internal pointer input, the real request owner, the original sleep presentation, paid output retained in furniture above capacity, manual bed/cart claims and disk reopen; interruption preserves the stored output and releases the presentation owner. Cart award presentation remains a component check; environment fast-cycle, output-detail windows and complete HUD remain pending.");
+        Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original float/double arithmetic and unsettled-preview settlement, actual native repair and production bed pointer, bed output foldout, original blessing rule rows/highlight/scroll/mask close, real lost goddess profile, production collection/experience/free acceleration, original XP award queue, all 259 selected income items and 15 images, actual cart repair/unlock/collection and native award queue with disk reopen, committed reward receipts, rejected experience grants retained, acknowledgement recovery, original remainder, idempotency and precise disk reopen. Actual bed acceleration selection uses internal pointer input, the real request owner, the original sleep presentation, paid output retained in furniture above capacity, manual bed/cart claims and disk reopen; interruption preserves the stored output and releases the presentation owner. Cart award presentation remains a component check; original environment clock, stage stack, natural-time unlock and bed message are covered; cold-load frame skips, environment pixels, output-detail windows and complete HUD remain pending.");
     }
 
     private IEnumerator CheckNativeBedCollection()
@@ -571,6 +572,7 @@ public sealed partial class HomeIncomeFormulaHostRunner
 
     private IEnumerator CheckNativeFastSequence()
     {
+        CheckFastEnvironmentRules();
         Require(home.Profile.ApplyInventoryTransaction("native-fast:seed", save => {
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 120, Count = 5 });
         }).IsApplied, "seed actual native acceleration inventory");
@@ -606,18 +608,30 @@ public sealed partial class HomeIncomeFormulaHostRunner
                 .All(value => value.IconSprite),
             "actual quantity text resolves its original language format and every cost/reward icon has its selected sprite");
         Capture("home-native-fast-selection.png");
+        // Let the preceding synchronous GPU capture finish before sampling the
+        // real next-frame delta used by the original 2.5-second environment.
+        yield return null; yield return null;
         long beforeXp = home.Profile.Save.Player.Experience;
         long beforeStored = home.Session.Preview(1).Count;
         long beforeStamina = home.Profile.InventoryCount(57);
         long expected = (long)OfflineHangUpIncome.RewardCount(home.Session.Definitions.Single(value => value.HangUpId == 1).Rule,
             home.PlayerProperties(), HomeIncomePropertyCatalog.CreateFloatPropertyIds(), 4);
-        int signals = 0; Action bedSignal = () => signals++;
+        var actualEnvironment = ActualEnvironment;
+        int signals = 0; bool startedFast = false;
+        Action bedSignal = () => { signals++; startedFast = actualEnvironment.IsFastCycling; };
+        double naturalBeforeFast = actualEnvironment.NaturalTotalSeconds;
+        int moonBeforeFast = actualEnvironment.MoonPhase;
         var originalSound = bed.FastHangUpSoundEvent;
         home.BedFastHangUpPresented += bedSignal;
         Click(selection.FastBtn); yield return new WaitForSeconds(.35f);
         var progress = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeFastHangUpProgressUI.FastHangUpProgressBarDialog>();
         Require(progress && signals == 1 && !bed && !selection && home.Hud.AnyModalOpen,
             "original successful selection closes both parent windows before opening the real sleep presentation");
+        Require(startedFast && actualEnvironment.MoonPhase == moonBeforeFast,
+            "the actual bed signal starts the original environment handler without advancing natural moon phase"
+            + "; started=" + startedFast + "; active=" + actualEnvironment.IsFastCycling
+            + "; natural delta=" + (actualEnvironment.NaturalTotalSeconds - naturalBeforeFast)
+            + "; moon=" + moonBeforeFast + "->" + actualEnvironment.MoonPhase);
         var audio = (AudioSource)typeof(HomeHudView).GetField("partnerUiAudioSource",
             BindingFlags.Instance | BindingFlags.NonPublic).GetValue(home.Hud);
         Require(originalSound.PlayingId > 0 && audio && audio.isPlaying && AudioListener.volume == 0,
@@ -641,8 +655,21 @@ public sealed partial class HomeIncomeFormulaHostRunner
         yield return new WaitForSeconds(.35f);
         Capture("home-native-fast-sleep.png");
         float started = Time.realtimeSinceStartup;
-        while (progress && progress.isActiveAndEnabled && Time.realtimeSinceStartup - started < 8) yield return null;
+        bool capturedFastDay = false, capturedFastNight = false;
+        while ((progress && progress.isActiveAndEnabled || actualEnvironment.IsFastCycling)
+            && Time.realtimeSinceStartup - started < 8)
+        {
+            if (actualEnvironment.IsFastCycling && !actualEnvironment.IsNight && !capturedFastDay)
+            { Capture("home-native-fast-environment-day.png"); capturedFastDay = true; }
+            if (actualEnvironment.IsFastCycling && actualEnvironment.IsNight && !capturedFastNight)
+            { Capture("home-native-fast-environment-night.png"); capturedFastNight = true; }
+            yield return null;
+        }
         yield return null;
+        Require(!actualEnvironment.IsFastCycling
+            && actualEnvironment.NaturalTotalSeconds - naturalBeforeFast < 3000
+            && actualEnvironment.MoonPhase == moonBeforeFast,
+            "actual sleep restores the natural clock without adding a visual day to its calendar");
         Require(!progress && group.alpha == 1 && group.interactable && group.blocksRaycasts
             && home.Profile.Save.Player.Experience == beforeXp
             && home.Session.Save.Income.Single(value => value.HangUpId == 1).SettledCount == storedAfter
@@ -668,10 +695,26 @@ public sealed partial class HomeIncomeFormulaHostRunner
         Capture("home-native-fast-second-selection.png");
         long secondXp = (long)OfflineHangUpIncome.RewardCount(home.Session.Definitions.Single(value => value.HangUpId == 1).Rule,
             home.PlayerProperties(), HomeIncomePropertyCatalog.CreateFloatPropertyIds(), 2);
+        yield return null; yield return null;
         Click(selection.FastBtn); yield return new WaitForSeconds(.35f);
         Require(UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeFastHangUpProgressUI.FastHangUpProgressBarDialog>()
             && home.Profile.Save.Player.Experience == awarded, "second native request is held before owner interruption");
+        var interruptedEnvironment = ActualEnvironment;
+        Require(interruptedEnvironment.IsFastCycling, "second actual bed signal starts its own environment cycle");
+        started = Time.realtimeSinceStartup;
+        while (interruptedEnvironment.IsFastCycling && !(capturedFastDay && capturedFastNight)
+            && Time.realtimeSinceStartup - started < 5)
+        {
+            if (!interruptedEnvironment.IsNight && !capturedFastDay)
+            { Capture("home-native-fast-environment-day.png"); capturedFastDay = true; }
+            if (interruptedEnvironment.IsNight && !capturedFastNight)
+            { Capture("home-native-fast-environment-night.png"); capturedFastNight = true; }
+            yield return null;
+        }
+        Require(capturedFastDay && capturedFastNight,
+            "actual native bed requests reach both accelerated day and night states through the original stage handler; captured pixels require separate review");
         home.Close(); CloseCapture(); yield return null;
+        Require(!interruptedEnvironment.IsFastCycling, "closing home clears its active environment handler");
         Open(); yield return new WaitForSeconds(1);
         Require(home.Profile.Save.Player.Experience == awarded && home.Profile.InventoryCount(120) == 2
             && home.Session.Save.Income.Single(value => value.HangUpId == 1).SettledCount >= storedAfter + secondXp
