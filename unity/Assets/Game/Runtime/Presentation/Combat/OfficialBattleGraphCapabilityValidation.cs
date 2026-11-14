@@ -347,6 +347,7 @@ namespace Zjcs.Presentation.Combat
         public void ObserveFrame(OfficialBattleRuntimeController controller)
         {
             CaptureName = null;
+            ObserveArcShieldSoundFrame(controller);
             ObserveChainedHitViews(controller);
             ObserveFirstPromotionGeneration(controller);
             if (ObserveTerrainScopeWalkingFrame(controller)) return;

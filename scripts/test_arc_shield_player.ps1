@@ -2,7 +2,8 @@ param(
     [Parameter(Mandatory)][string]$Player,
     [Parameter(Mandatory)][string]$Workspace,
     [ValidateSet('up','down','left','right')][string[]]$Directions = @('up','down','left','right'),
-    [switch]$ColdScene
+    [switch]$ColdScene,
+    [switch]$Sound
 )
 $ErrorActionPreference = 'Stop'
 $previous = @{}
@@ -11,6 +12,7 @@ try {
     foreach ($direction in $Directions) {
         Get-ChildItem Env:ZJCS_* | ForEach-Object { Remove-Item ('Env:' + $_.Name) }
         $env:ZJCS_ARC_SHIELD_LIFECYCLE = '1'
+        if ($Sound) { $env:ZJCS_ARC_SHIELD_SOUND = '1' }
         if ($ColdScene) { $env:ZJCS_ARC_SHIELD_COLD_SCENE = '1' }
         $before = @{}
         Get-ChildItem -LiteralPath $Workspace -Directory -Filter "native-10024-$direction-*" |
@@ -20,6 +22,14 @@ try {
             Where-Object { -not $before.ContainsKey($_.FullName) })
         if ($runs.Count -ne 1) { throw 'Expected one original arc-shield Player diagnostic.' }
         $run = $runs[0].FullName
+        if ($Sound) {
+            foreach ($message in @('[Arc shield sound] Original Skill_10024 event=3761013058 playing=',
+                '[Arc shield sound] Original Skill_10024 native playback and completion passed.')) {
+                if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch $message)) {
+                    throw "Original arc-shield native sound evidence missing: $run"
+                }
+            }
+        }
         foreach ($name in @('arc-shield-round-1.png','arc-shield-round-2.png','arc-shield-round-3.png',
             'arc-shield-restored.png','arc-shield-ended.png','arc-shield-checkpoint.json')) {
             if (-not (Test-Path -LiteralPath (Join-Path $run $name))) { throw "Arc-shield lifecycle evidence missing: $name ($run)" }
