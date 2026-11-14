@@ -1537,5 +1537,43 @@
     "child": "ExecuteConfiguredStatusSkills restores source rank/level/subrank properties for 11210; incoming damage delay plus original child hit delay"
   },
   "verifier": "scripts/test_battle_sword_counterattack.ps1",
-  "operation": "Reuse extracted selected APK provenance and decompiled original graph/config declarations; preserve historical runtime identity; explicit user-confirmed implementation for missing server hotfix classes."
+  "operation": "Reuse extracted selected APK provenance and decompiled original graph/config declarations; preserve historical runtime identity; explicit user-confirmed implementation for missing server hotfix classes.",
+  "native_binding": {
+    "shared_resource_proof": {
+      "path": "assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json",
+      "sha256": "9e19958ac436c87a774a947016954bb93fd870d3c86200104f8baff94558cfeb"
+    },
+    "inputs": [
+      {
+        "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11210/11210.prefab",
+        "sha256": "b4c84c4e90435e5c42c9fbccb914be489c088c062a6b69cd4f4def5b4ee16205"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11210/11211.prefab",
+        "sha256": "90c233e6b8f60814593bf4a254d931dca0151eae47c89c4ca383adfda59b9c70"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11210/11212.prefab",
+        "sha256": "50d4e834686dbfbbba0d0f6f562837700e1f5c413859af6c48264b6d71277e9f"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11210/playable11210.prefab",
+        "sha256": "5c9fb5f5df1adec08967800b8d11aabfe5a700d7cf4c4edddbae7c54a5c73b3b"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11210/playable11212.prefab",
+        "sha256": "670824e9c40120cf2cbced1081713d67f49a4ee128472b44ef6e0d3c0bff5d46"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/CEE87AD6-BE31-4A09-AF88-3FC17DB8D4B4.asset",
+        "sha256": "10b78a6e9c861115f7b3b4fec85eba310ac1960761aed7408b087100d5f03c96"
+      }
+    ],
+    "body_clip": "100/skill_12",
+    "sound_event_name": "Skill_10537_1",
+    "sound_event_id": 1876531539,
+    "observer": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.SwordCounterattack.cs",
+    "player_verifier": "scripts/test_sword_counterattack_player.ps1",
+    "fixture_boundary": "Original warrior identity selected through 10008, then no ordinary player slot; actual original 3331/14678/59460 attacks trigger unmodified 50% secret 10537/25017. Only isolated speed and base movement properties fixed to keep bodies inside original range. Ordinary-hit seed 1; full-shield seed 2 naturally counters before original 24435 expires; neither probability nor shield duration is changed."
+  }
 }

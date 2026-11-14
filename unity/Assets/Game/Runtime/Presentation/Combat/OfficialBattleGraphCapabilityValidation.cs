@@ -53,6 +53,8 @@ namespace Zjcs.Presentation.Combat
 
         public static OfficialBattleGraphCapabilityValidation Configure(FightBattleCheckpoint checkpoint)
         {
+            if (Environment.GetEnvironmentVariable("ZJCS_SWORD_COUNTERATTACK") == "1")
+                return ConfigureSwordCounterattack(checkpoint);
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_FIRST_PROMOTION_SKILL")))
                 return ConfigureFirstPromotion(checkpoint);
             string mode = Environment.GetEnvironmentVariable("ZJCS_GRAPH_CAPABILITY_ACCEPTANCE");
@@ -199,6 +201,7 @@ namespace Zjcs.Presentation.Combat
                 if (cast.SkillEntityId == 13643) nativeChildren++;
                 if (cast.SkillEntityId != skillId) return;
                 nativeCasts++; castTime = Time.realtimeSinceStartup;
+                if (ValidateSwordCounterattack) swordCounterattackClock = Time.time;
                 if (firstPromotionItemId != 0) firstPromotionCastClock = Time.time;
                 var source = controller.TryGetUnitTransform(1);
                 var renderer = source ? source.GetComponentInChildren<ProfessionNativeSceneRenderer>(true) : null;
@@ -217,6 +220,7 @@ namespace Zjcs.Presentation.Combat
 
         public void ObserveStep(OfficialBattleRuntimeController controller)
         {
+            if (ObserveSwordCounterattackStep(controller)) return;
             ObserveTerrainScopeStep(controller);
             ObserveShieldExpiryStep(controller);
             ObserveFirstPromotionDeathStep(controller.Checkpoint.Receipts.Last().Event);
@@ -348,6 +352,7 @@ namespace Zjcs.Presentation.Combat
         {
             CaptureName = null;
             ObserveArcShieldSoundFrame(controller);
+            if (ObserveSwordCounterattackFrame(controller)) return;
             ObserveChainedHitViews(controller);
             ObserveFirstPromotionGeneration(controller);
             if (ObserveTerrainScopeWalkingFrame(controller)) return;
@@ -499,6 +504,7 @@ namespace Zjcs.Presentation.Combat
             VerifyTerrainScopeLifecycle();
             VerifyChainedHitDiagnostic();
             VerifyArcShieldDiagnostic();
+            VerifySwordCounterattack();
             if (firstPromotionItemId != 0) Require(firstPromotionFrameCount == FirstPromotionFrameTimes.Length,
                 "The original skill's early presentation frames were not captured.");
             if (ValidateApproach) Require(ordinaryStarted && ordinaryRemoved && ordinaryCaptured,
