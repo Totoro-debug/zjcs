@@ -45,6 +45,7 @@ def prepare():
     checks = (ROOT / 'scripts/fixtures/home_income_formula_validation.cs').read_text('utf8')
     (folder / 'IncomeChecks.cs').write_text('#if UNITY_EDITOR\n' + checks + '\n#endif\n', 'utf8', newline='\n')
     (folder / 'EnvironmentChecks.cs').write_bytes((ROOT / 'scripts/fixtures/home_fast_environment_validation.cs').read_bytes())
+    (folder / 'BackdropChecks.cs').write_bytes((ROOT / 'scripts/fixtures/home_native_backdrop_validation.cs').read_bytes())
     (folder / 'Zjcs.HomeIncomeFormulaValidation.asmdef').write_text(json.dumps(dict(
         name='Zjcs.HomeIncomeFormulaValidation', references=[
             'Unity.ugui', 'Zjcs.Offline.Home', 'Zjcs.Official.HomeIncomeRules', 'Zjcs.Official.HomeUI',
@@ -165,7 +166,7 @@ def prepare():
     receipt['validation_inputs'] = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in (
         'scripts/prepare_home_income_formula_validation.py', 'scripts/fixtures/home_income_formula_validation.cs',
         'scripts/fixtures/home_furniture_host_validation.cs', 'scripts/bind_home_fast_audio.py',
-        'scripts/fixtures/home_fast_environment_validation.cs')}
+        'scripts/fixtures/home_fast_environment_validation.cs', 'scripts/fixtures/home_native_backdrop_validation.cs')}
     baseline = json.loads((work / 'base-commit.json').read_bytes())
     receipt['validation_base_commit'] = baseline['commit']
     receipt['runtime_bindings'] = {}

@@ -12,6 +12,7 @@ public sealed partial class HomeIncomeFormulaHostRunner
     IEnumerator CheckNaturalTimeUnlock()
     {
         CheckNativeEnvironmentGraph();
+        yield return CheckNativeBackdrop();
         Require(home.Profile.Save.Player.Level == 3 && home.Profile.StoryCount("FirstBattle") == 0
             && ActualEnvironment.Hour == 12 && ActualEnvironment.Minute == 0,
             "actual low-level home uses the original fixed noon before natural-time unlock");
