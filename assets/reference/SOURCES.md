@@ -1,5 +1,7 @@
 # 官方来源与提取入口
 
+六职业成长输入来源：`scripts/prepare_first_promotion_growth_reference.py` 从所选 `884_156692` 的 APK 优先读取实体成长、位阶映射、技能、默认属性和 WwiseBnk 成长二进制，核对历史运行载荷的消费字段；原程序集、原成长方法、12 份表构造依赖、完整输入哈希、三项未消费的 PVP 字段差异及验证器身份见[六职业成长来源](battle-rules/first-promotion-growth-source-manifest.json)。只生成隔离参照程序，不修改历史运行载荷；实现和实际验证范围仅在[技能页](../../docs/features/skills.md)维护。
+
 反击之剑 `10537／25017→11210→11211→11212` 的所选 APK 配置片段、原过滤器与缺少服务器正文的触发／黑板／技能执行类、历史运行载荷及单机适配身份见[反击来源](battle-rules/sword-counterattack-source-manifest.json)，复查入口为 `scripts/test_battle_sword_counterattack.ps1`。配置复用六职业已提取凭据，明确记录原 11210 非技能导出组件及 884 新增空驱散字段，不改写历史配置哈希；单机规则维护在[战士技能页](../../docs/features/skills-warrior.md)。
 
 弧光灵盾成长参考取所选 `884_156692` 的原 `BattleFormulaHandler`、`GroupLevelPropCfg`、`LevelPropParser`、枚举及 `Formula`；程序集、反编译输入、原文编译输出与历史运行配置 SHA-256 见[成长公式来源](battle-rules/arc-growth-source-manifest.json)，提取入口为 `scripts/prepare_battle_arc_growth_reference.py`。默认属性表重新读取所选 APK 的实际 `config_luban` TextAsset，并与历史 854 表内容哈希核对；两版 bundle／APK／对象身份分别保存，不改写历史清单。没有新增美术或运行载荷；实现及验证范围仅在[战士技能页](../../docs/features/skills-warrior.md)维护。
