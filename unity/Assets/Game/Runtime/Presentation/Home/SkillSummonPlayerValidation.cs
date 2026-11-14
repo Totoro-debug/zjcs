@@ -82,9 +82,7 @@ namespace Zjcs.Presentation.Home
             while(waitForStartup && GameObject.Find("OfficialSaveSelectionPanel")==null) yield return null;
             if (Environment.GetEnvironmentVariable("ZJCS_ACTIVE_LOADOUT_ACCEPTANCE") == "1")
             {
-                if (Environment.GetEnvironmentVariable("ZJCS_PURSUIT_ACCEPTANCE") == "1")
-                    yield return SkillPursuitValidation.Exercise(output, CaptureGridFrame, ClickGridControl);
-                else if (Environment.GetEnvironmentVariable("ZJCS_SHIELD_ATTACK_ACCEPTANCE") == "1")
+                if (Environment.GetEnvironmentVariable("ZJCS_SHIELD_ATTACK_ACCEPTANCE") == "1")
                     yield return SkillShieldAttackValidation.Exercise(output, CaptureGridFrame, ClickGridControl);
                 else if (Environment.GetEnvironmentVariable("ZJCS_RETURN_STRIKE_ACCEPTANCE") == "1")
                     yield return SkillReturnStrikeValidation.Exercise(output, CaptureGridFrame, ClickGridControl);

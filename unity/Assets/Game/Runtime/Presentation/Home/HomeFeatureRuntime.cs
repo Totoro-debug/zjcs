@@ -13,6 +13,7 @@ using Zjcs.Offline.CharacterCreation;
 using Zjcs.Offline.Equipment;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.HomeUI;
+using Zjcs.Offline.HomePlayerHealthUI;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.ProfessionUI;
 using Zjcs.Offline.State;
@@ -1000,8 +1001,16 @@ namespace Zjcs.Presentation.Home
         {
             if (progression != null) return;
             OfficialCharacterAssetCatalog characterAssets = OfficialCharacterAssetCatalog.LoadDefault();
+            // The selected client keeps treasure, suit, pet, evolution, potential
+            // and pet-ability property tables in the home payload. Attach that
+            // verified payload before constructing the formal home calculator so
+            // the HUD/income path and the detached no-blessing projection share
+            // the same original property inputs.
+            OfficialCharacterCatalog characterCatalog = characterAssets.Load();
+            OfflineHomeNoBlessConfiguration homeProperties = OfflineHomeNoBlessConfiguration.LoadDefault();
+            characterCatalog = homeProperties.CreatePropertyCatalog(characterCatalog);
             progression = OfflineCharacterProgressionService.Create(profile, new CharacterProgressionInputs(
-                characterAssets.Load(), OfficialEquipmentAssetCatalog.LoadDefault().Load(), characterAssets.LoadSkillRules()));
+                characterCatalog, OfficialEquipmentAssetCatalog.LoadDefault().Load(), characterAssets.LoadSkillRules()));
             equipmentPropertiesLoaded = true;
         }
 
