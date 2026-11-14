@@ -1567,6 +1567,14 @@
       {
         "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/CEE87AD6-BE31-4A09-AF88-3FC17DB8D4B4.asset",
         "sha256": "10b78a6e9c861115f7b3b4fec85eba310ac1960761aed7408b087100d5f03c96"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/FirstPromotionStatuses/Resources/Combat/FirstPromotionStatuses/Prefabs/EcEntity/Fight/FightSkill/25017/25017.prefab",
+        "sha256": "c8d5934896e25187707bdfd05785fd8d3224db471aa25d894938857e8bad5180"
+      },
+      {
+        "path": "unity/Assets/Game/Resources/Combat/first-promotion-statuses.json",
+        "sha256": "8891c1ecf88155af4d31f8c42d294312252c6fcecc9b037b909bec18c98e19be"
       }
     ],
     "body_clip": "100/skill_12",
@@ -1574,6 +1582,11 @@
     "sound_event_id": 1876531539,
     "observer": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.SwordCounterattack.cs",
     "player_verifier": "scripts/test_sword_counterattack_player.ps1",
-    "fixture_boundary": "Original warrior identity selected through 10008, then no ordinary player slot; actual original 3331/14678/59460 attacks trigger unmodified 50% secret 10537/25017. Only isolated speed and base movement properties fixed to keep bodies inside original range. Ordinary-hit seed 1; full-shield seed 2 naturally counters before original 24435 expires; neither probability nor shield duration is changed."
+    "process_verifier": "scripts/test_sword_counterattack_process_player.ps1",
+    "fixture_boundary": "Original warrior identity selected through 10008, then no ordinary player slot; actual original 3331/14678/59460 attacks trigger unmodified 50% secret 10537/25017. Only isolated speed and base movement properties fixed to keep bodies inside original range. Ordinary-hit seed 1; full-shield seed 2 naturally counters before original 24435 expires; neither probability nor shield duration is changed.",
+    "process_resource_proof": {
+      "path": "assets/reference/battle-animation/first-promotion-status-assets-source-manifest.json",
+      "sha256": "cee1b517d25192ceb5ec40e7201ef5260642d7b895bca0dc980f3a4210173c7e"
+    }
   }
 }

@@ -80,6 +80,11 @@ namespace Zjcs.Presentation.Home
         private IEnumerator Run()
         {
             while(waitForStartup && GameObject.Find("OfficialSaveSelectionPanel")==null) yield return null;
+            if (SkillSwordCounterattackProcessValidation.ResumeRequested)
+            {
+                yield return SkillSwordCounterattackProcessValidation.Resume(output, CaptureGridFrame, ClickGridControl);
+                yield break;
+            }
             if (SkillTerrainScopeProcessValidation.ResumeRequested)
             {
                 yield return SkillTerrainScopeProcessValidation.Resume(output, CaptureGridFrame, ClickGridControl);
@@ -276,6 +281,12 @@ namespace Zjcs.Presentation.Home
                 masterChildProbe?.ObserveFrame(controller);
                 hitFinishProbe?.ObserveFrame(controller);
                 graphCapabilityProbe?.ObserveFrame(controller);
+                if (SkillSwordCounterattackProcessValidation.PrepareRequested && graphCapabilityProbe.ReadyForSwordProcess(controller))
+                {
+                    yield return SkillSwordCounterattackProcessValidation.Prepare(runner, saveRoot, slot, output,
+                        graphCapabilityProbe, CaptureGridFrame);
+                    yield break;
+                }
                 if (graphCapabilityProbe != null && graphCapabilityProbe.ReadyForArcColdScene(controller))
                 {
                     runner.enabled = false;
