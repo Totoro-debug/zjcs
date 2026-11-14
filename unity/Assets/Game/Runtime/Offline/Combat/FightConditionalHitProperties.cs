@@ -110,7 +110,10 @@ namespace Zjcs.Combat.Official
             int count=0;var ids=new HashSet<int>();
             foreach(var status in unit.Statuses)
             {
-                if(status==null || status.ForbiddenType!=0 || !Matches(filter.AnyStatusTypes,status.StatusType)
+                // Confirmed 10516/25008 presence rule includes forbidden target debuffs.
+                // Other definitions retain their independently confirmed condition semantics.
+                if(status==null || status.ForbiddenType!=0 && source.ClassId!=25008
+                    || !Matches(filter.AnyStatusTypes,status.StatusType)
                     || !Matches(filter.AnyActionTypes,status.ActionType)) continue;
                 if(filter.CountType==2) {ids.Add(status.ClassId);count=ids.Count;}
                 else if(filter.CountType==1) count+=filter.IsCalculateStack ? Math.Max(0,status.StackCount) : 1;
