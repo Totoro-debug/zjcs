@@ -518,10 +518,9 @@ namespace Zjcs.Offline.Skills
         private static bool IsAvailable(OfflineSkillDefinition definition, OfflineSkillPlayerContext player)
         {
             if (definition.ItemType != ActiveSkillItemType && definition.ItemType != PassiveSkillItemType) return false;
-            // Starting skills are unlocked by the first profession rank and stay available without a
-            // profession restriction (original initial-weapon skill flow).
-            if (definition.AvailableWithoutProfession) return true;
-            if (player.Profession <= 0) return false;
+            // The original rank-one fallback applies only to Profession.None.
+            // A selected profession must still belong to the skill's inheritance branch.
+            if (player.Profession <= 0) return definition.AvailableWithoutProfession;
             foreach (int profession in definition.AvailableProfessions ?? Array.Empty<int>())
                 if (profession == player.Profession
                     || (player.CurrentProfessionChain != null && player.CurrentProfessionChain.Contains(profession))) return true;

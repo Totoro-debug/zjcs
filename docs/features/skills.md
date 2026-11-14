@@ -35,6 +35,8 @@
 
 ## 原始官方实现
 
+技能页职业可用性沿用原 `PlayerProfessionDataEx.IsSkillAvailableForCurProfession`：未转职时先经过原武器回退，再调用 `ProfessionBaseInfoParser.IsSkillAvailableForProfession`；已转职时检查当前职业及 `PrePro`，不会因技能属于一阶而跨路线开放。解析器仅在最终职业仍为 `None` 时按解锁职业 Rank=1 回退。原 `SkillPanelSkillDetailDialog.RefreshBtn` 仅对职业可用技能开启装配／替换按钮，保留已有装配的卸下和技能培养。原函数与现有载荷身份见[职业判定来源](../../assets/reference/battle-rules/skill-profession-source-manifest.json)。
+
 秘法进入战斗的选择依据为原 `PlayerSkillDataExt.GetValidSkillItems` 与 `PlayerSnapshotData.TryGetValidSkillItems／CheckSkillProfession`：先解析选中方案中实际持有的物品，再沿 `profession_base.PrePro` 校验当前职业；未转职时按 `ProfessionUtils.GetSafeProfession` 使用当前武器，无武器时使用初始武器。原 `FightUtilsHandler.IsSkillDisabled` 查询服务器临时 `UseSkillItem` 维护开关。原代码与既有载荷身份见[秘法装配来源](../../assets/reference/battle-rules/skill-passive-loadout-source-manifest.json)，复查入口为 `scripts/prepare_skill_passive_loadout_sources.py`。
 
 官方技能页按职业、前置链、品质、元素、标签、范围、安装槽、附加属性和升级／突破配置刷新；详情与模型预览使用原控件、数值计算及显示规则。
@@ -81,11 +83,15 @@
 
 ## 完整还原部分
 
+技能页筛选、职业不符标记、详情装配／替换按钮和本地装配事务共用修复后的 `OfflineSkillProgression.IsAvailableFor`；一阶技能的无职业回退只适用于最终职业仍为空的上下文。`OfflineCharacterProgressionService.SkillContext` 按当前武器／初始武器补齐未转职时的技能判定职业，避免与战斗装配的原武器回退不一致；推荐方案仍按实际转职记录的前置链。已有方案不自动删项，异路线技能仍可按原规则升阶和培养。
+
+`scripts/test_skill_profession.ps1` 在隔离 Unity 中直接执行四个未改写的官方职业／武器函数：104 项技能、六职业与五种未转职武器情形共 1,144 组可用性检查通过；其中 96 项直接战技／秘法还通过 7,392 次七方案装配事务和 1,056 项未持有排除检查。每次操作均保留另一方案的异路线技能，拒绝装配不改方案与材料，成功仅修改目标槽。隔离编译、`ProjectTools.Validate`、共享静态检查与既有七方案／升阶／祝福规则回归通过。完整内容 Windows 构建通过；六职业预置隔离档的实际 Windows Player 与骑士 Play Mode 均通过原界面的模拟点击：战技／秘法筛选、职业不符标记、异路线详情与遮罩关闭、继承技能装配及保存／同进程重载。异路线详情仅保留培养，旧第七方案保持原样；Player 48 张及 Play Mode 8 张实际运行画面均已查看。本项未验证实际转职界面，不代表全部技能行为、演出或正式发布完成。
+
 战斗秘法装配共用 `OfficialBattlePassivePropertyAssembler.CollectEquippedPlayerPassives`：属性入口与 `OfficialBattlePlayerLoadoutAssembler` 的初始状态图同时排除未持有、零品阶、非秘法和职业不符项，保留原槽位、当前赛季祝福、品阶与人物位阶；未转职时遵循上述原武器回退。装备／套装被动继续由其原独立来源装配。
 
 `scripts/test_skill_passive_loadout.ps1` 使用原职业表的独立 `PrePro` 遍历核对 46 项秘法：六职业、七方案、四槽分布、非均匀槽级、当前／其他赛季祝福及初始／当前武器回退的 2,162 组属性与初始状态对照通过，其中 686 组为有效职业方案；另有 139 项未持有、零品阶、错放战技与非当前方案排除检查。实际生产装配器创建的 390 个初始状态均保留物品、根实体、品阶、有效槽级、位阶及持有者来源。隔离 Unity 编译与 `ProjectTools.Validate`、共享工程静态检查通过。该测试核对初始状态挂载，不替代实际触发及完整演出验证。
 
-最新 Windows 脚本增量构建通过；骑士 `10516` 的 Play Mode，以及战士 `10500`、法师 `10554`、骑士 `10516`、斗士 `10588`、贤者 `10514`、术士继承 `10554` 的六项 Player 流程均以退出码 0 完成。各流程分别预置对应职业的隔离存档后，通过原人物技能界面的模拟点击完成装配、培养与磁盘保存／同进程重载；各阶段同时核对有效、未持有、职业不符三组属性与初始状态装配。共 28 张实际运行画面已查看，均为 675×1463 渲染面。此项验证未操作转职界面，也不代表六职业全部技能触发、完整战斗演出或正式发布已完成。
+Windows 脚本增量构建通过；骑士 `10516` 的 Play Mode，以及战士 `10500`、法师 `10554`、骑士 `10516`、斗士 `10588`、贤者 `10514`、术士继承 `10554` 的六项 Player 流程均以退出码 0 完成。各流程分别预置对应职业的隔离存档后，通过原人物技能界面的模拟点击完成装配、培养与磁盘保存／同进程重载；各阶段同时核对有效、未持有、职业不符三组属性与初始状态装配。共 28 张实际运行画面已查看，均为 675×1463 渲染面。此项验证未操作转职界面，也不代表六职业全部技能触发、完整战斗演出或正式发布已完成。
 
 ### 通用四向施法模块
 

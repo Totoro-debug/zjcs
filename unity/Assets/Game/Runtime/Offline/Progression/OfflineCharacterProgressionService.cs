@@ -297,9 +297,10 @@ namespace Zjcs.Offline.Progression
         public OfflineSkillPlayerContext SkillContext()
         {
             CharacterExperienceSnapshot experience = Experience();
+            int profession = SkillProfession();
             return new OfflineSkillPlayerContext
             {
-                Profession = Player.Wardrobe.Profession,
+                Profession = profession,
                 SubRank = Player.SubRank,
                 BaseLevel = Math.Min(Player.Level,
                     OfflineCharacterExperience.BaseLevelLimit(Player.SubRank, catalog.LevelLimits)),
@@ -311,6 +312,18 @@ namespace Zjcs.Offline.Progression
                 PlayerBlessLevel = experience.BlessLevel,
                 CurrentProfessionChain = ProfessionChain(Player.Wardrobe.Profession)
             };
+        }
+
+        private int SkillProfession()
+        {
+            int profession = Player.Wardrobe.Profession;
+            if (profession != 0) return profession;
+            int itemId = OfflineEquipmentOperations.EquippedItemIdAtPosition(Player.Equipment, 10);
+            Dictionary<string, object> item = EquipmentCatalog?.Find("item", itemId);
+            int weapon = item == null ? catalog.ItemType(itemId) : Integer(item, "ItemType");
+            if (weapon == 0) weapon = Player.InitialWeaponType;
+            // ProfessionUtils.GetSafeProfession: current weapon, then initial weapon.
+            return weapon == 200 ? 1 : weapon == 201 ? 10 : 0;
         }
 
         private HashSet<int> ProfessionChain(int profession)

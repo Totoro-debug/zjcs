@@ -87,6 +87,11 @@ namespace Zjcs.Presentation.Character
 
         private IEnumerator Run()
         {
+            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PROFESSION_FLOW") == "1")
+            {
+                yield return RunProfessionAvailabilityFlow();
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") == "1")
             {
                 yield return RunPassivePropertyFlow();

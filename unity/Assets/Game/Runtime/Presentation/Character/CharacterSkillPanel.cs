@@ -1821,12 +1821,13 @@ namespace Zjcs.Presentation.Character
             if (iconSlot != null) BuildSkillIcon(skillId, iconSlot, "OfficialSkillIcon");
 
             bool owned = ownedRank > 0;
+            bool available = OfflineSkillProgression.IsAvailableFor(definition, progression.SkillContext());
             bool equipped = progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].ActiveSkills
                 .Concat(progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].PassiveSkills)
                 .Contains(skillId);
             SetDialogNodeActive(dialogNodes, "UpgradeBtn", owned);
-            SetDialogNodeActive(dialogNodes, "EquipBtn", owned && !equipped);
-            SetDialogNodeActive(dialogNodes, "ReplaceBtn", owned && !equipped && selectedSlot >= 0);
+            SetDialogNodeActive(dialogNodes, "EquipBtn", owned && available && !equipped);
+            SetDialogNodeActive(dialogNodes, "ReplaceBtn", owned && available && !equipped && selectedSlot >= 0);
             SetDialogNodeActive(dialogNodes, "TakeOffBtn", equipped);
             SetDialogNodeActive(dialogNodes, "DecomposeBtn", false);
             SetDialogNodeActive(dialogNodes, "CommonBtn_11", !owned);

@@ -1,0 +1,69 @@
+{
+  "manifest": "884_156692",
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll",
+    "bytes": 16813568,
+    "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+  },
+  "official_code_receipt": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "bytes": 6939,
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "official_inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/SkillPanelSkillDetailDialog.cs",
+      "bytes": 9342,
+      "sha256": "978287c05e1abc9d78b73436657322157faa61acf19d3e31a0b72570633cbfb5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerProfessionDataEx.cs",
+      "bytes": 6037,
+      "sha256": "24a5eb7ac4ef3872ad1acc4528cb220375691e6fa91f48597d405d8a9baf3547"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Profession.cs",
+      "bytes": 611,
+      "sha256": "01c1fedcaeb1cbb24c8c64ef8e1a3dba4159050e41e29ba3d7ba0b3aad550017"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ProfessionBaseInfoParser.cs",
+      "bytes": 21469,
+      "sha256": "801c076f2df4bce5ad6db9e9647066af7dc111438bdbc80ec556465381225e10"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ProfessionUtils.cs",
+      "bytes": 1516,
+      "sha256": "af6c4a0271192be6ca40abeaf75771aa44d511dfe68c39c4e25e8e678cf0ccde"
+    }
+  ],
+  "original_method_signatures": {
+    "ProfessionBaseInfoParser": [
+      "public bool IsSkillAvailableForProfession(",
+      "public bool IsSkillAvailableForSingleProfession("
+    ],
+    "ProfessionUtils": [
+      "public static Profession GetSafeProfession(",
+      "private static Profession GetProfessionByWeaponType("
+    ]
+  },
+  "fixture": {
+    "path": "scripts/fixtures/skill_profession_reference.cs",
+    "sha256": "26a4700921f35ce393f57bb7ce7efd82606af25d4bc590e36d69f87a3da9b91d",
+    "normalization": "UTF-8 without BOM; LF"
+  },
+  "existing_inputs": [
+    {
+      "path": "unity/Assets/Official/Character/character-progression.json",
+      "bytes": 6341984,
+      "sha256": "d92b18206c2a9ccbfc0a7ab6aa82744207da8efd92c1a7c01d883efed0a1c19c"
+    },
+    {
+      "path": "unity/Assets/Official/Skills/skill-runtime-rules.json",
+      "bytes": 1065888,
+      "sha256": "1ece75e11e618c4a3fef61bb490ed2a3f101f3560649c3384f37eafac8183aba"
+    }
+  ],
+  "input_versions": "Official profession code 884_156692; existing character and skill payloads retain their recorded provenance and are not replaced.",
+  "boundary": "Original four methods unchanged; adapters supply existing profession/item tables. PlayerProfessionDataEx confirms safe-weapon selection precedes the parser. No server maintenance switch is invented."
+}
