@@ -27,6 +27,8 @@ namespace Zjcs.Presentation.Home
         OfflineProfessionSceneTextureResources textures;
         IProfessionAppearanceTextureBindings previousTextures;
         IProfessionAppearanceSkinClipBindings previousClips;
+        IProfessionAppearanceTextureBindings preparedTextures;
+        bool appearanceBindingsActive;
         GameObject root;
         bool disposed;
         public bool IsOpen => root && root.activeSelf;
@@ -53,12 +55,34 @@ namespace Zjcs.Presentation.Home
             to.referencePixelsPerUnit = from.referencePixelsPerUnit;
             fonts = OfflineHomeHudAssets.LoadDefault().CreateFontService();
             fonts.Initialize();
+            try { Prepare(); }
+            catch { Dispose(); throw; }
         }
 
         public void Show(int id, Action finished)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfflineHomeFastHangUpProgress));
-            if (root) throw new InvalidOperationException("An acceleration presentation is already open.");
+            if (IsOpen) throw new InvalidOperationException("An acceleration presentation is already open.");
+            try
+            {
+                if (!root) Prepare();
+                previousTextures = ProfessionAppearanceTextureBindings.Current;
+                previousClips = ProfessionAppearanceSkinClipBindings.Current;
+                ProfessionAppearanceTextureBindings.Current = preparedTextures;
+                ProfessionAppearanceSkinClipBindings.Current = new OfflineProfessionCurrentUiSkinClipBindings(previousClips);
+                appearanceBindingsActive = true;
+                root.SetActive(true);
+                root.GetComponent<FastHangUpProgressBarDialog>().Init(id, finished);
+            }
+            catch { if (root) Close(root); else ReleaseAppearance(); throw; }
+        }
+
+        // Preheat the original skeleton data through the existing Bind endpoint
+        // while the bed window opens. Keep the prefab inactive: MyAppearance's
+        // original Awake/OnEnable and legacy animation events must only run once
+        // the player actually requests acceleration.
+        void Prepare()
+        {
             var assets = OfficialHomeFastHangUpProgressAssetCatalog.LoadDefault();
             var resources = UnityEngine.Resources.Load<ProfessionNativeSceneAppearanceResources>("Partners/appearance-resources");
             AppearanceConfig = ProfessionNativePortraitStudioResources.LoadDefault().AppearanceConfig;
@@ -77,10 +101,7 @@ namespace Zjcs.Presentation.Home
             var partAssets = UnityEngine.Resources.Load<PartnerNativeDetailActorAssets>("DailyChallenges/Rank/PartAssets");
             var partTextures = new OfflinePartnerUiTextureResources(partAssets, manager, textures);
             var parts = new OfflinePartnerUiPartBindings(partAssets, AppearanceTables.SpineSkinInfoParser, tree => partTextures.BindTree(tree));
-            previousTextures = ProfessionAppearanceTextureBindings.Current;
-            previousClips = ProfessionAppearanceSkinClipBindings.Current;
-            ProfessionAppearanceTextureBindings.Current = partTextures;
-            ProfessionAppearanceSkinClipBindings.Current = new OfflineProfessionCurrentUiSkinClipBindings(previousClips);
+            preparedTextures = partTextures;
             var stage = new GameObject("HomeFastHangUpInactiveBinding"); stage.SetActive(false);
             try
             {
@@ -92,8 +113,6 @@ namespace Zjcs.Presentation.Home
                 foreach (var text in root.GetComponentsInChildren<WorldMultiLanguageText>(true))
                     text.Localizer = key => localizer.GetText(key, LanguageType.zh_CN);
                 root.transform.SetParent(canvas.transform, false);
-                root.SetActive(true);
-                root.GetComponent<FastHangUpProgressBarDialog>().Init(id, finished);
             }
             catch { if (root) Close(root); else ReleaseAppearance(); throw; }
             finally { Object.Destroy(stage); }
@@ -117,8 +136,13 @@ namespace Zjcs.Presentation.Home
         }
         void ReleaseAppearance()
         {
-            ProfessionAppearanceTextureBindings.Current = previousTextures;
-            ProfessionAppearanceSkinClipBindings.Current = previousClips;
+            if (appearanceBindingsActive)
+            {
+                ProfessionAppearanceTextureBindings.Current = previousTextures;
+                ProfessionAppearanceSkinClipBindings.Current = previousClips;
+                appearanceBindingsActive = false;
+            }
+            preparedTextures = null;
             textures?.Dispose(); textures = null;
             manager?.Dispose(); manager = null;
         }
@@ -126,6 +150,7 @@ namespace Zjcs.Presentation.Home
         {
             if (disposed) return; disposed = true;
             if (root) Close(root);
+            else ReleaseAppearance();
             fonts.Dispose();
             if (canvas) Object.Destroy(canvas.gameObject);
         }

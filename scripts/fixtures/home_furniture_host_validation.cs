@@ -148,7 +148,10 @@ public sealed class HomeFurnitureHostRunner : MonoBehaviour
     {
         // Preserve the production screen-overlay ordering in a camera capture.
         // World layers otherwise sort above a default camera-space canvas.
-        foreach (Canvas item in home.Hud.CanvasTransform.GetComponentsInChildren<Canvas>(true))
+        // Original progress windows use a sibling canvas. Include that owned
+        // camera's canvases when emulating screen-overlay sorting offscreen.
+        foreach (Canvas item in home.Hud.CanvasTransform.GetComponentsInChildren<Canvas>(true)
+            .Concat(Object.FindObjectsOfType<Canvas>(true).Where(value => value.worldCamera == home.Scene.Camera)).Distinct())
         {
             item.sortingLayerID = SortingLayer.layers.Last().id;
             if (item.sortingOrder < 30000) item.sortingOrder += 30000;
@@ -172,7 +175,9 @@ public sealed class HomeFurnitureHostRunner : MonoBehaviour
     {
         var previous = RenderTexture.active; RenderTexture.active = target;
         var pixel = new Texture2D(1, 1, TextureFormat.RGB24, false);
-        pixel.ReadPixels(new Rect(target.width / 2, target.height - 40, 1, 1), 0, 0); pixel.Apply();
+        // Stay below the native currency bar and above the reward queue. The
+        // bar grows leftward when its count or quick-buy button changes.
+        pixel.ReadPixels(new Rect(target.width / 2, target.height - 200, 1, 1), 0, 0); pixel.Apply();
         Color result = pixel.GetPixel(0, 0); Object.Destroy(pixel);
         RenderTexture.active = previous; return result;
     }

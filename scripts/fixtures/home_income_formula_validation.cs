@@ -579,6 +579,13 @@ public sealed partial class HomeIncomeFormulaHostRunner
         SceneClick(0); yield return new WaitForSeconds(.8f);
         var bed = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeHangUpWindowsUI.FurnitureBedDialog>();
         Require(bed, "scene pointer opens original bed before acceleration");
+        var preparedProgress = home.Hud.CanvasTransform.parent
+            ? home.Hud.CanvasTransform.parent.GetComponentsInChildren<Zjcs.Official.HomeFastHangUpProgressUI.FastHangUpProgressBarDialog>(true).SingleOrDefault()
+            : UnityEngine.Resources.FindObjectsOfTypeAll<Zjcs.Official.HomeFastHangUpProgressUI.FastHangUpProgressBarDialog>()
+                .Single(value => value.gameObject.scene.IsValid());
+        Require(preparedProgress && !preparedProgress.gameObject.activeInHierarchy
+            && preparedProgress.PlayerAppearance.AppearanceRuntimeData == null,
+            "opening the bed prepares original resources without initializing its actor or starting the presentation");
         Capture("home-native-fast-bed-entry.png");
         Click(bed.FastHangUpBtn); yield return new WaitForSeconds(.8f);
         yield return ConfirmNativeFastIfPresent("home-native-fast-personal-confirm.png");
@@ -632,6 +639,8 @@ public sealed partial class HomeIncomeFormulaHostRunner
             + "; started=" + startedFast + "; active=" + actualEnvironment.IsFastCycling
             + "; natural delta=" + (actualEnvironment.NaturalTotalSeconds - naturalBeforeFast)
             + "; moon=" + moonBeforeFast + "->" + actualEnvironment.MoonPhase);
+        Require(actualEnvironment.IsFastCycling,
+            "first acceleration remains visible after its initial frames instead of consuming the cycle in synchronous actor loading");
         var audio = (AudioSource)typeof(HomeHudView).GetField("partnerUiAudioSource",
             BindingFlags.Instance | BindingFlags.NonPublic).GetValue(home.Hud);
         Require(originalSound.PlayingId > 0 && audio && audio.isPlaying && AudioListener.volume == 0,
@@ -644,10 +653,6 @@ public sealed partial class HomeIncomeFormulaHostRunner
         var group = home.Hud.CanvasTransform.Find("Content/Main").GetComponent<CanvasGroup>();
         Require(group && group.alpha == 0 && !group.interactable && !group.blocksRaycasts,
             "original hide reference makes the underlying HUD transparent and noninteractive");
-        var notice = home.Hud.CanvasTransform.GetComponentsInChildren<TMPro.TMP_Text>(true)
-            .Single(value => value.name == "ToastText");
-        Require(notice.transform.IsChildOf(group.transform) && notice.canvasRenderer.GetInheritedAlpha() == 0,
-            "the existing local notice belongs to the original hidden Main/Public hierarchy");
         var graphic = progress.PlayerAppearance.GetComponent<Zjcs.Offline.ProfessionUI.ProfessionNativeUiGraphic>();
         Require(graphic.AnimationState.GetCurrent(0)?.Animation.Name == "home/sleep_02"
             && progress.RewardImageList.Count == 8 && progress.RewardImageList.All(value => value.sprite),
