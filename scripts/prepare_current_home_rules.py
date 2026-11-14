@@ -17,7 +17,7 @@ TABLES = (
     'furniture_level_rule', 'reward_rule', 'item', 'furniture_skin',
     'home_theme_skin', 'home_environment_skin', 'home_random_reward_type',
     'home_random_reward_group', 'home_random_reward_slot', 'home_decoration',
-    'home_skin_weather_override_prefab', 'profession_base',
+    'home_skin_weather_override_prefab', 'profession_base', 'map_region',
 )
 
 
@@ -38,13 +38,14 @@ def build(work):
     mapping = {name.rsplit('/', 1)[-1]: kind for kind, name in
                re.findall(r'new (Tb\w+)\(loader\("([^"]+)"\)\)', constructors.source('Tables'))}
     objects = {}
-    for obj in apk.objects('defaultpackage_assets_config_luban.bundle'):
-        if obj.type.name != 'TextAsset':
-            continue
-        name = obj.read().m_Name.rsplit('/', 1)[-1]
-        if name in objects:
-            raise ValueError('Ambiguous selected table: ' + name)
-        objects[name] = obj
+    for bundle in ('defaultpackage_assets_config_luban.bundle', 'defaultpackage_assets_config_luban_map.bundle'):
+        for obj in apk.objects(bundle):
+            if obj.type.name != 'TextAsset':
+                continue
+            name = obj.read().m_Name.rsplit('/', 1)[-1]
+            if name in objects:
+                raise ValueError('Ambiguous selected table: ' + name)
+            objects[name] = obj
     tables, proofs = {}, {}
     for name in TABLES:
         obj = objects[name + '.g']

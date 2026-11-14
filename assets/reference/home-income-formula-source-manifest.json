@@ -1,6 +1,6 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "40b8dd10c2e491bcc1e669900d5f9286752f033a304f1afac82630cd9357174f",
+  "generator_sha256": "e26013820b8703519ab9e996a69a22c7d8d25f1faa1428077dc95fec2a190e3f",
   "inputs": {
     "assets/reference/official-client-code/source-manifest.json": "801da9e6427f41987b269e816579f0c2228bc4cbeb4a49e11a8e707f235d0d68",
     ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6",
@@ -13,13 +13,19 @@
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs": "ce40db54d87030ded0a9f8a6dc95db5a3a4e46ae02bf76a9d273fe092a703d12",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/Formula.cs": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/HangUpUtils.cs": "b5d834657d4410887c370b905b7844cb2e38964a86ad3954ef8ae58a48fb247a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TimeUtils.cs": "f00bb313e48acf2af929cb579bff803dae3e857c496ab9f34c950734d2c44bbc",
     "unity/Assets/Official/Partners/partner-property-ui.json": "248cb46ddf9f333645ad0142150d5c0ea5995ab25204e659a177fd21b356d7c3",
     "assets/reference/partner-property-ui-source-manifest.json": "aed3a4d9a05bf9d6325ab29ab2e30d10fbd28dea9d16c492843d4c1edac3769e",
     ".tools/source-packages/current/884_156692/official-code/client-source/FurnitureBedDialog.cs": "b65f8fcaa988cd55991edc3fca71c8def7e30105f62648ce2c56bae5032a6e84",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerHangUpDataExt.cs": "52c6a123f697422dd7c18d5dbb42349eb11c06553f2d470eb62b3ced32c9edb7",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/Player.cs": "e0b324d6cf965e194cc517c176e8fae80f16dda7019e42d705ed6ae7d44da611",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/FunctionType.cs": "a4ba46945936bf793e114d9121a59562727dc321f6b274d84f0d13b9e9562b5c",
-    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FurnitureLevelRuleInfo.cs": "4b7d347787a2ccb13ce5c876d8fd69a33475962b17d71e4de4fcc286badd8984"
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FurnitureLevelRuleInfo.cs": "4b7d347787a2ccb13ce5c876d8fd69a33475962b17d71e4de4fcc286badd8984",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/EnumExt.cs": "245e7b2e1352e2e86a3e85227bf8dc0e36b6b3d080c6070d67a403443b805d52",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapRegionInfoParser.cs": "24379426b584f71e3a29c539d531644fcdbdaac114dbc9f7f2a7b261760b9f1e",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ServerInfoManager.cs": "9f55bb289e62ddacc5ea679166f14257c09d0a60792d891c5c666cc6ae564b81",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FunctionsDisabledData.cs": "efa8ce7c1cdc4aed8b654af491367ea5557941310bbe03e0ad90c0f551bd94ad",
+    ".tools/source-packages/current/884_156692/official-code/client-source/HangUpUIUtils.cs": "7f5f6d3e278cbbc75880f7951fa8b1ef729949fdf5b2268134d1a6f50328805a"
   },
   "outputs": {
     "unity/Assets/Game/Runtime/Official/HomeIncomeRules/PropType.cs": "1813ad74c60ad245324a147c827a9da3b7ed6c751e7397ce56c5b4b40e090ace",
@@ -30,7 +36,7 @@
     "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HomeIncomeModels.cs.meta": "3e9cb572c84bd51ecca92315f3b683d9146e078d537b23f6f172885150ee4efc",
     "unity/Assets/Game/Runtime/Official/HomeIncomeRules/BattleFormulaHandler.cs": "eea1cb00675b73bf082d220b1b5be7e4ecf46a0b76700ae5293fc11a51c81651",
     "unity/Assets/Game/Runtime/Official/HomeIncomeRules/BattleFormulaHandler.cs.meta": "070c59ee43582f203dc1e04046aa9048019e5823174c441c63d2301d0672d663",
-    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HangUpUtils.cs": "2b4bc23e95bf2dc739162673b7e317c721ce5e1127983c2e474ab430da3ad372",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HangUpUtils.cs": "4d8ee8b006e4aadad2ec22ae64020379dd556284a917a16ffb3a87407403d5c6",
     "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HangUpUtils.cs.meta": "b3fa7d3996deb6b1eb29fd7cd00d51b2b4c3bdfdeb2a760ca21f0c0b5dbea557",
     "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HomeIncomePropertyCatalog.cs": "79365247129ddc07bb1d01b9bdc15f1b761069c19d3a4921dd02b7936255ba62",
     "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HomeIncomePropertyCatalog.cs.meta": "7a7479c796c168ec68452a0b0ac7099f31985d3dc89cf173eaea2b4ed3b573cf",
@@ -38,17 +44,21 @@
     "unity/Assets/Game/Runtime/Official/HomeIncomeRules/Zjcs.Official.HomeIncomeRules.asmdef.meta": "2278206c646b997165c3bd61335b4bc342eea3c0c7ecbb7b9f17c9ee862efee8",
     "unity/Assets/Game/Runtime/Official/HomeIncomeRules.meta": "3df3563a193ce4b951ac74a91b2473f00d6e927dc074763b1125791db5923420"
   },
-  "adaptation": "Original arithmetic, float casts and execution order; explicit reward row, property dictionary and property parser boundaries. Full original enums; selected prop_cfg flags. Offline checkpoint and award transactions remain separate.",
+  "adaptation": "Original arithmetic, float casts and execution order; explicit reward row, property dictionary and property parser boundaries. Original unsettled-preview argument order, truncation, fractional seconds and award clamp retained. Full original enums; selected prop_cfg flags. Offline checkpoint and award transactions remain separate.",
+  "free_fast_forward_adapter": "Selected function 53 keyed by fast-hang-up ID, configured free count plus original non-battle property 1101, and read-only expired-count projection. User-confirmed local 06:00 day boundary reuses OfflineRefreshClock; old midnight-era morning counters migrate without granting another use.",
+  "collection_adapter": "CollectReward projects only the committed claim delta, selected output item and durable ledger identity; presentation does not issue a second grant. Failed character experience mutations retain the local ledger; previously committed character receipts acknowledge without another award. The ledger persists a sealed transfer amount before granting; later same-item claims receive a separate serial until acknowledgement.",
+  "ordinary_settlement_adapter": "User-confirmed ordinary claims follow the original client unsettled preview, independently of hourly/fast output argument order. Original fractional remainder is persisted when finite; pending local time and its subsecond checkpoint commit atomically with the claim. Failed grants retain the previous time, reward selection state and receipt.",
+  "native_bed_adapter": "Complete selected FurnitureBedDialog prefab/controller, original output foldouts, quick-receive condition, property chunks and inventory response phases are bound to the actual local home/profile. No remote disable keys are installed, matching original empty-key HasKey=false. Secondary acceleration, activity-output details and blessing-rule windows are not covered by this production-bed validation.",
   "validation_inputs": {
-    "scripts/prepare_home_income_formula_validation.py": "ae3d63ff33e867cf8538169aded71a672e196cf00cbaf33e9036ac36b2a2618d",
-    "scripts/fixtures/home_income_formula_validation.cs": "5a80cb725d21a69e59125722b5e8dae085cc758150df895510972e2e2e6b46ac",
-    "scripts/fixtures/home_furniture_host_validation.cs": "04b99707086fdb7beb10202dc1fd4be3bcb2b6a4d6ef857239ad9e6368dfc5c1"
+    "scripts/prepare_home_income_formula_validation.py": "d6db2218a9016f07b1ca8159a10d3f318a29ce68b1aa56e9dc2bee7114fab275",
+    "scripts/fixtures/home_income_formula_validation.cs": "b938e21a72a8916a4cb7a51db8feff98ed6f7c606794ab89c5e187b86bf7bede",
+    "scripts/fixtures/home_furniture_host_validation.cs": "853d4192ccff2c093725967fe086164c5ef55b271b952642ba108c69bb7c9bf7"
   },
   "validation_base_commit": "65aabf8dfb0ad1b0b4ff765118a6673ced2f904e",
   "runtime_bindings": {
-    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "46d95fad7283e686e2f153f9cdd4585aff8b831150f826ba23bfa4828b2d6f35",
-    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs": "4689b513ef18ed360d7e9c0a896b545539c585e3b227602922d4f7a54ac7efc9",
-    "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef": "4b78eb8f27c354da2ead5163c243da50e108fd8a78a788e092c6092c548db5ad",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "cdd2f29480170e00cfc6b261dc285a5df6b7451ec662ee880cedd031f5123656",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs": "909c2630027b84065c6f5da68af6f63757f285ec35e21dc5f7445dbe713bc247",
+    "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef": "421c4493e216e9b4726701ca94077b000a7a79efb43229a714d89431ddf2d215",
     "unity/Assets/Game/Runtime/Official/ProfessionUI/OfficialWwiseEvent.cs": "e13764940488dd88cb195e0a60b3ceb084afbf013d3254eac08f770635900ee8",
     "unity/Assets/Game/Runtime/Presentation/Home/OfflineHomeBedAwards.cs": "edfc5a38d9cb2382f5bf202d65816f4e81392c56419baa3e3488c3333d761300",
     "unity/Assets/Game/Runtime/Presentation/Home/OfflineHomeBedAwards.cs.meta": "34f56a9c163adef7a55870e0a3e7168f75cc898cd4e682206a2c6a8425bc33a2",
@@ -102,15 +112,20 @@
     "unity/Assets/Game/Runtime/Official/HomeAwardUI/Zjcs.Official.HomeAwardUI.asmdef.meta": "1807011b510c040fc1b8ed4524f67c460c0dcd0f99cf6488f8f02230f76ab20e",
     "unity/Assets/Game/Runtime/Official/WorldUI/WorldPopupWindow.cs": "eba6e02e821cab22d7d1150df531a33a99586bff57db89ba6c163ece06f1504f",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Repair.cs": "f7e4b3237f805d3c5583bcfac6f7448c5d7c7c7dd0264d14364e6c23f1f7efc9",
-    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "6d381e930600c259f500b27a984c2f56ea94e6330c25f0b9fc1666abe93488d8",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "583c0901a10aaec58763002f3fe965d983581e03313fc714da408833d1fa17da",
     "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeProgression.cs": "1c16c04a1443bc216cd7b45c55d794c390b3f28ab3518de4acdbf1afde6078b8",
     "unity/Assets/Game/Runtime/Offline/Home/OfficialHomeRules.CurrentIncome.cs": "575a67ee0444d5258da0f17bdfa363e159c6e4b9bd4c21aa461e3ca8a17370eb",
     "unity/Assets/Game/Runtime/Offline/Home/Zjcs.Offline.Home.asmdef": "b0a0c1f86a80aae7cd215ccf11d726e5f9a85c29f51cf2c66f03ace1e1cfc1b5",
     "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineCurrentHomeIncome.cs": "34e0dcab99b941904aae79cb5a5dc69b914b6988ac47e0e516cb32a8302d971d",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineRefreshClock.cs": "bfdb55fdbd99cf5e9d460cf256f587706e7d3dd81e6e3457f8049c1e28b704cf",
-    "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncome.cs": "573f8e414fc1331561f302f4d733e2ec24d80868a7a01afb0192bdfdf79db391",
-    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeFurnitureOutput.cs": "7af9eca0e867ae73f19cb0c96785e7f5282a5f28a12c52d790626400321272e2"
-  },
-  "collection_adapter": "CollectReward projects only the committed claim delta, selected output item and durable ledger identity; presentation does not issue a second grant. Failed character experience mutations retain the local ledger; previously committed character receipts acknowledge without another award. The ledger persists a sealed transfer amount before granting; later same-item claims receive a separate serial until acknowledgement.",
-  "free_fast_forward_adapter": "Selected function 53 keyed by fast-hang-up ID, configured free count plus original non-battle property 1101, and read-only expired-count projection. User-confirmed local 06:00 day boundary reuses OfflineRefreshClock; old midnight-era morning counters migrate without granting another use."
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncome.cs": "954098ae5faff822cb67a2e7d93bd05d2b473c1f19951bcf550308da2dacb07f",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeFurnitureOutput.cs": "594e02c3145c42f4c04a22e8818795f7e43699dd06a7bec35f3d72ce139fdddf",
+    "unity/Assets/Game/Runtime/Presentation/Home/OfflineHomeHangUpWindows.cs": "1e1eaf3a5a8717cc00394f9369988ba4fcb0e5a31dd78c39332cd9cc5b6cc636",
+    "unity/Assets/Game/Runtime/Presentation/Home/OfflineHomeHangUpWindows.cs.meta": "96161b70fb50ff3636605911f2ee645d19b70daa5dfa269ecfb770f12d3d8a8f",
+    "unity/Assets/Game/Runtime/Presentation/Home/OfflineHomeBedServices.cs": "052d2e44341fa5f16c51520a20af6620953c396909fa91b294eb80ee9ab52928",
+    "unity/Assets/Game/Runtime/Presentation/Home/OfflineHomeBedServices.cs.meta": "97a27fd958595709444459d2bd79afdb61c1fb1f3d1c073a800d16ba83b3a6a1",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.BedWindow.cs": "5e92fce71b06f3c34810bb59c6e0e70038d164040981c89b44622a244c50a296",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.BedWindow.cs.meta": "253f0de45eb487873a01a92a495fc8d96faf176d73ec85e2649912bd79fa6c08",
+    "unity/Assets/Official/Home/home-rules-current.json": "493eb0be246a11e26f84069ed999021d867f4706d5b9934a33745ec5dc387d03"
+  }
 }

@@ -1504,19 +1504,35 @@ namespace Zjcs.Presentation.Home
 
         public long TryCollect(int hangUpId)
         {
-            string receipt = tutorialHost?.CollectionReceiptFor(hangUpId)
-                ?? ("home:collect:" + slotId + ":" + hangUpId + ":" + Guid.NewGuid().ToString("N"));
-            OfflineHomeCollectedReward reward = session.CollectReward(hangUpId, receipt);
+            OfflineHomeCollectedReward reward = PrepareHomeCollection(hangUpId);
             long count = reward?.Count ?? 0;
             if (count > 0)
             {
-                HangUpCollectedForTutorial?.Invoke(hangUpId, count, receipt);
+                HangUpCollectedForTutorial?.Invoke(hangUpId, count, reward.Receipt);
                 DrainHomeInventory();
                 if (hangUpId == 1) hud.ShowBedAward(reward);
                 hangUpHud?.Source.NotifyDataChanged(hangUpId);
                 hud.RefreshAll();
             }
             return count;
+        }
+
+        // The original bed callback applies the response, awards the player,
+        // presents its delta, then publishes collection. Keep those phases
+        // separate so the original controller cannot grant a receipt twice.
+        internal OfflineHomeCollectedReward PrepareHomeCollection(int hangUpId)
+        {
+            string receipt = tutorialHost?.CollectionReceiptFor(hangUpId)
+                ?? ("home:collect:" + slotId + ":" + hangUpId + ":" + Guid.NewGuid().ToString("N"));
+            return session.CollectReward(hangUpId, receipt, DateTimeOffset.UtcNow);
+        }
+        internal void AwardPreparedHomeCollections() => DrainHomeInventory();
+        internal void PublishHomeCollection(OfflineHomeCollectedReward reward)
+        {
+            if (reward == null || reward.Count <= 0) return;
+            HangUpCollectedForTutorial?.Invoke(reward.HangUpId, reward.Count, reward.Receipt);
+            hangUpHud?.Source.NotifyDataChanged(reward.HangUpId);
+            hud.RefreshAll();
         }
 
         public long TryFastForward(int hangUpId)

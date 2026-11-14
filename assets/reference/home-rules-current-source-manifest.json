@@ -500,6 +500,26 @@
       "constructor": "TbProfessionBaseInfo",
       "kind": "list",
       "rows": 31
+    },
+    "map_region": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban_map.bundle",
+        "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+        "path_id": "-475710695530452369",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+        "raw_size": 197305,
+        "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7"
+      },
+      "object_sha256": "c62b345792b69067902a1eff4a5b7f4abdae89de465c24f5d63b7366c924fcb2",
+      "payload_sha256": "04525b1a307baeed8ed49e4004a855b2e0239176718ac08c912f34f2e0467bfa",
+      "bytes": 117608,
+      "constructor": "TbMapRegionInfo",
+      "kind": "list",
+      "rows": 2039
     }
   },
   "source_sha256": {
@@ -659,36 +679,22 @@
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbProfessionBaseInfo.cs": "38276d28eb58824e4a00eaaddd1ac4a42c7d7a263ea13adce9882b6c7b24c5b6",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ProfessionBaseInfo.cs": "8e157ce33784b5e550847106566581ab83d3d5b6b4635efa6bd7938f541490f2",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ProfessionPromotePrerequisitesCondition.cs": "7b4e5c2a3572d1c0d97d2132dd5c780ef251e7785dadb0252ec36bbc2a0e30bb",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbMapRegionInfo.cs": "258715211bf3d24f619622a6fecad7382f23541751266910be8a1e2b35402d71",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapRegionInfo.cs": "c98644f4854ff2f4c4e03b4e517d8d6799d323f6eabb7bbc6f64d281c2537a36",
     ".tools/source-packages/current/884_156692/official-code/global-metadata.dat": "c0fe5e062fb3ed1814781e54fd1b4859757970632655138adc091820ded88e0e",
     "scripts/official_tables.py": "77762a9b2aba2d92a6ad3ebd8ce5f7d0bb42a6b4cfc872ae7094c1d10b1e0473",
     "scripts/official_metadata.py": "4e8066a7300d2512ca6807d7bbbe7798c48fb4178aeaeb33fc8478140f722657",
     "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb"
   },
-  "generator_sha256": "f20a290d39cf147b8c19efaab8d47bc6f3c66bc6918f0f3e3af93b51549ee4d1",
+  "generator_sha256": "9acef06c2ee6f8cb143d0e192adfc6a415fc1673a3cb7d2ca8e9798faf23eac7",
   "output": {
     "path": "unity/Assets/Official/Home/home-rules-current.json",
-    "sha256": "c16b24c4c5324ae9e98158f9b55b66985296c81cfbc471333827d2bd50830821",
-    "bytes": 19361969
+    "sha256": "493eb0be246a11e26f84069ed999021d867f4706d5b9934a33745ec5dc387d03",
+    "bytes": 20368358
   },
   "validation": {
     "conditions": 4496,
     "mop_up_unlock_stages_without_stage_info": []
   },
-  "scope": "Selected raw configuration only; runtime migration and validation remain required.",
-  "installed_outputs": {
-    "unity/Assets/Official/Home/home-rules-current.json": "c16b24c4c5324ae9e98158f9b55b66985296c81cfbc471333827d2bd50830821",
-    "unity/Assets/Official/Home/home-rules-current.json.meta": "c3271345d0156aecf93edbf9a525f2653ad4e3e5ff4a3954729f0d767f21dfd9",
-    "unity/Assets/Game/Resources/Home/OfficialCurrentHomeRuleAssetCatalog.asset": "a664f27b499231149e2acf40a92434d104954f2939ef52d4aaf210265b64918e",
-    "unity/Assets/Game/Resources/Home/OfficialCurrentHomeRuleAssetCatalog.asset.meta": "1991d6e165b8d6c163f13199739e2b81302417343a81b6a9ee2145722dd26962"
-  },
-  "bindings_sha256": {
-    "unity/Assets/Game/Runtime/Offline/HomeUI/OfficialCurrentHomeRuleAssetCatalog.cs": "a60ae16c8926c48c9a7e97c0c783b1f01cc9ed70e4b6451fbd903ca3147fc096",
-    "unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef": "2339525e73c533a703824512578c53039e981a67f46ed902551a74c617c44ea7"
-  },
-  "validation_sha256": {
-    "scripts/fixtures/home_condition_validation.cs": "e83a92fa0055265be6620013132da58312465d2abacc1ddbc730e0d45a372894",
-    "scripts/validate_home_conditions.py": "d67e8f39bf8232424219b45aa390937b29122c8353180fda9153d5cbbd0eefc5",
-    "scripts/prepare_home_conditions_validation.py": "9d48fcdfe2f8764fcc474f2262f777b32b718e0e2bfac1f6fbf702a4a1667daf"
-  },
-  "installer_sha256": "450e527fabd5eb9d9bf9f9ec91bef96bef04935982af3ae15bbe5e9ecdf5ec88"
+  "scope": "Selected raw configuration only; runtime migration and validation remain required."
 }

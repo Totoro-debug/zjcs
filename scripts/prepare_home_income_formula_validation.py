@@ -39,14 +39,18 @@ def prepare():
             'Zjcs.Official.ProfessionUI', 'Zjcs.Offline.Commerce',
             'Zjcs.Offline.CharacterCreation', 'Zjcs.Offline.Progression', 'Zjcs.Offline.State',
             'Zjcs.Presentation.Home', 'Unity.TextMeshPro', 'Zjcs.Official.HomeAwardUI',
-            'Zjcs.Offline.HomeUI']), indent=2) + '\n', 'utf8', newline='\n')
+            'Zjcs.Offline.HomeUI', 'Zjcs.Official.HomeHangUpWindowsUI',
+            'Zjcs.Official.WorldUI']), indent=2) + '\n', 'utf8', newline='\n')
     receipt_path = ROOT / 'assets/reference/home-income-formula-source-manifest.json'
     receipt = json.loads(receipt_path.read_bytes())
     source = '.tools/source-packages/current/884_156692/official-code/client-source/FurnitureBedDialog.cs'
     receipt['inputs'][source] = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
-    for name in ('PlayerHangUpDataExt', 'Player', 'FunctionType', 'FurnitureLevelRuleInfo'):
+    for name in ('PlayerHangUpDataExt', 'Player', 'FunctionType', 'FurnitureLevelRuleInfo',
+                 'EnumExt', 'MapRegionInfoParser', 'ServerInfoManager', 'FunctionsDisabledData'):
         source = '.tools/source-packages/current/884_156692/official-code/common-source/Common/' + name + '.cs'
         receipt['inputs'][source] = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
+    source = '.tools/source-packages/current/884_156692/official-code/client-source/HangUpUIUtils.cs'
+    receipt['inputs'][source] = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
     receipt['free_fast_forward_adapter'] = (
         'Selected function 53 keyed by fast-hang-up ID, configured free count plus original non-battle '
         'property 1101, and read-only expired-count projection. User-confirmed local 06:00 day boundary '
@@ -56,6 +60,16 @@ def prepare():
         'presentation does not issue a second grant. Failed character experience mutations retain the local ledger; '
         'previously committed character receipts acknowledge without another award. The ledger persists a sealed '
         'transfer amount before granting; later same-item claims receive a separate serial until acknowledgement.')
+    receipt['ordinary_settlement_adapter'] = (
+        'User-confirmed ordinary claims follow the original client unsettled preview, independently of '
+        'hourly/fast output argument order. Original fractional remainder is persisted when finite; '
+        'pending local time and its subsecond checkpoint commit atomically with the claim. Failed grants '
+        'retain the previous time, reward selection state and receipt.')
+    receipt['native_bed_adapter'] = (
+        'Complete selected FurnitureBedDialog prefab/controller, original output foldouts, quick-receive '
+        'condition, property chunks and inventory response phases are bound to the actual local home/profile. '
+        'No remote disable keys are installed, matching original empty-key HasKey=false. Secondary acceleration, '
+        'activity-output details and blessing-rule windows are not covered by this production-bed validation.')
     receipt['validation_inputs'] = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in (
         'scripts/prepare_home_income_formula_validation.py', 'scripts/fixtures/home_income_formula_validation.cs',
         'scripts/fixtures/home_furniture_host_validation.cs')}

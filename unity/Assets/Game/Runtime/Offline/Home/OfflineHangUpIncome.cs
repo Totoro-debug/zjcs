@@ -27,6 +27,7 @@ namespace Zjcs.Offline.Home
         public long Count;
         public long Capacity;
         public long UnsettledCount;
+        public double RemainderSeconds;
     }
 
     public static class OfflineHangUpIncome
@@ -39,8 +40,17 @@ namespace Zjcs.Offline.Home
 
         public static double RewardCount(HangUpIncomeRule rule, IReadOnlyDictionary<int, long> properties,
             ISet<int> floatPropertyIds, double hours)
+            => Calculate(rule, properties, floatPropertyIds, hours, false, out _);
+
+        public static long UnsettledRewardCount(HangUpIncomeRule rule, IReadOnlyDictionary<int, long> properties,
+            ISet<int> floatPropertyIds, double seconds, out double remainderSeconds)
+            => WholeCount(Calculate(rule, properties, floatPropertyIds, seconds, true, out remainderSeconds));
+
+        private static double Calculate(HangUpIncomeRule rule, IReadOnlyDictionary<int, long> properties,
+            ISet<int> floatPropertyIds, double duration, bool unsettled, out double remainderSeconds)
         {
             if (rule == null) throw new ArgumentNullException(nameof(rule));
+            remainderSeconds = 0;
             if (rule.LevelNum <= 0) return 0;
             var info = new HangUpInfo
             {
@@ -51,8 +61,11 @@ namespace Zjcs.Offline.Home
             };
             var formula = new BattleFormulaHandler(type => HomeIncomePropertyCatalog.Get(type) == null ? null
                 : floatPropertyIds != null && floatPropertyIds.Contains((int)type) ? FloatingProperty : IntegerProperty);
-            return HangUpUtils.CalcRewardCount(info, new HangUpRewardInfo { HourlyOutput = (float)rule.HourlyOutput },
-                formula, properties, hours, rule.LevelNum);
+            var reward = new HangUpRewardInfo { HourlyOutput = (float)rule.HourlyOutput };
+            if (unsettled)
+                return HangUpUtils.CalcUnsettledRewardCount(info, reward, formula, properties,
+                    rule.LevelNum, 0, duration, 0, out remainderSeconds);
+            return HangUpUtils.CalcRewardCount(info, reward, formula, properties, duration, rule.LevelNum);
         }
 
         private static readonly PropCfgInfo FloatingProperty = new PropCfgInfo { Float = true };
@@ -85,7 +98,8 @@ namespace Zjcs.Offline.Home
         {
             if (record == null) throw new ArgumentNullException(nameof(record));
             double rate = HourlyRate(rule, properties, floatPropertyIds);
-            long unsettled = WholeCount(RewardCount(rule, properties, floatPropertyIds, Math.Max(0, record.StoredSeconds) / 3600.0));
+            long unsettled = UnsettledRewardCount(rule, properties, floatPropertyIds,
+                Math.Max(0, record.StoredSeconds), out double remainderSeconds);
             long capacity = WholeCount(RewardCount(rule, properties, floatPropertyIds, Math.Max(0, rule.MaxStoreHours)));
             long total = AddSaturated(Math.Max(0, record.SettledCount), unsettled);
             return new HangUpIncomePreview
@@ -93,7 +107,8 @@ namespace Zjcs.Offline.Home
                 HourlyRate = rate,
                 Count = Math.Max(Math.Max(0, record.SettledCount), Math.Min(total, capacity)),
                 Capacity = capacity,
-                UnsettledCount = unsettled
+                UnsettledCount = unsettled,
+                RemainderSeconds = remainderSeconds
             };
         }
 
@@ -103,8 +118,11 @@ namespace Zjcs.Offline.Home
             HangUpIncomePreview preview = Preview(record, rule, properties, floatPropertyIds);
             if (preview.Count <= 0) return 0;
 
-            if (preview.HourlyRate > 0)
-                record.StoredSeconds = Math.Max(0, record.StoredSeconds - preview.UnsettledCount * 3600.0 / preview.HourlyRate);
+            // User-confirmed local settlement follows the original unsettled
+            // preview and its fractional-time formula, independently of hourly
+            // output/fast acceleration. Invalid arithmetic never enters JSON.
+            if (IsFinite(preview.RemainderSeconds))
+                record.StoredSeconds = Math.Max(0, preview.RemainderSeconds);
             record.SettledCount = 0;
             return preview.Count;
         }

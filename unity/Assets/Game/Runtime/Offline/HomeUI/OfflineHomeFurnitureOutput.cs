@@ -80,6 +80,26 @@ namespace Zjcs.Offline.HomeUI
             double hours = rules.IncomeMaxStoreHours(row.levelRuleId, level);
             return (long)GetHangUpReward(id, hours, level);
         }
+        public long GetUnsettledRewardCount(int id, double elapsedSeconds, double lastNotSettleSeconds,
+            double extraRewardSeconds, out double remainderSeconds, int level = -1)
+        {
+            var row = Row(id);
+            if (level < 0) level = readLevel(id);
+            var levelRow = rules.Data.furnitureLevelRules.FirstOrDefault(value => value.id == row.levelRuleId && value.level == level);
+            remainderSeconds = 0;
+            if (levelRow == null)
+            {
+                if (row.levelRuleId > 0 && level > 0)
+                    UnityEngine.Debug.LogError("FurnitureLevelRuleInfoParser levelRuleId:" + row.levelRuleId + ", level:" + level + " not exist");
+                return 0;
+            }
+            var reward = rules.HangUpReward(row.rewardId)
+                ?? throw new InvalidOperationException("Selected home reward configuration is unavailable: " + row.rewardId);
+            return Zjcs.Official.HomeIncomeRules.HangUpUtils.CalcUnsettledRewardCount(Info(row),
+                new Zjcs.Official.HomeIncomeRules.HangUpRewardInfo { HourlyOutput = (float)reward.hourlyOutput },
+                formula, snapshot.NonBattleProps, levelRow.levelNum, elapsedSeconds, lastNotSettleSeconds,
+                extraRewardSeconds, out remainderSeconds);
+        }
         public double GetProp(IReadOnlyDictionary<PropType, long> props, PropType type)
             => formula.GetProp(props?.ToDictionary(row => (int)row.Key, row => row.Value), (FormulaProp)type);
         public void GetHangUpProp(HomeWindowHangUpInfo info, IReadOnlyDictionary<PropType, long> props,

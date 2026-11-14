@@ -13,6 +13,7 @@ namespace Zjcs.Offline.Home
     {
         public int Schema = 2;
         public long LastLocalUnixSeconds;
+        public double LastIncomeSubsecond;
         public long RandomState;
         public List<OfflineHomeIncomeEntry> Income = new List<OfflineHomeIncomeEntry>();
         public List<OfflineHomeItemStack> Inventory = new List<OfflineHomeItemStack>();
@@ -319,8 +320,32 @@ namespace Zjcs.Offline.Home
         public bool AdvanceTo(long nowUnixSeconds)
         {
             OfflineHomeSave next = Clone(Save);
+            AdvanceIncome(next, nowUnixSeconds, 0);
+            if (JsonUtility.ToJson(next) == JsonUtility.ToJson(Save)) return false;
+            return Commit(next);
+        }
+
+        public double PendingIncomeSeconds(DateTimeOffset now)
+            => Math.Max(0, (double)now.ToUnixTimeSeconds() - Save.LastLocalUnixSeconds
+                + Subsecond(now) - Save.LastIncomeSubsecond);
+
+        static double Subsecond(DateTimeOffset time)
+            => (time.UtcDateTime.Ticks % TimeSpan.TicksPerSecond) / (double)TimeSpan.TicksPerSecond;
+
+        void AdvanceIncome(OfflineHomeSave next, long nowUnixSeconds, double subsecond)
+        {
             long previousCheckpoint = next.LastLocalUnixSeconds;
-            long elapsed = OfflineHangUpIncome.AdvanceCheckpoint(ref next.LastLocalUnixSeconds, nowUnixSeconds);
+            double elapsed = OfflineHangUpIncome.AdvanceCheckpoint(ref next.LastLocalUnixSeconds, nowUnixSeconds);
+            if (next.LastLocalUnixSeconds > previousCheckpoint)
+            {
+                elapsed += subsecond - next.LastIncomeSubsecond;
+                next.LastIncomeSubsecond = subsecond;
+            }
+            else if (nowUnixSeconds == previousCheckpoint && subsecond > next.LastIncomeSubsecond)
+            {
+                elapsed = subsecond - next.LastIncomeSubsecond;
+                next.LastIncomeSubsecond = subsecond;
+            }
             if (elapsed > 0)
             {
                 foreach (OfflineHomeIncomeDefinition definition in definitions)
@@ -333,9 +358,6 @@ namespace Zjcs.Offline.Home
                 }
             }
             AdvanceRandomRewards(next, next.LastLocalUnixSeconds);
-            if (elapsed == 0 && previousCheckpoint == next.LastLocalUnixSeconds
-                && JsonUtility.ToJson(next) == JsonUtility.ToJson(Save)) return false;
-            return Commit(next);
         }
 
         public IReadOnlyList<OfflineHomeRandomRewardSlot> RandomRewards => Save.RandomRewards;
@@ -568,12 +590,16 @@ namespace Zjcs.Offline.Home
         public long Collect(int hangUpId, string receipt)
             => CollectReward(hangUpId, receipt)?.Count ?? 0;
 
-        public OfflineHomeCollectedReward CollectReward(int hangUpId, string receipt)
+        public OfflineHomeCollectedReward CollectReward(int hangUpId, string receipt, DateTimeOffset? collectedAt = null)
         {
             if (string.IsNullOrWhiteSpace(receipt) || Save.AppliedReceipts.Contains(receipt)) return null;
             OfflineHomeIncomeDefinition definition = FindDefinition(hangUpId);
             if (!definition.Unlocked) return null;
             OfflineHomeSave next = Clone(Save);
+            // Preview and claim consume the same precise local interval. Advance
+            // inside this transaction so a failed grant cannot consume time.
+            if (collectedAt.HasValue)
+                AdvanceIncome(next, collectedAt.Value.ToUnixTimeSeconds(), Subsecond(collectedAt.Value));
             OfflineHomeIncomeEntry entry = FindOrCreate(next, hangUpId);
             HangUpIncomeRecord record = ToRecord(entry);
             long count = OfflineHangUpIncome.Collect(record, definition.Rule, properties, floatPropertyIds);
@@ -958,6 +984,7 @@ namespace Zjcs.Offline.Home
         private static bool IsValid(OfflineHomeSave save)
         {
             if (save == null || save.Schema != 2 || save.LastLocalUnixSeconds < 0
+                || !IsFinite(save.LastIncomeSubsecond) || save.LastIncomeSubsecond < 0 || save.LastIncomeSubsecond >= 1
                 || save.Income == null || save.Inventory == null || save.RandomRewards == null
                 || save.FastForwardUsage == null || save.Mail == null || save.Tutorial == null || save.Tutorial.Step < 0
                 || save.Tutorial.PendingGuideIds == null || save.AppliedReceipts == null

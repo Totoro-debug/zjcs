@@ -89,6 +89,25 @@ def build():
     body = body.replace('BattleFormula.Instance.GetHangUpProp(hangUpInfo, player.NonBattleProps,',
                         'formula.GetHangUpProp(hangUpInfo, props,')
     assert 'Parsers.' not in body and 'player.' not in body
+    unsettled = method(source, 'public static long GetUnsettledRewardCount(this Player player, int hangUpId, int level, out double remainderSeconds)')
+    time_conversion = method(read('TimeUtils'), 'public static double SecondToHour(double sec)')
+    assert 'return sec / 3600.0;' in time_conversion
+    arithmetic = unsettled[unsettled.index('\t\tdouble num3 ='):] if '\t\tdouble num3 =' in unsettled else unsettled[unsettled.index('\t\t\tdouble num3 ='):]
+    arithmetic = arithmetic[:arithmetic.index('\n\t\t}')]
+    arithmetic = arithmetic.replace('player.CalcRewardCount(hangUpInfo, furnitureLevelRuleInfo.LevelNum, scaledNum)',
+        'CalcRewardCount(hangUpInfo, hangUpRewardInfo, formula, props, levelNum, scaledNum)')
+    award = method(source, 'public static long GetHangUpAwardCount(this Player player, int hangUpId, out double remainderSeconds)')
+    clamp = award[award.index('\t\tlong val ='):award.rindex('\n\t}')]
+    clamp = re.sub(r'\n\t\tlong hangUpMaxRewardStore =[^\n]+', '', clamp)
+    body += ('\n\t// Original GetUnsettledRewardCount arithmetic after unlock and row lookup.\n'
+        '\tpublic static long CalcUnsettledRewardCount(HangUpInfo hangUpInfo, HangUpRewardInfo hangUpRewardInfo, '
+        'BattleFormulaHandler formula, IReadOnlyDictionary<int, long> props, double levelNum, '
+        'double elapsedSeconds, double lastNotSettleSeconds, double extraRewardSeconds, out double remainderSeconds)\n'
+        '\t{\n\t\tdouble num2 = elapsedSeconds + lastNotSettleSeconds + extraRewardSeconds;\n'
+        '\t\tdouble scaledNum = num2 / 3600.0;\n\t\tlong num = 0L;\n' + arithmetic
+        + '\n\t\treturn num;\n\t}\n'
+        '\tpublic static long ClampAwardCount(long settledRewardCount, long unsettledRewardCount, long hangUpMaxRewardStore)\n'
+        '\t{\n' + clamp + '\n\t}')
     emit('HangUpUtils', 'public static class HangUpUtils\n{\n' + body + '\n}')
 
     path = ROOT / 'unity/Assets/Official/Partners/partner-property-ui.json'
@@ -116,7 +135,7 @@ def build():
         references=[], autoReferenced=False, noEngineReferences=True), indent=2) + '\n')
     write(DEST, '', folder=True)
     manifest = dict(manifest='884_156692', generator_sha256=sha(Path(__file__)), inputs=inputs,
-                    outputs=outputs, adaptation='Original arithmetic, float casts and execution order; explicit reward row, property dictionary and property parser boundaries. Full original enums; selected prop_cfg flags. Offline checkpoint and award transactions remain separate.')
+                    outputs=outputs, adaptation='Original arithmetic, float casts and execution order; explicit reward row, property dictionary and property parser boundaries. Original unsettled-preview argument order, truncation, fractional seconds and award clamp retained. Full original enums; selected prop_cfg flags. Offline checkpoint and award transactions remain separate.')
     (ROOT / 'assets/reference/home-income-formula-source-manifest.json').write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
     print('Recovered original income formula:', len(outputs), 'outputs;', len(rows), 'property definitions')

@@ -151,7 +151,7 @@ public sealed class HomeFurnitureHostRunner : MonoBehaviour
         foreach (Canvas item in home.Hud.CanvasTransform.GetComponentsInChildren<Canvas>(true))
         {
             item.sortingLayerID = SortingLayer.layers.Last().id;
-            item.sortingOrder = 30000;
+            if (item.sortingOrder < 30000) item.sortingOrder += 30000;
         }
         var canvas = home.Hud.CanvasTransform.GetComponent<Canvas>();
         canvas.enabled = false;

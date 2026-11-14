@@ -793,6 +793,7 @@ namespace Zjcs.Presentation.Home
 
         public void Tick()
         {
+            nativeBedServices?.Tick();
             host.SetFantasyTowerBackgroundExecution(AnyModalOpen);
             UpdatePartnerDetailRuntime();
             TickPetIntroduction();
@@ -879,6 +880,8 @@ namespace Zjcs.Presentation.Home
 
         public void CloseDialog()
         {
+            bool wasOpen = activeDialog != null;
+            ReleaseNativeBedWindow();
             ReleaseNativeBedOutput();
             repairWindows?.Dispose();
             repairWindows = null;
@@ -887,7 +890,6 @@ namespace Zjcs.Presentation.Home
             ClosePartnerDialogueImmediate();
             DestroyPartnerPromptWindow();
             DestroyPartnerFriendshipWindow();
-            bool wasOpen = activeDialog != null;
             partnerRosterPanel?.Close();
             partnerRosterPanel = null;
             partnerPanel?.Close();
@@ -954,8 +956,7 @@ namespace Zjcs.Presentation.Home
 
         public void ShowBed()
         {
-            OpenDialog("bed", (renderer, panel) => { BindNativeBedOutput(panel); RefreshBed(renderer); });
-            bedOpen = activeDialog != null;
+            ShowNativeBed();
         }
 
         private void RefreshBed() => RefreshBed(activeDialogRenderer);

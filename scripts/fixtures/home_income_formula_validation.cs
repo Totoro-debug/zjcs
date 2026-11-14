@@ -29,6 +29,21 @@ public sealed partial class HomeIncomeFormulaHostRunner
             "cart-wide percentage precedes final multiplier and fixed output");
         Require(new BattleFormulaHandler(HomeIncomePropertyCatalog.Get).GetProp(props, (PropType)int.MaxValue) == 0,
             "missing original property configuration returns zero");
+        var fixedRule = new HangUpIncomeRule { HourlyOutput = 50, LevelNum = 2, MaxStoreHours = 36,
+            EffectFixedPropertyId = 1000 };
+        var fixedProps = new Dictionary<int, long> { { 1000, 10 } };
+        var fixedRecord = new HangUpIncomeRecord { StoredSeconds = 1800 };
+        Require(OfflineHangUpIncome.RewardCount(fixedRule, fixedProps, flags, .5) == 55
+            && OfflineHangUpIncome.Preview(fixedRecord, fixedRule, fixedProps, flags).Count == 70
+            && OfflineHangUpIncome.Collect(fixedRecord, fixedRule, fixedProps, flags) == 70
+            && fixedRecord.StoredSeconds == 0,
+            "confirmed ordinary collection uses original unsettled parameter order independently of fast/hourly output");
+        fixedRecord.StoredSeconds = 1810;
+        long unsettled = OfflineHangUpIncome.UnsettledRewardCount(fixedRule, fixedProps, flags, 1810, out double originalRemainder);
+        Require(unsettled == 70 && originalRemainder > 0 && originalRemainder < 10
+            && OfflineHangUpIncome.Collect(fixedRecord, fixedRule, fixedProps, flags) == unsettled
+            && BitConverter.DoubleToInt64Bits(fixedRecord.StoredSeconds) == BitConverter.DoubleToInt64Bits(originalRemainder),
+            "ordinary collection saves original fractional time without dividing by hourly rate");
         rule.IsCart = false; props.Clear();
         rule.LevelNum = 1.1;
         Require(BitConverter.DoubleToInt64Bits(OfflineHangUpIncome.HourlyRate(rule, props, flags)) == 0x404b800000000001L,
@@ -160,8 +175,50 @@ public sealed partial class HomeIncomeFormulaHostRunner
             Require(home.PlayerProperties()[prop.propId] == prior + prop.value,
                 "periodic card non-battle property is included once, without a second commerce merge");
         }
+        yield return CheckNativeBedCollection();
         yield return CheckExperienceLedgerRecovery();
-        Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original single precision and arithmetic boundary, actual native repair pointer, real lost goddess profile, production collection/experience/free acceleration, original production XP award queue, committed reward receipts, rejected experience grants retained, acknowledgement recovery, remainder, idempotency and disk reopen. Collection and acceleration business calls are direct; original bed buttons and complete HUD remain pending.");
+        Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original float/double arithmetic and unsettled-preview settlement, actual native repair and production bed pointer, bed output foldout, real lost goddess profile, production collection/experience/free acceleration, original XP award queue, committed reward receipts, rejected experience grants retained, acknowledgement recovery, original remainder, idempotency and disk reopen. Acceleration business calls are direct; secondary bed windows and complete HUD remain pending.");
+    }
+
+    private IEnumerator CheckNativeBedCollection()
+    {
+        Require(home.Session.Mutate("native-bed:seed:" + Guid.NewGuid().ToString("N"), save => {
+            var entry = save.Income.Single(value => value.HangUpId == 1);
+            entry.SettledCount = 0; entry.StoredSeconds = 1800;
+        }), "seed actual saved income for the native bed pointer");
+        SceneClick(0);
+        yield return new WaitForSeconds(.8f);
+        var bed = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeHangUpWindowsUI.FurnitureBedDialog>();
+        Require(bed && bed.OutputInfo.OutputServices is Zjcs.Offline.HomeUI.OfflineHomeFurnitureOutput,
+            "formal scene pointer opens the complete original bed with actual property services");
+        Require(bed.Name.Text == Zjcs.Official.HomeHangUpWindowsUI.OfficialHomeHangUpWindowAssetCatalog.LoadDefault().Text("item_4000_name"),
+            "original controller retains the furniture title rather than replacing it with the reward name");
+        Require(!bed.GetComponentsInChildren<TMPro.TMP_Text>(true).Any(value => value.text == "hang_up_1_base_output"),
+            "native bed binds the selected dynamic base-output translation");
+        Capture("home-bed-production-native.png");
+        bool folded = bed.OutputFoldout;
+        Click(bed.OutputFoldoutBtn); yield return null;
+        Require(bed.OutputFoldout != folded, "original output foldout responds to internal pointer");
+        Capture("home-bed-production-output.png");
+        Click(bed.OutputFoldoutBtn); yield return null;
+        var profile = OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(root), slot);
+        long before = profile.Save.Player.Experience;
+        long expected = home.Session.Preview(1).Count;
+        Require(expected > 0, "actual native bed has a claim");
+        Click(bed.GetHangUpRewardBtn);
+        yield return new WaitForSeconds(.2f); profile.Reload();
+        Require(profile.Save.Player.Experience == before + expected && home.Session.Save.Inventory.Count == 0,
+            "native bed pointer awards the actual response exactly once and acknowledges its durable ledger");
+        Click(bed.GetHangUpRewardBtn); profile.Reload();
+        Require(profile.Save.Player.Experience == before + expected, "empty native claim does not duplicate XP");
+        Capture("home-bed-production-collected.png");
+        home.Hud.CloseDialog(); yield return null;
+        Require(!UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeHangUpWindowsUI.FurnitureBedDialog>(),
+            "native bed closes and releases the whole original controller");
+        SceneClick(0); yield return new WaitForSeconds(.8f);
+        Require(UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeHangUpWindowsUI.FurnitureBedDialog>(),
+            "actual native bed can reopen without stale services or subscriptions");
+        home.Hud.CloseDialog(); yield return null;
     }
 
     private void CheckCollectionReceipts(ISet<int> flags)
@@ -201,6 +258,44 @@ public sealed partial class HomeIncomeFormulaHostRunner
             "failed output grant preserves income, random state, serials and receipt");
         Require(session.Mutate("space", save => { foreach (var item in save.Inventory) item.Count = 1; }), "restore isolated ledger space");
         Require(session.CollectReward(1, "retry")?.Count == 5, "failed receipt remains retryable after storage succeeds");
+        CheckPreciseCollectionClock(flags);
+    }
+
+    private void CheckPreciseCollectionClock(ISet<int> flags)
+    {
+        const long epoch = 1700001000;
+        string path = System.IO.Path.Combine(root, "precise-collection-clock.json");
+        var definitions = new[] { new OfflineHomeIncomeDefinition {
+            HangUpId = 1, OutputItemId = 50, Unlocked = true,
+            Rule = new HangUpIncomeRule { HourlyOutput = 3600, LevelNum = 1, MaxStoreHours = 36 }
+        } };
+        var properties = new Dictionary<int, long>();
+        var session = OfflineHomeIncomeSession.Open(path, definitions, properties, flags, epoch);
+        Require(session.Mutate("half-second", save => save.Income.Add(
+            new OfflineHomeIncomeEntry { HangUpId = 1, StoredSeconds = .5 })), "seed subsecond production");
+        var at = DateTimeOffset.FromUnixTimeSeconds(epoch).AddTicks(7500000);
+        Require(session.PendingIncomeSeconds(at) == .75, "read-only bed preview includes pending subsecond time");
+        Require(session.CollectReward(1, "precise", at)?.Count == 1
+            && session.Save.LastIncomeSubsecond == .75 && session.Save.Income.Single().StoredSeconds == .25,
+            "precise claim includes pending production and persists its original remainder atomically");
+        Require(session.AdvanceTo(epoch + 1) && session.Save.LastIncomeSubsecond == 0
+            && session.Save.Income.Single().StoredSeconds == .5,
+            "next integral checkpoint does not accumulate the claimed fraction twice");
+        session = OfflineHomeIncomeSession.Open(path, definitions, properties, flags, epoch + 1);
+        Require(session.Save.Income.Single().StoredSeconds == .5, "disk reopen retains exact income time");
+        at = DateTimeOffset.FromUnixTimeSeconds(epoch + 1).AddTicks(5000000);
+        Require(session.CollectReward(1, "next-precise", at)?.Count == 1
+            && session.Save.Income.Single().StoredSeconds == 0, "next fractional interval claims once");
+        string before = JsonUtility.ToJson(session.Save);
+        Require(session.CollectReward(1, "rollback", at.AddTicks(-2500000)) == null
+            && JsonUtility.ToJson(session.Save) == before, "backward local time cannot rewind the income checkpoint");
+        Require(session.Mutate("fill-ledger", save => {
+            save.Income.Single().StoredSeconds = .5;
+            save.Inventory.Single().Count = long.MaxValue;
+        }), "seed rejected precise grant");
+        before = JsonUtility.ToJson(session.Save);
+        Require(session.CollectReward(1, "failed-precise", at.AddTicks(7500000)) == null
+            && JsonUtility.ToJson(session.Save) == before, "failed precise grant preserves time, remainder and receipt");
     }
 
     private IEnumerator CheckExperienceLedgerRecovery()
