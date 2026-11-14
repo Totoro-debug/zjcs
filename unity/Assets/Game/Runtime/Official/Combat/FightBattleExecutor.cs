@@ -915,7 +915,7 @@ namespace Zjcs.Combat.Official
                         continue;
                     }
                     SpawnSummons(actor, skill, hit,
-                        hasRandomTargetContext ? hitTargets : targets, hitSelection, castHit);
+                        hasRandomTargetContext || hit.PreviousCustomHit != null ? hitTargets : targets, hitSelection, castHit);
                     continue;
                 }
                 decimal hitRemovedHp = 0m;

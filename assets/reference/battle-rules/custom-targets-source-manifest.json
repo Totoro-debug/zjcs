@@ -1,0 +1,97 @@
+{
+  "code_manifest": "884_156692",
+  "configuration_manifest": "854_156383",
+  "original": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitCustomTargetComponent.cs",
+      "bytes": 449,
+      "sha256": "f013369b7abe4f7b529fc15709ead13fc935f28b7a617bf7a94b345606f2a180"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitCustomTargetComponentInfo.cs",
+      "bytes": 486,
+      "sha256": "07957458774f0ff583f07d5c5f3b6bca0b4a9a365fad7ce9400e45367eac9522"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SelfTargetPosResolver.cs",
+      "bytes": 233,
+      "sha256": "801da50d3058ddbc6a3860bd9208567340b69a6e6cc0e1682719359ad6420a54"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitCustomTarget.cs",
+      "bytes": 143,
+      "sha256": "58f3e03e3d6587c1bd9b1aab1cd8b2e3ffd1844cd8bb82a6d335e8b08dd58c8e"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "bytes": 22729433,
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+      "bytes": 566429,
+      "sha256": "e88d754e06c0b334ba1c2d94ae42dfbf3d2007b8f44ff7b7526dabbc983f4017"
+    }
+  ],
+  "migration": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleHitCollector.cs",
+      "bytes": 18616,
+      "sha256": "a7cb601ec96aa1b01bcef3f735b19a7aa5963e425eb98f04dd649a3ea4acabcb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
+      "bytes": 98140,
+      "sha256": "28b6c82dea059e47c3c7cb34c3f7aef013eb15578c4fc6dd3f922ea2a8f0f2e4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs",
+      "bytes": 226409,
+      "sha256": "4eef8fb98c5e952e28a4b99978f863f1dd2280b334cba7082323ed42893fc2c8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
+      "bytes": 163768,
+      "sha256": "71b32aaf91bc2fd8dc74231396d7fe9087c900d8f29b4cae9e013dbd543b3c5e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightHitChainExecution.cs",
+      "bytes": 10707,
+      "sha256": "9ed22b380b03463743e47c7fa03bccc44d0878e9c41fa00655555a2875581c45"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightHitChainExecution.CustomTargets.cs",
+      "bytes": 2690,
+      "sha256": "18ec0a37aaedd56614250425828ebfe223d1ec070a9e8872c078fe3014946de3"
+    }
+  ],
+  "validation": [
+    {
+      "path": "scripts/test_battle_custom_targets.ps1",
+      "bytes": 1233,
+      "sha256": "6e55f99bff0f043cf33f06decc1121a0292295b251710fded0b1aa4af3a8564f"
+    },
+    {
+      "path": "scripts/fixtures/battle_custom_targets_harness.cs",
+      "bytes": 7592,
+      "sha256": "b49b19979cea35654b651a8791e8f5f5cbdbd8e3536049f1358b01b852d7548c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleHitPlaybackAcceptance.CustomTargets.cs",
+      "bytes": 4962,
+      "sha256": "f36d0b4b9d75a01f5aea2e963bd8db9c62191c1951450b8e0212890d61c73c0b"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_battle_custom_target_sources.py",
+    "bytes": 3822,
+    "sha256": "b02faee83c1ec628a78db32900fa6115f86cdcb5838b524a7886deb3ad95295d"
+  },
+  "bindings": {
+    "execution": "FightBattleHitCollector -> FightHitChainExecution.SelectCustom -> existing settlement",
+    "presentation": "FightBattleHitSelectionSnapshot -> OfficialBattleHitReceiptPlayback -> original custom/summon views"
+  },
+  "operation": "User-confirmed offline SelfTargetPosResolver: scan the original Scope around the actual parent hit cell in original order; for each eligible occupied body cell create each original HitList child with its edge and scope delays. Preserve original orientation and flip. Parent performs no damage or random draw. No new artwork or prefab changes. Only the three installed original custom parents are validated."
+}

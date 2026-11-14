@@ -74,7 +74,7 @@ namespace Zjcs.Combat.Official
         {
             var result = new List<FightBattleHitDefinition>();
             Collect(entities, rootEntityId, result, new HashSet<int>(), 0, 0, 1, null,
-                ref nextRandomTargetGroupId, incoming, includeRootView: includeRootViews);
+                ref nextRandomTargetGroupId, incoming, includeRootView: includeRootViews, includeCustomViews: includeRootViews);
             return result;
         }
 
@@ -82,7 +82,7 @@ namespace Zjcs.Combat.Official
             List<FightBattleHitDefinition> result, HashSet<int> ancestors, int depth,
             int targetMode, int randomCount, RandomTargetContext randomTargetContext,
             ref int nextRandomTargetGroupId, FightBattleHitLink incoming = null, float parentDelay = 0f,
-            bool includeRootView = false)
+            bool includeRootView = false, bool includeCustomViews = false)
         {
             if (entityId <= 0 || depth > 12 || ancestors.Contains(entityId)) return;
             FightBattleHitEntity entity = Find(entities, entityId);
@@ -90,7 +90,8 @@ namespace Zjcs.Combat.Official
             var branch = new HashSet<int>(ancestors) { entityId };
             float occurrenceDelay = parentDelay + (incoming == null ? entity.Delay : incoming.Delay);
 
-            bool viewOnly = includeRootView && entity.HitComponentType == "FightHitRandomTargetComponent"
+            bool custom = includeCustomViews && entity.HitComponentType == "FightHitCustomTargetComponent";
+            bool viewOnly = custom || includeRootView && entity.HitComponentType == "FightHitRandomTargetComponent"
                 && entity.Scope != null && entity.Scope.Count > 0
                 && !entity.HasFixedDamage && !entity.IsSummon && entity.TriggerSkill == null;
             FightBattleHitDefinition definition = null;
@@ -99,6 +100,7 @@ namespace Zjcs.Combat.Official
                 definition = new FightBattleHitDefinition
                 {
                     ChainConfiguration = entity.IsChained ? entity : null,
+                    IsCustomTarget = custom,
                     IsViewOnly = viewOnly,
                     EntityId = entity.EntityId,
                     DamageId = entity.DamageId,
@@ -209,9 +211,10 @@ namespace Zjcs.Combat.Official
 
             CollectChildren(entities, entity.ChainedHits, entity.ChainedHitLinks, result, branch, depth + 1, occurrenceDelay,
                 targetMode, randomCount, randomTargetContext, ref nextRandomTargetGroupId,
-                entity.IsChained ? definition : null);
+                entity.IsChained ? definition : null, includeCustomViews: includeCustomViews);
             CollectChildren(entities, entity.CustomTargetHits, entity.CustomTargetHitLinks, result, branch, depth + 1, occurrenceDelay,
-                1, 0, null, ref nextRandomTargetGroupId);
+                1, 0, null, ref nextRandomTargetGroupId, customParent: custom ? definition : null,
+                includeCustomViews: includeCustomViews);
             bool hasRandomChildren = entity.RandomTargetHitLinks != null && entity.RandomTargetHitLinks.Count > 0
                 || entity.RandomTargetHits != null && entity.RandomTargetHits.Count > 0;
             RandomTargetContext childRandomTargetContext = !hasRandomChildren ? null : new RandomTargetContext
@@ -230,7 +233,7 @@ namespace Zjcs.Combat.Official
                 };
             CollectChildren(entities, entity.RandomTargetHits, entity.RandomTargetHitLinks, result, branch, depth + 1, occurrenceDelay, 2,
                 Math.Max(1, entity.MiniHitTargetCount), childRandomTargetContext,
-                ref nextRandomTargetGroupId);
+                ref nextRandomTargetGroupId, includeCustomViews: includeCustomViews);
         }
 
         private static List<FightBattleSkillMoveCondition> CopyMoveConditions(
@@ -251,7 +254,8 @@ namespace Zjcs.Combat.Official
             List<int> children, List<FightBattleHitLink> links, List<FightBattleHitDefinition> result, HashSet<int> ancestors,
             int depth, float parentDelay, int targetMode, int randomCount,
             RandomTargetContext randomTargetContext, ref int nextRandomTargetGroupId,
-            FightBattleHitDefinition previousChainHit = null)
+            FightBattleHitDefinition previousChainHit = null, FightBattleHitDefinition customParent = null,
+            bool includeCustomViews = false)
         {
             // HitCfg belongs to an edge, not to its shared entity class. Never mutate
             // the class while expanding repeated references. Parent configured delays accumulate
@@ -263,7 +267,9 @@ namespace Zjcs.Combat.Official
                     if (link == null) throw new InvalidOperationException("Null original HitCfg reference.");
                     int first = result.Count;
                     Collect(entities, link.EntityId, result, ancestors, depth, targetMode, randomCount,
-                        randomTargetContext, ref nextRandomTargetGroupId, link, parentDelay);
+                        randomTargetContext, ref nextRandomTargetGroupId, link, parentDelay,
+                        includeCustomViews: includeCustomViews);
+                    BindCustomParent(result, first, customParent, link.EntityId, link.Delay);
                     BindChainParent(result, first, previousChainHit, link.EntityId, link.Delay);
                 }
                 return;
@@ -273,10 +279,20 @@ namespace Zjcs.Combat.Official
             {
                 int first = result.Count;
                 Collect(entities, children[i], result, ancestors, depth, targetMode, randomCount,
-                    randomTargetContext, ref nextRandomTargetGroupId);
+                    randomTargetContext, ref nextRandomTargetGroupId, includeCustomViews: includeCustomViews);
+                BindCustomParent(result, first, customParent, children[i],
+                    first < result.Count ? result[first].Delay : 0f);
                 BindChainParent(result, first, previousChainHit, children[i],
                     first < result.Count ? result[first].Delay : 0f);
             }
+        }
+
+        private static void BindCustomParent(List<FightBattleHitDefinition> result, int first,
+            FightBattleHitDefinition parent, int childId, float delay)
+        {
+            if (parent == null || first >= result.Count || result[first].EntityId != childId) return;
+            result[first].PreviousCustomHit = parent;
+            result[first].CustomLinkDelay = delay;
         }
 
         private static void BindChainParent(List<FightBattleHitDefinition> result, int first,

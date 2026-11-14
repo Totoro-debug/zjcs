@@ -16,6 +16,7 @@ GUID = re.compile(rb'(?m)^guid: ([a-f0-9]{32})\r?$')
 def main():
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument('--code-only', action='store_true')
+    parser.add_argument('--custom-targets', action='store_true')
     args = parser.parse_args()
     work = Path(os.environ['ZJCS_VALIDATION_DIR']).resolve()
     project = prepare(work)
@@ -57,10 +58,13 @@ def main():
         print('Prepared actual damage code:', len(selected), 'runtime assemblies;', project)
         return
 
-    prepare_native_assets(project, work, selected)
+    if args.custom_targets:
+        for fixture in (ROOT / 'unity/Assets/Game/Editor/Combat/AnimatorPlayback').glob('OfficialBattleHitPlaybackAcceptance*.cs'):
+            shutil.copy2(fixture, editor / fixture.name)
+    prepare_native_assets(project, work, selected, args.custom_targets)
 
 
-def prepare_native_assets(project, work, selected):
+def prepare_native_assets(project, work, selected, custom_targets=False):
     receipt = json.loads((ROOT / 'assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json').read_bytes())
     catalog_path = ROOT / 'unity/Assets/Game/Resources/Combat/skill-native-graphs.json'
     catalog = json.loads(catalog_path.read_bytes())
@@ -103,6 +107,9 @@ def prepare_native_assets(project, work, selected):
     hits = [row for row in catalog['hits'] if row['hit_entity_id'] in (10101, 10911, 10912, 11051, 13521, 13522, 13524, 13525)]
     if len(skills) != 5 or len(hits) != 8:
         raise ValueError('Formal receipt fixture original skill/hit entities are not installed.')
+    if custom_targets:
+        skills.extend(row for row in catalog['skills'] if row['skill_entity_id'] in (12060,13300,13670))
+        hits.extend(row for row in catalog['hits'] if row['hit_entity_id'] in (12061,12063,13301,13303,13671,13673))
     for row in [*skills, *hits, *catalog['damages']]:
         prefix = row['entity_resource'].removeprefix('Combat/SkillGraphs/')
         pending.append(ROOT / 'unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs' / (prefix + '.prefab'))

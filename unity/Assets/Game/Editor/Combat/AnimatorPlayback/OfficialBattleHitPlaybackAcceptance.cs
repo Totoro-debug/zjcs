@@ -55,7 +55,7 @@ namespace Zjcs.Editor.Combat
         [Serializable] private sealed class Result { public bool passed; public string error; }
     }
 
-    public sealed class NativeHitAcceptanceRunner : MonoBehaviour
+    public sealed partial class NativeHitAcceptanceRunner : MonoBehaviour
     {
         private sealed class Grid : FightHitGridTransformData
         {
@@ -141,11 +141,17 @@ namespace Zjcs.Editor.Combat
         private IEnumerator Start()
         {
             Application.logMessageReceived += Observe;
-            var steps = Check();
-            while (true)
+            var steps = new Stack<IEnumerator>();
+            steps.Push(Check());
+            while (steps.Count > 0)
             {
                 object current;
-                try { if (!steps.MoveNext()) break; current = steps.Current; }
+                try
+                {
+                    if (!steps.Peek().MoveNext()) { steps.Pop(); continue; }
+                    current = steps.Peek().Current;
+                    if (current is IEnumerator nested) { steps.Push(nested); continue; }
+                }
                 catch (Exception error) { failure = error.ToString(); break; }
                 yield return current;
             }
@@ -222,6 +228,12 @@ namespace Zjcs.Editor.Combat
                 });
             });
             views = new OfficialBattleSkillEntityPlayback(root, mapper, scope, id => units.FirstOrDefault(x => x.Id == id));
+            if (Environment.GetEnvironmentVariable("ZJCS_CUSTOM_TARGET_ACCEPTANCE") == "1")
+            {
+                combatCatalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+                yield return ValidateCustomReceipts(root, source, target);
+                yield break;
+            }
             var skill = new FightBattleSkillDefinition { EntityId = 10100, Slot = -1, Duration = -1f,
                 FlipSource = false, SkillTargetType = 1 };
             var cast = new FightBattleSkillCastEvent { ActorId = 1, Slot = -1, SkillEntityId = skill.EntityId,
@@ -543,7 +555,7 @@ namespace Zjcs.Editor.Combat
             }
         }
 
-        private FightBattleCheckpoint SummonBattle(int skillId, out FightBattleSkillCastEvent cast)
+        private FightBattleCheckpoint SummonBattle(int skillId, out FightBattleSkillCastEvent cast, Action<FightBattleCheckpoint> arrange = null)
         {
             var checkpoint = new FightBattleCheckpoint { StageId = 1, RandomSeed = 11,
                 Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 0 } };
@@ -565,6 +577,7 @@ namespace Zjcs.Editor.Combat
                 checkpoint.Units.Add(unit);
             }
             var wave = new FightBattleWaveState(); wave.UnitIds.Add(2); checkpoint.Waves.Add(wave);
+            arrange?.Invoke(checkpoint);
             var result = OfficialCombatAssetCatalog.LoadDefault().BeginBattle(checkpoint).Step(0, 1);
             cast = result.Event.SkillCasts.Single(value => value.SkillEntityId == skillId);
             return checkpoint;
@@ -603,7 +616,7 @@ namespace Zjcs.Editor.Combat
             if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
                 failure = failure ?? text + "\n" + stack;
         }
-        private void Capture(string name)
+        private void Capture(string name, bool expectEffect = true)
         {
             var render = new RenderTexture(540, 960, 24);
             var previous = RenderTexture.active;
@@ -621,7 +634,7 @@ namespace Zjcs.Editor.Combat
                     .Select(color => ((int)color.r << 16) | ((int)color.g << 8) | color.b)
                     .Distinct().Take(5).Count() >= 5;
                 Destroy(image);
-                Require(hasEffect, "Native hit capture contains only its background: " + name);
+                Require(!expectEffect || hasEffect, "Native hit capture contains only its background: " + name);
             }
             finally { cameraView.targetTexture = previousTarget; RenderTexture.active = previous; Destroy(render); }
         }

@@ -1470,6 +1470,9 @@ namespace Zjcs.Combat.Official
         [NonSerialized] internal FightBattleHitEntity ChainConfiguration;
         [NonSerialized] internal FightBattleHitDefinition PreviousChainHit;
         [NonSerialized] internal float ChainLinkDelay;
+        [NonSerialized] internal bool IsCustomTarget;
+        [NonSerialized] internal FightBattleHitDefinition PreviousCustomHit;
+        [NonSerialized] internal float CustomLinkDelay;
         internal FightBattleHitDefinition AtDelay(float delay)
         {
             var copy = (FightBattleHitDefinition)MemberwiseClone();

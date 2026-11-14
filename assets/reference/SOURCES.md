@@ -943,3 +943,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 
 主线机神山初遇 Timeline 固定使用当前 `884_156692` 的 `defaultpackage_assets_prefabs_playables_displaypackage_story_timeline_map12_earthquake1.bundle`（`Earthquake1`）及 `ZSettings`；官方对象、相机绑定、Cinemachine 依赖、章节节点 16 字段／端口核对和安装输出记录见[Timeline 来源清单](official-map/story-timeline-source-manifest.json)。生成器为 `scripts/prepare_story_timeline.py`；实现与验证缺项见[剧情页](../../docs/features/story.md)。
+
+- 公共战斗自定义目标命中代码与配置凭据：[custom-targets-source-manifest.json](battle-rules/custom-targets-source-manifest.json)，记录所选官方输入、迁移入口及处理方式。

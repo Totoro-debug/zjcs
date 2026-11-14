@@ -5,7 +5,7 @@ namespace Zjcs.Combat.Official
 {
     // Owns one cast's traversal, shared branch history and hit origins. The
     // executor still settles each selected hit through its existing damage path.
-    internal sealed class FightHitChainExecution
+    internal sealed partial class FightHitChainExecution
     {
         internal sealed class History
         {
@@ -17,6 +17,8 @@ namespace Zjcs.Combat.Official
             internal FightBattleHitDefinition Original, Hit;
             internal FightBattleSkillCastPresentation Cast;
             internal History History;
+            internal FightBattleUnitState CustomTarget;
+            internal FightGridPoint CustomCell;
             internal int PreviousTargetId, PickedTargetId, Order;
         }
 
@@ -34,9 +36,16 @@ namespace Zjcs.Combat.Official
             this.cast = cast ?? throw new ArgumentNullException(nameof(cast));
             if (hits == null) throw new ArgumentNullException(nameof(hits));
             foreach (var hit in hits)
-                if (enableChains && hit.ChainConfiguration != null) ordered = true;
+                if (enableChains && (hit.ChainConfiguration != null || hit.IsCustomTarget)) ordered = true;
             foreach (var hit in hits)
             {
+                if (ordered && hit.PreviousCustomHit != null)
+                {
+                    if (!customChildren.TryGetValue(hit.PreviousCustomHit, out var list))
+                        customChildren.Add(hit.PreviousCustomHit, list = new List<FightBattleHitDefinition>());
+                    list.Add(hit);
+                    continue;
+                }
                 if (ordered && hit.PreviousChainHit != null)
                 {
                     if (!children.TryGetValue(hit.PreviousChainHit, out var list))
@@ -70,6 +79,12 @@ namespace Zjcs.Combat.Official
         {
             context.Hit = step.Hit;
             context.Cast = step.Cast;
+            if (step.CustomTarget != null)
+            {
+                context.Primary = new FightBattleUnitState { X = step.CustomCell.X, Y = step.CustomCell.Y };
+                context.Targets = new List<FightBattleUnitState> { step.CustomTarget };
+            }
+            if (step.Hit.IsCustomTarget) return SelectCustom(step, context, flight);
             var selection = step.History == null
                 ? selectors.For(step.Hit).Select(context) : SelectNext(step, context);
             if (selection == null || !ordered || step.Hit.ChainConfiguration == null) return selection;

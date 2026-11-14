@@ -3382,8 +3382,14 @@ namespace Zjcs.Combat.Official
                     - Math.Abs(right.Position.X) - Math.Abs(right.Position.Y));
             if (chained != null) AddIntArray(chained, "NextHitList", result.ChainedHits,
                 pending, references, result.ChainedHitLinks);
-            if (custom != null) AddIntArray(custom, "HitList", result.CustomTargetHits,
-                pending, references, result.CustomTargetHitLinks);
+            if (custom != null)
+            {
+                var resolver = Component(custom, "HitTargetPosResolver");
+                if (resolver == null || Convert.ToString(resolver.ContainsKey("_type") ? resolver["_type"] : null) != "SelfTargetPosResolver")
+                    throw new NotSupportedException("Unmigrated custom hit target resolver: " + id);
+                AddIntArray(custom, "HitList", result.CustomTargetHits,
+                    pending, references, result.CustomTargetHitLinks);
+            }
             if (random != null)
             {
                 AddIntArray(random, "HitList", result.RandomTargetHits, pending, references,
