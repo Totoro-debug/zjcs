@@ -6,7 +6,7 @@ using System.Linq;
 namespace Zjcs.Offline.Progression
 {
     /// <summary>Original PetPropChunck and CalculatePetPropsAsOrnament for every owned pet.</summary>
-    public sealed class OfflinePetPropSource : IOfflineCharacterPropSource
+    public sealed class OfflinePetPropSource : IOfflineCharacterScoredPropSource
     {
         private readonly OfficialCharacterCatalog catalog;
 
@@ -43,12 +43,15 @@ namespace Zjcs.Offline.Progression
         }
 
         public IReadOnlyDictionary<int, long> CalculateProps(OfflinePlayerProgress player)
+            => CalculateProps(player, null);
+
+        public IReadOnlyDictionary<int, long> CalculateProps(OfflinePlayerProgress player, CharacterPropScoreContext context)
         {
             var result = new Dictionary<int, long>();
             if (player?.Pets?.Pets == null) return result;
 
             foreach (OfflinePetInstance pet in player.Pets.Pets)
-                CharacterPropFormula.Merge(result, CalculatePetProps(player, pet));
+                CharacterPropFormula.Merge(result, CalculatePetProps(player, pet, context?.Inputs?.SeasonId));
             return result;
         }
 
@@ -75,7 +78,7 @@ namespace Zjcs.Offline.Progression
                 records.Add(new PetCombatRatingRecord
                 {
                     PetClassId = pet.ClassId,
-                    PropsRating = context.Common(CalculatePetProps(player, pet)),
+                    PropsRating = context.Common(CalculatePetProps(player, pet, context.Inputs?.SeasonId)),
                     SupportRating = SkillCombatRating(definition, "SupportSkillLevelId", supportRank, context),
                     EntityRating = entitySkillId > 0
                         ? SkillCombatRating(definition, "EntitySkillLevelId", entityRank, context) : 0L
@@ -95,10 +98,10 @@ namespace Zjcs.Offline.Progression
         public long CalculatePetCombatRating(OfflinePlayerProgress player, OfflinePetInstance pet,
             CharacterPropScoreContext context)
         {
-            return context == null || pet == null ? 0L : context.Common(CalculatePetProps(player, pet));
+            return context == null || pet == null ? 0L : context.Common(CalculatePetProps(player, pet, context.Inputs?.SeasonId));
         }
 
-        private Dictionary<int, long> CalculatePetProps(OfflinePlayerProgress player, OfflinePetInstance pet)
+        private Dictionary<int, long> CalculatePetProps(OfflinePlayerProgress player, OfflinePetInstance pet, int? seasonId = null)
         {
             var result = new Dictionary<int, long>();
             if (player == null || pet == null || pet.ClassId <= 0) return result;
@@ -109,7 +112,7 @@ namespace Zjcs.Offline.Progression
             int baseLevel = Math.Min(PetBaseLevelLimit(player.SubRank), finalLevel);
             int blessLevel = finalLevel - baseLevel;
             result = new Dictionary<int, long>(catalog.GetLevelProps(
-                PetLevelPropId(definition, Math.Max(0, player.SeasonRank)), baseLevel));
+                PetLevelPropId(definition, seasonId ?? Math.Max(0, player.SeasonRank)), baseLevel));
             ApplyBlessScale(result, PetPropClass(player.SubRank), blessLevel);
             AddAbilityProps(result, definition, pet.Abilities);
             HandleSystemPercentProps(result);

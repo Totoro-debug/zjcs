@@ -64,6 +64,27 @@ namespace Zjcs.Offline.Progression
             CharacterPropScoreContext context);
     }
 
+    public interface IOfflineCharacterContextualScoredPropSource : IOfflineCharacterContextualPropSource
+    {
+        IReadOnlyDictionary<int,long> CalculateProps(OfflinePlayerProgress player,
+            OfflineWorldProgress world, long nowUnixSeconds, CharacterPropScoreContext context);
+    }
+
+    // Explicit original provider values for a detached calculation. The normal
+    // profile path supplies no override; NoBlessPlayerInfoProvider supplies all
+    // three values together, including the original cumulative resonance props.
+    public sealed class CharacterPropCalculationInputs
+    {
+        public int PlanesRank { get; }
+        public int SeasonId { get; }
+        public IReadOnlyDictionary<int,long> EquipResonance { get; }
+        public CharacterPropCalculationInputs(int planesRank, int seasonId, IReadOnlyDictionary<int,long> equipResonance)
+        {
+            PlanesRank = planesRank; SeasonId = seasonId;
+            EquipResonance = equipResonance ?? throw new ArgumentNullException(nameof(equipResonance));
+        }
+    }
+
     /// <summary>Inputs shared by chunk combat-rating calculations.</summary>
     public sealed class CharacterPropScoreContext
     {
@@ -71,6 +92,7 @@ namespace Zjcs.Offline.Progression
         public int SubRank;
         public OfficialPropCatalog Props;
         public CharacterPropBasicRef BasicRef;
+        public CharacterPropCalculationInputs Inputs;
 
         public long Common(IReadOnlyDictionary<int, long> props)
         {
@@ -477,6 +499,10 @@ namespace Zjcs.Offline.Progression
 
         public CharacterPropSnapshot Evaluate(OfflinePlayerProgress player, OfflineWorldProgress world,
             long nowUnixSeconds)
+            => Evaluate(player, world, nowUnixSeconds, null);
+
+        public CharacterPropSnapshot Evaluate(OfflinePlayerProgress player, OfflineWorldProgress world,
+            long nowUnixSeconds, CharacterPropCalculationInputs inputs)
         {
             if (player == null) throw new ArgumentNullException(nameof(player));
             int level = Math.Max(1, player.Level);
@@ -498,11 +524,14 @@ namespace Zjcs.Offline.Progression
                 Level = level,
                 SubRank = subRank,
                 Props = props,
-                BasicRef = CharacterPropBasicRef.Build(level, subRank, props, LevelProps)
+                BasicRef = CharacterPropBasicRef.Build(level, subRank, props, LevelProps),
+                Inputs = inputs
             };
             foreach (IOfflineCharacterPropSource source in sources)
             {
-                IReadOnlyDictionary<int, long> values = source is IOfflineCharacterContextualPropSource contextual
+                IReadOnlyDictionary<int, long> values = source is IOfflineCharacterContextualScoredPropSource both
+                    ? both.CalculateProps(player, world, nowUnixSeconds, scoreContext)
+                    : source is IOfflineCharacterContextualPropSource contextual
                     ? contextual.CalculateProps(player, world, nowUnixSeconds)
                     : source is IOfflineCharacterScoredPropSource scored
                         ? scored.CalculateProps(player, scoreContext) : source.CalculateProps(player);

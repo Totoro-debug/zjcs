@@ -12,7 +12,7 @@ namespace Zjcs.Offline.Progression
     }
 
     /// <summary>Official character property chunks backed by locally persisted feature state.</summary>
-    public sealed class OfflineCharacterConfiguredPropSource : IOfflineCharacterContextualPropSource
+    public sealed class OfflineCharacterConfiguredPropSource : IOfflineCharacterContextualScoredPropSource
     {
         private readonly OfficialCharacterCatalog catalog;
 
@@ -31,6 +31,10 @@ namespace Zjcs.Offline.Progression
 
         public IReadOnlyDictionary<int, long> CalculateProps(OfflinePlayerProgress player,
             OfflineWorldProgress world, long nowUnixSeconds)
+            => CalculateProps(player, world, nowUnixSeconds, null);
+
+        public IReadOnlyDictionary<int, long> CalculateProps(OfflinePlayerProgress player,
+            OfflineWorldProgress world, long nowUnixSeconds, CharacterPropScoreContext context)
         {
             var result = new Dictionary<int, long>();
             if (player == null) return result;
@@ -42,7 +46,7 @@ namespace Zjcs.Offline.Progression
                 case CharacterPropHandleType.Extra: CalculateExtra(state, result); break;
                 case CharacterPropHandleType.NpcFriendshipLevel: CalculateFriendship(player, state, result); break;
                 case CharacterPropHandleType.NpcTalentTree: CalculateNpcTalent(state, result); break;
-                case CharacterPropHandleType.Treasure: CalculateTreasures(player, state, result); break;
+                case CharacterPropHandleType.Treasure: CalculateTreasures(player, state, result, context); break;
                 case CharacterPropHandleType.TreasureSuit: CalculateTreasureSuits(player, state, result); break;
                 case CharacterPropHandleType.LostGoddess: CalculateLostGoddess(world, result); break;
                 case CharacterPropHandleType.PeriodIcCar: CalculatePeriodicCards(state, nowUnixSeconds, result); break;
@@ -171,11 +175,11 @@ namespace Zjcs.Offline.Progression
         }
 
         private void CalculateTreasures(OfflinePlayerProgress player, OfflineCharacterPropertyProgress state,
-            Dictionary<int, long> result)
+            Dictionary<int, long> result, CharacterPropScoreContext context)
         {
             Dictionary<string, object> settings = catalog.Rows("game_settings").FirstOrDefault();
             int planeRank = catalog.RankOfSubRank(player.SubRank);
-            bool useFinalSlotLevels = planeRank > 0 && planeRank == state.TreasurePlaneRank;
+            bool useFinalSlotLevels = planeRank > 0 && planeRank == (context?.Inputs?.PlanesRank ?? state.TreasurePlaneRank);
             double slotRate = Number(settings, "TreasureSlotPropAddRate");
             Dictionary<string, object> subRank = catalog.Rows("player_subrank").FirstOrDefault(row =>
                 Integer(row, "SubRank") == player.SubRank);
@@ -196,11 +200,17 @@ namespace Zjcs.Offline.Progression
                     finalLevel = owned.Level;
                     baseLevel = owned.BaseLevel;
                 }
-                else if (useFinalSlotLevels)
+                else if (useFinalSlotLevels || context?.Inputs != null && !inSlot)
                 {
                     OfflineTreasureElementLevel shared = state.TreasureElementLevels.FirstOrDefault(value =>
                         value != null && value.ElementType == element);
-                    if (shared != null)
+                    if (context?.Inputs != null)
+                    {
+                        // PlayerTreasureSlotDataWrap supplies level 1 when an element slot is absent.
+                        baseLevel = shared?.BaseLevel ?? 1;
+                        finalLevel = useFinalSlotLevels ? shared?.Level ?? 1 : baseLevel;
+                    }
+                    else if (shared != null)
                     {
                         finalLevel = shared.Level;
                         baseLevel = shared.BaseLevel;
@@ -209,7 +219,7 @@ namespace Zjcs.Offline.Progression
 
                 int star = Math.Max(0, Math.Min(Integer(treasure, "StarMax"), owned.Star));
                 Dictionary<string, object> seasonIds = Map(treasure, "LevelPropId");
-                int levelPropId = Integer(seasonIds, state.SeasonId.ToString(CultureInfo.InvariantCulture));
+                int levelPropId = Integer(seasonIds, (context?.Inputs?.SeasonId ?? state.SeasonId).ToString(CultureInfo.InvariantCulture));
                 if (levelPropId <= 0) levelPropId = Integer(seasonIds, "0");
                 if (levelPropId <= 0) levelPropId = seasonIds.Values.Select(value =>
                     Convert.ToInt32(value, CultureInfo.InvariantCulture)).FirstOrDefault();

@@ -985,3 +985,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 公共战斗原状态伤害公式的 884 共享代码与原逻辑处理器配置、运行属性表、提取程序及实现／验证身份见[状态伤害公式来源](battle-rules/status-damage-source-manifest.json)，生成入口为 `scripts/prepare_battle_status_damage_sources.py`。原始输入使用原字节哈希；新增代码与验证使用明确标记的 CRLF → LF 文本哈希。此项不转换或替换美术载荷；当前实现和验证范围见[公共战斗](../../docs/features/battle-execution.md)。
 
 家园玩家状态记录来源：所选 `884_156692` 的 `PlayerStatusEffectData`、`PlayerStatusEffectDataWrap`、`PlayerStatusEffectManager` 与状态／作用域／词条 Luban 构造器；`scripts/prepare_home_player_status.py` 从经所选索引核对的 APK 配置包提取全部记录，保留 APK 与所选版本的独立来源。原始输入、CAB／PathID、二进制配置与迁移输出 SHA256 见 [home-player-status-source-manifest.json](home-player-status-source-manifest.json)。未新增图像或素材快照；实现、差异及实际验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
+
+家园无赐福属性来源：所选 884_156692 的 NoBlessPlayerInfoProvider、SystemLevelLimitInfoParser、EquipResonanceInfoParser 及古遗物／幻兽 Luban 配置；scripts/prepare_home_no_bless_rules.py 提取原始等级、共鸣、古遗物、幻兽和属性曲线，运行时由 OfflineHomeNoBlessConfiguration 显式加载。原始输入、输出与 SHA256 见 [home-no-bless-rules-source-manifest.json](home-no-bless-rules-source-manifest.json)。实现、单机差异及验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。

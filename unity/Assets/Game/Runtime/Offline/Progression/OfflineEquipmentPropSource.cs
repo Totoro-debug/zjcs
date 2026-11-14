@@ -40,12 +40,12 @@ namespace Zjcs.Offline.Progression
             {
                 OfflineEquipmentInstance instance = Find(player, slot.InstanceId);
                 if (instance == null) continue;
-                CharacterPropFormula.Merge(result, BaseItemProps(player, instance));
+                CharacterPropFormula.Merge(result, BaseItemProps(player, instance, context));
             }
             foreach (TermCandidate candidate in EffectiveTerms(player, context))
                 if (candidate.Instance != null)
-                    CharacterPropFormula.Merge(result, TermProperties(player, candidate.Term, candidate.Instance));
-            CharacterPropFormula.Merge(result, SuitProps(player));
+                    CharacterPropFormula.Merge(result, TermProperties(player, candidate.Term, candidate.Instance, PlanesRank(player, context)));
+            CharacterPropFormula.Merge(result, SuitProps(player, context));
             return result;
         }
 
@@ -57,7 +57,7 @@ namespace Zjcs.Offline.Progression
             {
                 OfflineEquipmentInstance instance = Find(player, slot.InstanceId);
                 if (instance == null) continue;
-                rating += context.Common(BaseItemProps(player, instance));
+                rating += context.Common(BaseItemProps(player, instance, context));
                 rating += SuitCombatRating(player, instance, context);
             }
             foreach (TermCandidate candidate in EffectiveTerms(player, context))
@@ -102,13 +102,14 @@ namespace Zjcs.Offline.Progression
             return BuildItemProps(player, instance, true);
         }
 
-        private Dictionary<int, long> BaseItemProps(OfflinePlayerProgress player, OfflineEquipmentInstance instance)
+        private Dictionary<int, long> BaseItemProps(OfflinePlayerProgress player, OfflineEquipmentInstance instance,
+            CharacterPropScoreContext context = null)
         {
-            return BuildItemProps(player, instance, false);
+            return BuildItemProps(player, instance, false, context);
         }
 
         private Dictionary<int, long> BuildItemProps(OfflinePlayerProgress player, OfflineEquipmentInstance instance,
-            bool includeSpecialTerms)
+            bool includeSpecialTerms, CharacterPropScoreContext context = null)
         {
             var result = new Dictionary<int, long>();
             Dictionary<string, object> equip = catalog.Find("equip", instance.ItemId);
@@ -118,7 +119,7 @@ namespace Zjcs.Offline.Progression
             if (type == null) return result;
             int level = EquipLevel(player, equip, instance);
             int upgradeLevel = UpgradeLevel(player, Integer(type, "EquipPos"));
-            int rank = rankOfSubRank(player.SubRank);
+            int rank = PlanesRank(player, context);
             int equipRank = Integer(item, "LimitRank");
             MergeMain(result, equip, level, upgradeLevel, instance.BlessLevel, rank, Integer(item, "LimitRank"), true,
                 Integer(equip, "MainPropType"));
@@ -128,10 +129,10 @@ namespace Zjcs.Offline.Progression
             return result;
         }
 
-        public Dictionary<int, long> SuitProps(OfflinePlayerProgress player)
+        public Dictionary<int, long> SuitProps(OfflinePlayerProgress player, CharacterPropScoreContext context = null)
         {
             var counts = new Dictionary<int, int>();
-            int rank = rankOfSubRank(player.SubRank);
+            int rank = PlanesRank(player, context);
             foreach (OfflineEquippedSlot slot in player.Equipment.Equipped)
             {
                 OfflineEquipmentInstance instance = Find(player, slot.InstanceId);
@@ -229,7 +230,7 @@ namespace Zjcs.Offline.Progression
                     AddEffectiveTerm(player, context, result, exclusive,
                         new TermCandidate { Term = term, Instance = instance }, checkApplyInBattle);
             }
-            foreach (TermCandidate candidate in ActiveSuitTerms(player))
+            foreach (TermCandidate candidate in ActiveSuitTerms(player, context))
                 AddEffectiveTerm(player, context, result, exclusive, candidate, checkApplyInBattle);
             return result;
         }
@@ -279,7 +280,7 @@ namespace Zjcs.Offline.Progression
             Dictionary<string, object> attribute = catalog.Find("equip_attributes", candidate.Term.PropertyId, "Id");
             if (attribute == null) return 0L;
             int type = Integer(attribute, "Type");
-            int playerRank = rankOfSubRank(player.SubRank);
+            int playerRank = PlanesRank(player, context);
             int equipRank = ItemLimitRank(scoringEquipment);
             int blessLevel = scoringEquipment == null ? 0 : scoringEquipment.BlessLevel;
             bool sameRank = equipRank == playerRank;
@@ -345,10 +346,10 @@ namespace Zjcs.Offline.Progression
             return result;
         }
 
-        private List<TermCandidate> ActiveSuitTerms(OfflinePlayerProgress player)
+        private List<TermCandidate> ActiveSuitTerms(OfflinePlayerProgress player, CharacterPropScoreContext context = null)
         {
             var result = new List<TermCandidate>();
-            foreach (KeyValuePair<int, int> suit in SuitCounts(player))
+            foreach (KeyValuePair<int, int> suit in SuitCounts(player, context))
             {
                 int attributeId = ActiveSuitAttribute(suit.Key, suit.Value);
                 Dictionary<string, object> attribute = catalog.Find("equip_attributes", attributeId, "Id");
@@ -368,10 +369,10 @@ namespace Zjcs.Offline.Progression
             return result;
         }
 
-        private Dictionary<int, int> SuitCounts(OfflinePlayerProgress player)
+        private Dictionary<int, int> SuitCounts(OfflinePlayerProgress player, CharacterPropScoreContext context = null)
         {
             var counts = new Dictionary<int, int>();
-            int rank = rankOfSubRank(player.SubRank);
+            int rank = PlanesRank(player, context);
             foreach (OfflineEquippedSlot slot in player.Equipment.Equipped)
             {
                 OfflineEquipmentInstance instance = Find(player, slot.InstanceId);
@@ -428,7 +429,7 @@ namespace Zjcs.Offline.Progression
             CharacterPropScoreContext context)
         {
             Dictionary<string, object> equip = catalog.Find("equip", instance.ItemId);
-            int rank = rankOfSubRank(player.SubRank);
+            int rank = PlanesRank(player, context);
             if (instance.SuitId == 0 || equip == null
                 || Integer(catalog.Find("item", instance.ItemId), "LimitRank") != rank) return 0L;
             int count = CompatibleSuitPositionCount(instance.SuitId, player.Wardrobe.Profession);
@@ -542,6 +543,9 @@ namespace Zjcs.Offline.Progression
             return slot == null ? 0 : slot.BaseLevel;
         }
 
+        private int PlanesRank(OfflinePlayerProgress player, CharacterPropScoreContext context)
+            => context?.Inputs?.PlanesRank ?? rankOfSubRank(player.SubRank);
+
         private Dictionary<string, object> EquipType(Dictionary<string, object> item)
         {
             int itemType = Integer(item, "ItemType");
@@ -567,7 +571,7 @@ namespace Zjcs.Offline.Progression
         }
     }
 
-    public sealed class OfflineEquipmentResonancePropSource : IOfflineCharacterPropSource
+    public sealed class OfflineEquipmentResonancePropSource : IOfflineCharacterScoredPropSource
     {
         private readonly OfflineEquipmentPropSource equipment;
 
@@ -582,6 +586,9 @@ namespace Zjcs.Offline.Progression
         {
             return equipment.ResonanceProps(player);
         }
+
+        public IReadOnlyDictionary<int, long> CalculateProps(OfflinePlayerProgress player, CharacterPropScoreContext context)
+            => context?.Inputs?.EquipResonance ?? CalculateProps(player);
 
         public long CalculateCombatRating(OfflinePlayerProgress player,
             IReadOnlyDictionary<int, long> props, CharacterPropScoreContext context)
