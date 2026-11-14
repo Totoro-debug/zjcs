@@ -123,6 +123,25 @@ namespace Zjcs.Presentation.Character
             Require(expected.Count > 0, "Selected original secret has no property contribution.");
             long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var snapshot = progression.PropertyCalculator.Evaluate(player, now);
+            var context = new CharacterPropScoreContext { Level = player.Level, SubRank = player.SubRank,
+                Props = progression.Catalog.Props, BasicRef = CharacterPropBasicRef.Build(player.Level,
+                    player.SubRank, progression.Catalog.Props, progression.Catalog.GetLevelProps) };
+            var skillSource = new OfflineSkillPropSource(progression.Catalog, progression.SkillRules);
+            long skillRating = skillSource.CalculateCombatRating(player, expected, context);
+            Require(skillRating > 0, "An owned available secret contributes no skill combat rating.");
+            var withoutOwned = JsonUtility.FromJson<OfflinePlayerProgress>(JsonUtility.ToJson(player));
+            withoutOwned.Skills.Skills.Clear();
+            Require(snapshot.CombatRating - progression.PropertyCalculator.Evaluate(withoutOwned, now).CombatRating == skillRating,
+                "The registered combat rating omitted or duplicated the owned secret.");
+            Require(skillSource.CalculateCombatRating(disk, expected, context) == skillRating,
+                "The persisted skill cultivation changes combat rating after reload.");
+            var ratingText = FindObjectsOfType<TMPro.TMP_Text>(true).Single(value => value.name == "CRText"
+                && value.GetComponentInParent<OfficialCharacterSkillHeader>(true) != null);
+            if (ratingText.gameObject.activeInHierarchy)
+                Require(ratingText.text == OfficialPropFormat.Compact(progression.EvaluateProps(now).CombatRating),
+                    "The original skill HUD displays a stale combat rating.");
+            Debug.Log("[Passive skill rating] item=" + itemId + " level=" + level + " skill=" + skillRating
+                + " total=" + snapshot.CombatRating + " displayed=" + ratingText.text);
             var unequipped = JsonUtility.FromJson<OfflinePlayerProgress>(JsonUtility.ToJson(player));
             unequipped.Skills.Plans[unequipped.Skills.SelectedPlan].PassiveSkills[0] = 0;
             var withoutSecret = progression.PropertyCalculator.Evaluate(unequipped, now).OutOfFightBattleProps;

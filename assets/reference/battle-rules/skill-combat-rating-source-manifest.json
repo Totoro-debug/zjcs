@@ -1,0 +1,96 @@
+{
+  "manifest": "884_156692",
+  "operation": "Compare the offline character skill rating against unchanged official methods.",
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll",
+    "bytes": 16813568,
+    "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+  },
+  "official_code_receipt": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "bytes": 6939,
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "official_inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "bytes": 191212,
+      "sha256": "ce40db54d87030ded0a9f8a6dc95db5a3a4e46ae02bf76a9d273fe092a703d12"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Formula.cs",
+      "bytes": 10907,
+      "sha256": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Profession.cs",
+      "bytes": 611,
+      "sha256": "01c1fedcaeb1cbb24c8c64ef8e1a3dba4159050e41e29ba3d7ba0b3aad550017"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ProfessionBaseInfoParser.cs",
+      "bytes": 21469,
+      "sha256": "801c076f2df4bce5ad6db9e9647066af7dc111438bdbc80ec556465381225e10"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PropType.cs",
+      "bytes": 10443,
+      "sha256": "265a81dbeab87b90e3a1c1423884610ed43ea9b535e488e20de0e0c41f9831b0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillPropChunck.cs",
+      "bytes": 6581,
+      "sha256": "967437913a268434b7560f31aa0ea133b2a53524d4e5c90f53141a2df5ac82dc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SubRank.cs",
+      "bytes": 1193,
+      "sha256": "a4ed6930d7473456d13f7f102a708aa88510e52cda6521a034dc625cda40406e"
+    }
+  ],
+  "original_method_signatures": [
+    "public long CalcCombatRatingSkill(",
+    "public float GetSkillBaseScore(",
+    "public long CalcCombatRatingSkillQuality(",
+    "public float CalcSkillQualityAttack(",
+    "public long CalcCombatRatingSkillLevel(",
+    "public float CalcSkillLevelCombatRating(",
+    "public long CalcCombatRatingByProps(",
+    "public void CalcPlayerRefBaseProp(",
+    "public void HandlePropRate(",
+    "public double GetProp(",
+    "public long GetRawProp(",
+    "public double Long2Double(long val)"
+  ],
+  "original_availability_method_signatures": [
+    "public bool IsSkillAvailableForProfession(",
+    "public bool IsSkillAvailableForSingleProfession("
+  ],
+  "original_formula_method_signatures": [
+    "public static double Long2Double(long val)"
+  ],
+  "existing_character_inputs": [
+    {
+      "path": "unity/Assets/Official/Character/character-progression.json",
+      "bytes": 6341984,
+      "sha256": "d92b18206c2a9ccbfc0a7ab6aa82744207da8efd92c1a7c01d883efed0a1c19c"
+    },
+    {
+      "path": "unity/Assets/Official/Character/character-overview.json",
+      "bytes": 73326,
+      "sha256": "c814deeacfe912d3638d6d0246ec4872fe8f80faefe81163a6c291ed0288e062"
+    },
+    {
+      "path": "unity/Assets/Official/Skills/skill-runtime-rules.json",
+      "bytes": 1065888,
+      "sha256": "1ece75e11e618c4a3fef61bb490ed2a3f101f3560649c3384f37eafac8183aba"
+    }
+  ],
+  "input_versions": "884_156692 official formula; existing character/skill catalog payloads keep their recorded 854_156383 provenance and are not replaced.",
+  "comparison_fixture": {
+    "path": "scripts/fixtures/skill_combat_rating_reference.cs",
+    "sha256": "f8c6f849be235cfe261d5b36c102c0864a957627097e103791531335ae13c2d8",
+    "normalization": "UTF-8 without BOM; LF (versioned comparison fixture only)"
+  },
+  "adapter_scope": "Character table lookups and item wrappers only; original scoring, sorting, float truncation and rate passes remain unchanged."
+}

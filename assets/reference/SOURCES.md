@@ -1,5 +1,7 @@
 # 官方来源与提取入口
 
+技能战力参照由 `scripts/prepare_skill_combat_rating_reference.py` 提取所选 `884_156692` 的原 `BattleFormulaHandler` 及 `Formula.Long2Double`，原枚举、`SkillPropChunck`、公式原文和既有人物／技能目录各自的来源版本与输入哈希见[技能战力来源](battle-rules/skill-combat-rating-source-manifest.json)。参照仅在带标记的隔离 Unity 工程生成，不替换现有配置或美术；实现与验证范围在[技能页](../../docs/features/skills.md)维护。
+
 人物秘法属性绑定复用现有 Combat 三份配置及其来源清单，六个 TextAsset 的 GUID、原输入／当前载荷哈希、原 `SkillPropChunck`／`BattleFormulaHandler` 和人物目录绑定输出见[人物秘法属性绑定凭据](battle-rules/skill-passive-property-bindings.json)，核验入口为 `scripts/prepare_skill_passive_property_bindings.py`。未新增或修改配置载荷；实现与验证范围仅在[技能页](../../docs/features/skills.md)维护。
 
 六职业成长输入来源：`scripts/prepare_first_promotion_growth_reference.py` 从所选 `884_156692` 的 APK 优先读取实体成长、位阶映射、技能、默认属性和 WwiseBnk 成长二进制，核对历史运行载荷的消费字段；原程序集、原成长方法、12 份表构造依赖、完整输入哈希、三项未消费的 PVP 字段差异及验证器身份见[六职业成长来源](battle-rules/first-promotion-growth-source-manifest.json)。只生成隔离参照程序，不修改历史运行载荷；实现和实际验证范围仅在[技能页](../../docs/features/skills.md)维护。

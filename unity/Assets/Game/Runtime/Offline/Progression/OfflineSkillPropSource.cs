@@ -110,8 +110,7 @@ namespace Zjcs.Offline.Progression
                     || !skills.TryGetValue(owned.ClassId, out OfflineSkillDefinition definition)
                     || !IsAvailable(definition, profession)) continue;
                 Dictionary<string, object> item = catalog.Find("item", owned.ClassId);
-                Dictionary<string, object> skill = catalog.Find("skill", owned.ClassId);
-                if (item == null || skill == null || Integer(item, "ItemType") != itemType) continue;
+                if (item == null || Integer(item, "ItemType") != itemType) continue;
 
                 int professionRank = professionRanks.TryGetValue(owned.ClassId, out int rank) ? rank : 0;
                 float rankFactor = professionRankFactors.TryGetValue(professionRank, out float factor)
@@ -174,6 +173,11 @@ namespace Zjcs.Offline.Progression
                         catalog.CalcProfessionLevelProperties(player.ProfessionLevels));
                     MergeProfessionFeatureProps(referenceProps,
                         player.Wardrobe == null ? 0 : player.Wardrobe.Profession);
+                    // Original CalcPlayerRefBaseProp filters battle properties and handles base rates;
+                    // CalcSkillLevelCombatRating then handles those rates again below.
+                    referenceProps = referenceProps.Where(pair => context.Props.IsBattleProp(pair.Key))
+                        .ToDictionary(pair => pair.Key, pair => pair.Value);
+                    CharacterPropFormula.HandlePropRate(referenceProps, context.Props);
                 }
                 else
                 {
@@ -184,7 +188,8 @@ namespace Zjcs.Offline.Progression
                 CharacterPropFormula.HandlePropRate(referenceProps, context.Props);
                 SkillRatingEntry skill = entries.First(value => value.ClassId == skillIds[i]);
                 float value = skillLevelScore * skill.BaseScore
-                    * (float)context.ByProps(referenceProps, null, skillScoreBase);
+                    * (float)CharacterPropFormula.CombatRatingByProps(level, player.SubRank,
+                        referenceProps, context.Props, null, skillScoreBase);
                 if (i >= slotCount) value *= 0.1f;
                 result += value / slotTotal;
             }
