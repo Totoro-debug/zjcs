@@ -1,0 +1,1541 @@
+{
+  "manifest": "884_156692",
+  "verified_scope": {
+    "path": "assets/reference/battle-rules/first-promotion-source-manifest.json",
+    "sha256": "d0aaa37bdeb491a5723f00d9f3a5a2c1e15e926bd5f84a0ff788524c98d0246d"
+  },
+  "configuration": {
+    "manifest": "884_156692",
+    "fragments": [
+      {
+        "path": "Assets/Config/EC/FightSkill_part61.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "4231053258383335003",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "3669b86abe53bf15154ec9a30b5a1f84cd3a2683362e4bf8e1decd594c4f7bc6",
+        "payload_sha256": "82e2ef235543e442bbf8bfc5100b2e08436ecc96e1995e49c6d6bfee625fa854",
+        "legacy_prefix": false,
+        "entities": {
+          "11210": {
+            "parent": 0,
+            "components": {
+              "GridTransformComponent": {
+                "BodyRangeInfos": [
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  }
+                ],
+                "BodyCrossBlockedInfos": [],
+                "UnlockWholeRequestCount": 1,
+                "RealCenter": [
+                  0.0,
+                  0.0
+                ],
+                "IsRigidBody": true
+              },
+              "TransformComponent": {},
+              "FightSkillComponent": {
+                "SkillType": 0,
+                "CostType": 0,
+                "SkillTargetType": 1,
+                "TargetType": 1,
+                "HitTargetActionType": 0,
+                "ElementType": 0,
+                "RangeType": 0,
+                "Range": [
+                  {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": -1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 1
+                  },
+                  {
+                    "X": -1,
+                    "Y": 0
+                  },
+                  {
+                    "X": 2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -2,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": -1
+                  },
+                  {
+                    "X": 1,
+                    "Y": -1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 0,
+                    "Y": -2
+                  },
+                  {
+                    "X": 0,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": -2
+                  },
+                  {
+                    "X": 1,
+                    "Y": 2
+                  },
+                  {
+                    "X": 3,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 3
+                  },
+                  {
+                    "X": -3,
+                    "Y": 0
+                  },
+                  {
+                    "X": -2,
+                    "Y": -1
+                  },
+                  {
+                    "X": 0,
+                    "Y": -3
+                  },
+                  {
+                    "X": 2,
+                    "Y": 1
+                  },
+                  {
+                    "X": 2,
+                    "Y": -1
+                  },
+                  {
+                    "X": -1,
+                    "Y": 2
+                  },
+                  {
+                    "X": -1,
+                    "Y": -2
+                  },
+                  {
+                    "X": -2,
+                    "Y": 1
+                  },
+                  {
+                    "X": 3,
+                    "Y": 1
+                  },
+                  {
+                    "X": -4,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 4
+                  },
+                  {
+                    "X": 2,
+                    "Y": 2
+                  },
+                  {
+                    "X": -2,
+                    "Y": 2
+                  },
+                  {
+                    "X": -3,
+                    "Y": 1
+                  },
+                  {
+                    "X": 1,
+                    "Y": 3
+                  },
+                  {
+                    "X": 4,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": 3
+                  },
+                  {
+                    "X": -3,
+                    "Y": -1
+                  },
+                  {
+                    "X": 3,
+                    "Y": -1
+                  },
+                  {
+                    "X": -2,
+                    "Y": -2
+                  },
+                  {
+                    "X": 2,
+                    "Y": -2
+                  },
+                  {
+                    "X": 0,
+                    "Y": -4
+                  },
+                  {
+                    "X": -1,
+                    "Y": -3
+                  },
+                  {
+                    "X": 1,
+                    "Y": -3
+                  },
+                  {
+                    "X": 0,
+                    "Y": -5
+                  },
+                  {
+                    "X": 2,
+                    "Y": 3
+                  },
+                  {
+                    "X": -3,
+                    "Y": 2
+                  },
+                  {
+                    "X": 1,
+                    "Y": -4
+                  },
+                  {
+                    "X": -1,
+                    "Y": -4
+                  },
+                  {
+                    "X": 2,
+                    "Y": -3
+                  },
+                  {
+                    "X": -4,
+                    "Y": 1
+                  },
+                  {
+                    "X": 5,
+                    "Y": 0
+                  },
+                  {
+                    "X": -2,
+                    "Y": -3
+                  },
+                  {
+                    "X": 3,
+                    "Y": -2
+                  },
+                  {
+                    "X": -3,
+                    "Y": -2
+                  },
+                  {
+                    "X": 4,
+                    "Y": -1
+                  },
+                  {
+                    "X": -5,
+                    "Y": 0
+                  },
+                  {
+                    "X": 3,
+                    "Y": 2
+                  },
+                  {
+                    "X": -4,
+                    "Y": -1
+                  },
+                  {
+                    "X": 4,
+                    "Y": 1
+                  },
+                  {
+                    "X": -1,
+                    "Y": 4
+                  },
+                  {
+                    "X": -2,
+                    "Y": 3
+                  },
+                  {
+                    "X": 1,
+                    "Y": 4
+                  },
+                  {
+                    "X": 0,
+                    "Y": 5
+                  },
+                  {
+                    "X": 2,
+                    "Y": 4
+                  },
+                  {
+                    "X": -5,
+                    "Y": 1
+                  },
+                  {
+                    "X": -2,
+                    "Y": 4
+                  },
+                  {
+                    "X": -5,
+                    "Y": -1
+                  },
+                  {
+                    "X": 0,
+                    "Y": 6
+                  },
+                  {
+                    "X": 0,
+                    "Y": -6
+                  },
+                  {
+                    "X": 5,
+                    "Y": -1
+                  },
+                  {
+                    "X": 6,
+                    "Y": 0
+                  },
+                  {
+                    "X": 4,
+                    "Y": 2
+                  },
+                  {
+                    "X": -4,
+                    "Y": -2
+                  },
+                  {
+                    "X": -1,
+                    "Y": 5
+                  },
+                  {
+                    "X": 4,
+                    "Y": -2
+                  },
+                  {
+                    "X": -3,
+                    "Y": -3
+                  },
+                  {
+                    "X": -4,
+                    "Y": 2
+                  },
+                  {
+                    "X": 3,
+                    "Y": -3
+                  },
+                  {
+                    "X": 1,
+                    "Y": 5
+                  },
+                  {
+                    "X": 1,
+                    "Y": -5
+                  },
+                  {
+                    "X": -2,
+                    "Y": -4
+                  },
+                  {
+                    "X": 2,
+                    "Y": -4
+                  },
+                  {
+                    "X": -6,
+                    "Y": 0
+                  },
+                  {
+                    "X": 3,
+                    "Y": 3
+                  },
+                  {
+                    "X": -1,
+                    "Y": -5
+                  },
+                  {
+                    "X": 5,
+                    "Y": 1
+                  },
+                  {
+                    "X": -3,
+                    "Y": 3
+                  },
+                  {
+                    "X": -2,
+                    "Y": 5
+                  },
+                  {
+                    "X": -1,
+                    "Y": -6
+                  },
+                  {
+                    "X": 2,
+                    "Y": 5
+                  },
+                  {
+                    "X": 7,
+                    "Y": 0
+                  },
+                  {
+                    "X": -1,
+                    "Y": 6
+                  },
+                  {
+                    "X": 1,
+                    "Y": 6
+                  },
+                  {
+                    "X": 6,
+                    "Y": -1
+                  },
+                  {
+                    "X": -5,
+                    "Y": -2
+                  },
+                  {
+                    "X": 0,
+                    "Y": 7
+                  },
+                  {
+                    "X": 5,
+                    "Y": -2
+                  },
+                  {
+                    "X": -4,
+                    "Y": -3
+                  },
+                  {
+                    "X": 4,
+                    "Y": -3
+                  },
+                  {
+                    "X": 2,
+                    "Y": -5
+                  },
+                  {
+                    "X": -3,
+                    "Y": -4
+                  },
+                  {
+                    "X": 3,
+                    "Y": -4
+                  },
+                  {
+                    "X": -6,
+                    "Y": -1
+                  },
+                  {
+                    "X": -7,
+                    "Y": 0
+                  },
+                  {
+                    "X": -2,
+                    "Y": -5
+                  },
+                  {
+                    "X": 1,
+                    "Y": -6
+                  },
+                  {
+                    "X": 5,
+                    "Y": 2
+                  },
+                  {
+                    "X": -4,
+                    "Y": 3
+                  },
+                  {
+                    "X": 6,
+                    "Y": 1
+                  },
+                  {
+                    "X": 0,
+                    "Y": -7
+                  },
+                  {
+                    "X": -6,
+                    "Y": 1
+                  },
+                  {
+                    "X": 4,
+                    "Y": 3
+                  },
+                  {
+                    "X": -5,
+                    "Y": 2
+                  },
+                  {
+                    "X": -3,
+                    "Y": 4
+                  },
+                  {
+                    "X": 3,
+                    "Y": 4
+                  },
+                  {
+                    "X": 2,
+                    "Y": -6
+                  },
+                  {
+                    "X": 6,
+                    "Y": 2
+                  },
+                  {
+                    "X": 7,
+                    "Y": -1
+                  },
+                  {
+                    "X": 5,
+                    "Y": -3
+                  },
+                  {
+                    "X": -6,
+                    "Y": 2
+                  },
+                  {
+                    "X": -6,
+                    "Y": -2
+                  },
+                  {
+                    "X": 4,
+                    "Y": 4
+                  },
+                  {
+                    "X": -8,
+                    "Y": 0
+                  },
+                  {
+                    "X": 0,
+                    "Y": 8
+                  },
+                  {
+                    "X": 1,
+                    "Y": 7
+                  },
+                  {
+                    "X": -1,
+                    "Y": 7
+                  },
+                  {
+                    "X": 0,
+                    "Y": -8
+                  },
+                  {
+                    "X": -1,
+                    "Y": -7
+                  },
+                  {
+                    "X": -5,
+                    "Y": 3
+                  },
+                  {
+                    "X": 6,
+                    "Y": -2
+                  },
+                  {
+                    "X": -2,
+                    "Y": 6
+                  },
+                  {
+                    "X": -5,
+                    "Y": -3
+                  },
+                  {
+                    "X": 3,
+                    "Y": -5
+                  },
+                  {
+                    "X": -4,
+                    "Y": 4
+                  },
+                  {
+                    "X": -3,
+                    "Y": -5
+                  },
+                  {
+                    "X": 2,
+                    "Y": 6
+                  },
+                  {
+                    "X": 8,
+                    "Y": 0
+                  },
+                  {
+                    "X": 4,
+                    "Y": -4
+                  },
+                  {
+                    "X": 7,
+                    "Y": 1
+                  },
+                  {
+                    "X": -2,
+                    "Y": -6
+                  },
+                  {
+                    "X": -3,
+                    "Y": 5
+                  },
+                  {
+                    "X": -7,
+                    "Y": -1
+                  },
+                  {
+                    "X": 5,
+                    "Y": 3
+                  },
+                  {
+                    "X": 3,
+                    "Y": 5
+                  },
+                  {
+                    "X": 1,
+                    "Y": -7
+                  },
+                  {
+                    "X": -4,
+                    "Y": -4
+                  },
+                  {
+                    "X": -7,
+                    "Y": 1
+                  },
+                  {
+                    "X": -4,
+                    "Y": -5
+                  },
+                  {
+                    "X": -6,
+                    "Y": 3
+                  },
+                  {
+                    "X": 1,
+                    "Y": -8
+                  },
+                  {
+                    "X": -5,
+                    "Y": -4
+                  },
+                  {
+                    "X": 1,
+                    "Y": 8
+                  },
+                  {
+                    "X": 5,
+                    "Y": -4
+                  },
+                  {
+                    "X": -1,
+                    "Y": 8
+                  },
+                  {
+                    "X": 0,
+                    "Y": 9
+                  },
+                  {
+                    "X": 6,
+                    "Y": 3
+                  },
+                  {
+                    "X": 6,
+                    "Y": -3
+                  },
+                  {
+                    "X": -7,
+                    "Y": 2
+                  },
+                  {
+                    "X": 0,
+                    "Y": -9
+                  },
+                  {
+                    "X": -9,
+                    "Y": 0
+                  },
+                  {
+                    "X": -8,
+                    "Y": -1
+                  },
+                  {
+                    "X": 4,
+                    "Y": -5
+                  },
+                  {
+                    "X": 4,
+                    "Y": 5
+                  },
+                  {
+                    "X": 8,
+                    "Y": 1
+                  },
+                  {
+                    "X": -5,
+                    "Y": 4
+                  },
+                  {
+                    "X": -4,
+                    "Y": 5
+                  },
+                  {
+                    "X": 9,
+                    "Y": 0
+                  },
+                  {
+                    "X": -3,
+                    "Y": -6
+                  },
+                  {
+                    "X": -8,
+                    "Y": 1
+                  },
+                  {
+                    "X": 2,
+                    "Y": -7
+                  },
+                  {
+                    "X": 3,
+                    "Y": 6
+                  },
+                  {
+                    "X": -6,
+                    "Y": -3
+                  },
+                  {
+                    "X": 7,
+                    "Y": 2
+                  },
+                  {
+                    "X": 3,
+                    "Y": -6
+                  },
+                  {
+                    "X": -7,
+                    "Y": -2
+                  },
+                  {
+                    "X": 8,
+                    "Y": -1
+                  },
+                  {
+                    "X": 7,
+                    "Y": -2
+                  },
+                  {
+                    "X": -2,
+                    "Y": -7
+                  },
+                  {
+                    "X": -2,
+                    "Y": 7
+                  },
+                  {
+                    "X": 5,
+                    "Y": 4
+                  },
+                  {
+                    "X": 2,
+                    "Y": 7
+                  },
+                  {
+                    "X": -1,
+                    "Y": -8
+                  },
+                  {
+                    "X": -3,
+                    "Y": 6
+                  },
+                  {
+                    "X": 4,
+                    "Y": -6
+                  },
+                  {
+                    "X": -1,
+                    "Y": -9
+                  },
+                  {
+                    "X": 2,
+                    "Y": -8
+                  },
+                  {
+                    "X": 3,
+                    "Y": -7
+                  },
+                  {
+                    "X": -3,
+                    "Y": -7
+                  },
+                  {
+                    "X": -4,
+                    "Y": -6
+                  },
+                  {
+                    "X": 5,
+                    "Y": -5
+                  },
+                  {
+                    "X": -2,
+                    "Y": -8
+                  },
+                  {
+                    "X": 0,
+                    "Y": 10
+                  },
+                  {
+                    "X": 6,
+                    "Y": -4
+                  },
+                  {
+                    "X": -1,
+                    "Y": 9
+                  },
+                  {
+                    "X": 1,
+                    "Y": 9
+                  },
+                  {
+                    "X": -2,
+                    "Y": 8
+                  },
+                  {
+                    "X": 2,
+                    "Y": 8
+                  },
+                  {
+                    "X": -3,
+                    "Y": 7
+                  },
+                  {
+                    "X": 3,
+                    "Y": 7
+                  },
+                  {
+                    "X": -4,
+                    "Y": 6
+                  },
+                  {
+                    "X": 4,
+                    "Y": 6
+                  },
+                  {
+                    "X": -5,
+                    "Y": 5
+                  },
+                  {
+                    "X": 5,
+                    "Y": 5
+                  },
+                  {
+                    "X": -6,
+                    "Y": 4
+                  },
+                  {
+                    "X": 6,
+                    "Y": 4
+                  },
+                  {
+                    "X": -7,
+                    "Y": 3
+                  },
+                  {
+                    "X": -5,
+                    "Y": -5
+                  },
+                  {
+                    "X": 7,
+                    "Y": 3
+                  },
+                  {
+                    "X": 8,
+                    "Y": 2
+                  },
+                  {
+                    "X": -9,
+                    "Y": 1
+                  },
+                  {
+                    "X": 9,
+                    "Y": 1
+                  },
+                  {
+                    "X": -10,
+                    "Y": 0
+                  },
+                  {
+                    "X": 1,
+                    "Y": -9
+                  },
+                  {
+                    "X": 10,
+                    "Y": 0
+                  },
+                  {
+                    "X": -9,
+                    "Y": -1
+                  },
+                  {
+                    "X": 9,
+                    "Y": -1
+                  },
+                  {
+                    "X": -8,
+                    "Y": -2
+                  },
+                  {
+                    "X": 8,
+                    "Y": -2
+                  },
+                  {
+                    "X": -7,
+                    "Y": -3
+                  },
+                  {
+                    "X": 7,
+                    "Y": -3
+                  },
+                  {
+                    "X": -6,
+                    "Y": -4
+                  },
+                  {
+                    "X": -8,
+                    "Y": 2
+                  },
+                  {
+                    "X": 0,
+                    "Y": -10
+                  }
+                ],
+                "HitList": [
+                  {
+                    "ClassId": 11211,
+                    "Delay": 0.07999999821186066,
+                    "ActOnSouce": 0,
+                    "IgnoreAICount": false
+                  }
+                ],
+                "SourceMoveList": [],
+                "ActionDuration": 0.0,
+                "AllEndedActionDuration": -1.0,
+                "AllRelevantEndedActionDuration": -1.0,
+                "Duration": 0.8999999761581421,
+                "AllEndedDuration": -1.0,
+                "AllRelevantEndedDuration": -1.0,
+                "LimitedTimes": -1,
+                "ResetCDAtStart": false,
+                "ExtSkill": [],
+                "Replay": {
+                  "Rate": 0.0,
+                  "ReplaceSkillArrayOnReplay": []
+                },
+                "ReplayMaxCountEachRound": -1,
+                "CanTriggerChild": false,
+                "CanTriggerStatusEntityIds": [
+                  60270
+                ],
+                "Ai": {
+                  "DontKeepDistance": false,
+                  "AiPriorityTypes": [],
+                  "LastAIPriorityTypes": [],
+                  "IgnoreStatusArray": [],
+                  "AIPriroityCharacterType": 8,
+                  "ReleaseWhileRidicule": false,
+                  "ReleaseWhileConfusion": false,
+                  "IsReleaseSkillAfterMove": false,
+                  "IsFixSkillDirection": false,
+                  "FixedDirection": 0,
+                  "MoveByTeleport": false,
+                  "AIPriorityHpLowerCharacterTypeFilter": [],
+                  "AiPriorityPropType": 0,
+                  "AiPriorityFindMax": true,
+                  "AIPriorityCharacterTypeGroups": []
+                },
+                "ActionType": 68,
+                "FlipSource": true,
+                "NeedConditionStatusMeetToRelease": false,
+                "MustHaveValidCost": false,
+                "IsFixedProp": false,
+                "ResetReleasedTimeOnNextWave": false
+              },
+              "FightGameplayTagComponent": {
+                "GameplayTag": {
+                  "V0": 9344,
+                  "V1": 0,
+                  "V2": 0,
+                  "V3": 0
+                }
+              }
+            }
+          },
+          "11211": {
+            "parent": 0,
+            "components": {
+              "GridTransformComponent": {
+                "BodyRangeInfos": [
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  }
+                ],
+                "BodyCrossBlockedInfos": [],
+                "UnlockWholeRequestCount": 1,
+                "RealCenter": [
+                  0.0,
+                  0.0
+                ],
+                "IsRigidBody": true
+              },
+              "TransformComponent": {},
+              "FightHitFixedComponent": {
+                "DamageId": 11212,
+                "DamageType": 1,
+                "DamageBasicProp": 1,
+                "DamageProp": 200,
+                "FixedDamageProp": 190,
+                "DamageParam": 0,
+                "DamageActionType": 4,
+                "DelayDistFactor": 0.0,
+                "Offset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "TargetOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "IsUseCenterRotation": false,
+                "RotateCenterOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "UseDamageFactor": false,
+                "DamageIgnoreShield": false,
+                "IsTrueDamage": false,
+                "AirCombo": {
+                  "AirComboStatusId": 0,
+                  "BasePercent": 0.0,
+                  "AffectedByProp": false
+                },
+                "DestroyDelay": 0.0,
+                "IsBreakResilience": false,
+                "Scope": [
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "Delay": 0.0,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  }
+                ]
+              }
+            }
+          },
+          "11212": {
+            "parent": 0,
+            "components": {
+              "TransformComponent": {},
+              "FightDamageComponent": {
+                "Duration": 0.5,
+                "DieId": 24000,
+                "ReplaySkillOnTaragetDie": false,
+                "StatusList": [],
+                "MoveCfg": {
+                  "MoveBehaviourId": 0,
+                  "Delay": 0.0,
+                  "Offset": {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  "TowardsTargetPos": false,
+                  "SkillMoveDirection": 1,
+                  "Distance": -1,
+                  "BasePercent": 1.0,
+                  "AffectedByProp": false,
+                  "AiMustMoveTo": false,
+                  "AIIgnore": false,
+                  "CanExpandOffset": false,
+                  "CancelDiagonally": false,
+                  "DoMoveConditions": []
+                },
+                "DisperseStatus": {
+                  "BasePercent": 0.0,
+                  "AffectedByProp": false,
+                  "TargetTypes": [],
+                  "Count": 0,
+                  "IsRandom": false,
+                  "ExcludeCharacterTypes": []
+                },
+                "SwitchForm": false,
+                "ChildSkillCfg": {
+                  "Rate": 1.0,
+                  "LessThanHpPer": -1.0,
+                  "SkillId": 0
+                },
+                "TriggerExistStateCfg": {
+                  "StatusIds": [],
+                  "TriggerCount": 0,
+                  "IsOnlyTriggerStatusApplyBySelf": false,
+                  "ActiveTriggerNotComsumeRound": false,
+                  "FilterCondition": null
+                },
+                "StatusListRandomOne": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "path": "Assets/Config/EC/FightSkill_part751.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "5230422050709495469",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "ad0538e99bf6a88c19781902bcd8acfc8e6e7dc8d802e0dd50c8e04e1f5d2dfd",
+        "payload_sha256": "bd6d4e0f91c3d28e241d5e132165d7bdf884498ca2b606c97807623046442df8",
+        "legacy_prefix": false,
+        "entities": {
+          "25017": {
+            "parent": 0,
+            "components": {
+              "ActionComponent": {
+                "ActionType": 50
+              },
+              "FightStatusComponent": {
+                "_unused_0": null,
+                "RoundTarget": 2,
+                "DurationRound": -1,
+                "RoundUpdateTiming": 1,
+                "RemoveAtRoundTargetDestroy": false,
+                "ElementType": 0,
+                "ActionBehOfSameStatus": 1,
+                "StatusType": 0,
+                "CanDispersed": false,
+                "IsOpenStack": false,
+                "InitStackCount": 1,
+                "AddStackedCount": 1,
+                "MaxStackedCount": 0,
+                "IsAddDurationRound": false,
+                "MaxAddDurationRound": 100,
+                "ScalePropWhenChangeStacked": false,
+                "StatusSourceType": 1,
+                "ApplyIgnoreResilience": false,
+                "CheckTriggerLimitActions": true,
+                "AI": {
+                  "MoreHit": false
+                },
+                "ForbiddenOnApplicatorDie": false,
+                "StackRoundCondition": 0,
+                "StackCountCondition": 0,
+                "IsResetDurationWhenStack": false,
+                "AddStackedRandomMinCount": 1,
+                "AddStackedRandomMaxCount": 1,
+                "IsFixedProp": false,
+                "MutexChecker": null,
+                "FollowRoundUpdateTimingOnGlobalRound": false
+              },
+              "FightStatusLogicComponent": {
+                "StatusReplacePropertyValues": [],
+                "Triggers": [
+                  {
+                    "Flow": {
+                      "FilterCondition": {
+                        "LogicType": 0,
+                        "SubFilters": [
+                          {
+                            "ResultType": 1,
+                            "DamageEntityKey": {
+                              "Id": 1023,
+                              "Name": "DamageEntity",
+                              "PortType": 0,
+                              "IsPersistentBlackboard": false
+                            },
+                            "_type": "DamageResultTypeFilter"
+                          },
+                          {
+                            "StatusEntityKey": {
+                              "Id": 2,
+                              "Name": "MainStatus",
+                              "PortType": 0,
+                              "IsPersistentBlackboard": false
+                            },
+                            "SkillEntityIdKey": {
+                              "Id": 1025,
+                              "Name": "DamageSkill",
+                              "PortType": 0,
+                              "IsPersistentBlackboard": false
+                            },
+                            "_type": "DamageSkillCanTriggerStatusFilter"
+                          },
+                          {
+                            "TargetFilter": {
+                              "EntityKey": {
+                                "Id": 1,
+                                "Name": "MainEntity",
+                                "PortType": 0,
+                                "IsPersistentBlackboard": false
+                              },
+                              "ActionType": 3,
+                              "_type": "EntityHasActionTypeByEntityKeyFilter"
+                            },
+                            "_type": "LogicNotFilter"
+                          },
+                          {
+                            "CenterEntity": {
+                              "Id": 1,
+                              "Name": "MainEntity",
+                              "PortType": 0,
+                              "IsPersistentBlackboard": false
+                            },
+                            "Range": [
+                              {
+                                "X": 0,
+                                "Y": 1
+                              },
+                              {
+                                "X": 1,
+                                "Y": 0
+                              },
+                              {
+                                "X": -1,
+                                "Y": 0
+                              },
+                              {
+                                "X": 0,
+                                "Y": -1
+                              },
+                              {
+                                "X": 1,
+                                "Y": 1
+                              },
+                              {
+                                "X": 1,
+                                "Y": -1
+                              },
+                              {
+                                "X": -1,
+                                "Y": 1
+                              },
+                              {
+                                "X": -1,
+                                "Y": -1
+                              },
+                              {
+                                "X": 2,
+                                "Y": 0
+                              },
+                              {
+                                "X": -2,
+                                "Y": 0
+                              },
+                              {
+                                "X": 0,
+                                "Y": 2
+                              },
+                              {
+                                "X": 0,
+                                "Y": -2
+                              }
+                            ],
+                            "UseWorldPosByCenterEntityTransform": false,
+                            "TargetEntityIdKey": {
+                              "Id": 1021,
+                              "Name": "DamageSource",
+                              "PortType": 0,
+                              "IsPersistentBlackboard": false
+                            },
+                            "ConsiderTargetBodySize": true,
+                            "_type": "RangeByEcIdKeyFilter"
+                          },
+                          {
+                            "Rate": 0.5,
+                            "_type": "RandomJudgeFilter"
+                          }
+                        ],
+                        "_type": "LogicFilter"
+                      },
+                      "HandleCfgs": [
+                        {
+                          "ValueBBKey": {
+                            "Id": 1021,
+                            "Name": "DamageSource",
+                            "PortType": 0,
+                            "IsPersistentBlackboard": false
+                          },
+                          "StorageBBKey": {
+                            "Id": 656972986,
+                            "Name": "DamageSourceEntity",
+                            "PortType": 1,
+                            "IsPersistentBlackboard": false
+                          },
+                          "_type": "FightHandleCfgBBEcId2EcEntityAndStore"
+                        },
+                        {
+                          "TriggerSkillCfgs": [
+                            {
+                              "SkillId": 11210,
+                              "BasePercent": 1.0,
+                              "AffectedByProp": false,
+                              "Source": 2,
+                              "UseAI": false,
+                              "PropTarget": {
+                                "IsEnemy": false,
+                                "RoleType": [],
+                                "IncludeApplicator": false,
+                                "PropType": 0,
+                                "Heighest": false,
+                                "SupportCustomFilter": false
+                              },
+                              "Target": 1,
+                              "TargetPos": 1,
+                              "StackedCountToDamageFactor": false,
+                              "CustomDamageInfo": {
+                                "TargetType": 0,
+                                "BaseProp": 0,
+                                "BaseCurrentHp": false,
+                                "DamageProp": 0,
+                                "UpperLimitTarget": 0,
+                                "UpperLimitPropType": 0,
+                                "UpperLimitPercent": 0
+                              },
+                              "StatusReplacePropertyValues": [],
+                              "TargetWithoutStatusIds": []
+                            }
+                          ],
+                          "SourceEntityKey": {
+                            "Id": 656972986,
+                            "Name": "DamageSourceEntity",
+                            "PortType": 0,
+                            "IsPersistentBlackboard": false
+                          },
+                          "TargetEntityKey": {
+                            "Id": 1,
+                            "Name": "MainEntity",
+                            "PortType": 0,
+                            "IsPersistentBlackboard": false
+                          },
+                          "UseDamagePos": false,
+                          "DamagePosEntityKey": {
+                            "Id": 1023,
+                            "Name": "DamageEntity",
+                            "PortType": 0,
+                            "IsPersistentBlackboard": false
+                          },
+                          "DamageFactorKey": {
+                            "Id": 348958083,
+                            "Name": "DamageFactor",
+                            "PortType": 0,
+                            "IsPersistentBlackboard": false
+                          },
+                          "_type": "FightHandleCfgTriggerSkills"
+                        },
+                        {
+                          "StatusEntityKey": {
+                            "Id": 2,
+                            "Name": "MainStatus",
+                            "PortType": 0,
+                            "IsPersistentBlackboard": false
+                          },
+                          "_type": "FightHandleCfgFireTriggerStatus"
+                        }
+                      ]
+                    },
+                    "_type": "FightOnAfterBeDamageTriggerCfg"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "runtime_comparison": [
+    {
+      "entity_id": 11210,
+      "consumed_components_equal": true,
+      "official_components_outside_skill_rules_export": {
+        "GridTransformComponent": {
+          "BodyRangeInfos": [
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 0
+              },
+              "GroundType": 0,
+              "IgnoreClick": false,
+              "OverrideGroundType": false
+            }
+          ],
+          "BodyCrossBlockedInfos": [],
+          "UnlockWholeRequestCount": 1,
+          "RealCenter": [
+            0.0,
+            0.0
+          ],
+          "IsRigidBody": true
+        },
+        "TransformComponent": {},
+        "FightGameplayTagComponent": {
+          "GameplayTag": {
+            "V0": 9344,
+            "V1": 0,
+            "V2": 0,
+            "V3": 0
+          }
+        }
+      },
+      "explicit_884_empty_dispel_default": {}
+    },
+    {
+      "entity_id": 11211,
+      "consumed_components_equal": true,
+      "official_components_outside_skill_rules_export": {},
+      "explicit_884_empty_dispel_default": {}
+    },
+    {
+      "entity_id": 11212,
+      "consumed_components_equal": true,
+      "official_components_outside_skill_rules_export": {},
+      "explicit_884_empty_dispel_default": {
+        "FightDamageComponent.DisperseStatus.ExcludeCharacterTypes": []
+      }
+    },
+    {
+      "entity_id": 25017,
+      "consumed_components_equal": true,
+      "official_components_outside_skill_rules_export": {},
+      "explicit_884_empty_dispel_default": {}
+    }
+  ],
+  "original_code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightOnAfterBeDamageTrigger.cs",
+      "sha256": "9f5f52731cfc77a583c74681ee28edeb7834e131599304e22784f89a628cfa9f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleBBEcId2EcEntityAndStore.cs",
+      "sha256": "d9fb01cff427622a2bc00022ee5aa745d29579c3dd81848eecff23f7286c1da3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleTriggerSkillsByStatus.cs",
+      "sha256": "dc3efb14a78d88db0f167dfecf81dd3f6f36dd9e1c075e8bf62c8efb6ccfb6d7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DamageResultTypeFilter.cs",
+      "sha256": "f93c674d6d54a39b3ada288a8a17bb419eb3bba0e4364d930326279bd792bd2c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RandomJudgeFilter.cs",
+      "sha256": "dfc54d10fc8665a42cfc29ad9226e49401c4ae069377ba0cce3f30fe99ead57f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RangeByEcIdKeyFilter.cs",
+      "sha256": "f731fe442d05f884878ac7d8bf10cf6126236a49ad1340fb4caeb05ca63f02fb"
+    }
+  ],
+  "runtime_inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    }
+  ],
+  "runtime_manifest": "854_156383",
+  "adapter": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightStatusLogicRuntime.SwordCounterattack.cs",
+      "sha256": "a7bbf4a7006e6d116d51979420f868279293cc62d1a9baaf37a2d4abd333c2db"
+    }
+  ],
+  "original_implementation_gap": [
+    "FightOnAfterBeDamageTrigger",
+    "FightHandleBBEcId2EcEntityAndStore",
+    "FightHandleTriggerSkillsByStatus"
+  ],
+  "confirmed_offline_rules": {
+    "successful_damage": "Allow full shield absorption; reject dodge, blinding and immunity. Require surviving holder, original trigger whitelist and any attacker body cell inside original 12-cell range before drawing RandomJudgeFilter <= Rate.",
+    "mapping": "Holder releases original 11210 once toward this hit attacker; inherit original secret 10537 cultivation and root; do not consume an equipped slot.",
+    "probability_order": "Draw the 50% random value only after preceding deterministic filters pass."
+  },
+  "binding": {
+    "event": "FightBattleExecutor.ExecuteSkill AfterBeDamage passes actual FightBattleDamageEvent",
+    "dispatch": "FightStatusLogicRuntime.Apply -> ApplySwordCounterattack only for original 25017 AfterBeDamage",
+    "child": "ExecuteConfiguredStatusSkills restores source rank/level/subrank properties for 11210; incoming damage delay plus original child hit delay"
+  },
+  "verifier": "scripts/test_battle_sword_counterattack.ps1",
+  "operation": "Reuse extracted selected APK provenance and decompiled original graph/config declarations; preserve historical runtime identity; explicit user-confirmed implementation for missing server hotfix classes."
+}
