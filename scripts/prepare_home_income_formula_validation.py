@@ -80,6 +80,13 @@ def prepare():
         'The original ignored-award list is retained. Actual cart repair/unlock/claim/drain and its original '
         'queue display use a real saved receipt; presentation never writes either save. General indexed '
         'equipment instances, detail popups and the production acceleration sequence remain separate.')
+    receipt['fast_reward_adapter'] = (
+        'Free-use settings belong to the configured furniture; all unlocked members of its original HangUpIdList '
+        'receive acceleration, including cart rows whose own FastHangUpId is -1. Free and paid income batches '
+        'return immutable projections of the exact committed output deltas and ledger serials. Older pending '
+        'amounts and sealed transfers are excluded. Checks cover random output, duplicate members, capacity '
+        'bypass, daily limits, rejected grants, disk reopen and actual bed/cart profile transfers. Extra reward '
+        'handlers, paid cost recovery and production progress/window integration remain pending.')
     receipt['validation_inputs'] = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in (
         'scripts/prepare_home_income_formula_validation.py', 'scripts/fixtures/home_income_formula_validation.cs',
         'scripts/fixtures/home_furniture_host_validation.cs')}

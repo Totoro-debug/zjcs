@@ -66,6 +66,7 @@ public sealed partial class HomeIncomeFormulaHostRunner
         rule.LevelNum = 0;
         Require(OfflineHangUpIncome.HourlyRate(rule, props, flags) == 0, "original nonpositive level branch");
         CheckAccelerationTransactions(flags);
+        CheckFastBatchReceipts(flags);
         CheckCollectionReceipts(flags);
         CheckFreeFastForwardCalendar(flags);
         Require(home.Rules.IsFunctionLimited(164) && !home.Rules.IsFunctionLimited(53, 1)
@@ -342,6 +343,85 @@ public sealed partial class HomeIncomeFormulaHostRunner
         Open(); yield return new WaitForSeconds(1);
         Require(home.Profile.InventoryCount(expectedItem) == before + reward.Count,
             "cart reward persists after reopening without another grant");
+        var cartDefinition = home.Session.Definitions.Single(value => value.HangUpId == 2);
+        var bedDefinition = home.Session.Definitions.Single(value => value.HangUpId == 1);
+        var flags = HomeIncomePropertyCatalog.CreateFloatPropertyIds();
+        long cartFastCount = (long)OfflineHangUpIncome.RewardCount(cartDefinition.Rule, home.PlayerProperties(), flags, 2);
+        long bedFastCount = (long)OfflineHangUpIncome.RewardCount(bedDefinition.Rule, home.PlayerProperties(), flags, 2);
+        var beforeFastItems = possibleItems.ToDictionary(id => id, home.Profile.InventoryCount);
+        long beforeFastExperience = home.Profile.Save.Player.Experience;
+        Require(home.Session.Mutate("income-reward:reset-free", save => save.FastForwardUsage.Clear()),
+            "reset only the isolated fixture's consumed free use");
+        Require(cartDefinition.FastHangUpId == -1 && cartFastCount > 0
+            && home.TryFastForward(1) == bedFastCount + cartFastCount,
+            "actual configured bed acceleration includes the unlocked cart with no independent fast ID");
+        Require(home.Profile.Save.Player.Experience == beforeFastExperience + bedFastCount
+            && possibleItems.Sum(id => home.Profile.InventoryCount(id) - beforeFastItems[id]) == cartFastCount
+            && home.Session.Save.Inventory.Count == 0 && home.TryFastForward(1) == 0,
+            "actual bed and random cart acceleration reach the profile exactly once under one free use");
+    }
+
+    private void CheckFastBatchReceipts(ISet<int> flags)
+    {
+        var bed = new OfflineHomeIncomeDefinition {
+            HangUpId = 1, OutputItemId = 50, FastHangUpId = 1, Unlocked = true,
+            FreeFastForwardLimit = 1, FreeFastForwardHours = 2,
+            Rule = new HangUpIncomeRule { HourlyOutput = 5, LevelNum = 1, MaxStoreHours = 0 }
+        };
+        var cart = new OfflineHomeIncomeDefinition {
+            HangUpId = 2, OutputItemId = 51, OutputItemIds = new[] { 51, 52 }, OutputWeights = new[] { 1000, 1000 },
+            FastHangUpId = -1, Unlocked = true,
+            Rule = new HangUpIncomeRule { HourlyOutput = 3, LevelNum = 1, MaxStoreHours = 0 }
+        };
+        var locked = new OfflineHomeIncomeDefinition {
+            HangUpId = 3, OutputItemId = 53, FastHangUpId = -1, Unlocked = false,
+            Rule = new HangUpIncomeRule { HourlyOutput = 100, LevelNum = 1, MaxStoreHours = 36 }
+        };
+        string path = System.IO.Path.Combine(root, "fast-receipts.json");
+        var entries = new[] { bed, cart, locked };
+        var properties = new Dictionary<int, long>();
+        var session = OfflineHomeIncomeSession.Open(path, entries, properties, flags, 1700000000);
+        Require(session.Mutate("prior", save => {
+            save.GrantSerial = 3;
+            save.Inventory.Add(new OfflineHomeItemStack { ItemId = 50, Count = 90, Serial = 1, TransferStarted = true });
+            save.Inventory.Add(new OfflineHomeItemStack { ItemId = 51, Count = 70, Serial = 2 });
+            save.Inventory.Add(new OfflineHomeItemStack { ItemId = 52, Count = 80, Serial = 3 });
+        }), "seed sealed XP transfer and older unrelated random output stacks");
+        string before = JsonUtility.ToJson(session.Save);
+        Require(session.ApplyFreeFastForwardGroupRewards(1, new[] { 1, 2 }, 3, "wrong-hours") == null
+            && JsonUtility.ToJson(session.Save) == before, "rejected free duration returns no receipt or changed state");
+        var result = session.ApplyFreeFastForwardGroupRewards(1, new[] { 1, 2, 2, 3 }, 2, "free-batch");
+        Require(result != null && result.TotalCount == 16 && result.Rewards.Count == 2,
+            "free group uses its configured members once, including carts without a fast ID, and excludes locked output");
+        var xp = result.Rewards.Single(value => value.HangUpId == 1);
+        var selected = result.Rewards.Single(value => value.HangUpId == 2);
+        Require(xp.ItemId == 50 && xp.Count == 10 && xp.LedgerSerial == 4 && selected.Count == 6
+            && new[] { 51, 52 }.Contains(selected.ItemId) && selected.Receipt == "free-batch"
+            && session.Save.Inventory.Single(value => value.Serial == 1).Count == 90
+            && session.Save.Inventory.Single(value => value.Serial == selected.LedgerSerial).Count
+                == (selected.ItemId == 51 ? 70 : 80) + 6,
+            "batch receipts contain exact new random outputs, excluding old amounts and sealed transfers, without a storage clamp");
+        before = JsonUtility.ToJson(session.Save);
+        Require(session.ApplyFreeFastForwardGroupRewards(1, new[] { 1, 2 }, 2, "free-batch") == null
+            && session.ApplyFreeFastForwardGroupRewards(1, new[] { 1, 2 }, 2, "over-limit") == null
+            && JsonUtility.ToJson(session.Save) == before, "duplicate and exhausted free requests produce no additional receipt");
+        var paid = session.ApplyFastForwardBatchRewards(new[] { 1, 2, 2, 3 }, 2, "paid-income");
+        Require(paid != null && paid.TotalCount == 16 && paid.Rewards.Count == 2
+            && paid.Rewards.All(value => value.Count == (value.HangUpId == 1 ? 10 : 6)),
+            "paid income batch reports only each selected output delta, independently of the prior free batch");
+        session = OfflineHomeIncomeSession.Open(path, entries, properties, flags, 1700000000);
+        before = JsonUtility.ToJson(session.Save);
+        Require(session.ApplyFastForwardBatchRewards(new[] { 1, 2 }, 2, "paid-income") == null
+            && JsonUtility.ToJson(session.Save) == before && session.Save.FastForwardUsage.Single().FreeUses == 1,
+            "disk reopen retains batch idempotency and the single free use");
+        Require(session.Mutate("full-ledger", save => {
+            foreach (var stack in save.Inventory.Where(value => value.ItemId == 51 || value.ItemId == 52))
+                stack.Count = long.MaxValue;
+        }), "seed full pending stacks for either possible cart output");
+        before = JsonUtility.ToJson(session.Save);
+        Require(session.ApplyFastForwardBatchRewards(new[] { 2 }, 2, "rejected-random") == null
+            && JsonUtility.ToJson(session.Save) == before,
+            "rejected random batch retains its old ledger, random state and receipt list");
     }
 
     private void CheckCollectionReceipts(ISet<int> flags)
