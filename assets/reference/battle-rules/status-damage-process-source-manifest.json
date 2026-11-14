@@ -1,0 +1,34 @@
+{
+  "manifest": "884_156692",
+  "official_code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusDamageProcessNoIndependentMultiplierComponent.cs",
+      "sha256": "72e4e003f4a07fa508c340d85575a76b4c34c47ea180fdd86e126982c1cdbbd1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusDamageProcessNoIndependentMultiplierComponentInfo.cs",
+      "sha256": "7a7ddd874595d5db545ff42db275e0d8b4d56e2806298a81d05132e54b2ffa9e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusDamageProcessNoIndependentMultiplier.cs",
+      "sha256": "14947e914472d8dc1fd3743a21abe6ba55b29b2df123bde4a162357926fb0cfa"
+    }
+  ],
+  "runtime_inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    }
+  ],
+  "migration": {
+    "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusCreatorDamageBoostRuntime.cs",
+    "sha256": "56bffa4380a43054fd47b7a03c4c8852ccc144de712b1a046e09d4dc03b3301e",
+    "text_hash": "CRLF normalized to LF"
+  },
+  "validation": {
+    "path": "scripts/test_battle_damage_process.ps1",
+    "sha256": "020b861af10672c7f979d78c96d5d95fe5f62cf6fad98b6476d05d7058cee938",
+    "text_hash": "CRLF normalized to LF"
+  },
+  "operation": "Preserve the official BeforeShield filters and property snapshots. Apply ordinary status damage-process modifiers per status; for the APK's NoIndependentMultiplier component, the local adaptation inferred from the component name sums matching percentage terms and applies one combined modifier. The server implementation is absent from the APK."
+}

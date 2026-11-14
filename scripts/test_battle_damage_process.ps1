@@ -116,6 +116,11 @@ Set-StatusProperty $g.Status 228 5000
 $g.Source.MasterId=1
 $processed=[Zjcs.Combat.Official.FightStatusDamageProcessRuntime]::BeforeShield($g.Source,$g.Target,-100,$formula,1)
 Require ($processed -eq -150) '24198 did not apply creator-summon vulnerable damage'
+$second=$catalog.CreateStatus(24198, 2, 1, 2, 0, 0, 1, 1, 1, $null)
+Set-StatusProperty $second 228 5000
+$g.Target.Statuses.Add($second)
+$processed=[Zjcs.Combat.Official.FightStatusDamageProcessRuntime]::BeforeShield($g.Source,$g.Target,-100,$formula,1)
+Require ($processed -eq -200) 'NoIndependentMultiplier statuses were multiplied independently'
 # Use the complete executor to verify accumulation, expiry, source credit and checkpoint replay together.
 $f=New-Fixture 1 $true 100
 $f.Hit.DamageType=2
@@ -139,4 +144,4 @@ $end=$runner.Step(0,2);$replay=$restored.Step(0,2)
 Require ($end.Event.DamageEvents[0].SkillEntityId -eq 13148 -and $end.Event.DamageEvents[0].Damage -eq -10 -and
     $replay.Event.DamageEvents[0].Damage -eq -10 -and $f.Target.Hp -eq 99955 -and
     $end.Checkpoint.Statistics.Skill(1,90001,90101).AdditionalAttributedDamage -eq 10) 'Status expiration, source credit or restoration reapplied the removed mark bonus'
-Write-Output 'Battle damage-process checks passed: official 20% + 4789, percent-before-fixed, BeforeShield, creator filter, no global property leakage, healing/no-action, accumulated expiry and checkpoint replay.'
+Write-Output 'Battle damage-process checks passed: official 20% + 4789, percent-before-fixed, BeforeShield, creator filter, no-independent aggregation, no global property leakage, healing/no-action, accumulated expiry and checkpoint replay.'

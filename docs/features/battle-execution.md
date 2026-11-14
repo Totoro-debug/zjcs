@@ -215,6 +215,8 @@
 - 用户确认 `DamageResultParameter.ResultType` 的单机分类：治疗结算为 `Cure`，伤害结算为 `Damage`（包括零伤害和免疫），两者均未执行为 `None`。APK 缺少服务端赋值，正式投影消费已有治疗标志及公式结果证据，不通过 HP 变化的正负猜测分类。无公式／结算的 `ActionType=None` 命中保留实际状态、驱散、位移及配置子技能并生成正式 `None` 回执；不进入伤害／治疗结算、次数和专用被动，仅继续符合条件的命中监听。原治疗技能即使互斥类型为 None，仍沿原治疗分支结算为 `Cure`。尚不支持的状态逻辑过滤器不据此宣称已实现。
 - 用户确认一个技能的伤害、护盾、增益和减益独立统计；增益与减益均纳入人物“施加状态”的统计；人物显示沿用原 `FightReportUIUtils.GetApplyStatusScore` 的分类权重和破韧分，纯状态技能也计入。执行器复用 `FightStatusLifecycle` 的实际成功记录和 `RecordPendingStatusApplications`，不按 `None` 回执额外加一次：成功添加、续期各记录实际施加，失败／免疫／拒绝不计，保存恢复不重复统计。原 `StatusType=None` 的纯护盾沿护盾量统计，不改写为增益或减益。
 
+- 通用 `FightStatusDamageProcessComponent` 及 `FightStatusDamageProcessNoIndependentMultiplierComponent` 均在扣盾前处理，保留原目标、阶段、伤害／治疗类型、来源行动类型、施加者／召唤物和敌我过滤。后者按官方组件名采取单机适配，将同类状态的减伤／增伤百分比先合并再应用一次，避免多个 24198 实例独立连乘；当前所选配置只有 24198 使用该组件，单实例仍得到原 15% 结果。官方客户端只含组件声明和空代理，服务端合并实现未随 APK 提供；来源与双实例回归见[状态伤害处理来源](../../assets/reference/battle-rules/status-damage-process-source-manifest.json)。
+
 - 用户确认行动者时间采用上述显示投影：本地执行器在演出前已推进其下次 `Next`，当前行动动画期间只向行动条传入本次 `Current`，切换后再显示下次时间；原管理器、UI、动画与战斗时钟保持原职责。
 
 - 状态 26030 的倍率由服务器 `MsgGameStartComplete／MsgGamePropsScaleUpdate` 下发，APK 的 `FightStatusPropsScaleFactorDescProvider` 只负责显示。用户确认单机固定为 1，不附加这项属性缩放；准备阶段仍显示原待计算说明，战斗开始后显示原“本场战斗无衰减”。受控验证额外输入 0.875 仅检查官方 provider 的更新与格式分支，不参与正式战斗裁决。

@@ -15,6 +15,10 @@ namespace Zjcs.Combat.Official
         {
             if (source == null || target == null || formula == null || target.Statuses == null
                 || value == 0) return value;
+            double noIndependentReduce = 0.0;
+            double noIndependentAdd = 0.0;
+            bool hasNoIndependent = false;
+            double amount = value;
             foreach (FightBattleStatusState status in target.Statuses)
             {
                 FightBattleStatusDamageProcessInfo process = status == null ? null : status.DamageProcess;
@@ -33,17 +37,33 @@ namespace Zjcs.Combat.Official
                 IDictionary<int, long> properties = status.ResolvedProperties == null
                     ? ToDictionary(status.StatusProperties) : ToDictionary(status.ResolvedProperties);
                 if (properties == null) continue;
-                double amount = value;
                 double reduce = process.ReducePercentPropertyId <= 0 ? 0.0
                     : formula.ReadProperty(properties, process.ReducePercentPropertyId);
                 double add = process.AddPercentPropertyId <= 0 ? 0.0
                     : formula.ReadProperty(properties, process.AddPercentPropertyId);
+                if (process.NoIndependentMultiplier)
+                {
+                    // The dedicated official component prevents each matching status
+                    // from multiplying the damage independently. Accumulate its
+                    // percentage terms and apply one combined modifier after the
+                    // ordinary per-status modifiers have been evaluated.
+                    noIndependentReduce += reduce;
+                    noIndependentAdd += add;
+                    hasNoIndependent = true;
+                    continue;
+                }
                 if (reduce != 0.0) amount /= Math.Max(1.0 + reduce, 0.1);
                 if (add != 0.0) amount *= 1.0 + add;
-                value = amount >= long.MaxValue ? long.MaxValue
-                    : amount <= long.MinValue ? long.MinValue : (long)amount;
             }
-            return value;
+            if (hasNoIndependent)
+            {
+                if (noIndependentReduce != 0.0)
+                    amount /= Math.Max(1.0 + noIndependentReduce, 0.1);
+                if (noIndependentAdd != 0.0)
+                    amount *= 1.0 + noIndependentAdd;
+            }
+            return amount >= long.MaxValue ? long.MaxValue
+                : amount <= long.MinValue ? long.MinValue : (long)amount;
         }
 
         private static bool HasSourceActionType(FightBattleUnitState source, IList<int> actionTypes)
