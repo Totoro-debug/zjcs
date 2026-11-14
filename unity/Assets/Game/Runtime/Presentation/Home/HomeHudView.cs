@@ -37,7 +37,6 @@ namespace Zjcs.Presentation.Home
         private Canvas canvas;
         private GameObject homePanel;
         private HomeUiRenderer homeRenderer;
-        private HomeUiRenderer topRenderer;
         private HomeUiRenderer bottomRenderer;
         private GameObject functionsPanel;
         private PartnerRosterPanelView partnerRosterPanel;
@@ -97,7 +96,7 @@ namespace Zjcs.Presentation.Home
         internal Transform HomeSceneUiParent => homePanel.transform.Find("Content");
 
         public bool AnyModalOpen => CharacterPageOpen || activeDialog != null || inventoryRoot != null || host.FeatureModalOpen || skillDamageTest != null
-            || DungeonModalOpen || nativeFastProgress != null && nativeFastProgress.IsOpen
+            || NativeCurrencyModalOpen || DungeonModalOpen || nativeFastProgress != null && nativeFastProgress.IsOpen
             || npcAdventureSelectRoot != null || npcAdventureResultRoot != null
             || (functionsPanel != null && functionsPanel.activeSelf) || homeSkin != null && homeSkin.IsOpen;
 
@@ -184,30 +183,7 @@ namespace Zjcs.Presentation.Home
             return text;
         }
 
-        private void BuildTopBar()
-        {
-            Transform slot = Find(homePanel.transform, "Slot");
-            if (slot == null) slot = homePanel.transform;
-            topRenderer = Renderer();
-            GameObject bar = topRenderer.Create("top_bar", slot, null);
-            RectTransform barRect = (RectTransform)bar.transform;
-            barRect.anchorMin = new Vector2(1, 1);
-            barRect.anchorMax = new Vector2(1, 1);
-            barRect.pivot = new Vector2(1, 1);
-            barRect.anchoredPosition = new Vector2(-16, -12);
-            Transform list = Find(bar.transform, "ResourceList") ?? bar.transform;
-            for (int index = 0; index < CurrencyItems.Length; index++)
-            {
-                HomeUiRenderer money = Renderer();
-                int itemId = CurrencyItems[index];
-                GameObject entry = money.Create("money", list, (path, node) =>
-                    BindHudButton(path, node, (clickedPath, clickedNode) => OnCurrencyButton(itemId, clickedPath)));
-                string icon = host.Rules.ItemIcon(itemId);
-                money.SetSpriteByPrefix("IconImg", string.IsNullOrEmpty(icon) ? CurrencyIcons[index] : icon);
-                entry.name = "Money_" + itemId;
-                entry.AddComponent<TopBarCurrency>().Renderer = money;
-            }
-        }
+        private void BuildTopBar() => BuildNativeCurrencyBar();
 
         public Action BuildWishCurrencyBar(Transform slot)
         {
@@ -732,6 +708,7 @@ namespace Zjcs.Presentation.Home
 
         public void Tick()
         {
+            nativeCurrencyPeriodic?.Update(Time.time);
             nativeBedServices?.Tick();
             host.SetFantasyTowerBackgroundExecution(AnyModalOpen);
             UpdatePartnerDetailRuntime();
@@ -748,6 +725,7 @@ namespace Zjcs.Presentation.Home
 
         public bool TryHandleBack()
         {
+            if (NativeCurrencyModalOpen) { nativeCurrencyWindows.CloseLast(); return true; }
             if (ClosePartnerPromptWindow()) return true;
             if (ClosePartnerFriendshipWindow()) return true;
             if (NpcTravelModalOpen)
@@ -787,6 +765,7 @@ namespace Zjcs.Presentation.Home
         public void RefreshCounts()
         {
             if (canvas == null) return;
+            nativeCurrencyPlayer?.SynchronizeCommittedPlayer();
             RefreshNativeFunctionMenuPlayer();
             foreach (TopBarCurrency currency in canvas.GetComponentsInChildren<TopBarCurrency>(true))
                 currency.Refresh(host);
@@ -1308,6 +1287,7 @@ namespace Zjcs.Presentation.Home
 
         public void Dispose()
         {
+            ReleaseNativeCurrencyBar();
             ReleaseNativeFunctionMenu();
             ReleaseNativeBedWindow();
             bedAwards?.Dispose(); bedAwards = null;

@@ -28,8 +28,17 @@ namespace Zjcs.Offline.HomeCurrencyUI
         Dictionary<string, string> language;
 
         public static OfflineHomeCurrencyAssets LoadDefault()
-            => Resources.Load<OfflineHomeCurrencyAssets>("Home/OfflineHomeCurrencyAssets")
+        {
+            // Load the catalog as a root asset before consuming its reference in
+            // the window bundle; a dependency-only load can expose an incomplete
+            // ScriptableObject during the first synchronous home construction.
+            var images = Resources.Load<OfflineProfessionImageCatalog>("Home/OfflineHomeCurrencyImages");
+            var assets = Resources.Load<OfflineHomeCurrencyAssets>("Home/OfflineHomeCurrencyAssets")
                 ?? throw new InvalidOperationException("Original home currency windows are unbound.");
+            if (!images || assets.images != images || images.Entries == null || images.Entries.Length == 0)
+                throw new InvalidOperationException("Original home currency image catalog is unbound or incomplete.");
+            return assets;
+        }
 
         public int MoneyId => (int)Settings["MoneyId"];
         public int DiamonId => (int)Settings["DiamonId"];

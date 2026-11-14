@@ -18,7 +18,7 @@ namespace Zjcs.Offline.HomeUI
         public HomeTopBarManager Manager => pools?.Manager;
 
         public OfflineHomeTopBar(Transform parent, IPlayerItemUIHost host, TMP_FontAsset font,
-            Func<string, string> localize, OfficialHomeTopBarAssetCatalog assets = null)
+            Func<string, string> localize, OfficialHomeTopBarAssetCatalog assets = null, bool activate = true)
         {
             if (!parent || host == null || !font || localize == null)
                 throw new ArgumentException("Complete local home top-bar bindings are required.");
@@ -31,7 +31,7 @@ namespace Zjcs.Offline.HomeUI
                 Root = Object.Instantiate(this.assets.parentPrefab, staging.transform, false);
                 Root.SetActive(false);
                 Handler = Root.GetComponent<TopBarHandler>(); Handler.Bind(Manager);
-                Root.transform.SetParent(parent, false); Root.SetActive(true);
+                Root.transform.SetParent(parent, false); Root.SetActive(activate);
             }
             catch { Dispose(); throw; }
             finally { Object.Destroy(staging); }

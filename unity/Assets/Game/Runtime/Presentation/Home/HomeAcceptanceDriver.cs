@@ -330,20 +330,12 @@ namespace Zjcs.Presentation.Home
                 // Pointer dispatch and asynchronous show/hide are exercised by
                 // HomeNativeFunctionMenuValidation, rather than synchronous callbacks.
 
-                TopBarCurrency[] currencies = GameObject.Find("Home Canvas")
-                    .GetComponentsInChildren<TopBarCurrency>(true);
-                Assert(currencies.Length == 3, "three official top bar currencies exist");
-                foreach (TopBarCurrency currency in currencies)
-                {
-                    Button details = currency.Renderer.Find<Button>("/MoneyUI/DescBtn");
-                    Button add = currency.Renderer.Find<Button>("/MoneyUI/AddBtn");
-                    Assert(details != null && add != null, "currency details and add buttons exist");
-                    details.onClick.Invoke();
-                    Assert(noticeRoot.activeSelf && toast.text.Contains("x"),
-                        "currency details onClick displays its local balance");
-                    add.onClick.Invoke();
-                    Assert(toast.text.Contains("离线模式"), "currency add onClick reports offline policy");
-                }
+                var currencies = PrivateField<Zjcs.Offline.HomeUI.OfflineHomeTopBar>(runtime.Hud, "nativeCurrencyBar");
+                Assert(currencies != null && currencies.Handler != null
+                    && currencies.Root.GetComponentsInChildren<MePlayerItemUI>(true).Length == 3,
+                    "three native official home currencies retain their original owner");
+                // Actual pointer purchase/exchange, masks, animation and disk reopen
+                // are exercised asynchronously by HomeNativeCurrencyValidation.
 
                 runtime.Hud.ShowBed();
                 GameObject dialog = PrivateField<GameObject>(runtime.Hud, "activeDialog");
@@ -351,7 +343,7 @@ namespace Zjcs.Presentation.Home
                 Assert(overlay != null, "modal backdrop close button exists");
                 overlay.onClick.Invoke();
                 Assert(!runtime.Hud.AnyModalOpen, "modal backdrop onClick closes the active window");
-                return "avatar, three currency controls, five tabs and modal backdrop use Unity events; native menu components retained";
+                return "avatar, five tabs and modal backdrop use Unity events; native currency/menu components retained";
             });            yield return CheckUi(runtime, value => ok &= value);
             ok &= Check("storage-input-events", () =>
             {
