@@ -39,7 +39,6 @@ namespace Zjcs.Presentation.Home
         private HomeUiRenderer homeRenderer;
         private HomeUiRenderer topRenderer;
         private HomeUiRenderer bottomRenderer;
-        private HomeUiRenderer functionsRenderer;
         private GameObject functionsPanel;
         private PartnerRosterPanelView partnerRosterPanel;
         private PartnerPanelView partnerPanel;
@@ -262,23 +261,12 @@ namespace Zjcs.Presentation.Home
             rect.anchoredPosition = new Vector2(0, 8);
         }
 
-        private void BuildFunctions()
-        {
-            functionsRenderer = Renderer();
-            functionsPanel = functionsRenderer.Create("functions", canvas.transform,
-                (path, node) => BindHudButton(path, node, OnFunctionButton));
-            RectTransform rect = (RectTransform)functionsPanel.transform;
-            rect.anchorMin = Vector2.zero;
-            rect.anchorMax = Vector2.one;
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
-            functionsPanel.SetActive(false);
-        }
+        private void BuildFunctions() => BuildNativeFunctionMenu();
 
         private void BuildToast()
         {
             noticeRoot = new GameObject("HomeToast", typeof(RectTransform));
-            noticeRoot.transform.SetParent(nativePublicSlot, false);
+            noticeRoot.transform.SetParent(canvas.transform, false);
             RectTransform rect = (RectTransform)noticeRoot.transform;
             rect.anchorMin = new Vector2(0.5f, 0);
             rect.anchorMax = new Vector2(0.5f, 0);
@@ -371,61 +359,12 @@ namespace Zjcs.Presentation.Home
             });
         }
 
-        private void OnFunctionButton(string path, GameObject node)
-        {
-            if (path.EndsWith("CloseBtn", StringComparison.Ordinal)) { ToggleFunctions(false); return; }
-            if (path.Contains("FunctionEntryTaskItem"))
-            {
-                ToggleFunctions(false);
-                OpenTaskPanel(host.Profile, NavigateMainlineTask);
-                return;
-            }
-            if (path.Contains("FunctionEntryHomeSkinItem"))
-            {
-                ToggleFunctions(false);
-                ShowHomeSkins();
-                return;
-            }
-            if (path.Contains("FunctionEntrySettingsItem")) { OpenSettings(); return; }
-            if (path.Contains("FunctionEntryFriendItem"))
-            {
-                ToggleFunctions(false);
-                OpenPartnerRoster();
-                return;
-            }
-            if (path.Contains("FunctionEntrySocialItem")
-                || path.Contains("FunctionEntryUserItem") || path.Contains("FunctionEntryTopListItem"))
-            {
-                Notify("社交与排行榜入口按离线范围关闭");
-                return;
-            }
-            if (path.Contains("FunctionEntryShopItem"))
-            {
-                Notify("商城活动依赖联网服务，离线模式不开放");
-                return;
-            }
-            if (path.Contains("FunctionEntryAnnounceItem"))
-            {
-                Notify("公告依赖联网服务，离线模式不开放");
-                return;
-            }
-            if (path.Contains("FunctionEntryPlanesMergeItem"))
-            {
-                Notify("跨服合并依赖联网服务，离线模式不开放");
-                return;
-            }
-            if (path.Contains("FunctionEntryPredownload"))
-            {
-                Notify("预下载依赖联网服务，离线模式不开放");
-                return;
-            }
-            Notify("该入口的页面由对应功能模块提供");
-        }
-
         public void ToggleFunctions(bool? open = null)
         {
-            bool next = open ?? (functionsPanel != null && !functionsPanel.activeSelf);
-            if (functionsPanel != null) functionsPanel.SetActive(next);
+            if (nativeFunctionMenu == null) return;
+            bool next = open ?? !nativeFunctionMenu.IsOpen;
+            if (next) { RefreshNativeFunctionMenuPlayer(); nativeFunctionMenu.Init(); }
+            else nativeFunctionMenu.CloseLast();
         }
 
         public void SelectTab(int index, bool notify)
@@ -848,6 +787,7 @@ namespace Zjcs.Presentation.Home
         public void RefreshCounts()
         {
             if (canvas == null) return;
+            RefreshNativeFunctionMenuPlayer();
             foreach (TopBarCurrency currency in canvas.GetComponentsInChildren<TopBarCurrency>(true))
                 currency.Refresh(host);
         }
@@ -1368,6 +1308,7 @@ namespace Zjcs.Presentation.Home
 
         public void Dispose()
         {
+            ReleaseNativeFunctionMenu();
             ReleaseNativeBedWindow();
             bedAwards?.Dispose(); bedAwards = null;
             ReleaseNativeBedOutput();

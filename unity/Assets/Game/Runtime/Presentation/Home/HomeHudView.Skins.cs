@@ -33,7 +33,7 @@ namespace Zjcs.Presentation.Home
             if (homePanel != null) homePanel.SetActive(visible);
             if (bottomRenderer != null && !string.IsNullOrEmpty(bottomRenderer.RootName))
                 bottomRenderer.Find("/" + bottomRenderer.RootName)?.SetActive(visible);
-            if (functionsPanel != null) functionsPanel.SetActive(visible && functionsPanel.activeSelf);
+            // The original menu button owns its close animation and lifecycle.
         }
 
         internal void HomeSkinClosed(HomeSkinScreenController controller)

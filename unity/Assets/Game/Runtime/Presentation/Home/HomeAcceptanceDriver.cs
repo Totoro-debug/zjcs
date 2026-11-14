@@ -287,7 +287,7 @@ namespace Zjcs.Presentation.Home
             {
                 HomeUiRenderer home = PrivateField<HomeUiRenderer>(runtime.Hud, "homeRenderer");
                 HomeUiRenderer bottom = PrivateField<HomeUiRenderer>(runtime.Hud, "bottomRenderer");
-                HomeUiRenderer functions = PrivateField<HomeUiRenderer>(runtime.Hud, "functionsRenderer");
+                GameObject functions = PrivateField<GameObject>(runtime.Hud, "functionsPanel");
                 GameObject functionsPanel = PrivateField<GameObject>(runtime.Hud, "functionsPanel");
                 GameObject noticeRoot = PrivateField<GameObject>(runtime.Hud, "noticeRoot");
                 TMP_Text toast = PrivateField<TMP_Text>(runtime.Hud, "toast");
@@ -323,77 +323,12 @@ namespace Zjcs.Presentation.Home
                 ActivateTab(tabs[2]);
                 Assert(!runtime.Hud.CharacterPageOpen, "home tab returns from the character page");
 
-                Button menuEntry = home.Find<Button>(
-                    "/HomeUI/Content/FunctionEntryGroup/FunctionEntryFunc/Content/Entry/EntryBtnFolded");
-                Assert(menuEntry != null, "official function menu entry exists");
-                menuEntry.onClick.Invoke();
-                Assert(functionsPanel.activeSelf, "function entry onClick opens the menu");
-                Button menuClose = functions.Find<Button>("/FunctionEntryDialog/CloseBtn");
-                Assert(menuClose != null, "official function menu close button exists");
-                menuClose.onClick.Invoke();
-                Assert(!functionsPanel.activeSelf, "function menu close onClick closes the menu");
-
-                menuEntry.onClick.Invoke();
-                int menuButtonCount = 0;
-                foreach (GameObject node in functions.AllNodes)
-                {
-                    Button button = node.GetComponent<Button>();
-                    if (button == null) continue;
-                    if (node.name == "CloseBtn")
-                    {
-                        button.onClick.Invoke();
-                        Assert(!functionsPanel.activeSelf, "each menu close event folds the menu");
-                    }
-                    else
-                    {
-                        runtime.Hud.ShowNotice("menu-event-sentinel");
-                        button.onClick.Invoke();
-                        string menuPath = PathOf(node.transform);
-                        if (menuPath.Contains("FunctionEntryTaskItem"))
-                        {
-                            Assert(PrivateField<string>(runtime.Hud, "activePanelKey") == "quests",
-                                "task menu opens the official task panel");
-                            HomeUiRenderer tasks = PrivateField<HomeUiRenderer>(runtime.Hud, "taskPanelRenderer");
-                            string[] taskTabs = { "Task", "Delegate", "Daily", "Weekly", "AchievementTitle" };
-                            for (int tabIndex = 0; tabIndex < taskTabs.Length; tabIndex++)
-                            {
-                                Toggle taskTab = tasks.Find<Toggle>("/TaskPanel/BgPanel/Content/BottomGo/TabGroup_11/TabGroup/TaskPanelTabGroupItem_11_" + taskTabs[tabIndex]);
-                                Assert(taskTab != null, "official task tab remains a Toggle");
-                                ActivateTab(taskTab);
-                                Assert(PrivateField<int>(runtime.Hud, "selectedTaskTab") == tabIndex,
-                                    "task Toggle input selects index=" + tabIndex);
-                            }
-                            Assert(runtime.Hud.TryHandleBack(), "back closes the task panel");
-                        }
-                        else if (menuPath.Contains("FunctionEntrySettingsItem"))
-                        {
-                            Assert(PrivateField<string>(runtime.Hud, "activePanelKey") == "settings",
-                                "settings menu opens its official dialog");
-                            HomeUiRenderer settings = PrivateField<HomeUiRenderer>(runtime.Hud, "activeDialogRenderer");
-                            foreach (string tabName in new[] { "GameGeneralTab", "QualityTab", "SoundTab", "OtherTab" })
-                            {
-                                Toggle tab = settings.Find<Toggle>("/SettingsDialog/BgDialog1/Content/TopTabGo/TopTabGroupGO/TabGroup/" + tabName);
-                                Assert(tab != null, "official settings Toggle exists: " + tabName);
-                                ActivateTab(tab);
-                                Assert(tab.isOn, "settings Toggle input selects: " + tabName);
-                            }
-                            Assert(runtime.Hud.TryHandleBack(), "back closes settings");
-                        }
-                        else if (menuPath.Contains("FunctionEntryHomeSkinItem"))
-                        {
-                            HomeSkinScreenController skins = PrivateField<HomeSkinScreenController>(runtime.Hud, "homeSkin");
-                            Assert(skins != null && skins.IsOpen, "home skin menu opens its official page");
-                            Assert(runtime.Hud.TryHandleBack() && !skins.IsOpen, "back closes the home skin page");
-                        }
-                        else
-                            Assert(toast.text != "menu-event-sentinel", "menu onClick dispatches " + menuPath);
-                    }
-                    menuButtonCount++;
-                }
-                Assert(menuButtonCount >= 17, "all official function menu buttons were checked");
-                menuEntry.onClick.Invoke();
-                Assert(runtime.Hud.TryHandleBack() && !functionsPanel.activeSelf,
-                    "Escape back closes the function menu");
+                Assert(functions.GetComponent<Zjcs.Official.HomeFunctionMenuUI.FunctionEntryDialog>() != null,
+                    "function menu uses the selected native component");
+                Assert(functions.GetComponent<Zjcs.Official.WorldUI.WorldPopupWindow>() != null,
+                    "function menu keeps its animated native window owner");
+                // Pointer dispatch and asynchronous show/hide are exercised by
+                // HomeNativeFunctionMenuValidation, rather than synchronous callbacks.
 
                 TopBarCurrency[] currencies = GameObject.Find("Home Canvas")
                     .GetComponentsInChildren<TopBarCurrency>(true);
@@ -416,7 +351,7 @@ namespace Zjcs.Presentation.Home
                 Assert(overlay != null, "modal backdrop close button exists");
                 overlay.onClick.Invoke();
                 Assert(!runtime.Hud.AnyModalOpen, "modal backdrop onClick closes the active window");
-                return "avatar, three currency controls, five tabs, menu open/close and modal backdrop use Unity events";
+                return "avatar, three currency controls, five tabs and modal backdrop use Unity events; native menu components retained";
             });            yield return CheckUi(runtime, value => ok &= value);
             ok &= Check("storage-input-events", () =>
             {
@@ -1278,40 +1213,12 @@ namespace Zjcs.Presentation.Home
                 Assert(graphic == null, "10611 must remain a static official Image with no bone animation binding");
                 return "official 10611 Image retained with no fabricated skeleton animation";
             });
-            HomeUiRenderer home = PrivateField<HomeUiRenderer>(runtime.Hud, "homeRenderer");
-            HomeUiRenderer functions = PrivateField<HomeUiRenderer>(runtime.Hud, "functionsRenderer");
-            bool functionMenuOpened = Check("partner-function-menu", () =>
-            {
-                Button menuEntry = home.Find<Button>(
-                    "/HomeUI/Content/FunctionEntryGroup/FunctionEntryFunc/Content/Entry/EntryBtnFolded");
-                Assert(menuEntry != null, "official function menu entry is missing");
-                ClickPartnerUi(menuEntry);
-                GameObject functionsPanel = PrivateField<GameObject>(runtime.Hud, "functionsPanel");
-                Assert(functionsPanel && functionsPanel.activeInHierarchy,
-                    "official function menu did not open from its HUD entry");
-                return "official function menu opened from its HUD entry";
-            });
-            ok &= functionMenuOpened;
-            if (!functionMenuOpened)
-            {
-                completed(false);
-                yield break;
-            }
-            yield return null;
-            yield return new WaitForEndOfFrame();
-            Canvas.ForceUpdateCanvases();
-            yield return Capture("partners-function-menu.png");
+            // NPC roster is a separate feature, not the real-player Friend page.
+            // This fixture checks roster internals; it does not claim a menu route.
             bool rosterOpened = Check("partner-roster", () =>
             {
-                GameObject friendNode = functions.AllNodes.SingleOrDefault(value =>
-                    value && value.name == "FunctionEntryFriendItem");
-                Selectable friendEntry = friendNode ? friendNode.GetComponent<Selectable>() : null;
-                Assert(friendEntry && friendEntry.gameObject.activeInHierarchy,
-                    "official partner roster function entry is missing or hidden");
-                RectTransform friendRect = friendEntry.transform as RectTransform;
-                Assert(friendRect && friendRect.rect.width > 0f && friendRect.rect.height > 0f,
-                    "official partner roster entry has no laid-out hit area");
-                ClickPartnerUi(friendEntry);
+                typeof(HomeHudView).GetMethod("OpenPartnerRoster", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(runtime.Hud, null);
                 GameObject root = PrivateField<GameObject>(runtime.Hud, "activeDialog");
                 Assert(root != null && root.name == "PartnerRosterDialog", "official partner roster root opens");
                 PartnerPanelView panel = PrivateField<PartnerPanelView>(runtime.Hud, "partnerPanel");

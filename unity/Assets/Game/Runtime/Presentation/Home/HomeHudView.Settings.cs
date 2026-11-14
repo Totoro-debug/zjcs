@@ -26,9 +26,9 @@ namespace Zjcs.Presentation.Home
             "GameGeneralContent", "QualityContent", "SoundContent", "OtherContent"
         };
 
-        public void OpenSettings()
+        public void OpenSettings(bool closeFunctions = true)
         {
-            ToggleFunctions(false);
+            if (closeFunctions) ToggleFunctions(false);
             GameObject panel = OpenDialog("settings", (renderer, root) => BuildSettings(renderer));
             if (panel == null) return;
             if (host.HomeSettings.LoadStatus == Zjcs.Offline.State.SaveReadStatus.Recovered)
