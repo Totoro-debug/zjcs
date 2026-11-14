@@ -9,4 +9,4 @@ $skills=Read-IntervalInput 'skill-rules';$battle=Read-IntervalInput 'battle-rule
 $catalog=[Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load($skills,(Hash-IntervalInput $skills),'854_156383',$battle,(Hash-IntervalInput $battle),'854_156383')
 $formula=$catalog.CreateDamageFormula($rules,(Hash-IntervalInput $rules),'854_156383')
 [BattleRoundIntervalFilterHarness]::Run($catalog,$formula)
-Write-Output 'Round interval filter passed: original 24387 ApplyEntity character types 0-9, creator independence, actual 20% timeline advance exactly once, deep copy, JSON and legacy counters.'
+Write-Output 'Round interval filter passed: original 24387 ApplyEntity character types 0-9, creator independence, actual 20% timeline advance exactly once, zero-percent immediate action, deep copy, JSON and legacy counters.'

@@ -84,6 +84,8 @@
 
 共享 `FightDamageFormula.CalculateStatusDamage` 复用所选官方 `BattleFormulaHandler.StatusDamage`：先取输入结果绝对值，再乘状态百分比属性并加固定属性，仅正数上限参与裁剪，结果下限为零，向零截断后取负数；零上限不限制，属性类型沿原浮点属性表转换。该纯公式不选择伤害结果、不直接修改生命，也不代发状态通知。原 25035 逻辑图引用此公式和 11480 子技能，缺失服务端处理体的单机触发方案已由用户确认，决策见[骑士路线](skills-knight.md#rank-3)，受击接线已通过规则专项，原生验证及发布范围由该页维护；不能把普通技能命中自动改作 `FightStatusDamageModification`。原码、配置及换行规范化后的实现／验证哈希见[状态伤害公式来源](../../assets/reference/battle-rules/status-damage-source-manifest.json)。
 
+官方 `FightStatusRoundChangeCfg` 将 `RoundIntervalPercent=0` 定义为把下一次行动推进到当前时间（立即行动），正负值才按自身回合间隔快进或后移。公共执行器现把零值也交给 `FightTurnQueue.ChangeInterval`，保留行动中的待处理变更和检查点时间；状态 24387 的原 20% 分支及零值回归均覆盖，未改变状态触发概率、次数或技能执行顺序。
+
 - `OfficialBattleRuntimeController` 连接战斗会话、准备界面、场景宿主与结算回调；`FightBattleCheckpoint` 保存可恢复的本地战斗状态。
 - 回合步骤、格网与单位、受控站位、技能装配、目标选择、命中及部分伤害／HP／护盾／状态规则已有共享实现。各模块仍按官方配置和已迁移的客户端代码执行，不代表所有技能及组件覆盖完整。
 - 公共战斗 HUD、状态列表、技能槽、战报、角色与部分 NPC 资源使用原配置和资源绑定；表现、音频、动画和资源依赖仍有缺项。

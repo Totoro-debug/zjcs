@@ -52,5 +52,22 @@ public static class BattleRoundIntervalFilterHarness
             Check(next==(type==8?3162278L:2529822L),
                 "Original 20% fast-forward did not change the real turn queue exactly once: "+next);
         }
+
+        // FightStatusRoundChangeCfg documents zero as an immediate action.
+        // Exercise the production status path rather than only the queue API.
+        {
+            var owner=Unit(1,1,1,1000);var enemy=Unit(2,2,2,1);
+            var status=catalog.CreateStatus(24387,1,3,9924387,0,0,5,20,1);
+            status.Components.RoundInterval.RoundIntervalPercent=0f;
+            owner.Statuses.Add(status);
+            var cp=new FightBattleCheckpoint {StageId=1,RandomSeed=23,MaxRound=100};
+            cp.Units.AddRange(new[]{owner,enemy});
+            var runner=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),catalog);
+            runner.Step(0,1);
+            var entry=cp.Timeline.Entries.Single(value=>value.Id==owner.Id);
+            Check(entry.Next==cp.Timeline.Current,
+                "Official zero round interval did not schedule the owner immediately: "
+                    +entry.Next+"/"+cp.Timeline.Current);
+        }
     }
 }

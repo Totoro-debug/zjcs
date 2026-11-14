@@ -336,7 +336,11 @@ namespace Zjcs.Combat.Official
                 // probability once so a failed phase-0 roll cannot be retried in phase 5.
                 component.LastTriggeredRound = round;
                 if (!RollComponent(component.Rate)) continue;
-                if (component.RoundIntervalPercent != 0f && owner.Turn != null)
+                // The official FightStatusRoundChangeCfg treats zero as an
+                // immediate action (current time), rather than as a no-op.
+                // FightTurnQueue.ChangeInterval owns the pending-change path
+                // when this listener runs during the acting unit's turn.
+                if (owner.Turn != null)
                     turns.ChangeInterval(owner.Id, component.FastForward
                         ? component.RoundIntervalPercent : -component.RoundIntervalPercent);
                 var invocations = new List<FightBattleStatusSkillInvocation>();
