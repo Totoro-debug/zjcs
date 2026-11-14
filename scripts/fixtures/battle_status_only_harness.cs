@@ -11,6 +11,15 @@ public static class BattleStatusOnlyHarness
         FightDamageFormula formula, FightBattleReportScoreSettings scores, string output)
     {
         Directory.CreateDirectory(output);
+        var forbiddenOwner = Unit(10, 5);
+        var forbiddenStatus = catalog.CreateStatus(24031, forbiddenOwner.Id, forbiddenOwner.Id);
+        forbiddenOwner.Statuses.Add(forbiddenStatus);
+        bool forbiddenChanged = false;
+        forbiddenOwner.StatusForbiddenChanged = (owner, status, wasForbidden) => forbiddenChanged = true;
+        Check(FightStatusLifecycle.SetForbidden(forbiddenOwner, forbiddenStatus,
+            FightStatusLifecycle.ForbiddenStatusTrigger, true)
+            && forbiddenStatus.ForbiddenType == FightStatusLifecycle.ForbiddenStatusTrigger
+            && forbiddenChanged, "Status-trigger forbidden transition must use the official type and callback.");
         foreach (string name in new[] { "target", "debuff", "abnormal", "self", "failed", "renewal", "disperse", "move", "mixed",
             "child", "hit-listener", "damage-listener", "cure-listener", "original-11160", "original-12890", "original-11460" })
         {

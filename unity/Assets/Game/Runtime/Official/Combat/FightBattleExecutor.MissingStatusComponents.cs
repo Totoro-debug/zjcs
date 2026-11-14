@@ -284,14 +284,18 @@ namespace Zjcs.Combat.Official
                 ApplyComponentStatus(status, trigger.EntityId, target, null,
                     trigger.StatusReplacementProperties);
             }
-            if (status.Components.Start.ForbiddenStatusId > 0
-                && status.Components.Start.Forbidden)
+            if (status.Components.Start.ForbiddenStatusId > 0)
             {
                 FightBattleUnitState target = status.Components.Start.ForbiddenTarget == 1
                     ? ResolveUnit(status.CreatorId) : owner;
                 FightBattleStatusState forbidden = target?.Statuses?.Find(value => value != null
                     && value.ClassId == status.Components.Start.ForbiddenStatusId);
-                if (forbidden != null) forbidden.ForbiddenType = 1;
+                // FightStatusStartComponent uses EFightStatusForbiddenType.StatusTrigger
+                // and routes through SetForbidden, so the native status view, property
+                // rebuild and any release-triggered round listener observe the transition.
+                if (forbidden != null)
+                    FightStatusLifecycle.SetForbidden(target, forbidden,
+                        FightStatusLifecycle.ForbiddenStatusTrigger, status.Components.Start.Forbidden);
             }
         }
 
