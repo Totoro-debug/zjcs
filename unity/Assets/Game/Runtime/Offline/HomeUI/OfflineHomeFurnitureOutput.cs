@@ -63,7 +63,17 @@ namespace Zjcs.Offline.HomeUI
         {
             var row = Row(id);
             if (level < 0) level = readLevel(id);
-            double levelNum = rules.LevelNumber(row.levelRuleId, level);
+            var levelRow = rules.Data.furnitureLevelRules.FirstOrDefault(value =>
+                value.id == row.levelRuleId && value.level == level);
+            if (levelRow == null && row.levelRuleId > 0 && level > 0)
+            {
+                UnityEngine.Debug.LogError("FurnitureLevelRuleInfoParser levelRuleId:" + row.levelRuleId
+                    + ", level:" + level + " not exist");
+                return 0;
+            }
+            // Original HangUpUtils.CalcRewardCount uses one when no level row
+            // is required (notably the fruit/stamina extra reward entries).
+            double levelNum = levelRow?.levelNum ?? 1.0;
             if (levelNum <= 0) return 0;
             var reward = rules.HangUpReward(row.rewardId)
                 ?? throw new InvalidOperationException("Selected home reward configuration is unavailable: " + row.rewardId);

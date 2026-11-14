@@ -78,6 +78,33 @@ public sealed partial class HomeIncomeFormulaHostRunner
         var originalOutput = new Zjcs.Offline.HomeUI.OfflineHomeFurnitureOutput(home.Rules,
             home.HomeIncomeProperties, _ => 2, home.FormatTopBarCurrency, key => key);
         originalOutput.Refresh();
+        Require(home.Rules.HangUp(100).levelRuleId == -1 && home.Rules.HangUp(101).levelRuleId == -1
+            && originalOutput.GetHangUpReward(100, 1, 1, true) == .25
+            && originalOutput.GetHangUpReward(101, 1, 1, true) == 5,
+            "original extra reward base previews use default level multiplier one without a furniture level rule");
+        foreach (int id in new[] { 100, 101 })
+        {
+            var extra = home.Rules.HangUp(id);
+            var reward = home.Rules.HangUpReward(extra.rewardId);
+            var info = new HangUpInfo { BindFurniture = (Zjcs.Official.HomeIncomeRules.EFurniture)extra.bindFurniture,
+                EffectFixedPropType = (PropType)extra.effectFixedProp,
+                EffectPercentPropType = (PropType)extra.effectPercentProp,
+                FinallyEffectPercentPropType = (PropType)extra.finallyEffectPercentProp };
+            double expectedExtra = Zjcs.Official.HomeIncomeRules.HangUpUtils.CalcRewardCount(info,
+                new HangUpRewardInfo { HourlyOutput = (float)reward.hourlyOutput },
+                new BattleFormulaHandler(HomeIncomePropertyCatalog.Get), home.PlayerProperties(), 2, 1);
+            Require(expectedExtra > 0 && originalOutput.GetHangUpReward(id, 2, 1) == expectedExtra,
+                "actual extra preview preserves original hourly, property and default multiplier calculation: " + id);
+        }
+        Require(originalOutput.GetHangUpReward(1, 2, 0) ==
+            Zjcs.Official.HomeIncomeRules.HangUpUtils.CalcRewardCount(
+                new HangUpInfo { BindFurniture = (Zjcs.Official.HomeIncomeRules.EFurniture)home.Rules.HangUp(1).bindFurniture,
+                    EffectFixedPropType = (PropType)home.Rules.HangUp(1).effectFixedProp,
+                    EffectPercentPropType = (PropType)home.Rules.HangUp(1).effectPercentProp,
+                    FinallyEffectPercentPropType = (PropType)home.Rules.HangUp(1).finallyEffectPercentProp },
+                new HangUpRewardInfo { HourlyOutput = (float)home.Rules.HangUpReward(home.Rules.HangUp(1).rewardId).hourlyOutput },
+                new BattleFormulaHandler(HomeIncomePropertyCatalog.Get), home.PlayerProperties(), 2, 1),
+            "original level zero call also uses the optional row fallback");
         double expectedBedBase = 50 * home.Rules.LevelNumber(home.Rules.HangUp(1).levelRuleId, 2);
         Require(BitConverter.DoubleToInt64Bits(originalOutput.GetHangUpReward(1, 1, 2, true))
                 == BitConverter.DoubleToInt64Bits(expectedBedBase)

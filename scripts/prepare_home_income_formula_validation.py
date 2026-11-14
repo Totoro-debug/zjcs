@@ -113,6 +113,11 @@ def prepare():
         'every configured extra and rewinds bed random reward timers by FastHangUpHours seconds exactly. '
         'Actual recovery after the character phase is exercised by reopening home; the native selection '
         'and sleep-progress presentation remain pending.')
+    receipt['extra_reward_preview_adapter'] = (
+        'Original HangUpUtils.CalcRewardCount resolves an optional furniture level row. Missing rows '
+        'use LevelNum=1 unless both rule ID and level are positive, which logs and returns zero. '
+        'Actual fruit/stamina extra rows (-1) and the level-zero call exercise this branch using '
+        'selected hourly output, original property arithmetic and both base/normal previews.')
     receipt['validation_inputs'] = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in (
         'scripts/prepare_home_income_formula_validation.py', 'scripts/fixtures/home_income_formula_validation.cs',
         'scripts/fixtures/home_furniture_host_validation.cs')}
