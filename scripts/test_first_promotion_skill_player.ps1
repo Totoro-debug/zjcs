@@ -99,6 +99,10 @@ try {
         while (-not $process.WaitForExit(30000)) { Write-Output "Running $item $direction : $run" }
         $result = Get-Content -LiteralPath (Join-Path $run 'result.json') -Raw | ConvertFrom-Json
         if ($process.ExitCode -ne 0 -or -not $result.passed) { throw "Player failed for $item $direction : $($result.error) ($run)" }
+        if ($item -eq 10016) {
+            & python -B (Join-Path $PSScriptRoot 'verify_lightning_dash_receipt.py') (Join-Path $run 'summon-final.json')
+            if ($LASTEXITCODE -ne 0) { throw "Original 10016 dash/hit receipt validation failed: $run" }
+        }
         foreach ($phase in 1..4) {
             if (-not (Test-Path -LiteralPath (Join-Path $run "first-promotion-$item-phase-$phase.png"))) {
                 throw "Original presentation phase $phase was not captured: $run"

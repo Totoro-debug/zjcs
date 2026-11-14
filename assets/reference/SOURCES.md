@@ -1,5 +1,7 @@
 # 官方来源与提取入口
 
+疾光一闪 `10016／10680→10681／10682→10026` 的所选 APK 原配置、程序集、八份共享／客户端代码与十二项原生输入／十二项现有 Windows 输出，由 `scripts/prepare_battle_lightning_dash_sources.py` 核对并记录于[疾光一闪来源](battle-rules/lightning-dash-source-manifest.json)。原载荷及历史来源保持独立，10026 的空驱散排除名单仅作所选默认值比较；实现缺口、单机决策和验证范围仅维护于[斗士技能页](../../docs/features/skills-fighter.md#rank-2)。
+
 技能职业判定参照由 `scripts/prepare_skill_profession_reference.py` 在标记的隔离工程提取所选 `884_156692` 原职业枚举、两个职业可用性函数和两个武器回退函数；原 `PlayerProfessionDataEx`、`PlayerSkillDataExt`、`PlayerSnapshotData`、`FightUtilsHandler` 调用依据、`FightSkillBaseInfo`／`FightSkillData` 外观映射依据、`SkillPanelSkillDetailDialog` 按钮代码、程序集、既有人物／技能／战斗载荷与参照模板哈希见[职业判定来源](battle-rules/skill-profession-source-manifest.json)。未修改配置或美术；规则与验证范围在[技能页](../../docs/features/skills.md)维护。
 
 不屈意志 `10518／25013→10990→10991→10992→24082` 的来源凭据见 [`battle-rules/indomitable-source-manifest.json`](battle-rules/indomitable-source-manifest.json)，重建入口为 `scripts/prepare_battle_indomitable_sources.py`。记录所选 `884_156692` APK 的五个原实体、技能归属、十三份共享／客户端代码、官方程序集、原状态与治疗图的 16 项原生输入和 16 项现有 Windows 输出、显式绑定及哈希；10992 缺省空驱散排除名单仅投影所选默认值，保留历史载荷字节与身份。行为、待确认规则及验证范围仅维护于[斗士技能页](../../docs/features/skills-fighter.md)。
