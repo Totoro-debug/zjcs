@@ -363,7 +363,7 @@ namespace Zjcs.Presentation.World
             OfficialBattleUnitAssembler.Initialize(formula, player, playerProperties, 3, 4, true);
             checkpoint.Units.Add(player);
             OfficialBattlePlayerLoadoutAssembler.Assemble(combatCatalog, skillItems, player,
-                progression.Player, progression, preserveZeroProperties: true, requireActiveSkill: true);
+                progression.Player, progression, preserveZeroProperties: true);
             OfficialBattlePetEnergyAssembler.TryConfigure(player, progression.Player,
                 progression.Catalog, combatCatalog, skillItems);
 

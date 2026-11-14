@@ -31,6 +31,11 @@ def main() -> None:
     for name, methods in signatures.items():
         generated = generated.replace('/* ORIGINAL_' + name + ' */', '\n'.join(source.method(name, sig) for sig in methods))
     source.original('PlayerProfessionDataEx')
+    source.original('PlayerSkillDataExt')
+    source.original('PlayerSnapshotData')
+    source.original('FightUtilsHandler')
+    source.original('FightSkillBaseInfo')
+    source.original('FightSkillData')
     detail_source = source.CURRENT / 'official-code/client-source/SkillPanelSkillDetailDialog.cs'
     source.USED.add(detail_source)
     receipt = dict(manifest='884_156692',
@@ -42,9 +47,10 @@ def main() -> None:
                                 sha256=hashlib.sha256(template.encode('utf-8')).hexdigest(), normalization='UTF-8 without BOM; LF'),
                    existing_inputs=[source.identity(source.ROOT / p) for p in (
                        'unity/Assets/Official/Character/character-progression.json',
-                       'unity/Assets/Official/Skills/skill-runtime-rules.json')],
-                   input_versions='Official profession code 884_156692; existing character and skill payloads retain their recorded provenance and are not replaced.',
-                   boundary='Original four methods unchanged; adapters supply existing profession/item tables. PlayerProfessionDataEx confirms safe-weapon selection precedes the parser. No server maintenance switch is invented.')
+                       'unity/Assets/Official/Skills/skill-runtime-rules.json',
+                       'unity/Assets/Official/Combat/rules.json')],
+                   input_versions='Official profession code 884_156692; existing character, skill and combat payloads retain their recorded provenance and are not replaced.',
+                   boundary='Original four methods unchanged; adapters supply existing profession/item tables. PlayerProfessionDataEx confirms safe-weapon selection precedes the parser. PlayerSkillDataExt and PlayerSnapshotData confirm owned-item and profession selection for battle. FightSkillData.Refresh checks the skin-resolved skill with the profession parser before release. No server maintenance switch is invented. Empty active plans follow the confirmed offline rule: no automatic skill injection, ordinary rounds and passives continue.')
     target = source.ROOT / 'assets/reference/battle-rules/skill-profession-source-manifest.json'
     if args.record:
         target.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

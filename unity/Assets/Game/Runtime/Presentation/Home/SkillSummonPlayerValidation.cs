@@ -80,6 +80,13 @@ namespace Zjcs.Presentation.Home
         private IEnumerator Run()
         {
             while(waitForStartup && GameObject.Find("OfficialSaveSelectionPanel")==null) yield return null;
+            if (Environment.GetEnvironmentVariable("ZJCS_ACTIVE_LOADOUT_ACCEPTANCE") == "1")
+            {
+                yield return SkillActiveLoadoutValidation.Exercise(output, CaptureGridFrame, ClickGridControl);
+                File.WriteAllText(Path.Combine(output,"result.json"),JsonUtility.ToJson(new Result {passed=true},true));
+                Application.Quit(0);
+                yield break;
+            }
             if (SkillSwordCounterattackProcessValidation.ResumeRequested)
             {
                 yield return SkillSwordCounterattackProcessValidation.Resume(output, CaptureGridFrame, ClickGridControl);

@@ -17,9 +17,34 @@
       "sha256": "978287c05e1abc9d78b73436657322157faa61acf19d3e31a0b72570633cbfb5"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillBaseInfo.cs",
+      "bytes": 668,
+      "sha256": "8ac54a3253df474a3493b983a41e70b426e69d6a88434c095e7053949f1ac576"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillData.cs",
+      "bytes": 6945,
+      "sha256": "71490c37c8d73b445076c0b0212b37a77f48dcbe88ba89508671d55959fb2354"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightUtilsHandler.cs",
+      "bytes": 2956,
+      "sha256": "6cff15412b844d47ecb14f7201a7b164af4932be9b7ceef8ee938957ebf84a8f"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerProfessionDataEx.cs",
       "bytes": 6037,
       "sha256": "24a5eb7ac4ef3872ad1acc4528cb220375691e6fa91f48597d405d8a9baf3547"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerSkillDataExt.cs",
+      "bytes": 32488,
+      "sha256": "48076550e5af36176b8afce908b5c8d379b7036b3c3c34a9bc5f2c0095fae28c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerSnapshotData.cs",
+      "bytes": 42296,
+      "sha256": "5bf30f444f3dbd5d455eac31d3a2477c9f5f7d1ec918bd1289073e5890521b71"
     },
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Profession.cs",
@@ -49,7 +74,7 @@
   },
   "fixture": {
     "path": "scripts/fixtures/skill_profession_reference.cs",
-    "sha256": "26a4700921f35ce393f57bb7ce7efd82606af25d4bc590e36d69f87a3da9b91d",
+    "sha256": "49a0b2bf77f6bc7b1c8ee57787b498e0a4cef01b082139dc24c6a1fab6b31095",
     "normalization": "UTF-8 without BOM; LF"
   },
   "existing_inputs": [
@@ -62,8 +87,13 @@
       "path": "unity/Assets/Official/Skills/skill-runtime-rules.json",
       "bytes": 1065888,
       "sha256": "1ece75e11e618c4a3fef61bb490ed2a3f101f3560649c3384f37eafac8183aba"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "bytes": 37209479,
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
     }
   ],
-  "input_versions": "Official profession code 884_156692; existing character and skill payloads retain their recorded provenance and are not replaced.",
-  "boundary": "Original four methods unchanged; adapters supply existing profession/item tables. PlayerProfessionDataEx confirms safe-weapon selection precedes the parser. No server maintenance switch is invented."
+  "input_versions": "Official profession code 884_156692; existing character, skill and combat payloads retain their recorded provenance and are not replaced.",
+  "boundary": "Original four methods unchanged; adapters supply existing profession/item tables. PlayerProfessionDataEx confirms safe-weapon selection precedes the parser. PlayerSkillDataExt and PlayerSnapshotData confirm owned-item and profession selection for battle. FightSkillData.Refresh checks the skin-resolved skill with the profession parser before release. No server maintenance switch is invented. Empty active plans follow the confirmed offline rule: no automatic skill injection, ordinary rounds and passives continue."
 }

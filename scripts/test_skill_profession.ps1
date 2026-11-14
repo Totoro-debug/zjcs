@@ -1,9 +1,11 @@
 param(
     [Parameter(Mandatory)][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [switch]$Build
+    [switch]$Build,
+    [switch]$FullBuild
 )
 $ErrorActionPreference='Stop'
+if($FullBuild){$Build=$true}
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
 . (Join-Path $PSScriptRoot 'validation_workspace.ps1')
 $repository=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -24,7 +26,10 @@ try {
     $env:ZJCS_REPOSITORY_ROOT=$repository
     $env:ZJCS_VALIDATION_DIR=$workspacePath
     $method='SourceSkillProfessionReference.Validation.Run'
-    if($Build){$method+='AndBuild'; $env:ZJCS_WINDOWS_SCRIPTS_ONLY='1'}
+    if($Build){
+        $method+='AndBuild'
+        if(-not $FullBuild){$env:ZJCS_WINDOWS_SCRIPTS_ONLY='1'}
+    }
     $log=Join-Path $workspacePath ('skill-profession-'+[guid]::NewGuid().ToString('N')+'.log')
     $config=Get-Content -LiteralPath (Join-Path $repository 'unity-tools.json') -Raw|ConvertFrom-Json
     $process=Start-UnityOnInternalDisplay -Editor $config.editorExecutable -ArgumentList @(

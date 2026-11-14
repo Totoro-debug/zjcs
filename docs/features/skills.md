@@ -14,7 +14,7 @@
 
 初始职业的技能清单、详细行为、单机差异及验证范围分别见[战士（一阶职业）](skills-warrior.md)、[法师（一阶职业）](skills-mage.md)；后续二至八阶职业按路线维护于[骑士](skills-knight.md)、[斗士](skills-fighter.md)、[术士](skills-warlock.md)、[贤者](skills-sage.md)详情页。本页维护共用界面、方案、培养和跨职业基础能力；各路线的共享机制以链接引用，避免重复维护。
 
-| 职业 | Profession | 战技（ItemType=100） | 秘法（ItemType=101） | 内置战斗技能项 |
+| 职业 | Profession | 战技（ItemType=100） | 秘法（ItemType=101） | 战斗使用技能项（FightUsedSkills） |
 | --- | --- | --- | --- | --- |
 | 战士 | 1 | 13 | 13 | 10128、10125 |
 | 法师 | 10 | 13 | 13 | 10126、10127 |
@@ -23,7 +23,7 @@
 | 术士 | 11 | 6 | 5 | 10131 |
 | 贤者 | 15 | 6 | 5 | 10132 |
 
-去重合计 50 个战技、46 个秘法和 8 个内置战斗技能项，共 104 项；范围同时包含这些技能所依赖的属性、触发、子技能、增益／减益、召唤／地块、动画、人物动作及本地存档。上述六个职业的 `profession_base` 和这 104 项的 `skill`／`item` 已逐字段对照所选官方表与当前战斗运行表一致；当前技能页可用职业及培养数据仍由原职业继承链提供。结束本次目标须完成这份范围的实际技能行为、官方界面与演出、Play Mode 和 Windows Player 流程，并发布到约定目录；清单计数和局部检查通过不代表这些技能已全部完成。六份职业详情页继续保留其余技能的既有实现和缺项，但本次目标不要求继续扩展到更高阶职业。
+去重合计 50 个战技、46 个秘法和 8 项 `FightUsedSkills`，共 104 项；范围同时包含这些技能所依赖的属性、触发、子技能、增益／减益、召唤／地块、动画、人物动作及本地存档。上述六个职业的 `profession_base` 和这 104 项的 `skill`／`item` 已逐字段对照所选官方表与当前战斗运行表一致；当前技能页可用职业及培养数据仍由原职业继承链提供。结束本次目标须完成这份范围的实际技能行为、官方界面与演出、Play Mode 和 Windows Player 流程，并发布到约定目录；清单计数和局部检查通过不代表这些技能已全部完成。六份职业详情页继续保留其余技能的既有实现和缺项，但本次目标不要求继续扩展到更高阶职业。
 
 人物秘法属性接线已修复：`OfficialCharacterAssetCatalog` 显式绑定现有 Combat 的技能／战斗／技能物品配置及各自来源清单，`OfficialCharacterCatalog.WithSkillPropertyRules` 为人物属性源复用战斗目录的原被动成长计算；按选中方案、已拥有品阶、职业适用性、槽位有效等级和人物位阶贡献属性。该绑定修复人物目录缺少技能成长表时静默跳过秘法的问题，原 `SkillPropChunck` 调用依据及输入／绑定哈希见[绑定凭据](../../assets/reference/battle-rules/skill-passive-property-bindings.json)。人物技能属性块保留原详情贡献，战斗入口从排除该块的 `OutOfFightBattleProps` 开始再加入一次；验证器以实际人物属性作基底核对，防止漏算或重复叠加。
 
@@ -38,6 +38,8 @@
 技能页职业可用性沿用原 `PlayerProfessionDataEx.IsSkillAvailableForCurProfession`：未转职时先经过原武器回退，再调用 `ProfessionBaseInfoParser.IsSkillAvailableForProfession`；已转职时检查当前职业及 `PrePro`，不会因技能属于一阶而跨路线开放。解析器仅在最终职业仍为 `None` 时按解锁职业 Rank=1 回退。原 `SkillPanelSkillDetailDialog.RefreshBtn` 仅对职业可用技能开启装配／替换按钮，保留已有装配的卸下和技能培养。原函数与现有载荷身份见[职业判定来源](../../assets/reference/battle-rules/skill-profession-source-manifest.json)。
 
 秘法进入战斗的选择依据为原 `PlayerSkillDataExt.GetValidSkillItems` 与 `PlayerSnapshotData.TryGetValidSkillItems／CheckSkillProfession`：先解析选中方案中实际持有的物品，再沿 `profession_base.PrePro` 校验当前职业；未转职时按 `ProfessionUtils.GetSafeProfession` 使用当前武器，无武器时使用初始武器。原 `FightUtilsHandler.IsSkillDisabled` 查询服务器临时 `UseSkillItem` 维护开关。原代码与既有载荷身份见[秘法装配来源](../../assets/reference/battle-rules/skill-passive-loadout-source-manifest.json)，复查入口为 `scripts/prepare_skill_passive_loadout_sources.py`。
+
+上述已持有物品与职业校验同样适用于战技；`GetValidSkillItems` 不自动补入初始战技。选择原技能后，`FightSkillBaseInfo.GetUseSkillId → FightSkillData.InitByBattleComponent／Refresh` 解析外观的执行技能，再经 `FightUtilsHandler.IsSkillMeetProfession` 使用同一个原职业解析器校验施法资格，不由职业列表的 `FightUsedSkills` 归属反推资格。服务器对空方案的战斗处理未取得，采用下述已确认单机规则；战技装配参照复用[职业判定来源](../../assets/reference/battle-rules/skill-profession-source-manifest.json)中的原函数和战斗载荷身份。
 
 官方技能页按职业、前置链、品质、元素、标签、范围、安装槽、附加属性和升级／突破配置刷新；详情与模型预览使用原控件、数值计算及显示规则。
 
@@ -82,6 +84,10 @@
 依据：`assets/reference/skill-ui/unity-icon-source-manifest.json`、`assets/reference/skill-quality-text/source-manifest.json`。
 
 ## 完整还原部分
+
+`OfficialBattlePlayerLoadoutAssembler` 已接入战技持有品阶、物品类型及原职业继承校验，保留原槽位、原技能项／皮肤映射、品阶、传入人物的当前赛季祝福及位阶；外观执行技能的施法资格同样按原职业解析器校验。旧方案不被重写；空方案不补技能，主线入口允许零有效战技。原函数对照通过 2,679 组战斗装配、1,076 项持有／类型／未选方案／空方案排除、84 组正常外观映射及 84 组旧外观覆盖检查，后者包含 58 次执行技能职业不符的施法拒绝。
+
+`scripts/test_skill_active_loadout.ps1` 的空方案、筛选后全空、保留一个有效战技三种场景均通过隔离 Play Mode 和实际 Windows Player。生产周常 4800 装配入口在受控对手、属性和五回合上限下，前两种场景各结算五个人物回合、零次主动施法和三次 10537／11210 反击；混合方案保留第三槽的原技能项、品阶、等级和位阶，完成五次主动施法及一次反击。各场景均经原开始／离开按钮的模拟射线点击、原超时结算页、11 次磁盘检查点回读和全部方案不改写检查；两端共 24 张准备／战斗／结算／返回截图已查看。Unity 编译、`ProjectTools.Validate`、Windows 资源完整构建及后续脚本增量构建、静态检查（151,975 个 GUID）通过。本批未实际进入主线战斗，也未验证跨进程冷恢复或逐项人物动作；大型对手遮挡人物、返回家园的既有空头像等问题仍在，完整视觉验收及正式发布未完成。
 
 技能页筛选、职业不符标记、详情装配／替换按钮和本地装配事务共用修复后的 `OfflineSkillProgression.IsAvailableFor`；一阶技能的无职业回退只适用于最终职业仍为空的上下文。`OfflineCharacterProgressionService.SkillContext` 按当前武器／初始武器补齐未转职时的技能判定职业，避免与战斗装配的原武器回退不一致；推荐方案仍按实际转职记录的前置链。已有方案不自动删项，异路线技能仍可按原规则升阶和培养。
 
@@ -230,6 +236,8 @@ Editor 程序集显式引用 `Zjcs.Presentation.Character`，以供技能 Play M
 首次转职闭包的 83 个状态原 prefab 及完整依赖已迁入 `Official/Combat/FirstPromotionStatuses`，生产角色状态目录使用 `Combat/first-promotion-statuses`；地块与秒制状态继续由各自原时钟接管。31 个原空包装组件及原持久护盾／绝对免伤客户端组件保留原分支，演出从不可变快照读取护盾最大／剩余值与触发次数，耗尽时先通知原组件，再退场，不重复执行业务 End。来源见[状态素材](../../assets/reference/battle-animation/first-promotion-status-assets-source-manifest.json)与[原状态组件](../../assets/reference/battle-animation/first-promotion-status-runtime-source-manifest.json)。当前 Unity 导入／编译及 83 个原状态目录加载通过，原暗击实战 Play Mode 通过，14 张运行画面已查看；护盾部分吸收、溢出、消耗、零值通知与绝对免伤次数先更新再移除的规则回归通过。全部 83 个原层级的脚本绑定与 79 个角色状态的原生 Start／Update／End 隔离演出已通过 Play Mode，172 张画面全部查看，包含 24175／24435 的原护盾耗尽演出；地块 11582／11632 与浮空 24269／24270 保留专属宿主。本探针将护盾值设为 100→0、绝对免伤触发次数设为 1 并增加叠层，以检查视图事件；延长隔离战斗上限为 2048 回合，不修改正式规则，不等同于全部技能实战触发。原 MyAction 的实体查询与播放中心已显式绑定，避免状态结束特效脱离原实体。规则回归、Unity 导入／编译、ProjectTools.Validate 与共享静态检查通过（151,872 个 GUID）；1,466 份输出在仓库及导入后的隔离工程均与凭据逐字节相符。Windows 全状态验证入口为 `scripts/test_first_promotion_skill_player.ps1 -DarkStatus -AllStatusViews`；完整原生构建通过 60 个 shader／55,036 个 GPU 阶段检查，四方向暗击与右向 79 状态原生 Start／Update／End 实机回归通过，214 张运行画面已查看。召唤物出生附带状态曾先于其首次施法绑定原角色实体，10712 因缺少原 MyAction 所属实体而失败；现由状态身体解析入口复用 `OfficialBattleSkillEntityPlayback.EnsureUnit`，在原状态动作执行前绑定同一个原角色实体，不等待召唤物首次攻击。修复后的技能图调度回归、Unity 编译、`ProjectTools.Validate` 与 Windows 脚本构建通过；实际 Windows Player 又通过岩灵 10019、图腾 10025、双火兽 10058 的出生附带状态、各召唤物最后一次原攻击、自然退场、原技能回收、磁盘回放及右向 10029 人物施法。合计八组通过的 Windows 流程、279 张实际运行画面均已查看，进程正常退出；失败版本的两张画面也已核对。完整资源构建实际处理 Noise 两个 pass 的四个阶段与 SpriteSequence 两个阶段，原程序均保留；最新共享静态检查通过（151,881 个 GUID）。最终受测工程的 1,480 份相关 Unity 文件已与提交逐字节核对一致；版本已发布到 `D:/Desktop/ZjcsGame/Zjcs.exe`，7,019 个交付文件大小及其中 361 个程序／原生资源文件的 SHA-256 与受测构建一致。桌面快捷方式不带验证参数，保留用户存档。此轮仅完成该状态目录、视图事件接入及列明的实机范围；暗击的完整场景／进程恢复见下段专项，其余专属状态流程及全技能完整迁移仍未完成，返回家园仍有既有空头像与色块。
 
 ## 自定义实现
+
+用户已确认空战技方案的单机规则：四槽为空，或排除未持有、零品阶、错放类型和异职业项后没有有效战技时，允许进入战斗，不自动补入初始技能；角色正常结算回合与被动，但不主动施法。此项不改变已装配有效技能的施法条件，也不删改旧方案。
 
 用户要求技能采用能力组合：按多段时序、范围命中、衰减、子技能、状态、地形及动作等职责设计行为接口，由具体能力读取各技能的官方配置；特殊规则由独立实现扩展。基础伤害公式继续复用官方计算。现已拆分的能力及验证范围见上文，其他职责的接口迁移仍待完成。
 

@@ -281,8 +281,11 @@ namespace Zjcs.Editor.Skills
             if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") == "1")
             {
                 string resultPath = Path.Combine(ValidationDirectory, "result.json");
-                Zjcs.Presentation.Character.SkillPlayerValidation.StartPassivePropertyDiagnostic(ValidationDirectory);
-                float deadline = Time.realtimeSinceStartup + 250f;
+                if (Environment.GetEnvironmentVariable("ZJCS_ACTIVE_LOADOUT_ACCEPTANCE") == "1")
+                    Zjcs.Presentation.Home.SkillSummonPlayerValidation.StartDiagnostic(ValidationDirectory, false);
+                else
+                    Zjcs.Presentation.Character.SkillPlayerValidation.StartPassivePropertyDiagnostic(ValidationDirectory);
+                float deadline = Time.realtimeSinceStartup + 600f;
                 while (!File.Exists(resultPath))
                 {
                     Require(Time.realtimeSinceStartup < deadline, "Passive property Play Mode diagnostic timed out.");
@@ -1406,6 +1409,7 @@ namespace Zjcs.Editor.Skills
         private static void ConfigureShaderCompilation()
         {
             bool captureOriginalMaterials = Environment.GetEnvironmentVariable("ZJCS_PLAYER_CLONE_ACCEPTANCE") == "1"
+                || Environment.GetEnvironmentVariable("ZJCS_ACTIVE_LOADOUT_ACCEPTANCE") == "1"
                 || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_GRAPH_CAPABILITY_ACCEPTANCE"));
             if (!captureOriginalMaterials || SessionState.GetBool(ShaderOverrideKey, false)) return;
             // Unity's async editor fallback is plain cyan. Capture the actual original

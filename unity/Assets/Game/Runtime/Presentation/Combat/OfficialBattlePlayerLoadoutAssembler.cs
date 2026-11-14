@@ -13,8 +13,7 @@ namespace Zjcs.Presentation.Combat
     {
         public static void Assemble(FightOfficialCombatCatalog combat, FightOfficialSkillItemCatalog items,
             FightBattleUnitState unit, OfflinePlayerProgress player,
-            OfflineCharacterProgressionService progression, bool preserveZeroProperties = false,
-            bool requireActiveSkill = false)
+            OfflineCharacterProgressionService progression, bool preserveZeroProperties = false)
         {
             if (combat == null || items == null || unit == null || player == null || progression == null)
                 throw new ArgumentException("Battle player loadout inputs are incomplete.");
@@ -22,33 +21,41 @@ namespace Zjcs.Presentation.Combat
             unit.EntryCombatRating = progression.EvaluateProps(DateTimeOffset.UtcNow.ToUnixTimeSeconds()).CombatRating;
 
             int[] equipped = OfflineSkillProgression.EquippedActiveSkills(player.Skills);
-            if (!equipped.Any(value => value > 0))
-            {
-                int initial = items.InitialActiveSkill(player.InitialWeaponType);
-                if (initial > 0) equipped = new[] { initial, 0, 0, 0 };
-            }
             IReadOnlyDictionary<int, long> properties = OfficialBattlePropertyAssembler.ToMap(unit.Properties);
             int weaponType = items.ItemTypeFor(OfflineEquipmentOperations.EquippedItemIdAtPosition(player.Equipment, 10));
+            int profession = player.Wardrobe?.Profession ?? 0;
+            if (profession <= 0)
+            {
+                int weapon = weaponType == 0 ? player.InitialWeaponType : weaponType;
+                if (weapon == FightOfficialSkillItemCatalog.SwordInitialWeaponType) profession = 1;
+                else if (weapon == FightOfficialSkillItemCatalog.WandInitialWeaponType) profession = 10;
+            }
+            var context = new OfflineSkillPlayerContext { Profession = profession };
             var active = new List<FightOfficialSkillBinding>();
             for (int slot = 0; slot < equipped.Length; slot++)
             {
                 int itemId = equipped[slot];
                 if (itemId <= 0) continue;
+                int rank = OfflineSkillProgression.OwnedRank(player.Skills, itemId);
+                OfflineSkillDefinition definition = progression.SkillDefinition(itemId);
+                // PlayerSkillDataExt.GetValidSkillItems resolves owned items before profession checks.
+                if (rank <= 0 || definition == null || definition.ItemType != 100
+                    || !OfflineSkillProgression.IsAvailableFor(definition, context)) continue;
                 int skinId = player.Wardrobe?.SkillSkins?.FirstOrDefault(value => value.SkillId == itemId)?.SkillSkinId ?? 0;
                 FightOfficialSkillItem item = items.RequiredForSkin(itemId, skinId);
                 active.Add(new FightOfficialSkillBinding
                 {
                     EntityId = item.EntityId, Slot = slot, ItemId = itemId, UseItemId = item.ItemId,
-                    SkillSkinId = skinId, Rank = Math.Max(1, OfflineSkillProgression.OwnedRank(player.Skills, itemId)),
+                    SkillSkinId = skinId, Rank = rank,
                     Level = Math.Max(1, progression.SkillProgression.SlotLevel(player.Skills, 100, slot,
-                        progression.SkillContext().CurrentSeasonId)),
-                    ProfessionAvailability = items.ProfessionAvailabilityFor(item.ItemId, unit.Profession,
-                        weaponType, player.InitialWeaponType),
+                        player.SeasonRank)),
+                    // FightSkillData.Refresh checks the actual skin-resolved skill after selection.
+                    ProfessionAvailability = OfflineSkillProgression.IsAvailableFor(
+                        progression.SkillDefinition(item.ItemId), context)
+                        ? FightSkillProfessionAvailability.Available : FightSkillProfessionAvailability.Mismatch,
                     SubRank = player.SubRank
                 });
             }
-            if (requireActiveSkill && active.Count == 0)
-                throw new InvalidOperationException("Official player has no equipped or initial active skill.");
             var passive = OfficialBattlePassivePropertyAssembler.CollectEquippedPlayerPassives(items, player, progression);
             passive.AddRange(OfficialEquipmentBattlePassives.Collect(progression, player, unit.SubRank));
             OfficialBattleSkillAssembler.AssembleUnit(combat, items, unit, properties, active, passive,

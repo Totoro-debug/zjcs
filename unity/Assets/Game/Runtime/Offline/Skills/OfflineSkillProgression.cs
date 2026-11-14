@@ -108,9 +108,8 @@ namespace Zjcs.Offline.Skills
         }
 
         /// <summary>
-        /// Grants the official initial active skill of the chosen starting weapon. Used by the
-        /// character flow and by battle entry so an existing save without a plan still fights with
-        /// the configured first skill instead of an empty list.
+        /// Grants and equips the official initial active skill during character creation.
+        /// Battle entry preserves the selected saved plan, including an empty loadout.
         /// </summary>
         public static bool EnsureInitialSkill(OfflineSkillProfile profile, int itemId)
         {
