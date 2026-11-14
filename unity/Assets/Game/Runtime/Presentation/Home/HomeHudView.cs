@@ -98,7 +98,7 @@ namespace Zjcs.Presentation.Home
         internal Transform HomeSceneUiParent => homePanel.transform.Find("Content");
 
         public bool AnyModalOpen => CharacterPageOpen || activeDialog != null || inventoryRoot != null || host.FeatureModalOpen || skillDamageTest != null
-            || DungeonModalOpen
+            || DungeonModalOpen || nativeFastProgress != null && nativeFastProgress.IsOpen
             || npcAdventureSelectRoot != null || npcAdventureResultRoot != null
             || (functionsPanel != null && functionsPanel.activeSelf) || homeSkin != null && homeSkin.IsOpen;
 
@@ -278,7 +278,7 @@ namespace Zjcs.Presentation.Home
         private void BuildToast()
         {
             noticeRoot = new GameObject("HomeToast", typeof(RectTransform));
-            noticeRoot.transform.SetParent(canvas.transform, false);
+            noticeRoot.transform.SetParent(nativePublicSlot, false);
             RectTransform rect = (RectTransform)noticeRoot.transform;
             rect.anchorMin = new Vector2(0.5f, 0);
             rect.anchorMax = new Vector2(0.5f, 0);
@@ -1368,6 +1368,7 @@ namespace Zjcs.Presentation.Home
 
         public void Dispose()
         {
+            ReleaseNativeBedWindow();
             bedAwards?.Dispose(); bedAwards = null;
             ReleaseNativeBedOutput();
             dungeonUiBindingModule?.Dispose();

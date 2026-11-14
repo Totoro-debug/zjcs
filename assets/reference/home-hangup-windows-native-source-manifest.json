@@ -6646,7 +6646,7 @@
     "unity/Assets/Official/Home/UI/HangUpWindows/Image/UI/OutputAddition/OutputAddition_Atlas.meta": "ea42401b662919fcba894063022622fd3641f961643cecdc800f14e63eca0f08",
     "unity/Assets/Official/Home/UI/HangUpWindows/Prefabs/UI/Common.meta": "6ffe2ffd53894f354b2286db743a7ae37f5caf3232cb6182fb0ef0788603b9fa",
     "unity/Assets/Official/Home/UI/HangUpWindows/Prefabs/UI/Common/Button.meta": "a2464a15a45a9638a07369959c4cd9960a973c3ba43b4ce6d880467e75bc24b2",
-    "unity/Assets/Game/Resources/Home/OfficialHomeHangUpWindowAssetCatalog.asset": "76af54d162a5f8b8e1b40c68b5a0b0f2e4cac91054b6c4a44de9f0ced7bb6530",
+    "unity/Assets/Game/Resources/Home/OfficialHomeHangUpWindowAssetCatalog.asset": "16732cdfd57976529f9754c9a298f50864302313a96c24a2c9c18ac7dc0d6592",
     "unity/Assets/Game/Resources/Home/OfficialHomeHangUpWindowAssetCatalog.asset.meta": "b870abc3120dd023f709c693f0a6ee85e2dfc460b4eabb61a44f6c9c1d6d9f46"
   },
   "reused": [
@@ -7848,7 +7848,7 @@
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/HomeHangUpWindowServices.cs.meta": "cc9776c3d6d1523dd3c0c05591cd0e291fd457394518ffb5af9ab79a30565658",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/IHomeFurnitureOutputServices.cs": "f735f5abb1de6431e184cfef7a0632002b0da3aeebcadaea7d36616f3616ae29",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/IHomeFurnitureOutputServices.cs.meta": "5994ae7a5331a1ac23d8dad0050d3ef4fbad3c80ae753932f7abf13ba1e19ff7",
-    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OfficialHomeHangUpWindowAssetCatalog.cs": "fd66d3f6df4940cb98b97f6b9108012203076215ed4d4e02b791d863759e717a",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OfficialHomeHangUpWindowAssetCatalog.cs": "3d9cdcf31fc1de7c5d7de6a4cdea231e2f0f14580108ca1eb639af016eaef09a",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OfficialHomeHangUpWindowAssetCatalog.cs.meta": "c9bc66c36c076b16d15a2a3fe57128b20af413cf4ada8be8d6a0fff861b155af",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OutputAdditionDetailButton.cs": "77fd086d5bccbaa6760a4033b7c9c656b405d4ac28914435a197ba1fa9188a2f",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OutputAdditionDetailButton.cs.meta": "296d73d6bc9147570ce36fbf36b514017928eaddf3880ab4716f4f3c4650f250",
@@ -7858,5 +7858,17 @@
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/RuleTipNumer.cs.meta": "04cb33441ed853b3eb9969a90beb1be0af483bf23ed7b8f0927e097db29c95e6",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/Zjcs.Official.HomeHangUpWindowsUI.asmdef": "b4ca91c83a13fd75e5a3159c50a7de188ee1e6ad5b6a6a8d0d9480821c68ee67",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/Zjcs.Official.HomeHangUpWindowsUI.asmdef.meta": "f3f2953815dbec20009012e2d76c4df1e3a4113c663d40a24296e096961d2ccf"
+  },
+  "production_audio_binding": {
+    "operation": "Post-install explicit binding of the existing verified complete original acceleration PCM; no re-encoding.",
+    "generator": "scripts/bind_home_fast_audio.py",
+    "generator_sha256": "3e278782dc0ea6a9e6752da10af9406c51b8e7ce52c38c0abb90ec56e7d279da",
+    "pcm": {
+      "path": "unity/Assets/Official/Home/UI/HangUpWindows/Audio/Furniture_Animation_Normal.wav",
+      "sha256": "7f5bb73ce2b8febe6a951f78b434fef5fbd13856fb5b51d891826aa716baacaf",
+      "guid": "30fce45515cc66b324517be5662d1971"
+    },
+    "catalog": "unity/Assets/Game/Resources/Home/OfficialHomeHangUpWindowAssetCatalog.asset",
+    "catalog_sha256": "16732cdfd57976529f9754c9a298f50864302313a96c24a2c9c18ac7dc0d6592"
   }
 }

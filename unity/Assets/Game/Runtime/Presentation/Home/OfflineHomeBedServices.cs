@@ -25,11 +25,13 @@ namespace Zjcs.Presentation.Home
 {
     // The original controller consumes the real home/profile owners through this
     // local request/response boundary. Presentation never grants a second reward.
-    public sealed class OfflineHomeBedServices : IHomeHangUpWindowServices, IHomeHangUpWindowPlayer, IHomeBlessingRuleServices, IDisposable
+    public sealed partial class OfflineHomeBedServices : IHomeHangUpWindowServices, IHomeHangUpWindowPlayer, IHomeBlessingRuleServices, IDisposable
     {
         sealed class Response : IHomeWindowAwardMessage
         {
             internal readonly ArrayList Rewards = new ArrayList();
+            internal bool IsFast, Awarded;
+            internal IDisposable Hold;
             public IList DataList => Rewards;
             public object SourceData => this;
         }
@@ -49,6 +51,7 @@ namespace Zjcs.Presentation.Home
         readonly Action<OfflineHomeCollectedReward> popupAward;
         readonly Func<string, string> outputText;
         readonly Func<int, int, bool> mapPublic;
+        readonly Zjcs.Offline.PartnersUI.OfflinePartnerLocalizationService confirmTexts;
         readonly Dictionary<object, List<Action>> conditions = new Dictionary<object, List<Action>>();
         readonly List<OfflineHomeCollectedReward> pending = new List<OfflineHomeCollectedReward>();
         readonly OfflineProfessionImageCatalog imageCatalog;
@@ -81,6 +84,8 @@ namespace Zjcs.Presentation.Home
             this.popupAward = popupAward ?? throw new ArgumentNullException(nameof(popupAward));
             this.outputText = outputText ?? throw new ArgumentNullException(nameof(outputText));
             this.mapPublic = mapPublic ?? throw new ArgumentNullException(nameof(mapPublic));
+            confirmTexts = new Zjcs.Offline.PartnersUI.OfflinePartnerLocalizationService(
+                Zjcs.Offline.PartnersUI.OfficialPartnerConfirmAssetCatalog.LoadDefault().Texts);
             configuration = OfficialCurrentHomeRuleAssetCatalog.LoadDefault();
             assets = OfficialHomeHangUpWindowAssetCatalog.LoadDefault();
             repair = OfficialHomeRepairAssetCatalog.LoadDefault();
@@ -174,6 +179,8 @@ namespace Zjcs.Presentation.Home
         public string Text(string key)
         {
             string text = assets.Text(key);
+            if (text == key && FastAwards != null) text = FastAwards().Text(key);
+            if (text == key) text = confirmTexts.GetText(key, Zjcs.Official.World.NativeLabelUI.Framework.LanguageType.zh_CN);
             return text == key ? outputText(key) : text;
         }
         public string TextFormatted(string key, params object[] args) => string.Format(CultureInfo.CurrentCulture, Text(key), args);
@@ -262,6 +269,12 @@ namespace Zjcs.Presentation.Home
         {
             if (!(source is Response response) || !ReferenceEquals(data, response.Rewards))
                 throw new InvalidOperationException("A committed local bed response is required.");
+            if (response.IsFast)
+            {
+                response.Hold?.Dispose();
+                response.Hold = null;
+                response.Awarded = true;
+            }
             home.AwardPreparedHomeCollections();
         }
         public void MergeAward(IList data) { foreach (OfflineHomeCollectedReward reward in data) if (!pending.Contains(reward)) throw new InvalidOperationException("Unknown bed receipt."); }
@@ -361,6 +374,7 @@ namespace Zjcs.Presentation.Home
         public void Dispose()
         {
             if (disposed) return; disposed = true;
+            ReleaseFastResponses();
             OutputAddition.Changed -= OnOutputChanged;
             conditions.Clear(); pending.Clear();
             outputFunctionChanged = null; newDay = null; OnFastHangUp = null; OnAddOutputAdditionData = null;

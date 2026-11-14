@@ -15,6 +15,8 @@ namespace Zjcs.Official.HomeHangUpWindowsUI
         public TextAsset texts;
         public string bedRewardImagePath;
         public Sprite bedRewardImage;
+        public uint fastHangUpEventId;
+        public AudioClip fastHangUpClip;
         private Dictionary<string, string> localized;
         private Rule blessingRule;
         public string GetTitleKey(string key) { Text(key); return GetRule(key).TitleKey; }

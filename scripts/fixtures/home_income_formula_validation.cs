@@ -12,6 +12,30 @@ using Zjcs.Offline.State;
 using Zjcs.Presentation.Home;
 using Zjcs.Offline.Commerce;
 
+public static partial class HomeIncomeFormulaValidation
+{
+    private static void ConfigureNativeFrame()
+    {
+        if (Application.isBatchMode)
+            throw new InvalidOperationException("Original frame-end text alignment and blur require an editor frame outside batch mode.");
+        var editor = typeof(UnityEditor.EditorWindow).Assembly;
+        var sizesType = editor.GetType("UnityEditor.GameViewSizes");
+        var sizes = typeof(UnityEditor.ScriptableSingleton<>).MakeGenericType(sizesType).GetProperty("instance").GetValue(null);
+        var group = sizesType.GetMethod("GetGroup").Invoke(sizes,
+            new[] { Enum.Parse(editor.GetType("UnityEditor.GameViewSizeGroupType"), "Standalone") });
+        var size = Activator.CreateInstance(editor.GetType("UnityEditor.GameViewSize"),
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null,
+            new object[] { Enum.ToObject(editor.GetType("UnityEditor.GameViewSizeType"), 1), 608, 1080, "Home income fixture" }, null);
+        group.GetType().GetMethod("AddCustomSize").Invoke(group, new[] { size });
+        int index = (int)group.GetType().GetMethod("GetTotalCount").Invoke(group, null) - 1;
+        var viewType = editor.GetType("UnityEditor.GameView");
+        // Only the owned editor's internal view changes; never focus a window.
+        var view = UnityEditor.EditorWindow.GetWindow(viewType, false, "Game", false);
+        viewType.GetProperty("selectedSizeIndex", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).SetValue(view, index);
+        view.Repaint();
+    }
+}
+
 public sealed partial class HomeIncomeFormulaHostRunner
 {
     private IEnumerator CheckIncomeFormula()
@@ -211,8 +235,9 @@ public sealed partial class HomeIncomeFormulaHostRunner
         yield return CheckIncomeRewardCatalog();
         CheckFastAutoIncrease();
         yield return CheckActualFastRequests();
+        yield return CheckNativeFastSequence();
         yield return CheckExperienceLedgerRecovery();
-        Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original float/double arithmetic and unsettled-preview settlement, actual native repair and production bed pointer, bed output foldout, original blessing rule rows/highlight/scroll/mask close, real lost goddess profile, production collection/experience/free acceleration, original XP award queue, all 259 selected income items and 15 images, actual cart repair/unlock/collection and native award queue with disk reopen, committed reward receipts, rejected experience grants retained, acknowledgement recovery, original remainder, idempotency and precise disk reopen. Cart award presentation is a component check; acceleration business calls are direct; acceleration/output-detail windows and complete HUD remain pending.");
+        Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original float/double arithmetic and unsettled-preview settlement, actual native repair and production bed pointer, bed output foldout, original blessing rule rows/highlight/scroll/mask close, real lost goddess profile, production collection/experience/free acceleration, original XP award queue, all 259 selected income items and 15 images, actual cart repair/unlock/collection and native award queue with disk reopen, committed reward receipts, rejected experience grants retained, acknowledgement recovery, original remainder, idempotency and precise disk reopen. Actual bed acceleration selection uses internal pointer input, the real request owner, the original sleep presentation, paid output retained in furniture above capacity, manual bed/cart claims and disk reopen; interruption preserves the stored output and releases the presentation owner. Cart award presentation remains a component check; environment fast-cycle, output-detail windows and complete HUD remain pending.");
     }
 
     private IEnumerator CheckNativeBedCollection()
@@ -466,6 +491,13 @@ public sealed partial class HomeIncomeFormulaHostRunner
         }).IsApplied, "seed isolated real time crystals and damaged health");
         long stamina = home.Profile.Save.Player.Inventory.Single(value => value.ItemId == 57).Count;
         long experience = home.Profile.Save.Player.Experience;
+        var cartDefinition = home.Session.Definitions.Single(value => value.HangUpId == 2);
+        var cartItems = cartDefinition.OutputItemIds.Distinct().ToArray();
+        var beforeCartItems = cartItems.ToDictionary(id => id, home.Profile.InventoryCount);
+        long beforeCartStored = home.Session.Preview(2).Count;
+        long expectedCart = (long)OfflineHangUpIncome.RewardCount(cartDefinition.Rule,
+            home.PlayerProperties(), HomeIncomePropertyCatalog.CreateFloatPropertyIds(), 4);
+        Require(expectedCart > 0, "actual paid fixture includes an unlocked productive cart");
         var timers = home.Session.Save.RandomRewards.Where(value => value.ItemId > 0)
             .ToDictionary(value => value.Slot, value => value.NextRefreshUnixSeconds);
         var flags = HomeIncomePropertyCatalog.CreateFloatPropertyIds();
@@ -494,11 +526,14 @@ public sealed partial class HomeIncomeFormulaHostRunner
         Require(home.Session.PendingFastForwardOperation == null && home.Session.Save.Inventory.Count == 0
             && home.Profile.InventoryCount(120) == 3
             && home.Profile.Save.Player.Inventory.Single(value => value.ItemId == 57).Count == stamina + 20
-            && home.Profile.Save.Player.Experience == experience + expectedXp
+            && home.Profile.Save.Player.Experience == experience
+            && home.Session.Save.Income.Single(value => value.HangUpId == 1).SettledCount >= expectedXp
+            && home.Session.Save.Income.Single(value => value.HangUpId == 2).SettledCount >= beforeCartStored + expectedCart
+            && cartItems.All(id => home.Profile.InventoryCount(id) == beforeCartItems[id])
             && timers.All(value => home.Session.Save.RandomRewards.Single(slot => slot.Slot == value.Key)
                 .NextRefreshUnixSeconds == value.Value - 4)
             && home.Profile.Save.Player.AppliedInventoryEventIds.Count(value => value == operation.ProfileReceipt) == 1,
-            "production home reopen recovers already charged request, drains original normal income and preserves extras exactly once");
+            "production home reopen recovers charged output into furniture storage without claiming XP or repeating extras");
         long beforePaid = home.Profile.InventoryCount(120);
         Require(home.TryFastForwardItems(1, 1) > 0 && home.Profile.InventoryCount(120) == beforePaid - 1
             && home.Profile.Save.Player.Inventory.Single(value => value.ItemId == 57).Count == stamina + 30
@@ -518,7 +553,251 @@ public sealed partial class HomeIncomeFormulaHostRunner
             && !home.Profile.Save.Player.AppliedInventoryEventIds.Contains("fast-request:unpaid-cancel:profile")
             && home.Profile.Save.Player.Inventory.Single(value => value.ItemId == 57).Count == stamina + 30,
             "insufficient uncharged request cancels without any extra reward or false character receipt");
+        Require(home.Profile.Save.Player.Experience == experience
+            && cartItems.All(id => home.Profile.InventoryCount(id) == beforeCartItems[id]),
+            "both production paid requests preserve bed XP and cart resources until manual collection");
         Capture("home-income-paid-request-recovered.png");
+        long cartClaimCount = home.Session.Preview(2).Count;
+        var cartReward = home.Session.CollectReward(2, "paid-request:manual-cart");
+        Require(cartReward != null && cartReward.Count == cartClaimCount && cartClaimCount >= expectedCart
+            && home.Session.CollectReward(2, "paid-request:manual-cart") == null,
+            "actual cart manual collection creates one exact random reward receipt from stored paid output");
+        home.DrainHomeInventory();
+        Require(cartItems.Sum(id => home.Profile.InventoryCount(id) - beforeCartItems[id]) == cartClaimCount
+            && home.Session.Save.Income.Single(value => value.HangUpId == 2).SettledCount == 0
+            && home.Profile.Save.Player.Experience == experience,
+            "manual cart collection alone transfers all stored resources once while bed XP remains unclaimed");
+    }
+
+    private IEnumerator CheckNativeFastSequence()
+    {
+        Require(home.Profile.ApplyInventoryTransaction("native-fast:seed", save => {
+            save.Player.Inventory.Add(new OfflineItemStack { ItemId = 120, Count = 5 });
+        }).IsApplied, "seed actual native acceleration inventory");
+        SceneClick(0); yield return new WaitForSeconds(.8f);
+        var bed = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeHangUpWindowsUI.FurnitureBedDialog>();
+        Require(bed, "scene pointer opens original bed before acceleration");
+        Capture("home-native-fast-bed-entry.png");
+        Click(bed.FastHangUpBtn); yield return new WaitForSeconds(.8f);
+        yield return ConfirmNativeFastIfPresent("home-native-fast-personal-confirm.png");
+        var selection = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeFastHangUpUI.FurnitureFastHangUpDialog>();
+        Require(selection && selection.ParentPanel == bed.gameObject,
+            "original bed button opens its original acceleration selection and retains its parent");
+        Capture("home-native-fast-selection-initial.png");
+        var row = selection.GetComponentsInChildren<Zjcs.Official.HomeFastHangUpUI.FurnitureUseItemSliderGroup>()
+            .Single(value => value.ItemId == 120);
+        var slider = row.GetComponentInChildren<Zjcs.Official.HomeFastHangUpUI.SetUseCountSlider>();
+        Require(row.UseCount == 1 && slider.Slider.maxValue == 5,
+            "original slider starts with selected default and actual crystal stock");
+        Click(slider.MinusBtn); yield return null;
+        Require(row.UseCount == 0, "native quantity minus reaches the original zero branch");
+        Click(selection.FastBtn); yield return null;
+        Require(selection && home.Profile.InventoryCount(120) == 5
+            && !UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeFastHangUpProgressUI.FastHangUpProgressBarDialog>(),
+            "zero selection cannot spend crystals or begin a sleep presentation");
+        DragNativeFastSlider(slider.Slider, true); yield return null;
+        Require(row.UseCount == 5, "actual slider drag reaches the saved crystal inventory maximum");
+        DragNativeFastSlider(slider.Slider, false); yield return null;
+        Require(row.UseCount == 0, "actual slider drag returns to zero without spending crystals");
+        Click(slider.AddBtn); Click(slider.AddBtn); yield return null;
+        Require(row.UseCount == 2, "two internal plus clicks select four actual acceleration hours");
+        Require(slider.CurrentCountText.Text.Contains("2/5")
+            && selection.GetComponentsInChildren<Zjcs.Official.ProfessionUI.ItemIcon>()
+                .All(value => value.IconSprite),
+            "actual quantity text resolves its original language format and every cost/reward icon has its selected sprite");
+        Capture("home-native-fast-selection.png");
+        long beforeXp = home.Profile.Save.Player.Experience;
+        long beforeStored = home.Session.Preview(1).Count;
+        long beforeStamina = home.Profile.InventoryCount(57);
+        long expected = (long)OfflineHangUpIncome.RewardCount(home.Session.Definitions.Single(value => value.HangUpId == 1).Rule,
+            home.PlayerProperties(), HomeIncomePropertyCatalog.CreateFloatPropertyIds(), 4);
+        int signals = 0; Action bedSignal = () => signals++;
+        var originalSound = bed.FastHangUpSoundEvent;
+        home.BedFastHangUpPresented += bedSignal;
+        Click(selection.FastBtn); yield return new WaitForSeconds(.35f);
+        var progress = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeFastHangUpProgressUI.FastHangUpProgressBarDialog>();
+        Require(progress && signals == 1 && !bed && !selection && home.Hud.AnyModalOpen,
+            "original successful selection closes both parent windows before opening the real sleep presentation");
+        var audio = (AudioSource)typeof(HomeHudView).GetField("partnerUiAudioSource",
+            BindingFlags.Instance | BindingFlags.NonPublic).GetValue(home.Hud);
+        Require(originalSound.PlayingId > 0 && audio && audio.isPlaying && AudioListener.volume == 0,
+            "the actual original bed acceleration event posts its verified complete PCM while muted");
+        Require(home.Profile.InventoryCount(120) == 3 && home.Profile.InventoryCount(57) == beforeStamina + 20
+            && home.Profile.Save.Player.Experience == beforeXp && home.Session.Save.Inventory.Count == 0
+            && home.Session.Save.Income.Single(value => value.HangUpId == 1).SettledCount >= beforeStored + expected,
+            "paid request charges once and adds ordinary output to furniture storage without creating an inventory award");
+        long storedAfter = home.Session.Save.Income.Single(value => value.HangUpId == 1).SettledCount;
+        var group = home.Hud.CanvasTransform.Find("Content/Main").GetComponent<CanvasGroup>();
+        Require(group && group.alpha == 0 && !group.interactable && !group.blocksRaycasts,
+            "original hide reference makes the underlying HUD transparent and noninteractive");
+        var notice = home.Hud.CanvasTransform.GetComponentsInChildren<TMPro.TMP_Text>(true)
+            .Single(value => value.name == "ToastText");
+        Require(notice.transform.IsChildOf(group.transform) && notice.canvasRenderer.GetInheritedAlpha() == 0,
+            "the existing local notice belongs to the original hidden Main/Public hierarchy");
+        var graphic = progress.PlayerAppearance.GetComponent<Zjcs.Offline.ProfessionUI.ProfessionNativeUiGraphic>();
+        Require(graphic.AnimationState.GetCurrent(0)?.Animation.Name == "home/sleep_02"
+            && progress.RewardImageList.Count == 8 && progress.RewardImageList.All(value => value.sprite),
+            "actual player sleeps in the original appearance with every original reward sprite");
+        yield return new WaitForSeconds(.35f);
+        Capture("home-native-fast-sleep.png");
+        float started = Time.realtimeSinceStartup;
+        while (progress && progress.isActiveAndEnabled && Time.realtimeSinceStartup - started < 8) yield return null;
+        yield return null;
+        Require(!progress && group.alpha == 1 && group.interactable && group.blocksRaycasts
+            && home.Profile.Save.Player.Experience == beforeXp
+            && home.Session.Save.Income.Single(value => value.HangUpId == 1).SettledCount == storedAfter
+            && home.Profile.InventoryCount(120) == 3 && home.Profile.InventoryCount(57) == beforeStamina + 20
+            && home.Session.Save.Inventory.Count == 0 && home.Session.PendingFastForwardOperation == null,
+            "original animation restores HUD while all paid XP remains in its furniture without another extra reward");
+        home.BedFastHangUpPresented -= bedSignal;
+        Capture("home-native-fast-awarded.png");
+        long awarded = home.Profile.Save.Player.Experience;
+        home.Close(); CloseCapture(); yield return null;
+        Open(); yield return new WaitForSeconds(1);
+        Require(home.Profile.Save.Player.Experience == awarded && home.Profile.InventoryCount(120) == 3
+            && home.Profile.InventoryCount(57) == beforeStamina + 20 && home.Session.Save.Inventory.Count == 0
+            && home.Session.Save.Income.Single(value => value.HangUpId == 1).SettledCount == storedAfter,
+            "native sequence survives actual disk reopen without another charge or award");
+        SceneClick(0); yield return new WaitForSeconds(.8f);
+        bed = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeHangUpWindowsUI.FurnitureBedDialog>();
+        Capture("home-native-fast-reopened-bed.png");
+        Click(bed.FastHangUpBtn); yield return new WaitForSeconds(.8f);
+        yield return ConfirmNativeFastIfPresent("home-native-fast-reopened-confirm.png");
+        selection = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeFastHangUpUI.FurnitureFastHangUpDialog>();
+        Require(selection, "actual reopened bed starts another original acceleration selection");
+        Capture("home-native-fast-second-selection.png");
+        long secondXp = (long)OfflineHangUpIncome.RewardCount(home.Session.Definitions.Single(value => value.HangUpId == 1).Rule,
+            home.PlayerProperties(), HomeIncomePropertyCatalog.CreateFloatPropertyIds(), 2);
+        Click(selection.FastBtn); yield return new WaitForSeconds(.35f);
+        Require(UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeFastHangUpProgressUI.FastHangUpProgressBarDialog>()
+            && home.Profile.Save.Player.Experience == awarded, "second native request is held before owner interruption");
+        home.Close(); CloseCapture(); yield return null;
+        Open(); yield return new WaitForSeconds(1);
+        Require(home.Profile.Save.Player.Experience == awarded && home.Profile.InventoryCount(120) == 2
+            && home.Session.Save.Income.Single(value => value.HangUpId == 1).SettledCount >= storedAfter + secondXp
+            && home.Profile.InventoryCount(57) == beforeStamina + 30 && home.Session.Save.Inventory.Count == 0
+            && !UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeFastHangUpProgressUI.FastHangUpProgressBarDialog>(),
+            "closing during sleep preserves paid furniture output without an automatic claim and disposes original presentation resources");
+        SceneClick(0); yield return new WaitForSeconds(.8f);
+        bed = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeHangUpWindowsUI.FurnitureBedDialog>();
+        Require(bed, "stored paid XP can be collected from the original reopened bed");
+        long manualCount = home.Session.Preview(1).Count;
+        Click(bed.GetHangUpRewardBtn); yield return new WaitForSeconds(.15f);
+        Require(home.Profile.Save.Player.Experience >= awarded + manualCount
+            && home.Session.Save.Income.Single(value => value.HangUpId == 1).SettledCount == 0,
+            "only the actual manual bed pointer transfers the stored paid XP to character growth");
+        Capture("home-native-fast-manual-claim.png");
+        home.Hud.CloseDialog(); yield return new WaitForSeconds(.3f);
+        Require(home.Session.Mutate("native-fast:reset-free", save => save.FastForwardUsage.Clear()),
+            "reset only the isolated native free-use fixture");
+        home.Close(); CloseCapture(); yield return null;
+        Open(); yield return new WaitForSeconds(1);
+        var freeBed = home.Session.Definitions.Single(value => value.HangUpId == 1);
+        var freeCart = home.Session.Definitions.Single(value => value.HangUpId == 2);
+        var freeItems = freeCart.OutputItemIds.Distinct().ToArray();
+        var freeInventory = freeItems.ToDictionary(id => id, home.Profile.InventoryCount);
+        long freeXpBefore = home.Profile.Save.Player.Experience;
+        long freeCrystalBefore = home.Profile.InventoryCount(120);
+        long paidCartStored = home.Session.Save.Income.Single(value => value.HangUpId == 2).SettledCount;
+        long freeXp = (long)OfflineHangUpIncome.RewardCount(freeBed.Rule, home.PlayerProperties(),
+            HomeIncomePropertyCatalog.CreateFloatPropertyIds(), freeBed.FreeFastForwardHours);
+        long freeCartCount = (long)OfflineHangUpIncome.RewardCount(freeCart.Rule, home.PlayerProperties(),
+            HomeIncomePropertyCatalog.CreateFloatPropertyIds(), freeBed.FreeFastForwardHours);
+        SceneClick(0); yield return new WaitForSeconds(.8f);
+        bed = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeHangUpWindowsUI.FurnitureBedDialog>();
+        Require(bed && home.Session.CanFreeFastForward(1), "native bed refreshes actual free eligibility");
+        Click(bed.FastHangUpBtn); yield return null;
+        yield return ConfirmNativeFastIfPresent("home-native-free-confirm.png");
+        progress = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeFastHangUpProgressUI.FastHangUpProgressBarDialog>();
+        Require(progress && home.Profile.Save.Player.Experience == freeXpBefore
+            && home.Profile.InventoryCount(120) == freeCrystalBefore && home.Session.Save.Inventory.Count > 0
+            && freeItems.All(id => home.Profile.InventoryCount(id) == freeInventory[id]),
+            "original free button holds ordinary output until its sleep callback and consumes no crystals");
+        Capture("home-native-free-sleep.png");
+        started = Time.realtimeSinceStartup;
+        while (progress && progress.isActiveAndEnabled && Time.realtimeSinceStartup - started < 8) yield return null;
+        yield return null;
+        Require(!progress && home.Profile.Save.Player.Experience == freeXpBefore + freeXp
+            && freeItems.Sum(id => home.Profile.InventoryCount(id) - freeInventory[id]) == freeCartCount
+            && home.Session.Save.Income.Single(value => value.HangUpId == 2).SettledCount == paidCartStored
+            && home.Profile.InventoryCount(120) == freeCrystalBefore && home.Session.Save.Inventory.Count == 0
+            && home.Session.GetTodayFreeFastForwardCount(1) == 1,
+            "original free completion awards only its own XP and cart receipt once, preserving stored paid output");
+        Capture("home-native-free-completed.png");
+        home.Close(); CloseCapture(); yield return null;
+        Open(); yield return new WaitForSeconds(1);
+        Require(home.Profile.Save.Player.Experience == freeXpBefore + freeXp
+            && freeItems.Sum(id => home.Profile.InventoryCount(id) - freeInventory[id]) == freeCartCount
+            && home.Session.GetTodayFreeFastForwardCount(1) == 1,
+            "native free completion and its single use survive disk reopen without another award");
+    }
+
+    private IEnumerator ConfirmNativeFastIfPresent(string screenshot)
+    {
+        var confirm = UnityEngine.Object.FindObjectOfType<Zjcs.Official.WorldUI.WorldConfirmDialog>();
+        if (!confirm) yield break;
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(.1f);
+        Require(confirm.TitleText.Text == "确认" && confirm.ConfirmText.Text == "确定"
+            && confirm.CancelText.Text == "取消"
+            && confirm.ContentText.mTxt.Text.Contains("是否确认继续加速"),
+            "the original confirmation resolves its selected Chinese strings after original deferred alignment");
+        CheckNativeBlur();
+        Capture(screenshot);
+        Click(confirm.ConfirmBtn);
+        yield return new WaitForSeconds(.8f);
+        Require(!UnityEngine.Object.FindObjectOfType<Zjcs.Official.WorldUI.WorldConfirmDialog>(),
+            "the actual original personal progression confirmation closes through its pointer");
+    }
+
+    private static void CheckNativeBlur()
+    {
+        var masks = UnityEngine.Object.FindObjectsOfType<Zjcs.Official.WorldUI.WorldWindowBlurMask>();
+        Require(masks.Length > 0, "the original modal owns its blur mask");
+        var previous = RenderTexture.active;
+        var pixels = new Texture2D(8, 8, TextureFormat.RGB24, false);
+        try
+        {
+            foreach (var mask in masks)
+            {
+                var image = mask.Image.texture as RenderTexture;
+                Require(image && image.IsCreated(), "the original blur has a live captured frame");
+                RenderTexture.active = image;
+                pixels.ReadPixels(new Rect(image.width / 2 - 4, image.height / 2 - 4, 8, 8), 0, 0);
+                pixels.Apply();
+                Require(pixels.GetPixels().Any(color => color.maxColorComponent > .1f),
+                    "the original blur captures the actual visible home frame rather than a blank backbuffer");
+            }
+        }
+        finally { RenderTexture.active = previous; UnityEngine.Object.Destroy(pixels); }
+    }
+
+    private void DragNativeFastSlider(UnityEngine.UI.Slider slider, bool maximum)
+    {
+        Canvas.ForceUpdateCanvases();
+        var handle = slider.handleRect;
+        var track = (RectTransform)handle.parent;
+        var camera = home.Scene.Camera;
+        Vector2 start = RectTransformUtility.WorldToScreenPoint(camera, handle.TransformPoint(handle.rect.center));
+        Vector2 end = RectTransformUtility.WorldToScreenPoint(camera, track.TransformPoint(new Vector2(
+            maximum ? track.rect.xMax : track.rect.xMin, track.rect.center.y)));
+        var pointer = new PointerEventData(EventSystem.current) {
+            position = start, pressPosition = start, button = PointerEventData.InputButton.Left,
+            useDragThreshold = false };
+        var hits = new List<RaycastResult>(); EventSystem.current.RaycastAll(pointer, hits);
+        Require(hits.Count > 0 && hits[0].gameObject.transform.IsChildOf(slider.transform),
+            "the real slider handle is the top internal pointer hit");
+        pointer.pointerPressRaycast = hits[0];
+        var target = ExecuteEvents.GetEventHandler<IDragHandler>(hits[0].gameObject);
+        Require(target == slider.gameObject, "the original slider owns the internal drag");
+        pointer.pointerDrag = target;
+        ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerDownHandler);
+        ExecuteEvents.Execute(target, pointer, ExecuteEvents.initializePotentialDrag);
+        ExecuteEvents.Execute(target, pointer, ExecuteEvents.beginDragHandler);
+        pointer.delta = end - start; pointer.position = end; pointer.dragging = true;
+        ExecuteEvents.Execute(target, pointer, ExecuteEvents.dragHandler);
+        ExecuteEvents.Execute(target, pointer, ExecuteEvents.endDragHandler);
+        ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerUpHandler);
     }
 
     private void CheckFastOperationRecovery(ISet<int> flags)
@@ -556,7 +835,8 @@ public sealed partial class HomeIncomeFormulaHostRunner
             "reopen recovers accepted extra-handler inputs");
         Require(!session.CancelUnpaidFastForwardOperation("paid-request", _ => true), "charged request cannot be cancelled");
         var result = session.CompleteFastForwardOperation("paid-request", value => value == "paid-request:profile");
-        Require(result != null && result.TotalCount == 14 && result.Rewards.Single().Count == 14
+        Require(result != null && result.TotalCount == 14 && result.Rewards.Count == 0
+            && session.Save.Income.Single(value => value.HangUpId == 1).SettledCount == 14
             && session.PendingFastForwardOperation == null
             && session.Save.RandomRewards.Single().NextRefreshUnixSeconds == 1700000998,
             "charged request completes with frozen numeric inputs and original two-second refresh rewind");
@@ -581,8 +861,10 @@ public sealed partial class HomeIncomeFormulaHostRunner
             Rule = new HangUpIncomeRule { HourlyOutput = 3, LevelNum = 1, MaxStoreHours = 0 }
         };
         session = OfflineHomeIncomeSession.Open(path, new[] { definition, cart }, props, flags, 1700000000);
-        Require(session.Mutate("full-cart", save => save.Inventory.Add(new OfflineHomeItemStack {
-            ItemId = 51, Count = long.MaxValue, Serial = ++save.GrantSerial })), "seed overflowing cart ledger");
+        Require(session.Mutate("full-cart", save => {
+            save.Income.RemoveAll(value => value.HangUpId == 2);
+            save.Income.Add(new OfflineHomeIncomeEntry { HangUpId = 2, SettledCount = long.MaxValue });
+        }), "seed overflowing cart storage");
         before = JsonUtility.ToJson(session.Save);
         Require(session.ApplyFastForwardBatchRewards(new[] { 1, 2 }, 2, "partial-overflow") == null
             && JsonUtility.ToJson(session.Save) == before, "one overflowing reward rejects the entire batch including earlier XP");
@@ -654,17 +936,23 @@ public sealed partial class HomeIncomeFormulaHostRunner
             && session.ApplyFreeFastForwardGroupRewards(1, new[] { 1, 2 }, 2, "over-limit") == null
             && JsonUtility.ToJson(session.Save) == before, "duplicate and exhausted free requests produce no additional receipt");
         var paid = session.ApplyFastForwardBatchRewards(new[] { 1, 2, 2, 3 }, 2, "paid-income");
-        Require(paid != null && paid.TotalCount == 16 && paid.Rewards.Count == 2
-            && paid.Rewards.All(value => value.Count == (value.HangUpId == 1 ? 10 : 6)),
-            "paid income batch reports only each selected output delta, independently of the prior free batch");
+        Require(paid != null && paid.TotalCount == 16 && paid.Rewards.Count == 0
+            && session.Save.Income.Single(value => value.HangUpId == 1).SettledCount == 10
+            && session.Save.Income.Single(value => value.HangUpId == 2).SettledCount == 6,
+            "paid output remains in each furniture beyond zero capacity without an inventory award");
         session = OfflineHomeIncomeSession.Open(path, entries, properties, flags, 1700000000);
         before = JsonUtility.ToJson(session.Save);
         Require(session.ApplyFastForwardBatchRewards(new[] { 1, 2 }, 2, "paid-income") == null
             && JsonUtility.ToJson(session.Save) == before && session.Save.FastForwardUsage.Single().FreeUses == 1,
             "disk reopen retains batch idempotency and the single free use");
+        Require(session.CollectReward(2, "manual-paid-cart")?.Count == 6
+            && session.CollectReward(2, "manual-paid-cart") == null
+            && session.Save.Income.Single(value => value.HangUpId == 2).SettledCount == 0,
+            "paid cart resources remain above capacity until one manual claim selects and grants the actual item");
         Require(session.Mutate("full-ledger", save => {
             foreach (var stack in save.Inventory.Where(value => value.ItemId == 51 || value.ItemId == 52))
                 stack.Count = long.MaxValue;
+            save.Income.Single(value => value.HangUpId == 2).SettledCount = long.MaxValue;
         }), "seed full pending stacks for either possible cart output");
         before = JsonUtility.ToJson(session.Save);
         Require(session.ApplyFastForwardBatchRewards(new[] { 2 }, 2, "rejected-random") == null
@@ -830,6 +1118,11 @@ public sealed partial class HomeIncomeFormulaHostRunner
             "free group preserves original integer boundary and daily usage");
         session = OfflineHomeIncomeSession.Open(System.IO.Path.Combine(root, "formula-batch.json"),
             entries, properties, flags, 1700000000);
+        Require(session.Save.Inventory.Single(value => value.ItemId == 50).Count == 9926
+            && session.Save.Income.Single(value => value.HangUpId == 1).SettledCount == 19852
+            && session.Collect(1, "manual-paid-output") == 19852
+            && session.Collect(1, "manual-paid-output") == 0,
+            "paid batches survive disk reopen in storage and transfer only on one manual claim");
         Require(session.Save.Inventory.Single(value => value.ItemId == 50).Count == 29778
             && !session.Save.Inventory.Any(value => value.ItemId == 120)
             && session.Save.FastForwardUsage.Single().FreeUses == 1,

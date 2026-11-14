@@ -104,7 +104,7 @@ namespace Zjcs.Offline.Home
             var outputProperties = operation.Properties.ToDictionary(value => value.Id, value => value.Value);
             var flags = new HashSet<int>(operation.FloatPropertyIds);
             var rewards = FastForwardRewards(next, operation.Definitions, operation.Hours, receipt,
-                outputProperties, flags, out long total);
+                outputProperties, flags, out long total, storeInFurniture: !operation.IsFree);
             if (rewards == null) return null;
             // OperPlayerFastHangUpCallback uses AddSeconds(-FastHangUpHours),
             // without converting hours to seconds. Preserve that original unit.

@@ -719,7 +719,8 @@ namespace Zjcs.Presentation.Home
             var partnerGiftImages = new OfflineProfessionImageResourceLoader(partnerGiftAssets.Images);
             var localization = new OfflinePartnerLocalizationService(partnerDetailAssets.Texts,
                 partnerDetailAssets.Common.GiftTexts, friendshipAssets.PropertyTexts, friendshipAssets.DialogTexts,
-                partnerGiftAssets.GiftTexts, partnerGiftAssets.RelationshipTexts);
+                partnerGiftAssets.GiftTexts, partnerGiftAssets.RelationshipTexts,
+                Zjcs.Official.HomeFastHangUpUI.OfficialHomeFastHangUpAssetCatalog.LoadDefault().texts);
             LanguageManager.Initialize(localization);
             var propertyBindings = new OfflineProfessionPropertyBindings(friendshipAssets.PropertyConfiguration,
                 partnerDetailImages, localization, (owner, path, name, description, control) => { },
@@ -1712,6 +1713,7 @@ namespace Zjcs.Presentation.Home
         /// <summary>Moves claimed home rewards into the real bag or character experience.</summary>
         public void DrainHomeInventory()
         {
+            if (fastForwardPresentationHolds > 0) return;
             foreach (OfflineHomeItemStack pending in session.Save.Inventory.ToArray())
             {
                 if (pending == null || pending.ItemId <= 0 || pending.Count <= 0) continue;

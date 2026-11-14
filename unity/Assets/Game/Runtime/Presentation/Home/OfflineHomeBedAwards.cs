@@ -87,6 +87,7 @@ namespace Zjcs.Presentation.Home
         readonly OfflineProfessionImageCatalog imageCatalog;
         readonly IProfessionImageResourceLoader images;
         readonly Formula formula = new Formula(Zjcs.Official.HomeIncomeRules.HomeIncomePropertyCatalog.Get);
+        readonly Dictionary<ItemIcon, IDisposable> iconScopes = new Dictionary<ItemIcon, IDisposable>();
         IDisposable scope;
         AwardListPanel panel;
         bool disposed;
@@ -220,11 +221,20 @@ namespace Zjcs.Presentation.Home
         {
             GetItemInfo(info.ClassId);
             var icon = Clone(assets.itemIconPrefab, parent).GetComponent<ItemIcon>(); icon.Bind(this);
+            iconScopes.Add(icon, OfflineUiBindingModule.Register(icon.transform, new OfflineUiBindings {
+                Localize = Text, Font = () => OfflineHomeHudAssets.LoadDefault().defaultFont,
+                Images = _ => images,
+                Pool = (_, prefab, owner, world) => Object.Instantiate(prefab, owner, world) }));
             foreach (var attachment in icon.GetComponentsInChildren<ItemIconAttachment>(true)) attachment.Bind(this);
             icon.gameObject.SetActive(true); icon.Init(info); return icon;
         }
         public ItemIcon GetIcon(IProfessionItemData item, Transform parent) => throw OutsideBed("indexed reward");
-        public void RecycleIcon(ItemIcon icon) { if (icon) { icon.Clear(); icon.gameObject.SetActive(false); Object.Destroy(icon.gameObject); } }
+        public void RecycleIcon(ItemIcon icon)
+        {
+            if (ReferenceEquals(icon, null)) return;
+            if (icon) { icon.Clear(); icon.gameObject.SetActive(false); Object.Destroy(icon.gameObject); }
+            if (iconScopes.TryGetValue(icon, out var binding)) { binding.Dispose(); iconScopes.Remove(icon); }
+        }
         public IProfessionItemData GetItem(ulong index) => throw OutsideBed("indexed reward");
         public IHomeAwardOutputAddition GetOutputAddition(ItemIcon icon) => throw OutsideBed("activity output attachment");
         public GameObject GetAttachment(ItemIconAttachmentType type, Transform parent, bool active)
@@ -240,6 +250,11 @@ namespace Zjcs.Presentation.Home
         {
             var clip = assets.sounds.FirstOrDefault(row => row.eventId == eventId)?.clip
                 ?? OfflineHomeHudAssets.LoadDefault().Sound(eventId);
+            if (!clip)
+            {
+                var bed = OfficialHomeHangUpWindowAssetCatalog.LoadDefault();
+                if (eventId == bed.fastHangUpEventId) clip = bed.fastHangUpClip;
+            }
             if (!clip) throw new InvalidOperationException("Original award sound is unbound: " + eventId);
             postSound(clip, emitter); return ++playingId;
         }
@@ -247,6 +262,7 @@ namespace Zjcs.Presentation.Home
         public Object GrayConfig => null;
         public IProfessionItemColors Colors => data.global_colors;
         public IProfessionItemPlayer Player => this;
+        internal IProfessionImageResourceLoader Images => images;
         IProfessionItemInfo IProfessionItemIconContext.GetItemInfo(int id) => GetItemInfo(id);
         public bool TryGetSourceData(int id, out IReadOnlyList<IProfessionItemSource> sources) { GetItemInfo(id); sources = Array.Empty<IProfessionItemSource>(); return false; }
         public bool CanMerge(int id, bool recursion) { GetItemInfo(id); return false; }
@@ -283,6 +299,7 @@ namespace Zjcs.Presentation.Home
             if (disposed) return;
             disposed = true;
             if (panel) { panel.gameObject.SetActive(false); Object.Destroy(panel.gameObject); }
+            foreach (var icon in iconScopes.Keys.ToArray()) RecycleIcon(icon);
             panel = null; OnWindowOpened = null; OnItemCountUpdate = null;
             scope?.Dispose(); scope = null; fonts?.Dispose();
             if (staging) Object.Destroy(staging.gameObject);

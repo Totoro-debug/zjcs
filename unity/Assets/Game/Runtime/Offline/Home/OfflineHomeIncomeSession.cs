@@ -96,8 +96,8 @@ namespace Zjcs.Offline.Home
         }
     }
 
-    // Only the deltas committed by this acceleration, excluding any older ledger
-    // entries. The original UI consumes these after its progress animation ends.
+    // TotalCount includes output stored in furniture. Rewards contains only
+    // free-acceleration ledger deltas consumed after the progress animation.
     public sealed class OfflineHomeFastForwardResult
     {
         public long TotalCount { get; }
@@ -706,7 +706,7 @@ namespace Zjcs.Offline.Home
             if (count <= 0) return 0;
             OfflineHomeSave next = Clone(Save);
             if (!Consume(next, timeCrystalItemId, itemCount)
-                || !GrantOutput(next, definition, count)) return 0;
+                || !StoreFastForwardOutput(next, definition, count, properties, floatPropertyIds)) return 0;
             AddReceipt(next, receipt);
             return Commit(next) ? count : 0;
         }
@@ -723,7 +723,8 @@ namespace Zjcs.Offline.Home
             OfflineHomeSave next = Clone(Save);
             var group = hangUpIds.Distinct().Select(id => definitions.FirstOrDefault(value => value.HangUpId == id))
                 .Where(value => value != null);
-            var rewards = FastForwardRewards(next, group, hours, receipt, properties, floatPropertyIds, out long total);
+            var rewards = FastForwardRewards(next, group, hours, receipt, properties, floatPropertyIds, out long total,
+                storeInFurniture: true);
             if (total <= 0) return null;
             AddReceipt(next, receipt);
             return Commit(next) ? new OfflineHomeFastForwardResult(total, rewards) : null;
@@ -731,7 +732,8 @@ namespace Zjcs.Offline.Home
 
         List<OfflineHomeCollectedReward> FastForwardRewards(OfflineHomeSave next,
             IEnumerable<OfflineHomeIncomeDefinition> group, double hours, string receipt,
-            IReadOnlyDictionary<int, long> outputProperties, ISet<int> floatFlags, out long total)
+            IReadOnlyDictionary<int, long> outputProperties, ISet<int> floatFlags, out long total,
+            bool storeInFurniture = false)
         {
             total = 0;
             var rewards = new List<OfflineHomeCollectedReward>();
@@ -740,6 +742,13 @@ namespace Zjcs.Offline.Home
                 if (!definition.Unlocked) continue;
                 long count = WholeCount(OfflineHangUpIncome.RewardCount(definition.Rule, outputProperties, floatFlags, hours));
                 if (count <= 0) continue;
+                if (storeInFurniture)
+                {
+                    if (!StoreFastForwardOutput(next, definition, count, outputProperties, floatFlags))
+                    { total = 0; return null; }
+                    total = AddSaturated(total, count);
+                    continue;
+                }
                 if (!GrantOutput(next, definition, count, out int itemId))
                 {
                     total = 0;
@@ -750,6 +759,21 @@ namespace Zjcs.Offline.Home
                 rewards.Add(new OfflineHomeCollectedReward(definition.HangUpId, itemId, count, serial, receipt));
             }
             return rewards;
+        }
+
+        static bool StoreFastForwardOutput(OfflineHomeSave next, OfflineHomeIncomeDefinition definition,
+            long count, IReadOnlyDictionary<int, long> outputProperties, ISet<int> floatFlags)
+        {
+            var entry = FindOrCreate(next, definition.HangUpId);
+            var record = ToRecord(entry);
+            // Settle the existing ordinary interval before adding the separately
+            // calculated acceleration output. The original settled-count preview
+            // preserves values above capacity; no inventory receipt is created.
+            long existing = OfflineHangUpIncome.Collect(record, definition.Rule, outputProperties, floatFlags);
+            if (existing > long.MaxValue - count) return false;
+            entry.StoredSeconds = record.StoredSeconds;
+            entry.SettledCount = existing + count;
+            return true;
         }
 
         private bool Commit(OfflineHomeSave next)

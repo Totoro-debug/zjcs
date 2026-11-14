@@ -7,6 +7,7 @@ using Zjcs.Offline.HomeHudUI;
 using Zjcs.Offline.HomeUI;
 using Zjcs.Offline.PartnersUI;
 using Zjcs.Official.HomeHangUpWindowsUI;
+using Zjcs.Official.HomeFastHangUpUI;
 using Zjcs.Official.HomeScreenUI;
 using Zjcs.Official.HomeUI;
 using Zjcs.Official.ProfessionUI;
@@ -42,6 +43,7 @@ namespace Zjcs.Presentation.Home
         public event Action<GameObject> ActiveWindowChanged;
         public event Action<GameObject> WindowOpened;
         public FurnitureBedDialog Bed { get; private set; }
+        public FurnitureFastHangUpDialog FastSelection { get; private set; }
 
         public OfflineHomeHangUpWindows(Canvas canvas, MonoBehaviour host,
             GameObject blurPrefab, IWorldWindowBlurManager blur, IScreenAdaptService screen,
@@ -87,6 +89,16 @@ namespace Zjcs.Presentation.Home
         public void ShowBlessingRule()
             => Create(assets.blessingRulePrefab, root => root.GetComponent<BlessingLevelRuleDialog>().Init());
 
+        public void ShowFastSelection(int id, GameObject parent)
+        {
+            output.Refresh();
+            Create(OfficialHomeFastHangUpAssetCatalog.LoadDefault().selectionPrefab, root => {
+                FastSelection = root.GetComponent<FurnitureFastHangUpDialog>();
+                FastSelection.Init(id, null);
+                FastSelection.ParentPanel = parent;
+            });
+        }
+
         GameObject Clone(GameObject prefab, Transform parent, bool keepWorld = false)
         {
             var root = Object.Instantiate(prefab, staging.transform, false);
@@ -100,6 +112,9 @@ namespace Zjcs.Presentation.Home
             foreach (var button in root.GetComponentsInChildren<WorldButtonSound>(true)) button.Post = sound;
             foreach (var popup in root.GetComponentsInChildren<WorldPopupWindowSound>(true)) popup.Post = sound;
             foreach (var bed in root.GetComponentsInChildren<FurnitureBedDialog>(true)) bed.Services = services;
+            foreach (var fast in root.GetComponentsInChildren<FurnitureFastHangUpDialog>(true)) fast.Services = (IHomeFastHangUpServices)services;
+            foreach (var slider in root.GetComponentsInChildren<FurnitureUseItemSliderGroup>(true)) slider.Services = (IHomeFastHangUpServices)services;
+            foreach (var slider in root.GetComponentsInChildren<SetUseCountSlider>(true)) slider.Services = (IHomeFastHangUpServices)services;
             foreach (var quick in root.GetComponentsInChildren<FurnitureHangUpQuickReceive>(true)) quick.Services = services;
             foreach (var addition in root.GetComponentsInChildren<OutputAdditionDetailButton>(true)) addition.Services = services;
             foreach (var ruleButton in root.GetComponentsInChildren<BlessingRuleBtn>(true)) ruleButton.Services = services;
@@ -185,6 +200,7 @@ namespace Zjcs.Presentation.Home
             if (window.Root)
             {
                 if (Bed && Bed.gameObject == window.Root) Bed = null;
+                if (FastSelection && FastSelection.gameObject == window.Root) FastSelection = null;
                 window.Root.SetActive(false);
                 Object.Destroy(window.Root);
             }
