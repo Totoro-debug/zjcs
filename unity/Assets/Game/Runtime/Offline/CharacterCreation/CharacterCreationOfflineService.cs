@@ -26,6 +26,8 @@ namespace Zjcs.Offline.CharacterCreation
         public const int SwordInitialWeaponType = 200;
         public const int WandInitialWeaponType = 201;
         public const int DefaultProfession = 1;
+        // Approved offline starting state: Common.SubRank.Norank (初心者).
+        public const int InitialSubRank = 1;
         private const int ChineseRegion = 0;
         private static readonly string[] AppearanceFields =
         {
@@ -331,6 +333,8 @@ namespace Zjcs.Offline.CharacterCreation
             {
                 player.CharacterName = draft.name;
                 player.CharacterCreated = true;
+                player.SubRank = InitialSubRank;
+                player.Rank = characterCatalog.RankOfSubRank(InitialSubRank);
                 player.InitialWeaponType = 0;
                 OfflineItemAutoIncrease.InitializeNewCharacter(player, DateTime.UtcNow);
                 player.Wardrobe.Sex = sex;

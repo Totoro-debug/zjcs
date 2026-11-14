@@ -21,11 +21,13 @@ def build():
             assert sha(ROOT/relative) == digest, relative
             if group == 'outputs': inputs[relative] = digest
     for relative in ('common-source/MsgPlayerBlessLevelUpdate.cs', 'common-source/ConsoleDataManager.cs',
-                     'common-source/Common/PlayerBlessLevelUtils.cs', 'common-source/Common/Player.cs'):
+                     'common-source/Common/PlayerBlessLevelUtils.cs', 'common-source/Common/Player.cs',
+                     'common-source/Common/SubRank.cs', 'common-source/Common/Rank.cs'):
         p = CODE/relative; inputs[p.relative_to(ROOT).as_posix()] = sha(p)
     for relative in ('assets/reference/home-experience-rewards-source-manifest.json',
                      'assets/reference/home-avatar-native-source-manifest.json',
                      'scripts/fixtures/home_experience_profile_validation.cs',
+                     'unity/Assets/Game/Runtime/Offline/CharacterCreation/CharacterCreationOfflineService.cs',
                      'unity/Assets/Game/Runtime/Official/HomeHudUI/HomePlayerExpSlider.cs',
                      'unity/Assets/Game/Runtime/Official/HomeHudUI/IHomeExperienceServices.cs',
                      'unity/Assets/Game/Runtime/Official/HomeExperienceRewards/HomeExperienceRewardBindings.cs'):
@@ -36,7 +38,8 @@ def build():
         for output in (p, metadata(p)): outputs[output.relative_to(ROOT).as_posix()] = sha(output)
     p = metadata(folder, True); outputs[p.relative_to(ROOT).as_posix()] = sha(p)
     proof = dict(manifest='884_156692', generator_sha256=sha(Path(__file__)), inputs=inputs, outputs=outputs,
-        scope='Actual committed profile XP and blessing fields drive selected original query/parser code, native slider and original reward handler. External season/world/function-173/non-battle-property context remains explicitly provided by the owner. Read projection never rewrites existing canonical character progression. Formal HomeFeatureRuntime composition is pending.')
+        offline_initial_rank=dict(subrank=1, rank=1, decision='User-approved beginner initialization for newly created characters only. No old-save migration.'),
+        scope='Actual committed profile XP and blessing fields drive selected original query/parser code, native slider and original reward handler. New character creation persists the approved beginner rank, then the native query resolves its original level cap. External season/world/function-173/non-battle-property context remains explicitly provided by the owner. Read projection never rewrites existing canonical character progression. Formal HomeFeatureRuntime composition is pending.')
     target = ROOT/'assets/reference/home-experience-profile-source-manifest.json'
     target.write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
     return proof
@@ -49,6 +52,8 @@ def stage(project, proof):
         assert sha(ROOT/relative) == digest, relative
         source = ROOT/relative; target = project/source.relative_to(ROOT/'unity')
         target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(source,target)
+    relative = Path('Assets/Game/Runtime/Offline/CharacterCreation/CharacterCreationOfflineService.cs')
+    shutil.copy2(ROOT/'unity'/relative, project/relative)
     folder = project/'Assets/HomeExperienceProfileValidation'; folder.mkdir(exist_ok=True)
     shutil.copy2(ROOT/'scripts/fixtures/home_experience_profile_validation.cs',folder/'HomeExperienceProfileValidation.cs')
     (folder/'HomeExperienceProfileValidation.asmdef').write_text(json.dumps(dict(name='Zjcs.HomeExperienceProfile.Validation',

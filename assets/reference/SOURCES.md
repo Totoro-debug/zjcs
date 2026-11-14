@@ -973,3 +973,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 家园正式功能菜单接线来源：复用当前 `884_156692` 的原生菜单、真实角色条件及同版配置载荷；正式入口与页面派发依据所选客户端 `FunctionEntryTaskBtn`、`TaskPanelNavigateHandler`、`SettingsBtn`、`HomeSkinBtn` 及框架 `Framework.UI.WindowContainer`。管理类、真实宿主、夹具、配置凭据和输入／输出 SHA256 见 [home-function-menu-host-source-manifest.json](home-function-menu-host-source-manifest.json)，页面状态及单机范围见 [家园](../../docs/features/city-and-home.md)。本次未新增美术或素材快照。
 
 家园正式货币顶栏接线来源：复用所选 `884_156692` 的原生 `NewPublicTopBarParent`、货币控件、完整速购／兑换／确认窗口和本地交易适配；正式入口依据同版 `HomeUI`、`TopBarHandler`、`QuickBuyDialog`、`PayMoneyChangeDialog` 及原窗口管理生命周期。原素材、配置及其来源清单不变；正式宿主、验证器和输入／输出 SHA256 见 [home-currency-host-source-manifest.json](home-currency-host-source-manifest.json)，实现与验证范围仅在 [家园](../../docs/features/city-and-home.md)维护。未新增美术或素材快照。
+
+新角色初心者位阶初始化来源：所选 `884_156692` 的 `Common.SubRank`／`Common.Rank` 枚举、`SystemLevelLimitInfoParser` 与经验配置定义有效初心者数值及等级上限；新档初始位阶 1 由用户确认，服务器创建初值不作官方来源声称。输入、创建代码与验证夹具哈希见 [家园真实经验接线来源](home-experience-profile-source-manifest.json)。重新运行原经验规则提取器后，生成代码与配置的输出哈希全部保持一致。

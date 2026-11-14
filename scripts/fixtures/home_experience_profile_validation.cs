@@ -83,10 +83,15 @@ public sealed class HomeExperienceProfileRunner : MonoBehaviour
         var slots = new ProfileSlotCatalog(root); profile = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
         var environment = new OfflineHomeExperienceEnvironment { PlanesRank = Rank.Norank };
         player = new OfflineHomeExperiencePlayer(profile, tables, () => environment);
-        Require(player.Level == 0 && player.LevelLimit == 0, "uninitialized None rank keeps the original zero cap without inventing initial server state");
-        // A controlled valid-rank scenario, independent from the pending
-        // production new-game initialization decision.
-        Mutate(saved => { saved.SubRank = (int)SubRank.Norank; saved.Rank = (int)Rank.Norank; saved.Level = 1; });
+        Require(profile.Save.Player.SubRank == (int)SubRank.Norank && profile.Save.Player.Rank == (int)Rank.Norank,
+            "new character persists the approved original beginner rank");
+        Require(player.Level == 1 && player.LevelLimit == 10, "new character XP resolves through the original beginner level cap");
+        var fresh = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
+        Require(fresh.Save.Player.SubRank == 1 && fresh.Save.Player.Rank == 1 && fresh.Save.Player.Experience == 0,
+            "beginner rank and unchanged initial XP survive disk reopen");
+        // Preserve the existing canonical-growth scenario below; this no longer
+        // supplies a missing rank to the new character.
+        Mutate(saved => saved.Level = 1);
         player.SynchronizeCommittedPlayer();
         var store = new OfflineHomeExperienceStore(player); var blockers = new Blockers();
         Require(store.Inited && store.HandledExp == 0 && store.HandledLevel == 1, "original ConsoleDataManager.Init snapshots the new character");

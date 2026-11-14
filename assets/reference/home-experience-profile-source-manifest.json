@@ -1,8 +1,8 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "b97d12e28ea7fd4bdc5db0bba67027e19d8ae80121b4cda2874f7a765d4846c1",
+  "generator_sha256": "a035a1f7a02ff92adb79c39aeaa03da632770603fd9aefaebee866578605b261",
   "inputs": {
-    "assets/reference/home-experience-rules-source-manifest.json": "861547a449ec76f47b0efe0c198020d480541ff112b9c76e6af6396408f01509",
+    "assets/reference/home-experience-rules-source-manifest.json": "3fae4d528f68eb3be6993fd6d57440b6a7ec241a8b3c6f17a0b8583af283d843",
     "unity/Assets/Game/Runtime/Official/HomeExperienceRules/Rank.cs": "0e6a746fc6fabb1b13fcade7d2cfb3cd3e2bf1184c965e6acd177c6a54ec2cd7",
     "unity/Assets/Game/Runtime/Official/HomeExperienceRules/Rank.cs.meta": "dd0fb66613034932d5a50a9edcb8070889304c3fc706489770633051496a400c",
     "unity/Assets/Game/Runtime/Official/HomeExperienceRules/SubRank.cs": "65db5f039d3c4ca6eb641d70ce47e0d201e187423d4913770407d567c8c53b80",
@@ -38,9 +38,12 @@
     ".tools/source-packages/current/884_156692/official-code/common-source/ConsoleDataManager.cs": "e9f8800953f829d532356eec4583e5039f62aa08162f7c004cf660b40b7ab129",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerBlessLevelUtils.cs": "9ae5969c964e806f3631cc0e419feb05ed2befd92e73d95770b0ccabfae6a2c3",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/Player.cs": "e0b324d6cf965e194cc517c176e8fae80f16dda7019e42d705ed6ae7d44da611",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/SubRank.cs": "a4ed6930d7473456d13f7f102a708aa88510e52cda6521a034dc625cda40406e",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Rank.cs": "1a91cda306404d54e85e4c2731748da101aca3cf14e9ade5871dffb5e83ce3b6",
     "assets/reference/home-experience-rewards-source-manifest.json": "c079fc0a9d596a66676f5a90ddeef2c58654c7ae3959172cb9ba69bd53b43cc3",
     "assets/reference/home-avatar-native-source-manifest.json": "beb8d1d5e354e0d541c1f8f11a53808f51315919b93f92589bd3e9efa3eb6944",
-    "scripts/fixtures/home_experience_profile_validation.cs": "33629fae6cf1b3b843b4668c67847d72655088086d2a5e697385d4343a40db5a",
+    "scripts/fixtures/home_experience_profile_validation.cs": "cc97638aa7c5fdcefc7e4b16eccd5040dbb0253cfea24453064836ffe37f167e",
+    "unity/Assets/Game/Runtime/Offline/CharacterCreation/CharacterCreationOfflineService.cs": "e1b973dc4647efaab3b788af6fb29bf39a4ec6a5a167a8a54b2c068b97254de3",
     "unity/Assets/Game/Runtime/Official/HomeHudUI/HomePlayerExpSlider.cs": "092a42a2f11602563c20dc82b564eac7f6a8eabeb6b698ec899218f636b7fee9",
     "unity/Assets/Game/Runtime/Official/HomeHudUI/IHomeExperienceServices.cs": "6af9b414f0fa5614a5b6d45f15960f6d410e088d748fe05a6b1c93467e509a40",
     "unity/Assets/Game/Runtime/Official/HomeExperienceRewards/HomeExperienceRewardBindings.cs": "dcb57a051d0c72438076a4b7e0a35a2e1e38d4d0a2248531e6c128825346e18d"
@@ -56,5 +59,10 @@
     "unity/Assets/Game/Runtime/Offline/HomeExperienceUI/Zjcs.Offline.HomeExperienceUI.asmdef.meta": "73c0c9457a76f0f3d25040df3d556cd976e670fe964c5f8ea432a144ffddab08",
     "unity/Assets/Game/Runtime/Offline/HomeExperienceUI.meta": "693019c0c53ead57717643db8aa27a13fc8d07aba0dd9de4e3cc6d21ffd6a7d4"
   },
-  "scope": "Actual committed profile XP and blessing fields drive selected original query/parser code, native slider and original reward handler. External season/world/function-173/non-battle-property context remains explicitly provided by the owner. Read projection never rewrites existing canonical character progression. Formal HomeFeatureRuntime composition is pending."
+  "offline_initial_rank": {
+    "subrank": 1,
+    "rank": 1,
+    "decision": "User-approved beginner initialization for newly created characters only. No old-save migration."
+  },
+  "scope": "Actual committed profile XP and blessing fields drive selected original query/parser code, native slider and original reward handler. New character creation persists the approved beginner rank, then the native query resolves its original level cap. External season/world/function-173/non-battle-property context remains explicitly provided by the owner. Read projection never rewrites existing canonical character progression. Formal HomeFeatureRuntime composition is pending."
 }

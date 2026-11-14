@@ -122,6 +122,8 @@ Boss 3803 使用官方节点、网格、描边、粒子、模板遮罩与星空�
 
 初始武器选项依据官方 `ChooseInitialWeaponNode.ProcessSucc` 和 `WeaponType` 数值 `200`（剑）、`201`（法杖）写入本地角色。由于官方节点由服务器故事流程触发，离线实现用本地按钮承接该选择；选择完成后进入人物页入口。
 
+新角色按用户确认初始化为初心者 `SubRank=1`（官方 `Common.SubRank.Norank`），对应 `Rank` 从现有官方人物目录映射为 1；在创建角色的同一存档事务中写入。此初始发放状态属于确认的单机方案，官方客户端未包含创建角色的服务器实现。旧档不作位阶迁移。经验查询及家园经验条的规则与验证见[家园](city-and-home.md)。
+
 官方染色遮罩 `ethnicity_06`、`ethnicity_07`、`ethnicity_22` 至 `ethnicity_27` 共 8 张经用户核对固定 APK、相关原版本 CDN 包及新版同名包仍缺失。按用户确认保留全部选项；缺少遮罩时沿官方空遮罩行为不染色，预览不生成或替代官方遮罩。
 
 开场跳过条件沿用官方 `MainUIRoot.mSkipNewbieCutsceneConditionId = 21003`：`CompositeOrCondition[21001 PlayerChannel(130077), 21002 PlayerMedia(C520612)]`。离线 SDK 桩的渠道／媒体均为空，因此判定为不跳过；`CharacterOpeningFlow.ShouldSkipNewbieCutscene` 保留该白名单比较，未另造“看过一次就跳过”的规则。每槽观看状态按用户确认只做进程内标记（`PlayedSlots`），重启游戏后未创角槽位会重新播放，不写入槽位存档。
