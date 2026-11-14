@@ -103,6 +103,9 @@ try {
             & python -B (Join-Path $PSScriptRoot 'verify_lightning_dash_receipt.py') (Join-Path $run 'summon-final.json')
             if ($LASTEXITCODE -ne 0) { throw "Original 10016 dash/hit receipt validation failed: $run" }
         }
+        if ($item -eq 10042 -and -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Breaking brand] Original 11010/11011/11012 damage and 24052 application/source/checkpoint passed;')) {
+            throw "Original 10042 damage/mark assertions did not complete: $run"
+        }
         foreach ($phase in 1..4) {
             if (-not (Test-Path -LiteralPath (Join-Path $run "first-promotion-$item-phase-$phase.png"))) {
                 throw "Original presentation phase $phase was not captured: $run"

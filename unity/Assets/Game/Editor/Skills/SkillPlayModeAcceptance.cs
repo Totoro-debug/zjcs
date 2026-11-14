@@ -282,6 +282,7 @@ namespace Zjcs.Editor.Skills
             {
                 string resultPath = Path.Combine(ValidationDirectory, "result.json");
                 if (Environment.GetEnvironmentVariable("ZJCS_ACTIVE_LOADOUT_ACCEPTANCE") == "1"
+                    || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_FIRST_PROMOTION_SKILL"))
                     || Environment.GetEnvironmentVariable("ZJCS_REFLECTION_ARMOR") == "1")
                     Zjcs.Presentation.Home.SkillSummonPlayerValidation.StartDiagnostic(ValidationDirectory, false);
                 else

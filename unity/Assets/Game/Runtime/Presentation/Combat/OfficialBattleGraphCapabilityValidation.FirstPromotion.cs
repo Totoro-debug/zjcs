@@ -238,6 +238,11 @@ namespace Zjcs.Presentation.Combat
                     if (prop.Id == catalog.PropertyType("MaxHp")) prop.Value = hp;
                     if (prop.Id == catalog.PropertyType("Attack")) prop.Value = 100;
                     if (prop.Id == catalog.PropertyType("Speed")) prop.Value = speed;
+                    // Isolate the authored facing of 11010. Ordinary landing AI
+                    // may otherwise relocate around this already adjacent target.
+                    if (itemId == 10042 && unit == player
+                        && (prop.Id == catalog.PropertyType("MoveDist")
+                            || prop.Id == catalog.PropertyType("FixedMoveDist"))) prop.Value = 0;
                 }
                 unit.Hp = unit.Turn.Hp = unit.MaxHp = unit.LastMaxHp = hp;
                 unit.Turn.Speed = speed;
@@ -346,6 +351,28 @@ namespace Zjcs.Presentation.Combat
                 + cast.SkillItemId + "/" + firstPromotionItemId + "; entity=" + cast.SkillEntityId + "/" + skillId
                 + "; facing=" + cast.Presentation?.FacingIndex + "/" + firstPromotionFacingIndex
                 + "; releases=" + player.SkillState.Slots[0].ReleasedTimes);
+            if (firstPromotionItemId == 10042)
+            {
+                var hit = step.DamageEvents.Single(value => value.SourceId == player.Id
+                    && value.SkillEntityId == 11010 && value.HitEntityId == 11011
+                    && value.DamageEntityId == 11012);
+                var target = checkpoint.Units.Single(value => value.Id == hit.TargetId);
+                var mark = target.Statuses.Single(value => value.ClassId == 24052);
+                Require(hit.BeforeHp > hit.AfterHp && !hit.Dodge && !hit.Blinding && !hit.Immunity
+                    && hit.ElementType == 102 && !hit.TrueDamage && step.Movements.Count == 0
+                    && mark.CreatorId == player.Id && mark.ApplyingSkillItemId == 10042
+                    && mark.SourceSkillRank == 2 && mark.SourceSkillLevel == 20,
+                    "Original 11010 damage or 24052 application/cultivation differs.");
+                var restored = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+                var savedMark = restored.Units.Single(value => value.Id == target.Id)
+                    .Statuses.Single(value => value.ClassId == 24052);
+                Require(savedMark.InstanceId == mark.InstanceId && savedMark.CreatorId == mark.CreatorId
+                    && savedMark.ApplyingSkillItemId == mark.ApplyingSkillItemId
+                    && savedMark.SourceSkillRank == mark.SourceSkillRank
+                    && savedMark.SourceSkillLevel == mark.SourceSkillLevel,
+                    "Original 24052 identity or cultivation was lost in the checkpoint.");
+                Debug.Log("[Breaking brand] Original 11010/11011/11012 damage and 24052 application/source/checkpoint passed; isolated ordinary movement=0.");
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_STATUS_MOVE_SCOPE_ACCEPTANCE") == "1")
             {
                 var component = player.Statuses.Single(status => status.ClassId == 25027).Components.MoveScope;
