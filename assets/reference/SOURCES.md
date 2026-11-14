@@ -979,3 +979,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 公共战斗持续状态的官方 `MyFightStatus`／`MyAction` 生命周期、既有状态与 3204 模型资源凭据，以及模型重建接线 SHA-256 见[状态与模型生命周期来源](battle-animation/status-model-lifecycle-source-manifest.json)，生成入口为 `scripts/record_battle_status_model_sources.py`。本项复用既有原生资产，未改写美术载荷；实现及验证范围见[公共战斗页](../../docs/features/battle-execution.md)。
 
 公共战斗原状态伤害公式的 884 共享代码与原逻辑处理器配置、运行属性表、提取程序及实现／验证身份见[状态伤害公式来源](battle-rules/status-damage-source-manifest.json)，生成入口为 `scripts/prepare_battle_status_damage_sources.py`。原始输入使用原字节哈希；新增代码与验证使用明确标记的 CRLF → LF 文本哈希。此项不转换或替换美术载荷；当前实现和验证范围见[公共战斗](../../docs/features/battle-execution.md)。
+
+家园玩家状态记录来源：所选 `884_156692` 的 `PlayerStatusEffectData`、`PlayerStatusEffectDataWrap`、`PlayerStatusEffectManager` 与状态／作用域／词条 Luban 构造器；`scripts/prepare_home_player_status.py` 从经所选索引核对的 APK 配置包提取全部记录，保留 APK 与所选版本的独立来源。原始输入、CAB／PathID、二进制配置与迁移输出 SHA256 见 [home-player-status-source-manifest.json](home-player-status-source-manifest.json)。未新增图像或素材快照；实现、差异及实际验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。

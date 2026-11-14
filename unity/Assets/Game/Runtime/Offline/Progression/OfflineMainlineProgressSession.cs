@@ -79,6 +79,8 @@ namespace Zjcs.Offline.Progression
         public OfflineSkillProfile Skills = new OfflineSkillProfile();
         public OfflinePetProgress Pets = new OfflinePetProgress();
         public OfflinePlayerHealthProgress Health = new OfflinePlayerHealthProgress();
+        public List<Zjcs.Official.HomePlayerStatusRules.PlayerStatusEffectData> StatusEffects =
+            new List<Zjcs.Official.HomePlayerStatusRules.PlayerStatusEffectData>();
         public OfflineCharacterPropertyProgress CharacterProperties = new OfflineCharacterPropertyProgress();
         public OfflineNpcTravelProgress NpcTravel = new OfflineNpcTravelProgress();
         public OfflineNpcAdventureProgress NpcAdventure = new OfflineNpcAdventureProgress();
@@ -1283,6 +1285,8 @@ namespace Zjcs.Offline.Progression
             Normalize(save);
             if (save.Player.Experience < 0 || save.Player.Level < 0 || save.Player.Rank < 0
                 || !OfflinePlayerHealthProgress.IsValid(save.Player.Health)
+                || !OfflinePlayerStatusProgress.IsValid(save.Player.StatusEffects,
+                    save.Player.CharacterProperties.LocalActorIdentities.PlayerId)
                 || save.CreatedAtUnixSeconds < 0
                 || save.Player.BlessingExperience < 0 || save.Player.SubRank < 0 || save.Player.SeasonRank < 0
                 || save.Player.SeasonBaseLevel < 0 || save.Player.MaxProfessionRank < 0 || save.Player.GuildName == null
@@ -1478,6 +1482,8 @@ namespace Zjcs.Offline.Progression
             if (save.Player.CharacterProperties == null)
                 save.Player.CharacterProperties = new OfflineCharacterPropertyProgress();
             OfflineCharacterPropertyProgress.Normalize(save.Player.CharacterProperties);
+            if (save.Player.StatusEffects == null)
+                save.Player.StatusEffects = new List<Zjcs.Official.HomePlayerStatusRules.PlayerStatusEffectData>();
             if (save.Player.NpcTravel == null) save.Player.NpcTravel = new OfflineNpcTravelProgress();
             OfflineNpcTravelProgress.Normalize(save.Player.NpcTravel);
             if (save.Player.NpcAdventure == null) save.Player.NpcAdventure = new OfflineNpcAdventureProgress();

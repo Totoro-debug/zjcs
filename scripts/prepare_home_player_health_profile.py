@@ -114,8 +114,8 @@ def stage(project, proof):
     marker='            LanguageManager.Initialize(experience);'
     assert source.count(marker)==1
     setup='''            var healthConfig=OfflineHomePlayerHealthConfiguration.LoadDefault();
-            // Explicit controlled valid initial-rank scenario; production choice is pending.
-            Require(profile.ApplyCharacterMutation(saved=>{saved.SubRank=1;saved.Rank=1;saved.Level=1;}).IsApplied,"controlled valid rank");
+            Require(profile.Save.Player.SubRank==1,"approved new beginner rank comes from actual character creation");
+            Require(profile.ApplyCharacterMutation(saved=>saved.Level=1).IsApplied,"initialize canonical level for health scenarios");
             var owner=new OwnerState();var games=new List<bool>();
             var health=new OfflinePlayerHealth(profile,growth,()=>owner.Maps.Count,()=>games,()=>experience.Now);
             using var xp=new OfflineHomeExperiencePlayer(profile,OfflineHomeExperienceConfiguration.LoadDefault().CreateTables(),
